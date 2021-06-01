@@ -311,6 +311,7 @@ pt_BR:
       abandon:
         confirm: "Você tem um rascunho em andamento para este tópico. O que você gostaria de fazer com ele?"
         yes_value: "Descartar"
+        no_value: "Retomar a edição"
     topic_count_latest:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -329,6 +330,7 @@ pt_BR:
     upload: "Enviar"
     uploading: "Enviando..."
     uploading_filename: "Enviando: %{filename}..."
+    processing_filename: "Processando: %{filename}..."
     clipboard: "área de transferência"
     uploaded: "Enviado!"
     pasting: "Colando..."
@@ -378,6 +380,7 @@ pt_BR:
         type_bonus:
           name: "tipo de bônus"
           title: "Certos tipos passíveis de revisão podem receber um bônus da equipe para torná-los uma prioridade mais alta."
+      stale_help: "Esta revisão foi resolvida por outra pessoa."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."
@@ -547,6 +550,7 @@ pt_BR:
       custom: "Data e hora personalizadas"
       relative: "Tempo relativo"
       none: "Nenhum necessário"
+      last_custom: "Última data personalizada"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'>Você</a> postou <a href='%{topicUrl}'>o tópico</a>"
@@ -600,6 +604,7 @@ pt_BR:
           title: "Digite nomes de usuários ou endereços de email"
           input_placeholder: "Nomes de usuário ou endereços de email"
         usernames:
+          title: "Insira os nomes de usuário"
           input_placeholder: "Nomes de usuários"
         notify_users: "Notificar usuários"
       requests:
@@ -626,6 +631,19 @@ pt_BR:
         email:
           title: "E-mail"
           status: "Sincronizado %{old_emails} / %{total_emails} dos emails via IMAP."
+          enable_smtp: "Habilitar SMTP"
+          enable_imap: "Habilitar IMAP"
+          test_settings: "Configurações de Teste"
+          save_settings: "Salvar Configurações"
+          settings_required: "Todas as configurações são obrigatórias, por favor preencha todos os campos antes de validar."
+          smtp_settings_valid: "Configurações de SMTP válidas."
+          smtp_title: "SMTP"
+          smtp_instructions: "Quando você habilita o SMTP para o grupo, todos os e-mails enviados da caixa de entrada do grupo serão enviados por meio das configurações de SMTP especificadas aqui, ao invés do servidor de e-mail configurado para outros e-mails enviados por seu fórum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Configurações Adicionais"
+          imap_instructions: "Quando você habilita o IMAP para o grupo, os e-mails são sincronizados entre a caixa de entrada do grupo e o servidor IMAP e a caixa de correio fornecidos. O SMTP deve ser habilitado com credenciais válidas e testadas antes que o IMAP possa ser habilitado. O nome de usuário e a senha de e-mail usados para SMTP serão usados para IMAP. Para obter mais informações, consulte <a target=\"_blank\" href=\"https://meta.discourse.org/t/imap-support-for-group-inboxes/160588\">anúncio de recurso no Discourse Meta</a>."
+          imap_alpha_warning: "Aviso: este recurso está no estágio alfa. Apenas o Gmail é oficialmente compatível. Use por sua conta e risco!"
+          imap_settings_valid: "Configurações IMAP válidas."
           credentials:
             title: "Credenciais"
             smtp_server: "Servidor SMTP"
@@ -643,7 +661,6 @@ pt_BR:
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Nenhuma caixa de correio foi encontrada nesta conta de e-mail."
-            disabled: "desativado"
         membership:
           title: Associação
           access: Acesso
@@ -4003,6 +4020,7 @@ pt_BR:
           require_approval: "Requerer aprovação"
           flag: "Bandeira,Sinalização"
           replace: "Substituir"
+          silence: "Silenciar"
         action_descriptions:
           block: "Impedir que postagens contendo estas palavras sejam postadas. O usuário verá uma mensagem de erro quando tentar enviar a postagem."
           censor: "Permitir postagens contendo estas palavras, mas substituí-las por caracteres que ocultem as palavras censuradas."

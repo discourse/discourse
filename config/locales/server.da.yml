@@ -1697,6 +1697,7 @@ da:
     embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
     notify_about_flags_after: "Hvis der er anmeldelser, der ikke er blevet håndteret efter mange timer, skal der sendes en personlig besked til moderatorer. Sæt til 0 for at deaktivere."
     delete_drafts_older_than_n_days: "Slet kladder, der er ældre end (n) dage."
+    delete_merged_stub_topics_after_days: "Antal dage, der skal ventes, før automatisk sletning af fuldt sammenflettede stub emner. Sæt til 0 for aldrig at slette stub emner."
     enable_emoji: "Aktivér humørikon"
     enable_emoji_shortcuts: "Almindelig smiley-tekst såsom :) :p :( vil blive konverteret til humørikoner"
     emoji_set: "Hvordan kunne du tænke dig diT humørikon?"
@@ -3302,6 +3303,7 @@ da:
       long_description: |
         Dette emblem tildeles første gang, du redigerer et af dine indlæg. Selvom du ikke vil være i stand til at redigere dine indlæg for evigt, opfordres du til at redigere dine indlæg — hvis du kan forbedre formateringen, rette små fejl eller tilføje noget du glemte, da du oprindeligt gemte. Rediger for at gøre dine indlæg endnu bedre!
     wiki_editor:
+      name: Wiki Redaktør
       description: Første wiki redigering
       long_description: |
         Dettee emblem tildeles første gang du redigerer et wiki-indlæg.

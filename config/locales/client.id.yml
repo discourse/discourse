@@ -521,8 +521,6 @@ id:
             password: "Kata Sandi"
           settings:
             title: "Pengaturan"
-          mailboxes:
-            disabled: "dinonaktifkan"
         membership:
           title: Keanggotaan
           access: Mengakses

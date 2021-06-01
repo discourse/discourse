@@ -647,7 +647,6 @@ de:
           mailboxes:
             synchronized: "Synchronisierte Mailbox"
             none_found: "In diesem E-Mail Konto wurden keine Postfächer gefunden."
-            disabled: "deaktiviert"
         membership:
           title: Mitgliedschaft
           access: Zugriff
@@ -4397,6 +4396,7 @@ de:
           flag: "Melden"
           replace: "Ersetzen"
           tag: "Schlagwort"
+          silence: "Stummschalten"
         action_descriptions:
           block: "Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken."
           censor: "Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken."

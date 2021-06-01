@@ -1809,7 +1809,6 @@ de:
     min_first_post_typing_time: "Minimale Zeit die ein Benutzer mindestens aufwenden muss, um einen Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0 um dieses Verhalten zu deaktivieren (nicht empfohlen)."
     auto_silence_fast_typers_on_first_post: "Benutzer automatisch stummschalten, die nicht der min_first_post_typing_time entsprechen."
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
-    auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Übernahme dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a, wird dazu führen, dass alle Posts, die wüten oder aba oder aca enthalten, zuerst stummgeschaltet werden. Gilt nur für den ersten Beitrag."
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
@@ -2648,11 +2647,11 @@ de:
       title: "Begrüßungsteam"
       subject_template: "Herzlichen Glückwunsch, du hast den Status %{role} erhalten!"
       text_body_template: |
-        Sie haben von einem Kollegen den Status %{role} erhalten.
+        Ein Team-Mitglied hat dir den Status „%{role}“ verliehen.
 
-        Als %{role}haben Sie jetzt Zugriff auf die <a href='%{base_url}/admin' target='_blank'>Admin-Oberfläche</a>.
+        Als Mitglied von „%{role}“ hast du jetzt Zugriff auf die <a href='%{base_url}/admin' target='_blank'>Admin-Oberfläche</a>.
 
-        Mit großer Kraft geht große Verantwortung einher. Wenn Sie mit dem Moderieren noch nicht vertraut sind, lesen Sie bitte den [Moderationsleitfaden] (https://meta.discourse.org/t/discourse-moderation-guide/63116).
+        Mit großer Kraft geht große Verantwortung einher. Wenn du mit dem Moderieren noch nicht vertraut bist, dann lies bitte den [Moderationsleitfaden](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Willkommen: Einladung"
       subject_template: "Willkommen bei %{site_name}!"

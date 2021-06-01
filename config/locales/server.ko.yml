@@ -1336,6 +1336,7 @@ ko:
     force_https_warning: "귀하의 웹 사이트는 SSL을 사용하고 있습니다. 그러나 사이트 설정에서` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> 가 아직 활성화되어 있지 않습니다."
     out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
     unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
+    watched_word_regexp_error: "감시 단어 %{action}의 정규식이 잘못되었습니다. <a href='%{base_path}/admin/customize/watched_words'>감시 단어 설정</a>을 확인하거나 사이트 설정의 'watched words regular expressions'을 비활성화하십시오."
   site_settings:
     display_local_time_in_user_card: "사용자 카드 페이지가 열릴 때 사용자의 시간대를 기준으로 현지 시간을 표시합니다."
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
@@ -1758,7 +1759,6 @@ ko:
     min_first_post_typing_time: "사용자가 첫번째 포스트를 작성할 때 타이핑에 소요해야 하는 밀리초. 설정값에 도달하지 않았을 때는 자동으로 승인 큐에 포함됩니다. 승인 0으로 설정하면 해제됩니다.(해제는 권장하지 않습니다)"
     auto_silence_fast_typers_on_first_post: "min_first_post_typing_time을 충족하지 않는 사용자를 자동으로 쓰기 금지 시킵니다."
     auto_silence_fast_typers_max_trust_level: "빠른 타이퍼를 자동으로 쓰기 금지 시키기 위한 최대 신뢰 수준"
-    auto_silence_first_post_regex: "대소 문자를 구분하지 않는 정규 표현식은 전달되면 사용자 별 첫 번째 게시물이 침묵되고 승인 대기열로 전송됩니다. 예 : raging | a [bc] a는 raging 또는 aba 또는 aca를 포함하는 모든 게시물이 먼저 침묵되도록합니다. 첫 번째 게시물에만 적용됩니다."
     reviewable_claiming: "검토 가능한 컨텐츠를 사용하려면 먼저 컨텐츠를 청구해야합니까?"
     reviewable_default_topics: "기본적으로 주제별로 그룹화 된 검토 가능한 컨텐츠 표시"
     reviewable_default_visibility: "이 우선 순위를 충족하지 않으면 검토 가능한 항목을 표시하지 않습니다."

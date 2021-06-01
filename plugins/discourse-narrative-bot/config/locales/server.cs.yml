@@ -279,12 +279,6 @@ cs:
 
           (A ano, moje uživatelské jméno je napsáno _disco_, stejně jako v 70. letech taneční šílenství. Mám [rád noční život!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Naše diskuse se nám líbí přátelské a potřebujeme vaši pomoc, abychom [udrželi věci civilizované] (%{guidelines_url}). Pokud narazíte na problém, nahlaste to prosím vlaječkou, abyste o tom soukromě informovali autora nebo [náš ochotný personál] (%{about_url}).
-
-          > :imp: Napsal jsem sem něco ošklivého
-
-          Myslím, že víte, co dělat. Pokračujte a ** označte tento příspěvek ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> jako nevhodný!
         reply: "[Naši personál (%{base_uri}/ skupiny / zaměstnanci) bude soukromě informováni o vaší vlajce. Pokud příspěvek označí dostatek členů komunity, bude také preventivně automaticky skryt. (Vzhledem k tomu, že jsem ve skutečnosti nenapsal ošklivý příspěvek :angel:, šel jsem napřed \na prozatím vlaječku odstranil)"
         not_found: |-
           Ach ne, můj ošklivý příspěvek ještě nebyl označen jako nevhodný. :worried: Můžete jej označit jako nevhodný pomocí ** vlaječky ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeňte použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> k odhalení dalších akcí pro každý příspěvek.

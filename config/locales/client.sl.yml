@@ -667,7 +667,6 @@ sl:
           mailboxes:
             synchronized: "Sinhronizirani nabiralnik"
             none_found: "V tem računu nismo našli poštnega nabiralnika."
-            disabled: "onemogočeno"
         membership:
           title: Članstvo
           access: Dostopnost
@@ -3935,6 +3934,7 @@ sl:
           require_approval: "Zahtevaj odobritev"
           flag: "Prijavi"
           replace: "Zamenjaj"
+          silence: "Utišaj"
         action_descriptions:
           block: "Onemogoči objavo prispevkov, ki vsebujejo te besede. Uporabnik bo dobil sporočilo o napaki, ko bo hotel objaviti prispevek."
           censor: "Dovoli prispevke s temi besedami, ampak jih zamenjaj z znaki, ki skrijejo cenzurirane besede."

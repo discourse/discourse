@@ -646,7 +646,6 @@ es:
           mailboxes:
             synchronized: "Bandeja de correo sincronizada"
             none_found: "No se han encontrado bandejas de correo para esta cuenta de correo electrónico."
-            disabled: "desactivado"
         membership:
           title: Membresía
           access: Acceso
@@ -3315,6 +3314,9 @@ es:
           name: Miscelánea
         posting:
           name: Publicación
+      favorite_max_reached: "No puedes marcar más insignias como favoritas."
+      favorite_max_not_reached: "Marcar esta insignia como favorita"
+      favorite_count: "%{count}/%{max} insignias marcadas como favoritas"
     tagging:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
@@ -4385,6 +4387,7 @@ es:
           flag: "Reportar"
           replace: "Reemplazar"
           tag: "Etiqueta"
+          silence: "Silenciar"
         action_descriptions:
           block: "Impedir la publicación de mensajes que contengan estas palabras. El usuario verá un mensaje de error cuando trate de publicar su mensaje."
           censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."

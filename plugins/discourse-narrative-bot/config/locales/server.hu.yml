@@ -227,12 +227,6 @@ hu:
         reply: |-
           _Kimondta valaki a nevemet!? _ :raised_hand: Azt hiszem, te voltál! :wave: Nos, itt vagyok! Köszönöm, hogy megemlítettél. :ok_hand:
       flag:
-        instructions: |-
-          Szeretnénk, ha a fórumon zajló beszélgetések kulturáltak tudnának maradni, és ehhez a te segítségedre is szükségünk van. Kérjük, olvasd el [a fórum szabályzatát](%{guidelines_url}), és ha problémát észlelsz, kérjük, jelezd a zászló megnyomásával, hogy titkosan értesítsd a szerzőt vagy [segítőkész munkatársainkat](%{about_url}).
-
-          > :imp: Írtam valami csúnyát ide
-
-          Gondolom tudod mit kell tenned!. Gyerünk, **jelöld meg ezt a bejegyzést** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kifogásolhatóként!
         reply: |-
           [Munkatársainkat](%{base_uri}/groups/staff) privát módon értesítjük a bejelentésedről. Ha elegendő közösségi tag megjelöl egy bejegyzést, az elővigyázatosságból automatikusan el is lesz rejtve. (Mivel valójában nem írtam egy csúnya bejegyzést :angel:, ezért egyelőre eltávolítottam a zászlót.)
       search:

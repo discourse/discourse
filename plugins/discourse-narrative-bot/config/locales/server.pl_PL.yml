@@ -280,12 +280,6 @@ pl_PL:
           (Tak, moja nazwa użytkownika pisana jest _disco_, tak jak w popularna w latach 90 muzyka. Naprawdę [kocham życie nocne!]
           (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Chcielibyśmy, aby dyskusja na forum przebiegała pokojowo i potrzebujemy Twojej pomocy, aby [utrzymać ją na poziomie](%{guidelines_url}). Jeśli zauważysz problem, prosimy o zaznaczenie flagi w celu poinformowania autora lub [naszego pomocnego zespołu](%{about_url}).
-
-          > :imp: napisałem tutaj coś brzydkiego
-
-          Wiesz co robić. Śmiało, **oflaguj ten post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> jako nieodpowiedni!
         reply: |-
           [Nasz zespół](%{base_uri}/groups/staff) zostanie prywatnie poinformowany o Twojej fladze. W przypadku, gdy wystarczająca liczba członków społeczności oflaguje ten sam wpis, zostanie on automatycznie ukryty ze względów ostrożności (Jako żę tak naprawdę nie napisałem niczego nieodpowiedniego :angel:, po prostu usunąłem flagę ze swojego wpisu),
         not_found: |-
