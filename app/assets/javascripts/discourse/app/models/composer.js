@@ -953,16 +953,20 @@ const Composer = RestModel.extend({
       }
     });
 
+    post.setProperties({ cooked: props.cooked, staged: true });
+    this.appEvents.trigger("post-stream:refresh", { id: post.id });
+
     return promise
       .then(() => {
-        // rest model only sets props after it is saved
-        post.set("cooked", props.cooked);
         return post.save(props).then((result) => {
           this.clearState();
           return result;
         });
       })
-      .catch(rollback);
+      .catch(rollback)
+      .finally(() => {
+        post.set("staged", false);
+      });
   },
 
   serialize(serializer, dest) {

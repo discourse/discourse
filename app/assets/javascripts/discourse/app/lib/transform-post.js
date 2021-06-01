@@ -148,6 +148,7 @@ export default function transformPost(
   postAtts.actionCodeWho = post.action_code_who;
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
+  postAtts.staged = post.staged;
 
   if (post.notice) {
     postAtts.notice = post.notice;
