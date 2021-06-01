@@ -1,3 +1,4 @@
+//= require ember_jquery
 //= require template_include.js
 //= require jquery.ui.widget.js
 //= require jquery.fileupload.js

@@ -6,7 +6,6 @@
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>
-    <%= preload_script 'ember_jquery' %>
     <%= preload_script 'wizard-vendor' %>
     <%= preload_script 'wizard-application' %>
     <%= preload_script_url ExtraLocalesController.url('wizard') %>
