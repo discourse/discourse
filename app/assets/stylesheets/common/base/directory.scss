@@ -1,6 +1,10 @@
 .directory {
   margin-bottom: 100px;
-  overflow-x: auto;
+
+  .directory-table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
 
   .open-edit-columns-btn {
     vertical-align: top;
