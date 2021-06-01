@@ -1,7 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import I18n from "I18n";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   let deleted;
@@ -23,7 +22,16 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     };
 
     server.post("/invites", () => helper.response(inviteData));
-    server.put("/invites/1", () => helper.response(inviteData));
+    server.put("/invites/1", (request) => {
+      const data = helper.parsePostData(request.requestBody);
+      if (data.email === "error") {
+        return helper.response(422, {
+          errors: ["error isn't a valid email address."],
+        });
+      } else {
+        return helper.response(inviteData);
+      }
+    });
 
     server.delete("/invites", () => {
       deleted = true;
@@ -95,11 +103,11 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click("#invite-type");
+    await fillIn("#invite-email", "error");
     await click(".invite-link .btn");
     assert.equal(
       find("#modal-alert").text(),
-      I18n.t("user.invited.invite.blank_email")
+      "error isn't a valid email address."
     );
   });
 });
@@ -172,11 +180,9 @@ acceptance("Invites - Email Invites", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click("#invite-type");
-
     assert.ok(find("#invite-email").length, "shows email field");
-
     await fillIn("#invite-email", "test@example.com");
+
     assert.ok(find(".save-invite").length, "shows save without email button");
     await click(".save-invite");
     assert.ok(

@@ -1534,7 +1534,7 @@ en:
           new_title: "Create Invite"
           edit_title: "Edit Invite"
 
-          instructions: "Share this link to instantly grant access to this site:"
+          instructions: "Share this link to instantly grant access to this site"
           copy_link: "copy link"
           expires_in_time: "Expires in %{time}."
           expired_at_time: "Expired at %{time}."
@@ -1542,21 +1542,20 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          restrict_email: "Restrict the invite to one email address"
+          restrict_email: "Restrict to one email address"
 
-          max_redemptions_allowed: "Max number of uses:"
+          max_redemptions_allowed: "Max uses"
 
-          add_to_groups: "Add to groups:"
-          invite_to_topic: "Send to topic on first login:"
-          expires_at: "Expire after:"
-          custom_message: "Optional personal message:"
+          add_to_groups: "Add to groups"
+          invite_to_topic: "Arrive at this topic"
+          expires_at: "Expire after"
+          custom_message: "Optional personal message"
 
           send_invite_email: "Save and Send Email"
           save_invite: "Save Invite"
 
           invite_saved: "Invite saved."
           invite_copied: "Invite link copied."
-          blank_email: "Invite link not copied. Email address is required."
 
         bulk_invite:
           none: "No invitations to display on this page."
