@@ -23,9 +23,7 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
 
   @on("didInsertElement")
   _monitorTrackingState() {
-    this.stateChangeCallbackId = this.topicTrackingState.onStateChange(
-      this._updateTrackingTopics.bind(this)
-    );
+    this.topicTrackingState.onStateChange(() => this._updateTrackingTopics());
   },
 
   @on("willDestroyElement")
