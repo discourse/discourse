@@ -328,8 +328,6 @@ class GroupsController < ApplicationController
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
       end
-    elsif !current_user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
-      raise Discourse::InvalidAccess
     end
 
     emails = []
@@ -339,6 +337,8 @@ class GroupsController < ApplicationController
         existing_user.present? ? users.push(existing_user) : emails.push(email)
       end
     end
+
+    guardian.ensure_can_invite_to_forum!([group]) if emails.present?
 
     if users.empty? && emails.empty?
       raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))

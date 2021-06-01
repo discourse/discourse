@@ -1212,12 +1212,18 @@ describe GroupsController do
       end
 
       it 'does not add users without sufficient permission' do
+        group.add_owner(user)
         sign_in(user)
-        SiteSetting.min_trust_level_to_allow_invite = user.trust_level + 1
-        user2 = Fabricate(:user)
 
-        put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
+        put "/groups/#{group.id}/members.json", params: { usernames: Fabricate(:user).username }
+        expect(response.status).to eq(200)
+      end
 
+      it 'does not send invites if user cannot invite' do
+        group.add_owner(user)
+        sign_in(user)
+
+        put "/groups/#{group.id}/members.json", params: { emails: "test@example.com" }
         expect(response.status).to eq(403)
       end
 
