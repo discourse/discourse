@@ -1568,7 +1568,6 @@ tr_TR:
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
     auto_silence_fast_typers_on_first_post: "Min_first_post_typing_time ile tanışmayan kullanıcıları otomatik olarak susturma"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazıcıları otomatik olarak susturmak için maksimum güven seviyesi"
-    auto_silence_first_post_regex: "Geçerse kullanıcı tarafından ilk gönderinin susturulmasına ve onay kuyruğuna gönderilmesine neden olacak büyük / küçük harfe duyarlı olmayan regex ifade. Örnek: raging | a [bc] a, raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Yalnızca ilk gönderi için geçerlidir."
     reviewable_claiming: "İncelenebilir içeriğin üzerinde işlem yapılabilmesi için hak talebinde bulunulması gerekiyor mu?"
     reviewable_default_topics: "Konuya göre gruplandırılmış incelenebilir içeriği varsayılan olarak göster"
     reviewable_default_visibility: "Bu önceliği karşılamadıkça incelenebilir öğeleri gösterme"

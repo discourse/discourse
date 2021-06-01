@@ -278,12 +278,6 @@ da:
 
           (Og ja, mit brugernavn er stavet _disco_, som i 1970'erne dans dille. Jeg gør [love the nightlife!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Vi kan godt lide at holde vores diskussioner venlige, og vi har brug for din hjælp til at [holde tingene civiliserede](%{guidelines_url}). Hvis du ser et problem, bedes du rapportere det for at lade forfatteren eller [vores hjælpsomme personale](%{about_url}) vide om det privat.
-
-          > :imp: Jeg skrev noget grimt her
-
-          Jeg tror du ved hvad du skal gøre. Gå videre og **rapporter dette indlæg** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende!
         reply: |-
           [Vores personale](%{base_uri}/groups/staff) vil blive underrettet privat om din rapportering. Hvis nok fællesskabsmedlemmer rapporterer et indlæg, skjules det også automatisk som en forholdsregel. (Da jeg faktisk ikke skrev et grimt indlæg :angel:, er jeg gået videre og fjernet rapporteringen for nu.)
         not_found: |-

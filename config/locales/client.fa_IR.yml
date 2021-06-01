@@ -632,8 +632,6 @@ fa_IR:
             password: "رمزعبور"
           settings:
             title: "تنظیمات"
-          mailboxes:
-            disabled: "غیرفعال شده"
         membership:
           title: عضویت
           access: دسترسی

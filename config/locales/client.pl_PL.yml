@@ -732,7 +732,6 @@ pl_PL:
           mailboxes:
             synchronized: "Zsynchronizowana skrzynka pocztowa"
             none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
-            disabled: "wyłączone"
         membership:
           title: Członkostwo
           access: Dostęp
@@ -4692,6 +4691,7 @@ pl_PL:
           flag: "Oflaguj"
           replace: "Zamień"
           tag: "Tag"
+          silence: "Wycisz"
         action_descriptions:
           block: "Zapobiegaj publikacji postów zawierających te słowa. Użytkownicy zobaczą błąd próbując wysłać taki wpis."
           censor: "Zezwalaj na wysyłanie wpisów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."

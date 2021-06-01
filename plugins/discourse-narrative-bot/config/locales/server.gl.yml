@@ -275,12 +275,6 @@ gl:
 
           (E si, o meu nome de usuario escríbese _disco_, como na moda de baile dos anos 70. Eu amo [a vida nocturna!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Gústannos as nosas discusións amábeis e necesitamos a súa axuda para [manter as cousas civilizadas] (%{guidelines_url}). Se ve algún problema, sinálello privadamente ao autor ou [ao noso persoal de axuda] (%{about_url}) para que o saiban.
-
-          > :imp: Escribín algo desagradábel aquí
-
-          Supoño que sabe qué facer. Siga adiante e **marque esta publicación** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como improcedente!
         reply: |-
           [O noso equipo] (%{base_uri}/groups/staff) recibirá unha notificación privada sobre a alerta. Se bastantes membros da comunidade sinalizan unha publicación, tamén se agochará automaticamente por precaución. (Mais como realmente non escribín nada desagradábel :angel:, seguín adiante e retirei a alerta por agora).
         not_found: |-
