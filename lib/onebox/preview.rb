@@ -40,6 +40,11 @@ module Onebox
       engine.data
     end
 
+    def verified_data
+      return {} unless engine
+      engine.verified_data
+    end
+
     def options
       OpenStruct.new(@options)
     end

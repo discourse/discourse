@@ -66,6 +66,10 @@ module Onebox
         to_html
       end
 
+      def verified_data
+        data
+      end
+
       def data
         @data ||= begin
           html_entities = HTMLEntities.new
