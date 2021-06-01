@@ -65,7 +65,7 @@ module Onebox
 
           required_tags = [:title, :description]
           required_tags.each do |tag|
-            if result[tag] == nil || result[tag] == ''
+            if result[tag].blank?
               errors[tag] ||= []
               errors[tag] << 'is blank'
             end
