@@ -1036,7 +1036,8 @@ export default Controller.extend(bufferedProperty("model"), {
         options = {
           action: Composer.CREATE_TOPIC,
           draftKey: post.topic.draft_key,
-          categoryId: this.get("model.category.id"),
+          topicCategoryId: this.get("model.category.id"),
+          prioritizedCategoryId: this.get("model.category.id"),
         };
       }
 

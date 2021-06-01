@@ -172,12 +172,7 @@ const Topic = RestModel.extend({
   @discourseComputed("related_messages")
   relatedMessages(relatedMessages) {
     if (relatedMessages) {
-      const store = this.store;
-
-      return this.set(
-        "related_messages",
-        relatedMessages.map((st) => store.createRecord("topic", st))
-      );
+      return relatedMessages.map((st) => this.store.createRecord("topic", st));
     }
   },
 

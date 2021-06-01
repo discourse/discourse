@@ -757,4 +757,20 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     expect(Topic.last.title).to eq(I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"))
     expect(Topic.last.topic_users.map(&:user_id).sort).to eq([DiscourseNarrativeBot::Base.new.discobot_user.id, recipient.id])
   end
+
+  it "invites to advanced training using the user's effective locale" do
+    SiteSetting.allow_user_locale = true
+    recipient = Fabricate(:user, locale: "de")
+
+    TranslationOverride.upsert!("de", 'discourse_narrative_bot.tl2_promotion_message.subject_template', 'german title')
+    TranslationOverride.upsert!("de", 'discourse_narrative_bot.tl2_promotion_message.text_body_template', 'german body')
+
+    expect {
+      DiscourseEvent.trigger(:system_message_sent, post: Post.last, message_type: 'tl2_promotion_message')
+    }.to change { Topic.count }
+
+    topic = Topic.last
+    expect(topic.title).to eq("german title")
+    expect(topic.first_post.raw).to eq("german body")
+  end
 end

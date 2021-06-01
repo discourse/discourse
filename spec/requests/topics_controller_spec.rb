@@ -2157,6 +2157,28 @@ RSpec.describe TopicsController do
         get "/t/#{topic.slug}/#{topic.id}/#{post_number}.json"
         expect(response.status).to eq(200)
         expect(extract_post_stream).to eq(@post_ids[-2..-1])
+
+        TopicView.stubs(:chunk_size).returns(3)
+
+        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
+        expect(response.status).to eq(200)
+        expect(extract_post_stream).to eq(@post_ids[0..2])
+
+        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
+        expect(response.status).to eq(200)
+        expect(extract_post_stream).to eq(@post_ids[3..3])
+
+        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 3 }
+        expect(response.status).to eq(404)
+
+        TopicView.stubs(:chunk_size).returns(4)
+
+        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
+        expect(response.status).to eq(200)
+        expect(extract_post_stream).to eq(@post_ids[0..3])
+
+        get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
+        expect(response.status).to eq(404)
       end
     end
 

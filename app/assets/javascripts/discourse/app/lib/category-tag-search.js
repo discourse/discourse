@@ -33,7 +33,6 @@ function searchTags(term, categories, limit) {
         function () {
           oldSearch = $.ajax(getURL("/tags/filter/search"), {
             type: "GET",
-            cache: true,
             data: { limit: limit, q },
           });
 
