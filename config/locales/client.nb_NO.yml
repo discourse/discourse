@@ -476,8 +476,6 @@ nb_NO:
             password: "Passord"
           settings:
             title: "Innstillinger"
-          mailboxes:
-            disabled: "deaktivert"
         membership:
           title: Medlemskap
           access: Tilgang
@@ -3145,6 +3143,7 @@ nb_NO:
           censor: "Sensurer"
           require_approval: "Krev godkjenning"
           flag: "Flagg"
+          silence: "Demp"
         action_descriptions:
           block: "Forhindre innlegg som inneholder disse ordene, fra å bli opprettet. Brukeren vil se en feilmelding når vedkommende prøver å opprette innlegget sitt."
           censor: "Tillat innlegg som inneholder disse ordene, men erstatt dem med bokstaver som skjuler de sensurerte ordene."

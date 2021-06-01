@@ -530,8 +530,6 @@ lt:
             password: "Slaptažodis"
           settings:
             title: "Nustatymai"
-          mailboxes:
-            disabled: "uždrausta"
         membership:
           title: Narystė
           access: Prieiga
@@ -2896,6 +2894,7 @@ lt:
           block: "Blokuoti"
           require_approval: "Reikalauja patvirtinimo"
           flag: "Pranešti"
+          silence: "Nutildyti"
         form:
           add: "Pridėti"
           success: "Sėkmingai"

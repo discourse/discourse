@@ -711,6 +711,7 @@ class UsersController < ApplicationController
   def password_reset_show
     expires_now
     token = params[:token]
+
     password_reset_find_user(token, committing_change: false)
 
     if !@error

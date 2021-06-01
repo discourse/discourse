@@ -3470,6 +3470,7 @@ cs:
           censor: "Cenzurovat "
           require_approval: "Vyžádat schválení"
           flag: "Nahlášení"
+          silence: "Ztišit"
         action_descriptions:
           block: "Zabránit přidání příspěvků obsahující tato slova. Uživatel uvidí chybovou hlášku ve chvíli, kdy se pokusí odeslat svůj příspěvek."
           censor: "Povolit příspěvky obsahující tato slova, ale nahradit je symboly, které skryjí cenzurovaná slova."

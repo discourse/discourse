@@ -1419,7 +1419,6 @@ zh_TW:
     min_first_post_typing_time: "使用者發表第一帖時打字的最小時間（以毫秒計），如果沒有達到該閾值，貼文將自動進入需要批准隊列。設置為 0 禁用（不推薦）"
     auto_silence_fast_typers_on_first_post: "自動禁言不符合min_first_post_typing_time的使用者"
     auto_silence_fast_typers_max_trust_level: "自動封鎖輸入過於快速的使用者的最高信任等級"
-    auto_silence_first_post_regex: "大小寫不相關的正則表達式，如果匹配成功，會導致該使用者不能發表第一帖，而是進入審核隊列。例如：求下載|謝謝樓[主豬]，會阻止包含求下載、謝謝樓主或謝謝樓豬的話題。該選項只適用於第一篇貼文。"
     reviewable_claiming: "是否需要審核內容後，才能對其進行操作？"
     reviewable_default_topics: "預設值為顯示按討論話題分類的已審核內容"
     reviewable_default_visibility: "除非符合此優先等級，否則不要顯示可審閱的項目"

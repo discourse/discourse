@@ -1541,7 +1541,6 @@ ca:
     min_first_post_typing_time: "Nombre mínim de temps en mil·lisegons que un usuari ha d'escriure durant la primera publicació. Si no s'assoleix el límit, la publicació passarà automàticament a la cua de les que requereixen aprovació. Poseu a 0 per desactivar (no recomanat)."
     auto_silence_fast_typers_on_first_post: "Silencia automàticament els usuaris que no compleixin min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivell de confiança sota el qual se silencien automàticament usuaris que escriguin massa de pressa"
-    auto_silence_first_post_regex: "Expressió regular insensible a les majúscules i minúscules que, si es compleix, silenciarà la primera publicació de l'usuari i l'enviarà a la cua d'aprovació. Exemple: \"enrabia(t|da|ts|des)\" farà que totes les publicacions que continguin \"enrabiat\", \"enrabiada\", \"enrabiats\" o \"enrabiades\" se silenciaran. Solament s'aplica a la primera publicació."
     reviewable_claiming: "Cal que es reclami el contingut revisable abans que s'hi pugui actuar?"
     reviewable_default_topics: "Per defecte, mostra el contingut revisable agrupat per temes"
     reviewable_default_visibility: "No mostris els elements revisables llevat que compleixin aquesta prioritat"

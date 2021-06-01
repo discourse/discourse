@@ -615,8 +615,6 @@ hu:
             title: "Beállítások"
             allow_unknown_sender_topic_replies: "Engedélyezze az ismeretlen feladóktól érkező témaválaszokat."
             allow_unknown_sender_topic_replies_hint: "Lehetővé teszi az ismeretlen feladók számára, hogy válaszoljanak a csoport témáira. Ha ez nincs engedélyezve, akkor az e-mail címekről érkező válaszok, amelyek még nem szerepelnek az IMAP e-mail szálában, vagy meghívást kaptak a témára, új témát hoznak létre."
-          mailboxes:
-            disabled: "kikapcsolva"
         membership:
           title: Tagság
           access: Hozzáférés
@@ -3291,6 +3289,7 @@ hu:
           censor: "Cenzúra"
           require_approval: "Jóváhagyást igényel"
           flag: "Jelölés"
+          silence: "Elnémítás"
         action_descriptions:
           flag: "Engedélyezze az ezeket a szavakat tartalmazó bejegyzéseket, de nem megfelelőnek jelölje őket, így a moderátorok átnézhetik azokat."
         form:

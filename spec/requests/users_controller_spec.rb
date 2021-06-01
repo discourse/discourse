@@ -64,6 +64,7 @@ describe UsersController do
     context 'valid token' do
       context 'welcome message' do
         it 'enqueues a welcome message if the user object indicates so' do
+          SiteSetting.send_welcome_message = true
           user.update(active: false)
           put "/u/activate-account/#{token}"
           expect(response.status).to eq(200)

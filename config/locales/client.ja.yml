@@ -585,7 +585,6 @@ ja:
           mailboxes:
             synchronized: "同期されたメールボックス"
             none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
-            disabled: "無効"
         membership:
           title: メンバーシップ
           access: アクセス

@@ -1,3 +1,5 @@
+//= require ember_jquery
+
 //= require logster
 
 //= require template_include.js

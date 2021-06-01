@@ -1787,7 +1787,6 @@ es:
     min_first_post_typing_time: "Período mínimo en milisegundos durante el que un usuario debe escribir en su primera publicación, si no se llega a este umbral, la publicación entrará automáticamente a la cola de moderación. Establece esta opción a 0 para deshabilitar (no recomendado)."
     auto_silence_fast_typers_on_first_post: "Silenciar automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar usuarios que escriban demasiado rápido en su primera publicación"
-    auto_silence_first_post_regex: "Expresión regular (que ignora mayúsculas/minúsculas) que, si coincide con la primera publicación de un usuario, lo silenciará y mandará el mensaje a la cola de aprobación. Por ejemplo: enfadado|a[bc]a hará que todas las primeras publicaciones que contengan enfadado, aba o aca se manden a la cola y se silencie al autor. Solo se ejecutará en el primer mensaje de cada usuario."
     reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar sobre el mismo?"
     reviewable_default_topics: "Mostrar contenido revisable agrupado por tema por defecto"
     reviewable_default_visibility: "No muestre elementos revisables a menos que cumplan con esta prioridad"

@@ -113,6 +113,7 @@ module SvgSprite
     "far-moon",
     "far-smile",
     "far-square",
+    "far-star",
     "far-sun",
     "far-thumbs-down",
     "far-thumbs-up",

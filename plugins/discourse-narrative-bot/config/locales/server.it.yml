@@ -274,12 +274,6 @@ it:
 
           (E sì, il mio username inizia con _disco_, come nella mania dance degli anni 70. Io [amo la vita notturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Ci piacciono le discussioni amichevoli e abbiamo bisogno del tuo aiuto per [mantenere le cose civili](%{guidelines_url}). Se noti un problema, per favore segnalalo, affinché l'autore, o il [nostro staff](%{about_url}) lo vengano a sapere.
-
-          > :imp: Ho scritto qualcosa di brutto qui
-
-          Penso che tu sappia cosa fare. Va avanti e **segnala questo messaggio** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> come inappropriato!
         reply: |-
           [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-

@@ -315,8 +315,6 @@ be:
             password: "Пароль"
           settings:
             title: "Налады"
-          mailboxes:
-            disabled: "адключана"
         membership:
           access: доступ
         categories:

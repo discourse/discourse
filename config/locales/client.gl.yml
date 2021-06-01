@@ -640,7 +640,6 @@ gl:
           mailboxes:
             synchronized: "Caixa de correo sincronizada"
             none_found: "Non se atoparon caixas de correo nesta conta de correo electrónico."
-            disabled: "desactivado"
         membership:
           title: Incorporación
           access: Acceso
@@ -4334,6 +4333,7 @@ gl:
           flag: "Sinalar"
           replace: "Substituír"
           tag: "Etiqueta"
+          silence: "Silenciar"
         action_descriptions:
           block: "Evitar as publicacións que conteñen estas palabras. O usuario verá unha mensaxe de erro cando tente enviar a publicación."
           censor: "Permitir publicacións que conteñan estas palabras pero substitúeas por caracteres que oculten as palabras censuradas."

@@ -504,8 +504,6 @@ et:
             password: "Parool"
           settings:
             title: "Seaded"
-          mailboxes:
-            disabled: "välja lülitatud"
         membership:
           title: Liikmelisus
           access: Juurdepääs
@@ -3151,6 +3149,7 @@ et:
           censor: "Tsenseeri"
           require_approval: "Nõua heakskiitu"
           flag: "Tähista"
+          silence: "Vaigista"
         form:
           placeholder_regexp: "regulaaravaldis"
           add: "isa"

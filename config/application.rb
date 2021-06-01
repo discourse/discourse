@@ -175,7 +175,6 @@ module Discourse
       embed-application.js
       discourse/tests/theme_qunit_helper.js
       discourse/tests/theme_qunit_vendor.js
-      discourse/tests/theme_qunit_ember_jquery.js
       discourse/tests/test_starter.js
     }
 
