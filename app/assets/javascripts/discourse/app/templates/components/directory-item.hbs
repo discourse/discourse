@@ -1,6 +1,12 @@
 <td>{{user-info user=item.user}}</td>
 {{#each columns as |column|}}
-  <td>{{directory-item-value item column}}</td>
+  <td>
+    {{#if column.automatic}}
+      {{directory-item-value item column}}
+    {{else}}
+      {{directory-item-user-field-value item column}}
+    {{/if}}
+  </td>
 {{/each}}
 
 {{#if showTimeRead}}

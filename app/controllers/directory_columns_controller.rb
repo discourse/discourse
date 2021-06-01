@@ -4,7 +4,7 @@ class DirectoryColumnsController < ApplicationController
   requires_login
 
   def index
-    raise Discourse::InvalidAccess unless guardian.is_staff?
+    raise Discourse::NotFound unless guardian.is_staff?
 
     ensure_user_fields_have_columns
 
@@ -12,8 +12,8 @@ class DirectoryColumnsController < ApplicationController
     render_json_dump(directory_columns: serialize_data(columns, DirectoryColumnSerializer))
   end
 
-  def save
-    raise Discourse::InvalidAccess unless guardian.is_staff?
+  def update
+    raise Discourse::NotFound unless guardian.is_staff?
     params.require(:directory_columns)
 
     directory_columns = DirectoryColumn.all
@@ -32,7 +32,9 @@ class DirectoryColumnsController < ApplicationController
 
   def ensure_user_fields_have_columns
     user_fields_without_column =
-      UserField.left_outer_joins(:directory_column).where(directory_column: { user_field_id: nil })
+      UserField.left_outer_joins(:directory_column)
+        .where(directory_column: { user_field_id: nil })
+        .where("show_on_profile=? OR show_on_user_card=?", true, true)
 
     return unless user_fields_without_column.count > 0
 

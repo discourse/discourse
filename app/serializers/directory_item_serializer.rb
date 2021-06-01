@@ -4,6 +4,17 @@ class DirectoryItemSerializer < ApplicationSerializer
 
   class UserSerializer < UserNameSerializer
     include UserPrimaryGroupMixin
+
+    attributes :user_fields
+
+    def user_fields
+      # allowed_keys = scope.allowed_user_field_ids(object)
+      object.user_fields(@options[:user_field_ids])
+    end
+
+    def include_user_fields?
+      user_fields.present?
+    end
   end
 
   attributes :id,
@@ -23,5 +34,4 @@ class DirectoryItemSerializer < ApplicationSerializer
   def include_time_read?
     object.period_type == DirectoryItem.period_types[:all]
   end
-
 end

@@ -32,6 +32,14 @@ class DirectoryItemsController < ApplicationController
       result = result.order("directory_items.#{order} #{dir}, directory_items.id")
     elsif params[:order] === 'username'
       result = result.order("users.#{order} #{dir}, directory_items.id")
+    else
+      user_field = UserField.find_by(name: params[:order])
+      if user_field
+        result = result
+          .joins(:user)
+          .joins("LEFT OUTER JOIN user_custom_fields ON user_custom_fields.user_id = users.id AND user_custom_fields.name = 'user_field_#{user_field.id}'")
+          .order("user_custom_fields.name = 'user_field_#{user_field.id}' ASC, user_custom_fields.value #{dir}")
+      end
     end
 
     if period_type == DirectoryItem.period_types[:all]
@@ -84,7 +92,14 @@ class DirectoryItemsController < ApplicationController
     end
 
     last_updated_at = DirectoryItem.last_updated_at(period_type)
-    render_json_dump(directory_items: serialize_data(result, DirectoryItemSerializer),
+
+    serializer_opts = {}
+    if params[:user_field_ids]
+      serializer_opts[:user_field_ids] = params[:user_field_ids]&.split("|")&.map(&:to_i)
+    end
+
+    serialized = serialize_data(result, DirectoryItemSerializer, serializer_opts)
+    render_json_dump(directory_items: serialized,
                      meta: {
                         last_updated_at: last_updated_at,
                         total_rows_directory_items: result_count,

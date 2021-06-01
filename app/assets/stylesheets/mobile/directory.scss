@@ -3,6 +3,10 @@
     font-size: $font-up-1;
   }
 
+  .open-edit-columns-btn {
+    margin: -0.7em 0 0.5em;
+  }
+
   &.users-directory {
     .filter-name {
       width: 100%;
@@ -48,4 +52,8 @@
       }
     }
   }
+}
+
+.edit-user-directory-columns-modal .modal-inner-container {
+  width: 90%;
 }

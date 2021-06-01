@@ -35,7 +35,7 @@ export default Controller.extend(ModalFunctionality, {
       ),
     };
 
-    ajax("directory-columns.json", { type: "POST", data })
+    ajax("directory-columns.json", { type: "PUT", data })
       .then(() => {
         reload();
       })

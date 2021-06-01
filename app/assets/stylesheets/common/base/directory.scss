@@ -1,5 +1,11 @@
 .directory {
   margin-bottom: 100px;
+  overflow-x: auto;
+
+  .open-edit-columns-btn {
+    vertical-align: top;
+    padding: 0.45em 0.8em;
+  }
 
   &.users-directory {
     .period-chooser {
@@ -60,6 +66,13 @@
       }
       .time-read {
         white-space: nowrap;
+      }
+      .user-field-value {
+        font-size: var(--font-up-1);
+        color: var(--primary-medium);
+        @media screen and (max-width: $small-width) {
+          font-size: $font-0;
+        }
       }
     }
 
@@ -124,4 +137,8 @@
       margin-right: 0;
     }
   }
+}
+
+.edit-user-directory-columns-modal .modal-inner-container {
+  min-width: 450px;
 }

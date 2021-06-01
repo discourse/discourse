@@ -29,7 +29,7 @@
               {{d-button
                 icon="wrench"
                 action=(action "showEditColumnsModal")
-                class="btn-default"
+                class="btn-default open-edit-columns-btn"
               }}
             {{/if}}
           </div>
@@ -42,7 +42,7 @@
               <thead>
                 {{table-header-toggle field="username" order=order asc=asc}}
                 {{#each columns as |column|}}
-                  {{table-header-toggle field=column.name icon=column.icon order=order asc=asc}}
+                  {{table-header-toggle field=column.name icon=column.icon order=order asc=asc translated=column.user_field_id}}
                 {{/each}}
 
                 {{#if showTimeRead}}
