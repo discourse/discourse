@@ -273,12 +273,18 @@ class TopicTrackingState
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
                   ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
                END, u.created_at, :min_date)",
-                now: DateTime.now,
-                last_visit: User::NewTopicDuration::LAST_VISIT,
-                always: User::NewTopicDuration::ALWAYS,
-                default_duration: SiteSetting.default_other_new_topic_duration_minutes,
-                min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
+               treat_as_new_topic_params
               ).where_clause.ast.to_sql
+  end
+
+  def self.treat_as_new_topic_params
+    {
+      now: DateTime.now,
+      last_visit: User::NewTopicDuration::LAST_VISIT,
+      always: User::NewTopicDuration::ALWAYS,
+      default_duration: SiteSetting.default_other_new_topic_duration_minutes,
+      min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
+    }
   end
 
   def self.include_tags_in_report?
@@ -304,10 +310,13 @@ class TopicTrackingState
 
     report = DB.query(
       sql + "\n\n LIMIT :max_topics",
-      user_id: user.id,
-      topic_id: topic_id,
-      min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
-      max_topics: TopicTrackingState::MAX_TOPICS
+      {
+        user_id: user.id,
+        topic_id: topic_id,
+        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
+        max_topics: TopicTrackingState::MAX_TOPICS,
+      }
+      .merge(treat_as_new_topic_params)
     )
 
     report
@@ -403,7 +412,16 @@ class TopicTrackingState
            last_read_post_number,
            c.id as category_id,
            tu.notification_level,
-           us.first_unread_at"
+           us.first_unread_at,
+           GREATEST(
+              CASE
+              WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
+              WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(
+                u.previous_visit_at,u.created_at
+              )
+              ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
+              END, u.created_at, :min_date
+           ) AS treat_as_new_topic_start_date"
 
     category_filter =
       if admin
