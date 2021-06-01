@@ -25,7 +25,6 @@ discourseModule(
     });
 
     componentTest("shows default options", {
-      skip: true,
       template: hbs`{{future-date-input-selector}}`,
 
       async test(assert) {
@@ -48,7 +47,6 @@ discourseModule(
     });
 
     componentTest("doesn't show 'Next Week' on Sundays", {
-      skip: true,
       template: hbs`{{future-date-input-selector}}`,
 
       beforeEach() {
