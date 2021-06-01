@@ -166,6 +166,10 @@
       color: var(--primary-medium);
     }
   }
+  .header-title .private-message-glyph-wrapper {
+    float: left;
+    margin-right: 0.25em;
+  }
 }
 
 a.badge-category {
