@@ -677,8 +677,7 @@ describe PostMover do
             add_moderator_post_to topic, Post.types[:small_action]
 
             posts_to_move = [p1.id, p2.id, p3.id, p4.id]
-            moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
-            expect(moved_to).to be_present
+            topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
 
             topic.reload
             expect(topic).to be_closed
