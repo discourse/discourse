@@ -938,6 +938,43 @@ describe PostDestroyer do
     end
   end
 
+  describe 'internal links' do
+    fab!(:topic)  { Fabricate(:topic) }
+    let!(:second_post) { Fabricate(:post, topic: topic) }
+    fab!(:other_topic)  { Fabricate(:topic) }
+    let!(:other_post) { Fabricate(:post, topic: other_topic) }
+    fab!(:user) { Fabricate(:user) }
+    let!(:base_url) { URI.parse(Discourse.base_url) }
+    let!(:guardian) { Guardian.new }
+    let!(:url) { "http://#{base_url.host}/t/#{other_topic.slug}/#{other_topic.id}/#{other_post.post_number}" }
+
+    it 'should destroy internal links when user deletes own post' do
+      new_post = Post.create!(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
+      TopicLink.extract_from(new_post)
+
+      link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(link_counts.count).to eq(1)
+
+      PostDestroyer.new(user, new_post).destroy
+
+      updated_link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(updated_link_counts.count).to eq(0)
+    end
+
+    it 'should destroy internal links when moderator deletes post' do
+      new_post = Post.create!(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
+      TopicLink.extract_from(new_post)
+      link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(link_counts.count).to eq(1)
+
+      PostDestroyer.new(moderator, new_post).destroy
+      TopicLink.extract_from(new_post)
+      updated_link_counts = TopicLink.counts_for(guardian, other_topic, [other_post])
+
+      expect(updated_link_counts.count).to eq(0)
+    end
+  end
+
   describe '#delete_with_replies' do
     let(:reporter) { Discourse.system_user }
     fab!(:post) { Fabricate(:post) }

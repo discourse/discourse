@@ -107,6 +107,7 @@ describe TopicLink do
       fab!(:other_topic) do
         Fabricate(:topic, user: user)
       end
+      fab!(:moderator) { Fabricate(:moderator) }
 
       let(:post) do
         other_topic.posts.create(user: user, raw: "some content")
@@ -184,6 +185,21 @@ describe TopicLink do
         expect(reflection.link_topic_id).to eq(topic.id)
         expect(reflection.link_post_id).to eq(linked_post.id)
         expect(reflection.user_id).to eq(link.user_id)
+      end
+
+      it "doesn't work for a deleted post" do
+        post
+        url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}"
+
+        topic.posts.create(user: user, raw: 'initial post')
+        linked_post = topic.posts.create(user: user, raw: "Link to another topic: #{url}")
+        TopicLink.extract_from(linked_post)
+        expect(other_topic.reload.topic_links.where(link_post_id: linked_post.id).count).to eq(1)
+
+        PostDestroyer.new(moderator, linked_post).destroy
+        TopicLink.extract_from(linked_post)
+        expect(other_topic.reload.topic_links.where(link_post_id: linked_post.id)).to be_blank
+
       end
     end
 
