@@ -224,19 +224,21 @@ module SvgSprite
     get_set_cache("custom_svg_sprites_#{Theme.transform_ids(theme_ids).join(',')}") do
       custom_sprite_paths = Dir.glob("#{Rails.root}/plugins/*/svg-icons/*.svg")
 
-      ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_ids))
-        .pluck(:upload_id).each do |upload_id|
+      if theme_ids.present?
+        ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_ids))
+          .pluck(:upload_id).each do |upload_id|
 
-        upload = Upload.find(upload_id) rescue nil
+          upload = Upload.find(upload_id) rescue nil
 
-        if Discourse.store.external?
-          external_copy = Discourse.store.download(upload) rescue nil
-          original_path = external_copy.try(:path)
-        else
-          original_path = Discourse.store.path_for(upload)
+          if Discourse.store.external?
+            external_copy = Discourse.store.download(upload) rescue nil
+            original_path = external_copy.try(:path)
+          else
+            original_path = Discourse.store.path_for(upload)
+          end
+
+          custom_sprite_paths << original_path if original_path.present?
         end
-
-        custom_sprite_paths << original_path if original_path.present?
       end
 
       custom_sprite_paths
@@ -274,7 +276,33 @@ module SvgSprite
   end
 
   def self.sprite_sources(theme_ids)
-    CORE_SVG_SPRITES | custom_svg_sprites(theme_ids)
+    sources = CORE_SVG_SPRITES
+
+    if theme_ids.present?
+      sources = sources + custom_svg_sprites(theme_ids)
+    end
+
+    sources
+  end
+
+  def self.core_svgs
+    @core_svgs ||= begin
+      symbols = {}
+
+      CORE_SVG_SPRITES.each do |filename|
+        svg_filename = "#{File.basename(filename, ".svg")}"
+
+        Nokogiri::XML(File.open(filename)) do |config|
+          config.options = Nokogiri::XML::ParseOptions::NOBLANKS
+        end.css('symbol').each do |sym|
+          icon_id = prepare_symbol(sym, svg_filename)
+          sym.attributes['id'].value = icon_id
+          symbols[icon_id] = sym.to_xml
+        end
+      end
+
+      symbols
+    end
   end
 
   def self.bundle(theme_ids = [])
@@ -287,19 +315,28 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 <svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
 """.dup
 
-    sprite_sources(theme_ids).each do |fname|
-      svg_file = Nokogiri::XML(File.open(fname)) do |config|
-        config.options = Nokogiri::XML::ParseOptions::NOBLANKS
+    core_svgs.each do |icon_id, sym|
+      if icons.include?(icon_id)
+        svg_subset << sym
       end
+    end
 
-      svg_filename = "#{File.basename(fname, ".svg")}"
+    if theme_ids.present?
+      custom_svg_sprites(theme_ids).each do |fname|
+        svg_file = Nokogiri::XML(File.open(fname)) do |config|
+          config.options = Nokogiri::XML::ParseOptions::NOBLANKS
+        end
 
-      svg_file.css('symbol').each do |sym|
-        icon_id = prepare_symbol(sym, svg_filename)
-        if icons.include? icon_id
-          sym.attributes['id'].value = icon_id
-          sym.css('title').each(&:remove)
-          svg_subset << sym.to_xml
+        svg_filename = "#{File.basename(fname, ".svg")}"
+
+        svg_file.css("symbol").each do |sym|
+          icon_id = prepare_symbol(sym, svg_filename)
+
+          if icons.include? icon_id
+            sym.attributes['id'].value = icon_id
+            sym.css('title').each(&:remove)
+            svg_subset << sym.to_xml
+          end
         end
       end
     end
@@ -404,6 +441,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.theme_icons(theme_ids)
+    return [] if theme_ids.blank?
+
     theme_icon_settings = []
 
     # Need to load full records for default values
@@ -421,6 +460,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.custom_icons(theme_ids)
+    return [] if theme_ids.blank?
+
     # Automatically register icons in sprites added via themes or plugins
     icons = []
     custom_svg_sprites(theme_ids).each do |fname|
