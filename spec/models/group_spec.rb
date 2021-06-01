@@ -546,7 +546,7 @@ describe Group do
     expect(user.groups.map(&:name).sort).to eq ["trust_level_0"]
   end
 
-  it "generates an even when applying group from trust level change" do
+  it "generates an event when applying group from trust level change" do
     called = nil
     block = Proc.new { |user, group| called = { user_id: user.id, group_id: group.id } }
 
