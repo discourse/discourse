@@ -914,9 +914,9 @@ module Discourse
 
     schema_cache = ActiveRecord::Base.connection.schema_cache
 
-    # load up schema cache for all multisite assuming all dbs have
-    # an identical schema
     RailsMultisite::ConnectionManagement.safe_each_connection do
+      # load up schema cache for all multisite assuming all dbs have
+      # an identical schema
       dup_cache = schema_cache.dup
       # this line is not really needed, but just in case the
       # underlying implementation changes lets give it a shot
@@ -948,6 +948,9 @@ module Discourse
       },
       Thread.new {
         LetterAvatar.image_magick_version
+      },
+      Thread.new {
+        SvgSprite.core_svgs
       }
     ].each(&:join)
   ensure
