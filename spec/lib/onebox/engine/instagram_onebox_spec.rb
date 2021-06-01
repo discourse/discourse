@@ -31,16 +31,15 @@ describe Onebox::Engine::InstagramOnebox do
       stub_request(:get, api_link).to_return(status: 200, body: onebox_response("instagram"))
       stub_request(:get, "https://api.instagram.com/oembed/?url=https://www.instagram.com/p/CARbvuYDm3Q")
         .to_return(status: 200, body: onebox_response("instagram"))
+      @previous_options = Onebox.options.to_h
+      Onebox.options = { facebook_app_access_token: access_token }
     end
 
-    around do |example|
-      previous_options = Onebox.options.to_h
-      example.run
-      Onebox.options = previous_options
+    after do
+      Onebox.options = @previous_options
     end
 
     it "includes title" do
-      Onebox.options = { facebook_app_access_token: access_token }
       onebox = described_class.new(link)
       html = onebox.to_html
 
@@ -48,7 +47,6 @@ describe Onebox::Engine::InstagramOnebox do
     end
 
     it "includes image" do
-      Onebox.options = { facebook_app_access_token: access_token }
       onebox = described_class.new(link)
       html = onebox.to_html
 
@@ -62,6 +60,12 @@ describe Onebox::Engine::InstagramOnebox do
 
     before do
       stub_request(:get, api_link).to_return(status: 200, body: onebox_response("instagram_old_onebox"))
+      @previous_options = Onebox.options.to_h
+      Onebox.options = {}
+    end
+
+    after do
+      Onebox.options = @previous_options
     end
 
     it "includes title" do
