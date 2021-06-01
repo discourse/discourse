@@ -6,6 +6,7 @@ class SiteSerializer < ApplicationSerializer
     :default_archetype,
     :notification_types,
     :post_types,
+    :trust_levels,
     :groups,
     :filters,
     :periods,
@@ -32,7 +33,6 @@ class SiteSerializer < ApplicationSerializer
   )
 
   has_many :categories, serializer: SiteCategorySerializer, embed: :objects
-  has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
   has_many :user_fields, embed: :objects, serializer: UserFieldSerializer
   has_many :auth_providers, embed: :objects, serializer: AuthProviderSerializer

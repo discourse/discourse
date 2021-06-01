@@ -21,7 +21,7 @@ class Site
   end
 
   def trust_levels
-    TrustLevel.all
+    TrustLevel.levels
   end
 
   def user_fields
