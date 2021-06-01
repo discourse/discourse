@@ -546,6 +546,22 @@ describe Group do
     expect(user.groups.map(&:name).sort).to eq ["trust_level_0"]
   end
 
+  it "generates an even when applying group from trust level change" do
+    called = nil
+    block = Proc.new { |user, group| called = { user_id: user.id, group_id: group.id } }
+
+    begin
+      DiscourseEvent.on(:user_added_to_group, &block)
+
+      user = Fabricate(:user, trust_level: 2)
+      Group.user_trust_level_change!(user.id, 2)
+
+      expect(called).to eq(user_id: user.id, group_id: Group.find_by(name: 'trust_level_2').id)
+    ensure
+      DiscourseEvent.off(:user_added_to_group, &block)
+    end
+  end
+
   context "group management" do
     fab!(:group) { Fabricate(:group) }
 
