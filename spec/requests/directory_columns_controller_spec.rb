@@ -53,7 +53,6 @@ describe DirectoryColumnsController do
       put "/directory-columns.json", params: params
 
       expect(response.status).to eq(404)
-
     end
   end
 end
