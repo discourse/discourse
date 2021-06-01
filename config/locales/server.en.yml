@@ -717,16 +717,8 @@ en:
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
   trust_levels:
-    newuser:
-      title: "new user"
-    basic:
-      title: "basic user"
-    member:
-      title: "member"
-    regular:
-      title: "regular"
-    leader:
-      title: "leader"
+    admin: "Admin"
+    staff: "Staff"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
 
   post:
@@ -994,7 +986,7 @@ en:
     imap_authentication_error: "There was an issue with the IMAP credentials provided, check the username and password and try again."
     imap_no_response_error: "An error occurred when communicating with the IMAP server. %{message}"
     smtp_authentication_error: "There was an issue with the SMTP credentials provided, check the username and password and try again."
-    authentication_error_gmail_app_password: "Application-specific password required. Learn more at <a target=\"_blank\" href=\"https://support.google.com/accounts/answer/185833\">this Google Help article</a>"
+    authentication_error_gmail_app_password: 'Application-specific password required. Learn more at <a target="_blank" href="https://support.google.com/accounts/answer/185833">this Google Help article</a>'
     smtp_server_busy_error: "The SMTP server is currently busy, try again later."
     smtp_unhandled_error: "There was an unhandled error when communicating with the SMTP server. %{message}"
     imap_unhandled_error: "There was an unhandled error when communicating with the IMAP server. %{message}"
