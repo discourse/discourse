@@ -770,14 +770,16 @@ export default Controller.extend({
 
     // TODO: This should not happen in model
     const imageSizes = {};
-    $("#reply-control .d-editor-preview img").not('.onebox.allowlistedgeneric img').each((i, e) => {
-      const $img = $(e);
-      const src = $img.prop("src");
+    $("#reply-control .d-editor-preview img")
+      .not(".onebox.allowlistedgeneric img")
+      .each((i, e) => {
+        const $img = $(e);
+        const src = $img.prop("src");
 
-      if (src && src.length) {
-        imageSizes[src] = { width: $img.width(), height: $img.height() };
-      }
-    });
+        if (src && src.length) {
+          imageSizes[src] = { width: $img.width(), height: $img.height() };
+        }
+      });
 
     const promise = composer
       .save({ imageSizes, editReason: this.editReason })
