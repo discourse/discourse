@@ -603,7 +603,8 @@ class Group < ActiveRecord::Base
     desired.each do |id|
       if group = find_by(id: id)
         unless GroupUser.where(group_id: id, user_id: user_id).exists?
-          group.group_users.create!(user_id: user_id)
+          group_user = group.group_users.create!(user_id: user_id)
+          DiscourseEvent.trigger(:user_added_to_group, group_user.user, group, automatic: true)
         end
       else
         name = AUTO_GROUP_IDS[trust_level]
