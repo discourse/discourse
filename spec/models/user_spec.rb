@@ -1993,8 +1993,8 @@ describe User do
     end
 
     it "triggers an event" do
-      event = DiscourseEvent.track_events { user.unstage! }.first
-      expect(event[:event_name]).to eq(:user_unstaged)
+      event = DiscourseEvent.track(:user_unstaged) { user.unstage! }
+      expect(event).to be_present
       expect(event[:params].first).to eq(user)
     end
   end
