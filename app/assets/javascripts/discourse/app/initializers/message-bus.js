@@ -2,10 +2,7 @@ import { isProduction, isTesting } from "discourse-common/config/environment";
 // Initialize the message bus to receive messages.
 import getURL from "discourse-common/lib/get-url";
 import { handleLogoff } from "discourse/lib/ajax";
-import {
-  onPresenceChange,
-  default as userPresent,
-} from "discourse/lib/user-presence";
+import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 const CONNECTIVITY_ERROR_CLASS = "message-bus-offline";
