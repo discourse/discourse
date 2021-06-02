@@ -770,7 +770,8 @@ export default Controller.extend({
 
     // TODO: This should not happen in model
     const imageSizes = {};
-    document.querySelectorAll("#reply-control .d-editor-preview img:not(.onebox img)")
+    document
+      .querySelectorAll("#reply-control .d-editor-preview img:not(.onebox img)")
       .forEach((e) => {
         const src = e.src;
 
