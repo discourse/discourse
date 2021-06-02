@@ -8,8 +8,6 @@
 # => RUN_SMOKE_TESTS  executes the smoke tests instead of the regular tests from docker.rake
 # See lib/tasks/docker.rake and lib/tasks/smoke_test.rake for more information
 
-puts "travis_fold:end:starting_docker_container" if ENV["TRAVIS"]
-
 def log(message)
   puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
 end
@@ -22,24 +20,17 @@ def run_or_fail(command)
 end
 
 unless ENV['NO_UPDATE']
-  puts "travis_fold:start:pulling_latest_discourse" if ENV["TRAVIS"]
-
   run_or_fail("git reset --hard")
-
   run_or_fail("git fetch")
 
   checkout = ENV['COMMIT_HASH'] || "FETCH_HEAD"
   run_or_fail("LEFTHOOK=0 git checkout #{checkout}")
 
-  puts "travis_fold:end:pulling_latest_discourse" if ENV["TRAVIS"]
-  puts "travis_fold:start:bundle" if ENV["TRAVIS"]
-
   run_or_fail("bundle")
-
-  puts "travis_fold:end:bundle" if ENV["TRAVIS"]
 end
 
 log("Running tests")
+
 if ENV['RUN_SMOKE_TESTS']
   run_or_fail("bundle exec rake smoke:test")
 else
