@@ -50,7 +50,7 @@ class SiteSerializer < ApplicationSerializer
 
   def user_color_schemes
     cache_fragment("user_color_schemes") do
-      schemes = ColorScheme.where('user_selectable').order(:name)
+      schemes = ColorScheme.includes(:color_scheme_colors).where('user_selectable').order(:name)
       ActiveModel::ArraySerializer.new(schemes, each_serializer: ColorSchemeSelectableSerializer).as_json
     end
   end
