@@ -43,4 +43,19 @@ describe CategorySerializer do
       expect(json[:notification_level]).to eq(NotificationLevels.all[:watching])
     end
   end
+
+  describe "available groups" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+
+    it "not included for a regular user" do
+      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
+      expect(json[:available_groups]).to eq(nil)
+    end
+
+    it "included for an admin" do
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+      expect(json[:available_groups]).to eq(Group.order(:name).pluck(:name) - ['everyone'])
+    end
+  end
 end

@@ -45,6 +45,10 @@ class CategorySerializer < SiteCategorySerializer
     end
   end
 
+  def include_available_groups?
+    scope && scope.can_edit?(object)
+  end
+
   def available_groups
     Group.order(:name).pluck(:name) - group_permissions.map { |g| g[:group_name] }
   end
