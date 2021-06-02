@@ -346,6 +346,25 @@ acceptance("Composer", function (needs) {
     );
   });
 
+  test("Editing a post stages new content", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
+
+    await fillIn(".d-editor-input", "will return empty json");
+    await fillIn("#reply-title", "This is the new text for the title");
+    await click("#reply-control button.create");
+
+    assert.equal(find(".topic-post.staged").length, 1);
+    assert.ok(
+      find(".topic-post:nth-of-type(1)")[0].className.includes("staged")
+    );
+    assert.equal(
+      find(".topic-post.staged .cooked").text().trim(),
+      "will return empty json"
+    );
+  });
+
   test("Composer can switch between edits", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
