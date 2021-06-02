@@ -1,11 +1,13 @@
 {{#if field.placeholders}}
   <div class="placeholders-list">
-    <p class="placeholder-description">{{i18n "discourse_automation.placeholders.description"}}</p>
-    {{#each field.placeholders as |placeholder|}}
-      {{#d-button class="placeholder-item" action=(action "copyPlaceholder" placeholder)}}
-        {{placeholder}}
-      {{/d-button}}
-    {{/each}}
+    <p class="placeholder-description">
+      <span>{{i18n "discourse_automation.placeholders.description"}}</span>
+      {{#each field.placeholders as |placeholder|}}
+        <a href class="placeholder-item" {{on "click" (action "copyPlaceholder" placeholder)}}>
+          {{placeholder}}
+        </a>
+      {{/each}}
+    </p>
   </div>
 {{/if}}
 

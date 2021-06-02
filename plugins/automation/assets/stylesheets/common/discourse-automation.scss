@@ -220,15 +220,11 @@
 }
 
 .placeholders-list {
-  padding: 0.5em 1em;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  border: 1px solid var(--tertiary);
 
   .placeholder-description {
-    display: flex;
-    flex: 1 0 100%;
     font-size: $font-0;
     font-weight: 500;
     margin: 0.5em 0;

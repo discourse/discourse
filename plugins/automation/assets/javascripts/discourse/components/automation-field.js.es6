@@ -77,7 +77,8 @@ export default Component.extend({
   }),
 
   @action
-  copyPlaceholder(placeholder) {
+  copyPlaceholder(placeholder, event) {
+    event.preventDefault();
     clipboardCopy(placeholder);
   }
 });
