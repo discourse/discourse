@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 describe Report do
-  let(:user) { Fabricate(:user) }  # id: 3
-  let(:c0) { Fabricate(:category, user: user) }  # id: 3
+  let(:user) { Fabricate(:user) }
+  let(:c0) { Fabricate(:category, user: user) }
   let(:c1) { Fabricate(:category, parent_category: c0, user: user) }  # id: 2
-  let(:c2) { Fabricate(:category, user: user) }  # id: 4
+  let(:c2) { Fabricate(:category, user: user) }
 
   shared_examples 'no data' do
     context "with no data" do
