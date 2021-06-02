@@ -35,7 +35,7 @@ export default Component.extend({
     this.toggleChevron();
   },
   didRender() {
-    if (this.onActiveRender) {
+    if (this.onActiveRender && this.chevronIcon) {
       this.onActiveRender(this.id);
     }
   },
