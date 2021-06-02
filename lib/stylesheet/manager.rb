@@ -88,14 +88,16 @@ class Stylesheet::Manager
             builder.compile unless File.exists?(builder.stylesheet_fullpath)
             href = builder.stylesheet_path(current_hostname)
           end
-          cache[cache_key] = href
+
+          cache.defer_set(cache_key, href)
         end
 
         data[:theme_id] = theme_id if theme_id.present? && data[:theme_id].blank?
         data[:new_href] = href
         stylesheets << data
       end
-      cache[array_cache_key] = stylesheets.freeze
+
+      cache.defer_set(array_cache_key, stylesheets.freeze)
       stylesheets
     end
   end
@@ -128,7 +130,7 @@ class Stylesheet::Manager
 
     href = builder.stylesheet_path(current_hostname)
     stylesheet[:new_href] = href
-    cache[cache_key] = stylesheet.freeze
+    cache.defer_set(cache_key, stylesheet.freeze)
     stylesheet
   end
 

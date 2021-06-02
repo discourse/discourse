@@ -155,10 +155,10 @@ class Theme < ActiveRecord::Base
   end
 
   def self.get_set_cache(key, &blk)
-    if @cache.hash.key? key.to_s
-      return @cache[key]
-    end
-    @cache[key] = blk.call
+    return @cache[key] if @cache[key]
+    value = blk.call
+    @cache.defer_set(key, value)
+    value
   end
 
   def self.theme_ids

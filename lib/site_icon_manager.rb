@@ -62,7 +62,10 @@ module SiteIconManager
   private
 
   def self.get_set_cache(key)
-    @cache[key] ||= yield
+    return @cache[key] if @cache[key]
+    value = yield
+    @cache.defer_set(key, value)
+    value
   end
 
   def self.resolve_original(info)
