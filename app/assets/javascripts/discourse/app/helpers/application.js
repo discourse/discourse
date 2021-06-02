@@ -50,7 +50,3 @@ registerUnbound("number", (orig, params) => {
 
   return htmlSafe(result);
 });
-
-registerUnbound("value-for-key", (obj = {}, key) => {
-  return obj[key];
-});
