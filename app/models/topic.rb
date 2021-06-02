@@ -1813,7 +1813,7 @@ end
 #  deleted_by_id             :integer
 #  participant_count         :integer          default(1)
 #  word_count                :integer
-#  excerpt                   :string(1000)
+#  excerpt                   :string
 #  pinned_globally           :boolean          default(FALSE), not null
 #  pinned_until              :datetime
 #  fancy_title               :string(400)
