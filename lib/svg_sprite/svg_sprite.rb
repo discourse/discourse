@@ -322,22 +322,20 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       end
     end
 
-    if theme_ids.present?
-      custom_svg_sprites(theme_ids).each do |fname|
-        svg_file = Nokogiri::XML(File.open(fname)) do |config|
-          config.options = Nokogiri::XML::ParseOptions::NOBLANKS
-        end
+    custom_svg_sprites(theme_ids).each do |fname|
+      svg_file = Nokogiri::XML(File.open(fname)) do |config|
+        config.options = Nokogiri::XML::ParseOptions::NOBLANKS
+      end
 
-        svg_filename = "#{File.basename(fname, ".svg")}"
+      svg_filename = "#{File.basename(fname, ".svg")}"
 
-        svg_file.css("symbol").each do |sym|
-          icon_id = prepare_symbol(sym, svg_filename)
+      svg_file.css("symbol").each do |sym|
+        icon_id = prepare_symbol(sym, svg_filename)
 
-          if icons.include? icon_id
-            sym.attributes['id'].value = icon_id
-            sym.css('title').each(&:remove)
-            svg_subset << sym.to_xml
-          end
+        if icons.include? icon_id
+          sym.attributes['id'].value = icon_id
+          sym.css('title').each(&:remove)
+          svg_subset << sym.to_xml
         end
       end
     end
