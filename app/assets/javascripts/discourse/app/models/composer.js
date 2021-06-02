@@ -946,7 +946,9 @@ const Composer = RestModel.extend({
     this.set("composeState", SAVING);
 
     const rollback = throwAjaxError((error) => {
-      post.set("cooked", oldCooked);
+      post.setProperties({ cooked: oldCooked, staged: false });
+      this.appEvents.trigger("post-stream:refresh", { id: post.id });
+
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);

@@ -365,6 +365,22 @@ acceptance("Composer", function (needs) {
     );
   });
 
+  test("Editing a post can rollback to old content", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
+
+    await fillIn(".d-editor-input", "this will 409");
+    await fillIn("#reply-title", "This is the new text for the title");
+    await click("#reply-control button.create");
+
+    assert.equal(find(".topic-post.staged").length, 0);
+    assert.equal(
+      find(".topic-post .cooked")[0].innerText,
+      "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
+    );
+  });
+
   test("Composer can switch between edits", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
