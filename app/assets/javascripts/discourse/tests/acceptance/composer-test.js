@@ -379,6 +379,8 @@ acceptance("Composer", function (needs) {
       find(".topic-post .cooked")[0].innerText,
       "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
     );
+
+    await click(".bootbox.modal .btn-primary");
   });
 
   test("Composer can switch between edits", async function (assert) {
