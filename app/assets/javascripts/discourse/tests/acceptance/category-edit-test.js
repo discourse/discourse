@@ -126,3 +126,26 @@ acceptance("Category Edit", function (needs) {
     );
   });
 });
+
+acceptance("Category Edit - no permission to edit", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () => {
+      return helper.response(200, {
+        category: {
+          id: 1,
+          name: "bug",
+          color: "e9dd00",
+          text_color: "000000",
+          slug: "bug",
+          can_edit: false,
+        },
+      });
+    });
+  });
+
+  test("returns 404", async function (assert) {
+    await visit("/c/bug/edit");
+    assert.equal(currentURL(), "/404");
+  });
+});
