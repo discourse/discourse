@@ -5,11 +5,31 @@
 # version: 0.1
 # authors: jjaffeux
 # url: https://github.com/jjaffeux/discourse-automation
+gem 'iso8601', '0.13.0'
+gem 'json_schemer', '0.2.18'
 
 register_asset 'stylesheets/common/discourse-automation.scss'
 enabled_site_setting :discourse_automation_enabled
 
 PLUGIN_NAME ||= 'discourse-automation'
+
+def handle_post_created_edited(post, action)
+  return if post.post_type != Post.types[:regular] || post.user_id < 0
+
+  name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
+
+  DiscourseAutomation::Automation
+    .where(trigger: name)
+    .find_each do |automation|
+      restricted_category = automation.trigger_field('restricted_category')
+      if restricted_category['category_id']
+        category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
+        next if restricted_category['category_id'] != category_id
+      end
+
+      automation.trigger!('kind' => name, 'action' => action, 'post' => post)
+    end
+end
 
 after_initialize do
   [
@@ -26,9 +46,10 @@ after_initialize do
     '../app/models/discourse_automation/pending_automation',
     '../app/models/discourse_automation/pending_pm',
     '../app/models/discourse_automation/field',
-    '../app/models/discourse_automation/trigger',
     '../app/jobs/scheduled/discourse_automation_tracker',
+    '../app/jobs/scheduled/stalled_wiki_tracker',
     '../app/core_ext/plugin_instance',
+    '../app/lib/discourse_automation/triggers/stalled_wiki',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
     '../app/lib/discourse_automation/triggers/point_in_time',
     '../app/lib/discourse_automation/triggers/post_created_edited',
@@ -76,11 +97,12 @@ after_initialize do
   on(:user_added_to_group) do |user, group|
     name = DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP
 
-    DiscourseAutomation::Trigger.where(name: name).find_each do |trigger|
-      if trigger.metadata['group_ids'].include?(group.id)
-        trigger.run!(
+    DiscourseAutomation::Automation.where(trigger: name).find_each do |automation|
+      joined_group = automation.trigger_field('joined_group')
+      if joined_group['group_id'] == group.id
+        automation.trigger!(
           'kind' => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
-          'user' => user,
+          'users' => [user],
           'group' => group
         )
       end
@@ -88,48 +110,15 @@ after_initialize do
   end
 
   on(:post_created) do |post|
-    if post.user_id != Discourse.system_user.id
-      name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
-
-      DiscourseAutomation::Trigger
-        .where(name: name)
-        .find_each do |trigger|
-          if trigger.metadata['category_id']
-            category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
-            next if trigger.metadata['category_id'] != category_id
-          end
-
-          trigger.run!(
-            'kind' => DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
-            'action' => :create,
-            'post' => post
-          )
-        end
-    end
+    handle_post_created_edited(post, :create)
   end
 
   on(:post_edited) do |post|
-    if post.user_id != Discourse.system_user.id
-      name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
-
-      DiscourseAutomation::Trigger
-        .where(name: name)
-        .find_each do |trigger|
-          if trigger.metadata['category_id']
-            category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
-            next if trigger.metadata['category_id'] != category_id
-          end
-
-          trigger.run!(
-            'kind' => DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
-            'action' => :edit,
-            'post' => post
-          )
-        end
-    end
+    handle_post_created_edited(post, :edit)
   end
 
   register_topic_custom_field_type('discourse_automation_id', :integer)
+  register_post_custom_field_type('stalled_wiki_triggered_at', :string)
 
   reloadable_patch do
     require 'post'
@@ -140,8 +129,8 @@ after_initialize do
       def discourse_automation_topic_required_words
         if topic.custom_fields['discourse_automation_id'].present?
           automation = DiscourseAutomation::Automation.find(topic.custom_fields['discourse_automation_id'])
-          if automation&.script == 'topic_required_words'
-            words = automation.fields.find { |field| field.name == 'words' }
+          if automation&.script == DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS
+            words = automation.fields.find_by(name: 'words')
 
             return if !words
 
@@ -170,9 +159,9 @@ Rake::Task.define_task run_automation: :environment do
 
       next if type != automation.script
 
-      script = DiscourseAutomation::Scriptable.new(automation)
-      script.public_send(name)
-      scripts << script.script.call
+      scriptable = automation.scriptable
+      scriptable.public_send(name)
+      scripts << scriptable.script.call
     end
   end
 end

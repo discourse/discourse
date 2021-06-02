@@ -2,12 +2,7 @@
   <form class="form-horizontal">
     {{form-error error=error}}
 
-    <section class="script-section form-section edit">
-      <div class="automation-presentation">
-        <h2 class="automation-name">{{automation.script.name}}</h2>
-        <p class="automation-doc">{{automation.script.doc}}</p>
-      </div>
-
+    <section class="form-section edit">
       <div class="control-group">
         <label class="control-label">
           {{i18n "discourse_automation.models.automation.name.label"}}
@@ -15,10 +10,41 @@
 
         <div class="controls">
           {{text-field
-            value=automation.name
+            value=automationForm.name
             type="text"
             classNames="input-large"
             autofocus="autofocus"
+          }}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.models.automation.enabled.label"}}
+        </label>
+
+        <div class="controls">
+          {{input
+            type="checkbox"
+            checked=automationForm.enabled
+            click=(action (mut automationForm.enabled) value="target.checked")
+          }}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.models.script.name.label"}}
+        </label>
+
+        <div class="controls">
+          {{dropdown-select-box
+            value=automationForm.script
+            content=model.scriptables
+            onChange=(action "onChangeScript")
+            options=(hash
+              none="discourse_automation.select_script"
+            )
           }}
         </div>
       </div>
@@ -35,19 +61,25 @@
         </label>
 
         <div class="controls">
-          {{combo-box
-            value=automation.trigger.name
+          {{dropdown-select-box
+            value=automationForm.trigger
             content=model.triggerables
-            class="scripts-list"
-            onChange=(action (mut automation.trigger.name))
+            onChange=(action "onChangeTrigger")
+            options=(hash
+              none="discourse_automation.select_trigger"
+            )
           }}
         </div>
       </div>
 
-      {{#if automation.trigger.name}}
-        {{component (concat automation.trigger.name "-trigger")
-          metadata=automation.trigger.metadata
-        }}
+      {{#if automationForm.trigger}}
+        {{#each triggerFields as |field|}}
+          {{automation-field
+            automation=automation
+            field=field
+            onChangeField=(action "onChangeField")
+          }}
+        {{/each}}
       {{/if}}
     </section>
 
@@ -57,7 +89,7 @@
       </h2>
 
       <div class="control-group">
-        {{#each automation.fields as |field|}}
+        {{#each scriptFields as |field|}}
           {{automation-field
             automation=automation
             field=field
@@ -68,15 +100,14 @@
     </section>
 
     <div class="control-group">
-      <div class="controls">
-        {{d-button
-          icon="plus"
-          isLoading=isUpdatingAutomation
-          class="btn-primary"
-          label="discourse_automation.update"
-          action=(action "saveAutomation" automation)
-        }}
-      </div>
+      {{d-button
+        icon="plus"
+        isLoading=isUpdatingAutomation
+        class="btn-primary"
+        label="discourse_automation.update"
+        type="submit"
+        action=(action "saveAutomation" automation)
+      }}
     </div>
   </form>
 </section>

@@ -10,7 +10,7 @@ export default Component.extend({
     this._super(...arguments);
 
     Group.findAll().then(groups => {
-      this.set("allGroups", groups.filterBy("automatic", false));
+      this.set("allGroups", groups);
     });
   },
 

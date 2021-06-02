@@ -2,26 +2,28 @@
 
 module DiscourseAutomation
   class Scriptable
-    attr_reader :fields, :automation
+    attr_reader :fields, :name, :not_found
 
-    def initialize(automation)
-      @automation = automation
-      @placeholders = [:site_title]
+    def initialize(name)
+      @name = name
       @version = 0
       @fields = []
+      @placeholders = [:site_title]
       @triggerables = []
-      @script = Proc.new {}
+      @script = proc {}
+      @not_found = false
 
-      eval!
+      eval! if @name
     end
 
     def eval!
-      public_send("__scriptable_#{automation.script.underscore}")
-      self
-    end
+      begin
+        public_send("__scriptable_#{name.underscore}")
+      rescue NoMethodError
+        @not_found = true
+      end
 
-    def name
-      @automation.script
+      self
     end
 
     def placeholders
@@ -56,12 +58,17 @@ module DiscourseAutomation
       end
     end
 
-    def field(name, component:, accepts_placeholders: false)
+    def field(name, component:, extra: {}, accepts_placeholders: false)
       @fields << {
         name: name,
         component: component,
-        accepts_placeholders: accepts_placeholders
+        accepts_placeholders: accepts_placeholders,
+        extra: extra
       }
+    end
+
+    def components
+      fields.map { |f| f[:component] }.uniq
     end
 
     def utils

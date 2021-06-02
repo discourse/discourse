@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require_relative '../discourse_automation_helper'
 
 describe DiscourseAutomation::Scriptable do
   before do
@@ -15,15 +15,20 @@ describe DiscourseAutomation::Scriptable do
     end
   end
 
-  let!(:automation) { DiscourseAutomation::Automation.create(name: 'welcoming cats', script: 'cats_everywhere', last_updated_by_id: Discourse.system_user.id) }
-  let(:scriptable) { DiscourseAutomation::Scriptable.new(automation) }
+  fab!(:automation) {
+    Fabricate(
+      :automation,
+      script: 'cats_everywhere',
+      trigger: DiscourseAutomation::Triggerable::TOPIC
+    )
+  }
 
   describe '#fields' do
     it 'returns the fields' do
-      expect(scriptable.fields).to match_array(
+      expect(automation.scriptable.fields).to match_array(
         [
-          { name: :cat, component: :string, accepts_placeholders: false },
-          { name: :dog, component: :integer, accepts_placeholders: true }
+          { extra: {}, name: :cat, component: :string, accepts_placeholders: false },
+          { extra: {}, name: :dog, component: :integer, accepts_placeholders: true }
         ]
       )
     end
@@ -31,25 +36,25 @@ describe DiscourseAutomation::Scriptable do
 
   describe '#script' do
     it 'returns the script proc' do
-      expect(scriptable.script.class).to eq(Proc)
+      expect(automation.scriptable.script.class).to eq(Proc)
     end
   end
 
   describe '#placeholders' do
     it 'returns the specified placeholders' do
-      expect(scriptable.placeholders).to eq(%i[site_title foo bar])
+      expect(automation.scriptable.placeholders).to eq(%i[site_title foo bar])
     end
   end
 
   describe '#version' do
     it 'returns the specified version' do
-      expect(scriptable.version).to eq(1)
+      expect(automation.scriptable.version).to eq(1)
     end
   end
 
   describe '.add' do
     it 'adds the script to the list of available scripts' do
-      expect(scriptable).to respond_to(:__scriptable_cats_everywhere)
+      expect(automation.scriptable).to respond_to(:__scriptable_cats_everywhere)
     end
   end
 
@@ -61,7 +66,7 @@ describe DiscourseAutomation::Scriptable do
 
   describe '.name' do
     it 'returns the name of the script' do
-      expect(scriptable.name).to eq('cats_everywhere')
+      expect(automation.scriptable.name).to eq('cats_everywhere')
     end
   end
 
@@ -70,14 +75,12 @@ describe DiscourseAutomation::Scriptable do
       it 'replaces the given string by placeholders' do
         input = 'hello %%COOL_CAT%%'
         map = { cool_cat: 'siberian cat' }
-        output = scriptable.utils.apply_placeholders(input, map)
+        output = automation.scriptable.utils.apply_placeholders(input, map)
         expect(output).to eq('hello siberian cat')
       end
     end
 
     describe '.send_pm' do
-      before { Jobs.run_immediately! }
-
       let(:user) { Fabricate(:user) }
 
       context 'pms is delayed' do

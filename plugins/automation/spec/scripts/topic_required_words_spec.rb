@@ -1,31 +1,26 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require_relative '../discourse_automation_helper'
 
 describe 'TopicRequiredWords' do
   fab!(:user) { Fabricate(:user) }
-  fab!(:topic) { Fabricate(:topic) }
-  let!(:automation) do
-    DiscourseAutomation::Automation.create!(
-      name: 'Ensure word is present',
-      script: 'topic_required_words',
-      last_updated_by_id: Discourse.system_user.id
+  fab!(:category) { Fabricate(:category, user: user) }
+  fab!(:topic) { Fabricate(:topic, category: category) }
+  fab!(:automation) do
+    Fabricate(
+      :automation,
+      script: DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS,
+      trigger: DiscourseAutomation::Triggerable::TOPIC
     )
   end
 
   before do
-    automation.create_trigger!(name: 'topic', metadata: {})
-
-    automation.fields.create!(
-      component: 'text_list',
-      name: 'words',
-      metadata: { list: ['#foo', '#bar'] }
-    )
+    automation.upsert_field!('words', 'text_list', { list: ['#foo', '#bar'] })
   end
 
   context 'editing/creating a post' do
     before do
-      automation.trigger.update_with_params(metadata: { topic_id: topic.id })
+      automation.upsert_field!('restricted_topic', 'text', { text: topic.id }, target: 'trigger')
     end
 
     context 'topic has a topic_required_words automation associated' do
@@ -49,7 +44,7 @@ describe 'TopicRequiredWords' do
     context 'topic has no topic_required_words automation associated' do
       context 'post has no required word' do
         it 'validates the post' do
-          no_automation_topic = create_topic
+          no_automation_topic = create_topic(category: category)
           post_creator = PostCreator.new(user, topic_id: no_automation_topic.id, raw: 'this is quite cool')
           post = post_creator.create
           expect(post.valid?).to be(true)

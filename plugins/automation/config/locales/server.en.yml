@@ -2,15 +2,26 @@ en:
   site_settings:
     discourse_automation_enabled: "Enable discourse-automation plugin"
   discourse_automation:
+    models:
+      fields:
+        invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}`
+        invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
       point_in_time:
         title: Point in time
+        description: When the date is reached the automation will be triggered
       user_added_to_group:
         title: User added to group
+        description: When a user is added to the specified group the automation will be triggered
+      stalled_wiki:
+        title: Stalled wiki
+        description: When a wiki has not been edited for a period longer than the one defined, the automation will be triggered
       post_created_edited:
         title: Post created/edited
+        description: When a valid post is edited or created the automation will be triggered
       topic:
         title: Topic
+        description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example
     scriptables:
       flag_post_on_words:
         title: Flag post on words

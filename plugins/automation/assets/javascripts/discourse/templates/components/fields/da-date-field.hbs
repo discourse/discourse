@@ -1,0 +1,15 @@
+<section class="field date-field">
+  <div class="control-group">
+    {{fields/da-field-label label=label}}
+
+    <div class="controls">
+      {{date-time-input
+        date=dateObject
+        onChange=(action (mut field.metadata.date))
+        showTime=false
+      }}
+
+      {{fields/da-field-description description=description}}
+    </div>
+  </div>
+</section>

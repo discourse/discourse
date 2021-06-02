@@ -1,31 +1,21 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable.add('gift_exchange') do
+DiscourseAutomation::Scriptable::GIFT_EXCHANGE = 'gift_exchange'
+
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHANGE) do
   placeholder :year
   placeholder :giftee_username
   placeholder :gifter_username
 
-  field :giftee_assignment_message, component: :pm, accepts_placeholders: true
+  field :giftee_assignment_messages, component: :pms, accepts_placeholders: true
   field :gift_exchangers_group, component: :group
 
   version 16
 
   triggerables %i[point_in_time]
 
-  script do |trigger, fields|
+  script do |_, fields, automation|
     now = Time.zone.now
-    giftee_assignment_message = fields['giftee_assignment_message']
-
-    if giftee_assignment_message['title'].blank?
-      Rails.logger.warn '[discourse-automation] Gift exchange requires a title for the PM'
-      next
-    end
-
-    if giftee_assignment_message['body'].blank?
-      Rails.logger.warn '[discourse-automation] Gift exchange requires a body for the PM'
-      next
-    end
-
     gift_exchangers_group = fields['gift_exchangers_group']
 
     unless group = Group.find_by(id: gift_exchangers_group['group_id'])
@@ -59,18 +49,31 @@ DiscourseAutomation::Scriptable.add('gift_exchange') do
         giftee_username: giftee
       }
 
-      raw = utils.apply_placeholders(giftee_assignment_message['body'], placeholders)
+      Array(fields['giftee_assignment_messages']['pms']).each do |giftee_assignment_message|
+        if giftee_assignment_message['title'].blank?
+          Rails.logger.warn '[discourse-automation] Gift exchange requires a title for the PM'
+          next
+        end
 
-      title = utils.apply_placeholders(
-        giftee_assignment_message['title'],
-        placeholders
-      )
+        if giftee_assignment_message['raw'].blank?
+          Rails.logger.warn '[discourse-automation] Gift exchange requires a raw for the PM'
+          next
+        end
 
-      utils.send_pm(
-        target_usernames: Array(gifter),
-        title: title,
-        raw: raw
-      )
+        raw = utils.apply_placeholders(giftee_assignment_message['raw'], placeholders)
+        title = utils.apply_placeholders(giftee_assignment_message['title'], placeholders)
+
+        utils.send_pm(
+          {
+            target_usernames: Array(gifter),
+            title: title,
+            raw: raw,
+          },
+          delay: giftee_assignment_message['delay'],
+          encrypt: giftee_assignment_message['encrypt'],
+          automation_id: automation.id
+        )
+      end
     end
 
     group.custom_fields[cf_name] = true

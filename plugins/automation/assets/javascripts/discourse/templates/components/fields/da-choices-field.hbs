@@ -1,0 +1,14 @@
+<div class="field control-group">
+  {{fields/da-field-label label=label}}
+
+  <div class="controls">
+    {{combo-box
+      value=field.metadata.value
+      content=replacedContent
+      onChange=(action (mut field.metadata.value))
+      options=(hash allowAny=false)
+    }}
+
+    {{fields/da-field-description description=description}}
+  </div>
+</div>

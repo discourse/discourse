@@ -3,7 +3,7 @@
 module DiscourseAutomation
   class AdminDiscourseAutomationAutomationsController < ::ApplicationController
     def index
-      automations = DiscourseAutomation::Automation.all
+      automations = DiscourseAutomation::Automation.order(:name).all
       serializer = ActiveModel::ArraySerializer.new(
         automations,
         each_serializer: DiscourseAutomation::AutomationSerializer,
@@ -18,7 +18,7 @@ module DiscourseAutomation
     end
 
     def create
-      automation_params = params.require(:automation).permit(:name, :script)
+      automation_params = params.require(:automation).permit(:name, :script, :trigger)
       automation = DiscourseAutomation::Automation.create!(
         automation_params.merge(last_updated_by_id: current_user.id)
       )
@@ -27,24 +27,27 @@ module DiscourseAutomation
 
     def update
       automation = DiscourseAutomation::Automation.find(params[:id])
+
+      if automation.trigger != params[:automation][:trigger]
+        request.parameters[:automation][:fields] = []
+      end
+
+      if automation.script != params[:automation][:script]
+        request.parameters[:automation][:trigger] = nil
+        request.parameters[:automation][:fields] = []
+      end
+
+      automation.fields.destroy_all
+
       automation.update!(
         request
           .parameters[:automation]
-          .slice(:name, :id, :script)
+          .slice(:name, :id, :script, :trigger, :enabled)
           .merge(last_updated_by_id: current_user.id)
       )
 
-      trigger_params = request.parameters[:automation][:trigger].slice(:metadata, :name)
-      automation.create_trigger!(trigger_params) unless automation.trigger
-
-      automation.trigger.update_with_params(trigger_params)
-
       Array(request.parameters[:automation][:fields]).each do |field|
-        f = automation.fields.find_or_initialize_by(
-          name: field[:name],
-          component: field[:component]
-        )
-        f.update!(metadata: field[:metadata])
+        automation.upsert_field!(field[:name], field[:component], field[:metadata], target: field[:target])
       end
 
       render_serialized_automation(automation)

@@ -1,12 +1,39 @@
 .discourse-automation {
+  .automations {
+    .relative-date {
+      font-size: $font-down-1;
+    }
+
+    td[role="button"] {
+      cursor: pointer;
+    }
+  }
+
+  .dropdown-select-box {
+    .select-kit-header {
+      background: var(--secondary);
+      border: 1px solid var(--primary-medium);
+      color: var(--primary);
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+
+    .select-kit-row.none .name {
+      font-weight: 500;
+      color: var(--primary-medium);
+    }
+  }
 }
 
 .discourse-automation-title {
   display: flex;
   align-items: center;
+  height: 40px;
 
   .title {
-    margin-left: 0.5em;
+    margin: 0 0 0 0.5em;
     font-weight: 700;
     font-size: $font-up-3;
   }
@@ -28,11 +55,17 @@
   .form-horizontal {
     .control-label {
       margin: 0.25em 0.25em 0.25em 0;
+      text-align: left;
+      width: 180px;
+    }
+
+    .controls {
+      margin-left: 185px;
     }
   }
 
   .automation-presentation {
-    background: var(--primary-very-low);
+    border-left: 5px solid var(--primary-very-low);
     padding: 0.5em;
 
     .automation-name {
@@ -106,16 +139,33 @@
   }
 
   .pms-field {
-    .actions.header {
+    .actions {
       display: flex;
-      margin-bottom: 1em;
       justify-content: flex-end;
       align-items: center;
+
+      &.header {
+        justify-content: space-between;
+        margin: 1em 0;
+      }
     }
 
     .pm-field {
-      background: var(--primary-very-low);
-      padding: 0.5em;
+      margin-bottom: 1em;
+
+      details {
+        padding: 0.5em;
+        border: 1px solid var(--primary-low);
+      }
+
+      summary {
+        padding: 0.5em;
+        &:focus {
+          &:before {
+            color: var(--tertiary);
+          }
+        }
+      }
 
       .control-group {
         display: flex;
@@ -156,21 +206,37 @@
       box-sizing: border-box;
       height: 200px;
     }
+
+    .no-pm {
+      border: 1px solid var(--tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1em;
+      margin: 1em 0;
+      flex-direction: column;
+    }
   }
 }
 
 .placeholders-list {
+  background: lighten($highlight, 25%);
+  padding: 0.5em 1em;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 
+  .placeholder-description {
+    display: flex;
+    flex: 1 0 100%;
+    font-size: $font-0;
+    font-weight: 500;
+    margin: 0.5em 0;
+  }
+
   .placeholder-item {
-    background: var(--primary-low);
-    color: var(--primary-high);
     border-radius: 3px;
     font-size: $font-down-2;
-    padding: 0.5em;
-    margin: 0.25em 0.25em 0.25em 0;
-    flex-shrink: 0;
+    margin: 0.5em 0.5em 0.5em 0;
   }
 }

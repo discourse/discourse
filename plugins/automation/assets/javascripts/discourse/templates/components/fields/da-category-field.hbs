@@ -1,0 +1,15 @@
+<section class="field category-field">
+  <div class="control-group">
+    {{fields/da-field-label label=label}}
+
+    <div class="controls">
+      {{category-chooser
+        value=field.metadata.category_id
+        onChange=(action (mut field.metadata.category_id))
+        options=(hash clearable=true)
+      }}
+
+      {{fields/da-field-description description=description}}
+    </div>
+  </div>
+</section>

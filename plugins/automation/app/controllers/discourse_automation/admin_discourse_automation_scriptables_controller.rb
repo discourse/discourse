@@ -10,8 +10,8 @@ module DiscourseAutomation
           {
             id: id,
             name: I18n.t("discourse_automation.scriptables.#{id}.title"),
-            description: I18n.t("discourse_automation.scriptables.#{id}.description"),
-            doc: I18n.t("discourse_automation.scriptables.#{id}.doc"),
+            description: I18n.t("discourse_automation.scriptables.#{id}.description", default: ''),
+            doc: I18n.t("discourse_automation.scriptables.#{id}.doc", default: ''),
           }
         end
 

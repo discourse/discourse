@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 
@@ -14,7 +15,16 @@ export default Component.extend({
 
   @action
   removePM(pm) {
-    this.field.metadata.pms.removeObject(pm);
+    bootbox.confirm(
+      I18n.t("discourse_automation.fields.pms.confirm_remove_pm"),
+      I18n.t("no_value"),
+      I18n.t("yes_value"),
+      result => {
+        if (result) {
+          this.field.metadata.pms.removeObject(pm);
+        }
+      }
+    );
   },
 
   @action

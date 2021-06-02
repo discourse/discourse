@@ -1,14 +1,14 @@
-<section class="text-field">
+<section class="field text-field">
   <div class="control-group">
-    <label class="control-label">
-      {{label}}
-    </label>
+    {{fields/da-field-label label=label}}
 
     <div class="controls">
       {{input
         value=field.metadata.text
         input=(action (mut field.metadata.text) value="target.value")
       }}
+
+      {{fields/da-field-description description=description}}
     </div>
   </div>
 </section>

@@ -1,13 +1,17 @@
 {{#if field.placeholders}}
   <div class="placeholders-list">
+    <p class="placeholder-description">{{i18n "discourse_automation.placeholders.description"}}</p>
     {{#each field.placeholders as |placeholder|}}
-      <span class="placeholder-item">{{placeholder}}</span>
+      {{#d-button class="placeholder-item" action=(action "copyPlaceholder" placeholder)}}
+        {{placeholder}}
+      {{/d-button}}
     {{/each}}
   </div>
 {{/if}}
 
-{{component (concat "da-" field.component "-field")
+{{component (concat "fields/da-" field.component "-field")
   field=field
   onChangeField=onChangeField
-  label=(i18n (concat "discourse_automation.scriptables." automation.script.id ".fields." field.name ".label"))
+  label=(i18n (concat "discourse_automation" target "fields." field.name ".label"))
+  description=description
 }}

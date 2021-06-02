@@ -1,8 +1,6 @@
-<section class="text-field">
+<section class="field tags-field">
   <div class="control-group">
-    <label class="control-label">
-      {{label}}
-    </label>
+    {{fields/da-field-label label=label}}
 
     <div class="controls">
       {{tag-chooser
@@ -12,6 +10,8 @@
           allowAny=false
         )
       }}
+
+      {{fields/da-field-description description=description}}
     </div>
   </div>
 </section>

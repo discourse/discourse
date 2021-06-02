@@ -1,30 +1,20 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require_relative '../discourse_automation_helper'
 
-describe 'USER_ADDED_TO_GROUP' do
-  before do
-    DiscourseAutomation::Scriptable.add('welcome_to_group') do
-      version 1
-
-      script do
-        p 'Howdy!'
-      end
-    end
-  end
-
-  let(:user) { Fabricate(:user) }
-  let(:tracked_group) { Fabricate(:group) }
-  let!(:automation) {
-    DiscourseAutomation::Automation.create!(
-      name: 'Welcoming new users',
-      script: 'welcome_to_group',
-      last_updated_by_id: Discourse.system_user.id
+describe 'UserAddedToGroup' do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:tracked_group) { Fabricate(:group) }
+  fab!(:automation) {
+    Fabricate(
+      :automation,
+      trigger: DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP
     )
   }
-  let!(:trigger) {
-    automation.create_trigger!(name: 'user_added_to_group', metadata: { group_ids: [tracked_group.id] })
-  }
+
+  before do
+    automation.upsert_field!('joined_group', 'group', { group_id: tracked_group.id }, target: 'trigger')
+  end
 
   context 'group is tracked' do
     it 'fires the trigger' do
@@ -32,7 +22,7 @@ describe 'USER_ADDED_TO_GROUP' do
         tracked_group.add(user)
       end
 
-      expect(output).to include('Howdy!')
+      expect(output).to include('"kind":"user_added_to_group"')
     end
   end
 
@@ -44,7 +34,7 @@ describe 'USER_ADDED_TO_GROUP' do
         untracked_group.add(user)
       end
 
-      expect(output).to_not include('Howdy!')
+      expect(output).to_not include('"kind":"user_added_to_group"')
     end
   end
 end

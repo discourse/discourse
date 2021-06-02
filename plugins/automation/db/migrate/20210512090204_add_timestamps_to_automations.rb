@@ -5,7 +5,7 @@ class AddTimestampsToAutomations < ActiveRecord::Migration[6.1]
     add_column :discourse_automation_automations, :last_updated_by_id, :integer, null: true
 
     DB.exec(
-      <<~SQL, user_id: Discourse.system_user.id
+      <<~SQL, user_id: Discourse::SYSTEM_USER_ID
         UPDATE discourse_automation_automations
         SET last_updated_by_id = :user_id
       SQL

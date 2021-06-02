@@ -23,11 +23,13 @@
       </label>
 
       <div class="controls">
-        {{combo-box
+        {{dropdown-select-box
           value=form.script
           content=model.scriptables.content
-          class="scripts-list"
           onChange=(action (mut form.script))
+          options=(hash
+            none="discourse_automation.select_script"
+          )
         }}
       </div>
     </div>

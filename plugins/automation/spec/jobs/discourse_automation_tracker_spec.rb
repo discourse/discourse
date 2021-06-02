@@ -1,61 +1,41 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-Automation ||= DiscourseAutomation::Automation
-Trigger ||= DiscourseAutomation::Trigger
+require_relative '../discourse_automation_helper'
 
 describe Jobs::DiscourseAutomationTracker do
-  before do
-    freeze_time
-  end
-
   describe 'pending automation' do
-    let!(:automation) {
-      automation = Automation.create!(
-        name: 'Secret Santa',
+    fab!(:automation) {
+      Fabricate(
+        :automation,
         script: 'gift_exchange',
-        last_updated_by_id: Discourse.system_user.id
+        trigger: DiscourseAutomation::Triggerable::POINT_IN_TIME
       )
-
-      automation.create_trigger!(
-        name: DiscourseAutomation::Triggerable::POINT_IN_TIME,
-      )
-
-      automation.fields.create!(
-        component: 'pm',
-        name: 'giftee_assignment_message',
-        metadata: {
-          body: 'foo',
-          title: 'bar'
-        }
-      )
-      automation.fields.create!(
-        component: 'group',
-        name: 'gift_exchangers_group',
-        metadata: { group_id: 1 }
-      )
-
-      automation
     }
+
+    before do
+      automation.upsert_field!('giftee_assignment_messages', 'pms', { raw: 'foo', title: 'bar' }, target: 'script')
+      automation.upsert_field!('gift_exchangers_group', 'group', { group_id: 1 }, target: 'script')
+    end
 
     context 'pending automation is in past' do
       before do
-        automation.trigger.update_with_params(metadata: { execute_at: 2.hours.ago })
+        automation.upsert_field!('execute_at', 'date', { date: 2.hours.from_now }, target: 'trigger')
       end
 
       it 'consumes the pending automation' do
-        expect {
-          Jobs::DiscourseAutomationTracker.new.execute
-        }.to change {
-          automation.pending_automations.count
-        }.by(-1)
+        freeze_time 4.hours.from_now do
+          expect {
+            Jobs::DiscourseAutomationTracker.new.execute
+          }.to change {
+            automation.pending_automations.count
+          }.by(-1)
+        end
       end
     end
 
     context 'pending automation is in future' do
       before do
-        automation.trigger.update_with_params(metadata: { execute_at: 2.hours.from_now })
+        automation.upsert_field!('execute_at', 'date', { date: 2.hours.from_now }, target: 'trigger')
       end
 
       it 'doesn’t consume the pending automation' do
@@ -73,11 +53,11 @@ describe Jobs::DiscourseAutomationTracker do
       Jobs.run_later!
     end
 
-    let!(:automation) {
-      Automation.create!(
-        name: 'On boarding',
-        script: 'send_pms',
-        last_updated_by_id: Discourse.system_user.id
+    fab!(:automation) {
+      Fabricate(
+        :automation,
+        script: DiscourseAutomation::Scriptable::SEND_PMS,
+        trigger: DiscourseAutomation::Triggerable::TOPIC
       )
     }
 

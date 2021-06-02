@@ -2,20 +2,49 @@
 
 module DiscourseAutomation
   class Triggerable
-    def initialize(automation)
-      @automation = automation
-      @on_update_block = Proc.new {}
-      @on_call_block = Proc.new {}
+    attr_reader :fields, :name, :not_found
 
-      eval!
+    def initialize(name)
+      @name = name
+      @placeholders = []
+      @fields = []
+      @on_update_block = proc {}
+      @on_call_block = proc {}
+      @not_found = false
+
+      eval! if @name
+    end
+
+    def placeholders
+      @placeholders.uniq.compact
+    end
+
+    def placeholder(placeholder)
+      @placeholders << placeholder
+    end
+
+    def field(name, component:, extra: {}, accepts_placeholders: false)
+      @fields << {
+        name: name,
+        component: component,
+        accepts_placeholders: accepts_placeholders,
+        extra: extra
+      }
+    end
+
+    def components
+      fields.map { |f| f[:component] }.uniq
     end
 
     def eval!
-      public_send("__triggerable_#{automation.trigger.name.underscore}")
+      begin
+        public_send("__triggerable_#{name.underscore}")
+      rescue NoMethodError
+        @not_found = true
+      end
+
       self
     end
-
-    attr_reader :automation
 
     def on_call(&block)
       if block_given?

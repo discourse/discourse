@@ -3,10 +3,13 @@
 DiscourseAutomation::Triggerable::TOPIC = 'topic'
 
 DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::TOPIC) do
+  field :restricted_topic, component: :text
+
   on_update do |automation, metadata, previous_metadata|
     ActiveRecord::Base.transaction do
-      previous_topic_id = previous_metadata['topic_id']
-      topic_id = metadata['topic_id']
+      previous_topic_id = previous_metadata.dig('restricted_topic', 'text')
+      topic_id = metadata.dig('restricted_topic', 'text')
+
       if previous_topic_id && previous_topic_id != topic_id
         previous_topic = Topic.find_by(id: previous_topic_id)
 

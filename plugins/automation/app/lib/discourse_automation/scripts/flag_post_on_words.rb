@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable.add('flag_post_on_words') do
+DiscourseAutomation::Scriptable::FLAG_POST_ON_WORDS = 'flag_post_on_words'
+
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::FLAG_POST_ON_WORDS) do
   field :words, component: :text_list
 
   version 1
@@ -13,7 +15,7 @@ DiscourseAutomation::Scriptable.add('flag_post_on_words') do
     fields['words']['list'].each do |list|
       words = list.split(',')
       count = words.inject(0) { |acc, word| post.raw.match?(/#{word}/i) ? acc + 1 : acc }
-      next if count >= words.length
+      next if count < words.length
 
       has_trust_level = post.user.has_trust_level?(TrustLevel[2])
       trusted_user = has_trust_level ||

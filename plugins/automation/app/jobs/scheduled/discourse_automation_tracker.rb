@@ -10,13 +10,13 @@ module Jobs
       return unless SiteSetting.discourse_automation_enabled
 
       DiscourseAutomation::PendingAutomation
-        .includes(automation: [:trigger])
+        .includes(:automation)
         .limit(BATCH_LIMIT)
         .where('execute_at < ?', Time.now)
         .find_each { |pending_automation| run_pending_automation(pending_automation) }
 
       DiscourseAutomation::PendingPm
-        .includes(automation: [:trigger])
+        .includes(:automation)
         .limit(BATCH_LIMIT)
         .where('execute_at < ?', Time.now)
         .find_each { |pending_pm| send_pending_pm(pending_pm) }
@@ -32,7 +32,7 @@ module Jobs
     end
 
     def run_pending_automation(pending_automation)
-      pending_automation.automation.trigger.run!(
+      pending_automation.automation.trigger!(
         'kind' => DiscourseAutomation::Triggerable::POINT_IN_TIME,
         'execute_at' => pending_automation.execute_at
       )

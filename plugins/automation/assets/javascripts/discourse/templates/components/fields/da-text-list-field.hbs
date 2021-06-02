@@ -1,8 +1,6 @@
-<section class="text-list-field">
+<section class="field text-list-field">
   <div class="control-group">
-    <label class="control-label">
-      {{label}}
-    </label>
+    {{fields/da-field-label label=label}}
 
     <div class="controls">
       {{multi-select
@@ -13,6 +11,8 @@
         valueProperty=null
         options=(hash allowAny=true)
       }}
+
+      {{fields/da-field-description description=description}}
     </div>
   </div>
 </section>
