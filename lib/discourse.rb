@@ -929,6 +929,7 @@ module Discourse
       Search.prepare_data("test")
 
       JsLocaleHelper.load_translations(SiteSetting.default_locale)
+      Site.json_for(Guardian.new)
     end
 
     [
