@@ -637,6 +637,8 @@ en:
           attributes:
             word:
               too_many: "Too many words for that action"
+            base:
+              invalid_url: "Replacement URL is invalid"
 
   uncategorized_category_name: "Uncategorized"
 

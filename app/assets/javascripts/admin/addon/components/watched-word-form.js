@@ -15,9 +15,16 @@ export default Component.extend({
   formSubmitted: false,
   actionKey: null,
   showMessage: false,
+  selectedTags: null,
 
   canReplace: equal("actionKey", "replace"),
   canTag: equal("actionKey", "tag"),
+  canLink: equal("actionKey", "link"),
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.set("selectedTags", []);
+  },
 
   @discourseComputed("siteSettings.watched_words_regular_expressions")
   placeholderKey(watchedWordsRegularExpressions) {
@@ -47,6 +54,13 @@ export default Component.extend({
   },
 
   actions: {
+    changeSelectedTags(tags) {
+      this.setProperties({
+        selectedTags: tags,
+        replacement: tags.join(","),
+      });
+    },
+
     submit() {
       if (!this.isUniqueWord) {
         this.setProperties({
@@ -61,7 +75,10 @@ export default Component.extend({
 
         const watchedWord = WatchedWord.create({
           word: this.word,
-          replacement: this.canReplace || this.canTag ? this.replacement : null,
+          replacement:
+            this.canReplace || this.canTag || this.canLink
+              ? this.replacement
+              : null,
           action: this.actionKey,
         });
 

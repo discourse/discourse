@@ -23,6 +23,7 @@ function findAllMatches(text, matchers) {
         index: match.index,
         text: match[0],
         replacement: matcher.replacement,
+        link: matcher.link,
       });
     }
   });
@@ -32,19 +33,39 @@ function findAllMatches(text, matchers) {
 
 export function setup(helper) {
   helper.registerPlugin((md) => {
-    const replacements = md.options.discourse.watchedWordsReplacements;
-    if (!replacements) {
+    const matchers = [];
+
+    if (md.options.discourse.watchedWordsReplace) {
+      Object.entries(md.options.discourse.watchedWordsReplace).map(
+        ([word, replacement]) => {
+          matchers.push({
+            pattern: new RegExp(word, "gi"),
+            replacement,
+            link: false,
+          });
+        }
+      );
+    }
+
+    if (md.options.discourse.watchedWordsLink) {
+      Object.entries(md.options.discourse.watchedWordsLink).map(
+        ([word, replacement]) => {
+          matchers.push({
+            pattern: new RegExp(word, "gi"),
+            replacement,
+            link: true,
+          });
+        }
+      );
+    }
+
+    if (matchers.length === 0) {
       return;
     }
 
-    const matchers = Object.keys(replacements).map((word) => ({
-      pattern: new RegExp(word, "gi"),
-      replacement: replacements[word],
-    }));
-
     const cache = {};
 
-    md.core.ruler.push("watched-words-replace", (state) => {
+    md.core.ruler.push("watched-words", (state) => {
       for (let j = 0, l = state.tokens.length; j < l; j++) {
         if (state.tokens[j].type !== "inline") {
           continue;
@@ -82,10 +103,6 @@ export function setup(helper) {
             }
           }
 
-          if (htmlLinkLevel > 0) {
-            continue;
-          }
-
           if (currentToken.type === "text") {
             const text = currentToken.content;
             const matches = (cache[text] =
@@ -109,25 +126,27 @@ export function setup(helper) {
                 nodes.push(token);
               }
 
-              let url = state.md.normalizeLink(matches[ln].replacement);
-              if (state.md.validateLink(url) && /^https?/.test(url)) {
-                token = new state.Token("link_open", "a", 1);
-                token.attrs = [["href", url]];
-                token.level = level++;
-                token.markup = "linkify";
-                token.info = "auto";
-                nodes.push(token);
+              if (matches[ln].link) {
+                const url = state.md.normalizeLink(matches[ln].replacement);
+                if (htmlLinkLevel === 0 && state.md.validateLink(url)) {
+                  token = new state.Token("link_open", "a", 1);
+                  token.attrs = [["href", url]];
+                  token.level = level++;
+                  token.markup = "linkify";
+                  token.info = "auto";
+                  nodes.push(token);
 
-                token = new state.Token("text", "", 0);
-                token.content = matches[ln].text;
-                token.level = level;
-                nodes.push(token);
+                  token = new state.Token("text", "", 0);
+                  token.content = matches[ln].text;
+                  token.level = level;
+                  nodes.push(token);
 
-                token = new state.Token("link_close", "a", -1);
-                token.level = --level;
-                token.markup = "linkify";
-                token.info = "auto";
-                nodes.push(token);
+                  token = new state.Token("link_close", "a", -1);
+                  token.level = --level;
+                  token.markup = "linkify";
+                  token.info = "auto";
+                  nodes.push(token);
+                }
               } else {
                 token = new state.Token("text", "", 0);
                 token.content = matches[ln].replacement;
