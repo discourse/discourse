@@ -103,7 +103,10 @@ after_initialize do
         automation.trigger!(
           'kind' => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
           'users' => [user],
-          'group' => group
+          'group' => group,
+          'placeholders' => {
+            'group_name' => group.name
+          }
         )
       end
     end
