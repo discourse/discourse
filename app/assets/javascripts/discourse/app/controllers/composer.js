@@ -770,8 +770,7 @@ export default Controller.extend({
 
     // TODO: This should not happen in model
     const imageSizes = {};
-    $("#reply-control .d-editor-preview img")
-      .not(".onebox.allowlistedgeneric img")
+    document.querySelectorAll("#reply-control .d-editor-preview img:not(.onebox img)")
       .each((i, e) => {
         const $img = $(e);
         const src = $img.prop("src");
