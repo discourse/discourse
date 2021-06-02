@@ -220,11 +220,11 @@
 }
 
 .placeholders-list {
-  background: lighten($highlight, 25%);
   padding: 0.5em 1em;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  border: 1px solid var(--tertiary);
 
   .placeholder-description {
     display: flex;
