@@ -15,7 +15,7 @@ module DiscourseAutomation
 
       yield
 
-      automation.triggerable.on_update.call(
+      automation.triggerable && automation.triggerable.on_update.call(
         automation,
         automation.serialized_fields,
         previous_fields
