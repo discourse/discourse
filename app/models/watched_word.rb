@@ -20,7 +20,7 @@ class WatchedWord < ActiveRecord::Base
   before_validation do
     self.word = self.class.normalize_word(self.word)
     if self.action == WatchedWord.actions[:link] && !(self.replacement =~ /^https?:\/\//)
-      self.replacement = "#{Discourse.base_url}#{self.replacement.starts_with?("/") ? "" : "/"}#{self.replacement}"
+      self.replacement = "#{Discourse.base_url}#{self.replacement&.starts_with?("/") ? "" : "/"}#{self.replacement}"
     end
   end
 
