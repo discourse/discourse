@@ -961,23 +961,29 @@ const Composer = RestModel.extend({
     this.set("composeState", SAVING);
 
     const rollback = throwAjaxError((error) => {
-      post.set("cooked", oldCooked);
+      post.setProperties({ cooked: oldCooked, staged: false });
+      this.appEvents.trigger("post-stream:refresh", { id: post.id });
+
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);
       }
     });
 
+    post.setProperties({ cooked: props.cooked, staged: true });
+    this.appEvents.trigger("post-stream:refresh", { id: post.id });
+
     return promise
       .then(() => {
-        // rest model only sets props after it is saved
-        post.set("cooked", props.cooked);
         return post.save(props).then((result) => {
           this.clearState();
           return result;
         });
       })
-      .catch(rollback);
+      .catch(rollback)
+      .finally(() => {
+        post.set("staged", false);
+      });
   },
 
   serialize(serializer, dest) {
