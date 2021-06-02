@@ -1,6 +1,8 @@
 <div class="future-date-input">
   <div class="control-group">
-    <label class={{labelClasses}}>{{displayLabel}}</label>
+    <label class={{labelClasses}}>
+      {{#if displayLabelIcon}}{{d-icon displayLabelIcon}}{{/if}}{{displayLabel}}
+    </label>
     {{future-date-input-selector
       minimumResultsForSearch=-1
       statusType=statusType

@@ -1,4 +1,6 @@
-<label for="choose-topic-title">{{i18n labelText}}</label>
+<label for="choose-topic-title">
+  {{#if labelIcon}}{{d-icon labelIcon}}{{/if}}{{i18n labelText}}
+</label>
 
 {{text-field value=topicTitle placeholderKey="choose_topic.title.placeholder" id="choose-topic-title"}}
 
