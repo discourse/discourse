@@ -58,6 +58,14 @@ describe PostMover do
         @like = PostActionCreator.like(another_user, p4)
       end
 
+      def add_moderator_post_to(topic, post_type)
+        topic.add_moderator_post(
+          user,
+          "message",
+          post_type: post_type,
+          action_code: "split_topic")
+      end
+
       context 'success' do
 
         it "correctly handles notifications and bread crumbs" do
@@ -662,6 +670,17 @@ describe PostMover do
 
             timer = topic.topic_timers.find_by(status_type: TopicTimer.types[:delete])
             expect(timer).to be_nil
+          end
+
+          it "ignores moderator posts and closes the topic if all regular posts were moved" do
+            add_moderator_post_to topic, Post.types[:moderator_action]
+            add_moderator_post_to topic, Post.types[:small_action]
+
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+            topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+            topic.reload
+            expect(topic).to be_closed
           end
 
           it "does not try to move small action posts" do
