@@ -4,13 +4,13 @@
   {{#if column.automatic}}
     <div class="user-stat">
       <span class="value">
-        {{directory-item-value item column}}
+        {{directory-item-value item=item column=column}}
       </span>
       <span class="label">
         {{#if column.icon}}
           {{d-icon column.icon}}
         {{/if}}
-        {{directory-item-label item column}}
+        {{mobile-directory-item-label item=item column=column}}
       </span>
     </div>
 

@@ -2,9 +2,9 @@
 {{#each columns as |column|}}
   <td>
     {{#if column.automatic}}
-      {{directory-item-value item column}}
+      {{directory-item-value item=item column=column}}
     {{else}}
-      {{directory-item-user-field-value item column}}
+      {{directory-item-user-field-value item=item column=column}}
     {{/if}}
   </td>
 {{/each}}

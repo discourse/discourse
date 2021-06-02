@@ -9,9 +9,9 @@
             <label class="column-name">
               {{input type="checkbox" checked=column.enabled}}
               {{#if column.automatic}}
-                {{directory-table-header-title column.name labelKey column.icon false}}
+                {{directory-table-header-title field=column.name labelKey=labelKey icon=column.icon}}
               {{else}}
-                {{directory-table-header-title column.user_field.name labelKey "" true}}
+                {{directory-table-header-title field=column.user_field.name translated=true}}
               {{/if}}
             </label>
           </div>
