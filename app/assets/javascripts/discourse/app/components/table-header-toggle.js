@@ -36,7 +36,7 @@ export default Component.extend({
   },
   didRender() {
     if (this.onActiveRender && this.chevronIcon) {
-      this.onActiveRender(this.id);
+      this.onActiveRender(this.element);
     }
   },
 });

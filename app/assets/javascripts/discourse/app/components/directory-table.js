@@ -1,19 +1,20 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 
 export default Component.extend({
   classNames: ["directory-table-container"],
 
-  setActiveHeader(id) {
+  @action
+  setActiveHeader(header) {
     // After render, scroll table left to ensure the order by column is visible
-    const headerEl = document.getElementById(id);
-    const tableContainer = document.querySelector(".directory-table-container");
     const scrollPixels =
-      headerEl.offsetParent.offsetLeft +
-      headerEl.offsetWidth +
+      header.offsetLeft +
+      header.offsetWidth +
       10 -
-      tableContainer.offsetWidth;
+      this.element.offsetWidth;
+
     if (scrollPixels > 0) {
-      tableContainer.scrollLeft = scrollPixels;
+      this.element.scrollLeft = scrollPixels;
     }
   },
 });

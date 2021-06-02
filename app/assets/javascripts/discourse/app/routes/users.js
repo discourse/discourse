@@ -38,9 +38,7 @@ export default DiscourseRoute.extend({
 
   model(params) {
     const columns = PreloadStore.get("directoryColumns");
-    if (!params.order) {
-      params.order = columns[0].name;
-    }
+    params.order = params.order || columns[0].name;
     return { params, columns };
   },
 
