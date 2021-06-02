@@ -706,7 +706,10 @@ class Group < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    self.where("string_to_array(incoming_email, '|') @> ARRAY[?]", Email.downcase(email)).first
+    self.where(
+      "email_username = :email OR string_to_array(incoming_email, '|') @> ARRAY[:email]",
+      email: Email.downcase(email)
+    ).first
   end
 
   def bulk_add(user_ids)
@@ -869,8 +872,17 @@ class Group < ActiveRecord::Base
     }
   end
 
+  def email_username_domain
+    email_username.split('@').last
+  end
+
+  def email_username_user
+    email_username.split('@').first
+  end
+
   def email_username_regex
-    user, domain = email_username.split('@')
+    user = email_username_user
+    domain = email_username_domain
     if user.present? && domain.present?
       /^#{Regexp.escape(user)}(\+[^@]*)?@#{Regexp.escape(domain)}$/i
     end

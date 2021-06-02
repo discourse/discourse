@@ -1275,4 +1275,20 @@ describe Group do
       expect(group.imap_updated_by).to eq(user)
     end
   end
+
+  describe "#find_by_email" do
+    it "finds the group by any of its incoming emails" do
+      group.update!(incoming_email: "abc@test.com|support@test.com")
+      expect(Group.find_by_email("abc@test.com")).to eq(group)
+      expect(Group.find_by_email("support@test.com")).to eq(group)
+      expect(Group.find_by_email("nope@test.com")).to eq(nil)
+    end
+
+    it "finds the group by its email_username" do
+      group.update!(email_username: "abc@test.com", incoming_email: "support@test.com")
+      expect(Group.find_by_email("abc@test.com")).to eq(group)
+      expect(Group.find_by_email("support@test.com")).to eq(group)
+      expect(Group.find_by_email("nope@test.com")).to eq(nil)
+    end
+  end
 end

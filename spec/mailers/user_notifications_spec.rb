@@ -611,6 +611,54 @@ describe UserNotifications do
       expect(mail.body).to include("[group1 (2)](http://test.localhost/groups/group1), [group2 (1)](http://test.localhost/groups/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
     end
 
+    context "when group smtp is configured and SiteSetting.enable_smtp" do
+      let!(:group1) do
+        Fabricate(
+          :group,
+          name: "group1",
+          smtp_enabled: true,
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_server: "smtp.test.com",
+          email_username: "user@test.com",
+          email_password: "password"
+        )
+      end
+
+      before do
+        SiteSetting.enable_smtp = true
+        topic.allowed_groups = [group1]
+      end
+
+      it "uses the from address, which is the group's email_username, for reply-to" do
+        mail = UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash
+        )
+
+        expect(mail.from).to eq([group1.email_username])
+        expect(mail.reply_to).to eq([group1.email_username])
+      end
+
+      it "uses the SMTP settings from the group for delivery" do
+        mail = UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash
+        )
+
+        delivery_method = mail.delivery_method.settings
+        expect(delivery_method[:port]).to eq(group1.smtp_port)
+        expect(delivery_method[:address]).to eq(group1.smtp_server)
+        expect(delivery_method[:domain]).to eq("test.com")
+        expect(delivery_method[:password]).to eq("password")
+        expect(delivery_method[:user_name]).to eq("user@test.com")
+      end
+    end
+
     context "when SiteSetting.group_name_in_subject is true" do
       before do
         SiteSetting.group_in_subject = true

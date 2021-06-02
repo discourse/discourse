@@ -327,6 +327,7 @@ class UserNotifications < ActionMailer::Base
     opts[:show_category_in_subject] = false
     opts[:show_tags_in_subject] = false
     opts[:show_group_in_subject] = true if SiteSetting.group_in_subject
+    opts[:use_group_smtp_if_configured] = true
 
     # We use the 'user_posted' event when you are emailed a post in a PM.
     opts[:notification_type] = 'posted'
@@ -460,6 +461,7 @@ class UserNotifications < ActionMailer::Base
       notification_type: notification_type,
       use_invite_template: opts[:use_invite_template],
       use_topic_title_subject: use_topic_title_subject,
+      use_group_smtp_if_configured: opts[:use_group_smtp_if_configured],
       user: user
     }
 
@@ -484,7 +486,12 @@ class UserNotifications < ActionMailer::Base
     user = opts[:user]
     group_name = opts[:group_name]
     locale = user_locale(user)
+
+    # this gets set in MessageBuilder if it is nil here, we just want to be
+    # able to override it if the group has SMTP enabled
+    from_address = nil
     delivery_method_options = nil
+    use_from_address_for_reply_to = false
 
     template = +"user_notifications.user_#{notification_type}"
     if post.topic.private_message?
@@ -522,16 +529,30 @@ class UserNotifications < ActionMailer::Base
     end
 
     group = post.topic.allowed_groups&.first
-    if group.present? && group.smtp_enabled && SiteSetting.enable_smtp
+    if group.present? && group.smtp_enabled && SiteSetting.enable_smtp && opts[:use_group_smtp_if_configured]
+      port, enable_tls, enable_starttls_auto = EmailSettingsValidator.provider_specific_ssl_overrides(
+        group.smtp_server, group.smtp_port, group.smtp_ssl, group.smtp_ssl
+      )
+
+      # TODO (martin): Remove this once testing is over and this is more stable.
+      Rails.logger.warn("Using SMTP settings from group #{group.name} (#{group.id}) to send user notification for topic #{post.topic.id} and user #{user.id} (#{user.email})")
+
       delivery_method_options = {
         address: group.smtp_server,
-        port: group.smtp_port,
-        domain: group.email_username.split('@').last,
+        port: port,
+        domain: group.email_username_domain,
         user_name: group.email_username,
         password: group.email_password,
         authentication: GlobalSetting.smtp_authentication,
-        enable_starttls_auto: group.smtp_ssl
+        enable_starttls_auto: enable_starttls_auto
       }
+
+      # We want from to be the same as the group's email_username, so if
+      # someone emails support@discourse.org they will get a reply from
+      # support@discourse.org and be able to email the SMTP email, which
+      # will forward the email back into Discourse and process/link it correctly.
+      use_from_address_for_reply_to = true
+      from_address = group.email_username
     end
 
     if post.topic.private_message?
@@ -679,7 +700,9 @@ class UserNotifications < ActionMailer::Base
       site_title: SiteSetting.title,
       site_title_url_encoded: UrlHelper.encode_component(SiteSetting.title),
       locale: locale,
-      delivery_method_options: delivery_method_options
+      delivery_method_options: delivery_method_options,
+      use_from_address_for_reply_to: use_from_address_for_reply_to,
+      from: from_address
     }
 
     unless translation_override_exists

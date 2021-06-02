@@ -26,7 +26,7 @@ class GroupSmtpMailer < ActionMailer::Base
     delivery_options = {
       address: from_group.smtp_server,
       port: from_group.smtp_port,
-      domain: from_group.email_username.split('@').last,
+      domain: from_group.email_username_domain,
       user_name: from_group.email_username,
       password: from_group.email_password,
       authentication: GlobalSetting.smtp_authentication,
