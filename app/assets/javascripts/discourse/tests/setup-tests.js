@@ -81,6 +81,16 @@ function createApplication(config, settings) {
   return app;
 }
 
+function resetPreloadStore() {
+  PreloadStore.reset();
+  PreloadStore.store(
+    "directoryColumns",
+    JSON.parse(
+      '[{"name":"likes_given","automatic":true,"icon":"heart","user_field_id":null},{"name":"posts_read","automatic":true,"icon":null,"user_field_id":null},{"name":"likes_received","automatic":true,"icon":"heart","user_field_id":null},{"name":"topic_count","automatic":true,"icon":null,"user_field_id":null},{"name":"post_count","automatic":true,"icon":null,"user_field_id":null},{"name":"topics_entered","automatic":true,"icon":null,"user_field_id":null},{"name":"days_visited","automatic":true,"icon":null,"user_field_id":null},{"name":"Favorite Color","automatic":false,"icon":null,"user_field_id":3}]'
+    )
+  );
+}
+
 function setupTestsCommon(application, container, config) {
   QUnit.config.hidepassed = true;
 
@@ -228,7 +238,7 @@ function setupTestsCommon(application, container, config) {
       site,
     });
 
-    PreloadStore.reset();
+    resetPreloadStore();
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");

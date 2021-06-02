@@ -9,6 +9,7 @@ export default Component.extend({
   chevronIcon: null,
   columnIcon: null,
   translated: false,
+  onActiveRender: null,
 
   toggleProperties() {
     if (this.order === this.field) {
@@ -30,6 +31,12 @@ export default Component.extend({
   },
   didReceiveAttrs() {
     this._super(...arguments);
+    this.set("id", `table-header-toggle-${this.field.replace(/\s/g, "")}`);
     this.toggleChevron();
+  },
+  didRender() {
+    if (this.onActiveRender) {
+      this.onActiveRender(this.id);
+    }
   },
 });

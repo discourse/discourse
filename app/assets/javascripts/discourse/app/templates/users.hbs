@@ -37,27 +37,7 @@
 
         {{#conditional-loading-spinner condition=isLoading}}
           {{#if model.length}}
-
-            <div class="directory-table-container">
-              <table>
-                <thead>
-                  {{table-header-toggle field="username" order=order asc=asc}}
-                  {{#each columns as |column|}}
-                    {{table-header-toggle field=column.name icon=column.icon order=order asc=asc translated=column.user_field_id}}
-                  {{/each}}
-
-                  {{#if showTimeRead}}
-                    <th>{{i18n "directory.time_read"}}</th>
-                  {{/if}}
-                </thead>
-                <tbody>
-                  {{#each model as |item|}}
-                    {{directory-item item=item columns=columns showTimeRead=showTimeRead}}
-                  {{/each}}
-                </tbody>
-              </table>
-            </div>
-
+            {{directory-table items=model columns=columns showTimeRead=showTimeRead order=order asc=asc}}
             {{conditional-loading-spinner condition=model.loadingMore}}
           {{else}}
             <div class="clearfix"></div>
