@@ -20,8 +20,8 @@ describe Imap::Sync do
       :group,
       imap_server: 'imap.gmail.com',
       imap_port: 993,
-      email_username: 'discourse@example.com',
-      email_password: 'discourse@example.com',
+      email_username: 'groupemailusername@example.com',
+      email_password: 'password',
       imap_mailbox_name: '[Gmail]/All Mail'
     )
   end

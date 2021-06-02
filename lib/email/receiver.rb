@@ -953,7 +953,7 @@ module Email
 
     def group_incoming_emails_regex
       @group_incoming_emails_regex = Regexp.union(
-        DB.query_single(<<~SQL).map { |e| e.split("|") }.flatten.compact.uniq
+        DB.query_single(<<~SQL).map { |e| e.split("|") }.flatten.compact_blank.uniq
           SELECT CONCAT(incoming_email, '|', email_username)
           FROM groups
           WHERE incoming_email IS NOT NULL OR email_username IS NOT NULL
