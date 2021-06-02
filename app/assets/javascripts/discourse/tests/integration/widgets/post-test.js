@@ -734,6 +734,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       {{mount-widget widget="post" args=args unhidePost=unhidePost}}
     `,
     beforeEach() {
+      this.currentUser.admin = true;
       this.set("args", { canManage: true, hidden: true });
       this.set("unhidePost", () => (this.unhidden = true));
     },

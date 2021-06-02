@@ -356,7 +356,7 @@ vi:
       settings:
         saved: "Lưu trữ"
         save_changes: "Lưu thay đổi"
-        title: "Xác lập"
+        title: "Cài đặt"
         priorities:
           title: "Ưu tiên xem lại"
       moderation_history: "Lịch sử kiểm duyệt"
@@ -534,8 +534,11 @@ vi:
       add_members:
         title: "Thêm thành viên vào %{group_name}"
         description: "Bạn cũng có thể dán vào danh sách được phân tách bằng dấu phẩy."
-        usernames: "Nhập tên người dùng hoặc địa chỉ email"
-        input_placeholder: "Tên người dùng hoặc email"
+        usernames_or_emails:
+          title: "Nhập tên người dùng hoặc địa chỉ email"
+          input_placeholder: "Tên người dùng hoặc email"
+        usernames:
+          input_placeholder: "Tên người dùng"
         notify_users: "Thông báo cho người dùng"
       requests:
         title: "Những yêu cầu"
@@ -561,6 +564,7 @@ vi:
         email:
           title: "Email"
           status: "Đồng bộ %{old_emails} / %{total_emails} email qua IMAP."
+          save_settings: "Lưu các cài đặt"
           credentials:
             title: "Thông tin đăng nhập"
             smtp_server: "Máy chủ SMTP"
@@ -572,11 +576,10 @@ vi:
             username: "Tên đăng nhập"
             password: "Mật khẩu"
           settings:
-            title: "Xác lập"
+            title: "Cài đặt"
           mailboxes:
             synchronized: "Hộp thư được đồng bộ hóa"
             none_found: "Không tìm thấy hộp thư nào trong tài khoản email này."
-            disabled: "vô hiệu hóa"
         membership:
           title: Thành viên
           access: Truy cập
@@ -1274,6 +1277,10 @@ vi:
           error: "Đã xảy ra lỗi khi tạo liên kết Mời"
           max_redemptions_allowed_label: "Có bao nhiêu người được phép đăng ký bằng cách sử dụng liên kết này?"
           expires_at: "Khi nào thì liên kết mời này hết hạn?"
+        invite:
+          send_invite_email: "Lưu và Gửi Email"
+          save_invite: "Lưu lời mời"
+          invite_saved: "Đã lưu lời mời."
         bulk_invite:
           none: "Không có lời mời để hiển thị trên trang này."
           text: "Mời hàng loạt"
@@ -2054,7 +2061,7 @@ vi:
         title: "Chế độ chậm"
         select: "Người dùng chỉ có thể đăng trong chủ đề này một lần mỗi lần:"
         description: "Người dùng phải đợi trước khi đăng lại chủ đề này để người khác có thời gian trả lời"
-        save: "Bật"
+        enable: "Kích hoạt"
         remove: "Tắt"
         hours: "Giờ:"
         minutes: "Phút:"
@@ -2377,8 +2384,6 @@ vi:
         deselect_all: bỏ chọn tất cả
         description:
           other: "Bạn đã chọn <b>%{count}</b> bài viết."
-      deleted_by_author:
-        other: "(chủ đề bị tác giả thu hồi, sẽ tự động bị xóa sau %{count} giờ trừ khi bị gắn cờ)"
     post:
       quote_reply: "Trích dẫn"
       quote_share: "Chia sẻ"
@@ -2391,8 +2396,6 @@ vi:
       follow_quote: "đến bài viết trích dẫn"
       show_full: "Hiển thị đầy đủ bài viết"
       show_hidden: "Xem nội dung bị bỏ qua."
-      deleted_by_author:
-        other: "(bài viết theo tác giả sẽ được xóa tự động sau %{count} giờ, trừ khi đã đánh dấu)"
       collapse: "Thu nhỏ"
       expand_collapse: "mở/đóng"
       locked: "MOD đã khóa bài đăng này không được chỉnh sửa"
@@ -2429,7 +2432,10 @@ vi:
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
       cancel_composer:
+        confirm: "Bạn muốn làm gì với bài đăng của mình?"
         discard: "Hủy bỏ"
+        save_draft: "Lưu bản nháp để sử dụng sau"
+        keep_editing: "Tiếp tục chỉnh sửa"
       via_email: "bài viết này đăng qua email"
       via_auto_generated_email: "bài đăng này đến qua một email được tạo tự động"
       whisper: "bài viết này là lời nhắn từ điều hành viên"
@@ -2782,6 +2788,12 @@ vi:
         title: "Chủ đề này là một tin nhắn cá nhân"
         help: "Chủ đề này là một tin nhắn cá nhân"
     posts: "Bài viết"
+    posts_likes_MF: |
+      Chủ đề này có {count, plural, one {# trả lời} other {# trả lời}} {ratio, select,
+        low {với tỷ lệ like trên post cao}
+        med {với tỷ lệ like trên post rất cao}
+        high {với tỷ lệ like trên post cực cao}
+        other {}}
     original_post: "Bài viết gốc"
     views: "Lượt xem"
     views_lowercase:
@@ -3077,6 +3089,7 @@ vi:
         everyone_can_use: "Mọi người đều có thể sử dụng thẻ"
         usable_only_by_groups: "Tất cả mọi người đều có thể nhìn thấy thẻ, nhưng chỉ những nhóm sau mới có thể sử dụng chúng"
         visible_only_to_groups: "Thẻ chỉ hiển thị cho các nhóm sau"
+        cannot_save: "Không thể lưu nhóm thẻ. Đảm bảo rằng có ít nhất một thẻ hiện diện, tên nhóm thẻ không trống và một nhóm được chọn cho quyền đối với thẻ."
       topics:
         none:
           unread: "Bạn không có chủ đề chưa đọc này"
@@ -3555,7 +3568,7 @@ vi:
           common: "Chung"
           desktop: "Máy tính để bàn"
           mobile: "Điện thoại"
-          settings: "Xác lập"
+          settings: "Cài đặt"
           translations: "Bản dịch"
           extra_scss: "SCSS bổ sung"
           extra_files: "Các tệp bổ sung"
@@ -3982,6 +3995,7 @@ vi:
         actions:
           block: "Khóa"
           flag: "Gắn cờ"
+          silence: "Im lặng"
         form:
           add: "Thêm"
           exists: "Đã tồn tại"
@@ -4031,6 +4045,7 @@ vi:
         unsuspend_failed: "Có gì đó sai khi gỡ bỏ đình chỉ tài khoản này %{error}"
         suspend_duration: "Tài khoản này sẽ bị đình chỉ bao lâu?"
         suspend_reason_label: "Tại sao bạn bị đình chỉ? Dòng chữ <b>hiển thị cho tất cả mọi người</b> sẽ hiển thị trên trang hồ sơ tài khoản của người dùng này, và sẽ hiển thị cho thành viên khi họ đăng nhập, hãy viết ngắn."
+        suspend_reason_hidden_label: "Tại sao bạn lại đình chỉ? Văn bản này sẽ được hiển thị cho người dùng khi họ cố gắng đăng nhập. Hãy viết ngắn gọn."
         suspend_reason: "Lý do"
         suspend_reasons:
           not_listening_to_staff: "Không lắng nghe phản hồi của nhân viên"
@@ -4263,7 +4278,7 @@ vi:
         reset: "trạng thái đầu"
         none: "không có gì"
       site_settings:
-        title: "Xác lập"
+        title: "Cài đặt"
         no_results: "Không tìm thấy kết quả."
         more_than_30_results: "Có hơn 30 kết quả. Vui lòng tinh chỉnh tìm kiếm của bạn hoặc chọn một danh mục."
         clear_filter: "Xóa"

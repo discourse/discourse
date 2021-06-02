@@ -6,87 +6,6 @@ RSpec.describe EmailSettingsValidator do
   let(:username) { "kwest@gmail.com" }
   let(:password) { "mbdtf" }
 
-  describe "#friendly_exception_message" do
-    it "formats a Net::POPAuthenticationError" do
-      exception = Net::POPAuthenticationError.new("invalid credentials")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.pop3_authentication_error")
-      )
-    end
-
-    it "formats a Net::IMAP::NoResponseError for invalid credentials" do
-      exception = Net::IMAP::NoResponseError.new(stub(data: stub(text: "Invalid credentials")))
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.imap_authentication_error")
-      )
-    end
-
-    it "formats a general Net::IMAP::NoResponseError" do
-      exception = Net::IMAP::NoResponseError.new(stub(data: stub(text: "NO bad problem (Failure)")))
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.imap_no_response_error", message: "NO bad problem")
-      )
-    end
-
-    it "formats a Net::SMTPAuthenticationError" do
-      exception = Net::SMTPAuthenticationError.new("invalid credentials")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.smtp_authentication_error")
-      )
-    end
-
-    it "formats a Net::SMTPServerBusy" do
-      exception = Net::SMTPServerBusy.new("call me maybe later")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.smtp_server_busy_error")
-      )
-    end
-
-    it "formats a Net::SMTPSyntaxError, Net::SMTPFatalError, and Net::SMTPUnknownError" do
-      exception = Net::SMTPSyntaxError.new("bad syntax")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.smtp_unhandled_error", message: exception.message)
-      )
-      exception = Net::SMTPFatalError.new("fatal")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.smtp_unhandled_error", message: exception.message)
-      )
-      exception = Net::SMTPUnknownError.new("unknown")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.smtp_unhandled_error", message: exception.message)
-      )
-    end
-
-    it "formats a SocketError and Errno::ECONNREFUSED" do
-      exception = SocketError.new("bad socket")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.connection_error")
-      )
-      exception = Errno::ECONNREFUSED.new("no thanks")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.connection_error")
-      )
-    end
-
-    it "formats a Net::OpenTimeout and Net::ReadTimeout error" do
-      exception = Net::OpenTimeout.new("timed out")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.timeout_error")
-      )
-      exception = Net::ReadTimeout.new("timed out")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.timeout_error")
-      )
-    end
-
-    it "formats unhandled errors" do
-      exception = StandardError.new("unknown")
-      expect(subject.class.friendly_exception_message(exception)).to eq(
-        I18n.t("email_settings.unhandled_error", message: exception.message)
-      )
-    end
-  end
-
   describe "#validate_imap" do
     let(:host) { "imap.gmail.com" }
     let(:port) { 993 }
@@ -175,6 +94,8 @@ RSpec.describe EmailSettingsValidator do
       obj.stubs(:finish).returns(true)
       obj.stubs(:enable_tls).returns(true)
       obj.stubs(:enable_starttls_auto).returns(true)
+      obj.stubs(:open_timeout=)
+      obj.stubs(:read_timeout=)
       obj
     end
 
@@ -199,12 +120,12 @@ RSpec.describe EmailSettingsValidator do
 
     it "uses the correct ssl verify params for enable_tls if those settings are enabled" do
       net_smtp_stub.expects(:enable_tls)
-      expect { subject.class.validate_smtp(host: host, port: port, username: username, password: password, domain: domain, openssl_verify_mode: "peer", enable_tls: true, enable_starttls_auto: false) }.not_to raise_error
+      expect { subject.class.validate_smtp(host: host, port: 465, username: username, password: password, domain: domain, openssl_verify_mode: "peer", enable_tls: true, enable_starttls_auto: false) }.not_to raise_error
     end
 
     it "uses the correct ssl verify params for enable_starttls_auto if those settings are enabled" do
       net_smtp_stub.expects(:enable_starttls_auto)
-      expect { subject.class.validate_smtp(host: host, port: port, username: username, password: password, domain: domain, openssl_verify_mode: "peer", enable_tls: false, enable_starttls_auto: true) }.not_to raise_error
+      expect { subject.class.validate_smtp(host: host, port: 587, username: username, password: password, domain: domain, openssl_verify_mode: "peer", enable_tls: false, enable_starttls_auto: true) }.not_to raise_error
     end
 
     it "raises an ArgumentError if both enable_tls is true and enable_starttls_auto is true" do
@@ -213,6 +134,20 @@ RSpec.describe EmailSettingsValidator do
 
     it "raises an ArgumentError if a bad authentication method is used" do
       expect { subject.class.validate_smtp(host: host, port: port, username: username, password: password, domain: domain, authentication: :rubber_stamp) }.to raise_error(ArgumentError)
+    end
+
+    context "when the domain is not provided" do
+      let(:domain) { nil }
+      it "gets the domain from the host" do
+        net_smtp_stub.expects(:start).with("gmail.com", username, password, :plain)
+        subject.class.validate_smtp(host: host, port: port, username: username, password: password, enable_tls: true, enable_starttls_auto: false)
+      end
+
+      it "uses localhost when in development mode" do
+        Rails.env.stubs(:development?).returns(true)
+        net_smtp_stub.expects(:start).with("localhost", username, password, :plain)
+        subject.class.validate_smtp(host: host, port: port, username: username, password: password, enable_tls: true, enable_starttls_auto: false)
+      end
     end
   end
 end

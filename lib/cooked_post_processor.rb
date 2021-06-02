@@ -7,6 +7,7 @@ class CookedPostProcessor
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   LOADING_SIZE = 10
   LOADING_COLORS = 32
+  GIF_SOURCES_REGEXP = /(giphy|tenor)\.com\//
 
   attr_reader :cooking_options, :doc
 
@@ -320,7 +321,7 @@ class CookedPostProcessor
 
     upload = Upload.get_from_url(src)
 
-    if upload.present? && upload.animated?
+    if (upload.present? && upload.animated?) || src.match?(GIF_SOURCES_REGEXP)
       img.add_class("animated")
     end
 

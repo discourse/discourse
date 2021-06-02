@@ -31,6 +31,11 @@ class InvitesController < ApplicationController
         end
       end
 
+      email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
+      if email_verified_by_link
+        email = invite.email
+      end
+
       hidden_email = email != invite.email
 
       info = {
@@ -38,7 +43,8 @@ class InvitesController < ApplicationController
         email: email,
         hidden_email: hidden_email,
         username: hidden_email ? '' : UserNameSuggester.suggest(invite.email),
-        is_invite_link: invite.is_invite_link?
+        is_invite_link: invite.is_invite_link?,
+        email_verified_by_link: email_verified_by_link
       }
 
       if staged_user = User.where(staged: true).with_email(invite.email).first

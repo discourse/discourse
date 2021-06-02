@@ -315,8 +315,6 @@ be:
             password: "Пароль"
           settings:
             title: "Налады"
-          mailboxes:
-            disabled: "адключана"
         membership:
           access: доступ
         categories:
@@ -981,7 +979,7 @@ be:
       jump_reply_down: перайсці да больш позняй адказы
       deleted: "Тэма была выдаленая"
       slow_mode_update:
-        save: "Уключыць"
+        enable: "Уключыць"
         remove: "Адключыць"
       topic_status_update:
         when: "калі:"

@@ -269,7 +269,11 @@ export default Component.extend({
       if (tl === 0 || tl === 1) {
         reason +=
           "<br/>" +
-          I18n.t("composer.error.try_like", { heart: iconHTML("heart") });
+          I18n.t("composer.error.try_like", {
+            heart: iconHTML("heart", {
+              label: I18n.t("likes_lowercase", { count: 1 }),
+            }),
+          });
       }
     }
 

@@ -7,6 +7,7 @@ import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new"
 
 export default Component.extend({
   saving: null,
+  disabled: false,
 
   @discourseComputed("saving")
   savingText(saving) {
@@ -15,6 +16,10 @@ export default Component.extend({
 
   actions: {
     save() {
+      if (this.beforeSave) {
+        this.beforeSave();
+      }
+
       this.set("saving", true);
       const group = this.model;
 
@@ -31,6 +36,10 @@ export default Component.extend({
           }
 
           this.set("saved", true);
+
+          if (this.afterSave) {
+            this.afterSave();
+          }
         })
         .catch(popupAjaxError)
         .finally(() => this.set("saving", false));

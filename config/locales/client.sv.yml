@@ -380,6 +380,7 @@ sv:
         type_bonus:
           name: "typ bonus"
           title: "Vissa granskningsärenden kan tilldelas en bonus av personal för att ge dem en högre prioritet."
+      stale_help: "Denna granskningsbara har lösts av någon annan."
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
         required: "Du måste göra anspråk innan du kan granska dem."
@@ -599,8 +600,12 @@ sv:
       add_members:
         title: "Lägg till medlemmar till %{group_name}"
         description: "Du kan även klistra in i en kommaseparerad lista."
-        usernames: "Ange användarnamn eller e-postadresser"
-        input_placeholder: "Användarnamn eller e-post"
+        usernames_or_emails:
+          title: "Ange användarnamn eller e-postadresser"
+          input_placeholder: "Användarnamn eller e-post"
+        usernames:
+          title: "Ange användarnamn"
+          input_placeholder: "Användarnamn"
         notify_users: "Meddela användare"
       requests:
         title: "Ansökningar"
@@ -626,6 +631,25 @@ sv:
         email:
           title: "E-post"
           status: "Synkroniserat %{old_emails}/ %{total_emails} e-post genom IMAP."
+          enable_smtp: "Aktivera SMTP"
+          enable_imap: "Aktivera IMAP"
+          test_settings: "Testa inställningar"
+          save_settings: "Spara inställningar"
+          settings_required: "Alla inställningar krävs. Fyll i alla fält innan valideringen."
+          smtp_settings_valid: "SMTP-inställningar är giltiga."
+          smtp_title: "SMTP"
+          smtp_instructions: "När du aktiverar SMTP för gruppen skickas alla utgående e-postmeddelanden från gruppens inkorg via de SMTP-inställningar som anges här istället för e-postservern som konfigurerats för andra e-postmeddelanden från ditt forum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Ytterligare inställningar"
+          imap_instructions: "När du aktiverar IMAP för gruppen synkroniseras e-post mellan gruppinkorgen och den medföljande IMAP-servern och brevlådan. SMTP måste aktiveras med giltiga och testade autentiseringsuppgifter innan IMAP kan aktiveras. Det användarnamn och lösenord som används för SMTP kommer att användas för IMAP. Mer information finns i <a target=\"_blank\" href=\"https://meta.discourse.org/t/imap-support-for-group-inboxes/160588\">funktionsmeddelande på Discourse Meta</a>."
+          imap_alpha_warning: "Varning: Detta är en alfafunktion. Endast Gmail stöds officiellt. Använd på egen risk!"
+          imap_settings_valid: "IMAP-inställningar är giltiga."
+          smtp_disable_confirm: "Om du inaktiverar SMTP återställs alla SMTP- och IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
+          imap_disable_confirm: "Om du inaktiverar IMAP återställs alla IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
+          imap_mailbox_not_selected: "Du måste välja en brevlåda för den här IMAP-konfigurationen, annars synkroniseras inga brevlådor!"
+          prefill:
+            title: "Förfyll med inställningar för:"
+            gmail: "GMail"
           credentials:
             title: "Kontouppgifter"
             smtp_server: "SMTP Server"
@@ -643,7 +667,7 @@ sv:
           mailboxes:
             synchronized: "Synkroniserad brevlåda"
             none_found: "Inga brevlådor hittades för detta e-postkonto."
-            disabled: "avstängd"
+            disabled: "Inaktiverad"
         membership:
           title: Medlemskap
           access: Tillgång
@@ -968,6 +992,7 @@ sv:
         description: "Hoppa över nybörjartips och utmärkelser för ny användare"
         not_first_time: "Är det inte din första gång?"
         skip_link: "Hoppa över dessa tips"
+        read_later: "Jag läser det senare."
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
       color_scheme: "Färgschema"
@@ -1220,6 +1245,7 @@ sv:
         invalid: "Vi ber dig ange en giltig e-postadress"
         authenticated: "Din e-postadress har blivit verifierad av %{provider}"
         invite_auth_email_invalid: "Ditt inbjudningsmeddelande matchar inte den e-postadress som autentiserats av %{provider}"
+        authenticated_by_invite: "Din e-postadress har verifierats genom inbjudan"
         frequency_immediately: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
         frequency:
           one: "Vi skickar bara e-post om du inte synts till den senaste minuten."
@@ -2150,10 +2176,13 @@ sv:
         delete: "Ta bort ämnen"
         dismiss: "Avfärda"
         dismiss_read: "Avfärda alla olästa"
+        dismiss_read_with_selected: "Avfärda %{count} olästa"
         dismiss_button: "Avfärda..."
+        dismiss_button_with_selected: "Avfärda (%{count})…"
         dismiss_tooltip: "Avfärda nya inlägg eller sluta följa ämnen"
         also_dismiss_topics: "Sluta följa de här ämnena så att de aldrig syns som olästa för mig igen"
         dismiss_new: "Avfärda nya"
+        dismiss_new_with_selected: "Avfärda nya (%{count})"
         toggle: "växla val av flertalet ämnen"
         actions: "Massändringar"
         change_category: "Sätt kategori"
@@ -2280,7 +2309,8 @@ sv:
         title: "Långsamt läge"
         select: "Användare får bara publicera i detta ämne en gång varje:"
         description: "För att främja tankeväckande diskussioner i snabba eller omtvistade diskussioner måste användarna vänta innan de publicerar i det här ämnet igen."
-        save: "Aktivera"
+        enable: "Aktivera"
+        update: "Uppdatera"
         enabled_until: "Aktiverat till:"
         remove: "Inaktivera"
         hours: "Timmar:"
@@ -2645,9 +2675,7 @@ sv:
         description:
           one: Du har markerat <b>%{count}</b> inlägg.
           other: "Du har markerat <b>%{count}</b> inlägg."
-      deleted_by_author:
-        one: "(ämne tillbakadraget av författaren, kommer att raderas automatiskt om %{count} timme om det inte flaggas)"
-        other: "(ämne tillbakadraget av författaren, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
+      deleted_by_author_simple: "(ämne raderat av författaren)"
     post:
       quote_reply: "Citat"
       quote_share: "Dela"
@@ -2662,9 +2690,7 @@ sv:
       follow_quote: "gå till det citerade inlägget"
       show_full: "Visa hela inlägget"
       show_hidden: "Visa ignorerat innehåll"
-      deleted_by_author:
-        one: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timme om det inte flaggas)"
-        other: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
+      deleted_by_author_simple: "(inlägg raderat av författaren)"
       collapse: "förminska"
       expand_collapse: "utvidga/förminska"
       locked: "en i personalen har låst detta inlägg från att redigeras"
@@ -3323,6 +3349,9 @@ sv:
           name: Övrigt
         posting:
           name: Publicera inlägg
+      favorite_max_reached: "Du kan inte markera fler utmärkelser som favoriter."
+      favorite_max_not_reached: "Markera denna utmärkelse som favorit"
+      favorite_count: "%{count}/%{max} utmärkelser markerade som favorit"
     tagging:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
@@ -4062,7 +4091,7 @@ sv:
           yaml:
             text: "YAML"
             title: "Definiera temainställningar i YAML-format"
-          scss_color_variables_warning: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">denna guide</a> för mer information."
+          scss_color_variables_warning: 'Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">denna guide</a> för mer information.'
           scss_warning_inline: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats."
         colors:
           select_base:
@@ -4389,6 +4418,7 @@ sv:
         download: Hämta
         clear_all: Rensa alla
         clear_all_confirm: "Är du säker på att du vill rensa alla bevakade ord för åtgärden %{action}?"
+        invalid_regex: 'Det bevakade ordet "%{word}" är ett ogiltigt reguljärt uttryck.'
         actions:
           block: "Blockera"
           censor: "Censur"
@@ -4396,6 +4426,7 @@ sv:
           flag: "Flagga"
           replace: "Ersätt"
           tag: "Tagg"
+          silence: "Tysta"
         action_descriptions:
           block: "Förhindra att inlägg med dessa ord publiceras. Användaren kommer att se ett felmeddelande när de försöker skicka inlägget."
           censor: "Tillåt inlägg med dessa ord, men ersätt orden med tecken som döljer det censurerade orden."
@@ -4403,6 +4434,7 @@ sv:
           flag: "Tillåt inlägg med dessa ord, men flagga orden som olämpliga så att moderatorer kan granska dem."
           replace: "Ersätt ord i inlägg med andra ord eller länkar"
           tag: "Tagga ämnen automatiskt baserat på första inlägget"
+          silence: "Användares första inlägg som innehåller dessa ord kommer att kräva godkännande av personalen innan de kan ses och användaren kommer automatiskt att tystas."
         form:
           label: "Har ord eller fras"
           placeholder: "Ange ord eller fras (* är ett jokertecken)"
@@ -4418,7 +4450,7 @@ sv:
           upload_successful: "Uppladdning lyckades. Ord har lagts till."
         test:
           button_label: "Testa"
-          modal_title: "Testa '%{action}' bevakade ord"
+          modal_title: "Testa %{action} bevakade ord"
           description: "Ange text nedan för att leta efter matchningar med bevakade ord"
           found_matches: "Hittade matchande:"
           no_matches: "Hittades inga matchningar"
@@ -4477,7 +4509,7 @@ sv:
         suspend_reasons:
           not_listening_to_staff: "Lyssnade inte på personalen"
           consuming_staff_time: "Förbrukade oproportionerligt mycket personaltid"
-          combatative: "För stridslysten"
+          combative: "Alltför stridslysten"
           in_wrong_place: "På fel plats"
           no_constructive_purpose: "Inget konstruktivt syfte med sina handlingar annat än att skapa oenighet inom forumet"
           custom: "Anpassad..."

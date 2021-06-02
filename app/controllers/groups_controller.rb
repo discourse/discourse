@@ -10,7 +10,8 @@ class GroupsController < ApplicationController
     :histories,
     :request_membership,
     :search,
-    :new
+    :new,
+    :test_email_settings
   ]
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
@@ -150,8 +151,13 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
-    if group.update(group_params(automatic: group.automatic))
+    params_with_permitted = group_params(automatic: group.automatic)
+    clear_disabled_email_settings(group, params_with_permitted)
+
+    if group.update(params_with_permitted)
       GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
+      group.record_email_setting_changes!(current_user)
+      group.expire_imap_mailbox_cache
 
       if guardian.can_see?(group)
         render json: success_json
@@ -580,6 +586,52 @@ class GroupsController < ApplicationController
     render_serialized(category_groups.sort_by { |category_group| category_group.category.name }, CategoryGroupSerializer)
   end
 
+  def test_email_settings
+    params.require(:group_id)
+    params.require(:protocol)
+    params.require(:port)
+    params.require(:host)
+    params.require(:username)
+    params.require(:password)
+    params.require(:ssl)
+
+    group = Group.find(params[:group_id])
+    guardian.ensure_can_edit!(group)
+
+    RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
+
+    settings = params.except(:group_id, :protocol)
+    enable_tls = settings[:ssl] == "true"
+    email_host = params[:host]
+
+    if !["smtp", "imap"].include?(params[:protocol])
+      raise Discourse::InvalidParameters.new("Valid protocols to test are smtp and imap")
+    end
+
+    hijack do
+      begin
+        case params[:protocol]
+        when "smtp"
+          enable_starttls_auto = false
+          settings.delete(:ssl)
+
+          final_settings = settings.merge(enable_tls: enable_tls, enable_starttls_auto: enable_starttls_auto)
+            .permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
+          EmailSettingsValidator.validate_as_user(current_user, "smtp", **final_settings.to_h.symbolize_keys)
+        when "imap"
+          final_settings = settings.merge(ssl: enable_tls)
+            .permit(:host, :port, :username, :password, :ssl, :debug)
+          EmailSettingsValidator.validate_as_user(current_user, "imap", **final_settings.to_h.symbolize_keys)
+        end
+      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
+        return render_json_error(
+          EmailSettingsExceptionHandler.friendly_exception_message(err, email_host)
+        )
+      end
+      render json: success_json
+    end
+  end
+
   private
 
   def group_params(automatic: false)
@@ -620,10 +672,16 @@ class GroupsController < ApplicationController
             :smtp_server,
             :smtp_port,
             :smtp_ssl,
+            :smtp_enabled,
+            :smtp_updated_by,
+            :smtp_updated_at,
             :imap_server,
             :imap_port,
             :imap_ssl,
             :imap_mailbox_name,
+            :imap_enabled,
+            :imap_updated_by,
+            :imap_updated_at,
             :email_username,
             :email_password,
             :primary_group,
@@ -677,5 +735,25 @@ class GroupsController < ApplicationController
       users = []
     end
     users
+  end
+
+  def clear_disabled_email_settings(group, params_with_permitted)
+    should_clear_imap = group.imap_enabled && params_with_permitted.key?(:imap_enabled) && params_with_permitted[:imap_enabled] == "false"
+    should_clear_smtp = group.smtp_enabled && params_with_permitted.key?(:smtp_enabled) && params_with_permitted[:smtp_enabled] == "false"
+
+    if should_clear_imap || should_clear_smtp
+      params_with_permitted[:imap_server] = nil
+      params_with_permitted[:imap_ssl] = false
+      params_with_permitted[:imap_port] = nil
+      params_with_permitted[:imap_mailbox_name] = ""
+    end
+
+    if should_clear_smtp
+      params_with_permitted[:smtp_server] = nil
+      params_with_permitted[:smtp_ssl] = false
+      params_with_permitted[:smtp_port] = nil
+      params_with_permitted[:email_username] = nil
+      params_with_permitted[:email_password] = nil
+    end
   end
 end

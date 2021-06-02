@@ -96,7 +96,7 @@ class DiscourseJsProcessor
 JS
       source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
       js_source = ::JSON.generate(source, quirks_mode: true)
-      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex', 'proposal-object-rest-spread'] }).code")
+      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex', 'proposal-object-rest-spread', 'proposal-optional-chaining'] }).code")
       ctx.eval(js)
 
       ctx
@@ -143,9 +143,9 @@ JS
 
       if opts[:module_name] && !@skip_module
         filename = opts[:filename] || 'unknown'
-        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-modules-amd', {noInterop: true}], 'proposal-object-rest-spread', ['proposal-decorators', {legacy: true} ], exports.WidgetHbsCompiler] }).code"
+        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-modules-amd', {noInterop: true}], 'proposal-object-rest-spread', 'proposal-optional-chaining', ['proposal-decorators', {legacy: true} ], 'proposal-class-properties', exports.WidgetHbsCompiler] }).code"
       else
-        "Babel.transform(#{js_source}, { ast: false, plugins: ['proposal-json-strings', 'proposal-nullish-coalescing-operator', 'proposal-logical-assignment-operators', 'proposal-numeric-separator', 'proposal-optional-catch-binding', 'transform-dotall-regex', 'proposal-unicode-property-regex', 'transform-named-capturing-groups-regex', 'proposal-object-rest-spread', 'proposal-optional-chaining', 'transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex', ['proposal-decorators', {legacy: true}], exports.WidgetHbsCompiler] }).code"
+        "Babel.transform(#{js_source}, { ast: false, plugins: ['proposal-json-strings', 'proposal-nullish-coalescing-operator', 'proposal-logical-assignment-operators', 'proposal-numeric-separator', 'proposal-optional-catch-binding', 'transform-dotall-regex', 'proposal-unicode-property-regex', 'transform-named-capturing-groups-regex', 'proposal-object-rest-spread', 'proposal-optional-chaining', 'transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex', ['proposal-decorators', {legacy: true}], 'proposal-class-properties', exports.WidgetHbsCompiler] }).code"
       end
     end
 

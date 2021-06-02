@@ -6,6 +6,10 @@ import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-butto
 export default Component.extend({
   elementId: "topic-footer-buttons",
 
+  attributeBindings: ["role"],
+
+  role: "region",
+
   // Allow us to extend it
   layoutName: "components/topic-footer-buttons",
 

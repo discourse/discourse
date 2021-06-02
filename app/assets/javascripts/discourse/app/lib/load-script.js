@@ -99,7 +99,6 @@ export default function loadScript(url, opts) {
       ajax({
         url: fullUrl,
         dataType: "text",
-        cache: true,
       }).then(cb);
     } else {
       // Always load JavaScript with script tag to avoid Content Security Policy inline violations

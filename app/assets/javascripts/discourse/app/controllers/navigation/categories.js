@@ -1,6 +1,6 @@
 import NavigationDefaultController from "discourse/controllers/navigation/default";
-import { inject } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 
 export default NavigationDefaultController.extend({
-  discoveryCategories: inject("discovery/categories"),
+  discoveryCategories: controller("discovery/categories"),
 });

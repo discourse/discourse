@@ -2,7 +2,7 @@ import { isProduction, isTesting } from "discourse-common/config/environment";
 // Initialize the message bus to receive messages.
 import getURL from "discourse-common/lib/get-url";
 import { handleLogoff } from "discourse/lib/ajax";
-import userPresent from "discourse/lib/user-presence";
+import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 const CONNECTIVITY_ERROR_CLASS = "message-bus-offline";
@@ -50,6 +50,18 @@ export default {
 
     // we do not want to start anything till document is complete
     messageBus.stop();
+
+    // This will notify MessageBus to force a long poll after user becomes
+    // present
+    // When 20 minutes pass we stop long polling due to "shouldLongPollCallback".
+    onPresenceChange({
+      unseenTime: LONG_POLL_AFTER_UNSEEN_TIME,
+      callback: () => {
+        if (messageBus.onVisibilityChange) {
+          messageBus.onVisibilityChange();
+        }
+      },
+    });
 
     if (siteSettings.login_required && !user) {
       // Endpoint is not available in this case, so don't try

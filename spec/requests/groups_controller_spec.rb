@@ -1997,4 +1997,116 @@ describe GroupsController do
       )
     end
   end
+
+  describe "#test_email_settings" do
+    let(:params) do
+      {
+        protocol: protocol,
+        ssl: ssl,
+        port: port,
+        host: host,
+        username: username,
+        password: password
+      }
+    end
+
+    before do
+      sign_in(user)
+      group.group_users.where(user: user).last.update(owner: user)
+    end
+
+    context "validating smtp" do
+      let(:protocol) { "smtp" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:domain) { nil }
+      let(:ssl) { true }
+      let(:host) { "smtp.somemailsite.com" }
+      let(:port) { 587 }
+
+      context "when an error is raised" do
+        before do
+          EmailSettingsValidator.expects(:validate_smtp).raises(Net::SMTPAuthenticationError, "Invalid credentials")
+        end
+        it "uses the friendly error message functionality to return the message to the user" do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(I18n.t("email_settings.smtp_authentication_error"))
+        end
+      end
+    end
+
+    context "validating imap" do
+      let(:protocol) { "imap" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:domain) { nil }
+      let(:ssl) { true }
+      let(:host) { "imap.somemailsite.com" }
+      let(:port) { 993 }
+
+      it "validates with the correct TLS settings" do
+        EmailSettingsValidator.expects(:validate_imap).with(
+          has_entry(ssl: true)
+        )
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+        expect(response.status).to eq(200)
+      end
+
+      context "when an error is raised" do
+        before do
+          EmailSettingsValidator.expects(:validate_imap).raises(
+            Net::IMAP::NoResponseError, stub(data: stub(text: "Invalid credentials"))
+          )
+        end
+        it "uses the friendly error message functionality to return the message to the user" do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(I18n.t("email_settings.imap_authentication_error"))
+        end
+      end
+    end
+
+    describe "global param validation and rate limit" do
+      let(:protocol) { "smtp" }
+      let(:host) { "smtp.gmail.com" }
+      let(:port) { 587 }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:ssl) { true }
+
+      context "when the protocol is not accepted" do
+        let(:protocol) { "sigma" }
+        it "raises an invalid params error" do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"].first).to match(/Valid protocols to test are smtp and imap/)
+        end
+      end
+
+      context "user does not have access to the group" do
+        before do
+          group.group_users.destroy_all
+        end
+        it "errors if the user does not have access to the group" do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "rate limited" do
+        it "rate limits anon searches per user" do
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          5.times do
+            post "/groups/#{group.id}/test_email_settings.json", params: params
+          end
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(429)
+        end
+      end
+    end
+  end
 end

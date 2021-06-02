@@ -1,5 +1,7 @@
-{{#if selected}}
-  <div id="bulk-select">
-    {{d-button class="btn-default bulk-select-btn" action=(action "showBulkActions") icon="wrench"}}
-  </div>
+{{#if canDoBulkActions}}
+  {{#if selected}}
+    <div id="bulk-select">
+      {{d-button class="btn-default bulk-select-btn" action=(action "showBulkActions") icon="wrench"}}
+    </div>
+  {{/if}}
 {{/if}}

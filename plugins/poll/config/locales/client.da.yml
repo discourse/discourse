@@ -89,6 +89,7 @@ da:
           multiple: Flere valg
           number: Nummerbedømmelse
         poll_result:
+          label: Vis Resultater...
           always: Altid synlig
           staff: Kun personale
         poll_chart_type:

@@ -308,7 +308,7 @@ export default Component.extend({
       customOptions.push({
         icon: "globe-americas",
         id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
-        label: "bookmarks.reminders.post_local_date",
+        label: "time_shortcut.post_local_date",
         time: this._postLocalDate(),
         timeFormatted: this._postLocalDate().format(
           I18n.t("dates.long_no_year")

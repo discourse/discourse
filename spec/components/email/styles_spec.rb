@@ -185,6 +185,15 @@ describe Email::Styles do
       fragment = html_fragment('<aside class="quote"> <div class="title"> <div class="quote-controls"> <i class="fa fa-chevron-down" title="expand/collapse"></i><a href="/t/xyz/123" title="go to the quoted post" class="back"></a> </div> <img alt="" width="20" height="20" src="https://cdn-enterprise.discourse.org/boingboing/user_avatar/bbs.boingboing.net/techapj/40/54379_1.png" class="avatar">techAPJ: </div> <blockquote> <p>lorem ipsum</p> </blockquote> </aside>')
       expect(fragment.to_s.squish).to match(/^<blockquote.+<\/blockquote>$/)
     end
+
+    it "removes GitHub excerpts" do
+      stub_request(:head, "https://github.com/discourse/discourse/pull/1253").to_return(status: 200, body: "", headers: {})
+      stub_request(:get, "https://api.github.com/repos/discourse/discourse/pulls/1253").to_return(status: 200, body: onebox_response("githubpullrequest"))
+
+      onebox = Oneboxer.onebox("https://github.com/discourse/discourse/pull/1253")
+      fragment = html_fragment(onebox)
+      expect(fragment.css(".github-body-container .excerpt")).to be_empty
+    end
   end
 
   context "replace_secure_media_urls" do

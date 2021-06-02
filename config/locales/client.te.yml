@@ -884,7 +884,7 @@ te:
       jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
       slow_mode_update:
-        save: "చేతనం"
+        enable: "చేతనం"
         remove: "అచేతనం"
       auto_update_input:
         tomorrow: "రేపు"
@@ -1025,9 +1025,6 @@ te:
       continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోటెడ్ టపాకు వెళ్లు"
       show_full: "పూర్తి టపా చూపు"
-      deleted_by_author:
-        one: " (టపా రచయిత ద్వారా తొలగింపబడింది , స్వతస్సిధ్దంగా తొలగింపబ[ది %{count} కాకపోతే సమయం కేతనించలేదు)"
-        other: "(టపా రచయిత ద్వారా ఉపసంహరించబడింది , స్వతసిధ్ధంగా తొలగించబడతాయి %{count} కాకపోతే సమయం కేతనించలేదు)"
       expand_collapse: "పెంచు/తుంచు"
       unread: "టపా చదవనిది"
       errors:

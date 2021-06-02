@@ -172,12 +172,7 @@ const Topic = RestModel.extend({
   @discourseComputed("related_messages")
   relatedMessages(relatedMessages) {
     if (relatedMessages) {
-      const store = this.store;
-
-      return this.set(
-        "related_messages",
-        relatedMessages.map((st) => store.createRecord("topic", st))
-      );
+      return relatedMessages.map((st) => this.store.createRecord("topic", st));
     }
   },
 
@@ -756,7 +751,14 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories, tracked = false, tag = false) {
+  resetNew(category, include_subcategories, opts = {}) {
+    let { tracked, tag, topicIds } = {
+      tracked: false,
+      tag: null,
+      topicIds: null,
+      ...opts,
+    };
+
     const data = { tracked };
     if (category) {
       data.category_id = category.id;
@@ -764,6 +766,9 @@ Topic.reopenClass({
     }
     if (tag) {
       data.tag_id = tag.id;
+    }
+    if (topicIds) {
+      data.topic_ids = topicIds;
     }
 
     return ajax("/topics/reset-new", { type: "PUT", data });

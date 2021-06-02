@@ -11,7 +11,6 @@ export default Mixin.create({
   searchTags(url, data, callback) {
     return ajax(getURL(url), {
       quietMillis: 200,
-      cache: true,
       dataType: "json",
       data,
     })

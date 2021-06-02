@@ -66,16 +66,13 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        margin-top: 0.15em;
 
         .discourse-tags {
           .discourse-tag {
             margin-right: 0.25em;
           }
         }
-      }
-
-      a.widget-link {
-        color: var(--tertiary);
       }
     }
 

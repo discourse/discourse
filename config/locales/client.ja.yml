@@ -538,8 +538,11 @@ ja:
       add_members:
         title: "メンバーを %{group_name}に追加"
         description: "カンマ区切りのリストに貼り付けることもできます。"
-        usernames: "ユーザー名またはメールアドレスを入力してください"
-        input_placeholder: "ユーザー名またはメール"
+        usernames_or_emails:
+          title: "ユーザー名またはメールアドレスを入力してください"
+          input_placeholder: "ユーザー名またはメール"
+        usernames:
+          input_placeholder: "ユーザー名"
         notify_users: "ユーザーに通知"
       requests:
         title: "リクエスト"
@@ -582,7 +585,6 @@ ja:
           mailboxes:
             synchronized: "同期されたメールボックス"
             none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
-            disabled: "無効"
         membership:
           title: メンバーシップ
           access: アクセス
@@ -2037,7 +2039,7 @@ ja:
       deleted: "トピックは削除されました"
       slow_mode_update:
         select: "ユーザーは、このトピックに一度だけ投稿できます。"
-        save: "有効"
+        enable: "有効にする"
         remove: "無効にする"
         durations:
           10_minutes: "10分"
@@ -2310,8 +2312,6 @@ ja:
       follow_quote: "引用した投稿に移動"
       show_full: "全て表示"
       show_hidden: "無視したコンテンツを見る"
-      deleted_by_author:
-        other: "(投稿は投稿者により削除されました。何らかの通報がされていない限り、%{count}時間後に自動的に削除されます)"
       collapse: "折りたたむ"
       expand_collapse: "開く/折りたたむ"
       gap:

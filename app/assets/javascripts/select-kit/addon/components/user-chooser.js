@@ -75,6 +75,7 @@ export default MultiSelectComponent.extend({
       includeMessageableGroups: options.includeMessageableGroups,
       groupMembersOf: options.groupMembersOf,
       allowEmails: options.allowEmails,
+      includeStagedUsers: this.includeStagedUsers,
     }).then((result) => {
       if (typeof result === "string") {
         // do nothing promise probably got cancelled

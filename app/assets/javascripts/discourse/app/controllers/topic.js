@@ -1036,7 +1036,8 @@ export default Controller.extend(bufferedProperty("model"), {
         options = {
           action: Composer.CREATE_TOPIC,
           draftKey: post.topic.draft_key,
-          categoryId: this.get("model.category.id"),
+          topicCategoryId: this.get("model.category.id"),
+          prioritizedCategoryId: this.get("model.category.id"),
         };
       }
 
@@ -1639,7 +1640,7 @@ export default Controller.extend(bufferedProperty("model"), {
       function () {
         const $post = $(`.topic-post article#post_${postNumber}`);
 
-        if ($post.length === 0 || isElementInViewport($post)) {
+        if ($post.length === 0 || isElementInViewport($post[0])) {
           return;
         }
 

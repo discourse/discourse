@@ -247,6 +247,13 @@ function showReplyTab(attrs, siteSettings) {
 createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
 
+  buildAttributes() {
+    return {
+      role: "heading",
+      "aria-level": "2",
+    };
+  },
+
   settings: {
     displayPosterName: true,
   },
@@ -596,6 +603,10 @@ createWidget("post-article", {
 
   buildAttributes(attrs) {
     return {
+      "aria-label": I18n.t("share.post", {
+        postNumber: attrs.post_number,
+      }),
+      role: "region",
       "data-post-id": attrs.id,
       "data-topic-id": attrs.topicId,
       "data-user-id": attrs.user_id,

@@ -40,41 +40,47 @@ describe Jobs::ReviewablePriorities do
     expect(Reviewable.score_required_to_hide_post).to eq(8.33)
   end
 
-  it "will set priorities based on the maximum score" do
-    create_reviewables(Jobs::ReviewablePriorities.min_reviewables)
+  context 'when there are enough reviewables' do
+    let(:medium_threshold) { 8.0 }
+    let(:high_threshold) { 13.0 }
+    let(:score_to_hide_post) { 8.66 }
 
-    Jobs::ReviewablePriorities.new.execute({})
+    it "will set priorities based on the maximum score" do
+      create_reviewables(Jobs::ReviewablePriorities.min_reviewables)
 
-    expect_min_score(:low, SiteSetting.reviewable_low_priority_threshold)
-    expect_min_score(:medium, 9.0)
-    expect_min_score(:high, 14.0)
-    expect(Reviewable.score_required_to_hide_post).to eq(9.33)
-  end
+      Jobs::ReviewablePriorities.new.execute({})
 
-  it 'ignore negative scores when calculating priorities' do
-    create_reviewables(Jobs::ReviewablePriorities.min_reviewables)
-    negative_score = -9
-    10.times { create_with_score(negative_score) }
+      expect_min_score(:low, SiteSetting.reviewable_low_priority_threshold)
+      expect_min_score(:medium, medium_threshold)
+      expect_min_score(:high, high_threshold)
+      expect(Reviewable.score_required_to_hide_post).to eq(score_to_hide_post)
+    end
 
-    Jobs::ReviewablePriorities.new.execute({})
+    it 'ignore negative scores when calculating priorities' do
+      create_reviewables(Jobs::ReviewablePriorities.min_reviewables)
+      negative_score = -9
+      10.times { create_with_score(negative_score) }
 
-    expect_min_score(:low, SiteSetting.reviewable_low_priority_threshold)
-    expect_min_score(:medium, 9.0)
-    expect_min_score(:high, 14.0)
-    expect(Reviewable.score_required_to_hide_post).to eq(9.33)
-  end
+      Jobs::ReviewablePriorities.new.execute({})
 
-  it 'ignores non-approved reviewables' do
-    create_reviewables(Jobs::ReviewablePriorities.min_reviewables)
-    low_score = 2
-    10.times { create_with_score(low_score, status: :pending) }
+      expect_min_score(:low, SiteSetting.reviewable_low_priority_threshold)
+      expect_min_score(:medium, medium_threshold)
+      expect_min_score(:high, high_threshold)
+      expect(Reviewable.score_required_to_hide_post).to eq(score_to_hide_post)
+    end
 
-    Jobs::ReviewablePriorities.new.execute({})
+    it 'ignores non-approved reviewables' do
+      create_reviewables(Jobs::ReviewablePriorities.min_reviewables)
+      low_score = 2
+      10.times { create_with_score(low_score, status: :pending) }
 
-    expect_min_score(:low, SiteSetting.reviewable_low_priority_threshold)
-    expect_min_score(:medium, 9.0)
-    expect_min_score(:high, 14.0)
-    expect(Reviewable.score_required_to_hide_post).to eq(9.33)
+      Jobs::ReviewablePriorities.new.execute({})
+
+      expect_min_score(:low, SiteSetting.reviewable_low_priority_threshold)
+      expect_min_score(:medium, medium_threshold)
+      expect_min_score(:high, high_threshold)
+      expect(Reviewable.score_required_to_hide_post).to eq(score_to_hide_post)
+    end
   end
 
   def expect_min_score(priority, score)

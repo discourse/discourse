@@ -48,7 +48,11 @@ export default {
       messageable: true,
       can_see_members: true,
       has_messages: true,
-      message_count: 2
+      message_count: 2,
+      imap_mailboxes: [
+        "All Mail",
+        "Important"
+      ]
     },
     extras: {
       visible_group_names: ["discourse"]

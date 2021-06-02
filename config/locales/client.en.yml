@@ -426,6 +426,7 @@ en:
         type_bonus:
           name: "type bonus"
           title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
+      stale_help: "This reviewable has been resolved by someone else."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -691,6 +692,25 @@ en:
         email:
           title: "Email"
           status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
+          enable_smtp: "Enable SMTP"
+          enable_imap: "Enable IMAP"
+          test_settings: "Test Settings"
+          save_settings: "Save Settings"
+          settings_required: "All settings are required, please fill in all fields before validation."
+          smtp_settings_valid: "SMTP settings valid."
+          smtp_title: "SMTP"
+          smtp_instructions: "When you enable SMTP for the group, all outbound emails sent from the group's inbox will be sent via the SMTP settings specified here instead of the mail server configured for other emails sent by your forum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Additional Settings"
+          imap_instructions: 'When you enable IMAP for the group, emails are synced between the group inbox and the provided IMAP server and mailbox. SMTP must be enabled with valid and tested credentials before IMAP can be enabled. The email username and password used for SMTP will be used for IMAP. For more information see <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">feature announcement on Discourse Meta</a>.'
+          imap_alpha_warning: "Warning: This is an alpha-stage feature. Only Gmail is officially supported. Use at your own risk!"
+          imap_settings_valid: "IMAP settings valid."
+          smtp_disable_confirm: "If you disable SMTP, all SMTP and IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_disable_confirm: "If you disable IMAP all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
+          prefill:
+            title: "Prefill with settings for:"
+            gmail: "GMail"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
@@ -708,7 +728,7 @@ en:
           mailboxes:
             synchronized: "Synchronized Mailbox"
             none_found: "No mailboxes were found in this email account."
-            disabled: "disabled"
+            disabled: "Disabled"
         membership:
           title: Membership
           access: Access
@@ -1041,6 +1061,7 @@ en:
         description: "Skip new user onboarding tips and badges"
         not_first_time: "Not your first time?"
         skip_link: "Skip these tips"
+        read_later: "I'll read it later."
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
@@ -1309,6 +1330,7 @@ en:
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by %{provider}"
         invite_auth_email_invalid: "Your invitation email does not match the email authenticated by %{provider}"
+        authenticated_by_invite: "Your email has been authenticated by the invitation"
         frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
         frequency:
           one: "We'll only email you if we haven't seen you in the last minute."
@@ -2331,10 +2353,13 @@ en:
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
+        dismiss_read_with_selected: "Dismiss %{count} unread"
         dismiss_button: "Dismiss…"
+        dismiss_button_with_selected: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
+        dismiss_new_with_selected: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Set Category"
@@ -2483,7 +2508,8 @@ en:
         title: "Slow Mode"
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
-        save: "Enable"
+        enable: "Enable"
+        update: "Update"
         enabled_until: "Enabled until:"
         remove: "Disable"
         hours: "Hours:"
@@ -3591,6 +3617,9 @@ en:
           name: Other
         posting:
           name: Posting
+      favorite_max_reached: "You can’t favorite more badges."
+      favorite_max_not_reached: "Mark this badge as favorite"
+      favorite_count: "%{count}/%{max} badges marked as favorite"
 
     tagging:
       all_tags: "All Tags"
@@ -3734,6 +3763,15 @@ en:
         tomorrow: "Until tomorrow"
         custom: "Custom"
       set_schedule: "Set a notification schedule"
+
+    trust_levels:
+      names:
+        newuser: "new user"
+        basic: "basic user"
+        member: "member"
+        regular: "regular"
+        leader: "leader"
+      detailed_name: "%{level}: %{name}"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4694,6 +4732,7 @@ en:
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
+        invalid_regex: 'The watched word "%{word}" is an invalid regular expression.'
         actions:
           block: "Block"
           censor: "Censor"
@@ -4701,21 +4740,26 @@ en:
           flag: "Flag"
           replace: "Replace"
           tag: "Tag"
+          silence: "Silence"
+          link: "Link"
         action_descriptions:
           block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
           censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
           require_approval: "Posts containing these words will require approval by staff before they can be seen."
           flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
-          replace: "Replace words in posts with other words or links"
+          replace: "Replace words in posts with other words"
           tag: "Automatically tag topics based on first post"
+          silence: "First posts of users containing these words will require approval by staff before they can be seen and the user will be automatically silenced."
+          link: "Replace words in posts with links"
         form:
           label: "Has word or phrase"
           placeholder: "Enter word or phrase (* is a wildcard)"
           placeholder_regexp: "regular expression"
-          replacement_label: "Replacement"
-          replacement_placeholder: "example or https://example.com"
+          replace_label: "Replacement"
+          replace_placeholder: "example"
           tag_label: "Tag"
-          tag_placeholder: "tag1,tag2,tag3"
+          link_label: "Link"
+          link_placeholder: "https://example.com"
           add: "Add"
           success: "Success"
           exists: "Already exists"

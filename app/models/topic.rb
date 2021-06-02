@@ -1695,7 +1695,9 @@ class Topic < ActiveRecord::Base
       post_number: 1,
       data: {
         topic_title: self.title,
-        display_username: username
+        display_username: username,
+        original_user_id: user.id,
+        original_username: user.username
       }.to_json
     )
   end

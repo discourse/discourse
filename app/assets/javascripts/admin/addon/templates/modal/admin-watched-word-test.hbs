@@ -5,7 +5,7 @@
     <p>
       {{i18n "admin.watched_words.test.found_matches"}}
       <ul>
-        {{#if isReplace}}
+        {{#if (or isReplace isLink)}}
           {{#each matches as |match|}}
             <li>
               <span class="match">{{match.match}}</span>

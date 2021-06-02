@@ -101,7 +101,18 @@ createWidget("header-notifications", {
                 "span.ring-backdrop",
                 {},
                 h("h1.ring-first-notification", {}, [
-                  h("span", {}, I18n.t("user.first_notification")),
+                  h(
+                    "span",
+                    { className: "first-notification" },
+                    I18n.t("user.first_notification")
+                  ),
+                  h("span", { className: "read-later" }, [
+                    this.attach("link", {
+                      action: "readLater",
+                      className: "read-later-link",
+                      label: "user.skip_new_user_tips.read_later",
+                    }),
+                  ]),
                   h("span", {}, [
                     I18n.t("user.skip_new_user_tips.not_first_time"),
                     " ",
@@ -110,7 +121,6 @@ createWidget("header-notifications", {
                       className: "skip-new-user-tips",
                       label: "user.skip_new_user_tips.skip_link",
                       title: "user.skip_new_user_tips.description",
-                      omitSpan: true,
                     }),
                   ]),
                 ])
@@ -496,11 +506,21 @@ export default createWidget("header", {
 
     this.state.userVisible = !this.state.userVisible;
     this.toggleBodyScrolling(this.state.userVisible);
+
+    // auto focus on first button in dropdown
+    schedule("afterRender", () =>
+      document.querySelector(".user-menu button")?.focus()
+    );
   },
 
   toggleHamburger() {
     this.state.hamburgerVisible = !this.state.hamburgerVisible;
     this.toggleBodyScrolling(this.state.hamburgerVisible);
+
+    // auto focus on first link in dropdown
+    schedule("afterRender", () => {
+      document.querySelector(".hamburger-panel .menu-links a")?.focus();
+    });
   },
 
   toggleBodyScrolling(bool) {
@@ -603,6 +623,10 @@ export default createWidget("header", {
     // Update UI
     this.state.ringBackdrop = false;
     this.scheduleRerender();
+  },
+
+  readLater() {
+    this.headerDismissFirstNotificationMask();
   },
 
   skipNewUserTips() {

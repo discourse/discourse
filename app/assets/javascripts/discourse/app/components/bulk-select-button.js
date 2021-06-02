@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
+import { reads } from "@ember/object/computed";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
@@ -16,6 +17,8 @@ export default Component.extend({
         headerHeight + 20 + "px";
     });
   },
+
+  canDoBulkActions: reads("currentUser.staff"),
 
   actions: {
     showBulkActions() {

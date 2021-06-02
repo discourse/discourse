@@ -66,8 +66,6 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
-    moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
-
     create_temp_table
     delete_invalid_post_timings
     move_each_post
@@ -78,8 +76,12 @@ class PostMover
     update_upload_security_status
     update_bookmarks
 
-    if moving_all_posts
-      @original_topic.update_status('closed', true, @user)
+    posts_left = @original_topic.posts
+      .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
+      .count
+
+    if posts_left == 1
+      close_topic_and_schedule_deletion
     end
 
     destination_topic.reload
@@ -545,5 +547,18 @@ class PostMover
       :delete_inaccessible_notifications,
       topic_id: topic.id
     )
+  end
+
+  def close_topic_and_schedule_deletion
+    @original_topic.update_status('closed', true, @user)
+
+    days_to_deleting = SiteSetting.delete_merged_stub_topics_after_days
+    if days_to_deleting > 0
+      @original_topic.set_or_create_timer(
+        TopicTimer.types[:delete],
+        days_to_deleting * 24,
+        by_user: @user
+      )
+    end
   end
 end

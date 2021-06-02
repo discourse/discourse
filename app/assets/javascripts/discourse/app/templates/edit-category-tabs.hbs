@@ -1,6 +1,17 @@
 <div class="edit-category {{if expandedMenu "expanded-menu"}}">
-  <div class="edit-category-title">
-    <h2>{{title}}</h2>
+  <div class="edit-category-title-bar">
+    <div class="edit-category-title">
+      <h2>{{title}}</h2>
+      {{#if model.id}}
+        {{bread-crumbs
+          categories=site.categoriesList
+          category=model
+          noSubcategories=model.noSubcategories
+          editingCategory=true
+          editingCategoryTab=selectedTab
+        }}
+      {{/if}}
+    </div>
     {{#unless mobileView}}
       {{#if model.id}}
         {{d-button
