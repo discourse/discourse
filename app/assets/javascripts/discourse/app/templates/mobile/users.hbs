@@ -30,7 +30,7 @@
         {{#if model.length}}
           <div class="total-rows">{{i18n "directory.total_rows" count=model.totalRows}}</div>
           {{#each model as |item|}}
-            {{directory-item tagName="div" class="user" item=item showTimeRead=showTimeRead}}
+            {{directory-item tagName="div" class="user" item=item columns=columns showTimeRead=showTimeRead}}
           {{/each}}
 
           {{conditional-loading-spinner condition=model.loadingMore}}

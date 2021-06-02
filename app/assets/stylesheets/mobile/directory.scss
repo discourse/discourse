@@ -42,6 +42,9 @@
       flex: 1 1 50%;
       .value {
         font-weight: bold;
+        &.user-field {
+          font-size: var(--font-down-1);
+        }
       }
       .label {
         margin-left: 0.2em;
