@@ -459,8 +459,6 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.custom_icons(theme_ids)
-    return [] if theme_ids.blank?
-
     # Automatically register icons in sprites added via themes or plugins
     icons = []
     custom_svg_sprites(theme_ids).each do |fname|
