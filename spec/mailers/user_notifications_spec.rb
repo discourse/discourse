@@ -657,6 +657,36 @@ describe UserNotifications do
         expect(delivery_method[:password]).to eq("password")
         expect(delivery_method[:user_name]).to eq("user@test.com")
       end
+
+      context "when imap is configured for the group" do
+        before do
+          group1.update(
+            imap_server: "imap.test.com",
+            imap_port: 993,
+            imap_ssl: true,
+            imap_enabled: true,
+            imap_mailbox_name: "All Mail"
+          )
+        end
+
+        it "does not use group SMTP settings for delivery, this is handled by Jobs::GroupSmtpEmail" do
+          mail = UserNotifications.user_private_message(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash
+          )
+
+          expect(mail.from).to eq([SiteSetting.notification_email])
+          expect(mail.reply_to).to eq([SiteSetting.notification_email])
+          delivery_method = mail.delivery_method.settings
+          expect(delivery_method[:port]).not_to eq(group1.smtp_port)
+          expect(delivery_method[:address]).not_to eq(group1.smtp_server)
+          expect(delivery_method[:domain]).not_to eq("test.com")
+          expect(delivery_method[:password]).not_to eq("password")
+          expect(delivery_method[:user_name]).not_to eq("user@test.com")
+        end
+      end
     end
 
     context "when SiteSetting.group_name_in_subject is true" do

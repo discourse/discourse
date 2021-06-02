@@ -529,7 +529,19 @@ class UserNotifications < ActionMailer::Base
     end
 
     group = post.topic.allowed_groups&.first
-    if group.present? && group.smtp_enabled && SiteSetting.enable_smtp && opts[:use_group_smtp_if_configured]
+
+    # If the group has IMAP enabled, then this will be handled by
+    # the Jobs::GroupSmtpEmail which is enqueued from the PostAlerter
+    #
+    # use_group_smtp_if_configured is used to ensure that no notifications
+    # expect for specific ones that we bless (such as user_private_message)
+    # accidentally get sent with the group SMTP settings.
+    if group.present? &&
+       group.smtp_enabled &&
+       !group.imap_enabled &&
+       SiteSetting.enable_smtp &&
+       opts[:use_group_smtp_if_configured]
+
       port, enable_tls, enable_starttls_auto = EmailSettingsValidator.provider_specific_ssl_overrides(
         group.smtp_server, group.smtp_port, group.smtp_ssl, group.smtp_ssl
       )
