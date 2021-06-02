@@ -166,7 +166,7 @@ describe DiscourseTagging do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin),
             for_input: true,
             category: category,
-            term: 'fun'
+            limit: 5
           ).to_a
 
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))

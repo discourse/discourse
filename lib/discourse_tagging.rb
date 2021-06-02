@@ -313,7 +313,7 @@ module DiscourseTagging
 
     # show required tags for non-staff
     # or for staff when
-    # - there are more required thans than the query limit
+    # - there are more available tags than the query limit
     # - and no search term has been included
     filter_required_tags = category&.required_tag_group && (filter_for_non_staff || (term.blank? && category&.required_tag_group&.tags.size >= opts[:limit].to_i))
 
