@@ -478,7 +478,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.get_set_cache(key)
-    cache[key] ||= yield
+    return cache[key] if cache[key]
+    value = yield
+    cache.defer_set(key, value)
+    value
   end
 
   def self.cache
