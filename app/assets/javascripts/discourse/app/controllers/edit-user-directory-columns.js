@@ -47,13 +47,14 @@ export default Controller.extend(ModalFunctionality, {
     let resetColumns = this.columns;
     resetColumns
       .sort((a, b) =>
-        (a.automatic_position || Infinity) > (b.automatic_position || Infinity)
+        (a.automatic_position || a.user_field.position + 1000) >
+        (b.automatic_position || b.user_field.position + 1000)
           ? 1
           : -1
       )
       .forEach((column, index) => {
         column.setProperties({
-          position: column.automatic_position || index,
+          position: column.automatic_position || index + 1,
           enabled: column.automatic,
         });
       });
