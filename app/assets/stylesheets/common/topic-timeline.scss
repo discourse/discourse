@@ -20,7 +20,9 @@
 
   &.timeline-fullscreen.show {
     max-height: 700px;
-    transition: max-height 0.4s ease-out;
+    @media (prefers-reduced-motion: no-preference) {
+      transition: max-height 0.4s ease-out;
+    }
 
     @media screen and (max-height: 425px) {
       max-height: 75vh;
@@ -38,11 +40,13 @@
 
   &.timeline-fullscreen {
     transform: translateY(var(--offset));
-    &.animate {
-      transition: transform 0.1s linear;
+    @media (prefers-reduced-motion: no-preference) {
+      &.animate {
+        transition: transform 0.1s linear;
+      }
+      transition: max-height 0.3s ease-in;
     }
     max-height: 0;
-    transition: max-height 0.3s ease-in;
     position: fixed;
     margin-left: 0;
     background-color: var(--secondary);
