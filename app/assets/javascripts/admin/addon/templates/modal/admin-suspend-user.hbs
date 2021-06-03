@@ -6,6 +6,14 @@
     {{/if}}
 
     {{#if user.canSuspend}}
+      <div class="penalty-history">
+        <label>
+          {{i18n "admin.user.penalty_history"}}
+        </label>
+        <div class="suspended-count">{{i18n "admin.user.tl3_requirements.suspended"}}: {{user.penalty_counts.suspended}}</div>
+        <div class="silenced-count">{{i18n "admin.user.tl3_requirements.silenced"}}: {{user.penalty_counts.silenced}}</div>
+      </div>
+
       <div class="until-controls">
         <label>
           {{future-date-input
