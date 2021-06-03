@@ -4858,6 +4858,7 @@ en:
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
+        penalty_history: "Penalty History"
         clear_penalty_history:
           title: "Clear Penalty History"
           description: "users with penalties cannot reach TL3"

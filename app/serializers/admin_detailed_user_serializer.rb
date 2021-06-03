@@ -22,6 +22,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :full_suspend_reason,
              :suspended_till,
              :silence_reason,
+             :penalty_counts,
              :primary_group_id,
              :badge_count,
              :warnings_received_count,
@@ -94,6 +95,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def silence_reason
     object.silence_reason
+  end
+
+  def penalty_counts
+    TrustLevel3Requirements.new(object).penalty_counts
   end
 
   def silenced_by
