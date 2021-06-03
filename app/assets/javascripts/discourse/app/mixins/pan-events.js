@@ -3,7 +3,6 @@ import Mixin from "@ember/object/mixin";
    Pan events is a mixin that allows components to detect and respond to swipe gestures
    It fires callbacks for panStart, panEnd, panMove with the pan state, and the original event.
  **/
-export const SWIPE_VELOCITY = 40;
 export const SWIPE_DISTANCE_THRESHOLD = 50;
 export const SWIPE_VELOCITY_THRESHOLD = 0.12;
 export const MINIMUM_SWIPE_DISTANCE = 5;
