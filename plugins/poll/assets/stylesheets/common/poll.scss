@@ -25,9 +25,16 @@ div.poll {
   }
 
   img {
+    // TODO: remove once disable_image_size_calculations is removed
     // needed to override internal styles in image-sizing hack
     max-width: 100% !important;
     height: auto;
+    // Hacky way to stop images without width/height
+    // from causing abrupt unintended scrolling
+    &:not([width]):not([height]) {
+      height: 200px !important;
+      object-fit: contain;
+    }
   }
 
   .poll-info {
