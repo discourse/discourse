@@ -1,6 +1,5 @@
 import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
-  SWIPE_VELOCITY,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
 import { cancel, later, schedule } from "@ember/runloop";
@@ -23,7 +22,6 @@ const SiteHeaderComponent = MountWidget.extend(
     _isPanning: false,
     _panMenuOrigin: "right",
     _panMenuOffset: 0,
-    _scheduledMovingAnimation: null,
     _scheduledRemoveAnimate: null,
     _topic: null,
     _mousetrap: null,
@@ -38,17 +36,33 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateOpening($panel) {
-      $panel.css({ right: "", left: "" });
+      const $headerCloak = $(".header-cloak");
+      $panel.addClass("animate");
+      $headerCloak.addClass("animate");
+      this._scheduledRemoveAnimate = later(() => {
+        $panel.removeClass("animate");
+        $headerCloak.removeClass("animate");
+      }, 200);
+      $panel.css("--offset", 0);
+      $headerCloak.css("--opacity", 0.5);
       this._panMenuOffset = 0;
     },
 
     _animateClosing($panel, menuOrigin, windowWidth) {
-      $panel.css(menuOrigin, -windowWidth);
       this._animate = true;
-      schedule("afterRender", () => {
-        this.eventDispatched("dom:clean", "header");
-        this._panMenuOffset = 0;
-      });
+      const $headerCloak = $(".header-cloak");
+      $panel.addClass("animate");
+      $headerCloak.addClass("animate");
+      const offsetDirection = menuOrigin === "left" ? -1 : 1;
+      $panel.css("--offset", `${offsetDirection * windowWidth}px`);
+      this._scheduledRemoveAnimate = later(() => {
+        $panel.removeClass("animate");
+        $headerCloak.removeClass("animate");
+        schedule("afterRender", () => {
+          this.eventDispatched("dom:clean", "header");
+          this._panMenuOffset = 0;
+        });
+      }, 200);
     },
 
     _isRTL() {
@@ -72,23 +86,12 @@ const SiteHeaderComponent = MountWidget.extend(
       const windowWidth = $window.width();
       const $menuPanels = $(".menu-panel");
       const menuOrigin = this._panMenuOrigin;
-      this._shouldMenuClose(event, menuOrigin)
-        ? (offset += SWIPE_VELOCITY)
-        : (offset -= SWIPE_VELOCITY);
       $menuPanels.each((idx, panel) => {
         const $panel = $(panel);
-        const $headerCloak = $(".header-cloak");
-        $panel.css(menuOrigin, -offset);
-        $headerCloak.css("opacity", Math.min(0.5, (300 - offset) / 600));
-        if (offset > windowWidth) {
+        if (this._shouldMenuClose(event, menuOrigin)) {
           this._animateClosing($panel, menuOrigin, windowWidth);
-        } else if (offset <= 0) {
-          this._animateOpening($panel);
         } else {
-          //continue to open or close menu
-          this._scheduledMovingAnimation = window.requestAnimationFrame(() =>
-            this._handlePanDone(offset, event)
-          );
+          this._animateOpening($panel);
         }
       });
     },
@@ -135,10 +138,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this._isPanning = false;
       $(".menu-panel").each((idx, panel) => {
         const $panel = $(panel);
-        let offset = $panel.css("right");
-        if (this._panMenuOrigin === "left") {
-          offset = $panel.css("left");
-        }
+        let offset = $panel.css("--offset");
         offset = Math.abs(parseInt(offset, 10));
         this._handlePanDone(offset, e);
       });
@@ -154,12 +154,12 @@ const SiteHeaderComponent = MountWidget.extend(
         const $headerCloak = $(".header-cloak");
         if (this._panMenuOrigin === "right") {
           const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
-          $panel.css("right", pxClosed);
-          $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
+          $panel.css("--offset", `${-pxClosed}px`);
+          $headerCloak.css("--opacity", Math.min(0.5, (300 + pxClosed) / 600));
         } else {
           const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
-          $panel.css("left", pxClosed);
-          $headerCloak.css("opacity", Math.min(0.5, (300 + pxClosed) / 600));
+          $panel.css("--offset", `${pxClosed}px`);
+          $headerCloak.css("--opacity", Math.min(0.5, (300 + pxClosed) / 600));
         }
       });
     },
@@ -286,7 +286,6 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.off("dom:clean", this, "_cleanDom");
 
       cancel(this._scheduledRemoveAnimate);
-      window.cancelAnimationFrame(this._scheduledMovingAnimation);
 
       this._mousetrap.reset();
 
@@ -336,17 +335,17 @@ const SiteHeaderComponent = MountWidget.extend(
 
         $panel.removeClass("drop-down slide-in").addClass(viewMode);
         if (this._animate || this._panMenuOffset !== 0) {
-          $headerCloak.css("opacity", 0);
           if (
             this.site.mobileView &&
             $panel.parent(this._leftMenuClass()).length > 0
           ) {
             this._panMenuOrigin = "left";
-            $panel.css("left", -windowWidth);
+            $panel.css("--offset", `${-windowWidth}px`);
           } else {
             this._panMenuOrigin = "right";
-            $panel.css("right", -windowWidth);
+            $panel.css("--offset", `${windowWidth}px`);
           }
+          $headerCloak.css("--opacity", 0);
         }
 
         const $panelBody = $(".panel-body", $panel);
@@ -406,15 +405,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
         $panel.width(width);
         if (this._animate) {
-          $panel.addClass("animate");
-          $headerCloak.addClass("animate");
-          this._scheduledRemoveAnimate = later(() => {
-            $panel.removeClass("animate");
-            $headerCloak.removeClass("animate");
-          }, 200);
+          this._animateOpening($panel);
         }
-        $panel.css({ right: "", left: "" });
-        $headerCloak.css("opacity", 0.5);
         this._animate = false;
       });
     },

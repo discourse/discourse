@@ -377,8 +377,12 @@ export default createWidget("hamburger-menu", {
       const windowWidth = $window.width();
       const $panel = $(".menu-panel");
       $panel.addClass("animate");
-      const panelOffsetDirection = this.site.mobileView ? "left" : "right";
-      $panel.css(panelOffsetDirection, -windowWidth);
+      let panelOffsetDirection = this.site.mobileView ? -1 : 1;
+      panelOffsetDirection =
+        $("html").css("direction") === "rtl"
+          ? -panelOffsetDirection
+          : panelOffsetDirection;
+      $panel.css("--offset", `${panelOffsetDirection * windowWidth}px`);
       const $headerCloak = $(".header-cloak");
       $headerCloak.addClass("animate");
       $headerCloak.css("opacity", 0);

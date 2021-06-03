@@ -276,7 +276,8 @@ export default createWidget("user-menu", {
       const windowWidth = $window.width();
       const $panel = $(".menu-panel");
       $panel.addClass("animate");
-      $panel.css("right", -windowWidth);
+      let panelOffsetDirection = $("html").css("direction") === "rtl" ? -1 : 1;
+      $panel.css("--offset", `${panelOffsetDirection * windowWidth}px`);
       const $headerCloak = $(".header-cloak");
       $headerCloak.addClass("animate");
       $headerCloak.css("opacity", 0);
