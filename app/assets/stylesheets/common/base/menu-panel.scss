@@ -68,6 +68,7 @@
     flex-wrap: wrap;
 
     .show-all {
+      display: flex;
       flex: 1 1 auto;
       button {
         width: 100%;
@@ -115,28 +116,30 @@
 }
 
 .menu-panel {
-  li,
-  li.heading {
-    a.widget-link,
-    a.categories-link {
-      padding: 0.25em 0.5em;
-      display: block;
-      color: var(--primary);
-      &:hover,
-      &:focus {
-        background-color: var(--highlight-medium);
-        outline: none;
-      }
+  .widget-link,
+  .categories-link {
+    padding: 0.25em 0.5em;
+    display: block;
+    color: var(--primary);
+    &:hover,
+    &:focus {
+      background-color: var(--highlight-medium);
+      outline: none;
+    }
 
-      .d-icon {
-        color: var(--primary-medium);
-      }
+    .d-icon {
+      color: var(--primary-medium);
     }
 
     .new {
       font-size: $font-down-1;
       margin-left: 0.5em;
       color: var(--primary-med-or-secondary-med);
+    }
+
+    &.show-help,
+    &.filter {
+      color: var(--tertiary);
     }
   }
 
