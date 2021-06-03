@@ -380,7 +380,8 @@ class TopicTrackingState
     staff: false,
     admin: false,
     select: nil,
-    custom_state_filter: nil
+    custom_state_filter: nil,
+    additional_join_sql: nil
   )
     unread =
       if skip_unread
@@ -404,11 +405,11 @@ class TopicTrackingState
       end
 
     select_sql = select || "
+           DISTINCT topics.id as topic_id,
            u.id as user_id,
-           topics.id as topic_id,
            topics.created_at,
            topics.updated_at,
-           #{staff ? "highest_staff_post_number highest_post_number" : "highest_post_number"},
+           #{highest_post_number_column_select(staff)},
            last_read_post_number,
            c.id as category_id,
            tu.notification_level,
@@ -478,6 +479,7 @@ class TopicTrackingState
       LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
       LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}
       LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}
+      #{additional_join_sql}
       WHERE u.id = :user_id AND
             #{filter_old_unread_sql}
             topics.archetype <> 'private_message' AND
@@ -504,6 +506,10 @@ class TopicTrackingState
     end
 
     sql
+  end
+
+  def self.highest_post_number_column_select(staff)
+    "#{staff ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
   end
 
   def self.publish_private_message(topic, archive_user_id: nil,
