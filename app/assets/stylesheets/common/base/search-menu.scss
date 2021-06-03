@@ -277,10 +277,10 @@
     }
 
     .topic-title {
+      display: inline-block;
+      color: var(--tertiary);
       overflow-wrap: anywhere;
-      font-size: var(--font-up-1);
       line-height: $line-height-medium;
-
       @supports not (overflow-wrap: anywhere) {
         word-break: break-word;
       }
