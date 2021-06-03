@@ -20,7 +20,7 @@ import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resolveShareUrl } from "discourse/helpers/share-url";
-import { userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -424,6 +424,9 @@ const Topic = RestModel.extend({
           "details.can_delete": false,
           "details.can_recover": true,
         });
+        if (!deleted_by.staff) {
+          DiscourseURL.redirectTo("/");
+        }
       })
       .catch(popupAjaxError);
   },
