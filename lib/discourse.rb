@@ -930,6 +930,7 @@ module Discourse
 
       JsLocaleHelper.load_translations(SiteSetting.default_locale)
       Site.json_for(Guardian.new)
+      SvgSprite.preload
     end
 
     [
