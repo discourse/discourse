@@ -81,7 +81,7 @@ const SiteHeaderComponent = MountWidget.extend(
       return this._isRTL() ? "toggleHamburger" : "toggleUserMenu";
     },
 
-    _handlePanDone(offset, event) {
+    _handlePanDone(event) {
       const $window = $(window);
       const windowWidth = $window.width();
       const $menuPanels = $(".menu-panel");
@@ -136,12 +136,7 @@ const SiteHeaderComponent = MountWidget.extend(
         return;
       }
       this._isPanning = false;
-      $(".menu-panel").each((idx, panel) => {
-        const $panel = $(panel);
-        let offset = $panel.css("--offset");
-        offset = Math.abs(parseInt(offset, 10));
-        this._handlePanDone(offset, e);
-      });
+      this._handlePanDone(e);
     },
 
     panMove(e) {
