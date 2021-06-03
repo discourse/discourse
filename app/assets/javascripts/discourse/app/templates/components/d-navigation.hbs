@@ -24,14 +24,14 @@
           class="btn-default edit-category"
           action=editCategory
           icon="wrench"
-          label="category.edit"}}
+          ariaLabel="category.edit"}}
       {{/if}}
     {{/unless}}
   {{/if}}
 
   {{#if tag}}
     {{#if showToggleInfo}}
-      {{d-button icon="tag" class="btn-default" label="tagging.info" action=toggleInfo id="show-tag-info"}}
+      {{d-button icon="wrench" class="btn-default" ariaLabel="tagging.info" action=toggleInfo id="show-tag-info"}}
     {{/if}}
   {{/if}}
 

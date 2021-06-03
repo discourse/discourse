@@ -188,6 +188,7 @@ module SvgSprite
     "sync",
     "table",
     "tag",
+    "tags",
     "tasks",
     "thermometer-three-quarters",
     "thumbs-down",
