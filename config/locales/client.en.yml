@@ -3704,14 +3704,18 @@ en:
 
       groups:
         title: "Tag Groups"
-        about: "Add tags to groups to manage them more easily."
+        about_heading: "Select a tag group or create a new one"
+        about_heading_empty: "Create a new tag group to get started"
+        about_description: "Tag groups help you manage permissions for many tags in one place."
         new: "New Group"
-        tags_label: "Tags in this group:"
-        parent_tag_label: "Parent tag:"
-        parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
+        new_title: "Create New Group"
+        edit_title: "Edit Tag Group"
+        tags_label: "Tags in this group"
+        parent_tag_label: "Parent tag"
+        parent_tag_description: "Tags from this group can only be used if the parent tag is present."
         one_per_topic_label: "Limit one tag per topic from this group"
         new_name: "New Tag Group"
-        name_placeholder: "Tag Group Name"
+        name_placeholder: "Name"
         save: "Save"
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
@@ -3719,6 +3723,10 @@ en:
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
         cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty, and a group is selected for tags permission."
+        tags_placeholder: "Search or create tags"
+        parent_tag_placeholder: "Optional"
+        select_groups_placeholder: "Select groups..."
+        disabled: "Tagging is disabled. "
 
       topics:
         none:
