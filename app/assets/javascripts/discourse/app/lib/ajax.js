@@ -54,6 +54,7 @@ export function updateCsrfToken() {
 
 export function ajax() {
   let url, args;
+  let ignoreUnsent = true;
   let ajaxObj;
 
   if (arguments.length === 1) {
@@ -68,6 +69,10 @@ export function ajax() {
   } else if (arguments.length === 2) {
     url = arguments[0];
     args = arguments[1];
+  } else if (arguments.length === 3) {
+    url = arguments[0];
+    args = arguments[1];
+    ignoreUnsent = arguments[2];
   }
 
   function performAjax(resolve, reject) {
@@ -112,7 +117,7 @@ export function ajax() {
 
     args.error = (xhr, textStatus, errorThrown) => {
       // 0 represents the `UNSENT` state
-      if (xhr.readyState === 0) {
+      if (ignoreUnsent && xhr.readyState === 0) {
         // Make sure we log pretender errors in test mode
         if (textStatus === "error" && isTesting()) {
           throw errorThrown;
