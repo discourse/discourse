@@ -64,15 +64,20 @@ module DiscourseAutomation
           'type' => ['string', 'integer']
         }
       },
+      'boolean' => {
+        'value' => {
+          'type' => ['boolean']
+        }
+      },
       'text_list' => {
         'list' => {
           'type' => 'array',
           'items' => [{ 'type': 'string' }]
         }
       },
-      'date' => {
-        'execute_at' => {
-          'type' => 'integer'
+      'date_time' => {
+        'value' => {
+          'type' => 'string'
         }
       },
       'group' => {

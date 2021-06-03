@@ -1,0 +1,22 @@
+<section class="field date-field">
+  <div class="control-group">
+    {{fields/da-field-label label=label}}
+
+    <div class="controls">
+      <div class="controls-row">
+        {{input
+          type="datetime-local"
+          value=(readonly localTime)
+          input=(action "convertToUniversalTime" value="target.value")
+        }}
+
+
+        {{#if field.metadata.value}}
+          {{d-button icon="trash-alt" action=(action (mut field.metadata.value) value=null)}}
+        {{/if}}
+      </div>
+
+      {{fields/da-field-description description=description}}
+    </div>
+  </div>
+</section>

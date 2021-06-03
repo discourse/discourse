@@ -1,12 +1,12 @@
-<section class="field date-field">
+<section class="field boolean-field">
   <div class="control-group">
     {{fields/da-field-label label=label}}
 
     <div class="controls">
-      {{date-time-input
-        date=dateObject
-        onChange=(action (mut field.metadata.date))
-        showTime=false
+      {{input
+        type="checkbox"
+        checked=field.metadata.value
+        input=(action (mut field.metadata.value) value="target.checked")
       }}
 
       {{fields/da-field-description description=description}}

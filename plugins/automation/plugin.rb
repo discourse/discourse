@@ -54,6 +54,7 @@ after_initialize do
     '../app/lib/discourse_automation/triggers/point_in_time',
     '../app/lib/discourse_automation/triggers/post_created_edited',
     '../app/lib/discourse_automation/triggers/topic',
+    '../app/lib/discourse_automation/scripts/pin_topic',
     '../app/lib/discourse_automation/scripts/gift_exchange',
     '../app/lib/discourse_automation/scripts/send_pms',
     '../app/lib/discourse_automation/scripts/topic_required_words',

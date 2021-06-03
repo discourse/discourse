@@ -19,7 +19,7 @@ describe Jobs::DiscourseAutomationTracker do
 
     context 'pending automation is in past' do
       before do
-        automation.upsert_field!('execute_at', 'date', { date: 2.hours.from_now }, target: 'trigger')
+        automation.upsert_field!('execute_at', 'date_time', { value: 2.hours.from_now }, target: 'trigger')
       end
 
       it 'consumes the pending automation' do
@@ -35,7 +35,7 @@ describe Jobs::DiscourseAutomationTracker do
 
     context 'pending automation is in future' do
       before do
-        automation.upsert_field!('execute_at', 'date', { date: 2.hours.from_now }, target: 'trigger')
+        automation.upsert_field!('execute_at', 'date_time', { value: 2.hours.from_now }, target: 'trigger')
       end
 
       it 'doesn’t consume the pending automation' do

@@ -81,6 +81,14 @@ en:
               description: Optional, allows to limit trigger execution to this category
       scriptables:
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Topic ID
+            pinned_globally:
+              label: Pinned globally
+            pinned_until:
+              label: Pinned until
         flag_post_on_words:
           fields:
             words:

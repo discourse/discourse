@@ -20,7 +20,7 @@ describe 'GiftExchange' do
 
   context 'ran from point_in_time trigger' do
     before do
-      automation.upsert_field!('execute_at', 'date', { date: 3.hours.from_now }, target: 'trigger')
+      automation.upsert_field!('execute_at', 'date_time', { value: 3.hours.from_now }, target: 'trigger')
     end
 
     it 'creates expected PM' do

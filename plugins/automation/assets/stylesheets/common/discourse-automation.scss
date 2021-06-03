@@ -1,4 +1,8 @@
 .discourse-automation {
+  ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+
   .automations {
     .relative-date {
       font-size: $font-down-1;
@@ -130,6 +134,12 @@
       margin: 0;
       padding: 0.25em 0;
     }
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    height: 34px;
   }
 
   .text-field {
