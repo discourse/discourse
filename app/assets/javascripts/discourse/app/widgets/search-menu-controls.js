@@ -80,7 +80,6 @@ createWidget("search-context", {
       );
     }
 
-    result.push(h("div.clearfix"));
     return result;
   },
 
