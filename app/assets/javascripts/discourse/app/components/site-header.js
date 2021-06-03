@@ -55,6 +55,7 @@ const SiteHeaderComponent = MountWidget.extend(
       $headerCloak.addClass("animate");
       const offsetDirection = menuOrigin === "left" ? -1 : 1;
       $panel.css("--offset", `${offsetDirection * windowWidth}px`);
+      $headerCloak.css("--opacity", 0);
       this._scheduledRemoveAnimate = later(() => {
         $panel.removeClass("animate");
         $headerCloak.removeClass("animate");
