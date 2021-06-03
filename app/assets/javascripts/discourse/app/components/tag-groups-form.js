@@ -73,8 +73,6 @@ export default Component.extend(bufferedProperty("model"), {
 
   actions: {
     setPermissionsType(permissionName) {
-      this.set("permissionName", permissionName);
-
       let updatedPermissions = Object.assign(
         {},
         this.buffered.get("permissions")
