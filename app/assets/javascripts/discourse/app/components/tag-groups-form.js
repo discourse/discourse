@@ -5,9 +5,11 @@ import PermissionType from "discourse/models/permission-type";
 import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 
 export default Component.extend(bufferedProperty("model"), {
+  router: service(),
   tagName: "",
   allGroups: null,
 
@@ -34,15 +36,6 @@ export default Component.extend(bufferedProperty("model"), {
       (!this.everyoneSelected(permissions) &&
         isEmpty(this.selectedGroupNames(permissions)))
     );
-  },
-
-  @discourseComputed("buffered.permissions")
-  showPrivateChooser(permissions) {
-    if (!permissions) {
-      return true;
-    }
-
-    return permissions.everyone !== PermissionType.READONLY;
   },
 
   @discourseComputed("buffered.permissions", "allGroups")
@@ -80,6 +73,8 @@ export default Component.extend(bufferedProperty("model"), {
 
   actions: {
     setPermissionsType(permissionName) {
+      this.set("permissionName", permissionName);
+
       let updatedPermissions = Object.assign(
         {},
         this.buffered.get("permissions")
@@ -140,6 +135,8 @@ export default Component.extend(bufferedProperty("model"), {
 
         if (this.onSave) {
           this.onSave();
+        } else {
+          this.router.transitionTo("tagGroups.index");
         }
       });
     },

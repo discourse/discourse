@@ -1,106 +1,123 @@
-<div class="tag-group-content">
-  <h1>{{text-field value=buffered.name}}</h1>
-  <br>
+<section class="group-name">
+  <label>{{i18n "tagging.groups.name_placeholder"}}</label>
+  <div>{{text-field value=buffered.name}}</div>
+</section>
 
-  <section class="group-tags-list">
-    <label>{{i18n "tagging.groups.tags_label"}}</label><br>
-    {{tag-chooser
-      tags=buffered.tag_names
-      everyTag=true
-      allowCreate=true
-      unlimitedTagCount=true
-      excludeSynonyms=true}}
-  </section>
+<section class="group-tags-list">
+  <label>{{i18n "tagging.groups.tags_label"}}</label><br>
+  {{tag-chooser
+    tags=buffered.tag_names
+    everyTag=true
+    allowCreate=true
+    unlimitedTagCount=true
+    excludeSynonyms=true
+    options=(hash
+      filterPlaceholder="tagging.groups.tags_placeholder"
+    )
+  }}
+</section>
 
-  <section class="parent-tag-section">
-    <label>{{i18n "tagging.groups.parent_tag_label"}}</label>
+<section class="parent-tag-section">
+  <label>{{i18n "tagging.groups.parent_tag_label"}}</label>
+  <div>
     {{tag-chooser
       tags=buffered.parent_tag_name
       everyTag=true
       maximum=1
       allowCreate=true
-      excludeSynonyms=true}}
-    <span class="description">{{i18n "tagging.groups.parent_tag_description"}}</span>
-  </section>
+      excludeSynonyms=true
+      options=(hash
+        filterPlaceholder="tagging.groups.parent_tag_placeholder"
+      )
+    }}
+  </div>
+  <div class="description">{{i18n "tagging.groups.parent_tag_description"}}</div>
+</section>
 
-  <section class="group-one-per-topic">
-    <label>
-      {{input type="checkbox" checked=buffered.one_per_topic name="onepertopic"}}
-      {{i18n "tagging.groups.one_per_topic_label"}}
+<section class="group-one-per-topic">
+  <label>
+    {{input type="checkbox" checked=buffered.one_per_topic name="onepertopic"}}
+    {{i18n "tagging.groups.one_per_topic_label"}}
+  </label>
+</section>
+
+<section class="group-visibility">
+  <div>
+    {{radio-button
+      class="tag-permissions-choice"
+      name="tag-permissions-choice"
+      value="public"
+      id="public-permission"
+      selection=buffered.permissionName
+      onChange=(action "setPermissionsType")}}
+
+    <label class="radio" for="public-permission">
+      {{i18n "tagging.groups.everyone_can_use"}}
     </label>
-  </section>
+  </div>
+  <div>
+    {{radio-button
+      class="tag-permissions-choice"
+      name="tag-permissions-choice"
+      value="visible"
+      id="visible-permission"
+      selection=buffered.permissionName
+      onChange=(action "setPermissionsType")}}
 
-  <section class="group-visibility">
-    <div>
-      {{radio-button
-        class="tag-permissions-choice"
-        name="tag-permissions-choice"
-        value="public"
-        id="public-permission"
-        selection=buffered.permissionName
-        onChange=(action "setPermissionsType")}}
+    <label class="radio" for="visible-permission">
+      {{i18n "tagging.groups.usable_only_by_groups"}}
+    </label>
 
-      <label class="radio" for="public-permission">
-        {{i18n "tagging.groups.everyone_can_use"}}
-      </label>
-    </div>
-    <div>
-      {{radio-button
-        class="tag-permissions-choice"
-        name="tag-permissions-choice"
-        value="visible"
-        id="visible-permission"
-        selection=buffered.permissionName
-        onChange=(action "setPermissionsType")}}
-
-      <label class="radio" for="visible-permission">
-        {{i18n "tagging.groups.usable_only_by_groups"}}
-      </label>
-
-      <div class="group-access-control {{if showPrivateChooser "hidden"}}">
-        {{group-chooser
-          content=allGroups
-          value=selectedGroupIds
-          labelProperty="name"
-          onChange=(action "setPermissionsGroups")
-        }}
-      </div>
-    </div>
-    <div>
-      {{radio-button
-        class="tag-permissions-choice"
-        name="tag-permissions-choice"
-        value="private"
-        id="private-permission"
-        selection=buffered.permissionName
-        onChange=(action "setPermissionsType")}}
-
-      <label class="radio" for="private-permission">
-        {{i18n "tagging.groups.visible_only_to_groups"}}
-      </label>
-    </div>
-
-    <div class="group-access-control {{unless showPrivateChooser "hidden"}}">
+    <div class="group-access-control">
       {{group-chooser
         content=allGroups
         value=selectedGroupIds
         labelProperty="name"
-        onChange=(action "setPermissionsGroups")}}
+        onChange=(action "setPermissionsGroups")
+        options=(hash
+          filterPlaceholder="tagging.groups.select_groups_placeholder"
+        )
+      }}
     </div>
-  </section>
-
-  <div class="tag-group-controls">
-    {{d-button
-      class="btn-default"
-      action=(action "save")
-      disabled=buffered.isSaving
-      label="tagging.groups.save"}}
-
-    {{d-button
-      class="btn-danger"
-      action=(action "destroy")
-      disabled=buffered.isNew
-      icon="far-trash-alt"
-      label="tagging.groups.delete"}}
   </div>
+  <div>
+    {{radio-button
+      class="tag-permissions-choice"
+      name="tag-permissions-choice"
+      value="private"
+      id="private-permission"
+      selection=buffered.permissionName
+      onChange=(action "setPermissionsType")}}
+
+    <label class="radio" for="private-permission">
+      {{i18n "tagging.groups.visible_only_to_groups"}}
+    </label>
+
+    <div class="group-access-control">
+      {{group-chooser
+        content=allGroups
+        value=selectedGroupIds
+        labelProperty="name"
+        onChange=(action "setPermissionsGroups")
+        options=(hash
+          filterPlaceholder="tagging.groups.select_groups_placeholder"
+        )
+      }}
+    </div>
+  </div>
+</section>
+
+<div class="tag-group-controls">
+  {{d-button
+    class="btn-primary"
+    action=(action "save")
+    disabled=buffered.isSaving
+    label="tagging.groups.save"}}
+
+  {{d-button
+    class="btn-danger"
+    action=(action "destroy")
+    disabled=buffered.isNew
+    icon="far-trash-alt"
+    label="tagging.groups.delete"}}
 </div>
