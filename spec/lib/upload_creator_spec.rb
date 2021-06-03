@@ -599,4 +599,30 @@ RSpec.describe UploadCreator do
       end
     end
   end
+
+  describe 'before_upload_creation event' do
+    let(:filename) { "logo.jpg" }
+    let(:file) { file_from_fixtures(filename) }
+
+    before do
+      setup_s3
+      stub_s3_store
+    end
+
+    it 'does not save the upload if an event added errors to the upload' do
+      error = 'This upload is invalid'
+
+      event = Proc.new do |file, is_image, upload|
+        upload.errors.add(:base, error)
+      end
+
+      DiscourseEvent.on(:before_upload_creation, &event)
+
+      created_upload = UploadCreator.new(file, filename).create_for(user.id)
+
+      expect(created_upload.persisted?).to eq(false)
+      expect(created_upload.errors).to contain_exactly(error)
+      DiscourseEvent.off(:before_upload_creation, &event)
+    end
+  end
 end
