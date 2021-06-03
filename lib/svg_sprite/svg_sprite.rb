@@ -221,6 +221,12 @@ module SvgSprite
 
   THEME_SPRITE_VAR_NAME = "icons-sprite"
 
+  def self.preload
+    settings_icons
+    group_icons
+    badge_icons
+  end
+
   def self.custom_svg_sprites(theme_ids = [])
     get_set_cache("custom_svg_sprites_#{Theme.transform_ids(theme_ids).join(',')}") do
       custom_sprite_paths = Dir.glob("#{Rails.root}/plugins/*/svg-icons/*.svg")
@@ -415,16 +421,18 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.settings_icons
-    # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
-    site_setting_icons = []
+    get_set_cache("settings_icons") do
+      # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
+      site_setting_icons = []
 
-    SiteSetting.settings_hash.select do |key, value|
-      if key.to_s.include?("_icon") && String === value
-        site_setting_icons |= value.split('|')
+      SiteSetting.settings_hash.select do |key, value|
+        if key.to_s.include?("_icon") && String === value
+          site_setting_icons |= value.split('|')
+        end
       end
-    end
 
-    site_setting_icons
+      site_setting_icons
+    end
   end
 
   def self.plugin_icons
@@ -432,11 +440,15 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.badge_icons
-    Badge.pluck(:icon).uniq
+    get_set_cache("badge_icons") do
+      Badge.pluck(:icon).uniq
+    end
   end
 
   def self.group_icons
-    Group.pluck(:flair_icon).uniq
+    get_set_cache("group_icons") do
+      Group.pluck(:flair_icon).uniq
+    end
   end
 
   def self.theme_icons(theme_ids)
