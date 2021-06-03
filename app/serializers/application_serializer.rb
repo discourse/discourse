@@ -24,8 +24,8 @@ class ApplicationSerializer < ActiveModel::Serializer
 
   protected
 
-  def cache_fragment(name)
-    ApplicationSerializer.fragment_cache[name] ||= yield
+  def cache_fragment(name, &block)
+    ApplicationSerializer.fragment_cache.defer_get_set(name, &block)
   end
 
   def cache_anon_fragment(name, &blk)

@@ -155,10 +155,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.get_set_cache(key, &blk)
-    return @cache[key] if @cache[key]
-    value = blk.call
-    @cache.defer_set(key, value)
-    value
+    @cache.defer_get_set(key, &blk)
   end
 
   def self.theme_ids
@@ -287,7 +284,7 @@ class Theme < ActiveRecord::Base
     target = target.to_sym
     val = resolve_baked_field(theme_ids, target, field)
 
-    (@cache[cache_key] = val || "").html_safe
+    get_set_cache(cache_key) { val || "" }.html_safe
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)

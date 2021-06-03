@@ -440,7 +440,7 @@ class Stylesheet::Manager
   def color_scheme_digest
     cs = @color_scheme || theme&.color_scheme
 
-    categories_updated = self.class.cache["categories_updated"] ||= begin
+    categories_updated = self.class.cache.defer_get_set("categories_updated") do
       Category
         .where("uploaded_background_id IS NOT NULL")
         .pluck(:updated_at)

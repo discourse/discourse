@@ -19,4 +19,11 @@ class DistributedCache < MessageBus::DistributedCache
       self[k] = v
     end
   end
+
+  def defer_get_set(k, &block)
+    return self[k] if self[k]
+    value = block.call
+    self.defer_set(k, value)
+    value
+  end
 end
