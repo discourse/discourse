@@ -257,14 +257,4 @@ end
 after_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.after_fork
-
-  # warm up v8 after fork, that way we do not fork a v8 context
-  # it may cause issues if bg threads in a v8 isolate randomly stop
-  # working due to fork
-  begin
-    # Skip warmup in development mode - it makes boot take ~2s longer
-    PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
-  rescue => e
-    Rails.logger.error("Failed to warm up pretty text: #{e}")
-  end
 end
