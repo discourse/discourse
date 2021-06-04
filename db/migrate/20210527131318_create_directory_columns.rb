@@ -12,6 +12,8 @@ class CreateDirectoryColumns < ActiveRecord::Migration[6.1]
       t.datetime :created_at, default: -> { 'CURRENT_TIMESTAMP' }
     end
 
+    add_index :directory_columns, [:enabled, :position, :user_field_id], name: "directory_column_index"
+
     create_automatic_columns
   end
 

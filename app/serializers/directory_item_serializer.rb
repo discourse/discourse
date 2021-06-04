@@ -8,7 +8,6 @@ class DirectoryItemSerializer < ApplicationSerializer
     attributes :user_fields
 
     def user_fields
-      # allowed_keys = scope.allowed_user_field_ids(object)
       object.user_fields(@options[:user_field_ids])
     end
 

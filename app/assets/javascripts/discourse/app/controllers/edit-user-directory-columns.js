@@ -39,7 +39,10 @@ export default Controller.extend(ModalFunctionality, {
       .then(() => {
         reload();
       })
-      .catch(extractError);
+      .catch((e) => {
+        this.set("loading", false);
+        this.flash(extractError(e), "error");
+      });
   },
 
   @action

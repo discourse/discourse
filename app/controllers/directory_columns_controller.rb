@@ -15,8 +15,13 @@ class DirectoryColumnsController < ApplicationController
   def update
     raise Discourse::NotFound unless guardian.is_staff?
     params.require(:directory_columns)
-
+    directory_column_params = params.permit(directory_columns: {})
     directory_columns = DirectoryColumn.all
+
+    has_enabled_column = directory_column_params[:directory_columns].values.any? do |column_data|
+      column_data[:enabled].to_s == "true"
+    end
+    raise Discourse::InvalidParameters, "Must have at least one column enabled" unless has_enabled_column
 
     params[:directory_columns].each do |index, column_data|
       existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }

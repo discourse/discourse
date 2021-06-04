@@ -28,12 +28,18 @@ describe DirectoryColumnsController do
 
   describe "#update" do
     let(:first_directory_column_id) { DirectoryColumn.first.id }
+    let(:second_directory_column_id) { DirectoryColumn.second.id }
     let(:params) {
       {
         directory_columns: {
           "0": {
             id: first_directory_column_id,
             enabled: false,
+            position: 1
+          },
+          "1": {
+            id: second_directory_column_id,
+            enabled: true,
             position: 1
           }
         }
@@ -46,6 +52,16 @@ describe DirectoryColumnsController do
       expect {
         put "/directory-columns.json", params: params
       }.to change { DirectoryColumn.find(first_directory_column_id).enabled }.from(true).to(false)
+    end
+
+    it "does not let all columns be disabled" do
+      sign_in(admin)
+      bad_params = params
+      bad_params[:directory_columns][:"1"][:enabled] = false
+
+      put "/directory-columns.json", params: bad_params
+
+      expect(response.status).to eq(400)
     end
 
     it "returns a 404 when not logged in as a staff member" do
