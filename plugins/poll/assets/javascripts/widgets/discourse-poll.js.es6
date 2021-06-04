@@ -163,20 +163,11 @@ createWidget("discourse-poll-standard-results", {
   fetchVoters(optionId) {
     const { attrs, state } = this;
 
-    if (!optionId) {
-      return _fetchVoters({
-        post_id: attrs.post.id,
-        poll_name: attrs.poll.get("name"),
-      }).then((result) => {
-        state.voters = result.voters;
-        this.scheduleRerender();
-      });
-    }
-
     if (!state.page) {
       state.page = {};
-      state.page[optionId] = 1;
-    } else if (!state.page[optionId]) {
+    }
+
+    if (!state.page[optionId]) {
       state.page[optionId] = 1;
     }
 
@@ -187,23 +178,18 @@ createWidget("discourse-poll-standard-results", {
       page: state.page[optionId],
       limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
-      const voters =
-        attrs.pollType === "number" ? state.voters : state.voters[optionId];
-
-      const newVoters =
-        attrs.pollType === "number" ? result.voters : result.voters[optionId];
+      const voters = state.voters[optionId];
+      const newVoters = result.voters[optionId];
 
       // remove users who changed their vote
-      if (attrs.pollType !== "number") {
-        const newVotersSet = new Set(newVoters.map((voter) => voter.username));
-        Object.keys(state.voters).forEach((otherOptionId) => {
-          if (optionId !== otherOptionId) {
-            state.voters[otherOptionId] = state.voters[otherOptionId].filter(
-              (voter) => !newVotersSet.has(voter.username)
-            );
-          }
-        });
-      }
+      const newVotersSet = new Set(newVoters.map((voter) => voter.username));
+      Object.keys(state.voters).forEach((otherOptionId) => {
+        if (optionId !== otherOptionId) {
+          state.voters[otherOptionId] = state.voters[otherOptionId].filter(
+            (voter) => !newVotersSet.has(voter.username)
+          );
+        }
+      });
 
       const votersSet = new Set(voters.map((voter) => voter.username));
       let count = 0;
@@ -304,14 +290,38 @@ createWidget("discourse-poll-number-results", {
     return { loaded: false };
   },
 
-  fetchVoters() {
+  fetchVoters(optionId) {
     const { attrs, state } = this;
+
+    if (!state.page) {
+      state.page = 1;
+    }
 
     return _fetchVoters({
       post_id: attrs.post.id,
       poll_name: attrs.poll.get("name"),
+      option_id: optionId,
+      page: state.page,
+      limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
-      state.voters = result.voters;
+      const voters = state.voters;
+      const newVoters = result.voters;
+
+      const votersSet = new Set(voters.map((voter) => voter.username));
+      let count = 0;
+      newVoters.forEach((voter) => {
+        if (!votersSet.has(voter.username)) {
+          voters.push(voter);
+          count++;
+        }
+      });
+
+      // request next page in the future only if a complete set was
+      // returned this time
+      if (count >= FETCH_VOTERS_COUNT) {
+        state.page++;
+      }
+
       this.scheduleRerender();
     });
   },
