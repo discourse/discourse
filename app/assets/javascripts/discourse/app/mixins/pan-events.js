@@ -13,35 +13,38 @@ export default Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    this.addTouchListeners($(this.element));
+    this.addTouchListeners(this.element);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.removeTouchListeners($(this.element));
+    this.removeTouchListeners(this.element);
   },
 
-  addTouchListeners($element) {
+  addTouchListeners(element) {
     if (this.site.mobileView) {
-      $element
-        .on("touchstart", (e) => e.touches && this._panStart(e.touches[0]))
-        .on("touchmove", (e) => {
-          const touchEvent = e.touches[0];
-          touchEvent.type = "pointermove";
-          this._panMove(touchEvent, e);
-        })
-        .on("touchend", (e) => this._panMove({ type: "pointerup" }, e))
-        .on("touchcancel", (e) => this._panMove({ type: "pointercancel" }, e));
+      this.touchStart = (e) => e.touches && this._panStart(e.touches[0]);
+      this.touchMove = (e) => {
+        const touchEvent = e.touches[0];
+        touchEvent.type = "pointermove";
+        this._panMove(touchEvent, e);
+      };
+      this.touchEnd = (e) => this._panMove({ type: "pointerup" }, e);
+      this.touchCancel = (e) => this._panMove({ type: "pointercancel" }, e);
+
+      element.addEventListener("touchstart", this.touchStart);
+      element.addEventListener("touchmove", this.touchMove);
+      element.addEventListener("touchend", this.touchEnd);
+      element.addEventListener("touchcancel", this.touchCancel);
     }
   },
 
-  removeTouchListeners($element) {
+  removeTouchListeners(element) {
     if (this.site.mobileView) {
-      $element
-        .off("touchstart")
-        .off("touchmove")
-        .off("touchend")
-        .off("touchcancel");
+      element.removeEventListener("touchstart", this.touchStart);
+      element.removeEventListener("touchmove", this.touchMove);
+      element.removeEventListener("touchend", this.touchEnd);
+      element.removeEventListener("touchcancel", this.touchCancel);
     }
   },
 
