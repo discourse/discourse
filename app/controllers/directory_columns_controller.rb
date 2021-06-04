@@ -23,7 +23,7 @@ class DirectoryColumnsController < ApplicationController
     end
     raise Discourse::InvalidParameters, "Must have at least one column enabled" unless has_enabled_column
 
-    params[:directory_columns].each do |index, column_data|
+    directory_column_params[:directory_columns].values.each do |column_data|
       existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }
       if (existing_column.enabled != column_data[:enabled] || existing_column.position != column_data[:position].to_i)
         existing_column.update(enabled: column_data[:enabled], position: column_data[:position])
