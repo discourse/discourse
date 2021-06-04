@@ -108,14 +108,14 @@ createWidget("discourse-poll-load-more", {
   },
 
   click() {
-    const { state } = this;
+    const { state, attrs } = this;
 
     if (state.loading) {
       return;
     }
 
     state.loading = true;
-    return this.sendWidgetAction("loadMore").finally(
+    return this.sendWidgetAction("fetchVoters", attrs.optionId).finally(
       () => (state.loading = false)
     );
   },
@@ -133,69 +133,18 @@ createWidget("discourse-poll-voters", {
     };
   },
 
-  fetchVoters() {
-    const { attrs, state } = this;
-
-    if (state.loaded === "loading") {
-      return;
-    }
-    state.loaded = "loading";
-
-    return _fetchVoters({
-      post_id: attrs.postId,
-      poll_name: attrs.pollName,
-      option_id: attrs.optionId,
-      page: state.page,
-      limit: FETCH_VOTERS_COUNT,
-    }).then((result) => {
-      state.loaded = "loaded";
-
-      const newVoters =
-        attrs.pollType === "number"
-          ? result.voters
-          : result.voters[attrs.optionId];
-
-      const existingVoters = new Set(
-        state.voters.map((voter) => voter.username)
-      );
-
-      let count = 0;
-      newVoters.forEach((voter) => {
-        if (!existingVoters.has(voter.username)) {
-          existingVoters.add(voter.username);
-          state.voters.push(voter);
-          count++;
-        }
-      });
-
-      if (count >= FETCH_VOTERS_COUNT) {
-        state.page++;
-      }
-
-      this.scheduleRerender();
-    });
-  },
-
-  loadMore() {
-    return this.fetchVoters();
-  },
-
-  html(attrs, state) {
-    if (attrs.voters && state.loaded === "new") {
-      state.voters = attrs.voters;
-    }
-
-    const contents = state.voters.map((user) => {
-      return h("li", [
+  html(attrs) {
+    const contents = attrs.voters.map((user) =>
+      h("li", [
         avatarFor("tiny", {
           username: user.username,
           template: user.avatar_template,
         }),
         " ",
-      ]);
-    });
+      ])
+    );
 
-    if (state.voters.length < attrs.totalVotes) {
+    if (attrs.voters.length < attrs.totalVotes) {
       contents.push(this.attach("discourse-poll-load-more", attrs));
     }
 
@@ -211,14 +160,66 @@ createWidget("discourse-poll-standard-results", {
     return { loaded: false };
   },
 
-  fetchVoters() {
+  fetchVoters(optionId) {
     const { attrs, state } = this;
+
+    if (!optionId) {
+      return _fetchVoters({
+        post_id: attrs.post.id,
+        poll_name: attrs.poll.get("name"),
+      }).then((result) => {
+        state.voters = result.voters;
+        this.scheduleRerender();
+      });
+    }
+
+    if (!state.page) {
+      state.page = {};
+      state.page[optionId] = 1;
+    } else if (!state.page[optionId]) {
+      state.page[optionId] = 1;
+    }
 
     return _fetchVoters({
       post_id: attrs.post.id,
       poll_name: attrs.poll.get("name"),
+      option_id: optionId,
+      page: state.page[optionId],
+      limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
-      state.voters = result.voters;
+      const voters =
+        attrs.pollType === "number" ? state.voters : state.voters[optionId];
+
+      const newVoters =
+        attrs.pollType === "number" ? result.voters : result.voters[optionId];
+
+      // remove users who changed their vote
+      if (attrs.pollType !== "number") {
+        const newVotersSet = new Set(newVoters.map((voter) => voter.username));
+        Object.keys(state.voters).forEach((otherOptionId) => {
+          if (optionId !== otherOptionId) {
+            state.voters[otherOptionId] = state.voters[otherOptionId].filter(
+              (voter) => !newVotersSet.has(voter.username)
+            );
+          }
+        });
+      }
+
+      const votersSet = new Set(voters.map((voter) => voter.username));
+      let count = 0;
+      newVoters.forEach((voter) => {
+        if (!votersSet.has(voter.username)) {
+          voters.push(voter);
+          count++;
+        }
+      });
+
+      // request next page in the future only if a complete set was
+      // returned this time
+      if (count >= FETCH_VOTERS_COUNT) {
+        state.page[optionId]++;
+      }
+
       this.scheduleRerender();
     });
   },
