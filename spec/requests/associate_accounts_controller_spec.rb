@@ -80,7 +80,7 @@ RSpec.describe Users::AssociateAccountsController do
       expect(response.status).to eq(404)
     end
 
-    it "returns the correct response for non-existant tokens" do
+    it "returns the correct response for non-existent tokens" do
       get "/associate/12345678901234567890123456789012.json"
       expect(response.status).to eq(404)
 
