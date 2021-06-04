@@ -35,12 +35,12 @@ class PushNotificationPusher
     user.push_subscriptions.clear
   end
 
-  def self.subscribe(user, subscription, send_confirmation)
-    data = subscription.to_json
+  def self.subscribe(user, push_params, send_confirmation)
+    data = push_params.to_json
     subscriptions = PushSubscription.where(user: user, data: data)
     subscriptions_count = subscriptions.count
 
-    if subscriptions_count > 1
+    new_subscription = if subscriptions_count > 1
       subscriptions.destroy_all
       PushSubscription.create!(user: user, data: data)
     elsif subscriptions_count == 0
@@ -57,7 +57,7 @@ class PushNotificationPusher
         tag: "#{Discourse.current_hostname}-subscription"
       }
 
-      send_notification(user, subscription, message)
+      send_notification(user, new_subscription, message)
     end
   end
 
