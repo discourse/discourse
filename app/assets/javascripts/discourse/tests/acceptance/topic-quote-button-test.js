@@ -5,7 +5,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
-import { visit, settled } from "@ember/test-helpers";
+import { settled, visit } from "@ember/test-helpers";
 
 async function selectText(selector) {
   const range = document.createRange();
@@ -41,8 +41,6 @@ acceptance("Topic - Quote button - logged in", function (needs) {
 
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
-
-    console.log(queryAll("#post_5 blockquote").val());
 
     assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
     assert.ok(
