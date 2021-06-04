@@ -14,6 +14,7 @@ describe BootstrapController do
 
   after do
     DiscoursePluginRegistry.reset!
+    ExtraLocalesController.clear_cache!
   end
 
   it "returns data as anonymous" do
