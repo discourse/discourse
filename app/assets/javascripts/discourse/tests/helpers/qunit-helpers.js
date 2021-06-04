@@ -76,6 +76,15 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
   });
 }
 
+export function withFrozenTime(timeString, timezone, callback) {
+  const clock = fakeTime(timeString, timezone, false);
+  try {
+    callback();
+  } finally {
+    clock.restore();
+  }
+}
+
 let _pretenderCallbacks = {};
 
 export function resetSite(siteSettings, extras) {

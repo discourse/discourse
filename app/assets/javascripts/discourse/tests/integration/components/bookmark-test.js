@@ -6,13 +6,6 @@ import {
   fakeTime,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import sinon from "sinon";
-
-let clock = null;
-
-function mockMomentTz(dateString, timezone) {
-  clock = fakeTime(dateString, timezone, true);
-}
 
 discourseModule("Integration | Component | bookmark", function (hooks) {
   setupRenderingTest(hooks);
@@ -32,17 +25,20 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
   });
 
   hooks.afterEach(function () {
-    if (clock) {
-      clock.restore();
+    if (this.clock) {
+      this.clock.restore();
     }
-    sinon.restore();
   });
 
   componentTest("show later this week option if today is < Thursday", {
     template,
 
     beforeEach() {
-      mockMomentTz("2019-12-10T08:00:00", this.currentUser._timezone);
+      this.clock = fakeTime(
+        "2019-12-10T08:00:00",
+        this.currentUser._timezone,
+        true
+      );
     },
 
     test(assert) {
@@ -56,7 +52,11 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
       template,
 
       beforeEach() {
-        mockMomentTz("2019-12-13T08:00:00", this.currentUser._timezone);
+        this.clock = fakeTime(
+          "2019-12-13T08:00:00",
+          this.currentUser._timezone,
+          true
+        );
       },
 
       test(assert) {
@@ -72,7 +72,11 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template,
 
     beforeEach() {
-      mockMomentTz("2019-12-11T22:00:00", this.currentUser._timezone);
+      this.clock = fakeTime(
+        "2019-12-11T22:00:00",
+        this.currentUser._timezone,
+        true
+      );
     },
 
     test(assert) {
@@ -87,7 +91,11 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template,
 
     beforeEach() {
-      mockMomentTz("2019-12-11T14:30:00", this.currentUser._timezone);
+      this.clock = fakeTime(
+        "2019-12-11T14:30:00",
+        this.currentUser._timezone,
+        true
+      );
     },
 
     test(assert) {
@@ -99,7 +107,11 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template,
 
     beforeEach() {
-      mockMomentTz("2019-12-11T17:00:00", this.currentUser._timezone);
+      this.clock = fakeTime(
+        "2019-12-11T17:00:00",
+        this.currentUser._timezone,
+        true
+      );
     },
 
     test(assert) {
@@ -114,7 +126,11 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template,
 
     beforeEach() {
-      mockMomentTz("2019-12-11T13:00:00", this.currentUser._timezone);
+      this.clock = fakeTime(
+        "2019-12-11T13:00:00",
+        this.currentUser._timezone,
+        true
+      );
     },
 
     test(assert) {

@@ -17,7 +17,6 @@ discourseModule(
 
     hooks.beforeEach(function () {
       this.set("subject", selectKit());
-      this.clock = fakeTime("2021-05-03T08:00:00", "UTC", true); // Monday
     });
 
     hooks.afterEach(function () {
@@ -26,6 +25,11 @@ discourseModule(
 
     componentTest("shows default options", {
       template: hbs`{{future-date-input-selector}}`,
+
+      beforeEach() {
+        const monday = fakeTime("2021-05-03T08:00:00", "UTC", true);
+        this.clock = monday;
+      },
 
       async test(assert) {
         await this.subject.expand();
@@ -50,7 +54,8 @@ discourseModule(
       template: hbs`{{future-date-input-selector}}`,
 
       beforeEach() {
-        this.clock = fakeTime("2021-05-02T08:00:00", "UTC", true); // Sunday
+        const sunday = fakeTime("2021-05-02T08:00:00", "UTC", true);
+        this.clock = sunday;
       },
 
       async test(assert) {
