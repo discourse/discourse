@@ -113,7 +113,6 @@ const Composer = RestModel.extend({
   unlistTopic: false,
   noBump: false,
   draftSaving: false,
-  draftSaved: false,
   draftForceSave: false,
 
   archetypes: reads("site.archetypes"),
@@ -1190,7 +1189,6 @@ const Composer = RestModel.extend({
     }
 
     this.setProperties({
-      draftSaved: false,
       draftSaving: true,
       draftConflictUser: null,
     });
@@ -1219,7 +1217,6 @@ const Composer = RestModel.extend({
           });
         } else {
           this.setProperties({
-            draftSaved: true,
             draftStatus: null,
             draftConflictUser: null,
             draftForceSave: false,

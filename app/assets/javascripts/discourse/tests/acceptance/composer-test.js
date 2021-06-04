@@ -698,8 +698,6 @@ acceptance("Composer", function (needs) {
         ),
         "mode should have changed"
       );
-
-      assert.ok(queryAll(".save-animation"), "save animation should show");
     } finally {
       toggleCheckDraftPopup(false);
     }
