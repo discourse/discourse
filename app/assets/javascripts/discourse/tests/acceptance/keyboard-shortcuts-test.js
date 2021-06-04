@@ -1,8 +1,9 @@
 import { currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { test } from "qunit";
 
-acceptance("Keyboard Shortcuts", function (needs) {
+acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/t/27331/4.json", () => helper.response({}));
     server.get("/t/27331.json", () => helper.response({}));
@@ -39,5 +40,69 @@ acceptance("Keyboard Shortcuts", function (needs) {
     await triggerKeyEvent(document, "keypress", "g".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
     assert.equal(currentURL(), "/t/keyboard-shortcuts-are-awesome/27331");
+  });
+});
+
+acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
+  let resetNewCalled = 0;
+  let markReadCalled = 0;
+  needs.user();
+  needs.pretender((server, helper) => {
+    let topicList = DiscoveryFixtures["/latest.json"];
+
+    // get rid of some of the topics and the more_topics_url
+    // so we consider them allLoaded and show the footer with
+    // the bottom dismiss button
+    topicList.topic_list.topics.splice(20, 30);
+    topicList.topic_list.more_topics_url = null;
+
+    server.get("/unread.json", () => {
+      return helper.response(topicList);
+    });
+    server.get("/new.json", () => {
+      return helper.response(topicList);
+    });
+    server.put("/topics/reset-new", () => {
+      resetNewCalled += 1;
+      return helper.response({});
+    });
+    server.put("/topics/bulk", () => {
+      markReadCalled += 1;
+      return helper.response({});
+    });
+  });
+
+  test("dismiss unread from top and bottom button", async function (assert) {
+    await visit("/unread");
+    await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
+    assert.ok(exists("#dismiss-read-confirm"));
+    assert.equal(
+      queryAll(".modal-body").text().trim(),
+      "Stop tracking these topics so they never show up as unread for me again"
+    );
+    await click("#dismiss-read-confirm");
+    assert.equal(markReadCalled, 1);
+    document.getElementById("dismiss-topics-top").remove();
+    await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
+    assert.ok(exists("#dismiss-read-confirm"));
+    assert.equal(
+      queryAll(".modal-body").text().trim(),
+      "Stop tracking these topics so they never show up as unread for me again"
+    );
+    await click("#dismiss-read-confirm");
+    assert.equal(markReadCalled, 2);
+  });
+
+  test("dismiss new from top and bottom button", async function (assert) {
+    await visit("/new");
+    await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
+    assert.equal(resetNewCalled, 1);
+    document.getElementById("dismiss-new-top").remove();
+    await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
+    assert.equal(resetNewCalled, 1);
   });
 });
