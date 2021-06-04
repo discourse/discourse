@@ -54,7 +54,6 @@ export function updateCsrfToken() {
 
 export function ajax() {
   let url, args;
-  let ignoreUnsent = true;
   let ajaxObj;
 
   if (arguments.length === 1) {
@@ -69,10 +68,12 @@ export function ajax() {
   } else if (arguments.length === 2) {
     url = arguments[0];
     args = arguments[1];
-  } else if (arguments.length === 3) {
-    url = arguments[0];
-    args = arguments[1];
-    ignoreUnsent = arguments[2];
+  }
+
+  let ignoreUnsent = true;
+  if (args.ignoreUnsent !== undefined) {
+    ignoreUnsent = args.ignoreUnsent;
+    delete args.ignoreUnsent;
   }
 
   function performAjax(resolve, reject) {
