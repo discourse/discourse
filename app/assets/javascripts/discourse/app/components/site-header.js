@@ -35,30 +35,30 @@ const SiteHeaderComponent = MountWidget.extend(
       this.queueRerender();
     },
 
-    _animateOpening($panel) {
-      const $headerCloak = $(".header-cloak");
-      $panel.addClass("animate");
-      $headerCloak.addClass("animate");
+    _animateOpening(panel) {
+      const headerCloak = document.querySelector(".header-cloak");
+      panel.classList.add("animate");
+      headerCloak.classList.add("animate");
       this._scheduledRemoveAnimate = later(() => {
-        $panel.removeClass("animate");
-        $headerCloak.removeClass("animate");
+        panel.classList.remove("animate");
+        headerCloak.classList.remove("animate");
       }, 200);
-      $panel.css("--offset", 0);
-      $headerCloak.css("--opacity", 0.5);
+      panel.style.setProperty("--offset", 0);
+      headerCloak.style.setProperty("--opacity", 0.5);
       this._panMenuOffset = 0;
     },
 
-    _animateClosing($panel, menuOrigin, windowWidth) {
+    _animateClosing(panel, menuOrigin, windowWidth) {
       this._animate = true;
-      const $headerCloak = $(".header-cloak");
-      $panel.addClass("animate");
-      $headerCloak.addClass("animate");
+      const headerCloak = document.querySelector(".header-cloak");
+      panel.classList.add("animate");
+      headerCloak.classList.add("animate");
       const offsetDirection = menuOrigin === "left" ? -1 : 1;
-      $panel.css("--offset", `${offsetDirection * windowWidth}px`);
-      $headerCloak.css("--opacity", 0);
+      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
+      headerCloak.style.setProperty("--opacity", 0);
       this._scheduledRemoveAnimate = later(() => {
-        $panel.removeClass("animate");
-        $headerCloak.removeClass("animate");
+        panel.classList.remove("animate");
+        headerCloak.classList.remove("animate");
         schedule("afterRender", () => {
           this.eventDispatched("dom:clean", "header");
           this._panMenuOffset = 0;
@@ -83,16 +83,14 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _handlePanDone(event) {
-      const $window = $(window);
-      const windowWidth = $window.width();
-      const $menuPanels = $(".menu-panel");
+      const windowWidth = document.querySelector("body").offsetWidth;
+      const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._panMenuOrigin;
-      $menuPanels.each((idx, panel) => {
-        const $panel = $(panel);
+      menuPanels.forEach((panel) => {
         if (this._shouldMenuClose(event, menuOrigin)) {
-          this._animateClosing($panel, menuOrigin, windowWidth);
+          this._animateClosing(panel, menuOrigin, windowWidth);
         } else {
-          this._animateOpening($panel);
+          this._animateOpening(panel);
         }
       });
     },
@@ -118,11 +116,15 @@ const SiteHeaderComponent = MountWidget.extend(
 
     panStart(e) {
       const center = e.center;
-      const $centeredElement = $(document.elementFromPoint(center.x, center.y));
+      const panOverValidElement = document
+        .elementsFromPoint(center.x, center.y)
+        .some(
+          (ele) =>
+            ele.classList.contains("panel-body") ||
+            ele.classList.contains("header-cloak")
+        );
       if (
-        ($centeredElement.hasClass("panel-body") ||
-          $centeredElement.hasClass("header-cloak") ||
-          $centeredElement.parents(".panel-body").length) &&
+        panOverValidElement &&
         (e.direction === "left" || e.direction === "right")
       ) {
         e.originalEvent.preventDefault();
@@ -401,7 +403,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
         $panel.width(width);
         if (this._animate) {
-          this._animateOpening($panel);
+          this._animateOpening(panel);
         }
         this._animate = false;
       });
