@@ -67,7 +67,7 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _isRTL() {
-      return $("html").css("direction") === "rtl";
+      return document.querySelector("html").classList["direction"] === "rtl";
     },
 
     _leftMenuClass() {
@@ -146,20 +146,23 @@ const SiteHeaderComponent = MountWidget.extend(
       if (!this._isPanning) {
         return;
       }
-      const $menuPanels = $(".menu-panel");
-      $menuPanels.each((idx, panel) => {
-        const $panel = $(panel);
-        const $headerCloak = $(".header-cloak");
-        if (this._panMenuOrigin === "right") {
-          const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
-          $panel.css("--offset", `${-pxClosed}px`);
-          $headerCloak.css("--opacity", Math.min(0.5, (300 + pxClosed) / 600));
-        } else {
-          const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
-          $panel.css("--offset", `${pxClosed}px`);
-          $headerCloak.css("--opacity", Math.min(0.5, (300 + pxClosed) / 600));
-        }
-      });
+      const panel = document.querySelector(".menu-panel");
+      const headerCloak = document.querySelector(".header-cloak");
+      if (this._panMenuOrigin === "right") {
+        const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
+        panel.style.setProperty("--offset", `${-pxClosed}px`);
+        headerCloak.style.setProperty(
+          "--opacity",
+          Math.min(0.5, (300 + pxClosed) / 600)
+        );
+      } else {
+        const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
+        panel.style.setProperty("--offset", `${pxClosed}px`);
+        headerCloak.style.setProperty(
+          "--opacity",
+          Math.min(0.5, (300 + pxClosed) / 600)
+        );
+      }
     },
 
     dockCheck(info) {
