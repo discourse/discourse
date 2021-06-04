@@ -14,6 +14,8 @@ import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
 
+const FETCH_VOTERS_COUNT = 25;
+
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
 
@@ -144,9 +146,9 @@ createWidget("discourse-poll-voters", {
       poll_name: attrs.pollName,
       option_id: attrs.optionId,
       page: state.page,
+      limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
       state.loaded = "loaded";
-      state.page += 1;
 
       const newVoters =
         attrs.pollType === "number"
@@ -157,12 +159,18 @@ createWidget("discourse-poll-voters", {
         state.voters.map((voter) => voter.username)
       );
 
+      let count = 0;
       newVoters.forEach((voter) => {
         if (!existingVoters.has(voter.username)) {
           existingVoters.add(voter.username);
           state.voters.push(voter);
+          count++;
         }
       });
+
+      if (count >= FETCH_VOTERS_COUNT) {
+        state.page++;
+      }
 
       this.scheduleRerender();
     });
