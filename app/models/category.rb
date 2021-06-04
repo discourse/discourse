@@ -735,7 +735,9 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache[self.id] ||= "#{Discourse.base_path}/c/#{slug_path.join('/')}/#{self.id}"
+    @@url_cache.defer_get_set(self.id) do
+      "#{Discourse.base_path}/c/#{slug_path.join('/')}/#{self.id}"
+    end
   end
 
   def url_with_id
