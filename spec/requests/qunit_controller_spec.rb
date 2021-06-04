@@ -100,7 +100,6 @@ describe QunitController do
         expect(response.body).to include("/assets/locales/en.js")
         expect(response.body).to include("/assets/vendor.js")
         expect(response.body).to include("/assets/discourse/tests/theme_qunit_vendor.js")
-        expect(response.body).to include("/assets/pretty-text-bundle.js")
         expect(response.body).to include("/assets/markdown-it-bundle.js")
         expect(response.body).to include("/assets/application.js")
         expect(response.body).to include("/assets/admin.js")
