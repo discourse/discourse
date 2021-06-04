@@ -48,13 +48,15 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
 acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   let resetNewCalled;
   let markReadCalled;
+  let topicList;
+
   needs.user();
   needs.hooks.beforeEach(() => {
     resetNewCalled = 0;
     markReadCalled = 0;
   });
   needs.pretender((server, helper) => {
-    let topicList = cloneJSON(DiscoveryFixtures["/latest.json"]);
+    topicList = cloneJSON(DiscoveryFixtures["/latest.json"]);
 
     // get rid of some of the topics and the more_topics_url
     // so we consider them allLoaded and show the footer with
@@ -89,7 +91,14 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     );
     await click("#dismiss-read-confirm");
     assert.equal(markReadCalled, 1);
-    document.getElementById("dismiss-topics-top").remove();
+
+    // we get rid of all but one topic so the top dismiss button doesn't
+    // show up, as it only appears if there are too many topics pushing
+    // the bottom button out of the viewport
+    let originalTopics = [...topicList.topic_list.topics];
+    topicList.topic_list.topics = [topicList.topic_list.topics[0]];
+
+    await visit("/unread");
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
     assert.ok(exists("#dismiss-read-confirm"));
@@ -99,6 +108,9 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     );
     await click("#dismiss-read-confirm");
     assert.equal(markReadCalled, 2);
+
+    // restore the original topic list
+    topicList.topic_list.topics = originalTopics;
   });
 
   test("dismiss new from top and bottom button", async function (assert) {
@@ -106,9 +118,19 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
     assert.equal(resetNewCalled, 1);
-    document.getElementById("dismiss-new-top").remove();
+
+    // we get rid of all but one topic so the top dismiss button doesn't
+    // show up, as it only appears if there are too many topics pushing
+    // the bottom button out of the viewport
+    let originalTopics = [...topicList.topic_list.topics];
+    topicList.topic_list.topics = [topicList.topic_list.topics[0]];
+
+    await visit("/new");
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
-    assert.equal(resetNewCalled, 1);
+    assert.equal(resetNewCalled, 2);
+
+    // restore the original topic list
+    topicList.topic_list.topics = originalTopics;
   });
 });
