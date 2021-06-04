@@ -246,7 +246,9 @@ createWidget("topic-map-summary", {
     const nav = h(
       "nav.buttons",
       this.attach("button", {
-        title: "topic.toggle_information",
+        title: state.collapsed
+          ? "topic.expand_details"
+          : "topic.collapse_details",
         icon: state.collapsed ? "chevron-down" : "chevron-up",
         action: "toggleMap",
         className: "btn",
