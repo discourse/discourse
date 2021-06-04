@@ -105,7 +105,7 @@ module Discourse
           raise "Arguments should be provided as separate strings"
         end
 
-        if timeout
+        if !timeout.nil?
           # will send a TERM after timeout
           # will send a KILL after timeout * 2
           command = ["timeout", "-k", "#{timeout.to_f * 2}", timeout.to_s] + command
