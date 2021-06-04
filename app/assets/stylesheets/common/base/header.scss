@@ -289,6 +289,7 @@
     align-items: center;
     max-width: 100%;
     .discourse-tags {
+      display: inline;
       color: var(--header_primary-high);
       @include ellipsis;
       .discourse-tag {
