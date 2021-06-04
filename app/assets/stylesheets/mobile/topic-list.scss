@@ -27,7 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    margin: 0.5em 0 0;
+    margin: 0;
 
     button {
       &.select-kit-header {
@@ -374,7 +374,7 @@ tr.category-topic-link {
   padding: 0.5em 0 0.25em;
   border-top: 1px solid var(--primary-low) !important;
   border-bottom: 1px solid var(--primary-low) !important;
-  margin-bottom: 2em;
+  margin: 1em 0 2em;
 }
 
 .category-box {
