@@ -1,4 +1,6 @@
 import { currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "I18n";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { test } from "qunit";
@@ -44,11 +46,15 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
 });
 
 acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
-  let resetNewCalled = 0;
-  let markReadCalled = 0;
+  let resetNewCalled;
+  let markReadCalled;
   needs.user();
+  needs.hooks.beforeEach(() => {
+    resetNewCalled = 0;
+    markReadCalled = 0;
+  });
   needs.pretender((server, helper) => {
-    let topicList = DiscoveryFixtures["/latest.json"];
+    let topicList = cloneJSON(DiscoveryFixtures["/latest.json"]);
 
     // get rid of some of the topics and the more_topics_url
     // so we consider them allLoaded and show the footer with
@@ -79,7 +85,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     assert.ok(exists("#dismiss-read-confirm"));
     assert.equal(
       queryAll(".modal-body").text().trim(),
-      "Stop tracking these topics so they never show up as unread for me again"
+      I18n.t("topics.bulk.also_dismiss_topics")
     );
     await click("#dismiss-read-confirm");
     assert.equal(markReadCalled, 1);
