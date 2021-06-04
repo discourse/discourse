@@ -438,6 +438,9 @@ login:
   discourse_connect_allows_all_return_paths: false
   enable_discourse_connect_provider: false
   verbose_discourse_connect_logging: false
+  verbose_upload_logging:
+    hidden: true
+    default: false
   verbose_auth_token_logging:
     hidden: true
     default: true
