@@ -57,7 +57,6 @@ export default class PostCooked {
 
     this._insertQuoteControls($cookedDiv);
     this._showLinkCounts($cookedDiv);
-    this._fixImageSizes($cookedDiv);
     this._applySearchHighlight($cookedDiv);
 
     this._decorateAndAdopt(cookedDiv);
@@ -88,44 +87,6 @@ export default class PostCooked {
       unhighlightHTML(html);
       this._highlighted = false;
     }
-  }
-
-  _fixImageSizes($html) {
-    if (!this.decoratorHelper || !this.decoratorHelper.widget) {
-      return;
-    }
-    let siteSettings = this.decoratorHelper.widget.siteSettings;
-
-    if (siteSettings.disable_image_size_calculations) {
-      return;
-    }
-
-    const maxImageWidth = siteSettings.max_image_width;
-    const maxImageHeight = siteSettings.max_image_height;
-
-    let maxWindowWidth;
-    $html.find("img:not(.avatar)").each((idx, img) => {
-      // deferring work only for posts with images
-      // we got to use screen here, cause nothing is rendered yet.
-      // long term we may want to allow for weird margins that are enforced, instead of hardcoding at 70/20
-      maxWindowWidth =
-        maxWindowWidth || $(window).width() - (this.attrs.mobileView ? 20 : 70);
-      if (maxImageWidth < maxWindowWidth) {
-        maxWindowWidth = maxImageWidth;
-      }
-
-      const aspect = img.height / img.width;
-      if (img.width > maxWindowWidth) {
-        img.width = maxWindowWidth;
-        img.height = parseInt(maxWindowWidth * aspect, 10);
-      }
-
-      // very unlikely but lets fix this too
-      if (img.height > maxImageHeight) {
-        img.height = maxImageHeight;
-        img.width = parseInt(maxWindowWidth / aspect, 10);
-      }
-    });
   }
 
   _showLinkCounts($html) {
