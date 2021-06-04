@@ -70,6 +70,12 @@ export function ajax() {
     args = arguments[1];
   }
 
+  let ignoreUnsent = true;
+  if (args.ignoreUnsent !== undefined) {
+    ignoreUnsent = args.ignoreUnsent;
+    delete args.ignoreUnsent;
+  }
+
   function performAjax(resolve, reject) {
     args.headers = args.headers || {};
 
@@ -112,7 +118,7 @@ export function ajax() {
 
     args.error = (xhr, textStatus, errorThrown) => {
       // 0 represents the `UNSENT` state
-      if (xhr.readyState === 0) {
+      if (ignoreUnsent && xhr.readyState === 0) {
         // Make sure we log pretender errors in test mode
         if (textStatus === "error" && isTesting()) {
           throw errorThrown;

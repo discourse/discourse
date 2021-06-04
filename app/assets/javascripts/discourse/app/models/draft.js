@@ -34,6 +34,7 @@ Draft.reopenClass({
         owner: clientId,
         force_save: forceSave,
       },
+      ignoreUnsent: false,
     });
   },
 });
