@@ -160,6 +160,7 @@ export function selectedText() {
       range.setEndBefore($postMenuArea);
     }
 
+    const $oneboxTest = $ancestor.closest("aside.onebox[data-onebox-src]");
     const $codeBlockTest = $ancestor.parents("pre");
     if ($codeBlockTest.length) {
       const $code = $("<code>");
@@ -172,10 +173,20 @@ export function selectedText() {
       } else {
         $div.append($code);
       }
+    } else if ($oneboxTest.length) {
+      // This is a partial quote from a onebox.
+      // Treat it as though the entire onebox was quoted.
+      const oneboxUrl = $($oneboxTest).data("onebox-src");
+      $div.append(oneboxUrl);
     } else {
       $div.append(range.cloneContents());
     }
   }
+
+  $div.find("aside.onebox[data-onebox-src]").each(function () {
+    const oneboxUrl = $(this).data("onebox-src");
+    $(this).replaceWith(oneboxUrl);
+  });
 
   return toMarkdown($div.html());
 }
