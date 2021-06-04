@@ -254,13 +254,16 @@ acceptance("Tag info", function (needs) {
     tags_listed_by_group: true,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/planters/notifications", () => {
+    server.get("/tag/:tag_name/notifications", (request) => {
       return helper.response({
-        tag_notification: { id: "planters", notification_level: 1 },
+        tag_notification: {
+          id: request.params.tag_name,
+          notification_level: 1,
+        },
       });
     });
 
-    server.get("/tag/planters/l/latest.json", () => {
+    server.get("/tag/:tag_name/l/latest.json", (request) => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -273,7 +276,7 @@ acceptance("Tag info", function (needs) {
           tags: [
             {
               id: 1,
-              name: "planters",
+              name: request.params.tag_name,
               topic_count: 1,
             },
           ],
@@ -345,8 +348,34 @@ acceptance("Tag info", function (needs) {
       });
     });
 
+    server.get("/tag/happy-monkey/info", () => {
+      return helper.response({
+        __rest_serializer: "1",
+        tag_info: {
+          id: 13,
+          name: "happy-monkey",
+          topic_count: 1,
+          staff: false,
+          synonyms: [],
+          tag_group_names: [],
+          category_ids: [],
+        },
+        categories: [],
+      });
+    });
+
     server.delete("/tag/planters/synonyms/containers", () =>
       helper.response({ success: true })
+    );
+
+    server.get("/tags/filter/search", () =>
+      helper.response({
+        results: [
+          { id: "monkey", text: "monkey", count: 1 },
+          { id: "not-monkey", text: "not-monkey", count: 1 },
+          { id: "happy-monkey", text: "happy-monkey", count: 1 },
+        ],
+      })
     );
   });
 
@@ -373,6 +402,25 @@ acceptance("Tag info", function (needs) {
     assert.ok(!exists("#rename-tag"), "can't rename tag");
     assert.ok(!exists("#edit-synonyms"), "can't edit synonyms");
     assert.ok(!exists("#delete-tag"), "can't delete tag");
+  });
+
+  test("tag info hides only current tag in synonyms dropdown", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true });
+
+    await visit("/tag/happy-monkey");
+    assert.ok(queryAll("#show-tag-info").length === 1);
+
+    await click("#show-tag-info");
+    assert.ok(exists(".tag-info .tag-name"), "show tag");
+
+    await click("#edit-synonyms");
+    await click("#add-synonyms .filter-input");
+
+    assert.equal(find(".tag-chooser-row").length, 2);
+    assert.deepEqual(
+      Array.from(find(".tag-chooser-row")).map((x) => x.dataset["value"]),
+      ["monkey", "not-monkey"]
+    );
   });
 
   test("can filter tags page by category", async function (assert) {
