@@ -942,6 +942,14 @@ module Discourse
       JsLocaleHelper.load_translations(SiteSetting.default_locale)
       Site.json_for(Guardian.new)
       SvgSprite.preload
+
+      begin
+        SiteSetting.client_settings_json
+      rescue => e
+        # Rescue from Redis related errors so that we can still boot the
+        # application even if Redis is down.
+        warn_exception(e, message: "Error while preloading client settings json")
+      end
     end
 
     [
