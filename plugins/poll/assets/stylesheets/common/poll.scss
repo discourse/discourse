@@ -31,8 +31,8 @@ div.poll {
     height: auto;
     // Hacky way to stop images without width/height
     // from causing abrupt unintended scrolling
-    &:not([width]),
-    &:not([height]) {
+    &:not([width]):not(.emoji),
+    &:not([height]):not(.emoji) {
       width: 200px !important;
       height: 200px !important;
       object-fit: contain;
