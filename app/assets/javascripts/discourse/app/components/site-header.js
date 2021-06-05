@@ -48,7 +48,8 @@ const SiteHeaderComponent = MountWidget.extend(
       this._panMenuOffset = 0;
     },
 
-    _animateClosing(panel, menuOrigin, windowWidth) {
+    _animateClosing(panel, menuOrigin) {
+      const windowWidth = document.querySelector("body").offsetWidth;
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
@@ -83,12 +84,11 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _handlePanDone(event) {
-      const windowWidth = document.querySelector("body").offsetWidth;
       const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._panMenuOrigin;
       menuPanels.forEach((panel) => {
         if (this._shouldMenuClose(event, menuOrigin)) {
-          this._animateClosing(panel, menuOrigin, windowWidth);
+          this._animateClosing(panel, menuOrigin);
         } else {
           this._animateOpening(panel);
         }
