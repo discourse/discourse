@@ -36,14 +36,19 @@
     a {
       color: var(--primary-medium);
 
-      &.active {
-        color: var(--primary);
+      &.active,
+      &:hover,
+      &:focus {
         font-weight: bold;
         background-color: transparent;
 
         &:after {
           display: none;
         }
+      }
+
+      &.active {
+        color: var(--primary);
       }
     }
   }

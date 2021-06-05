@@ -66,6 +66,7 @@
 .nav-stacked {
   @extend %nav;
   padding: 0;
+  margin: 0;
   overflow: hidden;
   background: var(--primary-low);
 
@@ -89,6 +90,12 @@
     line-height: $line-height-small;
     cursor: pointer;
     color: var(--primary);
+    transition: all 0.15s;
+    &:hover,
+    &:focus {
+      background: var(--quaternary-low);
+      color: var(--quaternary);
+    }
 
     &.active {
       color: var(--secondary);
