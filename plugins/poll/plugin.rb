@@ -516,7 +516,7 @@ after_initialize do
       result = NewPostResult.new(:poll, false)
 
       post.errors.full_messages.each do |message|
-        result.errors[:base] << message
+        result.add_error(message)
       end
 
       result
