@@ -71,7 +71,7 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _leftMenuClass() {
-      return this._isRTL() ? ".user-menu" : ".hamburger-panel";
+      return this._isRTL() ? "user-menu" : "hamburger-panel";
     },
 
     _leftMenuAction() {
@@ -308,24 +308,23 @@ const SiteHeaderComponent = MountWidget.extend(
         );
       }
 
-      const $menuPanels = $(".menu-panel");
-      if ($menuPanels.length === 0) {
+      const menuPanels = document.querySelectorAll(".menu-panel");
+      if (menuPanels.length === 0) {
         if (this.site.mobileView) {
           this._animate = true;
         }
         return;
       }
 
-      const $window = $(window);
-      const windowWidth = $window.width();
-
-      const headerWidth = $("#main-outlet .container").width() || 1100;
+      const windowWidth = document.querySelector("body").offsetWidth;
+      const headerWidth =
+        document.querySelector("#main-outlet .container").offsetWidth || 1100;
       const remaining = (windowWidth - headerWidth) / 2;
       const viewMode = remaining < 50 ? "slide-in" : "drop-down";
 
-      $menuPanels.each((idx, panel) => {
+      menuPanels.forEach((panel) => {
         const $panel = $(panel);
-        const $headerCloak = $(".header-cloak");
+        const headerCloak = document.querySelector(".header-cloak");
         let width = parseInt($panel.attr("data-max-width"), 10) || 300;
         if (windowWidth - width < 50) {
           width = windowWidth - 50;
@@ -334,30 +333,32 @@ const SiteHeaderComponent = MountWidget.extend(
           this._panMenuOffset = -width;
         }
 
-        $panel.removeClass("drop-down slide-in").addClass(viewMode);
+        panel.classList.remove("drop-down");
+        panel.classList.remove("slide-in");
+        panel.classList.add(viewMode);
         if (this._animate || this._panMenuOffset !== 0) {
           if (
             this.site.mobileView &&
-            $panel.parent(this._leftMenuClass()).length > 0
+            panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
-            $panel.css("--offset", `${-windowWidth}px`);
+            panel.style.setProperty("--offset", `${-windowWidth}px`);
           } else {
             this._panMenuOrigin = "right";
-            $panel.css("--offset", `${windowWidth}px`);
+            panel.style.setProperty("--offset", `${windowWidth}px`);
           }
-          $headerCloak.css("--opacity", 0);
+          headerCloak.style.setProperty("--opacity", 0);
         }
 
-        const $panelBody = $(".panel-body", $panel);
+        const panelBody = panel.querySelector(".panel-body");
 
         // We use a mutationObserver to check for style changes, so it's important
-        // we don't set it if it doesn't change. Same goes for the $panelBody!
+        // we don't set it if it doesn't change. Same goes for the panelBody!
         const style = $panel.prop("style");
 
         if (viewMode === "drop-down") {
-          const $buttonPanel = $("header ul.icons");
-          if ($buttonPanel.length === 0) {
+          const buttonPanel = document.querySelectorAll("header ul.icons");
+          if (buttonPanel.length === 0) {
             return;
           }
 
@@ -367,10 +368,10 @@ const SiteHeaderComponent = MountWidget.extend(
             $panel.css({ top: "100%", height: "auto" });
           }
 
-          $("body").addClass("drop-down-mode");
+          document.querySelector("body").classList.add("drop-down-mode");
         } else {
           if (this.site.mobileView) {
-            $headerCloak.show();
+            headerCloak.style.display = "block";
           }
 
           const menuTop = this.site.mobileView ? headerTop() : headerHeight();
@@ -394,17 +395,17 @@ const SiteHeaderComponent = MountWidget.extend(
             height = winHeight - menuTop - iPadOffset;
           }
 
-          if ($panelBody.prop("style").height !== "100%") {
-            $panelBody.height("100%");
+          if (panelBody.style.height !== "100%") {
+            panelBody.style.setProperty("height", "100%");
           }
           if (style.top !== menuTop + "px" || style[heightProp] !== height) {
             $panel.css({ top: menuTop + "px", [heightProp]: height });
             $(".header-cloak").css({ top: menuTop + "px" });
           }
-          $("body").removeClass("drop-down-mode");
+          document.querySelector("body").classList.remove("drop-down-mode");
         }
 
-        $panel.width(width);
+        panel.style.setProperty("width", `${width}px`);
         if (this._animate) {
           this._animateOpening(panel);
         }
