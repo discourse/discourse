@@ -203,7 +203,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
     didInsertElement() {
       this._super(...arguments);
-      $(window).on("resize.discourse-menu-panel", () => this.afterRender());
+      this._resizeDiscourseMenuPanel = () => this.afterRender();
+      window.addEventListener("resize", this._resizeDiscourseMenuPanel);
 
       this.appEvents.on("header:show-topic", this, "setTopic");
       this.appEvents.on("header:hide-topic", this, "setTopic");
@@ -279,7 +280,7 @@ const SiteHeaderComponent = MountWidget.extend(
     willDestroyElement() {
       this._super(...arguments);
 
-      $(window).off("resize.discourse-menu-panel");
+      window.removeEventListener("resize", this._resizeDiscourseMenuPanel);
 
       this.appEvents.off("header:show-topic", this, "setTopic");
       this.appEvents.off("header:hide-topic", this, "setTopic");
