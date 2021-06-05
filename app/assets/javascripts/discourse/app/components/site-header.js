@@ -49,7 +49,7 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateClosing(panel, menuOrigin) {
-      const windowWidth = document.querySelector("body").offsetWidth;
+      const windowWidth = document.body.offsetWidth;
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
@@ -175,16 +175,15 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = $header.offset().top;
       }
 
-      const $body = $("body");
       const offset = info.offset();
       if (offset >= this.docAt) {
         if (!this.dockedHeader) {
-          $body.addClass("docked");
+          document.body.classList.add("docked");
           this.dockedHeader = true;
         }
       } else {
         if (this.dockedHeader) {
-          $body.removeClass("docked");
+          document.body.classList.remove("docked");
           this.dockedHeader = false;
         }
       }
@@ -198,7 +197,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
     willRender() {
       if (this.get("currentUser.staff")) {
-        $("body").addClass("staff");
+        document.body.classList.add("staff");
       }
     },
 
@@ -316,7 +315,7 @@ const SiteHeaderComponent = MountWidget.extend(
         return;
       }
 
-      const windowWidth = document.querySelector("body").offsetWidth;
+      const windowWidth = document.body.offsetWidth;
       const headerWidth =
         document.querySelector("#main-outlet .container").offsetWidth || 1100;
       const remaining = (windowWidth - headerWidth) / 2;
@@ -368,7 +367,7 @@ const SiteHeaderComponent = MountWidget.extend(
             $panel.css({ top: "100%", height: "auto" });
           }
 
-          document.querySelector("body").classList.add("drop-down-mode");
+          document.body.classList.add("drop-down-mode");
         } else {
           if (this.site.mobileView) {
             headerCloak.style.display = "block";
@@ -402,7 +401,7 @@ const SiteHeaderComponent = MountWidget.extend(
             $panel.css({ top: menuTop + "px", [heightProp]: height });
             $(".header-cloak").css({ top: menuTop + "px" });
           }
-          document.querySelector("body").classList.remove("drop-down-mode");
+          document.body.classList.remove("drop-down-mode");
         }
 
         panel.style.setProperty("width", `${width}px`);

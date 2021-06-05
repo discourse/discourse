@@ -373,7 +373,7 @@ export default createWidget("hamburger-menu", {
     if (!centeredElement.classList.contains("header-cloak") && parents) {
       this.sendWidgetAction("toggleHamburger");
     } else {
-      const windowWidth = document.querySelector("body").offsetWidth;
+      const windowWidth = document.body.offsetWidth;
       const panel = document.querySelector(".menu-panel");
       panel.classList.add("animate");
       let offsetDirection = this.site.mobileView ? -1 : 1;
