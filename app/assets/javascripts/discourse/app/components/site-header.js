@@ -166,13 +166,13 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     dockCheck(info) {
-      const $header = $("header.d-header");
+      const header = document.querySelector("header.d-header");
 
       if (this.docAt === null) {
-        if (!($header && $header.length === 1)) {
+        if (!header) {
           return;
         }
-        this.docAt = $header.offset().top;
+        this.docAt = header.offsetTop;
       }
 
       const offset = info.offset();
@@ -322,9 +322,8 @@ const SiteHeaderComponent = MountWidget.extend(
       const viewMode = remaining < 50 ? "slide-in" : "drop-down";
 
       menuPanels.forEach((panel) => {
-        const $panel = $(panel);
         const headerCloak = document.querySelector(".header-cloak");
-        let width = parseInt($panel.attr("data-max-width"), 10) || 300;
+        let width = parseInt(panel.getAttribute("data-max-width"), 10) || 300;
         if (windowWidth - width < 50) {
           width = windowWidth - 50;
         }
@@ -353,7 +352,6 @@ const SiteHeaderComponent = MountWidget.extend(
 
         // We use a mutationObserver to check for style changes, so it's important
         // we don't set it if it doesn't change. Same goes for the panelBody!
-        const style = $panel.prop("style");
 
         if (viewMode === "drop-down") {
           const buttonPanel = document.querySelectorAll("header ul.icons");
@@ -363,8 +361,9 @@ const SiteHeaderComponent = MountWidget.extend(
 
           // These values need to be set here, not in the css file - this is to deal with the
           // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
-          if (style.top !== "100%" || style.height !== "auto") {
-            $panel.css({ top: "100%", height: "auto" });
+          if (panel.style.top !== "100%" || panel.style.height !== "auto") {
+            panel.style.setProperty("top", "100%");
+            panel.style.setProperty("height", "auto");
           }
 
           document.body.classList.add("drop-down-mode");
@@ -376,9 +375,7 @@ const SiteHeaderComponent = MountWidget.extend(
           const menuTop = this.site.mobileView ? headerTop() : headerHeight();
 
           const winHeightOffset = 16;
-          let initialWinHeight = window.innerHeight
-            ? window.innerHeight
-            : $(window).height();
+          let initialWinHeight = window.innerHeight;
           const winHeight = initialWinHeight - winHeightOffset;
 
           let height;
@@ -397,9 +394,15 @@ const SiteHeaderComponent = MountWidget.extend(
           if (panelBody.style.height !== "100%") {
             panelBody.style.setProperty("height", "100%");
           }
-          if (style.top !== menuTop + "px" || style[heightProp] !== height) {
-            $panel.css({ top: menuTop + "px", [heightProp]: height });
-            $(".header-cloak").css({ top: menuTop + "px" });
+          if (
+            panel.style.top !== menuTop + "px" ||
+            panel.style[heightProp] !== `${height}px`
+          ) {
+            panel.style.top = `${menuTop}px`;
+            panel.style.setProperty(heightProp, `${height}px`);
+            if (headerCloak) {
+              headerCloak.style.top = `${menuTop}px`;
+            }
           }
           document.body.classList.remove("drop-down-mode");
         }
@@ -419,21 +422,19 @@ export default SiteHeaderComponent.extend({
 });
 
 export function headerHeight() {
-  const $header = $("header.d-header");
+  const header = document.querySelector("header.d-header");
 
   // Header may not exist in tests (e.g. in the user menu component test).
-  if ($header.length === 0) {
+  if (!header) {
     return 0;
   }
 
-  const headerOffset = $header.offset();
-  const headerOffsetTop = headerOffset ? headerOffset.top : 0;
-  return $header.outerHeight() + headerOffsetTop - $(window).scrollTop();
+  const headerOffsetTop = header.offsetTop ? header.offsetTop : 0;
+  return header.offsetHeight + headerOffsetTop - document.body.scrollTop;
 }
 
 export function headerTop() {
-  const $header = $("header.d-header");
-  const headerOffset = $header.offset();
-  const headerOffsetTop = headerOffset ? headerOffset.top : 0;
-  return headerOffsetTop - $(window).scrollTop();
+  const header = document.querySelector("header.d-header");
+  const headerOffsetTop = header.offsetTop ? header.offsetTop : 0;
+  return headerOffsetTop - document.body.scrollTop;
 }
