@@ -71,6 +71,11 @@
     }
 
     .search-result-topic {
+      .first-line {
+        display: block;
+        line-height: $line-height-medium;
+      }
+
       .second-line {
         display: flex;
         flex-wrap: wrap;
@@ -273,14 +278,12 @@
     }
 
     .topic {
-      display: inline-block;
+      display: block;
     }
 
     .topic-title {
-      display: inline-block;
       color: var(--tertiary);
       overflow-wrap: anywhere;
-      line-height: $line-height-medium;
       @supports not (overflow-wrap: anywhere) {
         word-break: break-word;
       }
