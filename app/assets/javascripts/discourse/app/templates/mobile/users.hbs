@@ -17,13 +17,20 @@
           placeholderKey="directory.filter_name"
           class="filter-name no-blur"
         }}
+        {{#if currentUser.staff}}
+          {{d-button
+            icon="wrench"
+            action=(action "showEditColumnsModal")
+            class="btn-default open-edit-columns-btn"
+          }}
+        {{/if}}
       </div>
 
       {{#conditional-loading-spinner condition=model.loading}}
         {{#if model.length}}
           <div class="total-rows">{{i18n "directory.total_rows" count=model.totalRows}}</div>
           {{#each model as |item|}}
-            {{directory-item tagName="div" class="user" item=item showTimeRead=showTimeRead}}
+            {{directory-item tagName="div" class="user" item=item columns=columns showTimeRead=showTimeRead}}
           {{/each}}
 
           {{conditional-loading-spinner condition=model.loadingMore}}

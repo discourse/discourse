@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    {{table-header-toggle field="username" order=order asc=asc}}
+    {{#each columns as |column|}}
+      {{table-header-toggle
+        field=column.name
+        icon=column.icon
+        order=order
+        asc=asc
+        translated=column.user_field_id
+        onActiveRender=setActiveHeader
+      }}
+    {{/each}}
+
+    {{#if showTimeRead}}
+      <th>{{i18n "directory.time_read"}}</th>
+    {{/if}}
+  </thead>
+  <tbody>
+    {{#each items as |item|}}
+      {{directory-item item=item columns=columns showTimeRead=showTimeRead}}
+    {{/each}}
+  </tbody>
+</table>

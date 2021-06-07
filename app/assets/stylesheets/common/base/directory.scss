@@ -1,6 +1,16 @@
 .directory {
   margin-bottom: 100px;
 
+  .directory-table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .open-edit-columns-btn {
+    vertical-align: top;
+    padding: 0.45em 0.8em;
+  }
+
   &.users-directory {
     .period-chooser {
       .selected-name {
@@ -61,6 +71,13 @@
       .time-read {
         white-space: nowrap;
       }
+      .user-field-value {
+        font-size: var(--font-up-1);
+        color: var(--primary-medium);
+        @media screen and (max-width: $small-width) {
+          font-size: $font-0;
+        }
+      }
     }
 
     th.sortable {
@@ -81,4 +98,51 @@
       color: var(--primary-medium);
     }
   }
+}
+
+.edit-user-directory-columns-modal {
+  .edit-directory-columns-container {
+    .edit-directory-column {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--primary-low);
+
+      .column-name {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+      }
+      .d-icon-heart {
+        color: var(--love);
+        margin: 0 0.25em 0 0;
+      }
+
+      .move-column-up {
+        margin-right: 5px;
+      }
+
+      .left-content,
+      .right-content {
+        display: flex;
+        align-items: center;
+      }
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+    }
+  }
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
+
+    .reset-to-default {
+      margin-right: 0;
+    }
+  }
+}
+
+.edit-user-directory-columns-modal .modal-inner-container {
+  min-width: 450px;
 }
