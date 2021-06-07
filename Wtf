@@ -1,0 +1,91 @@
+discussions(
+  after: String,
+  before: String,
+  first: Int,
+  last: Int,
+  categoryId: ID = null,
+  orderBy: DiscussionOrder = {field: UPDATED_AT, direction: DESC}
+) : Discussion
+"""
+Ways in which discussions can be ordered.
+"""
+input DiscussionOrder {
+  """
+  The field by which to order discussions.
+  """
+  field: DiscussionOrderField!
+
+  """
+  The direction in which to order discussions by the specified field.
+  """
+  direction: OrderDirection!
+}
+"""
+Properties by which discussion connections can be ordered.
+"""
+enum DiscussionOrderField {
+  """
+  Order discussions by creation time.
+  """
+  CREATED_AT
+
+  """
+  Order discussions by most recent modification time.
+  """
+  UPDATED_AT
+}
+Repository
+discussionCategories(
+  after: String,
+  before: String,
+  first: Int,
+  last: Int,
+) : DiscussionCategoryConnection!
+pinnedDiscussions(
+  after: String,
+  before: String,
+  first: Int,
+  last: Int,
+) : PinnedDiscussionConnection!
+query {
+  repository(owner: "github", name: "some-repo") {
+    discussions(first: 10) {
+      # type: DiscussionConnection
+      totalCount # Int!
+
+      pageInfo {
+        # type: PageInfo (from the public schema)
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+
+      edges {
+        # type: DiscussionEdge
+        cursor
+        node {
+          # type: Discussion
+          id
+        }
+      }
+
+      nodes {
+        # type: Discussion
+        id
+      }
+    }
+  }
+}
+
+mutation {
+  # input type: CreateDiscussionInput
+  createDiscussion(input: {repositoryId: "1234", categoryId: "5678", body: "The body", title: "The title"}) {
+
+    # response type: CreateDiscussionPayload
+    discussion {
+      id
+    }
+  }
+}
+
