@@ -650,6 +650,10 @@ blockquote {
   // a deeply nested blockquote, and so on.. you get the idea.
   .cooked {
     overflow: hidden;
+
+    .button-wrapper {
+      display: none;
+    }
   }
   .group-request {
     border-top: 1px solid var(--primary-low);
