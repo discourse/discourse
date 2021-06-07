@@ -16,6 +16,7 @@ class UserBookmarkSerializer < ApplicationSerializer
              :reminder_at,
              :pinned,
              :title,
+             :fancy_title,
              :deleted,
              :hidden,
              :category_id,
@@ -51,6 +52,10 @@ class UserBookmarkSerializer < ApplicationSerializer
 
   def title
     topic.title
+  end
+
+  def fancy_title
+    topic.fancy_title
   end
 
   def deleted
