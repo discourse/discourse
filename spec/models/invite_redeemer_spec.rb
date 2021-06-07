@@ -85,6 +85,22 @@ describe InviteRedeemer do
       expect(user.approved).to eq(true)
       expect(user.active).to eq(false)
     end
+
+    it "does not automatically approve users if must_approve_users is true" do
+      SiteSetting.must_approve_users = true
+
+      invite = Fabricate(:invite, email: 'test@example.com')
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'test')
+      expect(user.approved).to eq(false)
+    end
+
+    it "approves user if invited by staff" do
+      SiteSetting.must_approve_users = true
+
+      invite = Fabricate(:invite, email: 'test@example.com', invited_by: Fabricate(:admin))
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'test')
+      expect(user.approved).to eq(true)
+    end
   end
 
   describe "#redeem" do
