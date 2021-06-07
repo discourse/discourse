@@ -577,11 +577,6 @@ class PostAlerter
     users
   end
 
-  def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
-    post.topic.allowed_groups.where(smtp_enabled: true).first
-  end
-
   def notify_pm_users(post, reply_to_user, notified)
     return unless post.topic
 
@@ -622,6 +617,11 @@ class PostAlerter
         notify_group_summary(user, post)
       end
     end
+  end
+
+  def group_notifying_via_smtp(post)
+    return nil if !SiteSetting.enable_smtp || !SiteSetting.enable_imap || post.post_type != Post.types[:regular]
+    post.topic.allowed_groups.where(smtp_enabled: true, imap_enabled: true).first
   end
 
   def notify_group_direct_emailers(post)
