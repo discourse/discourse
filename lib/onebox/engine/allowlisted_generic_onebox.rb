@@ -42,6 +42,10 @@ module Onebox
         %w(slideshare.net dailymotion.com livestream.com imgur.com flickr.com)
       end
 
+      def self.article_html_hosts
+        %w(imdb.com)
+      end
+
       def self.host_matches(uri, list)
         !!list.find { |h| %r((^|\.)#{Regexp.escape(h)}$).match(uri.host) }
       end
@@ -59,7 +63,7 @@ module Onebox
       end
 
       def placeholder_html
-        return article_html if is_article?
+        return article_html if (is_article? || force_article_html?)
         return image_html if is_image?
         return Onebox::Helpers.video_placeholder_html if is_video? || is_card?
         return Onebox::Helpers.generic_placeholder_html if is_embedded?
@@ -150,7 +154,7 @@ module Onebox
       end
 
       def generic_html
-        return article_html  if is_article?
+        return article_html  if (is_article? || force_article_html?)
         return video_html    if is_video?
         return image_html    if is_image?
         return embedded_html if is_embedded?
@@ -205,6 +209,10 @@ module Onebox
         fragment = Nokogiri::HTML5::fragment(data[:html])
         src = fragment.at_css('iframe')&.[]("src")
         options[:allowed_iframe_regexes]&.any? { |r| src =~ r }
+      end
+
+      def force_article_html?
+        AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.article_html_hosts) && (has_text? || is_image_article?)
       end
 
       def card_html
