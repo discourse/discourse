@@ -1356,7 +1356,7 @@ describe PostAlerter do
     end
 
     it "does not send a group smtp email if imap is not enabled for the group" do
-      group.update(imap_enabled: false)
+      group.update!(imap_enabled: false)
       create_post_with_incoming
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
