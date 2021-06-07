@@ -30,7 +30,7 @@ acceptance("Composer - Draft saving", function (needs) {
 
     assert.notOk(
       exists("div#draft-status span"),
-      "the draft was saved, there's no a warning"
+      "the draft was saved, there's no warning"
     );
 
     await fillIn(".d-editor-input", "This won't be saved because of error");
