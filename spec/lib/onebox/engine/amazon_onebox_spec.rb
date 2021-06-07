@@ -208,7 +208,7 @@ describe Onebox::Engine::AmazonOnebox do
     end
 
     it "produces a placeholder" do
-      expect(onebox.placeholder_html).to include('<aside class="onebox amazon">')
+      expect(onebox.placeholder_html).to include('<aside class="onebox amazon" data-onebox-src="https://www.amazon.com/dp/B0123ABCD3210">')
     end
 
     it "returns errors" do
