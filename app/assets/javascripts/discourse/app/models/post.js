@@ -19,8 +19,14 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import { userPath } from "discourse/lib/url";
 
 const Post = RestModel.extend({
-  @discourseComputed("url")
+  customShare: null,
+
+  @discourseComputed("url", "customShare")
   shareUrl(url) {
+    if (this.customShare) {
+      return this.customShare;
+    }
+
     const user = User.current();
     return resolveShareUrl(url, user);
   },
