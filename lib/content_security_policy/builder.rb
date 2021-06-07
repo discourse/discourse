@@ -6,6 +6,7 @@ class ContentSecurityPolicy
     EXTENDABLE_DIRECTIVES = %i[
       base_uri
       frame_ancestors
+      manifest_src
       object_src
       script_src
       worker_src
@@ -19,7 +20,6 @@ class ContentSecurityPolicy
       form_action
       frame_src
       img_src
-      manifest_src
       media_src
       prefetch_src
       style_src
