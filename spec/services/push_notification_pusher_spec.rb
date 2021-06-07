@@ -16,10 +16,11 @@ RSpec.describe PushNotificationPusher do
       .to eq(UrlHelper.absolute(upload.url))
   end
 
-  it "sends notification in user's locale" do
-    SiteSetting.allow_user_locale = true
-    user = Fabricate(:user, locale: 'pt_BR')
-    data = <<~JSON
+  context "with user" do
+    fab!(:user) { Fabricate(:user) }
+
+    def create_subscription
+      data = <<~JSON
       {
         "endpoint": "endpoint",
         "keys": {
@@ -27,47 +28,11 @@ RSpec.describe PushNotificationPusher do
           "auth": "auth"
         }
       }
-    JSON
-    PushSubscription.create!(user_id: user.id, data: data)
+      JSON
+      PushSubscription.create!(user_id: user.id, data: data)
+    end
 
-    Webpush.expects(:payload_send).with do |*args|
-      args.to_s.include?("system mencionou")
-    end.once
-
-    PushNotificationPusher.push(user, {
-      topic_title: 'Topic',
-      username: 'system',
-      excerpt: 'description',
-      topic_id: 1,
-      post_url: "https://example.com/t/1/2",
-      notification_type: 1
-    })
-  end
-
-  it "deletes subscriptions which are erroring regularly" do
-    start = freeze_time
-
-    user = Fabricate(:user)
-
-    data = <<~JSON
-      {
-        "endpoint": "endpoint",
-        "keys": {
-          "p256dh": "p256dh",
-          "auth": "auth"
-        }
-      }
-    JSON
-
-    sub = PushSubscription.create!(user_id: user.id, data: data)
-
-    response = Struct.new(:body, :inspect, :message).new("test", "test", "failed")
-    error = Webpush::ResponseError.new(response, "localhost")
-
-    Webpush.expects(:payload_send).raises(error).times(4)
-
-    # 3 failures in more than 24 hours
-    3.times do
+    def execute_push
       PushNotificationPusher.push(user, {
         topic_title: 'Topic',
         username: 'system',
@@ -76,55 +41,77 @@ RSpec.describe PushNotificationPusher do
         post_url: "https://example.com/t/1/2",
         notification_type: 1
       })
-
-      freeze_time 1.minute.from_now
     end
 
-    sub.reload
-    expect(sub.error_count).to eq(3)
-    expect(sub.first_error_at).to eq_time(start)
+    it "sends notification in user's locale" do
+      SiteSetting.allow_user_locale = true
+      user.update!(locale: 'pt_BR')
 
-    freeze_time(2.days.from_now)
+      Webpush.expects(:payload_send).with do |*args|
+        args.to_s.include?("system mencionou")
+      end.once
 
-    PushNotificationPusher.push(user, {
-      topic_title: 'Topic',
-      username: 'system',
-      excerpt: 'description',
-      topic_id: 1,
-      post_url: "https://example.com/t/1/2",
-      notification_type: 1
-    })
+      create_subscription
+      execute_push
+    end
 
-    expect(PushSubscription.where(id: sub.id).exists?).to eq(false)
-  end
+    it "deletes subscriptions which are erroring regularly" do
+      start = freeze_time
 
-  it "deletes invalid subscriptions during send" do
-    user = Fabricate(:walter_white)
+      sub = create_subscription
 
-    missing_endpoint = PushSubscription.create!(user_id: user.id, data:
-      { p256dh: "public ECDH key", keys: { auth: "private ECDH key" } }.to_json)
+      response = Struct.new(:body, :inspect, :message).new("test", "test", "failed")
+      error = Webpush::ResponseError.new(response, "localhost")
 
-    missing_p256dh = PushSubscription.create!(user_id: user.id, data:
-      { endpoint: "endpoint 1", keys: { auth: "private ECDH key" } }.to_json)
+      Webpush.expects(:payload_send).raises(error).times(4)
 
-    missing_auth = PushSubscription.create!(user_id: user.id, data:
-      { endpoint: "endpoint 2", keys: { p256dh: "public ECDH key" } }.to_json)
+      # 3 failures in more than 24 hours
+      3.times do
+        execute_push
 
-    valid_subscription = PushSubscription.create!(user_id: user.id, data:
-      { endpoint: "endpoint 3", keys: { p256dh: "public ECDH key", auth: "private ECDH key" } }.to_json)
+        freeze_time 1.minute.from_now
+      end
 
-    expect(PushSubscription.where(user_id: user.id)).to contain_exactly(missing_endpoint, missing_p256dh, missing_auth, valid_subscription)
-    Webpush.expects(:payload_send).with(has_entries(endpoint: "endpoint 3", p256dh: "public ECDH key", auth: "private ECDH key")).once
+      sub.reload
+      expect(sub.error_count).to eq(3)
+      expect(sub.first_error_at).to eq_time(start)
 
-    PushNotificationPusher.push(user, {
-      topic_title: 'Topic',
-      username: 'system',
-      excerpt: 'description',
-      topic_id: 1,
-      post_url: "https://example.com/t/1/2",
-      notification_type: 1
-    })
+      freeze_time(2.days.from_now)
 
-    expect(PushSubscription.where(user_id: user.id)).to contain_exactly(valid_subscription)
+      execute_push
+
+      expect(PushSubscription.where(id: sub.id).exists?).to eq(false)
+    end
+
+    it "deletes invalid subscriptions during send" do
+      missing_endpoint = PushSubscription.create!(user_id: user.id, data:
+        { p256dh: "public ECDH key", keys: { auth: "private ECDH key" } }.to_json)
+
+      missing_p256dh = PushSubscription.create!(user_id: user.id, data:
+        { endpoint: "endpoint 1", keys: { auth: "private ECDH key" } }.to_json)
+
+      missing_auth = PushSubscription.create!(user_id: user.id, data:
+        { endpoint: "endpoint 2", keys: { p256dh: "public ECDH key" } }.to_json)
+
+      valid_subscription = PushSubscription.create!(user_id: user.id, data:
+        { endpoint: "endpoint 3", keys: { p256dh: "public ECDH key", auth: "private ECDH key" } }.to_json)
+
+      expect(PushSubscription.where(user_id: user.id)).to contain_exactly(missing_endpoint, missing_p256dh, missing_auth, valid_subscription)
+      Webpush.expects(:payload_send).with(has_entries(endpoint: "endpoint 3", p256dh: "public ECDH key", auth: "private ECDH key")).once
+
+      execute_push
+
+      expect(PushSubscription.where(user_id: user.id)).to contain_exactly(valid_subscription)
+    end
+
+    it "handles timeouts" do
+      Webpush.expects(:payload_send).raises(Net::ReadTimeout.new)
+      subscription = create_subscription
+
+      expect { execute_push }.to_not raise_exception
+
+      subscription.reload
+      expect(subscription.error_count).to eq(1)
+    end
   end
 end
