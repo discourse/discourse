@@ -390,7 +390,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.7.0)
       parser (>= 3.0.1.1)
-    rubocop-discourse (2.4.1)
+    rubocop-discourse (2.4.2)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
     rubocop-rspec (2.3.0)
@@ -603,4 +603,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.2.17
+   2.2.19
