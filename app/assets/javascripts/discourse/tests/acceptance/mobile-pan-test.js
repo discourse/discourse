@@ -12,14 +12,23 @@ async function triggerSwipeStart(touchTarget) {
     window.getComputedStyle(document.querySelector("#ember-testing")).zoom || 1
   );
 
+  // Other tests are shown in a transformed viewport, and this is a multiple for the offsets
+  let scale = parseFloat(
+    window
+      .getComputedStyle(document.querySelector("#ember-testing"))
+      .transform.replace("matrix(", "") || 1
+  );
+
   const touchStart = {
     touchTarget: touchTarget,
     x:
       zoom *
-      (touchTarget.getBoundingClientRect().x + touchTarget.offsetWidth / 2),
+      (touchTarget.getBoundingClientRect().x +
+        (scale * touchTarget.offsetWidth) / 2),
     y:
       zoom *
-      (touchTarget.getBoundingClientRect().y + touchTarget.offsetHeight / 2),
+      (touchTarget.getBoundingClientRect().y +
+        (scale * touchTarget.offsetHeight) / 2),
   };
   const touch = new Touch({
     identifier: "test",
