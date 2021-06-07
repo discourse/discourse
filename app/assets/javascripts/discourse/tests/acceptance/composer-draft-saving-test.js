@@ -10,12 +10,11 @@ import I18n from "I18n";
 acceptance("Composer - Draft saving", function (needs) {
   needs.user();
 
-  let callNumber = 0;
+  const draftThatWillBeSaved = "This_will_be_saved_successfully";
+
   needs.pretender((server, helper) => {
-    server.post("/draft.json", () => {
-      // every even call is successful
-      callNumber++;
-      const success = callNumber % 2 !== 0;
+    server.post("/draft.json", (request) => {
+      const success = request.requestBody.includes(draftThatWillBeSaved);
       return success
         ? helper.response({ success: true })
         : helper.response(500, {});
@@ -27,7 +26,8 @@ acceptance("Composer - Draft saving", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
 
-    await fillIn(".d-editor-input", "This will be saved successfully");
+    await fillIn(".d-editor-input", draftThatWillBeSaved);
+
     assert.notOk(
       exists("div#draft-status span"),
       "the draft was saved, there's no a warning"
@@ -44,7 +44,7 @@ acceptance("Composer - Draft saving", function (needs) {
       "an exclamation icon is rendered"
     );
 
-    await fillIn(".d-editor-input", "This will be saved successfully");
+    await fillIn(".d-editor-input", draftThatWillBeSaved);
     assert.notOk(
       exists("div#draft-status span"),
       "the draft was saved again, the warning has disappeared"
