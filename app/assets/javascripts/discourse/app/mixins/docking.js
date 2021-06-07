@@ -4,9 +4,9 @@ import { cancel, later } from "@ember/runloop";
 
 const helper = {
   offset() {
-    const mainOffset = $("#main").offset();
-    const offsetTop = mainOffset ? mainOffset.top : 0;
-    return (window.pageYOffset || $("html").scrollTop()) - offsetTop;
+    const main = document.querySelector("#main");
+    const offsetTop = main ? main.offsetTop : 0;
+    return window.pageYOffset - offsetTop;
   },
 };
 
@@ -32,8 +32,8 @@ export default Mixin.create({
   didInsertElement() {
     this._super(...arguments);
 
-    $(window).bind("scroll.discourse-dock", this.queueDockCheck);
-    $(document).bind("touchmove.discourse-dock", this.queueDockCheck);
+    window.addEventListener("scroll", this.queueDockCheck);
+    document.addEventListener("touchmove", this.queueDockCheck);
 
     // dockCheck might happen too early on full page refresh
     this._initialTimer = later(this, this.safeDockCheck, 50);
@@ -47,7 +47,7 @@ export default Mixin.create({
     }
 
     cancel(this._initialTimer);
-    $(window).unbind("scroll.discourse-dock", this.queueDockCheck);
-    $(document).unbind("touchmove.discourse-dock", this.queueDockCheck);
+    window.removeEventListener("scroll", this.queueDockCheck);
+    document.removeEventListener("touchmove", this.queueDockCheck);
   },
 });

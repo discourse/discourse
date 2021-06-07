@@ -3,7 +3,6 @@ import Mixin from "@ember/object/mixin";
    Pan events is a mixin that allows components to detect and respond to swipe gestures
    It fires callbacks for panStart, panEnd, panMove with the pan state, and the original event.
  **/
-export const SWIPE_VELOCITY = 40;
 export const SWIPE_DISTANCE_THRESHOLD = 50;
 export const SWIPE_VELOCITY_THRESHOLD = 0.12;
 export const MINIMUM_SWIPE_DISTANCE = 5;
@@ -14,35 +13,38 @@ export default Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    this.addTouchListeners($(this.element));
+    this.addTouchListeners(this.element);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.removeTouchListeners($(this.element));
+    this.removeTouchListeners(this.element);
   },
 
-  addTouchListeners($element) {
+  addTouchListeners(element) {
     if (this.site.mobileView) {
-      $element
-        .on("touchstart", (e) => e.touches && this._panStart(e.touches[0]))
-        .on("touchmove", (e) => {
-          const touchEvent = e.touches[0];
-          touchEvent.type = "pointermove";
-          this._panMove(touchEvent, e);
-        })
-        .on("touchend", (e) => this._panMove({ type: "pointerup" }, e))
-        .on("touchcancel", (e) => this._panMove({ type: "pointercancel" }, e));
+      this.touchStart = (e) => e.touches && this._panStart(e.touches[0]);
+      this.touchMove = (e) => {
+        const touchEvent = e.touches[0];
+        touchEvent.type = "pointermove";
+        this._panMove(touchEvent, e);
+      };
+      this.touchEnd = (e) => this._panMove({ type: "pointerup" }, e);
+      this.touchCancel = (e) => this._panMove({ type: "pointercancel" }, e);
+
+      element.addEventListener("touchstart", this.touchStart);
+      element.addEventListener("touchmove", this.touchMove);
+      element.addEventListener("touchend", this.touchEnd);
+      element.addEventListener("touchcancel", this.touchCancel);
     }
   },
 
-  removeTouchListeners($element) {
+  removeTouchListeners(element) {
     if (this.site.mobileView) {
-      $element
-        .off("touchstart")
-        .off("touchmove")
-        .off("touchend")
-        .off("touchcancel");
+      element.removeEventListener("touchstart", this.touchStart);
+      element.removeEventListener("touchmove", this.touchMove);
+      element.removeEventListener("touchend", this.touchEnd);
+      element.removeEventListener("touchcancel", this.touchCancel);
     }
   },
 

@@ -2,9 +2,6 @@
   position: fixed;
   right: 0;
   box-shadow: shadow("header");
-  &.animate {
-    transition: right 0.2s ease-out, left 0.2s ease-out;
-  }
 
   .panel-body {
     width: 100%;
