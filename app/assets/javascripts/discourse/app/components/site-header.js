@@ -396,7 +396,7 @@ const SiteHeaderComponent = MountWidget.extend(
             panelBody.style.setProperty("height", "100%");
           }
           if (
-            panel.style.top !== menuTop + "px" ||
+            panel.style.top !== `${menuTop}px` ||
             panel.style[heightProp] !== `${height}px`
           ) {
             panel.style.top = `${menuTop}px`;
