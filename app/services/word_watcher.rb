@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class WordWatcher
+  REPLACEMENT_LETTER ||= CGI.unescape_html("&#9632;")
 
   def initialize(raw)
     @raw = raw
@@ -8,7 +9,7 @@ class WordWatcher
 
   def self.words_for_action(action)
     words = WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000)
-    if action.to_sym == :replace || action.to_sym == :tag
+    if WatchedWord.has_replacement?(action.to_sym)
       words.pluck(:word, :replacement).to_h
     else
       words.pluck(:word)
@@ -31,7 +32,7 @@ class WordWatcher
   def self.word_matcher_regexp(action, raise_errors: false)
     words = get_cached_words(action)
     if words
-      if action.to_sym == :replace || action.to_sym == :tag
+      if WatchedWord.has_replacement?(action.to_sym)
         words = words.keys
       end
       words = words.map do |w|
@@ -70,6 +71,27 @@ class WordWatcher
     "watched-words-list:#{action}"
   end
 
+  def self.censor(html)
+    regexp = WordWatcher.word_matcher_regexp(:censor)
+    return html if regexp.blank?
+
+    doc = Nokogiri::HTML5::fragment(html)
+    doc.traverse do |node|
+      if node.text?
+        node.content = node.content.gsub(regexp) do |match|
+          # the regex captures leading whitespaces
+          padding = match.size - match.lstrip.size
+          if padding > 0
+            match[0..padding - 1] + REPLACEMENT_LETTER * (match.size - padding)
+          else
+            REPLACEMENT_LETTER * match.size
+          end
+        end
+      end
+    end
+    doc.to_s
+  end
+
   def self.clear_cache!
     WatchedWord.actions.each do |a, i|
       Discourse.cache.delete word_matcher_regexp_key(a)
@@ -86,6 +108,10 @@ class WordWatcher
 
   def should_block?
     word_matches_for_action?(:block, all_matches: true)
+  end
+
+  def should_silence?
+    word_matches_for_action?(:silence)
   end
 
   def word_matches_for_action?(action, all_matches: false)

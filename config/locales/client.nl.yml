@@ -646,7 +646,6 @@ nl:
           mailboxes:
             synchronized: "Gesynchroniseerd postvak"
             none_found: "Geen postvakken gevonden in deze e-mailaccount."
-            disabled: "uitgeschakeld"
         membership:
           title: Lidmaatschap
           access: Toegang
@@ -4387,6 +4386,7 @@ nl:
           flag: "Markeren"
           replace: "Vervangen"
           tag: "Taggen"
+          silence: "Dempen"
         action_descriptions:
           block: "Het plaatsen van berichten die deze woorden bevatten tegengaan. Gebruikers zien een foutbericht wanneer ze hun bericht proberen te verzenden."
           censor: "Berichten met deze woorden toestaan, maar deze vervangen door tekens die de gecensureerde woorden verbergen."

@@ -9,6 +9,7 @@ export default Component.extend({
 
   isReplace: equal("actionKey", "replace"),
   isTag: equal("actionKey", "tag"),
+  isLink: equal("actionKey", "link"),
 
   @discourseComputed("word.replacement")
   tags(replacement) {

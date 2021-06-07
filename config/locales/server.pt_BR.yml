@@ -1566,7 +1566,6 @@ pt_BR:
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que um usuário deve digitar durante a primeira postagem; se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação de necessidades. Defina como 0 para desativar (não recomendado)"
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários que não atendem a min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente os tipos rápidos"
-    auto_silence_first_post_regex: "Regex insensitivo a maiúsculas e minúsculas que, se for transmitido, fará com que o primeiro post do usuário seja silenciado e enviado para a fila de aprovação. Exemplo: raging | a [bc] a, fará com que todas as mensagens contendo raging ou aba ou aca sejam silenciadas primeiro. Aplica-se apenas ao primeiro post."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"
     reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que eles atendam a esta prioridade"

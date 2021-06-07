@@ -430,7 +430,7 @@ class ImportScripts::Base
         # make sure categories don't go more than 2 levels deep
         if params[:parent_category_id]
           top = Category.find_by_id(params[:parent_category_id])
-          top = top.parent_category while top && !top.parent_category.nil?
+          top = top.parent_category while (top&.height_of_ancestors || -1) + 1 >= SiteSetting.max_category_nesting
           params[:parent_category_id] = top.id if top
         end
 

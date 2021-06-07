@@ -74,6 +74,10 @@ class UserProfile < ActiveRecord::Base
   end
 
   def self.import_url_for_user(background_url, user, options = nil)
+    if SiteSetting.verbose_upload_logging
+      Rails.logger.warn("Verbose Upload Logging: Downloading profile background from #{background_url}")
+    end
+
     tempfile = FileHelper.download(
       background_url,
       max_file_size: SiteSetting.max_image_size_kb.kilobytes,

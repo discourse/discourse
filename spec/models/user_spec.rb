@@ -153,6 +153,8 @@ describe User do
     let(:user) { Fabricate(:user) }
 
     it 'enqueues the system message' do
+      SiteSetting.send_welcome_message = true
+
       expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
         user.enqueue_welcome_message('welcome_user')
       end
@@ -1993,8 +1995,8 @@ describe User do
     end
 
     it "triggers an event" do
-      event = DiscourseEvent.track_events { user.unstage! }.first
-      expect(event[:event_name]).to eq(:user_unstaged)
+      event = DiscourseEvent.track(:user_unstaged) { user.unstage! }
+      expect(event).to be_present
       expect(event[:params].first).to eq(user)
     end
   end

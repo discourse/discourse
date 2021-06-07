@@ -276,6 +276,10 @@
   padding-bottom: 1em;
 }
 
+.reviewable-stale {
+  opacity: 0.7;
+}
+
 .blur-images {
   img:not(.avatar):not(.emoji) {
     filter: blur(10px);

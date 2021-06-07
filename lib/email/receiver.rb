@@ -952,7 +952,13 @@ module Email
     end
 
     def group_incoming_emails_regex
-      @group_incoming_emails_regex ||= Regexp.union Group.pluck(:incoming_email).select(&:present?).map { |e| e.split("|") }.flatten.uniq
+      @group_incoming_emails_regex = Regexp.union(
+        DB.query_single(<<~SQL).map { |e| e.split("|") }.flatten.compact_blank.uniq
+          SELECT CONCAT(incoming_email, '|', email_username)
+          FROM groups
+          WHERE incoming_email IS NOT NULL OR email_username IS NOT NULL
+        SQL
+      )
     end
 
     def category_email_in_regex

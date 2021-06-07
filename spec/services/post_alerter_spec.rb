@@ -1295,16 +1295,23 @@ describe PostAlerter do
   context "SMTP (group_smtp_email)" do
     before do
       SiteSetting.enable_smtp = true
+      SiteSetting.enable_imap = true
       Jobs.run_immediately!
     end
 
     fab!(:group) do
       Fabricate(
         :group,
-        smtp_server: "imap.gmail.com",
+        smtp_server: "smtp.gmail.com",
         smtp_port: 587,
+        smtp_ssl: true,
+        imap_server: "imap.gmail.com",
+        imap_port: 993,
+        imap_ssl: true,
         email_username: "discourse@example.com",
-        email_password: "discourse@example.com"
+        email_password: "password",
+        smtp_enabled: true,
+        imap_enabled: true
       )
     end
 
@@ -1346,6 +1353,27 @@ describe PostAlerter do
       expect(email.from).to include(group.email_username)
       expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
       expect(email.subject).to eq("Re: #{topic.title}")
+    end
+
+    it "does not send a group smtp email if imap is not enabled for the group" do
+      group.update!(imap_enabled: false)
+      create_post_with_incoming
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+
+    it "does not send a group smtp email if SiteSetting.enable_imap is false" do
+      SiteSetting.enable_imap = false
+      create_post_with_incoming
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+
+    it "does not send a group smtp email if SiteSetting.enable_smtp is false" do
+      SiteSetting.enable_smtp = false
+      create_post_with_incoming
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
     it "does not send group smtp emails for a whisper" do

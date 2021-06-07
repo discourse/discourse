@@ -693,15 +693,30 @@ const Composer = RestModel.extend({
     }
   },
 
-  /*
-     Open a composer
+  /**
+    Open a composer
 
-     opts:
-       action   - The action we're performing: edit, reply or createTopic
-       post     - The post we're replying to, if present
-       topic    - The topic we're replying to, if present
-       quote    - If we're opening a reply from a quote, the quote we're making
-  */
+    @method open
+    @param {Object} opts
+      @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+      @param {String} opts.draftKey
+      @param {String} opts.draftSequence
+      @param {Post} [opts.post] The post we're replying to, if present
+      @param {Topic} [opts.topic] The topic we're replying to, if present
+      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+      @param {String} [opts.reply]
+      @param {String} [opts.recipients]
+      @param {Number} [opts.composerTime]
+      @param {Number} [opts.typingTime]
+      @param {Boolean} [opts.whisper]
+      @param {Boolean} [opts.noBump]
+      @param {String} [opts.archetypeId] One of `site.archetypes` e.g. `regular` or `private_message`
+      @param {Object} [opts.metaData]
+      @param {Number} [opts.categoryId]
+      @param {Number} [opts.postId]
+      @param {Number} [opts.destinationCategoryId]
+      @param {String} [opts.title]
+  **/
   open(opts) {
     let promise = Promise.resolve();
 
@@ -946,23 +961,29 @@ const Composer = RestModel.extend({
     this.set("composeState", SAVING);
 
     const rollback = throwAjaxError((error) => {
-      post.set("cooked", oldCooked);
+      post.setProperties({ cooked: oldCooked, staged: false });
+      this.appEvents.trigger("post-stream:refresh", { id: post.id });
+
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);
       }
     });
 
+    post.setProperties({ cooked: props.cooked, staged: true });
+    this.appEvents.trigger("post-stream:refresh", { id: post.id });
+
     return promise
       .then(() => {
-        // rest model only sets props after it is saved
-        post.set("cooked", props.cooked);
         return post.save(props).then((result) => {
           this.clearState();
           return result;
         });
       })
-      .catch(rollback);
+      .catch(rollback)
+      .finally(() => {
+        post.set("staged", false);
+      });
   },
 
   serialize(serializer, dest) {

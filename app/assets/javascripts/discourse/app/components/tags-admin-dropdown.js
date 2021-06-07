@@ -8,7 +8,7 @@ export default DropdownSelectBoxComponent.extend({
   actionsMapping: null,
 
   selectKitOptions: {
-    icons: ["bars", "caret-down"],
+    icons: ["wrench", "caret-down"],
     showFullTitle: false,
   },
 
@@ -18,7 +18,7 @@ export default DropdownSelectBoxComponent.extend({
         id: "manageGroups",
         name: I18n.t("tagging.manage_groups"),
         description: I18n.t("tagging.manage_groups_description"),
-        icon: "wrench",
+        icon: "tags",
       },
       {
         id: "uploadTags",

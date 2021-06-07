@@ -108,7 +108,6 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       it "removes the file from s3 on multisite" do
         test_multisite_connection('default') do
           upload = build_upload
-          store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.png")
           s3_object = stub
@@ -125,7 +124,6 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       it "removes the file from s3 on another multisite db" do
         test_multisite_connection('second') do
           upload = build_upload
-          store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.png")
           s3_object = stub
@@ -147,7 +145,6 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         it "removes the file from s3 on multisite" do
           test_multisite_connection('default') do
             upload = build_upload
-            store.expects(:get_depth_for).with(upload.id).returns(0)
             s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
             upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png")
             s3_object = stub
@@ -185,14 +182,14 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     describe "when secure attachments are enabled" do
       it "returns signed URL with correct path" do
         test_multisite_connection('default') do
-          upload = build_upload
-          upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
+          upload = Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
           s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
 
-          expect(store.store_upload(uploaded_file, upload)).to eq(
+          upload.url = store.store_upload(uploaded_file, upload)
+          expect(upload.url).to eq(
             "//some-really-cool-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.pdf"
           )
 

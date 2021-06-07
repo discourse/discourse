@@ -371,6 +371,7 @@ tr_TR:
         type_bonus:
           name: "tür bonusu"
           title: "Bazı gözden geçirilebilir türlere daha yüksek öncelikli olmaları için personel tarafından bir bonus tahsis edilebilir."
+      stale_help: "Bu gözden geçirme bir başkası tarafından çözüldü."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu öğeyi talep edebilirsiniz."
         required: "Öğeleri inceleyebilmeniz için önce hak talebinde bulunmalısınız."
@@ -624,7 +625,6 @@ tr_TR:
           mailboxes:
             synchronized: "Senkronize Posta Kutusu"
             none_found: "Bu e-posta hesabında hiçbir posta kutusu bulunamadı."
-            disabled: "devredışı"
         membership:
           title: Üyelik
           access: Erişim
@@ -938,6 +938,7 @@ tr_TR:
         description: "Yeni kullanıcı katılımı ipuçlarını ve rozetlerini atlayın"
         not_first_time: "İlk defa değil mi?"
         skip_link: "İpuçlarını atla"
+        read_later: "Daha sonra okuyacağım."
       theme_default_on_all_devices: "Bu temayı bütün cihazlarımda varsayılan yap"
       color_scheme_default_on_all_devices: "Tüm cihazlarımda varsayılan renk düzenlerini ayarla"
       color_scheme: "Renk uyumu"
@@ -1188,6 +1189,7 @@ tr_TR:
         invalid: "Lütfen geçerli bir e-posta adresi gir"
         authenticated: "E-posta adresin %{provider} tarafından doğrulandı"
         invite_auth_email_invalid: "Davet e-postanız %{provider} tarafından doğrulanan e-postayla eşleşmiyor."
+        authenticated_by_invite: "E-posta adresiniz davetiye ile doğrulandı"
         frequency_immediately: "Eğer göndermek üzere olduğumuz e-postayı okuyamadıysan sana direkt e-posta göndereceğiz. "
         frequency:
           one: "Sadece son %{count} dakika içinde sizi görmediysek e-posta yollayacağız."
@@ -2053,10 +2055,13 @@ tr_TR:
         delete: "Konuları Sil"
         dismiss: "Yoksay"
         dismiss_read: "Okumadıklarını yoksay"
+        dismiss_read_with_selected: "%{count} adet okunmamışı at"
         dismiss_button: "Yoksay..."
+        dismiss_button_with_selected: "Bunları at (%{count})"
         dismiss_tooltip: "Yeni gönderileri görmezden gel ya da konuları takip etmeyi bırak"
         also_dismiss_topics: "Tekrar okunmamış olarak gösterilmemesi için bu konuları takip etmeyi bırak."
         dismiss_new: "Yenileri Yoksay"
+        dismiss_new_with_selected: "Yenileri (%{count}) at"
         toggle: "konuların toplu seçimini değiştir"
         actions: "Toplu Eylemler"
         change_category: "Kategori düzenle"
@@ -4082,6 +4087,7 @@ tr_TR:
           require_approval: "Onay gerektir"
           flag: "Bayrakla işaretle"
           replace: "Değiştir"
+          silence: "Sustur"
         action_descriptions:
           block: "Bu kelimeleri içeren gönderilerin yayımlanmasını önle. Kullanıcı, gönderilerini yayımlamaya çalışırken bir hata mesajı görecek."
           censor: "Bu kelimeleri içeren yayımlara izin ver ancak bu kelimeleri sansürlenmiş kelimeleri gizleyen karakterlerle değiştir. "

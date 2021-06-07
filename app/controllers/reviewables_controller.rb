@@ -12,11 +12,11 @@ class ReviewablesController < ApplicationController
     offset = params[:offset].to_i
 
     if params[:type].present?
-      raise Discourse::InvalidParameter.new(:type) unless Reviewable.valid_type?(params[:type])
+      raise Discourse::InvalidParameters.new(:type) unless Reviewable.valid_type?(params[:type])
     end
 
     status = (params[:status] || 'pending').to_sym
-    raise Discourse::InvalidParameter.new(:status) unless allowed_statuses.include?(status)
+    raise Discourse::InvalidParameters.new(:status) unless allowed_statuses.include?(status)
 
     topic_id = params[:topic_id] ? params[:topic_id].to_i : nil
     category_id = params[:category_id] ? params[:category_id].to_i : nil

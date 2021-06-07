@@ -1,3 +1,5 @@
+//= require ember_jquery
+
 //= require logster
 
 //= require template_include.js
@@ -25,3 +27,4 @@
 //= require virtual-dom-amd
 //= require intersection-observer
 //= require discourse-shims
+//= require pretty-text-bundle

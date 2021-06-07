@@ -227,6 +227,9 @@ fr:
     user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='%{base_path}/u/%{username}/summary'>a déjà un compte</a> !"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
     invalid_email: "%{email} n'est pas une adresse de courriel valable."
+    rate_limit:
+      one: "Vous avez déjà envoyé %{count} invitation dans la journée, veuillez patienter %{time_left} avant de réessayer."
+      other: "Vous avez déjà envoyé %{count} invitations dans la journée, veuillez patienter %{time_left} avant de réessayer."
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
     cant_invite_to_group: "Vous n'êtes pas autorisé à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
     disabled_errors:
@@ -259,7 +262,7 @@ fr:
   invalid_params: "Vous avez fourni des paramètres invalides pour la requête : %{message}"
   not_logged_in: "Vous devez être connecté pour faire cela."
   not_found: "L'URL ou la ressource demandée n'a pas été retrouvée."
-  invalid_access: "Vous n'avez pas la permission de voir cette ressource."
+  invalid_access: "L'accès à la ressource demandée n'est pas autorisé."
   authenticator_not_found: "La méthode d'authentification n'existe pas ou a été désactivée."
   invalid_api_credentials: "Vous n'êtes pas autorisé à voir cette ressource. Le nom d’utilisateur ou la clé API n'est pas valide."
   provider_not_enabled: "Vous n'êtes pas autorisé à voir cette ressource. Le fournisseur d'authentification n'est pas activé."
@@ -863,13 +866,13 @@ fr:
       short_description: "N'est pas pertinent à la discussion"
     spam:
       title: "Spam"
-      description: "Ce message est une publicité ou du vandalisme. Il n'est pas utile ou pertinent pour le sujet actuel."
+      description: "Ce message est une publicité ou du vandalisme. Il n'est pas utile ni pertinent au sujet actuel."
       short_description: "C'est de la publicité ou du vandalisme"
       email_title: '« %{title} » a été signalé comme spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: "Inapproprié"
-      description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en transgression de la <a href="%{base_path}/guidelines">charte communautaire</a>.'
+      title: "Répréhensible"
+      description: 'Le contenu de ce message serait jugé offensant, injurieux, violent ou en infraction de la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
     notify_user:
       title: "Envoyer un message à @%{username}"
@@ -879,7 +882,7 @@ fr:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Autre chose"
-      description: "Ce message demande l'attention des responsables pour une autre raison."
+      description: "Ce message requiert l'intervention des responsables pour une autre raison."
       short_description: "Nécessite l'attention des responsables pour une autre raison"
       email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
@@ -919,8 +922,10 @@ fr:
     imap_authentication_error: "L'authentification auprès du serveur IMAP a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
     imap_no_response_error: "Une erreur est survenue lors de la communication avec le serveur IMAP. %{message}"
     smtp_authentication_error: "L'authentification auprès du serveur SMTP a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
+    authentication_error_gmail_app_password: "Un mot de passe propre à l'application est requis. Pour en savoir plus, consultez cet <a target=\"_blank\" href=\"https://support.google.com/accounts/answer/185833\">article du centre d'aide Google</a>"
     smtp_server_busy_error: "Le serveur SMTP indique qu'il subit une trop forte charge. Patientez un moment avant de réessayer."
     smtp_unhandled_error: "Une erreur non prise en charge est survenue lors de la communication avec le serveur SMTP. %{message}"
+    imap_unhandled_error: "Une erreur non prise en charge est survenue lors de la communication avec le serveur IMAP. %{message}"
     connection_error: "Un problème de connexion au serveur s'est produit. Vérifiez le nom du serveur et le numéro de port avant de réessayer."
     timeout_error: "Le délai d'établissement de la connexion au serveur s'est écoulé. Vérifiez le nom du serveur et le numéro de port avant de réessayer."
     unhandled_error: "Une erreur non prise en charge est survenue lors du test des paramètres de courriel. %{message}"
@@ -942,13 +947,13 @@ fr:
   topic_flag_types:
     spam:
       title: "Spam"
-      description: "Ce message est une publicité. Il n'est pas utile ou pertinent pour ce site, mais de nature promotionnelle."
+      description: "Ce sujet est une publicité. Il n'est pas utile ni pertinent au forum, et de nature promotionnelle."
       long_form: "signalé comme spam"
       short_description: "Ceci est une publicité"
     inappropriate:
-      title: "Inapproprié"
-      description: 'Ce sujet contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation de la <a href="%{base_path}/guidelines">charte de notre communauté</a>.'
-      long_form: "signalé comme inapproprié"
+      title: "Répréhensible"
+      description: 'Le contenu de ce message serait jugé offensant, injurieux, violent ou en infraction de la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
+      long_form: "signalé comme répréhensible"
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
     notify_moderators:
       title: "Autre chose"
@@ -1374,7 +1379,7 @@ fr:
     bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon dans les <a href='%{base_path}/admin/site_settings'>paramètres du site</a>"
     poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='%{base_path}/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
     poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='%{base_path}/admin/site_settings/category/email'>les paramètres POP3</a>."
-    force_https_warning: "Votre site web utiliser le SSL. Mais `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
+    force_https_warning: "Votre site web utilise SSL. Mais l'option `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activée dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
     watched_word_regexp_error: "L'expression régulière pour %{action} des mots surveillés n'est pas valable. Veuillez vérifier la <a href='%{base_path}/admin/customize/watched_words'>configuration des Mots Surveillés</a>, ou désactiver le paramètre nommé \"watched words regular expressions\"."
@@ -1488,9 +1493,12 @@ fr:
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué suite à un signalement de la communauté"
     max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer dans la période de 24h après avoir créé son premier message"
     max_replies_in_first_day: "Le nombre maximum de réponses qu'un utilisateur est autorisé à créer dans la période de 24h après avoir créé son premier message"
-    tl2_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
-    tl3_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 3 (réguliers) en la multipliant par ce nombre"
-    tl4_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
+    tl2_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de J'aime pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
+    tl3_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de J'aime pour les utilisateurs de niveau 3 (habitués) en la multipliant par ce nombre"
+    tl4_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de J'aime pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
+    tl2_additional_edits_per_day_multiplier: "Augmenter la limite quotidienne de modifications de messages pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
+    tl3_additional_edits_per_day_multiplier: "Augmenter la limite quotidienne de modifications de messages pour les utilisateurs de niveau 3 (habitués) en la multipliant par ce nombre"
+    tl4_additional_edits_per_day_multiplier: "Augmenter la limite quotidienne de modifications de messages pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
     num_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_spam_flags_to_silence_new_user signalements de la part de ce nombre d'utilisateurs différents, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_flags_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent ce nombre de signalements de la part de num_tl3_users_to_silence_new_user utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur num_tl3_flags_to_silence_new_user signalements de la part de plusieurs utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
@@ -1803,7 +1811,7 @@ fr:
     min_first_post_typing_time: "Durée minimum en millisecondes qu'un utilisateur doit passer à saisir son premier message, si le seuil n'est pas atteint, le message rejoindra automatiquement la file d'attente pour approbation. Mettre à 0 pour désactiver (non recommandé)"
     auto_silence_fast_typers_on_first_post: "Mettre sous silence automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximum pour automatiquement mettre sous silence les utilisateurs rédigeant des messages trop rapidement."
-    auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est détectée, déclenchera la mise sous silence du premier message de tout utilisateur et ajoutera ce message à la liste des messages à valider. Exemple : « rageux|a[bc]a » mettra sous silence les premiers messages contenant « rageux » ou « aba » ou « aca »."
+    auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est détectée, déclenchera la mise sous silence du premier message de tout utilisateur et ajoutera ce message à la liste des messages à valider. Exemple : « rageux|a[bc]a » mettra sous silence les premiers messages contenant «&nbsp;rageux&nbsp;» ou «&nbsp;aba&nbsp;» ou «&nbsp;aca&nbsp;». DÉPRÉCIÉ&nbsp;: utilisez la fonctionnalité <em>Mettre sous silence</em> à la place."
     reviewable_claiming: "Les éléments à examiner doivent-ils être réservés avant de pouvoir être traités ?"
     reviewable_default_topics: "Par défaut, afficher les éléments à examiner en les regroupant par sujet"
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils n'aient ce niveau de priorité"
@@ -1820,7 +1828,7 @@ fr:
     short_email_length: "Taille des courriels courts en octets"
     display_name_on_email_from: "Afficher les noms complets dans le champ « De » des courriels"
     unsubscribe_via_email: "Autoriser les utilisateurs à se désabonner des courriels en envoyant un courriel avec « unsubscribe » dans le sujet ou le corps du message."
-    unsubscribe_via_email_footer: "Inclure un lien dans le pied des courriels envoyés pour se désabonner"
+    unsubscribe_via_email_footer: "Inclure un lien de désabonnement dans le pied des courriels envoyés"
     delete_email_logs_after_days: "Effacer les journaux de messagerie après (N) jours. 0 pour conserver indéfiniment."
     disallow_reply_by_email_after_days: "Interdire la réponse par courriel après (N) jours. 0 pour permettre indéfiniment."
     max_emails_per_day_per_user: "Nombre maximum de courriels à envoyer aux utilisateurs par jour. 0 pour désactiver la limite"
@@ -1930,7 +1938,7 @@ fr:
     disable_system_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
     notification_consolidation_threshold: "Nombre de notifications de J'aime ou de demandes d'adhésion à partir duquel les notifications sont regroupées en une seule. Mettre 0 pour désactiver."
     likes_notification_consolidation_window_mins: "Durée en minutes après que le seuil soit atteint pour regrouper les notifications de J'aime en une seule notification. Le seuil peut être configuré via `SiteSetting.notification_consolidation_threshold`."
-    automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
+    automatically_unpin_topics: "Désépingler automatiquement les sujets lorsque l'utilisateur atteint la fin de la liste."
     read_time_word_count: "Nombre de mots par minute servant de base de calcul à l'estimation du temps de lecture."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>balise title</a> de la page du sujet comprend le nom de la catégorie."
     native_app_install_banner_ios: "Affiche la bannière de l'application DiscourseHub sur les appareils iOS aux utilisateurs habitués (niveau de confiance 1 ou supérieur)."
@@ -1964,6 +1972,7 @@ fr:
     notify_about_flags_after: "Si des signalements n'ont pas été gérés après ce nombre d'heures, envoyer un message direct aux modérateurs. 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: "Supprimer les brouillons plus vieux que (n) jours."
+    delete_merged_stub_topics_after_days: "Délai (en jours) de suppression automatique des sujets-troncs, c'est-à-dire les sujets sans réponses résultant de la fusion de deux sujets par déplacement de messages. Si la valeur est de 0, les sujets-troncs ne seront pas supprimés."
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode spécial de lancement (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_media: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « login required » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement pour les médias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Voir <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ce sujet sur les médias sécurisés</a> pour plus d''informations.'
@@ -1982,7 +1991,7 @@ fr:
     notify_about_queued_posts_after: "Après tant d'heures écoulées, envoyer un courriel à tous les modérateurs si des messages sont en attente d'examen. Désactiver l'envoi de ces courriels en renseignant la valeur \"0\"."
     auto_close_messages_post_count: "Nombre maximum de messages dans un message privé avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
     auto_close_topics_post_count: "Nombre maximum de messages dans un sujet avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
-    auto_close_topics_create_linked_topic: "Créer un nouveau sujet lié lorsqu'un sujet est fermé automatiquement par l'activation du paramètre 'auto close topics post count'"
+    auto_close_topics_create_linked_topic: "Créer un nouveau sujet lié lorsqu'un sujet est automatiquement fermé du fait du paramètre 'auto close topics post count'"
     code_formatting_style: "Le bouton Code de l'éditeur utilisera ce style de mise en forme par défaut"
     max_allowed_message_recipients: "Nombre maximum de destinataires autorisés dans un message."
     watched_words_regular_expressions: "Les mots surveillés sont des expressions régulières."
@@ -2014,7 +2023,7 @@ fr:
     default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur."
     default_other_skip_new_user_tips: "Ignorer les conseils et badges d'intégration des nouveaux utilisateurs."
     default_other_like_notification_frequency: "Par défaut, notifier les utilisateurs d'un J'aime"
-    default_topics_automatic_unpin: "Par défaut, désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
+    default_topics_automatic_unpin: "Par défaut, désépingler automatiquement les sujets lorsque l'utilisateur atteint la fin de la liste."
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories mises sous silence par défaut."
@@ -2298,6 +2307,7 @@ fr:
       other: "Désactivé automatiquement après %{count} jours d'inactivité"
     activated_by_staff: "Activé par un responsable"
     new_user_typed_too_fast: "Le nouvel utilisateur écrivait trop rapidement"
+    content_matches_auto_silence_regex: "Le contenu correspond à l'expression régulière de mise sous silence automatique"
     content_matches_auto_block_regex: "Le contenu correspond à l'expression régulière de blocage automatique"
     username:
       short: "doit contenir au moins %{min} caractères"
@@ -2533,7 +2543,7 @@ fr:
       %{notes}
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en discussion qui est défini par son titre et son premier message."
-    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté considère que son contenu est offensant, abusif, ou qu'il enfreint notre [charte communautaire](%{base_path}/guidelines)."
+    inappropriate: "Votre message a été signalé comme étant **répréhensible**&nbsp;: la communauté a estimé que son contenu était offensant, injurieux, violent ou qu'il enfreignait notre [charte communautaire](%{base_path}/guidelines)."
     spam: "Votre message a été signalé comme étant du **spam** : la communauté considère qu'il s'agit d'une publicité ou du contenu trop promotionnel au lieu d'être utile et pertinent au sujet."
     notify_moderators: "Votre message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
   flags_dispositions:
@@ -2634,13 +2644,13 @@ fr:
       title: "Bienvenue utilisateur"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
-        Merci d'avoir rejoint %{site_name}, et bienvenue !
+        Merci d'avoir rejoint %{site_name}, bievenue&nbsp;!
 
         %{new_user_tips}
 
-        Nous croyons au [comportement civilisé de la communauté](%{base_url}/guidelines) en tout temps.
+        Nous prônons [la civilité au sein de notre communauté](%{base_url}/guidelines) dans toutes les circonstances.
 
-        Amusez-vous bien !
+        En vous souhaitant d'agréables moments parmi nous&nbsp;!
     welcome_tl1_user:
       title: "Bienvenue utilisateur"
       subject_template: "Merci de passer du temps avec nous"
@@ -2661,17 +2671,17 @@ fr:
       title: "Bienvenue invité"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
-        Merci d'avoir accepté l'invitation sur %{site_name} — bienvenue !
+        Merci d'avoir accepté l'invitation sur %{site_name}, bienvenue&nbsp;!
 
-        - Nous avons créé ce nouveau compte **%{username}** pour vous. Modifiez votre nom ou mot de passe en visitant [votre profil utilisateur][prefs].
+        - Nous vous avons créé un nouveau compte&nbsp;: **%{username}**. Vous pourrez modifier votre nom d'utilisateur ou votre mot de passe en vous rendant sur [votre profil utilisateur][prefs].
 
-        - Au moment de vous connecter, merci **d'indiquer l'adresse courriel utilisée pour l'invitation** — autrement, nous ne pourrons pas vous reconnaître !
+        - Au moment de vous connecter, nous vous prions **d'indiquer l'adresse de courriel à laquelle votre invitation a été adressée** — autrement, nous ne saurons pas qu'il s'agit de vous&nbsp;!
 
         %{new_user_tips}
 
-        Nous croyons au [comportement civilisé de la communauté](%{base_url}/guidelines) en tout temps.
+        Nous prônons [la civilité au sein de notre communauté](%{base_url}/guidelines) dans toutes les circonstances.
 
-        Amusez-vous bien !
+        En vous souhaitant d'agréables moments parmi nous&nbsp;!
 
         [prefs] : %{user_preferences_url}
     tl2_promotion_message:
@@ -3096,13 +3106,13 @@ fr:
 
         Des messages de nouveaux utilisateurs sont en attente de modération. Nous vous invitons à [les approuver ou les rejeter](%{base_url}/review?type=ReviewableQueuedPost).
   unsubscribe_link: |
-    Pour se désabonner de ces courriels, [cliquez ici](%{unsubscribe_url}).
+    Pour vous désabonner de ces courriels, [cliquez ici](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
-    Pour se désabonner de ces courriels, [cliquez ici](%{unsubscribe_url}).
+    Pour vous désabonner de ces courriels, [cliquez ici](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
     Vous recevez ce courriel car vous avez activé la liste de diffusion.
 
-    Pour se désabonner de ces courriels, [cliquez ici](%{unsubscribe_url}).
+    Pour vous désabonner de ces courriels, [cliquez ici](%{unsubscribe_url}).
   subject_re: "Re : "
   subject_pm: "[MD] "
   email_from: "%{user_name} via %{site_name}"
@@ -3365,7 +3375,7 @@ fr:
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
       subject_template: "[%{email_prefix}] Résumé"
-      unsubscribe: "Ce résumé est envoyé depuis %{site_link} quand nous ne vous avons plus vu depuis un moment. Changez %{email_preferences_link}, ou %{unsubscribe_link} pour se désabonner."
+      unsubscribe: "Ce résumé vous est envoyé par %{site_link} lorsqu'on ne vous aperçoit pas pendant un petit moment. Vous pouvez %{email_preferences_link}, ou %{unsubscribe_link} pour vous désabonner."
       your_email_settings: "vos préférences de courriel"
       click_here: "cliquez ici"
       from: "%{site_name}"
@@ -3451,7 +3461,7 @@ fr:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
-      title: "Confirmez votre ancienne adresse courriel (Ajout)"
+      title: "Confirmation à la précédente adresse (ajout)"
       subject_template: "[%{email_prefix}] Confirmez votre adresse courriel actuelle"
       text_body_template: |
         Avant de pouvoir ajouter une nouvelle adresse courriel, nous avons besoin de confirmer que vous contrôlez bien ce compte de messagerie. Une fois cette étape terminée, nous vous demanderons de confirmer la nouvelle adresse courriel.
@@ -3471,7 +3481,7 @@ fr:
 
         %{new_email}
     notify_old_email_add:
-      title: "Notifier l'ancienne adresse courriel (ajout)"
+      title: "Notification à la précédente adresse (ajout)"
       subject_template: "[%{email_prefix}] Une nouvelle adresse courriel a été ajoutée"
       text_body_template: |
         Ceci est un message automatique pour vous informer qu'une adresse courriel pour %{site_name} a été ajoutée. Si c'est une erreur, merci de contacter ²un administrateur du site.
@@ -3483,21 +3493,21 @@ fr:
       title: "Inscription après approbation"
       subject_template: "Votre compte a été approuvé sur %{site_name} !"
       text_body_template: |
-        Bienvenue sur %{site_name} !
+        Bienvenue sur %{site_name}&nbsp;!
 
-        Un responsable a approuvé votre compte sur %{site_name}.
+        Un responsable a approuvé votre inscription sur %{site_name}.
 
-        Cliquez sur le lien suivant pour accéder à votre nouveau compte :
+        Pour accéder à votre nouveau compte, vous pouvez utiliser le lien suivant&nbsp;:
 
         %{base_url}
 
-        Si le lien ci-dessus n'est pas cliquable, essayez de le copier-coller dans la barre d'adresse de votre navigateur internet.
+        Dans le cas où le lien ci-dessus ne serait pas utilisable, nous vous invitons à le copier-coller dans la barre d'adresse de votre navigateur.
 
         %{new_user_tips}
 
-        Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines).
+        Nous prônons [la civilité au sein de notre communauté](%{base_url}/guidelines) dans toutes les circonstances.
 
-        Amusez-vous bien !
+        En vous souhaitant d'agréables moments parmi nous&nbsp;!
     signup_after_reject:
       title: "Inscription Suite À Un Refus"
       subject_template: "Votre inscription à %{site_name} a été rejetée"
@@ -4357,7 +4367,7 @@ fr:
       replied: '%{username} vous a répondu dans « %{topic} » - %{site_title}'
       posted: '%{username} a posté dans « %{topic} » - %{site_title}'
       private_message: '%{username} vous a envoyé un message direct dans « %{topic} » - %{site_title}'
-      linked: '%{username} a créé un lien vers votre message posté dans « %{topic} » - %{site_title}'
+      linked: '%{username} a inséré un lien vers votre message dans le sujet «&nbsp;%{topic}&nbsp;» - %{site_title}'
       watching_first_post: '%{username} a créé un nouveau sujet « %{topic} » - %{site_title}'
       confirm_title: "Notifications activées - %{site_title}"
       confirm_body: "Les notifications ont été activées."
@@ -4511,8 +4521,8 @@ fr:
     topic_title_with_sequence:
       one: "%{topic_title} (partie %{count})"
       other: "%{topic_title} (partie %{count})"
-    post_raw: "Suite de la discussion de %{parent_url}.\n\nDiscussions précédentes :\n\n%{previous_topics}"
-    small_action_post_raw: "Continuer la discussion sur %{new_title}."
+    post_raw: "Suite de la discussion depuis %{parent_url}.\n\nDiscussions précédentes&nbsp;:\n\n%{previous_topics}"
+    small_action_post_raw: "Poursuivre la discussion dans %{new_title}."
   activemodel:
     errors:
       <<: *errors

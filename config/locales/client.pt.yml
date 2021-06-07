@@ -638,7 +638,6 @@ pt:
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Não foram encontradas caixas de correio nesta conta de e-mail."
-            disabled: "desativado"
         membership:
           title: Filiação
           access: Acesso

@@ -968,6 +968,23 @@ describe Email::Receiver do
       include_examples "creates topic with forwarded message as quote", :group, "team@bar.com|meat@bar.com"
     end
 
+    context "when a reply is sent to a group's email_username" do
+      let!(:topic) do
+        group.update(email_username: "team@somesmtpaddress.com")
+        process(:email_reply_1)
+        Topic.last
+      end
+
+      it "does not invite the group email_username as a staged user" do
+        process(:email_reply_to_group_email_username)
+        expect(User.find_by_email("team@somesmtpaddress.com")).to eq(nil)
+      end
+
+      it "creates the reply when the sender and referenced messsage id are known" do
+        expect { process(:email_reply_to_group_email_username) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+      end
+    end
+
     context "when message sent to a group has no key and find_related_post_with_key is enabled" do
       let!(:topic) do
         process(:email_reply_1)

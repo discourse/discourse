@@ -101,6 +101,7 @@ export default Controller.extend({
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
+  prioritizedCategoryId: null,
   lastValidatedAt: null,
   isUploading: false,
   topic: null,
@@ -710,7 +711,10 @@ export default Controller.extend({
     composer.set("disableDrafts", true);
 
     // for now handle a very narrow use case
-    // if we are replying to a topic AND not on the topic pop the window up
+    // if we are replying to a topic
+    // AND are on on a different topic
+    // AND topic is open (or we are staff)
+    // --> pop the window up
     if (!force && composer.replyingToTopic) {
       const currentTopic = this.topicModel;
 
@@ -719,7 +723,10 @@ export default Controller.extend({
         return;
       }
 
-      if (currentTopic.id !== composer.get("topic.id")) {
+      if (
+        currentTopic.id !== composer.get("topic.id") &&
+        (this.isStaffUser || !currentTopic.closed)
+      ) {
         const message =
           "<h1>" + I18n.t("composer.posting_not_on_topic") + "</h1>";
 
@@ -763,14 +770,15 @@ export default Controller.extend({
 
     // TODO: This should not happen in model
     const imageSizes = {};
-    $("#reply-control .d-editor-preview img").each((i, e) => {
-      const $img = $(e);
-      const src = $img.prop("src");
+    document
+      .querySelectorAll("#reply-control .d-editor-preview img")
+      .forEach((e) => {
+        const src = e.src;
 
-      if (src && src.length) {
-        imageSizes[src] = { width: $img.width(), height: $img.height() };
-      }
-    });
+        if (src && src.length) {
+          imageSizes[src] = { width: e.naturalWidth, height: e.naturalHeight };
+        }
+      });
 
     const promise = composer
       .save({ imageSizes, editReason: this.editReason })
@@ -868,15 +876,22 @@ export default Controller.extend({
   },
 
   /**
-   Open the composer view
+    Open the composer view
 
-   @method open
-   @param {Object} opts Options for creating a post
-   @param {String} opts.action The action we're performing: edit, reply or createTopic
-   @param {Post} [opts.post] The post we're replying to
-   @param {Topic} [opts.topic] The topic we're replying to
-   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-   **/
+    @method open
+    @param {Object} opts Options for creating a post
+      @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+      @param {String} opts.draftKey
+      @param {Post} [opts.post] The post we're replying to
+      @param {Topic} [opts.topic] The topic we're replying to
+      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+      @param {Boolean} [opts.ignoreIfChanged]
+      @param {Boolean} [opts.disableScopedCategory]
+      @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
+      @param {Number} [opts.prioritizedCategoryId]
+      @param {String} [opts.draftSequence]
+      @param {Boolean} [opts.skipDraftCheck]
+  **/
   open(opts) {
     opts = opts || {};
 
@@ -898,6 +913,7 @@ export default Controller.extend({
       showEditReason: false,
       editReason: null,
       scopedCategoryId: null,
+      prioritizedCategoryId: null,
       skipAutoSave: true,
     });
 
@@ -906,6 +922,16 @@ export default Controller.extend({
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);
+      }
+    }
+
+    if (opts.prioritizedCategoryId) {
+      const category = this.site.categories.findBy(
+        "id",
+        opts.prioritizedCategoryId
+      );
+      if (category) {
+        this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
     }
 

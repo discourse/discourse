@@ -141,7 +141,7 @@ const Bookmark = RestModel.extend({
       url += "?" + $.param(params);
     }
 
-    return ajax(url, { cache: "false" });
+    return ajax(url);
   },
 
   loadMore(additionalParams) {

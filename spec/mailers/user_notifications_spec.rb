@@ -611,6 +611,84 @@ describe UserNotifications do
       expect(mail.body).to include("[group1 (2)](http://test.localhost/groups/group1), [group2 (1)](http://test.localhost/groups/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
     end
 
+    context "when group smtp is configured and SiteSetting.enable_smtp" do
+      let!(:group1) do
+        Fabricate(
+          :group,
+          name: "group1",
+          smtp_enabled: true,
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_server: "smtp.test.com",
+          email_username: "user@test.com",
+          email_password: "password"
+        )
+      end
+
+      before do
+        SiteSetting.enable_smtp = true
+        topic.allowed_groups = [group1]
+      end
+
+      it "uses the from address, which is the group's email_username, for reply-to" do
+        mail = UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash
+        )
+
+        expect(mail.from).to eq([group1.email_username])
+        expect(mail.reply_to).to eq([group1.email_username])
+      end
+
+      it "uses the SMTP settings from the group for delivery" do
+        mail = UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash
+        )
+
+        delivery_method = mail.delivery_method.settings
+        expect(delivery_method[:port]).to eq(group1.smtp_port)
+        expect(delivery_method[:address]).to eq(group1.smtp_server)
+        expect(delivery_method[:domain]).to eq("test.com")
+        expect(delivery_method[:password]).to eq("password")
+        expect(delivery_method[:user_name]).to eq("user@test.com")
+      end
+
+      context "when imap is configured for the group" do
+        before do
+          group1.update(
+            imap_server: "imap.test.com",
+            imap_port: 993,
+            imap_ssl: true,
+            imap_enabled: true,
+            imap_mailbox_name: "All Mail"
+          )
+        end
+
+        it "does not use group SMTP settings for delivery, this is handled by Jobs::GroupSmtpEmail" do
+          mail = UserNotifications.user_private_message(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash
+          )
+
+          expect(mail.from).to eq([SiteSetting.notification_email])
+          expect(mail.reply_to).to eq([SiteSetting.notification_email])
+          delivery_method = mail.delivery_method.settings
+          expect(delivery_method[:port]).not_to eq(group1.smtp_port)
+          expect(delivery_method[:address]).not_to eq(group1.smtp_server)
+          expect(delivery_method[:domain]).not_to eq("test.com")
+          expect(delivery_method[:password]).not_to eq("password")
+          expect(delivery_method[:user_name]).not_to eq("user@test.com")
+        end
+      end
+    end
+
     context "when SiteSetting.group_name_in_subject is true" do
       before do
         SiteSetting.group_in_subject = true
@@ -972,11 +1050,52 @@ describe UserNotifications do
   end
 
   describe "user invited to a topic" do
+    let(:notification_type) { :invited_to_topic }
+
     include_examples "notification email building" do
-      let(:notification_type) { :invited_to_topic }
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
+    end
+
+    context "shows the right name in 'From' field" do
+      let(:inviter) { Fabricate(:user) }
+      let(:invitee) { Fabricate(:user) }
+
+      let(:notification) do
+        Fabricate(:notification,
+          notification_type: Notification.types[:invited_to_topic],
+          user: invitee,
+          topic: post.topic,
+          post_number: post.post_number,
+          data: {
+            topic_title: post.topic.title,
+            display_username: inviter.username,
+            original_user_id: inviter.id,
+            original_username: inviter.username
+          }.to_json
+        )
+      end
+
+      let(:mailer) do
+        UserNotifications.public_send(
+          "user_invited_to_topic",
+          invitee,
+          notification_type: Notification.types[notification.notification_type],
+          notification_data_hash: notification.data_hash,
+          post: notification.post
+        )
+      end
+
+      it "sends the email as the inviter" do
+        SiteSetting.enable_names = false
+
+        expect(mailer.message.to_s).to include("From: #{inviter.username} via #{SiteSetting.title} <#{SiteSetting.notification_email}>")
+      end
+
+      it "sends the email as the inviter" do
+        expect(mailer.message.to_s).to include("From: #{inviter.name} via #{SiteSetting.title} <#{SiteSetting.notification_email}>")
+      end
     end
   end
 

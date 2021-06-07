@@ -650,7 +650,6 @@ ro:
           mailboxes:
             synchronized: "Cutie poștală sincronizată"
             none_found: "Nu au fost găsite cutii poștale în acest cont de e-mail."
-            disabled: "dezactivat"
         membership:
           title: Abonare
           access: Acces

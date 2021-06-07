@@ -482,8 +482,6 @@ sk:
             password: "Heslo"
           settings:
             title: "Nastavenia"
-          mailboxes:
-            disabled: "vypnuté"
         membership:
           title: Členstvo
           access: Prístup

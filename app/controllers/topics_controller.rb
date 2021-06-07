@@ -128,7 +128,7 @@ class TopicsController < ApplicationController
     end
 
     page = params[:page]
-    if (page < 0) || ((page - 1) * @topic_view.chunk_size > @topic_view.topic.highest_post_number)
+    if (page < 0) || ((page - 1) * @topic_view.chunk_size >= @topic_view.topic.highest_post_number)
       raise Discourse::NotFound
     end
 
@@ -245,11 +245,11 @@ class TopicsController < ApplicationController
     params.require(:topic_id)
     params.require(:post_ids)
 
-    post_ids = params[:post_ids].map(&:to_i)
-    unless Array === post_ids
+    unless Array === params[:post_ids]
       render_json_error("Expecting post_ids to contain a list of posts ids")
       return
     end
+    post_ids = params[:post_ids].map(&:to_i)
 
     if post_ids.length > 100
       render_json_error("Requested a chunk that is too big")
@@ -911,10 +911,15 @@ class TopicsController < ApplicationController
 
   def bulk
     if params[:topic_ids].present?
+      unless Array === params[:topic_ids]
+        raise Discourse::InvalidParameters.new(
+          "Expecting topic_ids to contain a list of topic ids"
+        )
+      end
       topic_ids = params[:topic_ids].map { |t| t.to_i }
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
-      topics = TopicQuery.unread_filter(tq.joined_topic_user, current_user.id, staff: guardian.is_staff?).listable_topics
+      topics = TopicQuery.unread_filter(tq.joined_topic_user, staff: guardian.is_staff?).listable_topics
       topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
 
       if params[:category_id]
@@ -970,7 +975,18 @@ class TopicsController < ApplicationController
         end
       end
 
-    dismissed_topic_ids = DismissTopics.new(current_user, topic_scope).perform!
+    if params[:topic_ids].present?
+      unless Array === params[:topic_ids]
+        raise Discourse::InvalidParameters.new(
+          "Expecting topic_ids to contain a list of topic ids"
+        )
+      end
+
+      topic_ids = params[:topic_ids].map { |t| t.to_i }
+      topic_scope = topic_scope.where(id: topic_ids)
+    end
+
+    dismissed_topic_ids = TopicsBulkAction.new(current_user, [topic_scope.pluck(:id)], type: "dismiss_topics").perform!
     TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
 
     render body: nil

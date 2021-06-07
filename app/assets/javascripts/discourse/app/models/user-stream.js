@@ -100,7 +100,7 @@ export default RestModel.extend({
     }
 
     this.set("loading", true);
-    return ajax(findUrl, { cache: "false" })
+    return ajax(findUrl)
       .then((result) => {
         if (result && result.no_results_help) {
           this.set("noContentHelp", result.no_results_help);

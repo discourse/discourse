@@ -179,8 +179,10 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.trust_levels) {
-      result.trustLevels = result.trust_levels.map((tl) =>
-        TrustLevel.create(tl)
+      result.trustLevels = Object.entries(result.trust_levels).map(
+        ([key, id]) => {
+          return new TrustLevel(id, key);
+        }
       );
       delete result.trust_levels;
     }

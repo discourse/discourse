@@ -20,7 +20,7 @@ import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resolveShareUrl } from "discourse/helpers/share-url";
-import { userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -172,12 +172,7 @@ const Topic = RestModel.extend({
   @discourseComputed("related_messages")
   relatedMessages(relatedMessages) {
     if (relatedMessages) {
-      const store = this.store;
-
-      return this.set(
-        "related_messages",
-        relatedMessages.map((st) => store.createRecord("topic", st))
-      );
+      return relatedMessages.map((st) => this.store.createRecord("topic", st));
     }
   },
 
@@ -429,6 +424,9 @@ const Topic = RestModel.extend({
           "details.can_delete": false,
           "details.can_recover": true,
         });
+        if (!deleted_by.staff) {
+          DiscourseURL.redirectTo("/");
+        }
       })
       .catch(popupAjaxError);
   },
@@ -756,7 +754,14 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories, tracked = false, tag = false) {
+  resetNew(category, include_subcategories, opts = {}) {
+    let { tracked, tag, topicIds } = {
+      tracked: false,
+      tag: null,
+      topicIds: null,
+      ...opts,
+    };
+
     const data = { tracked };
     if (category) {
       data.category_id = category.id;
@@ -764,6 +769,9 @@ Topic.reopenClass({
     }
     if (tag) {
       data.tag_id = tag.id;
+    }
+    if (topicIds) {
+      data.topic_ids = topicIds;
     }
 
     return ajax("/topics/reset-new", { type: "PUT", data });

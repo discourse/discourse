@@ -5,12 +5,20 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
   classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
+  attributeBindings: ["role"],
   animateAttribute: null,
   bouncePixels: 6,
   bounceDelay: 100,
   rerenderTriggers: ["validation.reason"],
   closeIcon: `${iconHTML("times-circle")}`.htmlSafe(),
   tipReason: null,
+
+  @discourseComputed("bad")
+  role(bad) {
+    if (bad) {
+      return "alert";
+    }
+  },
 
   click() {
     this.set("shownAt", null);

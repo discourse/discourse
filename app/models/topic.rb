@@ -1674,6 +1674,15 @@ class Topic < ActiveRecord::Base
       # group if the group is present. If combined addresses is empty we do
       # not need to do this check, and instead can proceed on to adding the
       # from address.
+      #
+      # Will not include test1@gmail.com if the only IncomingEmail
+      # is:
+      #
+      # from: test1@gmail.com
+      # to: test+support@discoursemail.com
+      #
+      # Because we don't care about the from addresses and also the to address
+      # is not the email_username, which will be something like test1@gmail.com.
       if group.present? && combined_addresses.any?
         next if combined_addresses.none? { |address| address =~ group.email_username_regex }
       end
@@ -1695,7 +1704,9 @@ class Topic < ActiveRecord::Base
       post_number: 1,
       data: {
         topic_title: self.title,
-        display_username: username
+        display_username: username,
+        original_user_id: user.id,
+        original_username: user.username
       }.to_json
     )
   end
@@ -1811,7 +1822,7 @@ end
 #  deleted_by_id             :integer
 #  participant_count         :integer          default(1)
 #  word_count                :integer
-#  excerpt                   :string(1000)
+#  excerpt                   :string
 #  pinned_globally           :boolean          default(FALSE), not null
 #  pinned_until              :datetime
 #  fancy_title               :string(400)

@@ -275,12 +275,6 @@ zh_CN:
 
           （是的，我的用户名是**disco**，和 1970 年流行的舞蹈同名）
       flag:
-        instructions: |-
-          我们都喜欢友善的讨论，我们也需要你的帮助来[一起保持文明](%{guidelines_url})。如果你发现了问题，请用标记告诉作者，或者通知[我们友善的管理人员](%{about_url})来处理。
-
-          > :imp: 我在这写了些脏话
-
-          我猜你知道要做什么了。**标记该贴**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">为不恰当的发言！
         reply: |-
           [我们的管理人员](%{base_uri}/groups/staff)将私下通知你的标记。如果有足够的社区成员标记帖子，作为预防措施它也会自动隐藏。（因为我实际上并没有写一篇讨厌的帖子:angel:我现在已经取消了标记。）
         not_found: |-

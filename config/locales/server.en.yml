@@ -637,6 +637,8 @@ en:
           attributes:
             word:
               too_many: "Too many words for that action"
+            base:
+              invalid_url: "Replacement URL is invalid"
 
   uncategorized_category_name: "Uncategorized"
 
@@ -717,16 +719,8 @@ en:
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
   trust_levels:
-    newuser:
-      title: "new user"
-    basic:
-      title: "basic user"
-    member:
-      title: "member"
-    regular:
-      title: "regular"
-    leader:
-      title: "leader"
+    admin: "Admin"
+    staff: "Staff"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
 
   post:
@@ -994,8 +988,10 @@ en:
     imap_authentication_error: "There was an issue with the IMAP credentials provided, check the username and password and try again."
     imap_no_response_error: "An error occurred when communicating with the IMAP server. %{message}"
     smtp_authentication_error: "There was an issue with the SMTP credentials provided, check the username and password and try again."
+    authentication_error_gmail_app_password: 'Application-specific password required. Learn more at <a target="_blank" href="https://support.google.com/accounts/answer/185833">this Google Help article</a>'
     smtp_server_busy_error: "The SMTP server is currently busy, try again later."
     smtp_unhandled_error: "There was an unhandled error when communicating with the SMTP server. %{message}"
+    imap_unhandled_error: "There was an unhandled error when communicating with the IMAP server. %{message}"
     connection_error: "There was an issue connecting with the server, check the server name and port and try again."
     timeout_error: "Connection to the server timed out, check the server name and port and try again."
     unhandled_error: "Unhandled error when testing email settings. %{message}"
@@ -1970,7 +1966,7 @@ en:
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
-    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post."
+    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
@@ -2183,6 +2179,7 @@ en:
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
+    delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
@@ -2562,6 +2559,7 @@ en:
       other: "Automatically deactivated after %{count} days of inactivity"
     activated_by_staff: "Activated by staff"
     new_user_typed_too_fast: "New user typed too fast"
+    content_matches_auto_silence_regex: "Content matches auto silence regex"
     content_matches_auto_block_regex: "Content matches auto block regex"
     username:
       short: "must be at least %{min} characters"

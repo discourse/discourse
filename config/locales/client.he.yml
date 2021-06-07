@@ -633,6 +633,7 @@ he:
       custom: "תאריך ושעה מותאמים אישית"
       relative: "זמן יחסי"
       none: "אין צורך"
+      last_custom: "התאריך והשעה האחרונים שהותאמו אישית"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
       you_posted_topic: "<a href='%{userUrl}'>את/ה</a> פרסמת <a href='%{topicUrl}'>את הנושא</a>"
@@ -715,6 +716,21 @@ he:
         email:
           title: "כתובת דוא״ל"
           status: "סונכרנו %{old_emails} / %{total_emails} הודעות דוא״ל דרך IMAP."
+          enable_smtp: "הפעלת SMTP"
+          enable_imap: "הפעלת IMAP"
+          test_settings: "בדיקת ההגדרות"
+          save_settings: "שמירת ההגדרות"
+          settings_required: "כל ההגדרות נחוצות, נא למלא את כל השדות בטרם האימות."
+          smtp_settings_valid: "הגדרות ה־SMTP תקינות."
+          smtp_title: "SMTP"
+          imap_title: "IMAP"
+          imap_additional_settings: "הגדרות נוספות"
+          imap_alpha_warning: "אזהרה: יכולת זו היא בחיתולים. יש תמיכה רשמית רק ב־GMail. השימוש על אחריותך בלבד!"
+          imap_settings_valid: "הגדרות ה־IMAP תקינות."
+          imap_mailbox_not_selected: "עליך לבחור תיבת דואר עבור תצורת IMAP זו, אחרת לא יסונכרנו תיבות דואר כלל!"
+          prefill:
+            title: "מילוי הגדרות מראש עבור:"
+            gmail: "GMail"
           credentials:
             title: "פרטי גישה"
             smtp_server: "שרת SMTP"
@@ -732,7 +748,7 @@ he:
           mailboxes:
             synchronized: "תיבת דוא״ל מסונכרנת"
             none_found: "לא נמצאו תיבות דוא״ל בחשבון הדוא״ל הזה."
-            disabled: "מושבת"
+            disabled: "מושבתת"
         membership:
           title: חברות
           access: גישה
@@ -1055,6 +1071,8 @@ he:
       dismiss_notifications: "בטלו הכל"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       no_messages_title: "אין לך הודעות כלל"
+      no_messages_body: >
+        עליך לנהל שיחה אישית עם מישהו או מישהי מחוץ לרצף הדיון?<br><br> ניתן לשלוח אליו או אליה הודעה על ידי בחירת תמונת המשתמש המתאימה ואיתור הכפתור הודעה %{icon}. לקבלת עזרה, ניתן <a href='%{aboutUrl}'>לשלוח הודעה לאחד מחברי הסגל</a>.
       no_bookmarks_title: "עדיין לא הוספת שום דבר לסימניות"
       no_bookmarks_body: >
         ניתן להתחיל להוסיף פוסטים לסימניות עם הכפתור %{icon} והן תופענה כאן לפנייה בקלות. ניתן גם לתזמן תזכורת!
@@ -1065,6 +1083,7 @@ he:
         description: "דילוג על עצות ועיטורים של קבלת משתמשים חדשים"
         not_first_time: "לא הפעם הראשונה שלך?"
         skip_link: "דילוג על העצות האלו"
+        read_later: "אקרא את זה אחר כך."
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
       color_scheme_default_on_all_devices: "הגדרת ערכות צבעים כבררת מחדל לכל המכשירים שלי"
       color_scheme: "ערכת צבעים"
@@ -1183,11 +1202,11 @@ he:
         interface: "מנשק"
         apps: "יישומים"
       change_password:
-        success: "(דואר אלקטרוני נשלח)"
-        in_progress: "(שולח דואר אלקטרוני)"
+        success: "(דוא״ל נשלח)"
+        in_progress: "(דוא״ל בשליחה)"
         error: "(שגיאה)"
         emoji: "אמוג׳י של מנעול"
-        action: "שלח דואר אלקטרוני לשחזור סיסמה"
+        action: "שליחת דוא״ל לאיפוס סיסמה"
         set_password: "הזן סיסמה"
         choose_new: "בחרו סיסמה חדשה"
         choose: "בחרו סיסמה"
@@ -1272,7 +1291,7 @@ he:
         title: "הוספת דוא״ל"
         add: "הוספה"
       change_email:
-        title: "שנה דואר אלקטרוני"
+        title: "החלפת כתובת דוא״ל"
         taken: "סליחה, הכתובת הזו אינה זמינה."
         error: "הייתה שגיאה בשינוי כתובת הדואר האלקטרוני שלך. אולי היא תפוסה?"
         success: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. בבקשה עיקבו אחרי הוראות האישור שם."
@@ -1321,6 +1340,7 @@ he:
         invalid: "בבקשה הכניסו כתובת דואר אלקטרוני תקינה"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי %{provider}"
         invite_auth_email_invalid: "הודעת ההזמנה שלך בדוא״ל אינה תואמת להודעה שאומתה על ידי %{provider}"
+        authenticated_by_invite: "כתובת הדוא״ל שלך אושרה על ידי ההזמנה"
         frequency_immediately: "נשלח לך הודעה בדוא״ל מיידית אם טרם קראת את מה ששלחנו לך קודם."
         frequency:
           one: "נשלח לך הודעה בדוא״ל רק אם לא הופעת בדקה האחרונה."
@@ -3242,7 +3262,7 @@ he:
         general: "כללי"
         moderation: "פיקוח"
         appearance: "מראה"
-        email: "דואר אלקטרוני"
+        email: "דוא״ל"
       list_filters:
         all: "כל הנושאים"
         none: "אין תת־קטגוריות"
@@ -3600,6 +3620,9 @@ he:
           name: אחר
         posting:
           name: מפרסמים
+      favorite_max_reached: "לא ניתן להוסיף עיטורים נוספים למועדפים."
+      favorite_max_not_reached: "סימון העיטור הזה כמועדף"
+      favorite_count: "%{count}/%{max} עיטורים סומנו כמועדפים"
     tagging:
       all_tags: "כל התגיות"
       other_tags: "תגיות אחרות"
@@ -3871,7 +3894,7 @@ he:
           as_owner: "הגדרת משתמשים כבעלים של הקבוצה הזו"
         manage:
           interaction:
-            email: דואר אלקטרוני
+            email: דוא״ל
             incoming_email: "כתובת דוא״ל נכנס בהתאמה אישית"
             incoming_email_placeholder: "נא למלא כתובת דוא״ל"
             visibility: חשיפה
@@ -4458,9 +4481,9 @@ he:
         sent_at: "נשלח ב"
         time: "זמן"
         user: "משתמש"
-        email_type: "סוג דואר אלקטרוני"
+        email_type: "סוג דוא״ל"
         to_address: "לכתובת"
-        test_email_address: "כתובת דואר אלקטרוני לבדיקה"
+        test_email_address: "כתובת דוא״ל לבדיקה"
         send_test: "שליחת הודעת דוא״ל בדיקה"
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
@@ -4642,7 +4665,7 @@ he:
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
-          email: "כתובת דואר אלקטרוני"
+          email: "כתובת דוא״ל"
           actions:
             allow: "לאפשר"
         screened_urls:
@@ -4701,6 +4724,7 @@ he:
           flag: "דגל"
           replace: "החלפה"
           tag: "תגית"
+          silence: "השתקה"
         action_descriptions:
           block: "למנוע פרסום של פוסטים שמכילים את המילים הללו. בפני המשתמש תופיע הודעת שגיאה בעת ניסיון פרסום הפוסט."
           censor: "להרשות פוסטים שמכילים מילים אלו, אבל להחליף אותן בתווים שמסתירים את המילים המצונזרות."
@@ -4708,6 +4732,7 @@ he:
           flag: "להרשות פוסטים שמכילים מילים אלו, אבל לסמן אותם כבלתי הולמים כדי שמפקחים יוכלו לסקור אותם."
           replace: "להחליף מילים בפוסטים במילים או קישורים אחרים"
           tag: "לתייג אוטומטית נושאים לפי הפוסט הראשון בהם"
+          silence: "פוסטים ראשונים של משתמשים המכילים מילים אלה ידרשו אישור של הסגל לפני הצגתם והמשתמש יושתק אוטומטית."
         form:
           label: "יש מילה או ביטוי"
           placeholder: "נא למלא מילה או ביטוי (* הוא תו כללי)"
@@ -4723,6 +4748,7 @@ he:
           upload_successful: "העלאה הצליחה. מילים נוספו."
         test:
           button_label: "נסיון"
+          modal_title: "בדיקת מילים במעקב ‚%{action}’"
           description: "נא להקליד טקסט להלן כדי לבדוק התאמות מול מילים שבמעקב"
           found_matches: "נמצאו התאמות:"
           no_matches: "לא נמצאו התאמות"
@@ -5068,7 +5094,7 @@ he:
           basic: "התקנה בסיסית"
           users: "משתמשים"
           posting: "פרסומים"
-          email: "דואר אלקטרוני"
+          email: "דוא״ל"
           files: "קבצים"
           trust: "דרגת אמון"
           security: "אבטחה"

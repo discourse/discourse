@@ -8,6 +8,8 @@
 
 hide_plugin if self.respond_to?(:hide_plugin)
 
+require "onebox"
+
 # javascript
 register_asset "javascripts/lazyYT.js"
 

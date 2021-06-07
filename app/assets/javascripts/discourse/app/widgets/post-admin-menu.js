@@ -65,7 +65,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     });
   }
 
-  if (attrs.canManage && attrs.hidden) {
+  if (currentUser.staff && attrs.hidden) {
     contents.push({
       icon: "far-eye",
       label: "post.controls.unhide",

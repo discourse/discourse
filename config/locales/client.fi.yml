@@ -647,7 +647,6 @@ fi:
           mailboxes:
             synchronized: "Synkronoitu postilaatikko"
             none_found: "Tältä sähköpostitililtä ei löytynyt postilaatikoita."
-            disabled: "poistettu käytöstä"
         membership:
           title: Jäsenyys
           access: Pääsy
@@ -4396,6 +4395,7 @@ fi:
           flag: "Liputa"
           replace: "Korvaa"
           tag: "Merkitse"
+          silence: "Hiljennä"
         action_descriptions:
           block: "Estä lähettämästä viestiä, jossa esiintyy joku näistä sanoista. Käyttäjälle näytetään virheilmoitus, kun hän yrittää lähettää viestinsä."
           censor: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta korvaa ne merkeillä, jotka piilottavat sensuroidut sanat."

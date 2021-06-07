@@ -595,8 +595,6 @@ ca:
             password: "Contrasenya"
           settings:
             title: "Configuració"
-          mailboxes:
-            disabled: "desactivat"
         membership:
           title: Membres
           access: Accés
@@ -3685,6 +3683,7 @@ ca:
           require_approval: "Requereix aprovació"
           flag: "Bandera"
           replace: "Reemplaça"
+          silence: "Silencia"
         action_descriptions:
           block: "Impedeix que es publiquin texts que continguin aquestes paraules. L'usuari veurà un missatge d'error quan intenti enviar la publicació. "
           censor: "Permet publicacions que contenen aquestes paraules, però reemplaça-les amb caràcters que amaguin les paraules censurades."

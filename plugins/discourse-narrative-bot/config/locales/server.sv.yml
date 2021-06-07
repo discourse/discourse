@@ -277,11 +277,11 @@ sv:
           (Och ja, mitt användarnamn stavas _disco_, precis som i 70-talets dansera. Jag [älskar nattlivet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Vi gillar vänskapliga diskussioner, och vi behöver din hjälp för att [hålla en civiliserad ton](%{guidelines_url}). Om du ser ett problem, ber vi dig flagga inlägget för att anonymt informera författaren, eller [vår hjälpsamma personal](%{about_url}), om problemet.
+          Vi gillar vänskapliga diskussioner, och vi behöver din hjälp för att [hålla en civiliserad ton](%{guidelines_url}). Om du ser ett problem, ber vi dig flagga inlägget för att privat informera författaren, eller [vår hjälpsamma personal](%{about_url}), om problemet. Det finns många anledningar till att du kanske vill flagga ett inlägg, allt från ett oskyldigt ämnesdelande förslag till en tydlig kränkning av forumets standarder. Om du väljer **Något annat** startas en privat meddelandediskussion med moderatorerna där du kan ställa ytterligare frågor.
 
           > :imp: Jag skrev något otrevligt här
 
-          Jag antar att du vet vad du bör göra. Kör på och **flagga detta inlägg** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som olämpligt!
+          Var så god och **flagga detta inlägg** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> och välj **Olämpligt** som anledning!
         reply: |-
           [Vår personal](%{base_uri}/groups/staff) kommer att aviseras om din flaggning. Om tillräckligt många forummedlemmar flaggar ett inlägg, kommer det också att döljas automatiskt som en säkerhetsåtgärd. (Eftersom jag inte skrev ett otrevligt inlägg :angel:, har jag gått i förväg och tagit bort flaggan för stunden.)
         not_found: |-

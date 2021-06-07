@@ -351,6 +351,7 @@ zh_CN:
         type_bonus:
           name: "奖励类型"
           title: "某些可审核类型可以由管理人员加权，以使其具有更高的优先级。"
+      stale_help: "这个可审查对象已被其他人解决。"
       claim_help:
         optional: "你可以认领此条目以避免被他人审核。"
         required: "在你审核之前你必须认领此条目。"
@@ -587,6 +588,25 @@ zh_CN:
         email:
           title: "邮箱"
           status: "已通过 IMAP 同步了 %{old_emails} / %{total_emails} 封邮件。"
+          enable_smtp: "启用 SMTP"
+          enable_imap: "启用 IMAP"
+          test_settings: "测试设置"
+          save_settings: "保存设置"
+          settings_required: "所有设置均为必填项，请在验证前填写所有字段。"
+          smtp_settings_valid: "SMTP 设置有效。"
+          smtp_title: "SMTP"
+          smtp_instructions: "当您为此群组启用 SMTP 时， 从群组收件箱发送的所有出站邮件将通过此处指定的 SMTP 设置而不是为您的论坛发送的其他邮件配置的邮件服务器发送。"
+          imap_title: "IMAP"
+          imap_additional_settings: "附加设置"
+          imap_instructions: "当您为群组启用 IMAP 时，邮件将在群组收件箱和被提供的 IMAP 服务器和邮箱之间同步. 在启用 IMAP 之前，SMTP 必须启用并且凭证经过验证与测试。 SMTP 使用的电子邮件用户名和密码将用于 IMAP。 欲了解更多信息，请访问 <a target=\"_blank\" href=\"https://meta.discourse.org/t/imap-support-for-group-inboxes/160588\">Discourse Meta 功能公告</a>。"
+          imap_alpha_warning: "警告：这是处于A测的功能。只官方支持 Gmail，风险自负！"
+          imap_settings_valid: "IMAP 设置有效。"
+          smtp_disable_confirm: "如果你禁用SMTP，所有SMTP和 IMAP 设置将被重置，相关功能将被禁用，你确定要继续吗？"
+          imap_disable_confirm: "如果你禁用 IMAP，所有 IMAP 设置将被重置，相关功能将被禁用，你确定要继续吗？"
+          imap_mailbox_not_selected: "你必须为此 IMAP 配置选择一个邮箱，否则不会同步任何邮箱！"
+          prefill:
+            title: "以此设置预填："
+            gmail: "GMail"
           credentials:
             title: "认证"
             smtp_server: "SMTP 服务器"
@@ -604,7 +624,6 @@ zh_CN:
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
-            disabled: "已"
         membership:
           title: 成员
           access: 访问
@@ -1171,6 +1190,7 @@ zh_CN:
         invalid: "请填写正确的邮箱地址"
         authenticated: "你的邮箱已被 %{provider} 验证过了"
         invite_auth_email_invalid: "您的邀请电子邮件与 %{provider} 验证的电子邮件不匹配"
+        authenticated_by_invite: "你的邮箱已被此邀请验证过了"
         frequency_immediately: "如果你没有阅读过摘要邮件中的相关内容，将立即发送电子邮件给你。"
         frequency:
           other: "仅在 %{count} 分钟内没有访问时发送邮件给你。"
@@ -3179,6 +3199,9 @@ zh_CN:
           name: 其它
         posting:
           name: 发帖
+      favorite_max_reached: "您不能收藏更多徽章。"
+      favorite_max_not_reached: "收藏此徽章"
+      favorite_count: "%{count}/%{max} 个徽章已被收藏"
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"
@@ -4231,6 +4254,7 @@ zh_CN:
         download: 下载
         clear_all: 清除全部
         clear_all_confirm: "您确定要清除 %{action} 动作的所有敏感词吗？"
+        invalid_regex: '已关注的关键字“%{word}”是无效的正则表达式。'
         actions:
           block: "封禁"
           censor: "审查"
@@ -4238,6 +4262,7 @@ zh_CN:
           flag: "标记"
           replace: "替换"
           tag: "标签"
+          silence: "禁言"
         action_descriptions:
           block: "防止发布包含这些敏感词的帖子。用户提交帖子时会收到错误提示。"
           censor: "允许包含这些敏感词的帖子，但将其替换为隐藏敏感词的字符。"
@@ -4245,6 +4270,7 @@ zh_CN:
           flag: "允许包含这些敏感词的帖子，但将其标记为不当，以便版主审核。"
           replace: "使用另外的字词替换帖子中的字词"
           tag: "根据第一个帖子自动为话题打标签"
+          silence: "包含这些关键字的用户的第一篇贴子，需要得到工作人员的批准才能被看到，并且该用户将被自动静音。"
         form:
           label: "包含字词"
           placeholder: "输入字词（*为通配符）"

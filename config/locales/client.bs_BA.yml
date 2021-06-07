@@ -641,7 +641,6 @@ bs_BA:
           mailboxes:
             synchronized: "Sinkronizirani poštanski sandučić"
             none_found: "Na ovom računu e-pošte nisu pronađeni poštanski sandučići."
-            disabled: "deaktiviran"
         membership:
           title: Članstvo
           access: Pristup
@@ -3915,6 +3914,7 @@ bs_BA:
           require_approval: "Zahtjeva Dozvolu"
           flag: "Prijava"
           replace: "Zamijeni"
+          silence: "Stišaj"
         action_descriptions:
           block: "Spriječite postavljanje postova koji sadrže ove riječi. Korisnik će vidjeti poruku o pogrešci kada pokuša da pošalje svoj post."
           censor: "Dopustite poruke koje sadrže te riječi, ali ih zamijenite znakovima koji kriju cenzurirane riječi."

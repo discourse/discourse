@@ -1,8 +1,6 @@
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import BufferedMixin from "ember-buffered-proxy/mixin";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import Controller from "@ember/controller";
-import EmberObjectProxy from "@ember/object/proxy";
 import Evented from "@ember/object/evented";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
@@ -17,8 +15,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
 
   @discourseComputed("site.categories.[]")
   categoriesBuffered(categories) {
-    const bufProxy = EmberObjectProxy.extend(BufferedMixin || BufferedProxy);
-    return (categories || []).map((c) => bufProxy.create({ content: c }));
+    return (categories || []).map((c) => BufferedProxy.create({ content: c }));
   },
 
   categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),

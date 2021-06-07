@@ -332,6 +332,19 @@ table.screened-ip-addresses {
   vertical-align: top;
 }
 
+.watched-words-link {
+  .watched-word-box {
+    min-width: 100%;
+  }
+}
+
+.watched-words-replace,
+.watched-words-tag {
+  .watched-word-box {
+    min-width: calc(50% - 5px);
+  }
+}
+
 .watched-word-box,
 .watched-words-test-modal {
   .replacement {
@@ -354,6 +367,7 @@ table.screened-ip-addresses {
 .watched-words-list {
   margin-top: 20px;
   display: inline-block;
+  width: 100%;
 }
 
 .watched-word {
@@ -395,6 +409,9 @@ table.screened-ip-addresses {
   }
   input.watched-word-input-field {
     min-width: 300px;
+  }
+  .select-kit.multi-select.watched-word-input-field {
+    width: 300px;
   }
 }
 

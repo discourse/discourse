@@ -479,6 +479,8 @@ export function applyDefaultHandlers(pretender) {
     const data = parsePostData(request.requestBody);
     if (data.post.raw === "this will 409") {
       return response(409, { errors: ["edit conflict"] });
+    } else if (data.post.raw === "will return empty json") {
+      return response(200, {});
     }
     data.post.id = request.params.post_id;
     data.post.version = 2;
@@ -576,6 +578,9 @@ export function applyDefaultHandlers(pretender) {
     response(200, fixturesByUrl["/user_badges"])
   );
   pretender.delete("/user_badges/:badge_id", success);
+  pretender.put("/user_badges/:id/toggle_favorite", () =>
+    response(200, { user_badge: { is_favorite: true } })
+  );
 
   pretender.post("/posts", function (request) {
     const data = parsePostData(request.requestBody);

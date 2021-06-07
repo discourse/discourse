@@ -44,42 +44,46 @@
     {{/if}}
   </div>
   <div class="reviewable-actions">
-    {{#if claimEnabled}}
-      <div class="claimed-actions">
-        <span class="help">{{html-safe claimHelp}}</span>
-        {{reviewable-claimed-topic topicId=topicId claimedBy=reviewable.claimed_by}}
-      </div>
-    {{/if}}
+    {{#if reviewable.stale}}
+      <div class="stale-help">{{i18n "review.stale_help"}}</div>
+    {{else}}
+      {{#if claimEnabled}}
+        <div class="claimed-actions">
+          <span class="help">{{html-safe claimHelp}}</span>
+          {{reviewable-claimed-topic topicId=topicId claimedBy=reviewable.claimed_by}}
+        </div>
+      {{/if}}
 
-    {{#if canPerform}}
-      {{#if editing}}
-        {{d-button
-          class="btn-primary reviewable-action save-edit"
-          disabled=updating
-          icon="check"
-          action=(action "saveEdit")
-          label="review.save"}}
-        {{d-button
-          class="btn-danger reviewable-action cancel-edit"
-          disabled=updating
-          icon="times"
-          action=(action "cancelEdit")
-          label="review.cancel"}}
-      {{else}}
-        {{#each reviewable.bundled_actions as |bundle|}}
-          {{reviewable-bundled-action
-            bundle=bundle
-            performAction=(action "perform")
-            reviewableUpdating=updating}}
-        {{/each}}
-
-        {{#if reviewable.can_edit}}
+      {{#if canPerform}}
+        {{#if editing}}
           {{d-button
-            class="reviewable-action edit"
-            disabled=updating
-            icon="pencil-alt"
-            action=(action "edit")
-            label="review.edit"}}
+            class="btn-primary reviewable-action save-edit"
+            disabled=disabled
+            icon="check"
+            action=(action "saveEdit")
+            label="review.save"}}
+          {{d-button
+            class="btn-danger reviewable-action cancel-edit"
+            disabled=disabled
+            icon="times"
+            action=(action "cancelEdit")
+            label="review.cancel"}}
+        {{else}}
+          {{#each reviewable.bundled_actions as |bundle|}}
+            {{reviewable-bundled-action
+              bundle=bundle
+              performAction=(action "perform")
+              reviewableUpdating=disabled}}
+          {{/each}}
+
+          {{#if reviewable.can_edit}}
+            {{d-button
+              class="reviewable-action edit"
+              disabled=disabled
+              icon="pencil-alt"
+              action=(action "edit")
+              label="review.edit"}}
+          {{/if}}
         {{/if}}
       {{/if}}
     {{/if}}

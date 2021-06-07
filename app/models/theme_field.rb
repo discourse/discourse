@@ -151,6 +151,7 @@ class ThemeField < ActiveRecord::Base
 
     js_compiler = ThemeJavascriptCompiler.new(theme_id, theme.name)
     filename, extension = name.split(".", 2)
+    filename = "test/#{filename}" if js_tests_field?
     begin
       case extension
       when "js.es6", "js"

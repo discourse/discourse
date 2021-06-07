@@ -308,7 +308,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     report = TopicTrackingState.report(user)
-    serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
+    serializer = ActiveModel::ArraySerializer.new(
+      report, each_serializer: TopicTrackingStateSerializer, scope: guardian
+    )
 
     render json: MultiJson.dump(serializer)
   end
@@ -709,6 +711,7 @@ class UsersController < ApplicationController
   def password_reset_show
     expires_now
     token = params[:token]
+
     password_reset_find_user(token, committing_change: false)
 
     if !@error
@@ -1074,6 +1077,7 @@ class UsersController < ApplicationController
      groups: @groups
     }
 
+    options[:include_staged_users] = !!ActiveModel::Type::Boolean.new.cast(params[:include_staged_users])
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 

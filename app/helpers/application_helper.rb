@@ -512,8 +512,6 @@ module ApplicationHelper
   end
 
   def client_side_setup_data
-    service_worker_url = Rails.env.development? ? 'service-worker.js' : Rails.application.assets_manifest.assets['service-worker.js']
-
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
       base_url: Discourse.base_url,
@@ -521,7 +519,7 @@ module ApplicationHelper
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
       markdown_it_url: script_asset_path('markdown-it-bundle'),
-      service_worker_url: service_worker_url,
+      service_worker_url: 'service-worker.js',
       default_locale: SiteSetting.default_locale,
       asset_version: Discourse.assets_digest,
       disable_custom_css: loading_admin?,

@@ -45,7 +45,8 @@ export default {
       name: "testing",
       color: "0088CC",
       text_color: "FFFFFF",
-      slug: "testing"
+      slug: "testing",
+      can_edit: true
     }
   }
 };

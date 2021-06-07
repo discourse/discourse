@@ -405,8 +405,6 @@ sw:
             password: "Nywila"
           settings:
             title: "Mpangilio"
-          mailboxes:
-            disabled: "imezuiwa"
         membership:
           title: Uanachama
           access: Ufikivu
@@ -2887,6 +2885,7 @@ sw:
           censor: "Kizuizi"
           require_approval: "Inahitaji Uthibitisho"
           flag: "Bendera"
+          silence: "Imenyamazishwa"
         action_descriptions:
           block: "Zuia machapisho yenye maneno haya kuchapishwa. Mtumiaji ataona ujumbe wa hitilafu akijaribu kuwasilisha chapisho."
           censor: "Ruhusu machapisho yenye maneno yafuatayo, lakini badilisha maneno hayo na herufi zinazoficha maneno yanayokatazwa."

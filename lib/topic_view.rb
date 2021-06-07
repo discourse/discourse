@@ -749,7 +749,14 @@ class TopicView
   def filter_posts_by_ids(post_ids)
     # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
-      .includes({ user: :primary_group }, :reply_to_user, :deleted_by, :incoming_email, :topic)
+      .includes(
+        { user: :primary_group },
+        :reply_to_user,
+        :deleted_by,
+        :incoming_email,
+        :topic,
+        :image_upload
+      )
       .order('sort_order')
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)

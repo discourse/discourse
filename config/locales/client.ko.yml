@@ -351,6 +351,7 @@ ko:
         type_bonus:
           name: "유형 보너스"
           title: "특정한 검토 유형에는 관리자가 보너스를 할당하여 우선 순위를 높일 수 있습니다."
+      stale_help: "이 검토 가능 항목은 다른 사람에 의해 해결되었습니다."
       claim_help:
         optional: "다른 사용자가 처리하지 못하도록 이 항목을 지정 할 수 있습니다."
         required: "항목을 검토하려면 먼저 항목을 검토 요청을 해야합니다."
@@ -587,6 +588,21 @@ ko:
         email:
           title: "이메일"
           status: "IMAP을 통해 %{old_emails} / %{total_emails} 동기화"
+          enable_smtp: "SMTP 사용"
+          enable_imap: "IMAP 활성화"
+          test_settings: "테스트 설정"
+          save_settings: "설정 저장"
+          settings_required: "모든 설정은 필수입니다. 유효성 검사 전에 모든 필드를 입력하십시오."
+          smtp_settings_valid: "SMTP 설정이 유효합니다."
+          smtp_title: "SMTP"
+          imap_title: "IMAP"
+          imap_additional_settings: "추가 설정"
+          imap_settings_valid: "IMAP 설정이 유효합니다."
+          imap_disable_confirm: "IMAP을 사용하지 않도록 설정하면 모든 IMAP 설정이 재설정되고 관련 기능이 비활성화됩니다.계속하시겠습니까?"
+          imap_mailbox_not_selected: "이 IMAP 구성에 대해 사서함을 선택해야합니다. 그렇지 않으면 사서함이 동기화되지 않습니다!"
+          prefill:
+            title: "다음 설정으로 미리 채우기:"
+            gmail: "지메일"
           credentials:
             title: "자격 증명"
             smtp_server: "SMTP 서버"
@@ -923,6 +939,7 @@ ko:
         description: "새 사용자 온보딩 팁 및 배지 건너뛰기"
         not_first_time: "처음이 아니십니까?"
         skip_link: "이 팁 건너 뛰기"
+        read_later: "나중에 읽어 볼게요."
       theme_default_on_all_devices: "이 테마를 모든 기기에서 기본 테마로 설정"
       color_scheme_default_on_all_devices: "모든 장치에서 기본 색 구성표 설정"
       color_scheme: "색상 구성표"
@@ -1375,6 +1392,10 @@ ko:
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
+          instructions: |
+            <p>사용자 리스트를 이용해 초대를 빠르게 진행하십시오. 초대하려는 사용자의 이메일 주소를 한 라인당 하나씩 입력한 <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV 파일</a>을 준비하십시오. 그룹에 사람을 추가하거나 처음 로그인 할 때 특정 주제로 보내려는 경우 쉼표로 구분해 정보를 제공 할 수 있습니다.</p>
+            <pre>john@smith.com,첫 번째 그룹명;두 번째 그룹명,글_id</pre>
+            <p> CSV 파일에서에 입력된 모든 이메일 주소로 초대장이 전송되며 나중에 관리 할 수 있습니다.</p>
           progress: "%{progress}% 업로드..."
           success: "파일이 성공적으로 업로드되었습니다. 프로세스가 완료되면 메시지를 통해 알려드립니다."
           error: "죄송합니다. 파일은 CSV 형식이어야 합니다."
@@ -2185,6 +2206,7 @@ ko:
         select: "사용자는 이 글에 한 번 씩만 댓글을 작성 할 수 있습니다."
         description: "빠르게 진행되거나 논쟁이되는 대화에서 신중한 대화를 유도하기위해 사용자는이 글에 추가로 글을 작성하기 위해서는 기다려야합니다."
         enable: "활성화"
+        update: "업데이트"
         enabled_until: "다음까지 사용 가능:"
         remove: "비활성화"
         hours: "시간:"
@@ -2534,6 +2556,7 @@ ko:
         deselect_all: 전체 선택 해제
         description:
           other: "<b>%{count}</b>개의 개시글을 선택하셨어요."
+      deleted_by_author_simple: "(작성자가 삭제한 글)"
     post:
       quote_reply: "인용하기"
       quote_share: "공유"
@@ -2548,6 +2571,7 @@ ko:
       follow_quote: "인용 글로 이동"
       show_full: "전체 글 보기"
       show_hidden: "무시 된 내용을 봅니다."
+      deleted_by_author_simple: "(작성자가 삭제한 댓글)"
       collapse: "축소"
       expand_collapse: "확장/축소"
       locked: "이 글은 운영진에 의해 수정이 금지 되었습니다."
@@ -4223,6 +4247,7 @@ ko:
           flag: "신고"
           replace: "바꾸기"
           tag: "태그"
+          silence: "쓰기 금지"
         action_descriptions:
           block: "이 단어를 포함한 포스트는 게시되지 못하게 합니다. 사용자가 포스트를 올리려할 때 에러 메시지를 표시합니다."
           censor: "이 단어를 포함해도 포스트는 올라가지만, 가리기 설정된 단어는 다른 글자로 교체됩니다."

@@ -120,6 +120,15 @@ module Imap
         { trash_uid_validity: open_trash_mailbox, email_uids_to_trash: email_uids_to_trash }
       end
 
+      # Some mailboxes are just not useful or advisable to sync with. This is
+      # used for the dropdown in the UI where we allow the user to select the
+      # IMAP mailbox to sync with.
+      def filter_mailboxes(mailboxes_with_attributes)
+        mailboxes_with_attributes.reject do |mb|
+          (mb.attr & [:Drafts, :Sent, :Junk, :Flagged, :Trash]).any?
+        end.map(&:name)
+      end
+
       private
 
       def apply_gmail_patch(imap)
