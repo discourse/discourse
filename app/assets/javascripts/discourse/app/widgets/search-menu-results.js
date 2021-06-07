@@ -161,9 +161,7 @@ createSearchResult({
         this.siteSettings.use_pg_headlines_for_excerpt &&
           result.topic_title_headline
           ? new RawHtml({
-              html: `<span>${emojiUnescape(
-                result.topic_title_headline
-              )}</span>`,
+              html: emojiUnescape(result.topic_title_headline),
             })
           : new Highlighted(topic.fancyTitle, term)
       ),
@@ -182,8 +180,8 @@ createSearchResult({
     }
 
     const link = h("span.topic", [
-      h("div.first-line", firstLine),
-      h("div.second-line", secondLine),
+      h("span.first-line", firstLine),
+      h("span.second-line", secondLine),
     ]);
 
     return postResult.call(this, result, link, term);
