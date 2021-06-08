@@ -18,6 +18,7 @@ export default Controller.extend({
   exclude_usernames: null,
   isLoading: false,
   columns: null,
+  groupsOptions: null,
 
   showTimeRead: equal("period", "all"),
 
@@ -47,13 +48,31 @@ export default Controller.extend({
       });
   },
 
+  loadGroups() {
+    this.store.findAll("group").then((groups) => {
+      const groupOptions = [];
+      groups.forEach((group) => {
+        groupOptions.push({
+          name: group.name,
+          id: group.id,
+        });
+      });
+      this.set("groupOptions", groupOptions);
+    });
+  },
+
+  @action
+  groupChanged(_, groupAttrs) {
+    this.set("group", groupAttrs.id ? groupAttrs.name : null);
+  },
+
   @action
   showEditColumnsModal() {
     showModal("edit-user-directory-columns");
   },
 
   @action
-  onFilterChanged(filter) {
+  onUsernameFilterChanged(filter) {
     discourseDebounce(this, this._setName, filter, 500);
   },
 

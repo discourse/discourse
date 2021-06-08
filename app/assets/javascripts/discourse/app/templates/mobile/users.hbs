@@ -13,10 +13,21 @@
         {{/if}}
         {{input
           value=(readonly nameInput)
-          input=(action "onFilterChanged" value="target.value")
+          input=(action "onUsernameFilterChanged" value="target.value")
           placeholderKey="directory.filter_name"
           class="filter-name no-blur"
         }}
+        {{combo-box
+          class="directory-group-selector"
+          value=group
+          valueProperty="name"
+          content=groupOptions
+          nameProperty="name"
+          onChange=(action groupChanged)
+          options=(hash
+          none="directory.group.all"
+          )
+          }}
         {{#if currentUser.staff}}
           {{d-button
             icon="wrench"

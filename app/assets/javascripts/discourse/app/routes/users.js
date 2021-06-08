@@ -44,6 +44,7 @@ export default DiscourseRoute.extend({
 
   setupController(controller, model) {
     controller.set("columns", model.columns);
+    controller.loadGroups();
     controller.loadUsers(model.params);
   },
 
