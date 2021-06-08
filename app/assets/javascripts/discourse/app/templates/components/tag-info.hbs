@@ -28,7 +28,7 @@
         {{#if tagInfo.category_restricted}}
           {{i18n "tagging.category_restricted"}}
         {{else}}
-          {{i18n "tagging.default_info"}}
+          {{html-safe (i18n "tagging.default_info" basePath=(base-path))}}
         {{/if}}
       {{/if}}
     </div>
