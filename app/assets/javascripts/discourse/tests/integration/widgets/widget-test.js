@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -166,7 +167,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
       assert.ok(queryAll("button.test").length, "it renders the button");
       assert.equal(queryAll("button.test").text(), "0 clicks");
 
-      await click(queryAll("button")[0]);
+      await click(query("button"));
       assert.equal(queryAll("button.test").text(), "1 clicks");
     },
   });
@@ -200,7 +201,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     async test(assert) {
       assert.equal(queryAll("button.test").text().trim(), "No name");
 
-      await click(queryAll("button")[0]);
+      await click(query("button"));
       assert.equal(queryAll("button.test").text().trim(), "Robin");
     },
   });

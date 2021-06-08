@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
@@ -59,7 +60,7 @@ discourseModule("Integration | Component | value-list", function (hooks) {
       await selectKit().expand();
 
       assert.ok(
-        queryAll(".select-kit-collection li.select-kit-row span.name")[0]
+        query(".select-kit-collection li.select-kit-row span.name")
           .innerText === "vinkas",
         "it adds the removed value to choices"
       );

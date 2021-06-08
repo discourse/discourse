@@ -4,6 +4,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -33,8 +34,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
       );
 
       assert.ok(
-        queryAll(".values .value[data-index='2'] .value-input")[0].value ===
-          "penar",
+        query(".values .value[data-index='2'] .value-input").value === "penar",
         "it sets the correct value for added item"
       );
 
@@ -64,8 +64,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
       );
 
       assert.ok(
-        queryAll(".values .value[data-index='0'] .value-input")[0].value ===
-          "osama",
+        query(".values .value[data-index='0'] .value-input").value === "osama",
         "it removes the correct value"
       );
     },
@@ -88,7 +87,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
       );
 
       assert.ok(
-        queryAll(".values .value[data-index='2'] .value-input")[0].value ===
+        query(".values .value[data-index='2'] .value-input").value ===
           "eviltrout",
         "it adds the correct value"
       );

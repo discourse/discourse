@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
@@ -127,7 +128,7 @@ discourseModule(
         assert.ok(userPmsLink);
         await click(".user-pms-link");
 
-        const message = queryAll(".quick-access-panel li a")[0];
+        const message = query(".quick-access-panel li a");
         assert.ok(message);
 
         assert.ok(
@@ -158,7 +159,7 @@ discourseModule(
       async test(assert) {
         await click(".user-bookmarks-link");
 
-        const bookmark = queryAll(".quick-access-panel li a")[0];
+        const bookmark = query(".quick-access-panel li a");
         assert.ok(bookmark);
 
         assert.ok(bookmark.href.includes("/t/yelling-topic-title/119"));

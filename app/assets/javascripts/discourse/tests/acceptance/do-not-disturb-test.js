@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -37,7 +38,7 @@ acceptance("Do not disturb", function (needs) {
     await click(tiles[0]);
 
     assert.ok(
-      queryAll(".do-not-disturb-modal")[0].style.display === "none",
+      query(".do-not-disturb-modal").style.display === "none",
       "modal is hidden"
     );
 
@@ -55,10 +56,7 @@ acceptance("Do not disturb", function (needs) {
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
     await click(".menu-links-row .user-preferences-link");
-    assert.equal(
-      queryAll(".do-not-disturb .relative-date")[0].textContent,
-      "1h"
-    );
+    assert.equal(query(".do-not-disturb .relative-date").textContent, "1h");
 
     await click(".do-not-disturb");
 

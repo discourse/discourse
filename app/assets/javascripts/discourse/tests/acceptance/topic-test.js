@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -448,12 +449,12 @@ acceptance("Topic with title decorated", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
-      queryAll(".fancy-title")[0].innerText.endsWith("-280-topic-title"),
+      query(".fancy-title").innerText.endsWith("-280-topic-title"),
       "it decorates topic title"
     );
 
     assert.ok(
-      queryAll(".raw-topic-link:nth-child(1)")[0].innerText.endsWith(
+      query(".raw-topic-link:nth-child(1)").innerText.endsWith(
         "-27331-topic-list-item-title"
       ),
       "it decorates topic list item title"

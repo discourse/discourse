@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import EmberObject from "@ember/object";
@@ -63,7 +64,7 @@ discourseModule(
 
         $(document).trigger(
           $.Event("mouseup", {
-            target: queryAll("li")[0],
+            target: query("li"),
             button: 1,
             which: 2,
           })

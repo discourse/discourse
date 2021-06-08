@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -54,7 +55,7 @@ acceptance("Admin - Suspend User", function (needs) {
     await click(".modal-footer .btn-default");
     assert.equal(queryAll(".suspend-user-modal:visible").length, 1);
     assert.equal(
-      queryAll(".suspend-message")[0].value,
+      query(".suspend-message").value,
       "this is an email reason why"
     );
 

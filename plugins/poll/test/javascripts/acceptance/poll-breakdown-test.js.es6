@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
 acceptance("Poll breakdown", function (needs) {
@@ -69,7 +73,7 @@ acceptance("Poll breakdown", function (needs) {
     await click(".poll-show-breakdown");
 
     assert.equal(
-      queryAll(".poll-breakdown-total-votes")[0].textContent.trim(),
+      query(".poll-breakdown-total-votes").textContent.trim(),
       "2 votes",
       "display the correct total vote count"
     );
@@ -81,7 +85,7 @@ acceptance("Poll breakdown", function (needs) {
     );
 
     assert.ok(
-      queryAll(".poll-breakdown-chart-container > canvas")[0].$chartjs,
+      query(".poll-breakdown-chart-container > canvas").$chartjs,
       "$chartjs is defined on the pie charts"
     );
   });
@@ -91,7 +95,7 @@ acceptance("Poll breakdown", function (needs) {
     await click(".poll-show-breakdown");
 
     assert.equal(
-      queryAll(".poll-breakdown-option-count")[0].textContent.trim(),
+      query(".poll-breakdown-option-count").textContent.trim(),
       "40.0%",
       "displays the correct vote percentage"
     );
@@ -99,7 +103,7 @@ acceptance("Poll breakdown", function (needs) {
     await click(".modal-tabs .count");
 
     assert.equal(
-      queryAll(".poll-breakdown-option-count")[0].textContent.trim(),
+      query(".poll-breakdown-option-count").textContent.trim(),
       "2",
       "displays the correct vote count"
     );
@@ -107,8 +111,8 @@ acceptance("Poll breakdown", function (needs) {
     await click(".modal-tabs .percentage");
 
     assert.equal(
-      queryAll(".poll-breakdown-option-count:last")[0].textContent.trim(),
-      "20.0%",
+      query(".poll-breakdown-option-count").textContent.trim(),
+      "40.0%",
       "displays the percentage again"
     );
   });

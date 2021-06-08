@@ -146,7 +146,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
       this.set("ariaLabel", "test.fooAriaLabel");
 
       assert.equal(
-        queryAll("button")[0].getAttribute("aria-label"),
+        query("button").getAttribute("aria-label"),
         I18n.t("test.fooAriaLabel")
       );
 
@@ -155,7 +155,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
         translatedAriaLabel: "bar",
       });
 
-      assert.equal(queryAll("button")[0].getAttribute("aria-label"), "bar");
+      assert.equal(query("button").getAttribute("aria-label"), "bar");
     },
   });
 
@@ -169,7 +169,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     test(assert) {
       this.set("title", "test.fooTitle");
       assert.equal(
-        queryAll("button")[0].getAttribute("title"),
+        query("button").getAttribute("title"),
         I18n.t("test.fooTitle")
       );
 
@@ -178,7 +178,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
         translatedTitle: "bar",
       });
 
-      assert.equal(queryAll("button")[0].getAttribute("title"), "bar");
+      assert.equal(query("button").getAttribute("title"), "bar");
     },
   });
 

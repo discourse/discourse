@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -100,7 +104,7 @@ acceptance("Group logs", function (needs) {
       "it should display the right number of logs"
     );
 
-    await click(queryAll(".group-manage-logs-row button")[0]);
+    await click(query(".group-manage-logs-row button"));
     assert.ok(
       queryAll("tr.group-manage-logs-row").length === 1,
       "it should display the right number of logs"

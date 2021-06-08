@@ -2,6 +2,7 @@ import {
   acceptance,
   exists,
   invisible,
+  query,
   queryAll,
   updateCurrentUser,
   visible,
@@ -91,7 +92,7 @@ acceptance("Composer", function (needs) {
       "the body is now good"
     );
 
-    const textarea = queryAll("#reply-control .d-editor-input")[0];
+    const textarea = query("#reply-control .d-editor-input");
     textarea.selectionStart = textarea.value.length;
     textarea.selectionEnd = textarea.value.length;
 

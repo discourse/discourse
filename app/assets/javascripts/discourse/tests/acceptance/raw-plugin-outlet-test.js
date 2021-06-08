@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import {
   addRawTemplate,
   removeRawTemplate,
@@ -25,7 +29,7 @@ acceptance("Raw Plugin Outlet", function (needs) {
     await visit("/");
     assert.ok(queryAll(".topic-lala").length > 0, "it renders the outlet");
     assert.equal(
-      queryAll(".topic-lala:nth-of-type(1)")[0].innerText,
+      query(".topic-lala:nth-of-type(1)").innerText,
       "11557",
       "it has the topic id"
     );
