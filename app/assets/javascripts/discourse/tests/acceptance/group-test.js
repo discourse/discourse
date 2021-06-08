@@ -246,8 +246,9 @@ acceptance("Group - Authenticated", function (needs) {
   test("Admin Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(
-      queryAll(".nav-pills li a[title='Manage']").length === 1,
+    assert.equal(
+      count(".nav-pills li a[title='Manage']"),
+      1,
       "it should show manage group tab if user is admin"
     );
 
@@ -278,15 +279,16 @@ acceptance("Group - Authenticated", function (needs) {
   test("Moderator Viewing Group", async function (assert) {
     await visit("/g/alternative-group");
 
-    assert.ok(
-      queryAll(".nav-pills li a[title='Manage']").length === 1,
+    assert.equal(
+      count(".nav-pills li a[title='Manage']"),
+      1,
       "it should show manage group tab if user can_admin_group"
     );
 
     await click(".group-members-add.btn");
 
     assert.ok(
-      queryAll(".group-add-members-modal .group-add-members-make-owner"),
+      exists(".group-add-members-modal .group-add-members-make-owner"),
       "it allows moderators to set group owners"
     );
 

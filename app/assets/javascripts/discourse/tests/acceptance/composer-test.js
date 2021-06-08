@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   invisible,
   query,
@@ -356,7 +357,7 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "This is the new text for the title");
     await click("#reply-control button.create");
 
-    assert.equal(find(".topic-post.staged").length, 1);
+    assert.equal(count(".topic-post.staged"), 1);
     assert.ok(
       find(".topic-post:nth-of-type(1)")[0].className.includes("staged")
     );
@@ -375,7 +376,7 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "This is the new text for the title");
     await click("#reply-control button.create");
 
-    assert.equal(find(".topic-post.staged").length, 0);
+    assert.ok(!exists(".topic-post.staged"));
     assert.equal(
       find(".topic-post .cooked")[0].innerText,
       "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
@@ -448,8 +449,9 @@ acceptance("Composer", function (needs) {
     await menu.expand();
     await menu.selectRowByValue("toggleWhisper");
 
-    assert.ok(
-      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 1,
+    assert.equal(
+      count(".composer-actions svg.d-icon-far-eye-slash"),
+      1,
       "it sets the post type to whisper"
     );
 
@@ -478,37 +480,42 @@ acceptance("Composer", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post:nth-of-type(1) button.reply");
 
-    assert.ok(
-      queryAll("#reply-control.open").length === 1,
+    assert.equal(
+      count("#reply-control.open"),
+      1,
       "it starts in open state by default"
     );
 
     await click(".toggle-fullscreen");
 
-    assert.ok(
-      queryAll("#reply-control.fullscreen").length === 1,
+    assert.equal(
+      count("#reply-control.fullscreen"),
+      1,
       "it expands composer to full screen"
     );
 
     await click(".toggle-fullscreen");
 
-    assert.ok(
-      queryAll("#reply-control.open").length === 1,
+    assert.equal(
+      count("#reply-control.open"),
+      1,
       "it collapses composer to regular size"
     );
 
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".toggler");
 
-    assert.ok(
-      queryAll("#reply-control.draft").length === 1,
+    assert.equal(
+      count("#reply-control.draft"),
+      1,
       "it collapses composer to draft bar"
     );
 
     await click(".toggle-fullscreen");
 
-    assert.ok(
-      queryAll("#reply-control.open").length === 1,
+    assert.equal(
+      count("#reply-control.open"),
+      1,
       "from draft, it expands composer back to open state"
     );
   });
@@ -522,8 +529,9 @@ acceptance("Composer", function (needs) {
       "toggleWhisper"
     );
 
-    assert.ok(
-      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 1,
+    assert.equal(
+      count(".composer-actions svg.d-icon-far-eye-slash"),
+      1,
       "it sets the post type to whisper"
     );
 
@@ -788,9 +796,9 @@ acceptance("Composer", function (needs) {
       I18n.t("composer.create_pm"),
       "reply button says Message"
     );
-    assert.ok(
-      queryAll(".save-or-cancel button.create svg.d-icon-envelope").length ===
-        1,
+    assert.equal(
+      count(".save-or-cancel button.create svg.d-icon-envelope"),
+      1,
       "reply button has envelope icon"
     );
   });
@@ -805,9 +813,9 @@ acceptance("Composer", function (needs) {
       I18n.t("composer.save_edit"),
       "save button says Save Edit"
     );
-    assert.ok(
-      queryAll(".save-or-cancel button.create svg.d-icon-pencil-alt").length ===
-        1,
+    assert.equal(
+      count(".save-or-cancel button.create svg.d-icon-pencil-alt"),
+      1,
       "save button has pencil icon"
     );
   });
@@ -846,8 +854,9 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", uploads.join("\n"));
 
-    assert.ok(
-      queryAll(".button-wrapper").length === 10,
+    assert.equal(
+      count(".button-wrapper"),
+      10,
       "it adds correct amount of scaling button groups"
     );
 
@@ -949,13 +958,13 @@ acceptance("Composer", function (needs) {
     );
 
     await fillIn(".d-editor-input", "[](https://discourse.org)");
-    assert.equal(find(".composer-popup").length, 0);
+    assert.ok(!exists(".composer-popup"));
 
     await fillIn(".d-editor-input", "[quote][](https://github.com)[/quote]");
-    assert.equal(find(".composer-popup").length, 0);
+    assert.ok(!exists(".composer-popup"));
 
     await fillIn(".d-editor-input", "[](https://github.com)");
-    assert.equal(find(".composer-popup").length, 1);
+    assert.equal(count(".composer-popup"), 1);
   });
 
   test("Shows the 'group_mentioned' notice", async function (assert) {

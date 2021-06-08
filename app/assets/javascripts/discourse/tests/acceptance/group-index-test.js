@@ -49,7 +49,7 @@ acceptance("Group Members", function (needs) {
     await click(".group-members-add");
 
     assert.equal(
-      queryAll("#group-add-members-user-selector").length,
+      count("#group-add-members-user-selector"),
       1,
       "it should display the add members modal"
     );

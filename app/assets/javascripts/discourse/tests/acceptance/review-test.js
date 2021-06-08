@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   publishToMessageBus,
   queryAll,
@@ -96,10 +97,7 @@ acceptance("Review", function (needs) {
       "<b>cooked content</b>"
     );
 
-    assert.equal(
-      queryAll(".reviewable-flagged-post .reviewable-score").length,
-      2
-    );
+    assert.equal(count(".reviewable-flagged-post .reviewable-score"), 2);
   });
 
   test("Flag related", async function (assert) {

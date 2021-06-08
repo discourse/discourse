@@ -1,7 +1,7 @@
 import {
   acceptance,
+  count,
   exists,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -23,8 +23,9 @@ acceptance("Managing Group Category Notification Defaults", function (needs) {
   test("As an admin", async function (assert) {
     await visit("/g/discourse/manage/categories");
 
-    assert.ok(
-      queryAll(".groups-notifications-form .category-selector").length === 5,
+    assert.equal(
+      count(".groups-notifications-form .category-selector"),
+      5,
       "it should display category inputs"
     );
   });
@@ -34,8 +35,9 @@ acceptance("Managing Group Category Notification Defaults", function (needs) {
 
     await visit("/g/discourse/manage/categories");
 
-    assert.ok(
-      queryAll(".groups-notifications-form .category-selector").length === 5,
+    assert.equal(
+      count(".groups-notifications-form .category-selector"),
+      5,
       "it should display category inputs"
     );
   });

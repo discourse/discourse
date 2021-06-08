@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   queryAll,
   selectDate,
@@ -109,7 +110,7 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+    assert.equal(count(".fps-topic"), 1, "has one post");
   });
 
   test("search for personal messages", async function (assert) {
@@ -118,10 +119,11 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "discourse in:personal");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+    assert.equal(count(".fps-topic"), 1, "has one post");
 
-    assert.ok(
-      queryAll(".topic-status .personal_message").length === 1,
+    assert.equal(
+      count(".topic-status .personal_message"),
+      1,
       "shows the right icon"
     );
   });

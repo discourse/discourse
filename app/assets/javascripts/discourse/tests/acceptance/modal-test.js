@@ -1,6 +1,7 @@
 import {
   acceptance,
   controllerFor,
+  count,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -35,7 +36,7 @@ acceptance("Modal", function (needs) {
     assert.ok(!exists(".d-modal:visible"), "there is no modal at first");
 
     await click(".login-button");
-    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
+    assert.equal(count(".d-modal:visible"), 1, "modal should appear");
 
     let controller = controllerFor("modal");
     assert.equal(controller.name, "login");
@@ -48,10 +49,7 @@ acceptance("Modal", function (needs) {
     assert.equal(controller.name, null);
 
     await click(".login-button");
-    assert.ok(
-      queryAll(".d-modal:visible").length === 1,
-      "modal should reappear"
-    );
+    assert.equal(count(".d-modal:visible"), 1, "modal should reappear");
 
     await triggerKeyEvent("#main-outlet", "keyup", 27);
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
@@ -62,16 +60,18 @@ acceptance("Modal", function (needs) {
 
     run(() => showModal("not-dismissable", {}));
 
-    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
+    assert.equal(count(".d-modal:visible"), 1, "modal should appear");
 
     await click(".modal-outer-container");
-    assert.ok(
-      queryAll(".d-modal:visible").length === 1,
+    assert.equal(
+      count(".d-modal:visible"),
+      1,
       "modal should not disappear when you click outside"
     );
     await triggerKeyEvent("#main-outlet", "keyup", 27);
-    assert.ok(
-      queryAll(".d-modal:visible").length === 1,
+    assert.equal(
+      count(".d-modal:visible"),
+      1,
       "ESC should not close the modal"
     );
   });
@@ -137,12 +137,14 @@ acceptance("Modal Keyboard Events", function (needs) {
     await click(".admin-topic-timer-update button");
     await triggerKeyEvent(".d-modal", "keyup", 13);
 
-    assert.ok(
-      queryAll("#modal-alert:visible").length === 1,
+    assert.equal(
+      count("#modal-alert:visible"),
+      1,
       "hitting Enter triggers modal action"
     );
-    assert.ok(
-      queryAll(".d-modal:visible").length === 1,
+    assert.equal(
+      count(".d-modal:visible"),
+      1,
       "hitting Enter does not dismiss modal due to alert error"
     );
 
