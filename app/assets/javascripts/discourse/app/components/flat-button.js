@@ -14,7 +14,7 @@ export default Component.extend({
     }
   },
 
-  click() {
-    return this.attrs.action();
+  click(e) {
+    return this.attrs.action(e);
   },
 });
