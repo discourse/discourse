@@ -18,6 +18,7 @@ export default Controller.extend({
   exclude_usernames: null,
   isLoading: false,
   columns: null,
+  groupsOptions: null,
 
   showTimeRead: equal("period", "all"),
 
@@ -32,7 +33,7 @@ export default Controller.extend({
       .map((c) => c.user_field_id)
       .join("|");
 
-    this.store
+    return this.store
       .find("directoryItem", Object.assign(params, { user_field_ids }))
       .then((model) => {
         const lastUpdatedAt = model.get("resultSetMeta.last_updated_at");
@@ -47,13 +48,31 @@ export default Controller.extend({
       });
   },
 
+  loadGroups() {
+    return this.store.findAll("group").then((groups) => {
+      const groupOptions = groups.map((group) => {
+        return {
+          name: group.name,
+          id: group.id,
+        };
+      });
+      this.set("groupOptions", groupOptions);
+    });
+  },
+
+  @action
+  groupChanged(_, groupAttrs) {
+    // First param is the group name, which include none or 'all groups'. Ignore this and look at second param.
+    this.set("group", groupAttrs.id ? groupAttrs.name : null);
+  },
+
   @action
   showEditColumnsModal() {
     showModal("edit-user-directory-columns");
   },
 
   @action
-  onFilterChanged(filter) {
+  onUsernameFilterChanged(filter) {
     discourseDebounce(this, this._setName, filter, 500);
   },
 

@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
+import { Promise } from "rsvp";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -44,7 +45,10 @@ export default DiscourseRoute.extend({
 
   setupController(controller, model) {
     controller.set("columns", model.columns);
-    controller.loadUsers(model.params);
+    return Promise.all([
+      controller.loadGroups(),
+      controller.loadUsers(model.params),
+    ]);
   },
 
   actions: {

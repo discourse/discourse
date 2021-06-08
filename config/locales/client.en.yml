@@ -650,6 +650,8 @@ en:
         title: "Edit Directory Columns"
         save: "Save"
         reset_to_default: "Reset to default"
+      group:
+        all: "all groups"
 
     group_histories:
       actions:
