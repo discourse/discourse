@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -125,10 +126,7 @@ acceptance("User Preferences - Interface", function (needs) {
     assert.equal(selectKit(".theme .select-kit").header().value(), 2);
 
     await selectKit(".light-color-scheme .select-kit").expand();
-    assert.equal(
-      queryAll(".light-color-scheme .select-kit .select-kit-row").length,
-      2
-    );
+    assert.equal(count(".light-color-scheme .select-kit .select-kit-row"), 2);
 
     document.querySelector("meta[name='discourse_theme_ids']").remove();
   });

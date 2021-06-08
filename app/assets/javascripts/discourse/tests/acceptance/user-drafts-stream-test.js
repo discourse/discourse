@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   queryAll,
   visible,
@@ -12,14 +13,15 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(queryAll(".user-stream-item").length === 3, "has drafts");
+    assert.equal(count(".user-stream-item"), 3, "has drafts");
 
     await click(".user-stream-item:last-child .remove-draft");
     assert.ok(visible(".bootbox"));
 
     await click(".bootbox .btn-primary");
-    assert.ok(
-      queryAll(".user-stream-item").length === 2,
+    assert.equal(
+      count(".user-stream-item"),
+      2,
       "draft removed, list length diminished by one"
     );
   });
