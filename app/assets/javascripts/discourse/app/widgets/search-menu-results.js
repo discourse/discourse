@@ -161,7 +161,9 @@ createSearchResult({
         this.siteSettings.use_pg_headlines_for_excerpt &&
           result.topic_title_headline
           ? new RawHtml({
-              html: emojiUnescape(result.topic_title_headline),
+              html: `<span>${emojiUnescape(
+                result.topic_title_headline
+              )}</span>`,
             })
           : new Highlighted(topic.fancyTitle, term)
       ),
