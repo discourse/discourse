@@ -1,8 +1,4 @@
-import {
-  acceptance,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { currentRouteName, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
