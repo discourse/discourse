@@ -14,6 +14,7 @@ class ContentSecurityPolicy
         directives[:worker_src] = worker_src
         directives[:report_uri] = report_uri if SiteSetting.content_security_policy_collect_reports
         directives[:frame_ancestors] = frame_ancestors if restrict_embed?
+        directives[:manifest_src] = ["'self'"]
       end
     end
 

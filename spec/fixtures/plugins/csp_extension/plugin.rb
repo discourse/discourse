@@ -8,5 +8,6 @@
 extend_content_security_policy(
   script_src: ['https://from-plugin.com'],
   object_src: ['https://test-stripping.com'],
-  frame_ancestors: ['https://frame-ancestors-plugin.ext']
+  frame_ancestors: ['https://frame-ancestors-plugin.ext'],
+  manifest_src: ['https://manifest-src.com']
 )

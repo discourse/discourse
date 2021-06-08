@@ -155,6 +155,12 @@ describe ContentSecurityPolicy do
     end
   end
 
+  describe 'manifest-src' do
+    it 'is set to self' do
+      expect(parse(policy)['manifest-src']).to eq(["'self'"])
+    end
+  end
+
   describe 'frame-ancestors' do
     context 'with content_security_policy_frame_ancestors enabled' do
       before do
@@ -198,7 +204,7 @@ describe ContentSecurityPolicy do
       end
     end
 
-    it 'can extend script-src and object-src' do
+    it 'can extend script-src, object-src, manifest-src' do
       plugin = plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
 
       plugin.activate!
@@ -208,9 +214,12 @@ describe ContentSecurityPolicy do
       expect(parse(policy)['script-src']).to include('https://from-plugin.com')
       expect(parse(policy)['object-src']).to include('https://test-stripping.com')
       expect(parse(policy)['object-src']).to_not include("'none'")
+      expect(parse(policy)['manifest-src']).to include("'self'")
+      expect(parse(policy)['manifest-src']).to include('https://manifest-src.com')
 
       plugin.enabled = false
       expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
+      expect(parse(policy)['manifest-src']).to_not include('https://manifest-src.com')
 
       Discourse.plugins.delete plugin
     end
