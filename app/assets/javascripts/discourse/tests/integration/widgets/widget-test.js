@@ -262,6 +262,30 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
   });
 
+  componentTest("using transformed values in a subexpression", {
+    template: hbs`{{mount-widget widget="attach-test"}}`,
+
+    beforeEach() {
+      createWidget("testing", {
+        tagName: "span.value",
+        template: widgetHbs`{{attrs.value}}`,
+      });
+
+      createWidget("attach-test", {
+        transform() {
+          return { someValue: "world" };
+        },
+        tagName: "div.container",
+        template: widgetHbs`{{testing value=(concat "hello" " " transformed.someValue)}}`,
+      });
+    },
+
+    test(assert) {
+      assert.ok(queryAll(".container").length, "renders container");
+      assert.equal(queryAll(".container .value").text(), "hello world");
+    },
+  });
+
   componentTest("handlebars d-icon", {
     template: hbs`{{mount-widget widget="hbs-icon-test" args=args}}`,
 
