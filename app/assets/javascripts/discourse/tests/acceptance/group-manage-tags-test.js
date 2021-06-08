@@ -1,6 +1,6 @@
 import {
   acceptance,
-  count,
+  exists,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -12,7 +12,7 @@ acceptance("Managing Group Tag Notification Defaults", function () {
     await visit("/g/discourse/manage/tags");
 
     assert.ok(
-      count(".group-members tr") > 0,
+      exists(".group-members tr"),
       "it should redirect to members page for an anonymous user"
     );
   });

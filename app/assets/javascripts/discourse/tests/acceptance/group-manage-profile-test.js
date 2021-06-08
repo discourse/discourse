@@ -1,6 +1,6 @@
 import {
   acceptance,
-  count,
+  exists,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -12,7 +12,7 @@ acceptance("Managing Group Profile", function () {
     await visit("/g/discourse/manage/profile");
 
     assert.ok(
-      count(".group-members tr") > 0,
+      exists(".group-members tr"),
       "it should redirect to members page for an anonymous user"
     );
   });
@@ -47,9 +47,8 @@ acceptance("Managing Group Profile", function (needs) {
 
     await visit("/g/discourse/manage/profile");
 
-    assert.equal(
-      queryAll(".group-form-name").length,
-      0,
+    assert.ok(
+      !exists(".group-form-name"),
       "it should not display group name input"
     );
   });
