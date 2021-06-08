@@ -112,12 +112,8 @@ lv:
       <<: *errors
   staff_category_name: "Personāls"
   trust_levels:
-    newuser:
-      title: "jauns lietotājs"
-    member:
-      title: "biedrs"
-    regular:
-      title: "regulārs"
+    admin: "Administrators"
+    staff: "Personāls"
   rate_limiter:
     hours:
       zero: "%{count} stundas"

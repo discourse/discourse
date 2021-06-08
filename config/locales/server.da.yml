@@ -380,6 +380,7 @@ da:
   too_late_to_edit: "Dette indlæg blev oprettet for længe siden og kan ikke længere redigeres eller slettes."
   edit_conflict: "Dette indlæg blev redigeret af en anden bruger, og dine ændringer kan ikke længere blive gemt."
   revert_version_same: "Den nuværende udgave er den samme udgave som den du prøver at vende tilbage til."
+  cannot_edit_on_slow_mode: "Dette emne er i langsom tilstand. For at tilskynde til tankevækkende, overvejet diskussion er redigering af gamle indlæg i dette emne i øjeblikket ikke tilladt i langsom tilstand."
   excerpt_image: "billede"
   bookmarks:
     errors:
@@ -648,16 +649,8 @@ da:
       topic_exists_no_oldest: "Kan ikke slette denne kategori fordi antallet af emner er %{count}"
     uncategorized_description: "Emner der ikke behøver kategori, eller ikke passer i eksisterende kategori."
   trust_levels:
-    newuser:
-      title: "ny bruger"
-    basic:
-      title: "basis-bruger"
-    member:
-      title: "bruger"
-    regular:
-      title: "Trofast"
-    leader:
-      title: "Veteran"
+    admin: "Admin"
+    staff: "Personale"
     change_failed_explanation: "Du har forsøgt at degradere %{user_name} til '%{new_trust_level}'. Imidlertid er deres niveau af tillid allerede '%{current_trust_level}'. %{user_name} vil forblive'%{current_trust_level}' - hvis du ønsker at degradere brugeren, skal du først låse brugerens tillids niveau / Trust Level"
   post:
     image_placeholder:
@@ -2960,6 +2953,10 @@ da:
     see_more: "Flere"
     search_title: "Søg på dette websted"
     search_button: "Søg"
+  login_required:
+    welcome_message: |
+      ## [Velkommen til %{title}](#welcome)
+      En konto er påkrævet. Opret venligst en konto eller log ind for at fortsætte.
   deleted: "slettet"
   image: "billede"
   upload:
@@ -3790,6 +3787,13 @@ da:
         title: "Slet..."
       delete_and_ignore:
         title: "Slet Indlæg og Ignorer"
+      delete_and_agree:
+        title: "Slet Indlæg og Accepter"
+        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
+      delete_and_agree_replies:
+        title: "Slet Indlæg + Svar og Accepter"
+        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
+        confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       disagree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
       disagree:

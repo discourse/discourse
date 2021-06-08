@@ -517,16 +517,8 @@ ur:
       topic_exists_no_oldest: "اِس زُمرہ کو حذف نہیں کیا جا سکتا کیونکہ ٹاپک تعداد %{count} ہے۔"
     uncategorized_description: "وہ ٹاپک جنہیں کسی زُمرہ کی ضرورت نہیں، یا جو کسی اور موجودہ زُمرہ میں فِٹ نہیں ہوتے۔"
   trust_levels:
-    newuser:
-      title: "نیا صارف"
-    basic:
-      title: "بَیسِک صارف"
-    member:
-      title: "ممبر"
-    regular:
-      title: "رَیگولر"
-    leader:
-      title: "لِیڈر"
+    admin: "منتظم"
+    staff: "سٹاف"
     change_failed_explanation: "آپ نے %{user_name} کو '%{new_trust_level}' تک درجہ کم کرنے کی کوشش کی۔ تاہم اُن کا ٹرسٹ لَیول پہلے سے ہی '%{current_trust_level}' ہے۔ %{user_name} '%{current_trust_level}' پر رہیں گے - اگر آپ صارف کا درجہ کم کرنا چاہتے ہیں تو پہلے ٹرسٹ لَیول لاک کیجیے"
   post:
     image_placeholder:

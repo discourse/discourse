@@ -573,16 +573,8 @@ pt_BR:
       topic_exists_no_oldest: "Não é possível excluir esta categoria porque contagem tópico é %{count}."
     uncategorized_description: "Tópicos que não precisam de uma categoria, ou que não se encaixam em nenhuma outra categoria existente."
   trust_levels:
-    newuser:
-      title: "usuário novo"
-    basic:
-      title: "utilizador básico"
-    member:
-      title: "membro"
-    regular:
-      title: "regular"
-    leader:
-      title: "líder"
+    admin: "Admin"
+    staff: "Equipe"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}' - se você deseja rebaixar um usuário, tranque o nível de confiança primeiro"
   post:
     image_placeholder:

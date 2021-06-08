@@ -487,16 +487,8 @@ zh_TW:
       topic_exists_no_oldest: "不能刪除該分類，因為有 %{count} 個話題"
     uncategorized_description: "不需要分類或者不適合放在現在的任何分類中的主題。"
   trust_levels:
-    newuser:
-      title: "新使用者"
-    basic:
-      title: "初級使用者"
-    member:
-      title: "成員"
-    regular:
-      title: "活躍使用者"
-    leader:
-      title: "資深"
+    admin: "管理員"
+    staff: "管理員"
     change_failed_explanation: "你嘗試將%{user_name}降至%{new_trust_level}。然而他們的信任等級已經是%{current_trust_level}。%{user_name}將仍處于%{current_trust_level}——如果你想要降級使用者，先鎖定信任等級。"
   post:
     image_placeholder:

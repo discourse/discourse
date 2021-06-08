@@ -577,6 +577,9 @@ fa_IR:
       total_rows:
         one: "%{count} کاربر"
         other: "%{count} کاربر"
+      edit_columns:
+        save: "ذخیره"
+        reset_to_default: "بازگردانی به پیش‌فرض"
     group_histories:
       actions:
         change_group_setting: "تغییر تنظیمات گروه"
@@ -1288,22 +1291,13 @@ fa_IR:
         invite:
           new_title: "ایجاد دعوت‌نامه"
           edit_title: "ویرایش دعوت‌نامه"
-          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
           copy_link: "کپی پیوند"
-          expires_in_time: "در %{time} منقضی می شود."
-          expired_at_time: "منقضی شده در %{time}."
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
-          max_redemptions_allowed: "حداکثر تعداد قابل استفاده:"
-          add_to_groups: "افزودن به گروه‌ها:"
-          invite_to_topic: "هدایت به موضوعی خاص بعد از اولین ورود:"
-          expires_at: "انقضا بعد از:"
-          custom_message: "پیام شخصی اختیاری"
           send_invite_email: "ذخیره و ارسال ایمیل"
           save_invite: "ذخیره دعوت‌نامه"
           invite_saved: "دعوتنامه ذخیره شد."
           invite_copied: "لینک دعوت کپی شد."
-          blank_email: "لینک دعوت کپی نشد. وارد کردن آدرس ایمیل اجباری است."
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -2055,7 +2049,6 @@ fa_IR:
       back_to_list: "بازگشت به فهرست موضوعات"
       options: "گزینه‌های موضوع"
       show_links: "نمایش پیوندهای درون این موضوع"
-      toggle_information: " تغییر وضعیت جزئیات موضوع"
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟موضوعات دیگر را در %{catLink} یا %{latestLink} مرور کنید."
       read_more: "می‌خواهید بیشتر بخوانید؟ %{catLink} یا %{latestLink}."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
@@ -2978,11 +2971,7 @@ fa_IR:
           title: "خاموش"
       groups:
         title: "برچسب گروه‌ها"
-        about: "برای مدیریت راحت‌تر گروه‌ها به آن‌ها برچسب اضافه کنید."
         new: "گروه جدید"
-        tags_label: "برچسب‌های گروه:"
-        parent_tag_label: "برچسب مادر:"
-        parent_tag_description: "برچسب‌های این گروه تا زمانی که برچسب مادر وجود نداشته باشد، قابل استفاده نیستند."
         one_per_topic_label: "محدودیت یک برچسب به ازای هر موضوع در این گروه"
         new_name: "گروه برچسب جدید"
         save: "ذخیره"
@@ -3019,6 +3008,13 @@ fa_IR:
         tomorrow: "تا فردا"
         custom: "سفارشی"
       set_schedule: "تنظیم زمان‌بندی آگاه‌سازی"
+    trust_levels:
+      names:
+        newuser: "کاربر جدید"
+        basic: "کاربر ساده"
+        member: "عضو"
+        regular: "عادی"
+        leader: "راهبر"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -3711,7 +3707,7 @@ fa_IR:
           require_approval: "فرسته‌های دارای این واژه‌ها پیش از دیده شدن نیاز به تائید کارکنان دارند."
         form:
           tag_label: "برچسب"
-          tag_placeholder: "برچسب۱,برچسب۲,برچسب۳"
+          link_placeholder: "https://example.com"
           add: "افزودن"
           success: "موفقیت"
           upload_successful: "بارگذاری با موفقیت انجام شد. واژه‌ها اضافه شدند."

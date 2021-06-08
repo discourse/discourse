@@ -25,7 +25,7 @@ da:
       long_description: |
         Dette emblem tildeles, når den interaktive "avancerede bruger" vejledning gennemføres. Du har mestret de avancerede diskussionsværktøjer - og er nu fuldt licenseret!
   discourse_narrative_bot:
-    bio: "Hej, jeg er ikke en rigtig person. Jeg er en bot, der kan lære dig om dette websted. For at interagere med mig, send mig en besked eller nævn mig ved navn."
+    bio: "Hej, jeg er ikke en rigtig person. Jeg er en bot, der kan lære dig om dette websted. For at interagere med mig, send mig en besked eller nævne mig ved navn."
     tl2_promotion_message:
       subject_template: "Nu hvor du er blevet forfremmet, er det tid til at lære om nogle avancerede funktioner!"
       text_body_template: |

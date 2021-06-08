@@ -476,6 +476,8 @@ id:
       last_updated: "Terakhir Diperbarui:"
       total_rows:
         other: "%{count} pengguna"
+      edit_columns:
+        save: "Simpan"
     group_histories:
       actions:
         change_group_setting: "Ubah pengaturan grup"
@@ -1602,6 +1604,13 @@ id:
           new: "Anda tidak memiliki topik baru"
     footer_nav:
       dismiss: "Bubar"
+    trust_levels:
+      names:
+        newuser: "pengguna baru"
+        basic: "pengguna standar"
+        member: "anggota"
+        regular: "umum"
+        leader: "pemimpin"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

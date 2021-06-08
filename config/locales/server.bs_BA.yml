@@ -242,16 +242,8 @@ bs_BA:
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
   trust_levels:
-    newuser:
-      title: "novi korisnik"
-    basic:
-      title: "korisnik"
-    member:
-      title: "član"
-    regular:
-      title: "pokretač"
-    leader:
-      title: "vođa"
+    admin: "Admin"
+    staff: "Staff"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:

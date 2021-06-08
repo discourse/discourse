@@ -704,16 +704,8 @@ pl_PL:
       topic_exists_no_oldest: "Nie można usunąć tej kategorii z uwagi na liczbę tematów: %{count}."
     uncategorized_description: "Tematy które nie potrzebują kategorii, albo nie nadają się do żadnej innej."
   trust_levels:
-    newuser:
-      title: "nowy"
-    basic:
-      title: "początkujący"
-    member:
-      title: "uczestnik"
-    regular:
-      title: "zwyczajny"
-    leader:
-      title: "lider"
+    admin: "Administracja"
+    staff: "Zespół"
     change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}' - jeśli chcesz to zmienić, najpierw zablokuj poziom zaufania temu użytkownikowi."
   post:
     image_placeholder:

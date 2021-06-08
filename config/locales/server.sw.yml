@@ -356,16 +356,8 @@ sw:
       topic_exists_no_oldest: "Hauwezi kufuta kategoria hii kwa sababu ina idadi ya mada %{count}."
     uncategorized_description: "Mada ambazo hazina kategoria, au haziwezi kuwekwa kwenye kategoria zingine."
   trust_levels:
-    newuser:
-      title: "mtumiaji mpya"
-    basic:
-      title: "mtumiaji wa kawaida"
-    member:
-      title: "mwanachama"
-    regular:
-      title: "kawaida"
-    leader:
-      title: "kiongozi"
+    admin: "Kiongozi"
+    staff: "Wasaidizi"
     change_failed_explanation: "Ulijaribu kumshusha daraja %{user_name} kwenda '%{new_trust_level}'. Lakini kiwango chake cha uaminifu tayari ni '%{current_trust_level}'. %{user_name} atabaki kwenye '%{current_trust_level}' - kama unataka kumshusha daraja loki kiwango cha uaminifu kwanza."
   post:
     image_placeholder:

@@ -372,6 +372,8 @@ sw:
       total_rows:
         one: "Mtumiaji mmoja"
         other: "%{count} watumiaji"
+      edit_columns:
+        save: "hifadhi"
     group_histories:
       actions:
         change_group_setting: "Badilisha mipangilio ya kikundi"
@@ -1523,7 +1525,6 @@ sw:
       back_to_list: "Rudi tena kwenye Orodha ya Mada"
       options: "Machaguo ya Mada"
       show_links: "onyesha viungo ndani ya hii mada"
-      toggle_information: "badilisha taarifa za mada"
       read_more_in_category: "Unataka kusoma zaidi? Vinjari mada zingine ndani ya %{catLink} au %{latestLink}."
       read_more: "Unataka kusoma zaidi? %{catLink} au %{latestLink}."
       browse_all_categories: Vinjari kategoria zote
@@ -2250,11 +2251,7 @@ sw:
           description: "Hautajulishwa kuhusu mada mpya zenye lebo hii, na hazitatokea kwenye sehemu ya taarifa ambazo hazijasomwa."
       groups:
         title: "Vikundi vya Lebo"
-        about: "Ongeza lebo kwenye vikundi kuzisimamia kwa urahisi zaidi."
         new: "Kundi jipya"
-        tags_label: "Lebo kwenye kundi hili"
-        parent_tag_label: "lebo zazi"
-        parent_tag_description: "Lebo za kikundi hiki haziwezi kutumika kama lebo miliki haipo."
         one_per_topic_label: "Weka kikomo cha lebo moja kwenye kila mada iliyo ndani ya kikundi hiki"
         new_name: "Kikundi Kipya cha Lebo"
         save: "Hifadhi"
@@ -2281,6 +2278,13 @@ sw:
     do_not_disturb:
       options:
         custom: "Binafsi"
+    trust_levels:
+      names:
+        newuser: "mtumiaji mpya"
+        basic: "mtumiaji wa kawaida"
+        member: "mwanachama"
+        regular: "kawaida"
+        leader: "kiongozi"
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:
@@ -2893,6 +2897,7 @@ sw:
           flag: "Ruhusu machapisho yawe na maneno haya, ila ripoti kuonyesha kuwa hazifai ili wasimamizi waweze kuzikagua."
         form:
           placeholder_regexp: "muonekano wa kawaida"
+          link_placeholder: "https://example.com"
           add: "Ongeza"
           success: "Mafanikio"
           exists: "Tayari ipo"

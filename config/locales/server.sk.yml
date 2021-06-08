@@ -332,16 +332,8 @@ sk:
       topic_exists_no_oldest: "Nemôžete vymazať túto kategóriu pretože obsahuje %{count} tém."
     uncategorized_description: "Témy, ktoré nepotrebujú kategóriu, alebo sa do žiadnej existujúcej nehodia."
   trust_levels:
-    newuser:
-      title: "nový používateľ"
-    basic:
-      title: "základný používateľ"
-    member:
-      title: "člen"
-    regular:
-      title: "bežný"
-    leader:
-      title: "vodca"
+    admin: "Administrácia"
+    staff: "Zamestnanci"
     change_failed_explanation: "Pokúsili ste sa znížiť úroveň %{user_name} na '%{new_trust_level}'. Ale jeho/jej aktuálna úroveň už je '%{current_trust_level}'. %{user_name} zostane na úrovni '%{current_trust_level}' - Ak chcete znížiť úroveň používateľa, najskôr uzamknite úroveň"
   post:
     image_placeholder:

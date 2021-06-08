@@ -521,6 +521,9 @@ vi:
       last_updated: "Cập nhật lần cuối:"
       total_rows:
         other: "%{count} người dùng"
+      edit_columns:
+        save: "Lưu"
+        reset_to_default: "Đặt lại về mặc định"
     group_histories:
       actions:
         change_group_setting: "Đổi cài đặt nhóm"
@@ -2045,7 +2048,6 @@ vi:
       back_to_list: "Quay lại danh sách chủ đề"
       options: "Các lựa chọn chủ đề"
       show_links: "Hiển thị liên kết trong chủ đề này"
-      toggle_information: "chuyển đổi các chi tiết chủ để"
       read_more_in_category: "Muốn đọc nữa? Xem qua các chủ đề khác trong %{catLink} hoặc %{latestLink}"
       read_more: "Muốn đọc nữa? %{catLink} hoặc %{latestLink}"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
@@ -3075,14 +3077,9 @@ vi:
           description: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới với thẻ này và chúng sẽ không xuất hiện trên tab chưa đọc của bạn."
       groups:
         title: "Nhóm thẻ"
-        about: "Thêm thẻ vào nhóm để quản lý chúng dễ dàng hơn."
         new: "Nhóm mới"
-        tags_label: "Thẻ trong nhóm này:"
-        parent_tag_label: "Thẻ cha:"
-        parent_tag_description: "Không thể sử dụng các thẻ từ nhóm này trừ khi có thẻ mẹ."
         one_per_topic_label: "Giới hạn một thẻ cho mỗi chủ đề từ nhóm này"
         new_name: "Nhóm thẻ mới"
-        name_placeholder: "Tên nhóm thẻ"
         save: "Lưu"
         delete: "Xoá"
         confirm_delete: "Bạn có chắc chắn muốn xóa nhóm thẻ này không?"
@@ -3123,6 +3120,13 @@ vi:
         two_hours: "2 tiếng"
         tomorrow: "Cho tới ngày mai"
         custom: "Tùy biến"
+    trust_levels:
+      names:
+        newuser: "thành viên mới"
+        basic: "thành viên cơ bản"
+        member: "thành viên"
+        regular: "thường xuyên"
+        leader: "người khởi xướng"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:
@@ -3996,7 +4000,14 @@ vi:
           block: "Khóa"
           flag: "Gắn cờ"
           silence: "Im lặng"
+          link: "Liên kết"
+        action_descriptions:
+          tag: "Tự động gắn thẻ các chủ đề dựa trên bài đăng đầu tiên"
+          silence: "Các bài đăng đầu tiên của người dùng có chứa những từ này sẽ yêu cầu nhân viên phê duyệt trước khi họ có thể được nhìn thấy và người dùng sẽ tự động bị tắt tiếng."
         form:
+          replace_label: "Sự thay thế"
+          link_label: "Liên kết"
+          link_placeholder: "https://example.com"
           add: "Thêm"
           exists: "Đã tồn tại"
         test:
@@ -4409,6 +4420,7 @@ vi:
           upload_csv: Tải lên CSV có email hoặc tên người dùng
           aborted: Vui lòng tải lên CSV có chứa email người dùng hoặc tên người dùng
           success: CSV của bạn đã được nhận và người dùng sẽ sớm nhận được huy hiệu của họ.
+          replace_owners: Xóa huy hiệu khỏi chủ sở hữu trước đó
       emoji:
         title: "Emoji"
         help: "Thêm emoji mới có sẵn cho tất cả mọi người. (MẸO: kéo & thả nhiều file cùng lúc)"

@@ -251,16 +251,8 @@ id:
       topic_exists_no_oldest: "Tidak dapat menghapus kategori ini karena terdapat %{count} topik."
     uncategorized_description: "Topik yang tidak membutuhkan kategori, atau tidak masuk dalam kategori yang ada."
   trust_levels:
-    newuser:
-      title: "pengguna baru"
-    basic:
-      title: "pengguna standar"
-    member:
-      title: "anggota"
-    regular:
-      title: "umum"
-    leader:
-      title: "pemimpin"
+    admin: "Admin"
+    staff: "Staf"
   rate_limiter:
     hours:
       other: "%{count} jam"

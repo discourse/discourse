@@ -372,16 +372,8 @@ be:
       topic_exists_no_oldest: "Не ўдаецца выдаліць гэтую катэгорыю з-за %{count}тэм(аў)."
     uncategorized_description: "Тэмы, якія не маюць патрэбы ў катэгорыі, ці не ўпісваюцца ў любой іншай існуючай катэгорыі."
   trust_levels:
-    newuser:
-      title: "новы карыстальнік"
-    basic:
-      title: "асноўны карыстальнік"
-    member:
-      title: "член"
-    regular:
-      title: "рэгулярны"
-    leader:
-      title: "лідэр"
+    admin: "Адмін панэль"
+    staff: "персанал"
   post:
     image_placeholder:
       broken: "Гэта выява паламаная"

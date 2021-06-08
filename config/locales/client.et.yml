@@ -471,6 +471,8 @@ et:
       total_rows:
         one: "%{count} kasutaja"
         other: "%{count} kasutajat"
+      edit_columns:
+        save: "Salvesta"
     group_histories:
       actions:
         change_group_setting: "Muuda grupi sätteid"
@@ -1664,7 +1666,6 @@ et:
       back_to_list: "Tagasi Teemade Loendisse"
       options: "Teema Suvandid"
       show_links: "näita viiteid selles teemas"
-      toggle_information: "lülita teema üksikasjad ümber"
       read_more_in_category: "Soovid veel lugeda? Vaata teisi teemasid %{catLink} või %{latestLink}."
       read_more: "Soovid veel lugeda? %{catLink} või %{latestLink}."
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
@@ -2528,11 +2529,7 @@ et:
           title: "Vaigistatud"
       groups:
         title: "Siltide grupid"
-        about: "Hõlpsamaks haldamiseks lisa sildid gruppidesse."
         new: "Uus grupp"
-        tags_label: "Sildid selles grupis:"
-        parent_tag_label: "Ülemsilt:"
-        parent_tag_description: "Sellesse gruppi kuuluvaid silte ei saa kasutada, kui ülemsilt on puudu."
         one_per_topic_label: "Vaid üks selle grupi silt teema kohta"
         new_name: "Uus siltide grupp"
         save: "Salvesta"
@@ -2564,6 +2561,13 @@ et:
         one_hour: "1 tund"
         two_hours: "2 tundi"
         custom: "Individuaalne"
+    trust_levels:
+      names:
+        newuser: "uus kasutaja"
+        basic: "baaskasutaja"
+        member: "liige"
+        regular: "tavaline"
+        leader: "juht"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
@@ -3152,6 +3156,7 @@ et:
           silence: "Vaigista"
         form:
           placeholder_regexp: "regulaaravaldis"
+          link_placeholder: "https://example.com"
           add: "isa"
           success: "Korras"
         test:
