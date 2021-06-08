@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   invisible,
   queryAll,
@@ -416,7 +417,7 @@ acceptance("Tag info", function (needs) {
     await click("#edit-synonyms");
     await click("#add-synonyms .filter-input");
 
-    assert.equal(find(".tag-chooser-row").length, 2);
+    assert.equal(count(".tag-chooser-row"), 2);
     assert.deepEqual(
       Array.from(find(".tag-chooser-row")).map((x) => x.dataset["value"]),
       ["monkey", "not-monkey"]

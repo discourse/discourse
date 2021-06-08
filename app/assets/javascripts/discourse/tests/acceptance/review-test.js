@@ -3,6 +3,7 @@ import {
   count,
   exists,
   publishToMessageBus,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -188,10 +189,10 @@ acceptance("Review", function (needs) {
   test("Reviewables can become stale", async function (assert) {
     await visit("/review");
 
-    const reviewable = find("[data-reviewable-id=1234]")[0];
+    const reviewable = query("[data-reviewable-id=1234]");
     assert.notOk(reviewable.className.includes("reviewable-stale"));
-    assert.equal(find("[data-reviewable-id=1234] .status .pending").length, 1);
-    assert.equal(find(".stale-help").length, 0);
+    assert.equal(count("[data-reviewable-id=1234] .status .pending"), 1);
+    assert.ok(!exists(".stale-help"));
 
     publishToMessageBus("/reviewable_counts", {
       review_count: 1,
@@ -203,7 +204,7 @@ acceptance("Review", function (needs) {
     await visit("/review"); // wait for re-render
 
     assert.ok(reviewable.className.includes("reviewable-stale"));
-    assert.equal(find("[data-reviewable-id=1234] .status .approved").length, 1);
-    assert.equal(find(".stale-help").length, 1);
+    assert.equal(count("[data-reviewable-id=1234] .status .approved"), 1);
+    assert.equal(count(".stale-help"), 1);
   });
 });
