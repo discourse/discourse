@@ -285,7 +285,7 @@ acceptance("Composer", function (needs) {
   test("Create an enqueued Reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.notOk(queryAll(".pending-posts .reviewable-item").length);
+    assert.ok(!exists(".pending-posts .reviewable-item"));
 
     await click("#topic-footer-buttons .btn.create");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
@@ -306,7 +306,7 @@ acceptance("Composer", function (needs) {
     await click(".modal-footer button");
     assert.ok(invisible(".d-modal"), "the modal can be dismissed");
 
-    assert.ok(queryAll(".pending-posts .reviewable-item").length);
+    assert.ok(exists(".pending-posts .reviewable-item"));
   });
 
   test("Edit the first post", async function (assert) {
@@ -457,7 +457,7 @@ acceptance("Composer", function (needs) {
     await menu.selectRowByValue("toggleWhisper");
 
     assert.ok(
-      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 0,
+      !exists(".composer-actions svg.d-icon-far-eye-slash"),
       "it removes the whisper mode"
     );
 
@@ -532,7 +532,7 @@ acceptance("Composer", function (needs) {
 
     await click("#create-topic");
     assert.ok(
-      queryAll(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
+      !exists(".composer-fields .whisper .d-icon-far-eye-slash"),
       "it should reset the state of the composer's model"
     );
 
@@ -552,9 +552,7 @@ acceptance("Composer", function (needs) {
 
     await click(".topic-post:nth-of-type(1) button.reply");
     assert.ok(
-      queryAll(".composer-fields .whisper")
-        .text()
-        .indexOf(I18n.t("composer.unlist")) === -1,
+      !exists(".composer-fields .whisper"),
       "it should reset the state of the composer's model"
     );
   });
@@ -676,17 +674,20 @@ acceptance("Composer", function (needs) {
 
       await fillIn(".d-editor-input", longText);
 
+      assert.ok(
+        exists(
+          '.action-title a[href="/t/internationalization-localization/280"]'
+        ),
+        "the mode should be: reply to post"
+      );
+
       await click("article#post_3 button.reply");
 
       const composerActions = selectKit(".composer-actions");
       await composerActions.expand();
       await composerActions.selectRowByValue("reply_as_private_message");
 
-      assert.equal(
-        queryAll(".modal-body").text(),
-        "",
-        "abandon popup shouldn't come"
-      );
+      assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
 
       assert.ok(
         queryAll(".d-editor-input").val().includes(longText),
@@ -694,7 +695,7 @@ acceptance("Composer", function (needs) {
       );
 
       assert.ok(
-        queryAll(
+        !exists(
           '.action-title a[href="/t/internationalization-localization/280"]'
         ),
         "mode should have changed"
@@ -926,8 +927,8 @@ acceptance("Composer", function (needs) {
     );
 
     assert.ok(
-      queryAll("script").length === 0,
-      "it does not unescapes script tags in code blocks"
+      !exists("script"),
+      "it does not unescape script tags in code blocks"
     );
   });
 

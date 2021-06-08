@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -21,12 +22,12 @@ discourseModule(
       template: hbs`{{mount-widget widget="user-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".user-menu").length);
-        assert.ok(queryAll(".user-preferences-link").length);
-        assert.ok(queryAll(".user-notifications-link").length);
-        assert.ok(queryAll(".user-bookmarks-link").length);
-        assert.ok(queryAll(".quick-access-panel").length);
-        assert.ok(queryAll(".notifications-dismiss").length);
+        assert.ok(exists(".user-menu"));
+        assert.ok(exists(".user-preferences-link"));
+        assert.ok(exists(".user-notifications-link"));
+        assert.ok(exists(".user-bookmarks-link"));
+        assert.ok(exists(".quick-access-panel"));
+        assert.ok(exists(".notifications-dismiss"));
       },
     });
 
@@ -99,7 +100,7 @@ discourseModule(
       async test(assert) {
         await click(".user-preferences-link");
 
-        assert.ok(queryAll(".logout").length);
+        assert.ok(exists(".logout"));
 
         await click(".logout button");
         assert.ok(this.loggedOut);
@@ -113,7 +114,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".user-pms-link").length);
+        assert.ok(!exists(".user-pms-link"));
       },
     });
 
@@ -196,7 +197,7 @@ discourseModule(
 
       async test(assert) {
         await click(".user-preferences-link");
-        assert.ok(queryAll(".enable-anonymous").length);
+        assert.ok(exists(".enable-anonymous"));
 
         await click(".enable-anonymous");
         assert.ok(this.anonymous);
@@ -212,7 +213,7 @@ discourseModule(
 
       async test(assert) {
         await click(".user-preferences-link");
-        assert.ok(!queryAll(".enable-anonymous").length);
+        assert.ok(!exists(".enable-anonymous"));
       },
     });
 
@@ -230,7 +231,7 @@ discourseModule(
 
       async test(assert) {
         await click(".user-preferences-link");
-        assert.ok(queryAll(".disable-anonymous").length);
+        assert.ok(exists(".disable-anonymous"));
 
         await click(".disable-anonymous");
         assert.notOk(this.anonymous);

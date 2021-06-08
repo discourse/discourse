@@ -1,5 +1,6 @@
 import {
   acceptance,
+  exists,
   queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -25,7 +26,7 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream - resume draft", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(queryAll(".user-stream-item").length > 0, "has drafts");
+    assert.ok(exists(".user-stream-item"), "has drafts");
 
     await click(".user-stream-item .resume-draft");
     assert.equal(

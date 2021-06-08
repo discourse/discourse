@@ -4,6 +4,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -25,7 +26,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
     template: hbs`{{d-editor value=value}}`,
 
     async test(assert) {
-      assert.ok(queryAll(".d-editor-button-bar").length);
+      assert.ok(exists(".d-editor-button-bar"));
       await fillIn(".d-editor-input", "hello **world**");
 
       assert.equal(this.value, "hello **world**");

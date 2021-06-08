@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -121,8 +122,8 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll('.test[data-evil="trout"]').length);
-      assert.ok(queryAll('.test[aria-label="accessibility"]').length);
+      assert.ok(exists('.test[data-evil="trout"]'));
+      assert.ok(exists('.test[aria-label="accessibility"]'));
     },
   });
 
@@ -140,7 +141,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll("#test-1234").length);
+      assert.ok(exists("#test-1234"));
     },
   });
 
@@ -164,7 +165,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     async test(assert) {
-      assert.ok(queryAll("button.test").length, "it renders the button");
+      assert.ok(exists("button.test"), "it renders the button");
       assert.equal(queryAll("button.test").text(), "0 clicks");
 
       await click(query("button"));
@@ -219,8 +220,8 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll(".container").length, "renders container");
-      assert.ok(queryAll(".container .embedded").length, "renders attached");
+      assert.ok(exists(".container"), "renders container");
+      assert.ok(exists(".container .embedded"), "renders attached");
     },
   });
 
@@ -237,8 +238,8 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll(".container").length, "renders container");
-      assert.ok(queryAll(".container .embedded").length, "renders attached");
+      assert.ok(exists(".container"), "renders container");
+      assert.ok(exists(".container .embedded"), "renders attached");
     },
   });
 
@@ -258,7 +259,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll(".container").length, "renders container");
+      assert.ok(exists(".container"), "renders container");
       assert.equal(queryAll(".container .value").text(), "hello world");
     },
   });
@@ -358,7 +359,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll(".decorate").length);
+      assert.ok(exists(".decorate"));
       assert.equal(queryAll(".decorate b").text(), "before");
       assert.equal(queryAll(".decorate i").text(), "after");
     },

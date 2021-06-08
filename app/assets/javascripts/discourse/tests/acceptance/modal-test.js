@@ -1,6 +1,7 @@
 import {
   acceptance,
   controllerFor,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
@@ -31,10 +32,7 @@ acceptance("Modal", function (needs) {
   skip("modal", async function (assert) {
     await visit("/");
 
-    assert.ok(
-      queryAll(".d-modal:visible").length === 0,
-      "there is no modal at first"
-    );
+    assert.ok(!exists(".d-modal:visible"), "there is no modal at first");
 
     await click(".login-button");
     assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
@@ -44,7 +42,7 @@ acceptance("Modal", function (needs) {
 
     await click(".modal-outer-container");
     assert.ok(
-      queryAll(".d-modal:visible").length === 0,
+      !exists(".d-modal:visible"),
       "modal should disappear when you click outside"
     );
     assert.equal(controller.name, null);
@@ -56,10 +54,7 @@ acceptance("Modal", function (needs) {
     );
 
     await triggerKeyEvent("#main-outlet", "keyup", 27);
-    assert.ok(
-      queryAll(".d-modal:visible").length === 0,
-      "ESC should close the modal"
-    );
+    assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
     Ember.TEMPLATES[
       "modal/not-dismissable"
@@ -126,7 +121,7 @@ acceptance("Modal", function (needs) {
 
     run(() => showModal("test-title"));
     assert.ok(
-      queryAll(".d-modal .title").length === 0,
+      !exists(".d-modal .title"),
       "it should not re-use the previous title"
     );
   });
@@ -152,10 +147,7 @@ acceptance("Modal Keyboard Events", function (needs) {
     );
 
     await triggerKeyEvent("#main-outlet", "keyup", 27);
-    assert.ok(
-      queryAll(".d-modal:visible").length === 0,
-      "ESC should close the modal"
-    );
+    assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
     await click(".topic-body button.reply");
 
@@ -163,7 +155,7 @@ acceptance("Modal Keyboard Events", function (needs) {
 
     await triggerKeyEvent(".d-modal", "keyup", 13);
     assert.ok(
-      queryAll(".d-modal:visible").length === 0,
+      !exists(".d-modal:visible"),
       "modal should disappear on hitting Enter"
     );
   });

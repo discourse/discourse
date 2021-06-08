@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
@@ -13,7 +17,7 @@ acceptance("Shared Drafts", function () {
     await click(".publish-shared-draft");
     await click(".bootbox .btn-primary");
 
-    assert.ok(queryAll(".shared-draft-controls").length === 0);
+    assert.ok(!exists(".shared-draft-controls"));
   });
 
   test("Updating category", async function (assert) {

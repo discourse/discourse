@@ -233,7 +233,7 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
-    assert.ok(queryAll("#create-topic:disabled").length === 0);
+    assert.ok(!exists("#create-topic:disabled"));
 
     await visit("/tag/staff-only-tag");
     assert.ok(queryAll("#create-topic:disabled").length === 1);
@@ -241,10 +241,10 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: true });
 
     await visit("/tag/regular-tag");
-    assert.ok(queryAll("#create-topic:disabled").length === 0);
+    assert.ok(!exists("#create-topic:disabled"));
 
     await visit("/tag/staff-only-tag");
-    assert.ok(queryAll("#create-topic:disabled").length === 0);
+    assert.ok(!exists("#create-topic:disabled"));
   });
 });
 

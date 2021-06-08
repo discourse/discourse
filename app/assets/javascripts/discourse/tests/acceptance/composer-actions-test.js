@@ -169,7 +169,7 @@ acceptance("Composer Actions", function (needs) {
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
-    assert.equal(exists(queryAll(".bootbox")), false);
+    assert.ok(!exists(".bootbox"));
   });
 
   test("reply_as_new_group_message", async function (assert) {
@@ -234,7 +234,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
-    assert.ok(exists(queryAll(".action-title img.avatar")));
+    assert.ok(exists(".action-title img.avatar"));
     assert.equal(
       queryAll(".action-title .user-link").text().trim(),
       "codinghorror"

@@ -1,7 +1,7 @@
 import {
   acceptance,
+  exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   addRawTemplate,
@@ -27,7 +27,7 @@ acceptance("Raw Plugin Outlet", function (needs) {
   });
   test("Renders the raw plugin outlet", async function (assert) {
     await visit("/");
-    assert.ok(queryAll(".topic-lala").length > 0, "it renders the outlet");
+    assert.ok(exists(".topic-lala"), "it renders the outlet");
     assert.equal(
       query(".topic-lala:nth-of-type(1)").innerText,
       "11557",
