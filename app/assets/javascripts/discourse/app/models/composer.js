@@ -1,6 +1,6 @@
 import EmberObject, { set } from "@ember/object";
 import { and, equal, not, or, reads } from "@ember/object/computed";
-import { cancel, later, next, throttle } from "@ember/runloop";
+import { next, throttle } from "@ember/runloop";
 import discourseComputed, {
   observes,
   on,
@@ -113,7 +113,6 @@ const Composer = RestModel.extend({
   unlistTopic: false,
   noBump: false,
   draftSaving: false,
-  draftSaved: false,
   draftForceSave: false,
 
   archetypes: reads("site.archetypes"),
@@ -1190,15 +1189,9 @@ const Composer = RestModel.extend({
     }
 
     this.setProperties({
-      draftSaved: false,
       draftSaving: true,
       draftConflictUser: null,
     });
-
-    if (this._clearingStatus) {
-      cancel(this._clearingStatus);
-      this._clearingStatus = null;
-    }
 
     let data = this.serialize(_draft_serializer);
 
@@ -1224,7 +1217,7 @@ const Composer = RestModel.extend({
           });
         } else {
           this.setProperties({
-            draftSaved: true,
+            draftStatus: null,
             draftConflictUser: null,
             draftForceSave: false,
           });
@@ -1275,23 +1268,6 @@ const Composer = RestModel.extend({
       .finally(() => {
         this.set("draftSaving", false);
       });
-  },
-
-  @observes("title", "reply")
-  dataChanged() {
-    const draftStatus = this.draftStatus;
-
-    if (draftStatus && !this._clearingStatus) {
-      this._clearingStatus = later(
-        this,
-        () => {
-          this.setProperties({ draftStatus: null, draftConflictUser: null });
-          this._clearingStatus = null;
-          this.setProperties({ draftSaving: false, draftSaved: false });
-        },
-        Ember.Test ? 0 : 1000
-      );
-    }
   },
 });
 
