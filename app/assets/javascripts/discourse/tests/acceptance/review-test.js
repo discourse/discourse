@@ -189,9 +189,9 @@ acceptance("Review", function (needs) {
   test("Reviewables can become stale", async function (assert) {
     await visit("/review");
 
-    const reviewable = query("[data-reviewable-id=1234]");
+    const reviewable = query(`[data-reviewable-id="1234"]`);
     assert.notOk(reviewable.className.includes("reviewable-stale"));
-    assert.equal(count("[data-reviewable-id=1234] .status .pending"), 1);
+    assert.equal(count(`[data-reviewable-id="1234"] .status .pending`), 1);
     assert.ok(!exists(".stale-help"));
 
     publishToMessageBus("/reviewable_counts", {
