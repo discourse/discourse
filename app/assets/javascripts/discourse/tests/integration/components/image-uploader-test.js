@@ -77,12 +77,12 @@ discourseModule("Integration | Component | image-uploader", function (hooks) {
         "it displays the upload icon"
       );
 
-      assert.equal(
+      assert.ok(
         !exists(".d-icon-far-trash-alt"),
         "it does not display trash icon"
       );
 
-      assert.equal(
+      assert.ok(
         !exists(".image-uploader-lightbox-btn"),
         "it does not display the button to open image lightbox"
       );
