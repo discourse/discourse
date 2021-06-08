@@ -251,6 +251,12 @@
         "allow_unknown_sender_topic_replies": {
           "type": "boolean"
         },
+        "associated_group_ids": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
         "watching_category_ids": {
           "type": "array",
           "items": [

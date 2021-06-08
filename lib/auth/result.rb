@@ -21,7 +21,9 @@ class Auth::Result
     :omniauth_disallow_totp,
     :failed,
     :failed_reason,
-    :failed_code
+    :failed_code,
+    :secondary_authorization_url,
+    :associated_groups
   ]
 
   attr_accessor *ATTRIBUTES
@@ -93,6 +95,30 @@ class Auth::Result
     end
 
     change_made
+  end
+
+  def apply_associated_attributes!
+    if extra_data && extra_data[:provider].present? && associated_groups.present?
+      associated_group_ids = []
+
+      associated_groups.uniq.each do |associated_group|
+        begin
+          associated_group = AssociatedGroup.find_or_create_by(
+            name: associated_group,
+            provider_name: extra_data[:provider],
+            provider_domain: extra_data[:provider_domain]
+          )
+        rescue ActiveRecord::RecordNotUnique
+          retry
+        end
+
+        if associated_group.present?
+          associated_group_ids.push(associated_group.id)
+        end
+      end
+
+      user.update(associated_group_ids: associated_group_ids)
+    end
   end
 
   def can_edit_name
