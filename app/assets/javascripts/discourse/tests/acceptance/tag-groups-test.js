@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -53,7 +53,7 @@ acceptance("Tag Groups", function (needs) {
     await tags.expand();
 
     await click(".group-tags-list .tag-chooser .choice:nth-of-type(1)");
-    assert.ok(!queryAll(".tag-group-content .btn.btn-danger")[0].disabled);
+    assert.ok(!query(".tag-group-content .btn.btn-danger").disabled);
   });
 
   test("tag groups can have multiple groups added to them", async function (assert) {
@@ -72,7 +72,7 @@ acceptance("Tag Groups", function (needs) {
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);
 
-    assert.ok(!queryAll(".tag-group-content .btn.btn-primary")[0].disabled);
+    assert.ok(!query(".tag-group-content .btn.btn-primary").disabled);
 
     await click(".tag-group-content .btn.btn-primary");
     await click(".tag-groups-sidebar li:first-child a");

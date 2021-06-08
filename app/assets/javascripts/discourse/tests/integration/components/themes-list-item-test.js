@@ -4,6 +4,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -19,11 +20,7 @@ discourseModule("Integration | Component | themes-list-item", function (hooks) {
 
     test(assert) {
       assert.expect(1);
-      assert.equal(
-        queryAll(".d-icon-check").length,
-        1,
-        "shows default theme icon"
-      );
+      assert.equal(count(".d-icon-check"), 1, "shows default theme icon");
     },
   });
 
@@ -38,11 +35,7 @@ discourseModule("Integration | Component | themes-list-item", function (hooks) {
 
     test(assert) {
       assert.expect(1);
-      assert.equal(
-        queryAll(".d-icon-sync").length,
-        1,
-        "shows pending update icon"
-      );
+      assert.equal(count(".d-icon-sync"), 1, "shows pending update icon");
     },
   });
 
@@ -61,7 +54,7 @@ discourseModule("Integration | Component | themes-list-item", function (hooks) {
     test(assert) {
       assert.expect(1);
       assert.equal(
-        queryAll(".d-icon-exclamation-circle").length,
+        count(".d-icon-exclamation-circle"),
         1,
         "shows broken theme icon"
       );

@@ -1,7 +1,7 @@
 import {
   acceptance,
   count,
-  queryAll,
+  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -12,7 +12,7 @@ acceptance("Managing Group Tag Notification Defaults", function () {
     await visit("/g/discourse/manage/tags");
 
     assert.ok(
-      count(".group-members tr") > 0,
+      exists(".group-members tr"),
       "it should redirect to members page for an anonymous user"
     );
   });
@@ -24,8 +24,9 @@ acceptance("Managing Group Tag Notification Defaults", function (needs) {
   test("As an admin", async function (assert) {
     await visit("/g/discourse/manage/tags");
 
-    assert.ok(
-      queryAll(".groups-notifications-form .tag-chooser").length === 5,
+    assert.equal(
+      count(".groups-notifications-form .tag-chooser"),
+      5,
       "it should display tag inputs"
     );
   });
@@ -35,8 +36,9 @@ acceptance("Managing Group Tag Notification Defaults", function (needs) {
 
     await visit("/g/discourse/manage/tags");
 
-    assert.ok(
-      queryAll(".groups-notifications-form .tag-chooser").length === 5,
+    assert.equal(
+      count(".groups-notifications-form .tag-chooser"),
+      5,
       "it should display tag inputs"
     );
   });

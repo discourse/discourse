@@ -2,9 +2,9 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   exists,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
@@ -43,7 +43,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll(".slow-mode-heading").length === 1);
+      assert.equal(count(".slow-mode-heading"), 1);
     },
   });
 
@@ -58,7 +58,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll(".slow-mode-remove").length === 1);
+      assert.equal(count(".slow-mode-remove"), 1);
     },
   });
 

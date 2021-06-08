@@ -1,8 +1,4 @@
-import {
-  acceptance,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { currentRouteName, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -17,15 +13,15 @@ acceptance("User Anonymous", function () {
     await visit("/u/eviltrout/activity");
     assert.ok($("body.user-activity-page").length, "has the body class");
     assert.ok(exists(".user-main .about"), "it has the about section");
-    assert.ok(count(".user-stream .item") > 0, "it has stream items");
+    assert.ok(exists(".user-stream .item"), "it has stream items");
 
     await visit("/u/eviltrout/activity/topics");
-    assert.equal(count(".user-stream .item"), 0, "has no stream displayed");
-    assert.ok(count(".topic-list tr") > 0, "it has a topic list");
+    assert.ok(!exists(".user-stream .item"), "has no stream displayed");
+    assert.ok(exists(".topic-list tr"), "it has a topic list");
 
     await visit("/u/eviltrout/activity/replies");
     assert.ok(exists(".user-main .about"), "it has the about section");
-    assert.ok(count(".user-stream .item") > 0, "it has stream items");
+    assert.ok(exists(".user-stream .item"), "it has stream items");
 
     assert.ok(exists(".user-stream.filter-5"), "stream has filter class");
   });

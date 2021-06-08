@@ -1,10 +1,7 @@
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import {
-  discourseModule,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 const CONTENT_DIV_SELECTOR = "li > a > div";
@@ -22,7 +19,7 @@ discourseModule(
       },
 
       test(assert) {
-        const contentDiv = queryAll(CONTENT_DIV_SELECTOR)[0];
+        const contentDiv = query(CONTENT_DIV_SELECTOR);
         assert.equal(contentDiv.innerText, "<b>bold</b>");
       },
     });
@@ -35,7 +32,7 @@ discourseModule(
       },
 
       test(assert) {
-        const contentDiv = queryAll(CONTENT_DIV_SELECTOR)[0];
+        const contentDiv = query(CONTENT_DIV_SELECTOR);
         assert.equal(contentDiv.innerText, '"quote"');
       },
     });

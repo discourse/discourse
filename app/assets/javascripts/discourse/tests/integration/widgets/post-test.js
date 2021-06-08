@@ -2,7 +2,9 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import EmberObject from "@ember/object";
@@ -19,11 +21,11 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { shareUrl: "/example", post_number: 1 });
     },
     test(assert) {
-      assert.ok(queryAll(".names").length, "includes poster name");
+      assert.ok(exists(".names"), "includes poster name");
 
-      assert.ok(queryAll("a.post-date").length, "includes post date");
-      assert.ok(queryAll("a.post-date[data-share-url]").length);
-      assert.ok(queryAll("a.post-date[data-post-number]").length);
+      assert.ok(exists("a.post-date"), "includes post date");
+      assert.ok(exists("a.post-date[data-share-url]"));
+      assert.ok(exists("a.post-date[data-post-number]"));
     },
   });
 
@@ -147,8 +149,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { isWhisper: true });
     },
     test(assert) {
-      assert.ok(queryAll(".topic-post.whisper").length === 1);
-      assert.ok(queryAll(".post-info.whisper").length === 1);
+      assert.equal(count(".topic-post.whisper"), 1);
+      assert.equal(count(".post-info.whisper"), 1);
     },
   });
 
@@ -167,18 +169,18 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { likeCount: 1 });
     },
     async test(assert) {
-      assert.ok(queryAll("button.like-count").length === 1);
-      assert.ok(queryAll(".who-liked").length === 0);
+      assert.equal(count("button.like-count"), 1);
+      assert.ok(!exists(".who-liked"));
 
       // toggle it on
       await click("button.like-count");
-      assert.ok(queryAll(".who-liked").length === 1);
-      assert.ok(queryAll(".who-liked a.trigger-user-card").length === 1);
+      assert.equal(count(".who-liked"), 1);
+      assert.equal(count(".who-liked a.trigger-user-card"), 1);
 
       // toggle it off
       await click("button.like-count");
-      assert.ok(queryAll(".who-liked").length === 0);
-      assert.ok(queryAll(".who-liked a.trigger-user-card").length === 0);
+      assert.ok(!exists(".who-liked"));
+      assert.ok(!exists(".who-liked a.trigger-user-card"));
     },
   });
 
@@ -188,7 +190,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { likeCount: 0 });
     },
     test(assert) {
-      assert.ok(queryAll("button.like-count").length === 0);
+      assert.ok(!exists("button.like-count"));
     },
   });
 
@@ -199,7 +201,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     test(assert) {
       assert.ok(
-        !!queryAll(".actions button[data-share-url]").length,
+        exists(".actions button[data-share-url]"),
         "it renders a share button"
       );
     },
@@ -218,18 +220,18 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     async test(assert) {
-      assert.ok(!!queryAll(".actions button.like").length);
-      assert.ok(queryAll(".actions button.like-count").length === 0);
+      assert.ok(exists(".actions button.like"));
+      assert.ok(!exists(".actions button.like-count"));
 
       await click(".actions button.like");
-      assert.ok(!queryAll(".actions button.like").length);
-      assert.ok(!!queryAll(".actions button.has-like").length);
-      assert.ok(queryAll(".actions button.like-count").length === 1);
+      assert.ok(!exists(".actions button.like"));
+      assert.ok(exists(".actions button.has-like"));
+      assert.equal(count(".actions button.like-count"), 1);
 
       await click(".actions button.has-like");
-      assert.ok(!!queryAll(".actions button.like").length);
-      assert.ok(!queryAll(".actions button.has-like").length);
-      assert.ok(queryAll(".actions button.like-count").length === 0);
+      assert.ok(exists(".actions button.like"));
+      assert.ok(!exists(".actions button.has-like"));
+      assert.ok(!exists(".actions button.like-count"));
     },
   });
 
@@ -244,8 +246,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("showLogin", () => (this.loginShown = true));
     },
     async test(assert) {
-      assert.ok(!!queryAll(".actions button.like").length);
-      assert.ok(queryAll(".actions button.like-count").length === 0);
+      assert.ok(exists(".actions button.like"));
+      assert.ok(!exists(".actions button.like-count"));
 
       assert.equal(
         queryAll("button.like").attr("title"),
@@ -278,11 +280,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canEdit: false });
     },
     test(assert) {
-      assert.equal(
-        queryAll("button.edit").length,
-        0,
-        `button is not displayed`
-      );
+      assert.ok(!exists("button.edit"), "button is not displayed");
     },
   });
 
@@ -320,11 +318,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canDeleteTopic: false });
     },
     test(assert) {
-      assert.equal(
-        queryAll("button.delete").length,
-        0,
-        `button is not displayed`
-      );
+      assert.ok(!exists("button.delete"), `button is not displayed`);
     },
   });
 
@@ -343,16 +337,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       async test(assert) {
         await click(".show-more-actions");
 
-        assert.equal(
-          queryAll("button.create-flag").length,
-          1,
-          `button is displayed`
-        );
-        assert.equal(
-          queryAll("button.delete").length,
-          1,
-          `button is displayed`
-        );
+        assert.equal(count("button.create-flag"), 1, `button is displayed`);
+        assert.equal(count("button.delete"), 1, `button is displayed`);
         assert.equal(
           queryAll("button.delete").attr("title"),
           I18n.t("post.controls.delete_topic_disallowed"),
@@ -382,11 +368,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canRecoverTopic: false });
     },
     test(assert) {
-      assert.equal(
-        queryAll("button.recover").length,
-        0,
-        `button is not displayed`
-      );
+      assert.ok(!exists("button.recover"), `button is not displayed`);
     },
   });
 
@@ -411,11 +393,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canDelete: false });
     },
     test(assert) {
-      assert.equal(
-        queryAll("button.delete").length,
-        0,
-        `button is not displayed`
-      );
+      assert.ok(!exists("button.delete"), `button is not displayed`);
     },
   });
 
@@ -429,16 +407,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.equal(
-        queryAll("button.delete").length,
-        0,
-        `delete button is not displayed`
-      );
-      assert.equal(
-        queryAll("button.create-flag").length,
-        0,
-        `flag button is not displayed`
-      );
+      assert.ok(!exists("button.delete"), `delete button is not displayed`);
+      assert.ok(!exists("button.create-flag"), `flag button is not displayed`);
     },
   });
 
@@ -462,11 +432,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canRecover: false });
     },
     test(assert) {
-      assert.equal(
-        queryAll("button.recover").length,
-        0,
-        `button is not displayed`
-      );
+      assert.ok(!exists("button.recover"), `button is not displayed`);
     },
   });
 
@@ -479,7 +445,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("showFlags", () => (this.flagsShown = true));
     },
     async test(assert) {
-      assert.ok(queryAll("button.create-flag").length === 1);
+      assert.equal(count("button.create-flag"), 1);
 
       await click("button.create-flag");
       assert.ok(this.flagsShown, "it triggered the action");
@@ -492,7 +458,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canFlag: false });
     },
     test(assert) {
-      assert.ok(queryAll("button.create-flag").length === 0);
+      assert.ok(!exists("button.create-flag"));
     },
   });
 
@@ -502,7 +468,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canFlag: true, hidden: true });
     },
     test(assert) {
-      assert.ok(queryAll("button.create-flag").length === 0);
+      assert.ok(!exists("button.create-flag"));
     },
   });
 
@@ -512,7 +478,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { read: true });
     },
     test(assert) {
-      assert.ok(queryAll(".read-state.read").length);
+      assert.ok(exists(".read-state.read"));
     },
   });
 
@@ -522,7 +488,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { read: false });
     },
     test(assert) {
-      assert.ok(queryAll(".read-state").length);
+      assert.ok(exists(".read-state"));
     },
   });
 
@@ -536,12 +502,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.equal(queryAll("a.reply-to-tab").length, 0, "hides the tab");
-      assert.equal(
-        queryAll(".avoid-tab").length,
-        0,
-        "doesn't have the avoid tab class"
-      );
+      assert.ok(!exists("a.reply-to-tab"), "hides the tab");
+      assert.ok(!exists(".avoid-tab"), "doesn't have the avoid tab class");
     },
   });
 
@@ -555,8 +517,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.ok(queryAll("a.reply-to-tab").length, "shows the tab");
-      assert.equal(queryAll(".avoid-tab").length, 1, "has the avoid tab class");
+      assert.ok(exists("a.reply-to-tab"), "shows the tab");
+      assert.equal(count(".avoid-tab"), 1, "has the avoid tab class");
     },
   });
 
@@ -571,13 +533,10 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.siteSettings.suppress_reply_directly_above = false;
     },
     async test(assert) {
-      assert.equal(queryAll(".avoid-tab").length, 1, "has the avoid tab class");
+      assert.equal(count(".avoid-tab"), 1, "has the avoid tab class");
       await click("a.reply-to-tab");
-      assert.equal(queryAll("section.embedded-posts.top .cooked").length, 1);
-      assert.equal(
-        queryAll("section.embedded-posts .d-icon-arrow-up").length,
-        1
-      );
+      assert.equal(count("section.embedded-posts.top .cooked"), 1);
+      assert.equal(count("section.embedded-posts .d-icon-arrow-up"), 1);
     },
   });
 
@@ -603,7 +562,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       await click(".topic-body .expand-post");
-      assert.equal(queryAll(".expand-post").length, 0, "button is gone");
+      assert.ok(!exists(".expand-post"), "button is gone");
     },
   });
 
@@ -613,8 +572,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canBookmark: false });
     },
     test(assert) {
-      assert.equal(queryAll("button.bookmark").length, 0);
-      assert.equal(queryAll("button.bookmarked").length, 0);
+      assert.ok(!exists("button.bookmark"));
+      assert.ok(!exists("button.bookmarked"));
     },
   });
 
@@ -629,8 +588,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("toggleBookmark", () => (args.bookmarked = true));
     },
     async test(assert) {
-      assert.equal(queryAll(".post-menu-area .bookmark").length, 1);
-      assert.equal(queryAll("button.bookmarked").length, 0);
+      assert.equal(count(".post-menu-area .bookmark"), 1);
+      assert.ok(!exists("button.bookmarked"));
     },
   });
 
@@ -640,7 +599,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canManage: false });
     },
     test(assert) {
-      assert.equal(queryAll(".post-menu-area .show-post-admin-menu").length, 0);
+      assert.ok(!exists(".post-menu-area .show-post-admin-menu"));
     },
   });
 
@@ -650,17 +609,12 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canManage: true });
     },
     async test(assert) {
-      assert.equal(queryAll(".post-admin-menu").length, 0);
+      assert.ok(!exists(".post-admin-menu"));
       await click(".post-menu-area .show-post-admin-menu");
-      assert.equal(
-        queryAll(".post-admin-menu").length,
-        1,
-        "it shows the popup"
-      );
+      assert.equal(count(".post-admin-menu"), 1, "it shows the popup");
       await click(".post-menu-area");
-      assert.equal(
-        queryAll(".post-admin-menu").length,
-        0,
+      assert.ok(
+        !exists(".post-admin-menu"),
         "clicking outside clears the popup"
       );
     },
@@ -680,11 +634,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-admin-menu .toggle-post-type");
 
       assert.ok(this.toggled);
-      assert.equal(
-        queryAll(".post-admin-menu").length,
-        0,
-        "also hides the menu"
-      );
+      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
     },
   });
   componentTest("toggle moderator post", {
@@ -701,11 +651,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-admin-menu .toggle-post-type");
 
       assert.ok(this.toggled);
-      assert.equal(
-        queryAll(".post-admin-menu").length,
-        0,
-        "also hides the menu"
-      );
+      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -721,11 +667,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-menu-area .show-post-admin-menu");
       await click(".post-admin-menu .rebuild-html");
       assert.ok(this.baked);
-      assert.equal(
-        queryAll(".post-admin-menu").length,
-        0,
-        "also hides the menu"
-      );
+      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -742,11 +684,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-menu-area .show-post-admin-menu");
       await click(".post-admin-menu .unhide-post");
       assert.ok(this.unhidden);
-      assert.equal(
-        queryAll(".post-admin-menu").length,
-        0,
-        "also hides the menu"
-      );
+      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -763,11 +701,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-menu-area .show-post-admin-menu");
       await click(".post-admin-menu .change-owner");
       assert.ok(this.owned);
-      assert.equal(
-        queryAll(".post-admin-menu").length,
-        0,
-        "also hides the menu"
-      );
+      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -791,7 +725,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canCreatePost: false });
     },
     test(assert) {
-      assert.equal(queryAll(".post-controls .create").length, 0);
+      assert.ok(!exists(".post-controls .create"));
     },
   });
 
@@ -801,7 +735,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { replyCount: 0 });
     },
     test(assert) {
-      assert.equal(queryAll("button.show-replies").length, 0);
+      assert.ok(!exists("button.show-replies"));
     },
   });
 
@@ -812,7 +746,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { replyCount: 2, replyDirectlyBelow: true });
     },
     test(assert) {
-      assert.equal(queryAll("button.show-replies").length, 1);
+      assert.equal(count("button.show-replies"), 1);
     },
   });
 
@@ -823,7 +757,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { replyCount: 1, replyDirectlyBelow: true });
     },
     test(assert) {
-      assert.equal(queryAll("button.show-replies").length, 0);
+      assert.ok(!exists("button.show-replies"));
     },
   });
 
@@ -835,11 +769,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       await click("button.show-replies");
-      assert.equal(queryAll("section.embedded-posts.bottom .cooked").length, 1);
-      assert.equal(
-        queryAll("section.embedded-posts .d-icon-arrow-down").length,
-        1
-      );
+      assert.equal(count("section.embedded-posts.bottom .cooked"), 1);
+      assert.equal(count("section.embedded-posts .d-icon-arrow-down"), 1);
     },
   });
 
@@ -849,7 +780,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { showTopicMap: false });
     },
     test(assert) {
-      assert.equal(queryAll(".topic-map").length, 0);
+      assert.ok(!exists(".topic-map"));
     },
   });
 
@@ -863,15 +794,14 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     async test(assert) {
-      assert.equal(
-        queryAll("li.avatars a.poster").length,
-        0,
+      assert.ok(
+        !exists("li.avatars a.poster"),
         "shows no participants when collapsed"
       );
 
       await click("nav.buttons button");
       assert.equal(
-        queryAll(".topic-map-expanded a.poster").length,
+        count(".topic-map-expanded a.poster"),
         2,
         "shows all when expanded"
       );
@@ -895,19 +825,19 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       assert.equal(
-        queryAll("li.avatars a.poster").length,
+        count("li.avatars a.poster"),
         3,
         "limits to three participants"
       );
 
       await click("nav.buttons button");
-      assert.equal(queryAll("li.avatars a.poster").length, 0);
+      assert.ok(!exists("li.avatars a.poster"));
       assert.equal(
-        queryAll(".topic-map-expanded a.poster").length,
+        count(".topic-map-expanded a.poster"),
         4,
         "shows all when expanded"
       );
-      assert.equal(queryAll("a.poster.toggled").length, 2, "two are toggled");
+      assert.equal(count("a.poster.toggled"), 2, "two are toggled");
     },
   });
 
@@ -927,23 +857,23 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     async test(assert) {
-      assert.equal(queryAll(".topic-map").length, 1);
-      assert.equal(queryAll(".map.map-collapsed").length, 1);
-      assert.equal(queryAll(".topic-map-expanded").length, 0);
+      assert.equal(count(".topic-map"), 1);
+      assert.equal(count(".map.map-collapsed"), 1);
+      assert.ok(!exists(".topic-map-expanded"));
 
       await click("nav.buttons button");
-      assert.equal(queryAll(".map.map-collapsed").length, 0);
-      assert.equal(queryAll(".topic-map .d-icon-chevron-up").length, 1);
-      assert.equal(queryAll(".topic-map-expanded").length, 1);
+      assert.ok(!exists(".map.map-collapsed"));
+      assert.equal(count(".topic-map .d-icon-chevron-up"), 1);
+      assert.equal(count(".topic-map-expanded"), 1);
       assert.equal(
-        queryAll(".topic-map-expanded .topic-link").length,
+        count(".topic-map-expanded .topic-link"),
         5,
         "it limits the links displayed"
       );
 
       await click(".link-summary button");
       assert.equal(
-        queryAll(".topic-map-expanded .topic-link").length,
+        count(".topic-map-expanded .topic-link"),
         6,
         "all links now shown"
       );
@@ -956,7 +886,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { showTopicMap: true });
     },
     test(assert) {
-      assert.equal(queryAll(".toggle-summary").length, 0);
+      assert.ok(!exists(".toggle-summary"));
     },
   });
 
@@ -967,7 +897,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("showSummary", () => (this.summaryToggled = true));
     },
     async test(assert) {
-      assert.equal(queryAll(".toggle-summary").length, 1);
+      assert.equal(count(".toggle-summary"), 1);
 
       await click(".toggle-summary button");
       assert.ok(this.summaryToggled);
@@ -985,8 +915,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.equal(queryAll(".private-message-map").length, 1);
-      assert.equal(queryAll(".private-message-map .user").length, 1);
+      assert.equal(count(".private-message-map"), 1);
+      assert.equal(count(".private-message-map .user"), 1);
     },
   });
 

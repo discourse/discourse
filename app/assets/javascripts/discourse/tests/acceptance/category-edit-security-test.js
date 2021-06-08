@@ -1,4 +1,9 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -68,20 +73,12 @@ acceptance("Category Edit - security", function (needs) {
 
     await click(".row-body .remove-permission");
 
-    assert.equal(
-      queryAll(".row-body").length,
-      0,
-      "removes the permission from the list"
-    );
+    assert.ok(!exists(".row-body"), "removes the permission from the list");
 
     await availableGroups.expand();
     await availableGroups.selectRowByValue("everyone");
 
-    assert.equal(
-      queryAll(".row-body").length,
-      1,
-      "adds back the permission tp the list"
-    );
+    assert.equal(count(".row-body"), 1, "adds back the permission tp the list");
 
     const firstRow = queryAll(".row-body").first();
 

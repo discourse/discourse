@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -17,7 +18,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
     template: hbs`{{text-field}}`,
 
     test(assert) {
-      assert.ok(queryAll("input[type=text]").length);
+      assert.ok(exists("input[type=text]"));
     },
   });
 
@@ -29,7 +30,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll("input[type=text]").length);
+      assert.ok(exists("input[type=text]"));
       assert.equal(
         queryAll("input").prop("placeholder"),
         "placeholder.i18n.key"

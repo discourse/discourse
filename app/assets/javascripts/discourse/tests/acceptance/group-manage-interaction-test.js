@@ -1,6 +1,6 @@
 import {
   acceptance,
-  queryAll,
+  count,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -20,31 +20,31 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     await visit("/g/alternative-group/manage/interaction");
 
     assert.equal(
-      queryAll(".groups-form-visibility-level").length,
+      count(".groups-form-visibility-level"),
       1,
       "it should display visibility level selector"
     );
 
     assert.equal(
-      queryAll(".groups-form-mentionable-level").length,
+      count(".groups-form-mentionable-level"),
       1,
       "it should display mentionable level selector"
     );
 
     assert.equal(
-      queryAll(".groups-form-messageable-level").length,
+      count(".groups-form-messageable-level"),
       1,
       "it should display messageable level selector"
     );
 
     assert.equal(
-      queryAll(".groups-form-incoming-email").length,
+      count(".groups-form-incoming-email"),
       1,
       "it should display incoming email input"
     );
 
     assert.equal(
-      queryAll(".groups-form-default-notification-level").length,
+      count(".groups-form-default-notification-level"),
       1,
       "it should display default notification level input"
     );
@@ -60,31 +60,31 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     await visit("/g/discourse/manage/interaction");
 
     assert.equal(
-      queryAll(".groups-form-visibility-level").length,
+      count(".groups-form-visibility-level"),
       0,
       "it should not display visibility level selector"
     );
 
     assert.equal(
-      queryAll(".groups-form-mentionable-level").length,
+      count(".groups-form-mentionable-level"),
       1,
       "it should display mentionable level selector"
     );
 
     assert.equal(
-      queryAll(".groups-form-messageable-level").length,
+      count(".groups-form-messageable-level"),
       1,
       "it should display messageable level selector"
     );
 
     assert.equal(
-      queryAll(".groups-form-incoming-email").length,
+      count(".groups-form-incoming-email"),
       0,
       "it should not display incoming email input"
     );
 
     assert.equal(
-      queryAll(".groups-form-default-notification-level").length,
+      count(".groups-form-default-notification-level"),
       1,
       "it should display default notification level input"
     );

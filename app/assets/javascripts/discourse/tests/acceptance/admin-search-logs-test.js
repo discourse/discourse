@@ -8,7 +8,7 @@ acceptance("Admin - Search Logs", function (needs) {
   test("show search logs", async function (assert) {
     await visit("/admin/logs/search_logs");
 
-    assert.ok($("table.search-logs-list.grid").length, "has the div class");
+    assert.ok(exists("table.search-logs-list.grid"), "has the div class");
 
     assert.ok(
       exists(".search-logs-list .admin-list-item .col"),
@@ -18,7 +18,7 @@ acceptance("Admin - Search Logs", function (needs) {
     await click(".term a");
 
     assert.ok(
-      $("div.search-logs-filter").length,
+      exists("div.search-logs-filter"),
       "it should show the search log term page"
     );
   });

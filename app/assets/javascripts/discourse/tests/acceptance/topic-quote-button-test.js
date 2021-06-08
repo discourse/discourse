@@ -29,11 +29,7 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
     assert.ok(exists(".insert-quote"), "it shows the quote button");
-    assert.equal(
-      queryAll(".quote-sharing").length,
-      0,
-      "it does not show quote sharing"
-    );
+    assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
   });
 
   test("Shows quote share buttons with the right site settings", async function (assert) {
@@ -85,11 +81,7 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
       exists(`.quote-sharing .btn[title='${I18n.t("share.email")}']`),
       "it includes the email share button"
     );
-    assert.equal(
-      queryAll(".insert-quote").length,
-      0,
-      "it does not show the quote button"
-    );
+    assert.ok(!exists(".insert-quote"), "it does not show the quote button");
   });
 
   test("Shows single share button when site setting only has one item", async function (assert) {
@@ -103,9 +95,8 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
       exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
       "it includes the twitter share button"
     );
-    assert.equal(
-      queryAll(".quote-share-label").length,
-      0,
+    assert.ok(
+      !exists(".quote-share-label"),
       "it does not show the Share label"
     );
   });
@@ -116,16 +107,7 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
 
-    assert.equal(
-      queryAll(".quote-sharing").length,
-      0,
-      "it does not show quote sharing"
-    );
-
-    assert.equal(
-      queryAll(".insert-quote").length,
-      0,
-      "it does not show the quote button"
-    );
+    assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
+    assert.ok(!exists(".insert-quote"), "it does not show the quote button");
   });
 });

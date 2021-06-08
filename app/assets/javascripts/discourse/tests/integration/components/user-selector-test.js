@@ -1,10 +1,7 @@
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import {
-  discourseModule,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 function paste(element, text) {
@@ -24,7 +21,7 @@ discourseModule("Integration | Component | user-selector", function (hooks) {
     },
 
     test(assert) {
-      let element = queryAll(".test-selector")[0];
+      let element = query(".test-selector");
 
       assert.equal(this.get("usernames"), "evil,trout");
       paste(element, "zip,zap,zoom");
@@ -55,7 +52,7 @@ discourseModule("Integration | Component | user-selector", function (hooks) {
     },
 
     test(assert) {
-      let element = queryAll(".test-selector")[0];
+      let element = query(".test-selector");
       paste(element, "roman,penar,jeff,robin");
       assert.equal(this.get("usernames"), "mark,roman,penar");
     },

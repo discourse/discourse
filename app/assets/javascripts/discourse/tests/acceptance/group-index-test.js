@@ -1,6 +1,7 @@
 import {
   acceptance,
   count,
+  exists,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -17,10 +18,10 @@ acceptance("Group Members - Anonymous", function () {
       count(".avatar-flair .d-icon-adjust") === 1,
       "it displays the group's avatar flair"
     );
-    assert.ok(count(".group-members tr") > 0, "it lists group members");
+    assert.ok(exists(".group-members tr"), "it lists group members");
 
     assert.ok(
-      count(".group-member-dropdown") === 0,
+      !exists(".group-member-dropdown"),
       "it does not allow anon user to manage group members"
     );
 
@@ -48,7 +49,7 @@ acceptance("Group Members", function (needs) {
     await click(".group-members-add");
 
     assert.equal(
-      queryAll("#group-add-members-user-selector").length,
+      count("#group-add-members-user-selector"),
       1,
       "it should display the add members modal"
     );
@@ -58,7 +59,7 @@ acceptance("Group Members", function (needs) {
     await visit("/g/discourse");
 
     assert.ok(
-      count(".group-member-dropdown") > 0,
+      exists(".group-member-dropdown"),
       "it allows admin user to manage group members"
     );
 
@@ -72,7 +73,7 @@ acceptance("Group Members", function (needs) {
   test("Shows bulk actions", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(count("button.bulk-select") > 0);
+    assert.ok(exists("button.bulk-select"));
     await click("button.bulk-select");
 
     await click(queryAll("input.bulk-select")[0]);
