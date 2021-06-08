@@ -4,6 +4,10 @@ require 'rails_helper'
 
 describe TrustLevelSetting do
   describe ".values" do
+    after do
+      I18n.reload!
+    end
+
     it "returns translated names" do
       TranslationOverride.upsert!(I18n.locale, "js.trust_levels.names.newuser", "New Member")
 
