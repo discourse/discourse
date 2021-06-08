@@ -526,16 +526,8 @@ ca:
       topic_exists_no_oldest: "No es pot suprimir aquesta categoria perquè el recompte de temes és %{count}."
     uncategorized_description: "Temes que no necessiten una categoria o no encaixen a cap altra categoria existent."
   trust_levels:
-    newuser:
-      title: "usuari nou"
-    basic:
-      title: "usuari bàsic"
-    member:
-      title: "membre"
-    regular:
-      title: "habitual"
-    leader:
-      title: "líder"
+    admin: "Admin"
+    staff: "Equip responsable"
     change_failed_explanation: "Heu provat de degradar %{user_name} a '%{new_trust_level}'. En qualsevol cas, el seu nivell de confiança ja és '%{current_trust_level}'. %{user_name} restarà en '%{current_trust_level}'. Si voleu degradar un usuari, bloqueu-li abans el nivell de confiança."
   post:
     image_placeholder:

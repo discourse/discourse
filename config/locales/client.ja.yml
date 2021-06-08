@@ -525,6 +525,8 @@ ja:
       last_updated: "最終更新："
       total_rows:
         other: "%{count}人のユーザー"
+      edit_columns:
+        save: "保存"
     group_histories:
       actions:
         change_group_setting: "グループの設定を変更"
@@ -2026,7 +2028,6 @@ ja:
       back_to_list: "トピックリストに戻る"
       options: "トピックオプション"
       show_links: "このトピック内のリンクを表示"
-      toggle_information: "トピックの詳細を切り替え"
       read_more_in_category: "もっと読みたいですか？%{catLink}あるいは%{latestLink}の他のトピックを見てみてください。"
       read_more: "もっと見たいですか？%{catLink}あるいは%{latestLink}があります。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
@@ -2767,7 +2768,6 @@ ja:
       groups:
         title: "タグのグループ"
         new: "新しいグループ"
-        parent_tag_label: "親タグ:"
         new_name: "新しいタグのグループ"
         save: "保存する"
         delete: "削除する"
@@ -2800,6 +2800,13 @@ ja:
         tomorrow: "明日まで"
         custom: "カスタム"
       set_schedule: "通知スケジュールを設定する"
+    trust_levels:
+      names:
+        newuser: "新しいユーザー"
+        basic: "ベーシックユーザー"
+        member: "メンバー"
+        regular: "レギュラー"
+        leader: "リーダー"
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:
@@ -3280,10 +3287,12 @@ ja:
         actions:
           block: "ブロック"
           flag: "通報"
+          link: "リンク"
         action_descriptions:
           flag: "これらの言葉を含む投稿を許可しますが、仲裁者がこれをレビューできるよう、不適切であると通報されます。"
         form:
           placeholder_regexp: "正規表現"
+          link_label: "リンク"
           add: "追加"
           success: "成功"
           exists: "既に存在します。"

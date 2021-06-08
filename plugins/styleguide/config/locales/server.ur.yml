@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 ur:
+  site_settings:
+    styleguide_enabled: "ڈسکورس اسٹائل میں معاونت کے`/اسٹائل گائڈ` کی راہ کو فعال کریں"
+    styleguide_admin_only: "اسٹائل گائڈ کو صرف منتظمین تک محدود کریں"

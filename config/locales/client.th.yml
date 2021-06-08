@@ -447,6 +447,8 @@ th:
       last_updated: "อัปเดตล่าสุด:"
       total_rows:
         other: "%{count} ผู้ใช้"
+      edit_columns:
+        save: "บันทึก"
     group_histories:
       actions:
         change_group_setting: "แก้ไขการตั้งค่ากลุ่ม"
@@ -2404,7 +2406,6 @@ th:
           title: "ปิด"
       groups:
         new: "กลุ่มใหม่"
-        tags_label: "แท็กในกลุ่มนี้:"
         one_per_topic_label: "จำกัดหนึ่งแท็กต่อหนึ่งกระทู้จากกลุ่มนี้"
         save: "บันทึก"
         delete: "ลบ"
@@ -2427,6 +2428,10 @@ th:
       dismiss: "ซ่อน"
     do_not_disturb:
       remaining: "เหลืออีก %{remaining}"
+    trust_levels:
+      names:
+        member: "สมาชิก"
+        regular: "ทั่วไป"
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:
@@ -2823,7 +2828,9 @@ th:
           censor: "เซนเซอร์"
           require_approval: "ต้องได้รับการอนุมัติ"
           flag: "ธง"
+          link: "ลิงก์"
         form:
+          link_label: "ลิงก์"
           add: "เพิ่ม"
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"

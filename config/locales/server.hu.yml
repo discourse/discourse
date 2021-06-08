@@ -415,16 +415,8 @@ hu:
       topic_exists_no_oldest: "A kategóriát nem lehet törölni, mert a benne lévő témák száma %{count}."
     uncategorized_description: "Témák, amelyeknek nincs szükségük kategóriára, vagy nem férnek bele semmilyen más létező kategóriába."
   trust_levels:
-    newuser:
-      title: "új felhasználó"
-    basic:
-      title: "egyszerű felhasználó"
-    member:
-      title: "tag"
-    regular:
-      title: "rendes tag"
-    leader:
-      title: "vezető"
+    admin: "Adminisztrátor"
+    staff: "Személyzet"
   post:
     image_placeholder:
       broken: "Ez a kép hibás"

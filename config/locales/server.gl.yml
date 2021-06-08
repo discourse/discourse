@@ -649,16 +649,8 @@ gl:
       topic_exists_no_oldest: "Non se pode eliminar esta categoría porque o número de temas é %{count}."
     uncategorized_description: "Temas que non teñen categoría ou non encaixan en ningunha das xa existentes."
   trust_levels:
-    newuser:
-      title: "novo usuario"
-    basic:
-      title: "usuario básico"
-    member:
-      title: "membro"
-    regular:
-      title: "habitual"
-    leader:
-      title: "líder"
+    admin: "Admin"
+    staff: "Equipo"
     change_failed_explanation: "Tratou de rebaixar a %{user_name} a '%{new_trust_level}'. Porén, o seu nivel de confianza xa é '%{current_trust_level}'. %{user_name} vai permanecer en '%{current_trust_level}' - se quere rebaixarlle o nivel, primeiro bloquee o seu nivel de confianza"
   post:
     image_placeholder:

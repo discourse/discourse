@@ -196,16 +196,8 @@ te:
       has_subcategories: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనికి ఉప వర్గాలు ఉన్నాయి."
       topic_exists_no_oldest: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో %{count} విషయాలు ఉన్నాయి."
   trust_levels:
-    newuser:
-      title: "కొత్త సభ్యుడు"
-    basic:
-      title: "ప్రాథమిక సభ్యుడు"
-    member:
-      title: "మెంబరు"
-    regular:
-      title: "రెగ్యులర్"
-    leader:
-      title: "లీడర్"
+    admin: "అధికారి"
+    staff: "సిబ్బంది"
   rate_limiter:
     hours:
       one: "ఒక గంట"

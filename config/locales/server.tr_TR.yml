@@ -540,16 +540,8 @@ tr_TR:
       topic_exists_no_oldest: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor."
     uncategorized_description: "Kategoriye ihtiyacı olmayan, ya da diğer kategorilere uymayan konular."
   trust_levels:
-    newuser:
-      title: "yeni kullanıcı"
-    basic:
-      title: "acemi kullanıcı"
-    member:
-      title: "üye"
-    regular:
-      title: "müdavim"
-    leader:
-      title: "lider"
+    admin: "Yönetici"
+    staff: "Görevli"
     change_failed_explanation: " %{user_name} adlı kullanıcıyı '%{new_trust_level}' seviyesine düşürmeye çalıştınız. Ancak, halihazırda kullanıcının güven seviyesi zaten '%{current_trust_level}'. %{user_name} '%{current_trust_level}' seviyesinde kalacak - eğer seviyesini düşürmek istiyorsanız öncelikle güven seviyesini kilitlemelisiniz"
   post:
     image_placeholder:

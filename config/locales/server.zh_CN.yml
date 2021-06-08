@@ -219,6 +219,7 @@ zh_CN:
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a> 的邀请已失效。请让邀请人重新发送新邀请。</p>
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有账户了！</a>"
+    invite_exists: "你已经邀请了 <b>%{email}</b>。"
     invalid_email: "'%{email}' 不是一个有效邮箱地址。"
     rate_limit:
       other: "您已经在之前发出过 %{count} 份邀请，请等待 %{time_left} 然后再试。"
@@ -564,6 +565,8 @@ zh_CN:
           attributes:
             word:
               too_many: "对该操作敏感词过多"
+            base:
+              invalid_url: "用于替换的网址无效"
       <<: *errors
   uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
@@ -636,16 +639,8 @@ zh_CN:
       topic_exists_no_oldest: "不能删除该分类，因为话题数量为 %{count}。"
     uncategorized_description: "不需要分类或者不适合放在现有的任何分类中的话题。"
   trust_levels:
-    newuser:
-      title: "新用户"
-    basic:
-      title: "初级用户"
-    member:
-      title: "成员"
-    regular:
-      title: "活跃用户"
-    leader:
-      title: "资深"
+    admin: "管理员"
+    staff: "工作人员"
     change_failed_explanation: "你尝试将%{user_name}降至%{new_trust_level}。然而他们的信任等级已经是%{current_trust_level}。%{user_name}将仍处于%{current_trust_level}——如果你想要降级用户，先锁定信任等级。"
   post:
     image_placeholder:
@@ -872,7 +867,7 @@ zh_CN:
     imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码后重试。"
     imap_no_response_error: "与 IMAP 服务器通信时发生错误，%{message}"
     smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码后重试。"
-    authentication_error_gmail_app_password: "需要特定应用程序的密码，请在 <a target=\"_blank\" href=\"https://support.google.com/accounts/answer/185833\">Google 帮助文章</a> 了解更多信息"
+    authentication_error_gmail_app_password: '需要特定应用程序的密码，请在 <a target="_blank" href="https://support.google.com/accounts/answer/185833">Google 帮助文章</a> 了解更多信息'
     smtp_server_busy_error: "SMTP 服务器当前正忙，请稍后再试。"
     smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误，%{message}"
     imap_unhandled_error: "与 IMAP 服务器通信时发生未处理错误， %{message}"

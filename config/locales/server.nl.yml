@@ -603,16 +603,8 @@ nl:
       topic_exists_no_oldest: "Deze categorie kan niet worden verwijderd, omdat het aantal topics %{count} is."
     uncategorized_description: "Topics die geen categorie nodig hebben of niet in een andere bestaande categorie passen."
   trust_levels:
-    newuser:
-      title: "nieuwe gebruiker"
-    basic:
-      title: "basisgebruiker"
-    member:
-      title: "lid"
-    regular:
-      title: "vaste gebruiker"
-    leader:
-      title: "leider"
+    admin: "Beheer"
+    staff: "Stafleden"
     change_failed_explanation: "U probeerde %{user_name} naar '%{new_trust_level}' te degraderen. Zijn of haar vertrouwensniveau is echter al '%{current_trust_level}'. %{user_name} blijft op vertrouwensniveau '%{current_trust_level}'. Als u de gebruiker wil degraderen, vergrendel dan eerst het vertrouwensniveau."
   post:
     image_placeholder:

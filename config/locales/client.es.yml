@@ -586,6 +586,9 @@ es:
       total_rows:
         one: "%{count} usuario"
         other: "%{count} usuarios"
+      edit_columns:
+        save: "Guardar"
+        reset_to_default: "Restablecer ajustes predeterminados"
     group_histories:
       actions:
         change_group_setting: "Cambiar configuración de grupo"
@@ -1405,23 +1408,13 @@ es:
         invite:
           new_title: "Crear invitación"
           edit_title: "Editar invitación"
-          instructions: "Comparte este enlace para dar acceso instantáneo a este sitio:"
           copy_link: "copiar enlace"
-          expires_in_time: "Caduca en %{time}."
-          expired_at_time: "Caducó: %{time}."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
-          restrict_email: "Restringir la invitación a una sola dirección de correo"
-          max_redemptions_allowed: "Máximo de usos:"
-          add_to_groups: "Añadir a grupos:"
-          invite_to_topic: "Enviar a tema al entrar por primera vez:"
-          expires_at: "Caducidad:"
-          custom_message: "Mensaje personal opcional:"
           send_invite_email: "Guardar y enviar correo"
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
           invite_copied: "Enlace de invitación copiado."
-          blank_email: "No se ha copiado el enlace. La dirección de correo es obligatoria."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones masivas"
@@ -2263,7 +2256,6 @@ es:
       back_to_list: "Volver a la lista de temas"
       options: "Opciones del tema"
       show_links: "mostrar enlaces dentro de este tema"
-      toggle_information: "activar/desactivar detalles del tema"
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en %{catLink} o %{latestLink}."
       read_more: "¿Quieres leer más? %{catLink} o %{latestLink}."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
@@ -3398,14 +3390,13 @@ es:
           description: "No se te notificará sobre temas nuevos con esta etiqueta, ni aparecerán en tu pestaña de no leídos."
       groups:
         title: "Grupos de etiquetas"
-        about: "Agrupar etiquetas para administrarlas más fácilmente."
+        about_heading: "Seleccione un grupo de etiquetas o cree uno nuevo"
+        about_description: "Los grupos de etiquetas le ayudan a administrar los permisos de muchas etiquetas en un solo lugar."
         new: "Nuevo grupo"
-        tags_label: "Etiquetas en este grupo:"
-        parent_tag_label: "Etiqueta primaria:"
-        parent_tag_description: "Las etiquetas de este grupo no se pueden utilizar a menos que la etiqueta primaria esté presente. "
+        new_title: "Crear nuevo grupo"
+        edit_title: "Editar grupo de etiquetas"
         one_per_topic_label: "Limitar las etiquetas de este grupo a utilizarse solo una vez por tema"
         new_name: "Nuevo grupo de etiquetas"
-        name_placeholder: "Nombre del grupo de etiquetas"
         save: "Guardar"
         delete: "Eliminar"
         confirm_delete: "¿Estás seguro de que quieres eliminar este grupo de etiquetas?"
@@ -3413,6 +3404,10 @@ es:
         usable_only_by_groups: "Las etiquetas son visibles para todo el mundo, pero solo los siguientes grupos las pueden usar"
         visible_only_to_groups: "Las etiquetas sólo son visibles para los siguientes grupos"
         cannot_save: "No se ha podido guardar el grupo de etiquetas. Asegúrate de que tenga al menos una etiqueta, el nombre no esté vacío y hayas seleccionado un grupo para los permisos."
+        tags_placeholder: "Buscar o crear etiquetas"
+        parent_tag_placeholder: "Opcional"
+        select_groups_placeholder: "Seleccionar grupos ..."
+        disabled: "El etiquetado está deshabilitado. "
       topics:
         none:
           unread: "No tienes temas sin leer."
@@ -3449,6 +3444,14 @@ es:
         tomorrow: "Hasta mañana"
         custom: "Personalizado"
       set_schedule: "Establecer un horario de notificaciones"
+    trust_levels:
+      names:
+        newuser: "usuario nuevo"
+        basic: "usuario básico"
+        member: "miembro"
+        regular: "habitual"
+        leader: "líder"
+      detailed_name: "%{level}: %{name}"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -4388,19 +4391,19 @@ es:
           replace: "Reemplazar"
           tag: "Etiqueta"
           silence: "Silenciar"
+          link: "Enlace"
         action_descriptions:
           block: "Impedir la publicación de mensajes que contengan estas palabras. El usuario verá un mensaje de error cuando trate de publicar su mensaje."
           censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."
           require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el staff antes de que se puedan visualizar."
           flag: "Permitir publicaciones que contengan estas palabras, pero reportar el mensaje como inapropiado para que los moderadores puedan revisarlo."
-          replace: "Reemplazar palabras en publicaciones con otras nuevas o enlaces"
           tag: "Etiquetas temas automáticamente basándose en su primer mensaje."
         form:
           placeholder_regexp: "expresión regular"
-          replacement_label: "Sustitución"
-          replacement_placeholder: "ejemplo o https://ejemplo.com"
+          replace_label: "Sustitución"
           tag_label: "Etiqueta"
-          tag_placeholder: "etiqueta1,etiqueta2,etiqueta3"
+          link_label: "Enlace"
+          link_placeholder: "https://example.com"
           add: "Agregar"
           success: "Éxito"
           exists: "Ya existe"

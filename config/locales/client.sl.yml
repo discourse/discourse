@@ -607,6 +607,8 @@ sl:
         two: "%{count} uporabnika"
         few: "%{count} uporabniki"
         other: "%{count} uporabnikov"
+      edit_columns:
+        save: "Shrani"
     group_histories:
       actions:
         change_group_setting: "Spremeni nastavitve za skupino"
@@ -1414,14 +1416,7 @@ sl:
           expires_at: "Kdaj bo ta povezava povabila potekla?"
         invite:
           new_title: "Ustvari povabilo"
-          instructions: "Delite to povezavo in takoj omogočite dostop do te strani:"
-          expires_in_time: "Poteče čez %{time}."
           show_advanced: "Pokaži dodatne možnosti"
-          restrict_email: "Omejitev povabila na en e-poštni naslov"
-          max_redemptions_allowed: "Največje število uporab:"
-          add_to_groups: "Dodaj v skupine:"
-          invite_to_topic: "Pošlji v temo ob prvi prijavi:"
-          expires_at: "Poteče po:"
         bulk_invite:
           none: "Ni povabil za prikaz na tej strani."
           text: "Skupinsko povabilo"
@@ -2247,7 +2242,6 @@ sl:
       back_to_list: "Nazaj na seznam tem"
       options: "Možnosti teme"
       show_links: "pokaži povezave v tej temi"
-      toggle_information: "preklopi podrobnosti teme"
       read_more_in_category: "Brskaj po ostalih temah v %{catLink} ali %{latestLink}."
       read_more: "Brskaj po ostalih temah %{catLink} ali %{latestLink}."
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
@@ -3376,14 +3370,9 @@ sl:
           description: "Ne boste obveščeni o temah s temi oznakami in ne bodo se pojavile v seznamu neprebrane."
       groups:
         title: "Skupine oznak"
-        about: "Dodajte oznake v skupine da jih lažje upravljate"
         new: "Nova skupina"
-        tags_label: "Oznake v tej skupini:"
-        parent_tag_label: "Nadrejena oznaka:"
-        parent_tag_description: "Oznake iz te skupine se ne morejo uporabiti, če ni prisotna tudi nadrejena oznaka."
         one_per_topic_label: "Omeji na eno oznako na temo iz te skupine"
         new_name: "Nova skupina oznak"
-        name_placeholder: "Ime skupine oznak"
         save: "Shrani"
         delete: "Izbriši"
         confirm_delete: "Ali ste prepričani, da hočete izbrisati to skupino oznak?"
@@ -3425,6 +3414,13 @@ sl:
         tomorrow: "Do jutri"
         custom: "Po meri"
       set_schedule: "Nastavi razpored obveščanja"
+    trust_levels:
+      names:
+        newuser: "nov uporabnik"
+        basic: "uporabnik"
+        member: "član"
+        regular: "redni uporabnik"
+        leader: "vodja"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:
@@ -3935,16 +3931,16 @@ sl:
           flag: "Prijavi"
           replace: "Zamenjaj"
           silence: "Utišaj"
+          link: "Povezava"
         action_descriptions:
           block: "Onemogoči objavo prispevkov, ki vsebujejo te besede. Uporabnik bo dobil sporočilo o napaki, ko bo hotel objaviti prispevek."
           censor: "Dovoli prispevke s temi besedami, ampak jih zamenjaj z znaki, ki skrijejo cenzurirane besede."
           require_approval: "Prispevki, ki vsebujejo te besede bodo zahtevali potrditev s strani osebja preden jih lahko kdo vidi."
           flag: "Dovoli prispevke, ki vsebujejo te besede, vendar jih prijavi kot neprimerne, tako da jih lahko moderatorji preverijo."
-          replace: "Besede v objavah zamenjajte z drugimi besedami ali povezavami"
         form:
           placeholder_regexp: "Regularni izraz"
-          replacement_label: "Zamenjava"
-          replacement_placeholder: "primer ali https://primer.si"
+          replace_label: "Zamenjava"
+          link_label: "Povezava"
           add: "Dodaj"
           success: "Uspeh"
         test:

@@ -441,6 +441,8 @@ nb_NO:
       total_rows:
         one: "%{count} bruker"
         other: "%{count} brukere"
+      edit_columns:
+        save: "Lagre"
     group_histories:
       actions:
         change_group_setting: "Endre gruppeinnstillinger"
@@ -1611,7 +1613,6 @@ nb_NO:
       back_to_list: "Tilbake til Listen over Emner"
       options: "Valg for emner"
       show_links: "vis lenker i dette emnet"
-      toggle_information: "vis/skjul detaljer for emnet"
       read_more_in_category: "Vil du lese mer? Les andre emner i %{catLink} eller %{latestLink}."
       read_more: "Vil du lese mer? %{catLink} eller %{latestLink}."
       browse_all_categories: Se alle kategorier
@@ -2442,11 +2443,7 @@ nb_NO:
           description: "Du vil ikke bli varslet om noe vedrørende nye emner med dette stikkordet, og de vil ikke vises i ulest-listen din."
       groups:
         title: "Stikkordgrupper"
-        about: "Legg stikkord til grupper for å kunne organisere dem enklere."
         new: "Ny gruppe"
-        tags_label: "Stikkord i denne gruppen:"
-        parent_tag_label: "Overordnet stikkord:"
-        parent_tag_description: "Stikkord fra denne gruppen kan ikke brukes med mindre det overordnede stikkordet er til stede."
         one_per_topic_label: "Begrens til ett stikkord fra denne gruppen per emne "
         new_name: "Ny stikkordgruppe"
         save: "Lagre"
@@ -2477,6 +2474,13 @@ nb_NO:
       remaining: "%{remaining} gjenstående"
       options:
         custom: "Egendefinert"
+    trust_levels:
+      names:
+        newuser: "ny bruker"
+        basic: " bruker"
+        member: "medlem"
+        regular: "aktivt medlem"
+        leader: "leder"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:

@@ -587,6 +587,10 @@ fr:
       total_rows:
         one: "%{count} utilisateur"
         other: "%{count} utilisateurs"
+      edit_columns:
+        title: "Modifier les colonnes de l'annuaire"
+        save: "Enregistrer"
+        reset_to_default: "Réinitialiser aux valeurs par défaut"
     group_histories:
       actions:
         change_group_setting: "Changer les paramètres du groupe"
@@ -641,7 +645,7 @@ fr:
           smtp_instructions: "Quand le SMTP est activé au niveau du groupe, tous les courriels envoyés au nom de ce groupe seront expédiés en utilisant les paramètres SMTP indiqués ici plutôt qu'avec les paramètres SMTP globaux du site."
           imap_title: "IMAP"
           imap_additional_settings: "Paramètres additionnels"
-          imap_instructions: "Quand l'IMAP est activé au niveau du groupe, les courriels sont synchronisés entre la boîte de réception de ce groupe et la boîte aux lettres IMAP indiquée ici. Avant de pouvoir activer l'IMAP, le SMTP doit d'abord être activé, et des paramètres SMTP valides doivent être renseignés. L'identifiant et le mot de passe du serveur SMTP seront utilisés pour l'authentification auprès du serveur IMAP. Pour en savoir plus, consultez <a target=\"_blank\" href=\"https://meta.discourse.org/t/imap-support-for-group-inboxes/160588\">l'annonce de cette fonctionnalité sur Discourse Meta</a> (en anglais)."
+          imap_instructions: 'Quand l''IMAP est activé au niveau du groupe, les courriels sont synchronisés entre la boîte de réception de ce groupe et la boîte aux lettres IMAP indiquée ici. Avant de pouvoir activer l''IMAP, le SMTP doit d''abord être activé, et des paramètres SMTP valides doivent être renseignés. L''identifiant et le mot de passe du serveur SMTP seront utilisés pour l''authentification auprès du serveur IMAP. Pour en savoir plus, consultez <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">l''annonce de cette fonctionnalité sur Discourse Meta</a> (en anglais).'
           imap_alpha_warning: "Attention&nbsp;:cette fonctionnalité est en alpha-test. Seul Gmail est pris en charge officiellement. Son utilisation se fait à vos risques et périls&nbsp;!"
           imap_settings_valid: "Paramètres IMAP valides."
           smtp_disable_confirm: "En désactivant le SMTP, tous les paramètres SMTP et IMAP seront remis à zéro et ces fonctionnalités seront désactivées. Souhaitez-vous continuer&nbsp;?"
@@ -665,8 +669,9 @@ fr:
             allow_unknown_sender_topic_replies: "Autoriser des réponses par un expéditeur inconnu."
             allow_unknown_sender_topic_replies_hint: "Permet aux expéditeurs inconnus de répondre aux sujets du groupe. Si cette option n'est pas activée, les réponses provenant d'adresses courriel qui ne sont pas déjà incluses dans le fil de discussion IMAP ou invitées au sujet créeront un nouveau sujet."
           mailboxes:
-            synchronized: "Boîte aux lettres synchronisée"
+            synchronized: "Boîte aux lettres à synchroniser"
             none_found: "Aucune boîte aux lettres n'a été trouvée pour ce compte de courriel."
+            disabled: "(Désactivé)"
         membership:
           title: Adhésion
           access: Accès
@@ -1430,23 +1435,22 @@ fr:
         invite:
           new_title: "Créer une invitation"
           edit_title: "Modifier l'invitation"
-          instructions: "Partagez ce lien pour donner instantanément accès au site :"
+          instructions: "Partagez ce lien pour donner instantanément accès au forum"
           copy_link: "copier le lien"
-          expires_in_time: "Expire dans %{time}."
-          expired_at_time: "Expiré à %{time}."
+          expires_in_time: "Arrivera à expiration dans %{time}"
+          expired_at_time: "Arrivée à expiration le %{time}"
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
-          restrict_email: "Restreindre cette invitation au propriétaire d'une adresse de courriel donnée"
-          max_redemptions_allowed: "Nombre maximum d'utilisations :"
-          add_to_groups: "Ajouter la personne invitée à ces groupes :"
-          invite_to_topic: "À sa première connexion, diriger la personne invitée vers ce sujet :"
-          expires_at: "Ce lien expirera :"
-          custom_message: "Message personnel facultatif :"
+          restrict_email: "Restreindre l'invitation à une adresse de courriel donnée"
+          max_redemptions_allowed: "Nb. max. d'utilisations"
+          add_to_groups: "Ajouter la personne invitée à ces groupes"
+          invite_to_topic: "Diriger vers ce sujet"
+          expires_at: "Ce lien expirera dans"
+          custom_message: "Message personnel (facultatif)"
           send_invite_email: "Enregistrer et envoyer le courriel"
           save_invite: "Enregistrer l'invitation"
           invite_saved: "Invitation enregistrée."
           invite_copied: "Lien d'invitation copié."
-          blank_email: "Lien d'invitation non copié. Une adresse courriel est requise."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation en masse"
@@ -2007,7 +2011,7 @@ fr:
       invitee_accepted: "<span>%{username}</span> a accepté votre invitation"
       moved_post: "<span>%{username}</span> a déplacé %{description}"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "Vous avez gagné « %{description} »"
+      granted_badge: "Vous avez obtenu le badge «&nbsp;%{description}&nbsp;»"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nouveau sujet</span> %{description}"
       membership_request_accepted: "Adhésion acceptée dans « %{group_name} »"
@@ -2291,7 +2295,8 @@ fr:
       back_to_list: "Retour à la liste des sujets"
       options: "Options du sujet"
       show_links: "afficher les liens dans ce sujet"
-      toggle_information: "basculer l'affichage des détails du sujet"
+      collapse_details: "masquer les détails de ce sujet"
+      expand_details: "afficher les détails de ce sujet"
       read_more_in_category: "Vous voulez en lire plus ? Découvrez d'autres sujets dans %{catLink} ou %{latestLink}."
       read_more: "Vous voulez en lire plus ? %{catLink} ou %{latestLink}."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
@@ -2724,7 +2729,7 @@ fr:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Veuillez réessayer."
         edit: "Désolé, il y a eu une erreur lors de la modification de votre message. Veuillez réessayer."
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Veuillez réessayer."
-        file_too_large: "Désolé, ce fichier est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko). Vous pouvez envoyer votre fichier sur un service d'hébergement externe et ensuite coller le lien ici."
+        file_too_large: "Désolé, ce fichier est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko). Nous vous suggérons de stocker votre fichier sur un service d'hébergement extérieur au forum et de coller ensuite un lien dans votre message."
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
         too_many_dragged_and_dropped_files:
           one: "Désolé, vous ne pouvez envoyer que %{count} fichier à la fois."
@@ -3320,11 +3325,11 @@ fr:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
         other: "A reçu ce badge %{count} fois"
-      granted_on: "Accordé %{date}"
+      granted_on: "Décerné %{date}"
       others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
       allow_title: "Vous pouvez utiliser ce badge comme titre"
-      multiple_grant: "Vous pouvez le recevoir plusieurs fois"
+      multiple_grant: "Vous pouvez obtenir plusieurs fois ce badge"
       badge_count:
         one: "%{count} badge"
         other: "%{count} badges"
@@ -3334,9 +3339,9 @@ fr:
       granted:
         one: "%{count} décerné"
         other: "%{count} décernés"
-      select_badge_for_title: Sélectionner un badge comme titre
+      select_badge_for_title: Sélectionnez un badge qui vous servira de titre
       none: "(aucun)"
-      successfully_granted: "%{badge} accordé à %{username} avec succès"
+      successfully_granted: "%{badge} attribué à %{username} avec succès"
       badge_grouping:
         getting_started:
           name: Initiation
@@ -3348,6 +3353,9 @@ fr:
           name: Autre
         posting:
           name: Contribution
+      favorite_max_reached: "Vous ne pouvez pas choisir davantage de badges préférés"
+      favorite_max_not_reached: "Faire de ce badge un de mes préférés"
+      favorite_count: "%{count} badge(s) sur %{max} préféré(s)"
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
@@ -3429,14 +3437,18 @@ fr:
           description: "Vous ne recevrez aucune notification concernant des nouveaux sujets avec cette étiquette et ces sujets n'apparaîtront pas sur votre page des sujets non lus."
       groups:
         title: "Groupes d'étiquettes"
-        about: "Ajoutez les étiquettes à des groupes pour les gérer plus facilement."
+        about_heading: "Sélectionnez un groupe d'étiquettes, ou créez-en un nouveau"
+        about_heading_empty: "Pour commencer, créez un nouveau groupe d'étiquettes"
+        about_description: "Les groupes d'étiquettes permettent de gérer les permissions d'accès de plusieurs étiquettes de façon centralisée."
         new: "Nouveau groupe"
-        tags_label: "Étiquettes dans ce groupe :"
-        parent_tag_label: "Étiquette parente :"
-        parent_tag_description: "Les étiquettes de ce groupe ne peuvent pas être utilisées sauf si l'étiquette parente est présente."
+        new_title: "Créer un nouveau groupe"
+        edit_title: "Modifier un groupe"
+        tags_label: "Étiquettes appartenant à ce groupe"
+        parent_tag_label: "Étiquette-mère"
+        parent_tag_description: "Les étiquettes de ce groupe ne pourront être attribuées que si leur étiquette-mère est attribuée aussi."
         one_per_topic_label: "Limiter à une étiquette de ce groupe par sujet"
         new_name: "Nouveau groupe d'étiquettes"
-        name_placeholder: "Nom du groupe d'étiquettes"
+        name_placeholder: "Nom"
         save: "Enregistrer"
         delete: "Supprimer"
         confirm_delete: "Êtes-vous sûr de vouloir supprimer ce groupe d'étiquettes ?"
@@ -3444,6 +3456,10 @@ fr:
         usable_only_by_groups: "Les étiquettes sont visibles par tous, mais seuls les groupes suivants peuvent les utiliser"
         visible_only_to_groups: "Les étiquettes sont uniquement visibles pour les groupes suivants"
         cannot_save: "Impossible d'enregistrer le groupe d'étiquettes. Assurez-vous qu'au moins une étiquette est présente, que le nom du groupe d'étiquettes n'est pas vide et qu'un groupe est sélectionné pour l'autorisation des étiquettes."
+        tags_placeholder: "Créez ou recherchez des étiquettes"
+        parent_tag_placeholder: "Facultatif"
+        select_groups_placeholder: "Sélectionnez des groupes..."
+        disabled: "L'étiquetage des sujets est désactivé "
       topics:
         none:
           unread: "Vous n'avez aucun sujet non lu."
@@ -3480,6 +3496,14 @@ fr:
         tomorrow: "Jusqu'à demain"
         custom: "Personnalisé"
       set_schedule: "Planifier les notifications"
+    trust_levels:
+      names:
+        newuser: "nouvel utilisateur"
+        basic: "utilisateur de base"
+        member: "membre"
+        regular: "habitué"
+        leader: "meneur"
+      detailed_name: "%{level}&nbsp;: %{name}"
   admin_js:
     type_to_filter: "commencez à taper pour filtrer…"
     admin:
@@ -4406,14 +4430,14 @@ fr:
           title: "Journal d'erreurs"
       watched_words:
         title: "Mots surveillés"
-        search: "recherche"
-        clear_filter: "Vider"
+        search: "rechercher"
+        clear_filter: "Effacer"
         show_words:
           one: "afficher %{count} mot"
           other: "afficher %{count} mots"
         download: Télécharger
-        clear_all: Tout désélectionner
-        clear_all_confirm: "Êtes-vous sûr de vouloir effacer l'ensemble des mots surveillés en rapport à l'action %{action} ?"
+        clear_all: Tout supprimer
+        clear_all_confirm: "Êtes-vous sûr de vouloir effacer l'ensemble des mots surveillés en rapport à l'action %{action}&nbsp;?"
         invalid_regex: 'Le mot surveillé «&nbsp;%{word}&nbsp;» n''est pas une expression régulière valide.'
         actions:
           block: "Bloquer"
@@ -4421,33 +4445,36 @@ fr:
           require_approval: "Nécessiter l'approbation"
           flag: "Signaler"
           replace: "Remplacer"
-          tag: "Étiquette"
+          tag: "Étiqueter"
           silence: "Mettre sous silence"
+          link: "Insérer un lien"
         action_descriptions:
           block: "Empêcher les messages contenant ces mots d'être publiés. L'utilisateur verra un message d'erreur lorsqu'il essaiera de publier son message."
           censor: "Autoriser les messages contenant ces mots, mais les remplacer par des caractères qui masquent les mots censurés."
-          require_approval: "Les messages qui contiennent ces mots devront être approuvés par un responsable avant de pouvoir être publiés."
+          require_approval: "Obtenir l'approbation d'un responsable avant de publier les messages contenant ces mots."
           flag: "Autoriser les messages qui contiennent ces mots, mais les marquer comme étant signalés pour que les modérateurs puissent les examiner."
-          replace: "Remplacer certains mots contenus dans des messages par d'autres mots ou par des liens"
-          tag: "Étiqueter automatiquement les sujets en fonction de leur premier message"
-          silence: "Un utilisateur dont les premiers messages contiennent ces mots sera mis sous silence automatiquement, et ses messages devront être examinés par un responsable avant d'être publiés."
+          replace: "Remplacer ces mots par d'autres mots"
+          tag: "Étiqueter automatiquement les sujets en fonction de leur premier message."
+          silence: "Mettre automatiquement sous silence les utilisateurs dont le premier message contient ces mots, et nécessiter l'approbation d'un responsable avant sa publication."
+          link: "Remplacer ces mots par des liens"
         form:
           label: "Contient le mot ou l'expression"
           placeholder: "Saisissez un mot ou une expression (* sert de caractère générique)"
           placeholder_regexp: "expression régulière"
-          replacement_label: "Remplacement"
-          replacement_placeholder: "exemple ou https://exemple.com"
+          replace_label: "Mot ou expression de substitution"
+          replace_placeholder: "exemple"
           tag_label: "Étiquette"
-          tag_placeholder: "étiquette1,étiquette2,étiquette3"
+          link_label: "Lien"
+          link_placeholder: "https://exemple.com"
           add: "Ajouter"
           success: "Succès"
           exists: "Existe déjà"
           upload: "Ajouter depuis un fichier"
-          upload_successful: "Envoi réussi. Les mots ont été ajoutés."
+          upload_successful: "Envoi effectué avec succès. Les mots et expressions à surveiller ont été ajoutés."
         test:
           button_label: "Tester"
           modal_title: "Tester les mots surveillés pour l'action «&nbsp;%{action}&nbsp;»"
-          description: "Entrez le texte ci-dessous pour vérifier les correspondances avec les mots surveillés"
+          description: "Saisissez du texte dans le champ ci-dessous pour vérifier le fonctionnement des mots ou expressions surveillés"
           found_matches: "Correspondances trouvées :"
           no_matches: "Aucune correspondance trouvée"
       impersonate:
@@ -4832,19 +4859,19 @@ fr:
           modal_title: Groupes de badges
         granted_by: Décerné par
         granted_at: Décerné le
-        reason_help: (Lien vers un message ou sujet)
+        reason_help: (Lien vers un message ou un sujet)
         save: Enregistrer
         delete: Supprimer
         delete_confirm: Êtes-vous sûr de vouloir supprimer ce badge ?
         revoke: Retirer
-        reason: Raison
+        reason: Motif d'attribution
         expand: Développer &hellip;
         revoke_confirm: Êtes-vous sûr de vouloir retirer ce badge ?
         edit_badges: Modifier les badges
         grant_badge: Décerner le badge
         granted_badges: Badges décernés
         grant: Décerner
-        no_user_badges: "%{name} ne s'est vu décerné aucun badge."
+        no_user_badges: "%{name} ne s'est vu décerner aucun badge."
         no_badges: Il n'y a aucun badge pouvant être décerné.
         none_selected: "Sélectionnez un badge pour commencer"
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
@@ -4899,11 +4926,11 @@ fr:
           title: Accorder en masse
           description: Accordez le même badge à plusieurs utilisateurs à la fois.
           no_badge_selected: Veuillez sélectionner un badge pour commencer.
-          perform: "Accorder un badge aux utilisateurs"
-          upload_csv: Envoyer un CSV avec les courriels ou les noms d'utilisateurs
-          aborted: Veuillez envoyer un CSV contenant des courriels ou des noms d'utilisateurs
-          success: Votre CSV a été envoyé et les utilisateurs recevront leur badge rapidement.
-          replace_owners: Supprimer le badge des détenteurs précédents
+          perform: "Décerner ce badge à ces utilisateurs"
+          upload_csv: Envoyez un fichier CSV contenant les adresses de courriel ou les noms d'utilisateur des concernés
+          aborted: Envoyez d'abord un fichier CSV qui contienne des adresses de courriel ou des noms d'utilisateur
+          success: Votre fichier CSV a été envoyé, les utilisateurs obtiendront leur badge d'ici peu de temps.
+          replace_owners: Retirer ce badge à ses détenteurs actuels non-listés dans le fichier
       emoji:
         title: "Émoji"
         help: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. (Conseil : glisser-déposer plusieurs fichiers en même temps)"

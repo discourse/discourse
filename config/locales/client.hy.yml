@@ -518,6 +518,9 @@ hy:
       total_rows:
         one: "%{count} օգտատեր"
         other: "%{count} օգտատեր"
+      edit_columns:
+        save: "Պահպանել"
+        reset_to_default: "Վերականգնել լռելյայն"
     group_histories:
       actions:
         change_group_setting: "Փոխել խմբի կարգավորումը"
@@ -1887,7 +1890,6 @@ hy:
       back_to_list: "Վերադառնալ Թեմաների Ցանկին"
       options: "Թեմաների Տարբերակները"
       show_links: "ցուցադրել այս թեմայի հղումները"
-      toggle_information: "փոխանջատել թեմայի մանրամասները"
       read_more_in_category: "Ցանկանո՞ւմ եք կարդալ ավելին: Դիտեք այլ թեմաներ՝ %{catLink}-ում կամ %{latestLink}."
       read_more: "Ցանկանո՞ւմ եք կարդալ ավելին: %{catLink} կամ %{latestLink}."
       unread_indicator: "Ոչ մի անդամ դեռ չի կարդացել այս թեմայի մինչև վերջին գրառումը: "
@@ -2867,14 +2869,9 @@ hy:
           description: "Դուք ծանուցում չեք ստանա այս թեգով որևէ նոր թեմայի մասին, և դրանք չեն հայտնվի Ձեր չկարդացածների ցանկում:"
       groups:
         title: "Թեգավորել Խմբերը"
-        about: "Ավելացրեք թեգեր խմբերին՝ դրանք ավելի հեշտ կառավարելու համար:"
         new: "Նոր Խումբ"
-        tags_label: "Այս խմբի թեգերը՝ "
-        parent_tag_label: "Մայր թեգ՝ "
-        parent_tag_description: "Այս խմբի թեգերը չեն կարող օգտագործվել, քանի դեռ մայր թեգը առկա չէ:"
         one_per_topic_label: "Սահմանափակել այս խմբի յուրաքանչյուր թեման մեկ թեգով:"
         new_name: "Նոր Թեգի Խումբ"
-        name_placeholder: "Տեգի Խմբի Անունը"
         save: "Պահպանել"
         delete: "Ջնջել"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգի խումբը:"
@@ -2905,6 +2902,13 @@ hy:
       remaining: "%{remaining}-ը մնում է"
       options:
         custom: "Մասնավոր"
+    trust_levels:
+      names:
+        newuser: "նոր օգտատեր"
+        basic: "հիմնական օգտատեր"
+        member: "անդամ"
+        regular: "սովորական"
+        leader: "առաջնորդ"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:
@@ -3756,6 +3760,7 @@ hy:
           flag: "Թույլատրել այս բառերը պարունակող գրառումները, սակայն դրոշակավորել դրանք որպես անհամապատասխան, որպեսզի մոդերատորները կարողանան վերանայել դրանք:"
         form:
           placeholder_regexp: "regular expression"
+          link_placeholder: "https://example.com"
           add: "Ավելացնել"
           success: "Հաջողություն"
           exists: "Արդեն գոյություն ունի"

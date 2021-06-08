@@ -454,16 +454,8 @@ hy:
       topic_exists_no_oldest: "Անհնար է ջնջել այս կատեգորիան, քանի որ թեմաների քանակը %{count} է:"
     uncategorized_description: "Թեմաներ, որոնք կատեգորիայի կարիք չունեն կամ չեն համապատասխանում ցանկացած այլ գոյություն ունեցող կատեգորիայի:"
   trust_levels:
-    newuser:
-      title: "նոր օգտատեր"
-    basic:
-      title: "հիմնական օգտատեր"
-    member:
-      title: "անդամ"
-    regular:
-      title: "սովորական"
-    leader:
-      title: "առաջնորդ"
+    admin: "Ադմին"
+    staff: "Անձնակազմ"
     change_failed_explanation: "Դուք փորձել եք իջեցնել%{user_name}-ին դեպի '%{new_trust_level}': Սակայն, նրա վստահության մակարդակն արդեն իսկ '%{current_trust_level}' է: %{user_name}-ը կմնա '%{current_trust_level}' -ում. եթե ցանկանում եք իջեցնել օգտատիրոջ վստահության մակարդակը, սկզբում արգելափակեք այն:"
   post:
     image_placeholder:

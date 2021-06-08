@@ -449,6 +449,8 @@ sk:
         few: "%{count} používatelia"
         many: "%{count} používateľov"
         other: "%{count} používateľov"
+      edit_columns:
+        save: "Uložiť"
     group_histories:
       actions:
         change_group_setting: "Zmeniť nastavenia skupiny"
@@ -1510,7 +1512,6 @@ sk:
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
-      toggle_information: "zmeniť detaily témy"
       read_more_in_category: "Chcete si prečítať viac? Prezrite si témy v %{catLink} alebo v %{latestLink}."
       read_more: "Chcete si prečítať viac? %{catLink} alebo v %{latestLink}."
       browse_all_categories: Prezrieť všetky kategórie
@@ -2253,11 +2254,7 @@ sk:
           title: "Stíšené"
       groups:
         title: "Skupiny štítkov"
-        about: "Pridajte štítky do skupín, aby sa ľahšie spravovali."
         new: "Nová skupina"
-        tags_label: "Štítky v tejto skupine:"
-        parent_tag_label: "Nadradený štítok"
-        parent_tag_description: "Štítky z tejto skupiny nemôžu byť použité pokiaľ nie je použitý nadradený štítok."
         one_per_topic_label: "Obmedziť na jeden štítok na tému z tejto skupiny"
         new_name: "Nová skupina štítkov"
         save: "Uložiť"
@@ -2282,6 +2279,13 @@ sk:
       remaining: "%{remaining} zostáva"
       options:
         custom: "Vlastné"
+    trust_levels:
+      names:
+        newuser: "nový používateľ"
+        basic: "základný používateľ"
+        member: "člen"
+        regular: "bežný"
+        leader: "vodca"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:
@@ -2773,6 +2777,7 @@ sk:
           require_approval: "Potrebné povolenie"
           flag: "Označenie"
         form:
+          link_placeholder: "https://example.com"
           add: "Pridať"
         test:
           button_label: "Test"

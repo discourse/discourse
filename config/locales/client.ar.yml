@@ -698,6 +698,9 @@ ar:
         few: "%{count} أعضاء"
         many: "%{count} عضوًا"
         other: "%{count} عضو"
+      edit_columns:
+        save: "احفظ"
+        reset_to_default: "صفّر إلى المبدئي"
     group_histories:
       actions:
         change_group_setting: "تغيير إعدادات المجموعة"
@@ -2372,7 +2375,6 @@ ar:
       back_to_list: "عد إلى قائمة الموضوعات"
       options: "خيارات الموضوعات"
       show_links: "اظهر الروابط في هذا الموضوع"
-      toggle_information: "أظهر/أخف تفاصيل الموضوع"
       read_more_in_category: "أتريد قراءة المزيد؟ تصفح المواضيع الأخرى في %{catLink} أو %{latestLink}."
       read_more: "أتريد قراءة المزيد؟ %{catLink} أو %{latestLink}."
       unread_indicator: "لم يقرأ أيّ عضو بعد آخر مشاركة في هذا الموضوع."
@@ -3633,14 +3635,9 @@ ar:
           description: "لن يتم إخطارك بأي شيء يتعلق بالمواضيع الجديدة بهذ الوسم، ولن تظهر في علامة التبويب \"غير المقروءة\"."
       groups:
         title: "مجموعات الوسوم"
-        about: "ضَع الوسوم في مجموعات ليسهُل عليك إدارتها."
         new: "مجموعة جديدة"
-        tags_label: "الوسوم في هذه المجموعة:"
-        parent_tag_label: "التصنيف الأب"
-        parent_tag_description: "لا يمكنك استعمال الوسوم في هذه المجموعة ما لم يوجد الوسم الأب."
         one_per_topic_label: "السماح بوسم واحد فقط من هذة المجموعة لكل موضوع"
         new_name: "مجموعة وسوم جديدة"
-        name_placeholder: "اسم مجموعة الوسوم"
         save: "حفظ"
         delete: "حذف"
         confirm_delete: "أمتأكد من حذف مجموعة الوسوم هذه؟"
@@ -3680,6 +3677,13 @@ ar:
         two_hours: "2 ساعة"
         tomorrow: "حتى الغد"
         custom: "مخصص"
+    trust_levels:
+      names:
+        newuser: "مستخدم جديد "
+        basic: "مستخدم أساسي"
+        member: "عضو"
+        regular: "منتظم"
+        leader: "قائد"
   admin_js:
     type_to_filter: "اكتب للتّرشيح..."
     admin:
@@ -4355,11 +4359,14 @@ ar:
           flag: "علم"
           replace: "غير"
           silence: "صامت"
+          link: "رابط"
         action_descriptions:
           require_approval: "المنشورات التي تحتوي على هذه الكلمات تحتاج الى موافقة الطاقم قبل ان يتم رؤيتهم."
           flag: "اسمح للمنشورات التي تحتوي على هذه الكلمات, ولكن علمهم كـ غير مناسب لكي يتمكن المشرف من مراجعتهم."
         form:
           placeholder_regexp: "تعبير اعتيادي"
+          link_label: "رابط"
+          link_placeholder: "https://example.com"
           add: "اضف"
           success: "نجاح"
           upload_successful: "تم الرفع بنجاح. تم اضافة الكلمات"

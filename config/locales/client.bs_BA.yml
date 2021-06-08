@@ -583,6 +583,8 @@ bs_BA:
         one: "%{count} korisnik"
         few: "%{count} korisnika"
         other: "%{count} korisnika"
+      edit_columns:
+        save: "Sačuvaj"
     group_histories:
       actions:
         change_group_setting: "Promijeni postavke grupe"
@@ -2050,7 +2052,6 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
-      toggle_information: "uključi detalje teme"
       read_more_in_category: "Želite dalje čitati? Pregledajte druge teme u %{catLink} ili %{latestLink}."
       read_more: "Želite li dalje čitati? %{catLink} Ili %{latestLink}."
       browse_all_categories: Pregledaj sve kategorije
@@ -3058,14 +3059,9 @@ bs_BA:
           description: "Nećete bit obavješteni bilo čime o ovoj temi sa ovom oznakom, i neće se pojavljivati na tabularu nepročitanih tema."
       groups:
         title: "Označite grupe"
-        about: "Dodajte oznake grupama da biste ih lakše upravljali."
         new: "Nova grupa "
-        tags_label: "Oznake u ovoj grupi:"
-        parent_tag_label: "Roditeljska oznaka:"
-        parent_tag_description: "Oznake iz ove grupe ne mogu se koristiti ako roditeljska oznaka nije prisutna."
         one_per_topic_label: "Ograničite jednu oznaku po temi iz ove grupe"
         new_name: "Nova Grupa Oznaka"
-        name_placeholder: "Ime grupe oznaka"
         save: "Sačuvaj"
         delete: "Delete"
         confirm_delete: "Jeste li sigurni da želite izbrisati ovu grupu oznaka?"
@@ -3097,6 +3093,13 @@ bs_BA:
       remaining: "%{remaining} preostalo"
       options:
         custom: "Custom"
+    trust_levels:
+      names:
+        newuser: "novi korisnik"
+        basic: "korisnik"
+        member: "član"
+        regular: "pokretač"
+        leader: "vođa"
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
@@ -3915,6 +3918,7 @@ bs_BA:
           flag: "Prijava"
           replace: "Zamijeni"
           silence: "Stišaj"
+          link: "Link"
         action_descriptions:
           block: "Spriječite postavljanje postova koji sadrže ove riječi. Korisnik će vidjeti poruku o pogrešci kada pokuša da pošalje svoj post."
           censor: "Dopustite poruke koje sadrže te riječi, ali ih zamijenite znakovima koji kriju cenzurirane riječi."
@@ -3922,6 +3926,8 @@ bs_BA:
           flag: "Dozvoli objave koje sadrže ove riječi, ali prijavi ih kao neadekvatne kako bi ih moderatori mogli analizirati gledajući na kontekst i značenje"
         form:
           placeholder_regexp: "regularni izraz"
+          link_label: "Link"
+          link_placeholder: "https://example.com"
           add: "Dodaj"
           success: "Uspjeh"
           exists: "Već postoji"

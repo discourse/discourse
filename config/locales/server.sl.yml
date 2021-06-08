@@ -339,16 +339,8 @@ sl:
         other: "Ne moremo odstraniti to kategorijo ker ima %{count} tem. Najstarejša tema je %{topic_link}."
     uncategorized_description: "Teme, ki ne potrebujejo kategorijo ali ne sodijo v nobeno obstoječo kategorijo."
   trust_levels:
-    newuser:
-      title: "nov uporabnik"
-    basic:
-      title: "uporabnik"
-    member:
-      title: "član"
-    regular:
-      title: "redni uporabnik"
-    leader:
-      title: "vodja"
+    admin: "Admin"
+    staff: "Osebje"
   post:
     has_likes:
       one: "%{count} všeček"

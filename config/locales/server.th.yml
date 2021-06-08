@@ -110,10 +110,8 @@ th:
   category:
     topic_prefix: "เกี่ยวกับหมวด %{category}"
   trust_levels:
-    member:
-      title: "สมาชิก"
-    regular:
-      title: "ทั่วไป"
+    admin: "ผู้ดูแลระบบ"
+    staff: "ทีมงาน"
   rate_limiter:
     hours:
       other: "%{count} ชั่วโมง"

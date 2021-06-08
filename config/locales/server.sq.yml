@@ -221,16 +221,8 @@ sq:
       has_subcategories: "Nuk e fshini dot këtë kategori sepse ajo ka nënkategori. "
       topic_exists_no_oldest: "Nuk e fshini dot këtë kategori sepse numri i temave është %{count}."
   trust_levels:
-    newuser:
-      title: "anëtar i ri"
-    basic:
-      title: "anëtar i thjeshtë"
-    member:
-      title: "anëtarë"
-    regular:
-      title: "i zakonshëm"
-    leader:
-      title: "udhëheqës"
+    admin: "Admin"
+    staff: "Stafi"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
