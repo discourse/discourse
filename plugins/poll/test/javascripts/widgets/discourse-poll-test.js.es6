@@ -4,7 +4,7 @@ import {
 } from "discourse/tests/helpers/widget-test";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { count, exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 let requests = 0;
 
@@ -100,7 +100,7 @@ widgetTest("can vote", {
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(requests, 1);
-    assert.equal(queryAll(".chosen").length, 1);
+    assert.equal(count(".chosen"), 1);
     assert.equal(queryAll(".chosen").text(), "100%yes");
     assert.equal(queryAll(".toggle-results").text(), "Show vote");
 
@@ -152,6 +152,6 @@ widgetTest("cannot vote if not member of the right group", {
       I18n.t("poll.results.groups.title", { groups: "foo" })
     );
     assert.equal(requests, 0);
-    assert.equal(queryAll(".chosen").length, 0);
+    assert.ok(!exists(".chosen"));
   },
 });

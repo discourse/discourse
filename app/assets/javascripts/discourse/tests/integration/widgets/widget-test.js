@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   exists,
   query,
@@ -99,10 +100,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(
-        queryAll(".test.static.cool-class").length,
-        "it has all the classes"
-      );
+      assert.ok(exists(".test.static.cool-class"), "it has all the classes");
     },
   });
 
@@ -274,7 +272,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll(".d-icon-arrow-down").length, 1);
+      assert.equal(count(".d-icon-arrow-down"), 1);
     },
   });
 
@@ -333,7 +331,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll("ul li").length, 3);
+      assert.equal(count("ul li"), 3);
       assert.equal(queryAll("ul li:nth-of-type(1)").text(), "one");
     },
   });
@@ -434,7 +432,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
 
     test(assert) {
       assert.ok(
-        queryAll("section.override").length,
+        exists("section.override"),
         "renders container with overrided tagName"
       );
     },

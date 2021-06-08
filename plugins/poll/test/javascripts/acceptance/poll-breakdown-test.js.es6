@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -79,7 +80,7 @@ acceptance("Poll breakdown", function (needs) {
     );
 
     assert.equal(
-      queryAll(".poll-breakdown-chart-container").length,
+      count(".poll-breakdown-chart-container"),
       2,
       "renders a chart for each of the groups in group_results response"
     );

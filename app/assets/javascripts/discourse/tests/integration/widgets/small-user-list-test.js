@@ -2,9 +2,9 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   exists,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
@@ -24,7 +24,7 @@ discourseModule(
         });
       },
       async test(assert) {
-        assert.ok(queryAll('[data-user-card="eviltrout"]').length === 1);
+        assert.equal(count('[data-user-card="eviltrout"]'), 1);
         assert.ok(!exists('[data-user-card="someone"]'));
         assert.ok(exists(".unknown"), "includes unknown user");
       },
