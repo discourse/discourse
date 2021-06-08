@@ -33,7 +33,7 @@ export default Controller.extend({
       .map((c) => c.user_field_id)
       .join("|");
 
-    this.store
+    return this.store
       .find("directoryItem", Object.assign(params, { user_field_ids }))
       .then((model) => {
         const lastUpdatedAt = model.get("resultSetMeta.last_updated_at");
@@ -49,7 +49,7 @@ export default Controller.extend({
   },
 
   loadGroups() {
-    this.store.findAll("group").then((groups) => {
+    return this.store.findAll("group").then((groups) => {
       const groupOptions = groups.map((group) => {
         return {
           name: group.name,
