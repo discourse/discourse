@@ -1,5 +1,4 @@
 import I18n from "I18n";
-import { isTesting } from "discourse-common/config/environment";
 import bootbox from "bootbox";
 
 export function extractError(error, defaultMessage) {
@@ -69,11 +68,6 @@ export function popupAjaxError(error) {
     return;
   }
   bootbox.alert(extractError(error));
-
-  // in testing mode we want to be able to test these ajax popup messages
-  if (isTesting()) {
-    return;
-  }
 
   error._discourse_displayed = true;
 
