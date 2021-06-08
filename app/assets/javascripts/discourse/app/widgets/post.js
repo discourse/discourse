@@ -57,6 +57,7 @@ export function avatarImg(wanted, attrs) {
       height: size,
       src: getURLWithCDN(url),
       title,
+      "aria-label": title,
     },
     className,
   };
@@ -246,6 +247,13 @@ function showReplyTab(attrs, siteSettings) {
 
 createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
+
+  buildAttributes() {
+    return {
+      role: "heading",
+      "aria-level": "2",
+    };
+  },
 
   settings: {
     displayPosterName: true,
@@ -596,6 +604,10 @@ createWidget("post-article", {
 
   buildAttributes(attrs) {
     return {
+      "aria-label": I18n.t("share.post", {
+        postNumber: attrs.post_number,
+      }),
+      role: "region",
       "data-post-id": attrs.id,
       "data-topic-id": attrs.topicId,
       "data-user-id": attrs.user_id,
@@ -724,7 +736,7 @@ export default createWidget("post", {
     }
     const classNames = ["topic-post", "clearfix"];
 
-    if (attrs.id === -1 || attrs.isSaving) {
+    if (attrs.id === -1 || attrs.isSaving || attrs.staged) {
       classNames.push("staged");
     }
     if (attrs.selected) {

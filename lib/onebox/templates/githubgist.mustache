@@ -1,0 +1,15 @@
+<h4><a href="{{link}}" target="_blank" rel="noopener">{{link}}</a></h4>
+
+{{#gist_files}}
+  <h5>{{filename}}</h5>
+  <pre><code class="{{language}}">{{content}}</code></pre>
+  {{#truncated?}}
+    This file has been truncated. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
+  {{/truncated?}}
+{{/gist_files}}
+
+<p>
+  {{#truncated_files?}}
+    There are more than three files. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
+  {{/truncated_files?}}
+</p>

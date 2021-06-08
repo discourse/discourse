@@ -26,7 +26,7 @@ describe Unread do
   end
 
   describe 'staff counts' do
-    it 'shoule correctly return based on staff post number' do
+    it 'should correctly return based on staff post number' do
 
       user.admin = true
 

@@ -87,7 +87,7 @@ class UrlHelper
     # to avoid asset_host mixups
     return schemaless(url) if secure
 
-    # PERF: avoid parsing url excpet for extreme conditions
+    # PERF: avoid parsing url except for extreme conditions
     # this is a hot path used on home page
     filename = url
     if url.include?("?")

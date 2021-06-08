@@ -22,6 +22,7 @@ module FileStore
     end
 
     def store_upload(file, upload, content_type = nil)
+      upload.url = nil
       path = get_path_for_upload(upload)
       url, upload.etag = store_file(
         file,
@@ -35,6 +36,7 @@ module FileStore
     end
 
     def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
+      optimized_image.url = nil
       path = get_path_for_optimized_image(optimized_image)
       url, optimized_image.etag = store_file(file, path, content_type: content_type, private_acl: secure)
       url
@@ -93,7 +95,7 @@ module FileStore
       begin
         parsed_url = URI.parse(UrlHelper.encode(url))
       rescue
-        # There are many exceptions possible here including Addressable::URI:: excpetions
+        # There are many exceptions possible here including Addressable::URI:: exceptions
         # and URI:: exceptions, catch all may seem wide, but it makes no sense to raise ever
         # on an invalid url here
         return false

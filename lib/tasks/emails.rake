@@ -11,7 +11,7 @@ def process_popmail(popmail)
   end
 end
 
-desc "use this task to import a mailbox into Disourse"
+desc "use this task to import a mailbox into Discourse"
 task "emails:import" => :environment do
   begin
     unless SiteSetting.email_in
@@ -72,7 +72,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         Sending mail with Gmail is a violation of their terms of service.
 
         Sending with G Suite might work, but it is not recommended. For information see:
-        https://meta.discourse.org/t/dscourse-aws-ec2-g-suite-troubleshoting/62931?u=pfaffman
+        https://meta.discourse.org/t/discourse-aws-ec2-g-suite-troubleshooting/62931?u=pfaffman
 
         ========================= CONTINUING TEST ============================
       STR
@@ -111,7 +111,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
       STR
 
     elsif e.to_s.match(/530.*STARTTLS/)
-      # We can't run a prelimary test with STARTTLS, we'll just try sending the test email.
+      # We can't run a preliminary test with STARTTLS, we'll just try sending the test email.
       message = "OK"
 
     elsif e.to_s.match(/535/)

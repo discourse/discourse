@@ -1,10 +1,20 @@
 # frozen_string_literal: true
 
-# this class is used to mirror unread and new status back to end users
-# in JavaScript there is a mirror class that is kept in-sync using the mssage bus
+# This class is used to mirror unread and new status back to end users
+# in JavaScript there is a mirror class that is kept in-sync using MessageBus
 # the allows end users to always know which topics have unread posts in them
-# and which topics are new
-
+# and which topics are new. This is used in various places in the UI, such as
+# counters, indicators, and messages at the top of topic lists, so the user
+# knows there is something worth reading at a glance.
+#
+# The TopicTrackingState.report data is preloaded in ApplicationController
+# for the current user under the topicTrackingStates key, and the existing
+# state is loaded into memory on page load. From there the MessageBus is
+# used to keep topic state up to date, as well as syncing with topics from
+# corresponding lists fetched from the server (e.g. the /new, /latest,
+# /unread topic lists).
+#
+# See discourse/app/models/topic-tracking-state.js
 class TopicTrackingState
 
   include ActiveModel::SerializerSupport
@@ -13,6 +23,13 @@ class TopicTrackingState
   LATEST_MESSAGE_TYPE = "latest"
   MUTED_MESSAGE_TYPE = "muted"
   UNMUTED_MESSAGE_TYPE = "unmuted"
+  NEW_TOPIC_MESSAGE_TYPE = "new_topic"
+  RECOVER_MESSAGE_TYPE = "recover"
+  DELETE_MESSAGE_TYPE = "delete"
+  DESTROY_MESSAGE_TYPE = "destroy"
+  READ_MESSAGE_TYPE = "read"
+  DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
+  MAX_TOPICS = 5000
 
   attr_accessor :user_id,
                 :topic_id,
@@ -20,20 +37,15 @@ class TopicTrackingState
                 :last_read_post_number,
                 :created_at,
                 :category_id,
-                :notification_level
+                :notification_level,
+                :tags
 
   def self.publish_new(topic)
     return unless topic.regular?
 
-    tags, tag_ids = nil
+    tag_ids, tags = nil
     if SiteSetting.tagging_enabled
-      topic.tags.pluck(:id, :name).each do |id, name|
-        tags ||= []
-        tag_ids ||= []
-
-        tags << name
-        tag_ids << id
-      end
+      tag_ids, tags = topic.tags.pluck(:id, :name).transpose
     end
 
     payload = {
@@ -43,6 +55,7 @@ class TopicTrackingState
       topic_id: topic.id,
       category_id: topic.category_id,
       archetype: topic.archetype,
+      created_in_new_period: true
     }
 
     if tags
@@ -52,7 +65,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "new_topic",
+      message_type: NEW_TOPIC_MESSAGE_TYPE,
       payload: payload
     }
 
@@ -65,16 +78,25 @@ class TopicTrackingState
   def self.publish_latest(topic, staff_only = false)
     return unless topic.regular?
 
+    tag_ids, tags = nil
+    if SiteSetting.tagging_enabled
+      tag_ids, tags = topic.tags.pluck(:id, :name).transpose
+    end
+
     message = {
       topic_id: topic.id,
       message_type: LATEST_MESSAGE_TYPE,
       payload: {
         bumped_at: topic.bumped_at,
         category_id: topic.category_id,
-        archetype: topic.archetype,
-        topic_tag_ids: topic.tags.pluck(:id)
+        archetype: topic.archetype
       }
     }
+
+    if tags
+      message[:payload][:tags] = tags
+      message[:payload][:topic_tag_ids] = tag_ids
+    end
 
     group_ids =
       if staff_only
@@ -133,25 +155,33 @@ class TopicTrackingState
       end
 
     tags = nil
+    tag_ids = nil
     if include_tags_in_report?
-      tags = post.topic.tags.pluck(:name)
+      tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose
     end
 
     TopicUser
       .tracking(post.topic_id)
+      .includes(user: :user_stat)
       .select([:user_id, :last_read_post_number, :notification_level])
       .each do |tu|
 
       payload = {
         last_read_post_number: tu.last_read_post_number,
         highest_post_number: post.post_number,
+        updated_at: post.topic.updated_at,
         created_at: post.created_at,
         category_id: post.topic.category_id,
         notification_level: tu.notification_level,
-        archetype: post.topic.archetype
+        archetype: post.topic.archetype,
+        first_unread_at: tu.user.user_stat.first_unread_at,
+        unread_not_too_old: true
       }
 
-      payload[:tags] = tags if tags
+      if tags
+        payload[:tags] = tags
+        payload[:topic_tag_ids] = tag_ids
+      end
 
       message = {
         topic_id: post.topic_id,
@@ -169,7 +199,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "recover"
+      message_type: RECOVER_MESSAGE_TYPE
     }
 
     MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
@@ -181,7 +211,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "delete"
+      message_type: DELETE_MESSAGE_TYPE
     }
 
     MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
@@ -192,7 +222,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "destroy"
+      message_type: DESTROY_MESSAGE_TYPE
     }
 
     MessageBus.publish("/destroy", message.as_json, group_ids: group_ids)
@@ -203,7 +233,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic_id,
-      message_type: "read",
+      message_type: READ_MESSAGE_TYPE,
       payload: {
         last_read_post_number: last_read_post_number,
         highest_post_number: highest_post_number,
@@ -217,12 +247,24 @@ class TopicTrackingState
 
   def self.publish_dismiss_new(user_id, topic_ids: [])
     message = {
-      message_type: "dismiss_new",
+      message_type: DISMISS_NEW_MESSAGE_TYPE,
       payload: {
         topic_ids: topic_ids
       }
     }
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+  end
+
+  def self.new_filter_sql
+    TopicQuery.new_filter(
+      Topic, treat_as_new_topic_clause_sql: treat_as_new_topic_clause
+    ).where_clause.ast.to_sql +
+      " AND topics.created_at > :min_new_topic_date" +
+      " AND dismissed_topic_users.id IS NULL"
+  end
+
+  def self.unread_filter_sql(staff: false)
+    TopicQuery.unread_filter(Topic, staff: staff).where_clause.ast.to_sql
   end
 
   def self.treat_as_new_topic_clause
@@ -231,12 +273,18 @@ class TopicTrackingState
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
                   ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
                END, u.created_at, :min_date)",
-                now: DateTime.now,
-                last_visit: User::NewTopicDuration::LAST_VISIT,
-                always: User::NewTopicDuration::ALWAYS,
-                default_duration: SiteSetting.default_other_new_topic_duration_minutes,
-                min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
+               treat_as_new_topic_params
               ).where_clause.ast.to_sql
+  end
+
+  def self.treat_as_new_topic_params
+    {
+      now: DateTime.now,
+      last_visit: User::NewTopicDuration::LAST_VISIT,
+      always: User::NewTopicDuration::ALWAYS,
+      default_duration: SiteSetting.default_other_new_topic_duration_minutes,
+      min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
+    }
   end
 
   def self.include_tags_in_report?
@@ -247,18 +295,35 @@ class TopicTrackingState
     @include_tags_in_report = v
   end
 
+  # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
+  #  Dropping to sql_builder so I can make sense of it.
+  #
+  # Keep in mind, we need to be able to filter on a GROUP of users, and zero in on topic
+  #  all our existing scope work does not do this
+  #
+  # This code needs to be VERY efficient as it is triggered via the message bus and may steal
+  #  cycles from usual requests
   def self.report(user, topic_id = nil)
-    # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
-    #  Dropping to sql_builder so I can make sense of it.
-    #
-    # Keep in mind, we need to be able to filter on a GROUP of users, and zero in on topic
-    #  all our existing scope work does not do this
-    #
-    # This code needs to be VERY efficient as it is triggered via the message bus and may steal
-    #  cycles from usual requests
     tag_ids = muted_tag_ids(user)
+    sql = new_and_unread_sql(topic_id, user, tag_ids)
+    sql = tags_included_wrapped_sql(sql)
 
-    sql = +report_raw_sql(
+    report = DB.query(
+      sql + "\n\n LIMIT :max_topics",
+      {
+        user_id: user.id,
+        topic_id: topic_id,
+        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
+        max_topics: TopicTrackingState::MAX_TOPICS,
+      }
+      .merge(treat_as_new_topic_params)
+    )
+
+    report
+  end
+
+  def self.new_and_unread_sql(topic_id, user, tag_ids)
+    sql = report_raw_sql(
       topic_id: topic_id,
       skip_unread: true,
       skip_order: true,
@@ -280,74 +345,90 @@ class TopicTrackingState
       user: user,
       muted_tag_ids: tag_ids
     )
+  end
 
+  def self.tags_included_wrapped_sql(sql)
     if SiteSetting.tagging_enabled && TopicTrackingState.include_tags_in_report?
-      sql = <<~SQL
-        WITH X AS (#{sql})
+      return <<~SQL
+        WITH tags_included_cte AS (
+          #{sql}
+        )
         SELECT *, (
           SELECT ARRAY_AGG(name) from topic_tags
              JOIN tags on tags.id = topic_tags.tag_id
-             WHERE topic_id = X.topic_id
+             WHERE topic_id = tags_included_cte.topic_id
           ) tags
-        FROM X
+        FROM tags_included_cte
       SQL
     end
 
-    DB.query(
-      sql,
-        user_id: user.id,
-        topic_id: topic_id,
-        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
-    )
+    sql
   end
 
   def self.muted_tag_ids(user)
     TagUser.lookup(user, :muted).pluck(:tag_id)
   end
 
-  def self.report_raw_sql(opts = nil)
-    opts ||= {}
-
+  def self.report_raw_sql(
+    user:,
+    muted_tag_ids:,
+    topic_id: nil,
+    filter_old_unread: false,
+    skip_new: false,
+    skip_unread: false,
+    skip_order: false,
+    staff: false,
+    admin: false,
+    select: nil,
+    custom_state_filter: nil,
+    additional_join_sql: nil
+  )
     unread =
-      if opts[:skip_unread]
+      if skip_unread
         "1=0"
       else
-        TopicQuery
-          .unread_filter(Topic, -999, staff: opts && opts[:staff])
-          .where_clause.ast.to_sql
-          .gsub("-999", ":user_id")
+        unread_filter_sql
       end
 
-    filter_old_unread =
-      if opts[:filter_old_unread]
+    filter_old_unread_sql =
+      if filter_old_unread
         " topics.updated_at >= us.first_unread_at AND "
       else
         ""
       end
 
     new =
-      if opts[:skip_new]
+      if skip_new
         "1=0"
       else
-        TopicQuery.new_filter(Topic, "xxx").where_clause.ast.to_sql.gsub!("'xxx'", treat_as_new_topic_clause) +
-          " AND topics.created_at > :min_new_topic_date" +
-          " AND dismissed_topic_users.id IS NULL"
+        new_filter_sql
       end
 
-    select = (opts[:select]) || "
-           u.id AS user_id,
-           topics.id AS topic_id,
+    select_sql = select || "
+           DISTINCT topics.id as topic_id,
+           u.id as user_id,
            topics.created_at,
-           #{opts[:staff] ? "highest_staff_post_number highest_post_number" : "highest_post_number"},
+           topics.updated_at,
+           #{highest_post_number_column_select(staff)},
            last_read_post_number,
-           c.id AS category_id,
-           tu.notification_level"
+           c.id as category_id,
+           tu.notification_level,
+           us.first_unread_at,
+           GREATEST(
+              CASE
+              WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
+              WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(
+                u.previous_visit_at,u.created_at
+              )
+              ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
+              END, u.created_at, :min_date
+           ) AS treat_as_new_topic_start_date"
 
     category_filter =
-      if opts[:admin]
+      if admin
         ""
       else
-        append = "OR u.admin" if !opts.key?(:admin)
+        append = "OR u.admin" if !admin
         <<~SQL
           (
            NOT c.read_restricted #{append} OR c.id IN (
@@ -360,18 +441,18 @@ class TopicTrackingState
       end
 
     visibility_filter =
-      if opts[:staff]
+      if staff
         ""
       else
-        append = "OR u.admin OR u.moderator" if !opts.key?(:staff)
+        append = "OR u.admin OR u.moderator" if !staff
         "(topics.visible #{append}) AND"
       end
 
     tags_filter = ""
 
-    if (muted_tag_ids = opts[:muted_tag_ids]).present? && ['always', 'only_muted'].include?(SiteSetting.remove_muted_tags_from_latest)
+    if muted_tag_ids.present? && ['always', 'only_muted'].include?(SiteSetting.remove_muted_tags_from_latest)
       existing_tags_sql = "(select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id)"
-      muted_tags_array_sql = "ARRAY[#{opts[:muted_tag_ids].join(',')}]"
+      muted_tags_array_sql = "ARRAY[#{muted_tag_ids.join(',')}]"
 
       if SiteSetting.remove_muted_tags_from_latest == 'always'
         tags_filter = <<~SQL
@@ -389,38 +470,46 @@ class TopicTrackingState
     end
 
     sql = +<<~SQL
-    SELECT #{select}
-    FROM topics
-    JOIN users u on u.id = :user_id
-    JOIN user_stats AS us ON us.user_id = u.id
-    JOIN user_options AS uo ON uo.user_id = u.id
-    JOIN categories c ON c.id = topics.category_id
-    LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
-    LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{opts[:user].id}
-    LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{opts[:user].id}
-    WHERE u.id = :user_id AND
-          #{filter_old_unread}
-          topics.archetype <> 'private_message' AND
-          ((#{unread}) OR (#{new})) AND
-          #{visibility_filter}
-          #{tags_filter}
-          topics.deleted_at IS NULL AND
-          #{category_filter}
-          NOT (
-            last_read_post_number IS NULL AND
-            COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}
-          )
-SQL
+      SELECT #{select_sql}
+      FROM topics
+      JOIN users u on u.id = :user_id
+      JOIN user_stats AS us ON us.user_id = u.id
+      JOIN user_options AS uo ON uo.user_id = u.id
+      JOIN categories c ON c.id = topics.category_id
+      LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
+      LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}
+      LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}
+      #{additional_join_sql}
+      WHERE u.id = :user_id AND
+            #{filter_old_unread_sql}
+            topics.archetype <> 'private_message' AND
+            #{custom_state_filter ? custom_state_filter : "((#{unread}) OR (#{new})) AND"}
+            #{visibility_filter}
+            #{tags_filter}
+            topics.deleted_at IS NULL AND
+            #{category_filter}
+            NOT (
+              #{(skip_new && skip_unread) ? "" : "last_read_post_number IS NULL AND"}
+              (
+                COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}
+                AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
+              )
+            )
+    SQL
 
-    if opts[:topic_id]
+    if topic_id
       sql << " AND topics.id = :topic_id"
     end
 
-    unless opts[:skip_order]
+    unless skip_order
       sql << " ORDER BY topics.bumped_at DESC"
     end
 
     sql
+  end
+
+  def self.highest_post_number_column_select(staff)
+    "#{staff ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
   end
 
   def self.publish_private_message(topic, archive_user_id: nil,

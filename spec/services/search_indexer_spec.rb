@@ -202,7 +202,7 @@ describe SearchIndexer do
 
       post = Fabricate(:post, topic: topic, raw: <<~RAW)
       a https://abc.com?bob=1, http://efg.com.au?bill=1 b hij.net/xyz=1
-      www.klm.net/?IGNORE=1 <a href="http://abc.de.nop.co.uk?IGNORE=1&ingore2=2">test</a>
+      www.klm.net/?IGNORE=1 <a href="http://abc.de.nop.co.uk?IGNORE=1&ignore2=2">test</a>
       RAW
 
       post.rebake!
@@ -241,7 +241,7 @@ describe SearchIndexer do
       post.rebake!
       post.reload
 
-      expect(post.cooked).to include(
+      expect(post.cooked).not_to include(
         CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS
       )
 

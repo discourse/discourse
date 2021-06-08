@@ -258,6 +258,8 @@ te:
       days_visited_long: "దర్శించిన రోజులు"
       posts_read: "చదివిన"
       posts_read_long: "చదివిన టపాలు"
+      edit_columns:
+        save: "భద్రపరచు"
     groups:
       requests:
         reason: "కారణం"
@@ -875,7 +877,6 @@ te:
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
-      toggle_information: "విషయపు వివరాలు అటుఇటుచేయి"
       read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink} లో ఇతర విషయాలు చూడు."
       read_more: "మరిన్ని చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink}."
       browse_all_categories: అన్ని వర్గాలూ జల్లించు
@@ -884,7 +885,7 @@ te:
       jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
       slow_mode_update:
-        save: "చేతనం"
+        enable: "చేతనం"
         remove: "అచేతనం"
       auto_update_input:
         tomorrow: "రేపు"
@@ -1025,9 +1026,6 @@ te:
       continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోటెడ్ టపాకు వెళ్లు"
       show_full: "పూర్తి టపా చూపు"
-      deleted_by_author:
-        one: " (టపా రచయిత ద్వారా తొలగింపబడింది , స్వతస్సిధ్దంగా తొలగింపబ[ది %{count} కాకపోతే సమయం కేతనించలేదు)"
-        other: "(టపా రచయిత ద్వారా ఉపసంహరించబడింది , స్వతసిధ్ధంగా తొలగించబడతాయి %{count} కాకపోతే సమయం కేతనించలేదు)"
       expand_collapse: "పెంచు/తుంచు"
       unread: "టపా చదవనిది"
       errors:
@@ -1362,6 +1360,13 @@ te:
     do_not_disturb:
       options:
         custom: "అనురూప"
+    trust_levels:
+      names:
+        newuser: "కొత్త సభ్యుడు"
+        basic: "ప్రాథమిక సభ్యుడు"
+        member: "మెంబరు"
+        regular: "రెగ్యులర్"
+        leader: "లీడర్"
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:

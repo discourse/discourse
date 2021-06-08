@@ -6,6 +6,7 @@ import {
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,7 +24,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   });
 
   componentTest("doesn't render if the slow mode is disabled", {
-    template: "{{slow-mode-info topic=topic}}",
+    template: hbs`{{slow-mode-info topic=topic}}`,
 
     beforeEach() {
       this.set("topic", { slow_mode_seconds: 0, closed: false });
@@ -35,7 +36,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   });
 
   componentTest("renders if slow mode is enabled", {
-    template: "{{slow-mode-info topic=topic}}",
+    template: hbs`{{slow-mode-info topic=topic}}`,
 
     beforeEach() {
       this.set("topic", { slow_mode_seconds: 3600, closed: false });
@@ -47,7 +48,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   });
 
   componentTest("staff and TL4 users can disable slow mode", {
-    template: "{{slow-mode-info topic=topic user=user}}",
+    template: hbs`{{slow-mode-info topic=topic user=user}}`,
 
     beforeEach() {
       this.setProperties({
@@ -62,7 +63,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   });
 
   componentTest("regular users can't disable slow mode", {
-    template: "{{slow-mode-info topic=topic user=user}}",
+    template: hbs`{{slow-mode-info topic=topic user=user}}`,
 
     beforeEach() {
       this.setProperties({

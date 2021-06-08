@@ -25,11 +25,11 @@ da:
       long_description: |
         Dette emblem tildeles, når den interaktive "avancerede bruger" vejledning gennemføres. Du har mestret de avancerede diskussionsværktøjer - og er nu fuldt licenseret!
   discourse_narrative_bot:
-    bio: "Hej, jeg er ikke en rigtig person. Jeg er en bot, der kan lære dig om dette websted. For at interagere med mig, send mig en besked eller nævn mig ved navn."
+    bio: "Hej, jeg er ikke en rigtig person. Jeg er en bot, der kan lære dig om dette websted. For at interagere med mig, send mig en besked eller nævne mig ved navn."
     tl2_promotion_message:
       subject_template: "Nu hvor du er blevet forfremmet, er det tid til at lære om nogle avancerede funktioner!"
       text_body_template: |
-        Svar på denne besked med `@%{discobot_username} %{reset_trigger}`for at finde ud af mere om, hvad du kan gøre.
+        Svar på denne besked med `@%{discobot_username} %{reset_trigger}` for at finde ud af mere om, hvad du kan gøre.
     timeout:
       message: |-
         Hej @%{username}, jeg skriver fordi jeg ikke har hørt fra dig i et stykke tid.
@@ -117,12 +117,12 @@ da:
       help_trigger: "vis hjælp"
       random_mention:
         reply: |-
-          Hej! For at finde ud af, hvad jeg kan gøre, skal du skrive `@ %{discobot_username} %{help_trigger}`.
+          Hej! For at finde ud af, hvad jeg kan gøre, skal du skrive `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           Jeg ved i øjeblikket, hvordan man gør følgende ting:
 
-          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}“
-          > Starter et interaktivt selvstudium kun for dig, i en personlig besked. `{name-of-tutorial}“ kan være en af:“%{tracks}“.
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Starter et interaktivt selvstudium kun for dig, i en personlig besked. `{name-of-tutorial}` kan være en af: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -184,7 +184,7 @@ da:
 
           Hvis du kan lide det (og hvem ville det ikke!), Gå videre og tryk på Synes om :heart: knappen under dette indlæg for at lade mig vide.
 
-          Kan du ** svare med et billede?** Ethvert billede kan bruges! Træk og slip, tryk på uploadknappen, eller kopier og sæt det ind.
+          Kan du **svare med et billede?** Ethvert billede kan bruges! Træk og slip, tryk på uploadknappen, eller kopier og sæt det ind.
         reply: |-
           Fedt billede - Jeg trykkede på 'Synes om' :heart: knappen for at fortælle dig, hvor meget jeg satte pris på det :heart_eyes:
         like_not_found: |-
@@ -212,7 +212,7 @@ da:
         instructions: |-
           Kan du lave nogle ord **fed** eller _kursiv_ i dit svar?
 
-          - skriv '**fed**' eller '_kursiv_'
+          - skriv `**fed**` eller `_kursiv_`
 
           - eller tryk på <kbd><b>B</b></kbd> eller <kbd><i>I</i></kbd> i editoren
         reply: |-
@@ -231,7 +231,7 @@ da:
           >
           > Nogle mennesker har en måde med ord, og andre mennesker… åh, øh, ikke har måde.
 
-          Vælg teksten for det &uarr; citat, du foretrækker, og tryk derefter på knappen **Citat**, der dukker op over dit valg - eller knappen **Svar** nederst i dette indlæg.
+          Vælg teksten for det &uarr; citat, du foretrækker, og tryk derefter på knappen **Citér**, der dukker op over dit valg - eller knappen **Svar** nederst i dette indlæg.
 
           Skriv venligst et ord eller to under citatet om, hvorfor du valgte det, fordi jeg er nysgerrig :thinking:
         reply: |-
@@ -249,7 +249,7 @@ da:
           Åh åh, jeg kan ikke se nogen bogmærker i dette emne. Har du fundet bogmærket under hvert indlæg? Brug vis mere <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for at afsløre yderligere handlinger, hvis nødvendigt.
       emoji:
         instructions: |-
-          Du har måske set mig bruge små billeder i mine svar :blue_car::dash: de kaldes for [emoji](https://da.wikipedia.org/wiki/Emoji). Kan du **tilføje et humærikon** til dit svar? Enhver af disse kan bruges:
+          Du har måske set mig bruge små billeder i mine svar :blue_car::dash: de kaldes for [emoji](https://da.wikipedia.org/wiki/Emoji). Kan du **tilføje et humørikon** til dit svar? Enhver af disse kan bruges:
 
           - Skriv `:);): D: P: O`
 
@@ -257,7 +257,7 @@ da:
 
           - Tryk på humørikon-knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> i editoren eller på din mobils tastatur
         reply: |-
-          Det er :sparkles: _emojitastic! _ :sparkles:
+          Det er :sparkles: _humørtastisk!_ :sparkles:
         not_found: |-
           Ups, jeg kan ikke se nogen Emoji i dit svar? Åh nej! :sob:
 
@@ -278,14 +278,8 @@ da:
 
           (Og ja, mit brugernavn er stavet _disco_, som i 1970'erne dans dille. Jeg gør [love the nightlife!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Vi kan godt lide at holde vores diskussioner venlige, og vi har brug for din hjælp til at [holde tingene civiliserede](%{guidelines_url}). Hvis du ser et problem, bedes du markere for at lade forfatteren eller [vores hjælpsomme personale](%{about_url}) vide om det privat.
-
-          > :imp: Jeg skrev noget grimt her
-
-          Jeg tror du ved hvad du skal gøre. Gå videre og **rapporter dette indlæg** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende!
         reply: |-
-          [Vores personale](%{base_uri}/groups/staff) vil blive underrettet privat om din markering. Hvis nok fællesskabsmedlemmer markerer et indlæg, skjules det også automatisk som en forholdsregel. (Da jeg faktisk ikke skrev et grimt indlæg :angel:, er jeg gået videre og fjernet rapporteringen for nu.)
+          [Vores personale](%{base_uri}/groups/staff) vil blive underrettet privat om din rapportering. Hvis nok fællesskabsmedlemmer rapporterer et indlæg, skjules det også automatisk som en forholdsregel. (Da jeg faktisk ikke skrev et grimt indlæg :angel:, er jeg gået videre og fjernet rapporteringen for nu.)
         not_found: |-
           Å nej, mit grimme indlæg er endnu ikke markeret som upassende. :worried: Kan du markere det som upassende ved hjælp af **flaget** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Glem ikke at bruge knappen Vis mere <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for at afsløre flere handlinger for hvert indlæg.
       search:
@@ -298,7 +292,7 @@ da:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Har du bemærket, at du er tilbage i topped? Vil du ikke nok fodre denne stakkels sultne capybara ved **svare med `%{search_answer}` emoji** og du vil automatisk blive ført til slutningen.
+          Har du bemærket, at du er tilbage i toppen? Vil du ikke nok fodre denne stakkels sultne capybara ved **svare med `%{search_answer}` humørikonet** og du vil automatisk blive ført til slutningen.
         reply: |-
           Fedt, du fandt det :tada:
 
@@ -329,7 +323,7 @@ da:
 
         Men jeg afviger, lad os begynde!
       edit:
-        bot_created_post_raw: "@ %{discobot_username} er langt den fedeste bot, jeg kender :wink:"
+        bot_created_post_raw: "@%{discobot_username} er langt den fedeste bot, jeg kender :wink:"
         instructions: |-
           Alle begår fejl. Men bare rolig, du kan altid redigere dine indlæg for at rette dem!
 
@@ -434,7 +428,7 @@ da:
           [/details]
           ```
         reply: |-
-          Fantastisk arbejde - din sans for _detaljer_ er beundringsværdig!
+          Fantastisk arbejde - din sans for _detaljer_ er beundringsværdigt!
       end:
         message: |-
           Du strøg jo virkeligt igennem dette som en rigtig _avanceret bruger_ :bow:

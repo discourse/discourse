@@ -447,6 +447,8 @@ th:
       last_updated: "อัปเดตล่าสุด:"
       total_rows:
         other: "%{count} ผู้ใช้"
+      edit_columns:
+        save: "บันทึก"
     group_histories:
       actions:
         change_group_setting: "แก้ไขการตั้งค่ากลุ่ม"
@@ -456,6 +458,9 @@ th:
     groups:
       member_added: "เพิ่ม"
       member_requested: "ร้องขอเมื่อ"
+      add_members:
+        usernames:
+          input_placeholder: "ชื่อผู้ใช้"
       requests:
         title: "คำร้องขอ"
         reason: "เหตุผล"
@@ -481,8 +486,6 @@ th:
             password: "รหัสผ่าน"
           settings:
             title: "การตั้งค่า"
-          mailboxes:
-            disabled: "ปิดใช้งานแล้ว"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -1665,7 +1668,8 @@ th:
       jump_reply_down: ข้ามไปยังคำตอบหลังจากนี้
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
-        save: "เปิดใช้งาน"
+        enable: "เปิดใช้งาน"
+        update: "อัปเดต"
         remove: "ปิดใช้งาน"
       topic_status_update:
         num_of_hours: "จำนวนชั่วโมง:"
@@ -1926,8 +1930,6 @@ th:
         deselect_all: ไม่เลือกทั้งหมด
         description:
           other: "คุณได้เลือก <b>%{count}</b> โพสต์"
-      deleted_by_author:
-        other: "(กระทู้ถูกแจ้งลบโดยเจ้าของ และจะถูกลบโดยอัตโนมัติใน%{count}ชั่วโมง เว้นแต่จะถูกปักธง)"
     post:
       quote_reply: "อ้างอิง"
       quote_share: "แบ่งปัน"
@@ -1937,8 +1939,6 @@ th:
       reply_as_new_private_message: "ตอบกลับด้วยข้อความใหม่ไปยังผู้รับคนเดียวกัน"
       follow_quote: "ไปยังโพสต์ที่ถูกกล่าวถึง"
       show_full: "แสดงโพสต์ทั้งหมด"
-      deleted_by_author:
-        other: "(โพสถูกแจ้งลบโดยเจ้าของ และจะถูกลบใน %{count} ชั่วโมงเว้นแต่จะถูกปักธง)"
       collapse: "ย่อ"
       expand_collapse: "ขยาย/ย่อ"
       locked: "ทีมงานได้ปิดโพสต์นี้จากการแก้ไข"
@@ -2406,7 +2406,6 @@ th:
           title: "ปิด"
       groups:
         new: "กลุ่มใหม่"
-        tags_label: "แท็กในกลุ่มนี้:"
         one_per_topic_label: "จำกัดหนึ่งแท็กต่อหนึ่งกระทู้จากกลุ่มนี้"
         save: "บันทึก"
         delete: "ลบ"
@@ -2429,6 +2428,10 @@ th:
       dismiss: "ซ่อน"
     do_not_disturb:
       remaining: "เหลืออีก %{remaining}"
+    trust_levels:
+      names:
+        member: "สมาชิก"
+        regular: "ทั่วไป"
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:
@@ -2825,7 +2828,9 @@ th:
           censor: "เซนเซอร์"
           require_approval: "ต้องได้รับการอนุมัติ"
           flag: "ธง"
+          link: "ลิงก์"
         form:
+          link_label: "ลิงก์"
           add: "เพิ่ม"
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"

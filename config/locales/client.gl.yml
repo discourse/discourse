@@ -580,6 +580,9 @@ gl:
       total_rows:
         one: "%{count} usuario"
         other: "%{count} usuarios"
+      edit_columns:
+        save: "Gardar"
+        reset_to_default: "Restabelecer cos valores predeterminados"
     group_histories:
       actions:
         change_group_setting: "Cambiar axustes do grupo"
@@ -593,8 +596,11 @@ gl:
       add_members:
         title: "Engadir membros a %{group_name}"
         description: "Tamén pode pegalos nunha lista separada por comas."
-        usernames: "Escriba nomes de usuario e enderezos de correo"
-        input_placeholder: "Nomes de usuario ou enderezos de correo"
+        usernames_or_emails:
+          title: "Escriba nomes de usuario e enderezos de correo"
+          input_placeholder: "Nomes de usuario ou enderezos de correo"
+        usernames:
+          input_placeholder: "Nomes de usuario"
         notify_users: "Notificar os usuarios"
       requests:
         title: "Peticións"
@@ -637,7 +643,6 @@ gl:
           mailboxes:
             synchronized: "Caixa de correo sincronizada"
             none_found: "Non se atoparon caixas de correo nesta conta de correo electrónico."
-            disabled: "desactivado"
         membership:
           title: Incorporación
           access: Acceso
@@ -1389,17 +1394,9 @@ gl:
         invite:
           new_title: "Crear convite"
           edit_title: "Editar convite"
-          instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
           copy_link: "copiar a ligazón"
-          expires_in_time: "Caduca en %{time}"
-          expired_at_time: "Caduca o %{time}."
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
-          max_redemptions_allowed: "Número máximo de usos:"
-          add_to_groups: "Engadir aos grupos:"
-          invite_to_topic: "Enviar ao tema co primeiro inicio de sesión:"
-          expires_at: "Caduca tras:"
-          custom_message: "Mensaxe persoal opcional:"
           send_invite_email: "Gardar e enviar mensaxe de correo"
           save_invite: "Gardar convite"
         bulk_invite:
@@ -2230,7 +2227,6 @@ gl:
       back_to_list: "Volver á listase de temas"
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
-      toggle_information: "cambiar detalles do tema"
       read_more_in_category: "Quere ler máis? explore outros temas en %{catLink} ou %{latestLink}."
       read_more: "Quere ler máis? %{catLink} ou %{latestLink}."
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
@@ -2247,7 +2243,8 @@ gl:
         title: "Modo lento"
         select: "Os usuarios só poden publicar neste tema unha vez cada:"
         description: "Para promover unha discusión reflexiva en discusións rápidas ou polémicas, os usuarios deben esperar antes de publicar de novo neste tema."
-        save: "Activar"
+        enable: "Activar"
+        update: "Actualizar"
         remove: "Desactivar"
         hours: "Horas:"
         minutes: "Minutos:"
@@ -2598,9 +2595,6 @@ gl:
         description:
           one: Seleccionou <b>%{count}</b> publicación.
           other: "Seleccionou <b>%{count}</b> publicacións."
-      deleted_by_author:
-        one: "(tema retirado polo autor, eliminarase automaticamente en %{count} hora, agás no caso de que sexa sinalado)"
-        other: "(tema retirado polo autor, eliminarase automaticamente en %{count} horas, agás no caso de que sexa sinalado)"
     post:
       quote_reply: "Cita"
       quote_share: "Compartir"
@@ -2615,9 +2609,6 @@ gl:
       follow_quote: "ir á publicación citada"
       show_full: "Amosar a publicación completa"
       show_hidden: "Ver o contido ignorado."
-      deleted_by_author:
-        one: "(as publicacións retiradas polo autor serán automaticamente eliminadas en %{count} hora, agás que fosen sinaladas)"
-        other: "(as publicacións retiradas polo autor serán automaticamente eliminadas en %{count} horas, agás que fosen sinaladas)"
       collapse: "reducir"
       expand_collapse: "ampliar/reducir"
       locked: "un membro do equipo bloqueou a edición nesta publicación"
@@ -3354,14 +3345,9 @@ gl:
           description: "Non recibirá notificacións de nada relacionado cos novos temas con esta etiqueta e non aparecerán no separador de elementos pendentes de ler."
       groups:
         title: "Etiquetar grupos"
-        about: "Engádalles etiquetas aos grupos para xestionalos con maior facilidade."
         new: "Novo grupo"
-        tags_label: "Etiquetas neste grupo:"
-        parent_tag_label: "Etiqueta primaria:"
-        parent_tag_description: "Non poden usarse as etiquetas deste grupo, agás no caso de que exista unha etiqueta primaria."
         one_per_topic_label: "Limitar a unha etiqueta por tema neste grupo"
         new_name: "Novo grupo de etiquetas"
-        name_placeholder: "Nome do grupo de etiquetas"
         save: "Gardar"
         delete: "Eliminar"
         confirm_delete: "Confirma a eliminación deste grupo de etiquetas?"
@@ -3404,6 +3390,13 @@ gl:
         tomorrow: "Ata mañá"
         custom: "Personalizado"
       set_schedule: "Estabelecer un calendario de notificacións"
+    trust_levels:
+      names:
+        newuser: "novo usuario"
+        basic: "usuario básico"
+        member: "membro"
+        regular: "habitual"
+        leader: "líder"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -4336,18 +4329,19 @@ gl:
           flag: "Sinalar"
           replace: "Substituír"
           tag: "Etiqueta"
+          silence: "Silenciar"
+          link: "Ligazón"
         action_descriptions:
           block: "Evitar as publicacións que conteñen estas palabras. O usuario verá unha mensaxe de erro cando tente enviar a publicación."
           censor: "Permitir publicacións que conteñan estas palabras pero substitúeas por caracteres que oculten as palabras censuradas."
           require_approval: "As publicacións que conteñan estas palabras requiren a aprobación do equipo antes de ser visíbeis."
           flag: "Permitir as publicacións que conteñen estas palabras, pero marcalas como inadecuadas para que os moderadores poidan revisalas."
-          replace: "Substitúa as palabras das publicacións por outras palabras ou ligazóns"
         form:
           placeholder_regexp: "expresión regular"
-          replacement_label: "Substitución"
-          replacement_placeholder: "exemplo ou https://examplo.com"
+          replace_label: "Substitución"
           tag_label: "Etiqueta"
-          tag_placeholder: "etiqueta1, etiqueta2, etiqueta3"
+          link_label: "Ligazón"
+          link_placeholder: "https://example.com"
           add: "Engadir"
           success: "Feito"
           exists: "Xa existe"
@@ -4355,7 +4349,6 @@ gl:
           upload_successful: "Carga realizada correctamente. Engadíronse palabras."
         test:
           button_label: "Proba"
-          modal_title: "Probar as palabras observadas na acción «%{action}»"
           description: "Escriba texto a continuación para comprobar coincidencias con palabras observadas"
           found_matches: "Coincidencias atopadas:"
           no_matches: "Non se atoparon coincidencias"
@@ -4414,7 +4407,6 @@ gl:
         suspend_reasons:
           not_listening_to_staff: "Preferiría non escoitar comentarios do equipo"
           consuming_staff_time: "Consumiu cantidades desproporcionadas de tempo do equipo"
-          combatative: "Demasiado combativo"
           in_wrong_place: "No lugar equivocado"
           no_constructive_purpose: "Non ten ningún propósito construtivo nas súas accións que non sexa crear disensión dentro da comunidade"
           custom: "Personalizar..."

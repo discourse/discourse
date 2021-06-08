@@ -227,7 +227,7 @@ class Autospec::Manager
         file, line = line.split(' ')
         file = reverse_symlink(file)
         file = file.sub(Rails.root.to_s + "/", "")
-        # process_change can aquire a mutex and block
+        # process_change can acquire a mutex and block
         # the acceptor
         Thread.new do
           if file =~ /(es6|js)$/

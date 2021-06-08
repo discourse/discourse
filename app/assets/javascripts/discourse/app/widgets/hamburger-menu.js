@@ -366,22 +366,25 @@ export default createWidget("hamburger-menu", {
   },
 
   clickOutsideMobile(e) {
-    const $centeredElement = $(document.elementFromPoint(e.clientX, e.clientY));
-    if (
-      $centeredElement.parents(".panel").length &&
-      !$centeredElement.hasClass("header-cloak")
-    ) {
+    const centeredElement = document.elementFromPoint(e.clientX, e.clientY);
+    const parents = document
+      .elementsFromPoint(e.clientX, e.clientY)
+      .some((ele) => ele.classList.contains("panel"));
+    if (!centeredElement.classList.contains("header-cloak") && parents) {
       this.sendWidgetAction("toggleHamburger");
     } else {
-      const $window = $(window);
-      const windowWidth = $window.width();
-      const $panel = $(".menu-panel");
-      $panel.addClass("animate");
-      const panelOffsetDirection = this.site.mobileView ? "left" : "right";
-      $panel.css(panelOffsetDirection, -windowWidth);
-      const $headerCloak = $(".header-cloak");
-      $headerCloak.addClass("animate");
-      $headerCloak.css("opacity", 0);
+      const windowWidth = document.body.offsetWidth;
+      const panel = document.querySelector(".menu-panel");
+      panel.classList.add("animate");
+      let offsetDirection = this.site.mobileView ? -1 : 1;
+      offsetDirection =
+        document.querySelector("html").classList["direction"] === "rtl"
+          ? -offsetDirection
+          : offsetDirection;
+      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
+      const headerCloak = document.querySelector(".header-cloak");
+      headerCloak.classList.add("animate");
+      headerCloak.style.setProperty("--opacity", 0);
       later(() => this.sendWidgetAction("toggleHamburger"), 200);
     }
   },

@@ -490,6 +490,8 @@ sr:
         one: "{count} korisnik"
         few: "%{count} korisnika"
         other: "%{count} korisnika"
+      edit_columns:
+        save: "Sačuvaj"
     group_histories:
       actions:
         add_user_to_group: "Dodaj člana"
@@ -1227,7 +1229,6 @@ sr:
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
-      toggle_information: "uključi/isključi detalje teme"
       read_more_in_category: "Želite da pročitate više? Pregledaj druge teme u %{catLink} ili %{latestLink}."
       read_more: "Želite da pročitate više? %{catLink} ili %{latestLink}."
       browse_all_categories: Pregledaj sve kategorije
@@ -1236,7 +1237,7 @@ sr:
       jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"
       slow_mode_update:
-        save: "Omogući"
+        enable: "Omogući"
         remove: "Onemogući"
       topic_status_update:
         when: "Kada:"
@@ -1400,10 +1401,6 @@ sr:
       continue_discussion: "Nastavak diskusije iz %{postLink}:"
       follow_quote: "idi na citiranu poruku"
       show_full: "Prikaži Celu Poruku"
-      deleted_by_author:
-        one: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
-        few: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
-        other: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
       expand_collapse: "proširi/sruši"
       unread: "Poruka je nepročitana"
       errors:
@@ -1785,6 +1782,11 @@ sr:
     do_not_disturb:
       options:
         custom: "Posebna"
+    trust_levels:
+      names:
+        member: "član"
+        regular: "stalni član"
+        leader: "vođa"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

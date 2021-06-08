@@ -586,6 +586,9 @@ fi:
       total_rows:
         one: "%{count} käyttäjä"
         other: "%{count} käyttäjää"
+      edit_columns:
+        save: "Tallenna"
+        reset_to_default: "Palauta oletus"
     group_histories:
       actions:
         change_group_setting: "Muuta ryhmän asetusta"
@@ -599,8 +602,12 @@ fi:
       add_members:
         title: "Lisää jäseniä ryhmään %{group_name}"
         description: "Voit myös liittää pilkuin erotellun luettelon."
-        usernames: "Anna käyttäjätunnukset tai sähköpostiosoitteet"
-        input_placeholder: "Käyttäjätunnukset tai sähköpostit"
+        usernames_or_emails:
+          title: "Anna käyttäjätunnukset tai sähköpostiosoitteet"
+          input_placeholder: "Käyttäjätunnukset tai sähköpostit"
+        usernames:
+          title: "Syötä käyttäjänimet"
+          input_placeholder: "Käyttäjänimet"
         notify_users: "Ilmoita käyttäjille"
       requests:
         title: "Pyynnöt"
@@ -643,7 +650,6 @@ fi:
           mailboxes:
             synchronized: "Synkronoitu postilaatikko"
             none_found: "Tältä sähköpostitililtä ei löytynyt postilaatikoita."
-            disabled: "poistettu käytöstä"
         membership:
           title: Jäsenyys
           access: Pääsy
@@ -1405,23 +1411,13 @@ fi:
         invite:
           new_title: "Luo kutsulinkki"
           edit_title: "Muokkaa kutsua"
-          instructions: "Jaa tämä linkki, jotta voit välittömästi myöntää pääsyn tälle sivustolle:"
           copy_link: "kopioi linkki"
-          expires_in_time: "Vanhenee %{time}."
-          expired_at_time: "Vanhentunut %{time}."
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
-          restrict_email: "Rajoita kutsu yhteen sähköpostiosoitteeseen"
-          max_redemptions_allowed: "Käyttökertojen enimmäismäärä:"
-          add_to_groups: "Lisää ryhmiin:"
-          invite_to_topic: "Lähetä tähän ketjuun ensimmäisellä kirjautumiskerralla:"
-          expires_at: "Vanhenee:"
-          custom_message: "Valinnainen henkilökohtainen viesti:"
           send_invite_email: "Tallenna ja lähetä sähköposti"
           save_invite: "Tallenna kutsu"
           invite_saved: "Kutsu tallennettu."
           invite_copied: "Kutsulinkki kopioitu."
-          blank_email: "Kutsulinkkiä ei kopioitu. Sähköpostiosoite vaaditaan."
         bulk_invite:
           none: "Ei kutsuja näytettäväksi tällä sivulla."
           text: "Massakutsu"
@@ -2263,7 +2259,6 @@ fi:
       back_to_list: "Takaisin ketjulistaan"
       options: "Ketjun asetukset"
       show_links: "näytä tämän ketjun linkit"
-      toggle_information: "näytä/kätke ketjun tiedot"
       read_more_in_category: "Haluatko lukea lisää? Selaile muita alueen %{catLink} ketjuja tai %{latestLink}."
       read_more: "Haluatko lukea lisää? Selaa aluetta %{catLink} tai katsele %{latestLink}."
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
@@ -2280,7 +2275,8 @@ fi:
         title: "Hidas tila"
         select: "Käyttäjän tulee odottaa ennen toisen viestin lähettämistä:"
         description: "Jotta keskustelu kiivaasti etenevästä tai tulenarasta aiheesta olisi harkitumpaa, viestin lähettänyt käyttäjä voi lähettää toisen viestin aikaisintaan %{duration} päästä."
-        save: "Ota käyttöön"
+        enable: "Ota käyttöön"
+        update: "Päivitä"
         enabled_until: "Aktiivisena tähän asti:"
         remove: "Poista käytöstä"
         hours: "Tuntia:"
@@ -2645,9 +2641,7 @@ fi:
         description:
           one: Olet valinnut <b>%{count}</b> viestin.
           other: "Olet valinnut <b>%{count}</b> viestiä."
-      deleted_by_author:
-        one: "(kirjoittaja perui ketjun, poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos liputetaan)"
-        other: "(kirjoittaja perui ketjun, poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos liputetaan)"
+      deleted_by_author_simple: "(kirjoittajan poistama ketju)"
     post:
       quote_reply: "Lainaa"
       quote_share: "Jaa"
@@ -2662,9 +2656,7 @@ fi:
       follow_quote: "siirry lainattuun viestiin"
       show_full: "Näytä koko viesti"
       show_hidden: "Katso sivuutettu sisältö."
-      deleted_by_author:
-        one: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti tunnin kuluttua, paitsi jos se liputetaan)"
-        other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos se liputetaan)"
+      deleted_by_author_simple: "(kirjoittajan poistama viesti)"
       collapse: "kutista"
       expand_collapse: "laajenna/pienennä"
       locked: "henkilökunnan jäsen on estänyt tämän viestin muokkaamisen"
@@ -3404,14 +3396,9 @@ fi:
           description: "Et saa ilmoituksia ketjusta, jolla on tämä tunniste, eivätkä ne näy lukemattomissa."
       groups:
         title: "Tunnisteryhmät"
-        about: "Lisää tunnisteita ryhmiin, jotta niitä on helpompi hallita"
         new: "Uusi ryhmä"
-        tags_label: "Tunnisteet tässä ryhmässä"
-        parent_tag_label: "Emotunniste:"
-        parent_tag_description: "Tämän ryhmän tunnisteita voi käyttää vain, jos emotunniste on asetettu"
         one_per_topic_label: "Rajoita tästä ryhmästä yhteen tunnisteeseen per ketju"
         new_name: "Uusi ryhmä tunnisteita"
-        name_placeholder: "Tunnisteryhmän nimi"
         save: "Tallenna"
         delete: "Poista"
         confirm_delete: "Oletko varma, että haluat poistaa tämän tunnisteryhmän?"
@@ -3455,6 +3442,13 @@ fi:
         tomorrow: "ennen huomista"
         custom: "Mukautettu"
       set_schedule: "Aseta ilmoitusten aikataulu"
+    trust_levels:
+      names:
+        newuser: "tulokas"
+        basic: "haastaja"
+        member: "konkari"
+        regular: "mestari"
+        leader: "johtaja"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:
@@ -4061,7 +4055,7 @@ fi:
           yaml:
             text: "YAML"
             title: "Määritä teeman asetukset YAML-muodossa"
-          scss_color_variables_warning: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta. Suosittelemme käyttämään mukautettuja CSS-ominaisuuksia niiden sijasta. Lue lisää aiheesta <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">tästä oppaasta</a>."
+          scss_color_variables_warning: 'Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta. Suosittelemme käyttämään mukautettuja CSS-ominaisuuksia niiden sijasta. Lue lisää aiheesta <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">tästä oppaasta</a>.'
           scss_warning_inline: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta."
         colors:
           select_base:
@@ -4395,21 +4389,21 @@ fi:
           flag: "Liputa"
           replace: "Korvaa"
           tag: "Merkitse"
+          silence: "Hiljennä"
+          link: "Linkki"
         action_descriptions:
           block: "Estä lähettämästä viestiä, jossa esiintyy joku näistä sanoista. Käyttäjälle näytetään virheilmoitus, kun hän yrittää lähettää viestinsä."
           censor: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta korvaa ne merkeillä, jotka piilottavat sensuroidut sanat."
           require_approval: "Viesti, jossa esiintyy joku näistä sanoista, tarvitsee henkilökunnan hyväksynnän ennen sen julkaisemista."
           flag: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta liputa se sopimattomaksi, jotta valvojat voivat tarkastella sitä."
-          replace: "Korvaa sanoja viesteissä vaihtoehtoisilla sanoilla tai linkeillä"
           tag: "Merkitse automaattisesti ketjuja tunnisteilla ensimmäisen viestin perusteella"
         form:
           label: "Sisältää sanan tai lauseen"
           placeholder: "Syötä sana tai lause (* on jokerimerkki)"
           placeholder_regexp: "säännöllinen lauseke"
-          replacement_label: "Korvaava teksti"
-          replacement_placeholder: "esimerkki tai https://esimerkki.fi"
+          replace_label: "Korvaava teksti"
           tag_label: "Tunnisteet"
-          tag_placeholder: "tunniste1,tunniste2,tunniste3"
+          link_label: "Linkki"
           add: "Lisää"
           success: "Onnistui"
           exists: "On jo olemassa"
@@ -4417,7 +4411,7 @@ fi:
           upload_successful: "Lataus onnistui. Sanoja lisättiin."
         test:
           button_label: "Testi"
-          modal_title: "Testaa '%{action}' -tyypin tarkkailtuja sanoja"
+          modal_title: "Testaa %{action} -tyypin tarkkailtuja sanoja"
           description: "Tarkastele tekstin osuvuutta tarkkailtuihin sanoihin kirjoittamalla alle"
           found_matches: "Löytyneitä osumia:"
           no_matches: "Ei osumia"
@@ -4476,7 +4470,7 @@ fi:
         suspend_reasons:
           not_listening_to_staff: "Ei kuunnellut henkilökunnan palautetta"
           consuming_staff_time: "Kulutti suhteettomasti henkilökunnan aikaa"
-          combatative: "Riidanhaluinen"
+          combative: "Riidanhaluinen"
           in_wrong_place: "Väärässä paikassa"
           no_constructive_purpose: "Toiminta ei ole rakentavaa, aiheuttaa eripuraa yhteisössä"
           custom: "Mukautettu..."

@@ -215,6 +215,14 @@ describe TextCleaner do
         expect(TextCleaner.clean_title("épico encontro")).to eq("Épico encontro")
       end
 
+      it "correctly cleans Turkish characters" do
+        expect(TextCleaner.clean_title("GIDA")).to eq("Gida")
+        expect(TextCleaner.clean_title("istanbul")).to eq("Istanbul")
+
+        SiteSetting.default_locale = "tr_TR"
+        expect(TextCleaner.clean_title("GIDA")).to eq("Gıda")
+        expect(TextCleaner.clean_title("istanbul")).to eq("İstanbul")
+      end
     end
 
   end

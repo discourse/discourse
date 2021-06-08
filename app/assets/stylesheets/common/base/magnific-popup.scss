@@ -6,7 +6,7 @@
 //
 // 1. Default Settings
 // 2. General styles
-//    - Transluscent overlay
+//    - Translucent overlay
 //    - Containers, wrappers
 //    - Cursors
 //    - Helper classes
@@ -66,7 +66,7 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
 // 2. General styles
 ////////////////////////
 
-// Transluscent overlay
+// Translucent overlay
 .mfp-bg {
   top: 0;
   left: 0;
@@ -622,6 +622,9 @@ button {
   &.mfp-wrap {
     overflow-y: auto !important;
     overflow-x: auto !important;
+  }
+  .mfp-figure {
+    overflow: auto;
   }
   .mfp-img {
     max-width: none;

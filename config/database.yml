@@ -6,7 +6,7 @@ development:
   pool: 5
   timeout: 5000
   checkout_timeout: <%= ENV['CHECKOUT_TIMEOUT'] || 5 %>
-  advisory_locks: false # Disable until https://github.com/rails/rails/issues/40029 has beeen resolved.
+  advisory_locks: false # Disable until https://github.com/rails/rails/issues/40029 has been resolved.
   host_names:
     ### Don't include the port number here. Change the "port" site setting instead, at /admin/site_settings.
     ### If you change this setting you will need to
@@ -40,7 +40,7 @@ test:
   min_messages: warning
   pool: 5
   timeout: 5000
-  advisory_locks: false # Disable until https://github.com/rails/rails/issues/40029 has beeen resolved.
+  advisory_locks: false # Disable until https://github.com/rails/rails/issues/40029 has been resolved.
   host_names:
     - test.localhost
 

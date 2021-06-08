@@ -479,6 +479,8 @@ export function applyDefaultHandlers(pretender) {
     const data = parsePostData(request.requestBody);
     if (data.post.raw === "this will 409") {
       return response(409, { errors: ["edit conflict"] });
+    } else if (data.post.raw === "will return empty json") {
+      return response(200, {});
     }
     data.post.id = request.params.post_id;
     data.post.version = 2;
@@ -576,6 +578,9 @@ export function applyDefaultHandlers(pretender) {
     response(200, fixturesByUrl["/user_badges"])
   );
   pretender.delete("/user_badges/:badge_id", success);
+  pretender.put("/user_badges/:id/toggle_favorite", () =>
+    response(200, { user_badge: { is_favorite: true } })
+  );
 
   pretender.post("/posts", function (request) {
     const data = parsePostData(request.requestBody);
@@ -923,5 +928,103 @@ export function applyDefaultHandlers(pretender) {
     }
 
     return [404, { "Content-Type": "application/html" }, ""];
+  });
+
+  pretender.get("directory-columns.json", () => {
+    return response(200, {
+      directory_columns: [
+        {
+          id: 1,
+          name: "likes_received",
+          automatic: true,
+          enabled: true,
+          automatic_position: 1,
+          position: 1,
+          icon: "heart",
+          user_field: null,
+        },
+        {
+          id: 2,
+          name: "likes_given",
+          automatic: true,
+          enabled: true,
+          automatic_position: 2,
+          position: 2,
+          icon: "heart",
+          user_field: null,
+        },
+        {
+          id: 3,
+          name: "topic_count",
+          automatic: true,
+          enabled: true,
+          automatic_position: 3,
+          position: 3,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 4,
+          name: "post_count",
+          automatic: true,
+          enabled: true,
+          automatic_position: 4,
+          position: 4,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 5,
+          name: "topics_entered",
+          automatic: true,
+          enabled: true,
+          automatic_position: 5,
+          position: 5,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 6,
+          name: "posts_read",
+          automatic: true,
+          enabled: true,
+          automatic_position: 6,
+          position: 6,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 7,
+          name: "days_visited",
+          automatic: true,
+          enabled: true,
+          automatic_position: 7,
+          position: 7,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 9,
+          name: null,
+          automatic: false,
+          enabled: false,
+          automatic_position: null,
+          position: 8,
+          icon: null,
+          user_field: {
+            id: 3,
+            name: "Favorite Color",
+            description: "User's favorite color",
+            field_type: "text",
+            editable: false,
+            required: false,
+            show_on_profile: false,
+            show_on_user_card: true,
+            searchable: true,
+            position: 2,
+          },
+        },
+      ],
+    });
   });
 }

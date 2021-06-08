@@ -418,16 +418,8 @@ pt:
       topic_exists_no_oldest: "Não é possível eliminar esta categoria porque a contagem de tópicos é de %{count}."
     uncategorized_description: "Tópicos que não precisam de uma categoria ou que não se encaixam em nenhuma outra categoria existente."
   trust_levels:
-    newuser:
-      title: "novo utilizador"
-    basic:
-      title: "utilizador básico"
-    member:
-      title: "membro"
-    regular:
-      title: "habitual"
-    leader:
-      title: "líder"
+    admin: "Administração"
+    staff: "Pessoal"
     change_failed_explanation: "Tentou despromover %{user_name} para '%{new_trust_level}'. Contudo o Nível de Confiança é atualmente '%{current_trust_level}'. %{user_name} irá permanecer em '%{current_trust_level}' - se deseja despromover o utilizador, bloqueie o Nível de Confiança primeiro"
   rate_limiter:
     hours:

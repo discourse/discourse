@@ -105,7 +105,7 @@ describe TagsController do
     end
 
     context "when user can admin tags" do
-      it "succesfully retrieve all tags" do
+      it "successfully retrieve all tags" do
         sign_in(admin)
 
         get "/tags.json"

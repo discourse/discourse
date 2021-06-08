@@ -333,11 +333,11 @@ describe CategoriesController do
       end
 
       it "returns 422 if email_in address is already in use for other category" do
-        _other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
+        _other_category = Fabricate(:category, name: "Other", email_in: "mail@example.com")
 
         put "/categories/#{category.id}.json", params: {
           name: "Email",
-          email_in: "mail@examle.com",
+          email_in: "mail@example.com",
           color: "ff0",
           text_color: "fff",
         }

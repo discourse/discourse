@@ -88,7 +88,7 @@ const DEFAULT_BINDINGS = {
   "x r": {
     click: "#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top",
   }, // dismiss new/posts
-  "x t": { click: "#dismiss-topics,#dismiss-topics-top" }, // dismiss topics
+  "x t": { click: "#dismiss-topics-bottom,#dismiss-topics-top" }, // dismiss topics
 };
 
 const animationDuration = 100;

@@ -21,6 +21,7 @@ function performSearch(
   includeMessageableGroups,
   allowedUsers,
   groupMembersOf,
+  includeStagedUsers,
   resultsFn
 ) {
   let cached = cache[term];
@@ -49,6 +50,7 @@ function performSearch(
       include_messageable_groups: includeMessageableGroups,
       groups: groupMembersOf,
       topic_allowed_users: allowedUsers,
+      include_staged_users: includeStagedUsers,
     },
   });
 
@@ -90,6 +92,7 @@ let debouncedSearch = function (
   includeMessageableGroups,
   allowedUsers,
   groupMembersOf,
+  includeStagedUsers,
   resultsFn
 ) {
   discourseDebounce(
@@ -103,6 +106,7 @@ let debouncedSearch = function (
     includeMessageableGroups,
     allowedUsers,
     groupMembersOf,
+    includeStagedUsers,
     resultsFn,
     300
   );
@@ -157,7 +161,7 @@ function organizeResults(r, options) {
   return results;
 }
 
-// all punctuations except for -, _ and . which are allowed in usernames
+// all punctuation except for -, _ and . which are allowed in usernames
 // note: these are valid in names, but will end up tripping search anyway so just skip
 // this means searching for `sam saffron` is OK but if my name is `sam$ saffron` autocomplete
 // will not find me, which is a reasonable compromise
@@ -189,7 +193,8 @@ export default function userSearch(options) {
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
     categoryId = options.categoryId,
-    groupMembersOf = options.groupMembersOf;
+    groupMembersOf = options.groupMembersOf,
+    includeStagedUsers = options.includeStagedUsers;
 
   if (oldSearch) {
     oldSearch.abort();
@@ -226,6 +231,7 @@ export default function userSearch(options) {
       includeMessageableGroups,
       allowedUsers,
       groupMembersOf,
+      includeStagedUsers,
       function (r) {
         cancel(clearPromise);
         resolve(organizeResults(r, options));

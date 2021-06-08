@@ -26,7 +26,7 @@ class GroupSmtpMailer < ActionMailer::Base
     delivery_options = {
       address: from_group.smtp_server,
       port: from_group.smtp_port,
-      domain: from_group.email_username.split('@').last,
+      domain: from_group.email_username_domain,
       user_name: from_group.email_username,
       password: from_group.email_password,
       authentication: GlobalSetting.smtp_authentication,
@@ -48,7 +48,7 @@ class GroupSmtpMailer < ActionMailer::Base
       group_name: from_group.name,
       allow_reply_by_email: true,
       only_reply_by_email: true,
-      use_from_address_for_reply_to: from_group.imap_enabled?,
+      use_from_address_for_reply_to: SiteSetting.enable_imap && from_group.imap_enabled?,
       private_reply: post.topic.private_message?,
       participants: participants(post),
       include_respond_instructions: true,

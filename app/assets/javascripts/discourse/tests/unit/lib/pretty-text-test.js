@@ -1602,7 +1602,7 @@ var bar = 'bar';
     assert.cookedOptions(" -->asd", enabledTypographer, "<p>–&gt;asd</p>");
   });
 
-  test("default typhographic replacements", function (assert) {
+  test("default typographic replacements", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };
@@ -1628,7 +1628,7 @@ var bar = 'bar';
     assert.cookedOptions("(pa) (PA)", enabledTypographer, "<p>¶ ¶</p>");
   });
 
-  test("default typhographic replacements - dashes", function (assert) {
+  test("default typographic replacements - dashes", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };
@@ -1663,7 +1663,7 @@ var bar = 'bar';
     );
   });
 
-  test("disabled typhographic replacements", function (assert) {
+  test("disabled typographic replacements", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };
@@ -1675,17 +1675,29 @@ var bar = 'bar';
 
   test("watched words replace", function (assert) {
     const opts = {
-      watchedWordsReplacements: { fun: "times" },
+      watchedWordsReplace: { fun: "times" },
     };
 
     assert.cookedOptions("test fun", opts, "<p>test times</p>");
+  });
+
+  test("watched words link", function (assert) {
+    const opts = {
+      watchedWordsLink: { fun: "https://discourse.org" },
+    };
+
+    assert.cookedOptions(
+      "test fun",
+      opts,
+      '<p>test <a href="https://discourse.org">fun</a></p>'
+    );
   });
 
   test("watched words replace with bad regex", function (assert) {
     const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
-      watchedWordsReplacements: { "\\bu?\\b": "you" },
+      watchedWordsReplace: { "\\bu?\\b": "you" },
     };
 
     assert.cookedOptions(

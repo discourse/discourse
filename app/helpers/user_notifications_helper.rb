@@ -47,7 +47,7 @@ module UserNotificationsHelper
 
     return result unless result.blank?
 
-    # If there is no first paragaph with text, return the first paragraph with
+    # If there is no first paragraph with text, return the first paragraph with
     # something else (an image) or div (a onebox).
     doc.css('body > p:not(:empty), body > div:not(:empty), body > p > div.lightbox-wrapper img').first
   end

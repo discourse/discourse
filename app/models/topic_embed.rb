@@ -240,7 +240,7 @@ class TopicEmbed < ActiveRecord::Base
     end
     return result unless result.blank?
 
-    # If there is no first paragaph, return the first div (onebox)
+    # If there is no first paragraph, return the first div (onebox)
     doc.css('div').first.to_s
   end
 

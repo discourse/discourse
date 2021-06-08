@@ -33,7 +33,7 @@ export function registerTopicFooterButton(button) {
     ariaLabel: null,
     translatedAriaLabel: null,
 
-    // is this button disaplyed in the mobile dropdown or as an inline button ?
+    // is this button displayed in the mobile dropdown or as an inline button ?
     dropdown: false,
 
     // css class appended to the button

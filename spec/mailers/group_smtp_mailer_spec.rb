@@ -11,9 +11,11 @@ describe GroupSmtpMailer do
               smtp_server: 'smtp.gmail.com',
               smtp_port: 587,
               smtp_ssl: true,
+              smtp_enabled: true,
               imap_server: 'imap.gmail.com',
               imap_port: 993,
               imap_ssl: true,
+              imap_enabled: true,
               email_username: 'bugs@gmail.com',
               email_password: 'super$secret$password'
              )
@@ -96,22 +98,16 @@ describe GroupSmtpMailer do
 
     context "when IMAP is disabled for the group" do
       before do
-        group.update(
-          imap_server: nil
-        )
+        group.update(imap_enabled: false)
       end
 
-      it "uses the reply key based reply to address" do
+      it "does not send the email" do
         post = PostCreator.create(user,
                                   topic_id: receiver.incoming_email.topic.id,
                                   raw: raw
                                  )
 
-        expect(ActionMailer::Base.deliveries.size).to eq(1)
-
-        sent_mail = ActionMailer::Base.deliveries[0]
-        post_reply_key = PostReplyKey.last
-        expect(sent_mail.reply_to).to contain_exactly("test+#{post_reply_key.reply_key}@test.com")
+        expect(ActionMailer::Base.deliveries.size).to eq(0)
       end
     end
   end

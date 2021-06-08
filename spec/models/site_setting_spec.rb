@@ -196,7 +196,7 @@ describe SiteSetting do
   end
 
   describe 'cached settings' do
-    it 'should recalcualte cached setting when dependent settings are changed' do
+    it 'should recalculate cached setting when dependent settings are changed' do
       SiteSetting.blocked_attachment_filenames = 'foo'
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo/)
 

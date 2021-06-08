@@ -129,7 +129,7 @@ class Toolbar {
     this.addButton({
       id: "code",
       group: "insertions",
-      shortcut: "Shift+C",
+      shortcut: "E",
       preventFocus: true,
       trimLeading: true,
       action: (...args) => this.context.send("formatCode", args),

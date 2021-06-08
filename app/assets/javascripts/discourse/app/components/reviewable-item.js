@@ -29,11 +29,16 @@ export default Component.extend({
 
   @discourseComputed(
     "reviewable.type",
+    "reviewable.stale",
     "siteSettings.blur_tl0_flagged_posts_media",
     "reviewable.target_created_by_trust_level"
   )
-  customClasses(type, blurEnabled, trustLevel) {
+  customClasses(type, stale, blurEnabled, trustLevel) {
     let classes = type.dasherize();
+
+    if (stale) {
+      classes = `${classes} reviewable-stale`;
+    }
 
     if (blurEnabled && trustLevel === 0) {
       classes = `${classes} blur-images`;

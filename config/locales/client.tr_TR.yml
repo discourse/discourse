@@ -371,6 +371,7 @@ tr_TR:
         type_bonus:
           name: "tür bonusu"
           title: "Bazı gözden geçirilebilir türlere daha yüksek öncelikli olmaları için personel tarafından bir bonus tahsis edilebilir."
+      stale_help: "Bu gözden geçirme bir başkası tarafından çözüldü."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu öğeyi talep edebilirsiniz."
         required: "Öğeleri inceleyebilmeniz için önce hak talebinde bulunmalısınız."
@@ -563,6 +564,9 @@ tr_TR:
       total_rows:
         one: "%{count} kullanıcı"
         other: "%{count} kullanıcı"
+      edit_columns:
+        save: "Kaydet"
+        reset_to_default: "Varsayılana sıfırla"
     group_histories:
       actions:
         change_group_setting: "Grup ayarlarını değiştir"
@@ -576,8 +580,12 @@ tr_TR:
       add_members:
         title: "%{group_name} grubuna üye ekleyin"
         description: "Ayrıca virgülle ayrılmış bir liste de yapıştırabilirsiniz."
-        usernames: "Kullanıcı adlarını veya e-posta adreslerini girin"
-        input_placeholder: "Kullanıcı adı ya da e-posta"
+        usernames_or_emails:
+          title: "Kullanıcı adlarını veya e-posta adreslerini girin"
+          input_placeholder: "Kullanıcı adı ya da e-posta"
+        usernames:
+          title: "Kullanıcı adlarını girin"
+          input_placeholder: "Kullanıcı adları"
         notify_users: "Kullanıcıları bilgilendir"
       requests:
         title: "İstekler"
@@ -620,7 +628,6 @@ tr_TR:
           mailboxes:
             synchronized: "Senkronize Posta Kutusu"
             none_found: "Bu e-posta hesabında hiçbir posta kutusu bulunamadı."
-            disabled: "devredışı"
         membership:
           title: Üyelik
           access: Erişim
@@ -934,6 +941,7 @@ tr_TR:
         description: "Yeni kullanıcı katılımı ipuçlarını ve rozetlerini atlayın"
         not_first_time: "İlk defa değil mi?"
         skip_link: "İpuçlarını atla"
+        read_later: "Daha sonra okuyacağım."
       theme_default_on_all_devices: "Bu temayı bütün cihazlarımda varsayılan yap"
       color_scheme_default_on_all_devices: "Tüm cihazlarımda varsayılan renk düzenlerini ayarla"
       color_scheme: "Renk uyumu"
@@ -1184,6 +1192,7 @@ tr_TR:
         invalid: "Lütfen geçerli bir e-posta adresi gir"
         authenticated: "E-posta adresin %{provider} tarafından doğrulandı"
         invite_auth_email_invalid: "Davet e-postanız %{provider} tarafından doğrulanan e-postayla eşleşmiyor."
+        authenticated_by_invite: "E-posta adresiniz davetiye ile doğrulandı"
         frequency_immediately: "Eğer göndermek üzere olduğumuz e-postayı okuyamadıysan sana direkt e-posta göndereceğiz. "
         frequency:
           one: "Sadece son %{count} dakika içinde sizi görmediysek e-posta yollayacağız."
@@ -1360,8 +1369,6 @@ tr_TR:
           max_redemptions_allowed_label: "Bu bağlantıyı kullanarak kaç kişinin kaydolmasına izin verilsin?"
           expires_at: "Bu davet bağlantısının süresi ne zaman dolacak?"
         invite:
-          expires_in_time: "Süresi dolacak: %{time}."
-          expired_at_time: "Süresi dolmuş: %{time}."
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
         bulk_invite:
@@ -2049,10 +2056,13 @@ tr_TR:
         delete: "Konuları Sil"
         dismiss: "Yoksay"
         dismiss_read: "Okumadıklarını yoksay"
+        dismiss_read_with_selected: "%{count} adet okunmamışı at"
         dismiss_button: "Yoksay..."
+        dismiss_button_with_selected: "Bunları at (%{count})"
         dismiss_tooltip: "Yeni gönderileri görmezden gel ya da konuları takip etmeyi bırak"
         also_dismiss_topics: "Tekrar okunmamış olarak gösterilmemesi için bu konuları takip etmeyi bırak."
         dismiss_new: "Yenileri Yoksay"
+        dismiss_new_with_selected: "Yenileri (%{count}) at"
         toggle: "konuların toplu seçimini değiştir"
         actions: "Toplu Eylemler"
         change_category: "Kategori düzenle"
@@ -2158,7 +2168,6 @@ tr_TR:
       back_to_list: "Konu listesine geri dön"
       options: "Konu Seçenekleri"
       show_links: "Bu konunun içindeki bağlantıları göster. "
-      toggle_information: "konu ayrıntılarını değiştir"
       read_more_in_category: "Daha fazlası için %{catLink} kategorisine göz atabilir ya da %{latestLink}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? %{catLink} ya da %{latestLink}."
       unread_indicator: "Bu konunun son mesajını henüz hiç üye okumamış."
@@ -2172,7 +2181,7 @@ tr_TR:
         title: "Yavaş mod"
         select: "Kullanıcılar bu konuda yalnızca bir kez gönderi yapabilir:"
         description: "Hızlı cevaplanan veya ateşi yüksek tartışmalarda, mantıklı ve kaliteli cevaplar verilmesi amacıyla kullanıcıların bu konuya tekrar cevap yazabilmesi için beklemesi gerekir."
-        save: "Etkin"
+        enable: "Etkinleştir"
         remove: "Devredışı"
         hours: "Saat:"
         minutes: "Dakika:"
@@ -2496,9 +2505,7 @@ tr_TR:
         description:
           one: <b>%{count}</b> gönderi seçtiniz.
           other: "<b>%{count}</b> gönderi seçtin."
-      deleted_by_author:
-        one: "(yazarı tarafından geri alınan konu, bildirilmiş hale gelmezse %{count} saat içinde otomatik olarak silinecek.)"
-        other: "(yazarı tarafından geri alınan konu, bildirilmiş hale gelmezse %{count} saat içinde otomatik olarak silinecek.)"
+      deleted_by_author_simple: "(konu yazarı tarafından silindi)"
     post:
       quote_reply: "Alıntı"
       quote_share: "Paylaş"
@@ -2511,9 +2518,7 @@ tr_TR:
       follow_quote: "alıntılanan gönderiye git"
       show_full: "Gönderinin Tamamını Göster"
       show_hidden: "Yok sayılan içeriği görüntüleyin."
-      deleted_by_author:
-        one: "(yazarı tarafından geri alınan gönderi, bildirilmediği takdirde %{count} saat içinde otomatik olarak silinecek.)"
-        other: "(yazarı tarafından geri alınan gönderi, bildirilmediği takdirde %{count} saat içinde otomatik olarak silinecek.)"
+      deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
       expand_collapse: "genişlet/daralt"
       locked: "personel bu yayının düzenlenmesini kilitledi"
@@ -3199,18 +3204,22 @@ tr_TR:
           description: "Bu etiketle yeni konular hakkında hiçbir şeyden haberdar edilmeyeceksin ve konular okunmamış sekmesinde görünmeyecek. "
       groups:
         title: "Etiket Grupları"
-        about: "Konuları kolayca yönetmek için onlara etiket ekle."
+        about_heading: "Bir etiket grubu seçin veya yeni bir tane oluşturun"
+        about_heading_empty: "Başlamak için yeni bir etiket grubu oluşturun"
+        about_description: "Etiket grupları, birçok etiketin izinlerini tek bir yerde yönetmenize yardımcı olur."
         new: "Yeni Grup"
-        tags_label: "Bu gruptaki etiketler:"
-        parent_tag_label: "Üst etiket:"
-        parent_tag_description: "Bu gruptaki etiketler üst etiket olduğu sürece kullanılamaz."
+        new_title: "Yeni Grup Oluştur"
+        edit_title: "Etiket Grubunu Düzenle"
         one_per_topic_label: "Bu etiket grubundan her konu için bir etiket ile sınır koy"
         new_name: "Yeni Etiket Grubu"
-        name_placeholder: "Etiket Grubu Adı"
         save: "Kaydet"
         delete: "Sil"
         confirm_delete: "Bu etiket grubunu silmek istediğine emin misin?"
         everyone_can_use: "Etiketler herkes tarafından kullanılabilir"
+        tags_placeholder: "Etiket ara veya oluştur"
+        parent_tag_placeholder: "Opsiyonel"
+        select_groups_placeholder: "Grupları seçin..."
+        disabled: "Etiketleme devre dışı. "
       topics:
         none:
           unread: "Okunmamış konun bulunmuyor."
@@ -3241,6 +3250,13 @@ tr_TR:
         two_hours: "2 saat"
         custom: "Özel ayarlar"
       set_schedule: "Bildirim zamanlaması ayarla"
+    trust_levels:
+      names:
+        newuser: "yeni kullanıcı"
+        basic: "acemi kullanıcı"
+        member: "üye"
+        regular: "müdavim"
+        leader: "lider"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:
@@ -4082,16 +4098,17 @@ tr_TR:
           require_approval: "Onay gerektir"
           flag: "Bayrakla işaretle"
           replace: "Değiştir"
+          silence: "Sustur"
+          link: "Bağlantı"
         action_descriptions:
           block: "Bu kelimeleri içeren gönderilerin yayımlanmasını önle. Kullanıcı, gönderilerini yayımlamaya çalışırken bir hata mesajı görecek."
           censor: "Bu kelimeleri içeren yayımlara izin ver ancak bu kelimeleri sansürlenmiş kelimeleri gizleyen karakterlerle değiştir. "
           require_approval: "Bu kelimeleri içeren gönderiler yayımlanmadan önce personel onayı gerektirir."
           flag: "Bu kelimeleri içeren yayımlara izin ver ancak bunları uygunsuz olarak bayrakla işaretle. Böylece moderatörler bunları inceleyebilir."
-          replace: "Yazılardaki kelimeleri başka kelimeler veya bağlantılarla değiştirin"
         form:
           placeholder_regexp: "güvenilir ifade"
-          replacement_label: "Değiştirme"
-          replacement_placeholder: "örnek veya https://example.com"
+          replace_label: "Değiştirme"
+          link_label: "Bağlantı"
           add: "Ekle"
           success: "Başarılı"
           exists: "Zaten mevcut"
@@ -4099,7 +4116,6 @@ tr_TR:
           upload_successful: "Yükleme başarılı oldu. Kelimeler eklendi."
         test:
           button_label: "Deneme"
-          modal_title: "Deneme'%{action}' İzlenen Kelimeler"
           description: "İzlenen kelimelerle eşleşenleri kontrol etmek için aşağıya metin girin"
           found_matches: "Bulunan eşlemeler:"
           no_matches: "Hiçbir eşleşme bulunamadı"
@@ -4155,6 +4171,8 @@ tr_TR:
         suspend_reason_hidden_label: "Neden askıya alıyorsun? Kullanıcı giriş yapmaya çalıştığında yazdığın metni görecek. Metin lütfen kısa olsun."
         suspend_reason: "Sebep"
         suspend_reason_title: "Askıya Alma Sebebi"
+        suspend_reasons:
+          combative: "Çok kavgacı"
         suspend_message: "E Posta Mesajı"
         suspend_message_placeholder: "İsteğe bağlı olarak, askıya alma sebebini daha uzun yazabilirsin. Askıya alma sebebi kullanıcıya e-postayla gönderilecek."
         suspended_by: "Askıya alan"

@@ -86,10 +86,6 @@ class Plugin::Instance
     [].tap { |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
       Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
-
-        # tagging is included in core, so don't load it
-        next if path =~ /discourse-tagging/
-
         source = File.read(path)
         metadata = Plugin::Metadata.parse(source)
         plugins << self.new(metadata, path)
@@ -595,7 +591,7 @@ class Plugin::Instance
     end
   end
 
-  # note, we need to be able to parse seperately to activation.
+  # note, we need to be able to parse separately to activation.
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
@@ -820,7 +816,7 @@ class Plugin::Instance
   end
 
   # Register a new UserApiKey scope, and its allowed routes. Scope will be prefixed
-  # with the (parametetized) plugin name followed by a colon.
+  # with the (parameterized) plugin name followed by a colon.
   #
   # For example, if discourse-awesome-plugin registered this:
   #

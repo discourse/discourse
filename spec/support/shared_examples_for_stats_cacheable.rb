@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples_for 'stats cachable' do
+shared_examples_for 'stats cacheable' do
   describe 'fetch_cached_stats' do
     after do
       Discourse.redis.del(described_class.stats_cache_key)

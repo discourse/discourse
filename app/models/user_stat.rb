@@ -161,7 +161,7 @@ class UserStat < ActiveRecord::Base
         X.c <> topics_entered
     SQL
 
-    # Update denormalzied posts_read_count
+    # Update denormalized posts_read_count
     DB.exec(<<~SQL, seen_at: last_seen)
       UPDATE user_stats SET posts_read_count = X.c
       FROM

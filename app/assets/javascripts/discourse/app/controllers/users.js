@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
+import showModal from "discourse/lib/show-modal";
 import { equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
 import { observes } from "discourse-common/utils/decorators";
@@ -9,13 +10,14 @@ export default Controller.extend({
   application: controller(),
   queryParams: ["period", "order", "asc", "name", "group", "exclude_usernames"],
   period: "weekly",
-  order: "likes_received",
+  order: "",
   asc: null,
   name: "",
   group: null,
   nameInput: null,
   exclude_usernames: null,
   isLoading: false,
+  columns: null,
 
   showTimeRead: equal("period", "all"),
 
@@ -23,9 +25,15 @@ export default Controller.extend({
     this.set("isLoading", true);
 
     this.set("nameInput", params.name);
+    this.set("order", params.order);
+
+    const custom_field_columns = this.columns.filter((c) => !c.automatic);
+    const user_field_ids = custom_field_columns
+      .map((c) => c.user_field_id)
+      .join("|");
 
     this.store
-      .find("directoryItem", params)
+      .find("directoryItem", Object.assign(params, { user_field_ids }))
       .then((model) => {
         const lastUpdatedAt = model.get("resultSetMeta.last_updated_at");
         this.setProperties({
@@ -37,6 +45,11 @@ export default Controller.extend({
       .finally(() => {
         this.set("isLoading", false);
       });
+  },
+
+  @action
+  showEditColumnsModal() {
+    showModal("edit-user-directory-columns");
   },
 
   @action

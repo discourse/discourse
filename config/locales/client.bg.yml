@@ -461,6 +461,8 @@ bg:
       total_rows:
         one: "%{count} потребител"
         other: "%{count} потребители"
+      edit_columns:
+        save: "Запази"
     group_histories:
       actions:
         change_group_setting: "Промени настройки"
@@ -470,6 +472,9 @@ bg:
         remove_user_as_group_owner: "Премахни като собственик"
     groups:
       member_added: "Добавено"
+      add_members:
+        usernames:
+          input_placeholder: "Потебителско име"
       requests:
         title: "Заявки"
         reason: "Причина"
@@ -1454,7 +1459,6 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
-      toggle_information: "Показване / скриване на подробна информация за дадена тема "
       read_more_in_category: "Искате да прочетете повече ? Разгледайте други теми в %{catLink} или %{latestLink}."
       read_more: "Искате да прочетете повече ? %{catLink} или %{latestLink}."
       browse_all_categories: Прегледай всички категории
@@ -1463,7 +1467,7 @@ bg:
       jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"
       slow_mode_update:
-        save: "Позволи"
+        enable: "Позволи"
         remove: "Деактивиране"
       topic_status_update:
         when: "Кога:"
@@ -1683,9 +1687,6 @@ bg:
       continue_discussion: "Продължаване на дискусията от %{postLink}: "
       follow_quote: "отиди на цитираната публикация "
       show_full: "Покажи цялата публикация"
-      deleted_by_author:
-        one: "(публикация оттеглена от автора, ще бъде автоматично изтрита след %{count} час, освен, ако не бъде сигнализирана)"
-        other: "(публикация оттеглена от автора, ще бъде автоматично изтрита след %{count} часа, освен, ако не бъде сигнализирана) "
       collapse: "намали"
       expand_collapse: "разшири/намали "
       gap:
@@ -2166,9 +2167,6 @@ bg:
           description: "Няма да бъдете уведомявани относно нови теми с този етикет и те няма да се появяват в 'непрочетени'. "
       groups:
         title: "Групи етикети"
-        about: "Добавете етикетите към групи за да управлявате по-лесно."
-        tags_label: "Етикети в тази група:"
-        parent_tag_description: "Етикетите от тази група не могат да бъдат използвани, освен ако го има родителският етикет"
         save: "Запази"
         delete: "Изтрий"
         everyone_can_use: "Етикетите могат да се използват от всички"
@@ -2191,6 +2189,13 @@ bg:
     do_not_disturb:
       options:
         custom: "По избор"
+    trust_levels:
+      names:
+        newuser: "нов потребител"
+        basic: "основен потребител"
+        member: "потребител"
+        regular: "редовен"
+        leader: "лидер"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

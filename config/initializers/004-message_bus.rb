@@ -42,8 +42,9 @@ def setup_message_bus_env(env)
         extra_headers['Set-Cookie'] = '_t=del; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
       end
     rescue => e
-      Discourse.warn_exception(e, message: "Unexpected error in Message Bus")
+      Discourse.warn_exception(e, message: "Unexpected error in Message Bus", env: env)
     end
+
     user_id = user && user.id
 
     raise Discourse::InvalidAccess if !user_id && SiteSetting.login_required

@@ -550,6 +550,8 @@ cs:
         few: "%{count} uživatelé"
         many: "%{count} uživatelů"
         other: "%{count} uživatelů"
+      edit_columns:
+        save: "Uložit"
     group_histories:
       actions:
         change_group_setting: "Změnit nastavení skupiny"
@@ -559,6 +561,9 @@ cs:
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
       member_added: "Přidáno"
+      add_members:
+        usernames:
+          input_placeholder: "Uživatelská jména"
       requests:
         reason: "Reason"
         accepted: "přijato"
@@ -1895,7 +1900,6 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
-      toggle_information: "zobrazit/skrýt detaily tématu"
       read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v %{catLink} nebo %{latestLink}."
       read_more: "Chcete si přečíst další informace? %{catLink} nebo %{latestLink}."
       browse_all_categories: Projděte všechny kategorie
@@ -1904,7 +1908,7 @@ cs:
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
       slow_mode_update:
-        save: "Zapnout"
+        enable: "Zapnout"
         remove: "Vypnout"
       topic_status_update:
         title: "Časovač tématu"
@@ -2195,11 +2199,6 @@ cs:
       continue_discussion: "Pokračování diskuze z %{postLink}:"
       follow_quote: "přejít na citovaný příspěvek"
       show_full: "Zobrazit celý příspěvek"
-      deleted_by_author:
-        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        few: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
-        many: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
-        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       collapse: "kolaps"
       expand_collapse: "rozbalit/sbalit"
       locked: "Personál znemožnil upravování na tomto příspěvku"
@@ -2811,11 +2810,7 @@ cs:
           description: "Nebudete upozorněni na žádná nová témata s tímto tagem, a nebudou se objevovat na vaší záložce s nepřečtenými."
       groups:
         title: "Skupiny štítků"
-        about: "Přidej štítky do skupin pro přehlednost"
         new: "Nová skupina"
-        tags_label: "Štítky v této skupině:"
-        parent_tag_label: "Nadřazený štítek:"
-        parent_tag_description: "Štítky z této skupiny nemohou být použity pokud není přítomen nadřazený štítek."
         one_per_topic_label: "Omezit na jeden štítek k tématu z této skupiny"
         new_name: "Nová skupina štítků"
         save: "Uložit"
@@ -2847,6 +2842,13 @@ cs:
       remaining: "%{remaining} zbývá"
       options:
         custom: "Přizpůsobené"
+    trust_levels:
+      names:
+        newuser: "nový uživatel"
+        basic: "základní uživatel"
+        member: "člen"
+        regular: "pravidelný uživatel"
+        leader: "vůdce"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -3472,6 +3474,7 @@ cs:
           censor: "Cenzurovat "
           require_approval: "Vyžádat schválení"
           flag: "Nahlášení"
+          silence: "Ztišit"
         action_descriptions:
           block: "Zabránit přidání příspěvků obsahující tato slova. Uživatel uvidí chybovou hlášku ve chvíli, kdy se pokusí odeslat svůj příspěvek."
           censor: "Povolit příspěvky obsahující tato slova, ale nahradit je symboly, které skryjí cenzurovaná slova."
@@ -3479,6 +3482,7 @@ cs:
           flag: "Povolit příspěvky obsahující tato slova, ale oflagovat je jako nevhodně, aby je mohli moderátoři kontrolovat."
         form:
           placeholder_regexp: "obvyklý výraz"
+          link_placeholder: "https://example.com"
           add: "přidat"
           success: "Úspěch"
           upload_successful: "Nahráno úspěšně. Slova byla přidána "

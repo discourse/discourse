@@ -168,6 +168,7 @@ vi:
   read_only_mode_enabled: "Trang web đang ở chế độ chỉ đọc. Tất cả các tương tác đã bị tắt."
   not_in_group:
     join_group: "Tham gia nhóm"
+  deleted_topic: "Ôi! Chủ đề này đã bị xóa và không còn khả dụng nữa."
   reading_time: "Thời gian đọc"
   likes: "Lượt Thích"
   too_many_replies:
@@ -202,6 +203,8 @@ vi:
   user_is_suspended: "Người dùng đang bị treo không được phép đăng bài."
   topic_not_found: "Có gì đó đã sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
   not_accepting_pms: "Xin lỗi, %{username} hiện không chấp nhận tin nhắn."
+  removed_direct_reply_full_quotes: "Đã tự động xóa trích dẫn của toàn bộ bài viết trước đó."
+  watched_words_auto_tag: "Chủ đề được gắn thẻ tự động"
   just_posted_that: "rất giống với những gì bạn đã viết gần đây"
   invalid_characters: "chứa các kí tự không hợp lệ"
   next_page: "trang sau →"
@@ -225,6 +228,7 @@ vi:
     user_topics: "Chủ đề mới của @%{username}"
     tag: "Những chủ đề được gắn thẻ"
   too_late_to_edit: "Bài đăng đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
+  edit_conflict: "Bài đăng đó đã được chỉnh sửa bởi một người dùng khác và các thay đổi của bạn không thể lưu được nữa."
   revert_version_same: "Phiên bản hiện tại giống với phiên bản mà bạn muốn hoàn nguyên."
   excerpt_image: "hình ảnh"
   bookmarks:
@@ -260,6 +264,26 @@ vi:
   education:
     until_posts:
       other: "%{count} bài đăng"
+    "new-topic": |
+      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn vì đã bắt đầu một cuộc trò chuyện mới! **
+
+      - Tiêu đề có nghe thú vị nếu bạn đọc to không? Đó có phải là một bản tóm tắt hay không?
+
+      - Ai sẽ quan tâm đến điều này? Tại sao nó lại quan trọng? Bạn muốn loại phản hồi nào?
+
+      - Bao gồm các từ thường được sử dụng trong chủ đề của bạn để những người khác có thể *tìm thấy* nó. Để nhóm chủ đề của bạn với các chủ đề liên quan, hãy chọn một dang mục (hoặc thẻ).
+
+      Để biết thêm, [xem hướng dẫn cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
+    "new-reply": |
+      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn bạn đã đóng góp!**
+
+      - Hãy tử tế với các thành viên trong cộng đồng của bạn.
+
+      - Câu trả lời của bạn có cải thiện cuộc trò chuyện không?
+
+      - Phê bình mang tính xây dựng được hoan nghênh, nhưng chỉ trích *ý tưởng*, không phải con người.
+
+      Để biết thêm, [xem nguyên tắc cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
   activerecord:
     attributes:
       category:
@@ -399,16 +423,8 @@ vi:
       topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count} chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."
   trust_levels:
-    newuser:
-      title: "thành viên mới"
-    basic:
-      title: "thành viên cơ bản"
-    member:
-      title: "thành viên"
-    regular:
-      title: "thường xuyên"
-    leader:
-      title: "người khởi xướng"
+    admin: "Quản trị"
+    staff: "Nhân viên"
     change_failed_explanation: "Bạn đã cố gắng để giảm hạng %{user_name} xuống '%{new_trust_level}'. Tuy nhiên cấp độ tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở cấp độ '%{current_trust_level}' - nếu bạn muốn giảm hạng thành viên, trước tiên hãy khóa cấp độ tin cậy"
   post:
     image_placeholder:
@@ -417,6 +433,7 @@ vi:
     slow_down: "Bạn đã thực hiện hành động này quá nhiều lần, vui lòng thử lại sau."
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
     by_type:
+      first_day_replies_per_day: "Chúng tôi đánh giá cao sự nhiệt tình của bạn, hãy duy trì nó! Điều đó có nghĩa là, vì sự an toàn của cộng đồng của chúng tôi, bạn đã đạt đến số lượng câu trả lời tối đa mà người dùng mới có thể tạo vào ngày đầu tiên của họ. Vui lòng đợi %{time_left} và bạn sẽ có thể tạo thêm câu trả lời."
       live_post_counts: "Bạn đang yêu cầu số lượng bài đăng trực tiếp quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
       unsubscribe_via_email: "Bạn đã đạt đến số lượng người hủy đăng ký tối đa qua email. Vui lòng đợi %{time_left} trước khi thử lại."
     hours:
@@ -533,6 +550,8 @@ vi:
   user_activity:
     no_bookmarks:
       self: "Bạn không có bài viết nào được đánh dấu; dấu trang cho phép bạn nhanh chóng tham khảo các bài viết cụ thể."
+    no_drafts:
+      self: "Bạn không có bản nháp nào; bắt đầu soạn một câu trả lời trong bất kỳ chủ đề nào và nó sẽ được tự động lưu dưới dạng một bản nháp mới."
   topic_flag_types:
     spam:
       title: "Rác"
@@ -864,7 +883,10 @@ vi:
     min_personal_message_title_length: "Chiều dài tối thiểu cho phép theo số kí tự của một thông điệp"
     min_search_term_length: "Số kí tự tối thiểu trong từ khóa tìm kiếm."
     search_tokenize_chinese_japanese_korean: "Bắt buộc tìm kiếm tách từ Chinese/Japanese/Korean ngay cả trên các site không phải là CJK"
+    search_recent_posts_size: "Có bao nhiêu bài đăng gần đây để giữ trong chỉ mục"
     log_search_queries: "Ghi nhật ký các truy vấn tìm kiếm do người dùng thực hiện"
+    search_query_log_max_size: "Số lượng truy vấn tìm kiếm tối đa cần lưu giữ"
+    search_query_log_max_retention_days: "Khoảng thời gian tối đa để giữ các truy vấn tìm kiếm, tính bằng ngày."
     allow_uncategorized_topics: "Cho phép các chủ đề được tạo ra mà không gán chuyên mục. LƯU Ý: Nếu có bất kỳ chủ đề nào chưa gán chuyên mục, bạn phải phân loại chúng trước khi thay đổi."
     allow_duplicate_topic_titles: "Cho phép các chủ đề trùng tiêu đề."
     unique_posts_mins: "Trong bao nhiêu phút người sử dụng có thể viết bài khác với nội dung giống nhau"
@@ -904,6 +926,7 @@ vi:
     tl3_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 3 (bình thường) bằng cách nhân với số này"
     tl4_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 4 (dẫn đầu) bằng cách nhân với số này"
     traditional_markdown_linebreaks: "Sử dụng ngắt dòng truyền thống trong Markdown, đòi hỏi hai khoảng trống kế tiếp cho một ngắt dòng."
+    markdown_typographer_quotation_marks: "Danh sách các cặp thay thế dấu ngoặc kép và dấu ngoặc đơn"
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
     pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
@@ -1028,6 +1051,7 @@ vi:
     authorized_extensions: "Danh sách định dạng file cho phép tải lên (sử dụng '*' để cho phép tất cả loại tập tin)"
     max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."
     title_prettify: "Ngăn chặn lỗi chính tả và sai sót phổ biến trong tiêu đề, bao gồm tất cả là chữ hoa, ký tự đầu tiên là chữ thường, sử dụng quá nhiều ! và ?, thêm . ở cuối..."
+    automatic_topic_heat_values: 'Tự động cập nhật cài đặt "lượt xem chủ đề nổi bật" và "lượt thích chủ đề nổi bật" dựa trên hoạt động của trang web.'
     topic_views_heat_low: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật một chút."
     topic_views_heat_medium: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật vừa phải."
     topic_views_heat_high: "Sau bao nhiêu lượt xem thì số lượt xem sẽ rất nổi bật."
@@ -2033,6 +2057,12 @@ vi:
     reasons:
       contains_media: "Bài đăng này bao gồm phương tiện được nhúng. Xem `review_media_unless_trust_level`."
     actions:
+      agree_and_keep:
+        title: "Giữ bài viết"
+        description: "Đồng ý với cờ và giữ nguyên bài viết."
+      agree_and_keep_hidden:
+        title: "Giữ bài đăng ẩn"
+        description: "Đồng ý với cờ và để bài viết ẩn."
       agree_and_suspend:
         title: "Tạm khóa Thành viên"
       agree_and_silence:
@@ -2052,6 +2082,8 @@ vi:
           title: "Xóa tài khoản"
       reject:
         title: "Từ chối"
+      reject_and_keep_deleted:
+        title: "Giữ bài đăng bị xóa"
       delete_user:
         title: "Xóa tài khoản"
   old_keys_reminder:

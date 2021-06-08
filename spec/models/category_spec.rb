@@ -875,10 +875,6 @@ describe Category do
   end
 
   describe 'auto bump' do
-    after do
-      RateLimiter.disable
-    end
-
     it 'should correctly automatically bump topics' do
       freeze_time
       category = Fabricate(:category_with_definition, created_at: 1.minute.ago)

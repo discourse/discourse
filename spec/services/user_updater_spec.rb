@@ -173,7 +173,7 @@ describe UserUpdater do
       expect(user.user_option.mailing_list_mode).to eq true
     end
 
-    it "filters theme_ids blank values before updating perferences" do
+    it "filters theme_ids blank values before updating preferences" do
       user = Fabricate(:user)
       user.user_option.update!(theme_ids: [1])
       updater = UserUpdater.new(acting_user, user)

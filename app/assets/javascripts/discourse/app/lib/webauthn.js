@@ -42,7 +42,7 @@ export function getWebauthnCredential(
         timeout: 60000,
 
         // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
-        // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
+        // default value of preferred is not necessarily what we want, it limits webauthn to only devices that support
         // user verification, which usually requires entering a PIN
         userVerification: "discouraged",
       },

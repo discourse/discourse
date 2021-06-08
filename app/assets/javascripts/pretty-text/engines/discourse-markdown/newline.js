@@ -20,7 +20,7 @@ function newline(state, silent) {
   // '  \n' -> hardbreak
   // Lookup in pending chars is bad practice! Don't copy to other rules!
   // Pending string is stored in concat mode, indexed lookups will cause
-  // convertion to flat mode.
+  // conversion to flat mode.
   if (!silent) {
     if (pmax >= 0 && state.pending.charCodeAt(pmax) === 0x20) {
       if (pmax >= 1 && state.pending.charCodeAt(pmax - 1) === 0x20) {

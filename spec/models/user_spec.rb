@@ -153,6 +153,8 @@ describe User do
     let(:user) { Fabricate(:user) }
 
     it 'enqueues the system message' do
+      SiteSetting.send_welcome_message = true
+
       expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
         user.enqueue_welcome_message('welcome_user')
       end
@@ -679,7 +681,7 @@ describe User do
       expect(User.username_available?('tESt')).to eq(false)
     end
 
-    it 'returns true when reserved username is explicity allowed' do
+    it 'returns true when reserved username is explicitly allowed' do
       SiteSetting.reserved_usernames = 'test|donkey'
 
       expect(User.username_available?(
@@ -727,7 +729,7 @@ describe User do
       expect(User.reserved_username?('test')).to eq(true)
     end
 
-    it 'should not allow usernames matched against an expession' do
+    it 'should not allow usernames matched against an expression' do
       SiteSetting.reserved_usernames = "test)|*admin*|foo*|*bar|abc.def|löwe|ka\u0308fer"
 
       expect(User.reserved_username?('test')).to eq(false)
@@ -1901,7 +1903,7 @@ describe User do
 
       expect(message.data[:unread_notifications]).to eq(1)
       # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
-      #       to be remonved in 2.5
+      #       to be removed in 2.5
       expect(message.data[:unread_private_messages]).to eq(2)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
     end
@@ -1993,8 +1995,8 @@ describe User do
     end
 
     it "triggers an event" do
-      event = DiscourseEvent.track_events { user.unstage! }.first
-      expect(event[:event_name]).to eq(:user_unstaged)
+      event = DiscourseEvent.track(:user_unstaged) { user.unstage! }
+      expect(event).to be_present
       expect(event[:params].first).to eq(user)
     end
   end
@@ -2359,7 +2361,7 @@ describe User do
           expect(User.system_avatar_template("बहुत")).to match(%r|/letter_avatar_proxy/v\d/letter/%E0%A4%AC/ea5d25/{size}.png|)
         end
 
-        it "substitues {username} with the URL encoded username" do
+        it "substitutes {username} with the URL encoded username" do
           SiteSetting.external_system_avatars_url = "https://{hostname}/{username}.png"
           expect(User.system_avatar_template("बहुत")).to eq("https://#{Discourse.current_hostname}/%E0%A4%AC%E0%A4%B9%E0%A5%81%E0%A4%A4.png")
         end

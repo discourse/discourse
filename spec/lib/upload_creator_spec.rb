@@ -504,6 +504,32 @@ RSpec.describe UploadCreator do
         expect(FastImage.size(Discourse.store.path_for(upload))).to eq([320, 320])
       end
     end
+
+    describe 'skip validations' do
+      let(:filename) { "small.pdf" }
+      let(:file) { file_from_fixtures(filename, "pdf") }
+
+      before do
+        SiteSetting.authorized_extensions = 'png|jpg'
+      end
+
+      it 'creates upload when skip_validations is true' do
+        upload = UploadCreator.new(file, filename,
+          skip_validations: true
+        ).create_for(user.id)
+
+        expect(upload.persisted?).to eq(true)
+        expect(upload.original_filename).to eq(filename)
+      end
+
+      it 'does not create upload when skip_validations is false' do
+        upload = UploadCreator.new(file, filename,
+          skip_validations: false
+        ).create_for(user.id)
+
+        expect(upload.persisted?).to eq(false)
+      end
+    end
   end
 
   describe '#clean_svg!' do

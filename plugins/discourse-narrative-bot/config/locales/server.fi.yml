@@ -276,12 +276,6 @@ fi:
 
           (Huomaa, että nimessäni on kansainvälisessä hengessä _disco_, ihan kuin siinä 1970-luvun tanssityylissä. [Rakastan yöelämää!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Pidämme ystävällishenkisistä keskusteluista, ja tarvitsemme apuasi, jotta [pysytään asialinjalla](%{guidelines_url}). Kun näet ongelman, kerro siitä kirjoittajalle tai [avuliaalle henkilökunnalle](%{about_url}) liputtamalla.
-
-          > :imp: Kirjoitin tähän jotain tuhmaa.
-
-          Tiedät mitä tehdä. **Liputa tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> sopimattomaksi!
         reply: |-
           [Henkilökuntamme](%{base_uri}/groups/staff) saa ei-julkisen ilmoituksen lipusta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin liputuksesi.)
         not_found: |-

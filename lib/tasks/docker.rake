@@ -8,7 +8,7 @@
 # => SKIP_TESTS                set to 1 to skip all tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
-# => SKIP_INSTALL_PLUGINS      comma seperated list of plugins you want to skip installing
+# => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
 # => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all core plugins before running tests
 # => RUBY_ONLY                 set to 1 to skip all qunit tests
 # => JS_ONLY                   set to 1 to skip all rspec tests
@@ -59,9 +59,9 @@ desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
     @good = true
+
     unless ENV['SKIP_LINT']
       @good &&= run_or_fail("yarn install")
-      puts "travis_fold:start:lint" if ENV["TRAVIS"]
       puts "Running linters/prettyfiers"
       puts "eslint #{`yarn eslint -v`}"
       puts "prettier #{`yarn prettier -v`}"
@@ -94,11 +94,9 @@ task 'docker:test' do
           @good &&= run_or_fail('yarn prettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"')
         end
       end
-      puts "travis_fold:end:lint" if ENV["TRAVIS"]
     end
 
     unless ENV['SKIP_TESTS']
-      puts "travis_fold:start:prepare_tests" if ENV["TRAVIS"]
       puts "Cleaning up old test tmp data in tmp/test_data"
       `rm -fr tmp/test_data && mkdir -p tmp/test_data/redis && mkdir tmp/test_data/pg`
 
@@ -156,11 +154,7 @@ task 'docker:test' do
         @good &&= run_or_fail("#{command_prefix}bundle exec rake parallel:migrate")
       end
 
-      puts "travis_fold:end:prepare_tests" if ENV["TRAVIS"]
-
       unless ENV["JS_ONLY"]
-        puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
-
         if ENV['WARMUP_TMP_FOLDER']
           run_or_fail('bundle exec rspec ./spec/requests/groups_controller_spec.rb')
         end
@@ -211,13 +205,11 @@ task 'docker:test' do
             @good &&= run_or_fail("#{fail_fast} bundle exec rake plugin:spec")
           end
         end
-        puts "travis_fold:end:ruby_tests" if ENV["TRAVIS"]
       end
 
       unless ENV["RUBY_ONLY"]
         js_timeout = ENV["JS_TIMEOUT"].presence || 900_000 # 15 minutes
 
-        puts "travis_fold:start:js_tests" if ENV["TRAVIS"]
         unless ENV["SKIP_CORE"]
           @good &&= run_or_fail("bundle exec rake qunit:test['#{js_timeout}']")
           @good &&= run_or_fail("bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
@@ -237,13 +229,9 @@ task 'docker:test' do
             @good &&= run_or_fail("yarn ember test")
           end
         end
-
-        puts "travis_fold:end:js_tests" if ENV["TRAVIS"]
       end
     end
-
   ensure
-    puts "travis_fold:start:terminating" if ENV["TRAVIS"]
     puts "Terminating"
 
     if ENV['PAUSE_ON_TERMINATE']
@@ -255,11 +243,7 @@ task 'docker:test' do
     Process.kill("TERM", @pg_pid) if @pg_pid
     Process.wait @redis_pid if @redis_pid
     Process.wait @pg_pid if @pg_pid
-    puts "travis_fold:end:terminating" if ENV["TRAVIS"]
   end
 
-  if !@good
-    exit 1
-  end
-
+  exit 1 unless @good
 end

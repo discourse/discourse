@@ -27,7 +27,7 @@ acceptance("Group Members - Anonymous", function () {
     assert.equal(
       queryAll(".group-username-filter").attr("placeholder"),
       I18n.t("groups.members.filter_placeholder"),
-      "it should display the right filter placehodler"
+      "it should display the right filter placeholder"
     );
   });
 });
@@ -65,7 +65,7 @@ acceptance("Group Members", function (needs) {
     assert.equal(
       queryAll(".group-username-filter").attr("placeholder"),
       I18n.t("groups.members.filter_placeholder_admin"),
-      "it should display the right filter placehodler"
+      "it should display the right filter placeholder"
     );
   });
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#mixin for all guardian methods dealing with tagging permisions
+#mixin for all guardian methods dealing with tagging permissions
 module TagGuardian
   def can_create_tag?
     return is_admin? if SiteSetting.min_trust_to_create_tag.to_s == 'admin'

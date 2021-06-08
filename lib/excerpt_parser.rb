@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class ExcerptParser < Nokogiri::XML::SAX::Document
-
   attr_reader :excerpt
 
-  SPAN_REGEX = /<\s*span[^>]*class\s*=\s*['|"]excerpt['|"][^>]*>/
+  CUSTOM_EXCERPT_REGEX = /<\s*(span|div)[^>]*class\s*=\s*['"]excerpt['"][^>]*>/
 
   def initialize(length, options = nil)
     @length = length
@@ -29,7 +28,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   def self.get_excerpt(html, length, options)
     html ||= ''
-    length = html.length if html.include?('excerpt') && SPAN_REGEX === html
+    length = html.length if html.include?('excerpt') && CUSTOM_EXCERPT_REGEX === html
     me = self.new(length, options)
     parser = Nokogiri::HTML::SAX::Parser.new(me)
     catch(:done) do
@@ -179,8 +178,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       @in_summary = false if @in_details_depth == 1
     when "div", "span"
       throw :done if @start_excerpt
-      characters("</span>", truncate: false, count_it: false, encode: false) if @in_spoiler
-      @in_spoiler = false
     end
   end
 

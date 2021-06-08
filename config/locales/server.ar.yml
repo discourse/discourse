@@ -441,16 +441,8 @@ ar:
       topic_exists_no_oldest: "لا يمكن حذف هذا القسم لأن عدد الموضوعات به هو %{count}."
     uncategorized_description: "الموضوعات التي لا تحتاج الي ان تصنف تحت قسم معين, او لا تندرج تحت الأقسام الأخري."
   trust_levels:
-    newuser:
-      title: "مستخدم جديد "
-    basic:
-      title: "مستخدم أساسي"
-    member:
-      title: "عضو"
-    regular:
-      title: "منتظم"
-    leader:
-      title: "قائد"
+    admin: "المدير"
+    staff: "الطاقم"
     change_failed_explanation: "حاولت تخفيض رتبة %{user_name} إلى '%{new_trust_level}'. أيضا مستوى الثقة لهم حاليا '%{current_trust_level}'. %{user_name} سيبقى في '%{current_trust_level}' - إذا رغبت في تخفيض رتبة عضو أنظر لمستوى الثقة أولاً."
   rate_limiter:
     hours:

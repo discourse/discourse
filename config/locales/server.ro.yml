@@ -335,16 +335,8 @@ ro:
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
   trust_levels:
-    newuser:
-      title: "utilizator nou"
-    basic:
-      title: "utilizator simplu"
-    member:
-      title: "membru"
-    regular:
-      title: "utilizator frecvent"
-    leader:
-      title: "lider"
+    admin: "Admin"
+    staff: "Membrii echipei"
     change_failed_explanation: "Ai încercat să retrogradezi utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Însă nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}' - dacă dorești să retrogradezi utilizatorul, trebuie să îi blochezi întâi nivelul de încredere."
   rate_limiter:
     by_type:

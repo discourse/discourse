@@ -3091,11 +3091,11 @@ export default {
       {
         id: 27346,
         title:
-          'Reply+{messagekey}@... optionaly in header "from" in addition to "reply-to"',
+          'Reply+{messagekey}@... optionally in header "from" in addition to "reply-to"',
         fancy_title:
-          "Reply+{messagekey}@&hellip; optionaly in header &ldquo;from&rdquo; in addition to &ldquo;reply-to&rdquo;",
+          "Reply+{messagekey}@&hellip; optionally in header &ldquo;from&rdquo; in addition to &ldquo;reply-to&rdquo;",
         slug:
-          "reply-messagekey-optionaly-in-header-from-in-addition-to-reply-to",
+          "reply-messagekey-optionally-in-header-from-in-addition-to-reply-to",
         posts_count: 1,
         reply_count: 0,
         highest_post_number: 1,
@@ -5455,7 +5455,7 @@ export default {
           username: "group_moderator",
           avatar_template: "/images/avatar.png",
           created_at: "2020-07-24T17:50:17.274Z",
-          cooked: "<p>Thank you for your reply!</p>",
+          cooked: '<aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/57350945"><header class="source"><a href="https://example.com/57350945" target="_blank" rel="noopener">XYZ News Site</a> </header> <article class="onebox-body"> <div class="aspect-image" style="--aspect-ratio:690/388;"><img src="/assets/logo.png" class="thumbnail d-lazyload" width="690" height="388"></div> <h3><a href="https://example.com/57350945" target="_blank" rel="noopener">News Headline</a></h3> <p>Article summary</p> </article> <div class="onebox-metadata"> </div> <div style="clear: both"></div> </aside>',
           post_number: 3,
           post_type: 1,
           updated_at: "2020-07-24T17:50:17.274Z",

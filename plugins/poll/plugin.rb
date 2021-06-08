@@ -467,6 +467,7 @@ after_initialize do
 
       after_save do
         polls = self.extracted_polls
+        self.extracted_polls = nil
         next if polls.blank? || !polls.is_a?(Hash)
         post = self
 
@@ -515,7 +516,7 @@ after_initialize do
       result = NewPostResult.new(:poll, false)
 
       post.errors.full_messages.each do |message|
-        result.errors[:base] << message
+        result.add_error(message)
       end
 
       result

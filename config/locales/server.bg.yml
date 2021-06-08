@@ -268,16 +268,8 @@ bg:
       has_subcategories: "Не можете да изтриете тази категория, защото има подкатегории."
       topic_exists_no_oldest: "Не можете да изтриете тази категория, защото броят на темите е %{count}."
   trust_levels:
-    newuser:
-      title: "нов потребител"
-    basic:
-      title: "основен потребител"
-    member:
-      title: "потребител"
-    regular:
-      title: "редовен"
-    leader:
-      title: "лидер"
+    admin: "Админ"
+    staff: "Персонал"
     change_failed_explanation: "Опитахте се да понижите %{user_name} на '%{new_trust_level}'. Обаче тяхното ниво на доверие е вече '%{current_trust_level}'. %{user_name} ще остане на '%{current_trust_level}' - ако искате да понижите потребителското ниво, ниво на доверие първо"
   rate_limiter:
     by_type:

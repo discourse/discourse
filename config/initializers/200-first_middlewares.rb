@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# we want MesageBus to be close to the front
+# we want MessageBus to be close to the front
 # this is important cause the vast majority of web requests go to it
 # this allows us to avoid full middleware crawls each time
 #

@@ -11,8 +11,8 @@ class RateLimiter
       @type = type
     end
 
-    def description
-      time_left =
+    def time_left
+      @time_left ||=
         if @available_in <= 3
           I18n.t("rate_limiter.short_time")
         elsif @available_in < 1.minute.to_i
@@ -22,7 +22,9 @@ class RateLimiter
         else
           I18n.t("rate_limiter.hours", count: (@available_in / 1.hour.to_i))
         end
+    end
 
+    def description
       if @type.present?
         type_key = @type.tr("-", "_")
         msg = I18n.t("rate_limiter.by_type.#{type_key}", time_left: time_left, default: "")

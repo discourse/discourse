@@ -3,13 +3,17 @@
 module FileStore
 
   class BaseStore
+    UPLOAD_PATH_REGEX = %r|/(original/\d+X/.*)|
+    OPTIMIZED_IMAGE_PATH_REGEX = %r|/(optimized/\d+X/.*)|
 
     def store_upload(file, upload, content_type = nil)
+      upload.url = nil
       path = get_path_for_upload(upload)
       store_file(file, path)
     end
 
     def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
+      optimized_image.url = nil
       path = get_path_for_optimized_image(optimized_image)
       store_file(file, path)
     end
@@ -116,6 +120,12 @@ module FileStore
     end
 
     def get_path_for_upload(upload)
+      # try to extract the path from the URL instead of calculating it,
+      # because the calculated path might differ from the actual path
+      if upload.url.present? && (path = upload.url[UPLOAD_PATH_REGEX, 1])
+        return prefix_path(path)
+      end
+
       extension =
         if upload.extension
           ".#{upload.extension}"
@@ -128,6 +138,12 @@ module FileStore
     end
 
     def get_path_for_optimized_image(optimized_image)
+      # try to extract the path from the URL instead of calculating it,
+      # because the calculated path might differ from the actual path
+      if optimized_image.url.present? && (path = optimized_image.url[OPTIMIZED_IMAGE_PATH_REGEX, 1])
+        return prefix_path(path)
+      end
+
       upload = optimized_image.upload
       version = optimized_image.version || 1
       extension = "_#{version}_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
@@ -178,6 +194,9 @@ module FileStore
       depths.max
     end
 
+    def prefix_path(path)
+      path
+    end
   end
 
 end

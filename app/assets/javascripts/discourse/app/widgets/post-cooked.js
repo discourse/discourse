@@ -155,7 +155,7 @@ export default class PostCooked {
           valid = href.split("?")[0] === lc.url;
         }
 
-        // don't display badge counts on category badge & oneboxes (unless when explicitely stated)
+        // don't display badge counts on category badge & oneboxes (unless when explicitly stated)
         if (valid && isValidLink($link)) {
           const title = I18n.t("topic_map.clicks", { count: lc.clicks });
           $link.append(

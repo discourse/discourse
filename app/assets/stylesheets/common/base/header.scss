@@ -14,7 +14,7 @@
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
   > .wrap {
-    width: calc(100% - 16px); // accommodates for 8px vertical padding
+    width: calc(100% - 20px); // accommodates for 10px vertical padding
     height: 100%;
     .contents {
       display: flex;
@@ -213,19 +213,6 @@
   background-color: var(--highlight-medium);
 }
 
-.search-highlight {
-  font-weight: bold;
-}
-
-#search-help table td {
-  padding-right: 10px;
-}
-
-// we don't need this X to clear field
-#search-term::-ms-clear {
-  display: none;
-}
-
 // topic info in the header
 .extra-info-wrapper {
   display: flex;
@@ -302,6 +289,7 @@
     align-items: center;
     max-width: 100%;
     .discourse-tags {
+      display: inline;
       color: var(--header_primary-high);
       @include ellipsis;
       .discourse-tag {

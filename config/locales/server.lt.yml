@@ -241,16 +241,8 @@ lt:
     cannot_delete:
       has_subcategories: "Negalima pašalinti kategorijos, nes ji turi subkategorijų."
   trust_levels:
-    newuser:
-      title: "naujas vartotojas"
-    basic:
-      title: "pagrindinis vartotojas"
-    member:
-      title: "narys"
-    regular:
-      title: "reguliarus"
-    leader:
-      title: "lyderis"
+    admin: "Administratorius"
+    staff: "Komanda"
   post:
     image_placeholder:
       broken: "Šis paveikslėlis yra sugadintas"

@@ -476,6 +476,8 @@ id:
       last_updated: "Terakhir Diperbarui:"
       total_rows:
         other: "%{count} pengguna"
+      edit_columns:
+        save: "Simpan"
     group_histories:
       actions:
         change_group_setting: "Ubah pengaturan grup"
@@ -488,6 +490,8 @@ id:
       member_requested: "Diminta pada"
       add_members:
         title: "Tambahkan anggota ke %{group_name}"
+        usernames:
+          input_placeholder: "Nama Pengguna"
         notify_users: "Beritahu pengguna"
       requests:
         title: "Permintaan"
@@ -519,8 +523,6 @@ id:
             password: "Kata Sandi"
           settings:
             title: "Pengaturan"
-          mailboxes:
-            disabled: "dinonaktifkan"
         membership:
           title: Keanggotaan
           access: Mengakses
@@ -1387,7 +1389,7 @@ id:
       view_latest_topics: lihat topik terbaru
       jump_reply_up: lompat ke balasan sebelumnya
       slow_mode_update:
-        save: "Aktifkan"
+        enable: "Aktifkan"
         remove: "Nonaktifkan"
       topic_status_update:
         when: "Ketika:"
@@ -1602,6 +1604,13 @@ id:
           new: "Anda tidak memiliki topik baru"
     footer_nav:
       dismiss: "Bubar"
+    trust_levels:
+      names:
+        newuser: "pengguna baru"
+        basic: "pengguna standar"
+        member: "anggota"
+        regular: "umum"
+        leader: "pemimpin"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

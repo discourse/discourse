@@ -273,7 +273,7 @@ describe UserGuardian do
         expect(guardian.can_delete_user?(user)).to eq(true)
       end
 
-      it "is allowed when user created multiple posts in PMs to themself" do
+      it "is allowed when user created multiple posts in PMs to themselves" do
         topic = Fabricate(:private_message_topic, user: user, topic_allowed_users: [
           Fabricate.build(:topic_allowed_user, user: user)
         ])

@@ -346,6 +346,43 @@ acceptance("Composer", function (needs) {
     );
   });
 
+  test("Editing a post stages new content", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
+
+    await fillIn(".d-editor-input", "will return empty json");
+    await fillIn("#reply-title", "This is the new text for the title");
+    await click("#reply-control button.create");
+
+    assert.equal(find(".topic-post.staged").length, 1);
+    assert.ok(
+      find(".topic-post:nth-of-type(1)")[0].className.includes("staged")
+    );
+    assert.equal(
+      find(".topic-post.staged .cooked").text().trim(),
+      "will return empty json"
+    );
+  });
+
+  test("Editing a post can rollback to old content", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
+
+    await fillIn(".d-editor-input", "this will 409");
+    await fillIn("#reply-title", "This is the new text for the title");
+    await click("#reply-control button.create");
+
+    assert.equal(find(".topic-post.staged").length, 0);
+    assert.equal(
+      find(".topic-post .cooked")[0].innerText,
+      "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
+    );
+
+    await click(".bootbox.modal .btn-primary");
+  });
+
   test("Composer can switch between edits", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
@@ -661,8 +698,6 @@ acceptance("Composer", function (needs) {
         ),
         "mode should have changed"
       );
-
-      assert.ok(queryAll(".save-animation"), "save animation should show");
     } finally {
       toggleCheckDraftPopup(false);
     }
@@ -788,7 +823,7 @@ acceptance("Composer", function (needs) {
       "![test|690x313, 50%](upload://test.png)",
       // 3 No dimensions, should not work
       "![test](upload://test.jpeg)",
-      // 4 Wrapped in backquetes should not work
+      // 4 Wrapped in backticks should not work
       "`![test|690x313](upload://test.png)`",
       // 5 html image - should not work
       "<img src='/images/avatar.png' wight='20' height='20'>",

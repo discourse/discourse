@@ -311,6 +311,7 @@ pt_BR:
       abandon:
         confirm: "Você tem um rascunho em andamento para este tópico. O que você gostaria de fazer com ele?"
         yes_value: "Descartar"
+        no_value: "Retomar a edição"
     topic_count_latest:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -329,6 +330,7 @@ pt_BR:
     upload: "Enviar"
     uploading: "Enviando..."
     uploading_filename: "Enviando: %{filename}..."
+    processing_filename: "Processando: %{filename}..."
     clipboard: "área de transferência"
     uploaded: "Enviado!"
     pasting: "Colando..."
@@ -378,6 +380,7 @@ pt_BR:
         type_bonus:
           name: "tipo de bônus"
           title: "Certos tipos passíveis de revisão podem receber um bônus da equipe para torná-los uma prioridade mais alta."
+      stale_help: "Esta revisão foi resolvida por outra pessoa."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."
@@ -547,6 +550,7 @@ pt_BR:
       custom: "Data e hora personalizadas"
       relative: "Tempo relativo"
       none: "Nenhum necessário"
+      last_custom: "Última data personalizada"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'>Você</a> postou <a href='%{topicUrl}'>o tópico</a>"
@@ -583,6 +587,9 @@ pt_BR:
       total_rows:
         one: "%{count} usuário"
         other: "%{count} usuários"
+      edit_columns:
+        save: "Salvar"
+        reset_to_default: "Restaurar ao padrão"
     group_histories:
       actions:
         change_group_setting: "Alterar configurações do grupo"
@@ -596,8 +603,12 @@ pt_BR:
       add_members:
         title: "Adicionar membros a %{group_name}"
         description: "Você também pode colocar aqui uma lista de usuários separados por vírgulas."
-        usernames: "Digite nomes de usuários ou endereços de email"
-        input_placeholder: "Nomes de usuário ou endereços de email"
+        usernames_or_emails:
+          title: "Digite nomes de usuários ou endereços de email"
+          input_placeholder: "Nomes de usuário ou endereços de email"
+        usernames:
+          title: "Insira os nomes de usuário"
+          input_placeholder: "Nomes de usuários"
         notify_users: "Notificar usuários"
       requests:
         title: "Solicitações"
@@ -623,6 +634,19 @@ pt_BR:
         email:
           title: "E-mail"
           status: "Sincronizado %{old_emails} / %{total_emails} dos emails via IMAP."
+          enable_smtp: "Habilitar SMTP"
+          enable_imap: "Habilitar IMAP"
+          test_settings: "Configurações de Teste"
+          save_settings: "Salvar Configurações"
+          settings_required: "Todas as configurações são obrigatórias, por favor preencha todos os campos antes de validar."
+          smtp_settings_valid: "Configurações de SMTP válidas."
+          smtp_title: "SMTP"
+          smtp_instructions: "Quando você habilita o SMTP para o grupo, todos os e-mails enviados da caixa de entrada do grupo serão enviados por meio das configurações de SMTP especificadas aqui, ao invés do servidor de e-mail configurado para outros e-mails enviados por seu fórum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Configurações Adicionais"
+          imap_instructions: 'Quando você habilita o IMAP para o grupo, os e-mails são sincronizados entre a caixa de entrada do grupo e o servidor IMAP e a caixa de correio fornecidos. O SMTP deve ser habilitado com credenciais válidas e testadas antes que o IMAP possa ser habilitado. O nome de usuário e a senha de e-mail usados para SMTP serão usados para IMAP. Para obter mais informações, consulte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anúncio de recurso no Discourse Meta</a>.'
+          imap_alpha_warning: "Aviso: este recurso está no estágio alfa. Apenas o Gmail é oficialmente compatível. Use por sua conta e risco!"
+          imap_settings_valid: "Configurações IMAP válidas."
           credentials:
             title: "Credenciais"
             smtp_server: "Servidor SMTP"
@@ -640,7 +664,6 @@ pt_BR:
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Nenhuma caixa de correio foi encontrada nesta conta de e-mail."
-            disabled: "desativado"
         membership:
           title: Associação
           access: Acesso
@@ -2067,7 +2090,6 @@ pt_BR:
       back_to_list: "Voltar para a Lista de Tópicos"
       options: "Opções de Tópico"
       show_links: "mostrar links dentro deste tópico"
-      toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Quer ler mais? Veja outros tópicos em %{catLink} ou %{latestLink}."
       read_more: "Quer ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
@@ -2078,7 +2100,7 @@ pt_BR:
       jump_reply_down: pular para a última resposta
       deleted: "Este tópico foi excluído"
       slow_mode_update:
-        save: "Habilitar"
+        enable: "Habilitar"
         remove: "Desabilitar"
         hours: "Horas:"
         minutes: "Minutos:"
@@ -2414,9 +2436,6 @@ pt_BR:
         description:
           one: <b>%{count}</b> resposta selecionada.
           other: "<b>%{count}</b> respostas selecionadas."
-      deleted_by_author:
-        one: "(tópico retirado pelo autor, será automaticamente excluído em %{count} hora a menos que seja sinalizado)"
-        other: "(tópico retirado pelo autor, será automaticamente excluído em %{count} horas a menos que seja sinalizado)"
     post:
       quote_reply: "Citação"
       quote_share: "Compartilhar"
@@ -2429,9 +2448,6 @@ pt_BR:
       follow_quote: "ir para a resposta citada"
       show_full: "Exibir mensagem completa"
       show_hidden: "Ver o conteúdo ignorado."
-      deleted_by_author:
-        one: "(postagem retirada pelo autor, será automaticamente excluída em %{count} hora a menos que seja sinalizada)"
-        other: "(postagem retirada pelo autor, será automaticamente excluída em %{count} horas a menos que seja sinalizada)"
       collapse: "colapso"
       expand_collapse: "expandir/encolher"
       locked: "um membro da equipe bloqueou este post de ser editado"
@@ -3112,14 +3128,9 @@ pt_BR:
           description: "Você não será notificado de nada sobre novos tópicos com esta tag e eles não aparecerão na guia não lida."
       groups:
         title: "Grupos de Etiquetas"
-        about: "Adicione marcadores aos grupos para gerenciá-los mais facilmente"
         new: "Novo grupo"
-        tags_label: "Marcadores neste grupo"
-        parent_tag_label: "Categoria Principal"
-        parent_tag_description: "Etiquetas deste grupo não podem ser usadas a menos que a etiqueta principal esteja presente."
         one_per_topic_label: "Limite uma etiqueta por tópico deste grupo"
         new_name: "Novo Grupo de Etiquetas"
-        name_placeholder: "Nome do grupo de etiquetas"
         save: "Salvar"
         delete: "Apagar"
         confirm_delete: "Tem certeza de que deseja remover este grupo de etiquetas?"
@@ -3158,6 +3169,13 @@ pt_BR:
         two_hours: "2 horas"
         tomorrow: "Até amanhã"
         custom: "Definidos"
+    trust_levels:
+      names:
+        newuser: "usuário novo"
+        basic: "usuário básico"
+        member: "membro"
+        regular: "regular"
+        leader: "líder"
   admin_js:
     type_to_filter: "escreva para filtrar..."
     admin:
@@ -4006,6 +4024,8 @@ pt_BR:
           require_approval: "Requerer aprovação"
           flag: "Bandeira,Sinalização"
           replace: "Substituir"
+          silence: "Silenciar"
+          link: "Link"
         action_descriptions:
           block: "Impedir que postagens contendo estas palavras sejam postadas. O usuário verá uma mensagem de erro quando tentar enviar a postagem."
           censor: "Permitir postagens contendo estas palavras, mas substituí-las por caracteres que ocultem as palavras censuradas."
@@ -4013,6 +4033,8 @@ pt_BR:
           flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que os moderadores possam analisá-las."
         form:
           placeholder_regexp: "expressão regular"
+          link_label: "Link"
+          link_placeholder: "https://example.com"
           add: "Adicionar"
           success: "Sucesso"
           exists: "Já existe"
@@ -4020,7 +4042,6 @@ pt_BR:
           upload_successful: "Upload successful. Words have been added."
         test:
           button_label: "Testar"
-          modal_title: "Teste '%{action}' palavras assistidas"
           description: "Digite o texto abaixo para verificar as correspondências com palavras observadas"
           found_matches: "Encontros encontrados:"
           no_matches: "Nenhuma correspondência encontrada"

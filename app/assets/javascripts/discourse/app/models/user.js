@@ -229,7 +229,7 @@ const User = RestModel.extend({
     const allowedUsers = details && details.get("allowed_users");
     const groups = details && details.get("allowed_groups");
 
-    // directly targetted so go to inbox
+    // directly targeted so go to inbox
     if (!groups || (allowedUsers && allowedUsers.findBy("id", userId))) {
       return userPath(`${username}/messages`);
     } else {
@@ -524,27 +524,23 @@ const User = RestModel.extend({
 
   loadUserAction(id) {
     const stream = this.stream;
-    return ajax(`/user_actions/${id}.json`, { cache: "false" }).then(
-      (result) => {
-        if (result && result.user_action) {
-          const ua = result.user_action;
+    return ajax(`/user_actions/${id}.json`).then((result) => {
+      if (result && result.user_action) {
+        const ua = result.user_action;
 
-          if (
-            (this.get("stream.filter") || ua.action_type) !== ua.action_type
-          ) {
-            return;
-          }
-          if (!this.get("stream.filter") && !this.inAllStream(ua)) {
-            return;
-          }
-
-          ua.title = emojiUnescape(escapeExpression(ua.title));
-          const action = UserAction.collapseStream([UserAction.create(ua)]);
-          stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
-          stream.get("content").insertAt(0, action[0]);
+        if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
+          return;
         }
+        if (!this.get("stream.filter") && !this.inAllStream(ua)) {
+          return;
+        }
+
+        ua.title = emojiUnescape(escapeExpression(ua.title));
+        const action = UserAction.collapseStream([UserAction.create(ua)]);
+        stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
+        stream.get("content").insertAt(0, action[0]);
       }
-    );
+    });
   },
 
   inAllStream(ua) {

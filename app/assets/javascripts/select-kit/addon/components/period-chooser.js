@@ -18,6 +18,7 @@ export default DropdownSelectBoxComponent.extend({
     filterable: false,
     autoFilterable: false,
     fullDay: "fullDay",
+    customStyle: true,
     headerComponent: "period-chooser/period-chooser-header",
   },
 

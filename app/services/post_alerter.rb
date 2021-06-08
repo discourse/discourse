@@ -577,30 +577,25 @@ class PostAlerter
     users
   end
 
-  def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
-
-    post.topic.allowed_groups
-      .where.not(smtp_server: nil)
-      .where.not(smtp_port: nil)
-      .where.not(email_username: nil)
-      .where.not(email_password: nil)
-      .first
-  end
-
   def notify_pm_users(post, reply_to_user, notified)
     return unless post.topic
 
     warn_if_not_sidekiq
 
     # Users who interacted with the post by _directly_ emailing the group
-    # via the group's email_username. This excludes people who replied via
-    # email to a user_private_message notification email. These people should
+    # via the group's email_username which is configured via SMTP/IMAP.
+    #
+    # This excludes people who replied via email to a user_private_message
+    # notification email which will have a PostReplyKey. These people should
     # not be emailed again by the user_private_message notifications below.
+    #
+    # This also excludes people who emailed the group by one of its incoming_email
+    # addresses, e.g. somegroup+support@discoursemail.com, which is part of the
+    # normal group email flow and has nothing to do with SMTP/IMAP.
     emails_to_skip_send = notify_group_direct_emailers(post)
 
     # Users that aren't part of any mentioned groups and who did not email
-    # the group directly.
+    # the group directly at the group's email_username.
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
@@ -610,7 +605,7 @@ class PostAlerter
       end
     end
 
-    # Users that are part of all mentioned groups
+    # Users that are part of all mentioned groups.
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
@@ -622,6 +617,11 @@ class PostAlerter
         notify_group_summary(user, post)
       end
     end
+  end
+
+  def group_notifying_via_smtp(post)
+    return nil if !SiteSetting.enable_smtp || !SiteSetting.enable_imap || post.post_type != Post.types[:regular]
+    post.topic.allowed_groups.where(smtp_enabled: true, imap_enabled: true).first
   end
 
   def notify_group_direct_emailers(post)
@@ -642,7 +642,7 @@ class PostAlerter
       end
     end
 
-    # Add the group's email into the array, because it is used for
+    # Add the group's email_username into the array, because it is used for
     # skip_send_email_to in the case of user private message notifications
     # (we do not want the group to be sent any emails from here because it
     # will make another email for IMAP to pick up in the group's mailbox)

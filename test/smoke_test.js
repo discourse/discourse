@@ -16,7 +16,7 @@ const path = require("path");
 
 (async () => {
   const browser = await puppeteer.launch({
-    // when debugging localy setting the SHOW_BROWSER env variable can be very helpful
+    // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
     headless: process.env.SHOW_BROWSER === undefined,
     args: ["--disable-local-storage", "--no-sandbox"]
   });

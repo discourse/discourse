@@ -1,5 +1,6 @@
 import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
+import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import LockOn from "discourse/lib/lock-on";
 import Session from "discourse/models/session";
@@ -33,7 +34,7 @@ const SERVER_SIDE_ONLY = [
   /^\/styleguide/,
 ];
 
-// The amount of height (in pixles) that we factor in when jumpEnd is called so
+// The amount of height (in pixels) that we factor in when jumpEnd is called so
 // that we show a little bit of the post text even on mobile devices instead of
 // scrolling to "suggested topics".
 const JUMP_END_BUFFER = 250;
@@ -513,6 +514,15 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
   }
 
   return getURL(url || "/");
+}
+
+export function getEditCategoryUrl(category, subcategories, tab) {
+  let url = `/c/${Category.slugFor(category)}/edit`;
+
+  if (tab) {
+    url += `/${tab}`;
+  }
+  return getURL(url);
 }
 
 export default _urlInstance;

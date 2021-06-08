@@ -351,6 +351,7 @@ zh_CN:
         type_bonus:
           name: "奖励类型"
           title: "某些可审核类型可以由管理人员加权，以使其具有更高的优先级。"
+      stale_help: "这个可审查对象已被其他人解决。"
       claim_help:
         optional: "你可以认领此条目以避免被他人审核。"
         required: "在你审核之前你必须认领此条目。"
@@ -543,6 +544,9 @@ zh_CN:
       last_updated: "最近更新："
       total_rows:
         other: "%{count} 位用户"
+      edit_columns:
+        save: "保存"
+        reset_to_default: "重置为默认"
     group_histories:
       actions:
         change_group_setting: "更改群组设置"
@@ -556,8 +560,12 @@ zh_CN:
       add_members:
         title: "添加成员到 %{group_name}"
         description: "你也可以粘贴一个以逗号分隔的列表。"
-        usernames: "输入用户名或电子邮件地址"
-        input_placeholder: "用户名或电子邮件"
+        usernames_or_emails:
+          title: "输入用户名或电子邮件地址"
+          input_placeholder: "用户名或电子邮件"
+        usernames:
+          title: "输入用户名"
+          input_placeholder: "用户名"
         notify_users: "通知用户"
       requests:
         title: "请求"
@@ -583,6 +591,25 @@ zh_CN:
         email:
           title: "邮箱"
           status: "已通过 IMAP 同步了 %{old_emails} / %{total_emails} 封邮件。"
+          enable_smtp: "启用 SMTP"
+          enable_imap: "启用 IMAP"
+          test_settings: "测试设置"
+          save_settings: "保存设置"
+          settings_required: "所有设置均为必填项，请在验证前填写所有字段。"
+          smtp_settings_valid: "SMTP 设置有效。"
+          smtp_title: "SMTP"
+          smtp_instructions: "当您为此群组启用 SMTP 时， 从群组收件箱发送的所有出站邮件将通过此处指定的 SMTP 设置而不是为您的论坛发送的其他邮件配置的邮件服务器发送。"
+          imap_title: "IMAP"
+          imap_additional_settings: "附加设置"
+          imap_instructions: '当您为群组启用 IMAP 时，邮件将在群组收件箱和被提供的 IMAP 服务器和邮箱之间同步. 在启用 IMAP 之前，SMTP 必须启用并且凭证经过验证与测试。 SMTP 使用的电子邮件用户名和密码将用于 IMAP。 欲了解更多信息，请访问 <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta 功能公告</a>。'
+          imap_alpha_warning: "警告：这是处于A测的功能。只官方支持 Gmail，风险自负！"
+          imap_settings_valid: "IMAP 设置有效。"
+          smtp_disable_confirm: "如果你禁用SMTP，所有SMTP和 IMAP 设置将被重置，相关功能将被禁用，你确定要继续吗？"
+          imap_disable_confirm: "如果你禁用 IMAP，所有 IMAP 设置将被重置，相关功能将被禁用，你确定要继续吗？"
+          imap_mailbox_not_selected: "你必须为此 IMAP 配置选择一个邮箱，否则不会同步任何邮箱！"
+          prefill:
+            title: "以此设置预填："
+            gmail: "GMail"
           credentials:
             title: "认证"
             smtp_server: "SMTP 服务器"
@@ -600,7 +627,7 @@ zh_CN:
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
-            disabled: "已"
+            disabled: "已禁用"
         membership:
           title: 成员
           access: 访问
@@ -917,6 +944,7 @@ zh_CN:
         description: "跳过新用户流程提示和徽章"
         not_first_time: "不是第一次？"
         skip_link: "跳过这些提示"
+        read_later: "稍后再读"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
       color_scheme_default_on_all_devices: "为我所有的设备上设置默认配色方案"
       color_scheme: "配色方案"
@@ -1167,6 +1195,7 @@ zh_CN:
         invalid: "请填写正确的邮箱地址"
         authenticated: "你的邮箱已被 %{provider} 验证过了"
         invite_auth_email_invalid: "您的邀请电子邮件与 %{provider} 验证的电子邮件不匹配"
+        authenticated_by_invite: "你的邮箱已被此邀请验证过了"
         frequency_immediately: "如果你没有阅读过摘要邮件中的相关内容，将立即发送电子邮件给你。"
         frequency:
           other: "仅在 %{count} 分钟内没有访问时发送邮件给你。"
@@ -1350,23 +1379,13 @@ zh_CN:
         invite:
           new_title: "创建邀请"
           edit_title: "编辑邀请"
-          instructions: "分享此链接可立即授予访问此站点的权限："
           copy_link: "复制链接"
-          expires_in_time: "%{time} 内过期"
-          expired_at_time: "过期时间为 %{time}"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
-          restrict_email: "将邀请限制为一个电子邮件地址"
-          max_redemptions_allowed: "最大使用次数："
-          add_to_groups: "添加到群组："
-          invite_to_topic: "首次登录时邀请至话题："
-          expires_at: "过期时间："
-          custom_message: "可选私信："
           send_invite_email: "保存并发送电子邮件"
           save_invite: "保存邀请"
           invite_saved: "邀请已保存。"
           invite_copied: "邀请链接已复制。"
-          blank_email: "邀请链接未复制，电子邮件地址为必填项。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
@@ -2065,10 +2084,13 @@ zh_CN:
         delete: "删除话题"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读话题"
+        dismiss_read_with_selected: "忽略 %{count} 个未读"
         dismiss_button: "忽略…"
+        dismiss_button_with_selected: "忽略（%{count}）…"
         dismiss_tooltip: "忽略新帖或停止跟踪话题"
         also_dismiss_topics: "停止追踪这些话题以不再显示为未读"
         dismiss_new: "设为已读"
+        dismiss_new_with_selected: "忽略新内容（%{count}）…"
         toggle: "切换话题批量选择"
         actions: "批量操作"
         change_category: "设置分类"
@@ -2168,7 +2190,8 @@ zh_CN:
       back_to_list: "返回列表"
       options: "话题选项"
       show_links: "显示此话题中的链接"
-      toggle_information: "切换话题详情"
+      collapse_details: "收起话题详情"
+      expand_details: "展开话题详情"
       read_more_in_category: "想阅读更多？浏览%{catLink}的其他话题或%{latestLink}。"
       read_more: "想阅读更多？%{catLink}或%{latestLink}。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
@@ -2185,7 +2208,8 @@ zh_CN:
         title: "慢速模式"
         select: "用户只能在这个话题中发言一次："
         description: "为了提高回帖太快或有争议内容的话题的讨论质量，用户再次发言之前必须稍作等待。"
-        save: "启用"
+        enable: "启用"
+        update: "更新"
         enabled_until: "启用直到："
         remove: "停用"
         hours: "小时："
@@ -2535,8 +2559,7 @@ zh_CN:
         deselect_all: 取消全选
         description:
           other: "已选择 <b>%{count}</b> 个帖子。"
-      deleted_by_author:
-        other: "（话题被作者删除，如无标记将在 %{count} 小时后自动删除）"
+      deleted_by_author_simple: "(话题已被作者删除)"
     post:
       quote_reply: "引用"
       quote_share: "分享"
@@ -2551,8 +2574,7 @@ zh_CN:
       follow_quote: "转到所引用的帖子"
       show_full: "显示完整帖子"
       show_hidden: "显示已忽略内容。"
-      deleted_by_author:
-        other: "（帖子被作者删除，如无标记将在 %{count} 小时后自动删除）"
+      deleted_by_author_simple: "(帖子已被作者删除)"
       collapse: "折叠"
       expand_collapse: "展开/折叠"
       locked: "一个管理人员锁定了该帖的编辑"
@@ -3176,6 +3198,9 @@ zh_CN:
           name: 其它
         posting:
           name: 发帖
+      favorite_max_reached: "您不能收藏更多徽章。"
+      favorite_max_not_reached: "收藏此徽章"
+      favorite_count: "%{count}/%{max} 个徽章已被收藏"
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"
@@ -3250,14 +3275,9 @@ zh_CN:
           description: "你不会收到任何含有此标签的新话题的通知，也不会在未读栏。"
       groups:
         title: "标签组"
-        about: "将标签分组以便管理。"
         new: "新标签组"
-        tags_label: "标签组内标签："
-        parent_tag_label: "上级标签："
-        parent_tag_description: "未设置上级标签前不能使用标签组内的标签。"
         one_per_topic_label: "本组中的每个话题限制一个标签"
         new_name: "新建标签组"
-        name_placeholder: "标签组名称"
         save: "保存"
         delete: "删除"
         confirm_delete: "确定要删除此标签组吗？"
@@ -3301,6 +3321,14 @@ zh_CN:
         tomorrow: "直到明天"
         custom: "自定义"
       set_schedule: "设定一个定时通知"
+    trust_levels:
+      names:
+        newuser: "新用户"
+        basic: "初级用户"
+        member: "成员"
+        regular: "活跃用户"
+        leader: "资深用户"
+      detailed_name: "%{level}：%{name}"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -3902,7 +3930,7 @@ zh_CN:
           yaml:
             text: "YAML"
             title: "用 YAML 格式定义主题设置"
-          scss_color_variables_warning: "不建议在主题中使用核心 SCSS 颜色变量，请改用 CSS 自定义属性，详细信息参见 <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">本指南</a>"
+          scss_color_variables_warning: '不建议在主题中使用核心 SCSS 颜色变量，请改用 CSS 自定义属性，详细信息参见 <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">本指南</a>'
           scss_warning_inline: "不建议在主题中使用核心 SCSS 颜色变量。"
         colors:
           select_base:
@@ -4228,6 +4256,7 @@ zh_CN:
         download: 下载
         clear_all: 清除全部
         clear_all_confirm: "您确定要清除 %{action} 动作的所有敏感词吗？"
+        invalid_regex: '已关注的关键字“%{word}”是无效的正则表达式。'
         actions:
           block: "封禁"
           censor: "审查"
@@ -4235,6 +4264,8 @@ zh_CN:
           flag: "标记"
           replace: "替换"
           tag: "标签"
+          silence: "禁言"
+          link: "链接"
         action_descriptions:
           block: "防止发布包含这些敏感词的帖子。用户提交帖子时会收到错误提示。"
           censor: "允许包含这些敏感词的帖子，但将其替换为隐藏敏感词的字符。"
@@ -4242,14 +4273,17 @@ zh_CN:
           flag: "允许包含这些敏感词的帖子，但将其标记为不当，以便版主审核。"
           replace: "使用另外的字词替换帖子中的字词"
           tag: "根据第一个帖子自动为话题打标签"
+          silence: "包含这些关键字的用户的第一篇贴子，需要得到工作人员的批准才能被看到，并且该用户将被自动静音。"
+          link: "用链接替换帖子中的文字"
         form:
           label: "包含字词"
           placeholder: "输入字词（*为通配符）"
           placeholder_regexp: "正则表达式"
-          replacement_label: "替换"
-          replacement_placeholder: "示例 https://example.com"
+          replace_label: "替换"
+          replace_placeholder: "示例"
           tag_label: "标签"
-          tag_placeholder: "标签1,标签2,标签3"
+          link_label: "链接"
+          link_placeholder: "https://example.com"
           add: "新增"
           success: "成功"
           exists: "已存在"
@@ -4257,7 +4291,6 @@ zh_CN:
           upload_successful: "上传成功。敏感词已添加。"
         test:
           button_label: "测试"
-          modal_title: "测试“%{action}”敏感词"
           description: "在下方输入文本以检查匹配的敏感词"
           found_matches: "发现匹配："
           no_matches: "无符合的结果"
@@ -4316,7 +4349,7 @@ zh_CN:
         suspend_reasons:
           not_listening_to_staff: "不理会管理人员的反馈"
           consuming_staff_time: "消耗了过多的管理人员时间"
-          combatative: "太好斗了"
+          combative: "过于好斗"
           in_wrong_place: "在错误的地方"
           no_constructive_purpose: "除了在社区内引起异议外，他们的行动没有任何建设性的目的"
           custom: "自定义..."

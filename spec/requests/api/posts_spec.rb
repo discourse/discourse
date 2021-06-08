@@ -118,7 +118,7 @@ describe 'posts' do
 
   path '/posts/{id}.json' do
 
-    get 'Retreive a single post' do
+    get 'Retrieve a single post' do
       tags 'Posts'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true

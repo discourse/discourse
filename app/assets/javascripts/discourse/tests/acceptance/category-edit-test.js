@@ -23,9 +23,19 @@ acceptance("Category Edit", function (needs) {
       "it jumps to the correct screen"
     );
 
-    assert.equal(queryAll(".badge-category").text(), "bug");
+    assert.equal(
+      queryAll(".category-breadcrumb .badge-category").text(),
+      "bug"
+    );
+    assert.equal(
+      queryAll(".category-color-editor .badge-category").text(),
+      "bug"
+    );
     await fillIn("input.category-name", "testing");
-    assert.equal(queryAll(".badge-category").text(), "testing");
+    assert.equal(
+      queryAll(".category-color-editor .badge-category").text(),
+      "testing"
+    );
 
     await fillIn(".edit-text-color input", "ff0000");
 
@@ -124,5 +134,28 @@ acceptance("Category Edit", function (needs) {
       !visible(".subcategory-list-style-field"),
       "subcategory list style isn't visible for child categories"
     );
+  });
+});
+
+acceptance("Category Edit - no permission to edit", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () => {
+      return helper.response(200, {
+        category: {
+          id: 1,
+          name: "bug",
+          color: "e9dd00",
+          text_color: "000000",
+          slug: "bug",
+          can_edit: false,
+        },
+      });
+    });
+  });
+
+  test("returns 404", async function (assert) {
+    await visit("/c/bug/edit");
+    assert.equal(currentURL(), "/404");
   });
 });

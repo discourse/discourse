@@ -21,8 +21,7 @@ discourseModule(
 
         test(assert) {
           assert.ok(
-            queryAll("div.software-update-prompt.require-software-refresh")
-              .length === 0,
+            queryAll("div.software-update-prompt").length === 0,
             "it does not have the class to show the prompt"
           );
 

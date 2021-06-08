@@ -586,6 +586,9 @@ nl:
       total_rows:
         one: "%{count} gebruiker"
         other: "%{count} gebruikers"
+      edit_columns:
+        save: "Opslaan"
+        reset_to_default: "Standaardwaarden terugzetten"
     group_histories:
       actions:
         change_group_setting: "Groepsinstelling wijzigen"
@@ -599,8 +602,11 @@ nl:
       add_members:
         title: "Leden toevoegen aan %{group_name}"
         description: "U kunt ook in een door komma's gescheiden lijst plakken."
-        usernames: "Voer gebruikersnamen of e-mailadressen in"
-        input_placeholder: "Gebruikersnamen of e-mailadressen"
+        usernames_or_emails:
+          title: "Voer gebruikersnamen of e-mailadressen in"
+          input_placeholder: "Gebruikersnamen of e-mailadressen"
+        usernames:
+          input_placeholder: "Gebruikersnamen"
         notify_users: "Gebruikers een melding sturen"
       requests:
         title: "Aanvragen"
@@ -643,7 +649,6 @@ nl:
           mailboxes:
             synchronized: "Gesynchroniseerd postvak"
             none_found: "Geen postvakken gevonden in deze e-mailaccount."
-            disabled: "uitgeschakeld"
         membership:
           title: Lidmaatschap
           access: Toegang
@@ -1403,23 +1408,13 @@ nl:
         invite:
           new_title: "Uitnodiging maken"
           edit_title: "Uitnodiging bewerken"
-          instructions: "Deze koppeling delen om meteen toegang tot deze website te verlenen:"
           copy_link: "koppeling kopiëren"
-          expires_in_time: "Verloopt in %{time}."
-          expired_at_time: "Verlopen om %{time}."
           show_advanced: "Geavanceerde opties tonen"
           hide_advanced: "Geavanceerde opties verbergen"
-          restrict_email: "De uitnodiging tot één e-mail beperken"
-          max_redemptions_allowed: "Max. aantal toepassingen:"
-          add_to_groups: "Toevoegen aan groepen:"
-          invite_to_topic: "Naar topic versturen bij eerste login:"
-          expires_at: "Verloopt na:"
-          custom_message: "Optioneel persoonlijk bericht:"
           send_invite_email: "E-mail opslaan en versturen"
           save_invite: "Uitnodiging opslaan"
           invite_saved: "Uitnodiging opgeslagen."
           invite_copied: "Uitnodigingskoppeling gekopieerd."
-          blank_email: "Uitnodigingskoppeling niet gekopieerd. E-mailadres is vereist."
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
           text: "Bulkuitnodiging"
@@ -2261,7 +2256,6 @@ nl:
       back_to_list: "Terug naar topiclijst"
       options: "Topic-opties"
       show_links: "koppelingen binnen dit topic tonen"
-      toggle_information: "topicdetails in-/uitschakelen"
       read_more_in_category: "Wilt u meer lezen? U kunt door andere topics in %{catLink} bladeren, of de %{latestLink}."
       read_more: "Wilt u meer lezen? %{catLink} of %{latestLink}."
       unread_indicator: "Nog geen enkel lid heeft het laatste bericht van dit topic gelezen."
@@ -2278,7 +2272,8 @@ nl:
         title: "Langzame modus"
         select: "Gebruikers mogen slechts een bericht in dit topic plaatsen om de:"
         description: "Om een doordachte discussie in snel bewegende of controversiële discussies te stimuleren, moeten gebruikers wachten voordat ze opnieuw een bericht in dit topic kunnen plaatsen."
-        save: "Inschakelen"
+        enable: "Inschakelen"
+        update: "Bijwerken"
         enabled_until: "Ingeschakeld tot:"
         remove: "Uitschakelen"
         hours: "Uren:"
@@ -2640,9 +2635,6 @@ nl:
         description:
           one: U hebt <b>%{count}</b> bericht geselecteerd.
           other: "U hebt <b>%{count}</b> berichten geselecteerd."
-      deleted_by_author:
-        one: "(topic ingetrokken door schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
-        other: "(topic ingetrokken door schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
     post:
       quote_reply: "Citeren"
       quote_share: "Delen"
@@ -2657,9 +2649,6 @@ nl:
       follow_quote: "naar het geciteerde bericht"
       show_full: "Volledige bericht tonen"
       show_hidden: "Genegeerde inhoud weergeven."
-      deleted_by_author:
-        one: "(bericht ingetrokken door de schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
-        other: "(bericht ingetrokken door de schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
       collapse: "samenvouwen"
       expand_collapse: "uitvouwen/samenvouwen"
       locked: "een staflid heeft dit bericht voor bewerking vergrendeld"
@@ -3399,14 +3388,9 @@ nl:
           description: "U ontvangt geen enkele melding over nieuwe topics met deze tag, en ze verschijnen niet op uw tabblad Ongelezen."
       groups:
         title: "Tag-groepen"
-        about: "Tags aan groepen toevoegen om deze makkelijker te beheren."
         new: "Nieuwe groep"
-        tags_label: "Tags in deze groep:"
-        parent_tag_label: "Bovenliggende tag:"
-        parent_tag_description: "Tags uit deze groep kunnen niet worden gebruikt, tenzij de bovenliggende tag aanwezig is."
         one_per_topic_label: "Beperken tot 1 tag per topic uit deze groep"
         new_name: "Nieuwe tag-groep"
-        name_placeholder: "Naam van tag-groep"
         save: "Opslaan"
         delete: "Verwijderen"
         confirm_delete: "Weet u zeker dat u deze tag-groep wilt verwijderen?"
@@ -3450,6 +3434,13 @@ nl:
         tomorrow: "Tot morgen"
         custom: "Aangepast"
       set_schedule: "Stel een meldingsschema in"
+    trust_levels:
+      names:
+        newuser: "nieuwe gebruiker"
+        basic: "basisgebruiker"
+        member: "lid"
+        regular: "vaste gebruiker"
+        leader: "leider"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:
@@ -4389,19 +4380,20 @@ nl:
           flag: "Markeren"
           replace: "Vervangen"
           tag: "Taggen"
+          silence: "Dempen"
+          link: "Koppeling"
         action_descriptions:
           block: "Het plaatsen van berichten die deze woorden bevatten tegengaan. Gebruikers zien een foutbericht wanneer ze hun bericht proberen te verzenden."
           censor: "Berichten met deze woorden toestaan, maar deze vervangen door tekens die de gecensureerde woorden verbergen."
           require_approval: "Berichten die deze woorden bevatten, vereisen goedkeuring door stafleden voordat ze kunnen worden bekeken."
           flag: "Berichten met deze woorden toestaan, maar deze markeren als ongepast zodat moderators ze kunnen beoordelen."
-          replace: "Woorden in berichten vervangen door andere woorden of links"
           tag: "Automatisch topics taggen op basis van het eerste bericht"
         form:
           placeholder_regexp: "reguliere expressie"
-          replacement_label: "Vervanging"
-          replacement_placeholder: "voorbeeld of https://example.com"
+          replace_label: "Vervanging"
           tag_label: "Tag"
-          tag_placeholder: "tag1,tag2,tag3"
+          link_label: "Koppeling"
+          link_placeholder: "https://example.com"
           add: "Toevoegen"
           success: "Succes"
           exists: "Bestaat al"
@@ -4409,7 +4401,6 @@ nl:
           upload_successful: "Uploaden geslaagd. Woorden zijn toegevoegd."
         test:
           button_label: "Testen"
-          modal_title: "In de gaten gehouden woorden voor '%{action}' testen"
           description: "Voer hieronder tekst in voor controle op in de gaten gehouden woorden"
           found_matches: "Gevonden overeenkomsten:"
           no_matches: "Geen overeenkomsten gevonden"
@@ -4468,7 +4459,6 @@ nl:
         suspend_reasons:
           not_listening_to_staff: "Wilde niet naar feedback van stafleden luisteren"
           consuming_staff_time: "Heeft onevenredig veel tijd van stafleden verbruikt"
-          combatative: "Te strijdlustig"
           in_wrong_place: "Op de verkeerde plek"
           no_constructive_purpose: "Geen constructief doel voor hun acties, anders dan het creëren van onenigheid binnen de gemeenschap"
           custom: "Aangepast..."

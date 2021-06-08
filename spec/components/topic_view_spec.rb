@@ -15,6 +15,23 @@ describe TopicView do
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
 
+  context "preload" do
+    it "allows preloading of data" do
+      preloaded_topic_view = nil
+      preloader = lambda do |view|
+        preloaded_topic_view = view
+      end
+
+      TopicView.on_preload(&preloader)
+
+      expect(preloaded_topic_view).to eq(nil)
+      topic_view
+      expect(preloaded_topic_view).to eq(topic_view)
+
+      TopicView.cancel_preload(&preloader)
+    end
+  end
+
   it "raises a not found error if the topic doesn't exist" do
     expect { TopicView.new(1231232, evil_trout) }.to raise_error(Discourse::NotFound)
   end

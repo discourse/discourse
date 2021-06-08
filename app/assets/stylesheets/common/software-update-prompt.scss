@@ -6,8 +6,8 @@
   background-color: var(--tertiary-low);
   color: var(--tertiary);
   max-height: 0;
-  visibility: hidden;
-  transition: max-height 1s;
+  overflow: hidden;
+  transition: max-height 0.3s;
   box-shadow: shadow("header");
   z-index: z("header") - 10;
 
@@ -48,10 +48,9 @@
   }
 
   &.require-software-refresh {
-    visibility: visible;
-    overflow: hidden;
     max-height: 300px;
     margin-left: auto;
     margin-right: auto;
+    transition: max-height 0.75s;
   }
 }

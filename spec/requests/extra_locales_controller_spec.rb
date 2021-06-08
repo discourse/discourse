@@ -57,7 +57,7 @@ describe ExtraLocalesController do
               "admin" => {
                 "site_settings" => {
                   "categories" => {
-                    "github_badges" => "Github Badges"
+                    "github_badges" => "GitHub Badges"
                   }
                 }
               }

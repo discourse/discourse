@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
@@ -97,3 +98,26 @@ acceptance("User Routes", function (needs) {
     );
   });
 });
+
+acceptance(
+  "User Routes - Periods in current user's username",
+  function (needs) {
+    needs.user({ username: "e.il.rout" });
+
+    test("Periods in current user's username don't act like wildcards", async function (assert) {
+      await visit("/u/eviltrout");
+      assert.equal(
+        query(".user-profile-names .username").textContent.trim(),
+        "eviltrout",
+        "eviltrout profile is shown"
+      );
+
+      await visit("/u/e.il.rout");
+      assert.equal(
+        query(".user-profile-names .username").textContent.trim(),
+        "e.il.rout",
+        "e.il.rout profile is shown"
+      );
+    });
+  }
+);

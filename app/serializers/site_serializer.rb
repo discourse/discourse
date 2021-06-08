@@ -6,13 +6,13 @@ class SiteSerializer < ApplicationSerializer
     :default_archetype,
     :notification_types,
     :post_types,
+    :trust_levels,
     :groups,
     :filters,
     :periods,
     :top_menu_items,
     :anonymous_top_menu_items,
     :uncategorized_category_id, # this is hidden so putting it here
-    :disabled_plugins,
     :user_field_max_length,
     :post_action_types,
     :topic_flag_types,
@@ -29,11 +29,11 @@ class SiteSerializer < ApplicationSerializer
     :censored_regexp,
     :shared_drafts_category_id,
     :custom_emoji_translation,
-    :watched_words_replace
+    :watched_words_replace,
+    :watched_words_link
   )
 
   has_many :categories, serializer: SiteCategorySerializer, embed: :objects
-  has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
   has_many :user_fields, embed: :objects, serializer: UserFieldSerializer
   has_many :auth_providers, embed: :objects, serializer: AuthProviderSerializer
@@ -51,7 +51,7 @@ class SiteSerializer < ApplicationSerializer
 
   def user_color_schemes
     cache_fragment("user_color_schemes") do
-      schemes = ColorScheme.where('user_selectable').order(:name)
+      schemes = ColorScheme.includes(:color_scheme_colors).where('user_selectable').order(:name)
       ActiveModel::ArraySerializer.new(schemes, each_serializer: ColorSchemeSelectableSerializer).as_json
     end
   end
@@ -116,10 +116,6 @@ class SiteSerializer < ApplicationSerializer
 
   def uncategorized_category_id
     SiteSetting.uncategorized_category_id
-  end
-
-  def disabled_plugins
-    Discourse.disabled_plugin_names
   end
 
   def user_field_max_length
@@ -188,6 +184,10 @@ class SiteSerializer < ApplicationSerializer
 
   def watched_words_replace
     WordWatcher.word_matcher_regexps(:replace)
+  end
+
+  def watched_words_link
+    WordWatcher.word_matcher_regexps(:link)
   end
 
   private

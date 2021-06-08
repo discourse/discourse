@@ -213,4 +213,18 @@ describe Badge do
       expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(0)
     end
   end
+
+  context "#seed" do
+
+    let(:regular_badge) do
+      Badge.find(Badge::Regular)
+    end
+
+    it "`allow_title` is not updated for existing records" do
+      regular_badge.update(allow_title: false)
+      SeedFu.seed
+      regular_badge.reload
+      expect(regular_badge.allow_title).to eq(false)
+    end
+  end
 end

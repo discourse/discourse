@@ -305,7 +305,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      // comin up
+      // coming up
       assert.equal(queryAll("span.string").text(), "evil");
       assert.equal(queryAll("span.var").text(), "trout");
       assert.equal(queryAll("a").prop("title"), "evil");

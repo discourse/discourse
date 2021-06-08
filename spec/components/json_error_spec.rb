@@ -42,7 +42,7 @@ describe JsonError do
     end
   end
 
-  describe "an activerecord objec with errors" do
+  describe "an activerecord object with errors" do
     let(:invalid_user) { User.new }
     it "returns the errors correctly" do
       expect(invalid_user).not_to be_valid

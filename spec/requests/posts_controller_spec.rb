@@ -577,7 +577,7 @@ describe PostsController do
       before do
         Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: post.topic)
       end
-      it "marks topic_bookmaked as true" do
+      it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
         expect(response.parsed_body['topic_bookmarked']).to eq(true)
       end
@@ -889,6 +889,28 @@ describe PostsController do
 
       it 'silences correctly based on auto_silence_first_post_regex' do
         SiteSetting.auto_silence_first_post_regex = "I love candy|i eat s[1-5]"
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'when I eat s3 sometimes when not looking'
+        }
+
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body
+
+        expect(parsed["action"]).to eq("enqueued")
+        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        score = reviewable.reviewable_scores.first
+        expect(score.reason).to eq('auto_silence_regex')
+
+        user.reload
+        expect(user).to be_silenced
+      end
+
+      it 'silences correctly based on silence watched words' do
+        SiteSetting.watched_words_regular_expressions = true
+        WatchedWord.create!(action: WatchedWord.actions[:silence], word: 'I love candy')
+        WatchedWord.create!(action: WatchedWord.actions[:silence], word: 'i eat s[1-5]')
 
         post "/posts.json", params: {
           raw: 'this is the test content',
@@ -1903,7 +1925,7 @@ describe PostsController do
   end
 
   describe '#cooked' do
-    it 'returns the cooked conent' do
+    it 'returns the cooked content' do
       post = Fabricate(:post, cooked: "WAt")
       get "/posts/#{post.id}/cooked.json"
 

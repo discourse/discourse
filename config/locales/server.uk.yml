@@ -692,16 +692,8 @@ uk:
       topic_exists_no_oldest: "Неможливо видалити цей розділ, тому що кількість тем у ньому дорівнює %{count}."
     uncategorized_description: "Теми, які не потребують категорії, або не розподілені до будь-якої категорії."
   trust_levels:
-    newuser:
-      title: "новий користувач"
-    basic:
-      title: "базовий користувач"
-    member:
-      title: "учасник"
-    regular:
-      title: "активний"
-    leader:
-      title: "провідник"
+    admin: "Адмін"
+    staff: "Персонал"
     change_failed_explanation: "Ви намагаєтеся знизити користувача %{user_name} до рівня довіри '%{new_trust_level}'. Однак, його рівень довіри вже '%{current_trust_level}'. %{user_name} залишиться з рівнем довіри '%{current_trust_level}'. Якщо ви все ж хочете знизити користувача, заблокуйте спочатку рівень довіри."
   post:
     image_placeholder:

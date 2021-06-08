@@ -391,7 +391,7 @@ describe BadgeGranter do
       expect(UserBadge.where(user_id: user.id, badge_id: Badge::Autobiographer).count).to eq(1)
     end
 
-    it "grants read guidlines" do
+    it "grants read guidelines" do
       user.user_stat.read_faq = Time.now
       user.user_stat.save
 
