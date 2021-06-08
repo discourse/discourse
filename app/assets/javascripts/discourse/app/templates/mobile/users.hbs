@@ -20,14 +20,12 @@
         {{combo-box
           class="directory-group-selector"
           value=group
-          valueProperty="name"
           content=groupOptions
-          nameProperty="name"
           onChange=(action groupChanged)
           options=(hash
-          none="directory.group.all"
+            none="directory.group.all"
           )
-          }}
+        }}
         {{#if currentUser.staff}}
           {{d-button
             icon="wrench"
