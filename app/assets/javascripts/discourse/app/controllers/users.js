@@ -50,12 +50,11 @@ export default Controller.extend({
 
   loadGroups() {
     this.store.findAll("group").then((groups) => {
-      const groupOptions = [];
-      groups.forEach((group) => {
-        groupOptions.push({
+      const groupOptions = groups.map((group) => {
+        return {
           name: group.name,
           id: group.id,
-        });
+        };
       });
       this.set("groupOptions", groupOptions);
     });
