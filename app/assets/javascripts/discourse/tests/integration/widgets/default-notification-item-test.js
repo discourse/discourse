@@ -2,9 +2,10 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
+  exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import EmberObject from "@ember/object";
 import hbs from "htmlbars-inline-precompile";
@@ -60,7 +61,7 @@ discourseModule(
           ];
         });
 
-        assert.equal(queryAll("li.read").length, 0);
+        assert.ok(!exists("li.read"));
 
         $(document).trigger(
           $.Event("mouseup", {
@@ -71,7 +72,7 @@ discourseModule(
         );
         await settled();
 
-        assert.equal(queryAll("li.read").length, 1);
+        assert.equal(count("li.read"), 1);
         assert.equal(requests, 1);
       },
     });

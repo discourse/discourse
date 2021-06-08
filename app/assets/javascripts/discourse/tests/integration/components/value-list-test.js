@@ -2,9 +2,9 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -27,8 +27,9 @@ discourseModule("Integration | Component | value-list", function (hooks) {
       await selectKit().fillInFilter("eviltrout");
       await selectKit().keyboard("enter");
 
-      assert.ok(
-        queryAll(".values .value").length === 3,
+      assert.equal(
+        count(".values .value"),
+        3,
         "it adds the value to the list of values"
       );
 
@@ -50,8 +51,9 @@ discourseModule("Integration | Component | value-list", function (hooks) {
     async test(assert) {
       await click(".values .value[data-index='0'] .remove-value-btn");
 
-      assert.ok(
-        queryAll(".values .value").length === 1,
+      assert.equal(
+        count(".values .value"),
+        1,
         "it removes the value from the list of values"
       );
 
@@ -81,8 +83,9 @@ discourseModule("Integration | Component | value-list", function (hooks) {
       await selectKit().expand();
       await selectKit().selectRowByValue("maja");
 
-      assert.ok(
-        queryAll(".values .value").length === 3,
+      assert.equal(
+        count(".values .value"),
+        3,
         "it adds the value to the list of values"
       );
 
@@ -108,8 +111,9 @@ discourseModule("Integration | Component | value-list", function (hooks) {
       await selectKit().fillInFilter("eviltrout");
       await selectKit().keyboard("enter");
 
-      assert.ok(
-        queryAll(".values .value").length === 3,
+      assert.equal(
+        count(".values .value"),
+        3,
         "it adds the value to the list of values"
       );
 
@@ -135,8 +139,9 @@ discourseModule("Integration | Component | value-list", function (hooks) {
       await selectKit().fillInFilter("eviltrout");
       await selectKit().keyboard("enter");
 
-      assert.ok(
-        queryAll(".values .value").length === 3,
+      assert.equal(
+        count(".values .value"),
+        3,
         "it adds the value to the list of values"
       );
 

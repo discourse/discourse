@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   exists,
   queryAll,
@@ -121,7 +122,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".category-link").length, 8);
+        assert.equal(count(".category-link"), 8);
         assert.equal(
           queryAll(".category-link .category-name").text(),
           this.site
@@ -143,7 +144,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".category-link").length, 8);
+        assert.equal(count(".category-link"), 8);
         assert.equal(
           queryAll(".category-link .category-name").text(),
           this.site
@@ -199,7 +200,7 @@ discourseModule(
 
       test(assert) {
         assert.equal(
-          queryAll(".category-link").length,
+          count(".category-link"),
           maxCategoriesToDisplay,
           "categories displayed limited by header_dropdown_category_count"
         );
