@@ -359,6 +359,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     searched_icon = process(searched_icon.dup)
 
     sprite_sources([SiteSetting.default_theme_id]).each do |fname|
+      next if !File.exist?(fname)
+
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
@@ -380,6 +382,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     results = Set.new
 
     sprite_sources([SiteSetting.default_theme_id]).each do |fname|
+      next if !File.exist?(fname)
+
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
