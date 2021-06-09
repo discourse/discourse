@@ -20,7 +20,7 @@ require 'fileutils'
 dev_mode = false
 
 def ensure_cache_clean!
-  all_plugin_directories = Pathname.new(RAILS_ROOT + '/plugins').children.select(&:directory?)
+  _all_plugin_directories = Pathname.new(RAILS_ROOT + '/plugins').children.select(&:directory?)
   core_git_sha = `git rev-parse HEAD`.strip
   plugins_combined_git_sha = `git ls-files -s plugins | git hash-object --stdin`.strip
   super_sha = Digest::SHA1.hexdigest(core_git_sha + plugins_combined_git_sha)
