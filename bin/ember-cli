@@ -48,7 +48,7 @@ end
 
 system "yarn -s install --cwd #{yarn_dir}"
 
-if (ARGV - ["--unicorn", "-"]).length < 2
+if ARGV.include?("-u") || ARGV.include?("--unicorn")
   unicorn_pid = spawn(__dir__ + "/unicorn")
 
   Thread.new do
