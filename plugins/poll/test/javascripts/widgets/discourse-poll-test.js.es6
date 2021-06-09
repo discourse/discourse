@@ -123,7 +123,7 @@ discourseModule(
           "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']"
         );
         assert.equal(requests, 1);
-        assert.equal(queryAll(".chosen").length, 1);
+        assert.equal(count(".chosen"), 1);
         assert.equal(queryAll(".chosen").text(), "100%yes");
         assert.equal(queryAll(".toggle-results").text(), "Show vote");
 
