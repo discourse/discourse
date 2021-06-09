@@ -178,6 +178,10 @@ createWidget("discourse-poll-standard-results", {
       page: state.page[optionId],
       limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
+      if (!state.voters[optionId]) {
+        state.voters[optionId] = [];
+      }
+
       const voters = state.voters[optionId];
       const newVoters = result.voters[optionId];
 
@@ -304,6 +308,10 @@ createWidget("discourse-poll-number-results", {
       page: state.page,
       limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
+      if (!state.voters) {
+        state.voters = [];
+      }
+
       const voters = state.voters;
       const newVoters = result.voters;
 
