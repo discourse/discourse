@@ -330,6 +330,11 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     end
 
     custom_svg_sprites(theme_ids).each do |fname|
+      if !File.exist?(fname)
+        cache.delete("custom_svg_sprites_#{Theme.transform_ids(theme_ids).join(',')}")
+        next
+      end
+
       svg_file = Nokogiri::XML(File.open(fname)) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
@@ -354,6 +359,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     searched_icon = process(searched_icon.dup)
 
     sprite_sources([SiteSetting.default_theme_id]).each do |fname|
+      next if !File.exist?(fname)
+
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
@@ -375,6 +382,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     results = Set.new
 
     sprite_sources([SiteSetting.default_theme_id]).each do |fname|
+      next if !File.exist?(fname)
+
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
@@ -475,6 +484,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     # Automatically register icons in sprites added via themes or plugins
     icons = []
     custom_svg_sprites(theme_ids).each do |fname|
+      next if !File.exist?(fname)
+
       svg_file = Nokogiri::XML(File.open(fname))
 
       svg_file.css('symbol').each do |sym|
