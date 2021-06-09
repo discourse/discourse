@@ -22,6 +22,17 @@ class EmailLog < ActiveRecord::Base
 
   scope :bounced, -> { where(bounced: true) }
 
+  scope :addressed_to_user, ->(user) do
+    where(<<~SQL, user_id: user.id)
+      EXISTS(
+        SELECT 1
+        FROM user_emails
+        WHERE user_emails.user_id = :user_id AND
+         email_logs.to_address ILIKE '%' || user_emails.email || '%'
+      )
+    SQL
+  end
+
   after_create do
     # Update last_emailed_at if the user_id is present and email was sent
     User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present?
