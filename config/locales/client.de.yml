@@ -380,6 +380,7 @@ de:
         type_bonus:
           name: "Bonus Typ"
           title: "Bestimmte überprüfbare Typen können vom Team mit einem Bonus ausgestattet werden, damit sie höher priorisiert sind."
+      stale_help: "Diese Überprüfung wurde von einer anderen Person behoben."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
         required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
@@ -586,6 +587,9 @@ de:
       total_rows:
         one: "%{count} Benutzer"
         other: "%{count} Benutzer"
+      edit_columns:
+        save: "Speichern"
+        reset_to_default: "Auf Standard zurücksetzen"
     group_histories:
       actions:
         change_group_setting: "Gruppeneinstellung ändern"
@@ -630,6 +634,25 @@ de:
         email:
           title: "E-Mail"
           status: "Synchronisiert %{old_emails} / %{total_emails} E-Mails über IMAP."
+          enable_smtp: "SMTP aktivieren"
+          enable_imap: "IMAP aktivieren"
+          test_settings: "Test-Einstellungen"
+          save_settings: "Einstellungen speichern"
+          settings_required: "Alle Einstellungen sind erforderlich, bitte fülle alle Felder vor der Validierung aus."
+          smtp_settings_valid: "SMTP-Einstellungen gültig."
+          smtp_title: "SMTP"
+          smtp_instructions: "Wenn Du SMTP für die Gruppe aktivierst, werden alle ausgehenden E-Mails, die aus dem Posteingang der Gruppe gesendet werden, über die hier angegebenen SMTP-Einstellungen anstelle des E-Mail-Servers gesendet, der für andere von Ihrem Forum gesendete E-Mails konfiguriert ist."
+          imap_title: "IMAP"
+          imap_additional_settings: "Weitere Einstellungen"
+          imap_instructions: 'Wenn Du IMAP für die Gruppe aktivierst, werden E-Mails zwischen dem Gruppenposteingang und dem bereitgestellten IMAP-Server und -Postfach synchronisiert. SMTP muss mit gültigen und getesteten Anmeldeinformationen aktiviert werden, bevor IMAP aktiviert werden kann. Der für SMTP verwendete E-Mail-Benutzername und das Passwort werden für IMAP verwendet. Weitere Informationen finden Sie unter <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Feature-Ankündigung auf Discourse Meta</a>.'
+          imap_alpha_warning: "Warnung: Dies ist eine Alpha-Phasen-Funktion. Nur Gmail wird offiziell unterstützt. Benutzung auf eigene Gefahr!"
+          imap_settings_valid: "IMAP-Einstellungen gültig."
+          smtp_disable_confirm: "Wenn Du SMTP deaktivierst, werden alle SMTP- und IMAP-Einstellungen zurückgesetzt und die zugehörigen Funktionen deaktiviert. Bist Du sicher, dass Du fortfahren möchtest?"
+          imap_disable_confirm: "Wenn Du IMAP deaktivierst, werden alle IMAP-Einstellungen zurückgesetzt und die zugehörigen Funktionen deaktiviert. Bist Du sicher, dass Du fortfahren möchtest?"
+          imap_mailbox_not_selected: "Du musst ein Postfach für diese IMAP-Konfiguration auswählen, sonst werden keine Postfächer synchronisiert!"
+          prefill:
+            title: "Vorbefüllen mit Einstellungen für:"
+            gmail: "GMail"
           credentials:
             title: "Zugangsdaten"
             smtp_server: "SMTP Server"
@@ -647,6 +670,7 @@ de:
           mailboxes:
             synchronized: "Synchronisierte Mailbox"
             none_found: "In diesem E-Mail Konto wurden keine Postfächer gefunden."
+            disabled: "Deaktiviert"
         membership:
           title: Mitgliedschaft
           access: Zugriff
@@ -971,6 +995,7 @@ de:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
         not_first_time: "Nicht dein erstes Mal?"
         skip_link: "Überspringe diese Tipps"
+        read_later: "Ich werde es später lesen."
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
       color_scheme_default_on_all_devices: "Standard-Farbschema(s) auf allen meinen Geräten festlegen"
       color_scheme: "Farbschema"
@@ -1223,6 +1248,7 @@ de:
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
         authenticated: "Deine E-Mail-Adresse wurde von %{provider} bestätigt"
         invite_auth_email_invalid: "Ihre Einladungs-E-Mail stimmt nicht mit der von %{provider} authentifizierten E-Mail überein"
+        authenticated_by_invite: "Deine E-Mail wurde durch die Einladung authentifiziert"
         frequency_immediately: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
         frequency:
           one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten Minute gesehen haben."
@@ -1408,23 +1434,22 @@ de:
         invite:
           new_title: "Einladung erstellen"
           edit_title: "Einladung bearbeiten"
-          instructions: "Teile diesen Link, um sofort Zugriff auf folgende Seite zu gewähren:"
+          instructions: "Teile diesen Link, um sofort Zugriff auf diese Seite zu gewähren"
           copy_link: "Link kopieren"
-          expires_in_time: "Läuft in %{time} ab."
-          expired_at_time: "Abgelaufen um %{time}."
+          expires_in_time: "Läuft in %{time} ab"
+          expired_at_time: "Abgelaufen um %{time}"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
-          restrict_email: "Einladung auf eine E-Mail-Adresse beschränken"
-          max_redemptions_allowed: "Maximale Anzahl an Verwendungen:"
-          add_to_groups: "Zu Gruppen hinzufügen:"
-          invite_to_topic: "Beim ersten Login zum Thema senden:"
-          expires_at: "Verfällt nach:"
-          custom_message: "Optionale persönliche Nachricht:"
+          restrict_email: "Auf eine E-Mail-Adresse beschränken"
+          max_redemptions_allowed: "Max. Verwendungen"
+          add_to_groups: "Zu Gruppen hinzufügen"
+          invite_to_topic: "Kommen Sie zu diesem Thema"
+          expires_at: "Verfällt nach"
+          custom_message: "Optionale persönliche Nachricht"
           send_invite_email: "Speichern und E-Mail senden"
           save_invite: "Einladung speichern"
           invite_saved: "Einladung gespeichert."
           invite_copied: "Einladungslink kopiert."
-          blank_email: "Einladungslink nicht kopiert. E-Mailadresse wird benötigt."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2153,10 +2178,13 @@ de:
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
+        dismiss_read_with_selected: "%{count} ungelesene verwerfen"
         dismiss_button: "Ignorieren..."
+        dismiss_button_with_selected: "Verwerfen (%{count})…"
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new: "Neue Themen ignorieren"
+        dismiss_new_with_selected: "Neue verwerfen (%{count})"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
         change_category: "Kategorie auswählen"
@@ -2266,7 +2294,8 @@ de:
       back_to_list: "Zurück zur Themenliste"
       options: "Themen-Optionen"
       show_links: "zeige Links innerhalb dieses Themas"
-      toggle_information: "Details zum Thema ein- oder ausblenden"
+      collapse_details: "Themendetails einklappen"
+      expand_details: "Themendetails erweitern"
       read_more_in_category: "Möchtest du mehr lesen? Entdecke andere Themen in %{catLink} oder %{latestLink}."
       read_more: "Möchtest du mehr lesen? %{catLink} oder %{latestLink}."
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
@@ -3323,6 +3352,9 @@ de:
           name: Andere
         posting:
           name: Schreiben
+      favorite_max_reached: "Du kannst keine weiteren Abzeichen favorieren."
+      favorite_max_not_reached: "Markiere dieses Abzeichen als Favorit"
+      favorite_count: "%{count}/%{max} Abzeichen als Favorit markiert"
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
@@ -3404,14 +3436,18 @@ de:
           description: "Du wirst nicht über neue Themen mit diesem Schlagwort benachrichtigt und sie werden nicht in deinen ungelesenen Beiträgen auftauchen."
       groups:
         title: "Schlagwort-Gruppen"
-        about: "Schlagwörter zu Gruppen hinzufügen, um sie einfacher zu verwalten."
+        about_heading: "Wähle eine Tag-Gruppe oder erstelle eine neue."
+        about_heading_empty: "Erstelle eine neue Tag-Gruppe um loszulegen"
+        about_description: "Tag-Gruppen helfen Dir, Berechtigungen für viele Tags an einem Ort zu verwalten."
         new: "Neue Gruppe"
-        tags_label: "Schlagwörter in dieser Gruppe:"
+        new_title: "Neue Gruppe erstellen"
+        edit_title: "Tag-Gruppe bearbeiten"
+        tags_label: "Schlagwörter in dieser Gruppe"
         parent_tag_label: "Übergeordnetes Schlagwort"
-        parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort zugeordnet ist."
+        parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort vorhanden ist."
         one_per_topic_label: "Beschränke diese Gruppe auf ein Schlagwort pro Thema"
         new_name: "Neue Schlagwort-Gruppe"
-        name_placeholder: "Name der Tag Gruppe"
+        name_placeholder: "Name"
         save: "Speichern"
         delete: "Löschen"
         confirm_delete: "Möchtest du wirklich diese Schlagwort-Gruppe löschen?"
@@ -3419,6 +3455,10 @@ de:
         usable_only_by_groups: "Schlagwörter sind für jeden sichtbar, aber nur die folgenden Gruppen können sie benutzen"
         visible_only_to_groups: "Tags sind nur für folgende Gruppen sichtbar"
         cannot_save: "Schlagwort-Gruppe kann nicht gespeichert werden. Stelle sicher, dass mindestens ein Schlagwort vorhanden ist, der Name der Schlagwort-Gruppe nicht leer ist und eine Gruppe für die Schlagwort-Berechtigung ausgewählt ist."
+        tags_placeholder: "Tags suchen oder erstellen"
+        parent_tag_placeholder: "Optional"
+        select_groups_placeholder: "Gruppen auswählen..."
+        disabled: "Tagging ist deaktiviert. "
       topics:
         none:
           unread: "Du hast keine ungelesenen Themen."
@@ -3455,6 +3495,14 @@ de:
         tomorrow: "Bis morgen"
         custom: "Benutzerdefiniert"
       set_schedule: "Zeitplan für Benachrichtigungen festlegen"
+    trust_levels:
+      names:
+        newuser: "Neuer Benutzer"
+        basic: "Anwärter"
+        member: "Mitglied"
+        regular: "Stammgast"
+        leader: "Anführer"
+      detailed_name: "%{level}: %{name}"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben…"
     admin:
@@ -4389,6 +4437,7 @@ de:
         download: Herunterladen
         clear_all: Auswahl aufheben
         clear_all_confirm: "Bist Du sicher, dass Du alle beobachteten Wörter für die %{action} Aktion löschen möchtest?"
+        invalid_regex: 'Das beobachtete Wort „%{word}“ ist ein ungültiger regulärer Ausdruck.'
         actions:
           block: "Blockieren"
           censor: "Zensieren"
@@ -4397,21 +4446,25 @@ de:
           replace: "Ersetzen"
           tag: "Schlagwort"
           silence: "Stummschalten"
+          link: "Link"
         action_descriptions:
           block: "Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken."
           censor: "Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken."
           require_approval: "Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind."
           flag: "Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können."
-          replace: "Wörter in Beiträgen durch andere Wörter oder Links ersetzen"
+          replace: "Wörter in Beiträgen durch andere Wörter ersetzen"
           tag: "Markieren Sie Themen automatisch basierend auf dem ersten Beitrag"
+          silence: "Erste Beiträge von Benutzern, die diese Wörter enthalten, müssen von den Team Mitgliedern genehmigt werden, bevor sie gesehen werden können, und der Benutzer wird automatisch stummgeschaltet."
+          link: "Wörter in Beiträgen durch Links ersetzen"
         form:
           label: "Hat Wort oder Wortgruppe"
           placeholder: "Geben Sie ein Wort oder eine Phrase ein (* ist ein Platzhalter)"
           placeholder_regexp: "regulärer Ausdruck"
-          replacement_label: "Ersatz"
-          replacement_placeholder: "example oder https://example.com"
+          replace_label: "Ersatz"
+          replace_placeholder: "Beispiel"
           tag_label: "Schlagwort"
-          tag_placeholder: "Schlagwort1, Schlagwort2, Schlagwort3"
+          link_label: "Link"
+          link_placeholder: "https://example.com"
           add: "Hinzufügen"
           success: "Erfolg"
           exists: "Existiert bereits"

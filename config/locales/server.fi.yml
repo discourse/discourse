@@ -657,16 +657,8 @@ fi:
       topic_exists_no_oldest: "Aluetta ei voi poistaa, koska ketjujen lukumäärä on #{count}."
     uncategorized_description: "Ketjut, jotka eivät tarvitse aluetta tai eivät sovi muihin alueisiin."
   trust_levels:
-    newuser:
-      title: "tulokas"
-    basic:
-      title: "haastaja"
-    member:
-      title: "konkari"
-    regular:
-      title: "mestari"
-    leader:
-      title: "johtaja"
+    admin: "Ylläpito"
+    staff: "Henkilökunta"
     change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}' - jos haluat alentaa luottamustasoa, lukitse se ensin"
   post:
     image_placeholder:

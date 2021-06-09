@@ -392,16 +392,8 @@ fa_IR:
       topic_exists_no_oldest: "این دسته را نمی توان پاک کرد زیرا تعداد موضوع %{count} است "
     uncategorized_description: "موضوعاتی که نیاز به دسته‌بندی ندارند، یا قابل دسته‌بندی نیستند."
   trust_levels:
-    newuser:
-      title: "کاربر جدید"
-    basic:
-      title: "کاربر ساده"
-    member:
-      title: "عضو"
-    regular:
-      title: "عادی"
-    leader:
-      title: "راهبر"
+    admin: "مدیر"
+    staff: "همکاران"
     change_failed_explanation: "شما تلاش برای تنزل رتبه دادید %{user_name} به '%{new_trust_level}'. در هر صورت سطح اعتمادشان در حال حاضر '%{current_trust_level}' است. %{user_name} در '%{current_trust_level}' می‌ماند - اگر می‌خواهید سطح کاربری را پایین بیاورید، ابتدا سطح اعتماد را قبل کنید."
   post:
     image_placeholder:

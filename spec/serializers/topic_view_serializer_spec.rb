@@ -196,8 +196,6 @@ describe TopicViewSerializer do
     fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
     before do
-      SiteSetting.tagging_enabled = true
-      hidden_tag.tag_groups << staff_tag_group
       topic.tags << hidden_tag
     end
 
@@ -218,7 +216,6 @@ describe TopicViewSerializer do
     fab!(:tag3) { Fabricate(:tag, name: 'atag', topic_count: 3) }
 
     before do
-      SiteSetting.tagging_enabled = true
       topic.tags << tag1
       topic.tags << tag2
       topic.tags << tag3

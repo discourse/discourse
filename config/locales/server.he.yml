@@ -633,6 +633,8 @@ he:
           attributes:
             word:
               too_many: "יש יותר מדי מילים בפעולה הזו"
+            base:
+              invalid_url: "כתובת ההחלפה שגויה"
       <<: *errors
   uncategorized_category_name: "מחוץ לקטגוריה"
   vip_category_name: "טרקלין"
@@ -688,16 +690,8 @@ he:
       topic_exists_no_oldest: "לא ניתן להסיר קטגוריה זו משום שסך הנושאים הוא %{count}."
     uncategorized_description: "נושאים שלא דורשים קטגוריה מסויימת, או שאינם מתאימים לאף קטגוריה קיימת."
   trust_levels:
-    newuser:
-      title: "משתמש חדש"
-    basic:
-      title: "משתמשים בסיסיים"
-    member:
-      title: "חבר"
-    regular:
-      title: "רגיל"
-    leader:
-      title: "מוביל"
+    admin: "ניהול"
+    staff: "סגל"
     change_failed_explanation: "ניסיתם להוריד ברמה את %{user_name} ל- '%{new_trust_level}'. אולם רמת האמון שלהם היא כבר '%{current_trust_level}'. %{user_name} ישאר/תישאר ב-'%{current_trust_level}' - אם ברצונכם להוריד את המשתמש/ת נעלו קודם את רמת האמון"
   post:
     image_placeholder:
@@ -1000,6 +994,7 @@ he:
     smtp_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור SMTP, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
     smtp_server_busy_error: "שרת ה־SMTP עסוק, נא לנסות שוב בהמשך."
     smtp_unhandled_error: "קרתה תקלה שלא טופלה בעת יצירת הקשר עם שרת ה־SMTP. ‏%{message}"
+    imap_unhandled_error: "קרתה תקלה שלא טופלה בעת יצירת הקשר עם שרת ה־IMAP. ‏%{message}"
     connection_error: "אירעה שגיאה בהתחברות לשרת, נא לבדוק את שם השרת ואת הפתחה ולנסות שוב."
     timeout_error: "הזמן שהוקצב להתחברות לשרת תם, נא לבדוק את שם השרת ואת הפתחה ולנסות שוב."
     unhandled_error: "שגיאה שלא טופלה בעת בדיקת הגדרות הדוא״ל. %{message}"

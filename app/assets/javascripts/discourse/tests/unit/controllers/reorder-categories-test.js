@@ -11,17 +11,14 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       categories.push(store.createRecord("category", { id: i, position: 0 }));
     }
 
-    const reorderCategoriesController = this.getController(
-      "reorder-categories",
-      { site: { categories } }
-    );
-    reorderCategoriesController.reorder();
+    const controller = this.getController("reorder-categories", {
+      site: { categories },
+    });
+    controller.reorder();
 
-    reorderCategoriesController
-      .get("categoriesOrdered")
-      .forEach((category, index) => {
-        assert.equal(category.get("position"), index);
-      });
+    controller.get("categoriesOrdered").forEach((category, index) => {
+      assert.equal(category.get("position"), index);
+    });
   });
 
   test("reorder places subcategories after their parent categories, while maintaining the relative order", function (assert) {
@@ -51,14 +48,13 @@ discourseModule("Unit | Controller | reorder-categories", function () {
     });
 
     const expectedOrderSlugs = ["parent", "child2", "child1", "other"];
-    const reorderCategoriesController = this.getController(
-      "reorder-categories",
-      { site: { categories: [child2, parent, other, child1] } }
-    );
-    reorderCategoriesController.reorder();
+    const controller = this.getController("reorder-categories", {
+      site: { categories: [child2, parent, other, child1] },
+    });
+    controller.reorder();
 
     assert.deepEqual(
-      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
+      controller.get("categoriesOrdered").mapBy("slug"),
       expectedOrderSlugs
     );
   });
@@ -84,21 +80,18 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "test",
     });
 
-    const reorderCategoriesController = this.getController(
-      "reorder-categories",
-      { site: { categories: [elem1, elem2, elem3] } }
-    );
+    const controller = this.getController("reorder-categories", {
+      site: { categories: [elem1, elem2, elem3] },
+    });
 
-    reorderCategoriesController.actions.change.call(
-      reorderCategoriesController,
-      elem1,
-      { target: { value: "2" } }
-    );
+    // Move category 'foo' from position 0 to position 2
+    controller.send("change", elem1, { target: { value: "2" } });
 
-    assert.deepEqual(
-      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
-      ["test", "bar", "foo"]
-    );
+    assert.deepEqual(controller.get("categoriesOrdered").mapBy("slug"), [
+      "bar",
+      "test",
+      "foo",
+    ]);
   });
 
   test("changing the position number of a category should place it at given position and respect children", function (assert) {
@@ -129,72 +122,71 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "test",
     });
 
-    const reorderCategoriesController = this.getController(
-      "reorder-categories",
-      { site: { categories: [elem1, child1, elem2, elem3] } }
-    );
+    const controller = this.getController("reorder-categories", {
+      site: { categories: [elem1, child1, elem2, elem3] },
+    });
 
-    reorderCategoriesController.actions.change.call(
-      reorderCategoriesController,
-      elem1,
-      { target: { value: 3 } }
-    );
+    controller.send("change", elem1, { target: { value: 3 } });
 
-    assert.deepEqual(
-      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
-      ["test", "bar", "foo", "foochild"]
-    );
+    assert.deepEqual(controller.get("categoriesOrdered").mapBy("slug"), [
+      "bar",
+      "test",
+      "foo",
+      "foochild",
+    ]);
   });
 
   test("changing the position through click on arrow of a category should place it at given position and respect children", function (assert) {
     const store = createStore();
 
-    const elem1 = store.createRecord("category", {
-      id: 1,
-      position: 0,
-      slug: "foo",
+    const child2 = store.createRecord("category", {
+      id: 105,
+      position: 2,
+      slug: "foochildchild",
+      parent_category_id: 104,
     });
 
     const child1 = store.createRecord("category", {
-      id: 4,
+      id: 104,
       position: 1,
       slug: "foochild",
-      parent_category_id: 1,
+      parent_category_id: 101,
+      subcategories: [child2],
     });
 
-    const child2 = store.createRecord("category", {
-      id: 5,
-      position: 2,
-      slug: "foochildchild",
-      parent_category_id: 4,
+    const elem1 = store.createRecord("category", {
+      id: 101,
+      position: 0,
+      slug: "foo",
+      subcategories: [child1],
     });
 
     const elem2 = store.createRecord("category", {
-      id: 2,
+      id: 102,
       position: 3,
       slug: "bar",
     });
 
     const elem3 = store.createRecord("category", {
-      id: 3,
+      id: 103,
       position: 4,
       slug: "test",
     });
 
-    const reorderCategoriesController = this.getController(
-      "reorder-categories",
-      { site: { categories: [elem1, child1, child2, elem2, elem3] } }
-    );
-    reorderCategoriesController.reorder();
+    const controller = this.getController("reorder-categories", {
+      site: { categories: [elem1, child1, child2, elem2, elem3] },
+    });
 
-    reorderCategoriesController.actions.moveDown.call(
-      reorderCategoriesController,
-      elem1
-    );
+    controller.reorder();
 
-    assert.deepEqual(
-      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
-      ["bar", "foo", "foochild", "foochildchild", "test"]
-    );
+    controller.send("moveDown", elem1);
+
+    assert.deepEqual(controller.get("categoriesOrdered").mapBy("slug"), [
+      "bar",
+      "foo",
+      "foochild",
+      "foochildchild",
+      "test",
+    ]);
   });
 });

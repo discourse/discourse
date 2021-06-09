@@ -147,12 +147,8 @@ sr:
       <<: *errors
   staff_category_name: "Osoblje"
   trust_levels:
-    member:
-      title: "član"
-    regular:
-      title: "stalni član"
-    leader:
-      title: "vođa"
+    admin: "Admin"
+    staff: "Osoblje"
   rate_limiter:
     hours:
       one: "%{count} sat"

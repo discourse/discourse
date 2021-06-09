@@ -58,7 +58,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.notOk(
-      exists(queryAll(".alert-error")),
+      exists(".alert-error"),
       "it should remove the flash error when succeeding"
     );
 

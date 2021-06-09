@@ -165,7 +165,15 @@ describe SvgSprite do
 
     before do
       setup_s3
-      stub_request(:get, upload_s3.url).to_return(status: 200, body: "Hello world")
+      body = <<~XML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+          <symbol id="my-custom-theme-icon" viewBox="0 0 496 512">
+            <path d="M248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm0 376c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm0-128c-53.02 0-96 42.98-96 96s42.98 96 96 96c-106.04 0-192-85.96-192-192S141.96 64 248 64c53.02 0 96 42.98 96 96s-42.98 96-96 96zm0-128c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z"></path>
+          </symbol>
+        </svg>
+      XML
+      stub_request(:get, upload_s3.url).to_return(status: 200, body: body)
     end
 
     it 'includes svg sprites in themes stored in s3' do
@@ -174,9 +182,19 @@ describe SvgSprite do
       theme.save!
 
       sprite_files = SvgSprite.custom_svg_sprites([theme.id]).join("|")
-
       expect(sprite_files).to match(/#{upload_s3.sha1}/)
       expect(sprite_files).not_to match(/amazonaws/)
+
+      SvgSprite.bundle([theme.id])
+      expect(SvgSprite.cache.hash.keys).to include("custom_svg_sprites_#{theme.id}")
+
+      external_copy = Discourse.store.download(upload_s3)
+      File.delete external_copy.try(:path)
+
+      SvgSprite.bundle([theme.id])
+      # when a file is missing, ensure that cache entry is cleared
+      expect(SvgSprite.cache.hash.keys).to_not include("custom_svg_sprites_#{theme.id}")
+
     end
   end
 

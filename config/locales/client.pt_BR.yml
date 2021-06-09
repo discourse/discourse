@@ -587,6 +587,9 @@ pt_BR:
       total_rows:
         one: "%{count} usuário"
         other: "%{count} usuários"
+      edit_columns:
+        save: "Salvar"
+        reset_to_default: "Restaurar ao padrão"
     group_histories:
       actions:
         change_group_setting: "Alterar configurações do grupo"
@@ -641,7 +644,7 @@ pt_BR:
           smtp_instructions: "Quando você habilita o SMTP para o grupo, todos os e-mails enviados da caixa de entrada do grupo serão enviados por meio das configurações de SMTP especificadas aqui, ao invés do servidor de e-mail configurado para outros e-mails enviados por seu fórum."
           imap_title: "IMAP"
           imap_additional_settings: "Configurações Adicionais"
-          imap_instructions: "Quando você habilita o IMAP para o grupo, os e-mails são sincronizados entre a caixa de entrada do grupo e o servidor IMAP e a caixa de correio fornecidos. O SMTP deve ser habilitado com credenciais válidas e testadas antes que o IMAP possa ser habilitado. O nome de usuário e a senha de e-mail usados para SMTP serão usados para IMAP. Para obter mais informações, consulte <a target=\"_blank\" href=\"https://meta.discourse.org/t/imap-support-for-group-inboxes/160588\">anúncio de recurso no Discourse Meta</a>."
+          imap_instructions: 'Quando você habilita o IMAP para o grupo, os e-mails são sincronizados entre a caixa de entrada do grupo e o servidor IMAP e a caixa de correio fornecidos. O SMTP deve ser habilitado com credenciais válidas e testadas antes que o IMAP possa ser habilitado. O nome de usuário e a senha de e-mail usados para SMTP serão usados para IMAP. Para obter mais informações, consulte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anúncio de recurso no Discourse Meta</a>.'
           imap_alpha_warning: "Aviso: este recurso está no estágio alfa. Apenas o Gmail é oficialmente compatível. Use por sua conta e risco!"
           imap_settings_valid: "Configurações IMAP válidas."
           credentials:
@@ -2087,7 +2090,6 @@ pt_BR:
       back_to_list: "Voltar para a Lista de Tópicos"
       options: "Opções de Tópico"
       show_links: "mostrar links dentro deste tópico"
-      toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Quer ler mais? Veja outros tópicos em %{catLink} ou %{latestLink}."
       read_more: "Quer ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
@@ -3126,14 +3128,9 @@ pt_BR:
           description: "Você não será notificado de nada sobre novos tópicos com esta tag e eles não aparecerão na guia não lida."
       groups:
         title: "Grupos de Etiquetas"
-        about: "Adicione marcadores aos grupos para gerenciá-los mais facilmente"
         new: "Novo grupo"
-        tags_label: "Marcadores neste grupo"
-        parent_tag_label: "Categoria Principal"
-        parent_tag_description: "Etiquetas deste grupo não podem ser usadas a menos que a etiqueta principal esteja presente."
         one_per_topic_label: "Limite uma etiqueta por tópico deste grupo"
         new_name: "Novo Grupo de Etiquetas"
-        name_placeholder: "Nome do grupo de etiquetas"
         save: "Salvar"
         delete: "Apagar"
         confirm_delete: "Tem certeza de que deseja remover este grupo de etiquetas?"
@@ -3172,6 +3169,13 @@ pt_BR:
         two_hours: "2 horas"
         tomorrow: "Até amanhã"
         custom: "Definidos"
+    trust_levels:
+      names:
+        newuser: "usuário novo"
+        basic: "usuário básico"
+        member: "membro"
+        regular: "regular"
+        leader: "líder"
   admin_js:
     type_to_filter: "escreva para filtrar..."
     admin:
@@ -4021,6 +4025,7 @@ pt_BR:
           flag: "Bandeira,Sinalização"
           replace: "Substituir"
           silence: "Silenciar"
+          link: "Link"
         action_descriptions:
           block: "Impedir que postagens contendo estas palavras sejam postadas. O usuário verá uma mensagem de erro quando tentar enviar a postagem."
           censor: "Permitir postagens contendo estas palavras, mas substituí-las por caracteres que ocultem as palavras censuradas."
@@ -4028,6 +4033,8 @@ pt_BR:
           flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que os moderadores possam analisá-las."
         form:
           placeholder_regexp: "expressão regular"
+          link_label: "Link"
+          link_placeholder: "https://example.com"
           add: "Adicionar"
           success: "Sucesso"
           exists: "Já existe"

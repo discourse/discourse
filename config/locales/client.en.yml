@@ -646,6 +646,12 @@ en:
       total_rows:
         one: "%{count} user"
         other: "%{count} users"
+      edit_columns:
+        title: "Edit Directory Columns"
+        save: "Save"
+        reset_to_default: "Reset to default"
+      group:
+        all: "all groups"
 
     group_histories:
       actions:
@@ -2471,7 +2477,8 @@ en:
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
-      toggle_information: "toggle topic details"
+      collapse_details: "collapse topic details"
+      expand_details: "expand topic details"
       read_more_in_category: "Want to read more? Browse other topics in %{catLink} or %{latestLink}."
       read_more: "Want to read more? %{catLink} or %{latestLink}."
       unread_indicator: "No member has read the last post of this topic yet."
@@ -3629,7 +3636,7 @@ en:
       tags: "Tags"
       choose_for_topic: "optional tags"
       info: "Info"
-      default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      default_info: "This tag isn't restricted to any categories, and has no synonyms. To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."

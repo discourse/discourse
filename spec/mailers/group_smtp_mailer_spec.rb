@@ -101,17 +101,13 @@ describe GroupSmtpMailer do
         group.update(imap_enabled: false)
       end
 
-      it "uses the reply key based reply to address" do
+      it "does not send the email" do
         post = PostCreator.create(user,
                                   topic_id: receiver.incoming_email.topic.id,
                                   raw: raw
                                  )
 
-        expect(ActionMailer::Base.deliveries.size).to eq(1)
-
-        sent_mail = ActionMailer::Base.deliveries[0]
-        post_reply_key = PostReplyKey.last
-        expect(sent_mail.reply_to).to contain_exactly("test+#{post_reply_key.reply_key}@test.com")
+        expect(ActionMailer::Base.deliveries.size).to eq(0)
       end
     end
   end

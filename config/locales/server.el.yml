@@ -468,16 +468,8 @@ el:
       topic_exists_no_oldest: "Δεν είναι δυνατή η διαγραφή αυτής της κατηγορίας, διότι ο αριθμός νημάτων είναι %{count}."
     uncategorized_description: "Νήματα που δεν χρειάζονται κατηγορία ή που δεν ταιριάζουν σε καμία άλλη από τις υπάρχουσες κατηγορίες."
   trust_levels:
-    newuser:
-      title: "νέος χρήστης"
-    basic:
-      title: "αρχάριος"
-    member:
-      title: "μέλος"
-    regular:
-      title: "τακτικός"
-    leader:
-      title: "αρχηγός"
+    admin: "Διαχειριστής"
+    staff: "Συνεργάτες"
     change_failed_explanation: "Προσπάθησες να υποβιβάσεις τον %{user_name} σε '%{new_trust_level}'. Ωστόσο το επίπεδο εμπιστοσύνης τους είναι ήδη '%{current_trust_level}'. Ο/Η %{user_name} θα παραμείνει στο '%{current_trust_level}' - εάν επιθυμείς ακόμα να υποβιβάσεις το επίπεδο εμπιστοσύνης του χρήστη, κλείδωσε πρώτα το επίπεδο εμπιστοσύνης "
   post:
     image_placeholder:

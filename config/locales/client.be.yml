@@ -290,6 +290,8 @@ be:
         few: " %{Count} карыстальнікі"
         many: " %{Count} карыстальнікаў"
         other: " %{Count} карыстальнікаў"
+      edit_columns:
+        save: "Захаваць"
     group_histories:
       actions:
         change_group_setting: "Змяніць наладкі групы"
@@ -970,7 +972,6 @@ be:
       back_to_list: "Вярнуцца да спісу тым"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
-      toggle_information: "паказаць"
       read_more_in_category: "Хочаце пачытаць яшчэ? Глядзіце іншыя тэмы ў %{catLink} або %{latestLink}."
       read_more: "Хочаце пачытаць яшчэ? %{CatLink} або %{latestLink}."
       browse_all_categories: Паглядзець усе катэгорыі
@@ -1348,6 +1349,13 @@ be:
     footer_nav:
       back: "Назад"
       share: "Падзяліцца"
+    trust_levels:
+      names:
+        newuser: "новы карыстальнік"
+        basic: "асноўны карыстальнік"
+        member: "член"
+        regular: "рэгулярны"
+        leader: "лідэр"
   admin_js:
     admin:
       moderator: "Мадэратар"

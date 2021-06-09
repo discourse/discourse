@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -23,9 +24,9 @@ discourseModule(
         });
       },
       test(assert) {
-        assert.ok(queryAll(".names").length);
-        assert.ok(queryAll("span.username").length);
-        assert.ok(queryAll('a[data-user-card="eviltrout"]').length);
+        assert.ok(exists(".names"));
+        assert.ok(exists("span.username"));
+        assert.ok(exists('a[data-user-card="eviltrout"]'));
         assert.equal(queryAll(".username a").text(), "eviltrout");
         assert.equal(queryAll(".full-name a").text(), "Robin Ward");
         assert.equal(queryAll(".user-title").text(), "Trout Master");
@@ -46,12 +47,12 @@ discourseModule(
         });
       },
       test(assert) {
-        assert.ok(queryAll("span.staff").length);
-        assert.ok(queryAll("span.admin").length);
-        assert.ok(queryAll("span.moderator").length);
-        assert.ok(queryAll(".d-icon-shield-alt").length);
-        assert.ok(queryAll("span.new-user").length);
-        assert.ok(queryAll("span.fish").length);
+        assert.ok(exists("span.staff"));
+        assert.ok(exists("span.admin"));
+        assert.ok(exists("span.moderator"));
+        assert.ok(exists(".d-icon-shield-alt"));
+        assert.ok(exists("span.new-user"));
+        assert.ok(exists("span.fish"));
       },
     });
 
@@ -62,7 +63,7 @@ discourseModule(
         this.set("args", { username: "eviltrout", name: "Robin Ward" });
       },
       test(assert) {
-        assert.equal(queryAll(".full-name").length, 0);
+        assert.ok(!exists(".full-name"));
       },
     });
 
@@ -74,7 +75,7 @@ discourseModule(
         this.set("args", { username: "eviltrout", name: "evil-trout" });
       },
       test(assert) {
-        assert.equal(queryAll(".second").length, 0);
+        assert.ok(!exists(".second"));
       },
     });
   }

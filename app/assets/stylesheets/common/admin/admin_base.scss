@@ -13,9 +13,6 @@ $mobile-breakpoint: 700px;
   height: auto;
   overflow: hidden;
   height: 100%;
-  .mobile-view & {
-    margin-top: 10px;
-  }
   @include breakpoint(tablet) {
     width: calc(100% + 10px);
     margin-left: -10px;
@@ -27,6 +24,7 @@ $mobile-breakpoint: 700px;
     flex-wrap: wrap;
     width: calc(100% - 10px);
     flex: 1 0 auto;
+    margin-top: 0;
     @include breakpoint(tablet) {
       white-space: nowrap;
       flex-wrap: nowrap;

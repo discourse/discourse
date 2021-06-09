@@ -13,17 +13,33 @@
         {{/if}}
         {{input
           value=(readonly nameInput)
-          input=(action "onFilterChanged" value="target.value")
+          input=(action "onUsernameFilterChanged" value="target.value")
           placeholderKey="directory.filter_name"
           class="filter-name no-blur"
         }}
+        {{combo-box
+          class="directory-group-selector"
+          value=group
+          content=groupOptions
+          onChange=(action groupChanged)
+          options=(hash
+            none="directory.group.all"
+          )
+        }}
+        {{#if currentUser.staff}}
+          {{d-button
+            icon="wrench"
+            action=(action "showEditColumnsModal")
+            class="btn-default open-edit-columns-btn"
+          }}
+        {{/if}}
       </div>
 
       {{#conditional-loading-spinner condition=model.loading}}
         {{#if model.length}}
           <div class="total-rows">{{i18n "directory.total_rows" count=model.totalRows}}</div>
           {{#each model as |item|}}
-            {{directory-item tagName="div" class="user" item=item showTimeRead=showTimeRead}}
+            {{directory-item tagName="div" class="user" item=item columns=columns showTimeRead=showTimeRead}}
           {{/each}}
 
           {{conditional-loading-spinner condition=model.loadingMore}}

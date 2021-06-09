@@ -541,6 +541,9 @@ ca:
       total_rows:
         one: "%{count} usuari"
         other: "%{count} usuaris"
+      edit_columns:
+        save: "Desa"
+        reset_to_default: "Restableix el valor predeterminat"
     group_histories:
       actions:
         change_group_setting: "Canvia la configuració del grup"
@@ -1907,7 +1910,6 @@ ca:
       back_to_list: "Torna a la llista de temes"
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
-      toggle_information: "commuta els detalls del tema"
       read_more_in_category: "Voleu llegir-ne més? Navegueu per altres temes a %{catLink} o %{latestLink}."
       read_more: "Voleu llegir-ne més? %{catLink} o %{latestLink}."
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
@@ -2827,14 +2829,9 @@ ca:
           description: "No sereu notificat de res sobre temes nous amb aquesta etiqueta, i no apareixeran en la pestanya de no llegits."
       groups:
         title: "Grups d'etiquetes"
-        about: "Afegeix etiquetes a grups per a gestionar-los més fàcilment."
         new: "Nou grup"
-        tags_label: "Etiquetes en aquest grup:"
-        parent_tag_label: "Etiqueta primària:"
-        parent_tag_description: "Les etiquetes d'aquest grup no es poden fer servir si no hi és l'etiqueta primària."
         one_per_topic_label: "Limita a una etiqueta per cada tema d'aquest grup"
         new_name: "Nou grup d'etiquetes"
-        name_placeholder: "Nom del grup d’etiquetes"
         save: "Desa"
         delete: "Suprimeix"
         confirm_delete: "Esteu segur que voleu suprimir aquest grup d'etiquetes?"
@@ -2864,6 +2861,13 @@ ca:
       remaining: "%{remaining} restant"
       options:
         custom: "Personalitzat"
+    trust_levels:
+      names:
+        newuser: "usuari nou"
+        basic: "usuari bàsic"
+        member: "membre"
+        regular: "habitual"
+        leader: "líder"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:
@@ -3691,6 +3695,7 @@ ca:
           flag: "Permet publicacions que contenen aquestes paraules, però senyala-les amb bandera com a inapropiades de manera que els moderadors puguin revisar-les"
         form:
           placeholder_regexp: "expressió regular"
+          link_placeholder: "https://example.com"
           add: "Afegeix"
           success: "Èxit"
           exists: "Ja existeix"

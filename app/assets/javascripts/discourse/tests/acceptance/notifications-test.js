@@ -1,7 +1,10 @@
 import { visit } from "@ember/test-helpers";
 import {
   acceptance,
+  count,
   publishToMessageBus,
+  query,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
@@ -32,7 +35,7 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(find("#quick-access-notifications li").length, 5);
+    assert.equal(count("#quick-access-notifications li"), 5);
 
     // high priority, unread notification - should be first
 
@@ -77,9 +80,9 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(find("#quick-access-notifications li").length, 6);
+    assert.equal(count("#quick-access-notifications li"), 6);
     assert.equal(
-      find("#quick-access-notifications li span[data-topic-id]")[0].innerText,
+      query("#quick-access-notifications li span[data-topic-id]").innerText,
       "First notification"
     );
 
@@ -127,9 +130,10 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(find("#quick-access-notifications li").length, 7);
+    assert.equal(count("#quick-access-notifications li"), 7);
     assert.equal(
-      find("#quick-access-notifications li span[data-topic-id]")[1].innerText,
+      queryAll("#quick-access-notifications li span[data-topic-id]")[1]
+        .innerText,
       "Second notification"
     );
   });

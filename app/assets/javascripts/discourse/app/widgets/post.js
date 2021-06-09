@@ -57,6 +57,7 @@ export function avatarImg(wanted, attrs) {
       height: size,
       src: getURLWithCDN(url),
       title,
+      "aria-label": title,
     },
     className,
   };

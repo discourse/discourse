@@ -506,11 +506,6 @@ describe Guardian do
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
     end
 
-    it 'returns false when the site requires approving users and is regular' do
-      SiteSetting.expects(:must_approve_users?).returns(true)
-      expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
-    end
-
     context 'with groups' do
       let(:groups) { [group, another_group] }
 

@@ -564,6 +564,9 @@ tr_TR:
       total_rows:
         one: "%{count} kullanıcı"
         other: "%{count} kullanıcı"
+      edit_columns:
+        save: "Kaydet"
+        reset_to_default: "Varsayılana sıfırla"
     group_histories:
       actions:
         change_group_setting: "Grup ayarlarını değiştir"
@@ -1366,8 +1369,6 @@ tr_TR:
           max_redemptions_allowed_label: "Bu bağlantıyı kullanarak kaç kişinin kaydolmasına izin verilsin?"
           expires_at: "Bu davet bağlantısının süresi ne zaman dolacak?"
         invite:
-          expires_in_time: "Süresi dolacak: %{time}."
-          expired_at_time: "Süresi dolmuş: %{time}."
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
         bulk_invite:
@@ -2167,7 +2168,6 @@ tr_TR:
       back_to_list: "Konu listesine geri dön"
       options: "Konu Seçenekleri"
       show_links: "Bu konunun içindeki bağlantıları göster. "
-      toggle_information: "konu ayrıntılarını değiştir"
       read_more_in_category: "Daha fazlası için %{catLink} kategorisine göz atabilir ya da %{latestLink}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? %{catLink} ya da %{latestLink}."
       unread_indicator: "Bu konunun son mesajını henüz hiç üye okumamış."
@@ -3204,18 +3204,22 @@ tr_TR:
           description: "Bu etiketle yeni konular hakkında hiçbir şeyden haberdar edilmeyeceksin ve konular okunmamış sekmesinde görünmeyecek. "
       groups:
         title: "Etiket Grupları"
-        about: "Konuları kolayca yönetmek için onlara etiket ekle."
+        about_heading: "Bir etiket grubu seçin veya yeni bir tane oluşturun"
+        about_heading_empty: "Başlamak için yeni bir etiket grubu oluşturun"
+        about_description: "Etiket grupları, birçok etiketin izinlerini tek bir yerde yönetmenize yardımcı olur."
         new: "Yeni Grup"
-        tags_label: "Bu gruptaki etiketler:"
-        parent_tag_label: "Üst etiket:"
-        parent_tag_description: "Bu gruptaki etiketler üst etiket olduğu sürece kullanılamaz."
+        new_title: "Yeni Grup Oluştur"
+        edit_title: "Etiket Grubunu Düzenle"
         one_per_topic_label: "Bu etiket grubundan her konu için bir etiket ile sınır koy"
         new_name: "Yeni Etiket Grubu"
-        name_placeholder: "Etiket Grubu Adı"
         save: "Kaydet"
         delete: "Sil"
         confirm_delete: "Bu etiket grubunu silmek istediğine emin misin?"
         everyone_can_use: "Etiketler herkes tarafından kullanılabilir"
+        tags_placeholder: "Etiket ara veya oluştur"
+        parent_tag_placeholder: "Opsiyonel"
+        select_groups_placeholder: "Grupları seçin..."
+        disabled: "Etiketleme devre dışı. "
       topics:
         none:
           unread: "Okunmamış konun bulunmuyor."
@@ -3246,6 +3250,13 @@ tr_TR:
         two_hours: "2 saat"
         custom: "Özel ayarlar"
       set_schedule: "Bildirim zamanlaması ayarla"
+    trust_levels:
+      names:
+        newuser: "yeni kullanıcı"
+        basic: "acemi kullanıcı"
+        member: "üye"
+        regular: "müdavim"
+        leader: "lider"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:
@@ -4088,16 +4099,16 @@ tr_TR:
           flag: "Bayrakla işaretle"
           replace: "Değiştir"
           silence: "Sustur"
+          link: "Bağlantı"
         action_descriptions:
           block: "Bu kelimeleri içeren gönderilerin yayımlanmasını önle. Kullanıcı, gönderilerini yayımlamaya çalışırken bir hata mesajı görecek."
           censor: "Bu kelimeleri içeren yayımlara izin ver ancak bu kelimeleri sansürlenmiş kelimeleri gizleyen karakterlerle değiştir. "
           require_approval: "Bu kelimeleri içeren gönderiler yayımlanmadan önce personel onayı gerektirir."
           flag: "Bu kelimeleri içeren yayımlara izin ver ancak bunları uygunsuz olarak bayrakla işaretle. Böylece moderatörler bunları inceleyebilir."
-          replace: "Yazılardaki kelimeleri başka kelimeler veya bağlantılarla değiştirin"
         form:
           placeholder_regexp: "güvenilir ifade"
-          replacement_label: "Değiştirme"
-          replacement_placeholder: "örnek veya https://example.com"
+          replace_label: "Değiştirme"
+          link_label: "Bağlantı"
           add: "Ekle"
           success: "Başarılı"
           exists: "Zaten mevcut"

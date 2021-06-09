@@ -125,13 +125,9 @@ const Bookmark = RestModel.extend({
     ).capitalize();
   },
 
-  @discourseComputed("linked_post_number", "title", "topic_id")
-  topicLink(linked_post_number, title, topic_id) {
-    return Topic.create({
-      id: topic_id,
-      fancy_title: title,
-      linked_post_number,
-    });
+  @discourseComputed("linked_post_number", "fancy_title", "topic_id")
+  topicLink(linked_post_number, fancy_title, id) {
+    return Topic.create({ id, fancy_title, linked_post_number });
   },
 
   loadItems(params) {

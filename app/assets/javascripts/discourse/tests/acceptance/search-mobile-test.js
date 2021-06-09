@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -23,18 +24,19 @@ acceptance("Search - Mobile", function (needs) {
 
     await click(".search-advanced-title");
 
-    assert.ok(
-      queryAll(".search-advanced-filters").length === 1,
+    assert.equal(
+      count(".search-advanced-filters"),
+      1,
       "it should expand advanced search filters"
     );
 
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+    assert.equal(count(".fps-topic"), 1, "has one post");
 
     assert.ok(
-      queryAll(".search-advanced-filters").length === 0,
+      !exists(".search-advanced-filters"),
       "it should collapse advanced search filters"
     );
 

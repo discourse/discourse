@@ -354,7 +354,7 @@ class Guardian
     return false if !authenticated?
 
     invites_available = SiteSetting.max_invites_per_day.to_i.positive?
-    trust_level_requirement_met = !SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+    trust_level_requirement_met = @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
 
     if !is_staff?
       return false if !invites_available

@@ -588,6 +588,8 @@ de:
           attributes:
             word:
               too_many: "Zu viele Wörter für diese Aktion"
+            base:
+              invalid_url: "Ersatz-URL ist ungültig"
       <<: *errors
   uncategorized_category_name: "Unkategorisiert"
   vip_category_name: "Lounge"
@@ -661,16 +663,8 @@ de:
       topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält."
     uncategorized_description: "Themen welche keine Kategorie benötigen oder in keine existierende Kategorie passen."
   trust_levels:
-    newuser:
-      title: "Neuer Benutzer"
-    basic:
-      title: "Anwärter"
-    member:
-      title: "Mitglied"
-    regular:
-      title: "Stammgast"
-    leader:
-      title: "Anführer"
+    admin: "Administrator"
+    staff: "Team"
     change_failed_explanation: "Du wolltest %{user_name} auf '%{new_trust_level}' zurückstufen. Die Vertrauensstufe ist jedoch bereits '%{current_trust_level}'. %{user_name} verbleibt auf '%{current_trust_level}'. Wenn du den Benutzer zurückstufen möchtest, musst du zuerst seine Vertrauensstufe sperren."
   post:
     image_placeholder:
@@ -922,8 +916,10 @@ de:
     imap_authentication_error: "Es gab ein Problem mit den bereitgestellten IMAP-Anmeldeinformationen, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
     imap_no_response_error: "Bei der Kommunikation mit dem IMAP-Server ist ein Fehler aufgetreten. %{message}"
     smtp_authentication_error: "Es gab ein Problem mit den bereitgestellten SMTP-Anmeldeinformationen, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
+    authentication_error_gmail_app_password: 'Anwendungsspezifisches Passwort erforderlich. Erfahre mehr unter <a target="_blank" href="https://support.google.com/accounts/answer/185833">in diesem Google-Hilfeartikel</a>'
     smtp_server_busy_error: "Der SMTP-Server ist derzeit ausgelastet, versuche es später erneut."
     smtp_unhandled_error: "Es gab einen unbehandelten Fehler bei der Kommunikation mit dem SMTP-Server. %{message}"
+    imap_unhandled_error: "Es gab einen unbehandelten Fehler bei der Kommunikation mit dem IMAP-Server. %{message}"
     connection_error: "Es gab ein Problem beim Verbinden mit dem Server, überprüfe den Servernamen und den Port und versuche es erneut."
     timeout_error: "Zeitüberschreitung bei der Verbindung zum Server, überprüfe den Servernamen und den Port und versuche es erneut."
     unhandled_error: "Unbehandelter Fehler beim Testen der E-Mail-Einstellungen. %{message}"
@@ -1809,6 +1805,7 @@ de:
     min_first_post_typing_time: "Minimale Zeit die ein Benutzer mindestens aufwenden muss, um einen Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0 um dieses Verhalten zu deaktivieren (nicht empfohlen)."
     auto_silence_fast_typers_on_first_post: "Benutzer automatisch stummschalten, die nicht der min_first_post_typing_time entsprechen."
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
+    auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Übernahme dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a, wird dazu führen, dass alle Posts, die wüten oder aba oder aca enthalten, zuerst stummgeschaltet werden. Gilt nur für den ersten Beitrag. VERALTET: Verwende stattdessen „Beobachtete Wörter zur Stummschaltung“."
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
@@ -1969,6 +1966,7 @@ de:
     notify_about_flags_after: "Wenn es Meldungen gibt, die nicht innerhalb der angegebenen Anzahl von Stunden behandelt wurden, sende eine Nachricht an die Moderatoren. Ein Wert von 0 deaktiviert die Funktion."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die mehr als (n) Tage alt sind."
+    delete_merged_stub_topics_after_days: "Anzahl der Tage, die gewartet werden müssen, bevor automatisch vollständig zusammengeführte Stub-Themen gelöscht werden. Setze auf 0, um niemals Stub-Themen zu löschen."
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (0 = ausgeschaltet)"
     prevent_anons_from_downloading_files: "Verhindert, dass anonyme Benutzer Anhänge herunterladen können."
     secure_media: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, Zips und andere). Wenn „Login erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienhochladungen in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein tiefes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">das Secure Media Thema auf Meta</a> für Details.'
@@ -2303,6 +2301,7 @@ de:
       other: "Automatische Deaktivierung nach %{count} Tagen Inaktivität"
     activated_by_staff: "Aktiviert vom Team"
     new_user_typed_too_fast: "Neuer Benutzer hat zu schnell getippt"
+    content_matches_auto_silence_regex: "Inhalt entspricht der automatischen Stummschaltung-Regex"
     content_matches_auto_block_regex: "Inhalt stimmt mit regulärem Auto-Block-Ausdruck überein"
     username:
       short: "muss mindestens %{min} Zeichen lang sein"

@@ -449,6 +449,8 @@ zh_TW:
       posts_read_long: "已讀貼文"
       total_rows:
         other: "%{count} 個使用者"
+      edit_columns:
+        save: "儲存"
     group_histories:
       actions:
         change_group_setting: "更改群組設定"
@@ -1695,7 +1697,6 @@ zh_TW:
       back_to_list: "回到話題列表"
       options: "話題選項"
       show_links: "在話題裡顯示連結"
-      toggle_information: "切換話題詳情"
       read_more_in_category: "要閱讀更多貼文嗎? 瀏覽 %{catLink} 裡的話題或 %{latestLink}。"
       read_more: "要閱讀更多貼文嗎? 請按 %{catLink} 或 %{latestLink}。"
       browse_all_categories: 瀏覽所有分類
@@ -2561,11 +2562,7 @@ zh_TW:
           description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
       groups:
         title: "標籤組"
-        about: "將標籤分組以便管理。"
         new: "新標籤組"
-        tags_label: "標籤組內標籤："
-        parent_tag_label: "上級標籤："
-        parent_tag_description: "未設置上級標籤前群組內標籤無法使用。"
         one_per_topic_label: "只可給話題設置一個該組內的標籤"
         new_name: "新標籤組名"
         save: "保存"
@@ -2597,6 +2594,13 @@ zh_TW:
       remaining: "剩餘 %{remaining}"
       options:
         custom: "客製"
+    trust_levels:
+      names:
+        newuser: "新使用者"
+        basic: "初級使用者"
+        member: "成員"
+        regular: "活躍使用者"
+        leader: "資深"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:
@@ -3368,6 +3372,7 @@ zh_TW:
           flag: "允許貼文含有這些文字，但標註成不當的用字以讓管理員能審核。"
         form:
           placeholder_regexp: "正規表示法"
+          link_placeholder: "https://example.com"
           add: "新增"
           success: "成功"
           exists: "已存在"

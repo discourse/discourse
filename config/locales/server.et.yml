@@ -321,16 +321,8 @@ et:
       topic_exists_no_oldest: "Seda foorumit ei saa kustutada, kuna teemade arv on %{count}."
     uncategorized_description: "Teemad, mis ei vaja või mida ei saa liigitada ühegi olemasoleva foorumi alla."
   trust_levels:
-    newuser:
-      title: "uus kasutaja"
-    basic:
-      title: "baaskasutaja"
-    member:
-      title: "liige"
-    regular:
-      title: "tavaline"
-    leader:
-      title: "juht"
+    admin: "Admin"
+    staff: "Meeskond"
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   post:
     image_placeholder:

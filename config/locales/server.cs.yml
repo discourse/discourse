@@ -387,16 +387,8 @@ cs:
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
     uncategorized_description: "Témata bez kategorií, případně která nepasují do stávajících kategorií."
   trust_levels:
-    newuser:
-      title: "nový uživatel"
-    basic:
-      title: "základní uživatel"
-    member:
-      title: "člen"
-    regular:
-      title: "pravidelný uživatel"
-    leader:
-      title: "vůdce"
+    admin: "Administrace"
+    staff: "Redakce"
     change_failed_explanation: "Pokusili jste se snížit důvěryhodnost uživatele %{user_name} na '%{new_trust_level}'. Nicméně jeho aktuální důvěryhodnost už je '%{current_trust_level}'. Uživatel %{user_name} zůstane na úrovni '%{current_trust_level}'. Pokud chcete snížit důvěryhodnost uživatele, zamkněte nejdříve důvěryhodnost."
   post:
     image_placeholder:

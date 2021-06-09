@@ -1,6 +1,5 @@
 import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
-  SWIPE_VELOCITY,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
 import Component from "@ember/component";
@@ -127,17 +126,18 @@ export default Component.extend(PanEvents, {
     const $timelineContainer = $(".timeline-container");
     const maxOffset = parseInt($timelineContainer.css("height"), 10);
 
-    this._shouldPanClose(event)
-      ? (offset += SWIPE_VELOCITY)
-      : (offset -= SWIPE_VELOCITY);
-
-    $timelineContainer.css("bottom", -offset);
-    if (offset > maxOffset) {
-      this._collapseFullscreen();
-    } else if (offset <= 0) {
-      $timelineContainer.css("bottom", "");
+    $timelineContainer.addClass("animate");
+    if (this._shouldPanClose(event)) {
+      $timelineContainer.css("--offset", `${maxOffset}px`);
+      later(() => {
+        this._collapseFullscreen();
+        $timelineContainer.removeClass("animate");
+      }, 200);
     } else {
-      later(() => this._handlePanDone(offset, event), 20);
+      $timelineContainer.css("--offset", 0);
+      later(() => {
+        $timelineContainer.removeClass("animate");
+      }, 200);
     }
   },
 
@@ -174,7 +174,7 @@ export default Component.extend(PanEvents, {
       return;
     }
     e.originalEvent.preventDefault();
-    $(".timeline-container").css("bottom", Math.min(0, -e.deltaY));
+    $(".timeline-container").css("--offset", `${Math.max(0, e.deltaY)}px`);
   },
 
   didInsertElement() {

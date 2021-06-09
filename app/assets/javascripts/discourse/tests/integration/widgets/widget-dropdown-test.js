@@ -4,6 +4,7 @@ import componentTest, {
 import {
   discourseModule,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -27,7 +28,7 @@ async function clickRowById(id) {
 }
 
 function rowById(id) {
-  return queryAll(`#my-dropdown .widget-dropdown-item.item-${id}`)[0];
+  return query(`#my-dropdown .widget-dropdown-item.item-${id}`);
 }
 
 async function toggle() {
@@ -41,11 +42,11 @@ function headerLabel() {
 }
 
 function header() {
-  return queryAll("#my-dropdown .widget-dropdown-header")[0];
+  return query("#my-dropdown .widget-dropdown-header");
 }
 
 function body() {
-  return queryAll("#my-dropdown .widget-dropdown-body")[0];
+  return query("#my-dropdown .widget-dropdown-body");
 }
 
 const TEMPLATE = hbs`
@@ -150,10 +151,7 @@ discourseModule(
       beforeEach() {
         this.setProperties(DEFAULT_CONTENT);
 
-        this.set(
-          "onChange",
-          (item) => (queryAll("#test")[0].innerText = item.id)
-        );
+        this.set("onChange", (item) => (query("#test").innerText = item.id));
       },
 
       async test(assert) {

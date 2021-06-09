@@ -439,16 +439,8 @@ nb_NO:
       topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi antall emner er %{count}."
     uncategorized_description: "Emne som ikke trenger en kategori eller som ikke passer i noen av de andre kategoriene."
   trust_levels:
-    newuser:
-      title: "ny bruker"
-    basic:
-      title: " bruker"
-    member:
-      title: "medlem"
-    regular:
-      title: "aktivt medlem"
-    leader:
-      title: "leder"
+    admin: "Admin"
+    staff: "Stab"
     change_failed_explanation: "Du forsøkte å nedgradere %{user_name} til '%{new_trust_level}'. Men tillitsnivået til brukeren er allerede '%{current_trust_level}'. %{user_name} vil bli værende ved '%{current_trust_level}' - hvis du ønsker å nedgradere brukeren må du låse fast tillitsnivået først"
   post:
     image_placeholder:

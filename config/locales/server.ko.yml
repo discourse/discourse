@@ -568,6 +568,8 @@ ko:
           attributes:
             word:
               too_many: "해당 행동을 위한 단어가 너무 많습니다."
+            base:
+              invalid_url: "대체 URL이 잘못되었습니다."
       <<: *errors
   uncategorized_category_name: "미분류"
   vip_category_name: "라운지"
@@ -643,16 +645,8 @@ ko:
       topic_exists_no_oldest: "%{count}개의 글타래가 이 카테고리 내에 있어 삭제할 수 없습니다."
     uncategorized_description: "카테고리가 필요없는 토픽이거나, 토픽에 부합하는 카테고리가 없습니다."
   trust_levels:
-    newuser:
-      title: "새로운 사용자"
-    basic:
-      title: "기본 사용자"
-    member:
-      title: "멤버"
-    regular:
-      title: "일반"
-    leader:
-      title: "리더"
+    admin: "관리자"
+    staff: "스태프"
     change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다. - if you wish to demote user lock trust level first"
   post:
     image_placeholder:
@@ -1620,7 +1614,7 @@ ko:
     categories_topics: "/ 카테고리 페이지에 표시 할 주제 수입니다. 0으로 설정하면 두 열을 대칭 (범주 및 주제)으로 유지하는 값을 자동으로 찾습니다."
     suggested_topics: "글타래 아랫부분에 몇개의 글타래를 제안하여 보여준다."
     limit_suggested_to_category: "제안된 글타래는 현재의 카테고리에 있는 글타래 중에서만 보여준다."
-    suggested_topics_max_days_old: "설정된 일수 이상의 토픽은 추천하지 않음"
+    suggested_topics_max_days_old: "제안 된 글은 n 일을 넘지 않아야합니다."
     suggested_topics_unread_max_days_old: "읽지 않은 주제는 n 일을 넘지 않아야합니다."
     clean_up_uploads: "불법 호스팅을 막기 위해서 참조되지 않은 업로드 파일은 제거합니다. 주의 : 이 설정을 활성화 하기 전에 `/uploads` 디렉토리를 백업하는 것이 좋습니다."
     clean_orphan_uploads_grace_period_hours: "글에 연결되지 않은 업로드 파일을 제거하기 전 유예 기간 (시간) 입니다."

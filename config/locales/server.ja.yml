@@ -347,16 +347,8 @@ ja:
       topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
     uncategorized_description: "カテゴリーを必要としない、または既存のカテゴリーにマッチしないトピックです。"
   trust_levels:
-    newuser:
-      title: "新しいユーザー"
-    basic:
-      title: "ベーシックユーザー"
-    member:
-      title: "メンバー"
-    regular:
-      title: "レギュラー"
-    leader:
-      title: "リーダー"
+    admin: "管理設定"
+    staff: "スタッフ"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   post:
     image_placeholder:

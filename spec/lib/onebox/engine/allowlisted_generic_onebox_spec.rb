@@ -182,4 +182,21 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
       end
     end
   end
+
+  describe 'article html hosts' do
+    context 'returns article_html for hosts in article_html_hosts' do
+      before do
+        stub_request(:get, "https://www.imdb.com/title/tt0108002/")
+          .to_return(status: 200, body: onebox_response('imdb'))
+      end
+
+      it 'shows article onebox' do
+        onebox = described_class.new("https://www.imdb.com/title/tt0108002/")
+        expect(onebox.to_html).to include("https://www.imdb.com/title/tt0108002")
+        expect(onebox.to_html).to include("https://m.media-amazon.com/images/M/MV5BZGUzMDU1YmQtMzBkOS00MTNmLTg5ZDQtZjY5Njk4Njk2MmRlXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_FMjpg_UX1000_.jpg")
+        expect(onebox.to_html).to include("Rudy (1993) - IMDb")
+        expect(onebox.to_html).to include("Rudy: Directed by David Anspaugh. With Sean Astin, Jon Favreau, Ned Beatty, Greta Lind. Rudy has always been told that he was too small to play college football.")
+      end
+    end
+  end
 end

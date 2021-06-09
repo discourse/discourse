@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
@@ -81,9 +85,8 @@ acceptance("Admin - User Index", function (needs) {
       "the name should be correct"
     );
 
-    assert.equal(
-      queryAll('.group-chooser span[title="Macdonald"]').length,
-      0,
+    assert.ok(
+      !exists('.group-chooser span[title="Macdonald"]'),
       "group should not be set"
     );
   });

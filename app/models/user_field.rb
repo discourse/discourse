@@ -7,6 +7,7 @@ class UserField < ActiveRecord::Base
   validates_presence_of :description, :field_type
   validates_presence_of :name, unless: -> { field_type == "confirm" }
   has_many :user_field_options, dependent: :destroy
+  has_one :directory_column, dependent: :destroy
   accepts_nested_attributes_for :user_field_options
 
   after_save :queue_index_search
