@@ -33,7 +33,8 @@
       transition: transform 0.1s linear;
     }
   }
-  &.moving {
+  &.moving,
+  &.animate {
     // PERF: only render first 20 items in a list to allow for smooth
     // pan events
     li:nth-child(n + 20) {
