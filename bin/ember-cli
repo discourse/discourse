@@ -64,7 +64,6 @@ if (ARGV - ["--unicorn", "-"]).length < 2
       end
     end
   end
-  # ember_pid = spawn("yarn", *args.to_a.flatten)
 
   trap("SIGINT") do
     # we got to swallow sigint to give time for
