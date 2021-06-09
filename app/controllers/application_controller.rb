@@ -621,11 +621,11 @@ class ApplicationController < ActionController::Base
       .where(enabled: true)
       .order(:position)
       .pluck('directory_columns.name',
-             'directory_columns.automatic',
+             'directory_columns.type',
              'directory_columns.icon',
              'user_fields.id',
              'user_fields.name')
-      .map { |column| { name: column[0] || column[4], automatic: column[1], icon: column[2], user_field_id: column[3] } }
+      .map { |column| { name: column[0] || column[4], type: column[1], icon: column[2], user_field_id: column[3] } }
       .to_json
   end
 

@@ -1,7 +1,7 @@
 <td>{{user-info user=item.user}}</td>
 {{#each columns as |column|}}
   <td>
-    {{#if column.automatic}}
+    {{#if (directory-column-is-automatic column=column)}}
       {{directory-item-value item=item column=column}}
     {{else}}
       {{directory-item-user-field-value item=item column=column}}
