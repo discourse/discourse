@@ -3,8 +3,10 @@
   <td>
     {{#if (directory-column-is-automatic column=column)}}
       {{directory-item-value item=item column=column}}
-    {{else}}
+    {{else if (directory-column-is-automatic column=column)}}
       {{directory-item-user-field-value item=item column=column}}
+    {{else}}
+      {{directory-item-plugin-value item=item column=column}}
     {{/if}}
   </td>
 {{/each}}

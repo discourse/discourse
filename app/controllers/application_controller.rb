@@ -616,16 +616,18 @@ class ApplicationController < ActionController::Base
   end
 
   def directory_columns_json
+    types = DirectoryColumn.types
     DirectoryColumn
       .left_joins(:user_field)
       .where(enabled: true)
       .order(:position)
-      .pluck('directory_columns.name',
+      .pluck('directory_columns.id',
+             'directory_columns.name',
              'directory_columns.type',
              'directory_columns.icon',
              'user_fields.id',
              'user_fields.name')
-      .map { |column| { name: column[0] || column[4], type: column[1], icon: column[2], user_field_id: column[3] } }
+      .map { |column| { id: column[0], name: column[1] || column[5], type: types.key(column[2]), icon: column[3], user_field_id: column[4] } }
       .to_json
   end
 
