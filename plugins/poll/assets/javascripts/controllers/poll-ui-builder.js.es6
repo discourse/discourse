@@ -98,7 +98,8 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("pollOptions.@each.value")
   pollOptionsCount(pollOptions) {
-    return pollOptions.filter((option) => option.value.length > 0).length;
+    return (pollOptions || []).filter((option) => option.value.length > 0)
+      .length;
   },
 
   @discourseComputed("site.groups")
