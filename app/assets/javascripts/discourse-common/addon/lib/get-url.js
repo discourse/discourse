@@ -1,6 +1,13 @@
 let cdn, baseUrl, baseUri, baseUriMatcher;
 let S3BaseUrl, S3CDN;
 
+export function getBaseURI() {
+  if (baseUri === undefined) {
+    setPrefix($('meta[name="discourse-base-uri"]').attr("content") || "");
+  }
+  return baseUri || "/";
+}
+
 export default function getURL(url) {
   if (baseUri === undefined) {
     setPrefix($('meta[name="discourse-base-uri"]').attr("content") || "");
