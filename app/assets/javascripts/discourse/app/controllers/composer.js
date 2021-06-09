@@ -471,6 +471,14 @@ export default Controller.extend({
             ) {
               return true;
             }
+
+            if (
+              element.tagName === "ASIDE" &&
+              element.classList.contains("onebox") &&
+              href !== element.dataset["onebox-src"]
+            ) {
+              return true;
+            }
           }
 
           const [warn, info] = linkLookup.check(post, href);
