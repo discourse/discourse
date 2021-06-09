@@ -325,10 +325,10 @@ module PrettyText
     doc = Nokogiri::HTML5.fragment(html)
 
     # extract onebox links
-    doc.css("aside.onebox").each { |onebox| links << DetectedLink.new(onebox["data-onebox-src"], false) }
+    doc.css("aside.onebox[data-onebox-src]").each { |onebox| links << DetectedLink.new(onebox["data-onebox-src"], false) }
 
     # remove href inside quotes & oneboxes & elided part
-    doc.css("aside.quote a, aside.onebox a, .elided a").each { |a| a["href"] = "" }
+    doc.css("aside.quote a, aside.onebox a, .elided a").remove
 
     # extract all links
     doc.css("a").each do |a|
