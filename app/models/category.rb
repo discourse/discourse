@@ -91,6 +91,7 @@ class Category < ActiveRecord::Base
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
+  after_commit :clear_site_cache
 
   after_save_commit :index_search
 
@@ -956,6 +957,10 @@ class Category < ActiveRecord::Base
       SQL
 
     result.map { |row| [row.group_id, row.permission_type] }
+  end
+
+  def clear_site_cache
+    Site.clear_cache
   end
 end
 
