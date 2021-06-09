@@ -27,7 +27,7 @@
 }
 
 .menu-panel.slide-in {
-  transform: translate(var(--offset), 0);
+  transform: translateX(var(--offset));
   @media (prefers-reduced-motion: no-preference) {
     &.animate {
       transition: transform 0.1s linear;

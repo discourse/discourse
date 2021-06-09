@@ -10,6 +10,7 @@ export default Mixin.create({
   //velocity is pixels per ms
 
   _panState: null,
+  _animationPending: false,
 
   didInsertElement() {
     this._super(...arguments);
@@ -122,6 +123,7 @@ export default Mixin.create({
       this._panStart(e);
       return;
     }
+
     const previousState = this._panState;
     const newState = this._calculateNewPanState(previousState, e);
     if (previousState.start && newState.distance < MINIMUM_SWIPE_DISTANCE) {
@@ -137,7 +139,17 @@ export default Mixin.create({
     ) {
       this.panEnd(newState);
     } else if (e.type === "pointermove" && "panMove" in this) {
-      this.panMove(newState);
+      if (this._animationPending) {
+        return;
+      }
+      this._animationPending = true;
+      window.requestAnimationFrame(() => {
+        if (!this._animationPending) {
+          return;
+        }
+        this.panMove(newState);
+        this._animationPending = false;
+      });
     }
   },
 });
