@@ -72,9 +72,7 @@ export default Mixin.create({
     //calculate delta x, y, distance from START location
     const deltaX = e.clientX - oldState.startLocation.x;
     const deltaY = e.clientY - oldState.startLocation.y;
-    const distance = Math.round(
-      Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))
-    );
+    const distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
     //calculate velocity from previous event center location
     const eventDeltaX = e.clientX - oldState.center.x;
@@ -88,7 +86,7 @@ export default Mixin.create({
 
     return {
       startLocation: oldState.startLocation,
-      center: { x: Math.round(e.clientX), y: Math.round(e.clientY) },
+      center: { x: e.clientX, y: e.clientY },
       velocity,
       velocityX,
       velocityY,
@@ -103,7 +101,7 @@ export default Mixin.create({
 
   _panStart(e) {
     const newState = {
-      center: { x: Math.round(e.clientX), y: Math.round(e.clientY) },
+      center: { x: e.clientX, y: e.clientY },
       startLocation: { x: e.clientX, y: e.clientY },
       velocity: 0,
       velocityX: 0,
