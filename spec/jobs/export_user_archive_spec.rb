@@ -159,7 +159,7 @@ describe Jobs::ExportUserArchive do
     it 'can export a post from a deleted category' do
       cat2 = Fabricate(:category)
       topic2 = Fabricate(:topic, category: cat2, user: user)
-      post2 = Fabricate(:post, topic: topic2, user: user)
+      _post2 = Fabricate(:post, topic: topic2, user: user)
 
       cat2_id = cat2.id
       cat2.destroy!
@@ -182,7 +182,7 @@ describe Jobs::ExportUserArchive do
     end
 
     it 'properly includes the profile fields' do
-      serializer = job.preferences_export
+      _serializer = job.preferences_export
       # puts MultiJson.dump(serializer, indent: 4)
       output = make_component_json
       payload = output['user']
@@ -205,7 +205,7 @@ describe Jobs::ExportUserArchive do
     end
 
     it 'properly includes session records' do
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
       expect(data.length).to eq(1)
 
       expect(data[0]['user_agent']).to eq('MyWebBrowser')
@@ -214,7 +214,7 @@ describe Jobs::ExportUserArchive do
     context 'auth token logs' do
       let(:component) { 'auth_token_logs' }
       it 'includes details such as the path' do
-        data, csv_out = make_component_csv
+        data, _csv_out = make_component_csv
         expect(data.length).to eq(1)
 
         expect(data[0]['action']).to eq('generate')
@@ -240,7 +240,7 @@ describe Jobs::ExportUserArchive do
       BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
       BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
       expect(data.length).to eq(6)
 
       expect(data[0]['badge_id']).to eq(badge1.id.to_s)
@@ -285,7 +285,7 @@ describe Jobs::ExportUserArchive do
 
       BookmarkReminderNotificationHandler.send_notification(pending_reminder)
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
 
       expect(data.length).to eq(4)
 
@@ -341,7 +341,7 @@ describe Jobs::ExportUserArchive do
     end
 
     it 'correctly exports the CategoryUser table' do
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
 
       expect(data.find { |r| r['category_id'] == category.id }).to be_nil
       expect(data.length).to eq(4)
@@ -376,10 +376,11 @@ describe Jobs::ExportUserArchive do
       PostActionCreator.spam(user, post3)
       PostActionDestroyer.destroy(user, post3, :spam)
       PostActionCreator.inappropriate(user, post3)
+
       result3 = PostActionCreator.off_topic(user, post4)
       result3.reviewable.perform(admin, :agree_and_keep)
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
       expect(data.length).to eq(4)
       data.sort_by! { |row| row['post_id'].to_i }
 
@@ -411,7 +412,7 @@ describe Jobs::ExportUserArchive do
       PostActionDestroyer.destroy(user, post3, :like)
       post3.destroy!
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
       expect(data.length).to eq(2)
       data.sort_by! { |row| row['post_id'].to_i }
 
@@ -461,7 +462,7 @@ describe Jobs::ExportUserArchive do
       UserVisit.create(user_id: user.id, visited_at: 1.year.ago, posts_read: 4, mobile: false, time_read: 40)
       UserVisit.create(user_id: user2.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 50)
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
 
       # user2's data is not mixed in
       expect(data.length).to eq(4)
