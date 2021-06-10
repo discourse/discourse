@@ -987,14 +987,14 @@ describe Email::Receiver do
 
     context "emailing a group by email_username and following reply flow" do
       let!(:topic) do
-        group.update(email_username: "team@somesmtpaddress.com")
+        group.update!(email_username: "team@somesmtpaddress.com")
         process(:email_to_group_email_username_1)
         Topic.last
       end
-      let(:group_user) do
-        g_user = Fabricate(:user)
-        Fabricate(:group_user, user: g_user, group: group)
-        g_user
+      fab!(:user_in_group) do
+        u = Fabricate(:user)
+        Fabricate(:group_user, user: u, group: group)
+        u
       end
 
       before do
@@ -1004,7 +1004,7 @@ describe Email::Receiver do
 
       def reply_as_group_user
         group_post = PostCreator.create(
-          group_user,
+          user_in_group,
           raw: "Thanks for your request. Please try to restart.",
           topic_id: topic.id
         )
@@ -1012,7 +1012,7 @@ describe Email::Receiver do
         [email_log, group_post]
       end
 
-      it "creates an incoming email and topic correctly, and adds the group to the topic" do
+      it "the inbound processed email creates an incoming email and topic record correctly, and adds the group to the topic" do
         incoming = IncomingEmail.find_by(topic: topic)
         user = User.find_by_email("two@foo.com")
         expect(topic.topic_allowed_users.first.user_id).to eq(user.id)
@@ -1028,7 +1028,7 @@ describe Email::Receiver do
         expect(email_log.to_address).to eq("two@foo.com")
         expect(email_log.email_type).to eq("user_private_message")
         expect(email_log.post_id).to eq(group_post.id)
-        expect(IncomingEmail.find_by(post_id: group_post.id)).to eq(nil)
+        expect(IncomingEmail.exists?(post_id: group_post.id)).to eq(false)
       end
 
       it "processes a reply from the OP user to the group SMTP username, linking the reply_to_post_number correctly by
@@ -1037,10 +1037,12 @@ describe Email::Receiver do
 
         reply_email = email(:email_to_group_email_username_2)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        Email::Receiver.new(reply_email).process!
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
 
         reply_post = Post.last
-        expect(reply_post.reply_to_user).to eq(group_user)
+        expect(reply_post.reply_to_user).to eq(user_in_group)
         expect(reply_post.reply_to_post_number).to eq(group_post.post_number)
       end
 
