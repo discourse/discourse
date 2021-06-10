@@ -1,4 +1,5 @@
 import DateWithZoneHelper from "./date-with-zone-helper";
+import { module, test } from "qunit";
 
 const PARIS = "Europe/Paris";
 const SYDNEY = "Australia/Sydney";

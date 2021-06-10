@@ -16,6 +16,8 @@ registerUnbound("topic-link", (topic, args) => {
 
   return htmlSafe(
     `<a href='${url}'
+        role='heading'
+        level='2'
         class='${classes.join(" ")}'
         data-topic-id='${topic.id}'>${title}</a>`
   );

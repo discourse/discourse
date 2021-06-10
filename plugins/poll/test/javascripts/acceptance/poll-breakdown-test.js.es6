@@ -1,10 +1,12 @@
 import {
   acceptance,
   count,
+  exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Poll breakdown", function (needs) {
   needs.user();
@@ -65,19 +67,14 @@ acceptance("Poll breakdown", function (needs) {
   test("Displaying the poll breakdown modal", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
 
-    assert.equal(
-      queryAll(".poll-show-breakdown").text(),
-      "Show breakdown",
+    assert.ok(
+      exists(".poll-show-breakdown"),
       "shows the breakdown button when poll_groupable_user_fields is non-empty"
     );
 
     await click(".poll-show-breakdown");
 
-    assert.equal(
-      query(".poll-breakdown-total-votes").textContent.trim(),
-      "2 votes",
-      "display the correct total vote count"
-    );
+    assert.ok(exists(".poll-breakdown-total-votes"), "displays the vote count");
 
     assert.equal(
       count(".poll-breakdown-chart-container"),

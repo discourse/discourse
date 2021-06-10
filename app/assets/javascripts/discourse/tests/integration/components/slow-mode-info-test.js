@@ -12,7 +12,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("doesn't render if the topic is closed", {
-    template: "{{slow-mode-info topic=topic}}",
+    template: hbs`{{slow-mode-info topic=topic}}`,
 
     beforeEach() {
       this.set("topic", { slow_mode_seconds: 3600, closed: true });

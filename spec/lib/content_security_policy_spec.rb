@@ -32,6 +32,18 @@ describe ContentSecurityPolicy do
     end
   end
 
+  describe 'upgrade-insecure-requests' do
+    it 'is not included when force_https is off' do
+      SiteSetting.force_https = false
+      expect(parse(policy)['upgrade-insecure-requests']).to eq(nil)
+    end
+
+    it 'is included when force_https is on' do
+      SiteSetting.force_https = true
+      expect(parse(policy)['upgrade-insecure-requests']).to eq([])
+    end
+  end
+
   describe 'worker-src' do
     it 'has expected values' do
       worker_srcs = parse(policy)['worker-src']

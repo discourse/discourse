@@ -1,4 +1,5 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Local Dates - composer", function (needs) {
   needs.user();
