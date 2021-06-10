@@ -29,19 +29,6 @@ registerUnbound(
   }
 );
 
-registerUnbound(
-  "directory-item-plugin-value",
-  function (args) {
-    // Args should include key/values { item, column }
-    const value =
-      args.item.plugin_attrs
-        ? args.item.plugin_attrs[args.column.id]
-        : null;
-    const content = value || "-";
-    return htmlSafe(`<span class='user-field-value'>${content}</span>`);
-  }
-);
-
 registerUnbound("directory-column-is-automatic", function (args) {
   // Args should include key/values { column }
   return args.column.type === "automatic";

@@ -13,6 +13,10 @@ class DirectoryColumn < ActiveRecord::Base
                    :days_visited]
   end
 
+  def self.active_column_names
+    DirectoryColumn.where(type: [:automatic, :plugin]).where(enabled: true).pluck(:name).map(&:to_sym)
+  end
+
   @@plugin_directory_columns = []
 
   enum type: { automatic: 0, user_field: 1, plugin: 2 }

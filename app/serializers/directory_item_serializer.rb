@@ -17,11 +17,10 @@ class DirectoryItemSerializer < ApplicationSerializer
   end
 
   attributes :id,
-             :time_read,
-             # :plugin_attrs
+             :time_read
 
   has_one :user, embed: :objects, serializer: UserSerializer
-  attributes *DirectoryColumn.automatic_column_names
+  attributes *DirectoryColumn.active_column_names
 
   def id
     object.user_id
@@ -34,17 +33,4 @@ class DirectoryItemSerializer < ApplicationSerializer
   def include_time_read?
     object.period_type == DirectoryItem.period_types[:all]
   end
-
-  # def plugin_attrs
-    # attrs = {}
-    # @options[:plugin_column_ids].map do |column_id|
-      # directory_column = DirectoryColumn.plugin_directory_columns.detect { |column| column[:id] == column_id }
-      # attrs[column_id] = directory_column[:value_proc].call(object)
-    # end
-    # attrs
-  # end
-
-  # def include_plugin_attrs?
-    # @options[:plugin_column_ids]
-  # end
 end

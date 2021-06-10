@@ -375,14 +375,14 @@ class Plugin::Instance
     assets
   end
 
-  def add_directory_column(column_name, icon: nil, query_proc:)
+  def add_directory_column(column_name, icon: nil, with_rows: "", joins: "")
     directory_column = DirectoryColumn
       .find_or_create_by(name: column_name, icon: icon, type: DirectoryColumn.types[:plugin]) do |column|
         column.position = DirectoryColumn.maximum("position") + 1
         column.enabled = false
       end
     DirectoryColumn.add_plugin_directory_column(column_name)
-    DirectoryItem.add_plugin_query(query_proc)
+    DirectoryItem.add_plugin_query(column: column_name, with_rows: with_rows, joins: joins)
   end
 
   def delete_extra_automatic_assets(good_paths)
