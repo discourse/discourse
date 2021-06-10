@@ -70,6 +70,13 @@ class Stylesheet::Manager
 
     @lock.synchronize do
       stylesheets = []
+
+      themes = Theme.where(id: theme_ids).each_with_object({}) do |theme, hash|
+        hash[theme.id] = theme
+      end
+
+      theme_scss_checker = Theme::ScssChecker.new(target, theme_ids)
+
       theme_ids.each do |theme_id|
         data = { target: target }
         cache_key = "path_#{target}_#{theme_id}_#{current_hostname}"
@@ -77,13 +84,14 @@ class Stylesheet::Manager
 
         unless href
           builder = self.new(target, theme_id)
+          builder.theme = themes[theme_id]
           is_theme = builder.is_theme?
           has_theme = builder.theme.present?
 
           if is_theme && !has_theme
             next
           else
-            next if builder.theme&.component && !builder.theme&.has_scss(target)
+            next if builder.theme&.component && !theme_scss_checker.has_scss(builder&.theme.id)
             data[:theme_id] = builder.theme.id if has_theme && is_theme
             builder.compile unless File.exists?(builder.stylesheet_fullpath)
             href = builder.stylesheet_path(current_hostname)
@@ -171,11 +179,12 @@ class Stylesheet::Manager
           next if theme_id == -1
 
           theme_ids = Theme.transform_ids([theme_id], extend: true)
+          theme_scss_checker = Theme::ScssChecker.new(target, theme_ids)
 
           theme_ids.each do |t_id|
             builder = self.new(target, t_id)
             STDERR.puts "precompile target: #{target} #{builder.theme.name}"
-            next if builder.theme.component && !builder.theme.has_scss(target)
+            next if builder.theme.component && !theme_scss_checker.has_scss(builder.theme.id)
             builder.compile(force: true)
           end
         else
@@ -232,6 +241,8 @@ class Stylesheet::Manager
     "#{Rails.root}/#{CACHE_PATH}"
   end
 
+  attr_accessor :theme
+
   def initialize(target = :desktop, theme_id = nil, color_scheme = nil)
     @target = target
     @theme_id = theme_id
@@ -239,7 +250,7 @@ class Stylesheet::Manager
   end
 
   def compile(opts = {})
-    unless opts[:force]
+    if !opts[:force]
       if File.exists?(stylesheet_fullpath)
         unless StylesheetCache.where(target: qualified_target, digest: digest).exists?
           begin
