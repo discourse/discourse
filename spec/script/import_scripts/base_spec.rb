@@ -45,6 +45,10 @@ describe ImportScripts::Base do
 
   let(:import_data) do
     import_file = Rack::Test::UploadedFile.new(file_from_fixtures("base-import-data.json", "json"))
+    puts "\n\n\n\n"
+    puts "import_file #{import_file}"
+    puts import_file.read
+    puts "\n\n\n\n"
     ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(import_file.read))
   end
 
