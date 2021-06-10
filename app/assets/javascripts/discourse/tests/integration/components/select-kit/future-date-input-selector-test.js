@@ -27,7 +27,7 @@ discourseModule(
       template: hbs`{{future-date-input-selector}}`,
 
       beforeEach() {
-        const monday = fakeTime("2021-05-03T08:00:00", "UTC", true);
+        const monday = fakeTime("2100-06-07T08:00:00", "UTC", true);
         this.clock = monday;
       },
 
@@ -54,7 +54,7 @@ discourseModule(
       template: hbs`{{future-date-input-selector}}`,
 
       beforeEach() {
-        const sunday = fakeTime("2021-05-02T08:00:00", "UTC", true);
+        const sunday = fakeTime("2100-06-13T08:00:00", "UTC", true);
         this.clock = sunday;
       },
 

@@ -34,11 +34,8 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template,
 
     beforeEach() {
-      this.clock = fakeTime(
-        "2019-12-10T08:00:00",
-        this.currentUser._timezone,
-        true
-      );
+      const monday = "2100-06-07T08:00:00";
+      this.clock = fakeTime(monday, this.currentUser._timezone, true);
     },
 
     test(assert) {
@@ -52,11 +49,8 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
       template,
 
       beforeEach() {
-        this.clock = fakeTime(
-          "2019-12-13T08:00:00",
-          this.currentUser._timezone,
-          true
-        );
+        const thursday = "2100-06-10T08:00:00";
+        this.clock = fakeTime(thursday, this.currentUser._timezone, true);
       },
 
       test(assert) {
@@ -73,7 +67,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
     beforeEach() {
       this.clock = fakeTime(
-        "2019-12-11T22:00:00",
+        "2100-12-11T22:00:00",
         this.currentUser._timezone,
         true
       );
@@ -92,7 +86,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
     beforeEach() {
       this.clock = fakeTime(
-        "2019-12-11T14:30:00",
+        "2100-12-11T14:30:00",
         this.currentUser._timezone,
         true
       );
@@ -108,7 +102,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
     beforeEach() {
       this.clock = fakeTime(
-        "2019-12-11T17:00:00",
+        "2100-12-11T17:00:00",
         this.currentUser._timezone,
         true
       );
@@ -127,7 +121,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
     beforeEach() {
       this.clock = fakeTime(
-        "2019-12-11T13:00:00",
+        "2100-12-11T13:00:00",
         this.currentUser._timezone,
         true
       );
