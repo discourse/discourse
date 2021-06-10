@@ -760,7 +760,11 @@ module Email
       # there will be a corresponding EmailLog record, so we can use that as the
       # reply post if it exists
       if discourse_generated_message_id?(mail.in_reply_to)
-        post_id_from_email_log = EmailLog.where(message_id: mail.in_reply_to).addressed_to_user(user).pluck(:post_id).last
+        post_id_from_email_log = EmailLog.where(message_id: mail.in_reply_to)
+          .addressed_to_user(user)
+          .order(created_at: :desc)
+          .limit(1)
+          .pluck(:post_id).last
         post_ids << post_id_from_email_log
       end
 
