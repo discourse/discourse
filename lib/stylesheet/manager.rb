@@ -434,7 +434,18 @@ class Stylesheet::Manager
   end
 
   def uploads_digest
-    Digest::SHA1.hexdigest(ThemeField.joins(:upload).where(id: theme&.all_theme_variables).pluck(:sha1).join(","))
+    sha1s =
+      if (theme_ids = theme&.all_theme_variables).present?
+        ThemeField
+          .joins(:upload)
+          .where(id: theme_ids)
+          .pluck(:sha1)
+          .join(",")
+      else
+        ""
+      end
+
+      Digest::SHA1.hexdigest(sha1s)
   end
 
   def color_scheme_digest
