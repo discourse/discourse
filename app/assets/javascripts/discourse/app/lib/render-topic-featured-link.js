@@ -12,7 +12,7 @@ export function extractLinkMeta(topic) {
   const href = topic.get("featured_link");
   const target = User.currentProp("external_links_in_new_tab") ? "_blank" : "";
   const domain = topic.get("featured_link_root_domain");
-  let allowList = Discourse.SiteSettings.exclude_rel_nofollow_domains;
+  let allowList = topic.siteSettings.exclude_rel_nofollow_domains;
   let rel = "nofollow ugc";
 
   if (allowList) {
