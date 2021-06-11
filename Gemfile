@@ -175,7 +175,7 @@ group :development do
   gem 'yaml-lint'
   gem 'annotate'
   gem 'discourse_dev_assets'
-  gem 'faker'
+  gem 'faker', "~> 2.16"
 end
 
 # this is an optional gem, it provides a high performance replacement
