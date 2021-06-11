@@ -422,14 +422,6 @@ acceptance("Topic featured links", function (needs) {
       exists(".title-wrapper .remove-featured-link"),
       "link to remove featured link"
     );
-
-    // TODO: decide if we want to test this, test is flaky so it
-    // was commented out.
-    // If not fixed by May 2021, delete this code block
-    //
-    //await click(".title-wrapper .remove-featured-link");
-    //await click(".title-wrapper .submit-edit");
-    //assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
   });
 });
 
