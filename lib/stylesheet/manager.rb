@@ -395,8 +395,7 @@ class Stylesheet::Manager
 
   def theme_digest
     if [:mobile_theme, :desktop_theme].include?(@target)
-      scss_digest = theme.resolve_baked_field(:common, :scss)
-      scss_digest += theme.resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
+      scss_digest = theme.resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
     elsif @target == :embedded_theme
       scss_digest = theme.resolve_baked_field(:common, :embedded_scss)
     else
