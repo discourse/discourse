@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
-require "fileutils"
+cgroup = File.read("/proc/1/cgroup") rescue ""
 
-# See: https://github.com/docker/for-linux/issues/1015
+if cgroup.include?("/docker/")
+  require "fileutils"
 
-module FileUtils
-  class Entry_
-    def copy_file(dest)
-      File.open(path()) do |s|
-        File.open(dest, "wb", s.stat.mode) do |f|
-          IO.copy_stream(s, f)
-          f.chmod(f.lstat.mode)
+  # See: https://github.com/docker/for-linux/issues/1015
+
+  module FileUtils
+    class Entry_
+      def copy_file(dest)
+        File.open(path()) do |s|
+          File.open(dest, "wb", s.stat.mode) do |f|
+            IO.copy_stream(s, f)
+            f.chmod(f.lstat.mode)
+          end
         end
       end
     end
