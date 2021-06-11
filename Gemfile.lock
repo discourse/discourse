@@ -115,8 +115,8 @@ GEM
       railties (>= 3.1)
     discourse-ember-source (3.12.2.3)
     discourse-fonts (0.0.8)
-    discourse_dev (0.2.1)
-      faker (~> 2.16)
+    discourse_dev_assets (0.0.1)
+      faker (= 2.16)
     docile (1.4.0)
     ecma-re-validator (0.3.0)
       regexp_parser (~> 2.0)
@@ -132,7 +132,7 @@ GEM
     execjs (2.8.1)
     exifr (1.3.9)
     fabrication (2.22.0)
-    faker (2.18.0)
+    faker (2.16.0)
       i18n (>= 1.6, < 2)
     fakeweb (1.3.0)
     faraday (1.4.2)
@@ -504,12 +504,13 @@ DEPENDENCIES
   discourse-ember-rails (= 0.18.6)
   discourse-ember-source (~> 3.12.2)
   discourse-fonts
-  discourse_dev
+  discourse_dev_assets
   email_reply_trimmer
   ember-handlebars-template (= 0.8.0)
   excon
   execjs
   fabrication
+  faker
   fakeweb
   fast_blank
   fast_xs
