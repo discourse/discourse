@@ -17,8 +17,9 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    if (this.input) {
-      const datetime = moment(this.input);
+    let initialInput = this.input || this.initialInput;
+    if (initialInput) {
+      const datetime = moment(initialInput);
       this.setProperties({
         selection: "pick_date_and_time",
         date: datetime.format("YYYY-MM-DD"),

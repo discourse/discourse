@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import PenaltyController from "admin/mixins/penalty-controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
+import { later } from "@ember/runloop";
 
 export default Controller.extend(PenaltyController, {
   suspendUntil: null,
@@ -10,6 +11,14 @@ export default Controller.extend(PenaltyController, {
   onShow() {
     this.resetModal();
     this.setProperties({ suspendUntil: null, suspending: false });
+  },
+
+  @discourseComputed("user")
+  suspendUntilDefault() {
+    later(() => {
+      this.set("suspendUntil", this.user?.next_penalty);
+    });
+    return this.user?.next_penalty;
   },
 
   @discourseComputed("suspendUntil", "reason", "suspending")
