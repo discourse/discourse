@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'discourse_dev/record'
-require 'rails'
 require 'faker'
 
 module DiscourseDev
@@ -11,9 +10,7 @@ module DiscourseDev
     def initialize
       super(::User, DiscourseDev.config.user[:count])
 
-      # Using the stock avatar images from https://tinyfac.es
-      # Tiny Faces is a free crowd-sourced avatar gallery
-      @images = Dir[File.join(__dir__, '..', '..', 'avatars', '*.*')]
+      @images = DiscourseDevAssets.avatars
     end
 
     def data
