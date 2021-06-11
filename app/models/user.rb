@@ -527,7 +527,7 @@ class User < ActiveRecord::Base
   end
 
   def unread_high_priority_notifications
-    1
+    @unread_high_prios ||= unread_notifications_of_priority(high_priority: true)
   end
 
   # PERF: This safeguard is in place to avoid situations where
@@ -584,7 +584,14 @@ class User < ActiveRecord::Base
   TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
 
   def read_first_notification?
-    false
+    if (trust_level > TrustLevel[1] ||
+        (first_seen_at.present? && first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago) ||
+        user_option.skip_new_user_tips)
+
+      return true
+    end
+
+    self.seen_notification_id == 0 ? false : true
   end
 
   def publish_notifications_state
