@@ -2594,6 +2594,7 @@ en:
     email_in_spam_header: "User's first email was flagged as spam"
     already_silenced: "User was already silenced by %{staff} %{time_ago}."
     already_suspended: "User was already suspended by %{staff} %{time_ago}."
+    cannot_delete_has_posts: "User %{username} has %{post_count} posts(s), either public posts or personal messages, so they can't be deleted."
 
   reviewables_reminder:
     submitted:

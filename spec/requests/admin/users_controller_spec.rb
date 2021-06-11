@@ -626,10 +626,16 @@ RSpec.describe Admin::UsersController do
       let!(:post) { Fabricate(:post, topic: topic, user: delete_me) }
 
       it "returns an api response that the user can't be deleted because it has posts" do
+        post_count = delete_me.posts.joins(:topic).count
+        delete_me_topic = Fabricate(:topic)
+        Fabricate(:post, topic: delete_me_topic, user: delete_me)
+        PostDestroyer.new(admin, delete_me_topic.first_post, context: "Deleted by admin").destroy
+
         delete "/admin/users/#{delete_me.id}.json"
         expect(response.status).to eq(403)
         json = response.parsed_body
         expect(json['deleted']).to eq(false)
+        expect(json['message']).to eq(I18n.t("user.cannot_delete_has_posts", username: delete_me.username, post_count: post_count))
       end
 
       it "doesn't return an error if delete_posts == true" do
