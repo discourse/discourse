@@ -1,15 +1,14 @@
 import { module, test } from "qunit";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import { formattedReminderTime } from "discourse/lib/bookmark";
-import sinon from "sinon";
 
 module("Unit | Utility | bookmark", function (hooks) {
   hooks.beforeEach(function () {
-    fakeTime("2020-04-11 08:00:00", "Australia/Brisbane");
+    this.clock = fakeTime("2020-04-11 08:00:00", "Australia/Brisbane");
   });
 
   hooks.afterEach(function () {
-    sinon.restore();
+    this.clock.restore();
   });
 
   test("formattedReminderTime works when the reminder time is tomorrow", function (assert) {
