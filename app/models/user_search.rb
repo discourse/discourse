@@ -68,7 +68,7 @@ class UserSearch
     if @term.present?
       exact_matches = scoped_users.where(username_lower: @term)
 
-      # don't polute mentions with users who haven't shown up in over a year
+      # don't pollute mentions with users who haven't shown up in over a year
       exact_matches = exact_matches.where('last_seen_at > ?', 1.year.ago) if @topic_id || @category_id
 
       exact_matches

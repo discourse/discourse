@@ -1,7 +1,7 @@
 import {
   acceptance,
+  count,
   exists,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -78,7 +78,7 @@ acceptance("User notification schedule", function (needs) {
       "set monday label to none"
     );
     assert.equal(
-      queryAll(".day.Monday .select-kit.single-select").length,
+      count(".day.Monday .select-kit.single-select"),
       1,
       "The end time input is hidden"
     );

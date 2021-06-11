@@ -5,3 +5,20 @@
 # https://translate.discourse.org/
 
 sk:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Vitajte v Discourse"
+        colors:
+          title: "Farby"
+        categories:
+          title: "Kategórie"
+        navigation:
+          title: "Navigácia"
+        categories_list:
+          title: "Zoznam kategórií"
+        post:
+          title: "Príspevok"
+        suggested_topics:
+          title: "Odporúčané témy"

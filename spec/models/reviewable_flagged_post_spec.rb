@@ -305,6 +305,23 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe 'recalculating the reviewable score' do
+    let(:expected_score) { 8 }
+    let(:reviewable) { Fabricate(:reviewable_flagged_post, score: expected_score) }
+
+    it "doesn't recalculate the score after ignore" do
+      reviewable.perform(moderator, :ignore)
+
+      expect(reviewable.score).to eq(expected_score)
+    end
+
+    it "doesn't recalculate the score after disagree" do
+      reviewable.perform(moderator, :disagree)
+
+      expect(reviewable.score).to eq(expected_score)
+    end
+  end
+
   def assert_pm_creation_enqueued(user_id, pm_type)
     expect(Jobs::SendSystemMessage.jobs.length).to eq(1)
       job = Jobs::SendSystemMessage.jobs[0]

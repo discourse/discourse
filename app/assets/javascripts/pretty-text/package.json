@@ -25,7 +25,7 @@
     "@glimmer/component": "^1.0.0",
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~3.15.2",
+    "ember-cli": "~3.25.3",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-eslint": "^5.1.0",
     "ember-cli-inject-live-reload": "^2.0.1",

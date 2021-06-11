@@ -442,7 +442,7 @@ describe PostAlerter do
         expect(n.data_hash["original_username"]).to eq(admin.username)
     end
 
-    it "doesn't notify the last post editor if they mention themself" do
+    it "doesn't notify the last post editor if they mention themselves" do
       post = create_post_with_alerts(user: user, raw: 'Post without a mention.')
       expect {
         post.revise(evil_trout, raw: "O hai, @eviltrout!")
@@ -1101,6 +1101,26 @@ describe PostAlerter do
         }.to add_notification(staged_member, :posted)
           .and not_add_notification(staged_non_member, :posted)
       end
+
+      it "does not update existing unread notification" do
+        category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id)
+        topic = Fabricate(:topic, category: category)
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+        notification_data = JSON.parse(notification.data)
+        expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
+      end
     end
   end
 
@@ -1117,6 +1137,26 @@ describe PostAlerter do
           PostAlerter.post_created(post)
         end
         expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
+      end
+
+      it "does not update existing unread notification" do
+        tag = Fabricate(:tag)
+        TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+        topic = Fabricate(:topic, tags: [tag])
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+        notification_data = JSON.parse(notification.data)
+        expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
       end
     end
 
@@ -1175,7 +1215,7 @@ describe PostAlerter do
         post.topic.allowed_users << staged
       end
 
-      it "only notifes staff watching added tag" do
+      it "only notifies staff watching added tag" do
         expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag.name])).to be true
         expect(Notification.where(user_id: staged.id).count).to eq(0)
         expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag2.name])).to be true
@@ -1255,16 +1295,23 @@ describe PostAlerter do
   context "SMTP (group_smtp_email)" do
     before do
       SiteSetting.enable_smtp = true
+      SiteSetting.enable_imap = true
       Jobs.run_immediately!
     end
 
     fab!(:group) do
       Fabricate(
         :group,
-        smtp_server: "imap.gmail.com",
+        smtp_server: "smtp.gmail.com",
         smtp_port: 587,
+        smtp_ssl: true,
+        imap_server: "imap.gmail.com",
+        imap_port: 993,
+        imap_ssl: true,
         email_username: "discourse@example.com",
-        email_password: "discourse@example.com"
+        email_password: "password",
+        smtp_enabled: true,
+        imap_enabled: true
       )
     end
 
@@ -1306,6 +1353,27 @@ describe PostAlerter do
       expect(email.from).to include(group.email_username)
       expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
       expect(email.subject).to eq("Re: #{topic.title}")
+    end
+
+    it "does not send a group smtp email if imap is not enabled for the group" do
+      group.update!(imap_enabled: false)
+      create_post_with_incoming
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+
+    it "does not send a group smtp email if SiteSetting.enable_imap is false" do
+      SiteSetting.enable_imap = false
+      create_post_with_incoming
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+
+    it "does not send a group smtp email if SiteSetting.enable_smtp is false" do
+      SiteSetting.enable_smtp = false
+      create_post_with_incoming
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
     it "does not send group smtp emails for a whisper" do

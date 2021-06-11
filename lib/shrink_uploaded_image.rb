@@ -67,7 +67,7 @@ class ShrinkUploadedImage
 
     log "base62: #{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
     log "sha: #{original_upload.sha1} -> #{sha1}"
-    log "(an exisiting upload)" if existing_upload
+    log "(an existing upload)" if existing_upload
 
     success = true
     posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)

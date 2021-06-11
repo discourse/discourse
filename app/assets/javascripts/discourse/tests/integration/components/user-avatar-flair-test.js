@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -61,8 +62,8 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC000A; color: #FFFFFA; ",
@@ -86,8 +87,8 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0005; color: #FFFFF5; ",
@@ -111,11 +112,8 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(
-          queryAll("svg.d-icon-dice-two").length,
-          "it has the svg icon"
-        );
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0002; color: #FFFFF2; ",
@@ -139,11 +137,8 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(
-          queryAll("svg.d-icon-dice-two").length,
-          "it has the svg icon"
-        );
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0002; color: #FFFFF2; ",
@@ -171,8 +166,8 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg.d-icon-times").length, "it has the svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-times"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #123456; color: #B0B0B0; ",

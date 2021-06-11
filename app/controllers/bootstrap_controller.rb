@@ -3,6 +3,8 @@
 class BootstrapController < ApplicationController
   include ApplicationHelper
 
+  skip_before_action :redirect_to_login_if_required
+
   # This endpoint allows us to produce the data required to start up Discourse via JSON API,
   # so that you don't have to scrape the HTML for `data-*` payloads
   def index

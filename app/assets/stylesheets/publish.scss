@@ -9,7 +9,7 @@
   width: 100%;
   top: 0;
   z-index: z("header");
-  background-color: var(--header_background, $header_background);
+  background-color: var(--header_background);
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.25);
   position: sticky;
   top: 0;
@@ -25,7 +25,7 @@
       line-height: 1em;
     }
     .published-page-title {
-      color: var(--header_primary, $header_primary);
+      color: var(--header_primary);
       font-size: 2em;
       margin: 0;
       max-height: 1.25em;
@@ -34,8 +34,8 @@
 }
 
 .published-page {
-  background-color: var(--secondary, $secondary);
-  color: var(--primary, $primary);
+  background-color: var(--secondary);
+  color: var(--primary);
 
   blockquote {
     margin-left: 0;
@@ -53,10 +53,10 @@
     margin-right: 1em;
     height: 45px;
     width: 45px;
-    border: 4px solid var(--tertiary-medium, $tertiary-medium);
+    border: 4px solid var(--tertiary-medium);
   }
   .topic-created-at {
-    color: var(--primary-medium, $primary-medium);
+    color: var(--primary-medium);
   }
 }
 

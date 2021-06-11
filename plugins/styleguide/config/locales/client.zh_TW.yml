@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "歡迎來到 Discourse"
+        colors:
+          title: "顏色"
+        icons:
+          title: "表徵圖"
+        categories:
+          title: "分類"
+        navigation:
+          title: "導航"
+        categories_list:
+          title: "分類清單"
+        topic_timer_info:
+          title: "話題計時器"
+        post:
+          title: "貼文"
+        suggested_topics:
+          title: "推薦的話題"

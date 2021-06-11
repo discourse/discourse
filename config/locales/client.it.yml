@@ -330,6 +330,7 @@ it:
     upload: "Carica"
     uploading: "In caricamento..."
     uploading_filename: "In caricamento: %{filename}..."
+    processing_filename: "In elaborazione: %{filename}..."
     clipboard: "clipboard"
     uploaded: "Caricato!"
     pasting: "Incollando..."
@@ -467,6 +468,7 @@ it:
         priority:
           title: "Priorità Minima"
           any: "(qualsiasi)"
+          low: "Bassa"
           medium: "Media"
           high: "Alta"
       conversation:
@@ -583,6 +585,10 @@ it:
       total_rows:
         one: "%{count} utente"
         other: "%{count} utenti"
+      edit_columns:
+        title: "Modifica Colonne Directory"
+        save: "Salva"
+        reset_to_default: "Ripristina impostazioni predefinite"
     group_histories:
       actions:
         change_group_setting: "Cambia le impostazioni del gruppo"
@@ -596,8 +602,12 @@ it:
       add_members:
         title: "Aggiungi membri a %{group_name}"
         description: "Puoi anche incollare in un elenco separato da virgole."
-        usernames: "Inserisci nomi utente o indirizzi email"
-        input_placeholder: "Nomi utente o email"
+        usernames_or_emails:
+          title: "Inserisci nomi utente o indirizzi email"
+          input_placeholder: "Nomi utente o email"
+        usernames:
+          title: "Immettere i nomi utente"
+          input_placeholder: "Nome utente"
         notify_users: "Notifica gli utenti"
       requests:
         title: "Richieste"
@@ -623,6 +633,25 @@ it:
         email:
           title: "Email"
           status: "Sincronizzate %{old_emails} / %{total_emails} email via IMAP."
+          enable_smtp: "Abilita SMTP"
+          enable_imap: "Abilita IMAP"
+          test_settings: "Prova le impostazioni"
+          save_settings: "Salva Impostazioni"
+          settings_required: "Tutte le impostazioni sono obbligatorie, si prega di compilare tutti i campi prima della convalida."
+          smtp_settings_valid: "Impostazioni SMTP valide."
+          smtp_title: "SMTP"
+          smtp_instructions: "Quando abiliti l'SMTP di gruppo, tutte le email in uscita dalla casella di posta del gruppo saranno inviate usando queste impostazioni SMTP, invece che tramite il server di posta configurato per le altre email inviate dal forum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Altre impostazioni"
+          imap_instructions: 'Quando si abilita l''IMAP di gruppo, le e-mail vengono sincronizzate tra la casella di posta del gruppo e il server IMAP e la casella di posta forniti. Affinché l''IMAP possa essere abilitato, l''SMTP deve prima essere impostato con credenziali valide e verificate. Il nome utente e la password di posta elettronica utilizzati per SMTP saranno utilizzati anche per IMAP. Per ulteriori informazioni vedi l''annuncio della funzionalità su <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta</a>.'
+          imap_alpha_warning: "Attenzione: questa è una funzionalità in stadio alfa. Solo Gmail è ufficialmente supportato. Usare a proprio rischio e pericolo!"
+          imap_settings_valid: "Impostazioni IMAP valide."
+          smtp_disable_confirm: "Se disabiliti SMTP, tutte le impostazioni SMTP e IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
+          imap_disable_confirm: "Se disabiliti IMAP tutte le impostazioni IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
+          imap_mailbox_not_selected: "Devi selezionare una casella di posta per questa configurazione IMAP, altrimenti non verrà sincronizzata nessuna casella di posta!"
+          prefill:
+            title: "Precompila con impostazioni per:"
+            gmail: "GMail"
           credentials:
             title: "Credenziali"
             smtp_server: "Server SMTP"
@@ -640,7 +669,6 @@ it:
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
-            disabled: "disabilitata"
         membership:
           title: Iscrizione
           access: Accesso
@@ -963,6 +991,7 @@ it:
         description: "Salta i suggerimenti e i distintivi per l'inserimento dei nuovi utenti"
         not_first_time: "Non è la tua prima volta?"
         skip_link: "Ignora questi consigli"
+        read_later: "Lo leggerò più tardi."
       theme_default_on_all_devices: "Rendi questo il tema di default su tutti i miei dispositivi."
       color_scheme_default_on_all_devices: "Imposta questa combinazione (o combinazioni) di colori come predefinita/e su tutti i miei dispositivi"
       color_scheme: "Combinazione di colori"
@@ -1183,6 +1212,7 @@ it:
         uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
         upload_title: "Carica la tua foto"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
+        logo_small: "Logo piccolo del sito. Usato come impostazione predefinita."
       change_profile_background:
         title: "Intestazione Profilo "
         instructions: "Le intestazioni dei profili saranno centrate e avranno una larghezza predefinita di 1110 px."
@@ -1214,6 +1244,7 @@ it:
         invalid: "Inserisci un indirizzo email valido"
         authenticated: "%{provider} ha autenticato la tua email"
         invite_auth_email_invalid: "La tua email di invito non corrisponde all'email autenticata da %{provider}"
+        authenticated_by_invite: "La tua email è stata autenticata dall'invito"
         frequency_immediately: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
         frequency:
           one: "TI invieremo un email solo se non ti avremo visto nell'ultimo minuto."
@@ -1399,23 +1430,13 @@ it:
         invite:
           new_title: "Crea invito"
           edit_title: "Modifica invito"
-          instructions: "Condividi questo link per concedere istantaneamente l'accesso a questo sito:"
           copy_link: "copia link"
-          expires_in_time: "Scade fra %{time}."
-          expired_at_time: "Scaduto alle %{time}."
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
-          restrict_email: "Limita l'invito a un solo indirizzo email"
-          max_redemptions_allowed: "Numero massimo di utilizzi:"
-          add_to_groups: "Aggiungi ai gruppi:"
-          invite_to_topic: "Invia all'argomento al primo accesso:"
-          expires_at: "Scadenza dopo:"
-          custom_message: "Messaggio personale facoltativo:"
           send_invite_email: "Salva e invia Email"
           save_invite: "Salva invito"
           invite_saved: "Invito salvato."
           invite_copied: "Link di invito copiato."
-          blank_email: "Collegamento di invito non copiato. L'indirizzo e-mail è obbligatorio."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -1565,6 +1586,7 @@ it:
       sign_up: "Iscriviti"
       hide_session: "Ricordamelo domani"
       hide_forever: "no grazie"
+      hidden_for_session: "OK, te lo chiederemo domani. Puoi sempre utilizzare \"Accedi\" anche per creare un account."
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
       value_prop: "Quando crei un account, potremo ricordare esattamente cosa hai letto, in modo che tu possa riprendere esattamente da dove hai lasciato. Riceverai inoltre notifiche, qui o via email, quando qualcuno ti risponde. Potrai anche mettere \"Mi piace\" per mostrare il tuo apprezzamento :heartpulse:"
     summary:
@@ -1901,6 +1923,8 @@ it:
       yourself_confirm:
         title: "Hai dimenticato di aggiungere i destinatari?"
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
+      slow_mode:
+        error: "Questo argomento è in modalità lenta. Hai già postato di recente, puoi postare di nuovo tra %{timeLeft}."
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       composer_actions:
         reply: Rispondi
@@ -2029,13 +2053,13 @@ it:
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
-      remote_tip_with_attachments: "collegamento all'immagine o al file %{authorized_extensions}"
       local_tip: "seleziona immagini dal tuo dispositivo"
-      local_tip_with_attachments: "seleziona immagini o file dal tuo dispositivo %{authorized_extensions}"
+      hint: "(puoi anche trascinare e rilasciare nell'editor per caricare)"
       hint_for_supported_browsers: "puoi fare il \"trascina e rilascia\" o incollare immagini nell'editor"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       default_image_alt_text: immagine
+      supported_formats: "formati supportati"
     search:
       sort_by: "Ordina per"
       relevance: "Rilevanza"
@@ -2139,10 +2163,13 @@ it:
         delete: "Elimina argomenti"
         dismiss: "Letti"
         dismiss_read: "Nascondi tutti i non letti"
+        dismiss_read_with_selected: "Ignora %{count} non letti"
         dismiss_button: "Ignora…"
+        dismiss_button_with_selected: "Ignora (%{count})…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new: "Ignora i nuovi messaggi"
+        dismiss_new_with_selected: "Ignora i nuovi (%{count})"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
         change_category: "Imposta categoria"
@@ -2252,7 +2279,8 @@ it:
       back_to_list: "Torna alla Lista Argomenti"
       options: "Opzioni Argomento"
       show_links: "mostra i collegamenti in questo argomento"
-      toggle_information: "commuta i dettagli dell'argomento"
+      collapse_details: "comprimi i dettagli dell'argomento"
+      expand_details: "espandi i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
       read_more: "Vuoi saperne di più? %{catLink} o %{latestLink}."
       unread_indicator: "Nessun utente ha ancora letto l'ultimo post di questo Argomento."
@@ -2269,7 +2297,9 @@ it:
         title: "Modalità lenta"
         select: "Gli utenti possono pubblicare in questo argomento solo una volta ogni:"
         description: "Per promuovere discussioni ponderate in argomenti in rapida evoluzione o controversi, gli utenti devono attendere prima di pubblicare nuovamente in questo argomento."
-        save: "Abilita"
+        enable: "Attiva"
+        update: "Aggiorna"
+        enabled_until: "Abilitato fino a:"
         remove: "Disattiva"
         hours: "Ore:"
         minutes: "Minuti:"
@@ -2379,6 +2409,7 @@ it:
         reasons:
           mailing_list_mode: "Hai la modalità mailing list abilitata, verrai notificato delle risposte a questo argomento via email."
           "3_10": "Riceverai notifiche perché stai osservando un'etichetta in questo argomento."
+          "3_10_stale": "Riceverai notifiche perché in passato stavi seguendo un’etichetta su questo argomento."
           "3_6": "Riceverai notifiche perché stai osservando questa categoria."
           "3_5": "Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente."
           "3_2": "Riceverai notifiche perché stai osservando questo argomento."
@@ -2628,9 +2659,7 @@ it:
         description:
           one: Hai selezionato <b>%{count}</b> messaggio.
           other: "Hai selezionato <b>%{count}</b> messaggi."
-      deleted_by_author:
-        one: "(Argomento eliminato dall'autore, verrà automaticamente cancellato in %{count} ora, se non segnalato)"
-        other: "(Argomento eliminato dall'autore, verrà automaticamente cancellato in %{count} ore, se non segnalato)"
+      deleted_by_author_simple: "(argomento eliminato dall'autore)"
     post:
       quote_reply: "Cita"
       quote_share: "Condividi"
@@ -2645,9 +2674,7 @@ it:
       follow_quote: "vai al messaggio citato"
       show_full: "Mostra Messaggio Completo"
       show_hidden: "Visualizza contenuto ignorato"
-      deleted_by_author:
-        one: "(post eliminato dall'autore, sarà automaticamente cancellato in %{count} ore se non contrassegnato)"
-        other: "(messaggio eliminato dall'autore, verrà automaticamente cancellato in %{count} ore se non segnalato)"
+      deleted_by_author_simple: "(messaggio eliminato dall'autore)"
       collapse: "raggruppa"
       expand_collapse: "espandi/raggruppa"
       locked: "un membro dello Staff ha bloccato le modifiche a questo messaggio"
@@ -3101,7 +3128,6 @@ it:
       one: "utente"
       other: "utenti"
     category_title: "Categoria"
-    history: "Storia"
     changed_by: "da %{author}"
     raw_email:
       title: "Email In Arrivo"
@@ -3306,6 +3332,9 @@ it:
           name: Altri
         posting:
           name: Pubblicazione
+      favorite_max_reached: "Non puoi aggiungere altri distintivi ai preferiti."
+      favorite_max_not_reached: "Imposta questo distintivo come preferito"
+      favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
     tagging:
       all_tags: "Etichette"
       other_tags: "Altre Etichette"
@@ -3387,14 +3416,14 @@ it:
           description: "Non riceverai alcuna notifica per nuovi Argomenti con questa Etichetta, e non compariranno nella pagina dei messaggi non letti."
       groups:
         title: "Gruppi Etichette"
-        about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
+        about_heading: "Seleziona un gruppo di etichette o creane uno nuovo"
+        about_heading_empty: "Crea un nuovo gruppo di etichette per iniziare"
+        about_description: "I gruppi di etichette permettono di gestire i permessi per più etichette in un unico posto."
         new: "Nuovo Gruppo"
-        tags_label: "Etichette in questo gruppo:"
-        parent_tag_label: "Etichetta padre:"
-        parent_tag_description: "Le etichette di questo gruppo non possono essere usate finché è presente l'etichetta padre."
+        new_title: "Crea nuovo gruppo"
+        edit_title: "Modifica gruppo di etichette"
         one_per_topic_label: "Limita ad una sola etichetta per argomento in questo gruppo"
         new_name: "Nuovo Gruppo Etichette"
-        name_placeholder: "Nome Gruppo Etichette"
         save: "Salva"
         delete: "Elimina"
         confirm_delete: "Sicuro di voler cancellare questo gruppo di etichette?"
@@ -3402,6 +3431,10 @@ it:
         usable_only_by_groups: "Le etichette sono visibili a tutti, ma solo i gruppi seguenti possono usarle"
         visible_only_to_groups: "Le etichette sono visibili soltanto ai seguenti gruppi"
         cannot_save: "Impossibile salvare il gruppo di etichette. Assicurati che ci sia almeno un'etichetta, che il nome del gruppo di etichette non sia vuoto e che sia selezionato un gruppo etichette per i permessi."
+        tags_placeholder: "Cerca o crea etichette"
+        parent_tag_placeholder: "Facoltativo"
+        select_groups_placeholder: "Seleziona gruppi..."
+        disabled: "L’etichettatura è disabilitata. "
       topics:
         none:
           unread: "Non hai argomenti non letti."
@@ -3438,6 +3471,14 @@ it:
         tomorrow: "Fino a domani"
         custom: "Personalizzato"
       set_schedule: "Imposta una pianificazione delle notifiche"
+    trust_levels:
+      names:
+        newuser: "nuovo utente"
+        basic: "utente base"
+        member: "assiduo"
+        regular: "esperto"
+        leader: "veterano"
+      detailed_name: "%{level} - %{name}"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3736,6 +3777,9 @@ it:
         group_user_event:
           name: "Raggruppa Evento Utente"
           details: "Quando un utente viene aggiunto o rimosso da un gruppo."
+        like_event:
+          name: "Evento Mi Piace"
+          details: "Quando un utente mette Mi piace su un messaggio."
         delivery_status:
           title: "Stato di Consegna"
           inactive: "Non attivo"
@@ -4042,6 +4086,8 @@ it:
           yaml:
             text: "YAML"
             title: "Definisci le impostazioni del tema in formato YAML"
+          scss_color_variables_warning: 'L''utilizzo delle variabili di colore SCSS di base nei temi è deprecato. Utilizzare invece le proprietà personalizzate CSS. Vedi <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">questa guida</a> per maggiori dettagli.'
+          scss_warning_inline: "L'utilizzo delle variabili di colore SCSS di base nei temi è deprecato."
         colors:
           select_base:
             title: "Seleziona la paletta dei colori di base"
@@ -4367,25 +4413,30 @@ it:
         download: Scarica
         clear_all: Deseleziona Tutto
         clear_all_confirm: "Vuoi davvero cancellare tutte le parole che osservi per l'azione %{action}?"
+        invalid_regex: 'La parola controllata "%{word}" è un''espressione regolare non valida.'
         actions:
           block: "Blocca"
           censor: "Censura"
           require_approval: "Richiede Approvazione"
           flag: "Segnala"
           replace: "Sostituisci"
+          tag: "Etichetta"
+          silence: "Silenzio"
+          link: "Collegamento"
         action_descriptions:
           block: "Impedisci che i messaggi contenenti queste parole siano pubblicati. L'utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio."
           censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
           require_approval: "I messaggi contenenti queste parole richiederanno l'approvazione dello staff prima di poter essere visualizzati."
           flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
-          replace: "Sostituisci le parole nei messaggi con altre parole o link"
+          silence: "I primi post degli utenti che contengono queste parole richiederanno l'approvazione dello staff prima di essere visibili, e l'utente verrà automaticamente silenziato."
+          link: "Nei messaggi sostituisce le parole con collegamenti"
         form:
-          placeholder: "parola completa o * come carattere jolly"
           placeholder_regexp: "espressione regolare"
-          replacement_label: "Sostituzione"
-          replacement_placeholder: "esempio o https://esempio.com"
+          replace_label: "Sostituzione"
+          replace_placeholder: "esempio"
           tag_label: "Etichetta"
-          tag_placeholder: "tag1,tag2,tag3"
+          link_label: "Link"
+          link_placeholder: "https://example.com"
           add: "Aggiungi"
           success: "Successo"
           exists: "Già esistente"
@@ -4393,7 +4444,6 @@ it:
           upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
         test:
           button_label: "Test"
-          modal_title: "Testa Parole Osservate '%{action}'"
           description: "Inserisci il testo qui sotto per verificare la corrispondenza con le parole osservate"
           found_matches: "Trovate corrispondenze:"
           no_matches: "Nessun risultato trovato"
@@ -4452,7 +4502,7 @@ it:
         suspend_reasons:
           not_listening_to_staff: "Non ascoltava le raccomandazioni dello staff"
           consuming_staff_time: "Ha fatto sprecare troppo tempo allo staff"
-          combatative: "Troppo veemente"
+          combative: "Troppo veemente"
           in_wrong_place: "Al posto sbagliato"
           no_constructive_purpose: "Azioni senza fini costruttivi se non creare disaccordo nella comunità"
           custom: "Personalizzato..."

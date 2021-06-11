@@ -101,8 +101,7 @@ class FinalDestination
     status_code, response_headers = nil
 
     catch(:done) do
-      Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS)) do |http|
-        http.open_timeout = timeout
+      Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS), open_timeout: timeout) do |http|
         http.read_timeout = timeout
         http.request_get(@uri.request_uri, request_headers) do |resp|
           status_code = resp.code.to_i
@@ -216,7 +215,7 @@ class FinalDestination
 
       @status = :resolved
       return @uri
-    when 400, 405, 406, 409, 501
+    when 400, 405, 406, 409, 500, 501
       response_status, small_headers = small_get(request_headers)
 
       if response_status == 200
@@ -301,7 +300,17 @@ class FinalDestination
 
   def hostname_matches?(url)
     url = uri(url)
-    @uri && url.present? && @uri.hostname == url&.hostname
+
+    if @uri&.hostname.present? && url&.hostname.present?
+      hostname_parts = url.hostname.split('.')
+      has_wildcard = hostname_parts.first == '*'
+
+      if has_wildcard
+        @uri.hostname.end_with?(hostname_parts[1..-1].join('.'))
+      else
+        @uri.hostname == url.hostname
+      end
+    end
   end
 
   def is_dest_valid?
@@ -431,9 +440,8 @@ class FinalDestination
   end
 
   def safe_session(uri)
-    Net::HTTP.start(uri.host, uri.port, use_ssl: (uri.scheme == "https")) do |http|
+    Net::HTTP.start(uri.host, uri.port, use_ssl: (uri.scheme == "https"), open_timeout: timeout) do |http|
       http.read_timeout = timeout
-      http.open_timeout = timeout
       yield http
     end
   end

@@ -41,6 +41,22 @@ describe InvitesController do
       end
     end
 
+    it 'includes token validity boolean' do
+      get "/invites/#{invite.invite_key}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['email_verified_by_link']).to eq(false)
+      end
+
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['email_verified_by_link']).to eq(true)
+      end
+    end
+
     it 'fails for logged in users' do
       sign_in(Fabricate(:user))
 
@@ -106,14 +122,6 @@ describe InvitesController do
 
         post '/invites.json', params: { email: 'test@example.com' }
         expect(response).to be_forbidden
-      end
-
-      it 'fails for normal user if invite email already exists' do
-        Fabricate(:invite, invited_by: user, email: 'test@example.com')
-
-        post '/invites.json', params: { email: 'test@example.com' }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body['failed']).to be_present
       end
     end
 
@@ -191,15 +199,18 @@ describe InvitesController do
     end
 
     context 'email invite' do
-      it 'does not allow users to send multiple invites to same email' do
+      it 'creates invite once and updates it on successive calls' do
         sign_in(user)
 
         post '/invites.json', params: { email: 'test@example.com' }
         expect(response.status).to eq(200)
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
 
+        invite = Invite.last
+
         post '/invites.json', params: { email: 'test@example.com' }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body['id']).to eq(invite.id)
       end
 
       it 'accept skip_email parameter' do
@@ -325,8 +336,13 @@ describe InvitesController do
           .to change { RateLimiter.new(user, 'resend-invite-per-hour', 10, 1.hour).remaining }.by(-1)
         expect(response.status).to eq(200)
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
-      ensure
-        RateLimiter.disable
+      end
+
+      it 'cannot create duplicated invites' do
+        Fabricate(:invite, invited_by: admin, email: 'test2@example.com')
+
+        put "/invites/#{invite.id}.json", params: { email: 'test2@example.com' }
+        expect(response.status).to eq(409)
       end
     end
   end

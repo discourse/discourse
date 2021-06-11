@@ -368,6 +368,7 @@ en:
     upload: "Upload"
     uploading: "Uploading..."
     uploading_filename: "Uploading: %{filename}..."
+    processing_filename: "Processing: %{filename}..."
     clipboard: "clipboard"
     uploaded: "Uploaded!"
 
@@ -425,6 +426,7 @@ en:
         type_bonus:
           name: "type bonus"
           title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
+      stale_help: "This reviewable has been resolved by someone else."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -644,6 +646,12 @@ en:
       total_rows:
         one: "%{count} user"
         other: "%{count} users"
+      edit_columns:
+        title: "Edit Directory Columns"
+        save: "Save"
+        reset_to_default: "Reset to default"
+      group:
+        all: "all groups"
 
     group_histories:
       actions:
@@ -659,8 +667,12 @@ en:
       add_members:
         title: "Add members to %{group_name}"
         description: "You can also paste in a comma separated list."
-        usernames: "Enter usernames or email addresses"
-        input_placeholder: "Usernames or emails"
+        usernames_or_emails:
+          title: "Enter usernames or email addresses"
+          input_placeholder: "Usernames or emails"
+        usernames:
+          title: "Enter usernames"
+          input_placeholder: "Usernames"
         notify_users: "Notify users"
       requests:
         title: "Requests"
@@ -686,6 +698,25 @@ en:
         email:
           title: "Email"
           status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
+          enable_smtp: "Enable SMTP"
+          enable_imap: "Enable IMAP"
+          test_settings: "Test Settings"
+          save_settings: "Save Settings"
+          settings_required: "All settings are required, please fill in all fields before validation."
+          smtp_settings_valid: "SMTP settings valid."
+          smtp_title: "SMTP"
+          smtp_instructions: "When you enable SMTP for the group, all outbound emails sent from the group's inbox will be sent via the SMTP settings specified here instead of the mail server configured for other emails sent by your forum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Additional Settings"
+          imap_instructions: 'When you enable IMAP for the group, emails are synced between the group inbox and the provided IMAP server and mailbox. SMTP must be enabled with valid and tested credentials before IMAP can be enabled. The email username and password used for SMTP will be used for IMAP. For more information see <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">feature announcement on Discourse Meta</a>.'
+          imap_alpha_warning: "Warning: This is an alpha-stage feature. Only Gmail is officially supported. Use at your own risk!"
+          imap_settings_valid: "IMAP settings valid."
+          smtp_disable_confirm: "If you disable SMTP, all SMTP and IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_disable_confirm: "If you disable IMAP all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
+          prefill:
+            title: "Prefill with settings for:"
+            gmail: "GMail"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
@@ -703,7 +734,7 @@ en:
           mailboxes:
             synchronized: "Synchronized Mailbox"
             none_found: "No mailboxes were found in this email account."
-            disabled: "disabled"
+            disabled: "Disabled"
         membership:
           title: Membership
           access: Access
@@ -1027,15 +1058,16 @@ en:
         Start bookmarking posts with the %{icon} button and they will be listed here for easy reference. You can schedule a reminder too!
       no_notifications_title: "You don’t have any notifications yet"
       no_notifications_body: >
-        You will be notified in this panel about activity relevant to you, including replies to topics you are watching and when someone <b>@mentions</b> you or responds to you. Notifications will be sent to your email when you haven’t logged in for a while.
+        You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
-        You are in control! Look for the %{icon} button throughout the site to decide which specific topics, categories and tags you want to watch, track or mute. More options available in your <a href='%{preferencesUrl}'>user preferences</a>.
+        Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:
         description: "Skip new user onboarding tips and badges"
         not_first_time: "Not your first time?"
         skip_link: "Skip these tips"
+        read_later: "I'll read it later."
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
@@ -1304,6 +1336,7 @@ en:
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by %{provider}"
         invite_auth_email_invalid: "Your invitation email does not match the email authenticated by %{provider}"
+        authenticated_by_invite: "Your email has been authenticated by the invitation"
         frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
         frequency:
           one: "We'll only email you if we haven't seen you in the last minute."
@@ -1507,29 +1540,28 @@ en:
           new_title: "Create Invite"
           edit_title: "Edit Invite"
 
-          instructions: "Share this link to instantly grant access to this site:"
+          instructions: "Share this link to instantly grant access to this site"
           copy_link: "copy link"
-          expires_in_time: "Expires in %{time}."
-          expired_at_time: "Expired at %{time}."
+          expires_in_time: "Expires in %{time}"
+          expired_at_time: "Expired at %{time}"
 
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          restrict_email: "Restrict the invite to one email address"
+          restrict_email: "Restrict to one email address"
 
-          max_redemptions_allowed: "Max number of uses:"
+          max_redemptions_allowed: "Max uses"
 
-          add_to_groups: "Add to groups:"
-          invite_to_topic: "Send to topic on first login:"
-          expires_at: "Expire after:"
-          custom_message: "Optional personal message:"
+          add_to_groups: "Add to groups"
+          invite_to_topic: "Arrive at this topic"
+          expires_at: "Expire after"
+          custom_message: "Optional personal message"
 
           send_invite_email: "Save and Send Email"
           save_invite: "Save Invite"
 
           invite_saved: "Invite saved."
           invite_copied: "Invite link copied."
-          blank_email: "Invite link not copied. Email address is required."
 
         bulk_invite:
           none: "No invitations to display on this page."
@@ -2209,14 +2241,15 @@ en:
       from_my_computer: "From my device"
       from_the_web: "From the web"
       remote_tip: "link to image"
-      remote_tip_with_attachments: "link to image or file %{authorized_extensions}"
+      remote_tip_with_attachments: "link to image or file"
       local_tip: "select images from your device"
-      local_tip_with_attachments: "select images or files from your device %{authorized_extensions}"
+      local_tip_with_attachments: "select images or files from your device"
       hint: "(you can also drag & drop into the editor to upload)"
       hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
       default_image_alt_text: image
+      supported_formats: "supported formats"
 
     search:
       sort_by: "Sort by"
@@ -2325,10 +2358,13 @@ en:
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
+        dismiss_read_with_selected: "Dismiss %{count} unread"
         dismiss_button: "Dismiss…"
+        dismiss_button_with_selected: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
+        dismiss_new_with_selected: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Set Category"
@@ -2441,7 +2477,8 @@ en:
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
-      toggle_information: "toggle topic details"
+      collapse_details: "collapse topic details"
+      expand_details: "expand topic details"
       read_more_in_category: "Want to read more? Browse other topics in %{catLink} or %{latestLink}."
       read_more: "Want to read more? %{catLink} or %{latestLink}."
       unread_indicator: "No member has read the last post of this topic yet."
@@ -2477,7 +2514,8 @@ en:
         title: "Slow Mode"
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
-        save: "Enable"
+        enable: "Enable"
+        update: "Update"
         enabled_until: "Enabled until:"
         remove: "Disable"
         hours: "Hours:"
@@ -2594,12 +2632,15 @@ en:
         reasons:
           mailing_list_mode: "You have mailing list mode enabled, so you will be notified of replies to this topic via email."
           "3_10": "You will receive notifications because you are watching a tag on this topic."
+          "3_10_stale": "You will receive notifications because you were watching a tag on this topic in the past."
           "3_6": "You will receive notifications because you are watching this category."
+          "3_6_stale": "You will receive notifications because you were watching this category in the past."
           "3_5": "You will receive notifications because you started watching this topic automatically."
           "3_2": "You will receive notifications because you are watching this topic."
           "3_1": "You will receive notifications because you created this topic."
           "3": "You will receive notifications because you are watching this topic."
           "2_8": "You will see a count of new replies because you are tracking this category."
+          "2_8_stale": "You will see a count of new replies because you were tracking this category in the past."
           "2_4": "You will see a count of new replies because you posted a reply to this topic."
           "2_2": "You will see a count of new replies because you are tracking this topic."
           "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
@@ -2868,10 +2909,7 @@ en:
         description:
           one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>%{count}</b> posts."
-
-      deleted_by_author:
-        one: "(topic withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(topic withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      deleted_by_author_simple: "(topic deleted by author)"
 
     post:
       quote_reply: "Quote"
@@ -2887,9 +2925,7 @@ en:
       follow_quote: "go to the quoted post"
       show_full: "Show Full Post"
       show_hidden: "View ignored content."
-      deleted_by_author:
-        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
       expand_collapse: "expand/collapse"
       locked: "a staff member has locked this post from being edited"
@@ -3373,7 +3409,7 @@ en:
       one: "user"
       other: "users"
     category_title: "Category"
-    history: "History"
+    history: "History, last 100 revisions"
     changed_by: "by %{author}"
 
     raw_email:
@@ -3587,6 +3623,9 @@ en:
           name: Other
         posting:
           name: Posting
+      favorite_max_reached: "You can’t favorite more badges."
+      favorite_max_not_reached: "Mark this badge as favorite"
+      favorite_count: "%{count}/%{max} badges marked as favorite"
 
     tagging:
       all_tags: "All Tags"
@@ -3597,7 +3636,7 @@ en:
       tags: "Tags"
       choose_for_topic: "optional tags"
       info: "Info"
-      default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      default_info: "This tag isn't restricted to any categories, and has no synonyms. To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
@@ -3672,14 +3711,18 @@ en:
 
       groups:
         title: "Tag Groups"
-        about: "Add tags to groups to manage them more easily."
+        about_heading: "Select a tag group or create a new one"
+        about_heading_empty: "Create a new tag group to get started"
+        about_description: "Tag groups help you manage permissions for many tags in one place."
         new: "New Group"
-        tags_label: "Tags in this group:"
-        parent_tag_label: "Parent tag:"
-        parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
+        new_title: "Create New Group"
+        edit_title: "Edit Tag Group"
+        tags_label: "Tags in this group"
+        parent_tag_label: "Parent tag"
+        parent_tag_description: "Tags from this group can only be used if the parent tag is present."
         one_per_topic_label: "Limit one tag per topic from this group"
         new_name: "New Tag Group"
-        name_placeholder: "Tag Group Name"
+        name_placeholder: "Name"
         save: "Save"
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
@@ -3687,6 +3730,10 @@ en:
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
         cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty, and a group is selected for tags permission."
+        tags_placeholder: "Search or create tags"
+        parent_tag_placeholder: "Optional"
+        select_groups_placeholder: "Select groups..."
+        disabled: "Tagging is disabled. "
 
       topics:
         none:
@@ -3730,6 +3777,15 @@ en:
         tomorrow: "Until tomorrow"
         custom: "Custom"
       set_schedule: "Set a notification schedule"
+
+    trust_levels:
+      names:
+        newuser: "new user"
+        basic: "basic user"
+        member: "member"
+        regular: "regular"
+        leader: "leader"
+      detailed_name: "%{level}: %{name}"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4354,6 +4410,8 @@ en:
           yaml:
             text: "YAML"
             title: "Define theme settings in YAML format"
+          scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
+          scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
         colors:
           select_base:
             title: "Select base color palette"
@@ -4688,6 +4746,7 @@ en:
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
+        invalid_regex: 'The watched word "%{word}" is an invalid regular expression.'
         actions:
           block: "Block"
           censor: "Censor"
@@ -4695,21 +4754,26 @@ en:
           flag: "Flag"
           replace: "Replace"
           tag: "Tag"
+          silence: "Silence"
+          link: "Link"
         action_descriptions:
           block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
           censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
           require_approval: "Posts containing these words will require approval by staff before they can be seen."
           flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
-          replace: "Replace words in posts with other words or links"
+          replace: "Replace words in posts with other words"
           tag: "Automatically tag topics based on first post"
+          silence: "First posts of users containing these words will require approval by staff before they can be seen and the user will be automatically silenced."
+          link: "Replace words in posts with links"
         form:
-          label: "Has the word"
-          placeholder: "full word or * as wildcard"
+          label: "Has word or phrase"
+          placeholder: "Enter word or phrase (* is a wildcard)"
           placeholder_regexp: "regular expression"
-          replacement_label: "Replacement"
-          replacement_placeholder: "example or https://example.com"
+          replace_label: "Replacement"
+          replace_placeholder: "example"
           tag_label: "Tag"
-          tag_placeholder: "tag1,tag2,tag3"
+          link_label: "Link"
+          link_placeholder: "https://example.com"
           add: "Add"
           success: "Success"
           exists: "Already exists"
@@ -4717,7 +4781,7 @@ en:
           upload_successful: "Upload successful. Words have been added."
         test:
           button_label: "Test"
-          modal_title: "Test '%{action}' Watched Words"
+          modal_title: "Test %{action} Watched Words"
           description: "Enter text below to check for matches with watched words"
           found_matches: "Found matches:"
           no_matches: "No matches found"
@@ -4779,7 +4843,7 @@ en:
         suspend_reasons:
           not_listening_to_staff: "Would not listen to staff feedback"
           consuming_staff_time: "Consumed disproportionate amounts of staff time"
-          combatative: "Too combatative"
+          combative: "Too combative"
           in_wrong_place: "In the wrong place"
           no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
           custom: "Custom..."

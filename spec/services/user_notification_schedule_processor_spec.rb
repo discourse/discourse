@@ -28,7 +28,7 @@ describe UserNotificationScheduleProcessor do
           UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(standard_schedule)
 
           # The default schedule is 8am - 5pm.
-          # Expext DND timings to fill gaps before/after those times for 3 days.
+          # Expect DND timings to fill gaps before/after those times for 3 days.
           dnd_timings = user.do_not_disturb_timings
           offset = timezone_info[:offset]
           expect(dnd_timings[0].starts_at).to eq_time(Time.new(2020, 1, 4, 0, 0, 0, offset))

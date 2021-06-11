@@ -1,4 +1,11 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  exists,
+  publishToMessageBus,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -12,18 +19,18 @@ acceptance("Review", function (needs) {
   test("It returns a list of reviewable items", async function (assert) {
     await visit("/review");
 
-    assert.ok(queryAll(".reviewable-item").length, "has a list of items");
-    assert.ok(queryAll(user).length);
+    assert.ok(exists(".reviewable-item"), "has a list of items");
+    assert.ok(exists(user));
     assert.ok(
-      queryAll(`${user}.reviewable-user`).length,
+      exists(`${user}.reviewable-user`),
       "applies a class for the type"
     );
     assert.ok(
-      queryAll(`${user} .reviewable-action.approve`).length,
+      exists(`${user} .reviewable-action.approve`),
       "creates a button for approve"
     );
     assert.ok(
-      queryAll(`${user} .reviewable-action.reject`).length,
+      exists(`${user} .reviewable-action.reject`),
       "creates a button for reject"
     );
   });
@@ -31,7 +38,7 @@ acceptance("Review", function (needs) {
   test("Grouped by topic", async function (assert) {
     await visit("/review/topics");
     assert.ok(
-      queryAll(".reviewable-topic").length,
+      exists(".reviewable-topic"),
       "it has a list of reviewable topics"
     );
   });
@@ -66,10 +73,7 @@ acceptance("Review", function (needs) {
   test("Settings", async function (assert) {
     await visit("/review/settings");
 
-    assert.ok(
-      queryAll(".reviewable-score-type").length,
-      "has a list of bonuses"
-    );
+    assert.ok(exists(".reviewable-score-type"), "has a list of bonuses");
 
     const field = selectKit(
       ".reviewable-score-type:nth-of-type(1) .field .combo-box"
@@ -78,15 +82,14 @@ acceptance("Review", function (needs) {
     await field.selectRowByValue("5");
     await click(".save-settings");
 
-    assert.ok(queryAll(".reviewable-settings .saved").length, "it saved");
+    assert.ok(exists(".reviewable-settings .saved"), "it saved");
   });
 
   test("Flag related", async function (assert) {
     await visit("/review");
 
     assert.ok(
-      queryAll(".reviewable-flagged-post .post-contents .username a[href]")
-        .length,
+      exists(".reviewable-flagged-post .post-contents .username a[href]"),
       "it has a link to the user"
     );
 
@@ -95,36 +98,26 @@ acceptance("Review", function (needs) {
       "<b>cooked content</b>"
     );
 
-    assert.equal(
-      queryAll(".reviewable-flagged-post .reviewable-score").length,
-      2
-    );
+    assert.equal(count(".reviewable-flagged-post .reviewable-score"), 2);
   });
 
   test("Flag related", async function (assert) {
     await visit("/review/1");
 
-    assert.ok(
-      queryAll(".reviewable-flagged-post").length,
-      "it shows the flagged post"
-    );
+    assert.ok(exists(".reviewable-flagged-post"), "it shows the flagged post");
   });
 
   test("Clicking the buttons triggers actions", async function (assert) {
     await visit("/review");
     await click(`${user} .reviewable-action.approve`);
-    assert.equal(
-      queryAll(user).length,
-      0,
-      "it removes the reviewable on success"
-    );
+    assert.ok(!exists(user), "it removes the reviewable on success");
   });
 
   test("Editing a reviewable", async function (assert) {
     const topic = '.reviewable-item[data-reviewable-id="4321"]';
     await visit("/review");
-    assert.ok(queryAll(`${topic} .reviewable-action.approve`).length);
-    assert.ok(!queryAll(`${topic} .category-name`).length);
+    assert.ok(exists(`${topic} .reviewable-action.approve`));
+    assert.ok(!exists(`${topic} .category-name`));
     assert.equal(
       queryAll(`${topic} .discourse-tag:nth-of-type(1)`).text(),
       "hello"
@@ -142,14 +135,13 @@ acceptance("Review", function (needs) {
     await click(`${topic} .reviewable-action.edit`);
     await click(`${topic} .reviewable-action.save-edit`);
     assert.ok(
-      queryAll(`${topic} .reviewable-action.approve`).length,
+      exists(`${topic} .reviewable-action.approve`),
       "saving without changes is a cancel"
     );
     await click(`${topic} .reviewable-action.edit`);
 
-    assert.equal(
-      queryAll(`${topic} .reviewable-action.approve`).length,
-      0,
+    assert.ok(
+      !exists(`${topic} .reviewable-action.approve`),
       "when editing actions are disabled"
     );
 
@@ -192,5 +184,27 @@ acceptance("Review", function (needs) {
       "new raw contents"
     );
     assert.equal(queryAll(`${topic} .category-name`).text().trim(), "support");
+  });
+
+  test("Reviewables can become stale", async function (assert) {
+    await visit("/review");
+
+    const reviewable = query(`[data-reviewable-id="1234"]`);
+    assert.notOk(reviewable.className.includes("reviewable-stale"));
+    assert.equal(count(`[data-reviewable-id="1234"] .status .pending`), 1);
+    assert.ok(!exists(".stale-help"));
+
+    publishToMessageBus("/reviewable_counts", {
+      review_count: 1,
+      updates: {
+        1234: { status: 1 },
+      },
+    });
+
+    await visit("/review"); // wait for re-render
+
+    assert.ok(reviewable.className.includes("reviewable-stale"));
+    assert.equal(count("[data-reviewable-id=1234] .status .approved"), 1);
+    assert.equal(count(".stale-help"), 1);
   });
 });

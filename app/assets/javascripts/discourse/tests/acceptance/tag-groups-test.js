@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -39,19 +39,21 @@ acceptance("Tag Groups", function (needs) {
   });
 
   test("tag groups can be saved and deleted", async function (assert) {
-    const tags = selectKit(".tag-chooser");
+    const tags = selectKit(".group-tags-list .tag-chooser");
 
     await visit("/tag_groups");
-    await click(".content-list .btn");
+    await click(".tag-group-content .btn.btn-primary");
 
-    await fillIn(".tag-group-content h1 input", "test tag group");
+    await fillIn(".tag-group-content .group-name input", "test tag group");
+
     await tags.expand();
     await tags.selectRowByValue("monkey");
+    await click(".tag-group-content .btn.btn-primary");
+    await click(".tag-groups-sidebar li:first-child a");
+    await tags.expand();
 
-    await click(".tag-group-content .btn.btn-default");
-
-    await click(".tag-chooser .choice:nth-of-type(1)");
-    assert.ok(!queryAll(".tag-group-content .btn.btn-danger")[0].disabled);
+    await click(".group-tags-list .tag-chooser .choice:nth-of-type(1)");
+    assert.ok(!query(".tag-group-content .btn.btn-danger").disabled);
   });
 
   test("tag groups can have multiple groups added to them", async function (assert) {
@@ -59,9 +61,9 @@ acceptance("Tag Groups", function (needs) {
     const groups = selectKit(".group-chooser");
 
     await visit("/tag_groups");
-    await click(".content-list .btn");
+    await click(".tag-group-content .btn.btn-primary");
 
-    await fillIn(".tag-group-content h1 input", "test tag group");
+    await fillIn(".tag-group-content .group-name input", "test tag group");
     await tags.expand();
     await tags.selectRowByValue("monkey");
 
@@ -69,9 +71,12 @@ acceptance("Tag Groups", function (needs) {
     await groups.expand();
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);
-    assert.ok(!queryAll(".tag-group-content .btn.btn-default")[0].disabled);
 
-    await click(".tag-group-content .btn.btn-default");
+    assert.ok(!query(".tag-group-content .btn.btn-primary").disabled);
+
+    await click(".tag-group-content .btn.btn-primary");
+    await click(".tag-groups-sidebar li:first-child a");
+
     assert.ok(
       exists("#visible-permission:checked"),
       "selected permission does not change after saving"

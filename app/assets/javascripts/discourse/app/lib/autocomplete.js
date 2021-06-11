@@ -99,7 +99,7 @@ export default function (options) {
   let div = null;
   let prevTerm = null;
 
-  // By default, when the autcomplete popup is rendered it has the
+  // By default, when the autocomplete popup is rendered it has the
   // first suggestion 'selected', and pressing enter key inserts
   // the first suggestion into the input box.
   // If you want to stop that behavior, i.e. have the popup renders

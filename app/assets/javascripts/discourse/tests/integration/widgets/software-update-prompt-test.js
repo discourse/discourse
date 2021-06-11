@@ -2,9 +2,10 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
+  exists,
   publishToMessageBus,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { later } from "@ember/runloop";
@@ -21,8 +22,7 @@ discourseModule(
 
         test(assert) {
           assert.ok(
-            queryAll("div.software-update-prompt.require-software-refresh")
-              .length === 0,
+            !exists("div.software-update-prompt"),
             "it does not have the class to show the prompt"
           );
 
@@ -30,9 +30,9 @@ discourseModule(
 
           const done = assert.async();
           later(() => {
-            assert.ok(
-              queryAll("div.software-update-prompt.require-software-refresh")
-                .length === 1,
+            assert.equal(
+              count("div.software-update-prompt.require-software-refresh"),
+              1,
               "it does have the class to show the prompt"
             );
             done();

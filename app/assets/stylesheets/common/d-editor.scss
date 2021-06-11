@@ -193,6 +193,7 @@
   padding-bottom: 1.4em;
   &.emoji,
   &.avatar,
+  &.onebox-avatar,
   &.site-icon {
     padding-bottom: 0;
   }
@@ -260,7 +261,7 @@
   opacity: 1;
 }
 
-// d-editor bar button sizing for all editors - this is kept seprate to keep
+// d-editor bar button sizing for all editors - this is kept separate to keep
 // everything in one place
 .d-editor-button-bar {
   margin: 0.25em;

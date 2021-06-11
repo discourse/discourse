@@ -538,7 +538,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
         post: placeholder,
       }),
       null,
-      "it should work with a post-placehodler"
+      "it should work with a post-placeholder"
     );
   });
 

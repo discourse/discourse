@@ -1,0 +1,16 @@
+{{#image}}<img src="{{image}}" class="thumbnail"/>{{/image}}
+
+<h3><a href="{{link}}" target="_blank" rel="noopener">{{title}}</a></h3>
+
+{{#description}}
+  <p>{{description}}</p>
+{{/description}}
+
+{{#data_1}}
+  <p>
+    <span class="label1">{{label_1}}: {{data_1}}</span>
+    {{#data_2}}
+      <span class="label2">{{label_2}}: {{data_2}}</span>
+    {{/data_2}}
+  </p>
+{{/data_1}}

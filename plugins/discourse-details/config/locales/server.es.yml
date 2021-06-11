@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 es:
+  site_settings:
+    details_enabled: 'Incluir la posibilidad de añadir detalles expandibles a las publicaciones. Esta funcionalidad se puede encontrar en el menú desplegable del editor. Debes hacer rebake de todas las publicaciones con «rake posts:rebake» si cambias este ajuste.'
   details:
     excerpt_details: "(haga clic para más detalles)"

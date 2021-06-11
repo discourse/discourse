@@ -330,6 +330,7 @@ sv:
     upload: "Ladda upp"
     uploading: "Laddar upp..."
     uploading_filename: "Laddar upp: %{filename}..."
+    processing_filename: "Bearbetar: %{filename}..."
     clipboard: "urklipp"
     uploaded: "Uppladdad!"
     pasting: "Klistrar in..."
@@ -379,6 +380,7 @@ sv:
         type_bonus:
           name: "typ bonus"
           title: "Vissa granskningsärenden kan tilldelas en bonus av personal för att ge dem en högre prioritet."
+      stale_help: "Denna granskningsbara har lösts av någon annan."
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
         required: "Du måste göra anspråk innan du kan granska dem."
@@ -585,6 +587,10 @@ sv:
       total_rows:
         one: "%{count} användare"
         other: "%{count} användare"
+      edit_columns:
+        title: "Redigera katalogkolumner"
+        save: "Spara"
+        reset_to_default: "Återställ till standard"
     group_histories:
       actions:
         change_group_setting: "Ändra gruppinställningar"
@@ -598,8 +604,12 @@ sv:
       add_members:
         title: "Lägg till medlemmar till %{group_name}"
         description: "Du kan även klistra in i en kommaseparerad lista."
-        usernames: "Ange användarnamn eller e-postadresser"
-        input_placeholder: "Användarnamn eller e-post"
+        usernames_or_emails:
+          title: "Ange användarnamn eller e-postadresser"
+          input_placeholder: "Användarnamn eller e-post"
+        usernames:
+          title: "Ange användarnamn"
+          input_placeholder: "Användarnamn"
         notify_users: "Meddela användare"
       requests:
         title: "Ansökningar"
@@ -625,6 +635,25 @@ sv:
         email:
           title: "E-post"
           status: "Synkroniserat %{old_emails}/ %{total_emails} e-post genom IMAP."
+          enable_smtp: "Aktivera SMTP"
+          enable_imap: "Aktivera IMAP"
+          test_settings: "Testa inställningar"
+          save_settings: "Spara inställningar"
+          settings_required: "Alla inställningar krävs. Fyll i alla fält innan valideringen."
+          smtp_settings_valid: "SMTP-inställningar är giltiga."
+          smtp_title: "SMTP"
+          smtp_instructions: "När du aktiverar SMTP för gruppen skickas alla utgående e-postmeddelanden från gruppens inkorg via de SMTP-inställningar som anges här istället för e-postservern som konfigurerats för andra e-postmeddelanden från ditt forum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Ytterligare inställningar"
+          imap_instructions: 'När du aktiverar IMAP för gruppen synkroniseras e-post mellan gruppinkorgen och den medföljande IMAP-servern och brevlådan. SMTP måste aktiveras med giltiga och testade autentiseringsuppgifter innan IMAP kan aktiveras. Det användarnamn och lösenord som används för SMTP kommer att användas för IMAP. Mer information finns i <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funktionsmeddelande på Discourse Meta</a>.'
+          imap_alpha_warning: "Varning: Detta är en alfafunktion. Endast Gmail stöds officiellt. Använd på egen risk!"
+          imap_settings_valid: "IMAP-inställningar är giltiga."
+          smtp_disable_confirm: "Om du inaktiverar SMTP återställs alla SMTP- och IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
+          imap_disable_confirm: "Om du inaktiverar IMAP återställs alla IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
+          imap_mailbox_not_selected: "Du måste välja en brevlåda för den här IMAP-konfigurationen, annars synkroniseras inga brevlådor!"
+          prefill:
+            title: "Förfyll med inställningar för:"
+            gmail: "GMail"
           credentials:
             title: "Kontouppgifter"
             smtp_server: "SMTP Server"
@@ -642,7 +671,7 @@ sv:
           mailboxes:
             synchronized: "Synkroniserad brevlåda"
             none_found: "Inga brevlådor hittades för detta e-postkonto."
-            disabled: "avstängd"
+            disabled: "Inaktiverad"
         membership:
           title: Medlemskap
           access: Tillgång
@@ -960,13 +989,14 @@ sv:
         Börja bokmärka inlägg med %{icon} -knappen, så visas de i listan här för enkel referens. Du kan också schemalägga en påminnelse!
       no_notifications_title: "Du har inga aviseringar än"
       no_notifications_body: >
-        Du kommer att aviseras i denna panel om aktivitet som är relevant för dig, bland annat svar på ämnen du tittar på och när någon <b>@nämner</b> eller svarar dig. Aviseringar kommer att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Det är du som bestämmer! Med %{icon}-knappen, som hittas här och där i webbplatsen, avgör du vilka specifika ämnen, kategorier och taggar som du vill bevaka, spåra eller tysta. Dina <a href='%{preferencesUrl}'>användarinställningar</a> innehåller fler alternativ.
+        Du kommer att aviseras i denna panel om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen som du bevakar. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar som du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
       first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
         description: "Hoppa över nybörjartips och utmärkelser för ny användare"
         not_first_time: "Är det inte din första gång?"
         skip_link: "Hoppa över dessa tips"
+        read_later: "Jag läser det senare."
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
       color_scheme: "Färgschema"
@@ -1187,6 +1217,7 @@ sv:
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte lika stora."
+        logo_small: "Webbplatsens lilla logotyp. Används som standard."
       change_profile_background:
         title: "Profilrubrik"
         instructions: "Profilrubriken kommer att centreras, samt ha en standardbredd på 1110px."
@@ -1218,6 +1249,7 @@ sv:
         invalid: "Vi ber dig ange en giltig e-postadress"
         authenticated: "Din e-postadress har blivit verifierad av %{provider}"
         invite_auth_email_invalid: "Ditt inbjudningsmeddelande matchar inte den e-postadress som autentiserats av %{provider}"
+        authenticated_by_invite: "Din e-postadress har verifierats genom inbjudan"
         frequency_immediately: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
         frequency:
           one: "Vi skickar bara e-post om du inte synts till den senaste minuten."
@@ -1403,23 +1435,22 @@ sv:
         invite:
           new_title: "Skapa inbjudan"
           edit_title: "Redigera inbjudan"
-          instructions: "Dela denna länk för att omedelbart bevilja åtkomst till denna webbplats:"
+          instructions: "Dela denna länk för att omedelbart bevilja åtkomst till denna webbplats"
           copy_link: "kopiera länk"
-          expires_in_time: "Utgår om %{time}."
-          expired_at_time: "Utgick kl. %{time}."
+          expires_in_time: "Utgår om %{time}"
+          expired_at_time: "Utgår kl. %{time}"
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
-          restrict_email: "Begränsa inbjudan till en e-postadress"
-          max_redemptions_allowed: "Max antal användningar:"
-          add_to_groups: "Lägg till i grupper:"
-          invite_to_topic: "Skicka till ämnet vid första inloggningen:"
-          expires_at: "Utgår efter:"
-          custom_message: "Valfritt personligt meddelande:"
+          restrict_email: "Begränsa till en enda e-postadress"
+          max_redemptions_allowed: "Max antal användningar"
+          add_to_groups: "Lägg till i grupper"
+          invite_to_topic: "Kom fram till detta ämne"
+          expires_at: "Förfaller efter"
+          custom_message: "Valfritt personligt meddelande"
           send_invite_email: "Spara och skicka e-post"
           save_invite: "Spara inbjudan"
           invite_saved: "Inbjudan har sparats."
           invite_copied: "Inbjudningslänken har kopierats."
-          blank_email: "Inbjudningslänken har inte kopierats. E-postadress krävs."
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -2036,14 +2067,15 @@ sv:
       from_my_computer: "Från min enhet"
       from_the_web: "Från webben"
       remote_tip: "länk till bild"
-      remote_tip_with_attachments: "länk till bild eller fil %{authorized_extensions}"
+      remote_tip_with_attachments: "länk till bild eller fil"
       local_tip: "välj bilder från din enhet"
-      local_tip_with_attachments: "välj bilder eller filer från din enhet %{authorized_extensions}"
+      local_tip_with_attachments: "välj bilder eller filer från din enhet"
       hint: "(du kan också dra och släppa i redigeraren för att ladda upp)"
       hint_for_supported_browsers: "du kan också dra och släppa eller klistra in bilder i redigeraren"
       uploading: "Laddar upp"
       select_file: "Välj fil"
       default_image_alt_text: bild
+      supported_formats: "format som stöds"
     search:
       sort_by: "Sortera efter"
       relevance: "Relevans"
@@ -2147,10 +2179,13 @@ sv:
         delete: "Ta bort ämnen"
         dismiss: "Avfärda"
         dismiss_read: "Avfärda alla olästa"
+        dismiss_read_with_selected: "Avfärda %{count} olästa"
         dismiss_button: "Avfärda..."
+        dismiss_button_with_selected: "Avfärda (%{count})…"
         dismiss_tooltip: "Avfärda nya inlägg eller sluta följa ämnen"
         also_dismiss_topics: "Sluta följa de här ämnena så att de aldrig syns som olästa för mig igen"
         dismiss_new: "Avfärda nya"
+        dismiss_new_with_selected: "Avfärda nya (%{count})"
         toggle: "växla val av flertalet ämnen"
         actions: "Massändringar"
         change_category: "Sätt kategori"
@@ -2260,7 +2295,8 @@ sv:
       back_to_list: "Tillbaka till ämneslistan"
       options: "Ämnesinställningar"
       show_links: "visa länkar som finns i det här ämnet"
-      toggle_information: "slå av/på ämnesdetaljer"
+      collapse_details: "komprimera ämnesdetaljer"
+      expand_details: "expandera ämnesdetaljer"
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{catLink} eller %{latestLink}."
       read_more: "Vill du läsa mer? %{catLink} eller %{latestLink}."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
@@ -2277,7 +2313,8 @@ sv:
         title: "Långsamt läge"
         select: "Användare får bara publicera i detta ämne en gång varje:"
         description: "För att främja tankeväckande diskussioner i snabba eller omtvistade diskussioner måste användarna vänta innan de publicerar i det här ämnet igen."
-        save: "Aktivera"
+        enable: "Aktivera"
+        update: "Uppdatera"
         enabled_until: "Aktiverat till:"
         remove: "Inaktivera"
         hours: "Timmar:"
@@ -2390,12 +2427,15 @@ sv:
         reasons:
           mailing_list_mode: "Du har utskicksläge aktiverat, så du kommer aviseras om inlägg till det här ämnet via e-post."
           "3_10": "Du kommer att ta emot aviseringar eftersom du bevakar en tagg i det här ämnet."
+          "3_10_stale": "Du får aviseringar eftersom du har bevakat en tagg om det här ämnet tidigare."
           "3_6": "Du kommer att få aviseringar eftersom du bevakar denna kategori."
+          "3_6_stale": "Du kommer att få aviseringar eftersom du har bevakat denna kategori tidigare."
           "3_5": "Du kommer att få aviseringar eftersom du automatiskt började följa det här ämnet."
           "3_2": "Du kommer att få aviseringar eftersom du bevakar detta ämne."
           "3_1": "Du kommer att få aviseringar eftersom du skapade detta ämne."
           "3": "Du kommer att få aviseringar eftersom du bevakar detta ämne."
           "2_8": "Du kommer att se en räknare för nya svar eftersom du följer denna kategorin."
+          "2_8_stale": "Du kommer att se en räknare för nya svar eftersom du har följt denna kategori tidigare."
           "2_4": "Du kommer att se en räknare för nya svar eftersom du postat ett svar i detta ämne."
           "2_2": "Du kommer att se en räknare för nya svar eftersom du följer detta ämne."
           "2": 'Du kommer att se en räknare för nya svar eftersom du <a href="%{basePath}/u/%{username}/preferences/notifications">läser detta ämne</a>.'
@@ -2639,9 +2679,7 @@ sv:
         description:
           one: Du har markerat <b>%{count}</b> inlägg.
           other: "Du har markerat <b>%{count}</b> inlägg."
-      deleted_by_author:
-        one: "(ämne tillbakadraget av författaren, kommer att raderas automatiskt om %{count} timme om det inte flaggas)"
-        other: "(ämne tillbakadraget av författaren, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
+      deleted_by_author_simple: "(ämne raderat av författaren)"
     post:
       quote_reply: "Citat"
       quote_share: "Dela"
@@ -2656,9 +2694,7 @@ sv:
       follow_quote: "gå till det citerade inlägget"
       show_full: "Visa hela inlägget"
       show_hidden: "Visa ignorerat innehåll"
-      deleted_by_author:
-        one: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timme om det inte flaggas)"
-        other: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
+      deleted_by_author_simple: "(inlägg raderat av författaren)"
       collapse: "förminska"
       expand_collapse: "utvidga/förminska"
       locked: "en i personalen har låst detta inlägg från att redigeras"
@@ -3112,7 +3148,7 @@ sv:
       one: "användare"
       other: "användare"
     category_title: "Kategori"
-    history: "Historik"
+    history: "Historik, senaste 100 versionerna"
     changed_by: "av %{author}"
     raw_email:
       title: "Inkommande e-post"
@@ -3317,6 +3353,9 @@ sv:
           name: Övrigt
         posting:
           name: Publicera inlägg
+      favorite_max_reached: "Du kan inte markera fler utmärkelser som favoriter."
+      favorite_max_not_reached: "Markera denna utmärkelse som favorit"
+      favorite_count: "%{count}/%{max} utmärkelser markerade som favorit"
     tagging:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
@@ -3398,14 +3437,18 @@ sv:
           description: "Du aviseras inte om nya ämnen med den här taggen, och de kommer inte att visas på din \"oläst\"-flik."
       groups:
         title: "Taggrupper"
-        about: "Lägg till taggar i grupper för att lättare hantera dem."
+        about_heading: "Välj en taggrupp eller skapa en ny"
+        about_heading_empty: "Skapa en ny taggrupp för att komma igång"
+        about_description: "Taggrupper hjälper dig att hantera behörigheter för många taggar på ett ställe."
         new: "Ny grupp"
-        tags_label: "Taggar i den här gruppen:"
-        parent_tag_label: "Överordnad tagg:"
-        parent_tag_description: "Taggar från den här gruppen kan inte användas om inte den överordnade taggen är med."
+        new_title: "Skapa ny grupp"
+        edit_title: "Redigera taggrupp"
+        tags_label: "Taggar i den här gruppen"
+        parent_tag_label: "Överordnad tagg"
+        parent_tag_description: "Taggar från den här gruppen kan bara användas om den överordnade taggen finns."
         one_per_topic_label: "Sätt gränsen till en tagg per ämne för den här gruppen"
         new_name: "Ny tagg-grupp"
-        name_placeholder: "Namn på taggrupp"
+        name_placeholder: "Namn"
         save: "Spara"
         delete: "Radera"
         confirm_delete: "Är du säker på att du vill ta bort den här taggruppen?"
@@ -3413,6 +3456,10 @@ sv:
         usable_only_by_groups: "Taggar är synliga för alla, men endast följande grupper kan använda dem"
         visible_only_to_groups: "Taggar är endast synliga för följande grupper"
         cannot_save: "Kan inte spara taggrupp. Kontrollera att det finns minst en tagg tillgänglig, att taggruppsnamnet inte är tomt och att en grupp är markerad för taggbehörighet."
+        tags_placeholder: "Sök eller skapa taggar"
+        parent_tag_placeholder: "Valfritt"
+        select_groups_placeholder: "Välj grupper..."
+        disabled: "Taggning är inaktiverad. "
       topics:
         none:
           unread: "Du har inga olästa ämnen."
@@ -3449,6 +3496,14 @@ sv:
         tomorrow: "Tills imorgon"
         custom: "Anpassad"
       set_schedule: "Ange ett aviseringsschema"
+    trust_levels:
+      names:
+        newuser: "ny användare"
+        basic: "grundläggande användare"
+        member: "medlem"
+        regular: "regelbunden"
+        leader: "ledare"
+      detailed_name: "%{level}: %{name}"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -3747,6 +3802,9 @@ sv:
         group_user_event:
           name: "Gruppanvändarhändelse"
           details: "När en användare läggs till i, eller tas bort från, en grupp."
+        like_event:
+          name: "Gilla händelse"
+          details: "När en användare gillar ett inlägg."
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"
@@ -4053,6 +4111,8 @@ sv:
           yaml:
             text: "YAML"
             title: "Definiera temainställningar i YAML-format"
+          scss_color_variables_warning: 'Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">denna guide</a> för mer information.'
+          scss_warning_inline: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats."
         colors:
           select_base:
             title: "Välj grundfärgspalett"
@@ -4378,6 +4438,7 @@ sv:
         download: Hämta
         clear_all: Rensa alla
         clear_all_confirm: "Är du säker på att du vill rensa alla bevakade ord för åtgärden %{action}?"
+        invalid_regex: 'Det bevakade ordet "%{word}" är ett ogiltigt reguljärt uttryck.'
         actions:
           block: "Blockera"
           censor: "Censur"
@@ -4385,21 +4446,26 @@ sv:
           flag: "Flagga"
           replace: "Ersätt"
           tag: "Tagg"
+          silence: "Tysta"
+          link: "Länk"
         action_descriptions:
           block: "Förhindra att inlägg med dessa ord publiceras. Användaren kommer att se ett felmeddelande när de försöker skicka inlägget."
           censor: "Tillåt inlägg med dessa ord, men ersätt orden med tecken som döljer det censurerade orden."
           require_approval: "Inlägg som innehåller dessa ord kommer att behöva godkännande av personal innan de visas."
           flag: "Tillåt inlägg med dessa ord, men flagga orden som olämpliga så att moderatorer kan granska dem."
-          replace: "Ersätt ord i inlägg med andra ord eller länkar"
+          replace: "Ersätt ord i inlägg med andra ord"
           tag: "Tagga ämnen automatiskt baserat på första inlägget"
+          silence: "Användares första inlägg som innehåller dessa ord kommer att kräva godkännande av personalen innan de kan ses och användaren kommer automatiskt att tystas."
+          link: "Ersätt ord i inlägg med länkar"
         form:
-          label: "Har ordet"
-          placeholder: "hela ordet eller * som jokertecken"
+          label: "Har ord eller fras"
+          placeholder: "Ange ord eller fras (* är ett jokertecken)"
           placeholder_regexp: "reguljärt uttryck"
-          replacement_label: "Ersättning"
-          replacement_placeholder: "exempel eller https://example.com"
+          replace_label: "Ersättning"
+          replace_placeholder: "exempel"
           tag_label: "Tagg"
-          tag_placeholder: "tag1,tag2,tag3"
+          link_label: "Länk"
+          link_placeholder: "https://example.com"
           add: "Lägg till"
           success: "Lyckades"
           exists: "Finns redan"
@@ -4407,7 +4473,7 @@ sv:
           upload_successful: "Uppladdning lyckades. Ord har lagts till."
         test:
           button_label: "Testa"
-          modal_title: "Testa '%{action}' bevakade ord"
+          modal_title: "Testa %{action} bevakade ord"
           description: "Ange text nedan för att leta efter matchningar med bevakade ord"
           found_matches: "Hittade matchande:"
           no_matches: "Hittades inga matchningar"
@@ -4466,7 +4532,7 @@ sv:
         suspend_reasons:
           not_listening_to_staff: "Lyssnade inte på personalen"
           consuming_staff_time: "Förbrukade oproportionerligt mycket personaltid"
-          combatative: "För stridslysten"
+          combative: "Alltför stridslysten"
           in_wrong_place: "På fel plats"
           no_constructive_purpose: "Inget konstruktivt syfte med sina handlingar annat än att skapa oenighet inom forumet"
           custom: "Anpassad..."

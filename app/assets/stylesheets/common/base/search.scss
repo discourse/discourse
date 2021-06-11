@@ -1,3 +1,7 @@
+.search-highlight {
+  font-weight: bold;
+}
+
 .search-container {
   display: flex;
   justify-content: space-between;
@@ -148,6 +152,7 @@
       font-size: $font-up-1;
       background: var(--primary-low);
       padding: 0.358em 1em;
+      margin-bottom: 0;
       @include breakpoint(medium) {
         padding: 0.358em 0.5em;
       }
@@ -289,12 +294,13 @@
   }
 
   a.search-link:visited .topic-title {
-    color: var(--tertiary-high);
+    color: var(--primary-medium);
   }
   .search-link {
     .topic-title {
-      font-size: $font-up-2;
+      font-size: $font-up-1;
       line-height: $line-height-medium;
+      color: var(--primary);
     }
     .topic-statuses {
       display: inline-block;

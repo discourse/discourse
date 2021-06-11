@@ -2,7 +2,11 @@ import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
 
-export function addRawTemplate(name, template) {
+export function addRawTemplate(name, template, opts = {}) {
+  // Core templates should never overwrite themes / plugins
+  if (opts.core && __DISCOURSE_RAW_TEMPLATES[name]) {
+    return;
+  }
   __DISCOURSE_RAW_TEMPLATES[name] = template;
 }
 

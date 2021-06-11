@@ -1102,7 +1102,7 @@ describe GroupsController do
     fab!(:group) { Fabricate(:group) }
 
     context 'when user is not signed in' do
-      it 'should be fobidden' do
+      it 'should be forbidden' do
         put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
         expect(response).to be_forbidden
 
@@ -1111,7 +1111,7 @@ describe GroupsController do
       end
 
       context 'public group' do
-        it 'should be fobidden' do
+        it 'should be forbidden' do
           group.update!(
             public_admission: true,
             public_exit: true
@@ -1209,6 +1209,22 @@ describe GroupsController do
         expect(response.status).to eq(200)
 
         expect(Topic.last.topic_users.map(&:user_id)).to include(Discourse::SYSTEM_USER_ID, user2.id)
+      end
+
+      it 'does not add users without sufficient permission' do
+        group.add_owner(user)
+        sign_in(user)
+
+        put "/groups/#{group.id}/members.json", params: { usernames: Fabricate(:user).username }
+        expect(response.status).to eq(200)
+      end
+
+      it 'does not send invites if user cannot invite' do
+        group.add_owner(user)
+        sign_in(user)
+
+        put "/groups/#{group.id}/members.json", params: { emails: "test@example.com" }
+        expect(response.status).to eq(403)
       end
 
       context "is able to add several members to a group" do
@@ -1395,10 +1411,7 @@ describe GroupsController do
       it "will invite the user if their username and email are both invited" do
         new_user = Fabricate(:user)
         put "/groups/#{group.id}/members.json", params: { usernames: new_user.username, emails: new_user.email }
-
         expect(response.status).to eq(200)
-        body = response.parsed_body
-
         expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
       end
 
@@ -1440,7 +1453,7 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
-        it 'should not allow an underprivilege user to add another user to a group' do
+        it 'should not allow an underprivileged user to add another user to a group' do
           sign_in(user)
 
           put "/groups/#{group.id}/members.json",
@@ -1461,8 +1474,6 @@ describe GroupsController do
 
       it "raises an error if user to be removed is not found" do
         delete "/groups/#{group.id}/members.json", params: { user_id: -10 }
-
-        response_body = response.parsed_body
         expect(response.status).to eq(400)
       end
 
@@ -1544,7 +1555,7 @@ describe GroupsController do
             expect(response.status).to eq(200)
           end
 
-          it 'should not allow a underprivilege user to leave a group for another user' do
+          it 'should not allow a underprivileged user to leave a group for another user' do
             sign_in(user)
 
             delete "/groups/#{group.id}/members.json",
@@ -1617,7 +1628,7 @@ describe GroupsController do
     end
 
     it "sends a private message when accepted" do
-      group_request = GroupRequest.create!(group: group, user: other_user)
+      GroupRequest.create!(group: group, user: other_user)
       expect { put "/groups/#{group.id}/handle_membership_request.json", params: { user_id: other_user.id, accept: true } }
         .to change { Topic.count }.by(1)
         .and change { Post.count }.by(1)
@@ -1990,6 +2001,118 @@ describe GroupsController do
       expect(response.parsed_body.map { |permission| permission["category"]["name"] }).to eq(
         ["Abc", "Hello", "New Cat", "Three"]
       )
+    end
+  end
+
+  describe "#test_email_settings" do
+    let(:params) do
+      {
+        protocol: protocol,
+        ssl: ssl,
+        port: port,
+        host: host,
+        username: username,
+        password: password
+      }
+    end
+
+    before do
+      sign_in(user)
+      group.group_users.where(user: user).last.update(owner: user)
+    end
+
+    context "validating smtp" do
+      let(:protocol) { "smtp" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:domain) { nil }
+      let(:ssl) { true }
+      let(:host) { "smtp.somemailsite.com" }
+      let(:port) { 587 }
+
+      context "when an error is raised" do
+        before do
+          EmailSettingsValidator.expects(:validate_smtp).raises(Net::SMTPAuthenticationError, "Invalid credentials")
+        end
+        it "uses the friendly error message functionality to return the message to the user" do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(I18n.t("email_settings.smtp_authentication_error"))
+        end
+      end
+    end
+
+    context "validating imap" do
+      let(:protocol) { "imap" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:domain) { nil }
+      let(:ssl) { true }
+      let(:host) { "imap.somemailsite.com" }
+      let(:port) { 993 }
+
+      it "validates with the correct TLS settings" do
+        EmailSettingsValidator.expects(:validate_imap).with(
+          has_entry(ssl: true)
+        )
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+        expect(response.status).to eq(200)
+      end
+
+      context "when an error is raised" do
+        before do
+          EmailSettingsValidator.expects(:validate_imap).raises(
+            Net::IMAP::NoResponseError, stub(data: stub(text: "Invalid credentials"))
+          )
+        end
+        it "uses the friendly error message functionality to return the message to the user" do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(I18n.t("email_settings.imap_authentication_error"))
+        end
+      end
+    end
+
+    describe "global param validation and rate limit" do
+      let(:protocol) { "smtp" }
+      let(:host) { "smtp.gmail.com" }
+      let(:port) { 587 }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:ssl) { true }
+
+      context "when the protocol is not accepted" do
+        let(:protocol) { "sigma" }
+        it "raises an invalid params error" do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"].first).to match(/Valid protocols to test are smtp and imap/)
+        end
+      end
+
+      context "user does not have access to the group" do
+        before do
+          group.group_users.destroy_all
+        end
+        it "errors if the user does not have access to the group" do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "rate limited" do
+        it "rate limits anon searches per user" do
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          5.times do
+            post "/groups/#{group.id}/test_email_settings.json", params: params
+          end
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(429)
+        end
+      end
     end
   end
 end

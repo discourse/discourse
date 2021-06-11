@@ -8,18 +8,38 @@
   }
 }
 .header-cloak {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   position: fixed;
   background-color: black;
-  opacity: 0.5;
+  --opacity: 0.5;
+  opacity: var(--opacity);
   top: 0;
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
 
+  @media (prefers-reduced-motion: no-preference) {
+    &.animate {
+      transition: opacity 0.1s linear;
+    }
+  }
+}
+
+.menu-panel.slide-in {
+  transform: translateX(var(--offset));
+  @media (prefers-reduced-motion: no-preference) {
+    &.animate {
+      transition: transform 0.1s linear;
+    }
+  }
+  &.moving,
   &.animate {
-    transition: opacity 0.2s ease-out;
+    // PERF: only render first 20 items in a list to allow for smooth
+    // pan events
+    li:nth-child(n + 20) {
+      display: none;
+    }
   }
 }
 
@@ -30,6 +50,7 @@
   button {
     // accounts for menu "ears" 4px + border 1px
     padding: 0.75em calc(0.5em + 4px + 1px);
+    margin: 0.25em;
     @media screen and (max-height: 380px) {
       // reduce padding to avoid scroll
       padding-top: 0.5em;

@@ -118,6 +118,16 @@ describe Stylesheet::Compiler do
     expect(css).not_to include('absolute-image-url')
   end
 
+  it "supports absolute-image-url in plugins" do
+    set_cdn_url "https://awesome.com"
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/plugins/discourse-special/images/somefile.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "discourse-special.scss")
+
+    expect(css).to include('url("https://awesome.com/plugins/discourse-special/images/somefile.png")')
+    expect(css).not_to include('absolute-image-url')
+  end
+
   context "with a color scheme" do
     it "returns the default color definitions when no color scheme is specified" do
       css, _map = Stylesheet::Compiler.compile_asset("color_definitions")

@@ -138,6 +138,9 @@ ar:
           صورة رائعة - لقد قمت بالضغط علي زر اعجبني :heart: لجعلك تعرف كم انا احبها :heart_eyes:
         like_not_found: |-
           هل نسيت ان تعجب heart: [بمنشوري](%{url}) :crying_cat_face:
+      likes:
+        not_found: |-
+          هل نسيت ان تعجب heart: [بمنشوري](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           هل تستطيع عمل بعض الكلمات **غليطة** او _مائلة_ في ردك؟

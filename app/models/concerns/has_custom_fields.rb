@@ -257,7 +257,7 @@ module HasCustomFields
     end
   end
 
-  # We support unique indexes on certain fields. In the event two concurrenct processes attempt to
+  # We support unique indexes on certain fields. In the event two concurrent processes attempt to
   # update the same custom field we should catch the error and perform an update instead.
   def create_singular(name, value, field_type = nil)
     write_value = value.is_a?(Hash) || field_type == :json ? value.to_json : value

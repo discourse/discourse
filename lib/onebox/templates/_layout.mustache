@@ -1,0 +1,25 @@
+<aside class="onebox {{subname}}" data-onebox-src="{{link}}">
+  <header class="source">
+    {{#favicon}}
+      <img src="{{favicon}}" class="site-icon"/>
+    {{/favicon}}
+
+    {{#article_published_time}}
+      <a href="{{link}}" target="_blank" rel="noopener" title="{{article_published_time_title}}">{{domain}} &ndash; {{article_published_time}}</a>
+    {{/article_published_time}}
+    {{^article_published_time}}
+      <a href="{{link}}" target="_blank" rel="noopener">{{domain}}</a>
+    {{/article_published_time}}
+  </header>
+
+  <article class="onebox-body">
+    {{{view}}}
+  </article>
+
+  <div class="onebox-metadata">
+    {{#metadata_1_label}}<span style="float: left;">{{metadata_1_label}}: {{metadata_1_value}}</span>{{/metadata_1_label}}
+    {{#metadata_2_label}}<span style="float: right;">{{metadata_2_label}}: {{metadata_2_value}}</span>{{/metadata_2_label}}
+  </div>
+
+  <div style="clear: both"></div>
+</aside>

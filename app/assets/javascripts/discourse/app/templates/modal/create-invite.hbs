@@ -13,33 +13,31 @@
       </div>
     </div>
 
-    <p>{{expiresAtLabel}}</p>
+    <div class="input-group input-expires-at">
+      <label>{{d-icon "far-clock"}}{{expiresAtLabel}}</label>
+    </div>
 
-    <div class="input-group invite-type">
-      {{input type="checkbox" id="invite-type" checked=limitToEmail click=(action "toggleLimitToEmail")}}
-      <label for="invite-type">{{i18n "user.invited.invite.restrict_email"}}</label>
-
-      {{#if isEmail}}
-        <div class="invite-input-with-button">
-          {{input
-            id="invite-email"
-            value=buffered.email
-            placeholderKey="topic.invite_reply.email_placeholder"
+    <div class="input-group input-email">
+      <label for="invite-email">{{d-icon "envelope"}}{{i18n "user.invited.invite.restrict_email"}}</label>
+      <div class="invite-input-with-button">
+        {{input
+          id="invite-email"
+          value=buffered.email
+          placeholderKey="topic.invite_reply.email_placeholder"
+        }}
+        {{#if capabilities.hasContactPicker}}
+          {{d-button
+            icon="address-book"
+            action=(action "searchContact")
+            class="btn-primary open-contact-picker"
           }}
-          {{#if capabilities.hasContactPicker}}
-            {{d-button
-              icon="address-book"
-              action=(action "searchContact")
-              class="btn-primary open-contact-picker"
-            }}
-          {{/if}}
-        </div>
-      {{/if}}
+        {{/if}}
+      </div>
     </div>
 
     {{#if isLink}}
       <div class="input-group invite-max-redemptions">
-        <label for="invite-max-redemptions">{{i18n "user.invited.invite.max_redemptions_allowed"}}</label>
+        <label for="invite-max-redemptions">{{d-icon "users"}}{{i18n "user.invited.invite.max_redemptions_allowed"}}</label>
         {{input
           id="invite-max-redemptions"
           type="number"
@@ -50,14 +48,12 @@
       </div>
     {{/if}}
 
-    {{#if isEmail}}
-      {{#if showAdvanced}}
-        {{#if currentUser.staff}}
-          <div class="input-group invite-custom-message">
-            <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
-            {{textarea id="invite-message" value=buffered.custom_message}}
-          </div>
-        {{/if}}
+    {{#if showAdvanced}}
+      {{#if isEmail}}
+        <div class="input-group invite-custom-message">
+          <label for="invite-message">{{d-icon "envelope"}}{{i18n "user.invited.invite.custom_message"}}</label>
+          {{textarea id="invite-message" value=buffered.custom_message}}
+        </div>
       {{/if}}
     {{/if}}
 
@@ -68,12 +64,13 @@
             selectedTopicId=buffered.topicId
             topicTitle=buffered.topicTitle
             additionalFilters="status:public"
+            labelIcon="hand-point-right"
             label="user.invited.invite.invite_to_topic"
           }}
         </div>
-      {{else}}
-        <div class="input-group">
-          <label for="invite-topic">{{i18n "user.invited.invite.invite_to_topic"}}</label>
+      {{else if buffered.topicTitle}}
+        <div class="input-group invite-to-topic">
+          <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
           {{input
             name="invite-topic"
             class="invite-topic"
@@ -85,9 +82,9 @@
     {{/if}}
 
     {{#if showAdvanced}}
-      {{#if currentUser.staff}}
+      {{#if canInviteToGroup}}
         <div class="input-group invite-to-groups">
-          <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
+          <label>{{d-icon "users"}}{{i18n "user.invited.invite.add_to_groups"}}</label>
           {{group-chooser
             content=allGroups
             value=buffered.groupIds
@@ -102,6 +99,7 @@
       {{#if currentUser.staff}}
         <div class="input-group invite-expires-at">
           {{future-date-input
+            displayLabelIcon="far-clock"
             displayLabel=(i18n "user.invited.invite.expires_at")
             includeDateTime=true
             includeMidFuture=true
@@ -120,7 +118,6 @@
     label="user.invited.invite.save_invite"
     class="btn-primary save-invite"
     action=(action "saveInvite")
-    disabled=disabled
   }}
 
   {{#if isEmail}}
@@ -129,14 +126,13 @@
       label=(if invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email")
       class="btn-primary send-invite"
       action=(action "saveInvite" true)
-      disabled=disabled
     }}
   {{/if}}
 
-  {{#if currentUser.staff}}
+  {{#if hasAdvanced}}
     {{d-button
       action=(action "toggleAdvanced")
-      class="show-advanced"
+      class="btn-default show-advanced"
       icon="cog"
       title=(if showAdvanced "user.invited.invite.hide_advanced" "user.invited.invite.show_advanced")
     }}

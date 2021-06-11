@@ -7,6 +7,12 @@
 pt_BR:
   js:
     presence:
+      replying:
+        one: "respondendo"
+        other: "respondendo"
+      editing:
+        one: "editando"
+        other: "editando"
       replying_to_topic:
         one: "respondendo"
         other: "respondendo"

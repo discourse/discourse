@@ -39,7 +39,7 @@ task "admin:create" => :environment do
     email = ask("Email:  ")
     existing_user = User.find_by_email(email)
 
-    # check if user account already exixts
+    # check if user account already exists
     if existing_user
       # user already exists, ask for password reset
       admin = existing_user

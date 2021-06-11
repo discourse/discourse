@@ -1,5 +1,7 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Poll quote", function (needs) {
   needs.user();
@@ -427,7 +429,7 @@ acceptance("Poll quote", function (needs) {
   test("renders and extends", async function (assert) {
     await visit("/t/-/topic_with_two_quoted_polls");
     await click(".quote-controls");
-    assert.equal(queryAll(".poll").length, 2, "polls are rendered");
-    assert.equal(queryAll(".poll-buttons").length, 2, "polls are extended");
+    assert.equal(count(".poll"), 2, "polls are rendered");
+    assert.equal(count(".poll-buttons"), 2, "polls are extended");
   });
 });

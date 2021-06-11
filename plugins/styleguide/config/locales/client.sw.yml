@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 sw:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Karibu kwenye Discourse"
+        colors:
+          title: "Rangi"
+        icons:
+          title: "Ikoni"
+        categories:
+          title: "Vikundi"
+        navigation:
+          title: "Abiri"
+        categories_list:
+          title: "Orodha ya Kategoria"
+        topic_timer_info:
+          title: "Vipima Mda vya Mada"
+        post:
+          title: "Ujumbe"
+        suggested_topics:
+          title: "Mada Zilizopendekezwa"

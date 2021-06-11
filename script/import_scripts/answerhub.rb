@@ -3,7 +3,7 @@
 # AnswerHub Importer
 #
 # Based on having access to a mysql dump.
-# Pass in the ENV variables listed below before runing the script.
+# Pass in the ENV variables listed below before running the script.
 
 require_relative 'base'
 require 'mysql2'

@@ -229,6 +229,12 @@ function setupTestsCommon(application, container, config) {
     });
 
     PreloadStore.reset();
+    PreloadStore.store(
+      "directoryColumns",
+      JSON.parse(
+        '[{"name":"likes_given","automatic":true,"icon":"heart","user_field_id":null},{"name":"posts_read","automatic":true,"icon":null,"user_field_id":null},{"name":"likes_received","automatic":true,"icon":"heart","user_field_id":null},{"name":"topic_count","automatic":true,"icon":null,"user_field_id":null},{"name":"post_count","automatic":true,"icon":null,"user_field_id":null},{"name":"topics_entered","automatic":true,"icon":null,"user_field_id":null},{"name":"days_visited","automatic":true,"icon":null,"user_field_id":null},{"name":"Favorite Color","automatic":false,"icon":null,"user_field_id":3}]'
+      )
+    );
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
@@ -247,7 +253,7 @@ function setupTestsCommon(application, container, config) {
 
     if (!setupApplicationTest) {
       // ensures any event not removed is not leaking between tests
-      // most likely in intialisers, other places (controller, component...)
+      // most likely in initializers, other places (controller, component...)
       // should be fixed in code
       clearAppEventsCache(getOwner(this));
     }

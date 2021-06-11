@@ -426,7 +426,7 @@ Category.reopenClass({
 
   findBySlugPathWithID(slugPathWithID) {
     let parts = slugPathWithID.split("/").filter(Boolean);
-    // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
+    // slugs found by star/glob pathing in ember do not automatically url decode - ensure that these are decoded
     if (this.slugEncoded()) {
       parts = parts.map((urlPart) => decodeURI(urlPart));
     }

@@ -283,14 +283,14 @@ class UserAction < ActiveRecord::Base
           update_like_count(user_id, hash[:action_type], 1)
         end
 
-        # move into Topic perhaps
         group_ids = nil
         if topic && topic.category && topic.category.read_restricted
-          group_ids = topic.category.groups.pluck("groups.id")
+          group_ids = [Group::AUTO_GROUPS[:admins]]
+          group_ids.concat(topic.category.groups.pluck("groups.id"))
         end
 
         if action.user
-          MessageBus.publish("/u/#{action.user.username.downcase}", action.id, user_ids: [user_id], group_ids: group_ids)
+          MessageBus.publish("/u/#{action.user.username_lower}", action.id, user_ids: [user_id], group_ids: group_ids)
         end
 
         action

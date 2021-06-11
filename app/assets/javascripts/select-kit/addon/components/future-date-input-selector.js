@@ -53,7 +53,7 @@ export const TIMEFRAMES = [
   buildTimeframe({
     id: "next_week",
     format: "ddd, h a",
-    enabled: (opts) => opts.day !== 7,
+    enabled: (opts) => opts.day !== 0,
     when: (time, timeOfDay) =>
       time.add(1, "week").day(1).hour(timeOfDay).minute(0),
     icon: "briefcase",

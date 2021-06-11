@@ -168,6 +168,7 @@ class PostDestroyer
         permanent? ? @post.topic.destroy! : @post.topic.trash!(@user)
         PublishedPage.unpublish!(@user, @post.topic) if @post.topic.published_page
       end
+      TopicLink.where(link_post_id: @post.id).destroy_all
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
@@ -196,9 +197,9 @@ class PostDestroyer
     I18n.with_locale(SiteSetting.default_locale) do
 
       # don't call revise from within transaction, high risk of deadlock
-      key = @post.is_first_post? ? 'js.topic.deleted_by_author' : 'js.post.deleted_by_author'
+      key = @post.is_first_post? ? 'js.topic.deleted_by_author_simple' : 'js.post.deleted_by_author_simple'
       @post.revise(@user,
-        { raw: I18n.t(key, count: delete_removed_posts_after) },
+        { raw: I18n.t(key) },
         force_new_version: true,
         deleting_post: true
       )

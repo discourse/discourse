@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 sr:
+  js:
+    presence:
+      replying:
+        one: "odgovara"
+        few: "odgovara"
+        other: "odgovara"
+      editing:
+        one: "menja"
+        few: "menja"
+        other: "menja"
+      replying_to_topic:
+        one: "odgovara"
+        few: "odgovara"
+        other: "odgovara"

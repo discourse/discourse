@@ -24,7 +24,7 @@ describe ThemeJavascriptsController do
       get "/theme-javascripts/#{digest}.js"
     end
 
-    it 'only accepts 40-char hexdecimal digest name' do
+    it 'only accepts 40-char hexadecimal digest name' do
       update_digest_and_get('0123456789abcdefabcd0123456789abcdefabcd')
       expect(response.status).to eq(200)
 

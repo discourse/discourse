@@ -143,14 +143,24 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def handle_mail
-    params.require(:email)
+    deprecated_email_param_used = false
+
+    if params[:email_encoded].present?
+      email_raw = Base64.strict_decode64(params[:email_encoded])
+    elsif params[:email].present?
+      deprecated_email_param_used = true
+      email_raw = params[:email]
+    else
+      raise ActionController::ParameterMissing.new("email_encoded or email")
+    end
+
     retry_count = 0
 
     begin
-      Jobs.enqueue(:process_email, mail: params[:email], retry_on_rate_limit: true, source: :handle_mail)
-    rescue JSON::GeneratorError => e
+      Jobs.enqueue(:process_email, mail: email_raw, retry_on_rate_limit: true, source: :handle_mail)
+    rescue JSON::GeneratorError, Encoding::UndefinedConversionError => e
       if retry_count == 0
-        params[:email] = params[:email].force_encoding('iso-8859-1').encode("UTF-8")
+        email_raw = email_raw.force_encoding('iso-8859-1').encode("UTF-8")
         retry_count += 1
         retry
       else
@@ -158,7 +168,13 @@ class Admin::EmailController < Admin::AdminController
       end
     end
 
-    render plain: "email has been received and is queued for processing"
+    # TODO: 2022-05-01 Remove this route once all sites have migrated over
+    # to using the new email_encoded param.
+    if deprecated_email_param_used
+      render plain: "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded encoded_email parameter instead. email has been received and is queued for processing"
+    else
+      render plain: "email has been received and is queued for processing"
+    end
   end
 
   def raw_email

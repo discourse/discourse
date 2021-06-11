@@ -363,25 +363,29 @@ describe Upload do
       expect(upload.secure).to eq(false)
     end
 
-    it 'marks a local attachment as secure if secure media enabled' do
-      SiteSetting.authorized_extensions = "pdf"
-      upload.update!(original_filename: "small.pdf", extension: "pdf", secure: false, access_control_post: Fabricate(:private_message_post))
-      enable_secure_media
+    context "local attachment" do
+      before do
+        SiteSetting.authorized_extensions = "pdf"
+      end
 
-      expect { upload.update_secure_status }
-        .to change { upload.secure }
+      let(:upload) { Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true) }
 
-      expect(upload.secure).to eq(true)
-    end
+      it 'marks a local attachment as secure if secure media enabled' do
+        upload.update!(secure: false, access_control_post: Fabricate(:private_message_post))
+        enable_secure_media
 
-    it 'marks a local attachment as not secure if secure media enabled' do
-      SiteSetting.authorized_extensions = "pdf"
-      upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
+        expect { upload.update_secure_status }
+          .to change { upload.secure }
 
-      expect { upload.update_secure_status }
-        .to change { upload.secure }
+        expect(upload.secure).to eq(true)
+      end
 
-      expect(upload.secure).to eq(false)
+      it 'marks a local attachment as not secure if secure media enabled' do
+        expect { upload.update_secure_status }
+          .to change { upload.secure }
+
+        expect(upload.secure).to eq(false)
+      end
     end
 
     it 'does not change secure status of a non-attachment when prevent_anons_from_downloading_files is enabled by itself' do

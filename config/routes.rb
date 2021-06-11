@@ -387,6 +387,8 @@ Discourse::Application.routes.draw do
     get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
 
     get "user-cards" => "users#cards", format: :json
+    get "directory-columns" => "directory_columns#index", format: :json
+    put "directory-columns" => "directory_columns#update", format: :json
 
     %w{users u}.each_with_index do |root_path, index|
       get "#{root_path}" => "users#index", constraints: { format: 'html' }
@@ -568,6 +570,7 @@ Discourse::Application.routes.draw do
         get 'mentionable'
         get 'messageable'
         get 'logs' => 'groups#histories'
+        post 'test_email_settings'
 
         collection do
           get "check-name" => 'groups#check_name'
@@ -670,7 +673,9 @@ Discourse::Application.routes.draw do
 
     resources :badges, only: [:index]
     get "/badges/:id(/:slug)" => "badges#show", constraints: { format: /(json|html|rss)/ }
-    resources :user_badges, only: [:index, :create, :destroy]
+    resources :user_badges, only: [:index, :create, :destroy] do
+      put "toggle_favorite" => "user_badges#toggle_favorite", constraints: { format: :json }
+    end
 
     get '/c', to: redirect(relative_url_root + 'categories')
 
@@ -864,7 +869,7 @@ Discourse::Application.routes.draw do
       # current site before updating to a new Service Worker.
       # Support the old Service Worker path to avoid routing error filling up the
       # logs.
-      get "/service-worker.js" => redirect(relative_url_root + service_worker_asset, status: 302), format: :js
+      get "/service-worker.js" => "static#service_worker_asset", format: :js
       get service_worker_asset => "static#service_worker_asset", format: :js
     elsif Rails.env.development?
       get "/service-worker.js" => "static#service_worker_asset", format: :js

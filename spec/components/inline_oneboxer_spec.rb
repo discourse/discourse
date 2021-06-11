@@ -116,7 +116,7 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
     end
 
-    it "will append the post number post auther's username to the title" do
+    it "will append the post number post author's username to the title" do
       topic = Fabricate(:topic, title: "Inline oneboxer")
       Fabricate(:post, topic: topic) # OP
       Fabricate(:post, topic: topic)

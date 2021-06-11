@@ -973,7 +973,10 @@ describe CookedPostProcessor do
       expect(doc.css('img').first['srcset']).to_not eq(nil)
     end
 
-    it "does not optimize animated images but adds a class so animated images can be identified" do
+    it "processes animated images correctly" do
+      # skips optimization
+      # skips lightboxing
+      # adds "animated" class to element
       upload.update!(animated: true)
       post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
 
@@ -981,10 +984,35 @@ describe CookedPostProcessor do
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
-      expect(doc.css('.lightbox-wrapper').size).to eq(1)
+      expect(doc.css('.lightbox-wrapper').size).to eq(0)
       expect(doc.css('img').first['src']).to include(upload.url)
       expect(doc.css('img').first['srcset']).to eq(nil)
       expect(doc.css('img.animated').size).to eq(1)
+    end
+
+    context "giphy/tenor images" do
+      before do
+        CookedPostProcessor.any_instance.stubs(:get_size).with("https://media2.giphy.com/media/7Oifk90VrCdNe/giphy.webp").returns([311, 280])
+        CookedPostProcessor.any_instance.stubs(:get_size).with("https://media1.tenor.com/images/20c7ddd5e84c7427954f430439c5209d/tenor.gif").returns([833, 104])
+      end
+
+      it "marks giphy images as animated" do
+        post = Fabricate(:post, raw: "![tennis-gif|311x280](https://media2.giphy.com/media/7Oifk90VrCdNe/giphy.webp)")
+        cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+        cpp.post_process
+
+        doc = Nokogiri::HTML5::fragment(cpp.html)
+        expect(doc.css('img.animated').size).to eq(1)
+      end
+
+      it "marks giphy images as animated" do
+        post = Fabricate(:post, raw: "![cat](https://media1.tenor.com/images/20c7ddd5e84c7427954f430439c5209d/tenor.gif)")
+        cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+        cpp.post_process
+
+        doc = Nokogiri::HTML5::fragment(cpp.html)
+        expect(doc.css('img.animated').size).to eq(1)
+      end
     end
 
     it "optimizes images in quotes" do

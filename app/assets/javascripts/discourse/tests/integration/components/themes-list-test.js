@@ -4,6 +4,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -49,11 +50,7 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
         -1,
         "there is no inactive themes separator when all themes are inactive"
       );
-      assert.equal(
-        queryAll(".themes-list-item").length,
-        5,
-        "displays all themes"
-      );
+      assert.equal(count(".themes-list-item"), 5, "displays all themes");
 
       [2, 3].forEach((num) => this.themes[num].set("user_selectable", true));
       this.themes[4].set("default", true);
@@ -82,7 +79,7 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
 
       this.set("themes", []);
       assert.equal(
-        queryAll(".themes-list-item").length,
+        count(".themes-list-item"),
         1,
         "shows one entry with a message when there is nothing to display"
       );
@@ -132,15 +129,11 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
         -1,
         "there is no separator"
       );
-      assert.equal(
-        queryAll(".themes-list-item").length,
-        5,
-        "displays all components"
-      );
+      assert.equal(count(".themes-list-item"), 5, "displays all components");
 
       this.set("components", []);
       assert.equal(
-        queryAll(".themes-list-item").length,
+        count(".themes-list-item"),
         1,
         "shows one entry with a message when there is nothing to display"
       );

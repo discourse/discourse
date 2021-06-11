@@ -40,7 +40,7 @@ describe WebHook do
     fab!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
     fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
-    it "removes whitspace from payload_url before saving" do
+    it "removes whitespace from payload_url before saving" do
       expect(post_hook.payload_url).to eq("https://example.com")
     end
 
@@ -197,7 +197,8 @@ describe WebHook do
       expect do
         PostRevisor.new(post, post.topic).revise!(
           post.user,
-          category_id: category.id,
+          { category_id: category.id },
+          { skip_validations: true },
         )
       end.to change { Jobs::EmitWebHookEvent.jobs.length }.by(1)
 

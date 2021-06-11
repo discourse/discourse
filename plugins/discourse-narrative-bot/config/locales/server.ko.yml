@@ -131,6 +131,7 @@ ko:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: 답글을 쓸 수 있습니다
+        discobot_disabled: 사용자님이 기본 설정에서 봇을 비활성화했습니다. 새 사용자 온 보딩 팁이 상호 작용하도록 허용해야합니다.
       do_not_understand:
         first_response: |-
           우와, 답글을 써줘서 고마워!
@@ -268,12 +269,6 @@ ko:
 
           (그래, 내 아이디는 _disco_, 라고 써. 1970년대 토요일밤의 열기처럼 말이야. 난 [밤을 사랑하는 댄서라고!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          나는 우리 커뮤니티의 토론이 친근해서 좋단다. 계속 그렇게 되려면 [질서를 유지](%{guidelines_url})하는 데 너의 도움이 필요해. 문제가 보인다면, 신고하기를 눌러서 작성자에게 개인적으로 알려주거나, 우리의[친절한 운영진](%{about_url})들에게 알려주렴.
-
-          > :imp: 어쩌고 저쩌고 나쁜 글
-
-          뭘 할지 잘 알고 있지? **이 포스트 신고하기** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 를 눌러서 부적절하다고 알려줘!
         reply: |-
           [우리의 직원] (%{base_uri} / groups / staff)는 귀하의 깃발에 대해 개인적으로 통지를받습니다. 커뮤니티 회원이 충분하면 게시물을 신고하면 예방 조치로 자동 숨겨집니다. (나는 실제로 불쾌한 게시물을 작성하지 않았기 때문에 : angel :, 나는 지금 나아가서 깃발을 제거했습니다.)
         not_found: |-

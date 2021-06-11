@@ -32,7 +32,7 @@ RSpec.describe Admin::UsersController do
         end
       end
 
-      it "logs only 1 enty" do
+      it "logs only 1 entry" do
         expect do
           get "/admin/users/list.json", params: { show_emails: "true" }
         end.to change { UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count }.by(1)
@@ -98,7 +98,7 @@ RSpec.describe Admin::UsersController do
 
     let(:evil_trout) { Fabricate(:evil_trout) }
 
-    it "does nothing without uesrs" do
+    it "does nothing without users" do
       put "/admin/users/approve-bulk.json"
       evil_trout.reload
       expect(response.status).to eq(200)

@@ -143,6 +143,9 @@ sw:
           Picha nzuri -- Nimebonyeza kitufe cha :moyo: kuonyesha shukrani yangu kwako :heart_eyes_:
         like_not_found: |-
           Je ulisahau kuipenda :heart: [taarifa] yangu?(%{url}) :crying_cate_face:
+      likes:
+        not_found: |-
+          Je ulisahau kuipenda :heart: [taarifa] yangu?(%{url}) :crying_cate_face:
       formatting:
         instructions: |-
           Unaweza **kukoza** au _italiki_kwenye jibu lako?
@@ -211,12 +214,6 @@ sw:
 
           (Ndio, jina langu ni _disco_, kama miziki ya miaka ya 1970. Ni[napenda kusherehekea!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Tunapenda majadiliano yetu yawe ya kirafiki, na tunahitaji msaada wako [kuhakikisha kuwa vitu vipo kistaarabu au kiungwana](%{guidelines_url}). Kama ukiona tatizo lolote, tafadhali bonyeza bendera pembeni ya hiyo taarifa kumtujulisha mwandishi, au [wasaidizi wetu](%{about_url}), kujua kuhusiana na hilo tatizo.
-
-          > :imp: Nimeandika kitu ambacho hakifai
-
-          Nadhani unajua chakufanya, **Bonyeza hiyo bendera**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kuashiria kuwa kuna tatizo na ujumbe uliosoma!
         reply: |-
           [Wasaidizi](%{base_uri}/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi sijaandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
       search:

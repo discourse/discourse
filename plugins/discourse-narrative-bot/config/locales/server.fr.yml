@@ -143,13 +143,13 @@ fr:
       hello:
         title: "Bienvenue !"
         message: |-
-          Merci de vous être inscrit à %{title}, et bienvenue !
+          Merci de vous être inscrit à %{title}, bienvenue&nbsp;!
 
-          - Je ne suis qu'un robot, mais [notre équipe](%{base_uri}/about) est également disponible si vous avez besoin de contacter quelqu'un.
+          - Je ne suis qu'un robot, mais si vous avez besoin de parler à quelqu'un, [mes responsables](%{base_uri}/about) sont très sympathiques et ils sont là pour vous aider.
 
-          - Pour des raisons de sécurité, nous avons temporairement limité ce que les nouveaux utilisateurs peuvent faire. Vous obtiendrez de [nouvelles possibilités](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (et des [badges](%{base_uri}/badges)) au fur et à mesure que nous vous connaîtrons.
+          - Pour des raisons de sécurité, nous limitons de façon transitoire ce que les nouveaux utilisateurs ont le droit de faire. Vous débloquerez de [nouvelles possibilités](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (et des [badges](%{base_uri}/badges)) à mesure que nous ferons votre connaissance.
 
-          - Nous croyons en [un comportement communautaire civilisé](%{base_uri}/guidelines) de tout temps.
+          - Nous prônons [la civilité au sein de notre communauté](%{base_uri}/guidelines) dans toutes les circonstances.
       onebox:
         instructions: |-
           Maintenant, pouvez-vous partager l'un de ces liens avec moi ? Répondez avec **un lien sur une ligne vide**, et il sera automatiquement transformé pour inclure un astucieux résumé.
@@ -179,7 +179,7 @@ fr:
         reply: |-
           Sympa la photo ! – J'ai appuyé sur le bouton :heart: J'aime pour que vous sachiez au combien je l'apprécie. :heart_eyes:
         like_not_found: |-
-          Avez-vous oublié d'aimer :heart: mon [message ?](%{url}) :crying_cat_face:
+          Avez-vous oublié d'aimer :heart: mon [message](%{url}) ? :crying_cat_face:
         not_found: |-
           Il semblerait que vous n'ayez pas téléversé d'image, j'en ai donc choisi une qui vous fera _certainement_ plaisir.
 
@@ -196,7 +196,7 @@ fr:
         reply: |-
           Merci d'avoir apprécié mon message !
         not_found: |-
-          Avez-vous oublié _d'aimer_ :heart: mon [message ?](%{url}) :crying_cat_face:
+          Avez-vous oublié _d'aimer_ :heart: mon [message](%{url}) ? :crying_cat_face:
       formatting:
         instructions: |-
           Pouvez-vous faire quelques mots en **gras** ou en _italique_ dans votre réponse ?
@@ -268,16 +268,16 @@ fr:
           (Et oui, mon nom d'utilisateur est écrit «_disco_», comme dans la folie des années 1970. J'adore [la vie nocturne !](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Nous aimons nos discussions amicales, et nous avons besoin de votre aide pour [garder les lieux civilisés](%{guidelines_url}). Si vous voyez un problème, signalez-le s'il vous plait de façon privée à l'auteur, ou à notre [équipe](%{about_url}).
+          Par ici, on aime que les discussions restent sympa, et on compte sur vous pour veiller à ce que [la civilité règne](%{guidelines_url}). Si quelque chose dans un message vous semble gênant, on vous invite à le signaler pour que son auteur ou que [nos gentils responsables](%{about_url}) soient mis au courant. Il y a toute une gamme de raisons valables de signaler un message, qui vont de la simple suggestion que l'on scinde un sujet en deux à une infraction claire et nette à la charte communautaire. Au moment de définir le motif de votre signalement, si vous choisissez **Autre chose**, un échange privé avec les modérateurs sera lancé pour vous donner la possibilité de leur adresser des questions particulières.
 
-          > :imp: J'ai écris quelque chose de très méchant ici
+          > :imp: J'ai écrit quelque chose de vilain ici
 
-          Je devine que vous savez ce que vous avez à faire. **Signalez ce message** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> comme inapproprié !
+          N'hésitez pas, **signalez ce message** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> et choisissez le motif **C'est répréhensible**&nbsp;!
         reply: |-
-          [Notre équipe](%{base_uri}/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
-          (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
+          [Notre équipe](%{base_uri}/groups/staff) sera notifiée de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
+          (Puisque je n'ai pas réellement écrit un article méchant :angel: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
         not_found: |-
-          Oh non, mon _sale_ message n'a pas encore été signalé comme inapproprié. :worried: Pouvez-vous le signaler comme inapproprié à l'aide du ** drapeau ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? N'oubliez pas d'utiliser le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour afficher plus d'actions pour chaque message.
+          Mais&nbsp;? Mon vilain message n'a pas encore été signalé comme étant répréhensible. :worried: Pouvez-vous le signaler comme étant répréhensible avec le **drapeau** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">&nbsp;? Pensez à utiliser le bouton <em>Afficher plus</em> <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afin de faire apparaître plus d'actions relatives à un message.
       search:
         instructions: |-
           _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les challenges, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> en haut à droite &#8599; pour la trouver.

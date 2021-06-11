@@ -2,8 +2,8 @@ import { module, test } from "qunit";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 
-function buildDetails(id) {
-  const topic = Topic.create({ id: id });
+function buildDetails(id, topicParams = {}) {
+  const topic = Topic.create(Object.assign({ id }, topicParams));
   return topic.get("details");
 }
 

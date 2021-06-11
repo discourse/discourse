@@ -482,11 +482,6 @@ div.ac-wrap {
   }
 }
 
-.save-animation {
-  -webkit-animation: transformer 5s forwards;
-  animation: transformer 5s forwards;
-}
-
 @-webkit-keyframes transformer {
   90% {
     -webkit-filter: opacity(1);

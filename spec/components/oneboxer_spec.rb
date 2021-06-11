@@ -177,6 +177,29 @@ describe Oneboxer do
     expect(Oneboxer.external_onebox(url)[:onebox]).to be_present
   end
 
+  it "censors external oneboxes" do
+    Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad word")
+
+    url = 'https://example.com/'
+    stub_request(:any, url).to_return(status: 200, body: <<~HTML, headers: {})
+      <html>
+      <head>
+        <meta property="og:title" content="title with bad word">
+        <meta property="og:description" content="description with bad word">
+      </head>
+      <body>
+        <p>content with bad word</p>
+      </body>
+      <html>
+    HTML
+
+    onebox = Oneboxer.external_onebox(url)
+    expect(onebox[:onebox]).to include('title with')
+    expect(onebox[:onebox]).not_to include('bad word')
+    expect(onebox[:preview]).to include('title with')
+    expect(onebox[:preview]).not_to include('bad word')
+  end
+
   it "uses the Onebox custom user agent on specified hosts" do
     SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
     url = 'https://video.discourse.org/presentation.mp4'
@@ -352,6 +375,60 @@ describe Oneboxer do
 
     it "includes cache_onebox_response_body_domains" do
       expect(Oneboxer.force_get_hosts).to include('https://www.example.com')
+    end
+  end
+
+  context 'strategies' do
+    it "has a 'default' strategy" do
+      expect(Oneboxer.strategies.keys.first).to eq(:default)
+    end
+
+    it "has a strategy with overrides" do
+      strategy = Oneboxer.strategies.keys[1]
+      expect(Oneboxer.strategies[strategy].keys).not_to eq([])
+    end
+
+    context "using a non-default strategy" do
+      let(:hostname) { "my.interesting.site" }
+      let(:url) { "https://#{hostname}/cool/content" }
+      let(:html) do
+        <<~HTML
+          <html>
+          <head>
+            <meta property="og:title" content="Page Title">
+            <meta property="og:description" content="Here is some cool content">
+          </head>
+          <body>
+             <p>body</p>
+          </body>
+          <html>
+        HTML
+      end
+
+      before do
+        stub_request(:head, url).to_return(status: 509)
+        stub_request(:get, url).to_return(status: 200, body: html)
+      end
+
+      after do
+        Oneboxer.clear_preferred_strategy!(hostname)
+      end
+
+      it "uses multiple strategies" do
+        default_ordered = Oneboxer.strategies.keys
+        custom_ordered = Oneboxer.ordered_strategies(hostname)
+        expect(custom_ordered).to eq(default_ordered)
+
+        expect(Oneboxer.preferred_strategy(hostname)).to eq(nil)
+        expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("Here is some cool content")
+
+        custom_ordered = Oneboxer.ordered_strategies(hostname)
+
+        expect(custom_ordered.count).to eq(default_ordered.count)
+        expect(custom_ordered).not_to eq(default_ordered)
+
+        expect(Oneboxer.preferred_strategy(hostname)).not_to eq(:default)
+      end
     end
   end
 

@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -22,8 +23,8 @@ discourseModule(
         });
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0000; color: #FFFFFF; ",
@@ -40,8 +41,8 @@ discourseModule(
         });
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg").length === 0, "it does not have an svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(!exists("svg"), "it does not have an svg icon");
       },
     });
   }

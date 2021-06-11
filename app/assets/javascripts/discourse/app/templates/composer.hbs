@@ -80,6 +80,7 @@
                       isDisabled=disableCategoryChooser
                       options=(hash
                         scopedCategoryId=scopedCategoryId
+                        prioritizedCategoryId=prioritizedCategoryId
                       )
                     }}
                     {{popup-input-tip validation=categoryValidation}}
@@ -129,6 +130,7 @@
                           afterRefresh=(action "afterRefresh")
                           focusTarget=focusTarget}}
 
+        {{plugin-outlet name="composer-after-composer-editor" connectorTagName="" args=(hash model=model)}}
         <div class="submit-panel">
           {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
 
@@ -173,14 +175,12 @@
               </div>
             {{/if}}
             <div class={{if isUploading "hidden"}} id="draft-status">
-              {{#if model.draftSaving}}<div class="spinner small"></div>{{/if}}
-              {{#if model.draftSaved}}{{d-icon "check" class="save-animation"}}{{/if}}
               {{#if model.draftStatus}}
                 <span title={{model.draftStatus}}>
                   {{#if model.draftConflictUser}}
                     {{avatar model.draftConflictUser imageSize="small"}} {{d-icon "user-edit"}}
                   {{else}}
-                    {{d-icon "sync-alt"}}
+                    {{d-icon "exclamation-triangle"}}
                   {{/if}}
                   {{#unless site.mobileView}}
                     {{model.draftStatus}}

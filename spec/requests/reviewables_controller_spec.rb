@@ -105,7 +105,7 @@ describe ReviewablesController do
 
       it "raises an error with an invalid type" do
         get "/review.json?type=ReviewableMadeUp"
-        expect(response.code).to eq("500")
+        expect(response.code).to eq("400")
       end
 
       it "supports filtering by status" do
@@ -135,7 +135,7 @@ describe ReviewablesController do
 
       it "raises an error with an invalid status" do
         get "/review.json?status=xyz"
-        expect(response.code).to eq("500")
+        expect(response.code).to eq("400")
       end
 
       it "supports filtering by category_id" do
@@ -172,6 +172,25 @@ describe ReviewablesController do
         json_review = json['reviewables'][0]
         expect(json_review['id']).to eq(reviewable.id)
         expect(json_review['user_id']).to eq(user.id)
+      end
+
+      it "returns correct error message if ReviewableUser not found" do
+        sign_in(admin)
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        put "/review/#{reviewable.id}/perform/reject_user_delete.json?version=0"
+        expect(response.code).to eq("200")
+
+        put "/review/#{reviewable.id}/perform/reject_user_delete.json?version=0&index=2"
+        expect(response.code).to eq("404")
+        json = response.parsed_body
+
+        expect(json["error_type"]).to eq("not_found")
+        expect(json["errors"][0]).to eq(I18n.t("reviewables.already_handled_and_user_not_exist"))
       end
 
       context "supports filtering by range" do
@@ -338,7 +357,7 @@ describe ReviewablesController do
         expect(response.code).to eq("404")
       end
 
-      it "validates the presenece of an action" do
+      it "validates the presence of an action" do
         put "/review/#{reviewable.id}/perform/nope.json?version=#{reviewable.version}"
         expect(response.code).to eq("403")
       end

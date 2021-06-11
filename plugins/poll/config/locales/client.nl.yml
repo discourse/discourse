@@ -77,24 +77,41 @@ nl:
         title: Poll aanmaken
         insert: Poll invoegen
         help:
+          options_min_count: Voer minimaal 1 optie in.
+          options_max_count: Voer maximaal %{count} opties in.
+          invalid_min_value: De minimumwaarde moet minimaal 1 zijn.
+          invalid_max_value: De maximale waarde moet minimaal 1 zijn, maar kleiner dan of gelijk aan het aantal opties.
           invalid_values: Minimale waarde moet kleiner zijn dan de maximale waarde.
-          min_step_value: De minimale waarde voor stap is 1
+          min_step_value: De minimale waarde voor een stap is 1
         poll_type:
           label: Type
           regular: Eén keuze
           multiple: Meerkeuze
           number: Numerieke beoordeling
         poll_result:
+          label: Resultaten tonen...
           always: Altijd zichtbaar
+          vote: Pas na stemming
+          closed: Wanneer de poll is gesloten
           staff: Alleen stafleden
+        poll_groups:
+          label: Beperk het stemmen tot deze groepen
         poll_chart_type:
+          label: Resultaatgrafiek
           bar: Staaf
           pie: Cirkel
         poll_config:
+          max: Max. keuzes
+          min: Min. keuzes
           step: Stap
         poll_public:
           label: Tonen wie er heeft gestemd
         poll_title:
           label: Titel (optioneel)
+        poll_options:
+          label: Opties (één per regel)
+          add: Optie toevoegen
         automatic_close:
           label: Poll automatisch sluiten
+        show_advanced: "Geavanceerde opties tonen"
+        hide_advanced: "Geavanceerde opties verbergen"

@@ -4,8 +4,8 @@
 }
 
 .presence-users {
-  background-color: var(--secondary, $secondary);
-  color: var(--primary-medium, $primary-medium);
+  background-color: var(--secondary);
+  color: var(--primary-medium);
   display: flex;
 
   span.presence-text {

@@ -51,7 +51,7 @@
           {{d-button
             icon="check"
             class="btn-primary"
-            disabled=(not users)
+            disabled=(if users false true)
             action=(action "notifyUsers")
           }}
         </div>

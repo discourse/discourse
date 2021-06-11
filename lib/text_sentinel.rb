@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Whe use ActiveSupport mb_chars from here to properly support non ascii downcase
+# We use ActiveSupport mb_chars from here to properly support non ascii downcase
 # TODO remove when ruby 2.4 lands
 require 'active_support/core_ext/string/multibyte'
 
@@ -68,7 +68,9 @@ class TextSentinel
   def seems_unpretentious?
     return true if skipped_locale.include?(SiteSetting.default_locale)
     # Don't allow super long words if there is a word length maximum
-    @opts[:max_word_length].blank? || @text.split(/\s|\/|-|\.|:/).map(&:size).max <= @opts[:max_word_length]
+
+    @opts[:max_word_length].blank? ||
+    (@text.split(/\s|\/|-|\.|:/).map(&:size).max || 0) <= @opts[:max_word_length]
   end
 
   def seems_quiet?

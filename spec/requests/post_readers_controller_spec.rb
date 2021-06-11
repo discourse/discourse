@@ -48,7 +48,7 @@ describe PostReadersController do
         assert_reader_is_correctly_serialized(reader_data, reader, @post)
       end
 
-      it 'return an empty list when nodobody read unti that post' do
+      it 'return an empty list when nodobody read until that post' do
         TopicUser.create!(user: reader, topic: @group_message, last_read_post_number: 1)
 
         get '/post_readers.json', params: { id: @post.id }

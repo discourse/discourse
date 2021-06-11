@@ -1,6 +1,8 @@
 import {
   acceptance,
+  count,
   exists,
+  query,
   queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -140,16 +142,13 @@ acceptance("Topic", function (needs) {
   test("Marking a topic as wiki", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      queryAll("a.wiki").length === 0,
-      "it does not show the wiki icon"
-    );
+    assert.ok(!exists("a.wiki"), "it does not show the wiki icon");
 
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
     await click(".btn.wiki");
 
-    assert.ok(queryAll("button.wiki").length === 1, "it shows the wiki icon");
+    assert.equal(count("button.wiki"), 1, "it shows the wiki icon");
   });
 
   test("Visit topic routes", async function (assert) {
@@ -376,7 +375,7 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".gap");
 
-    assert.equal(queryAll(".gap").length, 0, "it hides gap");
+    assert.ok(!exists(".gap"), "it hides gap");
   });
 
   test("Quoting a quote keeps the original poster name", async function (assert) {
@@ -487,12 +486,12 @@ acceptance("Topic with title decorated", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
-      queryAll(".fancy-title")[0].innerText.endsWith("-280-topic-title"),
+      query(".fancy-title").innerText.endsWith("-280-topic-title"),
       "it decorates topic title"
     );
 
     assert.ok(
-      queryAll(".raw-topic-link:nth-child(1)")[0].innerText.endsWith(
+      query(".raw-topic-link:nth-child(1)").innerText.endsWith(
         "-27331-topic-list-item-title"
       ),
       "it decorates topic list item title"

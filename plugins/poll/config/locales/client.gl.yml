@@ -77,6 +77,7 @@ gl:
         title: Construír a enquisa
         insert: Inserir enquisa
         help:
+          options_min_count: Introducir cando menos 1 opción.
           invalid_values: O valor mínimo ten de ser menor có valor máximo.
           min_step_value: O valor mínimo do paso é 1
         poll_type:
@@ -98,3 +99,5 @@ gl:
           label: Título (opcional)
         automatic_close:
           label: Pechar automaticamente a enquisa
+        show_advanced: "Amosar opcións avanzadas"
+        hide_advanced: "Agochar opcións avanzadas"

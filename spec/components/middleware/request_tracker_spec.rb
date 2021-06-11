@@ -205,7 +205,6 @@ describe Middleware::RequestTracker do
     end
 
     after do
-      RateLimiter.disable
       Rails.logger = @old_logger
     end
 

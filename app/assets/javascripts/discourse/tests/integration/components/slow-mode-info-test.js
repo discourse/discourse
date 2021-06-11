@@ -2,15 +2,17 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
-  queryAll,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("doesn't render if the topic is closed", {
-    template: "{{slow-mode-info topic=topic}}",
+    template: hbs`{{slow-mode-info topic=topic}}`,
 
     beforeEach() {
       this.set("topic", { slow_mode_seconds: 3600, closed: true });
@@ -22,7 +24,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   });
 
   componentTest("doesn't render if the slow mode is disabled", {
-    template: "{{slow-mode-info topic=topic}}",
+    template: hbs`{{slow-mode-info topic=topic}}`,
 
     beforeEach() {
       this.set("topic", { slow_mode_seconds: 0, closed: false });
@@ -34,19 +36,19 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
   });
 
   componentTest("renders if slow mode is enabled", {
-    template: "{{slow-mode-info topic=topic}}",
+    template: hbs`{{slow-mode-info topic=topic}}`,
 
     beforeEach() {
       this.set("topic", { slow_mode_seconds: 3600, closed: false });
     },
 
     test(assert) {
-      assert.ok(queryAll(".slow-mode-heading").length === 1);
+      assert.equal(count(".slow-mode-heading"), 1);
     },
   });
 
   componentTest("staff and TL4 users can disable slow mode", {
-    template: "{{slow-mode-info topic=topic user=user}}",
+    template: hbs`{{slow-mode-info topic=topic user=user}}`,
 
     beforeEach() {
       this.setProperties({
@@ -56,12 +58,12 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll(".slow-mode-remove").length === 1);
+      assert.equal(count(".slow-mode-remove"), 1);
     },
   });
 
   componentTest("regular users can't disable slow mode", {
-    template: "{{slow-mode-info topic=topic user=user}}",
+    template: hbs`{{slow-mode-info topic=topic user=user}}`,
 
     beforeEach() {
       this.setProperties({

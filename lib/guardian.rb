@@ -354,7 +354,7 @@ class Guardian
     return false if !authenticated?
 
     invites_available = SiteSetting.max_invites_per_day.to_i.positive?
-    trust_level_requirement_met = !SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+    trust_level_requirement_met = @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
 
     if !is_staff?
       return false if !invites_available
@@ -372,7 +372,8 @@ class Guardian
     return false unless authenticated?
     is_topic = object.is_a?(Topic)
     return true if is_admin? && !is_topic
-    return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
+    return false if SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?
+    return false if SiteSetting.must_approve_users? && !is_staff?
     return false unless can_see?(object)
     return false if groups.present?
 
@@ -527,6 +528,10 @@ class Guardian
 
   def can_see_about_stats?
     true
+  end
+
+  def can_see_site_contact_details?
+    !SiteSetting.login_required? || authenticated?
   end
 
   def auth_token

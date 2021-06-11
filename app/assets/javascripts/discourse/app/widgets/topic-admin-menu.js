@@ -52,7 +52,7 @@ createWidget("topic-admin-menu-button", {
       result.push(
         this.attach("button", {
           className:
-            "popup-menu-button toggle-admin-menu" +
+            "btn-default popup-menu-button toggle-admin-menu" +
             (attrs.addKeyboardTargetClass ? " keyboard-target-admin-menu" : ""),
           title: "topic_admin_menu",
           icon: "wrench",

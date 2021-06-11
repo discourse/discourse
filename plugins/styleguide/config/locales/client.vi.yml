@@ -8,13 +8,25 @@ vi:
   js:
     styleguide:
       sections:
+        typography:
+          example: "Chào mừng đến với Discourse"
         date_time_inputs:
           title: "Ngày/giờ nhập"
+        colors:
+          title: "Màu sắc"
+        categories:
+          title: "Chuyên mục"
+        navigation:
+          title: "Điều hướng"
         navigation_stacked:
           title: "Điều hướng xếp chồng lên nhau"
+        categories_list:
+          title: "Danh sách Danh mục"
         topic_statuses:
           title: "Trạng thái chủ đề"
         post:
           title: "Bài đăng"
+        suggested_topics:
+          title: "Chủ đề tương tự"
         modal:
           title: "Phương thức"

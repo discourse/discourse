@@ -35,6 +35,7 @@
   &.no-text {
     .d-icon {
       margin-right: 0;
+      min-height: 17px;
     }
   }
   @include hover {
@@ -298,10 +299,9 @@
 
   &:focus {
     outline: none;
-    background: var(--primary-medium);
-    color: var(--secondary);
+    background: var(--primary-low);
     .d-icon {
-      color: var(--primary-low);
+      color: var(--primary);
     }
   }
 }

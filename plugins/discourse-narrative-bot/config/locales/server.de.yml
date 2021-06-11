@@ -277,11 +277,11 @@ de:
           (Und ja, mein Benutzername wird wirklich _disco_ geschrieben. Genau wie die Tanzmusik aus den 1970er Jahren. Ich [liebe das Nachtleben!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Wir mögen freundliche Diskussionen, und wir benötigen deine Hilfe, damit [alles zivilisiert bleibt](%{guidelines_url}). Wenn du ein Problem bemerkst, melde dies bitte und lass es diskret den Autor oder [unser hilfreiches Team](%{about_url}) wissen.
+          Wir mögen unsere Diskussionen freundlich und wir brauchen deine Hilfe, um Dinge zivilisiert zu halten (%{guidelines_url}). Wenn Sie ein Problem sehen, lassen Sie bitte den Autor oder [unser hilfsbereites Personal](%{about_url}) davon in Kenntnis setzen. Es gibt viele Gründe, warum Sie vielleicht einen Beitrag markieren wollen, von einem infizierten themenübergreifenden Vorschlag bis hin zu einer eindeutigen Verletzung von Gemeinschaftsstandards. Wenn du **Etwas anderes** auswählst, startest du eine private Nachrichten-Diskussion mit den Moderatoren, um weitere Fragen zu stellen.
 
-          > :imp: Ich habe dir hier etwas anstößiges geschrieben
+          > :imp: Ich habe hier etwas Ungewöhnliches geschrieben:
 
-          Ich denke, du weißt was zu tun ist. Leg los und **melde diesen Beitrag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> als unangemessen!
+          Geh voran und **markiere diesen Beitrag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> und wähle **Es ist unangemessen** als Grund!
         reply: |-
           [Unser Team](%{base_uri}/groups/staff) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
         not_found: |-

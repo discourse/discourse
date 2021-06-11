@@ -6,6 +6,8 @@ import { isDocumentRTL } from "discourse/lib/text-direction";
 import { next } from "@ember/runloop";
 
 export default Component.extend({
+  warning: null,
+
   @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
   visibleTargets(targets, onlyOverridden, showAdvanced) {
     return targets.filter((target) => {
@@ -119,6 +121,14 @@ export default Component.extend({
 
     onlyOverriddenChanged(value) {
       this.onlyOverriddenChanged(value);
+    },
+
+    save() {
+      this.attrs.save();
+    },
+
+    setWarning(message) {
+      this.set("warning", message);
     },
   },
 });

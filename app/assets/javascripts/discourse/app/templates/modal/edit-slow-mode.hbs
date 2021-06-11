@@ -33,8 +33,8 @@
       labelClasses="slow-mode-label"
       includeFarFuture=false
       clearable=true
-      input=enabledUntil
-      onChangeInput=(action (mut enabledUntil))
+      input=model.slow_mode_enabled_until
+      onChangeInput=(action (mut model.slow_mode_enabled_until))
     }}
   </div>
 {{/d-modal-body}}
@@ -43,7 +43,7 @@
   {{d-button class="btn-primary"
       disabled=submitDisabled
       icon="hourglass-start"
-      label="topic.slow_mode_update.save"
+      label=saveButtonLabel
       action=(action "enableSlowMode")}}
 
   {{conditional-loading-spinner size="small" condition=loading}}

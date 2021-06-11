@@ -27,7 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    margin: 0.5em 0 0;
+    margin: 0;
 
     button {
       &.select-kit-header {
@@ -36,10 +36,6 @@
         flex: 1 1 auto;
       }
     }
-  }
-
-  .navigation-controls {
-    margin-bottom: 0.667em;
   }
 
   .nav-pills {
@@ -378,7 +374,7 @@ tr.category-topic-link {
   padding: 0.5em 0 0.25em;
   border-top: 1px solid var(--primary-low) !important;
   border-bottom: 1px solid var(--primary-low) !important;
-  margin-bottom: 2em;
+  margin: 1em 0 2em;
 }
 
 .category-box {
@@ -408,14 +404,6 @@ tr.category-topic-link {
 
 .fade.in {
   opacity: 1;
-}
-
-.tags-controls {
-  display: flex;
-  h2 {
-    order: -1;
-    margin-right: auto;
-  }
 }
 
 .category-heading {

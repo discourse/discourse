@@ -2,7 +2,9 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -27,8 +29,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll(".faq-priority").length);
-        assert.ok(!queryAll(".faq-link").length);
+        assert.ok(exists(".faq-priority"));
+        assert.ok(!exists(".faq-link"));
       },
     });
 
@@ -41,8 +43,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".faq-priority").length);
-        assert.ok(queryAll(".faq-link").length);
+        assert.ok(!exists(".faq-priority"));
+        assert.ok(exists(".faq-link"));
       },
     });
 
@@ -54,7 +56,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".admin-link").length);
+        assert.ok(!exists(".admin-link"));
       },
     });
 
@@ -67,9 +69,9 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll(".admin-link").length);
-        assert.ok(queryAll(".review").length);
-        assert.ok(!queryAll(".settings-link").length);
+        assert.ok(exists(".admin-link"));
+        assert.ok(exists(".review"));
+        assert.ok(!exists(".settings-link"));
       },
     });
 
@@ -81,7 +83,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll(".settings-link").length);
+        assert.ok(exists(".settings-link"));
       },
     });
 
@@ -89,8 +91,8 @@ discourseModule(
       template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".new-topics-link").length);
-        assert.ok(queryAll(".unread-topics-link").length);
+        assert.ok(exists(".new-topics-link"));
+        assert.ok(exists(".unread-topics-link"));
       },
     });
 
@@ -99,13 +101,13 @@ discourseModule(
       anonymous: true,
 
       test(assert) {
-        assert.ok(queryAll("li[class='']").length === 0);
-        assert.ok(queryAll(".latest-topics-link").length);
-        assert.ok(!queryAll(".new-topics-link").length);
-        assert.ok(!queryAll(".unread-topics-link").length);
-        assert.ok(queryAll(".top-topics-link").length);
-        assert.ok(queryAll(".badge-link").length);
-        assert.ok(queryAll(".category-link").length > 0);
+        assert.ok(!exists("li[class='']"));
+        assert.ok(exists(".latest-topics-link"));
+        assert.ok(!exists(".new-topics-link"));
+        assert.ok(!exists(".unread-topics-link"));
+        assert.ok(exists(".top-topics-link"));
+        assert.ok(exists(".badge-link"));
+        assert.ok(exists(".category-link"));
       },
     });
 
@@ -120,7 +122,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".category-link").length, 8);
+        assert.equal(count(".category-link"), 8);
         assert.equal(
           queryAll(".category-link .category-name").text(),
           this.site
@@ -142,7 +144,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".category-link").length, 8);
+        assert.equal(count(".category-link"), 8);
         assert.equal(
           queryAll(".category-link .category-name").text(),
           this.site
@@ -171,20 +173,22 @@ discourseModule(
             } else if (unreadCategoryIds.length === 0) {
               unreadCategoryIds.push(c.id);
               for (let i = 0; i < 5; i++) {
-                c.topicTrackingState.states["t123" + i] = {
+                c.topicTrackingState.modifyState(123 + i, {
                   category_id: c.id,
                   last_read_post_number: 1,
                   highest_post_number: 2,
                   notification_level: NotificationLevels.TRACKING,
-                };
+                  unread_not_too_old: true,
+                });
               }
             } else {
               unreadCategoryIds.splice(0, 0, c.id);
               for (let i = 0; i < 10; i++) {
-                c.topicTrackingState.states["t321" + i] = {
+                c.topicTrackingState.modifyState(321 + i, {
                   category_id: c.id,
                   last_read_post_number: null,
-                };
+                  created_in_new_period: true,
+                });
               }
               return false;
             }
@@ -195,7 +199,11 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".category-link").length, maxCategoriesToDisplay);
+        assert.equal(
+          count(".category-link"),
+          maxCategoriesToDisplay,
+          "categories displayed limited by header_dropdown_category_count"
+        );
 
         categoriesByCount = categoriesByCount.filter(
           (c) => !mutedCategoryIds.includes(c.id)
@@ -211,8 +219,12 @@ discourseModule(
         assert.equal(
           queryAll(".category-link .category-name").text(),
           ids
-            .map((i) => categoriesByCount.find((c) => c.id === i).name)
-            .join("")
+            .map(
+              (id) =>
+                categoriesByCount.find((category) => category.id === id).name
+            )
+            .join(""),
+          "top categories are in the correct order"
         );
       },
     });
@@ -225,7 +237,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".badge-link").length);
+        assert.ok(!exists(".badge-link"));
       },
     });
 
@@ -233,7 +245,7 @@ discourseModule(
       template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".badge-link").length);
+        assert.ok(exists(".badge-link"));
       },
     });
 
@@ -241,7 +253,7 @@ discourseModule(
       template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".user-directory-link").length);
+        assert.ok(exists(".user-directory-link"));
       },
     });
 
@@ -253,7 +265,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".user-directory-link").length);
+        assert.ok(!exists(".user-directory-link"));
       },
     });
 
@@ -261,8 +273,8 @@ discourseModule(
       template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".about-link").length);
-        assert.ok(queryAll(".keyboard-shortcuts-link").length);
+        assert.ok(exists(".about-link"));
+        assert.ok(exists(".keyboard-shortcuts-link"));
       },
     });
   }

@@ -60,12 +60,57 @@ describe UserSerializer do
   end
 
   context "with a user" do
+    let(:admin_user) { Fabricate(:admin) }
     let(:scope) { Guardian.new }
     fab!(:user) { Fabricate(:user) }
     let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
     fab!(:upload) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
+
+    context "when the scope user is admin" do
+      let(:scope) { Guardian.new(admin_user) }
+
+      it "returns the user's category notification levels, not the scope user's" do
+        category1 = Fabricate(:category)
+        category2 = Fabricate(:category)
+        category3 = Fabricate(:category)
+        category4 = Fabricate(:category)
+        CategoryUser.create(category: category1, user: user, notification_level: CategoryUser.notification_levels[:muted])
+        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:muted])
+        CategoryUser.create(category: category2, user: user, notification_level: CategoryUser.notification_levels[:tracking])
+        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:tracking])
+        CategoryUser.create(category: category3, user: user, notification_level: CategoryUser.notification_levels[:watching])
+        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:watching])
+        CategoryUser.create(category: category4, user: user, notification_level: CategoryUser.notification_levels[:regular])
+        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:regular])
+
+        expect(json[:muted_category_ids]).to eq([category1.id])
+        expect(json[:tracked_category_ids]).to eq([category2.id])
+        expect(json[:watched_category_ids]).to eq([category3.id])
+        expect(json[:regular_category_ids]).to eq([category4.id])
+      end
+
+      it "returns the user's tag notification levels, not the scope user's" do
+        tag1 = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+        tag3 = Fabricate(:tag)
+        tag4 = Fabricate(:tag)
+        TagUser.create(tag: tag1, user: user, notification_level: TagUser.notification_levels[:muted])
+        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:muted])
+        TagUser.create(tag: tag2, user: user, notification_level: TagUser.notification_levels[:tracking])
+        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:tracking])
+        TagUser.create(tag: tag3, user: user, notification_level: TagUser.notification_levels[:watching])
+        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:watching])
+        TagUser.create(tag: tag4, user: user, notification_level: TagUser.notification_levels[:watching_first_post])
+        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:watching_first_post])
+
+        expect(json[:muted_tags]).to eq([tag1.name])
+        expect(json[:tracked_tags]).to eq([tag2.name])
+        expect(json[:watched_tags]).to eq([tag3.name])
+        expect(json[:watching_first_post_tags]).to eq([tag4.name])
+      end
+    end
 
     context "with `enable_names` true" do
       before do

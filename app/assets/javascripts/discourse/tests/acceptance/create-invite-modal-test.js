@@ -1,7 +1,10 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  exists,
+} from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import I18n from "I18n";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   let deleted;
@@ -23,7 +26,16 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     };
 
     server.post("/invites", () => helper.response(inviteData));
-    server.put("/invites/1", () => helper.response(inviteData));
+    server.put("/invites/1", (request) => {
+      const data = helper.parsePostData(request.requestBody);
+      if (data.email === "error") {
+        return helper.response(422, {
+          errors: ["error isn't a valid email address."],
+        });
+      } else {
+        return helper.response(inviteData);
+      }
+    });
 
     server.delete("/invites", () => {
       deleted = true;
@@ -44,18 +56,9 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     );
 
     await click(".modal-footer .show-advanced");
-    await assert.ok(
-      find(".invite-to-groups").length > 0,
-      "shows advanced options"
-    );
-    await assert.ok(
-      find(".invite-to-topic").length > 0,
-      "shows advanced options"
-    );
-    await assert.ok(
-      find(".invite-expires-at").length > 0,
-      "shows advanced options"
-    );
+    await assert.ok(exists(".invite-to-groups"), "shows advanced options");
+    await assert.ok(exists(".invite-to-topic"), "shows advanced options");
+    await assert.ok(exists(".invite-expires-at"), "shows advanced options");
 
     await click(".modal-close");
     assert.ok(deleted, "deletes the invite if not saved");
@@ -65,17 +68,11 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    assert.ok(
-      find("tbody tr").length === 0,
-      "does not show invite before saving"
-    );
+    assert.ok(!exists("tbody tr"), "does not show invite before saving");
 
     await click(".btn-primary");
 
-    assert.ok(
-      find("tbody tr").length === 1,
-      "adds invite to list after saving"
-    );
+    assert.equal(count("tbody tr"), 1, "adds invite to list after saving");
 
     await click(".modal-close");
     assert.notOk(deleted, "does not delete invite on close");
@@ -95,11 +92,11 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click("#invite-type");
+    await fillIn("#invite-email", "error");
     await click(".invite-link .btn");
     assert.equal(
       find("#modal-alert").text(),
-      I18n.t("user.invited.invite.blank_email")
+      "error isn't a valid email address."
     );
   });
 });
@@ -130,10 +127,7 @@ acceptance("Invites - Link Invites", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    assert.ok(
-      find("#invite-max-redemptions").length,
-      "shows max redemptions field"
-    );
+    assert.ok(exists("#invite-max-redemptions"), "shows max redemptions field");
   });
 });
 
@@ -172,12 +166,10 @@ acceptance("Invites - Email Invites", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click("#invite-type");
-
-    assert.ok(find("#invite-email").length, "shows email field");
-
+    assert.ok(exists("#invite-email"), "shows email field");
     await fillIn("#invite-email", "test@example.com");
-    assert.ok(find(".save-invite").length, "shows save without email button");
+
+    assert.ok(exists(".save-invite"), "shows save without email button");
     await click(".save-invite");
     assert.ok(
       lastRequest.requestBody.indexOf("skip_email=true") !== -1,
@@ -185,7 +177,7 @@ acceptance("Invites - Email Invites", function (needs) {
     );
 
     await fillIn("#invite-email", "test2@example.com");
-    assert.ok(find(".send-invite").length, "shows save and send email button");
+    assert.ok(exists(".send-invite"), "shows save and send email button");
     await click(".send-invite");
     assert.ok(
       lastRequest.requestBody.indexOf("send_email=true") !== -1,

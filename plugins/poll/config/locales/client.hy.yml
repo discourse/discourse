@@ -42,6 +42,8 @@ hy:
       automatic_close:
         closes_in: "Փակվում է <strong>%{timeLeft}</strong> անց:"
         age: "Փակված է՝ <strong>%{age}</strong>"
+      breakdown:
+        count: "Քանակ"
       error_while_toggling_status: "Ներողություն, այս հարցման կարգավիճակը փոխելիս տեղի է ունեցել սխալ:"
       error_while_casting_votes: "Ներողություն, Ձեր քվեարկելիս տեղի է ունեցել սխալ:"
       error_while_fetching_voters: "Ներողություն, քվեարկողներին ցուցադրելիս տեղի է ունեցել սխալ:"

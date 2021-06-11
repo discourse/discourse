@@ -19,6 +19,7 @@ sl:
           insert: Dodaj
           advanced_mode: Napredni način
           simple_mode: Enostavni način
+          format_description: "Format, uporabljen za prikaz datuma uporabniku. Uporabite Z, da prikažete odmik in zz za ime časovnega pasu."
           timezones_title: Časovni pas za prikaz
           timezones_description: Časovni pas bo uporabljen za prikaz v predogledu ali kot rezerva.
           recurring_title: Ponovitev

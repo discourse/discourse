@@ -180,6 +180,9 @@ ca:
           Excel·lent imatge. He premut el botó 'M'agrada' :heart: perquè sapigueu que m'ha agradat molt :heart_eyes:
         like_not_found: |-
           Us heu descuidat de fer clic en 'M'agrada' :heart: en la meva [publicació?](%{url}) :crying_cat_face:
+      likes:
+        not_found: |-
+          Us heu descuidat de fer clic en 'M'agrada' :heart: en la meva [publicació?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           ¿Podeu convertir algunes paraules en **negreta** o _cursiva_ en la vostra resposta?
@@ -250,12 +253,6 @@ ca:
 
           (Doncs sí, el meu nom d'usuari és _disco_, com en les discos de moda dels anys 70. [M'encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Ens agrada que les nostres discussions siguin amistoses, i necessitem que ens ajudeu a [mantenir un ambient civilitzat](%{guidelines_url}). Si detecteu qualsevol problema, feu-ho saber de manera privada a l'autor, o [a l'equip responsable](%{about_url}).
-
-          > :imp: He escrit una cosa desagradable aquí
-
-          Crec que ja sabeu què s'ha de fer. Tireu avant i **marqueu amb bandera la publicació** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> com a inapropiada!
         reply: |-
           [El nostre equip responsable](%{base_uri}/groups/staff) serà notificat de manera privada sobre la vostra bandera. Si hi ha prou membres de la comunitat que marquen amb bandera una publicació, també serà amagada automàticament per precaució. (Com que no he escrit un missatge desagradable :angel:, he tirat avant i de moment he eliminat la bandera.)
       search:

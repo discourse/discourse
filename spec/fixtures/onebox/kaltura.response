@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+
+<!--[if lte IE 7]> <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8]>     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">             <!--<![endif]-->
+
+<head>
+    <link rel="search" type="application/opensearchdescription+xml" href="/osd">
+<meta http-equiv='X-UA-Compatible' content='requiresActiveX=true' /><!-- viewhook start modulesHeader -->
+ <meta name="google-site-verification" content="eCsPknr-P4BkdOLI61hdhotMYXlbop2K1pkdrBW0Rjc" /> 
+<!-- BEGIN FACEBOOK OPEN GRAPH TAGS -->
+    <meta property="og:title" content="Kaltura Overview" />
+    <meta property="og:url" content="https://videos.kaltura.com/media/Kaltura+Overview/0_e2ea6ygt" />
+
+    <meta property="og:description" content="Kaltura powers any video experience. Watch this video to get a quick glimpse into the breadth and depth of the Kaltura Video Platform and our market-leading video solutions." />
+    <meta property="og:type" content="video" />
+    <meta property="og:image" content="http://cdnapi.kaltura.com/p/811441/sp/81144100/thumbnail/entry_id/0_e2ea6ygt/width/534" />
+    <meta property="og:image:secure_url" content="https://cdnapisec.kaltura.com/p/811441/sp/81144100/thumbnail/entry_id/0_e2ea6ygt/width/534" />
+
+
+    <!-- direct asset ref -->
+    <meta property="og:video" content="https://cdnapisec.kaltura.com/p/811441/sp/81144100/playManifest/entryId/0_e2ea6ygt/flavorId/0_422v9u1n/format/url/protocol/http/a.mp4" />
+    <meta property="og:video:type" content="video/mp4" />
+    <meta property="og:site_name" content="Kaltura Videos" />
+    <!-- Facebook iframe embed -->
+    <meta property="og:video:url" content="https://cdnapisec.kaltura.com//p/811441/sp/81144100/embedIframeJs/uiconf_id/40430081/partner_id/811441?iframeembed=true&playerId=kaltura_player&entry_id=0_e2ea6ygt&widget_id=1_c6hc9mf5">
+    <meta property="og:video:secure_url" content="https://cdnapisec.kaltura.com//p/811441/sp/81144100/embedIframeJs/uiconf_id/40430081/partner_id/811441?iframeembed=true&playerId=kaltura_player&entry_id=0_e2ea6ygt&widget_id=1_c6hc9mf5">
+    <meta property="og:video:type" content="text/html">
+    <meta property="og:video:width" content="534">
+    <meta property="og:video:height" content="300">
+    <!-- legacy swf embed -->
+    <meta property="og:video:url" content="https://cdnapisec.kaltura.com/index.php/kwidget/wid/_811441/uiconf_id/40430081/entry_id/0_e2ea6ygt?widget_id=1_c6hc9mf5" />
+    <meta property="og:video:secure_url" content="https://cdnapisec.kaltura.com/index.php/kwidget/wid/_811441/uiconf_id/40430081/entry_id/0_e2ea6ygt?widget_id=1_c6hc9mf5" />
+    <meta property="og:video:type" content="application/x-shockwave-flash">
+    <meta property="og:video:width" content="534" />
+    <meta property="og:video:height" content="300" />
+
+<!-- END FACEBOOK OPEN GRAPH TAGS -->
+
+<!-- BEGIN TWITTER TAGS -->
+<meta name="twitter:card" content="player">
+<meta name="twitter:site" content="@kaltura">
+<meta name="twitter:title" content="Kaltura Overview">
+<meta name="twitter:description" content="Kaltura powers any video experience. Watch this video to get a quick glimpse into the breadth and depth of the Kaltura Video Platform and our market-leading video solutions.">
+<meta name="twitter:image" content="https://cdnapisec.kaltura.com/p/811441/sp/81144100/thumbnail/entry_id/0_e2ea6ygt/width/534">
+<meta name="twitter:player" content="https://cdnapisec.kaltura.com/p/811441/sp/81144100/embedIframeJs/uiconf_id/40430081/partner_id/811441?iframeembed=true&playerId=kaltura_player&entry_id=0_e2ea6ygt&widget_id=1_c6hc9mf5">
+<meta name="twitter:player:width" content="600">
+<meta name="twitter:player:height" content="370">
+<meta name="twitter:player:stream" content="https://cdnapisec.kaltura.com/p/811441/sp/81144100/playManifest/entryId/0_e2ea6ygt/flavorId/0_422v9u1n/format/url/protocol/http/a.mp4">
+<meta name="twitter:player:stream:content_type" content="video/mp4; codecs=&quot;avc1.42E01E1, mp4a.40.2&quot;">
+
+<!-- END TWITTER TAGS -->
+
+<!-- viewhook end modulesHeader --><meta name="xsrf-ajax-nonce" content="eyJpdiI6IkFPSkpzNWowb0ZcL0ROOVwvUHdISVBTUT09IiwidmFsdWUiOiIwRG11UGp5T3dsZEdUMXgramE2cUNtRmQrd1dkc0lUYkl4bWtFTERLaHgyQzJrK3JpQlwvNnR2d1dzeEZaN1hENDhjMG5RbjlOSDZvMHJXcXhjaTh3bG8xZmMyUXRtWXNOTXh3SGFtUzhneGo2c00xWUI0bTBUTUlHWnhoMitKXC9FIiwibWFjIjoiZWU3N2IwNDQyNGZhMmVjMWQwMmI4ZjI5ZWE4ZGMwMDU3YmM3ZTMzOTNjMTZiY2ExYTlmZDAxMDljOWE0MzMxMiJ9" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="smartbanner:title" content="Kaltura MediaSpace Go" />
+<meta name="smartbanner:author" content=" " />
+<meta name="smartbanner:price" content="FREE" />
+<meta name="smartbanner:price-suffix-apple" content=" - On the App Store" />
+<meta name="smartbanner:price-suffix-google" content=" - In Google Play" />
+<meta name="smartbanner:icon-apple" content="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/kmsapi/asset/kaltura_logo.png" />
+<meta name="smartbanner:icon-google" content="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/kmsapi/asset/kaltura_logo.png" />
+<meta name="smartbanner:button" content="OPEN" />
+<meta name="smartbanner:button-url-apple" content="https://kmsgoapplication.page.link/?link=https%3A%2F%2Fvideos.kaltura.com%2Fid%2F0_e2ea6ygt%3Fwidth%3D400%26height%3D285%26playerId%3D32783592&amp;ibi=com.kaltura.kmsv2&amp;isi=1054967774" />
+<meta name="smartbanner:button-url-google" content="https://kmsgoapplication.page.link/?link=https%3A%2F%2Fvideos.kaltura.com%2Fid%2F0_e2ea6ygt%3Fwidth%3D400%26height%3D285%26playerId%3D32783592&amp;apn=com.kms.kaltura.kmsapplication" />
+<meta name="smartbanner:enabled-platforms" content="android,ios" />
+<meta name="smartbanner:hide-ttl" content="10000" />
+<meta name="smartbanner:custom-design-modifier" content="kmsapi" />
+<meta name="smartbanner:disable-positioning" content="true" /><title>Kaltura Overview - Kaltura Videos</title>
+
+<style type="text/css" media="screen">
+<!--
+.mymediaTable .published .accordion-toggle i:before{content: 'Published';}
+-->
+</style>
+<style type="text/css" media="screen">
+<!--
+.mymediaTable .pending .accordion-toggle i:before{content: 'Published';}
+-->
+</style>
+<style type="text/css" media="screen">
+<!--
+.mymediaTable .rejected .accordion-toggle i:before{content: 'Published';}
+-->
+</style>
+<!--[if lt IE 9]> <style type="text/css" media="screen">
+body{-ms-overflow-y : scroll;}
+</style><![endif]--><link href="https://cdnsecakmi.kaltura.com/p/811441/sp/81144100/raw/entry_id/1_i7gaj954/version/100000/direct_serve/1/a.css" media="screen" rel="stylesheet" type="text/css" /><link href="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/consolidated/8b90fe93376ff00c31142c4171ab38c6.css" media="screen" rel="stylesheet" type="text/css" /><link href="https://cdnsecakmi.kaltura.com/p/811441/sp/81144100/raw/entry_id/1_3n5bvb8c/version/100001" rel="icon" /><link href="https://cdnsecakmi.kaltura.com/p/811441/sp/81144100/raw/entry_id/1_3n5bvb8c/version/100001" rel="apple-touch-icon" /><link href="https://cdnsecakmi.kaltura.com/p/811441/sp/81144100/raw/entry_id/1_3n5bvb8c/version/100001" rel="icon" type="image/x-icon" /><link href="https://cdnsecakmi.kaltura.com/p/811441/sp/81144100/raw/entry_id/1_rzou9p1p/version/100001/direct_serve/1/a.css" media="screen" rel="stylesheet" type="text/css" /><!--[if lt IE 10]> <link href="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/css/ieadditions.css" media="screen" rel="stylesheet" type="text/css" /><![endif]--><!--[if IE 7]> <link href="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/fontAwesome/font-awesome-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]--><!--[if IE 7]> <link href="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/css/bootstrap-ie7buttonfix.css" media="screen" rel="stylesheet" type="text/css" /><![endif]--><!--[if IE 8]> <link href="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/css/bootstrap-ie8buttonfix.css" media="screen" rel="stylesheet" type="text/css" /><![endif]--><script type="text/javascript">
+    //<![CDATA[
+if (typeof(LOCALE) == 'object'){
+	var locale = {"Top":"Top","Back":"Back","* Required To Publish":"* Required To Publish","Press CTRL-C to copy":"Press CTRL-C to copy","Load More":"Load More","new tag":"new tag","Sorry, this action requires Adobe Flash.":"Sorry, this action requires Adobe Flash.","One result is available, press enter to select it.":"One result is available, press enter to select it.","%1 results are available, use up and down arrow keys to navigate.":"%1 results are available, use up and down arrow keys to navigate.","Loading failed":"Loading failed","Please enter %1 or more %2":"Please enter %1 or more %2","Please delete %1 %2":"Please delete %1 %2","You can only select %1 %2":"You can only select %1 %2","Loading more results\u2026":"Loading more results\u2026","Searching\u2026":"Searching\u2026","100%":"100%","Loading":"Loading","Close":"Close","thumbnail for channel %0":"thumbnail for channel %0","%0 Galleries found":"%0 Galleries found","%0 Channels found":"%0 Channels found","%0 Gallery found":"%0 Gallery found","%0 Channel found":"%0 Channel found","Found %0 result":"Found %0 result","Found %0 results":"Found %0 results","Go to Channel Results":"Go to Channel Results","Go to Gallery Results":"Go to Gallery Results","No more galleries found.":"No more galleries found.","No Galleries found":"No Galleries found","Slide":"Slide","%1 Slide":"%1 Slide","%1 Slides":"%1 Slides","Tags":"Tags","%1 Tag":"%1 Tag","%1 Tags":"%1 Tags","Caption":"Caption","%1 Caption":"%1 Caption","%1 Captions":"%1 Captions","Chapter":"Chapter","%1 Chapters":"%1 Chapters","%1 Chapter":"%1 Chapter","Quiz":"Quiz","%1 Quiz":"%1 Quiz","Details":"Details","%1 Details":"%1 Details","Poll":"Poll","%1 Polls":"%1 Polls","%1 Poll":"%1 Poll","Metadata":"Metadata","%1 Comment":"%1 Comment","Comment":"Comment","%1 Comments":"%1 Comments","selected":"selected","Appears in":"Appears in","Created by":"Created by","Show All":"Show All","Show Less":"Show Less","Show More":"Show More","A:":"A:","Q:":"Q:","Rejected By Admin":"Rejected By Admin","Keyword found in:":"Keyword found in:","Something went wrong":"Something went wrong","Today":"Today","More Filters":"More Filters","Filters":"Filters","Clear All":"Clear All","N\/A":"N\/A","More":"More","Previous Filters":"Previous Filters","Next Filters":"Next Filters","%1 second":"%1 second","%1 seconds":"%1 seconds","%1 minute":"%1 minute","%1 minutes":"%1 minutes","%1 hour":"%1 hour","%1 hours":"%1 hours","a few seconds ago":"A few seconds ago","%1 seconds ago":"%1 Seconds ago","%1 minutes ago":"%1 Minutes ago","a minute ago":"A minute ago","%1 hours ago":"%1 Hours ago","an hour ago":"An hour ago","%1 days ago":"%1 Days ago","a day ago":"A day ago","%1 months ago":"%1 Months ago","a month ago":"A month ago","%1 years ago":"%1 Years ago","a year ago":"A year ago","Search":"Search","Published":"Published","Private":"Private","thumbnail for entry ID":"thumbnail for entry ID","click to navigate to entry":"click to navigate to entry","Loading info...":"Loading info...","related entry ID":"related entry ID","click to see thumbnail":"click to see thumbnail","The bulk operation for %1 %2 has completed":"The bulk operation for %1 %2 has completed"};
+    for (var key in locale) {
+        LOCALE[key] = locale[key];
+    }
+}
+else {
+	LOCALE = {"Top":"Top","Back":"Back","* Required To Publish":"* Required To Publish","Press CTRL-C to copy":"Press CTRL-C to copy","Load More":"Load More","new tag":"new tag","Sorry, this action requires Adobe Flash.":"Sorry, this action requires Adobe Flash.","One result is available, press enter to select it.":"One result is available, press enter to select it.","%1 results are available, use up and down arrow keys to navigate.":"%1 results are available, use up and down arrow keys to navigate.","Loading failed":"Loading failed","Please enter %1 or more %2":"Please enter %1 or more %2","Please delete %1 %2":"Please delete %1 %2","You can only select %1 %2":"You can only select %1 %2","Loading more results\u2026":"Loading more results\u2026","Searching\u2026":"Searching\u2026","100%":"100%","Loading":"Loading","Close":"Close","thumbnail for channel %0":"thumbnail for channel %0","%0 Galleries found":"%0 Galleries found","%0 Channels found":"%0 Channels found","%0 Gallery found":"%0 Gallery found","%0 Channel found":"%0 Channel found","Found %0 result":"Found %0 result","Found %0 results":"Found %0 results","Go to Channel Results":"Go to Channel Results","Go to Gallery Results":"Go to Gallery Results","No more galleries found.":"No more galleries found.","No Galleries found":"No Galleries found","Slide":"Slide","%1 Slide":"%1 Slide","%1 Slides":"%1 Slides","Tags":"Tags","%1 Tag":"%1 Tag","%1 Tags":"%1 Tags","Caption":"Caption","%1 Caption":"%1 Caption","%1 Captions":"%1 Captions","Chapter":"Chapter","%1 Chapters":"%1 Chapters","%1 Chapter":"%1 Chapter","Quiz":"Quiz","%1 Quiz":"%1 Quiz","Details":"Details","%1 Details":"%1 Details","Poll":"Poll","%1 Polls":"%1 Polls","%1 Poll":"%1 Poll","Metadata":"Metadata","%1 Comment":"%1 Comment","Comment":"Comment","%1 Comments":"%1 Comments","selected":"selected","Appears in":"Appears in","Created by":"Created by","Show All":"Show All","Show Less":"Show Less","Show More":"Show More","A:":"A:","Q:":"Q:","Rejected By Admin":"Rejected By Admin","Keyword found in:":"Keyword found in:","Something went wrong":"Something went wrong","Today":"Today","More Filters":"More Filters","Filters":"Filters","Clear All":"Clear All","N\/A":"N\/A","More":"More","Previous Filters":"Previous Filters","Next Filters":"Next Filters","%1 second":"%1 second","%1 seconds":"%1 seconds","%1 minute":"%1 minute","%1 minutes":"%1 minutes","%1 hour":"%1 hour","%1 hours":"%1 hours","a few seconds ago":"A few seconds ago","%1 seconds ago":"%1 Seconds ago","%1 minutes ago":"%1 Minutes ago","a minute ago":"A minute ago","%1 hours ago":"%1 Hours ago","an hour ago":"An hour ago","%1 days ago":"%1 Days ago","a day ago":"A day ago","%1 months ago":"%1 Months ago","a month ago":"A month ago","%1 years ago":"%1 Years ago","a year ago":"A year ago","Search":"Search","Published":"Published","Private":"Private","thumbnail for entry ID":"thumbnail for entry ID","click to navigate to entry":"click to navigate to entry","Loading info...":"Loading info...","related entry ID":"related entry ID","click to see thumbnail":"click to see thumbnail","The bulk operation for %1 %2 has completed":"The bulk operation for %1 %2 has completed"};
+}
+    //]]>
+</script><script type="text/javascript">
+    //<![CDATA[
+    var baseUrl = "";
+    // kdp ready callbacks    
+    var KmsJsCallbackReady = {};
+    // kms analytics flag
+            var Kms_Analytics_Active = true;
+    
+    // kms "instant-search" - determines whether search requires you to press enter to search.
+            var kmsInstantSearch = true;
+        //]]>
+</script><script type="text/javascript">
+    //<![CDATA[
+
+    window.totango = {go: function(){return -1}, track: function(){}, identify: function(){}, setAccountAttributes: function(){}};
+    (function() {
+        var e = document.createElement('script'); e.type = 'text/javascript'; e.async = true;
+        e.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 's3.amazonaws.com/totango-cdn/totango2.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(e, s);
+    })();
+    //]]>
+</script><script type="text/javascript" src="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/consolidated/383fdc79fea578fe93db9799b8a06495.js"></script><script type="text/javascript" src="https://cdnapisec.kaltura.com/p/811441/sp/81144100/embedIframeJs/uiconf_id/32783592/partner_id/811441"></script><script type="text/javascript">
+    //<![CDATA[
+window.kms_kWidgetJsLoader_baseurl = "https:\/\/cdnapisec.kaltura.com\/p\/((PARTNER_ID))\/sp\/((PARTNER_ID))00\/embedIframeJs\/uiconf_id\/((PLAYER_ID))\/partner_id\/((PARTNER_ID))";window.kms_kWidgetJsLoader_partnerId = 811441;if (typeof(kms_kWidgetJsLoader) == "undefined") {kms_kWidgetJsLoader_loadedElsewherePlayerId = "32783592";} else {kms_kWidgetJsLoader.loadedElsewhere("32783592");};    //]]>
+</script><script type="text/javascript">
+    //<![CDATA[
+
+    $(document).ready(function() {
+        $(document).on('kmsTrack', function(event, message) {
+            $.ajax({
+                 url:'/serveranalytics/index/analytics/id/5c63578a39d0f/msg/'+message
+            });
+
+        });
+    });    //]]>
+</script><script type="text/javascript">
+    //<![CDATA[
+GLOBAL_KMS = GLOBAL_KMS || {};    //]]>
+</script><script type="text/javascript">
+    //<![CDATA[
+GLOBAL_KMS.EsearchClientProps = {"clientTag":"kms_client","ks":"","serviceUrl":"https:\/\/www.kaltura.com"}    //]]>
+</script><!--[if lt IE 10]> <script type="text/javascript" src="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/js/ieadditions.js"></script><![endif]--><!--[if lt IE 9]> <script type="text/javascript" src="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/js/html5.js"></script><![endif]--><!--[if lte IE 9]> <script type="text/javascript" src="https://kms-a.akamaihd.net/dc-0/5.82.16/public/build0/js/jquery.placeholder.min.js"></script><![endif]-->    <script>
+        (function(GLOBAL_KMS) {
+            GLOBAL_KMS = GLOBAL_KMS || {};
+            GLOBAL_KMS.helpers.weekStartDay = 1;
+        })(GLOBAL_KMS);
+    </script>
+</head>
+
+    <body class="module-default controller-entry action-view  menu-horizontal v2ui shrink--enabled">
+    <div id='globalOuterWrap'>
+        <div id='outerWrap'>
+            <div id='overlay'>
+                <div id="ajaxStatusWrap">
+                    <div id="ajaxStatusMain"></div>
+                </div>
+            </div>
+                        
+
+<div class="navbar  navbar-static-top" id="header" role="banner">
+    <div class="navbar-inner">
+        <div id="navbar-inner-wrapper" class="navbar-wrapper">
+            <a href="#wrap" class="skip-to-content-link" tabindex="100">Skip to content</a>
+            <div class="pull-left nav menu-trigger hidden-desktop">
+                <a id="Kbtn-navbar" class="btn btn-navbar show" href="#sidr" role="button"
+                   aria-label="Open side bar" tabindex="100">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+            </div>
+            <div class="hidden-desktop pull-right nav">            
+                                    <ul class="nav pull-right">
+                        
+    <li class="dropdown" id="mobileUserMenu">
+        <a href="#" class="hidden-desktop dropdown-toggle pull-right" id="mobileUserMenuBtn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-controls="mobileUserDropdown" aria-label="User Actions"> <i class="icon-user " aria-hidden="true"></i><strong class="caret" aria-hidden="true"></strong></a>
+        <ul class="dropdown-menu" id="mobileUserDropdown" role="menu" aria-labelledby="mobileUserMenuBtn">
+            <li class="hidden-desktop nav-header" id="userMobileMenuDisplayName" role="presentation"></li>
+
+            
+            <li role="presentation"><a href="/my-media" >My Media</a></li><li role="presentation"><a href="/my-playlists"  class="hidden-phone">My Playlists</a></li><li role="presentation"><a href="/history" >My History</a></li><li class="divider" role="separator"></li><li class='nativeOnly' role='presentation'><a href="/#"  class="nativeSettings nativeOnly">App Settings</a></li><li class='nativeOnly' role='presentation'><a href="/#"  class="mediaOnDevice nativeOnly">Media on Device</a></li>            <li class="divider" role="separator"></li>
+            <li role="presentation"><a  role="menuitem" tabindex="-1" href="/user/login"><i class="icon-signin" aria-hidden="true"></i> Login</a></li>
+        </ul>
+    </li>
+                                            </ul>
+                            </div>
+
+            <div class='pull-right topmenus'>
+                <ul class="nav" >
+                                            <li id="search" class="visible-desktop">
+                            <div id="globalsearch" class='navbar-search-wrapper'>
+<form id="main_search" class="navbar-search" action="/search" role="search">
+    <div class="input-prepend input-append" >
+        <span class="search-icon add-on">
+            <a onclick="$('#main_search').submit();
+                    return false;" href="#" title="Submit Search" aria-label="Submit Search" role="button">
+                <i class="icon-search navbar-link" aria-hidden="true"></i>
+            </a>
+        </span>
+        <input type="text" name="searchkeyword" id="main_search_search_for" value="Search all media" onfocus='if($(this).val() == "Search all media") {$(this).val("");}' onblur='if($(this).val() == "") { $(this).val("Search all media");}' class="input-medium searchInput search-query Xhidden" placeholder="Search all media" aria-label="Search all media" />    </div>
+</form>
+</div>
+<script type="text/javascript">
+    var defaultText = "Search all media";
+    $('#main_search').submit(function(index) {
+        if ($("#main_search #main_search_search_for").val() != defaultText) {
+            document.location.href = $("#main_search").attr("action") + '/searchkeyword/' + encodeURIComponent($("#main_search_search_for").val().replace(/\/|\\|%2F/g,''));
+        }
+        return false;
+    }).bind('keypress', function(e) {
+        if (e.keyCode == 13) {
+            $("#main_search").submit();
+        }
+    });
+</script>
+                        </li>
+                                        
+<li class="eSearch__link "><div class="btn-group"><div  id="eSearch-link" class="eSearch__link"></div></div></li>
+                
+
+                    
+                                            <li class="visible-desktop">
+                                <div class="btn-group" id="userMenuToggle">
+        <button data-toggle="dropdown"
+                class="btn  dropdown-toggle" 
+                id="userMenuToggleBtn"
+                aria-haspopup="true" 
+                aria-expanded="false" 
+                aria-controls="userMenuToggleMenu"><i
+                class="icon-user icon-white"></i> 
+            <span id="userMenuDisplayName">
+                        </span> 
+            <i class="icon-chevron-down icon-white"></i>
+        </button>
+        <ul class="dropdown-menu pull-right" id="userMenuToggleMenu" role="menu" aria-labelledby="userMenuToggleBtn">
+            <li role="presentation"><a href="/my-media"  role="menuitem" tabindex="-1">My Media</a></li><li role="presentation"><a href="/my-playlists"  class="hidden-phone" role="menuitem" tabindex="-1">My Playlists</a></li><li role="presentation"><a href="/history"  role="menuitem" tabindex="-1">My History</a></li><li class="divider" role="separator"></li><li class='nativeOnly' role='presentation'><a href="/#"  class="nativeSettings nativeOnly" role="menuitem" tabindex="-1">App Settings</a></li><li class='nativeOnly' role='presentation'><a href="/#"  class="mediaOnDevice nativeOnly" role="menuitem" tabindex="-1">Media on Device</a></li>            <li class="divider" role="separator"></li>
+            <li><a  role="menuitem" tabindex="-1" class="login-btn" href="/user/login"><i class="icon-signin" aria-hidden="true"></i> Login</a></li>
+        </ul>
+    </div>
+<script>
+    // issue an ajax call to get username into the page
+    $.getJSON(baseUrl+'/user/get-details?format=ajax', function(data) { asyncCallback(data); }).fail(transportError);
+</script>
+                        </li>
+                                                            
+
+                </ul>
+            </div>
+
+            <div class="visible-desktop pull-left">
+    <a href="/"  class=" logoImg brand" rel="noopener noreferrer" tabindex="100">
+                    <img src="https://cdnsecakmi.kaltura.com/p/811441/raw/entry_id/1_69loro2g/version/100000/direct_serve/1/filename.jpg"  alt="MediaSpace" />            </a>
+</div>
+<div class="hidden-desktop ">
+    <div class="center">
+        <a href="/"  class="" tabindex="100">
+                            <img src="https://cdnsecakmi.kaltura.com/p/811441/raw/entry_id/1_69loro2g/version/100000/direct_serve/1/filename.jpg"  class="smallLogo" alt="MediaSpace" />                    </a>
+    </div>
+</div>
+            <div id="logoMark"></div>
+            <div id="logoMarkTarget"></div>
+
+            <div id="toplinks" class="pull-left visible-desktop">
+                <ul class="added2SidemenuPost nav">
+                                        
+                <li><a href="http://corp.kaltura.com"  target="_blank" rel="noopener noreferrer"><i class='icon-globe'></i>Kaltura.com</a></li>    
+                                                <li class="divider-vertical"></li>
+                    
+                <li><a href="http://blog.kaltura.com"  target="_blank" rel="noopener noreferrer"><i class='icon-bullhorn'></i> Blog</a></li>    
+                                                <li class="divider-vertical"></li>
+                    
+                <li><a href="http://corp.kaltura.com/company/contact-us?utm_source=kaltura-videos&utm_medium=click&utm_campaign=videos-contact-us"  target="_blank" rel="noopener noreferrer"><i class='icon-envelope'></i> Contact Us</a></li>    
+                                                <li class="divider-vertical"></li>
+                    
+                <li><a href="https://learning.mediaspace.kaltura.com/"  target="_blank" rel="noopener noreferrer"><i class='icon-play'></i> Kaltura Learning</a></li>    
+                            </ul>
+            </div>
+                            <div id="horizontalMenu" class="pull-left clear visible-desktop" role="navigation" aria-label="top">
+                    <ul class="nav">
+                                <li >
+            <a id="menu-Featured-btn" href="/home" target="_self"  role="button">Featured</a>        </li>
+                <li class="dropdown ">
+            <a id="menu-About-btn" class=" dropdown-toggle" href="/category/About/54386111"  aria-haspopup="true" aria-expanded="false" aria-controls="About-menu" role="button">About</a><ul class="dropdown-menu" role="menu" id="About-menu" aria-labelledby="menu-About-btn" tabindex="-1">        <li class="dropdown-submenu " role="presentation">
+            <a id="menu-Community-btn" class=" dropdown-toggle" href="/category/About%3ECommunity/8952811"  aria-haspopup="true" aria-expanded="false" aria-controls="Community-menu" role="menuitem" tabindex="-1">Community</a><ul class="dropdown-menu" role="menu" id="Community-menu" aria-labelledby="menu-Community-btn" tabindex="-1">        <li  role="presentation">
+            <a id="menu-CustomerSuccess-btn" href="/category/About%3ECommunity%3ECustomer+Success/52508121"  role="menuitem" tabindex="-1">Customer Success</a>        </li>
+                <li  role="presentation">
+            <a id="menu-CommunityProjects-btn" href="/category/About%3ECommunity%3ECommunity+Projects/18589721"  role="menuitem" tabindex="-1">Community Projects</a>        </li>
+                <li  role="presentation">
+            <a id="menu-TechPartners-btn" href="/category/About%3ECommunity%3ETech+Partners/11235222"  role="menuitem" tabindex="-1">Tech Partners</a>        </li>
+                <li  role="presentation">
+            <a id="menu-CommunityLeadershipSummit(CLS)-btn" href="/category/About%3ECommunity%3ECommunity+Leadership+Summit+%28CLS%29/5759321"  role="menuitem" tabindex="-1">Community Leadership Summit (CLS)</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Meetups&amp;amp;Hackathons-btn" href="/category/About%3ECommunity%3EMeetups+%26+Hackathons/5759331"  role="menuitem" tabindex="-1">Meetups &amp; Hackathons</a>        </li>
+        </ul>        </li>
+                <li  role="presentation">
+            <a id="menu-Press-btn" href="/category/About%3EPress/52094991"  role="menuitem" tabindex="-1">Press</a>        </li>
+        </ul>        </li>
+                <li class="dropdown ">
+            <a id="menu-LessonsFromLeaders-btn" class=" dropdown-toggle" href="/category/Lessons+From+Leaders/36001801"  aria-haspopup="true" aria-expanded="false" aria-controls="LessonsFromLeaders-menu" role="button">Lessons From Leaders</a><ul class="dropdown-menu" role="menu" id="LessonsFromLeaders-menu" aria-labelledby="menu-LessonsFromLeaders-btn" tabindex="-1">        <li  role="presentation">
+            <a id="menu-Education-btn" href="/category/Lessons+From+Leaders%3EEducation/36029171"  role="menuitem" tabindex="-1">Education</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Enterprise-btn" href="/category/Lessons+From+Leaders%3EEnterprise/36029141"  role="menuitem" tabindex="-1">Enterprise</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Media&amp;amp;OTT-btn" href="/category/Lessons+From+Leaders%3EMedia+%26+OTT/36029181"  role="menuitem" tabindex="-1">Media &amp; OTT</a>        </li>
+                <li  role="presentation">
+            <a id="menu-TheClassroomofTomorrow-btn" href="/category/Lessons+From+Leaders%3EThe+Classroom+of+Tomorrow/72880291"  role="menuitem" tabindex="-1">The Classroom of Tomorrow</a>        </li>
+        </ul>        </li>
+                <li >
+            <a id="menu-VPaaS-btn" href="/category/VPaaS/94669261"  role="button">VPaaS</a>        </li>
+                <li class="dropdown ">
+            <a id="menu-VideoTips-btn" class=" dropdown-toggle" href="/category/Video+Tips/50421772"  aria-haspopup="true" aria-expanded="false" aria-controls="VideoTips-menu" role="button">Video Tips</a><ul class="dropdown-menu" role="menu" id="VideoTips-menu" aria-labelledby="menu-VideoTips-btn" tabindex="-1">        <li  role="presentation">
+            <a id="menu-VideoSalesTips-btn" href="/category/Video+Tips%3EVideo+Sales+Tips/92236071"  role="menuitem" tabindex="-1">Video Sales Tips</a>        </li>
+        </ul>        </li>
+                <li class="dropdown ">
+            <a id="menu-Education-btn" class=" dropdown-toggle" href="/category/Education/8952161"  aria-haspopup="true" aria-expanded="false" aria-controls="Education-menu" role="button">Education</a><ul class="dropdown-menu" role="menu" id="Education-menu" aria-labelledby="menu-Education-btn" tabindex="-1">        <li  role="presentation">
+            <a id="menu-CaseStudies-btn" href="/category/Education%3ECase+Studies/8955351"  role="menuitem" tabindex="-1">Case Studies</a>        </li>
+                <li  role="presentation">
+            <a id="menu-FeaturedPartners-btn" href="/category/Education%3EFeatured+Partners/8955561"  role="menuitem" tabindex="-1">Featured Partners</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Interviews-btn" href="/category/Education%3EInterviews/8955701"  role="menuitem" tabindex="-1">Interviews</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Solutions-btn" href="/category/Education%3ESolutions/8955391"  role="menuitem" tabindex="-1">Solutions</a>        </li>
+        </ul>        </li>
+                <li class="dropdown ">
+            <a id="menu-Enterprise-btn" class=" dropdown-toggle" href="/category/Enterprise/8952191"  aria-haspopup="true" aria-expanded="false" aria-controls="Enterprise-menu" role="button">Enterprise</a><ul class="dropdown-menu" role="menu" id="Enterprise-menu" aria-labelledby="menu-Enterprise-btn" tabindex="-1">        <li  role="presentation">
+            <a id="menu-CaseStudies-btn" href="/category/Enterprise%3ECase+Studies/8955511"  role="menuitem" tabindex="-1">Case Studies</a>        </li>
+                <li  role="presentation">
+            <a id="menu-FeaturedPartners-btn" href="/category/Enterprise%3EFeatured+Partners/8955571"  role="menuitem" tabindex="-1">Featured Partners</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Interviews-btn" href="/category/Enterprise%3EInterviews/8955711"  role="menuitem" tabindex="-1">Interviews</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Solutions-btn" href="/category/Enterprise%3ESolutions/8955521"  role="menuitem" tabindex="-1">Solutions</a>        </li>
+        </ul>        </li>
+                <li class="dropdown ">
+            <a id="menu-Media&amp;amp;OTTTV-btn" class=" dropdown-toggle" href="/category/Media+%26+OTT+TV/8952211"  aria-haspopup="true" aria-expanded="false" aria-controls="Media&amp;OTTTV-menu" role="button">Media &amp; OTT TV</a><ul class="dropdown-menu" role="menu" id="Media&amp;OTTTV-menu" aria-labelledby="menu-Media&amp;OTTTV-btn" tabindex="-1">        <li  role="presentation">
+            <a id="menu-CaseStudies-btn" href="/category/Media+%26+OTT+TV%3ECase+Studies/8955531"  role="menuitem" tabindex="-1">Case Studies</a>        </li>
+                <li  role="presentation">
+            <a id="menu-FeaturedPartners-btn" href="/category/Media+%26+OTT+TV%3EFeatured+Partners/8955581"  role="menuitem" tabindex="-1">Featured Partners</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Interviews-btn" href="/category/Media+%26+OTT+TV%3EInterviews/8955721"  role="menuitem" tabindex="-1">Interviews</a>        </li>
+                <li  role="presentation">
+            <a id="menu-Solutions-btn" href="/category/Media+%26+OTT+TV%3ESolutions/8955551"  role="menuitem" tabindex="-1">Solutions</a>        </li>
+        </ul>        </li>
+            
+                    </ul>
+                    <script type="text/javascript">
+                        $('#horizontalMenu li.dropdown > a.dropdown-toggle')
+                            .append('<strong class="caret"></strong>')
+                            .each(function() {
+                                $(this).parent('li')
+                                .on('mouseover', function() {
+                                    $(this).addClass('open');
+                                })
+                                .on('mouseout',function(){
+                                    $(this).removeClass('open');
+                                });
+                            });
+                        $('#horizontalMenu li.dropdown  a').on('mouseover', function() {
+                            $(this).parentsUntil('#horizontalMenu','li').find('> .dropdown-toggle').each(function(){
+                                $(this).attr('aria-expanded', true);
+                            })
+                        }).on('mouseout', function(){
+                            $(this).parentsUntil('#horizontalMenu','li').find('> .dropdown-toggle').each(function(){
+                                $(this).attr('aria-expanded', false);
+                            })
+                        });
+
+                        // first level links
+                        $('#horizontalMenu li.dropdown > a.dropdown-toggle').kmsDropdownKeyboardEvents();
+                        // second level links
+                        $('#horizontalMenu li.dropdown > ul.dropdown-menu > li > a').kmsDropdownKeyboardEvents({openKey: 39});
+                        // third level and on
+                        $('#horizontalMenu li.dropdown > ul.dropdown-menu > li > ul a').kmsDropdownKeyboardEvents({openKey: 39, closeKey: 37});
+                    </script>
+                </div>
+                    </div>    
+    </div>
+</div>
+
+<div id="sidr" style="display:none" class='' role="navigation" aria-label="side">
+                <ul id="menu" class="nav">
+                    <li >
+            <a href="/home" target="_self">Featured</a>        </li>
+                <li >
+            <a class=" dropdown-toggle" href="/category/About/54386111">About</a><ul>        <li  role="presentation">
+            <a class=" dropdown-toggle" href="/category/About%3ECommunity/8952811">Community</a><ul>        <li  role="presentation">
+            <a href="/category/About%3ECommunity%3ECustomer+Success/52508121">Customer Success</a>        </li>
+                <li  role="presentation">
+            <a href="/category/About%3ECommunity%3ECommunity+Projects/18589721">Community Projects</a>        </li>
+                <li  role="presentation">
+            <a href="/category/About%3ECommunity%3ETech+Partners/11235222">Tech Partners</a>        </li>
+                <li  role="presentation">
+            <a href="/category/About%3ECommunity%3ECommunity+Leadership+Summit+%28CLS%29/5759321">Community Leadership Summit (CLS)</a>        </li>
+                <li  role="presentation">
+            <a href="/category/About%3ECommunity%3EMeetups+%26+Hackathons/5759331">Meetups &amp; Hackathons</a>        </li>
+        </ul>        </li>
+                <li  role="presentation">
+            <a href="/category/About%3EPress/52094991">Press</a>        </li>
+        </ul>        </li>
+                <li >
+            <a class=" dropdown-toggle" href="/category/Lessons+From+Leaders/36001801">Lessons From Leaders</a><ul>        <li  role="presentation">
+            <a href="/category/Lessons+From+Leaders%3EEducation/36029171">Education</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Lessons+From+Leaders%3EEnterprise/36029141">Enterprise</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Lessons+From+Leaders%3EMedia+%26+OTT/36029181">Media &amp; OTT</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Lessons+From+Leaders%3EThe+Classroom+of+Tomorrow/72880291">The Classroom of Tomorrow</a>        </li>
+        </ul>        </li>
+                <li >
+            <a href="/category/VPaaS/94669261">VPaaS</a>        </li>
+                <li >
+            <a class=" dropdown-toggle" href="/category/Video+Tips/50421772">Video Tips</a><ul>        <li  role="presentation">
+            <a href="/category/Video+Tips%3EVideo+Sales+Tips/92236071">Video Sales Tips</a>        </li>
+        </ul>        </li>
+                <li >
+            <a class=" dropdown-toggle" href="/category/Education/8952161">Education</a><ul>        <li  role="presentation">
+            <a href="/category/Education%3ECase+Studies/8955351">Case Studies</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Education%3EFeatured+Partners/8955561">Featured Partners</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Education%3EInterviews/8955701">Interviews</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Education%3ESolutions/8955391">Solutions</a>        </li>
+        </ul>        </li>
+                <li >
+            <a class=" dropdown-toggle" href="/category/Enterprise/8952191">Enterprise</a><ul>        <li  role="presentation">
+            <a href="/category/Enterprise%3ECase+Studies/8955511">Case Studies</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Enterprise%3EFeatured+Partners/8955571">Featured Partners</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Enterprise%3EInterviews/8955711">Interviews</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Enterprise%3ESolutions/8955521">Solutions</a>        </li>
+        </ul>        </li>
+                <li >
+            <a class=" dropdown-toggle" href="/category/Media+%26+OTT+TV/8952211">Media &amp; OTT TV</a><ul>        <li  role="presentation">
+            <a href="/category/Media+%26+OTT+TV%3ECase+Studies/8955531">Case Studies</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Media+%26+OTT+TV%3EFeatured+Partners/8955581">Featured Partners</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Media+%26+OTT+TV%3EInterviews/8955721">Interviews</a>        </li>
+                <li  role="presentation">
+            <a href="/category/Media+%26+OTT+TV%3ESolutions/8955551">Solutions</a>        </li>
+        </ul>        </li>
+                </ul>
+    </div>
+
+            <div id="wrap" class="container" role="main" tabindex="-1">
+                <div id="alerts" aria-live="assertive" role="alert"></div>
+                
+
+
+
+<div id="content" class='row-fluid' >
+    <div id="mediaContainer" class="span9 no-space">
+                
+<div id="wrapper" class="video">
+    <!--[if !IE]> -->
+    <style>
+        #wrapper.video {
+            padding-top: 30px !important;
+            padding-bottom: 52.2% !important;
+        }
+    </style>
+    <!-- <![endif]-->
+
+	<div id="player">
+		<script>
+/* script for KDP callbacks */
+var autoLoadEntry = true;
+var playerLoaded = false;
+
+jsCallbackReady = function(playerId) {
+    kdp = document.getElementById(playerId);
+    window.kdpStatusCallback = function kdpStatusCallback(status) {
+        try {
+            if (status) {
+                playerReady(playerId);
+            }
+            else {
+                kdp.addJsListener("kdpEmpty", "playerReady");
+                kdp.addJsListener("kdpReady", "playerReady");
+                kdp.addJsListener("entryFailed", "jsCallbackFailed");
+            }
+
+            $.each(KmsJsCallbackReady, function (key, value) {
+                window[value](playerId);
+            });
+
+        } catch (e) {
+            jsLog(e);
+        }
+    };
+    if (kdp) {
+        kdpEvaluateWrapper("{playerStatusProxy.kdpStatus}", kdpStatusCallback);
+    }
+    else {
+        kdpStatusCallback(false);
+    }
+};
+
+
+jsCallbackFailed = function(e) {
+    jsLog('Entry Failed callback from KDP: ' + e);
+};
+
+kmh = {};
+kmh.expandShrinkPlayer = function(entryId) {
+    /* enlarge or shrink the player */
+    $("#mediaContainer").toggleClass('span9').toggleClass('span12');
+    $('#player').height('100%');
+};
+kmsExpandShrinkPlayer = function(){
+    kmh.expandShrinkPlayer();
+};
+
+function playerReady(playerId) {
+    if (playerLoaded == false) {
+        jsLog('KDP player Ready');
+        if (typeof debug != 'undefined' && debug) {
+            var end = new Date().getTime();
+            var time = end - start;
+            jsLog('KDP load time: ' + time + 'ms');
+        }
+        playerLoaded = true;
+    }
+}
+</script>
+
+
+    <!-- kdp embed -->
+        <div id='kplayer'></div>
+    <script>
+        var kMainPlayerEmbedObject = {
+            'targetId': 'kplayer',
+            'wid': '_811441',
+            'uiconf_id' : '32783592',
+                        'entry_id' : '0_e2ea6ygt',
+                        'flashvars': /* flashvars allows you to set runtime uiVar configuration overrides.*/
+            {"ks":"djJ8ODExNDQxfCUZVIzZsJYM3FccWNQuN3hI7A-1J8iDoL86SuMbumiToOr626vCiBkoL6dDTRh1ixKWBNXeu5AwRuBrMH09lckcZXG7voB8xIlG1cI9S0sK6bUFha6rxNxznAqdEvlJwXEG7J9if-LUwh02CQjQHc9St1r5D4OAaURjmQt53DTSGf7MwyBN_L1aRYKAfLIViiorFhC74Rrhqh6lHVmvbpF0yxI1Uw_Kvmxg12qQyELJ_PEW2cvz91u6ostF5YtFW8MZnt9EY2ECVzijOJyG9LBTGFM9dTdj-4LYoN8qKXteRGHQkfjscXGRieQl6XAvgQwSjmsVsoyFSM5PwurYsnxNe2RvCxmRWvQcbt5kEP5BFqWp3WKbYCT3L-fDJfE3mjlOKLisrPZxXyepqXfA0Ic=","applicationName":"KMS46","playbackContext":"","disableAlerts":"false","externalInterfaceDisabled":"false","autoPlay":"true","streamerType":"auto","localizationCode":"en","leadWithHTML5":"true","sideBarContainer":{"plugin":"true","position":"left","clickToClose":"true"},"chapters":{"plugin":"true","layout":"vertical","thumbnailRotator":"false"},"streamSelector":{"plugin":"true"},"EmbedPlayer":{"SpinnerTarget":"videoHolder"},"dualScreen":{"plugin":"true"}},
+            'params': {
+                'wmode': 'transparent'
+                }
+        };
+        kms_kWidgetJsLoader.embed('32783592', kMainPlayerEmbedObject);
+    </script>
+
+
+
+	</div>
+</div>
+<div id="transcript-player-plugin" ></div>
+        <div id="statusMessages"></div>
+        <div class="row-fluid tight">
+    <div class="span9">
+        <h3 class="entryTitle">
+            Kaltura Overview        </h3>
+        <p class="muted small">
+            <span class="data first">
+                From                <span class="userLink"><a href="/createdby/eyJpdiI6IllHaGJtXC9ndWw0TXdudWtZZGEyOGpnPT0iLCJ2YWx1ZSI6Im13cW00UENuMlZxejc4UmE4M3VnS3RVT0V4YWhHTno0clptSDRBVFIyRHc9IiwibWFjIjoiZTExZGRiMWI5ODkwNmRlMTBiNzhhMGE3NGMyM2M0YzVlNDJiNjVkNDBmMjA0NGRkZjdiYmIxZmE3NGFiMjE3YiJ9"><span class="">Alon Finkelstein</span></a></span>                A year ago            </span>&nbsp;
+
+                    </p>
+    </div>
+    <div class="span3" id="stats_wrap">
+        <span class="pull-right stat_data" id="entry_view_stats">
+            
+        <a id='entryLike' href='#' rel='async' role='button' data-title='like'
+        aria-label='like' data-toggle='tooltip'>
+    	
+        <span id="likes" class="disabled">
+            <span class="screenreader-only">likes</span>
+            <i class="icon-heart-empty" aria-hidden="true"></i>
+            <span class="stats-value" aria-hidden="true"></span>
+        </span>
+        </a>
+    	
+    	
+        <span id="views" class="disabled">
+            <span class="screenreader-only">views</span>
+            <i class="icon-eye-open" aria-hidden="true"></i>
+            <span class="stats-value" aria-hidden="true"></span>
+        </span>
+    	
+    	
+        <span id="comments" class="disabled">
+            <span class="screenreader-only">comments</span>
+            <i class="icon-comment" aria-hidden="true"></i>
+            <span class="stats-value" aria-hidden="true"></span>
+        </span>
+    	
+
+<script type="text/javascript">
+        $(function(){
+            $.getJSON("/default/entry/get-stats/id/0_e2ea6ygt?format=ajax",asyncCallback).error(transportError);
+
+                        	            $('#entryLike').kmsTooltip({delay: { show: 1000, hide: 100 }});
+	            var url = "/entry/is-liked/entryid/0_e2ea6ygt?format=ajax";
+	            $.getJSON(url, function(data) { asyncCallback(data); }).fail(transportError);
+                    });
+</script>
+
+			
+        </span>        
+    </div>
+</div>	
+    </div>
+            <div id='mySidebar' class="span3 pull-right no-space visible-desktop visible-desktop-hosted visible-tablet-hosted">
+            
+    <div class="navbar no-space">
+        <div class="row-fluid ">
+            <h3 class="tight">Related Media</h3>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div id="entrySideBarPane-Related-2" class="row-fluid"><script type="text/javascript">$(getAsyncContent('/entry/sidebar/related/0_e2ea6ygt', '#entrySideBarPane-Related-2', 'click', '#entrySideBarPane-Related-2', '', 'small'));</script><script>$("#entrySideBarPane-Related-2").trigger("click");</script></div>    </div>
+            </div>
+    
+    <div id ="entryDataBlock" class="span9 pull-left">
+        
+<div id="entry-nav" class="carousel-nav bottomMargin row-fluid hidden-phone hostedEnabled" >
+    <div class="span12">
+        <div id="entryButtons" class="span10 loading js-entry-buttons" role="tablist">
+    <ul class="inline tabs-container js-tabs-container">
+        <li  role="presentation"><a id="tab-Details" data-id="tab-Details" href="" data-original-title="" data-to="1" class="btn responsiveSizePhone tabs-container__button active tab-Details Details-tab" role="tab" aria-controls="" aria-selected="true"><i class="icon-info-sign entry-details__icon"></i><span class="tabLabel"> Details</span></a></li>
+    </ul>
+    <div class="js-inline-async shrink__inline-elements"></div>
+</div>
+<script>
+    $('.js-entry-buttons').shrink({
+        event: "entry:buttons-loaded",
+        maximized: ".js-tabs-container li"
+    });
+</script>        <div id="entryActions"  class="align-entry-actions-button-left pull-right hidden-phone with-placeholders">
+    <ul class="inline">
+                <li>
+            <a id="entryPageBack" href="javascript:history.back()" class="btn hidden-phone hidden-tablet hidden-desktop hostedEnabled responsiveSizePhone">
+                <i class="icon-arrow-left" id="backIcon"></i>
+                <span id="Label-entryPageBack">Back</span>
+            </a>
+        </li>
+                <div class="btn-group valign-top">
+
+                    </div>
+    </ul>
+</div>
+    </div>
+</div>
+
+<div id="entry-nav" class="carousel-nav bottomMargin row-fluid visible-phone hostedEnabled" >
+        
+
+<div id="mobile-entryButtons">
+    <ul class="inline" id="mobile-entryButtons-ul">
+    <li class='nativeOnly nativeAppShareBtn' ><a id="tab-ShareBtn" data-id="tab-ShareBtn" href="" data-original-title=""   class="btn btn-mini  tab-ShareBtn ShareBtn-tab"  ><i class="icon-share" id="ShareBtn" val="0_e2ea6ygt"></i> <span class="tabLabel" id="tabLabel-ShareBtn">Share</span> </a></li>
+    </ul>
+</div>
+</div>
+
+<div id="entryCarousel" class="row-fluid mainCarousel carousel slide">
+    <div class="carousel-inner">
+            <div class="item active">
+        <div id="Details" data-overflow="hidden" class="row-fluid" role="tabpanel" aria-labelledby="tab-Details">
+<div class='expandable'>
+    <div class="row-fluid normalWordBreak" >
+        Kaltura powers any video experience. Watch this video to get a quick glimpse into the breadth and depth of the Kaltura Video Platform and our market-leading video solutions.    </div>
+    <dl class="details dl-horizontal ">
+                            <dt>Tags</dt>
+            <dd>
+                <div id="entryTags" class="tagsWrapper">
+<script type="text/javascript">
+	(function() {
+        $(document).ready(function() {
+            kmsReact.ReactDOM.render(kmsReact.React.createElement(kmsReact.EntryTags, {
+                tags: ["telecom","ott","media","education","effects","learning","enterprise"],
+            } ), document.getElementById('entryTags'));
+        });
+    })();
+</script>
+</div>            </dd>
+            </dl>
+    <dl id="entry-metadata" class="dl-horizontal ">
+            </dl>
+    <div id="entry-metadata-msg"></div>
+
+    <script type="text/javascript">
+        $(function(){
+                        $('#entry-metadata-msg').kmsEntryMetadataMssage({'msg':"Looking for more..."});
+
+                        $.getJSON("/default/entry/get-metadata/id/0_e2ea6ygt?format=ajax",asyncCallback).error(transportError);
+        });
+    </script>
+</div>
+</div>
+<script>$(function(){$("#tab-Details").trigger("click");})</script>    </div>	
+                </div>
+</div>
+
+    <a id="bottom_tabs_anchor" aria-hidden="true"></a>
+
+<div id="bottom_tabs" class="tabbable row-fluid">
+    <div class="tab-content"></div>	
+</div>
+
+
+<script type="text/javascript">
+    $(function(){
+
+        var readyForDeepLink = false;
+
+                function gotoInitTab() {
+            if (!readyForDeepLink) {
+                readyForDeepLink = true;
+                return;
+            }
+            if (window.gotoTab) {
+                // use setTimeout() to make sure this is the last thing that happens
+                setTimeout(function() {$("a." + window.gotoTab + "-tab").trigger("click");}, 0);
+            }
+            else {
+                $(".js-entry-buttons").find(".js-tabs-container").find("a").first().click();
+            }
+        }
+
+        $('body').on('entry-buttons-loaded', gotoInitTab);
+        $('body').on('entry-actions-resolved', gotoInitTab);
+
+                $('#entryButtons ul').kmsEllipsisLoad();
+
+                            $.getJSON("/default/entry/get-buttons/id/0_e2ea6ygt?format=ajax",asyncCallback).error(transportError);
+        
+                $.getJSON("/default/entry/get-tabs/id/0_e2ea6ygt/categoryid/?format=ajax",asyncCallback).error(transportError);
+
+                $.getJSON("/default/entry/resolve-actions/id/0_e2ea6ygt?format=ajax",asyncCallback).error(transportError);
+    });
+
+
+
+</script>
+    
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        $.event.trigger('kmsTrack', 'Media View') 
+    });
+</script>
+            </div>
+            <div id="push"></div>
+        </div>
+        <div class="navbar-static-bottom" id="footer">
+    <div class="container">
+        <p class="muted credit">
+            <div class="menu-block-wrapper menu-block-9 menu-name-menu-free-trial---contact-sales parent-mlid-0 menu-level-1">                    <ul style="padding: 0; text-align: center; margin: 0 auto; width: 90%;" class="menu clearfix">                                                        <li style="display: inline-block; margin-right: 15px;" class="first leaf menu-mlid-555"><a href="https://corp.kaltura.com/products/video-for-business/kaltura-mediaspace-video-portal/free-trial/" target="_blank" style="background: #2ca9c9; color: #ffffff; text-transform: uppercase; display: inline-block; text-align: center; font-family: arial,helvetica,sans-serif; padding: 10px 30px; font-size: 14px; text-shadow: none; height: auto; text-decoration: none; text-indent: 0; margin: 0; line-height: 1; font-weight: bold; width: auto; -moz-transition: 200ms; -o-transition: 200ms; -webkit-transition: 200ms; transition: 200ms;" id="start-free-trial-button">Start Free Trial</a></li>                                   <li style="display: inline-block; margin-right: 15px;" class="middle leaf menu-mlid-556"><a href="https://corp.kaltura.com/company/contact/" target="_blank" style="background: black; color: #ffffff; text-transform: uppercase; display: inline-block; text-align: center; font-family: arial,helvetica,sans-serif; padding: 10px 30px; font-size: 14px; text-shadow: none; height: auto; text-decoration: none; text-indent: 0; margin: 0; line-height: 1; font-weight: bold; width: auto; -moz-transition: 200ms; -o-transition: 200ms; -webkit-transition: 200ms; transition: 200ms;" id="contact-sales-button">Contact Sales</a></li>                                                      <li style="display: inline-block;" class="last leaf menu-mlid-557"><a href="https://corp.kaltura.com/resources/" target="_blank" style="background: #06a885; color: #ffffff; text-transform: uppercase; display: inline-block; text-align: center; font-family: arial,helvetica,sans-serif; padding: 10px 30px; font-size: 14px; text-shadow: none; height: auto; text-decoration: none; text-indent: 0; margin: 0; line-height: 1; font-weight: bold; width: auto; -moz-transition: 200ms; -o-transition: 200ms; -webkit-transition: 200ms; transition: 200ms;" id="contact-sales-button">Join a Webinar</a></li>                                                                </ul>                       </div>                                                   <div id='newfooter' class='navbar-static-bottom'> <hr/> <a href='http://corp.kaltura.com' class='footerlinks'>Kaltura.com</a> <a href='http://kaltura.org' class='footerlinks'>Community</a> <a href='http://corp.kaltura.com/company/contact-us' class='footerlinks'>Contact Us</a> <a href='http://knowledge.kaltura.com/' class='footerlinks'>Knowledge Center</a> </div><!-- Google Tag Manager --> <noscript><iframe src='//www.googletagmanager.com/ns.html?id=GTM-56NZGC' height='0' width='0' style='display:none;visibility:hidden'></iframe></noscript> <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','rtbdataLayer','GTM-56NZGC');</script> <!-- End Google Tag Manager -->        </p>
+    </div>
+</div>
+
+<!-- viewhook start siteFooter -->
+<script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2078931-37']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- viewhook end siteFooter --><script type="text/javascript">
+    //<![CDATA[
+
+        kmsReact.ReactDOM.render(kmsReact.React.createElement(kmsReact.HeaderSearchForm,{ searchUrl: '/esearch/search?keyword', placeholder: 'Search all media', targetId: 'logoMark', renderTargetId: 'logoMarkTarget', headerId: 'navbar-inner-wrapper', headerLinkClass: 'eSearch__link', clearElementId: 'toplinks' ,mobileClearElementSelector: '.js-desktop-upload-menu', expanded: 0, tabIndex: 110} ), document.getElementById('eSearch-link'))    //]]>
+</script>
+    </div>
+    </body>
+</html>

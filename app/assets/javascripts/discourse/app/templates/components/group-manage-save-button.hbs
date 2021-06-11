@@ -1,6 +1,6 @@
-<div class="control-group buttons">
+<div class="control-group buttons group-manage-save-button">
   {{d-button action=(action "save")
-    disabled=saving
+    disabled=(or disabled saving)
     class="btn btn-primary group-manage-save"
     translatedLabel=savingText
   }}

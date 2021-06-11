@@ -5,3 +5,18 @@
 # https://translate.discourse.org/
 
 sq:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "Ngjyrat"
+        categories:
+          title: "Kategoritë"
+        navigation:
+          title: "Shfletimi"
+        categories_list:
+          title: "Lista Kategorive"
+        post:
+          title: "Postim"
+        suggested_topics:
+          title: "Temat e sugjeruara"

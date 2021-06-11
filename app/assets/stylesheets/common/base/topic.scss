@@ -28,8 +28,8 @@
   > .row {
     grid-area: posts;
     max-width: calc(
-      100vw - 16px
-    ); // 16px is the left + right padding on .wrap in common/base/discourse.scss
+      100vw - 20px
+    ); // 20px is the left + right padding on .wrap in common/base/discourse.scss
   }
 
   .timeline-container {
@@ -166,10 +166,10 @@
       color: var(--primary-medium);
     }
   }
-}
-
-h1 {
-  margin: 0 0 4px 0;
+  .header-title .private-message-glyph-wrapper {
+    float: left;
+    margin-right: 0.25em;
+  }
 }
 
 a.badge-category {
@@ -186,7 +186,7 @@ a.badge-category {
     }
   }
   h1 {
-    margin: 0 0 4px 0;
+    margin-bottom: 0;
     width: 100%;
   }
   a.badge-category {
@@ -228,11 +228,6 @@ a.badge-category {
   height: 0.95em;
 }
 
-.private-message-glyph-wrapper {
-  float: left;
-  margin-right: 0.25em;
-}
-
 .private_message {
   #topic-title {
     .edit-topic-title {
@@ -240,7 +235,7 @@ a.badge-category {
       .private-message-glyph {
         position: absolute;
         left: 0.75em;
-        top: 6px;
+        top: 7px;
       }
       #edit-title {
         width: calc(100% - 50px);

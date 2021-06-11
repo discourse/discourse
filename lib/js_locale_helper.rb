@@ -242,7 +242,7 @@ module JsLocaleHelper
       return locale_data if locale_data
     end
 
-    # English should alyways work
+    # English should always work
     ["en", File.join(path, "en.js")] if fallback_to_english
   end
 

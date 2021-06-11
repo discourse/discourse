@@ -5,3 +5,18 @@
 # https://translate.discourse.org/
 
 th:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "สี"
+        categories:
+          title: "หมวดหมู่"
+        navigation:
+          title: "การนำทาง"
+        categories_list:
+          title: "รายชื่อหมวดหมู่"
+        post:
+          title: "โพสต์"
+        suggested_topics:
+          title: "กระทู้แนะนำ"

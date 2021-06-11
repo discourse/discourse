@@ -19,8 +19,14 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import { userPath } from "discourse/lib/url";
 
 const Post = RestModel.extend({
-  @discourseComputed("url")
+  customShare: null,
+
+  @discourseComputed("url", "customShare")
   shareUrl(url) {
+    if (this.customShare) {
+      return this.customShare;
+    }
+
     const user = User.current();
     return resolveShareUrl(url, user);
   },
@@ -172,7 +178,6 @@ const Post = RestModel.extend({
 
     return ajax(`/posts/${this.id}/recover`, {
       type: "PUT",
-      cache: false,
     })
       .then((data) => {
         this.setProperties({
@@ -208,13 +213,9 @@ const Post = RestModel.extend({
     } else {
       const key =
         this.post_number === 1
-          ? "topic.deleted_by_author"
-          : "post.deleted_by_author";
-      promise = cookAsync(
-        I18n.t(key, {
-          count: this.siteSettings.delete_removed_posts_after,
-        })
-      ).then((cooked) => {
+          ? "topic.deleted_by_author_simple"
+          : "post.deleted_by_author_simple";
+      promise = cookAsync(I18n.t(key)).then((cooked) => {
         this.setProperties({
           cooked: cooked,
           can_delete: false,

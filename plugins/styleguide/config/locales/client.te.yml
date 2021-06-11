@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 te:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "రంగులు"
+        categories:
+          title: "వర్గాలు"
+        navigation:
+          title: "నావిగేషను"
+        categories_list:
+          title: "వర్గాల జాబితా"
+        suggested_topics:
+          title: "సూచించే విషయాలు"

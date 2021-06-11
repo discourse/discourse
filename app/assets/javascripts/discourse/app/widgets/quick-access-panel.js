@@ -140,7 +140,7 @@ export default createWidget("quick-access-panel", {
           title: "user.dismiss_notifications_tooltip",
           icon: "check",
           label: "user.dismiss",
-          className: "notifications-dismiss",
+          className: "btn btn-default notifications-dismiss",
           action: "dismissNotifications",
         })
       );

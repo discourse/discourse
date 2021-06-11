@@ -18,13 +18,13 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.1.3.1'
-  gem 'actionpack', '6.1.3.1'
-  gem 'actionview', '6.1.3.1'
-  gem 'activemodel', '6.1.3.1'
-  gem 'activerecord', '6.1.3.1'
-  gem 'activesupport', '6.1.3.1'
-  gem 'railties', '6.1.3.1'
+  gem 'actionmailer', '6.1.3.2'
+  gem 'actionpack', '6.1.3.2'
+  gem 'actionview', '6.1.3.2'
+  gem 'activemodel', '6.1.3.2'
+  gem 'activerecord', '6.1.3.2'
+  gem 'activesupport', '6.1.3.2'
+  gem 'railties', '6.1.3.2'
   gem 'sprockets-rails'
 end
 
@@ -60,8 +60,6 @@ gem 'redis-namespace'
 # better maintained living fork
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox'
-
 gem 'http_accept_language', require: false
 
 # Ember related gems need to be pinned cause they control client side
@@ -90,9 +88,7 @@ gem 'unf', require: false
 
 gem 'email_reply_trimmer'
 
-# Forked until https://github.com/toy/image_optim/pull/162 is merged
-# https://github.com/discourse/image_optim
-gem 'discourse_image_optim', require: 'image_optim'
+gem 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
@@ -230,6 +226,8 @@ gem 'sshkey', require: false
 
 gem 'rchardet', require: false
 gem 'lz4-ruby', require: false, platform: :ruby
+
+gem 'sanitize'
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

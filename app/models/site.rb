@@ -21,7 +21,7 @@ class Site
   end
 
   def trust_levels
-    TrustLevel.all
+    TrustLevel.levels
   end
 
   def user_fields
@@ -55,7 +55,7 @@ class Site
 
       by_id = {}
 
-      notification_levels = CategoryUser.notification_levels_for(@guardian)
+      notification_levels = CategoryUser.notification_levels_for(@guardian.user)
       default_notification_level = CategoryUser.default_notification_level
 
       categories.each do |category|

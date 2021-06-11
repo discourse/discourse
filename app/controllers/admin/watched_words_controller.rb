@@ -6,7 +6,9 @@ class Admin::WatchedWordsController < Admin::AdminController
   skip_before_action :check_xhr, only: [:download]
 
   def index
-    render_json_dump WatchedWordListSerializer.new(WatchedWord.by_action, scope: guardian, root: false)
+    watched_words = WatchedWord.by_action
+    watched_words = watched_words.where.not(action: WatchedWord.actions[:tag]) if !SiteSetting.tagging_enabled
+    render_json_dump WatchedWordListSerializer.new(watched_words, scope: guardian, root: false)
   end
 
   def create

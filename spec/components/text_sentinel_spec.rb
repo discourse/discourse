@@ -61,6 +61,18 @@ describe TextSentinel do
       end
     end
 
+    it "uses a sensible min entropy value when min body length is less than min entropy" do
+      SiteSetting.min_post_length = 3
+      SiteSetting.body_min_entropy = 7
+      expect(TextSentinel.body_sentinel('Yup')).to be_valid
+    end
+
+    it "uses a sensible min entropy value when min pm body length is less than min entropy" do
+      SiteSetting.min_post_length = 5
+      SiteSetting.min_personal_message_post_length = 3
+      SiteSetting.body_min_entropy = 7
+      expect(TextSentinel.body_sentinel('Lol', private_message: true)).to be_valid
+    end
   end
 
   context "validity" do
@@ -144,19 +156,9 @@ describe TextSentinel do
 
   end
 
-  context 'body_sentinel' do
-
-    it "uses a sensible min entropy value when min body length is less than min entropy" do
-      SiteSetting.min_post_length = 3
-      SiteSetting.body_min_entropy = 7
-      expect(TextSentinel.body_sentinel('Yup')).to be_valid
-    end
-
-    it "uses a sensible min entropy value when min pm body length is less than min entropy" do
-      SiteSetting.min_post_length = 5
-      SiteSetting.min_personal_message_post_length = 3
-      SiteSetting.body_min_entropy = 7
-      expect(TextSentinel.body_sentinel('Lol', private_message: true)).to be_valid
+  context 'seems_unpretentious?' do
+    it 'works with nil title' do
+      expect(TextSentinel.title_sentinel(nil).seems_unpretentious?).to eq(true)
     end
   end
 

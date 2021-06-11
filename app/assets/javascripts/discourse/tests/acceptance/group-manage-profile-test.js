@@ -1,7 +1,7 @@
 import {
   acceptance,
   count,
-  queryAll,
+  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -12,7 +12,7 @@ acceptance("Managing Group Profile", function () {
     await visit("/g/discourse/manage/profile");
 
     assert.ok(
-      count(".group-members tr") > 0,
+      exists(".group-members tr"),
       "it should redirect to members page for an anonymous user"
     );
   });
@@ -24,16 +24,19 @@ acceptance("Managing Group Profile", function (needs) {
   test("As an admin", async function (assert) {
     await visit("/g/discourse/manage/profile");
 
-    assert.ok(
-      queryAll(".group-form-bio").length === 1,
+    assert.equal(
+      count(".group-form-bio"),
+      1,
       "it should display group bio input"
     );
-    assert.ok(
-      queryAll(".group-form-name").length === 1,
+    assert.equal(
+      count(".group-form-name"),
+      1,
       "it should display group name input"
     );
-    assert.ok(
-      queryAll(".group-form-full-name").length === 1,
+    assert.equal(
+      count(".group-form-full-name"),
+      1,
       "it should display group full name input"
     );
   });
@@ -47,9 +50,8 @@ acceptance("Managing Group Profile", function (needs) {
 
     await visit("/g/discourse/manage/profile");
 
-    assert.equal(
-      queryAll(".group-form-name").length,
-      0,
+    assert.ok(
+      !exists(".group-form-name"),
       "it should not display group name input"
     );
   });

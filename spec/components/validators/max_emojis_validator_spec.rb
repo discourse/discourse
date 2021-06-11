@@ -21,7 +21,7 @@ describe MaxEmojisValidator do
       validate
       expect(record.errors[:title][0]).to eq(I18n.t("errors.messages.max_emojis", max_emojis_count: 3))
 
-      record.title = ':joy: :blush: :smile: is not only about emojis: Happyness::start()'
+      record.title = ':joy: :blush: :smile: is not only about emojis: Happiness::start()'
       validate
       expect(record.valid?).to be true
     end

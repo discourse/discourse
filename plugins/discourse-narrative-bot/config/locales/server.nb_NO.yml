@@ -144,6 +144,9 @@ nb_NO:
           Et flott bilde - jeg trykket på :heart: knappen så du også skal få vite at jeg satte stor pris på det :heart_eyes:
         like_not_found: |-
           Glemte du å trykke :heart:? Liker du ikke [innlegget mitt?](%{url}) :crying_cat_face:
+      likes:
+        not_found: |-
+          Glemte du å trykke :heart:? Liker du ikke [innlegget mitt?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Klarer du å gjøre noen ord **uthevet** eller _kursiv_ i svaret ditt?
@@ -211,12 +214,6 @@ nb_NO:
           Jeg ser ikke navnet mitt der noe sted :frowning: Kan du prøve å nevne meg som `@%{discobot_username}` igjen?
 
           (Og ja, brukernavnet mitt er stavet _disco_, som i 1970s farsott på dansegulvet. Jeg er en stor [fan av nattelivet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
-      flag:
-        instructions: |-
-          Vi liker å holde diskusjonene våre vennlige, og vi trenger din hjelp til å [holde ting sivilisert](%{guidelines_url}). Hvis du oppdager et problem, vær grei og flagg innlegget slik at enten den som skrev det eller [vår hjelpsomme stab](%{about_url}) blir klar over det.
-          > :imp: jeg skrev noe utrivelig her!
-
-          Jeg tror du vet hva du bør gjøre. Prøv å **flagge dette innlegget**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende
       search:
         instructions: |-
           _psst_ ... jeg har gjemt en overraskelse et sted i dette emnet. Hvis du tar utfordringen, **trykk på søkeikonet** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> øverst til høyre &#8599; for å lete etter den.

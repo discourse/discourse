@@ -31,6 +31,11 @@ class InvitesController < ApplicationController
         end
       end
 
+      email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
+      if email_verified_by_link
+        email = invite.email
+      end
+
       hidden_email = email != invite.email
 
       info = {
@@ -38,7 +43,8 @@ class InvitesController < ApplicationController
         email: email,
         hidden_email: hidden_email,
         username: hidden_email ? '' : UserNameSuggester.suggest(invite.email),
-        is_invite_link: invite.is_invite_link?
+        is_invite_link: invite.is_invite_link?,
+        email_verified_by_link: email_verified_by_link
       }
 
       if staged_user = User.where(staged: true).with_email(invite.email).first
@@ -71,10 +77,6 @@ class InvitesController < ApplicationController
   end
 
   def create
-    if params[:email].present? && Invite.exists?(email: params[:email])
-      return render json: failed_json, status: 422
-    end
-
     if params[:topic_id].present?
       topic = Topic.find_by(id: params[:topic_id])
       raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
@@ -153,6 +155,12 @@ class InvitesController < ApplicationController
         old_email = invite.email.presence
         new_email = params[:email].presence
 
+        if new_email
+          if Invite.where.not(id: invite.id).find_by(email: new_email.downcase, invited_by_id: current_user.id)&.redeemable?
+            return render_json_error(I18n.t("invite.invite_exists", email: new_email), status: 409)
+          end
+        end
+
         if old_email != new_email
           invite.emailed_status = if new_email && !params[:skip_email]
             Invite.emailed_status_types[:pending]
@@ -183,7 +191,7 @@ class InvitesController < ApplicationController
 
     if invite.emailed_status == Invite.emailed_status_types[:pending]
       invite.update_column(:emailed_status, Invite.emailed_status_types[:sending])
-      Jobs.enqueue(:invite_email, invite_id: invite.id)
+      Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: params[:invite_to_topic])
     end
 
     render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))

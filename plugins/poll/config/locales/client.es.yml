@@ -77,6 +77,10 @@ es:
         title: Crear encuesta
         insert: Insertar encuesta
         help:
+          options_min_count: Introduce al menos 1 opción.
+          options_max_count: Introduce al menos %{count} opciones.
+          invalid_min_value: El valor mínimo debe ser al menos 1.
+          invalid_max_value: El valor mínimo debe ser al menos 1, pero menor o igual que el número de opciones.
           invalid_values: El valor mínimo debe ser menor que el valor máximo.
           min_step_value: El valor mínimo es 1
         poll_type:
@@ -85,16 +89,29 @@ es:
           multiple: Múltiples opciones
           number: Valoración numérica
         poll_result:
+          label: Ver resultados...
           always: Siempre visible
+          vote: Solo después de votar
+          closed: Cuando se cierre la encuesta
           staff: Solo staff
+        poll_groups:
+          label: Solo permitir votar a estos grupos
         poll_chart_type:
+          label: Gráfico de resultados
           bar: Barras
           pie: Tarta
         poll_config:
+          max: Máximo de opciones
+          min: Mínimo de opciones
           step: Intervalo
         poll_public:
           label: Mostrar quién votó
         poll_title:
           label: Título (opcional)
+        poll_options:
+          label: Opciones (una por línea)
+          add: Añadir opción
         automatic_close:
           label: Cerrar encuesta automáticamente
+        show_advanced: "Ver opciones avanzadas"
+        hide_advanced: "Ocultar opciones avanzadas"

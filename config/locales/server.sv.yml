@@ -225,7 +225,11 @@ sv:
     not_found_template_link: |
       <p>Inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>l
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
+    invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
+    rate_limit:
+      one: "Du har redan skickat %{count} inbjudan den senaste dagen, vänta %{time_left} innan du försöker igen."
+      other: "Du har redan skickat %{count} inbjudningar den senaste dagen, vänta %{time_left} innan du försöker igen."
     confirm_email: "<p>Du är nästan klar! Vi skickade ett aktiveringsmeddelande till din e-postadress. Följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte ser det kan du kolla i din skräppostmapp.</p>"
     cant_invite_to_group: "Du är inte behörig att bjuda in användare till specificerade grupper. Kontrollera att du är ägare för de grupper som du försöker bjuda in till."
     disabled_errors:
@@ -584,6 +588,8 @@ sv:
           attributes:
             word:
               too_many: "För många ord för den funktionen"
+            base:
+              invalid_url: "Ersättnings-URL är ogiltig"
       <<: *errors
   uncategorized_category_name: "Ej kategoriserad"
   vip_category_name: "Lounge"
@@ -637,16 +643,8 @@ sv:
       topic_exists_no_oldest: "Du kan inte ta bort den här kategorin eftersom antalet ämnen är %{count}."
     uncategorized_description: "Ämnen som inte behöver en kategori, eller som inte passar in i någon annan befintlig kategori."
   trust_levels:
-    newuser:
-      title: "ny användare"
-    basic:
-      title: "grundläggande användare"
-    member:
-      title: "medlem"
-    regular:
-      title: "regelbunden"
-    leader:
-      title: "ledare"
+    admin: "Admin"
+    staff: "Medarbetare"
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   post:
     image_placeholder:
@@ -893,6 +891,18 @@ sv:
       others: "Inga svar."
     no_drafts:
       self: "Du har inga utkast; börja att skriva ett svar i ett ämne så sparas det automatiskt som ett nytt utkast."
+  email_settings:
+    pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
+    imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
+    imap_no_response_error: "Det uppstod ett fel vid kommunikation med IMAP-servern. %{message}"
+    smtp_authentication_error: "Det uppstod ett problem med de angivna SMTP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
+    authentication_error_gmail_app_password: 'Programspecifikt lösenord krävs. Läs mer i <a target="_blank" href="https://support.google.com/accounts/answer/185833">den här Google Hjälp-artikeln</a>'
+    smtp_server_busy_error: "SMTP-servern är för närvarande upptagen. Försök igen senare."
+    smtp_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med SMTP-servern. %{message}"
+    imap_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med IMAP-servern. %{message}"
+    connection_error: "Det uppstod ett problem vid anslutning till servern. Kontrollera serverns namn och port och försök igen."
+    timeout_error: "Tidsgränsen för anslutning till servern uppnåddes. Kontrollera serverns namn och port och försök igen."
+    unhandled_error: "Ohanterat fel vid testning av e-postinställningar. %{message}"
   webauthn:
     validation:
       invalid_type_error: "webauthn-typen som angavs var ogiltig. Giltiga typer är webauthn.get eller webauthn.create."
@@ -1460,6 +1470,9 @@ sv:
     tl2_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 2 (medlem) genom att multiplicera med det här numret"
     tl3_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 3 (regelbundna) genom att multiplicera med det här numret"
     tl4_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 4 (ledare) genom att multiplicera med det här numret"
+    tl2_additional_edits_per_day_multiplier: "Öka gränsen för ändringar per dag för tl2 (medlem) genom att multiplicera med detta tal"
+    tl3_additional_edits_per_day_multiplier: "Öka gränsen för ändringar per dag för tl3 (regelbundna) genom att multiplicera med detta tal"
+    tl4_additional_edits_per_day_multiplier: "Öka gränsen för ändringar per dag för tl4 (ledare) genom att multiplicera med detta tal"
     num_users_to_silence_new_user: "Om en ny användares inlägg får num_spam_flags_to_silence_new_user skräppost-flaggor från detta antalet olika användare, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
     num_tl3_flags_to_silence_new_user: "Om en ny användares inlägg får så här många flaggningar från num_tl3_users_to_silence_new_user olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. Ange 0 för att inaktivera."
     num_tl3_users_to_silence_new_user: "Om en ny användares inlägg får num_tl3_flags_to_silence_new_user flaggningar från så här många olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
@@ -1772,7 +1785,7 @@ sv:
     min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid redigeringen av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
     auto_silence_fast_typers_on_first_post: "Tysta automatiskt användare som inte når upp till min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Högsta förtroendenivå för att automatiskt tysta snabba författare"
-    auto_silence_first_post_regex: "Skiftlägesokänsligt reguljärt uttryck som, om det godkänns, leder till att användarens första inlägg tystas och skickas till godkännandekön. Till exempel kommer rasande|a[bc]a att tysta alla inlägg som innehåller rasande eller aba eller aca i första inlägget. Gäller bara första inlägget."
+    auto_silence_first_post_regex: "Skiftlägesokänsligt reguljärt uttryck som, om det godkänns, leder till att användarens första inlägg tystas och skickas till godkännandekön. Till exempel kommer rasande|a[bc]a att tysta alla inlägg som innehåller rasande eller aba eller aca i första inlägget. Gäller bara första inlägget. UTFASAT: Använd Tystnad bevakade ord istället."
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
     reviewable_default_topics: "Visa granskningsbart innehåll grupperat efter ämne som standard"
     reviewable_default_visibility: "Visa inte artiklar som kan granskas om de inte uppfyller denna prioritering"
@@ -1807,6 +1820,7 @@ sv:
     blocked_attachment_filenames: "Lista med nyckelord som används för att blockera bilagor baserat på filnamn."
     forwarded_emails_behaviour: "Hur man behandlar ett vidarebefordrat e-postmeddelande till Discourse"
     always_show_trimmed_content: "Visa alltid trimmade delar av inkommande e-post. VARNING: kan avslöja e-postadresser."
+    trim_incoming_emails: "Trimma en del av de inkommande e-postmeddelandena som inte är relevant."
     private_email: "Inkludera inte innehåll från inlägg eller ämnen i e-posttitel eller e-postinnehåll. NOTERA: inaktiverar även sammanfogade e-postmeddelanden."
     email_total_attachment_size_limit_kb: "Maximal storlek på filer som bifogas till utgående e-post, i kB. Ställ in till 0 för att inaktivera sändningar av bilagor."
     post_excerpts_in_emails: "Skicka alltid utdrag istället för fullständiga inlägg i e-postmeddelanden"
@@ -1932,6 +1946,7 @@ sv:
     notify_about_flags_after: "Om det finns flaggor som inte har hanterats efter detta antal timmar skickas ett personligt meddelande till moderatorerna. Inaktivera genom att ställa in till 0."
     show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
+    delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
     secure_media: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "inloggning krävs" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ämnet för säkra media i Meta</a>.'
@@ -2266,7 +2281,8 @@ sv:
       other: "Automatiskt inaktiverad efter %{count} dagar av inaktivitet"
     activated_by_staff: "Aktiverades av personalen"
     new_user_typed_too_fast: "Ny användare skrev för fort"
-    content_matches_auto_block_regex: "Innehållet matchar automatisk blockering av regelbundet uttryck"
+    content_matches_auto_silence_regex: "Innehållet matchar regelbundet uttryck för automatiskt tystande"
+    content_matches_auto_block_regex: "Innehållet matchar regelbundet uttryck för automatisk blockering"
     username:
       short: "måste vara minst %{min} tecken"
       long: "får högst vara %{max} tecken"
@@ -3324,6 +3340,7 @@ sv:
         Detta är ett automatiserat meddelande från %{site_name} för att meddela dig om att [ditt inlägg](%{base_url}%{post_url}) godkändes.
   page_forbidden:
     title: "Hoppsan! Den sidan är privat."
+  site_setting_missing: "Webbplatsinställningen `%{name}` måste ställas in."
   page_not_found:
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"
@@ -3426,52 +3443,52 @@ sv:
 
       ## [Detta är en civiliserad plats för offentlig diskussion](#civilized)
 
-      Vi ber dig behandla detta diskussionsforum med samma respekt som en offentlig park. Vi är också en delad gemensam resurs — en plats där du kan dela färdigheter, kunskap och intressen genom pågående konversation.
+      Vi ber dig behandla detta diskussionsforum med samma respekt som en offentlig park. Vi är också en delad gemensam resurs &ndash; en plats där du kan dela färdigheter, kunskap och intressen genom pågående konversation.
 
-      Det här är inte strikt bindande regler, utan riktlinjer som hjälper den mänskliga bedömningen av vår gemenskap och bevarar denna som en ren och ordnad plats för civiliserad offentligt dialog.
+      Det här är inte strikt bindande regler. De är riktlinjer som hjälper den mänskliga bedömningen av vårt forum och bevarar detta som en hjälpsam, vänlig plats för civiliserad offentlig dialog.
 
       <a name="improve"></a>
 
       ## [Förbättra diskussionen](#improve)
 
-      Hjälp oss att göra detta till ett bra ställe för dialog genom att alltid arbeta för att förbättra diskussionen på något sätt, hur liten som helst. Om du inte är säker på att ditt inlägg bidrar till konversationen, tänk över vad du vill säga och försök igen senare.
+      Hjälp oss att göra detta till ett bra ställe för dialog genom att alltid lägga till något till diskussionen, hur litet det än må vara. Om du inte är säker på att ditt inlägg bidrar till diskussionen, tänk över vad du vill säga och försök igen senare.
+
+      Ett sätt att förbättra diskussionen är genom att utforska det som redan händer. Lägg lite tid på att bläddra i ämnena här innan du svarar eller startar ditt eget, så har du bättre chans att träffa andra som delar dina intressen.
 
       Ämnen som diskuteras här är viktiga för oss, och vi vill att du ska agera som om de också är betydelsefulla för dig. Ha respekt för ämnena och personerna som diskuterar dem, även om du inte håller med om något av det som sägs.
-
-      Ett sätt att förbättra diskussionen är genom att uppforska det som redan händer. Lägg lite tid på att bläddra i ämnena här innan du svarar eller startar ditt eget, så har du bättre chans att träffa andra som delar dina intressen.
 
       <a name="agreeable"></a>
 
       ## [Var öppen, även om du inte håller med](#agreeable)
 
-      Du kanske vill svara på något genom att inte hålla med om det. Det är okej. Men kom ihåg att _kritisera idéer, inte människor_. Vi ber dig att undvika:
+      Du kanske vill svara genom att inte vara av samma åsikt. Det är okej. Men kom ihåg att _kritisera idéer, inte människor_. Vi ber dig att undvika:
 
       * Skällsord
       * Personliga påhopp
       * Svara på inläggets ton istället för dess faktiska innehåll
       * Impulsiva motsägelser
 
-      Ange istället motiverade motargument som förbättrar samtalet.
+      Ange istället tankeväckande insikter som förbättrar samtalet.
 
       <a name="participate"></a>
 
-      ## [Ditt deltagande är betydelsefullt](#participate)
+      Ditt deltagande är betydelsefullt](#participate)
 
-      De samtal vi har här sätter tonen för varje ny medlem. Hjälp oss att påverka gemenskapens framtid genom att välja att delta i diskussioner som gör detta forum till en intressant plats att vara — och undvika de som inte gör det.
+      De samtal vi har här sätter tonen för varje ny medlem. Hjälp oss att påverka forumets framtid genom att välja att delta i diskussioner som gör forumet till en intressant plats att vara &ndash; och undvika de som inte gör det.
 
       Discourse tillhandahåller verktyg som gör det möjligt för gemenskapen att kollektivt identifiera de bästa (och värsta) bidragen: bokmärken, gillningar, flaggor, svar, redigeringar och så vidare. Använd dessa verktyg för att förbättra din egen upplevelse, och alla andras också.
 
-      Låt oss lämna vår gemenskap bättre än vi hittade den.
+      Låt oss lämna vårt forum bättre än vi hittade det.
 
       <a name="flag-problems"></a>
 
-      ## [Om du ser ett problem, markera det](#flag-problems)
+      ## [Om du ser ett problem, flagga det](#flag-problems)
 
       Moderatorer har särskild auktoritet; de ansvarar för detta forum. Men det gör du också. Med din hjälp kan moderatorer vara gemenskapens hjälpare, inte bara agera vaktmästare eller polis.
 
       När du ser dåligt beteende ska du inte svara. Det uppmuntrar till dåligt beteende genom att det bekräftas, det kommer förbruka din energi och slösa bort allas tid. _Bara flagga det istället_. Om tillräckligt med flaggor sätts kommer åtgärder vidtas antingen automatiskt eller genom att moderatorer ingriper.
 
-      För att upprätthålla vår gemenskap, förbehåller sig moderatorer rätten att ta bort allt innehåll och alla användarkonton på grund av valfri anledning, när som helst. Moderatorer förhandsgranskar inte nya inlägg; moderatorerna och webbplatsoperatörerna tar inget ansvar för något innehåll som publiceras av medlemmarna.
+      För att upprätthålla vår gemenskap förbehåller sig moderatorer rätten att ta bort allt innehåll och alla användarkonton på grund av valfri anledning, när som helst. Moderatorer förhandsgranskar inte nya inlägg; moderatorerna och webbplatsoperatörerna tar inget ansvar för något innehåll som publiceras av forumets medlemmar.
 
       <a name="be-civil"></a>
 
@@ -3484,13 +3501,13 @@ sv:
       * Respektera varandra. Trakassera inte eller gör narr av någon, imitera inte personligheter eller avslöja andras privata information.
       * Respektera vårt forum. Skicka inte skräppost eller skada forumet på annat sätt.
 
-      Detta är inte konkreta begrepp med exakta definitioner — undvik även andra former som liknar någon av dessa punkter. Om du är osäker, fråga dig själv hur det skulle kännas om ditt inlägg hade presenterats på Dagens Nyheters förstasida.
+      Detta är inte konkreta begrepp med exakta definitioner &ndash; se till att du undviker allt som ens _liknar_ dessa punkter. Om du är osäker, fråga dig själv hur det skulle kännas om ditt inlägg hade presenterats på en större nyhetswebbplats startsida.
 
-      Detta är ett offentligt forum och sökmotorer indexerar dessa diskussioner. Håll språk, länkar och bilder anpassade för familj och vänner.
+      Detta är ett offentligt forum, och sökmotorer indexerar dessa diskussioner. Håll språk, länkar och bilder anpassade för familj och vänner.
 
       <a name="keep-tidy"></a>
 
-      ## [Håll det städat(#keep-tidy)
+      ## [Håll det städat](#keep-tidy)
 
       Ansträng dig för att sätta saker på rätt plats så att vi kan spendera mer tid på att diskutera och mindre på att städa upp. Alltså:
 
@@ -3498,7 +3515,7 @@ sv:
       * Skriv inte samma sak i flera ämnen.
       * Skicka inga svar utan innehåll.
       * Ändra inte ett samtalsämne genom att byta ämne mitt i.
-      * Skriv inte under dina inlägg — Varje inlägg har redan din profilinformation bifogad.
+      * Skriv inte under dina inlägg &ndash; din profilinformation har redan bifogats varje inlägg.
 
       Istället för att posta “+1” eller “Instämmer”, använd knappen Gilla. Istället för att ta ett befintligt ämne i en radikalt annorlunda riktning, använd Svara som ett länkat ämne.
 
@@ -3512,7 +3529,7 @@ sv:
 
       ## [Drivs av dig](#power)
 
-      Denna webbplats drivs av din [vänliga lokala personal](%{base_path}/about) och _dig_, som tillsammans utgör forumet. Om du har ytterligare frågor om hur saker och ting ska fungera här, öppna ett nytt ämne i [kategorin för feedback](%{base_path}/c/site-feedback) och låt oss diskutera! Om det finns en kritisk eller brådskande fråga som inte kan hanteras av en flaggning eller ämnestaggning, kontakta oss via [personalsidan](%{base_path}/about).
+      Denna webbplats drivs av din [vänliga lokala personal](%{base_path}/about) och *dig*, som tillsammans utgör forumet. Om du har ytterligare frågor om hur saker och ting ska fungera här, öppna ett nytt ämne i [webbplatsens kategori för synpunkter](%{base_path}/c/site-feedback) och låt oss diskutera! Om det finns en kritisk eller brådskande fråga, som inte kan hanteras av ett metaämne eller en flaggning, kontaktar du oss via [personalsidan](%{base_path}/about).
 
       <a name="tos"></a>
 
@@ -4074,6 +4091,7 @@ sv:
       restored: Återställd
   reviewables:
     already_handled: "Tack, men vi har redan granskat det inlägget och beslutat att det inte behöver flaggas igen."
+    already_handled_and_user_not_exist: "Tack, men någon har redan granskat detta och den användaren finns inte längre."
     priorities:
       low: "Låg"
       medium: "Medium"

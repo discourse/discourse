@@ -106,7 +106,7 @@ describe DestroyTask do
       destroy_task = DestroyTask.new(StringIO.new)
       destroy_task.destroy_users
       expect(User.where(admin: false).count).to eq 0
-      # admin does not get detroyed
+      # admin does not get destroyed
       expect(User.count).to eq before_count + 1
     end
   end

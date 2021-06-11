@@ -70,6 +70,12 @@ export function ajax() {
     args = arguments[1];
   }
 
+  let ignoreUnsent = true;
+  if (args.ignoreUnsent !== undefined) {
+    ignoreUnsent = args.ignoreUnsent;
+    delete args.ignoreUnsent;
+  }
+
   function performAjax(resolve, reject) {
     args.headers = args.headers || {};
 
@@ -112,7 +118,7 @@ export function ajax() {
 
     args.error = (xhr, textStatus, errorThrown) => {
       // 0 represents the `UNSENT` state
-      if (xhr.readyState === 0) {
+      if (ignoreUnsent && xhr.readyState === 0) {
         // Make sure we log pretender errors in test mode
         if (textStatus === "error" && isTesting()) {
           throw errorThrown;
@@ -128,7 +134,7 @@ export function ajax() {
         Session.current().set("csrfToken", null);
       }
 
-      // If it's a parsererror, don't reject
+      // If it's a parser error, don't reject
       if (xhr.status === 200) {
         return args.success(xhr);
       }
@@ -160,10 +166,6 @@ export function ajax() {
 
     if (args.dataType === "script") {
       args.headers["Discourse-Script"] = true;
-    }
-
-    if (args.type === "GET" && args.cache !== true) {
-      args.cache = true; // Disable JQuery cache busting param, which was created to deal with IE8
     }
 
     ajaxObj = $.ajax(getURL(url), args);

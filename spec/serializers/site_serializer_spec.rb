@@ -59,4 +59,14 @@ describe SiteSerializer do
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     expect(serialized[:default_dark_color_scheme]).to eq(nil)
   end
+
+  it 'does not include shared_drafts_category_id if the category is Uncategorized' do
+    admin = Fabricate(:admin)
+    admin_guardian = Guardian.new(admin)
+
+    SiteSetting.shared_drafts_category = SiteSetting.uncategorized_category_id
+
+    serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+    expect(serialized[:shared_drafts_category_id]).to eq(nil)
+  end
 end

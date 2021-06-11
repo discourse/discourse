@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 id:
+  js:
+    styleguide:
+      sections:
+        categories:
+          title: "Kategori"
+        navigation:
+          title: "Navigasi"
+        suggested_topics:
+          title: "Topik Yang Disarankan"

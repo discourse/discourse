@@ -32,6 +32,18 @@ describe ContentSecurityPolicy do
     end
   end
 
+  describe 'upgrade-insecure-requests' do
+    it 'is not included when force_https is off' do
+      SiteSetting.force_https = false
+      expect(parse(policy)['upgrade-insecure-requests']).to eq(nil)
+    end
+
+    it 'is included when force_https is on' do
+      SiteSetting.force_https = true
+      expect(parse(policy)['upgrade-insecure-requests']).to eq([])
+    end
+  end
+
   describe 'worker-src' do
     it 'has expected values' do
       worker_srcs = parse(policy)['worker-src']
@@ -155,6 +167,12 @@ describe ContentSecurityPolicy do
     end
   end
 
+  describe 'manifest-src' do
+    it 'is set to self' do
+      expect(parse(policy)['manifest-src']).to eq(["'self'"])
+    end
+  end
+
   describe 'frame-ancestors' do
     context 'with content_security_policy_frame_ancestors enabled' do
       before do
@@ -188,26 +206,52 @@ describe ContentSecurityPolicy do
     end
   end
 
-  it 'can be extended by plugins' do
-    plugin = Class.new(Plugin::Instance) do
-      attr_accessor :enabled
-      def enabled?
-        @enabled
+  context 'with a plugin' do
+    let(:plugin_class) do
+      Class.new(Plugin::Instance) do
+        attr_accessor :enabled
+        def enabled?
+          @enabled
+        end
       end
-    end.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+    end
 
-    plugin.activate!
-    Discourse.plugins << plugin
+    it 'can extend script-src, object-src, manifest-src' do
+      plugin = plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
 
-    plugin.enabled = true
-    expect(parse(policy)['script-src']).to include('https://from-plugin.com')
-    expect(parse(policy)['object-src']).to include('https://test-stripping.com')
-    expect(parse(policy)['object-src']).to_not include("'none'")
+      plugin.activate!
+      Discourse.plugins << plugin
 
-    plugin.enabled = false
-    expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
+      plugin.enabled = true
+      expect(parse(policy)['script-src']).to include('https://from-plugin.com')
+      expect(parse(policy)['object-src']).to include('https://test-stripping.com')
+      expect(parse(policy)['object-src']).to_not include("'none'")
+      expect(parse(policy)['manifest-src']).to include("'self'")
+      expect(parse(policy)['manifest-src']).to include('https://manifest-src.com')
 
-    Discourse.plugins.pop
+      plugin.enabled = false
+      expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
+      expect(parse(policy)['manifest-src']).to_not include('https://manifest-src.com')
+
+      Discourse.plugins.delete plugin
+    end
+
+    it 'can extend frame_ancestors' do
+      SiteSetting.content_security_policy_frame_ancestors = true
+      plugin = plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+
+      plugin.activate!
+      Discourse.plugins << plugin
+
+      plugin.enabled = true
+      expect(parse(policy)['frame-ancestors']).to include("'self'")
+      expect(parse(policy)['frame-ancestors']).to include('https://frame-ancestors-plugin.ext')
+
+      plugin.enabled = false
+      expect(parse(policy)['frame-ancestors']).to_not include('https://frame-ancestors-plugin.ext')
+
+      Discourse.plugins.delete plugin
+    end
   end
 
   it 'only includes unsafe-inline for qunit paths' do

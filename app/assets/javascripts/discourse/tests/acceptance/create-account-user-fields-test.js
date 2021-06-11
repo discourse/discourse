@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -62,12 +63,12 @@ acceptance("Create Account - User Fields", function (needs) {
     );
 
     await click(".modal-footer .btn-primary");
-    assert.equal(queryAll("#modal-alert")[0].style.display, "");
+    assert.equal(query("#modal-alert").style.display, "");
 
     await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
 
     await click(".modal-footer .btn-primary");
-    assert.equal(queryAll("#modal-alert")[0].style.display, "none");
+    assert.equal(query("#modal-alert").style.display, "none");
   });
 });

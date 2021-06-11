@@ -9,12 +9,6 @@ require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
 require 'digest/sha1'
 
-# Prevents errors with reloading dev with conditional includes
-if Rails.env.development?
-  require_dependency 'file_store/s3_store'
-  require_dependency 'file_store/local_store'
-end
-
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
   REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
@@ -749,6 +743,17 @@ module Discourse
 
     DiscourseJsProcessor::Transpiler.reset_context if defined? DiscourseJsProcessor::Transpiler
     JsLocaleHelper.reset_context if defined? JsLocaleHelper
+
+    # warm up v8 after fork, that way we do not fork a v8 context
+    # it may cause issues if bg threads in a v8 isolate randomly stop
+    # working due to fork
+    begin
+      # Skip warmup in development mode - it makes boot take ~2s longer
+      PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
+    rescue => e
+      Rails.logger.error("Failed to warm up pretty text: #{e}")
+    end
+
     nil
   end
 
@@ -920,9 +925,9 @@ module Discourse
 
     schema_cache = ActiveRecord::Base.connection.schema_cache
 
-    # load up schema cache for all multisite assuming all dbs have
-    # an identical schema
     RailsMultisite::ConnectionManagement.safe_each_connection do
+      # load up schema cache for all multisite assuming all dbs have
+      # an identical schema
       dup_cache = schema_cache.dup
       # this line is not really needed, but just in case the
       # underlying implementation changes lets give it a shot
@@ -933,18 +938,42 @@ module Discourse
       # this will force Cppjieba to preload if any site has it
       # enabled allowing it to be reused between all child processes
       Search.prepare_data("test")
+
+      JsLocaleHelper.load_translations(SiteSetting.default_locale)
+      Site.json_for(Guardian.new)
+      SvgSprite.preload
+
+      begin
+        SiteSetting.client_settings_json
+      rescue => e
+        # Rescue from Redis related errors so that we can still boot the
+        # application even if Redis is down.
+        warn_exception(e, message: "Error while preloading client settings json")
+      end
     end
 
-    # router warm up
-    Rails.application.routes.recognize_path('abc') rescue nil
-
-    # preload discourse version
-    Discourse.git_version
-    Discourse.git_branch
-    Discourse.full_version
-
-    require 'actionview_precompiler'
-    ActionviewPrecompiler.precompile
+    [
+      Thread.new {
+        # router warm up
+        Rails.application.routes.recognize_path('abc') rescue nil
+      },
+      Thread.new {
+        # preload discourse version
+        Discourse.git_version
+        Discourse.git_branch
+        Discourse.full_version
+      },
+      Thread.new {
+        require 'actionview_precompiler'
+        ActionviewPrecompiler.precompile
+      },
+      Thread.new {
+        LetterAvatar.image_magick_version
+      },
+      Thread.new {
+        SvgSprite.core_svgs
+      }
+    ].each(&:join)
   ensure
     @preloaded_rails = true
   end

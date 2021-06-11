@@ -132,6 +132,7 @@ es:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Puedes contar con ello
+        discobot_disabled: Me has desactivado en tus preferencias. Tienes que permitir los consejos de bienvenida para interactuar conmigo.
       do_not_understand:
         first_response: |-
           ¡Hey, gracias por la respuesta!
@@ -275,11 +276,11 @@ es:
           (¡Sí! mi nombre de usuario se deletrea _disco_, como el baile de los años 70. [¡Me encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Nos gustan nuestras discusiones amistosas y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, por favor, repórtalo en privado para que el autor [o nuestro staff](%{about_url}) reciban una notificación.
+          Nos gusta que nuestros debates sean amables, y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, por favor marca la bandera para informar al autor o a [nuestro colaborador](%{about_url}) sobre él. Hay muchas razones por las que puede querer marcar un post, que va desde una inocua sugerencia de división de temas hasta una clara violación de los estándares comunitarios. Si seleccionas **Algo más**, iniciarás una discusión privada de mensajes con los moderadores donde podrás hacer más preguntas.
 
-          > :imp: Escribí algo asqueroso aquí
+          > :imp: Escribí algo desagradable aquí
 
-          Me imagino que sabes qué hacer. ¡Anímate y **reporta este mensaje** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
+          ¡Sigue adelante y **marca esta publicación** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> y selecciona **Es inapropiado** como la razón!
         reply: |-
           [Nuestro staff](%{base_uri}/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, este se ocultará automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado el reporte por ahora)
         not_found: |-

@@ -3,6 +3,9 @@
     display: inline-block;
     padding-left: 10px;
   }
+  &.modal-body {
+    width: 460px;
+  }
   .radios {
     min-height: 60px;
     display: flex;
@@ -36,8 +39,7 @@
       }
     }
   }
-  .radios:last-child:not(:nth-child(2)) {
-    // last child for composer modal, but not theme import modal
+  .radios:last-child {
     min-height: 20px;
   }
 }

@@ -58,6 +58,7 @@ ar:
         age: "أُغلق الاستطلاع <strong>%{age}</strong>."
       breakdown:
         title: "نتائج الاستطلاع"
+        count: "العد"
       error_while_toggling_status: "معذرةً، حدث عُطل أثناء تبديل حالة هذا الاستطلاع."
       error_while_casting_votes: "عذرا، حدث خطأ عند الإدلاء بأصواتكم."
       error_while_fetching_voters: "عذرا، حدث خطأ في عرض الناخبين."

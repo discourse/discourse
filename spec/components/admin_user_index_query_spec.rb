@@ -33,7 +33,7 @@ describe AdminUserIndexQuery do
       expect(query.find_users_query.to_sql).to match("trust_level ASC")
     end
 
-    it "allows custom ordering for stats wtih default direction" do
+    it "allows custom ordering for stats with default direction" do
       query = ::AdminUserIndexQuery.new(order: "topics_viewed")
       expect(query.find_users_query.to_sql).to match("topics_entered DESC")
     end

@@ -93,7 +93,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   # NOTE: A Category Group Moderator moving a topic to a different category
   # may result in the 'can_edit?' result changing from `true` to `false`.
-  # Explictly returning a `false` value is required to update the client UI.
+  # Explicitly returning a `false` value is required to update the client UI.
   def can_edit
     scope.can_edit?(object.topic)
   end

@@ -1,5 +1,12 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  exists,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Poll breakdown", function (needs) {
   needs.user();
@@ -60,28 +67,23 @@ acceptance("Poll breakdown", function (needs) {
   test("Displaying the poll breakdown modal", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
 
-    assert.equal(
-      queryAll(".poll-show-breakdown").text(),
-      "Show breakdown",
+    assert.ok(
+      exists(".poll-show-breakdown"),
       "shows the breakdown button when poll_groupable_user_fields is non-empty"
     );
 
     await click(".poll-show-breakdown");
 
-    assert.equal(
-      queryAll(".poll-breakdown-total-votes")[0].textContent.trim(),
-      "2 votes",
-      "display the correct total vote count"
-    );
+    assert.ok(exists(".poll-breakdown-total-votes"), "displays the vote count");
 
     assert.equal(
-      queryAll(".poll-breakdown-chart-container").length,
+      count(".poll-breakdown-chart-container"),
       2,
       "renders a chart for each of the groups in group_results response"
     );
 
     assert.ok(
-      queryAll(".poll-breakdown-chart-container > canvas")[0].$chartjs,
+      query(".poll-breakdown-chart-container > canvas").$chartjs,
       "$chartjs is defined on the pie charts"
     );
   });
@@ -91,7 +93,7 @@ acceptance("Poll breakdown", function (needs) {
     await click(".poll-show-breakdown");
 
     assert.equal(
-      queryAll(".poll-breakdown-option-count")[0].textContent.trim(),
+      query(".poll-breakdown-option-count").textContent.trim(),
       "40.0%",
       "displays the correct vote percentage"
     );
@@ -99,7 +101,7 @@ acceptance("Poll breakdown", function (needs) {
     await click(".modal-tabs .count");
 
     assert.equal(
-      queryAll(".poll-breakdown-option-count")[0].textContent.trim(),
+      query(".poll-breakdown-option-count").textContent.trim(),
       "2",
       "displays the correct vote count"
     );
@@ -107,8 +109,8 @@ acceptance("Poll breakdown", function (needs) {
     await click(".modal-tabs .percentage");
 
     assert.equal(
-      queryAll(".poll-breakdown-option-count:last")[0].textContent.trim(),
-      "20.0%",
+      query(".poll-breakdown-option-count").textContent.trim(),
+      "40.0%",
       "displays the percentage again"
     );
   });

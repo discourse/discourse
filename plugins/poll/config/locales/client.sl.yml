@@ -87,6 +87,7 @@ sl:
         title: Ustvari anketo
         insert: Vstavi anketo
         help:
+          options_min_count: Vnesite vsaj eno možnost.
           invalid_values: Najmanjša vrednost mora biti manjša od največje vrednosti.
           min_step_value: Najmanjša vrednost koraka je 1.
         poll_type:
@@ -106,3 +107,4 @@ sl:
           label: Pokaži glasovalce
         automatic_close:
           label: Samodejno zapri anketo
+        show_advanced: "Pokaži dodatne možnosti"

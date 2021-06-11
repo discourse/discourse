@@ -187,7 +187,7 @@ class RateLimiter
 
     # number of events in buffer less than max allowed? OR
     (redis.llen(prefixed_key) < @max) ||
-    # age bigger than silding window size?
+    # age bigger than sliding window size?
     (age_of_oldest(now) >= @secs)
   end
 

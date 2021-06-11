@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   exists,
   queryAll,
@@ -94,7 +95,7 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
     test(assert) {
       assert.ok(exists(".pagination"), "it paginates the results");
       assert.equal(
-        queryAll(".pagination button").length,
+        count(".pagination button"),
         3,
         "it creates the correct number of pages"
       );

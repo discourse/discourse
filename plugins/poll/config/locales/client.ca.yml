@@ -60,6 +60,8 @@ ca:
       automatic_close:
         closes_in: "Es tanca en <strong>%{timeLeft}</strong> ."
         age: "Tancat <strong>%{age}</strong>"
+      breakdown:
+        count: "Recompte"
       error_while_toggling_status: "Ho sentim. S'ha produït un error en canviar l'estat d'aquesta enquesta."
       error_while_casting_votes: "Ho sentim. S'ha produït un error en l'emissió dels vostres vots."
       error_while_fetching_voters: "Hi ha hagut un error en mostrar els votants."
@@ -68,6 +70,7 @@ ca:
         title: Crea una enquesta
         insert: Insereix una enquesta
         help:
+          options_min_count: Introduïu almenys una opció.
           invalid_values: El valor mínim ha de ser més petit que el valor màxim.
           min_step_value: L'increment mínim és 1
         poll_type:

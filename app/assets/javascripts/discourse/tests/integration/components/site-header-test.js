@@ -2,8 +2,9 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
-  queryAll,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import pretender from "discourse/tests/helpers/create-pretender";
 import hbs from "htmlbars-inline-precompile";
@@ -20,8 +21,9 @@ discourseModule("Integration | Component | site-header", function (hooks) {
     },
 
     async test(assert) {
-      assert.ok(
-        queryAll(".ring-backdrop").length === 1,
+      assert.equal(
+        count(".ring-backdrop"),
+        1,
         "there is the first notification mask"
       );
 
@@ -29,7 +31,7 @@ discourseModule("Integration | Component | site-header", function (hooks) {
       await click("header.d-header");
 
       assert.ok(
-        queryAll(".ring-backdrop").length === 0,
+        !exists(".ring-backdrop"),
         "it hides the first notification mask"
       );
     },
@@ -41,7 +43,7 @@ discourseModule("Integration | Component | site-header", function (hooks) {
 
     async test(assert) {
       assert.ok(
-        queryAll(".ring-backdrop").length === 0,
+        !exists(".ring-backdrop"),
         "there is no first notification mask for anonymous users"
       );
 

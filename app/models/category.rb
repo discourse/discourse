@@ -735,7 +735,9 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache[self.id] ||= "#{Discourse.base_path}/c/#{slug_path.join('/')}/#{self.id}"
+    @@url_cache.defer_get_set(self.id) do
+      "#{Discourse.base_path}/c/#{slug_path.join('/')}/#{self.id}"
+    end
   end
 
   def url_with_id
@@ -785,7 +787,7 @@ class Category < ActiveRecord::Base
   end
 
   def update_reviewables
-    if SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
+    if should_update_reviewables?
       Reviewable.where(category_id: id).update_all(reviewable_by_group_id: reviewable_by_group_id)
     end
   end
@@ -913,6 +915,10 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def should_update_reviewables?
+    SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
+  end
 
   def check_permissions_compatibility(parent_permissions, child_permissions)
     parent_groups = parent_permissions.map(&:first)

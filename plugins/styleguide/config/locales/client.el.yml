@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 el:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Καλώς ήρθατε στο Discourse"
+        colors:
+          title: "Χρώματα"
+        icons:
+          title: "Εικονίδια"
+        categories:
+          title: "Κατηγορίες"
+        navigation:
+          title: "Πλοήγηση"
+        categories_list:
+          title: "Λίστα Κατηγοριών"
+        topic_timer_info:
+          title: "Χρονοδιακόπτες Νημάτων"
+        post:
+          title: "Ανάρτηση"
+        suggested_topics:
+          title: "Προτεινόμενα θέματα"

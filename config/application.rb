@@ -93,7 +93,7 @@ module Discourse
     require_dependency 'lib/highlight_js/highlight_js'
 
     # we skip it cause we configure it in the initializer
-    # the railstie for message_bus would insert it in the
+    # the railtie for message_bus would insert it in the
     # wrong position
     config.skip_message_bus_middleware = true
     config.skip_multisite_middleware = true
@@ -111,7 +111,6 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/app/jobs"]
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib"]
-    config.autoload_paths += Dir["#{config.root}/lib/active_record/connection_adapters"]
     config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
     config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
     config.autoload_paths += Dir["#{config.root}/lib/i18n"]
@@ -139,7 +138,7 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
-    # Allows us to skip minifincation on some files
+    # Allows us to skip minification on some files
     config.assets.skip_minification = []
 
     # explicitly precompile any images in plugins ( /assets/images ) path
@@ -174,9 +173,10 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
-      discourse/tests/theme_qunit_helper.js
-      discourse/tests/theme_qunit_vendor.js
       discourse/tests/theme_qunit_ember_jquery.js
+      discourse/tests/theme_qunit_vendor.js
+      discourse/tests/theme_qunit_tests_vendor.js
+      discourse/tests/theme_qunit_helper.js
       discourse/tests/test_starter.js
     }
 
@@ -293,7 +293,7 @@ module Discourse
     # our setup does not use rack cache and instead defers to nginx
     config.action_dispatch.rack_cache = nil
 
-    # ember stuff only used for asset precompliation, production variant plays up
+    # ember stuff only used for asset precompilation, production variant plays up
     config.ember.variant = :development
     config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"

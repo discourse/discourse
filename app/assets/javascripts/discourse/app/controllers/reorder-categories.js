@@ -1,8 +1,6 @@
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import BufferedMixin from "ember-buffered-proxy/mixin";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import Controller from "@ember/controller";
-import EmberObjectProxy from "@ember/object/proxy";
 import Evented from "@ember/object/evented";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
@@ -17,8 +15,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
 
   @discourseComputed("site.categories.[]")
   categoriesBuffered(categories) {
-    const bufProxy = EmberObjectProxy.extend(BufferedMixin || BufferedProxy);
-    return (categories || []).map((c) => bufProxy.create({ content: c }));
+    return (categories || []).map((c) => BufferedProxy.create({ content: c }));
   },
 
   categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
@@ -63,56 +60,97 @@ export default Controller.extend(ModalFunctionality, Evented, {
     this.notifyPropertyChange("categoriesBuffered");
   },
 
+  countDescendants(category) {
+    return category.get("subcategories")
+      ? category
+          .get("subcategories")
+          .reduce(
+            (count, subcategory) => count + this.countDescendants(subcategory),
+            category.get("subcategories").length
+          )
+      : 0;
+  },
+
   move(category, direction) {
-    let otherCategory;
+    let targetPosition = category.get("position") + direction;
 
-    if (direction === -1) {
-      // First category above current one
-      const categoriesOrderedDesc = this.categoriesOrdered.reverse();
-      otherCategory = categoriesOrderedDesc.find(
-        (c) =>
-          category.get("parent_category_id") === c.get("parent_category_id") &&
-          c.get("position") < category.get("position")
-      );
-    } else if (direction === 1) {
-      // First category under current one
-      otherCategory = this.categoriesOrdered.find(
-        (c) =>
-          category.get("parent_category_id") === c.get("parent_category_id") &&
-          c.get("position") > category.get("position")
-      );
-    } else {
-      // Find category occupying target position
-      otherCategory = this.categoriesOrdered.find(
-        (c) => c.get("position") === category.get("position") + direction
-      );
-    }
-
-    if (otherCategory) {
-      // Try to swap positions of the two categories
-      if (category.get("id") !== otherCategory.get("id")) {
-        const currentPosition = category.get("position");
-        category.set("position", otherCategory.get("position"));
-        otherCategory.set("position", currentPosition);
+    // Adjust target position for sub-categories
+    if (direction > 0) {
+      // Moving down (position gets larger)
+      if (category.get("isParent")) {
+        // This category has subcategories, adjust targetPosition to account for them
+        let offset = this.countDescendants(category);
+        if (direction <= offset) {
+          // Only apply offset if target position is occupied by a subcategory
+          // Seems weird but fixes a UX quirk
+          targetPosition += offset;
+        }
       }
-    } else if (direction < 0) {
-      category.set("position", -1);
-    } else if (direction > 0) {
-      category.set("position", this.categoriesOrdered.length);
+    } else {
+      // Moving up (position gets smaller)
+      const otherCategory = this.categoriesOrdered.find(
+        (c) =>
+          // find category currently at targetPosition
+          c.get("position") === targetPosition
+      );
+      if (otherCategory && otherCategory.get("ancestors")) {
+        // Target category is a subcategory, adjust targetPosition to account for ancestors
+        const highestAncestor = otherCategory
+          .get("ancestors")
+          .reduce((current, min) =>
+            current.get("position") < min.get("position") ? current : min
+          );
+        targetPosition = highestAncestor.get("position");
+      }
     }
+
+    // Adjust target position for range bounds
+    if (targetPosition >= this.categoriesOrdered.length) {
+      // Set to max
+      targetPosition = this.categoriesOrdered.length - 1;
+    } else if (targetPosition < 0) {
+      // Set to min
+      targetPosition = 0;
+    }
+
+    // Update other categories between current and target position
+    this.categoriesOrdered.map((c) => {
+      if (direction < 0) {
+        // Moving up (position gets smaller)
+        if (
+          c.get("position") < category.get("position") &&
+          c.get("position") >= targetPosition
+        ) {
+          const newPosition = c.get("position") + 1;
+          c.set("position", newPosition);
+        }
+      } else {
+        // Moving down (position gets larger)
+        if (
+          c.get("position") > category.get("position") &&
+          c.get("position") <= targetPosition
+        ) {
+          const newPosition = c.get("position") - 1;
+          c.set("position", newPosition);
+        }
+      }
+    });
+
+    // Update this category's position to target position
+    category.set("position", targetPosition);
 
     this.reorder();
   },
 
   actions: {
     change(category, event) {
-      let newPosition = parseInt(event.target.value, 10);
-      newPosition = Math.min(
-        Math.max(newPosition, 0),
-        this.categoriesOrdered.length - 1
-      );
-
-      this.move(category, newPosition - category.get("position"));
+      let newPosition = parseFloat(event.target.value);
+      newPosition =
+        newPosition < category.get("position")
+          ? Math.ceil(newPosition)
+          : Math.floor(newPosition);
+      const direction = newPosition - category.get("position");
+      this.move(category, direction);
     },
 
     moveUp(category) {

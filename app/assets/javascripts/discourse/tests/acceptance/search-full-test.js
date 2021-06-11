@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   queryAll,
   selectDate,
@@ -96,19 +97,20 @@ acceptance("Search - Full Page", function (needs) {
 
     assert.ok($("body.search-page").length, "has body class");
     assert.ok(exists(".search-container"), "has container class");
-    assert.ok(queryAll(".search-query").length > 0);
-    assert.ok(queryAll(".fps-topic").length === 0);
+    assert.ok(exists(".search-query"));
+    assert.ok(!exists(".fps-topic"));
 
     await fillIn(".search-query", "none");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 0, "has no results");
-    assert.ok(queryAll(".no-results-suggestion .google-search-form"));
+    assert.ok(!exists(".fps-topic"), "has no results");
+    assert.ok(exists(".no-results-suggestion"));
+    assert.ok(exists(".google-search-form"));
 
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+    assert.equal(count(".fps-topic"), 1, "has one post");
   });
 
   test("search for personal messages", async function (assert) {
@@ -117,10 +119,11 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "discourse in:personal");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+    assert.equal(count(".fps-topic"), 1, "has one post");
 
-    assert.ok(
-      queryAll(".topic-status .personal_message").length === 1,
+    assert.equal(
+      count(".topic-status .personal_message"),
+      1,
       "shows the right icon"
     );
   });

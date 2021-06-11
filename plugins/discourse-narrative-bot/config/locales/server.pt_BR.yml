@@ -43,6 +43,9 @@ pt_BR:
       trigger: "rolar"
       invalid: |-
         Sinto muito, é matematicamente impossível rolar essa combinação de dados. :confounded:
+      not_enough_dice:
+        one: "Eu só tenho %{count} dado. [Vergonhoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), eu sei!"
+        other: "Eu só tenho %{count} dados. [Vergonhoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), eu sei!"
       out_of_range: |-
         Você sabia que [o número máximo de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para um dado matematicamente justo é 120?
       results: |-
@@ -270,12 +273,6 @@ pt_BR:
 
           (E sim, meu nome de usuário é soletrado _disco_, como na mania de dança dos anos 70. Eu realmente [amo a vida noturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Nós gostamos de nossas discussões amigáveis, e precisamos da sua ajuda para [manter as coisas civilizadas](%{guidelines_url}). Se você encontrar algum problema, por favor sinalize para que o autor ou [a nossa prestativa staff](%{about_url}) fique sabendo secretamente.
-
-          > :imp: Eu escrevi algo inapropriado aqui
-
-          Eu acho que você sabe o que fazer. Vá em frente e **sinalize esta postagem** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropriada!
         reply: |-
           [Nossa staff](%{base_uri}/groups/staff) será notificada secretamente sobre a sua sinalização. Se membros suficientes da comunidade notificarem uma postagem, ela também será automaticamente oculta como uma precaução. (Já que eu na verdade não escrevi uma postagem inapropriada :angel:, tomei a liberdade de remover a sinalização por enquanto.)
         not_found: |-

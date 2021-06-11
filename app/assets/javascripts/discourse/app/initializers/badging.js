@@ -1,4 +1,4 @@
-// Updates the PWA badging if avaliable
+// Updates the PWA badging if available
 export default {
   name: "badging",
   after: "message-bus",

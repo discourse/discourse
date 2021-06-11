@@ -484,7 +484,7 @@ module SiteSettingExtension
     end
 
     define_singleton_method "#{clean_name}=" do |val|
-      Rails.logger.warn("An attempt was to change #{clean_name} SiteSetting to #{val} however it is shadowed so this will be ignored!")
+      Rails.logger.warn("An attempt was to change #{clean_name} SiteSetting to #{val} however it is shadowed so this will be ignored!") if value != val
       nil
     end
 

@@ -40,6 +40,8 @@ vi:
         title: "Đóng thăm dò"
         label: "Đóng"
         confirm: "Bạn có muốn đóng thăm dò này ?"
+      breakdown:
+        count: "Đếm"
       error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái của thăm dò."
       error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến bình chọn của bạn."
       error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia bình chọn."

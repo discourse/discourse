@@ -6,31 +6,29 @@ describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
 
-  unless ENV["TRAVIS"]
-    describe '.crop' do
-      it 'should produce cropped images (requires ImageMagick 7)' do
-        tmp_path = "/tmp/cropped.png"
+  describe '.crop' do
+    it 'should produce cropped images (requires ImageMagick 7)' do
+      tmp_path = "/tmp/cropped.png"
 
-        begin
-          OptimizedImage.crop(
-            "#{Rails.root}/spec/fixtures/images/logo.png",
-            tmp_path,
-            5,
-            5
-          )
+      begin
+        OptimizedImage.crop(
+          "#{Rails.root}/spec/fixtures/images/logo.png",
+          tmp_path,
+          5,
+          5
+        )
 
-          # we don't want to deal with something new here every time image magick
-          # is upgraded or pngquant is upgraded, lets just test the basics ...
-          # cropped image should be less than 120 bytes
+        # we don't want to deal with something new here every time image magick
+        # is upgraded or pngquant is upgraded, lets just test the basics ...
+        # cropped image should be less than 120 bytes
 
-          cropped_size = File.size(tmp_path)
+        cropped_size = File.size(tmp_path)
 
-          expect(cropped_size).to be < 120
-          expect(cropped_size).to be > 50
+        expect(cropped_size).to be < 120
+        expect(cropped_size).to be > 50
 
-        ensure
-          File.delete(tmp_path) if File.exists?(tmp_path)
-        end
+      ensure
+        File.delete(tmp_path) if File.exists?(tmp_path)
       end
     end
 

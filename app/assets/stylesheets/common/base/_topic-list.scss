@@ -1,8 +1,6 @@
 // Topic list navigation & controls
 
 .list-controls {
-  margin-bottom: 0.25em;
-
   .btn {
     &:not(:first-child) {
       margin-left: 0.5em;
@@ -81,6 +79,19 @@
     // need to reduce vertical padding for consistent height
     padding-top: 0.3em;
     padding-bottom: 0.3em;
+    @include breakpoint(mobile-medium) {
+      font-size: var(--font-down-1);
+    }
+  }
+  @include breakpoint(mobile-large) {
+    .edit-category {
+      .d-button-label {
+        display: none;
+      }
+      .d-icon {
+        margin: 0;
+      }
+    }
   }
 }
 
@@ -201,6 +212,7 @@
     }
 
     td span {
+      position: relative; // Chrome needs this, otherwise the line is above the text
       background-color: var(--secondary);
       color: var(--danger-medium);
       padding: 0 8px;
@@ -266,8 +278,9 @@
   }
 
   .topic-excerpt {
+    display: block;
     font-size: $font-down-1;
-    margin-top: 5px;
+    margin-top: 0.33em;
     color: var(--primary-high);
     word-wrap: break-word;
     line-height: $line-height-large;

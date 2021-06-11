@@ -1,6 +1,7 @@
 {{#discourse-topic multiSelect=multiSelect enteredAt=enteredAt topic=model hasScrolled=hasScrolled}}
   {{#if model}}
     {{add-category-tag-classes category=model.category tags=model.tags}}
+    {{add-topic-status-classes topic=model}}
     <div class="container">
       {{discourse-banner user=currentUser banner=site.banner overlay=hasScrolled hide=model.errorLoading}}
     </div>

@@ -88,14 +88,16 @@ class Stylesheet::Manager
             builder.compile unless File.exists?(builder.stylesheet_fullpath)
             href = builder.stylesheet_path(current_hostname)
           end
-          cache[cache_key] = href
+
+          cache.defer_set(cache_key, href)
         end
 
         data[:theme_id] = theme_id if theme_id.present? && data[:theme_id].blank?
         data[:new_href] = href
         stylesheets << data
       end
-      cache[array_cache_key] = stylesheets.freeze
+
+      cache.defer_set(array_cache_key, stylesheets.freeze)
       stylesheets
     end
   end
@@ -128,7 +130,7 @@ class Stylesheet::Manager
 
     href = builder.stylesheet_path(current_hostname)
     stylesheet[:new_href] = href
-    cache[cache_key] = stylesheet.freeze
+    cache.defer_set(cache_key, stylesheet.freeze)
     stylesheet
   end
 
@@ -164,13 +166,23 @@ class Stylesheet::Manager
     themes.each do |id, name, color_scheme_id|
       targets.each do |target|
         theme_id = id || SiteSetting.default_theme_id
-        next if target =~ THEME_REGEX && theme_id == -1
-        cache_key = "#{target}_#{theme_id}"
 
-        STDERR.puts "precompile target: #{target} #{name}"
-        builder = self.new(target, theme_id)
-        builder.compile(force: true)
-        cache[cache_key] = nil
+        if target =~ THEME_REGEX
+          next if theme_id == -1
+
+          theme_ids = Theme.transform_ids([theme_id], extend: true)
+
+          theme_ids.each do |t_id|
+            builder = self.new(target, t_id)
+            STDERR.puts "precompile target: #{target} #{builder.theme.name}"
+            next if builder.theme.component && !builder.theme.has_scss(target)
+            builder.compile(force: true)
+          end
+        else
+          STDERR.puts "precompile target: #{target} #{name}"
+          builder = self.new(target, theme_id)
+          builder.compile(force: true)
+        end
       end
 
       theme_color_scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
@@ -422,19 +434,36 @@ class Stylesheet::Manager
   end
 
   def uploads_digest
-    Digest::SHA1.hexdigest(ThemeField.joins(:upload).where(id: theme&.all_theme_variables).pluck(:sha1).join(","))
+    sha1s =
+      if (theme_ids = theme&.all_theme_variables).present?
+        ThemeField
+          .joins(:upload)
+          .where(id: theme_ids)
+          .pluck(:sha1)
+          .join(",")
+      else
+        ""
+      end
+
+      Digest::SHA1.hexdigest(sha1s)
   end
 
   def color_scheme_digest
-
     cs = @color_scheme || theme&.color_scheme
 
-    category_updated = Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
+    categories_updated = self.class.cache.defer_get_set("categories_updated") do
+      Category
+        .where("uploaded_background_id IS NOT NULL")
+        .pluck(:updated_at)
+        .map(&:to_i)
+        .sum
+    end
+
     fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
 
-    if cs || category_updated > 0
+    if cs || categories_updated > 0
       theme_color_defs = theme&.resolve_baked_field(:common, :color_definitions)
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{fonts}"
+      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{categories_updated}-#{fonts}"
     else
       digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}-#{fonts}"
 

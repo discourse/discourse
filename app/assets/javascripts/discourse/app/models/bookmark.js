@@ -3,10 +3,10 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
+import Topic from "discourse/models/topic";
 import { ajax } from "discourse/lib/ajax";
 import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
@@ -89,11 +89,6 @@ const Bookmark = RestModel.extend({
     });
   },
 
-  @discourseComputed("title")
-  fancyTitle(title) {
-    return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
-  },
-
   @discourseComputed("created_at")
   createdAt(created_at) {
     return new Date(created_at);
@@ -130,6 +125,11 @@ const Bookmark = RestModel.extend({
     ).capitalize();
   },
 
+  @discourseComputed("linked_post_number", "fancy_title", "topic_id")
+  topicLink(linked_post_number, fancy_title, id) {
+    return Topic.create({ id, fancy_title, linked_post_number });
+  },
+
   loadItems(params) {
     let url = `/u/${this.user.username}/bookmarks.json`;
 
@@ -137,7 +137,7 @@ const Bookmark = RestModel.extend({
       url += "?" + $.param(params);
     }
 
-    return ajax(url, { cache: "false" });
+    return ajax(url);
   },
 
   loadMore(additionalParams) {

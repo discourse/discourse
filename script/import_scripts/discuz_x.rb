@@ -158,7 +158,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
       break if results.size < 1
 
-      # TODO: breaks the scipt reported by some users
+      # TODO: breaks the script reported by some users
       # next if all_records_exist? :users, users.map {|u| u["id"].to_i}
 
       create_users(results, total: total_count, offset: offset) do |user|

@@ -10,17 +10,6 @@ if !ENV["RAILS_ENV"] && (ARGV[0] == "s" || ARGV[0] == "server")
 
   ENV["RAILS_LOGS_STDOUT"] ||= "1"
 
-  STDERR.puts <<~MESSAGE
-    --------
-    WARNING: Discourse uses `bin/unicorn` to start the web server.
-    For backwards compatibility, `rails s` will do this automatically.
-    For improved performance you should run `bin/unicorn` directly.
-
-    Running:
-    UNICORN_PORT=#{ENV["UNICORN_PORT"]} RAILS_LOGS_STDOUT=#{ENV["RAILS_LOGS_STDOUT"]} bin/unicorn
-    --------
-  MESSAGE
-
   exec File.expand_path("unicorn", __dir__)
 end
 

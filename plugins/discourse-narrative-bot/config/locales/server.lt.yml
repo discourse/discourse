@@ -8,6 +8,8 @@ lt:
   site_settings:
     discourse_narrative_bot_enabled: "Įgalinti Discourse Botą (discodot)"
   discourse_narrative_bot:
+    quote:
+      trigger: "citata"
     magic_8_ball:
       answers:
         "1": "It is certain"

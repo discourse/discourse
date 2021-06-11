@@ -381,7 +381,7 @@ describe PostDestroyer do
         expect(post2.deleted_at).to be_blank
         expect(post2.deleted_by).to be_blank
         expect(post2.user_deleted).to eq(true)
-        expect(post2.raw).to eq(I18n.t('js.topic.deleted_by_author', count: 24))
+        expect(post2.raw).to eq(I18n.t('js.topic.deleted_by_author_simple'))
         expect(post2.version).to eq(2)
         expect(called).to eq(1)
         expect(user_stat.reload.post_count).to eq(0)
@@ -462,7 +462,7 @@ describe PostDestroyer do
       expect(post.deleted_at).to eq(nil)
       expect(post.user_deleted).to eq(true)
 
-      expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+      expect(post.raw).to eq(I18n.t('js.post.deleted_by_author_simple'))
     end
 
     context "as a moderator" do
@@ -935,6 +935,43 @@ describe PostDestroyer do
     it 'should destroy the topic links when the user destroys the post' do
       PostDestroyer.new(second_post.user, second_post.reload).destroy
       expect(topic.topic_links.count).to eq(0)
+    end
+  end
+
+  describe 'internal links' do
+    fab!(:topic)  { Fabricate(:topic) }
+    let!(:second_post) { Fabricate(:post, topic: topic) }
+    fab!(:other_topic)  { Fabricate(:topic) }
+    let!(:other_post) { Fabricate(:post, topic: other_topic) }
+    fab!(:user) { Fabricate(:user) }
+    let!(:base_url) { URI.parse(Discourse.base_url) }
+    let!(:guardian) { Guardian.new }
+    let!(:url) { "http://#{base_url.host}/t/#{other_topic.slug}/#{other_topic.id}/#{other_post.post_number}" }
+
+    it 'should destroy internal links when user deletes own post' do
+      new_post = Post.create!(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
+      TopicLink.extract_from(new_post)
+
+      link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(link_counts.count).to eq(1)
+
+      PostDestroyer.new(user, new_post).destroy
+
+      updated_link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(updated_link_counts.count).to eq(0)
+    end
+
+    it 'should destroy internal links when moderator deletes post' do
+      new_post = Post.create!(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
+      TopicLink.extract_from(new_post)
+      link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(link_counts.count).to eq(1)
+
+      PostDestroyer.new(moderator, new_post).destroy
+      TopicLink.extract_from(new_post)
+      updated_link_counts = TopicLink.counts_for(guardian, other_topic, [other_post])
+
+      expect(updated_link_counts.count).to eq(0)
     end
   end
 

@@ -189,7 +189,7 @@
         {{i18n "badges.badge_count" count=model.badge_count}}
       </div>
       <div class="controls">
-        {{#link-to "adminUser.badges" model class="btn"}}
+        {{#link-to "adminUser.badges" model class="btn btn-default"}}
           {{d-icon "certificate"}}
           {{i18n "admin.badges.edit_badges"}}
         {{/link-to}}
@@ -316,8 +316,7 @@
         {{model.api_key_count}}
       </div>
       <div class="controls">
-        {{d-button href="/admin/api/keys" label="admin.api.manage_keys"}}
-
+        {{d-button class="btn-default" href="/admin/api/keys" label="admin.api.manage_keys"}}
       </div>
     </div>
   {{/if}}

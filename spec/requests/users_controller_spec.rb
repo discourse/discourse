@@ -64,6 +64,7 @@ describe UsersController do
     context 'valid token' do
       context 'welcome message' do
         it 'enqueues a welcome message if the user object indicates so' do
+          SiteSetting.send_welcome_message = true
           user.update(active: false)
           put "/u/activate-account/#{token}"
           expect(response.status).to eq(200)
@@ -324,7 +325,6 @@ describe UsersController do
 
       context "rate limiting" do
         before { RateLimiter.clear_all!; RateLimiter.enable }
-        after  { RateLimiter.disable }
 
         it "rate limits reset passwords" do
           freeze_time
@@ -634,7 +634,7 @@ describe UsersController do
         post "/u.json", params: {
           name: @user.name,
           username: @user.username,
-          password: 'tesing12352343'
+          password: 'testing12352343'
         }
         expect(response.status).to eq(400)
       end
@@ -1370,7 +1370,7 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      let(:old_username) { "OrigUsrname" }
+      let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
       let(:user) { Fabricate(:user, username: old_username) }
 
@@ -2498,7 +2498,7 @@ describe UsersController do
             expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
           end
 
-          it 'can succesfully select an avatar using a cooked URL' do
+          it 'can successfully select an avatar using a cooked URL' do
             events = DiscourseEvent.track_events do
               put "/u/#{user.username}/preferences/avatar/select.json", params: { url: UrlHelper.cook_url(avatar1.url) }
             end
@@ -2898,16 +2898,29 @@ describe UsersController do
       expect(event[:params].first).to eq(user)
     end
 
-    it "can destroy duplicate emails" do
-      EmailChangeRequest.create!(
+    it "can destroy unconfirmed emails" do
+      request_1 = EmailChangeRequest.create!(
         user: user,
-        new_email: user.email,
+        new_email: user_email.email,
         change_state: EmailChangeRequest.states[:authorizing_new]
       )
 
-      delete "/u/#{user.username}/preferences/email.json", params: { email: user_email.email }
+      EmailChangeRequest.create!(
+        user: user,
+        new_email: other_email.email,
+        change_state: EmailChangeRequest.states[:authorizing_new]
+      )
 
-      expect(user.email_change_requests).to be_empty
+      EmailChangeRequest.create!(
+        user: user,
+        new_email: other_email.email,
+        change_state: EmailChangeRequest.states[:authorizing_new]
+      )
+
+      delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email }
+
+      expect(user.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
+      expect(user.email_change_requests).to contain_exactly(request_1)
     end
   end
 
@@ -3719,6 +3732,7 @@ describe UsersController do
     fab!(:topic) { Fabricate :topic }
     let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
+    let(:staged_user) { Fabricate(:user, staged: true) }
 
     before do
       SearchIndexer.enable
@@ -3986,6 +4000,26 @@ describe UsersController do
         def users_found
           response.parsed_body['users'].map { |u| u['username'] }
         end
+      end
+    end
+
+    context '`include_staged_users`' do
+      it "includes staged users when the param is true" do
+        get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["name"] }).to include(staged_user.name)
+      end
+
+      it "doesn't include staged users when the param is not passed" do
+        get "/u/search/users.json", params: { term: staged_user.name }
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["name"] }).not_to include(staged_user.name)
+      end
+
+      it "doesn't include staged users when the param explicitly set to false" do
+        get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: false }
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["name"] }).not_to include(staged_user.name)
       end
     end
   end

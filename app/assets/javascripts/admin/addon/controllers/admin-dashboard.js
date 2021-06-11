@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import AdminDashboard from "admin/models/admin-dashboard";
 import VersionCheck from "admin/models/version-check";
 import { computed } from "@ember/object";
@@ -10,7 +10,7 @@ const PROBLEMS_CHECK_MINUTES = 1;
 export default Controller.extend({
   isLoading: false,
   dashboardFetchedAt: null,
-  exceptionController: inject("exception"),
+  exceptionController: controller("exception"),
   showVersionChecks: setting("version_checks"),
 
   @discourseComputed("problems.length")

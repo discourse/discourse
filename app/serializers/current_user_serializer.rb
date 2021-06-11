@@ -28,13 +28,23 @@ class CurrentUserSerializer < BasicUserSerializer
              :redirected_to_top,
              :custom_fields,
              :muted_category_ids,
+             :regular_category_ids,
+             :tracked_category_ids,
+             :watched_first_post_category_ids,
+             :watched_category_ids,
              :muted_tag_ids,
+             :watched_tags,
+             :watching_first_post_tags,
+             :tracked_tags,
+             :muted_tags,
+             :regular_tags,
              :dismissed_banner_key,
              :is_anonymous,
              :reviewable_count,
              :read_faq,
              :automatically_unpin_topics,
              :mailing_list_mode,
+             :treat_as_new_topic_start_date,
              :previous_visit_at,
              :seen_notification_id,
              :primary_group_id,
@@ -53,10 +63,15 @@ class CurrentUserSerializer < BasicUserSerializer
              :skip_new_user_tips,
              :do_not_disturb_until,
              :has_topic_draft,
-             :can_review
+             :can_review,
 
   def groups
-    object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }
+    owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
+    object.visible_groups.pluck(:id, :name).map do |id, name|
+      group = { id: id, name: name }
+      group[:owner] = true if owned_group_ids.include?(id)
+      group
+    end
   end
 
   def link_posting_access
@@ -181,11 +196,49 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def muted_category_ids
-    CategoryUser.lookup(object, :muted).pluck(:category_id)
+    categories_with_notification_level(:muted)
   end
 
+  def regular_category_ids
+    categories_with_notification_level(:regular)
+  end
+
+  def tracked_category_ids
+    categories_with_notification_level(:tracking)
+  end
+
+  def watched_category_ids
+    categories_with_notification_level(:watching)
+  end
+
+  def watched_first_post_category_ids
+    categories_with_notification_level(:watching_first_post)
+  end
+
+  # this is a weird outlier that is used for topic tracking state which
+  # needs the actual ids, which is why it is duplicated with muted_tags
   def muted_tag_ids
     TagUser.lookup(object, :muted).pluck(:tag_id)
+  end
+
+  def muted_tags
+    tags_with_notification_level(:muted)
+  end
+
+  def tracked_tags
+    tags_with_notification_level(:tracking)
+  end
+
+  def watching_first_post_tags
+    tags_with_notification_level(:watching_first_post)
+  end
+
+  def watched_tags
+    tags_with_notification_level(:watching)
+  end
+
+  def regular_tags
+    tags_with_notification_level(:regular)
   end
 
   def ignored_users
@@ -224,6 +277,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def mailing_list_mode
     object.user_option.mailing_list_mode
+  end
+
+  def treat_as_new_topic_start_date
+    object.user_option.treat_as_new_topic_start_date
   end
 
   def skip_new_user_tips

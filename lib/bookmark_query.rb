@@ -28,7 +28,7 @@ class BookmarkQuery
 
   def list_all
     results = user_bookmarks.order(
-      '(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END), bookmarks.updated_at DESC'
+      '(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END), bookmarks.reminder_at ASC, bookmarks.updated_at DESC'
     )
 
     topics = Topic.listable_topics.secured(@guardian)

@@ -141,7 +141,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 50
+  BASE_COMPILER_VERSION = 51
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -155,10 +155,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.get_set_cache(key, &blk)
-    if @cache.hash.key? key.to_s
-      return @cache[key]
-    end
-    @cache[key] = blk.call
+    @cache.defer_get_set(key, &blk)
   end
 
   def self.theme_ids
@@ -287,7 +284,7 @@ class Theme < ActiveRecord::Base
     target = target.to_sym
     val = resolve_baked_field(theme_ids, target, field)
 
-    (@cache[cache_key] = val || "").html_safe
+    get_set_cache(cache_key) { val || "" }.html_safe
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)

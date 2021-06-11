@@ -100,7 +100,7 @@ class CategoryList
 
     @categories = @categories.to_a
 
-    notification_levels = CategoryUser.notification_levels_for(@guardian)
+    notification_levels = CategoryUser.notification_levels_for(@guardian.user)
     default_notification_level = CategoryUser.default_notification_level
 
     allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
@@ -144,7 +144,7 @@ class CategoryList
 
   def prune_empty
     return if SiteSetting.allow_uncategorized_topics
-    @categories.delete_if { |c| c.uncategorized? && c.displayable_topics.blank? }
+    @categories.delete_if { |c| c.uncategorized? }
   end
 
   # Attach some data for serialization to each topic

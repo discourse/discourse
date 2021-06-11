@@ -366,7 +366,7 @@ export default Component.extend({
   },
 
   _buildPayload(facets) {
-    let payload = { data: { cache: true, facets } };
+    let payload = { data: { facets } };
 
     if (this.startDate) {
       payload.data.start_date = moment(this.startDate)

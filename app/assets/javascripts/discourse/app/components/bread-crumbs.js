@@ -7,6 +7,8 @@ import { filter } from "@ember/object/computed";
 export default Component.extend({
   classNameBindings: ["hidden:hidden", ":category-breadcrumb"],
   tagName: "ol",
+  editingCategory: false,
+  editingCategoryTab: null,
 
   @discourseComputed("categories")
   filteredCategories(categories) {
@@ -45,6 +47,11 @@ export default Component.extend({
         hasOptions: options.length !== 0,
       };
     });
+  },
+
+  @discourseComputed("siteSettings.tagging_enabled", "editingCategory")
+  showTagsSection(taggingEnabled, editingCategory) {
+    return taggingEnabled && !editingCategory;
   },
 
   @discourseComputed("category")

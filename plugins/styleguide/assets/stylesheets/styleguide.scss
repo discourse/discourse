@@ -6,7 +6,7 @@
 
   .styleguide-note {
     padding: 1em;
-    background-color: var(--tertiary, $tertiary);
+    background-color: var(--tertiary);
     margin-bottom: 1em;
   }
 
@@ -20,7 +20,7 @@
       margin-left: 0;
 
       li.styleguide-heading {
-        color: var(--primary-medium, $primary-medium);
+        color: var(--primary-medium);
         text-transform: uppercase;
         font-size: 14px;
       }
@@ -29,7 +29,7 @@
         margin-bottom: 0.25em;
 
         a {
-          color: var(--primary, $primary);
+          color: var(--primary);
           font-size: 14px;
         }
 
@@ -47,7 +47,7 @@
 
   .styleguide-section {
     .section-title {
-      font-size: $font-up-5;
+      font-size: var(--font-up-5);
       font-weight: normal;
       margin-bottom: 0.5em;
     }
@@ -66,9 +66,9 @@
 
     .styleguide-example {
       .example-title {
-        color: var(--primary-medium, $primary-medium);
-        font-size: $font-0;
-        border-bottom: 1px solid var(--primary-low, $primary-low);
+        color: var(--primary-medium);
+        font-size: var(--font-0);
+        border-bottom: 1px solid var(--primary-low);
         margin-bottom: 1em;
       }
 
@@ -105,7 +105,7 @@
   }
 
   pre {
-    background: var(--primary-very-low, $primary-very-low);
+    background: var(--primary-very-low);
     white-space: pre-wrap;
     &.pre-inline {
       display: inline-block;
@@ -113,7 +113,7 @@
       vertical-align: bottom;
     }
     span {
-      color: var(--primary-medium, $primary-medium);
+      color: var(--primary-medium);
       &.hljs-attribute {
         color: teal;
       }
@@ -122,7 +122,7 @@
 
   p.reason {
     display: inline;
-    color: var(--primary-medium, $primary-medium);
+    color: var(--primary-medium);
     margin: 0 0 0 10px;
   }
 }
@@ -152,7 +152,7 @@
   grid-gap: 10px;
 
   .styleguide-icon {
-    background-color: var(--primary-low, $primary-low);
+    background-color: var(--primary-low);
     margin: 3px;
     text-align: center;
     padding: 10px;
@@ -163,7 +163,7 @@
       margin: 5px auto;
     }
     span {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
   }
 }

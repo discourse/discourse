@@ -181,9 +181,4 @@ module Helpers
     `cd #{repo_dir} && git commit -am 'first commit'`
     repo_dir
   end
-
-  class StubbedJob
-    def initialize; end
-    def perform(args); end
-  end
 end

@@ -12,7 +12,7 @@ For a list of recent security commits, check [our GitHub commits prefixed with S
 
 Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm is blessed by NIST. Security experts on the web [tend to agree that PBKDF2 is a secure choice](https://security.stackexchange.com/questions/4781/do-any-security-experts-recommend-bcrypt-for-password-storage).
 
-**options you can customise in your production.rb file**
+**options you can customize in your production.rb file**
 
 - `pbkdf2_algorithm`: the hashing algorithm used (default "sha256")
 - `pbkdf2_iterations`: the number of iterations to run (default 64000)
@@ -43,7 +43,7 @@ Discourse extends the built-in Rails CSRF protection in the following ways:
 
 2. API calls using the secret API bypass CSRF checks.
 
-3. Certain pages are "cachable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cachable pages. Instead when users are about to perform the first non GET request they retrieve the token just in time via `GET session/csrf`
+3. Certain pages are "cacheable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cacheable pages. Instead when users are about to perform the first non GET request they retrieve the token just in time via `GET session/csrf`
 
 ### DDOS
 

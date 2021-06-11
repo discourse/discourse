@@ -35,10 +35,10 @@ zh_CN:
       cannot_edit_named_poll_with_votes: "在创建%{minutes}分钟后，你无法更改投票名<strong>${name}</strong>。"
     no_poll_with_this_name: "投票“<strong>%{name}</strong>”没有被关联到帖子。"
     post_is_deleted: "帖子已经删除，无法操作。"
-    user_cant_post_in_topic: "你无法投票，因为你无法在这个主题里发帖"
-    topic_must_be_open_to_vote: "主题必须未被锁定才能投票。"
+    user_cant_post_in_topic: "你无法投票，因为你无法在这个话题里发帖"
+    topic_must_be_open_to_vote: "话题必须未被锁定才能投票。"
     poll_must_be_open_to_vote: "投票必须开启。"
-    topic_must_be_open_to_toggle_status: "主题必须未被锁定才能改变状态。"
+    topic_must_be_open_to_toggle_status: "话题必须未被锁定才能改变状态。"
     only_staff_or_op_can_toggle_status: "只有管理人员或者发布投票的人才能改变投票状态。"
     insufficient_rights_to_create: "你不能创建投票。"
     email:

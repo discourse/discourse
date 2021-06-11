@@ -49,7 +49,8 @@ class FileHelper
       max_redirects: follow_redirect ? 5 : 0,
       skip_rate_limit: skip_rate_limit,
       verbose: verbose,
-      validate_uri: validate_uri
+      validate_uri: validate_uri,
+      timeout: read_timeout
     )
 
     fd.get do |response, chunk, uri|

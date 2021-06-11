@@ -4,7 +4,7 @@ module.exports = function (environment) {
   let ENV = {
     modulePrefix: "discourse",
     environment,
-    rootURL: "/",
+    rootURL: process.env.DISCOURSE_RELATIVE_URL_ROOT || "/",
     locationType: "auto",
     historySupportMiddleware: false,
     EmberENV: {

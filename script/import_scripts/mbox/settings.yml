@@ -43,7 +43,7 @@ tags:
 #  announcement: ["ann", "announce", "announcement"]
 #  "": ["foo", "bar"]
 
-# These prefixes will be removed from the beginning of topic titles. You can use regular expessions.
+# These prefixes will be removed from the beginning of topic titles. You can use regular expressions.
 # Prefixes are case-insensitive. You can add additional prefixes (e.g. localized prefixes from
 # https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages).
 remove_subject_prefixes:

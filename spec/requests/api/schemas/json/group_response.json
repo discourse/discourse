@@ -140,6 +140,21 @@
             "null"
           ]
         },
+        "smtp_updated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "smtp_updated_by": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "smtp_enabled": {
+          "type": "boolean"
+        },
         "smtp_server": {
           "type": [
             "string",
@@ -155,6 +170,21 @@
         "smtp_ssl": {
           "type": [
             "string",
+            "null"
+          ]
+        },
+        "imap_enabled": {
+          "type": "boolean"
+        },
+        "imap_updated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_updated_by": {
+          "type": [
+            "object",
             "null"
           ]
         },
@@ -246,6 +276,36 @@
           ]
         },
         "muted_category_ids": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "watching_tags": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "watching_first_post_tags": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "tracking_tags": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "regular_tags": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "muted_tags": {
           "type": "array",
           "items": [
 

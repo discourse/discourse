@@ -9,4 +9,5 @@ cs:
     discourse_local_dates:
       create:
         form:
+          date_title: Datum
           time_title: Čas

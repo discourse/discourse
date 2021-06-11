@@ -221,6 +221,22 @@ describe UserDestroyer do
       end
     end
 
+    context 'user was invited' do
+      it "should delete the invite of user" do
+        invite = Fabricate(:invite)
+        topic_invite = invite.topic_invites.create!(topic: Fabricate(:topic))
+        invited_group = invite.invited_groups.create!(group: Fabricate(:group))
+        user = Fabricate(:user)
+        user.user_emails.create!(email: invite.email)
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(Invite.exists?(invite.id)).to eq(false)
+        expect(InvitedGroup.exists?(invited_group.id)).to eq(false)
+        expect(TopicInvite.exists?(topic_invite.id)).to eq(false)
+      end
+    end
+
     context 'user created category' do
       let!(:topic) { Fabricate(:topic, user: user) }
       let!(:first_post) { Fabricate(:post, user: user, topic: topic) }

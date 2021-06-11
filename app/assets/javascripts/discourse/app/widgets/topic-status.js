@@ -6,7 +6,7 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 
 export default createWidget("topic-status", {
-  tagName: "div.topic-statuses",
+  tagName: "span.topic-statuses",
 
   html(attrs) {
     const topic = attrs.topic;

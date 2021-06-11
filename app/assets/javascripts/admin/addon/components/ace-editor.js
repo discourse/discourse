@@ -1,8 +1,11 @@
 import Component from "@ember/component";
 import getURL from "discourse-common/lib/get-url";
 import loadScript from "discourse/lib/load-script";
+import I18n from "I18n";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
+
+const COLOR_VARS_REGEX = /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
 
 export default Component.extend({
   mode: "css",
@@ -17,6 +20,10 @@ export default Component.extend({
     if (this.autofocus) {
       this.send("focus");
     }
+  },
+
+  didRender() {
+    this._skipContentChangeEvent = false;
   },
 
   @observes("content")
@@ -103,14 +110,28 @@ export default Component.extend({
         editor.on("change", () => {
           this._skipContentChangeEvent = true;
           this.set("content", editor.getSession().getValue());
-          this._skipContentChangeEvent = false;
         });
+        if (this.attrs.save) {
+          editor.commands.addCommand({
+            name: "save",
+            exec: () => {
+              this.attrs.save();
+            },
+            bindKey: { mac: "cmd-s", win: "ctrl-s" },
+          });
+        }
+
+        editor.on("blur", () => {
+          this.warnSCSSDeprecations();
+        });
+
         editor.$blockScrolling = Infinity;
         editor.renderer.setScrollMargin(10, 10);
 
         this.element.setAttribute("data-editor", editor);
         this._editor = editor;
         this.changeDisabledState();
+        this.warnSCSSDeprecations();
 
         $(window)
           .off("ace:resize")
@@ -126,6 +147,38 @@ export default Component.extend({
         }
       });
     });
+  },
+
+  warnSCSSDeprecations() {
+    if (
+      this.mode !== "scss" ||
+      this.editorId.startsWith("color_definitions") ||
+      !this._editor
+    ) {
+      return;
+    }
+
+    let warnings = this.content
+      .split("\n")
+      .map((line, row) => {
+        if (line.match(COLOR_VARS_REGEX)) {
+          return {
+            row,
+            column: 0,
+            text: I18n.t("admin.customize.theme.scss_warning_inline"),
+            type: "warning",
+          };
+        }
+      })
+      .filter(Boolean);
+
+    this._editor.getSession().setAnnotations(warnings);
+
+    this.setWarning(
+      warnings.length
+        ? I18n.t("admin.customize.theme.scss_color_variables_warning")
+        : false
+    );
   },
 
   actions: {

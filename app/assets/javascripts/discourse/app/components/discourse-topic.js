@@ -23,8 +23,6 @@ export default Component.extend(
       "topic.is_warning",
       "topic.category.read_restricted:read_restricted",
       "topic.deleted:deleted-topic",
-      "topic.categoryClass",
-      "topic.tagClasses",
     ],
     menuVisible: true,
     SHORT_POST: 1200,

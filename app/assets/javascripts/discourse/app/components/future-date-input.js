@@ -24,7 +24,6 @@ export default Component.extend({
         date: datetime.format("YYYY-MM-DD"),
         time: datetime.format("HH:mm"),
       });
-      this._updateInput();
     }
   },
 

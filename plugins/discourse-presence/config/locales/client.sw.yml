@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 sw:
+  js:
+    presence:
+      replying:
+        one: "anajibu"
+        other: "anajibu"
+      editing:
+        one: "inarekebishwa/hariri"
+        other: "inarekebishwa/hariri"
+      replying_to_topic:
+        one: "anajibu"
+        other: "anajibu"

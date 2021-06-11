@@ -65,7 +65,12 @@ end
 
 task 'assets:flush_sw' => 'environment' do
   begin
-    # Pending due to test failures.
+    hostname = Discourse.current_hostname
+    default_port = SiteSetting.force_https? ? 443 : 80
+    port = SiteSetting.port.to_i > 0 ? SiteSetting.port : default_port
+    STDERR.puts "Flushing service worker script"
+    `curl -s -m 1 --resolve '#{hostname}:#{port}:127.0.0.1' #{Discourse.base_url}/service-worker.js > /dev/null`
+    STDERR.puts "done"
   rescue
     STDERR.puts "Warning: unable to flush service worker script"
   end
@@ -171,10 +176,9 @@ def compress(from, to)
 end
 
 def concurrent?
-  executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
-
   if ENV["SPROCKETS_CONCURRENT"] == "1"
     concurrent_compressors = []
+    executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
     yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call } })
     concurrent_compressors.each(&:wait!)
   else

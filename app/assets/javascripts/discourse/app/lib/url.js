@@ -1,5 +1,6 @@
 import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
+import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import LockOn from "discourse/lib/lock-on";
 import Session from "discourse/models/session";
@@ -8,6 +9,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { setOwner } from "@ember/application";
+import { isTesting } from "discourse-common/config/environment";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -33,7 +35,7 @@ const SERVER_SIDE_ONLY = [
   /^\/styleguide/,
 ];
 
-// The amount of height (in pixles) that we factor in when jumpEnd is called so
+// The amount of height (in pixels) that we factor in when jumpEnd is called so
 // that we show a little bit of the post text even on mobile devices instead of
 // scrolling to "suggested topics".
 const JUMP_END_BUFFER = 250;
@@ -225,7 +227,7 @@ const DiscourseURL = EmberObject.extend({
     }
 
     if (Session.currentProp("requiresRefresh")) {
-      return this.redirectTo(getURL(path));
+      return this.redirectTo(path);
     }
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
@@ -307,17 +309,20 @@ const DiscourseURL = EmberObject.extend({
     rewrites.push({ regexp, replacement, opts: opts || {} });
   },
 
-  redirectTo(url) {
-    window.location = getURL(url);
+  redirectAbsolute(url) {
+    // Redirects will kill a test runner
+    if (isTesting()) {
+      return true;
+    }
+    window.location = url;
     return true;
   },
 
-  /**
-   * Determines whether a URL is internal or not
-   *
-   * @method isInternal
-   * @param {String} url
-   **/
+  redirectTo(url) {
+    return this.redirectAbsolute(getURL(url));
+  },
+
+  // Determines whether a URL is internal or not
   isInternal(url) {
     if (url && url.length) {
       if (url.indexOf("//") === 0) {
@@ -513,6 +518,15 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
   }
 
   return getURL(url || "/");
+}
+
+export function getEditCategoryUrl(category, subcategories, tab) {
+  let url = `/c/${Category.slugFor(category)}/edit`;
+
+  if (tab) {
+    url += `/${tab}`;
+  }
+  return getURL(url);
 }
 
 export default _urlInstance;

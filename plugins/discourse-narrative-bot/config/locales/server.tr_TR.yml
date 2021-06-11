@@ -166,6 +166,9 @@ tr_TR:
           Şık resim -  :heart: :heart_eyes:
         like_not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
+      likes:
+        not_found: |-
+          Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Yanıtınızda bazı kelimeleri **kalın** veya _italic_ yapabilir misiniz?
@@ -223,12 +226,6 @@ tr_TR:
 
           (Ve evet, kullanıcı adım 1970&#39;ler dans çılgınlığında olduğu gibi _disco_ olarak yazılmıştır. [Gece hayatını seviyorum!] (Https://www.youtube.com/watch?v=B_wGI3_sGf8): dansçı :)
       flag:
-        instructions: |-
-          Dostça tartışmayı seviyoruz ve [fikirlerimizi geliştirmek] için yardımınıza ihtiyacımız var. Bir sorun görürseniz, lütfen yazarın veya [yardımcı moderatörümüz] (%{guidelines_url}) 'in %{about_url} bundan özel olarak bildirim almasına izin vermek için işaretleyin.
-
-          >:imp: Buraya kötü bir şey yazdım
-
-          Sanırım ne yapacağını biliyorsun. Devam edin ve bu yayını *uygunsuz olarak* <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> işaretleyin!
         reply: |-
           [Moderatörümüz] (%{base_uri}/grup/moderatör) raporunuz hakkında özel olarak bilgilendirilecektir. Yeterli topluluk üyesi bir gönderiyi işaretlerse, önlem olarak otomatik olarak gizlenir. (Aslında kötü bir yazı yazmadığım için :melek:, devam ettim ve şu an için bu raporu kaldırdım.)
       search:

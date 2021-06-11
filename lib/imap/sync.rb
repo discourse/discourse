@@ -42,7 +42,7 @@ module Imap
       if @status[:uid_validity] != @group.imap_uid_validity
         # If UID validity changes, the whole mailbox must be synchronized (all
         # emails are considered new and will be associated to existent topics
-        # in Email::Reciever by matching Message-Ids).
+        # in Email::Receiver by matching Message-Ids).
         ImapSyncLog.warn("UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for mailbox #{@group.imap_mailbox_name}", @group)
         @group.imap_last_uid = 0
       end

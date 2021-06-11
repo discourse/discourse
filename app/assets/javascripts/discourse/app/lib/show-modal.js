@@ -41,6 +41,8 @@ export default function (name, opts) {
   route.render(fullName, renderArgs);
   if (opts.title) {
     modalController.set("title", I18n.t(opts.title));
+  } else if (opts.titleTranslated) {
+    modalController.set("title", opts.titleTranslated);
   } else {
     modalController.set("title", null);
   }

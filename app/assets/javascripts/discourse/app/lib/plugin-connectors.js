@@ -1,4 +1,3 @@
-import Site from "discourse/models/site";
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 import deprecated from "discourse-common/lib/deprecated";
 
@@ -26,17 +25,8 @@ const DefaultConnectorClass = {
 };
 
 function findOutlets(collection, callback) {
-  const disabledPlugins = Site.currentProp("disabled_plugins") || [];
-
   Object.keys(collection).forEach(function (res) {
     if (res.indexOf("/connectors/") !== -1) {
-      // Skip any disabled plugins
-      for (let i = 0; i < disabledPlugins.length; i++) {
-        if (res.indexOf("/" + disabledPlugins[i] + "/") !== -1) {
-          return;
-        }
-      }
-
       const segments = res.split("/");
       let outletName = segments[segments.length - 2];
       const uniqueName = segments[segments.length - 1];

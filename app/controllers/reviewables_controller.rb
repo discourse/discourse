@@ -12,11 +12,11 @@ class ReviewablesController < ApplicationController
     offset = params[:offset].to_i
 
     if params[:type].present?
-      raise Discourse::InvalidParameter.new(:type) unless Reviewable.valid_type?(params[:type])
+      raise Discourse::InvalidParameters.new(:type) unless Reviewable.valid_type?(params[:type])
     end
 
     status = (params[:status] || 'pending').to_sym
-    raise Discourse::InvalidParameter.new(:status) unless allowed_statuses.include?(status)
+    raise Discourse::InvalidParameters.new(:status) unless allowed_statuses.include?(status)
 
     topic_id = params[:topic_id] ? params[:topic_id].to_i : nil
     category_id = params[:category_id] ? params[:category_id].to_i : nil
@@ -199,8 +199,12 @@ class ReviewablesController < ApplicationController
 
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e
-      # Consider InvalidAction an InvalidAccess
-      raise Discourse::InvalidAccess.new(e.message)
+      if reviewable.type == 'ReviewableUser' && !reviewable.pending? && reviewable.target.blank?
+        raise Discourse::NotFound.new(e.message, custom_message: "reviewables.already_handled_and_user_not_exist")
+      else
+        # Consider InvalidAction an InvalidAccess
+        raise Discourse::InvalidAccess.new(e.message)
+      end
     rescue Reviewable::UpdateConflict
       return render_json_error(I18n.t('reviewables.conflict'), status: 409)
     end

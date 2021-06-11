@@ -23,19 +23,20 @@ export function loadOneboxes(
   container
     .querySelectorAll(`a.onebox, a.inline-onebox-loading`)
     .forEach((link) => {
-      const text = link.textContent;
-      const isInline = link.getAttribute("class") === "inline-onebox-loading";
-      const m = isInline ? inlineOneboxes : oneboxes;
+      const isInline = link.classList.contains("inline-onebox-loading");
+
+      // maps URLs to their link elements
+      const map = isInline ? inlineOneboxes : oneboxes;
 
       if (loadedOneboxes < maxOneboxes) {
-        if (m[text] === undefined) {
-          m[text] = [];
+        if (map[link.href] === undefined) {
+          map[link.href] = [];
           loadedOneboxes++;
         }
-        m[text].push(link);
+        map[link.href].push(link);
       } else {
-        if (m[text] !== undefined) {
-          m[text].push(link);
+        if (map[link.href] !== undefined) {
+          map[link.href].push(link);
         } else if (isInline) {
           link.classList.remove("inline-onebox-loading");
         }

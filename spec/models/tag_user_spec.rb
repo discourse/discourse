@@ -232,4 +232,48 @@ describe TagUser do
       end
     end
   end
+
+  describe "#notification_levels_for" do
+    let!(:tag1) { Fabricate(:tag) }
+    let!(:tag2) { Fabricate(:tag) }
+    let!(:tag3) { Fabricate(:tag) }
+    let!(:tag4) { Fabricate(:tag) }
+
+    context "for anon" do
+      let(:user) { nil }
+      before do
+        SiteSetting.default_tags_watching = tag1.name
+        SiteSetting.default_tags_tracking = tag2.name
+        SiteSetting.default_tags_watching_first_post = tag3.name
+        SiteSetting.default_tags_muted = tag4.name
+      end
+      it "every tag from the default_tags_* site settings get overridden to watching_first_post, except for muted" do
+        levels = TagUser.notification_levels_for(user)
+        expect(levels[tag1.name]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag2.name]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag3.name]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag4.name]).to eq(TagUser.notification_levels[:muted])
+      end
+    end
+
+    context "for a user" do
+      let(:user) { Fabricate(:user) }
+      before do
+        TagUser.create(user: user, tag: tag1, notification_level: TagUser.notification_levels[:watching])
+        TagUser.create(user: user, tag: tag2, notification_level: TagUser.notification_levels[:tracking])
+        TagUser.create(user: user, tag: tag3, notification_level: TagUser.notification_levels[:watching_first_post])
+        TagUser.create(user: user, tag: tag4, notification_level: TagUser.notification_levels[:muted])
+      end
+      it "gets the tag_user notification levels for all tags the user is tracking and does not
+      include tags the user is not tracking at all" do
+        tag5 = Fabricate(:tag)
+        levels = TagUser.notification_levels_for(user)
+        expect(levels[tag1.name]).to eq(TagUser.notification_levels[:watching])
+        expect(levels[tag2.name]).to eq(TagUser.notification_levels[:tracking])
+        expect(levels[tag3.name]).to eq(TagUser.notification_levels[:watching_first_post])
+        expect(levels[tag4.name]).to eq(TagUser.notification_levels[:muted])
+        expect(levels.key?(tag5.name)).to eq(false)
+      end
+    end
+  end
 end

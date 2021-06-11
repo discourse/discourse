@@ -6,7 +6,6 @@
   &.users-directory {
     .filter-name {
       width: 100%;
-      margin-bottom: 1em;
     }
 
     .directory-last-updated {
@@ -38,6 +37,9 @@
       flex: 1 1 50%;
       .value {
         font-weight: bold;
+        &.user-field {
+          font-size: var(--font-down-1);
+        }
       }
       .label {
         margin-left: 0.2em;
@@ -48,4 +50,9 @@
       }
     }
   }
+}
+
+.edit-user-directory-columns-modal .modal-inner-container {
+  width: 90%;
+  min-width: unset;
 }

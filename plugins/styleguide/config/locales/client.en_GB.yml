@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 en_GB:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "Colours"

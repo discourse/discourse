@@ -2,7 +2,9 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import Session from "discourse/models/session";
@@ -31,9 +33,9 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll(".title").length === 1);
+        assert.equal(count(".title"), 1);
 
-        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(count("img#site-logo.logo-big"), 1);
         assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
         assert.equal(queryAll("#site-logo").attr("alt"), title);
       },
@@ -49,7 +51,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll("img.logo-small").length === 1);
+        assert.equal(count("img.logo-small"), 1);
         assert.equal(queryAll("img.logo-small").attr("src"), smallLogo);
         assert.equal(queryAll("img.logo-small").attr("alt"), title);
         assert.equal(queryAll("img.logo-small").attr("width"), 36);
@@ -66,7 +68,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll("h1#site-text-logo.text-logo").length === 1);
+        assert.equal(count("h1#site-text-logo.text-logo"), 1);
         assert.equal(queryAll("#site-text-logo").text(), title);
       },
     });
@@ -81,7 +83,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll(".d-icon-home").length === 1);
+        assert.equal(count(".d-icon-home"), 1);
       },
     });
 
@@ -94,7 +96,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll("img#site-logo.logo-mobile").length === 1);
+        assert.equal(count("img#site-logo.logo-mobile"), 1);
         assert.equal(queryAll("#site-logo").attr("src"), mobileLogo);
       },
     });
@@ -107,7 +109,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(count("img#site-logo.logo-big"), 1);
         assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
       },
     });
@@ -124,7 +126,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(count("img#site-logo.logo-big"), 1);
         assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
 
         assert.equal(
@@ -182,12 +184,9 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(count("img#site-logo.logo-big"), 1);
         assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
-        assert.ok(
-          queryAll("picture").length === 0,
-          "does not include alternative logo"
-        );
+        assert.ok(!exists("picture"), "does not include alternative logo");
       },
     });
 
@@ -199,12 +198,9 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(count("img#site-logo.logo-big"), 1);
         assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
-        assert.ok(
-          queryAll("picture").length === 0,
-          "does not include alternative logo"
-        );
+        assert.ok(!exists("picture"), "does not include alternative logo");
       },
     });
 
@@ -219,16 +215,13 @@ discourseModule(
         Session.currentProp("defaultColorSchemeIsDark", null);
       },
       test(assert) {
-        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(count("img#site-logo.logo-big"), 1);
         assert.equal(
           queryAll("#site-logo").attr("src"),
           darkLogo,
           "uses dark logo"
         );
-        assert.ok(
-          queryAll("picture").length === 0,
-          "does not add dark mode alternative"
-        );
+        assert.ok(!exists("picture"), "does not add dark mode alternative");
       },
     });
 
@@ -243,7 +236,7 @@ discourseModule(
         Session.currentProp("defaultColorSchemeIsDark", null);
       },
       test(assert) {
-        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(count("img#site-logo.logo-big"), 1);
         assert.equal(
           queryAll("#site-logo").attr("src"),
           bigLogo,

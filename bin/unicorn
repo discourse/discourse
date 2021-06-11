@@ -6,6 +6,12 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
   Pathname.new(__FILE__).realpath)
 RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 
+if defined? Bundler
+  STDERR.puts <<~MESSAGE
+    WARNING: Using `bundle exec` to start the server is unnecessary, and will make startup slower. Use `bin/rails s` or `bin/unicorn`.
+  MESSAGE
+end
+
 require 'rubygems'
 require 'bundler/setup'
 require 'digest'
@@ -14,7 +20,7 @@ require 'fileutils'
 dev_mode = false
 
 def ensure_cache_clean!
-  all_plugin_directories = Pathname.new(RAILS_ROOT + '/plugins').children.select(&:directory?)
+  _all_plugin_directories = Pathname.new(RAILS_ROOT + '/plugins').children.select(&:directory?)
   core_git_sha = `git rev-parse HEAD`.strip
   plugins_combined_git_sha = `git ls-files -s plugins | git hash-object --stdin`.strip
   super_sha = Digest::SHA1.hexdigest(core_git_sha + plugins_combined_git_sha)
@@ -81,6 +87,8 @@ end
 # This is handy if you want to bind a key to restarting unicorn in dev
 
 if dev_mode
+  $unicorn_dev_supervisor_pid = Process.pid # rubocop:disable Style/GlobalVars
+
   restart = true
   while restart
     restart = false
