@@ -175,5 +175,23 @@ discourseModule(
         );
       },
     });
+
+    componentTest("user-avatar-flair for user with no flairs", {
+      template: hbs`{{user-avatar-flair user=args}}`,
+      beforeEach() {
+        resetFlair();
+        this.set("args", {
+          admin: false,
+          moderator: false,
+          trust_level: 1,
+        });
+      },
+      afterEach() {
+        resetFlair();
+      },
+      test(assert) {
+        assert.ok(!exists(".avatar-flair"), "it does not render a flair");
+      },
+    });
   }
 );
