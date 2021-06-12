@@ -5,6 +5,11 @@ require 'rails_helper'
 RSpec.describe Jobs::CleanUpUserExportTopics do
   fab!(:user) { Fabricate(:user) }
 
+  after do
+    I18n.locale = :en
+    I18n.reload!
+  end
+
   it 'should delete ancient user export system messages' do
     post_en = SystemMessage.create_from_system_user(
       user,
