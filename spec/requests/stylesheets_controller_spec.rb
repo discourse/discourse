@@ -19,7 +19,7 @@ describe StylesheetsController do
     expect(cached.digest).to eq digest
 
     # tmp folder destruction and cached
-    `rm #{Stylesheet::Manager.cache_fullpath}/*`
+    `rm -rf #{Stylesheet::Manager.cache_fullpath}`
 
     get "/stylesheets/desktop_rtl_#{digest}.css"
     expect(response.status).to eq(200)
@@ -34,7 +34,7 @@ describe StylesheetsController do
     builder = Stylesheet::Manager.new(:desktop, theme.id)
     builder.compile
 
-    `rm #{Stylesheet::Manager.cache_fullpath}/*`
+    `rm -rf #{Stylesheet::Manager.cache_fullpath}`
 
     get "/stylesheets/#{builder.stylesheet_filename.sub(".css", "")}.css"
 
@@ -47,7 +47,7 @@ describe StylesheetsController do
     builder = Stylesheet::Manager.new(:desktop_theme, theme.id)
     builder.compile
 
-    `rm #{Stylesheet::Manager.cache_fullpath}/*`
+    `rm -rf #{Stylesheet::Manager.cache_fullpath}`
 
     get "/stylesheets/#{builder.stylesheet_filename.sub(".css", "")}.css"
 
