@@ -202,6 +202,8 @@ export default (filterArg, params) => {
 
     deactivate() {
       this._super(...arguments);
+
+      this.controllerFor("composer").set("prioritizedCategoryId", null);
       this.searchService.set("searchContext", null);
     },
 
