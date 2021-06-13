@@ -17,13 +17,11 @@ export default ComboBox.extend(TagsMixin, {
   noTags: empty("value"),
   maxTagSearchResults: setting("max_tag_search_results"),
   maxTagsPerTopic: setting("max_tags_per_topic"),
-  highlightedTag: null,
   singleSelect: false,
 
   collections: computed(
     "mainCollection.[]",
     "errorsCollection.[]",
-    "highlightedTag",
     function () {
       return this._super(...arguments);
     }
@@ -62,7 +60,6 @@ export default ComboBox.extend(TagsMixin, {
     if (collection === SELECTED_TAGS_COLLECTION) {
       return {
         selectedTags: this.value,
-        highlightedTag: this.highlightedTag,
       };
     }
   },
@@ -187,50 +184,5 @@ export default ComboBox.extend(TagsMixin, {
 
   _reset() {
     this.clearErrors();
-    this.set("highlightedTag", null);
-  },
-
-  _onKeydown(event) {
-    const value = makeArray(this.value);
-
-    if (event.keyCode === 8) {
-      if (!this.selectKit.filter) {
-        this._onBackspace(this.value, this.highlightedTag);
-      }
-    } else if (event.keyCode === 37) {
-      if (this.highlightedTag) {
-        const index = value.indexOf(this.highlightedTag);
-        const highlightedTag = value[index - 1]
-          ? value[index - 1]
-          : value.lastObject;
-        this.set("highlightedTag", highlightedTag);
-      } else {
-        this.set("highlightedTag", value.lastObject);
-      }
-    } else if (event.keyCode === 39) {
-      if (this.highlightedTag) {
-        const index = value.indexOf(this.highlightedTag);
-        const highlightedTag = value[index + 1]
-          ? value[index + 1]
-          : value.firstObject;
-        this.set("highlightedTag", highlightedTag);
-      } else {
-        this.set("highlightedTag", value.firstObject);
-      }
-    } else {
-      this.set("highlightedTag", null);
-    }
-
-    return true;
-  },
-
-  _onBackspace(value, highlightedTag) {
-    if (value && value.length) {
-      if (!highlightedTag) {
-        this.set("highlightedTag", value.lastObject);
-      } else {
-        this.deselect(highlightedTag);
-      }
-    }
   },
 });

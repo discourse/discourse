@@ -124,6 +124,10 @@ export default Component.extend(
           onClearSelection: bind(this, this._onClearSelection),
           onHover: bind(this, this._onHover),
           onKeydown: bind(this, this._onKeydownWrapper),
+
+          mainElement: bind(this, this._mainElement),
+          headerElement: bind(this, this._headerElement),
+          bodyElement: bind(this, this._bodyElement),
         })
       );
     },
@@ -436,7 +440,7 @@ export default Component.extend(
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
           if (this.selectKit.options.closeOnChange) {
-            this.selectKit.close();
+            this.selectKit.mainElement().open = false;
           }
 
           if (this.selectKit.options.focusAfterOnChange) {
@@ -503,6 +507,18 @@ export default Component.extend(
 
     _onKeydownWrapper(event) {
       return this._boundaryActionHandler("onKeydown", event);
+    },
+
+    _mainElement() {
+      return document.querySelector(`#${this.selectKit.uniqueID}`);
+    },
+
+    _headerElement() {
+      return this.selectKit.mainElement().querySelector("summary");
+    },
+
+    _bodyElement() {
+      return this.selectKit.mainElement().querySelector(".select-kit-body");
     },
 
     _onHover(value, item) {
@@ -670,13 +686,7 @@ export default Component.extend(
       const rowContainer = this.element.querySelector(
         `.select-kit-row[data-value="${value}"]`
       );
-
-      if (rowContainer) {
-        const collectionContainer = rowContainer.parentNode;
-
-        collectionContainer.scrollTop =
-          rowContainer.offsetTop - collectionContainer.offsetTop;
-      }
+      rowContainer && rowContainer.focus();
     },
 
     _highlightNext() {

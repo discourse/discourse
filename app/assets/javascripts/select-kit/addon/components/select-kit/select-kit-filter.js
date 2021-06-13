@@ -12,8 +12,7 @@ export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-filter"],
   classNameBindings: ["isExpanded:is-expanded"],
   attributeBindings: ["role"],
-
-  role: "searchbox",
+  tabIndex: -1,
 
   isHidden: computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
@@ -87,7 +86,8 @@ export default Component.extend(UtilsMixin, {
 
       // Escape
       if (event.keyCode === 27) {
-        this.selectKit.close(event);
+        this.selectKit.mainElement().open = false;
+        this.selectKit.headerElement().focus();
         return false;
       }
 
@@ -112,17 +112,6 @@ export default Component.extend(UtilsMixin, {
         return false;
       }
 
-      // Tab
-      if (event.keyCode === 9) {
-        if (this.selectKit.highlighted && this.selectKit.isExpanded) {
-          this.selectKit.select(
-            this.getValue(this.selectKit.highlighted),
-            this.selectKit.highlighted
-          );
-        }
-        this.selectKit.close(event);
-        return;
-      }
       this.selectKit.set("highlighted", null);
     },
   },

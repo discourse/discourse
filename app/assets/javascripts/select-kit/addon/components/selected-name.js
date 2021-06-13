@@ -16,10 +16,10 @@ export default Component.extend(UtilsMixin, {
 
   @action
   onSelectedNameClick() {
-    if (this.selectKit.options.clearOnClick) {
-      this.selectKit.deselect(this.item);
-      return false;
-    }
+    //   if (this.selectKit.options.clearOnClick) {
+    //     this.selectKit.deselect(this.item);
+    //     return false;
+    //   }
   },
 
   didReceiveAttrs() {

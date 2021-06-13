@@ -33,11 +33,6 @@
         border-top: 0;
       }
 
-      &.is-expanded .select-kit-wrapper,
-      .select-kit-wrapper {
-        display: none;
-      }
-
       .select-kit-row {
         &.is-selected {
           background: none;
@@ -68,11 +63,13 @@
           margin-right: 0.25em;
           margin-bottom: 0.25em;
 
-          .tag-icon {
+          .tag-icon,
+          .d-icon-times {
             margin-right: 0.25em;
           }
 
-          &.is-highlighted {
+          &.is-highlighted,
+          &:focus {
             box-shadow: 0 0 2px var(--danger), 0 1px 0 rgba(0, 0, 0, 0.05);
           }
 
