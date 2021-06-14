@@ -49,6 +49,7 @@ module("Unit | Utility | click-track", function (hooks) {
             <a href="https://google.com">bar</a>
           </aside>
           <a class="prefix-url" href="/forum/thing">prefix link</a>
+          <a class="abs-prefix-url" href="${window.location.origin}/forum/thing">prefix link</a>
           <a class="diff-prefix-url" href="/thing">diff prefix link</a>
         </article>
       </div>`
@@ -95,6 +96,17 @@ module("Unit | Utility | click-track", function (hooks) {
       returnPromise: true,
     });
     assert.ok(DiscourseURL.routeTo.calledWith("/forum/thing"));
+  });
+
+  test("routes to absolute internal urls", async function (assert) {
+    setPrefix("/forum");
+    pretender.post("/clicks/track", () => [200, {}, ""]);
+    await track(generateClickEventOn(".abs-prefix-url"), null, {
+      returnPromise: true,
+    });
+    assert.ok(
+      DiscourseURL.routeTo.calledWith(window.location.origin + "/forum/thing")
+    );
   });
 
   test("redirects to internal urls with a different prefix", async function (assert) {
