@@ -121,3 +121,18 @@ acceptance(
     });
   }
 );
+
+acceptance("User Routes - Moderator viewing warnings", function (needs) {
+  needs.user({
+    username: "notEviltrout",
+    moderator: true,
+    staff: true,
+    admin: false,
+  });
+
+  test("Messages - Warnings", async function (assert) {
+    await visit("/u/eviltrout/messages/warnings");
+    assert.ok($("body.user-messages-page").length, "has the body class");
+    assert.ok($("div.alert-info").length, "has the permissions alert");
+  });
+});

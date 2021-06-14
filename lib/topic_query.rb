@@ -365,6 +365,14 @@ class TopicQuery
     create_list(:private_messages, {}, list)
   end
 
+  def list_private_messages_warnings(user)
+    list = private_messages_for(user, :user)
+    list = list.where('topics.subtype = ?', TopicSubtype.moderator_warning)
+    # Exclude official warnings that the user created, instead of received
+    list = list.where('topics.user_id <> ?', user.id)
+    create_list(:private_messages, {}, list)
+  end
+
   def list_category_topic_ids(category)
     query = default_results(category: category.id)
     pinned_ids = query.where('topics.pinned_at IS NOT NULL AND topics.category_id = ?', category.id).limit(nil).order('pinned_at DESC').pluck(:id)

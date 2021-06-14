@@ -210,6 +210,10 @@ export function applyDefaultHandlers(pretender) {
     return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
   });
 
+  pretender.get("/topics/private-messages-warnings/eviltrout.json", () => {
+    return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
+  });
+
   pretender.get("/topics/feature_stats.json", () => {
     return response({
       pinned_in_category_count: 0,
