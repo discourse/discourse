@@ -1,0 +1,38 @@
+site_settings:
+  tagging_enabled: true
+  verbose_discourse_connect_logging: true
+
+seed: 1
+start_date: 2020-01-01
+auth_plugin_enabled: true
+allow_anonymous_to_impersonate: false
+
+category:
+  count: 30
+group:
+  count: 15
+post:
+  include_images: false
+  max_likes_count: 10
+tag:
+  count: 30
+topic:
+  count: 30
+  replies:
+    # number of replies per topic between min and max
+    min: 0
+    max: 12
+    overrides:
+      # topic titles can be found in config/locales/faker.en.yml
+      - title: "Coolest thing you have seen today"
+        count: 99
+  tags:
+    # number of tags per topic between min and max
+    min: 0
+    max: 3
+user:
+  count: 30
+
+new_user:
+   username: new_user
+   email: new_user@example.com
