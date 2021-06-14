@@ -299,7 +299,7 @@ class ApplicationController < ActionController::Base
       with_resolved_locale(check_current_user: false) do
         # Include error in HTML format for topics#show.
         if (request.params[:controller] == 'topics' && request.params[:action] == 'show') || (request.params[:controller] == 'categories' && request.params[:action] == 'find_by_slug')
-          opts[:extras] = { html: build_not_found_page(error_page_opts) }
+          opts[:extras] = { html: build_not_found_page(error_page_opts), group: error_page_opts[:group] }
         end
       end
 

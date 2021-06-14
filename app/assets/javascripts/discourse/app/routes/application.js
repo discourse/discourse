@@ -94,13 +94,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     error(err, transition) {
-      let xhr = {};
-      if (err.jqXHR) {
-        xhr = err.jqXHR;
-      }
-
-      const xhrOrErr = err.jqXHR ? xhr : err;
-
+      const xhrOrErr = err.jqXHR ? err.jqXHR : err;
       const exceptionController = this.controllerFor("exception");
 
       const c = window.console;

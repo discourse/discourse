@@ -5,9 +5,11 @@
     <div class="error-page">
       <div class="face">:(</div>
       <div class="reason">{{reason}}</div>
-      <div class="url">
-        {{i18n "errors.prev_page"}} <a href={{requestUrl}} data-auto-route="true">{{requestUrl}}</a>
-      </div>
+      {{#if requestUrl}}
+        <div class="url">
+          {{i18n "errors.prev_page"}} <a href={{requestUrl}} data-auto-route="true">{{requestUrl}}</a>
+        </div>
+      {{/if}}
       <div class="desc">
         {{#if networkFixed}}
           {{d-icon "check-circle"}}
