@@ -7,6 +7,9 @@ export default Component.extend({
 
   @discourseComputed("user")
   flair(user) {
+    if (!user) {
+      return;
+    }
     return this.primaryGroupFlair(user) || this.automaticGroupFlair(user);
   },
 
