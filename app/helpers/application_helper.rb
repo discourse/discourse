@@ -237,6 +237,7 @@ module ApplicationHelper
     # Add opengraph & twitter tags
     result = []
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
+    result << tag(:meta, property: 'og:type', content: 'website')
 
     if opts[:twitter_summary_large_image].present?
       result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
