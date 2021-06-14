@@ -51,6 +51,9 @@ export default Controller.extend({
   isServer: gte("thrown.status", 500),
   isUnknown: none("isNetwork", "isServer"),
 
+  // Handling for the detailed_404 setting (which actually creates 403s)
+  errorHtml: alias("thrown.responseJSON.extras.html"),
+
   // TODO
   // make ajax requests to /srv/status with exponential backoff
   // if one succeeds, set networkFixed to true, which puts a "Fixed!" message on the page

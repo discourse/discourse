@@ -294,7 +294,7 @@ en:
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
   not_in_group:
     title_topic: "You need to request membership to the '%{group}' group to see this topic."
-    title_category: "You must be in a group to see this category."
+    title_category: "You need to request membership to the '%{group}' group to see this category."
     request_membership: "Request Membership"
     join_group: "Join Group"
   deleted_topic: "Oops! This topic has been deleted and is no longer available."
