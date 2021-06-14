@@ -643,6 +643,28 @@ class Reviewable < ActiveRecord::Base
     self.score
   end
 
+  def delete_user_actions(actions, require_reject_reason: false)
+    reject = actions.add_bundle(
+      'reject_user',
+      icon: 'user-times',
+      label: 'reviewables.actions.reject_user.title'
+    )
+
+    actions.add(:delete_user, bundle: reject) do |a|
+      a.icon = 'user-times'
+      a.label = "reviewables.actions.reject_user.delete.title"
+      a.require_reject_reason = require_reject_reason
+      a.description = "reviewables.actions.reject_user.delete.description"
+    end
+
+    actions.add(:delete_user_block, bundle: reject) do |a|
+      a.icon = 'ban'
+      a.label = "reviewables.actions.reject_user.block.title"
+      a.require_reject_reason = require_reject_reason
+      a.description = "reviewables.actions.reject_user.block.description"
+    end
+  end
+
 protected
 
   def increment_version!(version = nil)

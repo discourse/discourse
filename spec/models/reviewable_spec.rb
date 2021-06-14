@@ -539,4 +539,23 @@ RSpec.describe Reviewable, type: :model do
       expect(Reviewable.by_status(Reviewable.all, :reviewed)).to contain_exactly(reviewable)
     end
   end
+
+  context 'default actions' do
+    let(:reviewable) { Reviewable.new }
+    let(:actions) { Reviewable::Actions.new(reviewable, Guardian.new) }
+
+    describe '#delete_user_actions' do
+      it 'adds a bundle with the delete_user action' do
+        reviewable.delete_user_actions(actions)
+
+        expect(actions.has?(:delete_user)).to be true
+      end
+
+      it 'adds a bundle with the delete_user_block action' do
+        reviewable.delete_user_actions(actions)
+
+        expect(actions.has?(:delete_user_block)).to be true
+      end
+    end
+  end
 end
