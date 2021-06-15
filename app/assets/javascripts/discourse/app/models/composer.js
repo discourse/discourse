@@ -992,6 +992,7 @@ const Composer = RestModel.extend({
       .catch(rollback)
       .finally(() => {
         post.set("staged", false);
+        this.appEvents.trigger("post-stream:refresh", { id: post.id });
       });
   },
 
