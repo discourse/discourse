@@ -1219,21 +1219,26 @@ export default Controller.extend(bufferedProperty("model"), {
       return Promise.resolve();
     }
     this.model.set("bookmarking", true);
-    const alreadyBookmarkedPosts = this.model.postStream.posts.filterBy(
-      "bookmarked",
-      true
-    );
+    const alreadyBookmarkedPosts = this.model.bookmarkedPosts;
 
     return this.model.firstPost().then((firstPost) => {
+      const bookmarkPost = (post) => {
+        return this._togglePostBookmark(post).then((opts) => {
+          this.model.set("bookmarking", false);
+          if (opts && opts.closedWithoutSaving) {
+            return;
+          }
+          this.model.afterPostBookmarked(post);
+          return [post.id];
+        });
+      };
+
       const toggleBookmarkOnServer = () => {
         if (alreadyBookmarkedPosts.length === 0) {
-          return this._togglePostBookmark(firstPost).then((opts) => {
-            this.model.set("bookmarking", false);
-            if (opts && opts.closedWithoutSaving) {
-              return;
-            }
-            return this.model.afterTopicBookmarked(firstPost);
-          });
+          return bookmarkPost(firstPost);
+        } else if (alreadyBookmarkedPosts.length === 1) {
+          const post = alreadyBookmarkedPosts[0];
+          return bookmarkPost(post);
         } else {
           return this.model
             .deleteBookmark()

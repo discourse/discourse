@@ -297,6 +297,7 @@ en:
 
     bookmarked:
       title: "Bookmark"
+      edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Clear Bookmarks"
       help:
         bookmark: "Click to bookmark the first post on this topic"
