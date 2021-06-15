@@ -228,6 +228,12 @@ module Email
 
       email_log.message_id = @message.message_id
 
+      # Log when a message is being sent from a group SMTP address, so we
+      # can debug deliverability issues.
+      if smtp_group = Group.find_by(email_username: @message.from.first)
+        email_log.smtp_group = smtp_group
+      end
+
       DiscourseEvent.trigger(:before_email_send, @message, @email_type)
 
       begin
