@@ -125,12 +125,18 @@ class Bookmark < ActiveRecord::Base
   # is deleted so that there is a grace period to un-delete.
   def self.cleanup!
     grace_time = 3.days.ago
-    DB.exec(<<~SQL, grace_time: grace_time)
+    topics_deleted = DB.query(<<~SQL, grace_time: grace_time)
       DELETE FROM bookmarks b
       USING topics t, posts p
       WHERE (b.topic_id = t.id AND b.post_id = p.id)
         AND (t.deleted_at < :grace_time OR p.deleted_at < :grace_time)
+       RETURNING b.topic_id
     SQL
+
+    topics_deleted_ids = topics_deleted.map(&:topic_id).uniq
+    topics_deleted_ids.each do |topic_id|
+      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic_id)
+    end
   end
 end
 
