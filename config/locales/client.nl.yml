@@ -540,12 +540,14 @@ nl:
       later_today: "Later vandaag"
       next_business_day: "Volgende werkdag"
       tomorrow: "Morgen"
-      next_week: "Volgende week"
       post_local_date: "Datum in bericht"
       later_this_week: "Later deze week"
+      this_weekend: "Dit weekend"
       start_of_next_business_week: "Maandag"
       start_of_next_business_week_alt: "Volgende maandag"
+      two_weeks: "Twee weken"
       next_month: "Volgende maand"
+      six_months: "Zes maanden"
       custom: "Aangepaste datum en tijd"
       relative: "Relatieve tijd"
       none: "Niet nodig"
@@ -589,6 +591,8 @@ nl:
       edit_columns:
         save: "Opslaan"
         reset_to_default: "Standaardwaarden terugzetten"
+      group:
+        all: "alle groepen"
     group_histories:
       actions:
         change_group_setting: "Groepsinstelling wijzigen"
@@ -3316,7 +3320,6 @@ nl:
       tags: "Tags"
       choose_for_topic: "optionele tags"
       info: "Info"
-      default_info: "Deze tag is niet beperkt tot categorieën, en heeft geen synoniemen."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe u geen toegang hebt."
       synonyms: "Synoniemen"
       synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."

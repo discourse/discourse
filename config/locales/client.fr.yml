@@ -541,7 +541,6 @@ fr:
       later_today: "Plus tard dans la journée"
       next_business_day: "Au prochain jour ouvré"
       tomorrow: "Demain"
-      next_week: "La semaine prochaine"
       post_local_date: "À la date dans le message"
       later_this_week: "Plus tard dans la semaine"
       start_of_next_business_week: "Lundi"
@@ -591,6 +590,8 @@ fr:
         title: "Modifier les colonnes de l'annuaire"
         save: "Enregistrer"
         reset_to_default: "Réinitialiser aux valeurs par défaut"
+      group:
+        all: "tous les groupes"
     group_histories:
       actions:
         change_group_setting: "Changer les paramètres du groupe"
@@ -3365,7 +3366,7 @@ fr:
       tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
       info: "Détails"
-      default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
+      default_info: "Cette étiquette n'est restreinte à aucune catégorie et n'a aucun synonyme défini. Pour restreindre l'utilisation de cette étiquette, ajoutez-là à un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories dont vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
       synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
@@ -3983,7 +3984,7 @@ fr:
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
           color_scheme_user_selectable: "Le jeu de couleurs peut être sélectionné par les utilisateurs"
-          auto_update: "Mettre à jour automatiquement lorsque Discours est mis à jour"
+          auto_update: "Mettre à jour automatiquement lors des mises à jour de Discourse"
           color_scheme: "Palette de couleurs"
           default_light_scheme: "Clair (par défaut)"
           color_scheme_select: "Sélectionner les couleurs utilisées par le thème"
@@ -4025,7 +4026,7 @@ fr:
           edit_css_html: "Modifier le CSS/HTML"
           edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
           delete_upload_confirm: "Supprimer ce fichier envoyé ? (Le thème CSS pourrait ne plus fonctionner !)"
-          component_on_themes: "Inclure le composant à ces thèmes"
+          component_on_themes: "Inclure ce composant dans ces thèmes"
           included_components: "Composants inclus"
           add_all: "Tout ajouter"
           import_web_tip: "Dépôt contenant le thème"
@@ -4072,7 +4073,7 @@ fr:
             one: "Le thème est en retard de %{count} commit !"
             other: "Le thème est en retard de %{count} commits !"
           compare_commits: "(Voir les nouveaux changements)"
-          remote_theme_edits: "Pour modifier ce thème, vous devez <a href='%{repoURL}' target='_blank'>effecteur un changement dans son dépôt</a>"
+          remote_theme_edits: "Pour modifier ce thème, vous devrez <a href='%{repoURL}' target='_blank'>proposer des changements dans son dépôt de développement</a>"
           repo_unreachable: "Le dépôt Git de ce thème est inaccessible. Message d'erreur :"
           imported_from_archive: "Ce thème a été importé depuis un fichier .zip"
           scss:

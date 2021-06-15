@@ -402,8 +402,8 @@ nb_NO:
     time_shortcut:
       later_today: "Senere i dag"
       tomorrow: "I morgen"
-      next_week: "Neste uke"
       later_this_week: "Senere denne uken"
+      this_weekend: "Denne uken"
       next_month: "Neste måned"
       custom: "Egendefinert dato og tid"
     user_action:
@@ -443,6 +443,8 @@ nb_NO:
         other: "%{count} brukere"
       edit_columns:
         save: "Lagre"
+      group:
+        all: "alle grupper"
     group_histories:
       actions:
         change_group_setting: "Endre gruppeinnstillinger"

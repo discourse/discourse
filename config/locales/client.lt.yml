@@ -455,8 +455,8 @@ lt:
     time_shortcut:
       later_today: "Šiandien vėliau"
       tomorrow: "Rytoj"
-      next_week: "Kitą savaitę"
       later_this_week: "Šia savaitę vėliau"
+      this_weekend: "Šį savaitgalį"
       start_of_next_business_week: "Pirmadienis"
       next_month: "Kitą mėnesį"
     user_action:
@@ -498,6 +498,8 @@ lt:
         other: "%{count} vartotojų"
       edit_columns:
         save: "Saugoti"
+      group:
+        all: "visos grupės"
     group_histories:
       actions:
         change_group_setting: "Pakeisti grupės nustatymus"

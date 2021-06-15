@@ -499,8 +499,8 @@ ca:
       later_today: "Més tard avui"
       next_business_day: "El pròxim dia feiner"
       tomorrow: "Demà"
-      next_week: "La setmana que ve"
       later_this_week: "Més avant aquesta setmana"
+      this_weekend: "Aquest cap de setmana"
       start_of_next_business_week: "Dilluns"
       start_of_next_business_week_alt: "Dilluns vinent"
       next_month: "El mes que ve"
@@ -544,6 +544,8 @@ ca:
       edit_columns:
         save: "Desa"
         reset_to_default: "Restableix el valor predeterminat"
+      group:
+        all: "tots els grups"
     group_histories:
       actions:
         change_group_setting: "Canvia la configuració del grup"

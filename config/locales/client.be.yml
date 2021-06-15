@@ -292,6 +292,8 @@ be:
         other: " %{Count} карыстальнікаў"
       edit_columns:
         save: "Захаваць"
+      group:
+        all: "усе групы"
     group_histories:
       actions:
         change_group_setting: "Змяніць наладкі групы"

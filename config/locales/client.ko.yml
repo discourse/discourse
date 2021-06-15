@@ -499,12 +499,14 @@ ko:
       later_today: "오늘 늦게"
       next_business_day: "다음 영업일"
       tomorrow: "내일"
-      next_week: "다음 주"
       post_local_date: "게시 날짜"
       later_this_week: "이번 주말"
+      this_weekend: "이번 주말"
       start_of_next_business_week: "월요일"
       start_of_next_business_week_alt: "다음 월요일"
+      two_weeks: "2주"
       next_month: "다음 달"
+      six_months: "6개월"
       custom: "사용자 지정 날짜 및 시간"
       relative: "상대 시간"
       none: "필요 없음"
@@ -548,6 +550,8 @@ ko:
         title: "디렉토리 열 편집"
         save: "저장"
         reset_to_default: "기본값으로 재설정"
+      group:
+        all: "모든 그룹"
     group_histories:
       actions:
         change_group_setting: "그룹 설정 변경"
@@ -3202,7 +3206,7 @@ ko:
       tags: "태그"
       choose_for_topic: "태그 선택"
       info: "정보"
-      default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
+      default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다. 제한을 추가하려면 이 태그를 <a href=%{basePath}/tag_groups>태그 그룹</a>에 넣으십시오."
       category_restricted: "이 태그는 액세스 권한이없는 카테고리로 제한됩니다."
       synonyms: "동의어"
       synonyms_description: "다음 태그를 사용하면 <b>%{base_tag_name}</b> 으로 대체됩니다."
@@ -3333,6 +3337,7 @@ ko:
         member: "멤버"
         regular: "일반"
         leader: "리더"
+      detailed_name: "%{level}: %{name}"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:
@@ -4536,6 +4541,7 @@ ko:
           locked_will_not_be_promoted: "회원등급이 고정되었습니다. 승급되지 않을 것입니다."
           locked_will_not_be_demoted: "회원등급이 고정되었습니다. 강등되지 않을 것입니다."
         discourse_connect:
+          title: "DiscourseConnect 단일 사인온"
           external_id: "외부 ID"
           external_username: "아이디"
           external_name: "이름"

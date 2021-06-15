@@ -519,9 +519,9 @@ tr_TR:
       later_today: "Bugün ilerleyen saatlerde"
       next_business_day: "Bir sonraki iş günü"
       tomorrow: "Yarın"
-      next_week: "Gelecek hafta"
       post_local_date: "Gönderideki tarih"
       later_this_week: "Bu hafta içinde"
+      this_weekend: "Bu hafta sonu"
       start_of_next_business_week: "Pazartesi"
       start_of_next_business_week_alt: "Gelecek pazartesi"
       next_month: "Gelecek ay"
@@ -565,8 +565,11 @@ tr_TR:
         one: "%{count} kullanıcı"
         other: "%{count} kullanıcı"
       edit_columns:
+        title: "Dizin Sütunlarını Düzenle"
         save: "Kaydet"
         reset_to_default: "Varsayılana sıfırla"
+      group:
+        all: "tüm gruplar"
     group_histories:
       actions:
         change_group_setting: "Grup ayarlarını değiştir"
@@ -2168,6 +2171,8 @@ tr_TR:
       back_to_list: "Konu listesine geri dön"
       options: "Konu Seçenekleri"
       show_links: "Bu konunun içindeki bağlantıları göster. "
+      collapse_details: "konu ayrıntılarını kapat"
+      expand_details: "konu ayrıntılarını göster"
       read_more_in_category: "Daha fazlası için %{catLink} kategorisine göz atabilir ya da %{latestLink}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? %{catLink} ya da %{latestLink}."
       unread_indicator: "Bu konunun son mesajını henüz hiç üye okumamış."
@@ -3134,7 +3139,6 @@ tr_TR:
       tags: "Etiketler"
       choose_for_topic: "opsiyonel etiketler"
       info: "Bilgi"
-      default_info: "Bu etiket hiçbir kategoriyle sınırlandırılmamıştır, ve eş anlamlısı yoktur."
       category_restricted: "Bu etiket, erişim izniniz olmayan kategorilerle sınırlıdır."
       synonyms: "Eş Anlamlılar"
       synonyms_description: "İlgili etiketler kullanılıyorsa, <b>%{base_tag_name}</b> ile değiştirilecektir."

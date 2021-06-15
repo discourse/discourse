@@ -1364,7 +1364,6 @@ zh_CN:
     title: "站点名字，用于 title 标签。"
     site_description: "用一句话描述这个论坛，用于 meta description 标签。"
     short_site_description: "简短的描述，用于主页上的标题标签。"
-    contact_email: "本网站主要负责人的电子邮件地址。用于重要通知以及<a href='%{base_path}/about' target='_blank'>/about</a>页面中的紧急联系人。"
     contact_url: "这个站点的联系链接。作为紧急联系方式显示在<a href='%{base_path}/about' target='_blank'>/about</a>页面。"
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "通过下载将远程图像转换为本地图像；此选项可避免图像损坏。"
@@ -2264,6 +2263,7 @@ zh_CN:
     email_in_spam_header: "用户的第一封电子邮件已被标记为垃圾邮件"
     already_silenced: "用户已被 %{staff} 在 %{time_ago} 静音。"
     already_suspended: "用户已被 %{staff} 在 %{time_ago} 封禁。"
+    cannot_delete_has_posts: "用户 %{username} 有 %{post_count} 个帖子，可能是公开贴或私信，因此无法被删除。"
   reviewables_reminder:
     submitted:
       other: "项目提交于1%{count}小时前。[请审核](%{base_path}/review)。"

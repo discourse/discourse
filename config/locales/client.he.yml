@@ -624,12 +624,14 @@ he:
       later_today: "בהמשך היום"
       next_business_day: "יום העסקים הבא"
       tomorrow: "מחר"
-      next_week: "בשבוע הבא"
       post_local_date: "תאריך בפוסט"
       later_this_week: "בהמשך השבוע"
+      this_weekend: "בסוף שבוע זה"
       start_of_next_business_week: "יום שני"
       start_of_next_business_week_alt: "יום שני הבא"
+      two_weeks: "שבועיים"
       next_month: "חודש הבא"
+      six_months: "שישה חודשים"
       custom: "תאריך ושעה מותאמים אישית"
       relative: "זמן יחסי"
       none: "אין צורך"
@@ -676,6 +678,8 @@ he:
         title: "עריכת עמודות ספרייה"
         save: "שמירה"
         reset_to_default: "איפוס לבררת מחדל"
+      group:
+        all: "כל הקבוצות"
     group_histories:
       actions:
         change_group_setting: "שינוי הגדרות קבוצה"
@@ -1194,6 +1198,7 @@ he:
         failed_to_move: "בעיה בהעברת ההודעות שנבחרו (אולי יש תקלה בהתחברות?)"
         select_all: "לבחור הכול"
         tags: "תגיות"
+        warnings: "אזהרות רשמיות"
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -3630,7 +3635,6 @@ he:
       tags: "תגיות"
       choose_for_topic: "תגיות רשות"
       info: "פרטים"
-      default_info: "תגית זו אינה מוגבלת לקטגוריות כלשהן ואין לה מילים נרדפות."
       category_restricted: "תגית זו מוגבלת לקטגוריות שאין לך גישה אליהן."
       synonyms: "מילים נרדפות"
       synonyms_description: "תגיות אלו תוחלפנה בתגית <b>%{base_tag_name}</b>."
@@ -4889,6 +4893,8 @@ he:
         flags_given_count: דגלים שניתנו
         flags_received_count: דגלים שהתקבלו
         warnings_received_count: התקבלו אזהרות
+        warnings_list_warning: |
+          יכול להיות שלא תהיה לך אפשרות לצפות בכל הנושאים האלו מתוקף תפקיד הפיקוח. במקרה הצורך, ניתן לבקש מההנהלה או מהמפקחים שהקצו להעניק לך גישת <b>@moderators</b> להודעה.
         flags_given_received_count: "דגלים שניתנו / התקבלו"
         approve: "אשר"
         approved_by: "אושר על ידי"

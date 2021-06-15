@@ -1394,7 +1394,7 @@ sv:
     title: "Namnet på denna webbplats som används i titel-taggen."
     site_description: "Beskriv denna webbplats i en mening, som sedan används i metabeskrivningstaggen."
     short_site_description: "Kort beskrivning, som används i titel-taggen på hemsidan."
-    contact_email: "E-postadress till huvudansvarig för denna webbplats. Används för kritiska meddelanden såväl som på <a href='%{base_path}/about' target='_blank'>/about</a> kontaktformuläret för brådskande ärenden."
+    contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a> för brådskande ärenden."
     contact_url: "Kontakt-URL för denna webbplats. Visas på <a href='%{base_path}/about' target='_blank'>/about</a>-sidan för brådskande ärenden."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
     download_remote_images_to_local: "Konvertera externa bilder till lokala bilder genom att hämta dem; det motverkar felaktiga bildlänkar."
@@ -2316,6 +2316,7 @@ sv:
     email_in_spam_header: "Användarens första e-post flaggades som skräppost"
     already_silenced: "Användaren har redan tystats av %{staff} %{time_ago}."
     already_suspended: "Användaren har redan avstängts av %{staff} %{time_ago}."
+    cannot_delete_has_posts: "Användaren %{username} har %{post_count} inlägg, antingen offentliga inlägg eller personliga meddelanden, så de kan inte raderas."
   reviewables_reminder:
     submitted:
       one: "Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_path}/review)."

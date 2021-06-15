@@ -479,9 +479,9 @@ vi:
       later_today: "Sau ngày hôm nay"
       next_business_day: "Ngày làm việc tiếp theo"
       tomorrow: "Ngày mai"
-      next_week: "Tuần tới"
       post_local_date: "Ngày trong bài"
       later_this_week: "Cuối tuần này"
+      this_weekend: "Cuối tuần này"
       start_of_next_business_week: "Thứ hai"
       start_of_next_business_week_alt: "Thứ hai tới"
       next_month: "Tháng t"
@@ -524,6 +524,8 @@ vi:
       edit_columns:
         save: "Lưu"
         reset_to_default: "Đặt lại về mặc định"
+      group:
+        all: "các nhóm"
     group_histories:
       actions:
         change_group_setting: "Đổi cài đặt nhóm"
@@ -3013,7 +3015,6 @@ vi:
       tags: "Thẻ"
       choose_for_topic: "thẻ không bắt buộc"
       info: "Thông tin"
-      default_info: "Thẻ này không bị giới hạn đối với bất kỳ danh mục nào và không có từ đồng nghĩa."
       category_restricted: "Thẻ này bị hạn chế đối với các danh mục bạn không có quyền truy cập."
       synonyms: "Từ đồng nghĩa"
       synonyms_description: "Khi các thẻ sau được sử dụng, chúng sẽ được thay thế bằng <b>%{base_tag_name}</b>."
