@@ -546,9 +546,6 @@ class UserNotifications < ActionMailer::Base
         group.smtp_server, group.smtp_port, group.smtp_ssl, group.smtp_ssl
       )
 
-      # TODO (martin): Remove this once testing is over and this is more stable.
-      Rails.logger.warn("Using SMTP settings from group #{group.name} (#{group.id}) to send user notification for topic #{post.topic.id} and user #{user.id} (#{user.email})")
-
       delivery_method_options = {
         address: group.smtp_server,
         port: port,

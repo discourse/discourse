@@ -16,6 +16,8 @@ class EmailLog < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :post
+  belongs_to :smtp_group, class_name: 'Group'
+
   has_one :topic, through: :post
 
   validates :email_type, :to_address, presence: true
@@ -89,23 +91,25 @@ end
 #
 # Table name: email_logs
 #
-#  id         :integer          not null, primary key
-#  to_address :string           not null
-#  email_type :string           not null
-#  user_id    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  post_id    :integer
-#  bounce_key :uuid
-#  bounced    :boolean          default(FALSE), not null
-#  message_id :string
+#  id            :integer          not null, primary key
+#  to_address    :string           not null
+#  email_type    :string           not null
+#  user_id       :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  post_id       :integer
+#  bounce_key    :uuid
+#  bounced       :boolean          default(FALSE), not null
+#  message_id    :string
+#  smtp_group_id :integer
 #
 # Indexes
 #
-#  index_email_logs_on_bounce_key  (bounce_key) UNIQUE WHERE (bounce_key IS NOT NULL)
-#  index_email_logs_on_bounced     (bounced)
-#  index_email_logs_on_created_at  (created_at)
-#  index_email_logs_on_message_id  (message_id)
-#  index_email_logs_on_post_id     (post_id)
-#  index_email_logs_on_user_id     (user_id)
+#  idx_email_logs_on_smtp_group_id  (smtp_group_id)
+#  index_email_logs_on_bounce_key   (bounce_key) UNIQUE WHERE (bounce_key IS NOT NULL)
+#  index_email_logs_on_bounced      (bounced)
+#  index_email_logs_on_created_at   (created_at)
+#  index_email_logs_on_message_id   (message_id)
+#  index_email_logs_on_post_id      (post_id)
+#  index_email_logs_on_user_id      (user_id)
 #

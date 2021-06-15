@@ -24,3 +24,12 @@ Fabricator(:imap_group, from: :group) do
   email_username "discourseteam@ponyexpress.com"
   email_password "test"
 end
+
+Fabricator(:smtp_group, from: :group) do
+  smtp_server "smtp.ponyexpress.com"
+  smtp_port 587
+  smtp_ssl true
+  smtp_enabled true
+  email_username "discourseteam@ponyexpress.com"
+  email_password "test"
+end
