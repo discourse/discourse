@@ -231,8 +231,8 @@ module Email
 
       # Log when a message is being sent from a group SMTP address, so we
       # can debug deliverability issues.
-      if from_address && smtp_group = Group.find_by(email_username: from_address, smtp_enabled: true)
-        email_log.smtp_group = smtp_group
+      if from_address && smtp_group_id = Group.where(email_username: from_address, smtp_enabled: true).pluck_first(:id)
+        email_log.smtp_group_id = smtp_group_id
       end
 
       DiscourseEvent.trigger(:before_email_send, @message, @email_type)
