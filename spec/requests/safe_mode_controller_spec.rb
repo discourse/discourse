@@ -11,6 +11,8 @@ RSpec.describe SafeModeController do
       theme.set_default!
 
       get '/safe-mode'
+
+      expect(response.status).to eq(200)
       expect(response.body).not_to include("My Custom Header")
     end
   end

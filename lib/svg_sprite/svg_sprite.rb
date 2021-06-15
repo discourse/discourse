@@ -228,12 +228,12 @@ module SvgSprite
     badge_icons
   end
 
-  def self.custom_svg_sprites(theme_ids = [])
-    get_set_cache("custom_svg_sprites_#{Theme.transform_ids(theme_ids).join(',')}") do
+  def self.custom_svg_sprites(theme_id)
+    get_set_cache("custom_svg_sprites_#{Theme.transform_ids(theme_id).join(',')}") do
       custom_sprite_paths = Dir.glob("#{Rails.root}/plugins/*/svg-icons/*.svg")
 
-      if theme_ids.present?
-        ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_ids))
+      if theme_id.present?
+        ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_id))
           .pluck(:upload_id).each do |upload_id|
 
           upload = Upload.find(upload_id) rescue nil
@@ -253,15 +253,15 @@ module SvgSprite
     end
   end
 
-  def self.all_icons(theme_ids = [])
-    get_set_cache("icons_#{Theme.transform_ids(theme_ids).join(',')}") do
+  def self.all_icons(theme_id = nil)
+    get_set_cache("icons_#{Theme.transform_ids(theme_id).join(',')}") do
       Set.new()
         .merge(settings_icons)
         .merge(plugin_icons)
         .merge(badge_icons)
         .merge(group_icons)
-        .merge(theme_icons(theme_ids))
-        .merge(custom_icons(theme_ids))
+        .merge(theme_icons(theme_id))
+        .merge(custom_icons(theme_id))
         .delete_if { |i| i.blank? || i.include?("/") }
         .map! { |i| process(i.dup) }
         .merge(SVG_ICONS)
@@ -269,25 +269,25 @@ module SvgSprite
     end
   end
 
-  def self.version(theme_ids = [])
-    get_set_cache("version_#{Theme.transform_ids(theme_ids).join(',')}") do
-      Digest::SHA1.hexdigest(bundle(theme_ids))
+  def self.version(theme_id = nil)
+    get_set_cache("version_#{Theme.transform_ids(theme_id).join(',')}") do
+      Digest::SHA1.hexdigest(bundle(theme_id))
     end
   end
 
-  def self.path(theme_ids = [])
-    "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme_ids&.join(",")}-#{version(theme_ids)}.js"
+  def self.path(theme_id = nil)
+    "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme_id}-#{version(theme_id)}.js"
   end
 
   def self.expire_cache
     cache&.clear
   end
 
-  def self.sprite_sources(theme_ids)
+  def self.sprite_sources(theme_id)
     sources = CORE_SVG_SPRITES
 
-    if theme_ids.present?
-      sources = sources + custom_svg_sprites(theme_ids)
+    if theme_id.present?
+      sources = sources + custom_svg_sprites(theme_id)
     end
 
     sources
@@ -313,8 +313,8 @@ module SvgSprite
     end
   end
 
-  def self.bundle(theme_ids = [])
-    icons = all_icons(theme_ids)
+  def self.bundle(theme_id = nil)
+    icons = all_icons(theme_id)
 
     svg_subset = """<!--
 Discourse SVG subset of Font Awesome Free by @fontawesome - https://fontawesome.com
@@ -329,9 +329,9 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       end
     end
 
-    custom_svg_sprites(theme_ids).each do |fname|
+    custom_svg_sprites(theme_id).each do |fname|
       if !File.exist?(fname)
-        cache.delete("custom_svg_sprites_#{Theme.transform_ids(theme_ids).join(',')}")
+        cache.delete("custom_svg_sprites_#{Theme.transform_ids(theme_id).join(',')}")
         next
       end
 
@@ -461,13 +461,13 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     end
   end
 
-  def self.theme_icons(theme_ids)
-    return [] if theme_ids.blank?
+  def self.theme_icons(theme_id)
+    return [] if theme_id.blank?
 
     theme_icon_settings = []
 
     # Need to load full records for default values
-    Theme.where(id: Theme.transform_ids(theme_ids)).each do |theme|
+    Theme.where(id: Theme.transform_ids(theme_id)).each do |theme|
       settings = theme.cached_settings.each do |key, value|
         if key.to_s.include?("_icon") && String === value
           theme_icon_settings |= value.split('|')
@@ -475,15 +475,15 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       end
     end
 
-    theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
+    theme_icon_settings |= ThemeModifierHelper.new(theme_ids: [theme_id]).svg_icons
 
     theme_icon_settings
   end
 
-  def self.custom_icons(theme_ids)
+  def self.custom_icons(theme_id)
     # Automatically register icons in sprites added via themes or plugins
     icons = []
-    custom_svg_sprites(theme_ids).each do |fname|
+    custom_svg_sprites(theme_id).each do |fname|
       next if !File.exist?(fname)
 
       svg_file = Nokogiri::XML(File.open(fname))

@@ -43,7 +43,7 @@ class QunitController < ApplicationController
       return
     end
 
-    request.env[:resolved_theme_ids] = [theme.id]
+    request.env[:resolved_theme_id] = theme.id
     request.env[:skip_theme_ids_transformation] = true
   end
 
