@@ -7,10 +7,6 @@ describe Theme do
     Theme.clear_cache!
   end
 
-  before do
-    I18n.locale = :en
-  end
-
   fab! :user do
     Fabricate(:user)
   end
@@ -21,6 +17,7 @@ describe Theme do
 
   let(:theme) { Fabricate(:theme, user: user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+
   it 'can properly clean up color schemes' do
     scheme = ColorScheme.create!(theme_id: theme.id, name: 'test')
     scheme2 = ColorScheme.create!(theme_id: theme.id, name: 'test2')
