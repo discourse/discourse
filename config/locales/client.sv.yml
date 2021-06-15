@@ -541,12 +541,14 @@ sv:
       later_today: "Senare idag"
       next_business_day: "Nästa vardag"
       tomorrow: "Imorgon"
-      next_week: "Nästa vecka"
       post_local_date: "Datum i inlägget"
       later_this_week: "Senare denna vecka"
+      this_weekend: "Detta veckoslut"
       start_of_next_business_week: "Måndag"
       start_of_next_business_week_alt: "Nästa måndag"
+      two_weeks: "Två veckor"
       next_month: "Nästa månad"
+      six_months: "Sex månader"
       custom: "Anpassa datum och tid"
       relative: "Relativ tid"
       none: "Ingen behövs"
@@ -591,6 +593,8 @@ sv:
         title: "Redigera katalogkolumner"
         save: "Spara"
         reset_to_default: "Återställ till standard"
+      group:
+        all: "alla grupper"
     group_histories:
       actions:
         change_group_setting: "Ändra gruppinställningar"
@@ -1102,6 +1106,7 @@ sv:
         failed_to_move: "Misslyckades med att flytta de markerade meddelandena (kanske ligger ditt nätverk nere)"
         select_all: "Markera alla"
         tags: "Taggar"
+        warnings: "Officiella varningar"
       preferences_nav:
         account: "Konto"
         security: "Säkerhet"
@@ -3365,7 +3370,7 @@ sv:
       tags: "Taggar"
       choose_for_topic: "alternativa taggar"
       info: "Info"
-      default_info: "Denna tagg är inte begränsad till någon kategori, och har inga synonymer."
+      default_info: "Denna tagg är inte begränsad till några kategorier, och har inga synonymer. Om du vill lägga till begränsningar lägger du denna tagg i en <a href=%{basePath}/tag_groups>taggrupp</a>."
       category_restricted: "Denna tagg är begränsad till kategorier som du inte har tillträde till."
       synonyms: "Synonymer"
       synonyms_description: "När följande taggar används, kommer de att ersättas med <b>%{base_tag_name}</b>."
@@ -4599,6 +4604,8 @@ sv:
         flags_given_count: Givna flaggningar
         flags_received_count: Mottagna flaggningar
         warnings_received_count: Mottagna varningar
+        warnings_list_warning: |
+          Som moderator kan du kanske inte se alla dessa ämnen. Vid behov ber du en administratör eller den utfärdande moderatorn att ge <b>@moderatorer</b> tillgång till meddelandet.
         flags_given_received_count: "Flaggor utdelade / mottagna"
         approve: "Godkänn"
         approved_by: "godkänd av"

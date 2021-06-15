@@ -380,6 +380,7 @@ es:
         type_bonus:
           name: "tipo de bonificación"
           title: "Algunos tipos de revisables pueden recibir una bonificación por el staff para que tengan mayor prioridad."
+      stale_help: "Este elemento ha sido atendido por otra persona."
       claim_help:
         optional: "Puedes reclamar este artículo para evitar que otros lo revisen."
         required: "Debes reclamar los artículos antes de poder revisarlos."
@@ -540,7 +541,6 @@ es:
       later_today: "Hoy más tarde"
       next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
-      next_week: "La próxima semana"
       post_local_date: "Fecha en la publicación"
       later_this_week: "Más tarde esta semana"
       start_of_next_business_week: "Lunes"
@@ -587,8 +587,11 @@ es:
         one: "%{count} usuario"
         other: "%{count} usuarios"
       edit_columns:
+        title: "Editar columnas del listado de usuarios"
         save: "Guardar"
         reset_to_default: "Restablecer ajustes predeterminados"
+      group:
+        all: "todos los grupos"
     group_histories:
       actions:
         change_group_setting: "Cambiar configuración de grupo"
@@ -606,6 +609,7 @@ es:
           title: "Introduce nombres de usuario o direcciones de correo electrónico"
           input_placeholder: "Nombres de usuario o correos electrónicos"
         usernames:
+          title: "Escribe nombres de usuario"
           input_placeholder: "Nombres de usuario"
         notify_users: "Notificar usuarios"
       requests:
@@ -632,6 +636,19 @@ es:
         email:
           title: "Correo electrónico"
           status: "Sincronizados %{old_emails} / %{total_emails} correos a través de IMAP."
+          enable_smtp: "Activar SMTP"
+          enable_imap: "Activar INAP"
+          test_settings: "Probar ajustes"
+          save_settings: "Guardar ajustes"
+          settings_required: "Todos los ajustes son obligatorios. Por favor, completa todos los campos antes de validar."
+          smtp_settings_valid: "Ajustes de SMTP válidos."
+          smtp_title: "SMTP"
+          imap_title: "IMAP"
+          imap_additional_settings: "Ajustes adicionales"
+          imap_settings_valid: "Ajustes de IMAP válidos."
+          prefill:
+            title: "Rellenar con los ajustes de:"
+            gmail: "GMail"
           credentials:
             title: "Credenciales"
             smtp_server: "Servidor SMTP"
@@ -649,6 +666,7 @@ es:
           mailboxes:
             synchronized: "Bandeja de correo sincronizada"
             none_found: "No se han encontrado bandejas de correo para esta cuenta de correo electrónico."
+            disabled: "Desactivado"
         membership:
           title: Membresía
           access: Acceso
@@ -965,12 +983,15 @@ es:
       no_bookmarks_body: >
         Añade publicaciones a tus marcadores con el botón %{icon}, y aparecerán aquí para que puedas volver fácilmente a ellos. ¡Hasta programarte recordatorios!
       no_notifications_title: "No tienes ninguna notificación todavía"
+      no_notifications_body: >
+        En esta pestaña te avisaremos sobre actividad relevante para ti incluyendo respuestas a tus temas y mensajes, <b>@menciones</b> o citas, y respuestas a los temas que estés siguiendo. También te notificaremos por correo si hace tiempo que no te conectas.<br><br>A través del icono %{icon} puedes decidir sobre qué temas, categorías y etiquetas quieres que te avisemos. Ve a tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a> para más detalles.
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
       dynamic_favicon: "Mostrar número en el icono del navegador"
       skip_new_user_tips:
         description: "Omitir consejos de bienvenida y medallas"
         not_first_time: "¿No es tu primera vez?"
         skip_link: "Saltarse estos consejos"
+        read_later: "Lo leeré más adelante."
       theme_default_on_all_devices: "Hacer que este sea el tema por defecto en todos mis dispositivos"
       color_scheme_default_on_all_devices: "Establecer la combinación de colores como predeterminada en todos mis dispositivos"
       color_scheme: "Combinación de colores"
@@ -1223,6 +1244,7 @@ es:
         invalid: "Por favor, ingresa una dirección de correo electrónico válida"
         authenticated: "Tu  correo electrónico ha sido autenticado por %{provider}"
         invite_auth_email_invalid: "Su correo electrónico de invitación no coincide con el correo electrónico autenticado por %{provider}"
+        authenticated_by_invite: "Tu correo ha sido autenticado a través de la invitación"
         frequency_immediately: "Te enviaremos un correo electrónico inmediatamente si no has leído el asunto por el cual te estamos enviando el correo."
         frequency:
           one: "Sólo te enviaremos emails si no te hemos visto en el último minuto."
@@ -1284,7 +1306,7 @@ es:
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Última publicación"
       last_emailed: "Último correo enviado"
-      last_seen: "Visto por última vez"
+      last_seen: "Última visita"
       created: "Creado el"
       log_out: "Cerrar sesión"
       location: "Ubicación"
@@ -1408,9 +1430,18 @@ es:
         invite:
           new_title: "Crear invitación"
           edit_title: "Editar invitación"
+          instructions: "Comparte este enlace para dar acceso inmediato al sitio"
           copy_link: "copiar enlace"
+          expires_in_time: "Caduca en %{time}"
+          expired_at_time: "Caducada en %{time}"
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
+          restrict_email: "Restringir a una dirección de correo"
+          max_redemptions_allowed: "Máximo de usos"
+          add_to_groups: "Añadir a grupos"
+          invite_to_topic: "Redirigir a este tema"
+          expires_at: "Caducar tras"
+          custom_message: "Mensaje personal opcional"
           send_invite_email: "Guardar y enviar correo"
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
@@ -2143,10 +2174,13 @@ es:
         delete: "Eliminar temas"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
+        dismiss_read_with_selected: "Descartar %{count} sin leer"
         dismiss_button: "Descartar..."
+        dismiss_button_with_selected: "Descartar (%{count})…"
         dismiss_tooltip: "Descartar solamente las nuevas publicaciones o dejar de seguir los temas"
         also_dismiss_topics: "Dejar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
         dismiss_new: "Ignorar nuevos"
+        dismiss_new_with_selected: "Descartar nuevos (%{count})"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
         change_category: "Cambiar categoría"
@@ -2256,6 +2290,8 @@ es:
       back_to_list: "Volver a la lista de temas"
       options: "Opciones del tema"
       show_links: "mostrar enlaces dentro de este tema"
+      collapse_details: "ocultar detalles del tema"
+      expand_details: "expandir detalles del tema"
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en %{catLink} o %{latestLink}."
       read_more: "¿Quieres leer más? %{catLink} o %{latestLink}."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
@@ -2634,6 +2670,7 @@ es:
         description:
           one: Has seleccionado <b>%{count}</b> publicación.
           other: "Has seleccionado <b>%{count}</b> publicaciones."
+      deleted_by_author_simple: "(tema eliminado por su autor/a)"
     post:
       quote_reply: "Citar"
       quote_share: "Compartir"
@@ -2648,6 +2685,7 @@ es:
       follow_quote: "ir a la publicación citada"
       show_full: "Mostrar la publicación completa"
       show_hidden: "Ver contenido ignorado."
+      deleted_by_author_simple: "(mensaje eliminado por su autor/a)"
       collapse: "contraer"
       expand_collapse: "expandir/contraer"
       locked: "un miembro del staff bloqueó la posibilidad de editar esta publicación"
@@ -2785,13 +2823,13 @@ es:
           other: "¿Estás seguro de que quieres fusionar estas %{count} publicaciones?"
       revisions:
         controls:
-          first: "Primera revisión"
-          previous: "Revisión anterior"
-          next: "Siguiente revisión"
-          last: "Última revisión"
-          hide: "Ocultar revisión."
-          show: "Mostrar revisión."
-          revert: "Volver a la revisión %{revision}"
+          first: "Primera edición"
+          previous: "Edición anterior"
+          next: "Siguiente edición"
+          last: "Última edición"
+          hide: "Ocultar edición"
+          show: "Mostrar edición"
+          revert: "Volver a la edición %{revision}"
           edit_wiki: "Editar wiki"
           edit_post: "Editar publicación"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3305,10 +3343,10 @@ es:
         other:
           name: Miscelánea
         posting:
-          name: Publicación
-      favorite_max_reached: "No puedes marcar más insignias como favoritas."
-      favorite_max_not_reached: "Marcar esta insignia como favorita"
-      favorite_count: "%{count}/%{max} insignias marcadas como favoritas"
+          name: Publicaciones
+      favorite_max_reached: "No puedes marcar más medallas como favoritas."
+      favorite_max_not_reached: "Marcar esta medalla como favorita"
+      favorite_count: "%{count}/%{max} medallas marcadas como favoritas"
     tagging:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
@@ -3316,9 +3354,9 @@ es:
       selector_no_tags: "sin etiquetas"
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
-      choose_for_topic: "etiquetas opcionales"
+      choose_for_topic: "etiquetas (opcional)"
       info: "Info"
-      default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
+      default_info: "Esta etiqueta no está restringida a ninguna categoría y no tiene sinónimos. Para añadir restricciones, añádela a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
       synonyms: "Sinónimos"
       synonyms_description: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por <b>%{base_tag_name}</b>."
@@ -3390,13 +3428,18 @@ es:
           description: "No se te notificará sobre temas nuevos con esta etiqueta, ni aparecerán en tu pestaña de no leídos."
       groups:
         title: "Grupos de etiquetas"
-        about_heading: "Seleccione un grupo de etiquetas o cree uno nuevo"
-        about_description: "Los grupos de etiquetas le ayudan a administrar los permisos de muchas etiquetas en un solo lugar."
-        new: "Nuevo grupo"
+        about_heading: "Selecciona un grupo de etiquetas, o crea uno nuevo"
+        about_heading_empty: "Crea un nuevo grupo de etiquetas para empezar"
+        about_description: "Los grupos de etiquetas te ayudan a gestionar los permisos de muchas etiquetas en un único sitio."
+        new: "Crear grupo"
         new_title: "Crear nuevo grupo"
         edit_title: "Editar grupo de etiquetas"
+        tags_label: "Etiquetas en este grupo"
+        parent_tag_label: "Etiqueta padre"
+        parent_tag_description: "Las etiquetas de este grupo solo se podrán usar si la etiqueta padre está presente."
         one_per_topic_label: "Limitar las etiquetas de este grupo a utilizarse solo una vez por tema"
         new_name: "Nuevo grupo de etiquetas"
+        name_placeholder: "Nombre"
         save: "Guardar"
         delete: "Eliminar"
         confirm_delete: "¿Estás seguro de que quieres eliminar este grupo de etiquetas?"
@@ -3407,7 +3450,7 @@ es:
         tags_placeholder: "Buscar o crear etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Seleccionar grupos ..."
-        disabled: "El etiquetado está deshabilitado. "
+        disabled: "El etiquetado está desactivado. "
       topics:
         none:
           unread: "No tienes temas sin leer."
@@ -3469,7 +3512,7 @@ es:
         last_updated: "Última actualización del panel:"
         discourse_last_updated: "Última actualización de Discourse:"
         version: "Versión"
-        up_to_date: "¡Estás actualizado!"
+        up_to_date: "Estás en la última versión"
         critical_available: "Actualización crítica disponible."
         updates_available: "Hay actualizaciones disponibles."
         please_upgrade: "¡Por favor, actualiza!"
@@ -3562,7 +3605,7 @@ es:
         by: "por"
       groups:
         new:
-          title: "Grupo nuevo"
+          title: "Crear grupo"
           create: "Crear"
           name:
             too_short: "El nombre del grupo es muy corto"
@@ -3902,7 +3945,7 @@ es:
           themes_intro: "Selecciona un tema existente o instala uno nuevo para empezar"
           themes_intro_emoji: "emoji de mujer artista"
           beginners_guide_title: "Guía básica para utilizar los temas de Discourse"
-          developers_guide_title: "Guía del desarrollador para los temas de Discourse"
+          developers_guide_title: "Guía de desarrollo de temas para Discourse"
           browse_themes: "Ver temas de la comunidad"
           customize_desc: "Personalizar:"
           title: "Temas"
@@ -4058,6 +4101,7 @@ es:
           yaml:
             text: "YAML"
             title: "Definir ajustes al tema en formato YAML"
+          scss_warning_inline: "El uso de variables de color SCSS del sistema en los temas está obsoleto."
         colors:
           select_base:
             title: "Selecciona paleta base de color"
@@ -4146,7 +4190,7 @@ es:
         bounced: "Rebotado"
         received: "Recibidos"
         rejected: "Rechazados"
-        sent_at: "Cuándo"
+        sent_at: "Fecha"
         time: "Fecha"
         user: "Usuario"
         email_type: "Tipo de correo"
@@ -4383,6 +4427,7 @@ es:
         download: Descargar
         clear_all: Limpiar todo
         clear_all_confirm: "¿Quitar todas las palabras vigiladas para la acción %{action}?"
+        invalid_regex: 'La palabra vigilada «%{word}» no es una expresión regular válida.'
         actions:
           block: "Bloquear"
           censor: "Censurar"
@@ -4397,13 +4442,19 @@ es:
           censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."
           require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el staff antes de que se puedan visualizar."
           flag: "Permitir publicaciones que contengan estas palabras, pero reportar el mensaje como inapropiado para que los moderadores puedan revisarlo."
+          replace: "Reemplazar palabras en publicaciones por otras palabras"
           tag: "Etiquetas temas automáticamente basándose en su primer mensaje."
+          silence: "Las primeras publicaciones de usuarios que contengan estas palabras deberán ser aprobadas por el staff antes de que se puedan ver, y el usuario será silenciado automáticamente."
+          link: "Reemplazar palabras en publicaciones por enlaces"
         form:
+          label: "Contiene palabra o frase"
+          placeholder: "Escribe una palabra o frase (* es un comodín)"
           placeholder_regexp: "expresión regular"
           replace_label: "Sustitución"
+          replace_placeholder: "ejemplo"
           tag_label: "Etiqueta"
           link_label: "Enlace"
-          link_placeholder: "https://example.com"
+          link_placeholder: "https://ejemplo.com"
           add: "Agregar"
           success: "Éxito"
           exists: "Ya existe"
@@ -4469,6 +4520,7 @@ es:
         suspend_reasons:
           not_listening_to_staff: "No escucha indicaciones del personal"
           consuming_staff_time: "Hace perder el tiempo desproporcionadamente al personal"
+          combative: "Demasiado combatiente"
           in_wrong_place: "No está en el sitio adecuado"
           no_constructive_purpose: "No hay otro propósito constructivo para sus acciones que crear conflictos dentro de la comunidad"
           custom: "Personalizado..."
@@ -4710,8 +4762,8 @@ es:
         revert: "Deshacer cambios"
         revert_confirm: "¿Estás seguro de que quieres deshacer tus cambios?"
         go_back: "Volver a la búsqueda"
-        recommended: "Recomendamos personalizar el siguiente texto para que se ajusten a tus necesidades:"
-        show_overriden: "Solo mostrar sobrescritos"
+        recommended: "Te recomendamos que ajustes los siguientes textos a tu comunidad:"
+        show_overriden: "Solo mostrar modificados"
         locale: "Idioma:"
         fallback_locale_warning: "Estás editando un idioma basado en %{fallback}. Los usuarios que seleccionen %{fallback} como su idioma de interfaz no verán tus cambios."
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu busqueda."
@@ -4783,7 +4835,7 @@ es:
       badges:
         title: Medallas
         new_badge: Nueva medalla
-        new: Crear nueva
+        new: Crear
         name: Nombre
         badge: Medalla
         display_name: Nombre que se muestra

@@ -1256,7 +1256,6 @@ pt_BR:
     title: "O nome deste site, como usado na tag de título."
     site_description: "Descreva este site com uma frase, como usado na tag de meta description."
     short_site_description: "Breve descrição, como usado na tag de título na página inicial."
-    contact_email: "Endereço de e-mail do contato principal responsável por este site. Usado para notificações críticas, bem como no formulário de contato da <a href='%{base_path}/about' target='_blank'>/about</a> para questões urgentes."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário para download das imagens ( em % )"

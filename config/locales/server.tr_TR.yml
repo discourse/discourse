@@ -1245,7 +1245,6 @@ tr_TR:
     title: "Sayfa başlığı etiketinde kullanılacak, bu sitenin ismi."
     site_description: "Meta açıklama etiketinde kullanılacak, bu sitenin bir cümlelik açıklaması."
     short_site_description: "Ana sayfadaki başlık etiketinde kullanılan kısa açıklama."
-    contact_email: "Bu site için sorumlu kişinin e-posta adresi. <a href='%{base_path}/about' target='_blank'> /about</a> iletişim formu içerisinde, sadece acil durumlar ve kritik bildirimler için kullanılacak."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
@@ -2002,6 +2001,7 @@ tr_TR:
       same_ip_address: "Diğer kullanıcılarla aynı IP adresi (%{ip_address})"
       inactive_user: "Etkin olmayan kullanıcı"
     email_in_spam_header: "Kullanıcının ilk e-postası spam olarak işaretlendi"
+    cannot_delete_has_posts: "%{username} kullanıcısının herkese açık gönderiler veya kişisel mesajlardan oluşan %{post_count} adet gönderisi var, dolayısıyla silinemez."
   reviewables_reminder:
     submitted:
       one: "Öğeler bir saat önce gönderildi %{count} saat. [Lütfen onları inceleyin] (%{base_path} / review)."

@@ -506,9 +506,9 @@ cs:
       later_today: "Později dnes"
       next_business_day: "Následující pracovní den"
       tomorrow: "Zítra"
-      next_week: "Příští týden"
       post_local_date: "Datum v příspěvku"
       later_this_week: "Později tento týden"
+      this_weekend: "Tento týden"
       start_of_next_business_week: "Pondělí"
       start_of_next_business_week_alt: "Příští pondělí"
       next_month: "Další měsíc"
@@ -552,6 +552,8 @@ cs:
         other: "%{count} uživatelů"
       edit_columns:
         save: "Uložit"
+      group:
+        all: "všechny skupiny"
     group_histories:
       actions:
         change_group_setting: "Změnit nastavení skupiny"

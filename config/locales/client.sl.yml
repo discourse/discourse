@@ -560,9 +560,9 @@ sl:
       later_today: "Kasneje danes"
       next_business_day: "Naslednji delovni dan"
       tomorrow: "Jutri"
-      next_week: "Naslednji teden"
       post_local_date: "Datum v objavi"
       later_this_week: "Kasneje v tednu"
+      this_weekend: "Ta vikend"
       start_of_next_business_week: "Ponedeljek"
       start_of_next_business_week_alt: "Naslednji ponedeljek"
       next_month: "Naslednji mesec"
@@ -609,6 +609,8 @@ sl:
         other: "%{count} uporabnikov"
       edit_columns:
         save: "Shrani"
+      group:
+        all: "vse skupine"
     group_histories:
       actions:
         change_group_setting: "Spremeni nastavitve za skupino"
@@ -3284,7 +3286,6 @@ sl:
       changed: "spremenjene oznake:"
       tags: "Oznake"
       choose_for_topic: "neobvezne oznake"
-      default_info: "Ta oznaka ni omejena na nobeno kategorijo in nima sopomenk."
       category_restricted: "Ta oznaka je omejena na kategorije, do katerih nimate dovoljenja za dostop."
       synonyms: "Sopomenke"
       synonyms_description: "Ko bodo uporabljene naslednje oznake, bodo nadomeščene z <b>%{base_tag_name}</b>."

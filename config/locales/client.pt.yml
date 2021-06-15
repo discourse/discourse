@@ -541,12 +541,14 @@ pt:
       later_today: "Hoje, mais tarde"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
-      next_week: "Próxima semana"
       post_local_date: "Data no post"
       later_this_week: "No final desta semana"
+      this_weekend: "Este fim de semana"
       start_of_next_business_week: "Segunda-feira"
       start_of_next_business_week_alt: "Próxima Segunda-feira"
+      two_weeks: "Duas semanas"
       next_month: "Próximo mês"
+      six_months: "Seis meses"
       custom: "Data e hora personalizadas"
       relative: "Tempo relativo"
       none: "Não é necessário"
@@ -589,6 +591,8 @@ pt:
         other: "%{count} utilizadores"
       edit_columns:
         save: "Guardar"
+      group:
+        all: "todos os grupos"
     group_histories:
       actions:
         change_group_setting: "Mudar configuração do grupo"

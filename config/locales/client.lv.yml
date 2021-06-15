@@ -353,8 +353,8 @@ lv:
     time_shortcut:
       later_today: "Vēlāk šodien"
       tomorrow: "Rītdien"
-      next_week: "Nākamā nedēļā"
       later_this_week: "Vēlāk šonedēļ"
+      this_weekend: "Šajā nedēļas nogalē"
       next_month: "Nākamā mēnesī"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> pievienoja ierakstus <a href='%{topicUrl}'>tēmai</a>"
@@ -394,6 +394,8 @@ lv:
         other: "%{count} lietotāji"
       edit_columns:
         save: "Saglabāt"
+      group:
+        all: "visas grupas"
     group_histories:
       actions:
         change_group_setting: "Mainīt grupas iestatījumus"

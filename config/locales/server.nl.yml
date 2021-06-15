@@ -1321,7 +1321,6 @@ nl:
     title: "De naam van deze website, zoals gebruikt in de titeltag"
     site_description: "Beschrijf deze website in één zin, zoals gebruikt in de meta-omschrijvingstag."
     short_site_description: "Korte beschrijving, zoals gebruikt in de titeltag op de startpagina."
-    contact_email: "E-mailadres van de hoofdpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen, evenals op het <a href='%{base_path}/about' target='_blank'>/about</a>-contactformulier voor dringende zaken."
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
     download_remote_images_to_local: "Externe afbeeldingen naar lokale afbeeldingen converteren door ze te downloaden; dit voorkomt beschadigde afbeeldingen."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"

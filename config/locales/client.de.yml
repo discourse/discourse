@@ -541,7 +541,6 @@ de:
       later_today: "Im Laufe des Tages"
       next_business_day: "Nächster Arbeitstag"
       tomorrow: "Morgen"
-      next_week: "Nächste Woche"
       post_local_date: "Datum im Beitrag"
       later_this_week: "Später in dieser Woche"
       start_of_next_business_week: "Montag"
@@ -588,8 +587,11 @@ de:
         one: "%{count} Benutzer"
         other: "%{count} Benutzer"
       edit_columns:
+        title: "Verzeichnisspalten bearbeiten"
         save: "Speichern"
         reset_to_default: "Auf Standard zurücksetzen"
+      group:
+        all: "alle Gruppen"
     group_histories:
       actions:
         change_group_setting: "Gruppeneinstellung ändern"
@@ -3364,7 +3366,7 @@ de:
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
       info: "Info"
-      default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
+      default_info: "Dieses Schlagwort ist nicht auf irgendwelche Kategorien beschränkt und hat keine Synonyme. Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwort-Gruppe</a> hinzu."
       category_restricted: "Dieser Tag ist auf Kategorien begrenzt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
       synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name} </b> ersetzt."
