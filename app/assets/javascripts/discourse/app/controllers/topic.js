@@ -1219,12 +1219,14 @@ export default Controller.extend(bufferedProperty("model"), {
       return Promise.resolve();
     }
     this.model.set("bookmarking", true);
-    const bookmark = !this.model.bookmarked;
-    let posts = this.model.postStream.posts;
+    const alreadyBookmarkedPosts = this.model.postStream.posts.filterBy(
+      "bookmarked",
+      true
+    );
 
     return this.model.firstPost().then((firstPost) => {
       const toggleBookmarkOnServer = () => {
-        if (bookmark) {
+        if (alreadyBookmarkedPosts.length === 0) {
           return this._togglePostBookmark(firstPost).then((opts) => {
             this.model.set("bookmarking", false);
             if (opts && opts.closedWithoutSaving) {
@@ -1238,37 +1240,26 @@ export default Controller.extend(bufferedProperty("model"), {
             .then(() => {
               this.model.toggleProperty("bookmarked");
               this.model.set("bookmark_reminder_at", null);
-              let clearedBookmarkProps = {
+              const clearedBookmarkProps = {
                 bookmarked: false,
                 bookmark_id: null,
                 bookmark_name: null,
                 bookmark_reminder_at: null,
               };
-              if (posts) {
-                const updated = [];
-                posts.forEach((post) => {
-                  if (post.bookmarked) {
-                    post.setProperties(clearedBookmarkProps);
-                    updated.push(post.id);
-                  }
-                });
-                return updated;
-              }
+              const updated = [];
+              alreadyBookmarkedPosts.forEach((post) => {
+                post.setProperties(clearedBookmarkProps);
+                updated.push(post.id);
+              });
+              return updated;
             })
             .catch(popupAjaxError)
             .finally(() => this.model.set("bookmarking", false));
         }
       };
 
-      const unbookmarkedPosts = [];
-      if (!bookmark && posts) {
-        posts.forEach(
-          (post) => post.bookmarked && unbookmarkedPosts.push(post)
-        );
-      }
-
       return new Promise((resolve) => {
-        if (unbookmarkedPosts.length > 1) {
+        if (alreadyBookmarkedPosts.length > 1) {
           bootbox.confirm(
             I18n.t("bookmarks.confirm_clear"),
             I18n.t("no_value"),
