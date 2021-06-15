@@ -4987,10 +4987,6 @@ en:
       agree_and_hide:
         title: "Hide Post"
         description: "Hide this post and automatically send the user a message urging them to edit it."
-      delete_spammer:
-        title: "Delete Spammer"
-        description: "Remove the user and all their posts and topics."
-        confirm: "Are you sure you want to delete all that user's posts, topics, and block their IP and email addresses?"
       delete_single:
         title: "Delete"
       delete:
@@ -5047,8 +5043,6 @@ en:
       approve_and_restore:
         title: "Approve and Restore post"
       delete_user:
-        title: "Delete User"
-        confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."
         reason: "Deleted via review queue"
 
   email_style:

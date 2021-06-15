@@ -1019,7 +1019,7 @@ class User < ActiveRecord::Base
     self.update!(active: false)
 
     if reviewable = ReviewableUser.pending.find_by(target: self)
-      reviewable.perform(performed_by, :reject_user_delete)
+      reviewable.perform(performed_by, :delete_user)
     end
   end
 
