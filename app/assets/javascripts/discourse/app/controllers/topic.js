@@ -1245,18 +1245,10 @@ export default Controller.extend(bufferedProperty("model"), {
             .then(() => {
               this.model.toggleProperty("bookmarked");
               this.model.set("bookmark_reminder_at", null);
-              const clearedBookmarkProps = {
-                bookmarked: false,
-                bookmark_id: null,
-                bookmark_name: null,
-                bookmark_reminder_at: null,
-              };
-              const updated = [];
               alreadyBookmarkedPosts.forEach((post) => {
-                post.setProperties(clearedBookmarkProps);
-                updated.push(post.id);
+                post.clearBookmark();
               });
-              return updated;
+              return alreadyBookmarkedPosts.mapBy("id");
             })
             .catch(popupAjaxError)
             .finally(() => this.model.set("bookmarking", false));
