@@ -8,10 +8,6 @@ describe ThemeField do
     ThemeField.destroy_all
   end
 
-  before do
-    I18n.locale = :en
-  end
-
   describe "scope: find_by_theme_ids" do
     it "returns result in the specified order" do
       theme = Fabricate(:theme)
