@@ -153,9 +153,10 @@ class UploadCreator
         @upload.assign_attributes(attrs)
       end
 
-      return @upload unless @upload.save(validate: @opts[:validate])
-
-      DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
+      # Callbacks using this event to validate the upload or the file must add errors to the
+      # upload errors object.
+      DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @upload, @opts[:validate])
+      return @upload unless @upload.errors.empty? && @upload.save(validate: @opts[:validate])
 
       # store the file and update its url
       File.open(@file.path) do |f|
