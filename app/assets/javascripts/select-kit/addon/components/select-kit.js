@@ -36,6 +36,7 @@ export default Component.extend(
   PluginApiMixin,
   UtilsMixin,
   {
+    tagName: "details",
     pluginApiIdentifiers: ["select-kit"],
     classNames: ["select-kit"],
     classNameBindings: [
@@ -189,6 +190,12 @@ export default Component.extend(
       this.handleDeprecations();
     },
 
+    didInsertElement() {
+      this._super(...arguments);
+
+      this.element.addEventListener("toggle", this.selectKit.toggle);
+    },
+
     willDestroyElement() {
       this._super(...arguments);
 
@@ -198,6 +205,8 @@ export default Component.extend(
         this.popper.destroy();
         this.popper = null;
       }
+
+      this.element.removeEventListener("toggle", this.selectKit.toggle);
     },
 
     didReceiveAttrs() {

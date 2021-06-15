@@ -1,7 +1,7 @@
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import layout from "select-kit/templates/components/single-select";
+import layout from "select-kit/templates/components/multi-select";
 
 export default SelectKitComponent.extend({
   tagName: "details",
@@ -46,16 +46,4 @@ export default SelectKitComponent.extend({
       }
     }
   ),
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    this.element.addEventListener("toggle", this.selectKit.toggle);
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    this.element.removeEventListener("toggle", this.selectKit.toggle);
-  },
 });
