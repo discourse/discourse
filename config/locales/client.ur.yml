@@ -528,11 +528,13 @@ ur:
     time_shortcut:
       later_today: "آج بعد میں"
       tomorrow: "کَل"
-      next_week: "اگلے ہفتے"
       later_this_week: "اِس ہفتے بعد میں"
+      this_weekend: "اِس ہفتےکےآخر میں"
       start_of_next_business_week: "پیر"
       start_of_next_business_week_alt: "اگلے پیر"
+      two_weeks: "دو ہفتے"
       next_month: "اگلے ماہ"
+      six_months: "چھ مہینے"
       custom: "حسب ضرورت تاریخ اور وقت"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> نے <a href='%{topicUrl}'>ٹاپک</a> پوسٹ کیا"
@@ -572,6 +574,8 @@ ur:
       edit_columns:
         save: "محفوظ کریں"
         reset_to_default: "دوبارہ پہلے جیسا کر دیں"
+      group:
+        all: "تمام گروپس"
     group_histories:
       actions:
         change_group_setting: "گروپ کی سیٹِنگ تبدیل کریں"

@@ -624,12 +624,14 @@ pl_PL:
       later_today: "Później dzisiaj"
       next_business_day: "Następny dzień roboczy"
       tomorrow: "Jutro"
-      next_week: "Następny tydzień"
       post_local_date: "Data w poście"
       later_this_week: "Później w tym tygodniu"
+      this_weekend: "W ten weekend"
       start_of_next_business_week: "Poniedziałek"
       start_of_next_business_week_alt: "Następny poniedziałek"
+      two_weeks: "Dwa tygodnie"
       next_month: "Następny miesiąc"
+      six_months: "Sześć miesięcy"
       custom: "Niestandardowa data i godzina"
       relative: "Względny czas"
       none: "Żadne nie są potrzebne"
@@ -675,6 +677,8 @@ pl_PL:
       edit_columns:
         save: "Zapisz"
         reset_to_default: "Przywróć ustawienia domyślne"
+      group:
+        all: "wszystkie grupy"
     group_histories:
       actions:
         change_group_setting: "Zmień ustawienia grupy"
@@ -3595,7 +3599,6 @@ pl_PL:
       tags: "Tagi"
       choose_for_topic: "tagi opcjonalne"
       info: "Informacje"
-      default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
       synonyms: "Synonimy"
       synonyms_description: "W przypadku użycia następujących tagów zostaną one zastąpione przez <b>%{base_tag_name}</b>."

@@ -1500,7 +1500,7 @@ en:
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
     short_site_description: "Short description, as used in the title tag on homepage."
-    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, as well as on the <a href='%{base_path}/about' target='_blank'>/about</a> contact form for urgent matters."
+    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
     contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
@@ -4990,10 +4990,6 @@ en:
       agree_and_hide:
         title: "Hide Post"
         description: "Hide this post and automatically send the user a message urging them to edit it."
-      delete_spammer:
-        title: "Delete Spammer"
-        description: "Remove the user and all their posts and topics."
-        confirm: "Are you sure you want to delete all that user's posts, topics, and block their IP and email addresses?"
       delete_single:
         title: "Delete"
       delete:
@@ -5050,8 +5046,6 @@ en:
       approve_and_restore:
         title: "Approve and Restore post"
       delete_user:
-        title: "Delete User"
-        confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."
         reason: "Deleted via review queue"
 
   email_style:

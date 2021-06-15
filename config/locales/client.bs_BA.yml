@@ -540,8 +540,8 @@ bs_BA:
       later_today: "Na kraju dana"
       next_business_day: "Sljedeći radni dan"
       tomorrow: "Sutra"
-      next_week: "Sljedeće sedmice"
       later_this_week: "Kasnije ove sedmice"
+      this_weekend: "Ovog vikenda"
       start_of_next_business_week: "Ponedjeljak"
       start_of_next_business_week_alt: "Sljedeći ponedjeljak"
       next_month: "Sljedeći mjesec"
@@ -585,6 +585,8 @@ bs_BA:
         other: "%{count} korisnika"
       edit_columns:
         save: "Sačuvaj"
+      group:
+        all: "sve grupe"
     group_histories:
       actions:
         change_group_setting: "Promijeni postavke grupe"
@@ -2981,7 +2983,6 @@ bs_BA:
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Informacija"
-      default_info: "Ovaj oznaka nije predodređena ni za jednu kategoriju i nema sinonime."
       category_restricted: "Ova oznaka je predodređena za kategorije na koje nemate pravo pristupa."
       synonyms: "Sinonimi"
       synonyms_description: "U slučaju da se sljedeće oznake koriste, iste će biti zamijenjene sa <b>%{base_tag_name}</b>."

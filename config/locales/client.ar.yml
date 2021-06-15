@@ -651,7 +651,6 @@ ar:
       later_today: "خلال هذا اليوم"
       next_business_day: "يوم العمل التالي"
       tomorrow: "غدًا"
-      next_week: "الأسبوع القادم"
       post_local_date: "تاريخ المشاركة"
       later_this_week: "خلال هذا الأسبوع"
       start_of_next_business_week: "الاثنين"
@@ -701,6 +700,8 @@ ar:
       edit_columns:
         save: "احفظ"
         reset_to_default: "صفّر إلى المبدئي"
+      group:
+        all: "كل المجموعات"
     group_histories:
       actions:
         change_group_setting: "تغيير إعدادات المجموعة"
@@ -3536,7 +3537,6 @@ ar:
       tags: "الوسوم"
       choose_for_topic: "الوسوم الاختيارية"
       info: "معلومات"
-      default_info: "هذ الوسم ليس مقصورًا على أي تصنيف، وليس له مرادفات."
       category_restricted: "هذه الوسم مقيد بالتصنيفات التي ليس لديك الصلاحية للوصول إليها."
       synonyms: "مرادفات"
       synonyms_description: "عند استخدام الأوسمة التالية، سيتم استبدالها بـ <b>%{base_tag_name}</b>."

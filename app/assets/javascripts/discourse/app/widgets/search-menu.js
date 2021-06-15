@@ -55,12 +55,12 @@ const SearchHelper = {
         fullSearchUrl,
       });
       this._activeSearch
-        .then((content) => {
+        .then((results) => {
           // we ensure the current search term is the one used
           // when starting the query
-          if (term === searchData.term) {
-            searchData.noResults = content.resultTypes.length === 0;
-            searchData.results = content;
+          if (results && term === searchData.term) {
+            searchData.noResults = results.resultTypes.length === 0;
+            searchData.results = results;
 
             if (searchContext && searchContext.type === "topic") {
               widget.appEvents.trigger("post-stream:refresh", { force: true });

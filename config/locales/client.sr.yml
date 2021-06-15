@@ -447,7 +447,6 @@ sr:
       later_today: "Kasnije ovog dana"
       next_business_day: "Naredni radni dan"
       tomorrow: "Sutra"
-      next_week: "Sledeće sedmice"
       post_local_date: "Datum u poruci"
       later_this_week: "Kasnije ove sedmice"
       start_of_next_business_week: "Ponedeljak"

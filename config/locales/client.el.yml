@@ -507,8 +507,8 @@ el:
       later_today: "Αργότερα σήμερα"
       next_business_day: "Επόμενη εργάσιμη ημέρα"
       tomorrow: "Αύριο"
-      next_week: "Την άλλη εβδομάδα"
       later_this_week: "Αργότερα αυτήν την εβδομάδα"
+      this_weekend: "Αυτό το Σαββατοκύριακο"
       start_of_next_business_week: "Τη Δευτέρα"
       start_of_next_business_week_alt: "Την επόμενη Δευτέρα"
       next_month: "Τον άλλο μήνα"
@@ -552,6 +552,8 @@ el:
       edit_columns:
         save: "Αποθήκευση"
         reset_to_default: "Επαναφορά στο προεπιλεγμένο"
+      group:
+        all: "όλες οι ομάδες"
     group_histories:
       actions:
         change_group_setting: "Αλλαγή ρυθμίσεων ομάδας"
@@ -2990,7 +2992,6 @@ el:
       tags: "Ετικέτες"
       choose_for_topic: "προαιρετικές ετικέτες"
       info: "Πληροφορίες"
-      default_info: "Αυτή η ετικέτα δεν περιορίζεται σε καμία κατηγορία και δεν έχει συνώνυμα."
       category_restricted: "Αυτή η ετικέτα περιορίζεται σε κατηγορίες στις οποίες δεν έχετε άδεια πρόσβασης."
       synonyms: "Συνώνυμα"
       synonyms_description: "Όταν χρησιμοποιούνται οι ακόλουθες ετικέτες, θα αντικατασταθούν με <b>%{base_tag_name}</b>."

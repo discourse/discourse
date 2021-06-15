@@ -75,7 +75,19 @@ async function runAllTests() {
     }
   }
 
-  const { Inspector, Page, Runtime } = protocol;
+  const { Inspector, Page, Runtime, Log } = protocol;
+
+  // Documentation https://chromedevtools.github.io/devtools-protocol/tot/Log/#type-LogEntry
+  Log.enable();
+  Log.entryAdded(({ entry }) => {
+    let message = `${new Date(entry.timestamp).toISOString()} - (type: ${
+      entry.source
+    }/${entry.level}) message: ${entry.text}`;
+    if (entry.url) {
+      message += `, url: ${entry.url}`;
+    }
+    console.log(message);
+  });
 
   // eslint-disable-next-line
   await Promise.all([Inspector.enable(), Page.enable(), Runtime.enable()]);

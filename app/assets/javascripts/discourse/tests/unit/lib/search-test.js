@@ -6,7 +6,7 @@ import {
 import I18n from "I18n";
 
 module("Unit | Utility | search", function () {
-  test("unescapesEmojisInBlurbs", function (assert) {
+  test("unescapesEmojisInBlurbs", async function (assert) {
     const source = {
       posts: [
         {
@@ -28,7 +28,7 @@ module("Unit | Utility | search", function () {
       grouped_search_result: false,
     };
 
-    const results = translateResults(source);
+    const results = await translateResults(source);
     const blurb = results.posts[0].get("blurb");
 
     assert.ok(blurb.indexOf("thinking.png"));

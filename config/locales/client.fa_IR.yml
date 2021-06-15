@@ -532,12 +532,14 @@ fa_IR:
       later_today: "بعد از امروز"
       next_business_day: "روز کاری بعدی"
       tomorrow: "فردا"
-      next_week: "هفته بعد"
       post_local_date: "تاریخ در پست"
       later_this_week: "بعد از اين هفته"
+      this_weekend: "آخر هفته"
       start_of_next_business_week: "دوشنبه"
       start_of_next_business_week_alt: "دوشنبه بعدی"
+      two_weeks: "دو هفته"
       next_month: "ماه بعد"
+      six_months: "شش ماه"
       custom: "تاریخ و زمان سفارشی"
       relative: "زمان نسبی"
       none: "هیچکدام نیازی نیست"
@@ -580,6 +582,8 @@ fa_IR:
       edit_columns:
         save: "ذخیره"
         reset_to_default: "بازگردانی به پیش‌فرض"
+      group:
+        all: "همه گروه‌ها"
     group_histories:
       actions:
         change_group_setting: "تغییر تنظیمات گروه"

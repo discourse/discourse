@@ -151,10 +151,6 @@ export default Controller.extend(ModalFunctionality, {
           keys1: ["n", "d"],
           shortcutsDelimiter: "space",
         }),
-        next_week: buildShortcut("bookmarks.next_week", {
-          keys1: ["n", "w"],
-          shortcutsDelimiter: "space",
-        }),
         next_business_week: buildShortcut("bookmarks.next_business_week", {
           keys1: ["n", "b", "w"],
           shortcutsDelimiter: "space",

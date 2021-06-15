@@ -3,18 +3,14 @@
 require "rails_helper"
 
 describe "translate accelerator" do
-  before(:all) do
+  before do
     @original_i18n_load_path = I18n.load_path.dup
     I18n.load_path += Dir["#{Rails.root}/spec/fixtures/i18n/translate_accelerator.*.yml"]
     I18n.reload!
   end
 
-  after(:all) do
-    I18n.load_path = @original_i18n_load_path
-    I18n.reload!
-  end
-
   after do
+    I18n.load_path = @original_i18n_load_path
     I18n.reload!
   end
 

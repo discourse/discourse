@@ -410,7 +410,7 @@ sk:
         other: "dní"
     time_shortcut:
       tomorrow: "Zajtra"
-      next_week: "Budúci týždeň"
+      this_weekend: "Tento víkend"
       next_month: "Budúci mesiac"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
@@ -451,6 +451,8 @@ sk:
         other: "%{count} používateľov"
       edit_columns:
         save: "Uložiť"
+      group:
+        all: "všetky skupiny"
     group_histories:
       actions:
         change_group_setting: "Zmeniť nastavenia skupiny"

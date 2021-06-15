@@ -1414,7 +1414,6 @@ de:
     title: "Der Name dieser Site, wird für das Title-Tag verwendet."
     site_description: "Beschreibe diese Site in einem Satz. Wird für das \"description\" Meta-Tag verwendet."
     short_site_description: "Kurze Beschreibung, die im Title-Tag auf der Webseite verwendet wird."
-    contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Community. Wird verwendet für kritische Benachrichtigungen sowie auf dem <a href='%{base_path}/about' target='_blank'>/about</a> Kontaktformular für dringende Anfragen."
     contact_url: "Kontakt-URL für diese Seite. Angezeigt auf der <a href='%{base_path}/about' target='_blank'>/about</a> Seite für dringende Fragen."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
@@ -2336,6 +2335,7 @@ de:
     email_in_spam_header: "Die erste E-Mail des Benutzers wurde als Spam gekennzeichnet"
     already_silenced: "Benutzer wurde bereits von %{staff} %{time_ago} stumm geschaltet."
     already_suspended: "Benutzer wurde bereits von %{staff} %{time_ago}gesperrt."
+    cannot_delete_has_posts: "Benutzer %{username} hat %{post_count} Beiträge, entweder öffentliche Beiträge oder persönliche Nachrichten, sodass sie nicht gelöscht werden können."
   reviewables_reminder:
     submitted:
       one: "Einträge wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."

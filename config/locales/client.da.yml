@@ -541,12 +541,14 @@ da:
       later_today: "Senere i dag"
       next_business_day: "Næste hverdag"
       tomorrow: "I morgen"
-      next_week: "Næste uge"
       post_local_date: "Dato i indlæg"
       later_this_week: "Senere denne uge"
+      this_weekend: "Denne weekend"
       start_of_next_business_week: "Mandag"
       start_of_next_business_week_alt: "Næste mandag"
+      two_weeks: "To uger"
       next_month: "Næste måned"
+      six_months: "Seks måneder"
       custom: "Brugerdefineret dato og tid"
       relative: "Relativ tid"
       none: "Ikke nødvendig"
@@ -590,6 +592,8 @@ da:
       edit_columns:
         save: "Gem"
         reset_to_default: "Nulstil til standard"
+      group:
+        all: "alle grupper"
     group_histories:
       actions:
         change_group_setting: "Skift gruppe indstilling"
@@ -3325,7 +3329,6 @@ da:
       tags: "Mærker"
       choose_for_topic: "valgfrie mærker"
       info: "Info"
-      default_info: "Dette mærke er ikke begrænset til nogen kategorier og har ingen synonymer."
       category_restricted: "Dette mærke er begrænset til kategorier, som du ikke har adgang til."
       synonyms: "Synonymer"
       synonyms_description: "Når følgende mærker bruges, vil de blive erstattet med <b>%{base_tag_name}</b>."

@@ -515,9 +515,9 @@ hu:
       later_today: "Ma később"
       next_business_day: "Következő munkanap"
       tomorrow: "Holnap"
-      next_week: "Jövő héten"
       post_local_date: "A bejegyzésben szereplő dátum"
       later_this_week: "Később ezen a héten"
+      this_weekend: "Hétvégén"
       start_of_next_business_week: "Hétfőn"
       start_of_next_business_week_alt: "Jövő hétfőn"
       next_month: "Jövő hónapban"
@@ -563,6 +563,8 @@ hu:
       edit_columns:
         save: "Mentés"
         reset_to_default: "Alapértelmezés visszaállítása"
+      group:
+        all: "összes csoport"
     group_histories:
       actions:
         change_group_setting: "Csoportbeállítások módosítása"

@@ -540,7 +540,6 @@ it:
       later_today: "Più tardi oggi"
       next_business_day: "Il prossimo giorno lavorativo"
       tomorrow: "Domani"
-      next_week: "La prossima settimana"
       post_local_date: "Data nel messaggio"
       later_this_week: "Più tardi questa settimana"
       start_of_next_business_week: "Lunedì"
@@ -589,6 +588,8 @@ it:
         title: "Modifica Colonne Directory"
         save: "Salva"
         reset_to_default: "Ripristina impostazioni predefinite"
+      group:
+        all: "tutti i gruppi"
     group_histories:
       actions:
         change_group_setting: "Cambia le impostazioni del gruppo"
@@ -3344,7 +3345,6 @@ it:
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
       info: "Info"
-      default_info: "Questa etichetta non è limitata a nessuna categoria e non ha sinonimi."
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
       synonyms: "Sinonimi"
       synonyms_description: "Quando vengono utilizzate le seguenti etichette, verranno sostituite con <b>%{base_tag_name}</b>."

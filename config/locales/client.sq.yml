@@ -348,6 +348,8 @@ sq:
         other: "%{count} anëtarë"
       edit_columns:
         save: "Ruaj"
+      group:
+        all: "të gjitha grupet"
     group_histories:
       actions:
         change_group_setting: "Ndrysho parametrin e grupit"

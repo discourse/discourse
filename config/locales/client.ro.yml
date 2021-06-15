@@ -549,8 +549,8 @@ ro:
       later_today: "Mai târziu azi"
       next_business_day: "Următoarea zi lucrătoare"
       tomorrow: "Mâine"
-      next_week: "Săptămâna viitoare"
       later_this_week: "Mai târziu săptămâna asta"
+      this_weekend: "Acest weekend"
       start_of_next_business_week: "Luni"
       start_of_next_business_week_alt: "Lunea viitoare"
       next_month: "Luna viitoare"
@@ -594,6 +594,8 @@ ro:
         other: "%{count} de utilizatori"
       edit_columns:
         save: "Salvează"
+      group:
+        all: "toate grupurile"
     group_histories:
       actions:
         change_group_setting: "Schimbă setarea grupului"
