@@ -755,7 +755,7 @@ class Plugin::Instance
       root_path = "#{File.dirname(@path)}/assets/javascripts"
       admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
 
-      Dir.glob(["#{root_path}/**/*", "#{admin_path}/**/*"]) do |f|
+      Dir.glob(["#{root_path}/**/*", "#{admin_path}/**/*"]).sort.each do |f|
         f_str = f.to_s
         if File.directory?(f)
           yield [f, true]
