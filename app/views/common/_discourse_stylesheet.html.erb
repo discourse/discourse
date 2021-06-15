@@ -14,7 +14,6 @@
   <%= discourse_stylesheet_link_tag(file) %>
 <%- end %>
 
-<%- if theme_ids.present? %>
+<%- if theme_id.present? %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
 <%- end %>
-

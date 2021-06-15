@@ -17,10 +17,10 @@ describe SvgSprite do
   it 'can generate paths' do
     version = SvgSprite.version # Icons won't change for this test
     expect(SvgSprite.path).to eq("/svg-sprite/#{Discourse.current_hostname}/svg--#{version}.js")
-    expect(SvgSprite.path([1, 2])).to eq("/svg-sprite/#{Discourse.current_hostname}/svg-1,2-#{version}.js")
+    expect(SvgSprite.path(1)).to eq("/svg-sprite/#{Discourse.current_hostname}/svg-1-#{version}.js")
 
     # Safe mode
-    expect(SvgSprite.path([nil])).to eq("/svg-sprite/#{Discourse.current_hostname}/svg--#{version}.js")
+    expect(SvgSprite.path(nil)).to eq("/svg-sprite/#{Discourse.current_hostname}/svg--#{version}.js")
   end
 
   it 'can search for a specific FA icon' do
@@ -54,13 +54,13 @@ describe SvgSprite do
     fname = "custom-theme-icon-sprite.svg"
     upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
 
-    version1 = SvgSprite.version([theme.id])
-    bundle1 = SvgSprite.bundle([theme.id])
+    version1 = SvgSprite.version(theme.id)
+    bundle1 = SvgSprite.bundle(theme.id)
 
     SiteSetting.svg_icon_subset = "my-custom-theme-icon"
 
-    version2 = SvgSprite.version([theme.id])
-    bundle2 = SvgSprite.bundle([theme.id])
+    version2 = SvgSprite.version(theme.id)
+    bundle2 = SvgSprite.bundle(theme.id)
 
     # The contents of the bundle should not change, because the icon does not actually exist
     expect(bundle1).to eq(bundle2)
@@ -71,8 +71,8 @@ describe SvgSprite do
     theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
     theme.save!
 
-    version3 = SvgSprite.version([theme.id])
-    bundle3 = SvgSprite.bundle([theme.id])
+    version3 = SvgSprite.version(theme.id)
+    bundle3 = SvgSprite.bundle(theme.id)
 
     # The version/bundle should be updated
     expect(bundle3).not_to match(bundle2)
@@ -97,34 +97,34 @@ describe SvgSprite do
     # Works for default settings:
     theme.set_field(target: :settings, name: :yaml, value: "custom_icon: dragon")
     theme.save!
-    expect(SvgSprite.all_icons([theme.id])).to include("dragon")
+    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
 
     # Automatically purges cache when default changes:
     theme.set_field(target: :settings, name: :yaml, value: "custom_icon: gamepad")
     theme.save!
-    expect(SvgSprite.all_icons([theme.id])).to include("gamepad")
+    expect(SvgSprite.all_icons(theme.id)).to include("gamepad")
 
     # Works when applying override
     theme.update_setting(:custom_icon, "gas-pump")
     theme.save!
-    expect(SvgSprite.all_icons([theme.id])).to include("gas-pump")
+    expect(SvgSprite.all_icons(theme.id)).to include("gas-pump")
 
     # Works when changing override
     theme.update_setting(:custom_icon, "gamepad")
     theme.save!
-    expect(SvgSprite.all_icons([theme.id])).to include("gamepad")
-    expect(SvgSprite.all_icons([theme.id])).not_to include("gas-pump")
+    expect(SvgSprite.all_icons(theme.id)).to include("gamepad")
+    expect(SvgSprite.all_icons(theme.id)).not_to include("gas-pump")
 
     # FA5 syntax
     theme.update_setting(:custom_icon, "fab fa-bandcamp")
     theme.save!
-    expect(SvgSprite.all_icons([theme.id])).to include("fab-bandcamp")
+    expect(SvgSprite.all_icons(theme.id)).to include("fab-bandcamp")
 
     # Internal Discourse syntax + multiple icons
     theme.update_setting(:custom_icon, "fab-android|dragon")
     theme.save!
-    expect(SvgSprite.all_icons([theme.id])).to include("fab-android")
-    expect(SvgSprite.all_icons([theme.id])).to include("dragon")
+    expect(SvgSprite.all_icons(theme.id)).to include("fab-android")
+    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
 
     # Check themes don't leak into non-theme sprite sheet
     expect(SvgSprite.all_icons).not_to include("dragon")
@@ -134,17 +134,17 @@ describe SvgSprite do
     theme.save!
     parent_theme = Fabricate(:theme)
     parent_theme.add_relative_theme!(:child, theme)
-    expect(SvgSprite.all_icons([parent_theme.id])).to include("dragon")
+    expect(SvgSprite.all_icons(parent_theme.id)).to include("dragon")
   end
 
   it 'includes icons defined in theme modifiers' do
     theme = Fabricate(:theme)
 
-    expect(SvgSprite.all_icons([theme.id])).not_to include("dragon")
+    expect(SvgSprite.all_icons(theme.id)).not_to include("dragon")
 
     theme.theme_modifier_set.svg_icons = ["dragon"]
     theme.save!
-    expect(SvgSprite.all_icons([theme.id])).to include("dragon")
+    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
   end
 
   it 'includes custom icons from a sprite in a theme' do
@@ -157,7 +157,7 @@ describe SvgSprite do
     theme.save!
 
     expect(Upload.where(id: upload.id)).to be_exist
-    expect(SvgSprite.bundle([theme.id])).to match(/my-custom-theme-icon/)
+    expect(SvgSprite.bundle(theme.id)).to match(/my-custom-theme-icon/)
   end
 
   context "s3" do
@@ -181,17 +181,17 @@ describe SvgSprite do
       theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload_s3.id, type: :theme_upload_var)
       theme.save!
 
-      sprite_files = SvgSprite.custom_svg_sprites([theme.id]).join("|")
+      sprite_files = SvgSprite.custom_svg_sprites(theme.id).join("|")
       expect(sprite_files).to match(/#{upload_s3.sha1}/)
       expect(sprite_files).not_to match(/amazonaws/)
 
-      SvgSprite.bundle([theme.id])
+      SvgSprite.bundle(theme.id)
       expect(SvgSprite.cache.hash.keys).to include("custom_svg_sprites_#{theme.id}")
 
       external_copy = Discourse.store.download(upload_s3)
       File.delete external_copy.try(:path)
 
-      SvgSprite.bundle([theme.id])
+      SvgSprite.bundle(theme.id)
       # when a file is missing, ensure that cache entry is cleared
       expect(SvgSprite.cache.hash.keys).to_not include("custom_svg_sprites_#{theme.id}")
 

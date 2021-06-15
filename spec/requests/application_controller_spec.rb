@@ -442,13 +442,13 @@ RSpec.describe ApplicationController do
 
       get "/"
       expect(response.status).to eq(200)
-      expect(controller.theme_ids).to eq([theme.id])
+      expect(controller.theme_id).to eq(theme.id)
 
       theme.update_attribute(:user_selectable, false)
 
       get "/"
       expect(response.status).to eq(200)
-      expect(controller.theme_ids).to eq([SiteSetting.default_theme_id])
+      expect(controller.theme_id).to eq(SiteSetting.default_theme_id)
     end
 
     it "can be overridden with a cookie" do
@@ -458,15 +458,7 @@ RSpec.describe ApplicationController do
 
       get "/"
       expect(response.status).to eq(200)
-      expect(controller.theme_ids).to eq([theme2.id])
-
-      theme2.update!(user_selectable: false, component: true)
-      theme.add_relative_theme!(:child, theme2)
-      cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
-
-      get "/"
-      expect(response.status).to eq(200)
-      expect(controller.theme_ids).to eq([theme.id, theme2.id])
+      expect(controller.theme_id).to eq(theme2.id)
     end
 
     it "falls back to the default theme when the user has no cookies or preferences" do
@@ -476,25 +468,25 @@ RSpec.describe ApplicationController do
 
       get "/"
       expect(response.status).to eq(200)
-      expect(controller.theme_ids).to eq([theme2.id])
+      expect(controller.theme_id).to eq(theme2.id)
     end
 
     it "can be overridden with preview_theme_id param" do
       sign_in(admin)
-      cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{admin.user_option.theme_key_seq}"
+      cookies['theme_ids'] = "#{theme.id}|#{admin.user_option.theme_key_seq}"
 
       get "/", params: { preview_theme_id: theme2.id }
       expect(response.status).to eq(200)
-      expect(controller.theme_ids).to eq([theme2.id])
+      expect(controller.theme_id).to eq(theme2.id)
 
       get "/", params: { preview_theme_id: non_selectable_theme.id }
-      expect(controller.theme_ids).to eq([non_selectable_theme.id])
+      expect(controller.theme_id).to eq(non_selectable_theme.id)
     end
 
     it "does not allow non privileged user to preview themes" do
       sign_in(user)
       get "/", params: { preview_theme_id: non_selectable_theme.id }
-      expect(controller.theme_ids).to eq([SiteSetting.default_theme_id])
+      expect(controller.theme_id).to eq(SiteSetting.default_theme_id)
     end
 
     it "cookie can fail back to user if out of sync" do
@@ -503,7 +495,7 @@ RSpec.describe ApplicationController do
 
       get "/"
       expect(response.status).to eq(200)
-      expect(controller.theme_ids).to eq([theme.id])
+      expect(controller.theme_id).to eq(theme.id)
     end
   end
 

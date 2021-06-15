@@ -519,7 +519,7 @@ Discourse::Application.routes.draw do
 
     get "letter_avatar_proxy/:version/letter/:letter/:color/:size.png" => "user_avatars#show_proxy_letter", constraints: { format: :png }
 
-    get "svg-sprite/:hostname/svg-:theme_ids-:version.js" => "svg_sprite#show", constraints: { hostname: /[\w\.-]+/, version: /\h{40}/, theme_ids: /([0-9]+(,[0-9]+)*)?/, format: :js }
+    get "svg-sprite/:hostname/svg-:theme_id-:version.js" => "svg_sprite#show", constraints: { hostname: /[\w\.-]+/, version: /\h{40}/, theme_id: /([0-9]+)?/, format: :js }
     get "svg-sprite/search/:keyword" => "svg_sprite#search", format: false, constraints: { keyword: /[-a-z0-9\s\%]+/ }
     get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search", defaults: { format: :json }
     get "svg-sprite/:hostname/icon(/:color)/:name.svg" => "svg_sprite#svg_icon", constraints: { hostname: /[\w\.-]+/, name: /[-a-z0-9\s\%]+/, color: /(\h{3}{1,2})/, format: :svg }

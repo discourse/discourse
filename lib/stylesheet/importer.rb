@@ -101,7 +101,7 @@ module Stylesheet
       end
 
       theme_id = @theme_id || SiteSetting.default_theme_id
-      resolved_ids = Theme.transform_ids([theme_id])
+      resolved_ids = Theme.transform_ids(theme_id)
 
       if resolved_ids
         theme = Theme.find_by_id(theme_id)

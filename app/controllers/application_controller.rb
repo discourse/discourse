@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   include Hijack
   include ReadOnlyHeader
 
-  attr_reader :theme_ids
+  attr_reader :theme_id
 
   serialization_scope :guardian
 
@@ -448,35 +448,34 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_ids = []
+    theme_id = nil
 
-    if preview_theme_id = request[:preview_theme_id]&.to_i
-      ids = [preview_theme_id]
-      theme_ids = ids if guardian.allow_themes?(ids, include_preview: true)
+    if (preview_theme_id = request[:preview_theme_id]&.to_i) &&
+      guardian.allow_themes?([preview_theme_id], include_preview: true)
+
+      theme_id = preview_theme_id
     end
 
     user_option = current_user&.user_option
 
-    if theme_ids.blank?
+    if theme_id.blank?
       ids, seq = cookies[:theme_ids]&.split("|")
-      ids = ids&.split(",")&.map(&:to_i)
-      if ids.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
-        theme_ids = ids if guardian.allow_themes?(ids)
+      id = ids&.split(",")&.map(&:to_i)&.first
+      if id.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
+        theme_id = id if guardian.allow_themes?([id])
       end
     end
 
-    if theme_ids.blank?
+    if theme_id.blank?
       ids = user_option&.theme_ids || []
-      theme_ids = ids if guardian.allow_themes?(ids)
+      theme_id = ids.first if guardian.allow_themes?(ids)
     end
 
-    if theme_ids.blank? && SiteSetting.default_theme_id != -1
-      if guardian.allow_themes?([SiteSetting.default_theme_id])
-        theme_ids << SiteSetting.default_theme_id
-      end
+    if theme_id.blank? && SiteSetting.default_theme_id != -1 && guardian.allow_themes?([SiteSetting.default_theme_id])
+      theme_id = SiteSetting.default_theme_id
     end
 
-    @theme_ids = request.env[:resolved_theme_ids] = theme_ids
+    @theme_id = request.env[:resolved_theme_id] = theme_id
   end
 
   def guardian
@@ -635,10 +634,10 @@ class ApplicationController < ActionController::Base
     target = view_context.mobile_view? ? :mobile : :desktop
 
     data =
-      if @theme_ids.present?
+      if @theme_id.present?
         {
-         top: Theme.lookup_field(@theme_ids, target, "after_header"),
-         footer: Theme.lookup_field(@theme_ids, target, "footer")
+         top: Theme.lookup_field(@theme_id, target, "after_header"),
+         footer: Theme.lookup_field(@theme_id, target, "footer")
         }
       else
         {}
@@ -943,9 +942,9 @@ class ApplicationController < ActionController::Base
   end
 
   def activated_themes_json
-    ids = @theme_ids&.compact
-    return "{}" if ids.blank?
-    ids = Theme.transform_ids(ids)
+    id = @theme_id
+    return "{}" if id.blank?
+    ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
   end
 end
