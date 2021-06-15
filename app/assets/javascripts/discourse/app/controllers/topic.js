@@ -1252,7 +1252,6 @@ export default Controller.extend(bufferedProperty("model"), {
                     updated.push(post.id);
                   }
                 });
-                firstPost.setProperties(clearedBookmarkProps);
                 return updated;
               }
             })
