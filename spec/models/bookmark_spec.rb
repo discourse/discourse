@@ -15,6 +15,26 @@ describe Bookmark do
       expect(Bookmark.find_by(id: bookmark2.id)).to eq(bookmark2)
     end
 
+    it "runs a SyncTopicUserBookmarked job for all deleted bookmark unique topics to make sure topic_user.bookmarked is in sync" do
+      post = Fabricate(:post)
+      post2 = Fabricate(:post)
+      bookmark = Fabricate(:bookmark, post: post, topic: post.topic)
+      bookmark2 = Fabricate(:bookmark, post: Fabricate(:post, topic: post.topic))
+      bookmark3 = Fabricate(:bookmark, post: post2, topic: post2.topic)
+      bookmark4 = Fabricate(:bookmark, post: post2, topic: post2.topic)
+      post.trash!
+      post.update(deleted_at: 4.days.ago)
+      post2.trash!
+      post2.update(deleted_at: 4.days.ago)
+      Bookmark.cleanup!
+      expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
+      expect(Bookmark.find_by(id: bookmark2.id)).to eq(bookmark2)
+      expect(Bookmark.find_by(id: bookmark3.id)).to eq(nil)
+      expect(Bookmark.find_by(id: bookmark4.id)).to eq(nil)
+      expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: post.topic_id })
+      expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: post2.topic_id })
+    end
+
     it "deletes bookmarks attached to a deleted topic which has been deleted for > 3 days" do
       post = Fabricate(:post)
       bookmark = Fabricate(:bookmark, post: post, topic: post.topic)
