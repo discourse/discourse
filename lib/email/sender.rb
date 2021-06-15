@@ -97,6 +97,7 @@ module Email
       post_id   = header_value('X-Discourse-Post-Id')
       topic_id  = header_value('X-Discourse-Topic-Id')
       reply_key = set_reply_key(post_id, user_id)
+      from_address = @message.from&.first
 
       # always set a default Message ID from the host
       @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
@@ -230,7 +231,7 @@ module Email
 
       # Log when a message is being sent from a group SMTP address, so we
       # can debug deliverability issues.
-      if smtp_group = Group.find_by(email_username: @message.from.first)
+      if from_address && smtp_group = Group.find_by(email_username: from_address)
         email_log.smtp_group = smtp_group
       end
 
