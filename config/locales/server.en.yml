@@ -112,6 +112,7 @@ en:
       no_subject: "(no subject)"
       no_body: "(no body)"
       missing_attachment: "(Attachment %{filename} is missing)"
+      continuing_old_discussion: "Continuing the discussion from the topic [%{title}](%{url})"
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."

@@ -224,12 +224,12 @@ module Email
         # We don't stage new users for emails to reply addresses, exit if user is nil
         raise BadDestinationAddress if user.blank?
 
+        # We only get here if there are no destinations (the email is not going to
+        # a Category, Group, or PostReplyKey)
         post = find_related_post(force: true)
 
         if post && Guardian.new(user).can_see_post?(post)
-          num_of_days = SiteSetting.disallow_reply_by_email_after_days
-
-          if num_of_days > 0 && post.created_at < num_of_days.days.ago
+          if destination_too_old?(post)
             raise OldDestinationError.new("#{Discourse.base_url}/p/#{post.id}")
           end
         end
@@ -770,18 +770,38 @@ module Email
 
       if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
 
-        # this must be done for the unknown user (who is staged) to
-        # be allowed to post a reply in the topic
-        if group.allow_unknown_sender_topic_replies
-          post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
-        end
+        # We don't want users reopening months-old PM discussions in
+        # group SMTP inbox environments. Instead we just create a new
+        # topic with a link back to the old one.
+        if destination_too_old?(post) && group.smtp_enabled
+          enable_email_pm_setting(user)
+          raw = body + "\n\n" + I18n.t(
+            "emails.incoming.continuing_old_discussion", url: post.topic.url, title: post.topic.title
+          )
 
-        create_reply(user: user,
-                     raw: body,
-                     elided: elided,
-                     post: post,
-                     topic: post.topic,
-                     skip_validations: true)
+          create_topic(user: user,
+                       raw: raw,
+                       elided: elided,
+                       title: subject,
+                       archetype: Archetype.private_message,
+                       target_group_names: [group.name],
+                       is_group_message: true,
+                       skip_validations: true)
+        else
+
+          # This must be done for the unknown user (who is staged) to
+          # be allowed to post a reply in the topic.
+          if group.allow_unknown_sender_topic_replies
+            post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
+          end
+
+          create_reply(user: user,
+                       raw: body,
+                       elided: elided,
+                       post: post,
+                       topic: post.topic,
+                       skip_validations: true)
+        end
       else
         enable_email_pm_setting(user)
 
@@ -1326,6 +1346,11 @@ module Email
       if !user.staged && user.user_option.email_messages_level == UserOption.email_level_types[:never]
         user.user_option.update!(email_messages_level: UserOption.email_level_types[:always])
       end
+    end
+
+    def destination_too_old?(post)
+      num_of_days = SiteSetting.disallow_reply_by_email_after_days
+      num_of_days > 0 && post.created_at < num_of_days.days.ago
     end
   end
 end

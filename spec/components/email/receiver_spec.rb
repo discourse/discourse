@@ -987,7 +987,13 @@ describe Email::Receiver do
 
     context "emailing a group by email_username and following reply flow" do
       let!(:topic) do
-        group.update!(email_username: "team@somesmtpaddress.com")
+        group.update!(
+          email_username: "team@somesmtpaddress.com",
+          smtp_server: "smtp.test.com",
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_enabled: true
+        )
         process(:email_to_group_email_username_1)
         Topic.last
       end
@@ -1071,6 +1077,30 @@ describe Email::Receiver do
 
         reply_post = Post.last
         expect(reply_post.topic_id).to eq(topic.id)
+      end
+
+      it "creates a new topic with a reference back to the original if replying to a too old topic" do
+        SiteSetting.disallow_reply_by_email_after_days = 2
+        email_log, group_post = reply_as_group_user
+
+        group_post.update(created_at: 10.days.ago)
+        group_post.topic.update(created_at: 10.days.ago)
+
+        reply_email = email(:email_to_group_email_username_2)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(1).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        new_topic = Topic.last
+
+        expect(reply_post.topic).to eq(new_topic)
+        expect(reply_post.raw).to include(
+          I18n.t(
+            "emails.incoming.continuing_old_discussion", url: group_post.topic.url, title: group_post.topic.title
+          )
+        )
       end
     end
 
