@@ -231,7 +231,7 @@ module Email
 
       # Log when a message is being sent from a group SMTP address, so we
       # can debug deliverability issues.
-      if from_address && smtp_group = Group.find_by(email_username: from_address)
+      if from_address && smtp_group = Group.find_by(email_username: from_address, smtp_enabled: true)
         email_log.smtp_group = smtp_group
       end
 
