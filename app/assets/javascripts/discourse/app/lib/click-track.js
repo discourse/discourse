@@ -4,7 +4,7 @@ import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import getURL, { getBaseURI } from "discourse-common/lib/get-url";
+import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
 import { later } from "@ember/runloop";
 import { selectedText } from "discourse/lib/utilities";
@@ -162,10 +162,7 @@ export default {
         openLinkInNewTab($link[0]);
       } else {
         trackPromise.finally(() => {
-          if (
-            DiscourseURL.isInternal(href) &&
-            href.indexOf(getBaseURI()) === 0
-          ) {
+          if (DiscourseURL.isInternal(href) && samePrefix(href)) {
             DiscourseURL.routeTo(href);
           } else {
             DiscourseURL.redirectAbsolute(href);
