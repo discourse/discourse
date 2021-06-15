@@ -929,6 +929,7 @@ const Composer = RestModel.extend({
 
   editPost(opts) {
     const post = this.post;
+    const oldRaw = post.raw;
     const oldCooked = post.cooked;
     let promise = Promise.resolve();
 
@@ -970,14 +971,14 @@ const Composer = RestModel.extend({
     this.set("composeState", SAVING);
 
     const rollback = throwAjaxError((error) => {
-      post.set("cooked", oldCooked);
+      post.setProperties({ raw: oldRaw, cooked: oldCooked });
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);
       }
     });
 
-    post.setProperties({ cooked: props.cooked, staged: true });
+    post.setProperties({ raw: props.raw, cooked: props.cooked, staged: true });
     this.appEvents.trigger("post-stream:refresh", { id: post.id });
 
     return promise
