@@ -355,8 +355,18 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", "will return empty json");
     await fillIn("#reply-title", "This is the new text for the title");
-    await click("#reply-control button.create");
 
+    // when this promise resolves, the request had already started because
+    // this promise will be resolved by the pretender
+    const promise = new Promise((resolve) => {
+      window.resolveLastPromise = resolve;
+    });
+
+    // click to trigger the save, but wait until the request starts
+    click("#reply-control button.create");
+    await promise;
+
+    // at this point, request is in flight, so post is staged
     assert.equal(count(".topic-post.staged"), 1);
     assert.ok(
       find(".topic-post:nth-of-type(1)")[0].className.includes("staged")
@@ -365,6 +375,12 @@ acceptance("Composer", function (needs) {
       find(".topic-post.staged .cooked").text().trim(),
       "will return empty json"
     );
+
+    // finally, finish request and wait for last render
+    window.resolveLastPromise();
+    await visit("/t/internationalization-localization/280");
+
+    assert.equal(count(".topic-post.staged"), 0);
   });
 
   test("Editing a post can rollback to old content", async function (assert) {
