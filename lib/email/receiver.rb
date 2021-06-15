@@ -765,7 +765,7 @@ module Email
           .order(created_at: :desc)
           .limit(1)
           .pluck(:post_id).last
-        post_ids << post_id_from_email_log
+        post_ids << post_id_from_email_log if post_id_from_email_log
       end
 
       if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
@@ -775,8 +775,9 @@ module Email
         # topic with a link back to the old one.
         if destination_too_old?(post) && group.smtp_enabled
           enable_email_pm_setting(user)
-          raw = body + "\n\n" + I18n.t(
-            "emails.incoming.continuing_old_discussion", url: post.topic.url, title: post.topic.title
+          raw = body + "\n\n----\n\n" + I18n.t(
+            "emails.incoming.continuing_old_discussion",
+            url: post.topic.url, title: post.topic.title, count: SiteSetting.disallow_reply_by_email_after_days
           )
 
           create_topic(user: user,
