@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "s3_helper"
-require 'rails_helper'
+require "rails_helper"
 
 describe Jobs::VacateLegacyPrefixBackups, type: :multisite do
   let(:bucket_name) { "backupbucket" }
 
-  before(:all) do
+  before do
     @s3_client = Aws::S3::Client.new(stub_responses: true)
     @s3_options = { client: @s3_client }
     @objects = []
@@ -15,9 +15,7 @@ describe Jobs::VacateLegacyPrefixBackups, type: :multisite do
     @s3_client.stub_responses(:list_objects_v2, -> (context) do
       { contents: objects_with_prefix(context) }
     end)
-  end
 
-  before do
     setup_s3
     SiteSetting.s3_backup_bucket = bucket_name
     SiteSetting.backup_location = BackupLocationSiteSetting::S3

@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'theme_settings_parser'
 
 describe ThemeSettingsParser do
-  after(:all) do
+  after do
     ThemeField.destroy_all
   end
 

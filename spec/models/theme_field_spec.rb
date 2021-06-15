@@ -4,7 +4,7 @@
 require 'rails_helper'
 
 describe ThemeField do
-  after(:all) do
+  after do
     ThemeField.destroy_all
   end
 
