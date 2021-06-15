@@ -348,7 +348,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Editing a post stages new content", async function (assert) {
+  QUnit.skip("Editing a post stages new content", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
