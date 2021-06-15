@@ -5,13 +5,20 @@ import {
   discourseModule,
   fakeTime,
   query,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "I18n";
 
 discourseModule("Integration | Component | bookmark", function (hooks) {
   setupRenderingTest(hooks);
 
-  let template =
-    '{{bookmark model=model afterSave=afterSave afterDelete=afterDelete onCloseWithoutSaving=onCloseWithoutSaving registerOnCloseHandler=(action "registerOnCloseHandler") closeModal=(action "closeModal")}}';
+  const template = `{{bookmark
+        model=model
+        afterSave=afterSave
+        afterDelete=afterDelete
+        onCloseWithoutSaving=onCloseWithoutSaving
+        registerOnCloseHandler=(action "registerOnCloseHandler")
+        closeModal=(action "closeModal")}}`;
 
   hooks.beforeEach(function () {
     this.actions.registerOnCloseHandler = () => {};
@@ -28,6 +35,35 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     if (this.clock) {
       this.clock.restore();
     }
+  });
+
+  componentTest("shows correct options", {
+    template,
+
+    beforeEach() {
+      const tuesday = "2100-06-08T08:00:00";
+      this.clock = fakeTime(tuesday, this.currentUser._timezone, true);
+    },
+
+    async test(assert) {
+      const expected = [
+        I18n.t("time_shortcut.later_today"),
+        I18n.t("time_shortcut.tomorrow"),
+        I18n.t("time_shortcut.later_this_week"),
+        I18n.t("time_shortcut.start_of_next_business_week"),
+        I18n.t("time_shortcut.next_month"),
+        I18n.t("time_shortcut.custom"),
+        I18n.t("time_shortcut.none"),
+      ];
+
+      const options = Array.from(
+        queryAll(
+          "div.control-group div.tap-tile-grid div.tap-tile-title"
+        ).map((_, div) => div.innerText.trim())
+      );
+
+      assert.deepEqual(options, expected);
+    },
   });
 
   componentTest("show later this week option if today is < Thursday", {
@@ -154,6 +190,25 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     async test(assert) {
       await click("#tap_tile_custom");
       assert.equal(query("#custom-time").value, "08:00");
+    },
+  });
+
+  componentTest("Next Month points to the first day of the next month", {
+    template,
+
+    beforeEach() {
+      this.clock = fakeTime(
+        "2100-01-01T08:00:00",
+        this.currentUser._timezone,
+        true
+      );
+    },
+
+    async test(assert) {
+      assert.equal(
+        query("div#tap_tile_next_month div.tap-tile-date").innerText,
+        "Feb 1, 8:00 am"
+      );
     },
   });
 });

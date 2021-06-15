@@ -32,10 +32,6 @@ const BINDINGS = {
     handler: "selectShortcut",
     args: [TIME_SHORTCUT_TYPES.TOMORROW],
   },
-  "n w": {
-    handler: "selectShortcut",
-    args: [TIME_SHORTCUT_TYPES.NEXT_WEEK],
-  },
   "n b w": {
     handler: "selectShortcut",
     args: [TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK],

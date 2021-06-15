@@ -7,7 +7,6 @@ import {
   laterThisWeek,
   laterToday,
   nextMonth,
-  nextWeek,
   startOfDay,
   tomorrow,
 } from "discourse/lib/time-utils";
@@ -16,15 +15,9 @@ import { test } from "qunit";
 const timezone = "Australia/Brisbane";
 
 discourseModule("Unit | lib | timeUtils", function () {
-  test("nextWeek gets next week correctly", function (assert) {
-    withFrozenTime("2019-12-11T08:00:00", timezone, () => {
-      assert.equal(nextWeek(timezone).format("YYYY-MM-DD"), "2019-12-18");
-    });
-  });
-
   test("nextMonth gets next month correctly", function (assert) {
     withFrozenTime("2019-12-11T08:00:00", timezone, () => {
-      assert.equal(nextMonth(timezone).format("YYYY-MM-DD"), "2020-01-11");
+      assert.equal(nextMonth(timezone).format("YYYY-MM-DD"), "2020-01-01");
     });
   });
 

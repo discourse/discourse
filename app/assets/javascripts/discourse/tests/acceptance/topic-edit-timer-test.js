@@ -1,14 +1,18 @@
 import {
   acceptance,
   exists,
+  fakeTime,
+  loggedInUser,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "I18n";
 
 acceptance("Topic - Edit timer", function (needs) {
+  let clock = null;
   needs.user();
   needs.pretender((server, helper) => {
     server.post("/t/280/timer", () =>
@@ -25,13 +29,23 @@ acceptance("Topic - Edit timer", function (needs) {
     );
   });
 
+  needs.hooks.beforeEach(() => {
+    const timezone = loggedInUser().resolvedTimezone(loggedInUser());
+    const tuesday = "2100-06-15T08:00:00";
+    clock = fakeTime(tuesday, timezone, true);
+  });
+
+  needs.hooks.afterEach(() => {
+    clock.restore();
+  });
+
   test("autoclose - specific time", async function (assert) {
     updateCurrentUser({ moderator: true });
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    await click("#tap_tile_next_week");
+    await click("#tap_tile_start_of_next_business_week");
 
     const regex = /will automatically close in/g;
     const html = queryAll(".edit-topic-timer-modal .topic-timer-info")
@@ -47,7 +61,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    await click("#tap_tile_next_week");
+    await click("#tap_tile_start_of_next_business_week");
 
     const regex1 = /will automatically close in/g;
     const html1 = queryAll(".edit-topic-timer-modal .topic-timer-info")
@@ -56,7 +70,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex1.test(html1));
 
     await click("#tap_tile_custom");
-    await fillIn(".tap-tile-date-input .date-picker", "2099-11-24");
+    await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
 
     const regex2 = /will automatically close in/g;
     const html2 = queryAll(".edit-topic-timer-modal .topic-timer-info")
@@ -89,7 +103,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("open");
 
-    await click("#tap_tile_next_week");
+    await click("#tap_tile_start_of_next_business_week");
 
     const regex1 = /will automatically open in/g;
     const html1 = queryAll(".edit-topic-timer-modal .topic-timer-info")
@@ -98,7 +112,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex1.test(html1));
 
     await click("#tap_tile_custom");
-    await fillIn(".tap-tile-date-input .date-picker", "2099-11-24");
+    await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
 
     const regex2 = /will automatically open in/g;
     const html2 = queryAll(".edit-topic-timer-modal .topic-timer-info")
@@ -125,7 +139,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue("7");
 
-    await click("#tap_tile_next_week");
+    await click("#tap_tile_start_of_next_business_week");
 
     const regex = /will be published to #dev/g;
     const text = queryAll(".edit-topic-timer-modal .topic-timer-info")
@@ -153,7 +167,7 @@ acceptance("Topic - Edit timer", function (needs) {
     );
 
     await click("#tap_tile_custom");
-    await fillIn(".tap-tile-date-input .date-picker", "2099-11-24");
+    await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
     await fillIn("#custom-time", "10:30");
     await click(".edit-topic-timer-buttons button.btn-primary");
 
@@ -164,7 +178,7 @@ acceptance("Topic - Edit timer", function (needs) {
       exists("#tap_tile_last_custom"),
       "it show last custom because the custom date and time was valid"
     );
-    let text = queryAll("#tap_tile_last_custom").text().trim();
+    const text = queryAll("#tap_tile_last_custom").text().trim();
     const regex = /Nov 24, 10:30 am/g;
     assert.ok(regex.test(text));
   });
@@ -209,7 +223,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    await click("#tap_tile_next_week");
+    await click("#tap_tile_start_of_next_business_week");
     await click(".edit-topic-timer-buttons button.btn-primary");
 
     const removeTimerButton = queryAll(".topic-timer-info .topic-timer-remove");
@@ -218,5 +232,31 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".topic-timer-info .topic-timer-remove");
     const topicTimerInfo = queryAll(".topic-timer-info .topic-timer-remove");
     assert.equal(topicTimerInfo.length, 0);
+  });
+
+  test("Shows correct time frame options", async function (assert) {
+    updateCurrentUser({ moderator: true });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    const expected = [
+      I18n.t("time_shortcut.tomorrow"),
+      I18n.t("time_shortcut.this_weekend"),
+      I18n.t("time_shortcut.start_of_next_business_week"),
+      I18n.t("time_shortcut.two_weeks"),
+      I18n.t("time_shortcut.next_month"),
+      I18n.t("time_shortcut.six_months"),
+      I18n.t("time_shortcut.custom"),
+    ];
+
+    const options = Array.from(
+      queryAll("div.tap-tile-grid div.tap-tile-title").map((_, div) =>
+        div.innerText.trim()
+      )
+    );
+
+    assert.deepEqual(options, expected);
   });
 });

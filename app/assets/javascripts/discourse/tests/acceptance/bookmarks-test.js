@@ -81,9 +81,6 @@ acceptance("Bookmarking", function (needs) {
     await click("#tap_tile_start_of_next_business_week");
 
     await openBookmarkModal();
-    await click("#tap_tile_next_week");
-
-    await openBookmarkModal();
     await click("#tap_tile_next_month");
 
     await openBookmarkModal();
@@ -96,7 +93,6 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, [
       "tomorrow",
       "start_of_next_business_week",
-      "next_week",
       "next_month",
       "custom",
     ]);
