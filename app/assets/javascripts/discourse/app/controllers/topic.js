@@ -1222,15 +1222,14 @@ export default Controller.extend(bufferedProperty("model"), {
     const alreadyBookmarkedPosts = this.model.bookmarkedPosts;
 
     return this.model.firstPost().then((firstPost) => {
-      const bookmarkPost = (post) => {
-        return this._togglePostBookmark(post).then((opts) => {
-          this.model.set("bookmarking", false);
-          if (opts && opts.closedWithoutSaving) {
-            return;
-          }
-          this.model.afterPostBookmarked(post);
-          return [post.id];
-        });
+      const bookmarkPost = async (post) => {
+        const opts = await this._togglePostBookmark(post);
+        this.model.set("bookmarking", false);
+        if (opts && opts.closedWithoutSaving) {
+          return;
+        }
+        this.model.afterPostBookmarked(post);
+        return [post.id];
       };
 
       const toggleBookmarkOnServer = () => {
