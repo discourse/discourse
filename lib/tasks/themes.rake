@@ -125,11 +125,14 @@ task "themes:install_and_test" => :environment do |t, args|
   # of DISCOURSE_* env vars that we don't want to be picked up by the Unicorn
   # server that will be spawned for the tests. So we need to unset them all
   # before we proceed.
-  ENV.keys.each do |key|
-    next if !key.start_with?('DISCOURSE_')
-    # we still need redis
-    next if key.start_with?('DISCOURSE_REDIS_')
-    ENV[key] = nil
+  # Make this behavior opt-in to make it very obvious.
+  if ENV["UNSET_DISCOURSE_ENV_VARS"] == "1"
+    ENV.keys.each do |key|
+      next if !key.start_with?('DISCOURSE_')
+      # we still need redis
+      next if key.start_with?('DISCOURSE_REDIS_')
+      ENV[key] = nil
+    end
   end
 
   db = TemporaryDb.new
