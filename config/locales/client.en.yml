@@ -704,6 +704,8 @@ en:
           enable_imap: "Enable IMAP"
           test_settings: "Test Settings"
           save_settings: "Save Settings"
+          last_updated: "Last updated:"
+          last_updated_by: "by"
           settings_required: "All settings are required, please fill in all fields before validation."
           smtp_settings_valid: "SMTP settings valid."
           smtp_title: "SMTP"

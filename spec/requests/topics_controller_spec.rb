@@ -2974,7 +2974,7 @@ RSpec.describe TopicsController do
         expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
       end
 
-      it "creates topic user records for each unread topic" do
+      it "creates dismissed topic user records for each new topic" do
         sign_in(user)
         user.user_stat.update_column(:new_since, 2.years.ago)
 
@@ -2982,11 +2982,57 @@ RSpec.describe TopicsController do
         CategoryUser.set_notification_level_for_category(user,
                                                      NotificationLevels.all[:tracking],
                                                      tracked_category.id)
-        tracked_topic = create_post.topic
-        tracked_topic.update!(category_id: tracked_category.id)
+        tracked_topic = create_post(category: tracked_category).topic
 
         create_post # This is a new post, but is not tracked so a record will not be created for it
-        expect { put "/topics/reset-new.json?tracked=true" }.to change { DismissedTopicUser.where(user_id: user.id).count }.by(1)
+        expect do
+          put "/topics/reset-new.json?tracked=true"
+        end.to change {
+          DismissedTopicUser.where(user_id: user.id, topic_id: tracked_topic.id).count
+        }.by(1)
+      end
+
+      it "creates dismissed topic user records if there are > 30 (default pagination) topics" do
+        sign_in(user)
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+
+        topic_ids = []
+        5.times do
+          topic_ids << create_post(category: tracked_category).topic.id
+        end
+
+        expect do
+          stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+            put "/topics/reset-new.json?tracked=true"
+          end
+        end.to change {
+          DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
+        }.by(5)
+      end
+
+      it "creates dismissed topic user records if there are > 30 (default pagination) topics and topic_ids are provided" do
+        sign_in(user)
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+
+        topic_ids = []
+        5.times do
+          topic_ids << create_post(category: tracked_category).topic.id
+        end
+        dismissing_topic_ids = topic_ids.sample(4)
+
+        expect do
+          stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+            put "/topics/reset-new.json?tracked=true", params: { topic_ids: dismissing_topic_ids }
+          end
+        end.to change {
+          DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
+        }.by(4)
       end
     end
 

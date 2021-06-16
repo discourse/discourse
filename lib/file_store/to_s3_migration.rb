@@ -7,6 +7,7 @@ module FileStore
 
   class ToS3Migration
     MISSING_UPLOADS_RAKE_TASK_NAME ||= 'posts:missing_uploads'
+    UPLOAD_CONCURRENCY ||= 20
 
     def initialize(s3_options:, dry_run: false, migrate_to_multisite: false, skip_etag_verify: false)
 
@@ -197,8 +198,24 @@ module FileStore
       log " => #{s3_objects.size} files"
       log " - Syncing files to S3"
 
+      queue = Queue.new
       synced = 0
       failed = []
+
+      lock = Mutex.new
+      upload_threads = UPLOAD_CONCURRENCY.times.map do
+        Thread.new do
+          while obj = queue.pop
+            if s3.put_object(obj[:options]).etag[obj[:etag]]
+              putc "."
+              lock.synchronize { synced += 1 }
+            else
+              putc "X"
+              lock.synchronize { failed << obj[:path] }
+            end
+          end
+        end
+      end
 
       local_files.each do |file|
         path = File.join(public_directory, file)
@@ -244,14 +261,13 @@ module FileStore
         if @dry_run
           log "#{file} => #{options[:key]}"
           synced += 1
-        elsif s3.put_object(options).etag[etag]
-          putc "."
-          synced += 1
         else
-          putc "X"
-          failed << path
+          queue << { path: path, options: options, etag: etag }
         end
       end
+
+      queue.close
+      upload_threads.each(&:join)
 
       puts
 

@@ -98,6 +98,7 @@ class Group < ActiveRecord::Base
     "imap_server",
     "imap_port",
     "imap_ssl",
+    "imap_mailbox_name",
     "email_username",
     "email_password"
   ]

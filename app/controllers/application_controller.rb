@@ -322,7 +322,9 @@ class ApplicationController < ActionController::Base
   end
 
   def send_ember_cli_bootstrap
-    head 200, content_type: "text/html", "X-Discourse-Bootstrap-Required": true
+    response.headers['X-Discourse-Bootstrap-Required'] = true
+    response.headers['Content-Type'] = "application/json"
+    render json: { preloaded: @preloaded }
   end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
