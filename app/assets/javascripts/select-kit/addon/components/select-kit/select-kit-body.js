@@ -8,7 +8,7 @@ export default Component.extend({
   classNames: ["select-kit-body"],
   classNameBindings: ["emptyBody:empty-body"],
   emptyBody: computed("selectKit.{filter,hasNoContent}", function () {
-    return !this.selectKit.filter && this.selectKit.hasNoContent;
+    return false;
   }),
   rootEventType: "click",
 

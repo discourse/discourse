@@ -2,7 +2,7 @@ import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import { isPresent } from "@ember/utils";
-import layout from "select-kit/templates/components/single-select";
+import layout from "select-kit/templates/components/multi-select";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default SelectKitComponent.extend({
@@ -20,6 +20,7 @@ export default SelectKitComponent.extend({
     closeOnChange: false,
     autoInsertNoneItem: false,
     headerComponent: "select-kit/single-select-header",
+    autoFilterable: true,
   },
 
   search(filter) {

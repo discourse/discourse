@@ -10,6 +10,17 @@
   {{#select-kit/select-kit-body selectKit=selectKit id=(concat selectKit.uniqueID "-body")}}
     {{component selectKit.options.filterComponent selectKit=selectKit id=(concat selectKit.uniqueID "-filter")}}
 
+    <div class="selected-content">
+      {{#each selectedContent as |sc|}}
+        {{d-button
+          icon="times"
+          translatedLabel=sc
+          class="selection"
+          action=(action selectKit.deselect sc)
+        }}
+      {{/each}}
+    </div>
+
     {{#if selectKit.isLoading}}
       <span class="is-loading">
         {{#if site}}
