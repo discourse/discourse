@@ -1274,8 +1274,14 @@ export default Controller.extend(bufferedProperty("model"), {
             I18n.t("bookmarks.confirm_clear"),
             I18n.t("no_value"),
             I18n.t("yes_value"),
-            (confirmed) =>
-              confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
+            (confirmed) => {
+              if (confirmed) {
+                toggleBookmarkOnServer().then(resolve);
+              } else {
+                this.model.set("bookmarking", false);
+                resolve();
+              }
+            }
           );
         } else {
           toggleBookmarkOnServer().then(resolve);
