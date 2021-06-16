@@ -158,7 +158,7 @@ export default Component.extend({
               gridLines: { display: false },
               type: "time",
               time: {
-                unit: this._unitForGrouping(options),
+                unit: Report.unitForGrouping(options.chartGrouping),
               },
               ticks: {
                 sampleSize: 5,
@@ -181,16 +181,5 @@ export default Component.extend({
 
   _applyChartGrouping(model, data, options) {
     return Report.collapse(model, data, options.chartGrouping);
-  },
-
-  _unitForGrouping(options) {
-    switch (options.chartGrouping) {
-      case "monthly":
-        return "month";
-      case "weekly":
-        return "week";
-      default:
-        return "day";
-    }
   },
 });

@@ -503,31 +503,47 @@ const Report = EmberObject.extend({
   },
 });
 
-function computeGrouping(data, grouping) {
-  if (!grouping) {
-    if (data.length < 30) {
+export const WEEKLY_LIMIT_DAYS = 365;
+export const DAILY_LIMIT_DAYS = 30;
+
+Report.reopenClass({
+  groupingForDatapoints(count) {
+    if (count < DAILY_LIMIT_DAYS) {
       return "daily";
     }
 
-    if (data.length >= 30 && data.length < 365) {
+    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
       return "weekly";
     }
 
-    if (data.length >= 365) {
+    if (count >= WEEKLY_LIMIT_DAYS) {
       return "monthly";
     }
-  }
+  },
 
-  if (grouping === "daily" && data.length >= 30) {
-    return "weekly";
-  }
+  unitForDatapoints(count) {
+    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
+      return "week";
+    } else if (count >= WEEKLY_LIMIT_DAYS) {
+      return "month";
+    } else {
+      return "day";
+    }
+  },
 
-  return grouping;
-}
+  unitForGrouping(grouping) {
+    switch (grouping) {
+      case "monthly":
+        return "month";
+      case "weekly":
+        return "week";
+      default:
+        return "day";
+    }
+  },
 
-Report.reopenClass({
   collapse(model, data, grouping) {
-    grouping = computeGrouping(data, grouping);
+    grouping = grouping || Report.groupingForDatapoints(data.length);
 
     if (grouping === "daily") {
       return data;

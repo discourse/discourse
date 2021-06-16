@@ -1,5 +1,5 @@
 import EmberObject, { action, computed } from "@ember/object";
-import Report, { SCHEMA_VERSION } from "admin/models/report";
+import Report, { DAILY_LIMIT_DAYS, SCHEMA_VERSION } from "admin/models/report";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import I18n from "I18n";
@@ -162,7 +162,7 @@ export default Component.extend({
       isTesting() ? "start" : startDate.replace(/-/g, ""),
       isTesting() ? "end" : endDate.replace(/-/g, ""),
       "[:prev_period]",
-      this.get("reportOptions.table.limit"),
+      this.get("options.table.limit"),
       // Convert all filter values to strings to ensure unique serialization
       customFilters
         ? JSON.stringify(customFilters, (k, v) => (k ? `${v}` : v))
@@ -176,21 +176,14 @@ export default Component.extend({
     return reportKey;
   },
 
-  @discourseComputed("reportOptions.chartGrouping")
-  chartGroupings(chartGrouping) {
-    chartGrouping = chartGrouping || "daily";
-
-    const options = ["weekly", "monthly"];
-    const distance = this.endDate.diff(this.startDate, "days");
-    if (distance <= 30) {
-      options.unshift("daily");
-    } else if (chartGrouping === "daily") {
-      chartGrouping = "weekly";
-    }
+  @discourseComputed("options.chartGrouping", "model.chartData.length")
+  chartGroupings(chartGrouping, count) {
+    const options = ["daily", "weekly", "monthly"];
 
     return options.map((id) => {
       return {
         id,
+        disabled: id === "daily" && count >= DAILY_LIMIT_DAYS,
         label: `admin.dashboard.reports.${id}`,
         class: `chart-grouping ${chartGrouping === id ? "active" : "inactive"}`,
       };
@@ -317,7 +310,7 @@ export default Component.extend({
     this.setProperties({
       model: report,
       currentMode,
-      options: this._buildOptions(currentMode),
+      options: this._buildOptions(currentMode, report),
     });
   },
 
@@ -368,8 +361,8 @@ export default Component.extend({
         .split("T")[0];
     }
 
-    if (this.get("reportOptions.table.limit")) {
-      payload.data.limit = this.get("reportOptions.table.limit");
+    if (this.get("options.table.limit")) {
+      payload.data.limit = this.get("options.table.limit");
     }
 
     if (this.get("filters.customFilters")) {
@@ -379,7 +372,7 @@ export default Component.extend({
     return payload;
   },
 
-  _buildOptions(mode) {
+  _buildOptions(mode, report) {
     if (mode === "table") {
       const tableOptions = JSON.parse(JSON.stringify(TABLE_OPTIONS));
       return EmberObject.create(
@@ -389,7 +382,9 @@ export default Component.extend({
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
       return EmberObject.create(
         Object.assign(chartOptions, this.get("reportOptions.chart") || {}, {
-          chartGrouping: this.get("reportOptions.chartGrouping"),
+          chartGrouping:
+            this.get("reportOptions.chartGrouping") ||
+            Report.groupingForDatapoints(report.chartData.length),
         })
       );
     }
