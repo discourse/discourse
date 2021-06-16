@@ -232,7 +232,7 @@ function setupTestsCommon(application, container, config) {
     PreloadStore.store(
       "directoryColumns",
       JSON.parse(
-        '[{"name":"likes_given","automatic":true,"icon":"heart","user_field_id":null},{"name":"posts_read","automatic":true,"icon":null,"user_field_id":null},{"name":"likes_received","automatic":true,"icon":"heart","user_field_id":null},{"name":"topic_count","automatic":true,"icon":null,"user_field_id":null},{"name":"post_count","automatic":true,"icon":null,"user_field_id":null},{"name":"topics_entered","automatic":true,"icon":null,"user_field_id":null},{"name":"days_visited","automatic":true,"icon":null,"user_field_id":null},{"name":"Favorite Color","automatic":false,"icon":null,"user_field_id":3}]'
+        '[{"name":"likes_given","type":"automatic","icon":"heart","user_field_id":null},{"name":"posts_read","type":"automatic","icon":null,"user_field_id":null},{"name":"likes_received","type":"automatic","icon":"heart","user_field_id":null},{"name":"topic_count","type":"automatic","icon":null,"user_field_id":null},{"name":"post_count","type":"automatic","icon":null,"user_field_id":null},{"name":"topics_entered","type":"automatic","icon":null,"user_field_id":null},{"name":"days_visited","type":"automatic","icon":null,"user_field_id":null},{"name":"Favorite Color","type":"user_field","icon":null,"user_field_id":3}]'
       )
     );
 
