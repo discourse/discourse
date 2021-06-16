@@ -977,7 +977,7 @@ class Plugin::Instance
 
   def validate_directory_column_name(column_name)
     match = /^[_a-z]+$/.match(column_name)
-    raise "Invalid directory column name '#{column_name}'. Can only container a-z and underscores" unless match
+    raise "Invalid directory column name '#{column_name}'. Can only contain a-z and underscores" unless match
   end
 
   def write_asset(path, contents)
