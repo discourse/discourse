@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
@@ -201,6 +205,130 @@ acceptance(
         "shows a confirm dialogue warning IMAP settings will be wiped"
       );
       await click(".modal-footer .btn.btn-primary");
+    });
+  }
+);
+
+acceptance(
+  "Managing Group Email Settings - SMTP and IMAP Enabled - Settings Preflled",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_smtp: true, enable_imap: true });
+
+    needs.pretender((server, helper) => {
+      server.get("/groups/discourse.json", () => {
+        return helper.response(200, {
+          group: {
+            id: 47,
+            automatic: false,
+            name: "discourse",
+            full_name: "Awesome Team",
+            user_count: 8,
+            alias_level: 99,
+            visible: true,
+            public_admission: true,
+            public_exit: false,
+            flair_url: "fa-adjust",
+            is_group_owner: true,
+            mentionable: true,
+            messageable: true,
+            can_see_members: true,
+            has_messages: true,
+            message_count: 2,
+            smtp_server: "smtp.gmail.com",
+            smtp_port: 587,
+            smtp_ssl: true,
+            smtp_enabled: true,
+            smtp_updated_at: "2021-06-16T02:58:12.739Z",
+            smtp_updated_by: {
+              id: 19,
+              username: "eviltrout",
+              name: "Robin Ward",
+              avatar_template:
+                "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
+            },
+            imap_server: "imap.gmail.com",
+            imap_port: 993,
+            imap_ssl: true,
+            imap_mailbox_name: "INBOX",
+            imap_mailboxes: ["INBOX", "[Gmail]/All Mail", "[Gmail]/Important"],
+            imap_enabled: true,
+            imap_updated_at: "2021-06-16T02:58:12.738Z",
+            imap_updated_by: {
+              id: 19,
+              username: "eviltrout",
+              name: "Robin Ward",
+              avatar_template:
+                "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
+            },
+            email_username: "test@test.com",
+            email_password: "password",
+          },
+          extras: {
+            visible_group_names: ["discourse"],
+          },
+        });
+      });
+    });
+
+    test("prefills smtp and imap saved settings and shows last updated details", async function (assert) {
+      await visit("/g/discourse/manage/email");
+
+      assert.notOk(exists("#enable_smtp:disabled"), "SMTP is not disabled");
+      assert.notOk(exists("#enable_imap:disabled"), "IMAP is not disabled");
+
+      assert.equal(
+        query("[name='username']").value,
+        "test@test.com",
+        "email username is prefilled"
+      );
+      assert.equal(
+        query("[name='password']").value,
+        "password",
+        "email password is prefilled"
+      );
+      assert.equal(
+        query("[name='smtp_server']").value,
+        "smtp.gmail.com",
+        "smtp server is prefilled"
+      );
+      assert.equal(
+        query("[name='smtp_port']").value,
+        "587",
+        "smtp port is prefilled"
+      );
+
+      assert.equal(
+        query("[name='imap_server']").value,
+        "imap.gmail.com",
+        "imap server is prefilled"
+      );
+      assert.equal(
+        query("[name='imap_port']").value,
+        "993",
+        "imap port is prefilled"
+      );
+      assert.equal(
+        selectKit("#imap_mailbox").header().value(),
+        "INBOX",
+        "imap mailbox is prefilled"
+      );
+
+      const regex = /updated: (.*?) by eviltrout/;
+      assert.ok(exists(".group-email-last-updated-details.for-imap"));
+      assert.ok(
+        regex.test(
+          query(".group-email-last-updated-details.for-imap").innerText.trim()
+        ),
+        "shows last updated imap details"
+      );
+      assert.ok(exists(".group-email-last-updated-details.for-smtp"));
+      assert.ok(
+        regex.test(
+          query(".group-email-last-updated-details.for-smtp").innerText.trim()
+        ),
+        "shows last updated smtp details"
+      );
     });
   }
 );
