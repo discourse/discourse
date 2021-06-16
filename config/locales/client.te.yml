@@ -232,7 +232,7 @@ te:
         other: "రోజులు"
     time_shortcut:
       tomorrow: "రేపు"
-      next_week: "వచ్చే వారం"
+      this_weekend: "ఈ వారాంతం"
       next_month: "వచ్చే నెల"
     user_action:
       user_posted_topic: "<a href='%{topicUrl}'>విషయాన్ని</a> <a href='%{userUrl}'>%{user}</a> రాసారు "

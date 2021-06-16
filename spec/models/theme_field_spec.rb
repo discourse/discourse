@@ -4,12 +4,8 @@
 require 'rails_helper'
 
 describe ThemeField do
-  after(:all) do
+  after do
     ThemeField.destroy_all
-  end
-
-  before do
-    I18n.locale = :en
   end
 
   describe "scope: find_by_theme_ids" do

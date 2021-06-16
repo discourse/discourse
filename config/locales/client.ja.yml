@@ -481,7 +481,6 @@ ja:
       later_today: "今日中"
       next_business_day: "翌営業日"
       tomorrow: "明日"
-      next_week: "来週"
       post_local_date: "投稿日時"
       later_this_week: "今週中"
       start_of_next_business_week: "月曜日"
@@ -527,6 +526,8 @@ ja:
         other: "%{count}人のユーザー"
       edit_columns:
         save: "保存"
+      group:
+        all: "すべてのグループ"
     group_histories:
       actions:
         change_group_setting: "グループの設定を変更"

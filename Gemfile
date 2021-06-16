@@ -174,7 +174,8 @@ group :development do
   gem 'binding_of_caller'
   gem 'yaml-lint'
   gem 'annotate'
-  gem 'discourse_dev'
+  gem 'discourse_dev_assets'
+  gem 'faker', "~> 2.16"
 end
 
 # this is an optional gem, it provides a high performance replacement

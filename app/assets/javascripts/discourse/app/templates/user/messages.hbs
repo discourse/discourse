@@ -87,5 +87,8 @@
       }}
     {{/if}}
   </div>
+  {{#if showWarningsWarning}}
+    <div class="alert alert-info">{{html-safe (i18n "admin.user.warnings_list_warning")}}</div>
+  {{/if}}
   {{outlet}}
 </section>

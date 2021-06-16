@@ -115,7 +115,7 @@ GEM
       railties (>= 3.1)
     discourse-ember-source (3.12.2.3)
     discourse-fonts (0.0.8)
-    discourse_dev (0.2.1)
+    discourse_dev_assets (0.0.2)
       faker (~> 2.16)
     docile (1.4.0)
     ecma-re-validator (0.3.0)
@@ -254,7 +254,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    oj (3.11.5)
+    oj (3.11.6)
     omniauth (1.9.1)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
@@ -337,7 +337,7 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
-    redis (4.2.5)
+    redis (4.3.1)
     redis-namespace (1.8.1)
       redis (>= 3.0.4)
     regexp_parser (2.1.1)
@@ -379,7 +379,7 @@ GEM
       json-schema (~> 2.2)
       railties (>= 3.1, < 7.0)
     rtlit (0.0.5)
-    rubocop (1.16.0)
+    rubocop (1.16.1)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -393,7 +393,7 @@ GEM
     rubocop-discourse (2.4.2)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
-    rubocop-rspec (2.3.0)
+    rubocop-rspec (2.4.0)
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
     ruby-prof (1.4.3)
@@ -504,12 +504,13 @@ DEPENDENCIES
   discourse-ember-rails (= 0.18.6)
   discourse-ember-source (~> 3.12.2)
   discourse-fonts
-  discourse_dev
+  discourse_dev_assets
   email_reply_trimmer
   ember-handlebars-template (= 0.8.0)
   excon
   execjs
   fabrication
+  faker (~> 2.16)
   fakeweb
   fast_blank
   fast_xs

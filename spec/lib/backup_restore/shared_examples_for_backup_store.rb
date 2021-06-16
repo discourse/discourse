@@ -2,7 +2,7 @@
 
 shared_context "backups" do
   before { create_backups }
-  after(:all) { remove_backups }
+  after { remove_backups }
 
   # default backup files
   let(:backup1) { BackupFile.new(filename: "b.tar.gz", size: 17, last_modified: Time.parse("2018-09-13T15:10:00Z")) }

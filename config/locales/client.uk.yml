@@ -623,12 +623,14 @@ uk:
       later_today: "Пізніше сьогодні"
       next_business_day: "Наступний робочий день"
       tomorrow: "Завтра"
-      next_week: "На наступному тижні"
       post_local_date: "Дата повідомлення"
       later_this_week: "Пізніше на цьому тижні"
+      this_weekend: "В ці вихідні"
       start_of_next_business_week: "Понеділок"
       start_of_next_business_week_alt: "Наступного понеділка"
+      two_weeks: "Два тижні"
       next_month: "В наступному місяці"
+      six_months: "Шість місяців"
       custom: "Вибрати дату та час"
       relative: "Через вказаний час"
       none: "Нічого не потрібно"
@@ -674,6 +676,8 @@ uk:
       edit_columns:
         save: "Зберегти"
         reset_to_default: "Скинути за замовчуванням"
+      group:
+        all: "усі групи"
     group_histories:
       actions:
         change_group_setting: "Змінити налаштування групи"
@@ -3592,7 +3596,6 @@ uk:
       tags: "Мітки"
       choose_for_topic: "необов'язкові мітки"
       info: "Інформація"
-      default_info: "Цей тег не обмежений розділами та не має синонімів."
       category_restricted: "Цей тег обмежений категоріями, на які ви не маєте дозволу на доступ."
       synonyms: "Синоніми"
       synonyms_description: "Коли будуть використані наступні теги, вони будуть замінені на <b>%{base_tag_name}</b> ."

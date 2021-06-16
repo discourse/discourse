@@ -84,7 +84,7 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 
-  if defined?(Rails::Server) || defined?(Puma) || defined?(Unicorn)
+  if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" && (defined?(Rails::Server) || defined?(Puma) || defined?(Unicorn))
     require 'stylesheet/watcher'
     STDERR.puts "Starting CSS change watcher"
     @watcher = Stylesheet::Watcher.watch

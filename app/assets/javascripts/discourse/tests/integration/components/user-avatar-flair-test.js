@@ -147,6 +147,26 @@ discourseModule(
       },
     });
 
+    componentTest("avatar flair for login-required site, before login", {
+      template: hbs`{{user-avatar-flair user=args}}`,
+      beforeEach() {
+        resetFlair();
+        this.set("args", {
+          admin: false,
+          moderator: false,
+          trust_level: 3,
+        });
+        // Groups not serialized for anon on login_required
+        this.site.groups = undefined;
+      },
+      afterEach() {
+        resetFlair();
+      },
+      test(assert) {
+        assert.ok(!exists(".avatar-flair"), "it does not render a flair");
+      },
+    });
+
     componentTest("avatar flair for primary group flair", {
       template: hbs`{{user-avatar-flair user=args}}`,
       beforeEach() {
@@ -173,6 +193,24 @@ discourseModule(
           "background-color: #123456; color: #B0B0B0; ",
           "it has styles"
         );
+      },
+    });
+
+    componentTest("user-avatar-flair for user with no flairs", {
+      template: hbs`{{user-avatar-flair user=args}}`,
+      beforeEach() {
+        resetFlair();
+        this.set("args", {
+          admin: false,
+          moderator: false,
+          trust_level: 1,
+        });
+      },
+      afterEach() {
+        resetFlair();
+      },
+      test(assert) {
+        assert.ok(!exists(".avatar-flair"), "it does not render a flair");
       },
     });
   }

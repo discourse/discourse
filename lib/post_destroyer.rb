@@ -76,6 +76,7 @@ class PostDestroyer
 
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
     WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
+    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic.id) if topic
 
     if is_first_post
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
@@ -95,8 +96,11 @@ class PostDestroyer
     topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !topic.user_id
     topic.recover!(@user) if @post.is_first_post?
     topic.update_statistics
+
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
+    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic.id) if topic
+
     if @post.is_first_post?
       UserActionManager.topic_created(topic)
       DiscourseEvent.trigger(:topic_recovered, topic, @user)

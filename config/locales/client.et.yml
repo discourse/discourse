@@ -426,9 +426,9 @@ et:
       later_today: "Täna hiljem"
       next_business_day: "Järgmisel tööpäeval"
       tomorrow: "Homme"
-      next_week: "Järgmisel nädalal"
       post_local_date: "Kuupäev postituses"
       later_this_week: "Hiljem sel nädalal"
+      this_weekend: "Sellel nädalavahetusel"
       start_of_next_business_week: "Esmaspäev"
       start_of_next_business_week_alt: "Järgmisel esmaspäeval"
       next_month: "Järgmisel kuul"
@@ -473,6 +473,8 @@ et:
         other: "%{count} kasutajat"
       edit_columns:
         save: "Salvesta"
+      group:
+        all: "kõik grupid"
     group_histories:
       actions:
         change_group_setting: "Muuda grupi sätteid"

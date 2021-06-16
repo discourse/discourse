@@ -74,4 +74,11 @@ describe BootstrapController do
     bootstrap = json['bootstrap']
     expect(bootstrap['extra_locales']).to be_present
   end
+
+  it "returns data when login_required is enabled" do
+    SiteSetting.login_required = true
+    get "/bootstrap.json"
+    expect(response.status).to eq(200)
+    expect(response.parsed_body).to be_present
+  end
 end

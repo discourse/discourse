@@ -245,8 +245,8 @@ export default Controller.extend({
     const searchKey = getSearchKey(args);
 
     ajax("/search", { data: args })
-      .then((results) => {
-        const model = translateResults(results) || {};
+      .then(async (results) => {
+        const model = (await translateResults(results)) || {};
 
         if (results.grouped_search_result) {
           this.set("q", results.grouped_search_result.term);

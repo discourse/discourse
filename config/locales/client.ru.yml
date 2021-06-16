@@ -625,12 +625,14 @@ ru:
       later_today: "Сегодня, но позже"
       next_business_day: "На следующий рабочий день"
       tomorrow: "Завтра"
-      next_week: "Через неделю"
       post_local_date: "Дата сообщения"
       later_this_week: "Позже на этой неделе"
+      this_weekend: "В эти выходные"
       start_of_next_business_week: "В понедельник"
       start_of_next_business_week_alt: "В следующий понедельник"
+      two_weeks: "Через 2 недели"
       next_month: "Через месяц"
+      six_months: "Через 6 месяцев"
       custom: "Установить дату и время"
       relative: "Через указанное время"
       none: "Не настраивать напоминание"
@@ -677,6 +679,8 @@ ru:
         title: "Изменить заголовки"
         save: "Сохранить"
         reset_to_default: "Сбросить на значения по умолчанию"
+      group:
+        all: "Все группы"
     group_histories:
       actions:
         change_group_setting: "Настроить группу"
@@ -1201,6 +1205,7 @@ ru:
         failed_to_move: "Невозможно переместить выделенные сообщения (возможно, у вас проблемы с сетевым подключением)"
         select_all: "Выбрать всё"
         tags: "Теги"
+        warnings: "Официальные предупреждения"
       preferences_nav:
         account: "Учётная запись"
         security: "Безопасность"
@@ -3651,8 +3656,8 @@ ru:
       tags: "Теги"
       choose_for_topic: "Выберите теги..."
       info: "Информация"
-      default_info: "Этот тег не ограничен никакими разделами и не имеет синонимов."
-      category_restricted: "Этот тег ограничен разделами, к которым у вас нет доступа."
+      default_info: "Этот тег не используется ни в одном разделе и не имеет синонимов. Чтобы использовать этот тег, поместите его в <a href=%{basePath}/tag_groups>группу тегов</a>."
+      category_restricted: "Этот тег используется в разделах, к которым у вас нет доступа."
       synonyms: "Синонимы"
       synonyms_description: "При использовании следующих тегов они будут заменены на <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -3702,7 +3707,7 @@ ru:
       delete_unused_confirmation:
         one: "%{count} тег будет удалён: %{tags}"
         few: "%{count} тега будут удалены: %{tags}"
-        many: "%{count} тегов будут удалены:: %{tags}"
+        many: "%{count} тегов будут удалены: %{tags}"
         other: "%{count} тегов будут удалены: %{tags}"
       delete_unused_confirmation_more_tags:
         one: "%{tags} и более %{count}"
@@ -4905,6 +4910,8 @@ ru:
         flags_given_count: Отправлено жалоб
         flags_received_count: Получено жалоб
         warnings_received_count: Получено предупреждений
+        warnings_list_warning: |
+          Как модератор, вы, возможно, не сможете просматривать все эти темы. В случае необходимости попросите администратора или модератора, проверяющего сообщение, предоставить <b>необходимый доступ</b> к этому сообщению.
         flags_given_received_count: "Жалоб отправил / получил"
         approve: "Одобрить"
         approved_by: "Кем одобрено"

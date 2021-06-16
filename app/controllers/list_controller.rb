@@ -168,7 +168,12 @@ class ListController < ApplicationController
 
   def message_route(action)
     target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
-    guardian.ensure_can_see_private_messages!(target_user.id)
+    case action
+    when :private_messages_warnings
+      guardian.ensure_can_see_warnings!(target_user)
+    else
+      guardian.ensure_can_see_private_messages!(target_user.id)
+    end
     list_opts = build_topic_list_options
     list = generate_list_for(action.to_s, target_user, list_opts)
     url_prefix = "topics"
@@ -185,6 +190,7 @@ class ListController < ApplicationController
     private_messages_group
     private_messages_group_archive
     private_messages_tag
+    private_messages_warnings
   }.each do |action|
     generate_message_route(action)
   end

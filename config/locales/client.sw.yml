@@ -334,8 +334,8 @@ sw:
     time_shortcut:
       later_today: "Baada ya mda leo"
       tomorrow: "Kesho"
-      next_week: "Wiki Ijayo"
       later_this_week: "Baada ya mda ndani ya wiki hii"
+      this_weekend: "Wikiendi hii"
       next_month: "Mwezi ujao"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"
@@ -374,6 +374,8 @@ sw:
         other: "%{count} watumiaji"
       edit_columns:
         save: "hifadhi"
+      group:
+        all: "vikundi vyote"
     group_histories:
       actions:
         change_group_setting: "Badilisha mipangilio ya kikundi"

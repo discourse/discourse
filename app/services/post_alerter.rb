@@ -651,13 +651,13 @@ class PostAlerter
     emails_to_skip_send
   end
 
-  def notify_post_users(post, notified, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)
+  def notify_post_users(post, notified, group_ids: nil, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)
     return unless post.topic
 
     warn_if_not_sidekiq
 
     condition = +<<~SQL
-      id IN (
+      users.id IN (
         SELECT id FROM users WHERE false
         /*topic*/
         /*category*/
@@ -711,12 +711,16 @@ class PostAlerter
       tag_ids: tag_ids
     )
 
+    if group_ids.present?
+      notify = notify.joins(:group_users).where("group_users.group_id IN (?)", group_ids)
+    end
+
     if post.topic.private_message?
       notify = notify.where(staged: false).staff
     end
 
     exclude_user_ids = notified.map(&:id)
-    notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
+    notify = notify.where("users.id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
 

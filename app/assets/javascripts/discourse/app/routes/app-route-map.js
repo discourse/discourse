@@ -149,6 +149,7 @@ export default function () {
         function () {
           this.route("sent");
           this.route("archive");
+          this.route("warnings");
           this.route("group", { path: "group/:name" });
           this.route("groupArchive", { path: "group/:name/archive" });
           this.route("tags");

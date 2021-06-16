@@ -1,41 +1,38 @@
-import MountWidget from "discourse/components/mount-widget";
-import { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default MountWidget.extend({
-  widget: "avatar-flair",
+export default Component.extend({
+  tagName: "",
 
-  @observes("user")
-  _rerender() {
-    this.queueRerender();
-  },
-
-  buildArgs() {
-    if (!this.user) {
+  @discourseComputed("user")
+  flair(user) {
+    if (!user) {
       return;
     }
+    return this.primaryGroupFlair(user) || this.automaticGroupFlair(user);
+  },
 
-    if (
-      this.user.primary_group_flair_url ||
-      this.user.primary_group_flair_bg_color
-    ) {
+  primaryGroupFlair(user) {
+    if (user.primary_group_flair_url || user.primary_group_flair_bg_color) {
       return {
-        primary_group_flair_url: this.user.primary_group_flair_url,
-        primary_group_flair_bg_color: this.user.primary_group_flair_bg_color,
-        primary_group_flair_color: this.user.primary_group_flair_color,
-        primary_group_name: this.user.primary_group_name,
+        flairURL: user.primary_group_flair_url,
+        flairBgColor: user.primary_group_flair_bg_color,
+        flairColor: user.primary_group_flair_color,
+        groupName: user.primary_group_name,
       };
-    } else {
-      const autoFlairAttrs = autoGroupFlairForUser(this.site, this.user);
-      if (autoFlairAttrs) {
-        return {
-          primary_group_flair_url: autoFlairAttrs.primary_group_flair_url,
-          primary_group_flair_bg_color:
-            autoFlairAttrs.primary_group_flair_bg_color,
-          primary_group_flair_color: autoFlairAttrs.primary_group_flair_color,
-          primary_group_name: autoFlairAttrs.primary_group_name,
-        };
-      }
+    }
+  },
+
+  automaticGroupFlair(user) {
+    const autoFlairAttrs = autoGroupFlairForUser(this.site, user);
+    if (autoFlairAttrs) {
+      return {
+        flairURL: autoFlairAttrs.primary_group_flair_url,
+        flairBgColor: autoFlairAttrs.primary_group_flair_bg_color,
+        flairColor: autoFlairAttrs.primary_group_flair_color,
+        groupName: autoFlairAttrs.primary_group_name,
+      };
     }
   },
 });

@@ -540,7 +540,6 @@ fi:
       later_today: "Myöhemmin tänään"
       next_business_day: "Seuraavana arkipäivänä"
       tomorrow: "Huomenna"
-      next_week: "Ensi viikolla"
       post_local_date: "Päivämäärä viestissä"
       later_this_week: "Myöhemmin tällä viikolla"
       start_of_next_business_week: "Maanantaina"
@@ -589,6 +588,8 @@ fi:
       edit_columns:
         save: "Tallenna"
         reset_to_default: "Palauta oletus"
+      group:
+        all: "kaikki ryhmät"
     group_histories:
       actions:
         change_group_setting: "Muuta ryhmän asetusta"
@@ -3324,7 +3325,6 @@ fi:
       tags: "Tunnisteet"
       choose_for_topic: "ei-pakolliset tunnisteet"
       info: "Tietoa"
-      default_info: "Tätä tunnistetta ei ole rajattu millekään alueelle eikä sillä ole synonyymejä."
       category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."
       synonyms: "Synonyymit"
       synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan pääsynonyymillä <b>%{base_tag_name}</b>."

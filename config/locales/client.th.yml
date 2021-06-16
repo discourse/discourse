@@ -406,8 +406,8 @@ th:
       later_today: "ภายหลังในวันนี้"
       next_business_day: "ในวันทำการถัดไป"
       tomorrow: "พรุ่งนี้"
-      next_week: "สัปดาห์หน้า"
       later_this_week: "ภายหลังในสัปดาห์นี้"
+      this_weekend: "สัปดาห์นี้"
       start_of_next_business_week: "วันจันทร์"
       start_of_next_business_week_alt: "วันจันทร์หน้า"
       next_month: "เดือนหน้า"
@@ -449,6 +449,8 @@ th:
         other: "%{count} ผู้ใช้"
       edit_columns:
         save: "บันทึก"
+      group:
+        all: "กลุ่มทั้งหมด"
     group_histories:
       actions:
         change_group_setting: "แก้ไขการตั้งค่ากลุ่ม"

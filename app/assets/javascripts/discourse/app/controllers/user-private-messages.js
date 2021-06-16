@@ -5,6 +5,7 @@ import I18n from "I18n";
 import Topic from "discourse/models/topic";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
+import { VIEW_NAME_WARNINGS } from "discourse/routes/user-private-messages-warnings";
 
 export default Controller.extend({
   userTopicsList: controller("user-topics-list"),
@@ -25,6 +26,11 @@ export default Controller.extend({
   @discourseComputed("selected.[]", "bulkSelectEnabled")
   hasSelection(selected, bulkSelectEnabled) {
     return bulkSelectEnabled && selected && selected.length > 0;
+  },
+
+  @discourseComputed("viewingSelf", "pmView", "currentUser.admin")
+  showWarningsWarning(viewingSelf, pmView, isAdmin) {
+    return pmView === VIEW_NAME_WARNINGS && !viewingSelf && !isAdmin;
   },
 
   bulkOperation(operation) {

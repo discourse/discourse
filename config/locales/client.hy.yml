@@ -477,8 +477,8 @@ hy:
       later_today: "Այսօր, մի փոքր ուշ"
       next_business_day: "Հաջորդ աշխատանքային օրը: "
       tomorrow: "Վաղը"
-      next_week: "Հաջորդ շաբաթ"
       later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
+      this_weekend: "Այս շաբաթ-կիրակի"
       start_of_next_business_week_alt: "Հաջորդ Երկուշաբթի: "
       next_month: "Հաջորդ ամիս"
       custom: "Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
@@ -521,6 +521,8 @@ hy:
       edit_columns:
         save: "Պահպանել"
         reset_to_default: "Վերականգնել լռելյայն"
+      group:
+        all: "բոլոր խմբերը"
     group_histories:
       actions:
         change_group_setting: "Փոխել խմբի կարգավորումը"
@@ -2808,7 +2810,6 @@ hy:
       tags: "Թեգեր"
       choose_for_topic: "ընտրովի թեգեր"
       info: "Ինֆորմացիա"
-      default_info: "Այս տեգը չի սահմանափակվում որևէ կատեգորիայով և չունի հոմանիշ:"
       category_restricted: "Այս տեգը սահմանափակված է այն կատեգորիաներով, որոնցում մուտքի թույլտվություն չունեք:"
       synonyms: "Հոմանիշներ"
       synonyms_description: "Հետևյալ տեգերի օգտագործման դեպքում, դրանք կփոխարինվեն <b>%{base_tag_name}</b> -ով:"

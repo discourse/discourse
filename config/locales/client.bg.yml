@@ -420,8 +420,8 @@ bg:
       later_today: "По-късно днес"
       next_business_day: "Следващия работен ден"
       tomorrow: "Утре"
-      next_week: "Следваща седмица"
       later_this_week: "По-късно тази седмица"
+      this_weekend: "Този уикенд"
       start_of_next_business_week_alt: "Следващия понеделник"
       next_month: "Следващия месец"
       custom: "Друга дата и час"
@@ -463,6 +463,8 @@ bg:
         other: "%{count} потребители"
       edit_columns:
         save: "Запази"
+      group:
+        all: "всички групи"
     group_histories:
       actions:
         change_group_setting: "Промени настройки"

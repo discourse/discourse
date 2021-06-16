@@ -1221,7 +1221,6 @@ ca:
     title: "El nom d'aquest lloc web per a l'etiqueta de títol."
     site_description: "Descriviu el lloc web amb una frase per a la metaetiqueta de descripció."
     short_site_description: "Descripció breu per a l'etiqueta de títol de la pàgina d'inici."
-    contact_email: "Adreça de correu de contacte del responsable del lloc web. S'utilitza per a notificacions crítiques, i també per al formulari de contacte <a href='%{base_path}/about' target='_blank'>/about</a> per a qüestions urgents."
     crawl_images: "Recupera imatges d'adreces URL remotes per a inserir-hi les dimensions correctes d'amplada i alçada."
     download_remote_images_to_local: "Converteix les imatges remotes en imatges locals en descarregar-les. Això evita les imatges trencades."
     download_remote_images_threshold: "L'espai mínim necessari en el disc per a descarregar imatges remotes en local (percentatge)"

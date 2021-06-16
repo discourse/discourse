@@ -1319,7 +1319,7 @@ HTML
   end
 
   describe "censoring" do
-    after(:all) { Discourse.redis.flushdb }
+    after { Discourse.redis.flushdb }
 
     def expect_cooked_match(raw, expected_cooked)
       expect(PrettyText.cook(raw)).to eq(expected_cooked)
@@ -1404,7 +1404,7 @@ HTML
   end
 
   describe "watched words - replace & link" do
-    after(:all) { Discourse.redis.flushdb }
+    after { Discourse.redis.flushdb }
 
     it "replaces words with other words" do
       Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit*", replacement: "something else")

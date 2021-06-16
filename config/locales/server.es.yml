@@ -227,6 +227,9 @@ es:
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
+    rate_limit:
+      one: "Ya has enviado %{count} invitación en el último día, espera %{time_left} antes de volverlo a intentar."
+      other: "Ya has enviado %{count} invitaciones en el último día, espera %{time_left} antes de volverlo a intentar."
     confirm_email: "<p>¡Ya casi terminas! Te enviamos un correo de activación a tu dirección de correo electrónico. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
     disabled_errors:
@@ -439,8 +442,8 @@ es:
         Tu solicitud para entrar al grupo @%{group_name} ha sido aceptada y ahora eres parte de él.
   education:
     until_posts:
-      one: "%{count} post"
-      other: "%{count} publicaciones"
+      one: "%{count} mensaje"
+      other: "%{count} mensajes"
     "new-topic": |
       Te damos la bienvenida a %{site_name}. **¡Gracias por empezar un nuevo tema!**
 
@@ -462,47 +465,47 @@ es:
 
       Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text} mensajes.
     avatar: |
-      ### ¿Que tal si agregas una imagen para tu cuenta?
+      ### ¿Qué tal si eliges una imagen para tu cuenta?
 
       Has publicado algunos temas y respuestas, pero tu imagen de perfil no es tan única como lo eres tú, es solo una letra.
 
       ¿Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
 
-      ¡Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todos tienen una imagen de perfil única!
+      Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todo el mundo tiene una imagen de perfil única.
     sequential_replies: |
       ### Considera la posibilidad de responder a varias publicaciones a la vez
 
-      En vez de publicar varias respuestas seguidas en un tema, por favor, considera incluir en una sola respuesta citas de las publicaciones previas o mencionar a un @usuario.
+      En vez de publicar varias respuestas seguidas en un tema, considera incluir en una sola respuesta varias citas de las publicaciones previas o @menciones a otras personas.
 
-      Puedes editar tu respuesta previa para añadir una cita seleccionando el texto y pulsando en el botón <b>citar respuesta</b> que aparecerá.
+      Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
 
-      Es más fácil para todos leer temas con menos respuestas pero más profundas que muchas respuestas pequeñas individuales.
+      Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
     dominating_topic: |
       ### Deja que otras personas se unan a la conversación
 
       Este tema es claramente importante para ti &ndash; has publicado más del %{percent}% de las respuestas.
 
-      Podría mejor todavía si le dieras a otras personas la oportunidad de compartir sus puntos de vista también. ¿Podrías invitarles?
+      Podría ser mejor todavía si le dieras a otras personas la oportunidad de compartir sus puntos de vista también. ¿Podrías invitarles?
     get_a_room: |
       ### Anima a los demás a participar
 
-      Has respondido %{count} veces a @%{reply_username} en este tema en particular
+      Has respondido %{count} veces a @%{reply_username} en este tema en particular.
 
-      Un buen debate incluye muchas voces y perspectivas. ¿Cómo podrías animar a que participar alguien más?
+      Un buen debate incluye muchas voces y perspectivas. ¿Puedes animar a que participe alguien más?
 
-      Y, no olvides: si quieres continuar la conversación con esta persona en particular fuera de la vista de todo el mundo, [envíales un mensaje personal](%{base_path}/u/%{reply_username}).
+      Y no olvides: si quieres seguir la conversación con esta persona en particular fuera de la vista de todo el mundo, [envíale un mensaje personal](%{base_path}/u/%{reply_username}).
     too_many_replies: |
-      ### Has alcanzado el límite de respuestas para este tema
+      ### Has llegado al límite de respuestas en este tema
 
-      Lo sentimos, los usuarios nuevos tienen temporalmente un límite de %{newuser_max_replies_per_topic} respuestas en el mismo tema.
+      Lo sentimos, los nuevos usuarios tienen temporalmente un límite de %{newuser_max_replies_per_topic} respuestas en el mismo tema.
 
-      En vez de añadir otra respuesta, por favor, considera editar tus respuestas previas o visitar otros temas.
+      En vez de añadir otra respuesta, puedes editar tus respuestas anteriores o visitar otros temas.
     reviving_old_topic: |
       ### ¿Revivir este tema?
 
-      La última respuesta a este tema fue **%{time_ago}**. Tu publicación reactivará el tema, subiéndolo a la parte superior de la lista y notificando a aquellos previamente involucrados.
+      La última respuesta a este tema fue **%{time_ago}**. Tu publicación reactivará el tema, subiéndolo a la parte superior de la lista y notificando a aquellas personas involucradas en su momento.
 
-      ¿Estás seguro de que quieres continuar esta conversación antigua?
+      ¿Seguro que quieres continuar esta conversación antigua?
   activerecord:
     attributes:
       category:
@@ -585,6 +588,8 @@ es:
           attributes:
             word:
               too_many: "Demasiadas palabras para esa acción"
+            base:
+              invalid_url: "La dirección URL de reemplazo no es válida"
       <<: *errors
   uncategorized_category_name: "Sin categoría"
   vip_category_name: "Sala VIP"
@@ -934,7 +939,7 @@ es:
       short_description: 'Violación de las <a href="%{base_path}/guidelines">directrices de la comunidad</a>'
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: 'Este tema necesita revisión por parte del staff con respecto a las <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">Términos de servicio</a> o por otra razón no mencionada anteriormente.'
+      description: 'Este tema necesita ser revisado por por un motivo relacionado con las <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">Términos de servicio</a> o por otra razón no mencionada anteriormente.'
       long_form: "reportado para ser atendido por los moderadores"
       short_description: "Requiere atención del staff por otro motivo"
       email_title: 'El tema «%{title}» requiere la atención de un moderador'
@@ -1396,7 +1401,6 @@ es:
     title: "El nombre de este sitio, utilizada en la etiqueta título."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
     short_site_description: "Descripción breve, utilizada como el título de la etiqueta en la página principal."
-    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas, así como en la página de <a href='%{base_path}/about' target='_blank'>/información</a> de contacto para asuntos urgentes."
     contact_url: "Dirección URL de contacto para el sitio. Se mostrará en la página de <a href='%{base_path}/about' target='_blank'>/about</a> (acerca de) para temas urgentes."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
@@ -1484,7 +1488,7 @@ es:
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en una publicación (me gusta, reportes, etc)."
     must_approve_users: "El staff debe aprobar todas las cuentas nuevas antes de que se les permita acceder al sitio."
     invite_code: "El usuario debe ingresar este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
-    approve_suspect_users: "Agregar usuarios sospechosos a la lista por revisión. Los usuarios sospechosos que hayan ingresado una biografía/página web pero que no hayan registrado ninguna actividad de lectura."
+    approve_suspect_users: "Mandar usuarios sospechosos a la lista de revisión. Se consideran usuarios sospechosos aquellos que hayan introducido una biografía o página web, pero que no hayan registrado ninguna actividad de lectura."
     review_every_post: "Todas las publicaciones deben ser revisadas. ¡ADVERTENCIA! NO SE RECOMIENDA PARA SITIOS CON MUCHA ACTIVIDAD."
     pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
@@ -2042,7 +2046,7 @@ es:
     gravatar_login_url: "URL relativa a gravatar_base_url, la cual provee al usuario el acceso al servicio de Gravatar"
     share_quote_buttons: "Determinar los elementos que aparecen en el cuadro de compartir y su orden."
     share_quote_visibility: "Cuándo mostrar los botones de compartir citas: nunca, a los usuarios anónimos sólo o a todos los usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear revisión para los primeros mensajes cuando los temas se mueven a una nueva categoría en masa."
+    create_revision_on_bulk_topic_moves: "Crear edición para los primeros mensajes cuando los temas se mueven a una nueva categoría en masa."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -2120,7 +2124,7 @@ es:
   poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "¡Bienvenido a nuestra comunidad! Estos son los temas recientes mas populares."
-    not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto durante algún tiempo. Estos son los temas mas populares desde que nos visitaste por última vez."
+    not_seen_in_a_month: "¡Hola! Hacía tiempo que no te veíamos. Estos han sido los temas más destacados desde que nos visitaste por última vez."
   merge_posts:
     edit_reason:
       one: "Un tema fue juntado por %{username}"
@@ -2272,6 +2276,7 @@ es:
       other: "Desactivado automáticamente después de %{count} días de inactividad."
     activated_by_staff: "Activado por el staff"
     new_user_typed_too_fast: "El nuevo usuario escribió demasiado rápido"
+    content_matches_auto_silence_regex: "Contenido coincide con regex para autosilenciar"
     content_matches_auto_block_regex: "El contenido coincide con una expresión regular de bloqueo automático"
     username:
       short: "debe tener al menos %{min} caracteres"
@@ -2983,7 +2988,7 @@ es:
       text_body_template: |
         Hola,
 
-        Este es un mensaje automatizado desde %{site_name} para informarte que tras la revisión de miembros del staff que tu cuenta ya no se encuentra suspendida.
+        Esto es un mensaje automático desde %{site_name} para informarte de que, tras la revisión por parte de miembros del staff, tu cuenta ya no se encuentra suspendida.
 
         Ahora puedes crear temas y responder a otros usuarios. Gracias por tu paciencia.
     pending_users_reminder:
@@ -3479,6 +3484,7 @@ es:
         Esto es un mensaje automático de %{site_name} para hacerte saber que [tu publicación](%{base_url}%{post_url}) ha sido aprobada.
   page_forbidden:
     title: "¡Ups! Esa página es privada."
+  site_setting_missing: "Debes rellenar el ajuste `%{name}`."
   page_not_found:
     title: "¡Ups! Esa página no existe o es privada."
     popular_topics: "Destacados"
@@ -4054,7 +4060,7 @@ es:
       long_description: |
         Esta medalla se concede la primera vez que publicas un enlace solo en una línea, que se expande automáticamente en un onebox con un resumen, título y (cuando esté disponible) imagen.
     first_reply_by_email:
-      name: Primera respuesta por correo electrónico
+      name: Primera respuesta por correo
       description: Respondió a una publicación por correo electrónico
       long_description: |
         Esta medalla se concede la primera vez que respondes a una publicación por correo electrónico :e-mail:.
@@ -4301,6 +4307,7 @@ es:
       restored: Restaurada
   reviewables:
     already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita reportarse de nuevo."
+    already_handled_and_user_not_exist: "Gracias, pero otra persona ya lo ha revisado, y ese usuario ha dejado de existir."
     priorities:
       low: "Bajo"
       medium: "Medio"

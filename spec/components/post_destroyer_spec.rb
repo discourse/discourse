@@ -241,6 +241,13 @@ describe PostDestroyer do
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::NEW_TOPIC).count).to eq(1)
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count).to eq(1)
         end
+
+        it "runs the SyncTopicUserBookmarked for the topic that the post is in so topic_users.bookmarked is correct" do
+          PostDestroyer.new(@user, @reply).destroy
+          expect_enqueued_with(job: :sync_topic_user_bookmarked, args: { topic_id: @reply.topic_id  }) do
+            PostDestroyer.new(@user, @reply.reload).recover
+          end
+        end
       end
 
       context "recovered by admin" do
@@ -463,6 +470,12 @@ describe PostDestroyer do
       expect(post.user_deleted).to eq(true)
 
       expect(post.raw).to eq(I18n.t('js.post.deleted_by_author_simple'))
+    end
+
+    it "runs the SyncTopicUserBookmarked for the topic that the post is in so topic_users.bookmarked is correct" do
+      post2 = create_post
+      PostDestroyer.new(post2.user, post2).destroy
+      expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: post2.topic_id })
     end
 
     context "as a moderator" do

@@ -97,6 +97,7 @@ module Email
       post_id   = header_value('X-Discourse-Post-Id')
       topic_id  = header_value('X-Discourse-Topic-Id')
       reply_key = set_reply_key(post_id, user_id)
+      from_address = @message.from&.first
 
       # always set a default Message ID from the host
       @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
@@ -227,6 +228,12 @@ module Email
       @message.html_part.body = style.to_s
 
       email_log.message_id = @message.message_id
+
+      # Log when a message is being sent from a group SMTP address, so we
+      # can debug deliverability issues.
+      if from_address && smtp_group_id = Group.where(email_username: from_address, smtp_enabled: true).pluck_first(:id)
+        email_log.smtp_group_id = smtp_group_id
+      end
 
       DiscourseEvent.trigger(:before_email_send, @message, @email_type)
 

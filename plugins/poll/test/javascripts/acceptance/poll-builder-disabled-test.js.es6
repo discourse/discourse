@@ -5,6 +5,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
+import { test } from "qunit";
 
 acceptance("Poll Builder - polls are disabled", function (needs) {
   needs.user();
@@ -20,7 +21,7 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
     await displayPollBuilderButton();
 
     assert.ok(
-      !exists(".select-kit-row[title='Build Poll']"),
+      !exists(".select-kit-row[data-value='showPollBuilder']"),
       "it hides the builder button"
     );
   });
@@ -31,7 +32,7 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
     await displayPollBuilderButton();
 
     assert.ok(
-      !exists(".select-kit-row[title='Build Poll']"),
+      !exists(".select-kit-row[data-value='showPollBuilder']"),
       "it hides the builder button"
     );
   });
@@ -42,7 +43,7 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
     await displayPollBuilderButton();
 
     assert.ok(
-      !exists(".select-kit-row[title='Build Poll']"),
+      !exists(".select-kit-row[data-value='showPollBuilder']"),
       "it hides the builder button"
     );
   });

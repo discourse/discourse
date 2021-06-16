@@ -408,9 +408,9 @@ zh_TW:
     time_shortcut:
       later_today: "今日稍晚"
       tomorrow: "明天"
-      next_week: "下週"
       post_local_date: "張貼日期"
       later_this_week: "本週稍晚"
+      this_weekend: "這週末"
       start_of_next_business_week: "星期一"
       start_of_next_business_week_alt: "下個星期一"
       next_month: "下個月"
@@ -451,6 +451,8 @@ zh_TW:
         other: "%{count} 個使用者"
       edit_columns:
         save: "儲存"
+      group:
+        all: "所有群組"
     group_histories:
       actions:
         change_group_setting: "更改群組設定"

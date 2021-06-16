@@ -49,7 +49,8 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
       "SKIP_ENFORCE_HOSTNAME" => "1",
       "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test_#{port}.pid", # So this can run alongside development
       "UNICORN_PORT" => port.to_s,
-      "UNICORN_SIDEKIQS" => "0"
+      "UNICORN_SIDEKIQS" => "0",
+      "DISCOURSE_SKIP_CSS_WATCHER" => "1"
     },
     "#{Rails.root}/bin/unicorn -c config/unicorn.conf.rb",
     pgroup: true

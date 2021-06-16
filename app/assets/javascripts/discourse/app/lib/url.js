@@ -9,6 +9,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { setOwner } from "@ember/application";
+import { isTesting } from "discourse-common/config/environment";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -226,7 +227,7 @@ const DiscourseURL = EmberObject.extend({
     }
 
     if (Session.currentProp("requiresRefresh")) {
-      return this.redirectTo(getURL(path));
+      return this.redirectTo(path);
     }
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
@@ -308,17 +309,20 @@ const DiscourseURL = EmberObject.extend({
     rewrites.push({ regexp, replacement, opts: opts || {} });
   },
 
-  redirectTo(url) {
-    window.location = getURL(url);
+  redirectAbsolute(url) {
+    // Redirects will kill a test runner
+    if (isTesting()) {
+      return true;
+    }
+    window.location = url;
     return true;
   },
 
-  /**
-   * Determines whether a URL is internal or not
-   *
-   * @method isInternal
-   * @param {String} url
-   **/
+  redirectTo(url) {
+    return this.redirectAbsolute(getURL(url));
+  },
+
+  // Determines whether a URL is internal or not
   isInternal(url) {
     if (url && url.length) {
       if (url.indexOf("//") === 0) {

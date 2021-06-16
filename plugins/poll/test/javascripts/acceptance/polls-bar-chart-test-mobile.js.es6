@@ -1,5 +1,7 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Rendering polls with bar charts - mobile", function (needs) {
   needs.user();

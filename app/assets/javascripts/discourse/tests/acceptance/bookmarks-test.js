@@ -52,11 +52,18 @@ acceptance("Bookmarking", function (needs) {
     function handleRequest(request) {
       const data = helper.parsePostData(request.requestBody);
       steps.push(data.reminder_type || "none");
-      return helper.response({ id: 999, success: "OK" });
+
+      if (data.post_id === "398") {
+        return helper.response({ id: 1, success: "OK" });
+      } else if (data.post_id === "419") {
+        return helper.response({ id: 2, success: "OK" });
+      } else {
+        throw new Error("Pretender: unknown post_id");
+      }
     }
     server.post("/bookmarks", handleRequest);
-    server.put("/bookmarks/999", handleRequest);
-    server.delete("/bookmarks/999", () =>
+    server.put("/bookmarks/1", handleRequest);
+    server.delete("/bookmarks/1", () =>
       helper.response({ success: "OK", topic_bookmarked: false })
     );
     server.get("/t/280.json", () => helper.response(topicResponse));
@@ -81,9 +88,6 @@ acceptance("Bookmarking", function (needs) {
     await click("#tap_tile_start_of_next_business_week");
 
     await openBookmarkModal();
-    await click("#tap_tile_next_week");
-
-    await openBookmarkModal();
     await click("#tap_tile_next_month");
 
     await openBookmarkModal();
@@ -96,7 +100,6 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, [
       "tomorrow",
       "start_of_next_business_week",
-      "next_week",
       "next_month",
       "custom",
     ]);
@@ -264,6 +267,52 @@ acceptance("Bookmarking", function (needs) {
     assert.notOk(
       exists("#tap_tile_post_local_date"),
       "it does not show the local date tile"
+    );
+  });
+
+  test("The topic level bookmark button deletes all bookmarks if several posts on the topic are bookmarked", async function (assert) {
+    const yesButton = "a.btn-primary";
+    const noButton = "a.btn-default";
+
+    await visit("/t/internationalization-localization/280");
+    await openBookmarkModal(1);
+    await click("#save-bookmark");
+    await openBookmarkModal(2);
+    await click("#save-bookmark");
+
+    assert.ok(
+      exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first bookmark is added"
+    );
+    assert.ok(
+      exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
+      "the second bookmark is added"
+    );
+
+    // open the modal and cancel deleting
+    await click("#topic-footer-button-bookmark");
+    await click(noButton);
+
+    assert.ok(
+      exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first bookmark isn't deleted"
+    );
+    assert.ok(
+      exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
+      "the second bookmark isn't deleted"
+    );
+
+    // open the modal and accept deleting
+    await click("#topic-footer-button-bookmark");
+    await click(yesButton);
+
+    assert.ok(
+      !exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first bookmark is deleted"
+    );
+    assert.ok(
+      !exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
+      "the second bookmark is deleted"
     );
   });
 });

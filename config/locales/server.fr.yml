@@ -958,7 +958,7 @@ fr:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="%{path}">consulter vos messages directs</a>.</p>'
-    user_must_edit: "<p>Ce message a été signalé par la communauté et est temporairement masqué.</p>"
+    user_must_edit: "<p>Ce message est provisoirement masqué suite à des signalements de la communauté.</p>"
   ignored:
     hidden_content: "<p>Contenu ignoré</p>"
   archetypes:
@@ -1414,7 +1414,6 @@ fr:
     title: "Le nom du site, utilisé dans la balise title."
     site_description: "Décrivez ce site en une seule phrase, utilisée dans la balise meta description."
     short_site_description: "Description courte, utilisée dans la balise title de la page d'accueil."
-    contact_email: "Adresse courriel de la personne responsable de ce site. Elle est utilisée pour des notifications critiques et des faits urgents en provenance du formulaire de contact de la page <a href='%{base_path}/about' target='_blank'>À propos</a>."
     contact_url: "URL de contact pour ce site. Elle est affichée sur la page <a href='%{base_path}/about' target='_blank'>À propos</a> et les utilisateurs sont invités à l'utiliser en cas de problèmes urgents."
     crawl_images: "Récupérer les images provenant de sources tierces pour y insérer les dimensions correctes (hauteur et largeur)."
     download_remote_images_to_local: "Transformer les images distantes en images locales en les téléchargeant ; cela permet d'éviter les liens morts."
@@ -2336,6 +2335,7 @@ fr:
     email_in_spam_header: "Le premier courriel de l'utilisateur a été signalé comme spam"
     already_silenced: "L'utilisateur a déjà été mis sous silence par %{staff} %{time_ago}."
     already_suspended: "L'utilisateur a déjà été suspendu par %{staff} %{time_ago}."
+    cannot_delete_has_posts: "L'utilisateur %{username} a déjà publié %{post_count} message(s) publics ou privés, ce qui l'empêche d'être supprimé."
   reviewables_reminder:
     submitted:
       one: "Ces éléments ont été soumis il y a plus de %{count} heure. [Nous vous invitons à les examiner](%{base_path}/review)."

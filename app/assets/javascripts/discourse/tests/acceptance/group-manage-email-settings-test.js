@@ -9,6 +9,10 @@ acceptance("Managing Group Email Settings - SMTP Disabled", function (needs) {
 
   test("When SiteSetting.enable_smtp is false", async function (assert) {
     await visit("/g/discourse/manage/email");
+    assert.notOk(
+      queryAll(".user-secondary-navigation").text().includes("Email"),
+      "email link is not shown in the sidebar"
+    );
     assert.equal(
       currentRouteName(),
       "group.manage.profile",
@@ -25,6 +29,10 @@ acceptance(
 
     test("When SiteSetting.enable_smtp is true but SiteSetting.enable_imap is false", async function (assert) {
       await visit("/g/discourse/manage/email");
+      assert.ok(
+        queryAll(".user-secondary-navigation").text().includes("Email"),
+        "email link is shown in the sidebar"
+      );
       assert.equal(
         currentRouteName(),
         "group.manage.email",
@@ -59,6 +67,10 @@ acceptance(
 
     test("enabling SMTP, testing, and saving", async function (assert) {
       await visit("/g/discourse/manage/email");
+      assert.ok(
+        queryAll(".user-secondary-navigation").text().includes("Email"),
+        "email link is shown in the sidebar"
+      );
       assert.ok(
         exists("#enable_imap:disabled"),
         "IMAP is disabled until SMTP settings are valid"

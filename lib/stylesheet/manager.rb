@@ -395,8 +395,7 @@ class Stylesheet::Manager
 
   def theme_digest
     if [:mobile_theme, :desktop_theme].include?(@target)
-      scss_digest = theme.resolve_baked_field(:common, :scss)
-      scss_digest += theme.resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
+      scss_digest = theme.resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
     elsif @target == :embedded_theme
       scss_digest = theme.resolve_baked_field(:common, :embedded_scss)
     else
@@ -434,7 +433,18 @@ class Stylesheet::Manager
   end
 
   def uploads_digest
-    Digest::SHA1.hexdigest(ThemeField.joins(:upload).where(id: theme&.all_theme_variables).pluck(:sha1).join(","))
+    sha1s =
+      if (theme_ids = theme&.all_theme_variables).present?
+        ThemeField
+          .joins(:upload)
+          .where(id: theme_ids)
+          .pluck(:sha1)
+          .join(",")
+      else
+        ""
+      end
+
+      Digest::SHA1.hexdigest(sha1s)
   end
 
   def color_scheme_digest

@@ -1390,7 +1390,6 @@ it:
     title: "Il nome di questo sito, da usare nell'attributo title."
     site_description: "Descrivi questo sito in una frase, da usare nell'attributo meta description."
     short_site_description: "Breve descrizione, come usata nel titolo dell'Etichetta in homepage."
-    contact_email: "Indirizzo email del contatto principale responsabile di questo sito. Utilizzato per notifiche critiche, nonché sul modulo di contatto <a href='%{base_path}/about' target='_blank'>/ su</a> per questioni urgenti."
     contact_url: "URL di contatto per questo sito. Visualizzato nella pagina <a href='%{base_path}/about' target='_blank'>/ Informazioni</a> , sezione contatti urgenti."
     crawl_images: "Recupera le immagini dagli URL remoti per inserire le dimensioni corrette di ampiezza e altezza nel tag."
     download_remote_images_to_local: "Scarica localmente le immagini remote; ciò permettei di evitare immagini assenti."
@@ -2197,6 +2196,7 @@ it:
       reviewable_reject: "Utente verificabile rifiutato"
     already_silenced: "L'utente è già stato silenziato da %{staff} %{time_ago}."
     already_suspended: "L'utente è già stato sospeso da %{staff} %{time_ago}."
+    cannot_delete_has_posts: "L'utente %{username} ha %{post_count} messaggi tra pubblici e personali, perciò non può essere cancellato."
   reviewables_reminder:
     submitted:
       one: "Gli articoli sono stati inviati oltre %{count} ora fa. [Si prega di rivederli] (%{base_path} / recensione)."

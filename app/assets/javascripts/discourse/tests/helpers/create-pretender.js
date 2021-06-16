@@ -1,6 +1,7 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
+import { Promise } from "rsvp";
 
 export function parsePostData(query) {
   const result = {};
@@ -207,6 +208,10 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/topics/private-messages/eviltrout.json", () => {
+    return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
+  });
+
+  pretender.get("/topics/private-messages-warnings/eviltrout.json", () => {
     return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
   });
 
@@ -475,12 +480,15 @@ export function applyDefaultHandlers(pretender) {
   pretender.put("/posts/:post_id/recover", success);
   pretender.get("/posts/:post_id/expand-embed", success);
 
-  pretender.put("/posts/:post_id", (request) => {
+  pretender.put("/posts/:post_id", async (request) => {
     const data = parsePostData(request.requestBody);
     if (data.post.raw === "this will 409") {
       return response(409, { errors: ["edit conflict"] });
     } else if (data.post.raw === "will return empty json") {
-      return response(200, {});
+      window.resolveLastPromise();
+      return new Promise((resolve) => {
+        window.resolveLastPromise = resolve;
+      }).then(() => response(200, {}));
     }
     data.post.id = request.params.post_id;
     data.post.version = 2;

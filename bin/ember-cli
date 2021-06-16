@@ -49,7 +49,8 @@ end
 system "yarn -s install --cwd #{yarn_dir}"
 
 if ARGV.include?("-u") || ARGV.include?("--unicorn")
-  unicorn_pid = spawn(__dir__ + "/unicorn")
+  unicorn_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
+  unicorn_pid = spawn(unicorn_env, __dir__ + "/unicorn")
 
   Thread.new do
     require 'open3'

@@ -499,7 +499,6 @@ zh_CN:
       later_today: "今天晚些时候"
       next_business_day: "下一个工作日"
       tomorrow: "明天"
-      next_week: "下周"
       post_local_date: "发布日期"
       later_this_week: "本周晚些时候"
       start_of_next_business_week: "星期一"
@@ -547,6 +546,8 @@ zh_CN:
       edit_columns:
         save: "保存"
         reset_to_default: "重置为默认"
+      group:
+        all: "所有群组"
     group_histories:
       actions:
         change_group_setting: "更改群组设置"
@@ -3210,7 +3211,6 @@ zh_CN:
       tags: "标签"
       choose_for_topic: "可选标签"
       info: "详情"
-      default_info: "该标签不限于任何类别，并且没有同义词。"
       category_restricted: "此标签仅限于你无权访问的分类。"
       synonyms: "同义词"
       synonyms_description: "使用以下标签时，它们将被替换为<b>%{base_tag_name}</b> 。"

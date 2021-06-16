@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import LocalDateBuilder from "./local-date-builder";
 import sinon from "sinon";
+import { module, test } from "qunit";
 
 const UTC = "Etc/UTC";
 const SYDNEY = "Australia/Sydney";

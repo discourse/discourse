@@ -535,12 +535,14 @@ gl:
       later_today: "Hoxe, máis tarde"
       next_business_day: "O vindeiro día laborábel"
       tomorrow: "Mañá"
-      next_week: "A vindeira semana"
       post_local_date: "Data na publicación"
       later_this_week: "Máis tarde, esta semana"
+      this_weekend: "Esta fin de semana"
       start_of_next_business_week: "Luns"
       start_of_next_business_week_alt: "O vindeiro luns"
+      two_weeks: "Dúas semanas"
       next_month: "O vindeiro mes"
+      six_months: "Seis meses"
       custom: "Personalizar data e hora"
       relative: "Tempo relativo"
       none: "Non se necesita"
@@ -583,6 +585,8 @@ gl:
       edit_columns:
         save: "Gardar"
         reset_to_default: "Restabelecer cos valores predeterminados"
+      group:
+        all: "todos os grupos"
     group_histories:
       actions:
         change_group_setting: "Cambiar axustes do grupo"
@@ -3273,7 +3277,6 @@ gl:
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Información"
-      default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
       synonyms_description: "Cando se usen as seguintes etiquetas, substituílas por <b>%{base_tag_name}</b>."

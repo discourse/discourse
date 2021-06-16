@@ -84,6 +84,10 @@ module UserGuardian
     can_merge_user?(source_user) && !target_user.nil?
   end
 
+  def can_see_warnings?(user)
+    user && (is_me?(user) || is_staff?)
+  end
+
   def can_reset_bounce_score?(user)
     user && is_staff?
   end
