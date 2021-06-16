@@ -137,7 +137,7 @@ export default Component.extend({
               gridLines: { display: false },
               type: "time",
               time: {
-                unit: this._unitForGrouping(data.labels.length),
+                unit: this._unitForDatapoints(data.labels.length),
               },
               ticks: {
                 sampleSize: 5,
@@ -151,7 +151,7 @@ export default Component.extend({
     };
   },
 
-  _unitForGrouping(count) {
+  _unitForDatapoints(count) {
     if (count >= 366) {
       return "month";
     } else if (count >= 14 && count < 366) {

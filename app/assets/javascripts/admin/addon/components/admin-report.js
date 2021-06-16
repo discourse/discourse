@@ -180,7 +180,7 @@ export default Component.extend({
   chartGroupings(chartGrouping) {
     chartGrouping = chartGrouping || "daily";
 
-    let options = ["weekly", "monthly"];
+    const options = ["weekly", "monthly"];
     const distance = this.endDate.diff(this.startDate, "days");
     if (distance <= 30) {
       options.unshift("daily");

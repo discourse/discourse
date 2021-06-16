@@ -503,21 +503,35 @@ const Report = EmberObject.extend({
   },
 });
 
+function computeGrouping(data, grouping) {
+  if (!grouping) {
+    if (data.length < 30) {
+      return "daily";
+    }
+
+    if (data.length >= 30 && data.length < 365) {
+      return "weekly";
+    }
+
+    if (data.length >= 365) {
+      return "monthly";
+    }
+  }
+
+  if (grouping === "daily" && data.length >= 30) {
+    return "weekly";
+  }
+
+  return grouping;
+}
+
 Report.reopenClass({
   collapse(model, data, grouping) {
-    if (!grouping) {
-      grouping = "daily";
-    }
+    grouping = computeGrouping(data, grouping);
 
-    if (data.length >= 30 && data.length < 366) {
-      grouping = "weekly";
-    } else if (data.length >= 366) {
-      grouping = "monthly";
-    } else {
+    if (grouping === "daily") {
       return data;
-    }
-
-    if (grouping === "weekly" || grouping === "monthly") {
+    } else if (grouping === "weekly" || grouping === "monthly") {
       const isoKind = grouping === "weekly" ? "isoWeek" : "month";
       const kind = grouping === "weekly" ? "week" : "month";
       const startMoment = moment(model.start_date, "YYYY-MM-DD");
@@ -533,7 +547,7 @@ Report.reopenClass({
       ];
 
       data.forEach((d) => {
-        let date = moment(d.x, "YYYY-MM-DD");
+        const date = moment(d.x, "YYYY-MM-DD");
 
         if (
           !date.isSame(currentStart) &&
