@@ -162,7 +162,7 @@ export default Component.extend({
       isTesting() ? "start" : startDate.replace(/-/g, ""),
       isTesting() ? "end" : endDate.replace(/-/g, ""),
       "[:prev_period]",
-      this.get("options.table.limit"),
+      this.get("reportOptions.table.limit"),
       // Convert all filter values to strings to ensure unique serialization
       customFilters
         ? JSON.stringify(customFilters, (k, v) => (k ? `${v}` : v))
@@ -176,7 +176,7 @@ export default Component.extend({
     return reportKey;
   },
 
-  @discourseComputed("options.chartGrouping", "model.chartData.length")
+  @discourseComputed("reportOptions.chartGrouping", "model.chartData.length")
   chartGroupings(chartGrouping, count) {
     const options = ["daily", "weekly", "monthly"];
 
@@ -361,8 +361,8 @@ export default Component.extend({
         .split("T")[0];
     }
 
-    if (this.get("options.table.limit")) {
-      payload.data.limit = this.get("options.table.limit");
+    if (this.get("reportOptions.table.limit")) {
+      payload.data.limit = this.get("reportOptions.table.limit");
     }
 
     if (this.get("filters.customFilters")) {
