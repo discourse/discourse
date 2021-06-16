@@ -1420,6 +1420,10 @@ HTML
       expect(PrettyText.cook("Lorem ipsum dolor sittt amet")).to match_html(<<~HTML)
         <p>Lorem ipsum something else amet</p>
       HTML
+
+      expect(PrettyText.cook("Lorem ipsum xdolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum xdolor sit amet</p>
+      HTML
     end
 
     it "replaces words with links" do

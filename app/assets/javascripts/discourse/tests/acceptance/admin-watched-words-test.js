@@ -118,7 +118,6 @@ acceptance("Admin - Watched Words - Bad regular expressions", function (needs) {
             action: "block",
           },
         ],
-        regular_expressions: true,
         compiled_regular_expressions: {
           block: null,
           censor: null,
