@@ -81,13 +81,18 @@ class DirectoryItem < ActiveRecord::Base
       # WARNING: post_count is a wrong name, it should be reply_count (excluding topic post)
       #
       #
-      plugin_select_statements = @@plugin_queries.map { |details| "#{details[:with_rows]}, " }.join("\n")
-      plugin_join_statements = @@plugin_queries.map { |details| details[:joins] }.join(" ")
-      plugin_update_statements = @@plugin_queries.map { |details| "#{details[:column]} = x.#{details[:column] }, " }.join("\n")
-      plugin_where_statements = @@plugin_queries.map { |details| "di.#{details[:column]} <> x.#{details[:column]} OR" }.join("\n")
+      query_args = {
+        period_type: period_types[period_type],
+        since: since,
+        like_type: UserAction::LIKE,
+        was_liked_type: UserAction::WAS_LIKED,
+        new_topic_type: UserAction::NEW_TOPIC,
+        reply_type: UserAction::REPLY,
+        regular_post_type: Post.types[:regular]
+      }
+
       DB.exec("WITH x AS (SELECT
                     u.id user_id,
-                    #{plugin_select_statements}
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :was_liked_type THEN 1 ELSE 0 END) likes_received,
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :like_type THEN 1 ELSE 0 END) likes_given,
                     COALESCE((SELECT COUNT(topic_id) FROM topic_views AS v WHERE v.user_id = u.id AND v.viewed_at > :since), 0) topics_entered,
@@ -100,14 +105,12 @@ class DirectoryItem < ActiveRecord::Base
                   LEFT OUTER JOIN posts AS p ON ua.target_post_id = p.id AND p.deleted_at IS NULL AND p.post_type = :regular_post_type AND NOT p.hidden
                   LEFT OUTER JOIN topics AS t ON p.topic_id = t.id AND t.archetype = 'regular' AND t.deleted_at IS NULL AND t.visible
                   LEFT OUTER JOIN topics AS t2 ON t2.id = ua.target_topic_id AND t2.archetype = 'regular' AND t2.deleted_at IS NULL AND t2.visible
-                  #{plugin_join_statements}
                   LEFT OUTER JOIN categories AS c ON t.category_id = c.id
                   WHERE u.active
                     AND u.silenced_till IS NULL
                     AND u.id > 0
                   GROUP BY u.id)
       UPDATE directory_items di SET
-               #{plugin_update_statements}
                likes_received = x.likes_received,
                likes_given = x.likes_given,
                topics_entered = x.topics_entered,
@@ -119,7 +122,6 @@ class DirectoryItem < ActiveRecord::Base
       WHERE
         x.user_id = di.user_id AND
         di.period_type = :period_type AND (
-        #{plugin_where_statements}
         di.likes_received <> x.likes_received OR
         di.likes_given <> x.likes_given OR
         di.topics_entered <> x.topics_entered OR
@@ -129,14 +131,12 @@ class DirectoryItem < ActiveRecord::Base
         di.post_count <> x.post_count )
 
               ",
-              period_type: period_types[period_type],
-              since: since,
-              like_type: UserAction::LIKE,
-              was_liked_type: UserAction::WAS_LIKED,
-              new_topic_type: UserAction::NEW_TOPIC,
-              reply_type: UserAction::REPLY,
-              regular_post_type: Post.types[:regular],
+              query_args
              )
+
+      plugin_queries.each do |plugin_query|
+        DB.exec(plugin_query, query_args)
+      end
 
       if period_type == :all
         DB.exec <<~SQL
