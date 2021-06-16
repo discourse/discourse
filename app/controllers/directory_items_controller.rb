@@ -28,22 +28,18 @@ class DirectoryItemsController < ApplicationController
 
     order = params[:order] || DirectoryColumn.automatic_column_names.first
     dir = params[:asc] ? 'ASC' : 'DESC'
-    if DirectoryColumn.automatic_column_names.include?(order.to_sym)
+    if DirectoryColumn.active_column_names.include?(order.to_sym)
       result = result.order("directory_items.#{order} #{dir}, directory_items.id")
     elsif params[:order] === 'username'
       result = result.order("users.#{order} #{dir}, directory_items.id")
     else
-      directory_column = DirectoryColumn.find_by(name: params[:order])
-      if directory_column # Ordering by plugin column
-
-      else # Ordering by user field column
-        user_field = UserField.find_by(name: params[:order])
-        if user_field
-          result = result
-            .joins(:user)
-            .joins("LEFT OUTER JOIN user_custom_fields ON user_custom_fields.user_id = users.id AND user_custom_fields.name = 'user_field_#{user_field.id}'")
-            .order("user_custom_fields.name = 'user_field_#{user_field.id}' ASC, user_custom_fields.value #{dir}")
-        end
+      # Ordering by user field value
+      user_field = UserField.find_by(name: params[:order])
+      if user_field
+        result = result
+          .joins(:user)
+          .joins("LEFT OUTER JOIN user_custom_fields ON user_custom_fields.user_id = users.id AND user_custom_fields.name = 'user_field_#{user_field.id}'")
+          .order("user_custom_fields.name = 'user_field_#{user_field.id}' ASC, user_custom_fields.value #{dir}")
       end
     end
 
