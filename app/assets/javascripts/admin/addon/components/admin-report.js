@@ -79,6 +79,8 @@ export default Component.extend({
     }
     this.set("endDate", endDate);
 
+    this.set("currentMode", this.filters.mode);
+
     if (this.report) {
       this._renderReport(this.report, this.forcedModes, this.currentMode);
     } else if (this.dataSourceName) {
@@ -127,7 +129,7 @@ export default Component.extend({
 
     return makeArray(modes).map((mode) => {
       const base = `btn-default mode-btn ${mode}`;
-      const cssClass = currentMode === mode ? `${base} is-current` : base;
+      const cssClass = currentMode === mode ? `${base} btn-primary` : base;
 
       return {
         mode,
@@ -176,8 +178,8 @@ export default Component.extend({
     return reportKey;
   },
 
-  @discourseComputed("reportOptions.chartGrouping", "model.chartData.length")
-  chartGroupings(chartGrouping, count) {
+  @discourseComputed("options.chartGrouping", "model.chartData.length")
+  chartGroupings(grouping, count) {
     const options = ["daily", "weekly", "monthly"];
 
     return options.map((id) => {
@@ -185,7 +187,7 @@ export default Component.extend({
         id,
         disabled: id === "daily" && count >= DAILY_LIMIT_DAYS,
         label: `admin.dashboard.reports.${id}`,
-        class: `chart-grouping ${chartGrouping === id ? "active" : "inactive"}`,
+        class: `chart-grouping ${grouping === id ? "active" : "inactive"}`,
       };
     });
   },
@@ -221,6 +223,7 @@ export default Component.extend({
 
     this.attrs.onRefresh({
       type: this.get("model.type"),
+      mode: this.currentMode,
       chartGrouping: options.chartGrouping,
       startDate:
         typeof options.startDate === "undefined"
@@ -252,7 +255,7 @@ export default Component.extend({
   },
 
   @action
-  changeMode(mode) {
+  onChangeMode(mode) {
     this.set("currentMode", mode);
 
     this.send("refreshReport", {
