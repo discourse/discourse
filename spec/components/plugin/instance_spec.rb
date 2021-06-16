@@ -609,5 +609,19 @@ describe Plugin::Instance do
 
       expect(DirectoryColumn.find_by(name: 'random_c', icon: 'recycle', enabled: false).present?).to be(true)
     end
+
+    it 'errors when the column_name contains invalid characters' do
+      expect {
+        plugin.add_directory_column('Capital', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+
+      expect {
+        plugin.add_directory_column('has space', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+
+      expect {
+        plugin.add_directory_column('has_number_1', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+    end
   end
 end

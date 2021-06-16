@@ -7,12 +7,7 @@ class AddTypeToDirectoryColumns < ActiveRecord::Migration[6.1]
     DB.exec(
       <<~SQL
         UPDATE directory_columns
-        SET type = 0
-        WHERE automatic = true;
-
-        UPDATE directory_columns
-        SET type = 1
-        WHERE automatic = false;
+        SET type = CASE WHEN automatic THEN 0 ELSE 1 END;
       SQL
     )
   end

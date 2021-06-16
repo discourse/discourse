@@ -374,6 +374,7 @@ class Plugin::Instance
   end
 
   def add_directory_column(column_name, query:, icon: nil)
+    validate_directory_column_name(column_name)
     directory_column = DirectoryColumn
       .find_or_create_by(name: column_name, icon: icon, type: DirectoryColumn.types[:plugin]) do |column|
         column.position = DirectoryColumn.maximum("position") + 1
@@ -973,6 +974,11 @@ class Plugin::Instance
   end
 
   private
+
+  def validate_directory_column_name(column_name)
+    match = /^[_a-z]+$/.match(column_name)
+    raise "Invalid directory column name '#{column_name}'. Can only container a-z and underscores" unless match
+  end
 
   def write_asset(path, contents)
     unless File.exists?(path)
