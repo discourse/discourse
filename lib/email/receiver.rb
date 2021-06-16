@@ -768,50 +768,42 @@ module Email
         post_ids << post_id_from_email_log if post_id_from_email_log
       end
 
-      if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+      target_post = post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+      too_old_for_group_smtp = (destination_too_old?(target_post) && group.smtp_enabled)
 
-        # We don't want users reopening months-old PM discussions in
-        # group SMTP inbox environments. Instead we just create a new
-        # topic with a link back to the old one.
-        if destination_too_old?(post) && group.smtp_enabled
-          raw = body + "\n\n----\n\n" + I18n.t(
-            "emails.incoming.continuing_old_discussion",
-            url: post.topic.url, title: post.topic.title, count: SiteSetting.disallow_reply_by_email_after_days
-          )
-
-          create_topic(user: user,
-                       raw: raw,
-                       elided: elided,
-                       title: subject,
-                       archetype: Archetype.private_message,
-                       target_group_names: [group.name],
-                       is_group_message: true,
-                       skip_validations: true)
-        else
-
-          # This must be done for the unknown user (who is staged) to
-          # be allowed to post a reply in the topic.
-          if group.allow_unknown_sender_topic_replies
-            post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
-          end
-
-          create_reply(user: user,
-                       raw: body,
-                       elided: elided,
-                       post: post,
-                       topic: post.topic,
-                       skip_validations: true)
-        end
-      else
+      if target_post.blank? || too_old_for_group_smtp
         create_topic(user: user,
-                     raw: body,
+                     raw: new_group_topic_body(body, target_post, too_old_for_group_smtp),
                      elided: elided,
                      title: subject,
                      archetype: Archetype.private_message,
                      target_group_names: [group.name],
                      is_group_message: true,
                      skip_validations: true)
+      else
+        # This must be done for the unknown user (who is staged) to
+        # be allowed to post a reply in the topic.
+        if group.allow_unknown_sender_topic_replies
+          target_post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
+        end
+
+        create_reply(user: user,
+                     raw: body,
+                     elided: elided,
+                     post: target_post,
+                     topic: target_post.topic,
+                     skip_validations: true)
       end
+    end
+
+    def new_group_topic_body(body, target_post, too_old_for_group_smtp)
+      return body if !too_old_for_group_smtp
+      body + "\n\n----\n\n" + I18n.t(
+        "emails.incoming.continuing_old_discussion",
+        url: target_post.topic.url,
+        title: target_post.topic.title,
+        count: SiteSetting.disallow_reply_by_email_after_days
+      )
     end
 
     def forwarded_reply_key?(post_reply_key, user)
@@ -1351,6 +1343,7 @@ module Email
     end
 
     def destination_too_old?(post)
+      return false if post.blank?
       num_of_days = SiteSetting.disallow_reply_by_email_after_days
       num_of_days > 0 && post.created_at < num_of_days.days.ago
     end
