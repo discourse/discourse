@@ -768,7 +768,7 @@ module Email
         post_ids << post_id_from_email_log if post_id_from_email_log
       end
 
-      target_post = post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+      target_post = post_ids.any? && Post.where(id: post_ids).order(:created_at).last
       too_old_for_group_smtp = (destination_too_old?(target_post) && group.smtp_enabled)
 
       if target_post.blank? || too_old_for_group_smtp
