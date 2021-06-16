@@ -774,7 +774,6 @@ module Email
         # group SMTP inbox environments. Instead we just create a new
         # topic with a link back to the old one.
         if destination_too_old?(post) && group.smtp_enabled
-          enable_email_pm_setting(user)
           raw = body + "\n\n----\n\n" + I18n.t(
             "emails.incoming.continuing_old_discussion",
             url: post.topic.url, title: post.topic.title, count: SiteSetting.disallow_reply_by_email_after_days
@@ -804,8 +803,6 @@ module Email
                        skip_validations: true)
         end
       else
-        enable_email_pm_setting(user)
-
         create_topic(user: user,
                      raw: body,
                      elided: elided,
@@ -1063,6 +1060,10 @@ module Email
     end
 
     def create_topic(options = {})
+      if options[:archetype] == Archetype.private_message
+        enable_email_pm_setting(options[:user])
+      end
+
       create_post_with_attachments(options)
     end
 
