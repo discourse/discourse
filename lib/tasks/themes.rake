@@ -121,6 +121,17 @@ end
 
 desc "Install a theme/component on a temporary DB and run QUnit tests"
 task "themes:install_and_test" => :environment do |t, args|
+  # This task can be called in a production environment that likely has a bunch
+  # of DISCOURSE_* env vars that we don't want to be picked up by the Unicorn
+  # server that will be spawned for the tests. So we need to unset them all
+  # before we proceed.
+  ENV.keys.each do |key|
+    next if !key.start_with?('DISCOURSE_')
+    # we still need redis
+    next if key.start_with?('DISCOURSE_REDIS_')
+    ENV[key] = nil
+  end
+
   db = TemporaryDb.new
   db.start
   db.migrate
