@@ -21,26 +21,6 @@ const TABLE_OPTIONS = {
 
 const CHART_OPTIONS = {};
 
-function collapseWeekly(data, average) {
-  let aggregate = [];
-  let bucket, i;
-  let offset = data.length % 7;
-  for (i = offset; i < data.length; i++) {
-    if (bucket && i % 7 === offset) {
-      if (average) {
-        bucket.y = parseFloat((bucket.y / 7.0).toFixed(2));
-      }
-      aggregate.push(bucket);
-      bucket = null;
-    }
-
-    bucket = bucket || { x: data[i].x, y: 0 };
-    bucket.y += data[i].y;
-  }
-
-  return aggregate;
-}
-
 export default Component.extend({
   classNameBindings: [
     "isHidden:hidden",
@@ -200,7 +180,15 @@ export default Component.extend({
   chartGroupings(chartGrouping) {
     chartGrouping = chartGrouping || "daily";
 
-    return ["daily", "weekly", "monthly"].map((id) => {
+    let options = ["weekly", "monthly"];
+    const distance = this.endDate.diff(this.startDate, "days");
+    if (distance <= 30) {
+      options.unshift("daily");
+    } else if (chartGrouping === "daily") {
+      chartGrouping = "weekly";
+    }
+
+    return options.map((id) => {
       return {
         id,
         label: `admin.dashboard.reports.${id}`,
@@ -414,7 +402,7 @@ export default Component.extend({
       jsonReport.chartData = jsonReport.chartData.map((chartData) => {
         if (chartData.length > 40) {
           return {
-            data: collapseWeekly(chartData.data),
+            data: chartData.data,
             req: chartData.req,
             label: chartData.label,
             color: chartData.color,
@@ -423,11 +411,6 @@ export default Component.extend({
           return chartData;
         }
       });
-    } else if (jsonReport.chartData && jsonReport.chartData.length > 40) {
-      jsonReport.chartData = collapseWeekly(
-        jsonReport.chartData,
-        jsonReport.average
-      );
     }
 
     if (jsonReport.prev_data) {
@@ -437,13 +420,6 @@ export default Component.extend({
         starDate: jsonReport.prev_startDate,
         endDate: jsonReport.prev_endDate,
       });
-
-      if (jsonReport.prevChartData && jsonReport.prevChartData.length > 40) {
-        jsonReport.prevChartData = collapseWeekly(
-          jsonReport.prevChartData,
-          jsonReport.average
-        );
-      }
     }
 
     return Report.create(jsonReport);

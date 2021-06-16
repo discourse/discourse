@@ -504,6 +504,63 @@ const Report = EmberObject.extend({
 });
 
 Report.reopenClass({
+  collapse(model, data, grouping) {
+    if (!grouping) {
+      grouping = "daily";
+    }
+
+    if (data.length >= 30 && data.length < 366) {
+      grouping = "weekly";
+    } else if (data.length >= 366) {
+      grouping = "monthly";
+    } else {
+      return data;
+    }
+
+    if (grouping === "weekly" || grouping === "monthly") {
+      const isoKind = grouping === "weekly" ? "isoWeek" : "month";
+      const kind = grouping === "weekly" ? "week" : "month";
+      const startMoment = moment(model.start_date, "YYYY-MM-DD");
+
+      let currentIndex = 0;
+      let currentStart = startMoment.clone().startOf(isoKind);
+      let currentEnd = startMoment.clone().endOf(isoKind);
+      const transformedData = [
+        {
+          x: currentStart.format("YYYY-MM-DD"),
+          y: 0,
+        },
+      ];
+
+      data.forEach((d) => {
+        let date = moment(d.x, "YYYY-MM-DD");
+
+        if (
+          !date.isSame(currentStart) &&
+          !date.isBetween(currentStart, currentEnd)
+        ) {
+          currentIndex += 1;
+          currentStart = currentStart.add(1, kind).startOf(isoKind);
+          currentEnd = currentEnd.add(1, kind).endOf(isoKind);
+        }
+
+        if (transformedData[currentIndex]) {
+          transformedData[currentIndex].y += d.y;
+        } else {
+          transformedData[currentIndex] = {
+            x: d.x,
+            y: d.y,
+          };
+        }
+      });
+
+      return transformedData;
+    }
+
+    // ensure we return something if grouping is unknown
+    return data;
+  },
+
   fillMissingDates(report, options = {}) {
     const dataField = options.dataField || "data";
     const filledField = options.filledField || "data";
