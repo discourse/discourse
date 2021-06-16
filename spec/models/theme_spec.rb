@@ -749,16 +749,6 @@ HTML
 
   describe "automatic recompile" do
     it 'must recompile after bumping theme_field version' do
-      def stub_const(target, const, value)
-        old = target.const_get(const)
-        target.send(:remove_const, const)
-        target.const_set(const, value)
-        yield
-      ensure
-        target.send(:remove_const, const)
-        target.const_set(const, old)
-      end
-
       child.set_field(target: :common, name: "header", value: "World")
       child.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
       child.save!
