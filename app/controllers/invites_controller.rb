@@ -290,12 +290,8 @@ class InvitesController < ApplicationController
   def resend_all_invites
     guardian.ensure_can_resend_all_invites!(current_user)
 
-    Invite
-      .left_outer_joins(:invited_users)
-      .where(invited_by: current_user)
+    Invite.pending(current_user)
       .where('invites.email IS NOT NULL')
-      .where('invited_users.user_id IS NULL')
-      .group('invites.id')
       .find_each { |invite| invite.resend_invite }
 
     render json: success_json
