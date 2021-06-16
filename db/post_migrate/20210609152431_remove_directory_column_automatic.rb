@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveDirectoryColumnAutomatic < ActiveRecord::Migration[6.1]
   def up
     remove_column :directory_columns, :automatic
