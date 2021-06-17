@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
-  queryParams: ["start_date", "end_date", "filters", "chart_grouping"],
+  queryParams: ["start_date", "end_date", "filters", "chart_grouping", "mode"],
   start_date: null,
   end_date: null,
   filters: null,
