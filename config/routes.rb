@@ -703,6 +703,11 @@ Discourse::Application.routes.draw do
     scope path: 'c/*category_slug_path_with_id' do
       get "/none" => "list#category_none_latest"
 
+      TopTopic.periods.each do |period|
+        get "/none/l/top/#{period}", to: redirect("/none/l/top?period=#{period}", status: 301)
+        get "/l/top/#{period}", to: redirect("/l/top?period=#{period}", status: 301)
+      end
+
       Discourse.filters.each do |filter|
         get "/none/l/#{filter}" => "list#category_none_#{filter}", as: "category_none_#{filter}"
         get "/l/#{filter}" => "list#category_#{filter}", as: "category_#{filter}"
@@ -713,6 +718,11 @@ Discourse::Application.routes.draw do
     end
 
     get "hashtags" => "hashtags#show"
+
+    TopTopic.periods.each do |period|
+      get "top/#{period}.rss", to: redirect("top.rss?period=#{period}", status: 301)
+      get "top/#{period}", to: redirect("top?period=#{period}", status: 301)
+    end
 
     Discourse.anonymous_filters.each do |filter|
       get "#{filter}.rss" => "list##{filter}_feed", format: :rss
