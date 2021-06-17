@@ -35,7 +35,6 @@ export default Controller.extend({
         })
       );
     });
-
     this.set("model", model);
   },
 
