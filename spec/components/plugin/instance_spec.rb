@@ -613,7 +613,6 @@ describe Plugin::Instance do
       plugin.add_directory_column('random_c', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
 
       expect(DirectoryColumn.find_by(name: 'random_c', icon: 'recycle', enabled: false).present?).to be(true)
-      DirectoryColumn
     end
 
     it 'errors when the column_name contains invalid characters' do
