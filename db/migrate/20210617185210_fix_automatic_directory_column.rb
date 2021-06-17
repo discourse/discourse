@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddAutomaticColumnDirectoryColumns < ActiveRecord::Migration[6.1]
+class FixAutomaticDirectoryColumn < ActiveRecord::Migration[6.1]
   def up
     if ActiveRecord::Base.connection.column_exists?(:directory_columns, :type)
       # This database ran 20210609133551_add_type_to_directory_columns
