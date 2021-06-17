@@ -216,7 +216,8 @@ class ListController < ApplicationController
     @link = "#{Discourse.base_url}/top"
     @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
-    @topic_list = TopicQuery.new(nil).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+    period = params[:period] || SiteSetting.top_page_default_timeframe.to_sym
+    @topic_list = TopicQuery.new(nil).list_top_for(period)
 
     render 'list', formats: [:rss]
   end
@@ -253,7 +254,8 @@ class ListController < ApplicationController
 
   def top(options = nil)
     options ||= {}
-    period = ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
+    period = params[:period]
+    period ||= ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
     public_send("top_#{period}", options)
   end
 
@@ -276,7 +278,8 @@ class ListController < ApplicationController
       list.for_period = period
       list.more_topics_url = construct_url_with(:next, top_options)
       list.prev_topics_url = construct_url_with(:prev, top_options)
-      @rss = "top_#{period}"
+      @rss = "top"
+      @params = { period: period }
 
       if use_crawler_layout?
         @title = I18n.t("js.filters.top.#{period}.title") + " - #{SiteSetting.title}"
@@ -302,8 +305,8 @@ class ListController < ApplicationController
 
       @description = I18n.t("rss_description.top_#{period}")
       @title = "#{SiteSetting.title} - #{@description}"
-      @link = "#{Discourse.base_url}/top/#{period}"
-      @atom_link = "#{Discourse.base_url}/top/#{period}.rss"
+      @link = "#{Discourse.base_url}/top?period=#{period}"
+      @atom_link = "#{Discourse.base_url}/top.rss?period=#{period}"
       @topic_list = TopicQuery.new(nil).list_top_for(period)
 
       render 'list', formats: [:rss]

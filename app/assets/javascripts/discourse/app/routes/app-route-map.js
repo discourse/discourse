@@ -27,27 +27,7 @@ export default function () {
   });
 
   this.route("discovery", { path: "/", resetNamespace: true }, function () {
-    // top
-    this.route("top");
-    this.route("topCategoryNone", {
-      path: "/c/*category_slug_path_with_id/none/l/top",
-    });
-    this.route("topCategory", { path: "/c/*category_slug_path_with_id/l/top" });
-
-    // top by periods
-    Site.currentProp("periods").forEach((period) => {
-      const top = "top" + period.capitalize();
-
-      this.route(top, { path: "/top/" + period });
-      this.route(top + "CategoryNone", {
-        path: "/c/*category_slug_path_with_id/none/l/top/" + period,
-      });
-      this.route(top + "Category", {
-        path: "/c/*category_slug_path_with_id/l/top/" + period,
-      });
-    });
-
-    // filters (e.g. bookmarks, posted, read, unread, latest)
+    // filters (e.g. bookmarks, posted, read, unread, latest, top)
     Site.currentProp("filters").forEach((filter) => {
       this.route(filter, { path: "/" + filter });
       this.route(filter + "CategoryNone", {
