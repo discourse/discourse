@@ -20,7 +20,7 @@ class DirectoryItemSerializer < ApplicationSerializer
              :time_read
 
   has_one :user, embed: :objects, serializer: UserSerializer
-  attributes *DirectoryColumn.active_column_names
+  attributes *DirectoryItem.headings
 
   def id
     object.user_id

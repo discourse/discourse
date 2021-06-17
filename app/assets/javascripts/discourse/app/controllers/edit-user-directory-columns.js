@@ -58,7 +58,7 @@ export default Controller.extend(ModalFunctionality, {
       .forEach((column, index) => {
         column.setProperties({
           position: column.automatic_position || index + 1,
-          enabled: column.type === "automatic",
+          enabled: column.automatic,
         });
       });
     this.set("columns", resetColumns);

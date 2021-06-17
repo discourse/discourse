@@ -130,7 +130,7 @@ describe Admin::UserFieldsController do
         DirectoryColumn.create(
           user_field_id: user_field.id,
           enabled: false,
-          type: DirectoryColumn.types[:user_field],
+          automatic: false,
           position: next_position
         )
         expect {
