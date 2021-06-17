@@ -9,6 +9,7 @@ export default Component.extend({
   chevronIcon: null,
   columnIcon: null,
   translated: false,
+  automatic: false,
   onActiveRender: null,
 
   toggleProperties() {
@@ -31,6 +32,9 @@ export default Component.extend({
   },
   didReceiveAttrs() {
     this._super(...arguments);
+    if (!this.automatic && !this.translated) {
+      this.set("labelKey", this.field);
+    }
     this.set("id", `table-header-toggle-${this.field.replace(/\s/g, "")}`);
     this.toggleChevron();
   },

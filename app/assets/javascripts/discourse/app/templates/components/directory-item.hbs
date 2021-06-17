@@ -1,10 +1,10 @@
 <td>{{user-info user=item.user}}</td>
 {{#each columns as |column|}}
   <td>
-    {{#if column.automatic}}
-      {{directory-item-value item=item column=column}}
-    {{else}}
+    {{#if (directory-column-is-user-field column=column)}}
       {{directory-item-user-field-value item=item column=column}}
+    {{else}}
+      {{directory-item-value item=item column=column}}
     {{/if}}
   </td>
 {{/each}}

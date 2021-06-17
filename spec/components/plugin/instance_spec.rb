@@ -600,4 +600,28 @@ describe Plugin::Instance do
       expect(ApiKeyScope.scope_mappings.dig(:groups, :create, :actions)).to contain_exactly(*actions)
     end
   end
+
+  describe '#add_directory_column' do
+    let!(:plugin) { Plugin::Instance.new }
+
+    it 'creates a directory column record' do
+      plugin.add_directory_column('random_c', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+
+      expect(DirectoryColumn.find_by(name: 'random_c', icon: 'recycle', enabled: false).present?).to be(true)
+    end
+
+    it 'errors when the column_name contains invalid characters' do
+      expect {
+        plugin.add_directory_column('Capital', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+
+      expect {
+        plugin.add_directory_column('has space', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+
+      expect {
+        plugin.add_directory_column('has_number_1', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+    end
+  end
 end

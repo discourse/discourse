@@ -944,7 +944,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 1,
           name: "likes_received",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 1,
           position: 1,
@@ -954,7 +954,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 2,
           name: "likes_given",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 2,
           position: 2,
@@ -964,7 +964,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 3,
           name: "topic_count",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 3,
           position: 3,
@@ -974,7 +974,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 4,
           name: "post_count",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 4,
           position: 4,
@@ -984,7 +984,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 5,
           name: "topics_entered",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 5,
           position: 5,
@@ -994,7 +994,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 6,
           name: "posts_read",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 6,
           position: 6,
@@ -1004,7 +1004,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 7,
           name: "days_visited",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 7,
           position: 7,
@@ -1014,7 +1014,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 9,
           name: null,
-          automatic: false,
+          type: "user_field",
           enabled: false,
           automatic_position: null,
           position: 8,

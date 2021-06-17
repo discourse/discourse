@@ -3,7 +3,7 @@
 class DirectoryColumnSerializer < ApplicationSerializer
   attributes :id,
              :name,
-             :automatic,
+             :type,
              :enabled,
              :automatic_position,
              :position,

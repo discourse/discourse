@@ -50,7 +50,7 @@ class DirectoryColumnsController < ApplicationController
       new_directory_column_attrs.push({
         user_field_id: user_field.id,
         enabled: false,
-        automatic: false,
+        type: DirectoryColumn.types[:user_field],
         position: next_position
       })
 
