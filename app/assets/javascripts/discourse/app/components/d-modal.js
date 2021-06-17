@@ -48,8 +48,11 @@ export default Component.extend({
   @on("didInsertElement")
   setUp() {
     $("html").on("keyup.discourse-modal", (e) => {
-      //only respond to events when the modal is visible
-      if (!this.element.classList.contains("hidden")) {
+      // only respond to events when we're on a modal and the modal is visible
+      if (
+        e.target.closest("#discourse-modal") &&
+        !this.element.classList.contains("hidden")
+      ) {
         if (e.which === 27 && this.dismissable) {
           next(() => this.attrs.closeModal("initiatedByESC"));
         }
