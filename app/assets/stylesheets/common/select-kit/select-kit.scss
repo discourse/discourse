@@ -7,6 +7,19 @@
   position: relative;
   vertical-align: middle;
 
+  > summary {
+    list-style-type: none;
+
+    &:before {
+      content: none !important;
+      margin: 0;
+    }
+  }
+
+  > summary::marker {
+    display: none !important;
+  }
+
   &.is-disabled {
     pointer-events: none;
   }

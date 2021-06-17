@@ -19,8 +19,8 @@ export default SelectKitComponent.extend({
     clearOnClick: true,
     closeOnChange: false,
     autoInsertNoneItem: false,
-    headerComponent: "multi-select/multi-select-header",
-    filterComponent: "multi-select/multi-select-filter",
+    headerComponent: "select-kit/single-select-header",
+    autoFilterable: true,
   },
 
   search(filter) {

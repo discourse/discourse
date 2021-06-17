@@ -1,9 +1,10 @@
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import layout from "select-kit/templates/components/single-select";
+import layout from "select-kit/templates/components/multi-select";
 
 export default SelectKitComponent.extend({
+  tagName: "details",
   pluginApiIdentifiers: ["single-select"],
   layout,
   classNames: ["single-select"],

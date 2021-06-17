@@ -11,17 +11,17 @@ export default Component.extend(UtilsMixin, {
   layout,
   classNames: ["select-kit-row"],
   tagName: "li",
-  tabIndex: -1,
+  tabIndex: 0,
   attributeBindings: [
     "tabIndex",
     "title",
     "rowValue:data-value",
     "rowName:data-name",
     "ariaLabel:aria-label",
+    "role",
     "ariaSelected:aria-selected",
     "guid:data-guid",
     "rowLang:lang",
-    "role",
   ],
   classNameBindings: [
     "isHighlighted",
@@ -31,23 +31,27 @@ export default Component.extend(UtilsMixin, {
     "item.classNames",
   ],
 
+  role: "region",
+
   didInsertElement() {
     this._super(...arguments);
     this.element.addEventListener("mouseenter", this.handleMouseEnter);
+    this.element.addEventListener("focus", this.handleMouseEnter);
+    this.element.addEventListener("blur", this.handleBlur);
   },
 
   willDestroyElement() {
     this._super(...arguments);
     if (this.element) {
-      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
+      this.element.removeEventListener("mouseenter", this.handleBlur);
+      this.element.removeEventListener("focus", this.handleMouseEnter);
+      this.element.removeEventListener("blur", this.handleMouseEnter);
     }
   },
 
   isNone: computed("rowValue", function () {
     return this.rowValue === this.getValue(this.selectKit.noneItem);
   }),
-
-  role: "option",
 
   guid: computed("item", function () {
     return guidFor(this.item);
@@ -119,7 +123,18 @@ export default Component.extend(UtilsMixin, {
   @action
   handleMouseEnter() {
     if (!this.isDestroying || !this.isDestroyed) {
+      this.element.focus({ preventScroll: true });
       this.selectKit.onHover(this.rowValue, this.item);
+    }
+    return false;
+  },
+
+  @action
+  handleBlur(event) {
+    if ((!this.isDestroying || !this.isDestroyed) && event.relatedTarget) {
+      if (!this.selectKit.mainElement().contains(event.relatedTarget)) {
+        this.selectKit.mainElement().open = false;
+      }
     }
     return false;
   },
@@ -132,6 +147,27 @@ export default Component.extend(UtilsMixin, {
   mouseDown(event) {
     if (this.selectKit.options.preventHeaderFocus) {
       event.preventDefault();
+    }
+  },
+
+  keyDown(event) {
+    if (this.selectKit.isExpanded) {
+      if (event.keyCode === 38) {
+        this.selectKit.highlightPrevious();
+        return false;
+      } else if (event.keyCode === 40) {
+        this.selectKit.highlightNext();
+        return false;
+      } else if (event.keyCode === 13) {
+        this.selectKit.select(
+          this.getValue(this.selectKit.highlighted),
+          this.selectKit.highlighted
+        );
+        return false;
+      } else if (event.keyCode === 27) {
+        this.selectKit.mainElement().open = false;
+        this.selectKit.headerElement().focus();
+      }
     }
   },
 });

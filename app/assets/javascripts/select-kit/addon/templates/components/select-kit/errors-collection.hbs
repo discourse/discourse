@@ -1,5 +1,7 @@
-{{#if collection}}
-  {{#each collection.content as |item|}}
-    <li class="select-kit-error">{{item}}</li>
-  {{/each}}
+{{#if collection.content}}
+  <ul class="select-kit-errors-collection">
+    {{#each collection.content as |item|}}
+      <li class="select-kit-error">{{item}}</li>
+    {{/each}}
+  </ul>
 {{/if}}
