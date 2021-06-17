@@ -377,7 +377,7 @@ describe UserAnonymizer do
       described_class.make_anonymous(user, admin)
 
       expect(user.email).not_to eq('test@example.com')
-      expect { invite.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(Invite.exists?(id: invite.id)).to eq(false)
     end
   end
 
