@@ -131,7 +131,7 @@ class UploadCreator
 
           begin
             w, h = Discourse::Utils
-              .execute_command("identify", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+              .execute_command("identify", "-ping", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
               .split(' ')
           rescue
             # use default 0, 0
@@ -194,7 +194,7 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.images.not_supported_or_corrupted"))
     elsif filesize <= 0
       @upload.errors.add(:base, I18n.t("upload.empty"))
-    elsif pixels == 0
+    elsif pixels == 0 && @image_info.type.to_s != 'svg'
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
     elsif max_image_pixels > 0 && pixels >= max_image_pixels * 2
       @upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels * 2))
