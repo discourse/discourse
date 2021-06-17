@@ -341,6 +341,7 @@ class ListController < ApplicationController
     end
 
     route_params[:username] = UrlHelper.encode_component(params[:username]) if params[:username].present?
+    route_params[:period] = params[:period] if params[:period].present?
     route_params
   end
 
