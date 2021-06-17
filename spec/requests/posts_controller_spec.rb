@@ -415,10 +415,11 @@ describe PostsController do
       end
 
       it "updates post's raw attribute" do
-        put "/posts/#{post.id}.json", params: update_params
+        put "/posts/#{post.id}.json", params: { post: { raw: 'edited body   ' } }
 
         expect(response.status).to eq(200)
-        expect(post.reload.raw).to eq(update_params[:post][:raw])
+        expect(response.parsed_body['post']['raw']).to eq('edited body')
+        expect(post.reload.raw).to eq('edited body')
       end
 
       it "extracts links from the new body" do
