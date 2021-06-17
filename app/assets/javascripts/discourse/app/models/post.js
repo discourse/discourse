@@ -314,6 +314,7 @@ const Post = RestModel.extend({
       bookmark_name: data.name,
       bookmark_id: data.id,
     });
+    this.topic.incrementProperty("bookmarksWereChanged");
     this.appEvents.trigger("page:bookmark-post-toggled", this);
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   },
@@ -333,6 +334,7 @@ const Post = RestModel.extend({
       bookmarked: false,
       bookmark_auto_delete_preference: null,
     });
+    this.topic.incrementProperty("bookmarksWereChanged");
   },
 
   updateActionsSummary(json) {

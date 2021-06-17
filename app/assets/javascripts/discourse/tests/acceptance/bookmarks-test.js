@@ -2,6 +2,7 @@ import {
   acceptance,
   exists,
   loggedInUser,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -313,6 +314,44 @@ acceptance("Bookmarking", function (needs) {
     assert.ok(
       !exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
       "the second bookmark is deleted"
+    );
+  });
+
+  test("The topic level bookmark button opens the edit modal if only the first post on the topic is bookmarked", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openBookmarkModal(1);
+    await click("#save-bookmark");
+
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.edit_bookmark"),
+      "A topic level bookmark button has a label 'Edit Bookmark'"
+    );
+
+    await click("#topic-footer-button-bookmark");
+
+    assert.ok(
+      exists("div.modal.bookmark-with-reminder"),
+      "The edit modal is opened"
+    );
+  });
+
+  test("The topic level bookmark button opens the edit modal if only one post in the post stream is bookmarked", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openBookmarkModal(2);
+    await click("#save-bookmark");
+
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.edit_bookmark"),
+      "A topic level bookmark button has a label 'Edit Bookmark'"
+    );
+
+    await click("#topic-footer-button-bookmark");
+
+    assert.ok(
+      exists("div.modal.bookmark-with-reminder"),
+      "The edit modal is opened"
     );
   });
 });

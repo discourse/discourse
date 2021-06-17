@@ -1219,57 +1219,43 @@ export default Controller.extend(bufferedProperty("model"), {
       return Promise.resolve();
     }
     this.model.set("bookmarking", true);
-    const bookmark = !this.model.bookmarked;
-    let posts = this.model.postStream.posts;
+    const alreadyBookmarkedPosts = this.model.bookmarkedPosts;
 
     return this.model.firstPost().then((firstPost) => {
+      const bookmarkPost = async (post) => {
+        const opts = await this._togglePostBookmark(post);
+        this.model.set("bookmarking", false);
+        if (opts.closedWithoutSaving) {
+          return;
+        }
+        this.model.afterPostBookmarked(post);
+        return [post.id];
+      };
+
       const toggleBookmarkOnServer = () => {
-        if (bookmark) {
-          return this._togglePostBookmark(firstPost).then((opts) => {
-            this.model.set("bookmarking", false);
-            if (opts && opts.closedWithoutSaving) {
-              return;
-            }
-            return this.model.afterTopicBookmarked(firstPost);
-          });
+        if (alreadyBookmarkedPosts.length === 0) {
+          return bookmarkPost(firstPost);
+        } else if (alreadyBookmarkedPosts.length === 1) {
+          const post = alreadyBookmarkedPosts[0];
+          return bookmarkPost(post);
         } else {
           return this.model
             .deleteBookmark()
             .then(() => {
               this.model.toggleProperty("bookmarked");
               this.model.set("bookmark_reminder_at", null);
-              let clearedBookmarkProps = {
-                bookmarked: false,
-                bookmark_id: null,
-                bookmark_name: null,
-                bookmark_reminder_at: null,
-              };
-              if (posts) {
-                const updated = [];
-                posts.forEach((post) => {
-                  if (post.bookmarked) {
-                    post.setProperties(clearedBookmarkProps);
-                    updated.push(post.id);
-                  }
-                });
-                firstPost.setProperties(clearedBookmarkProps);
-                return updated;
-              }
+              alreadyBookmarkedPosts.forEach((post) => {
+                post.clearBookmark();
+              });
+              return alreadyBookmarkedPosts.mapBy("id");
             })
             .catch(popupAjaxError)
             .finally(() => this.model.set("bookmarking", false));
         }
       };
 
-      const unbookmarkedPosts = [];
-      if (!bookmark && posts) {
-        posts.forEach(
-          (post) => post.bookmarked && unbookmarkedPosts.push(post)
-        );
-      }
-
       return new Promise((resolve) => {
-        if (unbookmarkedPosts.length > 1) {
+        if (alreadyBookmarkedPosts.length > 1) {
           bootbox.confirm(
             I18n.t("bookmarks.confirm_clear"),
             I18n.t("no_value"),
