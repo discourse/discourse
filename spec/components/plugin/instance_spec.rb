@@ -604,11 +604,6 @@ describe Plugin::Instance do
   describe '#add_directory_column' do
     let!(:plugin) { Plugin::Instance.new }
 
-    after do
-      DirectoryItem.clear_plugin_queries
-      DirectoryColumn.clear_plugin_directory_columns
-    end
-
     it 'creates a directory column record' do
       plugin.add_directory_column('random_c', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
 

@@ -34,10 +34,6 @@ class DirectoryItem < ActiveRecord::Base
     @@plugin_queries
   end
 
-  def self.clear_plugin_queries
-    @@plugin_queries = []
-  end
-
   def self.refresh_period!(period_type, force: false)
 
     Discourse.redis.set("directory_#{period_types[period_type]}", Time.zone.now.to_i)

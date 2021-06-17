@@ -30,8 +30,4 @@ class DirectoryColumn < ActiveRecord::Base
   def self.plugin_directory_columns
     @@plugin_directory_columns
   end
-
-  def self.clear_plugin_directory_columns
-    @@plugin_directory_columns = []
-  end
 end
