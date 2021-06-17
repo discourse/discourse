@@ -76,9 +76,15 @@ async function runAllTests() {
   }
 
   const { Inspector, Page, Runtime, Log } = protocol;
+  // eslint-disable-next-line
+  await Promise.all([
+    Inspector.enable(),
+    Page.enable(),
+    Runtime.enable(),
+    Log.enable(),
+  ]);
 
   // Documentation https://chromedevtools.github.io/devtools-protocol/tot/Log/#type-LogEntry
-  Log.enable();
   Log.entryAdded(({ entry }) => {
     let message = `${new Date(entry.timestamp).toISOString()} - (type: ${
       entry.source
@@ -88,9 +94,6 @@ async function runAllTests() {
     }
     console.log(message);
   });
-
-  // eslint-disable-next-line
-  await Promise.all([Inspector.enable(), Page.enable(), Runtime.enable()]);
 
   Inspector.targetCrashed((entry) => {
     console.log("Chrome target crashed:");
@@ -119,6 +122,31 @@ async function runAllTests() {
   });
 
   let url = args[0] + "&qunit_disable_auto_start=1";
+
+  const apiKey = process.env.ADMIN_API_KEY;
+  const apiUsername = process.env.ADMIN_API_USERNAME;
+  if (apiKey && apiUsername) {
+    const { Fetch } = protocol;
+    await Fetch.enable();
+    const urlObj = new URL(url);
+    Fetch.requestPaused((data) => {
+      const requestURL = new URL(data.request.url);
+      if (requestURL.hostname != urlObj.hostname) {
+        Fetch.continueRequest({
+          requestId: data.requestId,
+        });
+        return;
+      }
+      Fetch.continueRequest({
+        requestId: data.requestId,
+        headers: [
+          { name: "Api-Key", value: apiKey },
+          { name: "Api-Username", value: apiUsername },
+        ],
+      });
+    });
+  }
+
   console.log("navigate to ", url);
   Page.navigate({ url });
 
