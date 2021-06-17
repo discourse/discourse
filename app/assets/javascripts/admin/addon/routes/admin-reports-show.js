@@ -29,8 +29,6 @@ export default DiscourseRoute.extend({
     params.chartGrouping = params.chart_grouping || "daily";
     delete params.chart_grouping;
 
-    params.mode = params.mode || "table";
-
     return params;
   },
 
