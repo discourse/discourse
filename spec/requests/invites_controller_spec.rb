@@ -744,6 +744,8 @@ describe InvitesController do
     it 'resends all non-redeemed invites by a user' do
       SiteSetting.invite_expiry_days = 30
 
+      freeze_time
+
       user = Fabricate(:admin)
       new_invite = Fabricate(:invite, invited_by: user)
       expired_invite = Fabricate(:invite, invited_by: user)
@@ -756,9 +758,9 @@ describe InvitesController do
       post '/invites/reinvite-all'
 
       expect(response.status).to eq(200)
-      expect(new_invite.reload.expires_at.to_date).to eq(30.days.from_now.to_date)
-      expect(expired_invite.reload.expires_at.to_date).to eq(30.days.from_now.to_date)
-      expect(redeemed_invite.reload.expires_at.to_date).to eq(5.days.ago.to_date)
+      expect(new_invite.reload.expires_at).to eq_time(30.days.from_now)
+      expect(expired_invite.reload.expires_at).to eq_time(2.days.ago)
+      expect(redeemed_invite.reload.expires_at).to eq_time(5.days.ago)
     end
   end
 
