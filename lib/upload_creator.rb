@@ -131,7 +131,7 @@ class UploadCreator
 
           begin
             w, h = Discourse::Utils
-              .execute_command("identify", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+              .execute_command("identify", "-ping", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
               .split(' ')
           rescue
             # use default 0, 0
