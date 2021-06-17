@@ -79,7 +79,9 @@ export default Component.extend({
     }
     this.set("endDate", endDate);
 
-    this.set("currentMode", this.filters.mode);
+    if (this.filters) {
+      this.set("currentMode", this.filters.mode);
+    }
 
     if (this.report) {
       this._renderReport(this.report, this.forcedModes, this.currentMode);
