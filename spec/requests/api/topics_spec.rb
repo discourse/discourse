@@ -746,7 +746,7 @@ describe 'topics' do
     end
   end
 
-  path '/top/{flag}.json' do
+  path '/top.json?period={flag}' do
     get 'Get the top topics filtered by a flag' do
       tags 'Topics'
       consumes 'application/json'

@@ -721,6 +721,7 @@ Discourse::Application.routes.draw do
 
     TopTopic.periods.each do |period|
       get "top/#{period}.rss", to: redirect("top.rss?period=#{period}", status: 301)
+      get "top/#{period}.json", to: redirect("top.json?period=#{period}", status: 301)
       get "top/#{period}", to: redirect("top?period=#{period}", status: 301)
     end
 
