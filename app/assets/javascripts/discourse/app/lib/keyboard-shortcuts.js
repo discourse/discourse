@@ -553,11 +553,7 @@ export default {
       // If there is more than one match for the selector, just click
       // the first one, we don't want to click multiple things from one
       // shortcut.
-      if ($sel.length > 1) {
-        $sel[0].click();
-      } else {
-        $sel.click();
-      }
+      $sel[0].click();
     });
   },
 
