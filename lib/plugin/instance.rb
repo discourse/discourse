@@ -430,17 +430,7 @@ class Plugin::Instance
     end
 
     directory_columns.each do |column_attrs|
-      DirectoryColumn
-        .find_or_create_by(
-          name: column_attrs[:column_name],
-          icon: column_attrs[:icon],
-          type: DirectoryColumn.types[:plugin]
-        ) do |column|
-          column.position = DirectoryColumn.maximum("position") + 1
-          column.enabled = false
-        end
-      DirectoryColumn.add_plugin_directory_column(column_attrs[:column_name])
-      DirectoryItem.add_plugin_query(column_attrs[:query])
+      DirectoryColumn.create_plugin_directory_column(column_attrs)
     end
 
     initializers.each do |callback|

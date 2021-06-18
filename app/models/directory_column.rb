@@ -37,4 +37,20 @@ class DirectoryColumn < ActiveRecord::Base
   def self.clear_plugin_directory_columns
     @@plugin_directory_columns = []
   end
+
+  def self.create_plugin_directory_column(attrs)
+    directory_column = find_or_create_by(
+      name: attrs[:column_name],
+      icon: attrs[:icon],
+      type: DirectoryColumn.types[:plugin]
+    ) do |column|
+      column.position = DirectoryColumn.maximum("position") + 1
+      column.enabled = false
+    end
+
+    raise "Error creating plugin directory column '#{attrs[:column_name]}'" unless directory_column&.id
+
+    add_plugin_directory_column(directory_column.name)
+    DirectoryItem.add_plugin_query(attrs[:query])
+  end
 end
