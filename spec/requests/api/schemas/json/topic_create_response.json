@@ -19,6 +19,9 @@
     "created_at": {
       "type": "string"
     },
+    "raw": {
+      "type": "string"
+    },
     "cooked": {
       "type": "string"
     },
