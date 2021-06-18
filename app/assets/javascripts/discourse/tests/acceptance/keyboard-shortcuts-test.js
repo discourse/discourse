@@ -82,6 +82,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
 
   test("dismiss unread from top and bottom button", async function (assert) {
     await visit("/unread");
+    assert.ok(exists("#dismiss-topics-top"));
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
     assert.ok(exists("#dismiss-read-confirm"));
@@ -98,7 +99,10 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     let originalTopics = [...topicList.topic_list.topics];
     topicList.topic_list.topics = [topicList.topic_list.topics[0]];
 
+    // visit root first so topic list starts fresh
+    await visit("/");
     await visit("/unread");
+    assert.notOk(exists("#dismiss-topics-top"));
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
     assert.ok(exists("#dismiss-read-confirm"));
@@ -115,6 +119,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
 
   test("dismiss new from top and bottom button", async function (assert) {
     await visit("/new");
+    assert.ok(exists("#dismiss-new-top"));
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
     assert.equal(resetNewCalled, 1);
@@ -125,12 +130,26 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     let originalTopics = [...topicList.topic_list.topics];
     topicList.topic_list.topics = [topicList.topic_list.topics[0]];
 
+    // visit root first so topic list starts fresh
+    await visit("/");
     await visit("/new");
+    assert.notOk(exists("#dismiss-new-top"));
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
     assert.equal(resetNewCalled, 2);
 
     // restore the original topic list
     topicList.topic_list.topics = originalTopics;
+  });
+
+  test("click event not fired twice when both dismiss buttons are present", async function (assert) {
+    await visit("/new");
+    assert.ok(exists("#dismiss-new-top"));
+    assert.ok(exists("#dismiss-new-bottom"));
+
+    await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
+
+    assert.equal(resetNewCalled, 1);
   });
 });

@@ -86,8 +86,8 @@ const DEFAULT_BINDINGS = {
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
-    click: "#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top",
-  }, // dismiss new/posts
+    click: "#dismiss-new-bottom,#dismiss-new-top",
+  }, // dismiss new
   "x t": { click: "#dismiss-topics-bottom,#dismiss-topics-top" }, // dismiss topics
 };
 
@@ -549,7 +549,15 @@ export default {
         // If effective, prevent default.
         e.preventDefault();
       }
-      $sel.click();
+
+      // If there is more than one match for the selector, just click
+      // the first one, we don't want to click multiple things from one
+      // shortcut.
+      if ($sel.length > 1) {
+        $sel[0].click();
+      } else {
+        $sel.click();
+      }
     });
   },
 
