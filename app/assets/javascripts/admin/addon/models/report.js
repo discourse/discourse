@@ -504,7 +504,7 @@ const Report = EmberObject.extend({
 });
 
 export const WEEKLY_LIMIT_DAYS = 365;
-export const DAILY_LIMIT_DAYS = 30;
+export const DAILY_LIMIT_DAYS = 34;
 
 Report.reopenClass({
   groupingForDatapoints(count) {
