@@ -142,8 +142,6 @@ module("Unit | Service | store", function () {
     assert.equal(fruitCols.length, 2);
     assert.equal(fruitCols[0].get("id"), 1);
     assert.equal(fruitCols[1].get("id"), 2);
-
-    assert.ok(fruit.get("category"), "categories are found automatically");
   });
 
   test("embedded records can be cleared", async function (assert) {
