@@ -162,7 +162,7 @@ createWidget("filter-jump-to-post", {
 });
 
 createWidget("filter-show-all", {
-  tagName: "a.filtered-replies-show-all",
+  tagName: "button.filtered-replies-show-all",
   buildKey: (attrs) => `filtered-show-all-${attrs.id}`,
 
   buildClasses() {
