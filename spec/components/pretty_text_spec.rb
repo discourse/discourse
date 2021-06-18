@@ -779,6 +779,22 @@ describe PrettyText do
       ].sort)
     end
 
+    it "should not extract links inside oneboxes" do
+      onebox = <<~EOF
+        <aside class="onebox twitterstatus" data-onebox-src="https://twitter.com/EDBPostgres/status/1402528437441634306">
+          <header class="source">
+            <a href="https://twitter.com/EDBPostgres/status/1402528437441634306" target="_blank" rel="noopener">twitter.com</a>
+            <a href="https://twitter.com/EDBPostgres/status/1402528437441634306" target="_blank" rel="noopener">twitter.com</a>
+          </header>
+          <article class="onebox-body">
+            <div class="tweet">Example URL: <a target="_blank" href="https://example.com" rel="noopener">example.com</a></div>
+          </article>
+        </aside>
+      EOF
+
+      expect(PrettyText.extract_links(onebox).map(&:url)).to contain_exactly("https://twitter.com/EDBPostgres/status/1402528437441634306")
+    end
+
     it "should not preserve tags in code blocks" do
       expect(PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>", 100)).to eq("&lt;h3&gt;Hours&lt;/h3&gt;")
     end

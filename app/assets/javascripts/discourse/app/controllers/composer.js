@@ -456,7 +456,7 @@ export default Controller.extend({
       $links.each((idx, l) => {
         const href = l.href;
         if (href && href.length) {
-          // skip links in quotes
+          // skip links in quotes and oneboxes
           for (let element = l; element; element = element.parentElement) {
             if (
               element.tagName === "DIV" &&
@@ -468,6 +468,14 @@ export default Controller.extend({
             if (
               element.tagName === "ASIDE" &&
               element.classList.contains("quote")
+            ) {
+              return true;
+            }
+
+            if (
+              element.tagName === "ASIDE" &&
+              element.classList.contains("onebox") &&
+              href !== element.dataset["onebox-src"]
             ) {
               return true;
             }
