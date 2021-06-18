@@ -27,7 +27,7 @@ describe BootstrapController do
     bootstrap = json['bootstrap']
     expect(bootstrap).to be_present
     expect(bootstrap['title']).to be_present
-    expect(bootstrap['theme_ids']).to eq([theme.id])
+    expect(bootstrap['theme_id']).to eq(theme.id)
     expect(bootstrap['setup_data']['base_url']).to eq(Discourse.base_url)
     expect(bootstrap['stylesheets']).to be_present
 

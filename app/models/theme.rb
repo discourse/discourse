@@ -203,6 +203,7 @@ class Theme < ActiveRecord::Base
 
   def self.transform_ids(id)
     return [] if id.blank?
+    id = id.to_i
 
     get_set_cache "transformed_ids_#{id}" do
       all_ids =
@@ -297,8 +298,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)
-    theme_ids = [theme_ids] unless Array === theme_ids
-    theme_ids = transform_ids(theme_ids)
+    theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
 
     get_set_cache("#{theme_ids.join(",")}:modifier:#{modifier_name}:#{Theme.compiler_version}") do
       ThemeModifierSet.resolve_modifier_for_themes(theme_ids, modifier_name)
@@ -350,7 +350,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.refresh_message_for_targets(targets, theme_ids)
-    theme_ids = [theme_ids] unless theme_ids === Array
+    theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
 
     targets.each_with_object([]) do |target, data|
       theme_ids.each do |theme_id|

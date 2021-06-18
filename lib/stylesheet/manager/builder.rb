@@ -3,7 +3,7 @@
 class Stylesheet::Manager::Builder
   attr_reader :theme
 
-  def initialize(target: :desktop, theme:, color_scheme: nil, manager:)
+  def initialize(target: :desktop, theme: nil, color_scheme: nil, manager:)
     @target = target
     @theme = theme
     @color_scheme = color_scheme
@@ -115,11 +115,11 @@ class Stylesheet::Manager::Builder
 
   def qualified_target
     if is_theme?
-      "#{@target}_#{theme.id}"
+      "#{@target}_#{theme&.id}"
     elsif @color_scheme
       "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}"
     else
-      scheme_string = theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ""
+      scheme_string = theme&.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"
     end
   end
@@ -186,10 +186,10 @@ class Stylesheet::Manager::Builder
   end
 
   def settings_digest
-    theme_ids = Theme.is_parent_theme?(theme.id) ? @manager.theme_ids : [theme.id]
-
     themes =
-      if Theme.is_parent_theme?(theme.id)
+      if !theme
+        []
+      elsif Theme.is_parent_theme?(theme.id)
         @manager.load_themes(@manager.theme_ids)
       else
         [@manager.get_theme(theme.id)]
@@ -211,7 +211,7 @@ class Stylesheet::Manager::Builder
   def uploads_digest
     sha1s = []
 
-    theme.upload_fields.map do |upload_field|
+    (theme&.upload_fields || []).map do |upload_field|
       sha1s << upload_field.upload.sha1
     end
 
@@ -247,7 +247,9 @@ class Stylesheet::Manager::Builder
 
   def resolve_baked_field(target, name)
     theme_ids =
-      if Theme.is_parent_theme?(theme.id)
+      if !theme
+        []
+      elsif Theme.is_parent_theme?(theme.id)
         @manager.theme_ids
       else
         [theme.id]

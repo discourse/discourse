@@ -51,7 +51,7 @@ class BootstrapController < ApplicationController
     ).map { |f| script_asset_path(f) }
 
     bootstrap = {
-      theme_ids: [theme_id],
+      theme_id: theme_id,
       title: SiteSetting.title,
       current_homepage: current_homepage,
       locale_script: locale,

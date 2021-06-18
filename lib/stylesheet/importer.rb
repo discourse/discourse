@@ -173,6 +173,8 @@ module Stylesheet
     end
 
     def theme_import(target)
+      return "" if !@theme_id
+
       attr = target == :embedded_theme ? :embedded_scss : :scss
       target = target.to_s.gsub("_theme", "").to_sym
 
