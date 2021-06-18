@@ -16,7 +16,7 @@ describe SvgSpriteController do
       theme = Fabricate(:theme)
       theme.set_field(target: :settings, name: :yaml, value: "custom_icon: dragon")
       theme.save!
-      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme.id}-#{SvgSprite.version([theme.id])}.js"
+      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme.id}-#{SvgSprite.version(theme.id)}.js"
       expect(response.status).to eq(200)
     end
 

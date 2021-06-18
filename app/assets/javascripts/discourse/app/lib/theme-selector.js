@@ -2,7 +2,7 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import I18n from "I18n";
 import deprecated from "discourse-common/lib/deprecated";
 
-const keySelector = "meta[name=discourse_theme_ids]";
+const keySelector = "meta[name=discourse_theme_id]";
 
 export function currentThemeKey() {
   // eslint-disable-next-line no-console

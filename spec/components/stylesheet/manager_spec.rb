@@ -12,12 +12,6 @@ describe Stylesheet::Manager do
     Theme.clear_default!
     link = manager.stylesheet_link_tag(:embedded_theme)
     expect(link).to eq("")
-
-    theme = Fabricate(:theme)
-    SiteSetting.default_theme_id = theme.id
-
-    link = manager.stylesheet_link_tag(:embedded_theme)
-    expect(link).not_to eq("")
   end
 
   it "still returns something for no themes" do

@@ -47,7 +47,7 @@ class StylesheetsController < ApplicationController
         theme_id =
           if target.include?("theme")
             split_target, theme_id = target.split(/_(-?[0-9]+)/)
-            Theme.where(id: theme_id).pluck_first(:id) if theme_id.present?
+            theme_id if theme_id.present? && Theme.exists?(id: theme_id)
           else
             split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
             Theme.where(color_scheme_id: color_scheme_id).pluck_first(:id)

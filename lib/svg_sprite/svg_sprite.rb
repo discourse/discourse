@@ -358,7 +358,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    sprite_sources([SiteSetting.default_theme_id]).each do |fname|
+    sprite_sources(SiteSetting.default_theme_id).each do |fname|
       next if !File.exist?(fname)
 
       svg_file = Nokogiri::XML(File.open(fname))
@@ -381,7 +381,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.icon_picker_search(keyword)
     results = Set.new
 
-    sprite_sources([SiteSetting.default_theme_id]).each do |fname|
+    sprite_sources(SiteSetting.default_theme_id).each do |fname|
       next if !File.exist?(fname)
 
       svg_file = Nokogiri::XML(File.open(fname))
@@ -465,9 +465,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     return [] if theme_id.blank?
 
     theme_icon_settings = []
+    theme_ids = Theme.transform_ids(theme_id)
 
     # Need to load full records for default values
-    Theme.where(id: Theme.transform_ids(theme_id)).each do |theme|
+    Theme.where(id: theme_ids).each do |theme|
       settings = theme.cached_settings.each do |key, value|
         if key.to_s.include?("_icon") && String === value
           theme_icon_settings |= value.split('|')
@@ -475,7 +476,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       end
     end
 
-    theme_icon_settings |= ThemeModifierHelper.new(theme_ids: [theme_id]).svg_icons
+    theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
 
     theme_icon_settings
   end

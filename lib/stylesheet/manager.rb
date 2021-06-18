@@ -134,7 +134,7 @@ class Stylesheet::Manager
   attr_reader :theme_ids
 
   def initialize(theme_id: nil)
-    @theme_id = theme_id || SiteSetting.default_theme_id
+    @theme_id = theme_id
     @theme_ids = Theme.transform_ids(@theme_id)
     @themes_cache = {}
   end
@@ -218,16 +218,23 @@ class Stylesheet::Manager
 
       scss_checker = ScssChecker.new(target, stale_theme_ids)
 
-      load_themes(stale_theme_ids).each do |theme|
-        theme_id = theme.id
+      themes = @theme_id.blank? ? [nil] : load_themes(stale_theme_ids)
+
+      themes.each do |theme|
+        theme_id = theme&.id
         data = { target: target, theme_id: theme_id }
         builder = Builder.new(target: target, theme: theme, manager: self)
+        is_theme = builder.is_theme?
+        has_theme = builder.theme.present?
 
-        next if builder.theme.component && !scss_checker.has_scss(theme_id)
-        builder.compile unless File.exists?(builder.stylesheet_fullpath)
-        href = builder.stylesheet_path(current_hostname)
-
-        cache.defer_set("path_#{target}_#{theme_id}_#{current_hostname}", href)
+        if is_theme && !has_theme
+          next
+        else
+          next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+          builder.compile unless File.exists?(builder.stylesheet_fullpath)
+          href = builder.stylesheet_path(current_hostname)
+          cache.defer_set("path_#{target}_#{theme_id}_#{current_hostname}", href)
+        end
 
         data[:new_href] = href
         stylesheets << data
@@ -239,7 +246,7 @@ class Stylesheet::Manager
   end
 
   def color_scheme_stylesheet_details(color_scheme_id = nil, media)
-    theme_id = @theme_ids.first
+    theme_id = @theme_id || SiteSetting.default_theme_id
 
     color_scheme = begin
       ColorScheme.find(color_scheme_id)

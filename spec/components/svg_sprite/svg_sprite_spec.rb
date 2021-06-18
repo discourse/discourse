@@ -139,12 +139,21 @@ describe SvgSprite do
 
   it 'includes icons defined in theme modifiers' do
     theme = Fabricate(:theme)
+    child_theme = Fabricate(:theme, component: true)
+    theme.add_relative_theme!(:child, child_theme)
 
     expect(SvgSprite.all_icons(theme.id)).not_to include("dragon")
 
     theme.theme_modifier_set.svg_icons = ["dragon"]
     theme.save!
-    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
+
+    child_theme.theme_modifier_set.svg_icons = ["fly"]
+    child_theme.save!
+
+    icons = SvgSprite.all_icons(theme.id)
+
+    expect(icons).to include("dragon")
+    expect(icons).to include("fly")
   end
 
   it 'includes custom icons from a sprite in a theme' do
