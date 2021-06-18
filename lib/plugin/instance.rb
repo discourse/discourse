@@ -50,6 +50,7 @@ class Plugin::Instance
   # Memoized array readers
   [:assets,
    :color_schemes,
+   :directory_columns,
    :before_auth_initializers,
    :initializers,
    :javascripts,
@@ -375,13 +376,7 @@ class Plugin::Instance
 
   def add_directory_column(column_name, query:, icon: nil)
     validate_directory_column_name(column_name)
-    directory_column = DirectoryColumn
-      .find_or_create_by(name: column_name, icon: icon, type: DirectoryColumn.types[:plugin]) do |column|
-        column.position = DirectoryColumn.maximum("position") + 1
-        column.enabled = false
-      end
-    DirectoryColumn.add_plugin_directory_column(column_name)
-    DirectoryItem.add_plugin_query(query)
+    directory_columns << { column_name: column_name, icon: icon, query: query }
   end
 
   def delete_extra_automatic_assets(good_paths)
@@ -432,6 +427,20 @@ class Plugin::Instance
       unless ColorScheme.where(name: c[:name]).exists?
         ColorScheme.create_from_base(name: c[:name], colors: c[:colors])
       end
+    end
+
+    directory_columns.each do |column_attrs|
+      DirectoryColumn
+        .find_or_create_by(
+          name: column_attrs[:column_name],
+          icon: column_attrs[:icon],
+          type: DirectoryColumn.types[:plugin]
+        ) do |column|
+          column.position = DirectoryColumn.maximum("position") + 1
+          column.enabled = false
+        end
+      DirectoryColumn.add_plugin_directory_column(column_attrs[:column_name])
+      DirectoryItem.add_plugin_query(column_attrs[:query])
     end
 
     initializers.each do |callback|

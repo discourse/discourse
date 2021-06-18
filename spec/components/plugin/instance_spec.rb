@@ -611,7 +611,7 @@ describe Plugin::Instance do
 
     it 'creates a directory column record' do
       plugin.add_directory_column('random_c', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
-
+      plugin.notify_after_initialize
       expect(DirectoryColumn.find_by(name: 'random_c', icon: 'recycle', enabled: false).present?).to be(true)
     end
 

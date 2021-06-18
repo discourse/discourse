@@ -3,6 +3,9 @@
 class DirectoryColumn < ActiveRecord::Base
   self.inheritance_column = nil
 
+  # TODO(2021-06-18): Remove
+  self.ignored_columns = ["automatic"]
+
   def self.automatic_column_names
     @automatic_column_names ||= [:likes_received,
                    :likes_given,
