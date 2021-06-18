@@ -477,10 +477,14 @@
   }
   .modal-body {
     overflow-y: visible;
-    #post-jump,
-    .date-picker {
+    #post-jump {
       margin: 0;
       width: 100px;
+    }
+
+    .date-picker {
+      margin: 0;
+      width: 180px;
     }
 
     .input-hint-text {
@@ -491,8 +495,13 @@
       color: var(--primary-medium);
     }
 
-    .jump-to-date-control .input-hint-text {
-      margin-left: 0;
+    .jump-to-date-control {
+      display: flex;
+      align-items: center;
+      .input-hint-text {
+        margin-left: 0;
+        margin-right: 0.5em;
+      }
     }
 
     .separator {
