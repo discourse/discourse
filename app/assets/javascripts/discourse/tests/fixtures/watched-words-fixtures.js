@@ -11,14 +11,14 @@ export default {
       {
         id: 7,
         word: "hi",
-        regexp: "hi",
+        regexp: "(hi)",
         replacement: "hello",
         action: "replace",
       },
       {
         id: 8,
         word: "hello",
-        regexp: "hello",
+        regexp: "(hello)",
         replacement: "greeting",
         action: "tag",
       },

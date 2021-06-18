@@ -20,8 +20,8 @@ function findAllMatches(text, matchers) {
       count++ < MAX_MATCHES
     ) {
       matches.push({
-        index: match.index,
-        text: match[0],
+        index: match.index + match[0].indexOf(match[1]),
+        text: match[1],
         replacement: matcher.replacement,
         link: matcher.link,
       });
