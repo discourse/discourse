@@ -154,6 +154,15 @@ class GroupsController < ApplicationController
     params_with_permitted = group_params(automatic: group.automatic)
     clear_disabled_email_settings(group, params_with_permitted)
 
+    if params[:update_existing_users].blank? && (!group.automatic || current_user.admin)
+      user_count = updating_user_count(group, params_with_permitted)
+
+      if user_count > 0
+        render json: { user_count: user_count }
+        return
+      end
+    end
+
     if group.update(params_with_permitted)
       GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
       group.record_email_setting_changes!(current_user)
@@ -754,6 +763,112 @@ class GroupsController < ApplicationController
       params_with_permitted[:smtp_port] = nil
       params_with_permitted[:email_username] = nil
       params_with_permitted[:email_password] = nil
+    end
+  end
+
+  def user_default_notifications(group, params)
+    category_notifications = group.group_category_notification_defaults.pluck(:category_id, :notification_level).to_h
+    tag_notifications = group.group_tag_notification_defaults.pluck(:tag_id, :notification_level).to_h
+    category_actions = { create: [], update: [] }
+    tag_actions = { create: [], update: [] }
+
+    NotificationLevels.all.each do |key, value|
+      category_ids = params["#{key}_category_ids".to_sym] - ["-1"]
+      category_ids.each do |category_id|
+        category_id = category_id.to_i
+        notification_level = category_notifications[category_id]
+
+        if notification_level.blank?
+          category_notifications[category_id] = value
+          category_actions[:create] << category_id
+        elsif notification_level == value
+          category_notifications.delete(category_id)
+        else
+          category_actions[:update] << category_id
+        end
+      end
+
+      tag_names = params["#{key}_tags".to_sym] - ["-1"]
+      tag_ids = Tag.where(name: tag_names).pluck(:id)
+      tag_ids.each do |tag_id|
+        notification_level = tag_notifications[tag_id]
+
+        if notification_level.blank?
+          tag_notifications[tag_id] = value
+          tag_actions[:create] << tag_id
+        elsif notification_level == value
+          tag_notifications.delete(tag_id)
+        else
+          tag_actions[:update] << tag_id
+        end
+      end
+    end
+
+    [category_notifications, tag_notifications, category_actions, tag_actions]
+  end
+
+  def updating_user_count(group, params)
+    category_notifications, tag_notifications = user_default_notifications(group, params)
+
+    return 0 if category_notifications.blank? && tag_notifications.blank?
+
+    group_users = GroupUser.where(group: group)
+
+    if category_notifications.present?
+      group_users = group_users.where(<<~SQL, category_ids: category_notifications.keys)
+        NOT EXISTS (
+          SELECT 1
+          FROM category_users cu
+          WHERE cu.user_id = group_users.user_id
+          AND cu.category_id IN (:category_ids)
+        )
+      SQL
+    end
+
+    if tag_notifications.present?
+      group_users = group_users.where(<<~SQL, tag_ids: tag_notifications.keys)
+        NOT EXISTS (
+          SELECT 1
+          FROM tag_users tu
+          WHERE tu.user_id = group_users.user_id
+          AND tu.tag_id IN (:tag_ids)
+        )
+      SQL
+    end
+
+    group_users.count
+  end
+
+  def update_existing_users(group, params)
+    category_notifications, tag_notifications, category_actions, tag_actions = user_default_notifications(group, params)
+
+    return if category_notifications.blank? && tag_notifications.blank?
+
+    category_actions[:delete] = category_notifications.keys - (category_actions[:create] + category_actions[:update])
+    tag_actions[:delete] = tag_notifications.keys - (tag_actions[:create] + tag_actions[:update])
+
+    if category_actions[:create].present? || tag_actions[:create].present?
+      group.users.select(:id).find_in_batches do |users|
+        category_actions[:create].each do |category_id|
+          category_users = []
+          skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
+          users.each do |user|
+            next if skip_user_ids.include?(user.id)
+            category_users << { category_id: category_id, user_id: user.id, notification_level: category_notifications[category_id] }
+          end
+          CategoryUser.insert_all!(category_users)
+        end
+
+        tag_actions[:create].each do |tag_id|
+          tag_users = []
+          skip_user_ids = TagUser.where(category_id: category_id).pluck(:user_id)
+          users.each do |user|
+            next if skip_user_ids.include?(user.id)
+            tag_users << { tag_id: tag_id, user_id: user.id, notification_level: tag_notifications[tag_id] }
+          end
+          TagUser.insert_all!(tag_users)
+        end
+      end
     end
   end
 end
