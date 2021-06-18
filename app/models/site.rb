@@ -28,16 +28,42 @@ class Site
     UserField.order(:position).all
   end
 
-  def categories
-    @categories ||= begin
+  CATEGORIES_CACHE_KEY = "site_categories"
+
+  def self.clear_cache
+    Discourse.cache.delete(CATEGORIES_CACHE_KEY)
+  end
+
+  def self.all_categories_cache
+    # Categories do not change often so there is no need for us to run the
+    # same query and spend time creating ActiveRecord objects for every requests.
+    #
+    # Do note that any new association added to the eager loading needs a
+    # corresponding ActiveRecord callback to clear the categories cache.
+    Discourse.cache.fetch(CATEGORIES_CACHE_KEY, expires_in: 30.minutes) do
       categories = Category
-        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups)
-        .secured(@guardian)
+        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups, :required_tag_group)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')
         .select('categories.*, t.slug topic_slug')
         .order(:position)
+        .to_a
 
-      categories = categories.to_a
+      ActiveModel::ArraySerializer.new(
+        categories,
+        each_serializer: SiteCategorySerializer
+      ).as_json
+    end
+  end
+
+  def categories
+    @categories ||= begin
+      categories = []
+
+      self.class.all_categories_cache.each do |category|
+        if @guardian.can_see_serialized_category?(category_id: category[:id], read_restricted: category[:read_restricted])
+          categories << OpenStruct.new(category)
+        end
+      end
 
       with_children = Set.new
       categories.each do |c|

@@ -46,6 +46,14 @@ module CategoryGuardian
     nil
   end
 
+  def can_see_serialized_category?(category_id:, read_restricted: true)
+    # Guard to ensure only a boolean is passed in
+    read_restricted = true unless !!read_restricted == read_restricted
+
+    return true if !read_restricted
+    secure_category_ids.include?(category_id)
+  end
+
   def can_see_category?(category)
     return false unless category
     return true if is_admin?
