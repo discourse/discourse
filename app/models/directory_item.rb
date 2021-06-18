@@ -30,10 +30,6 @@ class DirectoryItem < ActiveRecord::Base
     @@plugin_queries << details
   end
 
-  def self.plugin_queries
-    @@plugin_queries
-  end
-
   def self.clear_plugin_queries
     @@plugin_queries = []
   end
@@ -138,7 +134,7 @@ class DirectoryItem < ActiveRecord::Base
               query_args
              )
 
-      plugin_queries.each do |plugin_query|
+      @@plugin_queries.each do |plugin_query|
         DB.exec(plugin_query, query_args)
       end
 

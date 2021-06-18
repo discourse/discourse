@@ -26,14 +26,6 @@ class DirectoryColumn < ActiveRecord::Base
 
   belongs_to :user_field
 
-  def self.add_plugin_directory_column(name)
-    @@plugin_directory_columns << name
-  end
-
-  def self.plugin_directory_columns
-    @@plugin_directory_columns
-  end
-
   def self.clear_plugin_directory_columns
     @@plugin_directory_columns = []
   end
@@ -50,7 +42,7 @@ class DirectoryColumn < ActiveRecord::Base
 
     raise "Error creating plugin directory column '#{attrs[:column_name]}'" unless directory_column&.id
 
-    add_plugin_directory_column(directory_column.name)
+    @@plugin_directory_columns << directory_column.name
     DirectoryItem.add_plugin_query(attrs[:query])
   end
 end
