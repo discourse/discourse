@@ -14,7 +14,7 @@ export default Controller.extend(ModalFunctionality, {
   labelKey: null,
 
   onShow() {
-    ajax("directory-columns.json")
+    ajax("edit-directory-columns.json")
       .then((response) => {
         this.setProperties({
           loading: false,
@@ -35,7 +35,7 @@ export default Controller.extend(ModalFunctionality, {
       ),
     };
 
-    ajax("directory-columns.json", { type: "PUT", data })
+    ajax("edit-directory-columns.json", { type: "PUT", data })
       .then(() => {
         reload();
       })

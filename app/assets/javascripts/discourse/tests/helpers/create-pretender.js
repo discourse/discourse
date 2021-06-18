@@ -938,7 +938,7 @@ export function applyDefaultHandlers(pretender) {
     return [404, { "Content-Type": "application/html" }, ""];
   });
 
-  pretender.get("directory-columns.json", () => {
+  pretender.get("edit-directory-columns.json", () => {
     return response(200, {
       directory_columns: [
         {
@@ -1031,6 +1031,77 @@ export function applyDefaultHandlers(pretender) {
             searchable: true,
             position: 2,
           },
+        },
+      ],
+    });
+  });
+
+  pretender.get("directory-columns.json", () => {
+    return response(200, {
+      directory_columns: [
+        {
+          id: 1,
+          name: "likes_received",
+          type: "automatic",
+          position: 1,
+          icon: "heart",
+          user_field: null,
+        },
+        {
+          id: 2,
+          name: "likes_given",
+          type: "automatic",
+          position: 2,
+          icon: "heart",
+          user_field: null,
+        },
+        {
+          id: 3,
+          name: "topic_count",
+          type: "automatic",
+          position: 3,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 4,
+          name: "post_count",
+          type: "automatic",
+          position: 4,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 5,
+          name: "topics_entered",
+          type: "automatic",
+          position: 5,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 6,
+          name: "posts_read",
+          type: "automatic",
+          position: 6,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 7,
+          name: "days_visited",
+          type: "automatic",
+          position: 7,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 9,
+          name: "Favorite Color",
+          type: "user_field",
+          position: 8,
+          icon: null,
+          user_field_id: 3,
         },
       ],
     });

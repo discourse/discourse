@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
 class DirectoryColumnsController < ApplicationController
-  requires_login
+  requires_login except: [:index]
 
   def index
+    directory_columns = DirectoryColumn.includes(:user_field).where(enabled: true).order(:position)
+    render_json_dump(directory_columns: serialize_data(directory_columns, DirectoryColumnSerializer))
+  end
+
+  def edit_index
     raise Discourse::NotFound unless guardian.is_staff?
 
     ensure_user_fields_have_columns
 
     columns = DirectoryColumn.includes(:user_field).all
-    render_json_dump(directory_columns: serialize_data(columns, DirectoryColumnSerializer))
+    render_json_dump(directory_columns: serialize_data(columns, EditDirectoryColumnSerializer))
   end
 
   def update

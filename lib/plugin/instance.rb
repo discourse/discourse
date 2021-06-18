@@ -50,7 +50,6 @@ class Plugin::Instance
   # Memoized array readers
   [:assets,
    :color_schemes,
-   :directory_columns,
    :before_auth_initializers,
    :initializers,
    :javascripts,
@@ -376,7 +375,10 @@ class Plugin::Instance
 
   def add_directory_column(column_name, query:, icon: nil)
     validate_directory_column_name(column_name)
-    directory_columns << { column_name: column_name, icon: icon, query: query }
+
+    DiscourseEvent.on("before_directory_refresh") do
+      DirectoryColumn.find_or_create_plugin_directory_column(column_name: column_name, icon: icon, query: query)
+    end
   end
 
   def delete_extra_automatic_assets(good_paths)
@@ -427,10 +429,6 @@ class Plugin::Instance
       unless ColorScheme.where(name: c[:name]).exists?
         ColorScheme.create_from_base(name: c[:name], colors: c[:colors])
       end
-    end
-
-    directory_columns.each do |column_attrs|
-      DirectoryColumn.create_plugin_directory_column(column_attrs)
     end
 
     initializers.each do |callback|
@@ -603,7 +601,6 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-
     if @path
       root_dir_name = File.dirname(@path)
 

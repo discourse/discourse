@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class DirectoryColumn < ActiveRecord::Base
+
+  # TODO(2021-06-18): Remove automatic column
+  self.ignored_columns = ["automatic"]
   self.inheritance_column = nil
 
-  # TODO(2021-06-18): Remove
-  self.ignored_columns = ["automatic"]
+  enum type: { automatic: 0, user_field: 1, plugin: 2 }
 
   def self.automatic_column_names
     @automatic_column_names ||= [:likes_received,
@@ -22,7 +24,9 @@ class DirectoryColumn < ActiveRecord::Base
 
   @@plugin_directory_columns = []
 
-  enum type: { automatic: 0, user_field: 1, plugin: 2 }
+  def self.plugin_directory_columns
+    @@plugin_directory_columns
+  end
 
   belongs_to :user_field
 
@@ -30,7 +34,7 @@ class DirectoryColumn < ActiveRecord::Base
     @@plugin_directory_columns = []
   end
 
-  def self.create_plugin_directory_column(attrs)
+  def self.find_or_create_plugin_directory_column(attrs)
     directory_column = find_or_create_by(
       name: attrs[:column_name],
       icon: attrs[:icon],
@@ -40,9 +44,9 @@ class DirectoryColumn < ActiveRecord::Base
       column.enabled = false
     end
 
-    raise "Error creating plugin directory column '#{attrs[:column_name]}'" unless directory_column&.id
-
-    @@plugin_directory_columns << directory_column.name
-    DirectoryItem.add_plugin_query(attrs[:query])
+    unless @@plugin_directory_columns.include?(directory_column.name)
+      @@plugin_directory_columns << directory_column.name
+      DirectoryItem.add_plugin_query(attrs[:query])
+    end
   end
 end

@@ -35,7 +35,7 @@ class DirectoryItem < ActiveRecord::Base
   end
 
   def self.refresh_period!(period_type, force: false)
-
+    DiscourseEvent.trigger("before_directory_refresh")
     Discourse.redis.set("directory_#{period_types[period_type]}", Time.zone.now.to_i)
 
     # Don't calculate it if the user directory is disabled

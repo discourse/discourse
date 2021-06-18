@@ -604,15 +604,37 @@ describe Plugin::Instance do
   describe '#add_directory_column' do
     let!(:plugin) { Plugin::Instance.new }
 
-    after do
+    before do
       DirectoryItem.clear_plugin_queries
+    end
+
+    after do
       DirectoryColumn.clear_plugin_directory_columns
     end
 
-    it 'creates a directory column record' do
-      plugin.add_directory_column('random_c', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
-      plugin.notify_after_initialize
-      expect(DirectoryColumn.find_by(name: 'random_c', icon: 'recycle', enabled: false).present?).to be(true)
+    describe "with valid column name" do
+      let(:column_name) { "random_c" }
+
+      before do
+        DB.exec("ALTER TABLE directory_items ADD COLUMN IF NOT EXISTS #{column_name} integer")
+      end
+
+      after do
+        DB.exec("ALTER TABLE directory_items DROP COLUMN IF EXISTS #{column_name}")
+      end
+
+      it 'creates a directory column record when directory items are refreshed' do
+        plugin.add_directory_column(column_name, query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+        expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false).present?).to be(false)
+
+        DirectoryItem.refresh!
+        expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false).present?).to be(true)
+
+        # add_directory_column runs `DiscourseEvent.on("before_directory_refresh")`. The rails spec helper
+        # ensures that no test will run and change the total number of registrations. The easy solution is to
+        # manually clean up the registration:
+        DiscourseEvent.events.delete("before_directory_refresh")
+      end
     end
 
     it 'errors when the column_name contains invalid characters' do
