@@ -680,11 +680,9 @@ aside.onebox.stackexchange .onebox-body {
   color: var(--primary-med-or-secondary-med);
 }
 
-.onebox.xkcd .onebox-body {
-  img {
-    max-width: 100% !important;
-    float: none !important;
-  }
+aside.onebox.xkcd .onebox-body img {
+  float: none;
+  max-height: unset;
 }
 
 // pdf onebox

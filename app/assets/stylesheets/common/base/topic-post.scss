@@ -195,6 +195,11 @@ $quote-share-maxwidth: 150px;
   sup sup {
     top: 0;
   }
+
+  img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 // add staff color
@@ -202,10 +207,6 @@ $quote-share-maxwidth: 150px;
   .regular > .cooked {
     background-color: var(--highlight-low-or-medium);
     padding: 10px;
-    img:not(.thumbnail) {
-      max-width: 100%;
-      height: auto;
-    }
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
@@ -261,15 +262,6 @@ aside.quote {
   // blockquote is docked within aside for content
   blockquote {
     margin-top: 0;
-  }
-}
-
-blockquote {
-  // due to #image-sizing-hack large images and lightboxes extend past the
-  // limits blockquotes. Since #image-sizing-hack is inline, we need to use
-  // !important here otherwise it won't work.
-  img {
-    max-width: 100% !important;
   }
 }
 
