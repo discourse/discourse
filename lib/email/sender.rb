@@ -98,6 +98,9 @@ module Email
       topic_id  = header_value('X-Discourse-Topic-Id')
       reply_key = set_reply_key(post_id, user_id)
       from_address = @message.from&.first
+      smtp_group_id = from_address.blank? ? nil : Group.where(
+        email_username: from_address, smtp_enabled: true
+      ).pluck_first(:id)
 
       # always set a default Message ID from the host
       @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
@@ -161,20 +164,29 @@ module Email
           list_id = "#{SiteSetting.title} <#{host}>"
         end
 
-        # https://www.ietf.org/rfc/rfc3834.txt
-        @message.header['Precedence'] = 'list'
-        @message.header['List-ID']    = list_id
+        # When we are emailing people from a group inbox, we are having a PM
+        # conversation with them, as a support account would. In this case
+        # mailing list headers do not make sense. It is not like a forum topic
+        # where you may have tens or hundreds of participants -- it is a
+        # conversation between the group and a small handful of people
+        # directly contacting the group, often just one person.
+        if !smtp_group_id
 
-        if topic
-          if SiteSetting.private_email?
-            @message.header['List-Archive'] = "#{Discourse.base_url}#{topic.slugless_url}"
-          else
-            @message.header['List-Archive'] = topic.url
+          # https://www.ietf.org/rfc/rfc3834.txt
+          @message.header['Precedence'] = 'list'
+          @message.header['List-ID']    = list_id
+
+          if topic
+            if SiteSetting.private_email?
+              @message.header['List-Archive'] = "#{Discourse.base_url}#{topic.slugless_url}"
+            else
+              @message.header['List-Archive'] = topic.url
+            end
           end
         end
       end
 
-      if reply_key.present? && @message.header['Reply-To'].to_s =~ /\<([^\>]+)\>/
+      if reply_key.present? && @message.header['Reply-To'].to_s =~ /\<([^\>]+)\>/ && !smtp_group_id
         email = Regexp.last_match[1]
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
@@ -231,9 +243,7 @@ module Email
 
       # Log when a message is being sent from a group SMTP address, so we
       # can debug deliverability issues.
-      if from_address && smtp_group_id = Group.where(email_username: from_address, smtp_enabled: true).pluck_first(:id)
-        email_log.smtp_group_id = smtp_group_id
-      end
+      email_log.smtp_group_id = smtp_group_id
 
       DiscourseEvent.trigger(:before_email_send, @message, @email_type)
 

@@ -366,6 +366,16 @@ describe Email::Sender do
           expect(email_log.user_id).to be_blank
           expect(email_log.smtp_group_id).to eq(group.id)
         end
+
+        it "does not add any of the mailing list headers" do
+          TopicAllowedGroup.create(topic: post.topic, group: group)
+          email_sender.send
+
+          expect(message.header['List-ID']).to eq(nil)
+          expect(message.header['List-Post']).to eq(nil)
+          expect(message.header['List-Archive']).to eq(nil)
+          expect(message.header['Precedence']).to eq(nil)
+        end
       end
     end
 
