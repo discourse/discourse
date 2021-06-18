@@ -14,6 +14,8 @@ import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
 
+const FETCH_VOTERS_COUNT = 25;
+
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
 
@@ -106,14 +108,14 @@ createWidget("discourse-poll-load-more", {
   },
 
   click() {
-    const { state } = this;
+    const { state, attrs } = this;
 
     if (state.loading) {
       return;
     }
 
     state.loading = true;
-    return this.sendWidgetAction("loadMore").finally(
+    return this.sendWidgetAction("fetchVoters", attrs.optionId).finally(
       () => (state.loading = false)
     );
   },
@@ -131,63 +133,18 @@ createWidget("discourse-poll-voters", {
     };
   },
 
-  fetchVoters() {
-    const { attrs, state } = this;
-
-    if (state.loaded === "loading") {
-      return;
-    }
-    state.loaded = "loading";
-
-    return _fetchVoters({
-      post_id: attrs.postId,
-      poll_name: attrs.pollName,
-      option_id: attrs.optionId,
-      page: state.page,
-    }).then((result) => {
-      state.loaded = "loaded";
-      state.page += 1;
-
-      const newVoters =
-        attrs.pollType === "number"
-          ? result.voters
-          : result.voters[attrs.optionId];
-
-      const existingVoters = new Set(
-        state.voters.map((voter) => voter.username)
-      );
-
-      newVoters.forEach((voter) => {
-        if (!existingVoters.has(voter.username)) {
-          existingVoters.add(voter.username);
-          state.voters.push(voter);
-        }
-      });
-
-      this.scheduleRerender();
-    });
-  },
-
-  loadMore() {
-    return this.fetchVoters();
-  },
-
-  html(attrs, state) {
-    if (attrs.voters && state.loaded === "new") {
-      state.voters = attrs.voters;
-    }
-
-    const contents = state.voters.map((user) => {
-      return h("li", [
+  html(attrs) {
+    const contents = attrs.voters.map((user) =>
+      h("li", [
         avatarFor("tiny", {
           username: user.username,
           template: user.avatar_template,
         }),
         " ",
-      ]);
-    });
+      ])
+    );
 
-    if (state.voters.length < attrs.totalVotes) {
+    if (attrs.voters.length < attrs.totalVotes) {
       contents.push(this.attach("discourse-poll-load-more", attrs));
     }
 
@@ -203,14 +160,56 @@ createWidget("discourse-poll-standard-results", {
     return { loaded: false };
   },
 
-  fetchVoters() {
+  fetchVoters(optionId) {
     const { attrs, state } = this;
+
+    if (!state.page) {
+      state.page = {};
+    }
+
+    if (!state.page[optionId]) {
+      state.page[optionId] = 1;
+    }
 
     return _fetchVoters({
       post_id: attrs.post.id,
       poll_name: attrs.poll.get("name"),
+      option_id: optionId,
+      page: state.page[optionId],
+      limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
-      state.voters = result.voters;
+      if (!state.voters[optionId]) {
+        state.voters[optionId] = [];
+      }
+
+      const voters = state.voters[optionId];
+      const newVoters = result.voters[optionId];
+
+      // remove users who changed their vote
+      const newVotersSet = new Set(newVoters.map((voter) => voter.username));
+      Object.keys(state.voters).forEach((otherOptionId) => {
+        if (optionId !== otherOptionId) {
+          state.voters[otherOptionId] = state.voters[otherOptionId].filter(
+            (voter) => !newVotersSet.has(voter.username)
+          );
+        }
+      });
+
+      const votersSet = new Set(voters.map((voter) => voter.username));
+      let count = 0;
+      newVoters.forEach((voter) => {
+        if (!votersSet.has(voter.username)) {
+          voters.push(voter);
+          count++;
+        }
+      });
+
+      // request next page in the future only if a complete set was
+      // returned this time
+      if (count >= FETCH_VOTERS_COUNT) {
+        state.page[optionId]++;
+      }
+
       this.scheduleRerender();
     });
   },
@@ -295,14 +294,42 @@ createWidget("discourse-poll-number-results", {
     return { loaded: false };
   },
 
-  fetchVoters() {
+  fetchVoters(optionId) {
     const { attrs, state } = this;
+
+    if (!state.page) {
+      state.page = 1;
+    }
 
     return _fetchVoters({
       post_id: attrs.post.id,
       poll_name: attrs.poll.get("name"),
+      option_id: optionId,
+      page: state.page,
+      limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
-      state.voters = result.voters;
+      if (!state.voters) {
+        state.voters = [];
+      }
+
+      const voters = state.voters;
+      const newVoters = result.voters;
+
+      const votersSet = new Set(voters.map((voter) => voter.username));
+      let count = 0;
+      newVoters.forEach((voter) => {
+        if (!votersSet.has(voter.username)) {
+          voters.push(voter);
+          count++;
+        }
+      });
+
+      // request next page in the future only if a complete set was
+      // returned this time
+      if (count >= FETCH_VOTERS_COUNT) {
+        state.page++;
+      }
+
       this.scheduleRerender();
     });
   },
