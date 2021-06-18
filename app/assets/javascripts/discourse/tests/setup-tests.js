@@ -229,12 +229,6 @@ function setupTestsCommon(application, container, config) {
     });
 
     PreloadStore.reset();
-    PreloadStore.store(
-      "directoryColumns",
-      JSON.parse(
-        '[{"name":"likes_given","type":"automatic","icon":"heart","user_field_id":null},{"name":"posts_read","type":"automatic","icon":null,"user_field_id":null},{"name":"likes_received","type":"automatic","icon":"heart","user_field_id":null},{"name":"topic_count","type":"automatic","icon":null,"user_field_id":null},{"name":"post_count","type":"automatic","icon":null,"user_field_id":null},{"name":"topics_entered","type":"automatic","icon":null,"user_field_id":null},{"name":"days_visited","type":"automatic","icon":null,"user_field_id":null},{"name":"Favorite Color","type":"user_field","icon":null,"user_field_id":3}]'
-      )
-    );
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
