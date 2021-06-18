@@ -4026,6 +4026,8 @@ en:
               write: Create a new topic or post to an existing one.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
+            posts:
+              edit: Edit any post or a specific one.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
