@@ -45,7 +45,9 @@ export default Component.extend({
     this.set("recentEmojis", this.emojiStore.favorites);
     this.set("selectedDiversity", this.emojiStore.diversity);
 
-    this._sectionObserver = this._setupSectionObserver();
+    if ("IntersectionObserver" in window) {
+      this._sectionObserver = this._setupSectionObserver();
+    }
   },
 
   didInsertElement() {
