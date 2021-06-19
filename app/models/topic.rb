@@ -901,7 +901,8 @@ class Topic < ActiveRecord::Base
                               silent: opts[:silent],
                               skip_validations: true,
                               custom_fields: opts[:custom_fields],
-                              import_mode: opts[:import_mode])
+                              import_mode: opts[:import_mode],
+                              created_at: opts[:created_at])
 
     if (new_post = creator.create) && new_post.present?
       increment!(:moderator_posts_count) if new_post.persisted?

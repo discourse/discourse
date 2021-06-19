@@ -400,6 +400,35 @@ class ImportScripts::Base
     UserEmail.where("lower(email) = ?", email.downcase).first&.user || User.where(username: username).first
   end
 
+  def create_group_members(results, opts = {})
+    created = 0
+    total = opts[:total] || results.count
+    group = nil
+    group_member_ids = []
+
+    results.each_with_index do |result, index|
+      member = yield(result)
+
+      if !group || group.id != member[:group_id]
+        if group_member_ids.any?
+          group.bulk_add(group_member_ids)
+          group_member_ids = []
+        end
+
+        group = Group.find(member[:group_id])
+      end
+
+      group_member_ids << member[:user_id]
+      group.bulk_add(group_member_ids) if index == results.size - 1 && group_member_ids.any?
+
+      created += 1
+
+      print_status(created + (opts[:offset] || 0), total, get_start_time("group_members"))
+    end
+
+    created
+  end
+
   def created_category(category)
     # override if needed
   end
