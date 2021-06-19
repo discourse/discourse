@@ -211,8 +211,9 @@ module Stylesheet
       contents = +""
 
       if font[:variants].present?
+        fonts_dir = UrlHelper.absolute("#{Discourse.base_path}/fonts")
         font[:variants].each do |variant|
-          src = variant[:src] ? variant[:src] : "asset-url(\"/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
+          src = variant[:src] ? variant[:src] : "url(\"#{fonts_dir}/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
           contents << <<~EOF
             @font-face {
               font-family: #{font[:name]};
