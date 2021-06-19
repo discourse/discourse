@@ -95,6 +95,27 @@ export default class PostCooked {
       return;
     }
 
+    // find the best <a> element in each onebox and display link counts only
+    // for that one (the best element is the most significant one to the
+    // viewer)
+    const bestElements = [];
+    $html[0].querySelectorAll("aside.onebox").forEach((onebox) => {
+      // look in headings first
+      for (let i = 1; i <= 6; ++i) {
+        const hLinks = onebox.querySelectorAll(`h${i} a[href]`);
+        if (hLinks.length > 0) {
+          bestElements[onebox] = hLinks[0];
+          return;
+        }
+      }
+
+      // use the header otherwise
+      const hLinks = onebox.querySelectorAll("header a[href]");
+      if (hLinks.length > 0) {
+        bestElements[onebox] = hLinks[0];
+      }
+    });
+
     linkCounts.forEach((lc) => {
       if (!lc.clicks || lc.clicks < 1) {
         return;
@@ -118,12 +139,18 @@ export default class PostCooked {
 
         // don't display badge counts on category badge & oneboxes (unless when explicitly stated)
         if (valid && isValidLink($link)) {
-          const title = I18n.t("topic_map.clicks", { count: lc.clicks });
-          $link.append(
-            ` <span class='badge badge-notification clicks' title='${title}'>${number(
-              lc.clicks
-            )}</span>`
-          );
+          const $onebox = $link.closest(".onebox");
+          if (
+            $onebox.length === 0 ||
+            (bestElements[$onebox[0]] && bestElements[$onebox[0]] === $link[0])
+          ) {
+            const title = I18n.t("topic_map.clicks", { count: lc.clicks });
+            $link.append(
+              ` <span class='badge badge-notification clicks' title='${title}'>${number(
+                lc.clicks
+              )}</span>`
+            );
+          }
         }
       });
     });
