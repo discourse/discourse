@@ -109,10 +109,6 @@ export default Component.extend({
         );
       }
 
-      emojiPicker
-        .querySelectorAll(".emojis-container .section .section-header")
-        .forEach((p) => this._sectionObserver.observe(p));
-
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
       later(() => {
@@ -125,6 +121,12 @@ export default Component.extend({
           ) {
             const filter = emojiPicker.querySelector("input.filter");
             filter && filter.focus();
+
+            if (this._sectionObserver) {
+              emojiPicker
+                .querySelectorAll(".emojis-container .section .section-header")
+                .forEach((p) => this._sectionObserver.observe(p));
+            }
           }
 
           if (this.selectedDiversity !== 0) {
