@@ -220,23 +220,22 @@ export default Component.extend({
 
   @action
   onFilter(event) {
-    const emojiPickerArea = document.querySelector(".emoji-picker-emoji-area");
-    const emojisContainer = emojiPickerArea.querySelector(".emojis-container");
-    const results = emojiPickerArea.querySelector(".results");
+    const emojiPicker = document.querySelector(".emoji-picker");
+    const results = document.querySelector(".emoji-picker-emoji-area .results");
     results.innerHTML = "";
 
     if (event.target.value) {
       results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
-        maxResults: 10,
+        maxResults: 20,
         diversity: this.emojiStore.diversity,
       })
         .map(this._replaceEmoji)
         .join("");
 
-      emojisContainer.style.visibility = "hidden";
+      emojiPicker.classList.add("has-filter");
       results.scrollIntoView();
     } else {
-      emojisContainer.style.visibility = "visible";
+      emojiPicker.classList.remove("has-filter");
     }
   },
 
