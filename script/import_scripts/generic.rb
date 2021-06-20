@@ -366,7 +366,8 @@ class ImportScripts::Generic < ImportScripts::Base
       post_type: post_type,
       action_code: "split_topic",
       import_mode: true,
-      created_at: to_datetime(row["created_at"])
+      created_at: to_datetime(row["created_at"]),
+      custom_fields: { import_id: row["id"] }
     )
   end
 
