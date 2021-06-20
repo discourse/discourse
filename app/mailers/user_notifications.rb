@@ -492,6 +492,7 @@ class UserNotifications < ActionMailer::Base
     from_address = nil
     delivery_method_options = nil
     use_from_address_for_reply_to = false
+    using_group_smtp = false
 
     template = +"user_notifications.user_#{notification_type}"
     if post.topic.private_message?
@@ -562,6 +563,7 @@ class UserNotifications < ActionMailer::Base
       # will forward the email back into Discourse and process/link it correctly.
       use_from_address_for_reply_to = true
       from_address = group.email_username
+      using_group_smtp = true
     end
 
     if post.topic.private_message?
@@ -711,7 +713,8 @@ class UserNotifications < ActionMailer::Base
       locale: locale,
       delivery_method_options: delivery_method_options,
       use_from_address_for_reply_to: use_from_address_for_reply_to,
-      from: from_address
+      from: from_address,
+      add_unsubscribe_link: !using_group_smtp
     }
 
     unless translation_override_exists

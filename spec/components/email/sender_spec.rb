@@ -375,6 +375,7 @@ describe Email::Sender do
           expect(message.header['List-Post']).to eq(nil)
           expect(message.header['List-Archive']).to eq(nil)
           expect(message.header['Precedence']).to eq(nil)
+          expect(message.header['List-Unsubscribe']).to eq(nil)
         end
       end
     end
