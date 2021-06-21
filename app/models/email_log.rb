@@ -39,7 +39,7 @@ class EmailLog < ActiveRecord::Base
   end
 
   def topic
-    @topic ||= self.topic_id.present? ? Topic.find(self.topic_id) : self.post.topic
+    @topic ||= self.topic_id.present? ? Topic.find_by(id: self.topic_id) : self.post&.topic
   end
 
   def self.unique_email_per_post(post, user)
@@ -124,6 +124,6 @@ end
 #  index_email_logs_on_created_at  (created_at)
 #  index_email_logs_on_message_id  (message_id)
 #  index_email_logs_on_post_id     (post_id)
-#  index_email_logs_on_topic_id    (topic_id)
+#  index_email_logs_on_topic_id    (topic_id) WHERE (topic_id IS NOT NULL)
 #  index_email_logs_on_user_id     (user_id)
 #
