@@ -38,6 +38,14 @@ describe Stylesheet::Manager do
       t.add_relative_theme!(:child, child_theme)
     }}
 
+    it "generates the right links for non-theme targets" do
+      manager = manager(theme.id)
+
+      hrefs = manager.stylesheet_details(:desktop, 'all')
+
+      expect(hrefs.length).to eq(1)
+    end
+
     it 'can correctly compile theme css' do
       manager = manager(theme.id)
       old_links = manager.stylesheet_link_tag(:desktop_theme, 'all')
@@ -396,13 +404,14 @@ describe Stylesheet::Manager do
   describe 'color_scheme_stylesheets' do
     it "returns something by default" do
       link = manager.color_scheme_stylesheet_link_tag
-      expect(link).not_to eq("")
+      expect(link).to include("color_definitions_base")
     end
 
     it "does not crash when no default theme is set" do
       SiteSetting.default_theme_id = -1
       link = manager.color_scheme_stylesheet_link_tag
-      expect(link).not_to eq("")
+
+      expect(link).to include("color_definitions_base")
     end
 
     it "loads base scheme when defined scheme id is missing" do

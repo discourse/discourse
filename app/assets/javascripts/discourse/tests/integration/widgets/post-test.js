@@ -47,6 +47,35 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
   });
 
+  componentTest("post - onebox links", {
+    template: hbs`{{mount-widget widget="post-contents" args=args}}`,
+    beforeEach() {
+      this.set("args", {
+        cooked: `
+        <p><a href="https://example.com">Other URL</a></p>
+
+        <aside class="onebox twitterstatus" data-onebox-src="https://twitter.com/codinghorror">
+          <header class="source">
+             <a href="https://twitter.com/codinghorror" target="_blank" rel="noopener">twitter.com</a>
+          </header>
+          <article class="onebox-body">
+             <h4><a href="https://twitter.com/codinghorror" target="_blank" rel="noopener">Jeff Atwood</a></h4>
+             <div class="twitter-screen-name"><a href="https://twitter.com/codinghorror" target="_blank" rel="noopener">@codinghorror</a></div>
+          </article>
+        </aside>`,
+        linkCounts: [
+          { url: "https://example.com", clicks: 1 },
+          { url: "https://twitter.com/codinghorror", clicks: 2 },
+        ],
+      });
+    },
+    async test(assert) {
+      assert.equal(queryAll(".badge.clicks").length, 2);
+      assert.equal(queryAll(".badge.clicks:nth(0)").text(), "1");
+      assert.equal(queryAll(".badge.clicks:nth(1)").text(), "2");
+    },
+  });
+
   componentTest("wiki", {
     template: hbs`
       {{mount-widget widget="post" args=args showHistory=showHistory}}

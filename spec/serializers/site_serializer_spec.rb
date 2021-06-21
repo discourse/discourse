@@ -10,34 +10,13 @@ describe SiteSerializer do
     category.custom_fields["enable_marketplace"] = true
     category.save_custom_fields
 
-    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    c1 = serialized[:categories].find { |c| c[:id] == category.id }
-
-    expect(c1[:preloaded_custom_fields]).to eq(nil)
+    data = MultiJson.dump(described_class.new(Site.new(guardian), scope: guardian, root: false))
+    expect(data).not_to include("enable_marketplace")
 
     Site.preloaded_category_custom_fields << "enable_marketplace"
 
-    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    c1 = serialized[:categories].find { |c| c[:id] == category.id }
-
-    expect(c1[:preloaded_custom_fields]["enable_marketplace"]).to eq("t")
-  end
-
-  it "includes category tags" do
-    tag = Fabricate(:tag)
-    tag_group = Fabricate(:tag_group)
-    tag_group_2 = Fabricate(:tag_group)
-
-    category.tags << tag
-    category.tag_groups << tag_group
-    category.update!(required_tag_group: tag_group_2)
-
-    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    c1 = serialized[:categories].find { |c| c[:id] == category.id }
-
-    expect(c1[:allowed_tags]).to contain_exactly(tag.name)
-    expect(c1[:allowed_tag_groups]).to contain_exactly(tag_group.name)
-    expect(c1[:required_tag_group_name]).to eq(tag_group_2.name)
+    data = MultiJson.dump(described_class.new(Site.new(guardian), scope: guardian, root: false))
+    expect(data).to include("enable_marketplace")
   end
 
   it "returns correct notification level for categories" do

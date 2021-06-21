@@ -201,8 +201,9 @@ class Stylesheet::Manager
     @@lock.synchronize do
       stylesheets = []
       stale_theme_ids = []
+      theme_ids = target.to_s =~ THEME_REGEX ? @theme_ids : [@theme_id]
 
-      @theme_ids.each do |theme_id|
+      theme_ids.each do |theme_id|
         cache_key = "path_#{target}_#{theme_id}_#{current_hostname}"
 
         if href = cache[cache_key]
@@ -269,23 +270,19 @@ class Stylesheet::Manager
 
     theme = get_theme(theme_id)
 
-    if theme
-      builder = Builder.new(
-        target: target,
-        theme: get_theme(theme_id),
-        color_scheme: color_scheme,
-        manager: self
-      )
+    builder = Builder.new(
+      target: target,
+      theme: get_theme(theme_id),
+      color_scheme: color_scheme,
+      manager: self
+    )
 
-      builder.compile unless File.exists?(builder.stylesheet_fullpath)
+    builder.compile unless File.exists?(builder.stylesheet_fullpath)
 
-      href = builder.stylesheet_path(current_hostname)
-      stylesheet[:new_href] = href
-      cache.defer_set(cache_key, stylesheet.freeze)
-      stylesheet
-    else
-      {}
-    end
+    href = builder.stylesheet_path(current_hostname)
+    stylesheet[:new_href] = href
+    cache.defer_set(cache_key, stylesheet.freeze)
+    stylesheet
   end
 
   def color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all')
