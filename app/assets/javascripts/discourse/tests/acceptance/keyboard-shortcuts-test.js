@@ -81,11 +81,19 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   });
 
   test("dismiss unread from top and bottom button", async function (assert) {
+    // visit root first so topic list starts fresh
+    await visit("/");
     await visit("/unread");
-    assert.ok(exists("#dismiss-topics-top"));
+    assert.ok(
+      exists("#dismiss-topics-top"),
+      "dismiss unread top button is present"
+    );
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
-    assert.ok(exists("#dismiss-read-confirm"));
+    assert.ok(
+      exists("#dismiss-read-confirm"),
+      "confirmation modal to dismiss unread is present"
+    );
     assert.equal(
       queryAll(".modal-body").text().trim(),
       I18n.t("topics.bulk.also_dismiss_topics")
@@ -102,15 +110,24 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     // visit root first so topic list starts fresh
     await visit("/");
     await visit("/unread");
-    assert.notOk(exists("#dismiss-topics-top"));
+    assert.notOk(
+      exists("#dismiss-topics-top"),
+      "dismiss unread top button is hidden"
+    );
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
-    assert.ok(exists("#dismiss-read-confirm"));
+    assert.ok(
+      exists("#dismiss-read-confirm"),
+      "confirmation modal to dismiss unread is present"
+    );
     assert.equal(
       queryAll(".modal-body").text().trim(),
       "Stop tracking these topics so they never show up as unread for me again"
     );
-    await click("#dismiss-read-confirm");
+    await click(
+      "#dismiss-read-confirm",
+      "confirmation modal to dismiss unread is present"
+    );
     assert.equal(markReadCalled, 2);
 
     // restore the original topic list
@@ -118,8 +135,10 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   });
 
   test("dismiss new from top and bottom button", async function (assert) {
+    // visit root first so topic list starts fresh
+    await visit("/");
     await visit("/new");
-    assert.ok(exists("#dismiss-new-top"));
+    assert.ok(exists("#dismiss-new-top"), "dismiss new top button is present");
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
     assert.equal(resetNewCalled, 1);
@@ -133,7 +152,10 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     // visit root first so topic list starts fresh
     await visit("/");
     await visit("/new");
-    assert.notOk(exists("#dismiss-new-top"));
+    assert.notOk(
+      exists("#dismiss-new-top"),
+      "dismiss new top button has been hidden"
+    );
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
     assert.equal(resetNewCalled, 2);
@@ -143,9 +165,14 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   });
 
   test("click event not fired twice when both dismiss buttons are present", async function (assert) {
+    // visit root first so topic list starts fresh
+    await visit("/");
     await visit("/new");
-    assert.ok(exists("#dismiss-new-top"));
-    assert.ok(exists("#dismiss-new-bottom"));
+    assert.ok(exists("#dismiss-new-top"), "dismiss new top button is present");
+    assert.ok(
+      exists("#dismiss-new-bottom"),
+      "dismiss new bottom button is present"
+    );
 
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "r".charCodeAt(0));
