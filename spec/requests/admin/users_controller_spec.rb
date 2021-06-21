@@ -635,7 +635,7 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(403)
         json = response.parsed_body
         expect(json['deleted']).to eq(false)
-        expect(json['message']).to eq(I18n.t("user.cannot_delete_has_posts", username: delete_me.username, post_count: post_count))
+        expect(json['message']).to eq(I18n.t("user.cannot_delete_has_posts", username: delete_me.username, count: post_count))
       end
 
       it "doesn't return an error if delete_posts == true" do
