@@ -3555,7 +3555,7 @@ en:
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
         help: "%{shortcut} Open keyboard help"
-        dismiss_new_posts: "%{shortcut} Dismiss New/Posts"
+        dismiss_new: "%{shortcut} Dismiss New"
         dismiss_topics: "%{shortcut} Dismiss Topics"
         log_out: "%{shortcut} Log Out"
       composing:
