@@ -8,25 +8,26 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | bookmark", function (hooks) {
   setupRenderingTest(hooks);
 
-  const template = `{{bookmark
+  const template = hbs`{{bookmark
         model=model
         afterSave=afterSave
         afterDelete=afterDelete
         onCloseWithoutSaving=onCloseWithoutSaving
-        registerOnCloseHandler=(action "registerOnCloseHandler")
-        closeModal=(action "closeModal")}}`;
+        registerOnCloseHandler=registerOnCloseHandler
+        closeModal=closeModal}}`;
 
   hooks.beforeEach(function () {
-    this.actions.registerOnCloseHandler = () => {};
-    this.actions.closeModal = () => {};
     this.setProperties({
       model: {},
+      closeModal: () => {},
       afterSave: () => {},
       afterDelete: () => {},
+      registerOnCloseHandler: () => {},
       onCloseWithoutSaving: () => {},
     });
   });

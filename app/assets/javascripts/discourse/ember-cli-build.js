@@ -36,6 +36,9 @@ module.exports = function (defaults) {
   app.import(vendorJs + "jquery.fileupload.js");
   app.import(vendorJs + "jquery.autoellipsis-1.0.10.js");
   app.import(vendorJs + "show-html.js");
+  app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
+    type: "test",
+  });
 
   let adminVendor = funnel(vendorJs, {
     files: ["resumable.js"],

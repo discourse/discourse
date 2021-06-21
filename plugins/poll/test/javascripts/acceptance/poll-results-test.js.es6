@@ -2,7 +2,9 @@ import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Poll results", function (needs) {
   needs.user();
