@@ -1119,6 +1119,7 @@ describe PostRevisor do
       context "secure media uploads" do
         let!(:image5) { Fabricate(:secure_upload) }
         before do
+          Jobs.run_immediately!
           setup_s3
           SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
           SiteSetting.secure_media = true
