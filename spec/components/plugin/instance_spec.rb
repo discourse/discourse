@@ -625,10 +625,10 @@ describe Plugin::Instance do
 
       it 'creates a directory column record when directory items are refreshed' do
         plugin.add_directory_column(column_name, query: "SELECT COUNT(*) FROM users", icon: 'recycle')
-        expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false).present?).to be(false)
+        expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false)).not_to be_present
 
         DirectoryItem.refresh!
-        expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false).present?).to be(true)
+        expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false)).to be_present
 
         # add_directory_column runs `DiscourseEvent.on("before_directory_refresh")`. The rails spec helper
         # ensures that no test will run and change the total number of registrations. The easy solution is to
