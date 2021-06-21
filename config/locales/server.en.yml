@@ -111,7 +111,7 @@ en:
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       no_subject: "(no subject)"
       no_body: "(no body)"
-      missing_attachment: "(Attachment %{filename} is missing) ago."
+      missing_attachment: "(Attachment %{filename} is missing)"
       continuing_old_discussion:
         one: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} day ago."
         other: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} days ago."
