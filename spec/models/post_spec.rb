@@ -1481,6 +1481,8 @@ describe Post do
       end
 
       before do
+        Jobs.run_immediately!
+
         setup_s3
         SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
         SiteSetting.secure_media = true
