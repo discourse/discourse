@@ -1309,11 +1309,7 @@ describe GroupsController do
         end
 
         it 'display error when try to add to many users at once' do
-          begin
-            old_constant = GroupsController.const_get("ADD_MEMBERS_LIMIT")
-            GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
-            GroupsController.const_set("ADD_MEMBERS_LIMIT", 1)
-
+          stub_const(GroupsController, "ADD_MEMBERS_LIMIT", 1) do
             expect do
               put "/groups/#{group.id}/members.json",
                 params: { user_emails: [user1.email, user2.email].join(",") }
@@ -1325,9 +1321,6 @@ describe GroupsController do
               "groups.errors.adding_too_many_users",
               count: 1
             ))
-          ensure
-            GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
-            GroupsController.const_set("ADD_MEMBERS_LIMIT", old_constant)
           end
         end
       end

@@ -802,19 +802,12 @@ describe TopicView do
 
     describe 'for mega topics' do
       it 'should return the right columns' do
-        begin
-          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
-          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
-
+        stub_const(TopicView, "MEGA_TOPIC_POSTS_COUNT", 2) do
           expect(topic_view.filtered_post_stream).to eq([
             post.id,
             post2.id,
             post3.id
           ])
-        ensure
-          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
         end
       end
     end
