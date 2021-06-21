@@ -569,6 +569,13 @@ Report.reopenClass({
           !date.isSame(currentStart) &&
           !date.isBetween(currentStart, currentEnd)
         ) {
+          if (model.average) {
+            const days = currentEnd.diff(currentStart, "day") + 1; // 1 to include start
+            transformedData[currentIndex].y = parseFloat(
+              (transformedData[currentIndex].y / days).toFixed(2)
+            );
+          }
+
           currentIndex += 1;
           currentStart = currentStart.add(1, kind).startOf(isoKind);
           currentEnd = currentEnd.add(1, kind).endOf(isoKind);
