@@ -111,7 +111,10 @@ en:
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       no_subject: "(no subject)"
       no_body: "(no body)"
-      missing_attachment: "(Attachment %{filename} is missing)"
+      missing_attachment: "(Attachment %{filename} is missing) ago."
+      continuing_old_discussion:
+        one: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} day ago."
+        other: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} days ago."
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
