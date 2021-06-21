@@ -201,8 +201,9 @@ class Stylesheet::Manager
     @@lock.synchronize do
       stylesheets = []
       stale_theme_ids = []
+      theme_ids = target.to_s =~ THEME_REGEX ? @theme_ids : [@theme_id]
 
-      @theme_ids.each do |theme_id|
+      theme_ids.each do |theme_id|
         cache_key = "path_#{target}_#{theme_id}_#{current_hostname}"
 
         if href = cache[cache_key]
