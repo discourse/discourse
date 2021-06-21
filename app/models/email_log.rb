@@ -89,11 +89,11 @@ class EmailLog < ActiveRecord::Base
 
   def cc_users
     return [] if !self.cc_user_ids
-    User.where(id: self.cc_user_ids)
+    @cc_users ||= User.where(id: self.cc_user_ids)
   end
 
   def cc_addresses_split
-    self.cc_addresses&.split(";") || []
+    @cc_addresses_split ||= self.cc_addresses&.split(";") || []
   end
 end
 
