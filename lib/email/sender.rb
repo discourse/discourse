@@ -249,12 +249,14 @@ module Email
 
       # Log when a message is being sent from a group SMTP address, so we
       # can debug deliverability issues.
-      email_log.smtp_group_id = smtp_group_id
+      if smtp_group_id
+        email_log.smtp_group_id = smtp_group_id
 
-      # Store contents of all outgoing emails for greater visibility. Not
-      # really required by default, but a good idea to turn on for SMTP
-      # and IMAP sending.
-      if SiteSetting.enable_raw_outbound_email_logging
+        # Store contents of all outgoing emails using group SMTP
+        # for greater visibility and debugging. If the size of this
+        # gets out of hand, we should look into a group-level setting
+        # to enable this; size should be kept in check by regular purging
+        # of EmailLog though.
         email_log.raw = Email::Cleaner.new(@message).execute
       end
 

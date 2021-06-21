@@ -339,12 +339,6 @@ describe Email::Sender do
         expect(email_log.raw).to eq(nil)
       end
 
-      it "logs raw of the email if enable_raw_outbound_email_logging" do
-        SiteSetting.enable_raw_outbound_email_logging = true
-        email_sender.send
-        expect(email_log.raw).to include("hello")
-      end
-
       context 'when the email is sent using group SMTP credentials' do
         let(:reply) { Fabricate(:post, topic: post.topic, reply_to_user: post.user, reply_to_post_number: post.post_number) }
         let(:notification) { Fabricate(:posted_notification, user: post.user, post: reply) }
@@ -362,7 +356,7 @@ describe Email::Sender do
           SiteSetting.enable_smtp = true
         end
 
-        it 'adds the group id to the email log' do
+        it 'adds the group id and raw content to the email log' do
           TopicAllowedGroup.create(topic: post.topic, group: group)
 
           email_sender.send
@@ -372,6 +366,7 @@ describe Email::Sender do
           expect(email_log.to_address).to eq(post.user.email)
           expect(email_log.user_id).to be_blank
           expect(email_log.smtp_group_id).to eq(group.id)
+          expect(email_log.raw).to include("Hello world")
         end
 
         it "does not add any of the mailing list headers" do

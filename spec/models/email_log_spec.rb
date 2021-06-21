@@ -111,7 +111,7 @@ describe EmailLog do
     end
   end
 
-  describe "#cc" do
+  describe "cc addresses handling" do
     let!(:email_log) { Fabricate(:email_log, user: user) }
 
     describe "#cc_addresses_split" do
