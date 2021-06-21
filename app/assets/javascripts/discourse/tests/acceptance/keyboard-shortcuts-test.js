@@ -103,7 +103,11 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       I18n.t("topics.bulk.also_dismiss_topics")
     );
     await click("#dismiss-read-confirm");
-    assert.equal(markReadCalled, 1);
+    assert.equal(
+      markReadCalled,
+      1,
+      "mark read has been called on the backend once"
+    );
 
     // we get rid of all but one topic so the top dismiss button doesn't
     // show up, as it only appears if there are too many topics pushing
@@ -128,11 +132,13 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       query(".modal-body").innerText,
       "Stop tracking these topics so they never show up as unread for me again"
     );
-    await click(
-      "#dismiss-read-confirm",
-      "confirmation modal to dismiss unread is present"
+
+    await click("#dismiss-read-confirm");
+    assert.equal(
+      markReadCalled,
+      2,
+      "mark read has been called on the backend twice"
     );
-    assert.equal(markReadCalled, 2);
 
     // restore the original topic list
     topicList.topic_list.topics = originalTopics;
