@@ -59,13 +59,11 @@ class UploadCreator
           clean_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
-          downsize!        if should_downsize?
-
-          return @upload   if is_still_too_big?
-
           fix_orientation! if should_fix_orientation?
           crop!            if should_crop?
           optimize!        if should_optimize?
+          downsize!        if should_downsize?
+          return @upload   if is_still_too_big?
         end
 
         # conversion may have switched the type
