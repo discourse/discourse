@@ -92,6 +92,11 @@ module Email
         user_id: user_id
       )
 
+      if cc_addresses.any?
+        email_log.cc_addresses = cc_addresses.join(";")
+        email_log.cc_user_ids = User.with_email(cc_addresses).pluck(:id)
+      end
+
       host = Email::Sender.host_for(Discourse.base_url)
 
       post_id   = header_value('X-Discourse-Post-Id')
@@ -201,6 +206,7 @@ module Email
       end
 
       email_log.post_id = post_id if post_id.present?
+      email_log.topic_id = topic_id if topic_id.present?
 
       # Remove headers we don't need anymore
       @message.header['X-Discourse-Topic-Id'] = nil if topic_id.present?
@@ -243,7 +249,16 @@ module Email
 
       # Log when a message is being sent from a group SMTP address, so we
       # can debug deliverability issues.
-      email_log.smtp_group_id = smtp_group_id
+      if smtp_group_id
+        email_log.smtp_group_id = smtp_group_id
+
+        # Store contents of all outgoing emails using group SMTP
+        # for greater visibility and debugging. If the size of this
+        # gets out of hand, we should look into a group-level setting
+        # to enable this; size should be kept in check by regular purging
+        # of EmailLog though.
+        email_log.raw = Email::Cleaner.new(@message).execute
+      end
 
       DiscourseEvent.trigger(:before_email_send, @message, @email_type)
 
@@ -267,6 +282,12 @@ module Email
         to = @message.try(:to)
         to = to.first if Array === to
         to.presence || "no_email_found"
+      end
+    end
+
+    def cc_addresses
+      @cc_addresses ||= begin
+        @message.try(:cc) || []
       end
     end
 
