@@ -110,4 +110,32 @@ describe EmailLog do
       expect(EmailLog.find(email_log.id).bounce_key).to eq(hex)
     end
   end
+
+  describe "#cc" do
+    let!(:email_log) { Fabricate(:email_log, user: user) }
+
+    describe "#cc_addresses_split" do
+      it "returns empty array if there are no cc addresses" do
+        expect(email_log.cc_addresses_split).to eq([])
+      end
+
+      it "returns array of cc addresses if there are any" do
+        email_log.update(cc_addresses: "test@test.com;test@test2.com")
+        expect(email_log.cc_addresses_split).to eq(["test@test.com", "test@test2.com"])
+      end
+    end
+
+    describe "#cc_users" do
+      it "returns empty array if there are no cc users" do
+        expect(email_log.cc_users).to eq([])
+      end
+
+      it "returns array of users if cc_user_ids is present" do
+        cc_user = Fabricate(:user, email: "test@test.com")
+        cc_user2 = Fabricate(:user, email: "test@test2.com")
+        email_log.update(cc_addresses: "test@test.com;test@test2.com", cc_user_ids: [cc_user.id, cc_user2.id])
+        expect(email_log.cc_users).to match_array([cc_user, cc_user2])
+      end
+    end
+  end
 end

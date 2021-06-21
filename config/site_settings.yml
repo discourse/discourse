@@ -1216,6 +1216,9 @@ email:
     client: true
     default: true
     hidden: true
+  enable_raw_outbound_email_logging:
+    default: false
+    hidden: true
 
 files:
   max_image_size_kb:
