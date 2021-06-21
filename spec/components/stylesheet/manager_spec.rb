@@ -38,6 +38,14 @@ describe Stylesheet::Manager do
       t.add_relative_theme!(:child, child_theme)
     }}
 
+    it "generates the right links for non-theme targets" do
+      manager = manager(theme.id)
+
+      hrefs = manager.stylesheet_details(:desktop, 'all')
+
+      expect(hrefs.length).to eq(1)
+    end
+
     it 'can correctly compile theme css' do
       manager = manager(theme.id)
       old_links = manager.stylesheet_link_tag(:desktop_theme, 'all')
