@@ -341,7 +341,7 @@ acceptance(
 
 //     needs.pretender((server, helper) => {
 //       server.post("/groups/47/test_email_settings", () => {
-//         return helper.response(422, {
+//         return helper.response(400, {
 //           success: false,
 //           errors: [
 //             "There was an issue with the SMTP credentials provided, check the username and password and try again.",
