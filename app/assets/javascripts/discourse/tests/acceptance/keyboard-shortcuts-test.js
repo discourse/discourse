@@ -1,7 +1,11 @@
 import { currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "I18n";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { test } from "qunit";
 
@@ -87,7 +91,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
     assert.ok(exists("#dismiss-read-confirm"));
     assert.equal(
-      queryAll(".modal-body").text().trim(),
+      query(".modal-body").innerText,
       I18n.t("topics.bulk.also_dismiss_topics")
     );
     await click("#dismiss-read-confirm");
@@ -107,7 +111,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
     assert.ok(exists("#dismiss-read-confirm"));
     assert.equal(
-      queryAll(".modal-body").text().trim(),
+      query(".modal-body").innerText,
       "Stop tracking these topics so they never show up as unread for me again"
     );
     await click("#dismiss-read-confirm");
