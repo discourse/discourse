@@ -61,6 +61,13 @@ describe Stylesheet::Importer do
       expect(compile_css("desktop"))
         .to include(":root{--font-family: #{base_font[:stack]}}")
         .and include(":root{--heading-font-family: #{heading_font[:stack]}}")
+
+      set_cdn_url("http://cdn.localhost")
+
+      # uses CDN and includes cache-breaking param
+      expect(compile_css("mobile"))
+        .to include("http://cdn.localhost/fonts/#{base_font[:variants][0][:filename]}?v=#{DiscourseFonts::VERSION}")
+        .and include("http://cdn.localhost/fonts/#{heading_font[:variants][0][:filename]}?v=#{DiscourseFonts::VERSION}")
     end
 
     it "includes all fonts in wizard" do
