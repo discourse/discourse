@@ -494,6 +494,7 @@ bg:
           notification: Известие
         email:
           title: "Имейл"
+          last_updated_by: "от"
           credentials:
             username: "Потребителско име"
             password: "Парола"
@@ -2091,7 +2092,6 @@ bg:
         show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"
         search: "%{shortcut} Отписване"
         help: "%{shortcut} Помощ с клавиатурата "
-        dismiss_new_posts: "%{shortcut} Отхвърляне на Нова/Публикации"
         dismiss_topics: "%{shortcut} Отхвърляне на темите"
         log_out: "%{shortcut} Отписване"
       composing:

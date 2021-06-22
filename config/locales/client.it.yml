@@ -666,7 +666,6 @@ it:
           settings:
             title: "Impostazioni"
             allow_unknown_sender_topic_replies: "Consenti a mittenti sconosciuti di rispondere all'argomento."
-            allow_unknown_sender_topic_replies_hint: "Consente ai mittenti sconosciuti di rispondere agli argomenti di gruppo. Se non abilitato, le risposte da indirizzi email non già inclusi nella discussione IMAP o invitati all'argomento creeranno un nuovo argomento."
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
@@ -2164,13 +2163,10 @@ it:
         delete: "Elimina argomenti"
         dismiss: "Letti"
         dismiss_read: "Nascondi tutti i non letti"
-        dismiss_read_with_selected: "Ignora %{count} non letti"
         dismiss_button: "Ignora…"
-        dismiss_button_with_selected: "Ignora (%{count})…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new: "Ignora i nuovi messaggi"
-        dismiss_new_with_selected: "Ignora i nuovi (%{count})"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
         change_category: "Imposta categoria"
@@ -2200,7 +2196,6 @@ it:
         new: "Non ci sono nuovi argomenti."
         read: "Non hai ancora letto nessun argomento."
         posted: "Non hai ancora scritto in nessun argomento."
-        ready_to_create: "Pronto a "
         latest: "Non hai nuovi messaggi da leggere!"
         bookmarks: "Non hai ancora argomenti nei segnalibri."
         category: "Non ci sono argomenti in %{category}."
@@ -2290,7 +2285,6 @@ it:
       browse_all_categories: Scorri tutte le categorie
       browse_all_tags: Sfoglia tutte le etichette
       view_latest_topics: visualizza gli argomenti più recenti
-      suggest_create_topic: iniziare una nuova conversazione?
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato eliminato"
@@ -3255,7 +3249,6 @@ it:
         show_incoming_updated_topics: "%{shortcut} Mostra argomenti aggiornati"
         search: "%{shortcut} Cerca"
         help: "%{shortcut} Apri la legenda tasti"
-        dismiss_new_posts: "%{shortcut} Marca i Nuovi messaggi come letti"
         dismiss_topics: "%{shortcut} Marca gli Argomenti come letti"
         log_out: "%{shortcut} Disconnetti"
       composing:

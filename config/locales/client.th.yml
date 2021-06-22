@@ -483,6 +483,7 @@ th:
           notification: การแจ้งเตือน
         email:
           title: "อีเมล"
+          last_updated_by: "โดย"
           credentials:
             username: "ชื่อผู้ใช้"
             password: "รหัสผ่าน"
@@ -2305,7 +2306,6 @@ th:
         show_incoming_updated_topics: "%{shortcut} แสดงกระทู้ที่อัปเดต"
         search: "%{shortcut}ค้นหา"
         help: "%{shortcut} เปิดความช่วยเหลือของแป้นพิมพ์"
-        dismiss_new_posts: "%{shortcut} ยกเลิกการโพสใหม่"
         dismiss_topics: "%{shortcut} ยกเลิกหัวข้อ"
         log_out: "%{shortcut} ออกจากระบบ"
       bookmarks:

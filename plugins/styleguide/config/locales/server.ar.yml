@@ -6,5 +6,5 @@
 
 ar:
   site_settings:
-    styleguide_enabled: "فعّل مسار `‎/styleguide` لتسهيل تخصيص أنماط دِسكورس"
-    styleguide_admin_only: "يقصر ظهور دليل الأنماط على المشرفين"
+    styleguide_enabled: "تفعيل مسار `‎/styleguide` لتسهيل تخصيص أنماط Discourse"
+    styleguide_admin_only: "يقصِر رؤية دليل الأنماط على المسؤولين"

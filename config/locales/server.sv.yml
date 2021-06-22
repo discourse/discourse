@@ -104,6 +104,9 @@ sv:
       no_subject: "(inget ämne)"
       no_body: "(ingen meddelandetext)"
       missing_attachment: "(Bilagan %{filename} saknas)"
+      continuing_old_discussion:
+        one: "Fortsätter diskussionen från [%{title}](%{url}), eftersom den skapades för mer än %{count} dag sedan."
+        other: "Fortsätter diskussionen från [%{title}](%{url}), eftersom den skapades för mer än %{count} dagar sedan."
       errors:
         empty_email_error: "Händer när rådata vi mottagit är tom."
         no_message_id_error: "Händer när e-post saknar 'Message-Id'-rubrik."
@@ -256,9 +259,6 @@ sv:
     not_enough_space_on_disk: "Det finns inte tillräckligt mycket utrymme på disken för att ladda upp denna säkerhetskopia."
     invalid_filename: "Säkerhetskopiefilens namn innehåller ogiltiga tecken. Giltiga tecken är a-z 0-9 . - _."
     file_exists: "Filen som du försöker ladda upp finns redan."
-    location:
-      local: "Lokalt"
-      s3: "Amazon S3"
   invalid_params: "Du levererade ogiltiga parametrar till begäran: %{message}"
   not_logged_in: "Du måste vara inloggad för att göra detta."
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
@@ -273,7 +273,7 @@ sv:
   invalid_whisper_access: "Antingen är viskningar inte aktiverade eller så har du inte behörighet för att skapa viskningsinlägg"
   not_in_group:
     title_topic: "Du måste begära medlemskap i gruppen '%{group}' för att se detta ämne."
-    title_category: "Du måste vara i en grupp för att se denna kategori."
+    title_category: "Du måste begära medlemskap i gruppen '%{group}' för att se den här kategorin."
     request_membership: "Begär medlemskap"
     join_group: "Gå med i grupp"
   deleted_topic: "Hoppsan! Detta ämne har tagits bort och är inte längre tillgängligt."
@@ -1789,7 +1789,7 @@ sv:
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
     reviewable_default_topics: "Visa granskningsbart innehåll grupperat efter ämne som standard"
     reviewable_default_visibility: "Visa inte artiklar som kan granskas om de inte uppfyller denna prioritering"
-    reviewable_low_priority_threshold: "Prioriteringsfiltret döljer granskningsbara som inte uppfyller denna poäng såvida inte filtret '(valfritt)' används."
+    reviewable_low_priority_threshold: "Prioritetsfiltret döljer granskningsbara objekt som inte uppfyller den här poängen om inte filtret '(valfritt)' används."
     high_trust_flaggers_auto_hide_posts: "Ny användares inlägg döljs automatiskt efter att de har flaggats som skräppost av en användare med minst FN3"
     cooldown_hours_until_reflag: "Hur lång tid användare måste avvakta tills de kan flagga ett inlägg igen"
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
@@ -2316,7 +2316,9 @@ sv:
     email_in_spam_header: "Användarens första e-post flaggades som skräppost"
     already_silenced: "Användaren har redan tystats av %{staff} %{time_ago}."
     already_suspended: "Användaren har redan avstängts av %{staff} %{time_ago}."
-    cannot_delete_has_posts: "Användaren %{username} har %{post_count} inlägg, antingen offentliga inlägg eller personliga meddelanden, så de kan inte raderas."
+    cannot_delete_has_posts:
+      one: "Användaren %{username} har %{count} inlägg i ett offentligt ämne eller personligt meddelande, så den kan inte tas bort."
+      other: "Användaren %{username} har %{count} inlägg i ett offentligt ämne eller personligt meddelande, så de kan inte tas bort."
   reviewables_reminder:
     submitted:
       one: "Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_path}/review)."
@@ -4143,10 +4145,6 @@ sv:
       agree_and_hide:
         title: "Dölj inlägg"
         description: "Dölj detta inlägg och sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
-      delete_spammer:
-        title: "Radera skräppostare"
-        description: "Radera användaren och användarens alla inlägg och ämnen."
-        confirm: "Är du säker på att du vill radera användarens alla inlägg, ämnen, samt blockera deras IP och e-postadresser?"
       delete_single:
         title: "Radera"
       delete:
@@ -4203,8 +4201,6 @@ sv:
       approve_and_restore:
         title: "Godkänn och återställ inlägg"
       delete_user:
-        title: "Ta bort användare"
-        confirm: "Är du säker på att du vill radera den här användaren? Detta kommer att ta bort användarens alla inlägg och blockera användarens e-postadress och IP-adress."
         reason: "Raderad via granskningskön"
   email_style:
     html_missing_placeholder: "Html-mallen måste omfatta %{placeholder}"

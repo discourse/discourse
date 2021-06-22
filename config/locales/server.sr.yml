@@ -518,8 +518,6 @@ sr:
     actions:
       agree_and_suspend:
         title: "Suspenduj Korisnika"
-      delete_spammer:
-        title: "Obriši korisnika"
       delete_single:
         title: "Obriši"
       disagree:
@@ -531,8 +529,6 @@ sr:
           title: "Obriši Korisnika"
       reject:
         title: "Odbij"
-      delete_user:
-        title: "Obriši Korisnika"
   time:
     <<: *datetime_formats
   activemodel:

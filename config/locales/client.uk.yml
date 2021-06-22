@@ -721,6 +721,7 @@ uk:
         email:
           title: "Електронна пошта"
           status: "Синхронізовано %{old_emails} / %{total_emails} листів через IMAP."
+          last_updated_by: "від"
           credentials:
             title: "Дані доступу"
             smtp_server: "SMTP-сервер"
@@ -734,7 +735,6 @@ uk:
           settings:
             title: "Налаштування"
             allow_unknown_sender_topic_replies: "Дозволити у темі відповіді невідомого відправника."
-            allow_unknown_sender_topic_replies_hint: "Дозволяє невідомим відправникам відповідати на теми групи. Якщо це не ввімкнено, відповіді з електронних адрес, які ще не включені в групу, або не запрошені до теми, створять нову тему."
           mailboxes:
             synchronized: "Синхронізована поштова скринька"
             none_found: "Не знайдено поштових скриньок в цьому обліковому записі."
@@ -2303,10 +2303,25 @@ uk:
         delete: "Видалити теми"
         dismiss: "Відкинути"
         dismiss_read: "Відхилити всі непрочитані"
+        dismiss_read_with_selected:
+          one: "Позначити прочитаним %{count}"
+          few: "Позначити прочитаними %{count}"
+          many: "Позначити прочитаними %{count}"
+          other: "Позначити прочитаними %{count}"
         dismiss_button: "Відкласти..."
+        dismiss_button_with_selected:
+          one: "Позначити прочитаним (%{count})..."
+          few: "Позначити прочитаними (%{count})..."
+          many: "Позначити прочитаними (%{count})..."
+          other: "Позначити прочитаними (%{count})..."
         dismiss_tooltip: "Відкласти нові повідомлення, або перестати стежити за цими темами"
         also_dismiss_topics: "Перестати стежити за цими темами, щоб вони ніколи більше не висвітлювались як непрочитані"
         dismiss_new: "Dismiss New"
+        dismiss_new_with_selected:
+          one: "Відхилити новий (%{count})..."
+          few: "Відхилити нові (%{count})..."
+          many: "Відхилити нові (%{count})..."
+          other: "Відхилити нові (%{count})..."
         toggle: "перемикач масової дії над темами"
         actions: "Масові дії"
         change_category: "Задати розділ"
@@ -2342,7 +2357,6 @@ uk:
         new: "У Вас немає нових тем."
         read: "Ви ще не прочитали жодної теми."
         posted: "Ви ще не дописували в жодну тему."
-        ready_to_create: "Готовий до "
         latest: "Немає оновлених чи нових тем!"
         bookmarks: "У вас немає обраних тем."
         category: "В категорії %{category} немає тем."
@@ -2444,7 +2458,6 @@ uk:
       browse_all_categories: Переглянути всі категорії
       browse_all_tags: Переглянути всі теги
       view_latest_topics: перегляньте останні теми
-      suggest_create_topic: розпочати нову бесіду?
       jump_reply_up: перейти до ранішої відповіді
       jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
@@ -3501,7 +3514,6 @@ uk:
         show_incoming_updated_topics: "%{shortcut} Показати оновлені теми"
         search: "%{shortcut} Пошук"
         help: "%{shortcut} Показати поєднання клавіш"
-        dismiss_new_posts: "%{shortcut} Відкласти нові повідомлення"
         dismiss_topics: "%{shortcut} Відкласти теми"
         log_out: "%{shortcut} Вийти"
       composing:

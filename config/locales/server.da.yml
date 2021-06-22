@@ -101,7 +101,6 @@ da:
       maximum_staged_user_per_email_reached: "Maksimalt antal af brugere oprettet pr. email."
       no_subject: "(intet emne)"
       no_body: "(intet meddelelsesindhold)"
-      missing_attachment: "(Vedhæftning %{filename} mangler)"
       errors:
         empty_email_error: "Dette sker når den rå email der modtages er tom."
         no_message_id_error: "Dette sker når emailen ikke har nogen 'Message-Id' header."
@@ -252,9 +251,6 @@ da:
     not_enough_space_on_disk: "Der er ikke nok diskplads til at overføre denne backup."
     invalid_filename: "Backup filnavnet indeholder ugyldige tegn. Gyldige tegn er a-z 0-9 . - _."
     file_exists: "Den fil, du prøver at overføre, findes allerede."
-    location:
-      local: "Lokal"
-      s3: "Amazon S3"
   invalid_params: "Du leverede ugyldige parametre til anmodningen: %{message}"
   not_logged_in: "Du skal logge på for at kunne dette."
   not_found: "Den anmodede URL eller ressource kunne ikke findes."
@@ -269,7 +265,6 @@ da:
   invalid_whisper_access: "Enten er hvisken ikke aktiveret, eller du har ikke adgang til at oprette hviskende indlæg"
   not_in_group:
     title_topic: "Du skal anmode om medlemskab af gruppen '%{group}' for at se dette emne."
-    title_category: "Du skal være i en gruppe for at se denne kategori."
     request_membership: "Anmod om medlemskab"
     join_group: "Bliv medlem af gruppen"
   deleted_topic: "Ups! Dette emne er blevet slettet og er ikke længere tilgængeligt."
@@ -1614,7 +1609,6 @@ da:
     max_new_accounts_per_registration_ip: "Hvis der allerede er (n) kontoer med tillidsniveau 0 fra en IP (og ingen er en del af hjælperteamet eller på TL2 eller højere), så accepteres nye kontooprettelser fra denne IP ikke."
     num_flaggers_to_close_topic: "Minimum antal anmeldelser fra unikke brugere, der skal til for automatisk at sætte et emne på pause for ingriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en anmeldelse fjernes."
-    reviewable_low_priority_threshold: "Prioritetsfilteret skjuler anmeldelser, der ikke opfylder denne score, medmindre filteret '(enhver)' bruges."
     high_trust_flaggers_auto_hide_posts: "Nye brugerindlæg skjules automatisk efter at være blevet anmeldt som spam af en TL3+ bruger"
     cooldown_hours_until_reflag: "Hvor lang tid brugerne skal vente, indtil de kan genanmelde et indlæg"
     reply_by_email_enabled: "Aktivér muligheden for at svare til emner via email."
@@ -3777,10 +3771,6 @@ da:
       agree_and_hide:
         title: "Skjul Indlæg"
         description: "Skjul dette indlæg og send automatisk brugeren en meddelelse, der opfordrer dem til at redigere det."
-      delete_spammer:
-        title: "Slet Spammer"
-        description: "Fjern brugeren og alle deres indlæg og emner."
-        confirm: "Er du sikker på, at du vil slette alle brugerens indlæg, emner og blokere deres IP-adresse og e-mailadresser?"
       delete_single:
         title: "Slet"
       delete:
@@ -3819,8 +3809,6 @@ da:
       reject:
         title: "Afvis"
       delete_user:
-        title: "Slet Bruger"
-        confirm: "Er du sikker på, at du vil slette denne bruger? Dette vil fjerne alle deres indlæg og blokere deres e-mail og IP-adresse."
         reason: "Slettet via gennemgangskø"
   email_style:
     html_missing_placeholder: "HTML-skabelonen skal indeholde %{placeholder}"

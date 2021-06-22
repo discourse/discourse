@@ -529,6 +529,7 @@ lt:
           notification: Perspėjimai
         email:
           title: "Epaštas"
+          last_updated_by: "nuo"
           credentials:
             username: "Slapyvardis"
             password: "Slaptažodis"
@@ -2292,7 +2293,6 @@ lt:
         user_profile_menu: "%{shortcut} Atidaryti vartotojo meniu"
         show_incoming_updated_topics: "%{shortcut} Rodyti atnaujintas temas"
         help: "%{shortcut} Atidaryti klavieturos pagalbą"
-        dismiss_new_posts: "%{shortcut} Praleisti Naujas/Žinutes"
         dismiss_topics: "%{shortcut} Praleisti Temas"
         log_out: "%{shortcut} Atsijungti"
       actions:

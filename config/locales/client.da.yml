@@ -642,6 +642,7 @@ da:
           enable_imap: "Aktivér IMAP"
           test_settings: "Test indstillinger"
           save_settings: "Gem indstillinger"
+          last_updated_by: "af"
           settings_required: "Alle indstillinger er påkrævet. Udfyld alle felter før validering."
           smtp_settings_valid: "SMTP-indstillinger er gyldige."
           smtp_title: "SMTP"
@@ -661,7 +662,6 @@ da:
           settings:
             title: "Indstillinger"
             allow_unknown_sender_topic_replies: "Tillad emnesvar fra ukendte afsendere"
-            allow_unknown_sender_topic_replies_hint: "Tillader ukendte afsendere at svare på gruppeemner. Hvis dette ikke er aktiveret, opretter svar fra e-mail-adresser, der ikke allerede er inkluderet i IMAP-e-mail-tråden eller er inviteret til emnet, et nyt emne."
           mailboxes:
             synchronized: "Synkroniseret postkasse"
             none_found: "Ingen postkasser blev fundet i denne e-mail-konto."
@@ -2187,7 +2187,6 @@ da:
         new: "Du har ingen nye emner."
         read: "Du har ikke læst nogen emner endnu."
         posted: "Du har ikke skrevet nogen indlæg endnu."
-        ready_to_create: "Klar til "
         latest: "Du er nu fuldt opdateret!"
         bookmarks: "Du har ingen bogmærkede emner endnu."
         category: "Der er ingen emner i kategorien %{category}."
@@ -2275,7 +2274,6 @@ da:
       browse_all_categories: Vis alle kategorier
       browse_all_tags: Gennemse alle mærker
       view_latest_topics: vis seneste emner
-      suggest_create_topic: start en ny samtale?
       jump_reply_up: hop til tidligere svar
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
@@ -3240,7 +3238,6 @@ da:
         show_incoming_updated_topics: "%{shortcut} Vis opdaterede emner"
         search: "%{shortcut} Søg"
         help: "%{shortcut} Åben tastaturhjælp"
-        dismiss_new_posts: "%{shortcut} Afvis Nyt/Indlæg"
         dismiss_topics: "%{shortcut} Afvis emner"
         log_out: "%{shortcut} Log ud"
       composing:

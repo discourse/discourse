@@ -588,6 +588,7 @@ ca:
           notification: Notificació
         email:
           title: "Correu electrònic"
+          last_updated_by: "per"
           credentials:
             title: "Credencials"
             smtp_server: "Servidor SMTP"
@@ -2714,7 +2715,6 @@ ca:
         show_incoming_updated_topics: "%{shortcut} Mostra temes actualitzats"
         search: "%{shortcut} Cerca"
         help: "%{shortcut} Obre l'ajuda de teclat"
-        dismiss_new_posts: "%{shortcut} Descarta publicacions noves"
         dismiss_topics: "%{shortcut} Descarta temes"
         log_out: "%{shortcut} Tanca la sessió"
       composing:

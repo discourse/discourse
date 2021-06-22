@@ -263,6 +263,7 @@ tr_TR:
       contact_info: "Bu siteyi etkileyen ciddi bir sorun ya da acil bir durum oluştuğunda, lütfen %{contact_info} adresi üzerinden bizimle iletişime geç."
     bookmarked:
       title: "İşaret"
+      edit_bookmark: "Yer İşaretini Düzenle"
       clear_bookmarks: "İşaretlenenleri Temizle"
       help:
         bookmark: "Bu konudaki ilk gönderiyi işaretlemek için tıkla"
@@ -524,7 +525,9 @@ tr_TR:
       this_weekend: "Bu hafta sonu"
       start_of_next_business_week: "Pazartesi"
       start_of_next_business_week_alt: "Gelecek pazartesi"
+      two_weeks: "İki hafta"
       next_month: "Gelecek ay"
+      six_months: "Altı ay"
       custom: "Özel tarih ve saat"
       relative: "Göreli zaman"
       none: "Hiçbiri"
@@ -614,6 +617,8 @@ tr_TR:
         email:
           title: "Eposta"
           status: "IMAP üzerinden senkronize edilmiş e-postalar %{old_emails} / %{total_emails} "
+          last_updated: "Son güncelleme:"
+          last_updated_by: "tarafından güncellendi"
           credentials:
             title: "Kimlik bilgileri"
             smtp_server: "SMTP sunucusu"
@@ -627,7 +632,6 @@ tr_TR:
           settings:
             title: "Ayarlar"
             allow_unknown_sender_topic_replies: "Bilinmeyen gönderen konu yanıtlarına izin ver."
-            allow_unknown_sender_topic_replies_hint: "Bilinmeyen gönderenlerin grup konularına cevap vermesine izin verir. Bu etkinleştirilmezse, IMAP e-posta dizisine henüz dahil edilmemiş veya konuya davet edilmemiş e-posta adreslerinden gelen yanıtlar yeni bir konu oluşturacaktır."
           mailboxes:
             synchronized: "Senkronize Posta Kutusu"
             none_found: "Bu e-posta hesabında hiçbir posta kutusu bulunamadı."
@@ -1049,6 +1053,7 @@ tr_TR:
         failed_to_move: "Seçilen mesajların taşınması başarısız oldu (muhtemelen şebeke çöktü)"
         select_all: "Tümünü seç"
         tags: "Etiketler"
+        warnings: "Resmi Uyarılar"
       preferences_nav:
         account: "Hesap"
         security: "Güvenlik"
@@ -2059,13 +2064,19 @@ tr_TR:
         delete: "Konuları Sil"
         dismiss: "Yoksay"
         dismiss_read: "Okumadıklarını yoksay"
-        dismiss_read_with_selected: "%{count} adet okunmamışı at"
+        dismiss_read_with_selected:
+          one: "%{count} adet okunmamışı at"
+          other: "%{count} adet okunmamışı at"
         dismiss_button: "Yoksay..."
-        dismiss_button_with_selected: "Bunları at (%{count})"
+        dismiss_button_with_selected:
+          one: "Bunları at (%{count})"
+          other: "Bunları at (%{count})"
         dismiss_tooltip: "Yeni gönderileri görmezden gel ya da konuları takip etmeyi bırak"
         also_dismiss_topics: "Tekrar okunmamış olarak gösterilmemesi için bu konuları takip etmeyi bırak."
         dismiss_new: "Yenileri Yoksay"
-        dismiss_new_with_selected: "Yenileri (%{count}) at"
+        dismiss_new_with_selected:
+          one: "Yenileri (%{count}) at"
+          other: "Yenileri (%{count}) at"
         toggle: "konuların toplu seçimini değiştir"
         actions: "Toplu Eylemler"
         change_category: "Kategori düzenle"
@@ -2092,7 +2103,6 @@ tr_TR:
         new: "Yeni konun yok."
         read: "Henüz herhangi bir konu okumadın."
         posted: "Henüz herhangi bir konuda gönderi yapmadın"
-        ready_to_create: "Hazır "
         latest: "Hepiniz yakalandınız!"
         bookmarks: "Henüz bir konu işaretlememişsin. "
         category: "%{category} konusu yok."
@@ -3069,7 +3079,7 @@ tr_TR:
         show_incoming_updated_topics: "%{shortcut} Güncellenmiş konuları göster"
         search: "%{shortcut} Ara"
         help: "%{shortcut} Klavye yardım sayfasını aç"
-        dismiss_new_posts: "%{shortcut} Yeni Konuları/Gönderileri Yoksay"
+        dismiss_new: "%{shortcut} Yenileri At"
         dismiss_topics: "%{shortcut} Konuları yoksay"
         log_out: "%{shortcut} Çıkış"
       composing:
@@ -4238,6 +4248,8 @@ tr_TR:
         flags_given_count: Verilen Bayraklar
         flags_received_count: Alınan Bayraklar
         warnings_received_count: Alınan Uyarılar
+        warnings_list_warning: |
+          Bir moderatör olarak, bu konuların tümünü görüntüleyemeyebilirsiniz. Gerekirse, bir yöneticiden veya yayınlayan moderatörden mesaja <b>@moderators</b> yetkisi vermesini isteyin.
         flags_given_received_count: "Yapılan / Alınan Bayraklar"
         approve: "Onayla"
         approved_by: "onaylayan"
