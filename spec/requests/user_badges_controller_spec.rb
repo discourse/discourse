@@ -277,12 +277,18 @@ describe UserBadgesController do
       expect(response.status).to eq(403)
     end
 
-    it "checks that the user has less than two favorited badges" do
+    it "checks that the user has less than max_favorites_badges favorited badges" do
       sign_in(user)
       UserBadge.create(badge: Fabricate(:badge), user: user, granted_by: Discourse.system_user, granted_at: Time.now, is_favorite: true)
       UserBadge.create(badge: Fabricate(:badge), user: user, granted_by: Discourse.system_user, granted_at: Time.now, is_favorite: true)
+
       put "/user_badges/#{user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(400)
+
+      SiteSetting.max_favorite_badges = 3
+
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(200)
     end
 
     it "favorites a badge" do

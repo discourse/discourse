@@ -1653,6 +1653,7 @@ en:
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
     enable_badges: "Enable the badge system"
+    max_favorite_badges: "Maximum number of badges that user can select"
     enable_whispers: "Allow staff private communication within topics."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
