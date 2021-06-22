@@ -28,16 +28,57 @@ class Site
     UserField.order(:position).all
   end
 
-  def categories
-    @categories ||= begin
-      categories = Category
-        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups)
-        .secured(@guardian)
+  CHANNEL = '/clear_site_cache'
+
+  def self.clear_cache
+    @categories_cache = nil
+    MessageBus.publish(CHANNEL, process: process_id) if !Rails.env.test?
+  end
+
+  def self.process_id
+    @process_id ||= SecureRandom.uuid
+  end
+
+  def self.after_fork
+    @process_id = nil
+    ensure_listen_for_changes
+  end
+
+  def self.ensure_listen_for_changes
+    unless @subscribed
+      MessageBus.subscribe(CHANNEL) do |message|
+        if message.data["process_id"] != process_id
+          @categories_cache = nil
+        end
+      end
+
+      @subscribed = true
+    end
+  end
+
+  def self.all_categories_cache
+    # Categories do not change often so there is no need for us to run the
+    # same query and spend time creating ActiveRecord objects for every requests.
+    #
+    # Do note that any new association added to the eager loading needs a
+    # corresponding ActiveRecord callback to clear the categories cache.
+    @categories_cache ||= begin
+      Category
+        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups, :required_tag_group)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')
         .select('categories.*, t.slug topic_slug')
         .order(:position)
+        .to_a
+    end
+  end
 
-      categories = categories.to_a
+  def categories
+    @categories ||= begin
+      categories = []
+
+      self.class.all_categories_cache.each do |category|
+        categories << category if @guardian.can_see_category?(category)
+      end
 
       with_children = Set.new
       categories.each do |c|

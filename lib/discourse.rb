@@ -729,6 +729,7 @@ module Discourse
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
+    Site.after_fork
     Discourse.redis.reconnect
     Rails.cache.reconnect
     Discourse.cache.reconnect
