@@ -3,6 +3,7 @@ import { scheduleOnce } from "@ember/runloop";
 export default Component.extend({
   classNames: ["modal-body"],
   fixed: false,
+  submitOnEnter: true,
   dismissable: true,
   autoFocus: true,
 
@@ -49,6 +50,7 @@ export default Component.extend({
         "fixed",
         "subtitle",
         "rawSubtitle",
+        "submitOnEnter",
         "dismissable",
         "headerClass",
         "autoFocus"
