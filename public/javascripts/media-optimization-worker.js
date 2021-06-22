@@ -25,8 +25,8 @@ function resizeWithAspect(
   };
 }
 
-function logIfDebug(message, debugMode) {
-  if (debugMode) {
+function logIfDebug(message) {
+  if (DedicatedWorkerGlobalScope.debugMode) {
     // eslint-disable-next-line no-console
     console.log(message);
   }
@@ -56,7 +56,7 @@ async function optimize(imageData, fileName, width, height, settings) {
   };
 
   const initialSize = imageData.byteLength;
-  logIfDebug(`Worker received imageData: ${initialSize}`, settings.debug_mode);
+  logIfDebug(`Worker received imageData: ${initialSize}`);
 
   let maybeResized;
 
@@ -86,7 +86,7 @@ async function optimize(imageData, fileName, width, height, settings) {
       maybeResized = imageData;
     }
   } else {
-    logIfDebug(`Skipped resize: ${width} < ${settings.resize_threshold}`, settings.debug_mode);
+    logIfDebug(`Skipped resize: ${width} < ${settings.resize_threshold}`);
     maybeResized = imageData;
   }
 
@@ -99,8 +99,8 @@ async function optimize(imageData, fileName, width, height, settings) {
   );
 
   const finalSize = result.byteLength
-  logIfDebug(`Worker post reencode file: ${finalSize}`, settings.debug_mode);
-  logIfDebug(`Reduction: ${(initialSize / finalSize).toFixed(1)}x speedup`, settings.debug_mode);
+  logIfDebug(`Worker post reencode file: ${finalSize}`);
+  logIfDebug(`Reduction: ${(initialSize / finalSize).toFixed(1)}x speedup`);
 
   let transferrable = Uint8Array.from(result).buffer; // decoded was allocated inside WASM so it **cannot** be transfered to another context, need to copy by value
 
@@ -111,6 +111,7 @@ onmessage = async function (e) {
   switch (e.data.type) {
     case "compress":
       try {
+        DedicatedWorkerGlobalScope.debugMode = e.data.settings.debug_mode;
         let optimized = await optimize(
           e.data.file,
           e.data.fileName,

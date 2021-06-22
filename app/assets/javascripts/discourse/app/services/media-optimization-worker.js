@@ -7,7 +7,6 @@ import { getAbsoluteURL, getURLWithCDN } from "discourse-common/lib/get-url";
 export default class MediaOptimizationWorkerService extends Service {
   appEvents = getOwner(this).lookup("service:app-events");
   worker = null;
-  debugger;
   workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
   currentComposerUploadData = null;
   currentPromiseResolver = null;
@@ -49,7 +48,7 @@ export default class MediaOptimizationWorkerService extends Service {
       return data;
     }
     this.ensureAvailiableWorker();
-    let p = new Promise(async (resolve) => {
+    return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 
       this.currentComposerUploadData = data;
@@ -99,7 +98,6 @@ export default class MediaOptimizationWorkerService extends Service {
         [imageData.data.buffer]
       );
     });
-    return p;
   }
 
   registerMessageHandler() {
