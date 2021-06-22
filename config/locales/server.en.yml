@@ -1826,7 +1826,7 @@ en:
 
     strip_image_metadata: "Strip image metadata."
 
-    composer_media_optimization_image_enabled: "Enables client-side media optimization on uploaded image files."
+    composer_media_optimization_image_enabled: "Enables client-side media optimization of uploaded image files."
     composer_media_optimization_image_kilobytes_optimization_threshold: "Minimum image file size to trigger client-side optimization"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-size resize"
     composer_media_optimization_image_resize_width_target: "Images with width larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
