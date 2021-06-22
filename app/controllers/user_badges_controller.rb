@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserBadgesController < ApplicationController
-  MAX_FAVORITES = 2
   MAX_BADGES = 96 # This was limited in PR#2360 to make it divisible by 8
 
   before_action :ensure_badges_enabled
@@ -51,7 +50,6 @@ class UserBadgesController < ApplicationController
       user_badges,
       DetailedUserBadgeSerializer,
       root: :user_badges,
-      meta: { max_favorites: MAX_FAVORITES },
     )
   end
 
@@ -107,7 +105,7 @@ class UserBadgesController < ApplicationController
       return render json: failed_json, status: 403
     end
 
-    if !user_badge.is_favorite && user_badges.where(is_favorite: true).count >= MAX_FAVORITES
+    if !user_badge.is_favorite && user_badges.where(is_favorite: true).count >= SiteSetting.max_favorite_badges
       return render json: failed_json, status: 400
     end
 

@@ -1,6 +1,6 @@
 {{#d-section pageClass="user-badges" class="user-content user-badges-list"}}
   <p class="favorite-count">
-    {{i18n "badges.favorite_count" count=this.favoriteBadges.length max=model.meta.max_favorites}}
+    {{i18n "badges.favorite_count" count=this.favoriteBadges.length max=siteSettings.max_favorite_badges}}
   </p>
   {{#each sortedBadges as |ub|}}
     {{badge-card

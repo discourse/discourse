@@ -307,6 +307,11 @@ basic:
     client: true
     default: false
     hidden: true
+  max_favorite_badges:
+    client: true
+    default: 2
+    min: 0
+    max: 5
   enable_whispers:
     client: true
     default: false
