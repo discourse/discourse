@@ -345,6 +345,7 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
+    redcarpet (3.5.1)
     redis (4.5.1)
     redis-namespace (1.8.1)
       redis (>= 3.0.4)
@@ -446,6 +447,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sqlite3 (1.4.2)
     sshkey (2.0.0)
     stackprof (0.2.17)
     test-prof (1.0.7)
@@ -576,6 +578,7 @@ DEPENDENCIES
   rb-fsevent
   rbtrace
   rchardet
+  redcarpet
   redis
   redis-namespace
   rinku
@@ -600,6 +603,7 @@ DEPENDENCIES
   simplecov
   sprockets (= 3.7.2)
   sprockets-rails
+  sqlite3
   sshkey
   stackprof
   test-prof
@@ -613,4 +617,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.2.26
+   2.2.29
