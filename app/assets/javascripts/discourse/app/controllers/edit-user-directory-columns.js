@@ -14,7 +14,7 @@ export default Controller.extend(ModalFunctionality, {
   labelKey: null,
 
   onShow() {
-    ajax("directory-columns.json")
+    ajax("edit-directory-columns.json")
       .then((response) => {
         this.setProperties({
           loading: false,
@@ -35,7 +35,7 @@ export default Controller.extend(ModalFunctionality, {
       ),
     };
 
-    ajax("directory-columns.json", { type: "PUT", data })
+    ajax("edit-directory-columns.json", { type: "PUT", data })
       .then(() => {
         reload();
       })
@@ -58,7 +58,7 @@ export default Controller.extend(ModalFunctionality, {
       .forEach((column, index) => {
         column.setProperties({
           position: column.automatic_position || index + 1,
-          enabled: column.automatic,
+          enabled: column.type === "automatic",
         });
       });
     this.set("columns", resetColumns);

@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
-import PreloadStore from "discourse/lib/preload-store";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 
 export default DiscourseRoute.extend({
@@ -38,9 +39,12 @@ export default DiscourseRoute.extend({
   },
 
   model(params) {
-    const columns = PreloadStore.get("directoryColumns");
-    params.order = params.order || columns[0].name;
-    return { params, columns };
+    return ajax("directory-columns.json")
+      .then((response) => {
+        params.order = params.order || response.directory_columns[0].name;
+        return { params, columns: response.directory_columns };
+      })
+      .catch(popupAjaxError);
   },
 
   setupController(controller, model) {
