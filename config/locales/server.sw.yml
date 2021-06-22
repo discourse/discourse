@@ -2115,8 +2115,6 @@ sw:
       agree_and_hide:
         title: "Ficha Chapisho"
         description: "Ficha chapisho hili na otomatikali mtumie mtumiaji ujumbe wa kumwambia afanye uhariri."
-      delete_spammer:
-        title: "Futa Muandishi wa Taka"
       delete_single:
         title: "Futa"
       disagree_and_restore:
@@ -2132,8 +2130,6 @@ sw:
           title: "Futa Mtumiaji"
       reject:
         title: "Kataa"
-      delete_user:
-        title: "Futa Mtumiaji"
   activemodel:
     errors:
       <<: *errors

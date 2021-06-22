@@ -13,7 +13,7 @@ de:
         yesterday: Gestern %{time}
         countdown:
           passed: Datum liegt in der Vergangenheit
-      title: Datum / Uhrzeit einfügen
+      title: Datum/Uhrzeit einfügen
       create:
         form:
           insert: Einfügen
@@ -23,7 +23,7 @@ de:
           timezones_title: Anzuzeigende Zeitzonen
           timezones_description: Zeitzonen werden verwendet, um Datumsangaben in der Vorschau und als Ausweichlösung anzuzeigen.
           recurring_title: Wiederholung
-          recurring_description: "Definiere die Wiederholung eines Ereignisses. Du kannst die vom Formular generierte Wiederholung auch manuell ändern und einen der folgenden Schlüssel verwenden: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds"
+          recurring_description: "Definiere die Wiederholung eines Ereignisses. Du kannst die vom Formular generierte Wiederholung auch manuell ändern und einen der folgenden Schlüssel verwenden: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
           recurring_none: Keine Wiederholung
           invalid_date: Ungültige Datumsangabe. Stelle sicher, dass Datum und Uhrzeit korrekt sind.
           date_title: Datum

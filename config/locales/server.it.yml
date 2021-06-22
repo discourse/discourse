@@ -103,7 +103,6 @@ it:
       maximum_staged_user_per_email_reached: "E' stato raggiunto il numero massimo di utenti temporanei creati via email."
       no_subject: "(nessun oggetto)"
       no_body: "(nessun corpo del messaggio)"
-      missing_attachment: "(Manca l'allegato %{filename})"
       errors:
         empty_email_error: "Succede quando l'email ricevuta era vuota."
         no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
@@ -256,9 +255,6 @@ it:
     not_enough_space_on_disk: "Non c'è abbastanza spazio su disco per caricare questo backup."
     invalid_filename: "Il nome del file di backup contiene caratteri non validi. I caratteri validi sono a-z 0-9 . - _."
     file_exists: "Il file che stai provando a caricare esiste già."
-    location:
-      local: "Locale"
-      s3: "Amazon S3"
   invalid_params: "Hai fornito parametri non validi alla richiesta: %{message}"
   not_logged_in: "Devi essere connesso per far ciò."
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
@@ -273,7 +269,6 @@ it:
   invalid_whisper_access: "I sussurri non sono abilitati oppure non hai i permessi per creare sussurri"
   not_in_group:
     title_topic: "Devi richiedere l'iscrizione al gruppo \"%{group}\" per visualizzare questo argomento."
-    title_category: "Devi essere in un gruppo per vedere questa categoria."
     request_membership: "Richiedi di Iscrizione"
     join_group: "Unisciti al Gruppo"
   deleted_topic: "Ops! Questo argomento è stato eliminato e non è più disponibile."
@@ -1754,7 +1749,6 @@ it:
     reviewable_claiming: "È necessario rivendicare il contenuto revisionabile prima che possa essere manipolato?"
     reviewable_default_topics: "Mostra contenuto revisionabile raggruppato per argomento per impostazione predefinita"
     reviewable_default_visibility: "Non mostrare elementi revisionabili a meno che non soddisfino questa priorità"
-    reviewable_low_priority_threshold: "Il filtro di priorità nasconde le recensioni che non soddisfano questo punteggio a meno che non venga utilizzato il filtro '(qualsiasi)'."
     high_trust_flaggers_auto_hide_posts: "I messaggi di nuovi utenti vengono automaticamente nascosti dopo essere stati contrassegnati come spam da un utente TL3 +"
     cooldown_hours_until_reflag: "Quanto tempo gli utenti dovranno aspettare prima di poter segnalare nuovamente un messaggio"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
@@ -2196,7 +2190,6 @@ it:
       reviewable_reject: "Utente verificabile rifiutato"
     already_silenced: "L'utente è già stato silenziato da %{staff} %{time_ago}."
     already_suspended: "L'utente è già stato sospeso da %{staff} %{time_ago}."
-    cannot_delete_has_posts: "L'utente %{username} ha %{post_count} messaggi tra pubblici e personali, perciò non può essere cancellato."
   reviewables_reminder:
     submitted:
       one: "Gli articoli sono stati inviati oltre %{count} ora fa. [Si prega di rivederli] (%{base_path} / recensione)."
@@ -3827,10 +3820,6 @@ it:
       agree_and_hide:
         title: "Nascondi Messaggio"
         description: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
-      delete_spammer:
-        title: "Cancella Spammer"
-        description: "Elimina l'utente e tutti i suoi Messaggi e Argomenti."
-        confirm: "Sei sicuro di voler eliminare tutti i Messaggi e Argomenti di questo utente, e di bloccarne IP e indirizzo email?"
       delete_single:
         title: "Elimina"
       delete:
@@ -3887,8 +3876,6 @@ it:
       approve_and_restore:
         title: "Approva e ripristina il messaggio"
       delete_user:
-        title: "Cancella utente"
-        confirm: "Sei sicuro di voler eliminare quell'utente? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'IP."
         reason: "Eliminato tramite la coda di revisione"
   email_style:
     html_missing_placeholder: "Il template html deve includere %{placeholder}"

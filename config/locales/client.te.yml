@@ -273,6 +273,7 @@ te:
           posting: రాస్తున్నారు
         email:
           title: "ఈమెయిల్"
+          last_updated_by: "నుండి"
           credentials:
             username: "వాడుకరి పేరు"
             password: "సంకేతపదం"
@@ -1293,7 +1294,6 @@ te:
         user_profile_menu: "%{shortcut} యూజర్ మెనూ తెరువు"
         show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"
         help: "%{shortcut} కీ బోర్డ్ సహాయాన్ని తెరువు"
-        dismiss_new_posts: "%{shortcut} తీసివేసిన కొత్త/టపాలు"
         dismiss_topics: "%{shortcut} తీసివేసిన విషయాలు"
       actions:
         title: "చర్యలు"

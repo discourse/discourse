@@ -498,8 +498,6 @@ th:
       medium: "ปานกลาง"
       high: "สูง"
     actions:
-      delete_spammer:
-        title: "ลบสแปมเมอร์"
       delete_single:
         title: "ลบ"
       disagree:
@@ -513,8 +511,6 @@ th:
           title: "ลบผู้ใช้"
       reject:
         title: "ละทิ้ง"
-      delete_user:
-        title: "ลบผู้ใช้"
   activemodel:
     errors:
       <<: *errors

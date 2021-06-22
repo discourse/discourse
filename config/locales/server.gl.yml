@@ -101,7 +101,6 @@ gl:
       maximum_staged_user_per_email_reached: "Alcanzouse o número máximo de usuarios transitorios creados por correo electrónico."
       no_subject: "(sen asunto)"
       no_body: "(sen mensaxe)"
-      missing_attachment: "(Falta o ficheiro anexo %{filename})"
       errors:
         empty_email_error: "Sucede cando o texto en bruto do correo que recibimos está en branco."
         no_message_id_error: "Sucede cando o correo electrónico non ten a cabeceira de «Id da mensaxe»."
@@ -246,9 +245,6 @@ gl:
     not_enough_space_on_disk: "Non hai espazo abondo no disco para cargar a copia de seguranza."
     invalid_filename: "O nome do ficheiro de copia de seguranza contén caracteres non válidos. Os caracteres que se admiten son a-z 0-9 . - _."
     file_exists: "O ficheiro que está tentando subir xa existe."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
   invalid_params: "Proporcionou parámetros non válidos para a solicitude: %{message}"
   not_logged_in: "Debe iniciar sesión para facer iso."
   not_found: "Non foi posible atopar o recurso ou o URL solicitado."
@@ -263,7 +259,6 @@ gl:
   invalid_whisper_access: "Ou bisbar non está activado ou non o ten permitido facer"
   not_in_group:
     title_topic: "Debe solicitar a incorporación ao grupo «%{group}» para ver este tema."
-    title_category: "Debe estar no grupo para ver esta categoría."
     request_membership: "Solicitar ser membro"
     join_group: "Unirse ao grupo"
   deleted_topic: "Oopa! Este tema foi eliminado e xa non está dispoñible."
@@ -4365,10 +4360,6 @@ gl:
       agree_and_hide:
         title: "Agochar publicación"
         description: "Agocha esta publicación e automaticamente lle envía ao usuario unha mensaxe que o insta a editala."
-      delete_spammer:
-        title: "Eliminar remitente non desexado"
-        description: "Retirar o usuario e todas as súas publicacións e temas."
-        confirm: "Confirma que quere eliminar todas as publicacións e temas deste usuario e bloquear as súas IP e enderezos electrónicos?"
       delete_single:
         title: "Eliminar"
       delete:
@@ -4414,8 +4405,6 @@ gl:
       reject:
         title: "Rexeitar"
       delete_user:
-        title: "Eliminar usuario"
-        confirm: "Confirma que quere eliminar este usuario? Isto retirará todas as súas publicacións e bloqueará o seu correo electrónico e enderezo IP."
         reason: "Eliminado a través da cola de revisións"
   email_style:
     html_missing_placeholder: "O modelo HTML debe incluír %{placeholder}"

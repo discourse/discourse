@@ -639,6 +639,7 @@ ro:
         email:
           title: "Email"
           status: "S-au sincronizat prin IMAP %{old_emails} e-mailuri din %{total_emails} în total."
+          last_updated_by: "de către"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
@@ -1814,7 +1815,6 @@ ro:
         new: "Nu sunt subiecte noi."
         read: "Nu ai citit încă niciun subiect."
         posted: "Nu ai postat încă în niciun subiect."
-        ready_to_create: "Gata pentru "
         bookmarks: "Nu ai nici un semn de carte încă."
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
@@ -2638,7 +2638,6 @@ ro:
         user_profile_menu: "%{shortcut} Deschide meniu utilizator"
         show_incoming_updated_topics: "%{shortcut} Arată subiectele actualizate"
         help: "%{shortcut} Deschide ajutor tastatură"
-        dismiss_new_posts: "%{shortcut} Abandonează postări noi"
         dismiss_topics: "%{shortcut} Abandonează subiecte"
         log_out: "%{shortcut} Ieșire"
       bookmarks:

@@ -612,6 +612,7 @@ ur:
           notification: اطلاع
         email:
           title: "اِی میل"
+          last_updated_by: "تک"
           credentials:
             username: "صارف کا نام"
             password: "پاسورڈ"
@@ -2910,7 +2911,6 @@ ur:
         show_incoming_updated_topics: "اَپ ڈیٹ ہوے ٹاپک دکھائیں"
         search: "%{shortcut}سرچ "
         help: "%{shortcut} کیبورڈ مدد کھولیں"
-        dismiss_new_posts: "%{shortcut} برخاست کریں نئے/پوسٹس"
         dismiss_topics: "%{shortcut} ٹاپک برخاست کریں"
         log_out: "%{shortcut} لاگ آوٹ"
       composing:

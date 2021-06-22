@@ -321,6 +321,7 @@ ru:
       contact_info: "В случае возникновения критической ошибки или срочного дела, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
     bookmarked:
       title: "Закладки"
+      edit_bookmark: "Изменить закладку"
       clear_bookmarks: "Очистить закладки"
       help:
         bookmark: "Добавить в закладки первое сообщение этой темы"
@@ -729,6 +730,8 @@ ru:
           enable_imap: "Включить IMAP"
           test_settings: "Тест настроек"
           save_settings: "Сохранить настройки"
+          last_updated: "Последнее обновление:"
+          last_updated_by: "от"
           settings_required: "Все настройки являются обязательными, пожалуйста, заполните все поля перед проверкой."
           smtp_settings_valid: "Параметры SMTP настроены правильно."
           smtp_title: "SMTP"
@@ -757,7 +760,7 @@ ru:
           settings:
             title: "Настройки"
             allow_unknown_sender_topic_replies: "Разрешать в теме ответы от неизвестного отправителя."
-            allow_unknown_sender_topic_replies_hint: "Разрешать неизвестным отправителям отвечать в групповой теме. Если этот параметр не включен, ответы с адресов электронной почты пользователей, не включенных в группу или не приглашенных в тему, создадут новую тему."
+            allow_unknown_sender_topic_replies_hint: "Разрешать неизвестным отправителям отвечать в групповой теме. Если этот параметр не включен, ответы с адресов электронной почты пользователей, не приглашенных в тему, создадут новую тему."
           mailboxes:
             synchronized: "Синхронизированный почтовый ящик"
             none_found: "В этой учётной записи электронной почты не найдено ни одного почтового ящика."
@@ -2350,13 +2353,25 @@ ru:
         delete: "Удалить темы"
         dismiss: "Отложить"
         dismiss_read: "Отложить все непрочитанные"
-        dismiss_read_with_selected: "Пометить прочитанными (%{count})"
+        dismiss_read_with_selected:
+          one: "Отложить %{count} непрочитанное"
+          few: "Отложить %{count} непрочитанных"
+          many: "Отложить %{count} непрочитанных"
+          other: "Отложить %{count} непрочитанных"
         dismiss_button: "Отложить..."
-        dismiss_button_with_selected: "Пометить прочитанными (%{count})..."
+        dismiss_button_with_selected:
+          one: "Отложить (%{count})..."
+          few: "Отложить (%{count})..."
+          many: "Отложить (%{count})..."
+          other: "Отложить (%{count})..."
         dismiss_tooltip: "Отложить новые сообщения или перестать следить за этими темами"
         also_dismiss_topics: "Перестать следить за этими темами, чтобы они никогда больше не высвечивались как непрочитанные"
         dismiss_new: "Отложить новые"
-        dismiss_new_with_selected: "Отклонить новые (%{count})"
+        dismiss_new_with_selected:
+          one: "Отложить новые (%{count})"
+          few: "Отложить новые (%{count})"
+          many: "Отложить новые (%{count})"
+          other: "Отложить новые (%{count})"
         toggle: "Вкл./выкл. выбор нескольких тем"
         actions: "Массовые действия"
         change_category: "Задать раздел"
@@ -2392,7 +2407,6 @@ ru:
         new: "У вас нет новых тем."
         read: "Вы ещё не прочитали ни одной темы."
         posted: "Вы ещё не принимали участие в обсуждении."
-        ready_to_create: "Готовы "
         latest: "Нет обновлённых или недавно созданных тем."
         bookmarks: "У вас пока нет тем, добавленных в закладки."
         category: "В разделе %{category} отсутствуют темы."
@@ -2496,7 +2510,6 @@ ru:
       browse_all_categories: Просмотреть все разделы
       browse_all_tags: Просмотреть все теги
       view_latest_topics: Просмотреть последние темы
-      suggest_create_topic: начать новое обсуждение?
       jump_reply_up: Перейти к более ранним ответам
       jump_reply_down: Перейти к более поздним ответам
       deleted: "Тема удалена"
@@ -3558,7 +3571,7 @@ ru:
         show_incoming_updated_topics: "%{shortcut} Показать обновлённые темы"
         search: "%{shortcut} Поиск"
         help: "%{shortcut} Показать эту справку"
-        dismiss_new_posts: "%{shortcut} Отложить новые сообщения"
+        dismiss_new: "%{shortcut} Отложить новые"
         dismiss_topics: "%{shortcut} Отложить темы"
         log_out: "%{shortcut} Выйти"
       composing:
@@ -3907,6 +3920,7 @@ ru:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Поисковые логи</a>'
             disabled: 'Отчёт о поисковых запросах отключён. Включить <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал поисковых запросов</a> для сбора данных.'
+          average_chart_label: Среднее
           filters:
             file_extension:
               label: Расширение файла
@@ -4038,6 +4052,8 @@ ru:
               write: Создание новой темы или сообщения в уже существующей теме.
               read_lists: Чтение тем, отображаемых в секциях Последние, Новые, Обсуждаемые и т.д. RSS также поддерживается.
               wordpress: Работа плагина WordPress wp-discourse.
+            posts:
+              edit: Редактирование сообщения.
             users:
               bookmarks: Список закладок пользователя. Возвращает напоминания о закладках при использовании формата ICS.
               sync_sso: Синхронизация пользователя с помощью DiscourseConnect.
@@ -4784,7 +4800,6 @@ ru:
           upload_successful: "Загрузка прошла успешна. Слова добавлены."
         test:
           button_label: "Тестирование слов"
-          modal_title: "Тест контролируемых слов - '%{action}'"
           description: "Введите текст, чтобы проверить совпадения с контролируемыми словами:"
           found_matches: "Найденные совпадения:"
           no_matches: "Совпадений не найдено"

@@ -404,6 +404,7 @@ sw:
           notification: Taarifa
         email:
           title: "Barua Pepe"
+          last_updated_by: "na"
           credentials:
             username: "Jina la mtumiaji"
             password: "Nywila"
@@ -2163,7 +2164,6 @@ sw:
         show_incoming_updated_topics: "%{shortcut} Onyesha mada zilizosasishwa"
         search: "%{shortcut} Tafuta"
         help: "%{shortcut} Fungua msaada wa kibodi"
-        dismiss_new_posts: "%{shortcut} Ondosha Mpya/Machapisho"
         dismiss_topics: "%{shortcut} Puuzia Mada"
         log_out: "%{shortcut} Ondoka"
       composing:

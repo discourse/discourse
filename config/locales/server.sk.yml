@@ -1437,8 +1437,6 @@ sk:
         title: "Suspendovaný užívateľ"
       agree_and_silence:
         title: "Tichý užívateľ"
-      delete_spammer:
-        title: "Zmazať spammera"
       delete_single:
         title: "Odstrániť"
       disagree:
@@ -1450,8 +1448,6 @@ sk:
           title: "Odstrániť používateľa"
       reject:
         title: "Zamietnuť"
-      delete_user:
-        title: "Odstrániť používateľa"
   activemodel:
     errors:
       <<: *errors

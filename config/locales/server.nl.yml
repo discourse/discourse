@@ -100,7 +100,6 @@ nl:
       maximum_staged_user_per_email_reached: "Het maximale aantal staged gebruikers dat per e-mail kan worden aangemaakt is bereikt."
       no_subject: "(geen onderwerp)"
       no_body: "(geen hoofdtekst)"
-      missing_attachment: "(Bijlage %{filename} ontbreekt)"
       errors:
         empty_email_error: "Gebeurt wanneer de e-mail die we hebben ontvangen leeg was."
         no_message_id_error: "Gebeurt wanneer de e-mail geen 'Message-Id'-header heeft."
@@ -235,9 +234,6 @@ nl:
     not_enough_space_on_disk: "Er is niet voldoende ruimte op de schijf om deze back-up te uploaden."
     invalid_filename: "De naam van het back-upbestand bevat ongeldige tekens. Geldige tekens zijn a-z 0-9 . - _."
     file_exists: "Het bestand dat u probeert te uploaden bestaat al."
-    location:
-      local: "Lokaal"
-      s3: "Amazon S3"
   invalid_params: "U hebt ongeldige parameters opgegeven voor het verzoek: %{message}"
   not_logged_in: "U dient aangemeld te zijn om dat te doen."
   not_found: "De opgevraagde URL of bron kon niet worden gevonden."
@@ -251,7 +247,6 @@ nl:
   email_template_cant_be_modified: "Deze e-mailsjabloon kan niet worden aangepast."
   invalid_whisper_access: "Fluisterberichten zijn niet ingeschakeld, of u kunt geen fluisterberichten maken"
   not_in_group:
-    title_category: "U moet in een groep zitten om deze categorie te zien."
     request_membership: "Lidmaatschap aanvragen"
     join_group: "Deelnemen aan groep"
   deleted_topic: "Oeps! Dit topic is verwijderd en is niet meer beschikbaar."
@@ -3099,10 +3094,6 @@ nl:
       agree_and_hide:
         title: "Bericht verbergen"
         description: "Dit bericht verbergen en de gebruiker automatisch een bericht sturen waarin dringend wordt gevraagd het te bewerken."
-      delete_spammer:
-        title: "Spammer verwijderen"
-        description: "De gebruiker en alle berichten en topics ervan verwijderen."
-        confirm: "Weet u zeker dat u alle berichten en topics van die gebruiker wilt verwijderen en het IP-nummer en e-mailadressen ervan wilt blokkeren?"
       delete_single:
         title: "Verwijderen"
       delete:
@@ -3147,8 +3138,6 @@ nl:
       reject:
         title: "Weigeren"
       delete_user:
-        title: "Gebruiker verwijderen"
-        confirm: "Weet u zeker dat u die gebruiker wilt verwijderen? Dit verwijdert alle berichten en blokkeert het e-mail- en IP-adres van de gebruiker."
         reason: "Verwijderd via wachtrij voor beoordeling"
   email_style:
     html_missing_placeholder: "De HTML-sjabloon moet %{placeholder} bevatten"
