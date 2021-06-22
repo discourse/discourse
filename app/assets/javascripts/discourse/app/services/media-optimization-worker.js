@@ -22,7 +22,7 @@ export default class MediaOptimizationWorkerService extends Service {
   }
 
   ensureAvailiableWorker() {
-    if (this.worker === null) {
+    if (!this.worker) {
       this.startWorker();
       this.registerMessageHandler();
       this.appEvents.on("composer:closed", this, "stopWorker");
