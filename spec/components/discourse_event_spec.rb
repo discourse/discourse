@@ -83,9 +83,25 @@ describe DiscourseEvent do
         expect(harvey.job).to eq('Supervillain')
         expect(harvey.name).to eq('Two Face')
       end
-
     end
 
-  end
+    context '#all_off' do
 
+      let(:event_handler_2) do
+        Proc.new { |user| user.job = 'Supervillain' }
+      end
+
+      before do
+        DiscourseEvent.on(:acid_face, &event_handler_2)
+      end
+
+      it 'removes all handlers with a key' do
+        harvey.job = 'gardening'
+        DiscourseEvent.all_off(:acid_face)
+        DiscourseEvent.trigger(:acid_face, harvey) # Doesn't change anything
+        expect(harvey.job).to eq('gardening')
+      end
+
+    end
+  end
 end

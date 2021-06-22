@@ -26,4 +26,8 @@ class DiscourseEvent
     raise ArgumentError.new "DiscourseEvent.off must reference a block" if block.nil?
     events[event_name].delete(block)
   end
+
+  def self.all_off(event_name)
+    events.delete(event_name)
+  end
 end
