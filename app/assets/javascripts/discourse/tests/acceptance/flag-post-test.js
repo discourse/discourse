@@ -2,17 +2,27 @@ import {
   acceptance,
   count,
   exists,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import { run } from "@ember/runloop";
 
 async function openFlagModal() {
   if (exists(".topic-post:first-child button.show-more-actions")) {
     await click(".topic-post:first-child button.show-more-actions");
   }
   await click(".topic-post:first-child button.create-flag");
+}
+
+function keyDown(element, keyCode, modifier) {
+  const event = document.createEvent("Event");
+  event.initEvent("keydown", true, true);
+  event.keyCode = 13;
+  event[modifier] = true;
+  run(() => element.dispatchEvent(event));
 }
 
 acceptance("flagging", function (needs) {
@@ -141,5 +151,37 @@ acceptance("flagging", function (needs) {
 
     await click(".modal-footer .btn-primary");
     assert.ok(!exists(".bootbox.modal:visible"));
+  });
+
+  test("CTRL + ENTER accepts the modal", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+
+    const modal = query("#discourse-modal");
+    keyDown(modal, 13, "ctrlKey");
+    assert.ok(
+      exists("#discourse-modal:visible"),
+      "The modal wasn't closed because the accept button was disabled"
+    );
+
+    await click("#radio_inappropriate"); // this enables the accept button
+    keyDown(modal, 13, "ctrlKey");
+    assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
+  });
+
+  test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+
+    const modal = query("#discourse-modal");
+    keyDown(modal, 13, "metaKey");
+    assert.ok(
+      exists("#discourse-modal:visible"),
+      "The modal wasn't closed because the accept button was disabled"
+    );
+
+    await click("#radio_inappropriate"); // this enables the accept button
+    keyDown(modal, 13, "ctrlKey");
+    assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
   });
 });
