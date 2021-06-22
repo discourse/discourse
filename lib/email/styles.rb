@@ -121,8 +121,10 @@ module Email
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px; vertical-align:middle;')
       style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
 
-      style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
-      style('blockquote > p', 'padding: 1em;')
+      style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin-left: 0; padding: 12px;')
+      style('blockquote > :first-child', 'margin-top: 0 !important;')
+      style('blockquote > :last-child', 'margin-bottom: 0 !important;')
+      style('blockquote > p', 'padding: 0 !important;')
 
       # Oneboxes
       style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px; margin-bottom: 10px;")
@@ -200,7 +202,7 @@ module Email
 
       style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
       style('h4', 'color: #222;')
-      style('h3', 'margin: 15px 0 20px 0;')
+      style('h3', 'margin: 30px 0 10px;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color};")
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
