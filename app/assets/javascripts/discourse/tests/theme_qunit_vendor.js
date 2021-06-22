@@ -32,6 +32,5 @@
 //= require jquery.autoellipsis-1.0.10
 //= require virtual-dom
 //= require virtual-dom-amd
-//= require intersection-observer
 //= require discourse-shims
 //= require pretty-text-bundle
