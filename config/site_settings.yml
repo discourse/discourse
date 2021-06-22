@@ -1400,6 +1400,33 @@ files:
   decompressed_backup_max_file_size_mb:
     default: 100000
     hidden: true
+  composer_media_optimization_image_enabled:
+    default: false
+    client: true
+  composer_media_optimization_image_kilobytes_optimization_threshold:
+    default: 1048576
+    client: true
+  composer_media_optimization_image_resize_dimensions_threshold:
+    default: 1920
+    client: true
+  composer_media_optimization_image_resize_width_target:
+    default: 1920
+    client: true
+  composer_media_optimization_image_resize_pre_multiply:
+    default: false
+    hidden: true
+    client: true
+  composer_media_optimization_image_resize_linear_rgb:
+    default: false
+    hidden: true
+    client: true
+  composer_media_optimization_image_encode_quality:
+    default: 75
+    client: true
+  composer_media_optimization_debug_mode:
+    default: false
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:

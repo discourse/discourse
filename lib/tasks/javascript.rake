@@ -113,6 +113,8 @@ def dependencies
     }, {
       source: 'blueimp-file-upload/js/jquery.iframe-transport.js',
     }, {
+      source: 'blueimp-file-upload/js/jquery.fileupload-process.js',
+    }, {
       source: 'blueimp-file-upload/js/vendor/jquery.ui.widget.js',
     }, {
       source: 'jquery/dist/jquery.js'
@@ -193,6 +195,30 @@ def dependencies
     },
     {
       source: 'sinon/pkg/sinon.js'
+    },
+    {
+      source: 'squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js',
+      destination: 'squoosh',
+      public: true,
+      skip_versioning: true
+    },
+    {
+      source: 'squoosh/codecs/mozjpeg/enc/mozjpeg_enc.wasm',
+      destination: 'squoosh',
+      public: true,
+      skip_versioning: true
+    },
+    {
+      source: 'squoosh/codecs/resize/pkg/squoosh_resize.js',
+      destination: 'squoosh',
+      public: true,
+      skip_versioning: true
+    },
+    {
+      source: 'squoosh/codecs/resize/pkg/squoosh_resize_bg.wasm',
+      destination: 'squoosh',
+      public: true,
+      skip_versioning: true
     },
 
   ]
