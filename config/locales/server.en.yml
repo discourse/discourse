@@ -111,7 +111,7 @@ en:
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       no_subject: "(no subject)"
       no_body: "(no body)"
-      missing_attachment: "(Attachment %{filename} is missing) ago."
+      missing_attachment: "(Attachment %{filename} is missing)"
       continuing_old_discussion:
         one: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} day ago."
         other: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} days ago."
@@ -279,9 +279,6 @@ en:
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
     invalid_filename: "The backup filename contains invalid characters. Valid characters are a-z 0-9 . - _."
     file_exists: "The file you are trying to upload already exists."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
 
   invalid_params: "You supplied invalid parameters to the request: %{message}"
   not_logged_in: "You need to be logged in to do that."
@@ -1973,7 +1970,7 @@ en:
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
-    reviewable_low_priority_threshold: "The priority filter hides reviewable that doesn't meet this score unless the '(any)' filter is used."
+    reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
 
@@ -2597,7 +2594,9 @@ en:
     email_in_spam_header: "User's first email was flagged as spam"
     already_silenced: "User was already silenced by %{staff} %{time_ago}."
     already_suspended: "User was already suspended by %{staff} %{time_ago}."
-    cannot_delete_has_posts: "User %{username} has %{post_count} posts(s), either public posts or personal messages, so they can't be deleted."
+    cannot_delete_has_posts:
+      one: "User %{username} has %{count} post in a public topic or personal message, so they can't be deleted."
+      other: "User %{username} has %{count} posts in public topics or personal messages, so they can't be deleted."
 
   reviewables_reminder:
     submitted:
