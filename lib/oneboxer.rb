@@ -407,7 +407,8 @@ module Oneboxer
         ignore_hostnames: blocked_domains,
         force_get_hosts: force_get_hosts,
         force_custom_user_agent_hosts: force_custom_user_agent_hosts,
-        preserve_fragment_url_hosts: preserve_fragment_url_hosts
+        preserve_fragment_url_hosts: preserve_fragment_url_hosts,
+        timeout: 5
       }
 
       if strategy && Oneboxer.strategies[strategy][:force_get_host]
