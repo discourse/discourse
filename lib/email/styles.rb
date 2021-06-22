@@ -185,7 +185,7 @@ module Email
     def format_html
       correct_first_body_margin
       correct_footer_style
-      correct_footer_style_hilight_first
+      correct_footer_style_highlight_first
       reset_tables
 
       html_lang = SiteSetting.default_locale.sub("_", "-")
@@ -376,9 +376,9 @@ module Email
       end
     end
 
-    def correct_footer_style_hilight_first
+    def correct_footer_style_highlight_first
       footernum = 0
-      @fragment.css('.footer.hilight').each do |element|
+      @fragment.css('.footer.highlight').each do |element|
         linknum = 0
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT
