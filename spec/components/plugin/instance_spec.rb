@@ -621,6 +621,7 @@ describe Plugin::Instance do
 
       after do
         DB.exec("ALTER TABLE directory_items DROP COLUMN IF EXISTS #{column_name}")
+        DiscourseEvent.all_off("before_directory_refresh")
       end
 
       it 'creates a directory column record when directory items are refreshed' do
@@ -629,7 +630,6 @@ describe Plugin::Instance do
 
         DirectoryItem.refresh!
         expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false)).to be_present
-        DiscourseEvent.all_off("before_directory_refresh")
       end
     end
 
