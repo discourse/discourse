@@ -1006,7 +1006,8 @@ def fix_missing_s3
     verification_status: Upload.verification_statuses[:invalid_etag]
   ).pluck(:id)
   ids.each do |id|
-    upload = Upload.find(id)
+    upload = Upload.find_by(id: id)
+    next if !upload
 
     tempfile = nil
 
