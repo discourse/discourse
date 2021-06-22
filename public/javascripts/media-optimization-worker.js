@@ -135,7 +135,7 @@ onmessage = async function (e) {
       }
       break;
     default:
-      logIfDebug(`Sorry, we are out of ${e}.`, true);
+      logIfDebug(`Sorry, we are out of ${e}.`);
   }
 };
 
