@@ -156,19 +156,6 @@ describe SvgSprite do
     expect(icons).to include("fly")
   end
 
-  it 'includes custom icons from a sprite in a theme' do
-    theme = Fabricate(:theme)
-    fname = "custom-theme-icon-sprite.svg"
-
-    upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
-
-    theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
-    theme.save!
-
-    expect(Upload.where(id: upload.id)).to be_exist
-    expect(SvgSprite.bundle(theme.id)).to match(/my-custom-theme-icon/)
-  end
-
   context "s3" do
     let(:upload_s3) { Fabricate(:upload_s3) }
 
@@ -191,8 +178,7 @@ describe SvgSprite do
       theme.save!
 
       sprite_files = SvgSprite.custom_svg_sprites(theme.id).join("|")
-      expect(sprite_files).to match(/#{upload_s3.sha1}/)
-      expect(sprite_files).not_to match(/amazonaws/)
+      expect(sprite_files).to match(/my-custom-theme-icon/)
 
       SvgSprite.bundle(theme.id)
       expect(SvgSprite.cache.hash.keys).to include("custom_svg_sprites_#{theme.id}")
@@ -201,9 +187,8 @@ describe SvgSprite do
       File.delete external_copy.try(:path)
 
       SvgSprite.bundle(theme.id)
-      # when a file is missing, ensure that cache entry is cleared
-      expect(SvgSprite.cache.hash.keys).to_not include("custom_svg_sprites_#{theme.id}")
-
+      # after a temp file is missing, bundling still works
+      expect(SvgSprite.cache.hash.keys).to include("custom_svg_sprites_#{theme.id}")
     end
   end
 
@@ -236,5 +221,63 @@ describe SvgSprite do
   it "includes Font Awesome icon from groups" do
     group = Fabricate(:group, flair_icon: "far-building")
     expect(SvgSprite.bundle).to match(/far-building/)
+  end
+
+  describe "#custom_svg_sprites" do
+    it 'is empty by default' do
+      expect(SvgSprite.custom_svg_sprites(nil)).to be_empty
+      expect(SvgSprite.bundle).not_to be_empty
+    end
+
+    context "with a plugin" do
+      let :plugin1 do
+        plugin1 = Plugin::Instance.new
+        plugin1.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+        plugin1
+      end
+
+      before do
+        Discourse.plugins << plugin1
+        plugin1.activate!
+      end
+
+      after do
+        Discourse.plugins.delete plugin1
+      end
+
+      it "includes custom icons from plugins" do
+        expect(SvgSprite.custom_svg_sprites(nil).size).to eq(1)
+        expect(SvgSprite.bundle).to match(/custom-icon/)
+      end
+    end
+
+    it 'includes custom icons in a theme' do
+      theme = Fabricate(:theme)
+      fname = "custom-theme-icon-sprite.svg"
+
+      upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+      theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
+      theme.save!
+
+      expect(Upload.where(id: upload.id)).to be_exist
+      expect(SvgSprite.bundle(theme.id)).to match(/my-custom-theme-icon/)
+    end
+
+    it 'includes custom icons in a child theme' do
+      theme = Fabricate(:theme)
+      fname = "custom-theme-icon-sprite.svg"
+      child_theme = Fabricate(:theme, component: true)
+      theme.add_relative_theme!(:child, child_theme)
+
+      upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+      child_theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
+      child_theme.save!
+
+      expect(Upload.where(id: upload.id)).to be_exist
+      expect(SvgSprite.bundle(theme.id)).to match(/my-custom-theme-icon/)
+    end
+
   end
 end
