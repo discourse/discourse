@@ -38,7 +38,7 @@ class EditDirectoryColumnsController < ApplicationController
   private
 
   def update_directory_item_serializer_attributes
-    ::DirectoryItemSerializer::UserSerializer.attributes(*DirectoryColumn.active_column_names)
+    ::DirectoryItemSerializer.attributes(*DirectoryColumn.active_column_names)
   end
 
   def ensure_user_fields_have_columns
