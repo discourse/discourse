@@ -309,5 +309,31 @@ describe UserBadgesController do
       user_badge = UserBadge.find_by(user: user, badge: badge)
       expect(user_badge.is_favorite).to be false
     end
+
+    it "works with multiple grants" do
+      SiteSetting.max_favorite_badges = 2
+
+      sign_in(user)
+
+      badge = Fabricate(:badge, multiple_grant: true)
+      user_badge = UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now, seq: 0, is_favorite: true)
+      user_badge2 = UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now, seq: 1, is_favorite: true)
+      other_badge = Fabricate(:badge)
+      other_user_badge = UserBadge.create(badge: other_badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now)
+
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(200)
+      expect(user_badge.reload.is_favorite).to eq(false)
+      expect(user_badge2.reload.is_favorite).to eq(false)
+
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(200)
+      expect(user_badge.reload.is_favorite).to eq(true)
+      expect(user_badge2.reload.is_favorite).to eq(true)
+
+      put "/user_badges/#{other_user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(200)
+      expect(other_user_badge.reload.is_favorite).to eq(true)
+    end
   end
 end
