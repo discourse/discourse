@@ -152,12 +152,15 @@ describe Email::MessageBuilder do
 
   context "header args" do
 
+    let(:additional_opts) { {} }
     let(:message_with_header_args) do
       Email::MessageBuilder.new(
         to_address,
+        {
         body: 'hello world',
         topic_id: 1234,
         post_id: 4567,
+        }.merge(additional_opts)
       )
     end
 
@@ -169,6 +172,42 @@ describe Email::MessageBuilder do
       expect(message_with_header_args.header_args['X-Discourse-Topic-Id']).to eq('1234')
     end
 
+    it "uses the default reply-to header" do
+      expect(message_with_header_args.header_args['Reply-To']).to eq("\"Discourse\" <#{SiteSetting.notification_email}>")
+    end
+
+    context "when allow_reply_by_email is enabled " do
+      let(:additional_opts) { { allow_reply_by_email: true } }
+
+      it "uses the reply by email address if that is enabled" do
+        SiteSetting.manual_polling_enabled = true
+        SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
+        SiteSetting.reply_by_email_enabled = true
+        expect(message_with_header_args.header_args['Reply-To']).to eq("\"Discourse\" <test+%{reply_key}@test.com>")
+      end
+    end
+
+    context "when allow_reply_by_email is enabled and use_from_address_for_reply_to is enabled but no from address is specified" do
+      let(:additional_opts) { { allow_reply_by_email: true, use_from_address_for_reply_to: true } }
+
+      it "uses the notification_email address, the default reply-to header" do
+        SiteSetting.manual_polling_enabled = true
+        SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
+        SiteSetting.reply_by_email_enabled = true
+        expect(message_with_header_args.header_args['Reply-To']).to eq("\"Discourse\" <#{SiteSetting.notification_email}>")
+      end
+    end
+
+    context "when allow_reply_by_email is enabled and use_from_address_for_reply_to is enabled and from is specified" do
+      let(:additional_opts) { { allow_reply_by_email: true, use_from_address_for_reply_to: true, from: "team@test.com" } }
+
+      it "removes the reply-to header because it is identical to the from header" do
+        SiteSetting.manual_polling_enabled = true
+        SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
+        SiteSetting.reply_by_email_enabled = true
+        expect(message_with_header_args.header_args['Reply-To']).to eq(nil)
+      end
+    end
   end
 
   context "unsubscribe link" do
@@ -337,7 +376,5 @@ describe Email::MessageBuilder do
       SiteSetting.stubs(:email_site_title).returns("::>>>Best \"Forum\", EU: Award Winning<<<")
       expect(build_args[:from]).to eq("\"Best Forum EU Award Winning\" <#{SiteSetting.notification_email}>")
     end
-
   end
-
 end
