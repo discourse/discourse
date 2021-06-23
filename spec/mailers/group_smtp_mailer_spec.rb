@@ -3,7 +3,7 @@ require 'rails_helper'
 require 'email/receiver'
 
 describe GroupSmtpMailer do
-  let(:group) {
+  let(:group) do
     Fabricate(:group,
               name: 'Testers',
               title: 'Tester',
@@ -19,15 +19,15 @@ describe GroupSmtpMailer do
               email_username: 'bugs@gmail.com',
               email_password: 'super$secret$password'
              )
-  }
+  end
 
-  let(:user) {
+  let(:user) do
     user = Fabricate(:user)
     group.add_owner(user)
     user
-  }
+  end
 
-  let(:email) {
+  let(:email) do
     <<~EOF
     Delivered-To: bugs@gmail.com
     MIME-Version: 1.0
@@ -42,17 +42,18 @@ describe GroupSmtpMailer do
 
     How are you doing?
     EOF
-  }
+  end
 
-  let(:receiver) {
-    receiver = Email::Receiver.new(email,
-                                   destinations: [group],
-                                   uid_validity: 1,
-                                   uid: 10000
-                                  )
-  receiver.process!
-  receiver
-  }
+  let(:receiver) do
+    receiver = Email::Receiver.new(
+      email,
+      destinations: [group],
+      uid_validity: 1,
+      uid: 10000
+    )
+    receiver.process!
+    receiver
+  end
 
   let(:raw) { 'hello, how are you doing?' }
 

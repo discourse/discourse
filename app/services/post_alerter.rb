@@ -634,6 +634,7 @@ class PostAlerter
     topic_allowed_users_by_age = post.topic.topic_allowed_users.includes(:user).order(:created_at).reject do |tau|
       not_allowed?(tau.user, post)
     end
+    return emails_to_skip_send if topic_allowed_users_by_age.empty?
 
     to_address = topic_allowed_users_by_age.first.user.email
     cc_addresses = topic_allowed_users_by_age[1..-1].map { |tau| tau.user.email }
