@@ -41,7 +41,7 @@ args = ["-s", "--cwd", yarn_dir, "run", "ember", command] + ARGV.reject do |a|
   ["--try", "--test", "--unicorn", "-u"].include?(a)
 end
 
-if !args.include?("--proxy")
+if !args.include?("test") && !args.include?("--proxy")
   args << "--proxy"
   args << PROXY
 end
