@@ -10,6 +10,7 @@ module Jobs
       group = Group.find_by(id: args[:group_id])
       post = Post.find_by(id: args[:post_id])
       email = args[:email]
+      cc_addresses = args[:cc_emails]
 
       # There is a rare race condition causing the Imap::Sync class to create
       # an incoming email and associated post/topic, which then kicks off
@@ -27,23 +28,12 @@ module Jobs
       ImapSyncLog.debug("Sending SMTP email for post #{post.id} in topic #{post.topic_id} to #{email}.", group)
 
       recipient_user = ::UserEmail.find_by(email: email, primary: true)&.user
-      message = GroupSmtpMailer.send_mail(group, email, post)
-      Email::Sender.new(message, :group_smtp, recipient_user).send
+      message = GroupSmtpMailer.send_mail(group, email, post, cc_addresses)
 
-      # Create an incoming email record to avoid importing again from IMAP
-      # server.
-      IncomingEmail.create!(
-        user_id: post.user_id,
-        topic_id: post.topic_id,
-        post_id: post.id,
-        raw: message.to_s,
-        subject: message.subject,
-        message_id: message.message_id,
-        to_addresses: message.to,
-        cc_addresses: message.cc,
-        from_address: message.from,
-        created_via: IncomingEmail.created_via_types[:group_smtp]
-      )
+      # The EmailLog record created by Email::Sender is used to avoid double
+      # importing from IMAP. Previously IncomingEmail was used, but it did
+      # not make sense to make an IncomingEmail record for outbound emails.
+      Email::Sender.new(message, :group_smtp, recipient_user).send
     end
   end
 end

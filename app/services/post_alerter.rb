@@ -582,20 +582,16 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    # Users who interacted with the post by _directly_ emailing the group
-    # via the group's email_username which is configured via SMTP/IMAP.
-    #
-    # This excludes people who replied via email to a user_private_message
-    # notification email which will have a PostReplyKey. These people should
-    # not be emailed again by the user_private_message notifications below.
-    #
-    # This also excludes people who emailed the group by one of its incoming_email
-    # addresses, e.g. somegroup+support@discoursemail.com, which is part of the
-    # normal group email flow and has nothing to do with SMTP/IMAP.
-    emails_to_skip_send = notify_group_direct_emailers(post)
+    # To simplify things and to avoid IMAP double sync issues, and to cut down
+    # on emails sent via SMTP, any topic_allowed_users (except those who are
+    # not_allowed?) for a group that has SMTP enabled will have their notification
+    # email combined into one and sent via a single group SMTP email with CC addresses.
+    emails_to_skip_send = email_using_group_smtp_if_configured(post)
 
-    # Users that aren't part of any mentioned groups and who did not email
-    # the group directly at the group's email_username.
+    # We create notifications for all directly_targeted_users and email those
+    # who do _not_ have their email addresses in the emails_to_skip_send array
+    # (which will include all topic allowed users' email addresses if group SMTP
+    # is enabled).
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
@@ -605,7 +601,8 @@ class PostAlerter
       end
     end
 
-    # Users that are part of all mentioned groups.
+    # Users that are part of all mentioned groups. Emails sent by this notification
+    # flow will not be sent via group SMTP if it is enabled.
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
@@ -620,27 +617,38 @@ class PostAlerter
   end
 
   def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp || !SiteSetting.enable_imap || post.post_type != Post.types[:regular]
-    post.topic.allowed_groups.where(smtp_enabled: true, imap_enabled: true).first
+    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
+    post.topic.allowed_groups.where(smtp_enabled: true).first
   end
 
-  def notify_group_direct_emailers(post)
-    email_addresses = []
+  def email_using_group_smtp_if_configured(post)
     emails_to_skip_send = []
     group = group_notifying_via_smtp(post)
-
     return emails_to_skip_send if group.blank?
 
-    # If the post already has an incoming email, it has been set in the
-    # Email::Receiver or via the GroupSmtpEmail job, and thus it was created
-    # via the IMAP/SMTP flow, so there is no need to notify those involved
-    # in the email chain again.
-    if post.incoming_email.blank?
-      email_addresses = post.topic.incoming_email_addresses(group: group)
-      if email_addresses.any?
-        Jobs.enqueue(:group_smtp_email, group_id: group.id, post_id: post.id, email: email_addresses)
-      end
+    to_address = nil
+    cc_addresses = []
+
+    # We need to use topic_allowed_users here instead of directly_targeted_users
+    # because we want to make sure the to_address goes to the OP of the topic.
+    topic_allowed_users_by_age = post.topic.topic_allowed_users.includes(:user).order(:created_at).reject do |tau|
+      not_allowed?(tau.user, post)
     end
+
+    to_address = topic_allowed_users_by_age.first.user.email
+    cc_addresses = topic_allowed_users_by_age[1..-1].map { |tau| tau.user.email }
+    email_addresses = [to_address, cc_addresses].flatten
+
+    # Send a single email using group SMTP settings to cut down on the
+    # number of emails sent via SMTP, also to replicate how support systems
+    # and group inboxes generally work in other systems.
+    Jobs.enqueue(
+      :group_smtp_email,
+      group_id: group.id,
+      post_id: post.id,
+      email: to_address,
+      cc_emails: cc_addresses
+    )
 
     # Add the group's email_username into the array, because it is used for
     # skip_send_email_to in the case of user private message notifications
@@ -648,7 +656,7 @@ class PostAlerter
     # will make another email for IMAP to pick up in the group's mailbox)
     emails_to_skip_send = email_addresses.dup if email_addresses.any?
     emails_to_skip_send << group.email_username
-    emails_to_skip_send
+    emails_to_skip_send.uniq
   end
 
   def notify_post_users(post, notified, group_ids: nil, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)

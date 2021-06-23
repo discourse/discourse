@@ -5,13 +5,8 @@ require_dependency 'email/message_builder'
 class GroupSmtpMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
-  def send_mail(from_group, to_address, post)
+  def send_mail(from_group, to_address, post, cc_addresses = nil)
     raise 'SMTP is disabled' if !SiteSetting.enable_smtp
-
-    incoming_email = IncomingEmail.joins(:post)
-      .where('imap_uid IS NOT NULL')
-      .where(topic_id: post.topic_id, posts: { post_number: 1 })
-      .limit(1).first
 
     context_posts = Post
       .where(topic_id: post.topic_id)
@@ -38,7 +33,8 @@ class GroupSmtpMailer < ActionMailer::Base
       user_name = post.user.name unless post.user.name.blank?
     end
 
-    build_email(to_address,
+    build_email(
+      to_address,
       message: post.raw,
       url: post.url(without_slug: SiteSetting.private_email?),
       post_id: post.id,
@@ -48,19 +44,20 @@ class GroupSmtpMailer < ActionMailer::Base
       group_name: from_group.name,
       allow_reply_by_email: true,
       only_reply_by_email: true,
-      use_from_address_for_reply_to: SiteSetting.enable_imap && from_group.imap_enabled?,
+      use_from_address_for_reply_to: SiteSetting.enable_smtp && from_group.smtp_enabled?,
       private_reply: post.topic.private_message?,
       participants: participants(post),
       include_respond_instructions: true,
       template: 'user_notifications.user_posted_pm',
       use_topic_title_subject: true,
-      topic_title: incoming_email&.subject || post.topic.title,
+      topic_title: post.topic.title,
       add_re_to_subject: true,
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,
       from: from_group.email_username,
       from_alias: I18n.t('email_from', user_name: user_name, site_name: Email.site_title),
-      html_override: html_override(post, context_posts: context_posts)
+      html_override: html_override(post, context_posts: context_posts),
+      cc: cc_addresses
     )
   end
 

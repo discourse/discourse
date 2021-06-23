@@ -2,6 +2,18 @@
 
 require 'net/imap'
 
+###
+# BROKEN
+# -------------------
+#
+# Note: (martin). Since changes have been made to the GroupSmtpMailer
+# to not create an IncomingEmail for outbound group SMTP emails, this
+# Sync functionality will be broken and will result in sent emails re-syncing
+# into the topic and creating more posts. We need to move to a model where
+# there is a single source of truth for external email data (e.g. an external
+# email metadata table) that stores IMAP uid, uid_validity, message_id, and
+# possibly even things like gmail thread IDs so we do not have to rely on the
+# IncomingEmail and EmailLog tables.
 module Imap
   class Sync
     def initialize(group, opts = {})

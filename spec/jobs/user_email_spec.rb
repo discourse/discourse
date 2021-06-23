@@ -178,6 +178,32 @@ describe Jobs::UserEmail do
       MD
     end
 
+    it "sends an email by default for a PM to a user that's been recently seen using group SMTP details" do
+      upload = Fabricate(:upload)
+
+      post.update!(raw: <<~RAW)
+      This is a test post
+
+      <a class="attachment" href="#{upload.url}">test</a>
+      <img src="#{upload.url}"/>
+      RAW
+
+      SiteSetting.enable_smtp = true
+      group = Fabricate(:smtp_group)
+      Fabricate(:topic_allowed_group, group: group, topic: post.topic)
+
+      Jobs::UserEmail.new.execute(
+        type: :user_private_message,
+        user_id: user.id,
+        post_id: post.id,
+        notification_id: notification.id
+      )
+
+      email = ActionMailer::Base.deliveries.first
+
+      expect(email.from.first).to eq(group.email_username)
+    end
+
     it "sends a PM email to a user that's been recently seen and has email_messages_level set to always" do
       user.user_option.update(email_messages_level: UserOption.email_level_types[:always])
       user.user_option.update(email_level: UserOption.email_level_types[:never])

@@ -84,7 +84,7 @@ describe GroupSmtpMailer do
       SiteSetting.reply_by_email_enabled = true
     end
 
-    it 'uses the correct IMAP/SMTP reply to address' do
+    it 'uses the correct IMAP/SMTP reply to address and does not create a post reply key' do
       post = PostCreator.create(user,
                                 topic_id: receiver.incoming_email.topic.id,
                                 raw: raw
@@ -92,13 +92,31 @@ describe GroupSmtpMailer do
 
       expect(ActionMailer::Base.deliveries.size).to eq(1)
 
+      expect(PostReplyKey.find_by(user_id: user.id, post_id: post.id)).to eq(nil)
+
       sent_mail = ActionMailer::Base.deliveries[0]
       expect(sent_mail.reply_to).to contain_exactly('bugs@gmail.com')
+      expect(sent_mail.from).to contain_exactly('bugs@gmail.com')
     end
 
     context "when IMAP is disabled for the group" do
       before do
         group.update(imap_enabled: false)
+      end
+
+      it "does send the email" do
+        post = PostCreator.create(user,
+                                  topic_id: receiver.incoming_email.topic.id,
+                                  raw: raw
+                                 )
+
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
+      end
+    end
+
+    context "when SMTP is disabled for the group" do
+      before do
+        group.update(smtp_enabled: false)
       end
 
       it "does not send the email" do
