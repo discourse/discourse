@@ -103,7 +103,6 @@ es:
       maximum_staged_user_per_email_reached: "Se alcanzó el número máximo de usuarios provisionales creados por correo electrónico."
       no_subject: "(sin título)"
       no_body: "(sin mensaje)"
-      missing_attachment: "(falta el archivo adjunto %{filename})"
       errors:
         empty_email_error: "Sucede cuando el texto en bruto del correo electrónico que recibimos está en blanco."
         no_message_id_error: "Sucede cuando el correo electrónico no tiene el encabezado de «ID del mensaje»."
@@ -256,9 +255,6 @@ es:
     not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de respaldo."
     invalid_filename: "El nombre de archivo del respaldo contiene caracteres inválidos. Los válidos son a-z 0-9 . - _."
     file_exists: "El archivo que estás intentando subir ya existe."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
   invalid_params: "Proporcionaste parámetros inválidos para la solicitud: %{message}"
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se pudo encontrar la URL o recurso solicitado."
@@ -273,7 +269,6 @@ es:
   invalid_whisper_access: "O los susurros no están habilitados o no tienes permitido crear susurros"
   not_in_group:
     title_topic: "Necesitas solicitar formar parte del grupo «%{group}» para ver este tema"
-    title_category: "Debes estar en grupo para ver esta categoría."
     request_membership: "Solicitar membresía"
     join_group: "Unirse al grupo"
   deleted_topic: "¡Ups! Este tema se ha eliminado y ya no está disponible."
@@ -630,11 +625,11 @@ es:
       * Acceder a la categoría privada Sala VIP, solo visible para usuarios de nivel 3 o más
       * Ocultar spam tras un solo reporte
 
-      Consulta aquí [la lista actualizada de usuarios habituales](%{base_path}/badges/3/regular). ¡Recuerda enviar un saludo!
+      Consulta aquí la [lista actualizada de usuarios habituales](%{base_path}/badges/3/regular). ¡Recuerda enviar un saludo!
 
       ¡Gracias por ser parte importante de esta comunidad!
 
-      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Por favor, ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán considerándose habituales.)
+      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán considerándose habituales.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEER PRIMERO: Guía rápida de inicio para administradores"
@@ -1786,7 +1781,6 @@ es:
     reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar sobre el mismo?"
     reviewable_default_topics: "Mostrar contenido revisable agrupado por tema por defecto"
     reviewable_default_visibility: "No muestre elementos revisables a menos que cumplan con esta prioridad"
-    reviewable_low_priority_threshold: "El filtro de prioridades oculta elementos a revisar que no lleguen a esta puntuación, salvo que se use el filtro «(cualquiera)»."
     high_trust_flaggers_auto_hide_posts: "Las publicaciones de los usuarios nuevos se esconden automáticamente tras ser marcadas como spam por un usuario con NC3 o superior"
     cooldown_hours_until_reflag: "Cantidad de tiempo que los usuarios deberán esperar antes de poder reportar de nuevo una publicación."
     reply_by_email_enabled: "Habilitar la respuesta a temas por correo electrónico."
@@ -2477,21 +2471,21 @@ es:
     contents_hidden: "Por favor, visita la publicación para ver su contenido."
     post_hidden:
       title: "Publicación oculta"
-      subject_template: "Mensaje ocultado debido a reportes de la comunidad"
+      subject_template: "Mensaje ocultado debido a denuncias de la comunidad"
       text_body_template: |
         Hola:
 
-        Este es un mensaje automático de %{site_name} para informarte que tu publicación fue ocultada.
+        Este es un mensaje automático de %{site_name} para informarte que tu publicación ha sido ocultada.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        Esta publicación se ocultó debido a reportes de la comunidad. Por esto, por favor, considera cómo podrías editar tus publicaciones tomando en cuenta esta respuesta de la comunidad. **Podrás editar tu publicación dentro de %{edit_delay} minutos y la misma dejará de estar oculta automáticamente.**
+        Esta publicación se ocultó debido a denuncias de la comunidad. Por esto, por favor, considera cómo podrías editar tus publicaciones teniendo en cuenta esta respuesta de la comunidad. **Podrás editar tu publicación dentro de %{edit_delay} minutos y la misma dejará de estar oculta automáticamente.**
 
-        Sin embargo, si la publicación es ocultada por la comunidad una segunda vez, se mantendrá oculta hasta que un miembro del staff la gestione.
+        Sin embargo, si la comunidad oculta la publicación una segunda vez, se mantendrá oculta hasta que un miembro del equipo la gestione.
 
-        Para más consejos, por favor, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
+        Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     post_hidden_again:
       title: "Mensaje ocultado de nuevo"
       subject_template: "Mensaje ocultado debido a reportes de la comunidad, staff notificado"
@@ -2826,7 +2820,7 @@ es:
 
         - ¿Usas más de una dirección de correo? ¿Has respondido desde la dirección que usaste originalmente? Es necesario que uses la misma dirección para responder que la que usaste originalmente
 
-        - ¿Ha usado correctamente tu programa de correo la propiedad Reply-To: al responder? Por desgracia, algunos programas responden a propiedad From:, que en este caso no funciona.
+        - ¿Has usado correctamente tu programa de correo la propiedad Reply-To: al responder? Por desgracia, algunos programas responden a propiedad From:, que en este caso no funciona.
 
         - ¿Se ha modificado el encabezado del correo Message-ID? No debe cambiarse. Es importante que sea consistente.
 
@@ -3588,7 +3582,8 @@ es:
       Estos términos regulan el uso del foro de Internet en <%{base_url}>. Para utilizar el foro, debes aceptar estos términos de %{company_name}, la compañía que maneja este foro.
 
       La compañía puede ofrecer otros productos y servicios, bajo diferentes términos. Estos términos se aplican únicamente al uso del foro.
-       Saltar a:
+
+      Saltar a:
 
       - [Términos importantes](#heading--terminos-importantes)
       - [Tus permisos para usar el foro](#heading--permisos)
@@ -3610,7 +3605,7 @@ es:
 
        <h2 id="heading--important-terms"><a href="#heading--important-terms">Términos Importantes</a></h2>
 
-       ***Estos términos incluyen una serie de disposiciones importantes que afectan tus derechos y responsabilidades, como las exenciones de responsabilidad en [liberación de responsabilidad](#heading--renuncias), límites de la responsabilidad de la empresa con usted en [límites de responsabilidad](#heading--limites-responsabilidad), tu acuerdo de cubrir a la compañía por los daños causados ​​por tu mal uso del foro en [responsabilidad de su uso](#heading--tu-responsabilidad) y un acuerdo para arbitrar disputas en [disputas](#heading--disputas).***
+       ***Estos términos incluyen una serie de disposiciones importantes que afectan tus derechos y responsabilidades, como las exenciones de responsabilidad en [Exención de responsabilidad](#heading--renuncias), límites de la responsabilidad de la empresa contigo en [Límites de responsabilidad](#heading--limites-responsabilidad), tu acuerdo de compensar a la compañía por los daños causados ​​por tu mal uso del foro en [Responsabilidad de su uso](#heading--tu-responsabilidad) y un acuerdo para arbitrar disputas en [Disputas](#heading--disputas).***
 
       <h2 id="heading--permission"><a href="#heading--permission">Tus permisos para usar el foro</a></h2>
 
@@ -3624,7 +3619,7 @@ es:
 
       2. No puedes usar el foro si la compañía te contacta directamente para decirte que no puedes usarlo.
 
-      3. Debes utilizar el foro de acuerdo con [uso aceptable](#heading--uso-aceptable) y los [estándares de contenido](#heading--estandares-contenido).
+      3. Debes utilizar el foro de acuerdo con [Uso aceptable](#heading--uso-aceptable) y los [Estándares de contenido](#heading--estandares-contenido).
 
       <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Uso aceptable</a></h2>
 
@@ -3636,15 +3631,15 @@ es:
 
       4. No puedes enviar anuncios publicitarios, mensajes en cadena u otras solicitudes a través del foro, o utilizar el foro para recopilar direcciones u otros datos personales para listas de correo comerciales o bases de datos.
 
-      5. No puedes automatizar el acceso al foro ni monitorear el foro mediante un rastreador web, complemento del navegador u otro programa de computación que no sea un navegador web. Puedes rastrear el foro para indexarlo en un motor de búsqueda disponible públicamente si eres el administrador de uno.
+      5. No puedes automatizar el acceso al foro ni monitorizar el foro mediante un rastreador web, complemento del navegador u otro programa informático que no sea un navegador web. Puedes rastrear el foro para indexarlo en un motor de búsqueda disponible públicamente si eres el administrador de uno.
 
       6. No puedes usar el foro para enviar correos electrónicos a listas de distribución, grupos de noticias o alias de correo grupales.
 
-      7. No puedes implicar falsamente que estás afiliado o respaldado por la compañía.
+      7. No puedes afirmar de manera implícita o explícita falsamente que estás afiliado o respaldado por la compañía.
 
-      8. No puede hacer hipervínculo a imágenes u otro contenido que no sea hipertexto en el foro en otras páginas web.
+      8. No puedes crear hipervínculos a imágenes u otro contenido que no sea hipertexto en el foro en otras páginas web.
 
-      9. No puedes eliminar ninguna marca que demuestre propiedad exclusiva de los materiales que descargues del foro.
+      9. No puedes eliminar ninguna marca que demuestre la propiedad exclusiva de los materiales que descargues del foro.
 
       10. No puedes mostrar ninguna parte del foro en otros sitios web con `<iframe>`.
 
@@ -3654,25 +3649,25 @@ es:
 
       13. No puedes hacerte pasar por otros a través del foro.
 
-      14. No puede alentar o ayudar a nadie que viole estos términos.
+      14. No puede alentar o ayudar a nadie a que viole estos términos.
 
       <h2 id="heading--content-standards"><a href="#heading--content-standards">Estándares de contenido</a></h2>
 
-      1. No puedes enviar contenido al foro que sea ilegal, ofensivo o perjudicial para los demás. Esto incluye contenido que acosador, inapropiado o abusivo.
+      1. No puedes enviar contenido al foro que sea ilegal, ofensivo o perjudicial para los demás. Esto incluye contenido que sea acosador, inapropiado o abusivo.
 
       2. No puedes enviar contenido al foro que viole la ley, infrinja los derechos de propiedad intelectual de nadie, infrinja la privacidad de nadie o incumpla los acuerdos que tenga con otros.
 
-      3. No puedes enviar contenido al foro que contenga códigos de computadora maliciosos, como virus informáticos o spyware.
+      3. No puedes enviar contenido al foro que contenga códigos informáticos maliciosos, como virus informáticos o spyware.
 
       4. No puedes enviar contenido al foro como un simple marcador de posición, para mantener una dirección particular, nombre de usuario u otro identificador único.
 
       5. No puedes usar el foro para divulgar información que no tenga derecho a divulgar, como la información confidencial de otros.
 
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Ley Aplicable</a></h2>
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Legislación aplicable</a></h2>
 
       La compañía puede investigar y procesar las violaciones de estos términos hasta el máximo alcance legal. La compañía puede notificar y cooperar con las autoridades policiales para procesar las violaciones de la ley y estos términos.
 
-      La empresa se reserva el derecho de cambiar, redactar y eliminar contenido en el foro por cualquier motivo. Si crees que alguien ha enviado contenido al foro que violen de estos términos, [contáctanos de inmediato](#heading--contacto).
+      La empresa se reserva el derecho de cambiar, redactar y eliminar contenido en el foro por cualquier motivo. Si crees que alguien ha enviado contenido al foro que viole estos términos, [contáctanos de inmediato](#heading--contacto).
 
       <h2 id="heading--your-account"><a href="#heading--your-account">Tu cuenta</a></h2>
 
@@ -3688,11 +3683,11 @@ es:
 
       Nada en estos términos le otorga a la empresa ningún derecho de propiedad sobre la propiedad intelectual que usted comparta con el foro, como la información de su cuenta, publicaciones u otro contenido que envíe al foro. Nada en estos términos te otorga ningún derecho de propiedad sobre la propiedad intelectual de la compañía tampoco.
 
-      Entre tú y la empresa, tú es el único responsable del contenido que envíes al foro. Aceptas no implicar erróneamente que el contenido que envía al foro está patrocinado o aprobado por la empresa. Estos términos no obligan a la compañía a almacenar, mantener o proporcionar copias del contenido que envíes y a cambiarlo de acuerdo con estos términos.
+      Entre tú y la empresa, tú es el único responsable del contenido que envíes al foro. Aceptas no afirmar de forma implícita o explícita falsamente que el contenido que envía al foro está patrocinado o aprobado por la empresa. Estos términos no obligan a la compañía a almacenar, mantener o proporcionar copias del contenido que envíes y a cambiarlo de acuerdo con estos términos.
 
       El contenido que envíes al foro te pertenece y tú decides qué permiso dar a otros para que lo hagan. Pero como mínimo, otorgas una licencia a la compañía para proporcionar contenido que envíes al foro a otros usuarios del foro. Esa licencia especial le permite a la compañía copiar, publicar y analizar el contenido que envíe al foro.
 
-      Cuando el contenido que envías se elimina del foro, lo hayas hecho tú o por la empresa, la licencia especial de la empresa finaliza cuando la última copia desaparece de las copias de seguridad, las cachés y otros sistemas de la empresa. Otras licencias que apliquen al contenido que envíe, como la licencia de [creativos comunes](https://creativecommons.org), pueden continuar después de que se elimine su contenido. Esas licencias pueden otorgar a otros o a la propia compañía el derecho a compartir tu contenido a través del foro nuevamente..
+      Cuando el contenido que envías se elimina del foro, lo hayas hecho tú o la empresa, la licencia especial de la empresa finaliza cuando la última copia desaparece de las copias de seguridad, las cachés y otros sistemas de la empresa. Otras licencias que apliquen al contenido que envíes, como la licencia de [creativos comunes](https://creativecommons.org), pueden continuar después de que se elimine el contenido. Esas licencias pueden otorgar a otros o a la propia compañía el derecho a compartir tu contenido a través del foro nuevamente.
 
       Las demás personas que reciben el contenido que envías al foro pueden violar los términos bajo los que licencias tu contenido. Aceptas que la compañía no será responsable ante ti por esas violaciones o sus consecuencias.
 
@@ -3700,7 +3695,7 @@ es:
 
       Aceptas indemnizar a la compañía por reclamaciones legales de terceros relacionadas con tu incumplimiento de estos términos o el incumplimiento de estos términos por parte de terceros que utilicen tu cuenta en el foro. Tanto tú como la compañía acuerdan notificar a la otra parte de cualquier reclamo legal por el cual tenga que indemnizar a la compañía tan pronto como sea posible. Si la compañía no te notifica un reclamo legal a tiempo, no tendrás que indemnizar a la compañía por los daños que podría haber defendido o mitigado con un aviso rápido. Aceptas permitir que la compañía controle la investigación, la defensa y la resolución de reclamos legales por los cuales tendrías que indemnizar a la compañía, así como cooperar con esos esfuerzos. La compañía acepta no aceptar ningún acuerdo que admita que la culpa es tuya o te imponga obligaciones sin tu previo acuerdo.
 
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Liberación de responsabilidad</a></h2>
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Exención de responsabilidad</a></h2>
 
       ***Aceptas todos los riesgos de utilizar el foro y el contenido del foro. En la medida en que la ley lo permite, la empresa y sus proveedores proporcionan el foro tal como está, sin ningún tipo de garantía.***
 
@@ -3710,11 +3705,11 @@ es:
 
       ***Ni la empresa ni sus proveedores serán responsables ante ti por los daños por incumplimiento de contrato que su personal no podría haber previsto razonablemente cuando aceptó estos términos.***
 
-      ***En la medida en que la ley lo permita, la responsabilidad total ante ti por reclamos de cualquier tipo que estén relacionados con el foro o el contenido del foro se limitará a $ 50.***
+      ***En la medida en que la ley lo permita, la responsabilidad total ante ti por reclamos de cualquier tipo que estén relacionados con el foro o el contenido del foro se limitará a 50 $.***
 
       <h2 id="heading--feedback"><a href="#heading--feedback">Sugerencias</a></h2>
 
-      La compañía agradece tus comentarios y sugerencias para el foro. Ver la sección de [contacto](#heading--contacto) para saber las posibilidades de ponerse en contacto con nosotros.
+      La compañía agradece tus comentarios y sugerencias para el foro. Ver la sección de [Contacto](#heading--contacto) para conocer las opciones para ponerte en contacto con nosotros.
 
       Aceptas que la compañía tendrá la libertad de actuar según los comentarios y sugerencias que proporciones y que la compañía no tendrá que notificarte que se usó tu opinión, obtener tu permiso para usarla o pagarte. Aceptas no enviar comentarios o sugerencias que consideres que pueden ser propiedad exclusiva o confidenciales para ti o para otros.
 
@@ -3722,18 +3717,18 @@ es:
 
       Tanto tú como la compañía pueden finalizar el acuerdo escrito en estos términos en cualquier momento. Cuando finaliza nuestro acuerdo, también finaliza tu permiso para utilizar el foro.
 
-      Las siguientes disposiciones sobreviven al final de nuestro acuerdo: [tu contenido](#heading--tu-contenido), [sugerencias](#heading--feedback), [tu responsabilidad](#heading--tu-responsabilidad), [liberación de responsabilidad](#heading--renuncias), [límites de responsabilidad](#heading--limites-responsabilidad) y [términos generales](#heading--general).
+      Las siguientes disposiciones sobreviven al final de nuestro acuerdo: [Tu contenido](#heading--tu-contenido), [Sugerencias](#heading--feedback), [Tu responsabilidad](#heading--tu-responsabilidad), [Exención de responsabilidad](#heading--renuncias), [Límites de responsabilidad](#heading--limites-responsabilidad) y [Términos generales](#heading--general).
 
       <h2 id="heading--disputes"><a href="#heading--disputes">Disputas</a></h2>
 
       %{governing_law} regirá cualquier disputa relacionada con estos términos o tu uso del foro.
-      Tú y la compañía acuerdan solicitar ordenes judiciales relacionados con estos términos solo en los tribunales estatales o federales en %{city_for_disputes}. Ni tú ni la compañía se opondrán a la jurisdicción, foro o lugar en esos tribunales.
+      Tú y la compañía acuerdan solicitar ordenes judiciales relacionados con estos términos solo en los tribunales estatales o federales en %{city_for_disputes}. Ni tú ni la compañía os opondréis a la jurisdicción, foro o lugar en esos tribunales.
 
-      ***Además de solicitar una orden judicial o reclamaciones en virtud de la Ley de abuso y fraude informático, tú y la compañía resolverán cualquier disputa vinculando el arbitraje de la Asociación americana de arbitraje. El arbitraje seguirá las reglas de arbitraje comercial de la AAA y los procedimientos complementarios para disputas relacionadas con el consumidor. El arbitraje se llevará a cabo en %{city_for_disputes}. Resolverá cualquier disputa como un individuo y no como parte de una acción de clase u otro procedimiento representativo, ya sea como demandante o un miembro de la clase. Ningún árbitro consolidará ninguna disputa con ningún otro arbitraje sin el permiso de la compañía.***
+      ***Además de solicitar una orden judicial o reclamaciones en virtud de la Ley de abuso y fraude informático, tú y la compañía resolveréis cualquier disputa vinculando el arbitraje de la Asociación americana de arbitraje. El arbitraje seguirá las reglas de arbitraje comercial de la AAA y los procedimientos complementarios para disputas relacionadas con el consumidor. El arbitraje se llevará a cabo en %{city_for_disputes}. Resolverá cualquier disputa como un individuo y no como parte de una acción de clase u otro procedimiento representativo, ya sea como demandante o un miembro de la clase. Ningún árbitro consolidará ninguna disputa con ningún otro arbitraje sin el permiso de la compañía.***
 
       Cualquier adjudicación de arbitraje incluirá los costos del arbitraje, los honorarios razonables de abogados y los costos razonables para los testigos. Tú y la compañía pueden ingresar laudos arbitrales en cualquier tribunal con jurisdicción.
 
-      <h2 id="heading--general"><a href="#heading--general">Términos Generales</a></h2>
+      <h2 id="heading--general"><a href="#heading--general">Términos generales</a></h2>
 
       Si una disposición de estos términos no se puede hacer cumplir tal como está escrita, pero podría modificarse para hacerla ejecutable, esa disposición debería modificarse en la medida mínima necesaria para que sea ejecutable. De lo contrario, esa disposición debería ser eliminada.
 
@@ -3759,19 +3754,19 @@ es:
     body: |
       <a name="collect"></a>
 
-      ## [¿Qué información recolectamos?](#collect)
+      ## [¿Qué información recopilamos?](#collect)
 
-      Recolectamos información tuya cuando te registras en nuestra web y recopilamos información cuando participas en ella leyendo, escribiendo y evaluando el contenido compartido aquí.
+      Recopilamos información tuya cuando te registras en nuestra web y recopilamos información cuando participas en ella leyendo, escribiendo y evaluando el contenido compartido aquí.
 
       Al registrarte en nuestra web, puede que se te pida que indiques tu nombre y tu correo electrónico. Sin embargo, puedes visitarnos sin registrarte. Tu correo electrónico será verificado a través de un mensaje que contendrá un enlace único. Si visitas ese enlace, sabremos que controlas el correo electrónico.
 
-      Cuando estés registrado y publiques, guardamos la dirección IP dede donde el mensaje fue publicado. Puede que guardemos registros que incluyan la dirección IP de cada intercambio de datos con nuestro servidor.
+      Cuando estés registrado y publiques, guardamos la dirección IP desde donde el mensaje fue publicado. Puede que guardemos registros que incluyan la dirección IP de cada intercambio de datos con nuestro servidor.
 
       <a name="use"></a>
 
       ## [¿Para qué usamos tu información?](#use)
 
-      Cualquier información recolectada puede ser usada en una de las siguientes maneras:
+      Cualquier información recopilada puede ser usada en una de las siguientes maneras:
 
       * Para personalizar tu experiencia &mdash; tu información nos ayuda a responder a tus necesidades individuales.
       * Para mejorar nuestra web &mdash; intentamos continuamente mejorar nuestro sitio web ofreciéndote contenido basado en la información que recibimos de ti.
@@ -3782,7 +3777,7 @@ es:
 
       ## [¿Cómo protegemos tu información?](#protect)
 
-      Tenemos implementadas varias medidas de seguridad para mantener tu información personal segura cuando la ingreses o accedas a ella.
+      Tenemos implementadas varias medidas de seguridad para mantener tu información personal segura cuando la introduzcas o accedas a ella.
 
       <a name="data-retention"></a>
 
@@ -3819,13 +3814,13 @@ es:
 
       ## [Cumplimiento del Acta de Protección de la Privacidad Online de los Niños de 1998](#coppa)
 
-      Nuestra web, sus productos y servicios están dirigidos a personas que tengan 13 o más años de edad. Si este servidor está en EEUU y tienes menos de 13 años de edad, a causa del Acta de protección de la privacidad online de los niños de 1998 ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) de EEUU, no uses este sitio web.
+      Nuestra web, sus productos y servicios están dirigidos a personas que tengan 13 o más años de edad. Si este servidor está en EE. UU. y tienes menos de 13 años de edad, a causa del Acta de protección de la privacidad online de los niños de 1998 ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) de EEUU, no uses este sitio web.
 
       <a name="online"></a>
 
       ## [Política de privacidad online](#online)
 
-      Esta política de privacidad sólo tiene validez para la información recolectada a través de nuestro sitio web, y no para aquella recolectada offline.
+      Esta política de privacidad solo tiene validez para la información recopilada a través de nuestro sitio web, y no para aquella recopilada sin conexión.
 
       <a name="consent"></a>
 
@@ -3839,7 +3834,7 @@ es:
 
       Si decidimos cambiar nuestra política de privacidad, publicaremos los cambios en esta misma página.
 
-      Este documento tiene una licencia "CC-BY-SA". Última actualización: 31 de mayo del 2013.
+      Este documento tiene una licencia «CC-BY-SA». Última actualización: 31 de mayo del 2013.
   badges:
     mass_award:
       errors:
@@ -4342,26 +4337,22 @@ es:
         title: "Concordar..."
       agree_and_keep:
         title: "Mantener publicación"
-        description: "Estar de acuerdo con el reporte y mantener la publicación intacta."
+        description: "Estar de acuerdo con la denuncia y mantener la publicación intacta."
       agree_and_keep_hidden:
         title: "Mantener la publicación oculta"
         description: "Concordar con el reporte y mantener la publicación oculta."
       agree_and_suspend:
         title: "Suspender usuario"
-        description: "Estar de acuerdo con el reporte y suspender el usuario."
+        description: "Estar de acuerdo con la denuncia y suspender el usuario."
       agree_and_silence:
         title: "Silenciar usuario"
-        description: "Estar de acuerdo con el reporte y silenciar el usuario."
+        description: "Estar de acuerdo con la denuncia y silenciar el usuario."
       agree_and_restore:
         title: "Restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
       agree_and_hide:
         title: "Ocultar publicación"
         description: "Ocultar la publicación y enviar un mensaje automáticamente al usuario animándole a que la edite."
-      delete_spammer:
-        title: "Eliminar spammer"
-        description: "Eliminar el usuario y todas sus publicaciones y temas."
-        confirm: "¿Estás seguro de que quieres eliminar todas las publicaciones y temas del usuario y bloquear su IP y correo electrónico?"
       delete_single:
         title: "Eliminar"
       delete:
@@ -4418,8 +4409,6 @@ es:
       approve_and_restore:
         title: "Aprobar y restaurar publicación"
       delete_user:
-        title: "Eliminar usuario"
-        confirm: "¿Estás seguro de que quieres eliminar a este usuario? Eliminará todas sus publicaciones y bloqueará su correo electrónico y dirección IP."
         reason: "Eliminado a través de la cola de revisiones"
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"

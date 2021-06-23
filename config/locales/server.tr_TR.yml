@@ -96,7 +96,6 @@ tr_TR:
       maximum_staged_user_per_email_reached: "E-posta başına maksimum sayıda kullanıcıya ulaşıldı."
       no_subject: "(konu yok)"
       no_body: "(kimse)"
-      missing_attachment: "(%{filename} adet ek eksik)"
       errors:
         empty_email_error: "Bize ulaşan ham posta boş olduğunda olur."
         no_message_id_error: "E-postanın 'Message-Id' başlığı olmadığında olur."
@@ -209,9 +208,6 @@ tr_TR:
     not_enough_space_on_disk: "Yedeklemenin yüklenebilmesi için diskte yeterli alan bulunmuyor."
     invalid_filename: "Yedekleme dosyasının adı geçersiz karakterler içeriyor. Geçerli olanlar: a-z 0-9 . -_."
     file_exists: "Yüklemeye çalıştığınız dosya zaten var."
-    location:
-      local: "Yerel"
-      s3: "Amazon S3"
   invalid_params: "İsteğe geçersiz parametreler verdiniz: %{message}"
   not_logged_in: "Bunun için giriş yapmanız gerekir."
   not_found: "İstenilen URL ya da kaynak bulunamadı."
@@ -225,7 +221,6 @@ tr_TR:
   email_template_cant_be_modified: "Bu e-posta şablonu değiştirilemez"
   invalid_whisper_access: "Fısıltılar etkin değil veya fısıltı yayınları oluşturma erişiminiz yok"
   not_in_group:
-    title_category: "Bu kategoriyi görebilmek için bir grupta olmalısınız."
     request_membership: "Üyelik İste"
     join_group: "Gruba katıl"
   deleted_topic: "Hata! Bu konu silindi ve artık kullanılamıyor."
@@ -2001,7 +1996,9 @@ tr_TR:
       same_ip_address: "Diğer kullanıcılarla aynı IP adresi (%{ip_address})"
       inactive_user: "Etkin olmayan kullanıcı"
     email_in_spam_header: "Kullanıcının ilk e-postası spam olarak işaretlendi"
-    cannot_delete_has_posts: "%{username} kullanıcısının herkese açık gönderiler veya kişisel mesajlardan oluşan %{post_count} adet gönderisi var, dolayısıyla silinemez."
+    cannot_delete_has_posts:
+      one: "%{username} kullanıcısının herkese açık gönderiler veya kişisel mesajlardan oluşan %{count} adet gönderisi var, dolayısıyla silinemez."
+      other: "%{username} kullanıcısının herkese açık gönderiler veya kişisel mesajlardan oluşan %{count} adet gönderisi var, dolayısıyla silinemez."
   reviewables_reminder:
     submitted:
       one: "Öğeler bir saat önce gönderildi %{count} saat. [Lütfen onları inceleyin] (%{base_path} / review)."
@@ -3562,10 +3559,6 @@ tr_TR:
       agree_and_hide:
         title: "Gönderiyi Gizle"
         description: "Bu gönderiyi sakla ve kullanıcıya otomatik olarak uyarı mesajı gönder."
-      delete_spammer:
-        title: "İstenmeyen e-postayı göndereni sil"
-        description: "Kullanıcıyı, kullanıcının tüm gönderi ve konularını kaldırın."
-        confirm: "Tüm kullanıcıların gönderilerini, konularını silmek ve IP ve e-posta adreslerini engellemek istediğinizden emin misiniz?"
       delete_single:
         title: "Sil"
       delete:
@@ -3622,8 +3615,6 @@ tr_TR:
       approve_and_restore:
         title: "Gönderiyi Onayla ve Geri Yükle"
       delete_user:
-        title: "Kullanıcıyı Sil"
-        confirm: "Bu kullanıcıyı silmek istediğinize emin misiniz? Bu, tüm gönderilerini kaldıracak, kullanıcının e-postala ve IP adresini engelleyecektir."
         reason: "İnceleme kuyruğunda silindi"
   email_style:
     html_missing_placeholder: "Html şablonu %{placeholder} içermelidir"

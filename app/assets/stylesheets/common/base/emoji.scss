@@ -126,6 +126,22 @@ sup img.emoji {
       }
     }
   }
+
+  &.has-filter {
+    .emojis-container {
+      visibility: hidden;
+      height: 0px;
+      overflow: hidden;
+    }
+
+    .emoji-picker-category-buttons {
+      pointer-events: none;
+      opacity: 0.5;
+      .category-button.current .emoji {
+        filter: grayscale(100%);
+      }
+    }
+  }
 }
 
 .emoji-picker-search-container {

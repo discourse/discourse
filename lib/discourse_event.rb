@@ -27,4 +27,7 @@ class DiscourseEvent
     events[event_name].delete(block)
   end
 
+  def self.all_off(event_name)
+    events.delete(event_name)
+  end
 end

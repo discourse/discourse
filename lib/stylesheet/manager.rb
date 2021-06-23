@@ -231,7 +231,7 @@ class Stylesheet::Manager
         if is_theme && !has_theme
           next
         else
-          next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+          next if is_theme && builder.theme&.component && !scss_checker.has_scss(theme_id)
           builder.compile unless File.exists?(builder.stylesheet_fullpath)
           href = builder.stylesheet_path(current_hostname)
           cache.defer_set("path_#{target}_#{theme_id}_#{current_hostname}", href)

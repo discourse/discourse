@@ -697,8 +697,6 @@ id:
           title: "Hapus Pengguna"
       reject:
         title: "Tolak"
-      delete_user:
-        title: "Hapus Pengguna"
   time:
     <<: *datetime_formats
   activemodel:

@@ -102,7 +102,11 @@ he:
       maximum_staged_user_per_email_reached: "הגעת למספר המרבי של משתמשים מבוימים לדוא״ל."
       no_subject: "(אין נושא)"
       no_body: "(אין גוף)"
-      missing_attachment: "(הקובץ המצורף %{filename} חסר)"
+      continuing_old_discussion:
+        one: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיום (%{count})."
+        two: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיומיים (%{count})."
+        many: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מ־%{count} ימים."
+        other: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מ־%{count} ימים."
       errors:
         empty_email_error: "מתרחש כאשר הודעת הדוא״ל הגולמית שקיבלנו הייתה ריקה."
         no_message_id_error: "מתרחש כאשר להודעת הדוא״ל אין כותרת בשם ‚Message-Id’."
@@ -269,9 +273,6 @@ he:
     not_enough_space_on_disk: "אין מספיק מקום על הכונן כדי לשלוח את הגיבוי הזה."
     invalid_filename: "שם קובץ הגיבוי מכיל תווים שגויים. תווים תקינים הם a-z 0-9 . - _."
     file_exists: "הקובץ המיועד להעלאה כבר קיים."
-    location:
-      local: "מקומי"
-      s3: "Amazon S3"
   invalid_params: "סיפקת משתנים שגויים לבקשה: %{message}"
   not_logged_in: "עליך להיכנס למערכת כדי לבצע פעולה זו."
   not_found: "המשאב או הכתובת שביקשת לא נמצאים."
@@ -286,7 +287,7 @@ he:
   invalid_whisper_access: "או שלחישות אינן פעילות או שאין לך גישה ליצור פוסטים של לחישות"
   not_in_group:
     title_topic: "עליך לבקש חברות בקבוצה ‚%{group}’ כדי לצפות בנושא הזה."
-    title_category: "עליך להיות בקבוצה כדי לצפות בקטגוריה זו."
+    title_category: "עליך לבקש חברות בקבוצה ‚%{group}’ כדי לצפות בקטגוריה זו."
     request_membership: "בקשת חברות"
     join_group: "הצטרפות לקבוצה"
   deleted_topic: "אופס! נושא זה נמחק ואינו זמין עוד."
@@ -992,6 +993,7 @@ he:
     imap_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור IMAP, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
     imap_no_response_error: "אירעה שגיאה ביצירת קשר עם שרת ה־IMAP. ‏%{message}"
     smtp_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור SMTP, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
+    authentication_error_gmail_app_password: 'נדרשת ססמה ייעודית ליישום. ניתן למצוא מידע נוסף ב<a target="_blank" href="https://support.google.com/accounts/answer/185833?hl=iw">כתבת העזרה הבאה מבית Google</a>'
     smtp_server_busy_error: "שרת ה־SMTP עסוק, נא לנסות שוב בהמשך."
     smtp_unhandled_error: "קרתה תקלה שלא טופלה בעת יצירת הקשר עם שרת ה־SMTP. ‏%{message}"
     imap_unhandled_error: "קרתה תקלה שלא טופלה בעת יצירת הקשר עם שרת ה־IMAP. ‏%{message}"
@@ -1883,7 +1885,6 @@ he:
     reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
     reviewable_default_topics: "הצגת תוכן שמיועד לסקירה בקיבוץ לפי נושא כבררת מחדל"
     reviewable_default_visibility: "לא להציג פריטים שמיועדים לסקירה אלמלא הם תואמים את העדיפות הזו"
-    reviewable_low_priority_threshold: "מסנן העדיפות מסתיר פריטים לסקירה שלא תואמים לציון אלא אם כן נעשה שימוש במסנן ‚(כלשהו)’"
     high_trust_flaggers_auto_hide_posts: "פוסטים של משתמש חדש מוסתרים אוטומטים לאחר שסומנו כספאם על ידי משתמש בדרגת אמון 3 ומעלה"
     cooldown_hours_until_reflag: "כמה זמן יהיה על משתמשים לחכות לפני שיוכלו לסמן פוסט כספאם פעם נוספת"
     reply_by_email_enabled: "הפעלת תגובה לנושאים דרך דוא״ל."
@@ -4557,10 +4558,6 @@ he:
       agree_and_hide:
         title: "הסתרת פוסט"
         description: "הסתרת הפוסט הזה ושליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
-      delete_spammer:
-        title: "מחק ספאמר"
-        description: "הסרת המשתמש על כל הפוסטים והנושאים שלו."
-        confirm: "למחוק את כל הפוסטים והנושאים של המשתמש וגם לחסום את כתובת ה־IP והדוא״ל שלו?"
       delete_single:
         title: "מחיקה"
       delete:
@@ -4617,8 +4614,6 @@ he:
       approve_and_restore:
         title: "אישור ושחזור הפוסט"
       delete_user:
-        title: "מחק משתמש"
-        confirm: "למחוק את המשתמש הזה? פעולה זו תסיר את כל הפוסטים של המשתמש ותחסום את כתובת הדוא״ל וה־IP שלו."
         reason: "למחוק דרך תור סקירה"
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"

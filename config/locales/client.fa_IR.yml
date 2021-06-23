@@ -627,6 +627,7 @@ fa_IR:
           notification: اعلان‌ها
         email:
           title: "ایمیل"
+          last_updated_by: "توسط"
           credentials:
             title: "اطلاعات ورود"
             smtp_server: "سرور SMTP"
@@ -1006,6 +1007,7 @@ fa_IR:
         failed_to_move: "انتقال پیام‌های انتخاب شده با اشکال مواجه شد (شاید اتصال شما در دسترس نیست)"
         select_all: "انتخاب همه"
         tags: "برچسب‌ها"
+        warnings: "هشدارهای رسمی"
       preferences_nav:
         account: "حساب کاربری"
         security: "امنیت"
@@ -1984,7 +1986,6 @@ fa_IR:
         new: "شما هیچ موضوع تازه‌ای ندارید"
         read: "هنوز هیچ موضوعی را نخوانده‌اید."
         posted: "هنوز در هیچ موضوعی نوشته نگذاشته‌اید."
-        ready_to_create: "آماده به "
         bookmarks: "هنوز هیچ موضوع نشانک‌داری ندارید."
         category: "هیچ موضوعی در %{category} نیست."
         top: "موضوع برتری وجود ندارد."
@@ -2856,7 +2857,6 @@ fa_IR:
         show_incoming_updated_topics: "%{shortcut} نمایش موضوعات به‌روز شده"
         search: "جستجو %{shortcut}"
         help: "%{shortcut} باز کردن کمک صفحه‌کلید"
-        dismiss_new_posts: "%{shortcut} بستن نوشته‌های جدید"
         dismiss_topics: "%{shortcut} بستن موضوعات"
         log_out: "%{shortcut} خروج"
       composing:

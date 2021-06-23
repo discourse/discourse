@@ -103,7 +103,6 @@ zh_CN:
       maximum_staged_user_per_email_reached: "已达到每个电子邮件可以创建暂存用户的上限。"
       no_subject: "（无标题）"
       no_body: "（无正文）"
-      missing_attachment: "（缺少附件 %{filename}）"
       errors:
         empty_email_error: "收到空白邮件。"
         no_message_id_error: "邮件报头没有“Message-Id”。"
@@ -249,9 +248,6 @@ zh_CN:
     not_enough_space_on_disk: "没有足够的磁盘空间可供备份文件上传。"
     invalid_filename: "备份文件名包含无效字符。有效字符为 a-z 0-9 . - _."
     file_exists: "你尝试上传的文件已存在。"
-    location:
-      local: "本地"
-      s3: "亚马逊S3"
   invalid_params: "你为请求提供了无效参数：%{message}"
   not_logged_in: "你需要登录后才能这么做。"
   not_found: "找不到请求的地址或资源。"
@@ -266,7 +262,6 @@ zh_CN:
   invalid_whisper_access: "没有启用密语或者是你无权创建密语帖子"
   not_in_group:
     title_topic: "你需要请求加入 `%{group}` 群组才能查看此话题。"
-    title_category: "你必须在群组中才能看到这个分类。"
     request_membership: "申请会员"
     join_group: "加入群组"
   deleted_topic: "哎呀！该话题已被删除了并且不再可用。"
@@ -1757,7 +1752,6 @@ zh_CN:
     reviewable_claiming: "是否需要审核可审核的内容才能对其进行操作？"
     reviewable_default_topics: "默认以话题为分组显示可审核内容"
     reviewable_default_visibility: "满足此优先级前不要显示可审核条目"
-    reviewable_low_priority_threshold: "除非使用 '(任何)' 过滤器，否则优先级过滤器会隐藏不符合该分数的评论。"
     high_trust_flaggers_auto_hide_posts: "新用户的发帖被信任等级3+的用户标记为垃圾后将被自动隐藏。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新标记一个帖子。"
     reply_by_email_enabled: "启用通过邮件回复。"
@@ -2263,7 +2257,6 @@ zh_CN:
     email_in_spam_header: "用户的第一封电子邮件已被标记为垃圾邮件"
     already_silenced: "用户已被 %{staff} 在 %{time_ago} 静音。"
     already_suspended: "用户已被 %{staff} 在 %{time_ago} 封禁。"
-    cannot_delete_has_posts: "用户 %{username} 有 %{post_count} 个帖子，可能是公开贴或私信，因此无法被删除。"
   reviewables_reminder:
     submitted:
       other: "项目提交于1%{count}小时前。[请审核](%{base_path}/review)。"
@@ -4298,10 +4291,6 @@ zh_CN:
       agree_and_hide:
         title: "隐藏帖子"
         description: "隐藏帖子并自动发送私信给作者使其修改"
-      delete_spammer:
-        title: "删除垃圾发布者"
-        description: "清除这个用户与其所有话题帖子。"
-        confirm: "你确定要删除这个用户的所有帖子和话题并且屏蔽其IP和电子邮件地址吗？"
       delete_single:
         title: "删除"
       delete:
@@ -4358,8 +4347,6 @@ zh_CN:
       approve_and_restore:
         title: "批准并恢复帖子"
       delete_user:
-        title: "删除用户"
-        confirm: "你确定要删除这个用户吗？这将删除用户的所有帖子并封禁这个邮箱和 IP 地址。"
         reason: "通过审核队列删除的"
   email_style:
     html_missing_placeholder: "HTML模板必须包含%{placeholder}"

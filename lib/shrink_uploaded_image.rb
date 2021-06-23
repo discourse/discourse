@@ -75,13 +75,9 @@ class ShrinkUploadedImage
     posts.each do |post|
       transform_post(post, original_upload, upload)
 
-      if post.custom_fields[Post::DOWNLOADED_IMAGES].present?
-        downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES])
-      end
-
       if post.raw_changed?
         log "Updating post"
-      elsif downloaded_images&.has_value?(original_upload.id)
+      elsif post.downloaded_images.has_value?(original_upload.id)
         log "A hotlinked, unreferenced image"
       elsif post.raw.include?(upload.short_url)
         log "Already processed"
@@ -192,14 +188,12 @@ class ShrinkUploadedImage
           )
         end
 
-        if existing_upload && post.custom_fields[Post::DOWNLOADED_IMAGES].present?
-          downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES])
-
-          downloaded_images.transform_values! do |upload_id|
+        if existing_upload && post.downloaded_images.present?
+          downloaded_images = post.downloaded_images.transform_values do |upload_id|
             upload_id == original_upload.id ? upload.id : upload_id
           end
 
-          post.custom_fields[Post::DOWNLOADED_IMAGES] = downloaded_images.to_json if downloaded_images.present?
+          post.custom_fields[Post::DOWNLOADED_IMAGES] = downloaded_images
           post.save_custom_fields
         end
 

@@ -321,6 +321,7 @@ pl_PL:
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
     bookmarked:
       title: "Zakładka"
+      edit_bookmark: "Edytuj zakładkę"
       clear_bookmarks: "Wyczyść zakładki"
       help:
         bookmark: "Kliknij, aby dodać pierwszy post tematu do zakładek"
@@ -696,6 +697,7 @@ pl_PL:
           title: "Wprowadź nazwy użytkowników lub adresy e-mail"
           input_placeholder: "Nazwy użytkowników lub e-maile"
         usernames:
+          title: "Wprowadź nazwy użytkowników"
           input_placeholder: "Nazwy użytkowników"
         notify_users: "Powiadom użytkowników"
       requests:
@@ -722,6 +724,16 @@ pl_PL:
         email:
           title: "Email"
           status: "Zsynchronizowane %{old_emails} / %{total_emails} wiadomości e-mail za pośrednictwem IMAP."
+          enable_smtp: "Włącz SMTP"
+          enable_imap: "Włącz IMAP"
+          test_settings: "Testuj ustawienia"
+          save_settings: "Zapisz ustawienia"
+          last_updated: "Ostatnio zaktualizowane:"
+          last_updated_by: "przez"
+          settings_required: "Wszystkie ustawienia są wymagane, wypełnij wszystkie pola przed weryfikacją."
+          smtp_settings_valid: "Ustawienia SMTP są poprawne."
+          smtp_title: "SMTP"
+          imap_title: "IMAP"
           credentials:
             title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
@@ -735,7 +747,6 @@ pl_PL:
           settings:
             title: "Ustawienia"
             allow_unknown_sender_topic_replies: "Zezwalaj na odpowiedzi od nieznanego nadawcy w temacie."
-            allow_unknown_sender_topic_replies_hint: "Zezwalaj nieznanym nadawcom na odpowiadanie w wątku grupowym. Jeśli to ustawienie nie jest włączone, odpowiedzi z adresów e-mail użytkowników spoza grupy lub zaproszonych do tematu utworzą nowy temat."
           mailboxes:
             synchronized: "Zsynchronizowana skrzynka pocztowa"
             none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
@@ -1516,6 +1527,8 @@ pl_PL:
           copy_link: "skopiuj link"
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
+          add_to_groups: "Dodaj do grup"
+          expires_at: "Wygasa po"
           send_invite_email: "Zapisz i wyślij e-mail"
           save_invite: "Zapisz zaproszenie"
           invite_saved: "Zaproszenie zapisane."
@@ -2308,10 +2321,25 @@ pl_PL:
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
         dismiss_read: "Wyczyść nieprzeczytane"
+        dismiss_read_with_selected:
+          one: "Odrzuć %{count} nieprzeczytane"
+          few: "Odrzuć %{count} nieprzeczytane"
+          many: "Odrzuć %{count} nieprzeczytanych"
+          other: "Odrzuć %{count} nieprzeczytanych"
         dismiss_button: "Wyczyść…"
+        dismiss_button_with_selected:
+          one: "Odrzuć (%{count})…"
+          few: "Odrzuć (%{count})…"
+          many: "Odrzuć (%{count})…"
+          other: "Odrzuć (%{count})…"
         dismiss_tooltip: "Wyczyść nowe wpisy lub przestań śledzić tematy"
         also_dismiss_topics: "Przestać śledzić wskazane tematy. Nie chcę, aby pojawiały się w zakładce nieprzeczytane."
         dismiss_new: "Wyczyść nowe"
+        dismiss_new_with_selected:
+          one: "Oddalenie nowe (%{count})"
+          few: "Oddalenie nowe (%{count})"
+          many: "Oddalenie nowe (%{count})"
+          other: "Oddalenie nowe (%{count})"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
         change_category: "Ustaw kategorię"
@@ -2347,7 +2375,6 @@ pl_PL:
         new: "Nie masz nowych tematów."
         read: "You haven't read any topics yet."
         posted: "Jeszcze nie zamieściłeś/łaś wpisu w żadnym z tematów."
-        ready_to_create: "Gotowy do "
         latest: "Jesteś na biężąco!"
         bookmarks: "Nie posiadasz tematów dodanych do zakładek."
         category: "Nie ma tematów w kategorii %{category}."
@@ -2441,6 +2468,8 @@ pl_PL:
       back_to_list: "Wróć do Listy Tematów"
       options: "Opcje tematu"
       show_links: "pokaż odnośniki z tego tematu"
+      collapse_details: "zwiń szczegóły tematu"
+      expand_details: "rozwiń szczegóły tematu"
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{catLink} lub %{latestLink}."
       read_more: "Chcesz przeczytać więcej? %{catLink} lub %{latestLink}."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
@@ -2449,7 +2478,6 @@ pl_PL:
       browse_all_categories: Przeglądaj wszystkie kategorie
       browse_all_tags: Przeglądaj wszystkie tagi
       view_latest_topics: pokaż aktualne tematy
-      suggest_create_topic: rozpocząć nową rozmowę?
       jump_reply_up: skocz do wcześniejszej odpowiedzi
       jump_reply_down: skocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
@@ -2458,6 +2486,7 @@ pl_PL:
         select: "Użytkownicy mogą publikować w tym temacie tylko raz na:"
         description: "Aby promować przemyślaną dyskusję w popularnych lub spornych dyskusjach, użytkownicy muszą poczekać przed ponownym opublikowaniem odpowiedzi w tym temacie."
         enable: "Włącz"
+        update: "Aktualizuj"
         enabled_until: "Włączone do:"
         remove: "Wyłącz"
         hours: "Godziny:"
@@ -2849,6 +2878,7 @@ pl_PL:
           few: "Wybrano <b>%{count}</b> wpisy."
           many: "Wybrano <b>%{count}</b> wpisów."
           other: "Wybrano <b>%{count}</b> wpisów."
+      deleted_by_author_simple: "(temat usunięty przez autora)"
     post:
       quote_reply: "Cytuj"
       quote_share: "Udostępnij"
@@ -3504,7 +3534,7 @@ pl_PL:
         show_incoming_updated_topics: "%{shortcut} Pokaż zaktualizowane tematy"
         search: "%{shortcut} Wyszukaj"
         help: "%{shortcut} Pokaż skróty klawiszowe"
-        dismiss_new_posts: "%{shortcut} wyczyść listę wpisów"
+        dismiss_new: "%{shortcut} Odrzuć nowe"
         dismiss_topics: "%{shortcut} wyczyść listę tematów"
         log_out: "%{shortcut} Wyloguj"
       composing:
@@ -3693,6 +3723,9 @@ pl_PL:
         everyone_can_use: "Tagi mogą być wykorzystywane przez wszystkich"
         usable_only_by_groups: "Tagi są widoczne dla wszystkich, ale tylko następujące grupy mogą ich używać"
         visible_only_to_groups: "Tagi są widoczne tylko dla następujących grup"
+        parent_tag_placeholder: "Opcjonalnie"
+        select_groups_placeholder: "Wybierz grupy..."
+        disabled: "Tagowanie jest wyłączone. "
       topics:
         none:
           unread: "Nie masz nieprzeczytanych tematów."
@@ -3736,6 +3769,7 @@ pl_PL:
         member: "uczestnik"
         regular: "zwyczajny"
         leader: "lider"
+      detailed_name: "%{level}: %{name}"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -3965,6 +3999,8 @@ pl_PL:
               write: Utwórz nowy temat lub post w istniejącym.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
+            posts:
+              edit: Edytuj dowolny post lub konkretny.
             users:
               bookmarks: Lista zakładek użytkownika. Zwraca przypomnienia o zakładkach podczas korzystania z formatu ICS.
               sync_sso: Zsynchronizuj użytkownika za pomocą DiscourseConnect.
@@ -4039,6 +4075,7 @@ pl_PL:
           details: "Gdy użytkownik otrzymuje odznakę."
         group_user_event:
           name: "Grupowy event użytkownika"
+          details: "Gdy użytkownik jest dodany lub usunięty w grupie."
         like_event:
           name: "Event polubienia postu"
           details: "Gdy użytkownik polubi post."
@@ -4354,6 +4391,8 @@ pl_PL:
           yaml:
             text: "YAML"
             title: "Zdefiniuj ustawienia motywu w formacie YAML"
+          scss_color_variables_warning: 'Używanie podstawowych zmiennych kolorów SCSS w szablonach jest przestarzałe. Zamiast tego użyj niestandardowych właściwości CSS. Zobacz <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ten przewodnik</a>, aby uzyskać więcej informacji.'
+          scss_warning_inline: "Używanie podstawowych zmiennych kolorów SCSS w motywach jest przestarzałe."
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
@@ -4681,6 +4720,7 @@ pl_PL:
         download: Pobierz
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
+        invalid_regex: 'Obserwowane słowo "%{word}" jest nieprawidłowym wyrażeniem regularnym.'
         actions:
           block: "Zablokuj"
           censor: "Cenzuruj"
@@ -4695,11 +4735,14 @@ pl_PL:
           censor: "Zezwalaj na wysyłanie wpisów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."
           require_approval: "Wpisy zawierające te słowa będą wymagały zatwierdzenia przez członka zespołu zarządzającego zanim zostaną opublikowane."
           flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
+          replace: "Zastąp słowa w postach innymi słowami"
+          link: "Zastąp słowa w postach linkami"
         form:
           label: "Zawiera słowo lub frazę"
           placeholder: "Wpisz słowo lub frazę (* to symbol wieloznaczny)"
           placeholder_regexp: "wyrażenie regularne"
           replace_label: "Zastąpienie"
+          replace_placeholder: "przykład"
           tag_label: "Tag"
           link_label: "Odnośnik"
           link_placeholder: "https://example.com"
@@ -4834,6 +4877,8 @@ pl_PL:
         flags_given_count: Dane flagi
         flags_received_count: Otrzymane flagi
         warnings_received_count: Otrzymane ostrzeżenia
+        warnings_list_warning: |
+          Jako moderator możesz nie być w stanie wyświetlić wszystkich tych tematów. W razie potrzeby poproś administratora lub moderatora o przyznanie <b>@moderators</b> do wiadomości.
         flags_given_received_count: "Flagi przyznane / otrzymane"
         approve: "Zatwierdź"
         approved_by: "zatwierdzone przez"

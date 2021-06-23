@@ -73,9 +73,11 @@ class User < ActiveRecord::Base
   }, class_name: "UserSecurityKey"
 
   has_many :badges, through: :user_badges
-  has_many :default_featured_user_badges,
-            -> { for_enabled_badges.grouped_with_count.where("featured_rank <= ?", DEFAULT_FEATURED_BADGE_COUNT) },
-            class_name: "UserBadge"
+  has_many :default_featured_user_badges, -> {
+    max_featured_rank = SiteSetting.max_favorite_badges > 0 ? SiteSetting.max_favorite_badges + 1
+                                                            : DEFAULT_FEATURED_BADGE_COUNT
+    for_enabled_badges.grouped_with_count.where("featured_rank <= ?", max_featured_rank)
+  }, class_name: "UserBadge"
 
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :groups, through: :group_users
@@ -1035,8 +1037,8 @@ class User < ActiveRecord::Base
     user_stat&.distinct_badge_count
   end
 
-  def featured_user_badges(limit = DEFAULT_FEATURED_BADGE_COUNT)
-    if limit == DEFAULT_FEATURED_BADGE_COUNT
+  def featured_user_badges(limit = nil)
+    if limit.nil?
       default_featured_user_badges
     else
       user_badges.grouped_with_count.where("featured_rank <= ?", limit)

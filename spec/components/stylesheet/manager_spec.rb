@@ -135,6 +135,14 @@ describe Stylesheet::Manager do
       )
     end
 
+    it 'outputs tags for non-theme targets for theme component' do
+      child_theme = Fabricate(:theme, component: true)
+
+      hrefs = manager(child_theme.id).stylesheet_details(:desktop, 'all')
+
+      expect(hrefs.count).to eq(1) # desktop
+    end
+
     it 'does not output tags for component targets with no styles' do
       embedded_scss_child = Fabricate(:theme, component: true)
       embedded_scss_child.set_field(target: :common, name: "embedded_scss", value: ".scss{color: red;}")

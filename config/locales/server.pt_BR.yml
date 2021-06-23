@@ -98,7 +98,6 @@ pt_BR:
       maximum_staged_user_per_email_reached: "Atingido número máximo de usuários de teste criados por email."
       no_subject: "(sem assunto)"
       no_body: "(sem corpo)"
-      missing_attachment: "(Anexo %{filename} não está presente)"
       errors:
         empty_email_error: "Ocorre quando o email bruto recebido estiver em branco."
         no_message_id_error: "Ocorre quando o email não possui cabeçalho 'id-mensagem'."
@@ -211,9 +210,6 @@ pt_BR:
     not_enough_space_on_disk: "Não há espaço suficiente no disco para carregar este backup."
     invalid_filename: "O nome do arquivo de backup contém caracteres inválidos. Os caracteres válidos são a-z 0-9 . - _."
     file_exists: "O arquivo que você está tentando enviar já existe."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
   invalid_params: "Você forneceu parâmetros inválidos para a solicitação %{message}"
   not_logged_in: "Você precisa estar conectado para fazer isso."
   not_found: "A URL ou recurso solicitado não pôde ser encontrado."
@@ -227,7 +223,6 @@ pt_BR:
   email_template_cant_be_modified: "Este modelo de e-mail não pode ser modificado"
   invalid_whisper_access: "Os sussurros não estão habilitados ou você não tem acesso para criar postagens de sussurro"
   not_in_group:
-    title_category: "Você deve estar em um grupo para ver esta categoria."
     request_membership: "Pedir para participar"
     join_group: "Entrar no Grupo"
   deleted_topic: "Ops! Este tópico foi excluído e não está mais disponível."
@@ -3618,10 +3613,6 @@ pt_BR:
       agree_and_hide:
         title: "Esconder publicação"
         description: "Esconder esta publicação e enviar automaticamente ao usuário uma mensagem pedindo-lhe para editá-lo."
-      delete_spammer:
-        title: "Deletar Spammer"
-        description: "Remover o usuário e todas as suas postagens e tópicos."
-        confirm: "Você tem certeza de que deseja excluir todas as postagens e tópicos do usuário e bloquear seus endereços IP e de e-mail?"
       delete_single:
         title: "Excluir"
       delete:
@@ -3667,8 +3658,6 @@ pt_BR:
       reject:
         title: "Rejeitar"
       delete_user:
-        title: "Excluir Usuário"
-        confirm: "Você tem certeza de que deseja excluir este usuário? Isso removerá todas as suas postagens e bloqueará seus e-mails e endereços IP."
         reason: "Excluído via fila de revisão"
   email_style:
     html_missing_placeholder: "O modelo HTML deve incluir %{placeholder}"

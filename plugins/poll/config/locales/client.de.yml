@@ -47,7 +47,7 @@ de:
         title: "Zurück zur Umfrage"
         label: "Umfrage anzeigen"
       group-results:
-        title: "Stimmen anhand von Benutzerdaten gruppieren"
+        title: "Stimmen anhand von Benutzerfeld gruppieren"
         label: "Aufschlüsselung anzeigen"
       export-results:
         title: "Ergebnisse der Umfrage exportieren"
@@ -70,7 +70,7 @@ de:
         percentage: "Prozentsatz"
         count: "Anzahl"
       error_while_toggling_status: "Leider ist beim Umschalten des Status dieser Umfrage ein Fehler aufgetreten."
-      error_while_casting_votes: "Leider ist beim Abgeben deiner Stimme ein Fehler aufgetreten."
+      error_while_casting_votes: "Leider ist beim Abgeben deiner Stimmen ein Fehler aufgetreten."
       error_while_fetching_voters: "Leider ist beim Anzeigen der Teilnehmer ein Fehler aufgetreten."
       error_while_exporting_results: "Leider ist beim Exportieren der Umfrageergebnisse ein Fehler aufgetreten."
       ui_builder:

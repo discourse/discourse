@@ -371,6 +371,7 @@ sq:
           posting: Postimet
         email:
           title: "Email"
+          last_updated_by: "nga"
           credentials:
             username: "Emri i përdoruesit"
             password: "Fjalëkalimi"
@@ -1831,7 +1832,6 @@ sq:
         user_profile_menu: "%{shortcut} Hap menunë e përdoruesit"
         show_incoming_updated_topics: "%{shortcut} Shiko temat e përditësuara"
         help: "%{shortcut} Trego shkurtimet e tastierës"
-        dismiss_new_posts: "%{shortcut} Hiq Të Rejat/Postimet"
         dismiss_topics: "%{shortcut} Hiq temat"
         log_out: "%{shortcut} Shkëputu"
       actions:

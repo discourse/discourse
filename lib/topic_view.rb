@@ -509,7 +509,8 @@ class TopicView
           reviewable_scores s ON reviewable_id = r.id
         WHERE
           r.target_id IN (:post_ids) AND
-          r.target_type = 'Post'
+          r.target_type = 'Post' AND
+          COALESCE(s.reason, '') != 'category'
         GROUP BY
           target_id
       SQL

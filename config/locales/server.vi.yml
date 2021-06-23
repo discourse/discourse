@@ -88,7 +88,6 @@ vi:
       maximum_staged_user_per_email_reached: "Đạt số lượng thành viên theo giai đoạn tối đa được tạo trên mỗi email."
       no_subject: "(không chủ đề)"
       no_body: "(không ai)"
-      missing_attachment: "(Thiếu tệp đính kèm %{filename})"
       errors:
         empty_email_error: "Xảy ra khi hệ thống nhận được một thư rỗng."
         no_message_id_error: "Xảy ra khi thư không có phần 'Message-Id'."
@@ -2067,8 +2066,6 @@ vi:
         title: "Tạm khóa Thành viên"
       agree_and_silence:
         title: "Người dùng im lặng"
-      delete_spammer:
-        title: "Xóa người Spam"
       delete_single:
         title: "Xóa"
       disagree:
@@ -2084,8 +2081,6 @@ vi:
         title: "Từ chối"
       reject_and_keep_deleted:
         title: "Giữ bài đăng bị xóa"
-      delete_user:
-        title: "Xóa tài khoản"
   old_keys_reminder:
     body: |
       Xin chào! Đây là lời nhắc bảo mật hàng năm thường xuyên từ phiên bản Discourse của bạn.

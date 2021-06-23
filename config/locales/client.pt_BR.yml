@@ -661,7 +661,6 @@ pt_BR:
           settings:
             title: "Configurações"
             allow_unknown_sender_topic_replies: "Permitir que remetentes desconhecidos respondam a tópicos."
-            allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos respondam a tópicos de grupo. Se não estiver habilitado, respostas de endereços de e-mail não incluídos no tópico de e-mail IMAP ou convidados para o tópico irão criar um novo tópico."
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Nenhuma caixa de correio foi encontrada nesta conta de e-mail."
@@ -2972,7 +2971,6 @@ pt_BR:
         show_incoming_updated_topics: "%{shortcut} Exibir tópicos atualizados"
         search: "%{shortcut} Procurar"
         help: "%{shortcut} Abrir ajuda de teclado"
-        dismiss_new_posts: "%{shortcut} Descartar Novas Postagens"
         dismiss_topics: "%{shortcut} Descartar Tópicos"
         log_out: "%{shortcut} Deslogar"
       composing:

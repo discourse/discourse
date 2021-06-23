@@ -28,13 +28,22 @@ export default Controller.extend({
     this.set("nameInput", params.name);
     this.set("order", params.order);
 
-    const custom_field_columns = this.columns.filter((c) => !c.automatic);
-    const user_field_ids = custom_field_columns
-      .map((c) => c.user_field_id)
-      .join("|");
+    const userFieldColumns = this.columns.filter(
+      (c) => c.type === "user_field"
+    );
+    const userFieldIds = userFieldColumns.map((c) => c.user_field_id).join("|");
+
+    const pluginColumns = this.columns.filter((c) => c.type === "plugin");
+    const pluginColumnIds = pluginColumns.map((c) => c.id).join("|");
 
     return this.store
-      .find("directoryItem", Object.assign(params, { user_field_ids }))
+      .find(
+        "directoryItem",
+        Object.assign(params, {
+          user_field_ids: userFieldIds,
+          plugin_column_ids: pluginColumnIds,
+        })
+      )
       .then((model) => {
         const lastUpdatedAt = model.get("resultSetMeta.last_updated_at");
         this.setProperties({

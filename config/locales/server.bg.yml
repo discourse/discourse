@@ -1339,8 +1339,6 @@ bg:
         description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
       agree_and_hide:
         description: "Скрий тази публикация и автоматично изпрати съобщение към потребителия спешно да я редактира."
-      delete_spammer:
-        title: "Изтрий спамера "
       delete_single:
         title: "Изтрий"
       disagree_and_restore:
@@ -1354,8 +1352,6 @@ bg:
           title: "Изтрий потребител "
       reject:
         title: "Отхвърли"
-      delete_user:
-        title: "Изтрий потребител "
   time:
     <<: *datetime_formats
   activemodel:

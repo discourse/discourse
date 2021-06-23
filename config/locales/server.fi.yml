@@ -103,7 +103,6 @@ fi:
       maximum_staged_user_per_email_reached: "Saavutti maksimimäärän automaattisesti luotuja esikäyttäjiä per sähköpostiosoite."
       no_subject: "(ei aihetta)"
       no_body: "(ei leipätekstiä)"
-      missing_attachment: "(Liite %{filename} puuttuu)"
       errors:
         empty_email_error: "Näin käy, kun saapuneessa sähköpostissa ei lue mitään."
         no_message_id_error: "Näin käy, kun viestin otsikkotiedoista puuttuu ID-tunniste (engl. message-ID)."
@@ -253,9 +252,6 @@ fi:
     not_enough_space_on_disk: "Ei tarpeeksi levytilaa."
     invalid_filename: "Varmuuskopion nimi sisältää ei-sallittuja merkkejä. Sallittuja ovat a-z 0-9 . - _."
     file_exists: "Tiedosto jota yrität lähettää on jo olemassa."
-    location:
-      local: "Paikallinen"
-      s3: "Amazon S3"
   invalid_params: "Vastasit pyyntöön parametreilla, jotka eivät kelpaa: %{message}"
   not_logged_in: "Sinun täytyy kirjautua sisään ensin."
   not_found: "Pyydettyä osoitetta tai resurssia ei löytynyt."
@@ -270,7 +266,6 @@ fi:
   invalid_whisper_access: "Joko kuiskaukset eivät ole käytössä tai sinulla ei ole oikeutta kuiskata."
   not_in_group:
     title_topic: "Ketjun lukeminen vaatii jäsenyyden ryhmässä '%{group}'."
-    title_category: "Täytyy kuulua ryhmään, jotta näkee tämän alueen."
     request_membership: "Hae jäsenyyttä"
     join_group: "Liity ryhmään"
   deleted_topic: "Ups! Ketju on poistettu eikä ole enää saatavilla."
@@ -3881,10 +3876,6 @@ fi:
       agree_and_hide:
         title: "Piilota viesti"
         description: "Piilota viesti ja lähetä käyttäjälle yksityisviesti, jossa pyydetään käyttäjää muokkaamaan viestiä."
-      delete_spammer:
-        title: "Poista roskapostittaja"
-        description: "Poista käyttäjä ja kaikki hänen viestinsä sekä aloittamansa ketjut."
-        confirm: "Oletko varma että haluat poistaa kaikki käyttäjän viestit ja aloittamansa ketjut sekä estää hänen IP-osoitteensa ja sähköpostiosoitteensa?"
       delete_single:
         title: "Poista"
       delete:
@@ -3941,8 +3932,6 @@ fi:
       approve_and_restore:
         title: "Hyväksy ja palauta viesti"
       delete_user:
-        title: "Poista käyttäjä"
-        confirm: "Haluatko varmasti poistaa käyttäjän? Kaikki hänen viestinsä poistetaan ja hänen sähköpostiosoitteensa sekä IP-osoitteensa estetään."
         reason: "Poistettiin hyväksyntäjonon kautta"
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"

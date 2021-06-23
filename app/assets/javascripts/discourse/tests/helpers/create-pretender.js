@@ -938,13 +938,13 @@ export function applyDefaultHandlers(pretender) {
     return [404, { "Content-Type": "application/html" }, ""];
   });
 
-  pretender.get("directory-columns.json", () => {
+  pretender.get("edit-directory-columns.json", () => {
     return response(200, {
       directory_columns: [
         {
           id: 1,
           name: "likes_received",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 1,
           position: 1,
@@ -954,7 +954,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 2,
           name: "likes_given",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 2,
           position: 2,
@@ -964,7 +964,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 3,
           name: "topic_count",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 3,
           position: 3,
@@ -974,7 +974,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 4,
           name: "post_count",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 4,
           position: 4,
@@ -984,7 +984,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 5,
           name: "topics_entered",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 5,
           position: 5,
@@ -994,7 +994,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 6,
           name: "posts_read",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 6,
           position: 6,
@@ -1004,7 +1004,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 7,
           name: "days_visited",
-          automatic: true,
+          type: "automatic",
           enabled: true,
           automatic_position: 7,
           position: 7,
@@ -1014,7 +1014,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 9,
           name: null,
-          automatic: false,
+          type: "user_field",
           enabled: false,
           automatic_position: null,
           position: 8,
@@ -1031,6 +1031,77 @@ export function applyDefaultHandlers(pretender) {
             searchable: true,
             position: 2,
           },
+        },
+      ],
+    });
+  });
+
+  pretender.get("directory-columns.json", () => {
+    return response(200, {
+      directory_columns: [
+        {
+          id: 1,
+          name: "likes_received",
+          type: "automatic",
+          position: 1,
+          icon: "heart",
+          user_field: null,
+        },
+        {
+          id: 2,
+          name: "likes_given",
+          type: "automatic",
+          position: 2,
+          icon: "heart",
+          user_field: null,
+        },
+        {
+          id: 3,
+          name: "topic_count",
+          type: "automatic",
+          position: 3,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 4,
+          name: "post_count",
+          type: "automatic",
+          position: 4,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 5,
+          name: "topics_entered",
+          type: "automatic",
+          position: 5,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 6,
+          name: "posts_read",
+          type: "automatic",
+          position: 6,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 7,
+          name: "days_visited",
+          type: "automatic",
+          position: 7,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 9,
+          name: "Favorite Color",
+          type: "user_field",
+          position: 8,
+          icon: null,
+          user_field_id: 3,
         },
       ],
     });
