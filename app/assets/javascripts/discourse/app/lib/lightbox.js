@@ -31,6 +31,7 @@ export default function (elem, siteSettings) {
         tPrev: I18n.t("lightbox.previous"),
         tNext: I18n.t("lightbox.next"),
         tCounter: I18n.t("lightbox.counter"),
+        navigateByImgClick: false,
       },
 
       ajax: {
@@ -57,6 +58,9 @@ export default function (elem, siteSettings) {
               $(".mfp-bg").css("background-color")
             );
           }
+        },
+        change() {
+          this.wrap.removeClass("mfp-force-scrollbars");
         },
         beforeClose() {
           this.wrap.off("click.pinhandler");
