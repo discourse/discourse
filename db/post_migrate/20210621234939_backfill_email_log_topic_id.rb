@@ -13,6 +13,7 @@ class BackfillEmailLogTopicId < ActiveRecord::Migration[6.1]
           WITH cte AS (
             SELECT post_id
             FROM email_logs
+            WHERE email_logs.topic_id IS NULL
             ORDER BY id
             LIMIT :batch_size
             OFFSET :offset
@@ -21,7 +22,7 @@ class BackfillEmailLogTopicId < ActiveRecord::Migration[6.1]
           SET topic_id = posts.topic_id
           FROM cte
           INNER JOIN posts ON posts.id = cte.post_id
-          WHERE email_logs.post_id = cte.post_id AND email_logs.topic_id IS NULL
+          WHERE email_logs.post_id = cte.post_id
       SQL
 
       offset += BATCH_SIZE
