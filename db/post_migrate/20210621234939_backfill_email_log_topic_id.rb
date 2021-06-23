@@ -13,7 +13,6 @@ class BackfillEmailLogTopicId < ActiveRecord::Migration[6.1]
           WITH cte AS (
             SELECT post_id
             FROM email_logs
-            WHERE email_logs.topic_id IS NULL
             ORDER BY id
             LIMIT :batch_size
             OFFSET :offset
