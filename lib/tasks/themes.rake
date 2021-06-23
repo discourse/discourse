@@ -129,6 +129,7 @@ task "themes:isolated_test" => :environment do |t, args|
   if ENV["UNSET_DISCOURSE_ENV_VARS"] == "1"
     ENV.keys.each do |key|
       next if !key.start_with?('DISCOURSE_')
+      next if ENV["DONT_UNSET_#{key}"] == "1"
       ENV[key] = nil
     end
   end
