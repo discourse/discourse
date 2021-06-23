@@ -108,6 +108,8 @@ class DirectoryItemsController < ApplicationController
       serializer_opts[:plugin_column_ids] = params[:plugin_column_ids]&.split("|")&.map(&:to_i)
     end
 
+    serializer_opts[:attributes] = DirectoryColumn.active_column_names
+
     serialized = serialize_data(result, DirectoryItemSerializer, serializer_opts)
     render_json_dump(directory_items: serialized,
                      meta: {
