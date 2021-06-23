@@ -288,7 +288,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-members-add.btn");
 
     assert.ok(
-      exists(".group-add-members-modal .group-add-members-make-owner"),
+      exists(".group-add-members-modal #set-owner"),
       "it allows moderators to set group owners"
     );
 
