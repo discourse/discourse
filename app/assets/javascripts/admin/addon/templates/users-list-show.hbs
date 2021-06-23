@@ -23,14 +23,14 @@
   {{#if model}}
     <table class="table users-list grid">
       <thead>
-        {{table-header-toggle field="username" labelKey="username" order=order asc=asc}}
-        {{table-header-toggle  class=(if showEmails "" "hidden") field="email" labelKey="email" order=order asc=asc}}
-        {{table-header-toggle field="last_emailed" labelKey="admin.users.last_emailed" order=order asc=asc}}
-        {{table-header-toggle field="seen" labelKey="last_seen" order=order asc=asc}}
-        {{table-header-toggle field="topics_viewed" labelKey="admin.user.topics_entered" order=order asc=asc}}
-        {{table-header-toggle field="posts_read" labelKey="admin.user.posts_read_count" order=order asc=asc}}
-        {{table-header-toggle field="read_time" labelKey="admin.user.time_read" order=order asc=asc}}
-        {{table-header-toggle field="created" labelKey="created" order=order asc=asc}}
+        {{table-header-toggle field="username" labelKey="username" order=order asc=asc automatic=true}}
+        {{table-header-toggle  class=(if showEmails "" "hidden") field="email" labelKey="email" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="last_emailed" labelKey="admin.users.last_emailed" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="seen" labelKey="last_seen" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="topics_viewed" labelKey="admin.user.topics_entered" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="posts_read" labelKey="admin.user.posts_read_count" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="read_time" labelKey="admin.user.time_read" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="created" labelKey="created" order=order asc=asc automatic=true}}
         {{#if siteSettings.must_approve_users}}
           <th>{{i18n "admin.users.approved"}}</th>
         {{/if}}
