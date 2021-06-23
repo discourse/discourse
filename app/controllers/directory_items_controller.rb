@@ -26,13 +26,14 @@ class DirectoryItemsController < ApplicationController
       result = result.references(:user).where.not(users: { username: params[:exclude_usernames].split(",") })
     end
 
-    order = params[:order] || DirectoryItem.headings.first
+    order = params[:order] || DirectoryColumn.automatic_column_names.first
     dir = params[:asc] ? 'ASC' : 'DESC'
-    if DirectoryItem.headings.include?(order.to_sym)
+    if DirectoryColumn.active_column_names.include?(order.to_sym)
       result = result.order("directory_items.#{order} #{dir}, directory_items.id")
     elsif params[:order] === 'username'
       result = result.order("users.#{order} #{dir}, directory_items.id")
     else
+      # Ordering by user field value
       user_field = UserField.find_by(name: params[:order])
       if user_field
         result = result
@@ -96,6 +97,10 @@ class DirectoryItemsController < ApplicationController
     serializer_opts = {}
     if params[:user_field_ids]
       serializer_opts[:user_field_ids] = params[:user_field_ids]&.split("|")&.map(&:to_i)
+    end
+
+    if params[:plugin_column_ids]
+      serializer_opts[:plugin_column_ids] = params[:plugin_column_ids]&.split("|")&.map(&:to_i)
     end
 
     serialized = serialize_data(result, DirectoryItemSerializer, serializer_opts)

@@ -42,25 +42,25 @@ fr:
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "il y a %{date}"
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1 min"
         less_than_x_seconds:
-          one: "< %{count}s"
-          other: "< %{count}s"
+          one: "< %{count} s"
+          other: "< %{count} s"
         x_seconds:
-          one: "%{count}s"
-          other: "%{count}s"
+          one: "%{count} s"
+          other: "%{count} s"
         less_than_x_minutes:
-          one: "< %{count}m"
-          other: "< %{count}m"
+          one: "< %{count} min"
+          other: "< %{count} min"
         x_minutes:
-          one: "%{count}m"
-          other: "%{count}m"
+          one: "%{count} min"
+          other: "%{count} min"
         about_x_hours:
-          one: "%{count}h"
-          other: "%{count}h"
+          one: "%{count} h"
+          other: "%{count} h"
         x_days:
-          one: "%{count}j"
-          other: "%{count}j"
+          one: "%{count} j"
+          other: "%{count} j"
         x_months:
           one: "%{count} mois"
           other: "%{count} mois"
@@ -77,8 +77,8 @@ fr:
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "%{count} min"
-          other: "%{count} mins"
+          one: "%{count} minute"
+          other: "%{count} minutes"
         x_hours:
           one: "%{count} heure"
           other: "%{count} heures"
@@ -88,8 +88,8 @@ fr:
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
-          one: "il y a %{count} min"
-          other: "il y a %{count} mins"
+          one: "il y a %{count} minute"
+          other: "il y a %{count} minutes"
         x_hours:
           one: "il y a %{count} heure"
           other: "il y a %{count} heures"
@@ -110,56 +110,56 @@ fr:
           one: "%{count} mois plus tard"
           other: "%{count} mois plus tard"
         x_years:
-          one: "%{count} année plus tard"
-          other: "%{count} années plus tard"
+          one: "%{count} an plus tard"
+          other: "%{count} ans plus tard"
       previous_month: "Mois précédent"
       next_month: "Mois suivant"
       placeholder: date
     share:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
-      post: "message #%{postNumber}"
+      post: "message num. %{postNumber}"
       close: "fermer"
       twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
       email: "Envoyer par courriel"
       url: "Copier et partager l'URL"
     action_codes:
-      public_topic: "a rendu ce sujet public %{when}"
-      private_topic: "a rendu ce sujet message direct %{when}"
-      split_topic: "a scindé ce sujet %{when}"
-      invited_user: "a invité %{who} %{when}"
-      invited_group: "a invité %{who} %{when}"
-      user_left: "%{who} a quitté cette conversation %{when}"
-      removed_user: "a retiré %{who} %{when}"
-      removed_group: "a retiré %{who} %{when}"
-      autobumped: "remonté automatiquement dans la liste %{when}"
+      public_topic: "a rendu ce sujet public le %{when}"
+      private_topic: "a fait de ce sujet un message direct le %{when}"
+      split_topic: "a scindé ce sujet le %{when}"
+      invited_user: "a invité %{who} le %{when}"
+      invited_group: "a invité %{who} le %{when}"
+      user_left: "%{who} a quitté cette conversation le %{when}"
+      removed_user: "a retiré %{who} le %{when}"
+      removed_group: "a retiré %{who} le %{when}"
+      autobumped: "remonté automatiquement dans la liste le %{when}"
       autoclosed:
-        enabled: "fermé automatiquement %{when}"
-        disabled: "ouvert automatiquement %{when}"
+        enabled: "fermé automatiquement le %{when}"
+        disabled: "ouvert automatiquement le %{when}"
       closed:
-        enabled: "a fermé ce sujet %{when}"
-        disabled: "a ouvert ce sujet %{when}"
+        enabled: "a fermé ce sujet le %{when}"
+        disabled: "a ouvert ce sujet le %{when}"
       archived:
-        enabled: "a archivé ce sujet %{when}"
-        disabled: "a désarchivé ce sujet %{when}"
+        enabled: "a archivé ce sujet le %{when}"
+        disabled: "a désarchivé ce sujet le %{when}"
       pinned:
-        enabled: "a épinglé ce sujet %{when}"
-        disabled: "a désépinglé ce sujet %{when}"
+        enabled: "a épinglé ce sujet le %{when}"
+        disabled: "a désépinglé ce sujet le %{when}"
       pinned_globally:
-        enabled: "a épinglé ce sujet globalement %{when}"
-        disabled: "a désépinglé ce sujet %{when}"
+        enabled: "a épinglé ce sujet globalement le %{when}"
+        disabled: "a désépinglé ce sujet le %{when}"
       visible:
-        enabled: "a rendu ce sujet visible %{when}"
-        disabled: "a rendu ce sujet invisible %{when}"
+        enabled: "a rendu ce sujet visible le %{when}"
+        disabled: "a rendu ce sujet invisible le %{when}"
       banner:
-        enabled: "a mis à la une %{when}. Il sera affiché en haut de chaque page jusqu'à ce qu'il soit ignoré par un utilisateur."
-        disabled: "a supprimé de la une %{when}. Il ne sera plus affiché en haut de chaque page."
+        enabled: "a mis à la une le %{when}. Il sera affiché en haut de chaque page jusqu'à ce qu'il soit ignoré par un utilisateur."
+        disabled: "a supprimé de la une le %{when}. Il ne sera plus affiché en haut de chaque page."
       forwarded: "a transmis le courriel ci-dessus"
     topic_admin_menu: "actions du sujet"
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
-    emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
+    emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification par courriel ne sera envoyée."
     software_update_prompt:
-      message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>rafraîchir cette page</span> pour éviter d'éventuels dysfonctionnements."
+      message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Ignorer"
     bootstrap_mode_enabled:
       one: "Pour faciliter son lancement, votre nouveau site se trouve dans un mode spécial de lancement. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateur."
@@ -167,7 +167,7 @@ fr:
     bootstrap_mode_disabled: "Le mode spécial de lancement sera désactivé dans les prochaines 24 heures."
     themes:
       default_description: "Par défaut"
-      broken_theme_alert: "Votre site pourrait ne pas fonctionner parce que le thème / composant %{theme} a des erreurs. Voici pouvez le désactiver ici : %{path}."
+      broken_theme_alert: "Votre site pourrait ne pas fonctionner parce que le thème/composant %{theme} comprend des erreurs. Vous pouvez le désactiver ici : %{path}."
     s3:
       regions:
         ap_northeast_1: "Asie-Pacifique (Tokyo)"
@@ -185,26 +185,26 @@ fr:
         eu_west_2: "UE (Londres)"
         eu_west_3: "UE (Paris)"
         sa_east_1: "Amérique du Sud (São Paulo)"
-        us_east_1: "États-Unis est (Virginie)"
-        us_east_2: "États-Unis est (Ohio)"
-        us_gov_east_1: "AWS GovCloud (US-Est)"
-        us_gov_west_1: "AWS GovCloud (US-Ouest)"
-        us_west_1: "États-Unis ouest (Californie)"
-        us_west_2: "États-Unis ouest (Oregon)"
-    clear_input: "Nettoyer l'entrée"
+        us_east_1: "États-Unis - Est (Virginie)"
+        us_east_2: "États-Unis - Est (Ohio)"
+        us_gov_east_1: "AWS GovCloud (É.-U.-Est)"
+        us_gov_west_1: "AWS GovCloud (É.-U.-Ouest)"
+        us_west_1: "États-Unis - Ouest (Californie)"
+        us_west_2: "États-Unis - Ouest (Oregon)"
+    clear_input: "Effacer la saisie"
     edit: "modifier le titre et la catégorie de ce sujet"
     expand: "Développer"
     not_implemented: "Cette fonctionnalité n'est pas encore disponible."
     no_value: "Non"
     yes_value: "Oui"
     submit: "Envoyer"
-    generic_error: "Désolé, une erreur est survenue."
+    generic_error: "Nous sommes désolés, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
     go_ahead: "Continuer"
     sign_up: "S'inscrire"
     log_in: "Se connecter"
     age: "Âge"
-    joined: "Inscrit"
+    joined: "Inscrit(e)"
     admin_title: "Administration"
     show_more: "afficher plus"
     show_help: "options"
@@ -218,7 +218,7 @@ fr:
     privacy: "Confidentialité"
     tos: "Conditions générales d'utilisation"
     rules: "Règles"
-    conduct: "Code de bonne conduite"
+    conduct: "Code de conduite"
     mobile_view: "Version mobile"
     desktop_view: "Version ordinateur"
     you: "Vous"
@@ -233,8 +233,8 @@ fr:
     never: "jamais"
     every_30_minutes: "toutes les 30 minutes"
     every_hour: "chaque heure"
-    daily: "quotidiennes"
-    weekly: "hebdomadaires"
+    daily: "chaque jour"
+    weekly: "chaque semaine"
     every_month: "chaque mois"
     every_six_months: "tous les six mois"
     max_of_count: "maximum sur %{count}"
@@ -246,8 +246,8 @@ fr:
       title: "Messages connexes"
       see_all: 'Voir <a href="%{path}">tous les messages</a> de @%{username}…'
     suggested_topics:
-      title: "À lire ensuite"
-      pm_title: "À lire ensuite"
+      title: "Sujets suggérés"
+      pm_title: "Messages suggérés"
     about:
       simple_title: "À propos"
       title: "À propos du site %{title}"
@@ -271,17 +271,17 @@ fr:
       title: "Mettre un signet"
       clear_bookmarks: "Retirer les signets"
       help:
-        bookmark: "Cliquer pour mettre un signet sur le premier message de ce sujet"
-        unbookmark: "Cliquer pour retirer tous les signets de ce sujet"
-        unbookmark_with_reminder: "Cliquer pour supprimer tous les signets et rappels de ce sujet. Vous avez un rappel pour %{reminder_at} sur ce sujet."
+        bookmark: "Cliquez pour mettre un signet sur le premier message de ce sujet"
+        unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
+        unbookmark_with_reminder: "Cliquez pour supprimer tous les signets et rappels de ce sujet. Vous avez un rappel pour %{reminder_at} sur ce sujet."
     bookmarks:
       created: "Vous avez mis un signet à ce message. %{name}"
       not_bookmarked: "mettre un signet à ce message"
-      created_with_reminder: "Vous avez placé un signet à ce message avec un rappel pour %{date}. %{name}"
+      created_with_reminder: "Vous avez mis un signet à ce message avec un rappel pour le %{date}. %{name}"
       remove: "Retirer le signet"
       delete: "Supprimer le signet"
-      confirm_delete: "Êtes-vous sûr de vouloir supprimer ce signet ? Le rappel sera aussi supprimé."
-      confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
+      confirm_delete: "Voulez-vous vraiment supprimer ce signet ? Le rappel sera également supprimé."
+      confirm_clear: "Voulez-vous vraiment retirer tous les signets de ce sujet ?"
       save: "Enregistrer"
       no_timezone: 'Vous n''avez pas encore défini un fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       invalid_custom_datetime: "La date et l'heure sont invalides, veuillez réessayer."
@@ -298,13 +298,13 @@ fr:
         today_with_time: "aujourd'hui à %{time}"
         tomorrow_with_time: "demain à %{time}"
         at_time: "à %{date_time}"
-        existing_reminder: "Vous avez un rappel configuré pour ce signet qui sera envoyé %{at_date_time}"
+        existing_reminder: "Vous avez configuré un rappel pour ce signet qui sera envoyé le %{at_date_time}"
     copy_codeblock:
       copied: "copié !"
     drafts:
       resume: "Reprendre"
       remove: "Supprimer"
-      remove_confirmation: "Êtes-vous sûr de vouloir supprimer ce brouillon ?"
+      remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
       topic_reply: "Créer un brouillon de réponse"
@@ -408,7 +408,7 @@ fr:
         other: "Ce sujet a <b>%{count}</b> messages en attente de validation"
       title: "À examiner"
       topic: "Sujet :"
-      filtered_topic: "Vous avez restreint à un seul sujet le contenu à examiner."
+      filtered_topic: "Vous avez restreint le contenu à examiner à un seul sujet."
       filtered_user: "Utilisateur"
       filtered_reviewed_by: "Examiné par"
       show_all_topics: "afficher tous les sujets"
@@ -416,7 +416,7 @@ fr:
       deleted_user: "(utilisateur supprimé)"
       user:
         bio: "Biographie"
-        website: "Site web"
+        website: "Site Web"
         username: "Nom d'utilisateur"
         email: "Courriel"
         name: "Nom"
@@ -668,7 +668,6 @@ fr:
           settings:
             title: "Paramètres"
             allow_unknown_sender_topic_replies: "Autoriser des réponses par un expéditeur inconnu."
-            allow_unknown_sender_topic_replies_hint: "Permet aux expéditeurs inconnus de répondre aux sujets du groupe. Si cette option n'est pas activée, les réponses provenant d'adresses courriel qui ne sont pas déjà incluses dans le fil de discussion IMAP ou invitées au sujet créeront un nouveau sujet."
           mailboxes:
             synchronized: "Boîte aux lettres à synchroniser"
             none_found: "Aucune boîte aux lettres n'a été trouvée pour ce compte de courriel."
@@ -2180,13 +2179,10 @@ fr:
         delete: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
-        dismiss_read_with_selected: "Marquer %{count} sujet(s) comme lu(s)"
         dismiss_button: "Vu…"
-        dismiss_button_with_selected: "Marquer comme lu(s) (%{count})…"
         dismiss_tooltip: "Marquer les nouveaux messages comme vus, ou arrêter de suivre des sujets"
         also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
         dismiss_new: "Marquer comme vu(s)"
-        dismiss_new_with_selected: "Marquer le(s) nouveau(x) sujet(s) comme lu(s) (%{count})"
         toggle: "basculer la sélection multiple de sujets"
         actions: "Actions sur la sélection"
         change_category: "Définir la catégorie"
@@ -2216,7 +2212,6 @@ fr:
         new: "Vous n'avez aucun nouveau sujet."
         read: "Vous n'avez lu aucun sujet pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
-        ready_to_create: "Prêt à "
         latest: "Vous avez tout lu !"
         bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
         category: "Il n'y a pas de sujets dans %{category}."
@@ -2306,7 +2301,6 @@ fr:
       browse_all_categories: Voir toutes les catégories
       browse_all_tags: Parcourir toutes les étiquettes
       view_latest_topics: consulter les sujets récents
-      suggest_create_topic: commencer une nouvelle conversation ?
       jump_reply_up: aller à des réponses précédentes
       jump_reply_down: aller à des réponses ultérieures
       deleted: "Ce sujet a été supprimé"
@@ -3276,7 +3270,6 @@ fr:
         show_incoming_updated_topics: "%{shortcut} Afficher les sujets mis à jour"
         search: "%{shortcut} Rechercher"
         help: "%{shortcut} Ouvrir l'aide du clavier"
-        dismiss_new_posts: "%{shortcut} Ignorer les nouveaux messages"
         dismiss_topics: "%{shortcut} Ignorer les sujets"
         log_out: "%{shortcut} Se déconnecter"
       composing:
@@ -3504,7 +3497,7 @@ fr:
         member: "membre"
         regular: "habitué"
         leader: "meneur"
-      detailed_name: "%{level}&nbsp;: %{name}"
+      detailed_name: "%{level}: %{name}"
   admin_js:
     type_to_filter: "commencez à taper pour filtrer…"
     admin:
@@ -4474,7 +4467,6 @@ fr:
           upload_successful: "Envoi effectué avec succès. Les mots et expressions à surveiller ont été ajoutés."
         test:
           button_label: "Tester"
-          modal_title: "Tester les mots surveillés pour l'action «&nbsp;%{action}&nbsp;»"
           description: "Saisissez du texte dans le champ ci-dessous pour vérifier le fonctionnement des mots ou expressions surveillés"
           found_matches: "Correspondances trouvées :"
           no_matches: "Aucune correspondance trouvée"

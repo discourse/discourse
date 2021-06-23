@@ -227,7 +227,7 @@ es:
           >
           > Una de las ventajas de hablar consigo mismo, es que sabes que al menos alguien está oyendo.
           >
-          > Algunas personas son buenas con las palabras, y otras personas ... oh, oh, no son buenas.
+          > Algunas personas son buenas con las palabras, y otras personas… oh, oh, no son buenas.
 
           Selecciona la parte del texto &uarr; que prefieres citar y luego presiona el botón **citar** que aparece sobre tu selección del texto – o presiona el botón **responder** debajo de esta publicación.
 
@@ -276,11 +276,11 @@ es:
           (¡Sí! mi nombre de usuario se deletrea _disco_, como el baile de los años 70. [¡Me encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Nos gusta que nuestros debates sean amables, y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, por favor marca la bandera para informar al autor o a [nuestro colaborador](%{about_url}) sobre él. Hay muchas razones por las que puede querer marcar un post, que va desde una inocua sugerencia de división de temas hasta una clara violación de los estándares comunitarios. Si seleccionas **Algo más**, iniciarás una discusión privada de mensajes con los moderadores donde podrás hacer más preguntas.
+          Nos gusta que nuestros debates sean amables, y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, marca la bandera para informar al autor o a [nuestro colaborador](%{about_url}) sobre él. Hay muchas razones por las que puede querer denunciar una publicación, que va desde una inocua sugerencia de división de temas hasta una clara violación de los estándares comunitarios. Si seleccionas **Algo más**, iniciarás una discusión privada de mensajes con los moderadores donde podrás hacer más preguntas.
 
           > :imp: Escribí algo desagradable aquí
 
-          ¡Sigue adelante y **marca esta publicación** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> y selecciona **Es inapropiado** como la razón!
+          ¡Sigue adelante y **denuncia esta publicación** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> y selecciona **Es inapropiada** como la razón!
         reply: |-
           [Nuestro staff](%{base_uri}/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, este se ocultará automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado el reporte por ahora)
         not_found: |-
@@ -377,11 +377,11 @@ es:
           ¡Excelente! Recuerda que esto funciona para categorías _y_ etiquetas, si las etiquetas están disponibles.
       change_topic_notification_level:
         instructions: |-
-          Cada tema tiene un nivel de notificación. Comienza en 'normal', lo que significa que normalmente solo se notificará cuando alguien está te está hablando directamente.
+          Cada tema tiene un nivel de notificación. Comienza en «normal», lo que significa que normalmente solo se notificará cuando alguien te está hablando directamente.
 
           De forma predeterminada, el nivel de notificación de un mensaje privado se establece en el nivel más alto de «vigilancia», lo que significa que se te notificará cada respuesta nueva. Pero puedes sobrescribir el nivel de notificación de _cualquier_ tema a «vigilar», «seguir» o «silenciar».
 
-          Intentemos cambiar el nivel de notificación de este tema. Al final del tema, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **seguir**?
+          Intentemos cambiar el nivel de notificación de este tema. Al final del tema, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **en seguimiento**?
         not_found: |-
           ¡Parece que aún estás vigilando :eyes: este tema! Si tienes problemas para encontrar el botón del nivel de notificación, este se encuentra en la parte inferior del tema.
         reply: |-

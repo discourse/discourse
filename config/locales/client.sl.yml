@@ -667,7 +667,6 @@ sl:
           settings:
             title: "Nastavitve"
             allow_unknown_sender_topic_replies: "Dovoli odgovore neznanih pošiljateljev."
-            allow_unknown_sender_topic_replies_hint: "Omogoča neznanim pošiljateljem, da odgovarjajo na teme skupine. Če to ni omogočeno, bodo odgovori iz e-poštnih naslovov, ki še niso vključeni v e-poštno nit IMAP ali niso povabljeni v to temo, ustvarili novo temo."
           mailboxes:
             synchronized: "Sinhronizirani nabiralnik"
             none_found: "V tem računu nismo našli poštnega nabiralnika."
@@ -2153,7 +2152,6 @@ sl:
         new: "Nimate novih tem."
         read: "Niste prebrali še nobene teme."
         posted: "Niste objavili še v nobeni temi."
-        ready_to_create: "Pripravljen "
         latest: "Vse ste že prebrali!"
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji %{category} ."
@@ -2251,7 +2249,6 @@ sl:
       browse_all_categories: Brskajte po vseh kategorijah
       browse_all_tags: Brskanje po vseh oznakah
       view_latest_topics: poglej najnovejše teme
-      suggest_create_topic: začni nov pogovor?
       jump_reply_up: pojdi na prejšni odgovor
       jump_reply_down: pojdi na naslednji odgovor
       deleted: "Tema je bila izbrisana"
@@ -3192,7 +3189,6 @@ sl:
         show_incoming_updated_topics: "%{shortcut} Prikaži osvežene teme"
         search: "%{shortcut} Iskalnik"
         help: "%{shortcut} Odpri bližnjice na tipkovnici"
-        dismiss_new_posts: "%{shortcut} Opusti nov/prispevek"
         dismiss_topics: "%{shortcut} Opusti teme"
         log_out: "%{shortcut} Odjava"
       composing:

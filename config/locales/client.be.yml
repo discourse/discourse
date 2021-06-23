@@ -314,6 +314,7 @@ be:
           posting: апублікаванне
         email:
           title: "Электронная пошта"
+          last_updated_by: "ад"
           credentials:
             username: "Імя карыстальніка"
             password: "Пароль"

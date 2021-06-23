@@ -604,7 +604,6 @@ class ApplicationController < ActionController::Base
     store_preloaded("customEmoji", custom_emoji)
     store_preloaded("isReadOnly", @readonly_mode.to_s)
     store_preloaded("activatedThemes", activated_themes_json)
-    store_preloaded("directoryColumns", directory_columns_json)
   end
 
   def preload_current_user_data
@@ -614,20 +613,6 @@ class ApplicationController < ActionController::Base
       report, each_serializer: TopicTrackingStateSerializer, scope: guardian
     )
     store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
-  end
-
-  def directory_columns_json
-    DirectoryColumn
-      .left_joins(:user_field)
-      .where(enabled: true)
-      .order(:position)
-      .pluck('directory_columns.name',
-             'directory_columns.automatic',
-             'directory_columns.icon',
-             'user_fields.id',
-             'user_fields.name')
-      .map { |column| { name: column[0] || column[4], automatic: column[1], icon: column[2], user_field_id: column[3] } }
-      .to_json
   end
 
   def custom_html_json

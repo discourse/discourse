@@ -103,7 +103,6 @@ pl_PL:
       maximum_staged_user_per_email_reached: "Osiągnięto maksymalną ilość użytkowników etapowych zarejestrowanych przez email."
       no_subject: "(brak tematu)"
       no_body: "(brak treści wpisu)"
-      missing_attachment: "(Brakuje załącznika %{filename})"
       errors:
         empty_email_error: "Zdarza się kiedy e-mail jaki dostaliśmy jest pusty."
         no_message_id_error: "Zdarza się kiedy email nie posiada nagłówka 'Message-Id'."
@@ -237,6 +236,7 @@ pl_PL:
     not_found_template_link: |
       <p>Zaproszenia do <a href="%{base_url}">%{site_name}</a> nie można już zrealizować. Poproś osobę, która Cię zaprosiła, o przesłanie nowego zaproszenia.</p>
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!</a>"
+    invite_exists: "Zaprosiłeś już <b>%{email}</b>."
     invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy na Twój adres e-mail aktywacyjny. Postępuj zgodnie z instrukcjami w e-mailu, aby aktywować konto.</p><p>Jeśli e-mail nie przyszedł, sprawdź folder ze spamem.</p>"
     cant_invite_to_group: "Nie możesz zapraszać użytkowników do określonej grupy. Upewnij się, że jesteś właścicielem grupy, do których próbujesz zaprosić."
@@ -264,9 +264,6 @@ pl_PL:
     not_enough_space_on_disk: "Nie ma wystarczającej ilości wolnego miejsca, aby wczytać tę kopię zapasową."
     invalid_filename: "Plik kopii zapasowej zawiera nieprawidłowe znaki. Nieprawidłowe znaki to a-z 0-9 . - _."
     file_exists: "Ten plik już istnieje."
-    location:
-      local: "Lokalne"
-      s3: "Amazon S3"
   invalid_params: "Zapytanie zawiera nieprawidłowy parametr: %{message}."
   not_logged_in: "Aby to zrobić musisz się zalogować."
   not_found: "Żądany URL lub źródło nie mógł/mogła zostać znaleziony."
@@ -281,7 +278,6 @@ pl_PL:
   invalid_whisper_access: "Albo szepty nie są włączone, albo nie masz dostępu do tworzenia wpisów szeptanych"
   not_in_group:
     title_topic: "Aby wyświetlić ten temat, musisz poprosić o członkostwo w grupie '%{group}'."
-    title_category: "Musisz być w grupie, aby zobaczyć tę kategorię."
     request_membership: "Poproś o członkostwo"
     join_group: "Dołącz do grupy"
   deleted_topic: "Ups! Ten temat został usunięty i nie jest już dostępny."
@@ -2443,6 +2439,11 @@ pl_PL:
     email_in_spam_header: "Pierwszy e-mail użytkownika został oznaczony jako spam"
     already_silenced: "Użytkownik został już wyciszony przez %{staff} %{time_ago}."
     already_suspended: "Użytkownik został już zawieszony przez %{staff} %{time_ago}."
+    cannot_delete_has_posts:
+      one: "Użytkownik %{username} ma %{count} post w publicznym wątku lub prywatnej wiadomości, więc nie można ich usunąć."
+      few: "Użytkownik %{username} ma %{count} posty w publicznym wątku lub prywatnej wiadomości, więc nie można ich usunąć."
+      many: "Użytkownik %{username} ma %{count} posty w publicznym wątku lub prywatnej wiadomości, więc nie można ich usunąć."
+      other: "Użytkownik %{username} ma %{count} postów w publicznych wątkach lub prywatnych wiadomościach, więc nie można ich usunąć."
   reviewables_reminder:
     submitted:
       one: "Wiadomości zostały wysłane ponad %{count} godzinę temu. [Sprawdź je](%{base_path}/review)."
@@ -3661,6 +3662,7 @@ pl_PL:
         To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że [Twój post](%{base_url}%{post_url}) został zatwierdzony.
   page_forbidden:
     title: "Ups! Ta strona jest prywatna."
+  site_setting_missing: "Ustawienie `%{name}` musi być ustawione."
   page_not_found:
     title: "Ups! Ta strona nie istnieje lub jest prywatna."
     popular_topics: "Popularne"
@@ -4491,6 +4493,7 @@ pl_PL:
       restored: Przywrócony
   reviewables:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
+    already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."
     priorities:
       low: "Niski"
       medium: "Średni"
@@ -4541,10 +4544,6 @@ pl_PL:
       agree_and_hide:
         title: "Ukryj post"
         description: "Ukryj ten post i automatycznie wyślij użytkownikowi wiadomość z wezwaniem do jego edycji."
-      delete_spammer:
-        title: "Usuń spamera"
-        description: "Usuń użytkownika oraz wszystkie jego posty i tematy."
-        confirm: "Czy na pewno chcesz usunąć wszystkie posty i tematy tego użytkownika oraz zablokować jego adresy IP i e-mail?"
       delete_single:
         title: "Usuń"
       delete:
@@ -4601,8 +4600,6 @@ pl_PL:
       approve_and_restore:
         title: "Zatwierdź i przywróć post"
       delete_user:
-        title: "Usuń użytkownika"
-        confirm: "Czy na pewno chcesz usunąć tego użytkownika? Spowoduje to usunięcie wszystkich jego postów i zablokowanie adresu e-mail oraz IP."
         reason: "Skasowano z poziomu kolejki moderacji"
   email_style:
     html_missing_placeholder: "Szablon HTML musi zawierać %{placeholder}"

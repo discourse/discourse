@@ -583,6 +583,7 @@ cs:
           notification: Notifikace
         email:
           title: "Email"
+          last_updated_by: "od"
           credentials:
             username: "Uživatelské jméno"
             password: "Heslo"
@@ -2696,7 +2697,6 @@ cs:
         show_incoming_updated_topics: "%{shortcut} Ukáže aktualizovaná témata"
         search: "%{shortcut}Vyhledávání"
         help: "%{shortcut} Otevře seznam klávesových zkratek"
-        dismiss_new_posts: "%{shortcut} Označit jako přečtené nové/příspěvky"
         dismiss_topics: "%{shortcut} Označit témata jako přečtená"
         log_out: "%{shortcut} Odhlásit se"
       composing:

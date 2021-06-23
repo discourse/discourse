@@ -417,6 +417,7 @@ lv:
           posting: Ieraksti
         email:
           title: "E-pasts"
+          last_updated_by: " "
           credentials:
             username: "Lietotājvārds"
             password: "Parole"
@@ -2093,7 +2094,6 @@ lv:
         user_profile_menu: "%{shortcut} Atvērt lietotaja menu"
         show_incoming_updated_topics: "%{shortcut} Parādīt tēmas ar izmaiņām"
         help: "%{shortcut} Atvērt klaviatūras palīdzību"
-        dismiss_new_posts: "%{shortcut} Ignorēt jauno/ierakstus"
         dismiss_topics: "%{shortcut} Ignorēt tēmas"
         log_out: "%{shortcut} Iziet no foruma"
       actions:

@@ -98,7 +98,6 @@ ja:
       show_trimmed_content: "続きを読む"
       no_subject: "(件名なし)"
       no_body: "(内容なし)"
-      missing_attachment: "(添付ファイル %{filename} がありません)"
       errors:
         empty_email_error: "受け取ったメールが空白だったときに発生します。"
         no_message_id_error: "メールに 'Message-Id' ヘッダーがない場合に発生します。"
@@ -181,9 +180,6 @@ ja:
     not_enough_space_on_disk: "このバックアップファイルをアップロードするディスクの空き容量が足りません。"
     invalid_filename: "バックアップファイル名に無効な文字が含まれています。有効な文字はa-z 0-9 . - _ です。"
     file_exists: "アップロードしようとしているファイルはすでに存在しています。"
-    location:
-      local: "ローカル"
-      s3: "Amazon S3"
   not_logged_in: "ログインしてください。"
   not_found: "リクエストされたURL、リソースは見つかりませんでした"
   invalid_access: "リクエストしたリソースの閲覧が許可されていません"
@@ -1726,8 +1722,6 @@ ja:
     actions:
       agree_and_suspend:
         title: "凍結中のユーザ"
-      delete_spammer:
-        title: "スパムユーザーを削除"
       delete_single:
         title: "削除する"
       disagree:
@@ -1741,8 +1735,6 @@ ja:
           title: "削除されたユーザー"
       reject:
         title: "リジェクト"
-      delete_user:
-        title: "削除されたユーザー"
   activemodel:
     errors:
       <<: *errors

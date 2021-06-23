@@ -333,38 +333,38 @@ acceptance(
   }
 );
 
-// acceptance(
-//   "Managing Group Email Settings - SMTP and IMAP Enabled - Email Test Invalid",
-//   function (needs) {
-//     needs.user();
-//     needs.settings({ enable_smtp: true, enable_imap: true });
+acceptance(
+  "Managing Group Email Settings - SMTP and IMAP Enabled - Email Test Invalid",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_smtp: true, enable_imap: true });
 
-//     needs.pretender((server, helper) => {
-//       server.post("/groups/47/test_email_settings", () => {
-//         return helper.response(400, {
-//           success: false,
-//           errors: [
-//             "There was an issue with the SMTP credentials provided, check the username and password and try again.",
-//           ],
-//         });
-//       });
-//     });
+    needs.pretender((server, helper) => {
+      server.post("/groups/47/test_email_settings", () => {
+        return helper.response(422, {
+          success: false,
+          errors: [
+            "There was an issue with the SMTP credentials provided, check the username and password and try again.",
+          ],
+        });
+      });
+    });
 
-//     test("enabling IMAP, testing, and saving", async function (assert) {
-//       await visit("/g/discourse/manage/email");
+    test("enabling IMAP, testing, and saving", async function (assert) {
+      await visit("/g/discourse/manage/email");
 
-//       await click("#enable_smtp");
-//       await click("#prefill_smtp_gmail");
-//       await fillIn('input[name="username"]', "myusername@gmail.com");
-//       await fillIn('input[name="password"]', "password@gmail.com");
-//       await click(".test-smtp-settings");
+      await click("#enable_smtp");
+      await click("#prefill_smtp_gmail");
+      await fillIn('input[name="username"]', "myusername@gmail.com");
+      await fillIn('input[name="password"]', "password@gmail.com");
+      await click(".test-smtp-settings");
 
-//       assert.equal(
-//         query(".modal-body").innerText,
-//         "There was an issue with the SMTP credentials provided, check the username and password and try again.",
-//         "shows a dialogue with the error message from the server"
-//       );
-//       await click(".modal-footer .btn.btn-primary");
-//     });
-//   }
-// );
+      assert.equal(
+        query(".modal-body").innerText,
+        "There was an issue with the SMTP credentials provided, check the username and password and try again.",
+        "shows a dialogue with the error message from the server"
+      );
+      await click(".modal-footer .btn.btn-primary");
+    });
+  }
+);

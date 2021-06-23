@@ -243,6 +243,7 @@ ko:
       contact_info: "이 사이트에 영향을 미치는 중대한 문제 또는 긴급한 문제가 발생하는 경우 %{contact_info} 에 문의하십시오."
     bookmarked:
       title: "북마크"
+      edit_bookmark: "북마크 수정"
       clear_bookmarks: "북마크 취소"
       help:
         bookmark: "이 글의 첫 번째 게시물을 북마크하려면 클릭하세요."
@@ -600,11 +601,15 @@ ko:
           enable_imap: "IMAP 활성화"
           test_settings: "테스트 설정"
           save_settings: "설정 저장"
+          last_updated: "마지막 업데이트:"
+          last_updated_by: "에 의해"
           settings_required: "모든 설정은 필수입니다. 유효성 검사 전에 모든 필드를 입력하십시오."
           smtp_settings_valid: "SMTP 설정이 유효합니다."
           smtp_title: "SMTP"
+          smtp_instructions: "그룹에 대해 SMTP를 활성화하면 그룹의받은 편지함에서 보낸 모든 아웃 바운드 이메일이 포럼에서 보낸 다른 이메일에 대해 구성된 메일 서버 대신 여기에 지정된 SMTP 설정을 통해 전송됩니다."
           imap_title: "IMAP"
           imap_additional_settings: "추가 설정"
+          imap_instructions: '그룹에 대해 IMAP을 활성화하면 그룹의 받은 편지함과 제공된 IMAP 서버 및 편지함간에 이메일이 동기화됩니다. IMAP을 사용하려면 먼저 유효한 인증 정보로 SMTP를 사용하도록 설정해야합니다. SMTP에 사용되는 이메일 사용자 이름과 비밀번호는 IMAP에 사용됩니다. 자세한 내용은<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">기능 안내</a>를 참조하십시오.'
           imap_alpha_warning: "경고: 이것은 알파 단계 기능입니다. Gmail만 공식적으로 지원됩니다. 자신의 책임하에 사용하십시오!"
           imap_settings_valid: "IMAP 설정이 유효합니다."
           smtp_disable_confirm: "SMTP를 사용하지 않도록 설정하면 모든 SMTP 및 IMAP 설정이 재설정되고 관련 기능이 비활성화됩니다.계속하시겠습니까?"
@@ -626,7 +631,7 @@ ko:
           settings:
             title: "설정"
             allow_unknown_sender_topic_replies: "알 수 없는 발신자 주제 응답을 허용합니다."
-            allow_unknown_sender_topic_replies_hint: "알 수없는 발신자가 그룹 글에 댓글을 작성 할 수 있습니다. 이 기능이 활성화되어 있지 않으면 IMAP 이메일 스레드에 아직 포함되지 않았거나 글에 초대되지 않은 이메일 주소에서 답장하면 새 글이 생성됩니다."
+            allow_unknown_sender_topic_replies_hint: "알 수없는 발신자가 그룹 글에 댓글을 작성 할 수 있습니다. 이 기능이 활성화되지 않은 경우 글에 아직 초대되지 않은 이메일 주소에서 답장하면 새 글이 생성됩니다."
           mailboxes:
             synchronized: "동기화된 사서함"
             none_found: "현재 이메일 계정에 사서함이 없습니다."
@@ -1056,6 +1061,7 @@ ko:
         failed_to_move: "선택한 메시지를 이동하지 못했습니다. (네트워크가 다운되었을 수 있음)"
         select_all: "모두 선택"
         tags: "태그"
+        warnings: "공식 경고"
       preferences_nav:
         account: "계정"
         security: "보안"
@@ -1200,6 +1206,7 @@ ko:
         invalid: "유효한 이메일 주소를 입력하십시오."
         authenticated: "사용자님의 이메일은 %{provider}에 의해 인증되었습니다."
         invite_auth_email_invalid: "초대 이메일이 %{provider}에 인증된 이메일과 일치하지 않습니다."
+        authenticated_by_invite: "사용자님의 이메일은 초대에 의해 인증되었습니다"
         frequency_immediately: "만약 전송된 메일을 읽지 않았을 경우, 즉시 메일을 다시 보내드립니다."
         frequency:
           other: "최근 %{count}분 동안 접속하지 않을 경우에만 메일이 전송됩니다."
@@ -1391,6 +1398,7 @@ ko:
           restrict_email: "하나의 이메일 주소로 제한"
           max_redemptions_allowed: "최대 사용"
           add_to_groups: "그룹에 추가"
+          invite_to_topic: "이 글로 이동합니다"
           expires_at: "다음 후 만료"
           custom_message: "개인 메시지 옵션"
           send_invite_email: "이메일 저장 및 보내기"
@@ -2094,10 +2102,16 @@ ko:
         delete: "글 삭제"
         dismiss: "읽음"
         dismiss_read: "읽지 않은 항목 모두 읽음"
-        dismiss_button: "읽음..."
+        dismiss_read_with_selected:
+          other: "읽지 않은 %{count}개 읽음 처리"
+        dismiss_button: "읽은 글로 표시..."
+        dismiss_button_with_selected:
+          other: "읽음 처리(%{count}개)..."
         dismiss_tooltip: "새 게시물만 닫거나 글 팔로우 중지"
         also_dismiss_topics: "이 글 팔로우를 중지하여 다시 읽지 않은 것으로 표시되지 않도록합니다."
         dismiss_new: "새글 모두 읽음"
+        dismiss_new_with_selected:
+          other: "새글 읽음 처리 (%{count}개)"
         toggle: "글 일괄 선택 전환"
         actions: "일괄 적용"
         change_category: "카테고리 설정"
@@ -2124,7 +2138,6 @@ ko:
         new: "새로운 글이 없습니다."
         read: "아직 읽은 글이 없습니다."
         posted: "아직 어떤 글도 게시하지 않았습니다."
-        ready_to_create: "지금 "
         latest: "모두 확인했습니다!"
         bookmarks: "아직 북마크된 글이 없습니다."
         category: "%{category}에 글이 없습니다."
@@ -2206,7 +2219,6 @@ ko:
       browse_all_categories: 모든 카테고리 보기
       browse_all_tags: 모든 태그 보기
       view_latest_topics: 최근 글 보기
-      suggest_create_topic: 새로운 대화를 시작 하시겠습니까?
       jump_reply_up: 이전 답글로 이동
       jump_reply_down: 이후 답글로 이동
       deleted: "글이 삭제되었습니다."
@@ -3123,7 +3135,6 @@ ko:
         show_incoming_updated_topics: "%{shortcut} 갱신된 토픽 보기"
         search: "%{shortcut} 를 사용하여 검색"
         help: "%{shortcut} 키보드 도움말 열기"
-        dismiss_new_posts: "%{shortcut} 새글을 읽은 상태로 표시하기"
         dismiss_topics: "%{shortcut} 토픽 무시하기"
         log_out: "%{shortcut} 로그아웃"
       composing:
@@ -3197,6 +3208,9 @@ ko:
           name: 기타
         posting:
           name: 포스팅
+      favorite_max_reached: "더 이상 좋아하는 배지로 추가할 수 없습니다."
+      favorite_max_not_reached: "이 배지를 좋아하는 배지로 표시"
+      favorite_count: "%{count}/%{max}개의 배지가 좋아하는 배지로 표시"
     tagging:
       all_tags: "모든 태그"
       other_tags: "기타 태그"
@@ -3558,6 +3572,8 @@ ko:
               write: 새 글 또는 기존 글에 댓글을 작성합니다.
               read_lists: 주요 글, 새 글, 최근 글 등과 같은 글 목록을 읽으십시오. RSS도 지원됩니다.
               wordpress: 워드프레스 wp-discourse 플러그인이 작동하는데 필요합니다.
+            posts:
+              edit: 게시물 또는 특정 게시물을 편집합니다.
             users:
               bookmarks: 사용자 북마크를 나열합니다. ICS 형식을 사용하면 북마크 알림을 반환합니다.
               sync_sso: DiscourseConnect를 사용하여 사용자를 동기화합니다.
@@ -4265,6 +4281,7 @@ ko:
         download: 다운로드
         clear_all: 모두 지우기
         clear_all_confirm: "%{action} 작업에 대한 모든 관심 단어를 지우시겠습니까?"
+        invalid_regex: '감시 단어 "%{word}"은 잘못된 정규식입니다.'
         actions:
           block: "차단"
           censor: "가리기"
@@ -4299,7 +4316,6 @@ ko:
           upload_successful: "성공적으로 업로드되었습니다. 단어가 추가되었습니다."
         test:
           button_label: "테스트"
-          modal_title: "테스트 %{action} 감시된 단어"
           description: "시청 한 단어와 일치하는지 확인하려면 아래에 텍스트를 입력하십시오"
           found_matches: "일치하는 결과 :"
           no_matches: "일치하는 결과가 없습니다"

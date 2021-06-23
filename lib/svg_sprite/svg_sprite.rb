@@ -230,7 +230,12 @@ module SvgSprite
 
   def self.custom_svg_sprites(theme_id)
     get_set_cache("custom_svg_sprites_#{Theme.transform_ids(theme_id).join(',')}") do
-      custom_sprite_paths = Dir.glob("#{Rails.root}/plugins/*/svg-icons/*.svg")
+      plugin_paths = []
+      Discourse.plugins.map { |plugin| File.dirname(plugin.path) }.each do |path|
+        plugin_paths << "#{path}/svg-icons/*.svg"
+      end
+
+      custom_sprite_paths = Dir.glob(plugin_paths)
 
       if theme_id.present?
         ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_id))
@@ -249,7 +254,14 @@ module SvgSprite
         end
       end
 
-      custom_sprite_paths
+      custom_sprite_paths.map do |path|
+        if File.exist?(path)
+          {
+            filename: "#{File.basename(path, ".svg")}",
+            sprite: File.read(path)
+          }
+        end
+      end
     end
   end
 
@@ -284,13 +296,22 @@ module SvgSprite
   end
 
   def self.sprite_sources(theme_id)
-    sources = CORE_SVG_SPRITES
+    sprites = []
 
-    if theme_id.present?
-      sources = sources + custom_svg_sprites(theme_id)
+    CORE_SVG_SPRITES.each do |path|
+      if File.exist?(path)
+        sprites << {
+          filename: "#{File.basename(path, ".svg")}",
+          sprite: File.read(path)
+        }
+      end
     end
 
-    sources
+    if theme_id.present?
+      sprites = sprites + custom_svg_sprites(theme_id)
+    end
+
+    sprites
   end
 
   def self.core_svgs
@@ -329,20 +350,13 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       end
     end
 
-    custom_svg_sprites(theme_id).each do |fname|
-      if !File.exist?(fname)
-        cache.delete("custom_svg_sprites_#{Theme.transform_ids(theme_id).join(',')}")
-        next
-      end
-
-      svg_file = Nokogiri::XML(File.open(fname)) do |config|
+    custom_svg_sprites(theme_id).each do |item|
+      svg_file = Nokogiri::XML(item[:sprite]) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
 
-      svg_filename = "#{File.basename(fname, ".svg")}"
-
       svg_file.css("symbol").each do |sym|
-        icon_id = prepare_symbol(sym, svg_filename)
+        icon_id = prepare_symbol(sym, item[:filename])
 
         if icons.include? icon_id
           sym.attributes['id'].value = icon_id
@@ -358,14 +372,11 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    sprite_sources(SiteSetting.default_theme_id).each do |fname|
-      next if !File.exist?(fname)
-
-      svg_file = Nokogiri::XML(File.open(fname))
-      svg_filename = "#{File.basename(fname, ".svg")}"
+    sprite_sources(SiteSetting.default_theme_id).each do |item|
+      svg_file = Nokogiri::XML(item[:sprite])
 
       svg_file.css('symbol').each do |sym|
-        icon_id = prepare_symbol(sym, svg_filename)
+        icon_id = prepare_symbol(sym, item[:filename])
 
         if searched_icon == icon_id
           sym.attributes['id'].value = icon_id
@@ -381,14 +392,11 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.icon_picker_search(keyword)
     results = Set.new
 
-    sprite_sources(SiteSetting.default_theme_id).each do |fname|
-      next if !File.exist?(fname)
-
-      svg_file = Nokogiri::XML(File.open(fname))
-      svg_filename = "#{File.basename(fname, ".svg")}"
+    sprite_sources(SiteSetting.default_theme_id).each do |item|
+      svg_file = Nokogiri::XML(item[:sprite])
 
       svg_file.css('symbol').each do |sym|
-        icon_id = prepare_symbol(sym, svg_filename)
+        icon_id = prepare_symbol(sym, item[:filename])
         if keyword.empty? || icon_id.include?(keyword)
           sym.attributes['id'].value = icon_id
           sym.css('title').each(&:remove)
@@ -417,7 +425,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     THEME_SPRITE_VAR_NAME
   end
 
-  def self.prepare_symbol(symbol, svg_filename)
+  def self.prepare_symbol(symbol, svg_filename = nil)
     icon_id = symbol.attr('id')
 
     case svg_filename
@@ -484,11 +492,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.custom_icons(theme_id)
     # Automatically register icons in sprites added via themes or plugins
     icons = []
-    custom_svg_sprites(theme_id).each do |fname|
-      next if !File.exist?(fname)
-
-      svg_file = Nokogiri::XML(File.open(fname))
-
+    custom_svg_sprites(theme_id).each do |item|
+      svg_file = Nokogiri::XML(item[:sprite])
       svg_file.css('symbol').each do |sym|
         icons << sym.attributes['id'].value if sym.attributes['id'].present?
       end

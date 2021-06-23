@@ -19,7 +19,6 @@
     "diffhtml": "^1.0.0-beta.18",
     "eslint-config-discourse": "^1.1.8",
     "handlebars": "^4.7.7",
-    "intersection-observer": "^0.5.1",
     "jquery": "3.5.1",
     "jquery-color": "3.0.0-alpha.1",
     "jquery-tags-input": "1.3.5",

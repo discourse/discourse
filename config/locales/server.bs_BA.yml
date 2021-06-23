@@ -93,7 +93,6 @@ bs_BA:
       maximum_staged_user_per_email_reached: "Dosegnut je maksimalni broj stupnjevanih korisnika kreiranih po e-pošti."
       no_subject: "(nema naslova)"
       no_body: "(nema teksta)"
-      missing_attachment: "(Nedostaje prilog %{filename})"
       errors:
         empty_email_error: "Dešava se kada je sirova pošta koju smo primili bila prazna."
         no_message_id_error: "Dešava se kada pošta nema zaglavlje 'Message-Id'."
@@ -1113,8 +1112,6 @@ bs_BA:
       agree_and_silence:
         title: "Stišaj korisnika"
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
-      delete_spammer:
-        title: "Obriši Spamera"
       delete_single:
         title: "Delete"
       disagree:
@@ -1128,8 +1125,6 @@ bs_BA:
           title: "Delete User"
       reject:
         title: "Odbij"
-      delete_user:
-        title: "Delete User"
   activemodel:
     errors:
       <<: *errors

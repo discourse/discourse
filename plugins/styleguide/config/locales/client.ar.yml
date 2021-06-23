@@ -32,13 +32,13 @@ ar:
         buttons:
           title: "الأزرار"
         dropdowns:
-          title: "المُنسدلات"
+          title: "القوائم المنسدلة"
         categories:
           title: "الفئات"
         bread_crumbs:
           title: "عناصر التنقّل التفصيلي"
         navigation:
-          title: "التنقّل"
+          title: "التنقل"
         navigation_bar:
           title: "شريط التنقّل"
         navigation_stacked:
@@ -64,7 +64,7 @@ ar:
         topic_footer_buttons:
           title: "أزرار تذييل الموضوع"
         topic_notifications:
-          title: "إخطارات المواضيع"
+          title: "إشعارات الموضوعات"
         post:
           title: "المشاركة"
         topic_map:
@@ -72,7 +72,7 @@ ar:
         site_header:
           title: "رأس الموقع"
         suggested_topics:
-          title: "المواضيع المقترحة"
+          title: "الموضوعات المقترحة"
         post_menu:
           title: "قائمة المشاركة"
         modal:

@@ -94,7 +94,6 @@ ca:
       maximum_staged_user_per_email_reached: "S'ha arribat al nombre màxim d'usuaris ficticis creats amb correu electrònic."
       no_subject: "(sense tema)"
       no_body: "(sense cos)"
-      missing_attachment: "(Falta l'adjunt %{filename})"
       errors:
         empty_email_error: "Succeeix quan el correu electrònic en brut que hem rebut és buit."
         no_message_id_error: "Succeeix quan el correu electrònic no conté la capçalera 'Message-Id'."
@@ -197,9 +196,6 @@ ca:
     not_enough_space_on_disk: "No hi ha prou espai en el disc per a desar-hi aquesta còpia de seguretat."
     invalid_filename: "El nom de la còpia de seguretat conté caràcters no vàlids. Els caràcters vàlids són a-z 0-9 . - _."
     file_exists: "El fitxer que intenteu pujar ja existeix."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
   invalid_params: "Heu donat paràmetres no vàlids a la petició: %{message}"
   not_logged_in: "Cal que inicieu sessió per a fer això. "
   not_found: "No s'ha trobat l'URL o el recurs sol·licitat. "
@@ -213,7 +209,6 @@ ca:
   email_template_cant_be_modified: "Aquesta plantilla de correu no es pot modificar."
   invalid_whisper_access: "O bé els xiuxiuejos no estan activats o bé no teniu permís per a crear-ne."
   not_in_group:
-    title_category: "Per a veure aquesta categoria heu d’estar en un grup."
     request_membership: "Sol·liciteu ser-ne membre"
     join_group: "Uneix-me al grup"
   deleted_topic: "Oh! Aquest tema s'ha suprimit i ja no està disponible."
@@ -3199,10 +3194,6 @@ ca:
       agree_and_hide:
         title: "Amaga la publicació"
         description: "Amaga aquesta publicació i envia automàticament a l'usuari un missatge que l'insti a editar-la."
-      delete_spammer:
-        title: "Suprimeix el generador de brossa"
-        description: "Elimina l'usuari i totes les seves publicacions i temes."
-        confirm: "Esteu segur que voleu eliminar totes les publicacions i temes d'aquest usuari i blocar les seves adreces de correu i IP?"
       delete_single:
         title: "Suprimeix"
       delete:
@@ -3248,8 +3239,6 @@ ca:
       reject:
         title: "Rebutja"
       delete_user:
-        title: "Suprimeix l'usuari"
-        confirm: "Esteu segur que voleu suprimir aquest usuari? Això eliminarà totes les seves publicacions i blocarà el seu correu electrònic i la seva adreça IP."
         reason: "Suprimit mitjançant cua de revisió"
   email_style:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"

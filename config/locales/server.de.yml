@@ -103,7 +103,6 @@ de:
       maximum_staged_user_per_email_reached: "Maximale Anzahl vorbereiteter Benutzer erreicht, die automatisch per E-Mail erstellt wurden."
       no_subject: "(kein Betreff)"
       no_body: "(kein Inhalt)"
-      missing_attachment: "(Dateianhang %{filename} fehlt)"
       errors:
         empty_email_error: "Passiert wenn die empfangene E-Mail leer war."
         no_message_id_error: "Passiert wenn in der E-Mail die Kopfzeile 'Message-Id' fehlt."
@@ -256,9 +255,6 @@ de:
     not_enough_space_on_disk: "Es gibt nicht genügend freien Festplattenspeicher, um dieses Backup hochzuladen."
     invalid_filename: "Der Dateiname für das Backup enthält ungültige Zeichen. Gültig sind: a-z 0-9 . - _."
     file_exists: "Die Datei, die du versucht hast hochzuladen, existiert bereits."
-    location:
-      local: "Lokal"
-      s3: "Amazon S3"
   invalid_params: "Du hast bei der Anfrage ungültige Parameter angegeben: %{message}"
   not_logged_in: "Dazu musst du angemeldet sein."
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
@@ -273,7 +269,6 @@ de:
   invalid_whisper_access: "Enweder ist Flüstern nicht aktiviert oder du hast keinen Zugang zu Flüster-Beiträgen"
   not_in_group:
     title_topic: "Um dieses Thema zu sehen, musst du die Mitgliedschaft der Gruppe '%{group}' beantragen."
-    title_category: "Du musst in einer Gruppe sein um diese Kategorie zu sehen."
     request_membership: "Mitgliedschaft anfordern"
     join_group: "Gruppe beitreten"
   deleted_topic: "Ups! Dieses Thema wurde gelöscht und ist nicht mehr verfügbar."
@@ -609,7 +604,7 @@ de:
       - Für wen ist sie?
       - Was findet man hier?
       - Warum sollte man hier vorbeischauen?
-      - Wo kann man mehr erfahren (Links, Dokumente, usw.)?
+      - Wo kann man mehr erfahren (Links, Dokumente usw.)?
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
@@ -1808,7 +1803,6 @@ de:
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
-    reviewable_low_priority_threshold: "Der Prioritätsfilter blendet überprüfbare Elemente aus, die diese Punktzahl nicht erfüllen, es sei denn, der Filter '(any)' wird verwendet."
     high_trust_flaggers_auto_hide_posts: "Neue Benutzerbeiträge werden automatisch ausgeblendet, nachdem sie von einem TL3 + -Benutzer als Spam gekennzeichnet wurden"
     cooldown_hours_until_reflag: "Wie viel Zeit Benutzer warten müssen, bis sie einen Beitrag neu kennzeichnen können"
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
@@ -2335,7 +2329,6 @@ de:
     email_in_spam_header: "Die erste E-Mail des Benutzers wurde als Spam gekennzeichnet"
     already_silenced: "Benutzer wurde bereits von %{staff} %{time_ago} stumm geschaltet."
     already_suspended: "Benutzer wurde bereits von %{staff} %{time_ago}gesperrt."
-    cannot_delete_has_posts: "Benutzer %{username} hat %{post_count} Beiträge, entweder öffentliche Beiträge oder persönliche Nachrichten, sodass sie nicht gelöscht werden können."
   reviewables_reminder:
     submitted:
       one: "Einträge wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
@@ -4518,10 +4511,6 @@ de:
       agree_and_hide:
         title: "Beitrag verstecken"
         description: "Verstecke diesen Beitrag und sende dem Benutzer/der Benutzerin eine Nachricht mit der Bitte, ihn zu bearbeiten."
-      delete_spammer:
-        title: "Spammer löschen"
-        description: "Lösche den Benutzer und alle seine Beiträge und Themen."
-        confirm: "Möchtest du wirklich alle Beiträge und Themen dieses Benutzers löschen und seine IP-Adresse und E-Mail-Adressen blockieren?"
       delete_single:
         title: "Löschen"
       delete:
@@ -4578,8 +4567,6 @@ de:
       approve_and_restore:
         title: "Beitrag genehmigen und wiederherstellen"
       delete_user:
-        title: "Benutzer löschen"
-        confirm: "Möchtest du diesen Benutzer wirklich löschen? Dies wird alle seien Beiträge löschen und seine E-Mail-Adresse und IP-Adresse sperren."
         reason: "Gelöscht via Review-Warteschlange"
   email_style:
     html_missing_placeholder: "Die HTML Vorlage muss %{placeholder}beinhalten"

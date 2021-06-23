@@ -373,6 +373,14 @@ class Plugin::Instance
     assets
   end
 
+  def add_directory_column(column_name, query:, icon: nil)
+    validate_directory_column_name(column_name)
+
+    DiscourseEvent.on("before_directory_refresh") do
+      DirectoryColumn.find_or_create_plugin_directory_column(column_name: column_name, icon: icon, query: query)
+    end
+  end
+
   def delete_extra_automatic_assets(good_paths)
     return unless Dir.exists? auto_generated_path
 
@@ -593,7 +601,6 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-
     if @path
       root_dir_name = File.dirname(@path)
 
@@ -963,6 +970,11 @@ class Plugin::Instance
   end
 
   private
+
+  def validate_directory_column_name(column_name)
+    match = /^[_a-z]+$/.match(column_name)
+    raise "Invalid directory column name '#{column_name}'. Can only contain a-z and underscores" unless match
+  end
 
   def write_asset(path, contents)
     unless File.exists?(path)

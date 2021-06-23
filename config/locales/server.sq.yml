@@ -1404,8 +1404,6 @@ sq:
     actions:
       agree_and_suspend:
         title: "Pezullo anëtarin"
-      delete_spammer:
-        title: "Elimino Spammer"
       delete_single:
         title: "Fshij"
       disagree:
@@ -1417,8 +1415,6 @@ sq:
           title: "Fshij Anëtarin"
       reject:
         title: "Refuzo"
-      delete_user:
-        title: "Fshij Anëtarin"
   activemodel:
     errors:
       <<: *errors

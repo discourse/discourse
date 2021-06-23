@@ -513,6 +513,7 @@ sr:
           posting: Poruke
         email:
           title: "E-mail"
+          last_updated_by: "od"
           credentials:
             username: "Korisničko ime"
             password: "Šifra"
@@ -1709,7 +1710,6 @@ sr:
         user_profile_menu: "%{shortcut} Otvori korisnički meni"
         show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
         help: "%{shortcut} Otvori pomoć za tastaturu"
-        dismiss_new_posts: "%{shortcut} Odbaci Nove/Poruke"
         dismiss_topics: "%{shortcut} Odbaci Teme"
       actions:
         title: "Akcije"

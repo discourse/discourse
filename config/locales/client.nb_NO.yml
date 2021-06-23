@@ -475,6 +475,7 @@ nb_NO:
           notification: Varsling
         email:
           title: "E-post"
+          last_updated_by: "av"
           credentials:
             username: "Brukernavn"
             password: "Passord"
@@ -2339,7 +2340,6 @@ nb_NO:
         show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
         search: "%{shortcut} Søk"
         help: "%{shortcut} Åpne tastaturhjelp"
-        dismiss_new_posts: "%{shortcut} Forkast Nye/Innlegg"
         dismiss_topics: "%{shortcut} Forkast Emner"
         log_out: "%{shortcut} Logg ut"
       composing:

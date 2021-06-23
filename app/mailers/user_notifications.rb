@@ -692,7 +692,7 @@ class UserNotifications < ActionMailer::Base
       context: context,
       username: username,
       group_name: group_name,
-      add_unsubscribe_link: !user.staged,
+      add_unsubscribe_link: !user.staged && !using_group_smtp,
       mailing_list_mode: user.user_option.mailing_list_mode,
       unsubscribe_url: post.unsubscribe_url(user),
       allow_reply_by_email: allow_reply_by_email,
@@ -713,8 +713,7 @@ class UserNotifications < ActionMailer::Base
       locale: locale,
       delivery_method_options: delivery_method_options,
       use_from_address_for_reply_to: use_from_address_for_reply_to,
-      from: from_address,
-      add_unsubscribe_link: !using_group_smtp
+      from: from_address
     }
 
     unless translation_override_exists

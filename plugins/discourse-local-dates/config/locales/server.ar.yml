@@ -6,6 +6,6 @@
 
 ar:
   site_settings:
-    discourse_local_dates_enabled: "فعّل ميزة ”التواريخ المحليّة من دِسكورس“. ستُضيف هذه الميزة دعم التواريخ التي تستوعب المناطق الزمنية المحليّة في المشاركات باستعمال عنصر [date]."
-    discourse_local_dates_default_formats: "نُسق التاريخ والوقت الأكثر استعمالًا، طالِع: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>نُسق سلاسل momentjs النصيّة</a>"
-    discourse_local_dates_email_format: "النُسق المستعمل لعرض التواريخ في الرسائل الإلكترونية."
+    discourse_local_dates_enabled: "فعِّل ميزة discourse-local-dates. ستُضيف هذه الميزة دعم التواريخ التي تستوعب المناطق الزمنية المحلية في المنشورات باستخدام عنصر [date]."
+    discourse_local_dates_default_formats: "لمعرفة تنسيقات التاريخ والوقت الأكثر استخدامًا، راجع: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>تنسيق سلاسل momentjs النصية</a>"
+    discourse_local_dates_email_format: "التنسيق المستخدم لعرض التواريخ في الرسائل الإلكترونية."

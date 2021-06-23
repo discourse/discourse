@@ -636,6 +636,7 @@ nl:
         email:
           title: "E-mailadres"
           status: "%{old_emails} / %{total_emails} e-mails via IMAP gesynchroniseerd."
+          last_updated_by: "door"
           credentials:
             title: "Referenties"
             smtp_server: "SMTP-server"
@@ -649,7 +650,6 @@ nl:
           settings:
             title: "Instellingen"
             allow_unknown_sender_topic_replies: "Sta topic antwoorden van onbekende afzenders toe."
-            allow_unknown_sender_topic_replies_hint: "Staat onbekende afzenders toe om te antwoorden op groepstopics. Als dit niet is ingeschakeld zullen antwoorden van e-mailadressen die niet al in de IMAP e-mailthread staan, of die voor het topic zijn uitgenodigd, een nieuw topic aanmaken."
           mailboxes:
             synchronized: "Gesynchroniseerd postvak"
             none_found: "Geen postvakken gevonden in deze e-mailaccount."
@@ -2180,7 +2180,6 @@ nl:
         new: "U hebt geen nieuwe topics."
         read: "U hebt nog geen topics gelezen."
         posted: "U hebt nog niet in een topic gereageerd."
-        ready_to_create: "Klaar om "
         latest: "U bent helemaal bij!"
         bookmarks: "U hebt nog geen bladwijzers voor topics gemaakt."
         category: "Er zijn geen topics in %{category}."
@@ -2268,7 +2267,6 @@ nl:
       browse_all_categories: Alle categorieën bekijken
       browse_all_tags: Alle tags bekijken
       view_latest_topics: nieuwste topics bekijken
-      suggest_create_topic: een nieuwe conversatie te starten?
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"
@@ -3233,7 +3231,6 @@ nl:
         show_incoming_updated_topics: "%{shortcut} Bijgewerkte topics tonen"
         search: "%{shortcut} Zoeken"
         help: "%{shortcut} Hulp voor sneltoetsen openen"
-        dismiss_new_posts: "%{shortcut} Nieuwe/Berichten negeren"
         dismiss_topics: "%{shortcut} Topics negeren"
         log_out: "%{shortcut} Afmelden"
       composing:

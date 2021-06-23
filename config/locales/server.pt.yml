@@ -96,7 +96,6 @@ pt:
       maximum_staged_user_per_email_reached: "Foi atingido o número máximo de utilizadores temporários criados por e-mail."
       no_subject: "(nenhum assunto)"
       no_body: "(nenhum corpo)"
-      missing_attachment: "(Anexo %{filename} está em falta)"
       errors:
         empty_email_error: "Acontece quando a informação não processada do email recebido veio em branco."
         no_message_id_error: "Acontece quando o e-mail não tem 'Id. de Mensagem' no cabeçalho."
@@ -211,9 +210,6 @@ pt:
     not_enough_space_on_disk: "Não existe espaço suficiente no disco para carregar esta cópia de segurança."
     invalid_filename: "O nome da cópia de segurança contém carácteres inválidos. Cáracteres válidos são a-z 0-9 . - _."
     file_exists: "O ficheiro que está a tentar enviar já existe."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
   invalid_params: "Você forneceu parâmetros inválidos para o pedido: %{message}"
   not_logged_in: "Necessita de ter sessão iniciada para fazer isso."
   not_found: "O URL ou recurso pedido não foi encontrado."
@@ -2149,8 +2145,6 @@ pt:
     actions:
       agree_and_suspend:
         title: "Utilizador Suspenso"
-      delete_spammer:
-        title: "Eliminar Spammer"
       delete_single:
         title: "Eliminar"
       disagree:
@@ -2164,8 +2158,6 @@ pt:
           title: "Eliminar Utilizador"
       reject:
         title: "Rejeitar"
-      delete_user:
-        title: "Eliminar Utilizador"
   activemodel:
     errors:
       <<: *errors

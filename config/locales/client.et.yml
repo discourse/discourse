@@ -503,6 +503,7 @@ et:
           notification: Teavitus
         email:
           title: "E-post"
+          last_updated_by: "autor"
           credentials:
             username: "Kasutajanimi"
             password: "Parool"
@@ -1591,7 +1592,6 @@ et:
         new: "Sul ei ole uusi teemasid."
         read: "Sa ei ole veel ühtegi teemat lugenud."
         posted: "Sa ei ole veel ühtegi teemasse postitanud."
-        ready_to_create: "Valmis "
         latest: "Kõik loetud!"
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
         category: "Foorumis %{category} teemad puuduvad."
@@ -1675,7 +1675,6 @@ et:
       browse_all_categories: Vaata kõiki foorumeid
       browse_all_tags: Sirvi kõiki silte
       view_latest_topics: vaata värskeid teemasid
-      suggest_create_topic: alusta uut vestlust?
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
@@ -2442,7 +2441,6 @@ et:
         user_profile_menu: "%{shortcut} Ava kasutajamenüü"
         show_incoming_updated_topics: "%{shortcut} Näita uuendatud teemasid"
         help: "%{shortcut} Ava klaviatuuri abimenüü"
-        dismiss_new_posts: "%{shortcut} Ignoreeri uusi/postitusi"
         dismiss_topics: "%{shortcut} Ignoreeri teemasid"
         log_out: "%{shortcut} Logi välja"
       actions:

@@ -1,7 +1,7 @@
 {{user-info user=item.user}}
 
 {{#each columns as |column|}}
-  {{#if column.automatic}}
+  {{#if (directory-column-is-automatic column=column)}}
     <div class="user-stat">
       <span class="value">
         {{directory-item-value item=item column=column}}

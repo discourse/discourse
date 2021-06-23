@@ -630,6 +630,7 @@ gl:
         email:
           title: "Correo electrónico"
           status: "Sincronizados os correos %{old_emails} / %{total_emails} vía IMAP."
+          last_updated_by: "por"
           credentials:
             title: "Acreditacións"
             smtp_server: "Servidor SMTP"
@@ -643,7 +644,6 @@ gl:
           settings:
             title: "Configuración"
             allow_unknown_sender_topic_replies: "Permitir respostas ao tema de remitente descoñecido."
-            allow_unknown_sender_topic_replies_hint: "Permítelles aos remitentes descoñecidos responder a temas do grupo. Se isto non está activado, as respostas desde enderezos de correo electrónico non incluídos no fío de correo electrónico IMAP ou convidados ao tema crearán un novo tema."
           mailboxes:
             synchronized: "Caixa de correo sincronizada"
             none_found: "Non se atoparon caixas de correo nesta conta de correo electrónico."
@@ -2151,7 +2151,6 @@ gl:
         new: "Non ten novos temas."
         read: "Aínda non leu ningún tema."
         posted: "Aínda non publicou en ningún tema."
-        ready_to_create: "Listo para "
         latest: "Están todos vostedes atrapados!"
         bookmarks: "Aínda non marcou este tema."
         category: "Non hai temas en %{category}."
@@ -2239,7 +2238,6 @@ gl:
       browse_all_categories: Explorar todas as categorías
       browse_all_tags: Explorar todas as etiquetas
       view_latest_topics: ver os últimos temas
-      suggest_create_topic: comezar unha nova conversa?
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
@@ -3190,7 +3188,6 @@ gl:
         show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
         search: "%{shortcut} Buscar"
         help: "%{shortcut} Abrir a axuda do teclado"
-        dismiss_new_posts: "%{shortcut} Desbotar novos/publicacións"
         dismiss_topics: "%{shortcut} Desbotar temas"
         log_out: "%{shortcut} Saír da sesión"
       composing:

@@ -8,7 +8,7 @@ ar:
   dates:
     short_date_no_year: "D ‏MMMM"
     short_date: "D ‏MMMM ‏YYYY"
-    long_date: "D ‏MMMM ‏YYYY ‏h:mm ‏a"
+    long_date: "D ‏MMMM ‏YYYY، ‏h:mm ‏a"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
@@ -36,15 +36,15 @@ ar:
     am: "ص"
     pm: "م"
     <<: *datetime_formats
-  title: "دِسكورس"
+  title: "Discourse"
   topics: "المواضيع"
   posts: "المشاركات"
   views: "المشاهدات"
-  loading: "يُحمّل"
-  powered_by_html: 'تدعمه <a href="http://www.discourse.org">دِسكورس </a>، يفضّل عرضه بتفعيل جافاسكربت'
-  sign_up: "سجّل حسابًا"
+  loading: "جارٍ التحميل"
+  powered_by_html: 'بدعم من <a href="http://www.discourse.org">Discourse</a>، يُفضَّل عرضه مع تفعيل JavaScript'
+  sign_up: "الاشتراك"
   log_in: "لِج"
-  submit: "أرسِل"
+  submit: "إرسال"
   purge_reason: "حُذف تلقائيًا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
   anonymous: "مجهول"
@@ -55,39 +55,39 @@ ar:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} بواسطة %{username}"
   themes:
-    bad_color_scheme: "تعذّر تحديث السمة، مخطّط الألوان غير صالح"
-    other_error: "حدث خطب ما أثناء تحديث السمة"
+    bad_color_scheme: "يتعذَّر تحديث السمة، لوحة الألوان غير صالحة"
+    other_error: "حدث خطأ ما في أثناء تحديث السمة"
     compile_error:
-      unrecognized_extension: "امتداد الملف غير مفهوم: %{extension}"
+      unrecognized_extension: "امتداد الملف غير معروف: %{extension}"
     import_error:
       generic: حدث عُطل أثناء استيراد هذه السمة
-      about_json: "عُطل أثناء الاستيراد: about.json غير موجود، أو غير صالح. أمتأكّد بأنّ هذه سمة دِسكورس حقًا؟"
-      about_json_values: "يحتوي about.json قيم غير صالحة: %{errors}"
-      modifier_values: "تحتوي مُعدّلات about.json قيم غير صالحة: %{errors}"
-      git: "حدث عُطل أثناء استنساخ مستودع غِت، الوصول ممنوع أو لم يُوجد المستودع"
+      about_json: "خطأ في الاستيراد: ملف about.json غير موجود أو غير صالح. هل أنت متأكد أن هذه سمة Discourse؟"
+      about_json_values: "يتضمَّن ملف about.json قيمًا غير صالحة: %{errors}"
+      modifier_values: "تتضمَّن معدِّلات ملف about.json قيمًا غير صالحة: %{errors}"
+      git: "حدث خطأ في أثناء استنساخ مستودع Git، تم رفض الوصول أو لم يتم العثور على المستودع"
       unpack_failed: "فشل فك ضغط الملف"
       file_too_big: "الملف غير المضغوط كبير جدًا."
-      unknown_file_type: "لا يظهر بأنّ الملف الذي رفعته سمة دِسكورس صالحة."
+      unknown_file_type: "يبدو أن الملف الذي حمَّلته ليس سمة Discourse صالحة."
     errors:
       component_no_user_selectable: "لا يمكن أن تكون مكونات السمة قابلة للتحديد من قبل المستخدم"
       component_no_default: "مكونات السمة لا يمكن أن تكون السمة الافتراضية"
       component_no_color_scheme: "مكونات السمة لا يمكن أن تحتوي على لوحات الألوان"
       no_multilevels_components: "السمات ذات السمات الفرعية لا يمكن أن تكون موضوعات فرعية نفسها"
     settings_errors:
-      invalid_yaml: "ملف YAML الذي قُدّم غير صالح."
-      data_type_not_a_number: "ضبط النوع ”%{name}“ غير مدعوم. الأنواع المدعومة هي: الأعداد الصحيحة ”integer“ والقيم المنطقية ”bool“ والقوائم ”list“ والتعدادات ”enum“ والرفع ”upload“"
-      name_too_long: "لأحد الإعدادات اسم طويل جدًا. الطول الأقصى هو 255"
-      default_value_missing: "ليس للإعداد `%{name}` قيمة مبدئية"
-      default_not_match_type: "لا تتطابق قيمة الإعداد `%{name}` المبدئية مع نوعه."
-      default_out_range: "قيمة الإعداد `%{name}` المبدئية ليست ضمن المجال المحدّد."
-      enum_value_not_valid: "القيمة المحدّدة ليست إحدى خيارات التعداد enum."
-      number_value_not_valid: "القيمة الجديدة ليست ضمن المجال المسموح."
-      number_value_not_valid_min_max: "يجب أن تكون بين %{min} و%{max}."
+      invalid_yaml: "ملف YAML الذي أدخلته غير صالح."
+      data_type_not_a_number: "نوع الإعداد \"%{name}\" غير مدعوم. الأنواع المدعومة هي: `integer`، و`bool`، و`list`، و`enum` و`upload`"
+      name_too_long: "يوجد إعداد باسم طويل جدًا. الحد الأقصى للطول هو 255"
+      default_value_missing: "لا توجد قيمة افتراضية للإعداد `%{name}`"
+      default_not_match_type: "لا تتطابق القيمة الافتراضية للإعداد `%{name}` مع نوعه."
+      default_out_range: "لا تقع القيمة الافتراضية للإعداد `%{name}` ضمن النطاق المحدَّد."
+      enum_value_not_valid: "القيمة المحدَّدة ليست أحد خيارات التعداد."
+      number_value_not_valid: "لا تقع القيمة الجديدة ضمن النطاق المسموح به."
+      number_value_not_valid_min_max: "يجب أن تقع بين %{min} و%{max}."
       number_value_not_valid_min: "يجب أن تكون أكبر من أو تساوي %{min}."
       number_value_not_valid_max: "يجب أن تكون أصغر من أو تساوي %{max}."
-      string_value_not_valid: "طول القيمة الجديدة ليس ضمن المجال المسموح."
-      string_value_not_valid_min: "يجب أن يكون عدد المحارف على الأقل %{min}."
-      string_value_not_valid_max: "يجب أن يكون عدد المحارف على الأكثر %{max}."
+      string_value_not_valid: "لا يقع طول القيمة الجديدة ضمن النطاق المسموح به."
+      string_value_not_valid_min: "يجب ألا يقل طولها عن %{min} على الأقل."
+      string_value_not_valid_max: "يجب أن يزيد عدد حروفها عن %{max} على الأكثر."
     locale_errors:
       invalid_yaml: "ملف YAML الترجمي غير صالحة"
   emails:
@@ -95,9 +95,8 @@ ar:
       default_subject: "يحتاج هذا الموضوع عنوانًا"
       show_trimmed_content: "اعرف المحتوى المقصوص"
       maximum_staged_user_per_email_reached: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم بالبريد الالكتروني."
-      no_subject: "(لا موضوع)"
-      no_body: "(لا متن)"
-      missing_attachment: "(المرفق %{filename} مفقود)"
+      no_subject: "(بلا موضوع)"
+      no_body: "(بلا نص)"
       errors:
         empty_email_error: "يحدث عندما يكون البريد المستَلم فارغ"
         no_message_id_error: "يحدث عندما لا يحتوي البريد ترويسة ’Message-Id‘."
@@ -131,7 +130,7 @@ ar:
       inclusion: غير متضمن في القائمة
       invalid: غير صالح
       is_invalid: "تبدو غير واضحة، هل هذه الجملة كاملة؟"
-      invalid_timezone: "المنطقة الزمنية ”%{tz}“ غير صالحة"
+      invalid_timezone: "\"%{tz}\" ليست منطقة زمنية صالحة"
       contains_censored_words: "تحتوي الكلمات الآتية الخاضعة للرّقابة: %{censored_words}"
       less_than: يجب أن يكون أقل من %{count}
       less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
@@ -176,13 +175,13 @@ ar:
     embed:
       load_from_remote: "حدث عطل أثناء تحميل هذا المنشور."
     site_settings:
-      invalid_category_id: "حدّدت فئة غير موجودة"
+      invalid_category_id: "الفئة التي حدَّدتها غير موجودة"
       default_categories_already_selected: "لا يمكنك اختيار قسم يستخدم في قائمة أخرى."
-      default_tags_already_selected: "لا يمكنك اختيار وسم مُستعمل في قائمة أخرى."
+      default_tags_already_selected: "لا يمكنك اختيار وسم مُستخدَم في قائمة أخرى."
       s3_upload_bucket_is_required: "لا يمكنك تفعيل الرفع إلى S3 حتّى توفّر 's3_upload_bucket'."
-      s3_backup_requires_s3_settings: "لا يمكنك استعمال S3 كمكان للنسخ الاحتياطي طالما لم تُقدّم ”%{setting_name}“."
-      s3_bucket_reused: "لا يمكنك استعمال نفس الحاوية لِ‍ ”s3_upload_bucket“ و”s3_backup_bucket“ معًا. اختر حاويةً أخرى أو استعمل مسارًا مختلف لكلّ حاوية."
-      secure_media_requirements: "عليك تفعيل ”الرفع إلى S3“ قبل تفعيل الوسائط الآمنة."
+      s3_backup_requires_s3_settings: "لا يمكنك استخدام S3 كمكان للنسخ الاحتياطي ما لم تُدخِل \"%{setting_name}\"."
+      s3_bucket_reused: "لا يمكنك استخدام الحاوية نفسها لـ \"s3_upload_bucket\" و\"s3_backup_bucket\" معًا. اختر حاويةً أخرى أو استخدم مسارًا مختلفًا لكل حاوية."
+      secure_media_requirements: "يجب تفعيل التحميل إلى S3 قبل تفعيل الوسائط الآمنة."
   invite:
     disabled_errors:
       invalid_access: "ليس مسموحًا لك عرض المورد المطلوب."
@@ -234,7 +233,7 @@ ar:
       few: "%{count} ردّ"
       many: "%{count} ردّ"
       other: "%{count} ردًا"
-    last_reply: "آخر ردّ"
+    last_reply: "آخر رد"
     created: "أُنشئ في"
     new_topic: "افتح موضوعًا جديدًا"
   no_mentions_allowed: "نأسف، لا يمكنك الإشارة إلى الغير."
@@ -630,33 +629,33 @@ ar:
     success_unapproved: "غُيّرت كلمة السّرّ بنجاح."
   user_auth_tokens:
     browser:
-      chrome: "غوغل كروم"
+      chrome: "Google Chrome"
       discoursehub: "تطبيق DiscourseHub"
-      edge: "مايكروسوفت إدج"
-      firefox: "فَيَرفُكس"
-      ie: "إنترنت إكسبلورر"
-      opera: "أوبرا"
-      safari: "سفاري"
-      unknown: "متصفّح مجهول"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+      unknown: "متصفح مجهول"
     device:
-      android: "جهاز أندرويد"
-      ipad: "آي‌باد"
-      iphone: "آي‌فون"
-      ipod: "آي‌بود"
-      linux: "حاسوب غنو/لينكس"
-      mac: "ماك"
-      mobile: "جهاز محمول"
-      windows: "حاسوب وِندوز"
+      android: "جهاز Android"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      linux: "جهاز كمبيوتر يعمل بنظام GNU/Linux"
+      mac: "Mac"
+      mobile: "جهاز جوَّال"
+      windows: "جهاز كمبيوتر يعمل بنظام Windows"
       unknown: "جهاز مجهول"
     os:
-      android: "أندرويد"
-      ios: "آي‌آو‌إس"
-      linux: "لينكس"
-      macos: "ماك‌أو‌إس"
-      windows: "مايكروسوفت وِندوز"
+      android: "Android"
+      ios: "iOS"
+      linux: "Linux"
+      macos: "macOS"
+      windows: "Microsoft Windows"
       unknown: "نظام تشغيل مجهول"
   change_email:
-    confirmed: "حُدّث بريدك الإلكتروني."
+    confirmed: "تم تحديث بريدك الإلكتروني."
     please_continue: "تابع إلى %{site_name}"
     error: "حدث خطأ في تغيير عنوان بريدك الإلكتروني. لربما يكون العنوان مستخدما بالفعل."
     error_staged: "حدث خطأ في تغيير عنوان بريدك الإلكتروني. العنوان الذى ادخلته مستخدم من قبل مشترك عبر البريد الالكترونى."
@@ -985,10 +984,10 @@ ar:
     host_names_warning: "يستخدم ملفّ config/database.yml اسم المضيف الافتراضيّ localhost. حدّثه ليستخدم اسم مضيف الموقع."
     sidekiq_warning: "\"Sidekiq\" لا يعمل! \nالعديد من المهام, كإرسال البريدوغيرها, يتم تنفيذها بشكل غير متزامن من قبل \"sidekiq\". الرجاء التحقيق من عمل احدى وضائف الـ\"Sidekiq\". <a href=\"https://github.com/mperham/sidekiq\" target=\"_blank\">Learn about Sidekiq here</a>."
     queue_size_warning: "عدد المهام في الطّابور هو %{queue_size}، وهذا رقم كبير. قد يكون هذا مؤشّرًا لوجود مشكلة بعمليّات Sidekiq، أو قد تحتاج إضافة عاملي Sidekiq أخرى."
-    memory_warning: "يعمل الخادوم بمجموع ذاكرة أقلّ من 1 غ.بايت. ننصح بوجود 1 غ.بايت من الذاكرة على الأقلّ."
-    subfolder_ends_in_slash: "إعداد المجلد الفرعي غير صحيح، على قيمة DISCOURSE_RELATIVE_URL_ROOT أن تنتهي بشرطة مائلة."
+    memory_warning: "يعمل الخادم بإجمالي ذاكرة أقل من 1 غ.ب. يوصى بتوفُّر 1 غ.ب من الذاكرة على الأقل."
+    subfolder_ends_in_slash: "إعداد المجلد الفرعي غير صحيح، تنتهي قيمة DISCOURSE_RELATIVE_URL_ROOT بشرطة مائلة."
   site_settings:
-    censored_words: "الكلمات التي ستُستبدل آليًا بِ‍ &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "الكلمات التي سيتم استبدالها تلقائيًا بـ &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "سيتم حذف المنشورات المخفية تلقائيًا إذا زادت مدة الإخفاء أكثر من 30 يومًا"
     allow_user_locale: "اسمح للمستخدمين باختيار لغة الواجهة التي تناسبهم"
     min_post_length: "الحد الأدنى المسموح به لطول المنشور بالأحرف"
@@ -1004,13 +1003,13 @@ ar:
     search_prefer_recent_posts: "اذا كان البحث في المنتدي بطئ, هذا الخيار سوف يحاول فهرسة اخر المنشورات اولاً"
     search_recent_posts_size: "كل عدد المنشورات الحديثة التي تريد الابقاء عليها بالفهرس"
     allow_uncategorized_topics: "اسمح بنشر الموضوعات بدون تحديد القسم. تحذير: اذا كان هناك نقاشات غير مصنفه، يجب عليك تصنيفها قبل تعطيل هذة الخاصية."
-    allow_duplicate_topic_titles: "اسمح بتكرار عناوين المواضيع."
+    allow_duplicate_topic_titles: "السماح بالموضوعات ذات العناوين المتطابقة المتكررة"
     unique_posts_mins: "عدد الدقائق التي يمكن للعضو بعدها عمل منشور به نفس المحتوى ثانيةً"
     educate_until_posts: "عندما يبدا العضو كتابه منشورة الاول، اظهر لوحه تعليمات الاعضاء الجدد في المحرر"
-    title: "اسم هذا الموقع، يُستعمل في وسم العنوان/title."
+    title: "اسم هذا الموقع كما هو مُستخدَم في وسم العنوان"
     site_description: "صِف هذا الموقع بجملة واحدة، يُستخدم في وسم meta description."
     crawl_images: "جلب الصور من الروابط لادراج الأبعاد الصحيحة."
-    download_remote_images_to_local: "حوّل الصور البعيدة إلى محلية بتنزيلها، بذلك تضمن عدم ضياع الصور."
+    download_remote_images_to_local: "يمكن تحويل الصور البعيدة إلى صور محلية عن طريق تنزيلها، وبذلك تضمن عدم تلف الصور."
     download_remote_images_threshold: "ادني مساحه للقرص ضروربه لتحميل الصور البعيده محليا ( في المئه) "
     disabled_image_download_domains: "الصور البعيدة لن يتم تنزيلها من هذا المجال. قائمة Pipe-delimited."
     editing_grace_period: "خلال هذا العدد من الثواني بعد نشر المنشور، تعديل المنشور لن يقوم بانشاء نسخة جديدة في السجل الخاص بالتعديل ."
@@ -1065,20 +1064,20 @@ ar:
     redirect_users_to_top_page: "إعادة توجيه تلقائيا للمستخدمين الجدد وغائبة لمدة طويلة إلى أعلى الصفحة."
     top_page_default_timeframe: "المدي الزمني الافتراضي لصفحة الموضوعات الاكثر مشاهدة."
     email_token_valid_hours: "أمارات نسيان كلمة السّرّ/تنشيط الحساب صالحة لمدّة (n) ساعة."
-    enable_badges: "فعّل نظام الشارات."
+    enable_badges: "تفعيل نظام الشارات"
     enable_whispers: "السماح للطاقم بعمل نقاشات سرية داخل الموضوعات."
     blocked_email_domains: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"
     allowed_email_domains: "قائمة pipe-delimited من مجالات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات مع. تحذير: لن يسمح للمستخدمين مع مجالات البريد الإلكتروني الأخرى غير المذكورة هنا!"
-    hide_email_address_taken: "لا تُخبر المستخدمين بوجود حساب بنفس عنوان البريد الإلكتروني أثناء تسجيل الحسابات وفي استمارة نسيان كلمة السر."
+    hide_email_address_taken: "لا تُخبر المستخدمين بوجود حساب بعنوان البريد الإلكتروني نفسه في أثناء الاشتراك وفي نموذج نسيان كلمة المرور."
     log_out_strict: "عند الخروج، اخرج من كلّ جلسات المستخدم في كلّ الأجهزة"
     new_version_emails: "إرسال بريد إلكتروني إلى عنوان contact_email عندما نسخة جديدة من ديسكورس هو متاح."
     invite_expiry_days: "مدة صلاحية مفاتيح دعوة عضو، بالأيام."
-    invite_only: "يجب على المستخدمين الموثوقين أو طاقم الموقع دعوة كلّ المستخدمين الجدد. التسجيل للعموم معطّل."
+    invite_only: "يجب أن تتم دعوة جميع المستخدمين الجُدد بشكلٍ صريح من قِبل المستخدمين الموثوق بهم أو طاقم العمل. التسجيل العام معطَّل."
     login_required: "اطلب تسجيل دخول لقرائة محتوي هذا الموقع."
     min_username_length: "أدنى طول لاسم المستخدم (بالمحارف). تحذير: إن كان هناك أيّة مستخدمين أو مجموعات تملك أسماء أقصر من هذه، فسيعطب الموقع!"
     min_password_length: "أدنى طول لكلمة السّرّ."
     min_admin_password_length: "أدنى طول لكلمة سرّ الإداريّ."
-    block_common_passwords: "لا تسمح بكلمات السر الموجودة ضمن كلمات السر ال‍ ١٠٬٠٠٠ الشائعة."
+    block_common_passwords: "لا تسمح بكلمات المرور الموجودة ضمن قائمة العشرة آلاف (10,000) كلمة مرور الأكثر شيوعًا."
     discourse_connect_overrides_bio: "تخطى التعريف المبسط بالعضو، ولا تسمح له بتغييره."
     allow_new_registrations: "السماح بتسجيل حسابات جديدة. عطل هذه الخاصية إذا كنت تريد منع الكل من عمل حساب جديد علي الموقع."
     enable_signup_cta: "اعرض تنبية للزوار المجهولين المترددين يحثهم علي تسجيل حساب جديد."
@@ -1097,14 +1096,14 @@ ar:
     rate_limit_create_post: "بعد النّشر، على المستخدمين الانتظار (n) ثانية قبل إنشاء مشاركة أخرى."
     rate_limit_new_user_create_topic: "بعد إنشاء الموضوع، على المستخدمين الجدد الانتظار (n) ثانية قبل إنشاء موضوع آخر."
     rate_limit_new_user_create_post: "بعد النّشر، على المستخدمين الجدد الانتظار (n) ثانية قبل إنشاء مشاركة أخرى."
-    max_likes_per_day: "الحدّ الأقصى اليومي من الإعجابات لكلّ مستخدم."
+    max_likes_per_day: "الحد الأقصى اليومي لمرات الإعجاب لكل مستخدم"
     max_flags_per_day: "أقصى عدد للإعلامات لكل عضو باليوم."
-    max_bookmarks_per_day: "الحدّ الأقصى اليومي من العلامات لكلّ مستخدم."
-    max_edits_per_day: "الحدّ الأقصى اليومي من عمليات التعديل لكلّ مستخدم."
-    max_topics_per_day: "الحدّ الأقصى اليومي من المواضيع التي يمكن للمستخدم فتحها."
-    max_invites_per_day: "الحدّ الأقصى اليومي من الدعوات التي يمكن للمستخدم إرسالها."
+    max_bookmarks_per_day: "الحد الأقصى اليومي للإشارات المرجعية لكل مستخدم"
+    max_edits_per_day: "الحد الأقصى اليومي للتعديلات لكل مستخدم"
+    max_topics_per_day: "الحد الأقصى اليومي لعدد الموضوعات التي يمكن للمستخدم إنشاؤها."
+    max_invites_per_day: "الحد الأقصى اليومي للدعوات التي يمكن للمستخدم إرسالها"
     max_topic_invitations_per_day: "أقصى عدد لدعوات الموضوع التي يمكن للعضو إرسالها باليوم."
-    alert_admins_if_errors_per_minute: "عدد الأعطال اللازم حصولها كلّ دقيقة لإعلان التحذير لمدير الموقع. قيمة ”٠“ تعطّل هذه الميزة. ملاحظة: عليك إعادة تشغيل البرمجية."
+    alert_admins_if_errors_per_minute: "عدد الأخطاء في الدقيقة لظهور تنبيه للمسؤول. تعطِّل القيمة \"0\" هذه الميزة. ملاحظة: تتطلَّب إعادة التشغيل."
     suggested_topics: "عدد الموضوعات المقترحة التي تظهر في أسفل الموضوع."
     limit_suggested_to_category: "أظهر فقط الموضوعات من القسم الحالي في الموضوعات المقترحة."
     suggested_topics_max_days_old: "الموضوعات المقترحة لا يجب ان تكون اقدم من هذا العدد من الايام."
@@ -1171,8 +1170,8 @@ ar:
     topic_post_like_heat_low: "بعد الاعجابات: نسبه تفوق هذه النسبه,سلط الضوء قليلا علي حقل المنشور"
     topic_post_like_heat_medium: "بعد الاعجابات: نسبه تفوق هذه النسبه,سلط الضوء باعتدال علي حقل المنشور"
     topic_post_like_heat_high: "بعد likes:post تفوق هذه النسبه,سلط الضوء بقوه علي حقل المنشور"
-    faq_url: "إن كانت صفحة الأسئلة الشائعة موجودة في مكان آخر وتريد استعمالها، أدخِل هنا عنوانها كاملًا."
-    tos_url: "إن كانت صفحة شروط الخدمة موجودة في مكان آخر وتريد استعمالها، أدخِل هنا عنوانها كاملًا."
+    faq_url: "إذا كان لديك صفحة أسئلة شائعة مستضافة في مكانٍ آخر وتريد استخدامها، فأدخِل عنوان URL لها كاملًا هنا."
+    tos_url: "إذا كان لديك مستند شروط خدمة مستضاف في مكانٍ آخر وتريد استخدامه، فأدخِل عنوان URL له كاملًا هنا."
     privacy_policy_url: "اذا كان لديك وثيقه سياسه خصوصيه مستضيفها في مكان ما و نريد استخدمها. وفر url الكامل هنا"
     allowed_spam_host_domains: "قائمة النطاقات المستثناة من اختبار مضيف البريد المزعج. لن يتم تقييد المستخدمين الجدد من إنشاء المشاركات مع الروابط إلى هذه النطاقات."
     topic_view_duration_hours: "احسب عدد المواضيع التي تمت مشاهدتها مره واحده عبر ip/مستخدم كل N ساعات"
@@ -1295,8 +1294,8 @@ ar:
     not_found: "تعذّر العثور على الحساب. رجاء تواصل مع مدير الموقع."
     unknown_error: "ثمّة مشكلة بالحساب. رجاء تواصل مع مدير الموقع."
     timeout_expired: "انتهت مهلة جلسة الولوج، رجاء جرّب الولوج ثانيةً."
-  original_poster: "الكاتب الأصلي"
-  most_posts: "معظم المشاركات"
+  original_poster: "كاتب المنشور الأصلي"
+  most_posts: "معظم المنشورات"
   most_recent_poster: "معظم المشاركات الاخيرة "
   redirected_to_top_reasons:
     new_user: "مرحبا بكم في مجتمعنا! هذه هي المواضيع الأكثر شعبية الأخيرة."
@@ -1689,17 +1688,17 @@ ar:
   badges:
     mass_award:
       errors:
-        invalid_csv: حدث عُطل في السطر %{line_number}. من فضلك تأكّد من وجود بريد إلكتروني واحد في كلّ سطر من ملف CSV.
+        invalid_csv: حدث عُطل في السطر %{line_number}. يُرجى التأكد من وجود عنوان بريد إلكتروني واحد في كل سطر من ملف CSV.
     editor:
-      name: محرّر
-      description: أوّل تعديل للمشاركة
+      name: محرِّر
+      description: تعديل أول منشور
       long_description: |
-        تُمنح هذه الشارة متى ما عدّلت إحدى مشاركاتك أوّل مرة. صحيح أنّك لن تقدر على تعديل مشاركاتك إلى الأبد، نحن نحثّك على التعديل، من تحسين للتنسيق وإصلاح المشاكل الصغيرة أو إضافة ما نسيته حين نشرت المشاركة أوّل مرة. مشاركاتك مميّزة، فعدّلها لتكون أكثر تميزًا!
+        يتم منحك هذه الشارة عند تعديل أحد منشوراتك لأول مرة. وفي حين أنك لن تتمكن من تعديل منشوراتك لأبد، فإننا نحثك على التعديل. يمكنك تحسين التنسيق أو إصلاح الأخطاء الصغيرة أو إضافة ما نسيته عندما نشرت المنشور أول مرة. مشاركاتك مميزة، فعدِّلها لتصبح أكثر تميزًا!
     wiki_editor:
-      name: محرّر في الويكي
-      description: أوّل تعديل للويكي
+      name: محرِّر Wiki
+      description: أول تعديل wiki
       long_description: |
-        تُمنح هذه الشارة متى ما عدّلت مشاركة ويكي واحدة أوّل مرة.
+        يتم منحك هذه الشارة عند تعديل أحد منشورات wiki لأول مرة.
     basic_user:
       name: عضو اساسي
     member:
@@ -1715,25 +1714,25 @@ ar:
       name: كاتب سيرة ذاتية
     anniversary:
       name: الذكرى السنوية
-      description: عضو نشط لسنة كاملة، ونشرت شيئًا مرة على الأقلّ
+      description: عضو نشط لعام كامل، ونشر شيئًا لمرة واحدة على الأقل
     nice_post:
-      name: ردّ رائع
-      description: استلمت 10 إعجابات على أحد ردودك
+      name: رد لطيف
+      description: حصلت على 10 مرات إعجاب على أحد ردودك
     good_post:
-      name: ردّ ممتاز
-      description: استلمت 25 إعجابًا على أحد ردودك
+      name: رد جيد
+      description: حصلت على 25 مرة إعجاب على أحد ردودك
     great_post:
-      name: ردّ عظيم
-      description: استلمت 50 إعجابًا على أحد ردودك
+      name: رد رائع
+      description: حصلت على 50 مرة إعجاب على أحد ردودك
     nice_topic:
-      name: موضوع رائع
-      description: استلمت 10 إعجابات على أحد مواضيعك
+      name: موضوع لطيف
+      description: حصلت على 10 مرات إعجاب على أحد موضوعاتك
     good_topic:
-      name: موضوع ممتاز
-      description: استلمت 25 إعجابًا على أحد مواضيعك
+      name: موضوع جيد
+      description: حصلت على 25 مرة إعجاب على أحد موضوعاتك
     great_topic:
-      name: موضوع عظيم
-      description: استلمت 50 إعجابًا على أحد مواضيعك
+      name: موضوع رائع
+      description: حصلت على 50 مرة إعجاب على أحد موضوعاتك
     nice_share:
       name: مشاركة رائعة
       description: لقد شاركت المنشور مع 25 زائر مختلف
@@ -1746,8 +1745,8 @@ ar:
       name: مشاركة عظيمة
       description: لقد شاركت المنشور مع 1000 زائر مختلف
     first_like:
-      name: أوّل إعجاب
-      description: أعجبتك مشاركة
+      name: أول مرة إعجاب
+      description: سجَّلت إعجابك بمشاركة
     first_flag:
       name: أول بلاغ
       description: لقد ابلغت عن منشور
@@ -1947,8 +1946,6 @@ ar:
         title: "عضو موقوف"
       agree_and_silence:
         title: "كتم المستخدم"
-      delete_spammer:
-        title: "احذف ناشر السبام"
       delete_single:
         title: "أحذف"
       disagree:
@@ -1962,8 +1959,6 @@ ar:
           title: "احذف المستخدم"
       reject:
         title: "ارفض"
-      delete_user:
-        title: "احذف المستخدم"
   activemodel:
     errors:
       <<: *errors
