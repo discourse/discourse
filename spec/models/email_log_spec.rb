@@ -138,4 +138,27 @@ describe EmailLog do
       end
     end
   end
+
+  describe ".addressed_to_user scope" do
+    let(:user) { Fabricate(:user, email: "test@test.com") }
+    before do
+      Fabricate(:email_log, to_address: "john@smith.com")
+      Fabricate(:email_log, cc_addresses: "jane@jones.com;elle@someplace.org")
+      user.reload
+    end
+
+    it "returns email logs where the to address matches" do
+      user.user_emails.first.update!(email: "john@smith.com")
+      expect(EmailLog.addressed_to_user(user).count).to eq(1)
+    end
+
+    it "returns email logs where a cc address matches" do
+      user.user_emails.first.update!(email: "elle@someplace.org")
+      expect(EmailLog.addressed_to_user(user).count).to eq(1)
+    end
+
+    it "returns nothing if no emails match" do
+      expect(EmailLog.addressed_to_user(user).count).to eq(0)
+    end
+  end
 end

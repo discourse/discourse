@@ -28,7 +28,8 @@ class EmailLog < ActiveRecord::Base
         SELECT 1
         FROM user_emails
         WHERE user_emails.user_id = :user_id AND
-        email_logs.to_address = user_emails.email
+        (email_logs.to_address = user_emails.email OR
+         email_logs.cc_addresses ILIKE '%' || user_emails.email || '%')
       )
     SQL
   end

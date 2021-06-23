@@ -636,9 +636,18 @@ class PostAlerter
     end
     return emails_to_skip_send if topic_allowed_users_by_age.empty?
 
+    # This should usually be the OP of the topic, unless they are the one
+    # replying by email (they are excluded by not_allowed? then)
     to_address = topic_allowed_users_by_age.first.user.email
     cc_addresses = topic_allowed_users_by_age[1..-1].map { |tau| tau.user.email }
     email_addresses = [to_address, cc_addresses].flatten
+
+    # If any of these email addresses were cc address on the
+    # incoming email for the target post, do not send them emails (they
+    # already have been notified by the CC on the email)
+    if post.incoming_email.present?
+      cc_addresses = cc_addresses - post.incoming_email.cc_addresses_split
+    end
 
     # Send a single email using group SMTP settings to cut down on the
     # number of emails sent via SMTP, also to replicate how support systems

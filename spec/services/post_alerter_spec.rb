@@ -1402,5 +1402,108 @@ describe PostAlerter do
       expect(email.cc).to eq(nil)
       expect(email.subject).to eq("[Discourse] [PM] #{topic.title}")
     end
+
+    it "skips sending a notification email to the cc address that was added on the same post with an incoming email" do
+      NotificationEmailer.enable
+
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+
+      post = Fabricate(:post, topic: topic.reload)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change { Notification.count }.by(1)
+      email = ActionMailer::Base.deliveries.last
+
+      # the reply post from someone who was emailed
+      reply_raw_mail = <<~MAIL
+      From: Bar <bar@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <sdugj3o4iyu4832x3487@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      Hey here is my reply!
+      MAIL
+
+      reply_post_from_email = nil
+      expect {
+        reply_post_from_email = Email::Receiver.new(reply_raw_mail, {}).process!
+      }.to change {
+        User.count # the two new cc addresses have users created
+      }.by(2).and change {
+        TopicAllowedUser.where(topic: topic).count # and they are added as topic allowed users
+      }.by(2).and change {
+        # but they are not sent emails because they were cc'd on an email, only jim@othersite.com
+        # is emailed because he is a topic allowed user cc'd on the _original_ email and he is not
+        # the one creating the post, and foo@discourse.org, who is the OP of the topic
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change {
+        Notification.count # and they are still sent their normal discourse notification
+      }.by(2)
+
+      email = ActionMailer::Base.deliveries.last
+
+      expect(email.to).to eq(["foo@discourse.org"])
+      expect(email.cc).to eq(["jim@othersite.com"])
+      expect(email.from).to eq([group.email_username])
+      expect(email.subject).to eq("Re: #{topic.title}")
+    end
+
+    it "handles the OP of the topic replying by email and sends a group email to the other topic allowed users successfully" do
+      NotificationEmailer.enable
+
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic.reload)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change { Notification.count }.by(1)
+      email = ActionMailer::Base.deliveries.last
+
+      # the reply post from someone who was emailed
+      reply_raw_mail = <<~MAIL
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <sgk094238uc0348c334483@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      I am ~~Commander Shepherd~~ the OP and I approve of this message.
+      MAIL
+
+      reply_post_from_email = nil
+      expect {
+        reply_post_from_email = Email::Receiver.new(reply_raw_mail, {}).process!
+      }.to change {
+        User.count # the two new cc addresses have users created
+      }.by(2).and change {
+        TopicAllowedUser.where(topic: topic).count # and they are added as topic allowed users
+      }.by(2).and change {
+        # but they are not sent emails because they were cc'd on an email, only jim@othersite.com
+        # is emailed because he is a topic allowed user cc'd on the _original_ email and he is not
+        # the one creating the post
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change {
+        Notification.count # and they are still sent their normal discourse notification
+      }.by(2)
+
+      email = ActionMailer::Base.deliveries.last
+
+      expect(email.to).to eq(["bar@discourse.org"])
+      expect(email.cc).to eq(["jim@othersite.com"])
+      expect(email.from).to eq([group.email_username])
+      expect(email.subject).to eq("Re: #{topic.title}")
+    end
   end
 end
