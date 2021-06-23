@@ -16,7 +16,6 @@ class EmailLog < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :post
-  belongs_to :topic
   belongs_to :smtp_group, class_name: 'Group'
 
   validates :email_type, :to_address, presence: true
@@ -82,6 +81,10 @@ class EmailLog < ActiveRecord::Base
 
   def bounce_key
     super&.delete('-')
+  end
+
+  def topic
+    @topic ||= self.topic_id.present? ? Topic.find_by(id: self.topic_id) : self.post&.topic
   end
 
   def cc_users
