@@ -33,7 +33,7 @@ class GroupSmtpMailer < ActionMailer::Base
       user_name = post.user.name unless post.user.name.blank?
     end
 
-    group_name = from_group.full_name || from_group.name
+    group_name = from_group.full_name.presence || from_group.name
     build_email(
       to_address,
       message: post.raw,

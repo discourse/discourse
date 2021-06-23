@@ -49,6 +49,13 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_log.raw).to include("From: Support Group via Discourse <#{group.email_username}")
   end
 
+  it "falls back to the group name if full name is blank" do
+    group.update(full_name: "")
+    subject.execute(args)
+    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    expect(email_log.raw).to include("From: support-group via Discourse <#{group.email_username}")
+  end
+
   it "has the group_smtp_id and the to_address filled in correctly" do
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
