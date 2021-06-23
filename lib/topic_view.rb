@@ -395,6 +395,17 @@ class TopicView
     @topic.bookmarks.exists?(user_id: @user.id)
   end
 
+  def bookmarked_posts
+    return nil unless has_bookmarks?
+    @topic.bookmarks.where(user: @user).map do |b|
+      {
+        post_id: b.post_id,
+        reminder_at: b.reminder_at
+      }
+    end
+  end
+
+  # fixme remove
   def first_post_bookmark_reminder_at
     @first_post_bookmark_reminder_at ||= \
       begin
