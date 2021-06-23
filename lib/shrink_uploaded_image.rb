@@ -52,7 +52,7 @@ class ShrinkUploadedImage
       filesize: File.size(path)
     }
 
-    if upload.filesize > upload.filesize_was
+    if upload.filesize >= upload.filesize_was
       log "No filesize reduction"
       return false
     end
