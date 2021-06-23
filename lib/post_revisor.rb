@@ -127,6 +127,7 @@ class PostRevisor
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
   # - skip_staff_log: skip creating an entry in the staff action log
+  # - increment_edits_count: increments the edits count when the post is saved
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -414,6 +415,8 @@ class PostRevisor
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.link_post_uploads
     @post.save_reply_relationships
+
+    @editor.increment_post_edits_count if @opts[:increment_edits_count] && @post_successfully_saved
 
     # post owner changed
     if prev_owner && new_owner && prev_owner != new_owner

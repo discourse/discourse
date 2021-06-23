@@ -63,6 +63,38 @@ acceptance("Admin - User Index", function (needs) {
     );
   });
 
+  test("shows the number of post edits", async function (assert) {
+    await visit("/admin/users/1/eviltrout");
+
+    assert.equal(queryAll(".post-edits-count .value").text().trim(), "6");
+
+    assert.ok(
+      exists(".post-edits-count .controls .btn.btn-icon"),
+      "View Edits button exits"
+    );
+  });
+
+  test("a link to view post edits report exits", async function (assert) {
+    await visit("/admin/users/1/eviltrout");
+
+    let filter = encodeURIComponent('{"editor":"eviltrout"}');
+
+    assert.equal(
+      queryAll(".post-edits-count .controls .btn.btn-icon").attr("href"),
+      `/admin/reports/post_edits?filters=${filter}`,
+      "it links to the post edits report"
+    );
+  });
+
+  test("hides the 'view Edits' button if the count is zero", async function (assert) {
+    await visit("/admin/users/2/sam");
+
+    assert.ok(
+      !exists(".post-edits-count .controls .btn.btn-icon"),
+      "View Edits button not present"
+    );
+  });
+
   test("will clear unsaved groups when switching user", async function (assert) {
     await visit("/admin/users/2/sam");
 

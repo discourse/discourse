@@ -169,6 +169,9 @@
         "null"
       ]
     },
+    "post_edits_count": {
+      "type": "integer"
+    },
     "primary_group_id": {
       "type": [
         "string",

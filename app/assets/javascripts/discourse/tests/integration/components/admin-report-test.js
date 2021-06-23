@@ -166,6 +166,17 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
     },
   });
 
+  componentTest("post edits", {
+    template: hbs`{{admin-report dataSourceName='post_edits'}}`,
+
+    test(assert) {
+      assert.ok(
+        exists(".admin-report.post-edits"),
+        "it displays the post edits report"
+      );
+    },
+  });
+
   componentTest("not found", {
     template: hbs`{{admin-report dataSourceName='not_found'}}`,
 

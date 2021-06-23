@@ -25,6 +25,11 @@ task 'topics:populate' => ['db:load_config'] do |_, args|
   DiscourseDev::Topic.populate!
 end
 
+desc 'Create post revisions'
+task 'post_revisions:populate' => ['db:load_config'] do |_, args|
+  DiscourseDev::PostRevision.populate!
+end
+
 desc 'Add replies to a topic'
 task 'replies:populate', [:topic_id, :count] => ['db:load_config'] do |_, args|
   DiscourseDev::Post.add_replies!(args)

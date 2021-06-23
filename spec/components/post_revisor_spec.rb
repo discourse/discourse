@@ -606,6 +606,12 @@ describe PostRevisor do
         expect(post.topic.word_count).to eq(5)
       end
 
+      it 'increases the post_edits stat count' do
+        expect do
+          subject.revise!(post.user, { raw: "This is a new revision" }, increment_edits_count: true)
+        end.to change { post.user.user_stat.reload.post_edits_count }.by(1)
+      end
+
       context 'second poster posts again quickly' do
 
         it 'is a grace period edit, because the second poster posted again quickly' do
@@ -1117,10 +1123,10 @@ describe PostRevisor do
         expect(post.post_uploads.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
 
         subject.revise!(user, raw: <<~RAW)
-            This is a post with multiple uploads
-            ![image2](#{image2.short_url})
-            ![image3](#{image3.short_url})
-            ![image4](#{image4.short_url})
+          This is a post with multiple uploads
+          ![image2](#{image2.short_url})
+          ![image3](#{image3.short_url})
+          ![image4](#{image4.short_url})
         RAW
 
         expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
@@ -1138,8 +1144,8 @@ describe PostRevisor do
 
         it "updates the upload secure status, which is secure by default from the composer. set to false for a public topic" do
           subject.revise!(user, raw: <<~RAW)
-              This is a post with a secure upload
-              ![image5](#{image5.short_url})
+            This is a post with a secure upload
+            ![image5](#{image5.short_url})
           RAW
 
           expect(image5.reload.secure).to eq(false)
@@ -1149,8 +1155,8 @@ describe PostRevisor do
         it "does not update the upload secure status, which is secure by default from the composer for a private" do
           post.topic.update(category: Fabricate(:private_category,  group: Fabricate(:group)))
           subject.revise!(user, raw: <<~RAW)
-              This is a post with a secure upload
-              ![image5](#{image5.short_url})
+            This is a post with a secure upload
+            ![image5](#{image5.short_url})
           RAW
 
           expect(image5.reload.secure).to eq(true)
