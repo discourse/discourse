@@ -12,6 +12,16 @@ class ShrinkUploadedImage
   end
 
   def perform
+    # Neither #dup or #clone provide a complete copy
+    original_upload = Upload.find_by(id: upload.id)
+    unless original_upload
+      log "Upload is missing"
+      return false
+    end
+
+    posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
+    return false if posts.empty?
+
     OptimizedImage.downsize(path, path, "#{@max_pixels}@", filename: upload.original_filename)
     sha1 = Upload.generate_digest(path)
 
@@ -24,13 +34,6 @@ class ShrinkUploadedImage
 
     if !w || !h
       log "Invalid image dimensions after resizing"
-      return false
-    end
-
-    # Neither #dup or #clone provide a complete copy
-    original_upload = Upload.find_by(id: upload.id)
-    unless original_upload
-      log "Upload is missing"
       return false
     end
 
@@ -70,7 +73,6 @@ class ShrinkUploadedImage
     log "(an existing upload)" if existing_upload
 
     success = true
-    posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
 
     posts.each do |post|
       transform_post(post, original_upload, upload)

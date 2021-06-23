@@ -66,6 +66,18 @@ describe ShrinkUploadedImage do
 
       expect(result).to be(false)
     end
+
+    it "returns false when the upload is not used in any posts" do
+      Fabricate(:user, uploaded_avatar: upload)
+
+      result = ShrinkUploadedImage.new(
+        upload: upload,
+        path: Discourse.store.path_for(upload),
+        max_pixels: 10_000
+      ).perform
+
+      expect(result).to be(false)
+    end
   end
 
   context "when S3 uploads are enabled" do
