@@ -26,8 +26,6 @@ class ShrinkUploadedImage
       return false
     end
 
-    return false if used_in_other_models?(original_upload)
-
     OptimizedImage.downsize(path, path, "#{@max_pixels}@", filename: upload.original_filename)
     sha1 = Upload.generate_digest(path)
 
@@ -199,38 +197,6 @@ class ShrinkUploadedImage
     end
 
     post.raw.gsub!(/!\[(.*?)\]\(\/uploads\/.+?\/#{upload_before.sha1}(\.#{upload_before.extension})?\)/i, "![\\1](#{upload_after.short_url})")
-  end
-
-  def used_in_other_models?(upload)
-    if User.where(uploaded_avatar_id: upload.id).exists?
-      log "Used as a User avatar"
-    elsif UserAvatar.where(gravatar_upload_id: upload.id).exists?
-      log "Used as a UserAvatar gravatar"
-    elsif UserAvatar.where(custom_upload_id: upload.id).exists?
-      log "Used as a UserAvatar custom upload"
-    elsif UserProfile.where(profile_background_upload_id: upload.id).exists?
-      log "Used as a UserProfile profile background"
-    elsif UserProfile.where(card_background_upload_id: upload.id).exists?
-      log "Used as a UserProfile card background"
-    elsif Category.where(uploaded_logo_id: upload.id).exists?
-      log "Used as a Category logo"
-    elsif Category.where(uploaded_background_id: upload.id).exists?
-      log "Used as a Category background"
-    elsif CustomEmoji.where(upload_id: upload.id).exists?
-      log "Used as a CustomEmoji"
-    elsif ThemeField.where(upload_id: upload.id).exists?
-      log "Used as a ThemeField"
-    elsif Group.where(flair_upload_id: upload.id).exists?
-      log "Used as a Group flair"
-    elsif Badge.where(image_upload_id: upload.id).exists?
-      log "Used as a Badge image"
-    elsif SiteSetting.where(data_type: SiteSettings::TypeSupervisor.types[:upload], value: upload.id).exists?
-      log "Used as a SiteSetting"
-    else
-      return false
-    end
-
-    return true
   end
 
   def log(*args)

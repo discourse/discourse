@@ -78,34 +78,6 @@ describe ShrinkUploadedImage do
 
       expect(result).to be(false)
     end
-
-    it "returns false when the upload is used in a theme field" do
-      Fabricate(:theme_field, upload: upload)
-      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
-      post.link_post_uploads
-
-      result = ShrinkUploadedImage.new(
-        upload: upload,
-        path: Discourse.store.path_for(upload),
-        max_pixels: 10_000
-      ).perform
-
-      expect(result).to be(false)
-    end
-
-    it "returns false when the upload is used as a category background" do
-      Fabricate(:category, uploaded_background: upload)
-      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
-      post.link_post_uploads
-
-      result = ShrinkUploadedImage.new(
-        upload: upload,
-        path: Discourse.store.path_for(upload),
-        max_pixels: 10_000
-      ).perform
-
-      expect(result).to be(false)
-    end
   end
 
   context "when S3 uploads are enabled" do
