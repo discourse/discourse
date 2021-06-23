@@ -8,11 +8,20 @@ class DirectoryItemSerializer < ApplicationSerializer
     attributes :user_fields
 
     def user_fields
-      object.user_fields(@options[:user_field_ids])
+      fields = {}
+
+      object.user_custom_fields.each do |cuf|
+        user_field_id = @options[:user_custom_field_map][cuf.name]
+        if user_field_id
+          fields[user_field_id] = cuf.value
+        end
+      end
+
+      fields
     end
 
     def include_user_fields?
-      user_fields.present?
+      @options[:user_custom_field_map].present?
     end
   end
 

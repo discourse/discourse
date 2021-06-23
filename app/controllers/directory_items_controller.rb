@@ -9,7 +9,7 @@ class DirectoryItemsController < ApplicationController
     period = params.require(:period)
     period_type = DirectoryItem.period_types[period.to_sym]
     raise Discourse::InvalidAccess.new(:period_type) unless period_type
-    result = DirectoryItem.where(period_type: period_type).includes(:user)
+    result = DirectoryItem.where(period_type: period_type).includes(user: :user_custom_fields)
 
     if params[:group]
       group = Group.find_by(name: params[:group])
@@ -96,7 +96,12 @@ class DirectoryItemsController < ApplicationController
 
     serializer_opts = {}
     if params[:user_field_ids]
-      serializer_opts[:user_field_ids] = params[:user_field_ids]&.split("|")&.map(&:to_i)
+      serializer_opts[:user_custom_field_map] = {}
+
+      user_field_ids = params[:user_field_ids]&.split("|")&.map(&:to_i)
+      user_field_ids.each do |user_field_id|
+        serializer_opts[:user_custom_field_map]["#{User::USER_FIELD_PREFIX}#{user_field_id}"] = user_field_id
+      end
     end
 
     if params[:plugin_column_ids]
