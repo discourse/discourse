@@ -6,7 +6,7 @@ class BackfillEmailLogTopicId < ActiveRecord::Migration[6.1]
 
   def up
     offset = 0
-    email_log_count = EmailLog.count
+    email_log_count = DB.query_single("SELECT COUNT(*) FROM email_logs").first
 
     loop do
       DB.exec(<<~SQL, offset: offset, batch_size: BATCH_SIZE)

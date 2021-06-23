@@ -38,6 +38,10 @@ class EmailLog < ActiveRecord::Base
     User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present?
   end
 
+  def topic
+    @topic ||= self.topic_id.present? ? Topic.find_by(id: self.topic_id) : self.post&.topic
+  end
+
   def self.unique_email_per_post(post, user)
     return yield unless post && user
 
@@ -81,10 +85,6 @@ class EmailLog < ActiveRecord::Base
 
   def bounce_key
     super&.delete('-')
-  end
-
-  def topic
-    @topic ||= self.topic_id.present? ? Topic.find_by(id: self.topic_id) : self.post&.topic
   end
 
   def cc_users
