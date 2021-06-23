@@ -20,7 +20,11 @@ class ShrinkUploadedImage
     end
 
     posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
-    return false if posts.empty?
+
+    if posts.empty?
+      log "Upload not used in any posts"
+      return false
+    end
 
     OptimizedImage.downsize(path, path, "#{@max_pixels}@", filename: upload.original_filename)
     sha1 = Upload.generate_digest(path)
