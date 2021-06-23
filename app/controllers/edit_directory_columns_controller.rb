@@ -30,10 +30,16 @@ class EditDirectoryColumnsController < ApplicationController
       end
     end
 
+    update_directory_item_serializer_attributes
+
     render json: success_json
   end
 
   private
+
+  def update_directory_item_serializer_attributes
+    ::DirectoryItemSerializer.attributes(*DirectoryColumn.active_column_names)
+  end
 
   def ensure_user_fields_have_columns
     user_fields_without_column =
