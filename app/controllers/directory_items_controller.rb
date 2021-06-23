@@ -28,7 +28,8 @@ class DirectoryItemsController < ApplicationController
 
     order = params[:order] || DirectoryColumn.automatic_column_names.first
     dir = params[:asc] ? 'ASC' : 'DESC'
-    if DirectoryColumn.active_column_names.include?(order.to_sym)
+    active_directory_column_names = DirectoryColumn.active_column_names
+    if active_directory_column_names.include?(order.to_sym)
       result = result.order("directory_items.#{order} #{dir}, directory_items.id")
     elsif params[:order] === 'username'
       result = result.order("users.#{order} #{dir}, directory_items.id")
@@ -108,7 +109,7 @@ class DirectoryItemsController < ApplicationController
       serializer_opts[:plugin_column_ids] = params[:plugin_column_ids]&.split("|")&.map(&:to_i)
     end
 
-    serializer_opts[:attributes] = DirectoryColumn.active_column_names
+    serializer_opts[:attributes] = active_directory_column_names
 
     serialized = serialize_data(result, DirectoryItemSerializer, serializer_opts)
     render_json_dump(directory_items: serialized,
