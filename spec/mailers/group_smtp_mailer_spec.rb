@@ -61,6 +61,9 @@ describe GroupSmtpMailer do
     SiteSetting.enable_smtp = true
     SiteSetting.enable_imap = true
     Jobs.run_immediately!
+    SiteSetting.manual_polling_enabled = true
+    SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
+    SiteSetting.reply_by_email_enabled = true
   end
 
   it 'sends an email as reply' do
@@ -73,7 +76,7 @@ describe GroupSmtpMailer do
 
     sent_mail = ActionMailer::Base.deliveries[0]
     expect(sent_mail.to).to contain_exactly('john@doe.com')
-    expect(sent_mail.reply_to).to contain_exactly('bugs@gmail.com')
+    expect(sent_mail.reply_to).to eq(nil)
     expect(sent_mail.subject).to eq('Re: Hello from John')
     expect(sent_mail.to_s).to include(raw)
   end
@@ -96,7 +99,7 @@ describe GroupSmtpMailer do
       expect(PostReplyKey.find_by(user_id: user.id, post_id: post.id)).to eq(nil)
 
       sent_mail = ActionMailer::Base.deliveries[0]
-      expect(sent_mail.reply_to).to contain_exactly('bugs@gmail.com')
+      expect(sent_mail.reply_to).to eq(nil)
       expect(sent_mail.from).to contain_exactly('bugs@gmail.com')
     end
 
