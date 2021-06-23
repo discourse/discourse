@@ -25,21 +25,27 @@ class DirectoryItemSerializer < ApplicationSerializer
     end
   end
 
-  attributes :id,
-             :time_read
-
   has_one :user, embed: :objects, serializer: UserSerializer
-  attributes *DirectoryColumn.active_column_names
+
+  attributes :id
 
   def id
     object.user_id
   end
 
-  def time_read
-    object.user_stat.time_read
-  end
+  private
 
-  def include_time_read?
-    object.period_type == DirectoryItem.period_types[:all]
+  def attributes
+    hash = super
+
+    @options[:attributes].each do |attr|
+      hash.merge!("#{attr}": object[attr])
+    end
+
+    if object.period_type == DirectoryItem.period_types[:all]
+      hash.merge!(time_read: object.user_stat.time_read)
+    end
+
+    hash
   end
 end
