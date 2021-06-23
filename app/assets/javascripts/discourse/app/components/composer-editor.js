@@ -672,6 +672,11 @@ export default Component.extend({
             filename: data.files[data.index].name,
           })}]()\n`
         );
+        this.setProperties({
+          uploadProgress: 0,
+          isUploading: true,
+          isCancellable: false,
+        });
       })
       .on("fileuploadprocessalways", (e, data) => {
         this.appEvents.trigger(
@@ -681,6 +686,11 @@ export default Component.extend({
           })}]()\n`,
           ""
         );
+        this.setProperties({
+          uploadProgress: 0,
+          isUploading: false,
+          isCancellable: false,
+        });
       });
 
     $element.on("fileuploadpaste", (e) => {
