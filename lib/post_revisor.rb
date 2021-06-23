@@ -415,6 +415,8 @@ class PostRevisor
     @post.link_post_uploads
     @post.save_reply_relationships
 
+    @editor.increment_post_edits_count if @post_successfully_saved
+
     # post owner changed
     if prev_owner && new_owner && prev_owner != new_owner
       likes = UserAction.where(target_post_id: @post.id)

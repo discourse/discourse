@@ -744,6 +744,7 @@ export function applyDefaultHandlers(pretender) {
       username: "eviltrout",
       email: "eviltrout@example.com",
       admin: true,
+      post_edits_count: 6,
     });
   });
 
