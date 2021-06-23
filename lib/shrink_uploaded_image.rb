@@ -220,6 +220,10 @@ class ShrinkUploadedImage
       log "Used as a CustomEmoji"
     elsif ThemeField.where(upload_id: upload.id).exists?
       log "Used as a ThemeField"
+    elsif Group.where(flair_upload_id: upload.id).exists?
+      log "Used as a Group flair"
+    elsif Badge.where(image_upload_id: upload.id).exists?
+      log "Used as a Badge image"
     else
       return false
     end
