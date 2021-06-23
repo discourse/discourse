@@ -1259,7 +1259,13 @@ describe PostAlerter do
     fab!(:category) { Fabricate(:category) }
 
     it 'creates single edit notification when post is modified' do
-      TopicUser.create!(user_id: user.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:watching], highest_seen_post_number: post.post_number)
+      TopicUser.create!(
+        user_id: user.id,
+        topic_id: topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+        last_read_post_number: post.post_number
+      )
+
       PostRevisor.new(post).revise!(last_editor, tags: [tag.name])
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)
@@ -1280,7 +1286,7 @@ describe PostAlerter do
         category: category.id
       )
 
-      TopicUser.change(user, post.topic_id, highest_seen_post_number: post.post_number)
+      TopicUser.change(user, post.topic_id, last_read_post_number: post.post_number)
 
       # Manually run job after the user read the topic to simulate a slow
       # Sidekiq.

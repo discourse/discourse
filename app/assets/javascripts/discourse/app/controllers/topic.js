@@ -68,6 +68,8 @@ export default Controller.extend(bufferedProperty("model"), {
   filter: null,
   quoteState: null,
   currentPostId: null,
+  userLastReadPostNumber: null,
+  highestPostNumber: null,
 
   init() {
     this._super(...arguments);

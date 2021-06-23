@@ -69,6 +69,8 @@ export default DiscourseRoute.extend({
       "model.currentPost": closest,
       enteredIndex: topic.postStream.progressIndexOfPost(closestPost),
       enteredAt: Date.now().toString(),
+      userLastReadPostNumber: topic.last_read_post_number,
+      highestPostNumber: topic.highest_post_number,
     });
 
     this.appEvents.trigger("page:topic-loaded", topic);

@@ -192,7 +192,7 @@ after_initialize do
     return if topic_id.blank? || data[:track] != DiscourseNarrativeBot::NewUserNarrative.to_s
 
     topic_user = topic_users.find_by(topic_id: topic_id)
-    return if topic_user.present? && (topic_user.last_read_post_number.present? || topic_user.highest_seen_post_number.present?)
+    return if topic_user.present? && topic_user.last_read_post_number.present?
 
     topic = Topic.find_by(id: topic_id)
     return if topic.blank?

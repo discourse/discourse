@@ -29,7 +29,7 @@
                                    topicId=topic.id
                                    unreadClass=unreadClass~}}
     {{~#if showTopicPostBadges}}
-    {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+    {{~raw "topic-post-badges" unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{~/if}}
   </span>
   <div class="link-bottom-line">

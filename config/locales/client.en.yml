@@ -2399,7 +2399,7 @@ en:
         top: "There are no top topics."
         educate:
           new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
-          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge unread-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "There are no more latest topics."
         posted: "There are no more posted topics."
@@ -2459,15 +2459,9 @@ en:
       not_found:
         title: "Topic not found"
         description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
-      total_unread_posts:
+      unread_posts:
         one: "you have %{count} unread post in this topic"
         other: "you have %{count} unread posts in this topic"
-      unread_posts:
-        one: "you have %{count} unread old post in this topic"
-        other: "you have %{count} unread old posts in this topic"
-      new_posts:
-        one: "there is %{count} new post in this topic since you last read it"
-        other: "there are %{count} new posts in this topic since you last read it"
       likes:
         one: "there is %{count} like in this topic"
         other: "there are %{count} likes in this topic"

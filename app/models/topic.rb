@@ -810,11 +810,7 @@ class Topic < ActiveRecord::Base
       SET last_read_post_number = CASE
                                   WHEN last_read_post_number > :highest THEN :highest
                                   ELSE last_read_post_number
-                                  END,
-          highest_seen_post_number = CASE
-                            WHEN highest_seen_post_number > :highest THEN :highest
-                            ELSE highest_seen_post_number
-                            END
+                                  END
       WHERE topic_id = :topic_id
     SQL
   end

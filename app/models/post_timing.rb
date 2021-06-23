@@ -71,7 +71,6 @@ class PostTiming < ActiveRecord::Base
       end
 
       TopicUser.where(user_id: user.id, topic_id: topic.id).update_all(
-        highest_seen_post_number: last_read,
         last_read_post_number: last_read
       )
 

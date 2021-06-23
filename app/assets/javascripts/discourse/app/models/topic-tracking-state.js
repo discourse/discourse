@@ -352,15 +352,14 @@ const TopicTrackingState = EmberObject.extend({
         isSeen !== state.is_seen
       ) {
         const postsCount = topic.get("posts_count");
-        let newPosts = postsCount - state.highest_post_number,
-          unread = postsCount - state.last_read_post_number;
+        let unread;
 
-        if (newPosts < 0) {
-          newPosts = 0;
-        }
-        if (!state.last_read_post_number) {
+        if (state.last_read_post_number) {
+          unread = postsCount - state.last_read_post_number;
+        } else {
           unread = 0;
         }
+
         if (unread < 0) {
           unread = 0;
         }
@@ -368,8 +367,7 @@ const TopicTrackingState = EmberObject.extend({
         topic.setProperties({
           highest_post_number: state.highest_post_number,
           last_read_post_number: state.last_read_post_number,
-          new_posts: newPosts,
-          unread: unread,
+          unread_posts: unread,
           is_seen: state.is_seen,
           unseen: !state.last_read_post_number && isUnseen(state),
         });
@@ -654,14 +652,13 @@ const TopicTrackingState = EmberObject.extend({
     newState.topic_id = topic.id;
     newState.notification_level = topic.notification_level;
 
-    // see ListableTopicSerializer for unread/unseen/new_posts and other
+    // see ListableTopicSerializer for unread_posts/unseen and other
     // topic property logic
     if (topic.unseen) {
       newState.last_read_post_number = null;
-    } else if (topic.unread || topic.new_posts) {
+    } else if (topic.unread_posts) {
       newState.last_read_post_number =
-        topic.highest_post_number -
-        ((topic.unread || 0) + (topic.new_posts || 0));
+        topic.highest_post_number - (topic.unread_posts || 0);
     } else {
       // remove the topic if it is no longer unread/new (it has been seen)
       // and if there are too many topics in memory

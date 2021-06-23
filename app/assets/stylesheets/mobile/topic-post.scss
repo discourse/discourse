@@ -9,6 +9,12 @@
   }
 }
 
+.topic-post-visited-line {
+  + .topic-post article {
+    border-top: none;
+  }
+}
+
 .topic-post article {
   border-top: 1px solid var(--primary-low);
   padding: 15px 0 8px 0;

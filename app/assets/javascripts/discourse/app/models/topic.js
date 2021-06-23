@@ -7,7 +7,6 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
-import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
@@ -239,12 +238,6 @@ const Topic = RestModel.extend({
     return url;
   },
 
-  @discourseComputed("new_posts", "unread")
-  totalUnread(newPosts, unread) {
-    const count = (unread || 0) + (newPosts || 0);
-    return count > 0 ? count : null;
-  },
-
   @discourseComputed("last_read_post_number", "url")
   lastReadUrl(lastReadPostNumber) {
     return this.urlForPostNumber(lastReadPostNumber);
@@ -282,25 +275,6 @@ const Topic = RestModel.extend({
   @discourseComputed("last_poster.username")
   lastPosterUrl(username) {
     return userPath(username);
-  },
-
-  // The amount of new posts to display. It might be different than what the server
-  // tells us if we are still asynchronously flushing our "recently read" data.
-  // So take what the browser has seen into consideration.
-  @discourseComputed("new_posts", "id")
-  displayNewPosts(newPosts, id) {
-    const highestSeen = Session.currentProp("highestSeenByTopic")[id];
-    if (highestSeen) {
-      const delta = highestSeen - this.last_read_post_number;
-      if (delta > 0) {
-        let result = newPosts - delta;
-        if (result < 0) {
-          result = 0;
-        }
-        return result;
-      }
-    }
-    return newPosts;
   },
 
   @discourseComputed("views")
