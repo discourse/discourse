@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_relative '../../../db/post_migrate/20180820080623_migrate_polls_data'
+require_relative '../../../db/migrate/20180820080623_migrate_polls_data'
 
 RSpec.describe MigratePollsData do
   let!(:user) { Fabricate(:user, id: 1) }
