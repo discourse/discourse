@@ -33,6 +33,9 @@ module Jobs
       # The EmailLog record created by Email::Sender is used to avoid double
       # importing from IMAP. Previously IncomingEmail was used, but it did
       # not make sense to make an IncomingEmail record for outbound emails.
+      #
+      # Note: (martin) IMAP syncing is currently broken by this change,
+      # we need to revisit at a later date.
       Email::Sender.new(message, :group_smtp, recipient_user).send
     end
   end
