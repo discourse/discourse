@@ -504,6 +504,20 @@ HTML
     expect(json["theme_uploads"]["bob"]).to eq(upload.url)
   end
 
+  it 'does not break on missing uploads in settings' do
+    Theme.destroy_all
+
+    upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+    theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
+    theme.save!
+
+    Upload.find(upload.id).destroy
+    theme.clear_cached_settings!
+
+    json = JSON.parse(cached_settings(theme.id))
+    expect(json).to be_empty
+  end
+
   it 'uses CDN url for theme_uploads in settings' do
     set_cdn_url("http://cdn.localhost")
     Theme.destroy_all
