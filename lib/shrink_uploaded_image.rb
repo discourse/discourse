@@ -224,6 +224,8 @@ class ShrinkUploadedImage
       log "Used as a Group flair"
     elsif Badge.where(image_upload_id: upload.id).exists?
       log "Used as a Badge image"
+    elsif SiteSetting.where(data_type: SiteSettings::TypeSupervisor.types[:upload], value: upload.id).exists?
+      log "Used as a SiteSetting"
     else
       return false
     end
