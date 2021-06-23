@@ -33,6 +33,7 @@ class GroupSmtpMailer < ActionMailer::Base
       user_name = post.user.name unless post.user.name.blank?
     end
 
+    group_name = from_group.full_name || from_group.name
     build_email(
       to_address,
       message: post.raw,
@@ -41,7 +42,7 @@ class GroupSmtpMailer < ActionMailer::Base
       topic_id: post.topic_id,
       context: context(context_posts),
       username: post.user.username,
-      group_name: from_group.name,
+      group_name: group_name,
       allow_reply_by_email: true,
       only_reply_by_email: true,
       use_from_address_for_reply_to: SiteSetting.enable_smtp && from_group.smtp_enabled?,
@@ -55,7 +56,7 @@ class GroupSmtpMailer < ActionMailer::Base
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,
       from: from_group.email_username,
-      from_alias: I18n.t('email_from', user_name: user_name, site_name: Email.site_title),
+      from_alias: I18n.t('email_from', user_name: group_name, site_name: Email.site_title),
       html_override: html_override(post, context_posts: context_posts),
       cc: cc_addresses
     )

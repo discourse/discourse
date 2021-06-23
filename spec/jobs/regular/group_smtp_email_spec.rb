@@ -8,7 +8,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     Fabricate(:post, topic: topic)
     Fabricate(:post, topic: topic)
   end
-  fab!(:group) { Fabricate(:smtp_group) }
+  fab!(:group) { Fabricate(:smtp_group, name: "support-group", full_name: "Support Group") }
   fab!(:recipient_user) { Fabricate(:user, email: "test@test.com") }
   let(:post_id) { post.id }
   let(:args) do
@@ -45,7 +45,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     post_reply_key = PostReplyKey.where(user_id: recipient_user, post_id: post.id).first
     expect(post_reply_key).to eq(nil)
-    expect(email_log.raw).to include("Reply-To: Bruce Wayne via Discourse <#{group.email_username}")
+    expect(email_log.raw).to include("Reply-To: Support Group via Discourse <#{group.email_username}")
+    expect(email_log.raw).to include("From: Support Group via Discourse <#{group.email_username}")
   end
 
   it "has the group_smtp_id and the to_address filled in correctly" do
