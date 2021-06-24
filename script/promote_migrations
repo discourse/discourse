@@ -14,8 +14,19 @@ require 'open3'
 require 'fileutils'
 
 VERSION_REGEX = %r{\/(\d+)_}
-DRY_RUN = ARGV.include? '--dry-run'
-PLUGINS = ARGV.include? '--plugins'
+
+DRY_RUN = !!ARGV.delete('--dry-run')
+
+if i = ARGV.find_index('--plugins-base')
+  ARGV.delete_at(i)
+  PLUGINS = true
+  PLUGINS_BASE = ARGV.delete_at(i)
+elsif ARV.delete('--plugins')
+  PLUGINS = true
+  PLUGINS_BASE = 'plugins'
+end
+
+raise "Unknown arguments: #{ARGV.join(', ')}" if ARGV.length > 0
 
 def run(*args, capture: true)
   out, s = Open3.capture2(*args)
@@ -60,7 +71,7 @@ promote_threshold = latest_stable_post_migration[VERSION_REGEX, 1].to_i
 current_post_migrations =
   if PLUGINS
     puts 'Looking in plugins...'
-    Dir.glob('plugins/*/db/post_migrate/*')
+    Dir.glob("#{PLUGINS_BASE}/**/db/post_migrate/*")
   else
     Dir.glob('db/post_migrate/*')
   end
