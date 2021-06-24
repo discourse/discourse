@@ -1601,7 +1601,7 @@ en:
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
     review_every_post: "All posts must be reviewed. WARNING! NOT RECOMMENDED FOR BUSY SITES."
-    pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
+    pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
     ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"

@@ -500,9 +500,9 @@ login:
     list_type: simple
   hide_email_address_taken: false
   log_out_strict: false
-  pending_users_reminder_delay:
+  pending_users_reminder_delay_minutes:
     min: -1
-    default: 8
+    default: 480
   persistent_sessions: true
   maximum_session_age:
     default: 1440
