@@ -1093,13 +1093,13 @@ class Topic < ActiveRecord::Base
     @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
   end
 
-  def make_banner!(user, bannered_until = '')
-    bannered_until ||= ''
-
-    bannered_until = begin
-      Time.parse(bannered_until)
-    rescue ArgumentError
-      raise Discourse::InvalidParameters(:bannered_until)
+  def make_banner!(user, bannered_until = nil)
+    if bannered_until
+      bannered_until = begin
+        Time.parse(bannered_until)
+      rescue ArgumentError
+        raise Discourse::InvalidParameters.new(:bannered_until)
+      end
     end
 
     # only one banner at the same time
@@ -1214,13 +1214,13 @@ class Topic < ActiveRecord::Base
     TopicUser.change(user.id, id, cleared_pinned_at: nil)
   end
 
-  def update_pinned(status, global = false, pinned_until = "")
-    pinned_until ||= ''
-
-    pinned_until = begin
-      Time.parse(pinned_until)
-    rescue ArgumentError
-      raise Discourse::InvalidParameters(:pinned_until)
+  def update_pinned(status, global = false, pinned_until = nil)
+    if pinned_until
+      pinned_until = begin
+        Time.parse(pinned_until)
+      rescue ArgumentError
+        raise Discourse::InvalidParameters.new(:pinned_until)
+      end
     end
 
     update_columns(

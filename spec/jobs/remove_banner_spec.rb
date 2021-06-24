@@ -41,7 +41,9 @@ describe Jobs::RemoveBanner do
     context 'bannered_until is an invalid date' do
       it 'doesn’t enqueue a future job to remove it' do
         expect do
-          topic.make_banner!(user, 'xxx')
+          expect do
+            topic.make_banner!(user, 'xxx')
+          end.to raise_error(Discourse::InvalidParameters)
         end.to change { Jobs::RemoveBanner.jobs.size }.by(0)
       end
     end
