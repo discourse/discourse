@@ -440,7 +440,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.17)
-    test-prof (1.0.5)
+    test-prof (1.0.6)
     thor (1.1.0)
     tilt (2.0.10)
     tzinfo (2.0.4)
