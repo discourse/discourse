@@ -21,7 +21,7 @@ if i = ARGV.find_index('--plugins-base')
   ARGV.delete_at(i)
   PLUGINS = true
   PLUGINS_BASE = ARGV.delete_at(i)
-elsif ARV.delete('--plugins-base')
+elsif ARV.delete('--plugins')
   PLUGINS = true
   PLUGINS_BASE = 'plugins'
 end
