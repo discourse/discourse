@@ -6,7 +6,9 @@ import I18n from "I18n";
 registerUnbound("mobile-directory-item-label", function (args) {
   // Args should include key/values { item, column }
   const count = args.item.get(args.column.name);
-  return htmlSafe(I18n.t(`directory.${args.column.name}`, { count }));
+  const translationPrefix =
+    args.column.type === "automatic" ? "directory." : "";
+  return htmlSafe(I18n.t(`${translationPrefix}${args.column.name}`, { count }));
 });
 
 registerUnbound("directory-item-value", function (args) {

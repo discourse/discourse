@@ -1,7 +1,19 @@
 {{user-info user=item.user}}
 
 {{#each columns as |column|}}
-  {{#if (directory-column-is-automatic column=column)}}
+  {{#if (directory-column-is-user-field column=column)}}
+    {{#if (get item.user.user_fields column.user_field_id)}}
+      <div class="user-stat">
+        <span class="value user-field">
+          {{directory-item-user-field-value item=item column=column}}
+        </span>
+        <span class="label">
+          {{column.name}}
+        </span>
+      </div>
+    {{/if}}
+
+  {{else}}
     <div class="user-stat">
       <span class="value">
         {{directory-item-value item=item column=column}}
@@ -13,18 +25,6 @@
         {{mobile-directory-item-label item=item column=column}}
       </span>
     </div>
-
-  {{else}}
-    {{#if (get item.user.user_fields column.user_field_id)}}
-      <div class="user-stat">
-        <span class="value user-field">
-          {{directory-item-user-field-value item=item column=column}}
-        </span>
-        <span class="label">
-          {{column.name}}
-        </span>
-      </div>
-    {{/if}}
   {{/if}}
 {{/each}}
 
