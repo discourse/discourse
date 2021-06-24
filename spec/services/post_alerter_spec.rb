@@ -1505,5 +1505,67 @@ describe PostAlerter do
       expect(email.from).to eq([group.email_username])
       expect(email.subject).to eq("Re: #{topic.title}")
     end
+
+    it "handles the OP of the topic replying by email and cc'ing new people, and does not send a group SMTP email to those newly cc'd users" do
+      NotificationEmailer.enable
+
+      # this is a special case where we are not CC'ing on the original email,
+      # only on the follow up email
+      raw_mail = <<~MAIL
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Subject: Full email group username flow
+      Date: Fri, 14 Jan 2021 00:12:43 +0100
+      Message-ID: <f4832ujfc3498u398i3@example.com.mail>
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      This is the first email.
+      MAIL
+
+      incoming_email_post = Email::Receiver.new(raw_mail, {}).process!
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic.reload)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change { Notification.count }.by(1)
+      email = ActionMailer::Base.deliveries.last
+
+      # the reply post from the OP, cc'ing new people in
+      reply_raw_mail = <<~MAIL
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <3849cu9843yncr9834yr9348x934@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      I am inviting my mates to this email party.
+      MAIL
+
+      reply_post_from_email = nil
+      expect {
+        reply_post_from_email = Email::Receiver.new(reply_raw_mail, {}).process!
+      }.to change {
+        User.count # the two new cc addresses have users created
+      }.by(2).and change {
+        TopicAllowedUser.where(topic: topic).count # and they are added as topic allowed users
+      }.by(2).and change {
+        # but they are not sent emails because they were cc'd on an email.
+        # no group smtp message is sent because the OP is not sent an email,
+        # they made this post.
+        ActionMailer::Base.deliveries.size
+      }.by(0).and change {
+        Notification.count # and they are still sent their normal discourse notification
+      }.by(2)
+
+      last_email = ActionMailer::Base.deliveries.last
+      expect(email).to eq(last_email)
+    end
   end
 end

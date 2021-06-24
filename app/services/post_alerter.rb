@@ -647,6 +647,12 @@ class PostAlerter
     # already have been notified by the CC on the email)
     if post.incoming_email.present?
       cc_addresses = cc_addresses - post.incoming_email.cc_addresses_split
+
+      # If the to address is one of the recently added CC addresses, then we
+      # need to bail early, because otherwise we are sending a notification
+      # email to the user who was just added by CC. In this case the OP probably
+      # replied and CC'd some people, and they are the only other topic users.
+      return if post.incoming_email.cc_addresses_split.include?(to_address)
     end
 
     # Send a single email using group SMTP settings to cut down on the
