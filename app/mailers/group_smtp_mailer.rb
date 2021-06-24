@@ -8,6 +8,8 @@ class GroupSmtpMailer < ActionMailer::Base
   def send_mail(from_group, to_address, post, cc_addresses = nil)
     raise 'SMTP is disabled' if !SiteSetting.enable_smtp
 
+    op_incoming_email = post.topic.first_post.incoming_email
+
     context_posts = Post
       .where(topic_id: post.topic_id)
       .where("post_number < ?", post.post_number)
@@ -51,7 +53,7 @@ class GroupSmtpMailer < ActionMailer::Base
       include_respond_instructions: true,
       template: 'user_notifications.user_posted_pm',
       use_topic_title_subject: true,
-      topic_title: post.topic.title,
+      topic_title: op_incoming_email&.subject || post.topic.title,
       add_re_to_subject: true,
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,

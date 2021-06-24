@@ -30,13 +30,27 @@ module Jobs
       recipient_user = ::UserEmail.find_by(email: email, primary: true)&.user
       message = GroupSmtpMailer.send_mail(group, email, post, cc_addresses)
 
-      # The EmailLog record created by Email::Sender is used to avoid double
-      # importing from IMAP. Previously IncomingEmail was used, but it did
-      # not make sense to make an IncomingEmail record for outbound emails.
-      #
-      # Note: (martin) IMAP syncing is currently broken by this change,
-      # we need to revisit at a later date.
+      # The EmailLog record created by the sender will have the raw email
+      # stored, the group smtp ID, and any cc addresses recorded for later
+      # cross referencing.
       Email::Sender.new(message, :group_smtp, recipient_user).send
+
+      # Create an incoming email record to avoid importing again from IMAP
+      # server. While this may not be technically required if IMAP is not
+      # currently enabled for the group, it will help a lot with the initial
+      # sync if it is turned on at a later date.
+      IncomingEmail.create!(
+        user_id: post.user_id,
+        topic_id: post.topic_id,
+        post_id: post.id,
+        raw: message.to_s,
+        subject: message.subject,
+        message_id: message.message_id,
+        to_addresses: message.to,
+        cc_addresses: message.cc,
+        from_address: message.from,
+        created_via: IncomingEmail.created_via_types[:group_smtp]
+      )
     end
   end
 end

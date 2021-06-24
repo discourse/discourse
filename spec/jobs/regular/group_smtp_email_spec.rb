@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Jobs::GroupSmtpEmail do
   fab!(:post) do
-    topic = Fabricate(:topic)
+    topic = Fabricate(:topic, title: "Help I need support")
     Fabricate(:post, topic: topic)
     Fabricate(:post, topic: topic)
   end
@@ -33,11 +33,22 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
   end
 
-  it "creates an EmailLog record with the correct details to avoid double processing via IMAP" do
+  it "creates an EmailLog record with the correct details" do
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     expect(email_log).not_to eq(nil)
     expect(email_log.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
+  end
+
+  it "creates an IncomingEmail record with the correct details to avoid double processing IMAP" do
+    subject.execute(args)
+    incoming_email = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
+    expect(incoming_email).not_to eq(nil)
+    expect(incoming_email.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
+    expect(incoming_email.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
+    expect(incoming_email.to_addresses).to eq("test@test.com")
+    expect(incoming_email.cc_addresses).to eq("otherguy@test.com;cormac@lit.com")
+    expect(incoming_email.subject).to eq("Re: Help I need support")
   end
 
   it "does not create a post reply key, it always replies to the group email_username" do

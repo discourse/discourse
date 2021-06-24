@@ -81,6 +81,16 @@ describe GroupSmtpMailer do
     expect(sent_mail.to_s).to include(raw)
   end
 
+  it "uses the OP incoming email subject for the subject over topic title" do
+    receiver.incoming_email.topic.update(title: "blah")
+    post = PostCreator.create(user,
+                              topic_id: receiver.incoming_email.topic.id,
+                              raw: raw
+                             )
+    sent_mail = ActionMailer::Base.deliveries[0]
+    expect(sent_mail.subject).to eq('Re: Hello from John')
+  end
+
   context "when the site has a reply by email address configured" do
     before do
       SiteSetting.manual_polling_enabled = true
