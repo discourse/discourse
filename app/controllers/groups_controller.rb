@@ -154,7 +154,10 @@ class GroupsController < ApplicationController
     params_with_permitted = group_params(automatic: group.automatic)
     clear_disabled_email_settings(group, params_with_permitted)
 
-    if params[:update_existing_users].blank? && (!group.automatic || current_user.admin)
+    category_notifications, tag_notifications, category_actions, tag_actions = []
+    if params[:update_existing_users].present?
+      category_notifications, tag_notifications, category_actions, tag_actions = user_default_notifications(group, params_with_permitted)
+    elsif !group.automatic || current_user.admin
       user_count = updating_user_count(group, params_with_permitted)
 
       if user_count > 0
@@ -167,6 +170,7 @@ class GroupsController < ApplicationController
       GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
+      update_existing_users(group, category_notifications, tag_notifications, category_actions, tag_actions) if params[:update_existing_users].present?
 
       if guardian.can_see?(group)
         render json: success_json
@@ -776,12 +780,12 @@ class GroupsController < ApplicationController
       category_ids = params["#{key}_category_ids".to_sym] - ["-1"]
       category_ids.each do |category_id|
         category_id = category_id.to_i
-        notification_level = category_notifications[category_id]
+        old_value = category_notifications[category_id]
+        category_actions[category_id] = value
 
-        if notification_level.blank?
-          category_notifications[category_id] = value
+        if old_value.blank?
           category_actions[:create] << category_id
-        elsif notification_level == value
+        elsif old_value == value
           category_notifications.delete(category_id)
         else
           category_actions[:update] << category_id
@@ -791,12 +795,13 @@ class GroupsController < ApplicationController
       tag_names = params["#{key}_tags".to_sym] - ["-1"]
       tag_ids = Tag.where(name: tag_names).pluck(:id)
       tag_ids.each do |tag_id|
-        notification_level = tag_notifications[tag_id]
+        old_value = tag_notifications[tag_id]
+        tag_actions[tag_id] = value
 
-        if notification_level.blank?
+        if old_value.blank?
           tag_notifications[tag_id] = value
           tag_actions[:create] << tag_id
-        elsif notification_level == value
+        elsif old_value == value
           tag_notifications.delete(tag_id)
         else
           tag_actions[:update] << tag_id
@@ -839,9 +844,7 @@ class GroupsController < ApplicationController
     group_users.count
   end
 
-  def update_existing_users(group, params)
-    category_notifications, tag_notifications, category_actions, tag_actions = user_default_notifications(group, params)
-
+  def update_existing_users(group, category_notifications, tag_notifications, category_actions, tag_actions)
     return if category_notifications.blank? && tag_notifications.blank?
 
     category_actions[:delete] = category_notifications.keys - (category_actions[:create] + category_actions[:update])
@@ -851,10 +854,10 @@ class GroupsController < ApplicationController
       group.users.select(:id).find_in_batches do |users|
         category_actions[:create].each do |category_id|
           category_users = []
-          skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
+          skip_user_ids = CategoryUser.where(category_id: category_id, user: users).pluck(:user_id)
           users.each do |user|
             next if skip_user_ids.include?(user.id)
-            category_users << { category_id: category_id, user_id: user.id, notification_level: category_notifications[category_id] }
+            category_users << { category_id: category_id, user_id: user.id, notification_level: category_actions[category_id] }
           end
           CategoryUser.insert_all!(category_users)
         end
@@ -864,7 +867,7 @@ class GroupsController < ApplicationController
           skip_user_ids = TagUser.where(category_id: category_id).pluck(:user_id)
           users.each do |user|
             next if skip_user_ids.include?(user.id)
-            tag_users << { tag_id: tag_id, user_id: user.id, notification_level: tag_notifications[tag_id] }
+            tag_users << { tag_id: tag_id, user_id: user.id, notification_level: tag_actions[tag_id] }
           end
           TagUser.insert_all!(tag_users)
         end
