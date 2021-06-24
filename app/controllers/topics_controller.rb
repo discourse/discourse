@@ -435,6 +435,8 @@ class TopicsController < ApplicationController
       guardian.ensure_can_moderate!(@topic)
     end
 
+    params[:until] === '' ? params[:until] = nil : params[:until]
+
     @topic.update_status(status, enabled, current_user, until: params[:until])
 
     render json: success_json.merge!(

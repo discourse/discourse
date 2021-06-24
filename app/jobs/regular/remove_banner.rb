@@ -2,7 +2,7 @@
 
 module Jobs
 
-  class UnpinTopic < ::Jobs::Base
+  class RemoveBanner < ::Jobs::Base
 
     def execute(args)
       topic_id = args[:topic_id]
@@ -10,7 +10,7 @@ module Jobs
       return unless topic_id.present?
 
       topic = Topic.find_by(id: topic_id)
-      topic.update_pinned(false) if topic.present?
+      topic.remove_banner!(Discourse.system_user) if topic.present?
     end
 
   end
