@@ -2032,20 +2032,20 @@ de:
     allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z.B. www.example.com/*)."
     allowed_user_api_push_urls: "Erlaubte URL für Server-Push zur Benutzer API"
     expire_user_api_keys_days: "Anzahl Tage, bevor ein Benutzer API Schlüssel automatisch abläuft. (0 für niemals)"
-    tagging_enabled: "Schlagwörter für Themen aktivieren"
+    tagging_enabled: "Schlagwörter für Themen aktivieren?"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
     max_tag_length: "Die maximale Anzahl von Zeichen, die in einem Schlagwort verwendet werden kann."
     max_tag_search_results: "Maximale Ergebnisanzahl bei der Suche nach Schlagwörtern."
-    max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in einer Dropdown-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
+    max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in der Filter-Drop-down-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
     tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwortgruppe an."
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
-    allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu markieren."
+    allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu versehen."
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
-    suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genau so im Thementitel vorkommt"
+    suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
-    force_lowercase_tags: "Erzwinge alle neuen tags in Kleinschreibung."
+    force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
@@ -2091,7 +2091,7 @@ de:
       user_locale_not_enabled: "Du musst zuerst 'allow user locale' aktivieren bevor du dies aktivierst"
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."
       email_editable_enabled: "Du musst die Einstellung 'email editable' deaktivieren, bevor du diese Einstellung aktivierst."
-      staged_users_disabled: "Du musst erst 'vorbereitete Benutzer' aktivieren, bevor du diese Einstellung aktivierst."
+      staged_users_disabled: "Du musst erst „vorbereitete Benutzer“ aktivieren, bevor du diese Einstellung aktivierst."
       reply_by_email_disabled: "Du musst erst 'Antwort per E-Mail' aktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_url_is_empty: "Du musst eine „Discourse Connect URL“ festlegen, bevor du diese Einstellung aktivierst."
       discourse_connect_invite_only: "Du kannst DiscourseConnect nicht gleichzeitig aktivieren und einladen."
@@ -2320,7 +2320,7 @@ de:
       domain_not_allowed: "Webseite ist ungültig. Erlaubte Domains sind: %{domains}"
     auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Seiteneinstellung auto_handle_queued_age."
     destroy_reasons:
-      unused_staged_user: "Unbenutztes, vorbereiteter Benutzerkonto"
+      unused_staged_user: "Inaktives vorbereitetes Benutzerkonto"
       fixed_primary_email: "Primäre E-Mail-Adresse für vorbereitetes Benutzerkonto korrigiert"
       same_ip_address: "Gleiche IP-Adresse (%{ip_address}) wie andere Benutzer"
       inactive_user: "Deaktivierter Benutzer"
@@ -3178,7 +3178,7 @@ de:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      title: "Benutzer zu Nachricht eingeladen (automatisch)"
+      title: "Benutzer zu Nachricht eingeladen (vorbereitet)"
       subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
@@ -3306,7 +3306,7 @@ de:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Benutzer hat Nachricht geschrieben (automatisch)"
+      title: "Benutzer hat Nachricht geschrieben (vorbereitet)"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3641,99 +3641,99 @@ de:
 
       ## [Dies ist ein zivilisierter Ort für öffentliche Diskussionen](#civilized)
 
-      Bitte behandel dieses Diskussionsforum mit demselben Respekt, den Du auch einem öffentlichen Park entgegenbringen würden. Auch wir sind eine gemeinschaftliche Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch fortlaufende Konversation zu teilen.
+      Bitte behandle dieses Diskussionsforum mit demselben Respekt, den du auch einem öffentlichen Park entgegenbringen würdest. Auch wir sind eine gemeinschaftliche Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch fortlaufende Konversation zu teilen.
 
-      Dies sind keine harten und schnellen Regeln. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Gemeinschaft unterstützen und dafür sorgen, dass dies ein freundlicher Ort für einen zivilisierten öffentlichen Diskurs bleibt.
+      Dies sind keine verbindlichen Regeln. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Gemeinschaft unterstützen und dafür sorgen, dass dies ein freundlicher Ort für einen zivilisierten öffentlichen Diskurs bleibt.
 
       <a name="improve"></a>
 
-      ## [Die Diskussion verbessern](#improve)
+      ## [Verbessere die Diskussion](#improve)
 
-      Hilf uns, dies zu einem großartigen Ort der Diskussion zu machen, indem Du immer etwas Positives zur Diskussion beiträgst, wie klein auch immer. Wenn Du Dir nicht sicher bist, ob Dein Beitrag zur Diskussion beiträgt, überlege Dir, was Du sagen willst und versuche es später noch einmal.
+      Hilf uns, dies zu einem großartigen Ort der Diskussion zu machen, indem du immer etwas Positives zur Diskussion beiträgst, wie klein auch immer der Beitrag sein mag. Wenn du dir nicht sicher bist, ob dein Beitrag zur Diskussion beiträgt, überlege dir, was du sagen willst, und versuche es später noch einmal.
 
-      Eine Möglichkeit, die Diskussion zu verbessern, besteht darin, die Themen zu entdecken, die bereits im Gange sind. Verbringe Zeit damit, die Themen hier zu durchstöbern, bevor Du antwortest oder einen eigenen Beitrag beginnst. Du hast dann eine bessere Chance, andere zu treffen, die Deine Interessen teilen.
+      Eine Möglichkeit, die Diskussion zu verbessern, besteht darin, die Themen zu entdecken, die bereits im Gange sind. Verbringe Zeit damit, die Themen hier zu durchstöbern, bevor du antwortest oder einen eigenen Beitrag beginnst. Du hast dann eine bessere Chance, andere zu treffen, die deine Interessen teilen.
 
-      Die Themen, die hier diskutiert werden, sind uns wichtig, und wir möchten, dass Du so handelst, als ob sie Dir auch wichtig wären. Sei respektvoll gegenüber den Themen und den Personen, die sie diskutieren, auch wenn Du mit einigen der Aussagen nicht einverstanden bist.
+      Die Themen, die hier diskutiert werden, sind uns wichtig und wir möchten, dass du so handelst, als ob sie dir auch wichtig wären. Sei respektvoll gegenüber den Themen und den Personen, die sie diskutieren, auch wenn du mit einigen der Aussagen nicht einverstanden bist.
 
       <a name="agreeable"></a>
 
-      ## [Sei zustimmend, auch wenn Du nicht einverstanden bist] (#agreeable)
+      ## [Verhalte dich umgänglich, auch wenn du nicht einverstanden bist] (#agreeable)
 
-      Vielleicht möchtest Du antworten, indem Du nicht zustimmst. Das ist in Ordnung. Aber denke daran _Ideen zu kritisieren, nicht Personen_. Bitte vermeide:
+      Vielleicht möchtest du deinen Dissens ausdrücken. Das ist in Ordnung. Aber denke daran, _Ideen zu kritisieren, nicht Personen_. Bitte vermeide Folgendes:
 
       * Beschimpfungen
       * Ad-hominem-Angriffe
-      * Ein Reagieren auf den Tonfall eines Beitrags anstatt auf den eigentlichen Inhalt
+      * Reagieren auf den Tonfall eines Beitrags anstatt auf den eigentlichen Inhalt
       * Widerspruch unter der Gürtellinie
 
-      Stelle stattdessen durchdachte Erkenntnisse zur Verfügung, die die Konversation verbessern.
+      Stelle stattdessen durchdachte Erkenntnisse zur Verfügung, die die Unterhaltung verbessern.
 
       <a name="participate"></a>
 
       ## [Deine Teilnahme zählt](#participate)
 
-      Die Unterhaltungen, die wir hier führen, geben den Ton für jeden Neuankömmling an. Hilf uns, die Zukunft dieser Gemeinschaft zu beeinflussen, indem Du dich an Diskussionen beteiligen, die dieses Forum zu einem interessanten Ort machen &mdash; und diejenigen meiden, die das nicht tun.
+      Die Unterhaltungen, die wir hier führen, geben den Ton für jeden Neuankömmling an. Hilf uns, die Zukunft dieser Gemeinschaft zu beeinflussen, indem du dich an Diskussionen beteiligst, die dieses Forum zu einem interessanten Ort machen &mdash; und diejenigen meidest, die das nicht tun.
 
-      Discourse bietet Werkzeuge, die es der Gemeinschaft ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifizieren: Lesezeichen, Likes, Flaggen, Antworten, Bearbeitungen, Beobachten, Stummschalten und so weiter. Nutze diese Werkzeuge, um Deine eigene Erfahrung zu verbessern und die aller anderen auch.
+      Discourse bietet Werkzeuge, die es der Gemeinschaft ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifizieren: Lesezeichen, Likes, Meldungen, Antworten, Bearbeitungen, das Beobachten, das Stummschalten und so weiter. Nutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern und die aller anderen auch.
 
-      Lasse uns unsere Community besser verlassen, als wir sie vorgefunden haben.
+      Verbessern wir gemeinsam unsere Community.
 
       <a name="flag-problems"></a>
 
-      ## [Wenn Du ein Problem siehst, markiere es](#flag-problems)
+      ## [Falls du ein Problem siehst, melde es](#flag-problems)
 
-      Moderatoren haben besondere Befugnisse; sie sind für dieses Forum verantwortlich. Aber das bist Du auch. Mit Deiner Hilfe können die Moderatoren die Gemeinschaft fördern und sind nicht nur Hausmeister oder Polizisten.
+      Moderatoren haben besondere Befugnisse; sie sind für dieses Forum verantwortlich. Aber das bist du auch. Mit deiner Hilfe können die Moderatoren die Gemeinschaft fördern und sind nicht nur Hausmeister oder Polizisten.
 
-      Wenn Du schlechtes Verhalten siehst, antworte nicht. Antworten ermutigt schlechtes Verhalten, indem es bestätigt wird, verbraucht Deine Energie und verschwendet die Zeit von allen. Markiere es _einfach_ mit dem Flaggensymbol. Wenn sich genug Markierungen ansammeln, werden Maßnahmen ergriffen, entweder automatisch oder durch das Eingreifen eines Moderators.
+      Wenn du schlechtes Verhalten siehst, antworte nicht. Antworten ermutigt schlechtes Verhalten, indem es bestätigt wird, verbraucht deine Energie und verschwendet die Zeit von allen. _Melde es einfach_. Wenn sich genug Meldungen ansammeln, werden Maßnahmen ergriffen, entweder automatisch oder durch das Eingreifen eines Moderators.
 
-      Um unsere Gemeinschaft aufrechtzuerhalten, behalten sich die Moderatoren das Recht vor, jeden Inhalt und jedes Benutzerkonto aus irgendeinem Grund zu jeder Zeit zu entfernen. Die Moderatoren führen keine Vorabansicht neuer Beiträge aus; die Moderatoren und Seitenbetreiber übernehmen keine Verantwortung für die von der Community eingestellten Inhalte.
+      Um unsere Gemeinschaft aufrechtzuerhalten, behalten sich die Moderatoren das Recht vor, jeden Inhalt und jedes Benutzerkonto aus irgendeinem Grund zu jeder Zeit zu entfernen. Die Moderatoren führen keine Vorabansicht neuer Beiträge durch; die Moderatoren und Websitebetreiber übernehmen keine Verantwortung für die von der Community eingestellten Inhalte.
 
       <a name="be-civil"></a>
 
-      ## [Immer respektvoll sein](#be-civil)
+      ## [Sei stets respektvoll](#be-civil)
 
-      Nichts sabotiert eine gesunde Konversation so sehr wie Unhöflichkeit:
+      Nichts sabotiert eine gesunde Unterhaltung so sehr wie Unhöflichkeit:
 
       * Sei höflich. Veröffentliche nichts, was eine vernünftige Person als beleidigend, ausfallend oder als Hassrede ansehen würde.
-      * Halte es sauber. Poste nichts Obszönes oder sexuell Anzügliches.
-      * Respektiert euch gegenseitig. Belästige niemanden, gebe dich nicht als jemand anderes aus und gebe keine privaten Informationen preis.
+      * Beherrsche dich. Poste nichts Obszönes oder sexuell Anzügliches.
+      * Respektiert euch gegenseitig. Belästige niemanden, gib dich nicht als jemand anderes aus und gib keine privaten Informationen preis.
       * Respektiere unser Forum. Veröffentliche keinen Spam und verunstalte nicht das Forum.
 
-      Dies sind keine konkreten Begriffe mit genauen Definitionen &mdash; vermeide auch nur den _Anschein_ eines dieser Dinge. Wenn Du unsicher bist, frage dich, wie Du dich fühlen würden, wenn Dein Beitrag auf der Titelseite einer großen Nachrichtenseite erscheinen würde.
+      Dies sind keine konkreten Begriffe mit genauen Definitionen &mdash; vermeide auch nur den _Anschein_ eines dieser Dinge. Wenn du unsicher bist, frage dich, wie du dich fühlen würdest, wenn dein Beitrag auf der Titelseite einer großen Nachrichtenseite erscheinen würde.
 
-      Dies ist ein öffentliches Forum und Suchmaschinen indizieren diese Diskussionen. Halte die Sprache, Links und Bilder sicher für Familie und Freunde.
+      Dies ist ein öffentliches Forum und Suchmaschinen indizieren diese Diskussionen. Halte die Sprache, Links und Bilder angemessen für Familie und Freunde.
 
       <a name="keep-tidy"></a>
 
-      ## [Halte es ordentlich](#keep-tidy)
+      ## [Sei ordentlich](#keep-tidy)
 
-      Mache Dir die Mühe, die Dinge an den richtigen Platz zu stellen, so dass wir mehr Zeit mit dem Diskutieren und weniger mit dem Aufräumen verbringen können. Also:
+      Mach dir die Mühe, alles an den richtigen Platz zu packen, sodass wir mehr Zeit mit dem Diskutieren und weniger mit dem Aufräumen verbringen können:
 
       * Fange kein Thema in der falschen Kategorie an; lies bitte die Kategorie-Definitionen.
-      * Poste nicht dasselbe in mehreren Themen.
+      * Poste nicht dieselben Inhalte in mehreren Themen.
       * Poste keine inhaltslosen Antworten.
-      * Lenke nicht von einem Thema ab, indem Du es mittendrin änderst.
-      * Unterschreibe Deine Beiträge nicht &mdash; jeder Beitrag ist mit Deinen Profilinformationen versehen.
+      * Lenke nicht von einem Thema ab, indem du es mittendrin änderst.
+      * Unterschreibe deine Beiträge nicht &mdash; jeder Beitrag ist mit deinen Profilinformationen versehen.
 
-      Anstatt "+1" oder "Einverstanden" zu posten, verwende den Like-Button. Anstatt ein bestehendes Thema in eine radikal andere Richtung zu lenken, verwende "Antworten" als verlinktes Thema.
+      Anstatt „+1“ oder „Einverstanden“ zu posten, verwende den Like-Button. Anstatt ein bestehendes Thema in eine radikal andere Richtung zu lenken, verwende „Antworten als verknüpftes Thema“.
 
       <a name="stealing"></a>
 
-      ## [Nur eigene Sachen posten] (#stealing)
+      ## [Poste nur eigene Inhalte] (#stealing)
 
-      Du darfst ohne Erlaubnis nichts Digitales posten, das jemand anderem gehört. Du darfst keine Beschreibungen, Links oder Methoden posten, die das geistige Eigentum (Software, Video, Audio, Bilder) von jemandem stehlen oder ein anderes Gesetz brechen.
+      Du darfst ohne Erlaubnis nichts Digitales posten, das jemand anderem gehört. Du darfst keine Beschreibungen, Links oder Methoden posten, die dem Diebstahl des geistigen Eigentums (Software, Video, Audio, Bilder) von jemandem dienen oder anderweitig illegales Verhalten beschreiben.
 
       <a name="power"></a>
 
-      ## [Angetrieben von Dir](#power)
+      ## [Angetrieben von dir](#power)
 
-      Diese Seite wird von Deinem [freundlichen Moderations-Team](%{base_path}/about) und von *Euch*, der Community, betrieben. Wenn Du weitere Fragen dazu hast, wie die Dinge hier funktionieren sollen, öffne ein neues Thema in der Kategorie [Seiten-Feedback](%{base_path}/c/site-feedback) und lasse uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht durch ein Meta-Thema oder eine Flagge behandelt werden kann, kontaktiere uns über die [Moderations-Team Seite](%{base_path}/about).
+      Diese Website wird von deinem [freundlichen Moderations-Team](%{base_path}/about) und von *euch*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie alles hier funktionieren soll, öffne ein neues Thema in der [Kategorie Website-Feedback](%{base_path}/c/site-feedback) und lass uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht durch ein Meta-Thema oder eine Meldung behandelt werden kann, kontaktiere uns über die [Seite des Moderations-Teams](%{base_path}/about).
 
       <a name="tos"></a>
 
       ## [Nutzungsbedingungen](#tos)
 
-      Ja, Juristensprache ist langweilig, aber wir müssen uns &ndash; und damit auch Dich und Deine Daten &ndash; vor unfreundlichen Leuten schützen. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die Dein (und unser) Verhalten und Deine Rechte in Bezug auf Inhalte, Datenschutz und Gesetze beschreibt. Um diesen Dienst zu nutzen, musst Du zustimmen, unsere [Nutzungsbedingungen](%{base_path}/tos) einzuhalten.
+      Ja, Juristensprache ist langweilig, aber wir müssen uns &ndash; und damit auch dich und deine Daten &ndash; vor unfreundlichen Leuten schützen. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die dein (und unser) Verhalten und deine Rechte in Bezug auf Inhalte, Datenschutz und Gesetze beschreiben. Um diesen Dienst zu nutzen, musst du zustimmen, unsere [Nutzungsbedingungen](%{base_path}/tos) einzuhalten.
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
@@ -4250,25 +4250,25 @@ de:
     initial_topic_title: Berichte zur Websitegeschwindigkeit
   tags:
     title: "Schlagwörter"
-    restricted_tag_disallowed: 'Sie können das Schlagwort "%{tag} " nicht anwenden.'
-    restricted_tag_remove_disallowed: 'Sie können das Schlagwort "%{tag} " nicht entfernen.'
+    restricted_tag_disallowed: 'Du kannst das Schlagwort „%{tag}“ nicht anwenden.'
+    restricted_tag_remove_disallowed: 'Du kannst das Schlagwort „%{tag}“ nicht entfernen.'
     minimum_required_tags:
       one: "Du muss mindestens %{count} Schlagwort auswählen."
       other: "Du musst mindestens %{count} Schlagwörter auswählen."
     upload_row_too_long: "Die CSV-Datei sollte ein Schlagwort pro Zeile haben. Optional kann das Schlagwort von einem Komma und dem Namen einer Schlagwortgruppe gefolgt sein."
     forbidden:
       invalid:
-        one: "Der ausgewählte Tag kann nicht genutzt werden."
-        other: "Keiner der ausgewählten Tags kann genutzt werden"
-      in_this_category: '"%{tag_name}" kann in dieser Kategorie nicht verwendet werden'
+        one: "Das ausgewählte Schlagwort kann nicht genutzt werden."
+        other: "Keines der ausgewählten Schlagwörter kann genutzt werden"
+      in_this_category: '„%{tag_name}“ kann in dieser Kategorie nicht verwendet werden'
       restricted_to:
-        one: '"%{tag_name}" ist beschränkt auf die Kategorie "%{category_names}"'
-        other: '"%{tag_name}" ist beschränkt auf folgende Kategorien: %{category_names}'
-      synonym: 'Synonyme sind nicht erlaubt. Verwenden Sie stattdessen "%{tag_name}".'
-      has_synonyms: '"%{tag_name}" kann nicht verwendet werden, da es Synonyme hat.'
+        one: '„%{tag_name}“ ist beschränkt auf die Kategorie „%{category_names}“'
+        other: '„%{tag_name}“ ist beschränkt auf folgende Kategorien: %{category_names}'
+      synonym: 'Synonyme sind nicht erlaubt. Verwende stattdessen „%{tag_name}“.'
+      has_synonyms: 'Schlagwort „%{tag_name}“ kann nicht verwendet werden, da es Synonyme hat.'
     required_tags_from_group:
-      one: "Du musst mindestens %{count} %{tag_group_name} Schlagwort hinzufügen. Die Schlagworte in dieser Gruppe sind: %{tags}."
-      other: "Du musst mindestens %{count} %{tag_group_name} Schlagwörter einschließen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
+      one: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwort hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
+      other: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwörter hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
     invalid_target_tag: "kann kein Synonym für ein Synonym sein"
     synonyms_exist: "ist nicht erlaubt, solange Synonyme existieren"
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
@@ -4481,7 +4481,7 @@ de:
       fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe `min_first_post_typing_time`."
       auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag mit der Einstellung „auto_silence_first_post_regex“ übereinstimmt."
       watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe deine <a href='%{base_url}/admin/customize/watched_words'>Liste der beobachteten Wörter</a>."
-      staged: "Neue Themen und Beiträge für aufgeführte Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_staged`."
+      staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_staged`."
       category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe in den Kategorie-Einstellungen."
       must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern bestätigt werden. Siehe `must_approve_users`. "
       invite_only: "Alle neuen Benutzer müssen eingeladen werden. Siehe `invite_only`. "

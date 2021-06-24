@@ -1061,7 +1061,7 @@ fi:
     signups:
       title: "Rekisteröitymiset"
       xaxis: "Päivä"
-      yaxis: "Liittymisten lukumäärä"
+      yaxis: "Rekisteröitymisten määrä"
       description: "Uudet rekisteröidyt käyttäjät tällä ajanjaksolla."
     new_contributors:
       title: "Uusia kirjoittajia"
@@ -1078,13 +1078,13 @@ fi:
       yaxis: "Päivä"
       description: "Kuinka monen käyttäjän luottamustaso nousi tällä ajanjaksolla."
     consolidated_page_views:
-      title: "Yhdistetyt sivukatselut"
+      title: "Kootut sivukatselut"
       xaxis:
         page_view_crawler: "Hakurobotit"
         page_view_anon: "Anonyymit käyttäjät"
         page_view_logged_in: "Kirjautuneet käyttäjät"
       yaxis: "Päivä"
-      description: "Kuinka monta sivukatselua kirjautuneilta, anonyymeiltä ja hakuroboteilta yhteensä."
+      description: "Kuinka monta sivukatselua kirjautuneilta ja anonyymeiltä käyttäjiltä sekä hakuroboteilta yhteensä."
       labels:
         post: Viesti
         editor: Muokkaaja
@@ -1094,7 +1094,7 @@ fi:
       title: "PAK/KAK"
       xaxis: "Päivä"
       yaxis: "PAK/KAK"
-      description: "Käyttäjät jotka kirjautuivat viimeisen päivän aikana jaettuna käyttäjillä, jotka kirjautuivat kuukauden aikana - tuottaa %-luvun joka kuvastaa yhteisön \"tarttuvuutta\". Tähtää yli 30 %:iin."
+      description: "Käyttäjät, jotka kirjautuivat sisään viimeisen päivän aikana, jaettuna käyttäjillä, jotka kirjautuivat sisään viimeisen kuukauden aikana – tuottaa prosenttiarvon, joka ilmaisee yhteisön sitoutuneisuutta. Tähtää yli 30 prosenttiin."
     daily_engaged_users:
       title: "Sitoutuneet päivittäiskäyttäjät"
       xaxis: "Päivä"
@@ -1119,12 +1119,12 @@ fi:
       title: "Tykkäyksiä"
       xaxis: "Päivä"
       yaxis: "Uusien tykkäysten lukumäärä"
-      description: "Uudet tykkäykset."
+      description: "Uusien tykkäysten lukumäärä."
     flags:
-      title: "Liputukset"
+      title: "Merkinnät"
       xaxis: "Päivä"
-      yaxis: "Liputusten lukumäärä"
-      description: "Uudet liputukset."
+      yaxis: "Merkintöjen lukumäärä"
+      description: "Uusien merkintöjen lukumäärä."
     bookmarks:
       title: "Kirjanmerkit"
       xaxis: "Päivä"
@@ -1176,9 +1176,9 @@ fi:
       title: "Järjestelmä"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monta yksityisviestiä systeemi on lähettänyt automaattisesti."
+      description: "Kuinka monta yksityisviestiä järjestelmä on lähettänyt automaattisesti."
     moderator_warning_private_messages:
-      title: "Varoitus valvojalle"
+      title: "Valvojan varoitus"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
       description: "Kuinka monta yksityistä varoitusta valvojat ovat lähettäneet."
@@ -1186,16 +1186,16 @@ fi:
       title: "Ilmoita valvojille"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monta kertaa valvojia on yksityisesti huomautettu lipuista."
+      description: "Kuinka monta kertaa valvojia on yksityisesti huomautettu merkinnästä."
     notify_user_private_messages:
       title: "Ilmoita käyttäjälle"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monesti käyttäjiä huomautettiin yksityisesti lipuista."
+      description: "Kuinka monesti käyttäjiä huomautettiin yksityisesti merkinnästä."
     top_referrers:
       title: "Parhaat viittaajat"
       xaxis: "Käyttäjä"
-      num_clicks: "Klikkausta"
+      num_clicks: "Klikkauksia"
       num_topics: "Ketjut"
       labels:
         user: "Käyttäjä"
@@ -1205,24 +1205,24 @@ fi:
     top_traffic_sources:
       title: "Parhaat liikenteen lähteet"
       xaxis: "Verkkotunnus"
-      num_clicks: "Klikkausta"
+      num_clicks: "Klikkauksia"
       num_topics: "Ketjut"
       num_users: "Käyttäjät"
       labels:
         domain: Verkkotunnus
-        num_clicks: Klikkaukset
+        num_clicks: Klikkauksia
         num_topics: Ketjut
-      description: "Ulkoiset lähteet jotka ovat linkittäneet tälle sivustolle eniten."
+      description: "Ulkoiset lähteet, jotka ovat linkittäneet tälle sivustolle eniten."
     top_referred_topics:
       title: "Parhaat viitatut ketjut"
       labels:
-        num_clicks: "Klikkaukset"
+        num_clicks: "Klikkauksia"
         topic: "Ketju"
-      description: "Ketjut jotka ovat saaneet eniten klikkauksia ulkoisilta sivustoilta."
+      description: "Ketjut, jotka ovat saaneet eniten klikkauksia ulkoisilta sivustoilta."
     page_view_anon_reqs:
       title: "Anonyymit"
       xaxis: "Päivä"
-      yaxis: "Anonyymien sivukatselut"
+      yaxis: "Anonyymit sivukatselut"
       description: "Kuinka monta sivunkatselua sisäänkirjautumattomilta vierailta."
     page_view_logged_in_reqs:
       title: "Kirjautuneita"
@@ -1233,7 +1233,7 @@ fi:
       title: "Hakurobottien sivukatselut"
       xaxis: "Päivä"
       yaxis: "Hakurobottien sivukatselut"
-      description: "Hakurobotit järjestettynä sivukatseluiden mukaan."
+      description: "Sivukatseluita hakuroboteilta ajan myötä."
     page_view_total_reqs:
       title: "Sivukatselua"
       xaxis: "Päivä"
@@ -1245,30 +1245,30 @@ fi:
       yaxis: "Kirjautuneiden mobiilikäyttäjien sivukatselut"
       description: "Kuinka monta sivukatselua kirjautuneilta mobiilikäyttäjiltä."
     page_view_anon_mobile_reqs:
-      title: "Anonyymien sivukatselut"
+      title: "Anonyymit sivukatselut"
       xaxis: "Päivä"
       yaxis: "Anonyymien mobiilikäyttäjien sivukatselut"
       description: "Kuinka monta sivukatselua kirjautumattomilta mobiilikäyttäjiltä."
     http_background_reqs:
-      title: "Taustajärjestelmä"
+      title: "Tausta"
       xaxis: "Päivä"
       yaxis: "Pyyntöjä sivun päivittämiseen ja seuraamiseen"
     http_2xx_reqs:
-      title: "Status 2xx (OK)"
+      title: "Tila 2xx (OK)"
       xaxis: "Päivä"
-      yaxis: "Onnistuneita pyyntöjä (Status 2xx)"
+      yaxis: "Onnistuneita pyyntöjä (tila 2xx)"
     http_3xx_reqs:
-      title: "HTTP 3xx (Uudelleenohjaus)"
+      title: "HTTP 3xx (uudelleenohjaus)"
       xaxis: "Päivä"
-      yaxis: "Uudelleenohjauksia (Status 3xx)"
+      yaxis: "Uudelleenohjauspyyntöjä (tila 3xx)"
     http_4xx_reqs:
-      title: "HTTP 4xx (Asiakasvirhe)"
+      title: "HTTP 4xx (asiakasvirhe)"
       xaxis: "Päivä"
-      yaxis: "Asiakasvirheitä (Status 4xx)"
+      yaxis: "Asiakasvirheitä (tila 4xx)"
     http_5xx_reqs:
-      title: "HTTP 5xx (Palvelinvirhe)"
+      title: "HTTP 5xx (palvelinvirhe)"
       xaxis: "Päivä"
-      yaxis: "Palvelinvirheitä (Status 5xx)"
+      yaxis: "Palvelinvirheitä (tila 5xx)"
     http_total_reqs:
       title: "Yhteensä"
       xaxis: "Päivä"
@@ -1304,7 +1304,7 @@ fi:
         device: Laite
         os: Käyttöjärjestelmä
         login_time: Kirjautumisaika
-      description: "Yksityiskohdat uusista kirjautumisista, jotka epäilyttävällä tavalla poikkesivat aiemmista kirjautumisista."
+      description: "Tiedot uusista kirjautumisista, jotka poikkesivat epäilyttävällä tavalla aiemmista kirjautumisista."
     staff_logins:
       title: "Ylläpitäjien kirjautumiset"
       labels:

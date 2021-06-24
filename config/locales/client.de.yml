@@ -300,7 +300,7 @@ de:
         at_time: "am %{date_time}"
         existing_reminder: "Du wirst %{at_date_time} an dieses Lesezeichen erinnert."
     copy_codeblock:
-      copied: "kopiert!"
+      copied: "Kopiert!"
     drafts:
       resume: "Fortsetzen"
       remove: "Entfernen"
@@ -516,7 +516,7 @@ de:
           one: "Du hast <strong>%{count}</strong> verbleibenden Beitrag."
           other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
         ok: "O. K."
-      example_username: "benutzername"
+      example_username: "Benutzername"
       reject_reason:
         title: "Warum lehnst du diesen Benutzer ab?"
         send_email: "Ablehnungs-E-Mail senden"
