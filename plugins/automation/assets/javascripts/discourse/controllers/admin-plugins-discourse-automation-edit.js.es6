@@ -43,11 +43,14 @@ export default Ember.Controller.extend({
 
   @action
   onChangeTrigger(id) {
-    if (this.automationForm.trigger !== id) {
+    if (this.automationForm.trigger && this.automationForm.trigger !== id) {
       this._confirmReset(() => {
         set(this.automationForm, "trigger", id);
         this.saveAutomation();
       });
+    } else if (!this.automationForm.trigger) {
+      set(this.automationForm, "trigger", id);
+      this.saveAutomation();
     }
   },
 

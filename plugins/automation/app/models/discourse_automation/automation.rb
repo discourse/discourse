@@ -31,6 +31,8 @@ module DiscourseAutomation
 
     def trigger!(context = {})
       if enabled
+        triggerable&.on_call&.call(self, serialized_fields)
+
         scriptable = DiscourseAutomation::Scriptable.new(script)
         scriptable.script.call(context, serialized_fields, self)
       end

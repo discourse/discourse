@@ -58,10 +58,11 @@ module DiscourseAutomation
       end
     end
 
-    def field(name, component:, extra: {}, accepts_placeholders: false)
+    def field(name, component:, extra: {}, accepts_placeholders: false, triggerable: nil)
       @fields << {
         name: name,
         component: component,
+        triggerable: triggerable,
         accepts_placeholders: accepts_placeholders,
         extra: extra
       }

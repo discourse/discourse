@@ -1,3 +1,4 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
@@ -58,6 +59,12 @@ export default Component.extend({
   tagName: "",
   field: null,
   automation: null,
+  tagName: "",
+
+  @discourseComputed("automation.trigger.id", "field.triggerable")
+  displayField(triggerId, triggerable) {
+    return triggerId && (!triggerable || triggerable === triggerId);
+  },
 
   placeholdersString: computed("field.placeholders", function() {
     return this.field.placeholders.join(", ");

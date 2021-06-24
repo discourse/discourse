@@ -7,6 +7,8 @@ en:
         invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}`
         invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
+      recurring:
+        title: Recurring
       point_in_time:
         title: Point in time
         description: When the date is reached the automation will be triggered

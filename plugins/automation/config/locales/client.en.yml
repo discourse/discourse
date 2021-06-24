@@ -43,6 +43,21 @@ en:
           label: Text
       triggerables:
         not_found: Couldn’t find trigger `%{trigger}` for automation `%{automation}`, ensure the associated plugin is installed
+        recurring:
+          recurrences:
+            every_minute: Every minute
+            every_hour: Every hour
+            every_day: Every day
+            every_weekday: Every weekday
+            every_week: Every week
+            every_other_week: Every other week
+            every_month: Every month
+            every_year: Every year
+          fields:
+            recurrence:
+              label: Recurrence
+            start_date:
+              label: Start date
         stalled_wiki:
           durations:
             PT1H: "One hour"
@@ -107,6 +122,8 @@ en:
           add_a_pm_btn:
             label: Add a PM
           fields:
+            receiver:
+              label: PM receiver
             sendable_pms:
               label: PMs
             sender:

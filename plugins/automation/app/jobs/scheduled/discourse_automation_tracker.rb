@@ -33,7 +33,7 @@ module Jobs
 
     def run_pending_automation(pending_automation)
       pending_automation.automation.trigger!(
-        'kind' => DiscourseAutomation::Triggerable::POINT_IN_TIME,
+        'kind' => pending_automation.automation.trigger,
         'execute_at' => pending_automation.execute_at
       )
 

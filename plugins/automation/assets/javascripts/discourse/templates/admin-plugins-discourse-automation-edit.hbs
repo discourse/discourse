@@ -83,30 +83,33 @@
       {{/if}}
     </section>
 
-    <section class="fields-section form-section edit">
-      <h2 class="title">
-        {{i18n "discourse_automation.edit_automation.fields_section.title"}}
-      </h2>
+
+    {{#if automationForm.trigger}}
+      <section class="fields-section form-section edit">
+        <h2 class="title">
+          {{i18n "discourse_automation.edit_automation.fields_section.title"}}
+        </h2>
+
+        <div class="control-group">
+          {{#each scriptFields as |field|}}
+            {{automation-field
+              automation=automation
+              field=field
+              onChangeField=(action "onChangeField")
+            }}
+          {{/each}}
+        </div>
+      </section>    
 
       <div class="control-group">
-        {{#each scriptFields as |field|}}
-          {{automation-field
-            automation=automation
-            field=field
-            onChangeField=(action "onChangeField")
-          }}
-        {{/each}}
+        {{d-button
+          isLoading=isUpdatingAutomation
+          class="btn-primary"
+          label="discourse_automation.update"
+          type="submit"
+          action=(action "saveAutomation" automation)
+        }}
       </div>
-    </section>
-
-    <div class="control-group">
-      {{d-button
-        isLoading=isUpdatingAutomation
-        class="btn-primary"
-        label="discourse_automation.update"
-        type="submit"
-        action=(action "saveAutomation" automation)
-      }}
-    </div>
+    {{/if}}
   </form>
 </section>

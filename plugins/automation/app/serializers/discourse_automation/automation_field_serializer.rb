@@ -2,10 +2,14 @@
 
 module DiscourseAutomation
   class FieldSerializer < ApplicationSerializer
-    attributes :id, :component, :name, :metadata, :placeholders, :target, :extra
+    attributes :id, :component, :name, :metadata, :placeholders, :target, :extra, :triggerable
 
     def metadata
       object.metadata || {}
+    end
+
+    def triggerable
+      targetable_field[:triggerable]
     end
 
     def target
