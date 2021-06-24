@@ -1380,6 +1380,24 @@ describe Topic do
 
     end
 
+    context "bannered_until date" do
+
+      it 'sets bannered_until to be caught by ensure_consistency' do
+        bannered_until = 5.days.from_now
+        topic.make_banner!(user, bannered_until.to_s)
+
+        freeze_time 6.days.from_now do
+          expect(topic.archetype).to eq(Archetype.banner)
+
+          Topic.ensure_consistency!
+          topic.reload
+
+          expect(topic.archetype).to eq(Archetype.default)
+        end
+      end
+
+    end
+
   end
 
   context 'last_poster info' do
