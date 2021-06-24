@@ -289,7 +289,6 @@ ar:
     submit: "إرسال"
     generic_error: "عذرًا، حدث خطأ."
     generic_error_with_reason: "حدث خطأ: %{error}"
-    go_ahead: "انطلق"
     sign_up: "الاشتراك"
     log_in: "تسجيل الدخول"
     age: "العمر"
@@ -319,7 +318,6 @@ ar:
     now: "منذ لحظات"
     read_more: "قراءة المزيد"
     more: "أكثر"
-    less: "أقل"
     never: "أبدا"
     every_30_minutes: "كلّ 30 دقيقة"
     every_hour: "كلّ ساعة"
@@ -328,7 +326,6 @@ ar:
     every_month: "كلّ شهر"
     every_six_months: "كلّ ستة أشهر"
     max_of_count: "%{count} كحدٍ أقصى"
-    alternation: "أو"
     character_count:
       zero: "لا محارف"
       one: "محرف واحد"

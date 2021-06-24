@@ -200,7 +200,6 @@ es:
     submit: "Enviar"
     generic_error: "Lo sentimos, ha ocurrido un error."
     generic_error_with_reason: "Ha ocurrido un error: %{error}"
-    go_ahead: "Continuar"
     sign_up: "Registrarse"
     log_in: "Iniciar sesión"
     age: "Edad"
@@ -229,7 +228,6 @@ es:
     x_more:
       one: "%{count} más"
       other: "%{count} más"
-    less: "Menos"
     never: "nunca"
     every_30_minutes: "cada 30 minutos"
     every_hour: "cada hora"
@@ -238,7 +236,6 @@ es:
     every_month: "cada mes"
     every_six_months: "cada seis meses"
     max_of_count: "máximo de %{count}"
-    alternation: "o"
     character_count:
       one: "%{count} carácter"
       other: "%{count} caracteres"

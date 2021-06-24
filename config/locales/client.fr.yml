@@ -200,7 +200,6 @@ fr:
     submit: "Envoyer"
     generic_error: "Nous sommes désolés, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
-    go_ahead: "Continuer"
     sign_up: "S'inscrire"
     log_in: "Se connecter"
     age: "Âge"
@@ -229,7 +228,6 @@ fr:
     x_more:
       one: "%{count} autre"
       other: "%{count} autres"
-    less: "Moins"
     never: "jamais"
     every_30_minutes: "toutes les 30 minutes"
     every_hour: "chaque heure"
@@ -238,7 +236,6 @@ fr:
     every_month: "chaque mois"
     every_six_months: "tous les six mois"
     max_of_count: "maximum sur %{count}"
-    alternation: "ou"
     character_count:
       one: "%{count} caractère"
       other: "%{count} caractères"

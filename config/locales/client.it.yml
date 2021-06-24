@@ -200,7 +200,6 @@ it:
     submit: "Invia"
     generic_error: "Spiacenti, c'è stato un problema."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
-    go_ahead: "Continua"
     sign_up: "Iscriviti"
     log_in: "Connetti"
     age: "Età"
@@ -229,7 +228,6 @@ it:
     x_more:
       one: "%{count} altro"
       other: "%{count} altri"
-    less: "Meno"
     never: "mai"
     every_30_minutes: "ogni 30 minuti"
     every_hour: "ogni ora"
@@ -238,7 +236,6 @@ it:
     every_month: "ogni mese"
     every_six_months: "ogni sei mesi"
     max_of_count: "massimo di %{count}"
-    alternation: "o"
     character_count:
       one: "%{count} carattere"
       other: "%{count} caratteri"

@@ -177,7 +177,6 @@ zh_CN:
     submit: "提交"
     generic_error: "抱歉，出了点小问题。"
     generic_error_with_reason: "出错了：%{error}"
-    go_ahead: "继续"
     sign_up: "注册"
     log_in: "登录"
     age: "年龄"
@@ -204,7 +203,6 @@ zh_CN:
     more: "更多"
     x_more:
       other: "%{count} 更多"
-    less: "更少"
     never: "从未"
     every_30_minutes: "每 30 分钟"
     every_hour: "每小时"
@@ -213,7 +211,6 @@ zh_CN:
     every_month: "每月"
     every_six_months: "每六个月"
     max_of_count: "不超过 %{count}"
-    alternation: "或"
     character_count:
       other: "%{count} 个字符"
     related_messages:

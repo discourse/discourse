@@ -200,7 +200,6 @@ fi:
     submit: "Lähetä"
     generic_error: "On tapahtunut virhe."
     generic_error_with_reason: "Tapahtui virhe: %{error}"
-    go_ahead: "Jatka"
     sign_up: "Rekisteröidy"
     log_in: "Kirjaudu"
     age: "Ikä"
@@ -229,7 +228,6 @@ fi:
     x_more:
       one: "%{count} muu"
       other: "%{count} muuta"
-    less: "Vähemmän"
     never: "ei koskaan"
     every_30_minutes: "30 minuutin välein"
     every_hour: "tunnin välein"
@@ -238,7 +236,6 @@ fi:
     every_month: "kuukausittain"
     every_six_months: "kuuden kuukauden välein"
     max_of_count: "korkeintaan %{count}"
-    alternation: "tai"
     character_count:
       one: "%{count} merkki"
       other: "%{count} merkkiä"

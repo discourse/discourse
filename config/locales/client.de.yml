@@ -200,7 +200,6 @@ de:
     submit: "Absenden"
     generic_error: "Entschuldigung, ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
-    go_ahead: "Fortfahren"
     sign_up: "Registrieren"
     log_in: "Anmelden"
     age: "Alter"
@@ -229,7 +228,6 @@ de:
     x_more:
       one: "%{count} weiterer"
       other: "%{count} weitere"
-    less: "Weniger"
     never: "nie"
     every_30_minutes: "alle 30 Minuten"
     every_hour: "jede Stunde"
@@ -238,7 +236,6 @@ de:
     every_month: "jeden Monat"
     every_six_months: "alle sechs Monate"
     max_of_count: "von max. %{count}"
-    alternation: "oder"
     character_count:
       one: "%{count} Zeichen"
       other: "%{count} Zeichen"
