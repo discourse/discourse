@@ -200,7 +200,9 @@ describe BackupRestore::DatabaseRestorer do
 
   context "readonly functions" do
     before do
-      Migration::SafeMigrate.stubs(:post_migration_path).returns("spec/fixtures/db/post_migrate/drop_column")
+      BackupRestore::DatabaseRestorer.stubs(:core_migration_files).returns(
+        Dir[Rails.root.join("spec/fixtures/db/post_migrate/drop_column/**/*.rb")]
+      )
     end
 
     it "doesn't try to drop function when no functions have been created" do

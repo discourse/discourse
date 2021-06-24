@@ -5,12 +5,13 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | discourse-poll-option",
   function (hooks) {
     setupRenderingTest(hooks);
-    const template = `{{mount-widget
+    const template = hbs`{{mount-widget
                     widget="discourse-poll-option"
                     args=(hash option=option isMultiple=isMultiple vote=vote)}}`;
 

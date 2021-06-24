@@ -7,6 +7,7 @@
 
 class TopicQuery
   PG_MAX_INT ||= 2147483647
+  DEFAULT_PER_PAGE_COUNT ||= 30
 
   def self.validators
     @validators ||= begin
@@ -578,7 +579,7 @@ class TopicQuery
   protected
 
   def per_page_setting
-    30
+    DEFAULT_PER_PAGE_COUNT
   end
 
   def private_messages_for(user, type)
@@ -702,7 +703,7 @@ class TopicQuery
   # Create results based on a bunch of default options
   def default_results(options = {})
     options.reverse_merge!(@options)
-    options.reverse_merge!(per_page: per_page_setting)
+    options.reverse_merge!(per_page: per_page_setting) unless options[:limit] == false
 
     # Whether to return visible topics
     options[:visible] = true if @user.nil? || @user.regular?

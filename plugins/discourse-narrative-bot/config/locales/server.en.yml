@@ -293,7 +293,7 @@ en:
 
       flag:
         instructions: |-
-          We like our discussions friendly, and we need your help to [keep things civilized](%{guidelines_url}). If you see a problem, please flag to privately let the author or [our helpful staff](%{about_url}) know about it. There are many reasons you might want to flag a post, ranging from an inocuous topic-splitting suggestion to a clear-cut community standards violation. If you select **Something Else**, you'll start a private message discussion with the moderators where you can ask further questions.
+          We like our discussions friendly, and we need your help to [keep things civilized](%{guidelines_url}). If you see a problem, please flag to privately let the author or [our helpful staff](%{about_url}) know about it. There are many reasons you might want to flag a post, ranging from an innocuous topic-splitting suggestion to a clear-cut community standards violation. If you select **Something Else**, you'll start a private message discussion with the moderators where you can ask further questions.
 
           > :imp: I wrote something nasty here
 

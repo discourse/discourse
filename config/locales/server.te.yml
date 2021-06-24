@@ -749,8 +749,6 @@ te:
     actions:
       agree_and_suspend:
         title: "సభ్యుడిని సస్పెండు చేయి"
-      delete_spammer:
-        title: "స్పామరును తొలగించు"
       delete_single:
         title: "తొలగించు"
       disagree:
@@ -762,8 +760,6 @@ te:
           title: "సభ్యుడిని తొలగించు"
       reject:
         title: "తిరస్కరించు"
-      delete_user:
-        title: "సభ్యుడిని తొలగించు"
   activemodel:
     errors:
       <<: *errors

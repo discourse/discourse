@@ -55,4 +55,13 @@
       </span>
     {{/if}}
   </div>
+
+  {{#if group.smtp_updated_at}}
+    <div class="group-email-last-updated-details for-smtp">
+      <small>
+        {{i18n "groups.manage.email.last_updated"}} <strong>{{format-date group.smtp_updated_at leaveAgo="true"}}</strong>
+        {{i18n "groups.manage.email.last_updated_by"}} {{#link-to "user" group.smtp_updated_by.username}}{{group.smtp_updated_by.username}}{{/link-to}}
+      </small>
+    </div>
+  {{/if}}
 </div>

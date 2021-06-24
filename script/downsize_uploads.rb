@@ -35,7 +35,11 @@ def process_uploads
   dimensions_count = 0
   downsized_count = 0
 
-  scope = Upload.by_users.where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
+  scope = Upload
+    .by_users
+    .with_no_non_post_relations
+    .where("LOWER(extension) IN ('jpg', 'jpeg', 'gif', 'png')")
+
   scope = scope.where(<<-SQL, MAX_IMAGE_PIXELS)
     COALESCE(width, 0) = 0 OR
     COALESCE(height, 0) = 0 OR

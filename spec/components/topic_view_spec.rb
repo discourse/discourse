@@ -802,19 +802,12 @@ describe TopicView do
 
     describe 'for mega topics' do
       it 'should return the right columns' do
-        begin
-          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
-          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
-
+        stub_const(TopicView, "MEGA_TOPIC_POSTS_COUNT", 2) do
           expect(topic_view.filtered_post_stream).to eq([
             post.id,
             post2.id,
             post3.id
           ])
-        ensure
-          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
         end
       end
     end
@@ -920,6 +913,43 @@ describe TopicView do
 
       topic_view = TopicView.new(topic.id, admin)
       expect(topic_view.show_read_indicator?).to be_falsey
+    end
+  end
+
+  describe '#reviewable_counts' do
+    it 'exclude posts queued because the category needs approval' do
+      category = Fabricate.build(:category, user: admin)
+      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.save!
+      manager = NewPostManager.new(
+        user,
+        raw: 'to the handler I say enqueue me!',
+        title: 'this is the title of the queued post',
+        category: category.id
+      )
+      result = manager.perform
+      reviewable = result.reviewable
+      reviewable.perform(admin, :approve_post)
+
+      topic_view = TopicView.new(reviewable.topic, admin)
+
+      expect(topic_view.reviewable_counts).to be_empty
+    end
+
+    it 'include posts queued for other reasons' do
+      Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is darn new post content',
+        title: 'this is the title of the queued post'
+      )
+      result = manager.perform
+      reviewable = result.reviewable
+      reviewable.perform(admin, :approve_post)
+
+      topic_view = TopicView.new(reviewable.topic, admin)
+
+      expect(topic_view.reviewable_counts.keys).to contain_exactly(reviewable.target_id)
     end
   end
 end

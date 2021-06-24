@@ -33,6 +33,17 @@
     </div>
   {{/if}}
 
+  <div class="group-manage-email-additional-settings-wrapper">
+    <div class="control-group">
+      <h3>{{i18n "groups.manage.email.imap_additional_settings"}}</h3>
+      <label class="control-group-inline" for="allow_unknown_sender_topic_replies">
+        {{input type="checkbox" name="allow_unknown_sender_topic_replies" id="allow_unknown_sender_topic_replies" checked=group.allow_unknown_sender_topic_replies tabindex="13"}}
+        <span>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies"}}</span>
+      </label>
+      <p>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies_hint"}}</p>
+    </div>
+  </div>
+
   <br>
   {{group-manage-save-button model=group disabled=(not emailSettingsValid) beforeSave=beforeSave afterSave=afterSave tabindex="14"}}
 </div>

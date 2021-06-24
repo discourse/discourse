@@ -368,4 +368,17 @@ describe UserAnonymizer do
 
   end
 
+  describe "anonymize_emails" do
+    it "destroys all associated invites" do
+      invite = Fabricate(:invite, email: 'test@example.com')
+      user = invite.redeem
+
+      Jobs.run_immediately!
+      described_class.make_anonymous(user, admin)
+
+      expect(user.email).not_to eq('test@example.com')
+      expect(Invite.exists?(id: invite.id)).to eq(false)
+    end
+  end
+
 end

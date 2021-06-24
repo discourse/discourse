@@ -321,6 +321,7 @@ he:
       contact_info: "במקרה של בעיה קריטית או דחופה המשפיעה על אתר זה, נא ליצור אתנו קשר דרך: %{contact_info}."
     bookmarked:
       title: "סימנייה"
+      edit_bookmark: "עריכת סימנייה"
       clear_bookmarks: "מחיקת סימניות"
       help:
         bookmark: "יש ללחוץ כדי ליצור סימנייה לפוסט הראשון בנושא זה"
@@ -728,13 +729,19 @@ he:
           enable_imap: "הפעלת IMAP"
           test_settings: "בדיקת ההגדרות"
           save_settings: "שמירת ההגדרות"
+          last_updated: "עדכון אחרון:"
+          last_updated_by: "על ידי"
           settings_required: "כל ההגדרות נחוצות, נא למלא את כל השדות בטרם האימות."
           smtp_settings_valid: "הגדרות ה־SMTP תקינות."
           smtp_title: "SMTP"
+          smtp_instructions: "הפעלת SMTP לקבוצה תגרום לכך שכל הודעות הדוא״ל היוצאות נשלחות מהתיבה של הקבוצה יישלחו באמצעות הגדרות ה־SMTP שמוגדרות כאן במקום בשרת הדוא״ל שמוגדר להודעות דוא״ל אחרות שנשלחות על ידי הפורום שלך."
           imap_title: "IMAP"
           imap_additional_settings: "הגדרות נוספות"
+          imap_instructions: 'הפעלת IMAP לקבוצה תגרום לכך שההודעות תסונכרנה בין התיבה של הקבוצה ושרת ה־IMAP ותיבת הדואר שסופקו. יש להפעיל SMTP עם פרטי גישה תקפים ומאומתים לפני שניתן יהיה להפעיל IMAP. שם המשתמש והססמה של תיבת הדוא״ל שתשמש ל־SMTP ישמשו גם ל־IMAP. למידע נוסף ניתן <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">לקרוא את ההכרזה על התכונה בפורום Discourse Meta</a>.'
           imap_alpha_warning: "אזהרה: יכולת זו היא בחיתולים. יש תמיכה רשמית רק ב־GMail. השימוש על אחריותך בלבד!"
           imap_settings_valid: "הגדרות ה־IMAP תקינות."
+          smtp_disable_confirm: "השבתת ה־SMTP תוביל לאיפוס הגדרות ה־SMTP וה־IMAP והשבתת כל יכולותיהן. להמשיך?"
+          imap_disable_confirm: "השבתת ה־IMAP תוביל לאיפוס הגדרות ה־IMAP והשבתת כל יכולותיהן. להמשיך?"
           imap_mailbox_not_selected: "עליך לבחור תיבת דואר עבור תצורת IMAP זו, אחרת לא יסונכרנו תיבות דואר כלל!"
           prefill:
             title: "מילוי הגדרות מראש עבור:"
@@ -752,7 +759,7 @@ he:
           settings:
             title: "הגדרות"
             allow_unknown_sender_topic_replies: "לאפשר תגובות לנושאים משולחים בלתי־ידועים."
-            allow_unknown_sender_topic_replies_hint: "מאפשר לשולחים בלתי־ידועים להגיב לנושאים קבוצתיים. אם האפשרות מבוטלת, תגובות מכתובות דוא״ל שאינן מופיעות בשרשור דוא״ל IMAP או שהוזמנו לנושא תיצורנה נושא חדש."
+            allow_unknown_sender_topic_replies_hint: "מאפשר לשולחים בלתי־ידועים להגיב לנושאים קבוצתיים. אם האפשרות מבוטלת, תגובות מכתובות דוא״ל שטרם הוזמנו לנושא תיצורנה נושא חדש."
           mailboxes:
             synchronized: "תיבת דוא״ל מסונכרנת"
             none_found: "לא נמצאו תיבות דוא״ל בחשבון הדוא״ל הזה."
@@ -1541,10 +1548,15 @@ he:
           edit_title: "עריכת הזמנה"
           instructions: "ניתן לשתף את הקישור הזה באופן מיידי כדי להעניק גישה לאתר"
           copy_link: "העתקת קישור"
+          expires_in_time: "תפוג בעוד %{time}"
+          expired_at_time: "פגה ב־%{time}"
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
           restrict_email: "להגביל לכתובת דוא״ל אחת"
+          max_redemptions_allowed: "כמות שימושים מרבית"
           add_to_groups: "הוספה לקבוצות"
+          expires_at: "תפוג לאחר"
+          custom_message: "הודעה אישית כרשות"
           send_invite_email: "לשמור ולשלח דוא״ל"
           save_invite: "שמירת הזמנה"
           invite_saved: "ההזמנה נשמרה."
@@ -2372,7 +2384,6 @@ he:
         new: "אין לך נושאים חדשים."
         read: "עדיין לא קראת אף נושא."
         posted: "עדיין לא פרסמתם באף נושא."
-        ready_to_create: "הסתיימו ההכנות לקראת "
         latest: "התעדכנת בהכול!"
         bookmarks: "אין לך עדיין סימניות לנושאים."
         category: "אין נושאים בקטגוריה %{category}."
@@ -2475,7 +2486,6 @@ he:
       browse_all_categories: עיינו בכל הקטגוריות
       browse_all_tags: עיון בכל התגיות
       view_latest_topics: הצגת נושאים אחרונים
-      suggest_create_topic: לפתוח דיון חדש?
       jump_reply_up: קפיצה לתגובה קודמת
       jump_reply_down: קפיצה לתגובה מאוחרת
       deleted: "הנושא הזה נמחק"
@@ -3537,7 +3547,6 @@ he:
         show_incoming_updated_topics: "%{shortcut} הצגת נושאים שהתעדכנו"
         search: "%{shortcut} חיפוש"
         help: "%{shortcut} פתיחת קיצורי מקשים"
-        dismiss_new_posts: "%{shortcut} בטלו חדשים/פוסטים"
         dismiss_topics: "%{shortcut} התעלמות מנושאים"
         log_out: "%{shortcut} התנתקות"
       composing:
@@ -3635,6 +3644,7 @@ he:
       tags: "תגיות"
       choose_for_topic: "תגיות רשות"
       info: "פרטים"
+      default_info: "תגית זו אינה מוגבלת לאף קטגוריה ואין לה תגיות נרדפות. כדי להוסיף הגבלות, יש להציב את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
       category_restricted: "תגית זו מוגבלת לקטגוריות שאין לך גישה אליהן."
       synonyms: "מילים נרדפות"
       synonyms_description: "תגיות אלו תוחלפנה בתגית <b>%{base_tag_name}</b>."
@@ -3727,6 +3737,8 @@ he:
         new_title: "יצירת קבוצה חדשה"
         edit_title: "עריכת קבוצת תגיות"
         tags_label: "תגיות בקבוצה זו"
+        parent_tag_label: "תגית הורה"
+        parent_tag_description: "ניתן להשתמש בתגיות מקבוצה זו רק אם תגית ההורה נמצאת."
         one_per_topic_label: "הגבלה של תג אחד לכל נושא מקבוצה זו"
         new_name: "קבוצת תגיות חדשה"
         name_placeholder: "שם"
@@ -3883,6 +3895,7 @@ he:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">חיפוש ביומנים</a>'
             disabled: 'דוח מגמות חיפושים מושבת. יש להפעיל <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">שאילתות חיפוש ביומן</a> כדי לאסוף נתונים.'
+          average_chart_label: ממוצע
           filters:
             file_extension:
               label: סיומת קובץ
@@ -4014,6 +4027,8 @@ he:
               write: יצירת נושא חדש או פרסום לאחד קיים.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
               wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
+            posts:
+              edit: לערוך כל פוסט שהוא או אחד מסוים.
             users:
               bookmarks: הצגת סימניות המשתמשים. מחזירה תזכורות לסימניות בעת שימוש בתצורת ICS.
               sync_sso: סנכרון משתמש באמצעות DiscourseConnect.
@@ -4767,7 +4782,6 @@ he:
           upload_successful: "העלאה הצליחה. מילים נוספו."
         test:
           button_label: "נסיון"
-          modal_title: "בדיקת מילים במעקב ‚%{action}’"
           description: "נא להקליד טקסט להלן כדי לבדוק התאמות מול מילים שבמעקב"
           found_matches: "נמצאו התאמות:"
           no_matches: "לא נמצאו התאמות"

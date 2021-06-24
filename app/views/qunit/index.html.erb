@@ -3,8 +3,8 @@
   <head>
     <title>QUnit Test Runner</title>
     <%= discourse_color_scheme_stylesheets %>
-    <%= discourse_stylesheet_link_tag(:desktop, theme_ids: nil) %>
-    <%= discourse_stylesheet_link_tag(:test_helper, theme_ids: nil) %>
+    <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
+    <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
     <%= preload_script "discourse/tests/test_helper" %>
     <%= preload_script "discourse/tests/core_plugins_tests" %>
     <%= preload_script "discourse/tests/test_starter" %>

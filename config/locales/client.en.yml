@@ -224,7 +224,6 @@ en:
     submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
-    go_ahead: "Go ahead"
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -253,7 +252,6 @@ en:
     x_more:
       one: "%{count} More"
       other: "%{count} More"
-    less: "Less"
     never: "never"
     every_30_minutes: "every 30 minutes"
     every_hour: "every hour"
@@ -262,7 +260,6 @@ en:
     every_month: "every month"
     every_six_months: "every six months"
     max_of_count: "max of %{count}"
-    alternation: "or"
     character_count:
       one: "%{count} character"
       other: "%{count} characters"
@@ -297,6 +294,7 @@ en:
 
     bookmarked:
       title: "Bookmark"
+      edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Clear Bookmarks"
       help:
         bookmark: "Click to bookmark the first post on this topic"
@@ -667,15 +665,10 @@ en:
       member_added: "Added"
       member_requested: "Requested at"
       add_members:
-        title: "Add members to %{group_name}"
-        description: "You can also paste in a comma separated list."
-        usernames_or_emails:
-          title: "Enter usernames or email addresses"
-          input_placeholder: "Usernames or emails"
-        usernames:
-          title: "Enter usernames"
-          input_placeholder: "Usernames"
+        title: "Add Users to %{group_name}"
+        description: "Enter a list of users you want to invite to the group or paste in a comma separated list:"
         notify_users: "Notify users"
+        set_owner: "Set users as owners of this group"
       requests:
         title: "Requests"
         reason: "Reason"
@@ -689,7 +682,8 @@ en:
         title: "Manage"
         name: "Name"
         full_name: "Full Name"
-        add_members: "Add Members"
+        add_members: "Add Users"
+        invite_members: "Invite"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         profile:
           title: Profile
@@ -704,6 +698,8 @@ en:
           enable_imap: "Enable IMAP"
           test_settings: "Test Settings"
           save_settings: "Save Settings"
+          last_updated: "Last updated:"
+          last_updated_by: "by"
           settings_required: "All settings are required, please fill in all fields before validation."
           smtp_settings_valid: "SMTP settings valid."
           smtp_title: "SMTP"
@@ -732,7 +728,7 @@ en:
           settings:
             title: "Settings"
             allow_unknown_sender_topic_replies: "Allow unknown sender topic replies."
-            allow_unknown_sender_topic_replies_hint: "Allows unknown senders to reply to group topics. If this is not enabled, replies from email addresses not already included on the IMAP email thread or invited to the topic will create a new topic."
+            allow_unknown_sender_topic_replies_hint: "Allows unknown senders to reply to group topics. If this is not enabled, replies from email addresses not already invited to the topic will create a new topic."
           mailboxes:
             synchronized: "Synchronized Mailbox"
             none_found: "No mailboxes were found in this email account."
@@ -2361,13 +2357,19 @@ en:
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
-        dismiss_read_with_selected: "Dismiss %{count} unread"
+        dismiss_read_with_selected:
+          one: "Dismiss %{count} unread"
+          other: "Dismiss %{count} unread"
         dismiss_button: "Dismiss…"
-        dismiss_button_with_selected: "Dismiss (%{count})…"
+        dismiss_button_with_selected:
+          one: "Dismiss (%{count})…"
+          other: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
-        dismiss_new_with_selected: "Dismiss New (%{count})"
+        dismiss_new_with_selected:
+          one: "Dismiss New (%{count})"
+          other: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Set Category"
@@ -2398,7 +2400,6 @@ en:
         new: "You have no new topics."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
-        ready_to_create: "Ready to "
         latest: "You're all caught up!"
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no %{category} topics."
@@ -2508,7 +2509,7 @@ en:
       browse_all_tags: Browse all tags
 
       view_latest_topics: view latest topics
-      suggest_create_topic: start a new conversation?
+      suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
@@ -3547,7 +3548,7 @@ en:
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
         help: "%{shortcut} Open keyboard help"
-        dismiss_new_posts: "%{shortcut} Dismiss New/Posts"
+        dismiss_new: "%{shortcut} Dismiss New"
         dismiss_topics: "%{shortcut} Dismiss Topics"
         log_out: "%{shortcut} Log Out"
       composing:
@@ -3892,6 +3893,7 @@ en:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
+          average_chart_label: Average
           filters:
             file_extension:
               label: File extension
@@ -3917,8 +3919,6 @@ en:
             available: "Group name is available"
             not_available: "Group name is not available"
             blank: "Group name cannot be blank"
-        add_members:
-          as_owner: "Set user(s) as owner(s) of this group"
         manage:
           interaction:
             email: Email
@@ -4023,6 +4023,8 @@ en:
               write: Create a new topic or post to an existing one.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
+            posts:
+              edit: Edit any post or a specific one.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
@@ -4784,7 +4786,7 @@ en:
           upload_successful: "Upload successful. Words have been added."
         test:
           button_label: "Test"
-          modal_title: "Test %{action} Watched Words"
+          modal_title: "%{action}: Test Watched Words"
           description: "Enter text below to check for matches with watched words"
           found_matches: "Found matches:"
           no_matches: "No matches found"

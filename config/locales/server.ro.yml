@@ -2031,8 +2031,6 @@ ro:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       agree_and_hide:
         title: "Ascunde postarea"
-      delete_spammer:
-        title: "Șterge spammer"
       delete_single:
         title: "Șterge"
       disagree_and_restore:
@@ -2048,8 +2046,6 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
-      delete_user:
-        title: "Şterge utilizatorul"
   activemodel:
     errors:
       <<: *errors

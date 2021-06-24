@@ -46,3 +46,10 @@
   width: 500px;
   max-width: 100%;
 }
+
+.group-smtp-email-settings,
+.group-imap-email-settings {
+  .group-email-last-updated-details {
+    text-align: right;
+  }
+}

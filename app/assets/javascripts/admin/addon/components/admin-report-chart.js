@@ -1,3 +1,4 @@
+import Report from "admin/models/report";
 import Component from "@ember/component";
 import discourseDebounce from "discourse-common/lib/debounce";
 import loadScript from "discourse/lib/load-script";
@@ -157,7 +158,7 @@ export default Component.extend({
               gridLines: { display: false },
               type: "time",
               time: {
-                unit: this._unitForGrouping(options),
+                unit: Report.unitForGrouping(options.chartGrouping),
               },
               ticks: {
                 sampleSize: 5,
@@ -179,62 +180,6 @@ export default Component.extend({
   },
 
   _applyChartGrouping(model, data, options) {
-    if (!options.chartGrouping || options.chartGrouping === "daily") {
-      return data;
-    }
-
-    if (
-      options.chartGrouping === "weekly" ||
-      options.chartGrouping === "monthly"
-    ) {
-      const isoKind = options.chartGrouping === "weekly" ? "isoWeek" : "month";
-      const kind = options.chartGrouping === "weekly" ? "week" : "month";
-      const startMoment = moment(model.start_date, "YYYY-MM-DD");
-
-      let currentIndex = 0;
-      let currentStart = startMoment.clone().startOf(isoKind);
-      let currentEnd = startMoment.clone().endOf(isoKind);
-      const transformedData = [
-        {
-          x: currentStart.format("YYYY-MM-DD"),
-          y: 0,
-        },
-      ];
-
-      data.forEach((d) => {
-        let date = moment(d.x, "YYYY-MM-DD");
-
-        if (!date.isBetween(currentStart, currentEnd)) {
-          currentIndex += 1;
-          currentStart = currentStart.add(1, kind).startOf(isoKind);
-          currentEnd = currentEnd.add(1, kind).endOf(isoKind);
-        }
-
-        if (transformedData[currentIndex]) {
-          transformedData[currentIndex].y += d.y;
-        } else {
-          transformedData[currentIndex] = {
-            x: d.x,
-            y: d.y,
-          };
-        }
-      });
-
-      return transformedData;
-    }
-
-    // ensure we return something if grouping is unknown
-    return data;
-  },
-
-  _unitForGrouping(options) {
-    switch (options.chartGrouping) {
-      case "monthly":
-        return "month";
-      case "weekly":
-        return "week";
-      default:
-        return "day";
-    }
+    return Report.collapse(model, data, options.chartGrouping);
   },
 });

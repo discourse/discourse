@@ -42,7 +42,7 @@ de:
       long_date_with_year_with_linebreak: "D. MMM YYYY<br/>HH:mm"
       wrap_ago: "vor %{date}"
       tiny:
-        half_a_minute: "< 1min"
+        half_a_minute: "< 1 Min."
         less_than_x_seconds:
           one: "< %{count}s"
           other: "< %{count}s"
@@ -668,7 +668,6 @@ de:
           settings:
             title: "Einstellungen"
             allow_unknown_sender_topic_replies: "Unbekannte Absender Antworten auf ein Thema erlauben."
-            allow_unknown_sender_topic_replies_hint: "Erlaubt unbekannten Absendern auf Gruppenthemen zu antworten. Wenn dies nicht aktiviert ist, Antworten von E-Mail-Adressen, die nicht bereits im IMAP-E-Mail-Thread enthalten sind oder zum Thema eingeladen werden, werden ein neues Thema erstellen."
           mailboxes:
             synchronized: "Synchronisierte Mailbox"
             none_found: "In diesem E-Mail Konto wurden keine Postfächer gefunden."
@@ -1829,7 +1828,7 @@ de:
       destination_category: "Ziel-Kategorie"
       publish: "Gemeinsame Vorlage veröffentlichen"
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
-      publishing: "Thema wird veröffentlicht…"
+      publishing: "Thema wird veröffentlicht …"
     composer:
       emoji: "Emoji :)"
       more_emoji: "mehr…"
@@ -2180,13 +2179,10 @@ de:
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
-        dismiss_read_with_selected: "%{count} ungelesene verwerfen"
         dismiss_button: "Ignorieren..."
-        dismiss_button_with_selected: "Verwerfen (%{count})…"
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new: "Neue Themen ignorieren"
-        dismiss_new_with_selected: "Neue verwerfen (%{count})"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
         change_category: "Kategorie auswählen"
@@ -2216,7 +2212,6 @@ de:
         new: "Es gibt für dich keine neuen Themen."
         read: "Du hast noch keine Themen gelesen."
         posted: "Du hast noch keine Beiträge verfasst."
-        ready_to_create: "Bereit zu "
         latest: "Ihr seid alle eingeholt!"
         bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
@@ -2306,7 +2301,6 @@ de:
       browse_all_categories: Alle Kategorien durchsehen
       browse_all_tags: Alle Tags durchsuchen
       view_latest_topics: aktuelle Themen anzeigen
-      suggest_create_topic: eine neue Unterhaltung starten?
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
@@ -2671,7 +2665,7 @@ de:
           label: "auswählen inkl. Antworten"
           title: "Beitrag und alle Antworten zu Auswahl hinzufügen"
         select_below:
-          label: "auswählen inkl. folgende"
+          label: "auswählen inkl. folgender"
           title: "Beitrag und alle folgende zu Auswahl hinzufügen"
         delete: ausgewählte löschen
         cancel: Auswahlvorgang abbrechen
@@ -2781,7 +2775,7 @@ de:
         convert_to_moderator: "Team-Einfärbung hinzufügen"
         revert_to_regular: "Team-Einfärbung entfernen"
         rebake: "HTML erneuern"
-        publish_page: "Als Seite veröffentlichen…"
+        publish_page: "Als Seite veröffentlichen"
         unhide: "Einblenden"
         change_owner: "Eigentümer ändern"
         grant_badge: "Abzeichen verleihen"
@@ -2920,7 +2914,7 @@ de:
       create: "Neue Kategorie"
       create_long: "Eine neue Kategorie erstellen"
       save: "Kategorie speichern"
-      slug: "Sprechender Name für URL"
+      slug: "Sprechender Name für URL der Kategorie"
       slug_placeholder: "Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
@@ -3169,7 +3163,7 @@ de:
         help: "Themen, die du gelesen hast; werden in der Reihenfolge angezeigt, in der du diese gelesen hast"
       categories:
         title: "Kategorien"
-        title_in: "Kategorie - %{categoryName}"
+        title_in: "Kategorie – %{categoryName}"
         help: "alle Themen, gruppiert nach Kategorie"
       unread:
         title: "Ungelesen"
@@ -3265,7 +3259,7 @@ de:
         back: "%{shortcut} Zurück"
         up_down: "%{shortcut} Auswahl bewegen &uarr; &darr;"
         open: "%{shortcut} Ausgewähltes Thema öffnen"
-        next_prev: "%{shortcut} Nächster/vorheriger Abschnitt"
+        next_prev: "%{shortcut} Nächster/Vorheriger Abschnitt"
         go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag springen"
       application:
         title: "Anwendung"
@@ -3276,7 +3270,6 @@ de:
         show_incoming_updated_topics: "%{shortcut} Aktualisierte Themen anzeigen"
         search: "%{shortcut} Suche"
         help: "%{shortcut} Tastenkombinationen anzeigen"
-        dismiss_new_posts: "%{shortcut} Neue Themen oder Beiträge ignorieren"
         dismiss_topics: "%{shortcut} Themen ignorieren"
         log_out: "%{shortcut} Abmelden"
       composing:
@@ -3312,14 +3305,14 @@ de:
         edit: "%{shortcut} Beitrag bearbeiten"
         delete: "%{shortcut} Beitrag löschen"
         mark_muted: "%{shortcut} Thema stummschalten"
-        mark_regular: "%{shortcut} Thema auf Normal setzen"
+        mark_regular: "%{shortcut} Thema auf „Normal“ setzen"
         mark_tracking: "%{shortcut} Thema verfolgen"
         mark_watching: "%{shortcut} Thema beobachten"
         print: "%{shortcut} Thema ausdrucken"
         defer: "%{shortcut} Thema ignorieren"
         topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
       search_menu:
-        title: "Suche"
+        title: "Suchmenü"
         prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
         insert_url: "%{shortcut} Auswahl in geöffneten Editor einfügen"
     badges:
@@ -4474,7 +4467,6 @@ de:
           upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
         test:
           button_label: "Test"
-          modal_title: "Teste %{action} beobachtete Wörter"
           description: "Füge unten Text ein, um auf Übereinstimmungen mit beobachteten Wörtern zu prüfen"
           found_matches: "Gefundene Übereinstimmungen:"
           no_matches: "Keine Treffer gefunden"

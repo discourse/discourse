@@ -46,8 +46,13 @@
   }
 
   td.bulk-select {
-    padding: 10px;
+    padding: 0;
     width: 30px;
+    label {
+      margin: 0px;
+      padding: 12px 10px 16px 10px;
+      cursor: pointer;
+    }
     + .main-link {
       padding-left: 0;
     }

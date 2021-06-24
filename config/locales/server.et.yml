@@ -129,9 +129,6 @@ et:
     backup_file_should_be_tar_gz: "Varukoopia peab olema .tar.gz arhiivifail."
     not_enough_space_on_disk: "Varukoopia üleslaadimiseks pole piisavalt kettaruumi."
     invalid_filename: "Varundusfaili nimi sisaldab keelatud sümboleid. Lubatud sümbolid on a-z 0-9 . - _."
-    location:
-      local: "Kohalik"
-      s3: "Amazon S3"
   not_logged_in: "Selleks peate olema sisse logitud."
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
@@ -1124,8 +1121,6 @@ et:
         title: "Vaigista kasutaja"
       agree_and_hide:
         title: "Peida postitus"
-      delete_spammer:
-        title: "Kustuta spämmija"
       delete_single:
         title: "Kustuta"
       disagree:
@@ -1141,8 +1136,6 @@ et:
           title: "Kustuta kasutaja"
       reject:
         title: "Lükka tagasi"
-      delete_user:
-        title: "Kustuta kasutaja"
   activemodel:
     errors:
       <<: *errors

@@ -19,6 +19,7 @@ export default Component.extend({
     "role",
     "ariaLabelledby:aria-labelledby",
   ],
+  submitOnEnter: true,
   dismissable: true,
   title: null,
   subtitle: null,
@@ -48,7 +49,7 @@ export default Component.extend({
   @on("didInsertElement")
   setUp() {
     $("html").on("keyup.discourse-modal", (e) => {
-      //only respond to events when the modal is visible
+      // only respond to events when the modal is visible
       if (!this.element.classList.contains("hidden")) {
         if (e.which === 27 && this.dismissable) {
           next(() => this.attrs.closeModal("initiatedByESC"));
@@ -70,6 +71,10 @@ export default Component.extend({
   },
 
   triggerClickOnEnter(e) {
+    if (!this.submitOnEnter) {
+      return false;
+    }
+
     // skip when in a form or a textarea element
     if (
       e.target.closest("form") ||
@@ -122,6 +127,10 @@ export default Component.extend({
       // if no subtitle provided, makes sure the previous subtitle
       // of another modal is not used
       this.set("subtitle", null);
+    }
+
+    if ("submitOnEnter" in data) {
+      this.set("submitOnEnter", data.submitOnEnter);
     }
 
     if ("dismissable" in data) {

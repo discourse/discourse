@@ -100,7 +100,7 @@ acceptance("User Preferences - Interface", function (needs) {
 
   test("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
     let meta = document.createElement("meta");
-    meta.name = "discourse_theme_ids";
+    meta.name = "discourse_theme_id";
     meta.content = "2";
     document.getElementsByTagName("head")[0].appendChild(meta);
 
@@ -128,7 +128,7 @@ acceptance("User Preferences - Interface", function (needs) {
     await selectKit(".light-color-scheme .select-kit").expand();
     assert.equal(count(".light-color-scheme .select-kit .select-kit-row"), 2);
 
-    document.querySelector("meta[name='discourse_theme_ids']").remove();
+    document.querySelector("meta[name='discourse_theme_id']").remove();
   });
 });
 

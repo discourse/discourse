@@ -54,17 +54,26 @@ class WordWatcher
 
   def self.word_matcher_regexps(action)
     if words = get_cached_words(action)
-      words.map { |w, r| [word_to_regexp(w), r] }.to_h
+      words.map { |w, r| [word_to_regexp(w, whole: true), r] }.to_h
     end
   end
 
-  def self.word_to_regexp(word)
+  def self.word_to_regexp(word, whole: false)
     if SiteSetting.watched_words_regular_expressions?
       # Strip ruby regexp format if present, we're going to make the whole thing
       # case insensitive anyway
-      return word.start_with?("(?-mix:") ? word[7..-2] : word
+      regexp = word.start_with?("(?-mix:") ? word[7..-2] : word
+      regexp = "(#{regexp})" if whole
+      return regexp
     end
-    Regexp.escape(word).gsub("\\*", '\S*')
+
+    regexp = Regexp.escape(word).gsub("\\*", '\S*')
+
+    if whole && !SiteSetting.watched_words_regular_expressions?
+      regexp = "(?:\\W|^)(#{regexp})(?=\\W|$)"
+    end
+
+    regexp
   end
 
   def self.word_matcher_regexp_key(action)
@@ -144,6 +153,6 @@ class WordWatcher
   end
 
   def word_matches?(word)
-    Regexp.new(WordWatcher.word_to_regexp(word), Regexp::IGNORECASE).match?(@raw)
+    Regexp.new(WordWatcher.word_to_regexp(word, whole: true), Regexp::IGNORECASE).match?(@raw)
   end
 end

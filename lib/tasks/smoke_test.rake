@@ -2,18 +2,12 @@
 
 desc "run chrome headless smoke tests on current build"
 task "smoke:test" do
-  if RbConfig::CONFIG['host_os'][/darwin|mac os/]
-    google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-  else
-    google_chrome_cli = "google-chrome"
-  end
+  require "chrome_installed_checker"
 
-  unless system("command -v \"#{google_chrome_cli}\" >/dev/null")
-    abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
-  end
-
-  if Gem::Version.new(`\"#{google_chrome_cli}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
-    abort "Chrome 59 or higher is required to run tests in headless mode."
+  begin
+    ChromeInstalledChecker.run
+  rescue ChromeNotInstalled, ChromeVersionTooLow => err
+    abort err.message
   end
 
   system("yarn install")
@@ -80,5 +74,34 @@ task "smoke:test" do
 
   if results !~ /ALL PASSED/
     raise "FAILED"
+  end
+
+  api_key = ENV["ADMIN_API_KEY"]
+  api_username = ENV["ADMIN_API_USERNAME"]
+  theme_url = ENV["SMOKE_TEST_THEME_URL"]
+
+  next if api_key.blank? && api_username.blank? && theme_url.blank?
+
+  puts "Running QUnit tests for theme #{theme_url.inspect} using API key #{api_key[0..3]}… and username #{api_username.inspect}"
+
+  query_params = {
+    seed: Random.new.seed,
+    theme_url: theme_url,
+    hidepassed: 1,
+    report_requests: 1
+  }
+  url += '/' if !url.end_with?('/')
+  full_url = "#{url}theme-qunit?#{query_params.to_query}"
+  timeout = 1000 * 60 * 10
+
+  sh(
+    "node",
+    "#{Rails.root}/test/run-qunit.js",
+    full_url,
+    timeout.to_s
+  )
+
+  if !$?.success?
+    raise "THEME TESTS FAILED!"
   end
 end

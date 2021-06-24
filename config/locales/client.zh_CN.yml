@@ -624,7 +624,6 @@ zh_CN:
           settings:
             title: "设置"
             allow_unknown_sender_topic_replies: "允许从未知发件人话题的回复。"
-            allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题，如果未启用此功能，那么不在 IMAP 邮件对话中，且未被邀请至该话题的邮件地址的回复，将会创建一个新的话题。"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
@@ -2085,13 +2084,10 @@ zh_CN:
         delete: "删除话题"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读话题"
-        dismiss_read_with_selected: "忽略 %{count} 个未读"
         dismiss_button: "忽略…"
-        dismiss_button_with_selected: "忽略（%{count}）…"
         dismiss_tooltip: "忽略新帖或停止跟踪话题"
         also_dismiss_topics: "停止追踪这些话题以不再显示为未读"
         dismiss_new: "设为已读"
-        dismiss_new_with_selected: "忽略新内容（%{count}）…"
         toggle: "切换话题批量选择"
         actions: "批量操作"
         change_category: "设置分类"
@@ -2118,7 +2114,6 @@ zh_CN:
         new: "你没有近期话题可读。"
         read: "你尚未阅读任何话题。"
         posted: "你尚未在任何话题中发帖。"
-        ready_to_create: "准备好 "
         latest: "你全都看过了！"
         bookmarks: "你没有收藏任何话题。"
         category: "%{category} 分类中没有话题。"
@@ -2201,7 +2196,6 @@ zh_CN:
       browse_all_categories: 浏览所有分类
       browse_all_tags: 浏览所有标签
       view_latest_topics: 查阅最新话题
-      suggest_create_topic: 开始讨论一个新的话题？
       jump_reply_up: 转到更早的回复
       jump_reply_down: 转到更新的回复
       deleted: "此话题已被删除"
@@ -3125,7 +3119,6 @@ zh_CN:
         show_incoming_updated_topics: "%{shortcut} 显示更新话题"
         search: "%{shortcut} 搜索"
         help: "%{shortcut} 打开键盘帮助"
-        dismiss_new_posts: "%{shortcut} 解除新/帖子提示"
         dismiss_topics: "%{shortcut} 解除话题提示"
         log_out: "%{shortcut} 退出登录"
       composing:

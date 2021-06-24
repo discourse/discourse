@@ -481,6 +481,7 @@ sk:
           notification: Notifikácia
         email:
           title: "Email"
+          last_updated_by: "podľa"
           credentials:
             username: "Používateľské meno"
             password: "Heslo"
@@ -2170,7 +2171,6 @@ sk:
         user_profile_menu: "%{shortcut} Otvor užívateľské menu"
         show_incoming_updated_topics: "%{shortcut} Zobraz aktualizované témy"
         help: "%{shortcut} Pomoc s klávesovými skratkami"
-        dismiss_new_posts: "%{shortcut} Zahodiť Nové/Príspevky"
         dismiss_topics: "%{shortcut} Zahodiť témy"
         log_out: "%{shortcut} Odhlásiť sa"
       actions:

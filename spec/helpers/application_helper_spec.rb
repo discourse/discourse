@@ -89,7 +89,7 @@ describe ApplicationHelper do
           user_id: -1,
           color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
         )
-        helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+        helper.request.env[:resolved_theme_id] = dark_theme.id
       end
       context "on desktop" do
         before do
@@ -509,7 +509,7 @@ describe ApplicationHelper do
         user_id: -1,
         color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
       )
-      helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+      helper.request.env[:resolved_theme_id] = dark_theme.id
 
       expect(helper.dark_color_scheme?).to eq(true)
     end

@@ -274,7 +274,7 @@ describe ContentSecurityPolicy do
     }
 
     def theme_policy
-      policy([theme.id])
+      policy(theme.id)
     end
 
     it 'can be extended by themes' do
@@ -303,13 +303,23 @@ describe ContentSecurityPolicy do
       theme.theme_modifier_set.csp_extensions = ["script-src: https://from-theme-flag.script", "worker-src: from-theme-flag.worker"]
       theme.save!
 
+      child_theme = Fabricate(:theme, component: true)
+      theme.add_relative_theme!(:child, child_theme)
+      child_theme.theme_modifier_set.csp_extensions = ["script-src: https://child-theme-flag.script", "worker-src: child-theme-flag.worker"]
+      child_theme.save!
+
       expect(parse(theme_policy)['script-src']).to include('https://from-theme-flag.script')
+      expect(parse(theme_policy)['script-src']).to include('https://child-theme-flag.script')
       expect(parse(theme_policy)['worker-src']).to include('from-theme-flag.worker')
+      expect(parse(theme_policy)['worker-src']).to include('child-theme-flag.worker')
 
       theme.destroy!
+      child_theme.destroy!
 
       expect(parse(theme_policy)['script-src']).to_not include('https://from-theme-flag.script')
       expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
+      expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
+      expect(parse(theme_policy)['worker-src']).to_not include('child-theme-flag.worker')
     end
 
     it 'is extended automatically when themes reference external scripts' do
@@ -352,7 +362,7 @@ describe ContentSecurityPolicy do
     end.to_h
   end
 
-  def policy(theme_ids = [], path_info: "/")
-    ContentSecurityPolicy.policy(theme_ids, path_info: path_info)
+  def policy(theme_id = nil, path_info: "/")
+    ContentSecurityPolicy.policy(theme_id, path_info: path_info)
   end
 end

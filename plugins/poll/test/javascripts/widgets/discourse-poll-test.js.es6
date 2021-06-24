@@ -10,6 +10,7 @@ import componentTest, {
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import pretender from "discourse/tests/helpers/create-pretender";
+import hbs from "htmlbars-inline-precompile";
 
 let requests = 0;
 
@@ -81,7 +82,7 @@ discourseModule(
       ];
     });
 
-    const template = `{{mount-widget
+    const template = hbs`{{mount-widget
                     widget="discourse-poll"
                     args=(hash id=id
                                post=post
@@ -126,7 +127,6 @@ discourseModule(
         assert.equal(requests, 1);
         assert.equal(count(".chosen"), 1);
         assert.equal(queryAll(".chosen").text(), "100%yes");
-        assert.equal(queryAll(".toggle-results").text(), "Show vote");
 
         await click(".toggle-results");
         assert.equal(
@@ -134,7 +134,6 @@ discourseModule(
             .length,
           1
         );
-        assert.equal(queryAll(".toggle-results").text(), "Show results");
       },
     });
 

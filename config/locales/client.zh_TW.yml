@@ -489,6 +489,7 @@ zh_TW:
           notification: 通知
         email:
           title: "電子信箱"
+          last_updated_by: "由"
           credentials:
             username: "使用者名稱"
             password: "密碼"
@@ -2455,7 +2456,6 @@ zh_TW:
         show_incoming_updated_topics: "%{shortcut} 顯示更新話題"
         search: "%{shortcut} 搜尋"
         help: "%{shortcut} 打開按鍵說明"
-        dismiss_new_posts: "%{shortcut} 解除新/貼文提示"
         dismiss_topics: "%{shortcut} 解除話題提示"
         log_out: "%{shortcut} 退出"
       composing:

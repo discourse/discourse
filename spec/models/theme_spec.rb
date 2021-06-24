@@ -66,24 +66,22 @@ describe Theme do
   end
 
   it "can automatically disable for mismatching version" do
-    expect(theme.supported?).to eq(true)
     theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "99.99.99")
     theme.save!
-    expect(theme.supported?).to eq(false)
 
-    expect(Theme.transform_ids([theme.id])).to be_empty
+    expect(Theme.transform_ids(theme.id)).to eq([])
   end
 
-  xit "#transform_ids works with nil values" do
+  it "#transform_ids works with nil values" do
     # Used in safe mode
-    expect(Theme.transform_ids([nil])).to eq([nil])
+    expect(Theme.transform_ids(nil)).to eq([])
   end
 
   it '#transform_ids filters out disabled components' do
     theme.add_relative_theme!(:child, child)
-    expect(Theme.transform_ids([theme.id], extend: true)).to eq([theme.id, child.id])
+    expect(Theme.transform_ids(theme.id)).to eq([theme.id, child.id])
     child.update!(enabled: false)
-    expect(Theme.transform_ids([theme.id], extend: true)).to eq([theme.id])
+    expect(Theme.transform_ids(theme.id)).to eq([theme.id])
   end
 
   it "doesn't allow multi-level theme components" do
@@ -171,19 +169,6 @@ HTML
     expect(Theme.lookup_field(theme.id, :desktop, :body_tag)).to match(/<b>test<\/b>/)
   end
 
-  it 'can find fields for multiple themes' do
-    theme2 = Fabricate(:theme)
-
-    theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
-    theme2.set_field(target: :common, name: :body_tag, value: "<b>theme2test</b>")
-    theme.save!
-    theme2.save!
-
-    field = Theme.lookup_field([theme.id, theme2.id], :desktop, :body_tag)
-    expect(field).to match(/<b>testtheme1<\/b>/)
-    expect(field).to match(/<b>theme2test<\/b>/)
-  end
-
   describe "#switch_to_component!" do
     it "correctly converts a theme to component" do
       theme.add_relative_theme!(:child, child)
@@ -229,25 +214,13 @@ HTML
     end
 
     it "returns an empty array if no ids are passed" do
-      expect(Theme.transform_ids([])).to eq([])
+      expect(Theme.transform_ids(nil)).to eq([])
     end
 
     it "adds the child themes of the parent" do
       sorted = [child.id, child2.id].sort
 
-      expect(Theme.transform_ids([theme.id])).to eq([theme.id, *sorted])
-
-      expect(Theme.transform_ids([theme.id, orphan1.id, orphan2.id])).to eq([theme.id, orphan1.id, *sorted, orphan2.id])
-    end
-
-    it "doesn't insert children when extend is false" do
-      fake_id = orphan2.id
-      fake_id2 = orphan3.id
-      fake_id3 = orphan4.id
-
-      expect(Theme.transform_ids([theme.id], extend: false)).to eq([theme.id])
-      expect(Theme.transform_ids([theme.id, fake_id3, fake_id, fake_id2, fake_id2], extend: false))
-        .to eq([theme.id, fake_id, fake_id2, fake_id3])
+      expect(Theme.transform_ids(theme.id)).to eq([theme.id, *sorted])
     end
   end
 
@@ -317,7 +290,12 @@ HTML
       theme.reload
       expect(theme.theme_fields.find_by(name: :scss).error).to eq(nil)
 
-      scss, _map = Stylesheet::Manager.new(:desktop_theme, theme.id).compile(force: true)
+      manager = Stylesheet::Manager.new(theme_id: theme.id)
+
+      scss, _map = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      ).compile(force: true)
+
       expect(scss).to include(upload.url)
     end
   end
@@ -328,7 +306,12 @@ HTML
       theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
       theme.save!
 
-      scss, _map = Stylesheet::Manager.new(:desktop_theme, theme.id).compile(force: true)
+      manager = Stylesheet::Manager.new(theme_id: theme.id)
+
+      scss, _map = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      ).compile(force: true)
+
       expect(scss).to include("background-color:red")
       expect(scss).to include("font-size:25px")
 
@@ -336,7 +319,10 @@ HTML
       setting.value = '30px'
       theme.save!
 
-      scss, _map = Stylesheet::Manager.new(:desktop_theme, theme.id).compile(force: true)
+      scss, _map = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      ).compile(force: true)
+
       expect(scss).to include("font-size:30px")
 
       # Escapes correctly. If not, compiling this would throw an exception
@@ -348,7 +334,10 @@ HTML
       theme.set_field(target: :common, name: :scss, value: 'body {font-size: quote($font-size)}')
       theme.save!
 
-      scss, _map = Stylesheet::Manager.new(:desktop_theme, theme.id).compile(force: true)
+      scss, _map = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      ).compile(force: true)
+
       expect(scss).to include('font-size:"#{$fakeinterpolatedvariable}\a andanothervalue \'withquotes\'; margin: 0;\a"')
     end
 
@@ -513,6 +502,20 @@ HTML
     json = JSON.parse(cached_settings(theme.id))
 
     expect(json["theme_uploads"]["bob"]).to eq(upload.url)
+  end
+
+  it 'does not break on missing uploads in settings' do
+    Theme.destroy_all
+
+    upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+    theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
+    theme.save!
+
+    Upload.find(upload.id).destroy
+    theme.clear_cached_settings!
+
+    json = JSON.parse(cached_settings(theme.id))
+    expect(json).to be_empty
   end
 
   it 'uses CDN url for theme_uploads in settings' do
@@ -749,16 +752,6 @@ HTML
 
   describe "automatic recompile" do
     it 'must recompile after bumping theme_field version' do
-      def stub_const(target, const, value)
-        old = target.const_get(const)
-        target.send(:remove_const, const)
-        target.const_set(const, value)
-        yield
-      ensure
-        target.send(:remove_const, const)
-        target.const_set(const, old)
-      end
-
       child.set_field(target: :common, name: "header", value: "World")
       child.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
       child.save!
@@ -814,8 +807,13 @@ HTML
     }}
 
     let(:compiler) {
-      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
-      manager.compile(force: true)
+      manager = Stylesheet::Manager.new(theme_id: theme.id)
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      )
+
+      builder.compile(force: true)
     }
 
     it "works when importing file by path" do
@@ -839,8 +837,13 @@ HTML
       child_theme.set_field(target: :common, name: :scss, value: '@import "my_files/moremagic"')
       child_theme.save!
 
-      manager = Stylesheet::Manager.new(:desktop_theme, child_theme.id)
-      css, _map = manager.compile(force: true)
+      manager = Stylesheet::Manager.new(theme_id: child_theme.id)
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: child_theme, manager: manager
+      )
+
+      css, _map = builder.compile(force: true)
       expect(css).to include("body{background:green}")
     end
   end

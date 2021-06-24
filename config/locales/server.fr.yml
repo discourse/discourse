@@ -103,7 +103,6 @@ fr:
       maximum_staged_user_per_email_reached: "Vous avez atteint le nombre maximal d'utilisateurs distants qui peuvent être créés par courriel."
       no_subject: "(aucun objet)"
       no_body: "(aucun texte)"
-      missing_attachment: "(Fichier %{filename} non trouvé)"
       errors:
         empty_email_error: "Se produit quand le courriel reçu était vide."
         no_message_id_error: "Se produit quand le courriel n'a pas d'entête « Message-Id »."
@@ -256,9 +255,6 @@ fr:
     not_enough_space_on_disk: "Il n'y a pas assez d'espace sur le disque pour charger cette sauvegarde."
     invalid_filename: "Le nom du fichier de sauvegarde contient des caractères invalides. Sont autorisés : a-z 0-9 . - _."
     file_exists: "Le fichier que vous essayer d'envoyer existe déjà."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
   invalid_params: "Vous avez fourni des paramètres invalides pour la requête : %{message}"
   not_logged_in: "Vous devez être connecté pour faire cela."
   not_found: "L'URL ou la ressource demandée n'a pas été retrouvée."
@@ -273,7 +269,6 @@ fr:
   invalid_whisper_access: "Les murmures ne sont pas activés ou vous n'avez pas accès à la création des messages murmurés."
   not_in_group:
     title_topic: "Vous devez demander l'adhésion au groupe « %{group} » pour voir ce sujet."
-    title_category: "Vous devez être dans un groupe pour voir cette catégorie."
     request_membership: "Demande d'adhésion"
     join_group: "Rejoindre le groupe"
   deleted_topic: "Ce sujet a été supprimé et n'est plus disponible."
@@ -1808,7 +1803,6 @@ fr:
     reviewable_claiming: "Les éléments à examiner doivent-ils être réservés avant de pouvoir être traités ?"
     reviewable_default_topics: "Par défaut, afficher les éléments à examiner en les regroupant par sujet"
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils n'aient ce niveau de priorité"
-    reviewable_low_priority_threshold: "Le filtre de niveau de priorité masque les éléments à examiner dont le score est inférieur au niveau spécifié, sauf lorsque le filtre '(tous)' est appliqué."
     high_trust_flaggers_auto_hide_posts: "Les messages des nouveaux utilisateurs seront automatiquement masqués après avoir été signalés comme spam par un utilisateur d'un niveau de confiance 3 et plus"
     cooldown_hours_until_reflag: "Combien de temps les utilisateurs doivent attendre avant de pouvoir signaler à nouveau un message"
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
@@ -2335,7 +2329,6 @@ fr:
     email_in_spam_header: "Le premier courriel de l'utilisateur a été signalé comme spam"
     already_silenced: "L'utilisateur a déjà été mis sous silence par %{staff} %{time_ago}."
     already_suspended: "L'utilisateur a déjà été suspendu par %{staff} %{time_ago}."
-    cannot_delete_has_posts: "L'utilisateur %{username} a déjà publié %{post_count} message(s) publics ou privés, ce qui l'empêche d'être supprimé."
   reviewables_reminder:
     submitted:
       one: "Ces éléments ont été soumis il y a plus de %{count} heure. [Nous vous invitons à les examiner](%{base_path}/review)."
@@ -4528,10 +4521,6 @@ fr:
       agree_and_hide:
         title: "Masquer le message"
         description: "Masquer le message et envoyer automatiquement un message à l'utilisateur l'incitant à le modifier."
-      delete_spammer:
-        title: "Supprimer le spammeur"
-        description: "Supprimer cet utilisateur et tous ses messages et sujets."
-        confirm: "Êtes-vous sûr de vouloir supprimer tous les messages et sujets de cet utilisateur, et bloquer ses adresses courriel et IP ?"
       delete_single:
         title: "Supprimer"
       delete:
@@ -4588,8 +4577,6 @@ fr:
       approve_and_restore:
         title: "Autoriser et Restaurer ce message"
       delete_user:
-        title: "Supprimer l'utilisateur"
-        confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cela va supprimer tous ses messages et bloquer ses adresses courriel et IP."
         reason: "Supprimé via la file des messages en attente d'examen"
   email_style:
     html_missing_placeholder: "Le modèle HTML doit inclure %{placeholder}"

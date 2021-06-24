@@ -269,6 +269,7 @@ sv:
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
     bookmarked:
       title: "Bokmärke"
+      edit_bookmark: "Redigera bokmärke"
       clear_bookmarks: "Töm bokmärken"
       help:
         bookmark: "Klicka för att bokmärka första inlägget i ämnet"
@@ -643,6 +644,8 @@ sv:
           enable_imap: "Aktivera IMAP"
           test_settings: "Testa inställningar"
           save_settings: "Spara inställningar"
+          last_updated: "Senast uppdaterat:"
+          last_updated_by: "av"
           settings_required: "Alla inställningar krävs. Fyll i alla fält innan valideringen."
           smtp_settings_valid: "SMTP-inställningar är giltiga."
           smtp_title: "SMTP"
@@ -671,7 +674,7 @@ sv:
           settings:
             title: "Inställningar"
             allow_unknown_sender_topic_replies: "Tillåt okända avsändares ämnesvar."
-            allow_unknown_sender_topic_replies_hint: "Tillåter okända avsändare att svara på gruppämnen. Om detta inte är aktiverat kommer svar från e-postadresser som inte redan ingår i IMAP-e-posttråden eller inbjudna till ämnet att skapa ett nytt ämne."
+            allow_unknown_sender_topic_replies_hint: "Tillåter okända avsändare att svara på gruppämnen. Om detta inte har aktiverats leder svar från e-postadresser som inte redan bjudits in till ämnet till att det skapas ett nytt ämne."
           mailboxes:
             synchronized: "Synkroniserad brevlåda"
             none_found: "Inga brevlådor hittades för detta e-postkonto."
@@ -2184,13 +2187,19 @@ sv:
         delete: "Ta bort ämnen"
         dismiss: "Avfärda"
         dismiss_read: "Avfärda alla olästa"
-        dismiss_read_with_selected: "Avfärda %{count} olästa"
+        dismiss_read_with_selected:
+          one: "Avfärda %{count} olästa"
+          other: "Avfärda %{count} olästa"
         dismiss_button: "Avfärda..."
-        dismiss_button_with_selected: "Avfärda (%{count})…"
+        dismiss_button_with_selected:
+          one: "Avfärda (%{count})…"
+          other: "Avfärda (%{count})…"
         dismiss_tooltip: "Avfärda nya inlägg eller sluta följa ämnen"
         also_dismiss_topics: "Sluta följa de här ämnena så att de aldrig syns som olästa för mig igen"
         dismiss_new: "Avfärda nya"
-        dismiss_new_with_selected: "Avfärda nya (%{count})"
+        dismiss_new_with_selected:
+          one: "Avfärda nya (%{count})"
+          other: "Avfärda nya (%{count})"
         toggle: "växla val av flertalet ämnen"
         actions: "Massändringar"
         change_category: "Sätt kategori"
@@ -2220,7 +2229,6 @@ sv:
         new: "Du har inga nya ämnen."
         read: "Du har inte läst några ämnen ännu."
         posted: "Du har inte postat i några ämnen ännu."
-        ready_to_create: "Redo att "
         latest: "Ni är alla ikapp!"
         bookmarks: "Du har inga bokmärkta ämnen ännu."
         category: "Det finns inga ämnen i %{category}."
@@ -2310,7 +2318,7 @@ sv:
       browse_all_categories: Bläddra bland alla kategorier
       browse_all_tags: Bläddra bland alla taggar
       view_latest_topics: visa senaste ämnen
-      suggest_create_topic: starta en ny konversation?
+      suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
       jump_reply_up: hoppa till tidigare svar
       jump_reply_down: hoppa till senare svar
       deleted: "Ämnet har raderats"
@@ -3280,7 +3288,7 @@ sv:
         show_incoming_updated_topics: "%{shortcut} Visa uppdaterade ämnen"
         search: "%{shortcut} Sök"
         help: "%{shortcut} Öppna tangentbordshjälp"
-        dismiss_new_posts: "%{shortcut} Avfärda nya/inlägg"
+        dismiss_new: "%{shortcut} Avfärda nya"
         dismiss_topics: "%{shortcut} Avfärda ämnen"
         log_out: "%{shortcut} Logga ut"
       composing:
@@ -3605,6 +3613,7 @@ sv:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Sökloggar</a>'
             disabled: 'Trendsökrapporten är inaktiverad. Aktivera <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">sökfrågor för loggar</a> för att samla data.'
+          average_chart_label: Genomsnitt
           filters:
             file_extension:
               label: Filändelse
@@ -3732,6 +3741,8 @@ sv:
               write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
               read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
               wordpress: Nödvändigt för att WordPress-tillägget wp-discourse ska fungera.
+            posts:
+              edit: Redigera ett inlägg eller ett specifikt inlägg.
             users:
               bookmarks: Lista användarbokmärken. Det returnerar bokmärkespåminnelser när ICS-formatet används.
               sync_sso: Synkronisera en användare med DiscourseConnect.
@@ -4478,7 +4489,7 @@ sv:
           upload_successful: "Uppladdning lyckades. Ord har lagts till."
         test:
           button_label: "Testa"
-          modal_title: "Testa %{action} bevakade ord"
+          modal_title: "%{action}: Testa bevakade ord"
           description: "Ange text nedan för att leta efter matchningar med bevakade ord"
           found_matches: "Hittade matchande:"
           no_matches: "Hittades inga matchningar"

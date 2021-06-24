@@ -119,6 +119,15 @@
     }
   }
 
+  .average-chart {
+    padding: 0.5em;
+    border: 1px solid var(--highlight-high);
+    color: var(--highlight-high);
+    margin-bottom: 1em;
+    text-align: center;
+    background: var(--highlight-low);
+  }
+
   .filters {
     display: flex;
     margin-left: 1em;

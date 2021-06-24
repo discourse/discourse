@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "demon/rails_autospec"
-require 'rbconfig'
+require "chrome_installed_checker"
 
 module Autospec
 
@@ -38,10 +38,8 @@ module Autospec
 
     require "socket"
 
-    class ChromeNotInstalled < StandardError; end
-
     def initialize
-      ensure_chrome_is_installed
+      ChromeInstalledChecker.run
     end
 
     def start
@@ -116,21 +114,6 @@ module Autospec
     end
 
     private
-
-    def ensure_chrome_is_installed
-      if RbConfig::CONFIG['host_os'][/darwin|mac os/]
-        binary = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-      elsif system("command -v google-chrome-stable >/dev/null;")
-        binary = "google-chrome-stable"
-      end
-      binary ||= "google-chrome" if system("command -v google-chrome >/dev/null;")
-
-      raise ChromeNotInstalled.new if !binary
-
-      if Gem::Version.new(`\"#{binary}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
-        raise "Chrome 59 or higher is required"
-      end
-    end
 
     def port_available?(port)
       TCPServer.open(port).close

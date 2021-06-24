@@ -641,6 +641,7 @@ pt:
           enable_imap: "Ativar IMAP"
           test_settings: "Testar Configurações"
           save_settings: "Guardar Configurações"
+          last_updated_by: "por"
           settings_required: "Todas as configurações são necessárias, por favor preencha todos os campos antes da validação."
           smtp_settings_valid: "Configurações SMTP válidas."
           smtp_title: "SMTP"
@@ -669,7 +670,6 @@ pt:
           settings:
             title: "Configurações"
             allow_unknown_sender_topic_replies: "Permitir respostas a tópicos por remetentes desconhecidos."
-            allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos respondam aos tópicos do grupo. Se não estiver ativado, as respostas de endereços de e-mail ainda não incluídos no tópico de e-mail IMAP ou convidados para o tópico criarão um novo tópico."
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Não foram encontradas caixas de correio nesta conta de e-mail."
@@ -2085,7 +2085,6 @@ pt:
         new: "Não tem novos tópicos."
         read: "Ainda não leu nenhum tópico."
         posted: "Ainda não publicou em nenhum tópico."
-        ready_to_create: "Pronto para "
         latest: "Está tudo atualizado!"
         bookmarks: "Ainda não marcou nenhum tópico."
         category: "Não há tópicos na categoria %{category}."
@@ -2919,7 +2918,6 @@ pt:
         user_profile_menu: "%{shortcut} Abrir menu de utilizador"
         show_incoming_updated_topics: "%{shortcut} Mostrar tópicos atualizados"
         help: "%{shortcut} Abrir ajuda do teclado"
-        dismiss_new_posts: "%{shortcut} Marcar Visto Novos/Publicações"
         dismiss_topics: "%{shortcut} Marcar Visto Tópicos"
         log_out: "%{shortcut} Sair"
       bookmarks:

@@ -1198,8 +1198,6 @@ cs:
       agree_and_hide:
         title: "Schovat příspěvek"
         description: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
-      delete_spammer:
-        title: "Odstranit spamera"
       delete_single:
         title: "Smazat"
       disagree_and_restore:
@@ -1215,8 +1213,6 @@ cs:
           title: "Smazat uživatele"
       reject:
         title: "Odmítnout"
-      delete_user:
-        title: "Smazat uživatele"
   activemodel:
     errors:
       <<: *errors

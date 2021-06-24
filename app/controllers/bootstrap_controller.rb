@@ -34,7 +34,7 @@ class BootstrapController < ApplicationController
     ).each do |file|
       add_style(file, plugin: true)
     end
-    add_style(mobile_view? ? :mobile_theme : :desktop_theme) if theme_ids.present?
+    add_style(mobile_view? ? :mobile_theme : :desktop_theme) if theme_id.present?
 
     extra_locales = []
     if ExtraLocalesController.client_overrides_exist?
@@ -51,7 +51,7 @@ class BootstrapController < ApplicationController
     ).map { |f| script_asset_path(f) }
 
     bootstrap = {
-      theme_ids: theme_ids,
+      theme_id: theme_id,
       title: SiteSetting.title,
       current_homepage: current_homepage,
       locale_script: locale,
@@ -75,15 +75,14 @@ class BootstrapController < ApplicationController
 private
   def add_scheme(scheme_id, media)
     return if scheme_id.to_i == -1
-    theme_id = theme_ids&.first
 
-    if style = Stylesheet::Manager.color_scheme_stylesheet_details(scheme_id, media, theme_id)
+    if style = Stylesheet::Manager.new(theme_id: theme_id).color_scheme_stylesheet_details(scheme_id, media)
       @stylesheets << { href: style[:new_href], media: media }
     end
   end
 
   def add_style(target, opts = nil)
-    if styles = Stylesheet::Manager.stylesheet_details(target, 'all', theme_ids)
+    if styles = Stylesheet::Manager.new(theme_id: theme_id).stylesheet_details(target, 'all')
       styles.each do |style|
         @stylesheets << {
           href: style[:new_href],
@@ -117,11 +116,11 @@ private
 
     theme_view = mobile_view? ? :mobile : :desktop
 
-    add_if_present(theme_html, :body_tag, Theme.lookup_field(theme_ids, theme_view, 'body_tag'))
-    add_if_present(theme_html, :head_tag, Theme.lookup_field(theme_ids, theme_view, 'head_tag'))
-    add_if_present(theme_html, :header, Theme.lookup_field(theme_ids, theme_view, 'header'))
-    add_if_present(theme_html, :translations, Theme.lookup_field(theme_ids, :translations, I18n.locale))
-    add_if_present(theme_html, :js, Theme.lookup_field(theme_ids, :extra_js, nil))
+    add_if_present(theme_html, :body_tag, Theme.lookup_field(theme_id, theme_view, 'body_tag'))
+    add_if_present(theme_html, :head_tag, Theme.lookup_field(theme_id, theme_view, 'head_tag'))
+    add_if_present(theme_html, :header, Theme.lookup_field(theme_id, theme_view, 'header'))
+    add_if_present(theme_html, :translations, Theme.lookup_field(theme_id, :translations, I18n.locale))
+    add_if_present(theme_html, :js, Theme.lookup_field(theme_id, :extra_js, nil))
 
     theme_html
   end

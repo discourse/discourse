@@ -98,7 +98,7 @@ module Stylesheet
       message = targets.map! do |name|
         msgs = []
         active_themes.each do |theme_id|
-          msgs << Stylesheet::Manager.stylesheet_data(name.to_sym, theme_id)
+          msgs << Stylesheet::Manager.new(theme_id: theme_id).stylesheet_data(name.to_sym)
         end
         msgs
       end.flatten!
@@ -116,7 +116,7 @@ module Stylesheet
       message = targets.map! do |name|
         msgs = []
         active_themes.each do |theme_id|
-          msgs << Stylesheet::Manager.stylesheet_data(name.to_sym, theme_id)
+          msgs << Stylesheet::Manager.new(theme_id: theme_id).stylesheet_data(name.to_sym)
         end
         msgs
       end.flatten!
