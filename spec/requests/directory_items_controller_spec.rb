@@ -53,6 +53,16 @@ describe DirectoryItemsController do
       expect(json['meta']['load_more_directory_items']).to include('.json')
     end
 
+    it "respects more_params in load_more_directory_items" do
+      get '/directory_items.json', params: { period: 'all', order: "likes_given", group: group.name }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      expect(json['meta']['load_more_directory_items']).to include("group=#{group.name}")
+      expect(json['meta']['load_more_directory_items']).to include("order=likes_given")
+      expect(json['meta']['load_more_directory_items']).to include("period=all")
+    end
+
     it "fails when the directory is disabled" do
       SiteSetting.enable_user_directory = false
 

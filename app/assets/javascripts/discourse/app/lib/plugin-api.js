@@ -951,8 +951,6 @@ class PluginApi {
   /**
    * Registers a pre-processor for file uploads
    * See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#file-processing-options
-   * Your theme/plugin will also need to load https://github.com/blueimp/jQuery-File-Upload/blob/v10.13.0/js/jquery.fileupload-process.js
-   * for this hook to work.
    *
    * Useful for transforming to-be uploaded files client-side
    *

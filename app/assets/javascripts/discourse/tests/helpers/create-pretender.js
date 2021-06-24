@@ -1036,7 +1036,7 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("directory-columns.json", () => {
+  pretender.get("/directory-columns.json", () => {
     return response(200, {
       directory_columns: [
         {

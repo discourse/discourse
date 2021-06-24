@@ -668,15 +668,10 @@ en:
       member_added: "Added"
       member_requested: "Requested at"
       add_members:
-        title: "Add members to %{group_name}"
-        description: "You can also paste in a comma separated list."
-        usernames_or_emails:
-          title: "Enter usernames or email addresses"
-          input_placeholder: "Usernames or emails"
-        usernames:
-          title: "Enter usernames"
-          input_placeholder: "Usernames"
+        title: "Add Users to %{group_name}"
+        description: "Enter a list of users you want to invite to the group or paste in a comma separated list:"
         notify_users: "Notify users"
+        set_owner: "Set users as owners of this group"
       requests:
         title: "Requests"
         reason: "Reason"
@@ -690,7 +685,8 @@ en:
         title: "Manage"
         name: "Name"
         full_name: "Full Name"
-        add_members: "Add Members"
+        add_members: "Add Users"
+        invite_members: "Invite"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         profile:
           title: Profile
@@ -3926,8 +3922,6 @@ en:
             available: "Group name is available"
             not_available: "Group name is not available"
             blank: "Group name cannot be blank"
-        add_members:
-          as_owner: "Set user(s) as owner(s) of this group"
         manage:
           interaction:
             email: Email
