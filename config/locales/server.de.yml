@@ -100,7 +100,7 @@ de:
     incoming:
       default_subject: "Dieses Thema benötigt einen Titel"
       show_trimmed_content: "Zeige gekürzten Inhalt"
-      maximum_staged_user_per_email_reached: "Maximale Anzahl vorbereiteter Benutzer erreicht, die automatisch per E-Mail erstellt wurden."
+      maximum_staged_user_per_email_reached: "Maximale Anzahl vorbereiteter Benutzer erreicht, die per E-Mail erstellt wurden."
       no_subject: "(kein Betreff)"
       no_body: "(kein Inhalt)"
       errors:
@@ -187,7 +187,7 @@ de:
         one: "Du hast die ungültige Auswahl %{name} getroffen"
         other: "Du hast die ungültige Auswahl %{name} getroffen"
       default_categories_already_selected: "Du kannst keine Kategorie auswählen, welche bereits in einer anderen Liste benutzt wird."
-      default_tags_already_selected: "Du kannst keinen Tag wählen, der in einer anderen Liste verwendet wird."
+      default_tags_already_selected: "Du kannst kein Schlagwort wählen, das in einer anderen Liste verwendet wird."
       s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
       enable_s3_uploads_is_required: "Der S3-Bestand setzt voraus, dass S3-Uploads aktiviert sind."
       page_publishing_requirements: "Die Veröffentlichung von Seiten kann nicht aktiviert werden, wenn sichere Medien aktiviert sind."
@@ -206,8 +206,8 @@ de:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server '%{hostname}' nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in Deinem Beitrag. :cry:"
       error_response: "Es tut uns leid, wir konnten keine Vorschau für diese Webseite erstellen, da der Webserver einen Fehlercode von %{status_code} zurückgegeben hat. Statt einer Vorschau erscheint nur ein Link in Deinem Beitrag. :cry:"
       missing_data:
-        one: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da das folgende oEmbed / OpenGraph Tag nicht gefunden werden konnte: %{missing_attributes}"
-        other: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da die folgenden oEmbed / OpenGraph Tags nicht gefunden werden konnten: %{missing_attributes}"
+        one: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da das folgende oEmbed-/OpenGraph-Tag nicht gefunden werden konnte: %{missing_attributes}"
+        other: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da die folgenden oEmbed-/OpenGraph-Tags nicht gefunden werden konnten: %{missing_attributes}"
   word_connector:
     comma: ", "
   invite:
@@ -337,7 +337,7 @@ de:
   max_pm_recipients: "Sorry, du kannst eine Nachricht nur an maximal %{recipients_limit} Emfpänger senden."
   pm_reached_recipients_limit: "Entschuldige, aber Du kannst nicht mehr als %{recipients_limit} Empfänger in einer Nachricht haben."
   removed_direct_reply_full_quotes: "Automatisch entferntes Zitat des gesamten vorherigen Beitrags."
-  watched_words_auto_tag: "Thema automatisch markiert"
+  watched_words_auto_tag: "Thema automatisch mit Schlagwort versehen"
   secure_upload_not_allowed_in_public_topic: "Entschuldigung, der/die folgende/n sichere Upload(s) konnte nicht in einem öffentlichen Thema verwendet werden: %{upload_filenames}."
   create_pm_on_existing_topic: "Entschuldigung, du kannst keine PM für ein exisiterendes Thema erstellen."
   slow_mode_enabled: "Dieses Thema befindet sich im langsamen Modus."
@@ -440,13 +440,13 @@ de:
       one: "%{count} Beitrag"
       other: "%{count} Beiträge"
     "new-topic": |
-      Willkommen bei %{site_name} &mdash; **danke, für das Erstellen eines neuen Themas!**
+      Willkommen bei %{site_name} &mdash; **danke für das Erstellen eines neuen Themas!**
 
       - Klingt der Titel interessant, wenn du ihn laut liest? Ist er eine gute Zusammenfassung?
 
-      - Wer würde sich für dieses Thema interessieren? Warum ist es wichtig? Welche Art Antworten wünschst du dir?
+      - Wer würde sich für dieses Thema interessieren? Warum ist es wichtig? Welche Art von Antworten wünschst du dir?
 
-      - Verwende gebräuchliche, gut definierte Wörter, damit andere das Thema *finden* können. Wähle eine Kategorie (oder einen Tag), um es mit ähnlichen Themen zu gruppieren.
+      - Verwende gebräuchliche Wörter, damit andere das Thema *finden* können. Wähle eine Kategorie (oder ein Schlagwort), um es mit ähnlichen Themen zu gruppieren.
 
       Mehr Tipps findest du in [unseren Community-Richtlinien](%{base_path}/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
     "new-reply": |
@@ -526,7 +526,7 @@ de:
               send_to_email_disabled: "Entschuldige, du kannst keine persönlichen Nachrichen an E-Mail senden."
               target_user_not_found: "Einer der Empfänger dieser Nachricht konnte nicht gefunden werden."
               unable_to_update: "Beim Aktualisieren dieses Themas ist ein Fehler aufgetreten."
-              unable_to_tag: "Beim Markieren des Themas ist ein Fehler aufgetreten."
+              unable_to_tag: "Beim Versehen des Themas mit einem Schlagwort ist ein Fehler aufgetreten."
             featured_link:
               invalid: "ist ungültig. URL sollte http:// oder https:// enthalten."
               invalid_category: "kann in dieser Kategorie nicht bearbeitet werden."
@@ -647,8 +647,8 @@ de:
       email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
       description_incomplete: "Die Kategorie-Beschreibung muss mindestens einen Absatz enthalten."
       permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie erhalten. Folgende Gruppen haben Zugriff auf eine der Unterkategorien, aber keinen Zugriff auf die übergeordnete Kategorie: %{group_names}."
-      disallowed_topic_tags: "Dieses Thema hat Tags, die in dieser Kategorie nicht erlaubt sind: '%{tags}'"
-      disallowed_tags_generic: "Dieses Thema hat unerlaubte Tags."
+      disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
+      disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien besitzt."
@@ -1406,9 +1406,9 @@ de:
     allow_duplicate_topic_titles_category: "Lassen Sie Themen mit identischen, doppelten Titeln zu, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss false sein."
     unique_posts_mins: "Minuten, nach denen ein Benutzer denselben Inhalt noch einmal schreiben kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor sobald ein Benutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
-    title: "Der Name dieser Site, wird für das Title-Tag verwendet."
-    site_description: "Beschreibe diese Site in einem Satz. Wird für das \"description\" Meta-Tag verwendet."
-    short_site_description: "Kurze Beschreibung, die im Title-Tag auf der Webseite verwendet wird."
+    title: "Der Name dieser Website. Wird für das „title“-Tag verwendet."
+    site_description: "Beschreibe diese Website in einem Satz. Wird für das „description“-Meta-Tag verwendet."
+    short_site_description: "Kurze Beschreibung, die im „title“-Tag auf der Homepage verwendet wird."
     contact_url: "Kontakt-URL für diese Seite. Angezeigt auf der <a href='%{base_path}/about' target='_blank'>/about</a> Seite für dringende Fragen."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
@@ -1439,7 +1439,7 @@ de:
     enable_inline_onebox_on_all_domains: "Ignoriere die `inline_onebox_domain_allowlist`-Seiteneinstellung und erlaube Inline-Oneboxen für alle Domains"
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren)."
     max_oneboxes_per_post: "Maximale Anzahl von Oneboxes in einem Beitrag."
-    facebook_app_access_token: "Ein Token, das aus Ihrer Facebook-App-ID und Ihrem Geheimnis generiert wurde. Wird verwendet, um Instagram-Oneboxen zu generieren."
+    facebook_app_access_token: "Ein Token, das aus deiner Facebook-App-ID und deinem Geheimnis generiert wird. Wird verwendet, um Instagram-Oneboxes zu generieren."
     logo: "Das Logo oben links auf deiner Seite. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1. Wenn leer, wird die Seitenüberschrift angezeigt."
     logo_small: "Kleine Logo-Grafik oben links auf der Seite, die beim Herunterscrollen angezeigt wird. Verwende ein quadratisches 120 × 120 Bild . Falls leer wird ein \"Home\" Zeichen angezeigt."
     digest_logo: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Seite. Verwende ein breites rechteckiges Bild. Verwende kein SVG-Bild. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
@@ -1505,11 +1505,11 @@ de:
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
-    ga_version: "Zu verwendende Version von Google Universal Analytics: v3 (analyse.js), v4 (gtag)"
+    ga_version: "Zu verwendende Version von Google Universal Analytics: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Aktiviere die domänenübergreifende Verfolgung von Google Universal Analytics. Bei ausgehenden Links zu diesen Domänen wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
-    gtm_container_id: "Google Tag Manager Container-ID. z.B.: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssten in der 'content security policy script src' Liste erlaubt werden."
+    gtm_container_id: "Google-Tag-Manager-Container-ID. Zum Beispiel: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssen unter Umständen in der Liste „content security policy script src“ erlaubt werden („allowlisted“)."
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu verwalten"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
@@ -1908,7 +1908,7 @@ de:
     ignored_users_count_message_threshold: "Informiere die Moderatoren wenn ein bestimmter Benutzer von so vielen anderen Benutzern ignoriert wird."
     ignored_users_message_gap_days: "Wie lange gewartet werden soll, bevor die Moderatoren erneut über einen Benutzer informiert werden, der von vielen anderen ignoriert wird."
     clean_up_inactive_users_after_days: "Anzahl von Tagen, nach denen ein inaktiver Benutzer (Vertrauensstufe 0 ohne irgendwelche Beiträge) entfernt wird. Zum Deaktivieren auf 0 setzen."
-    clean_up_unused_staged_users_after_days: "Anzahl der Tage, bevor ein nicht verwendeter bereitgestellter Benutzer (ohne Beiträge) entfernt wird. Zum Deaktivieren der Bereinigung auf 0 setzen."
+    clean_up_unused_staged_users_after_days: "Anzahl der Tage, bevor ein inaktiver vorbereiteter Benutzer (ohne Beiträge) entfernt wird. Zum Deaktivieren der Bereinigung auf 0 setzen."
     user_selected_primary_groups: "Erlaube Benutzern, ihre primäre Gruppe selbst zu setzen"
     max_notifications_per_user: "Die maximale Anzahl von Benachrichtigungen pro Benutzer, wenn diese Anzahl überschritten wird, werden alte Benachrichtigungen gelöscht. Wöchentlich erzwungen. Zum Deaktivieren auf 0 setzen"
     allowed_user_website_domains: "Die Website des Nutzers wird gegen diese Domains verifiziert. Pipe-getrennte Liste."
@@ -1916,7 +1916,7 @@ de:
     sequential_replies_threshold: "Anzahl an Beiträgen die ein Benutzer machen muss, um benachrichtigt zu werden, dass er zu viele aufeinanderfolgende Antworten schreibt."
     get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im gleichen Thema an die gleiche Person schreiben muss, bevor er gewarnt wird."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Site zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
-    dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
+    dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihr Profilbild ändern können"
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
     header_dropdown_category_count: "Wie viele Kategorien im der Header Dropdown-Liste angezeigt werden können."
@@ -1927,7 +1927,7 @@ de:
     likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere Like-Benachrichtigungen zu einer einzelnen Benachrichtigung zusammengefasst werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann mittels `SiteSetting.notification_consolidation_threshold` eingestellt werden."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
-    topic_page_title_includes_category: "Themen-Seite <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>title tag</a> enthält einen Kategorienamen."
+    topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>„title“-Tag</a> der Themen-Seite enthält einen Kategorienamen."
     native_app_install_banner_ios: "Zeigt das DiscourseHub Applikationsbanner auf iOS Geräten für Stammgäste (Vertrauensstufe 1 und höher) an."
     native_app_install_banner_android: "Zeigt das DiscourseHub Applikationsbanner auf Android Geräten für Stammgäste (Vertrauensstufe 1 und höher) an."
     app_association_android: "Inhalte vom <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> Endpunkt, für Googles Digital Asset Links API verwendet."
@@ -2017,10 +2017,10 @@ de:
     default_categories_watching_first_post: "Liste von Kategorien, in denen der erste Beiträge in jedem neuen Thema automatisch beobachtet wird."
     default_categories_regular: "Liste der Kategorien, die nicht standardmäßig stumm sind. Nützlich, wenn `mute_all_categories_by_default` Einstellung aktiviert ist."
     mute_all_categories_by_default: "Setze die Standard E-Mail Benachrichtigungs-Stufe für alle Kategorien auf stummgeschaltet. Benötigt die Zustimmung der Benutzer, damit sie in \"neueste\" und Kategorien-Seiten erscheinen. Um den Standard für anonyme Benutzer anzupassen, müssen 'default_categories_' Einstellungen gesetzt werden."
-    default_tags_watching: "Liste der Tags, die standardmäßig beobachtet werden."
-    default_tags_tracking: "Liste der Tags, die standardmäßig verfolgt werden."
-    default_tags_muted: "Liste der Tags, die standardmäßig stummgeschaltet werden."
-    default_tags_watching_first_post: "Liste der Tags, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
+    default_tags_watching: "Liste der Schlagwörter, die standardmäßig beobachtet werden."
+    default_tags_tracking: "Liste der Schlagwörter, die standardmäßig verfolgt werden."
+    default_tags_muted: "Liste der Schlagwörter, die standardmäßig stummgeschaltet werden."
+    default_tags_watching_first_post: "Liste der Schlagwörter, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
     default_text_size: "Schriftgröße, die standardmäßig ausgewählt ist"
     default_title_count_mode: "Standardmodus für den Seitentitel-Zähler"
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Web-Hook-Ereigniseinträge aufbewahrt werden"
@@ -2039,7 +2039,7 @@ de:
     max_tag_search_results: "Maximale Ergebnisanzahl bei der Suche nach Schlagwörtern."
     max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in einer Dropdown-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
-    tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwort-Gruppe an."
+    tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwortgruppe an."
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
     allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu markieren."
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."

@@ -678,12 +678,12 @@ de:
         tags:
           title: Schlagwörter
           long_title: "Standardbenachrichtigungen für Schlagwörter"
-          description: "Wenn Benutzer zu dieser Gruppe hinzugefügt werden, werden ihre Einstellungen für die Tag-Benachrichtigung auf diese Standardeinstellungen festgelegt. Danach können sie sie ändern."
-          watched_tags_instructions: "Beobachte automatisch alle Themen mit diesen Tags. Gruppenmitglieder werden über alle neuen Beiträge und Themen informiert, und neben dem Thema wird auch eine Anzahl neuer Beiträge angezeigt."
-          tracked_tags_instructions: "Verfolge automatisch alle Themen mit diesen Tags. Neben dem Thema wird eine Anzahl neuer Beiträge angezeigt."
-          watching_first_post_tags_instructions: "Benutzer werden mit diesen Tags über den ersten Beitrag in jedem neuen Thema informiert."
-          regular_tags_instructions: "Wenn diese Tags stummgeschaltet sind, werden sie für Gruppenmitglieder nicht stummgeschaltet. Benutzer werden benachrichtigt, wenn sie erwähnt werden oder jemand auf sie antwortet."
-          muted_tags_instructions: "Benutzer werden mit diesen Tags nicht über neue Themen informiert, und sie werden nicht unter Aktuell angezeigt."
+          description: "Wenn Benutzer zu dieser Gruppe hinzugefügt werden, werden ihre Einstellungen für die Schlagwort-Benachrichtigung auf diese Standardeinstellungen festgelegt. Danach können sie sie ändern."
+          watched_tags_instructions: "Beobachte automatisch alle Themen mit diesen Schlagwörtern. Gruppenmitglieder werden über alle neuen Beiträge sowie Themen informiert und neben dem Thema wird auch die Anzahl neuer Beiträge angezeigt."
+          tracked_tags_instructions: "Verfolge automatisch alle Themen mit diesen Schlagwörtern. Neben dem Thema wird die Anzahl neuer Beiträge angezeigt."
+          watching_first_post_tags_instructions: "Benutzer werden über den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern informiert."
+          regular_tags_instructions: "Wenn diese Schlagwörter stummgeschaltet sind, werden sie für Gruppenmitglieder nicht stummgeschaltet. Benutzer werden benachrichtigt, wenn sie erwähnt werden oder jemand auf sie antwortet."
+          muted_tags_instructions: "Benutzer werden nicht über neue Themen mit diesen Schlagwörtern benachrichtigt und sie werden nicht unter „Aktuell“ angezeigt."
         logs:
           title: "Protokoll"
           when: "Wann"
@@ -980,7 +980,7 @@ de:
         Beginne Lesezeichen von Beiträgen mit der Schaltfläche %{icon} zu setzen und sie werden hier zum einfachen Nachschlagen aufgeführt. Du kannst auch eine Erinnerung vereinbaren!
       no_notifications_title: "Du hast noch keine Benachrichtigungen"
       no_notifications_body: >
-        Du wirst in diesem Panel über für Dich direkt relevante Aktivitäten benachrichtigt einschließlich Antworten auf Deine Themen, wenn jemand mit <b>@mentions</b> Dich erwähnt oder auf Dich antwortet bei Themen, die Du beobachtest. Benachrichtigungen werden auch an Deine E-Mail gesendet, wenn Du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach der %{icon} -Taste, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörter Du neachrichtigt werden möchtest. Für weiteres schaue in die <a href='%{preferencesUrl}'>Benutzereinstellungen</a>.
+        Du wirst in diesem Panel über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn jemand mit <b>@mentions</b> dich erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
@@ -2188,13 +2188,13 @@ de:
           other: "Du hast <b>%{count}</b> Themen ausgewählt."
         change_tags: "Schlagwörter ersetzen"
         append_tags: "Schlagwörter hinzufügen"
-        choose_new_tags: "Neue Schlagwörter für die gewählten Themen wählen:"
+        choose_new_tags: "Neue Schlagwörter für diese Themen wählen:"
         choose_append_tags: "Wähle neue Schlagwörter, die diesen Themen hinzugefügt werden sollen:"
-        changed_tags: "Die Schlagwörter der gewählten Themen wurden geändert."
-        remove_tags: "Alle Tags entfernen"
+        changed_tags: "Die Schlagwörter dieser Themen wurden geändert."
+        remove_tags: "Alle Schlagwörter entfernen"
         confirm_remove_tags:
-          one: "Alle Tags werden aus diesem Thema entfernt. Sind Sie sicher?"
-          other: "Alle Tags werden aus <b>%{count}</b> Themen entfernt. Sind Sie sicher?"
+          one: "Alle Schlagwörter werden aus diesem Thema entfernt. Bist du sicher?"
+          other: "Alle Schlagwörter werden aus <b>%{count}</b> Themen entfernt. Bist du sicher?"
         progress:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
@@ -2217,7 +2217,7 @@ de:
         new: "Das waren alle neuen Themen."
         unread: "Das waren alle ungelesen Themen."
         category: "Das waren alle Themen in der Kategorie „%{category}“."
-        tag: "Das waren alle Themen in der Kategorie „%{tag}“."
+        tag: "Das waren alle Themen mit dem Schlagwort „%{tag}“."
         top: "Das waren alle angesagten Themen."
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
     topic:
@@ -2290,7 +2290,7 @@ de:
       read_more_MF: "Du {UNREAD, plural, =0 {} one {hast <a href='{basePath}/unread'>ein ungelesenes</a> Thema } other {hast <a href='{basePath}/unread'># ungelesene</a> Themen } } {NEW, plural, =0 {} one { {BOTH, select, true{und } false {hast } other{}} <a href='{basePath}/new'>ein neues</a> Thema} other { {BOTH, select, true{und } false {hast } other{}} <a href='{basePath}/new'># neue</a> Themen} }. Oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle Kategorien durchsehen
-      browse_all_tags: Alle Tags durchsuchen
+      browse_all_tags: Alle Schlagwörter durchsuchen
       view_latest_topics: aktuelle Themen anzeigen
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
@@ -2892,14 +2892,14 @@ de:
       tags_allowed_tags: "Schlagwörter auf diese Kategorie einschränken:"
       tags_allowed_tag_groups: "Schlagwortgruppen auf diese Kategorie einschränken:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
-      tags_tab_description: "Die oben spezifizierten Tags und Tag-Gruppen werden nur in dieser Kategorie und anderen Kategorien, für die sie ebenfalls spezifiziert sind, verfügbar sein. Darüber hinaus werden sie nicht in weiteren Kategorien verwendbar sein."
-      tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
-      manage_tag_groups_link: "Schlagwort-Gruppen verwalten"
+      tags_tab_description: "Die oben spezifizierten Schlagwörter und Schlagwortgruppen werden nur in dieser Kategorie und anderen Kategorien, für die sie ebenfalls spezifiziert sind, verfügbar sein. Darüber hinaus werden sie nicht in weiteren Kategorien verwendbar sein."
+      tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwortgruppen"
+      manage_tag_groups_link: "Schlagwortgruppen verwalten"
       allow_global_tags_label: "Erlaube auch andere Schlagwörter."
-      tag_group_selector_placeholder: "(Optional) Tag Gruppe"
-      required_tag_group_description: "Neue Themen müssen Tags von einer Tag Gruppe haben:"
-      min_tags_from_required_group_label: "Num Tags:"
-      required_tag_group_label: "Tag Gruppe:"
+      tag_group_selector_placeholder: "(Optional) Schlagwortgruppe"
+      required_tag_group_description: "Neue Themen müssen Schlagwörter aus einer Schlagwortgruppe haben:"
+      min_tags_from_required_group_label: "Anz. Schlagwörter:"
+      required_tag_group_label: "Schlagwortgruppe:"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
       delete: "Kategorie löschen"
       create: "Neue Kategorie"
@@ -2969,7 +2969,7 @@ de:
       default_position: "Standardposition"
       position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern, "
       position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
-      minimum_required_tags: "Minimal Anzahl an Schlagwörtern, die ein Thema erfordert"
+      minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       parent: "Übergeordnete Kategorie"
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
@@ -3344,16 +3344,16 @@ de:
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
-      selector_all_tags: "Alle Schlagwörter"
+      selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
       changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
       info: "Info"
-      default_info: "Dieses Schlagwort ist nicht auf irgendwelche Kategorien beschränkt und hat keine Synonyme. Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwort-Gruppe</a> hinzu."
-      category_restricted: "Dieser Tag ist auf Kategorien begrenzt, für die du keine Zugriffsberechtigung hast."
+      default_info: "Dieses Schlagwort ist nicht auf bestimmte Kategorien beschränkt und hat keine Synonyme. Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
+      category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
-      synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name} </b> ersetzt."
+      synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
       tag_groups_info:
         one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}”.'
         other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
@@ -3365,13 +3365,13 @@ de:
       add_synonyms: "Hinzufügen"
       add_synonyms_explanation:
         one: "Jede Stelle, die dieses Schlagwort aktuell verwendet, wird auf die Verwendung von <b>%{tag_name}</b> geändert. Bist du sicher, dass diese Änderung erfolgen soll?"
-        other: "Jede Stelle, die dieses Schlagwort aktuell verwendet, wird auf die Verwendung von <b>%{tag_name}</b> geändert. Bist du sicher, dass diese Änderung erfolgen soll?"
-      add_synonyms_failed: "Die folgenden Schlagwörter konnten nicht als Synonyme hinzugefügt werden: <b>%{tag_names}</b> . Stellen Sie sicher, dass sie keine Synonyme und keine Synonyme eines anderen Schlagwortes bereits haben."
+        other: "Jede Stelle, die diese Schlagwörter aktuell verwendet, wird auf die Verwendung von <b>%{tag_name}</b> geändert. Bist du sicher, dass diese Änderung erfolgen soll?"
+      add_synonyms_failed: "Die folgenden Schlagwörter konnten nicht als Synonyme hinzugefügt werden: <b>%{tag_names}</b>. Stelle sicher, dass sie keine Synonyme haben und keine Synonyme eines anderen Schlagworts sind."
       remove_synonym: "Synonym entfernen"
-      delete_synonym_confirm: 'Bist du dir sicher das du das folgende Synonym entfernen möchtest "%{tag_name}" ?'
-      delete_tag: "Schlagwört löschen"
+      delete_synonym_confirm: 'Bist du sicher, dass du das Synonym „%{tag_name}“ löschen möchtest?'
+      delete_tag: "Schlagwort löschen"
       delete_confirm:
-        one: "Bist du sicher, dass du dieses Schlagwort löschen und von einem zugeordneten Thema entfernen möchtest?"
+        one: "Bist du sicher, dass du dieses Schlagwort löschen und von %{count} zugeordneten Thema entfernen möchtest?"
         other: "Bist du sicher, dass du dieses Schlagwort löschen und von %{count} zugeordneten Themen entfernen möchtest?"
       delete_confirm_no_topics: "Bist du sicher, dass du dieses Schlagwort löschen möchtest?"
       delete_confirm_synonyms:
@@ -3382,11 +3382,11 @@ de:
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
       sort_by_name: "Name"
-      manage_groups: "Schlagwort-Gruppen verwalten"
+      manage_groups: "Schlagwortgruppen verwalten"
       manage_groups_description: "Gruppen definieren, um Schlagwörter zu organisieren"
       upload: "Schlagwörter hochladen"
       upload_description: "Lade eine CSV-Datei hoch, um mehrere Schlagwörter auf einmal zu erstellen"
-      upload_instructions: "Eine pro Zeile, optional mit einer Schlagwortgruppe nach dem Schema 'schlagwort_name,schlagwort_gruppe'."
+      upload_instructions: "Ein Schlagwort pro Zeile, optional mit einer Schlagwortgruppe nach dem Schema „tag_name,tag_group“."
       upload_successful: "Schlagwörter erfolgreich hochgeladen"
       delete_unused_confirmation:
         one: "%{count} Schlagwort wird gelöscht: %{tags}"
@@ -3403,7 +3403,7 @@ de:
         without_category: "%{filter} %{tag} Themen"
         with_category: "%{filter} %{tag} Themen in %{category}"
         untagged_without_category: "%{filter} Themen ohne Schlagwörter"
-        untagged_with_category: "%{filter} ohne Schlagwörter in %{category}"
+        untagged_with_category: "%{filter} Themen ohne Schlagwörter in %{category}"
       notifications:
         watching:
           title: "Beobachten"
@@ -3413,38 +3413,38 @@ de:
           description: "Du wirst über neue Themen mit diesem Schlagwort benachrichtigt, aber nicht über Antworten auf diese Themen."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst automatisch allen Themen mit diesem Schlagwort folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
+          description: "Du wirst automatisch alle Themen mit diesem Schlagwort verfolgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
         regular:
           title: "Allgemein"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du wirst nicht über neue Themen mit diesem Schlagwort benachrichtigt und sie werden nicht in deinen ungelesenen Beiträgen auftauchen."
+          description: "Du wirst nicht über neue Themen mit diesem Schlagwort benachrichtigt und sie werden nicht unter „Ungelesen“ auftauchen."
       groups:
-        title: "Schlagwort-Gruppen"
-        about_heading: "Wähle eine Tag-Gruppe oder erstelle eine neue."
-        about_heading_empty: "Erstelle eine neue Tag-Gruppe um loszulegen"
-        about_description: "Tag-Gruppen helfen Dir, Berechtigungen für viele Tags an einem Ort zu verwalten."
+        title: "Schlagwortgruppen"
+        about_heading: "Wähle eine Schlagwortgruppe oder erstelle eine neue."
+        about_heading_empty: "Erstelle eine neue Schlagwortgruppe, um loszulegen"
+        about_description: "Schlagwortgruppen helfen dir, Berechtigungen für viele Schlagwörter an einem Ort zu verwalten."
         new: "Neue Gruppe"
         new_title: "Neue Gruppe erstellen"
-        edit_title: "Tag-Gruppe bearbeiten"
+        edit_title: "Schlagwortgruppe bearbeiten"
         tags_label: "Schlagwörter in dieser Gruppe"
         parent_tag_label: "Übergeordnetes Schlagwort"
         parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort vorhanden ist."
         one_per_topic_label: "Beschränke diese Gruppe auf ein Schlagwort pro Thema"
-        new_name: "Neue Schlagwort-Gruppe"
+        new_name: "Neue Schlagwortgruppe"
         name_placeholder: "Name"
         save: "Speichern"
         delete: "Löschen"
-        confirm_delete: "Möchtest du wirklich diese Schlagwort-Gruppe löschen?"
+        confirm_delete: "Möchtest du wirklich diese Schlagwortgruppe löschen?"
         everyone_can_use: "Schlagwörter können von jedem verwendet werden"
         usable_only_by_groups: "Schlagwörter sind für jeden sichtbar, aber nur die folgenden Gruppen können sie benutzen"
-        visible_only_to_groups: "Tags sind nur für folgende Gruppen sichtbar"
-        cannot_save: "Schlagwort-Gruppe kann nicht gespeichert werden. Stelle sicher, dass mindestens ein Schlagwort vorhanden ist, der Name der Schlagwort-Gruppe nicht leer ist und eine Gruppe für die Schlagwort-Berechtigung ausgewählt ist."
-        tags_placeholder: "Tags suchen oder erstellen"
+        visible_only_to_groups: "Schlagwörter sind nur für folgende Gruppen sichtbar"
+        cannot_save: "Schlagwortgruppe kann nicht gespeichert werden. Stelle sicher, dass mindestens ein Schlagwort vorhanden ist, der Name der Schlagwortgruppe nicht leer ist und eine Gruppe für die Schlagwort-Berechtigung ausgewählt ist."
+        tags_placeholder: "Schlagwörter suchen oder erstellen"
         parent_tag_placeholder: "Optional"
         select_groups_placeholder: "Gruppen auswählen..."
-        disabled: "Tagging ist deaktiviert. "
+        disabled: "Verwendung von Schlagwörtern ist deaktiviert. "
       topics:
         none:
           unread: "Du hast keine ungelesenen Themen."
@@ -3497,7 +3497,7 @@ de:
       tags:
         remove_muted_tags_from_latest:
           always: "immer"
-          only_muted: "wenn allein oder mit anderen stummgeschalteten Tags verwendet"
+          only_muted: "wenn allein oder mit anderen stummgeschalteten Schlagwörtern verwendet"
           never: "nie"
       reports:
         title: "Verfügbare Berichte"
@@ -3750,7 +3750,7 @@ de:
         active_notice: "Wir werden Ereignisdetails übermitteln wenn es eintritt."
         categories_filter_instructions: "In Frage kommende Webhooks werden nur dann getriggert wenn das Ereignis in Verbindung mit den angegebenen Kategorien steht. Lasse den Wert frei um den Webhook für alle Kategorien auszuführen."
         categories_filter: "Getriggerte Kategorien"
-        tags_filter_instructions: "Relevante Web-Hooks werden nur ausgelöst, wenn das Ereignis mit den angegebenen Schlagwörtern verbunden ist. Ein leerer Wert löst Web-Hooks für alle Schlagwörter aus."
+        tags_filter_instructions: "Relevante Webhooks werden nur ausgelöst, wenn das Ereignis mit den angegebenen Schlagwörtern verbunden ist. Ein leerer Wert löst Webhooks für alle Schlagwörter aus."
         tags_filter: "Ausgelöste Schlagwörter"
         groups_filter_instructions: "In Frage kommende Webhooks werden nur dann getriggert wenn das Ereignis in Verbindung mit den angegebenen Gruppen steht. Lasse den Wert frei um den Webhook für alle Gruppen auszuführen."
         groups_filter: "Getriggerte Gruppen"
@@ -4087,10 +4087,10 @@ de:
               Eigenschaften sollten mit einem Präfix versehen werden, um Konflikte mit Discourse und Plugins zu vermeiden.
           head_tag:
             text: "</head>"
-            title: "HTML, das vor dem </head>-Befehl eingefügt wird"
+            title: "HTML, das vor dem </head>-Tag eingefügt wird"
           body_tag:
             text: "</body>"
-            title: "HTML, das vor dem </body>-Befehl eingefügt wird"
+            title: "HTML, das vor dem </body>-Tag eingefügt wird"
           yaml:
             text: "YAML"
             title: "Definiere Theme-Einstellungen im YAML-Format"
@@ -4437,7 +4437,7 @@ de:
           require_approval: "Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind."
           flag: "Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können."
           replace: "Wörter in Beiträgen durch andere Wörter ersetzen"
-          tag: "Markieren Sie Themen automatisch basierend auf dem ersten Beitrag"
+          tag: "Themen basierend auf dem ersten Beitrag automatisch mit Schlagwort versehen"
           silence: "Erste Beiträge von Benutzern, die diese Wörter enthalten, müssen von den Team Mitgliedern genehmigt werden, bevor sie gesehen werden können, und der Benutzer wird automatisch stummgeschaltet."
           link: "Wörter in Beiträgen durch Links ersetzen"
         form:
@@ -4495,7 +4495,7 @@ de:
           moderators: "Moderatoren"
           silenced: "Stummgeschaltete Benutzer"
           suspended: "Gesperrte Benutzer"
-          staged: "Vorbereite Benutzer"
+          staged: "Vorbereitete Benutzer"
         not_verified: "Nicht überprüft"
         check_email:
           title: "E-Mail-Adresse des Benutzers anzeigen"
@@ -4956,7 +4956,7 @@ de:
         post_title: "Beitrag"
         category_id: "Kategorie-ID"
         category_title: "Kategorie"
-        tag_name: "Verschlagworte den Namen"
+        tag_name: "Name des Schlagworts"
         external_url: "Externe oder relative URL"
         destination: "Ziel"
         copy_to_clipboard: "Kopiere den Permalink in die Zwischenablage"

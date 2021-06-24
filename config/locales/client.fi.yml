@@ -3432,9 +3432,9 @@ fi:
     trust_levels:
       names:
         newuser: "tulokas"
-        basic: "peruskäyttäjä"
-        member: "jäsen"
-        regular: "tavallinen"
+        basic: "haastaja"
+        member: "konkari"
+        regular: "mestari"
         leader: "johtaja"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
@@ -4426,9 +4426,9 @@ fi:
           new: "Uudet käyttäjät"
           pending: "Hyväksymistä odottavat käyttäjät"
           newuser: "Luottamustason 0 käyttäjät (Tulokas)"
-          basic: "Luottamustason 1 käyttäjät (Peruskäyttäjä)"
-          member: "Luottamustason 2 käyttäjät (Jäsen)"
-          regular: "Luottamustason 3 käyttäjät (Tavallinen)"
+          basic: "Luottamustason 1 käyttäjät (Haastaja)"
+          member: "Luottamustason 2 käyttäjät (Konkari)"
+          regular: "Luottamustason 3 käyttäjät (Mestari)"
           leader: "Luottamustason 4 käyttäjät (Johtaja)"
           staff: "Henkilökunta"
           admins: "Ylläpitäjät"

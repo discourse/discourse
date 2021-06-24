@@ -508,7 +508,7 @@ fi:
       post:
         raw: "Leipäteksti"
       user_profile:
-        bio_raw: "Minusta"
+        bio_raw: "Tietoa minusta"
     errors:
       models:
         topic:
@@ -516,16 +516,16 @@ fi:
             base:
               warning_requires_pm: "Voit liittää varoituksia vain yksityisviesteihin."
               too_many_users: "Voit lähettää varoituksia vain yhdelle käyttäjälle kerrallaan."
-              cant_send_pm: "Pahoittelut, et voi lähettää yksityisviestiä tällä käyttäjälle."
-              no_user_selected: "Sinun täytyy valita kelpaava käyttäjä."
+              cant_send_pm: "Et voi lähettää yksityisviestiä tälle käyttäjälle."
+              no_user_selected: "Sinun täytyy valita kelvollinen käyttäjä."
               reply_by_email_disabled: "Sähköpostilla vastaaminen ei ole käytössä."
-              send_to_email_disabled: "Valitettavasti et voi lähettää yksityisviestejä sähköpostiin."
-              target_user_not_found: "Ei löydetty yhtä niistä käyttäjistä, joille lähetät viestiä."
+              send_to_email_disabled: "Et voi lähettää yksityisviestejä sähköpostiin."
+              target_user_not_found: "Yhtä käyttäjää, jolle lähetät tämän viestin, ei löydy."
               unable_to_update: "Ketjun päivittäminen epäonnistui."
               unable_to_tag: "Tunnisteen asettaminen ketjuun epäonnistui."
             featured_link:
-              invalid: "ei ole käypä. URL:in tulisi sisältää http:// tai https://."
-              invalid_category: "ei voi muokata tällä alueella."
+              invalid: "ei ole kelvollinen. URL-osoitteen tulisi sisältää http:// tai https://."
+              invalid_category: "ei ole muokattavissa tällä alueella."
         user:
           attributes:
             password:
@@ -534,17 +534,17 @@ fi:
               same_as_email: "on sama kuin sähköpostiosoitteesi. Valitse turvallisempi salasana."
               same_as_current: "on sama kuin nykyinen salasanasi."
               same_as_name: "on sama kuin nimesi."
-              unique_characters: "on liikaa toistuvia merkkejä. Valitse turvallisempi salasana."
+              unique_characters: "sisältää liikaa toistuvia merkkejä. Valitse turvallisempi salasana."
             username:
               same_as_password: "on sama kuin salasanasi."
             name:
               same_as_password: "on sama kuin salasanasi."
             ip_address:
-              signup_not_allowed: "Liittyminen ei ole sallittu tälle tilille."
+              signup_not_allowed: "Rekisteröityminen ei ole sallittu tälle tilille."
         user_profile:
           attributes:
             featured_topic_id:
-              invalid: "Tätä ketjua et voi valikoida profiiliisi."
+              invalid: "Tätä ketjua ei voi valikoida profiiliisi."
         user_email:
           attributes:
             user_id:
@@ -552,14 +552,14 @@ fi:
         color_scheme_color:
           attributes:
             hex:
-              invalid: "ei ole sallittu väri"
+              invalid: "ei ole kelvollinen väri"
         post_reply:
           base:
-            different_topic: "Viestin ja siihen liittyvän vastauksen tulee olla samassa ketjussa."
+            different_topic: "Viestin ja siihen liittyvän vastauksen täytyy olla samassa ketjussa."
         web_hook:
           attributes:
             payload_url:
-              invalid: "URL ei kelpaa- URL:in tulee sisältää http:// tai https://. Välilyöntejä ei saa olla."
+              invalid: "URL ei kelpaa. URL-osoitteen täytyy sisältää http:// tai https://. Välilyöntejä ei sallita."
         custom_emoji:
           attributes:
             name:
@@ -569,7 +569,7 @@ fi:
             execute_at:
               in_the_past: "täytyy olla tulevaisuudessa."
             duration_minutes:
-              cannot_be_zero: "on oltava suurempi kuin 0."
+              cannot_be_zero: "täytyy olla suurempi kuin 0."
               exceeds_maximum: "voi olla enintään 20 vuotta."
         translation_overrides:
           attributes:
@@ -580,10 +580,10 @@ fi:
             word:
               too_many: "Toiminnolle on määritelty liian monta sanaa"
       <<: *errors
-  uncategorized_category_name: "Kategorisoimattomat"
+  uncategorized_category_name: "Luokittelematon"
   vip_category_name: "Lounge"
   vip_category_description: "Alue luottamustason 3 ja ylemmille käyttäjille."
-  meta_category_name: "Palaute"
+  meta_category_name: "Sivuston palaute"
   meta_category_description: "Keskustelua tästä sivustosta, sen järjestämisestä, siitä miten se toimii ja miten sitä voisi parantaa."
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
@@ -595,14 +595,14 @@ fi:
 
       **Muokkaa tästä** tiivis kuvaus yhteisöstäsi:
 
-      - Kenelle se on suunnattu?
-      - Mistä täällä keskustellaan?
-      - Miksi heidän kannattaa käydä täällä?
-      - Mistä he löytävät lisätietoa (linkkejä, ohjeita jne.)?
+      – Kenelle se on suunnattu?
+      – Mistä täällä keskustellaan?
+      – Miksi heidän kannattaa käydä täällä?
+      – Mistä he löytävät lisätietoa (linkkejä, ohjeita jne.)?
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Saattaa olla hyvä sulkea tämä ketju ylläpitäjän :wrench: -valikon kautta (oikealla ylhäällä sekä sivun pohjalla), jottei vastauksia kasaannu ilmoituksen alle.
+      Saattaa olla hyvä sulkea tämä ketju ylläpitäjän :wrench: -valikon kautta (oikealla ylhäällä sekä sivun alaosassa), jottei vastauksia kasaannu ilmoituksen alle.
   lounge_welcome:
     title: "Tervetuloa Loungeen"
     body: |2
@@ -628,33 +628,33 @@ fi:
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LUE ENSIN: Ylläpitäjän pika-aloitusopas"
   category:
-    topic_prefix: "Alueesta %{category}"
+    topic_prefix: "Tietoa alueesta %{category}"
     replace_paragraph: "(Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisena.)"
-    post_template: "%{replace_paragraph}\n\nKäytä seuraavat kappaleet pidempään kuvaukseen tai selvittääksesi alueen säännöt ja ohjeet:\n\n- Miksi käyttäjät valitsisivat tämän alueen? Mitä varten se on?\n\n- Kuinka se tarkkaan ottaen eroaa muista olemassa olevista alueista?\n\n- Minkälaista sisältöä alueen ketjuissa tulisi yleensä olla?\n\n- Tarvitaanko tätä aluetta? Voisiko sen yhdistää toiseen alueeseen tai siirtää toisen alueen alle?\n"
+    post_template: "%{replace_paragraph}\n\nKäytä seuraavat kappaleet pidempään kuvaukseen tai selvittääksesi alueen säännöt ja ohjeet:\n\n– Miksi käyttäjät valitsisivat tämän alueen? Mitä varten se on?\n\n–Kuinka se tarkkaan ottaen eroaa muista olemassa olevista alueista?\n\n– Minkälaista sisältöä alueen ketjuissa tulisi yleensä olla?\n\n– Tarvitaanko tätä aluetta? Voisiko sen yhdistää toiseen alueeseen tai siirtää toisen alueen alle?\n"
     errors:
       not_found: "Aluetta ei löytynyt!"
-      uncategorized_parent: "Alueettomilla ei voi olla emoaluetta"
-      self_parent: "Alue ei voi olla itsensä emoalue"
-      depth: "Alue ei voi olla tytäralueen tytäralue"
-      invalid_email_in: "'%{email}' ei ole käypä sähköpostiosoite"
+      uncategorized_parent: "Alueettomilla ei voi olla ylätason aluetta"
+      self_parent: "Alue ei voi olla itsensä ylätason talue"
+      depth: "Ala-aluetta voi asettaa toisen ala-alueen alle"
+      invalid_email_in: "'%{email}' ei ole kelvollinen sähköpostiosoite"
       email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
       email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
       description_incomplete: "Alueen kuvauksessa on oltava ainakin yksi kappale."
-      permission_conflict: "Ryhmällä jolle myönnetään pääsy tytäralueelle, on oltava pääsy emoalueelle. Näillä ryhmillä on pääsy jollekin tytäralueelle, muttei emoalueelle: %{group_names}."
+      permission_conflict: "Ryhmällä, jolle myönnetään pääsy ala-alueelle, on oltava pääsy ylätason alueelle. Näillä ryhmillä on pääsy jollekin ala-alueelle, muttei ylätason alueelle: %{group_names}."
       disallowed_topic_tags: "Ketjulla on tunnisteita, jotka eivät ole sallittuja tällä alueella: '%{tags}'"
       disallowed_tags_generic: "Tällä ketjulla on kiellettyjä tunnisteita."
     cannot_delete:
       uncategorized: "Tämä alue on erityinen. Se on tarkoitettu säilytyspaikaksi ketjuille, joilla ei ole aluetta; sitä ei voi poistaa."
-      has_subcategories: "Aluetta ei voi poistaa, koska sillä on tytäralueita."
+      has_subcategories: "Aluetta ei voi poistaa, koska sillä on ala-alueita."
       topic_exists:
         one: "Aluetta ei voi poistaa, koska siellä on %{count} ketju. Vanhin ketju on %{topic_link}."
         other: "Aluetta ei voi poistaa, koska siellä on %{count} ketjua. Vanhin ketju on %{topic_link}."
-      topic_exists_no_oldest: "Aluetta ei voi poistaa, koska ketjujen lukumäärä on #{count}."
+      topic_exists_no_oldest: "Aluetta ei voi poistaa, koska ketjujen lukumäärä on %{count}."
     uncategorized_description: "Ketjut, jotka eivät tarvitse aluetta tai eivät sovi muihin alueisiin."
   trust_levels:
     admin: "Ylläpito"
     staff: "Henkilökunta"
-    change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}' - jos haluat alentaa luottamustasoa, lukitse se ensin"
+    change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}' – jos haluat alentaa luottamustasoa, lukitse se ensin"
   post:
     image_placeholder:
       broken: "Tämä kuva ei toimi"
@@ -670,15 +670,15 @@ fi:
       create_topic: "Olet luomassa aiheita liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
       create_post: "Vastaat hieman liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
       delete_post: "Poistat viestejä hieman liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
-      public_group_membership: "Liityt / poistut ryhmistä hieman liian usein. Odota %{time_left} ja yritä sitten uudelleen."
-      topics_per_day: "Olet saavuttanut päivittäin sallittujen uusien aiheiden enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
+      public_group_membership: "Liityt tai poistut ryhmistä hieman liian usein. Odota %{time_left} ja yritä sitten uudelleen."
+      topics_per_day: "Olet saavuttanut päivittäin sallittujen uusien ketjujen enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       pms_per_day: "Olet saavuttanut päivässä sallitun viestien enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
-      create_like: "Vau! Olet jakanut paljon rakkautta! Olet saavuttanut päivittäisten tykkäysten ylärajan tälle päivälle, mutta kun saavutat luottamustason, ansaitset enemmän päivittäisiä tykkäyksiä. Odota %{time_left} ja yritä sitten uudelleen."
+      create_like: "Vau! Olet jakanut paljon rakkautta! Olet saavuttanut päivittäisten tykkäysten ylärajan tälle päivälle, mutta kun saavutat korkeamman luottamustason, ansaitset enemmän päivittäisiä tykkäyksiä. Odota %{time_left} ja yritä sitten uudelleen."
       create_bookmark: "Olet saavuttanut päivittäisten kirjanmerkkien enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       edit_post: "Olet saavuttanut päivittäisten muokkausten enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       live_post_counts: "Kysyt viestimääriä liian nopealla tahdilla. Odota %{time_left} ja yritä sitten uudelleen."
-      unsubscribe_via_email: "Olet perunut enimmäismäärän sähköpostitse. Odota %{time_left} ja yritä sitten uudelleen."
-      topic_invitations_per_day: "Olet lähettänyt enimmäismäärän kutsuja ketjuihin. Odota %{time_left} niin voit lähettää lisää kutsuja."
+      unsubscribe_via_email: "Olet tehnyt enimmäismäärän peruutuksia sähköpostitse. Odota %{time_left} ja yritä sitten uudelleen."
+      topic_invitations_per_day: "Olet lähettänyt enimmäismäärän kutsuja ketjuihin. Odota %{time_left}, niin voit lähettää lisää kutsuja."
     hours:
       one: "%{count} tunti"
       other: "%{count} tuntia"
@@ -759,16 +759,16 @@ fi:
         one: "lähes vuosi sitten"
         other: "lähes %{count} vuotta sitten"
   password_reset:
-    no_token: "Pahoittelut, tämä salasanan uusimisen linkki on liian vanha. Paina 'Kirjaudu sisään' nappia ja valitse 'Unohdin salasanani' saadaksesi uuden linkin."
+    no_token: "Tämä salasanan vaihtolinkki on liian vanha. Paina 'Kirjaudu sisään' -painiketta ja valitse 'Unohdin salasanani' saadaksesi uuden linkin."
     choose_new: "Valitse uusi salasana"
     choose: "Valitse salasana"
     update: "Päivitä salasana"
     save: "Aseta salasana"
-    title: "Uusi salasana"
-    success: "Salasanan vaihto onnistui ja olet nyt kirjautuneena sisään."
+    title: "Palauta salasana"
+    success: "Salasanan vaihto onnistui, ja olet nyt kirjautunut sisään."
     success_unapproved: "Salasana vaihdettu onnistuneesti."
   email_login:
-    invalid_token: "Pahoittelut, tämä sisäänkirjautumislinkki on liian vanha. Paina 'Kirjaudu sisään' nappia ja valitse 'Unohdin salasanani' saadaksesi uuden linkin."
+    invalid_token: "Tämä sähköpostikirjautumislinkki on liian vanha. Paina 'Kirjaudu sisään' -painiketta ja valitse 'Unohdin salasanani' saadaksesi uuden linkin."
     title: "Sähköpostikirjautuminen"
   user_auth_tokens:
     browser:
@@ -786,7 +786,7 @@ fi:
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      linux: "GNU/Linux -tietokone"
+      linux: "GNU/Linux-tietokone"
       mac: "Mac"
       mobile: "mobiililaite"
       windows: "Windows-tietokone"
@@ -800,7 +800,7 @@ fi:
       windows: "Microsoft Windows"
       unknown: "tuntematon käyttöjärjestelmä"
   change_email:
-    wrong_account_error: "Olet kirjautuneena väärällä käyttäjätilillä. Kirjaudu ulos ja yritä uudelleen."
+    wrong_account_error: "Olet kirjautuneena väärällä tilillä. Kirjaudu ulos ja yritä uudelleen."
     confirmed: "Sähköpostiosoite päivitetty."
     please_continue: "Jatka sivustolle %{site_name}"
     error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä tämä sähköpostiosoite on jo käytössä?"
@@ -814,49 +814,49 @@ fi:
       description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
       description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
     authorizing_old:
-      title: "Vaihda sähköpostiosoitettasi"
-      description: "Vahvista sähköpostiosoitteesi vaihdos"
+      title: "Vaihda sähköpostiosoitteesi"
+      description: "Vahvista sähköpostiosoitteesi muutos"
       description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
       old_email: "Vanha sähköposti: %{email}"
       new_email: "Uusi sähköposti: %{email}"
       almost_done_title: "Vahvista uusi sähköpostiosoite"
-      almost_done_description: "Lähetimme sinulle sähköpostin uuteen osoitteeseesi, jotta voit vahvistaa vaihdoksen!"
+      almost_done_description: "Lähetimme sinulle sähköpostin uuteen osoitteeseesi, jotta voit vahvistaa muutoksen!"
   associated_accounts:
-    revoke_failed: "Tunnustasi palveluntarjoajalla %{provider_name} ei onnistuttu perumaan."
+    revoke_failed: "Tunnustasi palveluntarjoajalla %{provider_name} ei voitu perua."
     connected: "(yhdistetty)"
   activation:
     action: "Aktivoi tilisi klikkaamalla tästä"
-    already_done: "Pahoittelut, tämän tilin varmennuslinkki ei ole enää voimassa. Ehkäpä tili on jo varmennettu?"
-    please_continue: "Tilisi on nyt varmennettu; sivu ohjautuu palstan etusivulle."
+    already_done: "Tämä tilin varmennuslinkki ei ole enää voimassa. Ehkäpä tili on jo varmennettu?"
+    please_continue: "Tilisi on nyt varmennettu; sinut ohjataan aloitussivulle."
     continue_button: "Jatka sivustolle %{site_name}"
     welcome_to: "Tervetuloa sivustolle %{site_name}!"
     approval_required: "Valvojan täytyy hyväksyä uusi tilisi, jotta pääset palstalle. Saat sähköpostin, kun tilisi on hyväksytty."
     missing_session: "Emme voineet havaita, onnistuiko tilisi luonti. Varmista, että selaimesi sallii evästeiden käytön."
-    activated: "Pahoittelut, tämä tili on jo aktivoitu."
+    activated: "Tämä tili on jo aktivoitu."
     admin_confirm:
       title: "Vahvista ylläpitäjätili"
       description: "Oletko varma, että haluat käyttäjästä <b>%{target_username} (%{target_email})</b> ylläpitäjän?"
       grant: "Myönnä ylläpitäjäoikeudet"
       complete: "<b>%{target_username}</b> on nyt ylläpitäjä."
-      back_to: "Palaa %{title}"
+      back_to: "Palaa kohteeseen %{title}"
   reviewable_score_types:
     needs_approval:
       title: "Odottaa hyväksyntää"
   post_action_types:
     off_topic:
-      title: "Se eksyy aiheesta"
+      title: "Eksyy aiheesta"
       description: "Viesti ei ole liity meneillään olevaan keskusteluun, jonka aiheen määrittelee ketjun otsikko ja aloitusviesti. Viesti pitäisi luultavasti siirtää toiseen paikkaan."
       short_description: "Ei liity aiheeseen"
     spam:
       title: "Roskaposti"
-      description: "Viesti on mainos tai ilkivaltaa. Se on hyödytön ja epäolennainen tähän ketjuun."
+      description: "Viesti on mainos tai ilkivaltaa. Se on hyödytön tai epäolennainen tähän ketjuun."
       short_description: "On mainos tai häiriköintiä"
-      email_title: '"%{title}" liputettiin roskapostiksi'
+      email_title: '"%{title}" merkittiin roskapostiksi'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Sopimaton"
-      description: 'Viestissä on sisältöä, jota tolkun ihminen pitää loukkaavana, herjaavana tai <a href="%{base_path}/guidelines">palstan sääntöjen</a> vastaisena.'
-      short_description: '<a href="%{base_path}/guidelines">Palstan sääntöjen</a> vastainen'
+      description: 'Viestissä on sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href="%{base_path}/guidelines">yhteisön sääntöjen</a> vastaisena.'
+      short_description: '<a href="%{base_path}/guidelines">Yhteisön sääntöjen</a> vastainen'
     notify_user:
       title: "Lähetä käyttäjälle @%{username} viesti."
       description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
@@ -867,7 +867,7 @@ fi:
       title: "Jotain muuta"
       description: "Henkilökunnan tulisi huomioida viesti muusta kuin yllä listatusta syystä."
       short_description: "Henkilökunnan tulisi huomioida muusta syystä"
-      email_title: 'Henkilökunnan tulisi huomioida viesti ketjussa "%{title}" '
+      email_title: 'Henkilökunnan tulisi huomioida viesti ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Kirjanmerkki"
@@ -882,12 +882,12 @@ fi:
       title: "luonnosvirhe"
       description: "Luonnosta muokataan toisessa ikkunassa. Lataa tämä sivu uudelleen."
   draft_backup:
-    pm_title: "Varmuuskopiot ketjuihin suunnatuista luonnoksista"
-    pm_body: "Ketju johon varmuuskopiot luonnoksista sijoitetaan"
+    pm_title: "Varmuuskopiot käynnissä olevien ketjujen luonnoksista"
+    pm_body: "Ketju, joka sisältää varmuuskopioluonnoksia"
   user_activity:
     no_default:
-      self: "Et ole vielä tehnyt mitään mainittavaa."
-      others: "Ei ole tehnyt mitään mainittavaa."
+      self: "Sinulla ei ole vielä toimintaa."
+      others: "Ei toimintaa."
     no_bookmarks:
       self: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestejä löydät ne myöhemmin helposti."
       search: "Kirjanmerkkejä ei löytynyt näillä hakusanoilla."
@@ -899,55 +899,55 @@ fi:
       self: "Et ole vastannut yhteenkään viestiin."
       others: "Ei vastauksia."
     no_drafts:
-      self: "Sinulla ei ole luonnoksia. Aloita kirjoittamaan viestiä mihin tahansa ketjuun niin se tallentuu automaattiseksi uudeksi luonnokseksi."
+      self: "Sinulla ei ole luonnoksia. Aloita kirjoittamaan vastausta mihin tahansa ketjuun, niin se tallentuu automaattiseksi uudeksi luonnokseksi."
   webauthn:
     validation:
       invalid_type_error: "Annettu webauthn-tyyppi ei kelpaa. Kelvollisia ovat webauthn.get ja webauthn.create."
-      challenge_mismatch_error: "Palautettu haaste ei vastaa todennuspalvelimen luomaa haastetta."
-      invalid_origin_error: "Todentautumisen alkuperä (origin) ei vastaa palvelimen alkuperää."
-      malformed_attestation_error: "Todentautumisdatan avaaminen epäonnistui."
-      invalid_relying_party_id_error: "Todennuspyynnön Relying Party ID ei vastaa palvelimen Relying Party ID:tä."
+      challenge_mismatch_error: "Annettu haaste ei vastaa todennuspalvelimen luomaa haastetta."
+      invalid_origin_error: "Todennuspyynnön alkuperä ei vastaa palvelimen alkuperää."
+      malformed_attestation_error: "Todennustietojen dekoodauksessa tapahtui virhe."
+      invalid_relying_party_id_error: "Todennuspyynnön välittävän osapuolen tunnus ei vastaa palvelimen välittävän osapuolen tunnusta."
       user_verification_error: "Käyttäjävahvistus vaaditaan."
-      unsupported_public_key_algorithm_error: "Palvelin ei tue annettua julkisen salauksen algoritmia."
-      unsupported_attestation_format_error: "Palvelin ei tue tätä todentautumistapaa."
-      credential_id_in_use_error: "Annettu pääsytieto-ID on jo käytössä."
-      public_key_error: "Pääsytiedon julkisen salauksen vahvistus epäonnistui."
+      unsupported_public_key_algorithm_error: "Palvelin ei tue annettua julkisen avaimen algoritmia."
+      unsupported_attestation_format_error: "Palvelin ei tue tätä todennustapaa."
+      credential_id_in_use_error: "Annettu tunnistetieto on jo käytössä."
+      public_key_error: "Tunnistetiedon julkisen avaimen vahvistus epäonnistui."
       ownership_error: "Käyttäjä ei omista tunnistautumislaitetta."
-      not_found_error: "Tunnistautumislaitetta annetulla pääsytieto-ID:llä ei löytynyt."
-      unknown_cose_algorithm_error: "Tunnistautumislaitteen algoritmia ei tunnistettu."
+      not_found_error: "Tunnistautumislaitetta annetulla tunnistetiedolla ei löytynyt."
+      unknown_cose_algorithm_error: "Tunnistautumislaitteelle käytettyä algoritmia ei tunnistettu."
   topic_flag_types:
     spam:
       title: "Roskaposti"
-      description: "Tämä ketju on mainos. Se ei ole hyödyllinen tai relevantti tällä sivustolla, vaan on luonteeltaan mainostamista."
-      long_form: "liputti tämän roskapostiksi"
+      description: "Tämä ketju on mainos. Se ei ole hyödyllinen tai olennainen tällä sivustolla, vaan on luonteeltaan mainostamista."
+      long_form: "merkitsi tämän roskapostiksi"
       short_description: "Tämä on mainos"
     inappropriate:
       title: "Sopimaton"
-      description: 'Ketjussa on sisältöä, jota tolkun ihminen pitää loukkaavana, herjaavana tai <a href="%{base_path}/guidelines">palstan sääntöjen</a> vastaisena.'
-      long_form: "liputti tämän sopimattomaksi"
-      short_description: '<a href="%{base_path}/guidelines">Palstan sääntöjen</a> vastainen'
+      description: 'Ketjussa on sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href="%{base_path}/guidelines">yhteisön sääntöjen</a> vastaisena.'
+      long_form: "merkitsi tämän sopimattomaksi"
+      short_description: '<a href="%{base_path}/guidelines">Yhteisön sääntöjen</a> rikkomus'
     notify_moderators:
       title: "Jotain muuta"
-      description: 'Henkilökunnan tulisi huomioida tämä ketju <a href="%{base_path}/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai jonkun muun syyn vuoksi.'
-      long_form: "liputit tämän valvojille tiedoksi"
+      description: 'Henkilökunnan tulisi huomioida tämä ketju <a href="%{base_path}/guidelines">sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai jonkun muun edellä listaamattoman syyn vuoksi.'
+      long_form: "merkitsit tämän valvojille tiedoksi"
       short_description: "Henkilökunnan tulisi huomioida muusta syystä"
       email_title: 'Ketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Muu yhteisö liputti viestisi. Käy lukemassa <a href="%{path}">saapuneet viestisi</a>.</p>'
-    user_must_edit: "<p>Tämä viesti on liputettu ja on siksi piilotettu väliaikaisesti.</p>"
+    you_must_edit: '<p>Muu yhteisö merkitsi viestisi. Käy lukemassa <a href="%{path}">saapuneet viestisi</a>.</p>'
+    user_must_edit: "<p>Tämä viesti on merkitty ja on siksi piilotettu väliaikaisesti.</p>"
   ignored:
-    hidden_content: "<p>Estettyä sisältöä</p>"
+    hidden_content: "<p>Ohitettu sisältö</p>"
   archetypes:
     regular:
       title: "Tavallinen ketju"
     banner:
       title: "Banneriketju"
       message:
-        make: "Tämä ketju on nyt banneri. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
-        remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun ylälaidassa."
+        make: "Tämä ketju on nyt banneri. Se näytetään jokaisen sivun yläosassa, kunnes käyttäjä kuittaa sen nähdyksi."
+        remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun yläosassa."
   unsubscribed:
-    title: "Sähköpostiasetukset päivitetty!"
+    title: "Sähköpostiasetukset päivitetty"
     description: "sähköpostiasetukset osoitteelle <b>%{email}</b> päivitettiin. Voit muuttaa sähköpostiasetuksia <a href='%{url}'>käyttäjäasetuksissasi</a>."
     topic_description: "Tilaa %{link} uudelleen ketjun alla tai oikealla puolen sijaitsevan ilmoitusvalikon kautta."
     private_topic_description: "Voit tilata ketjun uudelleen sen alla tai oikealla puolella sijaitsevan ilmoitusvalikon kautta."
@@ -956,54 +956,54 @@ fi:
   unsubscribe:
     title: "Peru tilaus"
     stop_watching_topic: "Lopeta ketjun tarkkailu, %{link}"
-    mute_topic: "Vaimenna ilmoitukset tästä ketjusta, %{link}"
+    mute_topic: "Vaimenna kaikki ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"
     mailing_list_mode: "Poistu postituslistatilasta"
     all: "Älä lähetä minulle sähköpostia sivustolta %{sitename}"
-    different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
-    not_found_description: "Valitettavasti emme löytäneet tilauksen peruutusta. Kenties sinulle lähetetty linkki on vanhentunut?"
+    different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin käyttäjä, jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
+    not_found_description: "Tilauksen peruutusta ei löytynyt. Kenties sinulle lähetetty linkki on vanhentunut?"
     log_out: "Kirjaudu ulos"
     submit: "Tallenna asetukset"
     digest_frequency:
-      title: "Saat sähköpostikoosteita %{frequency}"
-      never_title: "Sinulle ei lähetetä yhteenvetoja sähköpostitse"
-      select_title: "Sähköpostikoosteiden taajuus:"
+      title: "Saat yhteenvetosähköposteja %{frequency}"
+      never_title: "Sinulle ei lähetetä yhteenvetosähköposteja"
+      select_title: "Aseta yhteenvetosähköpostien tiheydeksi:"
       never: "ei koskaan"
-      every_30_minutes: "puolen tunnin välein"
+      every_30_minutes: "30 minuutin välein"
       every_hour: "tunneittain"
       daily: "päivittäin"
       weekly: "viikottain"
       every_month: "kuukausittain"
-      every_six_months: "puolen vuoden välein"
+      every_six_months: "kuuden kuukauden välein"
   user_api_key:
     title: "Anna sovellukselle käyttöoikeus"
     authorize: "Anna käyttöoikeus"
     read: "luku"
     read_write: "luku/kirjoitus"
-    description: '"%{application_name}" pyytää seuraavaa käyttöoikeutta tunnukseesi:'
-    instructions: 'Loimme juuri uuden käyttäjärajapinta-avaimen, jolla voit käyttää palveluamme "%{application_name}". Liitä tämä avainkoodi sovellukseesi:'
+    description: '"%{application_name}" pyytää seuraavaa käyttöoikeutta tiliisi:'
+    instructions: 'Loimme juuri uuden käyttäjä-API-avaimen, jota voit käyttää sovelluksessa "%{application_name}". Liitä tämä avainkoodi sovellukseesi:'
     otp_description: 'Haluatko sallia sovellukselle "%{application_name}" pääsyn sivustolle?'
     otp_confirmation:
       confirm_title: Jatka sivustolle %{site_name}
       logging_in_as: Kirjaudutaan käyttäjänä %{username}
       confirm_button: Kirjaudu
-    no_trust_level: "Pahoittelut, luottamustasosi ei ole riittävä käyttäjärajapinnan käyttämiseen"
-    generic_error: "Pahoittelut, API-salausavainta ei muodostettu; sivuston ylläpitäjä on saattanut ottaa ominaisuuden pois käytöstä"
+    no_trust_level: "Luottamustasosi ei ole riittävä käyttäjä-APIn käyttämiseen"
+    generic_error: "Käyttäjä-API-avaimien luominen ei onnistunut, sivuston ylläpitäjä on saattanut poistaa ominaisuuden käytöstä"
     scopes:
       message_bus: "Reaaliaikaiset päivitykset"
       notifications: "Ilmoitusten lukeminen ja kuittaaminen"
       push: "Push-ilmoitukset ulkoisiin palveluihin"
-      session_info: "Tiedot käyttäjän istunnosta"
+      session_info: "Käyttäjän istunnon tietojen lukeminen"
       read: "Kaikkien luku"
-      write: "Kaikkiin kirjaittaminen"
-      one_time_password: "Luo kertakäyttöinen kirjautumiskoodi"
-      bookmarks_calendar: "Lue kirjanmerkkimuistutuksia"
-    invalid_public_key: "Pahoittelut, julkinen avain ei kelpaa."
-    invalid_auth_redirect: "Pahoittelut, tämä auth_redirect host ei ole sallittu."
-    invalid_token: "Tunnistusväline puuttuu, ei kelpaa tai on vanhentunut."
+      write: "Kaikkiin kirjoittaminen"
+      one_time_password: "Kertakäyttöisen kirjautumiskoodin luominen"
+      bookmarks_calendar: "Kirjanmerkkimuistutusten lukeminen"
+    invalid_public_key: "Julkinen avain ei kelpaa."
+    invalid_auth_redirect: "Tämä auth_redirect host ei ole sallittu."
+    invalid_token: "Tunniste puuttuu, ei kelpaa tai on vanhentunut."
   flags:
     errors:
-      already_handled: "Lippu ehdittiin jo käsitellä"
+      already_handled: "Merkintä on jo käsitelty"
   reports:
     default:
       labels:
@@ -1020,27 +1020,27 @@ fi:
         edit_reason: Syy
       description: "Kuinka monesti viestejä muokattiin."
     user_flagging_ratio:
-      title: "Käyttäjän liputussuhde"
+      title: "Käyttäjän merkintäsuhde"
       labels:
         user: Käyttäjä
-        agreed_flags: Hyväksyttyjä lippuja
-        disagreed_flags: Hylättyjä lippuja
-        ignored_flags: Sivuutettuja lippuja
-        score: Luku
-      description: "Luettelo käyttäjistä järjestettynä sen mukaan, miten henkilökunta suhtautuu heidän liputuksiinsa (hylätyt jaettuna hyväksytyillä)."
+        agreed_flags: Hyväksyttyjä merkintöjä
+        disagreed_flags: Hylättyjä merkintöjä
+        ignored_flags: Sivuutettuja merkintöjä
+        score: Arvo
+      description: "Luettelo käyttäjistä järjestettynä sen mukaan, miten henkilökunta on reagoinut heidän merkintöihinsä (hylätyt jaettuna hyväksytyillä)."
     moderators_activity:
       title: "Valvoja-aktiivisuus"
       labels:
         moderator: Valvoja
-        flag_count: Arvioituja lippuja
+        flag_count: Arvioituja merkintöjä
         time_read: Lukuaika
         topic_count: Aloitetut ketjut
         post_count: Kirjoitetut viestit
         pm_count: Kirjoitetut yksityisviestit
         revision_count: Revisiot
-      description: Luettelo valvojien aktiivisuudesta. Sisältää käsitellyt liput, lukuajan, luodut ketjut, lähetetyt viestit, lähetetyt yksityisviestit ja tarkastukset.
+      description: Luettelo valvojien aktiivisuudesta. Sisältää käsitellyt merkinnät, lukuajan, luodut ketjut, lähetetyt viestit, lähetetyt yksityisviestit ja revisiot.
     flags_status:
-      title: "Lippujen status"
+      title: "Merkintöjen tila"
       values:
         agreed: Samaa mieltä
         disagreed: Eri mieltä
@@ -1052,14 +1052,14 @@ fi:
         poster: Kirjoittaja
         flagger: Liputtaja
         time_to_resolution: Selvitysaika
-      description: "Luettelo lippujen statuksista sisältäen lippujen tyypit, kirjoittajat, liputtajat ja selvitysajat."
+      description: "Luettelo merkintöjen tiloista, sisältäen merkintöjen tyypit, kirjoittajat, merkitsijät ja selvitysajat."
     visits:
-      title: "Vierailut"
+      title: "Käyttäjien vierailut"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
       description: "Vierailleiden käyttäjien määrä."
     signups:
-      title: "Liittymiset"
+      title: "Rekisteröitymiset"
       xaxis: "Päivä"
       yaxis: "Liittymisten lukumäärä"
       description: "Uudet rekisteröidyt käyttäjät tällä ajanjaksolla."

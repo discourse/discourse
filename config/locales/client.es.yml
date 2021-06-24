@@ -4735,7 +4735,7 @@ es:
         field_types:
           text: "Campo de texto"
           confirm: "Confirmación"
-          dropdown: "Lista"
+          dropdown: "Desplegable"
       site_text:
         description: "Puedes personalizar cualquier texto de tu foro. Empieza buscando:"
         search: "Busca el texto que te gustaría editar"
@@ -4748,7 +4748,7 @@ es:
         show_overriden: "Solo mostrar modificados"
         locale: "Idioma:"
         fallback_locale_warning: "Estás editando un idioma basado en %{fallback}. Los usuarios que seleccionen %{fallback} como su idioma de interfaz no verán tus cambios."
-        more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu busqueda."
+        more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu búsqueda."
       settings:
         show_overriden: "Ver solo cambiados"
         history: "Ver historial de cambios"
@@ -4756,9 +4756,9 @@ es:
         none: "ninguno"
       site_settings:
         emoji_list:
-          invalid_input: "Las listas de emojis solo pueden contener nombres válidos de emojis. Ej.: hugs"
+          invalid_input: "Las listas de emojis solo pueden contener nombres válidos de emojis. Ej.: abrazos"
           add_emoji_button:
-            label: "Añadir Emoticono"
+            label: "Añadir emoji"
         title: "Ajustes"
         no_results: "No se encontró ningún resultado."
         more_than_30_results: "Hay más de 30 resultados. Por favor, refina tu búsqueda o selecciona una categoría."
@@ -4812,7 +4812,7 @@ es:
         simple_list:
           add_item: "Añadir elemento..."
         json_schema:
-          edit: Lanzar editor
+          edit: Abrir editor
           modal_title: "Editar %{name}"
       badges:
         title: Insignias
@@ -4845,14 +4845,14 @@ es:
         no_badges: No hay insignias que puedan ser concedidas.
         none_selected: "Selecciona una insignia para empezar"
         allow_title: Permitir que se use la insignia como título
-        multiple_grant: Puede ser concedida varias veces
+        multiple_grant: Se puede conceder varias veces
         listable: Mostrar insignia en la página pública de insignias
         enabled: Activar insignias
         icon: Icono
         image: Imagen
         graphic: Gráfico
         icon_help: "Introduce un nombre de icono de Font Awesome (usa el prefijo 'far-' para iconos regulares y 'fab-' para iconos de marca)"
-        image_help: "Subir una imagen sobreescribirá el campo del icono si ambos tienen valores."
+        image_help: "Subir una imagen sobrescribirá el campo del icono si ambos tienen valores."
         select_an_icon: "Seleccionar un icono"
         upload_an_image: "Subir una imagen"
         read_only_setting_help: "Personalizar texto"
@@ -4860,12 +4860,12 @@ es:
         target_posts: Publicaciones destino de la consulta
         auto_revoke: Ejecutar diariamente la consulta de revocación
         show_posts: Mostrar la publicación por la cual se concedió la insignia en la página de insignias
-        trigger: Disparador
+        trigger: Activador
         trigger_type:
           none: "Actualizar diariamente"
           post_action: "Cuando un usuario interactúa con una publicación"
           post_revision: "Cuando un usuario edita o crea una publicación"
-          trust_level_change: "Cuando cambia el nivel de confianza de un usuario"
+          trust_level_change: "Cuando un usuario cambia el nivel de confianza"
           user_change: "Cuando se edita o se crea un usuario"
           post_processed: "Después de procesar una publicación"
         preview:
