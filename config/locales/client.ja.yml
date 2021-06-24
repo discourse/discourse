@@ -34,60 +34,60 @@ ja:
       long_with_year: "YYYY 年 MMM D 日 a h:mm"
       long_with_year_no_time: "YYYY 年 MMM D 日"
       full_with_year_no_time: "YYYY 年 MMMM D 日"
-      long_date_with_year: "'YY/MM/DD LT"
-      long_date_without_year: "M月D日 LT"
-      long_date_with_year_without_time: "'YY/MM/DD"
-      long_date_without_year_with_linebreak: "M月D日 <br/>LT"
-      long_date_with_year_with_linebreak: "'YY/MM/DD <br/>LT"
+      long_date_with_year: "'YY 年 MMM D 日 LT"
+      long_date_without_year: "MMM D 日 LT"
+      long_date_with_year_without_time: "'YY 年 MMM D 日"
+      long_date_without_year_with_linebreak: "MMM D 日 <br/>LT"
+      long_date_with_year_with_linebreak: "'YY 年 MMM D 日 <br/>LT"
       wrap_ago: "%{date}前"
       tiny:
-        half_a_minute: "1分未満"
+        half_a_minute: "1 分未満"
         less_than_x_seconds:
-          other: "%{count}秒未満"
+          other: "%{count} 秒未満"
         x_seconds:
-          other: "%{count}秒"
+          other: "%{count} 秒"
         less_than_x_minutes:
-          other: "%{count}分未満"
+          other: "%{count} 分未満"
         x_minutes:
-          other: "%{count}分"
+          other: "%{count} 分"
         about_x_hours:
-          other: "%{count}時間"
+          other: "%{count} 時間"
         x_days:
-          other: "%{count}日"
+          other: "%{count} 日"
         x_months:
-          other: "%{count}か月"
+          other: "%{count} か月"
         about_x_years:
-          other: "%{count}年"
+          other: "%{count} 年"
         over_x_years:
-          other: "%{count}年以上"
+          other: "%{count} 年以上"
         almost_x_years:
-          other: "約%{count}年"
-        date_month: "M月D日"
-        date_year: "'YY年M月"
+          other: "約 %{count} 年"
+        date_month: "MMM D 日"
+        date_year: "'YY 年 MMM"
       medium:
         x_minutes:
-          other: "%{count}分"
+          other: "%{count} 分"
         x_hours:
-          other: "%{count}時間"
+          other: "%{count} 時間"
         x_days:
-          other: "%{count}日"
-        date_year: "'YY年M月D日"
+          other: "%{count} 日"
+        date_year: "'YY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
-          other: "%{count}分前"
+          other: "%{count} 分前"
         x_hours:
-          other: "%{count}時間前"
+          other: "%{count} 時間前"
         x_days:
-          other: "%{count}日前"
+          other: "%{count} 日前"
         x_months:
-          other: "%{count}か月前"
+          other: "%{count} か月前"
         x_years:
-          other: "%{count}年前"
+          other: "%{count} 年前"
       later:
         x_days:
-          other: "%{count}日後"
+          other: "%{count} 日後"
         x_months:
-          other: "%{count}か月後"
+          other: "%{count} か月後"
         x_years:
           other: "%{count} 年後"
       previous_month: "前月"
@@ -112,11 +112,11 @@ ja:
       removed_group: "%{who} を削除しました: %{when}"
       autobumped: "自動的にトップに上げられました: %{when}"
       autoclosed:
-        enabled: "閉じられました: %{when}"
-        disabled: "開かれました: %{when}"
+        enabled: "クローズされました: %{when}"
+        disabled: "オープンされました: %{when}"
       closed:
-        enabled: "閉じられました: %{when}"
-        disabled: "開かれました: %{when}"
+        enabled: "クローズされました: %{when}"
+        disabled: "オープンされました: %{when}"
       archived:
         enabled: "アーカイブされました: %{when}"
         disabled: "アーカイブを解除されました: %{when}"
@@ -130,20 +130,20 @@ ja:
         enabled: "表示: %{when}"
         disabled: "非表示: %{when}"
       banner:
-        enabled: "これを%{when}にバナーにしました。ユーザーが閉じるまで各ページの上部に表示されます。"
+        enabled: "%{when}にこれをバナーにしました。ユーザーが閉じるまで各ページの上部に表示されます。"
         disabled: "%{when}にこのバナーを削除しました。今後ページの上部に表示されることはありません。"
       forwarded: "上記のメールを転送しました"
     topic_admin_menu: "トピックアクション"
-    wizard_required: "Discourseへようこそ！ <a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
+    wizard_required: "Discourse へようこそ！ <a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
     software_update_prompt:
       dismiss: "閉じる"
     bootstrap_mode_enabled:
-      other: "新しいサイトを簡単に立ち上げられるように、ブートストラップモードになっています。すべての新規ユーザーの信頼レベルは1となり、要約メールを毎日受け取るように設定されています。この設定は%{count}名のユーザーが参加すると自動的に無効になります。"
-    bootstrap_mode_disabled: "ブートストラップモードは24時間以内に無効になります。"
+      other: "新しいサイトを簡単に立ち上げられるように、ブートストラップモードになっています。すべての新規ユーザーの信頼レベルは 1 となり、要約メールを毎日受け取るように設定されています。この設定は %{count} 名のユーザーが参加すると自動的に無効になります。"
+    bootstrap_mode_disabled: "ブートストラップモードは 24 時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
-      broken_theme_alert: "テーマ/コンポーネントの%{theme}にエラーがあるため、サイトが動作しない可能性があります。%{path}で無効にしてください。"
+      broken_theme_alert: "テーマ/コンポーネントの %{theme} にエラーがあるため、サイトが動作しない可能性があります。%{path} で無効にしてください。"
     s3:
       regions:
         ap_northeast_1: "アジア・太平洋 (東京)"
@@ -490,19 +490,19 @@ ja:
       relative: "相対時間"
       none: "不要"
     user_action:
-      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が <a href='%{topicUrl}'>トピック</a> を作成"
-      you_posted_topic: "<a href='%{userUrl}'>あなた</a> が <a href='%{topicUrl}'>トピック</a> を作成"
-      user_replied_to_post: "<a href='%{userUrl}'>%{user}</a> が <a href='%{postUrl}'>%{post_number}</a> に返信"
-      you_replied_to_post: "<a href='%{userUrl}'>あなた</a> が <a href='%{postUrl}'>%{post_number}</a> に返信"
-      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> が <a href='%{topicUrl}'>トピック</a> に返信"
-      you_replied_to_topic: "<a href='%{userUrl}'>あなた</a> が <a href='%{topicUrl}'>トピック</a> に返信"
-      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> が <a href='%{user2Url}'>%{another_user}</a> をタグ付けしました"
-      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> が <a href='%{user2Url}'>あなた</a> を をタグ付けしました"
-      you_mentioned_user: "<a href='%{user1Url}'>あなた</a> が <a href='%{user2Url}'>%{another_user}</a> をタグ付けしました"
-      posted_by_user: "<a href='%{userUrl}'>%{user}</a> が投稿"
-      posted_by_you: "<a href='%{userUrl}'>あなた</a> が投稿"
-      sent_by_user: "<a href='%{userUrl}'>%{user}</a> が送信"
-      sent_by_you: "<a href='%{userUrl}'>あなた</a> が送信"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が<a href='%{topicUrl}'>トピック</a>を作成しました"
+      you_posted_topic: "<a href='%{userUrl}'>あなた</a>が<a href='%{topicUrl}'>トピック</a>を作成しました"
+      user_replied_to_post: "<a href='%{userUrl}'>%{user}</a> が <a href='%{postUrl}'>%{post_number}</a> に返信しました"
+      you_replied_to_post: "<a href='%{userUrl}'>あなた</a> が <a href='%{postUrl}'>%{post_number}</a> に返信しました"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> が<a href='%{topicUrl}'>トピック</a>に返信しました"
+      you_replied_to_topic: "<a href='%{userUrl}'>あなた</a> が<a href='%{topicUrl}'>トピック</a>に返信しました"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> が <a href='%{user2Url}'>%{another_user}</a> をメンションしました"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> が<a href='%{user2Url}'>あなた</a>をメンションしました"
+      you_mentioned_user: "<a href='%{user1Url}'>あなた</a>が <a href='%{user2Url}'>%{another_user}</a> をメンションしました"
+      posted_by_user: "投稿者: <a href='%{userUrl}'>%{user}</a>"
+      posted_by_you: "投稿者: <a href='%{userUrl}'>あなた</a>"
+      sent_by_user: "送信者: <a href='%{userUrl}'>%{user}</a>"
+      sent_by_you: "送信者: <a href='%{userUrl}'>あなた</a>"
     directory:
       username: "ユーザ名"
       filter_name: "ユーザー名でフィルタ"
@@ -652,7 +652,7 @@ ja:
         close_groups: "クローズされたグループ"
         automatic_groups: "自動作成グループ"
         automatic: "自動"
-        closed: "閉鎖"
+        closed: "クローズ"
         public: "公開"
         private: "非公開"
         public_groups: "公開グループ"
@@ -697,20 +697,20 @@ ja:
       messages: "メッセージ"
       notification_level: "グループメッセージのデフォルト通知レベル"
       alias_levels:
-        mentionable: "誰がこのグループに@メンションを送れますか?"
+        mentionable: "誰がこのグループに @メンションを送れますか?"
         messageable: "誰がこのグループにメッセージを送れますか?"
-        nobody: "無し"
+        nobody: "誰もできない"
         only_admins: "管理者のみ"
-        mods_and_admins: "管理者とモデレータのみ"
-        members_mods_and_admins: "管理者、モデレータ、グループメンバーのみ"
+        mods_and_admins: "モデレーターと管理者のみ"
+        members_mods_and_admins: "グループメンバー、モデレーター、管理者のみ"
         owners_mods_and_admins: "グループオーナー、モデレーター、管理者のみ"
-        everyone: "だれでも"
+        everyone: "誰でもできる"
       notifications:
         watching:
           title: "ウォッチ中"
-          description: "全てのメッセージについて通知があり、新規返信数が表示されます。"
+          description: "すべてのメッセージの新規投稿について通知があり、新しい返信の件数が表示されます。"
         watching_first_post:
-          title: "最初の投稿をウォッチする"
+          title: "最初の投稿をウォッチ中"
           description: "このグループの新着メッセージは通知されますが、メッセージへの返信は通知されません。"
         tracking:
           title: "追跡中"
@@ -733,17 +733,17 @@ ja:
         icon: "アイコンを選択してください"
         image: "画像のアップロード"
     user_action_groups:
-      "1": "「いいね！」 "
-      "2": "「いいね！」 された"
+      "1": "「いいね！」した数"
+      "2": "「いいね！」を受けた数"
       "3": "ブックマーク"
       "4": "トピック"
       "5": "返信"
-      "6": "反応"
-      "7": "タグ付け"
+      "6": "応答"
+      "7": "メンション"
       "9": "引用"
       "11": "編集"
       "12": "送信済み項目"
-      "13": "受信ボックス"
+      "13": "受信トレイ"
       "14": "保留"
       "15": "下書き"
     categories:
@@ -979,12 +979,12 @@ ja:
         rejected_posts: "拒否された投稿"
       messages:
         all: "すべて"
-        inbox: "受信箱"
+        inbox: "受信トレイ"
         sent: "送信済み"
         archive: "アーカイブ"
         groups: "自分のグループ"
         bulk_select: "メッセージを選択"
-        move_to_inbox: "受信箱へ移動"
+        move_to_inbox: "受信トレイへ移動"
         move_to_archive: "アーカイブ"
         failed_to_move: "選択されたメッセージを移動できませんでした (ネットワークがダウンしている可能性があります)"
         select_all: "すべて選択"
@@ -1934,7 +1934,7 @@ ja:
         change_category: "カテゴリを設定する"
         close_topics: "トピックをクローズする"
         archive_topics: "アーカイブトピック"
-        move_messages_to_inbox: "受信箱へ移動"
+        move_messages_to_inbox: "受信トレイへ移動"
         notification_level: "通知"
         choose_new_category: "このトピックの新しいカテゴリを選択してください"
         selected:
@@ -2623,7 +2623,7 @@ ja:
         help: "%{categoryName} カテゴリの最新トピック"
       top:
         title: "トップ"
-        help: "過去年間、月間、週間及び日間のアクティブトピック"
+        help: "昨年、先月、先週、または昨日で最もアクティブだったトピック"
         all:
           title: "すべて"
         yearly:

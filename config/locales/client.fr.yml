@@ -626,7 +626,7 @@ fr:
           notification: Notification
         email:
           title: "Courriel"
-          status: "%{old_emails} / %{total_emails} courriels synchronisés via IMAP."
+          status: "%{old_emails}/%{total_emails} courriels synchronisés via IMAP."
           enable_smtp: "Activer le SMTP"
           enable_imap: "Activer l'IMAP"
           test_settings: "Tester les paramètres"
