@@ -6,12 +6,12 @@
 
 ar:
   site_settings:
-    discourse_narrative_bot_enabled: "فعّل آلة التحدّث من دِسكورس (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "عطّل مشاركة الترحيب من آلة التحدّث من دِسكورس"
-    discourse_narrative_bot_ignored_usernames: "أسماء المستخدمين التي ستتجاهلها آلة التحدّث من دِسكورس"
-    discourse_narrative_bot_disable_public_replies: "عطّل الردود العمومية من آلة التحدّث من دِسكورس"
-    discourse_narrative_bot_welcome_post_type: "نوع المشاركة الترحيبية التي على آلة التحدّث من دِسكورس إرسالها"
-    discourse_narrative_bot_welcome_post_delay: "انتظر (ن) ثانية قبل إرسال آلة التحدّث من دِسكورس للمشاركة الترحيبية."
+    discourse_narrative_bot_enabled: "تفعيل Discourse Narrative Bot (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "تعطيل مشاركة المنشور الترحيبي من Discourse Narrative Bot"
+    discourse_narrative_bot_ignored_usernames: "أسماء المستخدمين المفترض أن يتجاهلها Discourse Narrative Bot"
+    discourse_narrative_bot_disable_public_replies: "تعطيل الردود العامة من Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_type: "نوع المنشور الترحيبي المفترض أن يُرسله Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_delay: "انتظر (ن) ثانية قبل إرسال المنشور الترحيبي من Discourse Narrative Bot."
   badges:
     certified:
       name: مُعتمد

@@ -499,7 +499,6 @@ zh_CN:
       later_today: "今天晚些时候"
       next_business_day: "下一个工作日"
       tomorrow: "明天"
-      next_week: "下周"
       post_local_date: "发布日期"
       later_this_week: "本周晚些时候"
       start_of_next_business_week: "星期一"
@@ -547,6 +546,8 @@ zh_CN:
       edit_columns:
         save: "保存"
         reset_to_default: "重置为默认"
+      group:
+        all: "所有群组"
     group_histories:
       actions:
         change_group_setting: "更改群组设置"
@@ -558,14 +559,6 @@ zh_CN:
       member_added: "已添加"
       member_requested: "请求于"
       add_members:
-        title: "添加成员到 %{group_name}"
-        description: "你也可以粘贴一个以逗号分隔的列表。"
-        usernames_or_emails:
-          title: "输入用户名或电子邮件地址"
-          input_placeholder: "用户名或电子邮件"
-        usernames:
-          title: "输入用户名"
-          input_placeholder: "用户名"
         notify_users: "通知用户"
       requests:
         title: "请求"
@@ -580,7 +573,6 @@ zh_CN:
         title: "管理"
         name: "名字"
         full_name: "全名"
-        add_members: "添加成员"
         delete_member_confirm: "要从群组 %{group} 中移除用户 %{username} 吗？"
         profile:
           title: 个人资料
@@ -623,7 +615,6 @@ zh_CN:
           settings:
             title: "设置"
             allow_unknown_sender_topic_replies: "允许从未知发件人话题的回复。"
-            allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题，如果未启用此功能，那么不在 IMAP 邮件对话中，且未被邀请至该话题的邮件地址的回复，将会创建一个新的话题。"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
@@ -2084,13 +2075,10 @@ zh_CN:
         delete: "删除话题"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读话题"
-        dismiss_read_with_selected: "忽略 %{count} 个未读"
         dismiss_button: "忽略…"
-        dismiss_button_with_selected: "忽略（%{count}）…"
         dismiss_tooltip: "忽略新帖或停止跟踪话题"
         also_dismiss_topics: "停止追踪这些话题以不再显示为未读"
         dismiss_new: "设为已读"
-        dismiss_new_with_selected: "忽略新内容（%{count}）…"
         toggle: "切换话题批量选择"
         actions: "批量操作"
         change_category: "设置分类"
@@ -2117,7 +2105,6 @@ zh_CN:
         new: "你没有近期话题可读。"
         read: "你尚未阅读任何话题。"
         posted: "你尚未在任何话题中发帖。"
-        ready_to_create: "准备好 "
         latest: "你全都看过了！"
         bookmarks: "你没有收藏任何话题。"
         category: "%{category} 分类中没有话题。"
@@ -2200,7 +2187,6 @@ zh_CN:
       browse_all_categories: 浏览所有分类
       browse_all_tags: 浏览所有标签
       view_latest_topics: 查阅最新话题
-      suggest_create_topic: 开始讨论一个新的话题？
       jump_reply_up: 转到更早的回复
       jump_reply_down: 转到更新的回复
       deleted: "此话题已被删除"
@@ -3124,7 +3110,6 @@ zh_CN:
         show_incoming_updated_topics: "%{shortcut} 显示更新话题"
         search: "%{shortcut} 搜索"
         help: "%{shortcut} 打开键盘帮助"
-        dismiss_new_posts: "%{shortcut} 解除新/帖子提示"
         dismiss_topics: "%{shortcut} 解除话题提示"
         log_out: "%{shortcut} 退出登录"
       composing:
@@ -3210,7 +3195,6 @@ zh_CN:
       tags: "标签"
       choose_for_topic: "可选标签"
       info: "详情"
-      default_info: "该标签不限于任何类别，并且没有同义词。"
       category_restricted: "此标签仅限于你无权访问的分类。"
       synonyms: "同义词"
       synonyms_description: "使用以下标签时，它们将被替换为<b>%{base_tag_name}</b> 。"
@@ -3447,8 +3431,6 @@ zh_CN:
             available: "群组名可用"
             not_available: "群组名不可用"
             blank: "群组名不能为空"
-        add_members:
-          as_owner: "设置用户为此群组拥有者"
         manage:
           interaction:
             email: 邮箱

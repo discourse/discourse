@@ -103,7 +103,6 @@ de:
       maximum_staged_user_per_email_reached: "Maximale Anzahl vorbereiteter Benutzer erreicht, die automatisch per E-Mail erstellt wurden."
       no_subject: "(kein Betreff)"
       no_body: "(kein Inhalt)"
-      missing_attachment: "(Dateianhang %{filename} fehlt)"
       errors:
         empty_email_error: "Passiert wenn die empfangene E-Mail leer war."
         no_message_id_error: "Passiert wenn in der E-Mail die Kopfzeile 'Message-Id' fehlt."
@@ -256,9 +255,6 @@ de:
     not_enough_space_on_disk: "Es gibt nicht genügend freien Festplattenspeicher, um dieses Backup hochzuladen."
     invalid_filename: "Der Dateiname für das Backup enthält ungültige Zeichen. Gültig sind: a-z 0-9 . - _."
     file_exists: "Die Datei, die du versucht hast hochzuladen, existiert bereits."
-    location:
-      local: "Lokal"
-      s3: "Amazon S3"
   invalid_params: "Du hast bei der Anfrage ungültige Parameter angegeben: %{message}"
   not_logged_in: "Dazu musst du angemeldet sein."
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
@@ -273,7 +269,6 @@ de:
   invalid_whisper_access: "Enweder ist Flüstern nicht aktiviert oder du hast keinen Zugang zu Flüster-Beiträgen"
   not_in_group:
     title_topic: "Um dieses Thema zu sehen, musst du die Mitgliedschaft der Gruppe '%{group}' beantragen."
-    title_category: "Du musst in einer Gruppe sein um diese Kategorie zu sehen."
     request_membership: "Mitgliedschaft anfordern"
     join_group: "Gruppe beitreten"
   deleted_topic: "Ups! Dieses Thema wurde gelöscht und ist nicht mehr verfügbar."
@@ -609,7 +604,7 @@ de:
       - Für wen ist sie?
       - Was findet man hier?
       - Warum sollte man hier vorbeischauen?
-      - Wo kann man mehr erfahren (Links, Dokumente, usw.)?
+      - Wo kann man mehr erfahren (Links, Dokumente usw.)?
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
@@ -1049,7 +1044,7 @@ de:
         agreed_flags: Akzeptierte Meldungen
         disagreed_flags: Abgelehnte Meldungen
         ignored_flags: Ignorierte Meldungen
-        score: Wertung
+        score: Score
       description: "Benutzer sortiert nach dem Verhältnis der Team-Reaktionen auf Meldungen (abgelehnt zu angenommen)"
     moderators_activity:
       title: "Moderator-Aktivität"
@@ -1414,7 +1409,6 @@ de:
     title: "Der Name dieser Site, wird für das Title-Tag verwendet."
     site_description: "Beschreibe diese Site in einem Satz. Wird für das \"description\" Meta-Tag verwendet."
     short_site_description: "Kurze Beschreibung, die im Title-Tag auf der Webseite verwendet wird."
-    contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Community. Wird verwendet für kritische Benachrichtigungen sowie auf dem <a href='%{base_path}/about' target='_blank'>/about</a> Kontaktformular für dringende Anfragen."
     contact_url: "Kontakt-URL für diese Seite. Angezeigt auf der <a href='%{base_path}/about' target='_blank'>/about</a> Seite für dringende Fragen."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
@@ -1464,10 +1458,10 @@ de:
     email_custom_headers: "Eine durch senkrechte Striche getrennte Liste von eigenen E-Mail Headerzeilen"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
-    enforce_second_factor: "Zwingt die Benutzer, die Zwei-Faktor-Authentifizierung zu aktivieren. Wähle \"all\", um sie für alle Benutzer zu erzwingen. Wähle \"staff\", um sie nur für Teammitglieder zu erzwingen."
+    enforce_second_factor: "Zwingt die Benutzer, die Zwei-Faktor-Authentifizierung zu aktivieren. Wähle \"all\", um sie für alle Benutzer zu erzwingen. Wähle \"staff\", um sie nur für Team-Mitglieder zu erzwingen."
     force_https: "Erzwinge HTTPS für deine Site. ACHTUNG: Aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
     same_site_cookies: "Benutze dieselben Site-Cookies, sie entfernen alle Vektoren Cross Site Request Forgery auf unterstützten Browsern (Lax oder Strict). Warnung: Strict funktioniert nur auf Seiten, die das Login erzwingen und eine externe Authentifizierungsmethode verwenden."
-    summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
+    summary_score_threshold: "Mindestscore, den ein Beitrag benötigt, um in der „Thema zusammenfassen“-Ansicht zu erscheinen."
     summary_posts_required: "Minimale Beiträge in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert ist. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
     summary_likes_required: "Minimale Likes in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert ist. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
@@ -1674,7 +1668,7 @@ de:
     purge_unactivated_users_grace_period_days: "Frist (in Tagen), bevor ein Benutzer gelöscht wird, der sein Konto nicht aktiviert hat. Setze sie auf 0, um nicht aktivierte Benutzer nie zu bereinigen."
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3. WICHTIG: benötigt gültige S3 Anmeldedaten (sowohl access_key_id als auch secret_access_key)."
     s3_use_iam_profile: 'Verwende ein <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 Instanz-Profil</a>, um Zugriff auf den S3-Bucket zu gewähren. BEACHTE: Das Aktivieren setzt voraus, dass Discourse in einer entsprechend konfigurierten EC2-Instanz läuft, und überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key”.'
-    s3_upload_bucket: "Der Name des Amazon S3 Buckets, in dem hochgeladene Dateien gespeichert werden sollen. ACHTUNG: nur Kleinbuchstaben, keine Punkte, keine Unterstriche."
+    s3_upload_bucket: "Der Name des Amazon-S3-Buckets, in dem hochgeladene Dateien gespeichert werden sollen. ACHTUNG: nur Kleinbuchstaben, keine Punkte, keine Unterstriche."
     s3_access_key_id: "Die Amazon S3 Zugangsschlüssel-ID, die für den Upload von Bildern, Anhängen und Backups verwendet wird."
     s3_secret_access_key: "Die Amazon S3 geheime Zugangsschlüssel-ID, die für den Upload von Bildern, Anhängen und Backups verwendet wird."
     s3_region: "Der Name der Amazon S3 Region, die für das Hochladen von Bildern und Sicherungen verwendet wird."
@@ -1809,7 +1803,6 @@ de:
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
-    reviewable_low_priority_threshold: "Der Prioritätsfilter blendet überprüfbare Elemente aus, die diese Punktzahl nicht erfüllen, es sei denn, der Filter '(any)' wird verwendet."
     high_trust_flaggers_auto_hide_posts: "Neue Benutzerbeiträge werden automatisch ausgeblendet, nachdem sie von einem TL3 + -Benutzer als Spam gekennzeichnet wurden"
     cooldown_hours_until_reflag: "Wie viel Zeit Benutzer warten müssen, bis sie einen Beitrag neu kennzeichnen können"
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
@@ -1898,7 +1891,7 @@ de:
     detect_custom_avatars: "Aktiviere diese Option, um zu überprüfen, ob Benutzer eigene Profilbilder hochgeladen haben."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
     public_user_custom_fields: "Eine Liste von benutzerdefinertern Feldern, die über die API-Schnittstelle abgerufen werden können."
-    staff_user_custom_fields: "Eine Liste von benutzerdefinertern Feldern, die von Teammitgliedern über die API-Schnittstelle abgerufen werden können."
+    staff_user_custom_fields: "Eine Liste von benutzerdefinertern Feldern, die von Team-Mitgliedern über die API-Schnittstelle abgerufen werden können."
     enable_user_directory: "Aktiviert ein durchsuchbares Benutzerverzeichnis"
     enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
@@ -2556,7 +2549,7 @@ de:
 
         Dieser Beitrag wurde wegen Meldungen der Community verborgen, deshalb prüfe bitte, wie du ihn überarbeiten kannst, um ihrem Feedback zu entsprechen. **Du kannst deinen Beitrag nach %{edit_delay} Minuten bearbeiten, und er wird automatisch wieder sichtbar.**
 
-        Falls er jedoch noch einmal von der Community verborgen wird, bleibt er dies, bis ein Teammitglied ihn prüft.
+        Falls er jedoch noch einmal von der Community verborgen wird, bleibt er dies, bis ein Team-Mitglied ihn prüft.
 
         Für zusätzliche Hinweise informiere dich bitte über unsere [Community Richtlinien](%{base_url}/guidelines).
     post_hidden_again:
@@ -2571,7 +2564,7 @@ de:
 
         %{flag_reason}
 
-        Die Community hat den Beitrag gemeldet und er ist nun verborgen. **Da er mehr als einmal verborgen wurde, wird er es bleiben, bis ein Teammitglied ihn prüft.**
+        Die Community hat den Beitrag gemeldet und er ist nun verborgen. **Da er mehr als einmal verborgen wurde, wird er es bleiben, bis ein Team-Mitglied ihn prüft.**
 
         Für zusätzliche Hinweise informiere dich bitte über unsere [Community Richtlinien](%{base_url}/guidelines).
     queued_by_staff:
@@ -2584,7 +2577,7 @@ de:
 
         <%{base_url}%{url}>
 
-        Dein Beitrag bleibt verborgen, bis ein Teammitglied ihn überprüft.
+        Dein Beitrag bleibt verborgen, bis ein Team-Mitglied ihn überprüft.
 
         Weitere Informationen findest du in unseren [community guidelines](%{base_url}/guidelines).
     flags_disagreed:
@@ -2595,7 +2588,7 @@ de:
 
         dies ist eine automatische Nachricht von %{site_name} um dich zu informieren, dass [dein Beitrag](%{base_url}%{url}) wiederhergestellt worden ist.
 
-        Dieser Beitrag wurde von der Community gemeldet, und ein Teammitglied hat entschieden, ihn wiederherzustellen.
+        Dieser Beitrag wurde von der Community gemeldet, und ein Team-Mitglied hat entschieden, ihn wiederherzustellen.
 
         [details="Hier klicken um wiederhergestellten Beitrag auszuklappen"]
         ``` markdown
@@ -3077,7 +3070,7 @@ de:
 
         [Besuche das Dashboard deiner Seite](%{base_url}/admin), um sie zu sehen.
 
-        Sollte im Dashboard nichts sichtbar sein, hat bereits ein anderes Teammitglied auf die Ratschläge reagiert. Eine Liste der Team Handlungen finden sich in den [Team Handlungs Logs](%{base_url}/admin/logs/staff_action_logs).
+        Sollte im Dashboard nichts sichtbar sein, hat bereits ein anderes Team-Mitglied auf die Ratschläge reagiert. Eine Liste der Team Handlungen finden sich in den [Team Handlungs Logs](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Du bist ein neuer Benutzer des Monats!"
       subject_template: "Du bist ein neuer Benutzer des Monats!"
@@ -4518,10 +4511,6 @@ de:
       agree_and_hide:
         title: "Beitrag verstecken"
         description: "Verstecke diesen Beitrag und sende dem Benutzer/der Benutzerin eine Nachricht mit der Bitte, ihn zu bearbeiten."
-      delete_spammer:
-        title: "Spammer löschen"
-        description: "Lösche den Benutzer und alle seine Beiträge und Themen."
-        confirm: "Möchtest du wirklich alle Beiträge und Themen dieses Benutzers löschen und seine IP-Adresse und E-Mail-Adressen blockieren?"
       delete_single:
         title: "Löschen"
       delete:
@@ -4578,8 +4567,6 @@ de:
       approve_and_restore:
         title: "Beitrag genehmigen und wiederherstellen"
       delete_user:
-        title: "Benutzer löschen"
-        confirm: "Möchtest du diesen Benutzer wirklich löschen? Dies wird alle seien Beiträge löschen und seine E-Mail-Adresse und IP-Adresse sperren."
         reason: "Gelöscht via Review-Warteschlange"
   email_style:
     html_missing_placeholder: "Die HTML Vorlage muss %{placeholder}beinhalten"

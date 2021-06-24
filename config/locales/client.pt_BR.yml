@@ -541,7 +541,6 @@ pt_BR:
       later_today: "Hoje mais tarde"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
-      next_week: "Próxima semana"
       post_local_date: "Data na postagem"
       later_this_week: "Mais tarde esta semana"
       start_of_next_business_week: "Segunda-feira"
@@ -590,6 +589,8 @@ pt_BR:
       edit_columns:
         save: "Salvar"
         reset_to_default: "Restaurar ao padrão"
+      group:
+        all: "todos os grupos"
     group_histories:
       actions:
         change_group_setting: "Alterar configurações do grupo"
@@ -601,14 +602,6 @@ pt_BR:
       member_added: "Adicionado"
       member_requested: "Solicitado em"
       add_members:
-        title: "Adicionar membros a %{group_name}"
-        description: "Você também pode colocar aqui uma lista de usuários separados por vírgulas."
-        usernames_or_emails:
-          title: "Digite nomes de usuários ou endereços de email"
-          input_placeholder: "Nomes de usuário ou endereços de email"
-        usernames:
-          title: "Insira os nomes de usuário"
-          input_placeholder: "Nomes de usuários"
         notify_users: "Notificar usuários"
       requests:
         title: "Solicitações"
@@ -623,7 +616,6 @@ pt_BR:
         title: "Gerenciar"
         name: "Nome"
         full_name: "Nome Completo"
-        add_members: "Adicionar membros"
         delete_member_confirm: "Remover '%{username}' do '%{group}' grupo?"
         profile:
           title: Perfil
@@ -660,7 +652,6 @@ pt_BR:
           settings:
             title: "Configurações"
             allow_unknown_sender_topic_replies: "Permitir que remetentes desconhecidos respondam a tópicos."
-            allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos respondam a tópicos de grupo. Se não estiver habilitado, respostas de endereços de e-mail não incluídos no tópico de e-mail IMAP ou convidados para o tópico irão criar um novo tópico."
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Nenhuma caixa de correio foi encontrada nesta conta de e-mail."
@@ -2971,7 +2962,6 @@ pt_BR:
         show_incoming_updated_topics: "%{shortcut} Exibir tópicos atualizados"
         search: "%{shortcut} Procurar"
         help: "%{shortcut} Abrir ajuda de teclado"
-        dismiss_new_posts: "%{shortcut} Descartar Novas Postagens"
         dismiss_topics: "%{shortcut} Descartar Tópicos"
         log_out: "%{shortcut} Deslogar"
       composing:
@@ -3058,7 +3048,6 @@ pt_BR:
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Informações"
-      default_info: "Esta etiqueta não está restrita a nenhuma categorias e não possui sinônimos."
       category_restricted: "Essa tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
       synonyms_description: "Quando as seguintes tags forem usadas, eles serão substituídas por <b>%{base_tag_name}</b>."
@@ -3294,8 +3283,6 @@ pt_BR:
             available: "O nome do grupo está disponível"
             not_available: "O nome do grupo não está disponível"
             blank: "O nome do grupo não pode ficar em branco"
-        add_members:
-          as_owner: "Definir usuário (s) como proprietário (s) deste grupo"
         manage:
           interaction:
             email: E-mail

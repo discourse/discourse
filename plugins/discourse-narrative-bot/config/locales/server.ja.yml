@@ -6,11 +6,11 @@
 
 ja:
   site_settings:
-    disable_discourse_narrative_bot_welcome_post: "ディスコースナレーター、ボットからのようこそ投稿を無効にしてください。"
-    discourse_narrative_bot_ignored_usernames: "ディスコースナレーター、ボットのユーザー名は気にするべきではありません。"
-    discourse_narrative_bot_disable_public_replies: "ディスコースナレーター、ボットからの返信を無効にして下さい。"
-    discourse_narrative_bot_welcome_post_type: "ディスコースナレーター、ボットが送るようこそ投稿のタイプ"
-    discourse_narrative_bot_welcome_post_delay: "ディスコースのナレーター、ボットのようこそ投稿を送信する前に(n)秒待ってください。"
+    disable_discourse_narrative_bot_welcome_post: "Discourse Narrative Bot のウェルカム投稿を無効にする"
+    discourse_narrative_bot_ignored_usernames: "Discourse Narrative Bot が無視するユーザー名"
+    discourse_narrative_bot_disable_public_replies: "Discourse Narrative Bot の公開返信を無効にする"
+    discourse_narrative_bot_welcome_post_type: "Discourse Narrative Bot が送信するウェルカム投稿のタイプ"
+    discourse_narrative_bot_welcome_post_delay: "Discourse Narrative Bot のウェルカム投稿を送信するまで (n) 秒待ちます。"
   badges:
     certified:
       name: 認証済

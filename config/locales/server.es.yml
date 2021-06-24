@@ -62,9 +62,9 @@ es:
       unrecognized_extension: "Extensión de archivo no reconocida: %{extension}"
     import_error:
       generic: Ha ocurrido un error al importar el tema
-      about_json: "Error de importación: about.json no existe o no es válido. ¿Estás seguro de que este es un tema de Discourse?"
-      about_json_values: "about.json contiene valores inválidos: %{errors}"
-      modifier_values: "los modificadores about.json contienen valores inválidos: %{errors}"
+      about_json: "Error de importación: about.json no existe o no es válido. ¿Seguro que este es un tema de Discourse?"
+      about_json_values: "about.json contiene valores no válidos: %{errors}"
+      modifier_values: "los modificadores about.json contienen valores no válidos: %{errors}"
       git: "Error al clonar el repositorio git, se deniega el acceso o no se encuentra el repositorio"
       git_ref_not_found: "No se ha podido hacer checkout de git reference: %{ref}"
       unpack_failed: "Error al descomprimir el archivo"
@@ -78,7 +78,7 @@ es:
       no_multilevels_components: "Los temas con temas secundarios no pueden ser temas secundarios en sí mismos."
       optimized_link: Los enlaces de imagen optimizados son efímeros y no deben incluirse en el código fuente del tema.
     settings_errors:
-      invalid_yaml: "El YAML provisto es inválido."
+      invalid_yaml: "El YAML provisto no es válido."
       data_type_not_a_number: "Tipo de ajuste `%{name}` no soportado. Los tipos soportados son `integer`, `bool`, `list`, `enum` y `upload`"
       name_too_long: "Hay un ajuste con un nombre muy largo. La cantidad máxima de caracteres es 255"
       default_value_missing: "El ajuste «%{name}» no tiene valor por defecto"
@@ -103,7 +103,6 @@ es:
       maximum_staged_user_per_email_reached: "Se alcanzó el número máximo de usuarios provisionales creados por correo electrónico."
       no_subject: "(sin título)"
       no_body: "(sin mensaje)"
-      missing_attachment: "(falta el archivo adjunto %{filename})"
       errors:
         empty_email_error: "Sucede cuando el texto en bruto del correo electrónico que recibimos está en blanco."
         no_message_id_error: "Sucede cuando el correo electrónico no tiene el encabezado de «ID del mensaje»."
@@ -119,7 +118,7 @@ es:
         reply_user_not_matching_error: "Sucede cuando una respuesta viene de una dirección de correo electrónico diferente a la que se le envió la notificación."
         topic_not_found_error: "Sucede cuando entra una respuesta pero el tema relacionado ha sido eliminado."
         topic_closed_error: "Sucede cuando entra una respuesta pero el tema relacionado ha sido cerrado. "
-        bounced_email_error: "El correo electrónico es un reporte de correo electrónico rebotado."
+        bounced_email_error: "El correo electrónico es un informe de correo electrónico rebotado."
         screened_email_error: "Sucede cuando la dirección de correo electrónico del remitente ya ha sido bloqueada."
         unsubscribe_not_allowed: "Sucede cuando no se le permite a este usuario anular la subscripción por correo electrónico."
         email_not_allowed: "Ocurre cuando la dirección de correo electrónico no está en la lista de permitidos o está en la lista de bloqueo."
@@ -130,7 +129,7 @@ es:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "está limitado a %{max} caracteres; has ingresado %{length}."
+      too_long_validation: "está limitado a %{max} caracteres; has introducido %{length}."
       invalid_boolean: "Booleano no válido."
       taken: "ya ha sido escogido"
       accepted: debe ser aceptado
@@ -145,7 +144,7 @@ es:
       greater_than_or_equal_to: debe ser mayor o igual que %{count}
       has_already_been_used: "ya se ha utilizado"
       inclusion: no está incluido en la lista
-      invalid: es inválido
+      invalid: no es válido
       is_invalid: "parece poco claro, ¿es una oración completa?"
       is_invalid_meaningful: "parece poco claro, la mayoría de las palabras contienen las mismas letras una y otra vez"
       is_invalid_unpretentious: "parece poco claro, una o más palabras es muy larga"
@@ -213,8 +212,8 @@ es:
     comma: ", "
   invite:
     expired: "Su token de invitación ha caducado. Por favor, <a href='%{base_url}/about'>póngase en contacto con el personal</a>."
-    not_found: "El código de invitación es inválido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro equipo</a>."
-    not_found_json: "El código de invitación es inválido. Por favor, ponte en contacto con nuestro equipo."
+    not_found: "El código de invitación no es válido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro equipo</a>."
+    not_found_json: "El código de invitación no es válido. Por favor, ponte en contacto con nuestro equipo."
     not_matching_email: "Tu dirección de correo y la dirección asociada a la invitación no coinciden. Por favor, contacta con la administración del sitio."
     not_found_template: |
       <p>Tu invitación a <a href="%{base_url}">%{site_name}</a> ya ha sido utilizada.</p>
@@ -227,6 +226,9 @@ es:
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
+    rate_limit:
+      one: "Ya has enviado %{count} invitación en el último día, espera %{time_left} antes de volverlo a intentar."
+      other: "Ya has enviado %{count} invitaciones en el último día, espera %{time_left} antes de volverlo a intentar."
     confirm_email: "<p>¡Ya casi terminas! Te enviamos un correo de activación a tu dirección de correo electrónico. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
     disabled_errors:
@@ -249,14 +251,11 @@ es:
     user_cannot_see_topic: "%{username} no puede ver el tema."
   backup:
     operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
-    backup_file_should_be_tar_gz: "El archivo de la copia de respaldo debería ser formato .tar.gz"
-    not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de respaldo."
-    invalid_filename: "El nombre de archivo del respaldo contiene caracteres inválidos. Los válidos son a-z 0-9 . - _."
+    backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser formato .tar.gz"
+    not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de seguridad."
+    invalid_filename: "El nombre de archivo del respaldo contiene caracteres no válidos. Los válidos son a-z 0-9 . - _."
     file_exists: "El archivo que estás intentando subir ya existe."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
-  invalid_params: "Proporcionaste parámetros inválidos para la solicitud: %{message}"
+  invalid_params: "Has proporcionado parámetros no válidos para la solicitud: %{message}"
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se pudo encontrar la URL o recurso solicitado."
   invalid_access: "No tienes permitido ver el recurso solicitado."
@@ -265,12 +264,11 @@ es:
   provider_not_enabled: "No tienes permitido visualizar el recurso solicitado. El proveedor de autenticación no está habilitado."
   provider_not_found: "No tienes permitido visualizar el recurso solicitado. El proveedor de autenticación no existe."
   read_only_mode_enabled: "El sitio está en modo solo lectura. Las interacciones están deshabilitadas."
-  invalid_grant_badge_reason_link: "El enlace externo o inválido de discourse no está permitido como motivo de la medalla."
+  invalid_grant_badge_reason_link: "El enlace externo o inválido de discourse no está permitido como motivo de la insignia."
   email_template_cant_be_modified: "Esta plantilla de correo electrónico no se puede modificar"
   invalid_whisper_access: "O los susurros no están habilitados o no tienes permitido crear susurros"
   not_in_group:
     title_topic: "Necesitas solicitar formar parte del grupo «%{group}» para ver este tema"
-    title_category: "Debes estar en grupo para ver esta categoría."
     request_membership: "Solicitar membresía"
     join_group: "Unirse al grupo"
   deleted_topic: "¡Ups! Este tema se ha eliminado y ya no está disponible."
@@ -344,7 +342,7 @@ es:
   create_pm_on_existing_topic: "Lo sentimos, no puedes crear un mensaje privado en un tema existente."
   slow_mode_enabled: "Este tema está en modo lento."
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
-  invalid_characters: "contiene caracteres inválidos"
+  invalid_characters: "contiene caracteres no válidos"
   is_invalid: "parece poco claro, ¿es una oración completa?"
   next_page: "página siguiente →"
   prev_page: "← página anterior"
@@ -377,7 +375,7 @@ es:
     user_posts: "Publicaciones recientes de @%{username}"
     user_topics: "Temas recientes de @%{username}"
     tag: "Temas etiquetados"
-    badge: "%{display_name} medalla en %{site_title}"
+    badge: "%{display_name} insignia en %{site_title}"
   too_late_to_edit: "Esa publicación se publicó hace demasiado tiempo. No se puede editar ni eliminar."
   edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no se pueden guardar."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
@@ -439,8 +437,8 @@ es:
         Tu solicitud para entrar al grupo @%{group_name} ha sido aceptada y ahora eres parte de él.
   education:
     until_posts:
-      one: "%{count} post"
-      other: "%{count} publicaciones"
+      one: "%{count} mensaje"
+      other: "%{count} mensajes"
     "new-topic": |
       Te damos la bienvenida a %{site_name}. **¡Gracias por empezar un nuevo tema!**
 
@@ -462,47 +460,47 @@ es:
 
       Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text} mensajes.
     avatar: |
-      ### ¿Que tal si agregas una imagen para tu cuenta?
+      ### ¿Qué tal si eliges una imagen para tu cuenta?
 
       Has publicado algunos temas y respuestas, pero tu imagen de perfil no es tan única como lo eres tú, es solo una letra.
 
       ¿Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
 
-      ¡Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todos tienen una imagen de perfil única!
+      Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todo el mundo tiene una imagen de perfil única.
     sequential_replies: |
       ### Considera la posibilidad de responder a varias publicaciones a la vez
 
-      En vez de publicar varias respuestas seguidas en un tema, por favor, considera incluir en una sola respuesta citas de las publicaciones previas o mencionar a un @usuario.
+      En vez de publicar varias respuestas seguidas en un tema, considera incluir en una sola respuesta varias citas de las publicaciones previas o @menciones a otras personas.
 
-      Puedes editar tu respuesta previa para añadir una cita seleccionando el texto y pulsando en el botón <b>citar respuesta</b> que aparecerá.
+      Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
 
-      Es más fácil para todos leer temas con menos respuestas pero más profundas que muchas respuestas pequeñas individuales.
+      Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
     dominating_topic: |
       ### Deja que otras personas se unan a la conversación
 
       Este tema es claramente importante para ti &ndash; has publicado más del %{percent}% de las respuestas.
 
-      Podría mejor todavía si le dieras a otras personas la oportunidad de compartir sus puntos de vista también. ¿Podrías invitarles?
+      Podría ser mejor todavía si le dieras a otras personas la oportunidad de compartir sus puntos de vista también. ¿Podrías invitarles?
     get_a_room: |
       ### Anima a los demás a participar
 
-      Has respondido %{count} veces a @%{reply_username} en este tema en particular
+      Has respondido %{count} veces a @%{reply_username} en este tema en particular.
 
-      Un buen debate incluye muchas voces y perspectivas. ¿Cómo podrías animar a que participar alguien más?
+      Un buen debate incluye muchas voces y perspectivas. ¿Puedes animar a que participe alguien más?
 
-      Y, no olvides: si quieres continuar la conversación con esta persona en particular fuera de la vista de todo el mundo, [envíales un mensaje personal](%{base_path}/u/%{reply_username}).
+      Y no olvides: si quieres seguir la conversación con esta persona en particular fuera de la vista de todo el mundo, [envíale un mensaje personal](%{base_path}/u/%{reply_username}).
     too_many_replies: |
-      ### Has alcanzado el límite de respuestas para este tema
+      ### Has llegado al límite de respuestas en este tema
 
-      Lo sentimos, los usuarios nuevos tienen temporalmente un límite de %{newuser_max_replies_per_topic} respuestas en el mismo tema.
+      Lo sentimos, los nuevos usuarios tienen temporalmente un límite de %{newuser_max_replies_per_topic} respuestas en el mismo tema.
 
-      En vez de añadir otra respuesta, por favor, considera editar tus respuestas previas o visitar otros temas.
+      En vez de añadir otra respuesta, puedes editar tus respuestas anteriores o visitar otros temas.
     reviving_old_topic: |
       ### ¿Revivir este tema?
 
-      La última respuesta a este tema fue **%{time_ago}**. Tu publicación reactivará el tema, subiéndolo a la parte superior de la lista y notificando a aquellos previamente involucrados.
+      La última respuesta a este tema fue **%{time_ago}**. Tu publicación reactivará el tema, subiéndolo a la parte superior de la lista y notificando a aquellas personas involucradas en su momento.
 
-      ¿Estás seguro de que quieres continuar esta conversación antigua?
+      ¿Seguro que quieres continuar esta conversación antigua?
   activerecord:
     attributes:
       category:
@@ -530,7 +528,7 @@ es:
               unable_to_update: "Hubo un error actualizando ese tema."
               unable_to_tag: "Hubo un error al etiquetar el tema."
             featured_link:
-              invalid: "es inválido. El URL debería incluir http:// o https://."
+              invalid: "no es válido. La URL debería incluir http:// o https://."
               invalid_category: "no se puede editar en esta categoría."
         user:
           attributes:
@@ -585,6 +583,8 @@ es:
           attributes:
             word:
               too_many: "Demasiadas palabras para esa acción"
+            base:
+              invalid_url: "La dirección URL de reemplazo no es válida"
       <<: *errors
   uncategorized_category_name: "Sin categoría"
   vip_category_name: "Sala VIP"
@@ -625,11 +625,11 @@ es:
       * Acceder a la categoría privada Sala VIP, solo visible para usuarios de nivel 3 o más
       * Ocultar spam tras un solo reporte
 
-      Consulta aquí [la lista actualizada de usuarios habituales](%{base_path}/badges/3/regular). ¡Recuerda enviar un saludo!
+      Consulta aquí la [lista actualizada de usuarios habituales](%{base_path}/badges/3/regular). ¡Recuerda enviar un saludo!
 
       ¡Gracias por ser parte importante de esta comunidad!
 
-      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Por favor, ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán considerándose habituales.)
+      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán considerándose habituales.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEER PRIMERO: Guía rápida de inicio para administradores"
@@ -841,7 +841,7 @@ es:
     activated: "Disculpa, esta cuenta ya fue activada."
     admin_confirm:
       title: "Confirmar cuenta de administrador"
-      description: "¿Estás seguro de que querer convertir a <b>%{target_username} (%{target_email})</b> en un administrador?"
+      description: "¿Seguro que quieres convertir a <b>%{target_username} (%{target_email})</b> en administrador?"
       grant: "Conceder acceso de administrador"
       complete: "<b>%{target_username}</b> ahora es un administrador."
       back_to: "Volver a %{title}"
@@ -857,7 +857,7 @@ es:
       title: "Spam"
       description: "Esta publicación es publicidad o vandalismo. No es útil o relevante para el tema."
       short_description: "Esto es publicidad o vandalismo"
-      email_title: '«%{title}» fue reportado como spam'
+      email_title: '«%{title}» fue denunciado como spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropiado"
@@ -908,7 +908,7 @@ es:
       self: "No tienes ningún borrador; empieza a escribir una respuesta en cualquier tema y se guardará automáticamente como nuevo borrador."
   webauthn:
     validation:
-      invalid_type_error: "El proveedor tipo webauthn provisto es inválido. Los tipos válidos son webauthn.get y webauthn.create."
+      invalid_type_error: "El proveedor tipo webauthn provisto no es válido. Los tipos válidos son webauthn.get y webauthn.create."
       challenge_mismatch_error: "El desafío provisto no coincide con el desafío generado por el servidor de autenticación."
       invalid_origin_error: "El origen de la solicitud de autenticación no coincide con el origen del servidor."
       malformed_attestation_error: "Se produjo un error al decodificar los datos de certificación."
@@ -934,14 +934,14 @@ es:
       short_description: 'Violación de las <a href="%{base_path}/guidelines">directrices de la comunidad</a>'
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: 'Este tema necesita revisión por parte del staff con respecto a las <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">Términos de servicio</a> o por otra razón no mencionada anteriormente.'
-      long_form: "reportado para ser atendido por los moderadores"
+      description: 'Este tema necesita ser revisado por por un motivo relacionado con las <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">Términos de servicio</a> o por otra razón no mencionada anteriormente.'
+      long_form: "denunciado para ser atendido por los moderadores"
       short_description: "Requiere atención del staff por otro motivo"
       email_title: 'El tema «%{title}» requiere la atención de un moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Tu publicación fue reportada por la comunidad. Por favor, <a href="%{path}">revisa tus mensajes</a>.</p>'
-    user_must_edit: "<p>Esta publicación fue reportada por la comunidad y se encuentra oculta temporalmente.</p>"
+    you_must_edit: '<p>Tu publicación fue denunciada por la comunidad. Por favor, <a href="%{path}">revisa tus mensajes</a>.</p>'
+    user_must_edit: "<p>Esta publicación fue denunciada por la comunidad y se encuentra oculta temporalmente.</p>"
   ignored:
     hidden_content: "<p>Contenido ignorado</p>"
   archetypes:
@@ -1006,10 +1006,10 @@ es:
       bookmarks_calendar: "Leer recordatorios de marcadores"
     invalid_public_key: "Lo sentimos, la clave pública no es válida."
     invalid_auth_redirect: "Lo sentimos, este host auth_redirect no está permitido."
-    invalid_token: "El token es inválido, ha expirado o no se puede conseguir."
+    invalid_token: "El token no es válido, ha caducado o no se encuentra"
   flags:
     errors:
-      already_handled: "El reporte ya ha sido atendido"
+      already_handled: "La denuncia ya ha sido atendida"
   reports:
     default:
       labels:
@@ -1026,27 +1026,27 @@ es:
         edit_reason: Motivo
       description: "Número de ediciones nuevas de publicaciones."
     user_flagging_ratio:
-      title: "Proporción de reportes del usuario"
+      title: "Proporción de denuncias del usuario"
       labels:
         user: Usuario
-        agreed_flags: Reportes de acuerdo
-        disagreed_flags: Reportes en desacuerdo
-        ignored_flags: Reportes ignorados
+        agreed_flags: Denuncias aceptadas
+        disagreed_flags: Denuncias rechazadas
+        ignored_flags: Denuncias ignoradas
         score: Puntuación
-      description: "Lista de usuarios ordenada de acuerdo a la proporción de respuestas a sus reportes por parte del staff (de acuerdo a en desacuerdo)."
+      description: "Lista de usuarios ordenada de acuerdo a la proporción de respuestas a sus denuncias por parte del personal (de acuerdo a en desacuerdo)."
     moderators_activity:
       title: "Actividad de moderación"
       labels:
         moderator: Moderador
-        flag_count: Reportes revisados
+        flag_count: Denuncias revisadas
         time_read: Tiempo de lectura
         topic_count: Temas creados
         post_count: Publicaciones creadas
         pm_count: Mensajes privados creados
         revision_count: Revisiones
-      description: Lista de actividad de moderación que incluye los reportes revisados, tiempo de lectura, temas creados, publicaciones creadas, mensajes personales creados y revisiones.
+      description: Lista de actividad de moderación que incluye las denuncias revisadas, tiempo de lectura, temas creados, publicaciones creadas, mensajes personales creados y revisiones.
     flags_status:
-      title: "Estado de reportes"
+      title: "Estado de denuncias"
       values:
         agreed: De acuerdo
         disagreed: En desacuerdo
@@ -1056,9 +1056,9 @@ es:
         flag: Tipo
         assigned: Asignado
         poster: Autor
-        flagger: Reportado por
+        flagger: Denunciado por
         time_to_resolution: Tiempo de resolución
-      description: "Lista de estados de reporte que incluye el tipo de reporte, usuario que lo publica, usuario que reporta y el tiempo de resolución."
+      description: "Lista de estados de denuncia que incluye el tipo de denuncia, el autor, el usuario que denuncia y el tiempo de resolución."
     visits:
       title: "Visitas de usuario"
       xaxis: "Día"
@@ -1127,10 +1127,10 @@ es:
       yaxis: "Número de nuevos me gusta"
       description: "Número de nuevos me gusta."
     flags:
-      title: "Reportes"
+      title: "Denuncias"
       xaxis: "Día"
-      yaxis: "Número de reportes"
-      description: "Número de reportes nuevos."
+      yaxis: "Número de denuncias"
+      description: "Número de denuncias nuevas."
     bookmarks:
       title: "Marcadores"
       xaxis: "Día"
@@ -1192,12 +1192,12 @@ es:
       title: "Notificaciones a moderadores"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de veces que los moderadores han sido notificados de forma privada por un reporte."
+      description: "Número de veces que los moderadores han sido notificados de forma privada por una denuncia."
     notify_user_private_messages:
       title: "Notificaciones a usuarios"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de veces que se le ha notificado a los usuarios de forma privada debido a un reporte."
+      description: "Número de veces que se le ha notificado a los usuarios de forma privada debido a una denuncia."
     top_referrers:
       title: "Aquellos que realizan la mayor cantidad de recomendaciones"
       xaxis: "Usuario"
@@ -1396,7 +1396,6 @@ es:
     title: "El nombre de este sitio, utilizada en la etiqueta título."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
     short_site_description: "Descripción breve, utilizada como el título de la etiqueta en la página principal."
-    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas, así como en la página de <a href='%{base_path}/about' target='_blank'>/información</a> de contacto para asuntos urgentes."
     contact_url: "Dirección URL de contacto para el sitio. Se mostrará en la página de <a href='%{base_path}/about' target='_blank'>/about</a> (acerca de) para temas urgentes."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
@@ -1415,7 +1414,7 @@ es:
     responsive_post_image_sizes: "Cambiar el tamaño de las imágenes de vista previa de lightbox para permitir su visualización en pantallas de alto DPI de las siguientes proporciones de píxeles. Eliminar todos los valores para deshabilitar las imágenes responsivas."
     fixed_category_positions: "Si está marcada, podrás organizar las categorías en un orden determinado. Si no, las categorías se mostrarán según su actividad reciente."
     fixed_category_positions_on_create: "Si está marcada, el orden de las categorías se mantendrá en el diálogo de creación de temas (requiere fixed_category_positions)."
-    add_rel_nofollow_to_user_content: 'Añadir la etiqueta rel nofollow a todo el contenido ingresado por los usuarios, excepto por los enlaces internos (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos las publicaciones con: «rake posts:rebake»'
+    add_rel_nofollow_to_user_content: 'Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces internos (incluidos dominios principales). Si cambias esto, deberás hacer un rebake de todos las publicaciones con: «rake posts:rebake»'
     exclude_rel_nofollow_domains: "Una lista de dominios a cuyos enlaces no se les añadirá la etiqueta nofollow. ejemplo.com permitirá automáticamente sub.ejemplo.com también. Como mínimo, deberías añadir el dominio de este sitio para ayudar a los rastreadores web a encontrar todo el contenido. Si otras partes de este sitio web están en otros dominios, añádelos también."
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de una publicación."
     topic_excerpt_maxlength: "Longitud máxima de un extracto o resumen de tema, generado a partir de la primera publicación de un tema."
@@ -1462,20 +1461,20 @@ es:
     polling_interval: "Cuando no este en long polling, frecuencia con la que los clientes con sesión iniciada hacen poll en milisegundos"
     anon_polling_interval: "Frecuencia en milisegundos con la que los clientes anónimos hacen poll"
     background_polling_interval: "Frecuencia en milisegundos con la que los clientes con sesión iniciada hacen poll (mientras que la ventana está en segundo plano)"
-    hide_post_sensitivity: "La probabilidad de que una publicación reportada se oculte"
-    silence_new_user_sensitivity: "La probabilidad de que un usuario nuevo sea silenciado con base en reportes de spam"
-    auto_close_topic_sensitivity: "La probabilidad de que un tema reportado se cierre automáticamente"
-    cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar una publicación oculta debido a reportes de la comunidad"
+    hide_post_sensitivity: "La probabilidad de que una publicación denunciada se oculte"
+    silence_new_user_sensitivity: "La probabilidad de que un usuario nuevo sea silenciado basándose en denuncias de spam"
+    auto_close_topic_sensitivity: "La probabilidad de que un tema denunciado se cierre automáticamente"
+    cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar una publicación oculta debido a denuncias de la comunidad"
     max_topics_in_first_day: "El número máximo de temas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
     max_replies_in_first_day: "El número máximo de respuestas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
     tl2_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 2 (miembros) multiplicándolo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 3 (regular) multiplicándolo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 4 (líder) multiplicándolo por este número"
-    num_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo se reportan como spam por num_spam_flags_to_silence_new_user usuarios diferentes, ocultar todas sus publicaciones y evitar que publique en el futuro. Establece el valor en 0 para deshabilitar."
-    num_tl3_flags_to_silence_new_user: "Si las publicaciones de un usuario nuevo obtienen este número de reportes de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todas sus publicaciones y no podrá publicar más en un futuro. Establece el valor en 0 para deshabilitar."
-    num_tl3_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo reciben num_tl3_flags_to_silence_new_user reportes de este número de usuarios de nivel 3 de confianza, ocultar todas sus publicaciones y prevenir futuras publicaciones. Establece el valor en 0 para deshabilitar."
+    num_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo se denuncian como spam por num_spam_flags_to_silence_new_user usuarios diferentes, ocultar todas sus publicaciones y evitar que publique en el futuro. Establece el valor en 0 para deshabilitar."
+    num_tl3_flags_to_silence_new_user: "Si las publicaciones de un usuario nuevo obtienen este número de denuncias de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todas sus publicaciones y no podrá publicar más en un futuro. Establece el valor en 0 para deshabilitar."
+    num_tl3_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo reciben num_tl3_flags_to_silence_new_user denuncias de este número de usuarios de nivel 3 de confianza, ocultar todas sus publicaciones y prevenir futuras publicaciones. Establece el valor en 0 para deshabilitar."
     notify_mods_when_user_silenced: "Si un usuario es silenciado automáticamente, enviar un mensaje a todos los moderadores."
-    flag_sockpuppets: "Si un usuario nuevo responde a un tema desde la misma dirección de IP que el usuario que inició el tema, reportar las publicaciones de ambos spam en potencia."
+    flag_sockpuppets: "Si un usuario nuevo responde a un tema desde la misma dirección de IP que el usuario que inició el tema, denunciar las publicaciones de ambos spam en potencia."
     traditional_markdown_linebreaks: "Utilizar saltos de línea tradicionales en Markdown, los cuales requieren dos espacios al final para un salto de línea."
     enable_markdown_typographer: "Utilizar reglas de tipografía para mejorar la legibilidad de texto: remplaza citas rectas «con comillas», (c) (tm) con símbolos, -- con guion largo –, etc"
     enable_markdown_linkify: "Tratar automáticamente el texto que parezca un enlace como un enlace: www.ejemplo.com y https://ejemplo.com se vincularán automáticamente"
@@ -1483,8 +1482,8 @@ es:
     markdown_typographer_quotation_marks: "Lista de pares de reemplazo de comillas dobles y simples"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en una publicación (me gusta, reportes, etc)."
     must_approve_users: "El staff debe aprobar todas las cuentas nuevas antes de que se les permita acceder al sitio."
-    invite_code: "El usuario debe ingresar este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
-    approve_suspect_users: "Agregar usuarios sospechosos a la lista por revisión. Los usuarios sospechosos que hayan ingresado una biografía/página web pero que no hayan registrado ninguna actividad de lectura."
+    invite_code: "El usuario debe introducir este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
+    approve_suspect_users: "Mandar usuarios sospechosos a la lista de revisión. Se consideran usuarios sospechosos aquellos que hayan introducido una biografía o página web, pero que no hayan registrado ninguna actividad de lectura."
     review_every_post: "Todas las publicaciones deben ser revisadas. ¡ADVERTENCIA! NO SE RECOMIENDA PARA SITIOS CON MUCHA ACTIVIDAD."
     pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
@@ -1506,11 +1505,11 @@ es:
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
     content_security_policy: "Activar la política de seguridad de contenido (CSP)"
     content_security_policy_report_only: "Activar solo el informe de la política de seguridad de contenido (CPS)"
-    content_security_policy_collect_reports: "Habilitar la recolección de reportes de violación de CSP en /csp_reports"
+    content_security_policy_collect_reports: "Habilitar la recolección de denuncias de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
     top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
-    post_menu: "Determinar los elementos que aparecen en el menú de publicación  y su orden. Ejemplo: me gusta|editar|reportar|eliminar|compartir|guardar en marcadores|responder"
+    post_menu: "Determinar los elementos que aparecen en el menú de publicación y su orden. Ejemplo: me gusta|editar|denunciar|eliminar|compartir|guardar en marcadores|responder"
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determinar los elementos que aparecen en el cuadro de compartir y su orden."
     site_contact_username: "Nombre de usuario de miembro del staff desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
@@ -1532,7 +1531,7 @@ es:
     enable_rich_text_paste: "Habilitar conversión automática de HTML a Markdown al pegar texto en el compositor. (Experimental)"
     send_old_credential_reminder_days: "Recordar credenciales antiguas después de días"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
-    enable_badges: "Activar el sistema de medallas"
+    enable_badges: "Activar el sistema de insignias"
     enable_whispers: "Permitir que los miembros del staff se comuniquen entre ellos en privado dentro de los temas."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     blocked_email_domains: "Lista de dominios de correo electrónico que no pueden ser utilizados para registrarse. Ejemplo: mailinator.com|trashmail.net"
@@ -1596,20 +1595,20 @@ es:
     discord_secret: "Clave secreta de Discord"
     discord_trusted_guilds: 'Solo permitir iniciar sesión con Discord a miembros de estas guilds de Discord. Usa la ID numérica del guild. Para más información, mira las instrucciones <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Deja en blanco para permitir cualquier guild.'
     enable_backups: "Permitir a los administradores crear respaldos del foro"
-    allow_restore: "Permitir restaurar, ¡lo cual puede remplazar TODOS los datos del sitio! Dejar en falso a menos de que tengas planeado recuperar los datos desde una copia de respaldo. "
-    maximum_backups: "La cantidad máxima de copias de respaldo que se mantendrán en el disco. Las copias de respaldo más antiguas se eliminan automáticamente"
+    allow_restore: "Permitir restaurar, ¡lo cual puede remplazar TODOS los datos del sitio! Dejar en falso a menos de que tengas planeado recuperar los datos desde una copia de seguridad."
+    maximum_backups: "La cantidad máxima de copias de seguridad que se mantendrán en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     automatic_backups_enabled: "Ejecutar respaldos automáticos definidos por la opción de frecuencia de respaldos"
     backup_frequency: "El número de días entre respaldos."
-    s3_backup_bucket: "El bucket remoto para mantener copias de respaldo. AVISO: Asegúrate de que es un bucket privado."
-    s3_endpoint: "El endpoint se puede modificar para realizar una copia de respaldo en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
+    s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
+    s3_endpoint: "El terminal se puede modificar para realizar una copia de seguridad en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
     s3_configure_tombstone_policy: "Habilitar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está deshabilitado, no se reclamará ningún espacio después de eliminar las cargas."
     s3_disable_cleanup: "Evite la eliminación de copias de seguridad antiguas de S3 cuando hay más copias de seguridad que el máximo permitido."
     enable_s3_inventory: "Generar informes y verificar las cargas utilizando el inventario de Amazon S3. IMPORTANTE: requiere credenciales S3 válidas (tanto la clave de acceso como la clave de acceso secreta)."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
-    backup_with_uploads: "Incluir archivos subidos en los respaldos programados. Si esta opción está deshabilitada, tan solo se ejecutará una copia de respaldo de la base de datos."
-    backup_location: "Ubicación donde se almacenan las copias de respaldo. IMPORTANTE: S3 requiere credenciales S3 válidas ingresadas en la configuración de archivos."
+    backup_with_uploads: "Incluir archivos subidos en las copias de seguridad programadas. Si esta opción está deshabilitada, tan solo se ejecutará una copia de seguridad de la base de datos."
+    backup_location: "Ubicación donde se almacenan las copias de respaldo. IMPORTANTE: S3 requiere credenciales S3 válidas introducidas en la configuración de archivos."
     backup_gzip_compression_level_for_uploads: "Nivel de compresión Gzip utilizado para comprimir archivos subidos."
-    include_thumbnails_in_backups: "Incluir miniaturas generadas en las copias de respaldo. Deshabilitar esto hará que las copias de respaldo sean más pequeñas, pero requiere el rebake de todas las publicaciones después de una restauración."
+    include_thumbnails_in_backups: "Incluir miniaturas generadas en las copias de seguridad. Deshabilitar esto hará que las copias de seguridad sean más pequeñas, pero requiere el rebake de todas las publicaciones después de una restauración."
     active_user_rate_limit_secs: "Con qué frecuencia actualizaremos el campo «last_seen_at», en segundos"
     verbose_localization: "Mostrar sugerencias de localización extendida en la interface de usuario "
     previous_visit_timeout_hours: "Tiempo que debe pasar antes de que una visita sea considerada la «visita previa», en horas"
@@ -1622,7 +1621,7 @@ es:
     rate_limit_new_user_create_topic: "Después de crear un tema, los nuevos usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_new_user_create_post: "Después de realizar una publicación, los nuevos usuarios deben esperar (n) segundos antes de crear otra publicación."
     max_likes_per_day: "Máximo número de me gusta por usuario por día."
-    max_flags_per_day: "Máximo número de reportes por usuario por día."
+    max_flags_per_day: "Máximo número de denuncias por usuario por día."
     max_bookmarks_per_day: "Máximo número de marcadores por usuario por día."
     max_edits_per_day: "Máximo número de ediciones por usuario por día."
     max_topics_per_day: "Máximo número de temas que un usuario puede crear al día."
@@ -1649,7 +1648,7 @@ es:
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere credenciales de S3 validas. (tanto clave de acceso y clave de acceso secreta)."
     s3_use_iam_profile: 'Utilice un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil de instancia de AWS EC2</a> para otorgar acceso al S3 bucket. NOTA: habilitar esto requiere que Discourse se ejecute en una instancia EC2 configurada apropiadamente, y anula las configuraciones de «clave de acceso s3» y «clave secreta s3».'
     s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
-    s3_access_key_id: "La clave secreta de acceso de Amazon S3 que se usará para subir imágenes, archivos adjuntos y copias de respaldo."
+    s3_access_key_id: "La clave secreta de acceso de Amazon S3 que se usará para subir imágenes, archivos adjuntos y copias de seguridad."
     s3_secret_access_key: "La clave secreta de acceso de Amazon S3 que se usará para subir imágenes, adjuntos y copias de seguridad."
     s3_region: "El nombre de región de Amazon S3 que se utilizará para subir imágenes y backups."
     s3_cdn_url: "URL de un CDN que se utilizará para todos los activos s3 (por ejemplo: https://cdn.somewhere.com). AVISO: después de cambiar esta opción debes hacer un rebake de todos las publicaciones antiguas."
@@ -1667,7 +1666,7 @@ es:
     image_preview_jpg_quality: "Calidad de las imágenes redimensionadas (1 es la peor calidad, 99 la mejor, 100 mantiene la calidad original)."
     allow_staff_to_upload_any_file_in_pm: "Permitir a los miembros del staff subir cualquier archivo en MP."
     strip_image_metadata: "Eliminar metadatos de imágenes."
-    min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Ingresa el resultado de anchura / altura."
+    min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Introduce el resultado de anchura / altura."
     simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para todos los usuarios nuevos. ¡AVISO! Cambiar esto puede resultar en alto riesgo de spam."
@@ -1690,20 +1689,20 @@ es:
     tl3_requires_posts_read_cap: "El número máximo requerido de publicaciones leídas en los últimos (período nc3) días."
     tl3_requires_topics_viewed_all_time: "El número total mínimo de temas que un usuario debió de haber visto para calificar a promoción de nivel de confianza 3."
     tl3_requires_posts_read_all_time: "El número mínimo total de publicaciones que un usuario debe haber leído para calificar a nivel de confianza 3."
-    tl3_requires_max_flagged: "El usuario no debe haber tenido más de x publicaciones reportadas por x diferentes usuarios en los últimos (período nc3) días para cumplir los requisitos de promoción al nivel de confianza 3, donde x es el valor de esta opción. (0 o más)"
+    tl3_requires_max_flagged: "El usuario no debe haber tenido más de x publicaciones denunciadas por x diferentes usuarios en los últimos (período nc3) días para cumplir los requisitos de promoción al nivel de confianza 3, donde x es el valor de esta opción. (0 o más)"
     tl3_promotion_min_duration: "El número mínimo de días de duración que una promoción al nivel de confianza 3 debe tener antes de que el usuario pueda ser degradado de vuelta a nivel de confianza 2."
     tl3_requires_likes_given: "El número mínimo de me gusta que un usuario debe dar en los últimos (período nc3) días para calificar al nivel de confianza 3."
     tl3_requires_likes_received: "El número mínimo de me gusta que un usuario debe recibir en los últimos (período nc3) días para calificar al nivel de confianza 3."
     tl3_links_no_follow: "No quitar rel=nofollow de los enlaces publicados por usuarios con nivel de confianza 3."
     trusted_users_can_edit_others: "Permitir a los usuarios con alto nivel de confianza editar el contenido de otros usuarios"
     min_trust_to_create_topic: "El nivel mínimo de confianza requerido para crear un nuevo tema."
-    allow_flagging_staff: "Si está activado, los usuarios pueden reportar publicaciones hechas desde cuentas del staff."
+    allow_flagging_staff: "Si está activado, los usuarios pueden denunciar publicaciones hechas desde cuentas del personal."
     min_trust_to_edit_wiki_post: "El nivel mínimo de confianza requerido para editar una publicación marcada como wiki."
     min_trust_to_edit_post: "El nivel mínimo de confianza requerido para editar publicaciones."
     min_trust_to_allow_self_wiki: "El nivel mínimo de confianza requerido para que un usuario convierta sus propias publicaciones a wiki."
     min_trust_to_send_messages: "El nivel mínimo de confianza requerido para crear nuevos mensajes personales."
     min_trust_to_send_email_messages: "Nivel de confianza mínimo para mandar mensajes personales a través de correo electrónico."
-    min_trust_to_flag_posts: "El nivel mínimo de confianza requerido para reportar publicaciones"
+    min_trust_to_flag_posts: "El nivel mínimo de confianza requerido para denunciar publicaciones"
     min_trust_to_post_links: "El nivel mínimo de confianza requerido para incluir enlaces en una publicación"
     min_trust_to_post_embedded_media: "Nivel confianza mínimo para incluir imágenes en una publicación"
     min_trust_level_to_allow_profile_background: "Nivel confianza mínimo para subir un fondo de perfil"
@@ -1759,9 +1758,9 @@ es:
     topic_post_like_heat_low: "Después de que la proporción me gusta:publicaciones exceda esta relación, el campo contador de publicaciones se resaltará ligeramente."
     topic_post_like_heat_medium: "Después de la proporción «me gusta»:publicaciones exceda esta relación, el campo contador de publicaciones se resaltará moderadamente."
     topic_post_like_heat_high: "Después de la proporción «me gusta»:publicaciones exceda esta relación, el campo contador de publicaciones se resaltará fuertemente."
-    faq_url: "Si tienes un documento de preguntas frecuentes alojado en algún otro sitio y que quieras utilizar, ingresa la URL completa aquí."
-    tos_url: "Si tienes un documento de condiciones de servicio alojado en algún otro sitio y que quieras utilizar, ingresa la URL completa aquí."
-    privacy_policy_url: "Si tienes un documento de política de privacidad alojado en algún otro sitio y que quieras utilizar, ingresa la URL completa aquí."
+    faq_url: "Si tienes un documento de preguntas frecuentes alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
+    tos_url: "Si tienes un documento de condiciones de servicio alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
+    privacy_policy_url: "Si tienes un documento de política de privacidad alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
     log_anonymizer_details: "Mantener o no los detalles de un usuario en el registro después de ser anonimizados. Para cumplir con la RGPD, deberás apagarlo."
     newuser_spam_host_threshold: "Cantidad de veces que un usuario nuevo puede publicar un enlace al mismo host dentro del `newuser_spam_host_threshold` de sus publicaciones antes de ser considerado spam."
     allowed_spam_host_domains: "Una lista de dominios que se excluyen de las pruebas de spam. A los usuarios nuevos no se les restringirá nunca la posibilidad de crear publicaciones con enlaces a estos dominios."
@@ -1775,16 +1774,15 @@ es:
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidos que no coincidan después de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para su intervención"
     num_hours_to_close_topic: "Número de horas que se pausa un tema para su invervención."
-    auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer un reporte."
+    auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer una denuncia."
     min_first_post_typing_time: "Período mínimo en milisegundos durante el que un usuario debe escribir en su primera publicación, si no se llega a este umbral, la publicación entrará automáticamente a la cola de moderación. Establece esta opción a 0 para deshabilitar (no recomendado)."
     auto_silence_fast_typers_on_first_post: "Silenciar automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar usuarios que escriban demasiado rápido en su primera publicación"
     reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar sobre el mismo?"
     reviewable_default_topics: "Mostrar contenido revisable agrupado por tema por defecto"
     reviewable_default_visibility: "No muestre elementos revisables a menos que cumplan con esta prioridad"
-    reviewable_low_priority_threshold: "El filtro de prioridades oculta elementos a revisar que no lleguen a esta puntuación, salvo que se use el filtro «(cualquiera)»."
     high_trust_flaggers_auto_hide_posts: "Las publicaciones de los usuarios nuevos se esconden automáticamente tras ser marcadas como spam por un usuario con NC3 o superior"
-    cooldown_hours_until_reflag: "Cantidad de tiempo que los usuarios deberán esperar antes de poder reportar de nuevo una publicación."
+    cooldown_hours_until_reflag: "Cantidad de tiempo que los usuarios deberán esperar antes de poder denunciar de nuevo una publicación."
     reply_by_email_enabled: "Habilitar la respuesta a temas por correo electrónico."
     reply_by_email_address: "Plantilla para la dirección de correo electrónico que aparecerá al recibir correos con la función de respuesta por correo electrónico: %%{reply_key}@respuesta.ejemplo.com o respuestas+%%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por correo electrónico. Ejemplo: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1865,9 +1863,9 @@ es:
     digest_suppress_categories: "Suprimir estas categorías de los correos electrónicos de resumen."
     disable_digest_emails: "Desactivar los correos electrónicos de resumen para todos los usuarios."
     apply_custom_styles_to_digest: "Las plantillas de correo electrónico y css personalizadas se aplican a los correos electrónicos de resumen."
-    email_accent_bg_color: "El color de realce utilizado como fondo en algunos elementos en los correos electrónicos HTML. Ingresa un nombre de color («rojo») o un valor hexadecimal («#FF0000»)."
-    email_accent_fg_color: "El color de texto renderizado que irá con el color de fondo en los correos electrónicos HTML. Ingresa un nombre de color («blanco») o un valor hexadecimal («#FFFFFF»)."
-    email_link_color: "El color de los enlaces en los correos electrónicos HTML. Ingresa un nombre de color («azul») o un valor hexadecimal («#0000FF»)."
+    email_accent_bg_color: "El color de realce utilizado como fondo en algunos elementos en los correos electrónicos HTML. Introduce un nombre de color («rojo») o un valor hexadecimal («#FF0000»)."
+    email_accent_fg_color: "El color de texto renderizado que irá con el color de fondo en los correos electrónicos HTML. Introduce un nombre de color («blanco») o un valor hexadecimal («#FFFFFF»)."
+    email_link_color: "El color de los enlaces en los correos electrónicos HTML. Introduce un nombre de color («azul») o un valor hexadecimal («#0000FF»)."
     detect_custom_avatars: "Verificar o no que los usuarios han subido una imagen de perfil."
     max_daily_gravatar_crawls: "Número máximo de veces que Discourse comprobará Gravatar en busca de avatares personalizados en un día"
     public_user_custom_fields: "Una lista con campos personalizados para el usuario que se pueden recuperar a través de la API."
@@ -1913,7 +1911,7 @@ es:
     app_association_android: "Los contenidos del extremo <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilizado por la API de «Digital Asset Links» de Google."
     app_association_ios: "Los contenidos del extremo <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilizado para crear enlaces universales entre este sitio y las aplicacios iOS."
     share_anonymized_statistics: "Compartir estadísticas de uso anonimizadas."
-    auto_handle_queued_age: "Maneja automáticamente los registros que están esperando para ser revisados después de esta cantidad de días. Los reportes serán ignorados. Los mensajes y usuarios en cola serán rechazados. Establece el valor en 0 para desactivar esta función."
+    auto_handle_queued_age: "Maneja automáticamente los registros que están esperando para ser revisados después de esta cantidad de días. Las denuncias serán ignoradas. Los mensajes y usuarios en cola serán rechazados. Establece el valor en 0 para desactivar esta función."
     svg_icon_subset: "Agregar iconos adicionales de FontAwesome 5 que te gustaría incluir en tus recursos. Usa el prefijo 'fa-' para iconos sólidos, 'far-' para los iconos regulares y 'fab-' para los iconos de marca."
     max_prints_per_hour_per_user: "Número máximo de vistas de página /print (establece el valor en 0 para desactivar esta opción)"
     full_name_required: "El nombre completo es un campo obligatorio del perfil de usuario."
@@ -1936,7 +1934,7 @@ es:
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
     embed_post_limit: "Número máximo de publicaciones que se pueden insertar."
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
-    notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un mensaje personal a los moderadores. Establece el valor en 0 para deshabilitar."
+    notify_about_flags_after: "Si hay denuncias que no han sido revisadas después de este número de horas, enviar un mensaje personal a los moderadores. Establece el valor en 0 para deshabilitar."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: "Eliminar borradores de más de (n) días de antigüedad."
     bootstrap_mode_min_users: "Número mínimo de usuarios requerido para desactivar el modo bootstrap (establece en 0 para desactivar esta opción)"
@@ -1966,7 +1964,7 @@ es:
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
     review_media_unless_trust_level: "El staff revisará las publicaciones de los usuarios con niveles de confianza bajos si tiene contenidos multimedia integrados."
-    blur_tl0_flagged_posts_media: "Difuminar imágenes en publicaciones reportadas para ocultar contenido potencialmente delicado."
+    blur_tl0_flagged_posts_media: "Difuminar imágenes en publicaciones denunciadas para ocultar contenido potencialmente delicado."
     enable_page_publishing: "Permitir que los miembros del personal publiquen temas en nuevas URL con su propio estilo."
     show_published_pages_login_required: "Los usuarios anónimos pueden ver páginas publicadas, incluso cuando sea necesario iniciar sesión."
     skip_auto_delete_reply_likes: "Al eliminar automáticamente respuestas antiguas, no eliminar mensajes con este número de \"me gusta\" o más."
@@ -1986,7 +1984,7 @@ es:
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_enable_defer: "Habilitar la funcionalidad de temas diferidos por defecto."
     default_other_dynamic_favicon: "Mostrar la cantidad de temas nuevos/actualizados en el icono del navegador por defecto."
-    default_other_skip_new_user_tips: "Omitir consejos y medallas de bienvenida."
+    default_other_skip_new_user_tips: "Omitir consejos y insignias de bienvenida."
     default_other_like_notification_frequency: "Notificar a los usuarios sobre los me gusta por defecto"
     default_topics_automatic_unpin: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     default_categories_watching: "Lista de categorías que están vigiladas por defecto."
@@ -2030,19 +2028,19 @@ es:
     shared_drafts_category: "Habilite la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del staff."
     shared_drafts_min_trust_level: "Permitir a los usuarios ver y editar borradores compartidos."
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
-    push_notifications_icon: "El icono de la medalla que aparece en el menú de notificaciones. Se recomienda un PNG monocromático de 96 × 96 con transparencia."
+    push_notifications_icon: "El icono de la insignia que aparece en el menú de notificaciones. Se recomienda un PNG monocromático de 96 × 96 con transparencia."
     base_font: "Fuente base para la mayoría de texto en el sitio. Los temas lo pueden sobreescribir a través de la propiedad personalizada de CSS `--font-family`."
     heading_font: "Fuente a usar para los encabezados del sitio. Los temas lo pueden sobreescribir a través de la propiedad personalizada de CSS `--heading-font-family`."
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
-    dashboard_general_tab_activity_metrics: "Selecciona los reportes que se muestran como medidas de actividad en la pestaña general."
+    dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
     gravatar_name: "Nombre del proveedor de Gravatar"
     gravatar_base_url: "URL de la API base del proveedor de Gravatar"
     gravatar_login_url: "URL relativa a gravatar_base_url, la cual provee al usuario el acceso al servicio de Gravatar"
     share_quote_buttons: "Determinar los elementos que aparecen en el cuadro de compartir y su orden."
     share_quote_visibility: "Cuándo mostrar los botones de compartir citas: nunca, a los usuarios anónimos sólo o a todos los usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear revisión para los primeros mensajes cuando los temas se mueven a una nueva categoría en masa."
+    create_revision_on_bulk_topic_moves: "Crear edición para los primeros mensajes cuando los temas se mueven a una nueva categoría en masa."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -2051,9 +2049,9 @@ es:
       invalid_integer_min: "El valor debe ser igual o mayor que %{min}. "
       invalid_integer_max: "El valor no puede ser mayor que %{max}."
       invalid_integer: "El valor debe ser un numero entero. "
-      regex_mismatch: "El valor ingresado no tiene el formato requerido. "
+      regex_mismatch: "El valor introducido no tiene el formato requerido."
       must_include_latest: "El menú superior debe incluir la pestaña «recientes»."
-      invalid_string: "Valor inválido. "
+      invalid_string: "Valor no válido."
       invalid_string_min_max: "Debe tener entre %{min} y %{max} caracteres."
       invalid_string_min: "Debe tener un mínimo de %{min} caracteres. "
       invalid_string_max: "No debe exceder los %{max} caracteres. "
@@ -2120,7 +2118,7 @@ es:
   poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "¡Bienvenido a nuestra comunidad! Estos son los temas recientes mas populares."
-    not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto durante algún tiempo. Estos son los temas mas populares desde que nos visitaste por última vez."
+    not_seen_in_a_month: "¡Hola! Hacía tiempo que no te veíamos. Estos han sido los temas más destacados desde que nos visitaste por última vez."
   merge_posts:
     edit_reason:
       one: "Un tema fue juntado por %{username}"
@@ -2148,7 +2146,7 @@ es:
     slug_errors:
       blank: "no puede dejarse en blanco"
       unavailable: "no está disponible"
-      invalid: "contiene caracteres inválidos"
+      invalid: "contiene caracteres no válidos"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuesta."
@@ -2232,17 +2230,17 @@ es:
     new_registrations_disabled: "El registro de nuevas cuentas no está permitido en este momento."
     password_too_long: "Las contraseñas están limitadas a 200 caracteres."
     email_too_long: "El correo electrónico que has proporcionado es demasiado largo. Las direcciones de correo no deben tener más de 254 caracteres y los nombres de dominio no más de 253."
-    wrong_invite_code: "El código de invitación que ingresaste es incorrecto."
+    wrong_invite_code: "El código de invitación que has introducido es incorrecto."
     reserved_username: "Ese nombre de usuario no está permitido."
     missing_user_field: "No has completado todos los campos de usuario"
     auth_complete: "Autenticación completa."
     click_to_continue: "Haz clic aquí para continuar."
     already_logged_in: "¡Vaya! Esta invitación es solo para nuevos usuarios que no tengan ya una cuenta."
     second_factor_title: "Autenticación de dos factores"
-    second_factor_description: "Por favor, ingresa el código de autenticación desde tu aplicación:"
-    second_factor_backup_description: "Por favor, ingresa uno de los códigos de respaldo:"
+    second_factor_description: "Introduce el código de autenticación desde tu aplicación:"
+    second_factor_backup_description: "Introduce uno de los códigos de respaldo:"
     second_factor_backup_title: "Códigos de respaldo de la autenticación de dos factores"
-    invalid_second_factor_code: "Código de autentificación inválido. Cada código se puede usar solo una vez."
+    invalid_second_factor_code: "Código de autentificación no válido. Cada código se puede usar solo una vez."
     invalid_security_key: "Clave de seguridad inválida."
     missing_second_factor_name: "Por favor, introduce un nombre."
     missing_second_factor_code: "Por favor, introduce un código."
@@ -2272,6 +2270,7 @@ es:
       other: "Desactivado automáticamente después de %{count} días de inactividad."
     activated_by_staff: "Activado por el staff"
     new_user_typed_too_fast: "El nuevo usuario escribió demasiado rápido"
+    content_matches_auto_silence_regex: "Contenido coincide con regex para autosilenciar"
     content_matches_auto_block_regex: "El contenido coincide con una expresión regular de bloqueo automático"
     username:
       short: "debe tener al menos %{min} caracteres"
@@ -2454,42 +2453,42 @@ es:
 
       %{notes}
   flag_reasons:
-    off_topic: "Tu publicación fue reportada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
-    inappropriate: "Tu publicación fue reportada como **inapropiada**: la comunidad piensa que es ofensivo, abusivo o que vulnera alguna de [directrices de la comunidad](%{base_path}/directrices)."
-    spam: "Tu publicación fue reportada como **spam**: la comunidad piensa que se trata de un anuncio, algo de naturaleza promocional, en vez de algo útil o relevante para lo que se espera del tema."
-    notify_moderators: "Tu publicación fue reportada para la **atención de un moderador**: la comunidad piensa que algo de esta publicación requiere la intervención manual de un miembro del staff."
+    off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
+    inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva o que vulnera alguna de las [directrices de la comunidad](%{base_path}/directrices)."
+    spam: "Tu publicación fue denunciada como **spam**: la comunidad piensa que se trata de un anuncio, algo de naturaleza promocional, en vez de algo útil o relevante para lo que se espera del tema."
+    notify_moderators: "Tu publicación fue denunciada para la **atención de un moderador**: la comunidad piensa que algo de esta publicación requiere la intervención manual de un miembro del personal."
   flags_dispositions:
-    agreed: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y lo estamos revisando."
-    agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y hemos quitado la publicación."
+    agreed: "Gracias por avisarnos. Coincidimos con tu denuncia en que hay un problema y lo estamos revisando."
+    agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu denuncia en que hay un problema y hemos quitado la publicación."
     disagreed: "Gracias por hacérnoslo saber. Estamos revisándolo."
     ignored: "Gracias por hacérnoslo saber. Estamos revisándolo."
     ignored_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado la publicación."
   temporarily_closed_due_to_flags:
-    one: "Este tema está cerrado temporalmente durante al menos %{count} hora debido a un número elevado de reportes de la comunidad."
-    other: "Este tema está cerrado temporalmente durante al menos %{count} horas debido a un número elevado de reportes de la comunidad."
+    one: "Este tema está cerrado temporalmente durante al menos %{count} hora debido a un número elevado de denuncias de la comunidad."
+    other: "Este tema está cerrado temporalmente durante al menos %{count} horas debido a un número elevado de denuncias de la comunidad."
   system_messages:
     private_topic_title: "Tema #%{id}"
     contents_hidden: "Por favor, visita la publicación para ver su contenido."
     post_hidden:
       title: "Publicación oculta"
-      subject_template: "Mensaje ocultado debido a reportes de la comunidad"
+      subject_template: "Mensaje ocultado debido a denuncias de la comunidad"
       text_body_template: |
         Hola:
 
-        Este es un mensaje automático de %{site_name} para informarte que tu publicación fue ocultada.
+        Este es un mensaje automático de %{site_name} para informarte que tu publicación ha sido ocultada.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        Esta publicación se ocultó debido a reportes de la comunidad. Por esto, por favor, considera cómo podrías editar tus publicaciones tomando en cuenta esta respuesta de la comunidad. **Podrás editar tu publicación dentro de %{edit_delay} minutos y la misma dejará de estar oculta automáticamente.**
+        Esta publicación se ocultó debido a denuncias de la comunidad. Por esto, por favor, considera cómo podrías editar tus publicaciones teniendo en cuenta esta respuesta de la comunidad. **Podrás editar tu publicación dentro de %{edit_delay} minutos y la misma dejará de estar oculta automáticamente.**
 
-        Sin embargo, si la publicación es ocultada por la comunidad una segunda vez, se mantendrá oculta hasta que un miembro del staff la gestione.
+        Sin embargo, si la comunidad oculta la publicación una segunda vez, se mantendrá oculta hasta que un miembro del equipo la gestione.
 
-        Para más consejos, por favor, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
+        Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     post_hidden_again:
       title: "Mensaje ocultado de nuevo"
-      subject_template: "Mensaje ocultado debido a reportes de la comunidad, staff notificado"
+      subject_template: "Mensaje ocultado debido a denuncias de la comunidad, se ha informado al personal"
       text_body_template: |
         Hola:
 
@@ -2516,23 +2515,23 @@ es:
 
         Para más información, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     flags_disagreed:
-      title: "Publicación reportada recuperada por el staff"
-      subject_template: "Publicación reportada recuperada por el staff"
+      title: "Publicación denunciada recuperada por el personal"
+      subject_template: "Publicación denunciada recuperada por el personal"
       text_body_template: |
         Hola:
 
         Este es un mensaje automático de %{site_name} para informarte que [tu publicación](%{base_url}%{url}) fue recuperada.
 
-        Esta publicación fue reportada por la comunidad y un miembro del staff optó por recuperarla.
+        Esta publicación fue denunciada por la comunidad y un miembro del equipo optó por recuperarla.
 
         [detalles=«Clic aquí para expandir la publicación recuperada»]
-        ``` reducción
+        ``` markdown
         %{flagged_post_raw_content}
         ```
         [/details]
     flags_agreed_and_post_deleted:
-      title: "Tema reportado y eliminado por el staff"
-      subject_template: "Tema reportado y eliminado por el staff"
+      title: "Tema denunciado y eliminado por el personal"
+      subject_template: "Tema denunciado y eliminado por el personal"
       text_body_template: |
         Hola,
 
@@ -2540,7 +2539,7 @@ es:
 
         %{flag_reason}
 
-        La publicación ha sido reportada por la comunidad, y un miembro del equipo ha decidido eliminarla.
+        La publicación ha sido denunciada por la comunidad, y un miembro del equipo ha decidido eliminarla.
 
         ``` markdown
         %{flagged_post_raw_content}
@@ -2607,12 +2606,12 @@ es:
 
         Te animamos a que sigas participando, nos gusta que estés por aquí.
     backup_succeeded:
-      title: "Copia de respaldo realizada con éxito"
-      subject_template: "La copia de respaldo se completó exitosamente"
+      title: "Copia de seguridad realizada con éxito"
+      subject_template: "La copia de seguridad se completó con éxito"
       text_body_template: |
-        Copia de respaldo realizada con éxito.
+        Copia de seguridad realizada con éxito.
 
-        Visita la sección [administrador > copias de respaldo](%{base_url}/admin/backups) para descargar tu nuevo respaldo.
+        Visita la sección [administrador > copias de seguridad](%{base_url}/admin/backups) para descargar tu nueva copia de seguridad.
 
         Aquí está el registro:
 
@@ -2620,10 +2619,10 @@ es:
         %{logs}
         ```
     backup_failed:
-      title: "Error en la copia de respaldo"
-      subject_template: "La copia de respaldo falló"
+      title: "Error en la copia de seguridad"
+      subject_template: "La copia de seguridad falló"
       text_body_template: |
-        La copia de respaldo ha fallado.
+        La copia de seguridad ha fallado.
 
         Aquí está el registro:
 
@@ -2758,15 +2757,15 @@ es:
 
         No hemos encontrado tu respuesta en el correo electrónico. **Asegúrate de escribir tu entera respuesta al principio del correo** - no podemos analizar respuestas entre líneas.
     email_reject_invalid_access:
-      title: "Correo electrónico rechazado. Acceso inválido"
-      subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acceso inválido"
+      title: "Correo electrónico rechazado. Acceso no válido"
+      subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acceso no válido"
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
 
         Tu cuenta no tiene los permisos para crear nuevos temas en esta categoría. Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Rechazar correos electrónicos desconocidos No permitido"
-      subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acceso inválido"
+      subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acceso no válido"
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
 
@@ -2821,7 +2820,7 @@ es:
 
         - ¿Usas más de una dirección de correo? ¿Has respondido desde la dirección que usaste originalmente? Es necesario que uses la misma dirección para responder que la que usaste originalmente
 
-        - ¿Ha usado correctamente tu programa de correo la propiedad Reply-To: al responder? Por desgracia, algunos programas responden a propiedad From:, que en este caso no funciona.
+        - ¿Has usado correctamente tu programa de correo la propiedad Reply-To: al responder? Por desgracia, algunos programas responden a propiedad From:, que en este caso no funciona.
 
         - ¿Se ha modificado el encabezado del correo Message-ID? No debe cambiarse. Es importante que sea consistente.
 
@@ -2923,27 +2922,27 @@ es:
 
         Para obtener orientación adicional, consulta nuestras [directrices de la comunidad](%{base_url}/directrices).
     too_many_spam_flags:
-      title: "Demasiados reportes de spam"
+      title: "Demasiadas denuncias de spam"
       subject_template: "Cuenta nueva suspendida"
       text_body_template: |
         Hola,
 
-        Esto es un mensaje automatizado de %{site_name} para hacerte saber que tus publicaciones han sido ocultadas temporalmente porquer la comunidad las ha reportado.
+        Esto es un mensaje automatizado de %{site_name} para hacerte saber que tus publicaciones han sido ocultadas temporalmente porque la comunidad las ha denunciado.
 
-        Como medida preventiva, tu nueva cuenta ha sido silenciada y no podrás crear respuestas o temas hasta que un miembro del staff la revise. Lamentamos las molestias.
+        Como medida preventiva, tu nueva cuenta ha sido silenciada y no podrás crear respuestas o temas hasta que un miembro del personal la revise. Lamentamos las molestias.
 
         Para más información, echa un vistazo a nuestras [directrices de la comunidad](%{base_url}/directrices).
     too_many_tl3_flags:
-      title: "Demasiadas reportes NC3"
+      title: "Demasiadas denuncias NC3"
       subject_template: "Nueva cuenta suspendida"
       text_body_template: |
         Hola,
 
-        Esto es un mensaje automátizado de %{site_name} para hacerte saber que tu cuenta se encuentra suspendida debido a numerosos reportes de la comunidad.
+        Esto es un mensaje automátizado de %{site_name} para hacerte saber que tu cuenta se encuentra suspendida debido a numerosas denuncias de la comunidad.
 
-        Como medida preventiva, tu cuenta nueva ha sido silenciada y no podrás crear nuevas respuestas o temas hasta que un miembro del staff la revise. Lamentamos las molestias ocasionadas.
+        Como medida preventiva, tu cuenta nueva ha sido silenciada y no podrás crear nuevas respuestas o temas hasta que un miembro del personal la revise. Lamentamos las molestias ocasionadas.
 
-        Para más información, por favor, lee las [directrices de la comunidad](%{base_url}/directrices).
+        Para más información, lee las [directrices de la comunidad](%{base_url}/directrices).
     silenced_by_staff:
       title: "Silenciado por el staff"
       subject_template: "Cuenta temporalmente suspendida"
@@ -2957,13 +2956,13 @@ es:
         Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/directrices).
     user_automatically_silenced:
       title: "Usuario silenciado automáticamente"
-      subject_template: "Usuario nuevo %{username} silenciado por reportes de la comunidad"
+      subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
       text_body_template: |
         Este es un mensaje automatizado.
 
-        El usuario nuevo [%{username}](%{user_url}) se silenció automáticamente porque múltiples usuarios han reportado mensaje(s) de %{username}.
+        El usuario nuevo [%{username}](%{user_url}) se silenció automáticamente porque múltiples usuarios han denunciado mensaje(s) de %{username}.
 
-        Por favor, [mira los reportes](%{base_url}/admin/flags). Si %{username} se silenció incorrectamente, haz clic en el botón de quitar silencio en la [página de administración del usuario](%{user_url}).
+        Por favor, [comprueba las denuncias](%{base_url}/admin/flags). Si %{username} se silenció incorrectamente, haz clic en el botón de quitar silencio en la [página de administración del usuario](%{user_url}).
 
         Esto puede ser cambiado con el ajuste `silence_new_user` en la configuración del sitio.
     spam_post_blocked:
@@ -2983,7 +2982,7 @@ es:
       text_body_template: |
         Hola,
 
-        Este es un mensaje automatizado desde %{site_name} para informarte que tras la revisión de miembros del staff que tu cuenta ya no se encuentra suspendida.
+        Esto es un mensaje automático desde %{site_name} para informarte de que, tras la revisión por parte de miembros del staff, tu cuenta ya no se encuentra suspendida.
 
         Ahora puedes crear temas y responder a otros usuarios. Gracias por tu paciencia.
     pending_users_reminder:
@@ -3014,7 +3013,7 @@ es:
       text_body_template: |
         ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de%{month_year}**. :trophy:
 
-        Este premio solo lo ganan dos de los nuevos miembros de cada mes y será visible permanentemente en [la página de medallas](%{url}).
+        Este premio solo lo ganan dos de los nuevos miembros de cada mes y será visible permanentemente en [la página de insignias](%{url}).
 
         Te has convertido rápidamente en un miembro de gran valor para nuestra comunidad. Gracias por unirte ¡y continúa con el gran trabajo!
     queued_posts_reminder:
@@ -3315,11 +3314,11 @@ es:
       title: "Iniciar sesión con un enlace"
       subject_template: "[%{email_prefix}] Iniciar sesión con un enlace"
       text_body_template: |
-        Aquí tienes tu enlace para ingresar a [%{site_name}](%{base_url}).
+        Aquí tienes tu enlace para iniciar sesión en [%{site_name}](%{base_url}).
 
         Si no has solicitado este enlace, puedes simplemente ignorar este correo electrónico.
 
-        Haz clic en el siguiente enlace para ingresar:
+        Haz clic en el siguiente enlace para iniciar sesión:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Establecer contraseña"
@@ -3414,9 +3413,9 @@ es:
       text_body_template: |
         ¡Bienvenido a %{site_name}!
 
-        Un miembro del staff aprobó tu cuenta en %{site_name}.
+        Un miembro del personal aprobó tu cuenta en %{site_name}.
 
-        Puedes ahora acceder a tu nueva cuenta ingresando en:
+        Puedes ahora acceder a tu nueva cuenta iniciando sesión en:
         %{base_url}
 
         Si no puedes hacer clic en el enlace, intenta copiarlo y pegarlo en la barra de direcciones de tu navegador.
@@ -3425,7 +3424,7 @@ es:
 
         Creemos en una comunidad con un [comportamiento civilizado en comunidad](%{base_url}/directrices) en todo momento.
 
-        ¡Disfruta tu estadía!
+        ¡Disfruta de tu estancia!
     signup_after_reject:
       title: "Registro: después de rechazo"
       subject_template: "Te han rechazado la cuenta en %{site_name}"
@@ -3479,6 +3478,7 @@ es:
         Esto es un mensaje automático de %{site_name} para hacerte saber que [tu publicación](%{base_url}%{post_url}) ha sido aprobada.
   page_forbidden:
     title: "¡Ups! Esa página es privada."
+  site_setting_missing: "Debes rellenar el ajuste `%{name}`."
   page_not_found:
     title: "¡Ups! Esa página no existe o es privada."
     popular_topics: "Destacados"
@@ -3582,7 +3582,8 @@ es:
       Estos términos regulan el uso del foro de Internet en <%{base_url}>. Para utilizar el foro, debes aceptar estos términos de %{company_name}, la compañía que maneja este foro.
 
       La compañía puede ofrecer otros productos y servicios, bajo diferentes términos. Estos términos se aplican únicamente al uso del foro.
-       Saltar a:
+
+      Saltar a:
 
       - [Términos importantes](#heading--terminos-importantes)
       - [Tus permisos para usar el foro](#heading--permisos)
@@ -3604,7 +3605,7 @@ es:
 
        <h2 id="heading--important-terms"><a href="#heading--important-terms">Términos Importantes</a></h2>
 
-       ***Estos términos incluyen una serie de disposiciones importantes que afectan tus derechos y responsabilidades, como las exenciones de responsabilidad en [liberación de responsabilidad](#heading--renuncias), límites de la responsabilidad de la empresa con usted en [límites de responsabilidad](#heading--limites-responsabilidad), tu acuerdo de cubrir a la compañía por los daños causados ​​por tu mal uso del foro en [responsabilidad de su uso](#heading--tu-responsabilidad) y un acuerdo para arbitrar disputas en [disputas](#heading--disputas).***
+       ***Estos términos incluyen una serie de disposiciones importantes que afectan tus derechos y responsabilidades, como las exenciones de responsabilidad en [Exención de responsabilidad](#heading--renuncias), límites de la responsabilidad de la empresa contigo en [Límites de responsabilidad](#heading--limites-responsabilidad), tu acuerdo de compensar a la compañía por los daños causados ​​por tu mal uso del foro en [Responsabilidad de su uso](#heading--tu-responsabilidad) y un acuerdo para arbitrar disputas en [Disputas](#heading--disputas).***
 
       <h2 id="heading--permission"><a href="#heading--permission">Tus permisos para usar el foro</a></h2>
 
@@ -3618,7 +3619,7 @@ es:
 
       2. No puedes usar el foro si la compañía te contacta directamente para decirte que no puedes usarlo.
 
-      3. Debes utilizar el foro de acuerdo con [uso aceptable](#heading--uso-aceptable) y los [estándares de contenido](#heading--estandares-contenido).
+      3. Debes utilizar el foro de acuerdo con [Uso aceptable](#heading--uso-aceptable) y los [Estándares de contenido](#heading--estandares-contenido).
 
       <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Uso aceptable</a></h2>
 
@@ -3630,15 +3631,15 @@ es:
 
       4. No puedes enviar anuncios publicitarios, mensajes en cadena u otras solicitudes a través del foro, o utilizar el foro para recopilar direcciones u otros datos personales para listas de correo comerciales o bases de datos.
 
-      5. No puedes automatizar el acceso al foro ni monitorear el foro mediante un rastreador web, complemento del navegador u otro programa de computación que no sea un navegador web. Puedes rastrear el foro para indexarlo en un motor de búsqueda disponible públicamente si eres el administrador de uno.
+      5. No puedes automatizar el acceso al foro ni monitorizar el foro mediante un rastreador web, complemento del navegador u otro programa informático que no sea un navegador web. Puedes rastrear el foro para indexarlo en un motor de búsqueda disponible públicamente si eres el administrador de uno.
 
       6. No puedes usar el foro para enviar correos electrónicos a listas de distribución, grupos de noticias o alias de correo grupales.
 
-      7. No puedes implicar falsamente que estás afiliado o respaldado por la compañía.
+      7. No puedes afirmar de manera implícita o explícita falsamente que estás afiliado o respaldado por la compañía.
 
-      8. No puede hacer hipervínculo a imágenes u otro contenido que no sea hipertexto en el foro en otras páginas web.
+      8. No puedes crear hipervínculos a imágenes u otro contenido que no sea hipertexto en el foro en otras páginas web.
 
-      9. No puedes eliminar ninguna marca que demuestre propiedad exclusiva de los materiales que descargues del foro.
+      9. No puedes eliminar ninguna marca que demuestre la propiedad exclusiva de los materiales que descargues del foro.
 
       10. No puedes mostrar ninguna parte del foro en otros sitios web con `<iframe>`.
 
@@ -3648,25 +3649,25 @@ es:
 
       13. No puedes hacerte pasar por otros a través del foro.
 
-      14. No puede alentar o ayudar a nadie que viole estos términos.
+      14. No puede alentar o ayudar a nadie a que viole estos términos.
 
       <h2 id="heading--content-standards"><a href="#heading--content-standards">Estándares de contenido</a></h2>
 
-      1. No puedes enviar contenido al foro que sea ilegal, ofensivo o perjudicial para los demás. Esto incluye contenido que acosador, inapropiado o abusivo.
+      1. No puedes enviar contenido al foro que sea ilegal, ofensivo o perjudicial para los demás. Esto incluye contenido que sea acosador, inapropiado o abusivo.
 
       2. No puedes enviar contenido al foro que viole la ley, infrinja los derechos de propiedad intelectual de nadie, infrinja la privacidad de nadie o incumpla los acuerdos que tenga con otros.
 
-      3. No puedes enviar contenido al foro que contenga códigos de computadora maliciosos, como virus informáticos o spyware.
+      3. No puedes enviar contenido al foro que contenga códigos informáticos maliciosos, como virus informáticos o spyware.
 
       4. No puedes enviar contenido al foro como un simple marcador de posición, para mantener una dirección particular, nombre de usuario u otro identificador único.
 
       5. No puedes usar el foro para divulgar información que no tenga derecho a divulgar, como la información confidencial de otros.
 
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Ley Aplicable</a></h2>
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Legislación aplicable</a></h2>
 
       La compañía puede investigar y procesar las violaciones de estos términos hasta el máximo alcance legal. La compañía puede notificar y cooperar con las autoridades policiales para procesar las violaciones de la ley y estos términos.
 
-      La empresa se reserva el derecho de cambiar, redactar y eliminar contenido en el foro por cualquier motivo. Si crees que alguien ha enviado contenido al foro que violen de estos términos, [contáctanos de inmediato](#heading--contacto).
+      La empresa se reserva el derecho de cambiar, redactar y eliminar contenido en el foro por cualquier motivo. Si crees que alguien ha enviado contenido al foro que viole estos términos, [contáctanos de inmediato](#heading--contacto).
 
       <h2 id="heading--your-account"><a href="#heading--your-account">Tu cuenta</a></h2>
 
@@ -3682,11 +3683,11 @@ es:
 
       Nada en estos términos le otorga a la empresa ningún derecho de propiedad sobre la propiedad intelectual que usted comparta con el foro, como la información de su cuenta, publicaciones u otro contenido que envíe al foro. Nada en estos términos te otorga ningún derecho de propiedad sobre la propiedad intelectual de la compañía tampoco.
 
-      Entre tú y la empresa, tú es el único responsable del contenido que envíes al foro. Aceptas no implicar erróneamente que el contenido que envía al foro está patrocinado o aprobado por la empresa. Estos términos no obligan a la compañía a almacenar, mantener o proporcionar copias del contenido que envíes y a cambiarlo de acuerdo con estos términos.
+      Entre tú y la empresa, tú es el único responsable del contenido que envíes al foro. Aceptas no afirmar de forma implícita o explícita falsamente que el contenido que envía al foro está patrocinado o aprobado por la empresa. Estos términos no obligan a la compañía a almacenar, mantener o proporcionar copias del contenido que envíes y a cambiarlo de acuerdo con estos términos.
 
       El contenido que envíes al foro te pertenece y tú decides qué permiso dar a otros para que lo hagan. Pero como mínimo, otorgas una licencia a la compañía para proporcionar contenido que envíes al foro a otros usuarios del foro. Esa licencia especial le permite a la compañía copiar, publicar y analizar el contenido que envíe al foro.
 
-      Cuando el contenido que envías se elimina del foro, lo hayas hecho tú o por la empresa, la licencia especial de la empresa finaliza cuando la última copia desaparece de las copias de seguridad, las cachés y otros sistemas de la empresa. Otras licencias que apliquen al contenido que envíe, como la licencia de [creativos comunes](https://creativecommons.org), pueden continuar después de que se elimine su contenido. Esas licencias pueden otorgar a otros o a la propia compañía el derecho a compartir tu contenido a través del foro nuevamente..
+      Cuando el contenido que envías se elimina del foro, lo hayas hecho tú o la empresa, la licencia especial de la empresa finaliza cuando la última copia desaparece de las copias de seguridad, las cachés y otros sistemas de la empresa. Otras licencias que apliquen al contenido que envíes, como la licencia de [creativos comunes](https://creativecommons.org), pueden continuar después de que se elimine el contenido. Esas licencias pueden otorgar a otros o a la propia compañía el derecho a compartir tu contenido a través del foro nuevamente.
 
       Las demás personas que reciben el contenido que envías al foro pueden violar los términos bajo los que licencias tu contenido. Aceptas que la compañía no será responsable ante ti por esas violaciones o sus consecuencias.
 
@@ -3694,7 +3695,7 @@ es:
 
       Aceptas indemnizar a la compañía por reclamaciones legales de terceros relacionadas con tu incumplimiento de estos términos o el incumplimiento de estos términos por parte de terceros que utilicen tu cuenta en el foro. Tanto tú como la compañía acuerdan notificar a la otra parte de cualquier reclamo legal por el cual tenga que indemnizar a la compañía tan pronto como sea posible. Si la compañía no te notifica un reclamo legal a tiempo, no tendrás que indemnizar a la compañía por los daños que podría haber defendido o mitigado con un aviso rápido. Aceptas permitir que la compañía controle la investigación, la defensa y la resolución de reclamos legales por los cuales tendrías que indemnizar a la compañía, así como cooperar con esos esfuerzos. La compañía acepta no aceptar ningún acuerdo que admita que la culpa es tuya o te imponga obligaciones sin tu previo acuerdo.
 
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Liberación de responsabilidad</a></h2>
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Exención de responsabilidad</a></h2>
 
       ***Aceptas todos los riesgos de utilizar el foro y el contenido del foro. En la medida en que la ley lo permite, la empresa y sus proveedores proporcionan el foro tal como está, sin ningún tipo de garantía.***
 
@@ -3704,11 +3705,11 @@ es:
 
       ***Ni la empresa ni sus proveedores serán responsables ante ti por los daños por incumplimiento de contrato que su personal no podría haber previsto razonablemente cuando aceptó estos términos.***
 
-      ***En la medida en que la ley lo permita, la responsabilidad total ante ti por reclamos de cualquier tipo que estén relacionados con el foro o el contenido del foro se limitará a $ 50.***
+      ***En la medida en que la ley lo permita, la responsabilidad total ante ti por reclamos de cualquier tipo que estén relacionados con el foro o el contenido del foro se limitará a 50 $.***
 
       <h2 id="heading--feedback"><a href="#heading--feedback">Sugerencias</a></h2>
 
-      La compañía agradece tus comentarios y sugerencias para el foro. Ver la sección de [contacto](#heading--contacto) para saber las posibilidades de ponerse en contacto con nosotros.
+      La compañía agradece tus comentarios y sugerencias para el foro. Ver la sección de [Contacto](#heading--contacto) para conocer las opciones para ponerte en contacto con nosotros.
 
       Aceptas que la compañía tendrá la libertad de actuar según los comentarios y sugerencias que proporciones y que la compañía no tendrá que notificarte que se usó tu opinión, obtener tu permiso para usarla o pagarte. Aceptas no enviar comentarios o sugerencias que consideres que pueden ser propiedad exclusiva o confidenciales para ti o para otros.
 
@@ -3716,18 +3717,18 @@ es:
 
       Tanto tú como la compañía pueden finalizar el acuerdo escrito en estos términos en cualquier momento. Cuando finaliza nuestro acuerdo, también finaliza tu permiso para utilizar el foro.
 
-      Las siguientes disposiciones sobreviven al final de nuestro acuerdo: [tu contenido](#heading--tu-contenido), [sugerencias](#heading--feedback), [tu responsabilidad](#heading--tu-responsabilidad), [liberación de responsabilidad](#heading--renuncias), [límites de responsabilidad](#heading--limites-responsabilidad) y [términos generales](#heading--general).
+      Las siguientes disposiciones sobreviven al final de nuestro acuerdo: [Tu contenido](#heading--tu-contenido), [Sugerencias](#heading--feedback), [Tu responsabilidad](#heading--tu-responsabilidad), [Exención de responsabilidad](#heading--renuncias), [Límites de responsabilidad](#heading--limites-responsabilidad) y [Términos generales](#heading--general).
 
       <h2 id="heading--disputes"><a href="#heading--disputes">Disputas</a></h2>
 
       %{governing_law} regirá cualquier disputa relacionada con estos términos o tu uso del foro.
-      Tú y la compañía acuerdan solicitar ordenes judiciales relacionados con estos términos solo en los tribunales estatales o federales en %{city_for_disputes}. Ni tú ni la compañía se opondrán a la jurisdicción, foro o lugar en esos tribunales.
+      Tú y la compañía acuerdan solicitar ordenes judiciales relacionados con estos términos solo en los tribunales estatales o federales en %{city_for_disputes}. Ni tú ni la compañía os opondréis a la jurisdicción, foro o lugar en esos tribunales.
 
-      ***Además de solicitar una orden judicial o reclamaciones en virtud de la Ley de abuso y fraude informático, tú y la compañía resolverán cualquier disputa vinculando el arbitraje de la Asociación americana de arbitraje. El arbitraje seguirá las reglas de arbitraje comercial de la AAA y los procedimientos complementarios para disputas relacionadas con el consumidor. El arbitraje se llevará a cabo en %{city_for_disputes}. Resolverá cualquier disputa como un individuo y no como parte de una acción de clase u otro procedimiento representativo, ya sea como demandante o un miembro de la clase. Ningún árbitro consolidará ninguna disputa con ningún otro arbitraje sin el permiso de la compañía.***
+      ***Además de solicitar una orden judicial o reclamaciones en virtud de la Ley de abuso y fraude informático, tú y la compañía resolveréis cualquier disputa vinculando el arbitraje de la Asociación americana de arbitraje. El arbitraje seguirá las reglas de arbitraje comercial de la AAA y los procedimientos complementarios para disputas relacionadas con el consumidor. El arbitraje se llevará a cabo en %{city_for_disputes}. Resolverá cualquier disputa como un individuo y no como parte de una acción de clase u otro procedimiento representativo, ya sea como demandante o un miembro de la clase. Ningún árbitro consolidará ninguna disputa con ningún otro arbitraje sin el permiso de la compañía.***
 
       Cualquier adjudicación de arbitraje incluirá los costos del arbitraje, los honorarios razonables de abogados y los costos razonables para los testigos. Tú y la compañía pueden ingresar laudos arbitrales en cualquier tribunal con jurisdicción.
 
-      <h2 id="heading--general"><a href="#heading--general">Términos Generales</a></h2>
+      <h2 id="heading--general"><a href="#heading--general">Términos generales</a></h2>
 
       Si una disposición de estos términos no se puede hacer cumplir tal como está escrita, pero podría modificarse para hacerla ejecutable, esa disposición debería modificarse en la medida mínima necesaria para que sea ejecutable. De lo contrario, esa disposición debería ser eliminada.
 
@@ -3753,19 +3754,19 @@ es:
     body: |
       <a name="collect"></a>
 
-      ## [¿Qué información recolectamos?](#collect)
+      ## [¿Qué información recopilamos?](#collect)
 
-      Recolectamos información tuya cuando te registras en nuestra web y recopilamos información cuando participas en ella leyendo, escribiendo y evaluando el contenido compartido aquí.
+      Recopilamos información tuya cuando te registras en nuestra web y recopilamos información cuando participas en ella leyendo, escribiendo y evaluando el contenido compartido aquí.
 
       Al registrarte en nuestra web, puede que se te pida que indiques tu nombre y tu correo electrónico. Sin embargo, puedes visitarnos sin registrarte. Tu correo electrónico será verificado a través de un mensaje que contendrá un enlace único. Si visitas ese enlace, sabremos que controlas el correo electrónico.
 
-      Cuando estés registrado y publiques, guardamos la dirección IP dede donde el mensaje fue publicado. Puede que guardemos registros que incluyan la dirección IP de cada intercambio de datos con nuestro servidor.
+      Cuando estés registrado y publiques, guardamos la dirección IP desde donde el mensaje fue publicado. Puede que guardemos registros que incluyan la dirección IP de cada intercambio de datos con nuestro servidor.
 
       <a name="use"></a>
 
       ## [¿Para qué usamos tu información?](#use)
 
-      Cualquier información recolectada puede ser usada en una de las siguientes maneras:
+      Cualquier información recopilada puede ser usada en una de las siguientes maneras:
 
       * Para personalizar tu experiencia &mdash; tu información nos ayuda a responder a tus necesidades individuales.
       * Para mejorar nuestra web &mdash; intentamos continuamente mejorar nuestro sitio web ofreciéndote contenido basado en la información que recibimos de ti.
@@ -3776,7 +3777,7 @@ es:
 
       ## [¿Cómo protegemos tu información?](#protect)
 
-      Tenemos implementadas varias medidas de seguridad para mantener tu información personal segura cuando la ingreses o accedas a ella.
+      Tenemos implementadas varias medidas de seguridad para mantener tu información personal segura cuando la introduzcas o accedas a ella.
 
       <a name="data-retention"></a>
 
@@ -3813,13 +3814,13 @@ es:
 
       ## [Cumplimiento del Acta de Protección de la Privacidad Online de los Niños de 1998](#coppa)
 
-      Nuestra web, sus productos y servicios están dirigidos a personas que tengan 13 o más años de edad. Si este servidor está en EEUU y tienes menos de 13 años de edad, a causa del Acta de protección de la privacidad online de los niños de 1998 ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) de EEUU, no uses este sitio web.
+      Nuestra web, sus productos y servicios están dirigidos a personas que tengan 13 o más años de edad. Si este servidor está en EE. UU. y tienes menos de 13 años de edad, a causa del Acta de protección de la privacidad online de los niños de 1998 ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) de EEUU, no uses este sitio web.
 
       <a name="online"></a>
 
       ## [Política de privacidad online](#online)
 
-      Esta política de privacidad sólo tiene validez para la información recolectada a través de nuestro sitio web, y no para aquella recolectada offline.
+      Esta política de privacidad solo tiene validez para la información recopilada a través de nuestro sitio web, y no para aquella recopilada sin conexión.
 
       <a name="consent"></a>
 
@@ -3833,7 +3834,7 @@ es:
 
       Si decidimos cambiar nuestra política de privacidad, publicaremos los cambios en esta misma página.
 
-      Este documento tiene una licencia "CC-BY-SA". Última actualización: 31 de mayo del 2013.
+      Este documento tiene una licencia «CC-BY-SA». Última actualización: 31 de mayo del 2013.
   badges:
     mass_award:
       errors:
@@ -3843,247 +3844,248 @@ es:
       name: Editor
       description: Primera edición de una publicación
       long_description: |
-        Esta medalla se concede la primera vez que editas una de tus publicaciones. Aunque no siempre podrás editar tus publicaciones, editar es una buena idea — te permite mejorar tus publicaciones, corregir pequeños errores o añadir algo que se te había pasado. ¡Edita para hacer mejores a tus publicaciones!
+        Esta insignia se concede la primera vez que editas una de tus publicaciones. Aunque no siempre podrás editar tus publicaciones, editar es una buena idea ya que te permite mejorar tus publicaciones, corregir pequeños errores o añadir algo que se te había pasado. ¡Edita para hacer mejores a tus publicaciones!
     wiki_editor:
       name: Editor de wiki
       description: Primera edición de un tema wiki
       long_description: |
-        Esta medalla se concede la primera vez que editas un tema de tipo wiki.
+        Esta insignia se concede la primera vez que editas un tema de tipo wiki.
     basic_user:
       name: Básico
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Acceso</a> a todas las funciones esenciales de la comunidad
       long_description: |
-        Esta medalla se concede cuando alcanzas el nivel de confianza 1. Gracias por quedarte y leer unos cuantos temas para aprender acerca de qué es esta comunidad. Las restricciones de usuario nuevo se han eliminado; podrás usar las funcionalidades esenciales como enviar mensajes privados a otras personas, reportar publicaciones, editar publicaciones wiki y publicar con múltiples imágenes y enlaces.
+        Esta insignia se concede cuando alcanzas el nivel de confianza 1. Gracias por quedarte y leer unos cuantos temas para aprender acerca de qué es esta comunidad. Las restricciones de usuario nuevo se han eliminado; podrás usar las funcionalidades esenciales como enviar mensajes privados a otras personas, reportar publicaciones, editar publicaciones wiki y publicar con múltiples imágenes y enlaces.
     member:
       name: Miembro
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Acceso</a> a invitaciones, mensajes grupales y más me gusta
       long_description: |
-        Esta medalla se concede al llegar a nivel de confianza 2. Gracias por participar durante estas semanas y unirte de verdad a nuestra comunidad. Ahora puedes enviar invitaciones desde tu página de usuario o desde los temas, crear mensajes personales grupales y dar más me gusta por día.
+        Esta insignia se concede al llegar a nivel de confianza 2. Gracias por participar durante estas semanas y unirte de verdad a nuestra comunidad. Ahora puedes enviar invitaciones desde tu página de usuario o desde los temas, crear mensajes personales grupales y dar más me gusta por día.
     regular:
       name: Habitual
       description: '<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Acceso</a> a las funciones: recategorizar, renombrar, publicar enlaces sin el tag no-follow y dar más me gusta'
       long_description: |
-        Esta medalla se concede al llegar a nivel de confianza 3. Gracias por ser una parte constante de nuestra comunidad durante estos meses. Ahora eres uno de nuestros lectores más activos y una fuente de confianza que hace nuestra comunidad mejor. Ahora puedes recategorizar y renombrar temas, tus reportes tienen más peso y tienes acceso a una categoría especial privada, además de poder dar muchos más me gusta al día.
+        Esta insignia se concede al llegar a nivel de confianza 3. Gracias por ser una parte constante de nuestra comunidad durante estos meses. Ahora eres uno de nuestros lectores más activos y una fuente de confianza que hace nuestra comunidad mejor. Ahora puedes recategorizar y renombrar temas, tus denuncias tienen más peso y tienes acceso a una categoría especial privada, además de poder dar muchos más me gusta al día.
     leader:
       name: Líder
       description: '<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Acceso</a> a las funciones: editar, destacar, cerrar, archivar, dividir y combinar temas globalmente'
       long_description: |
-        Esta medalla se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todas las publicaciones y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o fusionarlos.
+        Esta insignia se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todas las publicaciones y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o fusionarlos.
     welcome:
       name: '¡Bienvenido/a!'
       description: Recibió un me gusta
       long_description: |
-        Esta medalla se concede al recibir tu primer me gusta en una publicación. ¡Enhorabuena! Publicaste algo que los demás miembros de la comunidad han considerado útil, interesante o entretenido.
+        Esta insignia se concede al recibir tu primer me gusta en una publicación. ¡Enhorabuena! Publicaste algo que los demás miembros de la comunidad han considerado útil, interesante o entretenido.
     autobiographer:
       name: Autobiógrafo
       description: Detalló información en su <a href="%{base_uri}/my/preferences/profile">perfil</a> de usuario
       long_description: |
-        Esta medalla se concede por rellenar <a href="%{base_uri}/my/preferences/profile">tu perfil de usuario</a> y seleccionar una foto de perfil. Al contar más sobre ti y lo que te interesa, la comunidad es más cercana y está más conectada. ¡Anímate!
+        Esta insignia se concede por rellenar <a href="%{base_uri}/my/preferences/profile">tu perfil de usuario</a> y seleccionar una foto de perfil. Al contar más sobre ti y lo que te interesa, la comunidad es más cercana y está más conectada. ¡Anímate!
     anniversary:
       name: Aniversario
       description: Miembro activo desde hace un año y que ha publicado al menos una vez
       long_description: |
-        Esta medalla se concede cuando has sido miembro durante un año y has publicado al menos una vez durante este tiempo. Gracias por seguir con nosotros y contribuir con nuestra comunidad. ¡No sería lo mismo sin ti!
+        Esta insignia se concede cuando has sido miembro durante un año y has publicado al menos una vez durante este tiempo. Gracias por seguir con nosotros y contribuir con nuestra comunidad. ¡No sería lo mismo sin ti!
     nice_post:
       name: Buena respuesta
       description: Recibió 10 me gusta en una respuesta
-      long_description: "Esta medalla se concede cuando una de tus respuestas consigue 10 me gusta. Tus respuestas han gustado a la comunidad y han ayudado a mantener viva la conversación. \n"
+      long_description: |
+        Esta insignia se concede cuando una de tus respuestas consigue 10 me gusta. Tus respuestas han gustado a la comunidad y han ayudado a mantener viva la conversación.
     good_post:
       name: Muy buena respuesta
       description: Recibió 25 me gusta en una respuesta
       long_description: |
-        Esta medalla se concede cuando una de tus respuestas consigue 25 me gusta. Tu respuesta ha sido excepcional y ha conseguido hacer la conversación mucho más interesante.
+        Esta insignia se concede cuando una de tus respuestas consigue 25 me gusta. Tu respuesta ha sido excepcional y ha conseguido hacer la conversación mucho más interesante.
     great_post:
       name: Excelente respuesta
       description: Recibió 50 me gusta en una respuesta
       long_description: |
-        Esta medalla se concede cuando una de tus respuestas consigue 50 me gusta. ¡Wow! ¡Tu respuesta ha sido fascinante, inspiradora muy graciosa o muy bien pensada y le ha encantado a la comunidad!
+        Esta insignia se concede cuando una de tus respuestas consigue 50 me gusta. ¡Wow! ¡Tu respuesta ha sido fascinante, inspiradora muy graciosa o muy bien pensada y le ha encantado a la comunidad!
     nice_topic:
       name: Buen tema
       description: Recibió 10 me gusta en un tema
       long_description: |
-        Esta medalla se concede cuando un tema tuyo recibe 10 me gusta. Iniciaste una conversación interesante que le ha gustado a la comunidad.
+        Esta insignia se concede cuando un tema tuyo recibe 10 me gusta. Iniciaste una conversación interesante que le ha gustado a la comunidad.
     good_topic:
       name: Muy buen tema
       description: Recibió 25 me gusta en un tema
       long_description: |
-        Esta medalla se concede cuando un tema tuyo consigue 25 me gusta. Iniciaste una conversación que la comunidad ha disfrutado mucho.
+        Esta insignia se concede cuando un tema tuyo consigue 25 me gusta. Iniciaste una conversación que la comunidad ha disfrutado mucho.
     great_topic:
       name: Excelente tema
       description: Recibió 50 me gusta en un tema
       long_description: |
-        Esta medalla se concede cuando un tema tuyo consigue 50 me gusta. ¡Comenzaste un tema fascinante cuya discusión le ha encantado a la comunidad!
+        Esta insignia se concede cuando un tema tuyo consigue 50 me gusta. ¡Comenzaste un tema fascinante cuya discusión le ha encantado a la comunidad!
     nice_share:
       name: Buena contribución
       description: Compartió una publicación con 25 visitantes únicos
       long_description: |
-        Esta medalla se concede por compartir un enlace que fue visitado por 25 visitantes externos. Gracias por difundir las palabras sobre nuestras discusiones y esta comunidad.
+        Esta insignia se concede por compartir un enlace que fue visitado por 25 visitantes externos. Gracias por difundir las palabras sobre nuestras discusiones y esta comunidad.
     good_share:
       name: Muy buena contribución
       description: Compartió una publicación con 300 visitantes únicos
       long_description: |
-        Esta medalla se concede cuando compartes un enlace y 300 visitantes externos hacen clic. ¡Buen trabajo! Has enseñado una conversación excelente a unas cuantas personas nuevas y has ayudado a crecer la comunidad.
+        Esta insignia se concede cuando compartes un enlace y 300 visitantes externos hacen clic. ¡Buen trabajo! Has enseñado una conversación excelente a unas cuantas personas nuevas y has ayudado a crecer la comunidad.
     great_share:
       name: Excelente contribución
       description: Compartió una publicación con 1000 visitantes únicos
       long_description: |
-        Esta medalla se concede cuando compartes un enlace y 1000 visitantes externos hacen clic en él. ¡Increíble! Has promocionado una conversación muy interesante a una gran audiencia y has ayudado a crecer la comunidad.
+        Esta insignia se concede cuando compartes un enlace y 1000 visitantes externos hacen clic en él. ¡Increíble! Has promocionado una conversación muy interesante a una gran audiencia y has ayudado a crecer la comunidad.
     first_like:
       name: Primer me gusta
       description: Le dio a me gusta a una publicación
       long_description: |
-        Esta medalla se otorga la primera vez que le das me gusta a una publicación usando el botón :heart:. Darle me gusta a publicaciones es una manera estupenda de hacer saber al resto de los miembros de la comunidad que lo que han publicado te ha parecido interesante, útil, entretenido o divertido. ¡Comparte el amor!
+        Esta insignia se otorga la primera vez que le das me gusta a una publicación usando el botón :heart:. Darle me gusta a publicaciones es una manera estupenda de hacer saber al resto de los miembros de la comunidad que lo que han publicado te ha parecido interesante, útil, entretenido o divertido. ¡Comparte el amor!
     first_flag:
-      name: Primer reporte
+      name: Primera denuncia
       description: Reportó una publicación
       long_description: |
-        Esta medalla se concede la primera vez que reportas algo. Reportar es la manera en la que mantenemos el foro en buen estado. Si ves algo que deba ser revisado por un moderador por cualquier motivo, no dudes en reportarlo. Si ves un problema... ¡:flag_black: repórtalo!
+        Esta insignia se concede la primera vez que denuncias algo. Denunciar es la manera en la que mantenemos el foro en buen estado. Si ves algo que deba ser revisado por un moderador por cualquier motivo, no dudes en denunciarlo. Si ves un problema... ¡:flag_black: denúncialo!
     promoter:
       name: Promotor
       description: Invitó a un usuario
       long_description: |
-        Esta medalla se concede cuando invitas a alguien a unirse a la comunidad a través del botón de invitación en tu página del perfil o al final de un tema. Invitar a amigos que puedan estar interesados en debates específicos es una excelente manera para integrar personas nuevas a la comunidad, ¡gracias!
+        Esta insignia se concede cuando invitas a alguien a unirse a la comunidad a través del botón de invitación en tu página del perfil o al final de un tema. Invitar a amigos que puedan estar interesados en debates específicos es una excelente manera para integrar personas nuevas a la comunidad, ¡gracias!
     campaigner:
       name: Activista
       description: Invitó a 3 usuarios
       long_description: |
-        Esta medalla se concede cuando has invitado a 3 personas que han pasado tiempo en el sitio y se han convertido en usuarios básicos. Una comunidad vibrante necesita de un flujo constante de nuevas voces que participen en las conversaciones.
+        Esta insignia se concede cuando has invitado a 3 personas que han pasado tiempo en el sitio y se han convertido en usuarios básicos. Una comunidad vibrante necesita de un flujo constante de nuevas voces que participen en las conversaciones.
     champion:
       name: Campeón
       description: Invitó a 5 miembros
       long_description: |
-        Esta medalla se concede cuando has invitado a 5 personas que han pasado el suficiente tiempo en el sitio como para convertirse en miembros de pleno derecho. ¡Bravo! ¡Gracias por enriquecer la diversidad de la comunidad con nuevos miembros!
+        Esta insignia se concede cuando has invitado a 5 personas que han pasado el suficiente tiempo en el sitio como para convertirse en miembros de pleno derecho. ¡Bravo! ¡Gracias por enriquecer la diversidad de la comunidad con nuevos miembros!
     first_share:
       name: Primera vez que comparte
       description: Compartió una publicación
       long_description: |
-        Esta medalla se otorga la primera vez que compartes un enlace a una respuesta o tema usando el botón de compartir. Compartir enlaces es una excelente manera de mostrar discusiones interesantes con el resto del mundo y hacer crecer la comunidad.
+        Esta insignia se otorga la primera vez que compartes un enlace a una respuesta o tema usando el botón de compartir. Compartir enlaces es una excelente manera de mostrar discusiones interesantes con el resto del mundo y hacer crecer la comunidad.
     first_link:
       name: Primer enlace
       description: Añadió un enlace a otro tema
       long_description: |
-        Esta medalla se otorga la primera vez que incluyes un enlace a otro tema. Enlazar temas ayuda al resto de lectores a encontrar conversaciones interesantes. ¡Enlaza libremente!
+        Esta insignia se otorga la primera vez que incluyes un enlace a otro tema. Enlazar temas ayuda al resto de lectores a encontrar conversaciones interesantes. ¡Enlaza libremente!
     first_quote:
       name: Primera cita
       description: Citó una publicación
       long_description: |
-        Esta medalla se concede la primera vez que citas algo en una respuesta. Citar las partes relevantes de mensajes anteriores ayuda a mantener la conversación conectada y sin salirse del tema. La manera más fácil de citar es seleccionando una parte de un mensaje y luego pulsar el botón de responder. ¡Cita abundantemente!
+        Esta insignia se concede la primera vez que citas algo en una respuesta. Citar las partes relevantes de mensajes anteriores ayuda a mantener la conversación conectada y sin salirse del tema. La manera más fácil de citar es seleccionando una parte de un mensaje y luego pulsar el botón de responder. ¡No dejes de citar!
     read_guidelines:
       name: Preguntas frecuentes leídas
       description: Leyó las <a href="%{base_uri}/guidelines">directrices de la comunidad</a>
       long_description: |
-        Esta medalla se concede por <a href="%{base_uri}/guidelines">leer las directrices de la comunidad</a>. Con seguir y compartir estas simples pautas, nos ayudarás a construir un foro más seguro, divertido y sostenible. Acuérdate de que detrás de cada usuario hay un ser humano muy parecido a ti. ¡Sé amable!
+        Esta insignia se concede por <a href="%{base_uri}/guidelines">leer las directrices de la comunidad</a>. Con seguir y compartir estas simples pautas, nos ayudarás a construir un foro más seguro, divertido y sostenible. Acuérdate de que detrás de cada usuario hay un ser humano muy parecido a ti. ¡Sé amable!
     reader:
       name: Lector
       description: Leyó todas las respuestas en un tema con más de 100 respuestas
       long_description: |
-        Esta medalla se concede la primera vez que lees un tema largo, uno con más de 100 respuestas. Leer una conversación con atención te ayuda a seguir el debate, entender los diferentes puntos de vista y llevar a conversaciones más interesantes. Cuanto más lees, mejor es la conversación. Como nos gusta decir: ¡la lectura es fundamental! :slight_smile:
+        Esta insignia se concede la primera vez que lees un tema largo, uno con más de 100 respuestas. Leer una conversación con atención te ayuda a seguir el debate, entender los diferentes puntos de vista y llevar a conversaciones más interesantes. Cuanto más lees, mejor es la conversación. Como nos gusta decir: ¡la lectura es fundamental! :slight_smile:
     popular_link:
       name: Enlace popular
       description: Publicó un enlace externo con al menos 50 clics
       long_description: |
-        Esta medalla se concede cuando el enlace que has compartido alcanza los 50 clics. ¡Gracias por publicar un enlace útil que añade un contexto interesante a la conversación!
+        Esta insignia se concede cuando el enlace que has compartido alcanza los 50 clics. ¡Gracias por publicar un enlace útil que añade un contexto interesante a la conversación!
     hot_link:
       name: Enlace muy popular
       description: Publicó un enlace externo con al menos 300 clics
       long_description: |
-        Esta medalla se concede cuando el enlace que has compartido alcanza los 300 clics. ¡Gracias por publicar un enlace que impulsó la conversación e ilustró el debate!
+        Esta insignia se concede cuando el enlace que has compartido alcanza los 300 clics. ¡Gracias por publicar un enlace que impulsó la conversación e ilustró el debate!
     famous_link:
       name: Enlace famoso
       description: Publicó un enlace externo con al menos 1000 clics
       long_description: |
-        Esta medalla se concede cuando un enlace que compartiste llega a 1000 clics. ¡Vaya! Publicaste un enlace que mejoró significativamente la conversación al añadir un detalle esencial, contextual e informativo. ¡Gran trabajo!
+        Esta insignia se concede cuando un enlace que compartiste llega a 1000 clics. ¡Vaya! Publicaste un enlace que mejoró significativamente la conversación al añadir un detalle esencial, contextual e informativo. ¡Gran trabajo!
     appreciated:
       name: Apreciado
       description: Recibió 1 me gusta en 20 publicaciones
       long_description: |
-        Esta medalla se concede cuando recibes al menos un me gusta en 20 publicaciones distintas. ¡La comunidad está disfrutando tus contribuciones a las conversaciones!
+        Esta insignia se concede cuando recibes al menos un me gusta en 20 publicaciones distintas. ¡La comunidad está disfrutando tus contribuciones a las conversaciones!
     respected:
       name: Respetado
       description: Recibió 2 me gusta en 100 publicaciones
       long_description: |
-        Esta medalla se concede cuando recibes al menos 2 me gusta en 100 publicaciones distintas. ¡La comunidad está apreciando tus numerosas aportaciones a las conversación!
+        Esta insignia se concede cuando recibes al menos 2 me gusta en 100 publicaciones distintas. ¡La comunidad está apreciando tus numerosas aportaciones a las conversación!
     admired:
       name: Admirado
       description: Recibió 5 me gusta en 300 publicaciones
       long_description: |
-        Esta medalla se concede cuando recibes al menos 5 me gusta en 300 publicaciones distintas. ¡Bravo! ¡La comunidad admira tus aportes frecuentes y de gran calidad!
+        Esta insignia se concede cuando recibes al menos 5 me gusta en 300 publicaciones distintas. ¡Bravo! ¡La comunidad admira tus aportes frecuentes y de gran calidad!
     out_of_love:
       name: Dadivoso
       description: Por usar %{max_likes_per_day} me gusta en un día.
       long_description: |
-        Esta medalla se concede cuando usas todos los %{max_likes_per_day}de tus me gusta diarios. Recuerda tomar un momento y dar me gusta a las publicaciones que disfrutas, así incentivas a los demás miembros a crear aún mejores debates en el futuro.
+        Esta insignia se concede cuando usas todos los %{max_likes_per_day}de tus me gusta diarios. Recuerda tomar un momento y dar me gusta a las publicaciones que disfrutas, así incentivas a los demás miembros a crear aún mejores debates en el futuro.
     higher_love:
       name: Generoso
       description: Utilizó %{max_likes_per_day} me gusta en un día 5 veces
       long_description: |
-        Esta medalla se concede cuando usas todos los %{max_likes_per_day} me gusta diarios por 5 días. ¡Gracias por tomarte tiempo en incentivar y premiar las mejores conversaciones cada día!
+        Esta insignia se concede cuando usas todos los %{max_likes_per_day} me gusta diarios por 5 días. ¡Gracias por tomarte tiempo en incentivar y premiar las mejores conversaciones cada día!
     crazy_in_love:
       name: Magnánimo
       description: Por usar %{max_likes_per_day} me gusta en un día 20 veces
       long_description: |
-        Esta medalla se concede cuando usas todos los %{max_likes_per_day}de tus me gusta diarios por 20 días. ¡Wowl! ¡Eres un modelo a seguir por animar a los demás miembros de la comunidad!
+        Esta insignia se concede cuando usas todos los %{max_likes_per_day}de tus me gusta diarios por 20 días. ¡Guau! ¡Eres un modelo a seguir por animar a los demás miembros de la comunidad!
     thank_you:
       name: Gracias
       description: Ha recibido me gusta en 20 publicaciones y dado 10 me gusta
       long_description: |
-        Esta medalla se concede cuando has recibido 20 me gusta en tus publicaciones y has dado 10 o más de vuelta. Cuando a alguien le gustan tus publicaciones, también encuentras el tiempo para agradecer las publicaciones de otras personas.
+        Esta insignia se concede cuando has recibido 20 me gusta en tus publicaciones y has dado 10 o más de vuelta. Cuando a alguien le gustan tus publicaciones, también encuentras el tiempo para agradecer las publicaciones de otras personas.
     gives_back:
       name: Cómplice
       description: Ha recibido me gusta en 100 publicaciones y dado 100 me gusta
       long_description: |
-        Esta medalla se concede cuando has recibido 100 me gusta en tus publicaciones y has dado 100 o más de vuelta. ¡Gracias por dar tanto y agradecer de vuelta!
+        Esta insignia se concede cuando has recibido 100 me gusta en tus publicaciones y has dado 100 o más de vuelta. ¡Gracias por dar tanto y agradecer de vuelta!
     empathetic:
       name: Empático
       description: Ha recibido me gusta en 500 publicaciones y dado 1000 me gusta
       long_description: |
-        Esta medalla se concede cuando has recibido 500 me gusta y le has dado me gusta a otros 1000 mensajes. Eres un modelo de generosidad y apreciación mutua :two_hearts:.
+        Esta insignia se concede cuando has recibido 500 me gusta y le has dado me gusta a otros 1000 mensajes. Eres un modelo de generosidad y apreciación mutua :two_hearts:.
     first_emoji:
       name: Primer emoji
       description: Utilizó un emoji en una publicación
       long_description: |
-        Esta medalla se concede la primera vez que añades un emoji a tu publicación :thumbsup:. Los emoji te permiten añadir emociones a tu publicación, desde felicidad :smiley: a tristeza :anguished: pasando por enfado :angry: o cualquier otra expresión :sunglasses:. Comienza escribiendo : (dos puntos) o haz clic en el botón emoji de la barra del editor para seleccionar entre cientos de opciones. :ok_hand:
+        Esta insignia se concede la primera vez que añades un emoji a tu publicación :thumbsup:. Los emoji te permiten añadir emociones a tu publicación, desde felicidad :smiley: a tristeza :anguished: pasando por enfado :angry: o cualquier otra expresión :sunglasses:. Comienza escribiendo : (dos puntos) o haz clic en el botón emoji de la barra del editor para seleccionar entre cientos de opciones. :ok_hand:
     first_mention:
       name: Primera mención
       description: Mencionó a un usuario en una publicación
       long_description: |
-        Esta medalla se concede la primera vez que mencionas a un @usuario en una publicación. Las menciones generan notificaciones a la persona mencionada para que sepan que les estás mencionando. Simplemente empieza escribiendo @ (arroba) para mencionar a alguien o, si está permitido, a un grupo – es una forma conveniente de captar la atención de alguien.
+        Esta insignia se concede la primera vez que mencionas a un @usuario en una publicación. Las menciones generan notificaciones a la persona mencionada para que sepan que les estás mencionando. Simplemente empieza escribiendo @ (arroba) para mencionar a alguien o, si está permitido, a un grupo – es una forma conveniente de captar la atención de alguien.
     first_onebox:
       name: Primer onebox
       description: Publicó un enlace expandido vía onebox
       long_description: |
-        Esta medalla se concede la primera vez que publicas un enlace solo en una línea, que se expande automáticamente en un onebox con un resumen, título y (cuando esté disponible) imagen.
+        Esta insignia se concede la primera vez que publicas un enlace solo en una línea, que se expande automáticamente en un onebox con un resumen, título y (cuando esté disponible) imagen.
     first_reply_by_email:
-      name: Primera respuesta por correo electrónico
+      name: Primera respuesta por correo
       description: Respondió a una publicación por correo electrónico
       long_description: |
-        Esta medalla se concede la primera vez que respondes a una publicación por correo electrónico :e-mail:.
+        Esta insignia se concede la primera vez que respondes a una publicación por correo electrónico :e-mail:.
     new_user_of_the_month:
       name: "Usuario nuevo del mes"
       description: Contribuciones excepcionales en su primer mes
       long_description: |
-        Esta medalla se otorga para felicitar a dos nuevos usuarios cada mes por sus excelentes colaboraciones de acuerdo a la frecuencia con las que sus publicaciones reciben me gusta y quiénes se lo dan.
+        Esta insignia se otorga para felicitar a dos nuevos usuarios cada mes por sus excelentes colaboraciones de acuerdo a la frecuencia con las que sus publicaciones reciben me gusta y quiénes se lo dan.
     enthusiast:
       name: Entusiasta
       description: Visitó el sitio 10 días consecutivos
       long_description: |
-        Esta medalla se concede por visitarnos durante 10 días consecutivos. ¡Gracias por quedarte con nosotros más de una semana!
+        Esta insignia se concede por visitarnos durante 10 días consecutivos. ¡Gracias por quedarte con nosotros más de una semana!
     aficionado:
       name: Aficionado
       description: Visitó 100 días consecutivos
       long_description: |
-        Esta medalla se concede por visitarnos durante 100 días consecutivos. ¡Eso es más de tres meses!
+        Esta insignia se concede por visitarnos durante 100 días consecutivos. ¡Eso es más de tres meses!
     devotee:
       name: Devoto
       description: Visitó 365 días consecutivos
       long_description: |
-        Esta medalla se concede por visitarnos durante 365 días consecutivos. ¡Wow, un año entero!
-    badge_title_metadata: "%{display_name} medalla en %{site_title}"
+        Esta insignia se concede por visitarnos durante 365 días consecutivos. ¡Guau, un año entero!
+    badge_title_metadata: "%{display_name} insignia en %{site_title}"
   admin_login:
     success: "Correo electrónico enviado"
     errors:
       unknown_email_address: "Dirección de correo electrónico desconocida."
-      invalid_token: "Token inválido."
+      invalid_token: "Token no válido."
     email_input: "Correo electrónico de administrador"
     submit_button: "Enviar correo electrónico"
   performance_report:
@@ -4191,17 +4193,17 @@ es:
           contact_email:
             label: "Correo"
             placeholder: "nombre@ejemplo.com"
-            description: "Dirección de correo electrónico de la persona o grupo responsable de esta comunidad. Usado para notificaciones críticas como reportes sin atender y actualizaciones de seguridad. También estará en la <a href='%{base_path}/about' target='_blank'>página acerca de</a> para cosas urgentes."
+            description: "Dirección de correo electrónico de la persona o grupo responsable de esta comunidad. Se usa para notificaciones críticas como denuncias sin atender y actualizaciones de seguridad. También estará en la <a href='%{base_path}/about' target='_blank'>página acerca de</a> para cosas urgentes."
           contact_url:
             label: "Página web"
             placeholder: "https://ejemplo.com/contacto"
             description: "Tu página de contacto general o la de tu organización. Se mostrará en la <a href='%{base_path}/about' target='_blank'>página de acerca de</a>."
           site_contact:
             label: "Mensajes automatizados"
-            description: "Todos los mensajes privados automatizados de Discourse serán enviados desde este usuario, tales como reportes de advertencia y notificaciones de respaldos exitosos."
+            description: "Todos los mensajes privados automatizados de Discourse serán enviados desde este usuario, tales como denuncias de advertencia y notificaciones de copias de seguridad exitosas."
       corporate:
         title: "Organización"
-        description: "Esta información será ingresada en tus <a href='%{base_path}/tos' target='blank'>Términos de servicio</a>, las cuales podrás editar en todo momento en la categoría Staff. Si no tienes una empresa, puedes saltarte este paso por ahora."
+        description: "Esta información se introducirá en tus <a href='%{base_path}/tos' target='blank'>Términos de servicio</a>, las cuales podrás editar en todo momento en la categoría Personal. Si no tienes una empresa, puedes saltarte este paso por ahora."
         fields:
           company_name:
             label: "Nombre de la compañía"
@@ -4300,7 +4302,8 @@ es:
       revoked: Revocada
       restored: Restaurada
   reviewables:
-    already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita reportarse de nuevo."
+    already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita denunciarse de nuevo."
+    already_handled_and_user_not_exist: "Gracias, pero otra persona ya lo ha revisado, y ese usuario ha dejado de existir."
     priorities:
       low: "Bajo"
       medium: "Medio"
@@ -4335,26 +4338,22 @@ es:
         title: "Concordar..."
       agree_and_keep:
         title: "Mantener publicación"
-        description: "Estar de acuerdo con el reporte y mantener la publicación intacta."
+        description: "Estar de acuerdo con la denuncia y mantener la publicación intacta."
       agree_and_keep_hidden:
         title: "Mantener la publicación oculta"
-        description: "Concordar con el reporte y mantener la publicación oculta."
+        description: "Aceptar la denuncia y mantener la publicación oculta."
       agree_and_suspend:
         title: "Suspender usuario"
-        description: "Estar de acuerdo con el reporte y suspender el usuario."
+        description: "Estar de acuerdo con la denuncia y suspender el usuario."
       agree_and_silence:
         title: "Silenciar usuario"
-        description: "Estar de acuerdo con el reporte y silenciar el usuario."
+        description: "Estar de acuerdo con la denuncia y silenciar el usuario."
       agree_and_restore:
         title: "Restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
       agree_and_hide:
         title: "Ocultar publicación"
         description: "Ocultar la publicación y enviar un mensaje automáticamente al usuario animándole a que la edite."
-      delete_spammer:
-        title: "Eliminar spammer"
-        description: "Eliminar el usuario y todas sus publicaciones y temas."
-        confirm: "¿Estás seguro de que quieres eliminar todas las publicaciones y temas del usuario y bloquear su IP y correo electrónico?"
       delete_single:
         title: "Eliminar"
       delete:
@@ -4365,14 +4364,14 @@ es:
       delete_and_ignore_replies:
         title: "Eliminar publicación + respuestas e ignorar"
         description: "Eliminar publicación y todas sus respuestas; si es la primera publicación de un tema, eliminarlo también"
-        confirm: "¿Estás seguro de que quieres eliminar las respuestas de la publicación también?"
+        confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
       delete_and_agree:
         title: "Eliminar publicación y coincidir"
         description: "Eliminar publicación; si es la primera del tema, eliminar el tema también."
       delete_and_agree_replies:
         title: "Eliminar publicación + respuestas y coincidir"
         description: "Eliminar publicación y todas sus respuestas; si es la primera publicación de un tema, eliminarlo también"
-        confirm: "¿Estás seguro de que quieres eliminar las respuestas de la publicación también?"
+        confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
       disagree_and_restore:
         title: "Discrepar y restaurar publicación"
         description: "Restaurar la publicación para que los usuarios la puedan ver."
@@ -4411,8 +4410,6 @@ es:
       approve_and_restore:
         title: "Aprobar y restaurar publicación"
       delete_user:
-        title: "Eliminar usuario"
-        confirm: "¿Estás seguro de que quieres eliminar a este usuario? Eliminará todas sus publicaciones y bloqueará su correo electrónico y dirección IP."
         reason: "Eliminado a través de la cola de revisiones"
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"
