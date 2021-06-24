@@ -322,11 +322,6 @@ const Topic = RestModel.extend({
     return Site.currentProp("archetypes").findBy("id", archetype);
   },
 
-  @discourseComputed("bookmarksWereChanged")
-  bookmarkedPosts() {
-    return this.postStream.posts.filterBy("bookmarked", true);
-  },
-
   isPrivateMessage: equal("archetype", "private_message"),
   isBanner: equal("archetype", "banner"),
 
@@ -376,20 +371,39 @@ const Topic = RestModel.extend({
 
     const postId = postStream.findPostIdForPostNumber(1);
     if (postId) {
-      // try loading from identity map first
-      firstPost = postStream.findLoadedPost(postId);
-      if (firstPost) {
-        return Promise.resolve(firstPost);
-      }
-
-      return this.postStream.loadPost(postId);
+      return this.postById(postId);
     } else {
       return this.postStream.loadPostByPostNumber(1);
     }
   },
 
-  deleteBookmark() {
+  postById(id) {
+    const loaded = this.postStream.findLoadedPost(id);
+    if (loaded) {
+      return Promise.resolve(loaded);
+    }
+
+    return this.postStream.loadPost(id);
+  },
+
+  deleteBookmarks() {
     return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" });
+  },
+
+  clearBookmarks() {
+    this.toggleProperty("bookmarked");
+    this.set("bookmark_reminder_at", null); // fixme remove
+
+    const postIds = this.bookmarked_posts.mapBy("post_id");
+    postIds.forEach((postId) => {
+      const loadedPost = this.postStream.findLoadedPost(postId);
+      if (loadedPost) {
+        loadedPost.clearBookmark();
+      }
+    });
+    this.set("bookmarked_posts", []);
+
+    return postIds;
   },
 
   createGroupInvite(group) {

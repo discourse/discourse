@@ -322,6 +322,7 @@ const Post = RestModel.extend({
   deleteBookmark(bookmarked) {
     this.set("topic.bookmarked", bookmarked);
     this.clearBookmark();
+    this.topic.incrementProperty("bookmarksWereChanged");
     this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 

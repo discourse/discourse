@@ -22,6 +22,39 @@ async function openEditBookmarkModal() {
   await click(".topic-post:first-child button.bookmarked");
 }
 
+async function testTopicLevelBookmarkButtonIcon(assert, postNumber) {
+  const iconWithoutClock = "d-icon-bookmark";
+  const iconWithClock = "d-icon-discourse-bookmark-clock";
+
+  await visit("/t/internationalization-localization/280");
+  assert.ok(
+    query("#topic-footer-button-bookmark svg").classList.contains(
+      iconWithoutClock
+    ),
+    "Shows an icon without a clock when there is no a bookmark"
+  );
+
+  await openBookmarkModal(postNumber);
+  await click("#save-bookmark");
+
+  assert.ok(
+    query("#topic-footer-button-bookmark svg").classList.contains(
+      iconWithoutClock
+    ),
+    "Shows an icon without a clock when there is a bookmark without a reminder"
+  );
+
+  await openBookmarkModal(postNumber);
+  await click("#tap_tile_tomorrow");
+
+  assert.ok(
+    query("#topic-footer-button-bookmark svg").classList.contains(
+      iconWithClock
+    ),
+    "Shows an icon with a clock when there is a bookmark with a reminder"
+  );
+}
+
 acceptance("Bookmarking", function (needs) {
   needs.user();
   let steps = [];
@@ -64,6 +97,7 @@ acceptance("Bookmarking", function (needs) {
     }
     server.post("/bookmarks", handleRequest);
     server.put("/bookmarks/1", handleRequest);
+    server.put("/bookmarks/2", handleRequest);
     server.delete("/bookmarks/1", () =>
       helper.response({ success: "OK", topic_bookmarked: false })
     );
@@ -353,5 +387,15 @@ acceptance("Bookmarking", function (needs) {
       exists("div.modal.bookmark-with-reminder"),
       "The edit modal is opened"
     );
+  });
+
+  test("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the first post", async function (assert) {
+    const postNumber = 1;
+    await testTopicLevelBookmarkButtonIcon(assert, postNumber);
+  });
+
+  test("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the second post", async function (assert) {
+    const postNumber = 2;
+    await testTopicLevelBookmarkButtonIcon(assert, postNumber);
   });
 });
