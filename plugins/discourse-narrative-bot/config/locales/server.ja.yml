@@ -82,8 +82,8 @@ ja:
         message: |-
           ようこそ。そして %{title} に参加してくれてありがとう！
 
-          - 私はただのロボットですが、人間と話がしたいなら、[our friendly staff] (%{base_uri}/about) もいますよ。
+          - 私はただのロボットですが、人間と話がしたいなら、気さくなスタッフ (%{base_uri}/about) もお手伝いできます。
 
-          - セキュリティの都合上、新規ユーザーはできることには限られています。使用回数が増えれば、[new abilities] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)(と[badges] (%{base_uri}/badges)) を獲得できます。
+          - セキュリティの都合上、新規ユーザーはできることには限られています。使用回数が増えれば、新しい機能 (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (とバッジ (%{base_uri}/badges)) を得られます。
 
-          - 常に[civilized community behavior] (%{base_uri}/guidelines) に従ってもらえると、信じています。
+          - コミュニティでは常に礼節ある行動 (%{base_uri}/guidelines) を取ってもらえると信じています。

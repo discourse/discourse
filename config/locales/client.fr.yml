@@ -425,16 +425,16 @@ fr:
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (du dernier signalement)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (des derniers %{count} signalements)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (des %{count} derniers signalements)"
         agreed:
-          one: "%{count}% accepté"
-          other: "%{count}% acceptés"
+          one: "%{count} % accepté"
+          other: "%{count} % acceptés"
         disagreed:
-          one: "%{count}% rejeté"
-          other: "%{count}% rejetés"
+          one: "%{count} % rejeté"
+          other: "%{count} % rejetés"
         ignored:
-          one: "%{count}% ignoré"
-          other: "%{count}% ignorés"
+          one: "%{count} % ignoré"
+          other: "%{count} % ignorés"
       topics:
         topic: "Sujet"
         reviewable_count: "Nombre"
@@ -451,7 +451,7 @@ fr:
       edit: "Modifier"
       save: "Enregistrer"
       cancel: "Annuler"
-      new_topic: "Approuver cet élément créera un nouveau sujet"
+      new_topic: "L'approbation de cet élément créera un nouveau sujet"
       filters:
         all_categories: "(toutes les catégories)"
         type:
@@ -469,7 +469,7 @@ fr:
         priority:
           title: "Priorité minimum"
           any: "(toutes)"
-          low: "Basse"
+          low: "Faible"
           medium: "Moyenne"
           high: "Élevée"
       conversation:

@@ -32,13 +32,13 @@ es:
         Responde a este mensaje con «@%{discobot_username} %{reset_trigger}» para ver una lista de cosas que puedes hacer
     timeout:
       message: |-
-        Hey, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.
+        Eh, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.
 
         - Para continuar, contéstame en cualquier momento.
 
-        - Si deseas omitir este paso, escribe `%{skip_trigger}`.
+        - Si deseas omitir este paso, escribe «%{skip_trigger}».
 
-        - Para empezar de nuevo, escribe `%{reset_trigger}`.
+        - Para empezar de nuevo, escribe «%{reset_trigger}».
 
         Si prefieres no hacerlo, también está bien. Soy un bot. No herirás mis sentimientos. :sob:
     dice:
@@ -182,9 +182,9 @@ es:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Si te gusta (¡y a quién no le gustaría!), adelante, presiona el botón me gusta :heart: debajo de esta publicación para avisarme.
+          Si te gusta (¡y a quién no!), adelante, presiona el botón me gusta :heart: debajo de esta publicación para avisarme.
 
-          ¿Puedes **responder con una imagen?** ¡Cualquier imagen servirá! Arrastra y suelta, presiona el botón de carga o incluso cópialo y pégalo.
+          ¿Puedes **responder con una imagen?** ¡Cualquier imagen servirá! Arrastra y suelta, presiona el botón de carga o incluso cópiala y pégala.
         reply: |-
           Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié :heart_eyes:
         like_not_found: |-
@@ -242,16 +242,16 @@ es:
         instructions: |-
           Si quieres aprender más, selecciona debajo el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> y <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **guarda en marcadores este mensaje personal**. Si lo haces, ¡puede haber un :gift: en tu futuro!
         reply: |-
-          ¡Excelente! Ahora puedes encontrar fácilmente las conversaciones privadas en cualquier momento directamente desde la [sección de marcadores de tu perfil](%{bookmark_url}). Sólo debes seleccionar tu foto de perfil en la parte superior derecha de la pantalla &#8599;
+          ¡Excelente! Ahora puedes encontrar fácilmente las conversaciones privadas en cualquier momento directamente desde la [sección de marcadores de tu perfil](%{bookmark_url}). Solo debes seleccionar tu foto de perfil en la parte superior derecha de la pantalla &#8599;
         not_found: |-
           Oh oh, no veo ningún marcador en este tema. ¿Encontraste el botón para guardar en marcadores que se encuentra debajo de cada mensaje? Usa el botón mostrar más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que aparezcan acciones adicionales si necesitas.
       emoji:
         instructions: |-
-          Me has visto usando imágenes pequeñas en mis respuestas :blue_car::dash: estos se llaman [emoji](https://es.wikipedia.org/wiki/Emoji). ¿Puedes **agregar un emoji** a tu próxima respuesta? Cualquiera de estos funcionará:
+          Me has visto usando imágenes pequeñas en mis respuestas :blue_car::dash: se llaman [emoji](https://es.wikipedia.org/wiki/Emoji). ¿Puedes **añadir un emoji** a tu próxima respuesta? Cualquiera de estos funcionará:
 
           - Escribe `:) ;) :D :P :O`
 
-          - Escribe dos puntos <kbd>:</kbd> y luego puedes completar con la palabra para elegir el emoji `:tada:`
+          - Escribe dos puntos <kbd>:</kbd> y luego puedes completar con la palabra para elegir el emoji «:tada:»
 
           - O bien, presiona el botón de emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> en el editor o en el teclado de tu dispositivo móvil
         reply: |-
@@ -271,9 +271,9 @@ es:
         reply: |-
           _¿¡Alguien dijo mi nombre!?_ :raised_hand: ¡Creo que tú lo hiciste! :wave: Bien, ¡aquí estoy! Gracias por mencionarme. :ok_hand:
         not_found: |-
-          No veo que hayas mencionado mi nombre en ningún lugar. :frowning: ¿Puedes intentar mencionarme como `@%{discobot_username}` de nuevo, por favor?
+          No veo que hayas mencionado mi nombre en ningún lugar. :frowning: ¿Puedes intentar mencionarme como «@%{discobot_username}» de nuevo, por favor?
 
-          (¡Sí! mi nombre de usuario se deletrea _disco_, como el baile de los años 70. [¡Me encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+          (¡Sí! mi nombre de usuario es _disco_, como el baile de los años 70. [¡Me encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
           Nos gusta que nuestros debates sean amables, y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, marca la bandera para informar al autor o a [nuestro colaborador](%{about_url}) sobre él. Hay muchas razones por las que puede querer denunciar una publicación, que va desde una inocua sugerencia de división de temas hasta una clara violación de los estándares comunitarios. Si seleccionas **Algo más**, iniciarás una discusión privada de mensajes con los moderadores donde podrás hacer más preguntas.
@@ -295,11 +295,11 @@ es:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          ¿Notaste que estás de nuevo en el principio? Alimenta a este pobre capibara **respondiendo con el emoji de `%{search_answer}`** y esto te llevará automáticamente al final.
+          ¿Notaste que estás de nuevo en el principio? Alimenta a este pobre capibara **respondiendo con el emoji de «%{search_answer}»** y esto te llevará automáticamente al final.
         reply: |-
           ¡Lo encontraste! :tada:
 
-          - Para búsquedas más detalladas, ve a la página de [busqueda completa](%{search_url}).
+          - Para búsquedas más detalladas, ve a la página de [búsqueda completa](%{search_url}).
 
           - Para saltar a cualquier lugar en una discusión larga, intenta los controles de la línea de tiempo del tema a la derecha (o en la parte baja en dispositivos móviles)
 
@@ -322,9 +322,9 @@ es:
       cert_title: "Como reconocimiento de la finalización exitosa del tutorial de usuario avanzado"
       title: ":arrow_up: Funciones avanzadas del usuario"
       start_message: |-
-        Como un usuario _avanzado_, ¿ya has visitado [tus preferencias](%{base_uri}/my/preferences), @%{username}? Hay muchas formas de personalizar tu experiencia. Por ejemplo, podrías elegir un diseño oscuro o uno claro.
+        Como usuario _avanzado_, ¿ya has visitado [tus preferencias](%{base_uri}/my/preferences), @%{username}? Hay muchas formas de personalizar tu experiencia. Por ejemplo, podrías elegir un diseño oscuro o uno claro.
 
-        Pero yo divago, ¡comencemos!
+        Pero ya estoy divagando, ¡comencemos!
       edit:
         bot_created_post_raw: "@%{discobot_username} es por mucho el mejor bot que conozco :wink:"
         instructions: |-
@@ -332,7 +332,7 @@ es:
 
           ¿Puedes empezar por **editar** el mensaje que acabo de crear a tu nombre?
         not_found: |-
-          Parece que aún tienes que editar la [publicación](%{url}) que cree para ti. ¿Puedes intentar de nuevo?
+          Parece que aún tienes que editar la [publicación](%{url}) que creé para ti. ¿Puedes intentarlo de nuevo?
 
           Usa el icono <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> para que aparezca el editor.
         reply: |-
@@ -353,7 +353,7 @@ es:
       recover:
         deleted_post_raw: "¿Por qué @%{discobot_username} eliminó mi mensaje? :anguished:"
         instructions: |-
-          ¡Oh no! Parece que accidentalmente eliminé una publicación nueva que acababa de crear para ti.
+          ¡Oh, no! Parece que accidentalmente eliminé una publicación nueva que acababa de crear para ti.
 
           ¿Puedes presionar el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> y **deshacer la eliminación**, por favor?
         not_found: |-

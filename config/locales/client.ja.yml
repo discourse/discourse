@@ -24,16 +24,16 @@ ja:
         thousands: "%{number}k"
         millions: "%{number}M"
     dates:
-      time: "h:mm a"
-      time_with_zone: "hh:mm a (z)"
-      time_short_day: "ddd, h:mm a"
-      timeline_date: "MMM YYYY"
-      long_no_year: "MMM D, h:mm a"
-      long_no_year_no_time: "MMM D"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "MMM D, YYYY h:mm a"
-      long_with_year_no_time: "YYYY年M月D日"
-      full_with_year_no_time: "YYYY年M月D日"
+      time: "a h:mm"
+      time_with_zone: "a hh:mm (z)"
+      time_short_day: "ddd a h:mm"
+      timeline_date: "YYYY 年 MMM"
+      long_no_year: "MMM D 日 a h:mm"
+      long_no_year_no_time: "MMM D 日"
+      full_no_year_no_time: "MMMM D 日"
+      long_with_year: "YYYY 年 MMM D 日 a h:mm"
+      long_with_year_no_time: "YYYY 年 MMM D 日"
+      full_with_year_no_time: "YYYY 年 MMMM D 日"
       long_date_with_year: "'YY/MM/DD LT"
       long_date_without_year: "M月D日 LT"
       long_date_with_year_without_time: "'YY/MM/DD"
@@ -330,7 +330,7 @@ ja:
         min_score_visibility: "表示する最低スコア"
         score_to_hide: "投稿を非表示にするスコア"
         take_action_bonus:
-          name: "とった行動"
+          name: "対応済み"
           title: "スタッフが対応すると、フラグにボーナスが与えられます。"
         user_accuracy_bonus:
           name: "ユーザーの正確性"
@@ -451,9 +451,9 @@ ja:
           title: "通報された投稿"
           flagged_by: "通報者:"
         reviewable_queued_topic:
-          title: "キューに登録されたトピック"
+          title: "待機中のトピック"
         reviewable_queued_post:
-          title: "キューに登録された投稿"
+          title: "待機中の投稿"
         reviewable_user:
           title: "ユーザー"
         reviewable_post:

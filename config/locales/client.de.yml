@@ -800,20 +800,20 @@ de:
           description: "Du wirst über neue Nachrichten in dieser Gruppe informiert, aber nicht über Antworten auf diese Nachrichten."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
+          description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit Nachrichten in dieser Gruppe."
-      flair_url: "Avatar-Flair Bild"
+      flair_url: "Avatar-Flair-Bild"
       flair_upload_description: "Verwende quadratische Bilder, die nicht kleiner als 20 x 20 Pixel sind."
-      flair_bg_color: "Avatar-Flair Hintergrundfarbe"
+      flair_bg_color: "Avatar-Flair-Hintergrundfarbe"
       flair_bg_color_placeholder: "(Optional) Hex-Farbwert"
-      flair_color: "Avatar-Flair Farbe"
-      flair_color_placeholder: "(Optoinal) Hex-Farbwert"
-      flair_preview_icon: "Vorschau Symbol"
+      flair_color: "Avatar-Flair-Farbe"
+      flair_color_placeholder: "(Optional) Hex-Farbwert"
+      flair_preview_icon: "Vorschau des Symbols"
       flair_preview_image: "Vorschaubild"
       flair_type:
         icon: "Wähle ein Symbol"
@@ -833,7 +833,7 @@ de:
       "14": "Ausstehend"
       "15": "Entwürfe"
     categories:
-      all: "Alle Kategorien"
+      all: "alle Kategorien"
       all_subcategories: "alle"
       no_subcategory: "keine"
       category: "Kategorie"
@@ -846,7 +846,7 @@ de:
         position: "Position"
       posts: "Beiträge"
       topics: "Themen"
-      latest: "Aktuelle Themen"
+      latest: "Aktuellste Kategorien"
       toggle_ordering: "Reihenfolge ändern"
       subcategories: "Unterkategorien"
       muted: "Stummgeschaltete Kategorien"
@@ -868,7 +868,7 @@ de:
       topic_stat_sentence_month:
         one: "%{count} neues Thema im letzten Monat."
         other: "%{count} neue Themen im letzten Monat."
-      n_more: "Kategorien (%{count} weitere)..."
+      n_more: "Kategorien (%{count} weitere) …"
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname
@@ -888,7 +888,7 @@ de:
       copied: "kopiert"
     user_fields:
       none: "(wähle eine Option aus)"
-      required: 'Bitte gib einen Wert für "%{name}" ein'
+      required: 'Bitte gib einen Wert für „%{name}“ ein'
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -917,7 +917,7 @@ de:
         ignore_no_users: "Du hast keine Benutzer ignoriert."
         ignore_option: "Ignoriert"
         ignore_option_title: "Du wirst keine Benachrichtigungen zu dieser Person erhalten und ihre Themen und Antworten werden ausgeblendet."
-        add_ignored_user: "Hinzufügen..."
+        add_ignored_user: "Hinzufügen …"
         mute_option: "Stummgeschaltet"
         mute_option_title: "Du wirst keine Benachrichtigungen zu dieser Person bekommen."
         normal_option: "Normal"
@@ -925,9 +925,9 @@ de:
       notification_schedule:
         title: "Zeitplan für Benachrichtigungen"
         label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
-        tip: "Außerhalb dieser Zeiten wird automatisch der \"Nicht stören\"-Modus aktiviert."
+        tip: "Außerhalb dieser Zeiten wird automatisch der „Nicht stören“-Modus aktiviert."
         midnight: "Mitternacht"
-        none: "keine"
+        none: "Keine"
         monday: "Montag"
         tuesday: "Dienstag"
         wednesday: "Mittwoch"
@@ -946,8 +946,8 @@ de:
         search_label: "Suche nach einem Thema anhand der Überschrift"
         save: "Speichern"
         clear:
-          title: "Filter zurücksetzen"
-          warning: "Willst du wirklich dein Thema entfernen?"
+          title: "Löschen"
+          warning: "Bist du sicher, dass du dein hervorgehobenes Thema löschen möchtest?"
       use_current_timezone: "Aktuelle Zeitzone verwenden"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
       expand_profile: "Erweitern"
@@ -967,21 +967,21 @@ de:
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
-        each_browser_note: 'Hinweis: Du musst diese Einstellung in jedem von Dir verwendeten Browser ändern. Alle Benachrichtigungen werden deaktiviert, wenn "Nicht stören" angezeigt wird, unabhängig von dieser Einstellung.'
+        each_browser_note: 'Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern. Alle Benachrichtigungen werden deaktiviert, wenn der „Nicht stören“-Modus verwendet wird, unabhängig von dieser Einstellung.'
         consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: "Alles gelesen"
       dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       no_messages_title: "Du hast keine Nachrichten"
       no_messages_body: >
-        Benötigst Du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses? Sende ihnen eine Nachricht, indem Sie ihren Avatar auswählst und die %{icon} Nachrichtentaste verwendest.<br><br> Wenn Du Hilfe benötigst, kannst Du <a href='%{aboutUrl}'>Nachricht an einen Mitarbeiter senden</a>.
+        Benötigst du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses? Sende der Person eine Nachricht, indem du ihren Avatar auswählst und die Schaltfläche %{icon} verwendest.<br><br> Wenn du Hilfe benötigst, kannst du eine <a href='%{aboutUrl}'>Nachricht an ein Team-Mitglied senden</a>.
       no_bookmarks_title: "Du hast noch nichts mit einem Lesezeichen versehen"
       no_bookmarks_body: >
         Beginne Lesezeichen von Beiträgen mit der Schaltfläche %{icon} zu setzen und sie werden hier zum einfachen Nachschlagen aufgeführt. Du kannst auch eine Erinnerung vereinbaren!
       no_notifications_title: "Du hast noch keine Benachrichtigungen"
       no_notifications_body: >
-        Du wirst in diesem Panel über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn jemand mit <b>@mentions</b> dich erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
-      first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
+        Du wirst in diesem Panel über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn dich jemand mit <b>@</b> erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
+      first_notification: "Deine erste Benachrichtigung! Wähle sie aus, um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
@@ -992,20 +992,20 @@ de:
       color_scheme_default_on_all_devices: "Standard-Farbschema(s) auf allen meinen Geräten festlegen"
       color_scheme: "Farbschema"
       color_schemes:
-        default_description: "Theme Standard"
-        disable_dark_scheme: "gleich wie regulär"
-        dark_instructions: "Du kannst das dunkle Farbschema ausprobieren, indem du das dunkle Design auf deinem Gerät einschaltest."
+        default_description: "Theme-Standard"
+        disable_dark_scheme: "Gleich wie regulär"
+        dark_instructions: "Du kannst das dunkle Farbschema ausprobieren, indem du den dunklen Modus auf deinem Gerät einschaltest."
         undo: "Zurücksetzen"
         regular: "Regulär"
         dark: "Dunkler Modus"
-        default_dark_scheme: "(Standard)"
+        default_dark_scheme: "(Website-Standard)"
       dark_mode: "Dunkler Modus"
-      dark_mode_enable: "Dunkles Design automatisch aktivieren"
+      dark_mode_enable: "Dunkles Farbschema automatisch aktivieren"
       text_size_default_on_all_devices: "Mache diese Schriftgröße zum Standard für alle meine Geräte"
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
-      enable_defer: "Aktiviere Verzögerung für das ungelesen Markieren von Themen"
+      enable_defer: "Verzögerung aktivieren, um Themen als ungelesen zu markieren"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -1037,7 +1037,7 @@ de:
       muted_tags: "Stummgeschaltet"
       muted_tags_instructions: "Du erhältst keine Benachrichtigungen über neue Themen mit diesen Schlagwörtern und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       watched_categories: "Beobachtet"
-      watched_categories_instructions: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      watched_categories_instructions: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Beiträge wird bei den betroffenen Themen angezeigt."
       tracked_categories: "Verfolgt"
       tracked_categories_instructions: "Du wirst automatisch alle Themen in diesen Kategorien verfolgen. Die Anzahl der neuen Beiträge wird neben dem Thema erscheinen."
       watched_first_post_categories: "Ersten Beitrag beobachten"
@@ -1045,20 +1045,20 @@ de:
       watched_first_post_tags: "Ersten Beitrag beobachten"
       watched_first_post_tags_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern."
       muted_categories: "Stummgeschaltet"
-      muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
-      muted_categories_instructions_dont_hide: "Du bekommst keine Benachrichtigung über irgendetwas an neuen Themen in diesen Kategorien."
+      muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
+      muted_categories_instructions_dont_hide: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien."
       regular_categories: "Stammgast"
       regular_categories_instructions: "Diese Kategorien werden in den Themenlisten „Neueste“ und „Top“ angezeigt."
-      no_category_access: "Moderaturen haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
+      no_category_access: "Moderatoren haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
-      delete_yourself_not_allowed: "Bitte kontaktiere das Team, wenn du möchtest, dass dein Konto gelöscht wird."
+      delete_yourself_not_allowed: "Bitte kontaktiere ein Team-Mitglied, wenn du möchtest, dass dein Konto gelöscht wird."
       unread_message_count: "Nachrichten"
       admin_delete: "Löschen"
       users: "Benutzer"
       muted_users: "Stummgeschaltet"
-      muted_users_instructions: "Alle Benachrichtigungen und PMs von diesen Benutzern unterdrücken."
+      muted_users_instructions: "Alle Benachrichtigungen und privaten Nachrichten von diesen Benutzern unterdrücken."
       allowed_pm_users: "Erlaubt"
       allowed_pm_users_instructions: "Nur PMs von diesen Benutzern zulassen."
       allow_private_messages_from_specific_users: "Nur bestimmten Benutzern erlauben, mir persönliche Nachrichten zu senden"

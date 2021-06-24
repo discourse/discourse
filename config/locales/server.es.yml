@@ -201,7 +201,7 @@ es:
       local_login_cannot_be_disabled_if_second_factor_enforced: "No puede deshabilitar el inicio de sesión local si se aplica 2FA. Deshabilite 2FA antes de deshabilitar los inicios de sesión locales."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "No puedes habilitar las cargas S3 porque las cargas S3 ya están habilitadas globalmente, y habilitar este nivel de sitio podría causar problemas críticos con las cargas."
       cors_origins_should_not_have_trailing_slash: "No deberías añadir una barra al final (/) a los CORS origins."
-    conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor, ponte en contacto con el staff y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor '%{hostname}' no se ha encontrado. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
       error_response: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor web ha devuelto un código de error %{status_code}. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
@@ -220,7 +220,7 @@ es:
 
       <p>Si te acuerdas de tu contraseña puedes <a href="%{base_url}/login">iniciar sesión</a>.</p>
 
-      <p>Si no, por favor, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
+      <p>Si no, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
     not_found_template_link: |
       <p>La invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a mandar una.</p>
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
@@ -285,7 +285,7 @@ es:
     start_discussion: "Empezar discusión"
     continue: "Continuar discusión"
     error: "Error al insertar"
-    referer: "Referente:"
+    referer: "Remisor:"
     error_topics: "La el ajuste «embed topics list» no está activado."
     mismatch: "El remitente no se envió o no coincide con ninguno de los siguientes hosts:"
     no_hosts: "No se han definido hosts para el incrustado."
@@ -423,7 +423,7 @@ es:
       everyone: "todos"
       admins: "administradores"
       moderators: "moderadores"
-      staff: "staff"
+      staff: "personal"
       trust_level_0: "nivel_de_confianza_0"
       trust_level_1: "nivel_de_confianza_1"
       trust_level_2: "nivel_de_confianza_2"
@@ -591,7 +591,7 @@ es:
   vip_category_description: "Una categoría exclusiva para miembros con un nivel de confianza de 3 o más."
   meta_category_name: "Sugerencias sobre el sitio"
   meta_category_description: "Debate sobre este sitio, su organización, cómo funciona y cómo podemos mejorarlo."
-  staff_category_name: "Staff"
+  staff_category_name: "Personal"
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del staff."
   discourse_welcome_topic:
     title: "Te damos la bienvenida a Discourse"
@@ -636,7 +636,7 @@ es:
   category:
     topic_prefix: "Acerca de la categoría %{category}"
     replace_paragraph: "(Sustituye este párrafo con una descripción corta de tu nueva categoría. Este texto aparecerá en el área de selección de categoría, así que intenta que no supere los 200 caracteres.)"
-    post_template: "%{replace_paragraph}\n\nUtiliza los siguientes párrafos para una descripción más detallada, o establece las directrices o reglas de la categoría::\n\n- ¿Para qué la gente debería usar esta categoría? ¿Para qué se usa?\n\n- ¿Exactamente cómo se distingue de las otras categorías ya existentes?\n\n- ¿Qué temas debería contener esta categoría normalmente?\n\n- ¿Necesitamos esta categoría? ¿Podría fusionarse con otra categoría o subcategoría?\n"
+    post_template: "%{replace_paragraph}\n\nUtiliza los siguientes párrafos para una descripción más detallada, o establece las directrices o reglas de la categoría:\n\n- ¿Por qué debería la gente usar esta categoría? ¿Para qué se usa?\n\n- ¿Exactamente cómo se distingue de las otras categorías ya existentes?\n\n- ¿Qué temas debería contener esta categoría normalmente?\n\n- ¿Necesitamos esta categoría? ¿Podría fusionarse con otra categoría o subcategoría?\n"
     errors:
       not_found: "¡Categoría no encontrada!"
       uncategorized_parent: "Sin categoría no puede tener categoría primaria"
@@ -671,8 +671,8 @@ es:
     slow_down: "Has realizado esta acción demasiadas veces. Por favor, inténtalo de nuevo más tarde."
     too_many_requests: "Has realizado esta acción demasiadas veces. Por favor, espera %{time_left} antes de intentar nuevamente."
     by_type:
-      first_day_replies_per_day: "Te agradecemos el entusiasmo, ¡sigue así! Dicho esto, has llegado al límite máximo de respuestas que por seguridad un usuario nuevo puede publicar en su primer día. Por favor, espera %{time_left} para seguir respondiendo."
-      first_day_topics_per_day: "¡Te agradecemos el entusiasmo! Dicho esto, has llegado al límite de temas que los usuarios nuevos pueden por seguridad crear en su primer día. Por favor, espera %{time_left}, y podrás seguir creando nuevos temas."
+      first_day_replies_per_day: "Te agradecemos el entusiasmo, ¡sigue así! Dicho esto, has llegado al límite máximo de respuestas que, por seguridad, un usuario nuevo puede publicar en su primer día. Por favor, espera %{time_left} para seguir respondiendo."
+      first_day_topics_per_day: "¡Te agradecemos el entusiasmo! Dicho esto, has llegado al límite de temas que los usuarios nuevos pueden, por seguridad, crear en su primer día. Por favor, espera %{time_left}, y podrás seguir creando nuevos temas."
       create_topic: "Estás creando temas un poco rápido. Por favor, espera %{time_left} antes de intentarlo de nuevo."
       create_post: "Estás respondiendo un poco rápido. Por favor, espera %{time_left} antes de volverlo a intentar."
       delete_post: "Estás borrando publicaciones un poco rápido. Por favor, espera %{time_left} antes de volverlo a intentar."
@@ -717,10 +717,10 @@ es:
         one: "%{count}d"
         other: "%{count} d"
       about_x_months:
-        one: "%{count}mon"
+        one: "%{count} mes"
         other: "%{count} m"
       x_months:
-        one: "%{count}mon"
+        one: "%{count} mes"
         other: "%{count} meses"
       about_x_years:
         one: "%{count}y"
@@ -1095,7 +1095,7 @@ es:
         post: Publicación
         editor: Editor
         author: Autoría
-        edit_reason: Razón
+        edit_reason: Motivo
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1336,18 +1336,18 @@ es:
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo config/database.yml está utilizando el hostname localhost predeterminado. Actualízalo para usar el hostname de tu sitio."
-    sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, tal como el envío de correos electrónicos, están siendo realizadas desincronizadamente por sidekiq. Por favor, asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprende sobre Sidekiq aquí</a>.'
+    sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, tal como el envío de correos electrónicos, se están ejecutando de forma desincronizada por sidekiq. Asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Puedes obtener más información sobre Sidekiq aquí</a>.'
     queue_size_warning: "El número de tareas en cola es %{queue_size}, que es una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o tal vez deberías añadir más trabajadores de Sidekiq."
     memory_warning: "Tu servidor está funcionando con menos de 1 GB de memoria total. Se recomienda una memoria de al menos 1 GB de capacidad."
     google_oauth2_config_warning: 'El servidor está configurado para permitir registrarse e iniciar sesión con Google OAuth2 (enable_google_oauth2_logins), pero la ID de cliente y el secreto no están configurados. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualízalos. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira esta guía para más información</a>.'
     facebook_config_warning: 'El servidor está configurado para permitir registrarse e iniciar sesión con Facebook (enable_facebook_logins), pero la ID de cliente y el secreto no están configurados. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualízalos.<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Mira esta guía para más información</a>.'
     twitter_config_warning: 'El servidor está configurado para permitir registrarse e iniciar sesión con Twitter (enable_twitter_logins), pero la ID de cliente y el secreto no están configurados. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualízalos.<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Mira esta guía para más información</a>.'
     github_config_warning: 'El servidor está configurado para permitir registrarse e iniciar sesión con GitHub (enable_github_logins), pero la ID de cliente y el secreto no están configurados. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualízalos. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Mira esta guía para más información</a>.'
-    s3_config_warning: 'El servidor está configurado para permitir subir archivos a S3, pero por al menos una de las siguientes configuraciones no se ha establecido: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa «How to set up image uploads to S3?» para aprender más</a>.'
-    s3_backup_config_warning: 'El servidor está configurado para permitir subir los respaldos a S3, pero por al menos una de las siguientes configuraciones no se ha establecido: : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_backup_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa «How to set up image uploads to S3?» para aprender más</a>.'
-    s3_cdn_warning: 'El servidor está configurado para cargar los archivos a S3, pero no hay CDN de S3 configurado. Esto puede llevar a grandes costes de S3 y mal rendimiento del sitio. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Ver "Using Object Storage for Uploads" para más detalles</a>.'
+    s3_config_warning: 'El servidor está configurado para permitir subir archivos a S3, pero por al menos una de las siguientes configuraciones no se ha establecido: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta «How to set up image uploads to S3?» para obtener más información</a>.'
+    s3_backup_config_warning: 'El servidor está configurado para permitir subir copias de seguridad a S3, pero al menos una de las siguientes configuraciones no se ha establecido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_backup_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta «How to set up image uploads to S3?» para obtener más información</a>.'
+    s3_cdn_warning: 'El servidor está configurado para cargar los archivos a S3, pero no hay CDN de S3 configurado. Esto puede llevar a grandes costes de S3 y mal rendimiento del sitio. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consulta «Using Object Storage for Uploads» para obtener más detalles</a>.'
     image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="https://www.imagemagick.org/script/download.php" target="_blank">descarga la última versión</a>.'
-    failing_emails_warning: 'Hay %{num_failed_jobs} tareas de correo electrónico que fallaron. Revisa tu app.yml y asegúrate de que la configuración del servidor de correo es correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Mira las tareas que fallaron en Sidekiq</a>.'
+    failing_emails_warning: 'Hay %{num_failed_jobs} tareas de correo electrónico que fallaron. Revisa tu app.yml y asegúrate de que la configuración del servidor de correo es correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Consulta las tareas que fallaron en Sidekiq</a>.'
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
     email_polling_errored_recently:
       one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='%{base_path}/logs' target='_blank'>los logs</a> para más detalles."
@@ -1437,13 +1437,13 @@ es:
     large_icon: "Imagen utilizada como base para otros iconos de metadatos. Lo ideal sería que fuera mayor que 512 x 512. Si se deja en blanco, se utilizará logo_small."
     manifest_icon: "Imagen utilizada como logo/imagen de bienvenida en Android. Se cambiará automáticamente el tamaño a 512 × 512. Si se deja en blanco, se utilizará large_icon."
     manifest_screenshots: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
-    favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para trabajar correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
+    favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para que funcione correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
     apple_touch_icon: "Icono utilizado para dispositivos táctiles de Apple. Se redimensionará automáticamente a 180x180. Si se deja en blanco, se utilizará el icono grande."
     opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
     twitter_summary_large_image: "La «imagen grande de resumen» de la tarjeta de Twitter (debe tener al menos 280 de anchura y al menos 150 de altura). Si se deja en blanco, se generan metadatos de tarjetas normales utilizando opengraph_image."
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
     email_custom_headers: "Lista de correos electrónicos separados por barras"
-    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Revisa <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciona más detalles a los usuarios acerca de por qué no pueden acceder a un tema en particular. Nota: esto es menos seguro dado que los usuarios sabrán si una URL enlaza a un tema válido."
     enforce_second_factor: "Obligar a usar la autenticación de dos factores. Seleccionar «all» para obligar a todos y «staff» para obligar sólo a usuarios del personal."
     force_https: "Forzar al sitio a utilizar solo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión a través de redes sociales y cualquier logo externo / dependencia son compatibles con HTTPS?"
@@ -1562,7 +1562,7 @@ es:
     discourse_connect_overrides_bio: "Sobreescribir la biografía del usuario y evita que los usuarios la cambien"
     discourse_connect_overrides_groups: "Sincronizar todas las membresías manuales a grupos con los grupos especificados en el atributo groups (CUIDADO: si indicas grupos, todas las membresías manuales del usuario serán borradas)"
     auth_overrides_email: "Sobreescribir la dirección de correo local con la del sitio externo en cada inicio de sesión, y evitar cambios locales. Aplica a todos los proveedores de autenticación (CUIDADO: puede haber diferencias por la normalización de direcciones locales de correo)"
-    auth_overrides_username: "Sobreescribir nombre de usuari locale con el del sitio externo en cada inicio de sesión, y evitar cambios locales. Aplica a todos los proveedores de autenticación. (CUIDADO: puede haber diferencias si hay distintos requisitos en los nombres de usuarios, como los caracteres o la longitud)"
+    auth_overrides_username: "Sobrescribe el nombre de usuario local con el del sitio externo en cada inicio de sesión, y evita cambios locales. Se aplica a todos los proveedores de autenticación. (CUIDADO: puede haber diferencias si hay distintos requisitos en los nombres de usuarios, como los caracteres o la longitud)"
     auth_overrides_name: "Sobreescribir nombre completo local con el del sitio externo en cada inicio de sesión, y evitar cambios locales. Aplica a todos los proveedores de autenticación."
     discourse_connect_overrides_avatar: "Sobreescribir el avatar del usuario por el dado por DiscourseConnect. Si se activa, los usuarios no podrán cambiar su avatar ni subir nuevos desde Discourse."
     discourse_connect_overrides_location: "Sobreescribir la ubicación del usuario con la dada por DiscourseConnect, y evitar cambios locales."
@@ -1575,12 +1575,12 @@ es:
     enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión único que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de usuarios nuevos. Desactiva esta opción para que nadie pueda crear una cuenta nueva."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
-    enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación que Google soporta actualmente. Requiere de una clave de cliente y una clave secreta. Ver <a href='https://meta.discourse.org/t/15858' target='_blank'>configuración del inicio de sesión mediante para Discourse</a>."
+    enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación que Google soporta actualmente. Requiere de una clave de cliente y una clave secreta. Consulta <a href='https://meta.discourse.org/t/15858' target='_blank'>configuración del inicio de sesión mediante para Discourse</a>."
     google_oauth2_client_id: "ID de cliente de tu aplicación de Google."
     google_oauth2_client_secret: "Clave secreta del cliente de tu aplicación de Google."
     google_oauth2_prompt: "Una lista opcional delimitada por valores de cadena que especifica si el servidor de autorizaciones solicita al usuario la reautenticación y el consentimiento. Ver <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para los valores posibles."
     google_oauth2_hd: "Un dominio opcional hospedado por Google Apps limitará el inicio de sesión. Ver <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para más detalles."
-    enable_twitter_logins: "Activar autenticación mediante Twitter, requiere una twitter_consumer_key y un twitter_consumer_secret. Ver <a href='https://meta.discourse.org/t/13395' target='_blank'>configuración del inicio de sesión mediante Twitter (e inserciones) para Discourse</a>."
+    enable_twitter_logins: "Activar autenticación mediante Twitter requiere una twitter_consumer_key y un twitter_consumer_secret. Consulta <a href='https://meta.discourse.org/t/13395' target='_blank'>configuración del inicio de sesión mediante Twitter (e inserciones) para Discourse</a>."
     twitter_consumer_key: "Clave del consumidor para la autenticación mediante Twitter, registrado en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secreto del consumidor para la autenticación mediante Twitter, registrado en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     enable_facebook_logins: "Activar autenticación mediante Facebook, requiere una facebook_app_id y un facebook_app_secret. Ver <a href='https://meta.discourse.org/t/13394' target='_blank'>configuración del inicio de sesión mediante Facebook para Discourse</a>."
@@ -1645,7 +1645,7 @@ es:
     purge_deleted_uploads_grace_period_days: "Período de gracia (en horas) antes de que un archivo subido huérfano se elimine permanentemente."
     purge_unactivated_users_grace_period_days: "Periodo de gracia (en días) antes de eliminar a un usuario que no ha activado su cuenta. Establecer el valor en 0 para que nunca se purgue a usuarios no activados."
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere credenciales de S3 validas. (tanto clave de acceso y clave de acceso secreta)."
-    s3_use_iam_profile: 'Utilice un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil de instancia de AWS EC2</a> para otorgar acceso al S3 bucket. NOTA: habilitar esto requiere que Discourse se ejecute en una instancia EC2 configurada apropiadamente, y anula las configuraciones de «clave de acceso s3» y «clave secreta s3».'
+    s3_use_iam_profile: 'Utiliza un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil de instancia de AWS EC2</a> para otorgar acceso al S3 bucket. NOTA: habilitar esto requiere que Discourse se ejecute en una instancia EC2 configurada apropiadamente, y sobrescribe las configuraciones de «clave de acceso s3» y «clave secreta s3».'
     s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
     s3_access_key_id: "La clave secreta de acceso de Amazon S3 que se usará para subir imágenes, archivos adjuntos y copias de seguridad."
     s3_secret_access_key: "La clave secreta de acceso de Amazon S3 que se usará para subir imágenes, adjuntos y copias de seguridad."
@@ -1830,7 +1830,7 @@ es:
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de <a href='%{base_path}/logs' target='_blank'>/registros</a>"
     email_in: 'Permitir a los usuarios crear nuevos temas por correo electrónico (requiere el polling manual o pop3). Configura las direcciones en la pestaña «ajustes» de cada categoría.'
     email_in_min_trust: "El nivel de confianza mínimo requerido para poder publicar temas nuevos por correo electrónico."
-    email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Ver: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
+    email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Consulta: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
     email_in_spam_header: "El encabezado del correo electrónico para detectar spam."
     enable_imap: "Habilitar IMAP para sincronizar mensajes de grupo."
     enable_imap_write: "Habilitar sincronización IMAP bidireccional. Si está deshabilitado, todas las operaciones de escritura en cuentas IMAP están deshabilitadas."
@@ -1872,7 +1872,7 @@ es:
     enable_user_directory: "Proporcionar un directorio de usuarios que se pueda navegar"
     enable_group_directory: "Proporcionar un directorio de grupos que se pueda navegar"
     enable_category_group_moderation: "Permitir que los grupos moderen contenido en categorías específicas"
-    group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, ver: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalizar el formato del asunto para correos electrónicos estandar</a>"
+    group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, consulta: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalizar el formato del asunto para correos electrónicos estándar</a>"
     allow_anonymous_posting: "Permitir a los usuarios cambiar a modo anónimo"
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para permitir la publicación anónima"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
@@ -1921,7 +1921,7 @@ es:
     default_code_lang: "Lenguaje de programación que se usará para colorear los bloques de código de GitHub («auto» para automático, «nohighlight» para no colorear, ruby, python, etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para deshabilitar."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
-    highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) Ver: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
+    highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) Consulta: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
     show_copy_button_on_codeblocks: "Agrega un botón a los bloques de código para copiar el contenido del bloque al portapapeles del usuario. Esta característica no es compatible con Internet Explorer."
     embed_any_origin: "Permitir la inserción de contenido sin importar su origen. Esto se requiere para aplicaciones móviles con HTML estático."
     embed_topics_list: "Soportar la inserción HTML de listas de temas"
@@ -2315,11 +2315,11 @@ es:
     subject_template: "Confirma que no quieres recibir más correos electrónicos de %{site_title}"
     text_body_template: |
       Alguien (¿tal vez tú?) solicitó no recibir más actualizaciones por correo electrónico desde %{site_domain_name} a esta dirección de correo electrónico.
-      Si deseas confirmar esta acción, por favor, haz clic en el siguiente enlace:
+      Si deseas confirmar esta acción, haz clic en el siguiente enlace:
 
       %{confirm_unsubscribe_link}
 
-      Si quieres continuar recibiendo actualizaciones por correo electrónico, por favor ignora este correo.
+      Si quieres continuar recibiendo actualizaciones por correo electrónico, ignora este correo.
   invite_mailer:
     title: "Correo de invitación"
     subject_template: "%{inviter_name} te invitó a «%{topic_title}» en %{site_domain_name}"
@@ -2423,28 +2423,28 @@ es:
     title: "Correo electrónico de nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
     text_body_template: |
-      ¡Hurra! Una version nueva de [Discourse] (https://www.discourse.org) está disponible.
+      ¡Hurra! Hay una nueva versión de [Discourse] (https://www.discourse.org) disponible.
 
       Tu versión: %{installed_version}
       Versión nueva: **%{new_version}**
 
       Actualiza la versión fácilmente mediante nuestra **[actualización de navegador de un clic](%{base_url}/admin/upgrade)**
 
-      - Descubre que hay de nuevo en las [notas de la versión](https://meta.discourse.org/tag/release-notes) o revisa [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
+      - Descubre qué novedades hay en las [notas de la versión](https://meta.discourse.org/tag/release-notes) o revisa [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
       - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, discusiones y soporte de Discourse
   new_version_mailer_with_notes:
     title: "Correo electrónico de nueva versión con notas"
     subject_template: "[%{email_prefix}] actualización disponible"
     text_body_template: |
-      Hurra! Una version nueva de [Discourse] (https://www.discourse.org) está disponible.
+      Hurra! Hay una nueva versión de [Discourse] (https://www.discourse.org) disponible.
 
       Tu versión: %{installed_version}
       Versión nueva: **%{new_version}**
 
-      Actualiza la versión fácilmente mediante nuestra **[actualización de navegador de un clic](%{base_url}/admin/upgrade)**
+      Actualiza la versión fácilmente mediante nuestra **[actualización de navegador en un clic](%{base_url}/admin/upgrade)**
 
-      - Descubre que hay de nuevo en las [notas de la versión](https://meta.discourse.org/tag/release-notes) o revisa [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
+      - Descubre qué novedades hay en las [notas de la versión](https://meta.discourse.org/tag/release-notes) o revisa [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
       - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, discusiones y soporte de Discourse
 
@@ -2549,7 +2549,7 @@ es:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        Conforme vayas participando, te iremos conociendo más y tus limitaciones temporales como usuario nuevo serán levantadas. Con el tiempo ganarás [niveles de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que incluyen capacidades especiales para ayudarnos a gestionar la comunidad juntos.
+        Conforme vayas participando, te iremos conociendo más y se irán levantando tus limitaciones temporales como usuario nuevo. Con el tiempo ganarás [niveles de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que incluyen capacidades especiales para ayudarnos a gestionar la comunidad juntos.
     welcome_user:
       title: "Bienvenida al usuario"
       subject_template: "¡Bienvenido a %{site_name}!"
@@ -2576,14 +2576,14 @@ es:
 
         Como %{role}, ahora tienes acceso a la <a href='%{base_url}/admin' target='_blank'>interfaz de administración</a>.
 
-        Con un gran poder viene una gran responsabilidad. Si no tienes experiencia moderando, por favor, revisa la [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
+        Un gran poder conlleva una gran responsabilidad. Si no tienes experiencia moderando, consulta la [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Bienvenida al invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
         Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
 
-        Hemos creado automáticamente una nueva cuenta para ti: **%{username}**. Puedes cambiar tu nombre de usuario en cualquier momento visitando [tu perfil][preferencias].
+        Hemos creado automáticamente una nueva cuenta para ti: **%{username}**. Puedes cambiar tu nombre de usuario en cualquier momento visitando [tu perfil][prefs].
 
         Para iniciar sesión en adelante:
 
@@ -2679,13 +2679,13 @@ es:
       title: "Exportación de datos en CSV realizada con éxito"
       subject_template: "[%{export_title}] exportación de datos completa"
       text_body_template: |
-        ¡Tus datos se exportaron exitosamente! :dvd:
+        ¡Tus datos se exportaron con éxito! :dvd:
 
         %{download_link}
 
         Este enlace de descarga será válido durante 48 horas.
 
-        La información está comprimida en forma de archivo zip. Si el archivo no se extrae automáticamente cuando lo abras, utiliza la herrmaienta que se recomienda aquí: https://www.7-zip.org/
+        La información está comprimida en forma de archivo zip. Si el archivo no se extrae automáticamente cuando lo abras, utiliza la herramienta que se recomienda aquí: https://www.7-zip.org/
     csv_export_failed:
       title: "Error en la exportación de datos en CSV"
       subject_template: "La exportación de datos falló"
@@ -2724,7 +2724,7 @@ es:
       text_body_template: |
         Lo sentimos pero tu correo electrónico para %{destination} (con el título %{former_title}) no funcionó.
 
-        La cuenta asociada a esta dirección de correo electrónico no ha sido activada. Por favor, activa tu cuenta antes de enviar correos electrónicos.
+        La cuenta asociada a esta dirección de correo electrónico no ha sido activada. Activa tu cuenta antes de enviar correos electrónicos.
     email_reject_silenced_user:
       title: "Correo electrónico rechazado. Usuario silenciado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Usuario silenciado"
@@ -2808,7 +2808,7 @@ es:
       text_body_template: |
         Lo sentimos, tu correo a %{destination} (con el título%{former_title}) no funcionó.
 
-        La clave de respuesta es inválida o desconocida, así que no podemos determinar a qué estás respondiendo. [Contacta a un miembro del staff](%{base_url}/about).
+        La clave de respuesta no es válida o es desconocida, así que no podemos determinar a qué estás respondiendo. [Contacta con un miembro del personal](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "Correo electrónico de rechazo. Dirección del destinatario incorrecta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Dirección desconocida"
@@ -2830,7 +2830,7 @@ es:
       text_body_template: |
         Lo sentimos, tu correo electrónico para %{destination} (con el título %{former_title}) no funcionó.
 
-        Solo aceptamos respuestas a las notificaciones originales durante %{number_of_days} días. Por favor, [visita el tema](%{short_url}) para seguir con la conversación.
+        Solo aceptamos respuestas a las notificaciones originales durante %{number_of_days} días. [Visita el tema](%{short_url}) para seguir con la conversación.
     email_reject_topic_not_found:
       title: "Correo electrónico de rechazo. Tema no encontrado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Tema no encontrado"
@@ -2868,7 +2868,7 @@ es:
         Detalles:
         %{rejected_errors}
 
-        Si crees que se trata de un error, [contacta a un miembro del staff](%{base_url}/about).
+        Si crees que se trata de un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_reply_not_allowed:
       title: "Correo electrónico de rechazo. No permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Respuesta no permitida"
@@ -2889,9 +2889,9 @@ es:
       title: "Error de notificación de correo electrónico"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de autenticación POP"
       text_body_template: |
-        Hubo un error de autenticación mientras se ejecutaba el polling de los correos electrónicos desde el servidor POP.
+        Lamentablemente, se ha producido un error de autenticación al sondear los correos electrónicos del servidor POP.
 
-        Por favor, asegúrate de que se han configurado las credenciales POP correctamente en los [ajustes del sitio](%{base_url}/admin/site_settings/category/email).
+        Asegúrate de que se han configurado las credenciales POP correctamente en los [ajustes del sitio](%{base_url}/admin/site_settings/category/email).
 
         Si dispones de una interfaz de usuario web para la cuenta de correo POP, es posible que debas iniciar sesión allí y comprobar tu configuración.
     email_revoked:
@@ -3003,9 +3003,9 @@ es:
       text_body_template: |
         Tenemos nuevos consejos y recomendaciones para ti basados en tus ajustes del sitio actuales.
 
-        [Visita el dashboard de tu sitio](%{base_url}/admin) para verlos.
+        [Visita el panel de control de tu sitio](%{base_url}/admin) para verlos.
 
-        Si no hay nada visible en tu dashboard, otro miembro del staff podría haber actuado ya sobre este consejo. Puedes encontrar una lista de acciones del staff en tus [registros de acciones del staff](%{base_url}/admin/logs/staff_action_logs).
+        Si no hay nada visible en tu panel de control, otro miembro del personal podría haber actuado ya sobre este consejo. Puedes encontrar una lista de acciones del personal en tus [registros de acciones del personal](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "¡Eres el usuario nuevo del mes!"
       subject_template: "¡Eres el usuario nuevo del mes!"
@@ -3325,12 +3325,12 @@ es:
       text_body_template: |
         Alguien ha solicitado añadir una contraseña a tu cuenta en [%{site_name}](%{base_url}). Alternativamente, puedes iniciar sesión usando cualquier servicio online soportado (como Google, Facebook, etc) que esté asociado con esta dirección de correo electrónico validada.
 
-        Si no realizaste esta petición, por favor, ignora este correo.
+        Si no realizaste esta petición, ignora este correo.
 
         Haz clic en el siguiente enlace para escoger una contraseña:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
-      title: "Incicio de sesión de administrador"
+      title: "Inicio de sesión de administrador"
       subject_template: "[%{email_prefix}] Inicio de sesión"
       text_body_template: |
         Alguien ha solicitado iniciar sesión en tu cuenta de [%{site_name}](%{base_url}).
@@ -3370,7 +3370,7 @@ es:
       subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"
       text_body_template: |
         Antes de que podamos cambiar tu dirección de correo electrónico, es necesario que confirmes
-        que la cuenta de correo electrónica actual está bajo tu control. Tras completar este paso, deberemos confirmar también la nueva dirección.
+        que la cuenta de correo electrónico actual está bajo tu control. Tras completar este paso, deberemos confirmar también la nueva dirección.
 
         Confirma tu dirección de correo electrónico actual para %{site_name} haciendo clic en el siguiente enlace:
 
@@ -3429,12 +3429,12 @@ es:
       title: "Regístrate"
       subject_template: "[%{email_prefix}] Confirma tu cuenta nueva"
       text_body_template: |
-        ¡Bienvenido a %{site_name}!
+        ¡Te damos la bienvenida a %{site_name}!
 
         Haz clic en el siguiente enlace para confirmar y activar tu cuenta nueva:
         %{base_url}/u/activate-account/%{email_token}
 
-        Si no puedes hacer clic en el enlace, intentar copiarlo y pegarlo en la barra de direcciones de tu navegador.
+        Si no puedes hacer clic en el enlace, intenta copiarlo y pegarlo en la barra de direcciones de tu navegador.
     activation_reminder:
       title: "Recordatorio de activación"
       subject_template: "[%{email_prefix}] Recordatorio: confirma tu cuenta"
@@ -3461,7 +3461,7 @@ es:
 
         Si has sido tú, ¡genial! No tienes que hacer más nada.
 
-        Si no has sido tú, por favor, [revisa tus sesiones activas](%{base_url}/my/preferences/account) y considera cambiar tu contraseña.
+        Si no has sido tú, [revisa tus sesiones activas](%{base_url}/my/preferences/account) y considera cambiar tu contraseña.
     post_approved:
       title: "Tu publicación ha sido aprobada"
       subject_template: "[%{site_name}] Tu publicación ha sido aprobada"
@@ -4114,7 +4114,7 @@ es:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"
       help: "registra una cuenta para empezar"
-      no_emails: "Por desgracia, no se definió ningún correo electrónico de administrador durante la configuración inicial, por lo que terminar de instalar el foro será complicado. Por favor, añade un correo de desarrollador en el archivo de configuración o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea una cuenta de administrador desde la consola</a>."
+      no_emails: "Por desgracia, no se definió ningún correo electrónico de administrador durante la configuración inicial, por lo que terminar de instalar el foro será complicado. Añade un correo de desarrollador en el archivo de configuración o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea una cuenta de administrador desde la consola</a>."
     confirm_email:
       title: "Confirmar tu correo electrónico"
       message: "<p>Hemos enviado un correo de activación a <b>%{email}</b>. Por favor, sigue las instrucciones en el correo para activar tu cuenta.</p><p>Si no llega, revisa tu carpeta de spam y <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>asegúrate de configurar el correo electrónico correctamente</a>.</p>"
@@ -4156,7 +4156,7 @@ es:
         fields:
           welcome:
             label: "Tema de bienvenida"
-            description: "<p>¿Cómo le describirías tu comunidad a un desconocido en alrededor de 1 minuto?</p> <ul> <li>¿A quién está enfocado el contenido?</li> <li> ¿Qué puedo encontrar aquí?</li> <li>¿Por qué debería visitar esta página?</li> <p> Tu tema de bienvenida es lo primero que los nuevos visitantes verán en el sitio. Piensa que es el <b>párrafo</b> que define la esencia de tu comunidad.</p>"
+            description: "<p>¿Cómo le describirías tu comunidad a un desconocido en alrededor de 1 minuto?</p> <ul> <li>¿A quién va dirigido el contenido?</li> <li> ¿Qué puedo encontrar aquí?</li> <li>¿Por qué debería visitar esta página?</li> </ul> <p> Tu tema de bienvenida es lo primero que los nuevos visitantes verán en el sitio. Piensa que es el <b>párrafo</b> que define la esencia de tu comunidad.</p>"
             one_paragraph: "El mensaje de bienvenida no debería ser más de un párrafo."
             extra_description: "Si no te decides, puedes saltarte este paso y editar el tema de bienvenida más adelante."
       privacy:
@@ -4328,7 +4328,7 @@ es:
       queued_by_staff: "Un miembro del staff cree que esta publicación debe que ser revisada. Se mantendrá oculta hasta entonces."
     actions:
       agree:
-        title: "Concordar..."
+        title: "Estar de acuerdo..."
       agree_and_keep:
         title: "Mantener publicación"
         description: "Estar de acuerdo con la denuncia y mantener la publicación intacta."
