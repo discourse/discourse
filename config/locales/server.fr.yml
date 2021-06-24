@@ -1502,7 +1502,6 @@ fr:
     invite_code: "Les utilisateurs doivent entrer ce code pour pouvoir créer un compte (cela est ignoré si le champ est laissé vide, insensible à la casse)"
     approve_suspect_users: "Ajouter les utilisateurs suspects à la file des éléments en attente d'examen. Les utilisateurs qui ont renseigné une biographie ou un site web sur leur profil mais n'ont pas parcouru le forum sont définis comme suspects."
     review_every_post: "Chaque message doit être examiné par un responsable avant sa publication. AVERTISSEMENT ! DÉCONSEILLÉ POUR UN SITE À FORTE FRÉQUENTATION."
-    pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre d'heures. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
     ga_version: "Version de Google Universal Analytics à utiliser : v3 (analytics.js), v4 (gtag)"

@@ -1502,7 +1502,6 @@ de:
     invite_code: "Der Benutzer muss diesen Code eingeben, damit die Kontoregistrierung zugelassen wird. Wird ignoriert, wenn er leer ist (Groß-/Kleinschreibung wird nicht beachtet)"
     approve_suspect_users: "Fügen Sie verdächtige Benutzer zur Warteschlange hinzu. Verdächtige Benutzer haben eine Biografie/Website eingegeben, haben aber keine Leseaktivität."
     review_every_post: "Alle Beiträge müssen überprüft werden. WARNUNG! NICHT FÜR STARK FREQUENTIERTE WEBSITES EMPFOHLEN."
-    pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
     ga_version: "Zu verwendende Version von Google Universal Analytics: v3 (analytics.js), v4 (gtag)"

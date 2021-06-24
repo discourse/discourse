@@ -33,8 +33,8 @@ es:
     - Diciembre
     <<: *datetime_formats
   time:
-    am: "am"
-    pm: "pm"
+    am: "a.m."
+    pm: "p.m."
     <<: *datetime_formats
   title: "Discourse"
   topics: "Temas"
@@ -102,7 +102,7 @@ es:
       show_trimmed_content: "Mostrar contenido recortado"
       maximum_staged_user_per_email_reached: "Se alcanzó el número máximo de usuarios provisionales creados por correo electrónico."
       no_subject: "(sin título)"
-      no_body: "(sin mensaje)"
+      no_body: "(sin cuerpo)"
       errors:
         empty_email_error: "Sucede cuando el texto en bruto del correo electrónico que recibimos está en blanco."
         no_message_id_error: "Sucede cuando el correo electrónico no tiene el encabezado de «ID del mensaje»."
@@ -437,8 +437,8 @@ es:
         Tu solicitud para entrar al grupo @%{group_name} ha sido aceptada y ahora eres parte de él.
   education:
     until_posts:
-      one: "%{count} mensaje"
-      other: "%{count} mensajes"
+      one: "%{count} publicación"
+      other: "%{count} publicaciones"
     "new-topic": |
       Te damos la bienvenida a %{site_name}. **¡Gracias por empezar un nuevo tema!**
 
@@ -448,7 +448,7 @@ es:
 
       - Incluye palabras comúnmente utilizadas en tu tema para que los demás puedan **encontrarlo**. Para agrupar el tema con otros relacionados, selecciona una categoría (o etiqueta).
 
-      Para más información [consulta nuestra nuestra guía](%{base_path}/guidelines). Este panel solo aparecera para tus primeros %{education_posts_text} mensajes.
+      Para más información [consulta nuestra nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text} publicaciones.
     "new-reply": |
       Te damos la bienvenida a %{site_name}. **¡Gracias por contribuir!**
 
@@ -458,7 +458,7 @@ es:
 
       - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, y no a las personas.
 
-      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text} mensajes.
+      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text} publicaciones.
     avatar: |
       ### ¿Qué tal si eliges una imagen para tu cuenta?
 
@@ -518,12 +518,12 @@ es:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Solamente puedes enviar advertencias por mensajes privado."
+              warning_requires_pm: "Solamente puedes enviar advertencias por mensajes privados."
               too_many_users: "Solamente puedes enviar advertencias a un usuario a la vez."
-              cant_send_pm: "Lo sentimos, no puedes enviar un mensaje personal a este usuario."
+              cant_send_pm: "Lo sentimos, no puedes enviar un mensaje privado a este usuario."
               no_user_selected: "Debes seleccionar un usuario válido."
               reply_by_email_disabled: "Las respuestas por correo electrónico han sido desactivadas."
-              send_to_email_disabled: "Lo sentimos, no puedes enviar mensajes personales a direcciones de correo."
+              send_to_email_disabled: "Lo sentimos, no puedes enviar mensajes privados a direcciones de correo."
               target_user_not_found: "No se pudo encontrar a uno de los usuarios a los que envías este mensaje."
               unable_to_update: "Hubo un error actualizando ese tema."
               unable_to_tag: "Hubo un error al etiquetar el tema."
@@ -871,9 +871,9 @@ es:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: "Este mensaje requiere la atención del equipo de moderación por una razón no especificada arriba."
+      description: "Esta publicación requiere la atención del equipo de moderación por una razón no especificada arriba."
       short_description: "Requiere atención del staff por otra razón"
-      email_title: 'Un mensaje en «%{title}» requiere atención del staff'
+      email_title: 'Una publicación en «%{title}» requiere atención del personal'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Marcador"
@@ -1073,7 +1073,7 @@ es:
       title: "Colaboradores nuevos"
       xaxis: "Día"
       yaxis: "Número de colaboradores nuevos"
-      description: "Número de usuarios que han publicado su primer mensaje durante este periodo."
+      description: "Número de usuarios que han publicado su primera publicación durante este periodo."
     trust_level_growth:
       title: "Crecimiento de nivel de confianza"
       xaxis:
@@ -1135,7 +1135,7 @@ es:
       title: "Marcadores"
       xaxis: "Día"
       yaxis: "Número de nuevos marcadores"
-      description: "Número de temas y mensajes nuevos guardados en marcadores."
+      description: "Número de temas y publicaciones nuevas guardadas en marcadores."
     users_by_trust_level:
       title: "Usuarios por nivel de confianza"
       xaxis: "Nivel de confianza"
@@ -1172,22 +1172,22 @@ es:
       title: "Usuario a usuario (respuestas excluidas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de mensajes personales nuevos iniciados."
+      description: "Número de mensajes privados nuevos iniciados."
     user_to_user_private_messages_with_replies:
       title: "Usuario a usuario (con respuestas)"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de todos los mensajes personales y respuestas."
+      description: "Número de todos los mensajes privados y respuestas."
     system_private_messages:
       title: "Sistema"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de mensajes personales enviados automáticamente por el sistema."
+      description: "Número de mensajes privados enviados automáticamente por el sistema."
     moderator_warning_private_messages:
       title: "Advertencias de moderación"
       xaxis: "Día"
       yaxis: "Número de mensajes"
-      description: "Número de advertencias enviadas a través de mensaje personal por moderadores."
+      description: "Número de advertencias enviadas a través de mensaje privado por moderadores."
     notify_moderators_private_messages:
       title: "Notificaciones a moderadores"
       xaxis: "Día"
@@ -1452,7 +1452,7 @@ es:
     summary_likes_required: "Cantidad mínina de me gusta en un tema para habilitar «resumen de este tema». Los cambios a esta configuración se aplicarán retroactivamente dentro de una semana."
     summary_percent_filter: "Cuando un usuario hace clic en «resumen de este tema», mostrar el % de las publicaciones destacadas"
     summary_max_results: "Cantidad máxima de publicaciones devueltas en «resumen de este tema»"
-    enable_personal_messages: "Permitir a los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Ten en cuenta que el staff siempre puede enviar mensajes pase lo que pase."
+    enable_personal_messages: "Permitir a los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Ten en cuenta que el personal siempre puede enviar mensajes pase lo que pase."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes privados están inhabilitados."
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     enable_chunked_encoding: "Activar respuestas en lotes del servidor. Esta funcionalidad debería funcionar en casi todos los entornos, pero algunos proxies pueden causar que las respuestas tarden"
@@ -1485,7 +1485,6 @@ es:
     invite_code: "El usuario debe introducir este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
     approve_suspect_users: "Mandar usuarios sospechosos a la lista de revisión. Se consideran usuarios sospechosos aquellos que hayan introducido una biografía o página web, pero que no hayan registrado ninguna actividad de lectura."
     review_every_post: "Todas las publicaciones deben ser revisadas. ¡ADVERTENCIA! NO SE RECOMIENDA PARA SITIOS CON MUCHA ACTIVIDAD."
-    pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
     ga_version: "Versión de Google Universal Analytics a usar: v3 (analytics.js), v4 (gtag)"
@@ -1512,7 +1511,7 @@ es:
     post_menu: "Determinar los elementos que aparecen en el menú de publicación y su orden. Ejemplo: me gusta|editar|denunciar|eliminar|compartir|guardar en marcadores|responder"
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determinar los elementos que aparecen en el cuadro de compartir y su orden."
-    site_contact_username: "Nombre de usuario de miembro del staff desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
+    site_contact_username: "Nombre de usuario de miembro del personal desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
     site_contact_group_name: "Un nombre de grupo válido para que sea invitado a todos los mensajes automáticos."
     send_welcome_message: "Enviar a todos los usuarios nuevos un mensaje de bienvenida con una guía rápida de inicio."
     send_tl1_welcome_message: "Enviar a los nuevos usuarios con nivel de confianza 1 un mensaje de bienvenida."
@@ -1625,7 +1624,7 @@ es:
     max_bookmarks_per_day: "Máximo número de marcadores por usuario por día."
     max_edits_per_day: "Máximo número de ediciones por usuario por día."
     max_topics_per_day: "Máximo número de temas que un usuario puede crear al día."
-    max_personal_messages_per_day: "Número máximo de nuevos mensajes personales que un usuario puede crear al día."
+    max_personal_messages_per_day: "Número máximo de nuevos mensajes privados que un usuario puede crear al día."
     max_invites_per_day: "Máximo número de invitaciones que un usuario puede enviar al día."
     max_topic_invitations_per_day: "Máximo número de invitaciones a un tema que un usuario puede enviar por día."
     max_logins_per_ip_per_hour: "Máximo número de inicios de sesión permitidos por dirección IP por hora."
@@ -1700,8 +1699,8 @@ es:
     min_trust_to_edit_wiki_post: "El nivel mínimo de confianza requerido para editar una publicación marcada como wiki."
     min_trust_to_edit_post: "El nivel mínimo de confianza requerido para editar publicaciones."
     min_trust_to_allow_self_wiki: "El nivel mínimo de confianza requerido para que un usuario convierta sus propias publicaciones a wiki."
-    min_trust_to_send_messages: "El nivel mínimo de confianza requerido para crear nuevos mensajes personales."
-    min_trust_to_send_email_messages: "Nivel de confianza mínimo para mandar mensajes personales a través de correo electrónico."
+    min_trust_to_send_messages: "El nivel mínimo de confianza requerido para crear nuevos mensajes privados."
+    min_trust_to_send_email_messages: "Nivel de confianza mínimo para mandar mensajes privados a través de correo electrónico."
     min_trust_to_flag_posts: "El nivel mínimo de confianza requerido para denunciar publicaciones"
     min_trust_to_post_links: "El nivel mínimo de confianza requerido para incluir enlaces en una publicación"
     min_trust_to_post_embedded_media: "Nivel confianza mínimo para incluir imágenes en una publicación"
@@ -1726,8 +1725,8 @@ es:
     title_max_word_length: "La longitud máxima permitida de una palabra, en caracteres, en el título del tema."
     title_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el título de un tema."
     body_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el cuerpo de un publicación."
-    allow_uppercase_posts: "Permitir todas mayúsculas en el título de un tema o en el cuerpo del mensaje"
-    max_consecutive_replies: "Número de mensajes seguidos que un usuario debe publicar en un tema antes de que se le prohíba añadir otra respuesta."
+    allow_uppercase_posts: "Permitir todas mayúsculas en el título de un tema o en el cuerpo de la publicación."
+    max_consecutive_replies: "Número de publicaciones seguidas que un usuario debe hacer en un tema antes de que se le prohíba añadir otra respuesta."
     enable_filtered_replies_view: 'Hacer que el botón «(n) respuestas» colapse todas las demás publicaciones y solo muestre la publicación actual y sus respuestas.'
     title_fancy_entities: "Convertir caracteres ASCII comunes en entidades HTML de adorno en el título de los temas, como SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "La extensión mínima que un título debe tener antes de que se revise la existencia de temas similares."
@@ -1950,13 +1949,13 @@ es:
     approve_post_count: "La cantidad de publicaciones de usuarios nuevos o de nivel básico que deben ser aprobadas"
     approve_unless_trust_level: "Las publicaciones de usuarios con un nivel de confianza inferior a este deberán ser aprobadas"
     approve_new_topics_unless_trust_level: "Los temas nuevos de usuarios por debajo de este nivel de confianza deben ser aprobados"
-    approve_unless_staged: "Temas y mensajes nuevos de usuarios temporales deben ser aprobados"
+    approve_unless_staged: "Los temas y las publicaciones nuevas de usuarios temporales deben ser aprobadas"
     notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, enviar una notificación a todos los moderadores. Establece el valor en 0 para desactivar estas notificaciones."
     auto_close_messages_post_count: "Número máximo de publicaciones permitidas en un mensaje antes de que se cierre automáticamente (0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicaciones permitidas en un tema antes de que se cierre automáticamente (0 para desactivar)"
     auto_close_topics_create_linked_topic: "Crear un nuevo tema enlazado de continuación cuando un tema es cerrado automáticamente basado en la configuración de 'auto close topics post count'"
     code_formatting_style: "El botón de código en el editor establecerá por defecto este estilo de formato de código"
-    max_allowed_message_recipients: "Máxima cantidad de destinatarios permitidos en un mensaje."
+    max_allowed_message_recipients: "Cantidad máxima de destinatarios permitidos en un mensaje."
     watched_words_regular_expressions: "Las palabras vigiladas son expresiones regulares."
     enable_diffhtml_preview: "Funcionalidad experimental, usar diffHTML para sincronizar la previsualización en lugar de volver a renderizar toda de nuevo."
     old_post_notice_days: "Tiempo a partir del cual una publicación se considera antigua"
@@ -1967,7 +1966,7 @@ es:
     blur_tl0_flagged_posts_media: "Difuminar imágenes en publicaciones denunciadas para ocultar contenido potencialmente delicado."
     enable_page_publishing: "Permitir que los miembros del personal publiquen temas en nuevas URL con su propio estilo."
     show_published_pages_login_required: "Los usuarios anónimos pueden ver páginas publicadas, incluso cuando sea necesario iniciar sesión."
-    skip_auto_delete_reply_likes: "Al eliminar automáticamente respuestas antiguas, no eliminar mensajes con este número de \"me gusta\" o más."
+    skip_auto_delete_reply_likes: "Al eliminar automáticamente las respuestas antiguas, no eliminar publicaciones con este número de «me gusta» o más."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios correos electrónicos de resumen por defecto."
     default_include_tl0_in_digests: "Incluir publicaciones de usuarios nuevos en los correos electrónicos de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
     default_email_level: "Establecer nivel por defecto de las notificaciones por correo electrónico para los temas regulares."
@@ -1990,7 +1989,7 @@ es:
     default_categories_watching: "Lista de categorías que están vigiladas por defecto."
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
-    default_categories_watching_first_post: "Lista de categorías en las que el primer mensaje de cada tema nuevo se vigilará por defecto."
+    default_categories_watching_first_post: "Lista de categorías en las que la primera publicación de cada tema nuevo se vigilará por defecto."
     default_categories_regular: "Lista de categorías que no están silenciadas por defecto. Útil cuando el ajuste `mute_all_categories_by_default` está habilitado."
     mute_all_categories_by_default: "Establezca el nivel de notificación predeterminado de todas las categorías en silenciado. Solicite a los usuarios que opten por las categorías para que aparezcan en las páginas de 'latest' y 'categories'. Si desea modificar los valores predeterminados para usuarios anónimos, establezca la configuración en 'default_categories_'."
     default_tags_watching: "Lista de etiquetas vigiladas por defecto."
@@ -2017,7 +2016,7 @@ es:
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
     tag_style: "Estilo visual de las etiquetas."
-    allow_staff_to_tag_pms: "Permitir a los miembros del staff etiquetar cualquier mensaje personal"
+    allow_staff_to_tag_pms: "Permitir a los miembros del personal etiquetar cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
@@ -2040,7 +2039,7 @@ es:
     gravatar_login_url: "URL relativa a gravatar_base_url, la cual provee al usuario el acceso al servicio de Gravatar"
     share_quote_buttons: "Determinar los elementos que aparecen en el cuadro de compartir y su orden."
     share_quote_visibility: "Cuándo mostrar los botones de compartir citas: nunca, a los usuarios anónimos sólo o a todos los usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear edición para los primeros mensajes cuando los temas se mueven a una nueva categoría en masa."
+    create_revision_on_bulk_topic_moves: "Crear edición para las primeras publicaciones cuando los temas se mueven a una nueva categoría en masa."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -2121,25 +2120,25 @@ es:
     not_seen_in_a_month: "¡Hola! Hacía tiempo que no te veíamos. Estos han sido los temas más destacados desde que nos visitaste por última vez."
   merge_posts:
     edit_reason:
-      one: "Un tema fue juntado por %{username}"
-      other: "%{count} mensajes fueron fusionados por %{username}"
+      one: "Una publicación fue fusionada por %{username}"
+      other: "%{count} publicaciones fueron fusionadas por %{username}"
     errors:
       different_topics: "No se pueden fusionar publicaciones que pertenecen a temas diferentes."
-      different_users: "No se pueden fusionar mensajes que pertenezcan a diferentes usuarios."
-      max_post_length: "No se pueden juntar las publicaciones porque la longitud del conjunto supera la máxima permitida por mensaje."
+      different_users: "No se pueden fusionar publicaciones que pertenezcan a diferentes usuarios."
+      max_post_length: "No se pueden fusionar las publicaciones porque la longitud del conjunto supera la máxima permitida por publicación."
   move_posts:
     new_topic_moderator_post:
-      one: "Un mensaje ha sido separado a un nuevo tema: %{topic_link}"
+      one: "Una publicación ha sido separada a un nuevo tema: %{topic_link}"
       other: "%{count} publicaciones han sido separadas a un nuevo tema: %{topic_link}"
     new_message_moderator_post:
-      one: "Un mensaje ha sido separado a un nuevo mensaje: %{topic_link}"
-      other: "%{count} mensajes han sido separados a un mensaje nuevo: %{topic_link}"
+      one: "Una publicación ha sido separada a un nuevo mensaje: %{topic_link}"
+      other: "%{count} publicaciones han sido separadas a un nuevo mensaje: %{topic_link}"
     existing_topic_moderator_post:
-      one: "Un mensaje ha sido fusionado con un tema existente: %{topic_link}"
-      other: "%{count} mensajes han sido unidos a un tema existente: %{topic_link}"
+      one: "Una publicación ha sido fusionada con un tema existente: %{topic_link}"
+      other: "%{count} publicaciones han sido fusionadas a un tema existente: %{topic_link}"
     existing_message_moderator_post:
-      one: "Un post ha sido unido a un mensaje existente: %{topic_link}"
-      other: "%{count} publicaciones han sido unidas a un mensaje existente: %{topic_link}"
+      one: "Una publicación ha sido fusionada a un mensaje existente: %{topic_link}"
+      other: "%{count} publicaciones han sido fusionadas a un mensaje existente: %{topic_link}"
   change_owner:
     post_revision_text: "Se ha transferido la propiedad"
   publish_page:
@@ -2149,7 +2148,7 @@ es:
       invalid: "contiene caracteres no válidos"
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuesta."
+      one: "Este mensaje se cerró automáticamente al alcanzar el límite máximo de %{count} respuesta."
       other: "Este mensaje se cerró automáticamente al alcanzar el límite máximo de %{count} respuestas."
     autoclosed_topic_max_posts:
       one: "Este tema fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuesta."
@@ -2288,7 +2287,7 @@ es:
       not_allowed: "este proveedor de correo electrónico no está permitido. Por favor, utiliza otra dirección de correo electrónico."
       blocked: "no está permitido."
       revoked: "No se enviarán más correos electrónicos a «%{email}» hasta %{date}."
-      does_not_exist: "-"
+      does_not_exist: "N/D"
     ip_address:
       blocked: "No se permiten nuevos registros desde tu dirección IP."
       max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (se alcanzó el límite máximo). Contacta un miembro del staff."
@@ -2498,9 +2497,9 @@ es:
 
         %{flag_reason}
 
-        La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del staff.**
+        La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del personal.**
 
-        Para más consejos, por favor, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
+        Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     queued_by_staff:
       title: "Una publicación está esperando aprobación"
       subject_template: "Publicación oculta por el staff, esperando aprobación"
@@ -2697,28 +2696,28 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (titulado %{former_title}) no funcionó.
 
-        Tu cuenta no tiene el nivel de confianza suficiente para publicar nuevos temas con esta dirección de correo. Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
+        Tu cuenta no tiene el nivel de confianza suficiente para publicar nuevos temas con esta dirección de correo. Si crees que esto es un error, [contacta a un miembro del personal](%{base_url}/about).
     email_reject_user_not_found:
       title: "Correo electrónico rechazado. Cuenta de usuario no encontrada"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Usuario no encontrado"
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título %{former_title}) no funcionó.
 
-        Tu respuesta se envió desde un correo electrónico desconocido. Intenta usar otro correo o [contacta a un miembro del staff](%{base_url}/about).
+        Tu respuesta se envió desde un correo electrónico desconocido. Intenta usar otro correo o [contacta a un miembro del personal](%{base_url}/about).
     email_reject_screened_email:
       title: "Correo electrónico rechazado. Correo bloqueado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu respuesta se envió desde un correo bloqueado. Intenta usar otro correo o [contacta a un miembro del staff](%{base_url}/about).
+        Tu respuesta se envió desde un correo bloqueado. Intenta usar otro correo o [contacta a un miembro del personal](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Correo electrónico rechazado. Correo electrónico no permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
       text_body_template: |
         Lo sentimos, pero tu mensaje a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contactar a un miembro del staff](%{base_url}/about).
+        Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contacta con un miembro del personal](%{base_url}/about).
     email_reject_inactive_user:
       title: "Correo electrónico rechazado. Usuario inactivo"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Usuario inactivo"
@@ -2739,7 +2738,7 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu respuesta se envió desde un correo diferente al que esperábamos, así que no estamos seguros de que seas la misma persona. Intenta usar otro correo, o [contacta a un miembro del staff](%{base_url}/about).
+        Tu respuesta se envió desde un correo diferente al que esperábamos, así que no estamos seguros de que seas la misma persona. Intenta usar otro correo, o [contacta con un miembro del personal](%{base_url}/about).
     email_reject_empty:
       title: "Correo electrónico rechazado. Vacío"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Sin contenido"
@@ -2762,21 +2761,21 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu cuenta no tiene los permisos para crear nuevos temas en esta categoría. Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
+        Tu cuenta no tiene los permisos para crear nuevos temas en esta categoría. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Rechazar correos electrónicos desconocidos No permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acceso no válido"
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
 
-        La categoría a la que envió este correo electrónico solo permite respuestas de usuarios con cuentas válidas y direcciones de correo electrónico conocidas. Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
+        La categoría a la que envió este correo electrónico solo permite respuestas de usuarios con cuentas válidas y direcciones de correo electrónico conocidas. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_invalid_post:
       title: "Correo electrónico de rechazo. Publicación inválida"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de publicación"
       text_body_template: |
         Lo sentimos, tu correo electrónico para %{destination} (con el título %{former_title}) no funcionó.
 
-        Las posibles causas son: formato complejo, mensaje demasiado extenso o demasiado breve. Por favor, inténtalo de nuevo o publica a través del sitio web si el problema continúa.
+        Las posibles causas son: formato complejo, mensaje demasiado extenso o demasiado breve. Inténtalo de nuevo o publica a través del sitio web si el problema continúa.
     email_reject_invalid_post_specified:
       title: "Correo electrónico rechazado. Publicación especificada inválida"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de publicación"
@@ -2787,7 +2786,7 @@ es:
 
         %{post_error}
 
-        Si puedes corregir el problema sugerido, por favor, inténtalo de nuevo.
+        Si puedes corregir el problema sugerido, inténtalo de nuevo.
       date_invalid: "No hay fecha de creación de la publicación. ¿Le falta al correo electrónico un encabezado de Date:?"
     email_reject_post_too_short:
       title: "Correo electrónico de rechazo. Publicación muy corta"
@@ -2795,14 +2794,14 @@ es:
       text_body_template: |
         Lo sentimos, tu correo para %{destination} (con el título %{former_title}) no funcionó.
 
-        Para asegurar la calidad de las conversaciones, las respuestas muy cortas no están permitidas. ¿Podrías responder con al menos %{count} caracteres? Alternativamente, puedes darle me gusta a un mensaje respondiendo por correo electrónico con "+1".
+        Para asegurar la calidad de las conversaciones, no están permitidas las respuestas muy cortas. ¿Podrías responder con al menos %{count} caracteres? Alternativamente, puedes darle me gusta a un mensaje respondiendo por correo electrónico con «+1».
     email_reject_invalid_post_action:
       title: "Correo electrónico de rechazo. Acción de publicación inválida"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acción de publicación inválida"
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico para %{destination} (con el título%{former_title}) no funcionó.
 
-        La acción de publicación no se reconoce. Por favor, intenta más tarde o envía el mensaje desde el sitio web de forma tradicional si el error continua.
+        La acción de publicación no se reconoce. Inténtalo más tarde o envía el mensaje desde el sitio web de forma tradicional si el error continua.
     email_reject_reply_key:
       title: "Correo electrónico de rechazo. Clave de respuesta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Clave de respuesta desconocida"
@@ -2838,28 +2837,28 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
 
-        El tema al que estás respondiendo ya no existe -- ¿quizás ha sido eliminado? Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
+        El tema al que estás respondiendo ya no existe -- ¿quizás ha sido eliminado? Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_topic_closed:
       title: "Correo electrónico de rechazo. Tema cerrado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Tema cerrado"
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título %{former_title}) no ha funcionado.
 
-        El tema al que estás respondiendo está cerrado y no permite más respuestas. Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
+        El tema al que estás respondiendo está cerrado y no permite más respuestas. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_auto_generated:
       title: "Correo electrónico de rechazo. Autogenerado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Respuesta generada automaticamente"
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu correo electrónico ha sido marcado como «autogenerado», lo que significa que ha sido creado automáticamente por una computadora en lugar de haber sido escrito por un ser humano; no podemos aceptar este tipo de correos. Si crees que esto es un error, [contacta un miembro del staff](%{base_url}/about).
+        Tu correo electrónico ha sido marcado como «autogenerado», lo que significa que ha sido creado automáticamente por un ordenador en lugar de haber sido escrito por un ser humano; no podemos aceptar este tipo de correos. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_unrecognized_error:
       title: "Correo electrónico de rechazo. Error no identificado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error no reconocido"
       text_body_template: |
         Lo sentimos, tu mensaje a %{destination} (con el título %{former_title}) no funcionó.
 
-        Hay un error no reconocido mientras se procesó tu correo electrónico y no se pudo publicar. Intenta nuevamente o [contacta a un miembro del staff](%{base_url}/about).
+        Se produjo un error desconocido mientras se procesaba tu correo electrónico y no se pudo publicar. Inténtalo de nuevo o [contacta con un miembro del personal](%{base_url}/about).
     email_reject_attachment:
       title: "Correo electrónico de rechazo. Archivos adjuntos"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Archivos adjuntos rechazados"
@@ -2876,16 +2875,16 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo a %{destination} (con el título %{former_title}) no funcionó.
 
-        Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta a un miembro del staff](%{base_url}/about).
+        Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Correo de rechazo por respuesta al resumen"
       subject_template: "[%{email_prefix}] Problema de correo electrónico — Responder al resumen"
       text_body_template: |
         Lo sentimos, pero tu mensaje de correo electrónico a %{destination} (titulado %{former_title}) no ha funcionado.
 
-        Has respondido a un correo electrónico de resumen, lo cual no es aceptado.
+        Has respondido a un correo electrónico de resumen, lo cual no es aceptable.
 
-        Si cree que se trata de un error, [ponte en contacto con un miembro del staff] (%{base_url}/acerca de).
+        Si crees que se trata de un error, [ponte en contacto con un miembro del personal] (%{base_url}/acerca de).
     email_error_notification:
       title: "Error de notificación de correo electrónico"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de autenticación POP"
@@ -2916,7 +2915,7 @@ es:
       text_body_template: |
         Hola,
 
-        Este es un mensaje automatizado de %{site_name} para informarte que %{ignores_threshold} usuarios han ignorado @%{username}. Esto podría indicar que un problema se está desarrollando en tu comunidad.
+        Este es un mensaje automatizado de %{site_name} para informarte de que %{ignores_threshold} usuarios han ignorado a @%{username}. Esto podría indicar que un problema se está desarrollando en tu comunidad.
 
         Es posible que desees [revisar las publicaciones recientes](%{base_url}/u/%{username}/summary) de este usuario y potencialmente otros usuarios en el [informe de usuario ignorado y silenciado](%{base_url}/admin/reports/top_ignored_users).
 
@@ -2951,7 +2950,7 @@ es:
 
         Esto es un mensaje automatizado de %{site_name} para hacerte saber que tu cuenta ha sido temporalmente retenida como medida preventiva.
 
-        Por favor, sigue navegando, pero no podrás responder o crear temas hasta que un [miembro del staff](%{base_url}/about) revise tus últimos mensajes. Lamentamos las molestias ocasionadas.
+        Puedes seguir navegando, pero no podrás responder o crear temas hasta que un [miembro del personal](%{base_url}/about) revise tus últimos mensajes. Lamentamos las molestias ocasionadas.
 
         Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/directrices).
     user_automatically_silenced:
@@ -2982,7 +2981,7 @@ es:
       text_body_template: |
         Hola,
 
-        Esto es un mensaje automático desde %{site_name} para informarte de que, tras la revisión por parte de miembros del staff, tu cuenta ya no se encuentra suspendida.
+        Esto es un mensaje automático desde %{site_name} para informarte de que, tras la revisión por parte de miembros del personal, tu cuenta ya no se encuentra suspendida.
 
         Ahora puedes crear temas y responder a otros usuarios. Gracias por tu paciencia.
     pending_users_reminder:
@@ -3265,13 +3264,13 @@ es:
       title: "Cuenta ya existente"
       subject_template: "[%{email_prefix}] La cuenta ya existe"
       text_body_template: |
-        Intentaste crear una cuenta en %{site_name} o intentaste cambiar el correo electrónico de una cuenta a %{email}. Sin embargo, una cuenta ya existe con la dirección de correo %{email}.
+        Intentaste crear una cuenta en %{site_name} o intentaste cambiar el correo electrónico de una cuenta a %{email}. Sin embargo, ya existe una cuenta con la dirección de correo %{email}.
 
         Si olvidaste la contraseña, [restablécela ahora](%{base_url}/password-reset).
 
         Si no quisiste crear una cuenta con el correo %{email} o cambiar la dirección de correo electrónico, no te preocupes – puedes ignorar este mensaje.
 
-        Si tienes alguna pregunta, [contacta a nuestro amigable staff](%{base_url}/about).
+        Si tienes alguna pregunta, [contacta a nuestro amable personal](%{base_url}/about).
     account_second_factor_disabled:
       title: "Autenticación de dos factores desactivada"
       subject_template: "[%{email_prefix}] Autenticación de dos factores desactivada"
@@ -3390,19 +3389,13 @@ es:
     notify_old_email:
       title: "Antiguo correo electrónico de notificaciones"
       subject_template: "[%{email_prefix}] Tu dirección de correo electrónico ha sido cambiada"
-      text_body_template: |
-        Este es un mensaje automatizado para comunicarte que tu correo electrónico para el sitio %{site_name} ha sido modificado. Si esto fue un error, por favor, contacta
-        a un administrador del sitio.
-
-        Tu correo electrónico fue modificado por:
-
-        %{new_email}
+      text_body_template: "Este es un mensaje automatizado para comunicarte que tu correo electrónico para \nel sitio %{site_name} ha sido modificado. Si esto fue un error, ponte en contacto con un \nadministrador del sitio.\n\nTu correo electrónico fue modificado por:\n\n%{new_email}\n"
     notify_old_email_add:
       title: "Notificar correo electrónico antiguo (Añadir)"
       subject_template: "[%{email_prefix}] Dirección de correo electrónico añadida"
       text_body_template: |
         Este es un mensaje automatizado para informarte de que se ha añadido una dirección de correo electrónico para
-        %{site_name}. Si esto se hizo por error, por favor, ponte en en contacto con la administración del sitio.
+        %{site_name}. Si esto se hizo por error, ponte en en contacto con la administración del sitio.
 
         La dirección de correo electrónico añadida es:
 
@@ -4220,7 +4213,7 @@ es:
         title: "Tipos de letra"
         fields:
           body_font:
-            label: "Tipo de letra para contenido de mensajes"
+            label: "Fuente del cuerpo"
           heading_font:
             label: "Tipo de letra para encabezados"
           font_preview:
@@ -4321,11 +4314,11 @@ es:
       post_count: "Las primeras publicaciones de cada usuario deben ser aprobadas por el staff. Consulta `approve_post_count`."
       trust_level: "Los usuarios con niveles de confianza bajos deben tener respuestas aprobadas por el staff. Consulta `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Los usuarios con niveles de confianza bajos deben tener temas aprobados por el staff. Consulta `approve_new_topics_unless_trust_level`."
-      fast_typer: "El usuario nuevo escribió su primer mensaje de forma sospechosamente rápida. Podría ser un bot o comportamiento de spammer. Consulta `min_first_post_typing_time`."
+      fast_typer: "El usuario nuevo escribió su primer mensaje de forma sospechosamente rápida. Podría ser un bot o un spammer. Consulta `min_first_post_typing_time`."
       auto_silence_regexp: "Usuario nuevo cuya primera publicación coincide con el ajuste `auto_silence_first_post_regex`."
       watched_word: "Esta publicación contiene una palabra vigilada. Mira tu <a href='%{base_url}/admin/customize/watched_words'>lista de palabras vigiladas</a>."
       staged: "Los temas y publicaciones nuevas para usuarios provisionales deben ser aprobados por el staff. Consulta `approve_unless_staged`."
-      category: "Los mensajes en esta categoría requieren la aprobación manual del staff. Consulta la configuración de la categoría."
+      category: "Los mensajes en esta categoría requieren la aprobación manual del personal. Consulta la configuración de la categoría."
       must_approve_users: "Todos los usuarios nuevos deben ser aprobados por el staff. Consulta `must_approve_users`."
       invite_only: "Todos los usuarios nuevos deben ser invitados. Consulta `invite_only`."
       email_auth_res_enqueue: "Este correo falló la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo para más información."

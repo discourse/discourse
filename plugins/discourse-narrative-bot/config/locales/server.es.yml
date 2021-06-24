@@ -29,7 +29,7 @@ es:
     tl2_promotion_message:
       subject_template: "Ahora que has subido de nivel de confianza, es el momento de aprender sobre algunas funcionalidades avanzadas"
       text_body_template: |
-        Responde a este mensaje con `@%{discobot_username} %{reset_trigger}` para ver una lista de cosas que puedes hacer
+        Responde a este mensaje con «@%{discobot_username} %{reset_trigger}» para ver una lista de cosas que puedes hacer
     timeout:
       message: |-
         Hey, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.
@@ -121,8 +121,8 @@ es:
         tracks: |-
           Actualmente Sé cómo hacer las siguientes cosas:
 
-          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Inicia un tutorial interactivo sólo para ti, en un mensaje personal. `{name-of-tutorial}` puede ser uno de: `%{tracks}`.
+          «@%{discobot_username} %{reset_trigger} {name-of-tutorial}»
+          > Inicia un tutorial interactivo solo para ti, en un mensaje personal. «{name-of-tutorial}» puede ser uno de: «%{tracks}».
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -201,7 +201,7 @@ es:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Si te gusta (¡y a quién no le gustaría!), pulsa el botón me gusta :heart: debajo de este mensaje para que lo sepa.
+          Si te gusta (¡y a quién no!), pulsa el botón me gusta :heart: debajo de este mensaje para que lo sepa.
         reply: |-
           ¡Gracias por darle me gusta a mi mensaje!
         not_found: |-
@@ -266,8 +266,8 @@ es:
           (Si estás en un dispositivo móvil, puedes introducir directamente un emoji desde el teclado de tu dispositivo también.)
       mention:
         instructions: |-
-          A veces quisieras captar la atención de alguien en un debate, aunque no le estés respondiendo a su mensaje directamente. Para esto, escribe `@` seguido del nombre del usuario que quieres mencionar.
-          ¿Puedes mencionar **`@%{discobot_username}`** en tu respuesta?
+          A veces quisieras captar la atención de alguien en un debate, aunque no le estés respondiendo a su mensaje directamente. Para esto, escribe «@» seguido del nombre del usuario que quieres mencionar.
+          ¿Puedes mencionar **«@%{discobot_username}»** en tu respuesta?
         reply: |-
           _¿¡Alguien dijo mi nombre!?_ :raised_hand: ¡Creo que tú lo hiciste! :wave: Bien, ¡aquí estoy! Gracias por mencionarme. :ok_hand:
         not_found: |-
@@ -314,7 +314,7 @@ es:
 
           ¡Eso es todo por ahora! Echa un vistazo a [**nuestros últimos temas de discusión**](%{base_uri}/latest) o las [**categorías de debate**](%{base_uri}/categories). :sunglasses:
 
-          (¡Si deseas hablar conmigo de nuevo para aprender más, solo envíame un mensaje privado o mencióname `@%{discobot_username}` en cualquier momento!)
+          (¡Si deseas hablar conmigo de nuevo para aprender más, solo envíame un mensaje privado o mencióname «@%{discobot_username}» en cualquier momento!)
       certificate:
         alt: "Certificado de logro"
     advanced_user_narrative:

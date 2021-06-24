@@ -1452,7 +1452,6 @@ zh_CN:
     invite_code: "用户必须输入此代码才能够进行账户注册，留空则无需输入（大小写敏感）"
     approve_suspect_users: "添加可疑用户到审核队列。可疑用户填写了简介或网站但是没有浏览行为。"
     review_every_post: "所有帖子都必须经过审查。警告！不建议用于繁忙的站点。"
-    pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     persistent_sessions: "用户将在浏览器被关闭后保持登录状态"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
     ga_version: "要使用的 Google Universal Analytics 版本：v3(analytics.js)，v4(gtag)"

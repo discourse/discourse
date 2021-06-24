@@ -1313,7 +1313,7 @@ fi:
         login_at: Kirjautumisaika
       description: "Luettelo ylläpitäjien kirjautumisista ja niiden paikoista."
     top_uploads:
-      title: "Parhaat lataukset"
+      title: "Suosituimmat lataukset"
       labels:
         filename: Tiedostonimi
         extension: Tiedostopääte
@@ -1321,105 +1321,105 @@ fi:
         filesize: Tiedoston koko
       description: "Luettelo kaikista latauksista järjestettynä tiedostopäätteen, tiedoston koon ja käyttäjän mukaan."
     top_ignored_users:
-      title: "Estetyimmät / Vaimennetuimmat käyttäjät"
+      title: "Estetyimmät/vaimennetuimmat käyttäjät"
       labels:
         ignored_user: Estetty käyttäjä
         ignores_count: Estojen määrä
         mutes_count: Vaimennusten määrä
-      description: "Käyttäjät jotka monet muista on vaimentaneet ja/tai estäneet."
+      description: "Käyttäjät, jotka monet muista on vaimentaneet tai estäneet."
   dashboard:
-    rails_env_warning: "Palvelintasi ajetaan %{env} moodissa."
-    host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusisäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
-    sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
-    queue_size_warning: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosess(e)issa tai sinun voi täytyä lisätä Sidekiq workerien määrää."
-    memory_warning: "Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa."
+    rails_env_warning: "Palvelintasi ajetaan tilassa %{env}."
+    host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
+    sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq-prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Lue lisää Sidekiqista täällä</a>.'
+    queue_size_warning: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosesseissa, tai sinun voi täytyä lisätä Sidekiqin workerien määrää."
+    memory_warning: "Palvelimella on alle 1 Gt muistia. Vähintään 1 Gt muistia on suositeltavaa."
     google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id- ja client secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Lue lisää tästä oppaasta</a>.'
     facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Lue lisää tästä oppaasta</a>.'
     twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Twitterin kautta (enable_twitter_logins), mutta key- ja secret-arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Lue lisää tästä oppaasta</a>.'
     github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen GitHubin kautta (enable_github_logins), mutta client id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Lue lisää tästä oppaasta</a>.'
-    s3_config_warning: 'Palvelin on konfiguroitu tallentamaan sivustolle ladatut tiedostot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
-    s3_backup_config_warning: 'Palvelin on konfiguroitu tallentamaan varmuuskopiot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa englanninkielisestä ketjusta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
-    s3_cdn_warning: 'Palvelin on määritetty käyttämään S3-latausta, mutta S3 CDN-asetuksia ei ole määritelty. Tämä voi johtaa kalliisiin S3-kustannuksiin ja hitaampaan sivuston suorituskykyyn. <a href="https://meta.discourse.org/t/-/148916" target="_blank"> Lue lisää aiheesta täältä</a>.'
-    image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">lataa uusin versio</a>.'
-    failing_emails_warning: '%{num_failed_jobs} sähköpostitehtävää on epäonnistunut. Tarkista app.yml ja varmista, että sähköpostipalvelimen asetukset ovat kunnossa. <a href="/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
+    s3_config_warning: 'Palvelin on konfiguroitu tallentamaan sivustolle ladatut tiedostot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
+    s3_backup_config_warning: 'Palvelin on konfiguroitu tallentamaan varmuuskopiot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
+    s3_cdn_warning: 'Palvelin on määritetty käyttämään S3-latausta, mutta S3:n CDN-asetuksia ei ole määritelty. Tämä voi johtaa kalliisiin S3-kustannuksiin ja hitaampaan sivuston suorituskykyyn. <a href="https://meta.discourse.org/t/-/148916" target="_blank"> Lue lisää aiheesta täältä</a>.'
+    image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="https://www.imagemagick.org/script/download.php" target="_blank">lataa uusin versio</a>.'
+    failing_emails_warning: '%{num_failed_jobs} sähköpostitehtävää on epäonnistunut. Tarkista app.yml ja varmista, että sähköpostipalvelimen asetukset ovat kunnossa. <a href="%{base_path}/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
     email_polling_errored_recently:
-      one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
-      other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
-    missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määritellyt rajapinta-avainta, jolla varmistetaan webhook-viestien aitous."
+      one: "Sähköpostin pollaus on aiheuttanut virheen edellisten 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
+      other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisten 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
+    missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määrittänyt API-avainta, jolla varmistetaan webhook-viestien aitous."
     bad_favicon_url: "Favicon ei lataudu. Tarkista favicon-asetus <a href='%{base_path}/admin/site_settings'>sivuston asetuksissa</a>."
-    poll_pop3_timeout: "Yhteyttä POP3-palvelimelle aikakatkaistaan ja saapuvaa sähköpostia ei voitu hakea. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
-    poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a>."
-    force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna asetuksissa."
+    poll_pop3_timeout: "Yhteys POP3-palvelimeen aikakatkaistaan. Saapuvia sähköposteja ei voitu hakea. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
+    poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu todennusvirheen vuoksi. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a>."
+    force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna sivuston asetuksissa."
     out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
-    unreachable_themes: "Näille teemoille ei löytynyt päivityksiä:"
+    unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
   site_settings:
     display_local_time_in_user_card: "Näytä käyttäjän aikavyöhykkeeseen perustuva paikallinen aika hänen käyttäjäkortissaan."
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
-    default_locale: "Tämän Discourse-ympäristön oletuskieli. Voit korvata systeemin luomien alueiden ja ketjujen tekstejä kohteessa <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Mukauta / Tekstit</a>."
+    default_locale: "Tämän Discourse-ympäristön oletuskieli. Voit korvata järjestelmän luomien alueiden ja ketjujen tekstejä kohteessa <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Mukauta / Tekstit</a>."
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
     support_mixed_text_direction: "Salli vasemmalta-oikealle- ja oikealta-vasemmalle-kirjoitusta käytettävän sekaisin."
     min_post_length: "Viestin merkkien minimimäärä"
     min_first_post_length: "Ketjun aloitusviestin (leipätekstin) merkkien minimimäärä"
-    min_personal_message_post_length: "Yksityisviestin vähimmäismerkkimäärä"
-    max_post_length: "Viestin merkkien minimimäärä"
+    min_personal_message_post_length: "Yksityisviestin minimimerkkimäärä"
+    max_post_length: "Viestin merkkien maksimimäärä"
     topic_featured_link_enabled: "Ota käyttöön ketjulinkit."
     show_topic_featured_link_in_digest: "Näytä ketjulinkki tiivistelmäsähköpostissa."
-    min_topic_views_for_delete_confirm: "Vähimmäismäärä katselukertoja, joita ketjussa on oltava jotta vahvistusikkuna näytetään poiston yhteydessä"
+    min_topic_views_for_delete_confirm: "Vähimmäismäärä katselukertoja, joita ketjussa on oltava, jotta vahvistusikkuna näytetään poiston yhteydessä"
     min_topic_title_length: "Viestin otsikon merkkien minimimäärä"
     max_topic_title_length: "Viestin otsikon merkkien maksimimäärä"
     min_personal_message_title_length: "Yksityisviestin otsikon vähimmäismerkkimäärä"
     max_emojis_in_title: "Kuinka monta emojia enintään otsikossa"
     min_search_term_length: "Haun merkkien minimimäärä"
     search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
-    search_prefer_recent_posts: "Jos hakeminen suurelta palstaltasi on hidasta, tämä asetus kokeilee hakemistorakennetta, jossa tuoreimmat viestit ovat ensin"
-    search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään hakemistossa"
+    search_prefer_recent_posts: "Jos hakeminen suurelta foorumilta on hidasta, tämä asetus kokeilee indeksiä, jossa tuoreimmat viestit ovat ensin"
+    search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään indeksissä"
     log_search_queries: "Pidä lokia käyttäjien tekemistä hauista"
     search_query_log_max_size: "Kuinka monta hakukyselyä säilötään enintään"
-    search_query_log_max_retention_days: "Kuinka pitkään hakukyselyä enintään säilötään päivissä."
-    search_ignore_accents: "Älä välitä aksenteista, kun haetaan tekstiä"
+    search_query_log_max_retention_days: "Kuinka monta päivää hakukyselyä enintään säilötään."
+    search_ignore_accents: "Älä välitä aksenteista, kun haetaan tekstiä."
     category_search_priority_low_weight: "Matalan hakuprioriteetin painoarvo."
     category_search_priority_high_weight: "Korkean hakuprioriteetin painoarvo."
-    allow_uncategorized_topics: "Salli ketjujen aloittaminen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
+    allow_uncategorized_topics: "Salli ketjujen aloittaminen valitsematta aluetta. VAROITUS: alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun aloittaminen identtisellä otsikolla."
-    allow_duplicate_topic_titles_category: "Salli ketjut joilla on identtiset otsikot, jos ketjut on eri alueella. allow_duplicate_topic_titles on oltava pois päältä."
+    allow_duplicate_topic_titles_category: "Salli ketjut, joilla on identtiset otsikot, jos ketjut on eri alueella. Asetuksen allow_duplicate_topic_titles on oltava pois päältä."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
-    title: "Palstan nimi, käytetään title tagissa."
-    site_description: "Kuvaile sivustoa yhdellä lauseella, jota käytetään meta description tagissa."
-    short_site_description: "Lyhyt kuvaus, jota käytetään etusivulla otsikkotagissa (title tag)."
-    contact_url: "URL-osoite sivuston yhteydenottoja varten. Näytetään <a href='%{base_path}/about' target='_blank'>Tietoja</a> -sivulla kiireellisiä yhteydenottoja varten."
-    crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
+    title: "Tämän sivuston nimi, käytetään otsikkotunnisteessa."
+    site_description: "Kuvaile sivustoa yhdellä lauseella, jota käytetään metakuvaustunnisteessa."
+    short_site_description: "Lyhyt kuvaus, jota käytetään aloitussivun otsikkotunnisteessa."
+    contact_url: "URL-osoite sivuston yhteydenottoja varten. Näytetään <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla kiireellisiä yhteydenottoja varten."
+    crawl_images: "Lataa linkatut kuvat kuvan mittojen määrittamiseksi."
     download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
-    download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan (prosenteissa)"
-    disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu lista."
-    editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin lokiin."
-    editing_grace_period_max_diff: "Kuinka monen merkin muutos sallitaan katumusaikana. Jos muutos on isompi tallennetaan uusi viestirevisio (luottamustasolla 0 ja 1)."
-    editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan katumusaikana. Jos muutos on isompi tallennetaan uusi viestirevisio (luottamustasosta 2 ylöspäin)."
+    download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan paikallisesti (prosenteissa)"
+    disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu luettelo."
+    editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin historiaan."
+    editing_grace_period_max_diff: "Kuinka monen merkin muutos sallitaan muokkauksen katumusaikana. Jos muutos on isompi, tallennetaan uusi viestirevisio (luottamustasolla 0 ja 1)."
+    editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan muokkauksen katumusaikana. Jos muutos on isompi, tallennetaan uusi viestirevisio (luottamustasosta 2 ylöspäin)."
     staff_edit_locks_post: "Viesti lukitaan muokkauksilta, jos henkilökunnan jäsen muokkaa sitä"
-    post_edit_time_limit: "Lt0- tai lt1-kirjoittaja voi muokata viestiään (n) minuutin ajan viestin lähettämisen jälkeen. Aseta 0 niin voi muokata aina."
-    tl2_post_edit_time_limit: "Lt2+ -kirjoittaja voi muokata viestiään (n) minuutin ajan viestin lähettämisen jälkeen. Aseta 0 niin voi muokata aina."
-    edit_history_visible_to_public: "Salli kaikkien nähdä muokatun viestin edelliset versiot. Jos asetus otetaan pois käytöstä, vain henkilökunta näkee versiot."
-    delete_removed_posts_after: "Kirjoittajalta poistetut viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos asetetaan 0, viestit poistetaan välittömästi."
+    post_edit_time_limit: "Lt0- tai lt1-kirjoittaja voi muokata viestiään (n) minuutin ajan viestin lähettämisen jälkeen. Aseta 0, niin viestiä voi muokata aina."
+    tl2_post_edit_time_limit: "Vähintään Lt2-kirjoittaja voi muokata viestiään (n) minuutin ajan viestin lähettämisen jälkeen. Aseta 0, niin viestiä voi muokata aina."
+    edit_history_visible_to_public: "Salli kaikkien nähdä muokatun viestin edelliset versiot. Jos asetus poistetaan käytöstä, vain henkilökunta näkee versiot."
+    delete_removed_posts_after: "Kirjoittajan poistamat viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos arvoksi asetetaan 0, viestit poistetaan välittömästi."
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
     max_image_height: "Esikatselukuvan suurin sallittu korkeus viestissä"
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjestetään aktiivisuuden mukaan."
-    fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun aloittamisen dialogissa (edellyttää fixed_category_positions)"
+    fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun aloittamisen dialogissa (edellyttää fixed_category_positions-asetusta)."
     add_rel_nofollow_to_user_content: 'Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: "rake posts:rebake"'
-    exclude_rel_nofollow_domains: "Lista verkkotunnuksista, joihin osoittaviin linkkeihin nofollow:ta ei lisätä. esimerkki.fi sallii automaattisesti myös sub.esimerkki.fin. Sinun tulisi vähintäänkin lisätä tämän sivuston verkkotunnus, jotta hakurobotit löytävät kaiken sisällön. Jos sivustosi muita osia on toisen verkkotunnuksen alaisuudessa, lisää nekin."
-    post_excerpt_maxlength: "Viestin katkelman merkkien maksimimäärä."
-    topic_excerpt_maxlength: "Ketjun katkelman / tiivistelmän enimmäispituus, luodaan ketjun ensimmäisestä viestistä."
+    exclude_rel_nofollow_domains: "Luettelo verkkotunnuksista, joihin osoittaviin linkkeihin nofollow'ta ei lisätä. Esimerkki.fi sallii automaattisesti myös verkkotunnuksen sub.esimerkki.fi. Sinun tulisi vähintäänkin lisätä tämän sivuston verkkotunnus, jotta hakurobotit löytävät kaiken sisällön. Jos sivustosi muita osia on toisen verkkotunnuksen alaisuudessa, lisää nekin."
+    post_excerpt_maxlength: "Viestin katkelman tai yhteenvedon merkkien maksimimäärä."
+    topic_excerpt_maxlength: "Ketjun katkelman tai yhteenvedon enimmäispituus, luodaan ketjun ensimmäisestä viestistä."
     show_pinned_excerpt_mobile: "Näytä katkelma kiinnitetyistä ketjuista mobiilinäkymässä."
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
     blocked_onebox_domains: "Verkko-osoitteet, joista ei luoda Onebox-esikatselua."
     allowed_inline_onebox_domains: "Verkko-osoitteet, joista luodaan minimoitu Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
-    enable_inline_onebox_on_all_domains: "Ohita inline_onebox_domain_whitelist -asetus ja salli Onebox-esikatselut kaikista verkko-osoitteista."
+    enable_inline_onebox_on_all_domains: "Ohita inline_onebox_domain_whitelist-asetus ja salli Onebox-esikatselut kaikista verkko-osoitteista."
     max_oneboxes_per_post: "Oneboxien enimmäismäärä yhdessä viestissä"
     logo: "Kuva, joka toimii sivuston logona sivuston vasemmassa yläkulmassa. Valitse suorakulmion muotoinen kuva, jolla on korkeutta vähintään 120 ja jonka kuvasuhde on vähintään 3:1. Jos jätetty tyhjäksi, tilalla näytetään sivuston nimi."
-    logo_small: "Kuva, joka toimii sivuston pienenä logona sivuston yläkulmassa, kun vieritetään alaspäin. Valitse neliönmuotoinen kuva. Valitse neliönmallinen, 120×120-kokoinen kuva. Jos jätetty tyhjäksi, tilalla näytetään koti-merkki."
-    digest_logo: "Vaihtoehtoinen logo, jota käytetään sivustosi sähköpostitiivistelmien yläosassa. Valitse leveä suorakulmainen kuva. Älä käytä SVG-kuvaa. Jos jätetty tyhjäksi, `logo`-kuvaketta käytetään."
+    logo_small: "Kuva, joka toimii sivuston pienenä logona sivuston yläkulmassa, kun vieritetään alaspäin. Valitse neliönmuotoinen kuva, jonka koko on 120×120. Jos jätetty tyhjäksi, tilalla näytetään aloitussivun symboli."
+    digest_logo: "Vaihtoehtoinen logo, jota käytetään sivustosi sähköpostiyhteenvetojen yläosassa. Valitse leveä suorakulmainen kuva. Älä käytä SVG-kuvaa. Jos jätetty tyhjäksi, `logo`-asetuksen kuvaa käytetään."
     mobile_logo: "Logo, jota sivuston mobiiliversio käyttää. Valitse suorakulmion muotoinen kuva, jolla on korkeutta vähintään 120 ja jonka kuvasuhde on vähintään 3:1. Jos jätetty tyhjäksi, `logo`-kuvaketta käytetään."
     logo_dark: "Vaihtoehtoinen 'logo' -asetus sivuston tummaa värimallia varten."
     logo_small_dark: "Vaihtoehtoinen 'logo small' -asetus sivuston tummaa värimallia varten."
@@ -1470,7 +1470,6 @@ fi:
     invite_code: "Käyttäjän on kirjoitettava tämä koodi, jotta tilin rekisteröinti sallitaan. Ohitetaan, kun se on tyhjä (kirjainkoko ei eroa)"
     approve_suspect_users: "Lisää epäilyttävät käyttäjät tarkastusjonoon. Epäilyttävät käyttäjät ovat täydentäneet kuvauksen tai sivuston käyttäjäprofiiliin, mutta heillä ei ole lukuaktiivisuutta."
     review_every_post: "Kaikki viestit on tarkastettava. VAROITUS! EI SUOSITELLA RUUHKAISILLE SIVUSTOILLE."
-    pending_users_reminder_delay: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta tuntia. Aseta -1, jos haluat kytkeä ilmoitukset pois päältä."
     persistent_sessions: "Käyttäjät pysyvät sisäänkirjautuneena, vaikka selain on suljettuna"
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
     ga_version: "Käytettävä Google Universal Analytics -versio: v3 (analytics.js), v4 (gtag)"
