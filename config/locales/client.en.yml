@@ -224,7 +224,6 @@ en:
     submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
-    go_ahead: "Go ahead"
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -253,7 +252,6 @@ en:
     x_more:
       one: "%{count} More"
       other: "%{count} More"
-    less: "Less"
     never: "never"
     every_30_minutes: "every 30 minutes"
     every_hour: "every hour"
@@ -262,7 +260,6 @@ en:
     every_month: "every month"
     every_six_months: "every six months"
     max_of_count: "max of %{count}"
-    alternation: "or"
     character_count:
       one: "%{count} character"
       other: "%{count} characters"
