@@ -1207,11 +1207,11 @@ de:
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
         logo_small: "Das kleine Logo der Website. Es wird standardmäßig verwendet."
       change_profile_background:
-        title: "Profil Kopfzeile"
-        instructions: "Profil Kopfzeilen werden zentriert und haben eine Standardbreite von 1110px."
+        title: "Profil-Kopfzeile"
+        instructions: "Profil-Kopfzeilen werden zentriert und haben eine Standardbreite von 1110 px."
       change_card_background:
         title: "Benutzerkarten-Hintergrund"
-        instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590px."
+        instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590 px."
       change_featured_topic:
         title: "Hervorgehobenes Thema"
         instructions: "Eine Verknüpfung zu diesem Thema wird auf deiner Benutzerkarte und deinem Profil sein."
@@ -1219,24 +1219,24 @@ de:
         title: "E-Mail"
         primary: "Primäre E-Mail-Adresse"
         secondary: "Weitere E-Mail-Adressen"
-        primary_label: "erste"
+        primary_label: "primär"
         unconfirmed_label: "unbestätigt"
-        resend_label: "Bestätigungs E-Mail erneut senden"
-        resending_label: "sende..."
+        resend_label: "Bestätigungs-E-Mail erneut senden"
+        resending_label: "sende …"
         resent_label: "E-Mail gesendet"
         update_email: "E-Mail-Adresse ändern"
-        set_primary: "Primäre E-Mail Adresse festlegen"
+        set_primary: "Primäre E-Mail-Adresse festlegen"
         destroy: "E-Mail entfernen"
-        add_email: "Alternative E-Mail Adresse hinzufügen"
+        add_email: "Alternative E-Mail-Adresse hinzufügen"
         auth_override_instructions: "E-Mails können vom Authentifizierungsanbieter aktualisiert werden."
         no_secondary: "Keine weiteren E-Mail-Adressen"
         instructions: "Nie öffentlich gezeigt."
-        admin_note: "Hinweis: Ein Administrator, der die E-Mail-Adresse eines anderen Nicht-Administratorbenutzers ändert, zeigt an, dass der Benutzer den Zugriff auf sein ursprüngliches E-Mail-Konto verloren hat. Daher wird eine E-Mail zum Zurücksetzen des Kennworts an seine neue Adresse gesendet. Die E-Mail-Adresse des Benutzers ändert sich erst, wenn der Vorgang zum Zurücksetzen des Kennworts abgeschlossen ist."
+        admin_note: "Hinweis: Ein Administrator, der die E-Mail-Adresse eines anderen Nicht-Administratorbenutzers ändert, zeigt an, dass der Benutzer den Zugriff auf sein ursprüngliches E-Mail-Konto verloren hat. Daher wird eine E-Mail zum Zurücksetzen des Passworts an seine neue Adresse gesendet. Die E-Mail-Adresse des Benutzers ändert sich erst, wenn der Vorgang zum Zurücksetzen des Passworts abgeschlossen ist."
         ok: "Wir senden dir zur Bestätigung eine E-Mail"
-        required: "Bitte gib eine E-Mail Adresse ein"
+        required: "Bitte gib eine E-Mail-Adresse ein"
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
-        authenticated: "Deine E-Mail-Adresse wurde von %{provider} bestätigt"
-        invite_auth_email_invalid: "Ihre Einladungs-E-Mail stimmt nicht mit der von %{provider} authentifizierten E-Mail überein"
+        authenticated: "Deine E-Mail wurde von %{provider} authentifiziert"
+        invite_auth_email_invalid: "Deine Einladungs-E-Mail stimmt nicht mit der von %{provider} authentifizierten E-Mail überein"
         authenticated_by_invite: "Deine E-Mail wurde durch die Einladung authentifiziert"
         frequency_immediately: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
         frequency:
@@ -1248,10 +1248,10 @@ de:
         revoke: "Entziehen"
         cancel: "Abbrechen"
         not_connected: "(nicht verbunden)"
-        confirm_modal_title: "Verbinde %{provider} Konto"
+        confirm_modal_title: "Verbinde „%{provider}“-Konto"
         confirm_description:
-          account_specific: "Dein %{provider} Konto '%{account_description}' wird für die Authentifizierung genutzt werden."
-          generic: "Dein %{provider} Konto wird für die Authentifzierung genutzt werden."
+          account_specific: "Dein „%{provider}“-Konto „%{account_description}“ wird für die Authentifizierung genutzt."
+          generic: "Dein „%{provider}“-Konto wird für die Authentifizierung genutzt."
       name:
         title: "Name"
         instructions: "dein vollständiger Name (optional)"
@@ -1268,10 +1268,10 @@ de:
         not_available_no_suggestion: "Nicht verfügbar"
         too_short: "Dein Benutzername ist zu kurz"
         too_long: "Dein Benutzername ist zu lang"
-        checking: "Verfügbarkeit wird geprüft…"
+        checking: "Verfügbarkeit des Benutzernamens wird geprüft …"
         prefilled: "E-Mail-Adresse entspricht diesem registrierten Benutzernamen"
         required: "Bitte einen Benutzernamen eingeben"
-        edit: "Benutzername bearbeiten"
+        edit: "Benutzernamen bearbeiten"
       locale:
         title: "Oberflächensprache"
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
@@ -1290,10 +1290,10 @@ de:
         show_all: "Alle anzeigen (%{count})"
         show_few: "Weniger anzeigen"
         was_this_you: "Warst das du?"
-        was_this_you_description: "Wenn du das gewesen bist, empfehlen wir dir, dein Passwort zu ändern und dich überall abzumelden."
+        was_this_you_description: "Falls du es nicht warst, empfehlen wir dir, dein Passwort zu ändern und dich überall abzumelden."
         browser_and_device: "%{browser} auf %{device}"
         secure_account: "Mein Konto absichern"
-        latest_post: "Dein letzter Beitrag…"
+        latest_post: "Dein letzter Beitrag …"
         device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP-Adresse: %{ip}">%{location}</span>'
         browser_active: '%{browser} | <span class="active">gerade aktiv</span>'
         browser_last_seen: "%{browser} | %{date}"
@@ -1309,7 +1309,7 @@ de:
       enable_physical_keyboard: "Unterstützung für physische Tastatur auf dem iPad aktivieren"
       text_size:
         title: "Schriftgröße"
-        smallest: "Kleinster"
+        smallest: "Am kleinsten"
         smaller: "Kleiner"
         normal: "Normal"
         larger: "Größer"
@@ -1320,10 +1320,10 @@ de:
         contextual: "Neuer Seiteninhalt"
       like_notification_frequency:
         title: "Benachrichtigung für erhaltene Likes anzeigen"
-        always: "immer"
-        first_time_and_daily: "für den ersten Like sowie maximal täglich"
-        first_time: "nur für den ersten Like eines Beitrags"
-        never: "nie"
+        always: "Immer"
+        first_time_and_daily: "Für den ersten Like sowie maximal täglich"
+        first_time: "Nur für den ersten Like eines Beitrags"
+        never: "Nie"
       email_previous_replies:
         title: "Füge vorherige Beiträge ans Ende von E-Mails an"
         unless_emailed: "sofern noch nicht gesendet"
@@ -1338,12 +1338,12 @@ de:
         every_month: "jeden Monat"
         every_six_months: "alle sechs Monate"
       email_level:
-        title: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet, meinen @Namen erwähnt oder mich zu einem Thema einlädt."
+        title: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet, meinen Benutzernamen mit @ erwähnt oder mich zu einem Thema einlädt."
         always: "immer"
         only_when_away: "nur bei Abwesenheit"
         never: "nie"
       email_messages_level: "Sende mir eine E-Mail, wenn mir jemand eine Nachricht sendet."
-      include_tl0_in_digests: "Inhalte neuer Benutzer in E-Mail-Zusammenfassung einschließen"
+      include_tl0_in_digests: "Inhalte neuer Benutzer in E-Mail-Zusammenfassung einschließen."
       email_in_reply_to: "Einen Auszug aus dem beantworteten Beitrag in E-Mails einfügen."
       other_settings: "Andere"
       categories_settings: "Kategorien"
@@ -1355,12 +1355,12 @@ de:
         after_2_days: "in den letzten 2 Tagen erstellt"
         after_1_week: "in der letzten Woche erstellt"
         after_2_weeks: "in den letzten 2 Wochen erstellt"
-      auto_track_topics: "Betrachtete Themen automatisch folgen"
+      auto_track_topics: "Betrachtete Themen automatisch verfolgen"
       auto_track_options:
         never: "nie"
         immediately: "sofort"
         after_30_seconds: "nach 30 Sekunden"
-        after_1_minute: "nach 1 Minute"
+        after_1_minute: "nach einer Minute"
         after_2_minutes: "nach 2 Minuten"
         after_3_minutes: "nach 3 Minuten"
         after_4_minutes: "nach 4 Minuten"
@@ -1376,7 +1376,7 @@ de:
         redeemed_tab: "Angenommen"
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
-        invited_via_link: "Link %{key} (%{count} / %{max} eingelöst)"
+        invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
         groups: "Gruppen"
         topic: "Thema"
         sent: "Erstellt/Zuletzt gesendet"
@@ -1387,7 +1387,7 @@ de:
         reinvite: "E-Mail erneut senden"
         reinvited: "Einladung erneut gesendet"
         removed: "Entfernt"
-        search: "zum Suchen nach Einladungen hier eingeben…"
+        search: "zum Suchen nach Einladungen hier eingeben …"
         user: "Eingeladener Benutzer"
         none: "Keine Einladungen anzuzeigen."
         truncated:
@@ -1403,7 +1403,7 @@ de:
         removed_all: "Alle abgelaufenen Einladungen entfernt!"
         remove_all_confirm: "Sollen alle abgelaufenen Einladungen entfernt werden?"
         reinvite_all: "Alle Einladungen erneut senden"
-        reinvite_all_confirm: "Bist Du dir sicher alle Einladungen nochmals zu senden?"
+        reinvite_all_confirm: "Bist du sicher, dass du alle Einladungen erneut versenden möchtest?"
         reinvited_all: "Alle Einladungen gesendet!"
         time_read: "Lesezeit"
         days_visited: "Besuchstage"
@@ -1411,7 +1411,7 @@ de:
         create: "Einladen"
         generate_link: "Einladungslink erstellen"
         link_generated: "Hier ist dein Einladungslink!"
-        valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
+        valid_for: "Der Einladungslink ist nur für die E-Mail-Adresse %{email} gültig"
         single_user: "Einladen per E-Mail"
         multiple_user: "Per Link einladen"
         invite_link:
@@ -1432,7 +1432,7 @@ de:
           restrict_email: "Auf eine E-Mail-Adresse beschränken"
           max_redemptions_allowed: "Max. Verwendungen"
           add_to_groups: "Zu Gruppen hinzufügen"
-          invite_to_topic: "Kommen Sie zu diesem Thema"
+          invite_to_topic: "Dieses Thema aufrufen"
           expires_at: "Verfällt nach"
           custom_message: "Optionale persönliche Nachricht"
           send_invite_email: "Speichern und E-Mail senden"
@@ -1444,9 +1444,9 @@ de:
           text: "Massen-Einladung"
           instructions: |
             <p>Lade eine Liste von Benutzern ein, um deine Community schnell in Gang zu bringen. Bereite eine <a href="https://de.wikipedia.org/wiki/CSV_(Dateiformat)" target="_blank">CSV-Datei</a> mit mindestens einer Zeile pro E-Mail-Adresse vor, die du einladen möchtest. Die folgenden kommaseparierten Informationen können zur Verfügung gestellt werden, wenn du Personen zu Gruppen hinzufügen oder sie bei der ersten Anmeldung an ein bestimmtes Thema senden möchtest.</p>
-            <pre>max@mustermann.de,erster_gruppenname;zweiter_gruppenname,topic_id</pre>
+            <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
             <p>An jede E-Mail-Adresse in deiner hochgeladenen CSV-Datei wird eine Einladung gesendet. Du kannst diese später verwalten.</p>
-          progress: "Hochgeladen %{progress}%..."
+          progress: "%{progress} % hochgeladen …"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Die Datei sollte im CSV Format vorliegen."
       password:
@@ -4906,7 +4906,7 @@ de:
           description: Das gleiche Abzeichen vielen Benutzern auf einmal verleihen.
           no_badge_selected: Bitte wähle ein Abzeichen, um anzufangen.
           perform: "Verleihe Abzeichen an Benutzer"
-          upload_csv: Lade eine CSV-Datei mit entweder den E-Mail Adressen oder den Benutzernamen hoch
+          upload_csv: Lade eine CSV-Datei mit entweder den E-Mail-Adressen oder den Benutzernamen hoch
           aborted: Bitte lade eine CSV hoch, die entweder Benutzer-E-Mails oder Benutzernamen enthält
           success: Deine CSV Datei wurde empfangen und die Benutzer werden ihr Abzeichen in Kürze bekommen.
           replace_owners: Entferne das Abzeichen von vorherigen Eigentümern

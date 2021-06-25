@@ -112,7 +112,7 @@ de:
         from_reply_by_address_error: "Passiert wenn der From-Header mit der Antwort E-Mail-Adresse übereinstimmt."
         inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
         silenced_user_error: "Kommt vor, wenn der Absender stummgeschaltet wurde."
-        bad_destination_address: "Geschieht, wenn keine der E-Mail Adressen in An/CC Feldern einer konfigurierten eingehenden E-Mail Adresse entsprechen."
+        bad_destination_address: "Geschieht, wenn keine der E-Mail-Adressen in An/CC Feldern einer konfigurierten eingehenden E-Mail-Adresse entsprechen."
         strangers_not_allowed_error: "Passiert wenn ein Benutzer versuchte ein neues Thema in einer Kategorie ohne Mitgliedschaft zu erstellen."
         insufficient_trust_level_error: "Passiert wenn ein Benutzer versuchte ein neues Thema in einer Kategorie zu erstellen, ohne die erforderliche Vertrauensstufe dafür zu haben."
         reply_user_not_matching_error: "Passiert wenn die E-Mail-Adresse der Antwort von der Adresse abweicht, an die gesendet wurde."
@@ -552,7 +552,7 @@ de:
         user_email:
           attributes:
             user_id:
-              reassigning_primary_email: "Eine primäre E-Mail Adresse einem weiteren Benutzer zuzuordnen ist nicht erlaubt."
+              reassigning_primary_email: "Eine primäre E-Mail-Adresse einem weiteren Benutzer zuzuordnen ist nicht erlaubt."
         color_scheme_color:
           attributes:
             hex:
@@ -820,12 +820,12 @@ de:
       description: "Bitte bestätigen Sie, dass Ihre E-Mail-Adresse geändert werden soll in:"
       description_add: "Bitte bestätigen Sie, dass Sie eine alternative E-Mail-Adresse hinzufügen möchten:"
     authorizing_old:
-      title: "Ändere deine E-Mail Adresse"
-      description: "Bitte bestätige die Änderung deiner E-Mail Adresse"
+      title: "Ändere deine E-Mail-Adresse"
+      description: "Bitte bestätige die Änderung deiner E-Mail-Adresse"
       description_add: "Bitte bestätigen Sie, dass Sie eine alternative E-Mail-Adresse hinzufügen möchten:"
       old_email: "Alte Adresse: %{email}"
       new_email: "Neue Adresse: %{email}"
-      almost_done_title: "bestätige neue E-Mail Adresse"
+      almost_done_title: "bestätige neue E-Mail-Adresse"
       almost_done_description: "Wir haben eine E-Mail an deine neue Adresse gesendet, um die Änderung zu bestätigen!"
   associated_accounts:
     revoke_failed: "Das Widerrufen deines Kontos bei %{provider_name} ist fehlgeschlagen."
@@ -2964,7 +2964,7 @@ de:
       text_body_template: |
         Es tut uns leid aber wir haben Probleme Dich per E-Mail zu erreichen. Unsere letzten E-Mails an Dich sind alle als unzustellbar zurück gekommen.
 
-        Bitte stelle sicher, dass [E-Mail Adresse](%{base_url}/my/preferences/email) gültig und aktiv ist? Füge bitte unsere E-Mail Adresse in Deinem Adressbuch hinzu, damit die Zustellbarkeit verbessert wird.
+        Bitte stelle sicher, dass [E-Mail-Adresse](%{base_url}/my/preferences/email) gültig und aktiv ist? Füge bitte unsere E-Mail-Adresse in Deinem Adressbuch hinzu, damit die Zustellbarkeit verbessert wird.
     email_bounced: |
       Die Nachricht an %{email} konnte nicht zugestellt werden.
 
@@ -3420,7 +3420,7 @@ de:
 
         Wenn Sie diese Änderung nicht angefordert haben, wenden Sie sich bitte an einen [site admin] (%{base_url}/ ungefähr).
     confirm_new_email_via_admin:
-      title: "Neue E-Mail Adresse bestätigen"
+      title: "Neue E-Mail-Adresse bestätigen"
       subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
       text_body_template: |
         Bestätigen Sie Ihre neue E-Mail-Adresse für %{site_name} indem Sie auf den folgenden Link klicken:
@@ -3432,18 +3432,18 @@ de:
       title: "E-Mail-Adresse bestätigen (an alte)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
-        Bevor wir die E-Mail Adresse ändern können, benötigen wir deine Bestätigung, dass du den aktuellen E-Mail Account kontrollierst. Sobald du das getan hast, schicken wir dir eine Anfrage, die neue E-Mail Adresse zu bestätigen.
+        Bevor wir die E-Mail-Adresse ändern können, benötigen wir deine Bestätigung, dass du den aktuellen E-Mail Account kontrollierst. Sobald du das getan hast, schicken wir dir eine Anfrage, die neue E-Mail-Adresse zu bestätigen.
 
-        Bestätige deine aktuelle E-Mail Adresse für %{site_name}, indem du auf den folgenden Link klickst:
+        Bestätige deine aktuelle E-Mail-Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
       title: "Alte E-Mail bestätigen (Hinzufügen)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
-        Bevor wir die E-Mail Adresse hinzufügen können, benötigen wir deine Bestätigung, dass du den aktuellen E-Mail Account kontrollierst. Sobald du das getan hast, schicken wir dir eine Anfrage, die neue E-Mail Adresse zu bestätigen.
+        Bevor wir die E-Mail-Adresse hinzufügen können, benötigen wir deine Bestätigung, dass du den aktuellen E-Mail Account kontrollierst. Sobald du das getan hast, schicken wir dir eine Anfrage, die neue E-Mail-Adresse zu bestätigen.
 
-        Bestätige deine aktuelle E-Mail Adresse für %{site_name}, indem du auf den folgenden Link klickst:
+        Bestätige deine aktuelle E-Mail-Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
@@ -3601,7 +3601,7 @@ de:
     sender_text_part_body_blank: "text_part.body ist leer"
     sender_body_blank: "Textkörper ist leer"
     sender_post_deleted: "Beitrag wurde gelöscht"
-    sender_message_to_invalid: "Der Empfänger hat eine ungültige E-Mail Adresse"
+    sender_message_to_invalid: "Der Empfänger hat eine ungültige E-Mail-Adresse"
     sender_topic_deleted: "Thema wurde gelöscht"
   color_schemes:
     base_theme_name: "Basis"
@@ -4551,7 +4551,7 @@ de:
           description: "Der Benutzer wird aus dem Forum gelöscht."
         block:
           title: "Lösche und blockiere Benutzer"
-          description: "Der Benutzer wird gelöscht, und wir blockieren seine IP und E-Mail Adresse."
+          description: "Der Benutzer wird gelöscht, und wir blockieren seine IP und E-Mail-Adresse."
       reject:
         title: "Ablehnen"
         bundle_title: "Ablehnen..."
