@@ -365,11 +365,16 @@ class InvitesController < ApplicationController
   end
 
   def ensure_not_logged_in
-    if current_user
-      flash[:error] = I18n.t("login.already_logged_in")
-      render layout: 'no_ember'
-      false
+    return if !current_user
+
+    if invite = Invite.find_by(invite_key: params[:id])
+      if topic = invite.topics.first
+        return redirect_to(topic.url) if guardian.can_see?(topic)
+      end
     end
+
+    flash[:error] = I18n.t("login.already_logged_in")
+    render layout: 'no_ember'
   end
 
   def post_process_invite(user)

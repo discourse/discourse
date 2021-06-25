@@ -57,6 +57,16 @@ describe InvitesController do
       end
     end
 
+    it 'redirects logged in users to invite topic if they can see it' do
+      topic = Fabricate(:topic)
+      TopicInvite.create!(topic: topic, invite: invite)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(response).to redirect_to(topic.url)
+    end
+
     it 'fails for logged in users' do
       sign_in(Fabricate(:user))
 
