@@ -358,7 +358,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_bookmark
-    if !@topic_view.blank?
+    if @topic_view.present?
       @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id }
     else
       @post_bookmark ||= object.bookmarks.find_by(user: scope.user)
