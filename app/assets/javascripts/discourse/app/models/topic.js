@@ -358,7 +358,6 @@ const Topic = RestModel.extend({
 
   afterPostBookmarked(post) {
     post.set("bookmarked", true);
-    this.set("bookmark_reminder_at", post.bookmark_reminder_at);
   },
 
   firstPost() {
@@ -392,7 +391,6 @@ const Topic = RestModel.extend({
 
   clearBookmarks() {
     this.toggleProperty("bookmarked");
-    this.set("bookmark_reminder_at", null); // fixme remove
 
     const postIds = this.bookmarked_posts.mapBy("post_id");
     postIds.forEach((postId) => {

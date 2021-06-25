@@ -62,7 +62,6 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
-    :bookmark_reminder_at,
     :bookmarked_posts,
     :message_archived,
     :topic_timer,
@@ -196,16 +195,6 @@ class TopicViewSerializer < ApplicationSerializer
 
   def bookmarked_posts
     object.bookmarked_posts
-  end
-
-  # fixme remove
-  def include_bookmark_reminder_at?
-    bookmarked
-  end
-
-  # fixme remove
-  def bookmark_reminder_at
-    object.first_post_bookmark_reminder_at
   end
 
   def topic_timer
