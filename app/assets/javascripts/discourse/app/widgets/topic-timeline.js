@@ -351,6 +351,17 @@ createWidget("timeline-footer-controls", {
     const controls = [];
     const { currentUser, fullScreen, topic, notificationLevel } = attrs;
 
+    if (!fullScreen && topic.has_summary && !topic.postStream.summary) {
+      controls.push(
+        this.attach("button", {
+          className: "show-summary",
+          label: "summary.short_label",
+          title: "summary.short_title",
+          action: "showSummary",
+        })
+      );
+    }
+
     if (currentUser && !fullScreen) {
       if (topic.get("details.can_create_post")) {
         controls.push(
