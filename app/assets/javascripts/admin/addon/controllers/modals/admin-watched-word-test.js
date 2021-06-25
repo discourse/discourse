@@ -18,33 +18,45 @@ export default Controller.extend(ModalFunctionality, {
   )
   matches(value, regexpString, words, isReplace, isTag, isLink) {
     if (!value || !regexpString) {
-      return;
+      return [];
     }
-
-    const regexp = new RegExp(regexpString, "ig");
-    const matches = value.match(regexp) || [];
 
     if (isReplace || isLink) {
-      return matches.map((match) => ({
-        match,
-        replacement: words.find((word) =>
-          new RegExp(word.regexp, "ig").test(match)
-        ).replacement,
-      }));
-    } else if (isTag) {
-      return matches.map((match) => {
-        const tags = new Set();
-
-        words.forEach((word) => {
-          if (new RegExp(word.regexp, "ig").test(match)) {
-            word.replacement.split(",").forEach((tag) => tags.add(tag));
-          }
-        });
-
-        return { match, tags: Array.from(tags) };
+      const matches = [];
+      words.forEach((word) => {
+        const regexp = new RegExp(word.regexp, "gi");
+        let match;
+        while ((match = regexp.exec(value)) !== null) {
+          matches.push({
+            match: match[1],
+            replacement: word.replacement,
+          });
+        }
       });
-    }
+      return matches;
+    } else if (isTag) {
+      const matches = {};
+      words.forEach((word) => {
+        const regexp = new RegExp(word.regexp, "gi");
+        let match;
+        while ((match = regexp.exec(value)) !== null) {
+          if (!matches[match[1]]) {
+            matches[match[1]] = new Set();
+          }
 
-    return matches;
+          let tags = matches[match[1]];
+          word.replacement.split(",").forEach((tag) => {
+            tags.add(tag);
+          });
+        }
+      });
+
+      return Object.entries(matches).map((entry) => ({
+        match: entry[0],
+        tags: Array.from(entry[1]),
+      }));
+    } else {
+      return value.match(new RegExp(regexpString, "ig")) || [];
+    }
   },
 });
