@@ -1312,58 +1312,58 @@ ja:
         instructions: "%{count} 文字以上"
         required: "パスワードを入力してください"
       summary:
-        title: "サマリー"
+        title: "要約"
         stats: "統計"
-        time_read: "読んだ時間"
-        recent_time_read: "現在の読んだ時間"
+        time_read: "閲覧時間"
+        recent_time_read: "最近の閲覧時間"
         topic_count:
-          other: "つのトピックを作成"
+          other: "作成したトピック数"
         post_count:
-          other: "つの投稿"
+          other: "作成した投稿数"
         likes_given:
-          other: "与えた"
+          other: "「いいね！」した数"
         likes_received:
-          other: "もらった"
+          other: "「いいね！」された数"
         days_visited:
-          other: "訪問日数"
+          other: "アクセス日数"
         topics_entered:
-          other: "トピックの閲覧"
+          other: "閲覧したトピック数"
         posts_read:
-          other: "読んだ投稿"
+          other: "既読の投稿数"
         bookmark_count:
-          other: "つのブックマーク"
-        top_replies: "返信上位"
+          other: "ブックマーク数"
+        top_replies: "トップ返信"
         no_replies: "まだ返信はありません。"
         more_replies: "その他の返信"
-        top_topics: "トピック上位"
+        top_topics: "トップトピック"
         no_topics: "まだトピックはありません。"
         more_topics: "その他のトピック"
-        top_badges: "最近ゲットしたバッジ"
+        top_badges: "トップバッジ"
         no_badges: "まだバッジはありません。"
-        more_badges: "バッジをもっと見る"
-        top_links: "リンク上位"
+        more_badges: "その他のバッジ"
+        top_links: "トップリンク"
         no_links: "まだリンクはありません。"
-        most_liked_by: "最も「いいね！」してくれた"
-        most_liked_users: "最も「いいね！」した"
-        most_replied_to_users: "最も返信した"
-        no_likes: "「いいね！」はまだありません。"
+        most_liked_by: "「いいね！」を最も多くくれたユーザー"
+        most_liked_users: "「いいね！」が最も多いユーザー"
+        most_replied_to_users: "最も多く返信したユーザー"
+        no_likes: "まだ「いいね！」はありません。"
         top_categories: "トップカテゴリ"
         topics: "トピック"
         replies: "返信"
       ip_address:
-        title: "最後のIPアドレス"
+        title: "最後の IP アドレス"
       registration_ip_address:
-        title: "登録時のIPアドレス"
+        title: "登録時の IP アドレス"
       avatar:
         title: "プロフィール画像"
         header_title: "プロフィール、メッセージ、ブックマーク、設定"
-        edit: "プロフィール画像の編集"
+        edit: "プロフィール画像を編集"
       title:
-        title: "肩書き"
-        none: "（なし）"
+        title: "タグライン"
+        none: "(なし)"
       primary_group:
         title: "プライマリーグループ"
-        none: "（なし）"
+        none: "(なし)"
       filters:
         all: "すべて"
       stream:
@@ -1382,20 +1382,20 @@ ja:
         not_found: "ページが見つかりません"
       desc:
         network: "インターネット接続を確認してください。"
-        network_fixed: "ネットワーク接続が回復しました。"
+        network_fixed: "ネットワーク接続が回復したようです。"
         server: "エラーコード : %{status}"
-        forbidden: "閲覧する権限がありません"
-        not_found: "アプリケーションが存在しないURLを読み込もうとしました。"
+        forbidden: "閲覧する権限がありません。"
+        not_found: "アプリケーションは存在しない URL を読み込もうとしました。"
         unknown: "エラーが発生しました。"
       buttons:
         back: "戻る"
         again: "やり直す"
-        fixed: "ページロード"
+        fixed: "ページを読み込む"
     modal:
       close: "閉じる"
       dismiss_error: "エラーを閉じる"
     close: "閉じる"
-    logout: "ログアウトしました"
+    logout: "ログアウトしました。"
     refresh: "更新"
     home: "ホーム"
     read_only_mode:
