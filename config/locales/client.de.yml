@@ -1512,14 +1512,14 @@ de:
       avatar:
         title: "Profilbild"
         header_title: "Profil, Nachrichten, Lesezeichen und Einstellungen"
-        name_and_description: "%{name} - %{description}"
+        name_and_description: "%{name} – %{description}"
         edit: "Profilbild bearbeiten"
       title:
         title: "Titel"
         none: "(keiner)"
       primary_group:
         title: "Hauptgruppe"
-        none: "(keiner)"
+        none: "(keine)"
       filters:
         all: "Alle"
       stream:
@@ -1527,7 +1527,7 @@ de:
         sent_by: "Gesendet von"
         private_message: "Senden"
         the_topic: "das Thema"
-    loading: "Wird geladen…"
+    loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
       reasons:
@@ -1538,17 +1538,17 @@ de:
         not_found: "Seite nicht gefunden"
       desc:
         network: "Bitte überprüfe deine Netzwerkverbindung."
-        network_fixed: "Sieht aus, als wäre es wieder da."
+        network_fixed: "Sieht aus, als wäre sie wieder da."
         server: "Fehlercode: %{status}"
         forbidden: "Du darfst das nicht ansehen."
-        not_found: "Hoppla! Die Anwendung hat versucht eine URL zu laden, die nicht existiert."
-        unknown: "Etwas ist schief gelaufen."
+        not_found: "Hoppla! Die Anwendung hat versucht, eine URL zu laden, die nicht existiert."
+        unknown: "Etwas ist schiefgelaufen."
       buttons:
         back: "Zurück"
         again: "Erneut versuchen"
         fixed: "Seite laden"
     modal:
-      close: "Schließen"
+      close: "schließen"
       dismiss_error: "Fehler ignorieren"
     close: "Schließen"
     assets_changed_confirm: "Diese Website hat gerade ein Software-Upgrade erhalten. Jetzt die neueste Version abrufen?"
@@ -1570,7 +1570,7 @@ de:
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} erreicht."
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} überschritten."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} überschritten."
-    learn_more: "mehr erfahren…"
+    learn_more: "mehr erfahren …"
     first_post: Erster Beitrag
     mute: Stummschalten
     unmute: Stummschaltung aufheben
@@ -1589,7 +1589,7 @@ de:
       hide_session: "Erinnere mich morgen"
       hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, wir fragen dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
-      intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber Du hast bislang noch kein Konto angelegt."
+      intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber du hast bislang noch kein Konto angelegt."
       value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn jemand auf deine Beiträge antwortet. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartpulse:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
@@ -1606,13 +1606,13 @@ de:
       disable: "Gelöschte Beiträge anzeigen"
     private_message_info:
       title: "Nachricht"
-      invite: "Lade andere ein ..."
-      edit: "Hinzufügen oder Entfernen ..."
-      remove: "Entfernen..."
-      add: "Hinzufügen..."
-      leave_message: "Möchtest du diese Nachricht wirklich verlassen?"
-      remove_allowed_user: "Willst du %{name} wirklich aus dieser Unterhaltung entfernen?"
-      remove_allowed_group: "Willst du %{name} wirklich aus dieser Unterhaltung entfernen?"
+      invite: "Lade andere ein …"
+      edit: "Hinzufügen oder entfernen …"
+      remove: "Entfernen …"
+      add: "Hinzufügen …"
+      leave_message: "Möchtest du diese Nachricht wirklich hinterlassen?"
+      remove_allowed_user: "Willst du %{name} wirklich aus dieser Nachricht entfernen?"
+      remove_allowed_group: "Willst du %{name} wirklich aus dieser Nachricht entfernen?"
     email: "E-Mail-Adresse"
     username: "Benutzername"
     last_seen: "Zuletzt gesehen"
@@ -1625,14 +1625,14 @@ de:
       subheader_title: "Lass uns dein Konto erstellen"
       disclaimer: "Mit der Registrierung stimmst du der <a href='%{privacy_link}' target='blank'>Datenschutzerklärung</a> und den <a href='%{tos_link}' target='blank'>Nutzungsbedingungen</a> zu."
       title: "Erstelle dein Konto"
-      failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
+      failed: "Etwas ist schiefgelaufen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
     forgot_password:
       title: "Passwort zurücksetzen"
       action: "Ich habe mein Passwort vergessen"
       invite: "Gib deinen Benutzernamen oder deine E-Mail-Adresse ein. Wir senden dir eine E-Mail zum Zurücksetzen des Passworts."
       reset: "Passwort zurücksetzen"
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
-      complete_email: "Wenn ein Benutzerkonto der E-Mail <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
+      complete_email: "Wenn ein Benutzerkonto der E-Mail-Adresse <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_username_found: "Wir haben ein zum Benutzernamen <b>%{username}</b> gehörendes Konto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email_found: "Wir haben ein zu <b>%{email}</b> gehörendes Benutzerkonto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_username_not_found: "Es gibt kein Konto mit dem Benutzernamen <b>%{username}</b>"
@@ -1643,13 +1643,13 @@ de:
     email_login:
       link_label: "Sende mir einen Anmeldelink"
       button_label: "über E-Mail"
-      login_link: "Überspringe das Passwort; Schicke mir einen Login-Link per E-Mail"
+      login_link: "Überspringe das Passwort; sende mir einen Anmeldelink"
       emoji: "Emoji sperren"
-      complete_username: "Sofern ein Benutzerkonto mit dem Benutzername <b>%{username}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
+      complete_username: "Sofern ein Benutzerkonto mit dem Benutzernamen <b>%{username}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
       complete_email: "Sofern ein Benutzerkonto für <b>%{email}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
-      complete_username_found: "Wir haben ein Benutzerkonto mit dem Benutzername <b>%{username}</b> gefunden, du solltest in Kürze einen Anmeldelink erhalten."
+      complete_username_found: "Wir haben ein Benutzerkonto mit dem Benutzernamen <b>%{username}</b> gefunden, du solltest in Kürze einen Anmeldelink erhalten."
       complete_email_found: "Wir haben ein Benutzerkonto für <b>%{email}</b> erhalten, du solltest in Kürze einen Anmeldelink erhalten."
-      complete_username_not_found: "Es existiert kein Benutzerkonto mit dem Benutzername <b>%{username}</b>."
+      complete_username_not_found: "Es existiert kein Benutzerkonto mit dem Benutzernamen <b>%{username}</b>."
       complete_email_not_found: "Es existiert kein Benutzerkonto für <b>%{email}</b>."
       confirm_title: Weiter zu %{site_name}
       logging_in_as: Anmeldung als %{email}
@@ -1663,37 +1663,37 @@ de:
       second_factor_title: "Zwei-Faktor-Authentifizierung"
       second_factor_description: "Bitte gib den Authentifizierungscode aus deiner App ein:"
       second_factor_backup: "Anmeldung mit einem Wiederherstellungscode"
-      second_factor_backup_title: "Zwei-Faktor-Backup"
+      second_factor_backup_title: "Zwei-Faktor-Back-up"
       second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungscodes ein:"
       second_factor: "Anmeldung mit einer Authentifizierungs-App"
-      security_key_description: "Wenn Du Deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche \"Mit Sicherheitsschlüssel authentifizieren\"."
-      security_key_alternative: "Versuche einen anderen Weg"
+      security_key_description: "Wenn du deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche „Mit Sicherheitsschlüssel authentifizieren“."
+      security_key_alternative: "Versuche es anderweitig"
       security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
       security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
       security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldeinformationen gefunden."
       security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
-      email_placeholder: "E-Mail / Benutzername"
+      email_placeholder: "E-Mail/Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
-      cookies_error: "Dein Browser scheint Cookies deaktiviert zu haben. Du kannst dich möglicherweise nicht anmelden, ohne diese zuerst zu aktivieren"
-      rate_limit: "Warte bitte ein wenig, bevor du erneut versuchst dich anzumelden."
+      cookies_error: "Dein Browser scheint Cookies deaktiviert zu haben. Du kannst dich möglicherweise nicht anmelden, ohne diese zuerst zu aktivieren."
+      rate_limit: "Warte bitte ein wenig, bevor du erneut versuchst, dich anzumelden."
       blank_username: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen ein."
       blank_username_or_password: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen und dein Passwort ein."
       reset_password: "Passwort zurücksetzen"
-      logging_in: "Anmeldung läuft…"
+      logging_in: "Anmeldung läuft …"
       or: "Oder"
-      authenticating: "Authentifiziere…"
-      awaiting_activation: "Dein Konto ist noch nicht aktiviert. Verwende den 'Passwort vergessen'-Link, um eine weitere E-Mail mit Anweisungen zur Aktivierung zu erhalten."
+      authenticating: "Authentifiziere …"
+      awaiting_activation: "Dein Konto ist noch nicht aktiviert. Verwende den „Passwort vergessen“-Link, um eine weitere E-Mail mit Anweisungen zur Aktivierung zu erhalten."
       awaiting_approval: "Dein Konto wurde noch nicht von einem Team-Mitglied genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
       requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
       not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir schon eine E-Mail zur Aktivierung an <b>%{sentTo}</b> geschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Benutzerkonto zu aktivieren."
-      not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht anmelden."
-      admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
+      not_allowed_from_ip_address: "Von dieser IP-Adresse aus darfst du dich nicht anmelden."
+      admin_not_allowed_from_ip_address: "Von dieser IP-Adresse aus darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       omniauth_disallow_totp: "Für dein Benutzerkonto ist die Zwei-Faktor-Authentifizierung aktiviert. Bitte melde dich mit deinem Passwort an."
       resend_title: "Aktivierungsmail erneut senden"
       change_email: "E-Mail-Adresse ändern"
-      provide_new_email: "Gib’ eine neue Adresse an und wir senden deine Bestätigungsmail erneut."
+      provide_new_email: "Gib eine neue Adresse an und wir senden deine Bestätigungsmail erneut."
       submit_new_email: "E-Mail-Adresse aktualisieren"
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>%{currentEmail}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
       sent_activation_email_again_generic: "Wir haben eine weitere Aktivierungsmail verschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; schaue auch im Spam-Ordner nach."
@@ -1723,11 +1723,11 @@ de:
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
     invites:
       accept_title: "Einladung"
-      emoji: "Umschlag Emoji"
+      emoji: "Umschlag-Emoji"
       welcome_to: "Willkommen bei %{site_name}!"
       invited_by: "Du wurdest eingeladen von:"
-      social_login_available: "Du wirst dich auch über andere sozialen Netzwerken mit dieser E-Mail-Adresse anmelden können."
-      your_email: "Die E-Mail-Adresse deines Benutzerkontos ist <b>%{email}</b>"
+      social_login_available: "Du wirst dich auch über andere soziale Netzwerke mit dieser E-Mail-Adresse anmelden können."
+      your_email: "Die E-Mail-Adresse deines Benutzerkontos ist <b>%{email}</b>."
       accept_invite: "Einladung annehmen"
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
       name_label: "Name"
@@ -1736,15 +1736,15 @@ de:
     password_reset:
       continue: "Weiter zu %{site_name}"
     emoji_set:
-      apple_international: "Apple"
+      apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
       win10: "Windows 10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
     category_page_style:
-      categories_only: "nur Kategorien"
-      categories_with_featured_topics: "Kategorien mit empfohlenen Themen"
+      categories_only: "Nur Kategorien"
+      categories_with_featured_topics: "Kategorien mit hervorgehobenen Themen"
       categories_and_latest_topics: "Kategorien und aktuelle Themen"
       categories_and_top_topics: "Kategorien und angesagte Themen"
       categories_boxes: "Boxen mit Unterkategorien"
@@ -1755,7 +1755,7 @@ de:
       alt: "Alt"
       enter: "Enter"
     conditional_loading_section:
-      loading: Wird geladen…
+      loading: Wird geladen …
     category_row:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
@@ -1768,12 +1768,12 @@ de:
         other: "+ %{count} Unterkategorien"
     select_kit:
       filter_by: "Filtern nach: %{name}"
-      select_to_filter: "Wählen Sie einen zu filternden Wert aus"
-      default_header_text: Auswählen…
+      select_to_filter: "Wähle einen zu filternden Wert aus"
+      default_header_text: Auswählen …
       no_content: Keine Treffer gefunden
-      filter_placeholder: Suchen…
-      filter_placeholder_with_any: Suchen oder erzeugen
-      create: "Erstelle: '%{content}'"
+      filter_placeholder: Suchen …
+      filter_placeholder_with_any: Suchen oder erstellen …
+      create: "Erstelle: „%{content}“"
       max_content_reached:
         one: "Du kannst nur %{count} Eintrag auswählen."
         other: "Du kannst nur %{count} Einträge auswählen."
@@ -1782,10 +1782,10 @@ de:
         other: "Wähle mindestens %{count} Einträge aus."
       invalid_selection_length:
         one: "Die Auswahl muss mindestens %{count} Zeichen umfassen."
-        other: "Die Auswahl muss aus mindestens %{count} Zeichen bestehen."
+        other: "Die Auswahl muss mindestens %{count} Zeichen umfassen."
       components:
         tag_drop:
-          filter_for_more: Filtern nach mehr...
+          filter_for_more: Filtern nach mehr …
         categories_admin_dropdown:
           title: "Kategorien verwalten"
     date_time_picker:
@@ -1797,7 +1797,7 @@ de:
       people_&_body: Menschen und Körper
       animals_&_nature: Tiere und Natur
       food_&_drink: Essen und Getränke
-      travel_&_places: Verkehr und Orte
+      travel_&_places: Reisen und Orte
       activities: Tätigkeiten
       objects: Objekte
       symbols: Symbole
@@ -1811,7 +1811,7 @@ de:
       dark_tone: Dunkle Hautfarbe
       default: Benutzerdefinierte Emojis
     shared_drafts:
-      title: "Gemeinsame Vorlagen"
+      title: "Gemeinsame Entwürfe"
       notice: "Dieses Thema ist nur für diejenigen sichtbar, die gemeinsame Entwürfe veröffentlichen können."
       destination_category: "Ziel-Kategorie"
       publish: "Gemeinsame Vorlage veröffentlichen"
@@ -1819,7 +1819,7 @@ de:
       publishing: "Thema wird veröffentlicht …"
     composer:
       emoji: "Emoji :)"
-      more_emoji: "mehr…"
+      more_emoji: "mehr …"
       options: "Optionen"
       whisper: "flüstern"
       unlist: "unsichtbar"
@@ -1828,7 +1828,7 @@ de:
       toggle_unlisted: "Sichtbarkeit umschalten"
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
       saved_local_draft_tip: "lokal gespeichert"
-      similar_topics: "Dein Thema hat Ähnlichkeit mit…"
+      similar_topics: "Dein Thema hat Ähnlichkeit mit …"
       drafts_offline: "Entwürfe offline"
       edit_conflict: "Konflikt bearbeiten"
       group_mentioned_limit:
@@ -1838,9 +1838,9 @@ de:
         one: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Person</a> zu benachrichtigen – bist du dir sicher?"
         other: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Personen</a> zu benachrichtigen – bist du dir sicher?"
       cannot_see_mention:
-        category: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu die Zugriff auf diese Kategorie hat."
-        private: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser PM ein."
-      duplicate_link: "Es sieht so aus als wäre dein Link auf <b>%{domain}</b> in dem Thema bereits geschrieben worden von <b>@%{username}</b> in <a href='%{post_url}'>einer Antwort vor %{ago}</a> – bist du sicher, dass du ihn noch einmal schreiben möchtest?"
+        category: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu, die Zugriff auf diese Kategorie hat."
+        private: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser persönlichen Nachricht ein."
+      duplicate_link: "Es sieht so aus, als ob dein Link zu <b>%{domain}</b> bereits im Thema von <b>@%{username}</b> in <a href='%{post_url}'>einer Antwort vor %{ago}</a> geteilt wurde – bist du sicher, dass du ihn noch einmal teilen möchtest?"
       reference_topic_title: "AW: %{title}"
       error:
         title_missing: "Titel ist erforderlich"
@@ -1860,55 +1860,55 @@ de:
           one: "Du musst mindestens %{count} Schlagwort wählen."
           other: "Du musst mindestens %{count} Schlagwörter wählen."
         topic_template_not_modified: "Bitte füge Details und Spezifikationen zu deinem Thema hinzu, indem du die Themenvorlage anpasst."
-      save_edit: "Speichern"
+      save_edit: "Bearbeitung speichern"
       overwrite_edit: "Bearbeitung überschreiben"
-      reply_original: "Auf das ursprünglichen Thema antworten"
+      reply_original: "Auf das ursprüngliche Thema antworten"
       reply_here: "Hier antworten"
       reply: "Antworten"
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
       create_pm: "Nachricht"
       create_whisper: "Flüstern"
-      create_shared_draft: "Erstelle gemeinsame Vorlage"
-      edit_shared_draft: "Gemeinsame Vorlage bearbeiten"
-      title: "Oder drücke Strg+Eingabetaste"
+      create_shared_draft: "Gemeinsamen Entwurf erstellen"
+      edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
+      title: "Oder drücke Strg + Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
-      edit_reason_placeholder: "Warum bearbeitest du?"
-      topic_featured_link_placeholder: "Gib einen Link, der mit dem Titel angezeigt wird."
+      edit_reason_placeholder: "Welchen Grund gibt es für die Bearbeitung?"
+      topic_featured_link_placeholder: "Link zum Titel eingeben."
       remove_featured_link: "Link aus Thema entfernen."
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       reply_placeholder_no_images: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung."
-      reply_placeholder_choose_category: "Wähle vor dem Tippen eine Kategorie."
-      view_new_post: "Sieh deinen neuen Beitrag an."
+      reply_placeholder_choose_category: "Wähle vor der Eingabe eine Kategorie aus."
+      view_new_post: "Schau dir deinen neuen Beitrag an."
       saving: "Wird gespeichert"
       saved: "Gespeichert!"
       saved_draft: "Beitrags-Entwurf vorhanden. Tippen, um fortzusetzen."
-      uploading: "Wird hochgeladen…"
+      uploading: "Wird hochgeladen …"
       show_preview: "Vorschau zeigen"
       hide_preview: "Vorschau ausblenden"
       quote_post_title: "Ganzen Beitrag zitieren"
       bold_label: "F"
-      bold_title: "Fettgedruckt"
-      bold_text: "Fettgedruckter Text"
+      bold_title: "Fett gedruckt"
+      bold_text: "fett gedruckter Text"
       italic_label: "K"
       italic_title: "Betonung"
-      italic_text: "Betonter Text"
+      italic_text: "betonter Text"
       link_title: "Link"
       link_description: "gib hier eine Link-Beschreibung ein"
       link_dialog_title: "Link einfügen"
-      link_optional_text: "Optionaler Titel"
+      link_optional_text: "optionaler Titel"
       link_url_placeholder: "Füge eine URL ein oder tippe, um die Themen zu durchsuchen"
-      blockquote_title: "Blockquote"
-      blockquote_text: "Blockquote"
+      blockquote_title: "Blockzitat"
+      blockquote_text: "Blockzitat"
       code_title: "Vorformatierter Text"
       code_text: "vorformatierten Text mit 4 Leerzeichen einrücken"
-      paste_code_text: "Tippe oder füge den Code hier ein"
+      paste_code_text: "tippe oder füge den Code hier ein"
       upload_title: "Upload"
       upload_description: "gib hier eine Beschreibung des Uploads ein"
       olist_title: "Nummerierte Liste"
-      ulist_title: "Liste"
+      ulist_title: "Liste mit Aufzählungszeichen"
       list_item: "Listenelement"
       toggle_direction: "Schreibrichtung wechseln"
       help: "Hilfe zur Markdown-Formatierung"
@@ -1917,36 +1917,36 @@ de:
       abandon: "Editor schließen und Entwurf verwerfen"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
-      show_toolbar: "Composer-Werkzeugleiste anzeigen"
-      hide_toolbar: "Composer-Werkzeugleiste ausblenden"
+      show_toolbar: "Editor-Werkzeugleiste anzeigen"
+      hide_toolbar: "Editor-Werkzeugleiste ausblenden"
       modal_ok: "OK"
       modal_cancel: "Abbrechen"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       yourself_confirm:
-        title: "Hast du vergessen Empfänger hinzuzufügen?"
+        title: "Hast du vergessen, Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
       slow_mode:
-        error: "Dieses Thema befindet sich im langsamen Modus. Du hast bereits kürzlich gepostet. Du kannst erneut in %{timeLeft}posten."
+        error: "Dieses Thema befindet sich im langsamen Modus. Du hast bereits kürzlich gepostet. Du kannst erneut in %{timeLeft} posten."
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
       composer_actions:
         reply: Antworten
         draft: Entwurf
         edit: Bearbeiten
         reply_to_post:
-          label: Auf einen Beitrag von %{postUsername}antworten
+          label: Auf einen Beitrag von %{postUsername} antworten
           desc: Antworte auf einen bestimmten Beitrag
         reply_as_new_topic:
-          label: Antworte als verknüpftes Thema
+          label: Mit verknüpftem Thema antworten
           desc: Erstelle ein neues Thema, das auf dieses Thema verweist
-          confirm: Du hast einen neuen Themen-Entwurf gespeichert. Wenn du ein verlinktes Thema erstellst, wird er überschrieben.
+          confirm: Du hast einen neuen Themen-Entwurf gespeichert. Wenn du ein verknüpftes Thema erstellst, wird er überschrieben.
         reply_as_new_group_message:
           label: Als neue Gruppen-Nachricht antworten
-          desc: Erstellen Sie eine neue private Nachricht mit denselben Empfängern
+          desc: Erstelle eine neue private Nachricht mit denselben Empfängern
         reply_as_private_message:
           label: Neue Nachricht
-          desc: Erstelle eine neue Nachricht
+          desc: Erstelle eine neue persönliche Nachricht
         reply_to_topic:
-          label: Antworte auf Thema
+          label: Auf Thema antworten
           desc: Antworte auf das Thema, nicht auf einen bestimmten Beitrag
         toggle_whisper:
           label: Flüstermodus umschalten
@@ -1954,11 +1954,11 @@ de:
         create_topic:
           label: "Neues Thema"
         shared_draft:
-          label: "Gemeinsame Vorlage"
+          label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
         toggle_topic_bump:
-          label: "Bump des Themas umschalten"
-          desc: "Antworten ohne das Datum der neuesten Antwort zu ändern"
+          label: "„Nach oben verschieben“ für Thema umschalten"
+          desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
       reload: "Neu laden"
       ignore: "Ignorieren"
     notifications:
@@ -1970,9 +1970,9 @@ de:
           one: "%{count} ungelesene Nachricht"
           other: "%{count} ungelesene Nachrichten"
         high_priority:
-          one: "%{count} ungelesene Benachrichtigungen hoher Priorität"
-          other: "%{count} ungelesene Benachrichtigungen mit hoher Priorität"
-      title: "Benachrichtigung über @Name-Erwähnungen, Antworten auf deine Beiträge und Themen, Nachrichten, usw."
+          one: "%{count} ungelesene Benachrichtigung hoher Priorität"
+          other: "%{count} ungelesene Benachrichtigungen hoher Priorität"
+      title: "Benachrichtigungen über namentliche Erwähnungen mit @, Antworten auf deine Beiträge und Themen, Nachrichten usw."
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
       empty: "Keine Benachrichtigungen gefunden."
       post_approved: "Dein Beitrag wurde genehmigt."
