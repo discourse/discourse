@@ -368,8 +368,25 @@ class InvitesController < ApplicationController
     return if !current_user
 
     if invite = Invite.find_by(invite_key: params[:id])
+      added_to_group = false
+
+      if invite.groups.present?
+        invite_by_guardian = Guardian.new(invite.invited_by)
+        new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
+        new_group_ids.each do |id|
+          if group = Group.find_by(id: id)
+            if invite_by_guardian.can_edit_group?(group)
+              group.add(current_user)
+              added_to_group = true
+            end
+          end
+        end
+      end
+
       if topic = invite.topics.first
         return redirect_to(topic.url) if guardian.can_see?(topic)
+      elsif added_to_group
+        return redirect_to(path("/"))
       end
     end
 
