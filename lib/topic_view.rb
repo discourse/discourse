@@ -397,10 +397,10 @@ class TopicView
 
   def bookmarked_posts
     return nil unless has_bookmarks?
-    @topic.bookmarks.where(user: @user).map do |b|
+    @topic.bookmarks.where(user: @user).pluck(:post_id, :reminder_at).map do |post_id, reminder_at|
       {
-        post_id: b.post_id,
-        reminder_at: b.reminder_at
+        post_id: post_id,
+        reminder_at: reminder_at
       }
     end
   end
