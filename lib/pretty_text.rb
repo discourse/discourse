@@ -96,7 +96,6 @@ module PrettyText
     apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
-    ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 
     to_load = []
     DiscoursePluginRegistry.each_globbed_asset do |a|

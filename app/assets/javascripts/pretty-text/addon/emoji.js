@@ -129,6 +129,42 @@ export function performEmojiEscape(string, opts) {
     .replace(textEmojiRegex(opts.inlineEmoji), replacementFunction);
 }
 
+export function emojiUnicodeReplacer(text) {
+  const regexp = new RegExp(emojiReplacementRegex, "g");
+  regexp.lastIndex = 0;
+
+  let m;
+  while ((m = regexp.exec(text)) !== null) {
+    let match = m[0];
+
+    let replacement = replacements[match];
+
+    if (!replacement) {
+      // if we can't find replacement for an emoji match
+      // attempts to look for the same without trailing variation selector
+      match = match.replace(/\ufe0f$/g, "");
+      replacement = replacements[match];
+    }
+
+    if (!replacement) {
+      continue;
+    }
+
+    replacement = ":" + replacement + ":";
+    const before = text.charAt(m.index - 1);
+    if (!/\B/.test(before)) {
+      replacement = "\u200b" + replacement;
+    }
+    text = text.replace(match, replacement);
+  }
+
+  // fixes Safari VARIATION SELECTOR-16 issue with some emojis
+  // https://meta.discourse.org/t/emojis-selected-on-ios-displaying-additional-rectangles/86132
+  text = text.replace(/\ufe0f/g, "");
+
+  return text;
+}
+
 export function isCustomEmoji(code, opts) {
   code = code.toLowerCase();
   if (extendedEmoji.hasOwnProperty(code)) {

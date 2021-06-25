@@ -8,7 +8,7 @@ import Post from "discourse/models/post";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
-import { registerEmoji } from "pretty-text/emoji";
+import { emojiUnicodeReplacer, registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 const rawOpts = {
@@ -24,6 +24,7 @@ const rawOpts = {
     markdown_linkify_tlds: "com",
   },
   getURL: (url) => url,
+  emojiUnicodeReplacer: emojiUnicodeReplacer,
 };
 
 const defaultOpts = buildOptions(rawOpts);
@@ -1495,6 +1496,10 @@ var bar = 'bar';
     assert.cooked(
       "8-)",
       `<p><img src="/images/emoji/google_classic/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:"></p>`
+    );
+    assert.cooked(
+      "😀",
+      `<p><img src="/images/emoji/google_classic/grinning.png?v=${v}" title=":grinning:" class="emoji only-emoji" alt=":grinning:"></p>`
     );
   });
 

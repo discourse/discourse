@@ -1,5 +1,9 @@
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
-import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
+import {
+  buildEmojiUrl,
+  emojiUnicodeReplacer,
+  performEmojiUnescape,
+} from "pretty-text/emoji";
 import AllowLister from "pretty-text/allow-lister";
 import { Promise } from "rsvp";
 import Session from "discourse/models/session";
@@ -23,6 +27,7 @@ function getOpts(opts) {
       formatUsername,
       watchedWordsReplace: context.site.watched_words_replace,
       watchedWordsLink: context.site.watched_words_link,
+      emojiUnicodeReplacer: emojiUnicodeReplacer,
     },
     opts
   );
