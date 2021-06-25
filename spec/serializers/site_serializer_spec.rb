@@ -26,6 +26,8 @@ describe SiteSerializer do
     c1 = serialized[:categories].find { |c| c[:id] == category.id }
 
     expect(c1[:custom_fields]["enable_marketplace"]).to eq("t")
+  ensure
+    Site.preloaded_category_custom_fields.clear
   end
 
   it "includes category tags" do
