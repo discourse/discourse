@@ -662,7 +662,7 @@ class UserNotifications < ActionMailer::Base
         message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "")
       end
 
-      first_footer_classes = "hilight"
+      first_footer_classes = "highlight"
       if (allow_reply_by_email && user.staged) || (user.suspended? || user.staged?)
         first_footer_classes = ""
       end
