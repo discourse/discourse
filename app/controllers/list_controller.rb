@@ -84,6 +84,7 @@ class ListController < ApplicationController
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
         @rss = filter
+        @rss_description = filter
 
         # Note the first is the default and we don't add a title
         if (filter.to_s != current_homepage) && use_crawler_layout?
@@ -280,6 +281,7 @@ class ListController < ApplicationController
       list.prev_topics_url = construct_url_with(:prev, top_options)
       @rss = "top"
       @params = { period: period }
+      @rss_description = "top_#{period}"
 
       if use_crawler_layout?
         @title = I18n.t("js.filters.top.#{period}.title") + " - #{SiteSetting.title}"
