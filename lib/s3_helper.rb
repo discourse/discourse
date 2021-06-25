@@ -3,6 +3,7 @@
 require "aws-sdk-s3"
 
 class S3Helper
+  FIFTEEN_MEGABYTES = 15 * 1024 * 1024
 
   class SettingMissing < StandardError; end
 
@@ -42,8 +43,8 @@ class S3Helper
     obj = s3_bucket.object(path)
 
     etag = begin
-      if File.size(file.path) >= Aws::S3::FileUploader::FIFTEEN_MEGABYTES
-        options[:multipart_threshold] = Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+      if File.size(file.path) >= FIFTEEN_MEGABYTES
+        options[:multipart_threshold] = FIFTEEN_MEGABYTES
         obj.upload_file(file, options)
         obj.load
         obj.etag
