@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 describe Site do
+  after do
+    Site.clear_cache
+  end
 
   def expect_correct_themes(guardian)
     json = Site.json_for(guardian)
@@ -62,10 +65,6 @@ describe Site do
     fab!(:category) { Fabricate(:category) }
     fab!(:user) { Fabricate(:user) }
     fab!(:guardian) { Guardian.new(user) }
-
-    after do
-      Site.clear_cache
-    end
 
     it "omits read restricted categories" do
       expect(Site.new(guardian).categories.map(&:id)).to contain_exactly(
@@ -136,6 +135,8 @@ describe Site do
       categories = Site.new(Guardian.new).categories
 
       expect(categories.last[:custom_fields]["enable_marketplace"]).to eq('f')
+    ensure
+      Site.preloaded_category_custom_fields.clear
     end
   end
 
