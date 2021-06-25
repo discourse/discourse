@@ -122,9 +122,6 @@ module Email
       style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
 
       style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin-left: 0; padding: 12px;')
-      style('blockquote > :first-child', 'margin-top: 0 !important;')
-      style('blockquote > :last-child', 'margin-bottom: 0 !important;')
-      style('blockquote > p', 'padding: 0 !important;')
 
       # Oneboxes
       style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px; margin-bottom: 10px;")
@@ -199,6 +196,10 @@ module Email
         "text-align:#{ Rtl.new(nil).enabled? ? 'right' : 'left' };",
         dir: Rtl.new(nil).enabled? ? 'rtl' : 'ltr'
       )
+
+      style('blockquote > :first-child', 'margin-top: 0;')
+      style('blockquote > :last-child', 'margin-bottom: 0;')
+      style('blockquote > p', 'padding: 0;')
 
       style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
       style('h4', 'color: #222;')
