@@ -505,6 +505,11 @@ pre.onebox code {
     color: var(--secondary) !important;
     padding: 2px 4px !important;
   }
+
+  .emoji {
+    max-height: 15px;
+    margin: 0.2em;
+  }
 }
 
 .onebox.githubactions {
