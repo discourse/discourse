@@ -67,7 +67,7 @@ export default {
       dependentKeys: ["topic.bookmarked", "topic.bookmarksWereChanged"],
       id: "bookmark",
       icon() {
-        const bookmarkedPosts = this.get("topic.bookmarked_posts");
+        const bookmarkedPosts = this.topic.bookmarked_posts;
         if (bookmarkedPosts && bookmarkedPosts.find((x) => x.reminder_at)) {
           return "discourse-bookmark-clock";
         }
@@ -75,12 +75,13 @@ export default {
       },
       priority: BOOKMARK_PRIORITY,
       classNames() {
-        const bookmarked = this.get("topic.bookmarked");
-        return bookmarked ? ["bookmark", "bookmarked"] : ["bookmark"];
+        return this.topic.bookmarked
+          ? ["bookmark", "bookmarked"]
+          : ["bookmark"];
       },
       label() {
-        if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
-          const bookmarkedPosts = this.get("topic.bookmarked_posts");
+        if (!this.topic.isPrivateMessage || this.site.mobileView) {
+          const bookmarkedPosts = this.topic.bookmarked_posts;
           const bookmarkedPostsCount = bookmarkedPosts
             ? bookmarkedPosts.length
             : 0;
@@ -95,7 +96,7 @@ export default {
         }
       },
       translatedTitle() {
-        const bookmarkedPosts = this.get("topic.bookmarked_posts");
+        const bookmarkedPosts = this.topic.bookmarked_posts;
         if (!bookmarkedPosts || bookmarkedPosts.length === 0) {
           return I18n.t("bookmarked.help.bookmark");
         } else if (bookmarkedPosts.length === 1) {
