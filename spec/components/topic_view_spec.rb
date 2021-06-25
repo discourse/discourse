@@ -419,8 +419,7 @@ describe TopicView do
         topic_view = TopicView.new(topic.id, user)
 
         bookmarked_posts = topic_view.bookmarked_posts
-        first = bookmarked_posts.first
-        second = bookmarked_posts[1]
+        first, second = bookmarked_posts
         expect(first[:post_id]).to eq(bookmark1.post_id)
         expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
         expect(second[:post_id]).to eq(bookmark2.post_id)
@@ -434,8 +433,7 @@ describe TopicView do
           topic.reload
 
           bookmarked_posts = topic_view.bookmarked_posts
-          first = bookmarked_posts.first
-          second = bookmarked_posts[1]
+          first, second = bookmarked_posts
           expect(first[:post_id]).to eq(bookmark1.post_id)
           expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
           expect(second[:post_id]).to eq(bookmark2.post_id)
