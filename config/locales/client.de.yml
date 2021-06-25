@@ -159,7 +159,7 @@ de:
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     software_update_prompt:
-      message: "Wir haben diese Website aktualisiert. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
+      message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
       dismiss: "Verwerfen"
     bootstrap_mode_enabled:
       one: "Damit du mit deiner Website einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert hat."
@@ -1137,7 +1137,7 @@ de:
         enable: "Zwei-Faktor-Authentifizierung verwalten"
         disable_all: "Alle deaktivieren"
         forgot_password: "Passwort vergessen?"
-        confirm_password_description: "Bitte bestätige dein Passwort um fortzufahren"
+        confirm_password_description: "Bitte bestätige dein Passwort, um fortzufahren"
         name: "Name"
         label: "Code"
         rate_limit: "Bitte warte ein wenig, bevor du es mit einem anderen Authentifizierungscode versuchst."
@@ -1148,7 +1148,7 @@ de:
         short_description: |
           Schütze dein Konto mit Einweg-Sicherheitscodes.
         extended_description: |
-          Zwei-Faktor-Authentifizierung erhöht die Sicherheit deines Kontos, indem zusätzlich zum Passwort ein einmalig gültiger Code erforderlich ist. Codes können auf <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+android" target='_blank'>Android</a> und <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+iOS">iOS</a> Geräten generiert werden.
+          Zwei-Faktor-Authentifizierung erhöht die Sicherheit deines Kontos, indem zusätzlich zum Passwort ein einmalig gültiger Code erforderlich ist. Codes können auf <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+android" target='_blank'>Android</a>- und <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+iOS">iOS</a>-Geräten generiert werden.
         oauth_enabled_warning: "Bitte beachte, dass soziale Anmeldemethoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert wurde."
         use: "Benutze die Authentifizierungs-App"
         enforced_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren, um auf die Website zugreifen zu können."
@@ -1156,26 +1156,26 @@ de:
         disable_confirm: "Sollen wirklich alle Methoden zur Zwei-Faktor-Authentifizierung deaktiviert werden?"
         save: "Speichern"
         edit: "Bearbeiten"
-        edit_title: "Authenticator bearbeiten"
+        edit_title: "Authentifikator bearbeiten"
         edit_description: "Authentifikator-Name"
         enable_security_key_description: |
-          Wenn du deinen <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">Hardware-Sicherheitsschlüssel</a> vorbereitet hast, klicke unten auf Registrieren.
+          Wenn du deinen <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">Hardware-Sicherheitsschlüssel</a> vorbereitet hast, klicke unten auf „Registrieren“.
         totp:
           title: "Token-basierte Authentifikatoren"
           add: "Authentifikator hinzufügen"
           default_name: "Mein Authentifikator"
-          name_and_code_required_error: "Du musst einen Namen und den Code aus deiner Authentifizierungs-App angeben."
+          name_and_code_required_error: "Du musst einen Namen und den Code aus deiner Authentifikator-App angeben."
         security_key:
           register: "Registrieren"
           title: "Sicherheitsschlüssel"
           add: "Sicherheitsschlüssel hinzufügen"
           default_name: "Hauptsicherheitsschlüssel"
           not_allowed_error: "Der Registrierungsvorgang für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
-          already_added_error: "Du hast diesen Sicherheitsschlüssel bereits registriert. Du musst Ihn nicht erneut registrieren."
+          already_added_error: "Du hast diesen Sicherheitsschlüssel bereits registriert. Du musst ihn nicht erneut registrieren."
           edit: "Bearbeite den Sicherheitsschlüssel"
           save: "Speichern"
           edit_description: "Name des Sicherheitsschlüssels"
-          name_required_error: "Ein wird ein Name für den Sicherheitsschlüssel benötigt."
+          name_required_error: "Du musst einen Namen für deinen Sicherheitsschlüssel angeben."
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -1186,7 +1186,7 @@ de:
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
       add_email:
         title: "E-Mail hinzufügen"
-        add: "Hinzufügen"
+        add: "hinzufügen"
       change_email:
         title: "E-Mail-Adresse ändern"
         taken: "Entschuldige, diese E-Mail-Adresse ist nicht verfügbar."
@@ -1557,8 +1557,8 @@ de:
     home: "Startseite"
     read_only_mode:
       enabled: "Diese Website befindet sich im Nur-Lesen-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von Likes und Durchführen einiger weiterer Aktionen ist derzeit nicht möglich."
-      login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
-      logout_disabled: "Die Abmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
+      login_disabled: "Die Anmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
+      logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_and_posts_notice_MF: >-
       Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentTopics, plural, one {ist <strong>#</strong> Thema} other {sind <strong>#</strong> Themen}} und {currentPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredTopics, plural, one {<strong>#</strong> Thema} other {<strong>#</strong> Themen}} und {requiredPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
     too_few_topics_notice_MF: >-
@@ -1566,10 +1566,10 @@ de:
     too_few_posts_notice_MF: >-
       Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentPosts, plural, one {ist <strong>#</strong> Beitrag} other {sind <strong>#</strong> Beiträge}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# errors/hour}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}} erreicht."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehler/Minute}} erreicht."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}} überschritten."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehler/Minute}} überschritten."
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} erreicht."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} überschritten."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} überschritten."
     learn_more: "mehr erfahren…"
     first_post: Erster Beitrag
     mute: Stummschalten
@@ -2013,14 +2013,14 @@ de:
         one: "%{count} Nachricht in deinem %{group_name} Posteingang"
         other: "%{count} Nachrichten in deinem %{group_name} Posteingang"
       popup:
-        mentioned: '%{username} hat dich in "%{topic}" - %{site_title} erwähnt'
-        group_mentioned: '%{username} hat dich in "%{topic}" - %{site_title} erwähnt'
-        quoted: '%{username} hat dich in "%{topic}" - %{site_title} zitiert'
-        replied: '%{username} hat dir in "%{topic}" - %{site_title} geantwortet'
-        posted: '%{username} hat in "%{topic}" - %{site_title} einen Beitrag verfasst'
+        mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
+        group_mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
+        quoted: '%{username} hat dich zitiert in „%{topic}“ – %{site_title}'
+        replied: '%{username} hat dir geantwortet in „%{topic}“ – %{site_title}'
+        posted: '%{username} hat geschrieben in „%{topic}“ – %{site_title}'
         private_message: '%{username} hat dir eine Nachricht geschickt in „%{topic}“ – %{site_title}'
-        linked: '%{username} hat in "%{topic}" - %{site_title} einen Beitrag von dir verlinkt'
-        watching_first_post: '%{username} hat ein neues Thema "%{topic}" - %{site_title} erstellt'
+        linked: '%{username} hat deinen Beitrag verlinkt in „%{topic}“ – %{site_title}'
+        watching_first_post: '%{username} hat ein neues Thema „%{topic}“ erstellt – %{site_title}'
         confirm_title: "Benachrichtigungen aktiviert – %{site_title}"
         confirm_body: "Erfolgreich! Benachrichtigungen wurden aktiviert."
         custom: "Benachrichtigung von %{username} auf %{site_title}"
@@ -3206,7 +3206,7 @@ de:
         this_week: "Woche"
         today: "Heute"
         other_periods: "siehe oben:"
-    browser_update: 'Leider ist <a href="https://www.discourse.org/faq/#browser">Ihr Browser zu alt, um auf dieser Seite zu arbeiten</a>. Bitte <a href="https://browsehappy.com">aktualisieren Sie Ihren Browser</a> , um Inhalte korrekt anzuzeigen, einloggen und antworten zu können.'
+    browser_update: 'Leider ist <a href="https://www.discourse.org/faq/#browser">dein Browser zu alt, um auf dieser Website zu funktionieren</a>. Bitte <a href="https://browsehappy.com">aktualisiere deinen Browser</a>, um Inhalte korrekt anzuzeigen, dich anzumelden und zu antworten.'
     permission_types:
       full: "Erstellen / Antworten / Ansehen"
       create_post: "Antworten / Ansehen"
@@ -3458,7 +3458,7 @@ de:
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
     forced_anonymous: "Aufgrund einer außergewöhnlichen Last wird dies vorübergehend so angezeigt, wie es ein nicht angemeldeter Benutzer sehen würde."
-    forced_anonymous_login_required: "Die Website ist extrem belastet und kann derzeit nicht geladen werden. Versuchen Sie es in ein paar Minuten erneut."
+    forced_anonymous_login_required: "Die Seite befindet sich unter extremer Belastung und kann zu diesem Zeitpunkt nicht geladen werden. Versuche es in ein paar Minuten erneut."
     footer_nav:
       back: "Zurück"
       forward: "Vorwärts"
@@ -3721,7 +3721,7 @@ de:
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."
-        instruction: "Webhooks erlauben es Discourse externe Dienste zu benachrichtigen, wenn bestimmte Ereignisse auf der Plattform auftreten. Wird ein Webhook getriggert, so wird ein POST Request an die angegebenen URLs gesendet."
+        instruction: "Webhooks erlauben es Discourse, externe Dienste zu benachrichtigen, wenn bestimmte Ereignisse auf der Plattform auftreten. Wird ein Webhook getriggert, so wird eine POST-Anfrage an die angegebenen URLs gesendet."
         detailed_instruction: "Wenn das ausgewählte Ereignis eintritt wird ein POST Request an die angegebenen URLs versandt."
         new: "Neuer Webhook"
         create: "Erstellen"
@@ -3903,7 +3903,7 @@ de:
         button_title: "Einladungen versenden"
       customize:
         title: "Anpassen"
-        long_title: "Anpassungen"
+        long_title: "Website-Anpassungen"
         preview: "Vorschau"
         explain_preview: "Seite mit diesem Theme anschauen"
         save: "Speichern"
@@ -4279,10 +4279,10 @@ de:
             delete_user: "Benutzer löschen"
             change_trust_level: "Vertrauensstufe ändern"
             change_username: "Benutzernamen ändern"
-            change_site_setting: "Einstellungen ändern"
+            change_site_setting: "Website-Einstellungen ändern"
             change_theme: "Theme wechseln"
             delete_theme: "Theme löschen"
-            change_site_text: "Text ändern"
+            change_site_text: "Website-Text ändern"
             suspend_user: "Benutzer sperren"
             unsuspend_user: "Benutzer entsperren"
             removed_suspend_user: "Benutzer sperren (entfernt)"
@@ -4921,9 +4921,9 @@ de:
         alt: "benutzerdefinierte Emoji-Vorschau"
         delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
       embedding:
-        get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem hinzufügen des Host."
+        get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
-        sample: "Benutze den folgenden HTML code für deine Site um Discourse Beiträge zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Site in die du sie einbetten möchtest."
+        sample: "Verwende den folgenden HTML-Code auf deiner Website, um Discourse-Themen zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Seite, auf der du ihn einbettest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
         class_name: "Klassenname"
