@@ -12,7 +12,7 @@ module DiscourseAutomation
     attributes :last_updated_by
 
     def last_updated_by
-      BasicUserSerializer.new(User.find(object.last_updated_by_id), root: false).as_json
+      BasicUserSerializer.new(User.find_by(id: object.last_updated_by_id) || Discourse.system_user, root: false).as_json
     end
 
     def script
