@@ -2446,35 +2446,35 @@ ja:
         see: "閲覧"
         reply: "返信"
       images: "画像"
-      email_in: "カスタムメールアドレス:"
+      email_in: "カスタム受信メールアドレス:"
       email_in_allow_strangers: "登録されていない匿名のユーザーからのメールを受け取る"
-      email_in_disabled: "メールでの新規投稿は、サイトの設定で無効になっています。メールでの新規投稿を有効にするには"
+      email_in_disabled: "メールによる新しいトピックの投稿は、サイトの設定で無効になっています。メールによる新しいトピックの投稿を有効にするには、 "
       email_in_disabled_click: '"email in"設定を有効にしてください'
-      allow_badges_label: "このカテゴリでバッジが付与されることを許可"
-      edit_permissions: "パーミッションを編集"
+      allow_badges_label: "このカテゴリでバッジの付与を許可する"
+      edit_permissions: "権限を編集"
       review_group_name: "グループ名"
       this_year: "今年"
-      default_position: "デフォルトポジション"
-      position_disabled: "カテゴリはアクティビティで並び替えられます。カテゴリ一覧の順番を制御するには"
-      position_disabled_click: '「固定されたカテゴリーの位置付け」の設定を有効にしてください。'
+      default_position: "デフォルトの位置"
+      position_disabled: "カテゴリはアクティビティ順で表示されます。リスト内のカテゴリの順番を管理するには、 "
+      position_disabled_click: '「カテゴリの位置の固定」の設定を有効にしてください。'
       parent: "親カテゴリ"
       notifications:
         watching:
           title: "ウォッチ中"
         watching_first_post:
-          title: "最初の投稿をウォッチする"
+          title: "最初の投稿をウォッチ中"
         tracking:
           title: "追跡中"
         regular:
-          title: "デフォルト"
+          title: "通常"
           description: "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
         muted:
-          title: "ミュート中"
+          title: "ミュート"
       search_priority:
         options:
           normal: "通常"
-          ignore: "無視する"
-          high: "高い"
+          ignore: "無視"
+          high: "高"
       sort_options:
         default: "デフォルト"
         likes: "いいね！"
@@ -2483,57 +2483,57 @@ ja:
         activity: "アクティビティ"
         posters: "投稿者"
         category: "カテゴリ"
-        created: "作成者"
+        created: "作成"
       settings_sections:
         general: "一般"
-        email: "Eメール"
+        email: "メール"
     flagging:
       title: "報告していただきありがとうございます。"
       action: "投稿を通報"
       take_action_options:
         default:
-          title: "アクションをする"
-          details: "誰かが通報するのを待つのではなく、通報しましょう。"
+          title: "対応する"
+          details: "誰かの通報を待たずに、今すぐ通報する"
         suspend:
-          title: "凍結中のユーザー"
+          title: "ユーザーを凍結"
       notify_action: "メッセージ"
       official_warning: "運営スタッフからの警告"
-      delete_spammer: "スパムの削除"
-      yes_delete_spammer: "はい、スパムを削除する"
-      ip_address_missing: "(N/A)"
-      hidden_email_address: "(hidden)"
-      submit_tooltip: "プライベートの通報を送信する"
-      take_action_tooltip: "誰かが通報するのを待つのではなく、通報しましょう。"
+      delete_spammer: "迷惑行為者を削除"
+      yes_delete_spammer: "はい、迷惑行為者を削除する"
+      ip_address_missing: "(該当なし)"
+      hidden_email_address: "(非表示)"
+      submit_tooltip: "非公開の通報を送信する"
+      take_action_tooltip: "誰かの通報を待たずに、今すぐ通報する"
       cant: "現在、この投稿を通報することはできません。"
-      notify_staff: "スタッフに通報"
+      notify_staff: "非公開でスタッフに通報"
       formatted_name:
-        off_topic: "オフトピック"
+        off_topic: "話題に関係ない"
         inappropriate: "不適切"
-        spam: "スパム"
-      custom_placeholder_notify_user: "具体的に、建設的に、そして常に親切にしましょう。"
-      custom_placeholder_notify_moderators: "特にどのような問題が発生しているか記入して下さい。可能なら、関連するリンクなどを教えて下さい。"
+        spam: "迷惑コンテンツ"
+      custom_placeholder_notify_user: "具体的に、建設的に、そして常に親切に説明しましょう。"
+      custom_placeholder_notify_moderators: "具体的にどのような問題が発生しているか説明してください。可能なら、関連するリンクや例を含めてください。"
       custom_message:
         at_least:
-          other: "少なくとも%{count}文字入力してください"
+          other: "%{count} 文字以上を入力してください"
         more:
-          other: "あと%{count}文字..."
+          other: "あと %{count}..."
         left:
-          other: "残り%{count}文字"
+          other: "残り %{count}"
     flagging_topic:
       title: "報告していただきありがとうございます。"
       action: "トピックを通報"
       notify_action: "メッセージ"
     topic_map:
-      title: "トピックの情報"
+      title: "トピックの要約"
       participants_title: "よく投稿する人"
       links_title: "人気のリンク"
-      links_shown: "さらにリンクを表示する"
+      links_shown: "リンクをもっと表示..."
       clicks:
         other: "%{count} クリック"
     post_links:
-      about: "この投稿のリンクをもっと見る"
+      about: "この投稿のリンクをもっと表示"
       title:
-        other: "%{count} リンク"
+        other: "他 %{count}"
     topic_statuses:
       warning:
         help: "これは運営スタッフからの警告です。"
@@ -2544,26 +2544,26 @@ ja:
       archived:
         help: "このトピックはアーカイブされています。凍結状態のため一切の変更ができません"
       locked_and_archived:
-        help: "このトピックは閉じられ、アーカイブされます。新しい返信を受け入れず、変更することはできません"
+        help: "このトピックはクローズされ、アーカイブされています。新しい返信を受け入れず、変更することはできません"
       unpinned:
-        title: "固定表示されていません"
-        help: "このトピックは固定表示されていません。 既定の順番で表示されます"
+        title: "固定解除"
+        help: "このトピックは固定解除されています。 通常の順番で表示されます"
       pinned_globally:
-        title: "全体で固定表示されました"
-        help: "このトピックは全体で固定表示されています。常に新着とカテゴリのトップに表示されます"
+        title: "全体に固定"
+        help: "このトピックは全体に固定されています。常に最新とカテゴリのトップに表示されます"
       pinned:
-        title: "固定表示"
-        help: "このトピックは固定表示されています。常にカテゴリのトップに表示されます"
+        title: "固定"
+        help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
       unlisted:
-        help: "このトピックはリストされていません。トピックリストには表示されません。直接リンクでのみアクセス可能です"
+        help: "このトピックは非表示です。トピックリストには表示されません。直リンクでのみアクセス可能です"
     posts: "投稿"
-    original_post: "オリジナルの投稿"
-    views: "閲覧"
+    original_post: "元の投稿"
+    views: "表示"
     views_lowercase:
-      other: " 閲覧"
+      other: "表示"
     replies: "返信"
     views_long:
-      other: "このトピックは%{number}回閲覧されました"
+      other: "このトピックは %{number} 回表示されました"
     activity: "アクティビティ"
     likes: "いいね！"
     likes_lowercase:
@@ -2572,41 +2572,41 @@ ja:
     users_lowercase:
       other: "ユーザー"
     category_title: "カテゴリ"
-    changed_by: "by %{author}"
+    changed_by: "%{author}"
     raw_email:
       title: "受信メール"
-      not_available: "利用不可"
-    categories_list: "カテゴリ一覧"
+      not_available: "利用できません！"
+    categories_list: "カテゴリリスト"
     filters:
       with_topics: "%{filter} トピック"
       with_category: "%{filter} %{category} トピック"
       latest:
         title: "最新"
         title_with_count:
-          other: "最新の投稿 (%{count})"
-        help: "最新のトピック"
+          other: "最新 (%{count})"
+        help: "最近の投稿のあるトピック"
       read:
         title: "既読"
-        help: "既読のトピックを、最後に読んだ順に表示"
+        help: "既読のトピックを最後に読んだ順に表示する"
       categories:
         title: "カテゴリ"
         title_in: "カテゴリ - %{categoryName}"
-        help: "カテゴリ別全トピック"
+        help: "カテゴリ別トピック"
       unread:
         title: "未読"
         title_with_count:
           other: "未読 (%{count})"
-        help: "未読投稿のあるトピック"
+        help: "未読の投稿のあるウォッチ中または追跡中のトピック"
         lower_title_with_count:
-          other: "%{count} 未読"
+          other: "未読 %{count}"
       new:
         lower_title_with_count:
-          other: "%{count}件"
-        lower_title: "NEW"
+          other: "新着 %{count}"
+        lower_title: "新着"
         title: "新着"
         title_with_count:
           other: "新着 (%{count})"
-        help: "最近投稿されたトピック"
+        help: "数日以内に作成されたトピック"
       posted:
         title: "自分の投稿"
         help: "投稿したトピック"
@@ -2619,30 +2619,30 @@ ja:
           other: "%{categoryName} (%{count})"
         help: "%{categoryName} カテゴリの最新トピック"
       top:
-        title: "トップ"
+        title: "人気"
         help: "昨年、先月、先週、または昨日で最もアクティブだったトピック"
         all:
-          title: "すべて"
+          title: "全期間"
         yearly:
-          title: "年ごと"
+          title: "年間"
         quarterly:
-          title: "3ヶ月おき"
+          title: "四半期"
         monthly:
-          title: "毎月"
+          title: "月間"
         weekly:
-          title: "毎週"
+          title: "週間"
         daily:
-          title: "毎日"
-        all_time: "すべて"
-        this_year: "年"
+          title: "日間"
+        all_time: "全期間"
+        this_year: "今年"
         this_quarter: "今季"
-        this_month: "月"
-        this_week: "週"
+        this_month: "今月"
+        this_week: "今週"
         today: "今日"
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
-      readonly: "閲覧できる"
+      readonly: "閲覧"
     lightbox:
       download: "ダウンロード"
       counter: "%curr% / %total%"
@@ -2698,22 +2698,22 @@ ja:
         mark_watching: "%{shortcut} トピックをウォッチ"
         print: "%{shortcut} トピックを印刷"
     badges:
-      granted_on: "%{date}にゲット!"
-      others_count: "その他のバッジ所有者(%{count})"
+      granted_on: "%{date} にゲット！"
+      others_count: "このバッジを獲得した他のユーザー (%{count})"
       title: バッジ
       badge_count:
-        other: "%{count}個のバッジ"
+        other: "%{count} 個のバッジ"
       more_badges:
-        other: "+%{count} リンク"
-      select_badge_for_title: プロフィールの肩書きに付けるバッジを選んでください
-      none: "（なし）"
+        other: "他 %{count}"
+      select_badge_for_title: タグラインとして使用するバッジを選択
+      none: "(なし)"
       badge_grouping:
         getting_started:
           name: はじめの一歩
         community:
           name: コミュニティ
         trust_level:
-          name: トラストレベル
+          name: 信頼レベル
         other:
           name: その他
         posting:
@@ -2725,17 +2725,17 @@ ja:
       selector_no_tags: "タグなし"
       changed: "タグを変更しました:"
       tags: "タグ"
-      choose_for_topic: "タグ(オプション)"
+      choose_for_topic: "オプションのタグ"
       add_synonyms: "追加"
       delete_tag: "タグを削除"
       rename_tag: "タグの名前を変更"
-      rename_instructions: "このタグの新しい名前を選択:"
+      rename_instructions: "タグの新しい名前を選択:"
       sort_by: "並べ替え:"
       sort_by_count: "カウント"
       sort_by_name: "名前"
       manage_groups: "タグのグループを管理"
-      upload_successful: "タグのアップロードに成功しました"
-      delete_unused: "使われていないタグを削除"
+      upload_successful: "タグを正常にアップロードしました"
+      delete_unused: "未使用のタグを削除"
       cancel_delete_unused: "キャンセル"
       filters:
         without_category: "%{filter} %{tag} トピック"
@@ -2743,35 +2743,35 @@ ja:
         watching:
           title: "ウォッチ中"
         watching_first_post:
-          title: "最初の投稿をウォッチする"
-          description: "このタグが付けられた新しいトピックは通知されますが、トピックへの返信は通知されません。"
+          title: "最初の投稿をウォッチ中"
+          description: "このタグの新着トピックは通知されますが、トピックへの返信は通知されません。"
         tracking:
           title: "追跡中"
         regular:
           title: "通常"
           description: "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
         muted:
-          title: "通知しない"
+          title: "ミュート"
       groups:
         title: "タグのグループ"
         new: "新しいグループ"
         new_name: "新しいタグのグループ"
-        save: "保存する"
-        delete: "削除する"
+        save: "保存"
+        delete: "削除"
         confirm_delete: "このタググループを削除してもよろしいですか？"
         everyone_can_use: "全員がタグを使用できます。"
       topics:
         none:
           unread: "未読のトピックはありません。"
           new: "新着トピックはありません。"
-          read: "あなたはまだ、どのトピックも読んでいません。"
-          posted: "あなたはまだ、どのトピックにも投稿していません。"
+          read: "まだトピックを一つも読んでいません。"
+          posted: "まだトピックを一つも投稿していません。"
           latest: "最新のトピックはありません。"
           bookmarks: "ブックマークしたトピックはありません。"
-          top: "トップトピックはありません。"
+          top: "人気のトピックはありません。"
     invite:
-      custom_message: "<a href>カスタムメッセージ</a>を作成して、あなたの招待状をもう少し個人的なものにします。"
-      custom_message_placeholder: "メッセージを入力"
+      custom_message: "<a href>カスタムメッセージ</a>で、招待状をもう少し個人的にします。"
+      custom_message_placeholder: "カスタムメッセージを入力"
     footer_nav:
       back: "戻る"
       share: "共有"
@@ -2779,9 +2779,9 @@ ja:
     do_not_disturb:
       title: "おやすみモード..."
       label: "おやすみモード"
-      remaining: "残り%{remaining}"
+      remaining: "残り %{remaining}"
       options:
-        half_hour: "30分"
+        half_hour: "30 分"
         one_hour: "１時間"
         two_hours: "２時間"
         tomorrow: "明日まで"
@@ -2797,19 +2797,19 @@ ja:
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:
-      title: "Discourseの管理者"
-      moderator: "モデレータ"
+      title: "Discourse の管理者"
+      moderator: "モデレーター"
       tags:
         remove_muted_tags_from_latest:
-          always: "常に含める"
-          never: "追跡しない"
+          always: "常に"
+          never: "削除しない"
       dashboard:
         title: "ダッシュボード"
-        version: "Version"
+        version: "バージョン"
         up_to_date: "最新のバージョンです!"
-        critical_available: "重要度の高いアップデートが存在します。"
-        updates_available: "アップデートが存在します。"
-        please_upgrade: "今すぐアップデートしてください!"
+        critical_available: "重大なアップデートがあります。"
+        updates_available: "アップデートがあります。"
+        please_upgrade: "アップグレードしてください！"
         no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         stale_data: "更新のチェックが最近行われておりません。Sidekiqが動作しているか確認してください。"
         version_check_pending: "アップロードしたてです。素晴らしいです！ "
