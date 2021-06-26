@@ -2810,9 +2810,9 @@ ja:
         critical_available: "重大なアップデートがあります。"
         updates_available: "アップデートがあります。"
         please_upgrade: "アップグレードしてください！"
-        no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
-        stale_data: "更新のチェックが最近行われておりません。Sidekiqが動作しているか確認してください。"
-        version_check_pending: "アップロードしたてです。素晴らしいです！ "
+        no_check_performed: "アップデートの確認が行われていません。sidekiq が起動していることを確認してください。"
+        stale_data: "最近、更新のチェックが行われていません。sidekiq が動作しているか確認してください。"
+        version_check_pending: "最近、アップグレードしましたね。素晴らしいです！"
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"
@@ -2821,7 +2821,7 @@ ja:
         last_checked: "最終チェック"
         refresh_problems: "更新"
         no_problems: "問題は見つかりませんでした。"
-        moderators: "モデレータ:"
+        moderators: "モデレーター:"
         admins: "管理者:"
         suspended: "停止中:"
         private_messages_short: "メッセージ"
@@ -2830,14 +2830,14 @@ ja:
         uploads: "アップロード"
         backups: "バックアップ"
         traffic_short: "トラフィック"
-        traffic: "Application web requests"
-        page_views: "閲覧数"
-        page_views_short: "閲覧数"
+        traffic: "アプリケーション Web リクエスト"
+        page_views: "ページビュー"
+        page_views_short: "ページビュー"
         show_traffic_report: "詳細なトラフィックレポートを表示"
         general_tab: "一般"
         security_tab: "セキュリティ"
-        report_filter_any: "任意"
-        disabled: 利用不可
+        report_filter_any: "すべて"
+        disabled: 無効化
         reports:
           today: "今日"
           yesterday: "昨日"
@@ -2860,89 +2860,89 @@ ja:
             category:
               label: カテゴリ
       commits:
-        latest_changes: "最新の更新内容:"
-        by: "by"
+        latest_changes: "最新の更新: 頻繁に更新してください！"
+        by: "コミット:"
       groups:
         new:
           title: "新しいグループ"
           name:
             too_short: "グループ名が短すぎます"
-            blank: "グループ名は空白にできません"
+            blank: "グループ名は空にできません"
         manage:
           interaction:
-            email: Eメール
-            incoming_email: "カスタムメールアドレス"
+            email: メール
+            incoming_email: "カスタム受信メールアドレス"
             incoming_email_placeholder: "メールアドレスを入力"
-            visibility: 可視性
+            visibility: 表示状態
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
-              public: "だれでも"
+              public: "全員"
           membership:
             automatic: 自動
-            trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与されるトラストレベル："
+            trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与される信頼トレベル:"
             trust_levels_none: "なし"
             automatic_membership_email_domains: "メールのドメインがこのリストにあるものと完全に一致する場合、そのメールのユーザーは自動的にこのグループに追加されます。"
             primary_group: "自動的にプライマリーグループとして設定する"
         name_placeholder: "グループ名、スペースなし、ユーザー名のルールと同じ"
         primary: "プライマリーグループ"
-        no_primary: "（プライマリーグループなし）"
+        no_primary: "(プライマリーグループなし)"
         title: "グループ"
         edit: "グループの編集"
         refresh: "更新"
-        about: "グループメンバーとグループ名を編集"
+        about: "グループのメンバーシップとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
-        delete_confirm: "このグループを削除しますか?"
-        delete_failed: "グループの削除に失敗しました。自動作成グループを削除することはできません。"
+        delete_confirm: "このグループを削除しますか？"
+        delete_failed: "グループを削除できません。自動作成グループを削除することはできません。"
         add: "追加"
         custom: "カスタム"
-        automatic: "自動で作成されたグループ"
-        default_title: "デフォルトタイトル"
+        automatic: "自動作成"
+        default_title: "デフォルトのタイトル"
         default_title_description: "グループ内のすべてのユーザーに適用されます"
         group_owners: オーナー
         add_owners: オーナーを追加
       api:
-        generate_master: "マスターAPIキーを生成"
-        none: "現在アクティブなAPIキーが存在しません。"
+        generate_master: "マスター API キーを生成"
+        none: "現在アクティブな API キーが存在しません。"
         user: "ユーザー"
         title: "API"
-        key: "Key"
-        created: 作成者
-        generate: "API キーを生成"
-        revoke: "無効化"
+        key: "キー"
+        created: 作成
+        generate: "生成"
+        revoke: "取り消す"
         all_users: "すべてのユーザー"
         show_details: 詳細
         description: 説明
         save: 保存
-        continue: 続く
+        continue: 続行
         scopes:
           action: アクション
       web_hooks:
-        title: "Webhooks"
-        none: "現在、Webhooksはありません。"
-        save: "セーブ"
-        destroy: "削除する"
+        title: "Webhook"
+        none: "現在、Webhook はありません。"
+        save: "保存"
+        destroy: "削除"
         description: "説明"
         active: "アクティブ"
         delivery_status:
           failed: "失敗"
-          disabled: "利用不可"
+          disabled: "無効化"
         events:
           request: "リクエスト"
-          headers: "ヘッダ"
+          headers: "ヘッダー"
           body: "本文"
           ping: "Ping"
-          timestamp: "作成者"
+          timestamp: "作成"
           actions: "アクション"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"
         name: "名前"
-        none_installed: "インストール済みのプラグインはありません"
+        none_installed: "インストール済みのプラグインはありません。"
         version: "バージョン"
-        enabled: "状態"
-        is_enabled: "有効"
-        not_enabled: "無効"
+        enabled: "有効化？"
+        is_enabled: "はい"
+        not_enabled: "いいえ"
         change_settings: "設定を変更"
         change_settings_short: "設定"
         howto: "プラグインをインストールするには？"
@@ -2951,17 +2951,17 @@ ja:
         menu:
           backups: "バックアップ"
           logs: "ログ"
-        none: "バックアップはありません"
+        none: "バックアップはありません。"
         read_only:
           enable:
             title: "閲覧専用モードを有効にする"
-            label: "閲覧専用モードを有効"
+            label: "閲覧専用モードを有効化"
             confirm: "閲覧専用モードを有効にしてもよろしいですか？"
           disable:
             title: "閲覧専用モードを無効にする"
-            label: "閲覧専用モードを無効"
+            label: "閲覧専用モードを無効化"
         logs:
-          none: "ログがありません"
+          none: "まだログがありません..."
         columns:
           filename: "ファイル名"
           size: "サイズ"
@@ -2970,71 +2970,71 @@ ja:
           title: "このインスタンスにバックアップをアップロード"
           uploading: "アップロード中..."
           uploading_progress: "アップロード中... %{progress}%"
-          success: "'%{filename}'のアップロードに成功しました。このファイルは現在処理中で、リストに表示されるまでに最大数分程度かかることがあります。"
-          error: "ファイル '%{filename}'のアップロード中にエラーが発生しました: %{message}"
+          success: "'%{filename}' のアップロードに成功しました。このファイルは現在処理中で、リストに表示されるまでに数分程度かかることがあります。"
+          error: "ファイル '%{filename}' のアップロード中にエラーが発生しました: %{message}"
         operations:
           is_running: "バックアップ作業を実行中..."
-          failed: "%{operation}失敗しました。ログをチェックください。"
+          failed: "%{operation}に失敗しました。ログを確認してください。"
           cancel:
             label: "キャンセル"
             title: "バックアップ作業をキャンセルする"
             confirm: "実行中のバックアップをキャンセルしてもよろしいですか？"
           backup:
             label: "バックアップ"
-            title: "バックアップを行います"
-            confirm: "新しくバックアップを行ってもよろしいですか？"
-            without_uploads: "はい（アップロードデータを含めない）"
+            title: "バックアップの作成"
+            confirm: "新しいバックアップを開始しますか？"
+            without_uploads: "はい (アップロードを含めない)"
           download:
             label: "ダウンロード"
             title: "ダウンロードリンクをメールで送る"
             alert: "バックアップのダウンロードリンクがメールで送られました。"
           destroy:
-            title: "バックアップを削除"
-            confirm: "このバックアップを削除しますか？"
+            title: "バックアップの削除"
+            confirm: "このバックアップを削除してもよろしいですか？"
           restore:
-            is_disabled: "バックアップ復元を無効にされています。"
+            is_disabled: "復元はサイト設定で無効になっています。"
             label: "復元"
-            title: "バックアップを復元"
+            title: "バックアップの復元"
             confirm: "バックアップを復元してもよろしいですか？"
           rollback:
             label: "ロールバック"
-            title: "データベースを前回の状態に戻します"
+            title: "データベースを前回の状態に戻す"
       export_csv:
-        success: "エクスポートを開始しました。処理が完了した後、メッセージでお知らせします。"
-        failed: "出力失敗。詳しくはログに参考してください。"
+        success: "エクスポートを開始しました。処理が完了したら、メッセージでお知らせします。"
+        failed: "エクスポートに失敗しました。ログを確認してください。"
         button_text: "エクスポート"
         button_title:
-          user: "全ユーザーリストを CSV 形式でエクスポートします。"
-          staff_action: "スタッフの操作ログをCSV出力"
-          screened_email: "全てのスクリーンメールアドレスをCSV出力"
-          screened_ip: "全てのスクリーンIPリストをCSV出力"
-          screened_url: "全てのスクリーンURLリストをCSV出力"
+          user: "ユーザーの全リストを CSV 形式でエクスポートします。"
+          staff_action: "スタッフの全操作ログを CSV 形式でエクスポートします。"
+          screened_email: "スクリーンメールアドレスの全リストを CSV 形式でエクスポートします。"
+          screened_ip: "スクリーン IP の全リストを CSV 形式でエクスポートします。"
+          screened_url: "スクリーン URL の全リストを CSV 形式でエクスポートします。"
       export_json:
         button_text: "エクスポート"
       invite:
-        button_text: "招待を送信"
-        button_title: "招待を送信"
+        button_text: "招待状を送信"
+        button_title: "招待状を送信"
       customize:
         title: "カスタマイズ"
         long_title: "サイトのカスタマイズ"
         preview: "プレビュー"
         save: "保存"
         new: "新規"
-        new_style: "新しいスタイル"
+        new_style: "新規スタイル"
         delete: "削除"
-        color: "カラー"
+        color: "色"
         opacity: "透明度"
         copy: "コピー"
         copy_to_clipboard: "クリップボードにコピー"
         copied_to_clipboard: "クリップボードにコピーしました"
-        copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
+        copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"
         email_templates:
-          title: "Eメール"
+          title: "メール"
           subject: "件名"
-          multiple_subjects: "このメールのテンプレートは複数の件名があります。"
+          multiple_subjects: "このメールテンプレートには複数の件名があります。"
           body: "本文"
           revert: "変更を元に戻す"
-          revert_confirm: "本当に変更を元に戻しますか?"
+          revert_confirm: "変更を元に戻してよろしいですか？"
         theme:
           theme: "テーマ"
           customize_desc: "カスタマイズ:"
@@ -3050,62 +3050,62 @@ ja:
           upload: "アップロード"
           installed: "インストール済み"
           install_popular: "人気"
-          about_theme: "このサイトについて"
+          about_theme: "テーマについて"
           license: "ライセンス"
-          version: "Version:"
-          enable: "利用できます"
-          disable: "利用できません"
+          version: "バージョン:"
+          enable: "有効化"
+          disable: "無効化"
           check_for_updates: "アップデートを確認"
           updating: "アップデート中..."
           add: "追加"
           scss:
             text: "CSS"
           header:
-            text: "ヘッダ"
+            text: "ヘッダー"
           footer:
             text: "フッター"
           head_tag:
             text: "</head>"
-            title: "</head>タグの前に挿入されるHTML"
+            title: "</head> タグの前に挿入される HTML"
           body_tag:
             text: "</body>"
-            title: "</body>タグの前に挿入されるHTML"
+            title: "</body> タグの前に挿入される HTML"
         colors:
-          title: "カラー"
-          copy_name_prefix: "のコピー"
-          undo: "取り消す"
-          undo_title: "変更を元に戻して、前回保存されたカラーにします"
-          revert: "取り戻す"
+          title: "色"
+          copy_name_prefix: "コピー元:"
+          undo: "元に戻す"
+          undo_title: "変更を元に戻して、前回保存された色にします。"
+          revert: "戻す"
           primary:
             name: "プライマリー"
-            description: "テキスト、アイコンと枠の色"
+            description: "ほとんどのテキスト、アイコン、ボーダー。"
           secondary:
             name: "セカンダリー"
-            description: "メイン背景とボタンのテキスト色"
+            description: "メインの背景色とボタンのテキスト色。"
           tertiary:
-            name: "ターシャリ"
-            description: "リンク、いくつかのボタン、お知らせ、アクセントカラー"
+            name: "ターシャリー"
+            description: "リンク、一部のボタン、通知、およびアクセントカラー。"
           quaternary:
-            name: "クォータナリ"
-            description: "ナビゲーションリンク"
+            name: "クォータナリー"
+            description: "ナビゲーションリンク。"
           header_background:
             name: "ヘッダー背景"
-            description: "ヘッダー背景色"
+            description: "サイトのヘッダー背景色。"
           header_primary:
-            name: "ヘッダープライマリー"
-            description: "サイトヘッダーのテキストとアイコン"
+            name: "ヘッダーのプライマリー"
+            description: "サイトのヘッダーのテキストとアイコン。"
           highlight:
             name: "ハイライト"
-            description: "ページのハイライトされた部分(投稿やトピックなど)"
+            description: "投稿やトピックなど、ページのハイライトされた要素の背景色。"
           danger:
             name: "危険"
-            description: "削除された投稿やトピックのハイライトカラー"
+            description: "投稿やトピックの削除といった操作の強調色。"
           success:
             name: "成功"
-            description: "操作が成功したことを示すために使用します"
+            description: "操作が成功したことを示すために使用します。"
           love:
-            name: "love"
-            description: "「いいね！」ボタンの色"
+            name: "ラブ"
+            description: "「いいね！」ボタンの色。"
         email_style:
           css: "CSS"
       email:
@@ -3113,10 +3113,10 @@ ja:
         settings: "設定"
         templates: "テンプレート"
         sending_test: "テストメールを送信中..."
-        error: "<b>ERROR</b> - %{server_error}"
-        test_error: "テストメールを送れませんでした。メール設定、またはホストをメールコネクションをブロックされていないようを確認してください。"
-        sent: "送信したメール"
-        skipped: "スキップ済み"
+        error: "<b>エラー</b> - %{server_error}"
+        test_error: "テストメールを送信中に問題が発生しました。メール設定を再確認し、ホストがメール接続をブロックしていないことを確認してから、もう一度お試しください。"
+        sent: "送信"
+        skipped: "スキップ"
         bounced: "バウンス"
         received: "受信したメール"
         rejected: "拒否されたメール"

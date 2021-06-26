@@ -2717,18 +2717,18 @@ de:
         too_many_dragged_and_dropped_files:
           one: "Es kann leider nur %{count} Datei gleichzeitig hochgeladen werden."
           other: "Es können leider nur %{count} Dateien gleichzeitig hochgeladen werden."
-        upload_not_authorized: "Entschuldigung, die Datei die du hochladen möchtest ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
+        upload_not_authorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
-        attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
-        attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Dateien herunterladen zu können."
+        attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Anhänge hochladen."
+        attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Anhänge herunterladen zu können."
       cancel_composer:
         confirm: "Was würdest du gerne mit deinem Beitrag machen?"
         discard: "Verwerfen"
         save_draft: "Entwurf für später speichern"
         keep_editing: "Weiter bearbeiten"
       via_email: "dieser Beitrag ist per E-Mail eingetroffen"
-      via_auto_generated_email: "dieser Beitrag ist als automatisch generierte E-Mail eingegangen"
-      whisper: "Dieser Beitrag ist Privat für Moderatoren."
+      via_auto_generated_email: "dieser Beitrag ist per automatisch generierter E-Mail eingegangen"
+      whisper: "dies ist ein privater geflüsterter Beitrag für Moderatoren"
       wiki:
         about: "dieser Beitrag ist ein Wiki"
       archetypes:
@@ -2749,13 +2749,13 @@ de:
         share: "Link zu diesem Beitrag teilen"
         more: "Mehr"
         delete_replies:
-          confirm: "Möchtest du auch die Antworten auf diese Beiträge löschen?"
+          confirm: "Möchtest du auch die Antworten auf diesen Beitrag löschen?"
           direct_replies:
-            one: "Ja, und eine direkte Antwort"
-            other: "Ja, und %{count} direkte Antworten"
+            one: "Ja und %{count} direkte Antwort"
+            other: "Ja und %{count} direkte Antworten"
           all_replies:
-            one: "Ja, und eine Antwort"
-            other: "Ja, und %{count} Antworten"
+            one: "Ja und %{count} Antwort"
+            other: "Ja und alle %{count} Antworten"
           just_the_post: "Nein, nur diesen Beitrag"
         admin: "Administrative Aktionen"
         wiki: "Wiki erstellen"
@@ -2770,21 +2770,21 @@ de:
         lock_post: "Beitrag sperren"
         lock_post_description: "verhindern, dass der Autor den Beitrag bearbeitet"
         unlock_post: "Beitrag entsperren"
-        unlock_post_description: "erlaube, dass der Autor den Beitrag bearbeitet"
+        unlock_post_description: "erlauben, dass der Autor den Beitrag bearbeitet"
         delete_topic_disallowed_modal: "Du hast keine Berechtigung, dieses Thema zu löschen. Wenn du wirklich möchtest, dass es gelöscht wird, melde es mit einer Begründung, um einen Moderator darauf aufmerksam zu machen."
         delete_topic_disallowed: "du hast keine Berechtigung, dieses Thema zu löschen"
         delete_topic_confirm_modal:
-          one: "Dieses Thema hat derzeit mehr als %{count} Aufruf und kann ein beliebtes Suchziel sein. Sind Sie sicher, dass Sie dieses Thema vollständig löschen wollen, anstatt es zu bearbeiten, um es zu verbessern?"
-          other: "Dieses Thema hat derzeit mehr als %{count} Aufrufe und kann ein beliebtes Suchziel sein. Sind Sie sicher, dass Sie dieses Thema vollständig löschen wollen, anstatt es zu bearbeiten, um es zu verbessern?"
+          one: "Dieses Thema hat derzeit mehr als %{count} Aufruf und kann ein beliebtes Suchziel sein. Bist du sicher, dass du dieses Thema komplett löschen möchtest, anstatt es zu bearbeiten, um es zu verbessern?"
+          other: "Dieses Thema hat derzeit mehr als %{count} Aufrufe und kann ein beliebtes Suchziel sein. Bist du sicher, dass du dieses Thema komplett löschen möchtest, anstatt es zu bearbeiten, um es zu verbessern?"
         delete_topic_confirm_modal_yes: "Ja, dieses Thema löschen"
         delete_topic_confirm_modal_no: "Nein, dieses Thema behalten"
         delete_topic_error: "Beim Löschen dieses Themas ist ein Fehler aufgetreten"
         delete_topic: "Thema löschen"
-        add_post_notice: "Team Notiz hinzufügen"
-        change_post_notice: "Team Notiz ändern"
-        delete_post_notice: "Team Notiz löschen"
-        remove_timer: "Stoppuhr entfernen"
-        edit_timer: "Timer bearbeiten"
+        add_post_notice: "Team-Notiz hinzufügen"
+        change_post_notice: "Team-Notiz ändern"
+        delete_post_notice: "Team-Notiz löschen"
+        remove_timer: "Zeitschaltuhr deaktivieren"
+        edit_timer: "Zeitschaltuhr bearbeiten"
       actions:
         people:
           like:
@@ -2802,7 +2802,7 @@ de:
         by_you:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
-          inappropriate: "Du hast das als Unangemessen gemeldet"
+          inappropriate: "Du hast das als „unangemessen“ gemeldet"
           notify_moderators: "Du hast dies den Moderatoren gemeldet"
           notify_user: "Du hast diesem Benutzer eine Nachricht gesendet"
       delete:
@@ -2821,9 +2821,9 @@ de:
           last: "Letzte Überarbeitung"
           hide: "Überarbeitung verstecken"
           show: "Überarbeitung anzeigen"
-          revert: "Auf Revision %{revision} zurücksetzen"
-          edit_wiki: "Bearbeite Wiki"
-          edit_post: "Bearbeite Beitrag"
+          revert: "Auf Überarbeitung %{revision} zurücksetzen"
+          edit_wiki: "Wiki bearbeiten"
+          edit_post: "Beitrag bearbeiten"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
@@ -2833,7 +2833,7 @@ de:
             title: "Zeige die Änderungen nebeneinander an"
             button: "HTML"
           side_by_side_markdown:
-            title: "Zeige die Originaltexte zum Vergleich nebeneinander an"
+            title: "Zeige die Quelltexte zum Vergleich nebeneinander an"
             button: "Quelltext"
       raw_email:
         displays:
@@ -2865,8 +2865,8 @@ de:
             name: "Lesezeichen anheften"
             description: "Das Lesezeichen anheften, damit es oben auf der Liste der Lesezeichen erscheint."
           unpin_bookmark:
-            name: "Lesezeichen lösen"
-            description: "Löse das Lesezeichen. Es wird nicht mehr oben in Deiner Lesezeichenliste angezeigt."
+            name: "Lesezeichen loslösen"
+            description: "Löse das Lesezeichen los. Es wird nicht mehr oben in deiner Lesezeichenliste angezeigt."
       filtered_replies:
         viewing_posts_by: "Zeige %{post_count} Beiträge von"
         viewing_subset: "Einige Antworten sind reduziert"
@@ -2874,13 +2874,13 @@ de:
         post_number: "%{username}, Beitrag #%{post_number}"
         show_all: "Alle anzeigen"
     category:
-      can: "kann&hellip; "
+      can: "kann &hellip; "
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
-      choose: "Kategorie&hellip;"
+      choose: "Kategorie &hellip;"
       edit: "Bearbeiten"
       edit_dialog_title: "Bearbeiten: %{categoryName}"
-      view: "Zeige Themen dieser Kategorie"
+      view: "Zeige Themen in Kategorie"
       back: "Zurück zur Kategorie"
       general: "Allgemeines"
       settings: "Einstellungen"
@@ -2903,19 +2903,19 @@ de:
       create_long: "Eine neue Kategorie erstellen"
       save: "Kategorie speichern"
       slug: "Sprechender Name für URL der Kategorie"
-      slug_placeholder: "Bindestrich getrennte Wörter für URL"
+      slug_placeholder: "(Optional) durch Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       name: "Name der Kategorie"
       description: "Beschreibung"
-      topic: "Themenkategorie"
+      topic: "Thema der Kategorie"
       logo: "Logo für Kategorie"
       background_image: "Hintergrundbild für Kategorie"
-      badge_colors: "Farben von Abzeichen"
+      badge_colors: "Farben des Abzeichens"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
       name_placeholder: "Ein oder maximal zwei Wörter"
-      color_placeholder: "Irgendeine Web-Farbe"
+      color_placeholder: "Beliebige Web-Farbe"
       delete_confirm: "Möchtest du wirklich diese Kategorie löschen?"
       delete_error: "Beim Löschen der Kategorie ist ein Fehler aufgetreten."
       list: "Kategorien auflisten"
@@ -2927,14 +2927,14 @@ de:
       permissions:
         group: "Gruppe"
         see: "Ansehen"
-        reply: "Antworte"
-        create: "Erstelle"
-        no_groups_selected: "Es wurde keinen Gruppen Zugriff gewährt. Diese Kategorie ist nur für Mitarbeiter sichtbar."
-        everyone_has_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe "Jeder" erteilt wurden, um die Berechtigungen einzuschränken.'
+        reply: "Antworten"
+        create: "Erstellen"
+        no_groups_selected: "Es wurde keinen Gruppen Zugriff gewährt. Diese Kategorie ist nur für das Team sichtbar."
+        everyone_has_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe „Jeder“ erteilt wurden, um die Berechtigungen einzuschränken.'
         toggle_reply: "Antwortberechtigung umschalten"
         toggle_full: "Erstellungsberechtigung umschalten"
-        inherited: 'Diese Berechtigung wird von "jedem" vererbt'
-      special_warning: "Warnung: Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen anstatt sie für andere Zwecke zu verwenden."
+        inherited: 'Diese Berechtigung wird von „Jeder“ vererbt'
+      special_warning: "Warnung: Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen, anstatt sie für andere Zwecke zu verwenden."
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
       uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen / Textinhalte</a> geändert werden.'
       pending_permission_change_alert: "Du hast %{group} nicht zu dieser Kategorie hinzugefügt; klicke diese Schaltfläche, um sie zuzufügen."
