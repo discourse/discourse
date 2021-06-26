@@ -2232,7 +2232,7 @@ de:
         title: "In Posteingang verschieben"
         help: "Nachricht in den Posteingang zurück verschieben"
       edit_message:
-        help: "Bearbeite ersten Beitrag dieser Nachricht"
+        help: "Ersten Beitrag dieser Unterhaltung bearbeiten"
         title: "Bearbeiten"
       defer:
         help: "Als ungelesen markieren"
@@ -2242,8 +2242,8 @@ de:
         title: "Auf Profil hervorheben"
       remove_from_profile:
         warning: "Dein Profil hat bereits ein hervorgehobenes Thema. Wenn du fortfährst, wird dieses das bestehende Thema ersetzen."
-        help: "Entferne diesen Link zum Thema aus deinem Profil"
-        title: "Vom Profil entfernen"
+        help: "Entferne den Link zu diesem Thema aus deinem Benutzerprofil"
+        title: "Aus Profil entfernen"
       list: "Themen"
       new: "neues Thema"
       unread: "ungelesen"
@@ -2260,21 +2260,21 @@ de:
         login_required: "Du musst dich anmelden, damit du dieses Thema sehen kannst."
       server_error:
         title: "Thema konnte nicht geladen werden"
-        description: "Entschuldige, wir konnten das Thema, wahrscheinlich wegen eines Verbindungsfehlers, nicht laden. Bitte versuche es erneut. Wenn das Problem bestehen bleibt, gib uns Bescheid."
+        description: "Entschuldige, wir konnten dieses Thema nicht laden, möglicherweise aufgrund eines Verbindungsproblems. Bitte versuche es erneut. Wenn das Problem weiterhin besteht, lass es uns wissen."
       not_found:
         title: "Thema nicht gefunden"
         description: "Entschuldige, wir konnten dieses Thema nicht finden. Wurde es vielleicht von einem Moderator entfernt?"
       total_unread_posts:
-        one: "du hast einen ungelesenen Beitrag in diesem Thema"
+        one: "du hast %{count} ungelesenen Beitrag in diesem Thema"
         other: "du hast %{count} ungelesene Beiträge in diesem Thema"
       unread_posts:
-        one: "Du hast einen ungelesenen, alten Beitrag zu diesem Thema"
-        other: "Du hast %{count} ungelesene, alte Beiträge zu diesem Thema"
+        one: "Du hast %{count} ungelesenen alten Beitrag in diesem Thema"
+        other: "Du hast %{count} ungelesene alte Beiträge in diesem Thema"
       new_posts:
-        one: "Es gibt einen neuen Beitrag zu diesem Thema seit du es das letzte Mal gelesen hast"
-        other: "Es gibt %{count} neue Beiträge zu diesem Thema seit du es das letzte Mal gelesen hast"
+        one: "Es gibt %{count} neuen Beitrag in diesem Thema, seit du es das letzte Mal gelesen hast"
+        other: "Es gibt %{count} neue Beiträge in diesem Thema, seit du es das letzte Mal gelesen hast"
       likes:
-        one: "Es gibt ein Like in diesem Thema"
+        one: "Es gibt %{count} Like in diesem Thema"
         other: "Es gibt %{count} Likes in diesem Thema"
       back_to_list: "Zurück zur Themenliste"
       options: "Themen-Optionen"

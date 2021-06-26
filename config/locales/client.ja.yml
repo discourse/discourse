@@ -1530,12 +1530,12 @@ ja:
       resend_title: "アクティベーションメールを再送"
       change_email: "メールアドレスを変更"
       provide_new_email: "新しいメールアドレスを入力すると、確認メールを再送します。"
-      submit_new_email: "メールアドレスの更新"
-      sent_activation_email_again: "<b>%{currentEmail}</b> にアクティベーションメールを再送信しました。メールが届くまで数分掛かることがあります。 (メールが届かない場合は、迷惑メールフォルダの中をご確認ください)。"
-      sent_activation_email_again_generic: "アクティベーションメールを送りました。届くのに少し時間がかかるかもしれません。スパムフォルダーも確認してください。"
+      submit_new_email: "メールアドレスを更新"
+      sent_activation_email_again: "<b>%{currentEmail}</b> にアクティベーションメールを再送しました。メールが届くまで数分掛かることがあります。迷惑メールフォルダも確認してください。"
+      sent_activation_email_again_generic: "アクティベーションメールを再送しました。メールが届くまで数分掛かることがあります。迷惑メールフォルダも確認してください。"
       to_continue: "ログインしてください"
       preferences: "ユーザー設定を変更するには、ログインする必要があります。"
-      not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
+      not_approved: "あなたのアカウントはまだ承認されていません。ログインできるようになったら、メールで通知します。"
       google_oauth2:
         name: "Google"
         title: "Google"
@@ -1560,15 +1560,15 @@ ja:
     invites:
       accept_title: "招待"
       emoji: "封筒の絵文字"
-      welcome_to: "%{site_name}へようこそ!"
-      invited_by: "あなたは招待されました:"
+      welcome_to: "%{site_name} へようこそ！"
+      invited_by: "あなたは次の人から招待されました:"
       social_login_available: "このメールアドレスを使ってソーシャルログインすることも可能です。"
       your_email: "あなたのアカウントのメールアドレスは <b>%{email}</b> です。"
-      accept_invite: "招待に応じる"
-      success: "あなたのアカウントは作成されて、ログインされました。"
-      name_label: "氏名"
+      accept_invite: "招待を承諾"
+      success: "あなたのアカウントが作成され、ログインしました。"
+      name_label: "名前"
       password_label: "パスワード"
-      optional_description: "(任意)"
+      optional_description: "(オプション)"
     password_reset:
       continue: "%{site_name} に進む"
     emoji_set:
@@ -1577,12 +1577,12 @@ ja:
       twitter: "Twitter"
       win10: "Win10"
       google_classic: "Google Classic"
-      facebook_messenger: "Facebookメッセンジャー"
+      facebook_messenger: "Facebook メッセンジャー"
     category_page_style:
       categories_only: "カテゴリのみ"
       categories_with_featured_topics: "注目のトピックのカテゴリ"
       categories_and_latest_topics: "カテゴリと最新トピック"
-      categories_and_top_topics: "カテゴリーと人気トピック"
+      categories_and_top_topics: "カテゴリと人気トピック"
       categories_boxes: "サブカテゴリのあるボックス"
       categories_boxes_with_topics: "注目のトピックのあるボックス"
     shortcut_modifier_key:
@@ -1594,39 +1594,39 @@ ja:
       loading: 読み込み中...
     category_row:
       topic_count:
-        other: "このカテゴリ内の %{count} 件のトピック"
+        other: "このカテゴリの %{count} 件のトピック"
       plus_subcategories_title:
         other: "%{name} および %{count} 個のサブカテゴリ"
       plus_subcategories:
         other: "+ %{count} 個のサブカテゴリ"
     select_kit:
-      filter_by: "%{name} でフィルター"
-      select_to_filter: "フィルタする値を選択"
+      filter_by: "フィルタ: %{name}"
+      select_to_filter: "フィルタする値を選択する"
       default_header_text: 選択...
       no_content: 一致する項目が見つかりませんでした
       filter_placeholder: 検索...
-      filter_placeholder_with_any: 検索 または 新規作成
-      create: "作成:'%{content}'"
+      filter_placeholder_with_any: 検索または作成...
+      create: "作成: '%{content}'"
       max_content_reached:
         other: "%{count} 項目まで選択できます。"
       min_content_not_reached:
         other: "少なくとも %{count} 項目を選択してください。"
       invalid_selection_length:
-        other: "選択は%{count}文字以上必要です。"
+        other: "選択は %{count} 文字以上である必要があります。"
       components:
         categories_admin_dropdown:
           title: "カテゴリの管理"
     date_time_picker:
-      from: 発信元
-      to: 宛先
+      from: 開始
+      to: 終了
     emoji_picker:
       filter_placeholder: 絵文字を探す
-      smileys_&_emotion: スマイリーと感情
+      smileys_&_emotion: スマイルと感情
       people_&_body: 人と体
       animals_&_nature: 動物と自然
-      food_&_drink: 食べ物と飲み物
+      food_&_drink: 食べ物とドリンク
       travel_&_places: 旅行と場所
-      activities: 活動
+      activities: アクティビティ
       objects: オブジェクト
       symbols: シンボル
       flags: 旗
@@ -1639,10 +1639,10 @@ ja:
       dark_tone: ダークスキントーン
       default: カスタム絵文字
     shared_drafts:
-      title: "共有ドラフト"
+      title: "共有の下書き"
       notice: "このトピックは、共有の下書きを公開できるユーザーのみに表示されます。"
       destination_category: "宛先カテゴリ"
-      publish: "共有ドラフトの公開"
+      publish: "共有の下書きを公開"
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピック公開中..."
     composer:
@@ -1650,37 +1650,37 @@ ja:
       more_emoji: "もっと..."
       options: "オプション"
       whisper: "ささやき"
-      unlist: "リストから非表示"
+      unlist: "非表示"
       add_warning: "これは運営スタッフからの警告です。"
-      toggle_whisper: "ささやき機能の切り替え"
-      toggle_unlisted: "表示非表示を切り替える"
-      posting_not_on_topic: "どのトピックに返信しますか?"
+      toggle_whisper: "ささやきを切り替える"
+      toggle_unlisted: "非表示を切り替える"
+      posting_not_on_topic: "どのトピックに返信しますか？"
       saved_local_draft_tip: "ローカルに保存しました"
-      similar_topics: "このトピックに似ているものは..."
+      similar_topics: "これに似たトピックは..."
       drafts_offline: "オフラインの下書き"
-      edit_conflict: "競合の編集"
+      edit_conflict: "競合を編集する"
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
       group_mentioned:
-        other: "%{group}へのメンションで、 約<a href='%{group_link}'>%{count} 人</a> へ通知されます。よろしいですか？"
+        other: "%{group} をメンションすると、<a href='%{group_link}'>%{count} 人</a> へ通知されます。よろしいですか？"
       cannot_see_mention:
-        category: "%{username}にメンションしましたが、このカテゴリへのアクセス権がないため通知されません。このカテゴリへのアクセス権があるグループにメンバー追加してください。"
-        private: "%{username}にメンションしましたが、このパーソナルメッセージを見ることができないため通知されません。このパーソナルメッセージに招待してください。"
-      duplicate_link: "<b>%{domain}</b> については、すでに<b>@%{username}</b> が <a href='%{post_url}'>%{ago}</a> 前に投稿しています。再び投稿してよろしいですか？"
+        category: "%{username} をメンションしましたが、このカテゴリへのアクセス権がないため通知されません。このカテゴリにアクセスできるグループに追加してください。"
+        private: "%{username} をメンションしましたが、この個人メッセージを見ることができないため通知されません。この個人メッセージに招待してください。"
+      duplicate_link: "<b>%{domain}</b> へのリンクは、すでに <b>@%{username}</b> が <a href='%{post_url}'>%{ago}</a> 前に投稿しています。もう一度投稿してもよろしいですか？"
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "タイトルを入力してください。"
         title_too_short:
-          other: "タイトルは%{count}文字以上必要です。"
+          other: "タイトルは %{count} 文字以上である必要があります"
         title_too_long:
           other: "タイトルは %{count} 文字以上にすることはできません"
         post_missing: "空白の投稿はできません"
         post_length:
-          other: "投稿は%{count}文字以上必要です。"
-        try_like: " %{heart} ボタンは試しましたか？"
-        category_missing: "カテゴリを選択してください。"
+          other: "投稿は %{count} 文字以上である必要があります"
+        try_like: "%{heart} ボタンは試しましたか？"
+        category_missing: "カテゴリを選択してください"
         tags_missing:
-          other: "少なくとも %{count} つのタグが必要です。"
+          other: "少なくとも %{count} 個のタグが必要です"
         topic_template_not_modified: "トピックテンプレートを編集して、トピックに詳細を追加してください。"
       save_edit: "編集内容を保存"
       overwrite_edit: "上書き編集"
@@ -1688,56 +1688,56 @@ ja:
       reply_here: "ここに返信"
       reply: "返信"
       cancel: "キャンセル"
-      create_topic: "トピックを作る"
+      create_topic: "トピックを作成"
       create_pm: "メッセージ"
       create_whisper: "ささやき"
-      create_shared_draft: "共有ドラフトを作成"
-      edit_shared_draft: "共有ドラフトの編集"
-      title: "Ctrl+Enterでも投稿できます"
+      create_shared_draft: "共有の下書きを作成"
+      edit_shared_draft: "共有の下書きを編集"
+      title: "Ctrl+Enter でも投稿できます"
       users_placeholder: "ユーザーを追加"
-      title_placeholder: "トピックのタイトルを入力してください。"
-      title_or_link_placeholder: "タイトルを記入するか、リンクを貼ってください"
-      edit_reason_placeholder: "編集する理由は何ですか?"
-      topic_featured_link_placeholder: "タイトルにリンクを入力してください。"
-      remove_featured_link: "トピックからリンクを削除する。"
-      reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"
-      reply_placeholder_no_images: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。"
-      reply_placeholder_choose_category: "ここで入力する前にカテゴリを選んでください。"
-      view_new_post: "新しい投稿を見る。"
+      title_placeholder: "トピックのタイトルを入力してください"
+      title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
+      edit_reason_placeholder: "編集する理由は？"
+      topic_featured_link_placeholder: "タイトルに表示されるリンクを入力してください。"
+      remove_featured_link: "トピックからリンクを削除してください。"
+      reply_placeholder: "ここに入力してください。 Markdown、BBCode、HTML を使用できます。画像はドラッグか貼り付けできます。"
+      reply_placeholder_no_images: "ここに入力してください。 Markdown、BBCode、HTML を使用できます。"
+      reply_placeholder_choose_category: "カテゴリを選択してから、ここに入力してください。"
+      view_new_post: "新しい投稿を表示します。"
       saving: "保存中"
-      saved: "保存しました!"
+      saved: "保存しました！"
       saved_draft: "下書きを投稿中です。タップして再開します。"
       uploading: "アップロード中..."
       quote_post_title: "投稿全体を引用"
       bold_label: "B"
       bold_title: "太字"
-      bold_text: "太字にしたテキスト"
-      italic_label: "斜体"
+      bold_text: "太字テキスト"
+      italic_label: "I"
       italic_title: "斜体"
-      italic_text: "斜体のテキスト"
+      italic_text: "斜体テキスト"
       link_title: "ハイパーリンク"
       link_description: "リンクの説明をここに入力"
-      link_dialog_title: "ハイパーリンクの挿入"
-      link_optional_text: "タイトル(オプション)"
-      link_url_placeholder: "トピックを検索するためにURLを貼り付けるか入力してください"
-      blockquote_title: "引用"
-      blockquote_text: "引用"
+      link_dialog_title: "ハイパーリンクを挿入"
+      link_optional_text: "オプションのタイトル"
+      link_url_placeholder: "URL を貼り付けるか入力してトピックを検索します"
+      blockquote_title: "ブロック引用"
+      blockquote_text: "ブロック引用"
       code_title: "整形済みテキスト"
-      code_text: "4文字スペースでインデント"
-      paste_code_text: "コードをここに入力"
+      code_text: "4 文字スペースでインデント"
+      paste_code_text: "コードをここに入力または貼り付け"
       upload_title: "アップロード"
-      upload_description: "アップロード内容の説明文をここに入力"
+      upload_description: "アップロードの説明をここに入力"
       olist_title: "番号付きリスト"
       ulist_title: "箇条書き"
       list_item: "リスト項目"
       help: "Markdown 編集のヘルプ"
       modal_ok: "OK"
       modal_cancel: "キャンセル"
-      cant_send_pm: "%{username}へメッセージを送ることはできません。"
+      cant_send_pm: "%{username} にメッセージを送ることはできません。"
       yourself_confirm:
-        title: "受信者の追加を忘れましたか？"
-        body: "たった今このメッセージはあなただけに送られました。"
-      admin_options_title: "このトピックの詳細設定"
+        title: "受信者を追加し忘れましたか？"
+        body: "現時点では、このメッセージは自分にしか送信されません！"
+      admin_options_title: "このトピックのオプションのスタッフ設定"
       composer_actions:
         reply: 返信
         draft: 下書き
@@ -1749,29 +1749,29 @@ ja:
           desc: このトピックにリンクしている新しいトピックを作成する
           confirm: 新しいトピックの下書きが保存されていますが、リンクされたトピックを作成すると上書きされます。
         reply_as_private_message:
-          label: メッセージを作成
-          desc: 新しいパーソナルメッセージを作成する
+          label: 新規メッセージ
+          desc: 新しい個人メッセージを作成する
         reply_to_topic:
           label: トピックへ返信
           desc: 特定の投稿ではなく、トピックに返信する
         create_topic:
           label: "新規トピック"
         shared_draft:
-          label: "共有ドラフト"
+          label: "共有の下書き"
       reload: "再読み込み"
       ignore: "無視する"
     notifications:
       tooltip:
         regular:
-          other: "%{count}件の未読通知"
+          other: "%{count} 件の未読通知"
         message:
-          other: "%{count}件の未読メッセージ"
+          other: "%{count} 件の未読メッセージ"
         high_priority:
-          other: "%{count}件の未読の優先度の高い通知"
+          other: "%{count} 件の優先度の高い未読通知"
       title: "@ユーザー名のメンション、投稿やトピックへの返信、メッセージなどの通知"
-      none: "通知を読み込むことができませんでした。"
+      none: "現在、通知を読み込めません。"
       empty: "通知はありません。"
-      post_approved: "あなたの投稿は承認されました"
+      post_approved: "あなたの投稿が承認されました"
       reviewable_items: "レビューが必要な項目"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
@@ -1781,87 +1781,87 @@ ja:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
       liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} 、他 %{count} 人</span> %{description}"
+        other: "<span class='multi-user'>%{username}、%{username2}、他 %{count} 人</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
-      invitee_accepted: "<span>%{username}</span> があなたの招待を受理しました"
-      moved_post: "<span>%{username}</span> は %{description} を移動しました"
+      invitee_accepted: "<span>%{username}</span> があなたの招待を承諾しました"
+      moved_post: "<span>%{username}</span> が %{description} を移動しました"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "'%{description}'バッジをゲット！"
+      granted_badge: "「%{description}」をゲット！"
       topic_reminder: "<span>%{username}</span> %{description}"
-      watching_first_post: "<span>新しいトピック</span> %{description}"
+      watching_first_post: "<span>新規トピック</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
-      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 完了"
       group_message_summary:
-        other: "%{group_name} 宛のメッセージが %{count} 通あります"
+        other: "%{group_name} の受信トレイに %{count} 件のメッセージがあります"
       popup:
-        mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
-        group_mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
-        quoted: '"%{topic}"で%{username}が引用しました - %{site_title}'
-        replied: '%{username}が"%{topic}"へ返信しました - %{site_title}'
-        posted: '%{username} が投稿しました "%{topic}" - %{site_title}'
-        private_message: '%{username} が "%{topic}" - %{site_title} であなたに個人的なメッセージを送信しました'
-        linked: '"%{topic}"にあるあなたの投稿に%{username}がリンクしました - %{site_title}'
-        watching_first_post: '%{username} が "%{topic}" - %{site_title}を投稿しました'
+        mentioned: '「%{topic}」で %{username} にメンションされました - %{site_title}'
+        group_mentioned: '「%{topic}」で %{username} にメンションされました - %{site_title}'
+        quoted: '「%{topic}」で %{username} に引用されました - %{site_title}'
+        replied: '「%{topic}」で %{username} があなたに返信しました - %{site_title}'
+        posted: '%{username} が「%{topic}」に投稿しました - %{site_title}'
+        private_message: '「%{topic}」で %{username} があなたに個人メッセージを送信しました - %{site_title}'
+        linked: '%{username} が 「%{topic}」のあなたの投稿にリンクしました - %{site_title}'
+        watching_first_post: '%{username} が新規トピック「%{topic}」を作成しました - %{site_title}'
         confirm_title: "通知を有効にしました - %{site_title}"
-        confirm_body: "成功！通知を可能にしました！"
+        confirm_body: "成功！通知を有効にしました！"
       titles:
-        mentioned: "メンション済み"
+        mentioned: "メンション"
         replied: "新しい返信"
-        quoted: "引用された"
-        edited: "編集済み"
-        private_message: "新しいプライベートメッセージ"
-        invited_to_private_message: "プライベートメッセージに招待"
-        invitee_accepted: "招待が承認されました"
+        quoted: "引用"
+        edited: "編集"
+        private_message: "新しい個人メッセージ"
+        invited_to_private_message: "個人メッセージに招待"
+        invitee_accepted: "招待が承諾されました"
         posted: "新しい投稿"
         moved_post: "投稿が移動されました"
-        granted_badge: "バッジが付与されました"
-        invited_to_topic: "トピックに招待済み"
+        granted_badge: "バッジを獲得しました"
+        invited_to_topic: "トピックに招待されました"
         group_mentioned: "グループがメンションされました"
         group_message_summary: "新着のグループメッセージ"
         watching_first_post: "新着トピック"
         topic_reminder: "トピックのリマインダー"
     upload_selector:
-      title: "画像のアップロード"
-      title_with_attachments: "画像/ファイルをアップロード"
-      from_my_computer: "このデバイスから"
+      title: "画像の追加"
+      title_with_attachments: "画像/ファイルの追加"
+      from_my_computer: "自分のデバイスから"
       from_the_web: "Web から"
       remote_tip: "画像へのリンク"
-      local_tip: "ローカルからアップロードする画像を選択"
-      hint_for_supported_browsers: "ドラッグ＆ドロップあるいはエディター内に画像を貼り付けてください。"
+      local_tip: "デバイスの画像を選択します"
+      hint_for_supported_browsers: "画像をエディタ内にドラッグ＆ドロップするか貼り付けることもできます"
       uploading: "アップロード中"
       select_file: "ファイル選択"
       default_image_alt_text: 画像
     search:
       sort_by: "並べ替え"
-      relevance: "一番関連しているもの"
+      relevance: "関連性の高い項目"
       latest_post: "最新の投稿"
-      latest_topic: "最近のトピック"
-      most_viewed: "最も閲覧されている順"
-      most_liked: "「いいね！」されている順"
-      select_all: "すべて選択する"
+      latest_topic: "最新のトピック"
+      most_viewed: "最も閲覧されている項目"
+      most_liked: "「いいね！」の多い項目"
+      select_all: "すべて選択"
       clear_all: "すべてクリア"
       too_short: "検索文字が短すぎます。"
       title: "トピック、投稿、ユーザー、カテゴリを検索"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
-      post_format: "#%{post_number} %{username}から"
+      post_format: "%{username} の #%{post_number}"
       more_results: "検索結果が多数あります。検索条件を絞ってください。"
       cant_find: "探しているものが見つかりませんか？"
       start_new_topic: "新しいトピックを始めてみては？"
-      or_search_google: "あるいは、Google検索で試してみてください:"
-      search_google: "Google検索で試してみてください:"
+      or_search_google: "または Google で検索してみてください:"
+      search_google: "Google で検索してみてください:"
       search_google_button: "Google"
       search_button: "検索"
       context:
-        user: "@%{username}の投稿を検索"
-        category: "#%{category} から検索する"
-        topic: "このトピックを探す"
+        user: "@%{username} の投稿を検索"
+        category: "#%{category} カテゴリを検索"
+        topic: "このトピックを検索"
         private_messages: "メッセージを検索"
       advanced:
         title: 高度な検索
@@ -1906,50 +1906,50 @@ ja:
             after: 以降
         views:
           label: 表示回数
-    hamburger_menu: "他のトピック一覧やカテゴリを見る"
-    new_item: "新しい"
+    hamburger_menu: "他のトピックリストやカテゴリに移動"
+    new_item: "新着"
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"
     current_user: "ユーザーページに移動"
     topics:
       new_messages_marker: "最後の訪問"
       bulk:
-        select_all: "すべて選択する"
+        select_all: "すべて選択"
         clear_all: "すべてクリア"
-        unlist_topics: "トピックをリストから非表示にする"
-        relist_topics: "トピックをリストに再表示する"
+        unlist_topics: "トピックを非表示"
+        relist_topics: "トピックを表示"
         reset_read: "未読に設定"
         delete: "トピックを削除"
-        dismiss: "既読"
-        dismiss_read: "未読をすべて既読にする"
-        dismiss_button: "既読..."
-        dismiss_tooltip: "新規投稿を既読にしてトピックの追跡を停止"
-        also_dismiss_topics: "トピックの追跡を停止して、未読として表示されないようにする"
-        dismiss_new: "既読にする"
-        toggle: "選択したトピックを切り替え"
-        actions: "操作"
-        change_category: "カテゴリを設定する"
-        close_topics: "トピックをクローズする"
-        archive_topics: "アーカイブトピック"
+        dismiss: "無視"
+        dismiss_read: "未読をすべて無視する"
+        dismiss_button: "無視..."
+        dismiss_tooltip: "新規投稿のみを無視するかトピックの追跡を停止します"
+        also_dismiss_topics: "これらのトピックの追跡を停止して、未読として表示されないようにする"
+        dismiss_new: "新規を無視"
+        toggle: "トピックの一括選択を切り替える"
+        actions: "一括操作"
+        change_category: "カテゴリを設定"
+        close_topics: "トピックをクローズ"
+        archive_topics: "トピックをアーカイブ"
         move_messages_to_inbox: "受信トレイへ移動"
         notification_level: "通知"
-        choose_new_category: "このトピックの新しいカテゴリを選択してください"
+        choose_new_category: "このトピックの新しいカテゴリを選択:"
         selected:
-          other: "あなたは <b>%{count}</b> トピックを選択しました。"
-        change_tags: "タグを付け替える"
-        append_tags: "タグを追加する"
-        choose_new_tags: "これらのトピックの新しいタグを選択してください"
-        choose_append_tags: "これらのトピックに新しいタグを追加してください"
+          other: "<b>%{count}</b> 件のトピックを選択しました。"
+        change_tags: "タグを置換"
+        append_tags: "タグを追加"
+        choose_new_tags: "これらのトピックに新しいタグを選択:"
+        choose_append_tags: "これらのトピックに追加する新しいタグを選択:"
         changed_tags: "トピックのタグが変更されました。"
       none:
         unread: "未読のトピックはありません。"
         new: "新しいトピックはありません。"
         read: "まだトピックを一つも読んでいません。"
-        posted: "トピックは一つもありません。"
-        latest: "コンテンツは以上です!"
+        posted: "まだトピックを一つも投稿していません。"
+        latest: "すべて既読です！"
         bookmarks: "ブックマークしたトピックはありません。"
-        category: "%{category} トピックはありません。"
-        top: "トップトピックはありません。"
+        category: "%{category} のトピックはありません。"
+        top: "人気のトピックはありません。"
         educate:
           new: '<p>新しいトピックがここに表示されます。デフォルトでは、2 日以内に作成されたトピックは新しいトピックとみなされ、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> が表示されます。</p><p>この設定はユーザー<a href="%{userPrefsUrl}">設定</a>で変更できます。</p>'
       bottom:
