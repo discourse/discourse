@@ -1999,19 +1999,19 @@ de:
       invitee_accepted: "<span>%{username}</span> hat deine Einladung angenommen"
       moved_post: "<span>%{username}</span> hat %{description} verschoben"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "Du hast '%{description}' verliehen bekommen"
+      granted_badge: "Du hast „%{description}“ verliehen bekommen"
       topic_reminder: "<span>%{username}</span> %{description}"
-      watching_first_post: "<span>New Topic</span> %{description}"
-      membership_request_accepted: "Mitgliedschaft akzeptiert in '%{group_name}' "
+      watching_first_post: "<span>Neues Thema</span> %{description}"
+      membership_request_accepted: "Mitgliedschaft akzeptiert in „%{group_name}“"
       membership_request_consolidated:
         one: "%{count} offene Mitgliedschaftsanfrage für '%{group_name}'"
-        other: "%{count} offene Mitgliedschaftsanfragen für '%{group_name}'"
+        other: "%{count} offene Mitgliedschaftsanfragen für „%{group_name}“"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - abgeschlossen"
+      votes_released: "%{description} – abgeschlossen"
       group_message_summary:
-        one: "%{count} Nachricht in deinem %{group_name} Posteingang"
-        other: "%{count} Nachrichten in deinem %{group_name} Posteingang"
+        one: "%{count} Nachricht in deinem „%{group_name}“-Posteingang"
+        other: "%{count} Nachrichten in deinem „%{group_name}“-Posteingang"
       popup:
         mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
         group_mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
@@ -2046,7 +2046,7 @@ de:
         topic_reminder: "Themen-Erinnerung"
         liked_consolidated: "neue „Gefällt mir“-Angaben"
         post_approved: "Beitrag genehmigt"
-        membership_request_consolidated: "Neue Gruppenmitgliedschaftsanfragen"
+        membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
     upload_selector:
@@ -2067,7 +2067,7 @@ de:
     search:
       sort_by: "Sortieren nach"
       relevance: "Relevanz"
-      latest_post: "letzter Beitrag"
+      latest_post: "Neuester Beitrag"
       latest_topic: "Neuestes Thema"
       most_viewed: "Anzahl der Aufrufe"
       most_liked: "Anzahl der Likes"
@@ -2080,12 +2080,12 @@ de:
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       full_page_title: "suche nach Themen oder Beiträgen"
       no_results: "Keine Ergebnisse gefunden."
-      no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
+      no_more_results: "Es wurden keine weiteren Ergebnisse gefunden."
       post_format: "#%{post_number} von %{username}"
-      results_page: "Suchergebnisse für '%{term}'"
+      results_page: "Suchergebnisse für „%{term}“"
       more_results: "Es gibt mehr Ergebnisse. Bitte grenze deine Suchkriterien weiter ein."
       cant_find: "Nicht gefunden, wonach du suchst?"
-      start_new_topic: "Wie wär’s mit einem neuen Thema?"
+      start_new_topic: "Wie wärs mit einem neuen Thema?"
       or_search_google: "Oder versuche stattdessen mit Google zu suchen:"
       search_google: "Versuche stattdessen mit Google zu suchen:"
       search_google_button: "Google"
@@ -2110,12 +2110,12 @@ de:
           label: Mit dem Schlagwort
         filters:
           label: 'Themen/Beiträge einschränken:'
-          title: mit Treffer im Titel
+          title: Mit Treffer im Titel
           likes: Themen/Beiträge, die mir gefallen
           posted: Themen mit Beiträgen von mir
-          created: von mir erstellt
+          created: Von mir erstellt
           watching: Themen, die ich beobachte
-          tracking: Themen, denen ich folge
+          tracking: Themen, die ich verfolge
           private: Beiträge in meinen Unterhaltungen
           bookmarks: von mir mit Lesezeichen versehen
           first: Erste Beiträge in Themen
@@ -2129,7 +2129,7 @@ de:
           label: 'Themen einschränken:'
           open: Offene Themen
           closed: Geschlossene Themen
-          public: sind öffentlich
+          public: Öffentliche Themen
           archived: Archivierte Themen
           noreplies: Themen ohne Antwort
           single_user: Themen mit nur einem Benutzer
@@ -2159,7 +2159,7 @@ de:
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
-        select_all: "Wähle alle aus"
+        select_all: "Alle auswählen"
         clear_all: "Auswahl aufheben"
         unlist_topics: "Themen unsichtbar machen"
         relist_topics: "Themen neu auflisten"
@@ -2167,11 +2167,11 @@ de:
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
-        dismiss_button: "Ignorieren..."
+        dismiss_button: "Ignorieren …"
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new: "Neue Themen ignorieren"
-        toggle: "zu Massenoperationen auf Themen umschalten"
+        toggle: "Massenauswahl von Themen umschalten"
         actions: "Massenoperationen"
         change_category: "Kategorie auswählen"
         close_topics: "Themen schließen"
@@ -2181,7 +2181,7 @@ de:
         change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
         selected:
-          one: "Du hast <b>ein</b> Thema ausgewählt."
+          one: "Du hast <b>%{count}</b> Thema ausgewählt."
           other: "Du hast <b>%{count}</b> Themen ausgewählt."
         change_tags: "Schlagwörter ersetzen"
         append_tags: "Schlagwörter hinzufügen"

@@ -538,7 +538,7 @@ fr:
       later_today: "Plus tard dans la journée"
       next_business_day: "Au prochain jour ouvré"
       tomorrow: "Demain"
-      post_local_date: "À la date dans le message"
+      post_local_date: "Date indiquée dans le message"
       later_this_week: "Plus tard dans la semaine"
       start_of_next_business_week: "Lundi"
       start_of_next_business_week_alt: "Lundi prochain"
@@ -555,7 +555,7 @@ fr:
       user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> a répondu à <a href='%{topicUrl}'>ce sujet</a>"
       you_replied_to_topic: "<a href='%{userUrl}'>Vous</a> avez répondu à <a href='%{topicUrl}'>ce sujet</a>"
       user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> a mentionné <a href='%{user2Url}'>%{another_user}</a>"
-      user_mentioned_you: "<a href='%{user2Url}'>Vous</a> avez été mentionné par <a href='%{user1Url}'>%{user}</a>"
+      user_mentioned_you: "<a href='%{user2Url}'>Vous</a> avez été mentionné(e) par <a href='%{user1Url}'>%{user}</a>"
       you_mentioned_user: "<a href='%{user1Url}'>Vous</a> avez mentionné <a href='%{user2Url}'>%{another_user}</a>"
       posted_by_user: "Rédigé par <a href='%{userUrl}'>%{user}</a>"
       posted_by_you: "Rédigé par <a href='%{userUrl}'>vous</a>"
@@ -634,14 +634,14 @@ fr:
           smtp_instructions: "Quand le SMTP est activé au niveau du groupe, tous les courriels envoyés au nom de ce groupe seront expédiés en utilisant les paramètres SMTP indiqués ici plutôt qu'avec les paramètres SMTP globaux du site."
           imap_title: "IMAP"
           imap_additional_settings: "Paramètres additionnels"
-          imap_instructions: 'Quand l''IMAP est activé au niveau du groupe, les courriels sont synchronisés entre la boîte de réception de ce groupe et la boîte aux lettres IMAP indiquée ici. Avant de pouvoir activer l''IMAP, le SMTP doit d''abord être activé, et des paramètres SMTP valides doivent être renseignés. L''identifiant et le mot de passe du serveur SMTP seront utilisés pour l''authentification auprès du serveur IMAP. Pour en savoir plus, consultez <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">l''annonce de cette fonctionnalité sur Discourse Meta</a> (en anglais).'
-          imap_alpha_warning: "Attention&nbsp;:cette fonctionnalité est en alpha-test. Seul Gmail est pris en charge officiellement. Son utilisation se fait à vos risques et périls&nbsp;!"
+          imap_instructions: 'Quand l''IMAP est activé au niveau du groupe, les courriels sont synchronisés entre la boîte de réception de ce groupe et la boîte de réception IMAP indiquée ici. Avant de pouvoir activer l''IMAP, le SMTP doit d''abord être activé, et des paramètres SMTP valides doivent être renseignés. L''identifiant et le mot de passe du serveur SMTP seront utilisés pour l''authentification auprès du serveur IMAP. Pour en savoir plus, consultez <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">l''annonce de cette fonctionnalité sur Discourse Meta</a> (en anglais).'
+          imap_alpha_warning: "Attention : cette fonctionnalité est en test alpha. Seul Gmail est pris en charge officiellement. Son utilisation se fait à vos risques et périls !"
           imap_settings_valid: "Paramètres IMAP valides."
-          smtp_disable_confirm: "En désactivant le SMTP, tous les paramètres SMTP et IMAP seront remis à zéro et ces fonctionnalités seront désactivées. Souhaitez-vous continuer&nbsp;?"
-          imap_disable_confirm: "En désactivant l'IMAP, tous les paramètres IMAP seront remis à zéro et cette fonctionnalité sera désactivée. Souhaitez-vous continuer&nbsp;?"
-          imap_mailbox_not_selected: "Vous devez indiquer une boîte aux lettres dans ces paramètres IMAP, autrement aucune boîte aux lettres ne sera synchronisée&nbsp;!"
+          smtp_disable_confirm: "En désactivant le SMTP, tous les paramètres SMTP et IMAP seront réinitialisés et ces fonctionnalités seront désactivées. Souhaitez-vous continuer ?"
+          imap_disable_confirm: "En désactivant l'IMAP, tous les paramètres IMAP seront réinitialisés et cette fonctionnalité sera désactivée. Souhaitez-vous continuer ?"
+          imap_mailbox_not_selected: "Vous devez indiquer une boîte de réception dans ces paramètres IMAP, autrement aucune boîte de réception ne sera synchronisée !"
           prefill:
-            title: "Renseigner les paramètres pour&nbsp;:"
+            title: "Renseigner les paramètres pour :"
             gmail: "Gmail"
           credentials:
             title: "Identifiants"
@@ -655,11 +655,11 @@ fr:
             password: "Mot de passe"
           settings:
             title: "Paramètres"
-            allow_unknown_sender_topic_replies: "Autoriser des réponses par un expéditeur inconnu."
+            allow_unknown_sender_topic_replies: "Autoriser les réponses par un expéditeur inconnu."
           mailboxes:
-            synchronized: "Boîte aux lettres à synchroniser"
-            none_found: "Aucune boîte aux lettres n'a été trouvée pour ce compte de courriel."
-            disabled: "(Désactivé)"
+            synchronized: "Boîte de réception à synchroniser"
+            none_found: "Aucune boîte de réception n'a été trouvée pour ce compte de courriel."
+            disabled: "Désactivée"
         membership:
           title: Adhésion
           access: Accès
@@ -670,7 +670,7 @@ fr:
           watched_categories_instructions: "Surveiller automatiquement tous les sujets de ces catégories. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
           tracked_categories_instructions: "Suivre automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
           watching_first_post_categories_instructions: "Les utilisateurs seront notifiés du premier message de chaque sujet dans ces catégories."
-          regular_categories_instructions: "Si ces catégories sont mises sous silence, elles ne le seront pas pour les membres de groupe. Les utilisateurs seront avertis s'ils sont mentionnés ou si quelqu'un leur répond."
+          regular_categories_instructions: "Si ces catégories sont désactivées, elles ne le seront pas pour les membres du groupe. Les utilisateurs seront avertis s'ils sont mentionnés ou si quelqu'un leur répond."
           muted_categories_instructions: "Les utilisateurs ne seront pas notifiés des nouveaux sujets dans ces catégories et ces sujets n'apparaîtront pas sur les pages des catégories et des sujets récents."
         tags:
           title: Étiquettes
@@ -679,7 +679,7 @@ fr:
           watched_tags_instructions: "Surveiller automatiquement tous les sujets avec ces étiquettes. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
           tracked_tags_instructions: "Suivre automatiquement tous les sujets avec ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
           watching_first_post_tags_instructions: "Les utilisateurs seront notifiés du premier message de chaque sujet avec ces étiquettes."
-          regular_tags_instructions: "Si ces étiquettes sont mises sous silence, elles ne le seront pas pour les membres de groupe. Les utilisateurs seront avertis s'ils sont mentionnés ou si quelqu'un leur répond."
+          regular_tags_instructions: "Si ces étiquettes sont désactivées, elles ne le seront pas pour les membres du groupe. Les utilisateurs seront avertis s'ils sont mentionnés ou si quelqu'un leur répond."
           muted_tags_instructions: "Les utilisateurs ne seront pas notifiés des nouveaux sujets avec ces étiquettes et ces sujets n'apparaîtront pas sur la page des sujets récents."
         logs:
           title: "Journaux"
