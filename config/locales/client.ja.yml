@@ -1958,25 +1958,25 @@ ja:
         read: "既読のトピックは以上です。"
         new: "新着トピックは以上です。"
         unread: "未読のトピックは以上です。"
-        category: "%{category}トピックは以上です。"
-        tag: "%{tag}が付加されたトピックは以上です。"
-        top: "トップトピックはこれ以上ありません。"
-        bookmarks: "ブックマーク済みのトピックはこれ以上ありません。"
+        category: "%{category} のトピックは以上です。"
+        tag: "%{tag} のトピックは以上です。"
+        top: "人気のトピックは以上です。"
+        bookmarks: "ブックマーク済みのトピックは以上です。"
     topic:
       filter_to:
-        other: "トピック内の %{count} 件を表示"
+        other: "トピックの %{count} 件の投稿"
       create: "新規トピック"
       create_long: "新しいトピックの作成"
       open_draft: "下書きを開く"
       private_message: "メッセージを書く"
       archive_message:
-        help: "アーカイブにメセージを移しました"
+        help: "アーカイブにメセージを移動する"
         title: "アーカイブ"
       move_to_inbox:
-        title: "受信ボックスへ移動"
-        help: "受信ボックスへメッセージを戻しました"
+        title: "受信トレイに移動"
+        help: "受信トレイにメッセージを戻す"
       edit_message:
-        help: "メッセージの最初の投稿を編集"
+        help: "メッセージの最初の投稿を編集する"
         title: "編集"
       defer:
         help: "未読にする"
@@ -1992,62 +1992,62 @@ ja:
       new: "新着トピック"
       unread: "未読"
       new_topics:
-        other: "%{count}個の新着トピック"
+        other: "%{count} 件の新着トピック"
       unread_topics:
-        other: "%{count}個の未読トピック"
+        other: "%{count} 件の未読トピック"
       title: "トピック"
       invalid_access:
         title: "トピックはプライベートです"
-        description: "申し訳ありませんが、このトピックへのアクセスは許可されていません。"
-        login_required: "ポストを閲覧するには、ログインする必要があります"
+        description: "このトピックへのアクセスは許可されていません！"
+        login_required: "トピックを閲覧するには、ログインする必要があります"
       server_error:
         title: "トピックの読み込みに失敗しました"
-        description: "申し訳ありませんが、トピックの読み込みに失敗しました。もう一度試してください。もし問題が継続する場合はお知らせください。"
+        description: "トピックを読み込めませんでした。接続に問題があるようです。もう一度試してください。もし問題が継続する場合はお知らせください。"
       not_found:
         title: "トピックが見つかりませんでした"
-        description: "申し訳ありませんがトピックが見つかりませんでした。モデレータによって削除された可能性があります。"
+        description: "トピックが見つかりませんでした。モデレーターによって削除された可能性があります。"
       total_unread_posts:
-        other: "このトピックに未読のポストが%{count}つあります。"
+        other: "このトピックに %{count} 件の未読の投稿があります"
       unread_posts:
-        other: "このトピックに未読のポストが%{count}つあります。"
+        other: "このトピックに %{count} 件の古い未読の投稿があります"
       new_posts:
-        other: "前回閲覧時より、このトピックに新しいポストが%{count}個投稿されています"
+        other: "このトピックには最後に閲覧してから %{count} 件が投稿されています"
       likes:
-        other: "このトピックには%{count}個「いいね！」がついています"
+        other: "このトピックには %{count} 個の「いいね！」があります"
       back_to_list: "トピックリストに戻る"
-      options: "トピックオプション"
-      show_links: "このトピック内のリンクを表示"
-      read_more_in_category: "もっと読みたいですか？%{catLink}あるいは%{latestLink}の他のトピックを見てみてください。"
-      read_more: "もっと見たいですか？%{catLink}あるいは%{latestLink}があります。"
+      options: "トピックのオプション"
+      show_links: "このトピック内のリンクを表示する"
+      read_more_in_category: "もっと読みますか？%{catLink} または %{latestLink} での他のトピックを閲覧できます。"
+      read_more: "もっと読みますか？%{catLink} または %{latestLink}。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
-      browse_all_categories: 全てのカテゴリを閲覧する
-      browse_all_tags: すべてのタグを参照
-      view_latest_topics: 最新のトピックを見る
+      browse_all_categories: すべてのカテゴリを閲覧する
+      browse_all_tags: すべてのタグを閲覧する
+      view_latest_topics: 最新のトピックを表示する
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
       slow_mode_update:
         select: "ユーザーはこのトピックに次の頻度でのみ投稿できます。"
-        enable: "有効にする"
-        remove: "無効にする"
+        enable: "有効化"
+        remove: "無効化"
         durations:
-          10_minutes: "10分"
+          10_minutes: "10 分間"
           15_minutes: "15分"
           30_minutes: "30分"
           45_minutes: "45分"
           1_hour: "１時間"
           2_hours: "２時間"
       topic_status_update:
-        save: "タイマーをセットする"
-        num_of_hours: "時間数"
-        remove: "タイマーをはずす"
+        save: "タイマーをセット"
+        num_of_hours: "時間:"
+        remove: "タイマーを削除"
         publish_to: "公開先:"
         when: "公開時間:"
         time_frame_required: "時間枠を選択してください"
       auto_update_input:
-        later_today: "今日中"
+        later_today: "今日の後程"
         tomorrow: "明日"
-        later_this_week: "今週中"
+        later_this_week: "今週の後半"
         this_weekend: "今週末"
         next_week: "来週"
         next_month: "来月"
@@ -2058,64 +2058,64 @@ ja:
       temp_open:
         title: "一時的にオープン"
       auto_reopen:
-        title: "自動的にオープン"
+        title: "トピックを自動的にオープン"
       temp_close:
         title: "一時的にクローズ"
       auto_close:
-        title: "自動的にクローズ"
-        error: "正しい値を入力してください。"
+        title: "トピックを自動的にクローズ"
+        error: "有効な値を入力してください。"
         based_on_last_post: "最終投稿時間より前でクローズしない"
       auto_delete:
-        title: "自動的にトピックを削除"
+        title: "トピックを自動的に削除"
       reminder:
-        title: "リマインド"
+        title: "リマインダー"
       status_update_notice:
-        auto_open: "このトピックはあと%{timeLeft}で自動的にオープンします。"
-        auto_close: "このトピックはあと%{timeLeft}で自動的にクローズします。"
-        auto_publish_to_category: "このトピックはあと %{timeLeft} で、<a href=%{categoryUrl}>#%{categoryName}</a> にて公開されます。"
-        auto_close_after_last_post: "このトピックは最後の返信から%{duration} 後にクローズされます"
-        auto_delete: "このトピックはあと%{timeLeft}で自動的に削除されます。"
-        auto_reminder: "このトピックについて、%{timeLeft} 後にリマインドします。"
-      auto_close_title: "オートクローズの設定"
+        auto_open: "このトピックは後 %{timeLeft}で自動的にオープンします。"
+        auto_close: "このトピックは後 %{timeLeft}で自動的にクローズします。"
+        auto_publish_to_category: "このトピックは後 %{timeLeft}で <a href=%{categoryUrl}>#%{categoryName}</a> に公開されます。"
+        auto_close_after_last_post: "このトピックは最後の返信から%{duration}後にクローズされます。"
+        auto_delete: "このトピックは後 %{timeLeft}で自動的に削除されます。"
+        auto_reminder: "このトピックについて %{timeLeft}後にリマインダーを通知します。"
+      auto_close_title: "自動クローズの設定"
       auto_close_immediate:
-        other: "このトピックは最終投稿からすでに%{count}時間経過しているため、すぐにクローズされます。"
+        other: "このトピックは最終投稿からすでに %{count} 時間経過しているため、すぐにクローズされます。"
       timeline:
         back: "戻る"
-        back_description: "未読の最終投稿へ戻る"
+        back_description: "最後の未読の投稿に戻る"
         replies_short: "%{current} / %{total}"
       progress:
-        title: トピック進捗
+        title: トピックの進捗
         go_top: "上"
         go_bottom: "下"
-        go: "へ"
-        jump_bottom: "最後の投稿へ"
-        jump_prompt: "ジャンプする..."
+        go: "移動"
+        jump_bottom: "最後の投稿へジャンプ"
+        jump_prompt: "ジャンプ..."
         jump_prompt_of:
-          other: "%{count} 投稿"
-        jump_prompt_long: "ジャンプする..."
-        jump_bottom_with_number: "%{post_number}番へジャンプ"
+          other: "/ %{count} の投稿"
+        jump_prompt_long: "ジャンプ..."
+        jump_bottom_with_number: "%{post_number} 番へジャンプ"
         jump_prompt_or: "または"
-        total: 投稿の合計
+        total: 全投稿
         current: 現在の投稿
       notifications:
-        title: このトピックに関する通知頻度を変更
+        title: このトピックに関する通知頻度の変更
         reasons:
-          mailing_list_mode: "メーリングリストモードになっているため、このトピックへの返信はメールで送られます。"
+          mailing_list_mode: "メーリングリストモードになっているため、このトピックへの返信はメールで通知されます。"
           "3_10": "このトピックのタグをウォッチしているため通知されます。"
           "3_6": "このカテゴリをウォッチしているため通知されます。"
-          "3_5": "このトピックをウォッチし始めたため通知されます。"
+          "3_5": "このトピックを自動的にウォッチし始めたため通知されます。"
           "3_2": "このトピックをウォッチしているため通知されます。"
           "3_1": "このトピックを作成したため通知されます。"
           "3": "このトピックをウォッチしているため通知されます。"
-          "2_8": "このカテゴリを追跡しているので、新たな返信のカウント数が表示されます。"
-          "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
-          "2_2": "このトピックを追跡しているので、新たな返信のカウント数が表示されます。"
+          "2_8": "このカテゴリを追跡しているため、新しい返信の件数が表示されます。"
+          "2_4": "このトピックに返信したので、新しい返信の件数が表示されます。"
+          "2_2": "このトピックを追跡しているので、新しい返信の件数が表示されます。"
           "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
           "1": "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
-          "0_7": "このカテゴリに関して一切通知を受け取りません。"
-          "0_2": "このトピックに関して一切通知を受け取りません。"
-          "0": "このトピックに関して一切通知を受け取りません。"
+          "0_7": "このカテゴリのすべての通知を無視しています。"
+          "0_2": "このトピックのすべての通知を無視しています。"
+          "0": "このトピックのすべての通知を無視しています。"
         watching_pm:
           title: "ウォッチ中"
           description: "未読件数と新しい投稿がトピックの横に表示されます。このトピックに対して新しい投稿があった場合に通知されます。"

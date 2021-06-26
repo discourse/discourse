@@ -2276,7 +2276,7 @@ de:
     user:
       merge_user:
         updating_username: "Aktualisiere Benutzername..."
-        changing_post_ownership: "Ändern des Beitragbesitzers ..."
+        changing_post_ownership: "Ändern des Beitragseigentümers …"
         merging_given_daily_likes: "Zusammenführen gegebener täglicher Likes ..."
         merging_post_timings: "Beitragszeiten zusammenführen ..."
         merging_user_visits: "Zusammenführen von Benutzerbesuchen ..."
