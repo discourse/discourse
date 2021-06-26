@@ -1490,7 +1490,7 @@ de:
         top_replies: "Die besten Beiträge"
         no_replies: "Noch keine Antworten."
         more_replies: "Weitere Antworten"
-        top_topics: "Die besten Themen"
+        top_topics: "Angesagte Themen"
         no_topics: "Noch keine Themen."
         more_topics: "Weitere Themen"
         top_badges: "Die besten Abzeichen"
@@ -2200,13 +2200,13 @@ de:
         new: "Es gibt für dich keine neuen Themen."
         read: "Du hast noch keine Themen gelesen."
         posted: "Du hast noch keine Beiträge verfasst."
-        latest: "Ihr seid alle eingeholt!"
+        latest: "Du bist auf dem Laufenden!"
         bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
-        top: "Es gibt keine Top-Themen."
+        top: "Es gibt keine angesagten Themen."
         educate:
-          new: '<p>Ihre neuen Themen werden hier angezeigt. Standardmäßig gelten Themen als neu und zeigen einen Indikator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> an, wenn sie in den letzten 2 Tagen erstellt wurden.</p><p>Besuchen Sie Ihre <a href="%{userPrefsUrl}">Einstellungen</a> , um dies zu ändern.</p>'
-          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class=\"badge new-posts badge-notification\">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen eines jeden Themas mittels der \U0001F514 ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href=\"%{userPrefsUrl}\">Einstellungen</a> ändern.</p>"
+          new: '<p>Hier werden deine neuen Themen angezeigt. Standardmäßig werden Themen als neu erachtet und mit einem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-Indikator dargestellt, wenn sie in den letzten 2 Tagen erstellt wurden. </p><p>Besuche deine <a href="%{userPrefsUrl}">Einstellungen</a>, um dies zu ändern.</p>'
+          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Standardmäßig werden Themen als ungelesen erachtet und mit einem Zähler für ungelesene Beiträge <span class=\"badge new-posts badge-notification\">1</span> dargestellt, wenn du:</p><ul><li>das Thema erstellt hast;</li><li>auf das Thema geantwortet hast;</li><li>das Thema für mehr als 4 Minuten gelesen hast.</li></ul><p>Oder falls du das Thema über \U0001F514 ausdrücklich auf „Verfolgen“ oder „Beobachten“ eingestellt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a>, um dies zu ändern.</p>"
       bottom:
         latest: "Das waren die aktuellen Themen."
         posted: "Das waren alle Themen."
@@ -3450,7 +3450,7 @@ de:
           posted: "Du hast noch keine Beiträge verfasst."
           latest: "Es gibt keine aktuellen Themen."
           bookmarks: "Du hast noch keine Themen, die du mit einem Lesezeichen versehen hast."
-          top: "Es gibt keine Top-Themen."
+          top: "Es gibt keine angesagten Themen."
     invite:
       custom_message: "Gestalte deine Einladung etwas persönlicher, indem du eine <a href>eigene Nachricht</a> schreibst."
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
