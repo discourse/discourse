@@ -3703,16 +3703,16 @@ de:
           allowed_urls: Zulässige URLs
           descriptions:
             topics:
-              read: Lesen Sie ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
-              write: Erstellen Sie ein neues Thema oder posten Sie es in einem vorhandenen Thema.
-              read_lists: Lesen Sie Themenlisten wie Top, Neu, Aktuell usw. RSS wird ebenfalls unterstützt.
-              wordpress: Notwendig, damit das WordPress-WP-Diskurs-Plugin funktioniert.
+              read: Lies ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
+              write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
+              read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
+              wordpress: Notwendig, damit das „wp-discourse“-Plug-in für WordPress funktioniert.
             users:
-              bookmarks: Benutzer-Lesezeichen auflisten. Es gibt Lesezeichenerinnerungen zurück, wenn Sie das ICS-Format verwenden.
+              bookmarks: Listet die Lesezeichen des Benutzers auf. Gibt Lesezeichen-Erinnerungen zurück, wenn du das ICS-Format verwendest.
               sync_sso: Synchronisiere einen Benutzer mit DiscourseConnect.
               show: Informationen über einen Benutzer abrufen.
               check_emails: Benutzer-E-Mails auflisten.
-              update: Benutzerprofil Informationen aktualisieren.
+              update: Benutzerprofil-Informationen aktualisieren.
               log_out: Alle Sitzungen für einen Benutzer abmelden.
               anonymize: Benutzerkonten anonymisieren.
               delete: Benutzerkonten löschen.
@@ -3722,7 +3722,7 @@ de:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."
         instruction: "Webhooks erlauben es Discourse, externe Dienste zu benachrichtigen, wenn bestimmte Ereignisse auf der Plattform auftreten. Wird ein Webhook getriggert, so wird eine POST-Anfrage an die angegebenen URLs gesendet."
-        detailed_instruction: "Wenn das ausgewählte Ereignis eintritt wird ein POST Request an die angegebenen URLs versandt."
+        detailed_instruction: "Wenn das ausgewählte Ereignis eintritt, wird eine POST-Anfrage an die angegebene URL verschickt."
         new: "Neuer Webhook"
         create: "Erstellen"
         save: "Speichern"
@@ -3730,9 +3730,9 @@ de:
         description: "Beschreibung"
         controls: "Kontrollelemente"
         go_back: "Zurück zur Liste"
-        payload_url: "Payload URL"
+        payload_url: "Payload-URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Es sieht so aus als wenn du versuchst einen Webhook an eine lokale URL einzurichten. Ereignisse die an eine lokale Adresse ausgeliefert werden können möglicherweise Nebeneffekte oder unvorhergesehenes Verhalten auslösen. Möchtest du fortfahren?"
+        warn_local_payload_url: "Es scheint, dass du versuchst, den Webhook für eine lokale URL einzurichten. Ein Ereignis, das an eine lokale Adresse übermittelt wird, kann einen Nebeneffekt oder ein unerwartetes Verhalten verursachen. Möchtest du fortfahren?"
         secret_invalid: "Das Geheimnis darf keine Leerzeichen enthalten."
         secret_too_short: "Das Geheimnis sollte mindestens 12 Zeichen enthalten."
         secret_placeholder: "Eine optionale Zeichenkette für die Signatur"
@@ -3742,21 +3742,21 @@ de:
         event_chooser: "Welche Ereignisse sollen diesen Webhook auslösen?"
         wildcard_event: "Sende mir alles."
         individual_event: "Wähle einzelne Ereignisse aus."
-        verify_certificate: "Überprüfe das TLS Zertifikat der Payload URL"
+        verify_certificate: "Überprüfe das TLS-Zertifikat der Payload-URL"
         active: "Aktiv"
-        active_notice: "Wir werden Ereignisdetails übermitteln wenn es eintritt."
-        categories_filter_instructions: "In Frage kommende Webhooks werden nur dann getriggert wenn das Ereignis in Verbindung mit den angegebenen Kategorien steht. Lasse den Wert frei um den Webhook für alle Kategorien auszuführen."
-        categories_filter: "Getriggerte Kategorien"
+        active_notice: "Wir werden Ereignisdetails beim Eintritt desselben übermitteln."
+        categories_filter_instructions: "Relevante Webhooks werden nur ausgelöst, wenn das Ereignis mit den angegebenen Kategorien verbunden ist. Ein leerer Wert löst Webhooks für alle Kategorien aus."
+        categories_filter: "Ausgelöste Kategorien"
         tags_filter_instructions: "Relevante Webhooks werden nur ausgelöst, wenn das Ereignis mit den angegebenen Schlagwörtern verbunden ist. Ein leerer Wert löst Webhooks für alle Schlagwörter aus."
         tags_filter: "Ausgelöste Schlagwörter"
-        groups_filter_instructions: "In Frage kommende Webhooks werden nur dann getriggert wenn das Ereignis in Verbindung mit den angegebenen Gruppen steht. Lasse den Wert frei um den Webhook für alle Gruppen auszuführen."
-        groups_filter: "Getriggerte Gruppen"
+        groups_filter_instructions: "Relevante Webhooks werden nur ausgelöst, wenn das Ereignis mit den angegebenen Gruppen verbunden ist. Ein leerer Wert löst Webhooks für alle Gruppen aus."
+        groups_filter: "Ausgelöste Gruppen"
         delete_confirm: "Diesen Webhook löschen?"
         topic_event:
-          name: "Thema Ereignis"
+          name: "Themenereignis"
           details: "Wenn ein neues Thema erstellt, bearbeitet oder gelöscht wird."
         post_event:
-          name: "Beitrag Ereignis"
+          name: "Beitragsereignis"
           details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
         user_event:
           name: "Benutzer Ereignis"
