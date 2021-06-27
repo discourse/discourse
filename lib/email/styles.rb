@@ -142,6 +142,7 @@ module Email
       style('.onebox-avatar-inline', ONEBOX_INLINE_AVATAR_STYLE)
 
       @fragment.css('.github-body-container .excerpt').remove
+      @fragment.css('.github-info .user img').remove
 
       @fragment.css('aside.quote blockquote > p').each do |p|
         p['style'] = 'padding: 0;'
