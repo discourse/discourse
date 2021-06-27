@@ -32,6 +32,7 @@ class GroupSmtpMailer < ActionMailer::Base
       url: post.url(without_slug: SiteSetting.private_email?),
       post_id: post.id,
       topic_id: post.topic_id,
+      context: "",
       username: post.user.username,
       group_name: group_name,
       allow_reply_by_email: true,

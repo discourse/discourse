@@ -43,23 +43,23 @@ RSpec.describe Jobs::GroupSmtpEmail do
   it "includes a 'reply above this line' message" do
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.raw_body).to include(I18n.t("user_notifications.reply_above_line"))
+    expect(email_log.as_mail_message.html_part.to_s).to include(I18n.t("user_notifications.reply_above_line"))
   end
 
   it "does not include context posts" do
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.raw_body).not_to include(I18n.t("user_notifications.previous_discussion"))
-    expect(email_log.raw_body).not_to include("some first post content")
+    expect(email_log.as_mail_message.text_part.to_s).not_to include(I18n.t("user_notifications.previous_discussion"))
+    expect(email_log.as_mail_message.text_part.to_s).not_to include("some first post content")
   end
 
   it "includes the participants in the correct format" do
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.raw_body).to include("Support Group")
-    expect(email_log.raw_body).to include("otherguy@test.com")
-    expect(email_log.raw_body).to include("cormac@lit.com")
-    expect(email_log.raw_body).to include("normaluser")
+    expect(email_log.as_mail_message.text_part.to_s).to include("Support Group")
+    expect(email_log.as_mail_message.text_part.to_s).to include("otherguy@test.com")
+    expect(email_log.as_mail_message.text_part.to_s).to include("cormac@lit.com")
+    expect(email_log.as_mail_message.text_part.to_s).to include("normaluser")
   end
 
   it "creates an EmailLog record with the correct details" do
