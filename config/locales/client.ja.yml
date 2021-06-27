@@ -218,7 +218,7 @@ ja:
       title: "推奨トピック"
       pm_title: "推奨メッセージ"
     about:
-      simple_title: "このサイトについて"
+      simple_title: "サイト情報"
       title: "%{title}について"
       stats: "サイトの統計"
       our_admins: "管理者"
@@ -541,9 +541,9 @@ ja:
         title: "リクエスト"
         reason: "理由"
         accept: "承諾"
-        accepted: "受け入れられました"
+        accepted: "承諾"
         deny: "拒否"
-        denied: "拒否されました"
+        denied: "拒否"
         undone: "リクエストの取り消し"
         handle: "メンバーシップリクエストを処理する"
       manage:
@@ -574,7 +574,7 @@ ja:
             title: "設定"
             allow_unknown_sender_topic_replies: "不明な送信者によるトピックの返信を許可します。"
           mailboxes:
-            synchronized: "同期されたメールボックス"
+            synchronized: "同期メールボックス"
             none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
         membership:
           title: メンバーシップ
@@ -599,14 +599,14 @@ ja:
           muted_tags_instructions: "これらのタグが付いている新規トピックについては、ユーザーには何も通知されず、最新情報には表示されません。"
         logs:
           title: "ログ"
-          when: "いつ"
+          when: "日時"
           action: "操作"
-          acting_user: "活動中のユーザー"
-          target_user: "ターゲットユーザー"
+          acting_user: "代理ユーザー"
+          target_user: "対象ユーザー"
           subject: "件名"
           details: "詳細"
-          from: "発信元"
-          to: "宛先"
+          from: "開始"
+          to: "終了"
       permissions:
         title: "権限"
         none: "このグループに関連付けられているカテゴリはありません。"
@@ -897,7 +897,7 @@ ja:
       allow_private_messages: "ほかのユーザーが私に個人メッセージを送信することを許可する"
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
-      enable_defer: "トピックを未読としてマークするために延期を有効にする"
+      enable_defer: "トピックを未読にマークして延期を有効にする"
       change: "変更"
       featured_topic: "注目のトピック"
       moderator: "%{user} はモデレーターです"
@@ -961,7 +961,7 @@ ja:
       apps: "アプリ連携"
       revoke_access: "アクセスを取り消す"
       undo_revoke_access: "アクセスの取り消しを元に戻す"
-      api_approved: "承認されました:"
+      api_approved: "承認:"
       api_last_used_at: "最終使用時間:"
       theme: "テーマ"
       save_to_change_theme: '「%{save_text}」をクリックするとテーマが更新されます'
@@ -1343,8 +1343,8 @@ ja:
         more_badges: "その他のバッジ"
         top_links: "人気のリンク"
         no_links: "まだリンクはありません。"
-        most_liked_by: "「いいね！」を最も多くくれたユーザー"
-        most_liked_users: "「いいね！」が最も多いユーザー"
+        most_liked_by: "最も「いいね！」したユーザー"
+        most_liked_users: "最も「いいね！」されたユーザー"
         most_replied_to_users: "最も多く返信したユーザー"
         no_likes: "まだ「いいね！」はありません。"
         top_categories: "人気のカテゴリ"
@@ -1373,7 +1373,7 @@ ja:
         the_topic: "トピック"
     loading: "読み込み中..."
     errors:
-      prev_page: "右記の項目をロード中に発生: "
+      prev_page: "読み込み中"
       reasons:
         network: "ネットワークエラー"
         server: "サーバーエラー"
@@ -1559,7 +1559,7 @@ ja:
         backup_code: "代わりにバックアップコードを使用する"
     invites:
       accept_title: "招待"
-      emoji: "封筒の絵文字"
+      emoji: "絵文字をエンベロープ"
       welcome_to: "%{site_name} へようこそ！"
       invited_by: "あなたは次の人から招待されました:"
       social_login_available: "このメールアドレスを使ってソーシャルログインすることも可能です。"
@@ -2064,7 +2064,7 @@ ja:
       auto_close:
         title: "トピックを自動的にクローズ"
         error: "有効な値を入力してください。"
-        based_on_last_post: "最終投稿時間より前でクローズしない"
+        based_on_last_post: "トピックの最後の投稿が古くなるまでクローズしない。"
       auto_delete:
         title: "トピックを自動的に削除"
       reminder:
@@ -2449,7 +2449,7 @@ ja:
       email_in: "カスタム受信メールアドレス:"
       email_in_allow_strangers: "登録されていない匿名のユーザーからのメールを受け取る"
       email_in_disabled: "メールによる新しいトピックの投稿は、サイトの設定で無効になっています。メールによる新しいトピックの投稿を有効にするには、 "
-      email_in_disabled_click: '"email in"設定を有効にしてください'
+      email_in_disabled_click: '"email in" 設定を有効にする。'
       allow_badges_label: "このカテゴリでバッジの付与を許可する"
       edit_permissions: "権限を編集"
       review_group_name: "グループ名"
@@ -2731,7 +2731,7 @@ ja:
       rename_tag: "タグの名前を変更"
       rename_instructions: "タグの新しい名前を選択:"
       sort_by: "並べ替え:"
-      sort_by_count: "カウント"
+      sort_by_count: "件数"
       sort_by_name: "名前"
       manage_groups: "タグのグループを管理"
       upload_successful: "タグを正常にアップロードしました"
@@ -2795,7 +2795,7 @@ ja:
         regular: "レギュラー"
         leader: "リーダー"
   admin_js:
-    type_to_filter: "設定項目を検索..."
+    type_to_filter: "フィルタの種類..."
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
@@ -3170,8 +3170,8 @@ ja:
         title: "ログ"
         action: "操作"
         created_at: "作成"
-        last_match_at: "最終マッチ"
-        match_count: "マッチ"
+        last_match_at: "最終一致"
+        match_count: "一致"
         ip_address: "IP"
         topic_id: "トピック ID"
         post_id: "投稿 ID"
