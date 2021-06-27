@@ -682,7 +682,7 @@ de:
           regular_tags_instructions: "Wenn diese Schlagwörter stummgeschaltet sind, werden sie für Gruppenmitglieder nicht stummgeschaltet. Benutzer werden benachrichtigt, wenn sie erwähnt werden oder jemand auf sie antwortet."
           muted_tags_instructions: "Benutzer werden nicht über neue Themen mit diesen Schlagwörtern benachrichtigt und sie werden nicht unter „Aktuell“ angezeigt."
         logs:
-          title: "Protokoll"
+          title: "Protokolle"
           when: "Wann"
           action: "Aktion"
           acting_user: "Ausführender Benutzer"
@@ -3580,7 +3580,7 @@ de:
           total: "Gesamt (vollständiger Zeitraum)"
           no_data: "Keine Daten anzuzeigen."
           trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokoll</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokolle</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
           filters:
             file_extension:
@@ -3759,7 +3759,7 @@ de:
           name: "Beitragsereignis"
           details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
         user_event:
-          name: "Benutzer Ereignis"
+          name: "Benutzer-Ereignis"
           details: "Wenn sich ein Benutzer anmeldet, abmeldet, seine E-Mail bestätigt, erstellt, genehmigt oder aktualisiert wird."
         group_event:
           name: "Gruppen-Ereignis"
@@ -3771,20 +3771,20 @@ de:
           name: "Schlagwort-Ereignis"
           details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
         reviewable_event:
-          name: "Überpüfbares Ereignis"
+          name: "Überprüfbares Ereignis"
           details: "Wenn ein neuer Eintrag zur Überprüfung bereit ist und wenn sich sein Status ändert."
         notification_event:
           name: "Benachrichtigungs-Ereignis"
           details: "Wenn ein Benutzer eine Benachrichtigung in seinem Feed erhält."
         user_badge_event:
-          name: "Abzeichen-Verleihungs-Event"
+          name: "Abzeichen-Verleihungs-Ereignis"
           details: "Wenn ein Benutzer ein Abzeichen erhält."
         group_user_event:
-          name: "Gruppenbenutzerereignis"
+          name: "Gruppenbenutzer-Ereignis"
           details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."
         like_event:
-          name: "Event liken"
-          details: "Wenn ein Benutzer einen Beitrag mag."
+          name: "Like-Ereignis"
+          details: "Wenn ein Benutzer einen Beitrag mit einem Like versieht."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -3793,16 +3793,16 @@ de:
           disabled: "Deaktiviert"
         events:
           none: "Es gibt keine verwandten Ereignisse."
-          redeliver: "Neu zustellen"
+          redeliver: "Erneut übertragen"
           incoming:
-            one: "Es gibt ein neues Ereignis"
+            one: "Es gibt ein neues Ereignis."
             other: "Es gibt %{count} neue Ereignisse."
           completed_in:
             one: "In %{count} Sekunde fertiggestellt."
             other: "In %{count} Sekunden fertiggestellt."
-          request: "Request"
-          response: "Response"
-          redeliver_confirm: "Bist du sicher dass du denselben Payload noch einmal übertragen möchtest?"
+          request: "Anfrage"
+          response: "Antwort"
+          redeliver_confirm: "Bist du sicher, dass du denselben Payload noch einmal übertragen möchtest?"
           headers: "Headers"
           payload: "Payload"
           body: "Body"
@@ -3810,10 +3810,10 @@ de:
           go_details: "Webhook bearbeiten"
           go_events: "Gehe zu Ereignissen"
           ping: "Ping"
-          status: "Status Code"
+          status: "Statuscode"
           event_id: "ID"
           timestamp: "Erstellt"
-          completion: "Zeit"
+          completion: "Fertigstellungszeit"
           actions: "Aktionen"
       plugins:
         title: "Plug-ins"
@@ -3827,68 +3827,68 @@ de:
         change_settings: "Einstellungen ändern"
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
-        official: "Offizielles Plugin"
+        official: "Offizielles Plug-in"
       backups:
-        title: "Backups"
+        title: "Back-ups"
         menu:
-          backups: "Backups"
-          logs: "Logs"
-        none: "Kein Backup verfügbar."
+          backups: "Back-ups"
+          logs: "Protokolle"
+        none: "Kein Back-up verfügbar."
         read_only:
           enable:
             title: "Nur-Lesen-Modus aktivieren"
-            label: "Nur-Lesen-Modus aktivieren"
+            label: "„Nur Lesen“ aktivieren"
             confirm: "Möchtest du wirklich den Nur-Lesen-Modus aktivieren?"
           disable:
             title: "Nur-Lesen-Modus deaktivieren"
-            label: "Nur-Lesen-Modus deaktivieren"
+            label: "„Nur Lesen“ deaktivieren"
         logs:
-          none: "Noch keine Protokolleinträge verfügbar…"
+          none: "Noch keine Protokolle verfügbar …"
         columns:
           filename: "Dateiname"
           size: "Größe"
         upload:
           label: "Hochladen"
-          title: "Eine Sicherung zu dieser Instanz hochladen"
-          uploading: "Wird hochgeladen…"
-          uploading_progress: "Wird hochgeladen... %{progress}%"
-          success: "'%{filename}' wurde erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu einer Minute dauern, bis sie in der Liste erscheint."
-          error: "Beim Hochladen der Datei '%{filename}' ist ein Fehler aufgetreten: %{message}"
+          title: "Ein Back-up zu dieser Instanz hochladen"
+          uploading: "Wird hochgeladen …"
+          uploading_progress: "Wird hochgeladen … %{progress} %"
+          success: "„%{filename}“ wurde erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu eine Minute dauern, bis sie in der Liste erscheint."
+          error: "Beim Hochladen der Datei „%{filename}“ ist ein Fehler aufgetreten: %{message}"
         operations:
-          is_running: "Ein Vorgang läuft gerade…"
-          failed: "Der Vorgang '%{operation}' ist fehlgeschlagen. Bitte überprüfe die Logs."
+          is_running: "Ein Vorgang läuft gerade …"
+          failed: "Der Vorgang „%{operation}“ ist fehlgeschlagen. Bitte überprüfe die Protokolle."
           cancel:
             label: "Abbrechen"
             title: "Den aktuellen Vorgang abbrechen"
             confirm: "Möchtest du wirklich den aktuellen Vorgang abbrechen?"
           backup:
-            label: "Sichern"
-            title: "Ein Backup erstellen"
-            confirm: "Willst du ein neues Backup starten?"
+            label: "Back-up"
+            title: "Ein Back-up erstellen"
+            confirm: "Möchtest du ein neues Back-up starten?"
             without_uploads: "Ja (ohne Dateien)"
           download:
             label: "Herunterladen"
             title: "Sende E-Mail mit Download-Link"
-            alert: "Ein Link zum Download dieses Backups wurde dir per E-Mail geschickt."
+            alert: "Ein Link zum Download dieses Back-ups wurde dir per E-Mail geschickt."
           destroy:
-            title: "Das Backup löschen"
-            confirm: "Möchtest du wirklich das Backup löschen?"
+            title: "Das Back-up löschen"
+            confirm: "Möchtest du wirklich das Back-up löschen?"
           restore:
             is_disabled: "Wiederherstellung ist in den Website-Einstellungen deaktiviert."
             label: "Wiederherstellen"
-            title: "Das Backup wiederherstellen"
-            confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
+            title: "Das Back-up wiederherstellen"
+            confirm: "Bist du sicher, dass du dieses Back-up wiederherstellen möchtest?"
           rollback:
             label: "Zurücksetzen"
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
             confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
         location:
-          local: "Lokaler Speicherplatz"
+          local: "Lokaler Speicher"
           s3: "S3"
-        backup_storage_error: "Zugriff auf Backup-Speicher fehlgeschlagen: %{error_message}"
+        backup_storage_error: "Zugriff auf Back-up-Speicher fehlgeschlagen: %{error_message}"
       export_csv:
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
-        failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
+        failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Protokolle."
         button_text: "Exportieren"
         button_title:
           user: "Vollständige Benutzerliste im CSV-Format exportieren."
@@ -4224,12 +4224,12 @@ de:
             subject_placeholder: "Betreff…"
             error_placeholder: "Fehler"
         logs:
-          none: "Keine Protokolleinträge gefunden."
+          none: "Keine Protokolle gefunden."
           filters:
             title: "Filter"
             user_placeholder: "Benutzername"
             address_placeholder: "name@example.com"
-            type_placeholder: "zusammenfassen, registrieren…"
+            type_placeholder: "zusammenfassen, registrieren …"
             reply_key_placeholder: "Antwort-Schlüssel"
       moderation_history:
         performed_by: "Durchgeführt von"
@@ -4242,7 +4242,7 @@ de:
           delete_topic: "Thema gelöscht"
           post_approved: "Beitrag genehmigt"
       logs:
-        title: "Logs"
+        title: "Protokolle"
         action: "Aktion"
         created_at: "Erstellt"
         last_match_at: "Letzter Treffer"
@@ -4307,7 +4307,7 @@ de:
             revoke_admin: "Administration entziehen"
             grant_moderation: "Moderation gewähren"
             revoke_moderation: "Moderation entziehen"
-            backup_create: "Backup erstellen"
+            backup_create: "Back-up erstellen"
             deleted_tag: "Schlagwort gelöscht"
             deleted_unused_tags: "nicht verwendete Schlagwörter gelöscht"
             renamed_tag: "Schlagwort umbenannt"
@@ -4317,15 +4317,15 @@ de:
             activate_user: "Benutzer aktivieren"
             deactivate_user: "Benutzer deaktivieren"
             change_readonly_mode: "Nur-Lesen-Modus ändern"
-            backup_download: "Backup herunterladen"
-            backup_destroy: "Backup löschen"
+            backup_download: "Back-up herunterladen"
+            backup_destroy: "Back-up löschen"
             reviewed_post: "Geprüfter Beitrag"
-            custom_staff: "plugin-spezifische Aktion"
+            custom_staff: "Plug-in-spezifische Aktion"
             post_locked: "Beitrag gesperrt"
             post_edit: "Beitrag bearbeitet"
             post_unlocked: "Beitrag entsperrt"
-            check_personal_message: "Nachrichten geprüft"
-            disabled_second_factor: "Zwei-Faktor-Authentifizierung deaktiviert"
+            check_personal_message: "persönliche Nachricht überprüfen"
+            disabled_second_factor: "Zwei-Faktor-Authentifizierung deaktivieren"
             topic_published: "Thema veröffentlicht"
             post_approved: "Beitrag genehmigt"
             post_rejected: "Beitrag abgelehnt"
@@ -4334,40 +4334,40 @@ de:
             delete_badge: "Abzeichen löschen"
             merge_user: "Benutzer zusammenführen"
             entity_export: "Entität exportieren"
-            change_name: "Name ändern"
+            change_name: "Namen ändern"
             topic_timestamps_changed: "Themen-Zeitstempel geändert"
-            approve_user: "genehmigter Benutzer"
+            approve_user: "Benutzer genehmigt"
             web_hook_create: "Webhook anlegen"
             web_hook_update: "Webhook aktualisieren"
             web_hook_destroy: "Webhook entfernen"
             web_hook_deactivate: "Webhook deaktivieren"
-            embeddable_host_create: "Einbettbaren Host erstellen"
-            embeddable_host_update: "Einbettbaren Host aktualisieren"
-            embeddable_host_destroy: "Einbettbaren Host entfernen"
-            change_theme_setting: "Theme Einstellung ändern"
+            embeddable_host_create: "einbettbaren Host erstellen"
+            embeddable_host_update: "einbettbaren Host aktualisieren"
+            embeddable_host_destroy: "einbettbaren Host entfernen"
+            change_theme_setting: "Theme-Einstellung ändern"
             disable_theme_component: "Theme-Komponente deaktivieren"
             enable_theme_component: "Theme-Komponente aktivieren"
             revoke_title: "Titel widerrufen"
             change_title: "Titel ändern"
-            api_key_create: "Api Schlüssel erstellen"
-            api_key_update: "Api Schlüssel aktualisieren"
-            api_key_destroy: "Api Schlüssel zerstören"
+            api_key_create: "API-Schlüssel erstellen"
+            api_key_update: "API-Schlüssel aktualisieren"
+            api_key_destroy: "API-Schlüssel zerstören"
             override_upload_secure_status: "Hochladesicherheitsstatus überschreiben"
             page_published: "Seite veröffentlicht"
             page_unpublished: "Veröffentlichung von Seite aufgehoben"
             add_email: "E-Mail hinzufügen"
             update_email: "E-Mail aktualisieren"
-            destroy_email: "E-Mail zerstören"
+            destroy_email: "E-Mail entfernen"
             topic_closed: "Thema geschlossen"
             topic_opened: "Thema geöffnet"
             topic_archived: "Thema archiviert"
-            topic_unarchived: "Thema nicht archiviert"
-            post_staff_note_create: "team Notiz hinzufügen"
-            post_staff_note_destroy: "team Notiz löschen"
+            topic_unarchived: "Thema aus dem Archiv geholt"
+            post_staff_note_create: "Team-Notiz hinzufügen"
+            post_staff_note_destroy: "Team-Notiz entfernen"
             delete_group: "Gruppe löschen"
         screened_emails:
           title: "Gefilterte E-Mails"
-          description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
+          description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
           email: "E-Mail-Adresse"
           actions:
             allow: "Erlauben"
@@ -4378,7 +4378,7 @@ de:
           domain: "Domain"
         screened_ips:
           title: "Gefilterte IPs"
-          description: 'IP-Adressen, die überwacht werden. Verwende "Zulassen", um IP-Adressen zuzulassen.'
+          description: 'IP-Adressen, die überwacht werden. Verwende „Erlauben“, um IP-Adressen zuzulassen.'
           delete_confirm: "Möchtest du wirklich die Regel für %{ip_address} entfernen?"
           roll_up_confirm: "Möchtest du wirklich die häufig gefilterten IP-Adressen zu Subnetzen zusammenfassen?"
           rolled_up_some_subnets: "Die geblockten IP-Adressen wurden erfolgreich zu diesen Subnetzen zusammengefasst: %{subnets}"
@@ -4394,7 +4394,7 @@ de:
             filter: "Suche"
           roll_up:
             text: "Zusammenfassen"
-            title: "Erzeugt neue Einträge zum Blockieren von Subnetzen, wenn mindestens 'min_ban_entries_for_roll_up' Einträge vorhanden sind."
+            title: "Erzeugt neue Subnetz-Block-Einträge, wenn mindestens „min_ban_entries_for_roll_up“ Einträge vorhanden sind."
         search_logs:
           title: "Suchprotokolle"
           term: "Suchbegriff"
@@ -4405,7 +4405,7 @@ de:
             header: "Überschrift"
             full_page: "Desktop-Seite"
             click_through_only: "Alle (nur durcklicken)"
-          header_search_results: "Suchergebnis-Kopfzeile"
+          header_search_results: "Suchergebnis (Kopfzeile)"
         logster:
           title: "Fehlerprotokolle"
       watched_words:
@@ -4551,7 +4551,7 @@ de:
         show_admin_profile: "Administration"
         show_public_profile: "Zeige öffentliches Profil"
         impersonate: "Nutzersicht"
-        action_logs: "Aktionsprotokoll"
+        action_logs: "Aktionsprotokolle"
         ip_lookup: "IP-Abfrage"
         log_out: "Abmelden"
         logged_out: "Der Benutzer wurde auf allen Geräten abgemeldet"

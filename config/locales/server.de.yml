@@ -1362,8 +1362,8 @@ de:
     failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"%{base_path}/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
     email_polling_errored_recently:
-      one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>im Fehlerprotokoll</a>."
-      other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>im Fehlerprotokoll</a>."
+      one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
+      other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
     missing_mailgun_api_key: "Der Server ist so eingestellt, dass E-Mails über Mailgun versendet werden, aber du hast keinen API-Schlüssel angegeben, um Webhook-Nachrichten zu überprüfen."
     bad_favicon_url: "Das Favicon lässt sich nicht laden. Prüfe die Favicon-Einstellung in den <a href='%{base_path}/admin/site_settings'>Einstellungen</a>."
     poll_pop3_timeout: "Die Verbindung zum POP3-Server schlägt mit einer Zeitüberschreitung fehl. Eingehende E-Mails konnten nicht abgerufen werden. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
@@ -1512,7 +1512,7 @@ de:
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu verwalten"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
-    use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie sich an einer IP-Adresse befinden, die in der Liste „Abgeprüfte IP-Adressen“ („Admin“ > „Protokolle“ > „Abgeschirmte Ips“) definiert ist."
+    use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
     blocked_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
     allowed_internal_hosts: "Eine Liste interner Hostnamen, die Discourse sicher abrufen kann für Oneboxing und andere Zwecke"
     allowed_onebox_iframes: "Eine Liste der iframe src-Domänen, die über Onebox-Einbettungen zulässig sind. `*` erlaubt alle Standard-Onebox-Engines."
@@ -1815,7 +1815,7 @@ de:
     display_name_on_email_from: "Zeige vollständige Namen im Absender-Feld von E-Mails"
     unsubscribe_via_email: "Erlaube es Benutzern eine E-Mail mit dem Betreff oder Text: \"unsubscribe\" zum Abbestellen der E-Mails zu senden."
     unsubscribe_via_email_footer: "Füge einen `mailto:`-Link zum Abbestellen im Fußbereich ausgehender E-Mails hinzu"
-    delete_email_logs_after_days: "Lösche E-Mail Logs nach (N) Tagen. 0 um sie für immer zu behalten."
+    delete_email_logs_after_days: "Lösche E-Mail-Protokolle nach (N) Tagen. Wähle 0, um sie für immer zu behalten."
     disallow_reply_by_email_after_days: "Verbiete Antworten per E-Mail nach (N) Tagen. 0 um es unbegrenzt zu lassen."
     max_emails_per_day_per_user: "Maximale Zahl an E-Mails, die Benutzern gesendet werden. 0 zum Deaktivieren der Grenze."
     enable_staged_users: "Erstelle automatisch vorbereitete Benutzer, wenn eingehende E-Mails verarbeitet werden."
@@ -2672,9 +2672,9 @@ de:
       title: "Backup erfolgreich"
       subject_template: "Sicherung erfolgreich abgeschlossen"
       text_body_template: |
-        Backup erfolgreich erstellt.
+        Back-up erfolgreich erstellt.
 
-        Besuche [admin > backup section](%{base_url}/admin/backups) um das neue Backup herunterzuladen.
+        Besuche [Administration > Back-ups](%{base_url}/admin/backups), um das neue Back-up herunterzuladen.
 
         Hier ist das Protokoll:
 
@@ -2685,7 +2685,7 @@ de:
       title: "Backup fehlgeschlagen"
       subject_template: "Sicherung fehlgeschlagen"
       text_body_template: |
-        Die Sicherung ist fehlgeschlagen.
+        Back-up ist fehlgeschlagen.
 
         Hier ist das Protokoll:
 
@@ -2753,7 +2753,7 @@ de:
     csv_export_failed:
       title: "CSV-Export fehlgeschlagen"
       subject_template: "Datenexport fehlgeschlagen"
-      text_body_template: "Es tut uns leid, aber dein Datenexport ist fehlgeschlagen. Bitte überprüfe die Logs oder [kontaktiere ein Team-Mitglied](%{base_url}/about)."
+      text_body_template: "Es tut uns leid, aber dein Datenexport ist fehlgeschlagen. Bitte überprüfe die Protokolle oder [kontaktiere ein Team-Mitglied](%{base_url}/about)."
     email_reject_insufficient_trust_level:
       title: "E-Mail abgelehnt weil Vertrauensstufe unzureichend"
       subject_template: "[%{email_prefix}] E-Mail-Probme -- Vertrauensstufe nicht ausreichend"
@@ -3065,11 +3065,11 @@ de:
       title: "Dashboard-Probleme"
       subject_template: "Neue Ratschläge auf deinem Website-Dashboard"
       text_body_template: |
-        Basierend auf deinen aktuellen Seiteneinstellungen haben wir einige neue Ratschläge und Empfehlungen für dich.
+        Basierend auf deinen aktuellen Website-Einstellungen haben wir einige neue Ratschläge und Empfehlungen für dich.
 
-        [Besuche das Dashboard deiner Seite](%{base_url}/admin), um sie zu sehen.
+        [Besuche das Dashboard deiner Website](%{base_url}/admin), um sie zu sehen.
 
-        Sollte im Dashboard nichts sichtbar sein, hat bereits ein anderes Team-Mitglied auf die Ratschläge reagiert. Eine Liste der Team Handlungen finden sich in den [Team Handlungs Logs](%{base_url}/admin/logs/staff_action_logs).
+        Sollte im Dashboard nichts sichtbar sein, hat bereits ein anderes Team-Mitglied auf die Ratschläge reagiert. Eine Liste der Team-Aktionen findest du in den [Protokollen für Team-Aktionen](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Du bist ein neuer Benutzer des Monats!"
       subject_template: "Du bist ein neuer Benutzer des Monats!"
@@ -3914,11 +3914,11 @@ de:
 
       ## [Welche Informationen sammeln wir?](#collect)
 
-      Wir sammeln Informationen von dir, wenn du dich auf unserer Seite registrierst, und erfassen Daten, wenn du dich hier am Forum durch Lesen, Schreiben und Bewertung der geteilten Inhalte beteiligst.
+      Wir sammeln Informationen von dir, wenn du dich auf unserer Website registrierst, und wir erfassen Daten, wenn du dich hier am Forum durch Lesen, Schreiben und Bewertung der geteilten Inhalte beteiligst.
 
-      Wenn du dich auf unserer Seite registrierst, wirst du möglicherweise gebeten, deinen Namen und deine E-Mail-Adresse einzugeben. Du kannst unsere Seite jedoch auch ohne Registrierung besuchen. Deine E-Mail-Adresse wird durch eine E-Mail verifiziert, die einen eindeutigen Link enthält. Wenn der Link aufgerufen wird, wissen wir, dass du die Kontrolle über die E-Mail-Adresse hast.
+      Wenn du dich auf unserer Website registrierst, wirst du möglicherweise gebeten, deinen Namen und deine E-Mail-Adresse einzugeben. Du kannst unsere Website jedoch auch ohne Registrierung besuchen. Deine E-Mail-Adresse wird durch eine E-Mail verifiziert, die einen eindeutigen Link enthält. Wenn der Link aufgerufen wird, wissen wir, dass du die Kontrolle über die E-Mail-Adresse hast.
 
-      Wenn du registrierst bist und etwas schreibst, erfassen wir die IP-Adresse, von der der Beitrag stammt. Wir behalten möglicherweise Serverprotokolle, die die IP-Adresse jeder Anfrage an unseren Server enthält.
+      Wenn du registrierst bist und etwas schreibst, erfassen wir die IP-Adresse, von der der Beitrag stammt. Wir speichern möglicherweise Serverprotokolle, die die IP-Adresse jeder Anfrage an unseren Server enthalten.
 
       <a name="use"></a>
 
@@ -3927,9 +3927,9 @@ de:
       Jede der Informationen, die wir von dir sammeln, kann auf eine der folgenden Arten genutzt werden:
 
       * Um deine Erfahrung zu personalisieren &mdash; deine Information hilft uns dabei, besser auf deine individuellen Bedürfnisse einzugehen.
-      * Um unsere Seite zu verbessern &mdash; wir streben kontinuierlich dazu, das Angebot unserer Seite auf Grundlage der Informationen und des Feedbacks zu verbessern, das wir von dir erhalten.
+      * Um unsere Website zu verbessern &mdash; wir bemühen uns, das Angebot unserer Website auf Grundlage der Informationen und des Feedbacks zu verbessern, das wir von dir erhalten.
       * Um unseren Kundendienst zu verbessern &mdash; deine Information hilft uns, effizienter auf deine Anfragen an den Kundendienst und deine Hilfsbedürfnisse einzugehen.
-      * Um wiederkehrende E-Mails zu senden &mdash; Die E-Mail-Adresse, die du angibst, kann genutzt werden, um dir Informationen und Benachrichtigungen zu senden, die du zu Änderungen an Themen oder in Bezug auf deinen Benutzernamen angefordert hast, um dir auf Nachfragen, Anfragen oder Fragen zu antworten.
+      * Um wiederkehrende E-Mails zu senden &mdash; die E-Mail-Adresse, die du angibst, kann genutzt werden, um dir Informationen und Benachrichtigungen zu senden, die du zu Änderungen an Themen oder in Bezug auf deinen Benutzernamen angefordert hast, sowie um dir auf Nachfragen, Anfragen oder Fragen zu antworten.
 
       <a name="protect"></a>
 
@@ -3950,45 +3950,45 @@ de:
 
       ## [Verwenden wir Cookies?](#cookies)
 
-      Ja. Cookies sind kleine Dateien, die eine Seite bzw. ihr Dienstleister über einen Browser auf die Festplatte deines Computers überträgt (sofern du zustimmst). Diese Cookies erlauben es der Seite, deinen Browser wiederzuerkennen und, sofern du ein registriertes Konto hast, diesen deinem registrierten Konto zuzuordnen.
+      Ja. Cookies sind kleine Dateien, die eine Website bzw. ihr Dienstleister über einen Browser auf die Festplatte deines Computers überträgt (sofern du zustimmst). Diese Cookies erlauben es der Website, deinen Browser wiederzuerkennen und, sofern du ein registriertes Konto hast, diesen deinem registrierten Konto zuzuordnen.
 
-      Wir verwenden Cookies, um deine Einstellungen für deine nächsten Besuche zu verstehen und zu speichern und um aggregierte Daten über unseren Internetverkehr und Interaktionen auf der Seite zu berechnen, damit wir in der Zukunft eine bessere Seitenerfahrung und bessere Werkzeuge anbieten können. Wir beauftragen möglicherweise Drittanbieter, die uns dabei unterstützen, unsere Seitenbesucher besser zu verstehen. Diese Dienstleister sind nicht befugt, unsere gesammelten Informationen anders zu verwenden als zur Unterstützung und Verbesserung unseres Geschäfts.
+      Wir verwenden Cookies, um deine Einstellungen für deine nächsten Besuche zu verstehen und zu speichern und um aggregierte Daten über unseren Website-Traffic und Interaktionen auf der Website zu erfassen, damit wir in der Zukunft eine bessere Website-Erfahrung und bessere Werkzeuge anbieten können. Wir beauftragen möglicherweise Drittanbieter, die uns dabei unterstützen, unsere Website-Besucher besser zu verstehen. Diese Dienstleister sind nicht befugt, unsere gesammelten Informationen anders zu verwenden als zur Unterstützung und Verbesserung unseres Geschäfts.
 
       <a name="disclose"></a>
 
       ## [Geben wir irgendwelche Informationen an Dritte weiter?](#disclose)
 
-      Weder verkaufen oder handeln wir deine personenbezogenen Daten noch übermitteln wir diese an Dritte. Dies schließt nicht Drittanbieter ein, die uns beim Betrieb unserer Seite, bei der Durchführung unseres Geschäfts oder dir helfen, solange diese Parteien einwilligen, diese Informationen vertraulich zu behandeln. Wir geben deine Informationen möglicherweise frei, wenn wir glauben, dass die Freigabe zweckmäßig ist, um das Gesetz einzuhalten, unsere Nutzungsbedingungen durchzusetzen oder unsere oder fremde Rechte, Werte oder Sicherheit zu schützen. Nicht-personenbezogene Daten werden möglicherweise anderen Parteien für Marketing, Werbung und andere Zwecke zugänglich gemacht.
+      Weder verkaufen oder handeln wir deine personenbezogenen Daten noch übermitteln wir diese an Dritte. Dies schließt nicht Drittanbieter ein, die uns beim Betrieb unserer Website, bei der Durchführung unseres Geschäfts oder bei der Erbringung unserer Dienstleistungen für dich helfen, solange diese Parteien einwilligen, diese Informationen vertraulich zu behandeln. Wir geben deine Informationen möglicherweise frei, wenn wir glauben, dass die Freigabe zweckmäßig ist, um das Gesetz einzuhalten, unsere Nutzungsbedingungen durchzusetzen oder unsere oder fremde Rechte, Werte oder Sicherheit zu schützen. Nicht-personenbezogene Daten werden möglicherweise anderen Parteien für Marketing, Werbung und andere Zwecke zugänglich gemacht.
 
       <a name="third-party"></a>
 
-      ## [Links auf fremde Webseiten](#third-party)
+      ## [Links auf fremde Websites](#third-party)
 
-      Gelegentlich können wir Produkte oder Dienste von Dritten nach unserer Wahl auf unserer Seite einbinden oder darauf bewerben. Diese Drittanbieter haben eigene und unabhängige Datenschutzrichtlinien. Wir übernehmen daher keine Verantwortung oder Haftung für den Inhalt und die Aktivitäten dieser verknüpften Seite. Dennoch sind wir bemüht, die Integrität unserer Seite zu schützen und freuen uns über jedes Feedback zu diesen Seiten.
+      Gelegentlich können wir Produkte oder Dienste von Dritten nach unserer Wahl auf unserer Website einbinden oder darauf bewerben. Diese Drittanbieter-Websites haben eigene und unabhängige Datenschutzerklärungen. Wir übernehmen daher keine Verantwortung oder Haftung für den Inhalt und die Aktivitäten dieser verlinkten Websites. Dennoch sind wir bemüht, die Integrität unserer Website zu schützen und freuen uns über jedes Feedback zu diesen Websites.
 
       <a name="coppa"></a>
 
       ## [Gesetz zum Schutz der Privatsphäre von Kindern im Internet](#coppa)
 
-      Unsere Seite, Produkte und Dienstleistungen richten sich alle an Menschen, die mindestens 13 Jahre oder älter sind. Wenn sich dieser Server in der USA befindet und du unter 13 Jahre alt bist, so benutze diese Seite gemäß der Anforderungen des COPPA-Gesetzes ([Children's Online Privacy Protection Act](https://de.wikipedia.org/wiki/Children%27ss_Online_Privacy_Protection_Act)) nicht.
+      Unsere Website, Produkte und Dienstleistungen richten sich alle an Menschen, die mindestens 13 Jahre oder älter sind. Wenn sich dieser Server in der USA befindet und du unter 13 Jahre alt bist, so benutze diese Website gemäß den Anforderungen von COPPA ([Children's Online Privacy Protection Act](https://de.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nicht.
 
       <a name="online"></a>
 
-      ## [Online-Datenschutzrichtlinie](#online)
+      ## [Online-Datenschutzerklärung](#online)
 
-      Diese Online-Datenschutzrichtlinie gilt nur für Informationen, die durch unsere Seite gesammelt werden, und nicht für offline erfasste Informationen.
+      Diese Online-Datenschutzerklärung gilt nur für Informationen, die durch unsere Website gesammelt werden, und nicht für offline erfasste Informationen.
 
       <a name="consent"></a>
 
       ## [Deine Zustimmung](#consent)
 
-      Indem du unsere Seite benutzt, stimmst du der Datenschutzrichtlinie unserer Webseite zu.
+      Indem du unsere Website benutzt, stimmst du der Datenschutzerklärung unserer Website zu.
 
       <a name="changes"></a>
 
-      ## [Änderungen unserer Datenschutzrichtlinie](#changes)
+      ## [Änderungen unserer Datenschutzerklärung](#changes)
 
-      Wenn wir uns dazu entscheiden, unsere Datenschutzrichtlinie zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
+      Wenn wir uns dazu entscheiden, unsere Datenschutzerklärung zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
 
       Dieses Dokument ist als CC-BY-SA lizenziert. Es wurde zuletzt aktualisiert am 31. Mai 2013.
   badges:
@@ -4450,7 +4450,7 @@ de:
     unknown: "unbekannt"
     user_merged: "%{username} wurde mit diesem Konto zusammengeführt"
     user_delete_self: "Selbst gelöscht von %{url}"
-    webhook_deactivation_reason: "Dein Webhook wurde automatisch deaktiviert. Wir bekommen zahlreiche '%{status}' fehlgeschlagene HTTP Status Antworten."
+    webhook_deactivation_reason: "Dein Webhook wurde automatisch deaktiviert. Wir haben mehrere „%{status}“-HTTP-Statusfehlerantworten erhalten."
     api_key:
       automatic_revoked:
         one: "Automatisch widerrufen, letzte Aktivität vor mehr als %{count} Tag"
