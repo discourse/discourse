@@ -173,6 +173,12 @@
         "allow_unlimited_owner_edits_on_first_post": {
           "type": "boolean"
         },
+        "default_slow_mode_seconds": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "group_permissions": {
           "type": "array",
           "items": [
@@ -277,6 +283,7 @@
         "auto_close_hours",
         "auto_close_based_on_last_post",
         "allow_unlimited_owner_edits_on_first_post",
+        "default_slow_mode_seconds",
         "group_permissions",
         "email_in",
         "email_in_allow_strangers",

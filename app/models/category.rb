@@ -1027,6 +1027,7 @@ end
 #  read_only_banner                          :string
 #  default_list_filter                       :string(20)       default("all")
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE)
+#  default_slow_mode_seconds                 :integer
 #
 # Indexes
 #

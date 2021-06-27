@@ -334,6 +334,7 @@ class Topic < ActiveRecord::Base
 
     if category_id_changed? || new_record?
       inherit_auto_close_from_category
+      inherit_slow_mode_from_category
     end
   end
 
@@ -1252,6 +1253,12 @@ class Topic < ActiveRecord::Base
     Topic.where('pinned_until < ?', Time.now).update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
     Topic.where('bannered_until < ?', Time.now).find_each do |topic|
       topic.remove_banner!(Discourse.system_user)
+    end
+  end
+
+  def inherit_slow_mode_from_category
+    if self.category&.default_slow_mode_seconds
+      self.slow_mode_seconds = self.category&.default_slow_mode_seconds
     end
   end
 

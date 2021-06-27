@@ -874,6 +874,19 @@ describe Category do
     end
   end
 
+  describe 'auto slow mode' do
+    it 'should set slow mode automatically' do
+      category = Fabricate(:category_with_definition,
+        created_at: 1.minute.ago,
+        default_slow_mode_seconds: 1800
+      )
+
+      post1 = create_post(category: category)
+      topic = post1.topic
+      expect(topic.reload.slow_mode_seconds).to eq(1800)
+    end
+  end
+
   describe 'auto bump' do
     it 'should correctly automatically bump topics' do
       freeze_time
