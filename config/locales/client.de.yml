@@ -3530,13 +3530,13 @@ de:
         space_used: "%{usedSize} verwendet"
         space_used_and_free: "%{usedSize} (%{freeSize} frei)"
         uploads: "Uploads"
-        backups: "Backups"
+        backups: "Back-ups"
         backup_count:
-          one: "%{count} Backup auf %{location}"
-          other: "%{count} Backups auf %{location}"
+          one: "%{count} Back-up auf %{location}"
+          other: "%{count} Back-ups auf %{location}"
         lastest_backup: "Letztes: %{date}"
         traffic_short: "Traffic"
-        traffic: "Web Requests der Applikation"
+        traffic: "Webanfragen der Anwendung"
         page_views: "Seitenaufrufe"
         page_views_short: "Seitenaufrufe"
         show_traffic_report: "Zeige detaillierten Traffic-Bericht"
@@ -3551,9 +3551,9 @@ de:
         reports_tab: "Berichte"
         report_filter_any: "alle"
         disabled: Deaktiviert
-        timeout_error: Entschuldige bitte, die Warteschlange ist zu lang, bitte wähle ein kürzeres Intervall
-        exception_error: Entschuldige, ein Fehler während der Ausführung des Query ist aufgetreten
-        too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte bevor Du es erneut probierst.
+        timeout_error: Entschuldige, die Abfrage dauert zu lange, bitte wähle ein kürzeres Intervall
+        exception_error: Entschuldige, ein Fehler ist beim Ausführen der Abfrage aufgetreten
+        too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         filter_reports: Berichte filtern
         reports:
@@ -3576,8 +3576,8 @@ de:
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
           totals_for_sample: "Insgesamt für Stichprobe"
-          average_for_sample: "Durchschnitt für Beispiel"
-          total: "Gesamt aller Zeiten"
+          average_for_sample: "Durchschnitt für Stichprobe"
+          total: "Gesamt (vollständiger Zeitraum)"
           no_data: "Keine Daten anzuzeigen."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokoll</a>'
@@ -3592,7 +3592,7 @@ de:
             include_subcategories:
               label: "Unterkategorien einschließen"
       commits:
-        latest_changes: "Letzte Änderungen: bitte häufig updaten!"
+        latest_changes: "Letzte Änderungen: Bitte häufig updaten!"
         by: "von"
       groups:
         new:
@@ -3601,7 +3601,7 @@ de:
           name:
             too_short: "Gruppenname ist zu kurz"
             too_long: "Gruppenname ist zu lang"
-            checking: "Verfügbarkeit des Gruppennamens wird geprüft..."
+            checking: "Verfügbarkeit des Gruppennamens wird geprüft …"
             available: "Gruppenname ist verfügbar"
             not_available: "Gruppenname ist nicht verfügbar"
             blank: "Gruppenname darf nicht leer sein"
@@ -3630,12 +3630,12 @@ de:
             trust_levels_none: "Keine"
             automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
             automatic_membership_user_count:
-              one: "%{count} Benutzer hat die neuen E-Mail-Domänen und wird der Gruppe hinzugefügt."
-              other: "%{count} Benutzer haben die neuen E-Mail-Domänen und werden der Gruppe hinzugefügt."
-            primary_group: "Automatisch als Hauptgruppe festlegen"
+              one: "%{count} Benutzer hat die neuen E-Mail-Domains und wird der Gruppe hinzugefügt."
+              other: "%{count} Benutzer haben die neuen E-Mail-Domains und werden der Gruppe hinzugefügt."
+            primary_group: "Automatisch als primäre Gruppe festlegen"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
-        primary: "Hauptgruppe"
-        no_primary: "(keine Hauptgruppe)"
+        primary: "Primäre Gruppe"
+        no_primary: "(keine primäre Gruppe)"
         title: "Gruppen"
         edit: "Gruppen bearbeiten"
         refresh: "Aktualisieren"
@@ -3644,11 +3644,11 @@ de:
         delete: "Löschen"
         delete_confirm: "Diese Gruppe löschen?"
         delete_with_messages_confirm:
-          one: "Wenn Sie diese Gruppe löschen, wird %{count} Nachricht verwaist, Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du sicher?"
-          other: "Wenn Sie diese Gruppe löschen, werden %{count} Nachrichten verwaist, Gruppenmitglieder haben keinen Zugriff mehr auf sie.<br><br>Bist du sicher?"
+          one: "Wenn du diese Gruppe löschst, wird %{count} Nachricht verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du dir sicher?"
+          other: "Wenn du diese Gruppe löschst, werden %{count} Nachrichten verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du dir sicher?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
-        delete_automatic_group: Dies ist eine automatische Gruppe und kann nicht gelöscht werden.
-        delete_owner_confirm: "Eigentümerrechte für '%{username}' entfernen?"
+        delete_automatic_group: Dies ist eine automatische Gruppe und sie kann nicht gelöscht werden.
+        delete_owner_confirm: "Eigentümerrechte für „%{username}“ entfernen?"
         add: "Hinzufügen"
         custom: "Benutzerdefiniert"
         automatic: "Automatisch"
@@ -3659,8 +3659,8 @@ de:
         none_selected: "Wähle eine Gruppe, um loszulegen"
         no_custom_groups: "Erstelle eine neue benutzerdefinierte Gruppe"
       api:
-        generate_master: "Master API Schlüssel erzeugen"
-        none: "Es gibt momentan keine aktiven API Schlüssel"
+        generate_master: "Master-API-Schlüssel erzeugen"
+        none: "Es gibt momentan keine aktiven API-Schlüssel."
         user: "Benutzer"
         title: "API"
         key: "Schlüssel"
@@ -3672,19 +3672,19 @@ de:
         undo_revoke: "Widerruf rückgängig machen"
         revoke: "Widerrufen"
         all_users: "Alle Benutzer"
-        active_keys: "Aktive API Schlüssel"
+        active_keys: "Aktive API-Schlüssel"
         manage_keys: Schlüssel verwalten
         show_details: Details
         description: Beschreibung
         no_description: (keine Beschreibung)
-        all_api_keys: Alle API Schlüssel
+        all_api_keys: Alle API-Schlüssel
         user_mode: Benutzerrang
         impersonate_all_users: Als jeder Benutzer ausgeben
         single_user: "Einzelbenutzer"
         user_placeholder: Benutzernamen eingeben
         description_placeholder: Wofür wird dieser Schlüssel verwendet werden?
         save: Speichern
-        new_key: Neuer API Schlüssel
+        new_key: Neuer API-Schlüssel
         revoked: Widerrufen
         delete: Endgültig löschen
         not_shown_again: Dieser Schlüssel wird nicht noch einmal angezeigt. Stelle sicher, dass du eine Kopie hast, bevor du fortfährst.
@@ -3692,9 +3692,9 @@ de:
         use_global_key: Globaler Schlüssel (erlaubt alle Aktionen)
         scopes:
           description: |
-            Wenn Sie Bereiche verwenden, können Sie einen API-Schlüssel auf einen bestimmten Satz von Endpunkten beschränken.
-            Sie können auch festlegen, welche Parameter zulässig sind. Verwenden Sie Kommas, um mehrere Werte zu trennen.
-          title: Geltungsbereiche
+            Wenn du Bereiche verwendest, kannst du einen API-Schlüssel auf einen bestimmten Satz von Endpunkten beschränken.
+            Du kannst auch definieren, welche Parameter erlaubt sind. Verwende Kommas, um mehrere Werte zu trennen.
+          title: Bereiche
           resource: Ressource
           action: Aktion
           allowed_parameters: Zulässige Parameter

@@ -9,7 +9,7 @@ it:
     number:
       format:
         separator: ","
-        delimiter: " '"
+        delimiter: " ."
       human:
         storage_units:
           format: "%n %u"
@@ -25,7 +25,7 @@ it:
         thousands: "%{number}k"
         millions: "%{number}M"
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"

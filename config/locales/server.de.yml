@@ -1006,7 +1006,7 @@ de:
       logging_in_as: Anmeldung als %{username}
       confirm_button: Anmeldung fertigstellen
     no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer API zu nutzen."
-    generic_error: "Entschuldige, wir können keinen Benutzer API Schlüssel erstellen. Dieses Feature ist möglicherweise vom Site Administrator deaktiviert worden."
+    generic_error: "Entschuldige, wir können keinen Benutzer API-Schlüssel erstellen. Dieses Feature ist möglicherweise vom Site Administrator deaktiviert worden."
     scopes:
       message_bus: "Live-Aktualisierungen"
       notifications: "Benachrichtigungen lesen und leeren"
@@ -2024,13 +2024,13 @@ de:
     default_title_count_mode: "Standardmodus für den Seitentitel-Zähler"
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Web-Hook-Ereigniseinträge aufbewahrt werden"
     retry_web_hook_events: "Fehlgeschlagene Web-Hook-Ereignisse automatisch 4-mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen 1, 5, 25 und 125 MInuten."
-    revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API Schlüssel automatisch zurückgezogen wird (0 für nie)"
+    revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch zurückgezogen wird (0 für nie)"
     allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
     allow_user_api_key_scopes: "Liste erlaubter Scopes für Benutzer-API-Schlüssel"
-    min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API Schlüsseln"
+    min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API-Schlüsseln"
     allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z.B. www.example.com/*)."
     allowed_user_api_push_urls: "Erlaubte URL für Server-Push zur Benutzer API"
-    expire_user_api_keys_days: "Anzahl Tage, bevor ein Benutzer API Schlüssel automatisch abläuft. (0 für niemals)"
+    expire_user_api_keys_days: "Anzahl Tage, bevor ein Benutzer API-Schlüssel automatisch abläuft. (0 für niemals)"
     tagging_enabled: "Schlagwörter für Themen aktivieren?"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
