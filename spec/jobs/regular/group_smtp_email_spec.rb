@@ -4,63 +4,91 @@ require 'rails_helper'
 
 RSpec.describe Jobs::GroupSmtpEmail do
   fab!(:post) do
-    topic = Fabricate(:topic)
+    topic = Fabricate(:topic, title: "Help I need support")
     Fabricate(:post, topic: topic)
     Fabricate(:post, topic: topic)
   end
-  fab!(:group) { Fabricate(:imap_group) }
+  fab!(:group) { Fabricate(:smtp_group, name: "support-group", full_name: "Support Group") }
   fab!(:recipient_user) { Fabricate(:user, email: "test@test.com") }
   let(:post_id) { post.id }
   let(:args) do
     {
       group_id: group.id,
       post_id: post_id,
-      email: "test@test.com"
+      email: "test@test.com",
+      cc_emails: ["otherguy@test.com", "cormac@lit.com"]
     }
   end
 
   before do
-    SiteSetting.reply_by_email_address = "test+%{reply_key}@incoming.com"
-    SiteSetting.manual_polling_enabled = true
-    SiteSetting.reply_by_email_enabled = true
     SiteSetting.enable_smtp = true
+    SiteSetting.manual_polling_enabled = true
+    SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
+    SiteSetting.reply_by_email_enabled = true
   end
 
   it "sends an email using the GroupSmtpMailer and Email::Sender" do
     message = Mail::Message.new(body: "hello", to: "myemail@example.invalid")
-    GroupSmtpMailer.expects(:send_mail).with(group, "test@test.com", post).returns(message)
-    Email::Sender.expects(:new).with(message, :group_smtp, recipient_user).returns(stub(send: nil))
+    GroupSmtpMailer.expects(:send_mail).with(group, "test@test.com", post, ["otherguy@test.com", "cormac@lit.com"]).returns(message)
     subject.execute(args)
   end
 
-  it "creates an IncomingEmail record to avoid double processing via IMAP" do
+  it "creates an EmailLog record with the correct details" do
     subject.execute(args)
-    incoming = IncomingEmail.find_by(post_id: post.id, user_id: post.user_id, topic_id: post.topic_id)
-    expect(incoming).not_to eq(nil)
-    expect(incoming.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
-    expect(incoming.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
+    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    expect(email_log).not_to eq(nil)
+    expect(email_log.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
   end
 
-  it "creates a PostReplyKey and correctly uses it for the email reply_key substitution" do
+  it "creates an IncomingEmail record with the correct details to avoid double processing IMAP" do
     subject.execute(args)
-    incoming = IncomingEmail.find_by(post_id: post.id, user_id: post.user_id, topic_id: post.topic_id)
+    incoming_email = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
+    expect(incoming_email).not_to eq(nil)
+    expect(incoming_email.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
+    expect(incoming_email.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
+    expect(incoming_email.to_addresses).to eq("test@test.com")
+    expect(incoming_email.cc_addresses).to eq("otherguy@test.com;cormac@lit.com")
+    expect(incoming_email.subject).to eq("Re: Help I need support")
+  end
+
+  it "does not create a post reply key, it always replies to the group email_username" do
+    subject.execute(args)
+    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     post_reply_key = PostReplyKey.where(user_id: recipient_user, post_id: post.id).first
-    expect(post_reply_key).not_to eq(nil)
-    expect(incoming.raw).to include("Reply-To: Discourse <test+#{post_reply_key.reply_key}@incoming.com>")
+    expect(post_reply_key).to eq(nil)
+    expect(email_log.raw).not_to include("Reply-To: Support Group via Discourse <#{group.email_username}")
+    expect(email_log.raw).to include("From: Support Group via Discourse <#{group.email_username}")
   end
 
-  it "has the from_address and the to_addresses and subject filled in correctly" do
+  it "falls back to the group name if full name is blank" do
+    group.update(full_name: "")
     subject.execute(args)
-    incoming = IncomingEmail.find_by(post_id: post.id, user_id: post.user_id, topic_id: post.topic_id)
-    expect(incoming.to_addresses).to eq("test@test.com")
-    expect(incoming.subject).to include("Re: This is a test topic")
-    expect(incoming.from_address).to eq("discourseteam@ponyexpress.com")
+    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    expect(email_log.raw).to include("From: support-group via Discourse <#{group.email_username}")
+  end
+
+  it "has the group_smtp_id and the to_address filled in correctly" do
+    subject.execute(args)
+    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    expect(email_log.to_address).to eq("test@test.com")
+    expect(email_log.smtp_group_id).to eq(group.id)
+  end
+
+  context "when there are cc_addresses" do
+    let!(:cormac_user) { Fabricate(:user, email: "cormac@lit.com") }
+
+    it "has the cc_addresses and cc_user_ids filled in correctly" do
+      subject.execute(args)
+      email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+      expect(email_log.cc_addresses).to eq("otherguy@test.com;cormac@lit.com")
+      expect(email_log.cc_user_ids).to eq([cormac_user.id])
+    end
   end
 
   context "when the post in the argument is the OP" do
     let(:post_id) { post.topic.posts.first.id }
     it "aborts and does not send a group SMTP email; the OP is the one that sent the email in the first place" do
-      expect { subject.execute(args) }.not_to(change { IncomingEmail.count })
+      expect { subject.execute(args) }.not_to(change { EmailLog.count })
     end
   end
 end
