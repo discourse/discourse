@@ -1731,6 +1731,7 @@ spam:
   cooldown_hours_until_reflag:
     default: 24
     min: 0
+  slow_mode_prevents_editing: true
 
   reviewable_claiming:
     client: true
