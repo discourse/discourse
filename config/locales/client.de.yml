@@ -2942,22 +2942,22 @@ de:
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben, "
-      email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
+      email_in_disabled_click: 'Aktiviere die Einstellung „email in“.'
       mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
-      show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
+      show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie."
       read_only_banner: "Bannertext, wenn ein Benutzer kein Thema in dieser Kategorie erstellen kann:"
-      num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
-      subcategory_num_featured_topics: "Anzahl beworbener Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
+      num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden:"
+      subcategory_num_featured_topics: "Anzahl der hervorgehobenen Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
       all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
       allow_unlimited_owner_edits_on_first_post: "Erlaube unbegrenzte Änderungen des Eigentümers am ersten Beitrag"
-      subcategory_list_style: "Listenstil für Unterkategorien"
+      subcategory_list_style: "Listenstil für Unterkategorien:"
       sort_order: "Themenliste sortieren nach:"
-      default_view: "Standard-Themenliste"
-      default_top_period: "Standard-Zeitraum für Top-Beiträge:"
+      default_view: "Standard-Themenliste:"
+      default_top_period: "Standard-Zeitraum für angesagte Beiträge:"
       default_list_filter: "Standard-Listenfilter:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
-      reviewable_by_group: "Zusätzlich zu den Mitarbeitern können Inhalte in dieser Kategorie auch überprüft werden von:"
+      reviewable_by_group: "Zusätzlich zum Team können Inhalte in dieser Kategorie auch überprüft werden von:"
       review_group_name: "Gruppenname"
       require_topic_approval: "Erfordere Moderator-Genehmigung für alle neuen Themen"
       require_reply_approval: "Erfordere Moderator-Genehmigung für alle neuen Antworten"
@@ -2968,7 +2968,7 @@ de:
       position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       parent: "Übergeordnete Kategorie"
-      num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden"
+      num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
       notifications:
         watching:
@@ -2979,13 +2979,13 @@ de:
           description: "Du wirst über neue Themen in dieser Kategorie benachrichtigt, aber nicht über Antworten auf diese Themen."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst automatisch alle Themen in dieser Kategorie verfolgen. Du wirst benachrichtigt, wenn jemand deinen @name erwähnt oder dir antwortet, und die Anzahl der neuen Antworten wird angezeigt."
+          description: "Du wirst automatisch alle Themen in dieser Kategorie verfolgen. Du wirst benachrichtigt, wenn jemand deinen Namen mit @ erwähnt oder dir antwortet, und die Anzahl der neuen Antworten wird angezeigt."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der letzten Themen erscheinen."
+          description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der aktullen Themen erscheinen."
       search_priority:
         label: "Suchpriorität"
         options:
@@ -3020,25 +3020,25 @@ de:
       list_filters:
         all: "alle Themen"
         none: "keine Unterkategorien"
-      colors_disabled: "Sie können keine Farben auswählen, da Sie keinen Kategoriestil haben."
+      colors_disabled: "Du kannst keine Farben auswählen, weil du keinen Kategoriestil verwendest."
     flagging:
       title: "Danke für deine Mithilfe!"
       action: "Beitrag melden"
-      take_action: "Reagieren..."
+      take_action: "Reagieren …"
       take_action_options:
         default:
           title: "Reagieren"
           details: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
         suspend:
           title: "Benutzer sperren"
-          details: "Erreichen Sie den Kennzeichnungsschwellenwert und sperren Sie den Benutzer"
+          details: "Erreiche den Meldungsschwellenwert und sperre den Benutzer"
         silence:
           title: "Benutzer stummschalten"
-          details: "Erreichen Sie den Kennzeichnungsschwellenwert und schalten Sie den Benutzer stumm"
+          details: "Erreiche den Meldungsschwellenwert und schalte den Benutzer stumm"
       notify_action: "Nachricht"
       official_warning: "Offizielle Warnung"
       delete_spammer: "Spammer löschen"
-      flag_for_review: "Warteschlange zur Überprüfung"
+      flag_for_review: "Zur Überprüfung einreihen"
       delete_confirm_MF: "Du wirst {POSTS, plural, one {<b>einen</b> Beitrag} other {<b>#</b> Beiträge}} und {TOPICS, plural, one {<b>ein</b> Thema} other {<b>#</b> Themen}} von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>{email}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
       ip_address_missing: "(nicht verfügbar)"
@@ -3046,7 +3046,7 @@ de:
       submit_tooltip: "Private Meldung abschicken"
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, du kannst diesen Beitrag derzeit nicht melden."
-      notify_staff: "Team nicht-öffentlich benachrichtigen"
+      notify_staff: "Team privat benachrichtigen"
       formatted_name:
         off_topic: "Es ist am Thema vorbei"
         inappropriate: "Es ist unangemessen"
@@ -3055,13 +3055,13 @@ de:
       custom_placeholder_notify_moderators: "Bitte lass uns wissen, was genau dich beunruhigt. Verweise, wenn möglich, auf relevante Links und Beispiele."
       custom_message:
         at_least:
-          one: "gib mindestens ein Zeichen ein"
+          one: "gib mindestens %{count} Zeichen ein"
           other: "gib mindestens %{count} Zeichen ein"
         more:
-          one: "eine weitere…"
-          other: "%{count} weitere…"
+          one: "%{count} weitere …"
+          other: "%{count} weitere …"
         left:
-          one: "eine übrig"
+          one: "%{count} übrig"
           other: "%{count} übrig"
     flagging_topic:
       title: "Danke für deine Mithilfe!"
@@ -3071,14 +3071,14 @@ de:
       title: "Zusammenfassung des Themas"
       participants_title: "Autoren vieler Beiträge"
       links_title: "Beliebte Links"
-      links_shown: "mehr Links anzeigen…"
+      links_shown: "mehr Links anzeigen …"
       clicks:
         one: "%{count} Klick"
         other: "%{count} Klicks"
     post_links:
       about: "weitere Links für diesen Beitrag aufklappen"
       title:
-        one: "ein weiterer"
+        one: "%{count} weiterer"
         other: "%{count} weitere"
     topic_statuses:
       warning:
@@ -3096,7 +3096,7 @@ de:
         help: "Dieses Thema ist für dich losgelöst; es wird in der normalen Reihenfolge angezeigt"
       pinned_globally:
         title: "Global angeheftet"
-        help: "Dieses Thema ist global angeheftet; es wird immer am Anfang der Liste der letzten Beiträgen und in seiner Kategorie auftauchen"
+        help: "Dieses Thema ist global angeheftet; es wird immer am Anfang der Liste der aktuellen Themen und in seiner Kategorie auftauchen"
       pinned:
         title: "Angeheftet"
         help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
@@ -3131,7 +3131,7 @@ de:
       one: "Benutzer"
       other: "Benutzer"
     category_title: "Kategorie"
-    history: "Verlauf, letzte 100 Revisionen"
+    history: "Verlauf, letzte 100 Überarbeitungen"
     changed_by: "von %{author}"
     raw_email:
       title: "Eingegangene E-Mail"
@@ -3208,18 +3208,18 @@ de:
         other_periods: "siehe oben:"
     browser_update: 'Leider ist <a href="https://www.discourse.org/faq/#browser">dein Browser zu alt, um auf dieser Website zu funktionieren</a>. Bitte <a href="https://browsehappy.com">aktualisiere deinen Browser</a>, um Inhalte korrekt anzuzeigen, dich anzumelden und zu antworten.'
     permission_types:
-      full: "Erstellen / Antworten / Ansehen"
-      create_post: "Antworten / Ansehen"
+      full: "Erstellen/Antworten/Ansehen"
+      create_post: "Antworten/Ansehen"
       readonly: "Ansehen"
     lightbox:
       download: "herunterladen"
-      previous: "Vorhergehend (linke Pfeiltaste)"
-      next: "Nächste (rechte Pfeiltaste)"
+      previous: "Zurück (linke Pfeiltaste)"
+      next: "Weiter (rechte Pfeiltaste)"
       counter: "%curr% von %total%"
       close: "Schließen (Esc)"
       content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
       image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden.'
-    cannot_render_video: Dieses Video kann nicht gerendert werden, da Dein Browser den Codec nicht unterstützt.
+    cannot_render_video: Dieses Video kann nicht gerendert werden, da dein Browser den Codec nicht unterstützt.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3335,7 +3335,7 @@ de:
           name: Andere
         posting:
           name: Schreiben
-      favorite_max_reached: "Du kannst keine weiteren Abzeichen favorieren."
+      favorite_max_reached: "Du kannst keine weiteren Abzeichen favorisieren."
       favorite_max_not_reached: "Markiere dieses Abzeichen als Favorit"
       favorite_count: "%{count}/%{max} Abzeichen als Favorit markiert"
     tagging:
@@ -3413,7 +3413,7 @@ de:
           description: "Du wirst automatisch alle Themen mit diesem Schlagwort verfolgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
         regular:
           title: "Allgemein"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
           description: "Du wirst nicht über neue Themen mit diesem Schlagwort benachrichtigt und sie werden nicht unter „Ungelesen“ auftauchen."
@@ -3440,7 +3440,7 @@ de:
         cannot_save: "Schlagwortgruppe kann nicht gespeichert werden. Stelle sicher, dass mindestens ein Schlagwort vorhanden ist, der Name der Schlagwortgruppe nicht leer ist und eine Gruppe für die Schlagwort-Berechtigung ausgewählt ist."
         tags_placeholder: "Schlagwörter suchen oder erstellen"
         parent_tag_placeholder: "Optional"
-        select_groups_placeholder: "Gruppen auswählen..."
+        select_groups_placeholder: "Gruppen auswählen …"
         disabled: "Verwendung von Schlagwörtern ist deaktiviert. "
       topics:
         none:
@@ -3465,10 +3465,10 @@ de:
       share: "Teilen"
       dismiss: "Alles gelesen"
     safe_mode:
-      enabled: "Der geschützte Modus ist aktiviert. Schliesse das Browserfenster um ihn zu verlassen."
+      enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
     image_removed: "(Bild entfernt)"
     do_not_disturb:
-      title: "Nicht stören für..."
+      title: "Nicht stören für …"
       label: "Nicht stören"
       remaining: "%{remaining} verbleibend"
       options:
@@ -3480,14 +3480,14 @@ de:
       set_schedule: "Zeitplan für Benachrichtigungen festlegen"
     trust_levels:
       names:
-        newuser: "Neuer Benutzer"
+        newuser: "neuer Benutzer"
         basic: "Anwärter"
         member: "Mitglied"
         regular: "Stammgast"
         leader: "Anführer"
       detailed_name: "%{level}: %{name}"
   admin_js:
-    type_to_filter: "zum Filtern hier eingeben…"
+    type_to_filter: "zum Filtern hier eingeben …"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -3499,8 +3499,8 @@ de:
       reports:
         title: "Verfügbare Berichte"
       dashboard:
-        title: "Übersicht"
-        last_updated: "Übersicht aktualisiert:"
+        title: "Dashboard"
+        last_updated: "Dashboard aktualisiert:"
         discourse_last_updated: "Discourse aktualisiert:"
         version: "Version"
         up_to_date: "Du verwendest die neueste Version!"
