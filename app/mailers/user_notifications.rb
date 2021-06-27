@@ -632,7 +632,8 @@ class UserNotifications < ActionMailer::Base
                     post: post,
                     in_reply_to_post: in_reply_to_post,
                     classes: Rtl.new(user).css_class,
-                    first_footer_classes: first_footer_classes
+                    first_footer_classes: first_footer_classes,
+                    reply_above_line: false
           }
         )
       end

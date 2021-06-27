@@ -10,16 +10,6 @@ class GroupSmtpMailer < ActionMailer::Base
 
     op_incoming_email = post.topic.first_post.incoming_email
 
-    context_posts = Post
-      .where(topic_id: post.topic_id)
-      .where("post_number < ?", post.post_number)
-      .where(user_deleted: false)
-      .where(hidden: false)
-      .where(post_type: Post.types[:regular])
-      .order(created_at: :desc)
-      .limit(SiteSetting.email_posts_context)
-      .to_a
-
     delivery_options = {
       address: from_group.smtp_server,
       port: from_group.smtp_port,
@@ -35,14 +25,13 @@ class GroupSmtpMailer < ActionMailer::Base
       user_name = post.user.name unless post.user.name.blank?
     end
 
-    group_name = from_group.full_name.presence || from_group.name
+    group_name = from_group.name_full_preferred
     build_email(
       to_address,
       message: post.raw,
       url: post.url(without_slug: SiteSetting.private_email?),
       post_id: post.id,
       topic_id: post.topic_id,
-      context: context(context_posts),
       username: post.user.username,
       group_name: group_name,
       allow_reply_by_email: true,
@@ -59,45 +48,26 @@ class GroupSmtpMailer < ActionMailer::Base
       delivery_method_options: delivery_options,
       from: from_group.email_username,
       from_alias: I18n.t('email_from', user_name: group_name, site_name: Email.site_title),
-      html_override: html_override(post, context_posts: context_posts),
+      html_override: html_override(post),
       cc: cc_addresses
     )
   end
 
   private
 
-  def context(context_posts)
-    return "" if SiteSetting.private_email?
-
-    context = +""
-
-    if context_posts.size > 0
-      context << +"-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
-      context_posts.each { |post| context << email_post_markdown(post, true) }
-    end
-
-    context
-  end
-
-  def email_post_markdown(post, add_posted_by = false)
-    result = +"#{post.raw}\n\n"
-    if add_posted_by
-      result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
-    end
-    result
-  end
-
-  def html_override(post, context_posts: nil)
+  def html_override(post)
     UserNotificationRenderer.render(
       template: 'email/notification',
       format: :html,
       locals: {
-        context_posts: context_posts,
+        context_posts: nil,
         reached_limit: nil,
         post: post,
         in_reply_to_post: post.reply_to_post,
         classes: Rtl.new(nil).css_class,
-        first_footer_classes: ''
+        first_footer_classes: '',
+        reply_above_line: true,
+        include_cc_indication: true
       }
     )
   end
@@ -106,14 +76,22 @@ class GroupSmtpMailer < ActionMailer::Base
     list = []
 
     post.topic.allowed_groups.each do |g|
-      list.push("[#{g.name} (#{g.users.count})](#{Discourse.base_url}/groups/#{g.name})")
+      list.push("[#{g.name_full_preferred}](#{Discourse.base_url}/groups/#{g.name})")
     end
 
     post.topic.allowed_users.each do |u|
       if SiteSetting.prioritize_username_in_ux?
-        list.push("[#{u.username}](#{Discourse.base_url}/u/#{u.username_lower})")
+        if u.staged?
+          list.push("[#{u.email}](#{Discourse.base_url}/u/#{u.username_lower})")
+        else
+          list.push("[#{u.username}](#{Discourse.base_url}/u/#{u.username_lower})")
+        end
       else
-        list.push("[#{u.name.blank? ? u.username : u.name}](#{Discourse.base_url}/u/#{u.username_lower})")
+        if u.staged?
+          list.push("[#{u.email}](#{Discourse.base_url}/u/#{u.username_lower})")
+        else
+          list.push("[#{u.name.blank? ? u.username : u.name}](#{Discourse.base_url}/u/#{u.username_lower})")
+        end
       end
     end
 
