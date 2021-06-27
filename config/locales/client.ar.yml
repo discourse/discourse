@@ -710,30 +710,30 @@ ar:
       member_added: "تمت الإضافة"
       member_requested: "تاريخ الطلب"
       add_members:
-        notify_users: "إخطار المستخدمين"
+        notify_users: "إشعار المستخدمين"
       requests:
         title: "الطلبات"
-        reason: "سبب"
+        reason: "السبب"
         accept: "قبول"
-        accepted: "مقبول"
+        accepted: "تم القبول"
         deny: "رفض"
-        denied: "مرفوض"
-        undone: "طلب التراجع"
+        denied: "تم الرفض"
+        undone: "تم التراجع عن الطلب"
         handle: "التعامل مع طلب العضوية"
       manage:
         title: "إدارة"
-        name: "الإسم"
+        name: "الاسم"
         full_name: "الاسم بالكامل"
         delete_member_confirm: "هل تريد إزالة \"%{username}\" من المجموعة \"%{group}\"؟"
         profile:
           title: الملف الشخصي
         interaction:
-          title: تفاعل
-          posting: نشر
-          notification: اشعار
+          title: التفاعل
+          posting: النشر
+          notification: الإشعارات
         email:
           title: "البريد الإلكتروني"
-          status: "مزامنة %{old_emails} / %{total_emails} رسائل البريد الإلكتروني عبر IMAP."
+          status: "تمت مزامنة %{old_emails}/%{total_emails} من رسائل البريد الإلكتروني عبر IMAP."
           credentials:
             title: "بيانات الاعتماد"
             smtp_server: "خادم SMTP"
@@ -745,13 +745,13 @@ ar:
             username: "اسم المستخدم"
             password: "كلمة السر"
           settings:
-            title: "إعدادات"
+            title: "الإعدادات"
           mailboxes:
             synchronized: "صندوق البريد المتزامن"
             none_found: "لم يتم العثور على صناديق بريد في حساب البريد الإلكتروني هذا."
         membership:
           title: العضوية
-          access: صلاحية
+          access: الوصول
         categories:
           title: الفئات
           long_title: "الإشعارات الافتراضية للفئة"
@@ -1297,7 +1297,7 @@ ar:
         set_primary: "تعيين البريد الإلكتروني الأساسي"
         destroy: "إزالة البريد الإلكتروني"
         add_email: "إضافة بريد إلكتروني بديل"
-        no_secondary: "لا توجد رسائل في البريد الإلكتروني الثانوي"
+        no_secondary: "لا توجد رسائل بريد إلكتروني ثانوية"
         instructions: "لا يظهر للعامة أبدًا."
         admin_note: "ملاحظة: يشير تغيير المستخدم الإداري للبريد الإلكتروني لمستخدم آخر غير إداري إلى أن المستخدم قد فقد الوصول إلى حساب البريد الإلكتروني الأصلي، لذلك سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى عنوانه الجديد. لن يتغير البريد الإلكتروني للمستخدم حتى يكمل عملية إعادة تعيين كلمة المرور."
         ok: "سنرسل لك بريدا للتأكيد"
