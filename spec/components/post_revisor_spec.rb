@@ -188,6 +188,16 @@ describe PostRevisor do
         expect(post.errors).to be_empty
       end
 
+      it 'edits are generally allowed' do
+        SiteSetting.slow_mode_prevents_editing = false
+
+        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
+
+        post.reload
+
+        expect(post.errors).to be_empty
+      end
+
       it 'staff is allowed to edit posts even if the topic is in slow mode' do
         admin = Fabricate(:admin)
         subject.revise!(admin, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
