@@ -5,10 +5,7 @@ import { getOwner } from "@ember/application";
 import { run } from "@ember/runloop";
 
 // TODO
-const {
-  assert,
-  runInDebug,
-} = Ember;
+const { assert, runInDebug } = Ember;
 
 function getCurrentRouteInfos(router) {
   let routerLib = router._routerMicrolib || router.router;
