@@ -66,8 +66,7 @@ class GroupSmtpMailer < ActionMailer::Base
         in_reply_to_post: post.reply_to_post,
         classes: Rtl.new(nil).css_class,
         first_footer_classes: '',
-        reply_above_line: true,
-        include_cc_indication: true
+        reply_above_line: true
       }
     )
   end
