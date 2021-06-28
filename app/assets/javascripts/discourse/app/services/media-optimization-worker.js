@@ -54,10 +54,11 @@ export default class MediaOptimizationWorkerService extends Service {
       this.currentComposerUploadData = data;
       this.currentPromiseResolver = resolve;
 
-      const { imageData, width, height, err } = await fileToImageData(file);
-
-      if (err) {
-        this.logIfDebug(err);
+      let imageData;
+      try {
+        imageData = await fileToImageData(file);
+      } catch (error) {
+        this.logIfDebug(error);
         return resolve(data);
       }
 
@@ -66,8 +67,8 @@ export default class MediaOptimizationWorkerService extends Service {
           type: "compress",
           file: imageData.data.buffer,
           fileName: file.name,
-          width: width,
-          height: height,
+          width: imageData.width,
+          height: imageData.height,
           settings: {
             mozjpeg_script: getURLWithCDN(
               "/javascripts/squoosh/mozjpeg_enc.js"
@@ -102,8 +103,6 @@ export default class MediaOptimizationWorkerService extends Service {
 
   registerMessageHandler() {
     this.worker.onmessage = (e) => {
-      this.logIfDebug("Main: Message received from worker script");
-      this.logIfDebug(e);
       switch (e.data.type) {
         case "file":
           let optimizedFile = new File([e.data.file], `${e.data.fileName}`, {

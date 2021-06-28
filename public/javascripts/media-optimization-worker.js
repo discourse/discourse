@@ -81,6 +81,7 @@ async function optimize(imageData, fileName, width, height, settings) {
       ).data;
       width = target_dimensions.width;
       height = target_dimensions.height;
+      logIfDebug(`Worker post resizing file: ${maybeResized.byteLength}`);
     } catch (error) {
       console.error(`Resize failed: ${error}`);
       maybeResized = imageData;
