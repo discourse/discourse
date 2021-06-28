@@ -54,11 +54,11 @@ describe Site do
   it "returns correct notification level for categories" do
     category = Fabricate(:category)
     guardian = Guardian.new
-    expect(Site.new(guardian).categories.last.notification_level).to eq(1)
+    expect(Site.new(guardian).categories.last[:notification_level]).to eq(1)
     SiteSetting.mute_all_categories_by_default = true
-    expect(Site.new(guardian).categories.last.notification_level).to eq(0)
+    expect(Site.new(guardian).categories.last[:notification_level]).to eq(0)
     SiteSetting.default_categories_tracking = category.id.to_s
-    expect(Site.new(guardian).categories.last.notification_level).to eq(1)
+    expect(Site.new(guardian).categories.last[:notification_level]).to eq(1)
   end
 
   describe '#categories' do
@@ -67,13 +67,13 @@ describe Site do
     fab!(:guardian) { Guardian.new(user) }
 
     it "omits read restricted categories" do
-      expect(Site.new(guardian).categories.map(&:id)).to contain_exactly(
+      expect(Site.new(guardian).categories.map { |c| c[:id] }).to contain_exactly(
         SiteSetting.uncategorized_category_id, category.id
       )
 
       category.update!(read_restricted: true)
 
-      expect(Site.new(guardian).categories.map(&:id)).to contain_exactly(
+      expect(Site.new(guardian).categories.map { |c| c[:id] }).to contain_exactly(
         SiteSetting.uncategorized_category_id
       )
     end
@@ -83,13 +83,13 @@ describe Site do
       category.update!(read_restricted: true)
       category.groups << group
 
-      expect(Site.new(guardian).categories.map(&:id)).to contain_exactly(
+      expect(Site.new(guardian).categories.map { |c| c[:id] }).to contain_exactly(
         SiteSetting.uncategorized_category_id
       )
 
       group.add(user)
 
-      expect(Site.new(Guardian.new(user)).categories.map(&:id)).to contain_exactly(
+      expect(Site.new(Guardian.new(user)).categories.map { |c| c[:id] }).to contain_exactly(
         SiteSetting.uncategorized_category_id, category.id
       )
     end
@@ -104,9 +104,8 @@ describe Site do
 
       expect(Site.new(guardian)
           .categories
-          .keep_if { |c| c.name == category.name }
-          .first
-          .permission)
+          .keep_if { |c| c[:name] == category.name }
+          .first[:permission])
         .not_to eq(CategoryGroup.permission_types[:full])
 
       # If a parent category is not visible, the child categories should not be returned
@@ -137,6 +136,22 @@ describe Site do
       expect(categories.last[:custom_fields]["enable_marketplace"]).to eq('f')
     ensure
       Site.preloaded_category_custom_fields.clear
+    end
+
+    it 'sets the can_edit field for categories correctly' do
+      categories = Site.new(Guardian.new).categories
+
+      expect(categories.map { |c| c[:can_edit] }).to contain_exactly(false, false)
+
+      site = Site.new(Guardian.new(Fabricate(:moderator)))
+
+      expect(site.categories.map { |c| c[:can_edit] }).to contain_exactly(false, false)
+
+      SiteSetting.moderators_manage_categories_and_groups = true
+
+      site = Site.new(Guardian.new(Fabricate(:moderator)))
+
+      expect(site.categories.map { |c| c[:can_edit] }).to contain_exactly(true, true)
     end
   end
 

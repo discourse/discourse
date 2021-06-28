@@ -22,6 +22,15 @@ module CategoryGuardian
     )
   end
 
+  def can_edit_serialized_category?(category_id:, read_restricted:)
+    is_admin? ||
+    (
+      SiteSetting.moderators_manage_categories_and_groups &&
+      is_moderator? &&
+      can_see_serialized_category?(category_id: category_id, read_restricted: read_restricted)
+    )
+  end
+
   def can_delete_category?(category)
     can_edit_category?(category) &&
     category.topic_count <= 0 &&
