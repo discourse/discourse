@@ -2139,6 +2139,12 @@ describe Guardian do
 
       it 'returns true when trying to delete your own post' do
         expect(Guardian.new(user).can_delete?(post)).to be_truthy
+
+        expect(Guardian.new(trust_level_0).can_delete?(post)).to be_falsey
+        expect(Guardian.new(trust_level_1).can_delete?(post)).to be_falsey
+        expect(Guardian.new(trust_level_2).can_delete?(post)).to be_falsey
+        expect(Guardian.new(trust_level_3).can_delete?(post)).to be_falsey
+        expect(Guardian.new(trust_level_4).can_delete?(post)).to be_falsey
       end
 
       it 'returns false when self deletions are disabled' do
@@ -2162,6 +2168,16 @@ describe Guardian do
 
       it 'returns true when an admin' do
         expect(Guardian.new(admin).can_delete?(post)).to be_truthy
+      end
+
+      it "returns true for category moderators" do
+        SiteSetting.enable_category_group_moderation = true
+        group = Fabricate(:group)
+        GroupUser.create(group: group, user: user)
+        category = Fabricate(:category, reviewable_by_group_id: group.id)
+        post.topic.update!(category: category)
+
+        expect(Guardian.new(user).can_delete?(post)).to eq(true)
       end
 
       it 'returns false when post is first in a static doc topic' do
