@@ -4438,7 +4438,7 @@ de:
           link: "Wörter in Beiträgen durch Links ersetzen"
         form:
           label: "Hat Wort oder Wortgruppe"
-          placeholder: "Geben Sie ein Wort oder eine Phrase ein (* ist ein Platzhalter)"
+          placeholder: "Wort oder Ausdruck eingeben (* ist ein Platzhalter)"
           placeholder_regexp: "regulärer Ausdruck"
           replace_label: "Ersatz"
           replace_placeholder: "Beispiel"
@@ -4454,9 +4454,9 @@ de:
           button_label: "Test"
           description: "Füge unten Text ein, um auf Übereinstimmungen mit beobachteten Wörtern zu prüfen"
           found_matches: "Gefundene Übereinstimmungen:"
-          no_matches: "Keine Treffer gefunden"
+          no_matches: "Keine Übereinstimmungen gefunden"
       impersonate:
-        title: "Als Benutzer ausgeben"
+        title: "Nutzersicht"
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
         not_found: "Der Benutzer wurde nicht gefunden."
         invalid: "Entschuldige, du darfst nicht in die Rolle dieses Benutzers schlüpfen."
@@ -4481,7 +4481,7 @@ de:
           active: "Aktive Benutzer"
           new: "Neue Benutzer"
           pending: "Benutzer mit ausstehender Genehmigung"
-          newuser: "Benutzer mit Vertrauensstufe 0 (Neuer Benutzer)"
+          newuser: "Benutzer mit Vertrauensstufe 0 (neuer Benutzer)"
           basic: "Benutzer mit Vertrauensstufe 1 (Anwärter)"
           member: "Benutzer mit Vertrauensstufe 2 (Mitglied)"
           regular: "Benutzer mit Vertrauensstufe 3 (Stammgast)"
@@ -4497,38 +4497,38 @@ de:
           title: "E-Mail-Adresse des Benutzers anzeigen"
           text: "Anzeigen"
         check_sso:
-          title: "SSO-Nutzlast anzeigen"
+          title: "SSO-Payload anzeigen"
           text: "Anzeigen"
       user:
-        suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen %{error}"
-        unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen %{error}"
+        suspend_failed: "Beim Sperren dieses Benutzers ist etwas schiefgegangen %{error}"
+        unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schiefgegangen %{error}"
         suspend_duration: "Wie lange soll dieser Benutzer gesperrt werden?"
-        suspend_reason_label: "Warum sperrst du? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Bitte kurz halten."
-        suspend_reason_hidden_label: "Warum sperrst du? Dieser Text wird dem Benutzer angezeigt, wenn er versucht, sich anzumelden. Fasse dich kurz."
+        suspend_reason_label: "Was ist der Grund für die Sperre? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Fasse dich kurz."
+        suspend_reason_hidden_label: "Was ist der Grund für die Sperre? Dieser Text wird dem Benutzer angezeigt, wenn er versucht, sich anzumelden. Fasse dich kurz."
         suspend_reason: "Grund"
         suspend_reason_title: "Grund der Sperre"
         suspend_reasons:
-          not_listening_to_staff: "Würde nicht auf Team Feedback hören"
+          not_listening_to_staff: "Hat nicht auf Team-Feedback gehört"
           consuming_staff_time: "Hat überproportional viel Zeit des Teams verbraucht"
-          combative: "Zu kämpferisch"
+          combative: "Zu streitlustig"
           in_wrong_place: "An der falschen Stelle"
-          no_constructive_purpose: "Kein konstruktiver Zweck für ihre Handlungen, außer Dissens innerhalb der Gemeinschaft zu erzeugen"
-          custom: "Benutzerdefiniert..."
+          no_constructive_purpose: "Kein konstruktiver Zweck der Handlungen, außer Dissens innerhalb der Gemeinschaft zu erzeugen"
+          custom: "Benutzerdefiniert …"
         suspend_message: "E-Mail-Nachricht"
-        suspend_message_placeholder: "Optional: Gib weitere Informationen über deine Sperrung an und sie wird dem Benutzer per E-Mail geschickt."
+        suspend_message_placeholder: "Optional: Gib weitere Informationen zur Sperre an und sie werden dem Benutzer per E-Mail geschickt."
         suspended_by: "Gesperrt von"
         silence_reason: "Grund"
         silenced_by: "Stummgeschaltet von"
         silence_modal_title: "Benutzer stummschalten"
-        silence_duration: "Wie lange wird der Benutzer/die Benutzerin stummgeschaltet?"
-        silence_reason_label: "Warum schaltest du diesen Benutzer/diese Benutzerin stumm?"
+        silence_duration: "Wie lange wird der Benutzer stummgeschaltet?"
+        silence_reason_label: "Warum schaltest du diesen Benutzer stumm?"
         silence_reason_placeholder: "Grund der Stummschaltung"
         silence_message: "E-Mail-Nachricht"
-        silence_message_placeholder: "(leer lassen um Standardnachricht zu schicken)"
+        silence_message_placeholder: "(leer lassen, um Standardnachricht zu schicken)"
         suspended_until: "(bis %{until})"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
         delete_all_posts: "Lösche alle Beiträge"
-        delete_posts_progress: "Beiträge werden gelöscht..."
+        delete_posts_progress: "Beiträge werden gelöscht …"
         delete_posts_failed: "Es gab ein Problem beim Löschen der Beiträge."
         penalty_post_actions: "Was möchtest du mit dem zugehörigen Beitrag machen?"
         penalty_post_delete: "Beitrag löschen"
@@ -4538,7 +4538,7 @@ de:
         penalty_count: "Anzahl der Strafen"
         clear_penalty_history:
           title: "Lösche die Strafenhistorie"
-          description: "Benutzer mit Strafen können TL3 nicht erreichen"
+          description: "Benutzer mit Strafen können VS3 nicht erreichen"
         delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {# Beitrag} other {# Beiträge}} und {TOPICS, plural, one {# Thema} other {# Themen}} löschen. Bist du dir sicher?"
         silence: "Stummschalten"
         unsilence: "Stummschaltung aufheben"
@@ -4567,7 +4567,7 @@ de:
         reputation: Reputation
         permissions: Berechtigungen
         activity: Aktivität
-        like_count: Abgegebene / erhaltene Likes
+        like_count: Abgegebene/Erhaltene Likes
         last_100_days: "in den letzten 100 Tagen"
         private_topics_count: Private Themen
         posts_read_count: Gelesene Beiträge
@@ -4577,16 +4577,16 @@ de:
         flags_given_count: Gemachte Meldungen
         flags_received_count: Erhaltene Meldungen
         warnings_received_count: Warnungen erhalten
-        flags_given_received_count: "Gemachte / erhaltene Meldungen"
+        flags_given_received_count: "Gemachte/Erhaltene Meldungen"
         approve: "Genehmigen"
         approved_by: "genehmigt von"
         approve_success: "Benutzer wurde genehmigt und eine E-Mail mit Anweisungen zur Aktivierung wurde gesendet."
         approve_bulk_success: "Erfolgreich! Alle ausgewählten Benutzer wurden genehmigt und benachrichtigt."
         time_read: "Lesezeit"
         anonymize: "Benutzer anonymisieren"
-        anonymize_confirm: "Willst du dieses Konto wirklich anonymisieren? Dadurch werden der Benutzername und die E-Mail-Adresse unkenntlich gemacht und alle Informationen im Profil entfernt."
-        anonymize_yes: "Ja, diesen Benutzer anonymisieren"
-        anonymize_failed: "Beim Anonymisieren des Benutzers ist ein Fehler aufgetreten."
+        anonymize_confirm: "Möchtest du dieses Konto WIRKLICH anonymisieren? Dadurch werden der Benutzername und die E-Mail-Adresse geändert und alle Informationen im Profil zurückgesetzt."
+        anonymize_yes: "Ja, dieses Konto anonymisieren"
+        anonymize_failed: "Beim Anonymisieren des Kontos ist ein Fehler aufgetreten."
         delete: "Benutzer löschen"
         delete_posts:
           progress:
@@ -4594,55 +4594,55 @@ de:
         merge:
           button: "Zusammenführen"
           prompt:
-            title: "Übertragen & Löschen @%{username}"
+            title: "@%{username} übertragen und löschen"
             description: |
               <p>Bitte wähle einen neuen Eigentümer für die Inhalte von <b>@%{username}</b>.</p>
 
               <p>Alle von <b>@%{username}</b> erstellten Themen, Beiträge, Nachrichten und sonstigen Inhalte werden übertragen.</p>
             target_username_placeholder: "Benutzername des neuen Eigentümers"
-            transfer_and_delete: "Übertragen & Löschen @%{username}"
+            transfer_and_delete: "@%{username} übertragen und löschen"
             cancel: "Abbrechen"
           progress:
             title: "Fortschritt der Zusammenführung"
           confirmation:
-            title: "Übertragen & Löschen @%{username}"
+            title: "@%{username} übertragen und löschen"
             description: |
-              <p>Alle Inhalte von <b>@%{username}</b> werden übertragen und <b>@%{targetUsername}</b>zugeschrieben. Nachdem der Inhalt übertragen wurde, wird das Konto von <b>@%{username}</b> gelöscht.</p>
+              <p>Alle Inhalte von <b>@%{username}</b> werden übertragen und <b>@%{targetUsername}</b> zugeschrieben. Nachdem die Inhalte übertragen wurden, wird das Konto von <b>@%{username}</b> gelöscht.</p>
 
               <p><b>Dies kann nicht rückgängig gemacht werden!</b></p>
 
-              <p>Um fortzufahren gib bitte Folgendes ein: <code>%{text}</code></p>
+              <p>Um fortzufahren, gib bitte Folgendes ein: <code>%{text}</code></p>
             text: "Übertrage @%{username} auf @%{targetUsername}"
-            transfer_and_delete: "Übertragen & Löschen @%{username}"
+            transfer_and_delete: "@%{username} übertragen und löschen"
             cancel: "Abbrechen"
-        merging_user: "Benutzer zusammenführen ..."
+        merging_user: "Benutzer zusammenführen …"
         merge_failed: "Beim Zusammenführen der Benutzer ist ein Fehler aufgetreten."
         delete_forbidden_because_staff: "Administratoren und Moderatoren können nicht gelöscht werden."
         delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
         delete_forbidden:
-          one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
-          other: "Benutzer können nicht gelöscht werden, wenn sie Beiträge haben. Lösche zuerst alle Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge älter als %{count} Tage können nicht gelöscht werden.)"
+          one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
+          other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"
         cant_delete_all_posts:
-          one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag (die „delete_user_max_post_age“ Einstellung)."
-          other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage (die „delete_user_max_post_age“ Einstellung)."
+          one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag. (Siehe die Einstellung „delete_user_max_post_age“.)"
+          other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage. (Siehe die Einstellung „delete_user_max_post_age“.)"
         cant_delete_all_too_many_posts:
-          one: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat (die „delete_all_posts_max“ Einstellung)."
-          other: "Es können nicht alle Beiträge gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat (siehe „delete_all_posts_max“ Einstellung)."
-        delete_confirm: "Es ist grundsätzlich vorzuziehen, Benutzer zu anonymisieren statt sie zu löschen, um zu vermeiden, dass Inhalt aus bestehenden Diskussionen entfernt wird. <br><br>Bist du SICHER, dass du diesen Benutzer löschen möchtest? Dies lässt sich nicht rückgängig machen."
+          one: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat. (Siehe die Einstellung „delete_all_posts_max“.)"
+          other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
+        delete_confirm: "Es ist grundsätzlich vorzuziehen, Benutzer zu anonymisieren, statt sie zu löschen, um zu vermeiden, dass Inhalt aus bestehenden Diskussionen entfernt wird.<br><br>Bist du SICHER, dass du diesen Benutzer löschen möchtest? Dies lässt sich nicht rückgängig machen."
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
-        deleting_user: "Benutzer wird gelöscht…"
+        deleting_user: "Benutzer wird gelöscht …"
         deleted: "Der Benutzer wurde gelöscht."
         delete_failed: "Beim Löschen des Benutzers ist ein Fehler aufgetreten. Stelle sicher, dass dieser Benutzer keine Beiträge mehr hat."
-        send_activation_email: "Aktivierungsmail senden"
-        activation_email_sent: "Die Aktivierungsmail wurde gesendet."
-        send_activation_email_failed: "Beim Senden der Aktivierungsmail ist ein Fehler aufgetreten. %{error}"
+        send_activation_email: "Aktivierungs-E-Mail senden"
+        activation_email_sent: "Eine Aktivierungs-E-Mail wurde gesendet."
+        send_activation_email_failed: "Beim Senden der Aktivierungs-E-Mail ist ein Fehler aufgetreten. %{error}"
         activate: "Benutzer aktivieren"
         activate_failed: "Beim Aktivieren des Benutzers ist ein Fehler aufgetreten."
         deactivate_account: "Benutzer deaktivieren"
         deactivate_failed: "Beim Deaktivieren des Benutzers ist ein Fehler aufgetreten."
         unsilence_failed: "Beim Aufheben der Stummschaltung ist ein Fehler aufgetreten."
-        silence_failed: "Bei der Stummschaltung des Benutzers/der Benutzerin ist ein Fehler aufgetreten."
+        silence_failed: "Bei der Stummschaltung des Benutzers ist ein Fehler aufgetreten."
         silence_confirm: "Bist du sicher, dass du diesen Benutzer stummschalten möchtest? Der Benutzer wird keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen."
         silence_accept: "Ja, diesen Benutzer stummschalten"
         bounce_score: "Anzahl unzustellbarer E-Mails"
@@ -4660,7 +4660,7 @@ de:
           threshold_reached: "Zu viele unzustellbare E-Mails an diese Adresse."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
-        confirm_cancel_penalty: "Sind Du sicher, dass Du die Strafe verwerfen möchtest?"
+        confirm_cancel_penalty: "Bist du sicher, dass du die Strafe verwerfen willst?"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
         trust_level_locked_tip: "Die Vertrauensstufe ist gesperrt. Das System wird den Benutzer nicht befördern oder zurückstufen."
@@ -4678,9 +4678,9 @@ de:
           days: "Tage"
           topics_replied_to: "Auf Themen geantwortet"
           topics_viewed: "Betrachtete Themen"
-          topics_viewed_all_time: "Betrachtete Themen (gesamte Zeit)"
+          topics_viewed_all_time: "Betrachtete Themen (gesamt)"
           posts_read: "Gelesene Beiträge"
-          posts_read_all_time: "Gelesene Beiträge (gesamte Zeit)"
+          posts_read_all_time: "Gelesene Beiträge (gesamt)"
           flagged_posts: "Gemeldete Beiträge"
           flagged_by_users: "Von Benutzern gemeldet"
           likes_given: "Abgegebene Likes"

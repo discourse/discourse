@@ -829,7 +829,7 @@ fr:
       "14": "En attente"
       "15": "Brouillons"
     categories:
-      all: "catégories"
+      all: "toutes les catégories"
       all_subcategories: "toutes"
       no_subcategory: "aucune"
       category: "Catégorie"
@@ -845,13 +845,13 @@ fr:
       latest: "Récents"
       toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories"
-      muted: "Catégories mises sous silence"
+      muted: "Catégories mises sous en sourdine"
       topic_sentence:
         one: "%{count} sujet"
         other: "%{count} sujets"
       topic_stat:
-        one: "%{number} / %{unit}"
-        other: "%{number} / %{unit}"
+        one: "%{number}/%{unit}"
+        other: "%{number}/%{unit}"
       topic_stat_unit:
         week: "semaine"
         month: "mois"
@@ -859,18 +859,18 @@ fr:
         one: "%{number} au total"
         other: "%{number} au total"
       topic_stat_sentence_week:
-        one: "%{count} nouveau sujet dans la dernière semaine."
-        other: "%{count} nouveaux sujets dans la dernière semaine."
+        one: "%{count} nouveau sujet au cours de la dernière semaine."
+        other: "%{count} nouveaux sujets au cours de la dernière semaine."
       topic_stat_sentence_month:
-        one: "%{count} nouveau sujet dans le dernier mois."
-        other: "%{count} nouveaux sujets dans le dernier mois."
+        one: "%{count} nouveau sujet au cours du dernier mois."
+        other: "%{count} nouveaux sujets au cours du dernier mois."
       n_more: "Catégories (%{count} autres)…"
     ip_lookup:
       title: Localisation de l'adresse IP
       hostname: Nom de l'hôte
       location: Localisation
       location_not_found: (inconnu)
-      organisation: Société
+      organisation: Organisation
       phone: Téléphone
       other_accounts: "Autres comptes avec cette adresse IP :"
       delete_other_accounts: "Supprimer %{count}"
@@ -879,21 +879,21 @@ fr:
       read_time: "temps de lecture"
       topics_entered: "sujets visités"
       post_count: "# messages"
-      confirm_delete_other_accounts: "Êtes-vous sûr de vouloir supprimer ces comptes ?"
+      confirm_delete_other_accounts: "Voulez-vous vraiment supprimer ces comptes ?"
       powered_by: "Informations fournies par <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copié"
     user_fields:
       none: "(choisir une option)"
-      required: 'Veuillez entrer une valeur pour « %{name} »'
+      required: 'Veuillez saisir une valeur pour « %{name} »'
     user:
       said: "%{username} :"
       profile: "Profil"
-      mute: "Silencieux"
+      mute: "Désactiver"
       edit: "Modifier les préférences"
       download_archive:
         button_text: "Tout télécharger"
-        confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
-        success: "Le téléchargement a démarré ; vous serez notifié par message lorsqu'il sera terminé."
+        confirm: "Voulez-vous vraiment télécharger vos messages ?"
+        success: "Le téléchargement a démarré ; vous recevrez une notification lorsqu'il sera terminé."
         rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
@@ -914,14 +914,14 @@ fr:
         ignore_option: "Ignoré"
         ignore_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur et ses messages et réponses seront masqués."
         add_ignored_user: "Ajouter…"
-        mute_option: "Silencieux"
+        mute_option: "En sourdine"
         mute_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur."
         normal_option: "Normal"
-        normal_option_title: "Vous serez notifié si cet utilisateur vous répond, vous cite ou vous mentionne."
+        normal_option_title: "Vous recevrez une notification si cet utilisateur vous répond, vous cite ou vous mentionne."
       notification_schedule:
-        title: "Planning des notifications"
+        title: "Planification des notifications"
         label: "Activer la planification personnalisée des notifications"
-        tip: "Vous basculerez automatiquement en mode \"Ne pas déranger\" en-dehors de ces horaires."
+        tip: "Vous basculerez automatiquement en mode « Ne pas déranger » en-dehors de ces horaires."
         midnight: "Minuit"
         none: "Jamais"
         monday: "Lundi"
@@ -943,7 +943,7 @@ fr:
         save: "Enregistrer"
         clear:
           title: "Vider"
-          warning: "Êtes-vous sûr de vouloir masquer votre sujet vedette ?"
+          warning: "Voulez-vous vraiment effacer votre sujet vedette ?"
       use_current_timezone: "Utiliser le fuseau horaire actuel"
       profile_hidden: "Le profil public de cet utilisateur est caché."
       expand_profile: "Développer"
@@ -951,33 +951,33 @@ fr:
       bookmarks: "Signets"
       bio: "À propos de moi"
       timezone: "Fuseau horaire"
-      invited_by: "Invité par"
+      invited_by: "Invité(e) par"
       trust_level: "Niveau de confiance"
       notifications: "Notifications"
       statistics: "Statistiques"
       desktop_notifications:
         label: "Notifications instantanées"
-        not_supported: "Les notifications ne sont pas supportées sur ce navigateur. Désolé."
+        not_supported: "Nous sommes désolés, les notifications ne sont pas supportées sur ce navigateur."
         perm_default: "Activer les notifications"
         perm_denied_btn: "Permission refusée"
-        perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les depuis les paramètres de votre navigateur."
+        perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les à partir des paramètres de votre navigateur."
         disable: "Désactiver les notifications"
         enable: "Activer les notifications"
-        each_browser_note: 'Remarque : Vous devez modifier ce paramètre sur chaque navigateur que vous utilisez. Toutes les notifications seront désactivées lorsque vous êtes en mode « Ne pas déranger », quel que soit ce paramètre.'
-        consent_prompt: "Souhaitez-vous recevoir des notifications en temps réel quand on répond à vos messages ?"
+        each_browser_note: 'Remarque : vous devez modifier ce paramètre sur chaque navigateur que vous utiliserez. Toutes les notifications seront désactivées lorsque vous serez en mode « Ne pas déranger », quel que soit la valeur de ce paramètre.'
+        consent_prompt: "Souhaitez-vous recevoir des notifications en temps réel en cas de réponse à vos messages ?"
       dismiss: "Vu"
       dismiss_notifications: "Tout vu"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
       no_messages_title: "Vous n'avez aucun message"
       no_messages_body: >
-        Besoin d'échanger directement avec une personne, en-dehors de la conversation principale ? Sélectionnez leur avatar et utilisez le bouton %{icon} pour leur écrire un message.<br><br>Pour obtenir de l'aide, <a href='%{aboutUrl}'>écrivez à un des responsables du site</a>.
+        Besoin d'échanger directement avec une personne en-dehors de la conversation principale ? Sélectionnez son avatar et utilisez le bouton %{icon} pour lui écrire un message.<br><br>Pour obtenir de l'aide, <a href='%{aboutUrl}'>adressez-vous à l'un des responsables du site</a>.
       no_bookmarks_title: "Vous n'avez pas encore créé de signet"
       no_bookmarks_body: >
-        Le bouton %{icon} vous permet de marquer d'un signet les messages qui vous intéressent particulièrement — ils s'afficheront alors ici, et vous les aurez sous la main. Pour vous organiser, vous pourrez même planifier une alerte associée à un signet&nbsp;!
+        Le bouton %{icon} vous permet de marquer d'un signet les messages qui vous intéressent particulièrement. Ils seront ensuite affichés ici pour faciliter leur consultation. Vous pouvez également planifier un rappel associé à un signet !
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
       no_notifications_body: >
-        Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que : des réponses qui vous sont faites, des personnes qui citent vos messages ou qui mentionnent votre <b>@pseudo</b>, et des nouveaux messages publiés dans des sujets que vous suivez. Si vous ne vous êtes pas connecté au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br>Un peu partout sur le forum, le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous recevez des notifications. Vous trouverez aussi des réglages dans la section <a href='%{preferencesUrl}'>Notifications</a> de votre page de préférences.
-      first_notification: "Votre première notification ! Cliquez-la pour démarrer."
+        Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que les réponses qui vous sont adressées, les personnes qui citent vos messages ou qui mentionnent votre <b>pseudo</b>, et les nouveaux messages publiés dans les sujets que vous suivez. Si vous ne vous êtes pas connecté(e) au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br>Le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous souhaitez recevoir des notifications. Pour en savoir plus, consultez également vos <a href='%{preferencesUrl}'>préférences de notification</a>.
+      first_notification: "Votre première notification ! Sélectionnez-la pour commencer."
       dynamic_favicon: "Afficher un compteur de notifications sur l'icône du navigateur"
       skip_new_user_tips:
         description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs."
@@ -985,7 +985,7 @@ fr:
         skip_link: "Ignorer ces conseils"
         read_later: "J'y jetterai un œil plus tard."
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
-      color_scheme_default_on_all_devices: "Définir comme jeux de couleurs par défaut sur tous mes appareils"
+      color_scheme_default_on_all_devices: "Définir comme jeu(x) de couleurs par défaut sur tous mes appareils"
       color_scheme: "Jeu de couleurs"
       color_schemes:
         default_description: "Couleur du thème"
@@ -1004,11 +1004,11 @@ fr:
       enable_defer: "Activer le bouton pour reporter des sujets à plus tard en les marquant comme non lus"
       change: "modifier"
       featured_topic: "Sujet vedette"
-      moderator: "%{user} est un modérateur"
-      admin: "%{user} est un administrateur"
-      moderator_tooltip: "Cet utilisateur est un modérateur"
-      admin_tooltip: "Cet utilisateur est un administrateur"
-      silenced_tooltip: "Cet utilisateur est mis sous silence"
+      moderator: "%{user} a le rôle de modérateur(rice)"
+      admin: "%{user} a le rôle d'administrateur(rice)"
+      moderator_tooltip: "Cet utilisateur a le rôle de modérateur(rice)"
+      admin_tooltip: "Cet utilisateur a le rôle d'administrateur(rice)"
+      silenced_tooltip: "Cet utilisateur est mis en sourdine"
       suspended_notice: "L'utilisateur est suspendu jusqu'au %{date}."
       suspended_permanently: "Cet utilisateur est suspendu."
       suspended_reason: "Raison : "
@@ -1018,8 +1018,8 @@ fr:
         label: "Liste de diffusion"
         enabled: "Activer la liste de diffusion"
         instructions: |
-          Ce paramètre remplace le résumé d'activités.<br />
-          Les sujets et catégories passés en silencieux ne sont pas inclus dans ces courriels.
+          Ce paramètre remplace le résumé d'activité.<br />
+          Les sujets et catégories mis en sourdine ne sont pas inclus dans ces courriels.
         individual: "Envoyer un courriel pour chaque nouveau message"
         individual_no_echo: "Envoyer un courriel pour chaque nouveau message sauf les miens"
         many_per_day: "M'envoyer un courriel pour chaque nouveau message (environ %{dailyEmailEstimate} par jour)"
@@ -1027,34 +1027,34 @@ fr:
         warning: "Mode liste de diffusion activé. Les paramètres de notification par courriel sont remplacés."
       tag_settings: "Étiquettes"
       watched_tags: "Surveillées"
-      watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets avec ces étiquettes. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
+      watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets marqués par ces étiquettes. Vous recevrez des notifications pour tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
       tracked_tags: "Suivies"
-      tracked_tags_instructions: "Vous suivrez automatiquement tous les sujets avec ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté du sujet."
-      muted_tags: "Silencieuses"
-      muted_tags_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets avec ces étiquettes et ces sujets n'apparaîtront pas sur la page des sujets récents."
+      tracked_tags_instructions: "Vous suivrez automatiquement tous les sujets marqués par ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté du sujet."
+      muted_tags: "En sourdine"
+      muted_tags_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets marqués par ces étiquettes et ces sujets n'apparaîtront pas sur la page des sujets récents."
       watched_categories: "Surveillées"
-      watched_categories_instructions: "Vous surveillerez automatiquement tous les sujets de ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
+      watched_categories_instructions: "Vous surveillerez automatiquement tous les sujets de ces catégories. Vous recevrez des notifications pour tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
       tracked_categories: "Suivies"
-      tracked_categories_instructions: "Vous suivrez automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
+      tracked_categories_instructions: "Vous suivrez automatiquement tous les sujets repris dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       watched_first_post_categories: "Surveiller les nouveaux sujets"
-      watched_first_post_categories_instructions: "Vous serez notifié du premier message de chaque sujet dans ces catégories."
+      watched_first_post_categories_instructions: "Vous recevrez une notification concernant le premier message de chaque sujet repris dans ces catégories."
       watched_first_post_tags: "Surveiller les nouveaux sujets"
-      watched_first_post_tags_instructions: "Vous serez notifié du premier message de chaque sujet avec ces étiquettes."
-      muted_categories: "Silencieuses"
-      muted_categories_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans ces catégories et ces sujets n'apparaîtront pas sur les pages des catégories et des sujets récents."
-      muted_categories_instructions_dont_hide: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans ces catégories."
+      watched_first_post_tags_instructions: "Vous recevrez une notification concernant le premier message de chaque sujet marqué par ces étiquettes."
+      muted_categories: "En sourdine"
+      muted_categories_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets repris dans ces catégories et ces sujets n'apparaîtront pas sur les pages des catégories et des sujets récents."
+      muted_categories_instructions_dont_hide: "Vous ne recevrez aucune notification concernant les nouveaux sujets repris dans ces catégories."
       regular_categories: "Normal"
-      regular_categories_instructions: "Vous verrez ces catégories dans les listes de sujets « Récents » et « Top »."
-      no_category_access: "Du fait de votre statut de modérateur, votre accès aux catégories est limité. L'enregistrement est désactivé."
+      regular_categories_instructions: "Vous verrez ces catégories dans les listes « Sujets récents » et « Meilleurs sujets »."
+      no_category_access: "Du fait de votre statut de modérateur(rice), votre accès aux catégories est limité. L'enregistrement est désactivé."
       delete_account: "Supprimer mon compte"
-      delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action n'est pas réversible !"
+      delete_account_confirm: "Voulez-vous vraiment supprimer définitivement votre compte ? Cette action est irréversible !"
       deleted_yourself: "Votre compte a été supprimé avec succès."
       delete_yourself_not_allowed: "Veuillez contacter un responsable si vous souhaitez supprimer votre compte."
       unread_message_count: "Messages"
       admin_delete: "Supprimer"
       users: "Utilisateurs"
-      muted_users: "Silencieux"
-      muted_users_instructions: "Ignorer toutes les notifications et messages directs provenant de ces utilisateurs."
+      muted_users: "En sourdine"
+      muted_users_instructions: "Ignorer toutes les notifications et tous les messages directs provenant de ces utilisateurs."
       allowed_pm_users: "Autorisés"
       allowed_pm_users_instructions: "Autoriser uniquement les messages directs de ces utilisateurs."
       allow_private_messages_from_specific_users: "Autoriser uniquement des utilisateurs spécifiques à m'envoyer des messages directs"
@@ -1087,7 +1087,7 @@ fr:
         bulk_select: "Sélectionner des messages"
         move_to_inbox: "Déplacer dans la boîte de réception"
         move_to_archive: "Archiver"
-        failed_to_move: "Impossible de déplacer les messages sélectionnés (peut-être que votre connexion est coupée)"
+        failed_to_move: "Impossible de déplacer les messages sélectionnés (votre connexion est peut-être en panne)"
         select_all: "Tout sélectionner"
         tags: "Étiquettes"
       preferences_nav:
@@ -1111,7 +1111,7 @@ fr:
         choose_new: "Choisissez un nouveau mot de passe"
         choose: "Choisissez un mot de passe"
       second_factor_backup:
-        title: "Codes de secours de la validation en deux étapes"
+        title: "Codes de secours de l'authentification à deux facteurs"
         regenerate: "Régénérer"
         disable: "Désactiver"
         enable: "Activer"
@@ -1127,43 +1127,43 @@ fr:
           one: "Il vous reste <strong>%{count}</strong> code de secours."
           other: "Il vous reste <strong>%{count}</strong> codes de secours."
         use: "Utiliser un code de secours"
-        enable_prerequisites: "Vous devez activer une validation principale en deux étapes avant de générer des codes de secours."
+        enable_prerequisites: "Vous devez activer une méthode d'authentification principale à deux facteurs avant de générer des codes de secours."
         codes:
           title: "Codes de secours générés"
-          description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
+          description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Conservez-les dans un endroit sûr et accessible."
       second_factor:
-        title: "Validation en deux étapes"
-        enable: "Gérer la validation en deux étapes"
+        title: "Authentification à deux facteurs"
+        enable: "Gérer l'authentification à deux facteurs"
         disable_all: "Tout désactiver"
         forgot_password: "Mot de passe oublié ?"
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         name: "Nom"
         label: "Code"
-        rate_limit: "Veuillez patienter avant d'essayer un autre code d'identification."
+        rate_limit: "Veuillez patienter avant d'essayer un autre code d'authentification."
         enable_description: |
-          Scannez ce code QR en utilisant une application compatible (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a>– <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) et entrez votre code d'authentification.
+          Scannez ce code QR en utilisant une application compatible (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a>– <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) et saisissez votre code d'authentification.
         disable_description: "Veuillez saisir le code d'authentification généré par l'application"
         show_key_description: "Saisir manuellement"
         short_description: |
           Protéger votre compte avec des codes de sécurité à usage unique.
         extended_description: |
-          La validation en deux étapes ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> et <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Veuillez noter que les connexions aux réseaux sociaux seront désactivées à l'activation de la validation en deux étapes sur votre compte."
+          L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> et <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+        oauth_enabled_warning: "Veuillez noter que les connexions aux réseaux sociaux seront désactivées une fois l'authentification à deux facteurs activée sur votre compte."
         use: "Utiliser l'application Authenticator"
-        enforced_notice: "Vous devez activer la validation en deux étapes avant d'accéder à ce site."
+        enforced_notice: "Vous devez activer l'authentification à deux facteurs avant d'accéder à ce site."
         disable: "Désactiver"
-        disable_confirm: "Êtes-vous sûr de vouloir désactiver toutes les validations en deux étapes ?"
+        disable_confirm: "Voulez-vous vraiment désactiver toutes les méthodes d'authentification à deux facteurs ?"
         save: "Enregistrer"
         edit: "Modifier"
         edit_title: "Gérer l'application d'authentification"
         edit_description: "Nom de l'application d'authentification"
         enable_security_key_description: |
-          Dès que votre <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">clé de sécurité physique</a> est prête, appuyer sur le bouton Enregistrer ci-dessous.
+          Dès que votre <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">clé de sécurité physique</a> est prête, appuyez sur le bouton « Enregistrer » ci-dessous.
         totp:
-          title: "Authentificateurs à base de jetons"
+          title: "Applications d'authentification basées sur les jetons"
           add: "Ajouter une application d'authentification"
           default_name: "Mon application d'authentification"
-          name_and_code_required_error: "Vous devez donner un nom et le code de votre application d'authentification."
+          name_and_code_required_error: "Vous devez donner le nom et le code de votre application d'authentification."
         security_key:
           register: "Enregistrer"
           title: "Clés de sécurité"
@@ -1176,23 +1176,23 @@ fr:
           edit_description: "Nom de la clé de sécurité"
           name_required_error: "Vous devez donner un nom à votre clé de sécurité."
       change_about:
-        title: "Modifier À propos de moi"
-        error: "Il y a eu une erreur lors de la modification de cette valeur."
+        title: "Modifier la rubrique « À propos de moi »"
+        error: "Une erreur s'est produite lors de la modification de cette valeur."
       change_username:
         title: "Modifier le nom d'utilisateur"
-        confirm: "Êtes-vous sûr de vouloir modifier votre nom d'utilisateur ?"
-        taken: "Désolé, ce nom d'utilisateur est déjà pris."
+        confirm: "Voulez-vous vraiment modifier votre nom d'utilisateur ?"
+        taken: "Nous sommes désolés, ce nom d'utilisateur est déjà utilisé."
         invalid: "Ce nom d'utilisateur est invalide. Il ne doit être composé que de lettres et de chiffres."
       add_email:
         title: "Ajouter une adresse courriel"
         add: "ajouter"
       change_email:
         title: "Modifier l'adresse courriel"
-        taken: "Désolé, cette adresse courriel est indisponible."
-        error: "Il y a eu une erreur lors du changement de l'adresse courriel. Cette adresse est peut-être déjà utilisée ?"
+        taken: "Nous sommes désolés, cette adresse courriel est indisponible."
+        error: "Une erreur est survenue lors de la modification de l'adresse courriel. Cette adresse est peut-être déjà utilisée ?"
         success: "Nous avons envoyé un courriel à cette adresse. Merci de suivre les instructions."
-        success_via_admin: "Nous avons envoyé un courriel à cette adresse. L'utilisateur devra suivre les instructions de confirmation indiquées dans le courriel."
-        success_staff: "Nous avons envoyé un courriel à votre adresse actuelle. Merci de suivre les instructions."
+        success_via_admin: "Nous avons envoyé un courriel à cette adresse. L'utilisateur devra suivre les instructions de confirmation qui y sont indiquées."
+        success_staff: "Nous avons envoyé un courriel à votre adresse actuelle. Merci de suivre les instructions qui y figurent."
       change_avatar:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, associé à"

@@ -134,7 +134,7 @@ ja:
       has_already_been_used: "はすでに使用されています"
       inclusion: はリストに含まれていません
       invalid: は無効です
-      is_invalid: "はわかりにくい文章です。完全な文ですか？"
+      is_invalid: "は曖昧です。完全な文ですか？"
       invalid_timezone: "'%{tz}' は有効なタイムゾーンではありません"
       contains_censored_words: "次の検閲された単語が含まれています: %{censored_words}"
       less_than: は %{count} より小さい値である必要があります
@@ -151,76 +151,76 @@ ja:
       too_long:
         other: は長すぎます (最大 %{count} 文字です)
       too_short:
-        other: は%{count}文字以上で入力してください
+        other: は短すぎます (最低 %{count}文字です)
       wrong_length:
-        other: は%{count}文字で入力してください
-      other_than: "は%{count}以外の値にしてください"
+        other: は %{count} 文字である必要があります
+      other_than: "は %{count} 以外の値である必要があります"
     template:
       body: ! "次のフィールドに問題があります:"
       header:
-        other: ! "%{model} の保存中に%{count} 個のエラーが発生しました"
+        other: ! "%{count} 個のエラーによりこの %{model} を保存できませんでした"
     embed:
-      load_from_remote: "投稿の読み込みに失敗しました。"
+      load_from_remote: "投稿を読み込み中にエラーが発生しました。"
     site_settings:
-      default_categories_already_selected: "他のリストで使われているカテゴリーは選択できません。"
-      s3_upload_bucket_is_required: "'s3_upload_bucket'がない場合、S3にアップロードを有効にすることはできません。"
+      default_categories_already_selected: "他のリストで使われているカテゴリは選択できません。"
+      s3_upload_bucket_is_required: "'s3_upload_bucket' を入力しない限り、S3 へのアップロードを有効にすることはできません。"
   invite:
-    user_exists: "<b>%{email}</b>を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'>すでにアカウントを持っています！</a>"
+    user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     disabled_errors:
-      invalid_access: "リクエストしたリソースの閲覧が許可されていません"
+      invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
   bulk_invite:
-    file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
-    error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
+    file_should_be_csv: "アップロードファイルは csv 形式である必要があります。"
+    error: "ファイルをアップロード中にエラーが発生しました。後でもう一度お試しください。"
   topic_invite:
-    user_exists: "ごめんなさい、そのユーザーはすでに招待されています。一つのトピックにつき一度しかユーザーを招待できません。"
-    sender_does_not_allow_pm: "申し訳ありませんが、そのユーザーがプライベートメッセージを送信することを許可していません。"
+    user_exists: "そのユーザーはすでに招待されています。ユーザーを一度しかトピックに招待できません。"
+    sender_does_not_allow_pm: "そのユーザーがプライベートメッセージを送信することを許可していません。"
   backup:
-    operation_already_running: "操作を実行しています。他の操作はできません。"
-    backup_file_should_be_tar_gz: "バックアップファイルは .tar.gz形式である必要があります。"
-    not_enough_space_on_disk: "このバックアップファイルをアップロードするディスクの空き容量が足りません。"
-    invalid_filename: "バックアップファイル名に無効な文字が含まれています。有効な文字はa-z 0-9 . - _ です。"
-    file_exists: "アップロードしようとしているファイルはすでに存在しています。"
-  not_logged_in: "ログインしてください。"
-  not_found: "リクエストされたURL、リソースは見つかりませんでした"
-  invalid_access: "リクエストしたリソースの閲覧が許可されていません"
-  read_only_mode_enabled: "このサイトは閲覧専用状態です。変更などの操作は無効になっています。"
+    operation_already_running: "作業を実行中です。新しいジョブを開始できません。"
+    backup_file_should_be_tar_gz: "バックアップファイルは .tar.gz 形式のアーカイブである必要があります。"
+    not_enough_space_on_disk: "このバックアップをアップロードするディスクの空き容量が足りません。"
+    invalid_filename: "バックアップファイル名に無効な文字が含まれています。有効な文字は a-z 0-9 . - _ です。"
+    file_exists: "アップロードしようとしているファイルはすでに存在します。"
+  not_logged_in: "この操作を行うにはログインしてください。"
+  not_found: "リクエストされた URL またはリソースは見つかりませんでした。"
+  invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
+  read_only_mode_enabled: "このサイトは閲覧専用状態です。操作は無効になっています。"
   not_in_group:
     join_group: "グループに参加"
   reading_time: "閲覧時間"
   likes: "いいね！"
   too_many_replies:
-    other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
+    other: "新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
   max_consecutive_replies:
-    other: " %{count}回を超える連続の返信は禁止されています。以前の返信を編集するか、他の人の返信をお待ちください。"
+    other: "%{count} 回を超える連続の返信は禁止されています。前の返信を編集するか、他の人の返信をお待ちください。"
   embed:
-    start_discussion: "会話をする"
-    continue: "会話を続ける"
+    start_discussion: "ディスカッションを開始"
+    continue: "ディスカッションを続行"
     referer: "リファラー:"
     more_replies:
-      other: "%{count} 以上の返信"
-    loading: "会話を読み込んでいます…"
+      other: "他 %{count} 件の返信"
+    loading: "ディスカッションを読み込み中…"
     permalink: "パーマリンク"
-    imported_from: "これは、オリジナルエントリ%{link}に対するディスカッショントピックです"
+    imported_from: "これは、元のエントリ (%{link}) に関連するディスカッショントピックです"
     in_reply_to: "▶ %{username}"
     replies:
-      other: "%{count}件のリプライ"
-    created: "作成者"
-  no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
-  no_mentions_allowed_newuser: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
-  no_attachments_allowed: "申し訳ありませんが、新規ユーザはこのポストにファイルを添付できません。"
+      other: "返信: %{count} 件"
+    created: "作成"
+  no_mentions_allowed: "他のユーザーをメンションできません。"
+  no_mentions_allowed_newuser: "新規ユーザーは他のユーザーをメンションできません。"
+  no_attachments_allowed: "新規ユーザーは投稿に添付ファイルを追加できません。"
   too_many_attachments:
-    other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個のファイルしか貼り付けられません。"
-  no_links_allowed: "申し訳ありませんが、新規ユーザはこのポストにリンクを貼れません。"
-  links_require_trust: "ごめんなさい、ポストにリンクを含めることはできません。"
+    other: "新規ユーザーは投稿につき %{count} 個のファイルしか添付できません。"
+  no_links_allowed: "新規ユーザーは投稿にリンクを追加できません。"
+  links_require_trust: "投稿にリンクを含めることはできません。"
   too_many_links:
-    other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個のリンクしか貼り付けられません。"
-  contains_blocked_word: "ポストに許可されていない言葉が含まれています: %{word}"
-  spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
+    other: "新規ユーザーは投稿につき %{count} 件のリンクしか追加できません。"
+  contains_blocked_word: "投稿に許可されていない言葉が含まれています: %{word}"
+  spamming_host: "このホストへのリンクを投稿できません。"
   user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
-  just_posted_that: "は最近の投稿と内容がほぼ一緒です"
-  invalid_characters: "は不正な文字を含んでいます"
-  is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
+  just_posted_that: "は最近の投稿に非常に似ています"
+  invalid_characters: "に無効な文字が含まれています"
+  is_invalid: "は曖昧です。完全な文ですか？"
   next_page: "次のページ →"
   prev_page: "← 前のページ"
   page_num: "%{num} ページ"
@@ -229,30 +229,30 @@ ja:
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
   rss_num_posts:
-    other: "%{count} 件"
-  read_full_topic: "完全なトピックを読む"
+    other: "投稿 %{count} 件"
+  read_full_topic: "全トピックを読む"
   private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新のトピック"
-    top: "トップトピック"
-    top_all: "すべての期間のトップトピック"
-    top_yearly: "年間のトップトピック"
-    top_quarterly: "四半期のトップトピック"
-    top_monthly: "月間のトップトピック"
-    top_weekly: "今週のトップトピック"
-    top_daily: "今日のトップトピック"
-    posts: "最近の投稿"
+    top: "人気のトピック"
+    top_all: "全期間の人気のトピック"
+    top_yearly: "年間の人気のトピック"
+    top_quarterly: "四半期の人気のトピック"
+    top_monthly: "月間の人気のトピック"
+    top_weekly: "今週の人気のトピック"
+    top_daily: "今日の人気のトピック"
+    posts: "最新の投稿"
     private_posts: "最新の個人メッセージ"
-    group_posts: "%{group_name}からの最新投稿"
-    group_mentions: "%{group_name}からの最新メンション"
-    user_posts: "@%{username}からの最新投稿"
-    user_topics: "@%{username}からの最新トピック"
-    tag: "タグされたトピック"
-  too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
+    group_posts: "%{group_name} の最新の投稿"
+    group_mentions: "%{group_name} の最新のメンション"
+    user_posts: "@%{username} の最新の投稿"
+    user_topics: "@%{username} の最新のトピック"
+    tag: "タグ付きトピック"
+  too_late_to_edit: "この投稿はかなり前に作成されました。編集または削除はできなくなりました。"
   excerpt_image: "画像"
   bookmarks:
     reminders:
-      later_today: "今日中"
+      later_today: "今日の後程"
       next_business_day: "翌営業日"
       tomorrow: "明日"
       next_week: "来週"
@@ -260,30 +260,28 @@ ja:
       custom: "カスタムの日付と時刻"
   groups:
     errors:
-      invalid_incoming_email: "%{email}のメール認証に失敗しました\U0001F62D"
-      email_already_used_in_group: "'%{email}'はすでに'%{group_name}'グループに使われています。"
-      email_already_used_in_category: "'%{email}'はすでに'%{category_name}'カテゴリーに使われています。"
+      invalid_incoming_email: "%{email} は有効なメールアドレスではありません。"
+      email_already_used_in_group: "'%{email}' はすでに '%{group_name}' グループに使われています。"
+      email_already_used_in_category: "'%{email}' はすでに '%{category_name}' カテゴリに使われています。"
     default_names:
-      everyone: "みなさん"
+      everyone: "全員"
       admins: "管理者"
-      moderators: "モデレータ"
+      moderators: "モデレーター"
       staff: "スタッフ"
-      trust_level_0: "トラストレベル0"
-      trust_level_1: "トラストレベル1"
-      trust_level_2: "トラストレベル2"
-      trust_level_3: "トラストレベル3"
-      trust_level_4: "トラストレベル4"
+      trust_level_0: "trust_level_0"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
   education:
     until_posts:
-      other: "%{count} 投稿"
+      other: "投稿 %{count} 件"
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
-      新しいユーザーは、同じトピックへの返信数が%{newuser_max_replies_per_topic}件に一時的に制限されています。
+      新しいユーザーの同じトピックへの返信は、一時的に %{newuser_max_replies_per_topic} 件に制限されています。
 
-      返信を追加する代わりに、次に手段を検討してください。
-      ・これまでの返信を編集する。
-      ・他のトピックを訪れる。
+      返信を追加する代わりに、前の返信を編集するかほかのトピックにアクセスしてください。
   activerecord:
     attributes:
       category:
@@ -300,41 +298,41 @@ ja:
         topic:
           attributes:
             base:
-              too_many_users: "一度に1ユーザーにしか警告を送る事はできません"
-              no_user_selected: "有効なユーザーを選択してください"
+              too_many_users: "一度に 1 人のユーザーにのみ警告を送ることができます。"
+              no_user_selected: "有効なユーザーを選択してください。"
         user:
           attributes:
             password:
-              common: "は10000最も一般的なパスワードのいずれかである。より安全なパスワードを使用してください。"
-              same_as_username: "はあなたのユーザー名と同じです。より安全なパスワードを使用してください"
-              same_as_email: "はあなたのメールアドレスと同じです。より安全なパスワードを使用してください"
+              common: "は 10000 個の最も一般的なパスワードの 1 つです。より安全なパスワードを使用してください。"
+              same_as_username: "はあなたのユーザー名と同じです。より安全なパスワードを使用してください。"
+              same_as_email: "はあなたのメールアドレスと同じです。より安全なパスワードを使用してください。"
               same_as_current: "はあなたの現在のパスワードと同じです。"
-              unique_characters: "パスワードに繰り返しが多すぎます。より安全なものを入力してください。"
+              unique_characters: "パスワードに繰り返しが多すぎます。より安全なものを使用してください。"
             ip_address:
-              signup_not_allowed: "このアカウントからのサインアップできません。"
+              signup_not_allowed: "このアカウントからサインアップできません。"
         color_scheme_color:
           attributes:
             hex:
-              invalid: "は有効なカラーではありません"
+              invalid: "は有効な色ではありません"
       <<: *errors
-  uncategorized_category_name: "その他"
+  uncategorized_category_name: "未分類"
   vip_category_name: "ラウンジ"
-  vip_category_description: "トラストレベル3以上のメンバーのみが参加できるカテゴリ"
-  meta_category_name: "サイトフィードバック"
-  meta_category_description: "このサイトに関するディスカッション、この組織、それがどのように機能し、 そして、我々はそれをどのように改善できるでしょうか。"
+  vip_category_description: "信頼レベル 3 以上のメンバーのみが参加できるカテゴリです。"
+  meta_category_name: "サイトに関する意見"
+  meta_category_description: "このサイト、組織、仕組み、および改善に関するディスカッションです。"
   staff_category_name: "スタッフ"
-  staff_category_description: "スタッフのためのプライベートカテゴリです。トピックは管理者とモデレータのみが閲覧できます"
+  staff_category_description: "スタッフディスカッション用の非公開カテゴリです。トピックは管理者とモデレーターのみが閲覧できます。"
   discourse_welcome_topic:
-    title: "Discourseへようこそ"
+    title: "Discourse へようこそ"
   lounge_welcome:
     title: "ラウンジへようこそ"
   category:
-    topic_prefix: "%{category}カテゴリについて"
+    topic_prefix: "%{category} カテゴリについて"
     errors:
-      uncategorized_parent: "未分類カテゴリは親カテゴリに設定出来ません。"
-      self_parent: "自分自身がサブカテゴリの親になることはできません"
-      depth: "他のサブカテゴリの下にサブカテゴリを作成することはできません"
-      invalid_email_in: "%{email}のメール認証に失敗しました\U0001F62D"
+      uncategorized_parent: "未分類カテゴリに親カテゴリを設定できません"
+      self_parent: "サブカテゴリの親をそのサブカテゴリに設定できません"
+      depth: "サブカテゴリの下に別のサブカテゴリを作成することはできません"
+      invalid_email_in: "%{email} は有効なメールアドレスではありません"
       email_already_used_in_group: "'%{email}'はすでに'%{group_name}'グループに使われています。"
       email_already_used_in_category: "'%{email}'はすでに'%{category_name}'カテゴリーに使われています。"
       description_incomplete: "カテゴリーの説明文は最低でも1段落必要です。"
