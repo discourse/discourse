@@ -146,42 +146,6 @@ class TopicTimer < ActiveRecord::Base
     self.status_type.to_i == TopicTimer.types[:publish_to_category]
   end
 
-  def cancel_auto_close_job
-    Jobs.cancel_scheduled_job(:close_topic, topic_timer_id: id)
-  end
-
-  def cancel_auto_open_job
-    Jobs.cancel_scheduled_job(:open_topic, topic_timer_id: id)
-  end
-
-  def cancel_auto_silent_close_job
-    Jobs.cancel_scheduled_job(:close_topic, topic_timer_id: id)
-  end
-
-  def cancel_auto_publish_to_category_job
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:publish_to_category], topic_timer_id: id)
-  end
-
-  def cancel_auto_delete_job
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:delete], topic_timer_id: id)
-  end
-
-  def cancel_auto_reminder_job
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:reminder], topic_timer_id: id)
-  end
-
-  def cancel_auto_bump_job
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:bump], topic_timer_id: id)
-  end
-
-  def cancel_auto_delete_replies_job
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:delete_replies], topic_timer_id: id)
-  end
-
-  def cancel_auto_clear_slow_mode_job
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:clear_slow_mode], topic_timer_id: id)
-  end
-
   def schedule_auto_delete_replies_job
     Jobs.enqueue(TopicTimer.type_job_map[:delete_replies], topic_timer_id: id)
   end
