@@ -7,7 +7,7 @@ export default Component.extend({
   topHorizontalScrollBar: null,
   tableContainer: null,
 
-  didRender() {
+  didInsertElement() {
     this._super(...arguments);
     this.set(
       "tableContainer",
