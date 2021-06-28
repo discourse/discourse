@@ -180,7 +180,7 @@ zh_CN:
     sign_up: "注册"
     log_in: "登录"
     age: "年龄"
-    joined: "已加入"
+    joined: "加入日期："
     admin_title: "管理员"
     show_more: "展开"
     show_help: "选项"
@@ -564,7 +564,7 @@ zh_CN:
         deny: "拒绝"
         denied: "已拒绝"
         undone: "请求已撤消"
-        handle: "处理会员资格请求"
+        handle: "处理成员资格请求"
       manage:
         title: "管理"
         name: "名称"
@@ -592,17 +592,17 @@ zh_CN:
           imap_instructions: '当您为群组启用 IMAP 时，电子邮件将在群组收件箱和提供的 IMAP 服务器与邮箱之间同步。在启用 IMAP 之前，必须启用 SMTP 并验证和测试凭据。SMTP 使用的电子邮件用户名和密码将用于 IMAP。有关详情，请参阅 <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta 功能公告</a>。'
           imap_alpha_warning: "警告：此功能仍处于 Alpha 版阶段。只官方支持 Gmail。风险自负！"
           imap_settings_valid: "IMAP 设置有效。"
-          smtp_disable_confirm: "如果你禁用SMTP，所有SMTP和 IMAP 设置将被重置，相关功能将被禁用，你确定要继续吗？"
-          imap_disable_confirm: "如果你禁用 IMAP，所有 IMAP 设置将被重置，相关功能将被禁用，你确定要继续吗？"
-          imap_mailbox_not_selected: "你必须为此 IMAP 配置选择一个邮箱，否则不会同步任何邮箱！"
+          smtp_disable_confirm: "如果您禁用 SMTP，所有 SMTP 和 IMAP 设置都将被重置，关联功能将被禁用。确定要继续吗？"
+          imap_disable_confirm: "如果您禁用 IMAP，所有 IMAP 设置都将被重置，关联功能将被禁用。确定要继续吗？"
+          imap_mailbox_not_selected: "您必须为此 IMAP 配置选择一个邮箱，否则将不会同步任何邮箱！"
           prefill:
-            title: "以此设置预填："
+            title: "使用设置预填充："
             gmail: "Gmail"
           credentials:
             title: "凭据"
             smtp_server: "SMTP 服务器"
             smtp_port: "SMTP 端口"
-            smtp_ssl: "使用 SSL 连接 SMTP"
+            smtp_ssl: "为 SMTP 使用 SSL"
             imap_server: "IMAP 服务器"
             imap_port: "IMAP 端口"
             imap_ssl: "为 IMAP 使用 SSL"
@@ -610,47 +610,47 @@ zh_CN:
             password: "密码"
           settings:
             title: "设置"
-            allow_unknown_sender_topic_replies: "允许从未知发件人话题的回复。"
+            allow_unknown_sender_topic_replies: "允许未知发件人话题回复。"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
             disabled: "已禁用"
         membership:
-          title: 成员
+          title: 成员资格
           access: 访问
         categories:
-          title: 分类
-          long_title: "分类默认通知"
-          description: "将用户添加到此组时，其分类通知将默认设置为此，在这之后，他们还可以自行修改。"
-          watched_categories_instructions: "自动关注这些分类中的所有话题，组成员将收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
-          tracked_categories_instructions: "自动跟踪这些分类中的所有话题，新帖子的数量将显示在话题旁边。"
-          watching_first_post_categories_instructions: "用户将收到这些分类中每个新话题的第一篇文章的通知。"
-          regular_categories_instructions: "如果这些分类已经被静音，将为群组成员取消静音，用户被提及到或被回复时会被通知。"
-          muted_categories_instructions: "用户不会收到有关这些类别中新话题的任何通知，也不会出现在分类或最新话题页面上。"
+          title: 类别
+          long_title: "类别默认通知"
+          description: "将用户添加到此群组时，其类别通知设置将被设置为这些默认值。之后，他们可以进行更改。"
+          watched_categories_instructions: "自动关注这些类别中的所有话题。组成员将收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
+          tracked_categories_instructions: "自动跟踪这些类别中的所有话题。新帖子的数量将显示在话题旁边。"
+          watching_first_post_categories_instructions: "用户将收到这些类别中每个新话题的第一个帖子的通知。"
+          regular_categories_instructions: "如果已被忽略，这些类别将对群组成员取消忽略。当用户被提及或其他人回复他们时，他们将收到通知。"
+          muted_categories_instructions: "用户不会收到有关这些类别中新话题的任何通知，也不会出现在类别或最新话题页面上。"
         tags:
           title: 标签
           long_title: "标签默认通知"
-          description: "将用户添加到此组时，其标签的通知将默认为这些设置。在这之后，还可以修改。"
-          watched_tags_instructions: "自动关注带有这些标签的所有话题。组成员将收到所有新帖子和话题的通知，话题旁边还会显示新帖子的数量。"
-          tracked_tags_instructions: "自动跟踪有这些标签的所有话题，新帖子的数量将显示在话题旁边。"
-          watching_first_post_tags_instructions: "用户将收到带有这些标签的每个新话题的第一篇文章的通知。"
-          regular_tags_instructions: "如果这些标签已经被静音，将为群组成员取消静音，用户被提及到或被回复时会被通知。"
-          muted_tags_instructions: "用户不会收到有关这些标签的新话题的任何通知，也不会出现在最新话题中。"
+          description: "将用户添加到此群组时，其标签通知设置将被设置为这些默认值。之后，他们可以进行更改。"
+          watched_tags_instructions: "自动关注带有这些标签的所有话题。组成员将收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
+          tracked_tags_instructions: "自动跟踪带有这些标签的所有话题。新帖子的数量将显示在话题旁边。"
+          watching_first_post_tags_instructions: "用户将收到带有这些标签的每个新话题的第一个帖子的通知。"
+          regular_tags_instructions: "如果已被忽略，这些标签将对群组成员取消忽略。当用户被提及或其他人回复他们时，他们将收到通知。"
+          muted_tags_instructions: "用户不会收到有关带有这些标签的新话题的任何通知，也不会出现在最新话题页面上。"
         logs:
           title: "日志"
-          when: "何时"
+          when: "时间"
           action: "操作"
           acting_user: "操作用户"
           target_user: "目标用户"
-          subject: "话题"
-          details: "详情"
+          subject: "主题"
+          details: "详细信息"
           from: "从"
-          to: "到"
+          to: "至"
       permissions:
         title: "权限"
-        none: "没有分类关联到这个群组。"
-        description: "这个群组的成员可以访问这些分类。"
-      public_admission: "允许用户自由加入群组（需要群组公开可见）"
+        none: "没有类别与此群组关联。"
+        description: "此群组的成员可以访问这些类别"
+      public_admission: "允许用户自由加入群组（要求群组公开可见）"
       public_exit: "允许用户自由离开群组"
       empty:
         posts: "群组成员没有发布帖子。"
@@ -691,7 +691,7 @@ zh_CN:
         closed: "已关闭"
         public: "公开"
         private: "私密"
-        public_groups: "公开的群组"
+        public_groups: "公开群组"
         automatic_group: 自动群组
         close_group: 关闭群组
         my_groups: "我的群组"
@@ -1244,7 +1244,7 @@ zh_CN:
       last_posted: "最后发帖"
       last_emailed: "最后邮寄"
       last_seen: "最后活动"
-      created: "加入时间"
+      created: "加入日期："
       log_out: "登出"
       location: "地点"
       website: "网址"
@@ -1943,7 +1943,7 @@ zh_CN:
         linked: "链接"
         bookmark_reminder: "收藏提醒"
         bookmark_reminder_with_name: "收藏提醒 - %{name}"
-        granted_badge: "勋章授予"
+        granted_badge: "已授予徽章"
         invited_to_topic: "邀请到话题"
         group_mentioned: "群组提及"
         group_message_summary: "新建群组消息"
@@ -3154,7 +3154,7 @@ zh_CN:
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
-      granted_on: "授予于%{date}"
+      granted_on: "%{date}授予"
       others_count: "其他有该徽章的人（%{count}）"
       title: 徽章
       allow_title: "你可以将该徽章设为头衔"

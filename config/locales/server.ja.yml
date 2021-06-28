@@ -49,107 +49,107 @@ ja:
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモート画像のダウンロードは無効化されました。"
   anonymous: "匿名"
   remove_posts_deleted_by_author: "作者によって削除"
-  redirect_warning: "選択されたリンクがこのフォーラムに投稿されたものと確認できませんでした。このまま進むには、下のリンクを選択してください。"
-  on_another_topic: "別のトピックで"
+  redirect_warning: "選択されたリンクがこのフォーラムに実際に投稿されていることを確認できませんでした。このまま進むには、下のリンクを選択してください。"
+  on_another_topic: "別のトピック"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
-    topic_page_title_post_number_by_user: "#%{post_number} %{username}から"
+    topic_page_title_post_number_by_user: "%{username} の #%{post_number}"
   themes:
-    bad_color_scheme: "テーマを更新できません、無効なカラーパレットです"
-    other_error: "サーバーに不具合があるので、テーマを更新してください。"
+    bad_color_scheme: "テーマを更新できません。無効なカラーパレットです"
+    other_error: "テーマの更新中に問題が発生しました"
     compile_error:
-      unrecognized_extension: "ファイルの拡張子が認識できません。: %{extension}"
+      unrecognized_extension: "ファイル拡張子を認識できません: %{extension}"
     import_error:
-      generic: テーマをインポートするときにエラーが起こりました
-      about_json: "インポート エラー: about.json が存在しないか、無効です。これはDiscourseのテーマですか？"
-      about_json_values: "about.jsonは無効な値があります: %{errors}"
-      modifier_values: "about.json修飾子に無効な値が含まれています: %{errors}"
-      git: "gitレポジトリのクローニングに失敗しました。アクセスが許可されていないか、レポジトリが見つかりません。"
+      generic: テーマをインポート中にエラーが発生しました
+      about_json: "インポートエラー: about.json が存在しないか無効です。これは Discourseテーマですか？"
+      about_json_values: "about.json に無効な値が含まれます: %{errors}"
+      modifier_values: "about.json 修飾子に無効な値が含まれます: %{errors}"
+      git: "git リポジトリのクローニング中にエラーが発生しました。アクセスが拒否されたか、リポジトリが見つかりません"
       unpack_failed: "ファイルの解凍に失敗しました"
-      file_too_big: "非圧縮ファイルが大きすぎます。"
-      unknown_file_type: "アップロードしたファイルは、有効なDiscourseテーマではないようです。"
+      file_too_big: "解凍されたファイルが大きすぎます。"
+      unknown_file_type: "アップロードしたファイルは、有効な Discourse テーマではないようです。"
     errors:
-      component_no_user_selectable: "テーマコンポーネントはユーザー選択可能にできません"
-      component_no_default: "テーマコンポーネントはデフォルトテーマにできません"
-      component_no_color_scheme: "テーマコンポーネントにカラーパターン設定はありません"
-      no_multilevels_components: "子テーマ自身を子テーマのテーマにはできません"
-      optimized_link: 最適化された画像リンクは一時的なものであり、テーマのソースコードに含めるべきではありません。
+      component_no_user_selectable: "テーマコンポーネントをユーザー選択可能にできません"
+      component_no_default: "テーマコンポーネントをデフォルトテーマにできません"
+      component_no_color_scheme: "テーマコンポーネントにカラーパレットを含めることはできません"
+      no_multilevels_components: "子テーマを持つテーマをその子テーマにできません。"
+      optimized_link: 最適化された画像のリンクは一時的なリンクであるため、テーマのソースコードに含めるべきではありません。
     settings_errors:
-      invalid_yaml: "入力されたYAMLは不正です"
-      data_type_not_a_number: "`%{name}` 型はサポートされていません。サポートしている型は `integer`、`bool`、`list`、`enum`、`upload`です。"
-      name_too_long: "長すぎる名前の設定があります。長さの最大値は255です。"
-      default_value_missing: "設定%{name}はデフォルト値を持っていません"
-      default_not_match_type: "設定%{name}のデフォルト値の型が、設定の型と合致しません"
-      default_out_range: "`%{name}`のデフォルト値は、指定された範囲ではありません。"
-      enum_value_not_valid: "選択された値は列挙された選択しの一つではありません。"
+      invalid_yaml: "入力された YAML は無効です。"
+      data_type_not_a_number: "設定 `%{name}` の型はサポートされていません。サポートされている型は `integer`、`bool`、`list`、`enum`、`upload` です"
+      name_too_long: "名前が長すぎる設定があります。最大長は 255 です"
+      default_value_missing: "設定 `%{name}` にデフォルト値がありません"
+      default_not_match_type: "設定 `%{name}` のデフォルト値の型が設定の型に一致していません。"
+      default_out_range: "設定 `%{name}` のデフォルト値は指定された範囲内にありません。"
+      enum_value_not_valid: "選択された値は列挙型の選択肢に含まれていません。"
       number_value_not_valid: "新しい値は許可された範囲を超えています。"
-      number_value_not_valid_min_max: "%{min}と%{max}の間になければなりません。"
-      number_value_not_valid_min: "%{min}以上でなければなりません。"
-      number_value_not_valid_max: "%{max}以下でなければなりません。"
-      string_value_not_valid: "新しい値の長さが許可された範囲を超えています。"
-      string_value_not_valid_min_max: "%{min}文字以上%{max}文字以下でなければいけません。"
-      string_value_not_valid_min: "少なくとも%{min}文字は必要です。"
-      string_value_not_valid_max: "%{max}文字以下でなければいけません。"
+      number_value_not_valid_min_max: "%{min} と %{max} の間である必要があります。"
+      number_value_not_valid_min: "%{min} 以上である必要があります。"
+      number_value_not_valid_max: "%{max} 以下である必要があります。"
+      string_value_not_valid: "新しい値の長さは許可された範囲を超えています。"
+      string_value_not_valid_min_max: "%{min} 文字以上 %{max} 文字以下である必要があります。"
+      string_value_not_valid_min: "%{min} 文字以上である必要があります。"
+      string_value_not_valid_max: "%{max} 文字以下である必要があります。"
     locale_errors:
-      invalid_yaml: "翻訳YAMLが無効です"
+      invalid_yaml: "翻訳 YAML が無効です"
   emails:
     incoming:
-      default_subject: "このトピックはタイトルが必要です。"
-      show_trimmed_content: "続きを読む"
+      default_subject: "このトピックはタイトルが必要です"
+      show_trimmed_content: "続きを表示"
       no_subject: "(件名なし)"
-      no_body: "(内容なし)"
+      no_body: "(本文なし)"
       errors:
-        empty_email_error: "受け取ったメールが空白だったときに発生します。"
+        empty_email_error: "受け取ったメールが空白である場合に発生します。"
         no_message_id_error: "メールに 'Message-Id' ヘッダーがない場合に発生します。"
-        auto_generated_email_error: "'precedence'ヘッダーにlist、junk、bulk、auto_replyが設定されている場合、または他のヘッダーに auto-submitted、auto-replied、auto-generatedが含まれている場合に発生します。"
-        no_body_detected_error: "本文を展開できず、添付ファイルがない場合に発生します。"
-        no_sender_detected_error: "Fromヘッダーに有効なメールアドレスが見つからなかった場合に発生します。"
-        from_reply_by_address_error: "Fromヘッダーが返信のメールアドレスと一致する場合に発生します。"
+        auto_generated_email_error: "'precedence' ヘッダーに list、junk、bulk、auto_reply が設定されている場合、または他のヘッダーに auto-submitted、auto-replied、auto-generated が含まれている場合に発生します。"
+        no_body_detected_error: "本文を抽出できず、添付ファイルがない場合に発生します。"
+        no_sender_detected_error: "From ヘッダーに有効なメールアドレスが見つからなかった場合に発生します。"
+        from_reply_by_address_error: "From ヘッダーが reply by のメールアドレスと一致する場合に発生します。"
         inactive_user_error: "送信者がアクティブでない場合に発生します。"
-        silenced_user_error: "送信者が沈黙したときに発生します。"
-        bad_destination_address: "To/Ccフィールドのいずれのメールアドレスも、設定された受信メールアドレスと一致しない場合に発生します。"
+        silenced_user_error: "送信者が投稿禁止になっている場合に発生します。"
+        bad_destination_address: "宛先と CC フィールドのいずれのメールアドレスも、設定された受信メールアドレスと一致しない場合に発生します。"
         strangers_not_allowed_error: "ユーザーがメンバーではないカテゴリに新しいトピックを作成しようとしたときに発生します。"
-        insufficient_trust_level_error: "必要なトラストレベルを持たないユーザーが新しいトピックを作成しようとしたときに発生します。"
-        bounced_email_error: "Eメールは返送されたEメールレポートです。"
-        screened_email_error: "送信者の電子メールアドレスがすでにブロックされている場合に発生します。"
-      unrecognized_error: "認識されていないエラー"
+        insufficient_trust_level_error: "必要な信頼レベルを持たないユーザーが新しいトピックを作成しようとしたときに発生します。"
+        bounced_email_error: "メールはバウンスメールのレポートです。"
+        screened_email_error: "送信者のメールアドレスがすでにスクリーン対象である場合に発生します。"
+      unrecognized_error: "不明なエラー"
     view_redacted_media: "メディアを表示"
   errors: &errors
     format: ! "%{attribute} %{message}"
-    format_with_full_message: "<b>%{attribute}</b>%{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
-      invalid_boolean: "無効な選択肢"
-      taken: "は既に使用されています"
+      too_long_validation: "は、最大 %{max} 文字に制限されていますが、%{length} 文字が入力されました。"
+      invalid_boolean: "無効なブール値。"
+      taken: "はすでに使用されています"
       accepted: に同意する必要があります
       blank: を入力してください
       present: は入力しないでください
-      confirmation: ! "と%{attribute}の入力が一致しません"
-      empty: 本文が入力されていません
-      equal_to: は%{count}にしてください
-      even: は偶数にしてください
-      exclusion: はすでに使われています
-      greater_than: は%{count}より大きい値にしてください
-      greater_than_or_equal_to: は%{count}以上の値にしてください
-      has_already_been_used: "は既に使用されています"
-      inclusion: は一覧にありません
-      invalid: は正しくありません
-      is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
+      confirmation: ! "は %{attribute} に一致していません"
+      empty: 空にできません
+      equal_to: は %{count} である必要があります
+      even: は偶数である必要があります
+      exclusion: は予約されています
+      greater_than: は %{count} より大きい値である必要があります
+      greater_than_or_equal_to: は %{count} 以上である必要があります
+      has_already_been_used: "はすでに使用されています"
+      inclusion: はリストに含まれていません
+      invalid: は無効です
+      is_invalid: "はわかりにくい文章です。完全な文ですか？"
       invalid_timezone: "'%{tz}' は有効なタイムゾーンではありません"
-      contains_censored_words: "次の検閲された単語が含まれています： %{censored_words}"
-      less_than: は%{count}より小さい値にしてください
-      less_than_or_equal_to: は%{count}以下の値にしてください
-      not_a_number: は数値で入力してください
-      not_an_integer: は整数で入力してください
-      odd: は奇数にしてください
-      record_invalid: ! "検証に失敗しました： %{errors}"
-      emojis_disabled: "絵文字を持っていません"
-      ip_address_already_screened: "すでに存在するルールを含んでいます"
+      contains_censored_words: "次の検閲された単語が含まれています: %{censored_words}"
+      less_than: は %{count} より小さい値である必要があります
+      less_than_or_equal_to: は %{count} 以下の値である必要があります
+      not_a_number: は数値ではありません
+      not_an_integer: は整数である必要があります
+      odd: は奇数である必要があります
+      record_invalid: ! "検証に失敗しました: %{errors}"
+      emojis_disabled: "は絵文字を使用できません"
+      ip_address_already_screened: "はすでに既存のルールに含まれています"
       restrict_dependent_destroy:
-        one: "%{record}が存在しているので削除できません"
-        many: "%{record}が存在しているので削除できません。"
+        one: "依存する %{record} が存在するため、レコードを削除できません"
+        many: "依存する %{record} が存在するため、レコードを削除できません"
       too_long:
-        other: は%{count}文字以内で入力してください
+        other: は長すぎます (最大 %{count} 文字です)
       too_short:
         other: は%{count}文字以上で入力してください
       wrong_length:

@@ -4215,12 +4215,12 @@ de:
             headers: "Kopfzeilen"
             subject: "Betreff"
             body: "Nachrichtentext"
-            rejection_message: "Zurückweisung-E-Mail"
+            rejection_message: "Zurückweisungs-E-Mail"
           filters:
-            from_placeholder: "von@example.com"
-            to_placeholder: "an@example.com"
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Betreff…"
+            subject_placeholder: "Betreff …"
             error_placeholder: "Fehler"
         logs:
           none: "Keine Protokolle gefunden."
@@ -4409,19 +4409,19 @@ de:
           title: "Fehlerprotokolle"
       watched_words:
         title: "Beobachtete Wörter"
-        search: "Suchen"
+        search: "suchen"
         clear_filter: "Zurücksetzen"
         show_words:
           one: "zeige %{count} Wort"
           other: "zeige %{count} Wörter"
         download: Herunterladen
-        clear_all: Auswahl aufheben
-        clear_all_confirm: "Bist Du sicher, dass Du alle beobachteten Wörter für die %{action} Aktion löschen möchtest?"
+        clear_all: Alle löschen
+        clear_all_confirm: "Bist du sicher, dass du alle beobachteten Wörter für die Aktion %{action} löschen möchtest?"
         invalid_regex: 'Das beobachtete Wort „%{word}“ ist ein ungültiger regulärer Ausdruck.'
         actions:
           block: "Blockieren"
           censor: "Zensieren"
-          require_approval: "Erfordert Genehmigung"
+          require_approval: "Genehmigung erfordern"
           flag: "Melden"
           replace: "Ersetzen"
           tag: "Schlagwort"
@@ -4434,7 +4434,7 @@ de:
           flag: "Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können."
           replace: "Wörter in Beiträgen durch andere Wörter ersetzen"
           tag: "Themen basierend auf dem ersten Beitrag automatisch mit Schlagwort versehen"
-          silence: "Erste Beiträge von Benutzern, die diese Wörter enthalten, müssen von den Team Mitgliedern genehmigt werden, bevor sie gesehen werden können, und der Benutzer wird automatisch stummgeschaltet."
+          silence: "Erste Beiträge von Benutzern, die diese Wörter enthalten, müssen vom Team genehmigt werden, bevor sie gesehen werden können, und der Benutzer wird automatisch stummgeschaltet."
           link: "Wörter in Beiträgen durch Links ersetzen"
         form:
           label: "Hat Wort oder Wortgruppe"
