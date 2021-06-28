@@ -64,7 +64,7 @@ class GroupSmtpMailer < ActionMailer::Base
         context_posts: nil,
         reached_limit: nil,
         post: post,
-        in_reply_to_post: post.reply_to_post,
+        in_reply_to_post: nil,
         classes: Rtl.new(nil).css_class,
         first_footer_classes: '',
         reply_above_line: true
@@ -82,13 +82,13 @@ class GroupSmtpMailer < ActionMailer::Base
     post.topic.allowed_users.each do |u|
       if SiteSetting.prioritize_username_in_ux?
         if u.staged?
-          list.push("[#{u.email}](#{Discourse.base_url}/u/#{u.username_lower})")
+          list.push("#{u.email}")
         else
           list.push("[#{u.username}](#{Discourse.base_url}/u/#{u.username_lower})")
         end
       else
         if u.staged?
-          list.push("[#{u.email}](#{Discourse.base_url}/u/#{u.username_lower})")
+          list.push("#{u.email}")
         else
           list.push("[#{u.name.blank? ? u.username : u.name}](#{Discourse.base_url}/u/#{u.username_lower})")
         end

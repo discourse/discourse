@@ -6,6 +6,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
   fab!(:topic) { Fabricate(:private_message_topic, title: "Help I need support") }
   fab!(:post) do
     Fabricate(:post, topic: topic, raw: "some first post content")
+    Fabricate(:post, topic: topic, raw: "some intermediate content")
     Fabricate(:post, topic: topic, raw: "this is the second post reply")
   end
   fab!(:group) { Fabricate(:smtp_group, name: "support-group", full_name: "Support Group") }
@@ -53,13 +54,26 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_log.as_mail_message.text_part.to_s).not_to include("some first post content")
   end
 
-  it "includes the participants in the correct format" do
+  it "does not include in reply to post in email but still has the header" do
+    second_post = topic.posts.find_by(post_number: 2)
+    post.update!(reply_to_post_number: 1, reply_to_user: second_post.user)
+    PostReply.create(post: second_post, reply: post)
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.as_mail_message.text_part.to_s).to include("Support Group")
-    expect(email_log.as_mail_message.text_part.to_s).to include("otherguy@test.com")
-    expect(email_log.as_mail_message.text_part.to_s).to include("cormac@lit.com")
-    expect(email_log.as_mail_message.text_part.to_s).to include("normaluser")
+    expect(email_log.raw_headers).to include("In-Reply-To: <topic/#{post.topic_id}/#{second_post.id}@#{Email::Sender.host_for(Discourse.base_url)}>")
+    expect(email_log.as_mail_message.html_part.to_s).not_to include(I18n.t("user_notifications.in_reply_to"))
+  end
+
+  it "includes the participants in the correct format, and does not have links for the staged users" do
+    subject.execute(args)
+    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    email_text = email_log.as_mail_message.text_part.to_s
+    expect(email_text).to include("Support Group")
+    expect(email_text).to include("otherguy@test.com")
+    expect(email_text).not_to include("[otherguy@test.com]")
+    expect(email_text).to include("cormac@lit.com")
+    expect(email_text).not_to include("[cormac@lit.com]")
+    expect(email_text).to include("normaluser")
   end
 
   it "creates an EmailLog record with the correct details" do
