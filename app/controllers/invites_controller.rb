@@ -251,11 +251,19 @@ class InvitesController < ApplicationController
       topic = invite.topics.first
       response = {}
 
-      if user.present? && user.active?
-        response[:redirect_to] = topic.present? ? path(topic.relative_url) : path("/")
-      elsif user.present?
-        response[:message] = I18n.t('invite.confirm_email')
-        cookies[:destination_url] = path(topic.relative_url) if topic.present?
+      if user.present?
+        if user.active?
+          if user.guardian.can_see?(topic)
+            response[:redirect_to] = path(topic.relative_url)
+          else
+            response[:redirect_to] = path("/")
+          end
+        else
+          response[:message] = I18n.t('invite.confirm_email')
+          if user.guardian.can_see?(topic)
+            cookies[:destination_url] = path(topic.relative_url)
+          end
+        end
       end
 
       render json: success_json.merge(response)
