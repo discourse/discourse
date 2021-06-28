@@ -4,49 +4,55 @@ import { action } from "@ember/object";
 export default Component.extend({
   lastScrollPosition: 0,
   ticking: false,
-  topHorizontalScrollBar: null,
-  tableContainer: null,
+  _topHorizontalScrollBar: null,
+  _tableContainer: null,
+  _table: null,
+  _fakeScrollContent: null,
 
   didInsertElement() {
     this._super(...arguments);
-    this.set(
-      "tableContainer",
-      this.element.querySelector(".directory-table-container")
-    );
+    this.setProperties({
+      _tableContainer: this.element.querySelector(".directory-table-container"),
+      _topHorizontalScrollBar: this.element.querySelector(
+        ".directory-table-top-scroll"
+      ),
+      _fakeScrollContent: this.element.querySelector(
+        ".directory-table-top-scroll-fake-content"
+      ),
+      _table: this.element.querySelector(".directory-table"),
+    });
+
+    this._tableContainer.addEventListener("scroll", this.onBottomScroll);
+    this._topHorizontalScrollBar.addEventListener("scroll", this.onTopScroll);
+
+    // Set active header might have already scrolled the _tableContainer.
+    // Call onHorizontalScroll manually to scroll the _topHorizontalScrollBar
+    this.onResize();
+    this.onHorizontalScroll(this._tableContainer, this._topHorizontalScrollBar);
+    window.addEventListener("resize", this.onResize);
+  },
+
+  @action
+  onResize() {
     if (
-      this.tableContainer.getBoundingClientRect().bottom < window.innerHeight
+      this._tableContainer.getBoundingClientRect().bottom < window.innerHeight
     ) {
-      // Bottom of the table is visible. Return and don't show top scrollbar
-      return;
+      // Bottom of the table is visible. Hide the scrollbar
+      this._fakeScrollContent.style.height = 0;
+    } else {
+      this._fakeScrollContent.style.width = `${this._table.offsetWidth}px`;
+      this._fakeScrollContent.style.height = "1px";
     }
-
-    this.set(
-      "topHorizontalScrollBar",
-      this.element.querySelector(".directory-table-top-scroll")
-    );
-    const fakeContent = this.topHorizontalScrollBar.querySelector(
-      ".directory-table-top-scroll-fake-content"
-    );
-    const table = this.tableContainer.querySelector(".directory-table");
-    fakeContent.style.width = `${table.offsetWidth}px`;
-    fakeContent.style.height = "1px";
-
-    this.tableContainer.addEventListener("scroll", this.onBottomScroll);
-    this.topHorizontalScrollBar.addEventListener("scroll", this.onTopScroll);
-
-    // Set active header might have already scrolled the tableContainer.
-    // Call onHorizontalScroll manually to scroll the topHorizontalScrollBar
-    this.onHorizontalScroll(this.tableContainer, this.topHorizontalScrollBar);
   },
 
   @action
   onTopScroll() {
-    this.onHorizontalScroll(this.topHorizontalScrollBar, this.tableContainer);
+    this.onHorizontalScroll(this._topHorizontalScrollBar, this._tableContainer);
   },
 
   @action
   onBottomScroll() {
-    this.onHorizontalScroll(this.tableContainer, this.topHorizontalScrollBar);
+    this.onHorizontalScroll(this._tableContainer, this._topHorizontalScrollBar);
   },
 
   @action
@@ -68,22 +74,31 @@ export default Component.extend({
   },
 
   willDestoryElement() {
-    this.tableContainer.removeEventListener("scroll", this.onBottomScroll);
-    this.topHorizontalScrollBar.removeEventListener("scroll", this.onTopScroll);
+    this._tableContainer.removeEventListener("scroll", this.onBottomScroll);
+    this._topHorizontalScrollBar.removeEventListener(
+      "scroll",
+      this.onTopScroll
+    );
+    window.removeEventListener("resize", this.onResize);
   },
 
   @action
   setActiveHeader(header) {
     // After render, scroll table left to ensure the order by column is visible
-    const tableContainer = this.element.querySelector(
-      ".directory-table-container"
-    );
-
+    if (!this._tableContainer) {
+      this.set(
+        "_tableContainer",
+        document.querySelector(".directory-table-container")
+      );
+    }
     const scrollPixels =
-      header.offsetLeft + header.offsetWidth + 10 - tableContainer.offsetWidth;
+      header.offsetLeft +
+      header.offsetWidth +
+      10 -
+      this._tableContainer.offsetWidth;
 
     if (scrollPixels > 0) {
-      tableContainer.scrollLeft = scrollPixels;
+      this._tableContainer.scrollLeft = scrollPixels;
     }
   },
 });
