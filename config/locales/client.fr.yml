@@ -1197,23 +1197,23 @@ fr:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, associé à"
         gravatar_title: "Modifier votre avatar sur le site de %{gravatarName}"
-        gravatar_failed: "Nous n'avons pas trouvé un %{gravatarName} associé à cette adresse courriel."
+        gravatar_failed: "Nous n'avons pas trouvé de %{gravatarName} associé à cette adresse courriel."
         refresh_gravatar_title: "Actualiser votre %{gravatarName}"
         letter_based: "Image de profil attribuée par le système"
         uploaded_avatar: "Avatar personnalisé"
         uploaded_avatar_empty: "Ajouter un avatar personnalisé"
-        upload_title: "Envoyer votre avatar"
-        image_is_not_a_square: "Attention : nous avons découpé votre image ; la largeur et la hauteur n'étaient pas égales."
+        upload_title: "Envoyer votre photo"
+        image_is_not_a_square: "Attention : nous avons découpé votre image. La largeur et la hauteur n'étaient pas égales."
         logo_small: "Logo du site en petit format. Sera utilisé par défaut."
       change_profile_background:
         title: "Arrière-plan du profil"
         instructions: "Les arrière-plans du profil seront centrés avec une largeur par défaut de 1110 pixels."
       change_card_background:
         title: "Arrière-plan de la carte de l'utilisateur"
-        instructions: "Les arrière-plans de la carte utilisateur seront centrés avec une largeur par défaut de 590 pixels."
+        instructions: "Les arrière-plans de la carte de l'utilisateur seront centrés avec une largeur par défaut de 590 pixels."
       change_featured_topic:
         title: "Sujet vedette"
-        instructions: "Un lien vers ce sujet sera ajouté sur votre carte d'utilisateur et votre profil."
+        instructions: "Un lien vers ce sujet sera ajouté à votre carte d'utilisateur et votre profil."
       email:
         title: "Courriel"
         primary: "Adresse courriel principale"
@@ -1230,17 +1230,17 @@ fr:
         auth_override_instructions: "Le courriel peut être mis à jour à partir du fournisseur d'authentification."
         no_secondary: "Aucune adresse courriel secondaire"
         instructions: "Ne sera pas visible publiquement."
-        admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse courriel d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine, donc un courriel de réinitialisation du mot de passe sera envoyé à sa nouvelle adresse. L'adresse courriel de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
+        admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse courriel d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine. Un courriel de réinitialisation du mot de passe sera donc envoyé à sa nouvelle adresse. L'adresse courriel de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
         ok: "Nous vous enverrons un courriel de confirmation"
-        required: "Veuillez entrer une adresse courriel"
-        invalid: "Veuillez entrer une adresse courriel valide"
+        required: "Veuillez saisir une adresse courriel"
+        invalid: "Veuillez saisir une adresse courriel valide"
         authenticated: "Votre adresse courriel a été authentifiée par %{provider}"
         invite_auth_email_invalid: "Votre e-mail d'invitation ne correspond pas à l'e-mail authentifié par %{provider}"
         authenticated_by_invite: "Votre adresse de courriel a été authentifiée par l'invitation"
         frequency_immediately: "Nous vous enverrons un courriel immédiatement si vous n'avez pas lu le contenu en question."
         frequency:
-          one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans la dernière minute."
-          other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans les %{count} dernières minutes."
+          one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu(e) sur le site au cours de la dernière minute."
+          other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu(e) sur le site au cours des %{count} dernières minutes."
       associated_accounts:
         title: "Comptes associés"
         connect: "Connecter"
@@ -1255,12 +1255,12 @@ fr:
         title: "Nom"
         instructions: "votre nom complet (facultatif)"
         instructions_required: "Votre nom complet"
-        required: "Veuillez entrer un nom"
+        required: "Veuillez saisir un nom"
         too_short: "Votre nom est trop court"
         ok: "Votre nom a l'air correct"
       username:
         title: "Nom d'utilisateur"
-        instructions: "unique, sans espaces, court"
+        instructions: "unique, sans espace, court"
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @%{username}"
         available: "Votre nom d'utilisateur est disponible"
         not_available: "Indisponible. Essayez %{suggestion} ?"
@@ -1444,9 +1444,9 @@ fr:
           instructions: |
             <p>Pour mettre votre communauté sur pied rapidement, invitez une liste d'utilisateurs : composez un <a href="https://fr.wikipedia.org/wiki/Fichier_CSV" target="_blank">fichier CSV</a> contenant l'adresse de chaque personne à inviter, en disposant une adresse par ligne. Pour ajouter certaines personnes à des groupes particuliers, ou pour les diriger automatiquement vers un sujet particulier lors de leur première connexion, vous pouvez faire figurer les éléments suivants.</p>
             <pre>jean@dupont.fr,nom_dun_groupe;nom_dun_autre_groupe,identifiant_numérique_du_sujet</pre>
-            <p>Un courriel d'invitation sera envoyé à chaque adresse contenue dans ce fichier CSV, et vous pourrez modifier son contenu après l'avoir envoyé sur le serveur.</p>
-          progress: "Envoi en cours : %{progress}%…"
-          success: "Le fichier a été téléversé. Une notification vous signalera la fin de son importation effective."
+            <p>Un courriel d'invitation sera envoyé à chaque adresse reprise dans ce fichier CSV, et vous pourrez modifier son contenu après l'avoir envoyé sur le serveur.</p>
+          progress: "Envoi en cours : %{progress} %…"
+          success: "Le fichier a été envoyé avec succès. Vous recevrez un message de notification lorsque le processus sera terminé."
           error: "Désolé, le fichier doit être au format CSV."
       password:
         title: "Mot de passe"
@@ -2051,12 +2051,12 @@ fr:
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
-      from_my_computer: "Depuis mon appareil"
-      from_the_web: "Depuis le web"
+      from_my_computer: "À partir de mon appareil"
+      from_the_web: "À partir du Web"
       remote_tip: "lien vers l'image"
       remote_tip_with_attachments: "indiquez un lien vers une image ou un autre type de fichier disponible en ligne"
-      local_tip: "choisissez des images stockées dans votre appareil"
-      local_tip_with_attachments: "choisissez des images ou d'autres fichiers stockés dans votre appareil"
+      local_tip: "choisissez des images stockées sur votre appareil"
+      local_tip_with_attachments: "choisissez des images ou d'autres fichiers stockés sur votre appareil"
       hint: "(vous pouvez aussi glisser-déposer vos fichiers dans le champ de saisie)"
       hint_for_supported_browsers: "vous pouvez aussi glisser-déposer ou coller des images dans l'éditeur"
       uploading: "En cours d'envoi"
@@ -2710,15 +2710,15 @@ fr:
       errors:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Veuillez réessayer."
         edit: "Désolé, il y a eu une erreur lors de la modification de votre message. Veuillez réessayer."
-        upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Veuillez réessayer."
-        file_too_large: "Désolé, ce fichier est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko). Nous vous suggérons de stocker votre fichier sur un service d'hébergement extérieur au forum et de coller ensuite un lien dans votre message."
-        too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
+        upload: "Nous sommes désolés, une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer."
+        file_too_large: "Nous sommes désolés, ce fichier est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko). Nous vous suggérons de stocker votre fichier sur un service d'hébergement extérieur au forum et de coller ensuite un lien dans votre message."
+        too_many_uploads: "Nous sommes désolés, vous ne pouvez envoyer qu'un seul fichier à la fois."
         too_many_dragged_and_dropped_files:
-          one: "Désolé, vous ne pouvez envoyer que %{count} fichier à la fois."
-          other: "Désolé, vous ne pouvez envoyer que %{count} fichiers à la fois."
-        upload_not_authorized: "Désolé, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
-        image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
-        attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichiers."
+          one: "Nous sommes désolés, vous ne pouvez envoyer que %{count} fichier à la fois."
+          other: "Nous sommes désolés, vous ne pouvez envoyer que %{count} fichiers à la fois."
+        upload_not_authorized: "Nous sommes désolés, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
+        image_upload_not_allowed_for_new_user: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
+        attachment_upload_not_allowed_for_new_user: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas envoyer de fichiers."
         attachment_download_requires_login: "Désolé, vous devez être connecté pour télécharger une pièce jointe."
       cancel_composer:
         confirm: "Que souhaitez-vous faire de votre message ?"
@@ -3382,7 +3382,7 @@ fr:
       manage_groups_description: "Définir des groupes pour organiser les étiquettes"
       upload: "Envoyer des étiquettes"
       upload_description: "Envoyer un fichier CSV pour créer des étiquettes en masse"
-      upload_instructions: "Une par ligne, avec optionnellement un groupe d'étiquettes sous la forme « tag_name,tag_group »."
+      upload_instructions: "Une par ligne, éventuellement avec un groupe d'étiquettes sous la forme « tag_name,tag_group »."
       upload_successful: "Étiquettes envoyées avec succès"
       delete_unused_confirmation:
         one: "%{count} étiquette sera supprimée : %{tags}"
@@ -3850,9 +3850,9 @@ fr:
           label: "Envoyer"
           title: "Envoyer une sauvegarde vers cette instance"
           uploading: "Envoi en cours…"
-          uploading_progress: "Envoi en cours… %{progress}%"
-          success: "« %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
-          error: "Il y a eu une erreur lors de l'envoi de « %{filename} » : %{message}"
+          uploading_progress: "Envoi en cours… %{progress} %"
+          success: "Le fichier « %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
+          error: "Une erreur est survenue lors de l'envoi du fichier « %{filename} » : %{message}"
         operations:
           is_running: "Une opération est en cours d'exécution…"
           failed: "L'opération %{operation} a échoué. Veuillez consulter les journaux."
@@ -4018,7 +4018,7 @@ fr:
           install: "Installer"
           installed: "Installé"
           install_popular: "Populaire"
-          install_upload: "Depuis votre appareil"
+          install_upload: "À partir de votre appareil"
           install_git_repo: "Depuis un dépôt Git"
           install_create: "Créer un nouveau"
           duplicate_remote_theme: "Le composant de thème « %{name} » est déjà installé, êtes-vous sûr de vouloir en installer une autre copie ?"
@@ -4448,7 +4448,7 @@ fr:
           add: "Ajouter"
           success: "Succès"
           exists: "Existe déjà"
-          upload: "Ajouter depuis un fichier"
+          upload: "Ajouter à partir d'un fichier"
           upload_successful: "Envoi effectué avec succès. Les mots et expressions à surveiller ont été ajoutés."
         test:
           button_label: "Tester"
@@ -4779,7 +4779,7 @@ fr:
           empty: "Il n'y a aucune image pour le moment. Veuillez en envoyer une."
           upload:
             label: "Envoyer"
-            title: "Envoyer des images"
+            title: "Envoyer une ou plusieurs images"
         selectable_avatars:
           title: "Liste d'avatars que les utilisateurs peuvent choisir"
         categories:
@@ -4860,9 +4860,9 @@ fr:
         image: Image
         graphic: Image
         icon_help: "Entrez un nom d'icône Font Awesome (utilisez le préfixe « far- » pour les icônes classiques et « fab- » pour les icônes de marques)"
-        image_help: "Téléverser une image remplace le champ d'icône si les deux sont définis."
+        image_help: "L'envoi d'une image remplace le champ d'icône si les deux sont définis."
         select_an_icon: "Sélectionnez une icône"
-        upload_an_image: "Téléverser une image"
+        upload_an_image: "Envoyer une image"
         read_only_setting_help: "Personnaliser le texte"
         query: Requête du badge (SQL)
         target_posts: Requête sur les messages
@@ -4905,7 +4905,7 @@ fr:
           description: Accordez le même badge à plusieurs utilisateurs à la fois.
           no_badge_selected: Veuillez sélectionner un badge pour commencer.
           perform: "Décerner ce badge à ces utilisateurs"
-          upload_csv: Envoyez un fichier CSV contenant les adresses de courriel ou les noms d'utilisateur des concernés
+          upload_csv: Envoyez un fichier CSV contenant les adresses courriel ou les noms d'utilisateur
           aborted: Envoyez d'abord un fichier CSV qui contienne des adresses de courriel ou des noms d'utilisateur
           success: Votre fichier CSV a été envoyé, les utilisateurs obtiendront leur badge d'ici peu de temps.
           replace_owners: Retirer ce badge à ses détenteurs actuels non-listés dans le fichier
@@ -4980,7 +4980,7 @@ fr:
       step: "%{current} sur %{total}"
       upload: "Envoi"
       uploading: "Envoi en cours…"
-      upload_error: "Désolé, il y a eu une erreur à l'envoi de ce fichier. Veuillez réessayer."
+      upload_error: "Nous sommes désolés, une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer."
       quit: "Peut-être plus tard"
       staff_count:
         one: "Votre communauté a %{count} responsable (vous)."

@@ -332,26 +332,26 @@ ja:
       uncategorized_parent: "未分類カテゴリに親カテゴリを設定できません"
       self_parent: "サブカテゴリの親をそのサブカテゴリに設定できません"
       depth: "サブカテゴリの下に別のサブカテゴリを作成することはできません"
-      invalid_email_in: "%{email} は有効なメールアドレスではありません"
-      email_already_used_in_group: "'%{email}'はすでに'%{group_name}'グループに使われています。"
-      email_already_used_in_category: "'%{email}'はすでに'%{category_name}'カテゴリーに使われています。"
-      description_incomplete: "カテゴリーの説明文は最低でも1段落必要です。"
+      invalid_email_in: "%{email} は有効なメールアドレスではありません。"
+      email_already_used_in_group: "'%{email}' はすでに '%{group_name}' グループに使われています。"
+      email_already_used_in_category: "'%{email}' はすでに '%{category_name}' カテゴリに使われています。"
+      description_incomplete: "カテゴリの説明の投稿には少なくとも 1 段落必要です。"
     cannot_delete:
-      has_subcategories: "サブカテゴリを持っているため、このカテゴリを削除できません。"
-      topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
-    uncategorized_description: "カテゴリーを必要としない、または既存のカテゴリーにマッチしないトピックです。"
+      has_subcategories: "サブカテゴリがあるためこのカテゴリを削除できません。"
+      topic_exists_no_oldest: "%{count} 件のトピックがあるためこのカテゴリを削除できません。"
+    uncategorized_description: "カテゴリが不要なトピック、または既存のカテゴリに当てはまらないトピックです。"
   trust_levels:
-    admin: "管理設定"
+    admin: "管理者"
     staff: "スタッフ"
-    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
+    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に降格しようとしましたが、既に信頼レベルは '%{current_trust_level}' になっています。%{user_name} は '%{current_trust_level}' のままになります。ユーザーを降格する場合は、先に信頼レベルをロックしてください"
   post:
     image_placeholder:
-      broken: "この画像は表示されません"
+      broken: "この画像は破損しています"
   rate_limiter:
-    slow_down: "アクションの制限により一定時間の制限を受けています。後ほどお試しください。"
-    too_many_requests: "アクション制限によっていって時間の制限を受けています。%{time_left}お待ちください"
+    slow_down: "この操作の実行回数が多すぎます。後でもう一度お試しください。"
+    too_many_requests: "この操作の実行回数が多すぎます。%{time_left}経ってからもう一度お試しください。"
     by_type:
-      unsubscribe_via_email: "メールから不登録の上限に達しました。どうか%{time_left}後に再度お試しください！"
+      unsubscribe_via_email: "メールでの購読解除数の上限に達しました。%{time_left}経ってからもう一度お試しください。"
     hours:
       other: "%{count} 時間"
     minutes:
@@ -361,107 +361,107 @@ ja:
     short_time: "数分"
   datetime:
     distance_in_words:
-      half_a_minute: "1分前"
+      half_a_minute: "1 分未満"
       less_than_x_seconds:
-        other: "< %{count} 秒"
+        other: "%{count} 秒未満"
       x_seconds:
         other: "%{count} 秒"
       less_than_x_minutes:
-        other: "%{count}分前"
+        other: "%{count} 分未満"
       x_minutes:
-        other: "%{count}分"
+        other: "%{count} 分"
       about_x_hours:
         other: "%{count} 時間"
       x_days:
         other: "%{count} 日"
       about_x_months:
-        other: "%{count}ヶ月"
+        other: "%{count} か月"
       x_months:
-        other: "%{count}ヶ月"
+        other: "%{count} か月"
       about_x_years:
         other: "%{count} 年"
       over_x_years:
-        other: "> %{count} 年"
+        other: "%{count} 年以上"
       almost_x_years:
         other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "たった今"
-      less_than_x_seconds: "現在"
+      less_than_x_seconds: "たった今"
       x_seconds:
         other: "%{count} 秒前"
       less_than_x_minutes:
-        other: "%{count}分未満"
+        other: "%{count} 分ほど前"
       x_minutes:
-        other: "%{count}分前"
+        other: "%{count} 分前"
       about_x_hours:
         other: "%{count} 時間前"
       x_days:
         other: "%{count} 日前"
       about_x_months:
-        other: "約 %{count}ヶ月前"
+        other: "約 %{count} か月前"
       x_months:
-        other: "%{count}ヶ月前"
+        other: "%{count} か月前"
       about_x_years:
         other: "約 %{count} 年前"
       over_x_years:
         other: "%{count} 年以上前"
       almost_x_years:
-        other: "だいたい %{count} 年前"
+        other: "ほぼ %{count} 年前"
   password_reset:
-    no_token: "申し訳ありません。パスワード変更のためのリンクは古いようです。ログインボタンを選択し、再度パスワード変更を行ってください"
+    no_token: "パスワード変更用のリンクは古すぎます。ログインボタンを選択し、「パスワードを忘れました」を使って新しいリンクを取得してください。"
     choose_new: "新しいパスワードを選択する"
     choose: "パスワードを選択する"
-    update: "パスワード更新"
-    save: "パスワードを設定する"
-    title: "パスワードリセット"
-    success: "パスワードを更新し、ログインしました。"
-    success_unapproved: "パスワードを更新しました。"
+    update: "パスワードを更新"
+    save: "パスワードを設定"
+    title: "パスワードをリセット"
+    success: "パスワードを変更し、ログインしました。"
+    success_unapproved: "パスワードを変更しました。"
   email_login:
-    invalid_token: "ごめんなさい、このメールに送られたログインリンクは古すぎます。ログインボタンを選択し、再度パスワード変更を行なってください。"
+    invalid_token: "このメールに送られたログインリンクは古すぎます。ログインボタンを選択し、「パスワードを忘れました」を使って新しいリンクを取得してください。"
     title: "メールログイン"
   change_email:
     confirmed: "メールアドレスが更新されました。"
-    please_continue: "%{site_name}へ"
+    please_continue: "%{site_name} に進む"
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
-    error_staged: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
-    already_done: "申し訳ありませんが、この確認リンクは有効ではありません。既にあなたのメールは変更されていませんか？"
+    error_staged: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでにステージングユーザーに使われている可能性があります。"
+    already_done: "この確認リンクは有効ではありません。すでにメールアドレスが変更されている可能性があります。"
   activation:
-    action: "クリックしてアカウントを認証する"
-    already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
-    please_continue: "あなたのアカウントは確認されました。ホームにリダイレクトされます"
-    continue_button: "%{site_name} へ"
-    welcome_to: "%{site_name} へようこそ!"
-    approval_required: "このフォーラムにアクセスするにはモデレータによる承認が必要です。承認されるとメールにて通知されます!"
+    action: "クリックしてアカウントを確認する"
+    already_done: "このアカウントの確認リンクは無効です。すでにアカウントがアクティブになっている可能性があります。"
+    please_continue: "あなたのアカウントは確認されました。ホームページにリダイレクトされます。"
+    continue_button: "%{site_name} に進む"
+    welcome_to: "%{site_name} へようこそ！"
+    approval_required: "このフォーラムにアクセスするにはモデレーターによる承認が必要です。承認されるとメールで通知されます！"
     missing_session: "アカウントが作成されたかどうか検出できません。Cookieを有効にしてください。"
-    activated: "このアカウントはすでにアクティベートされています。"
+    activated: "このアカウントはすでに確認済みです。"
     admin_confirm:
-      title: "管理アカウントの確認"
+      title: "管理者アカウントの確認"
   reviewable_score_types:
     needs_approval:
       title: "承認待ち"
   post_action_types:
     off_topic:
-      title: "関係ない話題"
-      description: "この投稿はタイトルと投稿で定義される現在の内容に関連しておらず、どこかに移動させる必要があります"
+      title: "関係のないトピック"
+      description: "この投稿はタイトルと最初の投稿で定義される現在のディスカッションに関連していないため、別の場所に移動する必要があります。"
       short_description: "ディスカッションに関連がない"
     spam:
-      title: "スパム"
+      title: "迷惑"
       description: "この投稿は広告、または悪質行為です。 現在のトピックとは関連性がありません。"
-      short_description: "営利目的か破壊行為の可能性"
-      email_title: '"%{title}"はスパムとして通報されています'
+      short_description: "これは広告または悪質行為です"
+      email_title: '"%{title}" は迷惑として通報されています'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不適切"
     notify_user:
-      title: "@%{username}へメッセージを送る"
-      description: "この投稿について直接話がしたいです。"
-      short_description: "彼らの投稿に対して直接話したいです。"
-      email_title: '「%{title}」にの投稿'
+      title: "@%{username} にメッセージを送る"
+      description: "この投稿についてこのユーザーと直接話すことを希望します。"
+      short_description: "この投稿についてこのユーザーと直接話すことを希望します。"
+      email_title: '「%{title}」の投稿について'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "その他"
       description: "この投稿は上記以外の理由でスタッフの注意が必要です。"
-      short_description: "その他の理由で管理人による確認が必要"
+      short_description: "その他の理由でスタッフの注意が必要"
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "ブックマーク"
@@ -473,45 +473,45 @@ ja:
       short_description: "この投稿を「いいね！」する"
   user_activity:
     no_default:
-      self: "まだアクティビティーがありません"
-      others: "アクティビティーなし"
+      self: "まだアクティビティがありません。"
+      others: "アクティビティがありません。"
     no_bookmarks:
       self: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
-      others: "ブックマークはありません"
+      others: "ブックマークはありません。"
     no_likes_given:
-      self: "いいね！はしていません。"
-      others: "いいね！した投稿はありません。"
+      self: "「いいね！」した投稿はありません。"
+      others: "「いいね！」した投稿はありません。"
     no_replies:
-      self: "まだ投稿に対して返信していません。"
+      self: "まだ投稿に返信していません。"
       others: "返信はありません。"
   topic_flag_types:
     spam:
-      title: "スパム"
-      description: "このトピックは広告です。これは、このサイトに有益ではないまたは関連していない、事実上の広告です。"
-      long_form: "スパムとして通報"
-      short_description: "広告です"
+      title: "迷惑"
+      description: "このトピックは広告です。これは、このサイトに有益ではないまたは関連していない事実上の広告です。"
+      long_form: "迷惑として通報"
+      short_description: "これは広告です"
     inappropriate:
       title: "不適切"
       description: 'このトピックには一般的な人が攻撃的、虐待的、または<a href="%{base_path}/guidelines">コミュニティガイドライン</a>に違反すると見なすコンテンツが含まれています。'
-      long_form: "不適切として通報する"
+      long_form: "不適切として通報"
     notify_moderators:
       title: "その他"
       description: 'このトピックは<a href="%{base_path}/guidelines">ガイドライン</a>、<a href="%{tos_url}">利用規約</a>または上記に記載されていない別の理由で、一般のスタッフによる注意が必要です。'
-      long_form: "モデレーターへ知らせるために通報する"
-      short_description: "その他の理由で管理人による確認が必要"
-      email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
+      long_form: "モデレーターの注意要として通報"
+      short_description: "その他の理由でスタッフによる注意が必要"
+      email_title: 'トピック "%{title}" はモデレーターの注意が必要です'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>投稿が他のユーザーから通報されました。<a href="%{path}">投稿したメッセージ</a>を確認してください。</p>'
-    user_must_edit: "<p>この投稿は他のユーザーから通報されたため、非表示にされています。</p>"
+    you_must_edit: '<p>あなたの投稿はコミュニティから通報されました。<a href="%{path}">投稿したメッセージを確認</a>してください。</p>'
+    user_must_edit: "<p>この投稿はコミュニティから通報されたため、一時的に非表示にされています。</p>"
   archetypes:
     regular:
       title: "通常のトピック"
     banner:
       title: "バナートピック"
       message:
-        make: "このトピックはバナートピックに設定されています。ユーザーが解除しない限り、ページ毎の一番上に表示されます"
-        remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
+        make: "このトピックはバナーに設定されました。ユーザーが閉じるまで各ページの上部に表示されます。"
+        remove: "このトピックはバナーではなくなりました。各ページの上部に表示されなくなります。"
   unsubscribed:
     title: "メール設定を更新しました！"
     description: " <b>%{email}</b>のメール設定は更新されました。変更するには <a href='%{url}'>あなたのユーザー設定にアクセスしてください</a>。"

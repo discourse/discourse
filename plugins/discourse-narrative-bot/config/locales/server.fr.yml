@@ -181,11 +181,11 @@ fr:
         like_not_found: |-
           Avez-vous oublié d'aimer :heart: mon [message](%{url}) ? :crying_cat_face:
         not_found: |-
-          Il semblerait que vous n'ayez pas téléversé d'image, j'en ai donc choisi une qui vous fera _certainement_ plaisir.
+          Il semblerait que vous n'ayez pas envoyé d'image, j'en ai donc choisi une qui vous fera certainement plaisir.
 
-          `%{image_url}`
+          <%{image_url}>
 
-          Essayez de téléverser cette image, ou de coller le lien sur une nouvelle ligne vide !
+          Essayez d'envoyer cette image, ou de coller le lien sur une nouvelle ligne vide !
       likes:
         instructions: |-
           Voici une photo de licorne :

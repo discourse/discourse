@@ -2199,7 +2199,7 @@ fi:
 
       %{invite_link}
   invite_forum_mailer:
-    title: "Kutsu palstalle"
+    title: "Kutsu foorumille"
     subject_template: "%{inviter_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
       %{inviter_name} kutsui sinut liittymään sivustolle
@@ -2212,7 +2212,7 @@ fi:
 
       %{invite_link}
   custom_invite_forum_mailer:
-    title: "Kutsu palstalle saatesanoilla"
+    title: "Kutsu foorumille saatesanoilla"
     subject_template: "%{inviter_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
       %{inviter_name} kutsui sinut liittymään sivustolle
@@ -2230,7 +2230,7 @@ fi:
       %{invite_link}
   invite_password_instructions:
     title: "Salasanaohjeistus kutsutulle"
-    subject_template: "Aseta salasana %{site_name} -tunnuksellesi"
+    subject_template: "Aseta salasana sivuston %{site_name} tilillesi"
     text_body_template: |
       Kiitos, kun hyväksyit kutsun sivustolle %{site_name} -- tervetuloa!
 
@@ -2242,7 +2242,7 @@ fi:
     title: "Lataa varmuuskopio"
     subject_template: "[%{email_prefix}] Varmuuskopion lataus sivustosta"
     text_body_template: |
-      Tässä [varmuuskopio sivustosta](%{backup_file_path}), jota pyysit.
+      Tässä pyytämäsi [varmuuskopio sivustosta](%{backup_file_path}).
 
       Lähetimme tämän latauslinkin varmennettuun sähköpostiosoitteeseesi turvallisuussyistä.
 
@@ -2253,7 +2253,7 @@ fi:
     title: "Ylläpitäjän vahvistaminen"
     subject_template: "[%{email_prefix}] Vahvista uusi ylläpitäjätili"
     text_body_template: |
-      Vahvista että haluat käyttäjästä **%{target_username} (%{target_email})** ylläpitäjän palstallesi.
+      Vahvista, että haluat käyttäjästä **%{target_username} (%{target_email})** ylläpitäjän foorumillesi.
 
       [Vahvista ylläpitäjätili](%{admin_confirm_url})
   test_mailer:
@@ -2268,11 +2268,11 @@ fi:
       Sinun versiosi: %{installed_version}
       Uusi versio: **%{new_version}**
 
-      - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
+      – Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
 
-      - Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
+      – Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
 
-      - Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
+      – Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
   new_version_mailer_with_notes:
     title: "Uusi versio julkaisumuistiolla"
     subject_template: "[%{email_prefix}] päivitys saatavilla"
@@ -2282,20 +2282,20 @@ fi:
       Sinun versiosi: %{installed_version}
       Uusi versio: **%{new_version}**
 
-      - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
+      – Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
 
-      - Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
+      – Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
 
-      - Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
+      – Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
 
       ### Julkaisutiedot
 
       %{notes}
   flag_reasons:
-    off_topic: "Viestisi liputettiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
-    inappropriate: "Viestisi liputettiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi tai [palstan sääntöjen](%{base_path}/guidelines) vastaiseksi."
-    spam: "Viestisi liputettiin **roskapostiksi**: sen koetaan olevan luonteeltaan mainostamista eikä hyödyllinen tai asiallinen lisä keskusteluun."
-    notify_moderators: "Viestisi liputettiin **valvojien tiedoksi**: siinä koetaan olevan jotain, mihin henkilökunnan pitäisi puuttua."
+    off_topic: "Viestisi merkittiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
+    inappropriate: "Viestisi merkittiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi tai [yhteisön sääntöjen](%{base_path}/guidelines) vastaiseksi."
+    spam: "Viestisi merkittiin **roskapostiksi**: sen koetaan olevan luonteeltaan mainostamista eikä hyödyllinen tai asiallinen lisä keskusteluun."
+    notify_moderators: "Viestisi merkittiin **valvojien tiedoksi**: siinä koetaan olevan jotain, mihin henkilökunnan pitäisi puuttua."
   flags_dispositions:
     agreed: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja selvitämme sitä."
     agreed_and_deleted: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja poistimme kyseisen viestin."
@@ -2303,14 +2303,14 @@ fi:
     ignored: "Kiitos kun toit asian tietoomme. Selvitämme asiaa."
     ignored_and_deleted: "Kiitos kun toit asian tietoomme. Poistimme kyseisen viestin."
   temporarily_closed_due_to_flags:
-    one: "Ketju on väliaikaisesti suljettu ainakin yhden tunnin ajaksi johtuen suuresta määrästä yhteisön liputuksia."
-    other: "Ketju on väliaikaisesti suljettu ainakin %{count} tunnin ajaksi johtuen suuresta määrästä yhteisön liputuksia."
+    one: "Ketju on väliaikaisesti suljettu ainakin %{count} tunnin ajaksi johtuen suuresta määrästä yhteisön merkintöjä."
+    other: "Ketju on väliaikaisesti suljettu ainakin %{count} tunnin ajaksi johtuen suuresta määrästä yhteisön merkintöjä."
   system_messages:
     private_topic_title: "Ketju #%{id}"
     contents_hidden: "Käy lukemassa viesti, jotta näet sen sisällön."
     post_hidden:
       title: "Viesti piilotettu"
-      subject_template: "Yhteisön piiloon liputtama viesti"
+      subject_template: "Yhteisön piiloon merkitsemä viesti"
       text_body_template: |
         Hello,
 
@@ -2320,14 +2320,14 @@ fi:
 
         %{flag_reason}
 
-        Viesti piilotettiin yhteisön liputuksien vuoksi, joten harkitse miten voisit muokata viestiä palautteen pohjalta. **Voit muokata viestiä kun %{edit_delay} minuuttia on kulunut, mikä palauttaa automaattisesti sen näkyville.**
+        Viesti piilotettiin yhteisön merkintöjen vuoksi, joten harkitse miten voisit muokata viestiä palautteen pohjalta. **Voit muokata viestiä %{edit_delay} minuutin kuluttua, mikä palauttaa automaattisesti sen näkyville.**
 
-        Jos viesti kuitenkin piilotetaan toisen kerran, se pysyy piilotettuna kunnes henkilökunta selvittää tilanteen.
+        Jos viesti kuitenkin piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen.
 
         Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     post_hidden_again:
       title: "Viesti piilotettiin jälleen"
-      subject_template: "Yhteisöliputukset piilottivat viestin, henkilökunnalle ilmoitettiin"
+      subject_template: "Yhteisön merkinnät piilottivat viestin, henkilökunnalle ilmoitettiin"
       text_body_template: |
         Hei,
 
@@ -2337,20 +2337,20 @@ fi:
 
         %{flag_reason}
 
-        Yhteisö liputti viestin ja se on nyt piilotettu. **Koska viestisi on piilotettu useammin kuin kerran, se pysyy piilotettuna kunnes henkilökunnan jäsen selvittää tilanteen.**
+        Yhteisö merkitsi viestin, ja se on nyt piilotettu. **Koska viestisi on piilotettu useammin kuin kerran, se pysyy piilotettuna, kunnes henkilökunnan jäsen selvittää tilanteen.**
 
         Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     queued_by_staff:
       title: "Viesti odottaa hyväksyntää"
     flags_disagreed:
-      title: "Henkilökunta palautti viestin"
-      subject_template: "Henkilökunta palautti viestin"
+      title: "Henkilökunta palautti merkityn viestin"
+      subject_template: "Henkilökunta palautti merkityn viestin"
       text_body_template: |
         Hello,
 
         Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että [viestisi](%{base_url}%{url}) palautettiin.
 
-        Yhteisö oli liputtanut viestin ja henkilökunnan jäsen päätti palauttaa sen.
+        Yhteisö oli merkinnyt viestin, ja henkilökunnan jäsen päätti palauttaa sen.
 
         [details="Klikkaa nähdäksesi palautetun viestin"]
         ``` markdown
@@ -2358,18 +2358,18 @@ fi:
         ```
         [/details]
     flags_agreed_and_post_deleted:
-      title: "Henkilökunta poisti liputetun viestin"
-      subject_template: "Henkilökunta poisti liputetun viestin"
+      title: "Henkilökunta poisti merkityn viestin"
+      subject_template: "Henkilökunta poisti merkityn viestin"
     usage_tips:
       text_body_template: |
         [Tässä blogikirjoituksessa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
 
-        Sitä mukaa kun toimit täällä, opimme tuntemaan sinut ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) ja saat valtuuksia, joiden avulla voit osallistua yhteisömme ylläpitoon.
+        Sitä mukaa kun toimit täällä, opimme tuntemaan sinut, ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) ja saat valtuuksia, joiden avulla voit osallistua yhteisömme ylläpitoon.
     welcome_user:
       title: "Tervetuloa käyttäjä"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
-        Kiitos kun liityit %{site_name} ja tervetuloa!
+        Kiitos kun liityit sivustolle %{site_name}, ja tervetuloa!
 
         %{new_user_tips}
 
@@ -2380,27 +2380,27 @@ fi:
       title: "Tervetuloa LT1-käyttäjä"
       subject_template: "Kiitos että olet viettänyt aikaa kanssamme"
       text_body_template: |
-        Hei! Olemme huomanneet että olet lukenut ahkerasti. Se on mahtavaa ja siksi nostimme sinut ylemmälle [luottamustasolle!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+        Hei! Olemme huomanneet että olet lukenut ahkerasti. Se on mahtavaa, ja siksi nostimme sinut ylemmälle [luottamustasolle!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
-        Olemme iloisia siitä että vietät aikaasi täällä ja haluaisimme tietää sinusta enemmänkin. Käytä hetki aikaa ja [täytä käyttäjäprofiilisi](%{base_url}/my/preferences/profile) tai [aloita uusi ketju](%{base_url}/categories) jos siltä tuntuu.
+        Olemme iloisia siitä, että vietät aikaasi täällä ja haluaisimme tietää sinusta enemmänkin. Käytä hetki aikaa ja [täytä profiilisi](%{base_url}/my/preferences/profile) tai [aloita uusi ketju](%{base_url}/categories) jos siltä tuntuu.
     welcome_staff:
       title: "Tervetuloa henkilökuntaan"
       subject_template: "Onnittelut, sinulle on myönnetty %{role}-status! "
       text_body_template: |
-        Toinen henkilökunnan jäsen myönsi sinulle %{role}-statuksen
+        Toinen henkilökunnan jäsen myönsi sinulle statuksen %{role}
 
-        %{role}-status tuo pääsyn <a href='%{base_url}/admin' target='_blank'>ylläpitokäyttöliittymään</a>.
+        Status %{role} tuo pääsyn <a href='%{base_url}/admin' target='_blank'>ylläpitokäyttöliittymään</a>.
 
-        Suuri voima tuo mukanaan suuren vastuun. Jos valvonta on sinulle uutta, tutustu [Valvontaoppaaseen](https://meta.discourse.org/t/discourse-moderation-guide/63116).
+        Suuri voima tuo mukanaan suuren vastuun. Jos valvonta on sinulle uutta, tutustu [valvontaoppaaseen](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Tervetuloa kutsuttu"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
-        Kiitos kun liityit %{site_name} ja tervetuloa!
+        Kiitos kun liityit sivustolle %{site_name}, ja tervetuloa!
 
-        - Loimme sinulle uuden tunnuksen **%{username}**. Muuta nimeäsi tai käyttäjätunnustasi [käyttäjäasetuksissasi][prefs].
+        – Loimme sinulle uuden tunnuksen **%{username}**. Muuta nimeäsi tai käyttäjätunnustasi [käyttäjäasetuksissasi][prefs].
 
-        - Kun kirjaudut sisään, **käytä samaa sähköpostiosoitetta kuin kutsuttaessa** — muuten emme tunnistua sinua sinuksi!
+        – Kun kirjaudut sisään, **käytä samaa sähköpostiosoitetta kuin kutsuttaessa** — muuten emme tunnista sinua!
 
         %{new_user_tips}
 
@@ -2410,14 +2410,14 @@ fi:
 
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
-      subject_template: "Onnittelut luottamustasonoususta!"
+      subject_template: "Onnittelut luottamustason noususta!"
     backup_succeeded:
       title: "Varmuuskopiointi onnistui"
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
       text_body_template: |
         Varmuuskopiointi onnistui.
 
-        Lataa varmuuskopio siirtymällä [ylläpito > varmuuskopiot](%{base_url}/admin/backups).
+        Lataa varmuuskopio siirtymällä kohtaan [ylläpito > varmuuskopiot](%{base_url}/admin/backups).
 
         Tässä loki:
 
@@ -2437,7 +2437,7 @@ fi:
         ```
     restore_succeeded:
       title: "Palautus onnistui"
-      subject_template: "Palauttaminen suoritettu onnistuneesti"
+      subject_template: "Palautus suoritettu onnistuneesti"
       text_body_template: |
         Palautus onnistui.
 
@@ -2448,7 +2448,7 @@ fi:
         ```
     restore_failed:
       title: "Palautus epäonnistui"
-      subject_template: "Palauttaminen epäonnistui"
+      subject_template: "Palautus epäonnistui"
       text_body_template: |
         Palautus epäonnistui.
 
@@ -2459,7 +2459,7 @@ fi:
         ```
     bulk_invite_succeeded:
       title: "Massakutsun lähetys onnistui"
-      subject_template: "Massakutsun käsittely onnistui."
+      subject_template: "Massakutsun käsittely onnistui"
       text_body_template: "Massakutsutiedostosi on käsitelty, %{sent} kutsua lähetetty."
     bulk_invite_failed:
       title: "Massakutsun lähetys epäonnistui"
@@ -2482,201 +2482,201 @@ fi:
 
         Yllä oleva latauslinkki toimii 48 tunnin ajan.
 
-        Tiedot on pakattu zip-arkistoksi. Jos arkisto ei purkaudu kun yrität avata sitä, käytä täällä suositeltua työkalua: https://www.7-zip.org/
+        Tiedot on pakattu zip-arkistoksi. Jos arkisto ei purkaudu, kun yrität avata sitä, käytä täällä suositeltua työkalua: https://www.7-zip.org/
     csv_export_failed:
       title: "CSV:n vienti epäonnistui"
-      subject_template: "Datan vienti epäonnistui"
-      text_body_template: "Pahoittelemme, mutta datan vienti epäonnistui. Tarkasta lokit tai [ota yhteyttä henkilökuntaan](%{base_url}/about)."
+      subject_template: "Tietojen vienti epäonnistui"
+      text_body_template: "Tietojen vienti epäonnistui. Tarkasta lokit tai [ota yhteyttä henkilökuntaan](%{base_url}/about)."
     email_reject_insufficient_trust_level:
-      title: "Sähköposti hylätty - riittämätön luottamustaso"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Riittämätön luottamustaso"
+      title: "Sähköposti hylätty – riittämätön luottamustaso"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- riittämätön luottamustaso"
       text_body_template: |
-        Pahoittelut, sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Et voi lähettää uusia ketjunaloituksia tähän sähköpostiosoitteeseen, koska luottamustasosi ei riitä. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_user_not_found:
-      title: "Sähköposti hylätty - käyttäjää ei löytynyt"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Käyttäjää ei löytynyt"
+      title: "Sähköposti hylätty – käyttäjää ei löytynyt"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- käyttäjää ei löytynyt"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Vastauksesi lähetettiin tuntemattomasta sähköpostiosoitteesta. Yritä lähettää viesti toisesta osoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Vastauksesi lähetettiin tuntemattomasta sähköpostiosoitteesta. Kokeile lähettää viesti toisesta osoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_screened_email:
-      title: "Sähköposti hylätty - estetty sähköpostiosoite"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma-- Estetty sähköpostiosoite"
+      title: "Sähköposti hylätty – estetty sähköpostiosoite"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- estetty sähköpostiosoite"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Vastauksesi lähetettiin estetystä sähköpostiosoitteesta. Yritä lähettää viesti toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Vastauksesi lähetettiin estetystä sähköpostiosoitteesta. Kokeile lähettää viesti toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_not_allowed_email:
-      title: "Sähköposti hylätty - osoite ei sallittu"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Estetty osoite"
+      title: "Sähköposti hylätty – osoite ei sallittu"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- estetty sähköpostiosoite"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Vastauksesi on peräisin estetystä sähköpostiosoitteesta. Kokeile lähettää toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_inactive_user:
-      title: "Sähköposti hylätty - aktivoimaton käyttäjä"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Aktivoimaton käyttäjä"
+      title: "Sähköposti hylätty – aktivoimaton käyttäjä"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- aktivoimaton käyttäjä"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Käyttäjätiliä tällä sähköpostiosoitteella ei ole aktivoitu. Aktivoi käyttäjätili ennen sähköpostien lähettämistä.
     email_reject_silenced_user:
       title: "Sähköposti hylätty - hiljennetty käyttäjä"
-      subject_template: "%{email_prefix} Sähköpostiongelma - Hiljennetty käyttäjä"
+      subject_template: "%{email_prefix} Sähköpostiongelma – hiljennetty käyttäjä"
       text_body_template: |
-        Pahoittelut, sähköpostin lähettäminen kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Tähän sähköpostiosoitteeseen liittyvä tilisi on hiljennetty.
     email_reject_reply_user_not_matching:
-      title: "Sähköposti hylätty - käyttäjä ei täsmää"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Vastaus odottamattomasta osoitteesta"
+      title: "Sähköposti hylätty – käyttäjä ei täsmää"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- vastaus odottamattomasta osoitteesta"
       text_body_template: |
-        Pahoittelut, sähköpostin lähettäminen kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Vastauksesi ei saapunut siitä sähköpostiosoitteesta kuin odotimme, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Vastauksesi ei saapunut odottamastamme sähköpostiosoitteesta, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_empty:
-      title: "Sähköposti hylätty - tyhjä"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei sisältöä"
+      title: "Sähköposti hylätty – tyhjä"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- ei sisältöä"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Emme löytäneet sähköpostiviestistäsi sisältöä.
 
         Jos saat tämän viestin ja viestisi _sisälsi_ sisältöä, yritä uudestaan yksinkertaisemmalla muotoilulla.
     email_reject_parsing:
-      title: "Sähköposti hylätty - jäsennys"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Sisältöä ei tunnistettu"
+      title: "Sähköposti hylätty – jäsennys"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – sisältöä ei tunnistettu"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Emme tunnistaneet sähköpostiviestistäsi sisältöä. **Varmista, että kirjoitit viestisi sähköpostiviestin alkuun** - emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia.
+        Emme tunnistaneet sähköpostiviestistäsi sisältöä. **Varmista, että kirjoitit viestisi sähköpostiviestin alkuun** – emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia.
     email_reject_invalid_access:
-      title: "Sähköposti hylätty - pääsy estetty"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei pääsyoikeutta"
+      title: "Sähköposti hylätty – pääsy estetty"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – ei käyttöoikeutta"
       text_body_template: |
-        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Käyttäjätililläsi ei ole oikeutta aloittaa ketjua sillä alueella. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Tililläsi ei ole oikeutta aloittaa ketjua sillä alueella. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_strangers_not_allowed:
-      title: "Sähköposti hylätty - vierailla ei pääsyä"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei pääsyoikeutta"
+      title: "Sähköposti hylätty – vierailla ei pääsyä"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – ei käyttöoikeutta"
       text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Alueelle jolle lähetit viestin voivat kirjoittaa ne, joilla on käypä käyttäjätunnus ja sähköpostiosoite. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Alueelle, jolle lähetit viestin, voivat kirjoittaa ne, joilla on kelvollinen tili ja tunnettu sähköpostiosoite. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_invalid_post:
-      title: "Sähköposti hylätty - viesti ei kelpaa"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Lähetysvirhe"
+      title: "Sähköposti hylätty – viesti ei kelpaa"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – lähetysvirhe"
       text_body_template: |
-        Pahoittelemme: sähköpostiviestisi kohteeseen %{destination} (titled %{former_title}) ei toiminut odotetusti.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Mahdollisia syitä ovat ainakin: ei-tuettu muotoilu, liian suuri viesti, liian pieni viesti. Ole hyvä ja yritä uudelleen; voit myös lähettää viestisi sivuston kautta, jos tämä ongelma ei vaikuta poistuvan.
+        Mahdollisia syitä ovat ainakin: ei-tuettu muotoilu, liian suuri viesti, liian pieni viesti. Yritä uudelleen tai lähetä viestisi sivuston kautta, jos ongelma toistuu.
     email_reject_invalid_post_specified:
-      title: "Sähköposti hylätty - viesti ei kelpaa, tarkennettu"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Lähetysvirhe"
+      title: "Sähköposti hylätty – viesti ei kelpaa, tarkennettu"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – lähetysvirhe"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Syy:
 
         %{post_error}
 
         Jos voit korjata ongelman, yritä uudelleen.
-      date_invalid: "Viestin luomispäivämäärää ei löytynyt. Puuttuuko sähköpostista Date: header?"
+      date_invalid: "Viestin luomispäivämäärää ei löytynyt. Puuttuuko sähköpostista Date:-otsikkotieto?"
     email_reject_post_too_short:
-      title: "Sähköposti hylättiin, koska lyhyt"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Viesti liian lyhyt"
+      title: "Sähköposti hylättiin liian lyhyenä"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – viesti liian lyhyt"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Koska haluamme vaalia syvällisempiä keskusteluja, erittäin lyhyitä vastauksia ei sallita. Voitko laittaa vastauksiisi vähintään %{count} merkkiä? Vaihtoehtoisesti voit tykätä viestistä sähköpostitse vastaamalla "+1".
     email_reject_invalid_post_action:
-      title: "Sähköposti hylätty - kielletty viestitoiminto"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Kielletty viestitoiminto"
+      title: "Sähköposti hylätty – kielletty viestitoiminto"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – kielletty viestitoiminto"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Toimintoa ei tunnistettu. Yritä uudelleen tai lähetä viesti nettisivun kautta, jos ongelma jatkuu.
+        Toimintoa ei tunnistettu. Yritä uudelleen tai lähetä viesti verkkosivuston kautta, jos ongelma toistuu.
     email_reject_reply_key:
-      title: "Sähköposti hylätty - vastausavain"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon vastausavain"
+      title: "Sähköposti hylätty – vastausavain"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – tuntematon vastausavain"
       text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Sähköpostiviestin vastaustunniste, engl. 'reply key', ei ole kelvollinen, minkä vuoksi ei tiedetä, mihin asiaan viestisi oli tarkoitus vastata. [Ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Sähköpostiviestin vastaustunniste ('reply key') on virheellinen tai tuntematon, minkä vuoksi emme tiedä, mihin viestiin sähköpostiviestisi oli tarkoitus vastata. [Ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_bad_destination_address:
-      title: "Sähköposti hylätty - tuntematon vastaanottajaosoite"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon Vastaanottaja: -osoite"
+      title: "Sähköposti hylätty – tuntematon vastaanottajaosoite"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – tuntematon vastaanottajan osoite"
     email_reject_old_destination:
-      title: "Sähköposti hylätty - vanha kohde"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Yrität vastata vanhaan ilmoitukseen"
+      title: "Sähköposti hylätty – vanha kohde"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – yrität vastata vanhaan ilmoitukseen"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Alkuperäisiin ilmoituksiin voi meillä vastata vain %{number_of_days} päivän ajan. Jatka keskustelua [vierailemalla ketjussa](%{short_url}).
     email_reject_topic_not_found:
-      title: "Sähköposti hylätty - ketjua ei löytynyt"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ketjua ei löytynyt"
+      title: "Sähköposti hylätty – ketjua ei löytynyt"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – ketjua ei löytynyt"
       text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Ketjua johon yritit kirjoittaa ei ole enää olemassa -- ehkä se poistettiin? Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Ketjua, johon yritit kirjoittaa, ei ole enää olemassa – ehkä se poistettiin? Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_topic_closed:
-      title: "Sähköposti hylätty - ketju suljettu"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Suljettu ketju"
+      title: "Sähköposti hylätty – ketju suljettu"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – ketju suljettu"
       text_body_template: |
-        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Ketju, johon yritit vastata on tällä hetkellä suljettu, eikä siihen voi enää vastata. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Ketju, johon yritit vastata, on tällä hetkellä suljettu, eikä siihen voi enää vastata. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_auto_generated:
-      title: "Sähköposti hylätty - automaattivastaus"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Automaattivastaus"
+      title: "Sähköposti hylätty – automaattinen vastaus"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – automaattinen vastaus"
       text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Järjestelmä havaitsi viestisi olevan tietokoneen automaattisesti luoma eikä ihmisen kirjoittama, eikä viestiä voitu siksi hyväksyä. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_unrecognized_error:
-      title: "Sähköposti hylätty - Tunnistamaton virhe"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tunnistamaton virhe"
+      title: "Sähköposti hylätty – tunnistamaton virhe"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – tunnistamaton virhe"
       text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Viestiäsi käsiteltäessä tapahtui tunnistamaton virhe eikä sitä siksi julkaistu. Kokeile uudelleen tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Viestiäsi käsiteltäessä tapahtui tunnistamaton virhe, eikä sitä siksi julkaistu. Kokeile uudelleen tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_attachment:
       title: "Sähköpostiliite hylätty"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Liite hylätty"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – liite hylätty"
       text_body_template: |
-        Valitettavasti jotkut liitteistäsi sähköpostiviestistäsi kohteeseen %{destination} (otsikolla%{former_title}) hylättiin.
+        Jotkin liitteet sähköpostiviestissäsi kohteeseen %{destination} (otsikolla%{former_title}) hylättiin.
 
         Tietoja:
         %{rejected_errors}
 
         Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_reply_not_allowed:
-      title: "Sähköposti hylätty - vastaaminen ei sallittu"
-      subject_template: "%{email_prefix} Sähköpostiongelma -- Vastaaminen ei sallittu"
+      title: "Sähköposti hylätty – vastaaminen ei sallittu"
+      subject_template: "%{email_prefix} Sähköpostiongelma – vastaaminen ei sallittu"
       text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut. 
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Sinulla ei ole oikeuksia vastata ketjuun. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_error_notification:
       title: "Ilmoitus sähköpostivirheestä"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- virhe POP-autentikoinnissa"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma – virhe POP-todennuksessa"
       text_body_template: |
-        Sähköpostin pollauksessa POP-serveriltä tapahtui autentikointivirhe.
+        Sähköpostin pollauksessa POP-serveriltä tapahtui todennusvirhe.
 
-        Varmista, että olet konfiguroinut POP-tunnukset oikein [sivuston asetuksissa](%{base_url}/admin/site_settings/category/email).
+        Varmista, että olet määrittänyt POP-tunnukset oikein [sivuston asetuksissa](%{base_url}/admin/site_settings/category/email).
 
-        Jos POP-sähköpostitilille on nettikäyttöliittymä, voit joutua kirjautumaan sinne ja tarkistamaan asetukset.
+        Jos POP-sähköpostitilillä on verkkokäyttöliittymä, voit joutua kirjautumaan sinne ja tarkistamaan asetukset.
     email_revoked:
       title: "Sähköposti peruutettiin"
       subject_template: "Onko sähköpostiosoitteesi oikea?"
       text_body_template: |
-        Pahoittelut, mutta meidän on vaikeaa tavoittaa sinua sähköpostitse. Muutamasta viimeisimmästä sähköpostista kaikki ovat palanneet takaisin. koska eivät ole päässeet perille.
+        Meidän on vaikeaa tavoittaa sinua sähköpostitse. Muutamasta viimeisimmästä sähköpostista kaikki ovat palanneet takaisin, koska niiden toimitus ei ole onnistunut.
 
-        Voisitko varmistaa että [sähköpostiosoitteesi](%{base_url}/my/preferences/email) on käypä ja toimiva? Voit myös lisätä sähköpostiosoitteemme osoitekirjaasi / yhteystietoihisi, mikä parantaa viestien perille saapumista.
+        Voisitko varmistaa, että [sähköpostiosoitteesi](%{base_url}/my/preferences/email) on oikea ja toimiva? Voit myös lisätä sähköpostiosoitteemme osoitekirjaasi tai yhteystietoihisi, mikä parantaa viestien perille saapumista.
     email_bounced: |
       Viesti sähköpostiin %{email} palautui.
 
@@ -2691,24 +2691,24 @@ fi:
       text_body_template: |
         Hei,
 
-        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että %{ignores_threshold} käyttäjää on estäneet käyttäjän %{username}. Tämä voi viitata siihen, että yhteisössäsi kytee ongelma.
+        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että %{ignores_threshold} käyttäjää on estänyt käyttäjän %{username}. Tämä voi viitata siihen, että yhteisössäsi kytee ongelma.
 
-        Voit [tarkastella tämän käyttäjän viimeisimpiä viestejä](%{base_url}/u/%{username}/summary), ja mahdollisesti muidenkin lukemalla [estetyt ja hiljennetyt käyttäjät -raportin](%{base_url}/admin/reports/top_ignored_users).
+        Voit [tarkastella tämän käyttäjän viimeisimpiä viestejä](%{base_url}/u/%{username}/summary), ja mahdollisesti muidenkin lukemalla [sivuutetut ja hiljennetyt käyttäjät -raportin](%{base_url}/admin/reports/top_ignored_users).
 
         Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     too_many_spam_flags:
-      title: "Liian monta roskapostiliputusta"
-      subject_template: "Uusi tili on estetty"
+      title: "Liian monta roskapostimerkintää"
+      subject_template: "Uusi tili on pidossa"
       text_body_template: |
         Hei,
 
-        Lähetämme tämän automaattisen viestin sivustolta %{site_name} kertoaksemme, että viestejäsi on väliakaisesti piilotettu yhteisön liputusten perusteella.
+        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että viestisi on piilotettu tilapäisesti, koska yhteisö on merkinnyt niitä.
 
-        Varotoimena uusi käyttäjätilisi on hiljennetty etkä voi vastata tai aloittaa uusia ketjuja ennen kuin henkilökunnan jäsen arvioi tilanteen. Pahoittelemme tästä aiheutuvaa vaivaa.
+        Varotoimena uusi tilisi on hiljennetty, etkä voi vastata tai aloittaa uusia ketjuja ennen kuin henkilökunnan jäsen tarkastaa tilisi. Pahoittelemme tästä aiheutuvaa vaivaa.
 
         Saat lisätietoa [yhteisön ohjeista](%{base_url}/guidelines).
     too_many_tl3_flags:
-      title: "Liian monta lt3-lippua"
+      title: "Liian monta LT3-merkintää"
       subject_template: "Uusi tili on estetty"
       text_body_template: |
         Hei,

@@ -1300,7 +1300,7 @@ it:
       location: "Località"
       website: "Sito Web"
       email_settings: "Email"
-      hide_profile_and_presence: "Nascondi il mio profilo pubblico e la mia presenza"
+      hide_profile_and_presence: "Funzioni Nascondi il mio profilo pubblico e la mia presenza"
       enable_physical_keyboard: "Attiva supporto alla tastiera fisica su iPad"
       text_size:
         title: "Dimensioni del testo"
@@ -1325,7 +1325,7 @@ it:
         always: "sempre"
         never: "mai"
       email_digests:
-        title: "Quando non visito il sito, inviami un'email riepilogativa degli argomenti e delle risposte di successo"
+        title: "Quando non visito il sito, inviami un'email riepilogativa degli argomenti e delle risposte più popolari"
         every_30_minutes: "ogni 30 minuti"
         every_hour: "ogni ora"
         daily: "ogni giorno"
@@ -1344,7 +1344,7 @@ it:
       categories_settings: "Categorie"
       new_topic_duration:
         label: "Considera un argomento \"nuovo\" se"
-        not_viewed: "non ancora visti"
+        not_viewed: "non l'ho ancora visto"
         last_here: "è stato creato dopo la mia ultima visita"
         after_1_day: "creato nell'ultimo giorno"
         after_2_days: "creato negli ultimi 2 giorni"
@@ -1380,7 +1380,7 @@ it:
         remove: "Rimuovi"
         copy_link: "Ottieni link"
         reinvite: "Reinvia Email"
-        reinvited: "Invito rinviato"
+        reinvited: "Invito inviato di nuovo"
         removed: "Rimosso"
         search: "digita per cercare inviti..."
         user: "Utente Invitato"
@@ -1398,7 +1398,7 @@ it:
         removed_all: "Tutti gli inviti scaduti sono stati rimossi!"
         remove_all_confirm: "Sei sicuro di voler rimuovere tutti gli inviti scaduti?"
         reinvite_all: "Rispedisci tutti gli Inviti"
-        reinvite_all_confirm: "Sei sicuro di voler inviare nuovamente tutti gli inviti?"
+        reinvite_all_confirm: "Vuoi inviare nuovamente tutti gli inviti?"
         reinvited_all: "Tutti gli inviti sono stati spediti!"
         time_read: "Ora di Lettura"
         days_visited: "Giorni di Frequenza"
@@ -1448,7 +1448,7 @@ it:
         title: "Riepilogo"
         stats: "Statistiche"
         time_read: "tempo di lettura"
-        recent_time_read: "tempo di lettura recente"
+        recent_time_read: "orario di lettura recente"
         topic_count:
           one: "argomento creato"
           other: "argomenti creati"
@@ -1484,7 +1484,7 @@ it:
         more_badges: "Altri Distintivi"
         top_links: "Migliori Collegamenti"
         no_links: "Ancora nessun collegamento."
-        most_liked_by: "Ricevuto più \"Mi Piace\" da"
+        most_liked_by: "Con più \"Mi Piace\" da"
         most_liked_users: "Con più \"Mi Piace\""
         most_replied_to_users: "Più Risposte A"
         no_likes: "Ancora nessun \"Mi piace\"."
@@ -1523,8 +1523,8 @@ it:
         unknown: "Errore"
         not_found: "Pagina Non Trovata"
       desc:
-        network: "Per favore controlla la connessione."
-        network_fixed: "Sembra essere tornato."
+        network: "Controlla la connessione."
+        network_fixed: "Sembra di nuovo disponibile."
         server: "Codice di errore: %{status}"
         forbidden: "Non hai i permessi per visualizzarlo."
         not_found: "Ops, l'applicazione ha cercato di caricare una URL inesistente."
@@ -1539,14 +1539,14 @@ it:
     close: "Chiudi"
     assets_changed_confirm: "Questo sito ha appena ricevuto un aggiornamento software. Vuoi scaricare l'ultima versione ora?"
     logout: "Sei stato disconnesso."
-    refresh: "Ricarica"
+    refresh: "Aggiorna"
     home: "Home"
     read_only_mode:
       enabled: "Questo sito è in modalità di sola lettura. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono per il momento disabilitate."
-      login_disabled: "La connessione è disabilitata quando il sito è in modalità di sola lettura."
+      login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
       logout_disabled: "La disconnessione è disabilitata quando il sito è in modalità di sola lettura."
     too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono <strong>#</strong> argomenti}} e {currentPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}} and {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono <strong>#</strong> argomenti}} e {currentPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. I visitatori hanno bisogno d'altro per leggere e rispondere: consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}} e {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
     too_few_topics_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono<strong>#</strong> argomenti}}. I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}}. Solo lo staff può vedere questo messaggio.
     too_few_posts_notice_MF: >-

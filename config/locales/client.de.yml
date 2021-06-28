@@ -4697,20 +4697,20 @@ de:
           locked_will_not_be_promoted: "Vertrauensstufe ist gesperrt. Wird nie befördert werden."
           locked_will_not_be_demoted: "Vertrauensstufe ist gesperrt. Wird nie zurückgestuft werden."
         discourse_connect:
-          title: "DiscourseConnect Single Sign On"
+          title: "DiscourseConnect Single Sign-on"
           external_id: "Externe ID"
           external_username: "Benutzername"
           external_name: "Name"
           external_email: "E-Mail"
-          external_avatar_url: "Profilbild URL"
-          last_payload: "Letzte Nutzlast"
+          external_avatar_url: "Profilbild-URL"
+          last_payload: "Letzter Payload"
           delete_sso_record: "SSO-Datensatz löschen"
-          confirm_delete: "Bist du sicher, dass du diesen DiscourseConnect-Eintrag löschen möchtest?"
+          confirm_delete: "Bist du sicher, dass du diesen DiscourseConnect-Datensatz löschen möchtest?"
       user_fields:
         title: "Benutzerfelder"
         help: "Füge Felder hinzu, welche deine Benutzer ausfüllen können."
         create: "Benutzerfeld erstellen"
-        untitled: "Unbetitelt"
+        untitled: "Ohne Titel"
         name: "Feldname"
         type: "Feldtyp"
         description: "Feldbeschreibung"
@@ -4734,8 +4734,8 @@ de:
           disabled: "wird im Profil nicht angezeigt"
         show_on_user_card:
           title: "Auf Benutzerkarte anzeigen?"
-          enabled: "Wird auf Benutzerkarte angezeigt"
-          disabled: "Wird nicht auf Benutzerkarte angezeigt"
+          enabled: "wird auf Benutzerkarte angezeigt"
+          disabled: "wird nicht auf Benutzerkarte angezeigt"
         searchable:
           title: "Durchsuchbar?"
           enabled: "durchsuchbar"
@@ -4743,7 +4743,7 @@ de:
         field_types:
           text: "Textfeld"
           confirm: "Bestätigung"
-          dropdown: "Dropdown-Liste"
+          dropdown: "Drop-down-Liste"
       site_text:
         description: "Du kannst jeden Text deines Forums anpassen. Benutze dazu die Suche:"
         search: "Suche nach dem Text, den du bearbeiten möchtest"
@@ -4755,16 +4755,16 @@ de:
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
         locale: "Sprache:"
-        fallback_locale_warning: "Du bearbeitest eine Sprache basierend auf %{fallback}. Benutzer, die %{fallback} als Sprache ihrer Schnittstelle wählen, werden deine Änderungen nicht sehen."
+        fallback_locale_warning: "Du bearbeitest eine Sprache basierend auf %{fallback}. Benutzer, die %{fallback} als Sprache ihrer Oberfläche wählen, werden deine Änderungen nicht sehen."
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
       settings:
-        show_overriden: "Nur geänderte anzeigen"
+        show_overriden: "Nur geänderte Texte anzeigen"
         history: "Änderungsverlauf ansehen"
         reset: "zurücksetzen"
         none: "keine"
       site_settings:
         emoji_list:
-          invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: hugs"
+          invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: Umarmung"
           add_emoji_button:
             label: "Emoji hinzufügen"
         title: "Einstellungen"
@@ -4801,9 +4801,9 @@ de:
           embedding: "Einbettung"
           legal: "Rechtliches"
           api: "API-Schnittstelle"
-          user_api: "Benutzer API"
+          user_api: "Benutzer-API"
           uncategorized: "Sonstiges"
-          backups: "Backups"
+          backups: "Back-ups"
           login: "Anmeldung"
           plugins: "Plug-ins"
           user_preferences: "Benutzereinstellungen"
@@ -4814,11 +4814,11 @@ de:
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
-          modal_description: "Soll diese Änderung rückwirkend gelten? Das ändert die Voreinstellungen für %{count} bestehende Benutzer."
+          modal_description: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehende Benutzer."
           modal_yes: "Ja"
           modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
         simple_list:
-          add_item: "Element hinzufügen..."
+          add_item: "Element hinzufügen …"
         json_schema:
           edit: Editor starten
           modal_title: "%{name} bearbeiten"
@@ -4850,7 +4850,7 @@ de:
         granted_badges: Verliehene Abzeichen
         grant: Verleihen
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
-        no_badges: Es gibt keine Abzeichen die verliehen werden können.
+        no_badges: Es gibt keine Abzeichen, die verliehen werden können.
         none_selected: "Wähle ein Abzeichen aus, um loszulegen"
         allow_title: Abzeichen darf als Titel verwendet werden
         multiple_grant: Kann mehrfach verliehen werden
@@ -4859,26 +4859,26 @@ de:
         icon: Symbol
         image: Bild
         graphic: Grafik
-        icon_help: "Gib einen Font Awesome Icon Namen ein (benutze für reguläre Icons das Präfix 'far-' und für Marken-Icons 'fab-')"
+        icon_help: "Gib einen „Font Awesome“-Symbolnamen ein (benutze für reguläre Symbole das Präfix „far-“ und für Markensymbole „fab-“)"
         image_help: "Das Hochladen eines Bildes überschreibt das Symbolfeld, wenn beide gesetzt sind."
         select_an_icon: "Wähle ein Symbol"
         upload_an_image: "Lade ein Bild hoch"
-        read_only_setting_help: "Anpassen von Text"
+        read_only_setting_help: "Text anpassen"
         query: Abzeichen-Abfrage (SQL)
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus
         show_posts: Den für die Verleihung des Abzeichens verantwortlichen Beitrag auf der Abzeichenseite anzeigen
-        trigger: Trigger
+        trigger: Auslöser
         trigger_type:
           none: "Täglich aktualisieren"
           post_action: "Wenn ein Benutzer auf einen Beitrag reagiert"
           post_revision: "Wenn ein Benutzer einen Beitrag bearbeitet oder erstellt"
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
-          user_change: "Wenn ein Benutzer bearbeitet oder erstellt wird."
+          user_change: "Wenn ein Benutzer bearbeitet oder erstellt wird"
           post_processed: "Nach der Verarbeitung eines Beitrags"
         preview:
           link_text: "Vorschau auf verliehene Abzeichen"
-          plan_text: "Vorschau mit Query Plan"
+          plan_text: "Vorschau mit Abfrageplan"
           modal_title: "Vorschau für Abzeichen-Abfrage"
           sql_error_header: "Es gab einen Fehler mit der SQL-Abfrage."
           error_help: "Unter den nachfolgenden Links findest du Hilfe zu Abzeichen-Abfragen."
@@ -4897,28 +4897,28 @@ de:
             with_time: <span class="username">%{username}</span> um <span class="time">%{time}</span>
         badge_intro:
           title: "Wähle ein bestehendes Abzeichen oder erstelle ein neues, um loszulegen"
-          emoji: "Studentin Emoji"
+          emoji: "Studentin-Emoji"
           what_are_badges_title: "Was sind Abzeichen?"
           badge_query_examples_title: "Beispiele für Abzeichen-Abfragen"
         mass_award:
           title: Massen-Auszeichnung
           description: Das gleiche Abzeichen vielen Benutzern auf einmal verleihen.
-          no_badge_selected: Bitte wähle ein Abzeichen, um anzufangen.
+          no_badge_selected: Bitte wähle ein Abzeichen aus, um loszulegen.
           perform: "Verleihe Abzeichen an Benutzer"
           upload_csv: Lade eine CSV-Datei mit entweder den E-Mail-Adressen oder den Benutzernamen hoch
-          aborted: Bitte lade eine CSV hoch, die entweder Benutzer-E-Mails oder Benutzernamen enthält
-          success: Deine CSV Datei wurde empfangen und die Benutzer werden ihr Abzeichen in Kürze bekommen.
+          aborted: Bitte lade eine CSV-Datei hoch, die entweder E-Mail-Adressen oder Benutzernamen enthält
+          success: Deine CSV-Datei wurde empfangen und die Benutzer werden ihr Abzeichen in Kürze erhalten.
           replace_owners: Entferne das Abzeichen von vorherigen Eigentümern
       emoji:
         title: "Emoji"
-        help: "Neues Emoji hinzufügen, das für alle verfügbar sein wird. (Tipp: per Drag & Drop kannst du gleichzeitig mehrere Dateien hinzufügen)"
+        help: "Neues Emoji hinzufügen, das für alle verfügbar sein wird. (TIPP: Per Drag-and-drop kannst du gleichzeitig mehrere Dateien hinzufügen)"
         add: "Neues Emoji hinzufügen"
-        uploading: "Wird hochgeladen…"
+        uploading: "Wird hochgeladen …"
         name: "Name"
         group: "Gruppe"
         image: "Bild"
-        alt: "benutzerdefinierte Emoji-Vorschau"
-        delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
+        alt: "Vorschau des benutzerdefinierten Emojis"
+        delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
@@ -4928,23 +4928,23 @@ de:
         class_name: "Klassenname"
         allowed_paths: "Pfad-Zulassungsliste"
         edit: "bearbeiten"
-        category: "In Kategorie Beitrag schreiben"
+        category: "In Kategorie posten"
         add_host: "Host hinzufügen"
         settings: "Einbettungseinstellungen"
         crawling_settings: "Crawler-Einstellungen"
-        crawling_description: "Wenn Discourse Themen für deine Beiträge erstellt wird es falls kein RSS/ATOM-Feed verfügbar ist versuchen, den Inhalt aus dem HTML-Code zu extrahieren. Dies ist teilweise schwierig, weshalb hier CSS-Regeln angegeben werden können, die die Extraktion erleichtern."
-        embed_by_username: "Benutzername für Beitragserstellung"
+        crawling_description: "Wenn Discourse Themen für deine Beiträge erstellt, wird es – falls kein RSS-/ATOM-Feed verfügbar ist – versuchen, den Inhalt aus dem HTML-Code zu extrahieren. Dies ist teilweise schwierig, weshalb hier CSS-Regeln angegeben werden können, die die Extraktion erleichtern."
+        embed_by_username: "Benutzername für Themenerstellung"
         embed_post_limit: "Maximale Anzahl der Beiträge, welche eingebettet werden"
-        embed_title_scrubber: "Regulärer Ausdruck (Regex) um den Titel eines Beitrags zu bereinigen"
+        embed_title_scrubber: "Regulärer Ausdruck (Regex), um den Titel eines Beitrags zu bereinigen"
         embed_truncate: "Kürze die eingebetteten Beiträge"
         embed_unlisted: "Importierte Themen werden nicht aufgelistet, bis eine Antwort eingeht."
-        allowed_embed_selectors: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
-        blocked_embed_selectors: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
+        allowed_embed_selectors: "CSS-Selektor für Elemente, die in Einbettungen erlaubt sind."
+        blocked_embed_selectors: "CSS-Selektor für Elemente, die in Einbettungen entfernt werden."
         allowed_embed_classnames: "Erlaubte CSS-Klassennamen"
         save: "Einbettungseinstellungen speichern"
       permalink:
-        title: "Permanentlinks"
-        description: "Weiterleitungen zur Aktivierung von URLs, die dem Forum nicht bekannt sind."
+        title: "Permalinks"
+        description: "Weiterleitungen für URLs, die dem Forum nicht bekannt sind."
         url: "URL"
         topic_id: "Themen-ID"
         topic_title: "Thema"
@@ -4955,15 +4955,15 @@ de:
         tag_name: "Name des Schlagworts"
         external_url: "Externe oder relative URL"
         destination: "Ziel"
-        copy_to_clipboard: "Kopiere den Permalink in die Zwischenablage"
-        delete_confirm: Möchtest du wirklich diesen Permanentlink löschen?
+        copy_to_clipboard: "Permalink in die Zwischenablage kopieren"
+        delete_confirm: Möchtest du wirklich diesen Permalink löschen?
         form:
           label: "Neu:"
           add: "Hinzufügen"
           filter: "Suche (URL oder externe URL)"
       reseed:
         action:
-          label: "Text ersetzen..."
+          label: "Text ersetzen …"
           title: "Text der Kategorien und Themen mit Übersetzungen ersetzen"
         modal:
           title: "Text ersetzen"
@@ -4979,7 +4979,7 @@ de:
       next: "Nächstes"
       step: "%{current} von %{total}"
       upload: "Hochladen"
-      uploading: "Hochladen..."
+      uploading: "Wird hochgeladen …"
       upload_error: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
       quit: "Vielleicht später"
       staff_count:
@@ -4987,13 +4987,13 @@ de:
         other: "Deine Community hat %{count} Team-Mitglieder (einschließlich dir)."
       invites:
         add_user: "Hinzufügen"
-        none_added: "Du hast bisher kein Team eingeladen. Möchtest du wirklich fortfahren?"
+        none_added: "Du hast bisher keine Team-Mitglieder eingeladen. Möchtest du wirklich fortfahren?"
         roles:
           admin: "Administration"
           moderator: "Moderator"
-          regular: "Normaler Anwender"
+          regular: "Normaler Benutzer"
       previews:
         topic_title: "Diskussionsthema"
-        font_title: "%{font} Schriftart"
+        font_title: "Schriftart „%{font}“"
         share_button: "Teilen"
         reply_button: "Antworten"
