@@ -96,6 +96,21 @@ class EmailLog < ActiveRecord::Base
   def cc_addresses_split
     @cc_addresses_split ||= self.cc_addresses&.split(";") || []
   end
+
+  def as_mail_message
+    return if self.raw.blank?
+    @mail_message ||= Mail.new(self.raw)
+  end
+
+  def raw_headers
+    return if self.raw.blank?
+    as_mail_message.header.raw_source
+  end
+
+  def raw_body
+    return if self.raw.blank?
+    as_mail_message.body
+  end
 end
 
 # == Schema Information
