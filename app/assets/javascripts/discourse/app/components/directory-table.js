@@ -29,6 +29,7 @@ export default Component.extend({
     );
     const table = this.tableContainer.querySelector(".directory-table");
     fakeContent.style.width = `${table.offsetWidth}px`;
+    fakeContent.style.height = "1px";
 
     this.tableContainer.addEventListener("scroll", this.onBottomScroll);
     this.topHorizontalScrollBar.addEventListener("scroll", this.onTopScroll);
