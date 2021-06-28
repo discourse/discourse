@@ -635,6 +635,7 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: false,
+          isProcessingUpload: false,
           isCancellable: false,
         });
       }
@@ -675,6 +676,7 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: true,
+          isProcessingUpload: true,
           isCancellable: false,
         });
       })
@@ -689,6 +691,7 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: false,
+          isProcessingUpload: false,
           isCancellable: false,
         });
       });
