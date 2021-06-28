@@ -270,7 +270,6 @@ fr:
       help:
         bookmark: "Cliquez pour mettre un signet sur le premier message de ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
-        unbookmark_with_reminder: "Cliquez pour supprimer tous les signets et rappels de ce sujet. Vous avez un rappel pour %{reminder_at} sur ce sujet."
     bookmarks:
       created: "Vous avez mis un signet à ce message. %{name}"
       not_bookmarked: "mettre un signet à ce message"

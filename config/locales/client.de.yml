@@ -270,7 +270,6 @@ de:
       help:
         bookmark: "Klicke hier, um den ersten Beitrag in diesem Thema mit einem Lesezeichen zu versehen."
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
-        unbookmark_with_reminder: "Klicke hier, um alle Lesezeichen und Erinnerungen in diesem Thema zu löschen. Die nächste Erinnerung ist %{reminder_at} geplant."
     bookmarks:
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"

@@ -239,7 +239,6 @@ ja:
       help:
         bookmark: "クリックしてこのトピックの最初の投稿をブックマークします"
         unbookmark: "クリックしてこのトピック内のすべてのブックマークを削除します"
-        unbookmark_with_reminder: "クリックしてこのトピック内のすべてのブックマークとリマインダーを削除します。このトピックには%{reminder_at}のリマインダーが設定されています。"
     bookmarks:
       created: "この投稿をブックマークしました。%{name}"
       not_bookmarked: "この投稿をブックマークする"

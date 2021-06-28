@@ -270,7 +270,6 @@ pt_BR:
       help:
         bookmark: "Clique para adicionar o primeiro post deste tópico aos favoritos"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
-        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes deste tópico. Você tem um lembrete definido %{reminder_at} para este tópico."
     bookmarks:
       created: "Você marcou esta mensagem como favorita. %{name}"
       not_bookmarked: "marcar postagem como favorita"

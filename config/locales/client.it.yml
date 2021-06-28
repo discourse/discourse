@@ -270,7 +270,6 @@ it:
       help:
         bookmark: "Clicca per aggiungere un segnalibro al primo messaggio di questo argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
-        unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria in questo argomento. Hai un promemoria impostato %{reminder_at} per questo argomento."
     bookmarks:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
@@ -866,7 +865,7 @@ it:
       n_more: "Categorie (%{count} di più)..."
     ip_lookup:
       title: Ricerca Indirizzo IP
-      hostname: Hostname
+      hostname: Nome host
       location: Località
       location_not_found: (sconosciuto)
       organisation: Organizzazione
@@ -878,7 +877,7 @@ it:
       read_time: "tempo lettura"
       topics_entered: "argomenti visualizzati"
       post_count: "n° messaggi"
-      confirm_delete_other_accounts: "Sicuro di voler cancellare questi account?"
+      confirm_delete_other_accounts: "Vuoi cancellare questi account?"
       powered_by: "tramite<a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiato"
     user_fields:
@@ -887,11 +886,11 @@ it:
     user:
       said: "%{username}:"
       profile: "Profilo"
-      mute: "Ignora"
+      mute: "Silenzia"
       edit: "Modifica opzioni"
       download_archive:
         button_text: "Scarica Tutto"
-        confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
+        confirm: "Vuoi scaricare i tuoi messaggi?"
         success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
         rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, riprova domani."
       new_private_message: "Nuovo Messaggio"
@@ -946,16 +945,16 @@ it:
       use_current_timezone: "Usa Fuso Orario Corrente"
       profile_hidden: "Il profilo pubblico di questo utente è nascosto."
       expand_profile: "Espandi"
-      collapse_profile: "Raggruppa"
+      collapse_profile: "Comprimi"
       bookmarks: "Segnalibri"
-      bio: "Su di me"
+      bio: "Info su di me"
       timezone: "Fuso orario"
       invited_by: "Invitato Da"
-      trust_level: "Livello Esperienza"
+      trust_level: "Livello di attendibilità"
       notifications: "Notifiche"
       statistics: "Statistiche"
       desktop_notifications:
-        label: "Notifiche Desktop"
+        label: "Notifiche in tempo reale"
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
         perm_default: "Attiva Notifiche"
         perm_denied_btn: "Permesso Negato"
@@ -981,7 +980,7 @@ it:
         not_first_time: "Non è la tua prima volta?"
         skip_link: "Ignora questi consigli"
         read_later: "Lo leggerò più tardi."
-      theme_default_on_all_devices: "Rendi questo il tema di default su tutti i miei dispositivi."
+      theme_default_on_all_devices: "Rendi questo il tema predefinito su tutti i miei dispositivi."
       color_scheme_default_on_all_devices: "Imposta questa combinazione (o combinazioni) di colori come predefinita/e su tutti i miei dispositivi"
       color_scheme: "Combinazione di colori"
       color_schemes:
@@ -994,10 +993,10 @@ it:
         default_dark_scheme: "(predefinito del sito)"
       dark_mode: "Modo scuro"
       dark_mode_enable: "Attiva lo schema di colori automatico del modo scuro"
-      text_size_default_on_all_devices: "Rendi questa dimensione del testo di default su tutti i miei dispositivi"
+      text_size_default_on_all_devices: "Rendi questa la dimensione del testo predefinita su tutti i miei dispositivi"
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi personali"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
-      enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
+      enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_defer: "Abilita il rinvio per contrassegnare gli argomenti come non letti"
       change: "cambia"
       featured_topic: "Argomento in primo piano"

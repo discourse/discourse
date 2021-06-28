@@ -270,7 +270,6 @@ fi:
       help:
         bookmark: "Klikkaa lisätäksesi ketjun ensimmäisen viestin kirjanmerkkeihin"
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
-        unbookmark_with_reminder: "Poista kaikki kirjanmerkkisi ja muistutuksesi tästä ketjusta klikkaamalla. Olet asettanut muistutuksen tästä ketjusta ajankohtaan %{reminder_at}."
     bookmarks:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"

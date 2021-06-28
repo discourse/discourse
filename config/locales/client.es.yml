@@ -270,7 +270,6 @@ es:
       help:
         bookmark: "Haz clic para añadir a marcadores la primera publicación de este tema"
         unbookmark: "Haz clic para eliminar todos los marcadores de este tema"
-        unbookmark_with_reminder: "Haz clic para quitar todos los marcadores y recordatorios en este tema. Tienes un recordatorio puesto %{reminder_at} para este tema."
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       not_bookmarked: "añadir esta publicación a marcadores"
