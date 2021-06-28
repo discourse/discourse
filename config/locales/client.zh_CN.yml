@@ -27,10 +27,10 @@ zh_CN:
       time: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
-      timeline_date: "YYYY[年]M[月]"
-      long_no_year: "M[月]D[日] HH:mm"
-      long_no_year_no_time: "M[月]D[日]"
-      full_no_year_no_time: "M[月]D[日]"
+      timeline_date: "YYYY 年 M 月"
+      long_no_year: "M 月 D 日 HH:mm"
+      long_no_year_no_time: "M 月 D 日"
+      full_no_year_no_time: "M 月 D 日"
       long_with_year: "YYYY[年]M[月]D[日] HH:mm"
       long_with_year_no_time: "YYYY[年]M[月]D[日]"
       full_with_year_no_time: "YYYY[年]M[月]D[日]"
@@ -57,11 +57,11 @@ zh_CN:
         x_months:
           other: "%{count} 个月"
         about_x_years:
-          other: "%{count}y"
+          other: "%{count} 年"
         over_x_years:
-          other: "> %{count}y"
+          other: "> %{count} 年"
         almost_x_years:
-          other: "%{count}y"
+          other: "%{count} 年"
         date_month: "M[月]D[日]"
         date_year: "YY[年]M[月]"
       medium:
@@ -76,7 +76,7 @@ zh_CN:
         x_minutes:
           other: "%{count} 分钟前"
         x_hours:
-          other: "%{count}小时前"
+          other: "%{count} 小时前"
         x_days:
           other: "%{count} 天前"
         x_months:
