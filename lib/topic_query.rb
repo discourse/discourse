@@ -586,7 +586,8 @@ class TopicQuery
     options = @options
     options.reverse_merge!(per_page: per_page_setting)
 
-    result = Topic.includes(:tags, :allowed_users)
+    result = Topic.includes(:allowed_users)
+    result = result.includes(:tags) if SiteSetting.tagging_enabled
 
     if type == :group
       result = result.joins(
