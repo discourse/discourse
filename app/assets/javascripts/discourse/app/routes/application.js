@@ -138,7 +138,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     showUploadSelector() {
-      $("#mobile-uploader").click();
+      $("#file-uploader").click();
     },
 
     showKeyboardShortcutsHelp() {

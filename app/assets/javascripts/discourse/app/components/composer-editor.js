@@ -830,7 +830,7 @@ export default Component.extend({
     if (this.site.mobileView) {
       $("#reply-control .mobile-file-upload").on("click.uploader", function () {
         // redirect the click on the hidden file input
-        $("#mobile-uploader").click();
+        $("#file-uploader").click();
       });
     }
   },
