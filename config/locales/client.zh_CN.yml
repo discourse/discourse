@@ -316,20 +316,20 @@ zh_CN:
     pwa:
       install_banner: "要<a href>在此设备上安装 %{title}</a> 吗？"
     choose_topic:
-      none_found: "找不到话题。"
+      none_found: "未找到话题。"
       title:
         search: "搜索话题"
         placeholder: "在此处输入话题标题、网址或 ID"
     choose_message:
-      none_found: "没有找到消息"
+      none_found: "未找到消息。"
       title:
         search: "搜索消息"
-        placeholder: "在此处输入消息的标题、链接或ID"
+        placeholder: "在此处输入消息标题、网址或 ID"
     review:
       order_by: "排序依据"
       in_reply_to: "回复给"
       explain:
-        why: "解释为什么该条目最终进入队列"
+        why: "解释为什么此条目最终进入队列"
         title: "需审核评分"
         formula: "公式"
         subtotal: "小计"
@@ -337,8 +337,8 @@ zh_CN:
         min_score_visibility: "可见的最低评分"
         score_to_hide: "隐藏帖子的评分"
         take_action_bonus:
-          name: "立即执行"
-          title: "当工作人员选择采取行动时，会给标记加分。"
+          name: "采取行动"
+          title: "当管理人员选择采取行动时，会给标记加分。"
         user_accuracy_bonus:
           name: "用户准确性"
           title: "先前已同意其标记的用户将获得奖励。"
@@ -362,7 +362,7 @@ zh_CN:
       delete: "删除"
       settings:
         saved: "已保存！"
-        save_changes: "保存更改"
+        save_changes: "保存变更"
         title: "设置"
         priorities:
           title: "需审核优先级"
@@ -372,8 +372,8 @@ zh_CN:
       none: "没有需要审核的条目"
       view_pending: "查看待审核"
       topic_has_pending:
-        other: "该话题中有 <b>%{count}</b> 个帖子等待审核"
-      title: "审核"
+        other: "此话题有 <b>%{count}</b> 个帖子等待审批"
+      title: "审查"
       topic: "话题："
       filtered_topic: "您正在选择性地查看这一话题中的可审核内容。"
       filtered_user: "用户"
