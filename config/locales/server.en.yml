@@ -1980,6 +1980,7 @@ en:
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
+    slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -3471,6 +3472,7 @@ en:
     only_reply_by_email_pm: "Reply to this email to respond to %{participants}."
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
     visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond to %{participants}."
+    reply_above_line: "## Please type your reply above this line. ##"
 
     posted_by: "Posted by %{username} on %{post_date}"
 

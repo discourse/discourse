@@ -67,14 +67,14 @@ class Site
 
       self.class.all_categories_cache.each do |category|
         if @guardian.can_see_serialized_category?(category_id: category[:id], read_restricted: category[:read_restricted])
-          categories << OpenStruct.new(category)
+          categories << category
         end
       end
 
       with_children = Set.new
       categories.each do |c|
-        if c.parent_category_id
-          with_children << c.parent_category_id
+        if c[:parent_category_id]
+          with_children << c[:parent_category_id]
         end
       end
 
@@ -91,13 +91,19 @@ class Site
       default_notification_level = CategoryUser.default_notification_level
 
       categories.each do |category|
-        category.notification_level = notification_levels[category.id] || default_notification_level
-        category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create&.include?(category.id) || @guardian.is_admin?
-        category.has_children = with_children.include?(category.id)
-        by_id[category.id] = category
+        category[:notification_level] = notification_levels[category[:id]] || default_notification_level
+        category[:permission] = CategoryGroup.permission_types[:full] if allowed_topic_create&.include?(category[:id]) || @guardian.is_admin?
+        category[:has_children] = with_children.include?(category[:id])
+
+        category[:can_edit] = @guardian.can_edit_serialized_category?(
+          category_id: category[:id],
+          read_restricted: category[:read_restricted]
+        )
+
+        by_id[category[:id]] = category
       end
 
-      categories.reject! { |c| c.parent_category_id && !by_id[c.parent_category_id] }
+      categories.reject! { |c| c[:parent_category_id] && !by_id[c[:parent_category_id]] }
       categories
     end
   end

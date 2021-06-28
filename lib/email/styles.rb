@@ -232,6 +232,7 @@ module Email
       style('.lightbox-wrapper .meta', 'display: none')
       style('div.undecorated-link-footer a', "font-weight: normal;")
       style('.mso-accent-link', "mso-border-alt: 6px solid #{SiteSetting.email_accent_bg_color}; background-color: #{SiteSetting.email_accent_bg_color};")
+      style('.reply-above-line', "font-size: 10px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color: #b5b5b5;padding: 5px 0px 20px;border-top: 1px dotted #ddd;")
 
       onebox_styles
       plugin_styles

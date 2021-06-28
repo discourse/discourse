@@ -104,6 +104,7 @@ export default Controller.extend({
   prioritizedCategoryId: null,
   lastValidatedAt: null,
   isUploading: false,
+  isProcessingUpload: false,
   topic: null,
   linkLookup: null,
   showPreview: true,

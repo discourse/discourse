@@ -343,11 +343,10 @@ describe Email::Sender do
         let(:reply) { Fabricate(:post, topic: post.topic, reply_to_user: post.user, reply_to_post_number: post.post_number) }
         let(:notification) { Fabricate(:posted_notification, user: post.user, post: reply) }
         let(:message) do
-          UserNotifications.user_private_message(
-            post.user,
-            post: reply,
-            notification_type: notification.notification_type,
-            notification_data_hash: notification.data_hash
+          GroupSmtpMailer.send_mail(
+            group,
+            post.user.email,
+            post
           )
         end
         let(:group) { Fabricate(:smtp_group) }
