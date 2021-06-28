@@ -102,7 +102,7 @@ class InvitesController < ApplicationController
       )
 
       if invite.present?
-        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
       else
         render json: failed_json, status: 422
       end
@@ -121,7 +121,7 @@ class InvitesController < ApplicationController
 
     guardian.ensure_can_invite_to_forum!(nil)
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
   end
 
   def update
@@ -194,7 +194,7 @@ class InvitesController < ApplicationController
       Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: params[:invite_to_topic])
     end
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
   end
 
   def destroy

@@ -62,7 +62,12 @@ export default Component.extend({
     const modalAlert = document.getElementById("modal-alert");
     if (modalAlert) {
       modalAlert.style.display = "none";
-      modalAlert.classList.remove("alert-info", "alert-error", "alert-success");
+      modalAlert.classList.remove(
+        "alert-error",
+        "alert-info",
+        "alert-success",
+        "alert-warning"
+      );
     }
   },
 
