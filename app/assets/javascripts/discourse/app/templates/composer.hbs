@@ -168,7 +168,7 @@
 
             {{#if isUploading}}
               <div id="file-uploading">
-                {{loading-spinner size="small"}}<span>{{i18n "upload_selector.uploading"}} {{uploadProgress}}%</span>
+                {{loading-spinner size="small"}}<span>{{i18n "upload_file.uploading"}} {{uploadProgress}}%</span>
                 {{#if isCancellable}}
                   <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{d-icon "times"}}</a>
                 {{/if}}

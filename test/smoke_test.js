@@ -222,24 +222,6 @@ const path = require("path");
       return page.waitForSelector(".d-editor-preview p", { visible: true });
     });
 
-    await exec("open upload modal", () => {
-      return page.click(".d-editor-button-bar .upload");
-    });
-
-    await exec("upload modal is open", () => {
-      return page.waitForSelector("#filename-input", { visible: true });
-    });
-
-    await exec("upload modal closes", () => {
-      let promise = page.click(".d-modal-cancel");
-
-      promise = promise.then(() => {
-        return page.waitForSelector("#filename-input", { hidden: true });
-      });
-
-      return promise;
-    });
-
     await exec("submit the topic", () => {
       return page.click(".submit-panel .create");
     });
