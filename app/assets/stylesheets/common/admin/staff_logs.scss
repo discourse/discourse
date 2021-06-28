@@ -377,10 +377,10 @@ table.screened-ip-addresses {
   .d-icon {
     margin-right: 0.25em;
     color: var(--primary-medium);
-  }
 
-  &:hover .d-icon {
-    color: var(--danger);
+    &:hover {
+      color: var(--danger);
+    }
   }
 }
 

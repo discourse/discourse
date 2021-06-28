@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { equal } from "@ember/object/computed";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default Component.extend({
@@ -16,7 +17,8 @@ export default Component.extend({
     return replacement.split(",");
   },
 
-  click() {
+  @action
+  deleteWord() {
     this.word
       .destroy()
       .then(() => {
