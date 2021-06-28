@@ -137,11 +137,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       showModal("not-activated", { title: "log_in" }).setProperties(props);
     },
 
-    showUploadSelector(toolbarEvent) {
-      showModal("uploadSelector").setProperties({
-        toolbarEvent,
-        imageUrl: null,
-      });
+    showUploadSelector() {
+      $("#mobile-uploader").click();
     },
 
     showKeyboardShortcutsHelp() {
