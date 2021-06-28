@@ -46,45 +46,45 @@ de:
   log_in: "Anmelden"
   submit: "Absenden"
   purge_reason: "Verlassenes, deaktiviertes Konto automatisch gelöscht"
-  disable_remote_images_download_reason: "Der Download von Bildern wurde deaktiviert, weil nicht mehr genug Plattenplatz vorhanden war."
+  disable_remote_images_download_reason: "Download von Remote-Bildern wurde deaktiviert, da nicht genügend Speicherplatz zur Verfügung stand."
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Gelöscht vom Verfasser"
-  redirect_warning: "Wir konnten nicht überprüfen, dass der ausgewählte Link tatsächlich im Forum geschrieben wurde. Wenn du trotzdem fortfahren möchtest, wähle den Link unten aus."
+  redirect_warning: "Wir konnten nicht überprüfen, dass der ausgewählte Link tatsächlich im Forum geteilt wurde. Wenn du trotzdem fortfahren möchtest, wähle den Link unten aus."
   on_another_topic: "Zu einem anderen Thema"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} von %{username}"
   themes:
     bad_color_scheme: "Kann Theme nicht aktualisieren, weil die Farbpalette ungültig ist"
-    other_error: "Etwas ist schief gelaufen beim Aktualisieren des Theme"
+    other_error: "Beim Aktualisieren des Themes ist ein Fehler aufgetreten"
     ember_selector_error: "Tut uns leid, die Verwendung von #ember- oder .ember-view-CSS-Selektoren ist nicht zulässig, da diese zur Laufzeit dynamisch generiert werden und sich im Laufe der Zeit ändern werden, was schließlich zu defektem CSS führt. Probiere einen anderen Selektor."
     compile_error:
       unrecognized_extension: "Unbekannte Dateiendung: %{extension}"
     import_error:
       generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
-      about_json: "Importfehler: about.json existiert nicht oder ist ungültig. Sind Sie sicher, dass dies ein Discourse Theme ist?"
+      about_json: "Importfehler: about.json existiert nicht oder ist ungültig. Bist du dir sicher, dass dies ein Discourse-Theme ist?"
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
-      modifier_values: "about.json Modifikatoren enthalten ungültige Werte: %{errors}"
-      git: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
+      modifier_values: "about.json-Modifikatoren enthalten ungültige Werte: %{errors}"
+      git: "Fehler beim Klonen des Git-Repository, Zugriff verweigert oder Repository nicht gefunden."
       git_ref_not_found: "Git-Referenz kann nicht ausgecheckt werden: %{ref}"
       unpack_failed: "Fehler beim Entpacken der Datei"
       file_too_big: "Die unkomprimierte Datei ist zu groß."
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
       not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
     errors:
-      component_no_user_selectable: "Theme Komponenten können nicht Benutzer auswählbar sein"
-      component_no_default: "Theme Komponenten können nicht Standard Theme sein"
+      component_no_user_selectable: "Theme-Komponenten können nicht vom Benutzer auswählbar sein"
+      component_no_default: "Theme-Komponenten können nicht Standard-Theme sein"
       component_no_color_scheme: "Theme-Komponenten können keine Farbpalette haben"
       no_multilevels_components: "Themes mit Unter-Themes können nicht selber Unter-Themes sein"
-      optimized_link: Optimierte Bild-Verknüpfungen sind kurzlebig und sollten nicht in Theme-Quellcode enthalten sein.
+      optimized_link: Optimierte Bildlinks sind flüchtig und sollten nicht in den Theme-Quellcode eingebunden werden.
     settings_errors:
       invalid_yaml: "Der YAML-Code ist ungültig."
-      data_type_not_a_number: "Das Setzen des Typs \"%{name}\" wird nicht unterstützt. Unterstützte Typen sind \"Integer\", \"Bool\", \"List\", \"Enum\" und \"Upload\""
+      data_type_not_a_number: "Typ der Einstellung `%{name}` wird nicht unterstützt. Unterstützte Typen sind `integer`, `bool`, `list`, `enum` und `upload`"
       name_too_long: "Es gibt eine Einstellung mit einem zu langen Namen. Die maximale Länge beträgt 255 Zeichen."
       default_value_missing: "Einstellung `%{name}` hat keinen Standardwert."
       default_not_match_type: "Bei der Einstellung `%{name}` stimmt der Datentyp des Standardwerts nicht mit dem Datentyp der Einstellung überein."
       default_out_range: "Bei der Einstellung `%{name}` liegt der Standardwert außerhalb des Wertebereichs."
-      enum_value_not_valid: "Der ausgewählte Wert gehört nicht zur Wertemenge des ENUM-Aufzählungstyps."
+      enum_value_not_valid: "Ausgewählter Wert ist nicht eine der „enum“-Auswahlmöglichkeiten."
       number_value_not_valid: "Der neue Wert liegt außerhalb des erlaubten Wertebereichs."
       number_value_not_valid_min_max: "Er muss zwischen %{min} und %{max} liegen."
       number_value_not_valid_min: "Er muss größer oder gleich %{min} sein."
@@ -94,7 +94,7 @@ de:
       string_value_not_valid_min: "Er muss mindestens %{min} Zeichen lang sein."
       string_value_not_valid_max: "Er darf maximal %{max} Zeichen lang sein."
     locale_errors:
-      top_level_locale: "Der Schlüssel auf der höchsten Ebene muss mit dem Locale-Name übereinstimmen."
+      top_level_locale: "Der Top-Level-Schlüssel in einer Locale-Datei muss mit dem Locale-Namen übereinstimmen"
       invalid_yaml: "Das YAML der Übersetzung ist ungültig."
   emails:
     incoming:
@@ -104,17 +104,17 @@ de:
       no_subject: "(kein Betreff)"
       no_body: "(kein Inhalt)"
       errors:
-        empty_email_error: "Passiert wenn die empfangene E-Mail leer war."
-        no_message_id_error: "Passiert wenn in der E-Mail die Kopfzeile 'Message-Id' fehlt."
-        auto_generated_email_error: "Passiert wenn die Kopfzeile 'precedence' folgendes enthält: list, junk, bulk oder auto_reply, oder eine der anderen Kopfzeilen enthält: auto-submitted, auto-replied oder auto-generated."
+        empty_email_error: "Passiert, wenn die empfangene E-Mail leer war."
+        no_message_id_error: "Passiert, wenn die E-Mail keinen „Message-Id“-Header hat."
+        auto_generated_email_error: "Passiert, wenn der „precedence“-Header auf list, junk, bulk oder auto_reply gesetzt ist oder wenn irgendein anderer Header auto-submitted, auto-replied oder auto-generated enthält."
         no_body_detected_error: "Passiert, wenn wir keinen Textkörper extrahieren konnten und keine Anhänge gefunden wurden."
-        no_sender_detected_error: "Kommt vor, wenn wir keine gültige E-Mail-Adresse im From-Header finden konnten."
-        from_reply_by_address_error: "Passiert wenn der From-Header mit der Antwort E-Mail-Adresse übereinstimmt."
-        inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
-        silenced_user_error: "Kommt vor, wenn der Absender stummgeschaltet wurde."
-        bad_destination_address: "Geschieht, wenn keine der E-Mail-Adressen in An/CC Feldern einer konfigurierten eingehenden E-Mail-Adresse entsprechen."
-        strangers_not_allowed_error: "Passiert wenn ein Benutzer versuchte ein neues Thema in einer Kategorie ohne Mitgliedschaft zu erstellen."
-        insufficient_trust_level_error: "Passiert wenn ein Benutzer versuchte ein neues Thema in einer Kategorie zu erstellen, ohne die erforderliche Vertrauensstufe dafür zu haben."
+        no_sender_detected_error: "Passiert, wenn wir keine gültige E-Mail-Adresse im From-Header finden konnten."
+        from_reply_by_address_error: "Passiert, wenn der From-Header mit der Antwort-E-Mail-Adresse übereinstimmt."
+        inactive_user_error: "Passiert, wenn der Sender nicht aktiv ist."
+        silenced_user_error: "Passiert, wenn der Absender stummgeschaltet wurde."
+        bad_destination_address: "Passiert, wenn keine der E-Mail-Adressen in den An-/Cc-Feldern mit einer konfigurierten eingehenden E-Mail-Adresse übereinstimmt."
+        strangers_not_allowed_error: "Passiert, wenn ein Benutzer versucht, ein neues Thema in einer Kategorie zu erstellen, in der er nicht Mitglied ist."
+        insufficient_trust_level_error: "Passiert, wenn ein Benutzer versucht, ein neues Thema in einer Kategorie zu erstellen, für die er nicht die erforderliche Vertrauensstufe hat."
         reply_user_not_matching_error: "Passiert wenn die E-Mail-Adresse der Antwort von der Adresse abweicht, an die gesendet wurde."
         topic_not_found_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema gelöscht wurde."
         topic_closed_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema geschlossen wurde."
@@ -1348,13 +1348,13 @@ de:
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
     host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen deiner Website ein."
-    sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von E-Mails, werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
+    sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
     queue_size_warning: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten."
     memory_warning: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
     google_oauth2_config_warning: 'Der Server ist für Anmeldung und Login mit Google OAuth2 (enable_google_oauth2_logins) konfiguriert, aber die Client-ID und das Client-Geheimwerte sind nicht gesetzt. Trage diese in den <a href="%{base_path}/admin/site_settings">Einstellung</a> ein. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Eine Anleitung zu diesem Thema findest du hier</a>.'
-    facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_path}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_path}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    github_config_warning: 'Der Server erlaubt die Anmeldung mit GitHub (enable_github_logins), aber die Kunden-ID und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_path}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    facebook_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Facebook erlaubt (enable_facebook_logins), aber die App-ID und die geheimen Werte der App sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
+    twitter_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Twitter erlaubt (enable_twitter_logins), aber der Schlüssel und die geheimen Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
+    github_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit GitHub erlaubt (enable_github_logins), aber die Client-ID und die geheimen Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
     s3_config_warning: 'Der Server ist so eingestellt, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Seiten-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
     s3_backup_config_warning: 'Der Server ist so eingestellt, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Seiten-Einstellungen</a> und aktulisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
     s3_cdn_warning: 'Der Server ist so konfiguriert, dass er Dateien nach S3 hochlädt, aber es ist kein S3 CDN konfiguriert. Dies kann zu teuren S3-Kosten und langsamerer Seitenleistung führen. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Siehe "Objektspeicher für Uploads verwenden", um mehr zu erfahren</a>.'
@@ -1607,9 +1607,9 @@ de:
     enable_facebook_logins: "Facebook-Authentifizierung aktivieren, erfordert facebook_api_id und facebook_app_secret. Siehe <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_id: "App-ID für die Facebook-Authentifizierung und -Freigabe, registriert unter <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App-Secret für Facebook-Authentifizierung, registriert unter <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "GitHub-Authentifizierung aktivieren, erfordert github_client_id und github_client_secret. Siehe <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
-    github_client_id: "Client-ID für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Client-Secret für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    enable_github_logins: "Aktiviere die GitHub-Authentifizierung, erfordert github_client_id und github_client_secret. Siehe <a href='https://meta.discourse.org/t/13745' target='_blank'>GitHub-Anmeldung für Discourse konfigurieren</a>."
+    github_client_id: "Client-ID für die GitHub-Authentifizierung, registriert unter <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Client-Geheimnis für die GitHub-Authentifizierung, registriert unter <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Benutzern erlauben, sich mit Discord zu authentifizieren?"
     discord_client_id: 'Discord Client ID (benötigst du eine? besuche<a href="https://discordapp.com/developers/applications/me">das Discord Entwickler Portal</a>)'
     discord_secret: "Discord geheimer Schlüssel"
@@ -1620,7 +1620,7 @@ de:
     automatic_backups_enabled: "Automatische Backups aktivieren. Die Backups werden im eingestellten Zeitintervall erstellt."
     backup_frequency: "Die Anzahl von Tagen zwischen Backups."
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
-    s3_endpoint: "Dieser Endpunkt kann so angepasst werden, dass er die Sicherung an einen S3-kompatiblen Service wie DigitalOcean Spaces oder Minio übertragt. WARNUNG: Verwende den Standard bei Verwendung von AWS S3."
+    s3_endpoint: "Der Endpunkt kann so angepasst werden, dass er das Back-up an einen S3-kompatiblen Service wie DigitalOcean Spaces oder Minio überträgt. WARNUNG: Bei Verwendung von AWS S3 leer lassen."
     s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Grabstein-Uploads. WICHTIG: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
     s3_disable_cleanup: "Verhindern Sie das Entfernen alter Sicherungen aus S3, wenn mehr Sicherungen als maximal zulässig vorhanden sind."
     enable_s3_inventory: "Erstelle Berichte und überprüfe Uploads mit Amazon S3-Bestand. WICHTIG: Benötigt gültige S3-Anmeldeinformationen (sowohl access_key_id als auch secret_access_key)."
@@ -1677,7 +1677,7 @@ de:
     external_system_avatars_url: "URL des externen Profilbild-Dienstes. Erlaubte Platzhalter sind {username} {first_letter} {color} {size}"
     external_emoji_url: "URL des externen Dienstes für Emoji-Bilder. Lasse das Feld leer, um es zu deaktivieren."
     use_site_small_logo_as_system_avatar: "Verwende das kleine Logo der Website anstelle des Avatars des Systembenutzers. Das Logo muss vorhanden sein."
-    restrict_letter_avatar_colors: "Eine Liste 6stelliger hexadezimaler Farbwerte für den Letter Avatar Hintergrund."
+    restrict_letter_avatar_colors: "Eine Liste von 6-stelligen hexadezimalen Farbwerten, die für den Letter-Avatar-Hintergrund verwendet werden."
     selectable_avatars_enabled: "Forciere Benutzer, ein Avatar aus der Liste auszuwählen."
     selectable_avatars: "Liste von Avataren, aus der Benutzer wählen können."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
@@ -1929,7 +1929,7 @@ de:
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>„title“-Tag</a> der Themen-Seite enthält einen Kategorienamen."
     native_app_install_banner_ios: "Zeigt das DiscourseHub Applikationsbanner auf iOS Geräten für Stammgäste (Vertrauensstufe 1 und höher) an."
     native_app_install_banner_android: "Zeigt das DiscourseHub Applikationsbanner auf Android Geräten für Stammgäste (Vertrauensstufe 1 und höher) an."
-    app_association_android: "Inhalte vom <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> Endpunkt, für Googles Digital Asset Links API verwendet."
+    app_association_android: "Inhalte des Endpunkts <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, verwendet für die Digital Asset Links API von Google."
     app_association_ios: "Inhalte vom <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> Endpunkt, zum Anlegen von Universal Links zwischen dieser Sieite und iOS Apps verwendet."
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignorieren. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
@@ -1940,7 +1940,7 @@ de:
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge eine bestimmte Anzahl an Tagen auseinander liegen, zeige die Zeitdifferenz im Beitrag an."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die die Breite des Fortschrittsbalkens verändert wird."
-    default_code_lang: "Standard Syntax Highlighting, dass auf GitHub Code Blöcke angewendet wird. (auto, nohighlight, ruby, python etc.)"
+    default_code_lang: "Standardmäßiges Syntax-Highlighting für GitHub-Codeblöcke (auto, nohighlight, ruby, python usw.)"
     warn_reviving_old_topic_age: "Wenn jemand beginnt auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Deaktiviere dies durch setzen auf 0."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke, auch dann wenn keine Sprache angeben wurde."
     highlighted_languages: "Aktivierter Regeln für das Syntax-Hervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen) siehe: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
@@ -2099,7 +2099,7 @@ de:
       min_username_length_range: "Sie können nicht das Minimum größer setzen als das Maximum."
       max_username_length_exists: "Sie können nicht die maximale Länge der Benutzernamen kleiner setzen als der längste Benutzername ist (%{username})."
       max_username_length_range: "Sie können nicht das Maximum kleiner setzen als das Minimum."
-      invalid_hex_value: "Farben müssen als 6stelliger Hexadezimalcode angegeben werden."
+      invalid_hex_value: "Farbwerte müssen als 6-stellige Hexadezimalcodes angegeben werden."
       empty_selectable_avatars: "Sie müssen zuerst mindestens zwei auswählbare Avatare hochladen, bevor Sie diese Einstellung aktivieren."
       category_search_priority:
         low_weight_invalid: "Du kannst das Gewicht nicht auf größer oder gleich 1 setzen."

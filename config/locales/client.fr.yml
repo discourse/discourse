@@ -1302,9 +1302,9 @@ fr:
       created: "Inscrit"
       log_out: "Se déconnecter"
       location: "Localisation"
-      website: "Site internet"
+      website: "Site Web"
       email_settings: "Courriel"
-      hide_profile_and_presence: "Cacher mon profil public et statistiques"
+      hide_profile_and_presence: "Cacher mon profil public et mes statistiques"
       enable_physical_keyboard: "Activer le support du clavier physique sur iPad"
       text_size:
         title: "Taille du texte"
@@ -1320,7 +1320,7 @@ fr:
       like_notification_frequency:
         title: "Envoyer une notification si un « J'aime » est attribué"
         always: "Toujours"
-        first_time_and_daily: "La première fois qu'un message est aimé puis quotidiennement"
+        first_time_and_daily: "La première fois qu'un message reçoit un « J'aime » puis quotidiennement"
         first_time: "La première fois qu'un message est aimé"
         never: "Jamais"
       email_previous_replies:

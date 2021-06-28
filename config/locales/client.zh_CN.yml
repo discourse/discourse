@@ -1021,8 +1021,8 @@ zh_CN:
       staged: "暂存"
       staff_counters:
         flags_given: "采纳标记"
-        flagged_posts: "被标记"
-        deleted_posts: "已删除"
+        flagged_posts: "被举报的帖子"
+        deleted_posts: "已删除的帖子"
         suspensions: "封禁"
         warnings_received: "警告"
         rejected_posts: "被拒绝的帖子"

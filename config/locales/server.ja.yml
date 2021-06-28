@@ -513,47 +513,47 @@ ja:
         make: "このトピックはバナーに設定されました。ユーザーが閉じるまで各ページの上部に表示されます。"
         remove: "このトピックはバナーではなくなりました。各ページの上部に表示されなくなります。"
   unsubscribed:
-    title: "メール設定を更新しました！"
-    description: " <b>%{email}</b>のメール設定は更新されました。変更するには <a href='%{url}'>あなたのユーザー設定にアクセスしてください</a>。"
-    topic_description: "%{link}を再配信するために、トピックの右か下の通知コントロールを使用してください。"
-    private_topic_description: "再配信するために、トピックの右か下の通知コントロールを使用してください。"
+    title: "メールの設定を更新しました！"
+    description: "<b>%{email}</b> のメールの設定が更新されました。変更するには<a href='%{url}'>あなたのユーザー設定にアクセス</a>してください。"
+    topic_description: "%{link} を購読し直すには、トピックの下または右にある通知の管理を使用してください。"
+    private_topic_description: "購読し直すには、トピックの下か右にある通知の管理を使用してください。"
   unsubscribe:
-    title: "配信停止"
-    stop_watching_topic: "%{link}内のトピックのウォッチを停止"
-    mute_topic: "%{link}通知をミュートにする"
-    unwatch_category: "%{category}内の全トピックのウォッチを解除"
-    mailing_list_mode: "メーリンリストモードを無効にする"
-    different_user_description: "電子メールで送信したものとは別のユーザーとしてログインしています。 ログアウトするか、匿名モードになり、もう一度やり直してください。"
+    title: "購読解除"
+    stop_watching_topic: "%{link} のトピックのウォッチを停止する"
+    mute_topic: "%{link} のトピックのすべての通知をミュートにする"
+    unwatch_category: "%{category} 内のすべてのトピックのウォッチを停止する"
+    mailing_list_mode: "メーリンリストモードをオフにする"
+    different_user_description: "メールで送信したものとは異なるユーザーとしてログインしています。 ログアウトするか、匿名モードを開始して、もう一度お試しください。"
     log_out: "ログアウト"
     digest_frequency:
-      never: "追跡しない"
-      every_30_minutes: "30分毎"
-      every_hour: "1時間毎"
+      never: "送信しない"
+      every_30_minutes: "30 分毎"
+      every_hour: "1 時間毎"
       daily: "毎日"
       weekly: "毎週"
       every_month: "毎月"
-      every_six_months: "6ヶ月毎"
+      every_six_months: "6 か月毎"
   user_api_key:
-    title: "アプリケーションアクセスの認証"
-    authorize: "認証"
-    read: "既読"
-    read_write: "既読/書く"
-    description: '"%{application_name}" があなたのアカウントへのアクセスを要求しています: '
+    title: "アプリケーションアクセスの承認"
+    authorize: "承認"
+    read: "読み取り"
+    read_write: "読み取り/書き込み"
+    description: '"%{application_name}" があなたのアカウントへの次のアクセス権を要求しています:'
     otp_confirmation:
-      confirm_title: '%{site_name}へ'
+      confirm_title: '%{site_name} に進む'
       logging_in_as: '%{username} としてログイン'
       confirm_button: ログイン完了
-    no_trust_level: "申し訳ありませんが、ユーザーAPIへのアクセスはできません。"
-    generic_error: "申し訳ありませんが、この機能は管理者が使用できなくしています。"
+    no_trust_level: "ユーザー API にアクセスするために必要な信頼レベルがありません。"
+    generic_error: "ユーザー API キーを発行できませんでした。この機能はサイト管理者によって無効化されている可能性があります。"
     scopes:
       message_bus: "ライプアップデート"
-      notifications: "全ての未読通知を既読にします"
-      session_info: "ユーザー情報を読み取ります"
-      read: "全て既読にする"
+      notifications: "通知を読み取ってクリアする"
+      session_info: "ユーザーセッション情報を読み取る"
+      read: "すべて読み取る"
   reports:
     default:
       labels:
-        count: カウント
+        count: 件数
         day: 日
     post_edits:
       labels:
@@ -567,12 +567,12 @@ ja:
         score: スコア
     moderators_activity:
       labels:
-        moderator: モデレータ
+        moderator: モデレーター
     flags_status:
       labels:
         flag: タイプ
     visits:
-      title: "アクセスユーザー"
+      title: "ユーザーアクセス"
       xaxis: "日"
       yaxis: "アクセス数"
     signups:
@@ -603,12 +603,12 @@ ja:
     posts:
       title: "投稿"
       xaxis: "日"
-      yaxis: "新規投稿数"
+      yaxis: "新しい投稿の数"
     likes:
-      title: "いいね"
+      title: "いいね！"
       xaxis: "日"
-      yaxis: "新規「いいね!」数"
-      description: "新規「いいね!」数."
+      yaxis: "新しい「いいね！」の数"
+      description: "新しい「いいね！」の数です。"
     flags:
       title: "通報"
       xaxis: "日"
@@ -616,10 +616,10 @@ ja:
     bookmarks:
       title: "ブックマーク"
       xaxis: "日"
-      yaxis: "新規ブックマーク数"
+      yaxis: "新しいブックマークの数"
     users_by_trust_level:
-      title: "ユーザーごとのトラストレベル"
-      xaxis: "トラストレベル"
+      title: "信頼レベル別ユーザー"
+      xaxis: "信頼レベル"
       yaxis: "ユーザー数"
     users_by_type:
       xaxis: "タイプ"
@@ -628,36 +628,36 @@ ja:
         type: タイプ
       xaxis_labels:
         admin: 管理者
-        moderator: モデレータ
+        moderator: モデレーター
         suspended: 凍結中
     emails:
-      title: "送信メール"
+      title: "送信されたメール"
       xaxis: "日"
-      yaxis: "メールの数"
+      yaxis: "メール件数"
     user_to_user_private_messages:
       xaxis: "日"
-      yaxis: "メッセージ数"
+      yaxis: "メッセージ件数"
     user_to_user_private_messages_with_replies:
       xaxis: "日"
-      yaxis: "メッセージ数"
+      yaxis: "メッセージ件数"
     system_private_messages:
       title: "システム"
       xaxis: "日"
-      yaxis: "メッセージ数"
+      yaxis: "メッセージ件数"
     moderator_warning_private_messages:
-      title: "モデレータ警告"
+      title: "モデレーター警告"
       xaxis: "日"
-      yaxis: "メッセージ数"
+      yaxis: "メッセージ件数"
     notify_moderators_private_messages:
       title: "管理人に通知"
       xaxis: "日"
-      yaxis: "メッセージ数"
+      yaxis: "メッセージ件数"
     notify_user_private_messages:
-      title: "ユーザーの通知"
+      title: "ユーザーに通知"
       xaxis: "日"
-      yaxis: "メッセージ数"
+      yaxis: "メッセージ件数"
     top_referrers:
-      title: "トップリファラ"
+      title: "上位リファラー"
       xaxis: "ユーザー"
       num_clicks: "クリック"
       num_topics: "トピック"
@@ -666,7 +666,7 @@ ja:
         num_clicks: "クリック"
         num_topics: "トピック"
     top_traffic_sources:
-      title: "トップトラフィックソース"
+      title: "上位トラフィックソース"
       xaxis: "ドメイン"
       num_clicks: "クリック"
       num_topics: "トピック"
@@ -676,46 +676,46 @@ ja:
         num_clicks: クリック
         num_topics: トピック
     top_referred_topics:
-      title: "トップ被参照トピック"
+      title: "人気の参照先トピック"
       labels:
         num_clicks: "クリック"
         topic: "トピック"
     page_view_anon_reqs:
       title: "匿名ユーザー"
       xaxis: "日"
-      yaxis: "匿名ユーザーからの閲覧数"
+      yaxis: "匿名のページビュー"
     page_view_logged_in_reqs:
       title: "ログイン"
       xaxis: "日"
-      yaxis: "ログインユーザーからの閲覧数"
+      yaxis: "ログインユーザーのページビュー"
     page_view_crawler_reqs:
-      title: "ウェブクローラからの閲覧数"
+      title: "ウェブクローラーのページビュー"
       xaxis: "日"
-      yaxis: "ウェブクローラからの閲覧数"
+      yaxis: "ウェブクローラーのページビュー"
     page_view_total_reqs:
-      title: "PV"
+      title: "ページビュー"
       xaxis: "日"
-      yaxis: "合計閲覧数"
+      yaxis: "合計ページビュー"
     page_view_logged_in_mobile_reqs:
-      title: "ログインユーザーからの閲覧数"
+      title: "ログインユーザーのページビュー"
       xaxis: "日"
-      yaxis: "モバイルでログインしているユーザーからの閲覧数"
+      yaxis: "モバイルログインユーザーのページビュー"
     page_view_anon_mobile_reqs:
-      title: "匿名ユーザーからの閲覧数"
+      title: "匿名ページビュー"
       xaxis: "日"
-      yaxis: "モバイルで閲覧している匿名ユーザーの閲覧数"
+      yaxis: "モバイル匿名ページビュー"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
-      yaxis: "Requests used for live update and tracking"
+      yaxis: "ライブアップデートと追跡に使用されるリクエスト"
     http_2xx_reqs:
-      title: "Status 2xx (OK)"
+      title: "ステータス 2xx (OK)"
       xaxis: "日"
-      yaxis: "成功 (Status 2xx)"
+      yaxis: "成功したリクエスト (Status 2xx)"
     http_3xx_reqs:
       title: "HTTP 3xx (リダイレクト)"
       xaxis: "日"
-      yaxis: "リダイレクト (Status 3xx)"
+      yaxis: "リダイレクトリクエスト (Status 3xx)"
     http_4xx_reqs:
       title: "HTTP 4xx (クライアントエラー)"
       xaxis: "日"
@@ -725,15 +725,15 @@ ja:
       xaxis: "日"
       yaxis: "サーバーエラー (Status 5xx)"
     http_total_reqs:
-      title: "全体"
+      title: "総合"
       xaxis: "日"
-      yaxis: "全リクエスト"
+      yaxis: "合計リクエスト"
     time_to_first_response:
-      title: "最初の返答までの時間"
+      title: "最初の応答までの時間"
       xaxis: "日"
-      yaxis: "平均時間(時間)"
+      yaxis: "平均時間 (時間)"
     topics_with_no_response:
-      title: "返答のないトピック"
+      title: "応答のないトピック"
       xaxis: "日"
       yaxis: "合計"
     mobile_visits:
@@ -741,7 +741,7 @@ ja:
       yaxis: "アクセス数"
     web_crawlers:
       labels:
-        page_views: "PV"
+        page_views: "ページビュー"
     suspicious_logins:
       labels:
         user: ユーザー
@@ -754,41 +754,41 @@ ja:
       labels:
         filename: ファイル名
   dashboard:
-    rails_env_warning: "サーバは %{env} モードで起動中です。"
+    rails_env_warning: "サーバーは %{env} モードで実行中です。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
-    sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
-    queue_size_warning: "キューイングされたジョブの数は %{queue_size} で、これは多いです。SIdekiqのプロセスに問題があるか、Sidekiqのworkerを増やす必要があります"
-    memory_warning: "現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。"
+    sidekiq_warning: 'Sidekiq が実行していません。メール送信などの多くのタスクは sidekiq により非同期に実行されます。少なくとも 1 つの sidekiq プロセスが実行していることを確認してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらをご覧ください</a>。'
+    queue_size_warning: "キューに入れられたジョブの数は %{queue_size} で、これは高い数字です。Sidekiq プロセスに問題があるか、Sidekiq ワーカーを増やす必要があります。"
+    memory_warning: "現在サーバーは 1 GB 未満の総メモリで実行しています。推奨メモリサイズは 1 GB 以上です。"
   site_settings:
-    censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
-    delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
-    allow_user_locale: "ユーザーが言語を選択できるようにする"
-    min_post_length: "投稿を許可する最少の文字数"
-    min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
-    min_personal_message_post_length: "メッセージに投稿可能な最少の文字数"
-    max_post_length: "投稿を許可する最大の文字数"
-    min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
-    max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
-    min_personal_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
-    min_search_term_length: "検索ワードとして有効にする最小の文字数"
-    allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
-    allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
-    unique_posts_mins: "同じ内容の投稿を再投稿可能にする時間 (分)"
-    educate_until_posts: "最初(または複数)の投稿でタイピングを開始したら、ポップアップでガイダンスを表示させるか"
-    title: "サイトの名前です。titleタグで使用されます"
-    site_description: "このサイトについて簡単に説明してください。 descriptionタグで使用されます。"
-    short_site_description: "ホームページのtitleタグで使用される簡単な説明です。"
-    crawl_images: "正しい幅と高さを取得するためにURLから画像を取得する"
-    download_remote_images_to_local: "リモート画像をダウンロードしてローカル画像に変換する。破損した画像を防ぎます"
-    download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクスペースの最低残容量 (パーセント)"
-    disabled_image_download_domains: "これらのドメインからは、リモート画像のダウンロードを行いません。パイプ区切りのリスト"
-    editing_grace_period: "投稿から(N)秒間は、ポストの新しいバージョンを作成しない"
-    edit_history_visible_to_public: "すべてのユーザに対して投稿の編集履歴を許可する。無効の場合はスタッフメンバーのみが確認できます"
-    delete_removed_posts_after: "投稿者は投稿を削除してから(N)時間後に削除されます。0を設定すると、すぐに削除されます"
-    max_image_width: "投稿内での画像サムネイルの最大の幅"
-    max_image_height: "投稿内での画像サムネイルの最大の高さ"
-    fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
-    fixed_category_positions_on_create: "チェックすると、トピック作成ダイアログ上でカテゴリの順序が維持されます(fixed category positions が必要)。"
+    censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; に置換される語"
+    delete_old_hidden_posts: "30日以上非表示になっている投稿を自動的に削除します。"
+    allow_user_locale: "ユーザーが独自の言語インターフェース設定を選択することを許可する"
+    min_post_length: "投稿の最低文字数"
+    min_first_post_length: "最初の投稿 (トピック本文) の最低文字数"
+    min_personal_message_post_length: "メッセージ投稿の最低文字数"
+    max_post_length: "投稿の最大文字数"
+    min_topic_title_length: "トピックタイトルの最低文字数"
+    max_topic_title_length: "トピックタイトルの最大文字数"
+    min_personal_message_title_length: "メッセージのタイトルの最小文字数"
+    min_search_term_length: "有効な検索語の最小文字数"
+    allow_uncategorized_topics: "カテゴリなしでトピックを作成することを許可する。警告: 未分類のトピックがある場合は、これをオフにする前に、カテゴリを設定する必要があります。"
+    allow_duplicate_topic_titles: "トピックに同一の重複するタイトルを指定することを許可する。"
+    unique_posts_mins: "同じコンテンツを投稿できるまでの時間 (分)"
+    educate_until_posts: "最初の (n) 件の新規投稿を入力し始めたときに、新規ユーザーチュートリアルのパネルをポップアップ表示します。"
+    title: "title タグで使用される、このサイトの名前です。"
+    site_description: "description タグで使用される、このサイトについて簡単な説明です。"
+    short_site_description: "ホームページの title タグで使用される簡単な説明です。"
+    crawl_images: "リモート URL から画像を取得して、正しい幅と高さの寸法を挿入する。"
+    download_remote_images_to_local: "リモート画像をダウンロードしてローカル画像に変換する。画像の破損を防止できます。"
+    download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクの最低空き容量 (パーセント表示)"
+    disabled_image_download_domains: "これらのドメインのリモート画像をダウンロードしない (パイプ区切りのリスト)。"
+    editing_grace_period: "投稿から (n) 秒間は、編集しても投稿履歴に新しいバージョンを作成しない。"
+    edit_history_visible_to_public: "編集した投稿の前のバージョンをすべてのユーザーが閲覧することを許可する。無効である場合、スタッフメンバーのみが閲覧できます。"
+    delete_removed_posts_after: "作者が削除した投稿は (n) 時間後に自動的に削除される。0 に設置すると、投稿は直ちに削除されます。"
+    max_image_width: "投稿内のサムネイル画像の最大幅"
+    max_image_height: "投稿内のサムネイル画像の最大高"
+    fixed_category_positions: "オンにすると、カテゴリを固定された順に並べ替えられるようになります。オフにすると、アクティビティ順に並べ替えられます。"
+    fixed_category_positions_on_create: "オンにすると、カテゴリの順序はトピック作成ダイアログで管理されるようになります (fixed_category_positions が必要)。"
     add_rel_nofollow_to_user_content: ' 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには "rake posts:rebake" を実行して baked markdown をすべて更新する必要があります'
     exclude_rel_nofollow_domains: "nofollowをリンクに追加しないドメインのリストです。 example.comは自動的にsub.example.comも許可します。少なくとも、Webクローラーがすべてのコンテンツを見つけやすくするために、このサイトのドメインを追加する必要があります。 もし、Webサイトの他の部分に別のドメインがある場合は、それらも追加してください。"
     post_excerpt_maxlength: "投稿の引用/サマリの最大文字数"
@@ -1688,16 +1688,16 @@ ja:
           homepage_style:
             choices:
               latest:
-                label: "最新トピック"
+                label: "最新のトピック"
               categories_only:
-                label: "カテゴリー"
+                label: "カテゴリのみ"
               categories_with_featured_topics:
-                label: "カテゴリーと特集されたトピック"
+                label: "注目のトピックのカテゴリ"
               categories_and_latest_topics:
-                label: "カテゴリーと最新トピック"
+                label: "カテゴリと最新トピック"
               categories_and_top_topics:
-                label: "カテゴリーと人気トピック"
-  joined: "参加日"
+                label: "カテゴリと人気トピック"
+  joined: "参加"
   discourse_push_notifications:
     popup:
       mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'

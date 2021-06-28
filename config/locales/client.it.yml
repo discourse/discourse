@@ -130,7 +130,7 @@ it:
       invited_user: "ha invitato %{who} %{when}"
       invited_group: "ha invitato %{who} %{when}"
       user_left: "%{who} ha rimosso se stesso da questo messaggio %{when}"
-      removed_user: "rimosso %{who} %{when}"
+      removed_user: "ha rimosso %{who} %{when}"
       removed_group: "rimosso %{who} %{when}"
       autobumped: "riproposto automaticamente %{when}"
       autoclosed:
@@ -1559,7 +1559,7 @@ it:
     learn_more: "per saperne di più..."
     first_post: Primo messaggio
     mute: Ignora
-    unmute: Attiva
+    unmute: Riattiva
     last_post: Ultimo messaggio
     local_time: "Ora Locale"
     time_read: Letti
@@ -1604,7 +1604,7 @@ it:
     last_seen: "Ultima visita"
     created: "Creato"
     created_lowercase: "creato"
-    trust_level: "Livello Esperienza"
+    trust_level: "Livello di attendibilità"
     search_hint: "nome utente, email o indirizzo IP"
     create_account:
       header_title: "Benvenuti!"
@@ -1615,7 +1615,7 @@ it:
     forgot_password:
       title: "Reimposta Password"
       action: "Ho dimenticato la password"
-      invite: "Inserisci il nome utente o l'indirizzo email. Ti manderemo un'email per l'azzeramento della password."
+      invite: "Inserisci il nome utente o l'indirizzo email. Ti manderemo un'email per reimpostare la password."
       reset: "Reimposta Password"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con le istruzioni per ripristinare la tua password."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
@@ -1623,7 +1623,7 @@ it:
       complete_email_found: "C'è un account che corrisponde a <b>%{email}</b>. A breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
       complete_username_not_found: "Nessun account corrisponde al nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account corrisponde a <b>%{email}</b>"
-      help: "Le email non arrivano? Per prima cosa assicurati di controllare la cartella spam.<p>Non sei sicuro di quale indirizzo email hai usato? Inserisci un indirizzo email e ti faremo sapere se esiste.</p><p>Se non hai più accesso all'indirizzo email del tuo account, per favore contatta <a href='%{basePath}/about'>il nostro staff.</a></p>"
+      help: "Le email non arrivano? Per prima cosa controlla la cartella di posta indesiderata.<p>Non sei sicuro di quale indirizzo email hai usato? Inserisci un indirizzo email e ti faremo sapere se esiste.</p><p>Se non hai più accesso all'indirizzo email del tuo account, per favore contatta <a href='%{basePath}/about'>il nostro staff.</a></p>"
       button_ok: "OK"
       button_help: "Aiuto"
     email_login:
@@ -1634,7 +1634,7 @@ it:
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b> , a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_username_found: "Abbiamo trovato un account che corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
-      complete_email_found: "Abbiamo trovato un account che corrisponde a <b>%{email}</b>, a breve dovresti ricevere una email con un collegamento per l'accesso."
+      complete_email_found: "Abbiamo trovato un account che corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_username_not_found: "Nessun account con nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account con email <b>%{email}</b>"
       confirm_title: Procedi su %{site_name}
@@ -1647,10 +1647,10 @@ it:
       username: "Utente"
       password: "Password"
       second_factor_title: "Autenticazione a Due Fattori"
-      second_factor_description: "Per favore, inserisci il codice di autenticazione della tua app:"
+      second_factor_description: "Inserisci il codice di autenticazione dalla tua app:"
       second_factor_backup: "Accedi utilizzando un codice di backup"
       second_factor_backup_title: "Backup per l'Autenticazione a Due Fattori"
-      second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
+      second_factor_backup_description: "Inserisci uno dei tuoi codici di backup:"
       second_factor: "Accedi utilizzando l'app Authenticator"
       security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Chiave di Sicurezza qui sotto."
       security_key_alternative: "Prova in un altro modo"
@@ -1661,12 +1661,12 @@ it:
       email_placeholder: "Email / Nome Utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
-      cookies_error: "Sembra che il tuo browser abbia i cookie disabilitati. Potresti non riuscire a connetterti senza abilitarli."
+      cookies_error: "Sembra che il tuo browser abbia i cookie disabilitati. Senza abilitarli potrai avere problemi di accesso."
       rate_limit: "Attendi prima di provare nuovamente a connetterti."
-      blank_username: "Per favore, inserisci la tua email o il tuo nome utente."
-      blank_username_or_password: "Per favore inserisci la tua email o il tuo nome utente, e la password."
-      reset_password: "Azzera Password"
-      logging_in: "Connessione in corso..."
+      blank_username: "Inserisci la tua email o il tuo nome utente."
+      blank_username_or_password: "Inserisci la tua email o il tuo nome utente, e la password."
+      reset_password: "Reimposta Password"
+      logging_in: "Accesso in corso..."
       or: "Oppure"
       authenticating: "Autenticazione..."
       awaiting_activation: "Il tuo account è in attesa di attivazione, utilizza il collegamento per la password dimenticata per ricevere un'altra email di attivazione."
@@ -1674,7 +1674,7 @@ it:
       requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
       not_activated: "Non puoi ancora connetterti. Abbiamo inviato un'email di attivazione a <b>%{sentTo}</b>. Per favore segui le istruzioni contenute nell'email per attivare l'account."
       not_allowed_from_ip_address: "Non puoi accedere da quell'indirizzo IP."
-      admin_not_allowed_from_ip_address: "Non puoi connetterti come amministratore da quell'indirizzo IP."
+      admin_not_allowed_from_ip_address: "Non puoi accedere come amministratore da quell'indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
       omniauth_disallow_totp: "Il tuo account ha l'autenticazione a due fattori abilitata. Accedi con la tua password."
       resend_title: "Invia Nuovamente Email Attivazione"
@@ -1683,8 +1683,8 @@ it:
       submit_new_email: "Aggiorna Indirizzo Email"
       sent_activation_email_again: "Ti abbiamo mandato un'altra email di attivazione su <b>%{currentEmail}</b>. Potrebbero essere necessari alcuni minuti di attesa; assicurati di controllare anche la cartella  spam."
       sent_activation_email_again_generic: "Abbiamo inviato un'altra email di attivazione. Potrebbero passare alcuni minuti prima che arrivi; assicurati di controllare la tua cartella spam."
-      to_continue: "Per favore Connettiti"
-      preferences: "Devi essere connesso per cambiare le tue impostazioni."
+      to_continue: "Effettua l'accesso"
+      preferences: "Devi effettuare l'accesso per cambiare le tue impostazioni."
       not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via email quando potrai collegarti."
       google_oauth2:
         name: "Google"
@@ -1712,10 +1712,10 @@ it:
       emoji: "emoji envelope"
       welcome_to: "Benvenuto su %{site_name}!"
       invited_by: "Sei stato invitato da:"
-      social_login_available: "Sarai anche in grado di accedere con qualsiasi login social usando questa email."
+      social_login_available: "Sarai anche in grado di accedere con qualsiasi account social usando questa email."
       your_email: "L'indirizzo email del tuo account è <b>%{email}</b>."
       accept_invite: "Accetta Invito"
-      success: "Il tuo account è stato creato e ora sei connesso."
+      success: "Il tuo account è stato creato e ora hai effettuato l'accesso."
       name_label: "Nome"
       password_label: "Password"
       optional_description: "(opzionale)"
@@ -1788,7 +1788,7 @@ it:
       objects: Oggetti
       symbols: Simboli
       flags: Bandiere
-      recent: Usate recentemente
+      recent: Usati recentemente
       default_tone: Nessun tono della pelle
       light_tone: Tono della pelle chiaro
       medium_light_tone: Tono della pelle medio chiaro
@@ -1807,7 +1807,7 @@ it:
       emoji: "Emoji :)"
       more_emoji: "altro..."
       options: "Opzioni"
-      whisper: "sussurra"
+      whisper: "sussurro"
       unlist: "invisibile"
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
@@ -1857,9 +1857,9 @@ it:
       create_whisper: "Sussurro"
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
-      title: "O premi Ctrl+Enter"
+      title: "Oppure premi Ctrl+Invio"
       users_placeholder: "Aggiunti un utente"
-      title_placeholder: "In breve, di cosa tratta questo argomento?"
+      title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
       edit_reason_placeholder: "perché stai scrivendo?"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
@@ -1879,8 +1879,8 @@ it:
       bold_title: "Grassetto"
       bold_text: "testo in grassetto"
       italic_label: "I"
-      italic_title: "Italic"
-      italic_text: "testo italic"
+      italic_title: "Corsivo"
+      italic_text: "testo in corsivo"
       link_title: "Collegamento"
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_title: "Inserisci il collegamento"
@@ -1889,20 +1889,20 @@ it:
       blockquote_title: "Citazione"
       blockquote_text: "Citazione"
       code_title: "Testo preformattato"
-      code_text: "rientra il testo preformattato di 4 spazi"
+      code_text: "fai rientrare il testo preformattato di 4 spazi"
       paste_code_text: "digita o incolla il codice qui"
       upload_title: "Carica"
       upload_description: "inserisci qui la descrizione del caricamento"
       olist_title: "Elenco Numerato"
       ulist_title: "Elenco Puntato"
       list_item: "Elemento lista"
-      toggle_direction: "Commuta Direzione"
+      toggle_direction: "Attiva Direzione"
       help: "Aiuto Inserimento Markdown"
       collapse: "minimizza il pannello del composer"
       open: "Apri il pannello del composer"
       abandon: "chiudi il composer e scarta la bozza"
       enter_fullscreen: "Espandi il composer a tutto schermo"
-      exit_fullscreen: "Lascia il composer a tutto schermo"
+      exit_fullscreen: "esci dal composer a tutto schermo"
       show_toolbar: "mostra la barra degli strumenti del Composer"
       hide_toolbar: "nascondi la barra degli strumenti del Composer"
       modal_ok: "OK"
@@ -1935,7 +1935,7 @@ it:
           label: Rispondi all'argomento
           desc: Rispondi all'argomento, non a uno specifico messaggio
         toggle_whisper:
-          label: Commuta Sussurri
+          label: Interruttore Sussurri
           desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
           label: "Nuovo Argomento"
