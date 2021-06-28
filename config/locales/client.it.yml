@@ -1943,7 +1943,7 @@ it:
           label: "Bozza Condivisa"
           desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
         toggle_topic_bump:
-          label: "Commuta riproposizione argomenti"
+          label: "Interruttore riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
       reload: "Ricarica"
       ignore: "Ignora"
@@ -2008,7 +2008,7 @@ it:
         linked: '%{username} ha aggiunto un collegamento a un tuo messaggio da "%{topic}" - %{site_title}'
         watching_first_post: '%{username} ha creato il nuovo argomento "%{topic}" - %{site_title}'
         confirm_title: "Notifiche abilitate - %{site_title}"
-        confirm_body: "Successo! Le notifiche sono state abilitate."
+        confirm_body: "Operazione riuscita! Le notifiche sono state abilitate."
         custom: "Notifica di %{username} su %{site_title}"
       titles:
         mentioned: "menzionato"
@@ -2043,7 +2043,7 @@ it:
       remote_tip: "collegamento all'immagine"
       local_tip: "seleziona immagini dal tuo dispositivo"
       hint: "(puoi anche trascinare e rilasciare nell'editor per caricare)"
-      hint_for_supported_browsers: "puoi fare il \"trascina e rilascia\" o incollare immagini nell'editor"
+      hint_for_supported_browsers: "puoi trascinare o incollare immagini nell'editor"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       default_image_alt_text: immagine
@@ -2067,11 +2067,11 @@ it:
       no_more_results: "Nessun altro risultato trovato."
       post_format: "n°%{post_number} da %{username}"
       results_page: "Risultati della ricerca per '%{term}'"
-      more_results: "Ci sono più risultati. Restringi i criteri di ricerca."
+      more_results: "Ci sono troppi risultati. Restringi i criteri di ricerca."
       cant_find: "Non riesci a trovare quello che stai cercando?"
       start_new_topic: "Forse vuoi iniziare un nuovo argomento?"
-      or_search_google: "O prova a cercare con Google invece:"
-      search_google: "Prova a cercare con Google invece:"
+      or_search_google: "Oppure prova a cercare con Google:"
+      search_google: "Prova a cercare con Google:"
       search_google_button: "Google"
       search_button: "Cerca"
       context:
@@ -2085,7 +2085,7 @@ it:
         posted_by:
           label: Pubblicato da
         in_category:
-          label: Classificate
+          label: Per categorie
         in_group:
           label: Nel Gruppo
         with_badge:
@@ -2103,9 +2103,9 @@ it:
           private: nei miei messaggi privati
           bookmarks: ho aggiunto ai segnalibri
           first: sono il primissimo post
-          pinned: sono appuntati
-          seen: messaggi che ho letto
-          unseen: non ho letto
+          pinned: sono bloccati
+          seen: che ho letto
+          unseen: che non ho letto
           wiki: sono wiki
           images: che includono immagini
           all_tags: Tutte le etichette sopra
@@ -2137,7 +2137,7 @@ it:
     hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
     new_item: "nuovo"
     go_back: "indietro"
-    not_logged_in_user: "pagina utente con riassunto delle attività correnti e delle impostazioni"
+    not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
     current_user: "vai alla pagina utente"
     view_all: "visualizza tutti i %{tab}"
     topics:
@@ -2145,17 +2145,17 @@ it:
       bulk:
         select_all: "Seleziona Tutto"
         clear_all: "Deseleziona Tutto"
-        unlist_topics: "Rendi invisibili"
+        unlist_topics: "Rendi argomenti invisibili"
         relist_topics: "Ripubblica Argomenti"
         reset_read: "Reimposta stato lettura"
         delete: "Elimina argomenti"
         dismiss: "Letti"
-        dismiss_read: "Nascondi tutti i non letti"
+        dismiss_read: "Ignora tutti i non letti"
         dismiss_button: "Ignora…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new: "Ignora i nuovi messaggi"
-        toggle: "commuta la selezione multipla degli argomenti"
+        toggle: "interruttore di selezione multipla degli argomenti"
         actions: "Azioni Multiple"
         change_category: "Imposta categoria"
         close_topics: "Chiudi argomenti"
