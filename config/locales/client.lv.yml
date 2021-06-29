@@ -212,7 +212,6 @@ lv:
       zero: "Vēl %{count}"
       one: "Vēl %{count}"
       other: "Vēl %{count}"
-    less: "Mazāk"
     never: "nekad"
     every_30_minutes: "katras 30 minūtes"
     every_hour: "katru stundu"
@@ -221,7 +220,6 @@ lv:
     every_month: "katru mēnesi"
     every_six_months: "katrus sešus mēnešus"
     max_of_count: "ne vairāk kā %{count}"
-    alternation: "vai"
     character_count:
       zero: "%{count} zīmes"
       one: "%{count} zīme"
@@ -409,7 +407,7 @@ lv:
       manage:
         name: "Vārds"
         full_name: "Pilns vārds"
-        add_members: "Pievienot dalībniekus"
+        invite_members: "Ielūgt"
         delete_member_confirm: "Izņemt '%{username}' no grupas '%{group}'?"
         profile:
           title: Profils

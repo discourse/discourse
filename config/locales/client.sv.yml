@@ -200,7 +200,6 @@ sv:
     submit: "Skicka"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
-    go_ahead: "Gå vidare"
     sign_up: "Registrera"
     log_in: "Logga in"
     age: "Ålder"
@@ -229,7 +228,6 @@ sv:
     x_more:
       one: "Ytterligare %{count}"
       other: "Ytterligare %{count}"
-    less: "Mindre"
     never: "aldrig"
     every_30_minutes: "var 30:e minut"
     every_hour: "varje timme"
@@ -238,7 +236,6 @@ sv:
     every_month: "varje månad"
     every_six_months: "var sjätte månad"
     max_of_count: "max av %{count}"
-    alternation: "eller"
     character_count:
       one: "%{count} tecken"
       other: "%{count} tecken"
@@ -273,8 +270,9 @@ sv:
       clear_bookmarks: "Töm bokmärken"
       help:
         bookmark: "Klicka för att bokmärka första inlägget i ämnet"
+        edit_bookmark: "Klicka för att redigera bokmärket på detta ämne"
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
-        unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken samt påminnelser för detta ämne. Du har en påminnelse inställd till %{reminder_at} för detta ämne."
+        unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
     bookmarks:
       created: "Du har bokmärkt detta inlägg. %{name}"
       not_bookmarked: "bokmärk detta inlägg"
@@ -607,15 +605,10 @@ sv:
       member_added: "Tillagd"
       member_requested: "Begärd vid"
       add_members:
-        title: "Lägg till medlemmar till %{group_name}"
-        description: "Du kan även klistra in i en kommaseparerad lista."
-        usernames_or_emails:
-          title: "Ange användarnamn eller e-postadresser"
-          input_placeholder: "Användarnamn eller e-post"
-        usernames:
-          title: "Ange användarnamn"
-          input_placeholder: "Användarnamn"
+        title: "Lägg till användare till %{group_name}"
+        description: "Ange en lista över användare som du vill bjuda in till gruppen eller klistra in i en kommaseparerad lista:"
         notify_users: "Meddela användare"
+        set_owner: "Ange användare som ägare till den här gruppen"
       requests:
         title: "Ansökningar"
         reason: "Anledning"
@@ -629,7 +622,8 @@ sv:
         title: "Hantera"
         name: "Namn"
         full_name: "Fullständigt namn"
-        add_members: "Lägg till medlemmar"
+        add_members: "Lägg till användare"
+        invite_members: "Inbjudan"
         delete_member_confirm: "Vill du ta bort '%{username}' från gruppen '%{group}'?"
         profile:
           title: Profil
@@ -2081,6 +2075,7 @@ sv:
       hint: "(du kan också dra och släppa i redigeraren för att ladda upp)"
       hint_for_supported_browsers: "du kan också dra och släppa eller klistra in bilder i redigeraren"
       uploading: "Laddar upp"
+      processing: "Bearbetar uppladdning"
       select_file: "Välj fil"
       default_image_alt_text: bild
       supported_formats: "format som stöds"
@@ -3637,8 +3632,6 @@ sv:
             available: "Gruppnamn är tillgängligt"
             not_available: "Gruppnamn är inte tillgängligt"
             blank: "Gruppnamn kan inte vara tomt"
-        add_members:
-          as_owner: "Ställ in användare som ägare av denna grupp"
         manage:
           interaction:
             email: E-post
@@ -4455,6 +4448,7 @@ sv:
         clear_all: Rensa alla
         clear_all_confirm: "Är du säker på att du vill rensa alla bevakade ord för åtgärden %{action}?"
         invalid_regex: 'Det bevakade ordet "%{word}" är ett ogiltigt reguljärt uttryck.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Bevakade ord är reguljära uttryck</a> och de omfattar inte automatiskt ordgränser. Om du vill att det reguljära uttrycket ska matcha hela ord, anger du <code>\b</code> i början och slutet av ditt reguljära uttryck.'
         actions:
           block: "Blockera"
           censor: "Censur"
@@ -4784,6 +4778,7 @@ sv:
           text: "Textfält"
           confirm: "Bekräftelse"
           dropdown: "Rullgardinsmeny"
+          multiselect: "Multival"
       site_text:
         description: "Du kan anpassa all text på ditt forum. Börja genom att söka här nedan:"
         search: "Sök efter texten som du vill redigera"

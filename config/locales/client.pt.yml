@@ -200,7 +200,6 @@ pt:
     submit: "Submeter"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
-    go_ahead: "Continuar"
     sign_up: "Inscrever-se"
     log_in: "Entrar"
     age: "Idade"
@@ -229,7 +228,6 @@ pt:
     x_more:
       one: "%{count} Mais"
       other: "%{count} Mais"
-    less: "Menos"
     never: "nunca"
     every_30_minutes: "a cada 30 minutos"
     every_hour: "a cada hora"
@@ -238,7 +236,6 @@ pt:
     every_month: "cada mês"
     every_six_months: "a cada seis meses"
     max_of_count: "máximo de %{count}"
-    alternation: "ou"
     character_count:
       one: "%{count} caracter"
       other: "%{count} caracteres"
@@ -273,7 +270,6 @@ pt:
       help:
         bookmark: "Clique para adicionar um marcador à primeira publicação neste tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
-        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes deste tópico. Você tem um lembrete definido %{reminder_at} para este tópico."
     bookmarks:
       created: "Adicionou este post aos favoritos. %{name}"
       not_bookmarked: "adicionar esta mensagem aos marcadores"
@@ -604,14 +600,6 @@ pt:
       member_added: "Adicionado(a)"
       member_requested: "Solicitado em"
       add_members:
-        title: "Adicionar membros a %{group_name}"
-        description: "Você também pode colar numa lista separada por vírgulas."
-        usernames_or_emails:
-          title: "Digite nomes de utilizador ou endereços de e-mail"
-          input_placeholder: "Nomes de utilizador ou e-mails"
-        usernames:
-          title: "Introduzir nomes de utilizador"
-          input_placeholder: "Nomes de Utilizador"
         notify_users: "Notificar utilizadores"
       requests:
         title: "Pedidos"
@@ -626,7 +614,7 @@ pt:
         title: "Gerir"
         name: "Nome"
         full_name: "Nome Completo"
-        add_members: "Adicionar Membros"
+        invite_members: "Convidar"
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
         profile:
           title: Perfil

@@ -169,6 +169,7 @@ tr_TR:
       regions:
         ap_northeast_1: "Asya Pasifik (Tokyo)"
         ap_northeast_2: "Asya Pasifik (Seul)"
+        ap_east_1: "Asya Pasifik (Hong Kong)"
         ap_south_1: "Asya Pasifik (Mumbai)"
         ap_southeast_1: "Asya Pasifik (Singapur)"
         ap_southeast_2: "Asya Pasifik (Sidney)"
@@ -196,7 +197,6 @@ tr_TR:
     submit: "Gönder"
     generic_error: "Üzgünüz, bir hata oluştu."
     generic_error_with_reason: "Bir hata oluştu: %{error}"
-    go_ahead: "Devam edin"
     sign_up: "Kayıt Ol"
     log_in: "Giriş Yap"
     age: "Yaş"
@@ -225,7 +225,6 @@ tr_TR:
     x_more:
       one: "%{count} Daha"
       other: "%{count} Daha"
-    less: "Daha az"
     never: "asla"
     every_30_minutes: "her 30 dakikada bir"
     every_hour: "her saat"
@@ -234,7 +233,6 @@ tr_TR:
     every_month: "her ay"
     every_six_months: "her altı ayda bir"
     max_of_count: "maksimum %{count}"
-    alternation: "ya da"
     character_count:
       one: "%{count} karakter"
       other: "%{count} karakter"
@@ -254,6 +252,8 @@ tr_TR:
       stat:
         all_time: "Tüm Zamanlar"
         last_day: "Son 24 saat"
+        last_7_days: "Son 7 gün"
+        last_30_days: "Son 30 gün"
       like_count: "Beğeniler"
       topic_count: "Konular"
       post_count: "Gönderiler"
@@ -268,7 +268,6 @@ tr_TR:
       help:
         bookmark: "Bu konudaki ilk gönderiyi işaretlemek için tıkla"
         unbookmark: "Bu konudaki tüm işaretlenenleri kaldırmak için tıkla"
-        unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve hatırlatıcıları kaldırmak için tıklayın. Bu konu için %{reminder_at} bir hatırlatıcı ayarınız var."
     bookmarks:
       created: " %{name} Başlıklı gönderiye yer işareti koydunuz."
       not_bookmarked: "bu yazıya yer işareti koy"
@@ -304,7 +303,9 @@ tr_TR:
       new_private_message: "Yeni özel mesaj taslağı"
       topic_reply: "Cevap taslağı"
       abandon:
+        confirm: "Bu konu için devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
         yes_value: "At"
+        no_value: "Düzenlemeye devam et"
     topic_count_latest:
       one: "%{count} yeni ya da güncellenmiş konu."
       other: "%{count} yeni ya da güncellenmiş konu."
@@ -323,6 +324,7 @@ tr_TR:
     upload: "Yükle"
     uploading: "Yükleniyor..."
     uploading_filename: "Yükleniyor: %{filename}..."
+    processing_filename: "İşleniyor: %{filename}..."
     clipboard: "pano"
     uploaded: "Yüklendi!"
     pasting: "Yapıştırılıyor..."
@@ -516,6 +518,7 @@ tr_TR:
       days:
         one: "gün"
         other: "günler"
+      relative: "Göreceli"
     time_shortcut:
       later_today: "Bugün ilerleyen saatlerde"
       next_business_day: "Bir sonraki iş günü"
@@ -531,6 +534,7 @@ tr_TR:
       custom: "Özel tarih ve saat"
       relative: "Göreli zaman"
       none: "Hiçbiri"
+      last_custom: "En son belirlenen özel tarih/saat"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>konuyu</a> açtı"
       you_posted_topic: "<a href='%{topicUrl}'>konuyu</a> <a href='%{userUrl}'>sen</a> açtın"
@@ -585,14 +589,9 @@ tr_TR:
       member_requested: "İstenen"
       add_members:
         title: "%{group_name} grubuna üye ekleyin"
-        description: "Ayrıca virgülle ayrılmış bir liste de yapıştırabilirsiniz."
-        usernames_or_emails:
-          title: "Kullanıcı adlarını veya e-posta adreslerini girin"
-          input_placeholder: "Kullanıcı adı ya da e-posta"
-        usernames:
-          title: "Kullanıcı adlarını girin"
-          input_placeholder: "Kullanıcı adları"
+        description: "Gruba davet etmek istediğiniz kullanıcıları birer birer veya virgülle ayrılmış bir liste olarak yapıştırarak girin :"
         notify_users: "Kullanıcıları bilgilendir"
+        set_owner: "Kullanıcıları bu grubun sahipleri olarak ayarla"
       requests:
         title: "İstekler"
         reason: "Sebep"
@@ -606,7 +605,8 @@ tr_TR:
         title: "Yönet"
         name: "İsim"
         full_name: "Tam İsim"
-        add_members: "Üyeleri ekle"
+        add_members: "Kullanıcı ekle"
+        invite_members: "Davet et"
         delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
         profile:
           title: Profil
@@ -617,8 +617,27 @@ tr_TR:
         email:
           title: "Eposta"
           status: "IMAP üzerinden senkronize edilmiş e-postalar %{old_emails} / %{total_emails} "
+          enable_smtp: "SMTP'yi etkinleştir"
+          enable_imap: "IMAP'i etkinleştir"
+          test_settings: "Test Ayarları"
+          save_settings: "Ayarları kaydet"
           last_updated: "Son güncelleme:"
           last_updated_by: "tarafından güncellendi"
+          settings_required: "Tüm ayarlar gereklidir, lütfen doğrulamadan önce tüm alanları doldurun."
+          smtp_settings_valid: "SMTP ayarları uygun."
+          smtp_title: "SMTP"
+          smtp_instructions: "Grup için SMTP'yi etkinleştirdiğinizde, grubun gelen kutusundan gönderilen tüm e-postalar, forumunuz tarafından gönderilen diğer e-postalar için yapılandırılmış posta sunucusu yerine burada belirtilen SMTP ayarları gözetilerek gönderilir."
+          imap_title: "IMAP"
+          imap_additional_settings: "Ek ayarlar"
+          imap_instructions: 'Grup için IMAP''i etkinleştirdiğinizde, e-postalar gruba ait gelen kutusu, sağlanan IMAP sunucusu ve posta kutusu arasında eşitlenir. IMAP''in etkinleştirilebilmesi için SMTP''nin geçerli ve test edilmiş kimlik bilgileriyle etkinleştirilmesi gerekir. SMTP için kullanılan e-posta kullanıcı adı ve şifre IMAP için kullanılacaktır. Daha fazla bilgi için <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta özellik duyurusuna</a> bakın.'
+          imap_alpha_warning: "Uyarı: Bu bir alfa aşaması özelliğidir. Resmi olarak yalnızca Gmail desteklenmektedir. Kendi sorumluluğunuzda kullanın!"
+          imap_settings_valid: "IMAP ayarları uygun."
+          smtp_disable_confirm: "SMTP'yi devre dışı bırakırsanız, tüm SMTP ve IMAP ayarları sıfırlanacak ve ilgili işlevler devre dışı bırakılacaktır. Devam etmek istediğine emin misiniz?"
+          imap_disable_confirm: "IMAP'i devre dışı bırakırsanız, tüm IMAP ayarları sıfırlanacak ve ilgili işlevler devre dışı bırakılacaktır. Devam etmek istediğine emin misin?"
+          imap_mailbox_not_selected: "Bu IMAP yapılandırması için bir Posta Kutusu seçmelisiniz, yoksa hiçbir posta kutusu senkronize edilmeyecektir!"
+          prefill:
+            title: "Şu ayarlarla önceden doldurun:"
+            gmail: "Gmail"
           credentials:
             title: "Kimlik bilgileri"
             smtp_server: "SMTP sunucusu"
@@ -632,9 +651,11 @@ tr_TR:
           settings:
             title: "Ayarlar"
             allow_unknown_sender_topic_replies: "Bilinmeyen gönderen konu yanıtlarına izin ver."
+            allow_unknown_sender_topic_replies_hint: "Bilinmeyen gönderenlerin grup konularına cevap vermesine izin verir. Bu ayar etkinleştirilmezse, konuya davet edilmemiş e-posta adreslerinden gelen yanıtlar yeni bir konu oluşturacaktır."
           mailboxes:
             synchronized: "Senkronize Posta Kutusu"
             none_found: "Bu e-posta hesabında hiçbir posta kutusu bulunamadı."
+            disabled: "Devre dışı"
         membership:
           title: Üyelik
           access: Erişim
@@ -942,6 +963,14 @@ tr_TR:
       dismiss_notifications: "Tümünü Yoksay"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
       no_messages_title: "Hiç mesajınız yok"
+      no_messages_body: >
+        Normal konuşma akışının dışında, biriyle doğrudan kişisel bir konuşma yapmanız mı gerekiyor? Avatarlarını seçip %{icon} mesaj düğmesini kullanarak onlara mesaj gönderin. <br><br> Yardıma ihtiyacınız varsa, <a href='%{aboutUrl}'> bir sorumluya mesaj gönderebilirsiniz</a>.
+      no_bookmarks_title: "Henüz hiçbir şeye yer işareti koymadınız"
+      no_bookmarks_body: >
+        %{icon} düğmesiyle gönderileri işaretlemeye başlayın ve bunlar kolayca erişilebilecek şekilde burada listelensin. Ayrıca bir hatırlatıcı da ekleyebilirsiniz!
+      no_notifications_title: "Henüz herhangi bir bildiriminiz yok"
+      no_notifications_body: >
+        Konu ve iletilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizle alâkalı etkinlik olduğunda, biri size <b>@mention</b> attığında veya sizi alıntıladığında bu panelde bildirilecektir. Bir süredir giriş yapmadığınızda da bildirimler e-posta olarak gönderilecektir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} ikonuna bakın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize bakın</a>.
       first_notification: "İlk bildirimin! Başlamak için seç. "
       dynamic_favicon: "Sayacı, tarayıcı ikonunda göster"
       skip_new_user_tips:
@@ -1339,12 +1368,17 @@ tr_TR:
         redeemed_tab: "Kabul Edildi"
         redeemed_tab_with_count: "Kabul edildi (%{count})"
         invited_via: "Davet"
+        invited_via_link: "bağlantı %{key} (%{count} / %{max} kullanıldı)"
         groups: "Gruplar"
         topic: "Konu"
+        sent: "Oluşturulan/Son Gönderilen"
         expires_at: "Bitiş tarihi"
         edit: "Düzenle"
         remove: "Kaldır"
+        copy_link: "Bağlantı adresini al"
+        reinvite: "E-postayı yeniden gönder"
         reinvited: "Davet tekrar gönderildi"
+        removed: "Kaldırıldı"
         search: "davet etmek için yaz..."
         user: "Davet Edilen Kullanıcı"
         none: "Görüntülenebilecek bir davet mevcut değil."
@@ -1360,7 +1394,9 @@ tr_TR:
         remove_all: "Süresi Dolan Davetleri Kaldır"
         removed_all: "Tüm Süresi Dolmuş Davetiyeler kaldırıldı!"
         remove_all_confirm: "Süresi dolmuş tüm davetiyeleri kaldırmak istediğinizden emin misiniz?"
+        reinvite_all: "Tüm davetleri tekrar gönder"
         reinvite_all_confirm: "Tüm davetleri tekrar göndermek istediğine emin misin?"
+        reinvited_all: "Tüm davetler gönderildi!"
         time_read: "Okunma Zamanı"
         days_visited: "Ziyaret Edilen Gün"
         account_age_days: "Günlük hesap yaşı"
@@ -1377,8 +1413,17 @@ tr_TR:
           max_redemptions_allowed_label: "Bu bağlantıyı kullanarak kaç kişinin kaydolmasına izin verilsin?"
           expires_at: "Bu davet bağlantısının süresi ne zaman dolacak?"
         invite:
+          new_title: "Davet oluştur"
+          edit_title: "Daveti düzenle"
+          instructions: "Bu siteye anında erişim vermek için bu bağlantıyı paylaşın"
+          copy_link: "bağlantıyı kopyala"
+          expires_in_time: "Süresi %{time} içinde dolacak:"
+          expired_at_time: "Şu zamanda süresi doldu: %{time}"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
+          restrict_email: "Bir e-posta adresiyle sınırla"
+          max_redemptions_allowed: "Maksimum kullanım"
+          add_to_groups: "Gruplara ekle"
         bulk_invite:
           none: "Bu sayfada görüntülenecek davetiye yok."
           text: "Toplu Davet"
@@ -3385,8 +3430,6 @@ tr_TR:
             available: "Grup adı uygun"
             not_available: "Grup adı mevcut değil"
             blank: "Grup adı boş olamaz"
-        add_members:
-          as_owner: "Kullanıcıyı/Kullanıcıları, bu grubun sahibi/sahipleri olarak ayarla"
         manage:
           interaction:
             email: E-posta

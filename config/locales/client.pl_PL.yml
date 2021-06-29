@@ -246,7 +246,6 @@ pl_PL:
     submit: "Prześlij"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
-    go_ahead: "Idź dalej"
     sign_up: "Rejestracja"
     log_in: "Logowanie"
     age: "Wiek"
@@ -279,7 +278,6 @@ pl_PL:
       few: "%{count} Więcej"
       many: "%{count} Więcej"
       other: "%{count} Więcej"
-    less: "Mniej"
     never: "nigdy"
     every_30_minutes: "co 30 minut"
     every_hour: "co godzinę"
@@ -288,7 +286,6 @@ pl_PL:
     every_month: "co miesiąc"
     every_six_months: "co 6 miesięcy"
     max_of_count: "max z %{count}"
-    alternation: "lub"
     character_count:
       one: "%{count} znak"
       few: "%{count} znaki"
@@ -326,7 +323,6 @@ pl_PL:
       help:
         bookmark: "Kliknij, aby dodać pierwszy post tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
-        unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie. Masz przypomnienie ustawione na %{reminder_at} dla tego tematu."
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
       not_bookmarked: "dodaj do zakładek"
@@ -691,14 +687,6 @@ pl_PL:
       member_added: "Dodano"
       member_requested: "Poproszono o"
       add_members:
-        title: "Dodaj członków do %{group_name}"
-        description: "Możesz również wkleić listę oddzieloną przecinkami."
-        usernames_or_emails:
-          title: "Wprowadź nazwy użytkowników lub adresy e-mail"
-          input_placeholder: "Nazwy użytkowników lub e-maile"
-        usernames:
-          title: "Wprowadź nazwy użytkowników"
-          input_placeholder: "Nazwy użytkowników"
         notify_users: "Powiadom użytkowników"
       requests:
         title: "Prośby"
@@ -713,7 +701,7 @@ pl_PL:
         title: "Zarządzaj"
         name: "Nazwa"
         full_name: "Pełna nazwa"
-        add_members: "Dodaj członków"
+        invite_members: "Zaproś"
         delete_member_confirm: "Usunąć '%{username}' z grupy '%{group}'?"
         profile:
           title: Profil
@@ -3891,8 +3879,6 @@ pl_PL:
             available: "Nazwa grupy jest dostępna"
             not_available: "Nazwa grupy jest niedostępna"
             blank: "Nazwa grupy nie może być pusta"
-        add_members:
-          as_owner: "Ustaw użytkownika/ów jako właściciel/i tej grupy"
         manage:
           interaction:
             email: Email

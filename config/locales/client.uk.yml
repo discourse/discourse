@@ -246,7 +246,6 @@ uk:
     submit: "Надіслати"
     generic_error: "Даруйте, виникла помилка."
     generic_error_with_reason: "Виникла помилка: %{error}"
-    go_ahead: "Вперед"
     sign_up: "Зареєструватись"
     log_in: "Увійти"
     age: "Вік"
@@ -279,7 +278,6 @@ uk:
       few: "Ще %{count}"
       many: "Ще %{count}"
       other: "Ще %{count}"
-    less: "Менше"
     never: "ніколи"
     every_30_minutes: "кожні 30 хвилин"
     every_hour: "щогодини"
@@ -288,7 +286,6 @@ uk:
     every_month: "щомісяця"
     every_six_months: "що шість місяців"
     max_of_count: "не більше %{count}"
-    alternation: "або"
     character_count:
       one: "%{count} символ"
       few: "%{count} символи"
@@ -325,7 +322,6 @@ uk:
       help:
         bookmark: "Натисніть, щоб закласти перший допис у цій темі"
         unbookmark: "Натисніть, щоб видалити усі закладки у цій темі"
-        unbookmark_with_reminder: "Клацніть, щоб видалити всі закладки та нагадування в цій темі. Ви маєте набір нагадувань %{reminder_at} для цієї теми."
     bookmarks:
       created: "Ви додали повідомлення в закладки. %{name}"
       not_bookmarked: "додати цей допис до закладок"
@@ -689,13 +685,6 @@ uk:
       member_added: "Додано"
       member_requested: "Запит подано"
       add_members:
-        title: "Додати учасників до %{group_name}"
-        description: "Ви також можете додати список учасників – значення, розділені комами."
-        usernames_or_emails:
-          title: "Введіть імена користувачів або адреси електронної пошти"
-          input_placeholder: "Ім'я користувачів або адреси електронної пошти"
-        usernames:
-          input_placeholder: "Імена користувачів"
         notify_users: "Сповістити користувачів"
       requests:
         title: "Запити"
@@ -710,7 +699,7 @@ uk:
         title: "Керувати"
         name: "Ім'я"
         full_name: "Повне ім'я"
-        add_members: "Додати учасників"
+        invite_members: "Запрошення"
         delete_member_confirm: "Вилучити '%{username}' з групи '%{group}'?"
         profile:
           title: Профіль
@@ -3867,8 +3856,6 @@ uk:
             available: "Назва групи є"
             not_available: "Назва групи недоступно"
             blank: "Ім’я групи не може бути порожнім"
-        add_members:
-          as_owner: "Встановити користувача (їй) в якості власника (ів) цієї групи"
         manage:
           interaction:
             email: Електронна пошта

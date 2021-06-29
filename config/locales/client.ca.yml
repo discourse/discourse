@@ -193,7 +193,6 @@ ca:
     submit: "Envia"
     generic_error: "Ho sentim, s'ha produït un error."
     generic_error_with_reason: "Hi ha hagut un error: %{error}"
-    go_ahead: "Avant"
     sign_up: "Registre"
     log_in: "Inicia sessió"
     age: "Edat"
@@ -222,7 +221,6 @@ ca:
     x_more:
       one: "%{count} Més"
       other: "%{count} Més"
-    less: "Menys"
     never: "mai"
     every_30_minutes: "cada 30 minuts"
     every_hour: "cada hora"
@@ -231,7 +229,6 @@ ca:
     every_month: "cada mes"
     every_six_months: "cada sis mesos"
     max_of_count: "màxim de %{count}"
-    alternation: "o"
     character_count:
       one: "%{count} caràcter"
       other: "%{count} caràcters"
@@ -263,7 +260,6 @@ ca:
       help:
         bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
-        unbookmark_with_reminder: "Feu clic per a eliminar tots els marcadors i recordatoris d’aquest tema. Teniu un recordatori establert %{reminder_at} per a aquest tema."
     bookmarks:
       created: "Heu marcat com a preferida aquesta publicació. %{name}"
       not_bookmarked: "marca aquesta publicació com a preferit"
@@ -557,13 +553,6 @@ ca:
       member_added: "Afegit"
       member_requested: "Sol·licitat"
       add_members:
-        title: "Afegeix membres a %{group_name}"
-        description: "També podeu enganxar una llista separada per comes."
-        usernames_or_emails:
-          title: "Introduïu noms d’usuari o adreces de correu electrònic"
-          input_placeholder: "Noms d’usuari o correus electrònics"
-        usernames:
-          input_placeholder: "Noms d'usuari"
         notify_users: "Notifiqueu els usuaris"
       requests:
         title: "Sol·licituds"
@@ -578,7 +567,7 @@ ca:
         title: "Gestiona"
         name: "Nom"
         full_name: "Nom complet"
-        add_members: "Afegeix membres"
+        invite_members: "Convida"
         delete_member_confirm: "Voleu eliminar '%{username}' del grup '%{group}'?"
         profile:
           title: Perfil
@@ -2984,8 +2973,6 @@ ca:
             available: "El nom de grup és disponible"
             not_available: "El nom de grup no és disponible"
             blank: "El nom de grup no pot restar en blanc"
-        add_members:
-          as_owner: "Estableix usuaris com a propietaris d'aquest grup"
         manage:
           interaction:
             email: Correu electrònic

@@ -190,14 +190,12 @@ sq:
     x_more:
       one: "Edhe %{count}"
       other: "Edhe %{count}"
-    less: "Më pak"
     never: "asnjëherë"
     every_30_minutes: "çdo 30 minuta"
     every_hour: "çdo orë"
     daily: "çdo ditë"
     weekly: "çdo javë"
     max_of_count: "max i %{count}"
-    alternation: "ose"
     character_count:
       one: "%{count} shkronjë"
       other: "%{count} shkronja"
@@ -363,7 +361,7 @@ sq:
       manage:
         name: "Emri"
         full_name: "Emri i plotë"
-        add_members: "Shto anëtarë"
+        invite_members: "Fto"
         delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
         profile:
           title: Profili

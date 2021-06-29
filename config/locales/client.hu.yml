@@ -198,7 +198,6 @@ hu:
     submit: "Beküldés"
     generic_error: "Sajnos hiba történt."
     generic_error_with_reason: "Hiba történt: %{error}"
-    go_ahead: "Folytatás"
     sign_up: "Regisztráció"
     log_in: "Bejelentkezés"
     age: "Életkor"
@@ -227,7 +226,6 @@ hu:
     x_more:
       one: "Még %{count}"
       other: "Még %{count}"
-    less: "Kevesebb"
     never: "soha"
     every_30_minutes: "30 percenként"
     every_hour: "óránként"
@@ -236,7 +234,6 @@ hu:
     every_month: "havonta"
     every_six_months: "hat havonta"
     max_of_count: "legfeljebb %{count}"
-    alternation: "vagy"
     character_count:
       one: "%{count} karakter"
       other: "%{count} karakter"
@@ -268,7 +265,6 @@ hu:
       help:
         bookmark: "Kattintson a téma első bejegyzésének könyvjelzőzéséhez"
         unbookmark: "Kattintson a téma valamennyi könyvjelzőjének törléséhez"
-        unbookmark_with_reminder: "Kattintson ide minden könyvjelző és emlékeztető törléséhez ebben a témában. Ezt az emlékeztetőt állította be a témához: %{reminder_at} ."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       not_bookmarked: "bejegyzés könyvjelzőzése"
@@ -576,12 +572,6 @@ hu:
       member_added: "Hozzáadva"
       member_requested: "Kérve"
       add_members:
-        title: "Tagok hozzáadása a(z) %{group_name} csoporthoz"
-        usernames_or_emails:
-          title: "Adja meg a felhasználóneveket vagy e-mail-címeket"
-          input_placeholder: "Felhasználónév vagy e-mail-cím"
-        usernames:
-          input_placeholder: "Felhasználónevek"
         notify_users: "Felhasználók értesítése"
       requests:
         title: "Kérelmek"
@@ -596,7 +586,7 @@ hu:
         title: "Kezelés"
         name: "Név"
         full_name: "Teljes név"
-        add_members: "Tagok hozzáadása"
+        invite_members: "Meghívás"
         delete_member_confirm: "Eltávolítja „%{username}” felhasználót a(z) „%{group}” csoportból?"
         profile:
           title: Profil

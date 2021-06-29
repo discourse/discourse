@@ -95,7 +95,6 @@ be:
     submit: "Адправіць"
     generic_error: "Выбачайце, здарылася памылка."
     generic_error_with_reason: "Паўстала памылка: %{error}"
-    go_ahead: "Далей"
     sign_up: "Рэгістрацыя"
     log_in: "Увайсці"
     age: "Узрост"
@@ -122,7 +121,6 @@ be:
     now: "толькі што"
     read_more: "чытаць далей"
     more: "больш"
-    less: "меньш"
     never: "ніколі"
     every_30_minutes: "кожныя 30 хвілін"
     every_hour: "кожную гадзіну"
@@ -131,7 +129,6 @@ be:
     every_month: "кожны месяц"
     every_six_months: "кожныя паўгады"
     max_of_count: "Не больш за %{count}"
-    alternation: "або"
     character_count:
       one: "%{Count} сімвал"
       few: "%{Count} сімвалы"
@@ -306,7 +303,6 @@ be:
       manage:
         name: "Імя"
         full_name: "поўнае Імя"
-        add_members: "Дадаць удзельнікаў"
         delete_member_confirm: "Выдаліць '%{username}' з групы '%{group}'?"
         profile:
           title: Профіль

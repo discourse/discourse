@@ -49,7 +49,7 @@ zh_CN:
   disable_remote_images_download_reason: "远程图像下载因为磁盘空间不足已经被停用。"
   anonymous: "匿名"
   remove_posts_deleted_by_author: "被作者删除"
-  redirect_warning: "我们无法验证你选择的链接是否已实际发布到论坛。如果你仍想继续，请选择以下链接。"
+  redirect_warning: "我们无法验证您选择的链接是否已实际发布到论坛。如果您仍想继续，请选择以下链接。"
   on_another_topic: "在另外的话题中"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
@@ -62,14 +62,14 @@ zh_CN:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
       generic: 导入该主题时发生了错误
-      about_json: "导入错误：about.json不存在或无效。你确定这是一个Discourse主题码？"
+      about_json: "导入错误：about.json不存在或无效。您确定这是一个Discourse主题码？"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 的修改包含无效值：%{errors}"
       git: "克隆git仓库时出错，访问被拒绝或找不到仓库"
       git_ref_not_found: "无法切换到git引用：%{ref}"
       unpack_failed: "无法解压缩文件"
       file_too_big: "未压缩的文件太大。"
-      unknown_file_type: "你上传的文件似乎不是一个有效的 Discourse 主题。"
+      unknown_file_type: "您上传的文件似乎不是一个有效的 Discourse 主题。"
       not_allowed_theme: "`%{repo}` 不在允许的主题列表中(请检查全局设置中的 `allowed_theme_repos`)。"
     errors:
       component_no_user_selectable: "主题组件不能由用户选择"
@@ -129,7 +129,7 @@ zh_CN:
     format: ! "%{attribute}%{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
     messages:
-      too_long_validation: "最多只能有 %{max} 个字；你已经输入了 %{length} 个字。"
+      too_long_validation: "最多只能有 %{max} 个字；您已经输入了 %{length} 个字。"
       invalid_boolean: "无效布尔值。"
       taken: "已经被采用"
       accepted: 必须被接受
@@ -148,7 +148,7 @@ zh_CN:
       is_invalid: "似乎不清楚，这是一个完整的句子？"
       is_invalid_meaningful: "似乎不清楚，大多数字眼都包含重复的字母？"
       is_invalid_unpretentious: "似乎不清楚，一个或多个单词很长？"
-      is_invalid_quiet: "似乎不清楚，你是要用全部大写字母输入吗？"
+      is_invalid_quiet: "似乎不清楚，您是要用全部大写字母输入吗？"
       invalid_timezone: "“%{tz}”不是一个有效的时区"
       contains_censored_words: "包含了以下敏感词:%{censored_words}"
       less_than: 必须小于 %{count}
@@ -178,52 +178,52 @@ zh_CN:
     embed:
       load_from_remote: "载入帖子时出错了。"
     site_settings:
-      invalid_category_id: "你所指定的一个分类是不存在的"
+      invalid_category_id: "您所指定的一个分类是不存在的"
       invalid_choice:
-        other: "你指定了无效的选择 %{name}"
-      default_categories_already_selected: "你不能选择一个已经被用在其它列表中的分类。"
-      default_tags_already_selected: "你不能选择一个已经被使用在其它列表中的标签。"
-      s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
-      enable_s3_uploads_is_required: "除非已启用上传到 S3，否则你无法存储到S3。"
+        other: "您指定了无效的选择 %{name}"
+      default_categories_already_selected: "您不能选择一个已经被用在其它列表中的分类。"
+      default_tags_already_selected: "您不能选择一个已经被使用在其它列表中的标签。"
+      s3_upload_bucket_is_required: "您没有填写“s3_upload_bucket”，不能开启上传至 S3。"
+      enable_s3_uploads_is_required: "除非已启用上传到 S3，否则您无法存储到S3。"
       page_publishing_requirements: "如果启用了安全媒体，则无法启用页面发布。"
-      s3_backup_requires_s3_settings: "除非你提供了'%{setting_name}'，否则无法将S3用作备份位置。"
-      s3_bucket_reused: "你不可以将同一个 bucket 同时用作 ‘s3_upload_bucket’ 和 ‘s3_backup_bucket’。请选择一个不同的 bucket 或为每个 bucket 使用不同的路径。"
+      s3_backup_requires_s3_settings: "除非您提供了'%{setting_name}'，否则无法将S3用作备份位置。"
+      s3_bucket_reused: "您不可以将同一个 bucket 同时用作 ‘s3_upload_bucket’ 和 ‘s3_backup_bucket’。请选择一个不同的 bucket 或为每个 bucket 使用不同的路径。"
       secure_media_requirements: "在启用安全媒体之前，必须先启用S3上传。"
-      share_quote_facebook_requirements: "你必须设置一个Facebook app id 才能启用Facebook的引用分享功能。"
-      second_factor_cannot_enforce_with_socials: "你不能在启用社交登录时强制启用双重认证。你必须先禁用以下登录方式：%{auth_provider_names}"
+      share_quote_facebook_requirements: "您必须设置一个Facebook app id 才能启用Facebook的引用分享功能。"
+      second_factor_cannot_enforce_with_socials: "您不能在启用社交登录时强制启用双重认证。您必须先禁用以下登录方式：%{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录则无法强制启用2FA。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行 2FA。"
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制启用2FA则不能禁用本地登录。在禁用本地登录之前，请禁用强制启用2FA。"
-      cannot_enable_s3_uploads_when_s3_enabled_globally: "你无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
-      cors_origins_should_not_have_trailing_slash: "你不应该将尾随斜线 (/) 添加到 Cross Origins。"
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "您无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
+      cors_origins_should_not_have_trailing_slash: "您不应该将尾随斜线 (/) 添加到 Cross Origins。"
     conflicting_google_user_id: '此账户的Google账户ID已更改; 出于安全原因，需要管理人员干预。请联系工作人员并指引他们前往<a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
-      invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 “%{hostname}”。你的帖子中只会显示链接，而不是预览。 :cry:"
-      error_response: "抱歉，我们无法为此网页生成预览，因为该服务器返回错误代码 %{status_code}。你的帖子中只会显示链接，而不是预览。 :cry:"
+      invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 “%{hostname}”。您的帖子中只会显示链接，而不是预览。 :cry:"
+      error_response: "抱歉，我们无法为此网页生成预览，因为该服务器返回错误代码 %{status_code}。您的帖子中只会显示链接，而不是预览。 :cry:"
       missing_data:
         other: "抱歉，我们无法为该网页生成预览，因为找不到 oEmbed / OpenGraph 标签： %{missing_attributes}"
   word_connector:
     comma: "， "
   invite:
-    expired: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
-    not_found: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
-    not_found_json: "你的邀请码不正确。请联系工作人员。"
-    not_matching_email: "你的电子邮件地址和与邀请关联的电子邮件地址不符。请联系管理员。"
+    expired: "您的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
+    not_found: "您的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
+    not_found_json: "您的邀请码不正确。请联系工作人员。"
+    not_matching_email: "您的电子邮件地址和与邀请关联的电子邮件地址不符。请联系管理员。"
     not_found_template: |
-      <p>邀请你加入<a href="%{base_url}">%{site_name}</a>的邀请函已被激活。</p>
+      <p>邀请您加入<a href="%{base_url}">%{site_name}</a>的邀请函已被激活。</p>
 
-      <p>如果你记得密码，你可以选择<a href="%{base_url}/login">登录</a>。</p>
+      <p>如果您记得密码，您可以选择<a href="%{base_url}/login">登录</a>。</p>
 
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a> 的邀请已失效。请让邀请人重新发送新邀请。</p>
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有账户了！</a>"
-    invite_exists: "你已经邀请了 <b>%{email}</b>。"
+    invite_exists: "您已经邀请了 <b>%{email}</b>。"
     invalid_email: "'%{email}' 不是一个有效邮箱地址。"
     rate_limit:
       other: "您已经在之前发出过 %{count} 份邀请，请等待 %{time_left} 然后再试。"
-    confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
-    cant_invite_to_group: "你未被允许邀请用户到指定的群组。请确保你是群组的所有者。"
+    confirm_email: "<p>快完成了！我们发送了一封激活邮件到您的邮件地址。请按照邮件中的步骤来激活您的账户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件收件箱。</p>"
+    cant_invite_to_group: "您未被允许邀请用户到指定的群组。请确保您是群组的所有者。"
     disabled_errors:
       discourse_connect_enabled: "邀请已禁用，因为已启用 DiscourseConnect。"
       invalid_access: "您没有权限查看所请求的资源。"
@@ -232,36 +232,36 @@ zh_CN:
     max_rows: "前%{max_bulk_invites}个邀请已经被发出。尝试将文件分割成更小的部分。"
     error: "上传文件的时候出错了。请稍后重试。"
   invite_link:
-    email_taken: "这个电子邮件地址已被使用。如果你已经拥有一个账户，请登录或重置密码。"
+    email_taken: "这个电子邮件地址已被使用。如果您已经拥有一个账户，请登录或重置密码。"
     max_redemptions_limit: "应该在 2 和 %{max_limit} 之间。"
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入到此话题：%{group_names}。"
-    user_exists: "抱歉，用户已经被邀请过了。你只可以邀请一个用户到一个话题中一次。"
-    muted_invitee: "抱歉，该用户忽略了你。"
+    user_exists: "抱歉，用户已经被邀请过了。您只可以邀请一个用户到一个话题中一次。"
+    muted_invitee: "抱歉，该用户忽略了您。"
     muted_topic: "抱歉，该用户忽略了该话题。"
-    receiver_does_not_allow_pm: "抱歉，该用户不允许你向他们发送私人消息。"
-    sender_does_not_allow_pm: "对不起，你不允许该用户给你发送私人信息。"
+    receiver_does_not_allow_pm: "抱歉，该用户不允许您向他们发送私人消息。"
+    sender_does_not_allow_pm: "对不起，您不允许该用户给您发送私人信息。"
     user_cannot_see_topic: "%{username} 无法看到该话题。"
   backup:
     operation_already_running: "有操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应该是一个 .tar.gz 压缩文件。"
     not_enough_space_on_disk: "没有足够的磁盘空间可供备份文件上传。"
     invalid_filename: "备份文件名包含无效字符。有效字符为 a-z 0-9 . - _."
-    file_exists: "你尝试上传的文件已存在。"
-  invalid_params: "你为请求提供了无效参数：%{message}"
-  not_logged_in: "你需要登录后才能这么做。"
+    file_exists: "您尝试上传的文件已存在。"
+  invalid_params: "您为请求提供了无效参数：%{message}"
+  not_logged_in: "您需要登录后才能这么做。"
   not_found: "找不到请求的地址或资源。"
-  invalid_access: "你没有权限查看所请求的资源。"
+  invalid_access: "您没有权限查看所请求的资源。"
   authenticator_not_found: "身份验证方法不存在或已被禁用。"
-  invalid_api_credentials: "你没有权限查看所请求的资源。API 用户名或者秘钥无效。"
-  provider_not_enabled: "你没有权限查看所请求的资源。身份验证提供程序未启用。"
-  provider_not_found: "你没有权限查看所请求的资源。身份验证提供程序不存在。"
+  invalid_api_credentials: "您没有权限查看所请求的资源。API 用户名或者秘钥无效。"
+  provider_not_enabled: "您没有权限查看所请求的资源。身份验证提供程序未启用。"
+  provider_not_found: "您没有权限查看所请求的资源。身份验证提供程序不存在。"
   read_only_mode_enabled: "这个站点正处于只读模式。交互功能已禁用。"
   invalid_grant_badge_reason_link: "徽章原因中不允许外部或无效的discourse链接"
   email_template_cant_be_modified: "该邮件模板不能被修改"
-  invalid_whisper_access: "没有启用密语或者是你无权创建密语帖子"
+  invalid_whisper_access: "没有启用密语或者是您无权创建密语帖子"
   not_in_group:
-    title_topic: "你需要请求加入 `%{group}` 群组才能查看此话题。"
+    title_topic: "您需要请求加入 `%{group}` 群组才能查看此话题。"
     request_membership: "申请会员"
     join_group: "加入群组"
   deleted_topic: "哎呀！该话题已被删除了并且不再可用。"
@@ -271,7 +271,7 @@ zh_CN:
   too_many_replies:
     other: "我们非常抱歉，新用户被暂时限制同一个话题内回复不超过%{count}次。"
   max_consecutive_replies:
-    other: "不得连续回复超过%{count}次。请编辑你之前的回复，或等待某个人回复你。"
+    other: "不得连续回复超过%{count}次。请编辑您之前的回复，或等待某个人回复您。"
   embed:
     start_discussion: "开始讨论"
     continue: "继续讨论"
@@ -294,13 +294,13 @@ zh_CN:
     last_reply: "最新回复"
     created: "创建时间"
     new_topic: "创建新话题"
-  no_mentions_allowed: "抱歉，你无法提到其他用户。"
+  no_mentions_allowed: "抱歉，您无法提到其他用户。"
   too_many_mentions:
-    other: "抱歉，你一次仅能提到 %{count} 个用户。"
+    other: "抱歉，您一次仅能提到 %{count} 个用户。"
   no_mentions_allowed_newuser: "抱歉，新用户不能@其它用户。"
   too_many_mentions_newuser:
     other: "抱歉，新用户在一个帖子中最多能@ %{count} 位用户。"
-  no_embedded_media_allowed_trust: "抱歉，你不能在帖子中嵌入媒体项目。"
+  no_embedded_media_allowed_trust: "抱歉，您不能在帖子中嵌入媒体项目。"
   no_embedded_media_allowed: "抱歉，新用户不能在帖子中嵌入媒体项目。"
   too_many_embedded_media:
     other: "抱歉，新用户只能在帖子中嵌入%{count}个媒体项目。"
@@ -308,23 +308,23 @@ zh_CN:
   too_many_attachments:
     other: "抱歉，新用户在一个帖子中仅能上传 %{count} 个附件。"
   no_links_allowed: "抱歉，新用户不能在帖子中发表链接。"
-  links_require_trust: "抱歉，你的帖子中不能包含链接。"
+  links_require_trust: "抱歉，您的帖子中不能包含链接。"
   too_many_links:
     other: "抱歉，新用户在一个帖子中仅能发表 %{count} 条链接。"
-  contains_blocked_word: "你的帖子中包含不允许的词：%{word}"
-  contains_blocked_words: "你的帖子中含有多个被禁止的词：%{words}"
-  spamming_host: "抱歉，你不能发表该主机的链接。"
+  contains_blocked_word: "您的帖子中包含不允许的词：%{word}"
+  contains_blocked_words: "您的帖子中含有多个被禁止的词：%{words}"
+  spamming_host: "抱歉，您不能发表该主机的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
-  topic_not_found: "出现问题。或许这个话题在你看的时候已经被关闭或删除了。"
+  topic_not_found: "出现问题。或许这个话题在您看的时候已经被关闭或删除了。"
   not_accepting_pms: "对不起，%{username} 目前不接收讯息。"
-  max_pm_recipients: "抱歉，你至多可以向%{recipients_limit}个收件人发送私信。"
+  max_pm_recipients: "抱歉，您至多可以向%{recipients_limit}个收件人发送私信。"
   pm_reached_recipients_limit: "抱歉，私信中的收信人不能超过%{recipients_limit}。"
   removed_direct_reply_full_quotes: "自动删除对上一个帖子的完整引用。"
   watched_words_auto_tag: "自动标记话题"
   secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开的话题中使用以下安全上传：%{upload_filenames}。"
-  create_pm_on_existing_topic: "抱歉，你无法在现有话题上创建PM。"
+  create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建PM。"
   slow_mode_enabled: "本话题处于慢速模式。"
-  just_posted_that: "太类似于你最近发表的内容"
+  just_posted_that: "太类似于您最近发表的内容"
   invalid_characters: "包含无效字符"
   is_invalid: "似乎不清楚，这是一个完整的句子？ "
   next_page: "下一页 →"
@@ -358,16 +358,16 @@ zh_CN:
     tag: "加标签的话题"
     badge: "%{site_title}的%{display_name}徽章"
   too_late_to_edit: "这个话题在很早之前创建。不能被编辑或者被删除。"
-  edit_conflict: "该帖子由其他用户编辑，你的更改无法再保存。"
-  revert_version_same: "目前的版本和你想要回退至的版本一样。"
+  edit_conflict: "该帖子由其他用户编辑，您的更改无法再保存。"
+  revert_version_same: "目前的版本和您想要回退至的版本一样。"
   cannot_edit_on_slow_mode: "本话题处于慢速模式。为了鼓励优质的讨论，目前不允许编辑本话题的旧帖。"
   excerpt_image: "图片"
   bookmarks:
     errors:
-      already_bookmarked_post: "你不能将同一帖子收藏两次。"
-      too_many: "抱歉，你不能添加超过 %{limit} 个收藏内容，请访问 <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 删除一些收藏。"
-      cannot_set_past_reminder: "你不能在此话题设置收藏提醒。"
-      cannot_set_reminder_in_distant_future: "你不能够设置一个大于十年的收藏提醒。"
+      already_bookmarked_post: "您不能将同一帖子收藏两次。"
+      too_many: "抱歉，您不能添加超过 %{limit} 个收藏内容，请访问 <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 删除一些收藏。"
+      cannot_set_past_reminder: "您不能在此话题设置收藏提醒。"
+      cannot_set_reminder_in_distant_future: "您不能够设置一个大于十年的收藏提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
@@ -383,20 +383,20 @@ zh_CN:
         other: "%{count}个用户已被添加到这个群组。"
     errors:
       grant_trust_level_not_valid: "'%{trust_level}'不是有效的信任等级。"
-      can_not_modify_automatic: "你不能修改自动组"
+      can_not_modify_automatic: "您不能修改自动组"
       member_already_exist:
         other: "以下用户已经是该群组的成员：%{username}"
       invalid_domain: "“%{domain}”不是有效域名。"
       invalid_incoming_email: "“%{email}”不是有效邮箱地址。"
       email_already_used_in_group: "“%{email}”已经被群组“%{group_name}”使用了。"
       email_already_used_in_category: "“%{email}”已经被分类“%{category_name}”使用了。"
-      cant_allow_membership_requests: "对没有拥有者的群组，你无法批准成员请求。"
-      already_requested_membership: "你已请求成为该群组的成员。"
+      cant_allow_membership_requests: "对没有拥有者的群组，您无法批准成员请求。"
+      already_requested_membership: "您已请求成为该群组的成员。"
       adding_too_many_users:
         other: "单次最多可添加%{count}个用户"
       usernames_or_emails_required: "用户名和电子邮件是必须的"
       no_invites_with_discourse_connect: "启用 DiscourseConnect 时，您只能邀请注册用户"
-      no_invites_without_local_logins: "本地登录禁用时，你只能邀请已经注册的用户"
+      no_invites_without_local_logins: "本地登录禁用时，您只能邀请已经注册的用户"
     default_names:
       everyone: "任何人"
       admins: "管理员"
@@ -410,38 +410,38 @@ zh_CN:
     request_membership_pm:
       title: "%{group_name}的成员请求"
     request_accepted_pm:
-      title: "你已接受加入@%{group_name}"
+      title: "您已接受加入@%{group_name}"
       body: |
-        你要加入@%{group_name}的请求已被允许，现在你是其中一员了。
+        您要加入@%{group_name}的请求已被允许，现在您是其中一员了。
   education:
     until_posts:
       other: "%{count} 个帖子"
     "new-topic": |
-      欢迎使用 %{site_name} &mdash; **感谢你开始新的对话！**
+      欢迎使用 %{site_name} &mdash; **感谢您开始新的对话！**
 
-      - 如果你大声朗读出标题，听起来有趣吗？能否很好地概括内容？
+      - 如果您大声朗读出标题，听起来有趣吗？能否很好地概括内容？
 
-      - 谁会对此感兴趣？为什么会感兴趣？你想得到怎样的回应？
+      - 谁会对此感兴趣？为什么会感兴趣？您想得到怎样的回应？
 
-      - 在你的话题中包含常用词，以便其他人能够“找到”它。要将你的话题与相关的话题关联，请选择一个分类（或标签）。
+      - 在您的话题中包含常用词，以便其他人能够“找到”它。要将您的话题与相关的话题关联，请选择一个分类（或标签）。
 
-      更多内容，请[请参阅我们的社区准则](%{base_path}/guidelines)。该面板仅在你的前 %{education_posts_text}出现。
+      更多内容，请[请参阅我们的社区准则](%{base_path}/guidelines)。该面板仅在您的前 %{education_posts_text}出现。
     "new-reply": |
-      欢迎来到%{site_name} &mdash; **感谢你的贡献！**
+      欢迎来到%{site_name} &mdash; **感谢您的贡献！**
 
       - 请对其他社区成员保持友善。
 
-      - 你的回复是否有益于交流？
+      - 您的回复是否有益于交流？
 
       - 欢迎有建设性的批评，但是请对事不对人。
 
-      更多内容，[请查看我们的社区准则](%{base_path}/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
+      更多内容，[请查看我们的社区准则](%{base_path}/guidelines)。此信息面板只会在您发表前 %{education_posts_text} 时显示。
     avatar: |
-      ### 想更改你的头像吗?
+      ### 想更改您的头像吗?
 
-      你已经发表和回复了几个话题，但你的头像并不像你自己一样独一无二——它仅仅是一个字母。
+      您已经发表和回复了几个话题，但您的头像并不像您自己一样独一无二——它仅仅是一个字母。
 
-      你想过更改你的头像 **[查看你的个人资料](%{profile_path})** 并上传一张代表你自己的照片吗?
+      您想过更改您的头像 **[查看您的个人资料](%{profile_path})** 并上传一张代表您自己的照片吗?
 
       如果每个人都有自己独特的头像会让人更加容易参与讨论和发现有趣的人!
     sequential_replies: |
@@ -449,35 +449,35 @@ zh_CN:
 
       与其回复话题多次，不如只回复一次，包括引用前面的帖子或者@用户名。
 
-      你可以在你的回复中添加引用。只要选择你想引用的文字，然后点击随后出现的<b>引用回复</b>按钮。
+      您可以在您的回复中添加引用。只要选择您想引用的文字，然后点击随后出现的<b>引用回复</b>按钮。
 
       这样其它人会更容易地看一个长的回复，而不是多个分开的回复。
     dominating_topic: |
       ### 让其他人也加入到讨论中
 
-      显然这个话题对你很重要 &ndash；但所有回复中你的发言占比超过%{percent}%
+      显然这个话题对您很重要 &ndash；但所有回复中您的发言占比超过%{percent}%
 
-      留一点空间给其他人分享他们自己的见解会更好。你能邀请他们吗？
+      留一点空间给其他人分享他们自己的见解会更好。您能邀请他们吗？
     get_a_room: |
       ### 鼓励每一个人都参与到讨论当中
 
-      你已经在这个话题中给@%{reply_username}回复了%{count}次了！
+      您已经在这个话题中给@%{reply_username}回复了%{count}次了！
 
-      良好讨论应该包含许多不同的声音和观点。你能让其他人也参与进来吗？
+      良好讨论应该包含许多不同的声音和观点。您能让其他人也参与进来吗？
 
-      不要忘记了，如果你想私下继续与特定用户进行对话，可以[给他们发送私信](%{base_path}/u/%{reply_username})。
+      不要忘记了，如果您想私下继续与特定用户进行对话，可以[给他们发送私信](%{base_path}/u/%{reply_username})。
     too_many_replies: |
-      ### 你发表的回复数量已经达到了上限。
+      ### 您发表的回复数量已经达到了上限。
 
       非常抱歉，但新用户被限制只能在同一话题中回复 %{newuser_max_replies_per_topic} 次。
 
-      与其添加另一个回复不如考虑编辑你以前的回复，或访问其他话题。
+      与其添加另一个回复不如考虑编辑您以前的回复，或访问其他话题。
     reviving_old_topic: |
       ### 重新激活这个话题？
 
-      该话题最后的回复是**%{time_ago}**。你的回复将让话题重新出现在列表的顶端并通知所有原先参与过讨论的人。
+      该话题最后的回复是**%{time_ago}**。您的回复将让话题重新出现在列表的顶端并通知所有原先参与过讨论的人。
 
-      你确定要延续这个久远的话题吗？
+      您确定要延续这个久远的话题吗？
   activerecord:
     attributes:
       category:
@@ -495,13 +495,13 @@ zh_CN:
         topic:
           attributes:
             base:
-              warning_requires_pm: "你只能在个人消息中附加警告。"
+              warning_requires_pm: "您只能在个人消息中附加警告。"
               too_many_users: "一次只能发送警告给一个用户。"
-              cant_send_pm: "抱歉，你不能向该用户发送消息。"
-              no_user_selected: "你必须选择一个有效的用户。"
+              cant_send_pm: "抱歉，您不能向该用户发送消息。"
+              no_user_selected: "您必须选择一个有效的用户。"
               reply_by_email_disabled: "用邮件回复已被禁止"
-              send_to_email_disabled: "抱歉，你不能向该邮件发送消息。"
-              target_user_not_found: "未找到你要向其发送此消息的其中一个用户"
+              send_to_email_disabled: "抱歉，您不能向该邮件发送消息。"
+              target_user_not_found: "未找到您要向其发送此消息的其中一个用户"
               unable_to_update: "更新该话题时发生错误。"
               unable_to_tag: "给话题设置标签时发生错误。"
             featured_link:
@@ -511,21 +511,21 @@ zh_CN:
           attributes:
             password:
               common: "是 10000 个最常用的密码之一。请用一个更安全的密码。"
-              same_as_username: "与你的用户名相同。请使用一个更安全的密码。"
-              same_as_email: "与你的邮件地址相同。请使用一个更安全的密码。"
-              same_as_current: "和你当前的密码相同"
-              same_as_name: "和你的名字一样。"
+              same_as_username: "与您的用户名相同。请使用一个更安全的密码。"
+              same_as_email: "与您的邮件地址相同。请使用一个更安全的密码。"
+              same_as_current: "和您当前的密码相同"
+              same_as_name: "和您的名字一样。"
               unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
             username:
-              same_as_password: "和你的密码相同。"
+              same_as_password: "和您的密码相同。"
             name:
-              same_as_password: "和你的密码相同。"
+              same_as_password: "和您的密码相同。"
             ip_address:
               signup_not_allowed: "不能使用这个账户登录。"
         user_profile:
           attributes:
             featured_topic_id:
-              invalid: "该话题不能显示在你的个人资料中。"
+              invalid: "该话题不能显示在您的个人资料中。"
         user_email:
           attributes:
             user_id:
@@ -585,20 +585,20 @@ zh_CN:
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      你可能想要在管理 :wrench: （右上角）中关闭这个话题，这样回复就不会积压在这个通告下。
+      您可能想要在管理 :wrench: （右上角）中关闭这个话题，这样回复就不会积压在这个通告下。
   lounge_welcome:
     title: "欢迎来到贵宾室"
     body: |2
 
       恭喜！:confetti_ball:
 
-      如果你看到了这个话题，说明你已经被提升至**常规**（信任等级3）了。
+      如果您看到了这个话题，说明您已经被提升至**常规**（信任等级3）了。
 
-      你现在可以&hellip;
+      您现在可以&hellip;
 
       * 编辑任何话题的标题
       * 改变任何话题的分类
-      * 让你的链接设置为 follow 属性（[自动不跟踪](https://en.wikipedia.org/wiki/Nofollow)限制已经移除）
+      * 让您的链接设置为 follow 属性（[自动不跟踪](https://en.wikipedia.org/wiki/Nofollow)限制已经移除）
       * 访问一个只有信任等级3及更高才能见到的贵宾室分类
       * 一次标记即可隐藏垃圾信息
 
@@ -618,7 +618,7 @@ zh_CN:
       not_found: "未找到分类！"
       uncategorized_parent: "未分类不能有一个父分类"
       self_parent: "一个子分类不能属于它自己。"
-      depth: "你不能在一个子分类下再包含一个子分类。"
+      depth: "您不能在一个子分类下再包含一个子分类。"
       invalid_email_in: "'%{email}'不是一个有效邮箱地址。"
       email_already_used_in_group: "'%{email}' 已经被群组'%{group_name}'使用了。"
       email_already_used_in_category: "'%{email}' 已经被分类'%{category_name}'使用了。"
@@ -636,30 +636,30 @@ zh_CN:
   trust_levels:
     admin: "管理员"
     staff: "工作人员"
-    change_failed_explanation: "你尝试将%{user_name}降至%{new_trust_level}。然而他们的信任等级已经是%{current_trust_level}。%{user_name}将仍处于%{current_trust_level}——如果你想要降级用户，先锁定信任等级。"
+    change_failed_explanation: "您尝试将%{user_name}降至%{new_trust_level}。然而他们的信任等级已经是%{current_trust_level}。%{user_name}将仍处于%{current_trust_level}——如果您想要降级用户，先锁定信任等级。"
   post:
     image_placeholder:
       broken: "此图片已损坏"
     has_likes:
       other: "%{count}赞"
   rate_limiter:
-    slow_down: "你执行这个操作太多次了，请稍后再试。"
-    too_many_requests: "你执行这个操作太多次了，请等待%{time_left}后再试。"
+    slow_down: "您执行这个操作太多次了，请稍后再试。"
+    too_many_requests: "您执行这个操作太多次了，请等待%{time_left}后再试。"
     by_type:
-      first_day_replies_per_day: "我们赞赏你的热情，保持这样！ 话虽如此，为了社区的安全，你已经达到了新用户第一天可以回复的最多数量。 请等待 %{time_left} ，你将可以继续回复。"
-      first_day_topics_per_day: "我们赞赏你的热情！ 话虽如此，为了社区的安全，你已经达到了新用户第一天可以创建的话题的最大数量。 请等待 %{time_left}，你讲可以继续创建新的话题。"
-      create_topic: "你创建新话题的速度太快了，请等待 %{time_left} 后再试。"
-      create_post: "你回帖太快了，请等待 %{time_left} 后再试。"
-      delete_post: "你删帖的速度有点太快了。请等待 %{time_left} 再试。"
-      public_group_membership: "你加入/离开小组的频率有点高，请等待 %{time_left} 后再试。"
-      topics_per_day: "你已经达到了每天允许的最大新话题数。你可以在 %{time_left} 后创建更多新话题。"
-      pms_per_day: "你已经达到了每天允许的最大私信数。你可以在 %{time_left} 后发送新私信。"
-      create_like: "哇！你已经分享了很多爱！今天你已经达到了每日点赞上限，但是随着你的信任等级提升，你将获得更高的每日点赞上限。你将在 %{time_left} 后可再次为帖子点赞。"
-      create_bookmark: "你已达到每日收藏的最大使用数量。你可以在 %{time_left} 后添加更多收藏。"
-      edit_post: "你已经达到了每日编辑的最大数量。你可以在 %{time_left} 后编辑更多内容。"
-      live_post_counts: "你请求帖子数量的速度太快了，请等待%{time_left}后再试。"
-      unsubscribe_via_email: "你已经达到了用邮件解除订阅的最大数量限制。请等待%{time_left}后再试。"
-      topic_invitations_per_day: "你已经达到了话题邀请的最大数量。你可以在 %{time_left} 后发送更多邀请。"
+      first_day_replies_per_day: "我们赞赏您的热情，保持这样！ 话虽如此，为了社区的安全，您已经达到了新用户第一天可以回复的最多数量。 请等待 %{time_left} ，您将可以继续回复。"
+      first_day_topics_per_day: "我们赞赏您的热情！ 话虽如此，为了社区的安全，您已经达到了新用户第一天可以创建的话题的最大数量。 请等待 %{time_left}，您讲可以继续创建新的话题。"
+      create_topic: "您创建新话题的速度太快了，请等待 %{time_left} 后再试。"
+      create_post: "您回帖太快了，请等待 %{time_left} 后再试。"
+      delete_post: "您删帖的速度有点太快了。请等待 %{time_left} 再试。"
+      public_group_membership: "您加入/离开小组的频率有点高，请等待 %{time_left} 后再试。"
+      topics_per_day: "您已经达到了每天允许的最大新话题数。您可以在 %{time_left} 后创建更多新话题。"
+      pms_per_day: "您已经达到了每天允许的最大私信数。您可以在 %{time_left} 后发送新私信。"
+      create_like: "哇！您已经分享了很多爱！今天您已经达到了每日点赞上限，但是随着您的信任等级提升，您将获得更高的每日点赞上限。您将在 %{time_left} 后可再次为帖子点赞。"
+      create_bookmark: "您已达到每日收藏的最大使用数量。您可以在 %{time_left} 后添加更多收藏。"
+      edit_post: "您已经达到了每日编辑的最大数量。您可以在 %{time_left} 后编辑更多内容。"
+      live_post_counts: "您请求帖子数量的速度太快了，请等待%{time_left}后再试。"
+      unsubscribe_via_email: "您已经达到了用邮件解除订阅的最大数量限制。请等待%{time_left}后再试。"
+      topic_invitations_per_day: "您已经达到了话题邀请的最大数量。您可以在 %{time_left} 后发送更多邀请。"
     hours:
       other: "%{count}小时"
     minutes:
@@ -722,8 +722,8 @@ zh_CN:
     update: "更新密码"
     save: "设置密码"
     title: "重置密码"
-    success: "你的密码已经修改成功，你现在已经登录。"
-    success_unapproved: "你的密码已经修改成功。"
+    success: "您的密码已经修改成功，您现在已经登录。"
+    success_unapproved: "您的密码已经修改成功。"
   email_login:
     invalid_token: "抱歉，邮件登录链接已过期。选择登录按钮再使用“我忘记了密码”获得一个新链接。"
     title: "邮件登录"
@@ -757,42 +757,42 @@ zh_CN:
       windows: "Microsoft Windows"
       unknown: "未知操作系统"
   change_email:
-    wrong_account_error: "你登录了错误的账户，请退出后重试。"
-    confirmed: "你的电子邮箱已被更新。"
+    wrong_account_error: "您登录了错误的账户，请退出后重试。"
+    confirmed: "您的电子邮箱已被更新。"
     please_continue: "转入到%{site_name}"
-    error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
-    doesnt_exist: "这个电子邮件地址与你的账户没有关联。"
-    error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
-    already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
+    error: "在修改您的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
+    doesnt_exist: "这个电子邮件地址与您的账户没有关联。"
+    error_staged: "在修改您的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
+    already_done: "抱歉，此激活链接已经失效。可能您已经修改了邮箱？"
     confirm: "确认"
-    max_secondary_emails_error: "你已达到所允许的辅助电子邮件数量最大限制。"
+    max_secondary_emails_error: "您已达到所允许的辅助电子邮件数量最大限制。"
     authorizing_new:
       title: "确认您的新邮箱"
-      description: "请确认你想要修改的电子邮件地址："
-      description_add: "请确认你要添加的次要电子邮件地址："
+      description: "请确认您想要修改的电子邮件地址："
+      description_add: "请确认您要添加的次要电子邮件地址："
     authorizing_old:
-      title: "修改你的电子邮件地址"
-      description: "请确认你的电子邮件地址更改"
-      description_add: "请确认你要添加的次要电子邮件地址："
+      title: "修改您的电子邮件地址"
+      description: "请确认您的电子邮件地址更改"
+      description_add: "请确认您要添加的次要电子邮件地址："
       old_email: "旧邮件：%{email}"
       new_email: "新邮件：%{email}"
       almost_done_title: "确认新的电子邮件地址"
       almost_done_description: "我们需要发送一封电子邮件到您的新电子邮件地址以确认更改！"
   associated_accounts:
-    revoke_failed: "无法使用%{provider_name}吊销你的账户。"
+    revoke_failed: "无法使用%{provider_name}吊销您的账户。"
     connected: "（已连接）"
   activation:
-    action: "点击这儿激活你的账户"
-    already_done: "抱歉，此账户激活链接已经失效。可能你的账户已经被激活了？"
-    please_continue: "你的新账户已激活；即将转到主页。"
+    action: "点击这儿激活您的账户"
+    already_done: "抱歉，此账户激活链接已经失效。可能您的账户已经被激活了？"
+    please_continue: "您的新账户已激活；即将转到主页。"
     continue_button: "转入到%{site_name}"
     welcome_to: "欢迎来到%{site_name}！"
-    approval_required: "你的新账户需要由一位论坛版主手动批准方可使用。一旦你的账户获得批准，你将收到一封电子邮件通知！"
-    missing_session: "无法确认你是否注册了账户，请确认你已经启用了 cookie。"
+    approval_required: "您的新账户需要由一位论坛版主手动批准方可使用。一旦您的账户获得批准，您将收到一封电子邮件通知！"
+    missing_session: "无法确认您是否注册了账户，请确认您已经启用了 cookie。"
     activated: "抱歉，这个账户已经被激活了。"
     admin_confirm:
       title: "确认管理员账户"
-      description: "你确定要将<b>%{target_username}（%{target_email}）</b>设为管理员吗？"
+      description: "您确定要将<b>%{target_username}（%{target_email}）</b>设为管理员吗？"
       grant: "授予管理员权限"
       complete: "<b>%{target_username}</b>现在是管理员了。"
       back_to: "返回%{title}"
@@ -818,7 +818,7 @@ zh_CN:
       title: "给@%{username}发送一条私信"
       description: "我想亲自与此人私下交流关于该帖子的事情。"
       short_description: "我想亲自与此人私下交流关于该帖子的事情。"
-      email_title: '你在“%{title}”中的帖子'
+      email_title: '您在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "其他事项"
@@ -843,20 +843,20 @@ zh_CN:
     pm_body: "话题包含备份的草稿"
   user_activity:
     no_default:
-      self: "你还没有活动。"
+      self: "您还没有活动。"
       others: "无活动。"
     no_bookmarks:
-      self: "你没有收藏帖子；收藏可让你快速查阅特定帖子。"
+      self: "您没有收藏帖子；收藏可让您快速查阅特定帖子。"
       search: "在所提供的搜索查询中没有找到收藏内容。"
       others: "没有收藏。"
     no_likes_given:
-      self: "你还没有点赞任何帖子。"
+      self: "您还没有点赞任何帖子。"
       others: "没有被赞的帖子。"
     no_replies:
-      self: "你还未回复任何话题"
+      self: "您还未回复任何话题"
       others: "无回复"
     no_drafts:
-      self: "你没有草稿；任何话题中撰写回复，它将自动保存为新草稿。"
+      self: "您没有草稿；任何话题中撰写回复，它将自动保存为新草稿。"
   email_settings:
     pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码后重试。"
     imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码后重试。"
@@ -903,8 +903,8 @@ zh_CN:
       email_title: '话题“%{title}”需要版主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的帖子被社区标记了。请<a href="%{path}">查看你的消息</a>。</p>'
-    user_must_edit: "<p>你的帖子已经被社区标记并被临时隐藏。</p>"
+    you_must_edit: '<p>您的帖子被社区标记了。请<a href="%{path}">查看您的消息</a>。</p>'
+    user_must_edit: "<p>您的帖子已经被社区标记并被临时隐藏。</p>"
   ignored:
     hidden_content: "<p>忽视的内容</p>"
   archetypes:
@@ -917,7 +917,7 @@ zh_CN:
         remove: "本话题已经不再是横幅话题。它将不在每个页面的顶部显示。"
   unsubscribed:
     title: "已更新电子邮件偏好设置！"
-    description: "<b>%{email}</b>的电子邮件设置已更新。要更改你的电子邮件设置，访问<a href='%{url}'>你的用户设置页面</a>。"
+    description: "<b>%{email}</b>的电子邮件设置已更新。要更改您的电子邮件设置，访问<a href='%{url}'>您的用户设置页面</a>。"
     topic_description: "点击链接 %{link} 重新订阅，或是使用话题底部或右侧的通知控制。"
     private_topic_description: "使用话题底部或右侧的通知控制重新订阅。"
   uploads:
@@ -929,13 +929,13 @@ zh_CN:
     unwatch_category: "不再关注%{category}分类中的所有话题"
     mailing_list_mode: "停用邮件列表模式"
     all: "不要从%{sitename}给我发送任何邮件"
-    different_user_description: "你当前登录的账户与我们所发送邮件的用户不符。请登出，或进入隐私模式，然后重试。"
-    not_found_description: "抱歉，我们未能找到此退订。或许是因为你的邮件中的链接是很久以前的并且过期了？"
+    different_user_description: "您当前登录的账户与我们所发送邮件的用户不符。请登出，或进入隐私模式，然后重试。"
+    not_found_description: "抱歉，我们未能找到此退订。或许是因为您的邮件中的链接是很久以前的并且过期了？"
     log_out: "退出登录"
     submit: "保存设置"
     digest_frequency:
-      title: "你将每%{frequency}接收摘要邮件"
-      never_title: "你将不再收到摘要邮件"
+      title: "您将每%{frequency}接收摘要邮件"
+      never_title: "您将不再收到摘要邮件"
       select_title: "将摘要邮件的频率设为："
       never: "从不"
       every_30_minutes: "每半小时"
@@ -949,14 +949,14 @@ zh_CN:
     authorize: "授权"
     read: "阅读"
     read_write: "读/写"
-    description: '“%{application_name}”正在请求访问你的账户中的以下权限：'
+    description: '“%{application_name}”正在请求访问您的账户中的以下权限：'
     instructions: '我们刚刚生成了一个新的用户API密钥供您使用“%{application_name}”，请将以下密钥粘贴到您的应用程序中：'
-    otp_description: '你要允许“%{application_name}”访问此网站吗？'
+    otp_description: '您要允许“%{application_name}”访问此网站吗？'
     otp_confirmation:
       confirm_title: 转入到%{site_name}
       logging_in_as: 用%{username}登录
       confirm_button: 登录完成
-    no_trust_level: "抱歉，你没有使用用户 API 所需要的信任等级"
+    no_trust_level: "抱歉，您没有使用用户 API 所需要的信任等级"
     generic_error: "抱歉，我们不能分发用户 API 密钥，该特性已经被站点管理员禁用"
     scopes:
       message_bus: "实时更新"
@@ -1297,11 +1297,11 @@ zh_CN:
         mutes_count: 静音计数
       description: "被许多其他用户忽略和/或忽视的用户。"
   dashboard:
-    rails_env_warning: "你的服务器运行在 %{env} 模式。"
-    host_names_warning: "你的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为你的站点主机名。"
+    rails_env_warning: "您的服务器运行在 %{env} 模式。"
+    host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
     sidekiq_warning: 'Sidekiq未运行。很多任务，例如发送电子邮件，是被Sidekiq异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解Sidekiq</a>。'
     queue_size_warning: "队列中有较多任务，为 %{queue_size} 个。这可能是因为 Sidekiq 进程的问题导致，或者需要更多的 Sidekiq 进程。"
-    memory_warning: "你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。"
+    memory_warning: "您的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。"
     google_oauth2_config_warning: '设置中允许使用Google OAuth2（enable_google_oauth2_logins）登录，但是没有设置client id和secret的值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>更新设置。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">查看文档</a>。'
     facebook_config_warning: '设置中允许使用Facebook（enable_facebook_login）登录，但是没有设置app id和secret的值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>更新设置。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">查看文档</a>。'
     twitter_config_warning: '设置允许使用Twitter（enable_twitter_logins）登录，但没有设置 key 和 secret的值。 前往<a href="%{base_path}/admin/site_settings">站点设置</a>更新设置。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
@@ -1309,24 +1309,24 @@ zh_CN:
     s3_config_warning: '服务器被配置为上传文件到s3，但以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">站点设置</a>中更新设置。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
     s3_backup_config_warning: '服务器被配置为上传备份到S3，但是以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。到<a href="%{base_path}/admin/site_settings">站点设置</a>中更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
     s3_cdn_warning: '服务器配置为将文件上传到 S3，但没有配置 S3 CDN。这可能会导致昂贵的 S3 成本和站点性能降低。 <a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅 “使用对象存储进行上传” 了解更多信息</a>.'
-    image_magick_warning: '服务器被设置为给大图片创建缩略图，但是ImageMagick没有被安装。用你最喜爱的包管理器安装ImageMagick或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
+    image_magick_warning: '服务器被设置为给大图片创建缩略图，但是ImageMagick没有被安装。用您最喜爱的包管理器安装ImageMagick或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
     failing_emails_warning: '有%{num_failed_jobs}个邮件任务失败。请检查app.yml文件是否正确配置了邮件服务器。<a href="%{base_path}/sidekiq/retries" target="_blank">查看Sidekiq中失败的任务</a>。'
-    subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
+    subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
     email_polling_errored_recently:
       other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='%{base_path}/logs' target='_blank'>日志</a>寻找详情。"
     missing_mailgun_api_key: "服务器设置使用Mailgun发送邮件，但并未设置验证webhook私信的API密钥。"
     bad_favicon_url: "网站图标无法载入。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的图标设置。"
-    poll_pop3_timeout: "连接 POP3 服务器超时。无法获取进站邮件。请检查你的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
-    poll_pop3_auth_error: "连接至 POP3 服务器因身份验证错误而失败。请检查你的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
-    force_https_warning: "你的网站使用了SSL。但是，你的网站设置中尚未启用`<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
+    poll_pop3_timeout: "连接 POP3 服务器超时。无法获取进站邮件。请检查您的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
+    poll_pop3_auth_error: "连接至 POP3 服务器因身份验证错误而失败。请检查您的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
+    force_https_warning: "您的网站使用了SSL。但是，您的网站设置中尚未启用`<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
     out_of_date_themes: "以下主题有更新："
     unreachable_themes: "我们无法检查以下主题的更新："
-    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的 <a href='%{base_path}/admin/customize/watched_words'>敏感词设置</a>，或禁用 “敏感词正则表达式” 设置。"
+    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查您的 <a href='%{base_path}/admin/customize/watched_words'>敏感词设置</a>，或禁用 “敏感词正则表达式” 设置。"
   site_settings:
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示本地时间。"
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
-    default_locale: "此Discourse实例的默认语言。你可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本内容</a>替换系统生成的分类或话题的文本。"
+    default_locale: "此Discourse实例的默认语言。您可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本内容</a>替换系统生成的分类或话题的文本。"
     allow_user_locale: "允许用户选择他们自己的语言界面"
     set_locale_from_accept_language_header: "使用浏览器的语言标头为匿名用户设置界面语言"
     support_mixed_text_direction: "支持混合的从左到右和从右到左的文本方向。"
@@ -1351,7 +1351,7 @@ zh_CN:
     search_ignore_accents: "搜索文本时忽略重音。"
     category_search_priority_low_weight: "权重给予分类低搜索优先级。"
     category_search_priority_high_weight: "权重给予分类高搜索优先级。"
-    allow_uncategorized_topics: "允许发表没有分类的帖子。警告：如果存在任何未分类的帖子，你必须给他们重新分类后才能关闭该选项。"
+    allow_uncategorized_topics: "允许发表没有分类的帖子。警告：如果存在任何未分类的帖子，您必须给他们重新分类后才能关闭该选项。"
     allow_duplicate_topic_titles: "允许有相同或重复标题的话题。"
     allow_duplicate_topic_titles_category: "在不同的分类中允许帖子话题可以重复。\nallow_duplicate_topic_titles 必须设置为否（false）。"
     unique_posts_mins: "多少分钟之后才允许一个用户再次发表包含相同内容的帖子"
@@ -1375,10 +1375,10 @@ zh_CN:
     max_image_width: "帖子中图片允许的最大缩略图宽度"
     max_image_height: "帖子中图片允许的最大缩略图宽度"
     responsive_post_image_sizes: "调整预览图像的大小以允许以下像素比率的高DPI屏幕。 删除所有值以禁用响应图像。"
-    fixed_category_positions: "如果选中，你将能够固定分类的排序。反之，分类将按照活跃顺序显示。"
+    fixed_category_positions: "如果选中，您将能够固定分类的排序。反之，分类将按照活跃顺序显示。"
     fixed_category_positions_on_create: "如果选中，话题创建对话框中会维持分类的排序（需要 fixed_category_positions)。"
-    add_rel_nofollow_to_user_content: '添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须使用“rake posts:rebake"重制所有帖子。'
-    exclude_rel_nofollow_domains: "不应添加nofollow的域名列表。example.com 会自动包含 sub.example.com。至少你应该填写本站域名来帮助爬虫获得所有内容。如果你网站的其余部分在另外的域名，也请添加那些域名。"
+    add_rel_nofollow_to_user_content: '添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果您更改了这个，您必须使用“rake posts:rebake"重制所有帖子。'
+    exclude_rel_nofollow_domains: "不应添加nofollow的域名列表。example.com 会自动包含 sub.example.com。至少您应该填写本站域名来帮助爬虫获得所有内容。如果您网站的其余部分在另外的域名，也请添加那些域名。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
     topic_excerpt_maxlength: "根据话题的第一帖所生成，话题的节选或摘要的最大长度。"
     show_pinned_excerpt_mobile: "在移动版中显示置顶话题的摘要。"
@@ -1389,9 +1389,9 @@ zh_CN:
     enable_inline_onebox_on_all_domains: "忽略inline_onebox_domain_allowlist设置，并允许所有域名的行内onebox。"
     force_custom_user_agent_hosts: "在所有请求上使用自定义 onebox 用户代理的主机。（对于限制用户代理访问的主机尤其有用）。"
     max_oneboxes_per_post: "帖子中最多的 Onebox 数量。"
-    facebook_app_access_token: "从你的 Facebook 应用程序 ID 和密钥生成的令牌。用于生成 Instagram oneboxes。"
-    logo: "你网站左上角的商标图像。使用高120且宽高比大于3:1的宽矩形图像。如果留空，将显示网站的标题文本。"
-    logo_small: "出现在你站点左上角的小号的商标图像，滚动后可见。使用方形120×120的图像。如果留空，将显示一个主页图标。"
+    facebook_app_access_token: "从您的 Facebook 应用程序 ID 和密钥生成的令牌。用于生成 Instagram oneboxes。"
+    logo: "您网站左上角的商标图像。使用高120且宽高比大于3:1的宽矩形图像。如果留空，将显示网站的标题文本。"
+    logo_small: "出现在您站点左上角的小号的商标图像，滚动后可见。使用方形120×120的图像。如果留空，将显示一个主页图标。"
     digest_logo: "邮件摘要顶部所使用的备用商标图像。使用宽矩形的图像。不要使用SVG图像。 如果留空，将使用`logo`设置中的图像。"
     mobile_logo: "网站的移动版本上使用的商标。使用高120且宽高比大于3:1的宽矩形图像。 如果留空，将使用`logo`设置中的图像。"
     logo_dark: "用于深色模式的“logo\"站点设置。"
@@ -1400,7 +1400,7 @@ zh_CN:
     large_icon: "用作其他元数据图标的基础的图像。 理想情况下应大于512 x 512。如果留空，将使用logo_small。"
     manifest_icon: "用作Android图标的图像。会被自动调整为512×512。如果留空，将使用large_icon。"
     manifest_screenshots: "用于在安装提示页面上展示社区的特色和功能的屏幕截图。所有图像均应为本地上传且尺寸相同。"
-    favicon: "你的站点图标（favicon），参考<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是png图片。会被调整为32x32。如果留空，将使用large_icon。"
+    favicon: "您的站点图标（favicon），参考<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是png图片。会被调整为32x32。如果留空，将使用large_icon。"
     apple_touch_icon: "用于Apple触控设备的图标。会被自动调整为180x180。如果留空，将使用large_icon。"
     opengraph_image: "默认的opengraph图像，当页面没有其它合适的图像时使用。如果留空，将使用large_icon。"
     twitter_summary_large_image: "Twitter卡片的“摘要大图”（宽度至少应为280，高度至少为150）。如果留空，则使用opengraph_image生成常规卡片元数据。"
@@ -1409,7 +1409,7 @@ zh_CN:
     email_subject: "自定义邮件标题的格式。参见<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "为用户提供关于他们为什么不能访问特定话题的更多细节。注意：这是不安全的，因为用户将知道一个 URL 是否链接到一个有效的话题。"
     enforce_second_factor: "强制用户启用双重验证。选择“all”以强制所有用户启用。选择“staff”仅强制管理人员。"
-    force_https: "强制使用 https。警告：开启前必须确认 HTTPS 已经配置并能够正常使用！你检查了 CDN、第三方登录和站外的 logo / 依赖是否支持 HTTPS 了吗？"
+    force_https: "强制使用 https。警告：开启前必须确认 HTTPS 已经配置并能够正常使用！您检查了 CDN、第三方登录和站外的 logo / 依赖是否支持 HTTPS 了吗？"
     same_site_cookies: "使用 Same-site cookies 以消除所有跨站请求伪造的攻击面 (Lax 或 Strict)。警告：Strict 仅在强制登录并使用外部身份验证方法的网站上有效。"
     summary_score_threshold: "一个帖子被加入到“话题摘要”中所需的最小分值"
     summary_posts_required: "一个话题启用“话题摘要”前最少需要有多少个回帖。修改此设置会影响过去一个星期。"
@@ -1452,7 +1452,6 @@ zh_CN:
     invite_code: "用户必须输入此代码才能够进行账户注册，留空则无需输入（大小写敏感）"
     approve_suspect_users: "添加可疑用户到审核队列。可疑用户填写了简介或网站但是没有浏览行为。"
     review_every_post: "所有帖子都必须经过审查。警告！不建议用于繁忙的站点。"
-    pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     persistent_sessions: "用户将在浏览器被关闭后保持登录状态"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
     ga_version: "要使用的 Google Universal Analytics 版本：v3(analytics.js)，v4(gtag)"
@@ -1503,7 +1502,7 @@ zh_CN:
     email_token_valid_hours: "“忘记密码”/“激活账户”令牌有效的小时数。"
     enable_badges: "启用徽章系统"
     enable_whispers: "允许管理人员在话题中私密交流。"
-    allow_index_in_robots_txt: "在robots.txt中指定允许网络搜索引擎建立该网站的索引。在特殊情况下，你可以永久<a href='%{base_path}/admin/customize/robots'>覆盖robots.txt</a> 。"
+    allow_index_in_robots_txt: "在robots.txt中指定允许网络搜索引擎建立该网站的索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>覆盖robots.txt</a> 。"
     blocked_email_domains: "不允许注册账户的邮件域名列表（以管道符号分割）。例如：mailinator.com|trashmail.net"
     allowed_email_domains: "用户必须使用列表中的域名邮箱注册（使用管道符号分割）。警告：用户将无法使用列表之外的域名邮箱注册！"
     auto_approve_email_domains: "使用来自此域名列表中所提供的邮箱的用户会被自动批准。"
@@ -1532,7 +1531,7 @@ zh_CN:
     discourse_connect_secret: "用于加密验证 DiscourseConnect 信息的密钥字符串，请确保是 10 个字符或者更长"
     discourse_connect_provider_secrets: "使用 DiscourseConnect 的域名与密钥对列表。确保 SSO 密钥为 10 个字符或更长。通配符 * 可用于匹配任何域名或仅匹配其中的一部分(例如* .example.com)。"
     discourse_connect_overrides_bio: "覆盖用户个人资料中的用户个人资料，并阻止用户对其进行更改"
-    discourse_connect_overrides_groups: "同步制定群组中手动创建的群组成员的群组属性。\n(警告：如果你不指定群组，所有的手动群组成员资格将被用户清除)"
+    discourse_connect_overrides_groups: "同步制定群组中手动创建的群组成员的群组属性。\n(警告：如果您不指定群组，所有的手动群组成员资格将被用户清除)"
     auth_overrides_email: "在每次登录时用外部网站的电子邮件覆盖本地电子邮件，并防止本地更改。适用于所有身份验证提供程序。(警告：由于本地电子邮件的规范化，可能会出现差异)"
     auth_overrides_username: "在每次登录时，用外部网站的用户名覆盖本地用户名，并防止本地更改。 适用于所有身份验证提供程序。(警告: 由于用户名长度/要求的不同，可能会出现差异)"
     auth_overrides_name: "每次登录都使用外部站点的全名覆盖本地全名，并且禁止本地修改。应用于所有的身份认证提供商。"
@@ -1566,7 +1565,7 @@ zh_CN:
     discord_secret: "Discord Secret Key"
     discord_trusted_guilds: '只允许这些 Discord 公会的成员通过 Discord 登录。使用公会的数字 ID。更多有关信息，请查看<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">这里</a>的说明。留空则允许任意公会。'
     enable_backups: "允许管理员创建论坛备份"
-    allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
+    allow_restore: "允许导入数据，这将能替换所有全站数据！除非您计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     automatic_backups_enabled: "按照定义的备份频率运行自动备份计划"
     backup_frequency: "备份之间的天数。"
@@ -1612,7 +1611,7 @@ zh_CN:
     limit_suggested_to_category: "只在当前分类的推荐帖子列表中显示帖子。"
     suggested_topics_max_days_old: "推荐话题的创建时间不能超过 n 天。"
     suggested_topics_unread_max_days_old: "推荐的未读话题创建时间不能大于 n 天。"
-    clean_up_uploads: "移除孤立的已上传资料。警告：你可能想要在启用这个设定前备份一下 /uploads 目录。"
+    clean_up_uploads: "移除孤立的已上传资料。警告：您可能想要在启用这个设定前备份一下 /uploads 目录。"
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "彻底删除孤立的上传内容的宽限期（单位：天）"
     purge_unactivated_users_grace_period_days: "删除未激活用户账户的宽限期（单位：天）。设置为 0 将永不清除未激活用户。"
@@ -1622,7 +1621,7 @@ zh_CN:
     s3_access_key_id: "将用于上传图片，附件和备份的Amazon S3 access key id。"
     s3_secret_access_key: "将用于上传图片，附件和备份的Amazon S3 secret access key。"
     s3_region: "将用于上传图片和备份的 Amazon S3 区域名。"
-    s3_cdn_url: "用户 S3 资料的 CDN URL（例如：https://cdn.somewhere.com）。警告：在改变该设置后你必须重制所有老帖子。"
+    s3_cdn_url: "用户 S3 资料的 CDN URL（例如：https://cdn.somewhere.com）。警告：在改变该设置后您必须重制所有老帖子。"
     avatar_sizes: "自动生成的头像大小列表。"
     external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
@@ -1640,7 +1639,7 @@ zh_CN:
     min_ratio_to_crop: "用于裁剪高图像的比率。输入宽/高值。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
     default_invitee_trust_level: "受邀用户的默认信任等级（0-4）。"
-    default_trust_level: "所有新用户的默认信任等级（0-4）。警告！改变此项将使你面临广告泛滥的风险。"
+    default_trust_level: "所有新用户的默认信任等级（0-4）。警告！改变此项将使您面临广告泛滥的风险。"
     tl1_requires_topics_entered: "新用户升级到信任等级1所需要进入的话题数量。"
     tl1_requires_read_posts: "新用户升级到信任等级1所需要阅读的帖子数量。"
     tl1_requires_time_spent_mins: "新用户升级到信任等级1需要看帖多少分钟。"
@@ -1686,7 +1685,7 @@ zh_CN:
     newuser_max_attachments: "一个新用户可以添加到一个帖子里的附件数量。"
     newuser_max_mentions_per_post: "一个访问者可以在一个帖子里使用 @name 提及的最大数量。"
     newuser_max_replies_per_topic: "直至有人回复他们前，新用户在一个帖子里的最大回复数量。"
-    max_mentions_per_post: "你可以在一个帖子里使用 @name 提及的最大数量。"
+    max_mentions_per_post: "您可以在一个帖子里使用 @name 提及的最大数量。"
     max_users_notified_per_group_mention: "当群组被提及时，接受提醒的最大用户数 ( 超过阈值后将不发送提醒 )"
     enable_mentions: "允许用户提及其他用户。"
     create_thumbnails: "为太大而无法恰当地显示在帖子里的图片创建 lightbox 缩略图。"
@@ -1729,10 +1728,10 @@ zh_CN:
     topic_post_like_heat_low: "在赞/帖子的比值超过这个值后，帖子计数栏将稍微高亮。"
     topic_post_like_heat_medium: "在赞/帖子的比值超过这个值后，帖子数量一栏将明显高亮。"
     topic_post_like_heat_high: "在赞与帖子的比例超过此比例后，帖子数量一栏将强烈高亮。"
-    faq_url: "如果你的 FAQ 文档在外部，那么请在此填写其完整 URL 地址。"
-    tos_url: "如果你的服务条款文档在外部，那么请在此填写其完整 URL 地址。"
-    privacy_policy_url: "如果你的隐私政策文档在外部，那么请在此填写其完整 URL 地址。"
-    log_anonymizer_details: "匿名后是否将用户的详细信息保留在日志中。在遵守GDPR时，你需要关闭它。"
+    faq_url: "如果您的 FAQ 文档在外部，那么请在此填写其完整 URL 地址。"
+    tos_url: "如果您的服务条款文档在外部，那么请在此填写其完整 URL 地址。"
+    privacy_policy_url: "如果您的隐私政策文档在外部，那么请在此填写其完整 URL 地址。"
+    log_anonymizer_details: "匿名后是否将用户的详细信息保留在日志中。在遵守GDPR时，您需要关闭它。"
     newuser_spam_host_threshold: "被判定为垃圾前，新用户能发表指向同一主机的链接的次数。"
     allowed_spam_host_domains: "不需要进行垃圾内容测试的域名列表。新用户永远不会因发表带有这些域名链接的内容而被限制。"
     staff_like_weight: "管理人员的赞的权重（非管理人员的赞的权重为1）。"
@@ -1828,7 +1827,7 @@ zh_CN:
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
     digest_topics: "邮件摘要中显示热门话题的最大数量。"
     digest_posts: "邮件摘要中所显示的热门帖子的数量。"
-    digest_other_topics: "邮件摘要中“你所关注的话题和分类中的新内容”这一部分的最大话题数量。"
+    digest_other_topics: "邮件摘要中“您所关注的话题和分类中的新内容”这一部分的最大话题数量。"
     digest_min_excerpt_length: "邮件摘要中显示的帖子摘要字符数下限。"
     suppress_digest_email_after_days: "停止给(n)天未登录网站的用户发送摘要邮件。"
     digest_suppress_categories: "从摘要邮件中排除这些分类的内容。"
@@ -1864,7 +1863,7 @@ zh_CN:
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
     sequential_replies_threshold: "在被提醒过多连续的回复前，用户在话题中可以连续回复的帖子数量。"
     get_a_room_threshold: "用户被警告前，可在同一个话题下向同一个人回帖的数量。"
-    enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
+    enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果您想要使用自定义的响应式主题请禁用它。"
     dominating_topic_minimum_percent: "被提醒过度干预一个话题前，单个用户发帖可占整个话题的百分比。"
     disable_avatar_education_message: "禁用更改头像操作的教育私信。"
     suppress_uncategorized_badge: "话题列表中的未分类话题不要显示徽章。"
@@ -1883,13 +1882,13 @@ zh_CN:
     app_association_ios: "端点<a href='%{base_path}/apple-app-site-association'>apple-app-site-association </a> 的内容，用于在创建该站点和 iOS 应用程序之间通用链接。"
     share_anonymized_statistics: "分享匿名化的使用数据。"
     auto_handle_queued_age: "此设定天数后自动处理待审核的记录。标记将被忽略。队列中的帖子及用户将被拒绝。设为 0 将禁用此功能。"
-    svg_icon_subset: "添加你希望包含在资产中的其它FontAwesome 5图标。使用前缀'fa-'表示实心图标，'far-'表示常规图标，'fab-'表示品牌图标。"
+    svg_icon_subset: "添加您希望包含在资产中的其它FontAwesome 5图标。使用前缀'fa-'表示实心图标，'far-'表示常规图标，'fab-'表示品牌图标。"
     max_prints_per_hour_per_user: "/print 页面的每小时最大展示量（设置为 0 禁用）"
     full_name_required: "全名是用户个人信息的必填项。"
     enable_names: "在用户的个人信息、用户卡片和邮件中显示全名。禁用以在所有地方隐藏全名。"
     display_name_on_posts: "在用户的帖子中显示他们的全名以及他们的 @username。"
     show_time_gap_days: "两个帖子的发表时间相隔多少天内时，在话题中以时间间隔显示。"
-    short_progress_text_threshold: "在话题中的帖子数超过这个数量后，进度条将只显示当前的帖子数量。如果你更改了进度条的宽度，你需要修改这个值。"
+    short_progress_text_threshold: "在话题中的帖子数超过这个数量后，进度条将只显示当前的帖子数量。如果您更改了进度条的宽度，您需要修改这个值。"
     default_code_lang: "使用Github code block(auto, nohighlight, ruby, python etc)作为默认的编程语言语法高亮。"
     warn_reviving_old_topic_age: "当有人开始回复一个最后回复于设定天数之前的话题时，将显示一个警告。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式声明语言，仍为所有预格式化代码块应用语法高亮。"
@@ -1916,7 +1915,7 @@ zh_CN:
     slug_generation_method: "选择一个链接生成方式。“encoded”将生成以百分号编码的链接。“none”将禁用自定义链接，只生成默认链接。"
     enable_emoji: "启用绘文字（emoji）"
     enable_emoji_shortcuts: "常见的笑脸文字如 :) :p :( 将被转换为绘文字"
-    emoji_set: "你喜欢哪一种 emoji？"
+    emoji_set: "您喜欢哪一种 emoji？"
     emoji_autocomplete_min_chars: "触发自动填充表情符号弹出窗口所需的最少字符数"
     enable_inline_emoji_translation: "启用行内表情符号解析（之前没有任何空格或标点）"
     approve_post_count: "新用户或基础用户需要被审核的帖子数量"
@@ -2030,29 +2029,29 @@ zh_CN:
       invalid_json: "无效的 JSON"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key' 并且要与通知邮件不同。"
       invalid_alternative_reply_by_email_addresses: "必须包括 “%{reply_key}” 并与通知邮件地址不同。"
-      pop3_polling_host_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling host'。"
-      pop3_polling_username_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling username'。"
-      pop3_polling_password_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling password'。"
-      pop3_polling_authentication_failed: "POP3 验证失败。请验证你的 pop3 账户信息。"
-      reply_by_email_address_is_empty: "在启用邮件回复之前，你必须设置“reply by email address”。"
-      email_polling_disabled: "在启用邮件回复功能前，你必须启用手动或者 POP3 轮询。"
-      user_locale_not_enabled: "你必须先设置 'allow user locale' 再启用该设置。"
+      pop3_polling_host_is_empty: "在启用 POP3 轮询前，您必须设置 'pop3 polling host'。"
+      pop3_polling_username_is_empty: "在启用 POP3 轮询前，您必须设置 'pop3 polling username'。"
+      pop3_polling_password_is_empty: "在启用 POP3 轮询前，您必须设置 'pop3 polling password'。"
+      pop3_polling_authentication_failed: "POP3 验证失败。请验证您的 pop3 账户信息。"
+      reply_by_email_address_is_empty: "在启用邮件回复之前，您必须设置“reply by email address”。"
+      email_polling_disabled: "在启用邮件回复功能前，您必须启用手动或者 POP3 轮询。"
+      user_locale_not_enabled: "您必须先设置 'allow user locale' 再启用该设置。"
       invalid_regex: "正则表达式非法或者不允许。"
-      email_editable_enabled: "你必须先禁用 'email editable' 再启用该设置。"
-      staged_users_disabled: "你必须先启用“暂存用户”再启用该设置。"
-      reply_by_email_disabled: "你必须先启用 '用 email 回复' 再启用该设置。"
+      email_editable_enabled: "您必须先禁用 'email editable' 再启用该设置。"
+      staged_users_disabled: "您必须先启用“暂存用户”再启用该设置。"
+      reply_by_email_disabled: "您必须先启用 '用 email 回复' 再启用该设置。"
       discourse_connect_url_is_empty: "在启用该设置前必须设置“discourse connect url”。"
-      discourse_connect_invite_only: "你不能够同时启用DiscourseConnect和仅邀请模式。"
+      discourse_connect_invite_only: "您不能够同时启用DiscourseConnect和仅邀请模式。"
       enable_local_logins_disabled: "必须先启用“启用本地登录”，才能启用此设置。"
       min_username_length_exists: "不能设置最小用户名长度大于最短用户名（%{username}）。"
       min_username_length_range: "不能将最小值设置为高于最大值。"
       max_username_length_exists: "不能设置最大用户名长度小于最长用户名（%{username}）。"
       max_username_length_range: "不能将最大值设置为低于最小值。"
       invalid_hex_value: "颜色值需为6位16进制代码。"
-      empty_selectable_avatars: "启用该设置前，你必须先上传至少两个可选的头像。"
+      empty_selectable_avatars: "启用该设置前，您必须先上传至少两个可选的头像。"
       category_search_priority:
-        low_weight_invalid: "你不能将权重设置为大于或等于1。"
-        high_weight_invalid: "你不能将权重设置为小于或等于1。"
+        low_weight_invalid: "您不能将权重设置为大于或等于1。"
+        high_weight_invalid: "您不能将权重设置为小于或等于1。"
       allowed_unicode_usernames:
         regex_invalid: "正在表达式无效：%{error}"
         leading_trailing_slash: "正则表达式不能以斜杠作为开头或结尾。"
@@ -2074,9 +2073,9 @@ zh_CN:
     video: "[视频]"
   discourse_connect:
     login_error: "登录错误"
-    not_found: "无法找到你的账户。请联系站点管理人员。"
-    account_not_approved: "你的帐户正在等待批准。获得批准时你会收到一封通知邮件。"
-    unknown_error: "你的账户出了一点问题。请联系站点管理人员。"
+    not_found: "无法找到您的账户。请联系站点管理人员。"
+    account_not_approved: "您的帐户正在等待批准。获得批准时您会收到一封通知邮件。"
+    unknown_error: "您的账户出了一点问题。请联系站点管理人员。"
     timeout_expired: "帐户登录超时，请尝试重新登录。"
     no_email: "没有找到邮件地址。请联系站点管理员。"
     blank_id_error: "当前空缺的`external_id`是必需的"
@@ -2090,7 +2089,7 @@ zh_CN:
   poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "欢迎来到我们的社区！这些都是最近热门话题。"
-    not_seen_in_a_month: "欢迎回来！我们已经好久没见到你了。这些是你不在时的最热门话题。"
+    not_seen_in_a_month: "欢迎回来！我们已经好久没见到您了。这些是您不在时的最热门话题。"
   merge_posts:
     edit_reason:
       other: "%{username}合并了 %{count} 个帖子"
@@ -2148,58 +2147,58 @@ zh_CN:
     auto_deleted_by_timer: "由计时器自动删除。"
   login:
     invalid_second_factor_method: "所选的双重认证方法无效。"
-    not_enabled_second_factor_method: "你的帐户未启用所选的双重验证方式。"
-    security_key_description: "当你准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
+    not_enabled_second_factor_method: "您的帐户未启用所选的双重验证方式。"
+    security_key_description: "当您准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
     security_key_alternative: "尝试另一种方式"
     security_key_authenticate: "使用安全密钥进行身份验证"
     security_key_not_allowed_error: "安全密钥验证超时或被取消。"
     security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
     security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
     security_key_invalid: "验证安全密钥时出错。"
-    not_approved: "你的账户尚未获得批准。一旦你的账户获得批准，你会收到一封电子邮件。"
+    not_approved: "您的账户尚未获得批准。一旦您的账户获得批准，您会收到一封电子邮件。"
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
     incorrect_password: "密码错误"
-    wait_approval: "谢谢注册账户。我们会在你的账户获得批准之后通知你。"
-    active: "你的账户已经被激活，可以使用了。"
-    activate_email: "<p>快完成了！我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
-    not_activated: "你还不能登录。我们发送了一封激活邮件给你，请按照邮件中的步骤来激活你的账户。"
-    not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登录。"
-    admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
-    reset_not_allowed_from_ip_address: "你不能够从当前的IP地址请求重置密码。"
-    suspended: "你要等到 %{date} 之后才能登录。"
+    wait_approval: "谢谢注册账户。我们会在您的账户获得批准之后通知您。"
+    active: "您的账户已经被激活，可以使用了。"
+    activate_email: "<p>快完成了！我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活您的账户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件收件箱。</p>"
+    not_activated: "您还不能登录。我们发送了一封激活邮件给您，请按照邮件中的步骤来激活您的账户。"
+    not_allowed_from_ip_address: "您不能以 %{username} 身份从该 IP 地址登录。"
+    admin_not_allowed_from_ip_address: "您不能从该 IP 地址以管理员身份登录。"
+    reset_not_allowed_from_ip_address: "您不能够从当前的IP地址请求重置密码。"
+    suspended: "您要等到 %{date} 之后才能登录。"
     suspended_with_reason: "账户已封禁至 %{date}：%{reason}"
     errors: "%{errors}"
     not_available: "不可用，试试%{suggestion}？"
     something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
     omniauth_error:
-      generic: "抱歉，验证你的账户时出错。请重试。"
+      generic: "抱歉，验证您的账户时出错。请重试。"
       csrf_detected: "授权超时，或者您已切换浏览器。请重试。"
       request_error: "授权时发生错误。请重试。"
       invalid_iat: "由于服务器时钟差异，无法验证授权令牌。请重试。"
-    omniauth_error_unknown: "在处理你的登录过程中发生了错误，请重试。"
+    omniauth_error_unknown: "在处理您的登录过程中发生了错误，请重试。"
     omniauth_confirm_title: "使用%{provider}登录"
     omniauth_confirm_button: "继续"
-    authenticator_error_no_valid_email: "关联%{account}的账户没有优秀的邮件地址。你可能需要用不同的邮件地址配置你的账户。"
+    authenticator_error_no_valid_email: "关联%{account}的账户没有优秀的邮件地址。您可能需要用不同的邮件地址配置您的账户。"
     new_registrations_disabled: "现在不允许注册新账户。"
     password_too_long: "密码不能超过 200 个字符。"
-    email_too_long: "你输入的邮件太长了。邮箱名不得超过 254 字符，域名必须不超过 253 字符。"
-    wrong_invite_code: "你输入的邀请码不正确。"
+    email_too_long: "您输入的邮件太长了。邮箱名不得超过 254 字符，域名必须不超过 253 字符。"
+    wrong_invite_code: "您输入的邀请码不正确。"
     reserved_username: "该用户名不可被使用。"
-    missing_user_field: "你还没有填写完所有用户字段"
+    missing_user_field: "您还没有填写完所有用户字段"
     auth_complete: "验证已经完成。"
     click_to_continue: "点击这里继续。"
     already_logged_in: "抱歉！这个邀请只用于尚未拥有账户的新用户。"
     second_factor_title: "双重认证"
-    second_factor_description: "请输入你的APP验证码："
+    second_factor_description: "请输入您的APP验证码："
     second_factor_backup_description: "请输入备用码："
-    second_factor_backup_title: "双重认证备份码"
+    second_factor_backup_title: "双重认证备份代码"
     invalid_second_factor_code: "验证码无效。每个代码只能使用一次。"
     invalid_security_key: "无效的安全密钥。"
     missing_second_factor_name: "请提供一个名称。"
     missing_second_factor_code: "请提供一个验证码"
     second_factor_toggle:
       totp: "请改用身份验证器应用或安全密钥"
-      backup_code: "使用备份码"
+      backup_code: "使用备份代码"
   admin:
     email:
       sent_test: "已发送！"
@@ -2242,8 +2241,8 @@ zh_CN:
       revoked: "在%{date}之前不发送邮件至“%{email}”"
       does_not_exist: "N/A"
     ip_address:
-      blocked: "不允许从你的 IP 地址注册新用户。"
-      max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
+      blocked: "不允许从您的 IP 地址注册新用户。"
+      max_new_accounts_per_registration_ip: "不允许从您的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
     website:
       domain_not_allowed: "网站无效。允许的域名有：%{domains}"
     auto_rejected: "因时限被自动拒绝。查看站点自动处理队列时限设置。"
@@ -2264,20 +2263,20 @@ zh_CN:
       other: "%{count}个项目需要被审核"
   unsubscribe_mailer:
     title: "取消订阅发件人"
-    subject_template: "确认你不想要收到%{site_title}的电子邮件更新"
+    subject_template: "确认您不想要收到%{site_title}的电子邮件更新"
     text_body_template: |
-      我们收到了取消订阅来自%{site_domain_name}的邮件更新的请求（是你的操作吗？）。
+      我们收到了取消订阅来自%{site_domain_name}的邮件更新的请求（是您的操作吗？）。
 
-      如果你确认该请求，点击链接：
+      如果您确认该请求，点击链接：
 
       %{confirm_unsubscribe_link}
 
-      如果你想要继续收到邮件更新，你可以忽略这封邮件。
+      如果您想要继续收到邮件更新，您可以忽略这封邮件。
   invite_mailer:
     title: "要求发件人"
-    subject_template: "%{inviter_name} 邀请你参与 '%{topic_title}' 于 %{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请您参与 '%{topic_title}' 于 %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} 邀请你参与讨论
+      %{inviter_name} 邀请您参与讨论
 
       > **%{topic_title}**
       >
@@ -2287,14 +2286,14 @@ zh_CN:
 
       > %{site_title} -- %{site_description}
 
-      如果你感兴趣，点击以下链接:
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   custom_invite_mailer:
     title: "自定义邀请发件人"
-    subject_template: "%{inviter_name}邀请你加入'%{topic_title}'于%{site_domain_name}"
+    subject_template: "%{inviter_name}邀请您加入'%{topic_title}'于%{site_domain_name}"
     text_body_template: |
-      %{inviter_name} 邀请你参与讨论
+      %{inviter_name} 邀请您参与讨论
 
       > **%{topic_title}**
       >
@@ -2308,27 +2307,27 @@ zh_CN:
 
       > %{user_custom_message}
 
-      如果你感兴趣，点击以下链接:
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   invite_forum_mailer:
     title: "邀请论坛发件人"
-    subject_template: "%{inviter_name}邀请你加入%{site_domain_name}"
+    subject_template: "%{inviter_name}邀请您加入%{site_domain_name}"
     text_body_template: |
-      %{inviter_name} 邀请你加入
+      %{inviter_name} 邀请您加入
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      如果你感兴趣，点击以下链接:
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   custom_invite_forum_mailer:
     title: "自定义论坛邀请发件人"
-    subject_template: "%{inviter_name}邀请你加入%{site_domain_name}"
+    subject_template: "%{inviter_name}邀请您加入%{site_domain_name}"
     text_body_template: |
-      %{inviter_name} 邀请你加入
+      %{inviter_name} 邀请您加入
 
       > **%{site_title}**
       >
@@ -2338,38 +2337,38 @@ zh_CN:
 
       > %{user_custom_message}
 
-      如果你感兴趣，点击以下链接:
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   invite_password_instructions:
     title: "邀请密码指示"
     subject_template: "为 %{site_name} 账户设置密码"
     text_body_template: |
-      感谢你接受来自%{site_name}的邀请——欢迎！
+      感谢您接受来自%{site_name}的邀请——欢迎！
 
       点击下面的链接立即选择一个密码：
       %{base_url}/u/password-reset/%{email_token}
 
-      （如果链接已经过期，在登录时点击“我忘记了密码”，再次输入你的邮箱即可。）
+      （如果链接已经过期，在登录时点击“我忘记了密码”，再次输入您的邮箱即可。）
   download_backup_mailer:
     title: "下载备份邮件发件人"
     subject_template: "[%{email_prefix}] 站点备份下载"
     text_body_template: |
-      这是你的[站点备份文件](%{backup_file_path})。
+      这是您的[站点备份文件](%{backup_file_path})。
 
-      出于安全原因，我们把下载链接发送至你验证过的邮箱。
+      出于安全原因，我们把下载链接发送至您验证过的邮箱。
 
-      （如果你**没有**请求下载，你需要思考一下了——某管理员请求了备份文件）
+      （如果您**没有**请求下载，您需要思考一下了——某管理员请求了备份文件）
     no_token: |
       抱歉，这个备份下载链接已经被使用或已经过期。
   admin_confirmation_mailer:
     title: "管理员确认"
     subject_template: "[%{site_name}] 确认新管理员账户"
-    text_body_template: "请确认你要添加**%{target_username}（%{target_email}）**作为你的论坛的管理员。 \n\n[确认管理员账户](%{admin_confirm_url})\n"
+    text_body_template: "请确认您要添加**%{target_username}（%{target_email}）**作为您的论坛的管理员。 \n\n[确认管理员账户](%{admin_confirm_url})\n"
   test_mailer:
     title: "测试发件人"
     subject_template: "[%{email_prefix}] 邮件可达性测试"
-    text_body_template: "这是一封测试邮件，它来自 \n\n[**%{base_url}**][0]\n\n邮件传输是复杂的。下面是几个你需要第一时间留意的重点：\n\n- 请*确保*正确地在站点设置中设置了`notification email`。**你所发出的邮件的来源字段的域名需要被验证**。\n\n- 清楚如何使用你的邮件客户端查看邮件原始内容，这样你能够检查邮件标头以获取重要线索。在Gmail中，每封邮件的右上角下拉菜单中都有“显示原始内容”的选项。\n\n- **重要:**你的ISP是否设置了反向DNS记录以关联你用于发送邮件的域名和IP地址？[测试你的反向PTR记录][2]。如果你的ISP未正确设置反向DNS记录，你的邮件不太可能被正确送达。\n\n- 你的域名的[SPF记录][8]正确吗？[测试你的SPF记录][1]。注意SPF的正确记录类型是TXT.\n\n- 你的域名的[DKIM记录][3]正确吗？这会显著地提升邮件送达。[测试你的DKIM记录][7]。\n\n- 如果你使用自建的邮件服务器，确保你的邮件服务器的IP地址[不在邮件屏蔽列表中][4]。还要验证其在HELO信息中正确地发送出一个DNS解析正常的域名。否则，你的邮件会被许多邮件服务拒收。\n\n- 我们强烈建议你**发送一封测试邮件到[mail-tester.com][mt]**以验证上述所有设置正常。\n\n（较*方便*的方法就是创建一个[SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg]或[Mailjet][mj]的账号，这些平台提供适用于小型社区的低成本邮寄服务。不过，你仍然需要在DNS中设置SPF和DKIM记录！）\n\n希望你能成功收到这封测试邮件！\n\n祝君好运，\n\n你在[Discourse](https://www.discourse.org)的伙伴\n\n[0]: %{base_url}\n[1]: https://www.kitterman.com/spf/validate.html\n[2]: https://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: https://whatismyipaddress.com/blacklist-check\n[7]: https://www.mail-tester.com/spf-dkim-check\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://goo.gl/r1WMF6\n[sp]: https://www.sparkpost.com/\n[mg]: https://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing/\n[mt]: https://www.mail-tester.com/\n"
+    text_body_template: "这是一封测试邮件，它来自 \n\n[**%{base_url}**][0]\n\n邮件传输是复杂的。下面是几个您需要第一时间留意的重点：\n\n- 请*确保*正确地在站点设置中设置了`notification email`。**您所发出的邮件的来源字段的域名需要被验证**。\n\n- 清楚如何使用您的邮件客户端查看邮件原始内容，这样您能够检查邮件标头以获取重要线索。在Gmail中，每封邮件的右上角下拉菜单中都有“显示原始内容”的选项。\n\n- **重要:**您的ISP是否设置了反向DNS记录以关联您用于发送邮件的域名和IP地址？[测试您的反向PTR记录][2]。如果您的ISP未正确设置反向DNS记录，您的邮件不太可能被正确送达。\n\n- 您的域名的[SPF记录][8]正确吗？[测试您的SPF记录][1]。注意SPF的正确记录类型是TXT.\n\n- 您的域名的[DKIM记录][3]正确吗？这会显著地提升邮件送达。[测试您的DKIM记录][7]。\n\n- 如果您使用自建的邮件服务器，确保您的邮件服务器的IP地址[不在邮件屏蔽列表中][4]。还要验证其在HELO信息中正确地发送出一个DNS解析正常的域名。否则，您的邮件会被许多邮件服务拒收。\n\n- 我们强烈建议您**发送一封测试邮件到[mail-tester.com][mt]**以验证上述所有设置正常。\n\n（较*方便*的方法就是创建一个[SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg]或[Mailjet][mj]的账号，这些平台提供适用于小型社区的低成本邮寄服务。不过，您仍然需要在DNS中设置SPF和DKIM记录！）\n\n希望您能成功收到这封测试邮件！\n\n祝君好运，\n\n您在[Discourse](https://www.discourse.org)的伙伴\n\n[0]: %{base_url}\n[1]: https://www.kitterman.com/spf/validate.html\n[2]: https://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: https://whatismyipaddress.com/blacklist-check\n[7]: https://www.mail-tester.com/spf-dkim-check\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://goo.gl/r1WMF6\n[sp]: https://www.sparkpost.com/\n[mg]: https://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing/\n[mt]: https://www.mail-tester.com/\n"
   new_version_mailer:
     title: "新版本发件人"
     subject_template: "[%{email_prefix}] 新 Discourse 版本可供升级"
@@ -2403,14 +2402,14 @@ zh_CN:
 
       %{notes}
   flag_reasons:
-    off_topic: "你的帖子被标记为 **偏离话题**：鉴于当前的话题标题和第一个帖子，社区成员们感觉它不适合处于这个话题中。"
-    inappropriate: "你的帖子被标记为 **不恰当**：社区成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社区准则](%{base_path}/guidelines)。"
-    spam: "你的帖子被标记为 **广告**：社区成员觉得它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
-    notify_moderators: "你的帖子被标记为 **需要版主关注**：社区成员认为帖子需要管理人员介入。"
+    off_topic: "您的帖子被标记为 **偏离话题**：鉴于当前的话题标题和第一个帖子，社区成员们感觉它不适合处于这个话题中。"
+    inappropriate: "您的帖子被标记为 **不恰当**：社区成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社区准则](%{base_path}/guidelines)。"
+    spam: "您的帖子被标记为 **广告**：社区成员觉得它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
+    notify_moderators: "您的帖子被标记为 **需要版主关注**：社区成员认为帖子需要管理人员介入。"
   flags_dispositions:
-    agreed: "谢谢你的私信。我们认为这是个问题。我们正在进行处理。"
+    agreed: "谢谢您的私信。我们认为这是个问题。我们正在进行处理。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
-    disagreed: "谢谢你的私信。我们正在进行处理。"
+    disagreed: "谢谢您的私信。我们正在进行处理。"
     ignored: "感谢通知我们。我们正在调查情况。"
     ignored_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   temporarily_closed_due_to_flags:
@@ -2422,15 +2421,15 @@ zh_CN:
       title: "帖子隐藏"
       subject_template: "帖子因社区标记隐藏"
       text_body_template: |
-        你好，
+        您好，
 
-        这是%{site_name}通知你的帖子已被隐藏的自动消息。
+        这是%{site_name}通知您的帖子已被隐藏的自动消息。
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        这个帖子被隐藏是因为被社区成员所标记，所以请考虑根据他们的反馈修改你的帖子。**你可以在 %{edit_delay} 分钟后开始编辑你的帖子，然后它将重新被显示。**
+        这个帖子被隐藏是因为被社区成员所标记，所以请考虑根据他们的反馈修改您的帖子。**您可以在 %{edit_delay} 分钟后开始编辑您的帖子，然后它将重新被显示。**
 
         然而，如果帖子再次被社区成员标记并隐藏，它将被隐藏至版主处理后。
 
@@ -2439,15 +2438,15 @@ zh_CN:
       title: "再次发布隐藏"
       subject_template: "被社区标记所隐藏，已通知管理人员"
       text_body_template: |
-        你好，
+        您好，
 
-        这是%{site_name}通知你的帖子再次被隐藏了的自动消息。
+        这是%{site_name}通知您的帖子再次被隐藏了的自动消息。
 
         <%{base_url}}%{url}>
 
         %{flag_reason}
 
-        社区成员标记了该帖子，现已被隐藏。**由于此帖子已被隐藏超过一次，你的帖子现在将持续隐藏，直到由工作人员作出处理。**
+        社区成员标记了该帖子，现已被隐藏。**由于此帖子已被隐藏超过一次，您的帖子现在将持续隐藏，直到由工作人员作出处理。**
 
         有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
     queued_by_staff:
@@ -2456,20 +2455,20 @@ zh_CN:
       text_body_template: |
         Hello，
 
-        这是一条从 %{site_name} 发来的自动消息，，你的帖子已隐藏。
+        这是一条从 %{site_name} 发来的自动消息，，您的帖子已隐藏。
 
         <%{base_url}%{url}>
 
-        你的帖子将一直隐藏，直到管理员对其进行审核。
+        您的帖子将一直隐藏，直到管理员对其进行审核。
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     flags_disagreed:
       title: "管理人员恢复了被标记的帖子"
       subject_template: "管理人员恢复了被标记的帖子"
       text_body_template: |
-        你好，
+        您好，
 
-        这是%{site_name}通知[你的贴子](%{base_url}%{url})已被恢复的自动消息。
+        这是%{site_name}通知[您的贴子](%{base_url}%{url})已被恢复的自动消息。
 
         此贴曾被社区标记过，管理人员选择将其恢复。
 
@@ -2482,9 +2481,9 @@ zh_CN:
       title: "管理人员删除了已标记的帖子"
       subject_template: "管理人员删除了已标记的帖子"
       text_body_template: |
-        你好，
+        您好，
 
-        这是一则由%{site_name}自动发送的消息，告知[你的帖子](%{base_url}%{url})被移除了。
+        这是一则由%{site_name}自动发送的消息，告知[您的帖子](%{base_url}%{url})被移除了。
 
         %{flag_reason}
 
@@ -2499,65 +2498,65 @@ zh_CN:
       text_body_template: |
         要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
 
-        只要你不断参与，我们将更了解你，并且新用户的临时限制将被移除。一段时间后你将获得[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)，这将提供一些特殊功能来帮助我们更好地管理社区。
+        只要您不断参与，我们将更了解您，并且新用户的临时限制将被移除。一段时间后您将获得[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)，这将提供一些特殊功能来帮助我们更好地管理社区。
     welcome_user:
       title: "欢迎用户"
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
-        感谢你加入%{site_name}，欢迎！
+        感谢您加入%{site_name}，欢迎！
 
         %{new_user_tips}
 
         我们始终相信[讨论应该文明](%{base_url}/guidelines)。
 
-        好好享受你在社区的时光吧！
+        好好享受您在社区的时光吧！
     welcome_tl1_user:
       title: "欢迎信任等级1用户"
       subject_template: "感谢与我们共度时光"
       text_body_template: |
-        嘿。我们看到你一直在忙着阅读，这太棒了，所以我们已经提升你了[信任等级！](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+        嘿。我们看到您一直在忙着阅读，这太棒了，所以我们已经提升您了[信任等级！](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
-        我们很高兴你和我们共度时光，我们很想知道更多关于你的事情。花一点时间[填写你的个人资料](%{base_url}/my/preferences/profile)，或随时[开始一个新话题](%{base_url}/categories)。
+        我们很高兴您和我们共度时光，我们很想知道更多关于您的事情。花一点时间[填写您的个人资料](%{base_url}/my/preferences/profile)，或随时[开始一个新话题](%{base_url}/categories)。
     welcome_staff:
       title: "欢迎管理人员"
-      subject_template: "恭喜，你已获得%{role}身份！"
+      subject_template: "恭喜，您已获得%{role}身份！"
       text_body_template: |
-        一位管理员已授予你%{role}身份。
+        一位管理员已授予您%{role}身份。
 
-        作为一名%{role}，现在你可以访问<a href='%{base_url}/admin' target='_blank'>管理面板</a>。
+        作为一名%{role}，现在您可以访问<a href='%{base_url}/admin' target='_blank'>管理面板</a>。
 
-        拥有权利的同时也被赋予了重大的责任。如果你不熟悉管理，请参考[管理指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
+        拥有权利的同时也被赋予了重大的责任。如果您不熟悉管理，请参考[管理指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
     welcome_invite:
       title: "欢迎邀请"
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
-        感谢你接受邀请加入%{site_name} —— 欢迎！
+        感谢您接受邀请加入%{site_name} —— 欢迎！
 
-        - 我们为你创建了账户**%{username}**。访问[你的用户设置][prefs]修改名字或密码。
+        - 我们为您创建了账户**%{username}**。访问[您的用户设置][prefs]修改名字或密码。
 
-        - 你登录的时候，请**使用收到邀请的邮箱地址**登录——否则我们就无法分辨是不是你本人！
+        - 您登录的时候，请**使用收到邀请的邮箱地址**登录——否则我们就无法分辨是不是您本人！
 
         - %{new_user_tips}
 
         我们始终相信[讨论应该文明](%{base_url}/guidelines)。
 
-        好好享受你在论坛的时光吧！
+        好好享受您在论坛的时光吧！
 
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
-      subject_template: "恭喜！你的信任等级提升了！"
+      subject_template: "恭喜！您的信任等级提升了！"
       text_body_template: |
-        我们已经为你提升到另一个[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)！
+        我们已经为您提升到另一个[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)！
 
         作为经验丰富的用户，您可能会喜欢[这个方便实用的技巧清单](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
 
-        希望你能够继续活跃 —— 感谢你的参与。
+        希望您能够继续活跃 —— 感谢您的参与。
     backup_succeeded:
       title: "备份成功"
       subject_template: "备份成功完成"
       text_body_template: |
         备份成功。
-        访问[管理 > 备份](%{base_url}/admin/backups)下载你的新备份。
+        访问[管理 > 备份](%{base_url}/admin/backups)下载您的新备份。
 
         以下为日志：
 
@@ -2601,7 +2600,7 @@ zh_CN:
     bulk_invite_succeeded:
       title: "批量邀请成功"
       subject_template: "批量用户邀请成功完成"
-      text_body_template: "你的批量邀请用户已经完成，发送了 %{sent} 个邀请。"
+      text_body_template: "您的批量邀请用户已经完成，发送了 %{sent} 个邀请。"
     bulk_invite_failed:
       title: "批量邀请失败"
       subject_template: "批量邀请完成，并有一些错误"
@@ -2615,146 +2614,146 @@ zh_CN:
         ```
     user_added_to_group_as_owner:
       title: "添加为群组的所有者"
-      subject_template: "你已被添加为 %{group_name} 群组的所有者"
+      subject_template: "您已被添加为 %{group_name} 群组的所有者"
       text_body_template: |
-        你已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的所有者。
+        您已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的所有者。
     user_added_to_group_as_member:
       title: "添加为群组的成员"
-      subject_template: "你已被添加为 %{group_name} 群组的成员"
+      subject_template: "您已被添加为 %{group_name} 群组的成员"
       text_body_template: |
-        你已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的成员。
+        您已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的成员。
     csv_export_succeeded:
       title: "CSV导出成功"
       subject_template: "[%{export_title}]数据导出完成"
       text_body_template: |
-        你的数据导出成功！:dvd:
+        您的数据导出成功！:dvd:
 
         %{download_link}
 
         上方的下载地址将在 48 小时后失效。
 
-        用户数据以 Zip 格式归档。若归档文件无法在你打开时自动解压，请使用此处推荐的工具：https://www.7-zip.org/
+        用户数据以 Zip 格式归档。若归档文件无法在您打开时自动解压，请使用此处推荐的工具：https://www.7-zip.org/
     csv_export_failed:
       title: "导致CSV失败"
       subject_template: "数据导出失败"
-      text_body_template: "我们很抱歉，但是你的数据导出请求失败了。请检查日志或[联系管理人员](%{base_url}/about)。"
+      text_body_template: "我们很抱歉，但是您的数据导出请求失败了。请检查日志或[联系管理人员](%{base_url}/about)。"
     email_reject_insufficient_trust_level:
       title: "拒收邮件 信任等级不足"
       subject_template: "[%{email_prefix}] 邮件问题 -- 信任等级不足"
       text_body_template: |
-        我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        我们很抱歉，但是您发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
-        你的账户没有足够的信任等级以该邮件地址发布新话题。如果你有异议，[联系管理人员](%{base_url}/about)。
+        您的账户没有足够的信任等级以该邮件地址发布新话题。如果您有异议，[联系管理人员](%{base_url}/about)。
     email_reject_user_not_found:
       title: "Email被拒绝：用户未找到"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未找到用户"
       text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+        我们非常抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
-        你发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+        您发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_screened_email:
       title: "Email 被拒绝：已屏蔽的 Email 地址"
       subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的邮件地址"
       text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
-        你发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+        您发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_not_allowed_email:
       title: "邮件被拒绝：不被允许的邮件地址"
       subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的邮件地址"
       text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
-        你发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+        您发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_inactive_user:
       title: "Email被拒绝：未激活的用户"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未激活用户"
       text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+        我们非常抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
-        与你账户关联的邮件地址没有激活，请先激活你的账户再发送邮件。
+        与您账户关联的邮件地址没有激活，请先激活您的账户再发送邮件。
     email_reject_silenced_user:
       title: "Email 被拒绝：已禁言的用户"
       subject_template: "[%{email_prefix}] 邮件问题——已禁言的用户"
       text_body_template: |
-        我们非常抱歉，但是你发送至 （%{destination}题为 %{former_title}）的邮件出问题了。
+        我们非常抱歉，但是您发送至 （%{destination}题为 %{former_title}）的邮件出问题了。
 
-        与你邮件地址关联的账户已被禁言。
+        与您邮件地址关联的账户已被禁言。
     email_reject_reply_user_not_matching:
       title: "Email 被拒绝：用户不匹配"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未预期的回复地址"
       text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+        我们非常抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
-        你发送回复的邮件地址与我们预期的地址不同，所以我们不确定你是不是同一个人。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+        您发送回复的邮件地址与我们预期的地址不同，所以我们不确定您是不是同一个人。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_empty:
       title: "Email被拒绝：空"
       subject_template: "[%{email_prefix}] 邮件问题 -- 无内容"
       text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件没有成功。
+        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件没有成功。
 
-        我们不能找到你邮件中的任何回复内容。
+        我们不能找到您邮件中的任何回复内容。
 
-        如果你**确定**你的邮件中有回复内容，试试用更简单的格式。
+        如果您**确定**您的邮件中有回复内容，试试用更简单的格式。
     email_reject_parsing:
       title: "邮件拒绝解析"
       subject_template: "[%{email_prefix}] 邮件问题 -- 无法识别内容"
       text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
+        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
-        我们不能找到你邮件中的回复。**请确认将你的回复置于邮件顶端**——我们不能处理行内回复。
+        我们不能找到您邮件中的回复。**请确认将您的回复置于邮件顶端**——我们不能处理行内回复。
     email_reject_invalid_access:
       title: "Email被拒绝：无效访问"
       subject_template: "[%{email_prefix}] 邮件问题 -- 无效访问"
       text_body_template: |
-        我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        我们很抱歉，但是您发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
-        你的账户没有达到足够的信任等级在该分类发布新话题。如果你有异议，[联系管理人员](%{base_url}/about)。
+        您的账户没有达到足够的信任等级在该分类发布新话题。如果您有异议，[联系管理人员](%{base_url}/about)。
     email_reject_strangers_not_allowed:
       title: "Email被拒绝：不允许陌生人"
       subject_template: "[%{email_prefix}] 邮件问题 -- 无效访问"
       text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（标题为%{former_title}）无效。
+        我们非常抱歉，但是您发送至%{destination}（标题为%{former_title}）无效。
 
-        邮件所发送的分类只接受来自拥有邮箱地址的有效账户的回复。如果你认为这是一个错误，[联系管理人员](%{base_url}/about)。
+        邮件所发送的分类只接受来自拥有邮箱地址的有效账户的回复。如果您认为这是一个错误，[联系管理人员](%{base_url}/about)。
     email_reject_invalid_post:
       title: "邮件拒绝无效话题"
       subject_template: "[%{email_prefix}] 邮件问题 -- 发表错误"
       text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         可能的原因是：复杂的格式、私信超长、私信太短。请再试一次，如果还不行，使用网站发表。
     email_reject_invalid_post_specified:
       title: "邮件拒绝指定的帖子无效"
       subject_template: "[%{email_prefix}] 邮件问题 -- 发表错误"
       text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         原因：
 
         %{post_error}
 
-        如果你能解决错误，请再试一次。
+        如果您能解决错误，请再试一次。
       date_invalid: "没有找到帖子的创建时间。电子邮件是否缺少日期header？"
     email_reject_post_too_short:
       title: "邮件拒绝帖子过短"
       subject_template: "[%{email_prefix}] 邮件问题 - 帖子过短"
       text_body_template: |
-        很抱歉，你发送到%{destination}的邮件（标题%{former_title}）无效。
+        很抱歉，您发送到%{destination}的邮件（标题%{former_title}）无效。
 
-        为了促进更深入的对话，不允许进行非常简短的回复。你能回复至少%{count}个字符吗？或者回复“+1”来发送邮件。
+        为了促进更深入的对话，不允许进行非常简短的回复。您能回复至少%{count}个字符吗？或者回复“+1”来发送邮件。
     email_reject_invalid_post_action:
       title: "邮件拒绝无效的帖子动作"
       subject_template: "[%{email_prefix}] 邮件问题 -- 无效帖子动作"
       text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         发送的命令无法被识别。请再试一次，如果还有问题，使用网站发表。
     email_reject_reply_key:
       title: "邮件拒绝回复键"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未知回复键"
       text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         邮件中的回复信令是无效或者未知的，所以我们不知道这封邮件回复给谁了。请[联系管理人员](%{base_url}/about)。
     email_reject_bad_destination_address:
@@ -2765,90 +2764,90 @@ zh_CN:
 
         以下是一些需要检查的事项：
 
-          - 你使用多个电子邮件地址吗？你回复的电子邮件地址不同于原来使用的电子邮件地址吗？电子邮件回复要求您在回复时使用相同的电子邮件地址。
+          - 您使用多个电子邮件地址吗？您回复的电子邮件地址不同于原来使用的电子邮件地址吗？电子邮件回复要求您在回复时使用相同的电子邮件地址。
 
-          - 回复时，你的电子邮件软件是否正确使用 Reply-To: email address？不幸的是，某些电子邮件软件错误地使用 From: address，这不起作用。
+          - 回复时，您的电子邮件软件是否正确使用 Reply-To: email address？不幸的是，某些电子邮件软件错误地使用 From: address，这不起作用。
 
           - 电子邮件中的 Message-ID 标题是否已修改？Message-ID 必须保持一致且不变。
 
         需要更多帮助？联系我们： %{base_url}/about
     email_reject_old_destination:
       title: "邮件拒绝老地址"
-      subject_template: "[%{email_prefix}] 邮件问题 - 你正尝试回复旧通知"
+      subject_template: "[%{email_prefix}] 邮件问题 - 您正尝试回复旧通知"
       text_body_template: |
-        很抱歉，你发送到%{destination}的邮件（标题%{former_title}）无效。
+        很抱歉，您发送到%{destination}的邮件（标题%{former_title}）无效。
 
         我们只接受%{number_of_days}天的原始通知回复。请[访问话题](%{short_url})继续对话。
     email_reject_topic_not_found:
       title: "Email被拒绝：话题不存"
       subject_template: "[%{email_prefix}] 邮件问题 -- 话题未找到"
       text_body_template: |
-        我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        我们很抱歉，但是您发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
-        你回复的话题不存在——可能已经被删除了？如果你有异议，[联系管理人员](%{base_url}/about)。
+        您回复的话题不存在——可能已经被删除了？如果您有异议，[联系管理人员](%{base_url}/about)。
     email_reject_topic_closed:
       title: "Email被拒绝：话题已关闭"
       subject_template: "[%{email_prefix}] 邮件问题 -- 话题已关闭"
       text_body_template: |
-        我们很抱歉，但是你发送至 %{destination} ( 名为 %{former_title} )的邮件出问题了。
+        我们很抱歉，但是您发送至 %{destination} ( 名为 %{former_title} )的邮件出问题了。
 
-        你回复的话题已经被关闭，不允许回复。如果你有异议，[联系管理人员](%{base_url}/about)。
+        您回复的话题已经被关闭，不允许回复。如果您有异议，[联系管理人员](%{base_url}/about)。
     email_reject_auto_generated:
       title: "邮件拒绝自动生成"
       subject_template: "[%{email_prefix}] 邮件问题 -- 自动生成的回复"
       text_body_template: |
-        我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        我们很抱歉，但是您发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
-        系统觉得你的邮件是“自动生成”的，即电脑生成了该邮件而不是由你输入的；我们不能接受这样的邮件。如果你有异议，[联系管理人员](%{base_url}/about)。
+        系统觉得您的邮件是“自动生成”的，即电脑生成了该邮件而不是由您输入的；我们不能接受这样的邮件。如果您有异议，[联系管理人员](%{base_url}/about)。
     email_reject_unrecognized_error:
       title: "Email被拒绝：无法识别的错误"
       subject_template: "[%{email_prefix}] 邮件问题 -- 无法识别的错误"
       text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
-        在处理你的电子邮件时出现无法识别的错误，它并未发布。你可以再试一次，或者[联系管理人员](%{base_url}/about)。
+        在处理您的电子邮件时出现无法识别的错误，它并未发布。您可以再试一次，或者[联系管理人员](%{base_url}/about)。
     email_reject_attachment:
       title: "邮件附件被拒"
       subject_template: "[%{email_prefix}] 邮件问题 -- 附件被拒"
       text_body_template: |
-        很遗憾，你的邮件中的一些附件（%{destination}（标题%{former_title}）已被拒绝。
+        很遗憾，您的邮件中的一些附件（%{destination}（标题%{former_title}）已被拒绝。
 
         细节：
         %{rejected_errors}
 
-        如果你认为这是一个错误，[联系管理人员](%{base_url}/about)。
+        如果您认为这是一个错误，[联系管理人员](%{base_url}/about)。
     email_reject_reply_not_allowed:
       title: "邮件被拒绝：不允许回复"
       subject_template: "[%{email_prefix}]邮件问题 -- 不允许回复"
       text_body_template: |
-        我们很抱歉，但是你发送至%{destination}（标题 %{former_title}）的邮件出问题了。
+        我们很抱歉，但是您发送至%{destination}（标题 %{former_title}）的邮件出问题了。
 
-        你的账户没有权限回复这个话题。如果你认为这是一个错误，[联系管理人员](%{base_url}/about)。
+        您的账户没有权限回复这个话题。如果您认为这是一个错误，[联系管理人员](%{base_url}/about)。
     email_reject_reply_to_digest:
       title: "回复摘要邮件被拒"
       subject_template: "[%{email_prefix}] 邮件问题 -- 回复摘要邮件"
       text_body_template: |
-        抱歉，你发送到%{destination}（标题为%{former_title}）的邮件出现了问题。
+        抱歉，您发送到%{destination}（标题为%{former_title}）的邮件出现了问题。
 
         我们不接受直接回复摘要邮件。
 
-        如果你认为这是一个错误，[联系我们的管理人员](%{base_url}/about).
+        如果您认为这是一个错误，[联系我们的管理人员](%{base_url}/about).
     email_error_notification:
       title: "邮件错误提醒"
       subject_template: "[%{email_prefix}] 电子邮件错误 -- POP 验证错误"
       text_body_template: |
         不幸的是，从 POP 服务器查询邮件时遇到了验证错误。
 
-        请确认你在[站点设置](%{base_url}/admin/site_settings/category/email)中已经正确配置了 POP 验证信息。
+        请确认您在[站点设置](%{base_url}/admin/site_settings/category/email)中已经正确配置了 POP 验证信息。
 
-        如果 POP 邮件账户有图形界面，你可以登录后查看邮箱设置。
+        如果 POP 邮件账户有图形界面，您可以登录后查看邮箱设置。
     email_revoked:
       title: "邮件撤销"
-      subject_template: "你的邮箱地址是否正确？"
+      subject_template: "您的邮箱地址是否正确？"
       text_body_template: |
-        很抱歉，我们无法通过邮件与你联系。我们最后几封给你的邮件都因无法投递而全部退回。
+        很抱歉，我们无法通过邮件与您联系。我们最后几封给您的邮件都因无法投递而全部退回。
 
-        你能否确保[你的邮件地址](%{base_url}/我的/设置/邮件)有效且有效？你可能还希望将我们的邮件地址添加到您的地址簿/联系人列表中，以提高可投递性。
+        您能否确保[您的邮件地址](%{base_url}/我的/设置/邮件)有效且有效？您可能还希望将我们的邮件地址添加到您的地址簿/联系人列表中，以提高可投递性。
     email_bounced: |
       %{email}的邮件已退回。
 
@@ -2863,42 +2862,42 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是 %{site_name} 告知你 @%{username} 已被 %{ignores_threshold} 名用户忽略的自动消息。这可能表示你的社区已开始产生问题。
+        这是 %{site_name} 告知您 @%{username} 已被 %{ignores_threshold} 名用户忽略的自动消息。这可能表示您的社区已开始产生问题。
 
-        你可能想查阅[此用户的近期发帖](%{base_url}/u/%{username}/summary)和[忽略及禁言汇报](%{base_url}/admin/reports/top_ignored_users)中的其他用户。
+        您可能想查阅[此用户的近期发帖](%{base_url}/u/%{username}/summary)和[忽略及禁言汇报](%{base_url}/admin/reports/top_ignored_users)中的其他用户。
 
-        若你需要额外帮助，请参见我们的[社区准则](%{base_url}/guidelines)。
+        若您需要额外帮助，请参见我们的[社区准则](%{base_url}/guidelines)。
     too_many_spam_flags:
       title: "太多垃圾标记"
       subject_template: "新账户被搁置"
       text_body_template: |
-        你好，
+        您好，
 
-        这是%{site_name}通知你的帖子因被社区成员标记已被暂时隐藏的自动消息
+        这是%{site_name}通知您的帖子因被社区成员标记已被暂时隐藏的自动消息
 
-        作为预防措施，你的新账户已被停用，并且在管理人员审核你的账户前你无法创建回复或话题。我们对此深表抱歉。
+        作为预防措施，您的新账户已被停用，并且在管理人员审核您的账户前您无法创建回复或话题。我们对此深表抱歉。
 
         有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "太多信任等级3用户标记"
       subject_template: "新账户被暂时封禁"
       text_body_template: |
-        你好，
+        您好，
 
-        这是%{site_name}通知你的帖子因社区标记而被临时禁用的自动消息。
+        这是%{site_name}通知您的帖子因社区标记而被临时禁用的自动消息。
 
-        出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者话题。我们对此带来的不便表示歉意。
+        出于谨慎的考虑，在管理人员审核通过前，您的新账户不能再发表新的回复或者话题。我们对此带来的不便表示歉意。
 
         要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
     silenced_by_staff:
       title: "被管理人员禁言"
       subject_template: "账户临时被禁用"
       text_body_template: |
-        你好，
+        您好，
 
-        %{site_name}提醒你，出于谨慎起见你的账户已被暂时停用。
+        %{site_name}提醒您，出于谨慎起见您的账户已被暂时停用。
 
-        你可以继续浏览，但在[管理人员](%{base_url}/about)审核你最近的发帖前，你的账户将无法发表新的回复或者话题。我们对此带来的不便表示歉意。
+        您可以继续浏览，但在[管理人员](%{base_url}/about)审核您最近的发帖前，您的账户将无法发表新的回复或者话题。我们对此带来的不便表示歉意。
 
         要查看更多指引，请参阅我们的[社区指引](%{base_url}/guidelines)。
     user_automatically_silenced:
@@ -2927,11 +2926,11 @@ zh_CN:
       title: "解除禁言"
       subject_template: "账户不再被挂起"
       text_body_template: |
-        你好，
+        您好，
 
-        这是%{site_name}通知你的账户在管理人员审核后不再受到限制的自动消息。
+        这是%{site_name}通知您的账户在管理人员审核后不再受到限制的自动消息。
 
-        你现在又可以创建回复和话题了。感谢你的耐心等待。
+        您现在又可以创建回复和话题了。感谢您的耐心等待。
     pending_users_reminder:
       title: "待审核用户提醒"
       subject_template:
@@ -2950,14 +2949,14 @@ zh_CN:
       text_body_template: |
         基于您目前的网站设置，我们有一些新的建议和推荐。
 
-        [访问你的仪表板](%{base_url}/admin)来查看他们。
+        [访问您的仪表板](%{base_url}/admin)来查看他们。
 
-        如果你的仪表板上没有任何可见的内容，那么另一个工作人员可能已经根据这些建议采取了行动。
+        如果您的仪表板上没有任何可见的内容，那么另一个工作人员可能已经根据这些建议采取了行动。
 
         可以查看[管理人员操作日志](%{base_url}/admin/logs/staff_action_logs)。
     new_user_of_the_month:
-      title: "你是这个月的最佳新用户！"
-      subject_template: "你是这个月的最佳新用户！"
+      title: "您是这个月的最佳新用户！"
+      subject_template: "您是这个月的最佳新用户！"
       text_body_template: |
         恭喜，你是**%{month_year}月最佳新用户**。 :trophy:
 
@@ -2969,7 +2968,7 @@ zh_CN:
       subject_template:
         other: "%{count} 个帖子等待审核"
       text_body_template: |
-        你好，
+        您好，
 
         为了保持适度新用户的帖子，正在等待审核。[批准还是拒绝](%{base_url}/review?type=ReviewableQueuedPost)。
   unsubscribe_link: |
@@ -2977,7 +2976,7 @@ zh_CN:
   unsubscribe_link_and_mail: |
     要退订这些邮件，[点击这里](%{unsubscribe_url})。
   unsubscribe_mailing_list: |
-    你启用了邮件列表模式，所以收到了这些邮件。
+    您启用了邮件列表模式，所以收到了这些邮件。
 
     要退订这些邮件，[点击这里](%{unsubscribe_url})。
   subject_re: "回："
@@ -2986,7 +2985,7 @@ zh_CN:
   user_notifications:
     previous_discussion: "之前的回复"
     reached_limit:
-      other: "注意：我们每天最多发送 %{count} 邮件。访问站点看看没被发送的消息。还有你很火！"
+      other: "注意：我们每天最多发送 %{count} 邮件。访问站点看看没被发送的消息。还有您很火！"
     in_reply_to: "回复给"
     unsubscribe:
       title: "取消订阅"
@@ -3014,7 +3013,7 @@ zh_CN:
 
       %{topic_url}
     invited_to_private_message_body: |
-      %{username}邀请你参与私信
+      %{username}邀请您参与私信
 
       > **[%{topic_title}](%{topic_url})**
       >
@@ -3028,7 +3027,7 @@ zh_CN:
 
       %{topic_url}
     invited_to_topic_body: |
-      %{username}邀请你参与讨论
+      %{username}邀请您参与讨论
 
       > **[%{topic_title}](%{topic_url})**
       >
@@ -3052,7 +3051,7 @@ zh_CN:
         %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "邀请用户至私信"
-      subject_template: "[%{email_prefix}] %{username}邀请你至私信“%{topic_title}”"
+      subject_template: "[%{email_prefix}] %{username}邀请您至私信“%{topic_title}”"
       text_body_template: |
         %{header_instructions}
 
@@ -3061,7 +3060,7 @@ zh_CN:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "邀请用户至暂存私信"
-      subject_template: "[%{email_prefix}] %{username}邀请你至私信“%{topic_title}”"
+      subject_template: "[%{email_prefix}] %{username}邀请您至私信“%{topic_title}”"
       text_body_template: |
         %{header_instructions}
 
@@ -3070,7 +3069,7 @@ zh_CN:
         %{respond_instructions}
     user_invited_to_topic:
       title: "邀请用户至话题"
-      subject_template: "[%{email_prefix}] %{username}邀请你至“%{topic_title}”"
+      subject_template: "[%{email_prefix}] %{username}邀请您至“%{topic_title}”"
       text_body_template: |
         %{header_instructions}
 
@@ -3195,41 +3194,41 @@ zh_CN:
         %{message}
     account_suspended:
       title: "账户已封禁"
-      subject_template: "[%{email_prefix}] 你的账户已经被禁用"
+      subject_template: "[%{email_prefix}] 您的账户已经被禁用"
       text_body_template: |
-        你的账号已被论坛禁用，直到 %{suspended_till} 为止。
+        您的账号已被论坛禁用，直到 %{suspended_till} 为止。
 
         原因 - %{reason}
     account_silenced:
       title: "账户已禁言"
-      subject_template: "[%{email_prefix}] 你的账户已被禁言"
+      subject_template: "[%{email_prefix}] 您的账户已被禁言"
       text_body_template: |
-        你的账号已经被禁言至 %{silenced_till}。
+        您的账号已经被禁言至 %{silenced_till}。
 
         原因 - %{reason}
     account_exists:
       title: "账户已经存在"
       subject_template: "[%{email_prefix}] 账户已经存在"
       text_body_template: |
-        你刚试着在%{site_name}创建账户或者试着将账户的邮箱改为%{email}。然而，%{email}已经绑定于另一账户了。
+        您刚试着在%{site_name}创建账户或者试着将账户的邮箱改为%{email}。然而，%{email}已经绑定于另一账户了。
 
-        如果你忘记了密码，[立即重置](%{base_url}/password-reset)。
+        如果您忘记了密码，[立即重置](%{base_url}/password-reset)。
 
-        如果你没有试着用%{email}创建账户或者更改邮件，不要担心——你可以安全地忽略这封邮件。
+        如果您没有试着用%{email}创建账户或者更改邮件，不要担心——您可以安全地忽略这封邮件。
 
-        如果你有任何问题，[联系我们友善的工作人员](%{base_url}/about)。
+        如果您有任何问题，[联系我们友善的工作人员](%{base_url}/about)。
     account_second_factor_disabled:
       title: "双重认证已停用"
       subject_template: "[%{email_prefix}] 双重认证已停用"
       text_body_template: |
-        你在 %{site_name} 的账户已停用了双重认证。你现在只需使用密码便可以登录；不再需要额外的验证代码。
+        您在 %{site_name} 的账户已停用了双重认证。您现在只需使用密码便可以登录；不再需要额外的验证代码。
 
-        如果你未选择禁用双重验证，则有可能有人入侵了你的账户。
+        如果您未选择禁用双重验证，则有可能有人入侵了您的账户。
 
         如果有任何疑问，[联系我们友善的管理人员](%{base_url}/about)。
     digest:
-      why: "在你上次于%{last_seen_at}访问后，%{site_link}的新内容摘要。"
-      since_last_visit: "自从你上次访问"
+      why: "在您上次于%{last_seen_at}访问后，%{site_link}的新内容摘要。"
+      since_last_visit: "自从您上次访问"
       new_topics: "新话题"
       unread_notifications: "未读通知"
       unread_high_priority: "未读的高优先级通知"
@@ -3239,20 +3238,20 @@ zh_CN:
       follow_topic: "关注话题"
       join_the_discussion: "阅读更多"
       popular_posts: "流行帖子"
-      more_new: "你关注的新帖"
+      more_new: "您关注的新帖"
       subject_template: "[%{email_prefix}] 摘要"
-      unsubscribe: "这是来自%{site_link}的摘要邮件，因为你长时间没有访问站点而发送。修改你的邮件设置%{email_preferences_link}，或%{unsubscribe_link}取消订阅。"
-      your_email_settings: "你的邮件设置"
+      unsubscribe: "这是来自%{site_link}的摘要邮件，因为您长时间没有访问站点而发送。修改您的邮件设置%{email_preferences_link}，或%{unsubscribe_link}取消订阅。"
+      your_email_settings: "您的邮件设置"
       click_here: "点击此处"
       from: "%{site_name}"
-      preheader: "在你上次于%{last_seen_at}访问后的新内容摘要"
+      preheader: "在您上次于%{last_seen_at}访问后的新内容摘要"
     forgot_password:
       title: "忘记密码"
       subject_template: "[%{email_prefix}] 密码重置"
       text_body_template: |
-        在[%{site_name}](%{base_url})上有人要求重置你的密码。
+        在[%{site_name}](%{base_url})上有人要求重置您的密码。
 
-        如果不是你，你可以安全地忽略此邮件。
+        如果不是您，您可以安全地忽略此邮件。
 
         点击以下链接设置新密码：
         %{base_url}/u/password-reset/%{email_token}
@@ -3260,9 +3259,9 @@ zh_CN:
       title: "用链接登录"
       subject_template: "[%{email_prefix}]链接登录"
       text_body_template: |
-        这是你用于登录[%{site_name}](%{base_url})的链接
+        这是您用于登录[%{site_name}](%{base_url})的链接
 
-        如果你未请求过此链接，可以放心地忽略此电子邮件。
+        如果您未请求过此链接，可以放心地忽略此电子邮件。
 
         点击下方链接登录：
         %{base_url}/session/email-login/%{email_token}
@@ -3270,9 +3269,9 @@ zh_CN:
       title: "设置密码"
       subject_template: "[%{email_prefix}] 设置密码"
       text_body_template: |
-        有人尝试设置你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以从已验证过你邮件地址的在线服务商登录。
+        有人尝试设置您在 [%{site_name}](%{base_url}) 的密码。除此之外，您可以从已验证过您邮件地址的在线服务商登录。
 
-        如果不是你在请求添加密码，你可以直接忽略本邮件。
+        如果不是您在请求添加密码，您可以直接忽略本邮件。
 
         点击下面的链接来选择设置密码：
         %{base_url}/u/password-reset/%{email_token}
@@ -3280,63 +3279,63 @@ zh_CN:
       title: "管理员登录"
       subject_template: "[%{email_prefix}] 登录"
       text_body_template: |
-        有人要登录你在[%{site_name}](%{base_url})上的账户。
+        有人要登录您在[%{site_name}](%{base_url})上的账户。
 
-        如果你没有发出此请求，则可以放心地忽略此电子邮件。
+        如果您没有发出此请求，则可以放心地忽略此电子邮件。
 
         单击以下链接登录：
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "账户已创建"
-      subject_template: "[%{email_prefix}] 你的新账户"
+      subject_template: "[%{email_prefix}] 您的新账户"
       text_body_template: |
-        %{site_name}已经为你创建了新账户
+        %{site_name}已经为您创建了新账户
 
         点击下面的链接设置新账户密码：
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "确认新邮箱"
-      subject_template: "[%{email_prefix}] 确认你的新电子邮箱地址"
+      subject_template: "[%{email_prefix}] 确认您的新电子邮箱地址"
       text_body_template: |
-        点击以下链接确认你在 %{site_name} 的新电子邮件地址：
+        点击以下链接确认您在 %{site_name} 的新电子邮件地址：
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        如果你没有要求此更改，请联系管理员 (%{base_url}/about) 。
+        如果您没有要求此更改，请联系管理员 (%{base_url}/about) 。
     confirm_new_email_via_admin:
       title: "确认新邮箱"
-      subject_template: "[%{email_prefix}] 确认你的新电子邮箱地址"
+      subject_template: "[%{email_prefix}] 确认您的新电子邮箱地址"
       text_body_template: |
-        点击以下链接确认你在%{site_name}的新电子邮件地址：
+        点击以下链接确认您在%{site_name}的新电子邮件地址：
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        此电子邮件的更改由网站管理员发送。如果你没有要求此更改，请联系管理员(%{base_url}/about)。
+        此电子邮件的更改由网站管理员发送。如果您没有要求此更改，请联系管理员(%{base_url}/about)。
     confirm_old_email:
       title: "确认旧邮箱"
-      subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
+      subject_template: "[%{email_prefix}] 确认您现在的电子邮箱地址"
       text_body_template: |
-        在我们更改你的邮件地址前，我们需要确认你掌控当前邮件账户。在你完成这一步后，我们会让你确认新的邮件地址。
+        在我们更改您的邮件地址前，我们需要确认您掌控当前邮件账户。在您完成这一步后，我们会让您确认新的邮件地址。
 
-        点击下面链接以确认你当前在%{site_name}的邮件地址：
+        点击下面链接以确认您当前在%{site_name}的邮件地址：
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
       title: "确认旧邮箱（添加）"
-      subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
+      subject_template: "[%{email_prefix}] 确认您现在的电子邮箱地址"
       text_body_template: |
-        在我们添加新的电子邮件地址之前，我们需要确认你掌控当前的电子邮件账户。在你完成这一步后，我们会让你确认新的电子邮件地址。
+        在我们添加新的电子邮件地址之前，我们需要确认您掌控当前的电子邮件账户。在您完成这一步后，我们会让您确认新的电子邮件地址。
 
-        点击以下链接，确认你当前在%{site_name}电子邮件地址：
+        点击以下链接，确认您当前在%{site_name}电子邮件地址：
 
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "通知旧邮箱"
-      subject_template: "[%{email_prefix}] 你的邮箱已经修改成功"
+      subject_template: "[%{email_prefix}] 您的邮箱已经修改成功"
       text_body_template: |
-        这是%{site_name}自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
+        这是%{site_name}自动发出的邮件，以告知您的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
 
-        你的邮箱地址被修改为：
+        您的邮箱地址被修改为：
 
         %{new_email}
     notify_old_email_add:
@@ -3347,18 +3346,18 @@ zh_CN:
         已添加至%{site_name}。如果有误，请联系
         网站管理员。
 
-        你添加的电子邮件地址是：
+        您添加的电子邮件地址是：
 
         %{new_email}
     signup_after_approval:
       title: "在审批之后注册"
-      subject_template: "你通过了%{site_name}的审核！"
+      subject_template: "您通过了%{site_name}的审核！"
       text_body_template: |
         欢迎来到%{site_name}！
 
-        管理人员在%{site_name}上批准了你的账户。
+        管理人员在%{site_name}上批准了您的账户。
 
-        你现在可以通过以下登录访问你的新账户：
+        您现在可以通过以下登录访问您的新账户：
         %{base_url}
 
         如果上述链接无法点击，请尝试将其复制并粘贴到浏览器的地址栏中。
@@ -3370,30 +3369,30 @@ zh_CN:
         入住愉快！
     signup_after_reject:
       title: "拒绝后的注册"
-      subject_template: "你在 %{site_name}上被拒绝"
+      subject_template: "您在 %{site_name}上被拒绝"
       text_body_template: |
-        一名工作人员拒绝了你在 %{site_name} 上的帐户。
+        一名工作人员拒绝了您在 %{site_name} 上的帐户。
 
         %{reject_reason}
     signup:
       title: "注册"
-      subject_template: "[%{email_prefix}] 确认你的新账户"
+      subject_template: "[%{email_prefix}] 确认您的新账户"
       text_body_template: |
         欢迎来到 %{site_name}！
 
-        点击下面链接确认并激活你的新账户：
+        点击下面链接确认并激活您的新账户：
         %{base_url}/u/activate-account/%{email_token}
 
-        如果以上链接无法点击，请将它复制并粘贴到你的浏览器的地址栏。
+        如果以上链接无法点击，请将它复制并粘贴到您的浏览器的地址栏。
     activation_reminder:
       title: "激活提醒"
-      subject_template: "[%{email_prefix}]记得确认你的账户"
+      subject_template: "[%{email_prefix}]记得确认您的账户"
       text_body_template: |
         欢迎来到 %{site_name}！
 
-        这是一个提醒你激活账户的友情提醒。
+        这是一个提醒您激活账户的友情提醒。
 
-        请点击下面的链接来确认并激活你的新账户：
+        请点击下面的链接来确认并激活您的新账户：
         %{base_url}/u/activate-account/%{email_token}
 
         如果上方的链接无法点击，请尝试将其复制并粘贴到浏览器的地址栏中。
@@ -3401,24 +3400,24 @@ zh_CN:
       title: "新登录警告"
       subject_template: "[%{site_name}]新登录于%{location}"
       text_body_template: |
-        你好，
+        您好，
 
-        我们注意到您从通常不使用的设备或位置登录。 这是你吗？
+        我们注意到您从通常不使用的设备或位置登录。 这是您吗？
 
          - 位置：%{location}(%{client_ip})
          - 浏览器：%{browser}
          - 设备：%{device} - %{os}
 
-        如果这是你，太棒了！你不需要做任何其他事情。
+        如果这是您，太棒了！您不需要做任何其他事情。
 
-        如果不是你，请[查看你现有的会话](%{base_url}/my/preferences/account)并考虑更改密码。
+        如果不是您，请[查看您现有的会话](%{base_url}/my/preferences/account)并考虑更改密码。
     post_approved:
-      title: "你的帖子已通过审核"
-      subject_template: "[%{site_name}] 你的帖子已通过审核"
+      title: "您的帖子已通过审核"
+      subject_template: "[%{site_name}] 您的帖子已通过审核"
       text_body_template: |
-        你好：
+        您好：
 
-        这是来自 %{site_name} 的自动消息，[你的帖子] (%{base_url}%{post_url}) 已通过审核。
+        这是来自 %{site_name} 的自动消息，[您的帖子] (%{base_url}%{post_url}) 已通过审核。
   page_forbidden:
     title: "啊噢！该页面是私密的。"
   site_setting_missing: "站点设定 `%{name}` 必须被设置。"
@@ -3431,35 +3430,35 @@ zh_CN:
     search_button: "搜索"
   offline:
     title: "无法载入应用"
-    offline_page_message: "你似乎正处于离线状态！请检查网络连接并重试。"
+    offline_page_message: "您似乎正处于离线状态！请检查网络连接并重试。"
   login_required:
     welcome_message: |
       ## [欢迎来到 %{title}](#welcome)
-      你需要一个账户。请创建一个账户或者登录以继续。
+      您需要一个账户。请创建一个账户或者登录以继续。
     welcome_message_invite_only: |
       ## [欢迎来到%{title}](#welcome)
-      你需要一个账号。请从现有用户处获取一个邀请或者登录。
+      您需要一个账号。请从现有用户处获取一个邀请或者登录。
   deleted: "已删除"
   image: "图片"
   upload:
     edit_reason: "下载外部图片留作副本"
-    unauthorized: "抱歉，你没有上传文件的权限（验证扩展：%{authorized_extensions}）。"
+    unauthorized: "抱歉，您没有上传文件的权限（验证扩展：%{authorized_extensions}）。"
     pasted_image_filename: "粘贴的图像"
     store_failure: "用户#%{user_id} 上传的 #%{upload_id} 保存失败。"
-    file_missing: "抱歉，你必须选择一个文件上传。"
-    empty: "抱歉，但是你提交的文件是空的。"
+    file_missing: "抱歉，您必须选择一个文件上传。"
+    empty: "抱歉，但是您提交的文件是空的。"
     png_to_jpg_conversion_failure_message: "从PNG转换为JPG时发生错误。"
     optimize_failure_message: "优化上传的图像时出现了错误。"
     attachments:
-      too_large: "抱歉，你试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
+      too_large: "抱歉，您试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
     images:
-      too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
-      larger_than_x_megapixels: "对不起，你上传的图片太大(最大支持%{max_image_megapixels}像素)，请缩小图片然后再试一次。"
-      size_not_found: "抱歉，我们无法获取图片大小。也许是你的图片损坏了？"
+      too_large: "抱歉，您试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
+      larger_than_x_megapixels: "对不起，您上传的图片太大(最大支持%{max_image_megapixels}像素)，请缩小图片然后再试一次。"
+      size_not_found: "抱歉，我们无法获取图片大小。也许是您的图片损坏了？"
     placeholders:
       too_large: "(图片大小超过%{max_size_kb}KB)"
   avatar:
-    missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
+    missing: "抱歉，我们没法找到与您邮件地址关联的头像。您能再上传一次试试吗？"
   flag_reason:
     sockpuppet: "新用户创建了话题，而另一个新用户以同一个 IP 在该话题回复。查看站点设置的 <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>。"
     spam_hosts: "新用户尝试创建多个链接到相同域名的帖子。此用户所有包含链接的帖子需要审核。详见站点设置<a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
@@ -3522,21 +3521,21 @@ zh_CN:
   tos_topic:
     title: "服务条款"
     body: |
-      这些条款用于管理<%{base_url}>上互联网论坛的使用。要使用论坛，你必须与运行论坛的公司%{company_name}达成这些条款。
+      这些条款用于管理<%{base_url}>上互联网论坛的使用。要使用论坛，您必须与运行论坛的公司%{company_name}达成这些条款。
 
       公司可能会根据不同条款提供其他产品和服务。这些条款仅适用于论坛的使用。
 
       跳到：
 
        - [重要条款](#heading--重要条款)
-       - [你使用论坛的许可](#heading--permission)
+       - [您使用论坛的许可](#heading--permission)
        - [论坛的使用条件](#heading--conditions)
        - [可接受的用途](#heading--可接受使用)
        - [内容标准](#heading--content-standards)
        - [执法](#heading--强制执行)
-       - [你的账户](#heading--你的账户)
-       - [你的内容](#heading--你的内容)
-       - [你的责任](#heading--责任)
+       - [您的账户](#heading--您的账户)
+       - [您的内容](#heading--您的内容)
+       - [您的责任](#heading--责任)
        - [免责声明](#heading--免责声明)
        - [责任限额](#heading--liability)
        - [反馈](#heading--feedback)
@@ -3548,151 +3547,151 @@ zh_CN:
 
       <h2 id =“heading--important-terms”><a href="#heading--important-terms">重要条款</a></h2>
 
-      ***这些条款包括一些影响你的权利和责任的重要条款，例如[免责声明](#heading-disclaimers)中的免责声明，对[责任限制](#heading--liability)中公司对你的责任的限制，你同意在[责任使用](#heading-responsibility)中滥用论坛所造成的损害赔偿公司，以及在[争议](#heading--disputes)中仲裁争议的协议***
+      ***这些条款包括一些影响您的权利和责任的重要条款，例如[免责声明](#heading-disclaimers)中的免责声明，对[责任限制](#heading--liability)中公司对您的责任的限制，您同意在[责任使用](#heading-responsibility)中滥用论坛所造成的损害赔偿公司，以及在[争议](#heading--disputes)中仲裁争议的协议***
 
-      <h2 id =“heading--permission”><a href="#heading--permission">你使用论坛的权限</a></h2>
+      <h2 id =“heading--permission”><a href="#heading--permission">您使用论坛的权限</a></h2>
 
-      在遵守这些条款的前提下，公司允许你使用论坛。每个人都需要同意这些条款才能使用论坛。
+      在遵守这些条款的前提下，公司允许您使用论坛。每个人都需要同意这些条款才能使用论坛。
 
       <h2 id =“heading--conditions”><a href="#heading--conditions">论坛使用条件</a></h2>
 
-      你使用论坛的许可受以下条件限制：
+      您使用论坛的许可受以下条件限制：
 
-      1.你必须至少十三岁。
+      1.您必须至少十三岁。
 
-      2.如果公司直接与你表示不能，你不能继续使用该论坛。
+      2.如果公司直接与您表示不能，您不能继续使用该论坛。
 
-      3.你必须按照[可接受使用](#heading--accepted-use)和[内容标准](#heading--content-standards)使用论坛。
+      3.您必须按照[可接受使用](#heading--accepted-use)和[内容标准](#heading--content-standards)使用论坛。
 
       <h2 id =“heading--acceptable-use”><a href="#heading--acceptable-use">可接受的使用</a></h2>
 
-      1.你不能使用论坛违法。
+      1.您不能使用论坛违法。
 
-      2.未经特别许可，你不得在论坛上使用或尝试使用他人的账户。
+      2.未经特别许可，您不得在论坛上使用或尝试使用他人的账户。
 
-      3.你不得在论坛上购买，出售或以其他方式交易用户名或其他唯一标识符。
+      3.您不得在论坛上购买，出售或以其他方式交易用户名或其他唯一标识符。
 
-      4.你不得通过论坛发送广告，连锁信或其他请求，或使用论坛收集商业邮件列表或数据库的地址或其他个人数据。
+      4.您不得通过论坛发送广告，连锁信或其他请求，或使用论坛收集商业邮件列表或数据库的地址或其他个人数据。
 
-      5.你不能使用程序自动访问论坛或监控论坛，例如使用网络爬虫，浏览器插件或插件，或其他非Web浏览器的计算机程序。如果你运行一个搜索引擎，你可以抓取论坛为其公开搜索引擎编制索引。
+      5.您不能使用程序自动访问论坛或监控论坛，例如使用网络爬虫，浏览器插件或插件，或其他非Web浏览器的计算机程序。如果您运行一个搜索引擎，您可以抓取论坛为其公开搜索引擎编制索引。
 
-      6.你不能使用论坛将邮件发送到通讯组列表，新闻组或组邮件别名。
+      6.您不能使用论坛将邮件发送到通讯组列表，新闻组或组邮件别名。
 
-      7.你不得虚假暗示你与本公司有关联或得到许可。
+      7.您不得虚假暗示您与本公司有关联或得到许可。
 
-      8.你不得在其他论坛上超链接到本论坛的图片或其他非超文本内容。
+      8.您不得在其他论坛上超链接到本论坛的图片或其他非超文本内容。
 
-      9.你不得从论坛下载的资料中删除任何显示所有权的标记。
+      9.您不得从论坛下载的资料中删除任何显示所有权的标记。
 
-      10.你可能无法使用`<iframe>`在其他网站上显示论坛的任何部分。
+      10.您可能无法使用`<iframe>`在其他网站上显示论坛的任何部分。
 
-      11.你不得禁用，避免或绕过论坛的任何安全或访问限制。
+      11.您不得禁用，避免或绕过论坛的任何安全或访问限制。
 
-      12.你不能对论坛的基础设施施加不合理的请求量，或者旨在对论坛底层信息系统施加不合理负担的请求。
+      12.您不能对论坛的基础设施施加不合理的请求量，或者旨在对论坛底层信息系统施加不合理负担的请求。
 
-      13.你不得通过论坛冒充他人。
+      13.您不得通过论坛冒充他人。
 
-      14.你不得鼓励或帮助违反这些条款的任何人。
+      14.您不得鼓励或帮助违反这些条款的任何人。
 
       <h2 id =“heading--content-standards”><a href="#heading--content-standards">内容标准</a></h2>
 
-      1.你不得向论坛提交非法，冒犯或以其他方式伤害他人的内容。这包括骚扰，不恰当或滥用的内容。
+      1.您不得向论坛提交非法，冒犯或以其他方式伤害他人的内容。这包括骚扰，不恰当或滥用的内容。
 
-      2.你不得向论坛提交违反法律，侵犯任何人的知识产权，侵犯任何人隐私或违反与他人协议的内容。
+      2.您不得向论坛提交违反法律，侵犯任何人的知识产权，侵犯任何人隐私或违反与他人协议的内容。
 
-      3.你不得向包含恶意计算机代码的论坛提交内容，例如计算机病毒或间谍软件。
+      3.您不得向包含恶意计算机代码的论坛提交内容，例如计算机病毒或间谍软件。
 
-      4.你不得将内容作为占位符提交给论坛，以保存特定地址，用户名或其他唯一标识符。
+      4.您不得将内容作为占位符提交给论坛，以保存特定地址，用户名或其他唯一标识符。
 
-      5.你不得使用论坛披露你无权披露的信息，例如他人的机密或个人信息。
+      5.您不得使用论坛披露您无权披露的信息，例如他人的机密或个人信息。
 
       <h2 id =“heading--enforcement”><a href="#heading--enforcement">执法</a></h2>
 
       公司可以在最大程度上调查和起诉违反这些条款的行为。公司可以通知执法机关并与其合作起诉违法行为和这些条款。
 
-      公司保留以任何理由更改，编辑和删除论坛内容的权利。如果你认为有人违反这些条款向论坛提交了内容，请[立即与我们联系](#heading--contact)。
+      公司保留以任何理由更改，编辑和删除论坛内容的权利。如果您认为有人违反这些条款向论坛提交了内容，请[立即与我们联系](#heading--contact)。
 
-      <h2 id =“heading--your-account”><a href="#heading--your-account">你的账户</a></h2>
+      <h2 id =“heading--your-account”><a href="#heading--your-account">您的账户</a></h2>
 
-      你必须创建并登录账户才能使用论坛的某些功能。
+      您必须创建并登录账户才能使用论坛的某些功能。
 
-      要创建账户，你必须提供有关你自己的一些信息。如果你创建了一个账户，则表示你同意至少提供有效的邮件地址，并使该地址保持最新状态。你可以随时通过邮件<%{contact_email}>关闭你的账户。
+      要创建账户，您必须提供有关您自己的一些信息。如果您创建了一个账户，则表示您同意至少提供有效的邮件地址，并使该地址保持最新状态。您可以随时通过邮件<%{contact_email}>关闭您的账户。
 
-      你同意对使用你的账户账户采取的所有操作负责，无论你是否授权，直到你关闭账户或通知公司你的账户已遭到入侵。如果你怀疑自己的账户遭到入侵，则表示你同意立即通知公司。你同意为你的账户选择安全密码，并保密。
+      您同意对使用您的账户账户采取的所有操作负责，无论您是否授权，直到您关闭账户或通知公司您的账户已遭到入侵。如果您怀疑自己的账户遭到入侵，则表示您同意立即通知公司。您同意为您的账户选择安全密码，并保密。
 
-      公司可以根据其处理与版权相关的删除请求的政策限制，暂停或关闭你在论坛上的账户，或者如果公司合理地认为你违反了这些条款中的任何规则。
+      公司可以根据其处理与版权相关的删除请求的政策限制，暂停或关闭您在论坛上的账户，或者如果公司合理地认为您违反了这些条款中的任何规则。
 
-      <h2 id =“heading--your-content”><a href="#heading--your-content">你的内容</a></h2>
+      <h2 id =“heading--your-content”><a href="#heading--your-content">您的内容</a></h2>
 
-      这些条款中的任何内容均未赋予公司你与论坛共享的知识产权的所有权，例如你提交给论坛的账户信息，帖子或其他内容。这些条款中的任何内容都不会赋予你对公司知识产权的任何所有权。
+      这些条款中的任何内容均未赋予公司您与论坛共享的知识产权的所有权，例如您提交给论坛的账户信息，帖子或其他内容。这些条款中的任何内容都不会赋予您对公司知识产权的任何所有权。
 
-      在你和公司之间，你仍然对你提交给论坛的内容负全部责任。你同意不会错误地暗示你提交给论坛的内容是由公司赞助或批准的。根据这些条款，这些条款并不要求公司存储，维护或提供你提交的内容的副本，并对其进行更改。
+      在您和公司之间，您仍然对您提交给论坛的内容负全部责任。您同意不会错误地暗示您提交给论坛的内容是由公司赞助或批准的。根据这些条款，这些条款并不要求公司存储，维护或提供您提交的内容的副本，并对其进行更改。
 
-      你提交给论坛的内容属于你，你决定授予其他人的权限。但至少，你授权该公司向论坛的其他用户提供你提交给论坛的内容。该特殊许可允许公司复制，发布和分析你提交给论坛的内容。
+      您提交给论坛的内容属于您，您决定授予其他人的权限。但至少，您授权该公司向论坛的其他用户提供您提交给论坛的内容。该特殊许可允许公司复制，发布和分析您提交给论坛的内容。
 
-      当你提交的内容从论坛中删除时，无论是你还是公司，当最后一个副本从公司的备份，缓存和其他系统中消失时，公司的特殊许可将终止。你提交的内容的其他许可，例如[Creative Commons](https://creativecommons.org)许可，可能会在你的内容被删除后继续。这些许可可能会让其他人或公司本身再次通过论坛分享你的内容。
+      当您提交的内容从论坛中删除时，无论是您还是公司，当最后一个副本从公司的备份，缓存和其他系统中消失时，公司的特殊许可将终止。您提交的内容的其他许可，例如[Creative Commons](https://creativecommons.org)许可，可能会在您的内容被删除后继续。这些许可可能会让其他人或公司本身再次通过论坛分享您的内容。
 
-      收到你提交给论坛的内容的其他人可能违反了你对内容进行许可的条款。你同意公司不会对这些违规行为或其后果承担责任。
+      收到您提交给论坛的内容的其他人可能违反了您对内容进行许可的条款。您同意公司不会对这些违规行为或其后果承担责任。
 
-      <h2 id =“heading-responsibility”><a href="#heading--responsibility">你的责任</a></h2>
+      <h2 id =“heading-responsibility”><a href="#heading--responsibility">您的责任</a></h2>
 
-      你同意赔偿公司因与你违反这些条款有关的其他人的法律索赔，或其他人在论坛上使用你的账户违反这些条款。你和公司都同意尽快通知另一方你可能需要赔偿公司的任何法律索赔。如果公司未能及时通知你合法索赔，你将无需赔偿公司因你可能在及时通知后进行辩护或减轻的损失。你同意允许公司控制你必须赔偿公司的法律索赔的调查，辩护和解决，并与这些努力合作。未经你事先同意，公司同意不同意任何承认错误或对你施加义务的和解。
+      您同意赔偿公司因与您违反这些条款有关的其他人的法律索赔，或其他人在论坛上使用您的账户违反这些条款。您和公司都同意尽快通知另一方您可能需要赔偿公司的任何法律索赔。如果公司未能及时通知您合法索赔，您将无需赔偿公司因您可能在及时通知后进行辩护或减轻的损失。您同意允许公司控制您必须赔偿公司的法律索赔的调查，辩护和解决，并与这些努力合作。未经您事先同意，公司同意不同意任何承认错误或对您施加义务的和解。
 
       <h2 id =“heading--disclaimers”><a href="#heading--disclaimers">免责声明</a></h2>
 
-      ***你接受在论坛上使用论坛和内容的所有风险。在法律允许的范围内，公司及其供应商按原样提供论坛，不作任何保证。***
+      ***您接受在论坛上使用论坛和内容的所有风险。在法律允许的范围内，公司及其供应商按原样提供论坛，不作任何保证。***
 
-      论坛可以超链接并集成其他人运行的论坛和服务。公司不对其他人提供的服务或他们提供的内容提供任何保证。其他人运行的服务的使用可能受你与正在运行的服务之间的其他条款的约束。
+      论坛可以超链接并集成其他人运行的论坛和服务。公司不对其他人提供的服务或他们提供的内容提供任何保证。其他人运行的服务的使用可能受您与正在运行的服务之间的其他条款的约束。
 
       <h2 id =“heading--liability”><a href="#heading--liability">责任限制</a></h2>
 
-      ***当你同意这些条款时，公司及其供应商均不对你的人员无法合理预见的违反合同的损害承担责任。***
+      ***当您同意这些条款时，公司及其供应商均不对您的人员无法合理预见的违反合同的损害承担责任。***
 
       ***在法律允许的范围内，与论坛或论坛内容相关的任何类型的索赔的全部责任将限制在50美元。***
 
       <h2 id =“heading--feedback”><a href="#heading--feedback">反馈</a></h2>
 
-      公司欢迎你对论坛的反馈和建议。请参阅下面的[联系方式](#heading--contact)部分，了解与我们取得联系的方式。
+      公司欢迎您对论坛的反馈和建议。请参阅下面的[联系方式](#heading--contact)部分，了解与我们取得联系的方式。
 
-      你同意公司可以根据你提供的反馈和建议自由行事，并且公司不必通知你你的反馈已被使用，获得你的使用许可或付款给你。你同意不向你或他人提交你认为可能是机密或专有的反馈或建议。
+      您同意公司可以根据您提供的反馈和建议自由行事，并且公司不必通知您您的反馈已被使用，获得您的使用许可或付款给您。您同意不向您或他人提交您认为可能是机密或专有的反馈或建议。
 
       <h2 id =“heading--termination”><a href="#heading--termination">终止</a></h2>
 
-      你或公司可以随时终止以这些条款书写的协议。当我们的协议结束时，你对论坛的许可也将终止。
+      您或公司可以随时终止以这些条款书写的协议。当我们的协议结束时，您对论坛的许可也将终止。
 
-      以下条款在我们的协议结束后继续有效：[你的内容](#heading--your-content)，[反馈](#heading--feedback)，[你的责任](#heading--responsibility)，[免责声明](#heading--disclaimers)，[责任限制](#heading--liability)和[General Terms](#heading--general)。
+      以下条款在我们的协议结束后继续有效：[您的内容](#heading--your-content)，[反馈](#heading--feedback)，[您的责任](#heading--responsibility)，[免责声明](#heading--disclaimers)，[责任限制](#heading--liability)和[General Terms](#heading--general)。
 
       <h2 id =“heading--dispute”><a href="#heading--disputes"> Disputes </a></h2>
 
-      %{governing_law}将管辖与这些条款或你对论坛的使用相关的任何争议。
+      %{governing_law}将管辖与这些条款或您对论坛的使用相关的任何争议。
 
-      你和公司同意仅在%{city_for_disputes}的州或联邦法院寻求与这些条款相关的禁令。你和公司都不会反对这些法院的管辖权，论坛或地点。
+      您和公司同意仅在%{city_for_disputes}的州或联邦法院寻求与这些条款相关的禁令。您和公司都不会反对这些法院的管辖权，论坛或地点。
 
-      ***除了寻求禁令或根据“计算机欺诈和滥用法案”提出的索赔外，你和公司将通过约束美国仲裁协会的仲裁来解决任何争议。仲裁将遵循AAA的商业仲裁规则和消费者相关争议的补充程序。仲裁将在 %{city_for_disputes}举行。你将作为个人解决任何争议，而不是作为集体诉讼或其他代表诉讼的一部分，无论是作为原告还是集体成员。未经公司许可，任何仲裁员均不得将任何争议与任何其他仲裁合并。***
+      ***除了寻求禁令或根据“计算机欺诈和滥用法案”提出的索赔外，您和公司将通过约束美国仲裁协会的仲裁来解决任何争议。仲裁将遵循AAA的商业仲裁规则和消费者相关争议的补充程序。仲裁将在 %{city_for_disputes}举行。您将作为个人解决任何争议，而不是作为集体诉讼或其他代表诉讼的一部分，无论是作为原告还是集体成员。未经公司许可，任何仲裁员均不得将任何争议与任何其他仲裁合并。***
 
-      任何仲裁裁决将包括仲裁费用，合理的律师费和证人的合理费用。你和公司可以在任何有管辖权的法院进行仲裁裁决。
+      任何仲裁裁决将包括仲裁费用，合理的律师费和证人的合理费用。您和公司可以在任何有管辖权的法院进行仲裁裁决。
 
       <h2 id =“heading--general”><a href="#heading--general">一般条款</a></h2>
 
       如果这些条款的规定在书面上无法执行，但可以更改为可强制执行，则应将该条款修改为使其可执行所必需的最小程度。否则，应删除该条款。
 
-      你不得与公司分配你的协议。公司可以将你的协议转让给公司的任何关联公司，获得公司控制权的任何其他公司，或购买与公司相关的公司资产的任何其他公司。任何针对这些条款的尝试转让都没有法律效力。
+      您不得与公司分配您的协议。公司可以将您的协议转让给公司的任何关联公司，获得公司控制权的任何其他公司，或购买与公司相关的公司资产的任何其他公司。任何针对这些条款的尝试转让都没有法律效力。
 
       无论是否行使本协议下的任何权利，或放弃任何违反本协议的行为，均不得放弃任何其他违反本协议的行为。
 
-      这些条款体现了你和公司之间关于论坛使用的所有协议条款。这些条款完全取代了有关你使用论坛的任何其他协议，无论是否编写。
+      这些条款体现了您和公司之间关于论坛使用的所有协议条款。这些条款完全取代了有关您使用论坛的任何其他协议，无论是否编写。
 
       <h2 id =“heading--contact”><a href="#heading--contact">联络</a></h2>
 
-      你可以根据这些条款通知公司，并通过<%{contact_email}>向公司发送问题。
+      您可以根据这些条款通知公司，并通过<%{contact_email}>向公司发送问题。
 
-      公司可以使用你在论坛上为你的账户提供的邮件地址，或通过向论坛的主页或你的账户页面发布消息，根据这些条款通知你。
+      公司可以使用您在论坛上为您的账户提供的邮件地址，或通过向论坛的主页或您的账户页面发布消息，根据这些条款通知您。
 
       <h2 id =“heading--changes”><a href="#heading--changes">更改</a></h2>
 
-      该公司最后更新了这些条款于2018年7月12日，并可能再次更新这些条款。该公司将发布所有更新到论坛。对于包含重大更改的更新，如果你已创建账户并提供有效的邮件地址，则公司同意通过邮件通知你。该公司还可以在论坛上通过特殊消息或警报宣布更新。
+      该公司最后更新了这些条款于2018年7月12日，并可能再次更新这些条款。该公司将发布所有更新到论坛。对于包含重大更改的更新，如果您已创建账户并提供有效的邮件地址，则公司同意通过邮件通知您。该公司还可以在论坛上通过特殊消息或警报宣布更新。
 
-      一旦你收到这些条款的更新通知，你必须同意新条款才能继续使用论坛。
+      一旦您收到这些条款的更新通知，您必须同意新条款才能继续使用论坛。
   privacy_topic:
     title: "隐私政策"
     body: |
@@ -3700,28 +3699,28 @@ zh_CN:
 
       ## [我们收集什么信息？](#collect)
 
-      我们从你在我们站点注册开始从你那开始收集信息，并收集关于你在论坛的阅读和写作的数据，并评估分享的内容。
+      我们从您在我们站点注册开始从您那开始收集信息，并收集关于您在论坛的阅读和写作的数据，并评估分享的内容。
 
-      当在我们站点注册时，你可能被要求输入你的名字和邮件地址。然而你可以在不用注册的情况下访问站点。你的邮件地将通过一个独一无二的链接验证。如果链接被访问了，我们就知道你控制了该邮件地址。
+      当在我们站点注册时，您可能被要求输入您的名字和邮件地址。然而您可以在不用注册的情况下访问站点。您的邮件地将通过一个独一无二的链接验证。如果链接被访问了，我们就知道您控制了该邮件地址。
 
       当已注册和发帖时，我们记录发布帖子时的 IP 地址。我们也可能保留服务器日志，其中包括了每一个向我们服务器的请求。
 
       <a name="use"></a>
 
-      ## [我们如何使用你的信息？](#use)
+      ## [我们如何使用您的信息？](#use)
 
-      从你那收集的任何数据将以以下方式使用：
+      从您那收集的任何数据将以以下方式使用：
 
-      * 改进你的个人体验 &mdash; 你的信息帮助我们更好地满足你的个人需求。
-      * 改进我们的站点 &mdash; 我们基于信息和我们从你那收到的反馈不断地试图改进我们的站点。
-      * 改善我们的客户服务 &mdash; 你的信息帮助我们更有效地回应用户服务请求和支持。
-      * 用于发送阶段性的邮件 &mdash; 你提供的邮件地址可能用于接受信息、你想看到的通知或与你用户名有关的回复和询问，或是其他的请求和问题。
+      * 改进您的个人体验 &mdash; 您的信息帮助我们更好地满足您的个人需求。
+      * 改进我们的站点 &mdash; 我们基于信息和我们从您那收到的反馈不断地试图改进我们的站点。
+      * 改善我们的客户服务 &mdash; 您的信息帮助我们更有效地回应用户服务请求和支持。
+      * 用于发送阶段性的邮件 &mdash; 您提供的邮件地址可能用于接受信息、您想看到的通知或与您用户名有关的回复和询问，或是其他的请求和问题。
 
       <a name="protect"></a>
 
-      ## [我们如何保护你的信息?](#protect)
+      ## [我们如何保护您的信息?](#protect)
 
-      我们实现了一系列的安全措施保证你输入、提交或者访问你个人信息的数据安全。
+      我们实现了一系列的安全措施保证您输入、提交或者访问您个人信息的数据安全。
 
       <a name="data-retention"></a>
 
@@ -3736,27 +3735,27 @@ zh_CN:
 
       ## [我们使用 Cookie 吗？](#cookies)
 
-      是的。Cookie 是网站或它的服务商通过网页浏览器存储在你电脑硬盘上的小文件（如果你同意）。这些 Cookie 使站点能分辨你的浏览器，并且，如果你注册了一个账户，与你的注册账户关联。
+      是的。Cookie 是网站或它的服务商通过网页浏览器存储在您电脑硬盘上的小文件（如果您同意）。这些 Cookie 使站点能分辨您的浏览器，并且，如果您注册了一个账户，与您的注册账户关联。
 
-      我们使用 Cookie 为之后的访问和编译一小段关于站点流量和交互的数据来判断并保存你的个人设置，这样我们可以在之后提供更好的站点体验和工具。我们可能使用第三方服务商来帮助我们更好地理解我们的站点访客。这些服务商是不允许代表我们使用收集的信息，除非是在帮助我们执行和改进我们的站点。
+      我们使用 Cookie 为之后的访问和编译一小段关于站点流量和交互的数据来判断并保存您的个人设置，这样我们可以在之后提供更好的站点体验和工具。我们可能使用第三方服务商来帮助我们更好地理解我们的站点访客。这些服务商是不允许代表我们使用收集的信息，除非是在帮助我们执行和改进我们的站点。
 
       <a name="disclose"></a>
 
       ## [我们会在站外提供任何信息吗？](#disclose)
 
-      我们绝不销售、教育或任何向外转移你个人信息的行为。这不包括帮助我们管理站点、改进站定或给你提供服务的第三方团体，这些团体需要保证对这些信息保密。当我们认为提交你的信息符合法律、我们的站点政策或保护我们或其他人的权利、知识产权或安全时，我们也可能提交你的信息。然而，非个人访问信息可能供其他团体使用，用于市场、广告或其他用途。
+      我们绝不销售、教育或任何向外转移您个人信息的行为。这不包括帮助我们管理站点、改进站定或给您提供服务的第三方团体，这些团体需要保证对这些信息保密。当我们认为提交您的信息符合法律、我们的站点政策或保护我们或其他人的权利、知识产权或安全时，我们也可能提交您的信息。然而，非个人访问信息可能供其他团体使用，用于市场、广告或其他用途。
 
       <a name="third-party"></a>
 
       ## [第三方链接](#third-party)
 
-      偶尔地，根据我们的判断，我们可能在我们的站点上包括或提供第三方团体的产品或服务。这些第三方站点用于独立和不同的隐私政策。因此我们对链接到的站点或活动没有责任和权利。尽管如此，我们寻求保护我们的整个站点冰鞋欢迎你给这些站点反馈。
+      偶尔地，根据我们的判断，我们可能在我们的站点上包括或提供第三方团体的产品或服务。这些第三方站点用于独立和不同的隐私政策。因此我们对链接到的站点或活动没有责任和权利。尽管如此，我们寻求保护我们的整个站点冰鞋欢迎您给这些站点反馈。
 
       <a name="coppa"></a>
 
       ## [儿童在线隐私保护法案合规](#coppa)
 
-      我们的站点、产品和服务提供给 13 岁以上的人们。如果服务器位于美国，并且你小于 13 岁，根据[儿童在线隐私保护法案合规](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)，不要使用这个站点。
+      我们的站点、产品和服务提供给 13 岁以上的人们。如果服务器位于美国，并且您小于 13 岁，根据[儿童在线隐私保护法案合规](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)，不要使用这个站点。
 
       <a name="online"></a>
 
@@ -3766,9 +3765,9 @@ zh_CN:
 
       <a name="consent"></a>
 
-      ## [你的同意](#consent)
+      ## [您的同意](#consent)
 
-      你使用站点的同时，代表你同意了我们网站的隐私政策。
+      您使用站点的同时，代表您同意了我们网站的隐私政策。
 
       <a name="changes"></a>
 
@@ -3786,117 +3785,117 @@ zh_CN:
       name: 编辑
       description: 首次编辑帖子
       long_description: |
-        该徽章授予给第一次编辑自己帖子的你。虽然你不能永远在编辑自己的帖子，但鼓励编辑 - 你可以改进格式，修正小错误，或者是增补你原来没有写的内容。编辑能让你的帖子质量变得更好！
+        该徽章授予给第一次编辑自己帖子的您。虽然您不能永远在编辑自己的帖子，但鼓励编辑 - 您可以改进格式，修正小错误，或者是增补您原来没有写的内容。编辑能让您的帖子质量变得更好！
     wiki_editor:
       name: 维基编者
       description: 首次编辑维基
       long_description: |
-        该徽章授予给第一次编辑维基帖子的你。
+        该徽章授予给第一次编辑维基帖子的您。
     basic_user:
       name: 初级用户
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>所有常用社区功能
       long_description: |
-        该徽章授予给用户等级达到 1 的成员。感谢你在社区里花了一些时间并且阅读了一些帖子，了解了我们的社区。你的新用户限制已经被取消；并且你已经被授予了所有基本的社区权限，必须个人私信、标记、维基编辑和发布多张图片和多个链接的能力。
+        该徽章授予给用户等级达到 1 的成员。感谢您在社区里花了一些时间并且阅读了一些帖子，了解了我们的社区。您的新用户限制已经被取消；并且您已经被授予了所有基本的社区权限，必须个人私信、标记、维基编辑和发布多张图片和多个链接的能力。
     member:
       name: 社区成员
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>邀请、群组消息和更多的赞
       long_description: |
-        该徽章授予给达到信用等级2的你。感谢你在社区待了几周，真正融入到了社区中。现在你可以在你的用户页或单个话题中邀请他人加入，或者创建群组私信，同时也可以在每一天给出更多的赞。
+        该徽章授予给达到信用等级2的您。感谢您在社区待了几周，真正融入到了社区中。现在您可以在您的用户页或单个话题中邀请他人加入，或者创建群组私信，同时也可以在每一天给出更多的赞。
     regular:
       name: 活跃用户
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>重分类、重命名、重命名、跟随链接、维基还有更多的赞
       long_description: |
-        该徽章授予给达到信用等级3的你。感谢你在这几个月持续地参与社区。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社区。你现在可以重新分类或者重命名话题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了，并且你还可以每一天送出更多的赞。
+        该徽章授予给达到信用等级3的您。感谢您在这几个月持续地参与社区。您现在是我们之中最活跃的读者之一了，您持续的贡献极大地帮助了我们的社区。您现在可以重新分类或者重命名话题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了，并且您还可以每一天送出更多的赞。
     leader:
       name: 资深
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>全局编辑、置顶、关闭、归档、分割、合并帖子的权限，还有更多的赞
       long_description: |
-        当你达到信任等级 4 时，将被授予此徽章。你是管理人员选作的社区中的领导者，你的行为和言辞，为社区中的其他人树立了积极的榜样。 你现在可以编辑所有的帖子，使用常见的话题管理操作，例如置顶，关闭，不在列表中显示，归档，分割和合并。
+        当您达到信任等级 4 时，将被授予此徽章。您是管理人员选作的社区中的领导者，您的行为和言辞，为社区中的其他人树立了积极的榜样。 您现在可以编辑所有的帖子，使用常见的话题管理操作，例如置顶，关闭，不在列表中显示，归档，分割和合并。
     welcome:
       name: 欢迎
       description: 收到了一个赞
       long_description: |
-        该徽章授予给帖子收到了第一个赞的你。恭喜，有社区成员觉得你发布的内容有意思、酷炫或者是有用的！
+        该徽章授予给帖子收到了第一个赞的您。恭喜，有社区成员觉得您发布的内容有意思、酷炫或者是有用的！
     autobiographer:
       name: 自传作者
       description: 填写<a href="%{base_uri}/my/preferences/profile">用户资料</a>信息
       long_description: |
-        该徽章授予给填写了<a href="%{base_uri}/my/preferences/profile">用户资料页</a>并设置了用户头像的你。让社区成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社区。让我们一起努力！
+        该徽章授予给填写了<a href="%{base_uri}/my/preferences/profile">用户资料页</a>并设置了用户头像的您。让社区成员们多了解您一点以及您感兴趣的内容，能帮助我们打造一个更好、更团结的社区。让我们一起努力！
     anniversary:
       name: 年度纪念日
       description: 一年活跃用户，至少发了一个帖子
       long_description: |
-        该徽章授予给在社群注册一年并超至少发布了一个帖子的你。感谢你的持续关注和对我们社区的贡献！我们希望你继续参与我们的社区。
+        该徽章授予给在社群注册一年并超至少发布了一个帖子的您。感谢您的持续关注和对我们社区的贡献！我们希望您继续参与我们的社区。
     nice_post:
       name: 不错的回复
       description: 在单个回复中收获10个赞
       long_description: |
-        该徽章授予给回复得到10个赞的你。你的回复给社区成员们留下了印象，并且你推动了讨论的进程。
+        该徽章授予给回复得到10个赞的您。您的回复给社区成员们留下了印象，并且您推动了讨论的进程。
     good_post:
       name: 很棒的回复
       description: 在单个回复中收获25个赞
       long_description: |
-        该徽章授予给回复得到25个赞的你。你的回复很杰出，而且让讨论更有意思了。
+        该徽章授予给回复得到25个赞的您。您的回复很杰出，而且让讨论更有意思了。
     great_post:
       name: 精彩的回复
       description: 单个回复收获50个赞
       long_description: |
-        该徽章授予给回复收到50个赞的你。哇！你的回复很有启发、引经据典、令人冷俊不禁或者十分有内涵，整个社区都赞它！
+        该徽章授予给回复收到50个赞的您。哇！您的回复很有启发、引经据典、令人冷俊不禁或者十分有内涵，整个社区都赞它！
     nice_topic:
       name: 不错的话题
       description: 单个话题收获10个赞
       long_description: |
-        该徽章授予给话题收到10个赞的你。你创建了一个社区成员觉得有意思的讨论！
+        该徽章授予给话题收到10个赞的您。您创建了一个社区成员觉得有意思的讨论！
     good_topic:
       name: 很好的话题
       description: 单个话题收获25个赞
       long_description: |
-        该徽章授予给话题收到25个赞的你。你创建了一个有意义的话题，整个社区都在积极响应。
+        该徽章授予给话题收到25个赞的您。您创建了一个有意义的话题，整个社区都在积极响应。
     great_topic:
       name: 精彩的话题
       description: 单个话题收获50个赞
       long_description: |
-        该徽章授予给话题获得50个赞的你。你创建了一个引人入胜的话题，整个社区都沉浸于讨论之中。
+        该徽章授予给话题获得50个赞的您。您创建了一个引人入胜的话题，整个社区都沉浸于讨论之中。
     nice_share:
       name: 不错的分享
       description: 分享了一个有 25 个独立访问者的帖子
       long_description: |
-        该徽章授予给分享链接给 25 个其他访客的你。感谢你广而告之我们的讨论，和对这个社区的帮助。
+        该徽章授予给分享链接给 25 个其他访客的您。感谢您广而告之我们的讨论，和对这个社区的帮助。
     good_share:
       name: 很棒的分享
       description: 分享了一个有 300 个独立访问者的帖子
       long_description: |
-        该徽章授予给分享链接给 300 个其他访客的你。干得漂亮！你把一个有意思的讨论介绍给了许多新的朋友，并且帮助社区前进了一步。
+        该徽章授予给分享链接给 300 个其他访客的您。干得漂亮！您把一个有意思的讨论介绍给了许多新的朋友，并且帮助社区前进了一步。
     great_share:
       name: 精彩的分享
       description: 分享了一个有 1000 个独立访问者的帖子
       long_description: |
-        该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社区前进了一大步！
+        该徽章授予给分享链接给 1000 个其他访客的您。哇！您把一个有意思的讨论推广给了广大的读者们，并且帮助社区前进了一大步！
     first_like:
       name: 首赞
       description: 赞了一个帖子
       long_description: |
-        该徽章授予给首次使用 :heart: 按钮赞了一个帖子的你。点赞帖子是一个让社区成员知道他们所发布的内容是实用或有趣的一个好方法。分享这种热情吧！
+        该徽章授予给首次使用 :heart: 按钮赞了一个帖子的您。点赞帖子是一个让社区成员知道他们所发布的内容是实用或有趣的一个好方法。分享这种热情吧！
     first_flag:
       name: 首次标记
       description: 已标记过了一个帖子
       long_description: |
-        该徽章授予给第一次标记帖子的你。标记是帮助我们帮助社区保持良好的工具。如果你注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果你注意到别人帖子里的某个问题。如果你发现了问题，:flag_black: 标记吧！
+        该徽章授予给第一次标记帖子的您。标记是帮助我们帮助社区保持良好的工具。如果您注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果您注意到别人帖子里的某个问题。如果您发现了问题，:flag_black: 标记吧！
     promoter:
       name: 推广者
       description: 已邀请了 1 个用户
       long_description: |
-        该徽章授予给邀请他人加入社区的你。你曾使用了用户页面的邀请按钮或话题底部的邀请按钮。邀请对某个讨论感兴趣的朋友是引介新人的好办法，非常感谢！
+        该徽章授予给邀请他人加入社区的您。您曾使用了用户页面的邀请按钮或话题底部的邀请按钮。邀请对某个讨论感兴趣的朋友是引介新人的好办法，非常感谢！
     campaigner:
       name: 活动家
       description: 已邀请了 3 个初级用户
       long_description: |
-        该徽章授予给邀请了 3 人加入社区的你，你的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
+        该徽章授予给邀请了 3 人加入社区的您，您的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
     champion:
       name: 外交官
       description: 已邀请了 5 个成员
       long_description: |
-        该徽章授予给邀请了 5 人加入社区的你，你的朋友在站点上度过了很长的时间，已经成为了成员。哇！感谢你帮助社区成长，社区因此变得更多元了！
+        该徽章授予给邀请了 5 人加入社区的您，您的朋友在站点上度过了很长的时间，已经成为了成员。哇！感谢您帮助社区成长，社区因此变得更多元了！
     first_share:
       name: 首次分享
       description: 已分享了一个帖子
@@ -3906,107 +3905,107 @@ zh_CN:
       name: 首个链接
       description: 已链接了另一个话题
       long_description: |
-        该徽章授予给第一次链接到另一个话题的你。联结话题会在各个话题的右侧显示链接和标题，这可以帮助阅读者迅速地找到相关讨论。多链接一些话题吧！
+        该徽章授予给第一次链接到另一个话题的您。联结话题会在各个话题的右侧显示链接和标题，这可以帮助阅读者迅速地找到相关讨论。多链接一些话题吧！
     first_quote:
       name: 首次引用
       description: 已引用过一个帖子
       long_description: |
-        该徽章授予给第一次在回复中引用帖子的你。在你的回复中引用之前帖子中的相关的部分将把话题关联在一起并切题。只要选中别的帖子中的任何文字，然后点击回复按钮将可以引用啦。多引用一些吧！
+        该徽章授予给第一次在回复中引用帖子的您。在您的回复中引用之前帖子中的相关的部分将把话题关联在一起并切题。只要选中别的帖子中的任何文字，然后点击回复按钮将可以引用啦。多引用一些吧！
     read_guidelines:
       name: 阅读指引
       description: 阅读<a href="%{base_uri}/guidelines">社区指引</a>
       long_description: |
-        该徽章授予给<a href="%{base_uri}/guidelines">阅读了社区指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社区。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
+        该徽章授予给<a href="%{base_uri}/guidelines">阅读了社区指引</a>的您。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社区。永远记住别人，一个和您有很多共同点的人，就在屏幕的那一侧。友好一些！
     reader:
       name: 读者
       description: 阅读了有至少 100 个回复的话题中的所有回复
       long_description: |
-        该徽章授予给第一次阅读了超过 100 个回复的长话题的你。仔细地阅读对话内容能让你关注到讨论的中心，理解不同的观点，而且能帮助我们打造更有趣的对话情景。你读得越多，对话的效果就会越好。就如我们常说的那般，阅读是最重要的！ :slight_smile:
+        该徽章授予给第一次阅读了超过 100 个回复的长话题的您。仔细地阅读对话内容能让您关注到讨论的中心，理解不同的观点，而且能帮助我们打造更有趣的对话情景。您读得越多，对话的效果就会越好。就如我们常说的那般，阅读是最重要的！ :slight_smile:
     popular_link:
       name: 流行链接
       description: 分享的链接被点击了 50 次
       long_description: |
-        该徽章授予给分享的链接被点击过 50 次的你。感谢你贴出了有用的链接，这让讨论的情节更形象了！
+        该徽章授予给分享的链接被点击过 50 次的您。感谢您贴出了有用的链接，这让讨论的情节更形象了！
     hot_link:
       name: 热门链接
       description: 分享的链接被点击了 300 次
       long_description: |
-        该徽章授予给分享的链接被点击过 300 次的你。感谢你贴出了精彩的链接，这推进了讨论的进程，并且装点了讨论！
+        该徽章授予给分享的链接被点击过 300 次的您。感谢您贴出了精彩的链接，这推进了讨论的进程，并且装点了讨论！
     famous_link:
       name: 著名链接
       description: 分享的链接被点击了 1000 次
       long_description: |
-        该徽章授予给分享的链接被点击过 1000 次的你。哇！你贴出的链接明显地推动了交流，它提供了重要的细节、上下文和其他信息，干得好！
+        该徽章授予给分享的链接被点击过 1000 次的您。哇！您贴出的链接明显地推动了交流，它提供了重要的细节、上下文和其他信息，干得好！
     appreciated:
       name: 感谢
       description: 有 20 个帖子都被赞了 1 次
       long_description: |
-        该徽章授予给 20 个不同的帖子都收到了至少 1 个赞的你。社区感谢你对讨论的贡献！
+        该徽章授予给 20 个不同的帖子都收到了至少 1 个赞的您。社区感谢您对讨论的贡献！
     respected:
       name: 尊敬
       description: 在100个帖子内收获2个赞
       long_description: |
-        该徽章授予给 100 个不同的帖子都收到了至少 2 个喜欢的你。社区越来越尊重你在讨论中的贡献了。
+        该徽章授予给 100 个不同的帖子都收到了至少 2 个喜欢的您。社区越来越尊重您在讨论中的贡献了。
     admired:
       name: 敬仰
       description: 有 300 个帖子都被赞了 5 次
       long_description: |
-        该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的你。哇！社区敬仰你在讨论中频繁和高质量的贡献。
+        该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的您。哇！社区敬仰您在讨论中频繁和高质量的贡献。
     out_of_love:
       name: 热情
       description: 一天内给出了%{max_likes_per_day}个赞
       long_description: |
-        该徽章授予给一天内给出了%{max_likes_per_day}个赞的你。别忘记休息一下，喜欢你所欣赏的帖子能鼓励社区在将来创造更多更精彩的讨论。
+        该徽章授予给一天内给出了%{max_likes_per_day}个赞的您。别忘记休息一下，喜欢您所欣赏的帖子能鼓励社区在将来创造更多更精彩的讨论。
     higher_love:
       name: 激情
       description: 共5次一天内给出了%{max_likes_per_day}个赞
       long_description: |
-        此徽章授予给共5天用完每天%{max_likes_per_day}个赞的你。感谢你每天花时间积极鼓励最好的交流！
+        此徽章授予给共5天用完每天%{max_likes_per_day}个赞的您。感谢您每天花时间积极鼓励最好的交流！
     crazy_in_love:
       name: 狂热
       description: 共20次一天内给出了%{max_likes_per_day}个赞
       long_description: |
-        此徽章授予给每天都给出所有%{max_likes_per_day}个赞的你。哇！你是鼓励社区成员的榜样！
+        此徽章授予给每天都给出所有%{max_likes_per_day}个赞的您。哇！您是鼓励社区成员的榜样！
     thank_you:
-      name: 感谢你
+      name: 感谢您
       description: 有 20 个被赞的帖子，给出过 10 个赞
       long_description: |
-        该徽章授予给收到了 20 个赞，且赞过别人至少 10 次的你。当别人赞你的帖子的时候，你也找机会赞别人的帖子。
+        该徽章授予给收到了 20 个赞，且赞过别人至少 10 次的您。当别人赞您的帖子的时候，您也找机会赞别人的帖子。
     gives_back:
       name: 回馈
       description: 有 100 个被赞的帖子，给出过 100 个赞
       long_description: |
-        该徽章授予给收到了 100 个赞，且赞过别人至少 100 次的你。感谢你分享感激！
+        该徽章授予给收到了 100 个赞，且赞过别人至少 100 次的您。感谢您分享感激！
     empathetic:
       name: 感性
       description: 有 500 个被赞的帖子，并给出过 1000 个赞
       long_description: |
-        该徽章授予给收到了 500 个赞，且赞过别人至少 1000 次的你。哇！你是一个富有同情心且会换位思考的模范。 :two_hearts:
+        该徽章授予给收到了 500 个赞，且赞过别人至少 1000 次的您。哇！您是一个富有同情心且会换位思考的模范。 :two_hearts:
     first_emoji:
       name: 首个表情
       description: 在帖子中使用表情符号
       long_description: |
-        该徽章授予给第一次在帖子中使用 Emoji 的你 :thumbsup:。Emoji 让你在帖子中表达快乐 :smiley:、悲伤 :anguished:、愤怒 :angry: 以及任何东西 :sunglasses:。输入 :（冒号）或在编辑器中的 Emoji 工具栏中选择吧 :ok_hand:
+        该徽章授予给第一次在帖子中使用 Emoji 的您 :thumbsup:。Emoji 让您在帖子中表达快乐 :smiley:、悲伤 :anguished:、愤怒 :angry: 以及任何东西 :sunglasses:。输入 :（冒号）或在编辑器中的 Emoji 工具栏中选择吧 :ok_hand:
     first_mention:
       name: 首次提及
       description: 帖子中提及用户
       long_description: |
-        该徽章授予给第一次在帖子中@别人的你。每个提及都将通知对方，让他们知道你发了贴。输入 @ 提及任何用户，如果可以的话，也可以提及群组——这是个获得他们注意的好办法。
+        该徽章授予给第一次在帖子中@别人的您。每个提及都将通知对方，让他们知道您发了贴。输入 @ 提及任何用户，如果可以的话，也可以提及群组——这是个获得他们注意的好办法。
     first_onebox:
       name: 首个Onebox
       description: 发布过 oneboxed 链接
       long_description: |
-        该徽章授予给第一次发表单独一行链接的你。链接将展开成一个标签盒，其中包含摘要、标题和（可能的）图片。
+        该徽章授予给第一次发表单独一行链接的您。链接将展开成一个标签盒，其中包含摘要、标题和（可能的）图片。
     first_reply_by_email:
       name: 首次邮件回复
       description: 通过邮件回复
       long_description: |
-        该徽章授予给第一次通过邮件回复的你 :e-mail:。
+        该徽章授予给第一次通过邮件回复的您 :e-mail:。
     new_user_of_the_month:
       name: "本月最佳新用户"
       description: 第一个月做出杰出贡献
       long_description: |
-        该徽章授予给每个月中做出杰出贡献的两位新用户。这是根据你收到的赞和谁赞了你决定的。
+        该徽章授予给每个月中做出杰出贡献的两位新用户。这是根据您收到的赞和谁赞了您决定的。
     enthusiast:
       name: 十全十美
       description: 连续 10 天访问
@@ -4035,45 +4034,45 @@ zh_CN:
     initial_topic_title: 网站性能报告
   tags:
     title: "标签"
-    restricted_tag_disallowed: '你不能添加标签“%{tag}”。'
-    restricted_tag_remove_disallowed: '你不能删除标签“%{tag}”。'
+    restricted_tag_disallowed: '您不能添加标签“%{tag}”。'
+    restricted_tag_remove_disallowed: '您不能删除标签“%{tag}”。'
     minimum_required_tags:
-      other: "你必须选择至少%{count}个标签"
+      other: "您必须选择至少%{count}个标签"
     upload_row_too_long: "CSV文件每行应该有一个标签。可选地，标签后面可以是逗号，然后是标签组名称。"
     forbidden:
       invalid:
-        other: "你选择的可以使用的标签为空"
+        other: "您选择的可以使用的标签为空"
       in_this_category: '"%{tag_name}不能用于此分类"'
       restricted_to:
         other: '“%{tag_name}”被限制在以下分类：%{category_names}'
       synonym: '不允许使用同义词。使用“ %{tag_name}”代替。'
       has_synonyms: '无法使用“ %{tag_name}”，因为有同义词。'
     required_tags_from_group:
-      other: "你必须至少包括 %{count} %{tag_group_name} 标签。该组中的标签为：%{tags}。"
+      other: "您必须至少包括 %{count} %{tag_group_name} 标签。该组中的标签为：%{tags}。"
     invalid_target_tag: "不能是同义词的同义词"
     synonyms_exist: "存在同义词时不允许"
   rss_by_tag: "话题标签 %{tag}"
   finish_installation:
-    congratulations: "祝贺，你已经安装好了 Discourse！"
+    congratulations: "祝贺，您已经安装好了 Discourse！"
     register:
       button: "注册"
       title: "注册管理员账户"
       help: "注册新账户以开始"
       no_emails: "遗憾的是，在设置过程中未定义管理员电子邮件，因此最终确定配置可能很困难。请在配置文件中添加开发人员电子邮件或<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>从控制台创建管理员账户</a>。"
     confirm_email:
-      title: "配置你的邮件"
-      message: "<p>我们发送了一封激活邮件到<b>%{email}</b>。请安装电子邮件中的说明激活你的帐号。</p><p>如果没有收到，检查你的收件箱的垃圾箱或者<a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>确认你的电子邮件地址是正确的</a>。</p>"
+      title: "配置您的邮件"
+      message: "<p>我们发送了一封激活邮件到<b>%{email}</b>。请安装电子邮件中的说明激活您的帐号。</p><p>如果没有收到，检查您的收件箱的垃圾箱或者<a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>确认您的电子邮件地址是正确的</a>。</p>"
     resend_email:
       title: "重发激活邮件"
       message: "<p>我们重发了激活邮件至<b>%{email}</b>"
   safe_mode:
     title: "进入安全模式"
-    description: "安全模式让你的站点不载入插件或站点自定义设置。"
+    description: "安全模式让您的站点不载入插件或站点自定义设置。"
     no_customizations: "禁用当前主题"
     only_official: "禁用非官方插件"
     no_plugins: "禁用所有插件"
     enter: "进入安全模式"
-    must_select: "你必须选择至少一个选项以进入安全模式。"
+    must_select: "您必须选择至少一个选项以进入安全模式。"
   wizard:
     title: "Discourse 安装"
     step:
@@ -4081,32 +4080,32 @@ zh_CN:
         title: "欢迎来到 Discourse！"
         fields:
           default_locale:
-            description: "你的社区主要使用什么语言？"
+            description: "您的社区主要使用什么语言？"
       forum_title:
         title: "名字"
-        description: "名字就像远方可见的路标一样，访客“首先”将看到这个社区的名字。你起的名字和标题怎样描述了你的社区？"
+        description: "名字就像远方可见的路标一样，访客“首先”将看到这个社区的名字。您起的名字和标题怎样描述了您的社区？"
         fields:
           title:
-            label: "你社区的名字"
+            label: "您社区的名字"
             placeholder: "小明的论坛"
           site_description:
-            label: "用一句简短的话描述你的社区"
+            label: "用一句简短的话描述您的社区"
             placeholder: "小明和他的朋友讨论酷东西的论坛"
           short_site_description:
-            label: "用几句话来描述你的社区"
+            label: "用几句话来描述您的社区"
             placeholder: "有史以来最好的社区"
       introduction:
         title: "介绍"
-        disabled: "<p>我们找不到任何标题为“%{topic_title}”的话题。</p> <ul> <li>如果你更改了标题，请修改该话题以修改你网站的介绍。</li> <li>如果你已删除此话题，请创建另一个话题为“%{topic_title}”作为标题。 第一篇文章的内容是你网站的介绍。</li> </ul>"
+        disabled: "<p>我们找不到任何标题为“%{topic_title}”的话题。</p> <ul> <li>如果您更改了标题，请修改该话题以修改您网站的介绍。</li> <li>如果您已删除此话题，请创建另一个话题为“%{topic_title}”作为标题。 第一篇文章的内容是您网站的介绍。</li> </ul>"
         fields:
           welcome:
             label: "欢迎话题"
-            description: "<p>你如何向一个在电梯里的陌生人用一分钟时间介绍你的社区？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>你的欢迎话题是初来者首先所需要阅读的。 把它当成你的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
-            one_paragraph: "请限制你的欢迎私信至一段话。"
-            extra_description: "如果你不确定，可以跳过此步骤，稍后编辑你的欢迎话题。"
+            description: "<p>您如何向一个在电梯里的陌生人用一分钟时间介绍您的社区？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>您的欢迎话题是初来者首先所需要阅读的。 把它当成您的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
+            one_paragraph: "请限制您的欢迎私信至一段话。"
+            extra_description: "如果您不确定，可以跳过此步骤，稍后编辑您的欢迎话题。"
       privacy:
         title: "访问"
-        description: "<p>你的社区对所有人开放，还在是限制会员、邀请或审批？你可以随意设置为私有的然后切换到公开的。</p>"
+        description: "<p>您的社区对所有人开放，还在是限制会员、邀请或审批？您可以随意设置为私有的然后切换到公开的。</p>"
         fields:
           privacy:
             choices:
@@ -4135,13 +4134,13 @@ zh_CN:
           contact_url:
             label: "网页"
             placeholder: "https://www.example.com/contact-us"
-            description: "你或者你的组织平时用于联络的网页。将被显示在<a href='%{base_path}/about' target='_blank'>关于页面</a>中。"
+            description: "您或者您的组织平时用于联络的网页。将被显示在<a href='%{base_path}/about' target='_blank'>关于页面</a>中。"
           site_contact:
             label: "自动私信"
             description: "所有Discourse自动发送的消息将以该用户的名义发送，比如标志警告和备份完成通知。"
       corporate:
         title: "组织"
-        description: "此信息将输入你的<a href='%{base_path}/tos' target='blank'>服务条款</a>，这是你可以在员工类别中编辑的话题。如果你没有公司，现在可跳过此步骤。"
+        description: "此信息将输入您的<a href='%{base_path}/tos' target='blank'>服务条款</a>，这是您可以在员工类别中编辑的话题。如果您没有公司，现在可跳过此步骤。"
         fields:
           company_name:
             label: "公司名"
@@ -4168,10 +4167,10 @@ zh_CN:
         fields:
           logo:
             label: "主要Logo"
-            description: "你的站点左上角标志图像。使用高120且宽高比大于3:1的长方形图像。"
+            description: "您的站点左上角标志图像。使用高120且宽高比大于3:1的长方形图像。"
           logo_small:
             label: "正方形标志"
-            description: "你的标志的正方形版本。在浏览器下滑时显示在左上角，还显示在分享到社交网络时。推荐大于512x512。"
+            description: "您的标志的正方形版本。在浏览器下滑时显示在左上角，还显示在分享到社交网络时。推荐大于512x512。"
       icons:
         title: "图标"
         fields:
@@ -4182,7 +4181,7 @@ zh_CN:
             label: "大图标"
             description: "用于在现代设备上代表您的网站的图标图像，在较大尺寸的情况下表现出色。推荐尺寸大于512 × 512。我们默认会使用正方形的标志。"
       homepage:
-        description: "我们建议你在主页显示最新话题，但你喜欢的话也可以选择将分类（话题的分组）显示在主页。"
+        description: "我们建议您在主页显示最新话题，但您喜欢的话也可以选择将分类（话题的分组）显示在主页。"
         title: "主页"
         fields:
           homepage_style:
@@ -4203,26 +4202,26 @@ zh_CN:
                 label: "分类框和话题"
       invites:
         title: "邀请管理人员"
-        description: "你快做完啦！让我们邀请一些工作人员来帮助你创建一些有趣的话题和回复来<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>启动你的讨论</a>以开始社区之旅。"
+        description: "您快做完啦！让我们邀请一些工作人员来帮助您创建一些有趣的话题和回复来<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>启动您的讨论</a>以开始社区之旅。"
         disabled: "由于禁用了本地登录，因此无法向任何人发送邀请。请继续下一步。"
       finished:
-        title: "你的 Discourse 已经准备就绪！"
+        title: "您的 Discourse 已经准备就绪！"
         description: |
-          <p>如果你想，可以<b>随时重新运行这个向导</b>，或访问 <a href='%{base_path}/admin' target='_blank'>你的管理部分</a>；在站点菜单中的扳手图标旁边找到它。</p>
-          <p>使用我们强大的话题系统，可以更轻松地自定义你的 Discourse。例如，在 <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>上查看 <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">顶级话题和组件</a> 。</p>
-          <p>祝你愉快，祝你好运 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建立新社区！</a></p>
+          <p>如果您想，可以<b>随时重新运行这个向导</b>，或访问 <a href='%{base_path}/admin' target='_blank'>您的管理部分</a>；在站点菜单中的扳手图标旁边找到它。</p>
+          <p>使用我们强大的话题系统，可以更轻松地自定义您的 Discourse。例如，在 <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>上查看 <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">顶级话题和组件</a> 。</p>
+          <p>祝您愉快，祝您好运 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建立新社区！</a></p>
   search_logs:
     graph_title: "搜索计数"
   joined: "已加入"
   discourse_push_notifications:
     popup:
-      mentioned: '%{username}在“%{topic}”提到了你 - %{site_title}'
-      group_mentioned: '%{username}在“%{topic}”提到了你 - %{site_title}'
-      quoted: '%{username}在“%{topic}”引用了你的帖子 - %{site_title}'
-      replied: '%{username}在“%{topic}”回复了你 - %{site_title}'
+      mentioned: '%{username}在“%{topic}”提到了您 - %{site_title}'
+      group_mentioned: '%{username}在“%{topic}”提到了您 - %{site_title}'
+      quoted: '%{username}在“%{topic}”引用了您的帖子 - %{site_title}'
+      replied: '%{username}在“%{topic}”回复了您 - %{site_title}'
       posted: '%{username}在“%{topic}”中发布了帖子 - %{site_title}'
-      private_message: '%{username}在“%{topic}”中给你发送了一个私信 - %{site_title}'
-      linked: '%{username}在“%{topic}”中链接了你的帖子 - %{site_title}'
+      private_message: '%{username}在“%{topic}”中给您发送了一个私信 - %{site_title}'
+      linked: '%{username}在“%{topic}”中链接了您的帖子 - %{site_title}'
       watching_first_post: '%{username}创建一个新的话题“%{topic}”-%{site_title}'
       confirm_title: "通知已启用 - %{site_title}"
       confirm_body: "成功！通知已启用。"
@@ -4232,7 +4231,7 @@ zh_CN:
     unknown: "未知"
     user_merged: "%{username}已合并到此账户"
     user_delete_self: "已从%{url}自行删除"
-    webhook_deactivation_reason: "你的webhook已被自动停用。我们收到多个“%{status}”HTTP失败状态响应。"
+    webhook_deactivation_reason: "您的webhook已被自动停用。我们收到多个“%{status}”HTTP失败状态响应。"
     api_key:
       automatic_revoked:
         other: "自动撤销，最后活跃于%{count}日前"
@@ -4250,7 +4249,7 @@ zh_CN:
       low: "低"
       medium: "中"
       high: "高"
-    must_claim: "在你操作之前你必须认领此条目。"
+    must_claim: "在您操作之前您必须认领此条目。"
     user_claimed: "此条目已被其他用户认领。"
     missing_version: "您必须提供一个版本参数"
     conflict: "有一个更新冲突阻止您这样做。"
@@ -4301,14 +4300,14 @@ zh_CN:
       delete_and_ignore_replies:
         title: "删除帖子和回复并忽视"
         description: "删除帖子和其所有的回复；如果是第一个帖子则删除整个话题。"
-        confirm: "你确定要删除帖子的这个回复吗"
+        confirm: "您确定要删除帖子的这个回复吗"
       delete_and_agree:
         title: "删除帖子并同意"
         description: "删除此帖；如果这是这个话题内的第一篇帖子则删除话题"
       delete_and_agree_replies:
         title: "删除帖子+回复并同意"
         description: "删除帖子和其所有的回复；如果是第一个帖子则删除整个话题。"
-        confirm: "你确定要删除帖子的这个回复吗"
+        confirm: "您确定要删除帖子的这个回复吗"
       disagree_and_restore:
         title: "不同意并恢复帖子"
         description: "恢复帖子为所有用户可见。"
@@ -4320,7 +4319,7 @@ zh_CN:
         title: "批准"
       approve_post:
         title: "批准帖子"
-        confirm_closed: "此话题已关闭。你真的要创建帖子吗？"
+        confirm_closed: "此话题已关闭。您真的要创建帖子吗？"
       reject_post:
         title: "否决帖子"
       approve_user:
@@ -4351,16 +4350,16 @@ zh_CN:
   email_style:
     html_missing_placeholder: "HTML模板必须包含%{placeholder}"
   notification_level:
-    ignore_error: "对不起，你不能忽略这个用户。"
-    mute_error: "对不起，你不能禁音这个用户。"
+    ignore_error: "对不起，您不能忽略这个用户。"
+    mute_error: "对不起，您不能禁音这个用户。"
   discord:
     not_in_allowed_guild: "验证失败。您不是允许的Discord公会的成员。"
   old_keys_reminder:
     title: "关于旧凭证的提醒"
     body: |
-      Hello！这是你的 Discourse 实例每年例行安全提醒。
+      Hello！这是您的 Discourse 实例每年例行安全提醒。
 
-      出于礼貌，我们想让你知道，你的 Discourse 实例上使用的以下凭证已经两年多没有更新了。
+      出于礼貌，我们想让您知道，您的 Discourse 实例上使用的以下凭证已经两年多没有更新了。
 
       %{keys}
 

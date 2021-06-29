@@ -164,7 +164,6 @@ zh_TW:
     submit: "送出"
     generic_error: "抱歉，發生錯誤。"
     generic_error_with_reason: "發生錯誤: %{error}"
-    go_ahead: "下一步"
     sign_up: "註冊"
     log_in: "登入"
     age: "已建立"
@@ -191,7 +190,6 @@ zh_TW:
     more: "更多"
     x_more:
       other: "%{count} 更多"
-    less: "較少"
     never: "永不"
     every_30_minutes: "每 30 分鐘"
     every_hour: "每小時"
@@ -200,7 +198,6 @@ zh_TW:
     every_month: "每個月"
     every_six_months: "每半年"
     max_of_count: "（最大 %{count}）"
-    alternation: "或"
     character_count:
       other: "%{count} 個字元"
     related_messages:
@@ -231,7 +228,6 @@ zh_TW:
       help:
         bookmark: "點擊以將此話題的第一篇貼文加入書籤"
         unbookmark: "點擊以移除此話題所有書籤"
-        unbookmark_with_reminder: "按一下以移除本主題中的所有書籤和提醒事項。此主題的提醒設定為 %{reminder_at} 。"
     bookmarks:
       not_bookmarked: "將此貼文加入書籤"
       remove: "移除書籤"
@@ -463,9 +459,6 @@ zh_TW:
     groups:
       member_added: "已新增"
       member_requested: "請求"
-      add_members:
-        usernames:
-          input_placeholder: "使用者名稱"
       requests:
         title: "請求"
         reason: "原因"
@@ -479,7 +472,7 @@ zh_TW:
         title: "管理"
         name: "名稱"
         full_name: "全名"
-        add_members: "新增成員"
+        invite_members: "邀請"
         delete_member_confirm: "確定要從群組「\\b%{group}」中移除「%{username}'」嗎？"
         profile:
           title: 個人檔案
@@ -2712,8 +2705,6 @@ zh_TW:
             available: "可以使用此群組名稱"
             not_available: "無法使用此群組名稱"
             blank: "群組名稱不能空白"
-        add_members:
-          as_owner: "將使用者設為此群組的擁有者"
         manage:
           interaction:
             email: Email

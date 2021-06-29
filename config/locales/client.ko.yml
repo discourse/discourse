@@ -177,7 +177,6 @@ ko:
     submit: "확인"
     generic_error: "죄송합니다. 오류가 발생했습니다."
     generic_error_with_reason: "오류가 발생했습니다: %{error}"
-    go_ahead: "계속하기"
     sign_up: "회원가입"
     log_in: "로그인"
     age: "나이"
@@ -204,7 +203,6 @@ ko:
     more: "더 보기"
     x_more:
       other: "%{count}개 더보기"
-    less: "덜"
     never: "전혀"
     every_30_minutes: "30분마다"
     every_hour: "매 시간마다"
@@ -213,7 +211,6 @@ ko:
     every_month: "매달"
     every_six_months: "6개월마다"
     max_of_count: "최대 %{count}"
-    alternation: "또는"
     character_count:
       other: "%{count} 글자"
     related_messages:
@@ -247,8 +244,9 @@ ko:
       clear_bookmarks: "북마크 취소"
       help:
         bookmark: "이 글의 첫 번째 게시물을 북마크하려면 클릭하세요."
+        edit_bookmark: "이 글에 대한 북마크를 편집하려면 클릭하십시오."
         unbookmark: "이 항목의 모든 북마크를 제거하려면 클릭하십시오."
-        unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오. 이 글에 대해 알림이 %{reminder_at} 으로 설정되었습니다."
+        unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오."
     bookmarks:
       created: "이 글을 북마크했습니다. %{name}"
       not_bookmarked: "이 글을 북마크"
@@ -564,15 +562,10 @@ ko:
       member_added: "추가됨"
       member_requested: "요청됨"
       add_members:
-        title: "%{group_name}에 구성원 추가"
-        description: "쉼표로 구분해 붙여 넣을 수도 있습니다."
-        usernames_or_emails:
-          title: "사용자 이름 또는 이메일 주소를 입력하세요."
-          input_placeholder: "사용자 이름 또는 이메일"
-        usernames:
-          title: "아이디를 입력하세요"
-          input_placeholder: "아이디"
+        title: "%{group_name}에 사용자 추가"
+        description: "그룹에 초대 할 사용자 목록을 입력하거나 쉼표로 구분해 목록에 붙여 넣으십시오."
         notify_users: "사용자에게 알림"
+        set_owner: "사용자를 이 그룹의 소유자로 설정"
       requests:
         title: "요청"
         reason: "이유"
@@ -586,7 +579,8 @@ ko:
         title: "관리"
         name: "이름"
         full_name: "전체 이름"
-        add_members: "회원 추가"
+        add_members: "사용자 추가"
+        invite_members: "초대"
         delete_member_confirm: "'%{group}'그룹에서 '%{username}' 사용자를 제거 하시겠습니까?"
         profile:
           title: 프로필
@@ -2219,6 +2213,7 @@ ko:
       browse_all_categories: 모든 카테고리 보기
       browse_all_tags: 모든 태그 보기
       view_latest_topics: 최근 글 보기
+      suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되셨습니까?
       jump_reply_up: 이전 답글로 이동
       jump_reply_down: 이후 답글로 이동
       deleted: "글이 삭제되었습니다."
@@ -3135,6 +3130,7 @@ ko:
         show_incoming_updated_topics: "%{shortcut} 갱신된 토픽 보기"
         search: "%{shortcut} 를 사용하여 검색"
         help: "%{shortcut} 키보드 도움말 열기"
+        dismiss_new: "%{shortcut} 새 글을 읽은 상태로 표시하기"
         dismiss_topics: "%{shortcut} 토픽 무시하기"
         log_out: "%{shortcut} 로그아웃"
       composing:
@@ -3447,6 +3443,7 @@ ko:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">검색 로그</a>'
             disabled: '인기 검색 보고서가 비활성화되었습니다. <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">로그 검색 쿼리</a> 를 사용하여 데이터를 수집하십시오.'
+          average_chart_label: 평균
           filters:
             file_extension:
               label: 파일 확장자
@@ -3470,8 +3467,6 @@ ko:
             available: "사용가능한 그룹 이름"
             not_available: "사용 불가능한 그룹 이름"
             blank: "그룹 이름은 공백이 될 수 없습니다"
-        add_members:
-          as_owner: "사용자를 이 그룹의 소유자로 설정"
         manage:
           interaction:
             email: 이메일
@@ -4316,6 +4311,7 @@ ko:
           upload_successful: "성공적으로 업로드되었습니다. 단어가 추가되었습니다."
         test:
           button_label: "테스트"
+          modal_title: "%{action}: 감시 단어 테스트"
           description: "시청 한 단어와 일치하는지 확인하려면 아래에 텍스트를 입력하십시오"
           found_matches: "일치하는 결과 :"
           no_matches: "일치하는 결과가 없습니다"
@@ -4441,6 +4437,8 @@ ko:
         flags_given_count: 작성한 신고
         flags_received_count: 받은 신고
         warnings_received_count: 받은 경고
+        warnings_list_warning: |
+          중재자로서 이러한 글을 모두 보지 못할 수도 있습니다. 필요한 경우 관리자에게 <b>@moderators</b> 권한을 요청하십시오.
         flags_given_received_count: "준/받은 신고"
         approve: "승인"
         approved_by: "승인자"

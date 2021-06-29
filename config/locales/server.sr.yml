@@ -333,7 +333,6 @@ sr:
     min_personal_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
-    pending_users_reminder_delay: "Obavesti moderatore ako novi korisnik čeka na odobrenje duže nego ovoliko časova. Podesiti na -1 da bi se onemogućile notifikacije."
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
     send_welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike."
     dark_mode_none: "Ništa"

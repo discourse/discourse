@@ -208,7 +208,6 @@ sr:
     submit: "Potvrdi"
     generic_error: "Izvinite, pojavila se greška."
     generic_error_with_reason: "Došlo je do greške: %{error}"
-    go_ahead: "Nastavi"
     sign_up: "Registrujte se"
     log_in: "Prijavi se"
     age: "Godine"
@@ -239,7 +238,6 @@ sr:
       one: "još %{count} član"
       few: "još %{count} člana"
       other: "još %{count} članova"
-    less: "Manje"
     never: "nikad"
     every_30_minutes: "svakih 30 minuta"
     every_hour: "svakog sata"
@@ -248,7 +246,6 @@ sr:
     every_month: "svaki mesec"
     every_six_months: "svakih šest meseci"
     max_of_count: "maksimalno od %{count}"
-    alternation: "ili"
     character_count:
       one: "%{count} karakter"
       few: "%{count} karaktera"
@@ -281,7 +278,6 @@ sr:
       help:
         bookmark: "Klikni da markiraš prvi post u ovoj temi"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
-        unbookmark_with_reminder: "Kliknite da biste uklonili sve obeleživače i podsetnike u ovoj temi. Imate podsetnik %{reminder_at} za ovu temu."
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
@@ -506,6 +502,7 @@ sr:
       manage:
         name: "Ime foruma"
         full_name: "Ime"
+        invite_members: "Pozovi"
         delete_member_confirm: "Uklonite '%{username}' iz '%{group}' grupe?"
         profile:
           title: Profil

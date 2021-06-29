@@ -1246,7 +1246,6 @@ ur:
     markdown_typographer_quotation_marks: "ڈبل اور سِنگل قَوٹس کے متبادل جوڑوں کی فہرست"
     post_undo_action_window_mins: "منٹوں کی تعداد جب تک صارفین کو ایک پوسٹ پر حالیہ کارروائیوں (لائیک، فلَیگ، وغیرہ) کو واپس کرلینے کی اجازت ہے۔"
     must_approve_users: "سائٹ تک رسائی حاصل کرنے سے پہلے سٹاف کا تمام نئے صارف اکاؤنٹس کو منظور کرنا ضروری ہے۔"
-    pending_users_reminder_delay: "ماڈریٹرز کو مطلع کریں اگر نئے صارفین اِس سے زیادہ گھنٹوں سے منظوری کے منتظر ہوں۔ اطلاعات کو غیر فعال کرنے کیلئے -1 سَیٹ کریں۔"
     maximum_session_age: "آخری وزٹ سے ن گھنٹوں بعد تک صارف کو لاگڈ اِن رکھا جائے گا"
     enable_escaped_fragments: "اگر کسی وَیب کرالر کا پتہ نہ لگے تو گُوگل اَیجَیکس-کرالِنگ API کا استعمال کریں۔ دیکھیے <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "وہ اَوریجِن جن کیلئے کراس-اَوریجِن درخواستوں (CORS) کی اجازت ہے۔ ہراَوریجِن میں http:// یا https:// شامل ہونا ضروری ہے۔ CORS کو فعال کرنے کیلئے DISCOURSE_ENABLE_CORS کی وَیلِیو ٹرُو پر مقرر ہونا لاذمی ہے۔"

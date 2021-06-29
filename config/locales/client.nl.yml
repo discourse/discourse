@@ -200,7 +200,6 @@ nl:
     submit: "Versturen"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
-    go_ahead: "Ga uw gang"
     sign_up: "Registreren"
     log_in: "Aanmelden"
     age: "Leeftijd"
@@ -229,7 +228,6 @@ nl:
     x_more:
       one: "%{count} Meer"
       other: "%{count} Meer"
-    less: "Minder"
     never: "nooit"
     every_30_minutes: "elke 30 minuten"
     every_hour: "elk uur"
@@ -238,7 +236,6 @@ nl:
     every_month: "elke maand"
     every_six_months: "elke zes maanden"
     max_of_count: "max. %{count}"
-    alternation: "of"
     character_count:
       one: "%{count} teken"
       other: "%{count} tekens"
@@ -273,7 +270,6 @@ nl:
       help:
         bookmark: "Klik om een bladwijzer voor het eerste bericht van dit topic te maken"
         unbookmark: "Klik om alle bladwijzers in dit topic te verwijderen"
-        unbookmark_with_reminder: "Klik om alle bladwijzers en herinneringen in dit topic te verwijderen. U hebt voor dit topic een herinnering ingesteld voor %{reminder_at}."
     bookmarks:
       created: "U hebt een bladwijzer voor dit bericht gemaakt. %{name}"
       not_bookmarked: "bladwijzer voor dit bericht maken"
@@ -604,13 +600,6 @@ nl:
       member_added: "Toegevoegd"
       member_requested: "Aangevraagd:"
       add_members:
-        title: "Leden toevoegen aan %{group_name}"
-        description: "U kunt ook in een door komma's gescheiden lijst plakken."
-        usernames_or_emails:
-          title: "Voer gebruikersnamen of e-mailadressen in"
-          input_placeholder: "Gebruikersnamen of e-mailadressen"
-        usernames:
-          input_placeholder: "Gebruikersnamen"
         notify_users: "Gebruikers een melding sturen"
       requests:
         title: "Aanvragen"
@@ -625,7 +614,7 @@ nl:
         title: "Beheren"
         name: "Naam"
         full_name: "Volledige naam"
-        add_members: "Leden toevoegen"
+        invite_members: "Uitnodigen"
         delete_member_confirm: "'%{username}' uit de groep '%{group}' verwijderen?"
         profile:
           title: Profiel
@@ -3560,8 +3549,6 @@ nl:
             available: "Groepsnaam is beschikbaar"
             not_available: "Groepsnaam is niet beschikbaar"
             blank: "Groepsnaam mag niet leeg zijn"
-        add_members:
-          as_owner: "Gebruiker(s) als eigenaar(s) van deze groep instellen"
         manage:
           interaction:
             email: E-mail
