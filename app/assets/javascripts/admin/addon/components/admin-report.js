@@ -382,7 +382,7 @@ export default Component.extend({
       return EmberObject.create(
         Object.assign(tableOptions, this.get("reportOptions.table") || {})
       );
-    } else {
+    } else if (mode === "chart") {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
 
       let chartGrouping = this.get("reportOptions.chartGrouping");
