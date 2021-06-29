@@ -79,7 +79,7 @@ fr:
       optimized_link: Les liens optimisés d'images sont éphémères et ne devraient pas être inclus dans le code source d'un thème.
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
-      data_type_not_a_number: "Le type `%{name}` n'est pas supporté. Les types supportés sont `integer`, `bool`, `list`, `enum` et `upload`"
+      data_type_not_a_number: "Le type `%{name}` n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
       name_too_long: "Il y a un paramètre avec un nom trop long. Longueur maximum 255"
       default_value_missing: "Le paramètre `%{name}` n'a pas de valeur par défaut"
       default_not_match_type: "Le type de la valeur par défaut du paramètre `%{name}` ne correspond pas au type du paramètre."
@@ -188,11 +188,11 @@ fr:
         other: "Vous avez spécifié les choix invalides %{name}"
       default_categories_already_selected: "Vous ne pouvez pas sélectionner une catégorie qui est utilisée dans une autre liste."
       default_tags_already_selected: "Vous ne pouvez pas sélectionner une étiquette utilisée dans une autre liste."
-      s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'envoi de fichiers sur S3 avant d'avoir renseigné le paramètre 's3_upload_bucket'."
+      s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'envoi de fichiers sur S3 avant d'avoir renseigné le paramètre « s3_upload_bucket »."
       enable_s3_uploads_is_required: "Vous ne pouvez pas activer l'inventaire sur S3 avant d'avoir activer les envois S3."
       page_publishing_requirements: "La publication de pages ne peut pas être activée si la sécurisation des médias est activée."
       s3_backup_requires_s3_settings: "Utiliser S3 comme emplacement de sauvegarde nécessite de renseigner le paramètre '%{setting_name}'."
-      s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour 's3_upload_bucket' and 's3_backup_bucket'. Choisir un autre bucket ou utiliser un chemin d'accès différent pour chaque bucket."
+      s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour « s3_upload_bucket » et « s3_backup_bucket ». Choisissez un autre bucket ou utilisez un chemin d'accès différent pour chaque bucket."
       secure_media_requirements: "L'envoi de fichiers sur S3 doit être activé avant d'activer la sécurisation des médias."
       share_quote_facebook_requirements: "Vous devez définir un identifiant d'application Facebook pour activer le partage de citation vers Facebook."
       second_factor_cannot_enforce_with_socials: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque des connexions sociales sont activées. Vous devez d'abord désactiver la connexion via : %{auth_provider_names}"
@@ -237,7 +237,7 @@ fr:
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     max_rows: "Les premières %{max_bulk_invites} invitations ont été envoyées. Essayez de diviser le fichier en parties plus petites."
-    error: "Il y a eu une erreur en envoyant ce fichier. Merci de réessayer plus tard."
+    error: "Une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer plus tard."
   invite_link:
     email_taken: "Cette adresse courriel est déjà utilisée. Si vous possédez déjà un compte, veuillez vous connecter ou réinitialiser votre mot de passe."
     max_redemptions_limit: "doit être entre 2 et %{max_limit}."
@@ -254,7 +254,7 @@ fr:
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive au format .tar.gz."
     not_enough_space_on_disk: "Il n'y a pas assez d'espace sur le disque pour charger cette sauvegarde."
     invalid_filename: "Le nom du fichier de sauvegarde contient des caractères invalides. Sont autorisés : a-z 0-9 . - _."
-    file_exists: "Le fichier que vous essayer d'envoyer existe déjà."
+    file_exists: "Le fichier que vous essayez d'envoyer existe déjà."
   invalid_params: "Vous avez fourni des paramètres invalides pour la requête : %{message}"
   not_logged_in: "Vous devez être connecté pour faire cela."
   not_found: "L'URL ou la ressource demandée n'a pas été retrouvée."
@@ -301,8 +301,8 @@ fr:
       one: "%{count} réponse"
       other: "%{count} réponses"
     likes:
-      one: "%{count} J'aime"
-      other: "%{count} J'aime"
+      one: "%{count} « J'aime »"
+      other: "%{count} « J'aime »"
     last_reply: "Dernière réponse"
     created: "Créé"
     new_topic: "Créer un nouveau sujet"
@@ -338,7 +338,7 @@ fr:
   pm_reached_recipients_limit: "Désolé, vous ne pouvez pas avoir plus de %{recipients_limit} destinataires dans un message direct."
   removed_direct_reply_full_quotes: "La citation complète du message précédent a été supprimée automatiquement."
   watched_words_auto_tag: "Sujet automatiquement étiqueté"
-  secure_upload_not_allowed_in_public_topic: "Désolé, les envois sécurisés suivants ne peuvent pas être utilisés dans un sujet public : %{upload_filenames}."
+  secure_upload_not_allowed_in_public_topic: "Nous sommes désolés, les envois sécurisés suivants ne peuvent pas être utilisés dans un sujet public : %{upload_filenames}."
   create_pm_on_existing_topic: "Désolé, vous ne pouvez pas créer un message direct sur un sujet existant."
   slow_mode_enabled: "Ce sujet est en mode ralenti."
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
@@ -462,11 +462,11 @@ fr:
     avatar: |
       ### Avez-vous pensé à une photo de profil ?
 
-      Vous avez posté quelques sujets et réponses, mais votre photo de profil n'est pas unique comme vous -- c'est juste une lettre.
+      Vous avez publié quelques sujets et réponses, mais votre photo de profil n'est pas unique comme vous, ce n'est qu'une lettre.
 
       Avez-vous pensé à **[visiter votre profil utilisateur](%{profile_path})** et ajouter une photo qui vous représente ?
 
-      C'est plus facile de suivre les discussions et de rencontrer des personnes intéressantes dans les conversations lorsque tout le monde a une photo de profil unique !
+      Il est plus facile de suivre les discussions et de rencontrer des personnes intéressantes dans les conversations lorsque tout le monde a une photo de profil unique !
     sequential_replies: |
       ### Pensez à répondre à plusieurs messages en même temps
 
@@ -665,8 +665,8 @@ fr:
     image_placeholder:
       broken: "Cette image ne fonctionne pas"
     has_likes:
-      one: "%{count} J'aime"
-      other: "%{count} J'aime"
+      one: "%{count} « J'aime »"
+      other: "%{count} « J'aime »"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, veuillez réessayer plus tard."
     too_many_requests: "Vous avez effectué cette action trop de fois. Veuillez attendre %{time_left}avant de réessayer."
@@ -679,7 +679,7 @@ fr:
       public_group_membership: "Vous rejoignez ou quittez des groupes à rythme un peu trop élevé. Nous vous invitons à patienter %{time_left} avant de réessayer."
       topics_per_day: "Vous avez atteint la limite quotidienne de nouveaux sujets qu'il vous est possible de créer. Vous pourrez créer de nouveaux sujets d'ici %{time_left}."
       pms_per_day: "Vous avez atteint la limite quotidienne de messages qu'il vous est possible de publier. Vous pourrez publier de nouveaux messages d'ici %{time_left}."
-      create_like: "Woah, vous avez beaucoup d'amour à partager ! Vous avez atteint la limite quotidienne du nombre de « J'aime » qu'ils vous est possible de donner. Cependant, vous aurez le droit d'en donner davantage à mesure que votre niveau de confiance augmentera. Vous pourrez à nouveau laisser des « J'aime » d'ici %{time_left}."
+      create_like: "Ouah ! Vous avez beaucoup d'amour à partager ! Vous avez atteint la limite quotidienne du nombre de « J'aime » qu'ils vous est possible d'attribuer. Cependant, vous aurez le droit d'en attribuer davantage à mesure que votre niveau de confiance augmentera. Vous pourrez à nouveau laisser des « J'aime » d'ici %{time_left}."
       create_bookmark: "Vous avez atteint la limite quotidienne du nombre de signets qu'il vous est possible de créer. Vous pourrez créer de nouveaux signets d'ici %{time_left}."
       edit_post: "Vous avez atteint la limite quotidienne du nombre de modifications qu'il vous est possible d'apporter à des messages. Vous pourrez faire de nouvelles modifications d'ici %{time_left}."
       live_post_counts: "Vous demandez le nombre de messages en activité trop rapidement. Veuillez patienter %{time_left} avant de réessayer."
@@ -865,8 +865,8 @@ fr:
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
     notify_user:
       title: "Envoyer un message à @%{username}"
-      description: "J'aimerais parler à cette personne directement et personnellement au sujet de son message."
-      short_description: "J'aimerais parler à cette personne directement et personnellement au sujet de son message."
+      description: "J'aimerais m'adresser à cette personne directement et personnellement au sujet de son message."
+      short_description: "J'aimerais m'adresser à cette personne directement et personnellement au sujet de son message."
       email_title: 'Votre message sur « %{title} »'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -1136,8 +1136,8 @@ fr:
     likes:
       title: "J'aime"
       xaxis: "Jour"
-      yaxis: "Nombre de nouveau J'aime"
-      description: "Nombre de nouveau J'aime."
+      yaxis: "Nombre de nouveaux « J'aime »"
+      description: "Nombre de nouveaux « J'aime »."
     flags:
       title: "Signalements"
       xaxis: "Jour"
@@ -1336,7 +1336,7 @@ fr:
         filename: Nom du fichier
         extension: Extension
         author: Auteur
-        filesize: Taille de fichier
+        filesize: Taille du fichier
       description: "Liste de tous les fichiers envoyés, par extension, avec la taille des fichiers et leur auteur."
     top_ignored_users:
       title: "Principaux utilisateurs ignorés / mis sous silence"
@@ -1355,9 +1355,9 @@ fr:
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
     twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
     github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
-    s3_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
-    s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
-    s3_cdn_warning: 'Le serveur est configuré pour télécharger des fichiers vers S3, mais aucun CDN S3 n''est configuré. Cela peut entraîner des coûts S3 élevés et des performances du site moindres. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Voir « Using Object Storage for Uploads » pour en savoir plus</a>.'
+    s3_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez-les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consultez « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
+    s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez-les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consultez « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
+    s3_cdn_warning: 'Le serveur est configuré pour envoyer les fichiers sur S3, mais aucun CDN S3 n''est configuré. Cela peut entraîner des coûts S3 élevés et réduire les performances du site. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consultez « Utiliser un stockage d''objet pour les envois » pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">téléchargez directement la dernière version</a>.'
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="%{base_path}/sidekiq/retries" target="_blank">Voir aussi les processus en échec dans Sidekiq</a>.'
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée ; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
@@ -1449,7 +1449,7 @@ fr:
     mobile_logo_dark: "Alternative au paramètre 'mobile logo' pour le mode sombre."
     large_icon: "Image utilisée comme base pour d'autres icônes de métadonnées. Elle devrait idéalement être plus grande que 512 x 512. Si vous laissez ce champ vide, logo_small sera utilisé."
     manifest_icon: "Image utilisée comme logo / image de démarrage sur Android. Elle sera automatiquement redimensionnée en 512 × 512. Si vous laissez ce champ vide, large_icon sera utilisée."
-    manifest_screenshots: "Captures d'écrans qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
+    manifest_screenshots: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
     favicon: "Un favicon pour votre site, voir <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://fr.wikipedia.org/wiki/Favicon</a> . Pour fonctionner correctement sur un CDN, il doit être au format PNG. Il sera redimensionné en 32x32. Si vous laissez ce champ vide, large_icon sera utilisée."
     apple_touch_icon: "Icône utilisée pour les appareils Apple touch. Elle sera automatiquement redimensionnée en 180x180. Si vous laissez ce champ vide, large_icon sera utilisée."
     opengraph_image: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, large_icon sera utilisée"
@@ -1463,7 +1463,7 @@ fr:
     same_site_cookies: "Délivrer des cookies avec l'attribut SameSite. Cela permet d'éliminer tous les vecteurs de requêtes illégitimes par rebond (attaques de type « CSRF ») dans les navigateurs qui le prennent en charge (en mode \"Lax\" ou \"Strict\"). Attention : le mode \"Strict\" ne fonctionnera que sue des sites qui obligent à s'authentifier et qui utilisent un système d'authentification externe."
     summary_score_threshold: "Le score minimum pour qu'un message soit inclus dans le résultat de « Résumer ce sujet »"
     summary_posts_required: "Nombre minimum de messages dans un sujet avant que la fonctionnalité « Résumer ce sujet » soit activée. Les modifications de ce paramètre sont appliquées rétroactivement sur une semaine."
-    summary_likes_required: "Nombre minimum de J'aime dans un sujet avant que la fonctionnalité « Résumer ce sujet » soit activée. Les modifications de ce paramètre sont appliquées rétroactivement sur une semaine."
+    summary_likes_required: "Nombre minimal de « J'aime » dans un sujet avant que la fonctionnalité « Résumer ce sujet » soit activée. Les modifications de ce paramètre sont appliquées rétroactivement sur une semaine."
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages inclus dans le résultat de « Résumer ce sujet »"
     enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages directs et à y répondre (configurable via le niveau de confiance minimum pour envoyer des messages directs). Notez que les responsables peuvent toujours envoyer des messages directs."
@@ -1481,9 +1481,9 @@ fr:
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué suite à un signalement de la communauté"
     max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer dans la période de 24h après avoir créé son premier message"
     max_replies_in_first_day: "Le nombre maximum de réponses qu'un utilisateur est autorisé à créer dans la période de 24h après avoir créé son premier message"
-    tl2_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de J'aime pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
-    tl3_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de J'aime pour les utilisateurs de niveau 3 (habitués) en la multipliant par ce nombre"
-    tl4_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de J'aime pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
+    tl2_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de « J'aime » pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
+    tl3_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de « J'aime » pour les utilisateurs de niveau 3 (habitués) en la multipliant par ce nombre"
+    tl4_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de « J'aime » pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
     tl2_additional_edits_per_day_multiplier: "Augmenter la limite quotidienne de modifications de messages pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
     tl3_additional_edits_per_day_multiplier: "Augmenter la limite quotidienne de modifications de messages pour les utilisateurs de niveau 3 (habitués) en la multipliant par ce nombre"
     tl4_additional_edits_per_day_multiplier: "Augmenter la limite quotidienne de modifications de messages pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
@@ -1497,12 +1497,11 @@ fr:
     enable_markdown_linkify: "Traiter automatiquement le texte qui ressemble à un lien comme un lien : www.site.com et https://site.com seront automatiquement liés."
     markdown_linkify_tlds: "Liste des domaines de premier niveau qui sont automatiquement traités comme des liens."
     markdown_typographer_quotation_marks: "Liste des paires de remplacement des guillemets doubles et simples"
-    post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (J'aime, signaler, etc.)"
+    post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (« J'aime », signalement, etc.)"
     must_approve_users: "Un responsable doit approuver tous les nouveaux utilisateurs avant qu'ils aient accès au site."
     invite_code: "Les utilisateurs doivent entrer ce code pour pouvoir créer un compte (cela est ignoré si le champ est laissé vide, insensible à la casse)"
     approve_suspect_users: "Ajouter les utilisateurs suspects à la file des éléments en attente d'examen. Les utilisateurs qui ont renseigné une biographie ou un site web sur leur profil mais n'ont pas parcouru le forum sont définis comme suspects."
     review_every_post: "Chaque message doit être examiné par un responsable avant sa publication. AVERTISSEMENT ! DÉCONSEILLÉ POUR UN SITE À FORTE FRÉQUENTATION."
-    pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre d'heures. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
     ga_version: "Version de Google Universal Analytics à utiliser : v3 (analytics.js), v4 (gtag)"
@@ -1586,7 +1585,7 @@ fr:
     auth_overrides_email: "Écrase l'adresse de courriel définie localement en la remplaçant par l'adresse de courriel définie sur le site externe à chaque connexion, et interdit de la modifier localement. S'applique à tous les fournisseurs de service d'authentification. (ATTENTION : des divergences peuvent se produire en raison d'un algorithme de normalisation des adresses de courriel locales)"
     auth_overrides_username: "Écrase le nom d'utilisateur défini localement en le remplaçant par le nom d'utilisateur défini sur le site externe à chaque connexion, et interdit de le modifier localement. S'applique à tous les fournisseurs de service d'authentification. (ATTENTION : des divergences peuvent se produire en raison de contraintes de longueur ou de complexité des noms d'utilisateur)"
     auth_overrides_name: "Écrase le nom complet défini localement en le remplaçant par le nom complet défini sur le site externe à chaque connexion, et interdit de le modifier localement. S'applique à tous les fournisseurs de service d'authentification."
-    discourse_connect_overrides_avatar: "Écrase l'image de profil en la remplaçant par une image de profil définie dans les données transmises par le biais de DiscourseConnect. Si ce paramètre est activité, les utilisateurs ne seront pas autorisés à charger des images de profils sur le serveur Discourse."
+    discourse_connect_overrides_avatar: "Écrase l'image de profil en la remplaçant par une image de profil définie dans les données transmises par le biais de DiscourseConnect. Si ce paramètre est activé, les utilisateurs ne seront pas autorisés à charger les images de profils sur le serveur Discourse."
     discourse_connect_overrides_location: "Écrase le champ 'Localisation' défini localement en le remplaçant par une valeur définie par un site externe par le biais de données transmises avec le protocole DiscourseConnect, et interdit sa modification locale."
     discourse_connect_overrides_website: "Écrase le champ 'Site internet' défini localement en le remplaçant par une valeur définie par un site externe par le biais de données transmises avec le protocole DiscourseConnect, et interdit sa modification locale."
     discourse_connect_overrides_profile_background: "Écrase l'arrière-plan du profil défini localement en le remplaçant par une image définie par un site externe par le biais de données transmises avec le protocole DiscourseConnect."
@@ -1624,9 +1623,9 @@ fr:
     s3_endpoint: "La destination peut être modifiée pour envoyer les sauvegardes vers un service compatible avec S3, par exemple DigitalOcean Spaces ou Minio. ATTENTION : laisser vide si vous utilisez AWS S3."
     s3_configure_tombstone_policy: "Activer la suppression automatique des fichiers non utilisés. IMPORTANT : en cas de désactivation, aucun espace disque ne sera récupéré après la suppression des fichiers."
     s3_disable_cleanup: "Empêcher la suppression des anciennes sauvegardes sur S3 lorsqu'il y a plus de sauvegardes que le maximum autorisé."
-    enable_s3_inventory: "Générer des rapports et vérifier les envois avec l'inventaire Amazon S3. IMPORTANT : nécessite un accès valide à S3 (l'identifiant et la clé secrète)."
+    enable_s3_inventory: "Générer des rapports et vérifier les envois avec l'inventaire Amazon S3. IMPORTANT : cela nécessite un accès valide à S3 (l'identifiant et la clé secrète)."
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
-    backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si désactivé, seule la base de données sera sauvegardée."
+    backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si cette option est désactivée, seule la base de données sera sauvegardée."
     backup_location: "Emplacement de stockage des sauvegardes. IMPORTANT : S3 nécessite la saisie d'identifiants valides dans la section `Fichiers` des paramètres du site."
     backup_gzip_compression_level_for_uploads: "Niveau de compression gzip utilisé pour compresser les envois."
     include_thumbnails_in_backups: "Inclure les vignettes générées dans les sauvegardes. Si vous désactivez cette option, les sauvegardes seront plus petites mais leur restauration nécessitera de régénérer tous les messages."
@@ -1634,14 +1633,14 @@ fr:
     verbose_localization: "Afficher des informations supplémentaires sur l'interface des textes à traduire."
     previous_visit_timeout_hours: "Combien d'heures pour qu'une visite soit considérée comme la visite « précédente »."
     top_topics_formula_log_views_multiplier: "formule pour la valeur de multiplicateur de vues de journal (n) dans les sujets tendance : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
-    top_topics_formula_first_post_likes_multiplier: "formule pour la valeur de multiplicateur de premiers J'aime (n) dans les sujets tendance : `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
-    top_topics_formula_least_likes_per_post_multiplier: "formule pour la valeur de multiplicateur de moins de J'aime par message (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "formule permettant d'obtenir la valeur du multiplicateur des premiers « J'aime » (n) dans les sujets tendance : 'log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)'"
+    top_topics_formula_least_likes_per_post_multiplier: "formule permettant d'obtenir la valeur du multiplicateur du plus petit nombre de « J'aime » par message (n) dans les sujets tendance : 'log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)'"
     enable_safe_mode: "Permettre aux utilisateurs d'utiliser le mode sans échec pour déboguer les extensions."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir publié un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
     rate_limit_new_user_create_topic: "Après la création d'un sujet, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_new_user_create_post: "Après avoir publié un message, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
-    max_likes_per_day: "Nombre maximum de J'aime par utilisateur chaque jour."
+    max_likes_per_day: "Nombre maximal de « J'aime » par utilisateur chaque jour."
     max_flags_per_day: "Nombre maximum de signalement par utilisateur chaque jour."
     max_bookmarks_per_day: "Nombre maximum de signets par utilisateur et par jour."
     max_edits_per_day: "Nombre maximum de modifications par utilisateur chaque jour."
@@ -1662,16 +1661,16 @@ fr:
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie actuelle dans les sujets similaires."
     suggested_topics_max_days_old: "Les sujets suggérés ne devraient pas être plus anciens que n jours."
     suggested_topics_unread_max_days_old: "Les sujets non lus suggérés ne doivent pas être âgés de plus de n jours."
-    clean_up_uploads: "Supprimer les fichiers envoyés orphelins pour prévenir les hébergements illégaux. ATTENTION : vous devriez faire une sauvegarde de votre répertoire /uploads avant d'activer ce paramètre."
-    clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un fichier envoyé orphelin soit retiré."
+    clean_up_uploads: "Supprimez les fichiers envoyés orphelins pour prévenir les hébergements illégaux. ATTENTION : vous devriez faire une sauvegarde de votre répertoire « /uploads » avant d'activer ce paramètre."
+    clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un fichier envoyé orphelin soit supprimé."
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un fichier envoyé et supprimé soit effacé."
     purge_unactivated_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur qui n'a pas activé son compte soit supprimé. Régler à 0 pour ne jamais purger les utilisateurs non activés."
-    enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT : nécessite un accès valide à S3 (l'identifiant et la clé secrète)."
+    enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT : cela nécessite un accès valide à S3 (l'identifiant et la clé secrète)."
     s3_use_iam_profile: 'Utiliser un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">profil d''instance AWS EC2</a> pour accorder l''accès au bucket S3. NOTE : cela nécessite que Discourse soit exécuté sur une instance EC2 correctement configurée et remplace les paramètres « s3 access key id » et « s3 secret access key ».'
-    s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans tirets bas."
-    s3_access_key_id: "La clé d'accès Amazon S3 qui sera utilisée pour envoyer les images, les pièces joints et les sauvegardes."
-    s3_secret_access_key: "La clé d'accès secrète Amazon S3 qui sera utilisée pour envoyer les images, les pièces joints et les sauvegardes."
-    s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour envoyer des images et sauvegardes."
+    s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers envoyés. ATTENTION : ce nom doit être en minuscule, sans point ni tiret bas."
+    s3_access_key_id: "La clé d'accès Amazon S3 qui sera utilisée pour envoyer les images, les pièces jointes et les sauvegardes."
+    s3_secret_access_key: "La clé d'accès secrète Amazon S3 qui sera utilisée pour envoyer les images, les pièces jointes et les sauvegardes."
+    s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour envoyer les images et sauvegardes."
     s3_cdn_url: "L'adresse du CDN à utiliser pour toutes les ressources s3 (par exemple : https://cdn.monsite.com). ATTENTION : après avoir changé ce paramètre, vous devez régénérer la totalité des messages existants."
     avatar_sizes: "Liste des tailles des avatars automatiquement générés"
     external_system_avatars_enabled: "Utilisez un service d'avatars externe."
@@ -1683,12 +1682,12 @@ fr:
     selectable_avatars: "Liste d'avatars que les utilisateurs peuvent sélectionner."
     allow_all_attachments_for_group_messages: "Autoriser toutes les pièces-jointes pour les messages de groupes."
     png_to_jpg_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 99 est la meilleure, 100 pour désactiver)."
-    recompress_original_jpg_quality: "Qualité des fichiers image téléchargés (1 est la plus faible, 99 est la meilleure, 100 pour désactiver)."
+    recompress_original_jpg_quality: "Qualité des fichiers image envoyés (1 représente la qualité la plus faible, et 99 la meilleure qualité, 100 sert à désactiver)."
     image_preview_jpg_quality: "Qualité des fichiers image redimensionnés (1 est la plus faible, 99 est la meilleure, 100 pour désactiver)."
     allow_staff_to_upload_any_file_in_pm: "Autoriser les responsables à envoyer n'importe quel fichier dans les messages directs."
     strip_image_metadata: "Enlever les métadonnées de l'image."
     min_ratio_to_crop: "Ratio utilisé pour recadrer les images en hauteur. Entrez le résultat de la largeur / hauteur."
-    simultaneous_uploads: "Nombre maximum de fichiers qui peuvent être glissés et déposés dans l'éditeur"
+    simultaneous_uploads: "Nombre maximal de fichiers qui peuvent être glissés et déposés dans l'éditeur"
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
     tl1_requires_topics_entered: "À combien de sujets un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
@@ -1698,8 +1697,8 @@ fr:
     tl2_requires_read_posts: "Combien de message un utilisateur doit avoir lu pour être promu au niveau de confiance 2."
     tl2_requires_time_spent_mins: "Combien de minutes un utilisateur doit avoir passées à lire des messages pour être promu au niveau de confiance 2."
     tl2_requires_days_visited: "Combien de jours un utilisateur doit visiter le site pour être promu au niveau de confiance 2."
-    tl2_requires_likes_received: "Combien de J'aime un utilisateur doit recevoir pour être promu au niveau de confiance 2."
-    tl2_requires_likes_given: "Combien de J'aime un utilisateur doit donner pour être promu au niveau de confiance 2."
+    tl2_requires_likes_received: "Combien de « J'aime » un utilisateur doit recevoir pour être promu au niveau de confiance 2."
+    tl2_requires_likes_given: "Combien de « J'aime » un utilisateur doit attribuer pour être promu au niveau de confiance 2."
     tl2_requires_topic_reply_count: "À combien de sujets un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
     tl3_time_period: "Période de temps requise pour accéder au niveau de confiance 3 (en jours)"
     tl3_requires_days_visited: "Nombre minimum de jours qu'un utilisateur doit avoir passé sur le site dans les (tl3 time period) derniers jours pour être éligible au niveau de confiance 3. Fixer à plus que la période pour désactiver les promotions. (0 ou plus)"
@@ -1712,8 +1711,8 @@ fr:
     tl3_requires_posts_read_all_time: "Nombre minimum de messages qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3."
     tl3_requires_max_flagged: "L'utilisateur ne doit pas avoir plus de x messages signalés par x utilisateurs différents dans les (tl3 time period) derniers jours pour être éligible au niveau de confiance 3, x étant la valeur de ce paramètre. (0 ou plus)"
     tl3_promotion_min_duration: "Nombre minimum de jours qu'un utilisateur restera promu au niveau de confiance 3 avant de pouvoir être rétrogradé au niveau de confiance 2."
-    tl3_requires_likes_given: "Le nombre minimum de J'aime à donner dans les (tl3 time period) derniers jours pour être éligible au niveau de confiance 3."
-    tl3_requires_likes_received: "Le nombre minimum de J'aime à recevoir dans les (tl3 time period) derniers jours pour être éligible au niveau de confiance 3."
+    tl3_requires_likes_given: "Le nombre minimal de « J'aime » à attribuer au cours des (tl3 time period) derniers jours pour être éligible au niveau de confiance 3."
+    tl3_requires_likes_received: "Le nombre minimal de « J'aime » à recevoir au cours des (tl3 time period) derniers jours pour être éligible au niveau de confiance 3."
     tl3_links_no_follow: "Ne pas retirer rel=nofollow sur les liens des messages par les utilisateurs de niveau de confiance 3."
     trusted_users_can_edit_others: "Permettre aux utilisateurs ayant un niveau de confiance élevé de modifier le contenu d'autres utilisateurs"
     min_trust_to_create_topic: "Le niveau de confiance minimum pour créer un nouveau sujet."
@@ -1726,8 +1725,8 @@ fr:
     min_trust_to_flag_posts: "Le niveau de confiance minimum requis pour signaler des messages"
     min_trust_to_post_links: "Le niveau de confiance minimum requis pour inclure des liens dans les messages"
     min_trust_to_post_embedded_media: "Le niveau de confiance minimum requis pour intégrer des éléments multimédia dans un message"
-    min_trust_level_to_allow_profile_background: "Le niveau de confiance minimum requis pour télécharger un arrière-plan de profil"
-    min_trust_level_to_allow_user_card_background: "Le niveau de confiance minimum requis pour télécharger un arrière-plan de carte utilisateur"
+    min_trust_level_to_allow_profile_background: "Le niveau de confiance minimal requis pour envoyer un arrière-plan de profil"
+    min_trust_level_to_allow_user_card_background: "Le niveau de confiance minimal requis pour envoyer un arrière-plan de carte utilisateur"
     min_trust_level_to_allow_invite: "Le niveau de confiance minimum requis pour inviter des utilisateurs"
     min_trust_level_to_allow_ignore: "Le niveau de confiance minimum requis pour ignorer les utilisateurs"
     allowed_link_domains: "Domaines vers lesquels les utilisateurs peuvent créer des liens même s'ils n'ont pas le niveau de confiance suffisant pour publier des liens."
@@ -1757,10 +1756,10 @@ fr:
     category_style: "Style visuel pour les badges de catégorie."
     default_dark_mode_color_scheme_id: "Le jeu de couleurs utilisé en mode sombre."
     dark_mode_none: "Aucune"
-    max_image_size_kb: "La taille maximale des images envoyées en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy. Les images plus grandes que cette taille et plus petites que client_max_body_size seront redimensionnées à l'envoi."
+    max_image_size_kb: "La taille maximale des images envoyées en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy. Les images dont la taille est supérieure à celle indiquée et inférieure à client_max_body_size seront redimensionnées à l'envoi."
     max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy."
     authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois sur le serveur (mettre « * » pour autoriser tous les types)"
-    authorized_extensions_for_staff: "Une liste des extensions de fichiers autorisées pour le téléchargement pour les responsables en plus de la liste définie dans le paramètre `authorized_extensions'. (utilisez « * » pour activer tous les types de fichiers)"
+    authorized_extensions_for_staff: "Une liste des extensions de fichiers autorisées pour les envois effectués par les responsables en plus de la liste définie dans le paramètre « authorized_extensions ». (utilisez « * » pour activer tous les types de fichiers)"
     theme_authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois de thème (mettre « * » pour autoriser tous les types de fichier)"
     max_similar_results: "Combien de sujets similaires sont affichés lors de la création d'un nouveau sujet. La comparaison se base sur le titre et le contenu."
     max_image_megapixels: "Nombre maximum autorisé de mégapixels pour une image. Les images avec un nombre plus élevé seront rejetées."
@@ -1776,16 +1775,16 @@ fr:
     history_hours_low: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification légèrement mis en évidence"
     history_hours_medium: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification modérément mis en évidence."
     history_hours_high: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification fortement mis en évidence."
-    topic_post_like_heat_low: "Après le dépassement de ce ratio J'aime/message, le compteur de messages est légèrement mis en évidence."
-    topic_post_like_heat_medium: "Après le dépassement de ce ratio J'aime/message, le compteur de messages est modérément mis en évidence."
-    topic_post_like_heat_high: "Après le dépassement de ce ratio J'aime/message, le compteur de messages est fortement mis en évidence."
+    topic_post_like_heat_low: "Après le dépassement de ce ratio « J'aime »/message, le compteur de messages est légèrement mis en évidence."
+    topic_post_like_heat_medium: "Après le dépassement de ce ratio « J'aime »/message, le compteur de messages est modérément mis en évidence."
+    topic_post_like_heat_high: "Après le dépassement de ce ratio « J'aime »/message, le compteur de messages est fortement mis en évidence."
     faq_url: "Si vous disposez déjà d'une FAQ/Règles de la communauté, hébergée ailleurs, que vous souhaitez utiliser, vous pouvez renseigner l'URL complète ici."
     tos_url: "Si vous disposez déjà de conditions générales d'utilisation hébergées ailleurs que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité hébergée ailleurs que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
     log_anonymizer_details: "Conserver les détails relatifs aux utilisateurs dans les fichiers de journalisation après qu'ils aient été rendus anonymes. Vous devrez désactiver cette fonction pour être en conformité avec le RGPD."
     newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur `newuser_spam_host_threshold` messages avant d'être considéré comme du spam."
     allowed_spam_host_domains: "Une liste des domaines exclus des hôtes testés pour spam. Les nouveaux utilisateurs ne seront jamais empêchés de créer des messages contenant des liens vers ces domaines."
-    staff_like_weight: "Le poids à accorder aux J'aime provenant d'un responsable (les autres J'aime ont un poids de 1)."
+    staff_like_weight: "La pondération à accorder aux « J'aime » provenant d'un responsable (les autres « J'aime » ont une pondération de 1)."
     topic_view_duration_hours: "Compter la vue d'un sujet une seule fois par IP ou par utilisateur toutes les N heures"
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse courriel sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."
@@ -1912,7 +1911,7 @@ fr:
     user_selected_primary_groups: "Autoriser les utilisateurs à définir leur groupe principal"
     max_notifications_per_user: "Volume maximum de notifications par utilisateur. Si ce seuil est dépassé alors les notifications les plus anciennes seront supprimées. Appliqué chaque semaine. 0 pour le désactiver."
     allowed_user_website_domains: "Le site web de l'utilisateur sera vérifié par rapport à ces domaines. Liste délimitée par des barres verticales."
-    allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
+    allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrière-plans de profil."
     sequential_replies_threshold: "Nombre de messages consécutifs qu'un utilisateur peut publier dans un sujet avant d'être averti d'avoir publié trop de réponses à la suite."
     get_a_room_threshold: "Nombre de messages qu'un utilisateur doit faire à la même personne dans un même sujet avant d'être averti."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
@@ -1923,8 +1922,8 @@ fr:
     permalink_normalizations: "Appliquer l'expression régulière suivante avant de détecter les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les chaînes de requête des chemins de sujet. Le format est regex+string, utilisez \\1 etc. pour capturer des séquences"
     global_notice: "Afficher une bannière de notification globale et qui ne peut être ignorée à tous les visiteurs pour un message URGENT (HTML autorisé). Laissez le champ vide pour masquer la bannière."
     disable_system_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
-    notification_consolidation_threshold: "Nombre de notifications de J'aime ou de demandes d'adhésion à partir duquel les notifications sont regroupées en une seule. Mettre 0 pour désactiver."
-    likes_notification_consolidation_window_mins: "Durée en minutes après que le seuil soit atteint pour regrouper les notifications de J'aime en une seule notification. Le seuil peut être configuré via `SiteSetting.notification_consolidation_threshold`."
+    notification_consolidation_threshold: "Nombre de notifications de « J'aime » ou de demandes d'adhésion à partir duquel les notifications sont regroupées en une seule. Mettre 0 pour désactiver."
+    likes_notification_consolidation_window_mins: "Durée en minutes après laquelle les notifications de « J'aime » sont consolidées en une seule notification une fois que le seuil est atteint. Le seuil peut être configuré via 'SiteSetting.Notification_Consolidation_Threshold'."
     automatically_unpin_topics: "Désépingler automatiquement les sujets lorsque l'utilisateur atteint la fin de la liste."
     read_time_word_count: "Nombre de mots par minute servant de base de calcul à l'estimation du temps de lecture."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>balise title</a> de la page du sujet comprend le nom de la catégorie."
@@ -1962,7 +1961,7 @@ fr:
     delete_merged_stub_topics_after_days: "Délai (en jours) de suppression automatique des sujets-troncs, c'est-à-dire les sujets sans réponses résultant de la fusion de deux sujets par déplacement de messages. Si la valeur est de 0, les sujets-troncs ne seront pas supprimés."
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode spécial de lancement (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
-    secure_media: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « login required » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement pour les médias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Voir <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ce sujet sur les médias sécurisés</a> pour plus d''informations.'
+    secure_media: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement pour les médias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ce sujet sur les médias sécurisés</a> pour en savoir plus.'
     secure_media_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les courriels, si leur taille est inférieure à la valeur du paramètre 'secure media max email embed image size kb'."
     secure_media_max_email_embed_image_size_kb: "La taille maximale d'images sécurisées qui seront intégrées dans des courriels si le paramètre 'secure media allow embed in emails' est activé. Si celui-ci n'est pas activé, ce paramètre est sans effet."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. « encoded » générera des chaînes de caractères encodées avec des pourcentages. « none » désactivera complètement les identifiants."
@@ -1991,7 +1990,7 @@ fr:
     blur_tl0_flagged_posts_media: "Flouter les images des messages signalés pour masquer du contenu potentiellement NSFW."
     enable_page_publishing: "Autorisez les responsables de publier des sujets vers de nouvelles URL utilisant leur propre style."
     show_published_pages_login_required: "Les utilisateurs anonymes peuvent voir les pages publiées même quand la connexion est nécessaire."
-    skip_auto_delete_reply_likes: "Lorsque des réponses anciennes sont automatiquement supprimées, ignorer la suppression des messages avec ce nombre de J'aime ou plus."
+    skip_auto_delete_reply_likes: "Lors de la suppression automatique des anciennes réponses, cette option permet d'ignorer la suppression des messages ayant ce nombre ou un nombre supérieur de « J'aime »."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
     default_email_level: "Définissez le niveau de notification courriel par défaut pour les sujets standards."
@@ -2009,7 +2008,7 @@ fr:
     default_other_enable_defer: "Par défaut, activer le bouton pour reporter un sujet à plus tard."
     default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur."
     default_other_skip_new_user_tips: "Ignorer les conseils et badges d'intégration des nouveaux utilisateurs."
-    default_other_like_notification_frequency: "Par défaut, notifier les utilisateurs d'un J'aime"
+    default_other_like_notification_frequency: "Par défaut, notifier les utilisateurs lors de l'attribution d'un « J'aime »"
     default_topics_automatic_unpin: "Par défaut, désépingler automatiquement les sujets lorsque l'utilisateur atteint la fin de la liste."
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
@@ -2278,7 +2277,7 @@ fr:
       merge_user:
         updating_username: "Mise à jour du nom d'utilisateur…"
         changing_post_ownership: "Modification de la propriété du message…"
-        merging_given_daily_likes: "Fusion des J'aime quotidiens…"
+        merging_given_daily_likes: "Fusion des « J'aime » quotidiens…"
         merging_post_timings: "Fusion des horaires des messages…"
         merging_user_visits: "Fusion des visites utilisateur…"
         updating_site_settings: "Mise à jour des paramètres du site…"
@@ -3354,7 +3353,7 @@ fr:
       new_topics: "Nouveaux sujets"
       unread_notifications: "Notifications non lues"
       unread_high_priority: "Notifications prioritaires non lues"
-      liked_received: "J'aime reçus"
+      liked_received: "« J'aime » reçus"
       new_users: "Nouveaux utilisateurs"
       popular_topics: "Sujets populaires"
       follow_topic: "Suivre ce sujet"
@@ -3569,24 +3568,24 @@ fr:
   deleted: "supprimé"
   image: "image"
   upload:
-    edit_reason: "téléchargement d'une copie locale des images distantes"
-    unauthorized: "Désolé, le fichier que vous essayer d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
+    edit_reason: "téléchargement de copies locales des images distantes"
+    unauthorized: "Nous sommes désolés, le fichier que vous essayer d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
     pasted_image_filename: "Image collée"
-    store_failure: "Erreur lors du stockage du fichier #%{upload_id} pour l'utilisateur #%{user_id}."
-    file_missing: "Désolé, il faut fournir un fichier à envoyer."
-    empty: "Désolé, mais le fichier que vous avez fourni est vide."
-    png_to_jpg_conversion_failure_message: "Une erreur est survenue lors de la conversion de PNG en JPG."
+    store_failure: "Erreur lors du stockage du fichier numéro %{upload_id} pour l'utilisateur %{user_id}."
+    file_missing: "Nous sommes désolés, vous devez fournir un fichier à envoyer."
+    empty: "Nous sommes désolés, mais le fichier que vous avez fourni est vide."
+    png_to_jpg_conversion_failure_message: "Une erreur est survenue lors de la conversion du format PNG en JPG."
     optimize_failure_message: "Une erreur est survenue lors de l'optimisation de l'image envoyée."
     attachments:
-      too_large: "Désolé, le fichier que vous essayez d'envoyer est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko)."
+      too_large: "Nous sommes désolés, le fichier que vous essayez d'envoyer est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko)."
     images:
-      too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximale de %{max_size_kb} Ko) ; veuillez la redimensionner puis réessayez."
-      larger_than_x_megapixels: "Désolé, l'image que vous essayez d'envoyer est trop grande (la dimension maximale est de %{max_image_megapixels} mégapixels) ; veuillez la redimensionner puis réessayez."
-      size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
+      too_large: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size_kb} Ko). Veuillez la redimensionner puis réessayez."
+      larger_than_x_megapixels: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la dimension maximale est de %{max_image_megapixels} mégapixels). Veuillez la redimensionner puis réessayez."
+      size_not_found: "Nous sommes désolés, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
     placeholders:
-      too_large: "(image plus large que %{max_size_kb} Ko)"
+      too_large: "(image plus grande que %{max_size_kb} Ko)"
   avatar:
-    missing: "Désolé, nous ne parvenons pas à trouver un avatar associé à cette adresse courriel. Pouvez-vous essayer de l'envoyer à nouveau ?"
+    missing: "Nous sommes désolés, nous ne parvenons pas à trouver un avatar associé à cette adresse courriel. Pouvez-vous essayer de l'envoyer à nouveau ?"
   flag_reason:
     sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP (%{ip_address}) a répondu. Voir le paramètre <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Ce nouvel utilisateur a tenté de créer plusieurs messages avec des liens vers le même domaine. Tous les messages de cet utilisateur qui contiennent des liens doivent être examinés. Cette règle peut être ajustée avec le paramètre <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
@@ -3651,40 +3650,40 @@ fr:
 
       ## [Ce lieu est consacré à la discussion courtoise et publique](#civilized)
 
-      Nous vous invitons à faire preuve du même degré de respect envers ce forum qu'envers un jardin public. Nous aussi sommes une ressource collective&nbsp;: un endroit où partager des savoir-faire, des connaissances ou des goûts par le biais de conversations écrites.
+      Nous vous invitons à faire preuve du même degré de respect envers ce forum qu'envers un jardin public. Nous constituons également une ressource collective, un endroit où partager des savoir-faire, des connaissances ou des goûts par le biais de conversations écrites.
 
       Ces règles n'appellent pas à une interprétation stricte. Ce sont des lignes directrices, conçues pour fournir un cadre au discernement des membres de notre communauté afin que ce lieu demeure amical, bienveillant et propice aux échanges courtois en public.
 
       <a name="improve"></a>
 
-      ## [Ajoutez à la discussion](#improve)
+      ## [Contribuez à la discussion](#improve)
 
-      Participez à faire de ce forum un lieu de discussion agréable en y apportant quelque chose de bon à chaque message, si modestement que ce soit. Si vous n'êtes pas certain que votre message alimentera la conversation, repensez à ce que vous souhaitez dire avant de reprendre sa rédaction.
+      Contribuez à faire de ce forum un lieu de discussion agréable en y apportant quelque chose de bon à chaque message, si modestement que ce soit. Si vous doutez que votre message puisse alimenter la conversation, repensez à ce que vous souhaitez communiquer avant de poursuivre sa rédaction.
 
-      Une façon d'ajouter aux discussions consiste à découvrir celles qui ont lieu. Passez un peu de temps à consulter celles qui se tiennent ici avant d'y répondre ou avant de lancer la vôtre, ainsi vous augmenterez vos chances de rencontrer des personnes qui partagent vos centres d'intérêt.
+      L'une des façons de contribuer aux discussions consiste à rechercher celles qui ont déjà lieu. Passez un peu de temps à consulter celles qui se tiennent ici avant d'y répondre ou avant de créer la vôtre. Vous augmenterez ainsi vos chances de rencontrer des personnes qui partagent vos centres d'intérêt.
 
-      Les sujets dont nous discutons ici nous tiennent à cœur, et nous souhaitons que vous vous comportiez comme s'ils vous importaient aussi. Soyez respectueux des thèmes choisis et des personnes qui en discutent, y compris si vous n'êtes pas d'accord avec tout ce qui peut être dit.
+      Les sujets dont nous discutons ici nous tiennent à cœur, et nous souhaitons que vous vous comportiez comme s'ils vous importaient aussi. Faites preuve de respect envers les thèmes choisis et les personnes qui en discutent, y compris si vous n'êtes pas d'accord avec tout ce qui est dit.
 
       <a name="agreeable"></a>
 
-      ## [Soyez plaisant, même si vous êtes en désaccord](#agreeable)
+      ## [Faites preuve de courtoisie, même si vous êtes en désaccord](#agreeable)
 
-      Vous pouvez tout à fait exprimer un désaccord. Mais veillez à _critiquer les idées, pas les personnes_. Nous vous prions d'éviter&nbsp;:
+      Vous pouvez tout à fait exprimer un désaccord. Mais veillez à critiquer les idées, pas les personnes. Nous vous prions d'éviter&nbsp;:
 
       * les insultes
       * les attaques ad hominem
       * de réagir au ton d'un message plutôt qu'au fond de ce qu'il exprime
       * l'esprit de contradiction systématique
 
-      Tâchez plutôt d'apporter un point de vue réfléchi qui puisse améliorer la conversation.
+      Tâchez plutôt d'apporter un point de vue réfléchi susceptible d'améliorer la conversation.
 
       <a name="participate"></a>
 
       ## [Votre participation importe](#participate)
 
-      Les conversations qui se tiennent ici donnent le ton à chaque nouveau-venu. Aidez-nous à façonner l'avenir de cette communauté en favorisant le fait de participer à des discussions qui rendent ce forum intéressant &mdash; et évitez celles dont ça n'est pas le cas.
+      Les conversations qui se tiennent ici donnent voix à chaque nouvel utilisateur ou nouvelle utilisatrice. Aidez-nous à façonner l'avenir de cette communauté en participant à des discussions qui rendent ce forum intéressant et évitez celles dont ce n'est pas le cas.
 
-      <em>Discourse</em> comprend des outils qui permettent à la communauté d'identifier collectivement les meilleures (et les pires) contributions&nbsp;: signets, J'aime, signalements, réponses, modifications, abonnements, mise sous silence, et ainsi de suite. Utilisez ces fonctionnalités pour améliorer votre propre expérience, ainsi que celle des autres membres.
+      <em>Discourse</em> comprend des outils qui permettent à la communauté d'identifier collectivement les meilleures (et les pires) contributions&nbsp;: signets, « J'aime », signalements, réponses, modifications, abonnements, mise en sourdine, et ainsi de suite. Utilisez ces fonctionnalités pour améliorer votre propre expérience, ainsi que celle des autres membres.
 
       Faites en sorte que la communauté se porte mieux au moment de votre départ qu'à celui de votre arrivée.
 
@@ -3694,55 +3693,55 @@ fr:
 
       Les modérateurs disposent d'une autorité particulière&nbsp;: ils sont responsables de ce forum. Mais vous l'êtes aussi. Moyennant votre aide, les modérateurs pourront faciliter la vie de la communauté, plutôt que de seulement servir de gendarme ou de concierge.
 
-      Face à un comportement nuisible, ne répondez pas. Répondre dans de telles circonstances encourage les comportements délétères en leur accordant une forme de reconnaissance&nbsp;; vous y gâcherez de votre énergie et tout le monde y perdra son temps. _Signalez-le, rien de plus_. Si plusieurs signalements s'accumulent, une suite leur sera donnée, soit par l'intervention d'un modérateur, soit de façon automatisée.
+      Face à un comportement nuisible, ne répondez pas. Répondre dans de telles circonstances encourage les comportements délétères en leur accordant une forme de reconnaissance&nbsp;; vous y perdrez de l'énergie et tout le monde y perdra son temps. Signalez-le, rien de plus. Si plusieurs signalements s'accumulent, une suite sera donnée, soit par l'intervention d'un modérateur, soit de façon automatisée.
 
-      Pour le bien de notre communauté, les modérateurs sont autorisés à supprimer tout contenu ou tout compte utilisateur, à tout moment et quel qu'en soit le motif. Veuillez noter que les modérateurs n'ont pas connaissance des messages avant leur publication&nbsp;; les modérateurs et les administrateurs du site se dégagent de toute responsabilité quant au contenu publié au sein de la communauté.
+      Pour le bien de notre communauté, les modérateurs sont autorisés à supprimer tout contenu ou tout compte d'utilisateur, à tout moment et quel qu'en soit le motif. Veuillez noter que les modérateurs n'ont pas connaissance des messages avant leur publication&nbsp;; les modérateurs et les administrateurs du site déclinent toute responsabilité quant au contenu publié au sein de la communauté.
 
       <a name="be-civil"></a>
 
-      ## [Soyez toujours courtois](#be-civil)
+      ## [Faites toujours preuve de politesse](#be-civil)
 
       Rien de tel que l'impolitesse pour saboter une bonne conversation.
 
-      * Faites preuve de civilité. Ne publiez rien qui ne soit considéré comme offensant, injurieux, violent ou haineux par une personne raisonnable.
-      * Ne soyez pas grossier. Ne publiez rien d'obscène ni de pornographique.
-      * Respectez autrui. Ne harcelez personne, n'accablez personne, ne vous faites pas passer pour quelqu'un d'autre, et ne révélez pas d'informations privées qui ne soient pas les vôtres.
-      * Respectez notre forum. N'y publiez pas de spam, ne le vandalisez pas.
+      * Faites preuve de civilité. Ne publiez rien qui puisse être considéré comme offensant, injurieux, violent ou haineux par une personne raisonnable.
+      * Évitez la grossièreté. Ne publiez rien d'obscène ni de pornographique.
+      * Respectez les autres. Ne harcelez personne, n'accablez personne, ne vous faites pas passer pour quelqu'un d'autre, et ne révélez pas d'informations privées qui ne soient pas les vôtres.
+      * Respectez notre forum. N'y publiez pas de spam et ne le vandalisez pas.
 
-      Ces termes sont volontairement abstraits et dénués de définitions précises&nbsp;; abstenez-vous de tout ce qui puisse avoir la simple _apparence_ de telles choses. En cas de doute, demandez-vous&nbsp;: que feriez-vous si votre message finissait en page d'accueil d'un site d'actualités nationales&nbsp;?
+      Ces conditions sont volontairement abstraites et dénuées de définitions précises&nbsp;; abstenez-vous de tout ce qui peut avoir la simple apparence de telles choses. En cas de doute, demandez-vous&nbsp;: que feriez-vous si votre message finissait en page d'accueil d'un site d'actualités nationales&nbsp;?
 
-      Ce forum est public, et ces discussions sont indexées par les moteurs de recherche. Faites en sorte que le langage, les liens et les images y figurant conviennent à la famille et aux amis de chacun.
+      Ce forum est public, et ces discussions sont indexées par les moteurs de recherche. Faites en sorte que le langage, les liens et les images y figurant conviennent aux membres de la famille et aux amis de chacun.
 
       <a name="keep-tidy"></a>
 
       ## [Mettez-y un peu d'ordre](#keep-tidy)
 
-      Faites en sorte que les choses soient à leur place, afin que nous passions plus de temps à échanger et moins de temps à faire le ménage. Donc&nbsp;:
+      Faites en sorte que les choses soient à leur place, afin que nous passions plus de temps à échanger et moins de temps à faire le ménage. À ce titre&nbsp;:
 
-      * Ne lancez pas un nouveau sujet dans la mauvaise catégorie&nbsp;; nous vous invitons à lire les descriptions des catégories.
+      * Ne créez pas un nouveau sujet dans une catégorie erronée&nbsp;; nous vous invitons à lire les descriptions des catégories.
       * Ne publiez pas plusieurs fois le même message dans différents sujets.
       * Ne publiez pas de réponses dénuées de toute substance.
-      * Ne détournez pas un fil de discussion en changeant de sujet en plein milieu.
-      * N'inscrivez pas de signature dans vos messages&nbsp;; chacun d'eux contient déjà des informations tirées de votre profil.
+      * Ne détournez pas un fil de discussion en changeant de sujet.
+      * N'inscrivez pas de signature dans vos messages. Ces derniers contiennent déjà des informations extraites de votre profil.
 
       Plutôt que d'écrire «&nbsp;+1&nbsp;» ou «&nbsp;c'est clair&nbsp;», utilisez le bouton <em>J'aime</em>. Plutôt que de faire dériver un sujet vers une direction radicalement autre, utilisez la fonctionnalité <em>Répondre via un sujet lié</em>.
 
       <a name="stealing"></a>
 
       ## [Ne publiez que ce qui vous appartient](#stealing)
-      Il vous est interdit de publier quoi que ce soit qui ne vous appartienne pas en format numérique sans l'autorisation de son auteur. Vous ne devez pas publier de procédé qui décrive une façon de voler la propriété intellectuelle d'autrui (images, son, vidéo, logiciels) ou qui décrive une façon de violer toute autre loi, ni de lien renvoyant vers de tels procédés.
+      Il vous est interdit de publier quoi que ce soit qui ne vous appartienne pas au format numérique sans l'autorisation de son auteur. Vous ne pouvez pas publier de procédés visant à voler la propriété intellectuelle d'autrui (images, son, vidéo, logiciels) ou à violer toute autre loi, ni de liens renvoyant vers de tels procédés.
 
       <a name="power"></a>
 
-      ## [Propulsé par vous](#power)
+      ## [Soutenu par vous](#power)
 
-      Ce site est tenu par vos [gentils administrateurs](%{base_path}/about) et par *vous*, sa communauté. Si vous avez une question au sujet de la façon dont les choses devraient fonctionner chez nous, lancez un nouveau sujet dans la [catégorie consacrée](%{base_path}/c/site-feedback) et discutons-en&nbsp;! En cas de problème critique ou urgent ne pouvant pas être géré par un méta-sujet ou par un signalement, vous pouvez nous joindre via la [page des responsables](%{base_path}/about).
+      Ce site est géré par vos [gentils administrateurs](%{base_path}/about) et par *vous*, la communauté. Si vous avez une question au sujet de la façon dont les choses devraient fonctionner chez nous, créez un nouveau sujet dans la [catégorie consacrée](%{base_path}/c/site-feedback) et discutons-en&nbsp;! En cas de problème critique ou urgent ne pouvant pas être géré par un méta-sujet ou par un signalement, vous pouvez nous joindre via la [page des responsables](%{base_path}/about).
 
       <a name="tos"></a>
 
       ## [Conditions d'utilisation](#tos)
 
-      Le jargon juridique est barbant, certes, mais nous devons veiller à nous protéger &mdash; et par extension, veiller à vous protéger, ainsi que vos données &mdash; contre des gens aux intentions peu amicales. Nous avons des [conditions générales d'utilisation](%{base_path}/tos) qui décrivent vos droits et devoirs (ainsi que les nôtres) ayant trait au contenu, à la protection de la vie privée et à la législation. Pour utiliser ce service, vous devez obéir à nos [CGU](%{base_path}/tos).
+      Le jargon juridique est ennuyeux, certes, mais nous devons veiller à nous protéger (et par extension, à vous protéger, ainsi que vos données) contre les individus mal intentionnés. Nous avons des [conditions générales d'utilisation](%{base_path}/tos) qui décrivent vos droits et devoirs (ainsi que les nôtres) ayant trait au contenu, à la protection de la vie privée et à la législation. Pour utiliser ce service, vous devez respecter nos [CGU](%{base_path}/tos).
   tos_topic:
     title: "Conditions générales d'utilisation"
     body: |
@@ -4024,24 +4023,24 @@ fr:
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 1. Merci d'être resté sur le forum et d'avoir lu quelques sujets pour en apprendre plus sur notre communauté. Les restrictions liées au nouveaux utilisateurs ont été levées et vous avez accès aux fonctionnalités essentielles telles que la messagerie personnelle, le signalement, l'édition des wikis et la possibilité de publier plusieurs images et liens.
     member:
       name: Membre
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> aux invitations, aux messages de groupe et à plus de J'aime
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> aux invitations, aux messages de groupe et à plus de « J'aime »
       long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, envoyer des messages groupés et avez des J'aime supplémentaires à donner chaque jour.
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, envoyer des messages groupés et vous bénéficiez de « J'aime » supplémentaires à attribuer chaque jour.
     regular:
       name: Habitué
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à la re-catégorisation, au renommage, au suivi de liens, au wikis et à plus de J'aime
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à la recatégorisation, au renommage, au suivi de liens, au wikis et à plus de « J'aime »
       long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir été un participant régulier à notre communauté pendant ces quelques mois. Vous êtes l'un de nos lecteurs les plus actifs et un contributeur sérieux à ce qui rend notre communauté si belle. Vous pouvez désormais recatégoriser et renommer des sujets, accéder au salon privé, signaler des spams et vous avez plein de J'aime en plus à donner chaque jour.
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir contribué régulièrement à notre communauté pendant ces quelques mois. Vous faites partie de nos lecteurs et lectrices les plus actifs et votre contribution à ce qui rend notre communauté si belle est significative. Vous pouvez désormais recatégoriser et renommer des sujets, accéder au salon privé, signaler des spams et vous bénéficiez de nombreux « J'aime » supplémentaires à attribuer chaque jour.
     leader:
       name: Meneur
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion de sujets, et toujours plus de J'aime
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion de sujets, et toujours plus de « J'aime »
       long_description: |
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos paroles. Vous avez la possibilité de modifier tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, masquer, archiver, scinder et fusionner les sujets.
     welcome:
       name: Bienvenue
-      description: A reçu un J'aime
+      description: A reçu un « J'aime »
       long_description: |
-        Ce badge est accordé lorsque vous recevez votre premier J'aime sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, sympa ou utile !
+        Ce badge est accordé lorsque vous recevez votre premier « J'aime » sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, sympa ou utile !
     autobiographer:
       name: Autobiographe
       description: A complété les informations de son <a href="%{base_uri}/my/preferences/profile">profil</a>
@@ -4054,34 +4053,34 @@ fr:
         Ce badge est accordé après avoir été membre du site pendant une année, avec au moins un message créé durant cette année. Merci d'être resté avec nous et de contribuer ainsi à notre communauté ! Nous n'aurions pas pu le faire sans vous.
     nice_post:
       name: Jolie réponse
-      description: A reçu 10 J'aime sur une réponse
+      description: A reçu 10 « J'aime » sur une réponse
       long_description: |
-        Ce badge est accordé quand votre réponse obtient 10 J'aime. Votre réponse a fait bonne impression sur la communauté et a aidé la conversation à progresser.
+        Ce badge est accordé quand votre réponse obtient 10 « J'aime ». Votre réponse a fait bonne impression auprès de la communauté et a aidé la conversation à progresser.
     good_post:
       name: Bonne réponse
-      description: A reçu 25 J'aime sur une réponse
+      description: A reçu 25 « J'aime » sur une réponse
       long_description: |
-        Ce badge est accordé quand votre réponse obtient 25 J'aime. Votre réponse était exceptionnelle et a rendu la conversation beaucoup plus intéressante !
+        Ce badge est accordé quand votre réponse obtient 25 « J'aime ». Votre réponse était exceptionnelle et a rendu la conversation beaucoup plus intéressante !
     great_post:
       name: Super réponse
-      description: A reçu 50 J'aime sur une réponse
+      description: A reçu 50 « J'aime » sur une réponse
       long_description: |
-        Ce badge est accordé quand votre réponse obtient 50 J'aime. Votre réponse était inspirante, fascinante, hilarante ou pertinente et la communauté l'a adorée !
+        Ce badge est accordé quand votre réponse obtient 50 « J'aime ». Votre réponse était inspirante, fascinante, hilarante ou pertinente et la communauté l'a adorée !
     nice_topic:
       name: Sujet intéressant
-      description: A reçu 10 J'aime sur un sujet
+      description: A reçu 10 « J'aime » sur un sujet
       long_description: |
-        Ce badge est accordé quand votre sujet obtient 10 J'aime. Vous avez commencé une conversation intéressante que la communauté a apprécié !
+        Ce badge est accordé quand votre sujet obtient 10 « J'aime ». Vous avez commencé une conversation intéressante que la communauté a apprécié !
     good_topic:
       name: Bon sujet
-      description: A reçu 25 J'aime sur un sujet
+      description: A reçu 25 « J'aime » sur un sujet
       long_description: |
-        Ce badge est accordé quand votre sujet obtient 25 J'aime. Vous avez lancé une conversation vibrante autour de laquelle la communauté s'est ralliée !
+        Ce badge est accordé quand votre sujet obtient 25 « J'aime ». Vous avez lancé une conversation vibrante autour de laquelle la communauté s'est ralliée !
     great_topic:
       name: Super sujet
-      description: A reçu 50 J'aime sur un sujet
+      description: A reçu 50 « J'aime » sur un sujet
       long_description: |
-        Ce badge est accordé quand votre sujet obtient 50 J'aime. Vous avez initié une conversation fascinante et la communauté a apprécié la discussion dynamique résultante !
+        Ce badge est accordé quand votre sujet obtient 50 « J'aime ». Vous avez initié une conversation fascinante et la communauté a apprécié la discussion dynamique à laquelle elle a donné lieu !
     nice_share:
       name: Partage sympa
       description: Message partagé avec 25 visiteurs uniques
@@ -4098,7 +4097,7 @@ fr:
       long_description: |
         Ce badge est accordé après le partage d'un lien qui a été cliqué par 1000 visiteurs extérieurs. Whaou ! Vous avez fait la promotion d'une discussion intéressante auprès d'une nouvelle audience d'envergure et avez aidé notre communauté à grandir de manière significative !
     first_like:
-      name: Premier J'aime
+      name: Premier « J'aime »
       description: A aimé un message
       long_description: |
         Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, sympa ou amusant !
@@ -4164,49 +4163,49 @@ fr:
         Ce badge est accordé quand un lien que vous avez partagé obtient 1000 clics. Whaou ! Vous avez posté un lien qui a notablement amélioré la discussion en ajoutant des détails et des informations essentielles. Bon travail !
     appreciated:
       name: Apprécié
-      description: A reçu 1 J'aime sur 20 messages
+      description: A reçu 1 « J'aime » sur 20 messages
       long_description: |
-        Ce badge est accordé lorsque vous recevez au moins un J'aime sur 20 messages différents. La communauté apprécie vos contributions aux conversations !
+        Ce badge est accordé lorsque vous recevez au moins un « J'aime » sur 20 messages différents. La communauté apprécie vos contributions aux conversations !
     respected:
       name: Respecté
-      description: A reçu 2 J'aime sur 100 messages
+      description: A reçu 2 « J'aime » sur 100 messages
       long_description: |
-        Ce badge est accordé lorsque vous recevez au moins 2 J'aime sur 100 messages différents. La communauté a de plus en plus de respect pour vos nombreuses contributions aux conversations.
+        Ce badge est accordé lorsque vous recevez au moins 2 « J'aime » sur 100 messages différents. La communauté a de plus en plus de respect à l'égard de vos nombreuses contributions aux conversations.
     admired:
       name: Admiré
-      description: A reçu 5 J'aime sur 300 messages
+      description: A reçu 5 « J'aime » sur 300 messages
       long_description: |
-        Ce badge est accordé lorsque vous recevez au moins 5 J'aime sur 300 messages différents. Whaou ! La communauté admire vos fréquentes contributions de haute qualité aux conversations.
+        Ce badge est accordé lorsque vous recevez au moins 5 « J'aime » sur 300 messages différents. Ouah ! La communauté admire vos fréquentes contributions de grande qualité.
     out_of_love:
       name: Trop d'amour
-      description: A utilisé %{max_likes_per_day} J'aime en une journée
+      description: A utilisé %{max_likes_per_day} « J'aime » en une journée
       long_description: |
-        Ce badge est accordé lorsque vous utilisez la totalité de vos %{max_likes_per_day} J'aime quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et que vous appréciez. Cela encourage les autres membres de la communauté à créer encore plus de discussions de qualité à l'avenir.
+        Ce badge est accordé lorsque vous utilisez la totalité de vos %{max_likes_per_day} « J'aime » quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et que vous appréciez. Cela encouragera les autres membres de la communauté à créer encore plus de discussions de qualité à l'avenir.
     higher_love:
       name: Amour plus fort
-      description: A utilisé %{max_likes_per_day} J'aime en un jour 5 fois
+      description: A utilisé %{max_likes_per_day} « J'aime » en un jour à 5 reprises
       long_description: |
-        Ce badge est accordé lorsque vous utilisez la totalité de vos %{max_likes_per_day} J'aime par jour pendant 5 jours. Merci de prendre le temps d'encourager activement les meilleures conversations chaque jour !
+        Ce badge est accordé lorsque vous utilisez la totalité de vos %{max_likes_per_day} « J'aime » quotidiens pendant 5 jours. Merci de prendre le temps d'encourager activement les meilleures conversations au quotidien !
     crazy_in_love:
       name: Fou amoureux
-      description: A utilisé %{max_likes_per_day} J'aime en un jour 20 fois
+      description: A utilisé %{max_likes_per_day} « J'aime » en un jour à 20 reprises
       long_description: |
-        Ce badge est accordé lorsque vous utilisez la totalité vos %{max_likes_per_day} J'aime par jour pendant 20 jours. Whaou ! Vous êtes un modèle d'encouragement pour les membres de la communauté !
+        Ce badge est accordé lorsque vous utilisez la totalité vos %{max_likes_per_day} « J'aime » quotidiens pendant 20 jours. Ouah ! Vous êtes un modèle d'encouragement pour les membres de la communauté !
     thank_you:
       name: Merci
-      description: A 20 messages ayant reçu un J'aime et a donné 10 J'aime
+      description: A 20 messages ayant reçu un « J'aime » et a attribué 10 « J'aime »
       long_description: |
-        Ce badge est accordé quand vous avez reçu 20 J'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour.
+        Ce badge est accordé quand vous avez reçu 20 « J'aime » sur vos messages et en avez attribué 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres publient à leur tour.
     gives_back:
       name: Redonne
-      description: A 100 messages ayant reçu un J'aime et a donné 100 J'aime
+      description: A 100 messages ayant reçu un « J'aime » et a attribué 100 « J'aime »
       long_description: |
-        Ce badge est accordé quand vous avez reçu 100 J'aime et en avez donné 100 ou plus en retour. Whaou ! Merci de rendre ce lieu meilleur !
+        Ce badge est accordé quand vous avez reçu 100 « J'aime » et en avez attribué 100 ou plus en retour. Ouah ! Merci de rendre ce lieu meilleur !
     empathetic:
       name: Empathique
-      description: A 500 messages ayant reçu un J'aime et a donné 1000 J'aime
+      description: A 500 messages ayant reçu un « J'aime » et a donné 1000 « J'aime »
       long_description: |
-        Ce badge est accordé quand vous avez reçu 500 J'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:.
+        Ce badge est accordé quand vous avez reçu 500 « J'aime » et en avez donné 1000 ou plus en retour. Ouah ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:.
     first_emoji:
       name: Premier émoji
       description: A utilisé un émoji dans un message
@@ -4231,7 +4230,7 @@ fr:
       name: "Nouvel utilisateur du mois"
       description: Contributions remarquables durant leur premier mois
       long_description: |
-        Ce badge est accordé pour féliciter deux nouveaux utilisateurs chaque mois pour leur excellente contribution mesurée par la fréquence à laquelle leurs messages reçoivent des J'aime et par qui.
+        Ce badge est accordé pour féliciter deux nouveaux utilisateurs chaque mois pour leur excellente contribution mesurée par la fréquence à laquelle leurs messages reçoivent des « J'aime » et par qui.
     enthusiast:
       name: Passionné
       description: A visité 10 jours consécutifs

@@ -200,7 +200,6 @@ pt_BR:
     submit: "Enviar"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
-    go_ahead: "Continue"
     sign_up: "Cadastrar-se"
     log_in: "Entrar"
     age: "Idade"
@@ -229,7 +228,6 @@ pt_BR:
     x_more:
       one: "Mais %{count}"
       other: "Mais %{count}"
-    less: "Menos"
     never: "nunca"
     every_30_minutes: "a cada 30 minutos"
     every_hour: "a cada hora"
@@ -238,7 +236,6 @@ pt_BR:
     every_month: "a cada mês"
     every_six_months: "a cada seis meses"
     max_of_count: "máx de %{count}"
-    alternation: "ou"
     character_count:
       one: "%{count} caracter"
       other: "%{count} caracteres"
@@ -273,7 +270,6 @@ pt_BR:
       help:
         bookmark: "Clique para adicionar o primeiro post deste tópico aos favoritos"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
-        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes deste tópico. Você tem um lembrete definido %{reminder_at} para este tópico."
     bookmarks:
       created: "Você marcou esta mensagem como favorita. %{name}"
       not_bookmarked: "marcar postagem como favorita"
@@ -602,14 +598,6 @@ pt_BR:
       member_added: "Adicionado"
       member_requested: "Solicitado em"
       add_members:
-        title: "Adicionar membros a %{group_name}"
-        description: "Você também pode colocar aqui uma lista de usuários separados por vírgulas."
-        usernames_or_emails:
-          title: "Digite nomes de usuários ou endereços de email"
-          input_placeholder: "Nomes de usuário ou endereços de email"
-        usernames:
-          title: "Insira os nomes de usuário"
-          input_placeholder: "Nomes de usuários"
         notify_users: "Notificar usuários"
       requests:
         title: "Solicitações"
@@ -624,7 +612,6 @@ pt_BR:
         title: "Gerenciar"
         name: "Nome"
         full_name: "Nome Completo"
-        add_members: "Adicionar membros"
         delete_member_confirm: "Remover '%{username}' do '%{group}' grupo?"
         profile:
           title: Perfil
@@ -3292,8 +3279,6 @@ pt_BR:
             available: "O nome do grupo está disponível"
             not_available: "O nome do grupo não está disponível"
             blank: "O nome do grupo não pode ficar em branco"
-        add_members:
-          as_owner: "Definir usuário (s) como proprietário (s) deste grupo"
         manage:
           interaction:
             email: E-mail

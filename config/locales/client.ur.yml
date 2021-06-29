@@ -194,7 +194,6 @@ ur:
     submit: "شائع"
     generic_error: "معذرت، ایک تکنیکی خرابی کا سامنا کرنا پڑا ہے۔"
     generic_error_with_reason: "ایک تکنیکی خرابی پیش آئی: %{error}"
-    go_ahead: "آگے بڑھیے"
     sign_up: "سائن اپ"
     log_in: "لاگ ان"
     age: "عمر "
@@ -223,7 +222,6 @@ ur:
     x_more:
       one: "%{count} مزید"
       other: "%{count} مزید"
-    less: "کم "
     never: "کبھی نہیں "
     every_30_minutes: "ہر 30 منٹ"
     every_hour: "ہر گھنٹے"
@@ -232,7 +230,6 @@ ur:
     every_month: "ہر مہینے"
     every_six_months: "ہر چھ ماہ"
     max_of_count: "زیادہ سے زیادہ %{count}"
-    alternation: "یا "
     character_count:
       one: "%{count} حرف"
       other: "%{count} حروف"
@@ -267,7 +264,6 @@ ur:
       help:
         bookmark: "اِس ٹاپک کی پہلی پوسٹ بُک مارک کرنے کے لئے کلک کریں"
         unbookmark: "اِس ٹاپک کے تمام بُک مارک ہٹانے کے لئے کلک کریں"
-        unbookmark_with_reminder: "اس عنوان میں موجود تمام بُک مارکس اور یاد دہانیوں کو دور کرنے کے لئے کلک کریں۔ اس عنوان میں آپ نے یہ %{reminder_at} یاد دہانی رکھی ہےـ"
     bookmarks:
       created: "آپ نے اس %{name} پوسٹ کو بک مارک کیا ہے۔"
       not_bookmarked: "اِس پوسٹ کو بُک مارک کریں"
@@ -586,9 +582,6 @@ ur:
     groups:
       member_added: "شامل کر دیا گیا"
       member_requested: "درخواست کیا گیا"
-      add_members:
-        usernames:
-          input_placeholder: "صارف نام"
       requests:
         title: "درخواستیں"
         reason: "وجہ"
@@ -602,7 +595,7 @@ ur:
         title: "مَینَیج"
         name: "نام"
         full_name: "پورا نام"
-        add_members: "ممبران شامل کریں"
+        invite_members: "دعوت دیں"
         delete_member_confirm: "'%{username}' کو '%{group}' گروپ سے ہٹائیں؟"
         profile:
           title: پروفائل
@@ -3180,8 +3173,6 @@ ur:
             available: "گروپ کا نام دستیاب ہے"
             not_available: "گروپ کا نام دستیاب نہیں ہے"
             blank: "گروپ کا نام خالی نہیں ہو سکتا"
-        add_members:
-          as_owner: "صارف(ین) کو اِس گروپ کے مالک(ین) کے طور پر مقرر کریں"
         manage:
           interaction:
             email: اِی میل

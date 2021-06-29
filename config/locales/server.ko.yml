@@ -103,6 +103,7 @@ ko:
       maximum_staged_user_per_email_reached: "이메일 당 생성할 수 있는 격리 사용자의 최대치에 도달했습니다."
       no_subject: "(제목 없음)"
       no_body: "(내용 없음)"
+      missing_attachment: "(첨부 파일 %{filename}이 없음)"
       errors:
         empty_email_error: "수신한 raw mail이 공백일 때 발생합니다."
         no_message_id_error: "메일에 'Message-Id'헤더가 없을 때 발생합니다."
@@ -262,6 +263,7 @@ ko:
   invalid_whisper_access: "속삭임이 활성화되어 있지 않거나 속삭임 게시물을 작성할 수있는 권한이 없습니다"
   not_in_group:
     title_topic: "이 항목을 보려면 '%{group}' 그룹의 가입을 요청해야 합니다."
+    title_category: "이 항목을 보려면 '%{group}' 그룹의 가입을 요청해야 합니다."
     request_membership: "회원 신청"
     join_group: "그룹 참여하기"
   deleted_topic: "죄송합니다! 이 주제는 삭제되었으며 더 이상 사용할 수 없습니다."
@@ -1459,7 +1461,7 @@ ko:
     invite_code: "계정 등록이 가능하도록하려면이 코드를 입력해야합니다 (비어있을 경우 무시)."
     approve_suspect_users: "검토 대기열에 의심스러운 사용자를 추가하십시오. 의심스러운 사용자가 바이오 / 웹 사이트에 입장했지만 읽기 활동이 없습니다."
     review_every_post: "모든 게시물을 검토해야합니다. 경고! 사용량이 많은 사이트에는 권장되지 않습니다."
-    pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
+    pending_users_reminder_delay_minutes: "새 사용자가 다음 시간보다 오랫동안 승인 대기 중일 경우 관리자에게 알립니다. 알림을 비활성화하려면 -1로 설정합니다."
     persistent_sessions: "사용자는 웹 브라우저가 닫혀도 로그인 상태를 유지합니다."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
     ga_version: "사용할 Google 유니버설 애널리틱스 버전: v3 (analytics.js), v4 (gtag)"
@@ -1509,6 +1511,7 @@ ko:
     send_old_credential_reminder_days: "며칠 후 이전 자격 증명에 대해 알림"
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
     enable_badges: "배지 기능 사용"
+    max_favorite_badges: "사용자가 선택할 수있는 최대 배지 수"
     enable_whispers: "토픽 내 운영진 비공개 커뮤니케이션 허용"
     allow_index_in_robots_txt: "robots.txt에 웹 검색 엔진이이 사이트를 색인 할 수 있도록 지정하십시오. 예외적 인 경우 <a href='%{base_path}/admin/customize/robots'>robots.txt를</a> 영구적으로 <a href='%{base_path}/admin/customize/robots'>무시할</a> 수 있습니다."
     blocked_email_domains: "사용자가 계정을 등록 할 수없는 파이프- 로 구분 된 이메일 도메인 목록입니다. 예: mailinator.com | trashmail.net"
@@ -1537,8 +1540,10 @@ ko:
     enable_discourse_connect_provider: "/session/sso_provider 끝점에서 DiscourseConnect (이전의 'Discourse SSO') 공급자 프로토콜을 구현하려면 discourse_connect_provider_secrets를 설정해야합니다."
     discourse_connect_url: "DiscourseConnect 엔드포인트의 URL (반드시 http:// 또는 https:// 를 포함해야 함)"
     discourse_connect_secret: "DiscourseConnect 정보를 암호화 방식으로 인증하는데 사용되는 비밀 문자열입니다. 10자 이상이어야 합니다."
+    discourse_connect_provider_secrets: "DiscourseConnect를 사용하는 도메인 시크릿 목록입니다. DiscourseConnect 암호가 10자 이상인지 확인하십시오. 와일드 카드 기호*는 모든 도메인 또는 그 일부만 일치시키는데 사용할 수 있습니다. (예. * .example.com)"
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능을 무시하고 사용자가 변경할 수 없도록 합니다."
     discourse_connect_overrides_groups: "모든 수동 그룹 구성원을 그룹 속성에 지정된 그룹과 동기화합니다. (경고: 그룹을 지정하지 않으면 모든 수동 그룹 구성원이 지워짐)"
+    auth_overrides_username: "로그인 할 때마다 외부 사이트의 사용자 이름으로  로컬 사용자 이름을 재정의하고 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다. (경고: 사용자 이름 길이/요구 사항의 차이로 인해 불일치가 발생할 수 있음)"
     auth_overrides_name: "로그인 할 때마다 사용자의 로컬 전체 이름을 무시하고 외부 사이트 전체 이름을 사용해 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다."
     discourse_connect_overrides_avatar: "외부 DiscourseConnect 페이로드의 아바타로 사용자 아바타를 재정의합니다. 활성화되면 사용자는 Discourse에서 아바타를 업로드 할 수 없습니다."
     discourse_connect_overrides_location: "DiscourseConnect 페이로드의 외부 위치로 사용자 위치를 재정의하고 로컬 변경을 방지합니다."
@@ -1641,6 +1646,11 @@ ko:
     image_preview_jpg_quality: "크기가 조정된 이미지 파일의 품질 (1은 가장 낮은 품질, 99는 최고 품질, 100은 사용하지 않도록 설정)"
     allow_staff_to_upload_any_file_in_pm: "관리자는 개인메시지에 파일 첨부를 허용합니다."
     strip_image_metadata: "스트립 이미지 메타 데이터."
+    composer_media_optimization_image_enabled: "업로드된 이미지 파일의 클라이언트측 미디어 최적화를 활성화합니다."
+    composer_media_optimization_image_kilobytes_optimization_threshold: "클라이언트 측 최적화를 트리거하기 위한 최소 이미지 파일 크기"
+    composer_media_optimization_image_resize_dimensions_threshold: "클라이언트측 크기 조정을 트리거하는 최소 이미지 너비"
+    composer_media_optimization_image_resize_width_target: "너비가`composer_media_optimization_image_dimensions_resize_threshold`보다 큰 이미지는 이 너비로 크기가 조정됩니다. `composer_media_optimization_image_dimensions_resize_threshold`보다 크거나 같아야합니다."
+    composer_media_optimization_image_encode_quality: "재 인코딩 프로세스에 사용되는 JPEG 인코딩 품질입니다."
     min_ratio_to_crop: "큰 이미지를 자르는 데 사용되는 비율. 너비 / 높이의 결과를 입력하십시오."
     simultaneous_uploads: "글 작성기에서 끌어서 놓을 수 있는 최대 파일 수"
     default_invitee_trust_level: "초대 된 사용자의 기본 회원 등급 (0-4) 입니다."
@@ -2787,6 +2797,18 @@ ko:
     email_reject_bad_destination_address:
       title: "이메일 거부 잘못된 대상 주소"
       subject_template: "[%{email_prefix}] 이메일 문제-알 수 없음 : 주소"
+      text_body_template: |
+        %{destination} (제목 : %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        확인해야 할 사항은 다음과 같습니다.
+
+          - 하나 이상의 이메일 주소를 사용하십니까? 원래 사용한 이메일 주소와 다른 이메일 주소로 답장 했습니까? 이메일 답장을 보내려면 답장 할 때 동일한 이메일 주소를 사용해야합니다.
+
+          - 이메일 소프트웨어가 답장 할 때 Reply-To: 이메일 주소를 올바르게 사용 했습니까? 일부 이메일 소프트웨어는 From: 주소로 잘못 답장을 보냅니다.
+
+          - 이메일의 Message-ID 헤더가 수정 되었습니까? Message-ID는 일관성이 있고 변경되지 않아야합니다.
+
+        도움이 더 필요하세요? %{base_url}/about 의 연락처 세부 정보를 통해 저희에게 연락하십시오.
     email_reject_old_destination:
       title: "이메일 거부 이전 대상"
       subject_template: "[%{email_prefix}] 이메일 문제-이전 알림에 답장하려고합니다"
@@ -3010,6 +3032,7 @@ ko:
     only_reply_by_email_pm: "%{participants}에 응답하려면이 이메일에 회신하십시오."
     visit_link_to_respond: "[글](%{base_url}%{url})을 살펴보고 댓글을 작성해보세요."
     visit_link_to_respond_pm: "%{participants}에 응답하려면 [글 보기](%{base_url}%{url})을 살펴보세요."
+    reply_above_line: "##이 줄 위에 댓글을 입력하십시오. ##"
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
     pm_participants: "참가자 : %{participants}"
     invited_group_to_private_message_body: |

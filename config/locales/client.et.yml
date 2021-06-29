@@ -183,7 +183,6 @@ et:
     submit: "Saada"
     generic_error: "Vabandust, tekkis viga."
     generic_error_with_reason: "Tekkis viga: %{error}"
-    go_ahead: "Jätka"
     sign_up: "Liitu"
     log_in: "Logi sisse"
     age: "Vanus"
@@ -212,7 +211,6 @@ et:
     x_more:
       one: "%{count} Veel"
       other: "Veel %{count}"
-    less: "Peida"
     never: "mitte kunagi"
     every_30_minutes: "iga 30 minuti järel"
     every_hour: "iga tund"
@@ -221,7 +219,6 @@ et:
     every_month: "iga kuu"
     every_six_months: "iga kuue kuu tagant"
     max_of_count: "maksimum %{count}-st"
-    alternation: "või"
     character_count:
       one: "%{count} sümbol"
       other: "%{count} sümbolit"
@@ -253,7 +250,6 @@ et:
       help:
         bookmark: "Kliki selle teema esimesele postitusele järjehoidja lisamiseks"
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
-        unbookmark_with_reminder: "Klõpsa et eemaldada teemalt kõik järjehoidjad ja meeldetuletused. Sul on siin teemas meeldetuletus %{reminder_at}."
     bookmarks:
       created: "Oled selle postituse järjehoidjatesse lisanud. %{name}"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
@@ -484,9 +480,6 @@ et:
         remove_user_as_group_owner: "Eemalda omanik"
     groups:
       member_added: "Lisatud"
-      add_members:
-        usernames:
-          input_placeholder: "Kasutajanimed"
       requests:
         reason: "Põhjus"
         accepted: "aktsepteeritud"
@@ -494,7 +487,7 @@ et:
         title: "Halda"
         name: "Nimi"
         full_name: "Täisnimi"
-        add_members: "Lisa liikmeid"
+        invite_members: "Kutsu"
         delete_member_confirm: "Kas eemaldada '%{username}' grupist '%{group}'?"
         profile:
           title: Profiil

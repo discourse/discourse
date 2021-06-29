@@ -217,7 +217,6 @@ sk:
     submit: "Odoslať"
     generic_error: "Ľutujeme, nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
-    go_ahead: "Pokračujte"
     sign_up: "Registrácia"
     log_in: "Prihlásenie"
     age: "Vek"
@@ -249,7 +248,6 @@ sk:
       few: "%{count} Ďalší"
       many: "%{count} Ďalší"
       other: "%{count} Ďalší"
-    less: "Menej"
     never: "nikdy"
     every_30_minutes: "každých 30 mintút"
     every_hour: "každú hodinu"
@@ -257,7 +255,6 @@ sk:
     weekly: "týždenne"
     every_month: "každý mesiac"
     max_of_count: "najviac %{count}"
-    alternation: "alebo"
     character_count:
       one: "%{count} znak"
       few: "%{count} znakov"
@@ -462,16 +459,13 @@ sk:
         remove_user_as_group_owner: "Odobrať vlastníka"
     groups:
       member_added: "Pridané"
-      add_members:
-        usernames:
-          input_placeholder: "Používateľské mená"
       requests:
         reason: "Dôvod"
       manage:
         title: "Spravovať"
         name: "Názov"
         full_name: "Celé meno"
-        add_members: "Pridať používateľov"
+        invite_members: "Pozvi"
         delete_member_confirm: "Odstrániť '%{username}' zo skupiny '%{group}'?"
         profile:
           title: Profil
@@ -2366,8 +2360,6 @@ sk:
             available: "Názov skupiny je k dispozícii"
             not_available: "Názov skupiny nie je k dispozícii"
             blank: "Názov skupiny nesmie byť prázdny"
-        add_members:
-          as_owner: "Nastaviť používateľa/ov ako vlastníka/ov skupiny"
         manage:
           interaction:
             email: Email

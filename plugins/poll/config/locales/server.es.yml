@@ -29,7 +29,7 @@ es:
     named_poll_must_have_different_options: "La encuesta nombrada <strong>%{name}</strong> debe tener opciones diferentes."
     default_poll_must_not_have_any_empty_options: "La encuesta no puede tener ninguna opción vacía"
     named_poll_must_not_have_any_empty_options: "La encuesta llamada <strong>%{name}</strong> no puede tener ninguna opción vacía"
-    default_poll_with_multiple_choices_has_invalid_parameters: "La encuesta con opciones múltiples tiene parámetros inválidos."
+    default_poll_with_multiple_choices_has_invalid_parameters: "La encuesta con opciones múltiples tiene parámetros no válidos."
     named_poll_with_multiple_choices_has_invalid_parameters: "La encuesta llamada <strong>%{name}</strong> con opciones múltiples tiene párametros no válidos."
     requires_at_least_1_valid_option: "Debes seleccionar al menos 1 opción válida."
     edit_window_expired:

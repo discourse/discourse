@@ -189,7 +189,6 @@ bg:
     submit: "Изпрати"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
-    go_ahead: "Продължете напред"
     sign_up: "Регистрация"
     log_in: "Вход"
     age: "Години"
@@ -215,7 +214,6 @@ bg:
     now: "преди малко"
     read_more: "прочетете повече"
     more: "Повече"
-    less: "По-малко"
     never: "никога"
     every_30_minutes: "на всеки 30 минути"
     every_hour: "на всеки час"
@@ -224,7 +222,6 @@ bg:
     every_month: "всеки месец"
     every_six_months: "на всеки шест месеца"
     max_of_count: "максимално от %{count}"
-    alternation: "или"
     character_count:
       one: "%{count} символ"
       other: "%{count} символа"
@@ -256,7 +253,6 @@ bg:
       help:
         bookmark: "Щракнете за да добавите в отметки първата публикация в тази тема"
         unbookmark: "Щракнете тук за да изтриите всички отметки в тази тема"
-        unbookmark_with_reminder: "Натиснете за да премахнете всички отметки в тази тема. Имате напомняне %{reminder_at} за тази тема."
     bookmarks:
       not_bookmarked: "добавете тази публикация в Отметки"
       remove: "Премахнете отметката"
@@ -474,9 +470,6 @@ bg:
         remove_user_as_group_owner: "Премахни като собственик"
     groups:
       member_added: "Добавено"
-      add_members:
-        usernames:
-          input_placeholder: "Потебителско име"
       requests:
         title: "Заявки"
         reason: "Причина"
@@ -485,7 +478,7 @@ bg:
         title: "Управление"
         name: "Име"
         full_name: "Пълно име"
-        add_members: "Добавете потребители"
+        invite_members: "Покана"
         delete_member_confirm: "Премахнете '%{username}' от група '%{group}' ?"
         profile:
           title: Профил

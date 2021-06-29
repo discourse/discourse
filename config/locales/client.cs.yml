@@ -239,7 +239,6 @@ cs:
     submit: "Odeslat"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
-    go_ahead: "Pokračuj"
     sign_up: "Registrace"
     log_in: "Přihlásit se"
     age: "Věk"
@@ -272,7 +271,6 @@ cs:
       few: "%{count} další"
       many: "%{count} Více"
       other: "%{count} Více"
-    less: "Méně"
     never: "nikdy"
     every_30_minutes: "každých 30 minut"
     every_hour: "každou hodinu"
@@ -281,7 +279,6 @@ cs:
     every_month: "každý měsíc"
     every_six_months: "každých šest měsíců"
     max_of_count: "max z"
-    alternation: "nebo"
     character_count:
       one: "%{count} znak"
       few: "%{count} znaky"
@@ -315,7 +312,6 @@ cs:
       help:
         bookmark: "Kliknutím vložíte záložku na první příspěvek tohoto tématu"
         unbookmark: "Kliknutím odstraníte všechny záložky v tématu"
-        unbookmark_with_reminder: "Kliknutím odstraníte všechny záložky a připomenutí v tomto tématu. Máte nastavenou upomínku %{reminder_at} pro toto téma."
     bookmarks:
       created: "Tento příspěvek jste přidali do záložek. %{name}"
       not_bookmarked: "přidat záložku k příspěvku"
@@ -563,9 +559,6 @@ cs:
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
       member_added: "Přidáno"
-      add_members:
-        usernames:
-          input_placeholder: "Uživatelská jména"
       requests:
         reason: "Reason"
         accepted: "přijato"
@@ -573,7 +566,7 @@ cs:
         title: "Spravovat"
         name: "Název"
         full_name: "Celé název"
-        add_members: "Přidat členy"
+        invite_members: "Pozvat"
         delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
         profile:
           title: Profil

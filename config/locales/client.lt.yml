@@ -236,7 +236,6 @@ lt:
     submit: "Pateikti"
     generic_error: "Atsiprašome, įvyko klaida."
     generic_error_with_reason: "Įvyko klaida: %{error}"
-    go_ahead: "Pirmyn"
     sign_up: "Registruotis"
     log_in: "Prisijungti"
     age: "Amžius"
@@ -269,7 +268,6 @@ lt:
       few: "%{count} Daugiau"
       many: "%{count} Daugiau"
       other: "%{count} Daugiau"
-    less: "Mažiau"
     never: "niekada"
     every_30_minutes: "kas 30 minučių"
     every_hour: "kiekvieną valandą"
@@ -278,7 +276,6 @@ lt:
     every_month: "kiekvieną mėnesį"
     every_six_months: "kas šešis mėnesius"
     max_of_count: "daugiausia iš %{count}"
-    alternation: "arba"
     character_count:
       one: "%{count} simbolis"
       few: "%{count} simboliai"
@@ -509,9 +506,6 @@ lt:
         remove_user_as_group_owner: "Atšaukti valdytoją"
     groups:
       member_added: "Pridėta"
-      add_members:
-        usernames:
-          input_placeholder: "Slapyvardžiai"
       requests:
         reason: "Priežastis"
         accepted: "patvirtinta"
@@ -519,7 +513,7 @@ lt:
         title: "Redaguoti"
         name: "Vardas"
         full_name: "Vardas ir pavardė"
-        add_members: "Pridėti narių"
+        invite_members: "Kviesti"
         delete_member_confirm: "Pašalinti '%{username}' iš '%{group}' grupės?"
         profile:
           title: Profilis

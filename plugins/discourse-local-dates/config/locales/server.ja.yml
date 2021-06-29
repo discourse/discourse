@@ -6,4 +6,4 @@
 
 ja:
   site_settings:
-    discourse_local_dates_email_format: "電子メールで日付を表示するために使用される形式。"
+    discourse_local_dates_email_format: "メールに日付を表示するために使用されるフォーマット。"

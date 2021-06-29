@@ -225,11 +225,11 @@ de:
 
           > Wenn das Kaffee ist, bringe mir bitte Tee; aber wenn das Tee ist, bringe mir bitte Kaffee.
           >
-          > Eine Vorteil von Selbstgesprächen ist, dass du weißt, dass dir wenigstens irgendjemand zuhört.
+          > Ein Vorteil von Selbstgesprächen ist, dass du weißt, dass dir wenigstens irgendjemand zuhört.
           >
-          > Manche Menschen können gut mit Worten umgehen, und andere Menschen… ähm, nun ja, nicht so gut.
+          > Manche Menschen können gut mit Worten umgehen und andere Menschen … ähm, nun ja, nicht so gut.
 
-          Wähle ein beliebiges &uarr; Zitat aus, das du bevorzugst, und drücke dann die **Zitat**-Schaltfläche, die über deiner Auswahl erscheint – oder die **Antworten**-Schaltfläche am Ende dieses Beitrags.
+          Wähle ein beliebiges &uarr; Zitat aus, das du bevorzugst, und drücke dann die **Zitieren**-Schaltfläche, die über deiner Auswahl erscheint – oder die **Antworten**-Schaltfläche am Ende dieses Beitrags.
 
           Unter dem Zitat, schreibe ein oder zwei Worte dazu, warum du dieses Zitat gewählt hast, denn das würde mich interessieren :thinking:
         reply: |-
@@ -365,7 +365,7 @@ de:
           Bitte beachte, dass du nur %{deletion_after} Stunde(n) hast, um einen Beitrag wiederherzustellen.
       category_hashtag:
         instructions: |-
-          Wusstest du, dass du auf Kategorien und Schlagwörter in deinen Beiträgen verweisen kannst? Zum Beispiel, hast du die Kategorie %{category} schon gesehen?
+          Wusstest du, dass du auf Kategorien und Schlagwörter in deinen Beiträgen verweisen kannst? Hast du zum Beispiel die Kategorie %{category} schon gesehen?
 
           Gib `#` in der Mitte eines Satzes ein und wähle eine Kategorie oder ein Schlagwort aus.
         not_found: |-
