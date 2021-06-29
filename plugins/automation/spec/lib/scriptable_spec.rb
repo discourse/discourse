@@ -14,6 +14,14 @@ describe DiscourseAutomation::Scriptable do
       field :dog, component: :integer, accepts_placeholders: true
       field :bird, component: :integer, triggerable: 'recurring'
     end
+
+    DiscourseAutomation::Triggerable.add('dog') do
+      field :kind, component: :string
+    end
+
+    DiscourseAutomation::Scriptable.add('only_dogs') do
+      triggerable! :dog, { kind: 'good_boy' }
+    end
   end
 
   fab!(:automation) {
@@ -69,6 +77,24 @@ describe DiscourseAutomation::Scriptable do
   describe '.name' do
     it 'returns the name of the script' do
       expect(automation.scriptable.name).to eq('cats_everywhere')
+    end
+  end
+
+  describe 'triggerable!' do
+    fab!(:automation) {
+      Fabricate(
+        :automation,
+        script: 'only_dogs',
+        trigger: 'dog'
+      )
+    }
+
+    it 'has a forced triggerable' do
+      expect(automation.scriptable.forced_triggerable).to eq(triggerable: :dog, state: { kind: 'good_boy' })
+    end
+
+    it 'returns the forced triggerable in triggerables' do
+      expect(automation.scriptable.triggerables).to eq([:dog])
     end
   end
 

@@ -9,6 +9,7 @@ en:
       confirm_automation_reset: This action will reset script and trigger options, do you want to proceed?
       edit_automation:
         trigger_section:
+          forced: This trigger is forced by script.
           title: When/What...
         fields_section:
           title: Script options

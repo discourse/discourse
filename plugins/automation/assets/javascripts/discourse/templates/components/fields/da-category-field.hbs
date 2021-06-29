@@ -6,7 +6,7 @@
       {{category-chooser
         value=field.metadata.category_id
         onChange=(action (mut field.metadata.category_id))
-        options=(hash clearable=true)
+        options=(hash clearable=true disabled=isDisabled)
       }}
 
       {{fields/da-field-description description=description}}

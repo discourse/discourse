@@ -1,10 +1,8 @@
 import I18n from "I18n";
-import Component from "@ember/component";
 import { computed } from "@ember/object";
+import BaseField from "./da-base-field";
 
-export default Component.extend({
-  tagName: "",
-
+export default BaseField.extend({
   replacedContent: computed("field.extra.content.[]", function() {
     return (this.field.extra.content || []).map(r => {
       return {

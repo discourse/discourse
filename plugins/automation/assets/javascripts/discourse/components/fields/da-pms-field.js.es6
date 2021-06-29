@@ -1,10 +1,9 @@
+import BaseField from "./da-base-field";
 import I18n from "I18n";
 import { action } from "@ember/object";
-import Component from "@ember/component";
+import { reads } from "@ember/object/computed";
 
-export default Component.extend({
-  tagName: "",
-
+export default BaseField.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
@@ -12,6 +11,8 @@ export default Component.extend({
       this.set("field.metadata.pms", []);
     }
   },
+
+  fieldValue: reads("field.metadata.pms"),
 
   @action
   removePM(pm) {

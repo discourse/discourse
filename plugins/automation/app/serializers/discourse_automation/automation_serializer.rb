@@ -22,6 +22,7 @@ module DiscourseAutomation
         name: I18n.t("discourse_automation.scriptables.#{object.script}.title"),
         description: I18n.t("discourse_automation.scriptables.#{object.script}.description"),
         doc: I18n.t("discourse_automation.scriptables.#{object.script}.doc"),
+        forced_triggerable: scriptable.forced_triggerable,
         not_found: scriptable.not_found
       }
     end

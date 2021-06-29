@@ -1,5 +1,6 @@
-import Component from "@ember/component";
+import BaseField from "./da-base-field";
+import { reads } from "@ember/object/computed";
 
-export default Component.extend({
-  tagName: ""
+export default BaseField.extend({
+  fieldValue: reads("field.metadata.text")
 });

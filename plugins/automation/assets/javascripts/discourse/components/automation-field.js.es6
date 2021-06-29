@@ -1,3 +1,4 @@
+import { isPresent } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 import Component from "@ember/component";
@@ -64,6 +65,32 @@ export default Component.extend({
   @discourseComputed("automation.trigger.id", "field.triggerable")
   displayField(triggerId, triggerable) {
     return triggerId && (!triggerable || triggerable === triggerId);
+  },
+
+  fieldName: computed("field.name", function() {
+    return this.field.name;
+  }),
+
+  fieldValue: computed("field.metadata.value", function() {
+    return this.field.metadata.value;
+  }),
+
+  @discourseComputed(
+    "fieldName",
+    "fieldValue",
+    "field.target",
+    "automation.script.forced_triggerable"
+  )
+  forcedValue(fieldName, fieldValue, fieldTarget, forcedTriggerable) {
+    if (
+      forcedTriggerable &&
+      this.field.target === "trigger" &&
+      isPresent(forcedTriggerable.state[fieldName])
+    ) {
+      return isPresent(fieldValue)
+        ? fieldValue
+        : forcedTriggerable.state[fieldName];
+    }
   },
 
   placeholdersString: computed("field.placeholders", function() {

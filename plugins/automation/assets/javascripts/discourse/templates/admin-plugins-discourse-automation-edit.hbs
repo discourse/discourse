@@ -56,6 +56,13 @@
       </h2>
 
       <div class="control-group">
+
+        {{#if model.automation.script.forced_triggerable}}
+          <div class="alert alert-warning">
+            {{i18n "discourse_automation.edit_automation.trigger_section.forced"}}
+          </div>
+        {{/if}}
+
         <label class="control-label">
           {{i18n "discourse_automation.models.trigger.name.label"}}
         </label>
@@ -67,6 +74,7 @@
             onChange=(action "onChangeTrigger")
             options=(hash
               none="discourse_automation.select_trigger"
+              disabled=model.automation.script.forced_triggerable
             )
           }}
         </div>
@@ -83,7 +91,6 @@
       {{/if}}
     </section>
 
-
     {{#if automationForm.trigger}}
       <section class="fields-section form-section edit">
         <h2 class="title">
@@ -99,7 +106,7 @@
             }}
           {{/each}}
         </div>
-      </section>    
+      </section>
 
       <div class="control-group">
         {{d-button

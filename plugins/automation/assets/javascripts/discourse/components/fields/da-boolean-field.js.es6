@@ -1,5 +1,3 @@
-import Component from "@ember/component";
+import BaseField from "./da-base-field";
 
-export default Component.extend({
-  tagName: ""
-});
+export default BaseField.extend({});

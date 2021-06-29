@@ -6,6 +6,7 @@
       {{input
         value=field.metadata.text
         input=(action (mut field.metadata.text) value="target.value")
+        disabled=isDisabled
       }}
 
       {{fields/da-field-description description=description}}

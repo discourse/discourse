@@ -1,9 +1,7 @@
-import Component from "@ember/component";
+import BaseField from "./da-base-field";
 import { action, computed } from "@ember/object";
 
-export default Component.extend({
-  tagName: "",
-
+export default BaseField.extend({
   @action
   convertToUniversalTime(date) {
     return (

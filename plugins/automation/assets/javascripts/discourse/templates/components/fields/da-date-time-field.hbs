@@ -8,11 +8,15 @@
           type="datetime-local"
           value=(readonly localTime)
           input=(action "convertToUniversalTime" value="target.value")
+          disabled=isDisabled
         }}
 
-
         {{#if field.metadata.value}}
-          {{d-button icon="trash-alt" action=(action (mut field.metadata.value) value=null)}}
+          {{d-button
+            icon="trash-alt"
+            action=(action (mut field.metadata.value) value=null)
+            disabled=isDisabled
+          }}
         {{/if}}
       </div>
 

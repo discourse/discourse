@@ -8,7 +8,7 @@
         value=field.metadata.group_id
         labelProperty="name"
         onChange=(action "setGroupField")
-        options=(hash maximum=1)
+        options=(hash maximum=1 disabled=isDisabled)
       }}
 
       {{fields/da-field-description description=description}}

@@ -1,9 +1,9 @@
-import Component from "@ember/component";
+import BaseField from "./da-base-field";
 import Group from "discourse/models/group";
 import { action } from "@ember/object";
+import { reads } from "@ember/object/computed";
 
-export default Component.extend({
-  tagName: "",
+export default BaseField.extend({
   allGroups: null,
 
   init() {
@@ -13,6 +13,8 @@ export default Component.extend({
       this.set("allGroups", groups);
     });
   },
+
+  fieldValue: reads("field.metadata.group_id"),
 
   @action
   setGroupField(groupIds) {

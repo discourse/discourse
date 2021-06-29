@@ -2,7 +2,7 @@
 
 module DiscourseAutomation
   class Scriptable
-    attr_reader :fields, :name, :not_found
+    attr_reader :fields, :name, :not_found, :forced_triggerable
 
     def initialize(name)
       @name = name
@@ -12,6 +12,7 @@ module DiscourseAutomation
       @triggerables = []
       @script = proc {}
       @not_found = false
+      @forced_triggerable = nil
 
       eval! if @name
     end
@@ -24,6 +25,14 @@ module DiscourseAutomation
       end
 
       self
+    end
+
+    def triggerable!(*args)
+      if args.present?
+        @forced_triggerable = { triggerable: args[0], state: args[1] }
+      else
+        @forced_triggerable
+      end
     end
 
     def placeholders
@@ -46,7 +55,7 @@ module DiscourseAutomation
       if args.present?
         @triggerables, = args
       else
-        @triggerables
+        forced_triggerable ? [forced_triggerable[:triggerable]] : @triggerables
       end
     end
 

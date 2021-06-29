@@ -22,6 +22,7 @@
               value=pm.title
               class="pm-input pm-title"
               input=(action (mut pm.title) value="target.value")
+              disabled=isDisabled
             }}
           </div>
         </div>
@@ -43,6 +44,7 @@
               value=pm.delay
               class="input-large pm-input"
               input=(action (mut pm.delay) value="target.value")
+              disabled=isDisabled
             }}
           </div>
         </div>
@@ -57,6 +59,7 @@
               type="checkbox"
               checked=pm.encrypt
               click=(action (mut pm.encrypt) value="target.checked")
+              disabled=isDisabled
             }}
           </div>
         </div>
@@ -65,6 +68,7 @@
             icon="trash-alt"
             action=(action "removePM" pm)
             class="btn-danger"
+            disabled=isDisabled
           }}
         </section>
       </details>
@@ -77,6 +81,7 @@
         label="discourse_automation.fields.pms.add_pm"
         action=(action "insertPM")
         class="btn-primary insert-pm"
+        disabled=isDisabled
       }}
     </div>
   {{/each}}

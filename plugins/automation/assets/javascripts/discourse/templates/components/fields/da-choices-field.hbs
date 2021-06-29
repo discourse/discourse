@@ -6,7 +6,7 @@
       value=field.metadata.value
       content=replacedContent
       onChange=(action (mut field.metadata.value))
-      options=(hash allowAny=false)
+      options=(hash allowAny=false disabled=isDisabled)
     }}
 
     {{fields/da-field-description description=description}}
