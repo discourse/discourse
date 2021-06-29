@@ -66,6 +66,13 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
+    # when a topic contains some posts after moving posts to another topic we shouldn't close it
+    # two types of posts should prevent a topic from closing:
+    #   1. regular posts
+    #   2. almost all whispers
+    # we should only exclude whispers with action_code: 'split_topic'
+    # because we use such whispers as a small-action posts when moving posts to the secret message
+    # (in this case we don't want everyone to see that posts were moved, that's why we use whispers)
     original_topic_posts_count = @original_topic.posts
       .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
       .count
