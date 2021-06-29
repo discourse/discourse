@@ -156,7 +156,7 @@ class PostRevisor
     @revised_at = @opts[:revised_at] || Time.now
     @last_version_at = @post.last_version_at || Time.now
 
-    if guardian.affected_by_slow_mode?(@topic) && !ninja_edit?
+    if guardian.affected_by_slow_mode?(@topic) && !ninja_edit? && SiteSetting.slow_mode_prevents_editing
       @post.errors.add(:base, I18n.t("cannot_edit_on_slow_mode"))
       return false
     end

@@ -637,6 +637,28 @@ aside.onebox.twitterstatus .onebox-body {
       }
     }
   }
+
+  .date {
+    display: flex;
+    line-height: $line-height-small;
+
+    .timestamp {
+      color: var(--primary-medium);
+    }
+  }
+
+  .like,
+  .retweet {
+    align-items: center;
+    color: var(--primary-medium);
+    display: flex;
+    margin-left: 0.75em;
+
+    svg {
+      fill: currentColor;
+      margin-right: 0.25em;
+    }
+  }
 }
 
 // Onebox - Imgur/Flickr - Album
@@ -777,18 +799,6 @@ aside.onebox.xkcd .onebox-body img {
 .onebox.githubcommit {
   pre.message {
     padding: 0;
-  }
-}
-
-.onebox.twitterstatus {
-  .like,
-  .retweet {
-    color: var(--primary-med-or-secondary-med);
-    padding-left: 10px;
-    svg {
-      fill: currentColor;
-      vertical-align: middle;
-    }
   }
 }
 

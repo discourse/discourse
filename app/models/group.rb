@@ -894,9 +894,13 @@ class Group < ActiveRecord::Base
     SystemMessage.create_from_system_user(
       user,
       owner ? :user_added_to_group_as_owner : :user_added_to_group_as_member,
-      group_name: self.full_name.presence || self.name,
+      group_name: name_full_preferred,
       group_path: "/g/#{self.name}"
     )
+  end
+
+  def name_full_preferred
+    self.full_name.presence || self.name
   end
 
   def message_count
