@@ -5251,6 +5251,7 @@ en:
           aborted: Please upload a CSV containing either user emails or usernames
           success: Your CSV was received and users will receive their badge shortly.
           replace_owners: Remove the badge from previous owners
+          grant_existing_holders: Grant additional badges to existing badge holders
 
       emoji:
         title: "Emoji"

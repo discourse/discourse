@@ -16,7 +16,12 @@ module Jobs
 
       return if users.empty? || badge.nil?
 
-      BadgeGranter.mass_grant(badge, users)
+      BadgeGranter.mass_grant(
+        badge,
+        users,
+        sequence_map: args[:sequence_map],
+        count_per_user: args[:badge_count_per_user]
+      )
     end
   end
 end

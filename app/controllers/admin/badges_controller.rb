@@ -52,6 +52,15 @@ class Admin::BadgesController < Admin::AdminController
     end
 
     replace_badge_owners = params[:replace_badge_owners] == 'true'
+    grant_existing_holders = params[:grant_existing_holders] == 'true'
+    if !badge.multiple_grant? && grant_existing_holders
+      render_json_error(
+        I18n.t('badges.mass_award.errors.cant_grant_multiple_times', badge_name: badge.display_name),
+        status: 422
+      )
+      return
+    end
+
     BadgeGranter.revoke_all(badge) if replace_badge_owners
 
     batch_number = 1
@@ -62,12 +71,36 @@ class Admin::BadgesController < Admin::AdminController
       mode = Email.is_valid?(CSV.parse_line(csv.first).first) ? 'email' : 'username'
       csv.rewind
 
+      if grant_existing_holders
+        emails_or_usernames = []
+        csv.each_line do |line|
+          line = CSV.parse_line(line).first
+          line_number += 1
+          emails_or_usernames << line.strip.downcase if line.present?
+        end
+        csv.rewind
+
+        if mode == 'email'
+          sequence_map = User.with_email(emails_or_usernames)
+          emails_or_usernames_map_to_ids = sequence_map
+            .pluck('LOWER(user_emails.email)', :id)
+            .to_h
+        else
+          sequence_map = User.where(username_lower: emails_or_usernames)
+          emails_or_usernames_map_to_ids = sequence_map
+            .pluck(:username_lower, :id)
+            .to_h
+        end
+        sequence_map = sequence_map.joins(:user_badges).group(:id).maximum(:seq)
+      end
+
+      line_number = 1
       csv.each_line do |email_line|
         line = CSV.parse_line(email_line).first
+        line_number += 1
 
         if line.present?
-          batch << line
-          line_number += 1
+          batch << line.strip.downcase
         end
 
         # Split the emails in batches of 200 elements.
@@ -75,7 +108,26 @@ class Admin::BadgesController < Admin::AdminController
         last_batch_item = full_batch || csv.eof?
 
         if last_batch_item
-          Jobs.enqueue(:mass_award_badge, users_batch: batch, badge_id: badge.id, mode: mode)
+          if grant_existing_holders
+            batch_user_ids = emails_or_usernames_map_to_ids.slice(*batch).values
+            batch_sequence_map = sequence_map.slice(*batch_user_ids)
+            badge_count_per_user = {}
+            batch.each do |email_or_username|
+              user_id = emails_or_usernames_map_to_ids[email_or_username]
+              badge_count_per_user[user_id] ||= 0
+              badge_count_per_user[user_id] += 1
+              sequence_map[user_id] = (sequence_map[user_id] || -1) + 1
+            end
+          end
+
+          Jobs.enqueue(
+            :mass_award_badge,
+            users_batch: batch,
+            badge_id: badge.id,
+            mode: mode,
+            sequence_map: batch_sequence_map,
+            badge_count_per_user: badge_count_per_user
+          )
           batch = []
           batch_number += 1
         end
@@ -147,6 +199,7 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   private
+
   def find_badge
     params.require(:id)
     Badge.find(params[:id])

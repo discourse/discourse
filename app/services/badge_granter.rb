@@ -21,12 +21,25 @@ class BadgeGranter
     BadgeGranter.new(badge, user, opts).grant
   end
 
-  def self.mass_grant(badge, users)
+  def self.mass_grant(badge, users, sequence_map: nil, count_per_user: nil)
     return unless badge.enabled?
 
     system_user_id = Discourse.system_user.id
     now = Time.zone.now
-    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now } }
+    if sequence_map && count_per_user
+      user_badges = []
+      users.each do |u|
+        row = { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now }
+        count_per_user[u.id].times do
+          sequence_map[u.id] = (sequence_map[u.id] || -1) + 1
+          user_badges << row.merge(seq: sequence_map[u.id])
+        end
+      end
+    else
+      user_badges = users.map do |u|
+        { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now }
+      end
+    end
     granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
 
     users.each do |user|

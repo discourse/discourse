@@ -183,7 +183,7 @@ describe Admin::BadgesController do
     end
 
     describe '#mass_award' do
-      before { @user = Fabricate(:user, email: 'user1@test.com', username: 'username1') }
+      fab!(:user) { Fabricate(:user, email: 'user1@test.com', username: 'username1') }
 
       it 'does nothing when there is no file' do
         post "/admin/badges/award/#{badge.id}.json", params: { file: '' }
@@ -210,9 +210,12 @@ describe Admin::BadgesController do
 
         file = file_from_fixtures('user_emails.csv', 'csv')
 
+        UserBadge.destroy_all
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
+        expect(response.status).to eq(200)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
+        expect(UserBadge.where(user: user, badge: badge).first.seq).to eq(0)
       end
 
       it 'awards the badge using a list of usernames' do
@@ -222,7 +225,7 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
+        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
       end
 
       it 'works with a CSV containing nil values' do
@@ -232,7 +235,7 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
+        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
       end
 
       it 'fails when the badge is disabled' do
@@ -243,6 +246,60 @@ describe Admin::BadgesController do
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
         expect(response.status).to eq(422)
+      end
+
+      context "when grant_existing_holders is true" do
+        it "fails when the badge cannot be granted multiple times" do
+          file = file_from_fixtures('user_emails.csv', 'csv')
+          badge.update!(multiple_grant: false)
+          post "/admin/badges/award/#{badge.id}.json", params: {
+            file: fixture_file_upload(file),
+            grant_existing_holders: true
+          }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body['errors']).to eq([
+            I18n.t("badges.mass_award.errors.cant_grant_multiple_times", badge_name: badge.name)
+          ])
+        end
+
+        it "grants the badge to the users in the CSV as many times as they appear in it" do
+          Jobs.run_immediately!
+          user_without_badge = Fabricate(:user)
+          user_with_badge = Fabricate(:user)
+          badge.update!(multiple_grant: true)
+          BadgeGranter.grant(badge, user_with_badge)
+          expect(user_with_badge.reload.badges.pluck(:id)).to eq([badge.id])
+          expect(user_without_badge.reload.badges.pluck(:id)).to eq([])
+
+          random = Random.new(RSpec.configuration.seed)
+          emails_csv_content = [user_without_badge.email.titlecase, user_with_badge.email.titlecase] * 150
+          emails_csv_content.shuffle!(random: random)
+          usernames_csv_content = [user_without_badge.username.titlecase, user_with_badge.username.titlecase] * 150
+          usernames_csv_content.shuffle!(random: random)
+
+          expected = 0
+          [emails_csv_content, usernames_csv_content].each do |content|
+            expected += 150
+            csv = Tempfile.new
+            csv.write(content.join("\n"))
+            csv.rewind
+            post "/admin/badges/award/#{badge.id}.json", params: {
+              file: fixture_file_upload(csv),
+              grant_existing_holders: true
+            }
+            expect(response.status).to eq(200)
+            sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
+            expect(sequence.size).to eq(expected + 1)
+            expect(sequence.sort).to eq((0...(expected + 1)).to_a)
+            sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
+            expect(sequence.size).to eq(expected)
+            expect(sequence.sort).to eq((0...expected).to_a)
+          ensure
+            csv&.close
+            csv&.unlink
+          end
+        end
       end
     end
   end

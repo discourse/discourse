@@ -4450,6 +4450,7 @@ en:
       errors:
         invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
         badge_disabled: Please enable the %{badge_name} badge first.
+        cant_grant_multiple_times: Can't grant the %{badge_name} badge multiple times to a single user.
     editor:
       name: Editor
       description: First post edit
