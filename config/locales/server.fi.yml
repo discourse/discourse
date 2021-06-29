@@ -3182,7 +3182,7 @@ fi:
       title: "Viestisi hyväksyttiin"
   page_forbidden:
     title: "Hups! Tämä sivu on yksityinen."
-  site_setting_missing: "\"%{name}\" -asetus on pakollinen."
+  site_setting_missing: "Asetus \"%{name}\" on pakollinen."
   page_not_found:
     title: "Hups! Sivua ei ole tai se on yksityinen."
     popular_topics: "Suosittuja"
@@ -3203,39 +3203,39 @@ fi:
   deleted: "poistettu"
   image: "kuva"
   upload:
-    edit_reason: "lataa kuvista kopiot"
-    unauthorized: "Pahoittelut, tiedostomuoto ei ole sallittu (sallitut tiedostopäätteet: %{authorized_extensions})."
+    edit_reason: "lataa kuvista paikalliset kopiot"
+    unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut tiedostopäätteet: %{authorized_extensions})."
     pasted_image_filename: "Liitetty kuva"
     store_failure: "Latauksen #%{upload_id} käyttäjälle #%{user_id} tallentaminen epäonnistui."
-    file_missing: "Pahoittelut, sinun täytyy valita tiedosto joka ladataan."
-    empty: "Pahoittelut, mutta tiedostosi on tyhjä."
+    file_missing: "Sinun täytyy valita ladattava tiedosto."
+    empty: "Tiedostosi on tyhjä."
     png_to_jpg_conversion_failure_message: "PNG:n muuttamisessa JPG:ksi tapahtui virhe."
-    optimize_failure_message: "Lähetetyn kuvan optimoinniss tapahtui virhe."
+    optimize_failure_message: "Ladatun kuvan optimoinnissa tapahtui virhe."
     attachments:
-      too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on %{max_size_kb}KB)."
+      too_large: "Tiedosto, jonka yritit ladata, on liian suuri (suurin tiedostokoko on %{max_size_kb} kt)."
     images:
-      too_large: "Pahoittelut, kuva jonka yritit ladata on liian suuri (suurin sallittu kuvakoko on %{max_size_kb}KB), pienennä kuvaa ja yritä uudestaan."
-      larger_than_x_megapixels: "Pahoittelut, kuva jota yrität lähettää on liian suuri (maksimikoko on %{max_image_megapixels} megapikseliä). Muuta kuvan kokoa ja yritä uudelleen."
-      size_not_found: "Pahoittelut, mutta emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
+      too_large: "Kuva, jonka yritit ladata, on liian suuri (suurin sallittu koko on %{max_size_kb} kt), pienennä kuvaa ja yritä uudestaan."
+      larger_than_x_megapixels: "Kuva, jonka yritit ladata, on liian suuri (maksimikoko on %{max_image_megapixels} megapikseliä). Muuta kuvan kokoa ja yritä uudelleen."
+      size_not_found: "Emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
     placeholders:
-      too_large: "(kuva on suurempi kuin %{max_size_kb}KB)"
+      too_large: "(kuva on suurempi kuin %{max_size_kb} kt)"
   avatar:
-    missing: "Pahoittelut, emme löydä profiilikuvaa, joka olisi yhdistetty tähän sähköpostiosoitteeseen. Voitko yrittää ladata sen uudestaan?"
+    missing: "Tähän sähköpostiosoitteeseen liitettyä avataria ei löydy. Voitko yrittää ladata sen uudestaan?"
   flag_reason:
     sockpuppet: "Uusi käyttäjä aloitti ketjun, johon toinen uusi käyttäjä samasta IP-osoitteesta (%{ip_address}) vastasi. Katso asetus <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
-    spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, joissa oli linkkejä samaan verkkotunnukseen. Kaikki tämän käyttäjän linkkejä sisältävät viestit tulisi tarkastaa. Ks. <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> -sivustoasetus."
+    spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, joissa oli linkkejä samaan verkkotunnukseen. Kaikki tämän käyttäjän linkkejä sisältävät viestit tulisi tarkastaa. Katso asetus <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user ylitettiin"
     exceeded_bounces_limit: "bounce_score_threshold ylitettiin"
     mailing_list_no_echo_mode: "Postituslistan ilmoitukset on poistettu käytöstä käyttäjän omilta viesteiltä"
-    user_email_no_user: "Käyttäjää jonka id on %{user_id} ei löytynyt"
-    user_email_post_not_found: "Viestiä jonka id on %{post_id} ei löytynyt"
+    user_email_no_user: "Käyttäjää tunnuksella %{user_id} ei löytynyt"
+    user_email_post_not_found: "Viestiä tunnuksella %{post_id} ei löytynyt"
     user_email_anonymous_user: "Käyttäjä on anonyymi"
     user_email_user_suspended_not_pm: "Käyttäjä on hyllytetty, ei yksityisviesti"
     user_email_seen_recently: "Käyttäjä nähtiin äskettäin"
     user_email_notification_already_read: "Ilmoitus luettiin jo ennen kuin tämä sähköposti lähetettiin"
-    user_email_notification_topic_nil: "post.topic on nil"
-    user_email_post_user_deleted: "Viestin lähettänyt käyttäjä on poistettu"
+    user_email_notification_topic_nil: "post.topic on tyhjä arvo"
+    user_email_post_user_deleted: "Viestin lähettänyt käyttäjä on poistettu."
     user_email_post_deleted: "kirjoittaja poisti viestin"
     user_email_user_suspended: "käyttäjä hyllytettiin"
     user_email_already_read: "käyttäjä luki jo viestin"
@@ -3243,8 +3243,8 @@ fi:
     user_email_no_email: "Käyttäjätunnukseen %{user_id} ei ole liitetty sähköpostiosoitetta"
     sender_message_blank: "viesti on tyhjä"
     sender_message_to_blank: "message.to on tyhjä"
-    sender_text_part_body_blank: "text_part.body on tyhj"
-    sender_body_blank: "body on tyhjä"
+    sender_text_part_body_blank: "text_part.body on tyhjä"
+    sender_body_blank: "leipäteksti on tyhjä"
     sender_post_deleted: "viesti on poistettu"
     sender_message_to_invalid: "vastaanottajan sähköpostiosoite ei kelpaa"
     sender_topic_deleted: "ketju poistettiin"
@@ -3287,22 +3287,22 @@ fi:
 
       ## [Mitä tietoja keräämme?](#collect)
 
-      Tallennamme tietoa sinusta, kun rekisteröidyt sivustolle, ja keräämme dataa toimistasi palstalla: lukemisestasi, kirjoittamisestasi ja siitä miten reagoit täällä jaettuun sisältöön.
+      Tallennamme tietoa sinusta, kun rekisteröidyt sivustolle, ja keräämme tietoa toimistasi palstalla: lukemisestasi, kirjoittamisestasi ja siitä, miten reagoit täällä jaettuun sisältöön.
 
-      Kun rekisteröidyt sivustolle, sinua voidaan pyytää antamaan nimesi ja sähköpostiosoitteesi. Voit kuitenkin halutessasi vierailla sivustolla rekisteröitymättä. Sähköpostiosoitteesi varmistetaan aidoksi ainutkertaisen linkin sisältävän sähköpostiviestin avulla. Kun linkkiä klikataan, tiedämme sinun hallinnoivan antamaasi sähköpostiosoitetta.
+      Kun rekisteröidyt sivustolle, sinua voidaan pyytää antamaan nimesi ja sähköpostiosoitteesi. Voit kuitenkin halutessasi vierailla sivustolla rekisteröitymättä. Sähköpostiosoitteesi varmistetaan ainutkertaisen linkin sisältävän sähköpostiviestin avulla. Kun linkkiä klikataan, tiedämme sinun hallinnoivan antamaasi sähköpostiosoitetta.
 
-      Kun olet rekisteröitynyt ja kirjoitat, tallennamme IP-osoitteen josta viesti lähtee. Voimme myös ylläpitää palvelinlokia, joka sisältää jokaista palvelimellemme lähetettyä pyyntöä vastaavan IP-osoitteen.
+      Kun olet rekisteröitynyt ja kirjoitat, tallennamme IP-osoitteen, josta viesti lähtee. Voimme myös ylläpitää palvelinlokia, joka sisältää jokaista palvelimellemme lähetettyä pyyntöä vastaavan IP-osoitteen.
 
       <a name="use"></a>
 
       ## [Mihin käytämme sinusta kerättyä tietoa?](#use)
 
-      Mitä tahansa sinusta kerättyä tietoa voidaan käyttää jollain näistä tavoista:
+      Mitä tahansa sinusta kerättyä tietoa voidaan käyttää jollakin näistä tavoista:
 
       * Tarjotaksemme yksilöllisen kokemuksen &mdash; tietojen avulla vastaamme sinun henkilökohtaisiin tarpeisiisi.
       * Parantaaksemme sivustoa &mdash; pyrimme jatkuvasti parantamaan sivuston toimintaa kerätyn tiedon ja käyttäjäpalautteen perusteella.
       * Parantaaksemme asiakaspalvelua &mdash; tiedot auttavat tarjoamaan tehokkaampaa asiakaspalvelua ja teknistä tukea.
-      * Lähettääksemme ajoittain sähköpostiviestejä &mdash; antamaasi sähköpostiosoitteeseen voidaan lähettää tietoa, valitsemiasi ilmoituksia tapahtumista eri ketjuissa tai käyttäjänimeesi liittyen ja/tai vastineita tiedusteluihisi, pyyntöihisi tai kysymyksiisi.
+      * Lähettääksemme ajoittain sähköpostiviestejä &mdash; antamaasi sähköpostiosoitteeseen voidaan lähettää tietoa, valitsemiasi ilmoituksia tapahtumista eri ketjuissa tai käyttäjänimeesi liittyen tai vastineita tiedusteluihisi, pyyntöihisi tai kysymyksiisi.
 
       <a name="protect"></a>
 
@@ -3312,7 +3312,7 @@ fi:
 
       <a name="data-retention"></a>
 
-      ## [Miten dataa säilötään?](#data-retention)
+      ## [Miten tietoja säilötään?](#data-retention)
 
       Pyrimme parhaamme mukaan:
 
@@ -3323,9 +3323,9 @@ fi:
 
       ## [Käytämmekö evästeitä?](#cookies)
 
-      Kyllä. Evästeet ovat pieniä tiedostoja, jotka sivusto tai sen palveluntarjoaja siirtää tietokoneesi kiintolevylle verkkoselaimesi kautta (jos sallit sen). Nämä evästeet mahdollistavat selaimesi tunnistamisen ja jos olet rekisteröitynyt käyttäjä, sen yhdistämisen käyttäjätunnukseesi.
+      Kyllä. Evästeet ovat pieniä tiedostoja, jotka sivusto tai sen palveluntarjoaja siirtää tietokoneesi kiintolevylle verkkoselaimesi kautta (jos sallit sen). Nämä evästeet mahdollistavat selaimesi tunnistamisen, ja jos olet rekisteröitynyt käyttäjä, sen yhdistämisen käyttäjätunnukseesi.
 
-      Evästeiden avulla tunnistamme ja tallennamme asetuksia tulevia vierailuja varten ja keräämme yleisluontoista dataa sivuston liikennemääristä ja sivustolla liikkumisesta, jotta voimme tarjota tulevaisuudessa paremman käyttökokemuksen ja hyödyllisiä toimintoja. Voimme tehdä yhteistyötä kolmansien osapuolien kanssa ymmärtääksemme paremmin sivustolla vierailevia. Näillä palveluntarjoajilla ei ole lupaa käyttää keräämäämme tietoa muuhun kuin palvelumme kehittämiseen.
+      Evästeiden avulla tunnistamme ja tallennamme asetuksia tulevia vierailuja varten ja keräämme yleisluontoista tietoa sivuston liikennemääristä ja sivustolla liikkumisesta, jotta voimme tarjota tulevaisuudessa paremman käyttökokemuksen ja hyödyllisiä toimintoja. Voimme tehdä yhteistyötä kolmansien osapuolien kanssa ymmärtääksemme paremmin sivustolla vierailevia. Näillä palveluntarjoajilla ei ole lupaa käyttää keräämäämme tietoa muuhun kuin palvelumme kehittämiseen.
 
       <a name="disclose"></a>
 
@@ -3337,13 +3337,13 @@ fi:
 
       ## [Linkit kolmansien tahojen sivustoille](#third-party)
 
-      Joissain tapauksissa, harkintamme mukaan, voimme sallia tai tarjota kolmannen osapuolen tuotteita tai palveluita sivustollamme. Näillä kolmannen osapuolen sivustoilla on erilliset itsenäiset tietosuojaselosteensa. Emme ole edesvastuussa sisällöstä tai toiminnasta näillä linkitetyillä sivustoilla. Joka tapauksessa, pyrimme vaalimaan sivustomme kunniallisuutta ja otamme ilolla vastaan kaikenlaisen palautteen näitä sivustoja koskien.
+      Joissain tapauksissa, harkintamme mukaan, voimme sallia tai tarjota kolmannen osapuolen tuotteita tai palveluita sivustollamme. Näillä kolmannen osapuolen sivustoilla on erilliset itsenäiset tietosuojaselosteensa. Emme ole vastuussa sisällöstä tai toiminnasta näillä linkitetyillä sivustoilla. Joka tapauksessa pyrimme vaalimaan sivustomme kunniallisuutta ja otamme ilolla vastaan kaikenlaisen palautteen näitä sivustoja koskien.
 
       <a name="coppa"></a>
 
       ## [Lapsen yksilönsuoja internetissä -lain noudattaminen](#coppa)
 
-      Sivustomme, tuottteemme ja palvelumme on suunnattu 13-vuotiaille ja sitä vanhemmille. Jos tämä palvelin on Yhdysvalloissa ja olet alle 13-vuotias, COPPA-lain ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nojalla älä käytä tätä sivustoa.
+      Sivustomme, tuotteemme ja palvelumme on suunnattu 13-vuotiaille ja sitä vanhemmille. Jos tämä palvelin on Yhdysvalloissa ja olet alle 13-vuotias, COPPA-lain ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nojalla älä käytä tätä sivustoa.
 
       <a name="online"></a>
 
@@ -3367,7 +3367,7 @@ fi:
   badges:
     mass_award:
       errors:
-        invalid_csv: Rivillä %{line_number} törmättiin virheeseen. Varmistu, että CSV:ssä on yksi sähköpostiosoite riviä kohden.
+        invalid_csv: Rivillä %{line_number} havaittiin virhe. Varmista, että CSV:ssä on yksi sähköpostiosoite riviä kohden.
     editor:
       name: Muokkaaja
       description: Ensimmäinen viestin muokkaus
@@ -3377,22 +3377,22 @@ fi:
       name: Wiki-muokkaaja
       description: Ensimmäinen wiki-muokkaus
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kertaa muokkaat jotakin wiki-viestiä.
+        Tämä kunniamerkki myönnetään, kun ensi kertaa muokkaat jotakin wiki-viestiä.
     basic_user:
       name: Haastaja
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Myönnetty</a> kaikki palstan välttämättömimmät toiminnot
       long_description: |
-        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 1. Kiitos siitä, että olet päättänyt antaa palstalle mahdollisuuden ja selvittänyt mistä yhteisössä on kyse lukemalla muutamaa ketjua. Uuden käyttäjän rajoituksia on nyt poistettu; sait käyttöösi välttämättömimmät palstan toiminnot kuten yksityisviestit, liputtamisen, wiki-viestien muokkaamisen ja oikeuden laittaa viestiin useampia kuvia ja linkkejä.
+        Tämä kunniamerkki myönnetään, kun nouset luottamustasolle 1. Kiitos siitä, että olet päättänyt antaa palstalle mahdollisuuden ja selvittänyt mistä yhteisössä on kyse lukemalla muutamaa ketjua. Uuden käyttäjän rajoituksia on nyt poistettu; sait käyttöösi välttämättömimmät palstan toiminnot, kuten yksityisviestit, merkinnät, wiki-viestien muokkaamisen ja oikeuden lisätä viestiin useampia kuvia ja linkkejä.
     member:
       name: Konkari
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Myönnetty</a> kutsut, ryhmäviestit ja lisää tykkäyksiä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 2. Kiitos siitä, että olet ollut keskuudessamme viikkojen ajan ja tullut osaksi yhteisöä. Voit nyt lähettää kutsuja käyttäjäsivultasi ja ketjuista, aloittaa yksityisiä ryhmäkeskusteluja ja käytössäsi on enemmän tykkäyksiä päivää kohden.
+        Tämä kunniamerkki myönnetään, kun nouset luottamustasolle 2. Kiitos siitä, että olet ollut keskuudessamme viikkojen ajan ja tullut osaksi yhteisöä. Voit nyt lähettää kutsuja käyttäjäsivultasi ja ketjuista, aloittaa yksityisiä ryhmäkeskusteluja ja käytössäsi on enemmän tykkäyksiä päivää kohden.
     regular:
       name: Mestari
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Myönnetty</a> ketjujen siirto toiselle alueelle ja uudelleen nimeäminen, hakukoneiden seuraamat linkit, wiki-viestit ja lisää tykkäyksiä
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Myönnetty</a> ketjujen siirto toiselle alueelle ja uudelleennimeäminen, hakukoneiden seuraamat linkit, wiki-viestit ja lisää tykkäyksiä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 3. Kiitos kun olet ollut tärkeä osa yhteisöä kuukausien ajan. Olet yksi innokkaimmista lukijoista ja luotettava sisällön tuottaja, ja olet tekemässä yhteisöstä niin hienoa kuin se on. Voit nyt siirtää alueelta toiselle ja uudelleennimetä ketjuja, roskapostiliputuksesi ovat tehokkaampia, pääset lounge-alueelle ja käytössäsi on selvästi enemmän tykkäyksiä päivää kohden.
+        Tämä kunniamerkki myönnetään, kun nouset luottamustasolle 3. Kiitos kun olet ollut tärkeä osa yhteisöä kuukausien ajan. Olet yksi innokkaimmista lukijoista ja luotettava sisällön tuottaja, ja olet tekemässä yhteisöstä niin hienoa kuin se on. Voit nyt siirtää ketjuja alueelta toiselle ja uudelleennimetä ketjuja, roskapostimerkintäsi ovat tehokkaampia, pääset lounge-alueelle ja käytössäsi on selvästi enemmän tykkäyksiä päivää kohden.
     leader:
       name: Johtaja
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Myönnetty</a> minkä tahansa viestin muokkaaminen, kiinnittäminen, sulkeminen, arkistoiminen, pilkkominen ja yhdistäminen ja lisää tykkäyksiä

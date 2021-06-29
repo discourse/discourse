@@ -266,10 +266,13 @@ es:
       contact_info: "En caso de un problema crítico o urgente que esté afectando este sitio, contáctanos a través de %{contact_info}."
     bookmarked:
       title: "Marcador"
+      edit_bookmark: "Editar marcador"
       clear_bookmarks: "Quitar marcadores"
       help:
         bookmark: "Haz clic para añadir a marcadores la primera publicación de este tema"
+        edit_bookmark: "Haga clic para editar el marcador sobre este tema"
         unbookmark: "Haz clic para eliminar todos los marcadores de este tema"
+        unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema."
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       not_bookmarked: "añadir esta publicación a marcadores"
@@ -539,9 +542,12 @@ es:
       tomorrow: "Mañana"
       post_local_date: "Fecha en la publicación"
       later_this_week: "Más tarde esta semana"
+      this_weekend: "Este fin de semana"
       start_of_next_business_week: "Lunes"
       start_of_next_business_week_alt: "El próximo lunes"
+      two_weeks: "Dos semanas"
       next_month: "El próximo mes"
+      six_months: "Seis meses"
       custom: "Fecha y hora personalizadas"
       relative: "Tiempo relativo"
       none: "No se necesita"
@@ -599,7 +605,10 @@ es:
       member_added: "Añadido"
       member_requested: "Solicitado el"
       add_members:
+        title: "Añadir usuarios a %{group_name}"
+        description: "Introduce la lista de usuarios a los que quieres invitar al grupo o pega una lista separada por comas:"
         notify_users: "Notificar usuarios"
+        set_owner: "Establecer usuarios como propietarios de este grupo"
       requests:
         title: "Solicitudes"
         reason: "Motivo"
@@ -613,6 +622,8 @@ es:
         title: "Gestionar"
         name: "Nombre"
         full_name: "Nombre completo"
+        add_members: "Añadir usuarios"
+        invite_members: "Invitar"
         delete_member_confirm: "¿Eliminar a «%{username}» del grupo «%{group}»?"
         profile:
           title: Perfil
@@ -627,12 +638,20 @@ es:
           enable_imap: "Activar INAP"
           test_settings: "Probar ajustes"
           save_settings: "Guardar ajustes"
+          last_updated: "Última actualización:"
+          last_updated_by: "por"
           settings_required: "Todos los ajustes son obligatorios. Completa todos los campos antes de validar."
           smtp_settings_valid: "Ajustes de SMTP válidos."
           smtp_title: "SMTP"
+          smtp_instructions: "Cuando activas SMTP para el grupo, todos los correos salientes enviados desde la bandeja de entrada del grupo se enviarán mediante la configuración SMTP especificada aquí en lugar del servidor de correo configurado para otros correos enviados por su foro."
           imap_title: "IMAP"
           imap_additional_settings: "Ajustes adicionales"
+          imap_instructions: 'Cuando activas IMAP para el grupo, los correos electrónicos se sincronizan entre la bandeja de entrada del grupo y el servidor IMAP y el buzón proporcionados. El SMTP debe estar habilitado con credenciales válidas y probadas antes de activar IMAP. El nombre de usuario y la contraseña de correo electrónico utilizados para SMTP se utilizarán para IMAP. Para más información, consulta <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anuncio de características en Discourse Meta</a>.'
+          imap_alpha_warning: "Advertencia: Esta es una característica en fase alfa. Solo Gmail es oficialmente compatible. ¡Úsala bajo tu propio riesgo!"
           imap_settings_valid: "Ajustes de IMAP válidos."
+          smtp_disable_confirm: "Si desactivas SMTP, todos los ajustes SMTP e IMAP se restablecerán y la funcionalidad asociada se desactivará. ¿Seguro que quieres continuar?"
+          imap_disable_confirm: "Si desactivas IMAP, todos los ajustes IMAP se restablecerán y la funcionalidad asociada se desactivará. ¿Seguro que quieres continuar?"
+          imap_mailbox_not_selected: "¡Debes seleccionar un buzón para esta configuración IMAP o no se sincronizarán los buzones de correo!"
           prefill:
             title: "Rellenar con los ajustes de:"
             gmail: "GMail"
@@ -649,6 +668,7 @@ es:
           settings:
             title: "Ajustes"
             allow_unknown_sender_topic_replies: "Permitir respuestas a temas de remitentes desconocidos."
+            allow_unknown_sender_topic_replies_hint: "Permite a remitentes desconocidos responder a temas de grupo. Si esto no está activado, las respuestas de direcciones de correo electrónico no invitadas todavía al tema crearán un nuevo tema."
           mailboxes:
             synchronized: "Bandeja de correo sincronizada"
             none_found: "No se han encontrado bandejas de correo para esta cuenta de correo electrónico."
@@ -1084,6 +1104,7 @@ es:
         failed_to_move: "No se han podido mover los mensajes seleccionados (podrías estar teniendo problemas de conexión)"
         select_all: "Seleccionar todo"
         tags: "Etiquetas"
+        warnings: "Advertencias oficiales"
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -2054,6 +2075,7 @@ es:
       hint: "(también puedes arrastrar y soltar al editor para adjuntar)"
       hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
+      processing: "Procesando carga"
       select_file: "Seleccionar archivo"
       default_image_alt_text: imagen
       supported_formats: "formatos aceptados"
@@ -2160,10 +2182,19 @@ es:
         delete: "Eliminar temas"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
+        dismiss_read_with_selected:
+          one: "Descartar %{count} sin leer"
+          other: "Descartar %{count} sin leer"
         dismiss_button: "Descartar..."
+        dismiss_button_with_selected:
+          one: "Descartar (%{count})…"
+          other: "Descartar (%{count})…"
         dismiss_tooltip: "Descartar solamente las nuevas publicaciones o dejar de seguir los temas"
         also_dismiss_topics: "Dejar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
         dismiss_new: "Ignorar nuevos"
+        dismiss_new_with_selected:
+          one: "Descartar nuevo (%{count})"
+          other: "Descartar nuevos (%{count})"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
         change_category: "Cambiar categoría"
@@ -2277,10 +2308,12 @@ es:
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en %{catLink} o %{latestLink}."
       read_more: "¿Quieres leer más? %{catLink} o %{latestLink}."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
+      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># no leído</a> } other { <a href='{basePath}/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Ver todas las categorías
       browse_all_tags: Ver todas las etiquetas
       view_latest_topics: ver los temas recientes
+      suggest_create_topic: '¿Listo para <a href>iniciar una nueva conversación?</a>'
       jump_reply_up: saltar a la primera respuesta
       jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido eliminado"
@@ -2402,12 +2435,15 @@ es:
         reasons:
           mailing_list_mode: "El modo lista de correo se encuentra activado, por lo que se te notificarán las respuestas a este tema por correo electrónico."
           "3_10": "Recibirás notificaciones porque estás vigilando una etiqueta de este tema."
+          "3_10_stale": "Recibirás notificaciones porque vigilaste una etiqueta de este tema en el pasado."
           "3_6": "Recibirás notificaciones porque estás vigilando esta categoría."
+          "3_6_stale": "Recibirás notificaciones porque vigilaste esta categoría en el pasado."
           "3_5": "Recibirás notificaciones porque has empezado a vigilar este tema automáticamente."
           "3_2": "Recibirás notificaciones porque estás vigilando este tema."
           "3_1": "Recibirás notificaciones porque creaste este tema."
           "3": "Recibirás notificaciones porque estás vigilando este tema."
           "2_8": "Verás el número de respuestas nuevas porque estás siguiendo esta categoría."
+          "2_8_stale": "Verás el número de respuestas nuevas porque seguiste esta categoría en el pasado."
           "2_4": "Verás el número de respuestas nuevas porque has publicado una respuesta en este tema."
           "2_2": "Verás el número de respuestas nuevas porque estás siguiendo este tema."
           "2": 'Verás un contador con el número de nuevas respuestas porque has <a href="%{basePath}/u/%{username}/preferences/notifications">leído este tema</a>.'
@@ -3247,6 +3283,7 @@ es:
         show_incoming_updated_topics: "%{shortcut} Mostrar temas actualizados"
         search: "%{shortcut} Buscar"
         help: "%{shortcut} Abrir guía de atajos de teclado"
+        dismiss_new: "%{shortcut} Descartar nuevas"
         dismiss_topics: "%{shortcut} Descartar temas"
         log_out: "%{shortcut} Cerrar sesión"
       composing:
@@ -3571,6 +3608,7 @@ es:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de búsqueda</a>'
             disabled: 'El informe de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recopilar datos.'
+          average_chart_label: Promedio
           filters:
             file_extension:
               label: Extensión del archivo
@@ -3695,6 +3733,8 @@ es:
               write: Crear un nuevo tema o publicar en uno existente.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
               wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
+            posts:
+              edit: Edita cualquier publicación o una específica.
             users:
               bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
               sync_sso: Sincroniza un usuario usando DiscourseConnect.
@@ -4079,6 +4119,7 @@ es:
           yaml:
             text: "YAML"
             title: "Definir ajustes al tema en formato YAML"
+          scss_color_variables_warning: 'El uso de las variables de color SCSS de núcleo en los temas está obsoleto. Utiliza propiedades CSS personalizadas en su lugar. Consulta <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">esta guía</a> para más detalles.'
           scss_warning_inline: "El uso de variables de color SCSS del sistema en los temas está obsoleto."
         colors:
           select_base:
@@ -4406,6 +4447,7 @@ es:
         clear_all: Limpiar todo
         clear_all_confirm: "¿Quitar todas las palabras vigiladas para la acción %{action}?"
         invalid_regex: 'La palabra vigilada «%{word}» no es una expresión regular válida.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Las palabras vigiladas son expresiones regulares</a> y no incluyen automáticamente los límites de las palabras. Si quieres que la expresión regular coincida con palabras enteras, incluye <code>\b</code> al principio y al final de tu expresión regular.'
         actions:
           block: "Bloquear"
           censor: "Censurar"
@@ -4440,6 +4482,7 @@ es:
           upload_successful: "Subida completada. Las palabras se han añadido."
         test:
           button_label: "Prueba"
+          modal_title: "%{action}: Prueba de palabras vigiladas"
           description: "Escribe el texto más abajo para buscar coincidencias con las palabras vigiladas"
           found_matches: "Coincidencias encontradas:"
           no_matches: "No se encontraron coincidencias"
@@ -4565,6 +4608,8 @@ es:
         flags_given_count: Denuncias enviadas
         flags_received_count: Denuncias recibidas
         warnings_received_count: Advertencias recibidas
+        warnings_list_warning: |
+          Como moderador, es posible que no puedas ver todos estos temas. Si es necesario, pide a un administrador o al moderador emisor que dé acceso al mensaje a <b>@moderadores</b>.
         flags_given_received_count: "Denuncias enviadas / recibidas"
         approve: "Aprobar"
         approved_by: "aprobado por"
@@ -4732,6 +4777,7 @@ es:
           text: "Campo de texto"
           confirm: "Confirmación"
           dropdown: "Desplegable"
+          multiselect: "Selección múltiple"
       site_text:
         description: "Puedes personalizar cualquier texto de tu foro. Empieza buscando:"
         search: "Busca el texto que te gustaría editar"

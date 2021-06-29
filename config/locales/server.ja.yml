@@ -947,267 +947,265 @@ ja:
     email_in_min_trust: "メールでのトピック作成を許可する最低信頼レベル"
     email_prefix: "メールの件名に使用される [label]。空白の場合、'title' がデフォルトで使用されます。"
     email_site_title: "サイトからのメールの送信者として使用されるサイトのタイトル。 空白の場合、'title' がデフォルトで使用されます。'title' にメールの送信者として使用できない文字列が含まれている場合、この設定を使用します。"
-    minimum_topics_similar: "類似トピック表示のために存在しなければならないトピックの数"
-    relative_date_duration: "ポスト投稿後、ポスト投稿日が相対表示 (例: 7d)から絶対表示(例: Feb 20)に変わるまでの日数"
-    delete_user_max_post_age: "最初のポストが(x)日よりも古いユーザは削除しない"
-    delete_all_posts_max: "すべてのポストを削除ボタンで一度に削除可能な最大ポスト数。ユーザがここで指定した以上のポストを投稿していた場合は、一度に全ポストを削除することができません。またユーザも削除されません。"
-    email_editable: "登録後、ユーザによるメールアドレスの変更を許可する。"
-    allow_uploaded_avatars: "プロフィール画像のアップロードを許可"
-    default_avatars: "新規ユーザが変更するまで使用されるデフォルトのプロフィール画像URL"
-    automatically_download_gravatars: "アカウントの生成時、メールアドレスの変更時にGravatarをダウンロード"
-    detect_custom_avatars: "ユーザがプロフィール画像をアップロードしたか確認する"
-    max_daily_gravatar_crawls: "Discourseがプロフィール画像の確認をgravastarに行う回数の上限"
-    enable_user_directory: "ユーザーディレクトリの閲覧を提供"
-    allow_anonymous_posting: "全てのユーザーに匿名モードを許可"
-    anonymous_posting_min_trust_level: "匿名の投稿を行うための最小のトラストレベル"
-    anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に匿名ユーザーを作成しなおします。　例 : 600を設定すると匿名ユーザへの変更と最後の投稿から600分経過していた場合、匿名アカウントが作成されます"
-    allow_profile_backgrounds: "プロフィール背景のアップロードを許可"
-    enable_mobile_theme: "モバイル端末にモバイル向けテーマ (通常サイト用テーマにスイッチ可能) を利用する。レスポンシブなスタイルシートを使用する場合はこの設定を無効にしてください。"
-    dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
-    suppress_uncategorized_badge: "トピック一覧でカテゴライズされていないトピックのバッジは表示しない"
-    disable_system_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
-    full_name_required: "ユーザープロフィールのフルネームを必須にする"
-    enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームは非表示になります"
-    display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"
-    show_time_gap_days: "２つの投稿の作成日が離れていた場合、time gapをトピックに表示する。"
-    short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
-    warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
-    autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
-    embed_truncate: "embedされた投稿をtruncateする"
-    embed_post_limit: "表示可能な投稿の最大数を埋め込む"
-    show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
-    delete_drafts_older_than_n_days: "(n) 日間経過したドラフトを削除"
-    slug_generation_method: "slugを生成するメソッドを選択。 'encode'はパーセントエンコードされた文字列を生成します。 'none'は、slugを無効にします"
+    minimum_topics_similar: "新規トピックを作成する際に類似トピックを表示するため必要な既存のトピックの数です。"
+    relative_date_duration: "投稿後、投稿日が相対表示 (例: 7 日) から絶対表示 (2 月 20 日) に変わるまでの日数。"
+    delete_user_max_post_age: "最初の投稿が (x) 日間以上前であるユーザーは削除しない"
+    delete_all_posts_max: "[すべての投稿を削除] ボタンで一度に削除可能な最大投稿数。ユーザーがここで指定した以上の投稿を作成していた場合は、全投稿をまとめて削除することができません。またユーザーも削除されません。"
+    email_editable: "登録後、ユーザーにメールアドレスの変更を許可します。"
+    allow_uploaded_avatars: "ユーザーにカスタムプロフィール画像のアップロードを許可します。"
+    default_avatars: "新規ユーザーが変更するまで使用されるデフォルトのアバターの URL です。"
+    automatically_download_gravatars: "アカウントの作成時またはメールアドレスの変更時にユーザーの Gravatar をダウンロードします。"
+    detect_custom_avatars: "ユーザーがカスタムプロフィール画像をアップロードしたかを確認するかどうか。"
+    max_daily_gravatar_crawls: "Discourse が 1 日に Gravatar でカスタムアバターの有無をチェックする回数の上限"
+    enable_user_directory: "閲覧用のユーザーディレクトリを提供"
+    allow_anonymous_posting: "ユーザーに匿名モードへの切り替えを許可"
+    anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
+    anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
+    allow_profile_backgrounds: "ユーザーにプロフィール背景のアップロードを許可します。"
+    enable_mobile_theme: "モバイルデバイスにモバイル対応のテーマを使用します (デスクトップサイトに切り替え可能)。完全にレスポンシブなカスタムスタイルシートを使用する場合はこの設定を無効にしてください。"
+    dominating_topic_minimum_percent: "ユーザーがトピックを過度に占領していることを通知する、トピック内のユーザーの投稿率。"
+    suppress_uncategorized_badge: "トピックリストに未分類のトピックのバッジを表示しない"
+    disable_system_edit_notifications: "download_remote_images_to_local' が有効である場合、システムユーザーによる編集の通知を無効にします。"
+    full_name_required: "ユーザープロフィールのフルネームを必須にします。"
+    enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームはすべての場所で非表示になります。"
+    display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
+    show_time_gap_days: "２つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
+    short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
+    warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
+    autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
+    embed_truncate: "埋め込まれた投稿切り捨てます。"
+    embed_post_limit: "埋め込める投稿の最大数。"
+    show_create_topics_notice: "サイトの公開トピック数が 5 件未満である場合、管理者にトピックを作成するかどうかを尋ねる通知を表示します。"
+    delete_drafts_older_than_n_days: "(n) 日間経過した下書きを削除します。"
+    slug_generation_method: "スラッグ生成方法を選択します。'encode' はパーセントエンコード文字列を生成します。'none'は、スラッグを無効にします。"
     enable_emoji: "絵文字を有効にする"
-    emoji_set: "How would you like your emoji?"
-    approve_unless_trust_level: "トラストレベル以下のユーザーの投稿には承認が必要"
-    skip_auto_delete_reply_likes: "古い返信を自動的に削除する場合は、この数以上のいいねの投稿の削除をスキップしてください。"
-    default_email_previous_replies: "デフォルトでメールの文章に以前の返信を含める"
-    default_other_skip_new_user_tips: "新規ユーザーのヒントとバッジをスキップする."
+    emoji_set: "絵文字はどうですか？"
+    approve_unless_trust_level: "この信頼レベル以下のユーザーの投稿には承認が必要"
+    skip_auto_delete_reply_likes: "古い返信を自動的に削除する場合は、この数以上の「いいね！」がある投稿の削除をスキップします。"
+    default_email_previous_replies: "デフォルトでメールに以前の返信を含めます。"
+    default_other_skip_new_user_tips: "新規ユーザーオンボーディングのヒントとバッジをスキップします。"
     tagging_enabled: "トピックでタグを有効にしますか？"
-    tag_style: "カテゴリバッジのスタイル"
+    tag_style: "タグバッジの視覚的スタイル"
     errors:
-      invalid_email: "不正なメールアドレスです"
-      invalid_username: "そのユーザ名のユーザは存在しません"
-      invalid_integer_min_max: "値は%{min}と%{max}の間である必要があります"
-      invalid_integer_min: "値は%{min}以上必要です"
-      invalid_integer_max: "値は%{max}以上にすることはできません"
-      invalid_integer: "値は整数で入力してください"
-      regex_mismatch: "値は、指定されたフォーマットと一致しませんでした"
-      must_include_latest: "トップメニューは'latest'タブを含む必要があります"
-      invalid_string: "不正な値です"
-      invalid_string_min_max: "文字数は%{min}と%{max}の間である必要があります"
-      invalid_string_min: "少なくとも%{min}文字は必要です"
-      invalid_string_max: "%{max}文字以下である必要があります"
-      invalid_reply_by_email_address: "値は'%{reply_key}'を含む必要があり、通知メールとは異なる必要があります"
+      invalid_email: "無効なメールアドレスです。"
+      invalid_username: "そのユーザー名のユーザは存在しません。"
+      invalid_integer_min_max: "値は %{min} から %{max} の間である必要があります。"
+      invalid_integer_min: "値は %{min} 以上である必要があります。"
+      invalid_integer_max: "値は %{max} を超えることはできません。"
+      invalid_integer: "値は整数である必要があります。"
+      regex_mismatch: "値は必要な形式に一致していません。"
+      must_include_latest: "トップメニューに [最新] タブを含む必要があります。"
+      invalid_string: "無効な値です。"
+      invalid_string_min_max: "文字数は %{min} から %{max} の間である必要があります。"
+      invalid_string_min: "少なくとも %{min} 文字である必要があります。"
+      invalid_string_max: "%{max} 文字以下である必要があります。"
+      invalid_reply_by_email_address: "値に '%{reply_key}' を含める必要があり、通知メールとは異なる必要があります。"
       min_username_length_range: "最小値を最大値より上にすることはできません。"
   search:
-    within_post: "#%{post_number} by %{username}"
+    within_post: "%{username} の #%{post_number}"
     types:
       category: "カテゴリ"
       topic: "結果"
-      user: "ユーザ"
+      user: "ユーザー"
   discourse_connect:
-    timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度トップページからログインしてください。"
-  original_poster: "Original Poster"
-  most_posts: "Most Posts"
-  most_recent_poster: "Most Recent Poster"
-  frequent_poster: "Frequent Poster"
+    timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度ログインしてください。"
+  original_poster: "元の投稿者"
+  most_posts: "最も多い投稿"
+  most_recent_poster: "最も最近の投稿者"
+  frequent_poster: "頻繁な投稿者"
   redirected_to_top_reasons:
-    new_user: "コミュニティへようこそ！　これらが最も人気な最近のトピックです"
-    not_seen_in_a_month: "お帰りなさい！　最近見かけませんでしたね。　これらがあなたが離れてから最も人気のトピックです"
+    new_user: "コミュニティへようこそ！最も人気のある最近のトピックはこちらです。"
+    not_seen_in_a_month: "お帰りなさい！最近見かけませんでしたね。あなたがいない間に最も人気の高かったトピックはこちらです。"
   move_posts:
     existing_topic_moderator_post:
-      other: "%{count}つのポストが存在するトピックに統合されました：%{topic_link}"
+      other: "%{count} 件の投稿は次の既存のトピックにマージされました: %{topic_link}"
   publish_page:
     slug_errors:
-      blank: "を入力してください"
-      invalid: "は不正な文字を含んでいます"
+      blank: "は空にできません"
+      invalid: "に無効な文字が含まれています"
   topic_statuses:
     autoclosed_message_max_posts:
-      other: "このメッセージは%{count}つの返信に達した時に自動的に閉じます。"
+      other: "このメッセージは返信が %{count} 件に達した時に自動的にクローズされました。"
     autoclosed_topic_max_posts:
-      other: "このトピックは%{count}つの返信に達した時に自動的に閉じます。"
+      other: "このトピックは返信が %{count} 件に達した時に自動的にクローズされました。"
     autoclosed_enabled_days:
-      other: "このトピックは%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: "このトピックは %{count} 日が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_hours:
-      other: "このトピックは%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: "このトピックは %{count} 時間が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_minutes:
-      other: "このトピックは%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: "このトピックは %{count} 分が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_lastpost_days:
-      other: "このトピックは最後の返信から%{count}日が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: "このトピックは最後の返信から %{count} 日が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_lastpost_hours:
-      other: "このトピックは最後の返信から%{count}時間が経過したので自動的にクローズされました。新たに返信することはできません。"
+      other: "このトピックは最後の返信から %{count} 時間が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_lastpost_minutes:
-      other: "このトピックは最後の返信から%{count}分が経過したので自動的にクローズされました。新たに返信することはできません。"
-    autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
-    autoclosed_disabled_lastpost: "このトピックは再オープンされました。新しい回答が投稿できます"
+      other: "このトピックは最後の返信から %{count} 分が経過したので自動的にクローズされました。新たに返信することはできません。"
+    autoclosed_disabled: "このトピックはオープンになりました。新しい返信を投稿できます。"
+    autoclosed_disabled_lastpost: "このトピックはオープンになりました。新しい返信を投稿できます。"
   login:
-    security_key_description: "物理的なセキュリティキーを用意している場合は、以下のセキュリティキーで認証ボタンを押します。"
+    security_key_description: "物理的なセキュリティキーの準備ができたら、[セキュリティキーで認証] ボタンを押します。"
     security_key_alternative: "別の方法を試してください"
     security_key_authenticate: "セキュリティキーで認証"
-    security_key_not_allowed_error: "セキュリティキー認証プロセスがタイムアウトしたか、キャンセルされました。"
+    security_key_not_allowed_error: "セキュリティキーの認証プロセスがタイムアウトしたかキャンセルされました。"
     security_key_no_matching_credential_error: "提供されたセキュリティキーに一致する資格情報が見つかりませんでした。"
-    security_key_support_missing_error: "現在のデバイスまたはブラウザは、セキュリティキーの使用をサポートしていません。別の方法を使用してください。"
-    not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
-    incorrect_username_email_or_password: "ユーザ名、メールアドレス、またはパスワードが違います"
-    incorrect_password: "パスワードが違います"
-    wait_approval: "サインアップありがとうござました。アカウントが承認され次第メールにて通知いたします。"
-    active: "アカウントが利用可能になりました。"
-    not_activated: "まだログインできません。メールを送信済ですので、メールの指示に従ってあなたのアカウントを有効にしてください。"
-    not_allowed_from_ip_address: "そのIPアドレスからは%{username} としてログインできません"
-    admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
+    security_key_support_missing_error: "現在のデバイスまたはブラウザではセキュリティキーの使用がサポートされていません。別の方法を使用してください。"
+    not_approved: "あなたのアカウントはまだ承認されていません。ログインできるようになったら、メールで通知します。"
+    incorrect_username_email_or_password: "ユーザー名、メールアドレス、またはパスワードが誤っています"
+    incorrect_password: "パスワードが誤っています"
+    wait_approval: "ご登録いただきありがとうございます。アカウントが承認され次第メールで通知いたします。"
+    active: "アカウントの確認が完了し、利用可能になりました。"
+    not_activated: "まだログインできません。確認メールを送信しましたので、メールに記載の指示に従ってあなたのアカウントを有効にしてください。"
+    not_allowed_from_ip_address: "その IP アドレスからは %{username} としてログインできません。"
+    admin_not_allowed_from_ip_address: "その IP アドレスからは管理者としてログインできません。"
     suspended: "%{date} までログインできません。"
     suspended_with_reason: "%{date} までアカウントが凍結されました: %{reason}"
     errors: "%{errors}"
     not_available: "それは利用できません。\"%{suggestion}\" はどうですか？"
-    something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
-    omniauth_confirm_button: "続く"
-    new_registrations_disabled: "新規登録は現在行えません。"
-    password_too_long: "パスワードは200文字までです"
-    email_too_long: "メールアドレスが長過ぎます。アドレス部は254文字以内に、ドメイン部は253文字以内にする必要があります"
+    something_already_taken: "エラーが発生しました。ユーザー名またはメールアドレスがすでに登録されている可能性があります。パスワードリセットを行ってください。"
+    omniauth_confirm_button: "続行"
+    new_registrations_disabled: "現在、新しいアカウントの登録を行えません。"
+    password_too_long: "パスワードは 200 文字までです。"
+    email_too_long: "メールアドレスが長すぎます。メールボックス名は 254 文字以内、ドメイン名は 253 文字以内である必要があります。"
     reserved_username: "そのユーザー名は許可されていません"
-    missing_user_field: "全てのユーザーフィールドの入力が終わっていません"
+    missing_user_field: "すべてのユーザーフィールドに入力されていません。"
     auth_complete: "認証が完了しました。"
-    click_to_continue: "クリックして続けてください。"
-    second_factor_title: "2段階認証"
-    second_factor_backup_description: "バックアップコードを入力: "
+    click_to_continue: "ここをクリックして続行します。"
+    second_factor_title: "二要素認証"
+    second_factor_backup_description: "バックアップコードの 1 つを入力してください。"
     second_factor_toggle:
       backup_code: "代わりにバックアップコードを使用する"
   admin:
     email:
-      sent_test: "送信完了!"
+      sent_test: "送信完了！"
   user:
     username:
-      short: "少なくとも%{min}文字は必要です"
-      long: "%{max}文字以下である必要があります"
-      unique: "はユニークである必要があります"
-      blank: "は空であってはなりません"
-      must_begin_with_alphanumeric_or_underscore: "最初は英数字で始まる必要があります"
-      must_end_with_alphanumeric: "最後は英数字で終わる必要があります"
+      short: "は少なくとも %{min} 文字である必要があります"
+      long: "は %{max} 文字以下である必要があります"
+      unique: "は一意である必要があります"
+      blank: "は空にできません"
+      must_begin_with_alphanumeric_or_underscore: "は英数字またはアンダースコアで始まる必要があります"
+      must_end_with_alphanumeric: "は英数字で終わる必要があります"
     email:
-      not_allowed: "はこのメールプロバイダーを許可していません。他のメールアドレスを使用してください。"
+      not_allowed: "はこのメールプロバイダーを許可していません。別のメールアドレスを使用してください。"
       blocked: "は許可されていません。"
       does_not_exist: "該当なし"
     ip_address:
-      blocked: "あなたのIPアドレスからの新規登録は許可されていません"
-      max_new_accounts_per_registration_ip: "あなたのIPアドレスからの新規登録は行えません(登録可能な数を超えています)。スタッフへお問い合わせください。"
+      blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
+      max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
   invite_mailer:
-    subject_template: "%{inviter_name}が%{site_domain_name}の%{topic_title}に招待しました。"
+    subject_template: "%{inviter_name} があなたを %{site_domain_name} の「%{topic_title}」に招待しました"
     text_body_template: |
-      %{inviter_name}があなたを招待しました
-
-      %{topic_title}
-
-      %{topic_excerpt}
+      %{inviter_name} があなたをディスカッションに招待しました
 
       > %{site_title} -- %{site_description}
 
-      もし興味があれば、下のリンクをクリックしてください:
+      にある
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      興味があれば、下のリンクをクリックしてください
 
       %{invite_link}
   custom_invite_mailer:
-    subject_template: "%{inviter_name}が%{site_domain_name}の%{topic_title}にあなたを招待しました"
+    subject_template: "%{inviter_name} があなたを %{site_domain_name} の「%{topic_title}」に招待しました"
     text_body_template: |
-      %{inviter_name}が招待しました
-
-      >**%{topic_title}**
-      >
-      >%{topic_excerpt}
+      %{inviter_name} があなたをディスカッションに招待しました
 
       > %{site_title} -- %{site_description}
 
-      メッセージ
+      にある
 
-      >%{user_custom_message}
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
 
-      もしあなたが興味あれば、下のリンクをチェックしてください:
+      以下のメッセージがあります
+
+      > %{user_custom_message}
+
+      興味があれば、下のリンクをクリックしてください
 
       %{invite_link}
   invite_forum_mailer:
-    subject_template: "%{inviter_name}があなたを%{site_domain_name}に招待しました。"
+    subject_template: "%{inviter_name} があなたを %{site_domain_name} に招待しました"
     text_body_template: |
-      %{inviter_name}があなたを
+      %{inviter_name} があなたを招待しました
 
       >**%{site_title}**
       >
       >%{site_description}
 
-      もし興味があれば、下のリンクをチェックしてください！:
+      興味があれば、下のリンクをクリックしてください
 
       %{invite_link}
   custom_invite_forum_mailer:
-    subject_template: "%{inviter_name}があなたを%{site_domain_name}に招待しました。"
+    subject_template: "%{inviter_name} があなたを %{site_domain_name} に招待しました"
     text_body_template: |
-      %{inviter_name}があなたを
+      %{inviter_name} があなたを招待しました
 
-      >**%{site_title}**
+      > **%{site_title}**
       >
-      >%{site_description}
+      > %{site_description}
 
-      メッセージ
+      以下のメッセージがあります
 
-      >%{user_custom_message}
+      > %{user_custom_message}
 
-      もし興味があれば、下のリンクをチェックしてください:
+      興味があれば、下のリンクをクリックしてください
 
       %{invite_link}
   invite_password_instructions:
-    subject_template: "%{site_name} アカウントのパスワードを設定"
-    text_body_template: |
-      %{site_name}への招待を許可してくださってありがとうございます。 -- ようこそ！
-
-      リンクをクリックしてパスワードを設定してください:
-      %{base_url}/u/password-reset/%{email_token}
-
-      （もし上のリンクが失効していたら、メールアドレスでログインする時に「パスワードを忘れた」を選択してください。）
+    subject_template: "%{site_name} アカウントのパスワード設定"
+    text_body_template: "%{site_name} への招待を承諾いただきありがとうございます。ようこそ！\n\nリンクをクリックしてパスワードを設定してください: \n%{base_url}/u/password-reset/%{email_token}\n\n(リンクの有効期限が切れている場合は、メールアドレスでログインする時に「パスワードを忘れました」を選択してください。)\n"
   flag_reasons:
-    off_topic: "あなたの投稿/トピックは「話題に関係ない」として通報されました"
-    spam: "あなたの投稿は「スパム」として通報されました。営利目的、宣伝目的の投稿を行った可能性があります。"
-    notify_moderators: "あなたの投稿は「モデレータへ通報」として通報されました。モデレータによる判断が必要な内容を含んでいる可能性があります。"
+    off_topic: "あなたの投稿は「話題に関係ない」として通報されました。コミュニティはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
+    spam: "あなたの投稿は「迷惑」として通報されました。コミュニティはあなたの投稿に営利目的、宣伝目的の性質があり、トピックに意図される有用性または関連性がないと判断しました。"
+    notify_moderators: "あなたの投稿は「モデレーターの注意要」として通報されました。コミュニティはあなたの投稿にスタッフメンバーによる手動介入が必要であると判断しました。"
   flags_dispositions:
-    agreed: "伝えてくれてありがとうございます。問題に同意し、調査しています"
-    agreed_and_deleted: "伝えてくれてありがとうございます。問題に同意し、投稿を削除します"
-    disagreed: "伝えてくれてありがとうございます。調査しています"
-    ignored: "伝えてくれてありがとうございます。調査しています"
-    ignored_and_deleted: "伝えてくれてありがとうございます。投稿を削除しました"
+    agreed: "ご連絡いただきありがとうございます。問題があることを認め、現在調査しています。"
+    agreed_and_deleted: "ご連絡いただきありがとうございます。問題があることを認め、投稿を削除しました。"
+    disagreed: "ご連絡いただきありがとうございます。現在調査しています。"
+    ignored: "ご連絡いただきありがとうございます。現在調査しています。"
+    ignored_and_deleted: "ご連絡いただきありがとうございます。投稿を削除しました。"
   system_messages:
     private_topic_title: "トピック #%{id}"
-    contents_hidden: "内容を確認するためにその投稿にアクセスして下さい。"
+    contents_hidden: "コンテンツを見るには投稿にアクセスしてください。"
     post_hidden:
       title: "非表示の投稿"
-      subject_template: "コミュニティーフラッグによって非表示にされた投稿"
+      subject_template: "コミュニティ通報によって非表示にされた投稿"
     post_hidden_again:
       title: "再度非表示"
-      subject_template: "コミュニティーフラッグにより非表示になりました。"
+      subject_template: "コミュニティ通報によって非表示にされた投稿、スタッフ通知済み"
     queued_by_staff:
-      title: "この投稿は承認が必要です"
+      title: "承認待ちの投稿"
     welcome_user:
       title: "ようこそ：ユーザー"
-      subject_template: "%{site_name} へようこそ!"
+      subject_template: "%{site_name} へようこそ！"
       text_body_template: |
-        %{site_name}に参加ありがとうございます！
+        %{site_name} に参加していただきありがとうございます！
 
         %{new_user_tips}
 
-        私たちは [civilized community behavior](%{base_url}/guidelines) に基づいています。
+        コミュニティでは常に礼節ある行動 (%{base_url}/guidelines) を取ってもらえると信じています。
 
-        楽しんで！
+        ではお楽しみください！
     welcome_invite:
-      subject_template: "%{site_name}へようこそ!"
+      subject_template: "%{site_name} へようこそ！"
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
     backup_failed:
-      subject_template: "バックアップ失敗"
+      subject_template: "バックアップに失敗しました"
     restore_succeeded:
-      subject_template: "復元が正常に完了しました"
+      subject_template: "復元は正常に完了しました"
     restore_failed:
       subject_template: "復元に失敗しました"
     bulk_invite_succeeded:
-      subject_template: "ユーザの一括招待に成功しました。"
-      text_body_template: "ユーザの一括招待が処理され、%{sent}通の招待メールを送信しました"
+      subject_template: "ユーザーの一括招待に成功しました"
+      text_body_template: "ユーザーの一括招待ファイルが処理され、%{sent} 件の招待状が送信されました。"
     bulk_invite_failed:
-      subject_template: "ユーザの一括招待中にエラーが発生しました"
+      subject_template: "ユーザーの一括招待中にエラーが発生しました"
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
     email_reject_parsing:
