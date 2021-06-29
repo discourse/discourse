@@ -57,7 +57,11 @@ export default Component.extend({
 
   @action
   onHorizontalScroll(primary, replica) {
-    if (this.lastScrollPosition === primary.scrollLeft) {
+    if (
+      this.isDestroying ||
+      this.isDestroyed ||
+      this.lastScrollPosition === primary.scrollLeft
+    ) {
       return;
     }
 
@@ -65,8 +69,10 @@ export default Component.extend({
 
     if (!this.ticking) {
       window.requestAnimationFrame(() => {
-        replica.scrollLeft = this.lastScrollPosition;
-        this.set("ticking", false);
+        if (!this.isDestroying && !this.isDestroyed) {
+          replica.scrollLeft = this.lastScrollPosition;
+          this.set("ticking", false);
+        }
       });
 
       this.set("ticking", true);
