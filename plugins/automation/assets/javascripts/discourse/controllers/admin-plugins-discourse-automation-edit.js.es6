@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { reads, filterBy } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Ember.Controller.extend({
   error: null,
@@ -15,6 +16,13 @@ export default Ember.Controller.extend({
   scriptFields: filterBy("automationForm.fields", "target", "script"),
 
   triggerFields: filterBy("automationForm.fields", "target", "trigger"),
+
+  @discourseComputed("model.automation.next_pending_automation_at")
+  nextPendingAutomationAtFormatted(date) {
+    if (date) {
+      return moment(date).format("LLLL");
+    }
+  },
 
   @action
   saveAutomation() {

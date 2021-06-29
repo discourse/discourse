@@ -10,6 +10,7 @@ en:
       edit_automation:
         trigger_section:
           forced: This trigger is forced by script.
+          next_pending_automation: "Next automation will trigger at: %{date}"
           title: When/What...
         fields_section:
           title: Script options

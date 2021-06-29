@@ -10,9 +10,18 @@ module DiscourseAutomation
     attributes :fields
     attributes :updated_at
     attributes :last_updated_by
+    attributes :next_pending_automation_at
 
     def last_updated_by
       BasicUserSerializer.new(User.find_by(id: object.last_updated_by_id) || Discourse.system_user, root: false).as_json
+    end
+
+    def include_next_pending_automation_at?
+      object.pending_automations.exists?
+    end
+
+    def next_pending_automation_at
+      object&.pending_automations&.first&.execute_at
     end
 
     def script

@@ -81,6 +81,12 @@
       </div>
 
       {{#if automationForm.trigger}}
+        {{#if model.automation.next_pending_automation_at}}
+          <div class="alert alert-info">
+            {{i18n "discourse_automation.edit_automation.trigger_section.next_pending_automation" date=nextPendingAutomationAtFormatted}}
+          </div>
+        {{/if}}
+
         {{#each triggerFields as |field|}}
           {{automation-field
             automation=automation
