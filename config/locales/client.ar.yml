@@ -909,7 +909,7 @@ ar:
     categories:
       all: "كل الفئات"
       all_subcategories: "الكل"
-      no_subcategory: "لا شيء"
+      no_subcategory: "لا يوجد"
       category: "الفئة"
       category_list: "عرض قائمة الفئات"
       reorder:
@@ -1003,7 +1003,7 @@ ar:
         normal_option: "عادي"
         normal_option_title: "سنُرسل إليك إشعارًا في حال ردَّ هذا المستخدم عليك أو اقتبس كلامك أو أشار إليك."
       notification_schedule:
-        none: "لا شيء"
+        none: "لا يوجد"
         monday: "الاثنين"
         to: "إلى"
       activity_stream: "النشاط"
@@ -1233,7 +1233,7 @@ ar:
           title: "تطبيقات المصادقة المعتمدة على الرموز المميزة"
           add: "إضافة تطبيق مصادقة"
           default_name: "تطبيق المصادقة الخاص بي"
-          name_and_code_required_error: "يجب عليك إدخال اسم والرمز من تطبيق المصادقة."
+          name_and_code_required_error: "يجب عليك إدخال اسم، والرمز من تطبيق المصادقة."
         security_key:
           register: "تسجيل"
           title: "مفاتيح الأمان"
@@ -1486,7 +1486,7 @@ ar:
         bulk_invite:
           none: "لا توجد دعوات لعرضها على هذه الصفحة."
           text: "دعوة جماعية"
-          error: "معذرةً، يجب أن يكون الملف بنسق CSV."
+          error: "عذرًا، يجب أن يكون الملف بتنسيق CSV."
       password:
         title: "كلمة السر"
         too_short: "كلمة مرورك قصيرة جدًا."
@@ -1494,41 +1494,41 @@ ar:
         same_as_username: "كلمة السر تُطابق اسم المستخدم."
         same_as_email: "كلمة السر تُطابق عنوان البريد الإلكتروني."
         ok: "تبدو كلمة مرورك جيدة."
-        instructions: "علي الأقل %{count} حرفا"
+        instructions: "يجب ألا يقل عن %{count} حرف"
         required: "يُرجى إدخال كلمة المرور"
       summary:
         title: "الملخص"
         stats: "الإحصاءات"
         time_read: "وقت القراءة"
-        recent_time_read: "وقت القراءة الحديث"
+        recent_time_read: "وقت آخر قراءة"
         topic_count:
-          zero: "المواضيع المفتوحة"
-          one: "المواضيع المفتوحة"
-          two: "المواضيع المفتوحة"
-          few: "المواضيع المفتوحة"
-          many: "المواضيع المفتوحة"
-          other: "المواضيع المفتوحة"
+          zero: "موضوع تم إنشاؤه"
+          one: "موضوع واحد تم إنشاؤه"
+          two: "موضوعان تم إنشاؤهما"
+          few: "موضوعات تم إنشاؤها"
+          many: "موضوعات تم إنشاؤها"
+          other: "موضوعات تم إنشاؤها"
         post_count:
-          zero: "المشاركات المنشورة"
-          one: "المشاركات المنشورة"
-          two: "المشاركات المنشورة"
-          few: "المشاركات المنشورة"
-          many: "المشاركات المنشورة"
-          other: "المشاركات المنشورة"
+          zero: "منشور تم إنشاؤه"
+          one: "منشور واحد تم إنشاؤه"
+          two: "منشوران تم إنشاؤهما"
+          few: "منشورات تم إنشاؤها"
+          many: "منشورات تم إنشاؤها"
+          other: "منشورات تم إنشاؤها"
         likes_given:
-          zero: "المُهداة"
-          one: "المُهداة"
-          two: "المُهداة"
-          few: "المُهداة"
-          many: "المُهداة"
-          other: "المُهداة"
+          zero: "المعطاة"
+          one: "المعطاة"
+          two: "المعطاة"
+          few: "المعطاة"
+          many: "المعطاة"
+          other: "المعطاة"
         likes_received:
-          zero: "المُستلمة"
-          one: "المُستلمة"
-          two: "المُستلمة"
-          few: "المُستلمة"
-          many: "المُستلمة"
-          other: "المُستلمة"
+          zero: "المتلقاة"
+          one: "المتلقاة"
+          two: "المتلقاة"
+          few: "المتلقاة"
+          many: "المتلقاة"
+          other: "المتلقاة"
         days_visited:
           zero: "أيام الزيارة"
           one: "أيام الزيارة"
@@ -1551,12 +1551,12 @@ ar:
           many: "المشاركات المقروءة"
           other: "المشاركات المقروءة"
         bookmark_count:
-          zero: "العلامات"
-          one: "العلامات"
-          two: "العلامات"
-          few: "العلامات"
-          many: "العلامات"
-          other: "العلامات"
+          zero: "إشارة مرجعية"
+          one: "إشارة مرجعية واحدة"
+          two: "إشارتان مرجعيتان"
+          few: "إشارات مرجعية"
+          many: "إشارات مرجعية"
+          other: "إشارات مرجعية"
         top_replies: "أهم الردود"
         no_replies: "لا توجد ردود بعد."
         more_replies: "المزيد من الردود"
@@ -1568,45 +1568,45 @@ ar:
         more_badges: "المزيد من الشارات"
         top_links: "أهم الروابط"
         no_links: "لا توجد روابط بعد."
-        most_liked_by: "أكثر المعجبين به"
-        most_liked_users: "أكثر من أعجبه"
-        most_replied_to_users: "أكثر من رد عليه"
+        most_liked_by: "الأكثر تسجيلًا للإعجاب"
+        most_liked_users: "الأكثر تلقيًا للإعجاب"
+        most_replied_to_users: "الأكثر تلقيًا للردود"
         no_likes: "لا توجد مرات إعجاب بعد."
         top_categories: "أهم الفئات"
         topics: "الموضوعات"
         replies: "الردود"
       ip_address:
-        title: "عنوان IP الأخير"
+        title: "آخر عنوان IP"
       registration_ip_address:
-        title: "عنوان IP التسجيل"
+        title: "عنوان IP للتسجيل"
       avatar:
         title: "صورة الملف الشخصي"
         header_title: "الملف الشخصي والرسائل والإشارات المرجعية والتفضيلات"
       title:
-        title: "عنوان"
-        none: "(لا شيء)"
+        title: "العنوان"
+        none: "(لا يوجد)"
       primary_group:
-        title: "المجموعة الأساسية"
-        none: "(لا شيء)"
+        title: "المجموعة الرئيسية"
+        none: "(لا يوجد)"
       filters:
         all: "الكل"
       stream:
-        posted_by: "نُشرت بواسطة"
-        sent_by: " أرسلت بواسطة"
+        posted_by: "تم النشر بواسطة"
+        sent_by: "تم الإرسال بواسطة"
         private_message: "رسالة"
         the_topic: "الموضوع"
     loading: "جارٍ التحميل..."
     errors:
-      prev_page: "اثناء محاولة التحميل"
+      prev_page: "في أثناء محاولة التحميل"
       reasons:
         network: "خطأ في الشبكة"
         server: "خطأ في الخادم"
-        forbidden: "الوصول غير مصرح"
+        forbidden: "تم رفض الوصول"
         unknown: "خطأ"
-        not_found: "الصفحة غير متوفرة"
+        not_found: "الصفحة غير موجودة"
       desc:
-        network: "من فضلك تحقق من اتصالك."
-        network_fixed: "أنت الآن متصل بالانترنت"
+        network: "يُرجى التحقُّق من اتصالك."
+        network_fixed: "تمت استعادة الاتصال."
         server: "رمز الخطأ: %{status}"
         forbidden: "غير مسموح لك بعرض هذا."
         not_found: "عذرًا، حاول التطبيق تحميل عنوان URL غير موجود."
@@ -1627,68 +1627,68 @@ ar:
       login_disabled: "يكون تسجيل الدخول معطلًا في حال كان الموقع في وضع القراءة فقط."
       logout_disabled: "يتم تعطيل تسجيل الخروج عندما يكون الموقع في وضع القراءة فقط."
     too_few_topics_and_posts_notice_MF: >-
-      لنبدأ المناقشة <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> هناك {currentTopics, plural, zero {} one {هو <strong>#</strong> الموضوع} two { <strong>#</strong> موضوعا} few { <strong>#</strong> موضوعا} many { <strong>#</strong> موضوعا} other { <strong>#</strong> موضوعا}} و {currentPosts, plural, one {<strong>#</strong> آخر} two {<strong>#</strong> وظيفة} few {<strong>#</strong> وظيفة} many {<strong>#</strong> وظيفة} other {<strong>#</strong> وظيفة}}. يحتاج الزوار إلى المزيد من القراءة والرد عليها - نوصي على الأقل {requiredTopics, plural, one {<strong>#</strong> الموضوع} two {<strong>#</strong> موضوعا} few {<strong>#</strong> موضوعا} many {<strong>#</strong> موضوعا} other {<strong>#</strong> موضوعا}} و {requiredPosts, plural, one {<strong>#</strong> آخر} two {<strong>#</strong> وظيفة} few {<strong>#</strong> وظيفة} many {<strong>#</strong> وظيفة} other {<strong>#</strong> وظيفة}}. فقط الموظفين يمكنهم رؤية هذه الرسالة.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} و{currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} و{currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
     too_few_topics_notice_MF: >-
-      هيًا بنا <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ نقاشًا!</a> هناك حاليًا {currentTopics, plural, zero {} one {موضوع <strong>واحد</strong>} two {موضوعين <strong>اثنين</strong>} few {<strong>#</strong> مواضيع} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}}. يحتاج الزوّار إلى أكثر لقراءته والردّ عليه، ولذلك ننصح بوجود {requiredTopics, plural, one {موضوع <strong>واحد</strong>} two {موضوعين <strong>اثنين</strong>} few {<strong>#</strong> مواضيع} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} على الأقل. يرى طاقم الموقع فقط هذه الرسالة.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}}. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
     too_few_posts_notice_MF: >-
-      هيًا بنا <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ نقاشًا!</a> هناك حاليًا {currentPosts, plural, zero {} one {مشاركة <strong>واحدة</strong>} two {مشاركتين <strong>اثنتين</strong>} few {<strong>#</strong> مشاركات} many {<strong>#</strong> مشاركةً} other {<strong>#</strong> مشاركة}}. يحتاج الزوّار إلى أكثر لقراءتها والردّ عليها، ولذلك ننصح بوجود {requiredPosts, plural, one {مشاركة <strong>واحدة</strong>} two {مشاركتين <strong>اثنتين</strong>} few {<strong>#</strong> مشاركات} many {<strong>#</strong> مشاركةً} other {<strong>#</strong> مشاركة}} على الأقل. يرى طاقم الموقع فقط هذه الرسالة.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, zero {} one {# خطأ / ساعة} two {# أخطاء / ساعة} few {# أخطاء / ساعة} many {# أخطاء / ساعة} other {# أخطاء / ساعة}}</a> وصلت إلى حد إعداد الموقع {limit, plural, one {# خطأ / ساعة} two {# أخطاء / ساعة} few {# أخطاء / ساعة} many {# أخطاء / ساعة} other {# أخطاء / ساعة}}."
-      reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, zero {} one {# خطأ / دقيقة} two {# أخطاء / دقيقة} few {# أخطاء / دقيقة} many {# أخطاء / دقيقة} other {# أخطاء / دقيقة}}</a> وصلت إلى حد إعداد الموقع {limit, plural, one {# خطأ / دقيقة} two {# أخطاء / دقيقة} few {# أخطاء / دقيقة} many {# أخطاء / دقيقة} other {# أخطاء / دقيقة}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, zero {} one {# خطأ / ساعة} two {# أخطاء / ساعة} few {# أخطاء / ساعة} many {# أخطاء / ساعة} other {# أخطاء / ساعة}}</a> تجاوز حد إعداد الموقع {limit, plural, one {# خطأ / ساعة} two {# أخطاء / ساعة} few {# أخطاء / ساعة} many {# أخطاء / ساعة} other {# أخطاء / ساعة}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, zero {} one {# خطأ / دقيقة} two {# أخطاء / دقيقة} few {# أخطاء / دقيقة} many {# أخطاء / دقيقة} other {# أخطاء / دقيقة}}</a> تجاوز حد إعداد الموقع {limit, plural, one {# خطأ / دقيقة} two {# أخطاء / دقيقة} few {# أخطاء / دقيقة} many {# أخطاء / دقيقة} other {# أخطاء / دقيقة}}."
-    learn_more: "اطّلع على المزيد..."
+      reached_hour_MF: "<b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}."
+    learn_more: "معرفة المزيد..."
     first_post: أول منشور
     mute: كتم
     unmute: إلغاء الكتم
-    last_post: آخر مشاركة
+    last_post: آخر منشور
     local_time: "التوقيت المحلي"
-    time_read: المقروءة
-    time_read_recently: "حديثًا %{time_read}"
+    time_read: وقت القراءة
+    time_read_recently: "%{time_read} حديثًا"
     time_read_tooltip: "إجمالي وقت القراءة هو %{time_read}"
-    time_read_recently_tooltip: "إجمالي وقت القراءة هو %{time_read} (منها %{recent_time_read} خلال الستّين يومًا الماضية)"
+    time_read_recently_tooltip: "إجمالي وقت القراءة هو %{time_read} (%{recent_time_read} خلال 60 يومًا الماضية)"
     last_reply_lowercase: آخر رد
     replies_lowercase:
-      zero: الردود
-      one: الردود
-      two: الردود
-      few: الردود
-      many: الردود
-      other: الردود
+      zero: رد
+      one: رد واحد
+      two: ردَّان
+      few: ردود
+      many: ردود
+      other: ردود
     signup_cta:
-      sign_up: "إنشاء حساب"
-      hide_session: "ذكرني غدا"
-      hide_forever: "لا شكرا"
-      intro: "مرحبا! يبدو أنك تستمتع بالمناقشة، لكنك لم تسجل للحصول على حساب جديد حتى الآن."
+      sign_up: "الاشتراك"
+      hide_session: "تذكيري غدًا"
+      hide_forever: "لا، شكرًا"
+      intro: "مرحبًا! يبدو أنك تستمتع بالمناقشة، لكنك لم تشترك للحصول على حساب حتى الآن."
       value_prop: "عند إنشاء حساب، فإننا نتذكَّر ما قرأته بالضبط؛ حتى تتمكن دائمًا من العودة والمتابعة من حيث توقفت. ستتلقَّى أيضًا الإشعارات هنا وعبر البريد الإلكتروني كلما ردَّ أحد عليك. ويمكنك تسجيل إعجابك بالمنشورات لمشاركة مشاعر الود. :heartpulse:"
     summary:
-      enabled_description: "أنت تطالع ملخّصًا لهذا الموضوع، أي أكثر المنشورات الجديرة بالاهتمام حسب نظرة المجتمع."
-      enable: "لخّص هذا الموضوع"
+      enabled_description: "أنت تعرض ملخصًا لهذا الموضوع: المنشورات الأكثر إثارة للاهتمام وفقًا للمجتمع."
+      enable: "تلخيص هذا الموضوع"
       disable: "عرض كل المنشورات"
     deleted_filter:
-      enabled_description: "في هذا الموضوع مشاركات محذوفة قد أُخفيت."
-      disabled_description: "المشاركات المحذوفة في الموضوع معروضة."
-      enable: "أخفِ المشاركات المحذوفة"
+      enabled_description: "يتتضمَّن هذا الموضوع منشورات محذوفة، والتي تم إخفاؤها."
+      disabled_description: "يتم عرض المنشورات المحذوفة في الموضوع."
+      enable: "إخفاء المنشورات المحذوفة"
       disable: "عرض المنشورات المحذوفة"
     private_message_info:
       title: "رسالة"
       invite: "دعوة الآخرين..."
       edit: "إضافة أو إزالة..."
       remove: "إزالة..."
-      add: "أضِف..."
-      leave_message: "أمتأكّد من ترك هذه الرسالة؟"
-      remove_allowed_user: "أمتأكّد من إزالة %{name} من هذه الرّسالة؟"
-      remove_allowed_group: "أمتأكّد من إزالة %{name} من هذه الرّسالة؟"
+      add: "إضافة..."
+      leave_message: "هل تريد حقًا مغادرة هذه الرسالة؟"
+      remove_allowed_user: "هل تريد حقًا إزالة %{name} من هذه الرسالة؟"
+      remove_allowed_group: "هل تريد حقًا إزالة %{name} من هذه الرسالة؟"
     email: "البريد الإلكتروني"
     username: "اسم المستخدم"
-    last_seen: "كان هنا"
-    created: "انشات"
-    created_lowercase: "انشات"
+    last_seen: "آخر ظهور"
+    created: "تاريخ الإنشاء"
+    created_lowercase: "تاريخ الإنشاء"
     trust_level: "مستوى الثقة"
-    search_hint: "اسم المستخدم أو البريد إلكتروني أو عنوان الـ IP"
+    search_hint: "اسم المستخدم أو البريد إلكتروني أو عنوان IP"
     create_account:
       header_title: "مرحبًا!"
-      disclaimer: "بالتسجيل، أنت توافق على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و <a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
+      disclaimer: "يشير التسجيل إلى موافقتك على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و<a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
       failed: "حدث خطأ ما. قد يكون هذا البريد الإلكتروني مسجلًا بالفعل. جرِّب رابط نسيان كلمة المرور"
     forgot_password:
       title: "إعادة تعيين كلمة المرور"
@@ -1697,54 +1697,54 @@ ar:
       reset: "إعادة تعين كلمة المرور"
       complete_username: "إذا تطابق أحد الحسابات مع اسم المستخدم <b>%{username}</b>، فستتلقى سريعًا رسالة إلكترونية تتضمَّن تعليمات عن كيفية إعادة تعيين كلمة المرور."
       complete_email: "إذا تطابق أحد الحسابات مع <b>%{email}</b>، فستتلقى سريعًا رسالة إلكترونية تتضمَّن تعليمات عن كيفية إعادة تعيين كلمة المرور."
-      complete_username_found: "وجدنا حسابًا يُطابق اسم المستخدم <b>%{username}</b>. ستستلم قريبًا بريدًا بإرشادات آلية تصفير كلمة السر."
-      complete_email_found: "وجدنا حسابًا يُطابق <b>%{email}</b>. ستستلم قريبًا بريدًا بإرشادات آلية تصفير كلمة السر."
-      complete_username_not_found: "لا يوجد حساب يطابق اسم المستخدم <b>%{username}</b>"
-      complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
-      help: "ألم يصل البريد بعد؟ تفحّص مجلد السخام أولًا.<p>ألست متأكّدًا من العنوان الذي استعملته؟ أدخِل عنوان البريد الإلكتروني وسنُعلمك لو كان موجودًا هنا.</p><p>إن فقدت إمكانية الدخول على عنوان البريد المرتبط بحسابك، فمن فضلك راسِل <a href='%{basePath}/about'>طاقمنا الجاهز دومًا لمساعدتك.</a></p>"
-      button_ok: "حسنا"
-      button_help: "مساعدة"
+      complete_username_found: "لقد عثرنا على حساب مطابق لاسم المستخدم <b>%{username}</b>. ومن المفترض أن تتلقى رسالة إلكترونية بإرشادات إعادة تعيين كلمة المرور قريبًا."
+      complete_email_found: "لقد عثرنا على حساب مطابق لعنوان البريد الإلكتروني <b>%{email}</b>. ومن المفترض أن تتلقى رسالة إلكترونية بإرشادات إعادة تعيين كلمة المرور قريبًا."
+      complete_username_not_found: "لا يوجد حساب مطابق لاسم المستخدم <b>%{username}</b>"
+      complete_email_not_found: "لا يوجد حساب مطابق لعنوان البريد الإلكتروني <b>%{email}</b>"
+      help: "لم تصلك الرسالة الإلكترونية بعد؟ احرص على التحقُّق من مجلد البريد العشوائي أولًا.<p>لست متأكدًا من عنوان البريد الإلكتروني الذي استخدمته؟ أدخِل عنوان البريد الإلكتروني وسنخبرك إذا كان موجودًا هنا.</p><p>إذا فقدت الوصول إلى عنوان البريد الإلكتروني المرتبط بحسابك، يُرجى التواصل مع <a href='%{basePath}/about'>طاقم عملنا لمساعدتك.</a></p>"
+      button_ok: "حسنًا"
+      button_help: "المساعدة"
     email_login:
-      link_label: "أبرِدني رابط ولوج"
-      button_label: "مع البريد الإلكتروني"
-      emoji: "قفل الرموز التعبيرية"
-      complete_username: "إن تطابق أحد الحسابات مع اسم المستخدم <b>%{username}</b> فسوف تستلم بريدًا قريبًا بإرشادات آلية تسجيل الدخول."
-      complete_email: "إذا تطابق أحد الحسابات مع <b>%{email}</b>، فمن المفترض أن تتلقى بريدًا إلكترونيًا برابط تسجيل الدخول قريبًا."
-      complete_username_found: "وجدنا حسابًا يُطابق اسم المستخدم <b>%{username}</b>. ستستلم قريبًا بريدًا بإرشادات آلية تسجيل الدخول."
-      complete_email_found: "وجدنا حسابًا يستخدم نفس البريد الإلكتروني <b>%{email}</b>. ستستلم قريبًا بريدًا بإرشادات آلية تسجيل الدخول."
-      complete_username_not_found: "لا يوجد حساب يطابق اسم المستخدم <b>%{username}</b>"
-      complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
-      confirm_title: تابع إلى %{site_name}
-      logging_in_as: تسجيل الدخول باسم %{email}
+      link_label: "مراسلتي عبر البريد الإلكتروني برابط تسجيل الدخول"
+      button_label: "عبر البريد الإلكتروني"
+      emoji: "رمز قفل"
+      complete_username: "إذا تطابق أحد الحسابات مع اسم المستخدم <b>%{username}</b>، فمن المفترض أن تتلقى رسالة إلكترونية برابط تسجيل الدخول قريبًا."
+      complete_email: "إذا تطابق أحد الحسابات مع عنوان البريد الإلكتروني <b>%{email}</b>، فمن المفترض أن تتلقى رسالة إلكترونية برابط تسجيل الدخول قريبًا."
+      complete_username_found: "لقد عثرنا على حساب مطابق لاسم المستخدم <b>%{username}</b>. ومن المفترض أن تتلقى رسالة إلكتروني برابط تسجيل الدخول قريبًا."
+      complete_email_found: "لقد عثرنا على حساب مطابق لعنوان البريد الإلكتروني <b>%{email}</b>. ومن المفترض أن تتلقى رسالة إلكترونية برابط تسجيل الدخول قريبًا."
+      complete_username_not_found: "لا يوجد حساب مطابق لاسم المستخدم <b>%{username}</b>"
+      complete_email_not_found: "لا يوجد حساب مطابق لعنوان البريد الإلكتروني <b>%{email}</b>"
+      confirm_title: المتابعة إلى %{site_name}
+      logging_in_as: تسجيل الدخول بعنوان البريد الإلكتروني %{email}
       confirm_button: إنهاء تسجيل الدخول
     login:
-      header_title: "أهلًا بك من جديد"
-      subheader_title: "لِج إلى حسابك"
-      username: "اسم المستخدم"
-      password: "كلمة السر"
-      second_factor_title: "الاستيثاق بخطوتين"
-      second_factor_description: "من فضلك أدخِل رمز الاستيثاق من التطبيق:"
-      second_factor_backup: "لِج باستعمال رمز احتياطي"
-      second_factor_backup_title: "النسخ الاحتياطي لـ الاستيثاق بعوامل عدة"
-      second_factor_backup_description: "الرجاء إدخال أحد الرموز الاحتياطية الخاصة بك:"
-      second_factor: "تسجيل الدخول باستخدام تطبيق Authenticator"
-      security_key_description: "عند تجهيز مفتاح الأمان المادي، اضغط على زر المصادقة باستخدام مفتاح الأمان أدناه."
-      security_key_alternative: "جرب طريقة أخرى"
-      security_key_authenticate: "المصادقة باستخدام مفتاح الأمان"
-      security_key_not_allowed_error: "انتهت مهلة عملية تسجيل مفتاح الأمان أو تم إلغاؤها."
-      security_key_no_matching_credential_error: "لا يمكن العثور على بيانات اعتماد مطابقة في مفتاح الأمان المقدم."
-      security_key_support_missing_error: "جهازك الحالي أو متصفحك لا يدعم استخدام مفاتيح الأمان. يرجى استخدام طريقة مختلفة."
-      caps_lock_warning: "مفتاح Caps Lock مفعّل"
-      error: "خطأ مجهول"
-      cookies_error: "يبدو أن ملفات تعريف الارتباط في متصفّحك معطلة. قد لا تكون قادراً على تسجيل الدخول دون تمكينهم أولاً."
-      rate_limit: "رجاء انتظر قبل تسجيل دخول مرة أخرى."
-      blank_username: "من فضلك أدخِل بريدك الإلكتروني أو اسم المستخدم."
+      header_title: "مرحبًا بعودتك"
+      subheader_title: "تسجيل الدخول إلى حسابك"
+      username: "المستخدم"
+      password: "كلمة المرور"
+      second_factor_title: "المصادقة الثنائية"
+      second_factor_description: "يُرجى إدخال رمز المصادقة الثنائية من تطبيقك:"
+      second_factor_backup: "تسجيل الدخول باستخدام رمز احتياطي"
+      second_factor_backup_title: "الرمز الاحتياطي للمصادقة الثنائية"
+      second_factor_backup_description: "يُرجى إدخال أحد الرموز الاحتياطية:"
+      second_factor: "تسجيل الدخول باستخدام تطبيق المصادقة"
+      security_key_description: "عندما يكون مفتاح الأمان المادي جاهزًا، اضغط على زر \"المصادقة باستخدام مفتاح الأمان\" أدناه."
+      security_key_alternative: "تجربة طريقة أخرى"
+      security_key_authenticate: "المصادقة باستخدام مفتاح أمان"
+      security_key_not_allowed_error: "انتهت مهلة عملية المصادقة باستخدام مفتاح أمان أو تم إلغاؤها."
+      security_key_no_matching_credential_error: "تعذَّر العثور على بيانات اعتماد مطابقة في مفتاح الأمان المقدَّم."
+      security_key_support_missing_error: "لا يدعم جهازك أو متصفحك الحالي استخدام مفاتيح الأمان. يُرجى استخدام طريقة مختلفة."
+      caps_lock_warning: "مفتاح Caps Lock مفعَّل"
+      error: "خطأ غير معروف"
+      cookies_error: "يبدو أن ملفات تعريف الارتباط في متصفحك معطَّلة. قد لا تتمكن من تسجيل الدخول قبل تفعيلها أولًا."
+      rate_limit: "يُرجى الانتظار قبل محاولة تسجيل الدخول مرة أخرى."
+      blank_username: "يُرجى إدخال بريدك الإلكتروني أو اسم المستخدم."
       blank_username_or_password: "يُرجى إدخال بريدك الإلكتروني أو اسم المستخدم، وكلمة المرور."
       reset_password: "إعادة تعين كلمة المرور"
-      logging_in: "تلج الآن..."
-      or: "أو "
-      authenticating: "يوثق..."
-      awaiting_activation: "ما زال حسابك غير مفعّل، استخدم رابط نسيان كلمة المرور لإرسال بريد إلكتروني تفعيلي آخر."
+      logging_in: "جارٍ تسجيل الدخول..."
+      or: "أو"
+      authenticating: "جارٍ المصادقة..."
+      awaiting_activation: "ما زال حسابك بانتظار التفعيل، استخدم رابط نسيان كلمة المرور لإرسال رسالة إلكترونية أخرى للتفعيل."
       awaiting_approval: "لم يوافق أي من أعضاء طاقم العمل على حسابك بعد. سيُرسل إليك بريد إلكتروني حالما يتمّ ذلك."
       requires_invite: "معذرةً، دخول هذا المنتدى بالدعوات فقط."
       not_activated: "لا يمكنك تسجيل دخول بعد. لقد أرسلنا سابقًا بريدًا إلى <b>%{sentTo}</b>. رجاء اتّبع الإرشادات فيه لتفعيل حسابك."
@@ -1780,7 +1780,7 @@ ar:
         name: "دِسكورد"
         title: "مع ديسكورد"
       second_factor_toggle:
-        totp: "استخدام تطبيق مصادقة بدلاً من ذلك"
+        totp: "استخدام تطبيق مصادقة بدلًا من ذلك"
         backup_code: "استخدام رمز النسخ الاحتياطي بدلاً من ذلك"
     invites:
       accept_title: "دعوة"

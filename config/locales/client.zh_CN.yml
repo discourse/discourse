@@ -1350,19 +1350,19 @@ zh_CN:
         reinvited_all: "已发送所有邀请！"
         time_read: "阅读时间"
         days_visited: "访问天数"
-        account_age_days: "账户建立天数"
+        account_age_days: "帐户启用时长（天）"
         create: "邀请"
         generate_link: "创建邀请链接"
-        link_generated: "这是你的邀请链接！"
-        valid_for: "邀请链接只对这个邮件地址有效：%{email}"
+        link_generated: "这是您的邀请链接！"
+        valid_for: "邀请链接只对此电子邮件地址有效：%{email}"
         single_user: "通过电子邮件邀请"
         multiple_user: "通过链接邀请"
         invite_link:
           title: "邀请链接"
-          success: "邀请链接生成成功！"
+          success: "邀请链接已成功生成！"
           error: "生成邀请链接时出错"
-          max_redemptions_allowed_label: "允许多少人通过这个链接注册？"
-          expires_at: "邀请链接多久失效？"
+          max_redemptions_allowed_label: "允许多少人通过此链接注册？"
+          expires_at: "此邀请链接何时到期？"
         invite:
           new_title: "创建邀请"
           edit_title: "编辑邀请"
@@ -1377,42 +1377,42 @@ zh_CN:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
           instructions: |
-            <p>邀请用户可以加速你的社区的发展，准备一个<a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank"> CSV 文件</a>，每行至少含有一个你想要邀请的邮件地址。如果你想要将他们添加到群组或者在首次登录时引导至特定的话题中，下列由逗号分隔的信息可选填。</p>
+            <p>邀请用户以快速壮大您的社区。准备一个 <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank"> CSV 文件</a>，每行至少包含一个您想要邀请的电子邮件地址。如果您想要将他们添加到群组或者在他们首次登录时将其引导至特定话题，可以提供由逗号分隔的信息，如下所示。</p>
             <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
-            <p>你所上传的 CSV 文件中的每一个电子邮件地址都将被发送一个邀请，你可以稍后进行管理。</p>
-          progress: "已上传 %{progress}%..."
-          success: "文件上传成功，操作完成时会通过私信通知你。"
-          error: "抱歉，文件必须是CSV格式。"
+            <p>将向您上传的 CSV 文件中的每一个电子邮件地址发送邀请，您可以稍后进行管理。</p>
+          progress: "已上传 %{progress}%…"
+          success: "文件上传成功。该过程完成后，您将收到消息通知。"
+          error: "抱歉，文件应为 CSV 格式。"
       password:
         title: "密码"
-        too_short: "密码过短"
-        common: "密码过于常见"
-        same_as_username: "密码不能与用户名相同"
-        same_as_email: "密码不能与邮箱相同"
-        ok: "密码符合要求"
+        too_short: "您的密码过短。"
+        common: "该密码过于常见。"
+        same_as_username: "您的密码与您的用户名相同。"
+        same_as_email: "您的密码与您的电子邮件相同。"
+        ok: "您的密码没有问题。"
         instructions: "至少 %{count} 个字符"
-        required: "请输入一个密码"
+        required: "请输入密码"
       summary:
-        title: "概要"
-        stats: "统计"
+        title: "摘要"
+        stats: "统计信息"
         time_read: "阅读时间"
-        recent_time_read: "近期阅读时间"
+        recent_time_read: "最近阅读时间"
         topic_count:
           other: "已创建话题"
         post_count:
-          other: "已发表帖子"
+          other: "已创建帖子"
         likes_given:
-          other: "已发出"
+          other: "已送出"
         likes_received:
           other: "已收到"
         days_visited:
           other: "访问天数"
         topics_entered:
-          other: "已阅话题"
+          other: "已浏览话题"
         posts_read:
           other: "已读帖子"
         bookmark_count:
-          other: "收藏"
+          other: "书签"
         top_replies: "热门回复"
         no_replies: "暂无回复。"
         more_replies: "更多回复"
@@ -1428,7 +1428,7 @@ zh_CN:
         most_liked_users: "赞谁最多"
         most_replied_to_users: "最多回复至"
         no_likes: "暂无赞。"
-        top_categories: "热门分类"
+        top_categories: "热门类别"
         topics: "话题"
         replies: "回复"
       ip_address:
@@ -1436,10 +1436,10 @@ zh_CN:
       registration_ip_address:
         title: "注册 IP 地址"
       avatar:
-        title: "头像"
-        header_title: "个人信息、消息、收藏和设置"
+        title: "个人资料照片"
+        header_title: "个人资料、消息、书签和偏好设置"
         name_and_description: "%{name} - %{description}"
-        edit: "编辑个人资料图片"
+        edit: "编辑个人资料照片"
       title:
         title: "头衔"
         none: "（无）"
@@ -1449,44 +1449,44 @@ zh_CN:
       filters:
         all: "全部"
       stream:
-        posted_by: "发送人"
-        sent_by: "发送时间"
-        private_message: "私信"
-        the_topic: "本话题"
-    loading: "载入中…"
+        posted_by: "发帖人"
+        sent_by: "发送人"
+        private_message: "消息"
+        the_topic: "话题"
+    loading: "正在加载…"
     errors:
-      prev_page: "无法载入"
+      prev_page: "尝试加载时"
       reasons:
         network: "网络错误"
-        server: "服务器出错"
-        forbidden: "禁止访问"
+        server: "服务器错误"
+        forbidden: "访问被拒绝"
         unknown: "错误"
-        not_found: "页面不存在"
+        not_found: "找不到页面"
       desc:
-        network: "请检查网络状态"
-        network_fixed: "网络似乎恢复正常了"
+        network: "请检查您的连接。"
+        network_fixed: "网络似乎已恢复正常"
         server: "错误代码：%{status}"
-        forbidden: "好像不能进行此操作"
-        not_found: "没有这个页面"
-        unknown: "出了点小问题"
+        forbidden: "您无权查看。"
+        not_found: "糟糕，应用程序试图加载一个不存在的 URL。"
+        unknown: "出了点问题。"
       buttons:
         back: "返回"
         again: "重试"
-        fixed: "载入"
+        fixed: "加载页面"
     modal:
       close: "关闭"
       dismiss_error: "忽略错误"
     close: "关闭"
-    assets_changed_confirm: "该站点刚才收到了一个软件更新，是否马上获取最新版本？"
-    logout: "你已登出。"
+    assets_changed_confirm: "此站点刚才收到了一个软件更新。是否立即获取最新版本？"
+    logout: "您已退出。"
     refresh: "刷新"
     home: "首页"
     read_only_mode:
-      enabled: "站点处于只读模式，你可以继续浏览，但是回复、点赞和其它操作暂时被禁用。"
-      login_disabled: "只读模式下不允许登录。"
-      logout_disabled: "站点处于只读模式时退出登录被禁用。"
+      enabled: "此站点处于只读模式。您可以继续浏览，但是回复、点赞和其他操作暂时被禁用。"
+      login_disabled: "当站点处于只读模式时，登录被禁用。"
+      logout_disabled: "当站点处于只读模式时，退出被禁用。"
     too_few_topics_and_posts_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论吧！</a>现 {currentTopics, plural, one {仅有 <strong>#</strong> 个话题} other {共有 <strong>#</strong> 个话题}}和{currentPosts, plural, one { <strong>#</strong> 个帖子} other { <strong>#</strong> 个帖子}}。访客需要更多的阅读和回复——我们建议至少 {requiredTopics, plural, one { <strong>#</strong> 个话题} other { <strong>#</strong> 个话题}}和{requiredPosts, plural, one { <strong>#</strong> 个帖子} other { <strong>#</strong> 个帖子}}。此消息仅管理人员可见。
+      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {currentPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {requiredPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。只有管理人员可以看到此消息。
     too_few_topics_notice_MF: >-
       让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论吧！</a>现{currentTopics, plural, one {仅有<strong>#</strong> 个话题} other { 共有 <strong>#</strong> 个话题}}。访客需要更多的阅读和回复——我们建议至少 {requiredTopics, plural, one {<strong>#</strong>个话题} other {<strong>#</strong> 个话题}}。此消息仅管理人员可见。
     too_few_posts_notice_MF: >-

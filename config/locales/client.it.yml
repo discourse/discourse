@@ -2408,10 +2408,10 @@ it:
           "0_2": "Stai ignorando tutte le notifiche di questo argomento."
           "0": "Stai ignorando tutte le notifiche di questo argomento."
         watching_pm:
-          title: "Osservato"
+          title: "In osservazione"
           description: "Riceverai una notifica per ogni nuova risposta a questo messaggio, e comparirà un conteggio delle nuove risposte."
         watching:
-          title: "Osservato"
+          title: "In osservazione"
           description: "Riceverai una notifica per ogni nuova risposta in questo argomento, e comparirà un conteggio delle nuove risposte."
         tracking_pm:
           title: "Seguito"
@@ -2427,10 +2427,10 @@ it:
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted_pm:
           title: "Silenziato"
-          description: "Non ti verrà notificato nulla per questo messaggio."
+          description: "Non riceverai mai notifiche di alcun tipo per questo messaggio."
         muted:
           title: "Silenziato"
-          description: "Non riceverai mai notifiche o altro circa questo argomento e non apparirà nei recenti."
+          description: "Non riceverai mai notifiche di alcun tipo su questo argomento, che non apparirà tra i più recenti."
       actions:
         title: "Azioni"
         recover: "Ripristina Argomento"
@@ -2440,28 +2440,28 @@ it:
         multi_select: "Seleziona Messaggi..."
         slow_mode: "Imposta modalità lenta"
         timed_update: "Imposta Timer..."
-        pin: "Appunta Argomento..."
-        unpin: "Spunta Argomento..."
-        unarchive: "De-archivia Argomento"
+        pin: "Blocca Argomento..."
+        unpin: "Sblocca Argomento..."
+        unarchive: "Annulla archiviazione Argomento"
         archive: "Archivia Argomento"
         invisible: "Rendi Invisibile"
         visible: "Rendi Visibile"
-        reset_read: "Reimposta Dati Letti"
+        reset_read: "Reimposta Dati di lettura"
         make_public: "Rendi Argomento Pubblico"
         make_private: "Rendi Messaggio Personale"
         reset_bump_date: "Reimposta la data di riproposizione"
       feature:
-        pin: "Appunta Argomento"
-        unpin: "Spunta Argomento"
-        pin_globally: "Appunta Argomento Globalmente"
-        make_banner: "Argomento Annuncio"
-        remove_banner: "Rimuovi Argomento Annuncio"
+        pin: "Blocca Argomento"
+        unpin: "Sblocca Argomento"
+        pin_globally: "Blocca Argomento Globalmente"
+        make_banner: "Argomento banner"
+        remove_banner: "Rimuovi Argomento banner"
       reply:
         title: "Rispondi"
         help: "inizia a comporre una risposta a questo argomento"
       clear_pin:
-        title: "Spunta"
-        help: "Rimuovi la spunta da questo argomento, così non comparirà più in cima alla lista degli argomenti"
+        title: "Rimuovi blocco"
+        help: "Rimuovi la spunta di blocco da questo argomento, così non comparirà più in cima alla lista degli argomenti"
       share:
         title: "Condividi"
         extended_title: "Condividi un collegamento"
@@ -2477,7 +2477,7 @@ it:
         invite_users: "Invita"
       print:
         title: "Stampa"
-        help: "Apri una versione da stampabile di questo argomento"
+        help: "Apri una versione facilmente stampabile di questo argomento"
       flag_topic:
         title: "Segnala"
         help: "segnala questo argomento o invia una notifica privata"
@@ -2490,8 +2490,8 @@ it:
         pin: "Poni questo argomento in cima alla categoria %{categoryLink} fino a"
         unpin: "Rimuovi questo argomento dalla cima della categoria %{categoryLink}."
         unpin_until: "Rimuovi questo argomento dalla cima della categoria %{categoryLink} o attendi fino a <strong>%{until}</strong>."
-        pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
-        pin_validation: "È richiesta una data per appuntare questo argomento."
+        pin_note: "Gli utenti possono sbloccare gli argomenti individualmente per loro stessi."
+        pin_validation: "È richiesta una data per bloccare questo argomento."
         not_pinned: "Non ci sono argomenti appuntati in %{categoryLink}."
         already_pinned:
           one: "Argomenti attualmente appuntati in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
@@ -2500,18 +2500,18 @@ it:
         confirm_pin_globally:
           one: "Hai già %{count} argomento puntato globalmente. Troppi argomenti puntati possono rappresentare un peso per gli utenti nuovi e anonimi. Sei sicuro di voler puntare un altro argomento globalmente?"
           other: "Hai già %{count} argomenti puntati globalmente. Troppi argomenti puntati possono rappresentare un peso per gli utenti nuovi e anonimi. Sei sicuro di voler puntare un altro argomento globalmente?"
-        unpin_globally: "Togli questo argomento dalla cima degli altri argomenti."
+        unpin_globally: "Togli questo argomento dalla cima di tutti gli elenchi di argomenti."
         unpin_globally_until: "Rimuovi questo argomento dalla cima di tutte le liste di argomenti o attendi fino a <strong>%{until}</strong>."
-        global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."
+        global_pin_note: "Gli utenti possono sbloccare gli argomenti individualmente per loro stessi."
         not_pinned_globally: "Non ci sono argomenti appuntati globalmente."
         already_pinned_globally:
           one: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
-        make_banner: "Rendi questo argomento un annuncio che apparirà in cima a tutte le pagine."
-        remove_banner: "Rimuovi lo striscione che appare in cima a tutte le pagine."
-        banner_note: "Gli utenti possono nascondere l'annuncio chiudendolo. Solo un argomento per volta può diventare un annuncio."
-        no_banner_exists: "Non c'è alcun argomento annuncio."
-        banner_exists: "<strong class='badge badge-notification unread'>C'è</strong> attualmente un argomento annuncio."
+        make_banner: "Rendi questo argomento un banner che apparirà in cima a tutte le pagine."
+        remove_banner: "Rimuovi il banner che appare in cima a tutte le pagine."
+        banner_note: "Gli utenti possono nascondere il banner chiudendolo. Solo un argomento per volta può diventare un banner."
+        no_banner_exists: "Non c'è alcun argomento banner."
+        banner_exists: "<strong class='badge badge-notification unread'>C'è</strong> attualmente un argomento banner."
       inviting: "Sto invitando..."
       automatically_add_to_groups: "Questo invito include anche l'accesso ai seguenti gruppi:"
       invite_private:
@@ -2541,7 +2541,7 @@ it:
         success_username: "Abbiamo invitato l'utente a partecipare all'argomento."
         error: "Spiacenti, non siamo riusciti ad invitare questa persona. E' stata per caso già invitata (gli inviti sono limitati)? "
         success_existing_email: "Esiste già un utente con email <b>%{emailOrUsername}</b>. Lo abbiamo invitato a partecipare a questo argomento."
-      login_reply: "Connettiti per Rispondere"
+      login_reply: "Accedi per Rispondere"
       filters:
         n_posts:
           one: "%{count} post"
@@ -2563,7 +2563,7 @@ it:
       merge_topic:
         title: "Sposta in Argomento Esistente"
         action: "sposta in un argomento esistente"
-        error: "Si è verificato un errore nello spostare i messaggi nell'argomento."
+        error: "Si è verificato un errore spostando i messaggi nell'argomento."
         radio_label: "Argomento Esistente"
         instructions:
           one: "Per favore scegli l'argomento dove spostare il messaggio."
@@ -2617,9 +2617,9 @@ it:
       change_timestamp:
         title: "Cambia Marca Temporale..."
         action: "cambia marca temporale"
-        invalid_timestamp: "Il timestamp non può essere nel futuro."
-        error: "Errore durante la modifica del timestamp dell'argomento."
-        instructions: "Seleziona il nuovo timestamp per l'argomento. I messaggi nell'argomento saranno aggiornati in modo che abbiano lo stesso intervallo temporale."
+        invalid_timestamp: "La marca temporale non può essere nel futuro."
+        error: "Errore durante la modifica della marca temporale dell'argomento."
+        instructions: "Seleziona la nuova marca temporale per l'argomento. I messaggi nell'argomento saranno aggiornati in modo che abbiano lo stesso intervallo temporale."
       multi_select:
         select: "scegli"
         selected: "selezionati (%{count})"
@@ -2656,10 +2656,10 @@ it:
       continue_discussion: "Continua la discussione da %{postLink}:"
       follow_quote: "vai al messaggio citato"
       show_full: "Mostra Messaggio Completo"
-      show_hidden: "Visualizza contenuto ignorato"
+      show_hidden: "Visualizza contenuto ignorato."
       deleted_by_author_simple: "(messaggio eliminato dall'autore)"
-      collapse: "raggruppa"
-      expand_collapse: "espandi/raggruppa"
+      collapse: "comprimi"
+      expand_collapse: "espandi/comprimi"
       locked: "un membro dello Staff ha bloccato le modifiche a questo messaggio"
       gap:
         one: "visualizza %{count} risposta nascosta"
@@ -2700,7 +2700,7 @@ it:
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
-        attachment_download_requires_login: "Spiacenti, devi essere connesso per poter scaricare gli allegati."
+        attachment_download_requires_login: "Spiacenti, devi effettuare l'accesso per poter scaricare gli allegati."
       cancel_composer:
         confirm: "Cosa vorresti fare con il tuo messaggio?"
         discard: "Elimina"
@@ -2713,7 +2713,7 @@ it:
         about: "questo messaggio è una wiki"
       archetypes:
         save: "Opzioni di salvataggio"
-      few_likes_left: "Grazie per aver condiviso l'amore! Hai ancora pochi \"Mi piace\" rimasti per oggi."
+      few_likes_left: "Grazie per aver condiviso affetto! Hai ancora pochi \"Mi piace\" rimasti per oggi."
       controls:
         reply: "inizia a comporre una risposta a questo messaggio"
         like: "metti \"Mi piace\" al messaggio"
@@ -2722,12 +2722,12 @@ it:
         undo_like: "rimuovi il \"Mi piace\""
         edit: "modifica questo messaggio"
         edit_action: "Modifica"
-        edit_anonymous: "Spiacenti, devi essere connesso per poter modificare questo messaggio."
+        edit_anonymous: "Spiacenti, devi effettuare l'accesso per poter modificare questo messaggio."
         flag: "segnala privatamente questo messaggio o invia una notifica privata"
         delete: "cancella questo messaggio"
         undelete: "recupera questo messaggio"
         share: "condividi un collegamento a questo messaggio"
-        more: "Di più"
+        more: "Altro"
         delete_replies:
           confirm: "Vuoi eliminare anche le risposte a questo messaggio?"
           direct_replies:
@@ -2743,7 +2743,7 @@ it:
         convert_to_moderator: "Aggiungi Colore Staff"
         revert_to_regular: "Rimuovi Colore Staff"
         rebake: "Ricrea HTML"
-        publish_page: "Pubblicazione Pagine"
+        publish_page: "Pubblicazione Pagina"
         unhide: "Mostra nuovamente"
         change_owner: "Cambia Proprietà"
         grant_badge: "Assegna Distintivo"

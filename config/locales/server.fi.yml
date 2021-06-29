@@ -3734,10 +3734,10 @@ fi:
             label: "Sovellettava lainsäädäntö"
             placeholder: "Kalifornian laki"
           city_for_disputes:
-            label: "Kaupunki jonka oikeudessa riidat ratkotaan"
+            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
             placeholder: "San Francisco, Kalifornia"
       colors:
-        title: "Värimallit"
+        title: "Värit"
       fonts:
         title: "Fontit"
         fields:
@@ -3754,20 +3754,20 @@ fi:
             label: "Ensisijainen logo"
             description: "Sivuston vasemmassa yläkulmassa oleva logokuva. Käytä leveää suorakulmaista kuvaa, jonka korkeus on 120 ja kuvasuhde suurempi kuin 3:1"
           logo_small:
-            label: "Neliömäinen logo"
-            description: "Neliön muotoinen versio sivuston logosta. Näkyy sivuston vasemmassa yläkulmassa kun vierität selaimessa sivua alaspäin sekä sosiaalisen median julkaisuissa. Mielellään suurempi kuin 512x512."
+            label: "Neliölogo"
+            description: "Neliön muotoinen versio sivuston logosta. Näkyy sivuston vasemmassa yläkulmassa, kun vierität selaimessa sivua alaspäin, sekä sosiaalisen median julkaisuissa. Mielellään suurempi kuin 512x512."
       icons:
         title: "Kuvakkeet"
         fields:
           favicon:
             label: "Selaimen kuvake"
-            description: "Favicon-kuvake, jota käytetään kuvaamaan sivustoa selaimissa ja joka näyttää hyvältä pienissä kokoluokissa. Suositellut tiedostomuodot ovat PNG tai JPG. Käytämme oletuksena neliömäistä logoa."
+            description: "Kuvake, jota käytetään kuvaamaan sivustoa selaimissa, ja joka näyttää hyvältä pienissä kokoluokissa. Suositellut tiedostomuodot ovat PNG tai JPG. Käytämme oletuksena neliön muotoista logoa."
           large_icon:
             label: "Suuri kuvake"
-            description: "Kuvake jota käytetään kuvaamaan sivustoa moderneilla laitteilla ja joka näyttää hyvältä suuremmissa kokoluokissa. Mielellään suurempi kuin 512 × 512. Käytämme oletuksena neliömäistä logoa."
+            description: "Kuvake, jota käytetään kuvaamaan sivustoa moderneilla laitteilla, ja joka näyttää hyvältä suuremmissa kokoluokissa. Mielellään suurempi kuin 512 × 512. Käytämme oletuksena neliön muotoista logoa."
       homepage:
-        description: "Suosittelemme tuoreimmat ketjut -näkymää etusivuksi, mutta voit halutessasi näyttää myös keskustelualueet (ketjut ryhmitelty aihealueen mukaan) etusivulla."
-        title: "Etusivu"
+        description: "Suosittelemme näyttämään tuoreimmat ketjut aloitussivullasi, mutta voit halutessasi näyttää myös keskustelualueet (ketjut ryhmiteltynä aihealueen mukaan)."
+        title: "Aloitussivu"
         fields:
           homepage_style:
             choices:
@@ -3788,27 +3788,27 @@ fi:
       invites:
         title: "Kutsu henkilökuntaa"
         description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."
-        disabled: "Koska paikalliset kirjautumiset ovat pois käytöstä, ei ole mahdollista kutsua ketään. Ole hyvä jatka seuraavaan vaiheeseen."
+        disabled: "Koska paikalliset kirjautumiset ovat pois käytöstä, ei ole mahdollista kutsua ketään. Jatka seuraavaan vaiheeseen."
       finished:
-        title: "Discourse -sivustosi on valmis!"
+        title: "Discourse-sivustosi on valmis!"
         description: |
-          <p>Jos haluat muuttaa näitä asetuksia myöhemmin, <b>suorita tämä asetustoiminto uudelleen</b> tai vieraile <a href='%{base_path}/admin' target='_blank'>ylläpitopaneelissa</a>; löydät sen jakoavainkuvakkeen vierestä sivuston valikosta.</p>
-          <p>Discoursea on helppo mukauttaa entisestään sen tehokkaalla teemajärjestelmällä. <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> -sivustosta löydät esimerkkejä <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">suosituista teemoista ja komponenteista</a>.</p>
-          <p>Onnittelut ja pidä hauskaa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>rakentaessasi uutta yhteisöäsi!</a></p>
+          <p>Jos haluat muuttaa näitä asetuksia myöhemmin, <b>suorita tämä ohjattu toiminto uudelleen</b> tai vieraile <a href='%{base_path}/admin' target='_blank'>ylläpitopaneelissa</a>; löydät sen jakoavainkuvakkeen vierestä sivuston valikosta.</p>
+          <p>Discoursea on helppo mukauttaa entisestään sen tehokkaalla teemajärjestelmällä. <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>-sivustosta löydät esimerkkejä <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">suosituista teemoista ja komponenteista</a>.</p>
+          <p>Onnittelut, ja pidä hauskaa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>rakentaessasi uutta yhteisöäsi!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
   joined: "Liittyi"
   discourse_push_notifications:
     popup:
-      mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" - %{site_title}'
-      group_mentioned: '%{username} mainitsi ryhmäsi ketjussa "%{topic}" - %{site_title}'
-      quoted: '%{username} lainasi sinua ketjussa "%{topic}" - %{site_title}'
-      replied: '%{username} vastasi sinulle ketjussa "%{topic}" - %{site_title}'
-      posted: '%{username} lähetti viestin ketjuun "%{topic}" - %{site_title}'
-      private_message: '%{username} lähetti sivulle yksityisviestin keskustelussa "%{topic}" - %{site_title}'
-      linked: '%{username} linkitti viestiisi ketjussa "%{topic}" - %{site_title}'
-      watching_first_post: '%{username} aloitti ketjun "%{topic}" - %{site_title}'
-      confirm_title: "Ilmoitukset käytössä - %{site_title}"
+      mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
+      group_mentioned: '%{username} mainitsi sinut ketjussa "%{topic}"–- %{site_title}'
+      quoted: '%{username} lainasi sinua ketjussa "%{topic}" – %{site_title}'
+      replied: '%{username} vastasi sinulle ketjussa "%{topic}" – %{site_title}'
+      posted: '%{username} lähetti viestin ketjuun "%{topic}" – %{site_title}'
+      private_message: '%{username} lähetti sivulle yksityisviestin keskustelussa "%{topic}" – %{site_title}'
+      linked: '%{username} linkitti viestiisi ketjussa "%{topic}" – %{site_title}'
+      watching_first_post: '%{username} aloitti ketjun "%{topic}" – %{site_title}'
+      confirm_title: "Ilmoitukset käytössä – %{site_title}"
       confirm_body: "Onnistui! Ilmoitukset ovat käytössä."
       custom: "Ilmoitus käyttäjältä %{username} sivustolla %{site_title}"
   staff_action_logs:

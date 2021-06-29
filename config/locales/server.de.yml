@@ -639,37 +639,37 @@ de:
     post_template: "%{replace_paragraph}\n\nBenutze die folgenden Abschnitte für eine ausführlichere Beschreibung oder um Richtlinien oder Regeln für diese Kategorie festzulegen:\n\n- Warum sollten Benutzer diese Kategorie nutzen? Wofür ist sie gedacht?\n\n- Wie genau unterscheidet sie sich von den Kategorien, die es bereits gibt?\n\n- Was sollten Themen in dieser Kategorie generell beinhalten?\n\n- Brauchen wir diese Kategorie? Können wir sie mit einer anderen Kategorie oder Unter-Kategorie zusammenführen?\n"
     errors:
       not_found: "Kategorie nicht gefunden!"
-      uncategorized_parent: "Die \"unkategorisiert\" Kategorie kann keine Elternkategorie haben."
+      uncategorized_parent: "„Nicht kategorisiert“ kann keine übergeordnete Kategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
       depth: "Unterkategorien können nicht ineinander verschachtelt werden."
-      invalid_email_in: "'%{email}' ist keine gültige E-Mail-Adresse."
-      email_already_used_in_group: "'%{email}' wird bereits von der Gruppe '%{group_name}' verwendet."
-      email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
+      invalid_email_in: "„%{email}“ ist keine gültige E-Mail-Adresse."
+      email_already_used_in_group: "„%{email}“ wird bereits von der Gruppe „%{group_name}“ verwendet."
+      email_already_used_in_category: "„%{email}“ wird bereits von der Kategorie „%{category_name}“ verwendet."
       description_incomplete: "Die Kategorie-Beschreibung muss mindestens einen Absatz enthalten."
       permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie erhalten. Folgende Gruppen haben Zugriff auf eine der Unterkategorien, aber keinen Zugriff auf die übergeordnete Kategorie: %{group_names}."
       disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
     cannot_delete:
-      uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und kann nicht gelöscht werden."
-      has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien besitzt."
+      uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben, und kann nicht gelöscht werden."
+      has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien enthält."
       topic_exists:
-        one: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält. Das älteste Thema ist %{topic_link}."
+        one: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Thema enthält. Das älteste Thema ist %{topic_link}."
         other: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält. Das älteste Thema ist %{topic_link}."
-      topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält."
-    uncategorized_description: "Themen welche keine Kategorie benötigen oder in keine existierende Kategorie passen."
+      topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, da die Anzahl der Themen %{count} beträgt."
+    uncategorized_description: "Themen, welche keine Kategorie benötigen oder in keine existierende Kategorie passen."
   trust_levels:
     admin: "Administrator"
     staff: "Team"
-    change_failed_explanation: "Du wolltest %{user_name} auf '%{new_trust_level}' zurückstufen. Die Vertrauensstufe ist jedoch bereits '%{current_trust_level}'. %{user_name} verbleibt auf '%{current_trust_level}'. Wenn du den Benutzer zurückstufen möchtest, musst du zuerst seine Vertrauensstufe sperren."
+    change_failed_explanation: "Du wolltest %{user_name} auf „%{new_trust_level}“ zurückstufen. Die Vertrauensstufe ist jedoch bereits „%{current_trust_level}“. %{user_name} verbleibt auf „%{current_trust_level}“. Wenn du den Benutzer zurückstufen möchtest, musst du zuerst die Vertrauensstufe sperren."
   post:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
     has_likes:
       one: "%{count} Like"
-      other: "%{count} Like"
+      other: "%{count} Likes"
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Bitte versuche es später noch einmal."
-    too_many_requests: "Du hast diese Aktion zu häufig ausgeführt. Bitte warte %{time_left}, ehe du es erneut versuchst."
+    too_many_requests: "Du hast diese Aktion zu oft durchgeführt. Bitte warte %{time_left}, ehe du es erneut versuchst."
     by_type:
       first_day_replies_per_day: "Wir bedanken uns für Deine Begeisterung, mach Sie weiter so! Aus Sicherheitsgründen hast Du jedoch die maximale Anzahl von Antworten erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, dann kannst Du weitere Antworten erstellen."
       first_day_topics_per_day: "Wir bedanken uns für Deine Begeisterung! Aus Sicherheitsgründen hast Du jedoch die maximale Anzahl von Themen erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, dann kannst Du weitere neue Themen erstellen."
@@ -682,8 +682,8 @@ de:
       create_like: "Beeindruckend! Du hast viel Liebe geteilt! Du hast die maximalen täglichen Likes für heute erreicht, aber wenn du Vertrauensstufen gewinnst, wirst du mehr tägliche Likes verdienen. Du wirst Beiträge in %{time_left}wieder mögen können."
       create_bookmark: "Du hast die maximale Anzahl täglicher Lesezeichen erreicht. Du kannst weitere Lesezeichen in %{time_left}erstellen."
       edit_post: "Du hast die maximale Anzahl täglicher Bearbeitungen erreicht. Du kannst weitere Bearbeitungen in %{time_left}einreichen."
-      live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, bis du es wieder versuchst."
-      unsubscribe_via_email: "Du hast die maximale Anzahl an Abbestellungen per E-Mail erreicht. Bitte warte %{time_left}, vor einem neuen Versuch."
+      live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, ehe du es erneut versuchst."
+      unsubscribe_via_email: "Du hast die maximale Anzahl an Abbestellungen per E-Mail erreicht. Bitte warte %{time_left}, ehe du es erneut versuchst."
       topic_invitations_per_day: "Du hast die maximale Anzahl von Themeneinladungen erreicht. Du kannst weitere Einladungen in %{time_left}senden."
     hours:
       one: "%{count} Stunde"
@@ -697,16 +697,16 @@ de:
     short_time: "ein paar Sekunden"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1min"
+      half_a_minute: "< 1 Min."
       less_than_x_seconds:
-        one: "< %{count}s"
-        other: "< %{count}s"
+        one: "< %{count} s"
+        other: "< %{count} s"
       x_seconds:
-        one: "%{count}s"
-        other: "%{count}s"
+        one: "%{count} s"
+        other: "%{count} s"
       less_than_x_minutes:
         one: "< %{count} Min."
-        other: "< %{count}min"
+        other: "< %{count} Min."
       x_minutes:
         one: "%{count} Min."
         other: "%{count} Min."
@@ -735,43 +735,43 @@ de:
       half_a_minute: "gerade eben"
       less_than_x_seconds: "gerade eben"
       x_seconds:
-        one: "vor einer Sekunde"
+        one: "vor %{count} Sekunde"
         other: "vor %{count} Sekunden"
       less_than_x_minutes:
-        one: "vor weniger als einer Minute"
+        one: "vor weniger als %{count} Minute"
         other: "vor weniger als %{count} Minuten"
       x_minutes:
-        one: "vor einer Minute"
+        one: "vor %{count} Minute"
         other: "vor %{count} Minuten"
       about_x_hours:
-        one: "vor einer Stunde"
+        one: "vor %{count} Stunde"
         other: "vor %{count} Stunden"
       x_days:
-        one: "vor einem Tag"
+        one: "vor %{count} Tag"
         other: "vor %{count} Tagen"
       about_x_months:
-        one: "vor etwa einem Monat"
+        one: "vor etwa %{count} Monat"
         other: "vor etwa %{count} Monaten"
       x_months:
-        one: "vor einem Monat"
+        one: "vor %{count} Monat"
         other: "vor %{count} Monaten"
       about_x_years:
-        one: "vor etwa einem Jahr"
+        one: "vor etwa %{count} Jahr"
         other: "vor etwa %{count} Jahren"
       over_x_years:
-        one: "vor über einem Jahr"
+        one: "vor über %{count} Jahr"
         other: "vor über %{count} Jahren"
       almost_x_years:
-        one: "vor fast einem Jahr"
+        one: "vor fast %{count} Jahr"
         other: "vor fast %{count} Jahren"
   password_reset:
-    no_token: "Entschuldige, aber der Link zum Zurücksetzen des Passworts ist zu alt. Wähle 'Ich habe mein Passwort vergessen' um einen neuen Link zu erhalten."
+    no_token: "Entschuldige, aber der Link zum Ändern des Passworts ist zu alt. Wähle die Anmelden-Schaltfläche und nutze „Ich habe mein Passwort vergessen“, um einen neuen Link zu erhalten."
     choose_new: "Wähle ein neues Passwort"
     choose: "Wähle ein Passwort"
     update: "Passwort aktualisieren"
     save: "Passwort festlegen"
     title: "Passwort zurücksetzen"
-    success: "Dein Passwort wurde erfolgreich geändert, und du bist nun angemeldet."
+    success: "Dein Passwort wurde erfolgreich geändert und du bist nun angemeldet."
     success_unapproved: "Dein Passwort wurde erfolgreich geändert."
   email_login:
     invalid_token: "Entschuldige, aber der Link zum Anmelden ist zu alt. Wähle die Anmelden-Schaltfläche und nutze „Ich habe mein Passwort vergessen“, um einen neuen Link zu erhalten."
@@ -779,7 +779,7 @@ de:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      discoursehub: "DiscouseHub App"
+      discoursehub: "DiscouseHub-App"
       edge: "Microsoft Edge"
       firefox: "Firefox"
       ie: "Internet Explorer"
@@ -806,7 +806,7 @@ de:
       windows: "Microsoft Windows"
       unknown: "unbekanntes Betriebssystem"
   change_email:
-    wrong_account_error: "Du bist mit dem falschen Account angemeldet. Bitte melde dich ab und versuche es noch einmal."
+    wrong_account_error: "Du bist mit dem falschen Konto angemeldet. Bitte melde dich ab und versuche es noch einmal."
     confirmed: "Deine E-Mail-Adresse wurde aktualisiert."
     please_continue: "Weiter zu %{site_name}"
     error: "Es gab einen Fehler beim Ändern deiner E-Mail-Adresse. Wird vielleicht diese Adresse bereits verwendet?"
@@ -816,7 +816,7 @@ de:
     confirm: "Bestätigen"
     max_secondary_emails_error: "Sie haben das maximal zulässige Limit für sekundäre E-Mails erreicht."
     authorizing_new:
-      title: "Bestätige deine neue E-Mail"
+      title: "Bestätige deine neue E-Mail-Adresse"
       description: "Bitte bestätigen Sie, dass Ihre E-Mail-Adresse geändert werden soll in:"
       description_add: "Bitte bestätigen Sie, dass Sie eine alternative E-Mail-Adresse hinzufügen möchten:"
     authorizing_old:
@@ -825,7 +825,7 @@ de:
       description_add: "Bitte bestätigen Sie, dass Sie eine alternative E-Mail-Adresse hinzufügen möchten:"
       old_email: "Alte Adresse: %{email}"
       new_email: "Neue Adresse: %{email}"
-      almost_done_title: "bestätige neue E-Mail-Adresse"
+      almost_done_title: "Bestätige neue E-Mail-Adresse"
       almost_done_description: "Wir haben eine E-Mail an deine neue Adresse gesendet, um die Änderung zu bestätigen!"
   associated_accounts:
     revoke_failed: "Das Widerrufen deines Kontos bei %{provider_name} ist fehlgeschlagen."
