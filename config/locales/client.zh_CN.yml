@@ -127,8 +127,8 @@ zh_CN:
         enabled: "于%{when}全站置顶"
         disabled: "于%{when}取消全站置顶"
       visible:
-        enabled: "于 %{when} 显示"
-        disabled: "于 %{when} 隐藏"
+        enabled: "%{when}公开"
+        disabled: "%{when}取消公开"
       banner:
         enabled: "于%{when}将此设置为横幅。在用户关闭前，它将显示在每个页面的顶部。"
         disabled: "于%{when}移除了此横幅。它将不再显示在每个页面的顶部。"
@@ -4387,7 +4387,7 @@ zh_CN:
         like_count: 点赞 / 获赞
         last_100_days: "在最近 100 天"
         private_topics_count: 私有话题数量
-        posts_read_count: 已阅帖子数量
+        posts_read_count: 已阅帖子
         post_count: 发表的帖子数量
         second_factor_enabled: 双重认证已启用
         topics_entered: 已查看的话题数量
