@@ -187,7 +187,7 @@ createWidget("post-avatar", {
 
     const result = [body];
 
-    if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
+    if (attrs.flair_url || attrs.flair_bg_color) {
       result.push(this.attach("avatar-flair", attrs));
     } else {
       const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);

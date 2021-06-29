@@ -779,6 +779,45 @@ table {
   }
 }
 
+.pref-flair {
+  .controls {
+    display: flex;
+  }
+
+  .flair-image,
+  .flair-icon {
+    border: 0;
+    display: inline-block;
+    margin: 0 5px;
+    height: 50px;
+    width: 50px;
+  }
+
+  .flair-image {
+    background-repeat: no-repeat;
+    background-size: 50px 50px;
+  }
+
+  .flair-icon {
+    align-items: center;
+    border-radius: 50%;
+    display: inline-flex;
+    height: 50px;
+    justify-content: center;
+    width: 50px;
+
+    .d-icon {
+      display: block;
+      height: (50px / 1.8);
+      width: (50px / 1.8);
+    }
+  }
+
+  .flair-selected {
+    box-shadow: 0 0 5px 1px var(--tertiary);
+  }
+}
+
 .pref-auth-tokens {
   .row {
     border-bottom: 1px solid #ddd;

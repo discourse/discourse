@@ -2142,7 +2142,7 @@ describe User do
 
   end
 
-  describe '#match_title_to_primary_group_changes' do
+  describe '#match_primary_group_changes' do
     let(:primary_group_a) { Fabricate(:group, title: 'A', users: [user]) }
     let(:primary_group_b) { Fabricate(:group, title: 'B', users: [user]) }
 

@@ -59,6 +59,7 @@ let userFields = [
   "watching_first_post_tags",
   "date_of_birth",
   "primary_group_id",
+  "flair_group_id",
   "user_notification_schedule",
 ];
 
@@ -886,6 +887,47 @@ const User = RestModel.extend({
           id: title,
         };
       });
+  },
+
+  @discourseComputed("groups.[]")
+  availableFlairs() {
+    let flairs = [];
+
+    if (this.groups) {
+      this.groups.forEach((group) => {
+        if (group.flair_url) {
+          const flair = {
+            id: group.id,
+            name: group.name,
+            bgColor: group.flair_bg_color,
+            color: group.flair_color,
+          };
+
+          if (group.flair_url.includes("/")) {
+            flair.imageUrl = group.flair_url;
+          } else {
+            flair.icon = group.flair_url;
+          }
+
+          flair.style = "";
+          if (flair.imageUrl) {
+            const flairUrl = escapeExpression(flair.imageUrl);
+            flair.style += `background-image: url(${flairUrl});`;
+          }
+          if (flair.bgColor) {
+            flair.style += `background-color: #${flair.bgColor};`;
+          }
+          if (flair.color) {
+            flair.style += `color: #${flair.color};`;
+          }
+          flair.style = flair.style.htmlSafe();
+
+          flairs.push(flair);
+        }
+      });
+    }
+
+    return flairs;
   },
 
   @discourseComputed("user_option.text_size_seq", "user_option.text_size")

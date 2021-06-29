@@ -48,6 +48,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :previous_visit_at,
              :seen_notification_id,
              :primary_group_id,
+             :flair_group_id,
              :can_create_topic,
              :can_create_group,
              :link_posting_access,

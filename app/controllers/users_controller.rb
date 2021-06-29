@@ -1632,6 +1632,7 @@ class UsersController < ApplicationController
       :profile_background_upload_url,
       :card_background_upload_url,
       :primary_group_id,
+      :flair_group_id,
       :featured_topic_id
     ]
 

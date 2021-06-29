@@ -95,6 +95,7 @@ class User < ActiveRecord::Base
   has_one :card_background_upload, through: :user_profile
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
+  belongs_to :flair_group, class_name: 'Group'
 
   has_many :muted_users, through: :muted_user_records
   has_many :ignored_users, through: :ignored_user_records
@@ -133,7 +134,7 @@ class User < ActiveRecord::Base
 
   before_save :update_usernames
   before_save :ensure_password_is_hashed
-  before_save :match_title_to_primary_group_changes
+  before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
 
   after_save :expire_tokens_if_password_changed
@@ -1626,11 +1627,15 @@ class User < ActiveRecord::Base
     end
   end
 
-  def match_title_to_primary_group_changes
+  def match_primary_group_changes
     return unless primary_group_id_changed?
 
     if title == Group.where(id: primary_group_id_was).pluck_first(:title)
       self.title = primary_group&.title
+    end
+
+    if flair_group_id == primary_group_id_was
+      self.flair_group_id = primary_group&.id
     end
   end
 
@@ -1752,6 +1757,7 @@ end
 #  group_locked_trust_level  :integer
 #  manual_locked_trust_level :integer
 #  secure_identifier         :string
+#  flair_group_id            :integer
 #
 # Indexes
 #

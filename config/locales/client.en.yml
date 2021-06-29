@@ -1648,6 +1648,8 @@ en:
       title:
         title: "Title"
         none: "(none)"
+      flair:
+        title: "Flair"
       primary_group:
         title: "Primary Group"
         none: "(none)"
