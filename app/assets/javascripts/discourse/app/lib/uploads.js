@@ -12,7 +12,7 @@ export function markdownNameFromFileName(fileName) {
   let name = fileName.substr(0, fileName.lastIndexOf("."));
 
   if (isAppleDevice() && isGUID(name)) {
-    name = I18n.t("upload_file.default_image_alt_text");
+    name = I18n.t("upload_selector.default_image_alt_text");
   }
 
   return name.replace(/\[|\]|\|/g, "");

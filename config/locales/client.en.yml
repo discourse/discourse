@@ -2234,7 +2234,7 @@ en:
         reaction: "new reaction"
         votes_released: "Vote was released"
 
-    upload_file:
+    upload_selector:
       uploading: "Uploading"
       select_file: "Select File"
       default_image_alt_text: image
