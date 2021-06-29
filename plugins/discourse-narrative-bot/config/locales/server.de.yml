@@ -426,7 +426,7 @@ de:
 
           Kannst du das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor verwenden und einen Details-Abschnitt in deine nächste Antwort einfügen?
         not_found: |-
-          Hast du Schwierigkeiten, den Details-Abschnitt zu erstellen? Versuche Folgendes in deine nächste Antwort aufzunehmen:
+          Hast du Schwierigkeiten, ein Details-Widget zu erstellen? Versuche, Folgendes in deine nächste Antwort aufzunehmen:
 
           ```text
           [details=Wähle mich aus, um die Details zu sehen]

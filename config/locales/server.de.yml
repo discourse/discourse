@@ -1265,8 +1265,8 @@ de:
     page_view_anon_mobile_reqs:
       title: "Anonyme Seitenaufrufe"
       xaxis: "Tag"
-      yaxis: "Anonyme, mobile Seitenaufrufe"
-      description: "Anzahl neuer Seitenaufrufe von Besuchern auf mobilen Endgeräten, die nicht angemeldet sind."
+      yaxis: "Anonyme Seitenaufrufe (mobil)"
+      description: "Anzahl neuer Seitenaufrufe von nicht angemeldeten Besuchern auf mobilen Endgeräten."
     http_background_reqs:
       title: "Hintergrund"
       xaxis: "Tag"
@@ -1294,7 +1294,7 @@ de:
     time_to_first_response:
       title: "Zeit bis zur ersten Reaktion"
       xaxis: "Tag"
-      yaxis: "Durchschnittszeit (Stunden)"
+      yaxis: "Durchschnittliche Zeit (Stunden)"
       description: "Durchschnittliche Zeit (in Stunden) bis zur ersten Antwort auf neue Themen."
     topics_with_no_response:
       title: "Themen ohne Reaktionen"
@@ -1305,7 +1305,7 @@ de:
       title: "Benutzerbesuche (mobil)"
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl der eindeutigen Benutzern, die die Seite mit einem mobilen Endgerät besucht haben."
+      description: "Anzahl der eindeutigen Benutzer, welche die Website auf einem mobilen Endgerät besucht haben."
     web_crawlers:
       title: "Suchmaschinen-Browserkennungen"
       labels:
@@ -1334,20 +1334,20 @@ de:
       title: "Top-Uploads"
       labels:
         filename: Dateiname
-        extension: Erweiterung
+        extension: Dateiendung
         author: Ersteller
         filesize: Dateigröße
-      description: "Liste aller Uploads nach Erweiterung, Dateigröße und Ersteller."
+      description: "Liste aller Uploads nach Dateiendung, Dateigröße und Ersteller."
     top_ignored_users:
-      title: "Top ignorierte / stummgeschaltete Benutzer"
+      title: "Top ignorierte/stummgeschaltete Benutzer"
       labels:
         ignored_user: Ignorierte Benutzer
-        ignores_count: Anzahl ignorierte
+        ignores_count: Anzahl ignoriert
         mutes_count: Anzahl stummgeschaltet
-      description: "Bentuzer, die von vielen anderen Benutzern stummgeschaltet und/oder ignoriert worden sind."
+      description: "Benutzer, die von vielen anderen Benutzern stummgeschaltet und/oder ignoriert wurden."
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
-    host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen deiner Website ein."
+    host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostnamen. Trage hier den Hostnamen deiner Website ein."
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
     queue_size_warning: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten."
     memory_warning: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
@@ -1355,21 +1355,21 @@ de:
     facebook_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Facebook erlaubt (enable_facebook_logins), aber die App-ID und die geheimen Werte der App sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
     twitter_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Twitter erlaubt (enable_twitter_logins), aber der Schlüssel und die geheimen Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
     github_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit GitHub erlaubt (enable_github_logins), aber die Client-ID und die geheimen Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-    s3_config_warning: 'Der Server ist so eingestellt, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Seiten-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
-    s3_backup_config_warning: 'Der Server ist so eingestellt, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Seiten-Einstellungen</a> und aktulisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
-    s3_cdn_warning: 'Der Server ist so konfiguriert, dass er Dateien nach S3 hochlädt, aber es ist kein S3 CDN konfiguriert. Dies kann zu teuren S3-Kosten und langsamerer Seitenleistung führen. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Siehe "Objektspeicher für Uploads verwenden", um mehr zu erfahren</a>.'
-    image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="https://www.imagemagick.org/script/download.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
-    failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"%{base_path}/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
-    subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
+    s3_config_warning: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
+    s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Back-ups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
+    s3_cdn_warning: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber es ist kein S3-CDN konfiguriert. Dies kann zu teuren S3-Kosten und einer langsameren Performance der Website führen. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Unter „Objektspeicher für Uploads verwenden“ erfährst du mehr</a>.'
+    image_magick_warning: 'Der Server ist so konfiguriert, dass er Vorschaubilder von großen Bildern erstellt, aber ImageMagick ist nicht installiert. Installiere ImageMagick mit deinem bevorzugten Paketmanager oder <a href="https://www.imagemagick.org/script/download.php" target="_blank">lade die aktuelle Version herunter</a>.'
+    failing_emails_warning: '%{num_failed_jobs} E-Mail-Jobs sind fehlgeschlagen. Überprüfe deine app.yml und stelle sicher, dass die Mailservereinstellungen korrekt sind. <a href="%{base_path}/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq anzeigen</a>.'
+    subfolder_ends_in_slash: "Deine Unterordner-Konfiguration ist fehlerhaft; DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
     email_polling_errored_recently:
       one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
       other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
-    missing_mailgun_api_key: "Der Server ist so eingestellt, dass E-Mails über Mailgun versendet werden, aber du hast keinen API-Schlüssel angegeben, um Webhook-Nachrichten zu überprüfen."
+    missing_mailgun_api_key: "Der Server ist so konfiguriert, dass E-Mails über Mailgun versendet werden, aber du hast keinen API-Schlüssel angegeben, mit dem die Webhook-Nachrichten verifiziert werden können."
     bad_favicon_url: "Das Favicon lässt sich nicht laden. Prüfe die Favicon-Einstellung in den <a href='%{base_path}/admin/site_settings'>Einstellungen</a>."
     poll_pop3_timeout: "Die Verbindung zum POP3-Server schlägt mit einer Zeitüberschreitung fehl. Eingehende E-Mails konnten nicht abgerufen werden. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
-    poll_pop3_auth_error: "Die Verbindung zum POP3-Server schlägt mit einem Authentisierungsfehler fehl. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
-    force_https_warning: "Deine Webseite verwendet SSL, aber die `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ist in deinen Website-Einstellungen noch nicht aktiviert."
-    out_of_date_themes: "Updates sind zu folgenden Themes verfügbar:"
+    poll_pop3_auth_error: "Die Verbindung zum POP3-Server schlägt mit einem Authentifizierungsfehler fehl. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
+    force_https_warning: "Deine Website verwendet SSL, aber `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ist in deinen Website-Einstellungen noch nicht aktiviert."
+    out_of_date_themes: "Updates sind für die folgenden Themes verfügbar:"
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Regular expression für %{action} beobachtete Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Beobachtete Wörter Einstellungen</a>oder deaktiviere die Einstellung 'Beobachtete Wörter regular expressions."
   site_settings:
