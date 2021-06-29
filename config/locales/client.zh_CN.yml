@@ -102,36 +102,36 @@ zh_CN:
       email: "通过电子邮件发送"
       url: "复制并分享网址"
     action_codes:
-      public_topic: "于%{when}将此话题设为公开"
-      private_topic: "于%{when}将此话题转换为个人消息"
-      split_topic: "于%{when}拆分了此话题"
-      invited_user: "于%{when}邀请了 %{who}"
-      invited_group: "于%{when}邀请了 %{who}"
-      user_left: "%{who} 于%{when}将自己从此消息中移除"
-      removed_user: "于%{when}移除了 %{who}"
-      removed_group: "于%{when}移除了 %{who}"
-      autobumped: "于%{when}自动顶帖"
+      public_topic: "%{when}将此话题设为公开"
+      private_topic: "%{when}将此话题转换为个人消息"
+      split_topic: "%{when}拆分了此话题"
+      invited_user: "%{when}邀请了 %{who}"
+      invited_group: "%{when}邀请了 %{who}"
+      user_left: "%{who} 在 %{when}将自己从此消息中移除"
+      removed_user: "%{when}移除了 %{who}"
+      removed_group: "%{when}移除了 %{who}"
+      autobumped: "%{when}自动顶帖"
       autoclosed:
-        enabled: "于%{when}关闭"
-        disabled: "于%{when}打开"
+        enabled: "%{when}关闭"
+        disabled: "%{when}打开"
       closed:
-        enabled: "于%{when}关闭"
-        disabled: "于%{when}打开"
+        enabled: "%{when}关闭"
+        disabled: "%{when}打开"
       archived:
-        enabled: "于%{when}归档"
-        disabled: "于%{when}取消归档"
+        enabled: "%{when}归档"
+        disabled: "%{when}取消归档"
       pinned:
-        enabled: "于%{when}置顶"
-        disabled: "于%{when}取消置顶"
+        enabled: "%{when}置顶"
+        disabled: "%{when}取消置顶"
       pinned_globally:
-        enabled: "于%{when}全站置顶"
-        disabled: "于%{when}取消全站置顶"
+        enabled: "%{when}全站置顶"
+        disabled: "%{when}取消全站置顶"
       visible:
         enabled: "%{when}公开"
         disabled: "%{when}取消公开"
       banner:
-        enabled: "于%{when}将此设置为横幅。在用户关闭前，它将显示在每个页面的顶部。"
-        disabled: "于%{when}移除了此横幅。它将不再显示在每个页面的顶部。"
+        enabled: "%{when}将此设置为横幅。在用户关闭前，它将显示在每个页面的顶部。"
+        disabled: "%{when}移除了此横幅。它将不再显示在每个页面的顶部。"
       forwarded: "转发了上述电子邮件"
     topic_admin_menu: "话题操作"
     wizard_required: "欢迎来到全新的 Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧 ✨"
@@ -239,7 +239,7 @@ zh_CN:
       contact: "联系我们"
       contact_info: "如果出现影响此站点的关键问题或紧急事项，请联系我们：%{contact_info}。"
     bookmarked:
-      title: "书签"
+      title: "加入书签"
       clear_bookmarks: "清除书签"
       help:
         bookmark: "点击以将此话题的第一个帖子加入书签"
@@ -390,7 +390,7 @@ zh_CN:
         reject_reason: "原因"
       user_percentage:
         summary:
-          other: "%{agreed}，%{disagreed}，%{ignored}（共 %{count} 个旗帜）"
+          other: "%{agreed}，%{disagreed}，%{ignored}（共 %{count} 个举报）"
         agreed:
           other: "%{count}% 同意"
         disagreed:
@@ -2122,7 +2122,7 @@ zh_CN:
       filter_to:
         other: "话题中 %{count} 个帖子"
       create: "新建话题"
-      create_long: "创建新的话题"
+      create_long: "创建新话题"
       open_draft: "打开草稿"
       private_message: "开始发私信"
       archive_message:
@@ -2389,7 +2389,7 @@ zh_CN:
         title: "打印"
         help: "打开该话题的印刷版本"
       flag_topic:
-        title: "标记"
+        title: "举报"
         help: "私下标记此话题以警告，或发送一个关于它的私人通知"
         success_message: "你已经成功标记该话题。"
       make_public:
@@ -3019,7 +3019,7 @@ zh_CN:
         lower_title: "近期"
         title: "近期"
         title_with_count:
-          other: "近期（%{count}）"
+          other: "新 (%{count})"
         help: "最近几天里创建的话题"
       posted:
         title: "我的帖子"
