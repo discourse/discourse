@@ -5093,6 +5093,7 @@ en:
           text: "Text Field"
           confirm: "Confirmation"
           dropdown: "Dropdown"
+          multiselect: "Multiselect"
 
       site_text:
         description: "You can customize any of the text on your forum. Please start by searching below:"
