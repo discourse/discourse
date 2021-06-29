@@ -300,6 +300,7 @@ export default Component.extend({
         return;
       }
     }
+
     if (report.error === "not_found") {
       this.set("showFilteringUI", false);
     }
@@ -384,15 +385,11 @@ export default Component.extend({
       );
     } else if (mode === "chart") {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
-
-      let chartGrouping = this.get("reportOptions.chartGrouping");
-      if (!chartGrouping && report.chartData) {
-        chartGrouping = Report.groupingForDatapoints(report.chartData.length);
-      }
-
       return EmberObject.create(
         Object.assign(chartOptions, this.get("reportOptions.chart") || {}, {
-          chartGrouping,
+          chartGrouping:
+            this.get("reportOptions.chartGrouping") ||
+            Report.groupingForDatapoints(report.chartData.length),
         })
       );
     }
