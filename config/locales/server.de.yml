@@ -379,17 +379,17 @@ de:
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
-  cannot_edit_on_slow_mode: "Dieses Thema befindet sich im langsamen Modus. Um nachdenkliche, überlegte Diskussionen anzuregen, ist das Bearbeiten alter Beiträge in diesem Thema während des langsamen Modus nicht zulässig."
+  cannot_edit_on_slow_mode: "Dieses Thema befindet sich im langsamen Modus. Um durchdachte, überlegte Diskussionen anzuregen, ist das Bearbeiten alter Beiträge in diesem Thema während des langsamen Modus nicht zulässig."
   excerpt_image: "Bild"
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
-      too_many: "Leider kannst Du nicht mehr als %{limit} Lesezeichen hinzufügen. Besuche <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> , um einige zu entfernen."
-      cannot_set_past_reminder: "Sie können in der Vergangenheit keine Lesezeichenerinnerung festlegen."
+      too_many: "Entschuldige, leider kannst du nicht mehr als %{limit} Lesezeichen hinzufügen. Besuche <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>, um welche zu entfernen."
+      cannot_set_past_reminder: "Du kannst keine Lesezeichen-Erinnerung in der Vergangenheit setzen."
       cannot_set_reminder_in_distant_future: "Sie können eine Lesezeichenerinnerung nicht länger als 10 Jahre in der Zukunft festlegen."
       time_must_be_provided: "die Zeit muss für alle Erinnerungen angegeben werden"
     reminders:
-      at_desktop: "Nächstes mal wenn ich an meinem PC bin"
+      at_desktop: "Nächstes Mal, wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
       next_business_day: "Nächster Werktag"
       tomorrow: "Morgen"
@@ -402,23 +402,23 @@ de:
         one: "%{count} Benutzer wurde zur Gruppe hinzugefügt."
         other: "%{count} Benutzer wurden zur Gruppe hinzugefügt."
     errors:
-      grant_trust_level_not_valid: "'%{trust_level}' ist keine gültige Vertrauensstufe"
+      grant_trust_level_not_valid: "„%{trust_level}“ ist keine gültige Vertrauensstufe."
       can_not_modify_automatic: "Du kannst eine automatische Gruppe nicht bearbeiten"
       member_already_exist:
-        one: "'%{username}' ist bereits Mitglied dieser Gruppe."
+        one: "„%{username}“ ist bereits Mitglied dieser Gruppe."
         other: "Die folgenden Benutzer sind bereits Mitglieder dieser Gruppe: %{username}"
-      invalid_domain: "'%{domain}' ist keine gültige Domain."
-      invalid_incoming_email: "'%{email}' ist keine gültige E-Mail-Adresse."
-      email_already_used_in_group: "'%{email}' wird bereits von der Gruppe '%{group_name}' verwendet."
-      email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
+      invalid_domain: "„%{domain}“ ist keine gültige Domain."
+      invalid_incoming_email: "„%{email}“ ist keine gültige E-Mail-Adresse."
+      email_already_used_in_group: "„%{email}“ wird bereits von der Gruppe „%{group_name}“ verwendet."
+      email_already_used_in_category: "„%{email}“ wird bereits von der Kategorie „%{category_name}“ verwendet."
       cant_allow_membership_requests: "Du kannst Mitgliedschaftsanfragen nicht für eine Gruppe ohne Eigentümer erlauben."
-      already_requested_membership: "Du hast die Gruppenmitgliedschaft für diese Gruppe bereits angefragt."
+      already_requested_membership: "Du hast die Mitgliedschaft für diese Gruppe bereits angefragt."
       adding_too_many_users:
         one: "Maximal %{count} Benutzer kann auf einmal hinzugefügt werden"
         other: "Maximal %{count} Benutzer können auf einmal hinzugefügt werden"
       usernames_or_emails_required: "Benutzernamen oder E-Mails müssen vorhanden sein"
       no_invites_with_discourse_connect: "Du kannst nur registrierte Benutzer einladen, wenn DiscourseConnect aktiviert ist"
-      no_invites_without_local_logins: "Sie können nur registrierte Benutzer einladen, wenn lokale Anmeldungen deaktiviert sind"
+      no_invites_without_local_logins: "Du kannst nur registrierte Benutzer einladen, wenn lokale Anmeldungen deaktiviert sind"
     default_names:
       everyone: "jeder"
       admins: "admins"
@@ -450,31 +450,31 @@ de:
 
       Mehr Tipps findest du in [unseren Community-Richtlinien](%{base_path}/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
     "new-reply": |
-      Willkommen bei %{site_name} &mdash; **Danke für deinen Beitrag!**
+      Willkommen bei %{site_name} &mdash; **danke für deinen Beitrag!**
 
       - Sei nett zu deinen Community-Mitgliedern.
 
       - Verbessert dein Beitrag das Gespräch?
 
-      - Konstruktive Kritik ist willkommen, aber kritisiere *Ideen*, nicht Menschen.
+      - Konstruktive Kritik ist erwünscht, aber kritisiere *Ideen*, nicht Menschen.
 
-      Beachte bitte auch [unsere Richtlinien](%{base_path}/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} angezeigt.
+      Beachte bitte auch [unsere Community-Richtlinien](%{base_path}/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} angezeigt.
     avatar: |
-      ### Wie wär’s mit einem Bild für dein Konto?
+      ### Wie wärs mit einem Bild für dein Konto?
 
       Du hast schon ein paar Themen und Antworten geschrieben, aber dein Profilbild ist noch nicht so einzigartig wie du – es ist nur ein Buchstabe.
 
-      Hast du schon darüber nachgedacht **[dein Benutzerprofil zu besuchen](%{profile_path})** und ein Bild hochzuladen, das dich repräsentiert?
+      Hast du schon darüber nachgedacht, **[dein Benutzerprofil zu besuchen](%{profile_path})** und ein Bild hochzuladen, das dich repräsentiert?
 
       Es ist einfacher, Diskussionen zu folgen und in Unterhaltungen interessante Personen zu finden, wenn jeder ein einzigartiges Profilbild hat!
     sequential_replies: |
       ### Denke darüber nach, auf mehrere Beiträge gleichzeitig zu antworten
 
-      Statt mehrere aufeinanderfolgende Antworten zu einem Thema zu schreiben, denke bitte darüber nach, eine einzige Antwort zu schreiben, die Zitate mehrerer vorheriger Beiträge oder mehrere Erwähnungen wie @name enthält.
+      Statt mehrere aufeinanderfolgende Antworten zu einem Thema zu schreiben, denke bitte darüber nach, eine einzige Antwort zu schreiben, die Zitate mehrerer vorheriger Beiträge oder mehrere Erwähnungen von Benutzernamen mit @ enthält.
 
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
 
-      Es ist für alle einfacher, Themen zu lesen, die wenige tiefgehende Antworten haben statt vielen kleinen und einzelnen Antworten.
+      Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
     dominating_topic: |
       ### Lassen Sie andere an der Konversation teilnehmen
 
@@ -490,9 +490,9 @@ de:
 
       Und vergiss nicht, wenn du ein Gespräch mit dieser bestimmten Person ausserhalb der Öffentlichkeit ausführlich fortsetzen möchtest, [schicke ihr eine persönliche Nachricht](%{base_path}/u/ %{reply_username}).
     too_many_replies: |
-      ### Du hast das Antwort-Beschränkung für dieses Thema erreicht
+      ### Du hast das Antwort-Limit für dieses Thema erreicht
 
-      Entschuldige, aber neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im gleichen Thema beschränkt.
+      Entschuldige, aber neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im selben Thema beschränkt.
 
       Anstatt eine weitere Antwort hinzuzufügen, denke darüber nach, deine vorherigen Antworten zu bearbeiten oder andere Themen zu besuchen.
     reviving_old_topic: |
@@ -518,9 +518,9 @@ de:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Du kannst Warnungen nur bei Nachrichten hinzufügen."
-              too_many_users: "Du kannst eine Warnung nur an einen Benutzer zugleich anhängen."
-              cant_send_pm: "Entschuldige, du kannst keine Nachricht an diese Person verschicken."
+              warning_requires_pm: "Du kannst Warnungen nur an persönliche Nachrichten anhängen."
+              too_many_users: "Du kannst immer nur an einen Benutzer gleichzeitig Warnungen senden."
+              cant_send_pm: "Entschuldige, du kannst keine persönliche Nachricht an diesen Benutzer verschicken."
               no_user_selected: "Du musst einen gültigen Benutzer auswählen."
               reply_by_email_disabled: "Antwort per E-Mail ist deaktiviert."
               send_to_email_disabled: "Entschuldige, du kannst keine persönlichen Nachrichen an E-Mail senden."
@@ -533,16 +533,16 @@ de:
         user:
           attributes:
             password:
-              common: "ist eines der 10000 meist verwendeten Passwörter. Bitte verwende ein sichereres Passwort."
+              common: "ist eines der 10.000 am meisten verwendeten Passwörter. Bitte verwende ein sichereres Passwort."
               same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
               same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
-              same_as_current: "entspricht deinem aktuellen Passwort."
-              same_as_name: "entspricht deinem Namen."
+              same_as_current: "ist mit deinem aktuellen Passwort identisch."
+              same_as_name: "ist mit deinem Namen identisch."
               unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
             username:
-              same_as_password: "entspricht deinem Passwort."
+              same_as_password: "ist mit deinem Passwort identisch."
             name:
-              same_as_password: "entspricht deinem Passwort."
+              same_as_password: "ist mit deinem Passwort identisch."
             ip_address:
               signup_not_allowed: "Eine Registrierung ist von diesem Konto nicht erlaubt."
         user_profile:
@@ -552,14 +552,14 @@ de:
         user_email:
           attributes:
             user_id:
-              reassigning_primary_email: "Eine primäre E-Mail-Adresse einem weiteren Benutzer zuzuordnen ist nicht erlaubt."
+              reassigning_primary_email: "Das Zuweisen einer primären E-Mail-Adresse an einen anderen Benutzer ist nicht erlaubt."
         color_scheme_color:
           attributes:
             hex:
               invalid: "ist keine gültige Farbe"
         post_reply:
           base:
-            different_topic: "Beitrag und Antwort müssen zum gleichen Thema gehören."
+            different_topic: "Beitrag und Antwort müssen zum selben Thema gehören."
         web_hook:
           attributes:
             payload_url:
@@ -578,7 +578,7 @@ de:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Die folgenden Erweiterungsschlüssel sind ungültig: "%{keys}"'
+              invalid_interpolation_keys: 'Die folgenden Erweiterungsschlüssel sind ungültig: „%{keys}“'
         watched_word:
           attributes:
             word:
@@ -586,13 +586,13 @@ de:
             base:
               invalid_url: "Ersatz-URL ist ungültig"
       <<: *errors
-  uncategorized_category_name: "Unkategorisiert"
+  uncategorized_category_name: "Nicht kategorisiert"
   vip_category_name: "Lounge"
   vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit Vertrauensstufe 3 oder höher."
   meta_category_name: "Feedback"
   meta_category_description: "Diskussionen über dieses Forum, seine Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Team"
-  staff_category_description: "Geschützte Kategorie für Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
+  staff_category_description: "Private Kategorie für Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
   discourse_welcome_topic:
     title: "Willkommen bei Discourse"
     body: |2
@@ -625,18 +625,18 @@ de:
       * auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist
       * Spam durch eine einzige Meldung ausblenden
 
-      Hier ist die [aktuelle Liste aller Stammgäste](%{base_path}/badges/3/regular). Vergiss nicht, hallo zu sagen!
+      Hier ist die [aktuelle Liste aller Stammgäste](%{base_path}/badges/3/regular). Vergiss nicht, Hallo zu sagen!
 
       Vielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!
 
       (Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
-  admin_quick_start_title: "ZUERST LESEN: Admin Schnellstart Lotse"
+  admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
-    replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Orientierung wird in der Kategorienauswahl angezeigt, versuche also weniger als 200 Zeichen zu benutzen.)"
-    post_template: "%{replace_paragraph}\n\nBenutze die folgenden Abschnitte für eine ausführlichere Beschreibung oder um Richtlinien oder Regeln für diese Kategorie festzulegen:\n\n- Warum sollten Benutzer diese Kategorie nutzen? Wofür ist sie gedacht?\n\n- Wie genau unterscheidet sie sich von den Kategorien, die es bereits gibt?\n\n- Welche Themen sollte diese Kategorie im Allgemeinen beinhalten?\n\n- Brauchen wir diese Kategorie? Können wie sie mit einer anderen Kategorie oder Unter-Kategorie zusammenführen?\n"
+    replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Orientierung wird in der Kategorienauswahl angezeigt, versuche also, weniger als 200 Zeichen zu benutzen.)"
+    post_template: "%{replace_paragraph}\n\nBenutze die folgenden Abschnitte für eine ausführlichere Beschreibung oder um Richtlinien oder Regeln für diese Kategorie festzulegen:\n\n- Warum sollten Benutzer diese Kategorie nutzen? Wofür ist sie gedacht?\n\n- Wie genau unterscheidet sie sich von den Kategorien, die es bereits gibt?\n\n- Was sollten Themen in dieser Kategorie generell beinhalten?\n\n- Brauchen wir diese Kategorie? Können wir sie mit einer anderen Kategorie oder Unter-Kategorie zusammenführen?\n"
     errors:
       not_found: "Kategorie nicht gefunden!"
       uncategorized_parent: "Die \"unkategorisiert\" Kategorie kann keine Elternkategorie haben."

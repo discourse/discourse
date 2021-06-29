@@ -3397,222 +3397,222 @@ fi:
       name: Johtaja
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Myönnetty</a> minkä tahansa viestin muokkaaminen, kiinnittäminen, sulkeminen, arkistoiminen, pilkkominen ja yhdistäminen ja lisää tykkäyksiä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 4. Palstan henkilökunta on valinnut sinut johtajaksi. Näytät muille hyvää esimerkkiä sanoin ja teoin. Voit nyt muokata mitä tahansa viestiä ja käytössäsi on yleiset valvojatyökalut kuten kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistäminen.
+        Tämä kunniamerkki myönnetään, kun nouset luottamustasolle 4. Palstan henkilökunta on valinnut sinut johtajaksi. Näytät muille hyvää esimerkkiä sanoin ja teoin. Voit nyt muokata mitä tahansa viestiä, ja käytössäsi on yleiset valvojatyökalut kuten kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistäminen.
     welcome:
       name: Tervetuloa
       description: Sai tykkäyksen
       long_description: |
-        Tämä ansiomerkki myönnetään, kun viestistäsi tykätään ensi kertaa. Onnittelut, olet tuottanut jotakin, mitä toinen käyttäjä on pitänyt mielenkiintoisena, hauskana tai hyödyllisenä!
+        Tämä kunniamerkki myönnetään, kun viestistäsi tykätään ensi kertaa. Onnittelut, olet tuottanut jotakin, mitä toinen käyttäjä on pitänyt mielenkiintoisena, hauskana tai hyödyllisenä!
     autobiographer:
       name: Omaelämäkerta
       description: Täytti <a href="%{base_uri}/my/preferences/profile">käyttäjätiedot</a>
       long_description: |
-        Tämä ansiomerkki myönnetään, kun täytät <a href="%{base_uri}/my/preferences/profile">käyttäjätiedot</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
+        Tämä kunniamerkki myönnetään, kun täytät <a href="%{base_uri}/my/preferences/profile">käyttäjäprofiilin</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
     anniversary:
       name: Vuosipäivä
       description: Aktiivinen jäsen vuoden ajan, kirjoittanut ainakin yhden viestin
       long_description: |
-        Tämä ansiomerkki myönnetään vuosittain jäsenyytesi vuosipäivän kunniaksi sillä ehdolla, että olet kirjoittanut vuoden aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja antanut panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
+        Tämä kunniamerkki myönnetään vuosittain jäsenyytesi vuosipäivän kunniaksi sillä ehdolla, että olet kirjoittanut vuoden aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja antanut panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
     nice_post:
       name: Hyvä vastaus
       description: Vastaus sai 10 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun vastauksesi saa 10 tykkäystä. Teit sillä vaikutuksen yhteisöön ja edistit keskustelua!
+        Tämä kunniamerkki myönnetään, kun vastauksesi saa 10 tykkäystä. Teit sillä vaikutuksen yhteisöön ja edistit keskustelua!
     good_post:
       name: Erinomainen vastaus
       description: Vastaus sai 25 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Vastauksesi oli poikkeuksellinen ja teki keskustelusta todella paljon mielenkiintoisemman.
+        Tämä kunniamerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Vastauksesi oli poikkeuksellinen ja teki keskustelusta paljon mielenkiintoisemman.
     great_post:
       name: Loistava vastaus
       description: Vastaus sai 50 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun vastauksesi saa 50 tykkäystä. Vau! Vastauksesi oli innoittava, hulvaton tai oivaltava, ja yhteisö rakasti sitä!
+        Tämä kunniamerkki myönnetään, kun vastauksesi saa 50 tykkäystä. Vau! Vastauksesi oli innoittava, hulvaton tai oivaltava, ja yhteisö rakasti sitä!
     nice_topic:
       name: Hyvä ketju
-      description: Ketjunavaus sai 10 tykkäystä
+      description: Ketju sai 10 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ketjunaloituksesi saa 10 tykkäystä. Aloitit kiintoisan keskustelun, josta yhteisö nautti.
+        Tämä kunniamerkki myönnetään, kun ketjusi saa 10 tykkäystä. Aloitit kiintoisan keskustelun, josta yhteisö nautti.
     good_topic:
       name: Erinomainen ketju
-      description: Ketjunavaus sai 25 tykkäystä
+      description: Ketju sai 25 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ketjunaloituksesi saa 25 tykkäystä. Aloitit vilkkaan keskustelun, jonka ympärillä oli pöhinää.
+        Tämä kunniamerkki myönnetään, kun ketjusi saa 25 tykkäystä. Aloitit vilkkaan keskustelun, jonka ympärillä oli pöhinää.
     great_topic:
       name: Loistava ketju
-      description: Ketjunavaus sai 50 tykkäystä
+      description: Ketju sai 50 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ketjunaloituksesi saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jota yhteisö rakasti!
+        Tämä kunniamerkki myönnetään, kun ketjusi saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jota yhteisö rakasti!
     nice_share:
       name: Hyvä jako
       description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
       long_description: |
-        Tämä ansiomerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
+        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
     good_share:
       name: Erinomainen jako
       description: Jakoi viestin, ja linkin kautta saapui 300 vierailijaa
       long_description: |
-        Tämä ansiomerkki myönnetään, kun jaat linkin jota klikkaa 300 ulkopuolista vierailijaa. Hyvää työtä! Olet esitellyt upean keskustelun joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan.
+        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 300 ulkopuolista vierailijaa. Hyvää työtä! Olet esitellyt upean keskustelun joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan.
     great_share:
       name: Loistava jako
-      description: Jakoi viestin, ja linkin kautta saapui 1000 vierailijaa
+      description: Jakoi viestin, ja linkin kautta saapui 1 000 vierailijaa
       long_description: |
-        Tämä ansiomerkki myönnetään, kun jaat linkin jota klikkaa 1000 ulkopuolista vierailijaa. Vau! Olet mainostanut kiinnostavaa keskustelua valtavalle joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan merkittävästi.
+        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 1 000 ulkopuolista vierailijaa. Vau! Olet mainostanut kiinnostavaa keskustelua valtavalle joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan merkittävästi.
     first_like:
       name: Ensimmäinen tykkäys
       description: Tykkäsi viestistä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kertaa tykkäät viestistä käyttäen :heart: -nappia. Viestistä tykkääminen on hyvä tapa viestiä yhteisön toiselle jäsenelle, että hänen viestinsä oli kiintoisa, hyödyllinen, osuva tai hauska. Jaa rakkautta!
+        Tämä kunniamerkki myönnetään, kun ensi kertaa tykkäät viestistä käyttäen :heart: -painiketta. Viestistä tykkääminen on hyvä tapa viestiä yhteisön toiselle jäsenelle, että hänen viestinsä oli kiintoisa, hyödyllinen, osuva tai hauska. Jaa rakkautta!
     first_flag:
-      name: Ensimmäinen liputus
-      description: Liputti viestin
+      name: Ensimmäinen merkintä
+      description: Merkitsi viestin
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kertaa liputat viestin. Liputtaminen on keino, jolla yhdessä pidämme mukavana paikkana. Jos huomaat viestin joka valvojien tulisi huomioida syystä tai toisesta, älä epäröi liputtaa. Kun näet ongelman, :flag_black: liputa!
+        Tämä kunniamerkki myönnetään, kun ensi kertaa merkitset viestin. Merkitseminen on keino, jolla yhdessä pidämme mukavana paikkana. Jos huomaat viestin joka valvojien tulisi huomioida syystä tai toisesta, älä epäröi merkitä viestejä. Kun näet ongelman, :flag_black: merkitse se!
     promoter:
       name: Markkinoija
       description: Kutsui käyttäjän
       long_description: |
-        Tämä ansiomerkki myönnetään, kun kutsut jonkun liittymään yhteisöön käyttäen kutsupainiketta joko käyttäjäsivullasi tai ketjun alapuolella. Joistain keskusteluista mahdollisesti kiinnostuneen ystävän kutsuminen on erinomainen tapa tuoda uusia ihmisiä yhteisöön, joten kiitos!
+        Tämä kunniamerkki myönnetään, kun kutsut jonkun liittymään yhteisöön käyttäen kutsupainiketta joko käyttäjäsivullasi tai ketjun alaosassa. Joistain keskusteluista mahdollisesti kiinnostuneen ystävän kutsuminen on erinomainen tapa tuoda uusia ihmisiä yhteisöön, joten kiitos!
     campaigner:
       name: Kampanjoija
       description: Kutsui kolme haastajaa (luottamustaso 1)
       long_description: |
-        Tämä ansiomerkki myönnetään, kun 3 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heidän luottamustasonsa nousee ja heistä tulee "haastajia". Elinvoimainen yhteisö tarvitsee säännöllisesti uusia jäseniä tuomaan tuoreita näkökulmia keskusteluihin.
+        Tämä kunniamerkki myönnetään, kun 3 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heidän luottamustasonsa nousee ja heistä tulee "haastajia". Elinvoimainen yhteisö tarvitsee säännöllisesti uusia jäseniä tuomaan tuoreita näkökulmia keskusteluihin.
     champion:
       name: Kampanjapäällikkö
       description: Kutsui viisi konkaria (luottamustaso 2)
       long_description: |
-        Tämä ansiomerkki myönnetään, kun 5 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heistä tulee yhteisön täysivaltaisia jäseniä. Vau! Kiitos, kun edistät yhteisömme monimuotoisuutta tuomalla uusia jäseniä!
+        Tämä kunniamerkki myönnetään, kun 5 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heistä tulee yhteisön täysivaltaisia jäseniä. Vau! Kiitos, kun edistät yhteisömme monimuotoisuutta tuomalla uusia jäseniä!
     first_share:
       name: Ensimmäinen jako
       description: Jakoi viestin
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kertaa jaat linkin vastaukseen tai ketjuun käyttämällä Jaa-nappia. Jakaminen on hyvä tapa esitellä kiintoisia keskusteluita muulle maailmalle ja siten kasvattaa yhteisöä.
+        Tämä kunniamerkki myönnetään, kun ensi kertaa jaat linkin vastaukseen tai ketjuun käyttämällä Jaa-nappia. Jakaminen on hyvä tapa esitellä kiintoisia keskusteluita muulle maailmalle ja siten kasvattaa yhteisöä.
     first_link:
       name: Ensimmäinen linkki
       description: Linkitti toiseen ketjuun
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kerran linkität toiseen ketjuun. Linkittäminen auttaa kanssalukijoita löytämään kiintoisia asiaa sivuavia keskusteluita ja osoittaa yhteyksiä ketjujen välillä. Linkitä ahkerasti!
+        Tämä kunniamerkki myönnetään, kun ensi kerran linkität toiseen ketjuun. Linkittäminen auttaa kanssalukijoita löytämään kiintoisia asiaa sivuavia keskusteluita ja osoittaa yhteyksiä ketjujen välillä. Linkitä ahkerasti!
     first_quote:
       name: Ensimmäinen lainaus
       description: Lainasi viestiä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kerran lainaat viestiä vastauksessasi. Edellisten viestien olennaisten osien lainaaminen auttaa pitämään keskustelun yhtenäisenä ja aiheen mukaisena. Helpoin tapa on maalata viestin osa ja sitten painaa vastaa-painiketta. Muista lainata!
+        Tämä kunniamerkki myönnetään, kun ensi kerran lainaat viestiä vastauksessasi. Edellisten viestien olennaisten osien lainaaminen auttaa pitämään keskustelun yhtenäisenä ja aiheen mukaisena. Helpoin tapa on maalata viestin osa ja sitten painaa vastauspainiketta. Muista lainata!
     read_guidelines:
       name: Luki ohjeet
       description: Luki <a href="%{base_uri}/guidelines">yhteisön säännöt</a>
       long_description: |
-        Tämä ansiomerkki myönnetään, kun <a href="%{base_uri}/guidelines">luet yhteisön säännöt</a>. Noudattamalla ja jakamalla näitä yksinkertaisia ohjeita edistät yhteisön turvallisuutta, viihtyisyyttä ja jatkuvuutta. Muista aina, että toisessa päässä on toinen ihminen, hyvin itsesi kaltainen. Ole mukava toisille!
+        Tämä kunniamerkki myönnetään, kun <a href="%{base_uri}/guidelines">luet yhteisön säännöt</a>. Noudattamalla ja jakamalla näitä yksinkertaisia ohjeita edistät yhteisön turvallisuutta, viihtyisyyttä ja jatkuvuutta. Muista aina, että toisessa päässä on toinen ihminen, hyvin itsesi kaltainen. Ole mukava toisille!
     reader:
       name: Lukutoukka
       description: Luki jokaisen viestin ketjusta, jossa on enemmän kuin 100 vastausta
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kerran luet pitkän, vähintään 100 vastauksen ketjun. Keskustelua huolellisesti lukemalla tiedät missä mennään ja ymmärrät eri näkökulmia, mikä johtaa mielenkiintoisempiin keskusteluihin. Mitä enemmän luet, sitä parempaa on vuoropuhelu. Kuten tapaamme sanoa, lukeminen on kaiken A ja O! :slight_smile:
+        Tämä kunniamerkki myönnetään, kun ensi kerran luet pitkän, vähintään 100 vastauksen ketjun. Keskustelua huolellisesti lukemalla tiedät missä mennään ja ymmärrät eri näkökulmia, mikä johtaa mielenkiintoisempiin keskusteluihin. Mitä enemmän luet, sitä parempaa on vuoropuhelu. Kuten tapaamme sanoa, lukeminen on kaiken A ja O! :slight_smile:
     popular_link:
       name: Suosittu linkki
       description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 50 kertaa
       long_description: |
-        Tämä ansiomerkki myönnetään, kun linkkiäsi klikataan 50 kertaa. Kiitos kun laitoit hyödyllisen linkin, joka toi mielenkiintoista sisältöä keskusteluun!
+        Tämä kunniamerkki myönnetään, kun jakamaasi linkkiäsi klikataan 50 kertaa. Kiitos kun lisäsit hyödyllisen linkin, joka toi mielenkiintoista sisältöä keskusteluun!
     hot_link:
       name: Kuuma linkki
       description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 300 kertaa
       long_description: |
-        Tämä ansiomerkki myönnetään, kun linkkiäsi klikataan 300 kertaa. Kiitos kun laitoit kiehtovan linkin, joka vei keskustelua eteenpäin ja todella edisti keskustelua!
+        Tämä kunniamerkki myönnetään, kun jakamaasi linkkiäsi klikataan 300 kertaa. Kiitos kun lisäsit kiehtovan linkin, joka vei keskustelua eteenpäin ja todella edisti keskustelua!
     famous_link:
       name: Kuuluisa linkki
-      description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 1000 kertaa
+      description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 1 000 kertaa
       long_description: |
-        Tämä ansiomerkki myönnetään, kun linkkisi saa 1000 klikkausta. Vau! Sen sisältö paransi keskustelua merkittävästi. Hyvin tehty!
+        Tämä ansiomerkki myönnetään, kun jakamasi linkkisi saa 1 000 klikkausta. Vau! Sen sisältö paransi keskustelua merkittävästi. Hyvin tehty!
     appreciated:
       name: Arvostettu
       description: 20 viestiä sai tykkäyksen
       long_description: |
-        Tämä ansiomerkki myönnetään, kun olet saanut tykkäyksen vähintään 20 viestistä. Yhteisö nauttii panoksestasi keskusteluun täällä!
+        Tämä kunniamerkki myönnetään, kun olet saanut tykkäyksen vähintään 20 viestistä. Yhteisö nauttii panoksestasi keskusteluun täällä!
     respected:
       name: Kunnioitettu
       description: 100 viestiä sai ainakin 2 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun olet saanut vähintään 2 tykkäystä 100 viestistä. Yhteisö alkaa arvostaa panostasi keskusteluihin täällä.
+        Tämä kunniamerkki myönnetään, kun olet saanut vähintään 2 tykkäystä 100 viestistä. Yhteisö alkaa arvostaa panostasi keskusteluihin täällä.
     admired:
       name: Ihailtu
       description: 300 viestiä sai ainakin 5 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun olet saanut vähintään 5 tykkäystä 300 viestistä. Wow! Yhteisö ihailee toistuvaa korkealaatuista panostasi keskusteluun täällä!
+        Tämä kunniamerkki myönnetään, kun olet saanut vähintään 5 tykkäystä 300 viestistä. Wow! Yhteisö ihailee toistuvaa korkealaatuista panostasi keskusteluun täällä!
     out_of_love:
       name: Rakkaudesta
       description: Käytti %{max_likes_per_day} tykkäystä päivässä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi. Se, että muistaa pysähtyä hetkeksi tykkäämään arvostamastaan viestistä, kannustaa muita palstan kirjoittajia luomaan hienoja keskusteluja jatkossakin.
+        Tämä kunniamerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi. Se, että muistaa pysähtyä hetkeksi tykkäämään arvostamastaan viestistä, kannustaa muita palstan kirjoittajia luomaan hienoja keskusteluja jatkossakin.
     higher_love:
       name: Lukkarinrakkautta
       description: Käytti %{max_likes_per_day} tykkäystä päivässä viidesti
       long_description: |
-        Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi viitenä päivänä. Kiitos kun vaivaudut aktiivisesti kannustamaan muita hyviin keskusteluihin joka päivä!
+        Tämä kunniamerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi viitenä päivänä. Kiitos kun vaivaudut aktiivisesti kannustamaan muita hyviin keskusteluihin joka päivä!
     crazy_in_love:
       name: Korviaan myöten rakastunut
       long_description: |
-        Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi 20 päivänä. Vau! Esimerkillistä muiden palstan käyttäjien kannustamista!
+        Tämä kunniamerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi 20 päivänä. Vau! Esimerkillistä muiden palstan käyttäjien kannustamista!
     thank_you:
       name: Kiitos
       description: 20 viestistä on tykätty ja on tykännyt 10 viestistä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun olet sinulla on 20 tykättyä viestiä ja olet antanut 10 tykkäystä takaisin. Kun joku tykkää viestistäsi, löydät aikaa tykätä myös muiden viesteistä.
+        Tämä kunniamerkki myönnetään, kun olet sinulla on 20 tykättyä viestiä ja olet antanut 10 tykkäystä takaisin. Kun joku tykkää viestistäsi, löydät aikaa tykätä myös muiden viesteistä.
     gives_back:
       name: Vastavuoroinen
       description: 100 viestistä on tykätty ja on tykännyt 100 viestistä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun sinulla on 100 tykättyä viestiä ja olet antanut vähintään 100 tykkäystä takaisin. Kiitos kun laitat hyvän kiertämään!
+        Tämä kunniamerkki myönnetään, kun sinulla on 100 tykättyä viestiä ja olet antanut vähintään 100 tykkäystä takaisin. Kiitos kun laitat hyvän kiertämään!
     empathetic:
       name: Empaattinen
-      description: 500 viestistä on tykätty ja on tykännyt 1000 viestistä
+      description: 500 viestistä on tykätty ja on tykännyt 1 000 viestistä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun sinulla on 500 tykättyä viestiä ja olet antanut vähintään 1000 tykkäystä takaisin. Wow! Olet esimerkki avokätisyydestä ja keskinäisestä arvostuksesta :two_hearts:.
+        Tämä kunniamerkki myönnetään, kun sinulla on 500 tykättyä viestiä ja olet antanut vähintään 1 000 tykkäystä takaisin. Wow! Olet esimerkki avokätisyydestä ja keskinäisestä arvostuksesta :two_hearts:.
     first_emoji:
-      name: Ensimmäinen Emoji
-      description: Käytti Emojia viestissä
+      name: Ensimmäinen emoji
+      description: Käytti emojia viestissä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kerran lisäät emojin viestiin :thumbsup:. Emoji auttaa viestimään tunteista, ilosta :smiley: to suruun :anguished: ja vihaan :angry: ja kaikkea siltä väliltä :sunglasses:. Näppäile : (kaksoispiste) tai paina viestikentän työkalupalkin työkalupainiketta niin pääset valitsemaan sadoista vaihtoehdoista :ok_hand:
+        Tämä kunniamerkki myönnetään, kun ensi kerran lisäät emojin viestiin :thumbsup:. Emoji auttaa viestimään tunteista, ilosta :smiley: suruun :anguished: ja vihaan :angry: ja kaikkea siltä väliltä :sunglasses:. Näppäile : (kaksoispiste) tai paina viestikentän työkalupalkin emojipainiketta, niin pääset valitsemaan sadoista vaihtoehdoista :ok_hand:
     first_mention:
       name: Ensimmäinen maininta
       description: Mainitsi käyttäjän viestissä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kerran mainitset jonkun @käyttäjänimen viestissäsi. Jokaisesta maininnasta sen kohde saa ilmoituksen, jotta tietää viestistäsi. Mainitse käyttäjä kirjoittamalla @ (at-merkki) tai, jos sallittua voit mainita myös ryhmän. Se on helppo tapa kiinnittää heidän huomionsa.
+        Tämä kunniamerkki myönnetään, kun ensi kerran mainitset jonkun @käyttäjätunnuksen viestissäsi. Jokaisesta maininnasta sen kohde saa ilmoituksen, jotta tietää viestistäsi. Mainitse käyttäjä kirjoittamalla @ (at-merkki), tai voit mainita myös ryhmän, jos se on sallittua. Se on helppo tapa kiinnittää heidän huomionsa.
     first_onebox:
       name: Ensimmäinen Onebox
       description: Lähetti linkin, josta tehtiin onebox
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kertaa lisäät linkin omalle rivilleen, josta sitten automaattisesti tehdään onebox-esikatselu otsikolla, lyhyellä kuvauksella ja (jos saatavilla) kuvalla.
+        Tämä kunniamerkki myönnetään, kun ensi kertaa lisäät linkin omalle rivilleen, josta sitten automaattisesti tehdään onebox-esikatselu otsikolla, lyhyellä kuvauksella ja (jos saatavilla) kuvalla.
     first_reply_by_email:
       name: Ensimmäinen vastaus sähköpostilla
       description: Vastasi sähköpostilla
       long_description: |
-        Tämä ansiomerkki myönnetään, kun ensi kertaa vastaat sähköpostilla :e-mail:.
+        Tämä kunniamerkki myönnetään, kun ensi kertaa vastaat viestiin sähköpostilla :e-mail:.
     new_user_of_the_month:
       name: "Kuukauden tulokas"
       description: Erinomaista osallistumista ensimmäisen kuukauden aikana
       long_description: |
-        Tämä ansiomerkki myönnetään kahdelle uudelle käyttäjälle joka kuukausi kiitoksena erinomaisesta osallistumisestaan. Mittari on tykkäykset: kuinka usein viesteistä tykätään ja kuka tykkää.
+        Tämä kunniamerkki myönnetään kahdelle uudelle käyttäjälle joka kuukausi kiitoksena erinomaisesta osallistumisestaan. Mittari on tykkäykset: kuinka usein viesteistä tykätään ja kuka tykkää.
     enthusiast:
       name: Intoilija
       description: Vieraili 10 perättäisenä päivänä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun vierailet 10 peräkkäisenä päivänä. Kiitos kun olet ollut kanssamme yli viikon ajan!
+        Tämä kunniamerkki myönnetään, kun vierailet 10 peräkkäisenä päivänä. Kiitos kun olet ollut kanssamme yli viikon ajan!
     aficionado:
       name: Hullaantunut
       description: Vieraili 100 perättäisenä päivänä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun vierailet 100 peräkkäisenä päivänä. Sehän on yli kolme kuukautta!
+        Tämä kunniamerkki myönnetään, kun vierailet 100 peräkkäisenä päivänä. Sehän on yli kolme kuukautta!
     devotee:
       name: Omistautunut
       description: Vieraili 365 perättäisenä päivänä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun vierailet 365 peräkkäisenä päivänä. Vau, kokonainen vuosi!
-    badge_title_metadata: "%{display_name} -ansiomerkki sivustolla %{site_title}"
+        Tämä kunniamerkki myönnetään, kun vierailet 365 peräkkäisenä päivänä. Vau, kokonainen vuosi!
+    badge_title_metadata: "Kunniamerkki %{display_name} sivustolla %{site_title}"
   admin_login:
     success: "Sähköposti lähetetty"
     errors:
       unknown_email_address: "Tuntematon sähköpostiosoite."
-      invalid_token: "Tunnistusväline ei kelpaa."
+      invalid_token: "Tunniste ei kelpaa."
     email_input: "Ylläpitäjän sähköpostiosoite"
     submit_button: "Lähetä sähköposti"
   performance_report:
@@ -3621,19 +3621,19 @@ fi:
   tags:
     title: "Tunnisteet"
     minimum_required_tags:
-      one: "Täytyy valita ainakin %{count} tunniste."
-      other: "Täytyy valita ainakin %{count} tunnistetta."
+      one: "Sinun täytyy valita ainakin %{count} tunniste."
+      other: "Sinun täytyy valita ainakin %{count} tunnistetta."
     upload_row_too_long: "CSV:ssä tulee olla yksi tunniste per rivi. Tunnistetta voi seurata pilkku ja sitä tunnisteryhmän nimi."
     forbidden:
       invalid:
         one: "Valitsemaasi tunnistetta ei voi käyttää"
         other: "Mitään valitsemistasi tunnisteista ei voi käyttää"
-      in_this_category: '"%{tag_name}" ei voi käyttää tällä alueella'
+      in_this_category: 'Tunnistetta "%{tag_name}" ei voi käyttää tällä alueella'
       restricted_to:
         one: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan alueella %{category_names}'
-        other: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan alueilla: %{category_names}'
-      synonym: 'Synonyymit kielletty. Käytä sijasta tunnistetta "%{tag_name}".'
-      has_synonyms: 'Tunnistetta "%{tag_name}" ei voi käyttää koska sillä on synonyymejä.'
+        other: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan seuraavilla alueilla: %{category_names}'
+      synonym: 'Synonyymit kielletty. Käytä sen sijaan tunnistetta "%{tag_name}".'
+      has_synonyms: 'Tunnistetta "%{tag_name}" ei voi käyttää, koska sillä on synonyymejä.'
     invalid_target_tag: "ei voi olla synonyymin synonyymi"
     synonyms_exist: "ei ole sallittua, kun synonyymejä on olemassa"
   rss_by_tag: "Ketjut tunnisteella %{tag}"
@@ -3641,28 +3641,28 @@ fi:
     congratulations: "Onneksi olkoon, asensit Discoursen!"
     register:
       button: "Rekisteröidy"
-      title: "Rekisteröi ylläpitäjätunnus"
-      help: "aloita rekisteröimällä uusi tunnus"
-      no_emails: "Valitettavasti ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely voi olla vaikeaa. Lisää kehittäjäsähköposti konfiguraatiotiedostoon tai <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>luo ylläpitäjätili konsolissa</a>."
+      title: "Rekisteröi ylläpitäjän tili"
+      help: "aloita rekisteröimällä uusi tili"
+      no_emails: "Ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely voi olla vaikeaa. Lisää kehittäjän sähköpostiosoite määritystiedostoon tai <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>luo ylläpitäjän tili konsolissa</a>."
     confirm_email:
       title: "Vahvista sähköpostisi"
-      message: "<p>Lähetimme aktivointiviestin sähköpostiosoitteeseen <b>%{email}</b>. Ota tili käyttöön seuraamalla sähköpostiviestin ohjeita.</p><p>Jos viesti ei saavu, tarkista roskapostikansio ja <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>varmistu että asensit sähköpostipalvelun oikein</a>.</p>"
+      message: "<p>Lähetimme aktivointiviestin sähköpostiosoitteeseen <b>%{email}</b>. Aktivoi tili seuraamalla sähköpostiviestin ohjeita.</p><p>Jos viesti ei saavu, tarkista roskapostikansio ja <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>varmista, että määritit sähköpostin oikein</a>.</p>"
     resend_email:
-      title: "Lähetä vahvistusviesti uudelleen"
-      message: "Lähetimme uuden vahvistusviestin osoitteeseen <b>%{email}</b>"
+      title: "Lähetä aktivointiviesti uudelleen"
+      message: "<p>Lähetimme uuden aktivointiviestin osoitteeseen <b>%{email}</b>"
   safe_mode:
     title: "Siirry vikasietotilaan"
     description: "Vikasietotilassa voit testata sivustoasi ilman lisäosia ja sivuston mukautuksia."
     no_customizations: "Poista nykyinen teema käytöstä"
-    only_official: "Poista käytöstä epäviralliset lisäosat"
-    no_plugins: "Poista käytöstä kaikki lisäosat"
+    only_official: "Poista epäviralliset lisäosat käytöstä"
+    no_plugins: "Poista kaikki lisäosat käytöstä"
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
   wizard:
     title: "Discoursen asennus"
     step:
       locale:
-        title: "Tervetuloa Discourse-asennukseen!"
+        title: "Tervetuloa Discourseen!"
         fields:
           default_locale:
             description: "Mikä on yhteisön oletuskieli?"
@@ -3681,13 +3681,13 @@ fi:
             placeholder: "Paras yhteisö ikinä missään"
       introduction:
         title: "Johdanto"
-        disabled: "<p>Ketjua otsikolla “%{topic_title}” ei löytynyt.</p> <ul> <li>If Jos olet muuttanut otsikkoa, muuta sivuston esittelytekstiä muokkaamalla sitä ketjua.</li> <li>Jos olet poistanut ketjun, luo uusi ketju otsikolla “%{topic_title}”. Ketjun ensimmäisen viestin sisältö on sivustosi esittelyteksti.</li> </ul>"
+        disabled: "<p>Ketjua otsikolla “%{topic_title}” ei löytynyt.</p> <ul> <li>Jos olet muuttanut otsikkoa, muuta sivuston esittelytekstiä muokkaamalla sitä ketjua.</li> <li>Jos olet poistanut ketjun, luo uusi ketju otsikolla “%{topic_title}”. Ketjun ensimmäisen viestin sisältö on sivustosi esittelyteksti.</li> </ul>"
         fields:
           welcome:
             label: "Tervetuloa-ketju"
             description: "<p>Kuinka kuvailisit yhteisöä hississä ventovieraalle, jos sinulla olisi minuutti aikaa?</p> <ul> <li>Keille nämä keskustelut on suunnattu?</li> <li>Mistä täällä puhutaan?</li> <li>Miksi täällä kannattaa käydä?</li> </ul> <p>Tervetuloa-ketju on ensimmäinen asia, jonka palstalle saapunut näkee. Ajattele sitä <b>yhden kappaleen mittaisena</b> \"hissipuheena\" tai \"perimmäisenä tavoitteena\".</p>"
             one_paragraph: "Pidä tervetuloviesti yhden kappaleen mittaisena."
-            extra_description: "Jos olet epävarma, voit ohittaa tämän vaiheen ja muokata tervetuloa-ketjua myöhemmin."
+            extra_description: "Jos olet epävarma, voit ohittaa tämän vaiheen ja muokata tervetuloketjua myöhemmin."
       privacy:
         title: "Käyttöoikeudet"
         description: "<p>Onko yhteisö avoin kaikille vai onko sitä rajattu jäsenyyden, kutsujen tai hyväksynnän avulla? Jos haluat, voit määritellä asioita aluksi yksityisesti ja muuttaa sivuston julkiseksi myöhemmin.</p>"
@@ -3715,17 +3715,17 @@ fi:
           contact_email:
             label: "Sähköposti"
             placeholder: "nimi@esimerkki.fi"
-            description: "Tätä yhteisöä ylläpitävän henkilön tai ryhmän sähköpostiosoite. Käytetään vastaanottamaan kriittisiä huomautuksia käsittelemättömistä liputuksista ja tietoturvapäivityksistä. Se näkyy myös <a href='%{base_path}/about' target='_blank'>Tietoja</a> -sivulla kiireellisiä yhteydenottoja varten."
+            description: "Tätä yhteisöä ylläpitävän henkilön tai ryhmän sähköpostiosoite. Käytetään vastaanottamaan kriittisiä huomautuksia käsittelemättömistä merkinnöistä ja tietoturvapäivityksistä. Se näkyy myös <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla kiireellisiä yhteydenottoja varten."
           contact_url:
             label: "Verkkosivu"
             placeholder: "https://www.esimerkki.fi/ota-yhteytta"
-            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näkyy <a href='%{base_path}/about' target='_blank'>Tietoja</a> -sivulla."
+            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näkyy <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla."
           site_contact:
             label: "Automaattiset viestit"
-            description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset liputuksista ja ilmoitukset valmistuneista varmuuskopioista."
+            description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
       corporate:
         title: "Organisaatio"
-        description: "Tämä tieto syötetään <a href='%{base_path}/tos' target='blank'>Palveluehdot</a> -sivulle, joka on henkilökunta-alueella sijaitseva ketju jota voit muokata tarpeen mukaan. Jos sinulla ei ole yritystä, voit hypätä tämän vaiheen yli."
+        description: "Tämä tieto lisätään <a href='%{base_path}/tos' target='blank'>käyttöehtoihin</a>, joka on henkilökunta-alueella sijaitseva ketju, jota voit muokata tarpeen mukaan. Jos sinulla ei ole yritystä, voit ohittaa tämän vaiheen."
         fields:
           company_name:
             label: "Yrityksen nimi"

@@ -149,8 +149,8 @@ it:
         enabled: "appuntato globalmente %{when}"
         disabled: "spuntato %{when}"
       visible:
-        enabled: "listato %{when}"
-        disabled: "delistato %{when}"
+        enabled: "visibile in elenco %{when}"
+        disabled: "invisibile in elenco %{when}"
       banner:
         enabled: "lo ha reso un annuncio il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente. "
         disabled: "ha rimosso questo annuncio il %{when}. Non apparirà più in cima ad ogni pagina."
@@ -871,7 +871,7 @@ it:
       organisation: Organizzazione
       phone: Telefono
       other_accounts: "Altri account con questo indirizzo IP:"
-      delete_other_accounts: "Cancella %{count}"
+      delete_other_accounts: "Cancella %{count} account"
       username: "nome utente"
       trust_level: "TL"
       read_time: "tempo lettura"
@@ -1380,7 +1380,7 @@ it:
         remove: "Rimuovi"
         copy_link: "Ottieni link"
         reinvite: "Reinvia Email"
-        reinvited: "Invito inviato di nuovo"
+        reinvited: "Invito spedito di nuovo"
         removed: "Rimosso"
         search: "digita per cercare inviti..."
         user: "Utente Invitato"
@@ -1789,12 +1789,12 @@ it:
       symbols: Simboli
       flags: Bandiere
       recent: Usati recentemente
-      default_tone: Nessun tono della pelle
-      light_tone: Tono della pelle chiaro
-      medium_light_tone: Tono della pelle medio chiaro
-      medium_tone: Tono della pelle medio
-      medium_dark_tone: Tono della pelle medio scuro
-      dark_tone: Tono della pelle scuro
+      default_tone: Carnagione di colorito neutro
+      light_tone: Carnagione di tonalità chiara
+      medium_light_tone: Carnagione di tonalità medio-chiara
+      medium_tone: Carnagione di tonalità media
+      medium_dark_tone: Carnagione di tonalità medio-scura
+      dark_tone: Carnagione di tonalità scura
       default: Emoji personalizzate
     shared_drafts:
       title: "Bozze condivise"
@@ -2167,7 +2167,7 @@ it:
         selected:
           one: "Hai selezionato <b>%{count}</b> argomento."
           other: "Hai selezionato <b>%{count}</b> argomenti."
-        change_tags: "Sostituire Etichette"
+        change_tags: "Sostituisci Etichette"
         append_tags: "Aggiungi Etichette"
         choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
         choose_append_tags: "Scegli nuove etichette da aggiungere a questi argomenti:"
@@ -2187,7 +2187,7 @@ it:
         latest: "Non hai nuovi messaggi da leggere!"
         bookmarks: "Non hai ancora argomenti nei segnalibri."
         category: "Non ci sono argomenti in %{category}."
-        top: "Non ci sono argomenti di punta."
+        top: "Non ci sono argomenti popolari."
         educate:
           new: '<p>I tuoi nuovi argomenti appariranno qui. Di default, gli argomenti sono considerati nuovi e mostreranno un indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> se sono stati creati negli ultimi 2 giorni.</p><p>Visita le tue <a href="%{userPrefsUrl}">preferenze</a> per cambiarle.</p>'
           unread: "<p>I tuoi argomenti non letti appaiono qui.</p><p>Di default, gli argomenti sono considerati non letti e mostreranno conteggi non letti <span class=\"badge new-posts badge-notification\">1</span> se tu:</p><ul><li>Hai creato l'argomento</li><li>Hai risposto all'argomento</li><li>Leggi l'argomento per più di 4 minuti</li></ul><p>O hai esplicitamente impostato l'argomento su Seguito o Osservato tramite \U0001F514 in ogni argomento.</p><p>Visita le tue <a href=\"%{userPrefsUrl}\">preferenze</a> per cambiare queste impostazioni.</p>"
@@ -2196,10 +2196,10 @@ it:
         posted: "Non ci sono altri argomenti pubblicati."
         read: "Non ci sono altri argomenti letti."
         new: "Non ci sono altri argomenti nuovi."
-        unread: "Non ci sono altri argomenti non letti"
+        unread: "Non ci sono altri argomenti non letti."
         category: "Non ci sono altri argomenti nella categoria %{category}."
         tag: "Non ci sono altri argomenti con l'etichetta %{tag}."
-        top: "Non ci sono altri argomenti di punta."
+        top: "Non ci sono altri argomenti popolari."
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
     topic:
       filter_to:
@@ -2213,7 +2213,7 @@ it:
         help: "Sposta il messaggio nel tuo archivio"
         title: "Archivia"
       move_to_inbox:
-        title: "Sposta in arrivo"
+        title: "Sposta in posta in arrivo"
         help: "Sposta il messaggio di nuovo nella posta in arrivo"
       edit_message:
         help: "Modifica la prima versione del Messaggio"
@@ -2241,7 +2241,7 @@ it:
       invalid_access:
         title: "L'argomento è privato"
         description: "Spiacenti, non puoi accedere a questo argomento!"
-        login_required: "Devi connetterti per vedere questo argomento."
+        login_required: "Devi accedere per vedere questo argomento."
       server_error:
         title: "Errore di caricamento dell'argomento"
         description: "Spiacenti, non è stato possibile caricare questo argomento, probabilmente per un errore di connessione. Per favore riprova. Se il problema persiste, faccelo sapere."
@@ -2260,7 +2260,7 @@ it:
       likes:
         one: "c'è %{count} \"Mi piace\" in questo argomento"
         other: "ci sono %{count} \"Mi piace\" in questo argomento"
-      back_to_list: "Torna alla Lista Argomenti"
+      back_to_list: "Torna all'Elenco argomenti"
       options: "Opzioni Argomento"
       show_links: "mostra i collegamenti in questo argomento"
       collapse_details: "comprimi i dettagli dell'argomento"
@@ -2307,11 +2307,11 @@ it:
         remove: "Rimuovi Timer"
         publish_to: "Pubblica Su:"
         when: "Quando:"
-        time_frame_required: "Per favore, seleziona un lasso di tempo"
+        time_frame_required: "Seleziona un intervallo di tempo"
         min_duration: "La durata deve essere maggiore di 0"
         max_duration: "La durata deve essere inferiore a 20 anni"
       auto_update_input:
-        none: "Seleziona un lasso di tempo"
+        none: "Seleziona un intervallo di tempo"
         now: "Adesso"
         later_today: "Più tardi oggi"
         tomorrow: "Domani"
@@ -2337,10 +2337,10 @@ it:
       temp_close:
         title: "Chiudi Temporaneamente"
       auto_close:
-        title: "Chiudi Automaticamente"
+        title: "Chiudi Automaticamente argomento"
         label: "Chiude automaticamente l'argomento dopo:"
         error: "Per favore inserisci un valore valido."
-        based_on_last_post: "Non chiudere finché l'ultimo messaggio nell'argomento non ha questa anzianità."
+        based_on_last_post: "Non chiudere finché l'ultimo messaggio nell'argomento non ha raggiunto questa durata."
       auto_close_after_last_post:
         title: "Chiudi automaticamente l'argomento dopo l'ultimo messaggio"
       auto_delete:
@@ -2354,7 +2354,7 @@ it:
       status_update_notice:
         auto_open: "Questo argomento verrà automaticamente aperto %{timeLeft}"
         auto_close: "Questo argomento si chiuderà automaticamente in %{timeLeft}."
-        auto_publish_to_category: "Questo argomento verrà pubblicato su <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
+        auto_publish_to_category: "Questo argomento verrà pubblicato su <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}"
         auto_close_after_last_post: "Questo Argomento si chiuderà %{duration} dopo l'ultima risposta."
         auto_delete: "Questo argomento verrà automaticamente cancellato %{timeLeft}."
         auto_bump: "Questo argomento sarà riproposto automaticamente %{timeLeft}."
@@ -2381,8 +2381,8 @@ it:
         jump_prompt_of:
           one: "di %{count} messaggio"
           other: "di %{count} messaggi"
-        jump_prompt_long: "Salta a..."
-        jump_bottom_with_number: "Passa al messaggio %{post_number}"
+        jump_prompt_long: "Vai a..."
+        jump_bottom_with_number: "Vai al messaggio %{post_number}"
         jump_prompt_to_date: "ad oggi"
         jump_prompt_or: "o"
         total: totale messaggi

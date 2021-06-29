@@ -4893,7 +4893,7 @@ es:
         icon: Icono
         image: Imagen
         graphic: Gráfico
-        icon_help: "Introduce un nombre de icono de Font Awesome (usa el prefijo 'far-' para iconos regulares y 'fab-' para iconos de marca)"
+        icon_help: "Introduce un nombre de icono de Font Awesome (usa el prefijo «far-» para iconos normales y «fab-» para iconos de marca)"
         image_help: "Subir una imagen sobrescribirá el campo del icono si ambos tienen valores."
         select_an_icon: "Seleccionar un icono"
         upload_an_image: "Subir una imagen"
