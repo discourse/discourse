@@ -1745,46 +1745,46 @@ ar:
       or: "أو"
       authenticating: "جارٍ المصادقة..."
       awaiting_activation: "ما زال حسابك بانتظار التفعيل، استخدم رابط نسيان كلمة المرور لإرسال رسالة إلكترونية أخرى للتفعيل."
-      awaiting_approval: "لم يوافق أي من أعضاء طاقم العمل على حسابك بعد. سيُرسل إليك بريد إلكتروني حالما يتمّ ذلك."
-      requires_invite: "معذرةً، دخول هذا المنتدى بالدعوات فقط."
-      not_activated: "لا يمكنك تسجيل دخول بعد. لقد أرسلنا سابقًا بريدًا إلى <b>%{sentTo}</b>. رجاء اتّبع الإرشادات فيه لتفعيل حسابك."
-      not_allowed_from_ip_address: "لا يمكنك الولوج من عنوان IP هذا."
-      admin_not_allowed_from_ip_address: "لا يمكنك تسجيل دخول كمدير من عنوان IP هذا."
-      resend_activation_email: "انقر هنا لإرسال رسالة التفعيل مرّة أخرى."
-      omniauth_disallow_totp: "فعّلت المصادقة بخطوتين على حسابك. من فضلك لِج باستعمال كلمة السر."
-      resend_title: "اعد ارسال رسالة التفعيل"
-      change_email: "غير عنوان البريد الالكتروني"
-      provide_new_email: "ادخل عنوان بريد الكتروني جديد و سنقوم بأرسال لك بريد التأكيد."
-      submit_new_email: "حدث عنوان البريد الإلكتروني"
-      sent_activation_email_again: "لقد أرسلنا بريد تفعيل آخر إلى <b>%{currentEmail}</b>. قد يستغرق وصوله بضعة دقائق. تحقّق من مجلّد السبام."
-      sent_activation_email_again_generic: "لقد أرسلنا بريد تفعيل آخر إلى. قد يستغرق وصوله بضعة دقائق. تأكد من مراجعة مجلّد السبام."
-      to_continue: "رجاء سجل دخول"
-      preferences: "عليك تسجل الدخول لتغيير تفضيلاتك الشخصية."
-      not_approved: "لم تتمّ الموافقة على حسابك بعد. سيصلك إشعار عبر البريد عندما تكون مستعدا لتسجيل الدخول."
+      awaiting_approval: "لم يوافق أي من أعضاء طاقم العمل على حسابك بعد. سنُرسل إليك رسالة إلكترونية عند الموافقة عليه."
+      requires_invite: "عذرًا، الوصول إلى هذا المنتدى مقصور على أصحاب الدعوات فقط."
+      not_activated: "لا يمكنك تسجيل الدخول بعد. لقد أرسلنا سابقًا رسالة إلكترونية للتفعيل إلى <b>%{sentTo}</b>. يُرجى اتباع الإرشادات الواردة في هذه الرسالة لتفعيل حسابك."
+      not_allowed_from_ip_address: "لا يمكنك تسجيل الدخول من عنوان IP هذا."
+      admin_not_allowed_from_ip_address: "لا يمكنك تسجيل الدخول كمسؤول من عنوان IP هذا."
+      resend_activation_email: "انقر هنا لإرسال الرسالة الإلكترونية للتفعيل مرة أخرى."
+      omniauth_disallow_totp: "لقد فعَّلت المصادقة الثنائية على حسابك. يُرجى تسجيل الدخول بكلمة المرور."
+      resend_title: "إعادة إرسال الرسالة الإلكترونية للتفعيل"
+      change_email: "تغيير عنوان البريد الإلكتروني"
+      provide_new_email: "أدخِل عنوانًا جديدًا وسنعيد إرسال الرسالة الإلكترونية للتأكيد إليك."
+      submit_new_email: "تحديث عنوان البريد الإلكتروني"
+      sent_activation_email_again: "لقد أرسلنا رسالة إلكترونية أخرى للتفعيل إلى <b>%{currentEmail}</b>. قد يستغرق وصولها بضع دقائق؛ لذا احرص على التحقُّق من مجلد البريد العشوائي."
+      sent_activation_email_again_generic: "لقد أرسلنا رسالة إلكترونية أخرى للتفعيل. قد يستغرق وصولها بضع دقائق؛ لذا احرص على التحقُّق من مجلد البريد العشوائي."
+      to_continue: "يُرجى تسجيل الدخول"
+      preferences: "عليك تسجل الدخول لتغيير تفضيلات المستخدم."
+      not_approved: "لم تتم الموافقة على حسابك بعد. سيصلك إشعار عبر البريد عندما تكون مستعدًا لتسجيل الدخول."
       google_oauth2:
-        name: "غوغل"
-        title: "عبر Google "
+        name: "Google"
+        title: "باستخدام Google"
       twitter:
         name: "Twitter"
-        title: "عبر Twitter"
+        title: "باستخدام Twitter"
       instagram:
-        name: "إنستغرام"
-        title: "عبر Instagram"
+        name: "Instagram"
+        title: "باستخدام Instagram"
       facebook:
-        name: "فيسبوك"
-        title: "عبر Facebook"
+        name: "Facebook"
+        title: "باستخدام Facebook"
       github:
-        name: "غِت‌هَب"
-        title: "عبر GitHub"
+        name: "GitHub"
+        title: "باستخدام GitHub"
       discord:
-        name: "دِسكورد"
-        title: "مع ديسكورد"
+        name: "Discord"
+        title: "باستخدام Discord"
       second_factor_toggle:
         totp: "استخدام تطبيق مصادقة بدلًا من ذلك"
-        backup_code: "استخدام رمز النسخ الاحتياطي بدلاً من ذلك"
+        backup_code: "استخدام رمز احتياطي بدلًا من ذلك"
     invites:
       accept_title: "دعوة"
-      emoji: "رمز تعبيري مغلف"
+      emoji: "رمز مظروف"
       welcome_to: "مرحبًا بك في %{site_name}!"
       invited_by: "دعاك:"
       social_login_available: "يمكنك أيضًا تسجيل الدخول بأي حساب تواصل اجتماعي باستخدام هذا البريد الإلكتروني."
@@ -1795,9 +1795,9 @@ ar:
       password_label: "كلمة المرور"
       optional_description: "(اختياري)"
     password_reset:
-      continue: "تابع نحو %{site_name}"
+      continue: "المتابعة إلى %{site_name}"
     emoji_set:
-      apple_international: "Apple/International"
+      apple_international: "Apple/دولي"
       google: "Google"
       twitter: "Twitter"
       win10: "Win10"
@@ -1805,11 +1805,11 @@ ar:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "الفئات فقط"
-      categories_with_featured_topics: "أقسام ذات مواضيع مُميزة"
+      categories_with_featured_topics: "الفئات ذات الموضوعات المميزة"
       categories_and_latest_topics: "الفئات والموضوعات الحديثة"
-      categories_and_top_topics: "التصنيفات و أفضل المواضيع"
-      categories_boxes: "صناديق مع التصنيفات الفرعية"
-      categories_boxes_with_topics: "مربعات مع الموضوعات المميزة"
+      categories_and_top_topics: "الفئات والموضوعات الأكثر نشاطًا"
+      categories_boxes: "المربعات ذات الفئات الفرعية"
+      categories_boxes_with_topics: "المربعات ذات الموضوعات المميزة"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1819,42 +1819,42 @@ ar:
       loading: جارٍ التحميل...
     category_row:
       topic_count:
-        zero: "ما من مواضيع في هذه الفئة"
-        one: "في هذه الفئة موضوع واحد"
-        two: "في هذه الفئة موضوعين"
-        few: "في هذه الفئة %{count} مواضيع"
-        many: "في هذه الفئة %{count} موضوعًا"
-        other: "في هذه الفئة %{count} موضوع"
+        zero: "%{count} موضوع في هذه الفئة"
+        one: "موضوع واحد (%{count}) في هذه الفئة"
+        two: "موضوعان (%{count}) في هذه الفئة"
+        few: "%{count} موضوعات في هذه الفئة"
+        many: "%{count} موضوعًا في هذه الفئة"
+        other: "%{count} موضوع في هذه الفئة"
     select_kit:
       default_header_text: اختر...
-      no_content: لا يوجد نتائج مطابقة
-      filter_placeholder: ابحث...
-      filter_placeholder_with_any: ابحث أو أنشئً ...
-      create: "أنشِئ: ”%{content}“"
+      no_content: لم يتم العثور على نتائج مطابقة
+      filter_placeholder: بحث...
+      filter_placeholder_with_any: بحث أو إنشاء...
+      create: "إنشاء: \"%{content}\""
       max_content_reached:
-        zero: "لا يمكنك تحديد أيّ عنصر."
-        one: "يمكنك تحديد عنصر واحد فقط كحدّ أقصى."
-        two: "يمكنك تحديد عنصرين فقط كحدّ أقصى."
-        few: "يمكنك تحديد %{count} عناصر فقط كحدّ أقصى."
-        many: "يمكنك تحديد %{count} عنصرًا فقط كحدّ أقصى."
-        other: "يمكنك تحديد %{count} عنصر فقط كحدّ أقصى."
+        zero: "يمكنك تحديد %{count} عنصر فقط."
+        one: "يمكنك تحديد عنصر واحد (%{count})."
+        two: "يمكنك تحديد عنصرين (%{count}) فقط."
+        few: "يمكنك تحديد %{count} عناصر فقط."
+        many: "يمكنك تحديد %{count} عنصرًا فقط."
+        other: "يمكنك تحديد %{count} عنصر فقط."
       min_content_not_reached:
-        zero: "لا تُحدّد أيّ شيء."
-        one: "حدّد عنصرًا واحدًا على الأقلّ."
-        two: "حدّد عنصرين على الأقلّ."
-        few: "حدّد %{count} عناصر على الأقلّ."
-        many: "حدّد %{count} عنصرًا على الأقلّ."
-        other: "حدّد %{count} عنصر على الأقلّ."
+        zero: "حدِّد %{count} عنصر على الأقل."
+        one: "حدِّد عنصرًا واحدًا (%{count}) على الأقل."
+        two: "حدِّد عنصرين (%{count}) على الأقل."
+        few: "حدِّد %{count} عناصر على الأقل."
+        many: "حدِّد %{count} عنصرًا على الأقل."
+        other: "حدِّد %{count} عنصر على الأقل."
       invalid_selection_length:
-        zero: "يجب ألّا تُحدّد شيئًا."
-        one: "يجب ألّا يقلّ التحديد عن محرف واحد."
-        two: "يجب ألّا يقلّ التحديد عن محرفين."
-        few: "يجب ألّا يقلّ التحديد عن %{count} محارف."
-        many: "يجب ألّا يقلّ التحديد عن %{count} محرفًا."
-        other: "يجب ألّا يقلّ التحديد عن %{count} محرف."
+        zero: "يجب ألا يقل الاختيار عن %{count} حرف على الأقل."
+        one: "يجب ألا يقل الاختيار عن حرف واحد (%{count}) على الأقل."
+        two: "يجب ألا يقل الاختيار عن حرفين (%{count}) على الأقل."
+        few: "يجب ألا يقل الاختيار عن %{count} أحرف على الأقل."
+        many: "يجب ألا يقل الاختيار عن %{count} حرفًا على الأقل."
+        other: "يجب ألا يقل الاختيار عن %{count} حرف على الأقل."
       components:
         categories_admin_dropdown:
-          title: "أدِر الفئات"
+          title: "إدارة الفئات"
     date_time_picker:
       from: من
       to: إلى
@@ -1879,26 +1879,26 @@ ar:
       default: الرموز التعبيرية المخصَّصة
     shared_drafts:
       title: "المسودات المشتركة"
-      destination_category: "وجهة التصنيف"
+      destination_category: "فئة الوجهة"
       publish: "نشر المسودة المشتركة"
       confirm_publish: "هل تريد بالتأكيد نشر هذه المسودة؟"
       publishing: "جارٍ نشر الموضوع..."
     composer:
       emoji: "الرمز التعبيري :)"
       more_emoji: "المزيد..."
-      options: "خيارات"
+      options: "الخيارات"
       whisper: "همس"
-      unlist: "غير مدرج"
+      unlist: "تم إلغاء إدراجه"
       add_warning: "هذا تحذير رسمي."
-      toggle_whisper: "تبديل الهمس"
-      toggle_unlisted: "تبديل الغير مدرج"
+      toggle_whisper: "تشغيل الهمس"
+      toggle_unlisted: "تشغيل إلغاء الإدراج"
       posting_not_on_topic: "أي موضوع تريد الرد عليه؟"
-      saved_local_draft_tip: "حُفظ محليا"
+      saved_local_draft_tip: "تم الحفظ محليًا"
       similar_topics: "موضوعك يشابه..."
-      drafts_offline: "مسودات محفوظة "
-      edit_conflict: "تعديل التعارض"
+      drafts_offline: "مسودات بلا اتصال"
+      edit_conflict: "تعارض في التعديل"
       group_mentioned_limit:
-        zero: "<b>تحذير!</b> أشرت إلى <a href='%{group_link}'>%{group}</a>، ولكن في هذه المجموعة أعضاء أكثر من حدّ الإشارة الأقصى الذي ضبطته الإدارة، وهو لا مستخدمين. لن يُرسل أيّ إخطار لأحد."
+        zero: "<b>تحذير!</b>لقد أشرت إلى <a href='%{group_link}'>%{group}</a>، لكن هذه المجموعة بها عدد أعضاء أكثر من حد الإشارة الذي عيَّنه المسؤول والبالغ %{count} مستخدم. لن يتم إرسال إشعار إلى أي أحد."
         one: "<b>تحذير!</b> أشرت إلى <a href='%{group_link}'>%{group}</a>، ولكن في هذه المجموعة أعضاء أكثر من حدّ الإشارة الأقصى الذي ضبطته الإدارة، وهو مستخدم واحد. لن يُرسل أيّ إخطار لأحد."
         two: "<b>تحذير!</b> أشرت إلى <a href='%{group_link}'>%{group}</a>، ولكن في هذه المجموعة أعضاء أكثر من حدّ الإشارة الأقصى الذي ضبطته الإدارة، وهو مستخدمين. لن يُرسل أيّ إخطار لأحد."
         few: "<b>تحذير!</b> أشرت إلى <a href='%{group_link}'>%{group}</a>، ولكن في هذه المجموعة أعضاء أكثر من حدّ الإشارة الأقصى الذي ضبطته الإدارة، وهو %{count} مستخدمين. لن يُرسل أيّ إخطار لأحد."
@@ -2170,7 +2170,7 @@ ar:
       context:
         user: "ابحث في منشورات @%{username}"
         category: "أبحث في قسم #%{category}"
-        topic: "ابحث في هذا الموضوع"
+        topic: "البحث في هذا الموضوع"
         private_messages: "البحث في الرسائل الخاصة"
       advanced:
         title: البحث المتقدم
@@ -2331,7 +2331,7 @@ ar:
         title: "فشل تحميل الموضوع"
         description: "عذرا، تعذر علينا تحميل هذا الموضوع، قد يرجع ذلك إلى مشكلة بالاتصال. من فضلك حاول مجددا. أخبرنا بالمشكلة إن استمر حدوثها."
       not_found:
-        title: "لم يُعثر على الموضوع"
+        title: "الموضوع غير موجود"
         description: "معذرةً، لم نجد هذا الموضوع. لربّما أزاله أحد المشرفين؟"
       total_unread_posts:
         zero: "ما من مشاركات غير مقروءة في هذا الموضوع"

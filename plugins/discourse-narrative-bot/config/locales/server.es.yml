@@ -99,7 +99,7 @@ es:
         "8": "La perspectiva es buena"
         "9": "Sí"
         "10": "Las señales apuntan a que sí"
-        "11": "Respuesta confusa, intenta otra vez"
+        "11": "Respuesta confusa, inténtalo de nuevo"
         "12": "Pregunta de nuevo más tarde"
         "13": "Mejor no te digo ahora"
         "14": "No se puede predecir ahora"
@@ -117,7 +117,7 @@ es:
       help_trigger: "mostrar ayuda"
       random_mention:
         reply: |-
-          ¡Hola! Para saber qué puedo hacer, escribe `@%{discobot_username} %{help_trigger}`.
+          ¡Hola! Para saber qué puedo hacer, escribe «@%{discobot_username} %{help_trigger}».
         tracks: |-
           Actualmente Sé cómo hacer las siguientes cosas:
 
@@ -138,7 +138,7 @@ es:
           ¡Hey, gracias por la respuesta!
 
           Desafortunadamente, como el bot mal programado que soy, no puedo entenderla. :frowning:
-        track_response: Puedes intentarlo de nuevo, o si quieres omitir este paso, escribe `%{skip_trigger}`. De lo contrario, para comenzar de nuevo, escribe `%{reset_trigger}`.
+        track_response: Puedes intentarlo de nuevo, o si quieres omitir este paso, escribe «%{skip_trigger}». De lo contrario, para comenzar de nuevo, escribe «%{reset_trigger}».
         second_response: |-
           Oh, lo siento. Todavía no entiendo. :anguished:
 
@@ -210,7 +210,7 @@ es:
         instructions: |-
           ¿Puedes poner algunas letras en **negrita** o _cursiva_ en tu respuesta?
 
-          - escribe `**negrita**` o `_cursiva_`
+          - escribe «**negrita**» o «_cursiva_»
 
           - o, presiona los botones <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> en el editor
         reply: |-
@@ -249,7 +249,7 @@ es:
         instructions: |-
           Me has visto usando imágenes pequeñas en mis respuestas :blue_car::dash: se llaman [emoji](https://es.wikipedia.org/wiki/Emoji). ¿Puedes **añadir un emoji** a tu próxima respuesta? Cualquiera de estos funcionará:
 
-          - Escribe `:) ;) :D :P :O`
+          - Escribe «:) ;) :D :P :O»
 
           - Escribe dos puntos <kbd>:</kbd> y luego puedes completar con la palabra para elegir el emoji «:tada:»
 
@@ -259,7 +259,7 @@ es:
         not_found: |-
           ¡Ups!, no veo ningún emoji en tu respuesta. ¡Oh no! :sob:
 
-          Prueba escribiendo primero <kbd>:</kbd> y de esa forma el foro te mostrará emojis para elegir, luego puedes seguir escribiendo el nombre del emoji que quieres seleccionar, por ejemplo `:bird:`
+          Prueba escribiendo primero <kbd>:</kbd> y de esa forma el foro te mostrará emojis para elegir, luego puedes seguir escribiendo el nombre del emoji que quieres seleccionar, por ejemplo «:bird:»
 
           O presiona en botón de emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> en el editor.
 
@@ -366,9 +366,9 @@ es:
         instructions: |-
           ¿Sabías que puedes hacer referencia a categorías y etiquetas en tu publicación? Por ejemplo, ¿has visto la categoría %{category}?
 
-          Escribe `#` en el medio de una oración y selecciona cualquier categoría o etiqueta.
+          Escribe «#» en el medio de una oración y selecciona cualquier categoría o etiqueta.
         not_found: |-
-          Umm, no veo ninguna categoría. Ten en cuenta que `#` no puede ser el primer carácter. ¿Puedes copiar esto en tu próxima respuesta?
+          Umm, no veo ninguna categoría. Ten en cuenta que «#» no puede ser el primer carácter. ¿Puedes copiar esto en tu próxima respuesta?
 
           ```text
           Yo puedo crear un enlace a la categoría usando #

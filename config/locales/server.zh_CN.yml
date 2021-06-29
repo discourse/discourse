@@ -157,7 +157,7 @@ zh_CN:
       not_an_integer: 必须是整数
       odd: 必须是偶数
       record_invalid: ! "验证失败：%{errors}"
-      max_emojis: "不能超过%{max_emojis_count}个表情符号"
+      max_emojis: "不能超过 %{max_emojis_count} 个表情符号"
       emojis_disabled: "不能有表情符号"
       ip_address_already_screened: "已包含在现有规则中"
       restrict_dependent_destroy:
@@ -2155,13 +2155,13 @@ zh_CN:
     security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
     security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
     security_key_invalid: "验证安全密钥时出错。"
-    not_approved: "您的账户尚未获得批准。一旦您的账户获得批准，您会收到一封电子邮件。"
+    not_approved: "您的帐户尚未获得批准。一旦可以登录，您会收到电子邮件通知。"
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
     incorrect_password: "密码错误"
     wait_approval: "谢谢注册账户。我们会在您的账户获得批准之后通知您。"
     active: "您的账户已经被激活，可以使用了。"
     activate_email: "<p>快完成了！我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活您的账户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件收件箱。</p>"
-    not_activated: "您还不能登录。我们发送了一封激活邮件给您，请按照邮件中的步骤来激活您的账户。"
+    not_activated: "您还无法登录。我们向您发送了一封激活电子邮件。请按照电子邮件中的说明操作来激活您的帐户。"
     not_allowed_from_ip_address: "您不能以 %{username} 身份从该 IP 地址登录。"
     admin_not_allowed_from_ip_address: "您不能从该 IP 地址以管理员身份登录。"
     reset_not_allowed_from_ip_address: "您不能够从当前的IP地址请求重置密码。"

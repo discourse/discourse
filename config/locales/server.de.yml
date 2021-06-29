@@ -831,16 +831,16 @@ de:
     revoke_failed: "Das Widerrufen deines Kontos bei %{provider_name} ist fehlgeschlagen."
     connected: "(verbunden)"
   activation:
-    action: "Klicke hier, um deinen Account zu aktivieren"
+    action: "Klicke hier, um dein Konto zu aktivieren"
     already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
     please_continue: "Dein neues Konto ist jetzt bestätigt; du wirst auf die Startseite weitergeleitet."
     continue_button: "Weiter zu %{site_name}"
     welcome_to: "Willkommen bei %{site_name}!"
     approval_required: "Bevor du auf das Forum zugreifen kannst, muss dein neues Konto noch von einem Moderator genehmigt werden. Du erhältst eine E-Mail, sobald dies geschehen ist!"
     missing_session: "Wir können nicht feststellen, ob dein Konto erstellt wurde. Bitte stelle sicher, dass du Cookies aktiviert hast."
-    activated: "Bitte entschuldige, dieses Konto wurde bereits aktiviert."
+    activated: "Entschuldige, dieses Konto wurde bereits aktiviert."
     admin_confirm:
-      title: "Admnistrator-Konto bestätigen"
+      title: "Administrator-Konto bestätigen"
       description: "Soll <b>%{target_username} (%{target_email})</b> wirklich ein Administrator werden?"
       grant: "Administrationsrechte vergeben"
       complete: "<b>%{target_username}</b> ist jetzt ein Administrator."
@@ -851,17 +851,17 @@ de:
   post_action_types:
     off_topic:
       title: "Am Thema vorbei"
-      description: "Dieser Beitrag hat nichts mit dem Thema zu tun wie es im Titel und ersten Beitrag steht. Deshalb sollte er woanders hin verschoben werden."
+      description: "Dieser Beitrag ist nicht relevant für die aktuelle Diskussion im Sinne des Titels und des ersten Beitrags und sollte wohl verschoben werden."
       short_description: "Nicht relevant für die Diskussion"
     spam:
-      title: "Reklame"
+      title: "Spam"
       description: "Dieser Beitrag stellt Werbung oder Vandalismus dar. Er ist für das aktuelle Thema weder nützlich noch relevant."
       short_description: "Dies ist Werbung oder Vandalismus."
-      email_title: '"%{title}" wurde als Spam markiert'
+      email_title: '„%{title}“ wurde als Spam markiert'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Unangemessen"
-      description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_path}/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
+      description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
     notify_user:
       title: "Schreibe @%{username} eine Nachricht"
@@ -871,18 +871,18 @@ de:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Irgendetwas anderes"
-      description: "Auf diesen Beitrag sollte aus einem oben nicht aufgeführten Grund ein Moderator aufmerksam gemacht werden."
+      description: "Dieser Beitrag erfordert die Aufmerksamkeit des Teams aus einem anderen Grund, der oben nicht aufgeführt ist."
       short_description: "Erfordert aus einem anderen Grund die Aufmerksamkeit des Teams"
-      email_title: 'Ein Beitrag in "%{title}" sollte von einem Moderator begutachtet werden'
+      email_title: 'Ein Beitrag in „%{title}“ erfordert die Aufmerksamkeit des Teams'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Lesezeichen"
-      description: "Lesezeichen auf diesen Beitrag setzen"
-      short_description: "Lesezeichen auf diesen Beitrag setzen"
+      description: "Diesen Beitrag mit Lesezeichen versehen"
+      short_description: "Diesen Beitrag mit Lesezeichen versehen"
     like:
-      title: "Gefällt mir"
-      description: "Dieser Beitrag gefällt mir"
-      short_description: "Dieser Beitrag gefällt mir"
+      title: "Liken"
+      description: "Diesen Beitrag liken"
+      short_description: "Diesen Beitrag liken"
   draft:
     sequence_conflict_error:
       title: "Fehler beim Entwurf"
@@ -895,7 +895,7 @@ de:
       self: "Du hast noch keine Aktivität."
       others: "Keine Aktivität."
     no_bookmarks:
-      self: "Du hast keine Beiträge mit Lesezeichen; Lesezeichen erlauben es Dir schnell zu einem spezifischen Beitrag zu referenzieren."
+      self: "Du hast noch keine Beiträge mit einem Lesezeichen versehen. Lesezeichen erlauben dir den schnellen Zugriff auf bestimmte Beiträge."
       search: "Keine Lesezeichen mit der angegebenen Suchanfrage gefunden."
       others: "Keine Lesezeichen."
     no_likes_given:
@@ -905,7 +905,7 @@ de:
       self: "Du hast auf keine Beiträge geantwortet."
       others: "Keine Antworten."
     no_drafts:
-      self: "Du hast keine Entwürfe; beginne eine Antwort in einem beliebigen Thema und es wird automatisch als neuer Entwurf gespeichert."
+      self: "Du hast keine Entwürfe; verfasse eine Antwort in einem beliebigen Thema und sie wird automatisch als neuer Entwurf gespeichert."
   email_settings:
     pop3_authentication_error: "Es gab ein Problem mit den bereitgestellten POP3-Anmeldeinformationen, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
     imap_authentication_error: "Es gab ein Problem mit den bereitgestellten IMAP-Anmeldeinformationen, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
@@ -920,15 +920,15 @@ de:
     unhandled_error: "Unbehandelter Fehler beim Testen der E-Mail-Einstellungen. %{message}"
   webauthn:
     validation:
-      invalid_type_error: "Der gesendete webauthn Typ war ungültig. Gültige Typen sind webauthn.get und webauthn.create."
-      challenge_mismatch_error: "Die gesendete Aufforderung entspricht nicht der vom Authentifizierungsserver generierten."
+      invalid_type_error: "Der angegebene webauthn-Typ war ungültig. Gültige Typen sind webauthn.get und webauthn.create."
+      challenge_mismatch_error: "Die angegebene Aufforderung stimmt nicht mit der vom Authentifizierungsserver generierten Aufforderung überein."
       invalid_origin_error: "Die Herkunft der Authentifizierungsanfrage entspricht nicht der Server-Herkunft."
       malformed_attestation_error: "Beim Decodieren der Attestierungsdaten ist ein Fehler aufgetreten."
       invalid_relying_party_id_error: "Die ID der vertrauenden Partei der Authentifizierungsanforderung stimmt nicht mit der ID der vertrauenden Partei des Servers überein."
       user_verification_error: "Benutzerüberprüfung erforderlich."
-      unsupported_public_key_algorithm_error: "Der gesendete Algorithmus des öffentlichen Schlüssels wird vom Server nicht unterstützt."
+      unsupported_public_key_algorithm_error: "Der angegebene Algorithmus des öffentlichen Schlüssels wird vom Server nicht unterstützt."
       unsupported_attestation_format_error: "Das Attestierungsformat wird vom Server nicht unterstützt."
-      credential_id_in_use_error: "Die gesendete Anmelde-ID wird bereits benutzt."
+      credential_id_in_use_error: "Die angegebene Anmelde-ID wird bereits benutzt."
       public_key_error: "Die Überprüfung des öffentlichen Schlüssels für diese Anmeldedaten ist fehlgeschlagen."
       ownership_error: "Der Sicherheitsschlüssel gehört dem Benutzer nicht."
       not_found_error: "Ein Sicherheitsschlüssel mit der bereitgestellten Zugangs-ID konnte nicht gefunden werden."
@@ -936,20 +936,20 @@ de:
   topic_flag_types:
     spam:
       title: "Spam"
-      description: "Dieser Beitrag besteht effektiv nur aus Werbung, die nicht als solche ausgewiesen ist. Er trägt nichts zum aktuellen Gespräch bei."
+      description: "Dieses Thema besteht effektiv nur aus Werbung, die nicht als solche ausgewiesen ist. Es trägt nichts zur Website bei."
       long_form: "als Spam gemeldet"
       short_description: "Dies ist ist Werbung"
     inappropriate:
       title: "Unangemessen"
-      description: 'Dieses Thema enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_path}/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
+      description: 'Dieses Thema enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       long_form: "als unangemessen gemeldet"
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
     notify_moderators:
       title: "Irgendetwas anderes"
-      description: 'Dieser Beitrag erfordert die allgemeine Aufmerksamkeit des Teams, da er entweder nicht mit den <a href="%{base_path}/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus anderen Gründen.'
+      description: 'Dieses Thema erfordert die allgemeine Aufmerksamkeit des Teams, da es entweder nicht mit den <a href="%{base_path}/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist oder aus anderen Gründen.'
       long_form: "hast dies den Moderatoren gemeldet"
       short_description: "Erfordert aus einem anderen Grund die Aufmerksamkeit des Teams"
-      email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
+      email_title: 'Das Thema „%{title}“ erfordert die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Dein Beitrag wurde von der Community gemeldet. Bitte <a href="%{path}">überprüfe deine Nachrichten</a>.</p>'
@@ -965,12 +965,12 @@ de:
         make: "Dieses Thema ist jetzt ein Banner. Es wird auf jeder Seite ganz oben angezeigt, bis es vom Benutzer ausgeblendet wird."
         remove: "Dieses Thema ist jetzt kein Banner mehr. Es wird nicht mehr auf jeder Seite ganz oben angezeigt."
   unsubscribed:
-    title: "E-Mail Präferenzen aktualisiert!"
-    description: "E-Mail Präferenzen für <b>%{email}</b> wurden aktualisiert. Um deine E-Mail Einstellungen zu ändern, rufe <a href='%{url}'>deine Benutzereinstellungen</a> auf."
-    topic_description: "Um %{link} wieder zu abonnieren, verwende die Benachrichtigungseinstellungen, die du am Ende und rechts von jedem Thema findest."
+    title: "E-Mail-Einstellungen aktualisiert!"
+    description: "E-Mail-Einstellungen für <b>%{email}</b> wurden aktualisiert. Um deine E-Mail-Einstellungen zu ändern, rufe <a href='%{url}'>deine Benutzereinstellungen</a> auf."
+    topic_description: "Um %{link} wieder zu abonnieren, verwende die Benachrichtigungseinstellungen unten oder rechts vom Thema."
     private_topic_description: "Um das Thema wieder zu abonnieren, verwende die Benachrichtigungseinstellungen unten oder rechts vom Thema."
   uploads:
-    marked_insecure_from_theme_component_reason: "in Theme Komponente verwendeter Upload"
+    marked_insecure_from_theme_component_reason: "in Theme-Komponente verwendeter Upload"
   unsubscribe:
     title: "Abbestellen"
     stop_watching_topic: "Thema nicht mehr beobachten, %{link}"
@@ -978,10 +978,10 @@ de:
     unwatch_category: "Themen in %{category} nicht mehr beobachten"
     mailing_list_mode: "Mailinglisten-Modus ausschalten"
     all: "Sende mir keine E-Mail mehr von %{sitename}"
-    different_user_description: "Du bist gerade als ein anderer Benutzer angemeldet als der, an den die Zusammenfassung gesendet wurde. Bitte melde dich ab oder beginne den anonymen Modus und versuche es erneut."
-    not_found_description: "Entschuldigung, wir konnten diese Abmeldung nicht finden. Es ist möglich, dass der Link in deiner E-Mail zu alt ist und zwischenzeitlich abgelaufen ist?"
+    different_user_description: "Du bist derzeit als ein anderer Benutzer angemeldet als der, dem wir die E-Mail geschickt haben. Bitte melde dich ab oder gehe in den anonymen Modus und versuche es erneut."
+    not_found_description: "Entschuldige, wir konnten dein Abo nicht abbestellen. Kann es sein, dass der Link aus deiner E-Mail zu alt und abgelaufen ist?"
     log_out: "Abmelden"
-    submit: "Präferenzen speichern"
+    submit: "Einstellungen speichern"
     digest_frequency:
       title: "Du bekommst E-Mail Zusammenfassungen %{frequency}"
       never_title: "Du bekommst keine E-Mail Zusammenfassungen"

@@ -24,7 +24,7 @@ es:
         closed:
           title: "Los resultados se mostrarán una vez que la encuesta esté <strong>cerrada</strong>."
         staff:
-          title: "Los resultados solo se muestran a miembros del <strong>staff</strong>."
+          title: "Los resultados solo se muestran a miembros del <strong>equipo</strong>."
       multiple:
         help:
           at_least_min_options:

@@ -2810,10 +2810,10 @@ it:
             title: "Mostra il risultato con le aggiunte e le rimozioni in linea"
             button: "HTML"
           side_by_side:
-            title: "Mostra le differenze del risultato fianco a fianco"
+            title: "Mostra le differenze dei risultati affiancati"
             button: "HTML"
           side_by_side_markdown:
-            title: "Mostra le differenze nei sorgenti fianco-a-fianco"
+            title: "Mostra le differenze nei sorgenti affiancati"
             button: "Sorgente"
       raw_email:
         displays:
@@ -2896,7 +2896,7 @@ it:
       foreground_color: "Colore in primo piano"
       name_placeholder: "Una o due parole al massimo"
       color_placeholder: "Qualsiasi colore web"
-      delete_confirm: "Sei sicuro di voler cancellare questa categoria?"
+      delete_confirm: "Vuoi cancellare questa categoria?"
       delete_error: "Si è verificato un errore durante la cancellazione della categoria."
       list: "Elenca Categorie"
       no_description: "Aggiungi una descrizione alla categoria."
@@ -2926,14 +2926,14 @@ it:
       mailinglist_mirror: "La categoria si comporta come una mailing list"
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       read_only_banner: "Testo dell'annuncio quando un utente non può creare un argomento in questa categoria:"
-      num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
+      num_featured_topics: "Numero degli argomenti mostrati nella pagina delle categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
       all_topics_wiki: "Rendi i nuovi argomenti automaticamente delle wiki"
       allow_unlimited_owner_edits_on_first_post: "Consenti al proprietario modifiche illimitate al suo primo messaggio"
       subcategory_list_style: "Stile Lista Sottocategorie:"
       sort_order: "Lista Argomenti Ordinata Per:"
       default_view: "Lista Argomenti Predefinita:"
-      default_top_period: "Periodo Predefinito Argomenti Di Punta:"
+      default_top_period: "Periodo Predefinito Argomenti Popolari:"
       default_list_filter: "Filtro predefinito della lista:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
@@ -2943,7 +2943,7 @@ it:
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutte le nuove risposte"
       this_year: "quest'anno"
       position: "Posizione nella pagina delle Categorie:"
-      default_position: "Posizione di default"
+      default_position: "Posizione predefinita"
       position_disabled: "Le categorie verranno mostrate in ordine d'attività. Per modificare l'ordinamento delle categorie nelle liste,"
       position_disabled_click: 'attiva l''impostazione "posizione fissa delle categorie".'
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
@@ -2952,10 +2952,10 @@ it:
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
       notifications:
         watching:
-          title: "Osservata"
+          title: "In osservazione"
           description: "Osserverai automaticamente tutti gli argomenti in queste categorie. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."
         watching_first_post:
-          title: "Osserva Primo Messaggio"
+          title: "Osservando il Primo Messaggio"
           description: "Riceverai una notifica di nuovi argomenti in questa categoria, ma non per le risposte agli argomenti."
         tracking:
           title: "Seguita"
@@ -2990,8 +2990,8 @@ it:
       subcategory_list_styles:
         rows: "Righe"
         rows_with_featured_topics: "Righe con argomenti in primo piano"
-        boxes: "Box"
-        boxes_with_featured_topics: "Box con argomenti in primo piano"
+        boxes: "Riquadri"
+        boxes_with_featured_topics: "Riquadri con argomenti in primo piano"
       settings_sections:
         general: "Generale"
         moderation: "Moderazione"
