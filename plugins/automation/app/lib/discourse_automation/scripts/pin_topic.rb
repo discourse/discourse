@@ -16,8 +16,8 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::PIN_TOPIC) 
     next unless topic = Topic.find_by(id: topic_id)
 
     pinned_globally = fields.dig('pinned_globally', 'value') || false
-    pinned_until = fields.dig('pinned_until', 'value') || ''
-    
+    pinned_until = fields.dig('pinned_until', 'value') || nil
+
     topic.update_pinned(true, pinned_globally, pinned_until)
   end
 end

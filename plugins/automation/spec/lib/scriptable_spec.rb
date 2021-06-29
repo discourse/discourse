@@ -12,6 +12,7 @@ describe DiscourseAutomation::Scriptable do
 
       field :cat, component: :string
       field :dog, component: :integer, accepts_placeholders: true
+      field :bird, component: :integer, triggerable: 'recurring'
     end
   end
 
@@ -27,8 +28,9 @@ describe DiscourseAutomation::Scriptable do
     it 'returns the fields' do
       expect(automation.scriptable.fields).to match_array(
         [
-          { extra: {}, name: :cat, component: :string, accepts_placeholders: false },
-          { extra: {}, name: :dog, component: :integer, accepts_placeholders: true }
+          { extra: {}, name: :cat, component: :string, accepts_placeholders: false, triggerable: nil },
+          { extra: {}, name: :dog, component: :integer, accepts_placeholders: true, triggerable: nil },
+          { extra: {}, name: :bird, component: :integer, accepts_placeholders: false, triggerable: 'recurring' },
         ]
       )
     end

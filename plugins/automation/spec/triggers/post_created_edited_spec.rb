@@ -11,43 +11,45 @@ describe 'PostCreatedEdited' do
     it 'fires the trigger' do
       post = nil
 
-      output = capture_stdout do
+      output = JSON.load(capture_stdout do
         post = PostCreator.create(user, basic_topic_params)
-      end
+      end)
 
-      expect(output).to include('"kind":"post_created_edited"')
-      expect(output).to include('"action":"create"')
+      expect(output['kind']).to eq('post_created_edited')
+      expect(output['action']).to eq('create')
 
-      output = capture_stdout do
+      output = JSON.load(capture_stdout do
         post.revise(post.user, raw: 'this is another cool topic')
-      end
+      end)
 
-      expect(output).to include('"kind":"post_created_edited"')
-      expect(output).to include('"action":"edit"')
+      expect(output['kind']).to eq('post_created_edited')
+      expect(output['action']).to eq('edit')
     end
 
     context 'category is restricted' do
       before do
-        automation.upsert_field!('restricted_category', 'category', { category_id: Category.last.id }, target: 'trigger' )
+        automation.upsert_field!('restricted_category', 'category', { category_id: Category.first.id }, target: 'trigger' )
       end
 
       context 'category is allowed' do
         it 'fires the trigger' do
-          output = capture_stdout do
-            PostCreator.create(user, basic_topic_params.merge({ category: Category.last.id }))
-          end
+          output = JSON.load(capture_stdout do
+            PostCreator.create(user, basic_topic_params.merge({ category: Category.first.id }))
+          end)
 
-          expect(output).to include('"kind":"post_created_edited"')
+          expect(output['kind']).to eq('post_created_edited')
         end
       end
 
       context 'category is not allowed' do
-        it 'doesn’t fire the trigger' do
-          output = capture_stdout do
-            PostCreator.create(user, basic_topic_params)
-          end
+        fab!(:category) { Fabricate(:category) }
 
-          expect(output).to_not include('"kind":"post_created_edited"')
+        it 'doesn’t fire the trigger' do
+          output = JSON.load(capture_stdout do
+            PostCreator.create(user, basic_topic_params.merge({ category: category.id }))
+          end)
+
+          expect(output).to be_nil
         end
       end
     end

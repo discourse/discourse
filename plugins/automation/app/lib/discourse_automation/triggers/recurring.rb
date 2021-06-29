@@ -55,7 +55,7 @@ def setup_pending_automation(automation, fields)
   when 'every_other_week'
     next_trigger_date = RRule::Rule
       .new("FREQ=WEEKLY;INTERVAL=2;BYDAY=#{byday}", dtstart: start_date)
-      .between(Time.now.end_of_week, Time.now + 2.months)
+      .between(Time.now, Time.now + 2.months)
       .first
   when 'every_hour'
     next_trigger_date = (Time.zone.now + 1.hour).beginning_of_hour
