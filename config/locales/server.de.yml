@@ -1112,22 +1112,22 @@ de:
       title: "TAB/MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
-      description: "Anzahl der Mitglieder, die sich am vergangenen Tag angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, die das „Klebeverhalten“ der Community angibt. Erstrebenswert sind 30 % oder mehr."
+      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 30 % oder mehr."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"
       yaxis: "Engagierte Benutzer"
-      description: "Anzahl der Benutzer, die innerhalb des letzten Tages einen Beitrag geschrieben oder mit einem Like markiert haben"
+      description: "Anzahl der Benutzer, die innerhalb des letzten Tages einen Beitrag geschrieben oder mit einem Like versehen haben."
     profile_views:
       title: "Profilaufrufe"
       xaxis: "Tag"
       yaxis: "Anzahl der angezeigten Benutzerprofile"
-      description: "Gesamtzahl neuer Ansichten von Benutzerprofilen"
+      description: "Gesamtzahl neuer Ansichten von Benutzerprofilen."
     topics:
       title: "Themen"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Themen"
-      description: "Neue Themen, die in dieser Zeit erstellt wurden"
+      description: "Neue Themen, die in dieser Zeit erstellt wurden."
     posts:
       title: "Beiträge"
       xaxis: "Tag"
@@ -1142,19 +1142,19 @@ de:
       title: "Meldungen"
       xaxis: "Tag"
       yaxis: "Anzahl der Meldungen"
-      description: "Anzahl neuer Meldungen"
+      description: "Anzahl neuer Meldungen."
     bookmarks:
       title: "Lesezeichen"
       xaxis: "Tag"
-      yaxis: "Anzahl der Lesezeichen"
+      yaxis: "Anzahl der neuen Lesezeichen"
       description: "Anzahl neuer Lesezeichen für Themen und Beiträge."
     users_by_trust_level:
-      title: "Benutzer nach Stufe"
-      xaxis: "Stufe"
+      title: "Benutzer nach Vertrauensstufe"
+      xaxis: "Vertrauensstufe"
       yaxis: "Anzahl der Benutzer"
       labels:
         level: Stufe
-      description: "Anzahl von Benutzern nach Vertrauensstufe."
+      description: "Anzahl der Benutzer, gruppiert nach Vertrauensstufe."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Benutzer nach Art"
@@ -1167,7 +1167,7 @@ de:
         moderator: Moderator
         suspended: Gesperrt
         silenced: Stummgeschaltet
-      description: "Anzahl der Benutzer gruppiert nach Administrator, Moderator, gesperrt und stummgeschaltet."
+      description: "Anzahl der Benutzer, gruppiert nach Administrator, Moderator, gesperrt und stummgeschaltet."
     trending_search:
       title: Angesagte Suchbegriffe
       labels:
@@ -1184,34 +1184,34 @@ de:
       title: "Benutzer-an-Benutzer (ohne Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl neu angefangener Nachrichten."
+      description: "Anzahl neu angefangener persönlicher Nachrichten."
     user_to_user_private_messages_with_replies:
-      title: "Benutzer-zu-Benutzer (mit Antworten)"
+      title: "Benutzer-an-Benutzer (mit Antworten)"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl aller neuen Nachrichten und Antworten."
+      description: "Anzahl aller neuen persönlichen Nachrichten und Antworten."
     system_private_messages:
       title: "System"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl der automatischen Nachrichten durch das System."
+      description: "Anzahl der persönlichen Nachrichten, die automatisch vom System gesendet werden."
     moderator_warning_private_messages:
-      title: "Warnungen von Moderatoren"
+      title: "Moderatorwarnung"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl der Warnungen, die von Moderatoren als Nachricht geschickt wurden."
+      description: "Anzahl der Warnungen, die von Moderatoren als persönliche Nachrichten verschickt wurden."
     notify_moderators_private_messages:
-      title: "Meldungen an Moderatoren"
+      title: "Moderatoren benachrichtigen"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
       description: "Anzahl, wie häufig Moderatoren persönlich über eine Meldung informiert wurden."
     notify_user_private_messages:
-      title: "Meldungen an Benutzer"
+      title: "Benutzer benachrichtigen"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
       description: "Anzahl, wie häufig Benutzer persönlich über eine Meldung informiert wurden."
     top_referrers:
-      title: "Top Referrers"
+      title: "Top-Referrer"
       xaxis: "Benutzer"
       num_clicks: "Klicks"
       num_topics: "Themen"
@@ -1221,8 +1221,8 @@ de:
         num_topics: "Themen"
       description: "Benutzer nach Anzahl von Klicks auf Links, die sie geteilt haben."
     top_traffic_sources:
-      title: "Top Benutzerquellen"
-      xaxis: "Domäne"
+      title: "Top-Traffic-Quellen"
+      xaxis: "Domain"
       num_clicks: "Klicks"
       num_topics: "Themen"
       num_users: "Benutzer"
@@ -1230,7 +1230,7 @@ de:
         domain: Domain
         num_clicks: Klicks
         num_topics: Themen
-      description: "Externe Quellen, die am meisten auf diese Seite verweisen."
+      description: "Externe Quellen, die am meisten auf diese Website verweisen."
     top_referred_topics:
       title: "Top verwiesene Themen"
       labels:
@@ -1250,7 +1250,7 @@ de:
     page_view_crawler_reqs:
       title: "Aufrufe durch Suchmaschinen"
       xaxis: "Tag"
-      yaxis: "Aufrufe durch Suchmaschinen"
+      yaxis: "Seitenaufrufe durch Suchmaschinen"
       description: "Suchmaschinen-Seitenaufrufe insgesamt im Zeitverlauf."
     page_view_total_reqs:
       title: "Seitenaufrufe"
@@ -1260,8 +1260,8 @@ de:
     page_view_logged_in_mobile_reqs:
       title: "Seitenaufrufe durch angemeldete Benutzer"
       xaxis: "Tag"
-      yaxis: "Mobile Seitenaufrufe"
-      description: "Anzahl neuer Seitenaufrufe von mobilen Endgeräten, die angemeldet sind."
+      yaxis: "Seitenaufrufe durch angemeldete Benutzer (mobil)"
+      description: "Anzahl neuer Seitenaufrufe von angemeldeten Benutzern auf mobilen Endgeräten."
     page_view_anon_mobile_reqs:
       title: "Anonyme Seitenaufrufe"
       xaxis: "Tag"

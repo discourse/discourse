@@ -2952,7 +2952,7 @@ de:
       subcategory_list_style: "Listenstil für Unterkategorien:"
       sort_order: "Themenliste sortieren nach:"
       default_view: "Standard-Themenliste:"
-      default_top_period: "Standard-Zeitraum für angesagte Beiträge:"
+      default_top_period: "Standard-Zeitraum für angesagte Themen:"
       default_list_filter: "Standard-Listenfilter:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
