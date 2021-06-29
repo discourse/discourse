@@ -337,10 +337,10 @@ zh_CN:
         score_to_hide: "隐藏帖子的触发分数"
         take_action_bonus:
           name: "采取行动"
-          title: "当管理人员选择采取行动时，会给旗帜加分。"
+          title: "当管理人员选择采取行动时，举报会获得加分。"
         user_accuracy_bonus:
           name: "用户准确性"
-          title: "其旗帜一直都获得同意的用户将获得加分。"
+          title: "所提交的举报一直都获得同意的用户将获得加分。"
         trust_level_bonus:
           name: "信任等级"
           title: "由较高信任级别的用户创建的可审查条目具有较高的分数。"
@@ -1065,18 +1065,18 @@ zh_CN:
         enable: "启用"
         enable_long: "启用备份代码"
         manage:
-          other: "管理备份码，你还剩下 <strong>%{count}</strong> 个可用的备份码。"
+          other: "管理备份代码，你还剩下 <strong>%{count}</strong> 个可用的备份代码。"
         copy_to_clipboard: "复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
         copied_to_clipboard: "已复制到剪贴板"
-        download_backup_codes: "下载备份码"
+        download_backup_codes: "下载备份代码"
         remaining_codes:
-          other: "你还剩下 <strong>%{count}</strong> 个可用的备份码。"
-        use: "使用备份码"
-        enable_prerequisites: "在生成备份码之前你必须选用一个双重验证方式。"
+          other: "你还剩下 <strong>%{count}</strong> 个可用的备份代码。"
+        use: "使用备份代码"
+        enable_prerequisites: "在生成备份代码之前你必须选用一个双重验证方式。"
         codes:
-          title: "备份码生成"
-          description: "每个备份码只能使用一次，请存放于安全可读的地方。"
+          title: "备份代码生成"
+          description: "每个备份代码只能使用一次，请存放于安全可读的地方。"
       second_factor:
         title: "双重认证"
         enable: "管理双重认证"
@@ -1588,7 +1588,7 @@ zh_CN:
       second_factor_description: "请输入来自应用的验证码："
       second_factor_backup: "使用备用码登录"
       second_factor_backup_title: "双重认证备份"
-      second_factor_backup_description: "请输入你的备份码："
+      second_factor_backup_description: "请输入你的备份代码："
       second_factor: "使用身份验证器应用登录"
       security_key_description: "当你准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
       security_key_alternative: "尝试另一种方式"
@@ -1644,7 +1644,7 @@ zh_CN:
         title: "Discord 登录"
       second_factor_toggle:
         totp: "改用身份验证应用"
-        backup_code: "使用备份码"
+        backup_code: "使用备份代码"
     invites:
       accept_title: "邀请"
       emoji: "信封表情符号"

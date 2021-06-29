@@ -2191,14 +2191,14 @@ zh_CN:
     second_factor_title: "双重认证"
     second_factor_description: "请输入您的APP验证码："
     second_factor_backup_description: "请输入备用码："
-    second_factor_backup_title: "双重认证备份码"
+    second_factor_backup_title: "双重认证备份代码"
     invalid_second_factor_code: "验证码无效。每个代码只能使用一次。"
     invalid_security_key: "无效的安全密钥。"
     missing_second_factor_name: "请提供一个名称。"
     missing_second_factor_code: "请提供一个验证码"
     second_factor_toggle:
       totp: "请改用身份验证器应用或安全密钥"
-      backup_code: "使用备份码"
+      backup_code: "使用备份代码"
   admin:
     email:
       sent_test: "已发送！"
