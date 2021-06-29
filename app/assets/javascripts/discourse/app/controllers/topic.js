@@ -6,7 +6,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { later, next, schedule } from "@ember/runloop";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import Post from "discourse/models/post";
 import { Promise } from "rsvp";
@@ -949,10 +949,6 @@ export default Controller.extend(bufferedProperty("model"), {
       });
     },
 
-    recoverTopic() {
-      this.model.recover();
-    },
-
     makeBanner() {
       this.model.makeBanner();
     },
@@ -1424,6 +1420,7 @@ export default Controller.extend(bufferedProperty("model"), {
     return spinnerHTML;
   },
 
+  @action
   recoverTopic() {
     this.model.recover();
   },
