@@ -2709,35 +2709,35 @@ fi:
         Saat lisätietoa [yhteisön ohjeista](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Liian monta LT3-merkintää"
-      subject_template: "Uusi tili on estetty"
+      subject_template: "Uusi tili on pidossa"
       text_body_template: |
         Hei,
 
-        Lähetämme tämän automaattisen viestin sivustolta %{site_name} kertoaksemme, että käyttäjätilisi on jäädytetty yhteisön liputusten perusteella.
+        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että tilisi on pidossa johtuen suuresta määrästä yhteisön merkintöjä.
 
-        Varotoimena uusi käyttäjätilisi on hiljennetty etkä voi vastata etkä aloittaa uusia ketjuja ennen kuin henkilökunnan jäsen arvioi tilanteen. Pahoittelemme tästä aiheutuvaa vaivaa.
+        Varotoimena uusi tilisi on hiljennetty, etkä voi vastata etkä aloittaa uusia ketjuja ennen kuin henkilökunnan jäsen tarkastaa tilisi. Pahoittelemme tästä aiheutuvaa vaivaa.
 
         Saat lisätietoa [yhteisön ohjeista](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Henkilökunta hiljensi"
-      subject_template: "Tili väliaikaisesti jäädytetty"
+      subject_template: "Tili väliaikaisesti pidossa"
       text_body_template: |
         Hei,
 
-        Lähetämme tämän automaattisen viestin sivustolta %{site_name} kertoaksemme, että käyttäjätilisi on jäädytetty yhteisön liputusten perusteella.
+        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että tilisi on asetettu tilapäisesti pitoon varotoimena.
 
-        Voit jatkaa selailua, muttet voi vastata etkä aloittaa uusia ketjuja ennen kuin henkilökunnan jäsen arvioi tilanteen. Pahoittelemme tästä aiheutuvaa vaivaa.
+        Voit jatkaa selailua, muttet voi vastata etkä aloittaa uusia ketjuja ennen kuin [henkilökunnan jäsen](%{base_url}/about) tarkastaa viimeisimmät viestisi. Pahoittelemme tästä aiheutuvaa vaivaa.
 
         Saat lisätietoa [yhteisön ohjeista](%{base_url}/guidelines).
     user_automatically_silenced:
       title: "Käyttäjä hiljennettiin automaattisesti"
-      subject_template: "Yhteisön liputukset hiljensivät uuden käyttäjän %{username}"
+      subject_template: "Yhteisön merkinnät hiljensivät uuden käyttäjän %{username}"
       text_body_template: |
         Tämä on automaattinen viesti.
 
-        Uusi käyttäjä [%{username}](%{user_url}) hiljennettiin automaattisesti, koska useampi käyttäjä liputti hänen viestinsä tai viestejänsä.
+        Uusi käyttäjä [%{username}](%{user_url}) hiljennettiin automaattisesti, koska useampi käyttäjä on merkinnyt käyttäjän %{username} viestejä.
 
-        [Arvioi liputukset](%{base_url}/admin/flags). Jos %{username} hiljennettiin eli viestien kirjoittaminen estettiin ilman syytä. kumoa hiljennys klikkaamalla painiketta [käyttäjän ylläpitosivulla](%{user_url}).
+        [Tarkasta merkinnät](%{base_url}/admin/flags). Jos %{username} hiljennettiin ilman syytä, kumoa hiljennys klikkaamalla painiketta [käyttäjän ylläpitosivulla](%{user_url}).
 
         Rajaa voi muuttaa sivustoasetuksella `silence_new_user.
     spam_post_blocked:
@@ -2745,11 +2745,11 @@ fi:
       subject_template: "Uuden käyttäjän %{username} viestit estettiin toistuvien linkkien vuoksi"
     unsilenced:
       title: "Hiljennys kumottu"
-      subject_template: "Käyttäjätili ei ole enää jäädytetty"
+      subject_template: "Käyttäjätili ei ole enää pidossa"
       text_body_template: |
         Hei,
 
-        Tämä on automaattinen viesti sivustolta %{site_name} kertoaksemme, ettei käyttäjätilisi ole enää jäädytetty henkilökunnan arvioinnin jälkeen.
+        Tämä on automaattinen viesti sivustolta %{site_name} kertoaksemme, ettei käyttäjätilisi ole enää pidossa henkilökunnan arvioinnin jälkeen.
 
         Voit nyt jälleen kirjoittaa vastauksia ja aloittaa ketjuja. Kiitos kärsivällisyydestäsi.
     pending_users_reminder:
@@ -2758,29 +2758,29 @@ fi:
         one: "%{count} käyttäjä odottaa hyväksymistä"
         other: "%{count} käyttäjää odottaa hyväksymistä"
       text_body_template: |
-        Uusia käyttäjiä odottaa hyväksyntää (tai hylkäystä), mitä ennen he eivät voi käyttää palstaa.
+        Uusia käyttäjiä odottaa hyväksyntää (tai hylkäystä), mitä ennen he eivät voi käyttää foorumia.
 
-        [Tarkastele niitä](%{base_url}/review).
+        [Tarkasta käyttäjät](%{base_url}/review).
     download_remote_images_disabled:
-      title: "Linkattuja kuvia ei ladata"
-      subject_template: "Linkattujen kuvien lataaminen on otettu pois käytöstä"
-      text_body_template: "Asetus `download_remote_images_to_local` on otettu pois käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
+      title: "Linkattujen kuvien lataaminen on poistettu käytöstä"
+      subject_template: "Linkattujen kuvien lataaminen on poistettu käytöstä"
+      text_body_template: "Asetus `download_remote_images_to_local` on poistettu käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
     dashboard_problems:
       title: "Hallintapaneelissa ongelmia"
       subject_template: "Uusia neuvoja sivustosi hallintapaneelissa"
       text_body_template: |
         Meillä on joitakin neuvoja ja suosituksiasi nykyisiin sivustoasetuksiisi pohjautuen.
 
-        Katsele [sivustosi hallintapaneelissa](%{base_url}/admin).
+        Katsele niitä [sivustosi hallintapaneelissa](%{base_url}/admin).
 
         Jos hallintapaneelissa ei näy mitään, toinen henkilökuntalainen on voinut jo ottaa vinkistä vaarin. Luettelo henkilökunnan toimista löytyy [henkilökuntalokista](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Olet kuukauden tulokas!"
       subject_template: "Olet kuukauden tulokas!"
       text_body_template: |
-        Onneksi olkoon, olet ansainnut **Kuukauden tulokas -palkinnon %{month_year}** :trophy:
+        Onneksi olkoon, olet ansainnut **Kuukauden tulokas -palkinnon kuussa %{month_year}** :trophy:
 
-        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [käyttäjäsivullasi](%{url}).
+        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [kunniamerkkisivullasi](%{url}).
 
         Sinusta on äkkiä tullut tärkeä osa yhteisöä. Kiitos kun liityit, ja jatka samaa rataa!
     queued_posts_reminder:
@@ -2817,7 +2817,7 @@ fi:
     only_reply_by_email: "Vastaa vastaamalla tähän sähköpostiin."
     only_reply_by_email_pm: "Vastaa käyttäjille %{participants} vastaamalla tähän sähköpostiin."
     visit_link_to_respond: "[Vieraile ketjussa](%{base_url}%{url}) vastataksesi."
-    visit_link_to_respond_pm: "Vastaa käyttäjille %{participants} [vierailemalla keskustelussa](%{base_url}%{url})."
+    visit_link_to_respond_pm: "Vastaa käyttäjille %{participants} [vierailemalla viestissä](%{base_url}%{url})."
     posted_by: "Käyttäjältä %{username} %{post_date}"
     pm_participants: "Osanottajat: %{participants}"
     invited_group_to_private_message_body: |
@@ -2899,7 +2899,7 @@ fi:
 
         %{respond_instructions}
     user_replied:
-      title: "Käyttäjälle vastattiin"
+      title: "Käyttäjä vastasi"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2910,7 +2910,7 @@ fi:
 
         %{respond_instructions}
     user_replied_pm:
-      title: "Käyttäjän yksityisviestiin vastattiin"
+      title: "Käyttäjä vastasi yksityisviestiin"
       subject_template: "[%{email_prefix}] [YV] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2976,7 +2976,7 @@ fi:
 
         %{respond_instructions}
     user_posted:
-      title: "Käyttäjälle kirjoittiin"
+      title: "Käyttäjä kirjoitti"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3018,7 +3018,7 @@ fi:
       title: "Tili hyllytetty"
       subject_template: "[%{email_prefix}] Tilisi on hyllytetty"
     account_silenced:
-      title: "Käyttäjätili hiljennetty"
+      title: "Tili hiljennetty"
       subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
     account_exists:
       title: "Tili on jo olemassa"
@@ -3026,9 +3026,9 @@ fi:
       text_body_template: |
         Yritit luoda tilin sivustolle %{site_name} tai yritit muuttaa tilin sähköpostiosoitteeksi %{email}. Sähköpostiosoitteella %{email} on kuitenkin jo tili olemassa.
 
-        Jos unohdit salasanasi, [voit uusia sen nyt](%{base_url}/password-reset).
+        Jos unohdit salasanasi, [voit palauttaa sen nyt](%{base_url}/password-reset).
 
-        Jos et yrittänyt luoda tunnusta sähköpostiosoitteella %{email} tai vaihtaa sähköpostiosoitettasi, älä huoli - voit huoletta jättää tämän viestin huomiotta.
+        Jos et yrittänyt luoda tunnusta sähköpostiosoitteella %{email} tai vaihtaa sähköpostiosoitettasi, älä huoli – voit huoletta jättää tämän viestin huomiotta.
 
         Jos sinulla on kysyttävää, [ota yhteyttä avuliaaseen henkilökuntaamme](%{base_url}/about).
     digest:
@@ -3043,15 +3043,15 @@ fi:
       join_the_discussion: "Lue lisää"
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
-      subject_template: "[%{email_prefix}] Kooste"
-      unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla %{email_preferences_link} tai %{unsubscribe_link} peruaksesi tilauksen."
+      subject_template: "[%{email_prefix}] Yhteenveto"
+      unsubscribe: "Tämä yhteenveto lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla %{email_preferences_link} tai %{unsubscribe_link} peruaksesi tilauksen."
       your_email_settings: "sähköpostiasetuksiasi"
       click_here: "klikkaa tätä"
       from: "%{site_name}"
       preheader: "Lyhyt yhteenveto tapahtumista viime vierailusi (%{last_seen_at}) jälkeen"
     forgot_password:
       title: "Unohtunut salasana"
-      subject_template: "[%{email_prefix}] Salasanan uusiminen"
+      subject_template: "[%{email_prefix}] Salasanan palauttaminen"
       text_body_template: |
         Salasanasi uusimista pyydettiin sivustolla [%{site_name}](%{base_url}).
 
@@ -3063,19 +3063,19 @@ fi:
       title: "Kirjaudu linkin avulla"
       subject_template: "%{email_prefix} Kirjautuminen linkin avulla"
       text_body_template: |
-        Tässä linkki jolla voit kirjautua sivustolle [%{site_name}](%{base_url}).
+        Tässä linkki, jolla voit kirjautua sivustolle [%{site_name}](%{base_url}).
 
-        Jos et pyytänyt linkkiä voit huoletta sivuuttaa tämän sähköpostiviestin.
+        Jos et pyytänyt linkkiä, voit huoletta sivuuttaa tämän sähköpostiviestin.
 
         Kirjaudu klikkaamalla linkkiä:
         %{base_url}/session/email-login/%{email_token}
     set_password:
-      title: "Syötä salasana"
+      title: "Aseta salasana"
       subject_template: "[%{email_prefix}] Aseta salasana"
       text_body_template: |
-        Joku haluaa lisätä salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden (Google, Facebook, etc) tileillä, jotka ovat tämän saman sähköpostiosoitteen alaisia.
+        Joku haluaa lisätä salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden (Google, Facebook jne.) tileillä, jotka ovat tämän saman sähköpostiosoitteen alaisia.
 
-        Jos et ole pyynnön taustalla, voit huoletta jättää tämän viestin huomiotta.
+        Jos et tehnyt tätä pyyntöä, voit huoletta jättää tämän viestin huomiotta.
 
         Valitse uusi salasana klikkaamalla linkkiä:
         %{base_url}/u/password-reset/%{email_token}
@@ -3084,9 +3084,9 @@ fi:
       subject_template: "[%{email_prefix}] Kirjautuminen"
     account_created:
       title: "Tili luotu"
-      subject_template: "[%{email_prefix}] Uusi käyttäjätilisi"
+      subject_template: "[%{email_prefix}] Uusi tilisi"
       text_body_template: |
-        Sinulle luotiin käyttäjätili sivustolle %{site_name}
+        Sinulle luotiin tili sivustolle %{site_name}
 
         Valitse salasana uudelle tilillesi klikkaamalla linkkiä:
         %{base_url}/u/password-reset/%{email_token}
@@ -3117,12 +3117,12 @@ fi:
 
         %{new_email}
     signup_after_approval:
-      title: "Liity hyväksynnän jälkeen"
+      title: "Rekisteröityminen hyväksynnän jälkeen"
       subject_template: "Sinut on hyväksytty sivustolle %{site_name}!"
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
 
-        Henkilökunnan jäsen hyväksyi käyttäjätilisi sivustolle %{site_name}.
+        Henkilökunnan jäsen hyväksyi tilisi sivustolle %{site_name}.
 
         Voit kirjautua sisään osoitteessa:
         %{base_url}
@@ -3135,15 +3135,15 @@ fi:
 
         Nauti palstastamme!
     signup_after_reject:
-      title: "Rekisteröidy hylkäyksen jälkeen"
+      title: "Rekisteröityminen hylkäyksen jälkeen"
       subject_template: "Sinut on hylätty palveluta %{site_name}"
       text_body_template: |
         Palvelun %{site_name} ylläpitäjät ovat hylänneet tilisi.
 
         %{reject_reason}
     signup:
-      title: "Liity"
-      subject_template: "[%{email_prefix}] Vahvista uusi käyttäjätilisi"
+      title: "Rekisteröityminen"
+      subject_template: "[%{email_prefix}] Vahvista uusi tilisi"
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
 
@@ -3169,11 +3169,11 @@ fi:
       text_body_template: |
         Hei,
 
-        Huomasimme että kirjauduit sinulle epätavalliselta laitteelta tai paikasta. Olitko se sinä?
+        Huomasimme, että kirjauduit sinulle epätavalliselta laitteelta tai paikasta. Olitko se sinä?
 
-         - Paikka: %{location} (%{client_ip})
-         - Selain: %{browser}
-         - Laite: %{device} – %{os}
+         – Paikka: %{location} (%{client_ip})
+         – Selain: %{browser}
+         – Laite: %{device} – %{os}
 
         Jos se olit sinä, hyvä! Sinun ei tarvitse reagoida mitenkään.
 

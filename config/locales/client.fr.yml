@@ -2996,7 +2996,7 @@ fr:
           very_high: "Très élevée"
       sort_options:
         default: "par défaut"
-        likes: "Nombre de « J'aime »"
+        likes: "« J'aime »"
         op_likes: "Nombre de « J'aime » du message original"
         views: "Vues"
         posts: "Messages"
