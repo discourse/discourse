@@ -3820,10 +3820,10 @@ fi:
       automatic_revoked:
         one: "Peruutettiin automaattisesti, toimintaa viimeksi yli %{count} päivä sitten"
         other: "Peruutettiin automaattisesti, toimintaa viimeksi yli %{count} päivää sitten"
-      revoked: Jäädytetty
-      restored: Palautettiin
+      revoked: Peruttu
+      restored: Palautettu
   reviewables:
-    already_handled: "Kiitos, mutta olemme jo tarkistanut viestin ja arvioineet, että sitä ei tarvitse liputtaa uudelleen."
+    already_handled: "Kiitos, mutta olemme jo tarkistaneet viestin ja arvioineet, että sitä ei tarvitse merkitä uudelleen."
     already_handled_and_user_not_exist: "Kiitos, mutta joku muu on tehnyt jo tarkistuksen, eikä kyseistä käyttäjää ei ole enää olemassa."
     priorities:
       low: "Matala"
@@ -3839,39 +3839,39 @@ fi:
     missing_version: "Sinun on annettava version parametri"
     conflict: "Tapahtui muutosristiriita, joka estää tämän toimenpiteen."
     reasons:
-      post_count: "Muutama ensimmäinen viesti jokaiselta uudelta käyttäjältä tulee henkilökunnan hyväksyttäväksi. Ks.  `approve_post_count`."
-      trust_level: "Matalan luottamustason käyttäjien vastaukset tulevat henkilökunnan hyväksyttäviksi. Ks. `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Matalan luottamustason käyttäjien aloittamat ketjut tulevat henkilökunnan hyväksyttäviksi. Ks. `approve_new_topics_unless_trust_level`."
-      fast_typer: "Uusi käyttäjä kirjoitti ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Katso `min_first_post_typing_time` -asetus."
-      auto_silence_regexp: "Uusi käyttäjä jonka ensimmäinen viesti täsmää `auto_silence_first_post_regex` -asetukseen."
+      post_count: "Muutama ensimmäinen viesti jokaiselta uudelta käyttäjältä tulee henkilökunnan hyväksyttäväksi. Katso `approve_post_count`."
+      trust_level: "Matalan luottamustason käyttäjien vastaukset tulevat henkilökunnan hyväksyttäviksi. Katso `approve_unless_trust_level`."
+      new_topics_unless_trust_level: "Matalan luottamustason käyttäjien aloittamat ketjut tulevat henkilökunnan hyväksyttäviksi. Katso `approve_new_topics_unless_trust_level`."
+      fast_typer: "Uusi käyttäjä kirjoitti ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Katso `min_first_post_typing_time`."
+      auto_silence_regexp: "Uusi käyttäjä, jonka ensimmäinen viesti täsmää `auto_silence_first_post_regex` -asetukseen."
       watched_word: "Tämä viesti sisältää tarkkailussa olevan sanan. Katso <a href='%{base_url}/admin/customize/watched_words'>tarkkailtavien sanojen luettelosi</a>."
       staged: "Henkilökunnan täytyy hyväksyä esikäyttäjien uudet ketjut ja viestit. Katso `approve_unless_staged`."
       category: "Tämän alueen viestit vaativat henkilökunnan hyväksyntää. Katso alueen asetukset."
       must_approve_users: "Kaikki uudet käyttäjät tulevat henkilökunnan hyväksyttäviksi. Katso `must_approve_users`."
       invite_only: "Kaikki uudet käyttäjät täytyy kutsua. Katso `invite_only`."
-      email_auth_res_enqueue: "Tämän sähköpostiviestin DMARC-tarkistus epäonnistui, todennäköisesti se ei ole kyseiseltä henkilöltä. Tarkista sähköpostin otsaketiedot saadaksesi lisätietoja."
+      email_auth_res_enqueue: "Tämän sähköpostiviestin DMARC-tarkistus epäonnistui, todennäköisesti se ei ole kyseiseltä henkilöltä. Tarkista sähköpostin otsikkotiedot saadaksesi lisätietoja."
       email_spam: "Tämä sähköposti merkittiin roskapostiksi kohdassa `email_in_spam_header` määritellyllä otsikolla."
-      suspect_user: "Tämä uusi käyttäjä täytti profiilitiedot lukematta aiheita tai viestejä, mikä viittaa vahvasti siihen, että hän saattaa olla roskapostittaja. Katso `approve_suspect_users`."
+      suspect_user: "Tämä uusi käyttäjä täytti profiilitiedot lukematta ketjuja tai viestejä, mikä viittaa vahvasti siihen, että hän saattaa olla roskapostittaja. Katso `approve_suspect_users`."
       contains_media: "Tämä viesti sisältää upotettua mediaa. Katso `review_media_unless_trust_level`."
-      queued_by_staff: "Henkilökunnan kokee että tämä viesti on tarkistettava. Se pysyy piilotettuna kunnes se on tarkastettu."
+      queued_by_staff: "Henkilökunnan jäsen kokee, että tämä viesti on tarkistettava. Se pysyy piilotettuna, kunnes se on tarkastettu."
     actions:
       agree:
         title: "Hyväksy..."
       agree_and_keep:
         title: "Säilytä viesti"
-        description: "Hyväksy liputus ja pidä viesti ennallaan"
+        description: "Hyväksy merkintä ja pidä viesti ennallaan."
       agree_and_keep_hidden:
         title: "Jätä viesti piiloon"
-        description: "Hyväksy liputus ja jätä viesti piiloon."
+        description: "Hyväksy merkintä ja jätä viesti piiloon."
       agree_and_suspend:
         title: "Hyllytä käyttäjä"
-        description: "Hyväksy liputus ja hyllytä käyttäjä."
+        description: "Hyväksy merkintä ja hyllytä käyttäjä."
       agree_and_silence:
         title: "Hiljennä käyttäjä"
-        description: "Hyväksy liputus ja hiljennä käyttäjä."
+        description: "Hyväksy merkintä ja hiljennä käyttäjä."
       agree_and_restore:
         title: "Palauta viesti"
-        description: "Palauta viesti niin että kaikki käyttäjät näkevät sen."
+        description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       agree_and_hide:
         title: "Piilota viesti"
         description: "Piilota viesti ja lähetä käyttäjälle yksityisviesti, jossa pyydetään käyttäjää muokkaamaan viestiä."
@@ -3880,22 +3880,22 @@ fi:
       delete:
         title: "Poista..."
       delete_and_ignore:
-        title: "Poista viesti ja sivuuta"
-        description: "Poista viesti: jos on ketjunaloitusviesti, poista myös ketju"
+        title: "Poista viesti ja ohita"
+        description: "Poista viesti: jos on viesti on ketjun ensimmäinen, poista myös ketju"
       delete_and_ignore_replies:
         title: "Poista viesti + vastaukset ja sivuuta"
-        description: "Poista viesti ja kaikki sen vastaukset; jos ensimmäinen viesti, poista koko ketju"
-        confirm: "Oletko varma että haluat poistaa myös viestiin kohdistetut vastaukset?"
+        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
+        confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       delete_and_agree:
-        title: "Poista viesti ja hyväksy liputus"
-        description: "Poista viesti; jos ensimmäinen viesti, poista koko ketju"
+        title: "Poista viesti ja hyväksy merkintä"
+        description: "Poista viesti; jos viesti on ensimmäinen, poista koko ketju"
       delete_and_agree_replies:
-        title: "Poista viesti + vastaukset ja hyväksy liputus"
-        description: "Poista viesti ja kaikki sen vastaukset; jos ensimmäinen viesti, poista koko ketju"
-        confirm: "Oletko varma että haluat poistaa myös viestiin kohdistetut vastaukset?"
+        title: "Poista viesti + vastaukset ja hyväksy merkintä"
+        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
+        confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       disagree_and_restore:
-        title: "Hylkää liputus ja palauta viesti"
-        description: "Palauta viesti niin että kaikki käyttäjät näkevät sen."
+        title: "Hylkää merkintä ja palauta viesti"
+        description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
         title: "Hylkää"
       ignore:
@@ -3910,13 +3910,13 @@ fi:
       approve_user:
         title: "Hyväksy käyttäjä"
       reject_user:
-        title: "Poista käyttäjä.."
+        title: "Poista käyttäjä..."
         delete:
           title: "Poista käyttäjä"
-          description: "Käyttäjä poistetaan sivustolta."
+          description: "Käyttäjä poistetaan foorumista."
         block:
           title: "Poista ja estä käyttäjä"
-          description: "Käyttäjä poistetaan ja hänen IP-osoite sekä sähköpostiosoite estetään."
+          description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
       reject:
         title: "Hylkää"
         bundle_title: "Hylkää..."
@@ -3935,8 +3935,8 @@ fi:
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"
   notification_level:
-    ignore_error: "Valitettavasti et voi sivuuttaa kyseistä käyttäjää."
-    mute_error: "Valitettavasti et voi hiljentää kyseistä käyttäjää."
+    ignore_error: "Et voi sivuuttaa kyseistä käyttäjää."
+    mute_error: "Et voi hiljentää kyseistä käyttäjää."
   discord:
     not_in_allowed_guild: "Todennus epäonnistui. Et ole sallitun Discord-killan jäsen."
   old_keys_reminder:

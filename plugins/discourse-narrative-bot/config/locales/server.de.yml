@@ -71,7 +71,7 @@ de:
         author: "Theodore Roosevelt"
       "6":
         quote: "Das Leben ist wie eine Schachtel Pralinen. Man weiß nie, was man kriegt."
-        author: "Forrest Gump"
+        author: "Mutter von Forrest Gump"
       "7":
         quote: "Das ist ein kleiner Schritt für einen Menschen, ein riesiger Sprung für die Menschheit."
         author: "Neil Armstrong"
@@ -99,12 +99,12 @@ de:
         "8": "Gute Aussichten"
         "9": "Ja"
         "10": "Zeichen deuten auf ja"
-        "11": "Antwort unklar, versuch's nochmal"
+        "11": "Antwort unklar, versuchs nochmal"
         "12": "Frag später nochmal"
         "13": "Ich sags dir jetzt lieber nicht"
         "14": "Kann es jetzt nicht vorhersagen"
-        "15": "Konzentriere dich und frag nochmal"
-        "16": "Warts erst mal ab."
+        "15": "Konzentriere dich und frag noch einmal"
+        "16": "Verlass dich nicht darauf"
         "17": "Meine Antwort ist nein"
         "18": "Meine Quellen sagen nein"
         "19": "Nicht so gute Aussichten"
@@ -138,25 +138,25 @@ de:
           Danke für die Antwort!
 
           Weil ich ein schlecht programmierter Bot bin, habe ich das leider nicht ganz verstanden. :frowning:
-        track_response: Du kannst es nochmal versuchen, oder, wenn du diesen Schritt überspringen möchtest, antworte mit `%{skip_trigger}`. Falls du von vorne beginnen möchtest, antworte mit `%{reset_trigger}`.
+        track_response: Du kannst es noch einmal versuchen oder – wenn du diesen Schritt überspringen möchtest – mit `%{skip_trigger}` antworten. Falls du von vorne beginnen möchtest, antworte mit `%{reset_trigger}`.
         second_response: |-
           Es tut mir leid, aber ich verstehe es noch immer nicht. :anguished:
 
           Ich bin nur ein Bot. Schau dir [unsere Kontaktinformationen](%{base_path}/about) an, falls du dich mit einer echten Person unterhalten möchtest.
 
-          In der Zwischenzeit lass ich dich erst mal in Ruhe.
+          In der Zwischenzeit lass ich dich erst einmal in Ruhe.
     new_user_narrative:
       reset_trigger: "Tutorial"
-      title: "Abschlußzertifikat für das Tutorial für neue Benutzer"
-      cert_title: "In Anerkennung deines erfolgreichen Abschlusses eines Tutorials für neue Benutzer"
+      title: "Abschlusszertifikat für das Tutorial für neue Benutzer"
+      cert_title: "In Anerkennung deines erfolgreichen Abschlusses des Tutorials für neue Benutzer"
       hello:
         title: "Sei gegrüßt!"
         message: |-
-          Vielen Dank für's Mitmachen bei %{title}, und willkommen!
+          Vielen Dank fürs Mitmachen bei %{title} und herzlich willkommen!
 
-          - Ich bin nur ein Roboter, aber [unser freundliches Team](%{base_uri}/about) sind auch hier und können helfen, wenn du einen Menschen erreichen musst.
+          - Ich bin nur ein Roboter, aber [unser freundliches Team](%{base_uri}/about) ist auch hier und kann helfen, wenn du einen Menschen erreichen musst.
 
-          - Aus Sicherheitsgründen limitieren wir, was neue Benutzer machen können. Du bekommst [neue Fähigkeiten](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) und [Abzeichen](%{base_uri}/badges)), wenn wir dich besser kennenlernen.
+          - Aus Sicherheitsgründen limitieren wir vorübergehend, was neue Benutzer machen können. Du erhältst [neue Fähigkeiten](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) und [Abzeichen](%{base_uri}/badges)), wenn wir dich besser kennenlernen.
 
           - Wir glauben an [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu jeder Zeit.
       onebox:
@@ -434,7 +434,7 @@ de:
           [/details]
           ```
         reply: |-
-          Großartige Arbeit — deine Aufmerksamkeit fürs _Detail_ ist bewundernswert!
+          Großartige Arbeit – deine Aufmerksamkeit fürs _Detail_ ist bewundernswert!
       end:
         message: |-
           Du hast dir in der Tat den Weg hierdurch gebahnt wie ein _fortgeschrittener Benutzer_ :bow:

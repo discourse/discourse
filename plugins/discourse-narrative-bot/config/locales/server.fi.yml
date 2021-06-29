@@ -6,26 +6,26 @@
 
 fi:
   site_settings:
-    discourse_narrative_bot_enabled: "Ota Discoursen opastava botti käyttöön (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "Estä bottia lähettämästä tervetuloviestejä"
-    discourse_narrative_bot_ignored_usernames: "Käyttäjänimet, jotka botin tulisi jättää huomiotta"
-    discourse_narrative_bot_disable_public_replies: "Estä bottia vastaamasta julkisesti ketjuihin"
-    discourse_narrative_bot_welcome_post_type: "Minkätyyppisen tervetuloviestin botti lähettää"
-    discourse_narrative_bot_welcome_post_delay: "Odota (n) sekuntia ennen kuin botti lähettää tervetuloviestin."
+    discourse_narrative_bot_enabled: "Ota Discourse Narrative Bot käyttöön (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Poista Discourse Narrative Botin tervetuloviesti käytöstä"
+    discourse_narrative_bot_ignored_usernames: "Käyttäjätunnnukset, jotka Discourse Narrative Botin tulisi jättää huomiotta"
+    discourse_narrative_bot_disable_public_replies: "Estä Discourse Narrative Botia vastaamasta julkisesti ketjuihin"
+    discourse_narrative_bot_welcome_post_type: "Minkätyyppisen tervetuloviestin Discourse Narrative Bot lähettää"
+    discourse_narrative_bot_welcome_post_delay: "Odota (n) sekuntia ennen kuin Discourse Narrative Bot lähettää tervetuloviestin."
     discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot -oppaat ohitettavaksi"
   badges:
     certified:
       name: Tutkinto plakkarissa
       description: "Suoritti peruskurssin"
       long_description: |
-        Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön peruskurssin. Otit tavoitteeksesi hallita tavallisimmat toiminnot, ja nyt sinulla on siitä todistus!
+        Tämä kunniamerkki myönnetään, kun suoritat vuorovaikutteisen palstan käytön peruskurssin. Otit tavoitteeksesi hallita tavallisimmat toiminnot, ja nyt sinulla on siitä todistus!
     licensed:
       name: Pätevyytensä osoittanut
       description: "Suoritti jatkokurssin"
       long_description: |
-        Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
+        Tämä kunniamerkki myönnetään, kun suoritat vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet osoittanut taitosi.
   discourse_narrative_bot:
-    bio: "Hei, en ole oikea ihminen. Olen botti ja tarjoan opastusta sivuston käyttämisessä. Jos haluat jutella, lähetä minulle viesti tai mainitse minut nimeltä."
+    bio: "Hei, en ole oikea ihminen. Olen botti, ja tarjoan opastusta sivuston käyttämisessä. Jos haluat jutella, lähetä minulle viesti tai mainitse minut nimeltä."
     tl2_promotion_message:
       subject_template: "Nyt kun sinut on ylennetty, on aika oppia joitakin kehittyneitä ominaisuuksia!"
       text_body_template: |
@@ -36,15 +36,15 @@ fi:
 
         - Voit jatkaa milloin vain vastaamalla minulle.
 
-        - Voit hypätä tämän vaiheen yli sanomalla `@%{discobot_username} %{skip_trigger}`.
+        - Voit hypätä tämän vaiheen yli sanomalla `%{skip_trigger}`.
 
-        - Voit aloittaa alusta sanomalla `@%{discobot_username} %{reset_trigger}`.
+        - Voit aloittaa alusta sanomalla `%{reset_trigger}`.
 
         Jos et viitsi, sekin on ihan okei. Olen robotti. Minulla ei ole tunteita. :sob:
     dice:
       trigger: "heitä"
       invalid: |-
-        Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia sillä tavalla kuin pyysit. :confounded:
+        Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia pyytämälläsi tavalla. :confounded:
       not_enough_dice:
         one: "Minulla on vain %{count} noppa. [Häpeällistä](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tiedän!"
         other: "Minulla on vain %{count} noppaa. [Häpeällistä](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tiedän!"

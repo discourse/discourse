@@ -145,10 +145,10 @@ de:
       has_already_been_used: "wird bereits verwendet"
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
-      is_invalid: "Scheint unklar zu sein, ist das ein ganzer Satz?"
-      is_invalid_meaningful: "Scheint unklar zu sein, die meisten Wörter enthalten immer wieder die gleichen Buchstaben."
-      is_invalid_unpretentious: "Scheint unklar zu sein, eines oder mehrere Wörter sind sehr lang."
-      is_invalid_quiet: "Scheint unklar zu sein, wolltest du das in GROSSBUCHSTABEN eingeben?"
+      is_invalid: "scheint unklar zu sein, ist das ein ganzer Satz?"
+      is_invalid_meaningful: "scheint unklar zu sein, die meisten Wörter enthalten immer wieder die gleichen Buchstaben."
+      is_invalid_unpretentious: "scheint unklar zu sein, eines oder mehrere Wörter sind sehr lang."
+      is_invalid_quiet: "scheint unklar zu sein, wolltest du das in GROSSBUCHSTABEN eingeben?"
       invalid_timezone: "„%{tz}“ ist keine gültige Zeitzone"
       contains_censored_words: "enthält die folgenden nicht erlaubten Wörter: %{censored_words}"
       less_than: muss weniger als %{count} sein
@@ -189,7 +189,7 @@ de:
       default_categories_already_selected: "Du kannst keine Kategorie auswählen, welche bereits in einer anderen Liste benutzt wird."
       default_tags_already_selected: "Du kannst kein Schlagwort wählen, das in einer anderen Liste verwendet wird."
       s3_upload_bucket_is_required: "Uploads auf S3 können nicht aktiviert werden, bevor der „s3_upload_bucket“ eingetragen wurde."
-      enable_s3_uploads_is_required: "Der S3-Bestand setzt voraus, dass S3-Uploads aktiviert sind."
+      enable_s3_uploads_is_required: "Die Verwendung des S3-Bestands setzt voraus, dass S3-Uploads aktiviert sind."
       page_publishing_requirements: "Die Veröffentlichung von Seiten kann nicht aktiviert werden, wenn sichere Medien aktiviert sind."
       s3_backup_requires_s3_settings: "Du kannst S3 nicht als Back-up-Ort verwenden, solange du „%{setting_name}“ nicht festgelegt hast."
       s3_bucket_reused: "Du kannst nicht denselben Bucket für „s3_upload_bucket“ und „s3_backup_bucket“ verwenden. Bitte verwende einen anderen Bucket oder verwende für jeden Bucket einen anderen Pfad."
@@ -240,7 +240,7 @@ de:
     error: "Es gab einen Fehler beim Hochladen dieser Datei. Bitte versuche es später noch einmal."
   invite_link:
     email_taken: "Diese E-Mail-Adresse wird schon verwendet. Falls du bereits ein Konto hast, melde dich bitte an oder setze dein Passwort zurück."
-    max_redemptions_limit: "Sollte zwischen 2 und %{max_limit} liegen."
+    max_redemptions_limit: "sollte zwischen 2 und %{max_limit} sein."
   topic_invite:
     failed_to_invite: "Der Benutzer kann nicht in dieses Thema eingeladen werden, ohne Mitglied in einer der folgenden Gruppen zu sein: %{group_names}"
     user_exists: "Entschuldige, dieser Benutzer ist bereits eingeladen worden. Du kannst einen Benutzer nur einmal zu einem Thema einladen."
@@ -343,7 +343,7 @@ de:
   slow_mode_enabled: "Dieses Thema befindet sich im langsamen Modus."
   just_posted_that: "ist einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
   invalid_characters: "enthält ungültige Zeichen"
-  is_invalid: "Scheint unklar zu sein, ist das ein ganzer Satz?"
+  is_invalid: "scheint unklar zu sein, ist das ein ganzer Satz?"
   next_page: "nächste Seite →"
   prev_page: "← vorherige Seite"
   page_num: "Seite %{num}"
@@ -578,7 +578,7 @@ de:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Die folgenden Erweiterungsschlüssel sind ungültig: „%{keys}“'
+              invalid_interpolation_keys: 'Die folgenden Variablennamen sind ungültig: „%{keys}“'
         watched_word:
           attributes:
             word:
@@ -983,9 +983,9 @@ de:
     log_out: "Abmelden"
     submit: "Einstellungen speichern"
     digest_frequency:
-      title: "Du bekommst E-Mail Zusammenfassungen %{frequency}"
+      title: "Du erhältst E-Mail-Zusammenfassungen %{frequency}"
       never_title: "Du bekommst keine E-Mail Zusammenfassungen"
-      select_title: "Setze die Frequenz für E-Mail Zusammenfassungen auf:"
+      select_title: "Setze die Frequenz für E-Mail-Zusammenfassungen auf:"
       never: "nie"
       every_30_minutes: "alle 30 Minuten"
       every_hour: "stündlich"
@@ -998,15 +998,15 @@ de:
     authorize: "Genehmigen"
     read: "Lesen"
     read_write: "Lesen/Schreiben"
-    description: '"%{application_name}" fordert den folgenden Zugriff auf dein Konto:'
+    description: '„%{application_name}“ fordert den folgenden Zugriff auf dein Konto:'
     instructions: 'Wir haben gerade einen neuen Benutzer-API-Schlüssel für dich generiert zur Verwendung mit „%{application_name}“, bitte füge den folgenden Schlüssel in deine Anwendung ein:'
-    otp_description: 'Möchtest du "%{application_name}" erlauben, auf diese Seite zuzugreifen?'
+    otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
     otp_confirmation:
       confirm_title: Weiter zu %{site_name}
       logging_in_as: Anmeldung als %{username}
       confirm_button: Anmeldung fertigstellen
-    no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer API zu nutzen."
-    generic_error: "Entschuldige, wir können keinen Benutzer API-Schlüssel erstellen. Dieses Feature ist möglicherweise vom Site Administrator deaktiviert worden."
+    no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer-API zu nutzen."
+    generic_error: "Entschuldige, leider können wir keine Benutzer-API-Schlüssel ausgeben. Diese Funktion wurde unter Umständen vom Website-Administrator deaktiviert."
     scopes:
       message_bus: "Live-Aktualisierungen"
       notifications: "Benachrichtigungen lesen und leeren"
@@ -1014,11 +1014,11 @@ de:
       session_info: "Informationen zur Benutzersitzung lesen"
       read: "Alles lesen"
       write: "Alles schreiben"
-      one_time_password: "Erstelle ein Einmal-Login-Token"
+      one_time_password: "Erstelle ein Einmal-Anmelde-Token"
       bookmarks_calendar: "Lesezeichen-Erinnerungen lesen"
     invalid_public_key: "Entschuldige, der öffentliche Schlüssel ist ungültig."
     invalid_auth_redirect: "Entschuldige, dieser „auth_redirect“-Host ist nicht erlaubt."
-    invalid_token: "Fehlender, ungültiger oder abgelaufender Token."
+    invalid_token: "Fehlendes, ungültiges oder abgelaufenes Token."
   flags:
     errors:
       already_handled: "Die Meldung wurde bereits bearbeitet"
@@ -1054,9 +1054,9 @@ de:
         time_read: Lesezeit
         topic_count: Erstellte Themen
         post_count: Erstellte Beiträge
-        pm_count: Erstellte Nachrichten
-        revision_count: Revisionen
-      description: Liste der Moderator-Aktivität einschließlich gesichteter Meldungen, Lesezeit, erstellter Themen, erstellter Beiträge, erstellter Nachrichten und Bearbeitungen.
+        pm_count: Erstellte private Nachrichten
+        revision_count: Überarbeitungen
+      description: Liste der Moderator-Aktivität einschließlich gesichteter Meldungen, Lesezeit, erstellter Themen, erstellter Beiträge, erstellter persönlicher Nachrichten und Überarbeitungen.
     flags_status:
       title: "Meldungsstatus"
       values:
@@ -1067,15 +1067,15 @@ de:
       labels:
         flag: Typ
         assigned: Zugewiesen
-        poster: Ersteller
-        flagger: Meldender
+        poster: Beitragsersteller
+        flagger: Meldungsersteller
         time_to_resolution: Lösungszeit
       description: "Liste der Meldungszustände einschließlich Art der Meldung, Beitragsersteller, Meldungsersteller und Zeit bis zur Lösung."
     visits:
       title: "Nutzerbesuche"
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl aller Seitenbesucher"
+      description: "Anzahl aller Besuche."
     signups:
       title: "Neue Benutzer"
       xaxis: "Tag"
@@ -1085,16 +1085,16 @@ de:
       title: "Neue Mitwirkende"
       xaxis: "Tag"
       yaxis: "Anzahl neuer Mitwirkender"
-      description: "Anzahl der Benutzer, die ihren ersten Beitrag in dieser Zeit erstellt haben"
+      description: "Anzahl der Benutzer, die ihren ersten Beitrag in dieser Zeit erstellt haben."
     trust_level_growth:
       title: "Wachstum der Vertrauensstufen"
       xaxis:
-        tl1_reached: "TL1 erreicht"
-        tl2_reached: "TL2 erreicht"
-        tl3_reached: "TL3 erreicht"
-        tl4_reached: "TL4 erreicht"
+        tl1_reached: "VS1 erreicht"
+        tl2_reached: "VS2 erreicht"
+        tl3_reached: "VS3 erreicht"
+        tl4_reached: "VS4 erreicht"
       yaxis: "Tag"
-      description: "Anzahl der Benutzer, die in dieser Zeit eine höhere Vertrauensstufe erreicht haben"
+      description: "Anzahl der Benutzer, die in dieser Zeit eine höhere Vertrauensstufe erreicht haben."
     consolidated_page_views:
       title: "Zusammengefasste Seitenaufrufe"
       xaxis:
@@ -1102,10 +1102,10 @@ de:
         page_view_anon: "Anonyme Benutzer"
         page_view_logged_in: "Angemeldete Benutzer"
       yaxis: "Tag"
-      description: "Seitenaufrufe von angemeldeten Benutzer, anonymen Benutzern und Suchmaschinen."
+      description: "Seitenaufrufe von angemeldeten Benutzern, anonymen Benutzern und Suchmaschinen."
       labels:
         post: Beitrag
-        editor: Editor
+        editor: Bearbeiter
         author: Ersteller
         edit_reason: Grund
     dau_by_mau:
@@ -1392,7 +1392,7 @@ de:
     min_personal_message_title_length: "Minimale zulässige Zeichenanzahl für den Titel von Nachrichten."
     max_emojis_in_title: "Maximal erlaubte Emoji-Anzahl in Thementiteln"
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
-    search_tokenize_chinese_japanese_korean: "Zwinge die Suche Chinesisch, Japanisch und Koreanisch zu erkennen, auch wenn die Site keine dieser Sprachen nutzt"
+    search_tokenize_chinese_japanese_korean: "Zwinge die Suche, Chinesisch/Japanisch/Koreanisch zu tokenisieren, auch wenn Websites keine dieser Sprachen nutzen"
     search_prefer_recent_posts: "Wenn das Durchsuchen deines großen Forums langsam ist, dann versucht diese Option zuerst einen Index der letzten Beiträge."
     search_recent_posts_size: "Wie viele letzte Beiträge im Index halten"
     log_search_queries: "Protokolliere Suchanfragen von Benutzern"
@@ -1549,7 +1549,7 @@ de:
     prioritize_username_in_ux: "Zeige den Benutzernamen auf der Benutzerseite, der Benutzerkarte und in Beiträgen an erster Stelle (wenn deaktiviert, wird der Name an erster Stelle angezeigt)"
     enable_rich_text_paste: "Aktiviere automatische Umwandlung von HTML in Markdown beim Einfügen von Text in den Editor. (Experimentell)"
     send_old_credential_reminder_days: "An alte Anmeldeinformationen nach Tagen erinnern"
-    email_token_valid_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind für (n) Stunden gültig."
+    email_token_valid_hours: "Tokens zur Passwort-Wiederherstellung/Aktivierung eines Kontos sind für (n) Stunden gültig."
     enable_badges: "Abzeichen aktivieren"
     enable_whispers: "Erlaube dem Team private Kommunikation innerhalb von Themen."
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Seite gestattet von Web-Suchmaschinen indiziert zu werden. In außergewöhnlichen Fällen kannst du dauerhaft <a href='%{base_path}/admin/customize/robots'>robots.txt überschreiben</a>."
@@ -2245,7 +2245,7 @@ de:
       generic: "Entschuldigung, bei der Authentifizierung deines Kontos ist ein Fehler aufgetreten. Versuch es bitte noch einmal."
       csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Bitte noch einmal versuchen."
       request_error: "Ein Fehler ist beim Start der Anmeldung aufgetreten. Bitte noch einmal versuchen."
-      invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
+      invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server-Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"
     omniauth_confirm_button: "Weiter"
@@ -3367,7 +3367,7 @@ de:
       title: "Passwort vergessen"
       subject_template: "[%{email_prefix}] Passwort zurücksetzen"
       text_body_template: |
-        Jemand hat angefordert, dein Passwort zurückzusetzen auf [%{site_name}](%{base_url}).
+        Jemand hat angefordert, dein Passwort auf [%{site_name}](%{base_url}) zurückzusetzen.
 
         Wenn du diese Anfrage nicht gestellt hast, kannst du diese E-Mail einfach ignorieren.
 
@@ -3377,7 +3377,7 @@ de:
       title: "Anmeldung über Link"
       subject_template: "[%{email_prefix}] Anmeldung über Link"
       text_body_template: |
-        Hier ist dein Link, um dich anzumelden bei [%{site_name}](%{base_url}).
+        Hier ist dein Link, um dich bei [%{site_name}](%{base_url}) anzumelden.
 
         Wenn du diesen Link nicht angefordert hast, kannst du diese E-Mail einfach ignorieren.
 
@@ -3387,7 +3387,7 @@ de:
       title: "Passwort setzen"
       subject_template: "[%{email_prefix}] Passwort wählen"
       text_body_template: |
-        Jemand hat angefordert, ein Passwort hinzuzufügen zu deinem Konto auf [%{site_name}](%{base_url}). Alternativ kannst du dich mit jedem unterstützten Online-Service (Google, Facebook, etc) anmelden, der mit dieser validierten E-Mail-Adresse verknüpft ist.
+        Jemand hat angefordert, ein Passwort zu deinem Konto auf [%{site_name}](%{base_url}) hinzuzufügen. Alternativ kannst du dich mit jedem unterstützten Online-Service (Google, Facebook usw.) anmelden, der mit dieser validierten E-Mail-Adresse verknüpft ist.
 
         Wenn du diese Anfrage nicht gestellt hast, kannst du diese E-Mail einfach ignorieren.
 
@@ -3397,42 +3397,43 @@ de:
       title: "Administrator-Anmeldung"
       subject_template: "[%{email_prefix}] Anmeldung"
       text_body_template: |
-        Jemand hat versucht sich mit Ihrem Konto auf [%{site_name}] (%{base_url}) anzumelden.
+        Jemand hat versucht, sich bei deinem Konto auf [%{site_name}](%{base_url}) anzumelden.
 
-        Wenn Sie diese Anfrage nicht gestellt haben, können Sie diese E-Mail ignorieren.
+        Wenn du diese Anfrage nicht gestellt hast, kannst du diese E-Mail getrost ignorieren.
 
-        Klicken Sie auf den folgenden Link, um sich anzumelden: %{base_url}/session/email-login/%{email_token}
+        Klicke auf den folgenden Link, um dich anzumelden:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Konto erstellt"
       subject_template: "[%{email_prefix}] Dein neues Konto"
       text_body_template: |
-        Ein neues Konto wurde für dich erstellt bei %{site_name}
+        Ein neues Konto wurde für dich bei %{site_name} erstellt
 
-        Folge diesem Link, um ein Passwort für dein Konto zu wählen:
+        Klicke auf den folgenden Link, um ein Passwort für dein neues Konto zu wählen:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "E-Mail-Adresse bestätigen (an neue)"
       subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
       text_body_template: |
-        Bestätigen Sie Ihre neue E-Mail-Adresse für %{site_name} indem Sie auf den folgenden Link klicken:
+        Bestätige deine neue E-Mail-Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        Wenn Sie diese Änderung nicht angefordert haben, wenden Sie sich bitte an einen [site admin] (%{base_url}/ ungefähr).
+        Falls du diese Änderung nicht angefordert hast, kontaktiere bitte einen [Website-Administrator](%{base_url}/about).
     confirm_new_email_via_admin:
       title: "Neue E-Mail-Adresse bestätigen"
       subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
       text_body_template: |
-        Bestätigen Sie Ihre neue E-Mail-Adresse für %{site_name} indem Sie auf den folgenden Link klicken:
+        Bestätige deine neue E-Mail-Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        Diese E-Mail-Änderung wurde von einem Site-Administrator angefordert. Wenn Sie diese Änderung nicht angefordert haben, wenden Sie sich bitte an einen [site admin] (%{base_url}/ ungefähr).
+        Diese E-Mail-Änderung wurde von einem Website-Administrator angefordert. Falls du diese Änderung nicht angefordert hast, kontaktiere bitte einen [Website-Administrator](%{base_url}/about).
     confirm_old_email:
       title: "E-Mail-Adresse bestätigen (an alte)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
-        Bevor wir die E-Mail-Adresse ändern können, benötigen wir deine Bestätigung, dass du den aktuellen E-Mail Account kontrollierst. Sobald du das getan hast, schicken wir dir eine Anfrage, die neue E-Mail-Adresse zu bestätigen.
+        Bevor wir deine E-Mail-Adresse ändern können, benötigen wir deine Bestätigung, dass du das aktuelle E-Mail-Konto kontrollierst. Sobald du diesen Schritt erledigt hast, schicken wir dir eine Anfrage, die neue E-Mail-Adresse zu bestätigen.
 
         Bestätige deine aktuelle E-Mail-Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
@@ -3441,7 +3442,7 @@ de:
       title: "Alte E-Mail bestätigen (Hinzufügen)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
-        Bevor wir die E-Mail-Adresse hinzufügen können, benötigen wir deine Bestätigung, dass du den aktuellen E-Mail Account kontrollierst. Sobald du das getan hast, schicken wir dir eine Anfrage, die neue E-Mail-Adresse zu bestätigen.
+        Bevor wir eine neue E-Mail-Adresse hinzufügen können, benötigen wir deine Bestätigung, dass du das aktuelle E-Mail-Konto kontrollierst. Sobald du diesen Schritt erledigt hast, schicken wir dir eine Anfrage, die neue E-Mail-Adresse zu bestätigen.
 
         Bestätige deine aktuelle E-Mail-Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
@@ -3497,7 +3498,7 @@ de:
       text_body_template: |
         Willkommen bei %{site_name}!
 
-        Folge diesem Link, um dein neues Konto zu aktivieren:
+        Klicke auf den folgenden Link, um dein neues Konto zu bestätigen und zu aktivieren:
         %{base_url}/u/activate-account/%{email_token}
 
         Wenn der obige Link nicht anklickbar ist, versuche ihn zu kopieren und in die Adresszeile deines Webbrowsers einzufügen.
@@ -3509,7 +3510,7 @@ de:
 
         Dies ist eine freundliche Erinnerung, dein Konto zu aktivieren.
 
-        Folge diesem Link, um dies zu bestätigen und dein neues Konto zu aktivieren:
+        Klicke auf den folgenden Link, um dein neues Konto zu bestätigen und zu aktivieren:
         %{base_url}/u/activate-account/%{email_token}
 
         Wenn der obige Link nicht anklickbar ist, versuche ihn zu kopieren und in die Adresszeile deines Webbrowsers einzufügen.

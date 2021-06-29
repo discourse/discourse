@@ -3002,7 +3002,7 @@ it:
         none: "nessuna sottocategoria"
       colors_disabled: "Non puoi selezionare i colori perché lo stile della categoria è impostato su 'none'."
     flagging:
-      title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
+      title: "Grazie per aver contribuito a favorire la civile convivenza della nostra comunità!"
       action: "Segnala Messaggio"
       take_action: "Procedi..."
       take_action_options:
@@ -3030,7 +3030,7 @@ it:
       formatted_name:
         off_topic: "E' fuori tema"
         inappropriate: "È inappropriato"
-        spam: "E' Spam"
+        spam: "È spam"
       custom_placeholder_notify_user: "Sii dettagliato, costruttivo e sempre gentile."
       custom_placeholder_notify_moderators: "Facci sapere esattamente cosa ti preoccupa, fornendo collegamenti pertinenti ed esempi ove possibile."
       custom_message:
@@ -3044,13 +3044,13 @@ it:
           one: "%{count} mancante"
           other: "%{count} rimanenti..."
     flagging_topic:
-      title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
+      title: "Grazie per aver contribuito a favorire la civile convivenza della nostra comunità!"
       action: "Segnala Argomento"
       notify_action: "Messaggio"
     topic_map:
-      title: "Riassunto Argomento"
+      title: "Riepilogo Argomento"
       participants_title: "Autori Assidui"
-      links_title: "Collegamenti Di Successo"
+      links_title: "Collegamenti popolari"
       links_shown: "mostra altri collegamenti..."
       clicks:
         one: "%{count} click"
@@ -3072,14 +3072,14 @@ it:
       locked_and_archived:
         help: "Questo argomento è chiuso e archiviato; non sono ammesse nuove risposte e non può essere modificato"
       unpinned:
-        title: "Spuntato"
-        help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento di default"
+        title: "Sbloccato"
+        help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento normale"
       pinned_globally:
-        title: "Appuntato Globalmente"
-        help: "Questo argomento è appuntato globalmente; verrà mostrato sempre in cima sia agli argomenti recenti sia nella sua categoria."
+        title: "Bloccato Globalmente"
+        help: "Questo argomento è bloccato globalmente; verrà mostrato sempre in cima sia agli argomenti recenti sia nella sua categoria."
       pinned:
         title: "Appuntato"
-        help: "Questo argomento è per te appuntato; verrà mostrato con l'ordinamento di default"
+        help: "Questo argomento è bloccato per te; verrà mostrato in cima alla sua categoria"
       unlisted:
         help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
       personal_message:
@@ -3093,7 +3093,7 @@ it:
         high {con un rapporto di 'mi piace' e risposte estremamente alto}
         other {}}
     original_post: "Messaggio Originale"
-    views: "Visite"
+    views: "Visualizzazioni"
     views_lowercase:
       one: "visita"
       other: "visite"
@@ -3145,7 +3145,7 @@ it:
         lower_title_with_count:
           one: "%{count} nuovo"
           other: "%{count} nuovi"
-        lower_title: "nuovo"
+        lower_title: "nuovi"
         title: "Nuovi"
         title_with_count:
           one: "Nuovo (%{count})"
@@ -3205,9 +3205,9 @@ it:
       shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      title: "Scorciatoie Tastiera"
+      title: "Tasti di scelta rapida"
       jump_to:
-        title: "Salta A"
+        title: "Vai a"
         home: "%{shortcut} Home"
         latest: "%{shortcut} Recenti"
         new: "%{shortcut} Nuovi"
@@ -3226,7 +3226,7 @@ it:
         back: "%{shortcut} Indietro"
         up_down: "%{shortcut} Sposta la selezione &uarr; &darr;"
         open: "%{shortcut} Apri argomento selezionato"
-        next_prev: "%{shortcut} Prossima/precedente sezione"
+        next_prev: "%{shortcut} Sezione successiva/precedente"
         go_to_unread_post: "%{shortcut} Vai al primo messaggio non letto"
       application:
         title: "Applicazione"
@@ -3259,7 +3259,7 @@ it:
       actions:
         title: "Azioni"
         bookmark_topic: "%{shortcut} Aggiungi/togli argomento nei segnalibri"
-        pin_unpin_topic: "%{shortcut} Appunta/Spunta argomento"
+        pin_unpin_topic: "%{shortcut} Blocca/Sblocca argomento"
         share_topic: "%{shortcut} Condividi argomento"
         share_post: "%{shortcut} Condividi messaggio"
         reply_as_new_topic: "%{shortcut} Rispondi come argomento collegato"
@@ -3286,7 +3286,7 @@ it:
       earned_n_times:
         one: "Guadagnato questo distintivo %{count} volta"
         other: "Guadagnato questo distintivo %{count} volte"
-      granted_on: "Assegnata %{date}"
+      granted_on: "Assegnato il %{date}"
       others_count: "Altri utenti con questo distintivo (%{count})"
       title: Distintivi
       allow_title: "Puoi usare questo distintivo come qualifica"

@@ -2356,7 +2356,7 @@ fr:
       auto_close:
         title: "Fermer automatiquement le sujet"
         label: "Fermer automatiquement le sujet après :"
-        error: "Veuillez entrer une valeur valide."
+        error: "Veuillez saisir une valeur valide."
         based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
       auto_close_after_last_post:
         title: "Fermer automatiquement le sujet après le dernier message"
@@ -2375,44 +2375,44 @@ fr:
         auto_close_after_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
         auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}."
         auto_bump: "Ce sujet sera automatiquement remonté %{timeLeft}."
-        auto_reminder: "Vous serez rappelé sur ce sujet %{timeLeft}."
+        auto_reminder: "Vous recevrez un rappel concernant ce sujet %{timeLeft}."
         auto_delete_replies: "Les réponses à ce sujet sont automatiquement supprimées après %{duration}."
       auto_close_title: "Paramètres de fermeture automatique"
       auto_close_immediate:
-        one: "Le dernier message dans ce sujet est déjà vieux de %{count} heure donc le sujet sera immédiatement fermé."
-        other: "Le dernier message dans ce sujet est déjà vieux de %{count} heures donc le sujet sera immédiatement fermé."
+        one: "Le dernier message publié dans ce sujet remonte à %{count} heure. Le sujet sera donc immédiatement fermé."
+        other: "Le dernier message publié dans ce sujet remonte à %{count} heures. Le sujet sera donc immédiatement fermé."
       auto_close_momentarily:
-        one: "Le dernier message dans ce sujet est déjà vieux de %{count} heure donc le sujet sera temporairement fermé."
-        other: "Le dernier message dans ce sujet est déjà vieux de %{count} heures donc le sujet sera temporairement fermé."
+        one: "Le dernier message publié dans ce sujet remonte à %{count} heure. Le sujet sera donc temporairement fermé."
+        other: "Le dernier message publié dans ce sujet remonte à %{count} heures. Le sujet sera donc temporairement fermé."
       timeline:
         back: "Retour"
         back_description: "Revenir au dernier message non lu"
-        replies_short: "%{current} / %{total}"
+        replies_short: "%{current}/%{total}"
       progress:
         title: progression dans le sujet
         go_top: "haut"
         go_bottom: "bas"
         go: "aller"
-        jump_bottom: "aller au dernier message"
+        jump_bottom: "accéder au dernier message"
         jump_prompt: "aller à…"
         jump_prompt_of:
           one: "sur %{count} message"
           other: "sur %{count} messages"
         jump_prompt_long: "Aller à…"
-        jump_bottom_with_number: "aller au message %{post_number}"
+        jump_bottom_with_number: "accéder au message %{post_number}"
         jump_prompt_to_date: "à la date"
         jump_prompt_or: "ou"
-        total: total de messages
+        total: total des messages
         current: message actuel
       notifications:
         title: modifier la fréquence des notifications concernant ce sujet
         reasons:
-          mailing_list_mode: "Vous avez activé la liste de diffusion, vous serez donc notifié des réponses à ce sujet par courriel."
+          mailing_list_mode: "Vous avez activé la liste de diffusion, vous serez donc informé(e) des réponses à ce sujet par courriel."
           "3_10": "Vous recevrez des notifications car vous surveillez une étiquette de ce sujet."
           "3_10_stale": "Vous recevrez des notifications car vous surveilliez déjà une étiquette attribuée à ce sujet."
-          "3_6": "Vous recevrez des notifications parce que vous surveillez cette catégorie."
+          "3_6": "Vous recevrez des notifications car vous surveillez cette catégorie."
           "3_6_stale": "Vous recevrez des notifications car vous surveilliez déjà cette catégorie du forum."
-          "3_5": "Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement."
+          "3_5": "Vous recevrez des notifications car vous avez commencé à surveiller ce sujet automatiquement."
           "3_2": "Vous recevrez des notifications car vous surveillez ce sujet."
           "3_1": "Vous recevrez des notifications car vous avez créé ce sujet."
           "3": "Vous recevrez des notifications car vous surveillez ce sujet."

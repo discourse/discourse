@@ -936,7 +936,7 @@ ja:
     min_first_post_typing_time: "最初の投稿時にユーザーが入力する必要のある最低時間 (ミリ秒)。しきい値を満たさない場合、投稿は自動的に要承認キューに追加されます。無効にするには 0 を設定します (非推奨)"
     reply_by_email_enabled: "メールでのトピックへの返信を有効化します。"
     strip_images_from_short_emails: "2800 バイト未満のメールから画像を削除します。"
-    short_email_length: "ショートメールのバイト数"
+    short_email_length: "短いメールのバイト数"
     pop3_polling_enabled: "メール返信のために POP3 をポーリングします。"
     pop3_polling_ssl: "POP3 サーバーへ SSL 接続します (推奨)。"
     pop3_polling_period_mins: "POP3 アカウントのメールを確認する期間 (分)。注意: 再起動が必要です。"
@@ -1060,7 +1060,7 @@ ja:
     suspended: "%{date} までログインできません。"
     suspended_with_reason: "%{date} までアカウントが凍結されました: %{reason}"
     errors: "%{errors}"
-    not_available: "それは利用できません。\"%{suggestion}\" はどうですか？"
+    not_available: "利用できません。%{suggestion}を試しますか？"
     something_already_taken: "エラーが発生しました。ユーザー名またはメールアドレスがすでに登録されている可能性があります。パスワードリセットを行ってください。"
     omniauth_confirm_button: "続行"
     new_registrations_disabled: "現在、新しいアカウントの登録を行えません。"
@@ -1181,7 +1181,7 @@ ja:
     queued_by_staff:
       title: "承認待ちの投稿"
     welcome_user:
-      title: "ようこそ：ユーザー"
+      title: "ようこそ"
       subject_template: "%{site_name} へようこそ！"
       text_body_template: |
         %{site_name} に参加していただきありがとうございます！
@@ -1586,67 +1586,68 @@ ja:
       name: 尊敬
       description: '「いいね！」を 2 つゲットした 100 件の投稿'
       long_description: |
-        このバッジは、100の異なる投稿に対して少なくとも2つの好きなものを受け取った場合に付与されます。 コミュニティはここでの会話へのあなたの貢献を尊重するようになっています。
+        このバッジは、100 件の異なる投稿で「いいね！」を 2 つ以上もらったときに付与されます。コミュニティは会話へのあなたの投稿をますます楽しんでいます！
     admired:
       name: 賞賛
-      description: 300もの投稿で5いいね獲得
+      description: '「いいね！」を 5 つゲットした 300 件の投稿'
       long_description: |
-        このバッジは、300の異なる投稿で少なくとも5つの好きなものを受け取ったときに付与されます。 うわー！ コミュニティーは、あなたの頻繁で質の高い貢献をここにて賞賛します。
+        このバッジは、300 件の異なる投稿で「いいね！」を 5 つ以上もらったときに付与されます。コミュニティは頻繁で質の高いあなたの投稿を心待ちにしています。
     out_of_love:
-      name: 心から
+      name: 愛情
     higher_love:
-      name: より多くの愛
+      name: 愛だらけ
     crazy_in_love:
-      name: 愛
+      name: 愛は盲目
     thank_you:
       name: ありがとう
-      description: 20ものいいね！を受け取り10ものいいね！を与えました。
+      description: もらった「いいね！」が 20 個、あげた「いいね！」が10 個
       long_description: |
-        このバッジは20のお気に入りの投稿があり、10以上のいいね！を返すと付与されます。 誰かがあなたの記事を好きになると、他の人が投稿しているものを好きになる時間を見つけることができます。
+        このバッジは、あなたが 20 個の「いいね！」をもらって、10 個の「いいね！」を返したときに付与されます。誰かがあなたの投稿に「いいね！」したら、ほかの人の投稿を「いいね！」することができます。
     gives_back:
       name: ギブバック
-      description: 100ものいいね！を受け取り100のいいね！を与えました
-      long_description: "このバッジは100もの好きなポストがあり、100以上のいいね！を返すと付与されます。 \n"
+      description: もらった「いいね！」が 100 個、あげた「いいね！」が100 個
+      long_description: |
+        このバッジは、あなたが 100 個の「いいね！」をもらって、100 個以上の「いいね！」を返したときに付与されます。恩送りしてくれてありがとう！
     empathetic:
       name: 共感
-      description: 500もの好きな投稿があり、1000いいね！を与えました。
+      description: もらった「いいね！」が 500 個、あげた「いいね！」が1000 個
     first_emoji:
       name: はじめての絵文字
-      description: 投稿に絵文字を使いました。
+      description: 投稿に絵文字を使った
       long_description: |
-        このバッジは、あなたの投稿に絵文字を初めて追加したときに付与されます:thumbsup: 。絵文字は、笑顔:smiley: から悲しみへ:anguished: 怒りへ :angry: とその間のすべて:sunglasses:。 a:を入力するか、エディタの絵文字ツールバーボタンを押して、何百という選択肢から選択してください :ok_hand:
+        このバッジは、あなたの投稿に絵文字を初めて追加したときに付与されます :thumbsup: 。絵文字は、喜び :smiley: から、悲しみ :anguished: や怒り :angry: まで、そしてその間の様々な感情を投稿内で伝えられる便利なツールです :sunglasses:。a: (コロン) を入力するか、エディタの絵文字ツールバーボタンを押して、数百個の選択肢から選ぶことができます :ok_hand:
     first_mention:
       name: 初めてのメンション
-      description: ユーザーへのメンション
+      description: 投稿でユーザーをメンションした
       long_description: |
-        このバッジは、あなたの投稿に誰かの@usernameを含め、初めてメンションしたときに付与されます。 メンションは該当ユーザー宛に通知を生成するため、あなたの投稿を知ってもらうことができます。メンションは @（アットマーク）を入力するだけで、ユーザーやグループ（許可されている場合）の注目を集めることができる便利な機能です。
+        このバッジは、投稿で誰かの @username を初めてメンションしたときに付与されます。メンションするとその人に通知されるため、メンションを含む投稿を知らせることができます。@ (アットマーク) を入力するだけでユーザーまたは許可されている場合はグループをメンションすることができます。誰かの注意を呼ぶにはもってこいのツールです。
     first_onebox:
-      name: 初めてのOnebox
-      description: リンク付きの投稿
+      name: 初めての Onebox
+      description: Onebox のリンクを投稿した
       long_description: |
-        このバッジは、リンク先の概要やタイトル、画像（利用可能な場合）がOneboxで自動的に拡張されたリンクを初めて投稿したときに付与されます。
+        このバッジは、要約、タイトル、および（利用できる場合は）画像が含まれる Onebox に自動的に展開するリンクをはじめて投稿したときに付与されます。
     first_reply_by_email:
-      name: 初めてのメールからの返信
-      description: メールからの返信
+      name: 初めてのメールによる返信
+      description: メール経由で投稿に返信した
       long_description: |
-        このバッジは初めてメール :e-mail: 経由で返信した人に付与されます
+        このバッジは、初めてメール :e-mail: 経由で返信したときに付与されます。
     new_user_of_the_month:
-      name: "一ヶ月の新規ユーザー"
-      description: 最初の一ヶ月間の功績\U0001F44C
+      name: "今月の新規ユーザー"
+      description: 1 か月目にして目覚ましい投稿数を達成
       long_description: |
-        このバッジは毎月二人のユーザーに付与されるバッジで、素晴らしい貢献をコミュニティーにもたらしたことを讃えるものです！おめでとうございます！\U0001F381
+        このバッジは、投稿が「いいね！」される頻度と「いいね！」した人を基に総合的な貢献度を讃えるバッジで、毎月 2 人の新規ユーザーに付与されます。
     enthusiast:
       name: 熱狂者
     aficionado:
-      name: 愛すべき人
+      name: 愛好家
     devotee:
-      name: 信者
+      name: 献身者
   admin_login:
     success: "メールを送信しました"
-    email_input: "アドミンメール"
-    submit_button: "メールを送信する"
+    email_input: "管理者メール"
+    submit_button: "メールを送信"
   performance_report:
-    initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
+    initial_post_raw: このトピックには、サイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート
   tags:
     title: "タグ"
@@ -1675,7 +1676,7 @@ ja:
       corporate:
         title: "組織"
       colors:
-        title: "カラー"
+        title: "色"
       fonts:
         fields:
           font_preview:
@@ -1683,7 +1684,7 @@ ja:
       icons:
         title: "アイコン"
       homepage:
-        description: "ホームページへは最新トピックの表示を推薦しますが、カテゴリー（トピックのまとまり）のみの表示も可能です。"
+        description: "ホームページには最新トピックを表示することを推奨しますが、カテゴリ (トピックをグループ化したもの) を表示することもできます。"
         title: "ホームページ"
         fields:
           homepage_style:
@@ -1701,39 +1702,39 @@ ja:
   joined: "参加"
   discourse_push_notifications:
     popup:
-      mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
-      group_mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
-      quoted: '"%{topic}"で%{username}が引用しました - %{site_title}'
-      replied: '%{username}が"%{topic}"へ返信しました - %{site_title}'
-      posted: '%{username} が投稿しました "%{topic}" - %{site_title}'
-      linked: '"%{topic}"にあるあなたの投稿に%{username}がリンクしました - %{site_title}'
-      watching_first_post: '%{username} が "%{topic}" - %{site_title}を投稿しました'
+      mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'
+      group_mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'
+      quoted: '%{username} が「%{topic}」であなたを引用しました - %{site_title}'
+      replied: '%{username} が「%{topic}」であなたに返信しました - %{site_title}'
+      posted: '%{username} が「%{topic}」に投稿しました - %{site_title}'
+      linked: '%{username} が「%{topic}」のあなたの投稿にリンクしました - %{site_title}'
+      watching_first_post: '%{username} が新規トピック「%{topic}」を作成しました - %{site_title}'
       confirm_title: "通知を有効にしました - %{site_title}"
-      confirm_body: "成功！通知を可能にしました！"
+      confirm_body: "成功！通知を有効にしました！"
   reviewables:
     priorities:
       medium: "普通"
-      high: "高い"
+      high: "高"
     sensitivity:
-      disabled: "利用不可"
+      disabled: "無効化"
       medium: "普通"
-      high: "高い"
+      high: "高"
     actions:
       agree_and_suspend:
-        title: "凍結中のユーザ"
+        title: "ユーザーの凍結"
       delete_single:
-        title: "削除する"
+        title: "削除"
       disagree:
-        title: "反対する"
+        title: "同意しない"
       ignore:
-        title: "無視する"
+        title: "無視"
       approve:
         title: "承認"
       reject_user:
         delete:
-          title: "削除されたユーザー"
+          title: "ユーザーの削除"
       reject:
-        title: "リジェクト"
+        title: "却下"
   activemodel:
     errors:
       <<: *errors
