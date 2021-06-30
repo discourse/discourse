@@ -1116,7 +1116,7 @@ it:
           one: "Gestisci i codici di backup. Ti è rimasto <strong>%{count}</strong> codice di backup."
           other: "Gestisci i codici di backup. Ti sono rimasti <strong>%{count}</strong> codici di backup."
         copy_to_clipboard: "Copia negli Appunti"
-        copy_to_clipboard_error: "Errore durante la copia nella appunti"
+        copy_to_clipboard_error: "Errore durante la copia negli appunti"
         copied_to_clipboard: "Copiato negli Appunti"
         download_backup_codes: "Scarica i codici di backup"
         remaining_codes:
@@ -3710,12 +3710,12 @@ it:
         verify_certificate: "Verifica il certificato TLS dell'URL di payload"
         active: "Attivo"
         active_notice: "Invieremo i dettagli dell'evento quando si verificherà."
-        categories_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è in relazione a categorie specifiche. Lasciare vuoto per attivare i webhook per tutte le categorie."
-        categories_filter: "Categorie Innescate"
-        tags_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è relativo alle Etichette specificate. Lasciare vuoto per attivare i webhook per tutti i gruppi."
+        categories_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è relativo alle categorie specificate. Lasciare vuoto per attivare i webhook per tutte le categorie."
+        categories_filter: "Categorie attivate"
+        tags_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è relativo alle Etichette specificate. Lasciare vuoto per attivare i webhook per tutte le etichette."
         tags_filter: "Etichette attivate"
-        groups_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è in relazione a gruppi specifici. Lasciare vuoto per attivare i webhook per tutti i gruppi."
-        groups_filter: "Gruppi Innescati"
+        groups_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è in relativo ai gruppi specificati. Lasciare vuoto per attivare i webhook per tutti i gruppi."
+        groups_filter: "Gruppi attivati"
         delete_confirm: "Eliminare questo webhook?"
         topic_event:
           name: "Evento Argomento"
@@ -3736,7 +3736,7 @@ it:
           name: "Evento di Etichetta"
           details: "Quando un'Etichetta viene creata, aggiornata o distrutta."
         reviewable_event:
-          name: "Evento revisionabile"
+          name: "Evento elemento revisionabile"
           details: "Quando un nuovo elemento è pronto per la revisione e quando il suo stato viene aggiornato."
         notification_event:
           name: "Evento Notifica"
@@ -3753,7 +3753,7 @@ it:
         delivery_status:
           title: "Stato di Consegna"
           inactive: "Non attivo"
-          failed: "Fallito"
+          failed: "Non riuscito"
           successful: "Completato"
           disabled: "Disabilitato"
         events:
@@ -3801,12 +3801,12 @@ it:
         none: "Nessun backup disponibile."
         read_only:
           enable:
-            title: "Abilita la modalità sola-lettura"
-            label: "Abilita sola-lettura"
-            confirm: "Sei sicuro di voler abilitare la modalità sola-lettura?"
+            title: "Abilita la modalità a sola lettura"
+            label: "Abilita in sola lettura"
+            confirm: "Vuoi abilitare la modalità di sola lettura?"
           disable:
-            title: "Disattiva la modalità di sola-lettura"
-            label: "Disattiva sola-lettura"
+            title: "Disattiva la modalità di sola lettura"
+            label: "Disattiva sola lettura"
         logs:
           none: "Nessun log al momento..."
         columns:
@@ -3825,7 +3825,7 @@ it:
           cancel:
             label: "Annulla"
             title: "Annulla l'operazione in corso"
-            confirm: "Sei sicuro di voler annullare l'operazione corrente?"
+            confirm: "Vuoi annullare l'operazione in corso?"
           backup:
             label: "Backup"
             title: "Crea un backup"
@@ -3845,24 +3845,24 @@ it:
             confirm: "Sei sicuro di voler ripristinare questo backup?"
           rollback:
             label: "Rollback"
-            title: "Ripristina il database a una versione funzionante precedente"
+            title: "Ripristina il database a una versione precedente funzionante"
             confirm: "Sei sicuro di voler ripristinare il database alla versione funzionante precedente?"
         location:
           local: "Salvataggio in locale"
           s3: "S3"
-        backup_storage_error: "Fallito accesso all'archivio dei backup: %{error_message}"
+        backup_storage_error: "Errore di accesso all'archivio dei backup: %{error_message}"
       export_csv:
         success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
         failed: "Esportazione fallita. Controlla i log."
         button_text: "Esporta"
         button_title:
           user: "Esporta l'intero elenco di utenti in formato CSV."
-          staff_action: "Esporta il registro di tutte le azioni dello staff in formato CSV."
+          staff_action: "Esporta il log di tutte le azioni dello staff in formato CSV."
           screened_email: "Esporta tutta la lista delle email schermate in formato CSV."
           screened_ip: "Esporta tutta la lista degli IP schermati in formato CSV."
           screened_url: "Esporta tutta la lista degli URL schermati in formato CSV."
       export_json:
-        button_text: "Esportare"
+        button_text: "Esporta"
       invite:
         button_text: "Manda Inviti"
         button_title: "Manda Inviti"
@@ -3882,7 +3882,7 @@ it:
         copy: "Copia"
         copy_to_clipboard: "Copia negli Appunti"
         copied_to_clipboard: "Copiato negli Appunti"
-        copy_to_clipboard_error: "Errore nel copiare i dati negli Appunti"
+        copy_to_clipboard_error: "Errore durante la copia negli appunti"
         theme_owner: "Non modificabile, di proprietà di:"
         email_templates:
           title: "Email"
@@ -3907,7 +3907,7 @@ it:
           create: "Crea"
           create_type: "Tipo"
           create_name: "Nome"
-          long_title: "Modifica i colori, i CSS e il contenuto HTML del tuo sito"
+          long_title: "Modifica i colori e i contenuti CSS e HTML del tuo sito"
           edit: "Modifica"
           edit_confirm: "Questo è un tema remoto, se modifichi il CSS o l'HTML i cambiamenti verranno cancellati la prossima volta che aggiorni il tema."
           update_confirm: "Questi cambiamenti locali saranno eliminati dall'aggiornamento. Confermi di voler continuare?"
@@ -3920,12 +3920,12 @@ it:
           extra_scss: "Extra SCSS"
           extra_files: "File extra"
           extra_files_upload: "Esporta il tema per visualizzare questi file."
-          extra_files_remote: "Esporta il tema o controlla il repository git per visualizzare questi file."
+          extra_files_remote: "Esporta il tema o consulta l'archivio git per visualizzare questi file."
           preview: "Anteprima"
           show_advanced: "Mostra campi avanzati"
           hide_advanced: "Nascondi campi avanzati"
           hide_unused_fields: "Nascondi campi inutilizzati"
-          is_default: "Il tema è abilitato di default"
+          is_default: "Il tema è abilitato per impostazione predefinita"
           user_selectable: "Il tema può essere selezionato dagli utenti"
           color_scheme_user_selectable: "Lo schema di colori può essere selezionato dagli utenti"
           auto_update: "Aggiorna automaticamente quando Discourse viene aggiornato"

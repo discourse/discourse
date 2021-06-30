@@ -125,7 +125,7 @@ zh_CN:
         disabled: "%{when}取消置顶"
       pinned_globally:
         enabled: "%{when}全站置顶"
-        disabled: "%{when}取消全站置顶"
+        disabled: "%{when}取消置顶"
       visible:
         enabled: "%{when}公开"
         disabled: "%{when}取消公开"
@@ -256,7 +256,7 @@ zh_CN:
       no_timezone: '您尚未设置时区，将无法设置提醒，在<a href="%{basePath}/my/preferences/profile">您的个人资料中</a>进行设置。'
       invalid_custom_datetime: "您提供的日期和时间无效，请重试。"
       list_permission_denied: "您没有权限查看此用户的书签。"
-      no_user_bookmarks: "您没有已加入书签的帖子；书签让您可以快速定位指定帖子。"
+      no_user_bookmarks: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
       auto_delete_preference:
         label: "自动删除"
         never: "从不"
@@ -1009,7 +1009,7 @@ zh_CN:
       ignored_users: "已忽略"
       ignored_users_instructions: "屏蔽来自这些用户的所有帖子、通知和私信。"
       tracked_topics_link: "显示"
-      automatically_unpin_topics: "当我到达底部时自动取消固定话题。"
+      automatically_unpin_topics: "当我到达底部时自动取消置顶话题。"
       apps: "应用"
       revoke_access: "撤消访问权限"
       undo_revoke_access: "撤消撤消访问权限"
@@ -1241,8 +1241,8 @@ zh_CN:
         device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
         browser_active: '%{browser} | <span class="active">正在使用</span>'
         browser_last_seen: "%{browser} | %{date}"
-      last_posted: "最后发帖"
-      last_emailed: "最后邮寄"
+      last_posted: "最后一个帖子"
+      last_emailed: "最后一次发送电子邮件"
       last_seen: "最后活动"
       created: "加入日期："
       log_out: "退出"
@@ -2012,7 +2012,7 @@ zh_CN:
           private: 在我的消息中
           bookmarks: 我已加入书签
           first: 是第一个帖子
-          pinned: 被指定
+          pinned: 被置顶
           seen: 我读过
           unseen: 我还没读过
           wiki: 公共编辑
@@ -2146,79 +2146,79 @@ zh_CN:
         description: "抱歉，您无权访问该话题！"
         login_required: "您需要登录才能查看该话题。"
       server_error:
-        title: "载入话题失败"
-        description: "抱歉，无法加载该话题，有可能是网络连接出现了问题。请重试。如果问题依然存在，请联系我们。"
+        title: "话题加载失败"
+        description: "抱歉，我们无法加载该话题，可能是由于连接问题。请重试。如果问题仍然存在，请告诉我们。"
       not_found:
-        title: "未找到话题"
-        description: "抱歉，无法找到此话题。可能已经被删除了。"
+        title: "找不到话题"
+        description: "抱歉，我们找不到该话题。也许它被版主移除了？"
       total_unread_posts:
-        other: "这个话题中，你有 %{count} 条未读的帖子"
+        other: "您在此话题中有 %{count} 个未读帖子"
       unread_posts:
-        other: "这个话题中，你有 %{count} 个未读的帖子"
+        other: "您在此话题中有 %{count} 个未读的旧帖子"
       new_posts:
-        other: "自你上一次阅读此话题后，又有 %{count} 个新帖子发表了"
+        other: "自您上次阅读以来，此话题中有 %{count} 个新帖子"
       likes:
-        other: "这个话题收到了%{count}个赞"
-      back_to_list: "返回列表"
+        other: "此话题有 %{count} 个赞"
+      back_to_list: "返回话题列表"
       options: "话题选项"
       show_links: "显示此话题中的链接"
-      collapse_details: "收起话题详情"
-      expand_details: "展开话题详情"
-      read_more_in_category: "想阅读更多？浏览%{catLink}的其他话题或%{latestLink}。"
+      collapse_details: "收起话题详细信息"
+      expand_details: "展开话题详细信息"
+      read_more_in_category: "想阅读更多？浏览%{catLink}或%{latestLink}中的其他话题。"
       read_more: "想阅读更多？%{catLink}或%{latestLink}。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
-      read_more_MF: "还有{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1个未读话题</a>} other {<a href='{basePath}/unread'>#个未读话题</a> }}{BOTH, select, true{和} false{} other{}}{NEW, plural, =0{} one{<a href='{basePath}/new'>#1个新话题</a>} other{<a href='{basePath}/new'>#个新话题 </a>}}, 或者{CATEGORY,select,true{浏览其它的{catLink}话题} false{{latestLink}} other{}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: 浏览所有分类
+      read_more_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false { } other{}} <a href='{basePath}/new'># 个新</a>话题} }，或者{CATEGORY, select, true {浏览{catLink}中的其他话题} false {{latestLink}} other {}}"
+      bumped_at_title_MF: "{FIRST_POST}：{CREATED_AT}\n{LAST_POST}：{BUMPED_AT}"
+      browse_all_categories: 浏览所有类别
       browse_all_tags: 浏览所有标签
-      view_latest_topics: 查阅最新话题
-      jump_reply_up: 转到更早的回复
-      jump_reply_down: 转到更新的回复
-      deleted: "此话题已被删除"
+      view_latest_topics: 查看最新话题
+      jump_reply_up: 跳转到较早的回复
+      jump_reply_down: 跳转到较晚的回复
+      deleted: "该话题已被删除"
       slow_mode_update:
         title: "慢速模式"
-        select: "用户只能在这个话题中发言一次："
-        description: "为了提高回帖太快或有争议内容的话题的讨论质量，用户再次发言之前必须稍作等待。"
+        select: "用户在此话题中的发帖间隔："
+        description: "为了在快节奏或有争议的讨论中促进深思熟虑的讨论，用户必须等待一段时间才能在此话题中再次发帖。"
         enable: "启用"
         update: "更新"
-        enabled_until: "启用直到："
-        remove: "停用"
+        enabled_until: "启用至："
+        remove: "禁用"
         hours: "小时："
         minutes: "分钟："
         seconds: "秒："
         durations:
           10_minutes: "10 分钟"
-          15_minutes: "15分钟"
+          15_minutes: "15 分钟"
           30_minutes: "30 分钟"
           45_minutes: "45 分钟"
-          1_hour: "1小时"
+          1_hour: "1 小时"
           2_hours: "2 小时"
-          4_hours: "4小时"
+          4_hours: "4 小时"
           8_hours: "8 小时"
           12_hours: "12 小时"
           24_hours: "24 小时"
           custom: "自定义持续时间"
       slow_mode_notice:
-        duration: "这个话题下的每个发帖之间需要等待 %{duration}"
+        duration: "在此话题下，请在两次发帖之间等待%{duration}"
       topic_status_update:
         title: "话题计时器"
         save: "设置计时器"
         num_of_hours: "小时数："
-        num_of_days: "天数"
-        remove: "撤销计时器"
+        num_of_days: "天数："
+        remove: "移除计时器"
         publish_to: "发布至："
         when: "时间："
         time_frame_required: "请选择一个时间范围"
-        min_duration: "持续时间必须大于0"
-        max_duration: "持续时间必须少于 20 年"
+        min_duration: "持续时间必须大于 0"
+        max_duration: "持续时间必须小于 20 年"
       auto_update_input:
         none: "选择时间范围"
-        now: "当前"
-        later_today: "今天的某个时候"
+        now: "现在"
+        later_today: "今天晚些时候"
         tomorrow: "明天"
-        later_this_week: "这周的某个时候"
-        this_weekend: "周末"
-        next_week: "下个星期"
+        later_this_week: "本周晚些时候"
+        this_weekend: "本周末"
+        next_week: "下周"
         two_weeks: "两周"
         next_month: "下个月"
         two_months: "两个月"
@@ -2228,9 +2228,9 @@ zh_CN:
         one_year: "一年"
         forever: "永远"
         pick_date_and_time: "选择日期和时间"
-        set_based_on_last_post: "根据最后发帖关闭"
+        set_based_on_last_post: "根据最后一个帖子关闭"
       publish_to_category:
-        title: "定时发布"
+        title: "排定发布时间表"
       temp_open:
         title: "临时开启"
       auto_reopen:
@@ -2241,9 +2241,9 @@ zh_CN:
         title: "自动关闭话题"
         label: "自动关闭话题前等待："
         error: "请输入一个有效值。"
-        based_on_last_post: "最后发帖之后的多长时间内不自动关闭话题。"
+        based_on_last_post: "在话题中最后一个帖子的存在时间至少达到此时长之前不关闭。"
       auto_close_after_last_post:
-        title: "最后发帖后自动关闭话题"
+        title: "在最后一个帖子后自动关闭话题"
       auto_delete:
         title: "自动删除话题"
       auto_bump:
@@ -2253,36 +2253,36 @@ zh_CN:
       auto_delete_replies:
         title: "自动删除回复"
       status_update_notice:
-        auto_open: "本话题将在 %{timeLeft} 自动开启。"
-        auto_close: "本话题将在 %{timeLeft} 自动关闭。"
-        auto_publish_to_category: "话题将在%{timeLeft}后被发布到<a href=%{categoryUrl}>#%{categoryName}</a> 。"
-        auto_close_after_last_post: "如在 %{duration} 内没有新回复后话题将被关闭。"
-        auto_delete: "话题在 %{timeLeft} 后将被自动删除。"
-        auto_bump: "这个话题将在 %{timeLeft} 后自动顶帖。"
-        auto_reminder: "你将在 %{timeLeft} 后收到该话题的提醒。"
-        auto_delete_replies: "此话题的回复会在 %{duration} 后自动删除。"
+        auto_open: "此话题将在 %{timeLeft}后自动开启。"
+        auto_close: "此话题将在 %{timeLeft}后自动关闭。"
+        auto_publish_to_category: "此话题将在%{timeLeft}后发布到<a href=%{categoryUrl}>#%{categoryName}</a>。"
+        auto_close_after_last_post: "此话题将在最后一个帖子的%{duration}后关闭。"
+        auto_delete: "此话题将在 %{timeLeft}后自动删除。"
+        auto_bump: "此话题将在 %{timeLeft}后自动顶帖。"
+        auto_reminder: "您将在 %{timeLeft}后收到此话题的提醒。"
+        auto_delete_replies: "此话题的回复会在%{duration}后自动删除。"
       auto_close_title: "自动关闭设置"
       auto_close_immediate:
-        other: "话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将立即关闭。"
+        other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即关闭。"
       auto_close_momentarily:
-        other: "最后的回帖已经是 %{count} 小时前了，因此这个话题将会被立即关闭。"
+        other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被暂时关闭。"
       timeline:
         back: "返回"
-        back_description: "回到最后一个未读帖子"
+        back_description: "返回上一个未读帖子"
         replies_short: "%{current} / %{total}"
       progress:
         title: 话题进度
         go_top: "顶部"
         go_bottom: "底部"
         go: "前往"
-        jump_bottom: "跳至最后一个帖子"
-        jump_prompt: "跳到…"
+        jump_bottom: "跳转到最后一个帖子"
+        jump_prompt: "跳转到…"
         jump_prompt_of:
           other: "第 %{count} 帖"
-        jump_prompt_long: "跳到……"
-        jump_bottom_with_number: "跳至第 %{post_number} 帖"
-        jump_prompt_to_date: "至今"
-        jump_prompt_or: "或"
+        jump_prompt_long: "跳转到…"
+        jump_bottom_with_number: "跳转到帖子 %{post_number}"
+        jump_prompt_to_date: "到日期"
+        jump_prompt_or: "或者"
         total: 全部帖子
         current: 当前帖子
       notifications:
@@ -2385,7 +2385,7 @@ zh_CN:
         title: "转换为公开话题"
         choose_category: "请为公开话题选择分类："
       feature_topic:
-        title: "精选此话题"
+        title: "将此话题设为精选"
         pin: "将该话题置于 %{categoryLink} 分类顶端直到"
         unpin: "从 %{categoryLink} 分类顶端移除话题。"
         unpin_until: "从 %{categoryLink} 分类顶端移除话题，或等到 <strong>%{until}</strong>。"
@@ -2820,7 +2820,7 @@ zh_CN:
       position_disabled_click: '启用“固定分类位置”设置。'
       minimum_required_tags: "在一个话题中至少含有多少个标签："
       parent: "上级分类"
-      num_auto_bump_daily: "每天自动顶贴的话题的数量"
+      num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
       notifications:
         watching:
@@ -3065,7 +3065,7 @@ zh_CN:
       shortcut_delimiter_space: "%{shortcut1}%{shortcut2}"
       title: "键盘快捷键"
       jump_to:
-        title: "转至"
+        title: "跳转到"
         home: "%{shortcut} 首页"
         latest: "%{shortcut} 最新"
         new: "%{shortcut} 近期"
