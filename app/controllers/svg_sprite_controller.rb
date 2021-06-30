@@ -12,10 +12,10 @@ class SvgSpriteController < ApplicationController
     no_cookies
 
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      theme_id = params[:theme_id].to_i
+      theme_id = params[:theme_id].to_i if params[:theme_id].present?
 
       if SvgSprite.version(theme_id) != params[:version]
-        return redirect_to path(SvgSprite.path(theme_id))
+        return redirect_to UrlHelper.absolute((SvgSprite.path(theme_id)))
       end
 
       svg_sprite = "window.__svg_sprite = #{SvgSprite.bundle(theme_id).inspect};"
