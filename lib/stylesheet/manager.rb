@@ -42,58 +42,52 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin, :wizard]
-    targets += Discourse.find_plugin_css_assets(include_disabled: true, mobile_view: true, desktop_view: true)
-
-    targets.each do |target|
-      $stderr.puts "precompile target: #{target}"
-
-      Stylesheet::Manager::Builder.new(target: target, manager: nil).compile(force: true)
-    end
-  end
-
-  def self.precompile_theme_css
-    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :color_scheme_id)
+    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name, :color_scheme_id)
+    themes << nil
 
     color_schemes = ColorScheme.where(user_selectable: true).to_a
     color_schemes << ColorScheme.find_by(id: SiteSetting.default_dark_mode_color_scheme_id)
-    color_schemes << ColorScheme.base
     color_schemes = color_schemes.compact.uniq
 
-    targets = [:desktop_theme, :mobile_theme]
-    compiled = Set.new
+    targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin, :wizard]
+    targets += Discourse.find_plugin_css_assets(include_disabled: true, mobile_view: true, desktop_view: true)
 
-    themes.each do |theme_id, color_scheme_id|
+    themes.each do |id, name, color_scheme_id|
+      theme_id = id || SiteSetting.default_theme_id
       manager = self.new(theme_id: theme_id)
 
       targets.each do |target|
-        next if theme_id == -1
+        if target =~ THEME_REGEX
+          next if theme_id == -1
 
-        scss_checker = ScssChecker.new(target, manager.theme_ids)
+          scss_checker = ScssChecker.new(target, manager.theme_ids)
 
-        manager.load_themes(manager.theme_ids).each do |theme|
-          next if compiled.include?("#{target}_#{theme.id}")
+          manager.load_themes(manager.theme_ids).each do |theme|
+            builder = Stylesheet::Manager::Builder.new(
+              target: target, theme: theme, manager: manager
+            )
 
-          builder = Stylesheet::Manager::Builder.new(
-            target: target, theme: theme, manager: manager
-          )
+            STDERR.puts "precompile target: #{target} #{builder.theme.name}"
+            next if theme.component && !scss_checker.has_scss(theme.id)
+            builder.compile(force: true)
+          end
+        else
+          STDERR.puts "precompile target: #{target} #{name}"
 
-          next if theme.component && !scss_checker.has_scss(theme.id)
-          $stderr.puts "precompile target: #{target} #{theme.name}"
-          builder.compile(force: true)
-          compiled << "#{target}_#{theme.id}"
+          Stylesheet::Manager::Builder.new(
+            target: target, theme: manager.get_theme(theme_id), manager: manager
+          ).compile(force: true)
         end
       end
 
-      theme_color_scheme = ColorScheme.find_by_id(color_scheme_id)
-      theme = manager.get_theme(theme_id)
+      theme_color_scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
 
-      [theme_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
+      [theme_color_scheme, *color_schemes].uniq.each do |scheme|
+        STDERR.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
 
         Stylesheet::Manager::Builder.new(
           target: COLOR_SCHEME_STYLESHEET,
-          theme: theme,
+          theme: manager.get_theme(theme_id),
           color_scheme: scheme,
           manager: manager
         ).compile(force: true)
@@ -199,19 +193,15 @@ class Stylesheet::Manager
   def stylesheet_details(target = :desktop, media = 'all')
     target = target.to_sym
     current_hostname = Discourse.current_hostname
-    is_theme_target = !!(target.to_s =~ THEME_REGEX)
 
-    array_cache_key = is_theme_target ?
-      "array_themes_#{@theme_ids.join(",")}_#{target}_#{current_hostname}" :
-      "array_#{target}_#{current_hostname}"
-
+    array_cache_key = "array_themes_#{@theme_ids.join(",")}_#{target}_#{current_hostname}"
     stylesheets = cache[array_cache_key]
     return stylesheets if stylesheets.present?
 
     @@lock.synchronize do
       stylesheets = []
       stale_theme_ids = []
-      theme_ids = is_theme_target ? @theme_ids : [nil]
+      theme_ids = target.to_s =~ THEME_REGEX ? @theme_ids : [@theme_id]
 
       theme_ids.each do |theme_id|
         cache_key = "path_#{target}_#{theme_id}_#{current_hostname}"
@@ -229,36 +219,25 @@ class Stylesheet::Manager
 
       scss_checker = ScssChecker.new(target, stale_theme_ids)
 
-      if is_theme_target
-        themes = load_themes(stale_theme_ids)
+      themes = @theme_id.blank? ? [nil] : load_themes(stale_theme_ids)
 
-        themes.each do |theme|
-          theme_id = theme&.id
-          data = { target: target, theme_id: theme_id }
-          builder = Builder.new(target: target, theme: theme, manager: self)
-          is_theme = builder.is_theme?
-          has_theme = builder.theme.present?
+      themes.each do |theme|
+        theme_id = theme&.id
+        data = { target: target, theme_id: theme_id }
+        builder = Builder.new(target: target, theme: theme, manager: self)
+        is_theme = builder.is_theme?
+        has_theme = builder.theme.present?
 
-          if is_theme && !has_theme
-            next
-          else
-            next if is_theme && builder.theme&.component && !scss_checker.has_scss(theme_id)
-            builder.compile unless File.exists?(builder.stylesheet_fullpath)
-            href = builder.stylesheet_path(current_hostname)
-            cache.defer_set("path_#{target}_#{theme_id}_#{current_hostname}", href)
-          end
-
-          data[:new_href] = href
-          stylesheets << data
+        if is_theme && !has_theme
+          next
+        else
+          next if is_theme && builder.theme&.component && !scss_checker.has_scss(theme_id)
+          builder.compile unless File.exists?(builder.stylesheet_fullpath)
+          href = builder.stylesheet_path(current_hostname)
+          cache.defer_set("path_#{target}_#{theme_id}_#{current_hostname}", href)
         end
-      else
-        builder = Builder.new(target: target, manager: self)
-        builder.compile unless File.exists?(builder.stylesheet_fullpath)
-        href = builder.stylesheet_path(current_hostname)
 
-        cache.defer_set("path_#{target}__#{current_hostname}", href)
-
-        data = { target: target, new_href: href }
+        data[:new_href] = href
         stylesheets << data
       end
 
