@@ -1045,7 +1045,7 @@ export default Component.extend(
             `The \`${from}\` attribute is deprecated. Use \`${to}\` instead`
           );
 
-          this.set(to, this.get(from));
+          this.set(to, this.attrs[from]);
         }
       });
     },
