@@ -607,7 +607,7 @@ describe Stylesheet::Manager do
     end
   end
 
-  describe ".precompile css" do
+  describe "precompile css" do
     before do
       class << STDERR
         alias_method :orig_write, :write
