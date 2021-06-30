@@ -36,7 +36,7 @@ module Onebox
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
         canonical_uri = Addressable::URI.parse(canonical_link)
-        if canonical_link && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
+        if canonical_link && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}" && canonical_uri.host != "localhost"
           response = (fetch_response(canonical_uri.to_s, headers: headers, body_cacher: body_cacher) rescue nil)
           doc = Nokogiri::HTML(response) if response
         end
