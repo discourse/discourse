@@ -86,13 +86,10 @@ export default Controller.extend({
       this.model.set("user_option.timezone", moment.tz.guess());
     },
 
-    save() {
-      this.set("saved", false);
-
+    _updateUserFields() {
       const model = this.model,
         userFields = this.userFields;
 
-      // Update the user fields
       if (!isEmpty(userFields)) {
         const modelFields = model.get("user_fields");
         if (!isEmpty(modelFields)) {
@@ -104,6 +101,14 @@ export default Controller.extend({
           });
         }
       }
+    },
+
+    save() {
+      this.set("saved", false);
+      const model = this.model;
+
+      // Update the user fields
+      this.send("_updateUserFields");
 
       return model
         .save(this.saveAttrNames)
