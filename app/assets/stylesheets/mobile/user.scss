@@ -30,6 +30,39 @@
     grid-row-start: 3;
     grid-column-start: 1;
   }
+
+  .user-messages.user-messages-inboxes {
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    grid-column-gap: 16px;
+
+    .user-messages-inboxes-drop {
+      grid-row-start: 1;
+      grid-row-end: 2;
+      grid-column-start: 1;
+      grid-column-end: 2;
+
+      .select-kit-header {
+        padding: 8px 10px;
+
+        .caret-icon {
+          color: var(--primary-medium);
+        }
+      }
+    }
+
+    .messages-nav {
+      grid-row-start: 1;
+      grid-row-end: 2;
+      grid-column-start: 2;
+      grid-column-end: 3;
+    }
+  }
 }
 
 .user-main {

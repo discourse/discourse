@@ -6,10 +6,6 @@
       margin-top: 10px;
     }
   }
-
-  .show-mores {
-    position: absolute;
-  }
 }
 
 .form-horizontal .control-group.category {
@@ -20,8 +16,15 @@
   font-size: 1.5em;
   text-align: center;
 }
+
 .user-secondary-navigation {
   min-width: 150px;
+
+  .combo-box {
+    width: 100%;
+    margin-top: 1px;
+  }
+
   .nav-stacked {
     background-color: transparent;
 
@@ -44,6 +47,27 @@
         &:after {
           display: none;
         }
+      }
+    }
+  }
+
+  &.user-messages {
+    .user-messages-inboxes-drop,
+    .user-messages-tags-drop {
+      padding: 13px 13px 0 0;
+
+      .select-kit-selected-name {
+        overflow: hidden;
+      }
+    }
+
+    .nav-stacked {
+      a {
+        padding-left: 0;
+      }
+
+      .new-private-message {
+        margin-top: 13px;
       }
     }
   }
@@ -224,6 +248,10 @@ table.user-invite-list {
   .public-user-fields {
     overflow: hidden;
   }
+}
+
+.user-messages {
+  margin-right: 0.2em;
 }
 
 .user-preferences {

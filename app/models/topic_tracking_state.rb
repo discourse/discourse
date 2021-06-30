@@ -545,8 +545,9 @@ class TopicTrackingState
       group_user_ids = group.users.pluck(:id)
       next if group_user_ids.blank?
       group_channels = []
-      group_channels << "/private-messages/group/#{group.name.downcase}"
-      group_channels << "#{group_channels.first}/archive" if group_archive
+      channel_prefix = "/private-messages/group/#{group.name.downcase}"
+      group_channels << "#{channel_prefix}/inbox"
+      group_channels << "#{channel_prefix}/archive" if group_archive
       group_channels.each { |channel| channels[channel] = group_user_ids }
     end
 

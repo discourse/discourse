@@ -1,81 +1,134 @@
-{{#d-section class="user-secondary-navigation" pageClass="user-messages"}}
+{{#d-section class=sectionClass pageClass="user-messages"}}
+  {{#if inboxes.length}}
+    {{combo-box
+      content=inboxes
+      classNames="user-messages-inboxes-drop"
+      value=selectedInbox
+      onChange=(action "updateInbox")
+      options=(hash
+        filterable=true
+      )
+    }}
+  {{/if}}
+
   {{#unless site.mobileView}}
-    {{#if showNewPM}}
-      {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+    {{#if (and pmTaggingEnabled tagsContent)}}
+      {{combo-box
+        content=tagsContent
+        value=tag
+        classNames="user-messages-tags-drop"
+        options=(hash
+          filterable=true
+          none="tagging.selector_all_tags"
+        )
+      }}
     {{/if}}
   {{/unless}}
 
   {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list"}}
-    <li class="noGlyph">
-      {{#link-to "userPrivateMessages.index" model}}
-        {{i18n "user.messages.inbox"}}
-      {{/link-to}}
-    </li>
-    <li class="noGlyph">
-      {{#link-to "userPrivateMessages.sent" model}}
-        {{i18n "user.messages.sent"}}
-      {{/link-to}}
-    </li>
-    <li class="noGlyph">
-      {{#link-to "userPrivateMessages.archive" model}}
-        {{i18n "user.messages.archive"}}
-      {{/link-to}}
-    </li>
-    {{plugin-outlet name="user-messages-nav" connectorTagName="li" args=(hash model=model)}}
-    {{#each model.groups as |group|}}
-      {{#if group.has_messages}}
-        <li>
-          {{#link-to "userPrivateMessages.group" group.name}}
-            {{d-icon "users"}}
-            {{capitalize-string group.name}}
-          {{/link-to}}
-        </li>
-        <li class="archive">
-          {{#link-to "userPrivateMessages.groupArchive" group.name}}
-            {{i18n "user.messages.archive"}}
-          {{/link-to}}
-        </li>
-      {{/if}}
-    {{/each}}
-
-    {{#if pmTaggingEnabled}}
+    {{#if isAllInbox}}
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.tags" model}}
-          {{i18n "user.messages.tags"}}
+        {{#link-to "userPrivateMessages.index" model (query-params tag=tag)}}
+          {{i18n "user.messages.latest"}}
         {{/link-to}}
       </li>
-      {{#if tagId}}
-        <li class="archive">
-          {{#link-to "userPrivateMessages.tagsShow" tagId}}
-            {{tagId}}
-          {{/link-to}}
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.sent" model (query-params tag=tag)}}
+          {{i18n "user.messages.sent"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.new" model (query-params tag=tag)}}
+          {{i18n "user.messages.new"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.unread" model (query-params tag=tag)}}
+          {{i18n "user.messages.unread"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.archive" model (query-params tag=tag)}}
+          {{i18n "user.messages.archive"}}
+        {{/link-to}}
+      </li>
+      {{plugin-outlet name="user-messages-nav" connectorTagName="li" args=(hash model=model)}}
+    {{/if}}
+
+    {{#if group}}
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.group" group.name (query-params tag=tag)}}
+          {{i18n "user.messages.latest"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.groupNew" group.name (query-params tag=tag)}}
+          {{i18n "user.messages.new"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.groupUnread" group.name (query-params tag=tag)}}
+          {{i18n "user.messages.unread"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.groupArchive" group.name (query-params tag=tag)}}
+          {{i18n "user.messages.archive"}}
+        {{/link-to}}
+      </li>
+    {{/if}}
+
+    {{#if isPersonalInbox}}
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.personal" model (query-params tag=tag)}}
+          {{i18n "user.messages.latest"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.personalSent" model (query-params tag=tag)}}
+          {{i18n "user.messages.sent"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.personalNew" model (query-params tag=tag)}}
+          {{i18n "user.messages.new"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.personalUnread" model (query-params tag=tag)}}
+          {{i18n "user.messages.unread"}}
+        {{/link-to}}
+      </li>
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.personalArchive" model (query-params tag=tag)}}
+          {{i18n "user.messages.archive"}}
+        {{/link-to}}
+      </li>
+    {{/if}}
+
+    {{#unless mobileView}}
+      {{#if group}}
+        <li>
+          {{group-notifications-button
+            value=group.group_user.notification_level
+            onChange=(action "changeGroupNotificationLevel")
+          }}
         </li>
       {{/if}}
-    {{/if}}
+
+      {{#if showNewPM}}
+        <li>
+          {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+        </li>
+      {{/if}}
+    {{/unless}}
   {{/mobile-nav}}
 {{/d-section}}
 
 <section class="user-content">
-  <div class="list-actions">
-    {{#if site.mobileView}}
-      {{#if showNewPM}}
-        {{d-button
-          class="btn-primary new-private-message"
-          action=(route-action "composePrivateMessage")
-          icon="envelope"
-          label="user.new_private_message"}}
-      {{/if}}
-    {{/if}}
-
-    {{#if isGroup}}
-      {{group-notifications-button
-        value=group.group_user.notification_level
-        onChange=(action "changeGroupNotificationLevel")
-      }}
-    {{/if}}
-  </div>
   {{#if showWarningsWarning}}
     <div class="alert alert-info">{{html-safe (i18n "admin.user.warnings_list_warning")}}</div>
   {{/if}}
+
   {{outlet}}
 </section>

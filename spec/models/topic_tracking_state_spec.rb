@@ -205,8 +205,8 @@ describe TopicTrackingState do
 
         expect(messages.map(&:channel)).to contain_exactly(
           '/private-messages/inbox',
-          "/private-messages/group/#{group1.name}",
-          "/private-messages/group/#{group2.name}"
+          "/private-messages/group/#{group1.name}/inbox",
+          "/private-messages/group/#{group2.name}/inbox"
         )
 
         message = messages.find do |m|
@@ -218,7 +218,7 @@ describe TopicTrackingState do
 
         [group1, group2].each do |group|
           message = messages.find do |m|
-            m.channel == "/private-messages/group/#{group.name}"
+            m.channel == "/private-messages/group/#{group.name}/inbox"
           end
 
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
@@ -237,9 +237,9 @@ describe TopicTrackingState do
 
           expect(messages.map(&:channel)).to contain_exactly(
             '/private-messages/inbox',
-            "/private-messages/group/#{group1.name}",
+            "/private-messages/group/#{group1.name}/inbox",
             "/private-messages/group/#{group1.name}/archive",
-            "/private-messages/group/#{group2.name}",
+            "/private-messages/group/#{group2.name}/inbox",
             "/private-messages/group/#{group2.name}/archive",
           )
 
@@ -249,11 +249,9 @@ describe TopicTrackingState do
           expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
 
           [group1, group2].each do |group|
-            group_channel = "/private-messages/group/#{group.name}"
-
             [
-              group_channel,
-              "#{group_channel}/archive"
+              "/private-messages/group/#{group.name}/inbox",
+              "/private-messages/group/#{group.name}/archive"
             ].each do |channel|
               message = messages.find { |m| m.channel == channel }
               expect(message.data["topic_id"]).to eq(private_message_topic.id)
@@ -291,7 +289,7 @@ describe TopicTrackingState do
         expected_channels = [
           '/private-messages/inbox',
           '/private-messages/sent',
-          "/private-messages/group/#{group.name}"
+          "/private-messages/group/#{group.name}/inbox"
         ]
 
         expect(messages.map(&:channel)).to contain_exactly(*expected_channels)
