@@ -51,8 +51,7 @@ task 'assets:precompile:css' => 'environment' do
       if ActiveRecord::Base.connection.table_exists?(Theme.table_name)
         STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
         begin
-          Stylesheet::Manager.precompile_css if db == "default"
-          Stylesheet::Manager.precompile_theme_css
+          Stylesheet::Manager.precompile_css
         rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e
           STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
           STDERR.puts "Skipping precompilation of CSS cause schema is old, you are precompiling prior to running migrations."

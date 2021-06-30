@@ -39,7 +39,7 @@ describe Stylesheet::Manager do
     }}
 
     it "generates the right links for non-theme targets" do
-      manager = manager(nil)
+      manager = manager(theme.id)
 
       hrefs = manager.stylesheet_details(:desktop, 'all')
 
@@ -607,7 +607,8 @@ describe Stylesheet::Manager do
     end
   end
 
-  describe "precompile css" do
+  # this test takes too long, we don't run it by default
+  describe ".precompile_css", if: ENV["RUN_LONG_TESTS"] == "1" do
     before do
       class << STDERR
         alias_method :orig_write, :write
@@ -660,22 +661,14 @@ describe Stylesheet::Manager do
 
       StylesheetCache.destroy_all
 
-      # only core
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(core_targets.size)
 
-      StylesheetCache.destroy_all
+      expect(results.size).to eq(24) # (2 themes x 8 targets) + (1 child Theme x 2 targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
 
-      # only themes
-      Stylesheet::Manager.precompile_theme_css
-      results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(12) # (2 themes * 2 targets) + (one child theme * 2 targets) + 6 color schemes (2 custom, 4 base schemes)
-
-      # themes + core
-      Stylesheet::Manager.precompile_css
-      results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(18) # core targets + 6 theme + 6 color schemes
+      core_targets.each do |tar|
+        expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
+      end
 
       theme_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
@@ -684,11 +677,18 @@ describe Stylesheet::Manager do
       Theme.clear_default!
       StylesheetCache.destroy_all
 
-      # themes + core with no theme set as default
       Stylesheet::Manager.precompile_css
-      Stylesheet::Manager.precompile_theme_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(18) # core targets + 6 theme + 6 color schemes
+
+      expect(results.size).to eq(30) # (2 themes x 8 targets) + (1 child Theme x 2 targets) + (1 no/default/core theme x 6 core targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
+
+      core_targets.each do |tar|
+        expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)
+      end
+
+      theme_targets.each do |tar|
+        expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
+      end
 
       expect(results).to include(color_scheme_targets[0])
       expect(results).to include(color_scheme_targets[1])
