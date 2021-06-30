@@ -66,12 +66,24 @@ function isTransparent(type, imageData) {
   return false;
 }
 
+function jpegDecodeFailure(type, imageData) {
+  if (!/(\.|\/)jpe?g$/i.test(type)) {
+    return false;
+  }
+
+  return imageData.data[3] === 0;
+}
+
 export async function fileToImageData(file) {
   const drawable = await fileToDrawable(file);
   const imageData = drawableToimageData(drawable);
 
   if (isTransparent(file.type, imageData)) {
     throw "Image has transparent pixels, won't convert to JPEG!";
+  }
+
+  if (jpegDecodeFailure(file.type, imageData)) {
+    throw "JPEG image has transparent pixel, decode failed!";
   }
 
   return imageData;
