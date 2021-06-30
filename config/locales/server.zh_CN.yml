@@ -3412,8 +3412,8 @@ zh_CN:
 
         如果不是您，请[查看您现有的会话](%{base_url}/my/preferences/account)并考虑更改密码。
     post_approved:
-      title: "您的帖子已通过审核"
-      subject_template: "[%{site_name}] 您的帖子已通过审核"
+      title: "您的帖子已被批准"
+      subject_template: "[%{site_name}] 您的帖子已被批准"
       text_body_template: |
         您好：
 

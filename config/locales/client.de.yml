@@ -3204,7 +3204,7 @@ de:
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
-        other_periods: "siehe oben:"
+        other_periods: "angesagte Themen ansehen:"
     browser_update: 'Leider ist <a href="https://www.discourse.org/faq/#browser">dein Browser zu alt, um auf dieser Website zu funktionieren</a>. Bitte <a href="https://browsehappy.com">aktualisiere deinen Browser</a>, um Inhalte korrekt anzuzeigen, dich anzumelden und zu antworten.'
     permission_types:
       full: "Erstellen/Antworten/Ansehen"
@@ -3566,7 +3566,7 @@ de:
           30_days_ago: "vor 30 Tagen"
           all: "Gesamt"
           view_table: "Tabelle"
-          view_graph: "Netzwerk"
+          view_graph: "Diagramm"
           refresh_report: "Bericht aktualisieren"
           daily: Täglich
           monthly: Monatlich
@@ -4402,7 +4402,7 @@ de:
           types:
             all_search_types: "Alle Sucharten"
             header: "Überschrift"
-            full_page: "Desktop-Seite"
+            full_page: "Ganze Seite"
             click_through_only: "Alle (nur durcklicken)"
           header_search_results: "Suchergebnis (Kopfzeile)"
         logster:
@@ -4737,9 +4737,9 @@ de:
           enabled: "wird auf Benutzerkarte angezeigt"
           disabled: "wird nicht auf Benutzerkarte angezeigt"
         searchable:
-          title: "Durchsuchbar?"
-          enabled: "durchsuchbar"
-          disabled: "nicht durchsuchbar"
+          title: "In Suche einschließen?"
+          enabled: "in Suche einschließen"
+          disabled: "nicht in Suche einschließen"
         field_types:
           text: "Textfeld"
           confirm: "Bestätigung"
@@ -4764,7 +4764,7 @@ de:
         none: "keine"
       site_settings:
         emoji_list:
-          invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: Umarmung"
+          invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
           add_emoji_button:
             label: "Emoji hinzufügen"
         title: "Einstellungen"

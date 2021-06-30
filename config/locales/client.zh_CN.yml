@@ -1750,28 +1750,28 @@ zh_CN:
       drafts_offline: "离线草稿"
       edit_conflict: "编辑冲突"
       group_mentioned_limit:
-        other: "<b>警告！</b>你提及了 <a href='%{group_link}'> %{group} </a>，但是这个群组的成员数量超过了管理员所设置的可提及最大数量限制 %{count} 个用户，没有人会收到通知。"
+        other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
-        other: "提及 %{group} 时，你将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
+        other: "提及 %{group} 时，您将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
       cannot_see_mention:
-        category: "你提到了 %{username} ，然而他们不能访问该分类，所以他们不会被通知。你需要把他们加入到能访问该分类的群组中。"
-        private: "你提到了%{username}，然而他们不能访问该私信，所以他们不会被通知。你需要邀请他们至私信中。"
-      duplicate_link: "好像<b>@%{username}</b>在<a href='%{post_url}'>%{ago}</a>中前的回复中已经发了你的链接 <b>%{domain}</b> － 你想再次发表链接吗？"
+        category: "您提及了 %{username}，但由于他们无法访问此类别，他们将不会收到通知。您需要将其添加到可以访问此类别的群组中。"
+        private: "您提及了 %{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们加入此个人消息。"
+      duplicate_link: "好像 <b>@%{username}</b> 在<a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
       reference_topic_title: "回复：%{title}"
       error:
-        title_missing: "标题为空"
+        title_missing: "标题为必填项"
         title_too_short:
-          other: "标题至少需要 %{count} 个字符"
+          other: "标题必须至少为 %{count} 个字符"
         title_too_long:
           other: "标题不能多于 %{count} 个字符"
         post_missing: "帖子不能为空"
         post_length:
-          other: "帖子至少需要 %{count} 个字符"
-        try_like: "你尝试过使用 %{heart} 按钮了吗？"
-        category_missing: "你必须选择一个分类"
+          other: "帖子必须至少为 %{count} 个字符"
+        try_like: "您尝试过 %{heart} 按钮了吗？"
+        category_missing: "您必须选择一个类别"
         tags_missing:
-          other: "你必须选择至少 %{count} 个标签"
-        topic_template_not_modified: "请通过编辑话题模板来为话题添加详情。"
+          other: "您必须至少选择 %{count} 个标签"
+        topic_template_not_modified: "请通过编辑话题模板为您的话题添加详细信息和细节。"
       save_edit: "保存编辑"
       overwrite_edit: "覆盖编辑"
       reply_original: "回复原始话题"
@@ -1779,113 +1779,113 @@ zh_CN:
       reply: "回复"
       cancel: "取消"
       create_topic: "创建话题"
-      create_pm: "私信"
+      create_pm: "消息"
       create_whisper: "密语"
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
-      title: "或 Ctrl + 回车"
+      title: "或按 Ctrl+Enter"
       users_placeholder: "添加用户"
-      title_placeholder: "一句话概况讨论内容…"
-      title_or_link_placeholder: "输入标题，或粘贴一个链接"
-      edit_reason_placeholder: "编辑理由"
-      topic_featured_link_placeholder: "在标题里输入链接"
+      title_placeholder: "用一句话概括讨论内容…"
+      title_or_link_placeholder: "输入标题，或在此处粘贴链接"
+      edit_reason_placeholder: "编辑原因"
+      topic_featured_link_placeholder: "输入标题中显示的链接。"
       remove_featured_link: "从话题中移除链接。"
-      reply_placeholder: "在此键入，使用 Markdown，BBCode 或 HTML 格式，可拖拽或粘贴图片。"
-      reply_placeholder_no_images: "在此输入，使用 Markdown，BBCode 或 HTML 格式。"
-      reply_placeholder_choose_category: "输入前请选择一个分类。"
-      view_new_post: "浏览你的新帖。"
-      saving: "保存中"
+      reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行格式化。拖动或粘贴图片。"
+      reply_placeholder_no_images: "在此处输入。使用 Markdown、BBCode 或 HTML 进行格式化。"
+      reply_placeholder_choose_category: "先选择一个类别，然后在此处输入。"
+      view_new_post: "查看您的新帖子。"
+      saving: "正在保存"
       saved: "已保存！"
-      saved_draft: "正在编辑草稿，点击继续。"
-      uploading: "上传中…"
+      saved_draft: "正在发布草稿。点按即可恢复。"
+      uploading: "正在上传…"
       show_preview: "显示预览"
       hide_preview: "隐藏预览"
       quote_post_title: "引用整个帖子"
       bold_label: "B"
-      bold_title: "加粗"
-      bold_text: "加粗示例"
+      bold_title: "粗体"
+      bold_text: "粗体文本"
       italic_label: "I"
-      italic_title: "斜体"
-      italic_text: "斜体示例"
-      link_title: "链接"
-      link_description: "在此输入链接描述"
-      link_dialog_title: "插入链接"
+      italic_title: "强调"
+      italic_text: "强调文本"
+      link_title: "超链接"
+      link_description: "在此处输入链接描述"
+      link_dialog_title: "插入超链接"
       link_optional_text: "可选标题"
       link_url_placeholder: "粘贴 URL 或键入以搜索话题"
-      blockquote_title: "引用"
-      blockquote_text: "引用"
-      code_title: "预格式化文本"
-      code_text: "预格式化文本将缩进 4 格"
-      paste_code_text: "输入或粘贴代码"
+      blockquote_title: "块引用"
+      blockquote_text: "块引用"
+      code_title: "预先格式化的文本"
+      code_text: "将预先格式化的文本缩进 4 个空格"
+      paste_code_text: "在此处键入或粘贴代码"
       upload_title: "上传"
-      upload_description: "在此输入上传资料的描述"
-      olist_title: "数字列表"
-      ulist_title: "符号列表"
+      upload_description: "在此处输入上传描述"
+      olist_title: "编号列表"
+      ulist_title: "项目符号列表"
       list_item: "列表条目"
       toggle_direction: "切换方向"
       help: "Markdown 编辑帮助"
-      collapse: "最小化编辑面板"
-      open: "打开编辑面板"
-      abandon: "关闭编辑面板并放弃草稿"
-      enter_fullscreen: "进入全屏编辑模式"
-      exit_fullscreen: "退出全屏编辑模式"
+      collapse: "最小化编辑器面板"
+      open: "打开编辑器面板"
+      abandon: "关闭编辑器并舍弃草稿"
+      enter_fullscreen: "进入全屏编辑器"
+      exit_fullscreen: "退出全屏编辑器"
       show_toolbar: "显示编辑器工具栏"
       hide_toolbar: "隐藏编辑器工具栏"
-      modal_ok: "确认"
+      modal_ok: "确定"
       modal_cancel: "取消"
-      cant_send_pm: "抱歉，你不能向 %{username} 发送私信。"
+      cant_send_pm: "抱歉，您无法向 %{username} 发送消息。"
       yourself_confirm:
-        title: "你忘记添加收信人了吗？"
-        body: "目前该私信只发给了你自己！"
+        title: "您是否忘记添加收件人？"
+        body: "目前，此消息只发给您自己！"
       slow_mode:
-        error: "本帖处于慢速模式下。你刚刚已经发帖；可以在 %{timeLeft} 再次发帖。"
-      admin_options_title: "本话题可选设置"
+        error: "本话题处于慢速模式。您最近已经发帖；您可以在 %{timeLeft}后再次发帖。"
+      admin_options_title: "此话题的可选管理人员设置"
       composer_actions:
         reply: 回复
         draft: 草稿
         edit: 编辑
         reply_to_post:
-          label: 以 %{postUsername} 的身份回复
+          label: 回复 %{postUsername} 的帖子
           desc: 回复特定帖子
         reply_as_new_topic:
-          label: 回复为联结话题
-          desc: 创建一个新话题链接到这一话题
-          confirm: 您保存了新的话题草稿，如果您创建链接话题该草稿将被覆盖。
+          label: 作为链接话题回复
+          desc: 创建链接到此话题的新话题
+          confirm: 您保存了一个新的话题草稿，如果您创建链接话题，它将被覆盖。
         reply_as_new_group_message:
-          label: 回复为新群组消息
-          desc: 向相同的收件人创建新私信
+          label: 作为新群组消息回复
+          desc: 创建收件人相同的新私信
         reply_as_private_message:
-          label: 新消息
-          desc: 新建一个私信
+          label: 新建消息
+          desc: 创建新的个人消息
         reply_to_topic:
           label: 回复话题
           desc: 回复话题，不是任何特定的帖子
         toggle_whisper:
           label: 切换密语
-          desc: 只有管理人员才能看到密语
+          desc: 密语仅对管理人员可见
         create_topic:
-          label: "新话题"
+          label: "新建话题"
         shared_draft:
           label: "共享草稿"
-          desc: "起草一个只对允许的用户可见的话题"
+          desc: "起草一个仅对允许的用户可见的话题"
         toggle_topic_bump:
           label: "切换话题顶帖"
-          desc: "回复但不改变最新回复的日期"
-      reload: "重载"
+          desc: "回复但不更改最新回复日期"
+      reload: "重新加载"
       ignore: "忽略"
     notifications:
       tooltip:
         regular:
           other: "%{count} 个未读通知"
         message:
-          other: "%{count} 条未读私信"
+          other: "%{count} 条未读消息"
         high_priority:
           other: "%{count} 个未读的高优先级通知"
-      title: "使用@提到你，回复你的内容、私信以及其他的通知"
-      none: "现在无法载入通知"
-      empty: "未发现通知"
-      post_approved: "你的帖子已被审核"
-      reviewable_items: "待审核帖子"
+      title: "提及 (@) 您的用户名、回复您的帖子和话题、消息等的通知"
+      none: "目前无法加载通知。"
+      empty: "找不到通知。"
+      post_approved: "您的帖子已被批准"
+      reviewable_items: "需要审查的条目"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1894,69 +1894,69 @@ zh_CN:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
       liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} 还有其余 %{count} 人 </span> %{description}"
+        other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 人</span> %{description}"
       liked_consolidated_description:
-        other: "你的帖子有%{count}个赞"
+        other: "点赞了您的 %{count} 个帖子"
       liked_consolidated: "<span>%{username}</span>%{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
-      invitee_accepted: "<span>%{username}</span> 已接受你的邀请"
-      moved_post: "<span>%{username}</span> 移动了 %{description}"
+      invitee_accepted: "<span>%{username}</span> 已接受您的邀请"
+      moved_post: "<span>%{username}</span> 移动了%{description}"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "获得 “%{description}”"
+      granted_badge: "获得了 '%{description}'"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>新话题</span> %{description}"
-      membership_request_accepted: "接受来自“%{group_name}”的邀请"
+      membership_request_accepted: "加入 '%{group_name}' 的成员资格请求已被接受"
       membership_request_consolidated:
-        other: "%{count} 个申请加入“%{group_name}”群组的请求"
+        other: "%{count} 个未处理的加入 '%{group_name}' 的成员资格请求"
       reaction: "<span>%{username}</span> %{description}"
-      reaction_2: "<span>%{username}， %{username2}</span> %{description}"
+      reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 已完成"
       group_message_summary:
-        other: "%{count} 条消息在 %{group_name} 群组的收件箱中"
+        other: "您的 %{group_name} 收件箱中有 %{count} 条消息"
       popup:
-        mentioned: '%{username} 在“%{topic}”提到了你 - %{site_title}'
-        group_mentioned: '%{username} 在 “%{topic}”提到了你 - %{site_title}'
-        quoted: '%{username} 在 “%{topic}”引用了你的帖子 - %{site_title}'
-        replied: '%{username} 在 “%{topic}”回复了你 - %{site_title}'
-        posted: '%{username} 在 “%{topic}”中发布了帖子 - %{site_title}'
-        private_message: '%{username} 在 “%{topic}”中向你发送了个人消息 - %{site_title}'
-        linked: '%{username} 在 “%{topic}”中链接了你的帖子 - %{site_title}'
-        watching_first_post: '%{username} 发布了新话题 “%{topic}” - %{site_title}'
+        mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'
+        group_mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'
+        quoted: '%{username} 在“%{topic}”中引用了您的帖子 - %{site_title}'
+        replied: '%{username} 在“%{topic}”中回复了您 - %{site_title}'
+        posted: '%{username} 在“%{topic}”中发布了帖子 - %{site_title}'
+        private_message: '%{username} 在“%{topic}”中向您发送了个人消息 - %{site_title}'
+        linked: '%{username} 在“%{topic}”中链接到您的帖子 - %{site_title}'
+        watching_first_post: '%{username} 创建了新话题“%{topic}”- %{site_title}'
         confirm_title: "通知已启用 - %{site_title}"
         confirm_body: "成功！通知已启用。"
         custom: "来自 %{username} 在 %{site_title} 的通知"
       titles:
-        mentioned: "提及到"
+        mentioned: "被提及"
         replied: "新回复"
-        quoted: "引用"
-        edited: "编辑"
-        liked: "新的赞"
+        quoted: "被引用"
+        edited: "被编辑"
+        liked: "新赞"
         private_message: "新私信"
-        invited_to_private_message: "邀请进行私信"
-        invitee_accepted: "邀请已接受"
+        invited_to_private_message: "被邀请加入私信"
+        invitee_accepted: "邀请已被接受"
         posted: "新帖子"
-        moved_post: "帖子已移动"
-        linked: "链接"
-        bookmark_reminder: "收藏提醒"
-        bookmark_reminder_with_name: "收藏提醒 - %{name}"
+        moved_post: "帖子已被移动"
+        linked: "被链接"
+        bookmark_reminder: "书签提醒"
+        bookmark_reminder_with_name: "书签提醒 - %{name}"
         granted_badge: "已授予徽章"
-        invited_to_topic: "邀请到话题"
+        invited_to_topic: "被邀请加入话题"
         group_mentioned: "群组提及"
-        group_message_summary: "新建群组消息"
-        watching_first_post: "近期话题"
+        group_message_summary: "新群组消息"
+        watching_first_post: "新话题"
         topic_reminder: "话题提醒"
-        liked_consolidated: "新的赞"
-        post_approved: "帖子已批准"
-        membership_request_consolidated: "新的成员申请"
-        reaction: "新的反应"
+        liked_consolidated: "新赞"
+        post_approved: "帖子被批准"
+        membership_request_consolidated: "新成员资格请求"
+        reaction: "新回应"
         votes_released: "投票已发布"
     upload_selector:
-      title: "插入图片"
-      title_with_attachments: "上传图片或文件"
+      title: "添加图片"
+      title_with_attachments: "添加图片或文件"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
       remote_tip: "图片链接"

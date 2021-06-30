@@ -1560,7 +1560,7 @@ it:
     first_post: Primo messaggio
     mute: Ignora
     unmute: Riattiva
-    last_post: Ultimo messaggio
+    last_post: Pubblicato
     local_time: "Ora Locale"
     time_read: Letti
     time_read_recently: "%{time_read} recentemente"
