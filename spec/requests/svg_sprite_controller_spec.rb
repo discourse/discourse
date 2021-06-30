@@ -24,8 +24,17 @@ describe SvgSpriteController do
       random_hash = Digest::SHA1.hexdigest("somerandomstring")
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
 
-      expect(response.status).to eq(302)
-      expect(response.location).to include(SvgSprite.version)
+      expect(response).to redirect_to(
+        "/svg-sprite/test.localhost/svg--#{SvgSprite.version}.js"
+      )
+
+      set_cdn_url "//some-cdn.com/site"
+
+      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
+
+      expect(response).to redirect_to(
+        "https://some-cdn.com/site/svg-sprite/test.localhost/svg--#{SvgSprite.version}.js"
+      )
     end
   end
 
