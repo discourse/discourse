@@ -896,33 +896,13 @@ const User = RestModel.extend({
     if (this.groups) {
       this.groups.forEach((group) => {
         if (group.flair_url) {
-          const flair = {
+          flairs.push({
             id: group.id,
             name: group.name,
+            url: group.flair_url,
             bgColor: group.flair_bg_color,
             color: group.flair_color,
-          };
-
-          if (group.flair_url.includes("/")) {
-            flair.imageUrl = group.flair_url;
-          } else {
-            flair.icon = group.flair_url;
-          }
-
-          flair.style = "";
-          if (flair.imageUrl) {
-            const flairUrl = escapeExpression(flair.imageUrl);
-            flair.style += `background-image: url(${flairUrl});`;
-          }
-          if (flair.bgColor) {
-            flair.style += `background-color: #${flair.bgColor};`;
-          }
-          if (flair.color) {
-            flair.style += `color: #${flair.color};`;
-          }
-          flair.style = flair.style.htmlSafe();
-
-          flairs.push(flair);
+          });
         }
       });
     }

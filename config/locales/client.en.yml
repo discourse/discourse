@@ -1648,8 +1648,11 @@ en:
       title:
         title: "Title"
         none: "(none)"
+        instructions: "appears after your username"
       flair:
         title: "Flair"
+        none: "(none)"
+        instructions: "icon displayed next to your profile picture"
       primary_group:
         title: "Primary Group"
         none: "(none)"
