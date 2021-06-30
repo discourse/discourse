@@ -104,7 +104,7 @@ def dependencies
       source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
-      source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
+      source: '@kemitchell/jquery.autoellipsis/src/jquery.autoellipsis.js',
       destination: 'jquery.autoellipsis-1.0.10.js'
     }, {
       source: 'jquery-color/dist/jquery.color.js'

@@ -303,6 +303,11 @@
   dependencies:
     core-js "^3.6.5"
 
+"@kemitchell/jquery.autoellipsis@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@kemitchell/jquery.autoellipsis/-/jquery.autoellipsis-1.0.10.tgz#0580742e085c2dbaf0c6fd0b974a334c79bf168b"
+  integrity sha512-c03EFhM7Cp6Mq0ufIeP6aKtM76nL8DSxXtbPOsQz61KQpvzFGsPWJ7+BnsiwEdM15Yn3SuA/JdkkcgmdYpI6Sw==
+
 "@mixer/parallel-prettier@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@mixer/parallel-prettier/-/parallel-prettier-2.0.1.tgz#fd69bb55e38b3c1dbb2f1a534ea1a0cd3fe34946"
@@ -2222,10 +2227,6 @@ jquery-tags-input@1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/jquery-tags-input/-/jquery-tags-input-1.3.5.tgz#1c89cb95c61983ad14386d30a006920476b93ed7"
   integrity sha1-HInLlcYZg60UOG0woAaSBHa5Ptc=
-
-"jquery.autoellipsis@https://github.com/pvdspek/jquery.autoellipsis":
-  version "0.0.0"
-  resolved "https://github.com/pvdspek/jquery.autoellipsis#756391145c09ec11ae2b88a0ca0c3b5fdf8d21a1"
 
 jquery@3.5.1:
   version "3.5.1"
