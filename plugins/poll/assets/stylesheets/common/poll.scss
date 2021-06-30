@@ -2,8 +2,6 @@ div.poll {
   margin: 1em 0;
   border: 1px solid var(--primary-low);
 
-  @include unselectable;
-
   ul,
   ol {
     margin: 0;
