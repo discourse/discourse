@@ -74,6 +74,9 @@ async function optimize(imageData, fileName, width, height, settings) {
         settings.resize_pre_multiply,
         settings.resize_linear_rgb
       );
+      if (resizeResult[3] !== 255) {
+        throw "Image corrupted during resize. Falling back to the original for encode"
+      }
       maybeResized = new ImageData(
         resizeResult,
         target_dimensions.width,
@@ -102,6 +105,10 @@ async function optimize(imageData, fileName, width, height, settings) {
   const finalSize = result.byteLength
   logIfDebug(`Worker post reencode file: ${finalSize}`);
   logIfDebug(`Reduction: ${(initialSize / finalSize).toFixed(1)}x speedup`);
+
+  if (finalSize < 20000) {
+    throw "Final size suspciously small, discarding optimizations"
+  }
 
   let transferrable = Uint8Array.from(result).buffer; // decoded was allocated inside WASM so it **cannot** be transfered to another context, need to copy by value
 
