@@ -315,7 +315,7 @@ fr:
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé"
       title: ":arrow_up: Fonctionnalités utilisateur avancé"
       start_message: |-
-        En tant qu'utilisateur _averti_, avez-vous déjà visité la page [mes préférences](%{base_uri}/my/preferences) @%{username} ? Il y a beaucoup de possibilité pour personnaliser votre expérience, comme en sélectionnant un thème clair ou foncé.
+        En tant qu'utilisateur _avancé_, avez-vous déjà visité la page [mes préférences](%{base_uri}/my/preferences) @%{username} ? Vous y trouverez beaucoup de possibilités pour personnaliser votre expérience, comme le choix d'un thème clair ou foncé.
 
         Mais je divague, commençons !
       edit:
@@ -331,7 +331,7 @@ fr:
         reply: |-
           Bon boulot !
 
-          Remarquez que les modifications après 5 minutes seront considérées comme des modifications publiques, et qu'un petit crayon apparaîtra dans le coin haut droit avec le nombre de modification.
+          Remarquez que les modifications apportées après 5 minutes seront considérées comme des modifications publiques, et qu'un petit crayon apparaîtra dans le coin supérieur droit avec le nombre de modifications.
       delete:
         instructions: |-
           Si vous souhaitez retirer un message que vous avez écrit, vous pouvez le supprimer.
@@ -340,9 +340,9 @@ fr:
         not_found: |-
           Je ne vois toujours aucun message supprimé ! Rappelez-vous, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afficher plus révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> supprimer.
         reply: |-
-          Whoa ! :boom:
+          Ouah ! :boom:
 
-          Pour préserver la continuité des discussions, les suppressions ne sont pas immédiates, et le message ne sera supprimé qu'après quelques temps.
+          Pour préserver la continuité des discussions, les suppressions ne sont pas immédiates, et le message ne sera supprimé qu'après un certain temps.
       recover:
         deleted_post_raw: "Pourquoi @%{discobot_username} a supprimé mon message ? :anguished:"
         instructions: |-
@@ -357,15 +357,15 @@ fr:
           Notez que vous n'avez que %{deletion_after} heure(s) pour restaurer un message supprimé.
       category_hashtag:
         instructions: |-
-          Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple avez-vous vu la catégorie %{category} ?
+          Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
 
-          Tapez `#` au milieu d'une phrase et sélectionnez n'importe quelle catégorie ou étiquette.
+          Saisissez Tapez « # » au milieu d'une phrase et sélectionnez n'importe quelle catégorie ou étiquette.
         not_found: |-
-          Hmm, je ne vois pas de catégorie nulle part. Notez que `#` ne peut pas être le premier caractère. Pouvez-vous copier ceci dans votre prochaine réponse ?
+          Hum, je ne vois de catégorie nulle part. Notez que « # » ne peut pas être le premier caractère. Pouvez-vous copier ceci dans votre prochaine réponse ?
 
-          ```text
+          « texte
           Je peux créer un lien de catégorie via #
-          ```
+          »
         reply: |-
           Excellent ! Retenez que ceci fonctionne pour les catégories _et_ les étiquettes, si les étiquettes sont activées.
       change_topic_notification_level:

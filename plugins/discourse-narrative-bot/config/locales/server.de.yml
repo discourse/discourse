@@ -188,7 +188,7 @@ de:
         reply: |-
           Hübsches Bild – ich habe die Like-Schaltfläche :heart: gedrückt, um dich wissen zu lassen, wie sehr es mir gefällt :heart_eyes:
         like_not_found: |-
-          Hast du vergessen meinen [Beitrag](%{url}) mit einem Like :heart: zu markieren? :crying_cat_face:
+          Hast du vergessen, meinen [Beitrag](%{url}) mit einem Like :heart: zu versehen? :crying_cat_face:
         not_found: |-
           Sieht so aus, als hättest du kein Bild hochgeladen. Deshalb habe ich ein Bild ausgesucht, von dem ich _sicher_ bin, dass es dir gefällt.
 
@@ -210,15 +210,15 @@ de:
         instructions: |-
           Kannst du einige Wörter in deiner Antwort **fett** oder _kursiv_ markieren?
 
-          - schreibe `**fett**` oder `_kursiv_`
+          - Schreibe `**fett**` oder `_kursiv_`
 
-          - oder, drücke die <kbd><b>F</b></kbd>- oder <kbd><i>K</i></kbd>-Schaltflächen im Editor
+          - Oder drücke die <kbd><b>F</b></kbd>- oder <kbd><i>K</i></kbd>-Schaltflächen im Editor
         reply: |-
           Großartige Leistung! HTML und BBCode funktionieren auch zur Formatierung – um mehr zu erfahren, [probiere dieses Tutorial aus](http://commonmark.org/help) :nerd:
         not_found: |-
-          Ach, ich habe keine Formatierung in deiner Antwort gefunden. :pencil2:
+          Huch, ich habe keine Formatierung in deiner Antwort gefunden. :pencil2:
 
-          Kannst du es nochmal versuchen? Verwende die <kbd><b>F</b></kbd>- (Fett) oder <kbd><i>K</i></kbd>-Schaltfläche (Kursiv) im Editor, wenn du nicht weiter weißt.
+          Kannst du es noch einmal versuchen? Verwende die <kbd><b>F</b></kbd>- (fett) oder <kbd><i>K</i></kbd>-Schaltfläche (kursiv) im Editor, wenn du nicht weiterweißt.
       quoting:
         instructions: |-
           Kannst du versuchen, mich zu zitieren, wenn du antwortest, sodass ich genau weiß, auf welchen Teil du antwortest?
@@ -235,7 +235,7 @@ de:
         reply: |-
           Gute Arbeit, du hast mein Lieblingszitat ausgewählt! :left_speech_bubble:
         not_found: |-
-          Hmm, es sieht so aus als hättest du mich in deinem Beitrag nicht zitiert?
+          Hmm, es sieht so aus, als hättest du mich in deinem Beitrag nicht zitiert?
 
           Das Auswählen von beliebigem Text in meinem Beitrag lässt die <kbd>**Zitat**</kbd>-Schaltfläche erscheinen. Und das Drücken von **Antworten** mit einem beliebigen ausgewählten Text wird auch funktionieren! Kannst du es nochmal versuchen?
       bookmark:
@@ -244,7 +244,7 @@ de:
         reply: |-
           Ausgezeichnet! Jetzt kannst du jederzeit leicht wieder zu unserem privaten Gespräch zurückkehren, direkt vom [the bookmarks tab on your profile](%{bookmark_url}). Wähle einfach Dein Profilbild oben rechts &#8599;
         not_found: |-
-          Oh weh, ich sehe keine Lesezeichen in diesem Thema. Hast du das Lesezeichen unter jedme Beitrag gefunden? Verwende das „Mehr anzeigen“-Symbol <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, um bei Bedarf weitere Aktionen anzuzeigen.
+          Oh je, ich sehe keine Lesezeichen in diesem Thema. Hast du das Lesezeichen unter jedem Beitrag gefunden? Verwende das „Mehr anzeigen“-Symbol <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, um bei Bedarf weitere Aktionen anzuzeigen.
       emoji:
         instructions: |-
           Du hast vielleicht gesehen, dass ich kleine Bilder in meinen Antworten verwendet habe :blue_car::dash:. Die heißen [Emoji](https://de.wikipedia.org/wiki/Emoji). Kannst du in deiner Antwort **ein Emoji hinzufügen**? Du kannst das auf verschiedene Weise tun:
