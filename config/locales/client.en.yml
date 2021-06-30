@@ -668,6 +668,8 @@ en:
       add_members:
         title: "Add Users to %{group_name}"
         description: "Enter a list of users you want to invite to the group or paste in a comma separated list:"
+        usernames_placeholder: "usernames"
+        usernames_or_emails_placeholder: "usernames or emails"
         notify_users: "Notify users"
         set_owner: "Set users as owners of this group"
       requests:
