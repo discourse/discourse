@@ -502,6 +502,15 @@ describe Stylesheet::Manager do
       expect(stylesheet2).to include("--primary: #c00;")
     end
 
+    it "includes updated font definitions" do
+      details1 = manager.color_scheme_stylesheet_details(nil, "all")
+
+      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+
+      details2 = manager.color_scheme_stylesheet_details(nil, "all")
+      expect(details1[:new_href]).not_to eq(details2[:new_href])
+    end
+
     context "theme colors" do
       let(:theme) { Fabricate(:theme).tap { |t|
         t.set_field(target: :common, name: "color_definitions", value: ':root {--special: rebeccapurple;}')
