@@ -52,6 +52,23 @@ RSpec.describe Onebox::Helpers do
 
       expect(described_class.fetch_html_doc(uri).to_s).to match("success")
     end
+
+    context "canonical link" do
+      it "follows canonical link" do
+        uri = 'https://www.example.com'
+        stub_request(:get, uri).to_return(status: 200, body: "<!DOCTYPE html><link rel='canonical' href='http://foobar.com/'/><p>invalid</p>")
+        stub_request(:get, 'http://foobar.com').to_return(status: 200, body: "<!DOCTYPE html><p>success</p>")
+
+        expect(described_class.fetch_html_doc(uri).to_s).to match("success")
+      end
+
+      it "does not follow canonical link pointing at localhost" do
+        uri = 'https://www.example.com'
+        stub_request(:get, uri).to_return(status: 200, body: "<!DOCTYPE html><link rel='canonical' href='http://localhost:3000/'/><p>success</p>")
+
+        expect(described_class.fetch_html_doc(uri).to_s).to match("success")
+      end
+    end
   end
 
   describe "redirects" do
