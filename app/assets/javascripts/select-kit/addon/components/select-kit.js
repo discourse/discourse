@@ -1040,7 +1040,7 @@ export default Component.extend(
 
       Object.keys(migrations).forEach((from) => {
         const to = migrations[from];
-        if (this.get(from) && !this.get(to)) {
+        if (isPresent(this.attrs[from]) && !isPresent(this.attrs[to])) {
           this._deprecated(
             `The \`${from}\` attribute is deprecated. Use \`${to}\` instead`
           );
