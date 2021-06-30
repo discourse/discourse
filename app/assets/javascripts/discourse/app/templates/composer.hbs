@@ -200,7 +200,7 @@
             {{plugin-outlet name="composer-mobile-buttons-bottom" connectorTagName="" args=(hash model=model)}}
 
             {{#if allowUpload}}
-              <a class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}"  aria-label={{i18n "composer.upload_title"}}>
+              <a id="mobile-file-upload" class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}"  aria-label={{i18n "composer.upload_title"}}>
                 {{d-icon uploadIcon}}
               </a>
             {{/if}}
