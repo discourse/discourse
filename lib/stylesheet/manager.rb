@@ -46,49 +46,54 @@ class Stylesheet::Manager
     targets += Discourse.find_plugin_css_assets(include_disabled: true, mobile_view: true, desktop_view: true)
 
     targets.each do |target|
-      $stderr.puts "precompile target: #{target}"
+      STDERR.puts "precompile target: #{target}"
 
       Stylesheet::Manager::Builder.new(target: target, manager: nil).compile(force: true)
     end
   end
 
   def self.precompile_theme_css
-    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :color_scheme_id)
+    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name, :color_scheme_id)
+    themes << nil
 
     color_schemes = ColorScheme.where(user_selectable: true).to_a
     color_schemes << ColorScheme.find_by(id: SiteSetting.default_dark_mode_color_scheme_id)
-    color_schemes << ColorScheme.base
     color_schemes = color_schemes.compact.uniq
 
     targets = [:desktop_theme, :mobile_theme]
-    compiled = Set.new
 
-    themes.each do |theme_id, color_scheme_id|
+    themes.each do |id, name, color_scheme_id|
+      theme_id = id || SiteSetting.default_theme_id
       manager = self.new(theme_id: theme_id)
 
       targets.each do |target|
-        next if theme_id == -1
+        if target =~ THEME_REGEX
+          next if theme_id == -1
 
-        scss_checker = ScssChecker.new(target, manager.theme_ids)
+          scss_checker = ScssChecker.new(target, manager.theme_ids)
 
-        manager.load_themes(manager.theme_ids).each do |theme|
-          next if compiled.include?("#{target}_#{theme.id}")
+          manager.load_themes(manager.theme_ids).each do |theme|
+            builder = Stylesheet::Manager::Builder.new(
+              target: target, theme: theme, manager: manager
+            )
 
-          builder = Stylesheet::Manager::Builder.new(
-            target: target, theme: theme, manager: manager
-          )
+            STDERR.puts "precompile target: #{target} #{builder.theme.name}"
+            next if theme.component && !scss_checker.has_scss(theme.id)
+            builder.compile(force: true)
+          end
+        else
+          STDERR.puts "precompile target: #{target} #{name}"
 
-          $stderr.puts "precompile target: #{target} #{theme.name}"
-          next if theme.component && !scss_checker.has_scss(theme.id)
-          builder.compile(force: true)
-          compiled << "#{target}_#{theme.id}"
+          Stylesheet::Manager::Builder.new(
+            target: target, theme: manager.get_theme(theme_id), manager: manager
+          ).compile(force: true)
         end
       end
 
-      theme_color_scheme = ColorScheme.find_by_id(color_scheme_id)
+      theme_color_scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
 
-      [theme_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
+      [theme_color_scheme, *color_schemes].uniq.each do |scheme|
+        STDERR.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
 
         Stylesheet::Manager::Builder.new(
           target: COLOR_SCHEME_STYLESHEET,
