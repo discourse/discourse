@@ -167,10 +167,6 @@ export default Controller.extend(CanCheckEmails, {
         });
     },
 
-    selectFlair(flair) {
-      this.set("newFlairGroupId", flair.id);
-    },
-
     delete() {
       this.set("deleting", true);
       const message = I18n.t("user.delete_account_confirm"),

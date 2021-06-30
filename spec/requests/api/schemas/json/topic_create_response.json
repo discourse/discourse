@@ -79,6 +79,12 @@
         "null"
       ]
     },
+    "flair_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "flair_url": {
       "type": [
         "string",
@@ -219,6 +225,7 @@
     "topic_slug",
     "display_username",
     "primary_group_name",
+    "flair_name",
     "flair_url",
     "flair_bg_color",
     "flair_color",

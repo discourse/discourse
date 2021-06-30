@@ -36,6 +36,7 @@ class PostSerializer < BasicPostSerializer
              :category_id,
              :display_username,
              :primary_group_name,
+             :flair_name,
              :flair_url,
              :flair_bg_color,
              :flair_color,
@@ -186,6 +187,10 @@ class PostSerializer < BasicPostSerializer
     else
       object.user.primary_group.name if object.user.primary_group
     end
+  end
+
+  def flair_name
+    object.user&.flair_group&.name
   end
 
   def flair_url

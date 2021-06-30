@@ -38,7 +38,7 @@ createWidget("avatar-flair", {
     if (attrs.flair_color) {
       style += "color: #" + escapeExpression(attrs.flair_color) + "; ";
     }
-    return { style: style };
+    return { style };
   },
 
   html(attrs) {

@@ -3,7 +3,7 @@
 class TopicPostCountSerializer < BasicUserSerializer
 
   attributes :post_count, :primary_group_name,
-             :flair_url, :flair_color, :flair_bg_color,
+             :flair_name, :flair_url, :flair_color, :flair_bg_color,
              :admin, :moderator, :trust_level,
 
   def id
@@ -21,6 +21,10 @@ class TopicPostCountSerializer < BasicUserSerializer
   def primary_group_name
     return nil unless object[:user].primary_group_id
     object[:user]&.primary_group&.name
+  end
+
+  def flair_name
+    object[:user]&.flair_group&.name
   end
 
   def flair_url

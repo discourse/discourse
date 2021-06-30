@@ -174,14 +174,6 @@
         none="user.flair.none"
         onChange=(action (mut newFlairGroupId))
       }}
-
-      {{#each model.availableFlairs as |flair|}}
-        {{#if flair.imageUrl}}
-          <button type="button" {{action "selectFlair" flair}} class="flair-image {{if (eq newFlairGroupId flair.id) "flair-selected"}}" style={{flair.style}} title={{flair.name}}></button>
-        {{else if flair.icon}}
-          <button type="button" {{action "selectFlair" flair}} class="flair-icon {{if (eq newFlairGroupId flair.id) "flair-selected"}}" style={{flair.style}} title={{flair.name}}>{{d-icon flair.icon}}</button>
-        {{/if}}
-      {{/each}}
     </div>
     <div class="instructions">
       {{i18n "user.flair.instructions"}}

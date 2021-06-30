@@ -101,21 +101,6 @@ export default Controller.extend({
     return (fullName || displayName).capitalize();
   },
 
-  @discourseComputed(
-    "model.name",
-    "model.flair_url",
-    "model.flair_bg_color",
-    "model.flair_color"
-  )
-  avatarFlairAttributes(groupName, flairUrl, flairBgColor, flairColor) {
-    return {
-      flair_name: groupName,
-      flair_url: flairUrl,
-      flair_bg_color: flairBgColor,
-      flair_color: flairColor,
-    };
-  },
-
   @discourseComputed("model.messageable")
   displayGroupMessageButton(messageable) {
     return this.currentUser && messageable;

@@ -864,7 +864,7 @@ const User = RestModel.extend({
 
   @discourseComputed("groups.@each.title", "badges.[]")
   availableTitles() {
-    let titles = [];
+    const titles = [];
 
     (this.groups || []).forEach((group) => {
       if (get(group, "title")) {
@@ -891,7 +891,7 @@ const User = RestModel.extend({
 
   @discourseComputed("groups.[]")
   availableFlairs() {
-    let flairs = [];
+    const flairs = [];
 
     if (this.groups) {
       this.groups.forEach((group) => {
