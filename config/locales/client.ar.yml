@@ -2739,8 +2739,8 @@ ar:
           title: "إضافة المنشور وكل ما يليه إلى التحديد"
         delete: حذف المحدَّد
         cancel: إلغاء التحديد
-        select_all: حدد الكل
-        deselect_all: أزل تحديد الكل
+        select_all: تحديد الكل
+        deselect_all: إلغاء تحديد الكل
         description:
           zero: "لم تحدّد أي مشاركات."
           one: حدّدت مشاركة واحدة.
