@@ -66,6 +66,18 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
+    # when a topic contains some posts after moving posts to another topic we shouldn't close it
+    # two types of posts should prevent a topic from closing:
+    #   1. regular posts
+    #   2. almost all whispers
+    # we should only exclude whispers with action_code: 'split_topic'
+    # because we use such whispers as a small-action posts when moving posts to the secret message
+    # (in this case we don't want everyone to see that posts were moved, that's why we use whispers)
+    original_topic_posts_count = @original_topic.posts
+      .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
+      .count
+    moving_all_posts = original_topic_posts_count == posts.length
+
     create_temp_table
     delete_invalid_post_timings
     move_each_post
@@ -76,11 +88,7 @@ class PostMover
     update_upload_security_status
     update_bookmarks
 
-    posts_left = @original_topic.posts
-      .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
-      .count
-
-    if posts_left == 1
+    if moving_all_posts
       close_topic_and_schedule_deletion
     end
 
