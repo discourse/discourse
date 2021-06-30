@@ -188,12 +188,22 @@ describe Stylesheet::Manager do
       DiscoursePluginRegistry.reset!
     end
 
-    it 'can correctly account for plugins in default digest' do
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
+    it 'can correctly account for plugins in digest' do
+      theme = Fabricate(:theme)
+      manager = manager(theme.id)
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      )
+
       digest1 = builder.digest
 
       DiscoursePluginRegistry.stylesheets["fake"] = Set.new(["fake_file"])
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      )
+
       digest2 = builder.digest
 
       expect(digest1).not_to eq(digest2)
@@ -271,21 +281,6 @@ describe Stylesheet::Manager do
       digest2 = builder.digest
 
       expect(digest1).not_to eq(digest2)
-    end
-
-    it 'returns different digest based on target' do
-      theme = Fabricate(:theme)
-      builder = Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
-      expect(builder.digest).to eq(builder.theme_digest)
-
-      builder = Stylesheet::Manager::Builder.new(target: :color_definitions, manager: manager)
-      expect(builder.digest).to eq(builder.color_scheme_digest)
-
-      builder = Stylesheet::Manager::Builder.new(target: :admin, manager: manager)
-      expect(builder.digest).to eq(builder.default_digest)
-
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
-      expect(builder.digest).to eq(builder.default_digest)
     end
   end
 
