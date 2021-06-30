@@ -141,6 +141,8 @@ export default function () {
         { path: "/messages", resetNamespace: true },
         function () {
           this.route("sent");
+          this.route("unread");
+          this.route("new");
           this.route("archive");
           this.route("warnings");
           this.route("group", { path: "group/:name" });

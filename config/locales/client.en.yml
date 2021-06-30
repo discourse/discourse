@@ -1170,6 +1170,8 @@ en:
         all: "All"
         inbox: "Inbox"
         sent: "Sent"
+        unread: "Unread"
+        new: "New"
         archive: "Archive"
         groups: "My Groups"
         move_to_inbox: "Move to Inbox"

@@ -1343,4 +1343,80 @@ describe TopicQuery do
       expect(TopicQuery.new(user).list_private_messages(user).topics).to eq([private_message_topic])
     end
   end
+
+  describe '#list_private_messages_unread' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+
+    fab!(:pm) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    fab!(:pm_2) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    fab!(:pm_3) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    it 'returns a list of private messages with unread posts that user is at least tracking' do
+      freeze_time 1.minute.from_now do
+        create_post(user: user_2, topic_id: pm.id)
+        create_post(user: user_2, topic_id: pm_3.id)
+      end
+
+      TopicUser.find_by(user: user, topic: pm_3).update!(
+        notification_level: TopicUser.notification_levels[:regular]
+      )
+
+      expect(TopicQuery.new(user).list_private_messages_unread(user).topics)
+        .to contain_exactly(pm)
+    end
+  end
+
+  describe '#list_private_messages_new' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+
+    fab!(:pm) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    it 'returns a list of new private messages' do
+      expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics)
+        .to contain_exactly(pm)
+    end
+
+    it 'returns a list of new private messages accounting of muted tags' do
+      tag = Fabricate(:tag)
+
+      pm.tags << tag
+
+      TagUser.create!(
+        tag: tag,
+        user: user_2,
+        notification_level: TopicUser.notification_levels[:muted]
+      )
+
+      expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics)
+        .to eq([])
+    end
+  end
 end

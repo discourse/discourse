@@ -327,11 +327,20 @@ class TopicQuery
     create_list(:private_messages, {}, list)
   end
 
-  def list_private_messages_unread(user)
-    list = private_messages_for(user, :user)
+  def list_private_messages_new(user)
+    list = TopicQuery.new_filter(
+      private_messages_for(user, :user),
+      treat_as_new_topic_start_date: user.user_option.treat_as_new_topic_start_date
+    )
 
+    list = remove_muted_tags(list, user)
+
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_unread(user)
     list = TopicQuery.unread_filter(
-      list,
+      private_messages_for(user, :user),
       staff: user.staff?
     )
 
@@ -945,7 +954,7 @@ class TopicQuery
     list
   end
 
-  def remove_muted_tags(list, user, opts = nil)
+  def remove_muted_tags(list, user, opts = {})
     if !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
     end

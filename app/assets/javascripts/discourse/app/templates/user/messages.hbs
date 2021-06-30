@@ -12,6 +12,16 @@
       {{/link-to}}
     </li>
     <li class="noGlyph">
+      {{#link-to "userPrivateMessages.unread" model}}
+        {{i18n "user.messages.unread"}}
+      {{/link-to}}
+    </li>
+    <li class="noGlyph">
+      {{#link-to "userPrivateMessages.new" model}}
+        {{i18n "user.messages.new"}}
+      {{/link-to}}
+    </li>
+    <li class="noGlyph">
       {{#link-to "userPrivateMessages.sent" model}}
         {{i18n "user.messages.sent"}}
       {{/link-to}}

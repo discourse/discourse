@@ -187,6 +187,7 @@ class ListController < ApplicationController
     private_messages
     private_messages_sent
     private_messages_unread
+    private_messages_new
     private_messages_archive
     private_messages_group
     private_messages_group_archive
