@@ -71,11 +71,7 @@ function jpegDecodeFailure(type, imageData) {
     return false;
   }
 
-  if (imageData.data[3] === 0) {
-    return true;
-  } else {
-    return false;
-  }
+  return imageData.data[3] === 0;
 }
 
 export async function fileToImageData(file) {
