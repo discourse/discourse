@@ -1953,53 +1953,42 @@ zh_CN:
         post_approved: "帖子被批准"
         membership_request_consolidated: "新成员资格请求"
         reaction: "新回应"
-        votes_released: "投票已发布"
+        votes_released: "投票额度已释放"
     upload_selector:
-      title: "添加图片"
-      title_with_attachments: "添加图片或文件"
-      from_my_computer: "来自我的设备"
-      from_the_web: "来自网络"
-      remote_tip: "图片链接"
-      remote_tip_with_attachments: "链接到图像或文件"
-      local_tip: "从你的设备中选择图片"
-      local_tip_with_attachments: "从你的设备中选择图片或文件"
-      hint: "（你也可以通过拖放到编辑器的方式来上传）"
-      hint_for_supported_browsers: "可以拖放或复制粘帖至编辑器以上传"
-      uploading: "上传中"
+      uploading: "正在上传"
       select_file: "选择文件"
       default_image_alt_text: 图片
-      supported_formats: "支持的格式"
     search:
-      sort_by: "排序"
-      relevance: "最相关"
-      latest_post: "最新发帖"
+      sort_by: "排序依据"
+      relevance: "相关性"
+      latest_post: "最新帖子"
       latest_topic: "最新话题"
-      most_viewed: "最多查看"
-      most_liked: "最多赞"
+      most_viewed: "浏览最多"
+      most_liked: "赞最多"
       select_all: "全选"
-      clear_all: "清除所有"
-      too_short: "你的搜索关键词太短。"
+      clear_all: "全部清除"
+      too_short: "您的搜索词过短。"
       result_count:
-        other: "<span>%{count}%{plus} 条关于</span><span class='term'>%{term}</span>的结果"
-      title: "搜索话题、帖子、用户或分类"
+        other: "<span>%{count}%{plus} 条与 </span>“<span class='term'>%{term}</span>”有关的结果"
+      title: "搜索话题、帖子、用户或类别"
       full_page_title: "搜索话题或帖子"
-      no_results: "没有找到结果。"
+      no_results: "找不到结果。"
       no_more_results: "没有找到更多结果。"
-      post_format: "#%{post_number} 来自于 %{username}"
-      results_page: "关于“%{term}”的搜索结果"
-      more_results: "还有更多结果，请增加你的搜索条件。"
-      cant_find: "找不到你要找的内容？"
-      start_new_topic: "不如创建一个新话题？"
+      post_format: "#%{post_number}，来自 %{username}"
+      results_page: "'%{term}' 的搜索结果"
+      more_results: "还有更多结果。请缩小您的搜索范围。"
+      cant_find: "找不到您要找的内容？"
+      start_new_topic: "或许创建一个新话题？"
       or_search_google: "或者尝试使用 Google 进行搜索："
       search_google: "尝试使用 Google 进行搜索："
       search_google_button: "Google"
       search_button: "搜索"
       context:
         user: "搜索 @%{username} 的帖子"
-        category: "搜索 #%{category} 分类"
+        category: "搜索 #%{category} 类别"
         tag: "搜索 #%{tag} 标签"
-        topic: "搜索本话题"
-        private_messages: "搜索私信"
+        topic: "搜索此话题"
+        private_messages: "搜索消息"
       advanced:
         title: 高级搜索
         posted_by:
@@ -2011,32 +2000,32 @@ zh_CN:
         with_badge:
           label: 有该徽章
         with_tags:
-          label: 拥有标签
+          label: 拥有该标签
         filters:
-          label: 只返回话题/帖子……
+          label: 只返回话题/帖子…
           title: 仅在标题中匹配
-          likes: 我赞过的
-          posted: 我参与发帖
-          created: 我创建的
+          likes: 我赞过
+          posted: 我发过帖
+          created: 我创建
           watching: 我正在关注
-          tracking: 我正在追踪
-          private: 在我的私信中
-          bookmarks: 我收藏了
-          first: 是第一帖
-          pinned: 是置顶的
-          seen: 我看了
-          unseen: 我还没看过
+          tracking: 我正在跟踪
+          private: 在我的消息中
+          bookmarks: 我已加入书签
+          first: 是第一个帖子
+          pinned: 被指定
+          seen: 我读过
+          unseen: 我还没读过
           wiki: 公共编辑
           images: 包含图片
           all_tags: 上述所有标签
         statuses:
-          label: 当话题
-          open: 是开放的
-          closed: 是关闭的
-          public: 是公开的
+          label: 话题
+          open: 开放
+          closed: 已关闭
+          public: 公开
           archived: 已归档
           noreplies: 没有回复
-          single_user: 只有一个用户参与
+          single_user: 包含一个用户
         post:
           count:
             label: 帖子数量
@@ -2045,117 +2034,117 @@ zh_CN:
           max:
             placeholder: 最大值
           time:
-            label: 发表于
+            label: 发布时间
             before: 早于
             after: 晚于
         views:
-          label: 查看
+          label: 浏览量
         min_views:
           placeholder: 最小值
         max_views:
           placeholder: 最大值
-    hamburger_menu: "转到另一个话题列表或分类"
+    hamburger_menu: "转到另一个话题列表或类别"
     new_item: "新"
     go_back: "返回"
-    not_logged_in_user: "显示当前活动和设置的用户页面"
-    current_user: "转到用户页面"
+    not_logged_in_user: "包含当前活动和偏好设置摘要的用户页面"
+    current_user: "转到您的用户页面"
     view_all: "查看全部 %{tab}"
     topics:
       new_messages_marker: "上次访问"
       bulk:
-        select_all: "选择全部"
-        clear_all: "清除全部"
-        unlist_topics: "隐藏话题"
-        relist_topics: "显示话题"
-        reset_read: "设为未读"
+        select_all: "全选"
+        clear_all: "全部清除"
+        unlist_topics: "取消公开话题"
+        relist_topics: "重新公开话题"
+        reset_read: "重置已读话题"
         delete: "删除话题"
-        dismiss: "忽略"
-        dismiss_read: "忽略所有未读话题"
-        dismiss_button: "忽略…"
-        dismiss_tooltip: "忽略新帖或停止跟踪话题"
-        also_dismiss_topics: "停止追踪这些话题以不再显示为未读"
-        dismiss_new: "设为已读"
+        dismiss: "关闭"
+        dismiss_read: "关闭所有未读话题"
+        dismiss_button: "关闭…"
+        dismiss_tooltip: "仅关闭新帖子或停止跟踪话题"
+        also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
+        dismiss_new: "关闭新话题"
         toggle: "切换话题批量选择"
         actions: "批量操作"
-        change_category: "设置分类"
+        change_category: "设置类别"
         close_topics: "关闭话题"
         archive_topics: "归档话题"
         move_messages_to_inbox: "移至收件箱"
         notification_level: "通知"
         change_notification_level: "更改通知级别"
-        choose_new_category: "选择话题新分类："
+        choose_new_category: "为话题选择新类别："
         selected:
-          other: "已选择 <b>%{count}</b> 个话题"
+          other: "您已选择 <b>%{count}</b> 个话题。"
         change_tags: "替换标签"
-        append_tags: "添加标签"
-        choose_new_tags: "为话题选择新标签："
-        choose_append_tags: "为这些话题添加新标签："
-        changed_tags: "话题的标签已被修改"
+        append_tags: "附加标签"
+        choose_new_tags: "为这些话题选择新标签："
+        choose_append_tags: "为这些话题选择要附加的新标签："
+        changed_tags: "这些话题的标签已更改。"
         remove_tags: "移除所有标签"
         confirm_remove_tags:
-          other: "所有的标签将从 <b>%{count}</b> 个话题中移除，你确定吗？"
+          other: "所有标签将从 <b>%{count}</b> 个话题中移除。确定吗？"
         progress:
-          other: "进度： <strong>%{count}</strong> 话题"
+          other: "进度：<strong>%{count}</strong> 个话题"
       none:
-        unread: "你没有未读话题。"
-        new: "你没有近期话题可读。"
-        read: "你尚未阅读任何话题。"
-        posted: "你尚未在任何话题中发帖。"
-        latest: "你全都看过了！"
-        bookmarks: "你没有收藏任何话题。"
-        category: "%{category} 分类中没有话题。"
+        unread: "您没有未读话题。"
+        new: "您没有新话题。"
+        read: "您还没有阅读任何话题。"
+        posted: "您尚未在任何话题中发帖。"
+        latest: "您全都看过了！"
+        bookmarks: "您还没有将任何话题加入书签。"
+        category: "没有%{category}话题。"
         top: "没有热门话题。"
         educate:
-          new: '<p>这里显示近期话题， 默认情况下显示近 2 天内创建的话题，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>的标志。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改。</p>'
-          unread: "<p>你的未读话题显示在这里，</p><p>下列情况中的话题会被认为是未读的并显示未读计数<span class=\"badge new-posts badge-notification\">1</span>：</p><ul><li>创建话题</li><li>回复话题</li><li>阅读话题的时长超过4分钟</li></ul><p>或者曾使用每个话题中的\U0001F514手动调整话题的提醒等级为关注或跟踪。</p><p>查看你的<a href=\"%{userPrefsUrl}\">设置</a>可进行修改</p>"
+          new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
+          unread: "<p>您的未读话题显示在这里。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge new-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 4 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
       bottom:
-        latest: "没有更多话题了。"
+        latest: "没有更多最新话题了。"
         posted: "没有更多已发布话题了。"
-        read: "没有更多已阅话题了。"
-        new: "没有更多的近期话题了。"
+        read: "没有更多已读话题了。"
+        new: "没有更多新话题了。"
         unread: "没有更多未读话题了。"
-        category: "没有更多%{category}的话题了。"
-        tag: "没有更多带有%{tag}的话题了。"
-        top: "没有更多的热门话题了."
-        bookmarks: "没有更多收藏的话题了。"
+        category: "没有更多%{category}话题了。"
+        tag: "没有更多%{tag}话题了。"
+        top: "没有更多热门话题了。"
+        bookmarks: "没有更多已加入书签的话题了。"
     topic:
       filter_to:
-        other: "话题中 %{count} 个帖子"
+        other: "话题中的 %{count} 个帖子"
       create: "新建话题"
       create_long: "创建新话题"
       open_draft: "打开草稿"
-      private_message: "开始发私信"
+      private_message: "开始消息"
       archive_message:
-        help: "移动私信到归档"
+        help: "将消息移至您的归档"
         title: "归档"
       move_to_inbox:
-        title: "移动到收件箱"
-        help: "移动私信到收件箱"
+        title: "移至收件箱"
+        help: "将消息移回收件箱"
       edit_message:
-        help: "编辑消息中的第一帖"
+        help: "编辑消息的第一个帖子"
         title: "编辑"
       defer:
         help: "标记为未读"
-        title: "推迟处理"
+        title: "推迟"
       feature_on_profile:
-        help: "添加此话题的链接到你的用户卡片和资料中。"
+        help: "在您的用户卡和个人资料上添加指向此话题的链接"
         title: "精选到个人资料"
       remove_from_profile:
-        warning: "你的个人资料中已存在精选话题。如果继续，此话题会替换存在的话题。"
-        help: "在你的个人资料中移除指向该话题的链接"
+        warning: "您的个人资料已有精选话题。如果继续，此话题将替换现有话题。"
+        help: "在您的用户个人资料中移除指向此话题的链接"
         title: "从个人资料中移除"
       list: "话题"
-      new: "近期话题"
+      new: "新话题"
       unread: "未读"
       new_topics:
-        other: "%{count} 近期话题"
+        other: "%{count} 个新话题"
       unread_topics:
-        other: "%{count} 未读话题"
+        other: "%{count} 个未读话题"
       title: "话题"
       invalid_access:
         title: "这是私密话题"
-        description: "抱歉，你没有没有权限浏览此话题。"
-        login_required: "此话题需要登录后浏览。"
+        description: "抱歉，您无权访问该话题！"
+        login_required: "您需要登录才能查看该话题。"
       server_error:
         title: "载入话题失败"
         description: "抱歉，无法加载该话题，有可能是网络连接出现了问题。请重试。如果问题依然存在，请联系我们。"

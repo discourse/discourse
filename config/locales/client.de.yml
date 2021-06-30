@@ -2049,20 +2049,9 @@ de:
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
     upload_selector:
-      title: "Ein Bild hinzufügen"
-      title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
-      from_my_computer: "Von meinem Gerät"
-      from_the_web: "Aus dem Web"
-      remote_tip: "Link zu Bild"
-      remote_tip_with_attachments: "Link zu Bild oder Datei"
-      local_tip: "wähle auf deinem Gerät gespeicherte Bilder aus"
-      local_tip_with_attachments: "wähle auf deinem Gerät gespeicherte Bilder oder Dateien aus"
-      hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
-      hint_for_supported_browsers: "du kannst Bilder auch in den Editor ziehen oder diese aus der Zwischenablage einfügen"
       uploading: "Wird hochgeladen"
       select_file: "Datei auswählen"
       default_image_alt_text: Bild
-      supported_formats: "unterstützte Formate"
     search:
       sort_by: "Sortieren nach"
       relevance: "Relevanz"

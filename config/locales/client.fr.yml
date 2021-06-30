@@ -2049,20 +2049,9 @@ fr:
         reaction: "nouvelle réaction"
         votes_released: "Le vote a été publié"
     upload_selector:
-      title: "Ajouter une image"
-      title_with_attachments: "Ajouter une image ou un fichier"
-      from_my_computer: "À partir de mon appareil"
-      from_the_web: "À partir du Web"
-      remote_tip: "lien vers l'image"
-      remote_tip_with_attachments: "indiquez un lien vers une image ou un autre type de fichier disponible en ligne"
-      local_tip: "choisissez des images stockées sur votre appareil"
-      local_tip_with_attachments: "choisissez des images ou d'autres fichiers stockés sur votre appareil"
-      hint: "(vous pouvez aussi glisser-déposer vos fichiers dans le champ de saisie)"
-      hint_for_supported_browsers: "vous pouvez aussi glisser-déposer ou coller des images dans l'éditeur"
       uploading: "En cours d'envoi"
       select_file: "Sélectionner un fichier"
       default_image_alt_text: image
-      supported_formats: "formats de fichier acceptés"
     search:
       sort_by: "Trier par"
       relevance: "Pertinence"
@@ -2421,34 +2410,34 @@ fr:
           "2_4": "Vous verrez un compteur de nouvelles réponses car vous avez répondu dans ce sujet."
           "2_2": "Vous verrez un compteur de nouvelles réponses car vous suivez ce sujet."
           "2": 'Vous verrez un nombre de nouvelles réponses car vous <a href="%{basePath}/u/%{username}/preferences/notifications">avez lu ce sujet</a>.'
-          "1_2": "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
-          "1": "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
+          "1_2": "Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra."
+          "1": "Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra."
           "0_7": "Vous ignorez toutes les notifications de cette catégorie."
           "0_2": "Vous ignorez toutes les notifications de ce sujet."
           "0": "Vous ignorez toutes les notifications de ce sujet."
         watching_pm:
           title: "Surveiller"
-          description: "Vous serez notifié de chaque nouvelle réponse dans ce message, et le nombre de nouvelles réponses apparaîtra."
+          description: "Vous recevrez une notification pour chaque nouvelle réponse dans ce message, et le nombre de nouvelles réponses sera affiché."
         watching:
           title: "Surveiller"
-          description: "Vous serez notifié de chaque nouvelle réponse dans ce sujet, et le nombre de nouvelles réponses apparaîtra."
+          description: "Vous recevrez une notification pour chaque nouvelle réponse dans ce sujet, et le nombre de nouvelles réponses sera affiché."
         tracking_pm:
           title: "Suivre"
-          description: "Le nombre de nouvelles réponses apparaîtra pour ce message. Vous serez notifié si quelqu'un vous mentionne ou vous répond."
+          description: "Le nombre de nouvelles réponses apparaîtra pour ce message. Vous recevrez une notification si quelqu'un vous mentionne ou vous répond."
         tracking:
           title: "Suivre"
-          description: "Le nombre de nouvelles réponses apparaîtra pour ce sujet. Vous serez notifié si quelqu'un vous mentionne ou vous répond."
+          description: "Le nombre de nouvelles réponses apparaîtra pour ce sujet. Vous recevrez une notification si quelqu'un vous mentionne ou vous répond."
         regular:
           title: "Normal"
-          description: "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
+          description: "Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra."
         regular_pm:
           title: "Normal"
-          description: "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
+          description: "Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra."
         muted_pm:
-          title: "Silencieux"
+          title: "En sourdine"
           description: "Vous ne recevrez aucune notification concernant ce message."
         muted:
-          title: "Silencieux"
+          title: "En sourdine"
           description: "Vous ne recevrez aucune notification concernant ce sujet et il n'apparaîtra pas sur la page des sujets récents."
       actions:
         title: "Actions"
@@ -2517,8 +2506,8 @@ fr:
           other: "Sujets actuellement épinglés dans %{categoryLink} : <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Faire apparaître ce sujet en haut de toutes les listes de sujets jusqu'à"
         confirm_pin_globally:
-          one: "Vous avez déjà %{count} sujet épinglé globalement. Trop de sujets épinglés peut être lourd pour les nouveaux utilisateurs et les visiteurs. Êtes-vous sûr de vouloir épingler globalement un autre sujet ?"
-          other: "Vous avez déjà %{count} sujets épinglés globalement. Trop de sujets épinglés peut être lourd pour les nouveaux utilisateurs et les visiteurs. Êtes-vous sûr de vouloir épingler globalement un autre sujet ?"
+          one: "Vous avez déjà %{count} sujet épinglé globalement. Épingler un trop grand nombre de sujets peut être lourd pour les nouveaux utilisateurs et les visiteurs. Voulez-vous vraiment épingler globalement un autre sujet ?"
+          other: "Vous avez déjà %{count} sujets épinglés globalement. Épingler un trop grand nombre de sujets peut être lourd pour les nouveaux utilisateurs et les visiteurs. Voulez-vous vraiment épingler globalement un autre sujet ?"
         unpin_globally: "Enlever ce sujet du haut de toutes les listes de sujets."
         unpin_globally_until: "Enlever ce sujet du haut de toutes les listes de sujet ou attendre jusqu'à <strong>%{until}</strong>."
         global_pin_note: "Chaque utilisateur pourra désépingler le sujet individuellement (pour lui seulement)."

@@ -2016,20 +2016,9 @@ fi:
         reaction: "uusi reaktio"
         votes_released: "Ääni vapautui"
     upload_selector:
-      title: "Lisää kuva"
-      title_with_attachments: "Lisää kuva tai tiedosto"
-      from_my_computer: "Omasta laitteesta"
-      from_the_web: "Verkosta"
-      remote_tip: "linkki kuvaan"
-      remote_tip_with_attachments: "linkki kuvaan tai tiedostoon"
-      local_tip: "valitse kuvia laitteeltasi"
-      local_tip_with_attachments: "valitse kuvia tai tiedostoja laitteestasi"
-      hint: "(voit myös vetää ja pudottaa editoriin lataamista varten)"
-      hint_for_supported_browsers: "voit myös vetää ja pudottaa tai liittää kuvia editoriin"
       uploading: "Ladataan"
       select_file: "Valitse tiedosto"
       default_image_alt_text: kuva
-      supported_formats: "tuetut tiedostomuodot"
     search:
       sort_by: "Järjestä"
       relevance: "Osuvuus"

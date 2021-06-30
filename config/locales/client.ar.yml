@@ -2127,13 +2127,6 @@ ar:
         watching_first_post: "موضوع جديد"
         reaction: "تفاعل جديد"
     upload_selector:
-      title: "إضافة صورة"
-      title_with_attachments: "إضافة صورة أو ملف"
-      from_my_computer: "من جهازي"
-      from_the_web: "من الويب"
-      remote_tip: "رابط لصورة"
-      local_tip: "اختر الصور من جهازك"
-      hint_for_supported_browsers: "يمكنك أيضًا سحب وإفلات الصور أو لصقها في المحرِّر"
       uploading: "جارٍ التحميل"
       select_file: "اختيار ملف"
       default_image_alt_text: صورة

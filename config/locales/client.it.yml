@@ -143,11 +143,11 @@ it:
         enabled: "archiviato %{when}"
         disabled: "dearchiviato %{when}"
       pinned:
-        enabled: "appuntato %{when}"
-        disabled: "spuntato %{when}"
+        enabled: "bloccato %{when}"
+        disabled: "sbloccato %{when}"
       pinned_globally:
-        enabled: "appuntato globalmente %{when}"
-        disabled: "spuntato %{when}"
+        enabled: "bloccato globalmente %{when}"
+        disabled: "sbloccato %{when}"
       visible:
         enabled: "visibile in elenco %{when}"
         disabled: "invisibile in elenco %{when}"
@@ -2036,18 +2036,9 @@ it:
         reaction: "nuova reazione"
         votes_released: "Il voto è stato sbloccato"
     upload_selector:
-      title: "Aggiungi un'immagine"
-      title_with_attachments: "Aggiungi un'immagine o un file"
-      from_my_computer: "Dal mio dispositivo"
-      from_the_web: "Dal web"
-      remote_tip: "collegamento all'immagine"
-      local_tip: "seleziona immagini dal tuo dispositivo"
-      hint: "(puoi anche trascinare e rilasciare nell'editor per caricare)"
-      hint_for_supported_browsers: "puoi trascinare o incollare immagini nell'editor"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       default_image_alt_text: immagine
-      supported_formats: "formati supportati"
     search:
       sort_by: "Ordina per"
       relevance: "Rilevanza"
@@ -2220,7 +2211,7 @@ it:
         title: "Modifica"
       defer:
         help: "Contrassegna come non letto"
-        title: "Rinvia"
+        title: "Leggi più tardi"
       feature_on_profile:
         help: "Aggiungi un collegamento a questo argomento sulla tua scheda utente e sul tuo profilo"
         title: "Feature Sul Profilo"
@@ -2503,7 +2494,7 @@ it:
         unpin_globally: "Togli questo argomento dalla cima di tutti gli elenchi di argomenti."
         unpin_globally_until: "Rimuovi questo argomento dalla cima di tutte le liste di argomenti o attendi fino a <strong>%{until}</strong>."
         global_pin_note: "Gli utenti possono sbloccare gli argomenti individualmente per loro stessi."
-        not_pinned_globally: "Non ci sono argomenti appuntati globalmente."
+        not_pinned_globally: "Non ci sono argomenti bloccati globalmente."
         already_pinned_globally:
           one: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
@@ -2783,7 +2774,7 @@ it:
           off_topic: "L'hai segnalato come fuori tema"
           spam: "L'hai segnalato come spam"
           inappropriate: "L'hai segnalato come inappropriato"
-          notify_moderators: "L'hai segnalato per la moderazione"
+          notify_moderators: "L'hai segnalato per un controllo dei moderatori"
           notify_user: "Hai inviato un messaggio a questo utente"
       delete:
         confirm:
@@ -2922,7 +2913,7 @@ it:
       email_in: "Indirizzo email personalizzato:"
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
-      email_in_disabled_click: 'abilita l''impostazione "email entrante".'
+      email_in_disabled_click: 'abilita l''impostazione "email in".'
       mailinglist_mirror: "La categoria si comporta come una mailing list"
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       read_only_banner: "Testo dell'annuncio quando un utente non può creare un argomento in questa categoria:"
@@ -3073,12 +3064,12 @@ it:
         help: "Questo argomento è chiuso e archiviato; non sono ammesse nuove risposte e non può essere modificato"
       unpinned:
         title: "Sbloccato"
-        help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento normale"
+        help: "Questo argomento è sbloccato per te; verrà visualizzato in ordine normale"
       pinned_globally:
         title: "Bloccato Globalmente"
         help: "Questo argomento è bloccato globalmente; verrà mostrato sempre in cima sia agli argomenti recenti sia nella sua categoria."
       pinned:
-        title: "Appuntato"
+        title: "Bloccato"
         help: "Questo argomento è bloccato per te; verrà mostrato in cima alla sua categoria"
       unlisted:
         help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
@@ -3222,7 +3213,7 @@ it:
         previous: "%{shortcut} Argomento precedente"
       navigation:
         title: "Navigazione"
-        jump: "%{shortcut} Vai al messaggio n°"
+        jump: "%{shortcut} Vai al messaggio #"
         back: "%{shortcut} Indietro"
         up_down: "%{shortcut} Sposta la selezione &uarr; &darr;"
         open: "%{shortcut} Apri argomento selezionato"
@@ -3289,7 +3280,7 @@ it:
       granted_on: "Assegnato il %{date}"
       others_count: "Altri utenti con questo distintivo (%{count})"
       title: Distintivi
-      allow_title: "Puoi usare questo distintivo come qualifica"
+      allow_title: "Puoi usare questo distintivo come titolo"
       multiple_grant: "Puoi guadagnarlo più volte"
       badge_count:
         one: "%{count} Distintivo"
@@ -3305,11 +3296,11 @@ it:
       successfully_granted: "Distintivo %{badge} assegnato con successo a %{username}"
       badge_grouping:
         getting_started:
-          name: Iniziali
+          name: Per iniziare
         community:
           name: Comunità
         trust_level:
-          name: Livello Esperienza
+          name: Livello di attendibilità
         other:
           name: Altri
         posting:
@@ -3318,7 +3309,7 @@ it:
       favorite_max_not_reached: "Imposta questo distintivo come preferito"
       favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
     tagging:
-      all_tags: "Etichette"
+      all_tags: "Tutte le Etichette"
       other_tags: "Altre Etichette"
       selector_all_tags: "tutte le etichette"
       selector_no_tags: "nessuna etichetta"
@@ -3343,7 +3334,7 @@ it:
         other: "Qualsiasi posto che attualmente utilizza queste etichette verrà modificato per utilizzare invece <b>%{tag_name}</b>. Sei sicuro di voler apportare questa modifica?"
       add_synonyms_failed: "Le seguenti etichette non possono essere aggiunte come sinonimi: <b>%{tag_names}</b>. Assicurati che non abbiano sinonimi e non siano sinonimi di un'altra etichetta."
       remove_synonym: "Rimuovi sinonimo"
-      delete_synonym_confirm: 'Sei sicuro di voler eliminare il sinonimo &quot;%{tag_name}&quot;?'
+      delete_synonym_confirm: 'Sei sicuro di voler eliminare "%{tag_name}"?'
       delete_tag: "Cancella Etichetta"
       delete_confirm:
         one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da %{count} argomento a cui è assegnata?"
@@ -3360,7 +3351,7 @@ it:
       manage_groups: "Gestisci Gruppi Etichette"
       manage_groups_description: "Definisci gruppi per organizzare le etichette"
       upload: "Carica Etichette"
-      upload_description: "Carica un file csv per creare Etichette in massa"
+      upload_description: "Carica un file csv per creare numerose Etichette"
       upload_instructions: "Uno per riga, indicando opzionalmente un Gruppo di Etichette con il formato 'nome_etichetta,gruppo_etichetta'"
       upload_successful: "Etichette caricate con successo"
       delete_unused_confirmation:
@@ -3387,7 +3378,7 @@ it:
           title: "Osserva Primo Messaggio"
           description: "Riceverai una notifica se saranno aperti nuovi Argomenti in questa Etichetta, ma non per le risposte agli Argomenti."
         tracking:
-          title: "Seguiti"
+          title: "Seguito"
           description: "Seguirai automaticamente tutti gli argomenti con questa etichetta. Accanto all'argomento apparirà un conteggio dei messaggi non letti e nuovi."
         regular:
           title: "Normale"
@@ -3431,7 +3422,7 @@ it:
       approval_not_required: "L'utente verrà approvato automaticamente non appena accetterà questo invito."
       custom_message_template_forum: "Ehi, unisciti a questo forum!"
       custom_message_template_topic: "Ehi, credo che questo argomento ti possa interessare!"
-    forced_anonymous: "A causa del carico eccessivo, il sito viene ora mostrato a tutti come lo vedrebbe un utente non connesso."
+    forced_anonymous: "A causa del carico eccessivo, il sito viene temporaneamente mostrato a tutti come appare agli utenti che non hanno effettuato l'accesso."
     forced_anonymous_login_required: "Il sito è sovraccarico e non può essere caricato in questo momento; riprova tra qualche minuto."
     footer_nav:
       back: "Indietro"
@@ -3473,8 +3464,8 @@ it:
       reports:
         title: "Elenco dei rapporti disponibili"
       dashboard:
-        title: "Cruscotto"
-        last_updated: "Cruscotto aggiornato:"
+        title: "Dashboard"
+        last_updated: "Dashboard aggiornato:"
         discourse_last_updated: "Discourse aggiornato:"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
@@ -3484,7 +3475,7 @@ it:
         no_check_performed: "Non è stato effettuato un controllo sugli aggiornamenti. Assicurati che sidekiq sia attivo."
         stale_data: "Non è stato effettuato un controllo recente sugli aggiornamenti. Assicurati che sidekiq sia attivo."
         version_check_pending: "Sembra che tu abbia aggiornato di recente. Ottimo!"
-        installed_version: "Installata"
+        installed_version: "Versione Installata"
         latest_version: "Ultima"
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
         new_features:
@@ -3523,7 +3514,7 @@ it:
         moderation_tab: "Moderazione"
         security_tab: "Sicurezza"
         reports_tab: "Rapporti"
-        report_filter_any: "qualunque"
+        report_filter_any: "tutti"
         disabled: Disabilitato
         timeout_error: Spiacenti, la ricerca sta impiegando troppo tempo, per favore scegli un intervallo più breve
         exception_error: Spiacenti, si è verificato un errore nell'esecuzione della query
@@ -3555,7 +3546,7 @@ it:
           no_data: "Non ci sono dati da mostrare."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca nei log</a>'
-            disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> per iniziare a raccogliere i dati.'
+            disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'
           filters:
             file_extension:
               label: Estensione file
@@ -3588,7 +3579,7 @@ it:
             visibility_levels:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
-              logged_on_users: "Utenti connessi"
+              logged_on_users: "Utenti con accesso effettuato"
               members: "Proprietari, membri e moderatori del gruppo"
               staff: "Proprietari e moderatori del gruppo"
               owners: "Proprietari del gruppo"
@@ -3599,7 +3590,7 @@ it:
             publish_read_state: "Pubblica lo stato di lettura del gruppo nei messaggi di gruppo"
           membership:
             automatic: Automatico
-            trust_levels_title: "Livello Esperienza assegnato automaticamente agli utenti quando vengono aggiunti:"
+            trust_levels_title: "Livello di attendibilità assegnato automaticamente ai membri quando vengono aggiunti:"
             effects: Effetti
             trust_levels_none: "Nessuno"
             automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
@@ -3633,7 +3624,7 @@ it:
         none_selected: "Seleziona un gruppo per iniziare"
         no_custom_groups: "Crea un nuovo gruppo personalizzato"
       api:
-        generate_master: "Genera una Master API Key"
+        generate_master: "Genera una chiave API Master"
         none: "Non ci sono chiavi API attive al momento."
         user: "Utente"
         title: "API"
@@ -3702,7 +3693,7 @@ it:
         save: "Salva"
         destroy: "Elimina"
         description: "Descrizione"
-        controls: "Componenti"
+        controls: "Controlli"
         go_back: "Torna all'elenco"
         payload_url: "URL di Payload"
         payload_url_placeholder: "https://example.com/postreceive"
@@ -3716,9 +3707,9 @@ it:
         event_chooser: "Quali eventi devono attivare questo webhook?"
         wildcard_event: "Inviami tutto."
         individual_event: "Seleziona eventi singoli."
-        verify_certificate: "Verifica il certificato TLS della URL payload"
+        verify_certificate: "Verifica il certificato TLS dell'URL di payload"
         active: "Attivo"
-        active_notice: "Invieremo i dettagli dell'evento quando si verificherà"
+        active_notice: "Invieremo i dettagli dell'evento quando si verificherà."
         categories_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è in relazione a categorie specifiche. Lasciare vuoto per attivare i webhook per tutte le categorie."
         categories_filter: "Categorie Innescate"
         tags_filter_instructions: "I webhook pertinenti saranno attivati solo se l'evento è relativo alle Etichette specificate. Lasciare vuoto per attivare i webhook per tutti i gruppi."

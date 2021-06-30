@@ -1826,13 +1826,6 @@ ja:
         watching_first_post: "新着トピック"
         topic_reminder: "トピックのリマインダー"
     upload_selector:
-      title: "画像の追加"
-      title_with_attachments: "画像/ファイルの追加"
-      from_my_computer: "自分のデバイスから"
-      from_the_web: "Web から"
-      remote_tip: "画像へのリンク"
-      local_tip: "デバイスの画像を選択します"
-      hint_for_supported_browsers: "画像をエディタ内にドラッグ＆ドロップするか貼り付けることもできます"
       uploading: "アップロード中"
       select_file: "ファイル選択"
       default_image_alt_text: 画像

@@ -1864,14 +1864,6 @@ pt_BR:
         membership_request_consolidated: "novas solicitações de associação"
         reaction: "nova reação"
     upload_selector:
-      title: "Adicionar uma imagem"
-      title_with_attachments: "Adicionar uma imagem ou um arquivo"
-      from_my_computer: "Do meu dispositivo"
-      from_the_web: "Da Internet"
-      remote_tip: "link para imagem"
-      local_tip: "selecione imagens a partir do seu dispositivo"
-      hint: "(você também pode arrastar e soltar no editor para fazer upload)"
-      hint_for_supported_browsers: "você também pode arrastar e soltar no editor para enviá-las"
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
       default_image_alt_text: imagem
