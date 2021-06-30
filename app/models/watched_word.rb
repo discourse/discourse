@@ -68,10 +68,17 @@ class WatchedWord < ActiveRecord::Base
     self.action = self.class.actions[arg.to_sym]
   end
 
+  def action_log_details
+    if replacement.present?
+      "#{word} → #{replacement}"
+    else
+      word
+    end
+  end
+
   def clear_cache
     WordWatcher.clear_cache!
   end
-
 end
 
 # == Schema Information
