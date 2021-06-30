@@ -78,21 +78,22 @@ class Stylesheet::Manager
             target: target, theme: theme, manager: manager
           )
 
-          $stderr.puts "precompile target: #{target} #{theme.name}"
           next if theme.component && !scss_checker.has_scss(theme.id)
+          $stderr.puts "precompile target: #{target} #{theme.name}"
           builder.compile(force: true)
           compiled << "#{target}_#{theme.id}"
         end
       end
 
       theme_color_scheme = ColorScheme.find_by_id(color_scheme_id)
+      theme = manager.get_theme(theme_id)
 
       [theme_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
+        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
 
         Stylesheet::Manager::Builder.new(
           target: COLOR_SCHEME_STYLESHEET,
-          theme: manager.get_theme(theme_id),
+          theme: theme,
           color_scheme: scheme,
           manager: manager
         ).compile(force: true)
