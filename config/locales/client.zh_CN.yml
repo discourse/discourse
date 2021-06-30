@@ -1717,36 +1717,36 @@ zh_CN:
       food_&_drink: 食物和饮料
       travel_&_places: 旅行与地点
       activities: 活动
-      objects: 物品
+      objects: 对象
       symbols: 符号
       flags: 旗帜
       recent: 近期使用
       default_tone: 无肤色
-      light_tone: 浅色肤色
-      medium_light_tone: 中度浅色皮肤
-      medium_tone: 中间肤色
-      medium_dark_tone: 中度深色皮肤
+      light_tone: 浅肤色
+      medium_light_tone: 中等浅肤色
+      medium_tone: 中等肤色
+      medium_dark_tone: 中等深肤色
       dark_tone: 深肤色
       default: 自定义表情符号
     shared_drafts:
       title: "共享草稿"
-      notice: "这个话题只有可发布共享草稿的用户可见。"
-      destination_category: "目标分类"
+      notice: "此话题只对可以发布共享草稿的用户可见。"
+      destination_category: "目标类别"
       publish: "发布共享草稿"
-      confirm_publish: "你确定要发布此草稿吗？"
-      publishing: "发布话题中......"
+      confirm_publish: "确定要发布此草稿吗？"
+      publishing: "正在发布话题…"
     composer:
-      emoji: "Emoji :)"
+      emoji: "表情符号 :)"
       more_emoji: "更多…"
       options: "选项"
       whisper: "密语"
-      unlist: "隐藏"
-      add_warning: "这是一个官方警告"
+      unlist: "取消公开"
+      add_warning: "这是一个官方警告。"
       toggle_whisper: "切换密语"
-      toggle_unlisted: "切换隐藏"
-      posting_not_on_topic: "你想回复哪一个话题？"
+      toggle_unlisted: "切换取消公开"
+      posting_not_on_topic: "您想回复哪个主题？"
       saved_local_draft_tip: "已保存到本地"
-      similar_topics: "你的话题有点相似于…"
+      similar_topics: "您的话题类似于…"
       drafts_offline: "离线草稿"
       edit_conflict: "编辑冲突"
       group_mentioned_limit:
