@@ -67,7 +67,7 @@ function head(buffer, bootstrap) {
     }
     let link = `<link rel="stylesheet" type="text/css" href="${
       s.href
-    }" ${attrs.join(" ")}></script>\n`;
+    }" ${attrs.join(" ")}>`;
     buffer.push(link);
   });
 
