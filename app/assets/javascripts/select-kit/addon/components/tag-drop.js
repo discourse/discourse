@@ -33,6 +33,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   selectKitOptions: {
     allowAny: false,
+    autoFilterable: false,
     caretDownIcon: "caret-right",
     caretUpIcon: "caret-down",
     fullWidthOnMobile: true,
