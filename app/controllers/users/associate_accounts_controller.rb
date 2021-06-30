@@ -27,9 +27,9 @@ class Users::AssociateAccountsController < ApplicationController
     authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
     raise Discourse::InvalidAccess.new(I18n.t('authenticator_not_found')) if authenticator.nil?
 
-    DiscourseEvent.trigger(:before_auth, authenticator, auth)
+    DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies)
     auth_result = authenticator.after_authenticate(auth, existing_account: current_user)
-    DiscourseEvent.trigger(:after_auth, authenticator, auth_result)
+    DiscourseEvent.trigger(:after_auth, authenticator, auth_result, session, cookies)
 
     render json: success_json
   end

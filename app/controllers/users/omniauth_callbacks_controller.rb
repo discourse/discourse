@@ -33,10 +33,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       Discourse.redis.setex "#{Users::AssociateAccountsController::REDIS_PREFIX}_#{current_user.id}_#{token}", 10.minutes, auth.to_json
       return redirect_to "#{Discourse.base_path}/associate/#{token}"
     else
-      DiscourseEvent.trigger(:before_auth, authenticator, auth, session)
+      DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies)
       @auth_result = authenticator.after_authenticate(auth)
       @auth_result.user = nil if @auth_result&.user&.staged # Treat staged users the same as unregistered users
-      DiscourseEvent.trigger(:after_auth, authenticator, @auth_result, session)
+      DiscourseEvent.trigger(:after_auth, authenticator, @auth_result, session, cookies)
     end
 
     preferred_origin = request.env['omniauth.origin']
