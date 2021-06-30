@@ -117,7 +117,7 @@ class Stylesheet::Manager::Builder
     if is_theme?
       "#{@target}_#{theme&.id}"
     elsif @color_scheme
-      "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}"
+      "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}_#{@theme&.id}"
     else
       scheme_string = theme&.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"

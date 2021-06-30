@@ -52,6 +52,7 @@ task 'assets:precompile:css' => 'environment' do
         STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
         begin
           Stylesheet::Manager.precompile_css if db == "default"
+          STDERR.puts "Start compiling theme CSS for #{db} #{Time.zone.now}"
           Stylesheet::Manager.precompile_theme_css
         rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e
           STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
