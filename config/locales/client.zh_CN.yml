@@ -1500,7 +1500,7 @@ zh_CN:
     first_post: 第一个帖子
     mute: 免打扰
     unmute: 取消免打扰
-    last_post: 已发帖
+    last_post: 发布时间
     local_time: "当地时间"
     time_read: 阅读
     time_read_recently: "最近 %{time_read}"
@@ -1654,7 +1654,7 @@ zh_CN:
       your_email: "您的帐户电子邮件地址为 <b>%{email}</b>。"
       accept_invite: "接受邀请"
       success: "您的帐户已创建，您现在已登录。"
-      name_label: "昵称"
+      name_label: "姓名"
       password_label: "密码"
       optional_description: "（可选）"
     password_reset:
