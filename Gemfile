@@ -165,6 +165,8 @@ group :test, :development do
   gem 'parallel_tests'
 
   gem 'rswag-specs'
+
+  gem 'licensed'
 end
 
 group :development do
