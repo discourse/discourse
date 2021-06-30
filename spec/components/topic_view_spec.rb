@@ -4,7 +4,6 @@ require 'rails_helper'
 require 'topic_view'
 
 describe TopicView do
-
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
@@ -219,7 +218,6 @@ describe TopicView do
       PostActionCreator.like(moderator, p2)
       best = TopicView.new(topic.id, nil, best: 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(1)
-
     end
 
     it "raises NotLoggedIn if the user isn't logged in and is trying to view a private message" do
@@ -410,7 +408,7 @@ describe TopicView do
       end
     end
 
-    context "#first_post_bookmark_reminder_at" do
+    context "#bookmarked_posts" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
       let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, post: topic.posts[1], user: user) }
@@ -418,12 +416,11 @@ describe TopicView do
       it "gets the first post bookmark reminder at for the user" do
         topic_view = TopicView.new(topic.id, user)
 
-        bookmarked_posts = topic_view.bookmarked_posts
-        first, second = bookmarked_posts
+        first, second = topic_view.bookmarked_posts
         expect(first[:post_id]).to eq(bookmark1.post_id)
         expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
         expect(second[:post_id]).to eq(bookmark2.post_id)
-        expect(second[:reminder_at]).to eq_time(bookmark1.reminder_at)
+        expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
       end
 
       context "when the topic is deleted" do
@@ -432,12 +429,11 @@ describe TopicView do
           PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
           topic.reload
 
-          bookmarked_posts = topic_view.bookmarked_posts
-          first, second = bookmarked_posts
+          first, second = topic_view.bookmarked_posts
           expect(first[:post_id]).to eq(bookmark1.post_id)
           expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
           expect(second[:post_id]).to eq(bookmark2.post_id)
-          expect(second[:reminder_at]).to eq_time(bookmark1.reminder_at)
+          expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
         end
       end
     end
@@ -467,7 +463,6 @@ describe TopicView do
         expect(recent_posts.first.created_at).to be > recent_posts.last.created_at
       end
     end
-
   end
 
   context 'whispers' do
@@ -591,7 +586,6 @@ describe TopicView do
     end
 
     describe "filter_posts_near" do
-
       def topic_view_near(post, show_deleted = false)
         TopicView.new(topic.id, evil_trout, post_number: post.post_number, show_deleted: show_deleted)
       end
