@@ -38,11 +38,6 @@ acceptance("User Routes", function (needs) {
     assert.ok($("body.user-invites-page").length, "has the body class");
   });
 
-  test("Messages", async function (assert) {
-    await visit("/u/eviltrout/messages");
-    assert.ok($("body.user-messages-page").length, "has the body class");
-  });
-
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
     assert.ok($("body.user-notifications-page").length, "has the body class");

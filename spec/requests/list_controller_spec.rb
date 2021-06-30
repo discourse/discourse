@@ -136,40 +136,17 @@ RSpec.describe ListController do
   end
 
   describe "filter private messages by tag" do
-    let(:user) { Fabricate(:user) }
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
-    let(:tag) { Fabricate(:tag) }
-    let(:private_message) { Fabricate(:private_message_topic, user: admin) }
+    fab!(:tag) { Fabricate(:tag) }
+
+    fab!(:private_message) do
+      Fabricate(:private_message_topic, user: admin).tap { |t| t.tags << tag }
+    end
+
+    fab!(:private_message_2) { Fabricate(:private_message_topic, user: admin) }
 
     before do
       SiteSetting.tagging_enabled = true
       SiteSetting.allow_staff_to_tag_pms = true
-      Fabricate(:topic_tag, tag: tag, topic: private_message)
-    end
-
-    it 'should fail for non-staff users' do
-      sign_in(user)
-      get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
-      expect(response.status).to eq(404)
-    end
-
-    it 'should fail for staff users if disabled' do
-      SiteSetting.allow_staff_to_tag_pms = false
-
-      [moderator, admin].each do |user|
-        sign_in(user)
-        get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
-        expect(response.status).to eq(404)
-      end
-    end
-
-    it 'should be success for staff users' do
-      [moderator, admin].each do |user|
-        sign_in(user)
-        get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
-        expect(response.status).to eq(200)
-      end
     end
 
     it 'should work for tag with unicode name' do
@@ -177,10 +154,16 @@ RSpec.describe ListController do
       Fabricate(:topic_tag, tag: unicode_tag, topic: private_message)
 
       sign_in(admin)
-      get "/topics/private-messages-tags/#{admin.username}/#{UrlHelper.encode_component(unicode_tag.name)}.json"
+
+      get "/topics/private-messages-all/#{admin.username}.json", params: {
+        tag: unicode_tag.name
+      }
+
       expect(response.status).to eq(200)
-      expect(response.parsed_body["topic_list"]["topics"].first["id"])
-        .to eq(private_message.id)
+
+      topics = response.parsed_body["topic_list"]["topics"]
+
+      expect(topics.map { |t| t["id"] }).to contain_exactly(private_message.id)
     end
   end
 

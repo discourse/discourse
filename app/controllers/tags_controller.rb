@@ -301,7 +301,17 @@ class TagsController < ::ApplicationController
     allowed_user = fetch_user_from_params
     raise Discourse::NotFound if allowed_user.blank?
     raise Discourse::NotFound if current_user.id != allowed_user.id && !@guardian.is_admin?
-    pm_tags = Tag.pm_tags(guardian: guardian, allowed_user: allowed_user)
+
+    opts = {
+      guardian: guardian,
+      allowed_user: allowed_user
+    }
+
+    if params[:limit]
+      opts[:limit] = params[:limit]
+    end
+
+    pm_tags = Tag.pm_tags(opts)
 
     render json: { tags: pm_tags }
   end

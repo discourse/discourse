@@ -23,10 +23,26 @@ export default (viewName, path, channel) => {
     model() {
       const filter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
-      const lastTopicList = findOrResetCachedTopicList(this.session, filter);
+
+      const tag = this.paramsFor("user-private-messages").tag;
+      const params = {};
+
+      if (tag) {
+        params.tag = tag;
+      }
+
+      const lastTopicList = findOrResetCachedTopicList(
+        this.session,
+        filter,
+        params
+      );
+
       return lastTopicList
         ? lastTopicList
-        : this.store.findFiltered("topicList", { filter });
+        : this.store.findFiltered("topicList", {
+            filter,
+            params,
+          });
     },
 
     setupController() {
@@ -49,6 +65,7 @@ export default (viewName, path, channel) => {
       this.controllerFor("user-private-messages").setProperties({
         archive: false,
         pmView: viewName,
+        group: null,
       });
 
       this.searchService.set("contextType", "private_messages");

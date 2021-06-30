@@ -154,10 +154,14 @@ export default Controller.extend(bufferedProperty("model"), {
   showCategoryChooser: not("model.isPrivateMessage"),
 
   gotoInbox(name) {
-    let url = userPath(this.get("currentUser.username_lower") + "/messages");
+    let url = userPath(`${this.get("currentUser.username_lower")}/messages`);
+
     if (name) {
-      url = url + "/group/" + name;
+      url = `${url}/group/${name}`;
+    } else {
+      url = `${url}/personal`;
     }
+
     DiscourseURL.routeTo(url);
   },
 

@@ -1171,9 +1171,13 @@ en:
         rejected_posts: "rejected posts"
 
       messages:
-        all: "All"
+        all: "all inboxes"
         inbox: "Inbox"
+        personal: "Personal"
+        latest: "Latest"
         sent: "Sent"
+        unread: "Unread"
+        new: "New"
         archive: "Archive"
         groups: "My Groups"
         move_to_inbox: "Move to Inbox"

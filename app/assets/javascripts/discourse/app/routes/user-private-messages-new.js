@@ -1,7 +1,7 @@
 import createPMRoute from "discourse/routes/build-private-messages-route";
 
 export default createPMRoute(
-  "sent",
-  "private-messages-all-sent",
+  "new",
+  "private-messages-all-new",
   null /* no message bus notifications */
 );

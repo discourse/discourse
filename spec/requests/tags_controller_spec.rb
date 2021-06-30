@@ -473,7 +473,7 @@ describe TagsController do
       it "can't see pm tags" do
         get "/tags/personal_messages/#{regular_user.username}.json"
 
-        expect(response).not_to be_successful
+        expect(response.status).to eq(403)
       end
     end
 
@@ -485,7 +485,7 @@ describe TagsController do
       it "can't see pm tags for regular user" do
         get "/tags/personal_messages/#{regular_user.username}.json"
 
-        expect(response).not_to be_successful
+        expect(response.status).to eq(404)
       end
 
       it "can see their own pm tags" do
@@ -495,6 +495,21 @@ describe TagsController do
 
         tag = response.parsed_body['tags']
         expect(tag[0]["id"]).to eq('test')
+      end
+
+      it 'accepts a limit on number of tags to return' do
+        Fabricate(:tag, topics: [personal_message], name: 'test2')
+        Fabricate(:tag, topics: [personal_message], name: 'test3')
+
+        get "/tags/personal_messages/#{moderator.username}.json", params: {
+          limit: 2
+        }
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        expect(tags.map { |t| t["id"] }).to contain_exactly("test", "test2")
       end
     end
 
