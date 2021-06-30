@@ -97,7 +97,10 @@ export default Controller.extend({
         const modelFields = model.get("user_fields");
         if (!isEmpty(modelFields)) {
           userFields.forEach(function (uf) {
-            modelFields[uf.get("field.id").toString()] = uf.get("value");
+            const value = uf.get("value");
+            modelFields[uf.get("field.id").toString()] = isEmpty(value)
+              ? null
+              : value;
           });
         }
       }
