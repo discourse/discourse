@@ -2541,13 +2541,13 @@ fr:
         to_forum: "Votre ami(e) recevra un courriel qui lui permettra de participer avec un simple lien."
         discourse_connect_enabled: "Saisissez le nom d'utilisateur de la personne que vous souhaitez inviter à participer."
         to_topic_blank: "Entrez le nom d'utilisateur ou l'adresse courriel de la personne que vous souhaitez inviter sur ce sujet."
-        to_topic_email: "Vous avez entré une adresse courriel. Nous allons envoyer une invitation à votre ami lui permettant de répondre immédiatement à ce sujet."
-        to_topic_username: "Vous avez entré un nom d'utilisateur. Nous allons lui envoyer une notification avec un lien l'invitant sur ce sujet."
-        to_username: "Entrez le nom d'utilisateur de la personne que vous souhaitez inviter. Nous enverrons une notification avec un lien l'invitant sur ce sujet."
+        to_topic_email: "Vous avez saisi une adresse courriel. Nous allons envoyer une invitation à votre ami(e) pour lui permettre de répondre immédiatement à ce sujet."
+        to_topic_username: "Vous avez saisi un nom d'utilisateur. Nous allons lui envoyer une notification avec un lien d'invitation dans ce sujet."
+        to_username: "Saisissez le nom d'utilisateur de la personne que vous souhaitez inviter. Nous enverrons une notification avec un lien d'invitation dans ce sujet."
         email_placeholder: "nom@exemple.com"
         success_email: "Une invitation a été envoyée à <b>%{invitee}</b>. Vous recevrez une notification si cette invitation est acceptée. Pour faire le suivi de vos invitations, rendez-vous dans l'onglet « invitations » de votre page de profil."
         success_username: "Nous avons invité cet utilisateur à participer à ce sujet."
-        error: "Désolé, nous n'avons pas pu inviter cette personne. Elle a peut-être déjà été invitée ? (Le nombre d'invitations est limité)"
+        error: "Nous sommes désolés, nous n'avons pas pu inviter cette personne. Peut-être a-t-elle déjà été invitée ? (Le nombre d'invitations est limité)"
         success_existing_email: "Un utilisateur avec le courriel <b>%{emailOrUsername}</b> existe déjà. Nous avons invité cet utilisateur à participer à ce sujet."
       login_reply: "Se connecter pour répondre"
       filters:
@@ -2558,20 +2558,20 @@ fr:
       move_to:
         title: "Déplacer vers"
         action: "déplacer vers"
-        error: "Il y a eu une erreur en déplaçant les messages."
+        error: "Une erreur s'est produite lors du déplacement des messages."
       split_topic:
         title: "Déplacer vers un nouveau sujet"
         action: "déplacer vers un nouveau sujet"
         topic_name: "Titre du nouveau sujet"
         radio_label: "Nouveau sujet"
-        error: "Il y a eu une erreur en déplaçant les messages vers un nouveau sujet."
+        error: "Une erreur s'est produite lors du déplacement des messages vers le nouveau sujet."
         instructions:
           one: "Vous êtes sur le point de créer un nouveau sujet avec le message que vous avez sélectionné."
           other: "Vous êtes sur le point de créer un nouveau sujet avec les <b>%{count}</b> messages que vous avez sélectionnés."
       merge_topic:
         title: "Déplacer vers un sujet existant"
         action: "déplacer vers un sujet existant"
-        error: "Il y a eu une erreur en déplaçant les messages dans ce sujet."
+        error: "Une erreur s'est produite lors du déplacement des messages dans ce sujet."
         radio_label: "Sujet existant"
         instructions:
           one: "Veuillez sélectionner le sujet dans lequel vous souhaitez déplacer ce message."
@@ -2596,25 +2596,25 @@ fr:
       merge_posts:
         title: "Fusionner les messages sélectionnés"
         action: "fusionner les messages sélectionnés"
-        error: "Il y a eu une erreur lors de la fusion des messages sélectionnés."
+        error: "Une erreur s'est produite lors de la fusion des messages sélectionnés."
       publish_page:
         title: "Publication de pages"
         publish: "Publier"
-        description: "Lorsqu'un sujet est publié comme page, son URL peut être partagée et il sera affiché avec un style personnalisé."
+        description: "Lorsqu'un sujet est publié comme page, son adresse URL peut être partagée et il sera affiché avec un style personnalisé."
         slug: "Identifiant"
         public: "Public"
         public_description: "Les utilisateurs peuvent voir cette page même si le sujet associé est privé."
         publish_url: "Votre page a été publiée sur :"
         topic_published: "Votre sujet a été publié sur :"
         preview_url: "Votre page sera publiée sur :"
-        invalid_slug: "Désolé, vous ne pouvez pas publier cette page."
+        invalid_slug: "Nous sommes désolés, vous ne pouvez pas publier cette page."
         unpublish: "Annuler la publication"
         unpublished: "La publication de votre page a été annulée et elle n'est plus accessible."
         publishing_settings: "Paramètres de publication"
       change_owner:
         title: "Changer de propriétaire"
         action: "modifier l'auteur"
-        error: "Il y a eu une erreur lors du changement de l'auteur des messages."
+        error: "Une erreur s'est produite lors de la modification de la propriété des messages."
         placeholder: "nom d'utilisateur du nouvel auteur"
         instructions:
           one: "Veuillez choisir un nouvel auteur pour le message de <b>@%{old_user}</b>"
@@ -2625,8 +2625,8 @@ fr:
       change_timestamp:
         title: "Modifier la date et l'heure…"
         action: "modifier la date et l'heure"
-        invalid_timestamp: "La date et l'heure ne peuvent pas être dans le futur."
-        error: "Il y a eu une erreur lors de la modification de la date et l'heure de ce sujet."
+        invalid_timestamp: "La date et l'heure ne peuvent pas être ultérieures à la date et à l'heure actuelles."
+        error: "Une erreur s'est produite lors de la modification de la date et de l'heure du sujet."
         instructions: "Veuillez sélectionner les nouvelles date et heure du sujet. Les messages dans ce sujet seront mis à jour pour maintenir la même différence d'heures."
       multi_select:
         select: "sélectionner"
@@ -2662,7 +2662,7 @@ fr:
       reply_as_new_topic: "Répondre via un sujet lié"
       reply_as_new_private_message: "Répondre par un nouveau message direct adressé aux mêmes destinataires"
       continue_discussion: "Suite du sujet %{postLink} :"
-      follow_quote: "aller au message cité"
+      follow_quote: "accéder au message cité"
       show_full: "Afficher le message complet"
       show_hidden: "Afficher le contenu ignoré."
       deleted_by_author_simple: "(message supprimé par son auteur)"
@@ -2673,8 +2673,8 @@ fr:
         one: "voir %{count} réponse masquée"
         other: "voir %{count} réponses masquées"
       notice:
-        new_user: "C'est la première fois que %{user} publie un message — accueillons-les comme il se doit dans notre communauté !"
-        returning_user: "Cela faisait un moment que nous n'avions pas vu %{user} — son dernier message remonte à %{time}."
+        new_user: "C'est la première fois que %{user} publie un message. Assurons-lui un accueil chaleureux dans notre communauté !"
+        returning_user: "Cela faisait un moment que nous n'avions pas vu %{user}. Son dernier message remonte à %{time}."
       unread: "Ce message est non lu"
       has_replies:
         one: "%{count} réponse"
