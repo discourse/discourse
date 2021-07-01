@@ -58,8 +58,6 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   needs.hooks.beforeEach(() => {
     resetNewCalled = 0;
     markReadCalled = 0;
-  });
-  needs.pretender((server, helper) => {
     topicList = cloneJSON(DiscoveryFixtures["/latest.json"]);
 
     // get rid of some of the topics and the more_topics_url
@@ -67,7 +65,8 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     // the bottom dismiss button
     topicList.topic_list.topics.splice(20, 30);
     topicList.topic_list.more_topics_url = null;
-
+  });
+  needs.pretender((server, helper) => {
     server.get("/unread.json", () => {
       return helper.response(topicList);
     });
@@ -85,8 +84,10 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   });
 
   test("dismiss unread from top and bottom button", async function (assert) {
-    // visit root first so topic list starts fresh
+    // need to scroll to top so the viewport shows the top of the page
+    // and top dismiss button
     await visit("/");
+    document.getElementById("ember-testing-container").scrollTop = 0;
     await visit("/unread");
     assert.ok(
       exists("#dismiss-topics-top"),
@@ -145,8 +146,10 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   });
 
   test("dismiss new from top and bottom button", async function (assert) {
-    // visit root first so topic list starts fresh
+    // need to scroll to top so the viewport shows the top of the page
+    // and top dismiss button
     await visit("/");
+    document.getElementById("ember-testing-container").scrollTop = 0;
     await visit("/new");
     assert.ok(exists("#dismiss-new-top"), "dismiss new top button is present");
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
@@ -175,10 +178,15 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   });
 
   test("click event not fired twice when both dismiss buttons are present", async function (assert) {
-    // visit root first so topic list starts fresh
+    // need to scroll to top so the viewport shows the top of the page
+    // and top dismiss button
     await visit("/");
+    document.getElementById("ember-testing-container").scrollTop = 0;
     await visit("/new");
-    assert.ok(exists("#dismiss-new-top"), "dismiss new top button is present");
+    assert.ok(
+      exists("#dismiss-new-top"),
+      "dismiss new top button is present before double click test"
+    );
     assert.ok(
       exists("#dismiss-new-bottom"),
       "dismiss new bottom button is present"
