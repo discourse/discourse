@@ -121,7 +121,7 @@ class PostRevisor
 
   # AVAILABLE OPTIONS:
   # - revised_at: changes the date of the revision
-  # - force_new_version: bypass ninja-edit window
+  # - force_new_version: bypass grace period edit window
   # - bypass_rate_limiter:
   # - bypass_bump: do not bump the topic, even if last post
   # - skip_validations: ask ActiveRecord to skip validations
@@ -156,7 +156,7 @@ class PostRevisor
     @revised_at = @opts[:revised_at] || Time.now
     @last_version_at = @post.last_version_at || Time.now
 
-    if guardian.affected_by_slow_mode?(@topic) && !ninja_edit? && SiteSetting.slow_mode_prevents_editing
+    if guardian.affected_by_slow_mode?(@topic) && !grace_period_edit? && SiteSetting.slow_mode_prevents_editing
       @post.errors.add(:base, I18n.t("cannot_edit_on_slow_mode"))
       return false
     end
@@ -283,7 +283,7 @@ class PostRevisor
 
   def should_create_new_version?
     return false if @skip_revision
-    edited_by_another_user? || !ninja_edit? || owner_changed? || force_new_version? || edit_reason_specified?
+    edited_by_another_user? || !grace_period_edit? || owner_changed? || force_new_version? || edit_reason_specified?
   end
 
   def edit_reason_specified?
@@ -332,7 +332,7 @@ class PostRevisor
     end
   end
 
-  def ninja_edit?
+  def grace_period_edit?
     return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
     return false if @post.reviewable_flag.present?
 
