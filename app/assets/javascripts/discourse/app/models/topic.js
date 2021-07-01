@@ -20,6 +20,7 @@ import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
+import deprecated from "discourse-common/lib/deprecated";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -236,6 +237,18 @@ const Topic = RestModel.extend({
       url += `/${postNumber}`;
     }
     return url;
+  },
+
+  @discourseComputed("unread_posts", "new_posts")
+  totalUnread(unreadPosts, newPosts) {
+    deprecated("The totalUnread property of the topic model is deprecated");
+    return unreadPosts || newPosts;
+  },
+
+  @discourseComputed("unread_posts", "new_posts")
+  displayNewPosts(unreadPosts, newPosts) {
+    deprecated("The displayNewPosts property of the topic model is deprecated");
+    return unreadPosts || newPosts;
   },
 
   @discourseComputed("last_read_post_number", "url")

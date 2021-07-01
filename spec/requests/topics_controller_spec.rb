@@ -1009,7 +1009,7 @@ RSpec.describe TopicsController do
         )
 
         topic_user.update!(
-        last_read_post_number: 2,
+          last_read_post_number: 2,
         )
 
         # ensure we have 2 notifications

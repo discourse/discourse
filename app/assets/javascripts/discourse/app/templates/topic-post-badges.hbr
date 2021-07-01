@@ -1,4 +1,7 @@
 <span class='topic-post-badges'>
+  {{~#if newPosts ~}}
+    &nbsp;<a href='{{url}}' class='badge badge-notification unread-posts' title='{{i18n "topic.unread_posts" count=newPosts}}'>{{newPosts}}</a>
+  {{~/if}}
   {{~#if unreadPosts ~}}
     &nbsp;<a href='{{url}}' class='badge badge-notification unread-posts' title='{{i18n "topic.unread_posts" count=unreadPosts}}'>{{unreadPosts}}</a>
   {{~/if}}
