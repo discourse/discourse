@@ -329,11 +329,11 @@ zh_CN:
       in_reply_to: "回复给"
       explain:
         why: "解释为什么此条目最终进入队列"
-        title: "可审查对象评分"
+        title: "可审查帖子的评分"
         formula: "公式"
         subtotal: "小计"
         total: "总计"
-        min_score_visibility: "公开范围的最低分数"
+        min_score_visibility: "公开的最低分数"
         score_to_hide: "隐藏帖子的触发分数"
         take_action_bonus:
           name: "采取行动"
