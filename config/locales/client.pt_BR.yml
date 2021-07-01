@@ -2126,8 +2126,6 @@ pt_BR:
         title: "Agendar Publicação"
       temp_open:
         title: "Abrir Temporariamente"
-      auto_reopen:
-        title: "Abrir Tópico Automaticamente"
       temp_close:
         title: "Fechar Temporariamente"
       auto_close:

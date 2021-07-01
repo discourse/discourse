@@ -2233,8 +2233,6 @@ zh_CN:
         title: "排定发布时间表"
       temp_open:
         title: "临时开启"
-      auto_reopen:
-        title: "自动开启话题"
       temp_close:
         title: "临时关闭"
       auto_close:

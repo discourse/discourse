@@ -2338,8 +2338,6 @@ fr:
         title: "Planifier la publication"
       temp_open:
         title: "Ouvrir temporairement"
-      auto_reopen:
-        title: "Ouvrir automatiquement le sujet"
       temp_close:
         title: "Fermer temporairement"
       auto_close:

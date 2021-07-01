@@ -2303,8 +2303,6 @@ fi:
         title: "Julkaise määrättynä ajankohtana"
       temp_open:
         title: "Avaa väliaikaisesti"
-      auto_reopen:
-        title: "Avaa ketju automaattisesti"
       temp_close:
         title: "Sulje väliaikaisesti"
       auto_close:

@@ -2409,8 +2409,6 @@ ar:
         title: "جدولة النشر"
       temp_open:
         title: "الفتح مؤقتًا"
-      auto_reopen:
-        title: "فتح الموضوع تلقائيًا"
       temp_close:
         title: "غلق الموضوع مؤقتًا"
       auto_close:

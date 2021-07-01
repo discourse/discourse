@@ -2364,8 +2364,6 @@ es:
         title: "Programar publicación"
       temp_open:
         title: "Abrir temporalmente"
-      auto_reopen:
-        title: "Abrir tema automáticamente"
       temp_close:
         title: "Cerrar temporalmente"
       auto_close:

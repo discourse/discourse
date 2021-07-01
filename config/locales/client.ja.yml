@@ -2049,8 +2049,6 @@ ja:
         title: "公開スケジュール"
       temp_open:
         title: "一時的にオープン"
-      auto_reopen:
-        title: "トピックを自動的にオープン"
       temp_close:
         title: "一時的にクローズ"
       auto_close:

@@ -2338,8 +2338,6 @@ de:
         title: "Veröffentlichung planen"
       temp_open:
         title: "Vorübergehend öffnen"
-      auto_reopen:
-        title: "Thema automatisch öffnen"
       temp_close:
         title: "Vorübergehend schließen"
       auto_close:
