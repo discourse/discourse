@@ -69,7 +69,7 @@ module DiscourseAutomation
     def enforce_trigger!(params)
       scriptable = DiscourseAutomation::Scriptable.new(params[:script])
       if scriptable.forced_triggerable
-        params[:trigger] = scriptable.forced_triggerable[:triggerable]
+        params[:trigger] = scriptable.forced_triggerable[:triggerable].to_s
       end
     end
 
