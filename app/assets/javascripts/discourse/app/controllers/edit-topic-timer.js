@@ -20,8 +20,13 @@ export default Controller.extend(ModalFunctionality, {
   loading: false,
   isPublic: "true",
 
-  @discourseComputed("model.closed", "model.category", "model.isPrivateMessage")
-  publicTimerTypes(closed, category, isPrivateMessage) {
+  @discourseComputed(
+    "model.closed",
+    "model.category",
+    "model.isPrivateMessage",
+    "model.invisible"
+  )
+  publicTimerTypes(closed, category, isPrivateMessage, invisible) {
     let types = [];
 
     if (!closed) {
@@ -75,7 +80,11 @@ export default Controller.extend(ModalFunctionality, {
       });
     }
 
-    if ((category && category.read_restricted) || isPrivateMessage) {
+    if (
+      (category && category.read_restricted) ||
+      isPrivateMessage ||
+      invisible
+    ) {
       types.push({
         id: PUBLISH_TO_CATEGORY_STATUS_TYPE,
         name: I18n.t("topic.publish_to_category.title"),

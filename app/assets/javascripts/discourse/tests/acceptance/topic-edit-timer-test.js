@@ -121,7 +121,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex2.test(html2));
   });
 
-  test("schedule publish to category - allowed for a PM", async function (assert) {
+  test("schedule publish to category - visible for a PM", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
     const categoryChooser = selectKit(".modal-body .category-chooser");
@@ -141,14 +141,26 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const regex = /will be published to #dev/g;
     const text = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .text()
       .trim();
-    assert.ok(regex.test(text));
+
+    // this needs to be done because there is no simple way to get the
+    // plain text version of a translation with HTML
+    let el = document.createElement("p");
+    el.innerHTML = I18n.t(
+      "topic.status_update_notice.auto_publish_to_category",
+      {
+        categoryUrl: "/c/dev/7",
+        categoryName: "dev",
+        timeLeft: "in 6 days",
+      }
+    );
+
+    assert.equal(text, el.innerText);
   });
 
-  test("schedule publish to category - allowed for a private category", async function (assert) {
+  test("schedule publish to category - visible for a private category", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
     const categoryChooser = selectKit(".modal-body .category-chooser");
@@ -169,11 +181,67 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const regex = /will be published to #dev/g;
     const text = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .text()
       .trim();
-    assert.ok(regex.test(text));
+
+    // this needs to be done because there is no simple way to get the
+    // plain text version of a translation with HTML
+    let el = document.createElement("p");
+    el.innerHTML = I18n.t(
+      "topic.status_update_notice.auto_publish_to_category",
+      {
+        categoryUrl: "/c/dev/7",
+        categoryName: "dev",
+        timeLeft: "in 6 days",
+      }
+    );
+
+    assert.equal(text, el.innerText);
+  });
+
+  test("schedule publish to category - visible for an unlisted public topic", async function (assert) {
+    updateCurrentUser({ moderator: true });
+    const timerType = selectKit(".select-kit.timer-type");
+    const categoryChooser = selectKit(".modal-body .category-chooser");
+
+    await visit("/t/internationalization-localization/280");
+
+    // make topic not visible
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-visible .btn");
+
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    await timerType.expand();
+    await timerType.selectRowByValue("publish_to_category");
+
+    assert.equal(categoryChooser.header().label(), "uncategorized");
+    assert.equal(categoryChooser.header().value(), null);
+
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue("7");
+
+    await click("#tap_tile_start_of_next_business_week");
+
+    const text = queryAll(".edit-topic-timer-modal .topic-timer-info")
+      .text()
+      .trim();
+
+    // this needs to be done because there is no simple way to get the
+    // plain text version of a translation with HTML
+    let el = document.createElement("p");
+    el.innerHTML = I18n.t(
+      "topic.status_update_notice.auto_publish_to_category",
+      {
+        categoryUrl: "/c/dev/7",
+        categoryName: "dev",
+        timeLeft: "in 6 days",
+      }
+    );
+
+    assert.equal(text, el.innerText);
   });
 
   test("schedule publish to category - last custom date and time", async function (assert) {
@@ -222,7 +290,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     assert.notOk(
       timerType.rowByValue("publish_to_category").exists(),
-      "publish to category is not allowed for public topics (not PM or private category)"
+      "publish to category is not shown for a public topic"
     );
   });
 
