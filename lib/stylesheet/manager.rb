@@ -76,10 +76,11 @@ class Stylesheet::Manager
             compiled << "#{target}_#{theme.id}"
           end
         else
-          $stderr.puts "precompile target: #{target} #{name}"
+          theme = manager.get_theme(theme_id)
+          $stderr.puts "precompile target: #{target} #{theme&.name}"
 
           Stylesheet::Manager::Builder.new(
-            target: target, theme: manager.get_theme(theme_id), manager: manager
+            target: target, theme: theme, manager: manager
           ).compile(force: true)
         end
       end
