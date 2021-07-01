@@ -1,4 +1,6 @@
 import {
+  authorizedExtensions,
+  authorizesAllExtensions,
   authorizesOneOrMoreImageExtensions,
   displayErrorForUpload,
   getUploadMarkdown,
@@ -198,6 +200,21 @@ export default Component.extend({
       categoryId,
       includeGroups: true,
     });
+  },
+
+  @discourseComputed()
+  acceptsAllFormats() {
+    return authorizesAllExtensions(this.currentUser.staff, this.siteSettings);
+  },
+
+  @discourseComputed()
+  acceptedFormats() {
+    const extensions = authorizedExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
+
+    return extensions.map((ext) => `.${ext}`).join();
   },
 
   @on("didInsertElement")
