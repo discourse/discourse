@@ -1765,7 +1765,7 @@ de:
     max_image_megapixels: "Maximal zulässige Anzahl von Megapixeln für ein Bild. Bilder mit einer höheren Anzahl von Megapixeln werden abgelehnt."
     title_prettify: "Verhindert gängige Fehler im Titel, z. B. reine Großschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende usw."
     title_remove_extraneous_space: "Entferne führende Leerzeichen vor dem Ende-Zeichen."
-    automatic_topic_heat_values: 'Aktualisiere automatisch die Einstellungen „Themenaufrufe (Popularität)“ und „Likes für Themenbeiträge (Popularität)“ basierend auf der Website-Aktivität.'
+    automatic_topic_heat_values: 'Aktualisiere automatisch die Einstellungen „topic views heat“ und „topic post like heat“ basierend auf der Website-Aktivität.'
     topic_views_heat_low: "Aufrufe-Feld leicht hervorheben, sobald das Thema so oft gelesen wurde."
     topic_views_heat_medium: "Aufrufe-Feld mäßig hervorheben, sobald das Thema so oft gelesen wurde."
     topic_views_heat_high: "Aufrufe-Feld stark hervorheben, sobald das Thema so oft gelesen wurde."

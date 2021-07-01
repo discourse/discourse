@@ -45,7 +45,7 @@ es:
         half_a_minute: "< 1 m"
         less_than_x_seconds:
           one: "< %{count}s"
-          other: "< %{count} s"
+          other: "< %{count}s"
         x_seconds:
           one: "%{count}s"
           other: "%{count}s"
@@ -113,7 +113,7 @@ es:
           one: "%{count} año después"
           other: "%{count} años después"
       previous_month: "Mes anterior"
-      next_month: "Mes siguiente"
+      next_month: "El próximo mes"
       placeholder: fecha
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
@@ -231,7 +231,7 @@ es:
     never: "nunca"
     every_30_minutes: "cada 30 minutos"
     every_hour: "cada hora"
-    daily: "diario"
+    daily: "diariamente"
     weekly: "semanalmente"
     every_month: "cada mes"
     every_six_months: "cada seis meses"
@@ -253,7 +253,7 @@ es:
       our_moderators: "Nuestros moderadores"
       moderators: "Moderadores"
       stat:
-        all_time: "Todo el tiempo"
+        all_time: "Siempre"
         last_day: "Últimas 24 horas"
         last_7_days: "Últimos 7 días"
         last_30_days: "Últimos 30 días"
@@ -541,7 +541,7 @@ es:
       next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
       post_local_date: "Fecha en la publicación"
-      later_this_week: "Más tarde esta semana"
+      later_this_week: "Esta misma semana"
       this_weekend: "Este fin de semana"
       start_of_next_business_week: "Lunes"
       start_of_next_business_week_alt: "El próximo lunes"
@@ -774,8 +774,8 @@ es:
         remove_owner_description: "Quitar a <b>%{username}</b> como propietario de este grupo"
         make_primary: "Elegir como principal"
         make_primary_description: "Hacer de este el grupo principal de <b>%{username}</b>"
-        remove_primary: "Eliminar como principal"
-        remove_primary_description: "Eliminar esto como el grupo principal de <b>%{username}</b>"
+        remove_primary: "Quitar como principal"
+        remove_primary_description: "Quitar esto como el grupo principal de <b>%{username}</b>"
         remove_members: "Quitar miembros"
         remove_members_description: "Quitar a los usuarios seleccionados de este grupo"
         make_owners: "Hacer propietarios"
@@ -805,13 +805,13 @@ es:
         everyone: "Todos"
       notifications:
         watching:
-          title: "Vigilando"
+          title: "Vigilar"
           description: "Se te notificará cada nueva publicación en cada mensaje y se mostrará un recuento de las respuestas nuevas."
         watching_first_post:
           title: "Vigilando la primera publicación"
           description: "Se te notificarán los mensajes nuevos en este grupo, pero no las respuestas a los mensajes."
         tracking:
-          title: "Siguiendo"
+          title: "Seguir"
           description: "Se te notificará si alguien menciona tu @nombre o te responde y se mostrará un recuento de las respuestas nuevas."
         regular:
           title: "Normal"
@@ -996,7 +996,7 @@ es:
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
       dynamic_favicon: "Mostrar número en el icono del navegador"
       skip_new_user_tips:
-        description: "Omitir consejos de bienvenida y medallas"
+        description: "Omitir consejos e insignias de bienvenida"
         not_first_time: "¿No es tu primera vez?"
         skip_link: "Saltarse estos consejos"
         read_later: "Lo leeré más adelante."
@@ -1008,7 +1008,7 @@ es:
         disable_dark_scheme: "Igual que el normal"
         dark_instructions: "Puedes previsualizar el esquema de colores del modo oscuro activando o desactivando el modo oscuro de tu dispositivo."
         undo: "Restablecer"
-        regular: "Normal"
+        regular: "Habitual"
         dark: "Modo oscuro"
         default_dark_scheme: "(valor predeterminado por el sitio)"
       dark_mode: "Modo oscuro"
@@ -1235,7 +1235,7 @@ es:
         title: "Correo electrónico"
         primary: "Correo electrónico principal"
         secondary: "Correos electrónicos secundarios"
-        primary_label: "primario"
+        primary_label: "principal"
         unconfirmed_label: "sin confirmar"
         resend_label: "reenviar correo de confirmación"
         resending_label: "enviando..."
@@ -1509,9 +1509,9 @@ es:
         top_topics: "Temas destacados"
         no_topics: "No hay temas aún."
         more_topics: "Más temas"
-        top_badges: "Medallas destacadas"
+        top_badges: "Insignias destacadas"
         no_badges: "Todavía no hay insignias."
-        more_badges: "Más medallas"
+        more_badges: "Más insignias"
         top_links: "Enlaces destacados"
         no_links: "No hay enlaces aún."
         most_liked_by: "Recibió más me gusta de"
@@ -1560,7 +1560,7 @@ es:
         not_found: "¡Ups! La aplicación intentó cargar una URL inexistente."
         unknown: "Algo salió mal."
       buttons:
-        back: "Volver atrás"
+        back: "Volver"
         again: "Intentar de nuevo"
         fixed: "Cargar página"
     modal:
@@ -2023,7 +2023,7 @@ es:
         one: "%{count} solicitud de membresía pendiente para el grupo «%{group_name}»"
         other: "%{count} solicitudes de membresía pendientes para el grupo «%{group_name}»"
       reaction: "<span>%{username}</span> %{description}"
-      reaction_2: "<span>%{username} y %{username2}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
       group_message_summary:
         one: "%{count} mensaje en tu bandeja de %{group_name}"
@@ -2054,7 +2054,7 @@ es:
         linked: "enlazado"
         bookmark_reminder: "recordatorio de marcador"
         bookmark_reminder_with_name: "recordatorio de marcador - %{name}"
-        granted_badge: "medalla concedida"
+        granted_badge: "insignia concedida"
         invited_to_topic: "invitado al tema"
         group_mentioned: "grupo mencionado"
         group_message_summary: "nuevos mensajes grupales"
@@ -2111,7 +2111,7 @@ es:
         in_group:
           label: En el grupo
         with_badge:
-          label: Con la medalla
+          label: Con insignia
         with_tags:
           label: Etiquetas
         filters:
@@ -2165,8 +2165,8 @@ es:
     topics:
       new_messages_marker: "última visita"
       bulk:
-        select_all: "Seleccionar todos"
-        clear_all: "Desmarcar todos"
+        select_all: "Seleccionar todo"
+        clear_all: "Limpiar todo"
         unlist_topics: "Hacer invisibles"
         relist_topics: "Hacer visibles de nuevo"
         reset_read: "Restablecer leídos"
@@ -2211,7 +2211,7 @@ es:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
       none:
-        unread: "No tienes temas no leídos."
+        unread: "No tienes temas sin leer."
         new: "No tienes temas nuevos."
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
@@ -2341,7 +2341,7 @@ es:
         remove: "Quitar temporizador"
         publish_to: "Publicar en:"
         when: "Cuándo:"
-        time_frame_required: "Selecciona un plazo"
+        time_frame_required: "Selecciona un intervalo de tiempo"
         min_duration: "La duración debe ser mayor que 0"
         max_duration: "La duración debe ser inferior a 20 años"
       auto_update_input:
@@ -2353,7 +2353,7 @@ es:
         this_weekend: "Este fin de semana"
         next_week: "La próxima semana"
         two_weeks: "Dos semanas"
-        next_month: "Próximo mes"
+        next_month: "El próximo mes"
         two_months: "Dos meses"
         three_months: "Tres meses"
         four_months: "Cuatro meses"
@@ -2457,19 +2457,19 @@ es:
           description: "Se mostrará el número de respuestas nuevas en este tema. Se te notificará si alguien menciona tu @nombre o te responde."
         regular:
           title: "Normal"
-          description: "Se te notificará solo si alguien menciona tu @nombre o te responde."
+          description: "Se te notificará si alguien menciona tu @nombre o te responde."
         regular_pm:
           title: "Normal"
-          description: "Se te notificará solo si alguien menciona tu @nombre o te responde."
+          description: "Se te notificará si alguien menciona tu @nombre o te responde."
         muted_pm:
           title: "Silenciado"
           description: "No recibirás ninguna notificación de este mensaje."
         muted:
-          title: "Silenciar"
+          title: "Silenciado"
           description: "No recibirás ninguna notificación de este tema y no aparecerá en temas recientes."
       actions:
         title: "Acciones"
-        recover: "Deshacer eliminar tema"
+        recover: "Recuperar tema"
         delete: "Eliminar tema"
         open: "Abrir tema"
         close: "Cerrar tema"
@@ -2526,7 +2526,7 @@ es:
         pin: "Hacer que este tema aparezca de primero en la categoría %{categoryLink} hasta"
         unpin: "Quitar este tema del principio de la lista en la categoría %{categoryLink}."
         unpin_until: "Quitar este tema del top de la categoría %{categoryLink} o esperar al <strong>%{until}</strong>."
-        pin_note: "Los usuarios pueden dejar de destacar los temas de forma individual por sí mismos."
+        pin_note: "Los usuarios pueden dejar de destacar el tema de forma individual por sí mismos."
         pin_validation: "Es obligatorio especificar una fecha para destacar este tema."
         not_pinned: "No hay temas fijados en %{categoryLink}."
         already_pinned:
@@ -2591,7 +2591,7 @@ es:
         title: "Mover a un tema nuevo"
         action: "mover a un tema nuevo"
         topic_name: "Título del tema nuevo"
-        radio_label: "Tema nuevo"
+        radio_label: "Nuevo tema"
         error: "Se produjo un error al mover las publicaciones al nuevo tema"
         instructions:
           one: "Estás a punto de crear un tema nuevo y rellenarlo con la publicación que has seleccionado."
@@ -2608,7 +2608,7 @@ es:
         title: "Mover a un mensaje nuevo"
         action: "mover a un mensaje nuevo"
         message_title: "Título del mensaje nuevo"
-        radio_label: "Mnesaje nuevo"
+        radio_label: "Nuevo mensaje"
         participants: "Participantes"
         instructions:
           one: "Estás a punto de crear un nuevo mensaje y de llenarlo con la publicación que has seleccionado."
@@ -2782,7 +2782,7 @@ es:
         publish_page: "Publicación de página"
         unhide: "Deshacer ocultar"
         change_owner: "Cambiar dueño"
-        grant_badge: "Conceder medalla"
+        grant_badge: "Conceder insignia"
         lock_post: "Bloquear publicación"
         lock_post_description: "impedir que el usuario que realizó esta publicación la edite"
         unlock_post: "Desbloquear publicación"
@@ -2869,7 +2869,7 @@ es:
         updated: "Actualizado"
         name: "Nombre"
         name_placeholder: "¿Para qué es este marcador?"
-        set_reminder: "Recuérdame"
+        set_reminder: "Recordarme"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -2971,7 +2971,7 @@ es:
       default_view: "Orden por defecto:"
       default_top_period: "Período por defecto para estar en la parte superior:"
       default_list_filter: "Filtro de lista por defecto:"
-      allow_badges_label: "Permitir que se concedan medallas en esta categoría"
+      allow_badges_label: "Permitir que se concedan insignias en esta categoría"
       edit_permissions: "Editar permisos"
       reviewable_by_group: "Además del personal, el contenido de esta categoría también puede ser revisado por:"
       review_group_name: "nombre del grupo"
@@ -2998,9 +2998,9 @@ es:
           description: "Seguirás todos los temas en esta categoría. Se te notificará si alguien menciona tu @nombre o te responde, y verás un contador con el número de nuevas respuestas de cada tema."
         regular:
           title: "Normal"
-          description: "Se te notificará solo si alguien menciona tu @nombre o te responde."
+          description: "Se te notificará si alguien menciona tu @nombre o te responde."
         muted:
-          title: "Silenciar"
+          title: "Silenciado"
           description: "No recibirás notificaciones sobre novedades de temas en esta categoría, y no aparecerán en la lista de temas recientes."
       search_priority:
         label: "Prioridad de búsqueda"
@@ -3098,7 +3098,7 @@ es:
         other: "%{count} más"
     topic_statuses:
       warning:
-        help: "Ésta es una advertencia oficial."
+        help: "Esta es una advertencia oficial."
       bookmarked:
         help: "Guardaste en marcadores este tema"
       locked:
@@ -3349,7 +3349,7 @@ es:
         trust_level:
           name: Nivel de confianza
         other:
-          name: Miscelánea
+          name: Otros
         posting:
           name: Publicaciones
       favorite_max_reached: "No puedes marcar más insignias como favoritas."
@@ -3396,7 +3396,7 @@ es:
       sort_by: "Ordenar por:"
       sort_by_count: "recuento"
       sort_by_name: "nombre"
-      manage_groups: "Administrar grupos de etiquetas"
+      manage_groups: "Gestionar grupos de etiquetas"
       manage_groups_description: "Definir grupos para organizar etiquetas"
       upload: "Subir etiquetas"
       upload_description: "Sube un archivo csv para crear etiquetas en masa"
@@ -3423,13 +3423,13 @@ es:
           title: "Vigilar"
           description: "Vigilarás automáticamente todos los temas con esta etiqueta. Se te notificarán todos los temas y publicaciones nuevas. Además aparecerá un contador de publicaciones nuevas y sin leer al lado del tema."
         watching_first_post:
-          title: "Vigilar primera publicación"
+          title: "Vigilar la primera publicación"
           description: "Se te notificará acerca de nuevos temas con esta etiqueta, pero no cuando haya respuestas al tema."
         tracking:
           title: "Seguir"
           description: "Seguirás automáticamente todos los temas con esta etiqueta. Aparecerá un contador de publicaciones nuevas y sin leer al lado del tema."
         regular:
-          title: "Normal"
+          title: "Habitual"
           description: "Se te notificará si alguien menciona tu @nombre o responde a alguna de tus publicaciones."
         muted:
           title: "Silenciado"
@@ -3466,7 +3466,7 @@ es:
           read: "Todavía no has leído ningún tema."
           posted: "Todavía no has publicado en ningún tema."
           latest: "No hay temas recientes."
-          bookmarks: "No has guardado ningún tema en marcadores todavía."
+          bookmarks: "Todavía no tienes temas guardados en marcadores."
           top: "No hay temas destacados."
     invite:
       custom_message: "Dale a tu invitación un toque personal escribiendo un <a href>mensaje personalizado</a>."
@@ -3532,7 +3532,7 @@ es:
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         new_features:
           title: "\U0001F381 Novedades"
-          dismiss: "Ocultar"
+          dismiss: "Descartar"
           learn_more: "Más información"
         last_checked: "Ultima comprobación"
         refresh_problems: "Actualizar"
@@ -3579,7 +3579,7 @@ es:
           yesterday: "Ayer"
           last_7_days: "Últimos 7"
           last_30_days: "Últimos 30"
-          all_time: "Todo el tiempo"
+          all_time: "Siempre"
           7_days_ago: "Hace 7 días"
           30_days_ago: "Hace 30 días"
           all: "Todo"
@@ -3588,7 +3588,7 @@ es:
           refresh_report: "Actualizar informe"
           daily: Diariamente
           monthly: Mensualmente
-          weekly: Semana
+          weekly: Semanalmente
           dates: "Fechas (UTC)"
           groups: "Todos los grupos"
           disabled: "Este informe está desactivado"
@@ -3762,7 +3762,7 @@ es:
         wildcard_event: "Enviar todos los eventos."
         individual_event: "Seleccionar eventos individuales."
         verify_certificate: "Comprobar certificado TLS de la URL destino"
-        active: "Activo"
+        active: "Activos"
         active_notice: "Enviaremos detalles del evento cuando suceda."
         categories_filter_instructions: "Los webhooks solo se dispararán si el evento está relacionado con las categorías especificadas. Déjalo en blanco para disparar los webhooks con todas las categorías."
         categories_filter: "Categorías activadas"
@@ -3848,9 +3848,9 @@ es:
         howto: "¿Cómo instalo plugins?"
         official: "Plugin oficial"
       backups:
-        title: "Copia de seguridad"
+        title: "Copias de seguridad"
         menu:
-          backups: "Copia de seguridad"
+          backups: "Copias de seguridad"
           logs: "Registros"
         none: "Ninguna copia de seguridad disponible."
         read_only:
@@ -3936,7 +3936,7 @@ es:
         copy: "Copiar"
         copy_to_clipboard: "Copiar al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
-        copy_to_clipboard_error: "Se produjo un error al copiar los datos al portapapeles"
+        copy_to_clipboard_error: "Error al copiar datos al portapapeles"
         theme_owner: "No editable, propiedad de:"
         email_templates:
           title: "Correo electrónico"
@@ -3993,7 +3993,7 @@ es:
           convert_component_alert: "¿Seguro que quieres convertir este componente en tema? Se eliminará como componente en %{relatives}."
           convert_component_tooltip: "Convertir este componente en tema"
           convert_component_alert_generic: "¿Seguro que quieres convertir este componente en tema?"
-          convert_theme_alert: "¿Seguro que quieres convertir este tema en componente? Se eliminará como primario en %{relatives}."
+          convert_theme_alert: "¿Seguro que quieres convertir este tema en componente? Se eliminará como principal en %{relatives}."
           convert_theme_alert_generic: "¿Seguro que quieres convertir este tema en componente?"
           convert_theme_tooltip: "Convertir este tema en componente"
           inactive_themes: "Temas inactivos:"
@@ -4003,7 +4003,7 @@ es:
           default_theme_tooltip: "Este es el tema por defecto del sitio"
           updates_available_tooltip: "Hay actualizaciones disponibles para este tema"
           and_x_more: "y %{count} más."
-          collapse: Colapsar
+          collapse: Contraer
           uploads: "Subidos"
           no_uploads: "Puedes subir activos asociados con tu tema como fuentes e imágenes"
           add_upload: "Añadir subida"
@@ -4128,7 +4128,7 @@ es:
           revert: "revertir"
           revert_title: "Restaurar este color a la paleta de color por defecto de Discourse."
           primary:
-            name: "primario"
+            name: "principal"
             description: "La mayoría del texto, iconos y bordes."
           primary-medium:
             name: "primary-medium"
@@ -4147,7 +4147,7 @@ es:
             name: "fondo del encabezado"
             description: "Color de fondo del encabezado del sitio."
           header_primary:
-            name: "encabezado primario"
+            name: "encabezado principal"
             description: "Texto e iconos en el encabezado del sitio."
           highlight:
             name: "resaltado"
@@ -4181,7 +4181,7 @@ es:
           save_error_with_reason: "Tus cambios no se guardaron. %{error}"
           instructions: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS."
       email:
-        title: "Correos"
+        title: "Correos electrónicos"
         settings: "Ajustes"
         templates: "Plantillas"
         preview_digest: "Vista previa resumen"
@@ -4282,8 +4282,8 @@ es:
           title: "Acciones del personal"
           clear_filters: "Mostrar todo"
           staff_user: "Usuario"
-          target_user: "Usuario destino"
-          subject: "Sujeto"
+          target_user: "Usuario objetivo"
+          subject: "Asunto"
           when: "Cuándo"
           context: "Contexto"
           details: "Detalles"
@@ -4318,9 +4318,9 @@ es:
             change_category_settings: "cambiar opciones de categoría"
             delete_category: "eliminar categoría"
             create_category: "crear categoría"
-            silence_user: "silenciar usuario"
-            unsilence_user: "dejar de silenciar usuario"
-            removed_silence_user: "silenciar usuario (eliminado)"
+            silence_user: "silenciar al usuario"
+            unsilence_user: "dejar de silenciar al usuario"
+            removed_silence_user: "silenciar al usuario (eliminado)"
             removed_unsilence_user: "dejar de silenciar al usuario (eliminado)"
             grant_admin: "conceder administración"
             revoke_admin: "revocar administración"
@@ -4432,7 +4432,7 @@ es:
       watched_words:
         title: "Palabras vigiladas"
         search: "buscar"
-        clear_filter: "Limpiar"
+        clear_filter: "Quitar filtros"
         show_words:
           one: "ver %{count} palabra"
           other: "ver %{count} palabras"
@@ -4543,7 +4543,7 @@ es:
         suspended_by: "Suspendido por"
         silence_reason: "Motivo"
         silenced_by: "Silenciado por"
-        silence_modal_title: "Silenciar usuario"
+        silence_modal_title: "Silenciar al usuario"
         silence_duration: "¿Cuánto tiempo estará silenciado el usuario?"
         silence_reason_label: "¿Por qué se silencia a este usuario?"
         silence_reason_placeholder: "Motivo para silenciar"
@@ -4669,7 +4669,7 @@ es:
         deactivate_failed: "Hubo un problema al desactivar el usuario."
         unsilence_failed: "Hubo un problema al dejar de silenciar al usuario."
         silence_failed: "Hubo un problema al silenciar al usuario."
-        silence_confirm: "¿Seguro que quieres silenciar este usuario? No podrá crear temas ni mensajes nuevos."
+        silence_confirm: "¿Seguro que quieres silenciar a este usuario? No podrá crear temas ni mensajes nuevos."
         silence_accept: "Sí, silenciar a este usuario"
         bounce_score: "Puntuación de rebote"
         reset_bounce_score:

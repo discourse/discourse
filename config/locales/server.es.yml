@@ -399,7 +399,7 @@ es:
       next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
       next_week: "La próxima semana"
-      next_month: "Próximo mes"
+      next_month: "El próximo mes"
       custom: "Fecha y hora personalizadas"
   groups:
     success:
@@ -557,7 +557,7 @@ es:
         user_email:
           attributes:
             user_id:
-              reassigning_primary_email: "No está permitido reasignar un correo electrónico primario a otro usuario."
+              reassigning_primary_email: "No está permitido reasignar un correo electrónico principal a otro usuario."
         color_scheme_color:
           attributes:
             hex:
@@ -705,7 +705,7 @@ es:
       half_a_minute: "< 1 m"
       less_than_x_seconds:
         one: "< %{count}s"
-        other: "< %{count} s"
+        other: "< %{count}s"
       x_seconds:
         one: "%{count}s"
         other: "%{count} s"
@@ -1810,7 +1810,7 @@ es:
     auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer una denuncia."
     min_first_post_typing_time: "Período mínimo en milisegundos durante el que un usuario debe escribir en su primera publicación, si no se llega a este umbral, la publicación entrará automáticamente a la cola de moderación. Establece esta opción a 0 para deshabilitar (no recomendado)."
     auto_silence_fast_typers_on_first_post: "Silenciar automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
-    auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar usuarios que escriban demasiado rápido en su primera publicación"
+    auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar a usuarios que escriban demasiado rápido en su primera publicación"
     auto_silence_first_post_regex: "Expresión regular (que ignora mayúsculas/minúsculas) que, si coincide con la primera publicación de un usuario, lo silenciará y mandará el mensaje a la cola de aprobación. Por ejemplo: enfadado|a[bc]a hará que todas las primeras publicaciones que contengan enfadado, aba o aca se manden a la cola y se silencie al autor. Solo se ejecutará en el primer mensaje de cada usuario. DEPRECIADO: Utiliza en su lugar Palabras Vigiladas para Silencio."
     reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar sobre el mismo?"
     reviewable_default_topics: "Mostrar contenido revisable agrupado por tema por defecto"
@@ -1923,7 +1923,7 @@ es:
     ignored_users_message_gap_days: "Tiempo que se espera antes de notificar a los moderadores de nuevo sobre un usuario que ha sido ignorado por muchos otros."
     clean_up_inactive_users_after_days: "Número de días antes de que se elimine un usuario inactivo (nivel de confianza 0 sin publicaciones). Para desactivar la limpieza, configure en 0."
     clean_up_unused_staged_users_after_days: "Cantidad de días antes de que un usuario temporal (sin ninguna publicación) sea eliminado. Para inhabilitar esta limpieza de usuarios, establece el valor en 0."
-    user_selected_primary_groups: "Permitir a los usuarios establecer su propio grupo primario"
+    user_selected_primary_groups: "Permitir a los usuarios establecer su propio grupo principal"
     max_notifications_per_user: "Cantidad máxima de notificaciones por usuario. Si se supera este número, las notificaciones antiguas se eliminarán. Aplicado semanalmente. Establece el valor en 0 para inhabilitar."
     allowed_user_website_domains: "El sitio web del usuario deberá ser uno de estos dominios. Lista delimitada por barras verticales."
     allow_profile_backgrounds: "Permitir a los usuarios subir fondos de perfil."
@@ -4522,8 +4522,8 @@ es:
         title: "Suspender usuario"
         description: "Estar de acuerdo con la denuncia y suspender el usuario."
       agree_and_silence:
-        title: "Silenciar usuario"
-        description: "Estar de acuerdo con la denuncia y silenciar el usuario."
+        title: "Silenciar al usuario"
+        description: "Estar de acuerdo con la denuncia y silenciar al usuario."
       agree_and_restore:
         title: "Restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
@@ -4578,7 +4578,7 @@ es:
       reject_and_suspend:
         title: "Rechazar y suspender usuario"
       reject_and_silence:
-        title: "Rechazar y silenciar usuario"
+        title: "Rechazar y silenciar al usuario"
       reject_and_delete:
         title: "Rechazar y eliminar la publicación"
       reject_and_keep_deleted:
