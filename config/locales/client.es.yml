@@ -607,6 +607,8 @@ es:
       add_members:
         title: "Añadir usuarios a %{group_name}"
         description: "Introduce la lista de usuarios a los que quieres invitar al grupo o pega una lista separada por comas:"
+        usernames_placeholder: "nombres de usuario"
+        usernames_or_emails_placeholder: "nombres de usuario o correos electrónicos"
         notify_users: "Notificar usuarios"
         set_owner: "Establecer usuarios como propietarios de este grupo"
       requests:
@@ -1387,7 +1389,7 @@ es:
         pending_tab_with_count: "Pendientes (%{count})"
         expired_tab: "Caducado"
         expired_tab_with_count: "Caducado (%{count})"
-        redeemed_tab: "Canjeado"
+        redeemed_tab: "Aceptada"
         redeemed_tab_with_count: "Canjeados (%{count})"
         invited_via: "Invitación"
         invited_via_link: "enlace %{key} (%{count} / %{max} canjeados)"
@@ -1588,7 +1590,7 @@ es:
     first_post: Primera publicación
     mute: Silenciar
     unmute: No silenciar
-    last_post: Publicado
+    last_post: Fecha de publicación
     local_time: "Hora local"
     time_read: Leído
     time_read_recently: "%{time_read} recientemente"
@@ -1963,7 +1965,7 @@ es:
           label: Responder al tema
           desc: Responder al tema, no a una publicación específica
         toggle_whisper:
-          label: Mostrar/Ocultar susurros
+          label: Activar/desactivar susurro
           desc: Los susurros son visibles solo para los miembros del equipo
         create_topic:
           label: "Nuevo tema"
@@ -2364,6 +2366,8 @@ es:
         title: "Programar publicación"
       temp_open:
         title: "Abrir temporalmente"
+      auto_reopen:
+        title: "Abrir tema automáticamente"
       temp_close:
         title: "Cerrar temporalmente"
       auto_close:
@@ -4380,6 +4384,8 @@ es:
             post_staff_note_create: "añadir aviso del personal"
             post_staff_note_destroy: "destruir aviso del personal"
             delete_group: "eliminar grupo"
+            add_watched_word: "añadir palabra vigilada"
+            delete_watched_word: "eliminar palabra vigilada"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
