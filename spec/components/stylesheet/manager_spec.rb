@@ -650,13 +650,19 @@ describe Stylesheet::Manager do
         t.save!
 
         user_theme.add_relative_theme!(:child, t)
+        default_theme.add_relative_theme!(:child, t)
       end
 
       default_theme.set_default!
 
       StylesheetCache.destroy_all
 
-      Stylesheet::Manager.precompile_css
+      output = capture_output(:stderr) do
+        Stylesheet::Manager.precompile_css
+      end
+
+      # Ensure we force compile each theme only once
+      expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2)
       results = StylesheetCache.pluck(:target)
 
       expect(results.size).to eq(24) # (2 themes x 8 targets) + (1 child Theme x 2 targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
