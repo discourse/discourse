@@ -108,7 +108,7 @@ it:
         no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
         auto_generated_email_error: "Succede quando l'intestazione 'precedence' è impostata su: list, junk, bulk oppure auto_reply, oppure quando qualunque altra intestazione contiene: auto-submitted, auto-replied o auto-generated."
         no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
-        no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione From."
+        no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione Da."
         from_reply_by_address_error: "Accade quando l'intestazione From corrisponde all'indirizzo email della risposta."
         inactive_user_error: "Succede quando il mittente non è attivo."
         silenced_user_error: "Succede quando il mittente è stato silenziato."
@@ -118,7 +118,7 @@ it:
         reply_user_not_matching_error: "Succede quando arriva una risposta da un indirizzo email diverso da quello cui la notifica era stata inviata."
         topic_not_found_error: "Succede quando arriva una risposta ma l'argomento relativo è stato cancellato."
         topic_closed_error: "Succede quando arriva una risposta ma l'argomento relativo è stato chiuso."
-        bounced_email_error: "L'email è un rapporto di email non recapitata."
+        bounced_email_error: "L'email è una segnalazione di email rimbalzata."
         screened_email_error: "Succede quando l'indirizzo email del mittente era stato già scansionato."
         unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
         email_not_allowed: "Succede quando l'indirizzo e-mail non è nella lista di contatti permessi o è in quella di contatti bloccati."
@@ -350,7 +350,7 @@ it:
   page_num: "Pagina %{num}"
   home_title: "Home"
   topics_in_category: "Argomenti nella categoria '%{category}'"
-  rss_posts_in_topic: "RSS feed di '%{topic}'"
+  rss_posts_in_topic: "Feed RSS di '%{topic}'"
   rss_topics_in_category: "RSS feed degli argomenti nella categoria '%{category}'"
   rss_num_posts:
     one: "%{count} messaggio"
@@ -363,7 +363,7 @@ it:
   rss_description:
     latest: "Argomenti più recenti"
     top: "Argomenti di punta"
-    top_all: "Argomenti di punta totali"
+    top_all: "Argomenti di punta di sempre"
     top_yearly: "Argomenti di punta annuali"
     top_quarterly: "Argomenti di punta trimestrali"
     top_monthly: "Argomenti di punta mensili"
@@ -501,7 +501,7 @@ it:
       post:
         raw: "Contenuto"
       user_profile:
-        bio_raw: "Su di me"
+        bio_raw: "Info su di me"
     errors:
       models:
         topic:
@@ -517,7 +517,7 @@ it:
               unable_to_update: "Si è verificato un errore durante l'aggiornamento dell'argomento."
               unable_to_tag: "Si è verificato un errore etichettando l'argomento."
             featured_link:
-              invalid: "è invalido. Un URL dovrebbe includere http:// o https://."
+              invalid: "non è valido. Un URL dovrebbe includere http:// o https://."
               invalid_category: "non può essere modificato in questa categoria."
         user:
           attributes:
@@ -526,12 +526,12 @@ it:
               same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
               same_as_email: "coincide con la tua email. Per favore scegli una password più sicura."
               same_as_current: "è la tua stessa password attuale."
-              same_as_name: "corrisponde al tuo nome."
+              same_as_name: "è uguale al tuo nome."
               unique_characters: "ha troppi caratteri ripetuti. Per favore usa una password più sicura."
             username:
-              same_as_password: "corrisponde alla tua password."
+              same_as_password: "è uguale alla tua password."
             name:
-              same_as_password: "corrisponde alla tua password."
+              same_as_password: "è uguale alla tua password."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
         user_profile:
@@ -552,7 +552,7 @@ it:
         web_hook:
           attributes:
             payload_url:
-              invalid: "La URL non è valida. La URL dovrebbe iniziare per http:// o https:// e gli spazi non sono ammessi. "
+              invalid: "URL non valido. Dovrebbe iniziare con http:// o https:// e gli spazi non sono ammessi."
         custom_emoji:
           attributes:
             name:
@@ -577,7 +577,7 @@ it:
       <<: *errors
   uncategorized_category_name: "Non categorizzato"
   vip_category_name: "Salotto"
-  vip_category_description: "Una categoria esclusiva per i membri con livello di esperienza 3 o superiore."
+  vip_category_description: "Una categoria esclusiva per i membri con livello di attendibilità 3 o superiore."
   meta_category_name: "Feedback Sito"
   meta_category_description: "Discussioni su questo sito, la sua organizzazione, come funziona e su come possiamo migliorarlo."
   staff_category_name: "Staff"
@@ -628,8 +628,8 @@ it:
     post_template: "%{replace_paragraph}\n\nUsa i seguenti paragrafi per una descrizione più estesa o per stabilire delle regole o linee guida per la categoria:\n\n- Perché la gente dovrebbe usare questa categoria? A che cosaserve? \n\n- In cosa esattamente questa categoria è diversa dalle altre categorie già esistenti? \n\n- Cosa dovrebbero contenere gli argomenti in questa categoria? \n\n- C'è bisogno di questa categoria? Possiamo fonderla con un'altra categoria o sottocategoria?\n"
     errors:
       not_found: "Categoria non trovata!"
-      uncategorized_parent: "La categoria \"Nessuna\" non può avere una categoria superiore"
-      self_parent: "La categoria-genitore di una sottocategoria non può essere se stessa"
+      uncategorized_parent: "\"Senza categoria\" non può avere una categoria superiore"
+      self_parent: "Una sottocategoria non può avere se stessa come categoria superiore"
       depth: "Non puoi annidare una sottocategoria sotto un'altra"
       invalid_email_in: "'%{email}' non è un indirizzo email valido."
       email_already_used_in_group: "L'indirizzo '%{email}' è stato già usato dal gruppo '%{group_name}'."
@@ -649,7 +649,7 @@ it:
   trust_levels:
     admin: "Amministratore"
     staff: "Staff"
-    change_failed_explanation: "Hai cercato di degradare %{user_name} a '%{new_trust_level}'. Però il suo livello di esperienza è già '%{current_trust_level}'. %{user_name} resterà a '%{current_trust_level}' - se vuoi degradarlo, prima blocca il suo livello di esperienza"
+    change_failed_explanation: "Hai cercato di degradare %{user_name} a '%{new_trust_level}', ma il suo livello di attendibilità è già '%{current_trust_level}'. %{user_name} resterà a '%{current_trust_level}'; se vuoi degradarlo, prima blocca il suo livello di attendibilità"
   post:
     image_placeholder:
       broken: "Questa immagine è assente"
@@ -742,7 +742,7 @@ it:
         one: "quasi %{count} anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
-    no_token: "Spiacenti, il collegamento per il cambio password è scaduto. Clicca su Connetti e poi su 'Ho dimenticato la password' per ricevere un nuovo collegamento."
+    no_token: "Spiacenti, il collegamento per il cambio password è scaduto. Clicca su Accedi e poi su 'Ho dimenticato la password' per ricevere un nuovo collegamento."
     choose_new: "Scegli una nuova password"
     choose: "Scegli una password"
     update: "Aggiorna Password"
@@ -803,7 +803,7 @@ it:
       old_email: "Vecchia email: %{email}"
       new_email: "Nuova email: %{email}"
       almost_done_title: "Conferma nuovo indirizzo email"
-      almost_done_description: "Abbiamo inviato un'email al tuo nuovo indirizzo email per confermare la modifica!"
+      almost_done_description: "Abbiamo inviato un'email al tuo nuovo indirizzo per confermare la modifica!"
   associated_accounts:
     revoke_failed: "Impossibile revocare il tuo account con %{provider_name}."
     connected: "(connesso)"
@@ -820,7 +820,7 @@ it:
       title: "Conferma Account Amministratore"
       description: "Sei sicuro di voler <b>%{target_username} (%{target_email})</b> come amministratore?"
       grant: "Assegna Accesso Amministratore"
-      complete: "<b>%{target_username}</b>è ora un amministratore."
+      complete: "<b>%{target_username}</b> è ora un amministratore."
       back_to: "Torna a %{title}"
   reviewable_score_types:
     needs_approval:
@@ -832,7 +832,7 @@ it:
       short_description: "Non pertinente alla discussione"
     spam:
       title: "Spam"
-      description: "Questo messaggio è una pubblicità o vandalismo. Non è né utile né pertinente ai fini di questo argomento."
+      description: "Questo messaggio è una pubblicità o vandalismo. Non è utile o pertinente ai fini di questo argomento."
       short_description: "E' pubblicità o vandalismo"
       email_title: '"%{title}" è stato segnalato come spam'
       email_body: "%{link}\n\n%{message}"
@@ -854,7 +854,7 @@ it:
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Segnalibro"
-      description: "Messaggio nei segnalibri"
+      description: "Aggiungi messaggio ai segnalibri"
       short_description: "Aggiungi il messaggio ai segnalibri"
     like:
       title: "Mi piace"
@@ -865,8 +865,8 @@ it:
       title: "errore bozza"
       description: "La bozza viene modificata in un'altra finestra. Ricarica questa pagina."
   draft_backup:
-    pm_title: "Backup delle bozze da argomenti in corso"
-    pm_body: "Argomento contenente backup di bozze"
+    pm_title: "Copie di backup da argomenti in corso"
+    pm_body: "Argomento contenente copie di backup"
   user_activity:
     no_default:
       self: "Non hai ancora nessuna attività."
@@ -937,14 +937,14 @@ it:
     regular:
       title: "Argomento Normale"
     banner:
-      title: "Argomento Annuncio"
+      title: "Argomento banner"
       message:
-        make: "Questo argomento è ora un annuncio. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente."
-        remove: "Questo argomento non è più un annuncio. Non apparirà più in cima ad ogni pagina."
+        make: "Questo argomento è ora un banner. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente."
+        remove: "Questo argomento non è più un banner. Non apparirà più in cima ad ogni pagina."
   unsubscribed:
     title: "Preferenze email aggiornate!"
     description: "le preferenze email per <b>%{email}</b> sono state aggiornate. Per cambiare le tue impostazioni email <a href='%{url}'>accedi alle tue preferenze utente</a>."
-    topic_description: "Per re-iscriverti a %{link}, usa il controllo notifiche in fondo o a destra dell'argomento."
+    topic_description: "Per iscriverti di nuovo a %{link}, usa il controllo notifiche in fondo o a destra dell'argomento."
     private_topic_description: "Per re-iscriverti, usa il controllo notifica in fondo o sulla destra dell'argomento."
   uploads:
     marked_insecure_from_theme_component_reason: "caricamento utilizzato nel componente del tema"
@@ -955,7 +955,7 @@ it:
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
     mailing_list_mode: "Disabilita la modalità mailing list"
     all: "Non inviarmi nessuna email da %{sitename}"
-    different_user_description: "Sei attualmente connesso con un utente diverso da quello a cui abbiamo scritto. Per favore disconnettiti, oppure attiva la modalità anonima, e riprova."
+    different_user_description: "Attualmente hai effettuato l'accesso con un account utente diverso da quello a cui abbiamo scritto. Per favore disconnettiti, oppure attiva la modalità anonima, e riprova."
     not_found_description: "Spiacenti, non siamo riusciti ad annullare questa iscrizione. È possibile che il collegamento nella tua email sia troppo vecchio e sia scaduto?"
     log_out: "Disconnetti"
     submit: "Salva preferenze"
@@ -982,7 +982,7 @@ it:
       confirm_title: Procedi su %{site_name}.
       logging_in_as: Accedi come %{username}
       confirm_button: Completa l'accesso
-    no_trust_level: "Spiacenti, non hai il livello di esperienza richiesto per accedere alle user API"
+    no_trust_level: "Spiacenti, non hai il livello di attendibilità richiesto per accedere alle API utente"
     generic_error: "Spiacenti, non siamo in grado di produrre user API keys, questa caratteristica potrebbe essere stata disabilitata dall'amministratore di sistema"
     scopes:
       message_bus: "Aggiornamenti in tempo reale"
@@ -1033,7 +1033,7 @@ it:
         post_count: Messaggi creati
         pm_count: MP creati
         revision_count: Revisioni
-      description: Elenco delle attività del moderatore, incluse segnalazioni revisionate, tempo di lettura, argomenti creati, messaggi creati, messaggi personali creati.
+      description: Elenco delle attività del moderatore, incluse segnalazioni revisionate, tempo di lettura, argomenti creati, messaggi creati, messaggi personali creati e revisioni.
     flags_status:
       title: "Stato Segnalazioni"
       values:
@@ -1059,21 +1059,21 @@ it:
       yaxis: "Numero di iscrizioni"
       description: "Nuovi account registrati durante questo periodo."
     new_contributors:
-      title: "Nuovi Contributori"
+      title: "Nuovi collaboratori"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi contributori"
       description: "Numero di utenti che hanno inviato il loro primo messaggio durante questo periodo."
     trust_level_growth:
-      title: "Crescita del livello di esperienza"
+      title: "Crescita del livello di attendibilità"
       xaxis:
         tl1_reached: "Raggiunto TL1"
         tl2_reached: "Raggiunto TL2"
         tl3_reached: "Raggiunto TL3"
         tl4_reached: "Raggiunto TL4"
       yaxis: "Giorno"
-      description: "Numero di utenti che hanno aumentato il loro livello di esperienza durante questo periodo."
+      description: "Numero di utenti che hanno aumentato il loro livello di attendibilità durante questo periodo."
     consolidated_page_views:
-      title: "Pagine Viste Consolidate"
+      title: "Visualizzazioni di pagina consolidate"
       xaxis:
         page_view_crawler: "Crawler"
         page_view_anon: "Utenti anonimi"
@@ -1089,14 +1089,14 @@ it:
       title: "DAU/MAU"
       xaxis: "Giorno"
       yaxis: "DAU/MAU"
-      description: "Numero di utenti che hanno effettuato l'accesso nell'ultimo giorno diviso per il numero di utenti che hanno effettuato l'accesso nell'ultimo mese - restituisce una % che rappresenta 'l'attaccamento' alla comunità. Obiettivo > 30%."
+      description: "Numero di utenti che hanno effettuato l'accesso nell'ultimo giorno diviso per il numero di utenti che hanno effettuato l'accesso nell'ultimo mese: restituisce una % che rappresenta 'l'attaccamento' alla comunità. Obiettivo > 30%."
     daily_engaged_users:
       title: "Utenti Impegnati Giornalmente"
       xaxis: "Giorno"
       yaxis: "Utenti Impegnati"
       description: "Numero di utenti che hanno messo \"Mi piace\" o pubblicato nell'ultimo giorno."
     profile_views:
-      title: "Visite Profilo Utente"
+      title: "Visite al Profilo Utente"
       xaxis: "Giorno"
       yaxis: "Numero profili utente visualizzati"
       description: "Totale nuove visualizzazioni dei profili utente."
@@ -1126,12 +1126,12 @@ it:
       yaxis: "Numero di nuovi segnalibri"
       description: "Numero di nuovi argomenti e messaggi aggiunti ai segnalibri."
     users_by_trust_level:
-      title: "Utenti per Livello Esperienza"
-      xaxis: "Livello Esperienza"
+      title: "Utenti per Livello di attendibilità"
+      xaxis: "Livello di attendibilità"
       yaxis: "Numero Utenti"
       labels:
         level: Livello
-      description: "Numero di utenti raggruppati per livello di esperienza."
+      description: "Numero di utenti raggruppati per livello di attendibilità."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Utenti per Tipo"
@@ -1171,14 +1171,14 @@ it:
       title: "Sistema"
       xaxis: "Giorno"
       yaxis: "Numero di messaggi"
-      description: "Numero di messaggi personali inviati automaticamente da System."
+      description: "Numero di messaggi personali inviati automaticamente dal Sistema."
     moderator_warning_private_messages:
       title: "Segnalazione Moderatore"
       xaxis: "Giorno"
       yaxis: "Numero di messaggi"
       description: "Numero di avvisi inviati dai moderatori attraverso messaggi personali."
     notify_moderators_private_messages:
-      title: "Notifica i Moderatori"
+      title: "Notifiche ai Moderatori"
       xaxis: "Giorno"
       yaxis: "Numero di messaggi"
       description: "Numero di volte in cui i moderatori sono stati notificati privatamente tramite segnalazioni."
@@ -1220,7 +1220,7 @@ it:
       yaxis: "Visualizzazioni pagina da visitatori Anonimi"
       description: "Numero di nuove pagine viste da visitatori non connessi ad un account."
     page_view_logged_in_reqs:
-      title: "Connesso"
+      title: "Connessioni"
       xaxis: "Giorno"
       yaxis: "Pagine viste da utenti connessi"
       description: "Numero di nuove pagine viste da utenti connessi."
@@ -1237,13 +1237,13 @@ it:
     page_view_logged_in_mobile_reqs:
       title: "Pagine viste da utenti connessi"
       xaxis: "Giorno"
-      yaxis: "Pagine Viste da Utenti Connessi su Mobile"
-      description: "Numero di nuove pagine viste da utenti su dispositivi mobile e connessi ad un account."
+      yaxis: "Pagine Viste da Utenti Connessi in mobilità"
+      description: "Numero di nuove pagine viste da utenti su dispositivi mobili e connessi ad un account."
     page_view_anon_mobile_reqs:
       title: "Visualizzazioni pagina da visitatori anonimi"
       xaxis: "Giorno"
-      yaxis: "Pagine Viste da Visitatori Anonimi su Mobile"
-      description: "Numero di nuove pagine viste da utenti su dispositivi mobile e non connessi ad un account."
+      yaxis: "Pagine Viste da Visitatori Anonimi in mobilità"
+      description: "Numero di nuove pagine viste da utenti su dispositivi mobili e non connessi ad un account."
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -1771,10 +1771,10 @@ it:
     block_auto_generated_emails: "Bloccare le email in arrivo identificate come generate automaticamente."
     ignore_by_title: "Ignora le email in arrivo in base al loro titolo."
     mailgun_api_key: "Chiave API Segreta di Mailgun usata per verificare i messaggi webhook. "
-    soft_bounce_score: "Punteggio di rimbalzo aggiunto all'utente quando si verifica un rimbalzo temporaneo."
-    hard_bounce_score: "Punteggio di rimbalzo aggiunto all'utente quando si verifica un rimbalzo permanente."
-    bounce_score_threshold: "Punto di rimbalzo massimo prima di interrompere l'invio di email ad un utente."
-    reset_bounce_score_after_days: "Ripristina automaticamente il punteggio di rimbalzo dopo X giorni."
+    soft_bounce_score: "Messaggio rimbalzato aggiunto all'utente quando si verifica un rimbalzo temporaneo."
+    hard_bounce_score: "Messaggio rimbalzato aggiunto all'utente quando si verifica un rimbalzo definitivo."
+    bounce_score_threshold: "Numero massimo di messaggi rimbalzati prima di interrompere l'invio di email ad un utente."
+    reset_bounce_score_after_days: "Azzera automaticamente il conteggio di messaggi rimbalzati dopo X giorni."
     forwarded_emails_behaviour: "Come gestire una mail inoltrata a Discourse"
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
     trim_incoming_emails: "Taglia la parte delle email in arrivo che non è rilevante."
@@ -2154,7 +2154,7 @@ it:
     email:
       sent_test: "inviata!"
   user:
-    deactivated: "È stata disattivata a causa di troppe email rimbalzate a '%{email}'."
+    deactivated: "È stato disattivato a causa di troppe email rimbalzate a '%{email}'."
     deactivated_by_staff: "Disattivato dallo staff"
     activated_by_staff: "Attivato dallo staff"
     new_user_typed_too_fast: "Il nuovo utente ha digitato troppo velocemente"

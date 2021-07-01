@@ -3449,7 +3449,7 @@ de:
       back: "Zurück"
       forward: "Vorwärts"
       share: "Teilen"
-      dismiss: "Alles gelesen"
+      dismiss: "Schließen"
     safe_mode:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
     image_removed: "(Bild entfernt)"

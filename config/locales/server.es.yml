@@ -663,7 +663,7 @@ es:
       topic_exists_no_oldest: "No se puede eliminar esta categoría porque el número de temas es %{count}."
     uncategorized_description: "Temas que no necesitan una categoría o no encajan en ninguna de las categorías existentes."
   trust_levels:
-    admin: "Admin"
+    admin: "Administrador"
     staff: "Personal"
     change_failed_explanation: "Trataste de degradar a %{user_name} a «%{new_trust_level}». Sin embargo su nivel de confianza ya es «%{current_trust_level}». %{user_name} va a permanecer en «%{current_trust_level}» - si deseas degradar al usuario, primero bloquea su nivel de confianza."
   post:

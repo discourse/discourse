@@ -204,7 +204,7 @@ es:
     log_in: "Iniciar sesión"
     age: "Edad"
     joined: "Registrado"
-    admin_title: "Admin"
+    admin_title: "Administrador"
     show_more: "mostrar más"
     show_help: "opciones"
     links: "Enlaces"
@@ -4595,7 +4595,7 @@ es:
         last_100_days: "en los últimos 100 días"
         private_topics_count: Temas privados
         posts_read_count: Publicaciones leídas
-        post_count: Publicaciones publicadas
+        post_count: Publicaciones creadas
         second_factor_enabled: activar autenticación de dos factores
         topics_entered: Temas vistos
         flags_given_count: Denuncias enviadas
@@ -4691,8 +4691,8 @@ es:
         trust_level_3_requirements: "Requisitos para el nivel de confianza 3"
         trust_level_locked_tip: "el nivel de confianza está bloqueado, el sistema no promoverá o degradará al usuario."
         trust_level_unlocked_tip: "el nivel de confianza está desbloqueado, el sistema podrá promoverá o degradará al usuario."
-        lock_trust_level: "Bloquear nivel de confianza"
-        unlock_trust_level: "Desbloquear nivel de confianza"
+        lock_trust_level: "Bloquear el nivel de confianza"
+        unlock_trust_level: "Desbloquear el nivel de confianza"
         tl3_requirements:
           title: "Requisitos para el nivel de confianza 3"
           table_title:
@@ -4748,7 +4748,7 @@ es:
         options: "Opciones"
         required:
           title: "¿Obligatorio rellenarlo al registrarse?"
-          enabled: "requerido"
+          enabled: "obligatorio"
           disabled: "no requerido"
         editable:
           title: "¿Editable después del registro?"
@@ -4776,16 +4776,16 @@ es:
         search: "Busca el texto que te gustaría editar"
         title: "Texto"
         edit: "editar"
-        revert: "Deshacer cambios"
-        revert_confirm: "¿Seguro que quieres deshacer tus cambios?"
+        revert: "Revertir los cambios"
+        revert_confirm: "¿Seguro que quieres revertir los cambios?"
         go_back: "Volver a la búsqueda"
         recommended: "Te recomendamos que ajustes los siguientes textos a tu comunidad:"
-        show_overriden: "Solo mostrar modificados"
+        show_overriden: "Mostrar solo los sobrescritos"
         locale: "Idioma:"
         fallback_locale_warning: "Estás editando un idioma basado en %{fallback}. Los usuarios que seleccionen %{fallback} como su idioma de interfaz no verán tus cambios."
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu búsqueda."
       settings:
-        show_overriden: "Ver solo cambiados"
+        show_overriden: "Mostrar solo los sobrescritos"
         history: "Ver historial de cambios"
         reset: "restablecer"
         none: "ninguno"
@@ -4815,7 +4815,7 @@ es:
           branding: "Marca"
           basic: "Ajustes básicos"
           users: "Usuarios"
-          posting: "Publicar"
+          posting: "Publicaciones"
           email: "Correo electrónico"
           files: "Archivos"
           trust: "Niveles de confianza"

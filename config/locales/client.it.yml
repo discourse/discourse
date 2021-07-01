@@ -4141,7 +4141,7 @@ it:
         test_error: "C'è stato un problema nell'invio dell'email di test. Controlla nuovamente le impostazioni email, verifica che il tuo host non blocchi le connessioni email e riprova."
         sent: "Inviate"
         skipped: "Omesse"
-        bounced: "Non recapitate"
+        bounced: "Email rimbalzate"
         received: "Ricevute"
         rejected: "Rifiutate"
         sent_at: "Inviato Alle"
@@ -4605,19 +4605,19 @@ it:
         silence_failed: "Si è verificato un errore mentre si silenziava l'utente"
         silence_confirm: "Sei sicuro di voler silenziare questo utente? Non sarà più in grado di creare alcun nuovo argomento o messaggio."
         silence_accept: "Sì, silenzia questo utente"
-        bounce_score: "Errori di Ritorno"
+        bounce_score: "Conteggio messaggi rimbalzati"
         reset_bounce_score:
           label: "Azzera"
-          title: "Azzera il conteggio degli errori di ritorno."
+          title: "Azzera conteggio messaggi rimbalzati."
         visit_profile: "Visita <a href='%{url}'>la pagina delle preferenze di questo utente</a> per modificare il suo profilo"
         deactivate_explanation: "Un utente disattivato deve riconvalidare la propria email."
         suspended_explanation: "Un utente sospeso non può accedere."
         silence_explanation: "Un utente silenziato non può pubblicare messaggi o iniziare argomenti. "
         staged_explanation: "Un utente temporaneo può pubblicare via email solo in alcuni argomenti."
         bounce_score_explanation:
-          none: "L'indirizzo email non ha causato nessun errore di ritorno recentemente."
-          some: "Sono stati ricevuti alcuni errori di ritorno per quell'indirizzo email."
-          threshold_reached: "Quella email ha ricevuto troppi errori di ritorno."
+          none: "L'indirizzo email non ha causato nessun rimbalzo di messaggi recentemente."
+          some: "Sono stati ricevuti alcuni messaggi rimbalzati per quell'indirizzo email."
+          threshold_reached: "Quella email è stata rimbalzata troppe volte."
         trust_level_change_failed: "C'è stato un problema nel cambio di livello di attendibilità di questo utente."
         suspend_modal_title: "Sospendi Utente"
         confirm_cancel_penalty: "Sei sicuro di voler scartare la penalità?"
@@ -4636,7 +4636,7 @@ it:
           requirement_heading: "Requisito"
           visits: "Visite"
           days: "giorni"
-          topics_replied_to: "Argomenti con risposte"
+          topics_replied_to: "Argomenti cui hai risposto"
           topics_viewed: "Argomenti Visti"
           topics_viewed_all_time: "Argomenti Visti (di sempre)"
           posts_read: "Messaggi Letti"
@@ -4645,7 +4645,7 @@ it:
           flagged_by_users: "Utenti Segnalatori"
           likes_given: "Mi piace - Assegnati"
           likes_received: "Mi piace - Ricevuti"
-          likes_received_days: "\"Mi piace\" ricevuti: singoli giorni"
+          likes_received_days: "\"Mi piace\" ricevuti: in un solo giorno"
           likes_received_users: "\"Mi piace\" Ricevuti: singoli utenti"
           suspended: "Sospeso (ultimi 6 mesi)"
           silenced: "Silenziato (ultimi 6 mesi)"
@@ -4828,7 +4828,7 @@ it:
         target_posts: Ricerca i messaggi di destinazione
         auto_revoke: Avvia l'istruzione di revoca giornalmente
         show_posts: Visualizza i messaggi che assegnano distintivi sulla pagina dei distintivi
-        trigger: Trigger
+        trigger: Attivazione
         trigger_type:
           none: "Aggiorna giornalmente"
           post_action: "Quando un utente agisce su un messaggio"
