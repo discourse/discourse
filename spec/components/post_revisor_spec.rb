@@ -178,7 +178,7 @@ describe PostRevisor do
         expect(post.errors.messages[:base].first).to be I18n.t("cannot_edit_on_slow_mode")
       end
 
-      it 'ninja editing is allowed' do
+      it 'grace period editing is allowed' do
         SiteSetting.editing_grace_period = 1.minute
 
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
@@ -208,7 +208,7 @@ describe PostRevisor do
       end
     end
 
-    describe 'ninja editing' do
+    describe 'grace period editing' do
       it 'correctly applies edits' do
         SiteSetting.editing_grace_period = 1.minute
 
@@ -608,7 +608,7 @@ describe PostRevisor do
 
       context 'second poster posts again quickly' do
 
-        it 'is a ninja edit, because the second poster posted again quickly' do
+        it 'is a grace period edit, because the second poster posted again quickly' do
           SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
@@ -1178,7 +1178,7 @@ describe PostRevisor do
       expect { revisor.revise!(admin, { raw: 'updated body' }) }.to change(ReviewablePost, :count).by(0)
     end
 
-    it 'skips ninja edits' do
+    it 'skips grace period edits' do
       SiteSetting.editing_grace_period = 1.minute
 
       expect {
