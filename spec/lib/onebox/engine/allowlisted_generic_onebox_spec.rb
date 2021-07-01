@@ -98,6 +98,7 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
       before do
         stub_request(:get, mobile_url).to_return(status: 200, body: onebox_response('etsy_mobile'))
         stub_request(:get, canonical_url).to_return(status: 200, body: onebox_response('etsy'))
+        stub_request(:head, canonical_url).to_return(status: 200, body: "")
       end
 
       it 'fetches opengraph data and price from canonical link' do
@@ -142,6 +143,7 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
         }
       )
       stub_request(:get, redirect_link).to_return(status: 200, body: onebox_response('dailymail'))
+      stub_request(:head, redirect_link).to_return(status: 200, body: "")
     end
 
     around do |example|
@@ -168,9 +170,10 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
       before do
         stub_request(:get, "https://edition.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
           .to_return(status: 200, body: onebox_response('cnn'))
-
         stub_request(:get, "https://www.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
           .to_return(status: 200, body: onebox_response('cnn'))
+        stub_request(:head, "https://www.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
+          .to_return(status: 200, body: "")
       end
 
       it 'shows basic onebox' do

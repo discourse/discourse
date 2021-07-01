@@ -10,6 +10,8 @@ describe Onebox::Engine::GooglePhotosOnebox do
     stub_request(:get, link).to_return(status: 200, body: onebox_response("googlephotos"))
     stub_request(:get, "https://photos.google.com/share/AF1QipOV3gcu_edA8lyjJEpS9sC1g3AeCUtaZox11ylYZId7wJ7cthZ8M1kZXeAp5vhEPg?key=QktmUFNvdWpNVktERU5zWmVRZlZubzRRc0ttWWN3")
       .to_return(status: 200, body: onebox_response("googlephotos"))
+    stub_request(:head, "https://photos.google.com/share/AF1QipOV3gcu_edA8lyjJEpS9sC1g3AeCUtaZox11ylYZId7wJ7cthZ8M1kZXeAp5vhEPg?key=QktmUFNvdWpNVktERU5zWmVRZlZubzRRc0ttWWN3")
+      .to_return(status: 200, body: "")
   end
 
   it "includes album title" do
