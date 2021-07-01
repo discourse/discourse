@@ -8,6 +8,9 @@ module EnsureMagic
       can_method = :"#{Regexp.last_match[1]}?"
 
       if respond_to?(can_method)
+        puts "#########"
+        puts can_method.inspect
+        puts "#########"
         raise Discourse::InvalidAccess.new("#{can_method} failed") unless send(can_method, *args, &block)
         return
       end

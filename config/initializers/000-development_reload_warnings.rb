@@ -11,7 +11,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
     "#{Rails.root}/plugins"
   ]
 
-  Listen.to(*paths, only: /\.rb$/) do |modified, added, removed|
+  Listen.to(*paths, only: /^((?!plugin.rb).)*\.rb$/) do |modified, added, removed|
     supervisor_pid = $unicorn_dev_supervisor_pid # rubocop:disable Style/GlobalVars
     auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
 
