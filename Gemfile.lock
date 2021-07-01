@@ -349,7 +349,7 @@ GEM
     rqrcode (2.0.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
-    rqrcode_core (1.0.0)
+    rqrcode_core (1.1.0)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
