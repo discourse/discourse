@@ -1237,7 +1237,7 @@ zh_CN:
         was_this_you_description: "如果不是您，我们建议您更改密码并退出所有登录。"
         browser_and_device: "%{browser}，在 %{device} 上"
         secure_account: "保护我的帐户"
-        latest_post: "您上次发布了…"
+        latest_post: "您上次发帖…"
         device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
         browser_active: '%{browser} | <span class="active">正在使用</span>'
         browser_last_seen: "%{browser} | %{date}"
@@ -1323,7 +1323,7 @@ zh_CN:
         invited_via_link: "链接 %{key}（已确认 %{count}/%{max}）"
         groups: "群组"
         topic: "话题"
-        sent: "创建/发送时间"
+        sent: "创建/上次发送日期"
         expires_at: "到期时间"
         edit: "编辑"
         remove: "移除"
@@ -1455,7 +1455,7 @@ zh_CN:
         the_topic: "话题"
     loading: "正在加载…"
     errors:
-      prev_page: "尝试加载时"
+      prev_page: "无法加载"
       reasons:
         network: "网络错误"
         server: "服务器错误"
@@ -2048,7 +2048,7 @@ zh_CN:
     go_back: "返回"
     not_logged_in_user: "包含当前活动和偏好设置摘要的用户页面"
     current_user: "转到您的用户页面"
-    view_all: "查看全部 %{tab}"
+    view_all: "查看所有%{tab}"
     topics:
       new_messages_marker: "上次访问"
       bulk:
@@ -2278,7 +2278,7 @@ zh_CN:
         jump_bottom: "跳转到最后一个帖子"
         jump_prompt: "跳转到…"
         jump_prompt_of:
-          other: "第 %{count} 帖"
+          other: "/%{count} 个帖子"
         jump_prompt_long: "跳转到…"
         jump_bottom_with_number: "跳转到帖子 %{post_number}"
         jump_prompt_to_date: "到日期"
