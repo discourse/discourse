@@ -1994,43 +1994,43 @@ de:
     default_email_digest_frequency: "Wie oft Benutzer standardmäßig E-Mail-Zusammenfassungen erhalten."
     default_include_tl0_in_digests: "Beiträge von neuen Benutzern in E-Mail-Zusammenfassungen standardmäßig anzeigen. Benutzer können dies in ihren Einstelllungen ändern."
     default_email_level: "Lege die Standard-E-Mail-Benachrichtigungsstufe für normale Themen fest."
-    default_email_messages_level: "Standard E-Mail Benachrichtigungs-Stufe wenn jemand einem Benutzer Nachrichten schickt."
-    default_email_mailing_list_mode: "Sende standardmäßig eine E-Mail für jeden neuen Beitrag."
+    default_email_messages_level: "Lege die Standard-E-Mail-Benachrichtigungsstufe fest, wenn jemand einem Benutzer eine Nachricht sendet."
+    default_email_mailing_list_mode: "Für jeden neuen Beitrag standardmäßig eine E-Mail senden."
     default_email_mailing_list_mode_frequency: "Benutzer, die den Mailinglisten-Modus einschalten, werden standardmäßig so häufig eine E-Mail erhalten."
     disable_mailing_list_mode: "Benutzern das Aktivieren des Mailinglisten-Modus verbieten (verhindert, dass E-Mails von Mailinglisten gesendet werden.)"
     default_email_previous_replies: "Standardmäßig vorhergehende Antworten in E-Mails einschließen."
-    default_email_in_reply_to: "Standardmäßig einen Anriss des Beitrags, auf den geantwortet wurde, in E-Mails einfügen."
-    default_other_new_topic_duration_minutes: "Zeit wie lange ein Thema als \"Neu\" markiert werden soll."
-    default_other_auto_track_topics_after_msecs: "Zeit bevor ein Thema automatisch verfolg wird."
-    default_other_notification_level_when_replying: "Globales Standard-Benachrichtigungslevel, wenn ein Benutzer auf ein Thema antwortet."
+    default_email_in_reply_to: "Standardmäßig einen Auszug aus dem beantworteten Beitrag in E-Mails einfügen."
+    default_other_new_topic_duration_minutes: "Globale Standardbedingung, nach der ein Thema als neu gilt."
+    default_other_auto_track_topics_after_msecs: "Globale Standardzeit, bevor ein Thema automatisch verfolgt wird."
+    default_other_notification_level_when_replying: "Globale Standard-Benachrichtigungsstufe, wenn ein Benutzer auf ein Thema antwortet."
     default_other_external_links_in_new_tab: "Öffne externe Links standardmäßig in einem neuen Tab."
-    default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort Funktion für hervorgehobenen Text."
-    default_other_enable_defer: "Standardmäßig Verzögerung der Themen-Funktionalität aktivieren."
-    default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl von neuen und geänderten Beiträgen im Browser-Symbol an."
+    default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort-Funktion für hervorgehobenen Text."
+    default_other_enable_defer: "Aktiviere standardmäßig die Funktion zum Zurückstellen von Themen."
+    default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl der neuen/aktualisierten Themen im Browser-Symbol an."
     default_other_skip_new_user_tips: "Überspringen Sie Tipps und Abzeichen für das Onboarding neuer Benutzer."
     default_other_like_notification_frequency: "Benutzer standardmäßig bei erhaltenen Likes benachrichtigen."
-    default_topics_automatic_unpin: "Standardmäßig Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
+    default_topics_automatic_unpin: "Themen standardmäßig automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
-    default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
+    default_categories_tracking: "Liste der standardmäßig verfolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
-    default_categories_watching_first_post: "Liste von Kategorien, in denen der erste Beiträge in jedem neuen Thema automatisch beobachtet wird."
+    default_categories_watching_first_post: "Liste der Kategorien, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
     default_categories_regular: "Liste der Kategorien, die nicht standardmäßig stumm sind. Nützlich, wenn `mute_all_categories_by_default` Einstellung aktiviert ist."
-    mute_all_categories_by_default: "Setze die Standard E-Mail Benachrichtigungs-Stufe für alle Kategorien auf stummgeschaltet. Benötigt die Zustimmung der Benutzer, damit sie in \"neueste\" und Kategorien-Seiten erscheinen. Um den Standard für anonyme Benutzer anzupassen, müssen 'default_categories_' Einstellungen gesetzt werden."
+    mute_all_categories_by_default: "Setze die Standard-Benachrichtigungsstufe für alle Kategorien auf stumm. Erfordere die Aktivierung der Kategorien durch die Benutzer, damit sie auf den Seiten „Aktuell“ und „Kategorien“ erscheinen. Wenn du die Standardeinstellungen für anonyme Benutzer ändern möchtest, bearbeite die „default_categories_“-Einstellungen."
     default_tags_watching: "Liste der Schlagwörter, die standardmäßig beobachtet werden."
     default_tags_tracking: "Liste der Schlagwörter, die standardmäßig verfolgt werden."
     default_tags_muted: "Liste der Schlagwörter, die standardmäßig stummgeschaltet werden."
     default_tags_watching_first_post: "Liste der Schlagwörter, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
     default_text_size: "Schriftgröße, die standardmäßig ausgewählt ist"
     default_title_count_mode: "Standardmodus für den Seitentitel-Zähler"
-    retain_web_hook_events_period_days: "Anzahl an Tagen, die Web-Hook-Ereigniseinträge aufbewahrt werden"
-    retry_web_hook_events: "Fehlgeschlagene Web-Hook-Ereignisse automatisch 4-mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen 1, 5, 25 und 125 MInuten."
-    revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch zurückgezogen wird (0 für nie)"
+    retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
+    retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
+    revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch widerrufen wird (0 für niemals)"
     allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
-    allow_user_api_key_scopes: "Liste erlaubter Scopes für Benutzer-API-Schlüssel"
+    allow_user_api_key_scopes: "Liste erlaubter Bereiche für Benutzer-API-Schlüssel"
     min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API-Schlüsseln"
-    allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z.B. www.example.com/*)."
-    allowed_user_api_push_urls: "Erlaubte URL für Server-Push zur Benutzer API"
-    expire_user_api_keys_days: "Anzahl Tage, bevor ein Benutzer API-Schlüssel automatisch abläuft. (0 für niemals)"
+    allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z. B. www.example.com/*)."
+    allowed_user_api_push_urls: "Erlaubte URLs für Server-Push zur Benutzer-API"
+    expire_user_api_keys_days: "Anzahl der Tage, bevor ein Benutzer-API-Schlüssel automatisch abläuft (0 für niemals)"
     tagging_enabled: "Schlagwörter für Themen aktivieren?"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
@@ -2048,16 +2048,16 @@ de:
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
-    shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Vorlagen“, indem du eine Kategorie für Themen-Vorlagen bestimmst. Themen in dieser Kategorie werden unterdrückt in der Themen Liste für Team Mitarbeiter."
+    shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Entwürfe“, indem du eine Kategorie für Themenentwürfe bestimmst. Themen in dieser Kategorie werden in den Themenlisten für Team-Mitglieder unterdrückt."
     shared_drafts_min_trust_level: "Ermöglichen Sie Benutzern das Anzeigen und Bearbeiten von freigegebenen Entwürfen."
     push_notifications_prompt: "Zeige eine Aufforderung zur Benutzerzustimmung an."
     push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein 96 × 96 monochromatisches PNG mit Transparenz wird empfohlen."
     base_font: "Basisschriftart für die meisten Texte auf der Website. Themes können über die `--font-family` CSS-benutzerdefinierte Eigenschaft überschrieben werden."
     heading_font: "Schriftart für Überschriften auf der Website. Themes können über die `--heading-font-family` CSS-benutzerdefinierte Eigenschaft überschrieben werden."
-    short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
+    short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wählen Sie aus, welche Dashboard-Tabs sichtbar sind."
-    dashboard_general_tab_activity_metrics: "Wähle Berichte, die als Aktivitätsmetrik auf dem Allgemein-Tab angezeigt werden."
+    dashboard_general_tab_activity_metrics: "Wähle Berichte aus, die als Aktivitätsmetrik in der Registerkarte „Allgemein“ angezeigt werden."
     gravatar_name: "Name des Gravatar-Anbieters"
     gravatar_base_url: "URL der API-Basis des Gravatar-Anbieters"
     gravatar_login_url: "URL relativ zu gravatar_base_url, die dem Benutzer die Anmeldung beim Gravatar-Dienst ermöglicht"
@@ -3520,13 +3520,13 @@ de:
       text_body_template: |
         Hallo,
 
-        Wir haben festgestellt, dass du dich von einem anderen Gerät oder Ort als üblich angemeldet hast. Warst du das?
+        wir haben festgestellt, dass du dich von einem anderen Gerät oder Ort als üblich angemeldet hast. Warst du das?
 
          - Ort: %{location} (%{client_ip})
          - Browser: %{browser}
          - Gerät: %{device} – %{os}
 
-        Wenn du das warst, hervorragend! Es gibt nichts anderes, was du tun musst.
+        Wenn du das warst – hervorragend! Du musst nichts weiter tun.
 
         Wenn du das nicht gewesen bist, [überprüfe bitte deine aktiven Sitzungen](%{base_url}/my/preferences/account) und erwäge, dein Passwort zu ändern.
     post_approved:
@@ -3535,7 +3535,7 @@ de:
       text_body_template: |
         Hallo,
 
-        dies ist eine automatisierte Nachricht von %{site_name} , um dich darüber zu informieren, dass [dein Beitrag] (%{base_url}%{post_url}) genehmigt wurde.
+        dies ist eine automatisierte Nachricht von %{site_name}, um dich darüber zu informieren, dass [dein Beitrag](%{base_url}%{post_url}) genehmigt wurde.
   page_forbidden:
     title: "Hoppla! Diese Seite ist privat."
   site_setting_missing: "„%{name}“ Site-Einstellung muss festgelegt werden."
@@ -3544,18 +3544,18 @@ de:
     popular_topics: "Beliebt"
     recent_topics: "Aktuell"
     see_more: "Mehr"
-    search_title: "Diese Site durchsuchen"
+    search_title: "Diese Website durchsuchen"
     search_button: "Suche"
   offline:
     title: "App kann nicht geladen werden"
-    offline_page_message: "Sieht so aus als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es nochmal."
+    offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
   login_required:
     welcome_message: |
       ## [Willkommen bei %{title}](#welcome)
-      Ein Konto ist erforderlich. Bitte erstelle ein Konto oder melde dich an.
+      Ein Konto ist erforderlich. Bitte erstelle ein Konto oder melde dich an, um fortzufahren.
     welcome_message_invite_only: |
       ## [Willkommen bei %{title}](#welcome)
-      Ein Konto ist erforderlich. Bitte frage ein existierendes Mitglied nach einer Einladung und melde dich an um fortzufahren.
+      Ein Konto ist erforderlich. Bitte frage ein existierendes Mitglied nach einer Einladung oder melde dich an, um fortzufahren.
   deleted: "gelöscht"
   image: "Bild"
   upload:
@@ -3602,7 +3602,7 @@ de:
     sender_text_part_body_blank: "text_part.body ist leer"
     sender_body_blank: "Textkörper ist leer"
     sender_post_deleted: "Beitrag wurde gelöscht"
-    sender_message_to_invalid: "Der Empfänger hat eine ungültige E-Mail-Adresse"
+    sender_message_to_invalid: "Empfänger hat eine ungültige E-Mail-Adresse"
     sender_topic_deleted: "Thema wurde gelöscht"
   color_schemes:
     base_theme_name: "Basis"
@@ -3610,7 +3610,7 @@ de:
     dark: "Dunkel"
     neutral: "Neutral"
     grey_amber: "Grauer Bernstein"
-    shades_of_blue: "Blau-Schattierungen"
+    shades_of_blue: "Blautöne"
     latte: "Latte"
     summer: "Sommer"
     dark_rose: "Dunkelrosa"
@@ -3626,7 +3626,7 @@ de:
     shades_of_blue_theme_name: "Blautöne"
     latte_theme_name: "Latte"
     summer_theme_name: "Sommer"
-    dark_rose_theme_name: "Dunkle Rosen"
+    dark_rose_theme_name: "Dunkelrosa"
   edit_this_page: "Diese Seite bearbeiten"
   csv_export:
     boolean_yes: "Ja"
@@ -3635,7 +3635,7 @@ de:
   static_topic_first_reply: |
     Bearbeite den ersten Beitrag in diesem Thema, um den Inhalt von %{page_name} zu ändern.
   guidelines_topic:
-    title: "FAQ / Richtlinien"
+    title: "FAQ/Richtlinien"
     body: |
       <a name="civilized"></a>
 
@@ -4036,12 +4036,12 @@ de:
       name: Autobiograf
       description: Hat <a href="%{base_uri}/my/preferences/profile">Benutzerprofil</a> ausgefüllt
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du dein <a href="%{base_uri}/my/preferences/profile">Benutzerprofil</a> ausfüllst und ein Profilbild hochlädst. Die Community ein bisschen mehr wissen zu lassen über dich und darüber, was du gerne tust, macht die gesamte Community besser. Mach mit!
+        Dieses Abzeichen wird verliehen, wenn du dein <a href="%{base_uri}/my/preferences/profile">Benutzerprofil</a> ausfüllst und ein Profilbild auswählst. Die Community ein bisschen mehr wissen zu lassen über dich und darüber, was du gerne tust, macht die gesamte Community besser. Mach mit!
     anniversary:
       name: Jubiläum
       description: Ist ein aktives Mitglied für ein Jahr und hat mindestens einen Beitrag verfasst
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du ein Jahr lang Mitglied warst und in diesem Jahr mindestens einen Beitrag geschrieben hast. Danke, dass du hier geblieben bist und zu unserer Community beiträgst. Ohne dich könnten wir dies nicht tun.
+        Dieses Abzeichen wird verliehen, wenn du ein Jahr lang Mitglied warst und in diesem Jahr mindestens einen Beitrag geschrieben hast. Danke, dass du geblieben bist und zu unserer Community beiträgst. Ohne dich würde uns etwas fehlen.
     nice_post:
       name: Schöne Antwort
       description: Hat 10 Likes für eine Antwort erhalten
@@ -4514,7 +4514,7 @@ de:
       delete_single:
         title: "Löschen"
       delete:
-        title: "Löschen..."
+        title: "Löschen …"
       delete_and_ignore:
         title: "Beitrag löschen und ignorieren"
         description: "Lösche Beitrag; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
