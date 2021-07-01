@@ -6,12 +6,12 @@
 
 de:
   site_settings:
-    discourse_narrative_bot_enabled: "Aktiviere den Discourse Lerntrainings-Bot (discobot)"
+    discourse_narrative_bot_enabled: "Discourse Narrative Bot (discobot) aktivieren"
     disable_discourse_narrative_bot_welcome_post: "Die vom Discourse Narrative Bot gesendete Willkommensnachricht deaktivieren"
     discourse_narrative_bot_ignored_usernames: "Benutzernamen, die vom Discourse Narrative Bot ignoriert werden sollen"
-    discourse_narrative_bot_disable_public_replies: "Öffentliche Antworten von Discourse Narrative Bot deaktivieren"
+    discourse_narrative_bot_disable_public_replies: "Öffentliche Antworten vom Discourse Narrative Bot deaktivieren"
     discourse_narrative_bot_welcome_post_type: "Die Art der Willkommensnachricht, die vom Discourse Narrative Bot versendet werden soll."
-    discourse_narrative_bot_welcome_post_delay: "Warte (n) Sekunden bevor Discourse Narrative Bot seine Willkommensnachricht schickt"
+    discourse_narrative_bot_welcome_post_delay: "Warte (n) Sekunden, bevor der Discourse Narrative Bot seine Willkommensnachricht verschickt."
     discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot Tutorials zum Überspringen"
   badges:
     certified:
@@ -23,7 +23,7 @@ de:
       name: Lizenziert
       description: "Hat das Tutorial für fortgeschrittene Benutzer abgeschlossen"
       long_description: |
-        Das Abzeichen wird verliehen, wenn das interaktive Tutorial für fortgeschrittene Benutzer erfolgreich abgeschlossen wurde. Du beherrscht die fortgeschrittenen Werkzeuge für Diskussionen erlernt und besitzt nun die Lizenz zum Diskutieren.
+        Das Abzeichen wird verliehen, wenn das interaktive Tutorial für fortgeschrittene Benutzer erfolgreich abgeschlossen wurde. Du hast die fortgeschrittenen Werkzeuge für Diskussionen erlernt und besitzt nun die Lizenz zum Diskutieren.
   discourse_narrative_bot:
     bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne mich namentlich, um mit mir zu interagieren."
     tl2_promotion_message:

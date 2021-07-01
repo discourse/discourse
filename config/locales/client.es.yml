@@ -4835,7 +4835,7 @@ es:
           plugins: "Plugins"
           user_preferences: "Preferencias de usuario"
           tags: "Etiquetas"
-          search: "Búsqueda"
+          search: "Buscar"
           groups: "Grupos"
           dashboard: "Panel"
         secret_list:
@@ -4852,7 +4852,7 @@ es:
       badges:
         title: Insignias
         new_badge: Nueva insignia
-        new: Crear
+        new: Nueva
         name: Nombre
         badge: Insignia
         display_name: Nombre que se muestra
@@ -4888,8 +4888,8 @@ es:
         graphic: Gráfico
         icon_help: "Introduce un nombre de icono de Font Awesome (usa el prefijo «far-» para iconos normales y «fab-» para iconos de marca)"
         image_help: "Subir una imagen sobrescribirá el campo del icono si ambos tienen valores."
-        select_an_icon: "Seleccionar un icono"
-        upload_an_image: "Subir una imagen"
+        select_an_icon: "Selecciona un icono"
+        upload_an_image: "Sube una imagen"
         read_only_setting_help: "Personalizar texto"
         query: Consulta de insignia (SQL)
         target_posts: Publicaciones destino de la consulta
@@ -4995,7 +4995,7 @@ es:
         modal:
           title: "Reemplazar texto"
           subtitle: "Reemplazar el texto de las categorías generadas por el sistema con las últimas traducciones"
-          categories: "Categoría"
+          categories: "Categorías"
           topics: "Temas"
           replace: "Reemplazar"
   wizard_js:
