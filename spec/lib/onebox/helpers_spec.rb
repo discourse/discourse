@@ -58,6 +58,7 @@ RSpec.describe Onebox::Helpers do
         uri = 'https://www.example.com'
         stub_request(:get, uri).to_return(status: 200, body: "<!DOCTYPE html><link rel='canonical' href='http://foobar.com/'/><p>invalid</p>")
         stub_request(:get, 'http://foobar.com').to_return(status: 200, body: "<!DOCTYPE html><p>success</p>")
+        stub_request(:head, 'http://foobar.com').to_return(status: 200, body: "")
 
         expect(described_class.fetch_html_doc(uri).to_s).to match("success")
       end

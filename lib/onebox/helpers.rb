@@ -36,9 +36,12 @@ module Onebox
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
         canonical_uri = Addressable::URI.parse(canonical_link)
-        if canonical_link && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}" && canonical_uri.host != "localhost"
-          response = (fetch_response(canonical_uri.to_s, headers: headers, body_cacher: body_cacher) rescue nil)
-          doc = Nokogiri::HTML(response) if response
+        if canonical_link && canonical_uri && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
+          uri = FinalDestination.new(canonical_link, Oneboxer.get_final_destination_options(canonical_link)).resolve
+          if uri.present?
+            response = (fetch_response(uri.to_s, headers: headers, body_cacher: body_cacher) rescue nil)
+            doc = Nokogiri::HTML(response) if response
+          end
         end
       end
 
