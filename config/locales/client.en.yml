@@ -2566,7 +2566,7 @@ en:
       temp_open:
         title: "Open Temporarily"
       auto_reopen:
-        title: "Auto-open Topic"
+        title: "Auto-Open Topic"
       temp_close:
         title: "Close Temporarily"
       auto_close:
