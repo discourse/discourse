@@ -397,31 +397,11 @@ module Oneboxer
 
   def self.external_onebox(url, available_strategies = nil)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-
       uri = URI(url)
       available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
       strategy = available_strategies.shift
 
-      fd_options = {
-        ignore_redirects: ignore_redirects,
-        ignore_hostnames: blocked_domains,
-        force_get_hosts: force_get_hosts,
-        force_custom_user_agent_hosts: force_custom_user_agent_hosts,
-        preserve_fragment_url_hosts: preserve_fragment_url_hosts,
-        timeout: 5
-      }
-
-      if strategy && Oneboxer.strategies[strategy][:force_get_host]
-        fd_options[:force_get_hosts] = ["https://#{uri.hostname}"]
-      end
-      if strategy && Oneboxer.strategies[strategy][:force_custom_user_agent_host]
-        fd_options[:force_custom_user_agent_hosts] = ["https://#{uri.hostname}"]
-      end
-
-      user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
-      fd_options[:default_user_agent] = user_agent_override if user_agent_override
-
-      fd = FinalDestination.new(url, fd_options)
+      fd = FinalDestination.new(url, get_final_destination_options(url, strategy))
       uri = fd.resolve
 
       if fd.status != :resolved
@@ -453,6 +433,8 @@ module Oneboxer
       }
 
       onebox_options[:cookie] = fd.cookie if fd.cookie
+
+      user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
       onebox_options[:user_agent] = user_agent_override if user_agent_override
 
       r = Onebox.preview(uri.to_s, onebox_options)
@@ -552,4 +534,32 @@ module Oneboxer
     "ONEBOXER_STRATEGY_#{hostname}"
   end
 
+  def self.get_final_destination_options(url, strategy = nil)
+    fd_options = {
+      ignore_redirects: ignore_redirects,
+      ignore_hostnames: blocked_domains,
+      force_get_hosts: force_get_hosts,
+      force_custom_user_agent_hosts: force_custom_user_agent_hosts,
+      preserve_fragment_url_hosts: preserve_fragment_url_hosts,
+      timeout: 5
+    }
+
+    uri = URI(url)
+
+    if strategy.blank?
+      strategy = Oneboxer.ordered_strategies(uri.hostname).shift
+    end
+
+    if strategy && Oneboxer.strategies[strategy][:force_get_host]
+      fd_options[:force_get_hosts] = ["https://#{uri.hostname}"]
+    end
+    if strategy && Oneboxer.strategies[strategy][:force_custom_user_agent_host]
+      fd_options[:force_custom_user_agent_hosts] = ["https://#{uri.hostname}"]
+    end
+
+    user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
+    fd_options[:default_user_agent] = user_agent_override if user_agent_override
+
+    fd_options
+  end
 end
