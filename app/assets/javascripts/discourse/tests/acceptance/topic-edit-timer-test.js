@@ -121,12 +121,12 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex2.test(html2));
   });
 
-  test("schedule", async function (assert) {
+  test("schedule publish to category - allowed for a PM", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
     const categoryChooser = selectKit(".modal-body .category-chooser");
 
-    await visit("/t/internationalization-localization");
+    await visit("/t/pm-for-testing/12");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
@@ -148,7 +148,35 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex.test(text));
   });
 
-  test("schedule - last custom date and time", async function (assert) {
+  test("schedule publish to category - allowed for a private category", async function (assert) {
+    updateCurrentUser({ moderator: true });
+    const timerType = selectKit(".select-kit.timer-type");
+    const categoryChooser = selectKit(".modal-body .category-chooser");
+
+    // has private category id 24 (shared drafts)
+    await visit("/t/some-topic/9");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    await timerType.expand();
+    await timerType.selectRowByValue("publish_to_category");
+
+    assert.equal(categoryChooser.header().label(), "uncategorized");
+    assert.equal(categoryChooser.header().value(), null);
+
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue("7");
+
+    await click("#tap_tile_start_of_next_business_week");
+
+    const regex = /will be published to #dev/g;
+    const text = queryAll(".edit-topic-timer-modal .topic-timer-info")
+      .text()
+      .trim();
+    assert.ok(regex.test(text));
+  });
+
+  test("schedule publish to category - last custom date and time", async function (assert) {
     updateCurrentUser({ moderator: true });
 
     await visit("/t/internationalization-localization");
@@ -181,6 +209,21 @@ acceptance("Topic - Edit timer", function (needs) {
     const text = queryAll("#tap_tile_last_custom").text().trim();
     const regex = /Nov 24, 10:30 am/g;
     assert.ok(regex.test(text));
+  });
+
+  test("schedule publish to category - does not show for a public topic", async function (assert) {
+    updateCurrentUser({ moderator: true });
+    const timerType = selectKit(".select-kit.timer-type");
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    await timerType.expand();
+    assert.notOk(
+      timerType.rowByValue("publish_to_category").exists(),
+      "publish to category is not allowed for public topics (not PM or private category)"
+    );
   });
 
   test("TL4 can't auto-delete", async function (assert) {
