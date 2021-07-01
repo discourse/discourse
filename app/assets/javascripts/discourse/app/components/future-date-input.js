@@ -14,20 +14,6 @@ export default Component.extend({
   displayLabel: null,
   labelClasses: null,
 
-  init() {
-    this._super(...arguments);
-
-    let initialInput = this.input || this.initialInput;
-    if (initialInput) {
-      const datetime = moment(initialInput);
-      this.setProperties({
-        selection: "pick_date_and_time",
-        date: datetime.format("YYYY-MM-DD"),
-        time: datetime.format("HH:mm"),
-      });
-    }
-  },
-
   timeInputDisabled: empty("date"),
 
   @observes("date", "time")
@@ -52,6 +38,15 @@ export default Component.extend({
 
     if (this.label) {
       this.set("displayLabel", I18n.t(this.label));
+    }
+
+    if (this.input) {
+      const datetime = moment(this.input);
+      this.setProperties({
+        selection: "pick_date_and_time",
+        date: datetime.format("YYYY-MM-DD"),
+        time: datetime.format("HH:mm"),
+      });
     }
   },
 });
