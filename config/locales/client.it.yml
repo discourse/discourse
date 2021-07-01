@@ -4645,17 +4645,17 @@ it:
           flagged_by_users: "Utenti Segnalatori"
           likes_given: "Mi piace - Assegnati"
           likes_received: "Mi piace - Ricevuti"
-          likes_received_days: "\"Mi piace\" Ricevuti: singoli giorni"
+          likes_received_days: "\"Mi piace\" ricevuti: singoli giorni"
           likes_received_users: "\"Mi piace\" Ricevuti: singoli utenti"
           suspended: "Sospeso (ultimi 6 mesi)"
           silenced: "Silenziato (ultimi 6 mesi)"
-          qualifies: "Requisiti soddisfatti per il livello di esperienza 3."
-          does_not_qualify: "Mancano i requisiti per il livello esperienza 3."
+          qualifies: "Requisiti soddisfatti per il livello di attendibilità 3."
+          does_not_qualify: "Mancano i requisiti per il livello di attendibilità 3."
           will_be_promoted: "Verrà presto promosso."
           will_be_demoted: "Verrà presto degradato."
-          on_grace_period: "Al momento la promozione si trova nel periodo di grazia, non verrà degradato."
-          locked_will_not_be_promoted: "Livello esperienza bloccato. Non verrà mai promosso."
-          locked_will_not_be_demoted: "Livello esperienza bloccato. Non verrà mai degradato."
+          on_grace_period: "Attualmente siamo nel periodo di prova della promozione, l'utente non verrà degradato."
+          locked_will_not_be_promoted: "Livello di attendibilità bloccato. L'utente non verrà mai promosso."
+          locked_will_not_be_demoted: "Livello di attendibilità bloccato. L'utente non verrà mai degradato."
         discourse_connect:
           title: "DiscourseConnect Single Sign On"
           external_id: "ID esterno"
@@ -4668,7 +4668,7 @@ it:
           confirm_delete: "Sei sicuro di voler eliminare questo record DiscourseConnect?"
       user_fields:
         title: "Campi Utente"
-        help: "Tutti i campi che i tuoi utenti possono riempire."
+        help: "Tutti i campi che i tuoi utenti possono compilare."
         create: "Crea Campo Utente"
         untitled: "Senza nome"
         name: "Nome Campo"
@@ -4681,9 +4681,9 @@ it:
         delete_confirm: "Sicuro di voler cancellare il campo utente?"
         options: "Opzioni"
         required:
-          title: "Richiesto durante l'iscrizione?"
-          enabled: "richiesto"
-          disabled: "non richiesto"
+          title: "Obbligatorio durante l'iscrizione?"
+          enabled: "obbligatorio"
+          disabled: "non obbligatorio"
         editable:
           title: "Modificabile dopo l'iscrizione?"
           enabled: "modificabile"
@@ -4703,7 +4703,7 @@ it:
         field_types:
           text: "Campo Testo"
           confirm: "Conferma"
-          dropdown: "A tendina"
+          dropdown: "A discesa"
       site_text:
         description: "Puoi personalizzare qualsiasi testo del tuo forum. Comincia effettuando una ricerca qui sotto:"
         search: "Trova il testo che vorresti modificare"
@@ -4712,13 +4712,13 @@ it:
         revert: "Annulla Modifiche"
         revert_confirm: "Sei sicuro di voler annullare le modifiche?"
         go_back: "Torna alla Ricerca"
-        recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
+        recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         locale: "Lingua:"
         fallback_locale_warning: "Stai modificando una varietà di %{fallback}. Gli utenti che scelgono %{fallback} come lingua dell'interfaccia non visualizzeranno le modifiche apportate."
-        more_than_50_results: "Ci sono più di 50 risultati. Per favore, raffina la tua ricerca."
+        more_than_50_results: "Ci sono più di 50 risultati. Restringi i criteri di ricerca."
       settings:
-        show_overriden: "Mostra solo i sovrascritti"
+        show_overriden: "Mostra solo le opzioni sovrascritte"
         history: "Visualizza la cronologia delle modifiche"
         reset: "reimposta"
         none: "nessuno"
@@ -4729,7 +4729,7 @@ it:
             label: "Aggiungi Emoji"
         title: "Impostazioni"
         no_results: "Nessun risultato trovato."
-        more_than_30_results: "Ci sono più di 30 risultati. Per favore, raffina la tua ricerca o seleziona una Categoria."
+        more_than_30_results: "Ci sono più di 30 risultati. Restringi i criteri di ricerca o seleziona una categoria."
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"
         add_host: "aggiungi host"
@@ -4741,9 +4741,9 @@ it:
             label: "Carica"
             title: "Carica immagine(i)"
         selectable_avatars:
-          title: "Lista degli Avatar da cui l'utente può scegliere"
+          title: "Elenco degli Avatar tra cui l'utente può scegliere"
         categories:
-          all_results: "Tutti"
+          all_results: "Tutte"
           required: "Obbligatorie"
           branding: "Branding"
           basic: "Impostazioni Base"
@@ -4751,30 +4751,30 @@ it:
           posting: "Pubblicazione"
           email: "Email"
           files: "File"
-          trust: "Livelli Esperienza"
+          trust: "Livelli di attendibilità"
           security: "Sicurezza"
           onebox: "Onebox"
           seo: "SEO"
           spam: "Spam"
           rate_limits: "Limiti Frequenza"
           developer: "Sviluppatore"
-          embedding: "Incorporo"
+          embedding: "Integrato"
           legal: "Legale"
           api: "API"
           user_api: "API Utente"
           uncategorized: "Altro"
           backups: "Backup"
-          login: "Connessione"
+          login: "Accesso"
           plugins: "Plugin"
           user_preferences: "Preferenze Utente"
           tags: "Etichette"
           search: "Cerca"
           groups: "Gruppi"
-          dashboard: "Cruscotto"
+          dashboard: "Dashboard"
         secret_list:
           invalid_input: "I campi di inserimento non possono essere vuoti o contenere il carattere barra verticale."
         default_categories:
-          modal_description: "Desideri applicare questa modifica storicamente? Questo cambierà le preferenze per %{count} utenti esistenti."
+          modal_description: "Desideri applicare questa modifica retroattivamente? Questo cambierà le preferenze per %{count} utenti esistenti."
           modal_yes: "Sì"
           modal_no: "No, applica le modifiche solo da adesso in avanti"
         simple_list:
@@ -4795,7 +4795,7 @@ it:
         badge_grouping: Gruppo
         badge_groupings:
           modal_title: Raggruppamento Distintivi
-        granted_by: Assegnata Da
+        granted_by: Assegnato da
         granted_at: Assegnata in data
         reason_help: (Un collegamento a un messaggio o argomento)
         save: Salva
@@ -4813,7 +4813,7 @@ it:
         no_badges: Non ci sono distintivi da assegnare.
         none_selected: "Seleziona un distintivo per iniziare"
         allow_title: Permetti di utilizzare un distintivo come titolo
-        multiple_grant: Può essere assegnata più volte
+        multiple_grant: Può essere assegnato più volte
         listable: Mostra distintivo sulla pagina pubblica dei distintivi
         enabled: Attiva distintivo
         icon: Icona
@@ -4825,7 +4825,7 @@ it:
         upload_an_image: "Carica un'immagine"
         read_only_setting_help: "Personalizza testo"
         query: Query Distintivo (SQL)
-        target_posts: Interroga i messaggi destinazione
+        target_posts: Ricerca i messaggi di destinazione
         auto_revoke: Avvia l'istruzione di revoca giornalmente
         show_posts: Visualizza i messaggi che assegnano distintivi sulla pagina dei distintivi
         trigger: Trigger
@@ -4833,18 +4833,18 @@ it:
           none: "Aggiorna giornalmente"
           post_action: "Quando un utente agisce su un messaggio"
           post_revision: "Quando un utente modifica o crea un messaggio"
-          trust_level_change: "Quando un utente cambia livello di esperienza"
+          trust_level_change: "Quando un utente cambia livello di attendibilità"
           user_change: "Quando un utente viene modificato o creato"
           post_processed: "Dopo che un messaggio viene elaborato"
         preview:
           link_text: "Anteprima distintivi guadagnati"
-          plan_text: "Anteprima con query plan"
+          plan_text: "Anteprima con testo query"
           modal_title: "Anteprima Query Distintivo"
           sql_error_header: "Si è verificato un errore con la query."
           error_help: "Visita i seguenti collegamenti per un aiuto con le query dei distintivi."
           bad_count_warning:
             header: "ATTENZIONE!"
-            text: "Ci sono esempi di grant mancanti. Ciò accade quando la query dei distintivi ritorna ID utenti o ID messaggi inesistenti. Successivamente ciò può causare risultati inattesi - controlla bene la tua query."
+            text: "Ci sono esempi di assegnazioni mancanti. Ciò accade quando la query dei distintivi restituisce ID utenti o ID messaggi inesistenti. Successivamente ciò può causare risultati inattesi - controlla bene la tua query."
           no_grant_count: "Nessun distintivo da assegnare."
           grant_count:
             one: "<b>%{count}</b> distintivo da assegnare."
@@ -4880,17 +4880,17 @@ it:
         alt: "anteprima emoji personalizzata"
         delete_confirm: "Sicuro di voler cancellare l'emoji :%{name}:?"
       embedding:
-        get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host"
+        get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
         confirm_delete: "Sicuro di voler cancellare questo host?"
-        sample: "Utilizza il seguente codice HTML nel tuo sito per creare e incorporare gli argomenti di Discourse. Sostituisci <b>REPLACE_ME</b> con l'URL canonical della pagina in cui lo stai incorporando."
-        title: "Incorporo"
+        sample: "Utilizza il seguente codice HTML nel tuo sito per creare e incorporare gli argomenti di Discourse. Sostituisci <b>REPLACE_ME</b> con l'URL canonico della pagina in cui lo stai incorporando."
+        title: "Integrato"
         host: "Host Abilitati"
         class_name: "Nome Classe"
         allowed_paths: "Lista path permessi"
         edit: "modifica"
         category: "Pubblica nella Categoria"
         add_host: "Aggiungi Host"
-        settings: "Impostazioni di incorporo"
+        settings: "Impostazioni di inclusione"
         crawling_settings: "Impostazioni Crawler"
         crawling_description: "Quando Discourse crea gli argomenti per i tuoi messaggi, se non è presente nessun feed RSS/ATOM, cercherà di estrarre il contenuto dal codice HTML. Il contenuto può risultate a volte ostico da estrarre e, per semplificare il processo, forniamo la possibilità di specificare le regole CSS."
         embed_by_username: "Nome utente per la creazione dell'argomento"

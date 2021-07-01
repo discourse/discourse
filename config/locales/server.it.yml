@@ -43,10 +43,10 @@ it:
   loading: "Caricamento"
   powered_by_html: 'Fornito da <a href="https://www.discourse.org">Discourse</a>, si consiglia di abilitare JavaScript'
   sign_up: "Iscriviti"
-  log_in: "Connetti"
+  log_in: "Accedi"
   submit: "Invia"
   purge_reason: "Account cancellato automaticamente perché abbandonato o disattivato"
-  disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
+  disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disponibile su disco."
   anonymous: "Anonimo"
   remove_posts_deleted_by_author: "Cancellato dall'autore"
   redirect_warning: "Non è stato possibile verificare che il collegamento che hai selezionato sia stato effettivamente pubblicato sul forum. Se desideri procedere comunque, seleziona il collegamento qui sotto."
@@ -72,13 +72,13 @@ it:
       unknown_file_type: "Il file che hai caricato non sembra essere un tema valido di Discourse."
       not_allowed_theme: "`%{repo}` non è nella lista dei temi consentiti (controlla l'impostazione globale `allowed_theme_repos`)."
     errors:
-      component_no_user_selectable: "I componenti del tema non possono essere selezionabili dall'utente"
+      component_no_user_selectable: "I componenti del tema non sono selezionabili dall'utente"
       component_no_default: "I componenti del tema non possono essere il tema predefinito"
       component_no_color_scheme: "I componenti dei temi non possono avere palette dei colori"
-      no_multilevels_components: "I temi con temi figlio non possono essere essi stessi temi figlio"
+      no_multilevels_components: "I temi con elementi figli non possono a loro volta essere temi figli"
       optimized_link: I collegamenti ad immagini ottimizzate sono effimeri e non devono essere inclusi nel codice sorgente del tema.
     settings_errors:
-      invalid_yaml: "Il codice YAML fornito è invalido."
+      invalid_yaml: "Il codice YAML fornito non è valido."
       data_type_not_a_number: "L'impostazione del tipo `%{name}` non è supportata. I tipi supportati sono `integer`,` bool`, `list`,` enum` e `upload`"
       name_too_long: "Una delle impostazioni ha un nome troppo lungo. La lunghezza massima è 255 caratteri"
       default_value_missing: "L'impostazione `%{name}` non ha alcun valore predefinito"
@@ -113,13 +113,13 @@ it:
         inactive_user_error: "Succede quando il mittente non è attivo."
         silenced_user_error: "Succede quando il mittente è stato silenziato."
         bad_destination_address: "Succede quando nessuno degli indirizzi email nei campi A/Cc corrisponde a un indirizzo email entrante configurato."
-        strangers_not_allowed_error: "Succede quando un utente tenta di creare uno nuovo argomento in una categoria della quale non è membro."
-        insufficient_trust_level_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria per la quale non ha il livello di esperienza richiesto."
+        strangers_not_allowed_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria della quale non è membro."
+        insufficient_trust_level_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria per la quale non ha il livello di attendibilità richiesto."
         reply_user_not_matching_error: "Succede quando arriva una risposta da un indirizzo email diverso da quello cui la notifica era stata inviata."
         topic_not_found_error: "Succede quando arriva una risposta ma l'argomento relativo è stato cancellato."
         topic_closed_error: "Succede quando arriva una risposta ma l'argomento relativo è stato chiuso."
-        bounced_email_error: "L'email rappresenta un rapporto di email tornata indietro."
-        screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
+        bounced_email_error: "L'email è un rapporto di email non recapitata."
+        screened_email_error: "Succede quando l'indirizzo email del mittente era stato già scansionato."
         unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
         email_not_allowed: "Succede quando l'indirizzo e-mail non è nella lista di contatti permessi o è in quella di contatti bloccati."
       unrecognized_error: "Errore Non Riconosciuto"
@@ -130,7 +130,7 @@ it:
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "ha un massimo di%{max} caratteri; tu ne hai inseriti %{length}."
-      invalid_boolean: "Booleano non valido."
+      invalid_boolean: "Valore booleano non valido."
       taken: "è già stato usato"
       accepted: deve essere accettato
       blank: non può essere vuoto
@@ -156,13 +156,13 @@ it:
       not_a_number: non è un numero
       not_an_integer: deve essere un intero
       odd: deve essere dispari
-      record_invalid: ! "Validazione fallita: %{errors}"
+      record_invalid: ! "Verifica fallita: %{errors}"
       max_emojis: "non può avere più di %{max_emojis_count} emoji"
       emojis_disabled: "non può avere emoji"
       ip_address_already_screened: "è già incluso in una regola esistente"
       restrict_dependent_destroy:
-        one: "Impossibile cancellare il record poiché ne esistono %{record} dipendenti"
-        many: "Impossibile cancellare il record poiché esiste %{record} dipendente"
+        one: "Impossibile cancellare il record poiché esiste un %{record} dipendente"
+        many: "Impossibile cancellare il record poiché esistono %{record} dipendenti"
       too_long:
         one: è troppo lungo (il massimo è di %{count} carattere)
         other: è troppo lungo (il massimo è di %{count} caratteri)

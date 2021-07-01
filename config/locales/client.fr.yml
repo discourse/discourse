@@ -2684,8 +2684,8 @@ fr:
         other: "%{count} personnes ont aimé ce message"
       has_likes_title_only_you: "vous avez aimé ce message"
       has_likes_title_you:
-        one: "vous et %{count} autre personne ont aimé ce message"
-        other: "vous et %{count} autres personnes ont aimé ce message"
+        one: "vous et %{count} autre personne avez aimé ce message"
+        other: "vous et %{count} autres personnes avez aimé ce message"
       filtered_replies_hint:
         one: "Voir ce message et sa réponse"
         other: "Voir ce message et ses %{count} réponses"
@@ -2695,8 +2695,8 @@ fr:
       in_reply_to: "Charger le message parent"
       view_all_posts: "Afficher tous les messages"
       errors:
-        create: "Désolé, il y a eu une erreur lors de la publication de votre message. Veuillez réessayer."
-        edit: "Désolé, il y a eu une erreur lors de la modification de votre message. Veuillez réessayer."
+        create: "Nous sommes désolés, une erreur est survenue lors de la création de votre message. Veuillez réessayer."
+        edit: "Nous sommes désolés, une erreur est survenue lors de la modification de votre message. Veuillez réessayer."
         upload: "Nous sommes désolés, une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer."
         file_too_large: "Nous sommes désolés, ce fichier est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko). Nous vous suggérons de stocker votre fichier sur un service d'hébergement extérieur au forum et de coller ensuite un lien dans votre message."
         too_many_uploads: "Nous sommes désolés, vous ne pouvez envoyer qu'un seul fichier à la fois."
@@ -2706,7 +2706,7 @@ fr:
         upload_not_authorized: "Nous sommes désolés, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
         attachment_upload_not_allowed_for_new_user: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas envoyer de fichiers."
-        attachment_download_requires_login: "Désolé, vous devez être connecté pour télécharger une pièce jointe."
+        attachment_download_requires_login: "Nous sommes désolés, vous devez être connecté(e) pour télécharger une pièce jointe."
       cancel_composer:
         confirm: "Que souhaitez-vous faire de votre message ?"
         discard: "Abandonner"
@@ -2724,11 +2724,11 @@ fr:
         reply: "commencer à répondre à ce message"
         like: "attribuer un « J'aime » à ce message"
         has_liked: "vous avez aimé ce message"
-        read_indicator: "Membres ayant lu cette publication"
+        read_indicator: "Membres ayant lu ce message"
         undo_like: "annuler le « J'aime »"
         edit: "modifier ce message"
         edit_action: "Modifier"
-        edit_anonymous: "Désolé, mais vous devez être connecté pour modifier ce message."
+        edit_anonymous: "Nous sommes désolés, mais vous devez être connecté(e) pour modifier ce message."
         flag: "signaler secrètement ce message pour attirer l'attention ou envoyer une notification privée à son sujet"
         delete: "supprimer ce message"
         undelete: "annuler la suppression de ce message"
@@ -2737,11 +2737,11 @@ fr:
         delete_replies:
           confirm: "Voulez-vous aussi supprimer les réponses à ce message ?"
           direct_replies:
-            one: "Oui et %{count} réponse directe"
-            other: "Oui et %{count} réponses directes"
+            one: "Oui, et %{count} réponse directe"
+            other: "Oui, et %{count} réponses directes"
           all_replies:
-            one: "Oui et %{count} réponse"
-            other: "Oui et les %{count} réponses"
+            one: "Oui, et %{count} réponse"
+            other: "Oui, et les %{count} réponses"
           just_the_post: "Non, uniquement ce message"
         admin: "actions d'administration sur le message"
         wiki: "Basculer en mode wiki"
@@ -2750,18 +2750,18 @@ fr:
         revert_to_regular: "Retirer la couleur modérateur"
         rebake: "Reconstruire le HTML"
         publish_page: "Publication de pages"
-        unhide: "Ré-afficher"
-        change_owner: "Modifier l'auteur"
+        unhide: "Afficher"
+        change_owner: "Changer de propriétaire"
         grant_badge: "Décerner le badge"
         lock_post: "Verrouiller le message"
         lock_post_description: "empêcher l'utilisateur de modifier ce message"
         unlock_post: "Déverrouiller le message"
-        unlock_post_description: "permettre l'utilisateur de modifier le message"
-        delete_topic_disallowed_modal: "Vous n'avez pas le permission de supprimer ce sujet. Si vous souhaitez vraiment le voir supprimé, signalez-le aux modérateurs avec une explication."
+        unlock_post_description: "permettre à l'utilisateur de modifier le message"
+        delete_topic_disallowed_modal: "Vous n'avez pas la permission de supprimer ce sujet. Si vous souhaitez vraiment le supprimer, signalez-le aux modérateurs en fournissant une explication."
         delete_topic_disallowed: "vous n'avez pas la permission de supprimer ce sujet"
         delete_topic_confirm_modal:
-          one: "Ce sujet a actuellement plus de %{count} vue et peut être un résultat de recherche populaire. Voulez-vous vraiment supprimer ce sujet au lieu de le modifier pour l'améliorer ?"
-          other: "Ce sujet compte actuellement plus de %{count} vues et peut être un résultat de recherche apprécié. Êtes-vous sûr de vouloir supprimer ce sujet, plutôt que de le modifier pour en améliorer le contenu ?"
+          one: "Ce sujet a actuellement plus de %{count} vue et peut être un résultat de recherche populaire. Voulez-vous vraiment supprimer ce sujet au lieu de le modifier pour en améliorer le contenu ?"
+          other: "Ce sujet compte actuellement plus de %{count} vues et peut être un résultat de recherche apprécié. Voulez-vous vraiment supprimer ce sujet, au lieu de le modifier pour en améliorer le contenu ?"
         delete_topic_confirm_modal_yes: "Oui, supprimer ce sujet"
         delete_topic_confirm_modal_no: "Non, conserver ce sujet"
         delete_topic_error: "Une erreur s'est produite lors de la suppression de ce sujet"
@@ -2786,19 +2786,19 @@ fr:
             one: "et %{count} autre a lu ceci"
             other: "et %{count} autres ont lu ceci"
         by_you:
-          off_topic: "Vous l'avez signalé comme étant hors-sujet"
-          spam: "Vous l'avez signalé comme étant du spam"
+          off_topic: "Vous avez signalé ceci comme étant hors-sujet"
+          spam: "Vous avez signalé ceci comme étant du spam"
           inappropriate: "Vous avez signalé ceci comme étant répréhensible"
-          notify_moderators: "Vous l'avez signalé pour modération"
+          notify_moderators: "Vous avez signalé ceci pour modération"
           notify_user: "Vous avez envoyé un message à cet utilisateur"
       delete:
         confirm:
-          one: "Êtes-vous sûr de vouloir supprimer ce message ?"
-          other: "Êtes-vous sûr de vouloir supprimer ces %{count} messages ?"
+          one: "Voulez-vous vraiment supprimer ce message ?"
+          other: "Voulez-vous vraiment supprimer ces %{count} messages ?"
       merge:
         confirm:
-          one: "Êtes-vous sûr de vouloir fusionner ces messages ?"
-          other: "Êtes-vous sûr de vouloir fusionner ces %{count} messages ?"
+          one: "Voulez-vous vraiment fusionner ces messages ?"
+          other: "Voulez-vous vraiment fusionner ces %{count} messages ?"
       revisions:
         controls:
           first: "Première révision"
@@ -2810,7 +2810,7 @@ fr:
           revert: "Revenir à la révision %{revision}"
           edit_wiki: "Modifier le wiki"
           edit_post: "Modifier le message"
-          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon}<strong>%{current}</strong> / %{total}"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon}<strong>%{current}</strong>/%{total}"
         displays:
           inline:
             title: "Afficher le rendu avec les ajouts et les retraits en ligne"
@@ -2857,7 +2857,7 @@ fr:
         viewing_posts_by: "Affichage de %{post_count} messages par"
         viewing_subset: "Certaines réponses sont réduites"
         viewing_summary: "Affichage d'un résumé de ce sujet"
-        post_number: "%{username}, message #%{post_number}"
+        post_number: "%{username}, message numéro %{post_number}"
         show_all: "Tout afficher"
     category:
       can: "peut&hellip; "
@@ -2890,7 +2890,7 @@ fr:
       save: "Enregistrer la catégorie"
       slug: "Identifiant de la catégorie"
       slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
-      creation_error: Il y a eu une erreur lors de la création de la catégorie.
+      creation_error: Une erreur s'est produite lors de la création de la catégorie.
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
       name: "Nom de la catégorie"
       description: "Description"
@@ -2902,8 +2902,8 @@ fr:
       foreground_color: "Couleur du texte"
       name_placeholder: "Un ou deux mots maximum"
       color_placeholder: "N'importe quelle couleur"
-      delete_confirm: "Êtes-vous sûr de vouloir supprimer cette catégorie ?"
-      delete_error: "Il y a eu une erreur lors de la suppression."
+      delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
+      delete_error: "Une erreur s'est produite lors de la suppression de la catégorie."
       list: "Lister les catégories"
       no_description: "Veuillez ajouter une description pour cette catégorie."
       change_in_category_topic: "Modifier la description"
@@ -2920,22 +2920,22 @@ fr:
         toggle_reply: "Modifier la permission de répondre"
         toggle_full: "Modifier la permission de créer"
         inherited: 'Cette autorisation est héritée de « tout le monde »'
-      special_warning: "Avertissement : cette catégorie est une catégorie pré-remplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez là au lieu de détourner sa fonction."
-      uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert à rassembler les sujets qui n'ont pas de catégorie ; vous ne pouvez pas changer ses paramètres de sécurité."
-      uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez changer cela et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser / Contenu</a>.'
+      special_warning: "Avertissement : cette catégorie est une catégorie préremplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez-la au lieu de détourner sa fonction."
+      uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert à rassembler les sujets qui n'ont pas de catégorie ; vous ne pouvez pas modifier ses paramètres de sécurité."
+      uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez modifier ce comportement et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser/contenu</a>.'
       pending_permission_change_alert: "Vous n'avez pas ajouté %{group} à cette catégorie ; cliquez sur ce bouton pour l'ajouter."
       images: "Images"
       email_in: "Adresse courriel entrant personnalisée :"
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La création de nouveaux sujets par courriel est désactivée dans les paramètres. Pour activer la création de nouveaux sujets par courriel, "
-      email_in_disabled_click: 'activez le paramètre « email in ».'
+      email_in_disabled_click: 'activez le paramètre « e-mail entrant ».'
       mailinglist_mirror: "La catégorie reflète une liste de diffusion"
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       read_only_banner: "Texte du bandeau à afficher lorsqu'un utilisateur ne peut pas créer un sujet dans cette catégorie :"
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
       subcategory_num_featured_topics: "Nombre de sujets à la une sur la page de la catégorie parente :"
       all_topics_wiki: "Faire des nouveaux sujets des wikis par défaut"
-      allow_unlimited_owner_edits_on_first_post: "Autoriser l'auteur d'un message initial à modifier celui-ci sans limite de nombre."
+      allow_unlimited_owner_edits_on_first_post: "Autoriser la modification illimitée du premier message par son propriétaire"
       subcategory_list_style: "Style des listes de sous-catégories :"
       sort_order: "Trier la liste de sujets par :"
       default_view: "Liste de sujets par défaut :"
@@ -2951,34 +2951,34 @@ fr:
       position: "Position sur la page des catégories :"
       default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste, "
-      position_disabled_click: 'activez le paramètre « fixed category positions ».'
-      minimum_required_tags: "Nombre minimum d'étiquettes requises dans un sujet :"
+      position_disabled_click: 'activez le paramètre « positions de catégorie fixes ».'
+      minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
       parent: "Catégorie parente"
       num_auto_bump_daily: "Nombre de sujets ouverts à remonter dans la liste automatiquement et quotidiennement :"
       navigate_to_first_post_after_read: "Naviguer vers le premier message après avoir lu un sujet"
       notifications:
         watching:
           title: "Surveiller"
-          description: "Vous surveillerez automatiquement tous les sujets de cette catégorie. Vous serez notifié pour tous les nouveaux messages de chaque sujet, et le nombre de nouvelles réponses sera affiché."
+          description: "Vous surveillerez automatiquement tous les sujets de cette catégorie. Vous recevrez une notification pour tous les nouveaux messages de chaque sujet, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
-          description: "Vous serez averti de nouveaux sujets dans cette catégorie mais pas de réponses aux sujets."
+          description: "Vous recevrez une notification concernant les nouveaux sujets dans cette catégorie, mais pas pour les réponses aux sujets."
         tracking:
           title: "Suivre"
-          description: "Vous suivrez automatiquement tous les sujets dans cette catégorie. Vous serez notifié lorsque quelqu'un vous mentionne ou vous répond, et le nombre de nouvelles réponses sera affiché."
+          description: "Vous suivrez automatiquement tous les sujets dans cette catégorie. Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra, et le nombre de nouvelles réponses sera affiché."
         regular:
           title: "Normal"
-          description: "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
+          description: "Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra."
         muted:
-          title: "Silencieux"
+          title: "En sourdine"
           description: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans cette catégorie et ces sujets n'apparaîtront pas sur la page des sujets récents."
       search_priority:
         label: "Priorité dans les résultats de recherche"
         options:
           normal: "Normale"
           ignore: "Ignorer"
-          very_low: "Très basse"
-          low: "Basse"
+          very_low: "Très faible"
+          low: "Faible"
           high: "Élevée"
           very_high: "Très élevée"
       sort_options:
@@ -3008,30 +3008,30 @@ fr:
         none: "aucune sous-catégorie"
       colors_disabled: "Vous ne pouvez pas sélectionner de couleurs, car vous n'avez pas choisi de style de catégorie."
     flagging:
-      title: "Merci pour votre participation au maintien de la civilité&nbsp;!"
+      title: "Merci pour votre participation au maintien de la civilité !"
       action: "Signaler ce message"
       take_action: "Intervenir…"
       take_action_options:
         default:
           title: "Intervenir"
-          details: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre plus de signalements de la communauté."
+          details: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre d'autres signalements de la communauté."
         suspend:
           title: "Suspendre l'utilisateur"
           details: "Atteindre le seuil de signalement et suspendre l'utilisateur"
         silence:
-          title: "Mettre l'utilisateur sous silence"
-          details: "Atteindre le seuil de signalement et mettre l'utilisateur sous silence"
+          title: "Mettre l'utilisateur en sourdine"
+          details: "Atteindre le seuil de signalement et mettre l'utilisateur en sourdine"
       notify_action: "Message"
       official_warning: "Avertissement officiel"
       delete_spammer: "Supprimer le spammeur"
       flag_for_review: "Mettre en file d'attente pour examen"
-      delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse courriel <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr que cet utilisateur est réellement un spammeur ?"
+      delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse courriel <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr(e) que cet utilisateur est un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
-      ip_address_missing: "(N/A)"
+      ip_address_missing: "(S.O.)"
       hidden_email_address: "(masqué)"
       submit_tooltip: "Soumettre le signalement privé"
-      take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre plus de signalement de la communauté."
-      cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment."
+      take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre d'autres signalements de la communauté."
+      cant: "Nous sommes désolés, vous ne pouvez pas signaler ce message pour le moment."
       notify_staff: "Notifier les responsables de manière privée"
       formatted_name:
         off_topic: "C'est hors-sujet"
