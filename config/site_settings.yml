@@ -1409,7 +1409,7 @@ files:
     default: false
     client: true
   composer_media_optimization_image_kilobytes_optimization_threshold:
-    default: 1048576
+    default: 524288
     client: true
   composer_media_optimization_image_resize_dimensions_threshold:
     default: 1920
