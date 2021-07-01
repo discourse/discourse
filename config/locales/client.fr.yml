@@ -2189,7 +2189,7 @@ fr:
         read: "Vous n'avez lu aucun sujet pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
         latest: "Vous avez tout lu !"
-        bookmarks: "Vous n'avez pas encore attribué aucun signet."
+        bookmarks: "Vous n'avez encore attribué aucun signet."
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
         educate:
@@ -3037,8 +3037,8 @@ fr:
         off_topic: "C'est hors-sujet"
         inappropriate: "C'est répréhensible"
         spam: "C'est du spam"
-      custom_placeholder_notify_user: "Soyez précis, constructif et toujours respectueux."
-      custom_placeholder_notify_moderators: "Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents et exemples si possible."
+      custom_placeholder_notify_user: "Soyez précis(e), constructif(ve) et faites toujours preuve de respect."
+      custom_placeholder_notify_moderators: "Dites-nous ce qui vous dérange spécifiquement, et fournissez des exemples et des liens pertinents si possible."
       custom_message:
         at_least:
           one: "saisissez au moins %{count} caractère"
@@ -3050,7 +3050,7 @@ fr:
           one: "%{count} restant"
           other: "%{count} restants"
     flagging_topic:
-      title: "Merci pour votre participation au maintien de la civilité&nbsp;!"
+      title: "Merci pour votre participation au maintien de la civilité !"
       action: "Signaler le sujet"
       notify_action: "Message"
     topic_map:
@@ -3074,7 +3074,7 @@ fr:
       locked:
         help: "Ce sujet est fermé ; il n'accepte plus de nouvelles réponses"
       archived:
-        help: "Ce sujet est archivé ; il est figé et ne peut être modifié"
+        help: "Ce sujet est archivé ; il est figé et ne peut plus être modifié"
       locked_and_archived:
         help: "Ce sujet est fermé et archivé ; il n'accepte plus de nouvelles réponses et ne peut plus être modifié"
       unpinned:
@@ -3087,7 +3087,7 @@ fr:
         title: "Épinglé"
         help: "Ce sujet est épinglé pour vous ; il s'affichera en haut de sa catégorie"
       unlisted:
-        help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
+        help: "Ce sujet n'apparaît plus dans la liste des sujets et sera seulement accessible via un lien direct"
       personal_message:
         title: "Ce sujet est un message direct"
         help: "Ce sujet est un message direct"
@@ -3192,16 +3192,16 @@ fr:
         this_week: "Semaine"
         today: "Aujourd'hui"
         other_periods: "voir le top :"
-    browser_update: 'Malheureusement <a href="https://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Veuillez <a href="https://browsehappy.com">mettre à jour votre navigateur</a> afin de voir du contenu enrichi, se connecter et répondre.'
+    browser_update: 'Malheureusement <a href="https://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Veuillez <a href="https://browsehappy.com">mettre à jour votre navigateur</a> afin de voir le contenu enrichi, vous connecter et répondre.'
     permission_types:
-      full: "Créer / Répondre / Voir"
-      create_post: "Répondre / Voir"
+      full: "Créer/Répondre/Voir"
+      create_post: "Répondre/Voir"
       readonly: "Voir"
     lightbox:
       download: "télécharger"
       previous: "Précédent (touche flèche gauche)"
       next: "Suivant (touche flèche droite)"
-      counter: "%curr% de %total%"
+      counter: "%curr% sur %total%"
       close: "Fermer (Echap)"
       content_load_error: '<a href="%url%">Ce contenu</a> n''a pas pu être chargé.'
       image_load_error: '<a href="%url%">Cette image</a> n''a pas pu être chargée.'
@@ -3229,12 +3229,12 @@ fr:
         previous: "%{shortcut} Sujet précédent"
       navigation:
         title: "Navigation"
-        jump: "%{shortcut} Aller au message #"
+        jump: "%{shortcut} Accéder au message numéro"
         back: "%{shortcut} Retour"
         up_down: "%{shortcut} Déplacer la sélection &uarr; &darr;"
         open: "%{shortcut} Ouvrir le sujet sélectionné"
         next_prev: "%{shortcut} Section suivante/précédente"
-        go_to_unread_post: "%{shortcut} Aller au premier message non lu"
+        go_to_unread_post: "%{shortcut} Accéder au premier message non lu"
       application:
         title: "Application"
         create: "%{shortcut} Créer un nouveau sujet"
@@ -3278,7 +3278,7 @@ fr:
         bookmark: "%{shortcut} Mettre un signet au message"
         edit: "%{shortcut} Modifier le message"
         delete: "%{shortcut} Supprimer le message"
-        mark_muted: "%{shortcut} Mettre le sujet en silencieux"
+        mark_muted: "%{shortcut} Mettre le sujet en sourdine"
         mark_regular: "%{shortcut} Notifications par défaut pour le sujet"
         mark_tracking: "%{shortcut} Suivre le sujet"
         mark_watching: "%{shortcut} Surveiller le sujet"
@@ -3293,7 +3293,7 @@ fr:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
         other: "A reçu ce badge %{count} fois"
-      granted_on: "Décerné %{date}"
+      granted_on: "Décerné le %{date}"
       others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
       allow_title: "Vous pouvez utiliser ce badge comme titre"
@@ -3334,7 +3334,7 @@ fr:
       choose_for_topic: "étiquettes optionnelles"
       info: "Détails"
       default_info: "Cette étiquette n'est restreinte à aucune catégorie et n'a aucun synonyme défini. Pour restreindre l'utilisation de cette étiquette, ajoutez-là à un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
-      category_restricted: "Cette étiquette est limitée à des catégories dont vous n'avez pas la permission d'accéder."
+      category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
       synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
       tag_groups_info:
@@ -3347,16 +3347,16 @@ fr:
       add_synonyms_label: "Ajoutez des synonymes :"
       add_synonyms: "Ajouter"
       add_synonyms_explanation:
-        one: "Tous les éléments utilisant cette étiquette seront changés pour utiliser <b>%{tag_name}</b>. Êtes-vous sûr de vouloir faire ce changement ?"
-        other: "Tous les éléments utilisant ces étiquettes seront changés pour utiliser <b>%{tag_name}</b>. Êtes-vous sûr de vouloir faire ce changement ?"
-      add_synonyms_failed: "Les étiquettes suivantes n'ont pas pu être ajoutées comme synonymes : <b>%{tag_names}</b>. Assurez-vous qu'elles n'ont pas de synonymes et ne sont pas des synonymes d'une autre étiquette."
+        one: "Tous les éléments utilisant cette étiquette seront changés pour utiliser <b>%{tag_name}</b>. Voulez-vous vraiment effectuer ce changement ?"
+        other: "Tous les éléments utilisant ces étiquettes seront changés pour utiliser <b>%{tag_name}</b>. Voulez-vous vraiment effectuer ce changement ?"
+      add_synonyms_failed: "Les étiquettes suivantes n'ont pas pu être ajoutées comme synonymes : <b>%{tag_names}</b>. Assurez-vous qu'elles n'ont pas de synonymes et qu’elles ne sont pas des synonymes d'une autre étiquette."
       remove_synonym: "Supprimer le synonyme"
-      delete_synonym_confirm: 'Êtes-vous sur de vouloir supprimer le synonyme « %{tag_name} » ?'
+      delete_synonym_confirm: 'Voulez-vous vraiment supprimer le synonyme « %{tag_name} » ?'
       delete_tag: "Supprimer l'étiquette"
       delete_confirm:
-        one: "Êtes-vous sûr de vouloir supprimer cette étiquettes et l'enlever de %{count} sujet auquel elle est assignée ?"
-        other: "Êtes-vous sûr de vouloir supprimer cette étiquette et l'enlever de %{count} sujets auxquels elle est assignée ?"
-      delete_confirm_no_topics: "Êtes-vous sûr de vouloir supprimer cette étiquette ?"
+        one: "Voulez-vous vraiment supprimer cette étiquettes et l'enlever de %{count} sujet auquel elle est assignée ?"
+        other: "Voulez-vous vraiment supprimer cette étiquette et l'enlever de %{count} sujets auxquels elle est assignée ?"
+      delete_confirm_no_topics: "Voulez-vous vraiment supprimer cette étiquette ?"
       delete_confirm_synonyms:
         one: "Son synonyme sera aussi supprimé."
         other: "Ses %{count} synonymes seront aussi supprimés."
@@ -3390,22 +3390,22 @@ fr:
       notifications:
         watching:
           title: "Surveiller"
-          description: "Vous surveillerez automatiquement tous les sujets avec cette étiquette. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
+          description: "Vous surveillerez automatiquement tous les sujets marqués par cette étiquette. Vous recevrez des notifications pour tous les nouveaux messages et sujets, et les nombres de messages non lus et nouveaux apparaîtront à côté du sujet."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
-          description: "Vous serez averti de nouveaux sujets avec cette étiquette mais pas de réponses aux sujets."
+          description: "Vous recevrez une notification concernant les nouveaux sujets avec cette étiquette, mais pas pour les réponses aux sujets."
         tracking:
           title: "Suivre"
           description: "Vous suivrez automatiquement tous les sujets avec cette étiquette. Le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
         regular:
           title: "Normal"
-          description: "Vous serez notifié si quelqu'un vous mentionne ou répond à votre message."
+          description: "Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra."
         muted:
-          title: "Silencieux"
-          description: "Vous ne recevrez aucune notification concernant des nouveaux sujets avec cette étiquette et ces sujets n'apparaîtront pas sur votre page des sujets non lus."
+          title: "En sourdine"
+          description: "Vous ne recevrez aucune notification concernant les nouveaux sujets ayant cette étiquette et ces sujets n'apparaîtront pas sur votre page des sujets non lus."
       groups:
         title: "Groupes d'étiquettes"
-        about_heading: "Sélectionnez un groupe d'étiquettes, ou créez-en un nouveau"
+        about_heading: "Sélectionnez un groupe d'étiquettes ou créez-en un nouveau"
         about_heading_empty: "Pour commencer, créez un nouveau groupe d'étiquettes"
         about_description: "Les groupes d'étiquettes permettent de gérer les permissions d'accès de plusieurs étiquettes de façon centralisée."
         new: "Nouveau groupe"
@@ -3413,13 +3413,13 @@ fr:
         edit_title: "Modifier un groupe"
         tags_label: "Étiquettes appartenant à ce groupe"
         parent_tag_label: "Étiquette-mère"
-        parent_tag_description: "Les étiquettes de ce groupe ne pourront être attribuées que si leur étiquette-mère est attribuée aussi."
+        parent_tag_description: "Les étiquettes de ce groupe ne pourront être attribuées que si leur étiquette-mère est également attribuée."
         one_per_topic_label: "Limiter à une étiquette de ce groupe par sujet"
         new_name: "Nouveau groupe d'étiquettes"
         name_placeholder: "Nom"
         save: "Enregistrer"
         delete: "Supprimer"
-        confirm_delete: "Êtes-vous sûr de vouloir supprimer ce groupe d'étiquettes ?"
+        confirm_delete: "Voulez-vous vraiment supprimer ce groupe d'étiquettes ?"
         everyone_can_use: "Les étiquettes peuvent être utilisées par tout le monde"
         usable_only_by_groups: "Les étiquettes sont visibles par tous, mais seuls les groupes suivants peuvent les utiliser"
         visible_only_to_groups: "Les étiquettes sont uniquement visibles pour les groupes suivants"
@@ -3435,14 +3435,14 @@ fr:
           read: "Vous n'avez lu aucun sujet pour le moment."
           posted: "Vous n'avez écrit dans aucun sujet pour le moment."
           latest: "Il n'y a pas de sujets récents."
-          bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
+          bookmarks: "Vous n'avez encore attribué aucun signet."
           top: "Il n'y a pas de meilleurs sujets."
     invite:
       custom_message: "Rendez votre invitation plus personnelle en écrivant un <a href>message personnalisé</a>."
-      custom_message_placeholder: "Entrez votre message personnalisé"
+      custom_message_placeholder: "Saisissez votre message personnalisé"
       approval_not_required: "L'utilisateur sera automatiquement approuvé dès qu'il acceptera cette invitation."
-      custom_message_template_forum: "Hey, tu devrais rejoindre ce forum !"
-      custom_message_template_topic: "Hey, je pensais que tu aimerais ce sujet !"
+      custom_message_template_forum: "Salut, tu devrais rejoindre ce forum !"
+      custom_message_template_topic: "Salut, je pense que tu pourrais aimer ce sujet !"
     forced_anonymous: "En raison de la charge extrême, ceci est temporairement montré à tout le monde comme un utilisateur déconnecté le verrait."
     forced_anonymous_login_required: "Le site rencontre un nombre très élevé de consultations et ne peut être chargé pour le moment, veuillez réessayer d'ici quelques minutes."
     footer_nav:
@@ -3471,16 +3471,16 @@ fr:
         member: "membre"
         regular: "habitué"
         leader: "meneur"
-      detailed_name: "%{level}: %{name}"
+      detailed_name: "%{level} : %{name}"
   admin_js:
-    type_to_filter: "commencez à taper pour filtrer…"
+    type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
       title: "Administrateur"
       moderator: "Modérateur"
       tags:
         remove_muted_tags_from_latest:
           always: "toujours"
-          only_muted: "quand utilisée seule ou avec d'autres étiquettes mises sous silence"
+          only_muted: "quand utilisée seule ou avec d'autres étiquettes mises en sourdine"
           never: "jamais"
       reports:
         title: "Liste des rapports disponibles"
@@ -3508,7 +3508,7 @@ fr:
         no_problems: "Aucun problème n'a été trouvé."
         moderators: "Modérateurs :"
         admins: "Administrateurs :"
-        silenced: "Mis sous silence :"
+        silenced: "Mis en soudrine :"
         suspended: "Suspendus :"
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
@@ -3522,7 +3522,7 @@ fr:
           other: "%{count} sauvegardes sur %{location}"
         lastest_backup: "Dernière sauvegarde : %{date}"
         traffic_short: "Trafic"
-        traffic: "Requêtes d'application web"
+        traffic: "Requêtes d'application Web"
         page_views: "Pages vues"
         page_views_short: "Pages vues"
         show_traffic_report: "Afficher le rapport de trafic détaillé"
@@ -3537,17 +3537,17 @@ fr:
         reports_tab: "Rapports"
         report_filter_any: "tous"
         disabled: Désactivé
-        timeout_error: Désolé, la requête prend trop de temps, veuillez sélectionner un intervalle plus court
-        exception_error: Désolé, une erreur s'est produite à l'exécution de la requête
-        too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de ressayer.
-        not_found_error: Désolé, ce rapport n'existe pas
+        timeout_error: Nous sommes désolés, la requête prend trop de temps, veuillez sélectionner un intervalle plus court
+        exception_error: Nous sommes désolés, une erreur s'est produite lors de l'exécution de la requête
+        too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
+        not_found_error: Nous sommes désolés, ce rapport n'existe pas
         filter_reports: Filtrer les rapports
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           today: "Aujourd'hui"
           yesterday: "Hier"
-          last_7_days: "Derniers 7 jours"
-          last_30_days: "Derniers 30 jours"
+          last_7_days: "7 derniers jours"
+          last_30_days: "30 derniers jours"
           all_time: "Depuis toujours"
           7_days_ago: "il y a 7 jours"
           30_days_ago: "il y a 30 jours"
@@ -3562,7 +3562,7 @@ fr:
           groups: "Tous les groupes"
           disabled: "Ce rapport est désactivé"
           totals_for_sample: "Totaux pour l'échantillon"
-          average_for_sample: "Moyenne pour échantillon"
+          average_for_sample: "Moyenne pour l'échantillon"
           total: "Total depuis toujours"
           no_data: "Aucune donnée à afficher."
           trending_search:
@@ -3590,12 +3590,12 @@ fr:
             checking: "Vérification de la disponibilité du nom de groupe…"
             available: "Nom de groupe disponible"
             not_available: "Nom de groupe indisponible"
-            blank: "Le nom du groupe ne peut être vide"
+            blank: "Le nom du groupe ne peut pas être vide"
         manage:
           interaction:
             email: Courriel
             incoming_email: "Adresse courriel entrante personnalisée"
-            incoming_email_placeholder: "entrez une adresse courriel"
+            incoming_email_placeholder: "saisissez une adresse courriel"
             visibility: Visibilité
             visibility_levels:
               title: "Qui peut voir ce groupe ?"
@@ -3630,9 +3630,9 @@ fr:
         delete: "Supprimer"
         delete_confirm: "Supprimer ce groupe ?"
         delete_with_messages_confirm:
-          one: "La suppression de ce groupe rendra %{count} message orphelin, les membres du groupe n'y auront plus accès.<br><br>Etes-vous sûr?"
-          other: "La suppression de ce groupe rendra %{count} messages orphelins, les membres du groupe n'y auront plus accès.<br><br>Êtes-vous sûr ?"
-        delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
+          one: "La suppression de ce groupe rendra %{count} message orphelin, les membres du groupe n'y auront plus accès.<br><br>Voulez-vous continuer ?"
+          other: "La suppression de ce groupe rendra %{count} messages orphelins, les membres du groupe n'y auront plus accès.<br><br>Voulez-vous continuer ?"
+        delete_failed: "Impossible de supprimer le groupe. S'il s'agit d'un groupe automatique, il ne peut pas être détruit."
         delete_automatic_group: Ce groupe ne peut pas être supprimé car il est constitué de façon automatique.
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
         add: "Ajouter"
@@ -3667,7 +3667,7 @@ fr:
         user_mode: Niveau de l’utilisateur
         impersonate_all_users: Incarner un utilisateur
         single_user: "Utilisateur unique"
-        user_placeholder: Entrez un nom d'utilisateur
+        user_placeholder: Saisissez un nom d'utilisateur
         description_placeholder: À quoi servira cette clé ?
         save: Enregistrer
         new_key: Nouvelle clé pour l’API
@@ -3707,7 +3707,7 @@ fr:
       web_hooks:
         title: "Webhooks"
         none: "Il n'y a aucun Webhook actuellement."
-        instruction: "Les Webhooks permettent à Discourse de notifier des services externes lorsque certains événements se produisent sur votre site. Quand un Webhook est déclenché, une requête POST est envoyée aux URLs fournies."
+        instruction: "Les Webhooks permettent à Discourse de notifier des services externes lorsque certains événements se produisent sur votre site. Quand un Webhook est déclenché, une requête POST est envoyée aux URL fournies."
         detailed_instruction: "Une requête POST sera envoyée à l'URL fournie lorsque l'événement choisi se produira."
         new: "Nouveau Webhook"
         create: "Créer"
@@ -3730,17 +3730,17 @@ fr:
         individual_event: "Sélectionner des événements individuels."
         verify_certificate: "Vérifier le certificat TLS de l'URL cible"
         active: "Actif"
-        active_notice: "Nous délivrerons les détails de l'évènement quand il se produit."
-        categories_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux catégories définies. Laisser vide pour les déclencher pour toutes les catégories."
+        active_notice: "Nous délivrerons les détails de l'évènement quand il se produira."
+        categories_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux catégories définies. Laissez l'espace vide pour les déclencher pour toutes les catégories."
         categories_filter: "Catégories"
-        tags_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux étiquettes définies. Laisser vide pour les déclencher pour toutes les étiquettes."
+        tags_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux étiquettes définies. Laissez l'espace vide pour les déclencher pour toutes les étiquettes."
         tags_filter: "Étiquettes"
-        groups_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux groupes définis. Laisser vide pour les déclencher pour tous les groupes."
+        groups_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux groupes définis. Laissez l'espace vide pour les déclencher pour tous les groupes."
         groups_filter: "Groupes"
         delete_confirm: "Supprimer ce Webhook ?"
         topic_event:
           name: "Événement de sujet"
-          details: "Lorsqu'un sujet est créé, supprimé, modifié, ou subit une révision."
+          details: "Lorsqu'un sujet est créé, supprimé, modifié ou subit une révision."
         post_event:
           name: "Événement de message"
           details: "Lorsqu'une réponse est publiée, modifiée, supprimée ou restaurée."
@@ -3788,13 +3788,13 @@ fr:
             other: "Terminé en %{count} secondes."
           request: "Requête"
           response: "Réponse"
-          redeliver_confirm: "Êtes-vous sûr de vouloir redélivrer les mêmes données ?"
+          redeliver_confirm: "Voulez-vous vraiment redélivrer les mêmes données ?"
           headers: "Entêtes"
           payload: "Données"
           body: "Corps"
-          go_list: "Aller à la liste"
+          go_list: "Accéder à la liste"
           go_details: "Modifier le Webhook"
-          go_events: "Aller aux événements"
+          go_events: "Accéder aux événements"
           ping: "Ping"
           status: "Code de retour"
           event_id: "ID"
@@ -3824,7 +3824,7 @@ fr:
           enable:
             title: "Activer le mode lecture seule"
             label: "Activer la lecture seule"
-            confirm: "Êtes-vous sûr de vouloir activer le mode lecture seule ?"
+            confirm: "Voulez-vous vraiment activer le mode lecture seule ?"
           disable:
             title: "Désactiver le mode lecture seule"
             label: "Désactiver la lecture seule"
@@ -3846,7 +3846,7 @@ fr:
           cancel:
             label: "Annuler"
             title: "Annuler l'opération en cours"
-            confirm: "Êtes-vous sûr de vouloir annuler l'opération en cours ?"
+            confirm: "Voulez-vous vraiment annuler l'opération en cours ?"
           backup:
             label: "Sauvegarder"
             title: "Créer une sauvegarde"
@@ -3858,22 +3858,22 @@ fr:
             alert: "Un lien pour télécharger la sauvegarde vous a été envoyé par courriel."
           destroy:
             title: "Supprimer la sauvegarde"
-            confirm: "Êtes-vous certain de vouloir supprimer cette sauvegarde ?"
+            confirm: "Voulez-vous vraiment supprimer cette sauvegarde ?"
           restore:
             is_disabled: "La restauration est désactivée dans les paramètres du site."
             label: "Restaurer"
             title: "Restaurer la sauvegarde"
-            confirm: "Êtes-vous certain de vouloir restaurer cette sauvegarde ?"
+            confirm: "Voulez-vous vraiment restaurer cette sauvegarde ?"
           rollback:
             label: "Revenir en arrière"
             title: "Restaurer la base de données dans un état précédent"
-            confirm: "Êtes-vous sûr de vouloir restaurer la base de données dans cet état précédent ?"
+            confirm: "Voulez-vous vraiment restaurer la base de données dans cet état précédent ?"
         location:
           local: "Stockage local"
           s3: "S3"
         backup_storage_error: "L'accès à l'emplacement de la sauvegarde a échoué : %{error_message}"
       export_csv:
-        success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
+        success: "L'exportation a été démarrée. Vous recevrez une notification lorsque le traitement sera terminé."
         failed: "L'exportation a échoué. Veuillez consulter les journaux."
         button_text: "Exporter"
         button_title:
@@ -3897,7 +3897,7 @@ fr:
         new_style: "Nouveau style"
         install: "Installer"
         delete: "Supprimer"
-        delete_confirm: 'Êtes-vous sûr de vouloir supprimer « %{theme_name} » ?'
+        delete_confirm: 'Voulez-vous vraiment supprimer « %{theme_name} » ?'
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
@@ -3911,7 +3911,7 @@ fr:
           multiple_subjects: "Ce modèle de courriel a plusieurs objets."
           body: "Corps"
           revert: "Annuler les changements"
-          revert_confirm: "Êtes-vous sûr de vouloir annuler vos changements ?"
+          revert_confirm: "Voulez-vous vraiment annuler vos changements ?"
         theme:
           theme: "Thème"
           component: "Composant"
@@ -3930,8 +3930,8 @@ fr:
           create_name: "Nom"
           long_title: "Modifier les couleurs, le CSS et le contenu HTML de votre site"
           edit: "Modifier"
-          edit_confirm: "Ceci est un thème distant, si vous modifiez le CSS/HTML vos modifications seront écrasées la prochaine fois que vous le mettez à jour."
-          update_confirm: "Ces modifications locales seront supprimées par la mise à jour. Êtes-vous sûr de vouloir continuer ?"
+          edit_confirm: "Ceci est un thème distant. Si vous modifiez le CSS/HTML, vos modifications seront écrasées la prochaine fois que vous le mettrez à jour."
+          update_confirm: "Ces modifications locales seront supprimées par la mise à jour. Voulez-vous vraiment continuer ?"
           update_confirm_yes: "Oui, poursuivre la mise à jour"
           common: "Général"
           desktop: "Bureau"
@@ -3957,17 +3957,17 @@ fr:
           theme_components: "Composants du thème :"
           add_all_themes: "Ajouter tous les thèmes"
           convert: "Convertir"
-          convert_component_alert: "Êtes-vous sûr de vouloir convertir ce composant en thème ? Il ne sera plus un composant de %{relatives}."
+          convert_component_alert: "Voulez-vous vraiment convertir ce composant en thème ? Il ne sera plus un composant de %{relatives}."
           convert_component_tooltip: "Convertir ce composant en thème"
-          convert_component_alert_generic: "Êtes-vous sûr de vouloir convertir ce composant en thème ?"
-          convert_theme_alert: "Êtes-vous sûr de vouloir convertir ce thème en composant ? Il ne sera plus le parent de %{relatives}."
-          convert_theme_alert_generic: "Êtes-vous sûr de vouloir convertir ce thème en composant ?"
+          convert_component_alert_generic: "Voulez-vous vraiment convertir ce composant en thème ?"
+          convert_theme_alert: "Voulez-vous vraiment convertir ce thème en composant ? Il ne sera plus le parent de %{relatives}."
+          convert_theme_alert_generic: "Voulez-vous vraiment convertir ce thème en composant ?"
           convert_theme_tooltip: "Convertir ce thème en composant"
           inactive_themes: "Thèmes inactifs :"
           inactive_components: "Composants non utilisés :"
           broken_theme_tooltip: "Ce thème comporte des erreurs de CSS, HTML ou YAML"
           disabled_component_tooltip: "Ce composant a été désactivé"
-          default_theme_tooltip: "Ce thème est celui par défaut du site"
+          default_theme_tooltip: "Ce thème est le thème par défaut du site"
           updates_available_tooltip: "Des mises à jour sont disponibles pour ce thème"
           and_x_more: "et %{count} de plus."
           collapse: Réduire
@@ -3995,7 +3995,7 @@ fr:
           included_components: "Composants inclus"
           add_all: "Tout ajouter"
           import_web_tip: "Dépôt contenant le thème"
-          direct_install_tip: "Êtes-vous sur de vouloir installer <strong>%{name}</strong> depuis le dépôt indiqué ci-dessous ?"
+          direct_install_tip: "Voulez-vous vraiment installer <strong>%{name}</strong> depuis le dépôt indiqué ci-dessous ?"
           import_web_advanced: "Avancé…"
           import_file_tip: "Fichier .tar.gz, .zip ou .dcstyle.json contenant le thème"
           is_private: "Le thème est dans un dépôt Git privé"
@@ -4008,7 +4008,7 @@ fr:
           install_upload: "À partir de votre appareil"
           install_git_repo: "Depuis un dépôt Git"
           install_create: "Créer un nouveau"
-          duplicate_remote_theme: "Le composant de thème « %{name} » est déjà installé, êtes-vous sûr de vouloir en installer une autre copie ?"
+          duplicate_remote_theme: "Le composant de thème « %{name} » est déjà installé, voulez-vous vraiment en installer une autre copie ?"
           about_theme: "À propos"
           license: "Licence"
           version: "Version :"
@@ -4046,13 +4046,13 @@ fr:
             title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
           header:
             text: "Entête"
-            title: "Entrez du HTML à afficher au dessus de l'entête du site"
+            title: "Saisissez du code HTML à afficher au dessus de l'entête du site"
           after_header:
             text: "Après l'entête"
-            title: "Entrez du HTML à afficher sur toutes les pages après l'entête"
+            title: "Saisissez du code HTML à afficher sur toutes les pages après l'entête"
           footer:
             text: "Pied de page"
-            title: "Entrez du HTML à afficher dans le pied de page"
+            title: "Saisissez du code HTML à afficher dans le pied de page"
           embedded_scss:
             text: "CSS intégré"
             title: "Entrez du CSS personnalisé pour la version intégrée des commentaires"
@@ -4076,8 +4076,8 @@ fr:
             title: "HTML qui sera inséré avant la balise </body>"
           yaml:
             text: "YAML"
-            title: "Définir les paramètres du thème en format YAML"
-          scss_color_variables_warning: 'L''utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée, ces variables ne seront plus prises en charge dans des versions ultérieures. Pour obtenir davantage d''informations, nous vous invitons à consulter <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ce guide</a> (en anglais).'
+            title: "Définir les paramètres du thème au format YAML"
+          scss_color_variables_warning: 'L''utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée, ces variables ne seront plus prises en charge dans les versions ultérieures. Pour obtenir davantage d''informations, nous vous invitons à consulter <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ce guide</a> (en anglais).'
           scss_warning_inline: "L'utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée."
         colors:
           select_base:
@@ -4089,7 +4089,7 @@ fr:
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
-          delete_confirm: "Supprimer cette palette de couleur ?"
+          delete_confirm: "Supprimer cette palette de couleurs ?"
           undo: "annuler"
           undo_title: "Annuler les modifications que vous avez apportées à cette couleur depuis son dernier enregistrement."
           revert: "rétablir"
@@ -4118,7 +4118,7 @@ fr:
             description: "Textes et icônes dans l'entête du site."
           highlight:
             name: "accentuation"
-            description: "La couleur de fond des éléments accentués sur la page, comme les messages et sujets."
+            description: "La couleur de fond des éléments mis en surbrillance sur la page, comme les messages et sujets."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -4127,7 +4127,7 @@ fr:
             name: "highlight-low"
           danger:
             name: "danger"
-            description: "Couleur d'accentuation pour les actions comme la suppression de messages et de sujets."
+            description: "Couleur de mise en valeur pour les actions comme la suppression de messages et de sujets."
           success:
             name: "succès"
             description: "Utilisée pour indiquer qu'une action a réussi."
@@ -4143,8 +4143,8 @@ fr:
           heading: "Personnaliser le style du courriel"
           html: "Modèle HTML"
           css: "CSS"
-          reset: "Réinitialiser aux valeurs par défaut"
-          reset_confirm: "Êtes-vous sûr de vouloir rétablir la valeur par défaut de %{fieldName} et perdre toutes vos modifications ?"
+          reset: "Rétablir les valeurs par défaut"
+          reset_confirm: "Voulez-vous vraiment rétablir la valeur par défaut de %{fieldName} et perdre toutes vos modifications ?"
           save_error_with_reason: "Vos modifications n'ont pas pu être sauvegardées. %{error}"
           instructions: "Personnalisez le modèle depuis lequel tous les courriels HTML sont générés et stylés à l'aide de CSS."
       email:
@@ -4161,7 +4161,7 @@ fr:
           elided: "Texte élidé"
         sending_test: "Envoi du courriel de test…"
         error: "<b>ERREUR</b> - %{server_error}"
-        test_error: "Il y a eu un problème avec l'envoi du courriel de test. Veuillez vérifier vos paramètres et que votre hébergeur ne bloque pas les connexions aux courriels, puis réessayer."
+        test_error: "Un problème est survenu lors de l'envoi du courriel de test. Veuillez vérifier vos paramètres et que votre hébergeur ne bloque pas les connexions aux courriels, puis réessayez."
         sent: "Envoyés"
         skipped: "Ignorés"
         bounced: "Non délivrés"
@@ -4223,7 +4223,7 @@ fr:
         actions:
           delete_user: "Utilisateur supprimé"
           suspend_user: "Utilisateur suspendu"
-          silence_user: "Utilisateur mis sous silence"
+          silence_user: "Utilisateur mis en sourdine"
           delete_post: "Message supprimé"
           delete_topic: "Sujet supprimé"
           post_approved: "Message approuvé"
@@ -4271,8 +4271,8 @@ fr:
             change_site_text: "modifier le texte du site"
             suspend_user: "suspendre l'utilisateur"
             unsuspend_user: "annuler la suspension de l'utilisateur"
-            removed_suspend_user: "suspendre l'utilisateur (enlevé)"
-            removed_unsuspend_user: "annuler la suspension de l'utilisateur (enlevé)"
+            removed_suspend_user: "suspendre l'utilisateur (supprimé)"
+            removed_unsuspend_user: "annuler la suspension de l'utilisateur (supprimé)"
             grant_badge: "décerner le badge"
             revoke_badge: "retirer le badge"
             check_email: "vérifier l'adresse courriel"
@@ -4285,10 +4285,10 @@ fr:
             change_category_settings: "modifier les paramètres de la catégorie"
             delete_category: "supprimer une catégorie"
             create_category: "créer une catégorie"
-            silence_user: "mettre l'utilisateur sous silence"
-            unsilence_user: "annuler la mise sous silence de l'utilisateur"
-            removed_silence_user: "mettre l'utilisateur sous silence (enlevé)"
-            removed_unsilence_user: "annuler la mise sous silence de l'utilisateur (enlevé)"
+            silence_user: "mettre l'utilisateur en sourdine"
+            unsilence_user: "annuler la mise en sourdine de l'utilisateur"
+            removed_silence_user: "mettre l'utilisateur en sourdine (supprimé)"
+            removed_unsilence_user: "annuler la mise en sourdine de l'utilisateur (enlevé)"
             grant_admin: "accorder les droits d'administration"
             revoke_admin: "révoquer les droits d'administration"
             grant_moderation: "accorder les droits de modération"
@@ -4365,8 +4365,8 @@ fr:
         screened_ips:
           title: "IP sous surveillance"
           description: 'Adresses IP qui sont surveillées. Utilisez « Autoriser » pour ajouter des adresses IP à la liste.'
-          delete_confirm: "Êtes-vous sûr de vouloir supprimer la règle pour %{ip_address} ?"
-          roll_up_confirm: "Êtes-vous sûr de vouloir consolider les adresses IP sous surveillance sous forme de plages de sous-réseau ?"
+          delete_confirm: "Voulez-vous vraiment supprimer la règle pour %{ip_address} ?"
+          roll_up_confirm: "Voulez-vous vraiment consolider les adresses IP sous surveillance sous forme de plages de sous-réseau ?"
           rolled_up_some_subnets: "Consolidation réussie des adresses IP interdites vers ces plages de sous-réseau : %{subnets}."
           rolled_up_no_subnet: "Aucune consolidation possible."
           actions:
@@ -4775,7 +4775,7 @@ fr:
           branding: "Branding"
           basic: "Général"
           users: "Utilisateurs"
-          posting: "Messages"
+          posting: "Contribution"
           email: "Courriel"
           files: "Fichiers"
           trust: "Niveaux de confiance"
@@ -4812,7 +4812,7 @@ fr:
       badges:
         title: Badges
         new_badge: Nouveau badge
-        new: Nouveau
+        new: Nouveaux
         name: Nom
         badge: Badge
         display_name: Nom affiché

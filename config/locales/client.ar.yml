@@ -921,7 +921,7 @@ ar:
       posts: "المشاركات"
       topics: "الموضوعات"
       latest: "الحديثة"
-      toggle_ordering: "تشغيل التحكم في الترتيب"
+      toggle_ordering: "تفعيل التحكم في الترتيب"
       subcategories: "الفئات الفرعية"
       muted: "الفئات المكتومة"
       topic_sentence:
@@ -1106,7 +1106,7 @@ ar:
       muted_categories_instructions: "لن تتلقى أي إشعارات أبدًا بخصوص الموضوعات الجديدة في هذه الفئات، ولن تظهر في الفئات أو صفحات أحدث الموضوعات."
       muted_categories_instructions_dont_hide: "لن تتلقى أي إشعارات أبدًا بخصوص الموضوعات الجديدة في هذه الفئات."
       regular_categories: "العادية"
-      regular_categories_instructions: "سترى هذه الفئات في قوائم الموضوعات \"الحديثة\" و\"الأكثر نشاطًا\"."
+      regular_categories_instructions: "سترى هذه الفئات في قوائم الموضوعات \"الحديثة\" و\"الأكثر عرضًا\"."
       no_category_access: "كمشرف لديك صلاحيات وصول محدودة للفئات، فالحفظ معطَّل."
       delete_account: "حذف حسابي"
       delete_account_confirm: "هل تريد بالتأكيد حذف حسابك للأبد؟ لا يمكن التراجع عن هذا الإجراء!"
@@ -1627,11 +1627,11 @@ ar:
       login_disabled: "يكون تسجيل الدخول معطلًا في حال كان الموقع في وضع القراءة فقط."
       logout_disabled: "يتم تعطيل تسجيل الخروج عندما يكون الموقع في وضع القراءة فقط."
     too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} و{currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} و{requiredPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}} كحد أدنى. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} و{currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} و{requiredPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}} على الأقل. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
     too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} كحد أدنى. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} على الأقل. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
     too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}} على الأقل. يمكن لطاقم العمل فقط رؤية هذه الرسالة.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}."
       reached_minute_MF: "<b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}."
@@ -1807,7 +1807,7 @@ ar:
       categories_only: "الفئات فقط"
       categories_with_featured_topics: "الفئات ذات الموضوعات المميزة"
       categories_and_latest_topics: "الفئات والموضوعات الحديثة"
-      categories_and_top_topics: "الفئات والموضوعات الأكثر نشاطًا"
+      categories_and_top_topics: "الفئات والموضوعات الأكثر عرضًا"
       categories_boxes: "المربعات ذات الفئات الفرعية"
       categories_boxes_with_topics: "المربعات ذات الموضوعات المميزة"
     shortcut_modifier_key:
@@ -1890,8 +1890,8 @@ ar:
       whisper: "همس"
       unlist: "تم إلغاء إدراجه"
       add_warning: "هذا تحذير رسمي."
-      toggle_whisper: "تشغيل الهمس"
-      toggle_unlisted: "تشغيل إلغاء الإدراج"
+      toggle_whisper: "تفعيل الهمس"
+      toggle_unlisted: "تفعيل إلغاء الإدراج"
       posting_not_on_topic: "أي موضوع تريد الرد عليه؟"
       saved_local_draft_tip: "تم الحفظ محليًا"
       similar_topics: "موضوعك يشابه..."
@@ -2014,7 +2014,7 @@ ar:
           label: الرد على الموضوع
           desc: الرد على الموضوع، وليس أي منشور محدَّد
         toggle_whisper:
-          label: تشغيل الهمس
+          label: تفعيل الهمس
           desc: تكون الهمسات مرئية لأعضاء طاقم العمل فقط
         create_topic:
           label: "موضوع جديد"
@@ -2022,7 +2022,7 @@ ar:
           label: "مسودة مشتركة"
           desc: "إنشاء مسودة الموضوع ستكون مرئية للمستخدمين المسموح لهم فقط"
         toggle_topic_bump:
-          label: "تشغيل رفع الموضوع"
+          label: "تفعيل رفع الموضوع"
           desc: "الرد دون تغيير تاريخ آخر رد"
       reload: "إعادة التحميل"
       ignore: "تجاهل"
@@ -2237,7 +2237,7 @@ ar:
         dismiss_tooltip: "تجاهل المنشورات الجديدة فقط أو التوقف عن تتبُّع الموضوعات"
         also_dismiss_topics: "التوقف عن تتبُّع هذه الموضوعات حتي لا تظهر لي كغير مقروءة مرة أخرى"
         dismiss_new: "تجاهل الجديدة"
-        toggle: "تشغيل التحديد الجماعي للموضوعات"
+        toggle: "تفعيل التحديد الجماعي للموضوعات"
         actions: "الإجراءات الجماعية"
         change_category: "ضبط الفئة"
         close_topics: "إغلاق الموضوعات"
@@ -3025,91 +3025,91 @@ ar:
       background_color: "لون الخلفية"
       foreground_color: "لون المقدمة"
       name_placeholder: "كلمة أو كلمتان بحد أقصى"
-      color_placeholder: "أيّ لون متوافق مع الانترنت"
-      delete_confirm: "هل تريد فعلاً حذف هذا تصنيف؟"
-      delete_error: "حدث خطأ أثناء حذف هذا التصنيف"
-      list: "عرض الأقسام"
-      no_description: "من فضلك أضف وصفا لهذا القسم."
-      change_in_category_topic: "عدّل الوصف"
-      already_used: "هذا اللون تم استخدامه سابقا في قسم آخر"
-      security: "الأمن"
+      color_placeholder: "لون الويب"
+      delete_confirm: "هل تريد بالتأكيد حذف هذه الفئة؟"
+      delete_error: "حدث خطأ في أثناء حذف هذه الفئة"
+      list: "إدراج الفئات"
+      no_description: "يُرجى إضافة وصف لهذه الفئة."
+      change_in_category_topic: "تعديل الوصف"
+      already_used: "هذا اللون مستخدم بالفعل في فئة أخرى"
+      security: "الأمان"
       security_add_group: "إضافة مجموعة"
       permissions:
-        group: "مجموعة"
-        see: "شاهد"
+        group: "المجموعة"
+        see: "العرض"
         reply: "الرد"
         create: "إنشاء"
-        no_groups_selected: "لم تُمنح أي مجموعات إمكانية الوصول؛ وسيكون هذا التصنيف مرئي فقط للمشرفين."
-        everyone_has_access: 'هذه التصنيف عام، يمكن للجميع أن مشاهدة، الردود، وإنشاء المشاركات. لتقييد الأذونات، قم بإزالة واحد أو أكثر من الأذونات الممنوحة "الجميع" للمجموعة.'
-        toggle_reply: "تبديل أذونات الرد"
-        toggle_full: "تبديل اذونات الإنشاء"
-        inherited: 'هذا الإذن موروث من "الجميع"'
-      special_warning: "تحذير: هذا القسم هو قسم اصلي إعدادات الحماية له لا يمكن تعديلها. إذا لم تكن تريد استخدام هذا القسم، قم بحذفة بدلا من تطويعة لأغراض اخري."
+        no_groups_selected: "لم يتم منح إذن الوصول لأي مجموعة؛ لذا فإن هذه الفئة ستكون مرئية لطاقم العمل فقط."
+        everyone_has_access: 'هذه الفئة عامة، ويمكن للجميع رؤية المنشورات والرد عليها وإنشائها. لتقييد الأذونات، عليك إزالة واحد أو أكثر من الأذونات الممنوحة لمجموعة "الجميع".'
+        toggle_reply: "إذن تفعيل الرد"
+        toggle_full: "إذن تفعيل الإنشاء"
+        inherited: 'هذا الإذن مكتسب من "الجميع"'
+      special_warning: "تحذير: هذه الفئة مصنَّفة مسبقًا ولا يمكن تعديل إعدادات الأمان لها. إذا كنت لا ترغب في استخدام هذه الفئة، فعليك حذفها بدلًا من إعادة توظيفها."
       uncategorized_security_warning: "هذه الفئة خاصة. وتهدف إلى جمع الموضوعات التي لا تنتمي إلى أي فئة، ولا يمكنك ضبط إعدادات حماية لها."
       uncategorized_general_warning: 'هذه الفئة خاصة. ويتم استخدامها كفئة افتراضية للموضوعات الجديدة التي لا تنتمي إلى أي فئة. إذا أردت منع هذا السلوك وفرض اختيار الفئة، <a href="%{settingLink}">يُرجى تعطيل هذا الإعداد من هنا</a>. إذا أردت تغيير اسم الفئة أو وصفها، فانتقل إلى <a href="%{customizeLink}">التخصيص/المحتوى النصي</a>.'
       pending_permission_change_alert: "لم تُضف المجموعة %{group} إلى هذه الفئة، انقر على هذا الزر لإضافتها."
       images: "الصور"
-      email_in: "تعيين بريد إلكتروني خاص:"
-      email_in_allow_strangers: "قبول بريد إلكتروني من زوار لا يملكون حسابات"
-      email_in_disabled: "عُطّل إرسال المشاركات عبر البريد الإلكترونيّ من إعدادات الموقع. لتفعيل نشر المشاركات الجديدة عبر البريد،"
-      email_in_disabled_click: 'قم بتفعيل خيار "email in" في الإعدادات'
-      mailinglist_mirror: "التصنيف يحيل لقائمة بريدية"
+      email_in: "عنوان مخصَّص للبريد الوارد:"
+      email_in_allow_strangers: "قبول الرسائل الإلكترونية من المستخدمين المجهولين الذين لا يملكون حسابات"
+      email_in_disabled: "تم تعطيل نشر الموضوعات الجديدة عبر البريد الإلكتروني في إعدادات الموقع. لتفعيل نشر الموضوعات الجديدة عبر البريد الإلكتروني، "
+      email_in_disabled_click: 'فعليك تفعيل خيار "email in" في الإعدادات.'
+      mailinglist_mirror: "الفئة تعكس قائمة بريدية"
       show_subcategory_list: "اعرض قائمة الفئات الفرعية أعلى الموضوعات في هذه الفئة."
-      read_only_banner: "نص البانر عندما لا يستطيع المستخدم إنشاء موضوع في هذا التصنيف:"
-      num_featured_topics: "عدد الموضوعات المعروضة في صفحة الأقسام:"
-      subcategory_num_featured_topics: "عدد الموضوعات المُميزة في صفحة القسم الرئيسي."
-      all_topics_wiki: "إنشاء مواضيع جديدة wikis بشكل إفتراضي"
-      subcategory_list_style: "أسلوب عرض قائمة الأقسام الفرعية:"
-      sort_order: "رتب قائمة الموضوعات حسب:"
-      default_view: "قائمة الموضوعات الإفتراضية"
-      default_top_period: "فترة الاكثر مشاهدة الافتراضية"
+      read_only_banner: "نص البانر عندما لا يستطيع المستخدم إنشاء موضوع في هذه الفئة:"
+      num_featured_topics: "عدد الموضوعات المعروضة في صفحة الفئات:"
+      subcategory_num_featured_topics: "عدد الموضوعات المميزة في صفحة الفئة الرئيسية."
+      all_topics_wiki: "تحويل الموضوعات الجديدة إلى Wiki بشكلٍ افتراضي"
+      subcategory_list_style: "نمط قائمة الفئات الفرعية:"
+      sort_order: "ترتيب قائمة الموضوعات حسب:"
+      default_view: "قائمة الموضوعات الافتراضية:"
+      default_top_period: "الفترة الافتراضية للأكثر عرضًا:"
       default_list_filter: "تصفية القائمة الافتراضية:"
-      allow_badges_label: "السماح بالحصول على الأوسمة في هذا القسم"
-      edit_permissions: "عدل التصاريح"
-      reviewable_by_group: "وبالإضافة إلى المشرفين، يمكن أيضا مراجعة محتوى هذا التصنيف عن طريق ما يلي:"
+      allow_badges_label: "السماح بمنح الشارات في هذه الفئة"
+      edit_permissions: "تعديل الأذونات"
+      reviewable_by_group: "بالإضافة إلى طاقم العمل، يمكن أيضًا مراجعة المحتوى في هذه الفئة بواسطة:"
       review_group_name: "اسم المجموعة"
-      require_topic_approval: "يتطلب موافقة المشرف على جميع المواضيع الجديدة"
-      require_reply_approval: "يتطلب موافقة المشرف على جميع الردود الجديدة"
-      this_year: "هذه السنة"
-      position: "الموضع في صفحة التصنيفات:"
-      default_position: "المكان الافتراضي"
-      position_disabled: "سوف تُعرض الاقسام بترتيب نشاطها. للتّحكّم بترتيب الأقسام في القائمة،"
-      position_disabled_click: 'فعّل خاصية "تثبيت ترتيب الأقسام".'
-      minimum_required_tags: "العدد الأدنى من الوسوم المطلوب في كلّ موضوع:"
-      parent: "القسم الرئيسي"
-      num_auto_bump_daily: "عدد الموضوعات المفتوحة التي ستقتطع تلقائياً يومياً:"
-      navigate_to_first_post_after_read: "انتقل إلى أول مشاركة بعد قراءة المواضيع"
+      require_topic_approval: "طلب موافقة المشرف على جميع الموضوعات الجديدة"
+      require_reply_approval: "طلب موافقة المشرف على جميع الردود الجديدة"
+      this_year: "هذا العام"
+      position: "الترتيب في صفحة الفئات:"
+      default_position: "الترتيب الافتراضي"
+      position_disabled: "سيتم عرض الفئات بترتيب نشاطها. للتحكُّم في ترتيب الفئات في القائمة، "
+      position_disabled_click: 'عليك تفعيل إعداد "تثبيت ترتيب الفئات".'
+      minimum_required_tags: "أقل عدد من الوسوم المطلوبة في موضوع:"
+      parent: "الفئة الرئيسية"
+      num_auto_bump_daily: "عدد الموضوعات المفتوحة التي سيتم رفعها تلقائيًا بشكل يومي:"
+      navigate_to_first_post_after_read: "الانتقال إلى أول منشور بعد قراءة الموضوعات"
       notifications:
         watching:
-          title: "مُراقبة"
+          title: "المراقبة"
         watching_first_post:
           title: "مراقبة أول منشور"
-          description: "سيتم إعلامك بمواضيع جديدة في هذا الوسم ولكن ليس الرد على الموضوعات."
+          description: "سنُرسل إليك إشعارًا بالموضوعات الجديدة في هذه الفئة، ولكن ليس الردود على الموضوعات."
         tracking:
-          title: "مُتابعة"
+          title: "المتابعة"
         regular:
-          title: "منتظم"
-          description: "ستستقبل إشعارًا إن أشار أحد إلى @اسمك أو ردّ عليك."
+          title: "عادي"
+          description: "سنُرسل إليك إشعارًا إذا أشار أحد إلى اسمك باستخدام الرمز @ أو ردَّ عليك."
         muted:
           title: "الكتم"
       search_priority:
         label: "أولوية البحث"
         options:
-          normal: "عادي"
+          normal: "عادية"
           ignore: "تجاهل"
-          very_low: "منخفض جداً"
-          low: "منخفض"
-          high: "مرتفع"
-          very_high: "عالي جدا"
+          very_low: "منخفضة جدًا"
+          low: "منخفضة"
+          high: "مرتفعة"
+          very_high: "مرتفعة جدًا"
       sort_options:
-        default: "افترضى"
-        likes: "الاعجابات"
-        op_likes: "الاعجابات علي المنشور الاساسي"
-        views: "المشاهدات"
+        default: "افتراضي"
+        likes: "مرات الإعجاب"
+        op_likes: "مرات الإعجاب على المنشور الأصلي"
+        views: "مرات العرض"
         posts: "المنشورات"
         activity: "النشاط"
-        posters: "الإعلانات"
-        category: "القسم"
+        posters: "الناشرون"
+        category: "الفئة"
         created: "تاريخ الإنشاء"
       sort_ascending: "تصاعدي"
       sort_descending: "تنازلي"

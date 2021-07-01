@@ -148,7 +148,7 @@ de:
     new_user_narrative:
       reset_trigger: "Tutorial"
       title: "Abschlusszertifikat für das Tutorial für neue Benutzer"
-      cert_title: "In Anerkennung deines erfolgreichen Abschlusses des Tutorials für neue Benutzer"
+      cert_title: "In Anerkennung des erfolgreichen Abschlusses des Tutorials für neue Benutzer"
       hello:
         title: "Sei gegrüßt!"
         message: |-
@@ -292,30 +292,30 @@ de:
 
           Versuche, in diesem Thema nach dem Begriff „Capy&#8203;bara“ zu suchen.
         hidden_message: |-
-          Wie konntest du das Capybara übersehen? :zwinkern:
+          Wie konntest du das Capybara übersehen? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Hast du gemerkt, dass du jetzt wieder am Anfang bist? Füttere diesen armen hungrigen Capybara, indem du **mit dem `%{search_answer}` Emoji antwortest**, und du wirst automatisch zum Ende gebracht.
+          Hast du gemerkt, dass du jetzt wieder am Anfang bist? Füttere dieses arme hungrige Capybara, indem du **mit dem `%{search_answer}` Emoji antwortest**, und du wirst automatisch zum Ende geführt.
         reply: |-
           Juhu! Du hast es gefunden :tada:
 
-          - Zum Suchen nach weiteren Details gehe zur [Erweiterten Suche](%{search_url}).
+          - Für detailliertere Suchen gehe zur [erweiterten Suche](%{search_url}).
 
           - Um in einer langen Diskussion an eine beliebige Position zu springen, probiere die Zeitleiste rechts neben dem Thema aus. Auf mobilen Geräten findest du die Zeitleiste rechts unten.
 
-          - Wenn du eine physische Tastatur verwendest, gib <kbd>?</kbd> ein, um eine nützliche Übersicht über Tastenkombinationen anzuzeigen.
+          - Wenn du eine physische :keyboard: verwendest, gib <kbd>?</kbd> ein, um eine nützliche Übersicht über Tastenkombinationen anzuzeigen.
         not_found: |-
-          Hm… es sieht so aus, als hättest du Schwierigkeiten. Das tut mir leid. Hast du nach dem Begriff **Capy&#8203;bara** gesucht <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">?
+          Hm … es sieht so aus, als hättest du Schwierigkeiten. Das tut mir leid. Hast du nach dem Begriff **Capy&#8203;bara** gesucht <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">?
       end:
         message: |-
           Danke, dass du mir treu geblieben bist, @%{username}! Ich habe dies für dich gemacht. Ich denke, du hast es verdient:
 
           %{certificate}
 
-          Das ist erstmal alles für den Augenblick! Aber schau dir doch [**unsere neuesten Diskussionsthemen**](%{base_uri}/latest) oder [**Diskussionskategorien**](%{base_uri}/categories) an. :sunglasses:
+          Das ist alles für den Augenblick! Aber schau dir doch [**unsere neuesten Diskussionsthemen**](%{base_uri}/latest) oder [**Diskussionskategorien**](%{base_uri}/categories) an. :sunglasses:
 
-          (Wenn du wieder mit mir sprechen möchtest, um noch mehr zu lernen, schreibe mir einfach eine Nachricht oder erwähne `@%{discobot_username}` zu jeder Zeit!)
+          (Wenn du wieder mit mir sprechen möchtest, um noch mehr zu lernen, schreibe mir einfach eine Nachricht oder erwähne `@%{discobot_username}`!)
       certificate:
         alt: "Urkunde"
     advanced_user_narrative:
@@ -323,30 +323,30 @@ de:
       cert_title: "In Anerkennung des erfolgreichen Abschlusses des Tutorials für fortgeschrittene Benutzer"
       title: ":arrow_up: Fortgeschrittene Benutzerfunktionen"
       start_message: |-
-        Als ein _fortgeschrittener_ Benutzer hast du dir sicherlich schon die [Benutzer-Einstellungen](%{base_uri}/my/preferences) angesehen @%{username} oder? Dort gibt es eine Vielzahl an Möglichkeiten, um alles an deine Bedürfnisse anzupassen. Unter anderem kannst du ein helles oder dunkles Design auswählen.
+        @%{username}, als _fortgeschrittener_ Benutzer hast du dir sicherlich schon die [Benutzer-Einstellungen](%{base_uri}/my/preferences) angesehen, oder? Dort gibt es eine Vielzahl an Möglichkeiten, um alles an deine Bedürfnisse anzupassen. Unter anderem kannst du ein helles oder dunkles Design auswählen.
 
         Aber ich schweife ab. Lass uns beginnen!
       edit:
-        bot_created_post_raw: "@%{discobot_username} ist bei weitem der coolste Bot, den ich kenne :wink:"
+        bot_created_post_raw: "@%{discobot_username} ist mit Abstand der coolste Bot, den ich kenne :wink:"
         instructions: |-
           Jeder macht Fehler. Aber keine Sorge, du kannst deine Beiträge immer bearbeiten, um sie zu korrigieren!
 
           Kannst du beginnen, indem du den Beitrag **bearbeitest**, den ich gerade in deinem Namen erstellt habe?
         not_found: |-
-          Es sieht so aus, als hättest Du den [Beitrag](%{url}), den ich für dich erstellt habe, noch gar nicht bearbeitet. Kannst du es nochmal versuchen?
+          Es sieht so aus, als hättest du den [Beitrag](%{url}), den ich für dich erstellt habe, noch gar nicht bearbeitet. Kannst du es noch einmal versuchen?
 
           Verwende das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16">-Symbol, um den Editor zu öffnen.
         reply: |-
           Gut gemacht!
 
-          Beachte, dass Änderungen, die nach 5 Minuten gemacht werden, als Überarbeitungen für jeden sichtbar sind. Die Anzahl der Überarbeitungen wird, neben einem kleinen Bleistift-Symbol, am Beitrag rechts oben angezeigt.
+          Beachte, dass Änderungen, die nach 5 Minuten gemacht werden, als Überarbeitungen für jeden sichtbar sind. Die Anzahl der Überarbeitungen wird neben einem kleinen Bleistift-Symbol rechts oben angezeigt.
       delete:
         instructions: |-
           Wenn du einen Beitrag von dir zurückziehen möchtest, kannst du ihn löschen.
 
-          Leg’ los und **lösche** einen deiner Beiträge über die <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **Löschen**-Aktion. Lösche aber bitte nicht den ersten Beitrag!
+          Leg los und **lösche** einen deiner Beiträge über die <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **Löschen**-Aktion. Lösche aber bitte nicht den ersten Beitrag!
         not_found: |-
-          Ich sehe noch keine gelöschten Beiträge. Denk’ immer daran, dass <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> „Mehr anzeigen“ auch <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">„Löschen“ anzeigt.
+          Ich sehe noch keine gelöschten Beiträge. Denk immer daran, dass <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> „Mehr anzeigen“ auch <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">„Löschen“ anzeigt.
         reply: |-
           Oha! :boom:
 
@@ -354,13 +354,13 @@ de:
       recover:
         deleted_post_raw: "Warum hat @%{discobot_username} meinen Beitrag gelöscht? :anguished:"
         instructions: |-
-          Oh nein! Es sieht so aus als hätte ich versehentlich einen neuen Beitrag gelöscht, den ich gerade für dich erstellt hatte.
+          Oh nein! Es sieht so aus, als hätte ich versehentlich einen neuen Beitrag gelöscht, den ich gerade für dich erstellt hatte.
 
           Kannst du mir einen Gefallen tun und ihn <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **wiederherstellen**?
         not_found: |-
           Hast du Schwierigkeiten? Denk daran, dass <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> „Mehr anzeigen“ auch die Aktion <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> „Wiederherstellen“ anzeigt.
         reply: |-
-          Puh, dass war knapp! Danke für's Beheben :wink:
+          Puh, das war knapp! Danke für deine Hilfe :wink:
 
           Bitte beachte, dass du nur %{deletion_after} Stunde(n) hast, um einen Beitrag wiederherzustellen.
       category_hashtag:
@@ -380,13 +380,13 @@ de:
         instructions: |-
           Jedes Thema hat eine Benachrichtigungsstufe. Es beginnt bei „Normal“, was bedeutet, dass du normalerweise nur benachrichtigt wirst, wenn dich jemand direkt anspricht.
 
-          Standardmäßig ist die Benachrichtigungsstufe für Nachrichten auf die höchste Stufe „Beobachten“ gesetzt, was bedeutet, dass du über jede Antwort informiert wirst. Aber du kannst die Benachrichtigungsstufe für _jedes_ Thema auf „Beobachten“, „Verfolgen“ oder „Stummgeschaltet“ setzen.
+          Standardmäßig ist die Benachrichtigungsstufe für private Nachrichten auf die höchste Stufe „Beobachten“ gesetzt, was bedeutet, dass du über jede Antwort informiert wirst. Aber du kannst die Benachrichtigungsstufe für _jedes_ Thema auf „Beobachten“, „Verfolgen“ oder „Stummgeschaltet“ setzen.
 
           Lass uns versuchen, die Benachrichtigungsstufe für dieses Thema zu ändern. Am Ende des Themas wirst du eine Schaltfläche finden, die „Beobachten“ anzeigt. Kannst du die Benachrichtigungsstufe auf **Verfolgen** ändern?
         not_found: |-
-          Es sieht so aus, als würdest du dieses Thema noch beobachten! :eyes: Falls du Probleme hast es zu finden: Die Schaltfläche für die Benachrichtigungsstufe befindet sich am Ende des Themas.
+          Es sieht so aus, als würdest du dieses Thema noch beobachten! :eyes: Falls du Probleme hast, sie zu finden: Die Schaltfläche für die Benachrichtigungsstufe befindet sich am Ende des Themas.
         reply: |-
-          Fantastische Arbeit! Ich hoffe, dass du das Thema stumm geschaltet hast, denn ich kann manchmal ein bisschen gesprächig sein :grin:.
+          Fantastische Arbeit! Ich hoffe, dass du das Thema nicht stummgeschaltet hast, denn ich kann manchmal ein bisschen gesprächig sein :grin:.
 
           Beachte, dass die Benachrichtigungsstufe automatisch auf „Verfolgen“ geändert wird, wenn du auf ein Thema antwortest oder ein Thema länger als ein paar Minuten liest. Du kannst dies in [deinen Benutzer-Einstellungen](%{base_uri}/my/preferences) ändern.
       poll:
