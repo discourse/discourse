@@ -87,7 +87,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     // need to scroll to top so the viewport shows the top of the page
     // and top dismiss button
     await visit("/");
-    await (document.getElementById("ember-testing-container").scrollTop = 0);
+    document.getElementById("ember-testing-container").scrollTop = 0;
     await visit("/unread");
     assert.ok(
       exists("#dismiss-topics-top"),
@@ -149,7 +149,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     // need to scroll to top so the viewport shows the top of the page
     // and top dismiss button
     await visit("/");
-    await (document.getElementById("ember-testing-container").scrollTop = 0);
+    document.getElementById("ember-testing-container").scrollTop = 0;
     await visit("/new");
     assert.ok(exists("#dismiss-new-top"), "dismiss new top button is present");
     await triggerKeyEvent(document, "keypress", "x".charCodeAt(0));
@@ -181,7 +181,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     // need to scroll to top so the viewport shows the top of the page
     // and top dismiss button
     await visit("/");
-    await (document.getElementById("ember-testing-container").scrollTop = 0);
+    document.getElementById("ember-testing-container").scrollTop = 0;
     await visit("/new");
     assert.ok(
       exists("#dismiss-new-top"),
