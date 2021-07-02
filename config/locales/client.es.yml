@@ -4384,8 +4384,6 @@ es:
             post_staff_note_create: "añadir aviso del personal"
             post_staff_note_destroy: "destruir aviso del personal"
             delete_group: "eliminar grupo"
-            add_watched_word: "añadir palabra vigilada"
-            delete_watched_word: "eliminar palabra vigilada"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
