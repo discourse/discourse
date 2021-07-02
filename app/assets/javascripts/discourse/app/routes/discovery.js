@@ -27,7 +27,9 @@ export default DiscourseRoute.extend(OpenComposer, {
       User.currentProp("should_be_redirected_to_top", false);
       const period = User.currentProp("redirected_to_top.period") || "all";
       this.replaceWith("discovery.top", {
-        period: period,
+        queryParams: {
+          period: period,
+        },
       });
     }
   },
