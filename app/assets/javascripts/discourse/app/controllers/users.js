@@ -94,7 +94,10 @@ export default Controller.extend({
   },
 
   _setUsernameFilter(username) {
-    this.set("params.name", username);
+    this.setProperties({
+      name: username,
+      "params.name": username,
+    });
     this.loadUsers();
   },
 
