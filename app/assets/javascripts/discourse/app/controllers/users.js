@@ -20,27 +20,34 @@ export default Controller.extend({
   isLoading: false,
   columns: null,
   groupsOptions: null,
+  params: null,
 
   showTimeRead: equal("period", "all"),
 
-  loadUsers(params) {
-    this.set("isLoading", true);
+  loadUsers(params = null) {
+    if (params) {
+      this.set("params", params);
+    }
 
-    this.set("nameInput", params.name);
-    this.set("order", params.order);
+    this.setProperties({
+      isLoading: true,
+      nameInput: this.params.name,
+      order: this.params.order,
+    });
 
-    const userFieldColumns = this.columns.filter(
-      (c) => c.type === "user_field"
-    );
-    const userFieldIds = userFieldColumns.map((c) => c.user_field_id).join("|");
-
-    const pluginColumns = this.columns.filter((c) => c.type === "plugin");
-    const pluginColumnIds = pluginColumns.map((c) => c.id).join("|");
+    const userFieldIds = this.columns
+      .filter((c) => c.type === "user_field")
+      .map((c) => c.user_field_id)
+      .join("|");
+    const pluginColumnIds = this.columns
+      .filter((c) => c.type === "plugin")
+      .map((c) => c.id)
+      .join("|");
 
     return this.store
       .find(
         "directoryItem",
-        Object.assign(params, {
+        Object.assign(this.params, {
           user_field_ids: userFieldIds,
           plugin_column_ids: pluginColumnIds,
         })
@@ -50,7 +57,7 @@ export default Controller.extend({
         this.setProperties({
           model,
           lastUpdatedAt: lastUpdatedAt ? longDate(lastUpdatedAt) : null,
-          period: params.period,
+          period: this.params.period,
         });
       })
       .finally(() => {
@@ -83,11 +90,15 @@ export default Controller.extend({
 
   @action
   onUsernameFilterChanged(filter) {
-    discourseDebounce(this, this._setName, filter, 500);
+    discourseDebounce(this, this._setUsernameFilter, filter, 500);
   },
 
-  _setName(name) {
-    this.set("name", name);
+  _setUsernameFilter(username) {
+    this.setProperties({
+      name: username,
+      "params.name": username,
+    });
+    this.loadUsers();
   },
 
   @observes("model.canLoadMore")

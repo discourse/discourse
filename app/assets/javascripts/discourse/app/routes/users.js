@@ -9,7 +9,7 @@ export default DiscourseRoute.extend({
     period: { refreshModel: true },
     order: { refreshModel: true },
     asc: { refreshModel: true },
-    name: { refreshModel: true, replace: true },
+    name: { refreshModel: false, replace: true },
     group: { refreshModel: true },
     exclude_usernames: { refreshModel: true },
   },
