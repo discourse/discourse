@@ -626,7 +626,7 @@ zh_CN:
           tracked_categories_instructions: "自动跟踪这些类别中的所有话题。新帖子的数量将显示在话题旁边。"
           watching_first_post_categories_instructions: "用户将收到这些类别中每个新话题的第一个帖子的通知。"
           regular_categories_instructions: "如果已被设为免打扰，这些类别将对群组成员取消免打扰。当用户被提及或其他人回复他们时，他们将收到通知。"
-          muted_categories_instructions: "用户不会收到有关这些类别中新话题的任何通知，也不会出现在类别或最新话题页面上。"
+          muted_categories_instructions: "用户不会收到有关这些类别中新话题的任何通知，它们也不会出现在类别或最新话题页面上。"
         tags:
           title: 标签
           long_title: "标签默认通知"
@@ -635,7 +635,7 @@ zh_CN:
           tracked_tags_instructions: "自动跟踪带有这些标签的所有话题。新帖子的数量将显示在话题旁边。"
           watching_first_post_tags_instructions: "用户将收到带有这些标签的每个新话题的第一个帖子的通知。"
           regular_tags_instructions: "如果已被设为免打扰，这些标签将对群组成员取消免打扰。当用户被提及或其他人回复他们时，他们将收到通知。"
-          muted_tags_instructions: "用户不会收到有关带有这些标签的新话题的任何通知，也不会出现在最新话题页面上。"
+          muted_tags_instructions: "用户不会收到有关带有这些标签的新话题的任何通知，它们也不会出现在最新话题页面上。"
         logs:
           title: "日志"
           when: "时间"
@@ -979,7 +979,7 @@ zh_CN:
       tracked_tags: "已跟踪"
       tracked_tags_instructions: "您将自动跟踪带有这些标签的所有话题。新帖子的数量将显示在话题旁边。"
       muted_tags: "已设为免打扰"
-      muted_tags_instructions: "您不会收到有关带有这些标签的新话题的任何通知，也不会出现在最新话题页面上。"
+      muted_tags_instructions: "您不会收到有关带有这些标签的新话题的任何通知，它们也不会出现在最新话题页面上。"
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些类别中的所有话题。您会收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
       tracked_categories: "已跟踪"
@@ -989,7 +989,7 @@ zh_CN:
       watched_first_post_tags: "关注第一个帖子"
       watched_first_post_tags_instructions: "您将收到带有这些标签的每个新话题的第一个帖子的通知。"
       muted_categories: "已设为免打扰"
-      muted_categories_instructions: "您不会收到有关这些类别中新话题的任何通知，也不会出现在类别或最新话题页面上。"
+      muted_categories_instructions: "您不会收到有关这些类别中新话题的任何通知，它们也不会出现在类别或最新话题页面上。"
       muted_categories_instructions_dont_hide: "您不会收到有关这些类别中新话题的任何通知。"
       regular_categories: "常规"
       regular_categories_instructions: "您将在“最新”和“热门”话题列表中看到这些类别。"
@@ -2653,8 +2653,8 @@ zh_CN:
             other: "还有其他 %{count} 人阅读了此帖子"
         by_you:
           off_topic: "您将此帖子举报为偏离话题"
-          spam: "您将此帖子举报为垃圾内容"
-          inappropriate: "您将此帖子举报为不当"
+          spam: "您将此帖子举报为垃圾信息"
+          inappropriate: "您将此帖子举报为不当言论"
           notify_moderators: "您将此帖子举报为需要由版主核实"
           notify_user: "您向此用户发送了一条消息"
       delete:
@@ -2814,32 +2814,32 @@ zh_CN:
       this_year: "今年"
       position: "类别页面上的位置："
       default_position: "默认位置"
-      position_disabled: "分类按照其活跃程度的顺序显示。要固定分类列表的显示顺序， "
-      position_disabled_click: '启用“固定分类位置”设置。'
-      minimum_required_tags: "在一个话题中至少含有多少个标签："
-      parent: "上级分类"
+      position_disabled: "类别将按照活跃程度顺序显示。要控制类别在列表中的顺序，"
+      position_disabled_click: '请启用“固定类别位置”设置。'
+      minimum_required_tags: "话题中所需的最少标签数："
+      parent: "父类别"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
       notifications:
         watching:
           title: "关注"
-          description: "你将自动关注这个分类中的所有话题，你会收到所有新话题中的每一个新帖的通知，还会显示新回复的数量。"
+          description: "您将自动关注此类别中的所有话题。您会收到每个话题中每个新帖子的通知，并且会显示新回复数量。"
         watching_first_post:
-          title: "关注新帖"
-          description: "你将收到此分类中的新话题通知，不包括回复。"
+          title: "关注第一个帖子"
+          description: "您将收到此类别中新话题的通知，但不会收到话题回复。"
         tracking:
-          title: "追踪"
-          description: "你将自动跟踪这个分类中的所有话题，如果有人 @ 你或回复你，将通知你，还将显示新回复的数量。"
+          title: "跟踪"
+          description: "您将自动跟踪此类别中的所有话题。您会在别人 @ 您或回复您时收到通知，并且会显示新回复数量。"
         regular:
-          title: "普通"
-          description: "如果有人@你或回复你，将通知你。"
+          title: "常规"
+          description: "您会在别人 @ 您或回复您时收到通知。"
         muted:
-          title: "静音"
-          description: "你将不会收到有这些个分类新话题的任何通知，它们也不会出现在最新话题中。"
+          title: "已设为免打扰"
+          description: "您不会收到有关此类别中新话题的任何通知，它们也不会出现在最新话题页面上。"
       search_priority:
         label: "搜索优先级"
         options:
-          normal: "普通"
+          normal: "常规"
           ignore: "忽略"
           very_low: "非常低"
           low: "低"
@@ -2851,9 +2851,9 @@ zh_CN:
         op_likes: "原始帖子的赞"
         views: "浏览"
         posts: "帖子"
-        activity: "活跃"
-        posters: "发帖者"
-        category: "分类"
+        activity: "活动"
+        posters: "发帖人"
+        category: "类别"
         created: "创建日期"
       sort_ascending: "升序"
       sort_descending: "降序"
@@ -2866,104 +2866,104 @@ zh_CN:
         general: "常规"
         moderation: "审核"
         appearance: "外观"
-        email: "邮箱"
+        email: "电子邮件"
       list_filters:
         all: "所有话题"
-        none: "无子分类"
-      colors_disabled: "你无法选择颜色，因为你没有类别样式。"
+        none: "无子类别"
+      colors_disabled: "您无法选择颜色，因为您的类别样式为无。"
     flagging:
-      title: "感谢你帮助我们建设文明社区！"
-      action: "标记帖子"
-      take_action: "执行操作..."
+      title: "感谢您帮助我们建设文明社区！"
+      action: "举报帖子"
+      take_action: "执行操作…"
       take_action_options:
         default:
           title: "执行操作"
-          details: "立即采取标记达到阈值时的措施，而不是等待更多的社区标记"
+          details: "立即达到举报阈值，而不是等待更多社区举报"
         suspend:
           title: "封禁用户"
-          details: "立即采取标记达到阈值时的措施，并封禁用户"
+          details: "立即达到举报阈值，并封禁用户"
         silence:
           title: "禁言用户"
-          details: "立即采取标记达到阈值时的措施，并禁言用户"
+          details: "立即达到举报阈值，并禁言用户"
       notify_action: "消息"
       official_warning: "官方警告"
-      delete_spammer: "删除垃圾内容发布者"
+      delete_spammer: "删除垃圾信息发布者"
       flag_for_review: "加入审查队列"
-      delete_confirm_MF: "你将删除该用户的 {POSTS, plural, one {<b>1</b> 个帖子} other {<b>#</b> 个帖子}} 和 {TOPICS, plural, one {<b>1</b> 个话题} other {<b>#</b> 个话题}}，并且删除该账户，阻止其IP地址 <b>{ip_address}</b> 再次注册，同时将其邮件地址 <b>{email}</b> 加入永久的黑名单，你确定该用户是垃圾内容制造者吗？"
-      yes_delete_spammer: "是的，删除垃圾内容发布者"
-      ip_address_missing: "（N/A）"
-      hidden_email_address: "（隐藏）"
-      submit_tooltip: "私下提交标记"
-      take_action_tooltip: "立即采取标记达到阈值时的措施，而不是等待更多的社区标记"
-      cant: "抱歉，当前你不能标记该帖子。"
+      delete_confirm_MF: "您将删除此用户的 {POSTS, plural, one {<b>1</b> 个帖子} other {<b>#</b> 个帖子}}和 {TOPICS, plural, one {<b>#</b> 个话题} other {<b>#</b> 个话题}}，移除他们的帐户，阻止其 IP 地址 <b>{ip_address}</b> 再次注册，同时将其电子邮件地址 <b>{email}</b> 加入永久黑名单。确定此用户是垃圾信息发布者吗？"
+      yes_delete_spammer: "是，删除垃圾信息发布者"
+      ip_address_missing: "（不适用）"
+      hidden_email_address: "（已隐藏）"
+      submit_tooltip: "提交不公开举报"
+      take_action_tooltip: "立即达到举报阈值，而不是等待更多社区举报"
+      cant: "抱歉，您目前无法举报此帖子。"
       notify_staff: "私下通知管理人员"
       formatted_name:
         off_topic: "偏离话题"
-        inappropriate: "这是不当言论"
-        spam: "这是广告内容"
-      custom_placeholder_notify_user: "详细说明，易于理解，保持友善。"
-      custom_placeholder_notify_moderators: "让我们知道你关心的是什么，并尽可能地提供相关链接和例子。"
+        inappropriate: "不当言论"
+        spam: "垃圾信息"
+      custom_placeholder_notify_user: "具体，有建设性，并始终保持友善。"
+      custom_placeholder_notify_moderators: "让我们具体了解您关心的问题，并尽可能提供相关的链接和示例。"
       custom_message:
         at_least:
-          other: "输入至少 %{count} 个字符"
+          other: "至少输入 %{count} 个字符"
         more:
-          other: "还差 %{count} 个…"
+          other: "还差 %{count} 条…"
         left:
-          other: "剩余 %{count}"
+          other: "剩余 %{count} 条"
     flagging_topic:
-      title: "感谢你帮助我们建设文明社区！"
-      action: "标记话题"
+      title: "感谢您帮助我们建设文明社区！"
+      action: "举报话题"
       notify_action: "消息"
     topic_map:
       title: "话题摘要"
-      participants_title: "主要发帖者"
+      participants_title: "频繁发帖人"
       links_title: "热门链接"
       links_shown: "显示更多链接…"
       clicks:
         other: "%{count} 次点击"
     post_links:
-      about: "为本帖展开更多链接"
+      about: "展开此帖子的更多链接"
       title:
-        other: "还有 %{count} 篇"
+        other: "其他 %{count} 个"
     topic_statuses:
       warning:
         help: "这是一个官方警告。"
       bookmarked:
-        help: "你已经收藏了此话题"
+        help: "您已将此话题加入书签"
       locked:
-        help: "这个话题已被关闭，不再接受新的回复"
+        help: "此话题已被关闭；不再接受新回复"
       archived:
-        help: "本话题已归档，即已经冻结，无法修改"
+        help: "此话题已被归档；已被冻结，无法更改"
       locked_and_archived:
-        help: "这个话题已被关闭并归档，不再接受新的回复且不能被修改"
+        help: "此话题已被关闭并存档；不再接受新回复且无法更改"
       unpinned:
-        title: "取消置顶"
-        help: "话题已经取消置顶；它将以默认顺序显示"
+        title: "已取消置顶"
+        help: "此话题已对您取消置顶；它将以常规顺序显示"
       pinned_globally:
-        title: "全局置顶"
-        help: "本话题已全局置顶，它始终会在最新列表以及它所属的分类中置顶"
+        title: "已全局置顶"
+        help: "此话题已被全局置顶；它将显示在最新话题列表及其所属类别的顶部"
       pinned:
-        title: "置顶"
-        help: "本话题已置顶，它将始终显示在它所属分类的顶端"
+        title: "已置顶"
+        help: "此话题已对您置顶；它将显示在所属类别的顶部"
       unlisted:
-        help: "本话题被设置为不显示在话题列表中，只能通过链接来访问"
+        help: "此话题已被取消公开；它不会显示在话题列表中，只能通过直接链接访问"
       personal_message:
-        title: "此话题是一条私信"
-        help: "此话题是一条私信"
+        title: "此话题是一条个人消息"
+        help: "此话题是一条个人消息"
     posts: "帖子"
     posts_likes_MF: |
-      这个话题共有{count, plural, other {# 条回复}}{ratio, select,
-      low {，点赞比例比较高}
-      med {，点赞比例很高}
-      high {，点赞比例非常之高}
-      other {}}
-    original_post: "原始帖"
+      此话题有 {count, plural, other {# 个回复}}{ratio, select,
+        low {，并且点赞发帖比例比较高}
+        med {，并且点赞发帖比例非常高}
+        high {，并且点赞发帖比例极高}
+        other {}}
+    original_post: "原始帖子"
     views: "浏览"
     views_lowercase:
       other: "浏览"
     replies: "回复"
     views_long:
-      other: "本话题已经被浏览过 %{number} 次"
+      other: "此话题已被浏览 %{number} 次"
     activity: "活动"
     likes: "赞"
     likes_lowercase:
@@ -2971,43 +2971,43 @@ zh_CN:
     users: "用户"
     users_lowercase:
       other: "用户"
-    category_title: "分类"
-    history: "历史，最近100次修订"
-    changed_by: "由 %{author}"
+    category_title: "类别"
+    history: "历史记录，最近 100 次修订"
+    changed_by: "作者 %{author}"
     raw_email:
-      title: "进站邮件"
+      title: "收到的电子邮件"
       not_available: "不可用！"
-    categories_list: "分类列表"
+    categories_list: "类别列表"
     filters:
       with_topics: "%{filter} 话题"
       with_category: "%{category} 的 %{filter} 话题"
       latest:
         title: "最新"
         title_with_count:
-          other: "最新（%{count}）"
-        help: "有新帖的话题"
+          other: "最新 (%{count})"
+        help: "有新帖子的话题"
       read:
         title: "已读"
-        help: "你阅读过的话题，以你阅读的顺序排序"
+        help: "您已读过的话题，按您上次阅读它们的顺序排序"
       categories:
-        title: "分类"
-        title_in: "分类 - %{categoryName}"
-        help: "归入各种类别的所有话题"
+        title: "类别"
+        title_in: "类别 - %{categoryName}"
+        help: "按类别分组的所有话题"
       unread:
         title: "未读"
         title_with_count:
-          other: "未读（%{count}）"
-        help: "你目前关注或跟踪有了未读帖子的话题"
+          other: "未读 (%{count})"
+        help: "您当前正在关注或跟踪，具有未读帖子的话题"
         lower_title_with_count:
           other: "%{count} 未读"
       new:
         lower_title_with_count:
-          other: "%{count} 近期"
-        lower_title: "近期"
-        title: "近期"
+          other: "%{count} 新"
+        lower_title: "新"
+        title: "新"
         title_with_count:
           other: "新 (%{count})"
-        help: "最近几天里创建的话题"
+        help: "最近几天创建的话题"
       posted:
         title: "我的帖子"
         help: "你发表过帖子的话题"

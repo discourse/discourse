@@ -395,7 +395,7 @@ es:
       time_must_be_provided: "se debe indicar el tiempo para todos los recordatorios"
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
-      later_today: "Más tarde, hoy"
+      later_today: "Más tarde durante el día de hoy"
       next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
       next_week: "La próxima semana"
@@ -515,9 +515,9 @@ es:
         featured_link: "Enlace destacado"
         category_id: "Categoría"
       post:
-        raw: "Mensaje"
+        raw: "Cuerpo"
       user_profile:
-        bio_raw: "Sobre mi"
+        bio_raw: "Acerca de mí"
     errors:
       models:
         topic:
@@ -704,22 +704,22 @@ es:
     distance_in_words:
       half_a_minute: "< 1 m"
       less_than_x_seconds:
-        one: "< %{count}s"
-        other: "< %{count}s"
+        one: "< %{count} s"
+        other: "< %{count} s"
       x_seconds:
-        one: "%{count}s"
+        one: "%{count} s"
         other: "%{count} s"
       less_than_x_minutes:
-        one: "< %{count}m"
+        one: "< %{count} min"
         other: "< %{count} min"
       x_minutes:
-        one: "%{count}m"
-        other: "%{count} m"
+        one: "%{count} min"
+        other: "%{count} min"
       about_x_hours:
-        one: "%{count}h"
+        one: "%{count} h"
         other: "%{count} h"
       x_days:
-        one: "%{count}d"
+        one: "%{count} d"
         other: "%{count} d"
       about_x_months:
         one: "%{count} mes"
@@ -728,13 +728,13 @@ es:
         one: "%{count} mes"
         other: "%{count} meses"
       about_x_years:
-        one: "%{count}y"
+        one: "%{count} a"
         other: "%{count} a"
       over_x_years:
-        one: "> %{count}y"
+        one: "> %{count} a"
         other: "> %{count} a"
       almost_x_years:
-        one: "%{count}y"
+        one: "%{count} a"
         other: "%{count} a"
     distance_in_words_verbose:
       half_a_minute: "justo ahora"
@@ -840,7 +840,7 @@ es:
     already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
     please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
     continue_button: "Continuar a %{site_name}"
-    welcome_to: "¡Bienvenido a %{site_name}!"
+    welcome_to: "¡Te damos la bienvenida a %{site_name}!"
     approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un correo electrónico cuando tu cuenta sea aprobada!"
     missing_session: "No hemos podido detectar si tu cuenta fue creada. Asegúrate de tener activadas las cookies en tu navegador."
     activated: "Disculpa, esta cuenta ya fue activada."
@@ -877,7 +877,7 @@ es:
     notify_moderators:
       title: "Notificar a los moderadores"
       description: "Esta publicación requiere la atención del equipo de moderación por una razón no especificada arriba."
-      short_description: "Requiere atención del personal por otra razón"
+      short_description: "Requiere atención del personal por otro motivo"
       email_title: 'Una publicación en «%{title}» requiere atención del personal'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -948,7 +948,7 @@ es:
       title: "Inapropiado"
       description: 'Este tema tiene contenido que una persona razonable consideraría ofensivo, abusivo o una violación de las <a href="%{base_path}/guidelines">directrices de la comunidad</a>.'
       long_form: "marcado como inapropiado"
-      short_description: 'Violación de las <a href="%{base_path}/guidelines">directrices de la comunidad</a>'
+      short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
     notify_moderators:
       title: "Notificar a los moderadores"
       description: 'Este tema necesita ser revisado por por un motivo relacionado con las <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">Términos de servicio</a> o por otra razón no mencionada anteriormente.'
@@ -996,12 +996,12 @@ es:
       every_hour: "cada hora"
       daily: "diariamente"
       weekly: "semanalmente"
-      every_month: "mensualmente"
+      every_month: "cada mes"
       every_six_months: "cada seis meses"
   user_api_key:
     title: "Autorizar acceso de aplicación"
     authorize: "Autorizar"
-    read: "lectura"
+    read: "leer"
     read_write: "lectura/escritura"
     description: '«%{application_name}» está solicitando el siguiente acceso a tu cuenta:'
     instructions: 'Acabamos de generar una nueva clave API de usuario para que uses con «%{application_name}». Pega la siguiente clave en tu aplicación:'
@@ -1111,7 +1111,7 @@ es:
       labels:
         post: Publicación
         editor: Editor
-        author: Autoría
+        author: Autor
         edit_reason: Motivo
     dau_by_mau:
       title: "UAD/UAM"
@@ -1129,7 +1129,7 @@ es:
       yaxis: "Número de perfiles de usuario vistos"
       description: "Número total de visitas a perfiles de usuario."
     topics:
-      title: "Temas nuevos"
+      title: "Temas"
       xaxis: "Día"
       yaxis: "Número de temas nuevos"
       description: "Temas nuevos creados durante este periodo."
@@ -1250,7 +1250,7 @@ es:
     page_view_logged_in_reqs:
       title: "Con una sesión iniciada"
       xaxis: "Día"
-      yaxis: "Vistas de página realizadas de con una sesión iniciada"
+      yaxis: "Vistas de página de usuarios con una sesión iniciada"
       description: "Número de nuevas vistas de página de usuarios con una sesión iniciada."
     page_view_crawler_reqs:
       title: "Vistas de página de crawlers"
@@ -2155,7 +2155,7 @@ es:
   frequent_poster: "Autor frecuente"
   poster_description_joiner: ", "
   redirected_to_top_reasons:
-    new_user: "¡Bienvenido a nuestra comunidad! Estos son los temas recientes mas populares."
+    new_user: "¡Te damos la bienvenida a nuestra comunidad! Estos son los temas recientes mas populares."
     not_seen_in_a_month: "¡Hola! Hacía tiempo que no te veíamos. Estos han sido los temas más destacados desde que nos visitaste por última vez."
   merge_posts:
     edit_reason:
@@ -2228,20 +2228,20 @@ es:
     autoclosed_disabled_lastpost_minutes:
       one: "Este tema se abrió automáticamente %{count} minuto después de la última respuesta."
       other: "Este tema se abrió automáticamente %{count} minutos después de la última respuesta."
-    autoclosed_disabled: "El tema ahora está en abierto. Se permiten respuestas nuevas."
+    autoclosed_disabled: "Este tema ahora está abierto. Se permiten nuevas respuestas."
     autoclosed_disabled_lastpost: "Este tema ahora está abierto. Se permiten nuevas respuestas."
     auto_deleted_by_timer: "Eliminado automáticamente por el temporizador."
   login:
     invalid_second_factor_method: "El método de verificación de dos factores seleccionado no es válido."
     not_enabled_second_factor_method: "El método de dos factores seleccionado no está activado en tu cuenta."
     security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
-    security_key_alternative: "Intenta de otra manera"
+    security_key_alternative: "Probar de otra manera"
     security_key_authenticate: "Autenticar con clave de seguridad"
     security_key_not_allowed_error: "La autenticación de la clave de seguridad fue cancelada o se agotó el tiempo."
     security_key_no_matching_credential_error: "No se encontraron credenciales que coincidan en la clave de seguridad provista."
     security_key_support_missing_error: "Tu dispositivo o navegador actual no soporta el uso de claves de seguridad. Utiliza un método diferente."
     security_key_invalid: "Se produjo un error al validar la clave de seguridad."
-    not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para iniciar sesión."
+    not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para que inicies sesión."
     incorrect_username_email_or_password: "Nombre de usuario, correo electrónico o contraseña incorrecta"
     incorrect_password: "Contraseña incorrecta"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
@@ -2254,7 +2254,7 @@ es:
     suspended: "No puedes iniciar sesión hasta %{date}."
     suspended_with_reason: "Cuenta suspendida hasta %{date}: %{reason}"
     errors: "%{errors}"
-    not_available: "No disponible. ¿Prueba %{suggestion}?"
+    not_available: "No disponible. ¿Quieres probar con %{suggestion}?"
     something_already_taken: "Algo ha salido mal, quizá el nombre de usuario o el correo electrónico ya han sido registrados. Prueba con el enlace de olvidé mi contraseña."
     omniauth_error:
       generic: "Lo sentimos, se produjo un error al autorizar tu cuenta. Inténtalo de nuevo."
@@ -2636,7 +2636,7 @@ es:
         Conforme vayas participando, te iremos conociendo más y se irán levantando tus limitaciones temporales como usuario nuevo. Con el tiempo ganarás [niveles de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que incluyen capacidades especiales para ayudarnos a gestionar la comunidad juntos.
     welcome_user:
       title: "Bienvenida al usuario"
-      subject_template: "¡Bienvenido a %{site_name}!"
+      subject_template: "¡Te damos la bienvenida a %{site_name}!"
       text_body_template: |
         ¡Gracias por unirte a %{site_name}! ¡Te damos la bienvenida!
 
@@ -2663,7 +2663,7 @@ es:
         Un gran poder conlleva una gran responsabilidad. Si no tienes experiencia moderando, consulta la [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Bienvenida al invitado"
-      subject_template: "¡Bienvenido a %{site_name}!"
+      subject_template: "¡Te damos la bienvenida a %{site_name}!"
       text_body_template: |
         Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
 
@@ -2703,7 +2703,7 @@ es:
         ```
     backup_failed:
       title: "Error en la copia de seguridad"
-      subject_template: "La copia de seguridad falló"
+      subject_template: "Error en la copia de seguridad"
       text_body_template: |
         La copia de seguridad ha fallado.
 
@@ -2725,7 +2725,7 @@ es:
         ```
     restore_failed:
       title: "Error en la restauración"
-      subject_template: "La restauración falló."
+      subject_template: "Error en la restauración"
       text_body_template: |
         La restauración ha fallado.
 
@@ -2792,9 +2792,9 @@ es:
       title: "Correo electrónico rechazado. Correo bloqueado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
+        Lo sentimos, pero tu mensaje a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu respuesta se envió desde un correo bloqueado. Intenta usar otro correo o [contacta con un miembro del personal](%{base_url}/about).
+        Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contacta con un miembro del personal](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Correo electrónico rechazado. Correo electrónico no permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
@@ -3489,7 +3489,7 @@ es:
       title: "Entrar después de ser aprobado"
       subject_template: "¡Tu solicitud fue aprobada en %{site_name}!"
       text_body_template: |
-        ¡Bienvenido a %{site_name}!
+        ¡Te damos la bienvenida a %{site_name}!
 
         Un miembro del personal aprobó tu cuenta en %{site_name}.
 
@@ -3569,7 +3569,7 @@ es:
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
   login_required:
     welcome_message: |
-      ## [Bienvenido a %{title}](#welcome)
+      ## [Te damos la bienvenida a %{title}](#welcome)
       Se necesita una cuenta para utilizar el sitio. Crea una o inicia sesión para continuar.
     welcome_message_invite_only: |
       ## [Te damos la bienvenida a %{title}](#welcome)
