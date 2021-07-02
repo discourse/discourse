@@ -54,6 +54,7 @@ class BootstrapController < ApplicationController
 
     bootstrap = {
       theme_id: theme_id,
+      theme_color: "##{ColorScheme.hex_for_name('header_background', scheme_id)}",
       title: SiteSetting.title,
       current_homepage: current_homepage,
       locale_script: locale,
