@@ -692,7 +692,7 @@ describe Post do
 
     end
 
-    describe 'ninja editing & edit windows' do
+    describe 'grace period editing & edit windows' do
 
       before { SiteSetting.editing_grace_period = 1.minute.to_i }
 
@@ -700,7 +700,7 @@ describe Post do
         revised_at = post.updated_at + 2.minutes
         new_revised_at = revised_at + 2.minutes
 
-        # ninja edit
+        # grace period edit
         post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
         post.reload
         expect(post.version).to eq(1)
@@ -760,7 +760,7 @@ describe Post do
 
       context 'second poster posts again quickly' do
 
-        it 'is a ninja edit, because the second poster posted again quickly' do
+        it 'is a grace period edit, because the second poster posted again quickly' do
           SiteSetting.editing_grace_period = 1.minute.to_i
           post.revise(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload

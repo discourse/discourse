@@ -233,10 +233,10 @@ module HasCustomFields
             t = {}
             self.class.append_custom_field(t, f.name, f.value)
 
-            if dup[f.name] != t[f.name]
-              f.destroy!
-            else
+            if dup.has_key?(f.name) && dup[f.name] == t[f.name]
               dup.delete(f.name)
+            else
+              f.destroy!
             end
           end
         end

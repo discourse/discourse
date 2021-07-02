@@ -59,7 +59,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
 
   shared_context "quoted tweet info" do
     before do
-      @link = "https://twitter.com/Metallica/status/1128068672289890305"
+      @link = "https://twitter.com/metallica/status/1128068672289890305"
       @onebox_fixture = "twitterstatus_quoted"
 
       stub_request(:get, @link.downcase).to_return(status: 200, body: onebox_response(@onebox_fixture))

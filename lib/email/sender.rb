@@ -429,6 +429,8 @@ module Email
     end
 
     def set_reply_key(post_id, user_id)
+      # ALLOW_REPLY_BY_EMAIL_HEADER is only added if we are _not_ sending
+      # via group SMTP and if reply by email site settings are configured
       return if !user_id || !post_id || !header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
 
       # use safe variant here cause we tend to see concurrency issue

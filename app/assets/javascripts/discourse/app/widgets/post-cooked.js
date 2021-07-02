@@ -142,7 +142,8 @@ export default class PostCooked {
           const $onebox = $link.closest(".onebox");
           if (
             $onebox.length === 0 ||
-            (bestElements[$onebox[0]] && bestElements[$onebox[0]] === $link[0])
+            !bestElements[$onebox[0]] ||
+            bestElements[$onebox[0]] === $link[0]
           ) {
             const title = I18n.t("topic_map.clicks", { count: lc.clicks });
             $link.append(

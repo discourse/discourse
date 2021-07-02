@@ -163,7 +163,6 @@ th:
     submit: "ตกลง"
     generic_error: "ขออภัย เกิดข้อผิดพลาดขึ้น"
     generic_error_with_reason: "เกิดข้อผิดพลาดขึ้น: %{error}"
-    go_ahead: "ไปต่อ"
     sign_up: "สมัครสมาชิก"
     log_in: "เข้าสู่ระบบ"
     age: "อายุ"
@@ -190,7 +189,6 @@ th:
     more: "เพิ่มเติม"
     x_more:
       other: "อีก %{count}"
-    less: "น้อย"
     never: "ไม่เคย"
     every_30_minutes: "ทุก 30 นาที"
     every_hour: "ทุกชั่วโมง"
@@ -199,7 +197,6 @@ th:
     every_month: "ทุกเดือน"
     every_six_months: "ทุกหกเดือน"
     max_of_count: "สูงสุดของ %{count}"
-    alternation: "หรือ"
     character_count:
       other: "%{count} ตัวอักษร"
     related_messages:
@@ -460,9 +457,6 @@ th:
     groups:
       member_added: "เพิ่ม"
       member_requested: "ร้องขอเมื่อ"
-      add_members:
-        usernames:
-          input_placeholder: "ชื่อผู้ใช้"
       requests:
         title: "คำร้องขอ"
         reason: "เหตุผล"
@@ -474,7 +468,7 @@ th:
         title: "จัดการ"
         name: "ชื่อ"
         full_name: "ชื่อ-นามสกุล"
-        add_members: "เพิ่มสมาชิก"
+        invite_members: "เชิญ"
         delete_member_confirm: "ลบ '%{username}' ออกจากกลุ่ม '%{group}' ใช่ไหม"
         profile:
           title: โปรไฟล์

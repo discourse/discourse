@@ -246,7 +246,6 @@ he:
     submit: "שליחה"
     generic_error: "ארעה שגיאה, עמך הסליחה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
-    go_ahead: "קדימה"
     sign_up: "הרשמה"
     log_in: "כניסה"
     age: "גיל"
@@ -279,7 +278,6 @@ he:
       two: "עוד %{count}"
       many: "עוד %{count}"
       other: "עוד %{count}"
-    less: "צמצום"
     never: "אף פעם"
     every_30_minutes: "כל 30 דקות"
     every_hour: "כל שעה"
@@ -288,7 +286,6 @@ he:
     every_month: "כל חודש"
     every_six_months: "כל שישה חודשים"
     max_of_count: "%{count} לכל היותר"
-    alternation: "או"
     character_count:
       one: "תו אחד"
       two: "%{count} תווים"
@@ -325,8 +322,9 @@ he:
       clear_bookmarks: "מחיקת סימניות"
       help:
         bookmark: "יש ללחוץ כדי ליצור סימנייה לפוסט הראשון בנושא זה"
+        edit_bookmark: "יש ללחוץ כדי לערוך את הסימניה בנושא זה"
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
-        unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא הזה. יש לך תזכורת שמוגדרת ל־%{reminder_at} עבור הנושא הזה."
+        unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
@@ -692,15 +690,10 @@ he:
       member_added: "הוסיף"
       member_requested: "בקשה התקבלה ב־"
       add_members:
-        title: "הוספת חברים אל %{group_name}"
-        description: "ניתן גם להדביק ברשימה מופרדת בפסיקים"
-        usernames_or_emails:
-          title: "נא למלא שמות משתמשים או כתובות דוא״ל"
-          input_placeholder: "שמות משתמשים או כתובות דוא״ל"
-        usernames:
-          title: "נא להקליד שמות משתמשים"
-          input_placeholder: "שמות משתמשים"
+        title: "הוספת משתמשים אל %{group_name}"
+        description: "נא למלא רשימת משתמשים אותם ברצונך להזמין לקבוצה או להדביק רשימה מופרדת בפסיקים:"
         notify_users: "להודיע למשתמשים"
+        set_owner: "הגדרת משתמשים כבעלי הקבוצה הזו"
       requests:
         title: "בקשות"
         reason: "סיבה"
@@ -714,7 +707,8 @@ he:
         title: "ניהול"
         name: "שם"
         full_name: "שם מלא"
-        add_members: "הוספת חברים"
+        add_members: "הוספת משתמשים"
+        invite_members: "הזמנה"
         delete_member_confirm: "להסיר את ‚%{username}’ מהקבוצה ‚%{group}’?"
         profile:
           title: פרופיל
@@ -1555,6 +1549,7 @@ he:
           restrict_email: "להגביל לכתובת דוא״ל אחת"
           max_redemptions_allowed: "כמות שימושים מרבית"
           add_to_groups: "הוספה לקבוצות"
+          invite_to_topic: "נחיתה בנושא הזה"
           expires_at: "תפוג לאחר"
           custom_message: "הודעה אישית כרשות"
           send_invite_email: "לשמור ולשלח דוא״ל"
@@ -2237,6 +2232,7 @@ he:
       hint: "(ניתן גם לגרור לעורך להעלאה)"
       hint_for_supported_browsers: "תוכלו גם לגרור או להדביק תמונות לעורך"
       uploading: "מעלה"
+      processing: "ההעלאה עוברת עיבוד"
       select_file: "בחירת קובץ"
       default_image_alt_text: תמונה
       supported_formats: "תצורות קבצים נתמכות"
@@ -3919,8 +3915,6 @@ he:
             available: "שם הקבוצה זמין"
             not_available: "שם הקבוצה אינו זמין"
             blank: "שם הקבוצה לא יכול להיות ריק"
-        add_members:
-          as_owner: "הגדרת משתמשים כבעלים של הקבוצה הזו"
         manage:
           interaction:
             email: דוא״ל
@@ -5084,6 +5078,7 @@ he:
           text: "שדה טקסט"
           confirm: "אישור"
           dropdown: "נגלל"
+          multiselect: "מגוון בחירות"
       site_text:
         description: "ניתן להתאים כל טקסט בפורום שלך. נא להתחיל בחיפוש שלהלן:"
         search: "חפשו טקסט שברצונכם לערוך"

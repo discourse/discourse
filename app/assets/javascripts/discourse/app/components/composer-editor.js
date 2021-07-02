@@ -1,4 +1,6 @@
 import {
+  authorizedExtensions,
+  authorizesAllExtensions,
   authorizesOneOrMoreImageExtensions,
   displayErrorForUpload,
   getUploadMarkdown,
@@ -198,6 +200,21 @@ export default Component.extend({
       categoryId,
       includeGroups: true,
     });
+  },
+
+  @discourseComputed()
+  acceptsAllFormats() {
+    return authorizesAllExtensions(this.currentUser.staff, this.siteSettings);
+  },
+
+  @discourseComputed()
+  acceptedFormats() {
+    const extensions = authorizedExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
+
+    return extensions.map((ext) => `.${ext}`).join();
   },
 
   @on("didInsertElement")
@@ -635,6 +652,7 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: false,
+          isProcessingUpload: false,
           isCancellable: false,
         });
       }
@@ -675,6 +693,7 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: true,
+          isProcessingUpload: true,
           isCancellable: false,
         });
       })
@@ -689,6 +708,7 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: false,
+          isProcessingUpload: false,
           isCancellable: false,
         });
       });
@@ -828,10 +848,12 @@ export default Component.extend({
     });
 
     if (this.site.mobileView) {
-      $("#reply-control .mobile-file-upload").on("click.uploader", function () {
-        // redirect the click on the hidden file input
-        $("#mobile-uploader").click();
-      });
+      const uploadButton = document.getElementById("mobile-file-upload");
+      uploadButton.addEventListener(
+        "click",
+        () => document.getElementById("file-uploader").click(),
+        false
+      );
     }
   },
 

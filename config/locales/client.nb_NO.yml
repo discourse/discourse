@@ -182,7 +182,6 @@ nb_NO:
     submit: "Utfør"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
-    go_ahead: "Fortsett"
     sign_up: "Registrer deg"
     log_in: "Logg inn"
     age: "Alder"
@@ -207,7 +206,6 @@ nb_NO:
     now: "akkurat nå"
     read_more: "les mer"
     more: "Mer"
-    less: "Mindre"
     never: "aldri"
     every_30_minutes: "hvert 30. minutt"
     every_hour: "hver time"
@@ -216,7 +214,6 @@ nb_NO:
     every_month: "hver måned"
     every_six_months: "hver sjette måned"
     max_of_count: "maksimum av %{count}"
-    alternation: "eller"
     character_count:
       one: "%{count} tegn"
       other: "%{count} tegn"
@@ -453,9 +450,6 @@ nb_NO:
         make_user_group_owner: "Gjør til eier"
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
-      add_members:
-        usernames:
-          input_placeholder: "Brukernavn"
       requests:
         title: "Forespørsler"
         reason: "Begrunnelse"
@@ -465,7 +459,7 @@ nb_NO:
         title: "Behandle"
         name: "Navn"
         full_name: "Fullt navn"
-        add_members: "Legg til medlemmer"
+        invite_members: "Inviter"
         delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
         profile:
           title: Profil
@@ -2581,8 +2575,6 @@ nb_NO:
             available: "Gruppenavn tilgjengelig"
             not_available: "Gruppenavn ikke tilgjengelig"
             blank: "Gruppenavnet kan ikke være tomt"
-        add_members:
-          as_owner: "Sett bruker(e) som eier(e) av denne gruppen"
         manage:
           interaction:
             email: E-post

@@ -684,6 +684,40 @@ describe InvitesController do
         expect(response.body).to include(I18n.t('login.already_logged_in', current_user: user.username))
       end
     end
+
+    context 'topic invites' do
+      fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
+
+      fab!(:secured_category) do
+        secured_category = Fabricate(:category)
+        secured_category.permissions = { staff: :full }
+        secured_category.save!
+        secured_category
+      end
+
+      it 'redirects user to topic if activated' do
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+      end
+
+      it 'sets destination_url cookie if user is not activated' do
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        put "/invites/show/#{invite.invite_key}.json"
+        expect(cookies['destination_url']).to eq(topic.relative_url)
+      end
+
+      it 'does not redirect user if they cannot see topic' do
+        TopicInvite.create!(invite: invite, topic: Fabricate(:topic, category: secured_category))
+
+        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        expect(response.parsed_body['redirect_to']).to eq("/")
+      end
+    end
   end
 
   context '#destroy_all_expired' do

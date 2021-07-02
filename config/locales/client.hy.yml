@@ -190,7 +190,6 @@ hy:
     submit: "Հաստատել"
     generic_error: "Տեղի է ունեցել սխալ, ներողություն:"
     generic_error_with_reason: "Տեղի է ունեցել սխալ՝ %{error}"
-    go_ahead: "Գնալ առաջ"
     sign_up: "Գրանցվել"
     log_in: "Մուտք"
     age: "Տարիք"
@@ -219,7 +218,6 @@ hy:
     x_more:
       one: "ևս %{count}"
       other: "ևս %{count}"
-    less: "Կրճատ"
     never: "երբեք"
     every_30_minutes: "30 րոպեն մեկ"
     every_hour: "ժամը մեկ"
@@ -228,7 +226,6 @@ hy:
     every_month: "ամիսը մեկ"
     every_six_months: "վեց ամիսը մեկ"
     max_of_count: "առավելագույնը %{count}"
-    alternation: "կամ"
     character_count:
       one: "%{count} սիմվոլ"
       other: "%{count} սիմվոլ"
@@ -260,7 +257,6 @@ hy:
       help:
         bookmark: "Սեղմեք՝ այս թեմայի առաջին գրառումն էջանշելու համար"
         unbookmark: "Սեղմեք՝ այս թեմայի բոլոր էջանշանները ջնջելու համար"
-        unbookmark_with_reminder: "Բոլոր էջանշանները և այդ թեմայի հիշեցումները ջնջելու համար սեղմել: Դուք արդեն ունեք հիշեցում այդ թեմայի համար, որը կարգավորված է %{reminder_at}."
     bookmarks:
       not_bookmarked: "Էջանշել այս գրառումը"
       remove: "Հեռացնել էջանշանը"
@@ -533,9 +529,6 @@ hy:
     groups:
       member_added: "Ավելացված"
       member_requested: "Հարցով "
-      add_members:
-        usernames:
-          input_placeholder: "Օգտանուններ"
       requests:
         title: "Հարցումներ "
         reason: "Պատճառ"
@@ -549,7 +542,7 @@ hy:
         title: "Կառավարել"
         name: "Անուն"
         full_name: "Անուն Ազգանուն"
-        add_members: "Ավելացնել Անդամներ"
+        invite_members: "Հրավիրել"
         delete_member_confirm: "Հեռացնե՞լ '%{username}' օգտանունը '%{group}' խմբից:"
         profile:
           title: Պրոֆիլ
@@ -3027,8 +3020,6 @@ hy:
             available: "Խմբի անունը հասանելի է"
             not_available: "Խմբի անունը հասանելի չէ"
             blank: "Խմբի անունը չի կարող դատարկ լինել"
-        add_members:
-          as_owner: "Սահմանել օգտատիրոջ(երի) որպես այս խմբի սեփականատեր(եր)"
         manage:
           interaction:
             email: Էլ. հասցե

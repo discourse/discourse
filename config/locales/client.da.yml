@@ -200,7 +200,6 @@ da:
     submit: "Udfør"
     generic_error: "Beklager, der opstod en fejl."
     generic_error_with_reason: "Der opstod en fejl: %{error}"
-    go_ahead: "Fortsæt"
     sign_up: "Tilmeld"
     log_in: "Log ind"
     age: "Alder"
@@ -229,7 +228,6 @@ da:
     x_more:
       one: "%{count} Mere"
       other: "%{count} Flere"
-    less: "Mindre"
     never: "aldrig"
     every_30_minutes: "hver halve time"
     every_hour: "hver time"
@@ -238,7 +236,6 @@ da:
     every_month: "hver måned"
     every_six_months: "hvert halvår"
     max_of_count: "maks af %{count}"
-    alternation: "eller"
     character_count:
       one: "%{count} tegn"
       other: "%{count} tegn"
@@ -273,7 +270,6 @@ da:
       help:
         bookmark: "Klik for at sætte et bogmærke i det første indlæg i denne tråd"
         unbookmark: "Klik for at fjerne alle bogmærker i dette emne"
-        unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne. Du har en påmindelse sat %{reminder_at} for dette emne."
     bookmarks:
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
       not_bookmarked: "bogmærk dette indlæg"
@@ -605,14 +601,6 @@ da:
       member_added: "Tilføjet"
       member_requested: "Anmodet kl"
       add_members:
-        title: "Tilføj medlemmer til %{group_name}"
-        description: "Du kan også indsætte en kommasepareret liste."
-        usernames_or_emails:
-          title: "Indtast brugernavne eller e-mail adresser"
-          input_placeholder: "Brugernavne eller e-mails"
-        usernames:
-          title: "Indtast brugernavne"
-          input_placeholder: "Brugernavne"
         notify_users: "Giv brugerne besked"
       requests:
         title: "Anmodninger"
@@ -627,7 +615,7 @@ da:
         title: "Administrér"
         name: "Navn"
         full_name: "Fulde Navn"
-        add_members: "Tilføj Medlemmer"
+        invite_members: "Invitér"
         delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
         profile:
           title: Profil
@@ -3573,8 +3561,6 @@ da:
             available: "Gruppenavnet er tilgængeligt"
             not_available: "Gruppenavnet er ikke tilgængelig"
             blank: "Gruppenavnet kan ikke være tomt"
-        add_members:
-          as_owner: "Angiv bruger(e) som ejer(e) af denne gruppe"
         manage:
           interaction:
             email: Email

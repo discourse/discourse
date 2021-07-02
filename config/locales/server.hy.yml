@@ -1148,7 +1148,6 @@ hy:
     enable_markdown_linkify: "Ավտոմատ կերպով հղում դարձնել տեքստը, որը նման է հղման. www.example.com -ը և https://example.com -ը ավտոմատ կերպով կդառնան հղում"
     markdown_linkify_tlds: "Թոփ մակարդակի դոմենների ցանկ, որոնք ավտոմատ կերպով հղում են դառնում:"
     post_undo_action_window_mins: "Րոպեների քանակը, որոնց ընթացքում օգտատերերին թույլատրվում է ետարկել գրառման վրա կատարված վերջին գործողությունները (հավանում, դրոշակավորում և այլն):"
-    pending_users_reminder_delay: "Ծանուցել մոդերատորներին, եթե նոր օգտատերերը սպասում են հաստատման ավելի երկար, քան այսքան ժամ: Սահմանեք -1՝ ծանուցւոմները անջատելու համար:"
     maximum_session_age: "Օգտատերը կմնա մուտքագրված վերջին այցելությունից n ժամ անց"
     enable_escaped_fragments: "Վերադարձ դեպի Google's Ajax-Crawling API , եթե ոչ մի ցանցային տվայլների հավաքագրիչ (webcrawler) հայտնաբերված չէ: Այցելեք <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Թույլատրելի origin-ներ խաչաձև origin հարցումների համար (CORS): Յուրաքանչյուր origin պետք է ներառի http:// կամ https://: DISCOURSE_ENABLE_CORS env փոփոխականը պետք է սահմանված լինի true ՝ CORS -ի միացման համար:"

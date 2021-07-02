@@ -199,7 +199,6 @@ gl:
     submit: "Enviar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
-    go_ahead: "Avanzar"
     sign_up: "Crear unha conta"
     log_in: "Iniciar sesión"
     age: "Idade"
@@ -228,7 +227,6 @@ gl:
     x_more:
       one: "%{count} Máis"
       other: "%{count} Máis"
-    less: "Menos"
     never: "nunca"
     every_30_minutes: "cada 30 minutos"
     every_hour: "cada hora"
@@ -237,7 +235,6 @@ gl:
     every_month: "cada mes"
     every_six_months: "cada seis meses"
     max_of_count: "máx. de %{count}"
-    alternation: "ou"
     character_count:
       one: "%{count} carácter"
       other: "%{count} caracteres"
@@ -269,7 +266,6 @@ gl:
       help:
         bookmark: "Prema para engadir aos marcadores a publicación inicial deste tema"
         unbookmark: "Prema para retirar todos os marcadores deste tema"
-        unbookmark_with_reminder: "Prema para eliminar todos os marcadores e recordatorios deste tema. Configurou o recordatorio %{reminder_at} para este tema."
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
       not_bookmarked: "marcar esta publicación"
@@ -598,13 +594,6 @@ gl:
       member_added: "Engadido"
       member_requested: "Solicitado o"
       add_members:
-        title: "Engadir membros a %{group_name}"
-        description: "Tamén pode pegalos nunha lista separada por comas."
-        usernames_or_emails:
-          title: "Escriba nomes de usuario e enderezos de correo"
-          input_placeholder: "Nomes de usuario ou enderezos de correo"
-        usernames:
-          input_placeholder: "Nomes de usuario"
         notify_users: "Notificar os usuarios"
       requests:
         title: "Peticións"
@@ -619,7 +608,7 @@ gl:
         title: "Xestionar"
         name: "Nome"
         full_name: "Nome completo"
-        add_members: "Engadir membros"
+        invite_members: "Convidar"
         delete_member_confirm: "Quere eliminar a «%{username}» do grupo «%{group}»?"
         profile:
           title: Perfil
@@ -3516,8 +3505,6 @@ gl:
             available: "O nome do grupo está dispoñíbel"
             not_available: "O nome do grupo non está dispoñíbel"
             blank: "O nome do grupo non pode quedar baleiro"
-        add_members:
-          as_owner: "Estabelecer usuario(s) como propietario(s) deste grupo"
         manage:
           interaction:
             email: Correo electrónico

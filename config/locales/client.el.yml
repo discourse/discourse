@@ -194,7 +194,6 @@ el:
     submit: "Υποβολή"
     generic_error: "Λυπάμαι, προέκυψε κάποιο σφάλμα."
     generic_error_with_reason: "Προέκυψε ένα σφάλμα: %{error}"
-    go_ahead: "Προχωρήστε"
     sign_up: "Εγγραφή"
     log_in: "Σύνδεση"
     age: "Ηλικία"
@@ -223,7 +222,6 @@ el:
     x_more:
       one: "%{count} Περισσότερο"
       other: "%{count} Περισσότερο"
-    less: "Λιγότερα"
     never: "ποτέ"
     every_30_minutes: "κάθε 30 λεπτά"
     every_hour: "κάθε ώρα"
@@ -232,7 +230,6 @@ el:
     every_month: "κάθε μήνα"
     every_six_months: "κάθε έξι μήνες"
     max_of_count: "μέγιστο %{count}"
-    alternation: "ή"
     character_count:
       one: "%{count} χαρακτήρα"
       other: "%{count} χαρακτήρες"
@@ -264,7 +261,6 @@ el:
       help:
         bookmark: "Πάτήστε εδώ για να μπει σελιδοδείκτης στην πρώτη ανάρτηση του θέματος."
         unbookmark: "Πατήστε εδώ για να αφαιρεθούν όλοι οι σελιδοδείκτες από αυτό το θέμα."
-        unbookmark_with_reminder: "Κάντε κλικ για να αφαιρέσετε όλους τους σελιδοδείκτες και τις υπενθυμίσεις από αυτό το θέμα. Έχετε ορίσει μια υπενθύμιση στις %{reminder_at} για αυτό το θέμα."
     bookmarks:
       created: "Έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση. %{name}"
       not_bookmarked: "προσθέστε σελιδοδείκτη σε αυτήν την ανάρτηση"
@@ -565,11 +561,6 @@ el:
       member_added: "Προστέθηκε"
       member_requested: "Ζητήθηκε στις"
       add_members:
-        title: "Προσθήκη μελών στο %{group_name}"
-        description: "Μπορείτε επίσης να επικολλήσετε σε μια λίστα διαχωρισμένη με κόμμα."
-        usernames_or_emails:
-          title: "Εισαγάγετε ονόματα χρηστών ή διευθύνσεις email"
-          input_placeholder: "Ονόματα χρηστών ή email"
         notify_users: "Ειδοποίηση χρηστών"
       requests:
         title: "Αιτήματα"
@@ -584,7 +575,7 @@ el:
         title: "Διαχειριστείτε"
         name: "Όνομα"
         full_name: "Πλήρες Όνομα"
-        add_members: "Προσθήκη Μελών"
+        invite_members: "Πρόσκληση"
         delete_member_confirm: "Να αφαιρεθεί ο/η '%{username}' από την ομάδα '%{group}' ;"
         profile:
           title: Προφίλ
@@ -3226,8 +3217,6 @@ el:
             available: "Το όνομα ομάδας είναι διαθέσιμο"
             not_available: "Το όνομα ομάδας δεν είναι διαθέσιμο"
             blank: "Το όνομα ομάδας δε μπορεί να είναι κενό"
-        add_members:
-          as_owner: "Ορισμός χρηστών ως ιδιοκτητών αυτής της ομάδας"
         manage:
           interaction:
             email: Διεύθυνση Email

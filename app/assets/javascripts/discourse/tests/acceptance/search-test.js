@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -155,6 +156,38 @@ acceptance("Search - Anonymous", function (needs) {
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
 
+  needs.pretender((server, helper) => {
+    server.get("/search/query", (request) => {
+      if (request.queryParams.term.includes("empty")) {
+        return helper.response({
+          posts: [],
+          users: [],
+          categories: [],
+          tags: [],
+          groups: [],
+          grouped_search_result: {
+            more_posts: null,
+            more_users: null,
+            more_categories: null,
+            term: "plans test",
+            search_log_id: 1,
+            more_full_page_results: null,
+            can_create_topic: true,
+            error: null,
+            type_filter: null,
+            post_ids: [],
+            user_ids: [],
+            category_ids: [],
+            tag_ids: [],
+            group_ids: [],
+          },
+        });
+      }
+
+      return helper.response(searchFixtures["search/query"]);
+    });
+  });
+
   test("Right filters are shown to logged-in users", async function (assert) {
     const inSelector = selectKit(".select-kit#in");
 
@@ -176,6 +209,20 @@ acceptance("Search - Authenticated", function (needs) {
     assert.ok(exists(".search-advanced-options .in-likes"));
     assert.ok(exists(".search-advanced-options .in-private"));
     assert.ok(exists(".search-advanced-options .in-seen"));
+  });
+
+  test("Works with empty result sets", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".search-dropdown");
+    await click(".search-context input[type=checkbox]");
+    await fillIn("#search-term", "plans");
+    await triggerKeyEvent("#search-term", "keyup", 32);
+    assert.notEqual(count(".item"), 0);
+
+    await fillIn("#search-term", "plans empty");
+    await triggerKeyEvent("#search-term", "keyup", 32);
+    assert.equal(count(".item"), 0);
+    assert.equal(count(".no-results"), 1);
   });
 });
 

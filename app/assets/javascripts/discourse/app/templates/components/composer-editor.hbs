@@ -19,6 +19,10 @@
   disabled=disableTextarea
   outletArgs=(hash composer=composer editorType="composer")}}
 
-{{#if site.mobileView}}
-  <input type="file" id="mobile-uploader" multiple>
+{{#if allowUpload}}
+  {{#if acceptsAllFormats}}
+    <input type="file" id="file-uploader" multiple>
+  {{else}}
+    <input type="file" id="file-uploader" accept={{acceptedFormats}} multiple>
+  {{/if}}
 {{/if}}

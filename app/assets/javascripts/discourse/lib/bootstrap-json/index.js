@@ -65,6 +65,9 @@ function head(buffer, bootstrap) {
     if (s.theme_id) {
       attrs.push(`data-theme-id="${s.theme_id}"`);
     }
+    if (s.class) {
+      attrs.push(`class="${s.class}"`);
+    }
     let link = `<link rel="stylesheet" type="text/css" href="${
       s.href
     }" ${attrs.join(" ")}></script>\n`;

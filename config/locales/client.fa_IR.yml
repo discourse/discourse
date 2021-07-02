@@ -196,7 +196,6 @@ fa_IR:
     submit: "ارسال"
     generic_error: "متأسفیم، خطایی روی داده."
     generic_error_with_reason: "خطایی روی داد: %{error}"
-    go_ahead: "ادامه دهید"
     sign_up: "ثبت نام"
     log_in: "ورود"
     age: "سن"
@@ -225,7 +224,6 @@ fa_IR:
     x_more:
       one: "%{count} بیشتر"
       other: "بیش از %{count}"
-    less: "کمتر"
     never: "هرگز"
     every_30_minutes: "هر 30 دقیقه"
     every_hour: "هر ساعت"
@@ -234,7 +232,6 @@ fa_IR:
     every_month: "هر ماه"
     every_six_months: "هر شش ماه"
     max_of_count: "حداکثر %{count}"
-    alternation: "یا"
     character_count:
       one: "%{count} نویسه"
       other: "%{count} نویسه"
@@ -269,7 +266,6 @@ fa_IR:
       help:
         bookmark: "کلیک کنید تا به اولین نوشته این موضوع نشانک بزنید"
         unbookmark: "کلیک کنید تا همهٔ نشانک‌های این موضوع را حذف کنید"
-        unbookmark_with_reminder: "برای حذف همه نشانک‌ها و یادآوری‌های این موضوع کلیک کنید. شما یک مجموعه یادآوری %{reminder_at} برای این موضوع دارید."
     bookmarks:
       created: "شما این نوشته را نشانک کردید. %{name}"
       not_bookmarked: "این نوشته را نشانک بزنید"
@@ -595,14 +591,6 @@ fa_IR:
       member_added: "اضافه شده"
       member_requested: "درخواست شده در"
       add_members:
-        title: "اعضا را به %{group_name} اضافه کنید"
-        description: "شما همچنین قابلیت جداسازی در لیست با کاما را دارید."
-        usernames_or_emails:
-          title: "نام های کاربری یا آدرس ایمیل ها را وارد کنید"
-          input_placeholder: "نام‌کاربری یا ایمیل"
-        usernames:
-          title: "نام‌کاربری را وارد کنید"
-          input_placeholder: "نام های کاربری"
         notify_users: "اطلاع رسانی به کاربران"
       requests:
         title: "درخواست ها"
@@ -617,7 +605,7 @@ fa_IR:
         title: "مدیریت"
         name: "نام"
         full_name: "نام کامل"
-        add_members: "افزودن اعضا"
+        invite_members: "دعوت"
         delete_member_confirm: "کاربر '%{username}' از گروه '%{group}' حذف شود؟"
         profile:
           title: مشخصات کاربر
@@ -3123,8 +3111,6 @@ fa_IR:
             available: "نام گروه در دسترس است"
             not_available: "نام گروه در دسترس نیست"
             blank: "نام گروه نمی‌تواند خالی باشد"
-        add_members:
-          as_owner: "قراردادن کاربر(ها) به‌عنوان مالک(مالکان) این گروه"
         manage:
           interaction:
             email: ایمیل

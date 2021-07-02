@@ -803,6 +803,28 @@ class StaffActionLogger
     )
   end
 
+  def log_watched_words_creation(watched_word)
+    raise Discourse::InvalidParameters.new(:watched_word) unless watched_word
+
+    UserHistory.create!(
+      action: UserHistory.actions[:watched_word_create],
+      acting_user_id: @admin.id,
+      details: watched_word.action_log_details,
+      context: WatchedWord.actions[watched_word.action]
+    )
+  end
+
+  def log_watched_words_deletion(watched_word)
+    raise Discourse::InvalidParameters.new(:watched_word) unless watched_word
+
+    UserHistory.create!(
+      action: UserHistory.actions[:watched_word_destroy],
+      acting_user_id: @admin.id,
+      details: watched_word.action_log_details,
+      context: WatchedWord.actions[watched_word.action]
+    )
+  end
+
   private
 
   def get_changes(changes)
@@ -829,5 +851,4 @@ class StaffActionLogger
   def validate_category(category)
     raise Discourse::InvalidParameters.new(:category) unless category && category.is_a?(Category)
   end
-
 end

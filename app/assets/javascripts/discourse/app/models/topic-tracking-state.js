@@ -48,8 +48,6 @@ const TopicTrackingState = EmberObject.extend({
 
   @on("init")
   _setup() {
-    this.unreadSequence = [];
-    this.newSequence = [];
     this.states = new Map();
     this.messageIncrementCallbacks = {};
     this.stateChangeCallbacks = {};

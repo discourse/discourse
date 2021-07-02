@@ -327,7 +327,6 @@ class UserNotifications < ActionMailer::Base
     opts[:show_category_in_subject] = false
     opts[:show_tags_in_subject] = false
     opts[:show_group_in_subject] = true if SiteSetting.group_in_subject
-    opts[:use_group_smtp_if_configured] = true
 
     # We use the 'user_posted' event when you are emailed a post in a PM.
     opts[:notification_type] = 'posted'
@@ -461,7 +460,6 @@ class UserNotifications < ActionMailer::Base
       notification_type: notification_type,
       use_invite_template: opts[:use_invite_template],
       use_topic_title_subject: use_topic_title_subject,
-      use_group_smtp_if_configured: opts[:use_group_smtp_if_configured],
       user: user
     }
 
@@ -486,13 +484,6 @@ class UserNotifications < ActionMailer::Base
     user = opts[:user]
     group_name = opts[:group_name]
     locale = user_locale(user)
-
-    # this gets set in MessageBuilder if it is nil here, we just want to be
-    # able to override it if the group has SMTP enabled
-    from_address = nil
-    delivery_method_options = nil
-    use_from_address_for_reply_to = false
-    using_group_smtp = false
 
     template = +"user_notifications.user_#{notification_type}"
     if post.topic.private_message?
@@ -530,41 +521,6 @@ class UserNotifications < ActionMailer::Base
     end
 
     group = post.topic.allowed_groups&.first
-
-    # If the group has IMAP enabled, then this will be handled by
-    # the Jobs::GroupSmtpEmail which is enqueued from the PostAlerter
-    #
-    # use_group_smtp_if_configured is used to ensure that no notifications
-    # expect for specific ones that we bless (such as user_private_message)
-    # accidentally get sent with the group SMTP settings.
-    if group.present? &&
-       group.smtp_enabled &&
-       !group.imap_enabled &&
-       SiteSetting.enable_smtp &&
-       opts[:use_group_smtp_if_configured]
-
-      port, enable_tls, enable_starttls_auto = EmailSettingsValidator.provider_specific_ssl_overrides(
-        group.smtp_server, group.smtp_port, group.smtp_ssl, group.smtp_ssl
-      )
-
-      delivery_method_options = {
-        address: group.smtp_server,
-        port: port,
-        domain: group.email_username_domain,
-        user_name: group.email_username,
-        password: group.email_password,
-        authentication: GlobalSetting.smtp_authentication,
-        enable_starttls_auto: enable_starttls_auto
-      }
-
-      # We want from to be the same as the group's email_username, so if
-      # someone emails support@discourse.org they will get a reply from
-      # support@discourse.org and be able to email the SMTP email, which
-      # will forward the email back into Discourse and process/link it correctly.
-      use_from_address_for_reply_to = true
-      from_address = group.email_username
-      using_group_smtp = true
-    end
 
     if post.topic.private_message?
       subject_pm =
@@ -662,7 +618,7 @@ class UserNotifications < ActionMailer::Base
         message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "")
       end
 
-      first_footer_classes = "hilight"
+      first_footer_classes = "highlight"
       if (allow_reply_by_email && user.staged) || (user.suspended? || user.staged?)
         first_footer_classes = ""
       end
@@ -676,7 +632,8 @@ class UserNotifications < ActionMailer::Base
                     post: post,
                     in_reply_to_post: in_reply_to_post,
                     classes: Rtl.new(user).css_class,
-                    first_footer_classes: first_footer_classes
+                    first_footer_classes: first_footer_classes,
+                    reply_above_line: false
           }
         )
       end
@@ -692,7 +649,7 @@ class UserNotifications < ActionMailer::Base
       context: context,
       username: username,
       group_name: group_name,
-      add_unsubscribe_link: !user.staged && !using_group_smtp,
+      add_unsubscribe_link: !user.staged,
       mailing_list_mode: user.user_option.mailing_list_mode,
       unsubscribe_url: post.unsubscribe_url(user),
       allow_reply_by_email: allow_reply_by_email,
@@ -710,10 +667,7 @@ class UserNotifications < ActionMailer::Base
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
       site_title_url_encoded: UrlHelper.encode_component(SiteSetting.title),
-      locale: locale,
-      delivery_method_options: delivery_method_options,
-      use_from_address_for_reply_to: use_from_address_for_reply_to,
-      from: from_address
+      locale: locale
     }
 
     unless translation_override_exists

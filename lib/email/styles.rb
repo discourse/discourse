@@ -121,8 +121,7 @@ module Email
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px; vertical-align:middle;')
       style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
 
-      style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
-      style('blockquote > p', 'padding: 1em;')
+      style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin-left: 0; padding: 12px;')
 
       # Oneboxes
       style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px; margin-bottom: 10px;")
@@ -185,7 +184,7 @@ module Email
     def format_html
       correct_first_body_margin
       correct_footer_style
-      correct_footer_style_hilight_first
+      correct_footer_style_highlight_first
       reset_tables
 
       html_lang = SiteSetting.default_locale.sub("_", "-")
@@ -198,9 +197,13 @@ module Email
         dir: Rtl.new(nil).enabled? ? 'rtl' : 'ltr'
       )
 
+      style('blockquote > :first-child', 'margin-top: 0;')
+      style('blockquote > :last-child', 'margin-bottom: 0;')
+      style('blockquote > p', 'padding: 0;')
+
       style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
       style('h4', 'color: #222;')
-      style('h3', 'margin: 15px 0 20px 0;')
+      style('h3', 'margin: 30px 0 10px;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color};")
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
@@ -229,6 +232,7 @@ module Email
       style('.lightbox-wrapper .meta', 'display: none')
       style('div.undecorated-link-footer a', "font-weight: normal;")
       style('.mso-accent-link', "mso-border-alt: 6px solid #{SiteSetting.email_accent_bg_color}; background-color: #{SiteSetting.email_accent_bg_color};")
+      style('.reply-above-line', "font-size: 10px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color: #b5b5b5;padding: 5px 0px 20px;border-top: 1px dotted #ddd;")
 
       onebox_styles
       plugin_styles
@@ -376,9 +380,9 @@ module Email
       end
     end
 
-    def correct_footer_style_hilight_first
+    def correct_footer_style_highlight_first
       footernum = 0
-      @fragment.css('.footer.hilight').each do |element|
+      @fragment.css('.footer.highlight').each do |element|
         linknum = 0
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT

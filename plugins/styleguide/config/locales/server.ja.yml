@@ -6,5 +6,5 @@
 
 ja:
   site_settings:
-    styleguide_enabled: "`/styleguide` のパスを有効にして、Discourseのスタイリングに役立てる"
-    styleguide_admin_only: "styleguide の表示を管理者に制限する"
+    styleguide_enabled: "`/styleguide` のパスを有効にして、Discourse のスタイル設定に役立てる"
+    styleguide_admin_only: "スタイルガイドの表示を管理者に制限する"

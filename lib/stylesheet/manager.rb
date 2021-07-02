@@ -42,7 +42,7 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name, :color_scheme_id)
+    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :color_scheme_id)
     themes << nil
 
     color_schemes = ColorScheme.where(user_selectable: true).to_a
@@ -51,8 +51,9 @@ class Stylesheet::Manager
 
     targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin, :wizard]
     targets += Discourse.find_plugin_css_assets(include_disabled: true, mobile_view: true, desktop_view: true)
+    compiled = Set.new
 
-    themes.each do |id, name, color_scheme_id|
+    themes.each do |id, color_scheme_id|
       theme_id = id || SiteSetting.default_theme_id
       manager = self.new(theme_id: theme_id)
 
@@ -63,35 +64,41 @@ class Stylesheet::Manager
           scss_checker = ScssChecker.new(target, manager.theme_ids)
 
           manager.load_themes(manager.theme_ids).each do |theme|
+            next if compiled.include?("#{target}_#{theme.id}")
+
             builder = Stylesheet::Manager::Builder.new(
               target: target, theme: theme, manager: manager
             )
 
-            STDERR.puts "precompile target: #{target} #{builder.theme.name}"
             next if theme.component && !scss_checker.has_scss(theme.id)
+            $stderr.puts "precompile target: #{target} #{theme.name}"
             builder.compile(force: true)
+            compiled << "#{target}_#{theme.id}"
           end
         else
-          STDERR.puts "precompile target: #{target} #{name}"
+          theme = manager.get_theme(theme_id)
+          $stderr.puts "precompile target: #{target} #{theme&.name}"
 
           Stylesheet::Manager::Builder.new(
-            target: target, theme: manager.get_theme(theme_id), manager: manager
+            target: target, theme: theme, manager: manager
           ).compile(force: true)
         end
       end
 
       theme_color_scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
+      theme = manager.get_theme(theme_id)
 
       [theme_color_scheme, *color_schemes].uniq.each do |scheme|
-        STDERR.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
+        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} (#{scheme.name}) #{theme&.name}"
 
         Stylesheet::Manager::Builder.new(
           target: COLOR_SCHEME_STYLESHEET,
-          theme: manager.get_theme(theme_id),
+          theme: theme,
           color_scheme: scheme,
           manager: manager
         ).compile(force: true)
       end
+
       clear_color_scheme_cache!
     end
 

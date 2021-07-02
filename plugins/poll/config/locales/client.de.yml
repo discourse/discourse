@@ -24,7 +24,7 @@ de:
         closed:
           title: "Ergebnisse werden angezeigt, sobald die Abstimmung <strong>beendet</strong> ist."
         staff:
-          title: "Ergebnisse werden nur <strong>Teammitgliedern</strong> angezeigt."
+          title: "Ergebnisse werden nur <strong>Team-Mitgliedern</strong> angezeigt."
       multiple:
         help:
           at_least_min_options:
@@ -77,8 +77,8 @@ de:
         title: Umfrage erstellen
         insert: Umfrage einfügen
         help:
-          options_min_count: Geben Sie mindestens 1 Option ein.
-          options_max_count: Geben Sie höchstens %{count} Optionen ein.
+          options_min_count: Gib mindestens eine Option ein.
+          options_max_count: Gib maximal %{count} Optionen ein.
           invalid_min_value: Der Mindestwert muss mindestens 1 betragen.
           invalid_max_value: Der Maximalwert muss mindestens 1 betragen, aber kleiner oder gleich der Anzahl der Optionen sein.
           invalid_values: Der Mindestwert muss kleiner als der Höchstwert sein.
@@ -93,7 +93,7 @@ de:
           always: Immer sichtbar
           vote: Nur nach Stimmabgabe
           closed: Wenn die Umfrage geschlossen ist
-          staff: Nur Teammitglieder
+          staff: Nur Team-Mitglieder
         poll_groups:
           label: Abstimmung auf diese Gruppen beschränken
         poll_chart_type:

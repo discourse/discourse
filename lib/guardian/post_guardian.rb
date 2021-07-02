@@ -190,7 +190,7 @@ module PostGuardian
     # Can't delete the first post
     return false if post.is_first_post?
 
-    return true if can_moderate_topic?(post.topic)
+    return true if is_staff? || is_category_group_moderator?(post.topic&.category)
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?

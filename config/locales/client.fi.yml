@@ -200,7 +200,6 @@ fi:
     submit: "Lähetä"
     generic_error: "On tapahtunut virhe."
     generic_error_with_reason: "Tapahtui virhe: %{error}"
-    go_ahead: "Jatka"
     sign_up: "Rekisteröidy"
     log_in: "Kirjaudu"
     age: "Ikä"
@@ -229,7 +228,6 @@ fi:
     x_more:
       one: "%{count} muu"
       other: "%{count} muuta"
-    less: "Vähemmän"
     never: "ei koskaan"
     every_30_minutes: "30 minuutin välein"
     every_hour: "tunnin välein"
@@ -238,7 +236,6 @@ fi:
     every_month: "kuukausittain"
     every_six_months: "kuuden kuukauden välein"
     max_of_count: "korkeintaan %{count}"
-    alternation: "tai"
     character_count:
       one: "%{count} merkki"
       other: "%{count} merkkiä"
@@ -273,7 +270,6 @@ fi:
       help:
         bookmark: "Klikkaa lisätäksesi ketjun ensimmäisen viestin kirjanmerkkeihin"
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
-        unbookmark_with_reminder: "Poista kaikki kirjanmerkkisi ja muistutuksesi tästä ketjusta klikkaamalla. Olet asettanut muistutuksen tästä ketjusta ajankohtaan %{reminder_at}."
     bookmarks:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
@@ -601,14 +597,6 @@ fi:
       member_added: "Lisättiin"
       member_requested: "Pyydetty"
       add_members:
-        title: "Lisää jäseniä ryhmään %{group_name}"
-        description: "Voit myös liittää pilkuin erotellun luettelon."
-        usernames_or_emails:
-          title: "Anna käyttäjätunnukset tai sähköpostiosoitteet"
-          input_placeholder: "Käyttäjätunnukset tai sähköpostit"
-        usernames:
-          title: "Syötä käyttäjätunnukset"
-          input_placeholder: "Käyttäjätunnukset"
         notify_users: "Ilmoita käyttäjille"
       requests:
         title: "Pyynnöt"
@@ -623,7 +611,6 @@ fi:
         title: "Hallinnoi"
         name: "Nimi"
         full_name: "Koko nimi"
-        add_members: "Lisää jäseniä"
         delete_member_confirm: "Poistetaanko '%{username}' ryhmästä '%{group}'?"
         profile:
           title: Profiili
@@ -3441,9 +3428,9 @@ fi:
     trust_levels:
       names:
         newuser: "tulokas"
-        basic: "peruskäyttäjä"
-        member: "jäsen"
-        regular: "tavallinen"
+        basic: "haastaja"
+        member: "konkari"
+        regular: "mestari"
         leader: "johtaja"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
@@ -3564,8 +3551,6 @@ fi:
             available: "Ryhmän nimi on käytettävissä"
             not_available: "Ryhmän nimi ei ole käytettävissä"
             blank: "Ryhmällä on oltava nimi"
-        add_members:
-          as_owner: "Aseta käyttäjiä tämän ryhmän omistajiksi"
         manage:
           interaction:
             email: Sähköposti
@@ -4437,9 +4422,9 @@ fi:
           new: "Uudet käyttäjät"
           pending: "Hyväksymistä odottavat käyttäjät"
           newuser: "Luottamustason 0 käyttäjät (Tulokas)"
-          basic: "Luottamustason 1 käyttäjät (Peruskäyttäjä)"
-          member: "Luottamustason 2 käyttäjät (Jäsen)"
-          regular: "Luottamustason 3 käyttäjät (Tavallinen)"
+          basic: "Luottamustason 1 käyttäjät (Haastaja)"
+          member: "Luottamustason 2 käyttäjät (Konkari)"
+          regular: "Luottamustason 3 käyttäjät (Mestari)"
           leader: "Luottamustason 4 käyttäjät (Johtaja)"
           staff: "Henkilökunta"
           admins: "Ylläpitäjät"
@@ -4820,64 +4805,64 @@ fi:
         upload_an_image: "Lataa kuva"
         read_only_setting_help: "Mukauta tekstiä"
         query: Kunniamerkkikysely (SQL)
-        target_posts: Tietokantakyselyn kohdeviestit
-        auto_revoke: Aja kumoamis-ajo päivittäin
-        show_posts: Näytä ansiomerkin tuonut viesti ansiomerkkisivulla
+        target_posts: Kysely on kohdennettu viesteihin
+        auto_revoke: Suorita peruutuskysely päivittäin
+        show_posts: Näytä kunniamerkin tuonut viesti kunniamerkkisivulla
         trigger: Laukaisija
         trigger_type:
           none: "Päivitä päivittäin"
           post_action: "Kun käyttäjä toimii viestin suhteen"
           post_revision: "Kun käyttäjä muokkaa viestiä tai luo viestin"
           trust_level_change: "Kun käyttäjän luottamustaso vaihtuu"
-          user_change: "Kun käyttäjä luodaan tai sitä muokataan"
-          post_processed: "Sen jälkeen, kun viesti on käsitelty"
+          user_change: "Kun käyttäjä luodaan tai käyttäjää muokataan"
+          post_processed: "Viestin käsittelyn jälkeen"
         preview:
-          link_text: "Esikatsele myönnettäviä ansiomerkkejä"
-          plan_text: "Esikatsele query plan"
-          modal_title: "Ansiomerkin tietokantakyselyn esikatselu"
-          sql_error_header: "Kyselyn käsittelyssä tapahtui virhe."
-          error_help: "Apua ansiomerkkien tietokantakyselyihin saat seuraavista linkeistä."
+          link_text: "Esikatsele myönnettäviä kunniamerkkejä"
+          plan_text: "Esikatsele kyselysuunnitelmalla"
+          modal_title: "Kunniamerkin kyselyn esikatselu"
+          sql_error_header: "Kyselyssä tapahtui virhe."
+          error_help: "Apua kunniamerkkikyselyihin saat seuraavista linkeistä."
           bad_count_warning:
             header: "VAROITUS!"
-            text: "Myöntöjen näytteitä puuttuu. Tämä tapahtuu, kun ansiomerkin kysely palauttaa käyttäjä-ID:n tai viesti-ID:n, jota ei ole olemassa. Tämä voi johtaa odottamattomiin seurauksiin myöhemmin - tarkista kysely uudestaan."
-          no_grant_count: "Ei ansiomerkkejä myönnettäväksi"
+            text: "Antoesimerkkejä puuttuu. Tämä tapahtuu, kun kunniamerkkikysely palauttaa käyttäjätunnuksia tai viestien tunnuksia, joita ei ole olemassa. Tämä voi johtaa odottamattomiin seurauksiin myöhemmin – tarkista kyselysi."
+          no_grant_count: "Ei kunniamerkkejä myönnettäväksi."
           grant_count:
-            one: "<b>%{count}</b> ansiomerkki odottaa myöntämistä."
-            other: "<b>%{count}</b> ansiomerkkiä odottaa myöntämistä."
+            one: "<b>%{count}</b> myönnettävä kunniamerkki."
+            other: "<b>%{count}</b> myönnettävää kunniamerkkiä."
           sample: "Esimerkki:"
           grant:
             with: <span class="username">%{username}</span>
             with_post: <span class="username">%{username}</span> viestille ketjussa %{link}
-            with_post_time: <span class="username">%{username}</span> viestille ketjussa %{link} <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
+            with_post_time: <span class="username">%{username}</span> viestille ketjussa %{link} klo <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> klo <span class="time">%{time}</span>
         badge_intro:
-          title: "Aloita valitsemalla olemassa oleva ansiomerkki tai luomalla uusi"
+          title: "Aloita valitsemalla olemassa oleva kunniamerkki tai luomalla uusi"
           emoji: "naisopiskelijaemoji"
-          what_are_badges_title: "Mitä ansiomerkit ovat?"
-          badge_query_examples_title: "Esimerkkejä ansiomerkin tietokantakyselyistä"
+          what_are_badges_title: "Mitä kunniamerkit ovat?"
+          badge_query_examples_title: "Esimerkkejä kunniamerkkikyselyistä"
         mass_award:
-          title: Myönnä useille
-          description: Myönnä sama ansiomerkki useille käyttäjille samalla kertaa.
-          no_badge_selected: Aloita valitsemalla ansiomerkki.
-          perform: "Myönnä ansiomerkki käyttäjille"
-          upload_csv: Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteet tai käyttäjänimet
-          aborted: Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteet tai käyttäjänimet
-          success: CSV tuli perille ja käyttäjät saavat ansiomerkkinsä pian.
-          replace_owners: Poista ansiomerkki aiemmilta omistajilta
+          title: Joukkomyöntäminen
+          description: Myönnä sama kunniamerkki useille käyttäjille kerralla.
+          no_badge_selected: Aloita valitsemalla kunniamerkki.
+          perform: "Myönnä kunniamerkki käyttäjille"
+          upload_csv: Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
+          aborted: Lataa CSV, joka sisältää joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
+          success: CSV tuli perille ja käyttäjät saavat kunniamerkkinsä pian.
+          replace_owners: Poista kunniamerkki aiemmilta omistajilta
       emoji:
         title: "Emoji"
-        help: "Lisää uusi emoji joka on kaikkien käytettävissä. (Voit raahata useita tiedostoja kerralla)"
+        help: "Lisää uusi emoji, joka on kaikkien käytettävissä. (Vinkki: voit vetää ja pudottaa useita tiedostoja kerralla)"
         add: "Lisää uusi emoji"
-        uploading: "Lähettää..."
+        uploading: "Ladataan..."
         name: "Nimi"
         group: "Ryhmä"
         image: "Kuva"
         alt: "mukautetun emojin esikatselu"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
       embedding:
-        get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä isäntä."
+        get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"
-        sample: "Käytä alla olevaa HTML-koodia sivustollasi jotta voit luoda ja upottaa discourse-ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sivun kanonisella URL-osoitteella."
+        sample: "Käytä alla olevaa HTML-koodia sivustollasi, jotta voit luoda ja upottaa discourse-ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sen sivun kanonisella URL-osoitteella, jolle upotat."
         title: "Upottaminen"
         host: "Sallitut isännät"
         class_name: "Luokan nimi"
@@ -4885,33 +4870,33 @@ fi:
         edit: "muokkaa"
         category: "Julkaise alueelle"
         add_host: "Lisää isäntä"
-        settings: "Upotuksen asetukset"
-        crawling_settings: "Crawlerin asetukset"
-        crawling_description: "Kun Discourse aloittaa ketjuja kirjoituksistasi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS/ATOM-syötettä ei ole tarjolla, Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS-sääntöjä sen helpottamiseksi."
-        embed_by_username: "Käyttäjänimi, jonka nimissä ketjut aloitetaan"
+        settings: "Upotusasetukset"
+        crawling_settings: "Hakurobottiasetukset"
+        crawling_description: "Kun Discourse aloittaa ketjuja viesteistäsi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS-/ATOM-syötettä ei ole tarjolla. Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS-sääntöjä sen helpottamiseksi."
+        embed_by_username: "Käyttäjätunnus, jonka nimissä ketjut aloitetaan"
         embed_post_limit: "Upotettavien viestien maksimimäärä"
         embed_title_scrubber: "Säännöllinen lauseke, jolla riisutaan viestien otsikkoja"
         embed_truncate: "Typistä upotetut viestit"
-        embed_unlisted: "Tuodut ketjut ovat piilotettuna kunnes niihin vastataan."
+        embed_unlisted: "Tuodut ketjut ovat piilotettuna, kunnes niihin vastataan."
         allowed_embed_selectors: "CSS-valitsin elementeille, jotka ovat sallittuja upotuksissa"
         blocked_embed_selectors: "CSS-valitsin elementeille, jotka poistetaan upotuksista"
         allowed_embed_classnames: "Sallitut CSS-luokkien nimet"
         save: "Tallenna upotusasetukset"
       permalink:
-        title: "Ikilinkit"
+        title: "Pysyvät linkit"
         description: "Aseta uudelleenohjauksia URL-osoitteille, joita sivusto ei tunne."
         url: "URL"
-        topic_id: "Ketjun ID"
+        topic_id: "Ketjun tunnus"
         topic_title: "Ketju"
-        post_id: "Viestin ID"
+        post_id: "Viestin tunnus"
         post_title: "Viesti"
-        category_id: "Alueen ID"
+        category_id: "Alueen tunnus"
         category_title: "Alue"
         tag_name: "Tunnisteen nimi"
         external_url: "Ulkoinen tai suhteellinen URL-osoite"
         destination: "Kohde"
-        copy_to_clipboard: "Kopioi ikilinkki leikepöydälle"
-        delete_confirm: Oletko varma, että haluat poistaa tämän ikilinkin?
+        copy_to_clipboard: "Kopioi pysyvä linkki leikepöydälle"
+        delete_confirm: Oletko varma, että haluat poistaa tämän pysyvän linkin?
         form:
           label: "Uusi:"
           add: "Lisää"
@@ -4922,33 +4907,33 @@ fi:
           title: "Korvaa alueiden ja ketjujen tekstejä käännöksillä"
         modal:
           title: "Korvaa teksti"
-          subtitle: "Korvaa systeemin luomien alueiden ja ketjujen tekstejä viimeisimmillä käännöksillä"
-          categories: "Keskustelualueet"
-          topics: "Ketjuja"
+          subtitle: "Korvaa järjestelmän luomien alueiden ja ketjujen tekstejä viimeisimmillä käännöksillä"
+          categories: "Alueet"
+          topics: "Ketjut"
           replace: "Korvaa"
   wizard_js:
     wizard:
       done: "Valmis"
       finish: "Valmis"
-      back: "Edellinen"
+      back: "Takaisin"
       next: "Seuraava"
       step: "%{current}/%{total}"
       upload: "Lataa"
       uploading: "Ladataan..."
-      upload_error: "Tiedoston lähetys valitettavasti epäonnistui. Ole hyvä ja yritä uudelleen."
+      upload_error: "Tiedoston lataaminen epäonnistui. Yritä uudelleen."
       quit: "Ehkä myöhemmin"
       staff_count:
-        one: "Henkilökuntalaisia on %{count} (eli sinä)"
-        other: "Henkilökuntalaisia on %{count}, sinä mukaan lukien."
+        one: "Henkilökuntalaisia on yhteisössä %{count} (eli sinä)"
+        other: "Henkilökuntalaisia on yhteisössä %{count}, sinä mukaan lukien."
       invites:
         add_user: "lisää"
-        none_added: "Et ole kutsunut lainkaan henkilökuntaa. Haluatko todella jatkaa?"
+        none_added: "Et ole kutsunut henkilökuntaa. Oletko varma, että haluat jatkaa?"
         roles:
           admin: "Ylläpitäjä"
           moderator: "Valvoja"
           regular: "Tavallinen käyttäjä"
       previews:
         topic_title: "Keskusteluketju"
-        font_title: "%{font} -fontti"
+        font_title: "Fontti %{font}"
         share_button: "Jaa"
         reply_button: "Vastaa"

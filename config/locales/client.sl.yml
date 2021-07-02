@@ -239,7 +239,6 @@ sl:
     submit: "Išči"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
-    go_ahead: "Nadaljuj"
     sign_up: "Registracija"
     log_in: "Prijava"
     age: "Starost"
@@ -272,7 +271,6 @@ sl:
       two: "%{count} Več"
       few: "%{count} Več"
       other: "%{count} Več"
-    less: "Manj"
     never: "nikoli"
     every_30_minutes: "vsakih 30 minut"
     every_hour: "vsako uro"
@@ -281,7 +279,6 @@ sl:
     every_month: "vsak mesec"
     every_six_months: "vsakih 6 mesecev"
     max_of_count: "največ od %{count}"
-    alternation: "ali"
     character_count:
       one: "%{count} znak"
       two: "%{count} znaka"
@@ -318,7 +315,6 @@ sl:
       help:
         bookmark: "ustvari zaznamek prvega prispevka v tej temi"
         unbookmark: "odstrani vse zaznamke v tej temi"
-        unbookmark_with_reminder: "Kliknite, če želite odstraniti vse zaznamke in opomnike v tej temi. Za to temo imate opomnik nastavljen %{reminder_at}."
     bookmarks:
       created: "To objavo ste dodali med zaznamke. %{name}"
       not_bookmarked: "zaznamuj prispevek"
@@ -622,13 +618,6 @@ sl:
       member_added: "Dodano"
       member_requested: "Zahtevano ob"
       add_members:
-        title: "Dodaj člane v %{group_name}"
-        description: "Sem lahko prilepite tudi seznam, ločen z vejicami."
-        usernames_or_emails:
-          title: "Vnesi uporabniška imena ali e-poštne naslove"
-          input_placeholder: "Uporabniki ali e-poštni naslovi"
-        usernames:
-          input_placeholder: "Uporabniška imena"
         notify_users: "Obvesti uporabnike"
       requests:
         title: "Zahtevki"
@@ -643,7 +632,7 @@ sl:
         title: "Upravljaj"
         name: "Ime skupine"
         full_name: "Polno ime"
-        add_members: "Dodaj člane"
+        invite_members: "Povabi"
         delete_member_confirm: "Odstrani '%{username}' iz skupine '%{group}'?"
         profile:
           title: Profil
@@ -3533,8 +3522,6 @@ sl:
             available: "Ime skupine je na voljo"
             not_available: "Ime skupine ni na voljo"
             blank: "Ime skupine ne more biti prazno"
-        add_members:
-          as_owner: "Dodaj uporabnika(-e) in skrbnika(-e) za to skupino"
         manage:
           interaction:
             email: E-naslov

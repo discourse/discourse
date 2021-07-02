@@ -8,13 +8,9 @@
 
 .dashboard,
 .dashboard-next {
-  .section-top {
-    margin-bottom: 0.5em;
-  }
-
   .navigation {
     display: flex;
-    margin: 0 0 2.5em 0;
+    margin: 0 0 1em 0;
     border-bottom: 1px solid var(--primary-low-mid);
 
     .navigation-item {
@@ -101,6 +97,16 @@
 
   .section {
     .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--primary-low);
+      padding-bottom: 0.5em;
+
+      @media screen and (max-width: 400px) {
+        flex-wrap: wrap;
+      }
+
       h2 {
         margin: 0 0.5em 0 0;
 
@@ -108,20 +114,11 @@
           color: var(--primary);
         }
       }
-
-      display: flex;
-      @media screen and (max-width: 400px) {
-        flex-wrap: wrap;
-      }
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--primary-low);
-      margin-bottom: 0.5em;
-      padding-bottom: 0.5em;
     }
 
     .section-body {
-      padding: 1em 0 0;
+      margin-top: 1em;
+
       > p {
         margin-top: 0;
       }
@@ -223,7 +220,7 @@
   }
 
   .top-referred-topics {
-    margin-bottom: 1.5em;
+    margin-bottom: 2em;
   }
 
   .top-referred-topics,
@@ -247,7 +244,11 @@
   }
 
   .dashboard-problems {
-    margin-bottom: 2.5em;
+    margin-bottom: 2em;
+
+    .problem-messages ul {
+      margin: 0 0 0 1.25em;
+    }
 
     .d-icon-exclamation-triangle {
       color: var(--danger);
@@ -341,7 +342,7 @@
 }
 
 .activity-metrics {
-  margin-bottom: 1.5em;
+  margin-bottom: 2em;
 }
 
 .user-metrics {
@@ -440,17 +441,17 @@
 
 .users-by-trust-level,
 .users-by-type {
-  margin-bottom: 1.5em;
+  margin-bottom: 2em;
 }
 
 .community-health.section {
-  margin-bottom: 1.5em;
+  margin-bottom: 2em;
 }
 
 .dashboard-moderation,
 .dashboard-security {
   .section-body {
-    margin-bottom: 1em;
+    margin-bottom: 2em;
   }
 
   .main-section {
@@ -519,10 +520,15 @@
 .version-checks {
   display: flex;
   flex-wrap: wrap;
+
   .section-title {
     flex: 1 1 100%;
     border-bottom: 1px solid var(--primary-low);
-    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+  }
+
+  h2 {
+    margin: 0;
   }
 }
 
@@ -533,44 +539,56 @@
   align-items: flex-start;
   align-self: flex-start;
   justify-content: space-between;
-  padding: 10px 0 10px 0;
+  padding-top: 1em;
+
   .upgrade-header {
     flex: 1 1 100%;
+
     @media screen and (max-width: 650px) {
       margin: 0;
     }
+
     tr {
       border: none;
     }
+
     th {
       background: transparent;
       padding: 0;
     }
   }
+
   h2 {
     flex: 1 1 100%;
   }
+
   .version-number {
     font-size: $font-up-2;
-    line-height: $line-height-medium;
+    line-height: $line-height-small;
     box-sizing: border-box;
     font-weight: bold;
-    margin: 0 0 1em 0;
-    padding-right: 20px;
+    margin-bottom: 2em;
+    margin-right: 1em;
     flex: 1 1 27%;
+
     h3 {
       flex: 1 0 auto;
+      margin: 0;
       white-space: nowrap;
     }
-    h4,
-    .sha-link {
+
+    h4 {
       font-size: $font-down-2;
-      margin-bottom: 0;
+      margin-bottom: 0.5em;
     }
+
     .sha-link {
+      display: inline-flex;
+      font-size: $font-down-2;
       font-weight: normal;
     }
   }
+
   .version-status {
     display: flex;
     align-items: center;
@@ -617,6 +635,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .dashboard-new-features {
   &.ordered-first {
     order: -1;

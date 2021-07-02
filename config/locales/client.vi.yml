@@ -174,7 +174,6 @@ vi:
     submit: "Gửi đi"
     generic_error: "Rất tiếc, đã có lỗi xảy ra."
     generic_error_with_reason: "Đã xảy ra lỗi: %{error}"
-    go_ahead: "Lên đầu"
     sign_up: "Đăng ký"
     log_in: "Đăng nhập"
     age: "Tuổi"
@@ -201,7 +200,6 @@ vi:
     more: "Nhiều hơn"
     x_more:
       other: "%{count} Thêm"
-    less: "Ít hơn"
     never: "không bao giờ"
     every_30_minutes: "mỗi 30 phút"
     every_hour: "mỗi giờ"
@@ -210,7 +208,6 @@ vi:
     every_month: "hàng tháng"
     every_six_months: "mỗi sáu tháng"
     max_of_count: "tối đa trong %{count}"
-    alternation: "hoặc"
     character_count:
       other: "%{count} ký tự"
     related_messages:
@@ -241,7 +238,6 @@ vi:
       help:
         bookmark: "Chọn bài viết đầu tiên của chủ đề cho vào dấu trang"
         unbookmark: "Chọn để xoá toàn bộ dấu trang trong chủ đề này"
-        unbookmark_with_reminder: "Nhấp để xóa tất cả dấu trang và lời nhắc trong chủ đề này. Bạn có lời nhắc đặt %{reminder_at} cho chủ đề này."
     bookmarks:
       created: "Bạn đã đánh dấu bài đăng này. %{name}"
       not_bookmarked: "đánh dấu bài viết này"
@@ -537,13 +533,6 @@ vi:
       member_added: "Đã thêm"
       member_requested: "Yêu cầu tại"
       add_members:
-        title: "Thêm thành viên vào %{group_name}"
-        description: "Bạn cũng có thể dán vào danh sách được phân tách bằng dấu phẩy."
-        usernames_or_emails:
-          title: "Nhập tên người dùng hoặc địa chỉ email"
-          input_placeholder: "Tên người dùng hoặc email"
-        usernames:
-          input_placeholder: "Tên người dùng"
         notify_users: "Thông báo cho người dùng"
       requests:
         title: "Những yêu cầu"
@@ -558,7 +547,7 @@ vi:
         title: "Quản lý"
         name: "Tên"
         full_name: "Tên đầy đủ"
-        add_members: "Thêm thành viên"
+        invite_members: "Mời"
         delete_member_confirm: "Xóa %{username}ra khỏi nhóm %{group}?"
         profile:
           title: Hồ sơ
@@ -3242,8 +3231,6 @@ vi:
             available: "Tên nhóm dùng được"
             not_available: "Tên nhóm đã sử dụng"
             blank: "Tên nhóm không thể trống"
-        add_members:
-          as_owner: "Đặt user làm chủ sở hữu của nhóm này"
         manage:
           interaction:
             email: Email

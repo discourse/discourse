@@ -352,6 +352,8 @@ describe Report do
         expect(report.data.find { |d| d[:x] == TrustLevel[0] }[:y]).to eq 3
         expect(report.data.find { |d| d[:x] == TrustLevel[2] }[:y]).to eq 2
         expect(report.data.find { |d| d[:x] == TrustLevel[4] }[:y]).to eq 1
+
+        expect(report.data.find { |d| d[:x] == TrustLevel[0] }[:url]).to eq '/admin/users/list/newuser'
       end
     end
   end

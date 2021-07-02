@@ -215,7 +215,6 @@ bs_BA:
     submit: "Potvrdi"
     generic_error: "Uff, došlo je do greške."
     generic_error_with_reason: "Došlo je do greške: %{error}"
-    go_ahead: "Idi naprijed"
     sign_up: "Učlani se"
     log_in: "Prijavi se"
     age: "Godište"
@@ -246,7 +245,6 @@ bs_BA:
       one: "Još %{count}"
       few: "Još %{count}"
       other: "Još %{count}"
-    less: "Manje"
     never: "nikada"
     every_30_minutes: "svakih 30 minuta"
     every_hour: "svaki sat"
@@ -255,7 +253,6 @@ bs_BA:
     every_month: "svaki mjesec"
     every_six_months: "svakih šest mjeseci"
     max_of_count: "maksimalno %{count}"
-    alternation: "ili"
     character_count:
       one: "%{count} karakter"
       few: "%{count} karaktera"
@@ -288,7 +285,6 @@ bs_BA:
       help:
         bookmark: "Klikni kako bi dodao zabilješku na prvu objavu u temi"
         unbookmark: "Klikni za uklanjanje svih zabilješki sa ove teme"
-        unbookmark_with_reminder: "Kliknite da biste uklonili sve zabilješke i podsjetnike iz ove teme. Za ovu temu imate podsjetnik %{reminder_at}."
     bookmarks:
       created: "Zabilježili ste ovu objavu. %{name}"
       not_bookmarked: "zabilježi objavu"
@@ -598,13 +594,6 @@ bs_BA:
       member_added: "Doodano"
       member_requested: "zatraženo na"
       add_members:
-        title: "Dodaj članove u %{group_name}"
-        description: "Također možete zalijepiti i kao listu/popis razdvojen zarezom."
-        usernames_or_emails:
-          title: "Unesite korisnička imena ili adrese e-pošte"
-          input_placeholder: "Korisnička imena ili e-adrese"
-        usernames:
-          input_placeholder: "Korisnička imena"
         notify_users: "Obavijesti korisnike"
       requests:
         title: "Zahtjevi"
@@ -619,7 +608,7 @@ bs_BA:
         title: "Uredi"
         name: "Ime"
         full_name: "Puno ime"
-        add_members: "Dodaj članove"
+        invite_members: "Invite"
         delete_member_confirm: "Ukloni '%{username}' iz grupe '%{group}'?"
         profile:
           title: Profil
@@ -3219,8 +3208,6 @@ bs_BA:
             available: "Ime grupe je dostupno"
             not_available: "Naziv grupe nije dostupan"
             blank: "Naziv grupe ne može biti prazan"
-        add_members:
-          as_owner: "Postavite korisnika kao vlasnike ove grupe"
         manage:
           interaction:
             email: Email

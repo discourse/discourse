@@ -98,16 +98,6 @@ export function translateResults(results, opts) {
     )
     .then((results_) => {
       translateGroupedSearchResults(results_, opts);
-
-      if (
-        !results_.topics.length &&
-        !results_.posts.length &&
-        !results_.users.length &&
-        !results_.categories.length
-      ) {
-        return null;
-      }
-
       return EmberObject.create(results_);
     });
 }

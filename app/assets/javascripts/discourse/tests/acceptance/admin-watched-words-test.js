@@ -82,7 +82,7 @@ acceptance("Admin - Watched Words", function (needs) {
       }
     });
 
-    await click("#" + $(word).attr("id"));
+    await click(`#${$(word).attr("id")} .delete-word-record`);
 
     assert.equal(count(".watched-words-list .watched-word"), 2);
   });

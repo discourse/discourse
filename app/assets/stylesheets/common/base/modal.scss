@@ -856,8 +856,7 @@
     .group-chooser,
     .user-chooser,
     .future-date-input-selector {
-      margin-left: 25px;
-      width: calc(100% - 25px);
+      width: 100%;
     }
 
     &.invite-to-topic input[type="radio"] {
@@ -953,6 +952,19 @@
   .show-advanced {
     margin-left: auto;
     margin-right: 0;
+  }
+}
+
+.create-invite-modal {
+  .input-group {
+    textarea#invite-message,
+    &.invite-to-topic input[type="text"],
+    .group-chooser,
+    .user-chooser,
+    .future-date-input-selector {
+      margin-left: 25px;
+      width: calc(100% - 25px);
+    }
   }
 }
 

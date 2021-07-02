@@ -97,7 +97,10 @@ function validateUploadedFile(file, opts) {
     ) {
       bootbox.alert(
         I18n.t("post.errors.upload_not_authorized", {
-          authorized_extensions: authorizedExtensions(staff, opts.siteSettings),
+          authorized_extensions: authorizedExtensions(
+            staff,
+            opts.siteSettings
+          ).join(", "),
         })
       );
       return false;
@@ -177,7 +180,7 @@ export function authorizedExtensions(staff, siteSettings) {
   const exts = staff
     ? [...extensions(siteSettings), ...staffExtensions(siteSettings)]
     : extensions(siteSettings);
-  return exts.filter((ext) => ext.length > 0).join(", ");
+  return exts.filter((ext) => ext.length > 0);
 }
 
 function authorizedImagesExtensions(staff, siteSettings) {
@@ -230,14 +233,16 @@ function uploadTypeFromFileName(fileName) {
 export function allowsImages(staff, siteSettings) {
   return (
     authorizesAllExtensions(staff, siteSettings) ||
-    IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions(staff, siteSettings))
+    IMAGES_EXTENSIONS_REGEX.test(
+      authorizedExtensions(staff, siteSettings).join()
+    )
   );
 }
 
 export function allowsAttachments(staff, siteSettings) {
   return (
     authorizesAllExtensions(staff, siteSettings) ||
-    authorizedExtensions(staff, siteSettings).split(", ").length >
+    authorizedExtensions(staff, siteSettings).length >
       imagesExtensions(staff, siteSettings).length
   );
 }

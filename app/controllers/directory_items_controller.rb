@@ -75,7 +75,7 @@ class DirectoryItemsController < ApplicationController
     result_count = result.count
     result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
 
-    more_params = params.slice(:period, :order, :asc, :group).permit!
+    more_params = params.slice(:period, :order, :asc, :group, :user_field_ids).permit!
     more_params[:page] = page + 1
     load_more_uri = URI.parse(directory_items_path(more_params))
     load_more_directory_items_json = "#{load_more_uri.path}.json?#{load_more_uri.query}"

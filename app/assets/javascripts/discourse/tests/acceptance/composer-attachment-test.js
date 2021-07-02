@@ -1,5 +1,6 @@
 import {
   acceptance,
+  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -252,4 +253,41 @@ acceptance("Composer Attachment - Upload Placeholder", function (needs) {
       },
     };
   }
+});
+
+acceptance("Composer Attachment - File input", function (needs) {
+  needs.user();
+
+  test("shouldn't add to DOM the hidden file input if uploads aren't allowed", async function (assert) {
+    this.siteSettings.authorized_extensions = "";
+    await visit("/");
+    await click("#create-topic");
+
+    assert.notOk(exists("input#file-uploader"));
+  });
+
+  test("should fill the accept attribute with allowed file extensions", async function (assert) {
+    this.siteSettings.authorized_extensions = "jpg|jpeg|png";
+    await visit("/");
+    await click("#create-topic");
+
+    assert.ok(exists("input#file-uploader"), "An input is rendered");
+    assert.equal(
+      query("input#file-uploader").accept,
+      ".jpg,.jpeg,.png",
+      "Accepted values are correct"
+    );
+  });
+
+  test("the hidden file input shouldn't have the accept attribute if any file extension is allowed", async function (assert) {
+    this.siteSettings.authorized_extensions = "jpg|jpeg|png|*";
+    await visit("/");
+    await click("#create-topic");
+
+    assert.ok(exists("input#file-uploader"), "An input is rendered");
+    assert.notOk(
+      query("input#file-uploader").hasAttribute("accept"),
+      "The input doesn't contain the accept attribute"
+    );
+  });
 });

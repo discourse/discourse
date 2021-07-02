@@ -10,14 +10,14 @@ ja:
       title: "スタイルガイド"
       welcome: "開始するには、左側のメニューからセクションを選択します。"
       categories:
-        atoms: Atoms
-        molecules: Molecules
-        organisms: Organisms
+        atoms: 原子
+        molecules: 分子
+        organisms: 有機体
       sections:
         typography:
-          title: "Typography"
-          example: "Discourseへようこそ"
-          paragraph: "山路を登りながら、こう考えた。知に働けば角が立つ。情に棹させば流される。意地を通せば窮屈だ。とかくに人の世は住みにくい。住みにくさが高じると、安いところへ引き越したくなる。どこへ越しても住みにくいと悟った時、詩が生まれて、画ができる。"
+          title: "タイポグラフィ"
+          example: "Discourse へようこそ"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "日付/時刻の入力"
         font_scale:
@@ -26,7 +26,7 @@ ja:
           title: "色"
         icons:
           title: "アイコン"
-          full_list: "Font Awesome Icons の全リストを見る"
+          full_list: "Font Awesome Icons の全リストを表示"
         input_fields:
           title: "入力フィールド"
         buttons:
@@ -42,9 +42,9 @@ ja:
         navigation_bar:
           title: "ナビゲーションバー"
         navigation_stacked:
-          title: "スタックされたナビゲーション"
+          title: "スタックナビゲーション"
         categories_list:
-          title: "カテゴリ一覧"
+          title: "カテゴリリスト"
         topic_link:
           title: "トピックリンク"
         topic_list_item:
@@ -58,7 +58,7 @@ ja:
         footer_message:
           title: "フッターメッセージ"
         signup_cta:
-          title: "サインアップCTA"
+          title: "サインアップ CTA"
         topic_timer_info:
           title: "トピックタイマー"
         topic_footer_buttons:
@@ -72,7 +72,7 @@ ja:
         site_header:
           title: "サイトヘッダー"
         suggested_topics:
-          title: "関連トピック"
+          title: "推奨トピック"
         post_menu:
           title: "投稿メニュー"
         modal:
@@ -80,7 +80,7 @@ ja:
           header: "モーダルタイトル"
           footer: "モーダルフッター"
         user_about:
-          title: "ユーザーについてのボックス"
+          title: "ユーザープロフィールボックス"
         header_icons:
           title: "ヘッダーアイコン"
         spinners:

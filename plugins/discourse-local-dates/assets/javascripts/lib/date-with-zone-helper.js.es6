@@ -1,4 +1,4 @@
-const { getProperties } = Ember;
+import { getProperties } from "@ember/object";
 
 /*
   DateWithZoneHelper provides a limited list of helpers
