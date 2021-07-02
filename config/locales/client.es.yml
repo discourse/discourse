@@ -143,17 +143,17 @@ es:
         enabled: "archivado %{when}"
         disabled: "desarchivado %{when}"
       pinned:
-        enabled: "fijado %{when}"
-        disabled: "desfijado %{when}"
+        enabled: "anclado %{when}"
+        disabled: "desanclado %{when}"
       pinned_globally:
-        enabled: "fijado globalmente %{when}"
-        disabled: "desfijado %{when}"
+        enabled: "anclado globalmente %{when}"
+        disabled: "desanclado %{when}"
       visible:
         enabled: "listado %{when}"
         disabled: "quitado de la lista %{when}"
       banner:
-        enabled: "hizo esto un encabezado %{when}. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
-        disabled: "quitó este encabezado %{when}. Ya no aparecerá en la parte superior de cada página."
+        enabled: "hizo esto un banner %{when}. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
+        disabled: "quitó este banner %{when}. Ya no aparecerá en la parte superior de cada página."
       forwarded: "reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
     wizard_required: "¡Te damos la bienvenida a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
@@ -310,7 +310,7 @@ es:
       abandon:
         confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
         yes_value: "Descartar"
-        no_value: "Seguir editando"
+        no_value: "Reanudar edición"
     topic_count_latest:
       one: "Ver %{count} tema nuevo o actualizado"
       other: "Ver %{count} temas nuevos o actualizados"
@@ -337,13 +337,13 @@ es:
     disable: "Desactivar"
     continue: "Continuar"
     undo: "Deshacer"
-    revert: "Deshacer"
+    revert: "Revertir"
     failed: "Falló"
     switch_to_anon: "Entrar en modo anónimo"
     switch_from_anon: "Salir del modo anónimo"
     banner:
-      close: "Descartar este encabezado."
-      edit: "Editar este encabezado >>"
+      close: "Descartar este banner."
+      edit: "Editar este banner >>"
     pwa:
       install_banner: "¿Quieres <a href>instalar %{title} en este dispositivo?</a>"
     choose_topic:
@@ -457,7 +457,7 @@ es:
           title: "Tipo"
           all: "(todos los tipos)"
         minimum_score: "Puntuación mínima:"
-        refresh: "Actualizar"
+        refresh: "Volver a cargar"
         status: "Estado"
         category: "Categoría"
         orders:
@@ -825,8 +825,8 @@ es:
       flair_bg_color_placeholder: "(Opcional) Valor de color hexadecimal"
       flair_color: "Color del sub-avatar"
       flair_color_placeholder: "(Opcional) Valor de color hexadecimal"
-      flair_preview_icon: "Previsualización del icono"
-      flair_preview_image: "Previsualización de la imagen"
+      flair_preview_icon: "Icono de vista previa"
+      flair_preview_image: "Imagen de vista previa"
       flair_type:
         icon: "Selecciona un icono"
         image: "Sube una imagen"
@@ -1077,14 +1077,14 @@ es:
       ignored_users: "Ignorados"
       ignored_users_instructions: "Omitir todas las publicaciones, notificaciones y mensajes personales de estos usuarios."
       tracked_topics_link: "Mostrar"
-      automatically_unpin_topics: "Desfijar temas automáticamente cuando los leo por completo."
+      automatically_unpin_topics: "Desanclar temas automáticamente cuando los leo por completo."
       apps: "Aplicaciones"
       revoke_access: "Revocar acceso"
       undo_revoke_access: "Deshacer revocación de acceso"
       api_approved: "Fecha de aprobación:"
       api_last_used_at: "Fecha de último uso:"
       theme: "Tema"
-      save_to_change_theme: 'Este tema se actualizará después de que pulses «%{save_text}»'
+      save_to_change_theme: 'Este tema se actualizará después de que hagas clic en «%{save_text}»'
       home: "Página de inicio por defecto"
       staged: "Temporal"
       staff_counters:
@@ -1141,9 +1141,9 @@ es:
         copied_to_clipboard: "Copiado al portapapeles"
         download_backup_codes: "Descargar códigos de recuperación"
         remaining_codes:
-          one: "Te queda <strong>%{count}</strong> código de respaldo sin usar todavía."
+          one: "Te queda <strong>%{count}</strong> código de copia de seguridad sin usar todavía."
           other: "Te quedan <strong>%{count}</strong> códigos de respaldo sin usar todavía."
-        use: "Usar un código de respaldo"
+        use: "Usar un código de copia de seguridad"
         enable_prerequisites: "Debes activar un método principal de dos factores antes de generar códigos de respaldo."
         codes:
           title: "Códigos de respaldo generados"
@@ -1208,7 +1208,7 @@ es:
         taken: "Lo sentimos, ese correo electrónico no está disponible."
         error: "Ha ocurrido un error al cambiar tu correo electrónico. ¿Tal vez esa dirección ya se encuentra en uso?"
         success: "Te hemos enviado un correo electrónico a esa dirección. Sigue las instrucciones de confirmación."
-        success_via_admin: "Te hemos enviado un correo electrónico a esa dirección. Sigue las instrucciones de confirmación."
+        success_via_admin: "Hemos enviado un correo electrónico a esa dirección. El usuario tendrá que seguir las instrucciones de confirmación."
         success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Sigue las instrucciones de confirmación."
       change_avatar:
         title: "Cambiar tu imagen de perfil"
@@ -1239,7 +1239,7 @@ es:
         unconfirmed_label: "sin confirmar"
         resend_label: "reenviar correo de confirmación"
         resending_label: "enviando..."
-        resent_label: "correo enviado"
+        resent_label: "correo electrónico enviado"
         update_email: "Cambiar correo electrónico"
         set_primary: "Establecer como correo primario"
         destroy: "Quitar correo"
@@ -1426,7 +1426,7 @@ es:
         account_age_days: "Antigüedad de la cuenta en días"
         create: "Invitar"
         generate_link: "Crear enlace de invitación"
-        link_generated: "Aquí tienes el enlace"
+        link_generated: "Aquí tienes el enlace de invitación"
         valid_for: "El enlace de invitación solo es válido para esta dirección de correo electrónico: %{email}"
         single_user: "Invitar a través de correo electrónico"
         multiple_user: "Invitar a través de enlace"
@@ -1435,7 +1435,7 @@ es:
           success: "¡Enlace de invitación generado correctamente!"
           error: "Ha ocurrido un error al generar el enlace de invitación"
           max_redemptions_allowed_label: "¿Cuánta gente puede registrarse con este enlace?"
-          expires_at: "¿Cuándo caducará este enlace?"
+          expires_at: "¿Cuándo caducará este enlace de invitación?"
         invite:
           new_title: "Crear invitación"
           edit_title: "Editar invitación"
@@ -1569,7 +1569,7 @@ es:
     close: "Cerrar"
     assets_changed_confirm: "Se ha recibido una actualización de software. ¿Acualizar ahora?"
     logout: "Has cerrado sesión."
-    refresh: "Actualizar"
+    refresh: "Volver a cargar"
     home: "Inicio"
     read_only_mode:
       enabled: "Este sitio está en modo de solo lectura. Puedes continuar navegando pero algunas acciones como responder o dar me gusta no están disponibles por ahora."
@@ -1614,7 +1614,7 @@ es:
         other: "Hay <b>%{count}</b> respuestas."
       description_time_MF: "Hay {replyCount, plural, one {Hay <b>#</b> respuesta} other {Hay <b>#</b> respuestas}} con un tiempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
       enable: "Resumir este tema"
-      disable: "Ver todas las publicaciones"
+      disable: "Mostrar todas las publicaciones"
     deleted_filter:
       enabled_description: "Este tema contiene publicaciones eliminadas que se han ocultado."
       disabled_description: "Se muestran las publicaciones eliminadas de este tema. "
@@ -1678,7 +1678,7 @@ es:
       password: "Contraseña"
       second_factor_title: "Autenticación de dos factores"
       second_factor_description: "Introduce el código de autenticación desde tu aplicación:"
-      second_factor_backup: "Iniciar sesión utilizando un código de respaldo"
+      second_factor_backup: "Iniciar sesión utilizando un código de copia de seguridad"
       second_factor_backup_title: "Código de respaldo de la autenticación de dos factores"
       second_factor_backup_description: "Introduce uno de los códigos de respaldo:"
       second_factor: "Iniciar sesión utilizando la aplicación de autenticación"
@@ -1736,7 +1736,7 @@ es:
         title: "con Discord"
       second_factor_toggle:
         totp: "Usar una aplicación de autenticación en su lugar"
-        backup_code: "Usar un código de respaldo en su lugar"
+        backup_code: "Usar un código de copia de seguridad en su lugar"
     invites:
       accept_title: "Invitación"
       emoji: "emoji de un sobre"
@@ -1762,7 +1762,7 @@ es:
       categories_only: "Solo categorías"
       categories_with_featured_topics: "Categorías con temas destacados"
       categories_and_latest_topics: "Categorías y temas recientes"
-      categories_and_top_topics: "Categorías y temas más importantes"
+      categories_and_top_topics: "Categorías y temas destacados"
       categories_boxes: "Cajas con subcategorías"
       categories_boxes_with_topics: "Cajas con temas destacados"
     shortcut_modifier_key:
@@ -1902,8 +1902,8 @@ es:
       saved: "¡Guardado!"
       saved_draft: "Publica el borrador en progreso. Escribe para reanudar."
       uploading: "Subiendo..."
-      show_preview: "ver previsualización"
-      hide_preview: "ocultar previsualización"
+      show_preview: "mostrar vista previa"
+      hide_preview: "ocultar vista previa"
       quote_post_title: "Citar toda la publicación"
       bold_label: "B"
       bold_title: "Negrita"
@@ -2107,13 +2107,13 @@ es:
         posted_by:
           label: Publicado por
         in_category:
-          label: Categoría
+          label: Categorizado
         in_group:
           label: En el grupo
         with_badge:
           label: Con insignia
         with_tags:
-          label: Etiquetas
+          label: Etiquetado
         filters:
           label: Solo temas/mensajes que...
           title: coincide el título únicamente
@@ -2125,7 +2125,7 @@ es:
           private: en mis mensajes
           bookmarks: he guardado
           first: son la primera publicación
-          pinned: están fijados
+          pinned: están anclados
           seen: he leído
           unseen: no he leído
           wiki: son tipo wiki
@@ -2151,7 +2151,7 @@ es:
             before: antes de
             after: después de
         views:
-          label: Visitas
+          label: Vistas
         min_views:
           placeholder: mínimo
         max_views:
@@ -2476,8 +2476,8 @@ es:
         multi_select: "Seleccionar publicaciones..."
         slow_mode: "Ajustar modo lento"
         timed_update: "Configurar temporizador..."
-        pin: "Destacar tema..."
-        unpin: "Dejar de destacar..."
+        pin: "Anclar tema..."
+        unpin: "Desanclar tema…"
         unarchive: "Desarchivar tema"
         archive: "Archivar tema"
         invisible: "Hacer invisible"
@@ -2487,17 +2487,17 @@ es:
         make_private: "Crear mensaje personal"
         reset_bump_date: "Restablecer fecha de reflote"
       feature:
-        pin: "Destacar tema"
-        unpin: "Dejar de destacar tema"
-        pin_globally: "Destacar tema globalmente"
-        make_banner: "Tema de encabezado"
-        remove_banner: "Quitar tema de encabezado"
+        pin: "Anclar tema"
+        unpin: "Desanclar tema"
+        pin_globally: "Anclar tema globalmente"
+        make_banner: "Tema de banner"
+        remove_banner: "Quitar tema de banner"
       reply:
         title: "Responder"
         help: "comienza a escribir un mensaje en este tema"
       clear_pin:
-        title: "Eliminar destacado"
-        help: "Desfijar este tema para que no aparezca más de primero en tu lista de temas"
+        title: "Quitar anclado"
+        help: "Desanclar este tema para que no aparezca más de primero en tu lista de temas"
       share:
         title: "Compartir"
         extended_title: "Compartir un enlace"
@@ -2525,29 +2525,29 @@ es:
         title: "Características de este tema"
         pin: "Hacer que este tema aparezca de primero en la categoría %{categoryLink} hasta"
         unpin: "Quitar este tema del principio de la lista en la categoría %{categoryLink}."
-        unpin_until: "Quitar este tema del top de la categoría %{categoryLink} o esperar al <strong>%{until}</strong>."
-        pin_note: "Los usuarios pueden dejar de destacar el tema de forma individual por sí mismos."
-        pin_validation: "Es obligatorio especificar una fecha para destacar este tema."
-        not_pinned: "No hay temas fijados en %{categoryLink}."
+        unpin_until: "Quitar este tema de los destacados de la categoría %{categoryLink} o esperar al <strong>%{until}</strong>."
+        pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
+        pin_validation: "Es obligatorio especificar una fecha para anclar este tema."
+        not_pinned: "No hay temas anclados en %{categoryLink}."
         already_pinned:
-          one: "Temas fijados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Temas fijados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
+          one: "Temas anclados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "Temas anclados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Hacer que este tema aparezca de primero en todas las listas de temas hasta"
         confirm_pin_globally:
-          one: "Ya tienes %{count} tema fijado globalmente. Demasiados temas fijados puede ser una molestia para los usuarios nuevos y anónimos. ¿Quieres fijar otro tema globalmente?"
-          other: "Ya tienes %{count} temas fijados globalmente. Demasiados temas anclados pueden ser una molestia para los usuarios nuevos y anónimos. ¿Quieres fijar otro tema globalmente?"
+          one: "Ya tienes %{count} tema anclado globalmente. Demasiados temas anclados puede ser una molestia para los usuarios nuevos y anónimos. ¿Quieres anclar otro tema globalmente?"
+          other: "Ya tienes %{count} temas anclados globalmente. Demasiados temas anclados pueden ser una molestia para los usuarios nuevos y anónimos. ¿Quieres anclar otro tema globalmente?"
         unpin_globally: "Quitar este tema de la parte superior de todas las listas de temas."
         unpin_globally_until: "Quitar este tema de la parte superior de todas las listas de temas o esperar hasta <strong>%{until}</strong>."
-        global_pin_note: "Los usuarios pueden dejar de destacar el tema de forma individual por sí mismos."
-        not_pinned_globally: "No hay temas fijados globalmente."
+        global_pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
+        not_pinned_globally: "No hay temas anclados globalmente."
         already_pinned_globally:
-          one: "Temas fijados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Temas fijados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
-        make_banner: "Hacer que este tema aparezca como encabezado en la parte superior de todas las páginas."
-        remove_banner: "Retirar el encabezado que aparece en la parte superior de todas las páginas."
-        banner_note: "Los usuarios pueden cerrar el encabezado y descartarlo. Solo se puede anunciar un tema a la vez."
-        no_banner_exists: "No hay ningún tema como encabezado."
-        banner_exists: "Actualmente <strong class='badge badge-notification unread'>hay</strong> un tema como encabezado."
+          one: "Temas anclados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "Temas anclados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
+        make_banner: "Hacer que este tema aparezca como banner en la parte superior de todas las páginas."
+        remove_banner: "Retirar el banner que aparece en la parte superior de todas las páginas."
+        banner_note: "Los usuarios pueden cerrar el banner y descartarlo. Solo se puede anunciar un tema a la vez."
+        no_banner_exists: "No hay ningún tema como banner."
+        banner_exists: "Actualmente <strong class='badge badge-notification unread'>hay</strong> un tema como banner."
       inviting: "Invitando..."
       automatically_add_to_groups: "Esta invitación incluye además acceso a los siguientes grupos:"
       invite_private:
@@ -2640,9 +2640,9 @@ es:
         unpublished: "La página se ha despublicado y ya no se puede acceder a ella."
         publishing_settings: "Ajustes de publicación"
       change_owner:
-        title: "Cambiar dueño"
-        action: "cambiar dueño"
-        error: "Se produjo un error al cambiar la autoría de las publicaciones."
+        title: "Cambiar propietario"
+        action: "cambiar propiedad"
+        error: "Se produjo un error al cambiar la propiedad de las publicaciones."
         placeholder: "nombre de usuario del nuevo propietario"
         instructions:
           one: "Escoge el nuevo propietario de la publicación de <b>@%{old_user}</b>"
@@ -2651,11 +2651,11 @@ es:
           one: "Escoge un nuevo propietario para la publicación."
           other: "Escoge un nuevo propietario para las %{count} publicaciones"
       change_timestamp:
-        title: "Cambiar marca horaria..."
-        action: "cambiar marca horaria"
-        invalid_timestamp: "La marca horaria no puede ser en el futuro"
-        error: "Hubo un error al cambiar la marca horaria de este tema."
-        instructions: "Selecciona la nueva marca horaria del tema. Las publicaciones en el tema se actualizarán para mantener la diferencia de tiempo."
+        title: "Cambiar marca de tiempo..."
+        action: "cambiar marca de tiempo"
+        invalid_timestamp: "La marca de tiempo no puede ser en el futuro"
+        error: "Hubo un error al cambiar la marca de tiempo de este tema."
+        instructions: "Selecciona la nueva marca de tiempo del tema. Las publicaciones en el tema se actualizarán para mantener la diferencia de tiempo."
       multi_select:
         select: "seleccionar"
         selected: "seleccionados (%{count})"
@@ -2781,7 +2781,7 @@ es:
         rebake: "Reconstruir HTML"
         publish_page: "Publicación de página"
         unhide: "Deshacer ocultar"
-        change_owner: "Cambiar dueño"
+        change_owner: "Cambiar propiedad"
         grant_badge: "Conceder insignia"
         lock_post: "Bloquear publicación"
         lock_post_description: "impedir que el usuario que realizó esta publicación la edite"
@@ -2915,7 +2915,7 @@ es:
       required_tag_group_label: "Grupo de etiquetas:"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
-      create: "Crear categoría"
+      create: "Nueva categoría"
       create_long: "Crear una nueva categoría"
       save: "Guardar categoría"
       slug: "Slug de la categoría para URL"
@@ -2939,7 +2939,7 @@ es:
       change_in_category_topic: "Editar descripción"
       already_used: "Este color ya ha sido usado para otra categoría"
       security: "Seguridad"
-      security_add_group: "Añadir grupo"
+      security_add_group: "Añadir un grupo"
       permissions:
         group: "Grupo"
         see: "Ver"
@@ -2951,7 +2951,7 @@ es:
         toggle_full: "Alternar el permiso para crear temas"
         inherited: 'Este permiso está heredado de «todos»'
       special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no se pueden editar. Si no deseas utilizarla, elimínala en vez de reutilizarla."
-      uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y y no puede tener ajustes de seguridad."
+      uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y no puede tener ajustes de seguridad."
       uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'
       pending_permission_change_alert: "No has añadido a %{group} a esta categoría. Haz clic en este botón para añadirlos."
       images: "Imágenes"
@@ -2961,14 +2961,14 @@ es:
       email_in_disabled_click: 'activa la opción «correo electrónico»'
       mailinglist_mirror: "La categoría es el reflejo de una lista de correo"
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
-      read_only_banner: "Texto de encabezado cuando un usuario no pueda crear un tema en esta categoría:"
+      read_only_banner: "Texto de banner cuando un usuario no pueda crear un tema en esta categoría:"
       num_featured_topics: "Número de temas que se muestran en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página principal de categorías:"
       all_topics_wiki: "Hacer que los temas nuevos tengan formato wiki por defecto"
       allow_unlimited_owner_edits_on_first_post: "Permitir que los autores editen los primeros mensajes de sus temas en cualquier momento."
       subcategory_list_style: "Estilo de lista de subcategorías:"
       sort_order: "Ordenar lista de temas:"
-      default_view: "Orden por defecto:"
+      default_view: "Lista de temas por defecto:"
       default_top_period: "Período por defecto para estar en la parte superior:"
       default_list_filter: "Filtro de lista por defecto:"
       allow_badges_label: "Permitir que se concedan insignias en esta categoría"
@@ -3015,7 +3015,7 @@ es:
         default: "por defecto"
         likes: "Me gusta"
         op_likes: "Me gusta de la publicación original"
-        views: "Visitas"
+        views: "Vistas"
         posts: "Publicaciones"
         activity: "Actividad"
         posters: "Participantes"
@@ -3108,14 +3108,14 @@ es:
       locked_and_archived:
         help: "este tema está cerrado y archivado; ya no acepta respuestas nuevas y no se puede cambiar"
       unpinned:
-        title: "Desfijar"
-        help: "Este tema se ha desfijado para ti; tu lista de temas se mostrará en orden normal"
+        title: "Desanclado"
+        help: "Este tema se ha desanclado para ti; tu lista de temas se mostrará en orden normal"
       pinned_globally:
-        title: "Fijado globalmente"
-        help: "Este tema ha sido fijado globalmente, se mostrará en la parte superior de la página de mensajes recientes y de su categoría."
+        title: "Anclado globalmente"
+        help: "Este tema se ha anclado globalmente, se mostrará en la parte superior de la página de mensajes recientes y de su categoría."
       pinned:
-        title: "Fijado"
-        help: "Este tema ha sido fijado para ti; se mostrará en la parte superior de su categoría"
+        title: "Anclado"
+        help: "Este tema se ha anclado para ti; se mostrará en la parte superior de su categoría"
       unlisted:
         help: "Este tema es invisible. No se mostrará en la lista de temas y solo se le puede acceder mediante un enlace directo"
       personal_message:
@@ -3297,7 +3297,7 @@ es:
       actions:
         title: "Acciones"
         bookmark_topic: "%{shortcut} Guardar/quitar el tema de marcadores"
-        pin_unpin_topic: "%{shortcut} Destacar/dejar de destacar tema"
+        pin_unpin_topic: "%{shortcut} Anclar/desanclar tema"
         share_topic: "%{shortcut} Compartir tema"
         share_post: "%{shortcut} Compartir publicación"
         reply_as_new_topic: "%{shortcut} Responder como un tema enlazado"
@@ -3535,7 +3535,7 @@ es:
           dismiss: "Descartar"
           learn_more: "Más información"
         last_checked: "Ultima comprobación"
-        refresh_problems: "Actualizar"
+        refresh_problems: "Volver a cargar"
         no_problems: "No se ha encontrado ningún problema."
         moderators: "Moderadores:"
         admins: "Administradores:"
@@ -3656,7 +3656,7 @@ es:
         no_primary: "(ningún grupo principal)"
         title: "Grupos"
         edit: "Editar grupos"
-        refresh: "Actualizar"
+        refresh: "Volver a cargar"
         about: "Edita la membresía de tu grupo y sus nombres aquí"
         group_members: "Miembros del grupo"
         delete: "Eliminar"
@@ -4037,7 +4037,7 @@ es:
           public_key_note: "Después de poner una URL de repositorio privado válida, se generará una clave SSH y se mostrará aquí."
           install: "Instalar"
           installed: "Instalado"
-          install_popular: "Destacados"
+          install_popular: "Popular"
           install_upload: "Desde tu dispositivo"
           install_git_repo: "Desde un repositorio git"
           install_create: "Crear nuevo"
@@ -4165,7 +4165,7 @@ es:
             name: "éxito"
             description: "Para indicar que una acción se realizó con éxito."
           love:
-            name: "me gusta"
+            name: "me encanta"
             description: "El color del botón de me gusta"
         robots:
           title: "Sobrescribe el archivo robots.txt de tu sitio:"
@@ -4210,14 +4210,14 @@ es:
         sent_test: "enviado!"
         delivery_method: "Método de entrega"
         preview_digest_desc: "Previsualiza el contenido de los correos electrónicos de resumen enviados a los usuarios inactivos."
-        refresh: "Actualizar"
+        refresh: "Volver a cargar"
         send_digest_label: "Enviar este resultado a:"
         send_digest: "Enviar"
         sending_email: "Enviando correo electrónico..."
         format: "Formato"
         html: "html"
         text: "texto"
-        html_preview: "Previsualización de contenido de correo electrónico"
+        html_preview: "Vista previa de contenido de correo electrónico"
         last_seen_user: "Último usuario visto:"
         no_result: "No se han encontrado resultados para el resumen."
         reply_key: "Clave de respuesta"
@@ -4354,7 +4354,7 @@ es:
             merge_user: "fusionar usuario"
             entity_export: "entidad exportadora"
             change_name: "cambiar nombre"
-            topic_timestamps_changed: "marcas horarias del tema cambiadas"
+            topic_timestamps_changed: "marcas de tiempo del tema cambiadas"
             approve_user: "usuario aprovado"
             web_hook_create: "crear webhook"
             web_hook_update: "actualizar webhook"
@@ -4381,7 +4381,7 @@ es:
             topic_opened: "tema abierto"
             topic_archived: "tema archivado"
             topic_unarchived: "tema desarchivado"
-            post_staff_note_create: "añadir aviso del personal"
+            post_staff_note_create: "añadir nota del personal"
             post_staff_note_destroy: "destruir aviso del personal"
             delete_group: "eliminar grupo"
         screened_emails:
@@ -4942,7 +4942,7 @@ es:
         name: "Nombre"
         group: "Grupo"
         image: "Imagen"
-        alt: "previsualización de emoji personalizado"
+        alt: "vista previa de emoji personalizado"
         delete_confirm: "¿Seguro que quieres eliminar el emoji :%{name}:?"
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."

@@ -52,7 +52,7 @@ fr:
   redirect_warning: "Nous n'avons pas été en mesure de vérifier que le lien que vous avez sélectionné a bien été posté sur le forum. Si vous souhaitez quand même continuer, sélectionnez le lien ci-dessous."
   on_another_topic: "Sur un autre sujet"
   inline_oneboxer:
-    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number: "numéro %{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} par %{username}"
   themes:
     bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleur est invalide"
@@ -355,8 +355,8 @@ fr:
     one: "%{count} message"
     other: "%{count} messages"
   rss_num_participants:
-    one: "%{count} participant"
-    other: "%{count} participants"
+    one: "%{count} participant(e)"
+    other: "%{count} participant(e)s"
   read_full_topic: "Lire le sujet en entier"
   private_message_abbrev: "Msg"
   rss_description:
@@ -697,22 +697,22 @@ fr:
     short_time: "quelques secondes"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1m"
+      half_a_minute: "< 1 min"
       less_than_x_seconds:
-        one: "< %{count}s"
-        other: "< %{count}s"
+        one: "< %{count} sec"
+        other: "< %{count} sec"
       x_seconds:
-        one: "%{count}s"
-        other: "%{count}s"
+        one: "%{count} sec"
+        other: "%{count} sec"
       less_than_x_minutes:
         one: "%{count}m"
         other: "%{count}m"
       x_minutes:
-        one: "%{count}m"
-        other: "%{count}m"
+        one: "%{count} min"
+        other: "%{count} min"
       about_x_hours:
-        one: "%{count}h"
-        other: "%{count}h"
+        one: "%{count} h"
+        other: "%{count} h"
       x_days:
         one: "%{count}j"
         other: "%{count}j"
@@ -779,7 +779,7 @@ fr:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
+      discoursehub: "DiscourseHub"
       edge: "Microsoft Edge"
       firefox: "Firefox"
       ie: "Internet Explorer"
@@ -2311,7 +2311,7 @@ fr:
       not_allowed: "n'est pas autorisé pour ce fournisseur de courriels. Veuillez utiliser une autre adresse."
       blocked: "n'est pas autorisé."
       revoked: "N'enverra plus de courriels à « %{email} » jusqu'à %{date}."
-      does_not_exist: "N/A"
+      does_not_exist: "S.O."
     ip_address:
       blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
       max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
@@ -3620,7 +3620,7 @@ fr:
     neutral: "Neutre"
     grey_amber: "Gris ambre"
     shades_of_blue: "Nuances de bleu"
-    latte: "Latte"
+    latte: "Café crème"
     summer: "Été"
     dark_rose: "Rose foncé"
     wcag: "WCAG Clair"
@@ -3633,7 +3633,7 @@ fr:
     neutral_theme_name: "Neutre"
     grey_amber_theme_name: "Gris ambre"
     shades_of_blue_theme_name: "Nuances de bleu"
-    latte_theme_name: "Latte"
+    latte_theme_name: "Café crème"
     summer_theme_name: "Été"
     dark_rose_theme_name: "Rose foncé"
   edit_this_page: "Modifier cette page"

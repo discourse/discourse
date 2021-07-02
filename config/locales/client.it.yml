@@ -143,11 +143,11 @@ it:
         enabled: "archiviato %{when}"
         disabled: "dearchiviato %{when}"
       pinned:
-        enabled: "bloccato %{when}"
-        disabled: "sbloccato %{when}"
+        enabled: "appuntato %{when}"
+        disabled: "spuntato %{when}"
       pinned_globally:
-        enabled: "bloccato globalmente %{when}"
-        disabled: "sbloccato %{when}"
+        enabled: "appuntato globalmente %{when}"
+        disabled: "spuntato %{when}"
       visible:
         enabled: "visibile in elenco %{when}"
         disabled: "invisibile in elenco %{when}"
@@ -1057,7 +1057,7 @@ it:
       ignored_users: "Ignorato"
       ignored_users_instructions: "Elimina tutti i post, le notifiche e i PM da questi utenti."
       tracked_topics_link: "Mostra"
-      automatically_unpin_topics: "Sblocca automaticamente gli argomenti quando arrivi in fondo."
+      automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
       apps: "Applicazioni"
       revoke_access: "Revoca Accesso"
       undo_revoke_access: "Annullare Revoca Accesso"
@@ -2094,7 +2094,7 @@ it:
           private: nei miei messaggi privati
           bookmarks: ho aggiunto ai segnalibri
           first: sono il primissimo post
-          pinned: sono bloccati
+          pinned: sono appuntati
           seen: che ho letto
           unseen: che non ho letto
           wiki: sono wiki
@@ -2429,8 +2429,8 @@ it:
         multi_select: "Seleziona Messaggi..."
         slow_mode: "Imposta modalità lenta"
         timed_update: "Imposta Timer..."
-        pin: "Blocca Argomento..."
-        unpin: "Sblocca Argomento..."
+        pin: "Appunta Argomento..."
+        unpin: "Spunta Argomento..."
         unarchive: "Annulla archiviazione Argomento"
         archive: "Archivia Argomento"
         invisible: "Rendi Invisibile"
@@ -2440,17 +2440,17 @@ it:
         make_private: "Rendi Messaggio Personale"
         reset_bump_date: "Reimposta la data di riproposizione"
       feature:
-        pin: "Blocca Argomento"
-        unpin: "Sblocca Argomento"
-        pin_globally: "Blocca Argomento Globalmente"
+        pin: "Appunta Argomento"
+        unpin: "Spunta Argomento"
+        pin_globally: "Appunta Argomento Globalmente"
         make_banner: "Argomento banner"
         remove_banner: "Rimuovi Argomento banner"
       reply:
         title: "Rispondi"
         help: "inizia a comporre una risposta a questo argomento"
       clear_pin:
-        title: "Rimuovi blocco"
-        help: "Rimuovi la spunta di blocco da questo argomento, così non comparirà più in cima alla lista degli argomenti"
+        title: "Spunta"
+        help: "Rimuovi lo stato appuntato da questo argomento, così non comparirà più in cima alla lista degli argomenti"
       share:
         title: "Condividi"
         extended_title: "Condividi un collegamento"
@@ -2479,8 +2479,8 @@ it:
         pin: "Poni questo argomento in cima alla categoria %{categoryLink} fino a"
         unpin: "Rimuovi questo argomento dalla cima della categoria %{categoryLink}."
         unpin_until: "Rimuovi questo argomento dalla cima della categoria %{categoryLink} o attendi fino a <strong>%{until}</strong>."
-        pin_note: "Gli utenti possono sbloccare gli argomenti individualmente per loro stessi."
-        pin_validation: "È richiesta una data per bloccare questo argomento."
+        pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
+        pin_validation: "È richiesta una data per appuntare questo argomento."
         not_pinned: "Non ci sono argomenti appuntati in %{categoryLink}."
         already_pinned:
           one: "Argomenti attualmente appuntati in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
@@ -2491,8 +2491,8 @@ it:
           other: "Hai già %{count} argomenti puntati globalmente. Troppi argomenti puntati possono rappresentare un peso per gli utenti nuovi e anonimi. Sei sicuro di voler puntare un altro argomento globalmente?"
         unpin_globally: "Togli questo argomento dalla cima di tutti gli elenchi di argomenti."
         unpin_globally_until: "Rimuovi questo argomento dalla cima di tutte le liste di argomenti o attendi fino a <strong>%{until}</strong>."
-        global_pin_note: "Gli utenti possono sbloccare gli argomenti individualmente per loro stessi."
-        not_pinned_globally: "Non ci sono argomenti bloccati globalmente."
+        global_pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
+        not_pinned_globally: "Non ci sono argomenti appuntati globalmente."
         already_pinned_globally:
           one: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Argomenti attualmente appuntati globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
@@ -3061,14 +3061,14 @@ it:
       locked_and_archived:
         help: "Questo argomento è chiuso e archiviato; non sono ammesse nuove risposte e non può essere modificato"
       unpinned:
-        title: "Sbloccato"
+        title: "Spuntato"
         help: "Questo argomento è sbloccato per te; verrà visualizzato in ordine normale"
       pinned_globally:
-        title: "Bloccato Globalmente"
-        help: "Questo argomento è bloccato globalmente; verrà mostrato sempre in cima sia agli argomenti recenti sia nella sua categoria."
+        title: "Appuntato Globalmente"
+        help: "Questo argomento è appuntato globalmente; verrà mostrato sempre in cima sia agli argomenti recenti sia nella sua categoria."
       pinned:
-        title: "Bloccato"
-        help: "Questo argomento è bloccato per te; verrà mostrato in cima alla sua categoria"
+        title: "Appuntato"
+        help: "Questo argomento è appuntato per te; verrà mostrato in cima alla sua categoria"
       unlisted:
         help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
       personal_message:
@@ -3248,7 +3248,7 @@ it:
       actions:
         title: "Azioni"
         bookmark_topic: "%{shortcut} Aggiungi/togli argomento nei segnalibri"
-        pin_unpin_topic: "%{shortcut} Blocca/Sblocca argomento"
+        pin_unpin_topic: "%{shortcut} Appunta/spunta argomento"
         share_topic: "%{shortcut} Condividi argomento"
         share_post: "%{shortcut} Condividi messaggio"
         reply_as_new_topic: "%{shortcut} Rispondi come argomento collegato"

@@ -46,7 +46,7 @@ es:
       invalid: |-
         Lo siento, es matemáticamente imposible tirar esa combinación de dados. :confounded:
       not_enough_dice:
-        one: "Solo tengo %{count} dados. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
+        one: "Solo tengo %{count} dado. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
         other: "Solo tengo %{count} dados. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
       out_of_range: |-
         ¿Sabías que [el número máximo de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) que un dado matemáticamente correcto puede tener es 120?
@@ -205,7 +205,7 @@ es:
         reply: |-
           ¡Gracias por darle me gusta a mi mensaje!
         not_found: |-
-          ¿Te has olvidado de darle :heart: me gusta a mi [mensaje](%{url})? :crying_cat_face:
+          ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           ¿Puedes poner algunas letras en **negrita** o _cursiva_ en tu respuesta?

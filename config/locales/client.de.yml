@@ -2460,7 +2460,7 @@ de:
         pin: "Thema anheften"
         unpin: "Thema loslösen"
         pin_globally: "Thema global anheften"
-        make_banner: "Thema des Ankündigungsbanners"
+        make_banner: "Ankündigungsbanner erstellen"
         remove_banner: "Thema des Ankündigungsbanners entfernen"
       reply:
         title: "Antworten"
@@ -3006,7 +3006,7 @@ de:
       list_filters:
         all: "alle Themen"
         none: "keine Unterkategorien"
-      colors_disabled: "Du kannst keine Farben auswählen, weil du keinen Kategoriestil verwendest."
+      colors_disabled: "Du kannst keine Farben auswählen, weil du den „category style“ „none“ verwendest."
     flagging:
       title: "Danke für deine Mithilfe!"
       action: "Beitrag melden"

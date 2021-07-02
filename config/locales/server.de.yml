@@ -421,14 +421,14 @@ de:
       no_invites_without_local_logins: "Du kannst nur registrierte Benutzer einladen, wenn lokale Anmeldungen deaktiviert sind"
     default_names:
       everyone: "jeder"
-      admins: "admins"
-      moderators: "moderatoren"
-      staff: "team"
-      trust_level_0: "vertrauensstufe_0"
-      trust_level_1: "vertrauensstufe_1"
-      trust_level_2: "vertrauensstufe_2"
-      trust_level_3: "vertrauensstufe_3"
-      trust_level_4: "vertrauensstufe_4"
+      admins: "Administratoren"
+      moderators: "Moderatoren"
+      staff: "Team"
+      trust_level_0: "Vertrauensstufe_0"
+      trust_level_1: "Vertrauensstufe_1"
+      trust_level_2: "Vertrauensstufe_2"
+      trust_level_3: "Vertrauensstufe_3"
+      trust_level_4: "Vertrauensstufe_4"
     request_membership_pm:
       title: "Mitgliedschaftsanfrage für @%{group_name}"
     request_accepted_pm:
@@ -2916,31 +2916,31 @@ de:
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Deine E-Mail war als "auto generated" markiert, was bedeutet, dass sie automatisch von einem Computer erstellt und nicht von einem Menschen verfasst wurde; wir können diese Art von E-Mails nicht akzeptieren. Wenn du denkst, dass dies ein Fehler ist, dann [kontaktiere ein Team-Mitglied](%{base_url}/about).
+        Deine E-Mail wurde als „automatisch generiert“ markiert, was bedeutet, dass sie automatisch von einem Computer erstellt und nicht von einem Menschen verfasst wurde; wir können diese Art von E-Mails nicht akzeptieren. Wenn du denkst, dass dies ein Fehler ist, dann [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_unrecognized_error:
-      title: "E-Mail abgelehnt weil unbekannter Fehler"
-      subject_template: "[%{email_prefix}] E-Mail-Problem -- Unbekannter Fehler"
+      title: "E-Mail abgelehnt, weil unbekannter Fehler"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- unbekannter Fehler"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Es gab einen unbekannten Fehler beim Bearbeiten deiner E-Mail und diese wurde nicht als Beitrag entgegengenommen. Du solltest es noch einmal probieren, oder [ein Team-Mitglied kontaktieren](%{base_url}/about).
+        Es gab einen unbekannten Fehler beim Bearbeiten deiner E-Mail und diese wurde nicht als Beitrag entgegengenommen. Du solltest es noch einmal probieren oder [ein Team-Mitglied kontaktieren](%{base_url}/about).
     email_reject_attachment:
-      title: "E-Mail Dateianhang abgelehnt"
-      subject_template: "[%{email_prefix}] E-Mail Problem -- Dateianhang abgelehnt"
+      title: "E-Mail-Dateianhang abgelehnt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Dateianhang abgelehnt"
       text_body_template: |
-        Leider wurden ein paar Dateianhänge in ihrer E-Mail an %{destination} (Titel %{former_title}) abgelehnt.
+        Leider wurden einige Anhänge in deiner E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) abgelehnt.
 
         Details:
         %{rejected_errors}
 
-        Wenn Sie denken, dass dies ein Fehler ist, [Team Mitarbeiter kontaktieren](%{base_url}/about).
+        Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_reply_not_allowed:
-      title: "E-Mail Ablehnung Antwort nicht erlaubt"
-      subject_template: "[%{email_prefix}] E-Mail Problem -- Antwort nicht erlaubt"
+      title: "E-Mail abgelehnt, weil Antwort nicht erlaubt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort nicht erlaubt"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Du hast keine Berechtigung, auf das Thema zu antworten. Falls du glaubst, dass das nicht richtig ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
+        Du hast keine Berechtigung, auf das Thema zu antworten. Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-Mail ablehnen Antwort auf Zusammenfassung"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Auf Zusammenfassung antworten"
@@ -2951,21 +2951,21 @@ de:
 
         Wenn Sie glauben, dass dies ein Fehler ist, [wenden Sie sich an einen Mitarbeiter] (%{base_url}/ ungefähr).
     email_error_notification:
-      title: "Benachrichtigung zu E-Mail-POP-Authentifizierungsfehler"
+      title: "Benachrichtigung zu E-Mail-Fehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
       text_body_template: |
         Leider gab es einen Authentifizierungsfehler beim Abrufen von E-Mails vom POP-Server.
 
-        Bitte stelle sicher, dass du die POP-Zugangsdaten in [den Einstellungen](%{base_url}/admin/site_settings/category/email) korrekt konfiguriert hast.
+        Bitte stelle sicher, dass du die POP-Anmeldedaten in [den Website-Einstellungen](%{base_url}/admin/site_settings/category/email) korrekt konfiguriert hast.
 
         Wenn es eine Weboberfläche für das POP-E-Mail-Postfach gibt, möchtest du dich eventuell dort anmelden und die Einstellungen überprüfen.
     email_revoked:
       title: "E-Mail widerrufen"
-      subject_template: "Ist Deine E-Mail-Adresse korrekt?"
+      subject_template: "Ist deine E-Mail-Adresse korrekt?"
       text_body_template: |
-        Es tut uns leid aber wir haben Probleme Dich per E-Mail zu erreichen. Unsere letzten E-Mails an Dich sind alle als unzustellbar zurück gekommen.
+        Entschuldige, aber wir haben Probleme, dich per E-Mail zu erreichen. Unsere letzten E-Mails an dich wurden alle als unzustellbar zurückgeschickt.
 
-        Bitte stelle sicher, dass [E-Mail-Adresse](%{base_url}/my/preferences/email) gültig und aktiv ist? Füge bitte unsere E-Mail-Adresse in Deinem Adressbuch hinzu, damit die Zustellbarkeit verbessert wird.
+        Kannst du bitte sicherstellen, dass [deine E-Mail-Adresse](%{base_url}/my/preferences/email) gültig ist und funktioniert? Vielleicht möchtest du auch unsere E-Mail-Adresse zu deinem Adressbuch/deiner Kontaktliste hinzufügen, um die Zustellbarkeit zu verbessern.
     email_bounced: |
       Die Nachricht an %{email} konnte nicht zugestellt werden.
 
@@ -2975,36 +2975,36 @@ de:
       %{raw}
       ```
     ignored_users_summary:
-      title: "Schwellenwert für ignorierte Benutzer"
+      title: "Ignorierter Benutzer hat Schwellenwert überschritten"
       subject_template: "Ein Benutzer wird von vielen anderen Benutzern ignoriert"
       text_body_template: |
         Hallo,
 
         dies ist eine automatische Nachricht von %{site_name}, um dich darüber zu informieren, dass @%{username} von %{ignores_threshold} Benutzern ignoriert wird. Dies könnte auf ein in deiner Community entstehendes Problem hindeuten.
 
-        Eventuell möchtest du [letzte Beiträge](%{base_url}/u/%{username}/summary) dieses Benutzers prüfen, und potentielle weitere Benutzer im [ignorierte und stummgeschaltete Benutzer-Report](%{base_url}/admin/reports/top_ignored_users).
+        Eventuell möchtest du die [letzten Beiträge](%{base_url}/u/%{username}/summary) dieses Benutzers und weiterer Benutzer im [Bericht betreffend ignorierte und stummgeschaltete Benutzer](%{base_url}/admin/reports/top_ignored_users) prüfen.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     too_many_spam_flags:
-      title: "Neues Konto gesperrt wegen zu viel Spam"
-      subject_template: "Neues Konto gesperrt"
-      text_body_template: |
-        Hello,
-
-        Dies ist eine automatische Nachricht von %{site_name} um Dich wissen zu lassen, dass deine Beiträge temporär ausgeblendet wurden, weil diese von der Gemeinschaft gemeldet wurden.
-
-        Als Vorsichtsmaßnahme wurde Dein Konto stumm geschaltet und Du kannst nun nicht mehr antworten neue Themen erzeugen bis ein Team Mitglied Dein Konto überprüft hat. Wir bitten diese Unannehmlichkeit zu entschuldigen.
-
-        Für weitere Hinweise, schaue Dir bitte unsere [Verhaltensregeln](%{base_url}/guidelines) an.
-    too_many_tl3_flags:
-      title: "E-Mail abgelehnt wegen Meldungen durch Vertrauensstufe 3"
-      subject_template: "Neues Konto gesperrt"
+      title: "Zu viele Spam-Meldungen"
+      subject_template: "Neues Konto vorübergehend gesperrt"
       text_body_template: |
         Hallo,
 
-        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Konto vorübergehend gesperrt wurde aufgrund einer großen Anzahl an Community-Meldungen.
+        dies ist eine automatische Nachricht von %{site_name}, um dich zu informieren, dass deine Beiträge vorübergehend ausgeblendet wurden, weil sie von der Community gemeldet wurden.
 
-        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen stummgeschaltet, bis ein Team-Mitglied dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
+        Als Vorsichtsmaßnahme wurde dein neues Konto stummgeschaltet und du kannst keine Antworten oder Themen erstellen, bis ein Team-Mitglied dein Konto überprüft. Wir entschuldigen uns für die Unannehmlichkeiten.
+
+        Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+    too_many_tl3_flags:
+      title: "Zu viele VS3-Meldungen"
+      subject_template: "Neues Konto vorübergehend gesperrt"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatische Nachricht von %{site_name}, um dich zu informieren, dass dein Konto aufgrund einer großen Anzahl von Community-Meldungen vorübergehend gesperrt wurde.
+
+        Als Vorsichtsmaßnahme wurde dein neues Konto stummgeschaltet und du kannst keine neuen Antworten oder Themen erstellen, bis ein Team-Mitglied dein Konto überprüft. Wir entschuldigen uns für die Unannehmlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     silenced_by_staff:
@@ -3020,7 +3020,7 @@ de:
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     user_automatically_silenced:
       title: "Benutzer automatisch stummgeschaltet"
-      subject_template: "Neuer Benutzer %{username} stummgeschaltet wegen Community-Meldungen"
+      subject_template: "Neuer Benutzer %{username} wurde wegen Community-Meldungen stummgeschaltet"
       text_body_template: |
         Dies ist eine automatische Nachricht.
 
@@ -3030,7 +3030,7 @@ de:
 
         Der Schwellenwert kann über die Einstellung `silence_new_user` geändert werden.
     spam_post_blocked:
-      title: "Spam-Beitrag ausgeblendet"
+      title: "Spam-Beitrag blockiert"
       subject_template: "Beiträge des neuen Benutzers %{username} wegen mehrfacher Verlinkung blockiert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
@@ -3050,18 +3050,18 @@ de:
 
         Du kannst nun wieder neue Antworten und Themen erstellen. Vielen Dank für deine Geduld.
     pending_users_reminder:
-      title: "Benachrichtigung: Benutzer warten auf Freigabe"
+      title: "Erinnerung: Benutzer warten auf Genehmigung"
       subject_template:
-        one: "Es gibt einen nicht freigegebenen Benutzer"
-        other: "Es gibt %{count} nicht freigegebene Benutzer"
+        one: "%{count} Benutzer wartet auf Genehmigung"
+        other: "%{count} Benutzer warten auf Genehmigung"
       text_body_template: |
-        Es warten neuen Benutzer auf ihre Freigabe (oder Ablehnung) bevor sie auf dieses Forum zugreifen können.
+        Neu registrierte Benutzer warten darauf, genehmigt (oder abgelehnt) zu werden, bevor sie auf dieses Forum zugreifen können.
 
-        [Bitte überprüfe diese](%{base_url}/review).
+        [Bitte überprüfe sie](%{base_url}/review).
     download_remote_images_disabled:
       title: "Download von externen Bildern deaktiviert"
       subject_template: "Download von externen Bildern deaktiviert"
-      text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
+      text_body_template: "Die Einstellung `download_remote_images_to_local` wurde deaktiviert, da das Speicherplatzlimit von `download_remote_images_threshold` erreicht wurde."
     dashboard_problems:
       title: "Dashboard-Probleme"
       subject_template: "Neue Ratschläge auf deinem Website-Dashboard"
@@ -3077,11 +3077,11 @@ de:
       text_body_template: |
         Glückwunsch, du hast die Auszeichnung **Neuer Benutzer des Monats %{month_year}** erhalten. :trophy:
 
-        Diese Auszeichnung wird nur zwei neuen Benutzern pro Monat verliehen, und wird dauerhaft sichtbar sein auf [deiner Abzeichen-Seite](%{url}).
+        Diese Auszeichnung wird nur zwei neuen Benutzern pro Monat verliehen und ist auf [deiner Abzeichen-Seite](%{url}) dauerhaft sichtbar.
 
-        Du bist schnell ein wertvolles Mitglied unserer Community geworden. Danke, dass du dazugekommen bist, und mache weiter mit der großartigen Arbeit!
+        Du bist schnell ein wertvolles Mitglied unserer Community geworden. Danke, dass du da bist, und weiter so!
     queued_posts_reminder:
-      title: "Erinnerung für anstehende Beiträge"
+      title: "Erinnerung an Beiträge in Warteschlange"
       subject_template:
         one: "%{count} Beitrag wartet auf Überprüfung"
         other: "%{count} Beiträge warten auf Überprüfung"
@@ -3101,10 +3101,10 @@ de:
   subject_pm: "[PN] "
   email_from: "%{user_name} via %{site_name}"
   user_notifications:
-    previous_discussion: "Vorangehende Antworten"
+    previous_discussion: "Vorherige Antworten"
     reached_limit:
-      one: "Achtung: Wir senden maximal %{count} E-Mail pro Tag. Überprüfe die Seite, um möglicherweise zurückgehaltene E-Mails zu sehen."
-      other: "Achtung: Wir senden maximal%{count} E-Mails pro Tag. Überprüfe die Seite, um möglicherweise zurückgehaltene E-Mails zu sehen. P.S.: Danke, dass du so beliebt bist!"
+      one: "Achtung: Wir senden maximal %{count} E-Mail pro Tag. Überprüfe die Website, um möglicherweise zurückgehaltene E-Mails zu sehen."
+      other: "Achtung: Wir senden maximal %{count} E-Mails pro Tag. Überprüfe die Website, um möglicherweise zurückgehaltene E-Mails zu sehen. PS: Danke, dass du so beliebt bist!"
     in_reply_to: "Als Antwort auf"
     unsubscribe:
       title: "Abbestellen"
@@ -3114,7 +3114,7 @@ de:
     only_reply_by_email: "Antworte auf diese E-Mail, um zu antworten."
     only_reply_by_email_pm: "Antworte auf diese E-Mail, um %{participants} zu antworten."
     visit_link_to_respond: "[Rufe das Thema auf](%{base_url}%{url}), um zu antworten."
-    visit_link_to_respond_pm: "[Rufe die Nachricht auf](%{base_url}%{url}) um %{participants} zu antworten."
+    visit_link_to_respond_pm: "[Rufe die Nachricht auf](%{base_url}%{url}), um %{participants} zu antworten."
     posted_by: "Erstellt von %{username} am %{post_date}"
     pm_participants: "Teilnehmer: %{participants}"
     invited_group_to_private_message_body: |
@@ -3160,8 +3160,8 @@ de:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "Benutzer hat Gruppe zu Nachricht eingeladen"
-      subject_template: "[%{email_prefix}] %{username} hat @%{group_name} zu einer Unterhaltung '%{topic_title}' eingeladen"
+      title: "Benutzer hat Gruppe zu privater Nachricht eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat @%{group_name} zu einer Unterhaltung „%{topic_title}“ eingeladen"
       text_body_template: |
         %{header_instructions}
 
@@ -3169,8 +3169,8 @@ de:
 
         %{respond_instructions}
     user_invited_to_private_message_pm:
-      title: "Benutzer zu Nachricht eingeladen"
-      subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"
+      title: "Benutzer zu privater Nachricht eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung „%{topic_title}“ eingeladen"
       text_body_template: |
         %{header_instructions}
 
@@ -3179,7 +3179,7 @@ de:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Benutzer zu Nachricht eingeladen (vorbereitet)"
-      subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung „%{topic_title}“ eingeladen"
       text_body_template: |
         %{header_instructions}
 
@@ -3188,7 +3188,7 @@ de:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Benutzer zu Thema eingeladen"
-      subject_template: "[%{email_prefix}] %{username} hat dich eingeladen zu '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} hat dich eingeladen zu „%{topic_title}“"
       text_body_template: |
         %{header_instructions}
 
@@ -3196,7 +3196,7 @@ de:
 
         %{respond_instructions}
     user_replied:
-      title: "Benutzer hat auf Beitrag geantwortet"
+      title: "Benutzer hat geantwortet"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3207,7 +3207,7 @@ de:
 
         %{respond_instructions}
     user_replied_pm:
-      title: "Benutzer hat auf Nachricht geantwortet"
+      title: "Benutzer hat auf private Nachricht geantwortet"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3251,7 +3251,7 @@ de:
 
         %{respond_instructions}
     user_mentioned_pm:
-      title: "Benutzer hat Nachricht erwähnt"
+      title: "Benutzer wurde in privater Nachricht erwähnt"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3262,7 +3262,7 @@ de:
 
         %{respond_instructions}
     user_group_mentioned:
-      title: "Gruppe wurde erwähnt"
+      title: "Benutzer wurde in Gruppe erwähnt"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3273,7 +3273,7 @@ de:
 
         %{respond_instructions}
     user_posted:
-      title: "Benutzer hat in Thema geantwortet"
+      title: "Benutzer hat einen Beitrag geschrieben"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3295,7 +3295,7 @@ de:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Benutzer hat Nachricht geschrieben"
+      title: "Benutzer hat private Nachricht geschrieben"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3329,11 +3329,11 @@ de:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"
       text_body_template: |
-        Du hast gerade versuchst, ein Konto auf %{site_name} zu erstellen oder die E-Mail-Adresse eines Kontos zu %{email} zu ändern. Allerdings gibt es schon ein Konto für %{email}.
+        Du hast gerade versucht, ein Konto auf %{site_name} zu erstellen oder die E-Mail-Adresse eines Kontos auf %{email} zu ändern. Allerdings gibt es schon ein Konto für %{email}.
 
         Wenn du dein Passwort vergessen hast, [setze es jetzt zurück](%{base_url}/password-reset).
 
-        Wenn du nicht versucht hast, ein Konto für %{email} zu erstellen oder deine E-Mail-Adresse zu ändern, mach’ dir keine Sorgen – du kannst diese Nachricht getrost ignorieren.
+        Wenn du nicht versucht hast, ein Konto für %{email} zu erstellen oder deine E-Mail-Adresse zu ändern, mach dir keine Sorgen – du kannst diese Nachricht getrost ignorieren.
 
         Wenn du Fragen hast, [kontaktiere unser freundliches Team](%{base_url}/about).
     account_second_factor_disabled:
@@ -3385,8 +3385,8 @@ de:
         Klicke auf den folgenden Link, um dich anzumelden:
         %{base_url}/session/email-login/%{email_token}
     set_password:
-      title: "Passwort setzen"
-      subject_template: "[%{email_prefix}] Passwort wählen"
+      title: "Passwort festlegen"
+      subject_template: "[%{email_prefix}] Passwort festlegen"
       text_body_template: |
         Jemand hat angefordert, ein Passwort zu deinem Konto auf [%{site_name}](%{base_url}) hinzuzufügen. Alternativ kannst du dich mit jedem unterstützten Online-Service (Google, Facebook usw.) anmelden, der mit dieser validierten E-Mail-Adresse verknüpft ist.
 
@@ -3413,7 +3413,7 @@ de:
         Klicke auf den folgenden Link, um ein Passwort für dein neues Konto zu wählen:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
-      title: "E-Mail-Adresse bestätigen (an neue)"
+      title: "Bestätigung der neuen E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
       text_body_template: |
         Bestätige deine neue E-Mail-Adresse für %{site_name}, indem du auf den folgenden Link klickst:
@@ -3431,7 +3431,7 @@ de:
 
         Diese E-Mail-Änderung wurde von einem Website-Administrator angefordert. Falls du diese Änderung nicht angefordert hast, kontaktiere bitte einen [Website-Administrator](%{base_url}/about).
     confirm_old_email:
-      title: "E-Mail-Adresse bestätigen (an alte)"
+      title: "Bestätigung der alten E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
         Bevor wir deine E-Mail-Adresse ändern können, benötigen wir deine Bestätigung, dass du das aktuelle E-Mail-Konto kontrollierst. Sobald du diesen Schritt erledigt hast, schicken wir dir eine Anfrage, die neue E-Mail-Adresse zu bestätigen.
@@ -3469,7 +3469,7 @@ de:
 
         %{new_email}
     signup_after_approval:
-      title: "Anmelden nach Genehmigung"
+      title: "Registrierung: nach Genehmigung"
       subject_template: "Dein Konto bei %{site_name} wurde genehmigt!"
       text_body_template: |
         Willkommen bei %{site_name}!
@@ -3479,7 +3479,7 @@ de:
         Du kannst dein neues Konto nun verwenden, indem du dich hier anmeldest:
         %{base_url}
 
-        Wenn sich der obenstehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Browsers einzufügen.
+        Wenn sich der oben stehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Browsers einzufügen.
 
         %{new_user_tips}
 
@@ -3494,7 +3494,7 @@ de:
 
         %{reject_reason}
     signup:
-      title: "Konto bestätigen nach Anmeldung"
+      title: "Registrierung"
       subject_template: "[%{email_prefix}] Bestätige dein neues Konto"
       text_body_template: |
         Willkommen bei %{site_name}!
@@ -3561,7 +3561,7 @@ de:
   image: "Bild"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
-    unauthorized: "Entschuldigung, die Datei die du hochladen möchtest ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
+    unauthorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
     pasted_image_filename: "Hinzugefügtes Bild"
     store_failure: "Hochladen von #%{upload_id} für Benutzer #%{user_id} ist fehlgeschlagen."
     file_missing: "Bitte wähle eine Datei zum Hochladen aus."

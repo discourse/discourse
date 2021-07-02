@@ -39,7 +39,7 @@ es:
   title: "Discourse"
   topics: "Temas"
   posts: "publicaciones"
-  views: "visitas"
+  views: "vistas"
   loading: "Cargando"
   powered_by_html: 'Creado con <a href="https://www.discourse.org">Discourse</a>, se ve mejor con JavaScript activado'
   sign_up: "Registrarse"
@@ -218,7 +218,7 @@ es:
     expired: "Tu token de invitación ha caducado.  <a href='%{base_url}/about'>Ponte en contacto con el personal</a>."
     not_found: "El código de invitación no es válido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro equipo</a>."
     not_found_json: "El código de invitación no es válido. Por favor, ponte en contacto con nuestro equipo."
-    not_matching_email: "Tu dirección de correo y la dirección asociada a la invitación no coinciden. Contacta con la administración del sitio."
+    not_matching_email: "Tu dirección de correo y la dirección asociada al token de invitación no coinciden. Contacta con la administración del sitio."
     not_found_template: |
       <p>Tu invitación a <a href="%{base_url}">%{site_name}</a> ya ha sido utilizada.</p>
 
@@ -234,7 +234,7 @@ es:
       one: "Ya has enviado %{count} invitación en el último día, espera %{time_left} antes de volverlo a intentar."
       other: "Ya has enviado %{count} invitaciones en el último día, espera %{time_left} antes de volverlo a intentar."
     confirm_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a tu dirección de correo electrónico. Sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
-    cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
+    cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres propietario en los grupos a los que estás intentando invitar."
     disabled_errors:
       discourse_connect_enabled: "Las invitaciones están desactivadas porque DiscourseConnect está activado."
       invalid_access: "No tienes permitido ver el recurso solicitado."
@@ -453,7 +453,7 @@ es:
 
       - Incluye palabras comúnmente utilizadas en tu tema para que los demás puedan **encontrarlo**. Para agrupar el tema con otros relacionados, selecciona una categoría (o etiqueta).
 
-      Para más información [consulta nuestra nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text} publicaciones.
+      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text} publicaciones.
     "new-reply": |
       Te damos la bienvenida a %{site_name}. **¡Gracias por contribuir!**
 
@@ -602,7 +602,7 @@ es:
     title: "Te damos la bienvenida a Discourse"
     body: |2
 
-      El primer párrafo de este tema fijado será visible para todos los usuarios como mensaje de bienvenida en tu página principal. ¡Es importante!
+      El primer párrafo de este tema anclado será visible para todos los usuarios como mensaje de bienvenida en tu página principal. ¡Es importante!
 
       **Edita esto** y describe brevemente a tu comunidad:
 
@@ -951,7 +951,7 @@ es:
       short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: 'Este tema necesita ser revisado por por un motivo relacionado con las <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">Términos de servicio</a> o por otra razón no mencionada anteriormente.'
+      description: 'Este tema necesita ser revisado por un motivo relacionado con las <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">Términos de servicio</a> o por otra razón no mencionada anteriormente.'
       long_form: "denunciado para ser atendido por los moderadores"
       short_description: "Requiere atención del personal por otro motivo"
       email_title: 'El tema «%{title}» requiere la atención de un moderador'
@@ -965,10 +965,10 @@ es:
     regular:
       title: "Tema normal"
     banner:
-      title: "Tema de encabezado"
+      title: "Tema de banner"
       message:
-        make: "Este tema ahora funciona como encabezado. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
-        remove: "Este tema ya no funciona como encabezado. Ya no aparecerá en la parte superior de cada página."
+        make: "Este tema ahora funciona como banner. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
+        remove: "Este tema ya no funciona como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: "¡Preferencias de correo electrónico actualizadas!"
     description: "las preferencias de correo electrónico para <b>%{email}</b> han sido actualizadas. Para cambiar tus configuraciones de correo electrónico, <a href='%{url}'>visita tus preferencias de usuario</a>."
@@ -1030,7 +1030,7 @@ es:
   reports:
     default:
       labels:
-        count: Cuenta
+        count: Cantidad
         percent: Porcentaje
         day: Día
     post_edits:
@@ -1386,7 +1386,7 @@ es:
     set_locale_from_accept_language_header: "establecer el idioma de la interfaz para usuarios anónimos desde los encabezados de idioma del navegador web"
     support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda."
     min_post_length: "Extensión mínima de las publicaciones en número de caracteres"
-    min_first_post_length: "Extensión mínima en la primera publicación (cuerpo del tema) en en número de caracteres"
+    min_first_post_length: "Extensión mínima en la primera publicación (cuerpo del tema) en número de caracteres"
     min_personal_message_post_length: "Longitud mínima de una publicación en número de caracteres para mensajes"
     max_post_length: "Extensión máxima de las publicaciones en número de caracteres"
     topic_featured_link_enabled: "Activar la publicación de temas a partir de un enlace."
@@ -1437,8 +1437,8 @@ es:
     exclude_rel_nofollow_domains: "Una lista de dominios a cuyos enlaces no se les añadirá la etiqueta nofollow. ejemplo.com permitirá automáticamente sub.ejemplo.com también. Como mínimo, deberías añadir el dominio de este sitio para ayudar a los rastreadores web a encontrar todo el contenido. Si otras partes de este sitio web están en otros dominios, añádelos también."
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de una publicación."
     topic_excerpt_maxlength: "Longitud máxima de un extracto o resumen de tema, generado a partir de la primera publicación de un tema."
-    show_pinned_excerpt_mobile: "Mostrar extracto de temas fijados en la vista móvil."
-    show_pinned_excerpt_desktop: "Mostrar extracto de temas fijados en la vista de escritorio."
+    show_pinned_excerpt_mobile: "Mostrar extracto de temas anclados en la vista móvil."
+    show_pinned_excerpt_desktop: "Mostrar extracto de temas anclados en la vista de escritorio."
     post_onebox_maxlength: "Extensión máxima en caracteres de una publicación de Discourse en formato onebox."
     blocked_onebox_domains: "Una lista de dominios que nunca será oneboxed."
     allowed_inline_onebox_domains: "Una lista de dominios que serán oneboxed en forma de miniatura si están vinculados sin título"
@@ -1516,7 +1516,7 @@ es:
     ga_universal_domain_name: "Nombre de dominio para Google Universal Analytics. Ver <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Activar seguimiento multi-dominio de Google Universal Analytics. Los enlaces salientes a estos dominios tendrán la id de cliente añadida a ellos. Ver <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "ID de contenedor de Google Tag Manager. Ej.: GTM-ABCDEF. <br/>Nota: puede que los scripts de terceros cargados por GTM tengan que ser añadidos a la lista de admitidos en «content security policy script src»."
-    enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita </a>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permitir a los moderadores administrar categorías y grupos"
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
     use_admin_ip_allowlist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
@@ -1601,7 +1601,7 @@ es:
     discourse_connect_not_approved_url: "Redireccionar cuentas no aprobadas a esta URL al iniciar sesión con DiscourseConnect."
     discourse_connect_allows_all_return_paths: "No restringir el dominio para return_paths (rutas de vuelta) de DiscourseConnect (por defecto, la ruta de vuelta debe estar en el sitio actual)"
     enable_local_logins: "Activar inicio de sesión local con usuario y contraseña. CUIDADO: si lo desactivas, puede que no puedas iniciar sesión si no has configurado otro medio alternativo primero."
-    enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión único que se les enviará por correo electrónico."
+    enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión en un clic que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de usuarios nuevos. Desactiva esta opción para que nadie pueda crear una cuenta nueva."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
     enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación que Google soporta actualmente. Requiere de una clave de cliente y una clave secreta. Consulta <a href='https://meta.discourse.org/t/15858' target='_blank'>configuración del inicio de sesión mediante para Discourse</a>."
@@ -1839,7 +1839,7 @@ es:
     block_auto_generated_emails: "Bloquear correos electrónicos entrantes identificados como generados automaticamente."
     ignore_by_title: "Ignorar correos electrónicos entrantes por su título."
     mailgun_api_key: "Clave secreta de la API de Mailgun utilizada para verificar mensajes vía webhook."
-    soft_bounce_score: "Puntuación de rebote añadida al usuario cuando cuando se produce un rebote temporal."
+    soft_bounce_score: "Puntuación de rebote añadida al usuario cuando se produce un rebote temporal."
     hard_bounce_score: "Puntuación de rebote añadida al usuario cuando se produce un rebote permanente."
     bounce_score_threshold: "Máxima puntuación de rebote a partir de la cual se detiene el envío de correos al usuario."
     reset_bounce_score_after_days: "Restablecer la puntuación de reobte automáticamente luego de X días."
@@ -1935,15 +1935,15 @@ es:
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     header_dropdown_category_count: "Cantidad de categorías que se pueden mostrar en el menú desplegable del encabezado."
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
-    global_notice: "Mostrar un anuncio global de URGENCIA o EMERGENCIA que no se pueda ocultar para todos los visitantes. Deja este campo en blanco para ocultarlo (se permite HTML)."
+    global_notice: "Mostrar un banner global de URGENCIA o EMERGENCIA que no se pueda ocultar para todos los visitantes. Deja este campo en blanco para ocultarlo (se permite HTML)."
     disable_system_edit_notifications: "Inhabilitar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
     notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para deshabilitar."
     likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en «SiteSetting.notification_consolidation_threshold»."
-    automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
+    automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del título</a> de la página del tema incluye el nombre de la categoría."
-    native_app_install_banner_ios: "Muestra el anuncio de la aplicación DiscourseHub en dispositivos iOS a usuarios habituales (nivel de confianza 1 y superior)."
-    native_app_install_banner_android: "Muestra el anuncio de la aplicación DiscourseHub en dispositivos Android a usuarios habituales (nivel de confianza 1 y superior)."
+    native_app_install_banner_ios: "Muestra el banner de la aplicación DiscourseHub en dispositivos iOS a usuarios habituales (nivel de confianza 1 y superior)."
+    native_app_install_banner_android: "Muestra el banner de la aplicación DiscourseHub en dispositivos Android a usuarios habituales (nivel de confianza 1 y superior)."
     app_association_android: "Los contenidos del extremo <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilizado por la API de «Digital Asset Links» de Google."
     app_association_ios: "Los contenidos del extremo <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilizado para crear enlaces universales entre este sitio y las aplicacios iOS."
     share_anonymized_statistics: "Compartir estadísticas de uso anonimizadas."
@@ -1996,7 +1996,7 @@ es:
     code_formatting_style: "El botón de código en el editor establecerá por defecto este estilo de formato de código"
     max_allowed_message_recipients: "Cantidad máxima de destinatarios permitidos en un mensaje."
     watched_words_regular_expressions: "Las palabras vigiladas son expresiones regulares."
-    enable_diffhtml_preview: "Funcionalidad experimental, usar diffHTML para sincronizar la previsualización en lugar de volver a renderizar toda de nuevo."
+    enable_diffhtml_preview: "Funcionalidad experimental, usar diffHTML para sincronizar la vista previa en lugar de volver a renderizar toda de nuevo."
     old_post_notice_days: "Tiempo a partir del cual una publicación se considera antigua"
     new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios nuevos."
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
@@ -2024,7 +2024,7 @@ es:
     default_other_dynamic_favicon: "Mostrar la cantidad de temas nuevos/actualizados en el icono del navegador por defecto."
     default_other_skip_new_user_tips: "Omitir consejos y insignias de bienvenida."
     default_other_like_notification_frequency: "Notificar a los usuarios sobre los me gusta por defecto"
-    default_topics_automatic_unpin: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
+    default_topics_automatic_unpin: "Desanclar automáticamente cuando el usuario llega al final del tema."
     default_categories_watching: "Lista de categorías que están vigiladas por defecto."
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
@@ -2062,7 +2062,7 @@ es:
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
     company_name: "Nombre de la compañía"
     governing_law: "Ley que rige"
-    city_for_disputes: "Ciudad de disputas"
+    city_for_disputes: "Ciudad para disputas"
     shared_drafts_category: "Habilite la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del personal."
     shared_drafts_min_trust_level: "Permitir a los usuarios ver y editar borradores compartidos."
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
@@ -2076,7 +2076,7 @@ es:
     gravatar_name: "Nombre del proveedor de Gravatar"
     gravatar_base_url: "URL de la API base del proveedor de Gravatar"
     gravatar_login_url: "URL relativa a gravatar_base_url, la cual provee al usuario el acceso al servicio de Gravatar"
-    share_quote_buttons: "Determinar los elementos que aparecen en el cuadro de compartir y su orden."
+    share_quote_buttons: "Determinar los elementos que aparecen en el widget de compartir cita y su orden."
     share_quote_visibility: "Cuándo mostrar los botones de compartir citas: nunca, a los usuarios anónimos solo o a todos los usuarios. "
     create_revision_on_bulk_topic_moves: "Crear edición para las primeras publicaciones cuando los temas se mueven a una nueva categoría en masa."
     errors:
@@ -2284,7 +2284,7 @@ es:
     missing_second_factor_code: "Introduce un código."
     second_factor_toggle:
       totp: "Usar una aplicación de autenticación o una clave de seguridad en su lugar"
-      backup_code: "Usar un código de respaldo en su lugar"
+      backup_code: "Usar un código de copia de seguridad en su lugar"
   admin:
     email:
       sent_test: "¡enviado!"
@@ -2742,7 +2742,7 @@ es:
       title: "La invitación en masa falló"
       subject_template: "Invitación masiva procesada con algunos errores"
       text_body_template: |
-        Tu archivo de invitación masiva ha sido procesada, se han enviado por correo electrónico %{sent} invitaciones con %{failed} error(es).
+        Tu archivo de invitación masiva ha sido procesado, se han enviado por correo electrónico %{sent} invitaciones con %{failed} error(es).
 
         Este es el registro:
 
@@ -2947,7 +2947,7 @@ es:
       title: "Correo electrónico de rechazo. Archivos adjuntos"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Archivos adjuntos rechazados"
       text_body_template: |
-        Lamentablemente, algunos archivos archivos adjuntos de tu correo a %{destination} (con el título %{former_title}) han sido rechazados.
+        Lamentablemente, algunos archivos adjuntos de tu correo a %{destination} (con el título %{former_title}) han sido rechazados.
 
         Detalles:
         %{rejected_errors}
@@ -3060,7 +3060,7 @@ es:
 
         Puedes cambiar este comportamiento a través de los ajustes «newuser_spam_host_threshold» y «allowed_spam_host_domains». Considera añadir %{domains} a la lista de dominios permitidos si deberían estar exentos.
     unsilenced:
-      title: "Dejar de silenciar"
+      title: "Ha dejado de estar silenciado"
       subject_template: "Cuenta reestablecida"
       text_body_template: |
         Hola,
@@ -3373,10 +3373,10 @@ es:
       unread_high_priority: "Notificaciones de alta prioridad sin leer"
       liked_received: "Me gusta recibidos"
       new_users: "Usuarios nuevos"
-      popular_topics: "Temas destacados"
+      popular_topics: "Temas populares"
       follow_topic: "Seguir este tema"
       join_the_discussion: "Leer más"
-      popular_posts: "Temas destacados"
+      popular_posts: "Publicaciones populares"
       more_new: "Nuevo para ti"
       subject_template: "[%{email_prefix}] Resumen"
       unsubscribe: "Este resumen se envía desde %{site_link} cuando no te hemos visto durante cierto tiempo. Cambia %{email_preferences_link} o %{unsubscribe_link} para cancelar tu suscripción."
@@ -3428,12 +3428,12 @@ es:
       title: "Cuenta creada"
       subject_template: "[%{email_prefix}] Tu nueva cuenta"
       text_body_template: |
-        Una nueva cuenta ha sido creada por ti en %{site_name}
+        Has creado una nueva cuenta en %{site_name}
 
-        Pulsa en el siguiente enlace para escoger una contraseña para tu nueva cuenta:
+        Haz clic en el siguiente enlace para escoger una contraseña para tu nueva cuenta:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
-      title: "Confirmar correo electrónico nuevo"
+      title: "Confirmar nuevo correo electrónico"
       subject_template: "[%{email_prefix}] Confirma tu nueva dirección de correo electrónico"
       text_body_template: |
         Confirma tu nueva dirección de correo electrónico en %{site_name} haciendo clic en el siguiente enlace:
@@ -3480,7 +3480,7 @@ es:
       subject_template: "[%{email_prefix}] Dirección de correo electrónico añadida"
       text_body_template: |
         Este es un mensaje automatizado para informarte de que se ha añadido una dirección de correo electrónico para
-        %{site_name}. Si esto se hizo por error, ponte en en contacto con la administración del sitio.
+        %{site_name}. Si esto se hizo por error, ponte en contacto con la administración del sitio.
 
         La dirección de correo electrónico añadida es:
 
@@ -3559,7 +3559,7 @@ es:
   site_setting_missing: "Debes rellenar el ajuste «%{name}»."
   page_not_found:
     title: "¡Ups! Esa página no existe o es privada."
-    popular_topics: "Destacados"
+    popular_topics: "Popular"
     recent_topics: "Recientes"
     see_more: "Más"
     search_title: "Buscar en este sitio"
@@ -3578,7 +3578,7 @@ es:
   image: "imagen"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
-    unauthorized: "Lo sentimos, el archivo que estás intentando subir no está autorizado (extensiones autorizadas: %{authorized_extensions})."
+    unauthorized: "Lo sentimos, el archivo que estás intentando cargar no está permitido (extensiones autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagen pegada"
     store_failure: "Falló el almacenamiento de la subida #%{upload_id} para el usuario #%{user_id}."
     file_missing: "Lo sentimos, debes incluir un archivo para subir."
@@ -3753,7 +3753,7 @@ es:
 
       Sí, la jerga legal es aburrida, pero debemos protegernos a nosotros mismos &ndash; y por extensión, a ti y a tus datos &ndash; contra gente poco amistosa. Tenemos unas [Condiciones de servicio](%{base_path}/tos) que describen tu (y nuestro) comportamiento y derechos relacionados con el contenido, la privacidad y las leyes. Para utilizar este servicio, debes aceptar respetar nuestras [TOS](%{base_path}/tos).
   tos_topic:
-    title: "Términos de servicio"
+    title: "Términos del servicio"
     body: |
       Estos términos regulan el uso del foro de Internet en <%{base_url}>. Para utilizar el foro, debes aceptar estos términos de %{company_name}, la compañía que maneja este foro.
 
@@ -4045,7 +4045,7 @@ es:
       name: Líder
       description: '<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Acceso</a> a las funciones: editar, destacar, cerrar, archivar, dividir y combinar temas globalmente'
       long_description: |
-        Esta insignia se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todas las publicaciones y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o fusionarlos.
+        Esta insignia se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todas las publicaciones y realizar acciones de moderador como anclar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o fusionarlos.
     welcome:
       name: '¡Bienvenido/a!'
       description: Recibió un me gusta
@@ -4461,10 +4461,10 @@ es:
       posted: '%{username} publicó en «%{topic}» - %{site_title}'
       private_message: '%{username} te envió un mensaje privado en «%{topic}» - %{site_title}'
       linked: '%{username} enlazó tu publicación desde «%{topic}» - %{site_title}'
-      watching_first_post: '%{username} creó un tema nuevo «%{topic}» - %{site_title}'
+      watching_first_post: '%{username} creó un nuevo tema «%{topic}» - %{site_title}'
       confirm_title: "Notificaciones activadas - %{site_title}"
-      confirm_body: "¡Bien! Las notificaciones han sido activadas."
-      custom: "Notificación de %{username} on %{site_title}"
+      confirm_body: "¡Bien! Se han activado las notificaciones."
+      custom: "Notificación de %{username} en %{site_title}"
   staff_action_logs:
     not_found: "no encontrado"
     unknown: "desconocido"
@@ -4550,7 +4550,7 @@ es:
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
       disagree_and_restore:
         title: "Discrepar y restaurar publicación"
-        description: "Restaurar la publicación para que los usuarios la puedan ver."
+        description: "Restaurar la publicación para que los usuarios puedan verla."
       disagree:
         title: "Discrepar"
       ignore:
