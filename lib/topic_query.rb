@@ -335,7 +335,7 @@ class TopicQuery
       staff: user.staff?
     )
 
-    first_unread_pm_at = UserStat.where(user_id: user.id).pluck(:first_unread_pm_at).first
+    first_unread_pm_at = UserStat.where(user_id: user.id).pluck_first(:first_unread_pm_at)
     list = list.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
     create_list(:private_messages, {}, list)
   end
@@ -1013,7 +1013,7 @@ class TopicQuery
       if params[:my_group_ids].present?
         GroupUser.where(user_id: @user.id, group_id: params[:my_group_ids]).minimum(:first_unread_pm_at)
       else
-        UserStat.where(user_id: @user.id).pluck(:first_unread_pm_at).first
+        UserStat.where(user_id: @user.id).pluck_first(:first_unread_pm_at)
       end
 
     query = query.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
