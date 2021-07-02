@@ -2440,15 +2440,15 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是%{site_name}通知您的帖子再次被隐藏了的自动消息。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被重新隐藏。
 
         <%{base_url}}%{url}>
 
         %{flag_reason}
 
-        社区成员标记了该帖子，现已被隐藏。**由于此帖子已被隐藏超过一次，您的帖子现在将持续隐藏，直到由工作人员作出处理。**
+        此帖子被社区举报，现已被隐藏。**由于此帖子已被隐藏超过一次，您的帖子现在将持续隐藏，直至由管理人员处理**。
 
-        有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
+        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     queued_by_staff:
       title: "等待审核中"
       subject_template: "帖子被管理员隐藏，等待批准"
@@ -2468,11 +2468,11 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是%{site_name}通知[您的贴子](%{base_url}%{url})已被恢复的自动消息。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知[您的帖子](%{base_url}%{url})已被恢复。
 
-        此贴曾被社区标记过，管理人员选择将其恢复。
+        此帖子被社区举报，管理人员选择将其恢复。
 
-        [详情=“点击展开被恢复的贴子”]
+        [details="点击以展开恢复的帖子"]
         ```markdown
         %{flagged_post_raw_content}
         ```
@@ -2483,17 +2483,17 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是一则由%{site_name}自动发送的消息，告知[您的帖子](%{base_url}%{url})被移除了。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知[您的帖子](%{base_url}%{url})已被移除。
 
         %{flag_reason}
 
-        这个帖子被社区所标记后，工作人员选择将其移除。
+        此帖子被社区举报，管理人员选择将其移除。
 
         ``` markdown
         %{flagged_post_raw_content}
         ```
 
-        要了解详情，请阅读我们的[社区守则](%{base_url}/guidelines)。
+        请阅读我们的[社区准则](%{base_url}/guidelines)以了解详情。
     usage_tips:
       text_body_template: |
         要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
@@ -2873,11 +2873,11 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是%{site_name}通知您的帖子因被社区成员标记已被暂时隐藏的自动消息
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知由于您的帖子被社区举报，它们已被暂时隐藏。
 
-        作为预防措施，您的新账户已被停用，并且在管理人员审核您的账户前您无法创建回复或话题。我们对此深表抱歉。
+        作为预防措施，您的新帐户已被禁言，并且在管理人员审查您的帐户前您无法创建回复或话题。对于任何不便之处，我们深表歉意。
 
-        有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
+        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "太多信任等级3用户标记"
       subject_template: "新账户被暂时封禁"
