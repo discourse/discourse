@@ -858,7 +858,7 @@ zh_CN:
         ignore_duration_username: "用户名"
         ignore_duration_when: "持续时间："
         ignore_duration_save: "忽略"
-        ignore_duration_note: "请注意，所有忽略都会在忽略持续时间到期后被自动移除。"
+        ignore_duration_note: "请注意，所有忽略都会在持续时间到期后自动移除。"
         ignore_duration_time_frame_required: "请选择时间范围"
         ignore_no_users: "您没有忽略任何用户。"
         ignore_option: "已忽略"
@@ -2015,7 +2015,7 @@ zh_CN:
           pinned: 被置顶
           seen: 我读过
           unseen: 我还没读过
-          wiki: 公共编辑
+          wiki: wiki
           images: 包含图片
           all_tags: 上述所有标签
         statuses:
@@ -2466,102 +2466,102 @@ zh_CN:
         radio_label: "新消息"
         participants: "参与者"
         instructions:
-          other: "你正在发送 <b>%{count}</b> 篇帖子到一条新的消息。"
+          other: "您将创建一个新消息，并使用您选择的 <b>%{count}</b> 个帖子填充。"
       move_to_existing_message:
-        title: "合并消息"
-        action: "合并消息"
+        title: "移至现有消息"
+        action: "移至现有消息"
         radio_label: "现有消息"
         participants: "参与者"
         instructions:
-          other: "请选择你要将 <b>%{count}</b> 个帖子所移动到的消息。"
+          other: "请选择您要将这 <b>%{count}</b> 个帖子移至的消息。"
       merge_posts:
-        title: "合并已选定的帖子"
-        action: "合并已选定的帖子"
-        error: "合并选定帖子时发生了错误。"
+        title: "合并所选帖子"
+        action: "合并所选帖子"
+        error: "合并所选帖子时出错。"
       publish_page:
         title: "页面发布"
         publish: "发布"
-        description: "当一个话题被发布为页面后，其链接可被共享，并且可以以自定义样式显示。"
-        slug: "缩写"
+        description: "当一个话题作为一个页面发布时，可以分享它的 URL，并且它将以自定义样式显示。"
+        slug: "缩略名"
         public: "公开"
-        public_description: "即使关联的话题是私有的，用户也可以看到该页面。"
-        publish_url: "你的页面已发布在："
-        topic_published: "你的话题已发布在："
-        preview_url: "你的页面将被发布在："
-        invalid_slug: "抱歉，您不能发布该页面。"
+        public_description: "即使关联的话题是私有话题，用户也可以看到该页面。"
+        publish_url: "您的页面已发布到："
+        topic_published: "您的话题已发布到："
+        preview_url: "您的页面将发布到："
+        invalid_slug: "抱歉，您无法发布此页面。"
         unpublish: "取消发布"
-        unpublished: "你的页面已经取消发布，因此无法再访问。"
+        unpublished: "您的页面已取消发布，无法再访问。"
         publishing_settings: "发布设置"
       change_owner:
         title: "更改所有者"
-        action: "更改所有者"
-        error: "更改帖子所有者时发生错误。"
+        action: "更改所有权"
+        error: "更改帖子的所有权时出错。"
         placeholder: "新所有者的用户名"
         instructions:
-          other: "请选择 <b>@%{old_user}</b> 创建的 %{count} 个帖子的新所有者。"
+          other: "请为 <b>@%{old_user}</b> 创建的 %{count} 个帖子选择新所有者。"
         instructions_without_old_user:
-          other: "请为 %{count} 个帖子选择一个新的所有者。"
+          other: "请为 %{count} 个帖子选择新所有者。"
       change_timestamp:
-        title: "更改时间戳"
+        title: "更改时间戳…"
         action: "更改时间戳"
         invalid_timestamp: "时间戳不能为未来。"
-        error: "更改话题时间戳时发生错误。"
-        instructions: "请为话题选择新的时间戳，话题中的所有帖子将按照相同的时间差更新。"
+        error: "更改话题的时间戳时出错。"
+        instructions: "请选择话题的新时间戳。话题中的帖子将更新为具有相同时差。"
       multi_select:
         select: "选择"
-        selected: "已选择（%{count}）"
+        selected: "已选择 (%{count})"
         select_post:
-          label: "选中"
+          label: "选择"
           title: "将帖子加入选择"
         selected_post:
-          label: "已选中"
-          title: "单击以将帖子从中移除"
+          label: "已选择"
+          title: "点击以将帖子从选择中移除"
         select_replies:
-          label: "选择回复"
-          title: "选择帖子及其所有回复"
+          label: "选择 +回复"
+          title: "将帖子及其所有回复添加到选择中"
         select_below:
-          label: "选择下方"
-          title: "选择帖子及其后的所有内容"
+          label: "选择 +之后"
+          title: "将帖子和之后的所有内容添加到选择中"
         delete: 删除所选项
         cancel: 取消选择
         select_all: 全选
         deselect_all: 取消全选
         description:
-          other: "已选择 <b>%{count}</b> 个帖子。"
-      deleted_by_author_simple: "(话题已被作者删除)"
+          other: "您已选择 <b>%{count}</b> 个帖子。"
+      deleted_by_author_simple: "（话题已被作者删除）"
     post:
       quote_reply: "引用"
       quote_share: "分享"
-      edit_reason: "理由："
+      edit_reason: "原因："
       post_number: "帖子 %{number}"
       ignored: "已忽略的内容"
-      wiki_last_edited_on: "维基最后编辑于 %{dateTime}"
+      wiki_last_edited_on: "wiki 最后编辑于 %{dateTime}"
       last_edited_on: "帖子最后编辑于 %{dateTime}"
-      reply_as_new_topic: "回复为联结话题"
-      reply_as_new_private_message: "向相同的收件人回复新私信"
+      reply_as_new_topic: "作为链接话题回复"
+      reply_as_new_private_message: "作为新消息回复给相同的收件人"
       continue_discussion: "自 %{postLink} 继续讨论："
-      follow_quote: "转到所引用的帖子"
+      follow_quote: "转到引用的帖子"
       show_full: "显示完整帖子"
       show_hidden: "查看已忽略的内容。"
-      deleted_by_author_simple: "(帖子已被作者删除)"
-      collapse: "折叠"
-      expand_collapse: "展开/折叠"
-      locked: "一个管理人员锁定了该帖的编辑"
+      deleted_by_author_simple: "（帖子已被作者删除）"
+      collapse: "收起"
+      expand_collapse: "展开/收起"
+      locked: "一名管理人员已将此帖子锁定为无法编辑"
       gap:
         other: "查看 %{count} 个隐藏回复"
       notice:
-        new_user: "这是 %{user} 的首个发帖 - 让我们欢迎他加入社区吧！"
-        returning_user: "从我们上一次看到 %{user} 有一阵子了 — 他上次发帖是 %{time}。"
-      unread: "未读帖子"
+        new_user: "这是 %{user} 首次发帖 - 让我们欢迎他/她加入社区吧！"
+        returning_user: "我们已经有一段时间没有看到 %{user} 了 — 他/他上次发帖是 %{time}。"
+      unread: "帖子未读"
       has_replies:
-        other: "%{count} 回复"
+        other: "%{count} 个回复"
       has_replies_count: "%{count}"
       unknown_user: "（未知或已删除的用户）"
       has_likes_title:
-        other: "%{count} 人赞了该贴"
-      has_likes_title_only_you: "你赞了这个帖子"
+        other: "%{count} 人赞了此帖子"
+      has_likes_title_only_you: "您赞了此帖子"
       has_likes_title_you:
-        other: "你和另外的 %{count} 人赞了该帖"
+        other: "您和其他 %{count} 人赞了此帖子"
       filtered_replies_hint:
         other: "查看此帖子及其 %{count} 个回复"
       filtered_replies_viewing:
@@ -2569,41 +2569,41 @@ zh_CN:
       in_reply_to: "加载父帖子"
       view_all_posts: "查看所有帖子"
       errors:
-        create: "抱歉，在创建你的帖子时发生了错误，请重试。"
-        edit: "抱歉，在编辑你的帖子时发生了错误，请重试。"
-        upload: "抱歉，在上传文件时发生了错误，请重试。"
-        file_too_large: "抱歉，该文件太大（最大大小为 %{max_size_kb}KB），为什么不将您的大文件上传到云共享服务，然后粘贴链接？"
-        too_many_uploads: "抱歉，一次只能上传一张图片。"
+        create: "抱歉，创建您的帖子时出错。请重试。"
+        edit: "抱歉，编辑您的帖子时出错。请重试。"
+        upload: "抱歉，上传该文件时出错。请重试。"
+        file_too_large: "抱歉，该文件太大（最大大小为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
+        too_many_uploads: "抱歉，一次只能上传一个文件。"
         too_many_dragged_and_dropped_files:
           other: "抱歉，一次只能上传 %{count} 个文件。"
-        upload_not_authorized: "抱歉，你没有上传文件的权限（验证扩展：%{authorized_extensions}）。"
+        upload_not_authorized: "抱歉，您尝试上传的文件不受支持（支持的扩展名：%{authorized_extensions}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
-        attachment_download_requires_login: "抱歉，你需要登录后才能下载附件。"
+        attachment_download_requires_login: "抱歉，您需要登录才能下载附件。"
       cancel_composer:
-        confirm: "你想对自己的帖子做什么？"
-        discard: "丢弃"
+        confirm: "您想对您的帖子做什么？"
+        discard: "舍弃"
         save_draft: "保存草稿供以后使用"
         keep_editing: "继续编辑"
       via_email: "通过邮件发表的帖子"
       via_auto_generated_email: "通过自动生成邮件发表的帖子"
-      whisper: "设置帖子为密语，只对版主可见"
+      whisper: "此帖子是对版主的密语"
       wiki:
-        about: "这个帖子是维基"
+        about: "此帖子是 wiki"
       archetypes:
         save: "保存选项"
-      few_likes_left: "谢谢你的热情！你今天的赞快用完了。"
+      few_likes_left: "谢谢您分享爱！您今天只剩下几个赞了。"
       controls:
-        reply: "开始撰写本帖的回复"
-        like: "点赞此帖"
-        has_liked: "你已赞了这个帖子"
-        read_indicator: "阅读了帖子的用户"
+        reply: "开始撰写对此帖子的回复"
+        like: "点赞此帖子"
+        has_liked: "您已点赞此帖子"
+        read_indicator: "读过此帖子的成员"
         undo_like: "取消赞"
-        edit: "编辑本帖"
+        edit: "编辑此帖子"
         edit_action: "编辑"
-        edit_anonymous: "抱歉，需要登录后才能编辑该贴。"
-        flag: "私下标记此贴以警告，或发送一个关于它的私人通知"
-        delete: "删除本帖"
+        edit_anonymous: "抱歉，您需要登录才能编辑此帖子。"
+        flag: "以私密方式举报此帖子以引起注意，或发送一个关于它的不公开通知"
+        delete: "删除此帖子"
         undelete: "恢复本帖"
         share: "分享指向这个帖子的链接"
         more: "更多"
@@ -2709,7 +2709,7 @@ zh_CN:
             name: "删除收藏"
             description: "从你的个人资料中删除收藏并停止所有关于该收藏的提醒"
           edit_bookmark:
-            name: "编辑收藏"
+            name: "编辑书签"
             description: "编辑收藏名称或修改提醒的日期和时间"
           pin_bookmark:
             name: "置顶收藏"
