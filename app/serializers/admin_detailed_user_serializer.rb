@@ -103,17 +103,13 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def next_penalty
-    next_penalty = nil
-    begin
-      step_number = penalty_counts.total
-      steps = SiteSetting.penalty_step_hours.split('|')
-      step_number = [step_number, steps.length].min
-      penalty_hours = steps[step_number]
-      next_penalty = Integer(penalty_hours, 10).hours.from_now
-    rescue
-      next_penalty = nil
-    end
-    next_penalty
+    step_number = penalty_counts.total
+    steps = SiteSetting.penalty_step_hours.split('|')
+    step_number = [step_number, steps.length].min
+    penalty_hours = steps[step_number]
+    Integer(penalty_hours, 10).hours.from_now
+  rescue
+    nil
   end
 
   def silenced_by
