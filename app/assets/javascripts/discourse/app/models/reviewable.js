@@ -11,7 +11,7 @@ export const REJECTED = 2;
 export const IGNORED = 3;
 export const DELETED = 4;
 
-export default RestModel.extend({
+const Reviewable = RestModel.extend({
   @discourseComputed("type", "topic")
   humanType(type, topic) {
     // Display "Queued Topic" if the post will create a topic
@@ -22,6 +22,11 @@ export default RestModel.extend({
     return I18n.t(`review.types.${type.underscore()}.title`, {
       defaultValue: "",
     });
+  },
+
+  @discourseComputed("category_id")
+  category(categoryId) {
+    return Category.findById(categoryId);
   },
 
   update(updates) {
@@ -50,3 +55,13 @@ export default RestModel.extend({
     });
   },
 });
+
+Reviewable.reopenClass({
+  munge(json) {
+    // ensure we are not overriding category computed property
+    delete json.category;
+    return json;
+  },
+});
+
+export default Reviewable;
