@@ -15,12 +15,12 @@ describe 'TopicRequiredWords' do
   end
 
   before do
-    automation.upsert_field!('words', 'text_list', { list: ['#foo', '#bar'] })
+    automation.upsert_field!('words', 'text_list', { value: ['#foo', '#bar'] })
   end
 
   context 'editing/creating a post' do
     before do
-      automation.upsert_field!('restricted_topic', 'text', { text: topic.id }, target: 'trigger')
+      automation.upsert_field!('restricted_topic', 'text', { value: topic.id }, target: 'trigger')
     end
 
     context 'topic has a topic_required_words automation associated' do

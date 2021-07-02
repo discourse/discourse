@@ -12,7 +12,7 @@ describe 'FlagPostsOnWords' do
     automation.fields.create!(
       component: 'text_list',
       name: 'words',
-      metadata: { list: ['foo,bar'] },
+      metadata: { value: ['foo,bar'] },
       target: 'script'
     )
   end

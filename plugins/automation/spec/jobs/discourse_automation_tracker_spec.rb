@@ -13,8 +13,8 @@ describe Jobs::DiscourseAutomationTracker do
     }
 
     before do
-      automation.upsert_field!('giftee_assignment_messages', 'pms', { raw: 'foo', title: 'bar' }, target: 'script')
-      automation.upsert_field!('gift_exchangers_group', 'group', { group_id: 1 }, target: 'script')
+      automation.upsert_field!('giftee_assignment_messages', 'pms', { value: [{ raw: 'foo', title: 'bar' }] }, target: 'script')
+      automation.upsert_field!('gift_exchangers_group', 'group', { value: 1 }, target: 'script')
     end
 
     context 'pending automation is in past' do

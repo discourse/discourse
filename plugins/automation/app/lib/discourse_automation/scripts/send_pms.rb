@@ -15,7 +15,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SEND_PMS) d
   triggerables %i[user_added_to_group stalled_wiki recurring]
 
   script do |context, fields, automation|
-    sender_username = fields['sender']['username'] || Discourse.system_user.username
+    sender_username = fields.dig('sender', 'value') || Discourse.system_user.username
 
     placeholders = {
       sender_username: sender_username
@@ -24,13 +24,13 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SEND_PMS) d
     users = context['users'] || []
 
     # optional field when using recurring triggerable
-    if u = fields.dig('receiver', 'username')
+    if u = fields.dig('receiver', 'value')
       users << User.find_by(username: u)
     end
 
     users.compact.uniq.each do |user|
       placeholders[:receiver_username] = user.username
-      Array(fields['sendable_pms']['pms']).each do |sendable|
+      Array(fields.dig('sendable_pms', 'value')).each do |sendable|
         next if !sendable['title'] || !sendable['raw']
 
         pm = {}

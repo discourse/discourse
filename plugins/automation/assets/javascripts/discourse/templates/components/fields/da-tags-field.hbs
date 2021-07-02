@@ -4,8 +4,8 @@
 
     <div class="controls">
       {{tag-chooser
-        tags=field.metadata.tags
-        onChange=(action (mut field.metadata.tags))
+        tags=field.metadata.value
+        onChange=(action (mut field.metadata.value))
         options=(hash
           allowAny=false
           disabled=isDisabled

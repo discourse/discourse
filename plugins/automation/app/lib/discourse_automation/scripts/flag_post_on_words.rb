@@ -12,7 +12,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::FLAG_POST_O
   script do |trigger, fields|
     post = trigger['post']
 
-    fields['words']['list'].each do |list|
+    Array(fields.dig('words', 'value')).each do |list|
       words = list.split(',')
       count = words.inject(0) { |acc, word| post.raw.match?(/#{word}/i) ? acc + 1 : acc }
       next if count < words.length

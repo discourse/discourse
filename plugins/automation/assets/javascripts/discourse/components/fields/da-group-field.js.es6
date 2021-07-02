@@ -1,7 +1,6 @@
 import BaseField from "./da-base-field";
 import Group from "discourse/models/group";
 import { action } from "@ember/object";
-import { reads } from "@ember/object/computed";
 
 export default BaseField.extend({
   allGroups: null,
@@ -14,14 +13,8 @@ export default BaseField.extend({
     });
   },
 
-  fieldValue: reads("field.metadata.group_id"),
-
   @action
   setGroupField(groupIds) {
-    this.onChangeField(
-      this.field,
-      "group_id",
-      groupIds && groupIds.firstObject
-    );
+    this.onChangeField(this.field, "value", groupIds && groupIds.firstObject);
   }
 });

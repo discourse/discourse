@@ -14,7 +14,7 @@ describe 'PinTopic' do
   end
 
   before do
-    automation.upsert_field!('pinnable_topic', 'text', { text: topic.id }, target: 'script')
+    automation.upsert_field!('pinnable_topic', 'text', { value: topic.id }, target: 'script')
   end
 
   context 'not pinned globally' do

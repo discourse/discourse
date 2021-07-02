@@ -28,7 +28,7 @@ describe 'PostCreatedEdited' do
 
     context 'category is restricted' do
       before do
-        automation.upsert_field!('restricted_category', 'category', { category_id: Category.first.id }, target: 'trigger' )
+        automation.upsert_field!('restricted_category', 'category', { value: Category.first.id }, target: 'trigger' )
       end
 
       context 'category is allowed' do

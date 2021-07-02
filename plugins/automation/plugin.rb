@@ -23,9 +23,9 @@ def handle_post_created_edited(post, action)
     .where(trigger: name)
     .find_each do |automation|
       restricted_category = automation.trigger_field('restricted_category')
-      if restricted_category['category_id']
+      if restricted_category['value']
         category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
-        next if restricted_category['category_id'] != category_id
+        next if restricted_category['value'] != category_id
       end
 
       automation.trigger!('kind' => name, 'action' => action, 'post' => post)
@@ -103,7 +103,7 @@ after_initialize do
 
     DiscourseAutomation::Automation.where(trigger: name).find_each do |automation|
       joined_group = automation.trigger_field('joined_group')
-      if joined_group['group_id'] == group.id
+      if joined_group['value'] == group.id
         automation.trigger!(
           'kind' => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
           'users' => [user],
@@ -141,7 +141,7 @@ after_initialize do
 
             return if !words
 
-            words = words.metadata['list']
+            words = words.metadata['value']
 
             if words.present?
               if words.none? { |word| raw.include?(word) }

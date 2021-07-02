@@ -16,10 +16,10 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHAN
 
   script do |_, fields, automation|
     now = Time.zone.now
-    gift_exchangers_group = fields['gift_exchangers_group']
+    group_id = fields.dig('gift_exchangers_group', 'value')
 
-    unless group = Group.find_by(id: gift_exchangers_group['group_id'])
-      Rails.logger.warn "[discourse-automation] Couldn’t find group with id #{gift_exchangers_group['group_id']}"
+    unless group = Group.find_by(id: group_id)
+      Rails.logger.warn "[discourse-automation] Couldn’t find group with id #{group_id}"
       next
     end
 
@@ -49,7 +49,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHAN
         giftee_username: giftee
       }
 
-      Array(fields['giftee_assignment_messages']['pms']).each do |giftee_assignment_message|
+      Array(fields.dig('giftee_assignment_messages', 'value')).each do |giftee_assignment_message|
         if giftee_assignment_message['title'].blank?
           Rails.logger.warn '[discourse-automation] Gift exchange requires a title for the PM'
           next

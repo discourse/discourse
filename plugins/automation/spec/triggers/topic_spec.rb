@@ -15,11 +15,11 @@ describe 'TopicRequiredWords' do
 
   context 'updating trigger' do
     it 'updates the custom field' do
-      automation.upsert_field!('restricted_topic', 'text', { text: topic.id }, target: 'trigger')
+      automation.upsert_field!('restricted_topic', 'text', { value: topic.id }, target: 'trigger')
       expect(topic.custom_fields['discourse_automation_id']).to eq(automation.id)
 
       new_topic = create_topic
-      automation.upsert_field!('restricted_topic', 'text', { text: new_topic.id }, target: 'trigger')
+      automation.upsert_field!('restricted_topic', 'text', { value: new_topic.id }, target: 'trigger')
       expect(new_topic.custom_fields['discourse_automation_id']).to eq(automation.id)
     end
   end

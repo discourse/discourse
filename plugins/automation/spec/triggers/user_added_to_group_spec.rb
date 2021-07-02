@@ -13,7 +13,7 @@ describe 'UserAddedToGroup' do
   }
 
   before do
-    automation.upsert_field!('joined_group', 'group', { group_id: tracked_group.id }, target: 'trigger')
+    automation.upsert_field!('joined_group', 'group', { value: tracked_group.id }, target: 'trigger')
   end
 
   context 'group is tracked' do

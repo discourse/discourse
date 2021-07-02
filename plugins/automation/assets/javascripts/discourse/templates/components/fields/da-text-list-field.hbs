@@ -4,9 +4,9 @@
 
     <div class="controls">
       {{multi-select
-        value=field.metadata.list
-        content=field.metadata.list
-        onChange=(action (mut field.metadata.list))
+        value=field.metadata.value
+        content=field.metadata.value
+        onChange=(action (mut field.metadata.value))
         nameProperty=null
         valueProperty=null
         options=(hash allowAny=true disabled=isDisabled)

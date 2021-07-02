@@ -12,7 +12,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::PIN_TOPIC) 
   triggerables [:point_in_time]
 
   script do |_context, fields|
-    next unless topic_id = fields.dig('pinnable_topic', 'text')
+    next unless topic_id = fields.dig('pinnable_topic', 'value')
     next unless topic = Topic.find_by(id: topic_id)
 
     pinned_globally = fields.dig('pinned_globally', 'value') || false

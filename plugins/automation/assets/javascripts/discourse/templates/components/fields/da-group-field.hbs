@@ -5,7 +5,7 @@
     <div class="controls">
       {{group-chooser
         content=allGroups
-        value=field.metadata.group_id
+        value=field.metadata.value
         labelProperty="name"
         onChange=(action "setGroupField")
         options=(hash maximum=1 disabled=isDisabled)

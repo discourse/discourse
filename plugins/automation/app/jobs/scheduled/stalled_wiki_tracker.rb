@@ -16,8 +16,8 @@ module Jobs
           finder = Post.where('wiki = TRUE AND last_version_at <= ?', stalled_duration.seconds.ago)
 
           restricted_category = automation.trigger_field('restricted_category')
-          if restricted_category['category_id']
-            finder = finder.joins(:topic).where('topics.category_id = ?', restricted_category['category_id'])
+          if restricted_category['value']
+            finder = finder.joins(:topic).where('topics.category_id = ?', restricted_category['value'])
           end
 
           finder.each do |post|

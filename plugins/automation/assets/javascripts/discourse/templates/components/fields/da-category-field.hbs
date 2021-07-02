@@ -4,8 +4,8 @@
 
     <div class="controls">
       {{category-chooser
-        value=field.metadata.category_id
-        onChange=(action (mut field.metadata.category_id))
+        value=field.metadata.value
+        onChange=(action (mut field.metadata.value))
         options=(hash clearable=true disabled=isDisabled)
       }}
 

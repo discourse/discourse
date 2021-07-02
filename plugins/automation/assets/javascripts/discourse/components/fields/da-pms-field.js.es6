@@ -1,18 +1,15 @@
 import BaseField from "./da-base-field";
 import I18n from "I18n";
 import { action } from "@ember/object";
-import { reads } from "@ember/object/computed";
 
 export default BaseField.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    if (!this.field.metadata.pms) {
-      this.set("field.metadata.pms", []);
+    if (!this.field.metadata.value) {
+      this.set("field.metadata.value", []);
     }
   },
-
-  fieldValue: reads("field.metadata.pms"),
 
   @action
   removePM(pm) {
@@ -22,7 +19,7 @@ export default BaseField.extend({
       I18n.t("yes_value"),
       result => {
         if (result) {
-          this.field.metadata.pms.removeObject(pm);
+          this.field.metadata.value.removeObject(pm);
         }
       }
     );
@@ -30,7 +27,7 @@ export default BaseField.extend({
 
   @action
   insertPM() {
-    this.field.metadata.pms.pushObject({
+    this.field.metadata.value.pushObject({
       title: "",
       raw: "",
       delay: 0,

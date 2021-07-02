@@ -14,8 +14,8 @@ describe 'GiftExchange' do
     gift_group.add(user_2)
     gift_group.add(user_3)
 
-    automation.upsert_field!('gift_exchangers_group', 'group', { group_id: gift_group.id }, target: 'script')
-    automation.upsert_field!('giftee_assignment_messages', 'pms', { pms: [{ title: 'Gift %%YEAR%%', raw: '@%%GIFTER_USERNAME%% you should send a gift to %%GIFTEE_USERNAME%%'}] }, target: 'script')
+    automation.upsert_field!('gift_exchangers_group', 'group', { value: gift_group.id }, target: 'script')
+    automation.upsert_field!('giftee_assignment_messages', 'pms', { value: [{ title: 'Gift %%YEAR%%', raw: '@%%GIFTER_USERNAME%% you should send a gift to %%GIFTEE_USERNAME%%'}] }, target: 'script')
   end
 
   context 'ran from point_in_time trigger' do

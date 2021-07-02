@@ -15,7 +15,7 @@ module DiscourseAutomation
 
       yield
 
-      automation.triggerable && automation.triggerable.on_update.call(
+      automation&.triggerable&.on_update&.call(
         automation,
         automation.serialized_fields,
         previous_fields
@@ -49,18 +49,24 @@ module DiscourseAutomation
           'type' => ['string', 'integer']
         }
       },
+      'tags' => {
+        'value' => {
+          'type' => 'array',
+          'items' => [{ 'type': 'string' }]
+        }
+      },
       'category' => {
-        'category_id' => {
+        'value' => {
           'type' => ['string', 'integer', 'null']
         }
       },
       'user' => {
-        'username' => {
+        'value' => {
           'type' => 'string'
         }
       },
       'text' => {
-        'text' => {
+        'value' => {
           'type' => ['string', 'integer']
         }
       },
@@ -70,7 +76,7 @@ module DiscourseAutomation
         }
       },
       'text_list' => {
-        'list' => {
+        'value' => {
           'type' => 'array',
           'items' => [{ 'type': 'string' }]
         }
@@ -81,7 +87,7 @@ module DiscourseAutomation
         }
       },
       'group' => {
-        'group_id' => {
+        'value' => {
           'type' => 'integer'
         }
       },

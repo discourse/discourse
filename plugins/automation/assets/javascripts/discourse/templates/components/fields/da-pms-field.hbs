@@ -1,5 +1,5 @@
 <section class="field pms-field">
-  {{#if field.metadata.pms.length}}
+  {{#if field.metadata.value.length}}
     <section class="actions header">
       {{fields/da-field-label label=label}}
       {{d-button
@@ -10,7 +10,7 @@
     </section>
   {{/if}}
 
-  {{#each field.metadata.pms as |pm|}}
+  {{#each field.metadata.value as |pm|}}
     <div class="pm-field">
       <details>
         <summary>{{if pm.title pm.title (i18n "discourse_automation.fields.pms.placeholder_title")}}</summary>

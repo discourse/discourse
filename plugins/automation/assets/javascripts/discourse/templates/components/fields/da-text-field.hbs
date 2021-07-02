@@ -4,8 +4,8 @@
 
     <div class="controls">
       {{input
-        value=field.metadata.text
-        input=(action (mut field.metadata.text) value="target.value")
+        value=field.metadata.value
+        input=(action (mut field.metadata.value) value="target.value")
         disabled=isDisabled
       }}
 
