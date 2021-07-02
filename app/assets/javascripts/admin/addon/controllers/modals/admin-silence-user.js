@@ -21,22 +21,6 @@ export default Controller.extend(PenaltyController, {
     return silencing || isEmpty(silenceUntil) || !reason || reason.length < 1;
   },
 
-  @discourseComputed("user.penalty_counts.suspended")
-  suspendedCountClass(count) {
-    if (count > 0) {
-      return "danger";
-    }
-    return "";
-  },
-
-  @discourseComputed("user.penalty_counts.silenced")
-  silencedCountClass(count) {
-    if (count > 0) {
-      return "danger";
-    }
-    return "";
-  },
-
   actions: {
     silence() {
       if (this.submitDisabled) {
