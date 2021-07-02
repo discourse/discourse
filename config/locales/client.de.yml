@@ -3561,8 +3561,8 @@ de:
           dates: "Datumsangaben (UTC)"
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
-          totals_for_sample: "Insgesamt für Stichprobe"
-          average_for_sample: "Durchschnitt für Stichprobe"
+          totals_for_sample: "Insgesamt für Auswahl"
+          average_for_sample: "Durchschnitt für Auswahl"
           total: "Gesamt (vollständiger Zeitraum)"
           no_data: "Keine Daten anzuzeigen."
           trending_search:

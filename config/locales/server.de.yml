@@ -2415,7 +2415,7 @@ de:
 
       %{invite_link}
   invite_password_instructions:
-    title: "Passwort festlegen"
+    title: "Anweisungen zum Festlegen des Passworts im Anschluss an eine Einladung"
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
     text_body_template: |
       Danke, dass du deine Einladung zu %{site_name} angenommen hast -- willkommen!
@@ -2759,35 +2759,35 @@ de:
       title: "E-Mail abgelehnt, weil Vertrauensstufe unzureichend"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Vertrauensstufe nicht ausreichend"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Du hast nicht die erforderliche Vertrauensstufe, um neue Themen an diese E-Mail-Adresse zu schreiben. Wenn du denkst, dass dies ein Fehler ist, dann [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_user_not_found:
       title: "E-Mail abgelehnt, weil Benutzer nicht gefunden"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer nicht gefunden"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_screened_email:
       title: "E-Mail abgelehnt, weil E-Mail-Adresse gesperrt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail-Adresse blockiert"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-Mail abgelehnt, weil E-Mail-Adresse nicht erlaubt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail blockiert"
       text_body_template: |
-        Tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Betreff %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Versuche, von einer anderen E-Mail-Adresse zu schicken, oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_inactive_user:
       title: "E-Mail abgelehnt, weil Benutzer inaktiv"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer inaktiv"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Dein mit dieser E-Mail-Adresse verbundenes Benutzerkonto ist nicht aktiviert. Bitte aktiviere dein Konto, bevor du E-Mails sendest.
     email_reject_silenced_user:
@@ -2801,14 +2801,14 @@ de:
       title: "E-Mail abgelehnt, weil E-Mail-Adresse abweichend"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortadresse unerwartet"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer anderen E-Mail-Adresse als erwartet gesendet, sodass wir nicht sicher sind, ob dies die gleiche Person ist. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_empty:
       title: "E-Mail abgelehnt, weil kein Inhalt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Wir haben in deiner E-Mail keinen Inhalt feststellen können.
 
@@ -2817,65 +2817,65 @@ de:
       title: "E-Mail abgelehnt, weil Inhalt nicht erkannt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Inhalt nicht erkannt"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Wir konnten keinen Inhalt in deiner E-Mail feststellen. **Versichere dich, dass du den Inhalt oberhalb der erhaltenen E-Mail eingegeben hast** -- Eingebettete Antworten können wir nicht verarbeiten.
+        Wir konnten keine Antwort in deiner E-Mail finden. **Vergewissere dich, dass du die Antwort oberhalb der erhaltenen E-Mail eingegeben hast** -- Inline-Antworten können wir nicht verarbeiten.
     email_reject_invalid_access:
-      title: "E-Mail abgelehnt weil nicht erlaubt"
+      title: "E-Mail abgelehnt, weil nicht erlaubt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Zugriff ungültig"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Dein Benutzerkonto hat nicht die erforderlichen Rechte, um neue Themen in dieser Kategorie zu erstellen. Wenn du denkst, dass dies ein Fehler ist, dann [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_strangers_not_allowed:
-      title: "E-Mail abgelehnt weil Zugriff nicht erlaubt"
+      title: "E-Mail abgelehnt, weil Zugriff nicht erlaubt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Zugriff ungültig"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Die Kategorie, an die du diese E-Mail geschickt hast, erlaubt nur Antworten von Benutzern mit gültigen Benutzerkonten und bekannten E-Mail-Adressen. Wenn du denkst, dass dies ein Fehler ist, dann [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_invalid_post:
-      title: "E-Mail abgelehnt weil ungültiger Beitrag"
+      title: "E-Mail abgelehnt, weil ungültiger Beitrag"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitrag fehlerhaft"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Mögliche Gründe sind komplizierte Formatierung und zu lange oder kurze Nachrichten. Bitte versuche es erneut oder schreibe deinen Beitrag über die Website.
+        Mögliche Gründe sind komplizierte Formatierung und zu lange oder zu kurze Nachrichten. Bitte versuche es erneut oder veröffentliche deinen Beitrag über die Website.
     email_reject_invalid_post_specified:
-      title: "E-Mail abgelehnt weil ungültiger Beitrag"
+      title: "E-Mail abgelehnt, weil ungültiger Beitrag"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitrag fehlerhaft"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Grund:
 
         %{post_error}
 
-        Bitte versuch es erneut, wenn du das Problem beheben kannst.
+        Bitte versuche es erneut, wenn du das Problem beheben kannst.
       date_invalid: "Kein Beitrag-Erstelldatum gefunden. Fehlt der E-Mail ein „Date:“-Header?"
     email_reject_post_too_short:
-      title: "E-Mail Ablehnungsbeitrag zu kurz"
-      subject_template: "[%{email_prefix}] E-Mail Problem -- Beitrag zu kurz"
+      title: "E-Mail abgelehnt, weil Beitrag zu kurz"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitrag zu kurz"
       text_body_template: |
-        Es tut uns leid aber Deine E-Mail Nachricht an %{destination} (betitelt mit %{former_title}) funktionierte nicht.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Um eine tiefere Konversation zu fördern sind kurze Antworten nicht erlaubt. Bitte antworte mit mindestens %{count} Zeichen? Alternativ kannst Du auch einen Beitrag per E-Mail mit "+1" beantworten.
+        Um eingehendere Unterhaltungen zu fördern, sind sehr kurze Antworten nicht erlaubt. Bitte antworte mit mindestens %{count} Zeichen. Alternativ kannst du auch einen Beitrag per E-Mail liken, indem du mit „+1“ antwortest.
     email_reject_invalid_post_action:
-      title: "E-Mail abgelehnt weil fehlerhafte Beitragsaktion"
+      title: "E-Mail abgelehnt, weil ungültige Beitragsaktion"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitragsaktion ungültig"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Die Beitragsaktion wurde nicht erkannt. Bitte versuche es erneut oder erstelle deinen Beitrag auf der Website, wenn der Fehler weiterhin auftritt.
     email_reject_reply_key:
-      title: "E-Mail abgelehnt weil unbekannter Antwort-Schlüssel"
+      title: "E-Mail abgelehnt, weil unbekannter Antwort-Schlüssel"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortschlüssel unbekannt"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Der Antwort-Schlüssel in der E-Mail ist ungültig oder unbekannt, sodass wir nicht ermitteln können, worauf diese E-Mail antwortet. [Kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_bad_destination_address:
-      title: "E-Mail abgelehnt weil unbekannte Empfänger-Adresse"
+      title: "E-Mail abgelehnt, weil unbekannte Empfänger-Adresse"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Empfängeradresse unbekannt"
       text_body_template: |
         Es tut uns leid, aber Deine E-Mail an %{destination} (Titel %{former_title}) hat nicht funktioniert.
@@ -2890,38 +2890,38 @@ de:
 
         Brauchst Du weitere Hilfe? Kontaktiere uns über die Kontaktdetails unter %{base_url}/about
     email_reject_old_destination:
-      title: "E-Mail abgelehnt weil alter Empfänger"
-      subject_template: "[%{email_prefix}] E-Mail-Problem -- Du versuchst, auf eine alte Benachrichtigung zu antworten"
+      title: "E-Mail abgelehnt, weil alter Empfänger"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- du versuchst, auf eine alte Benachrichtigung zu antworten"
       text_body_template: |
-        Es tut uns leid aber Deine E-Mail Nachricht an %{destination} (betitelt mit %{former_title}) funktionierte nicht.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Wir akzeptieren nur Anworten auf die Original Nachrichten für %{number_of_days} Tage. Bitte [besuche das Thema](%{short_url}) um mit der Konversation fortzufahren.
+        Wir akzeptieren Antworten auf die Original-Nachrichten nur für %{number_of_days} Tage. Bitte [besuche das Thema](%{short_url}), um mit der Unterhaltung fortzufahren.
     email_reject_topic_not_found:
-      title: "E-Mail abgelehnt weil Thema nicht gefunden"
+      title: "E-Mail abgelehnt, weil Thema nicht gefunden"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema nicht gefunden"
       text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Das Thema, auf das du geantwortet hast, gibt es nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte [Kontakt mit einem Team-Mitglied](%{base_url}/about) auf.
     email_reject_topic_closed:
-      title: "E-Mail abgelehnt weil Thema geschlossen"
+      title: "E-Mail abgelehnt, weil Thema geschlossen"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema geschlossen"
       text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte [Kontakt mit einem Team-Mitglied](%{base_url}/about) auf.
     email_reject_auto_generated:
-      title: "E-Mail abgelehnt weil automatisch generierte Antwort"
+      title: "E-Mail abgelehnt, weil automatisch generierte Antwort"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort automatisch generiert"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Deine E-Mail war als "auto generated" markiert, was bedeutet, dass sie automatisch von einem Computer erstellt und nicht von einem Menschen verfasst wurde; wir können diese Art von E-Mails nicht akzeptieren. Wenn du denkst, dass dies ein Fehler ist, dann [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_unrecognized_error:
       title: "E-Mail abgelehnt weil unbekannter Fehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Unbekannter Fehler"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Es gab einen unbekannten Fehler beim Bearbeiten deiner E-Mail und diese wurde nicht als Beitrag entgegengenommen. Du solltest es noch einmal probieren, oder [ein Team-Mitglied kontaktieren](%{base_url}/about).
     email_reject_attachment:
@@ -2938,7 +2938,7 @@ de:
       title: "E-Mail Ablehnung Antwort nicht erlaubt"
       subject_template: "[%{email_prefix}] E-Mail Problem -- Antwort nicht erlaubt"
       text_body_template: |
-        Entschuldigung, aber deine E-Mail Nachricht an %{destination} (Betreff %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
         Du hast keine Berechtigung, auf das Thema zu antworten. Falls du glaubst, dass das nicht richtig ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_reply_to_digest:

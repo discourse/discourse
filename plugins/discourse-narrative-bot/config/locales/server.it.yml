@@ -31,7 +31,7 @@ it:
         Rispondi a questo messaggio con `@%{discobot_username} %{reset_trigger}` per saperne di più su quello che puoi fare.
     timeout:
       message: |-
-        Hey @%{username}, sto solo controllando perché è da un po' che non ti sento.
+        Ciao @%{username}, sto solo controllando perché è da un po' che non ti sento.
 
         - Per continuare, rispondimi in qualsiasi momento.
 
@@ -48,13 +48,13 @@ it:
         one: "Ho solo %{count} dado. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), lo so!"
         other: "Ho solo %{count} dadi. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), lo so!"
       out_of_range: |-
-        Lo sapevi che [il numero massimo di lati](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per essere matematicamente bilanciato è 120?
+        Lo sapevi che [il numero massimo di lati](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per avere un dado matematicamente ben bilanciato è 120?
       results: |-
         > :game_die: %{results}
     quote:
       trigger: "cita"
       "1":
-        quote: "E' nel mezzo delle difficoltà che nascono le opportunità"
+        quote: "Nel mezzo delle difficoltà nascono le opportunità"
         author: "Albert Einstein"
       "2":
         quote: "Non vale la pena avere la libertà se non si ha la libertà di sbagliare."
@@ -88,8 +88,8 @@ it:
     magic_8_ball:
       trigger: "fortuna"
       answers:
-        "1": "E' certo"
-        "2": "E' decisamente così"
+        "1": "È certo"
+        "2": "È decisamente così"
         "3": "Senza alcun dubbio"
         "4": "Sì, senza dubbio"
         "5": "Ci puoi contare"
@@ -112,7 +112,7 @@ it:
         > :crystal_ball: %{result}
     track_selector:
       reset_trigger: "avvia"
-      skip_trigger: "salta"
+      skip_trigger: "ignora"
       help_trigger: "mostra la guida"
       random_mention:
         reply: |-
@@ -133,9 +133,9 @@ it:
           > :crystal_ball: Ci puoi contare
       do_not_understand:
         first_response: |-
-          Hey, grazie per la risposta!
+          Ciao, grazie per la risposta!
 
-          Sfortunatamente, essendo un robot mal programmato, non l'ho capita bene. :frowning:
+          Sfortunatamente, essendo un robot mal programmato, non ho capito bene. :frowning:
         track_response: Puoi provare di nuovo, o se vuoi saltare questo passaggio, dimmi `%{skip_trigger}`. Altrimenti per ricominciare, dimmi `%{reset_trigger}`.
         second_response: |-
           Oh, scusa. Non ho ancora capito. :anguished:
@@ -144,9 +144,9 @@ it:
 
           Nel frattempo io me ne starò in disparte.
     new_user_narrative:
-      reset_trigger: "lezione"
+      reset_trigger: "tutorial"
       title: "Certificato di completamento del training per nuovi utenti"
-      cert_title: "In riconoscimento del successo nel completamento del tutorial come nuovo utente"
+      cert_title: "Per aver brillantemente superato il tutorial per nuovi utenti"
       hello:
         title: "Saluti!"
         message: |-
@@ -154,20 +154,20 @@ it:
 
           - Io sono solo un robot, ma [il nostro amichevole staff](%{base_uri}/about) è qui per aiutarti se hai bisogno di contattare qualcuno.
 
-          - Per ragioni di sicurezza, limitiamo temporaneamente ciò che i nuovi utenti possono fare. Potrai ottenere nuove abilità (e [distintivi](%{base_uri}/badges)) appena ti conosceremo meglio.
+          - Per ragioni di sicurezza, limitiamo temporaneamente ciò che i nuovi utenti possono fare. Potrai ottenere [nuove abilità] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [distintivi](%{base_uri}/badges)) appena ti conosceremo meglio.
 
           - Noi crediamo in una [comunità dal comportamento civile](%{base_uri}/guidelines) in ogni momento.
       onebox:
         instructions: |-
-          Poi, potresti condividere con me uno di questi collegamenti? Rispondi con **un collegamento per linea**, e verrà automaticamente espanso in un sommario molto figo.
+          Poi, potresti condividere con me uno di questi collegamenti? Rispondi con **un collegamento per linea**, e verrà automaticamente espanso in un sommario molto elegante.
 
-          Per copiare un collegamento, su piattaforma mobile basta toccare e tenere premuto, oppure fare un click con il tasto destro del vostro dispositivo di puntamento:
+          Per copiare un collegamento, su piattaforma mobile basta toccare e tenere premuto, oppure fare un click con il tasto destro del dispositivo di puntamento:
 
           <https://en.wikipedia.org/wiki/Inherently_funny_word>
           <https://en.wikipedia.org/wiki/Death_by_coconut>
           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
-          Fantastico! Funziona per la maggior parte dei <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, senza niente né davanti né dietro.
+          Fantastico! Funziona per la maggior parte dei <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga da solo senza niente che segua o preceda
         not_found: |-
           Mi dispiace, non riesco a trovare il collegamento nella tua risposta! :cry:
 
@@ -184,7 +184,7 @@ it:
 
           Puoi **rispondere con un'immagine?** Qualsiasi immagine andrà bene! Trascinala e rilasciala, premi il pulsante carica, oppure copiala e incollala.
         reply: |-
-          Bell'immagine – Ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
+          Bella immagine: ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
         like_not_found: |-
           Hai dimenticato di mettere Mi piace :heart: al mio [messaggio?](%{url}) :crying_cat_face:
         not_found: |-
@@ -264,7 +264,7 @@ it:
           (Se sei su un dispositvo mobile, puoi anche inviare emoji direttamente dalla tastiera.)
       mention:
         instructions: |-
-          A volte potresti voler richiedere l'attenzione di una persona, anche se non stai rispondendo direttamente ad essa. Digita `@` poi completa il suo username per menzionarla.
+          A volte potresti voler richiamare l'attenzione di una persona, anche se non stai rispondendo direttamente ad essa. Digita `@` poi completa il suo nome utente per menzionarla.
 
           Puoi menzionare **`@%{discobot_username}`** nella tua risposta?
         reply: |-
@@ -272,7 +272,7 @@ it:
         not_found: |-
           Non vedo il mio nome da nessuna parte qui :frowning: Puoi provare a menzionarmi di nuovo come `@%{discobot_username}`?
 
-          (E sì, il mio username inizia con _disco_, come nella mania dance degli anni 70. Io [amo la vita notturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+          (E sì, il mio username inizia con _disco_, come ai tempi della dance mania degli anni 70. Io [amo la vita notturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         reply: |-
           [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
