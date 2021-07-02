@@ -16,6 +16,18 @@ export default Component.extend({
 
   timeInputDisabled: empty("date"),
 
+  init() {
+    this._super(...arguments);
+    if (this.input) {
+      const datetime = moment(this.input);
+      this.setProperties({
+        selection: "pick_date_and_time",
+        date: datetime.format("YYYY-MM-DD"),
+        time: datetime.format("HH:mm"),
+      });
+    }
+  },
+
   @observes("date", "time")
   _updateInput() {
     if (!this.date) {
@@ -38,15 +50,6 @@ export default Component.extend({
 
     if (this.label) {
       this.set("displayLabel", I18n.t(this.label));
-    }
-
-    if (this.input) {
-      const datetime = moment(this.input);
-      this.setProperties({
-        selection: "pick_date_and_time",
-        date: datetime.format("YYYY-MM-DD"),
-        time: datetime.format("HH:mm"),
-      });
     }
   },
 });
