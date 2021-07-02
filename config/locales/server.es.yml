@@ -2130,7 +2130,7 @@ es:
         value: "Secreto de DiscourseConnect"
   search:
     extreme_load_error: "La página está soportando una carga extrema, por lo que se ha desactivado la búsqueda. Inténtalo de nuevo más tarde"
-    within_post: "#%{post_number} por %{username}"
+    within_post: "nº %{post_number} por %{username}"
     types:
       category: "Categorías"
       topic: "Resultados"
@@ -2585,7 +2585,7 @@ es:
 
         Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     queued_by_staff:
-      title: "Una publicación está esperando aprobación"
+      title: "La publicación requiere aprobación"
       subject_template: "Publicación oculta por el personal, esperando aprobación"
       text_body_template: |
         Hola,
@@ -3017,7 +3017,7 @@ es:
         Para más información, echa un vistazo a nuestras [directrices de la comunidad](%{base_url}/directrices).
     too_many_tl3_flags:
       title: "Demasiadas denuncias NC3"
-      subject_template: "Nueva cuenta suspendida"
+      subject_template: "Cuenta nueva suspendida"
       text_body_template: |
         Hola,
 
@@ -3126,7 +3126,7 @@ es:
       other: "Advertencia: enviamos un máximo de %{count} correos electrónicos por día. PD: ¡Gracias por ser tan popular!"
     in_reply_to: "En respuesta a"
     unsubscribe:
-      title: "Darse de baja"
+      title: "Cancelar suscripción"
       description: "¿No estás interesado en recibir estos correos? ¡No hay problema! Haz clic abajo para darte de baja de inmediatamente:"
     reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este correo para publicar."
     reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este correo electrónico para contestar a %{participants}."
@@ -3190,7 +3190,7 @@ es:
         %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Usuario invitado a MP"
-      subject_template: "[%{email_prefix}] %{username} te ha invitado a un mensaje en «%{topic_title}»"
+      subject_template: "[%{email_prefix}] %{username} te invitó al mensaje «%{topic_title}»"
       text_body_template: |
         %{header_instructions}
 

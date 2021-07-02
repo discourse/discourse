@@ -161,7 +161,7 @@ it:
       emojis_disabled: "non può avere emoji"
       ip_address_already_screened: "è già incluso in una regola esistente"
       restrict_dependent_destroy:
-        one: "Impossibile cancellare il record poiché esiste un %{record} dipendente"
+        one: "Impossibile cancellare il record poiché esiste un elemento %{record} dipendente"
         many: "Impossibile cancellare il record poiché esistono %{record} dipendenti"
       too_long:
         one: è troppo lungo (il massimo è di %{count} carattere)
@@ -628,7 +628,7 @@ it:
     post_template: "%{replace_paragraph}\n\nUsa i seguenti paragrafi per una descrizione più estesa o per stabilire delle regole o linee guida per la categoria:\n\n- Perché la gente dovrebbe usare questa categoria? A che cosaserve? \n\n- In cosa esattamente questa categoria è diversa dalle altre categorie già esistenti? \n\n- Cosa dovrebbero contenere gli argomenti in questa categoria? \n\n- C'è bisogno di questa categoria? Possiamo fonderla con un'altra categoria o sottocategoria?\n"
     errors:
       not_found: "Categoria non trovata!"
-      uncategorized_parent: "\"Senza categoria\" non può avere una categoria superiore"
+      uncategorized_parent: "La categoria predefinita \"Senza categoria\" non può avere una categoria superiore"
       self_parent: "Una sottocategoria non può avere se stessa come categoria superiore"
       depth: "Non puoi annidare una sottocategoria sotto un'altra"
       invalid_email_in: "'%{email}' non è un indirizzo email valido."
@@ -1536,7 +1536,7 @@ it:
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
     invite_only: "Tutti i nuovi utenti devono essere invitati esplicitamente da utenti o dallo Staff. La registrazione pubblica è disabilitata."
     login_required: "Autenticazione richiesta per leggere contenuti su questo sito, disabilita l'accesso anonimo."
-    min_username_length: "Lunghezza minima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più brevi di questo, il tuo sito non funzionerà!"
+    min_username_length: "Lunghezza minima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più brevi di questo, il tuo sito potrebbe avere malfunzionamenti!"
     max_username_length: "Lunghezza massima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più lunghi di questo, il tuo sito non funzionerà!"
     unicode_usernames: "Consenti ai nomi utente e nomi di gruppo di contenere lettere e numeri Unicode."
     allowed_unicode_username_characters: "Espressione regolare per consentire solo alcuni caratteri Unicode all'interno dei nomi utente. Lettere e numeri ASCII saranno sempre consentiti e non è necessario includerli nell'elenco consentito."
@@ -1569,7 +1569,7 @@ it:
     discord_secret: "Secret Key di Discord"
     discord_trusted_guilds: 'Consenti solo ai membri di queste gilde di Discord di accedere tramite Discord. Usa l''ID numerico per la gilda. Per ulteriori informazioni, controlla le istruzioni <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">qui</a>. Lascia vuoto per consentire qualsiasi gilda.'
     enable_backups: "Consenti agli amministratori di creare backup del forum"
-    allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia questa opzione non abilitata, a meno che non hai intenzione di ripristinare un backup."
+    allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia questa opzione non abilitata, a meno che tu non abbia intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
     automatic_backups_enabled: "Esegui backup automatici come definito nella frequenza di backup"
     backup_frequency: "Numero di giorni tra due backup."
@@ -1588,7 +1588,7 @@ it:
     previous_visit_timeout_hours: "Durata in ore di una visita prima che venga considerata una nuova visita"
     top_topics_formula_log_views_multiplier: "valore del moltiplicatore (n) delle visualizzazioni nella formula dei migliori argomenti: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valore del moltiplicatore (n) dei mi piace sul primo messaggio nella formula dei migliori argomenti: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
-    top_topics_formula_least_likes_per_post_multiplier: "valore del moltiplicatore (n) dei mi piace per messaggio nella formula dei migliori argomenti: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "valore del moltiplicatore (n) del numero minimo di \"mi piace\" per messaggio nella formula dei migliori argomenti: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Consenti agli utenti di accedere alla modalità provvisoria per eseguire il debug dei plug-in."
     rate_limit_create_topic: "Dopo aver creato un argomento, gli utenti devono aspettare (n) secondi prima di poterne creare un altro."
     rate_limit_create_post: "Dopo aver inviato un messaggio, gli utenti devono aspettare (n) secondi prima di creare un altro messaggio. "
@@ -2157,7 +2157,7 @@ it:
     deactivated: "È stato disattivato a causa di troppe email rimbalzate a '%{email}'."
     deactivated_by_staff: "Disattivato dallo staff"
     activated_by_staff: "Attivato dallo staff"
-    new_user_typed_too_fast: "Il nuovo utente ha digitato troppo velocemente"
+    new_user_typed_too_fast: "Il nuovo utente ha scritto troppo velocemente"
     content_matches_auto_block_regex: "Il contenuto corrisponde al regex del blocco automatico"
     username:
       short: "deve essere almeno di %{min} caratteri"
@@ -2169,7 +2169,7 @@ it:
       must_begin_with_alphanumeric_or_underscore: "deve iniziare con una lettera, un numero o un underscore"
       must_end_with_alphanumeric: "deve terminare con una lettera o un numero"
       must_not_contain_two_special_chars_in_seq: "non deve contenere una sequenza di 2 o più caratteri speciali (.-_)"
-      must_not_end_with_confusing_suffix: "non deve finire con un suffisso confuso come .json o .png ecc."
+      must_not_end_with_confusing_suffix: "non deve finire con un suffisso fuorviante come .json o .png ecc."
     email:
       not_allowed: "non è permesso da quel fornitore di email. Per favore usa un altro indirizzo email."
       blocked: "non è permesso."
@@ -2208,7 +2208,7 @@ it:
 
       Se desideri continuare a ricevere aggiornamenti via email, puoi ignorare questa email.
   invite_mailer:
-    title: "Mailer Invito"
+    title: "Mailer di Invito"
     subject_template: "%{inviter_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
     text_body_template: |
       %{inviter_name} ti ha invitato a una discussione
@@ -2295,7 +2295,7 @@ it:
     title: "Mailer Nuova Versione con Note"
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
   flag_reasons:
-    off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
+    off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa che non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](%{base_path}/guidelines)."
     spam: "Il tuo messaggio è stato segnalato come **spam**: la comunità ritiene che sia pubblicità o qualcosa di natura meramente promozionale invece di essere utile o rilevante per l'argomento, come invece ci si aspetterebbe."
     notify_moderators: "Il tuo messaggio è stato segnalato **all'attenzione dei moderatori**: la comunità ritiene che ci sia qualcosa nel messaggio che richiede l'intervento manuale di un membro dello staff."
@@ -2371,9 +2371,9 @@ it:
     welcome_tl1_user:
       title: "Benvenuto utente TL1"
       subject_template: "Grazie per aver passato del tempo con noi"
-      text_body_template: "Ehilà! \n\nAbbiamo notato che hai ti sei dato un bel daffare con la lettura, il che è fantastico, quindi ti abbiamo promosso di un [Livello di Esperienza!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nSiamo davvero felici che tu stia trascorrendo del tempo con noi e ci piacerebbe sapere di più su di te. Prenditi un momento per [compilare il tuo profilo](%{base_url}/my/preferences/profile), o sentiti libero di [iniziare un nuovo argomento](%{base_url}/categories).\n"
+      text_body_template: "Salve! \nAbbiamo notato con molto piacere che hai letto molto, quindi ti abbiamo promosso al successivo [Livello di Esperienza!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nSiamo davvero felici che tu stia trascorrendo del tempo con noi e ci piacerebbe sapere di più su di te. Prenditi un momento per [compilare il tuo profilo](%{base_url}/my/preferences/profile), o sentiti libero di [iniziare un nuovo argomento](%{base_url}/categories).\n"
     welcome_invite:
-      title: "Invito Benvenuto"
+      title: "Invito di Benvenuto"
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
         Grazie per aver accettato l'invito a %{site_name} -- benvenuto!
@@ -2460,8 +2460,8 @@ it:
       subject_template: "Esportazione dati fallita"
       text_body_template: "Siamo spiacenti, ma l'esportazione dei dati è fallita. Per favore controlla i log o [contatta un membro dello staff](%{base_url}/about)."
     email_reject_insufficient_trust_level:
-      title: "Email Rifiutata Livello Esperienza Insufficiente"
-      subject_template: "[%{email_prefix}] Problema email -- Livello Esperienza Insufficiente"
+      title: "Email Rifiutata Livello attendibilità Insufficiente"
+      subject_template: "[%{email_prefix}] Problema email -- Livello attendibilità Insufficiente"
       text_body_template: |
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
@@ -2509,7 +2509,7 @@ it:
 
         La tua risposta è stata inviata da un indirizzo email diverso da quello previsto quindi non sappiamo se proviene dalla stessa persona. Prova a rispondere da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
     email_reject_empty:
-      title: "Email Rifiutata Vuota"
+      title: "Email vuota rifiutata"
       subject_template: "[%{email_prefix}] Problema email -- Nessun Contenuto"
       text_body_template: |
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
@@ -2518,7 +2518,7 @@ it:
 
         Se stai ricevendo questo messaggio e _hai_ inserito una risposta, riprova con una formattazione più semplice.
     email_reject_parsing:
-      title: "Email Rifiutata Lettura"
+      title: "Email Rifiutata in Lettura"
       subject_template: "[%{email_prefix}] Problema email -- Contenuto Non Riconosciuto"
       text_body_template: |
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
@@ -2577,7 +2577,7 @@ it:
         La chiave di risposta nella email non è valida o è sconosciuta, quindi non possiamo capire a cosa risponda questa email. [Contatta un membro dello staff](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "Email Rifiutata Indirizzo di Destinazione Errato"
-      subject_template: "[%{email_prefix}] Problema email -- Sconosciuto A: Indirizzo"
+      subject_template: "[%{email_prefix}] Problema email -- Indirizzo A: sconosciuto"
     email_reject_old_destination:
       title: "Email Rifiutate - Vecchia Destinazione"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica: stai tentando di rispondere a una vecchia notifica"
@@ -2720,8 +2720,8 @@ it:
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
     dashboard_problems:
-      title: "Problemi Cruscotto"
-      subject_template: "Nuovo avviso sul Cruscotto del tuo sito"
+      title: "Problemi dashboard"
+      subject_template: "Nuovo avviso sul dashboard del tuo sito"
       text_body_template: |
         Abbiamo alcuni nuovi consigli e raccomandazioni per te in base alle attuali impostazioni del sito.
 
@@ -2930,7 +2930,7 @@ it:
 
         %{respond_instructions}
     user_posted:
-      title: "Utente Pubblicato"
+      title: "Messaggio utente"
       subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2995,19 +2995,19 @@ it:
       new_topics: "Nuovi Argomenti"
       unread_notifications: "Notifiche Non Lette"
       unread_high_priority: "Notifiche ad Alta Priorità Non Lette"
-      liked_received: "Like ricevuti"
+      liked_received: "Mi piace ricevuti"
       new_users: "Nuovi utenti"
-      popular_topics: "Argomenti Di Successo"
+      popular_topics: "Argomenti popolari"
       follow_topic: "Segui questo topic"
       join_the_discussion: "Leggi Altro"
-      popular_posts: "Messaggi di Successo"
+      popular_posts: "Messaggi popolari"
       more_new: "Nuovo per te"
       subject_template: "[%{email_prefix}] Riepilogo"
-      unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Modifica %{email_preferences_link}, o %{unsubscribe_link} per annullare l'iscrizione."
+      unsubscribe: "Questo riepilogo ti viene inviato da %{site_link} quando sei assente da un po'. Modifica %{email_preferences_link}, o %{unsubscribe_link} per annullare l'iscrizione."
       your_email_settings: "le tue impostazioni email"
       click_here: "clicca qui"
       from: "%{site_name}"
-      preheader: "Un breve riepilogo dall'ultima tua visita il %{last_seen_at}"
+      preheader: "Un breve riepilogo dalla tua ultima visita il %{last_seen_at}"
     forgot_password:
       title: "Password Dimenticata"
       subject_template: "[%{email_prefix}] Reimposta password"
@@ -3034,7 +3034,7 @@ it:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Accesso Amministratore"
-      subject_template: "[%{email_prefix}] Login"
+      subject_template: "[%{email_prefix}] Accesso"
     account_created:
       title: "Account Creato"
       subject_template: "[%{email_prefix}] Il Tuo Nuovo Account"
@@ -3129,7 +3129,7 @@ it:
   site_setting_missing: "Deve essere impostata l'impostazione del sito `%{name}`."
   page_not_found:
     title: "Ops! La pagina richiesta non esiste oppure è privata."
-    popular_topics: "Di successo"
+    popular_topics: "Popolari"
     recent_topics: "Recenti"
     see_more: "Altro"
     search_title: "Cerca nel sito"
@@ -3148,7 +3148,7 @@ it:
     edit_reason: "copie locali delle immagini scaricate"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
     pasted_image_filename: "Immagine incollata"
-    store_failure: "Caricamento n°%{upload_id} fallito per l'utente n°%{user_id}."
+    store_failure: "Caricamento n. %{upload_id} fallito per l'utente n. %{user_id}."
     file_missing: "Spiacenti, devi fornire un file da caricare."
     empty: "Spiacenti, ma il file che hai fornito è vuoto."
     png_to_jpg_conversion_failure_message: "Si è verificato un errore durante la conversione da PNG a JPG."
@@ -3158,7 +3158,7 @@ it:
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
       larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
-      size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. E' forse danneggiata?"
+      size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. Forse è danneggiata?"
     placeholders:
       too_large: "(immagine più grande di %{max_size_kb}KB)"
   avatar:
@@ -3224,7 +3224,7 @@ it:
   tos_topic:
     title: "Termini del Servizio"
   privacy_topic:
-    title: "Politica della Privacy"
+    title: "Informativa sulla privacy"
     body: |
       <a name="collect"></a>
 
@@ -3352,7 +3352,7 @@ it:
       long_description: |
         Questo Distintivo viene assegnato per aver compilato il <a href="%{base_uri}/my/preferences/profile">tuo Profilo utente</a> e aver impostato un'immagine di profilo. Far sì che la comunità sappia qualcosa di te e dei tuoi interessi aiuta a creare un gruppo migliore e più coeso. Unisciti a noi!
     anniversary:
-      name: Compleanno
+      name: Anniversario
       description: Membro attivo per un anno, ha scritto almeno una volta
       long_description: |
         Questo distintivo è assegnato a chi è membro della comunità da almeno un anno e ha scritto, in quel periodo, almeno un messaggio. Grazie per essere rimasto nei paraggi e per aver contribuito alla comunità. Non potremmo farcela senza di te.
@@ -3388,17 +3388,17 @@ it:
         Questo distintivo è assegnato quando un tuo argomento ha ricevuto 50 "Mi piace". Hai iniziato una conversazione affascinante e la comunità è stata entusiasta dell'animata conversazione che ne è scaturita.
     nice_share:
       name: Piacevole Condivisione
-      description: Ha condiviso un messaggio con 25 visitatori unici
+      description: Ha condiviso un messaggio con 25 visitatori diversi
       long_description: |
         Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 25 visitatori esterni. Grazie per diffondere la parola circa le nostre discussioni e questa comunità.
     good_share:
       name: Buona Condivisione
-      description: Ha condiviso un messaggio con 300 visitatori unici
+      description: Ha condiviso un messaggio con 300 visitatori diversi
       long_description: |
         Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 300 visitatori esterni. Ottimo lavoro! Hai mostrato una bella discussione a un bel mucchio di persone e aiutato la crescita della comunità.
     great_share:
       name: Grande Condivisione
-      description: Ha condiviso un messaggio con 1000 visitatori unici
+      description: Ha condiviso un messaggio con 1000 visitatori diversi
       long_description: |
         Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 1000 visitatori esterni. Hai promosso un'interessante discussione per un'audience enorme, e aiutato tantissimo la crescita di questa comunità.
     first_like:
@@ -3442,7 +3442,7 @@ it:
       long_description: |
         Questo distintivo è assegnato la prima volta che citi un messaggio in una tua risposta. Citare le parti rilevanti di un messaggio precedente nelle tue risposte aiuta a mantenere coese e in tema le discussioni. Il modo più semplice di citare è selezionare una sezione di un messaggio e cliccare sul pulsante Rispondi. Cita a volontà!
     read_guidelines:
-      name: Linee Guida
+      name: Linee Guida lette
       description: Ha letto le <a href="%{base_uri}/guidelines">linee guida della comunità</a>
       long_description: |
         Questo distintivo è assegnato per <a href="%{base_uri}/guidelines">aver letto le linee guida della comunità</a>. Seguire e condividere queste semplici regole aiuta a costruire una comunità sicura, divertente e sostenibile per tutti. Ricorda sempre che dall'altra parte dello schermo ci sono esseri umani proprio come te. Sii sempre gentile!
@@ -3452,7 +3452,7 @@ it:
       long_description: |
         Questo distintivo è assegnato la prima volta che leggi un argomento lungo con più di 100 risposte. Leggere una conversazione attentamente ti aiuta a seguire la discussione, a comprendere punti di vista diversi, e conduce a conversazioni ancora più interessanti. Quanto più si legge, tanto è migliore la conversazione. Come ci piace dire, la Lettura è Fondamentale! :slight_smile:
     popular_link:
-      name: Collegamento Di Successo
+      name: Collegamento popolare
       description: Ha pubblicato un collegamento esterno con 50 clic
       long_description: |
         Questo distintivo è assegnato quando un collegamento che hai condiviso riceve 50 clic. Grazie per aver pubblicato un collegamento utile che ha aggiunto un contesto interessante alla conversazione!
@@ -3487,7 +3487,7 @@ it:
       long_description: |
         Questo distintivo è concesso quando usi tutti i tuoi %{max_likes_per_day} "Mi piace" quotidiani. Ricordarsi di dedicare un momento e di apprezzare i messaggi che ti piacciono e apprezzi incoraggia gli altri membri della community a creare discussioni ancora più interessanti in futuro.
     higher_love:
-      name: Pieno d'Amore
+      name: Adorato
       description: Ha messo %{max_likes_per_day} Mi piace al giorno per 5 volte
       long_description: |
         Questo distintivo è assegnato quando usi tutti i %{max_likes_per_day} mi piace giornalieri per 5 giorni. Grazie per aver dedicato del tempo ad incoraggiare le migliori conversazioni ogni giorno!
@@ -3533,7 +3533,7 @@ it:
         Questo distintivo è assegnato la prima volta che rispondi ad un messaggio tramite email :e-mail:.
     new_user_of_the_month:
       name: "Nuovo Utente del Mese"
-      description: Contributi eccezionali nel loro primo mese
+      description: Contributi eccezionali nel primo mese
       long_description: |
         Questo distintivo è assegnato per congratularsi con due nuovi utenti ogni mese per i loro ottimi contributi globali, misurati sulla frequenza dei like ricevuti per i loro messaggi e da chi li ha dati.
     enthusiast:
@@ -3553,7 +3553,7 @@ it:
         Questo distintivo è assegnato per aver visitato il sito per 365 giorni consecutivi. Wow, un intero anno!
     badge_title_metadata: "%{display_name}distintivo su %{site_title}"
   admin_login:
-    success: "email Inviata"
+    success: "Email inviata"
     errors:
       unknown_email_address: "Indirizzo email sconosciuto."
       invalid_token: "Token non valido."
@@ -3586,7 +3586,7 @@ it:
   finish_installation:
     congratulations: "Congratulazioni, hai installato Discourse!"
     register:
-      button: "Registrare"
+      button: "Registra"
       title: "Registrare Account Amministratore"
       help: "registrare un nuovo account per cominciare"
       no_emails: "Sfortunatamente, nessuna email amministratore è stata definita durante l'installazione, quindi potrebbe essere difficile completare la configurazione . Aggiungi una email sviluppatore nel file di configurazione o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea un account amministratore dalla console</a> ."
@@ -3597,7 +3597,7 @@ it:
       title: "Rispedire Email di Attivazione"
       message: "<p>Abbiamo rispedito una email di attivazione a <b>%{email}</b>"
   safe_mode:
-    title: "Modalità sicura"
+    title: "Avvia Modalità Sicura"
     description: "La modalità sicura ti consente di testare il tuo sito senza caricare plugin o personalizzazioni del sito."
     no_customizations: "Disabilita il tema corrente"
     only_official: "Disabilita i plugin non ufficiali"
@@ -3614,7 +3614,7 @@ it:
             description: "Qual è il linguaggio predefinito della tua comunità?"
       forum_title:
         title: "Nome"
-        description: "Il tuo nome è un segno visibile in lontananza, la <i>prima</i> cosa che i visitatori potenziali noteranno della tua comunità. Cosa dice il tuo nome e il tuo titolo della tua comunità?"
+        description: "Il tuo nome è un segno visibile in lontananza, la <i>prima</i> cosa che i visitatori potenziali noteranno sulla tua comunità. Cosa dice il tuo nome e il tuo titolo sulla tua comunità?"
         fields:
           title:
             label: "Il nome della tua comunità"
@@ -3631,7 +3631,7 @@ it:
         fields:
           welcome:
             label: "Argomento di Benvenuto"
-            description: "<p>Come descriveresti la tua comunità ad uno sconosciuto su un ascensore in circa 1 minuto?</p><ul><li>Per chi sono queste discussioni?</li><li>Cosa posso trovare qui?</li><li>Perché dovrei visitare il sito?</li></ul><p>Il tuo argomento di benvenuto è la prima cosa che i nuovi arrivati leggeranno. Pensalo come al <b>tuo paragrafo</b> 'discorso da ascensore' o 'dichiarazione di intenti'.</p>"
+            description: "<p>Come descriveresti la tua comunità ad uno sconosciuto su un ascensore in circa 1 minuto?</p><ul><li>Per chi sono queste discussioni?</li><li>Cosa posso trovare qui?</li><li>Perché dovrei visitare il sito?</li></ul><p>Il tuo argomento di benvenuto è la prima cosa che i nuovi arrivati leggeranno. Pensalo come un 'discorso in ascensore' o una 'dichiarazione di intenti' di <b>un paragrafo</b>.</p>"
             one_paragraph: "Restringi il tuo messaggio di benvenuto a un paragrafo."
             extra_description: "Se non si è sicuri, è possibile saltare questo passaggio e modificare l'argomento di benvenuto in un secondo momento."
       privacy:
@@ -3668,9 +3668,9 @@ it:
             description: "Pagina web di contatto generale per te o per la tua organizzazione. Sarà visualizzato sulla tua pagina <a href='%{base_path}/about' target='_blank'>informazioni</a>."
           site_contact:
             label: "Messaggi Automatici"
-            description: "Tutti i messaggi personali automatici di Discourse saranno inviati da questo utente, come avvisi di segnalazione e notifiche di completamento del backup."
+            description: "Tutti i messaggi personali automatici di Discourse, come avvisi di segnalazione e notifiche di completamento dei backup, saranno inviati da questo utente."
       corporate:
-        title: "Società"
+        title: "Organizzazione"
         description: "Queste informazioni saranno inserite nei tuoi <a href='%{base_path}/tos' target='blank'>Termini di Servizio</a>, che sono un Argomento aggiornabile nella Categoria Staff. Se non hai un'azienda, puoi anche saltare questo passo, per ora."
         fields:
           company_name:
@@ -3733,7 +3733,7 @@ it:
                 label: "Riquadri Categorie con Argomenti"
       invites:
         title: "Invita lo Staff"
-        description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per iniziare la tua comunità."
+        description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."
         disabled: "Poiché le connessioni locali sono disabilitate, non è possibile inviare inviti a nessuno. Per favore, prosegui con il passo successivo."
       finished:
         title: "Il tuo Discourse è Pronto!"

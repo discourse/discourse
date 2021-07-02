@@ -2190,20 +2190,20 @@ de:
       one: "Dieses Thema wurde automatisch %{count} Tag nach der letzten Antwort geschlossen. Es sind keine neuen Antworten mehr erlaubt."
       other: "Dieses Thema wurde automatisch %{count} Tage nach der letzten Antwort geschlossen. Es sind keine neuen Antworten mehr erlaubt."
     autoclosed_enabled_lastpost_hours:
-      one: "Dieses Thema wurde automatisch eine Stunde nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
-      other: "Dieses Thema wurde automatisch %{count} Stunden nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+      one: "Dieses Thema wurde automatisch %{count} Stunde nach der letzten Antwort geschlossen. Es sind keine neuen Antworten mehr erlaubt."
+      other: "Dieses Thema wurde automatisch %{count} Stunden nach der letzten Antwort geschlossen. Es sind keine neuen Antworten mehr erlaubt."
     autoclosed_enabled_lastpost_minutes:
-      one: "Dieses Thema wurde automatisch eine Minute nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
-      other: "Dieses Thema wurde automatisch %{count} Minuten nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+      one: "Dieses Thema wurde automatisch %{count} Minute nach der letzten Antwort geschlossen. Es sind keine neuen Antworten mehr erlaubt."
+      other: "Dieses Thema wurde automatisch %{count} Minuten nach der letzten Antwort geschlossen. Es sind keine neuen Antworten mehr erlaubt."
     autoclosed_disabled_days:
-      one: "Das Thema wurde automatisch nach %{count} Tag geöffnet."
-      other: "Das Thema wurde automatisch nach %{count} Tagen geöffnet."
+      one: "Dieses Thema wurde automatisch nach %{count} Tag geöffnet."
+      other: "Dieses Thema wurde automatisch nach %{count} Tagen geöffnet."
     autoclosed_disabled_hours:
-      one: "Das Thema wurde automatisch nach %{count} Stunde geöffnet."
-      other: "Das Thema wurde automatisch nach %{count} Stunden geöffnet."
+      one: "Dieses Thema wurde automatisch nach %{count} Stunde geöffnet."
+      other: "Dieses Thema wurde automatisch nach %{count} Stunden geöffnet."
     autoclosed_disabled_minutes:
-      one: "Das Thema wurde automatisch nach %{count} Minute geöffnet."
-      other: "Das Thema wurde automatisch nach %{count} Minuten geöffnet."
+      one: "Dieses Thema wurde automatisch nach %{count} Minute geöffnet."
+      other: "Dieses Thema wurde automatisch nach %{count} Minuten geöffnet."
     autoclosed_disabled_lastpost_days:
       one: "Dieses Thema wurde automatisch %{count} Tag nach der letzten Antwort geöffnet."
       other: "Dieses Thema wurde automatisch %{count} Tage nach der letzten Antwort geöffnet."
@@ -2213,38 +2213,38 @@ de:
     autoclosed_disabled_lastpost_minutes:
       one: "Dieses Thema wurde automatisch %{count} Minute nach der letzten Antwort geöffnet."
       other: "Dieses Thema wurde automatisch %{count} Minuten nach der letzten Antwort geöffnet."
-    autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
+    autoclosed_disabled: "Dieses Thema ist jetzt geöffnet. Neue Antworten sind erlaubt."
     autoclosed_disabled_lastpost: "Dieses Thema ist jetzt geöffnet. Neue Antworten sind erlaubt."
-    auto_deleted_by_timer: "Automatisch gelöscht durch Timer."
+    auto_deleted_by_timer: "Automatisch gelöscht durch Zeitschaltuhr."
   login:
     invalid_second_factor_method: "Die ausgewählte Methode zur Zwei-Faktor-Authentifizierung ist ungültig."
     not_enabled_second_factor_method: "Die ausgewählte Methode zur Zwei-Faktor-Authentifizierung ist für dich nicht aktiviert."
-    security_key_description: "Wenn Du Deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche \"Mit Sicherheitsschlüssel authentifizieren\"."
-    security_key_alternative: "Versuche einen anderen Weg"
+    security_key_description: "Wenn du deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche „Mit Sicherheitsschlüssel authentifizieren“."
+    security_key_alternative: "Versuche es anderweitig"
     security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
     security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
-    security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldeinformationen gefunden."
+    security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldedaten gefunden."
     security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
     security_key_invalid: "Beim Überprüfen des Sicherheitsschlüssels ist ein Fehler aufgetreten."
-    not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald dies geschehen ist."
+    not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald du dich anmelden kannst."
     incorrect_username_email_or_password: "Benutzername, E-Mail-Adresse oder Passwort falsch"
     incorrect_password: "Falsches Passwort"
     wait_approval: "Danke fürs Registrieren. Wir werden dich benachrichtigen, sobald dein Benutzerkonto genehmigt wurde."
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
-    activate_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail gesendet an <b>%{email}</b>. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
+    activate_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungs-E-Mail an <b>%{email}</b> geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
     not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als %{username} anmelden."
     admin_not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als Administrator anmelden."
     reset_not_allowed_from_ip_address: "Sie können kein Zurücksetzen des Kennworts von dieser IP-Adresse anfordern."
     suspended: "Du kannst dich bis zum %{date} nicht anmelden."
-    suspended_with_reason: "Dieser Benutzer ist bis zum %{date} suspendiert: %{reason}"
+    suspended_with_reason: "Konto gesperrt bis zum %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Nicht verfügbar. Versuche %{suggestion}?"
-    something_already_taken: "Etwas ist schief gelaufen. Möglicherweise ist der Benutzername bereits registriert. Probiere den 'Passwort vergessen'-Link."
+    something_already_taken: "Etwas ist schiefgelaufen. Vielleicht ist dieser Benutzername oder diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
     omniauth_error:
-      generic: "Entschuldigung, bei der Authentifizierung deines Kontos ist ein Fehler aufgetreten. Versuch es bitte noch einmal."
-      csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Bitte noch einmal versuchen."
-      request_error: "Ein Fehler ist beim Start der Anmeldung aufgetreten. Bitte noch einmal versuchen."
+      generic: "Entschuldige, bei der Authentifizierung deines Kontos ist ein Fehler aufgetreten. Versuche es bitte noch einmal."
+      csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Versuche es bitte noch einmal."
+      request_error: "Beim Start der Authentifizierung ist ein Fehler aufgetreten. Versuche es bitte noch einmal."
       invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server-Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"
@@ -2257,7 +2257,7 @@ de:
     reserved_username: "Der Benutzername ist nicht erlaubt."
     missing_user_field: "Du hast nicht alle Benutzerangaben ausgefüllt"
     auth_complete: "Authentifizierung ist abgeschlossen."
-    click_to_continue: "Klicke hier um fortzufahren."
+    click_to_continue: "Klicke hier, um fortzufahren."
     already_logged_in: "Entschuldigung! Diese Einladung richtet sich an neue Benutzer, die noch kein bestehendes Konto haben."
     second_factor_title: "Zwei-Faktor-Authentifizierung"
     second_factor_description: "Bitte gib den erforderlichen Authentifizierungscode aus deiner App ein:"
@@ -2269,7 +2269,7 @@ de:
     missing_second_factor_code: "Bitte geben Sie einen Code an."
     second_factor_toggle:
       totp: "Verwende stattdessen eine Authentifizierungs-App oder einen Sicherheitsschlüssel"
-      backup_code: "Benutze stattdessen einen Backup Code"
+      backup_code: "Benutze stattdessen einen Wiederherstellungscode"
   admin:
     email:
       sent_test: "gesendet!"
@@ -2286,7 +2286,7 @@ de:
         updating_user_ids: "Aktualisiere Benutzer-Ids..."
         deleting_source_user: "Lösche Quellbenutzer..."
   user:
-    deactivated: "Deaktiviert wegen zu vielen unzustellbaren E-Mails an '%{email}'."
+    deactivated: "Wurde aufgrund zu vieler unzustellbarer E-Mails an „%{email}“ deaktiviert."
     deactivated_by_staff: "Deaktiviert vom Team"
     deactivated_by_inactivity:
       one: "Automatische Deaktivierung nach %{count} Tag Inaktivität"
@@ -2294,7 +2294,7 @@ de:
     activated_by_staff: "Aktiviert vom Team"
     new_user_typed_too_fast: "Neuer Benutzer hat zu schnell getippt"
     content_matches_auto_silence_regex: "Inhalt entspricht der automatischen Stummschaltung-Regex"
-    content_matches_auto_block_regex: "Inhalt stimmt mit regulärem Auto-Block-Ausdruck überein"
+    content_matches_auto_block_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Block überein"
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
       long: "darf nicht länger als %{max} Zeichen sein"
@@ -2304,20 +2304,20 @@ de:
       blank: "muss angegeben werden"
       must_begin_with_alphanumeric_or_underscore: "muss mit einem Buchstaben, einer Zahl oder einem Unterstrich beginnen"
       must_end_with_alphanumeric: "muss mit einem Buchstaben oder einer Zahl abschließen"
-      must_not_contain_two_special_chars_in_seq: "muss keine Reihenfolge von 2 oder mehr Sonderzeichen (.-_) haben"
-      must_not_end_with_confusing_suffix: "Darf nicht mit einem Suffix wie json, png, etc. enden."
+      must_not_contain_two_special_chars_in_seq: "darf keine Folge von 2 oder mehr Sonderzeichen enthalten (.-_)"
+      must_not_end_with_confusing_suffix: "darf nicht mit einem irritierenden Suffix wie .json oder .png usw. enden"
     email:
       invalid: "ist ungültig."
-      not_allowed: "ist für diesen E-Mail-Provider nicht erlaubt. Bitte verwende eine andere E-Mail-Adresse."
+      not_allowed: "ist für diesen E-Mail-Anbieter nicht erlaubt. Bitte verwende eine andere E-Mail-Adresse."
       blocked: "ist nicht erlaubt."
-      revoked: "Sende keine E-Mails an '%{email}' bis %{date}."
+      revoked: "Es werden bis zum %{date} keine E-Mails an „%{email}“ verschickt."
       does_not_exist: "N / A"
     ip_address:
       blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
-      max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
+      max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere ein Team-Mitglied."
     website:
-      domain_not_allowed: "Webseite ist ungültig. Erlaubte Domains sind: %{domains}"
-    auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Seiteneinstellung auto_handle_queued_age."
+      domain_not_allowed: "Website ist ungültig. Erlaubte Domains sind: %{domains}"
+    auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Website-Einstellung auto_handle_queued_age."
     destroy_reasons:
       unused_staged_user: "Inaktives vorbereitetes Benutzerkonto"
       fixed_primary_email: "Primäre E-Mail-Adresse für vorbereitetes Benutzerkonto korrigiert"
@@ -2330,24 +2330,25 @@ de:
     already_suspended: "Benutzer wurde bereits von %{staff} %{time_ago}gesperrt."
   reviewables_reminder:
     submitted:
-      one: "Einträge wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
-      other: "Einträge wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
+      one: "Elemente wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
+      other: "Elemente wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
     subject_template:
-      one: "%{count} Beitrag benötigt eine Überprüfung"
-      other: "%{count} Beiträge benötigen eine Überprüfung"
+      one: "%{count} Element benötigt eine Überprüfung"
+      other: "%{count} Elemente benötigen eine Überprüfung"
   unsubscribe_mailer:
     title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."
     text_body_template: |
-      Jemand (womöglich du?) hat angefordert, nicht mehr länger E-Mail-Aktualisierungen von %{site_domain_name} an diese Adresse zu erhalten.
-      Wenn du dies bestätigen möchtest, klicke bitte diesen Link:
+      Jemand (womöglich du?) hat angefordert, nicht mehr länger E-Mail-Updates von %{site_domain_name} unter dieser Adresse zu erhalten.
+      Wenn du dies bestätigen möchtest, klicke bitte auf diesen Link:
 
       %{confirm_unsubscribe_link}
 
-      Wenn du weiterhin E-Mail-Aktualisierungen erhalten möchtest, kannst du diese E-Mail ignorieren.
+
+      Wenn du weiterhin E-Mail-Updates erhalten möchtest, kannst du diese E-Mail ignorieren.
   invite_mailer:
     title: "Einladung zu einem Thema"
-    subject_template: "%{inviter_name} hat dich eingeladen zum Thema '%{topic_title}' auf %{site_domain_name}"
+    subject_template: "%{inviter_name} hat dich zum Thema „%{topic_title}“ auf %{site_domain_name} eingeladen"
     text_body_template: |
       %{inviter_name} hat dich eingeladen zur Diskussion
 
@@ -2364,7 +2365,7 @@ de:
       %{invite_link}
   custom_invite_mailer:
     title: "Einladung zu einem Thema (mit Nachricht)"
-    subject_template: "%{inviter_name} hat dich eingeladen zum Thema '%{topic_title}' auf %{site_domain_name}"
+    subject_template: "%{inviter_name} hat dich zum Thema „%{topic_title}“ auf %{site_domain_name} eingeladen"
     text_body_template: |
       %{inviter_name} hat dich eingeladen zur Diskussion
 
@@ -2385,9 +2386,9 @@ de:
       %{invite_link}
   invite_forum_mailer:
     title: "Einladung zur Teilnahme"
-    subject_template: "%{inviter_name} hat dich eingeladen %{site_domain_name} beizutreten"
+    subject_template: "%{inviter_name} hat dich eingeladen, %{site_domain_name} beizutreten"
     text_body_template: |
-      %{inviter_name} hat dich eingeladen, der folgenden Seite beizutreten:
+      %{inviter_name} hat dich eingeladen, der folgenden Website beizutreten:
 
       > **%{site_title}**
       >
@@ -2398,9 +2399,9 @@ de:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "Einladung zum Forum (mit Nachricht)"
-    subject_template: "%{inviter_name} hat dich eingeladen %{site_domain_name} beizutreten"
+    subject_template: "%{inviter_name} hat dich eingeladen, %{site_domain_name} beizutreten"
     text_body_template: |
-      %{inviter_name} hat dich eingeladen, der folgenden Seite beizutreten:
+      %{inviter_name} hat dich eingeladen, der folgenden Website beizutreten:
 
       > **%{site_title}**
       >
@@ -2424,18 +2425,18 @@ de:
 
       (Falls der Link abgelaufen ist, wähle „Ich habe mein Passwort vergessen“, wenn du dich mit deiner E-Mail-Adresse anmeldest.)
   download_backup_mailer:
-    title: "Backup-Download Mailer"
-    subject_template: "[%{email_prefix}] Backup der Seite herunterladen"
+    title: "Back-up-Download-E-Mail"
+    subject_template: "[%{email_prefix}] Back-up der Website herunterladen"
     text_body_template: |
-      Hier ist der von dir angeforderte [Download-Link für das Backup](%{backup_file_path}).
+      Hier ist der von dir angeforderte [Download-Link für das Back-up der Website](%{backup_file_path}).
 
       Aus Sicherheitsgründen haben wir diesen Link an deine überprüfte E-Mail-Adresse geschickt.
 
-      (Wenn du diesen Download *nicht* angefordert hast, solltest du in Sorge sein -- jemand hat Administrationszugriff auf deine Seite.)
+      (Wenn du diesen Download *nicht* angefordert hast, solltest du in Sorge sein -- jemand hat Administrationszugriff auf deine Website.)
     no_token: |
-      Entschuldige, der Backup-Download-Link wurde schon verwendet oder ist abgelaufen.
+      Entschuldige, der Back-up-Download-Link wurde schon verwendet oder ist abgelaufen.
   admin_confirmation_mailer:
-    title: "Admin-Bestätigung"
+    title: "Administrator-Bestätigung"
     subject_template: "[%{email_prefix}] Bestätige neues Administrator-Konto"
     text_body_template: |
       Bitte bestätigen Sie, dass Sie **%{target_username} (%{target_email}) ** als Administrator für Ihr Forum hinzufügen möchten.
@@ -2518,24 +2519,24 @@ de:
 
       %{notes}
   flag_reasons:
-    off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community glaubt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
-    inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: die Community glaubt, dass er anstößig oder beleidigend ist oder einen Verstoß gegen [die Community Richtlinien](%{base_path}/guidelines) darstellt."
+    off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
+    inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig oder beleidigend ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
     spam: "Dein Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt, zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
-    notify_moderators: "Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Moderator erfordert."
+    notify_moderators: "Dein Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
   flags_dispositions:
-    agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt und sehen uns das an."
-    agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir waren auch der Meinung, dass es ein Problem gibt und haben den Beitrag gelöscht."
+    agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt, und sehen uns das an."
+    agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt, und haben den Beitrag gelöscht."
     disagreed: "Danke für deine Meldung. Wir sehen uns das an."
     ignored: "Danke für deine Meldung. Wir sehen uns das an."
     ignored_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag entfernt."
   temporarily_closed_due_to_flags:
-    one: "Dieses Thema wurde vorübergehend für mindestens %{count} Stunde gesperrt aufgrund einer großen Anzahl an Community-Meldungen."
-    other: "Dieses Thema wurde vorübergehend für mindestens %{count} Stunden geschlossen aufgrund einer großen Anzahl an Community_Meldungen."
+    one: "Dieses Thema wurde aufgrund einer großen Anzahl an Community-Meldungen vorübergehend für mindestens %{count} Stunde geschlossen."
+    other: "Dieses Thema wurde aufgrund einer großen Anzahl an Community-Meldungen vorübergehend für mindestens %{count} Stunden geschlossen."
   system_messages:
     private_topic_title: "Thema #%{id}"
     contents_hidden: "Bitte besuche den Beitrag, um die Inhalte zu sehen."
     post_hidden:
-      title: "Benachrichtigung: Beitrag versteckt"
+      title: "Beitrag versteckt"
       subject_template: "Beitrag versteckt wegen Community-Meldungen"
       text_body_template: |
         Hallo,
@@ -2546,11 +2547,11 @@ de:
 
         %{flag_reason}
 
-        Dieser Beitrag wurde wegen Meldungen der Community verborgen, deshalb prüfe bitte, wie du ihn überarbeiten kannst, um ihrem Feedback zu entsprechen. **Du kannst deinen Beitrag nach %{edit_delay} Minuten bearbeiten, und er wird automatisch wieder sichtbar.**
+        Dieser Beitrag wurde wegen Meldungen der Community verborgen, deshalb prüfe bitte, wie du ihn überarbeiten kannst, um ihrem Feedback zu entsprechen. **Du kannst deinen Beitrag nach %{edit_delay} Minuten bearbeiten und er wird automatisch wieder sichtbar.**
 
         Falls er jedoch noch einmal von der Community verborgen wird, bleibt er dies, bis ein Team-Mitglied ihn prüft.
 
-        Für zusätzliche Hinweise informiere dich bitte über unsere [Community Richtlinien](%{base_url}/guidelines).
+        Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     post_hidden_again:
       title: "Beitrag wieder ausgeblendet"
       subject_template: "Beitrag ausgeblendet wegen Community-Meldungen, Team wurde informiert"
@@ -2563,9 +2564,9 @@ de:
 
         %{flag_reason}
 
-        Die Community hat den Beitrag gemeldet und er ist nun verborgen. **Da er mehr als einmal verborgen wurde, wird er es bleiben, bis ein Team-Mitglied ihn prüft.**
+        Die Community hat den Beitrag gemeldet und er ist nun verborgen. **Da er mehr als einmal verborgen wurde, wird er so verbleiben, bis ein Team-Mitglied ihn prüft.**
 
-        Für zusätzliche Hinweise informiere dich bitte über unsere [Community Richtlinien](%{base_url}/guidelines).
+        Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     queued_by_staff:
       title: "Beitrag muss genehmigt werden"
       subject_template: "Beitrag vom Team ausgeblendet, warte auf Genehmigung"
@@ -2585,11 +2586,11 @@ de:
       text_body_template: |
         Hallo,
 
-        dies ist eine automatische Nachricht von %{site_name} um dich zu informieren, dass [dein Beitrag](%{base_url}%{url}) wiederhergestellt worden ist.
+        dies ist eine automatische Nachricht von %{site_name}, um dich zu informieren, dass [dein Beitrag](%{base_url}%{url}) wiederhergestellt worden ist.
 
-        Dieser Beitrag wurde von der Community gemeldet, und ein Team-Mitglied hat entschieden, ihn wiederherzustellen.
+        Dieser Beitrag wurde von der Community gemeldet und ein Team-Mitglied hat entschieden, ihn wiederherzustellen.
 
-        [details="Hier klicken um wiederhergestellten Beitrag auszuklappen"]
+        [details="Hier klicken, um wiederhergestellten Beitrag auszuklappen"]
         ``` markdown
         %{flagged_post_raw_content}
         ```
@@ -2600,7 +2601,7 @@ de:
       text_body_template: |
         Hallo,
 
-        Dies ist eine automatische Nachricht von %{site_name}, um dich darüber zu informieren, dass [dein Beitrag](%{base_url}%{url}) entfernt wurde.
+        dies ist eine automatische Nachricht von %{site_name}, um dich darüber zu informieren, dass [dein Beitrag](%{base_url}%{url}) entfernt wurde.
 
         %{flag_reason}
 
@@ -2610,7 +2611,7 @@ de:
         %{flagged_post_raw_content}
         ```
 
-        Bitte sieh dir unsere [Verhaltensregeln](%{base_url}/guidelines) für weitere Informationen an.
+        Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2620,7 +2621,7 @@ de:
       title: "Willkommen: Benutzer"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
-        Danke, dass du %{site_name} beigetreten bist, und willkommen!
+        Danke, dass du %{site_name} beigetreten bist – herzlich willkommen!
 
         %{new_user_tips}
 
@@ -2628,19 +2629,19 @@ de:
 
         Genieße deinen Aufenthalt!
     welcome_tl1_user:
-      title: "Willkommen VS1 Benutzer"
+      title: "Willkommen: VS1-Benutzer"
       subject_template: "Danke, dass du deine Zeit mit uns verbringst"
       text_body_template: |
-        Hey du. Wir sehen, dass du mit Lesen beschäftigt bist, was fantastisch ist, daher haben wir dich in eine höhere [Vertrauensstufe](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) befördert!
+        Hey, du. Wir sehen, dass du mit Lesen beschäftigt warst, was fantastisch ist, daher haben wir dich auf eine höhere [Vertrauensstufe](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) befördert!
 
-        Wir sind sehr froh, dass du deine Zeit mit uns verbringst und wir würden uns freuen, mehr über dich zu erfahren. Nimm’ dir etwas Zeit, um [dein Profil auszufüllen](%{base_url}/my/preferences/profile), oder zögere nicht [ein neues Thema zu beginnen](%{base_url}/categories).
+        Wir sind sehr froh, dass du deine Zeit mit uns verbringst, und wir würden uns freuen, mehr über dich zu erfahren. Nimm dir etwas Zeit, um [dein Profil auszufüllen](%{base_url}/my/preferences/profile), oder zögere nicht, [ein neues Thema zu beginnen](%{base_url}/categories).
     welcome_staff:
       title: "Begrüßungsteam"
       subject_template: "Herzlichen Glückwunsch, du hast den Status %{role} erhalten!"
       text_body_template: |
         Ein Team-Mitglied hat dir den Status „%{role}“ verliehen.
 
-        Als Mitglied von „%{role}“ hast du jetzt Zugriff auf die <a href='%{base_url}/admin' target='_blank'>Admin-Oberfläche</a>.
+        Als Mitglied von „%{role}“ hast du jetzt Zugriff auf die <a href='%{base_url}/admin' target='_blank'>Administrator-Oberfläche</a>.
 
         Mit großer Kraft geht große Verantwortung einher. Wenn du mit dem Moderieren noch nicht vertraut bist, dann lies bitte den [Moderationsleitfaden](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
@@ -2669,8 +2670,8 @@ de:
 
         Wir laden dich ein, dich weiter zu engagieren – es ist schön, dass du da bist.
     backup_succeeded:
-      title: "Backup erfolgreich"
-      subject_template: "Sicherung erfolgreich abgeschlossen"
+      title: "Back-up erfolgreich"
+      subject_template: "Back-up erfolgreich abgeschlossen"
       text_body_template: |
         Back-up erfolgreich erstellt.
 
@@ -2682,8 +2683,8 @@ de:
         %{logs}
         ```
     backup_failed:
-      title: "Backup fehlgeschlagen"
-      subject_template: "Sicherung fehlgeschlagen"
+      title: "Back-up fehlgeschlagen"
+      subject_template: "Back-up fehlgeschlagen"
       text_body_template: |
         Back-up ist fehlgeschlagen.
 
@@ -2755,56 +2756,56 @@ de:
       subject_template: "Datenexport fehlgeschlagen"
       text_body_template: "Es tut uns leid, aber dein Datenexport ist fehlgeschlagen. Bitte überprüfe die Protokolle oder [kontaktiere ein Team-Mitglied](%{base_url}/about)."
     email_reject_insufficient_trust_level:
-      title: "E-Mail abgelehnt weil Vertrauensstufe unzureichend"
-      subject_template: "[%{email_prefix}] E-Mail-Probme -- Vertrauensstufe nicht ausreichend"
+      title: "E-Mail abgelehnt, weil Vertrauensstufe unzureichend"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Vertrauensstufe nicht ausreichend"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
 
         Du hast nicht die erforderliche Vertrauensstufe, um neue Themen an diese E-Mail-Adresse zu schreiben. Wenn du denkst, dass dies ein Fehler ist, dann [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_user_not_found:
-      title: "E-Mail abgelehnt weil Benutzer nicht gefunden"
+      title: "E-Mail abgelehnt, weil Benutzer nicht gefunden"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer nicht gefunden"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
 
         Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_screened_email:
-      title: "E-Mail abgelehnt weil E-Mail-Adresse gesperrt"
+      title: "E-Mail abgelehnt, weil E-Mail-Adresse gesperrt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail-Adresse blockiert"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
 
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_not_allowed_email:
-      title: "E-Mail abgelehnt weil E-Mail-Adresse nicht erlaubt"
+      title: "E-Mail abgelehnt, weil E-Mail-Adresse nicht erlaubt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail blockiert"
       text_body_template: |
         Tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Betreff %{former_title}) hat nicht funktioniert.
 
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Versuche, von einer anderen E-Mail-Adresse zu schicken, oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_inactive_user:
-      title: "E-Mail abgelehnt weil Benutzer inaktiv"
+      title: "E-Mail abgelehnt, weil Benutzer inaktiv"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer inaktiv"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
-        Dein mit dieser E-Mail-Adresse verbundenes Benutzerkonto ist nicht aktiviert. Bitte aktiviere dein Konto bevor du E-Mails sendest.
+        Dein mit dieser E-Mail-Adresse verbundenes Benutzerkonto ist nicht aktiviert. Bitte aktiviere dein Konto, bevor du E-Mails sendest.
     email_reject_silenced_user:
-      title: "E-Mail abgelehnt weil Benutzer stummgeschaltet"
+      title: "E-Mail abgelehnt, weil Benutzer stummgeschaltet"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer stummgeschaltet"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Betreff %{former_title}) hat nicht funktioniert.
 
         Dein mit dieser E-Mail-Adresse verbundenes Konto wurde stummgeschaltet.
     email_reject_reply_user_not_matching:
-      title: "E-Mail abgelehnt weil E-Mail-Adresse abweichend"
+      title: "E-Mail abgelehnt, weil E-Mail-Adresse abweichend"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortadresse unerwartet"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
 
         Deine Antwort wurde von einer anderen E-Mail-Adresse als erwartet gesendet, sodass wir nicht sicher sind, ob dies die gleiche Person ist. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_empty:
-      title: "E-Mail abgelehnt weil kein Inhalt"
+      title: "E-Mail abgelehnt, weil kein Inhalt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
@@ -2813,7 +2814,7 @@ de:
 
         Wenn du diese E-Mail bekommst, obwohl deine E-Mail Inhalt enthalten hat, versuche es erneut mit weniger Formatierung.
     email_reject_parsing:
-      title: "E-Mail abgelehnt weil Inhalt nicht erkannt"
+      title: "E-Mail abgelehnt, weil Inhalt nicht erkannt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Inhalt nicht erkannt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
@@ -4411,7 +4412,7 @@ de:
               categories_only:
                 label: "nur Kategorien"
               categories_with_featured_topics:
-                label: "Kategorien mit empfohlenen Themen"
+                label: "Kategorien mit hervorgehobenen Themen"
               categories_and_latest_topics:
                 label: "Kategorien und aktuelle Themen"
               categories_and_top_topics:
@@ -4507,10 +4508,10 @@ de:
         description: "Meldung zustimmen und Benutzer stummschalten."
       agree_and_restore:
         title: "Beitrag wiederherstellen"
-        description: "Beitrag wiederherstellen, sodass alle Benutzer/-innen ihn sehen können."
+        description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
       agree_and_hide:
         title: "Beitrag verstecken"
-        description: "Verstecke diesen Beitrag und sende dem Benutzer/der Benutzerin eine Nachricht mit der Bitte, ihn zu bearbeiten."
+        description: "Verstecke diesen Beitrag und sende dem Benutzer automatisch eine Nachricht mit der Bitte, ihn zu bearbeiten."
       delete_single:
         title: "Löschen"
       delete:
