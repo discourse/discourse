@@ -45,14 +45,12 @@ task 'assets:precompile:css' => 'environment' do
     STDERR.puts "Start compiling CSS: #{Time.zone.now}"
 
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      next if ENV["PRECOMPILE_SHARED_MULTISITE_CSS"] == "1" && db != "default"
-
-      # css will get precompiled during first request if tables do not exist.
+      # CSS will get precompiled during first request if tables do not exist.
       if ActiveRecord::Base.connection.table_exists?(Theme.table_name)
-        STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
+        STDERR.puts "-------------"
+        STDERR.puts "Compiling CSS for #{db} #{Time.zone.now}"
         begin
           Stylesheet::Manager.precompile_css if db == "default"
-          STDERR.puts "Start compiling theme CSS for #{db} #{Time.zone.now}"
           Stylesheet::Manager.precompile_theme_css
         rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e
           STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
