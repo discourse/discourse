@@ -281,6 +281,8 @@ task 'assets:precompile' => 'assets:precompile:before' do
           max_compress = max_compress?(info["logical_path"], locales)
           if File.exists?(_path)
             STDERR.puts "Skipping: #{file} already compressed"
+          elsif file.include? "discourse/tests"
+            STDERR.puts "Skipping: #{file}"
           else
             proc.call do
               start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
