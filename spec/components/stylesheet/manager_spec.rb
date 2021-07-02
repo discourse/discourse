@@ -674,9 +674,6 @@ describe Stylesheet::Manager do
         Stylesheet::Manager.precompile_css
       end
 
-      # Ensure we force compile each theme only once
-      expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2)
-
       results = StylesheetCache.pluck(:target)
       expect(results.size).to eq(core_targets.size)
 
