@@ -57,13 +57,6 @@
 
 <section class="user-content">
   <div class="list-actions">
-    {{#unless site.mobileView}}
-      {{#if showToggleBulkSelect}}
-        {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
-        {{bulk-select-button selected=selected action=(route-action "refresh")}}
-      {{/if}}
-    {{/unless}}
-
     {{#if site.mobileView}}
       {{#if showNewPM}}
         {{d-button
@@ -72,12 +65,6 @@
           icon="envelope"
           label="user.new_private_message"}}
       {{/if}}
-    {{/if}}
-
-    {{#if bulkSelectEnabled}}
-      {{bulk-select-all
-        class="btn-default btn-select-all"
-        label="user.messages.select_all"}}
     {{/if}}
 
     {{#if isGroup}}
