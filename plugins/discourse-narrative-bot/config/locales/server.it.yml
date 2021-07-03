@@ -41,7 +41,7 @@ it:
 
         Se preferisci non continuare, va bene lo stesso. Io sono un robot. Non ferirai i miei sentimenti. :sob:
     dice:
-      trigger: "tira"
+      trigger: "tira il dado"
       invalid: |-
         Mi dispiace, è matematicamente impossibile lanciare quella combinazione di dadi. :confounded:
       not_enough_dice:

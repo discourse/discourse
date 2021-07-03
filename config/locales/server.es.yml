@@ -218,7 +218,7 @@ es:
     expired: "Tu token de invitación ha caducado.  <a href='%{base_url}/about'>Ponte en contacto con el personal</a>."
     not_found: "El código de invitación no es válido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro equipo</a>."
     not_found_json: "El código de invitación no es válido. Por favor, ponte en contacto con nuestro equipo."
-    not_matching_email: "Tu dirección de correo y la dirección asociada al token de invitación no coinciden. Contacta con la administración del sitio."
+    not_matching_email: "Tu dirección de correo electrónico y la dirección asociada al token de invitación no coinciden. Contacta con la administración del sitio."
     not_found_template: |
       <p>Tu invitación a <a href="%{base_url}">%{site_name}</a> ya ha sido utilizada.</p>
 
@@ -528,7 +528,7 @@ es:
               cant_send_pm: "Lo sentimos, no puedes enviar un mensaje personal a este usuario."
               no_user_selected: "Debes seleccionar un usuario válido."
               reply_by_email_disabled: "Las respuestas por correo electrónico han sido desactivadas."
-              send_to_email_disabled: "Lo sentimos, no puedes enviar mensajes personales a direcciones de correo."
+              send_to_email_disabled: "Lo sentimos, no puedes enviar mensajes personales a direcciones de correo electrónico."
               target_user_not_found: "No se pudo encontrar a uno de los usuarios a los que envías este mensaje."
               unable_to_update: "Hubo un error actualizando ese tema."
               unable_to_tag: "Hubo un error al etiquetar el tema."
@@ -823,11 +823,11 @@ es:
     authorizing_new:
       title: "Confirmar tu nuevo correo electrónico"
       description: "Confirma que quieres cambiar tu dirección de correo electrónico a:"
-      description_add: "Confirma que quieres añadir una dirección de correo alternativa:"
+      description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
     authorizing_old:
       title: "Cambiar tu dirección de correo electrónico"
       description: "Confirma el cambio de tu dirección de correo electrónico"
-      description_add: "Confirma que quieres añadir una dirección de correo alternativa:"
+      description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
       old_email: "Correo electrónico antiguo: %{email}"
       new_email: "Correo electrónico nuevo: %{email}"
       almost_done_title: "Confirmando la nueva dirección de correo electrónico"
@@ -984,7 +984,7 @@ es:
     mailing_list_mode: "Desactivar el modo lista de correo"
     all: "No enviarme ningún correo desde %{sitename}"
     different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo electrónico. Cierra sesión o entra en modo anónimo antes de intentarlo de nuevo."
-    not_found_description: "Lo sentimos, pero no hemos encontrado este enlace de baja. ¿Es posible que el enlace en el correo sea antiguo y haya expirado?"
+    not_found_description: "Lo sentimos, pero no hemos encontrado este enlace de baja. ¿Es posible que el enlace en el correo sea antiguo y haya caducado?"
     log_out: "Cerrar sesión"
     submit: "Guardar preferencias"
     digest_frequency:
@@ -1563,7 +1563,7 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     blocked_email_domains: "Lista de dominios de correo electrónico que no pueden ser utilizados para registrarse. Ejemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Una lista separada con barras verticales de dominios de correo electrónico que los usuarios DEBEN usar para registrar sus cuentas. ¡CUIDADO! No se permitirá el registro de usuarios cuyo correo electrónico sea de un dominio diferente a los aquí listados"
-    auto_approve_email_domains: "Los usuarios con direcciones de email de esta lista de dominios serán aprobados automáticamente."
+    auto_approve_email_domains: "Los usuarios con direcciones de correo electrónico de esta lista de dominios serán aprobados automáticamente."
     hide_email_address_taken: "No informar a los usuarios de la existencia de una cuenta con un correo electrónico dado durante el registro y desde el formulario de contraseña olvidada."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el Discourse Hub para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard <a href='<a href='%{base_path}/admin' target='_blank'>/admin' target='_blank'>/admin</a>."
@@ -1582,7 +1582,7 @@ es:
     block_common_passwords: "No permitir contraseñas que formen parte de las 10.000 contraseñas más comunes."
     auth_skip_create_confirm: Al registrarse a través de autenticación externa, saltarse la ventana de creación de cuenta. Funciona mejor si los ajustes auth_overrides_email, auth_overrides_username y auth_overrides_name están activados.
     auth_immediately: "Redireccionar automáticamente al sistema de inicio de sesión externo sin interacción del usuario. Solo funciona cuando el ajuste login_required está activado, y solo hay un método de autenticación externo."
-    enable_discourse_connect: "Activar inicio de sesión a través de DiscourseConnect (antiguamente «Discourse SSO») (CUIDADO: ¡LAS DIRECCIONES DE CORREO *DEBEN* SER VALIDADAS POR EL SITIO EXTERNO!)"
+    enable_discourse_connect: "Activar inicio de sesión a través de DiscourseConnect (antiguamente «Discourse SSO») (CUIDADO: ¡LAS DIRECCIONES DE CORREO ELECTRÓNICO *DEBEN* SER VALIDADAS POR EL SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Guardar registros detallados de diagnóstico de DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementar el proveedor de protocolo DiscourseConnect (antiguamente «Discourse SSO») en la ruta /session/sso_provider, discourse_connect_provider_secrets debe estar rellenado."
     discourse_connect_url: "URL del endpoint de DiscourseConnect (debe incluir http:// o https://)"
@@ -1846,7 +1846,7 @@ es:
     blocked_attachment_content_types: "Lista de palabras clave utilizadas para bloquear archivos adjuntos según el tipo de contenido."
     blocked_attachment_filenames: "Lista de palabras clave utilizadas para bloquear los archivos adjuntos según el nombre del archivo."
     forwarded_emails_behaviour: "Cómo tratar un correo electrónico enviado a Discourse"
-    always_show_trimmed_content: "Mostrar siempre la parte recortada de los correos electrónicos entrantes. AVISO: podría revelar direcciones de correo."
+    always_show_trimmed_content: "Mostrar siempre la parte recortada de los correos electrónicos entrantes. AVISO: podría revelar direcciones de correo electrónico."
     trim_incoming_emails: "Recortar las partes irrelevantes de mensajes de correo entrantes."
     private_email: "No incluir contenido de publicaciones o temas en el título o el cuerpo del correo electrónico. NOTA: también desactiva los boletines por correo electrónico."
     email_total_attachment_size_limit_kb: "Tamaño máximo de archivos adjuntos de mensajes de correo salientes en kB. Poner a 0 para desactivar el envío de adjuntos."
@@ -1858,13 +1858,13 @@ es:
     pop3_polling_enabled: "Poll vía POP3 para respuestas por correo electrónico."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
     pop3_polling_openssl_verify: "Verificar certificado TLS sel servidor (activado por defecto)"
-    pop3_polling_period_mins: "El período en minutos entre revisiones de correo de la cuenta POP3. NOTA: requiere reiniciar."
+    pop3_polling_period_mins: "El período en minutos entre revisiones de correo electrónico de la cuenta POP3. NOTA: requiere reiniciar."
     pop3_polling_port: "El puerto utilizado para hacer polling a la cuenta POP3."
     pop3_polling_host: "El host utilizado para hacer polling de correos electrónicos vía POP3."
     pop3_polling_username: "El nombre de usuario de la cuenta POP3 para hacer polling de correos electrónicos."
     pop3_polling_password: "La contraseña de la cuenta POP3 para hacer polling de correos electrónicos."
     pop3_polling_delete_from_server: "Eliminar correos electrónicos del servidor. NOTA: si desactivas esto, debes limpiar manualmente su bandeja de entrada de correo"
-    log_mail_processing_failures: "Registra todos los fallos de procesamiento de <a href='%{base_path}/logs' target='_blank'>/registros</a>"
+    log_mail_processing_failures: "Registra todos los fallos de procesamiento de correo electrónico en <a href='%{base_path}/logs' target='_blank'>/registros</a>"
     email_in: 'Permitir a los usuarios crear nuevos temas por correo electrónico (requiere el polling manual o pop3). Configura las direcciones en la pestaña «ajustes» de cada categoría.'
     email_in_min_trust: "El nivel de confianza mínimo requerido para poder publicar temas nuevos por correo electrónico."
     email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Consulta: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
@@ -3122,13 +3122,13 @@ es:
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
-      one: "ADVERTENCIA: has superado el límite de %{count} email diario. Revisa el sitio para ver las otras notificaciones que no te han llegado."
+      one: "ADVERTENCIA: has superado el límite de %{count} correo electrónico diario. Revisa el sitio para ver las otras notificaciones que no te han llegado."
       other: "Advertencia: enviamos un máximo de %{count} correos electrónicos por día. PD: ¡Gracias por ser tan popular!"
     in_reply_to: "En respuesta a"
     unsubscribe:
       title: "Cancelar suscripción"
       description: "¿No estás interesado en recibir estos correos? ¡No hay problema! Haz clic abajo para darte de baja de inmediatamente:"
-    reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este correo para publicar."
+    reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este correo electrónico para publicar."
     reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este correo electrónico para contestar a %{participants}."
     only_reply_by_email: "Responde a este correo electrónico para comentar."
     only_reply_by_email_pm: "Responde a este correo electrónico para contestar a %{participants}."
@@ -3607,7 +3607,7 @@ es:
     user_email_anonymous_user: "El usuario es anónimo"
     user_email_user_suspended_not_pm: "El usuario está suspendido, no es un mensaje"
     user_email_seen_recently: "El usuario ha sido visto recientemente"
-    user_email_notification_already_read: "La notificación sobre la que va el correo ya ha sido leída"
+    user_email_notification_already_read: "La notificación sobre la que va el correo electrónico ya ha sido leída"
     user_email_notification_topic_nil: "post.topic es nulo"
     user_email_post_user_deleted: "El usuario de la publicación ha sido eliminado."
     user_email_post_deleted: "la publicación fue eliminada por el autor"
@@ -4303,7 +4303,7 @@ es:
       message: "<p>Hemos enviado un correo de activación a <b>%{email}</b>. Sigue las instrucciones en el correo para activar tu cuenta.</p><p>Si no llega, revisa tu carpeta de spam y <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>asegúrate de configurar el correo electrónico correctamente</a>.</p>"
     resend_email:
       title: "Volver a enviar el correo electrónico de activación"
-      message: "<p>Hemos reenviado el correo de activación a <b>%{email}</b>"
+      message: "<p>Hemos reenviado el correo electrónico de activación a <b>%{email}</b>"
   safe_mode:
     title: "Activar modo seguro"
     description: "El modo seguro permite probar tu página sin cargar plugins o customizaciones."
@@ -4504,8 +4504,8 @@ es:
       category: "Los mensajes en esta categoría requieren la aprobación manual del personal. Consulta la configuración de la categoría."
       must_approve_users: "Todos los usuarios nuevos deben ser aprobados por el personal. Consulta «must_approve_users»."
       invite_only: "Todos los usuarios nuevos deben ser invitados. Consulta «invite_only»."
-      email_auth_res_enqueue: "Este correo falló la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo para más información."
-      email_spam: "Este correo se marcó como spam por el encabezado definido en «email_in_spam_header»."
+      email_auth_res_enqueue: "Este correo electrónico no superó la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo electrónico para más información."
+      email_spam: "Este correo electrónico se marcó como spam por el encabezado definido en «email_in_spam_header»."
       suspect_user: "Este usuario nuevo ingresó información de perfil sin haber leído ningún tema o publicación, lo cual sugiere claramente que podría tratarse de un spammer. Revisa «approve_suspect_users»."
       contains_media: "Esta publicación incluye medios incrustados. Ver «review_media_unless_trust_level»."
       queued_by_staff: "Un miembro del equipo cree que esta publicación debe ser revisada. Se mantendrá oculta hasta entonces."

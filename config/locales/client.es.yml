@@ -1253,7 +1253,7 @@ es:
         invalid: "Introduce una dirección de correo electrónico válida"
         authenticated: "Tu correo electrónico ha sido autenticado por %{provider}"
         invite_auth_email_invalid: "Tu correo electrónico de invitación no coincide con el correo electrónico autenticado por %{provider}"
-        authenticated_by_invite: "Tu correo ha sido autenticado a través de la invitación"
+        authenticated_by_invite: "Tu correo electrónico ha sido autenticado a través de la invitación"
         frequency_immediately: "Te enviaremos un correo electrónico inmediatamente si no has leído el asunto por el cual te estamos enviando el correo."
         frequency:
           one: "Solo te enviaremos un correo electrónico si no te hemos visto en el último minuto."
@@ -1659,12 +1659,12 @@ es:
     email_login:
       link_label: "Enviarme un enlace para iniciar sesión por correo electrónico"
       button_label: "con correo electrónico"
-      login_link: "Saltarse la contraseña y enviar por correo un enlace para iniciar sesión"
+      login_link: "Saltarse la contraseña y enviar por correo electrónico un enlace para iniciar sesión"
       emoji: "emoji de candado"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con un enlace para iniciar sesión en tu cuenta."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con un enlace para iniciar sesión en tu cuenta."
       complete_username_found: "Hemos encontrado una cuenta que coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con un enlace para iniciar sesión en tu cuenta."
-      complete_email_found: "Hemos encontrado una cuenta que coincide con <b>%{email}</b>, deberías recibir un email con un enlace para iniciar sesión en breve."
+      complete_email_found: "Hemos encontrado una cuenta que coincide con <b>%{email}</b>, deberías recibir un correo electrónico con un enlace para iniciar sesión en breve."
       complete_username_not_found: "No hay ninguna cuenta que coincida con el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "No hay ninguna cuenta que coincida con el correo electrónico <b>%{email}</b>"
       confirm_title: Continuar a %{site_name}
@@ -2566,7 +2566,7 @@ es:
         username_placeholder: "nombre de usuario"
         action: "Enviar invitación"
         help: "invitar a otros a este tema mediante correo electrónico o notificaciones"
-        to_forum: "Enviaremos un correo corto para que la persona pueda unirse inmediatamente haciendo clic en un enlace."
+        to_forum: "Enviaremos un correo electrónico breve para que la persona pueda unirse inmediatamente haciendo clic en un enlace."
         discourse_connect_enabled: "Escribe el nombre de usuario o correo electrónico de la persona a la que quieres invitar al tema."
         to_topic_blank: "Introduce el nombre de usuario o correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Has introducido una dirección de correo electrónico. Enviaremos una invitación a tu amigo que le permitirá responder inmediatamente a este tema."
@@ -2576,7 +2576,7 @@ es:
         success_email: "Hemos enviado una invitación a <b>%{invitee}</b>. Te avisaremos cuando se use. Comprueba el estado en la pestaña invitaciones."
         success_username: " Hemos invitado a ese usuario a participar en este tema."
         error: "Lo sentimos, no pudimos invitar a esa persona. ¿Tal vez ya fue invitada antes? (El número de invitaciones es limitado)"
-        success_existing_email: "Ya existe un usuario con el correo <b>%{emailOrUsername}</b>. Invitamos a ese usuario a participar en este tema."
+        success_existing_email: "Ya existe un usuario con el correo electrónico <b>%{emailOrUsername}</b>. Invitamos a ese usuario a participar en este tema."
       login_reply: "Inicia sesión para responder"
       filters:
         n_posts:
@@ -3779,7 +3779,7 @@ es:
           details: "Cuando se publica, edita, elimina o recupera una respuesta."
         user_event:
           name: "Evento de usuario"
-          details: "Cuando un usuario inicia o cierra sesión, confirma su correo, se registra, es aprobado o actualizado."
+          details: "Cuando un usuario inicia o cierra sesión, confirma su correo electrónico, se registra, es aprobado o actualizado."
         group_event:
           name: "Evento de grupo"
           details: "Cuando se crea, actualiza o destruye un grupo."
@@ -4386,7 +4386,7 @@ es:
             delete_group: "eliminar grupo"
         screened_emails:
           title: "Correos bloqueados"
-          description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
+          description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos electrónicos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
           email: "Correo electrónico"
           actions:
             allow: "Permitir"

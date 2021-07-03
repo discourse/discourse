@@ -2371,7 +2371,7 @@ it:
     welcome_tl1_user:
       title: "Benvenuto utente TL1"
       subject_template: "Grazie per aver passato del tempo con noi"
-      text_body_template: "Salve! \nAbbiamo notato con molto piacere che hai letto molto, quindi ti abbiamo promosso al successivo [Livello di Esperienza!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nSiamo davvero felici che tu stia trascorrendo del tempo con noi e ci piacerebbe sapere di più su di te. Prenditi un momento per [compilare il tuo profilo](%{base_url}/my/preferences/profile), o sentiti libero di [iniziare un nuovo argomento](%{base_url}/categories).\n"
+      text_body_template: "Salve! \nAbbiamo notato con piacere che hai letto molto, quindi ti abbiamo promosso al successivo [Livello di attendibilità!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nSiamo davvero felici che tu stia trascorrendo del tempo con noi e ci piacerebbe sapere di più su di te. Prenditi un momento per [compilare il tuo profilo](%{base_url}/my/preferences/profile), o sentiti libero di [iniziare un nuovo argomento](%{base_url}/categories).\n"
     welcome_invite:
       title: "Invito di Benvenuto"
       subject_template: "Benvenuto su %{site_name}!"
