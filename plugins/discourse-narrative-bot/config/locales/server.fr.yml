@@ -18,12 +18,12 @@ fr:
       name: Certifié
       description: "A terminé le tutoriel des nouveaux utilisateurs"
       long_description: |
-        Ce badge est décerné quand vous avez terminé avec succès le tutoriel interactif des nouveaux utilisateurs. Vous avez pris l'initiative d'apprendre les outils de base de la discussion et vous êtes maintenant certifié !
+        Ce badge est attribué quand vous terminez avec succès le tutoriel interactif des nouveaux utilisateurs. Vous avez pris l'initiative d'apprendre les outils de base de la discussion et vous êtes désormais certifié(e) !
     licensed:
       name: Certifié
       description: "A terminé le tutoriel utilisateur avancé"
       long_description: |
-        Ce badge est décerné quand vous avez terminé avec succès le tutoriel interactif des utilisateurs avancés. Vous avez pris l'initiative d'apprendre les outils avancés de la discussion et vous êtes maintenant certifié à 100% !
+        Ce badge est attribué quand vous terminez avec succès le tutoriel interactif des utilisateurs avancés. Vous avez pris l'initiative d'apprendre les outils avancés de la discussion et vous êtes désormais certifié(e) à 100 % !
   discourse_narrative_bot:
     bio: "Bonjour,\n\nJe ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez mon nom."
     tl2_promotion_message:

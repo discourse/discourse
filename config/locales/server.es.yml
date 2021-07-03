@@ -1362,7 +1362,7 @@ es:
     github_config_warning: 'El servidor está configurado para permitir registrarse e iniciar sesión con GitHub (enable_github_logins), pero la ID de cliente y el secreto no están configurados. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualízalos. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Mira esta guía para más información</a>.'
     s3_config_warning: 'El servidor está configurado para permitir subir archivos a S3, pero por al menos una de las siguientes configuraciones no se ha establecido: s3_access_key_id, s3_secret_access_key o s3_upload_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta «How to set up image uploads to S3?» para obtener más información</a>.'
     s3_backup_config_warning: 'El servidor está configurado para permitir subir copias de seguridad a S3, pero al menos una de las siguientes configuraciones no se ha establecido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_backup_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta «How to set up image uploads to S3?» para obtener más información</a>.'
-    s3_cdn_warning: 'El servidor está configurado para cargar los archivos a S3, pero no hay CDN de S3 configurado. Esto puede llevar a grandes costes de S3 y mal rendimiento del sitio. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consulta «Using Object Storage for Uploads» para obtener más detalles</a>.'
+    s3_cdn_warning: 'El servidor está configurado para subir los archivos a S3, pero no hay CDN de S3 configurado. Esto puede llevar a grandes costes de S3 y mal rendimiento del sitio. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consulta «Using Object Storage for Uploads» para obtener más detalles</a>.'
     image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="https://www.imagemagick.org/script/download.php" target="_blank">descarga la última versión</a>.'
     failing_emails_warning: 'Hay %{num_failed_jobs} tareas de correo electrónico que fallaron. Revisa tu app.yml y asegúrate de que la configuración del servidor de correo es correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Consulta las tareas que fallaron en Sidekiq</a>.'
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
@@ -2115,7 +2115,7 @@ es:
       max_username_length_exists: "No puedes establecer la longitud de usuario máxima por debajo del nombre de usuario más largo (%{username})."
       max_username_length_range: "No puedes establecer el máximo por debajo del mínimo."
       invalid_hex_value: "Los colores debe ser códigos hexadecimalesde 6 dígitos."
-      empty_selectable_avatars: "Debes cargar al menos dos avatares seleccionables antes de habilitar esta configuración."
+      empty_selectable_avatars: "Debes subir al menos dos avatares seleccionables antes de habilitar esta configuración."
       category_search_priority:
         low_weight_invalid: "El peso no puede ser mayor o igual a 1."
         high_weight_invalid: "El peso no puede ser menor o igual a 1."
@@ -2961,7 +2961,7 @@ es:
 
         Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_reply_to_digest:
-      title: "Correo de rechazo por respuesta al resumen"
+      title: "Correo electrónico de rechazo por respuesta al resumen"
       subject_template: "[%{email_prefix}] Problema de correo electrónico — Responder al resumen"
       text_body_template: |
         Lo sentimos, pero tu mensaje de correo electrónico a %{destination} (titulado %{former_title}) no ha funcionado.
@@ -3578,7 +3578,7 @@ es:
   image: "imagen"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
-    unauthorized: "Lo sentimos, el archivo que estás intentando cargar no está permitido (extensiones autorizadas: %{authorized_extensions})."
+    unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagen pegada"
     store_failure: "Falló el almacenamiento de la subida #%{upload_id} para el usuario #%{user_id}."
     file_missing: "Lo sentimos, debes incluir un archivo para subir."
@@ -4232,7 +4232,7 @@ es:
       long_description: |
         Esta insignia se concede la primera vez que publicas un enlace solo en una línea, que se expande automáticamente en un onebox con un resumen, título y (cuando esté disponible) imagen.
     first_reply_by_email:
-      name: Primera respuesta por correo
+      name: Primera respuesta por correo electrónico
       description: Respondió a una publicación por correo electrónico
       long_description: |
         Esta insignia se concede la primera vez que respondes a una publicación por correo electrónico :e-mail:.

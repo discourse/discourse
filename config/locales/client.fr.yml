@@ -117,7 +117,7 @@ fr:
       placeholder: date
     share:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
-      post: "message num. %{postNumber}"
+      post: "message #%{postNumber}"
       close: "fermer"
       twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
@@ -2069,7 +2069,7 @@ fr:
       full_page_title: "rechercher des sujets ou messages"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
-      post_format: "Numéro %{post_number} par %{username}"
+      post_format: "#%{post_number} par %{username}"
       results_page: "Résultats de recherche pour « %{term} »"
       more_results: "Il y a des résultats supplémentaires. Veuillez raffiner vos critères de recherche."
       cant_find: "Vous ne trouvez pas ce que vous cherchez ?"
@@ -2080,8 +2080,8 @@ fr:
       search_button: "Recherche"
       context:
         user: "Rechercher dans les messages de @%{username}"
-        category: "Rechercher dans la catégorie numéro %{category}"
-        tag: "Rechercher dans l'étiquette numéro %{tag}"
+        category: "Rechercher dans la catégorie #%{category}"
+        tag: "Rechercher dans l'étiquette #%{tag}"
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher dans les messages directs"
       advanced:
@@ -2752,7 +2752,7 @@ fr:
         publish_page: "Publication de pages"
         unhide: "Afficher"
         change_owner: "Changer de propriétaire"
-        grant_badge: "Décerner le badge"
+        grant_badge: "Attribuer le badge"
         lock_post: "Verrouiller le message"
         lock_post_description: "empêcher l'utilisateur de modifier ce message"
         unlock_post: "Déverrouiller le message"
@@ -2857,7 +2857,7 @@ fr:
         viewing_posts_by: "Affichage de %{post_count} messages par"
         viewing_subset: "Certaines réponses sont réduites"
         viewing_summary: "Affichage d'un résumé de ce sujet"
-        post_number: "%{username}, message numéro %{post_number}"
+        post_number: "%{username}, message #%{post_number}"
         show_all: "Tout afficher"
     category:
       can: "peut&hellip; "
@@ -3293,7 +3293,7 @@ fr:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
         other: "A reçu ce badge %{count} fois"
-      granted_on: "Décerné le %{date}"
+      granted_on: "Attribué le %{date}"
       others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
       allow_title: "Vous pouvez utiliser ce badge comme titre"
@@ -3305,8 +3305,8 @@ fr:
         one: "+%{count} autre"
         other: "+%{count} autres"
       granted:
-        one: "%{count} décerné"
-        other: "%{count} décernés"
+        one: "%{count} attribué"
+        other: "%{count} attribués"
       select_badge_for_title: Sélectionnez un badge qui vous servira de titre
       none: "(aucun)"
       successfully_granted: "%{badge} attribué à %{username} avec succès"
@@ -4273,7 +4273,7 @@ fr:
             unsuspend_user: "annuler la suspension de l'utilisateur"
             removed_suspend_user: "suspendre l'utilisateur (supprimé)"
             removed_unsuspend_user: "annuler la suspension de l'utilisateur (supprimé)"
-            grant_badge: "décerner le badge"
+            grant_badge: "attribuer le badge"
             revoke_badge: "retirer le badge"
             check_email: "vérifier l'adresse courriel"
             delete_topic: "supprimer le sujet"
@@ -4692,7 +4692,7 @@ fr:
           external_avatar_url: "URL de l'image de profil"
           last_payload: "Dernière charge utile"
           delete_sso_record: "Supprimer l'enregistrement SSO"
-          confirm_delete: "Êtes-vous sûr de vouloir supprimer cet enregistrement DiscourseConnect ?"
+          confirm_delete: "Voulez-vous vraiment supprimer cet enregistrement DiscourseConnect ?"
       user_fields:
         title: "Champs utilisateurs"
         help: "Ajoutez des champs que vos utilisateurs pourront remplir."
@@ -4705,7 +4705,7 @@ fr:
         edit: "Modifier"
         delete: "Supprimer"
         cancel: "Annuler"
-        delete_confirm: "Êtes-vous sûr de vouloir supprimer ce champ utilisateur ?"
+        delete_confirm: "Voulez-vous vraiment supprimer ce champ utilisateur ?"
         options: "Options"
         required:
           title: "Obligatoire à l'inscription ?"
@@ -4718,7 +4718,7 @@ fr:
         show_on_profile:
           title: "Afficher sur le profil public ?"
           enabled: "affiché dans le profil"
-          disabled: "pas affiché dans le profil"
+          disabled: "non affiché dans le profil"
         show_on_user_card:
           title: "Afficher sur la carte de l'utilisateur ?"
           enabled: "affiché sur la carte de l'utilisateur"
@@ -4726,7 +4726,7 @@ fr:
         searchable:
           title: "Indexable ?"
           enabled: "indexable"
-          disabled: "non-indexable"
+          disabled: "non indexable"
         field_types:
           text: "Zone de texte"
           confirm: "Confirmation"
@@ -4736,12 +4736,12 @@ fr:
         search: "Recherchez le texte que vous souhaitez modifier"
         title: "Texte"
         edit: "modifier"
-        revert: "Annuler les changements"
-        revert_confirm: "Êtes-vous sûr de vouloir annuler vos changements ?"
+        revert: "Annuler les modifications"
+        revert_confirm: "Voulez-vous vraiment annuler vos modifications ?"
         go_back: "Retour à la recherche"
         recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: "Afficher uniquement les textes modifiés"
-        locale: "Langue:"
+        locale: "Langue :"
         fallback_locale_warning: "Vous modifiez une langue basée sur %{fallback}. Les utilisateurs qui choisissent %{fallback} comme langue d'interface ne verront pas vos modifications."
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
       settings:
@@ -4751,7 +4751,7 @@ fr:
         none: "aucun"
       site_settings:
         emoji_list:
-          invalid_input: "La liste des émojis ne doit contenir que des noms d'émojis valides (ex: hugs)"
+          invalid_input: "La liste des émojis ne doit contenir que des noms d'émojis valides (p. ex., câlins)"
           add_emoji_button:
             label: "Ajouter émoji"
         title: "Paramètres"
@@ -4799,9 +4799,9 @@ fr:
           groups: "Groupes"
           dashboard: "Tableau de bord"
         secret_list:
-          invalid_input: "Les champs de saisi ne peuvent pas être vide ou contenir le caractère barre verticale"
+          invalid_input: "Les champs de saisie ne peuvent pas être vide ou contenir le caractère de la barre verticale"
         default_categories:
-          modal_description: "Voulez-vous appliquer ce changement rétroactivement ? Cela changera les préférences de %{count} utilisateurs existants."
+          modal_description: "Voulez-vous appliquer cette modification rétroactivement ? Cela affectera les préférences de %{count} utilisateurs existants."
           modal_yes: "Oui"
           modal_no: "Non, appliquer ce changement à partir de maintenant"
         simple_list:
@@ -4812,7 +4812,7 @@ fr:
       badges:
         title: Badges
         new_badge: Nouveau badge
-        new: Nouveaux
+        new: Nouveau
         name: Nom
         badge: Badge
         display_name: Nom affiché
@@ -4822,31 +4822,31 @@ fr:
         badge_grouping: Groupe
         badge_groupings:
           modal_title: Groupes de badges
-        granted_by: Décerné par
-        granted_at: Décerné le
+        granted_by: Attribué par
+        granted_at: Attribué à
         reason_help: (Lien vers un message ou un sujet)
         save: Enregistrer
         delete: Supprimer
-        delete_confirm: Êtes-vous sûr de vouloir supprimer ce badge ?
+        delete_confirm: Voulez-vous vraiment supprimer ce badge ?
         revoke: Retirer
         reason: Motif d'attribution
         expand: Développer &hellip;
-        revoke_confirm: Êtes-vous sûr de vouloir retirer ce badge ?
+        revoke_confirm: Voulez-vous vraiment révoquer ce badge ?
         edit_badges: Modifier les badges
-        grant_badge: Décerner le badge
-        granted_badges: Badges décernés
-        grant: Décerner
-        no_user_badges: "%{name} ne s'est vu décerner aucun badge."
-        no_badges: Il n'y a aucun badge pouvant être décerné.
+        grant_badge: Attribuer le badge
+        granted_badges: Badges attribués
+        grant: Attribuer
+        no_user_badges: "%{name} ne s'est vu attribuer aucun badge."
+        no_badges: Il n'y a aucun badge à attribuer.
         none_selected: "Sélectionnez un badge pour commencer"
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
-        multiple_grant: Peut être décerné plusieurs fois
+        multiple_grant: Peut être attribué plusieurs fois
         listable: Afficher le badge sur la page publique des badges
         enabled: Activer le badge
         icon: Icône
         image: Image
-        graphic: Image
-        icon_help: "Entrez un nom d'icône Font Awesome (utilisez le préfixe « far- » pour les icônes classiques et « fab- » pour les icônes de marques)"
+        graphic: Graphique
+        icon_help: "Saisissez un nom d'icône Font Awesome (utilisez le préfixe « far- » pour les icônes classiques et « fab- » pour les icônes de marques)"
         image_help: "L'envoi d'une image remplace le champ d'icône si les deux sont définis."
         select_an_icon: "Sélectionnez une icône"
         upload_an_image: "Envoyer une image"
@@ -4867,11 +4867,11 @@ fr:
           link_text: "Aperçu des badges accordés"
           plan_text: "Aperçu avec le plan de requête"
           modal_title: "Aperçu de la requête du badge"
-          sql_error_header: "Il y a une erreur avec la requête."
+          sql_error_header: "Une erreur s'est produite avec la requête."
           error_help: "Consulter les liens suivants pour obtenir de l'aide sur les requêtes de badge."
           bad_count_warning:
             header: "ATTENTION !"
-            text: "Certains badges n'ont pas été décernés. Ceci se produit lorsque la requête du badge retourne des identifiants d'utilisateurs ou de messages qui n’existent plus. Cela peut produire des résultats inattendus - veuillez vérifier votre requête."
+            text: "Certains badges n'ont pas été attribués. Ceci se produit lorsque la requête du badge retourne des identifiants d'utilisateurs ou de messages qui n’existent plus. Cela peut produire des résultats inattendus, veuillez vérifier votre requête."
           no_grant_count: "Aucun badge à assigner."
           grant_count:
             one: "<b>%{count}</b> badge à assigner."
@@ -4889,27 +4889,27 @@ fr:
           badge_query_examples_title: "Exemple de requête de badge"
         mass_award:
           title: Accorder en masse
-          description: Accordez le même badge à plusieurs utilisateurs à la fois.
+          description: Attribuez le même badge à plusieurs utilisateurs à la fois.
           no_badge_selected: Veuillez sélectionner un badge pour commencer.
-          perform: "Décerner ce badge à ces utilisateurs"
+          perform: "Attribuer ce badge à ces utilisateurs"
           upload_csv: Envoyez un fichier CSV contenant les adresses courriel ou les noms d'utilisateur
-          aborted: Envoyez d'abord un fichier CSV qui contienne des adresses de courriel ou des noms d'utilisateur
+          aborted: Envoyez d'abord un fichier CSV contenant des adresses de courriel ou des noms d'utilisateur
           success: Votre fichier CSV a été envoyé, les utilisateurs obtiendront leur badge d'ici peu de temps.
-          replace_owners: Retirer ce badge à ses détenteurs actuels non-listés dans le fichier
+          replace_owners: Retirer le badge des propriétaires précédents
       emoji:
         title: "Émoji"
-        help: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. (Conseil : glisser-déposer plusieurs fichiers en même temps)"
+        help: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. (Conseil : glissez-déposez plusieurs fichiers en même temps)"
         add: "Ajouter un nouvel émoji"
         uploading: "Envoi en cours…"
         name: "Nom"
         group: "Groupe"
         image: "Image"
         alt: "aperçu de l'émoji personnalisé"
-        delete_confirm: "Êtes-vous sûr de vouloir supprimer l'émoji :%{name}: ?"
+        delete_confirm: "Voulez-vous vraiment supprimer l'émoji :%{name}: ?"
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
-        confirm_delete: "Êtes-vous sûr de vouloir supprimer cet hôte ?"
-        sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous l'intégrer."
+        confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
+        sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous souhaitez l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
         class_name: "Nom de classe"
@@ -4919,9 +4919,9 @@ fr:
         add_host: "Ajouter un hôte"
         settings: "Paramètres d'intégration externe"
         crawling_settings: "Paramètres des robots d'indexation"
-        crawling_description: "Quand Discourse crée des sujets pour vos messages, si aucun flux RSS/ATOM n'est présent, il essayera d'extraire le contenu à partir du HTML. Parfois, cette extraction peut être difficile alors nous donnons la possibilité de définir des règles CSS pour faciliter l'extraction."
-        embed_by_username: "Nom d'utilisateur pour création de sujet"
-        embed_post_limit: "Le nombre maximum de messages à intégrer"
+        crawling_description: "Quand Discourse crée des sujets pour vos messages, si aucun flux RSS/ATOM n'est présent, la plateforme essaiera d'extraire le contenu à partir du HTML. Cette extraction peut parfois s'avérer difficile, nous donnons donc la possibilité de définir des règles CSS pour faciliter l'extraction."
+        embed_by_username: "Nom d'utilisateur pour la création de sujet"
+        embed_post_limit: "Le nombre maximal de messages à intégrer"
         embed_title_scrubber: "Expression régulière utilisée pour nettoyer le titre des messages"
         embed_truncate: "Tronquer les messages intégrés"
         embed_unlisted: "Les sujets importés seront invisibles jusqu'à la prochaine réponse."
@@ -4943,7 +4943,7 @@ fr:
         external_url: "URL externe ou relative"
         destination: "Cible"
         copy_to_clipboard: "Copier le permalien dans le presse-papier"
-        delete_confirm: Êtes-vous sûr de vouloir supprimer ce permalien ?
+        delete_confirm: Voulez-vous vraiment supprimer ce permalien ?
         form:
           label: "Nouveau :"
           add: "Ajouter"
@@ -4971,10 +4971,10 @@ fr:
       quit: "Peut-être plus tard"
       staff_count:
         one: "Votre communauté a %{count} responsable (vous)."
-        other: "Votre communauté a %{count} responsables, dont vous."
+        other: "Votre communauté a %{count} responsables, vous y compris."
       invites:
         add_user: "ajouter"
-        none_added: "Vous n'avez invité aucun responsable. Êtes-vous sûr de vouloir continuer ?"
+        none_added: "Vous n'avez invité aucun responsable. Voulez-vous vraiment continuer ?"
         roles:
           admin: "Administrateur"
           moderator: "Modérateur"

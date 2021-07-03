@@ -33,15 +33,15 @@ fr:
     - Décembre
     <<: *datetime_formats
   time:
-    am: "am"
-    pm: "pm"
+    am: " "
+    pm: " "
     <<: *datetime_formats
   title: "Discourse"
   topics: "Sujets"
   posts: "messages"
   views: "vues"
   loading: "Chargement"
-  powered_by_html: 'Propulsé par <a href="https://www.discourse.org">Discourse</a>, le rendu est meilleur quand JavaScript est activé.'
+  powered_by_html: 'Optimisé par <a href="https://www.discourse.org">Discourse</a>, le rendu est meilleur quand JavaScript est activé.'
   sign_up: "S'inscrire"
   log_in: "Se connecter"
   submit: "Envoyer"
@@ -49,47 +49,47 @@ fr:
   disable_remote_images_download_reason: "Le téléchargement des images externes a été désactivé faute de place suffisante sur le disque."
   anonymous: "Anonyme"
   remove_posts_deleted_by_author: "Supprimé par l'auteur"
-  redirect_warning: "Nous n'avons pas été en mesure de vérifier que le lien que vous avez sélectionné a bien été posté sur le forum. Si vous souhaitez quand même continuer, sélectionnez le lien ci-dessous."
+  redirect_warning: "Nous n'avons pas été en mesure de vérifier que le lien que vous avez sélectionné a bien été publié sur le forum. Si vous souhaitez quand même continuer, sélectionnez le lien ci-dessous."
   on_another_topic: "Sur un autre sujet"
   inline_oneboxer:
     topic_page_title_post_number: "numéro %{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} par %{username}"
   themes:
-    bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleur est invalide"
-    other_error: "Il y a eu un problème pendant la mise à jour du thème"
-    ember_selector_error: "Désolé, utiliser un sélecteur CSS nommé #ember ou .ember-view n'est pas permis, car ces noms sont générés dynamiquement au moment de l'exécution et sont amenés à changer au cours du temps, ce qui entraînera potentiellement des dysfonctionnements des définitions CSS. Veuillez choisir un autre sélecteur."
+    bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleurs est invalide"
+    other_error: "Une erreur s'est produite lors de la mise à jour du thème"
+    ember_selector_error: "Nous sommes désolés, utiliser un sélecteur CSS nommé #ember ou .ember-view n'est pas permis, car ces noms sont générés dynamiquement au moment de l'exécution et sont amenés à changer au cours du temps, ce qui entraînera potentiellement un dysfonctionnement des définitions CSS. Veuillez choisir un autre sélecteur."
     compile_error:
       unrecognized_extension: "Extension de fichier non reconnue : %{extension}"
     import_error:
       generic: Une erreur s'est produite lors de l'importation de ce thème
-      about_json: "Erreur d'importation : about.json n'existe pas ou est invalide. Êtes-vous sûr qu'il s'agit d'un thème Discourse ?"
+      about_json: "Erreur d'importation : about.json n'existe pas ou est invalide. Êtes-vous sûr(e) qu'il s'agit d'un thème Discourse ?"
       about_json_values: "about.json contient des valeurs invalides : %{errors}"
       modifier_values: "les modificateurs du fichier about.json contiennent des valeurs invalides : %{errors}"
       git: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
-      git_ref_not_found: "Impossible de récupérer la référence git: %{ref}"
+      git_ref_not_found: "Impossible de récupérer la référence git : %{ref}"
       unpack_failed: "Impossible de décompresser le fichier"
       file_too_big: "Le fichier non compressé est trop volumineux."
       unknown_file_type: "Le fichier que vous avez essayé d'envoyer ne semble pas être un thème Discourse valide."
-      not_allowed_theme: "`%{repo}` n'est pas dans la liste des thèmes autorisés (vérifier le paramètre général `allowed_theme_repos`)."
+      not_allowed_theme: "« %{repo} » n'est pas repris dans la liste des thèmes autorisés (vérifier le paramètre général « allowed_theme_repos »)."
     errors:
       component_no_user_selectable: "Les composants du thème ne peuvent pas être sélectionnés par les utilisateurs"
       component_no_default: "Les composants du thème ne peuvent pas être un thème par défaut"
-      component_no_color_scheme: "Les composants de thème ne peuvent pas avoir de palette de couleur"
-      no_multilevels_components: "Les thèmes incluant d'autres thèmes ne peuvent pas être inclus eux-mêmes"
+      component_no_color_scheme: "Les composants du thème ne peuvent pas avoir de palette de couleurs"
+      no_multilevels_components: "Les thèmes incluant des thèmes enfants ne peuvent pas être eux-mêmes des thèmes enfants"
       optimized_link: Les liens optimisés d'images sont éphémères et ne devraient pas être inclus dans le code source d'un thème.
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
-      data_type_not_a_number: "Le type `%{name}` n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
+      data_type_not_a_number: "Le type « %{name} » n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
       name_too_long: "Il y a un paramètre avec un nom trop long. Longueur maximum 255"
-      default_value_missing: "Le paramètre `%{name}` n'a pas de valeur par défaut"
-      default_not_match_type: "Le type de la valeur par défaut du paramètre `%{name}` ne correspond pas au type du paramètre."
-      default_out_range: "La valeur par défaut de paramètre `%{name}` n'est pas dans la plage spécifiée."
+      default_value_missing: "Le paramètre « %{name} » n'a pas de valeur par défaut"
+      default_not_match_type: "Le type de la valeur par défaut du paramètre « %{name} » ne correspond pas au type du paramètre."
+      default_out_range: "La valeur par défaut de paramètre « %{name} » n'est pas dans la plage spécifiée."
       enum_value_not_valid: "La valeur sélectionnée ne fait pas partie de la liste des choix possibles."
-      number_value_not_valid: "La nouvelle valeur n'est pas dans la plage autorisée."
+      number_value_not_valid: "La nouvelle valeur n'est comprise pas dans la plage autorisée."
       number_value_not_valid_min_max: "La valeur doit être comprise entre %{min} et %{max}."
       number_value_not_valid_min: "La valeur doit être supérieure ou égale à %{min}."
       number_value_not_valid_max: "La valeur doit être inférieure ou égale à %{max}."
-      string_value_not_valid: "La longueur de la nouvelle valeur n'est pas dans la plage autorisée."
+      string_value_not_valid: "La longueur de la nouvelle valeur n'est pas comprise dans la plage autorisée."
       string_value_not_valid_min_max: "La chaîne de caractères doit contenir entre %{min} et %{max} caractères."
       string_value_not_valid_min: "La chaîne de caractères doit contenir au moins %{min} caractères."
       string_value_not_valid_max: "La chaîne de caractères doit contenir au plus %{max} caractères."
@@ -103,27 +103,28 @@ fr:
       maximum_staged_user_per_email_reached: "Vous avez atteint le nombre maximal d'utilisateurs distants qui peuvent être créés par courriel."
       no_subject: "(aucun objet)"
       no_body: "(aucun texte)"
+      missing_attachment: "(La pièce jointe %{filename} est manquante)"
       errors:
-        empty_email_error: "Se produit quand le courriel reçu était vide."
+        empty_email_error: "Se produit quand le courriel reçu est vide."
         no_message_id_error: "Se produit quand le courriel n'a pas d'entête « Message-Id »."
         auto_generated_email_error: "Se produit quand l'entête « precedence » est : list, junk, bulk ou auto-reply, ou lorsque n'importe quel autre entête contient : auto-submitted, auto-replied ou auto-generated."
-        no_body_detected_error: "Se produit quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces-jointes."
+        no_body_detected_error: "Se produit quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces jointes."
         no_sender_detected_error: "Se produit lorsque nous n'avons pas trouvé une adresse courriel valide dans l'entête From."
-        from_reply_by_address_error: "Survient quand l'entête 'From' correspond à l'adresse courriel 'Reply by'."
+        from_reply_by_address_error: "Survient quand l'entête « From » correspond à l'adresse courriel « Reply by »."
         inactive_user_error: "Se produit quand l'expéditeur n'est pas actif."
-        silenced_user_error: "Se produit lorsque l'expéditeur a été mis sous silence."
-        bad_destination_address: "Se produit quand aucune des adresses courriel des champs To/Cc ne correspond à une adresse courriel entrante configurée."
-        strangers_not_allowed_error: "Se produit quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'est pas membre."
-        insufficient_trust_level_error: "Se produit quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie pour laquelle il n'a pas le niveau de confiance nécessaire."
+        silenced_user_error: "Se produit lorsque l'expéditeur a été mis en sourdine."
+        bad_destination_address: "Se produit quand aucune des adresses courriel reprises dans les champs To/Cc ne correspond à une adresse courriel entrante configurée."
+        strangers_not_allowed_error: "Se produit quand un utilisateur essaie de créer un nouveau sujet dans une catégorie dans laquelle il n'est pas membre."
+        insufficient_trust_level_error: "Se produit quand un utilisateur essaie de créer un nouveau sujet dans une catégorie pour laquelle il n'a pas le niveau de confiance nécessaire."
         reply_user_not_matching_error: "Se produit quand une réponse est venue d'une adresse courriel différente de celle où a été envoyée la notification."
         topic_not_found_error: "Se produit quand quelqu'un répond à un sujet qui a été supprimé."
-        topic_closed_error: "Se produit quand quelqu'un répond mais le sujet lié a été fermé."
+        topic_closed_error: "Se produit quand quelqu'un répond alors que le sujet lié a été fermé."
         bounced_email_error: "Le courriel est un rapport de courriel non délivré."
         screened_email_error: "Se produit quand l'adresse courriel de l'expéditeur est déjà sous surveillance."
         unsubscribe_not_allowed: "Se produit lorsque le désabonnement via courriel n'est pas autorisé pour cet utilisateur."
-        email_not_allowed: "Se produit quand l'adresse courriel n'est pas dans la liste autorisée ou est dans la liste des indésirables."
+        email_not_allowed: "Se produit quand l'adresse courriel n'est pas reprise dans la liste autorisée ou se trouve dans la liste des expéditeurs indésirables."
       unrecognized_error: "Erreur non reconnue"
-    secure_media_placeholder: "Masqué : Ce site a activé la sécurisation des médias. Visitez le sujet ou cliquez sur Afficher le média pour le voir."
+    secure_media_placeholder: "Masqué : ce site a activé la sécurisation des médias. Visitez le sujet ou cliquez sur « Afficher le média » pour le voir."
     view_redacted_media: "Afficher le média"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -136,11 +137,11 @@ fr:
       blank: ne peut être vide
       present: doit être vide
       confirmation: ! "ne correspond pas à %{attribute}"
-      empty: ne peut être vide
+      empty: ne peut pas être vide
       equal_to: doit être égal à %{count}
       even: doit être paire
       exclusion: est réservé
-      greater_than: doit être supérieure à %{count}
+      greater_than: doit être supérieur à %{count}
       greater_than_or_equal_to: doit être supérieur ou égal à %{count}
       has_already_been_used: "a déjà été utilisée"
       inclusion: n'est pas inclus dans la liste
@@ -149,9 +150,9 @@ fr:
       is_invalid_meaningful: "ne semble pas clair, la plupart des mots contiennent les mêmes lettres répétées."
       is_invalid_unpretentious: "ne semble pas clair, un ou plusieurs mots sont très longs ?"
       is_invalid_quiet: "ne semble pas clair, vouliez-vous le saisir en MAJUSCULES ?"
-      invalid_timezone: "« %{tz} » n'est pas fuseau horaire valide"
+      invalid_timezone: "« %{tz} » n'est pas un fuseau horaire valide"
       contains_censored_words: "contient les mots censurés suivants : %{censored_words}"
-      less_than: doit être inférieure à %{count}
+      less_than: doit être inférieur à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
       not_an_integer: doit être un entier
@@ -164,23 +165,23 @@ fr:
         one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
         many: "Impossible de supprimer l'enregistrement car un %{record} existe et en dépend"
       too_long:
-        one: est trop long (le maximum est de %{count} caractère)
-        other: est trop long (le maximum est de %{count} caractères)
+        one: 'est trop long (nombre maximal de caractères : %{count})'
+        other: 'est trop long (nombre maximal de caractères : %{count})'
       too_short:
-        one: est trop court (le minimum est de %{count} caractère)
-        other: est trop court (le minimum est de %{count} caractères)
+        one: 'est trop court (nombre minimal de caractères : %{count})'
+        other: 'est trop court (nombre minimal de caractères : %{count})'
       wrong_length:
-        one: c'est la mauvaise longueur (devrait être de %{count} caractère)
-        other: est de la mauvaise longueur (devrait être de %{count} caractères)
+        one: longueur erronée (devrait comprendre %{count} caractère)
+        other: longueur erronée (devrait comprendre %{count} caractères)
       other_than: "doit être différent de %{count}"
-      auth_overrides_username: "Le nom d'utilisateur doit être mis à jour du côté du fournisseur d'authentification, car le paramètre `auth_overrides_username` est activé."
+      auth_overrides_username: "Le nom d'utilisateur doit être mis à jour du côté du fournisseur d'authentification, car le paramètre « auth_overrides_username » est activé."
     template:
       body: ! "Des problèmes ont été rencontrés sur les champs suivants :"
       header:
         one: "%{count} erreur a empêché l'enregistrement de ce %{model}"
         other: ! "%{count} erreurs ont empêché l'enregistrement de ce %{model}"
     embed:
-      load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
+      load_from_remote: "Une erreur s'est produite lors du chargement de ce message."
     site_settings:
       invalid_category_id: "Vous avez spécifiez une catégorie qui n'existe pas"
       invalid_choice:
@@ -189,13 +190,13 @@ fr:
       default_categories_already_selected: "Vous ne pouvez pas sélectionner une catégorie qui est utilisée dans une autre liste."
       default_tags_already_selected: "Vous ne pouvez pas sélectionner une étiquette utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'envoi de fichiers sur S3 avant d'avoir renseigné le paramètre « s3_upload_bucket »."
-      enable_s3_uploads_is_required: "Vous ne pouvez pas activer l'inventaire sur S3 avant d'avoir activer les envois S3."
+      enable_s3_uploads_is_required: "Vous ne pouvez pas activer l'inventaire sur S3 avant d'avoir activé les envois S3."
       page_publishing_requirements: "La publication de pages ne peut pas être activée si la sécurisation des médias est activée."
-      s3_backup_requires_s3_settings: "Utiliser S3 comme emplacement de sauvegarde nécessite de renseigner le paramètre '%{setting_name}'."
+      s3_backup_requires_s3_settings: "Utiliser S3 comme emplacement de sauvegarde nécessite de renseigner le paramètre « %{setting_name} »."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour « s3_upload_bucket » et « s3_backup_bucket ». Choisissez un autre bucket ou utilisez un chemin d'accès différent pour chaque bucket."
       secure_media_requirements: "L'envoi de fichiers sur S3 doit être activé avant d'activer la sécurisation des médias."
       share_quote_facebook_requirements: "Vous devez définir un identifiant d'application Facebook pour activer le partage de citation vers Facebook."
-      second_factor_cannot_enforce_with_socials: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque des connexions sociales sont activées. Vous devez d'abord désactiver la connexion via : %{auth_provider_names}"
+      second_factor_cannot_enforce_with_socials: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque des connexions aux réseaux sociaux sont activées. Vous devez d'abord désactiver la connexion via : %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque les connexions locales sont désactivées."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Vous ne pouvez pas appliquer 2FA si DiscourseConnect est activé."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Vous ne pouvez pas désactiver les connexions locales lorsque l'authentification à deux facteurs est obligatoire. Veuillez désactiver l'obligation d'authentification à deux facteurs avant de désactiver les connexions locales."
@@ -203,70 +204,70 @@ fr:
       cors_origins_should_not_have_trailing_slash: "Vous ne devez pas ajouter la barre oblique finale (/) aux origines CORS."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
-      invalid_address: "Désolé, nous n'avons pas pu générer d'aperçu pour cette page web car le serveur « %{hostname} » n'a pas pu être trouvé. Au lieu d'un aperçu, seul un lien apparaîtra dans votre message. :cry:"
-      error_response: "Désolé, nous n'avons pas pu générer d'aperçu pour cette page web car le serveur a retourné le code d'erreur %{status_code}. Au lieu d'un aperçu, seul un lien apparaîtra dans votre message. :cry:"
+      invalid_address: "Nous sommes désolés, nous n'avons pas pu générer d'aperçu pour cette page Web car le serveur « %{hostname} » n'a pas pu être trouvé. Au lieu d'un aperçu, seul un lien apparaîtra dans votre message. :cry:"
+      error_response: "Nous sommes désolés, nous n'avons pas pu générer d'aperçu pour cette page Web car le serveur a retourné le code d'erreur %{status_code}. Au lieu d'un aperçu, seul un lien apparaîtra dans votre message. :cry:"
       missing_data:
-        one: "Désolé, nous n'avons pas pu générer d'aperçu pour cette page web car la balise oEmbed / OpenGraph suivante n'a pas pu être trouvée : %{missing_attributes}"
-        other: "Désolé, nous n'avons pas pu générer d'aperçu pour cette page web car les balises oEmbed / OpenGraph suivantes n'ont pas pu être trouvées : %{missing_attributes}"
+        one: "Nous sommes désolés, nous n'avons pas pu générer d'aperçu pour cette page Web car la balise oEmbed/OpenGraph suivante n'a pas pu être trouvée : %{missing_attributes}"
+        other: "Nous sommes désolés, nous n'avons pas pu générer d'aperçu pour cette page Web car les balises oEmbed/OpenGraph suivantes n'ont pas pu être trouvées : %{missing_attributes}"
   word_connector:
     comma: ", "
   invite:
     expired: "Votre jeton d'invitation a expiré. Veuillez <a href='%{base_url}/about'>contacter les responsables</a>."
-    not_found: "Votre jeton d'invitation est invalide. Veuillez <a href='%{base_url}/about'>contacter le personnel</a>."
-    not_found_json: "Votre jeton d'invitation est invalide. Veuillez contacter le personnel."
-    not_matching_email: "Votre adresse de courriel ne correspond pas à celle qui a été définie dans votre invitation. Nous vous invitons à joindre un responsable."
+    not_found: "Votre jeton d'invitation est invalide. Veuillez <a href='%{base_url}/about'>contacter les responsables</a>."
+    not_found_json: "Votre jeton d'invitation est invalide. Veuillez contacter les responsables."
+    not_matching_email: "Votre adresse de courriel ne correspond pas à celle qui a été définie dans votre invitation. Nous vous invitons à contacter un responsable."
     not_found_template: |
       <p>Votre invitation à <a href="%{base_url}">%{site_name}</a> a déjà été utilisée.</p>
 
-      <p>Si vous vous rappelez de votre mot de passe, vous pouvez vous <a href="%{base_url}/login">connecter</a>.</p>
+      <p>Si vous vous souvenez de votre mot de passe, vous pouvez vous <a href="%{base_url}/login">connecter</a>.</p>
 
-      <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser mot de passe</a>.</p>
+      <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser votre mot de passe</a>.</p>
     not_found_template_link: |
-      <p>L'invitation à <a href="%{base_url}">%{site_name}</a> a dépassé sa date d'expiration. Nous vous invitons à demander à la personne qui vous a invité de vous faire parvenir une nouvelle invitation.</p>
-    user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='%{base_path}/u/%{username}/summary'>a déjà un compte</a> !"
+      La date d'expiration de <p>l'invitation à <a href="%{base_url}">%{site_name}</a> a été dépassée. Nous vous invitons à demander à la personne qui vous a invité(e) de vous faire parvenir une nouvelle invitation.</p>
+    user_exists: "Inutile d'inviter <b>%{email}</b>, cette personne <a href='%{base_path}/u/%{username}/summary'>dispose déjà d'un compte !</a>"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
     invalid_email: "%{email} n'est pas une adresse de courriel valable."
     rate_limit:
       one: "Vous avez déjà envoyé %{count} invitation dans la journée, veuillez patienter %{time_left} avant de réessayer."
       other: "Vous avez déjà envoyé %{count} invitations dans la journée, veuillez patienter %{time_left} avant de réessayer."
-    confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
-    cant_invite_to_group: "Vous n'êtes pas autorisé à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
+    confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions figurant dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, veuillez vérifier votre dossier de courrier indésirable.</p>"
+    cant_invite_to_group: "Vous n'êtes pas autorisé(e) à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le ou la propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
     disabled_errors:
       discourse_connect_enabled: "Les invitations sont désactivées car DiscourseConnect est activé."
-      invalid_access: "Vous n'êtes pas autorisé à afficher la ressource demandée."
+      invalid_access: "Vous n'êtes pas autorisé(e) à afficher la ressource demandée."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     max_rows: "Les premières %{max_bulk_invites} invitations ont été envoyées. Essayez de diviser le fichier en parties plus petites."
     error: "Une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer plus tard."
   invite_link:
     email_taken: "Cette adresse courriel est déjà utilisée. Si vous possédez déjà un compte, veuillez vous connecter ou réinitialiser votre mot de passe."
-    max_redemptions_limit: "doit être entre 2 et %{max_limit}."
+    max_redemptions_limit: "doit être compris entre 2 et %{max_limit}."
   topic_invite:
     failed_to_invite: "L'utilisateur ne peut pas être invité dans ce sujet sans être membre d'un des groupes suivants : %{group_names}."
-    user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
-    muted_invitee: "Désolé, cet utilisateur vous a mis sous silence."
-    muted_topic: "Désolé, cet utilisateur a mis ce sujet sous silence."
-    receiver_does_not_allow_pm: "Désolé, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
-    sender_does_not_allow_pm: "Désolé, vous n'autorisez pas cet utilisateur à vous envoyer des messages directs."
+    user_exists: "Nous sommes désolés, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
+    muted_invitee: "Nous sommes désolés, cet utilisateur vous a mis en sourdine."
+    muted_topic: "Nous sommes désolés, cet utilisateur a mis ce sujet en sourdine."
+    receiver_does_not_allow_pm: "Nous sommes désolés, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
+    sender_does_not_allow_pm: "Nous sommes désolés, vous n'autorisez pas cet utilisateur à vous envoyer des messages directs."
     user_cannot_see_topic: "%{username} n'a pas la possibilité de consulter ce sujet."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer une nouvelle tâche pour l'instant."
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive au format .tar.gz."
     not_enough_space_on_disk: "Il n'y a pas assez d'espace sur le disque pour charger cette sauvegarde."
-    invalid_filename: "Le nom du fichier de sauvegarde contient des caractères invalides. Sont autorisés : a-z 0-9 . - _."
+    invalid_filename: "Le nom du fichier de sauvegarde contient des caractères invalides. Les caractères autorisés sont les lettres de « a » à « z », les chiffres de 0 à 9 et les caractères « . », « - », « _ »."
     file_exists: "Le fichier que vous essayez d'envoyer existe déjà."
   invalid_params: "Vous avez fourni des paramètres invalides pour la requête : %{message}"
-  not_logged_in: "Vous devez être connecté pour faire cela."
+  not_logged_in: "Vous devez être connecté(e) pour effectuer cette opération."
   not_found: "L'URL ou la ressource demandée n'a pas été retrouvée."
   invalid_access: "L'accès à la ressource demandée n'est pas autorisé."
   authenticator_not_found: "La méthode d'authentification n'existe pas ou a été désactivée."
-  invalid_api_credentials: "Vous n'êtes pas autorisé à voir cette ressource. Le nom d’utilisateur ou la clé API n'est pas valide."
-  provider_not_enabled: "Vous n'êtes pas autorisé à voir cette ressource. Le fournisseur d'authentification n'est pas activé."
-  provider_not_found: "Vous n'êtes pas autorisé à voir cette ressource. Le fournisseur d'authentification n'existe pas."
+  invalid_api_credentials: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le nom d’utilisateur ou la clé API n'est pas valide."
+  provider_not_enabled: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le fournisseur d'authentification n'est pas activé."
+  provider_not_found: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le fournisseur d'authentification n'existe pas."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
-  invalid_grant_badge_reason_link: "Motif d'octroi de badge non-admissible&nbsp;: ce lien n'est pas valide ou pointe vers un site extérieur à votre forum Discourse."
+  invalid_grant_badge_reason_link: "Le lien Discourse externe ou invalide n'est pas autorisé dans le motif du badge"
   email_template_cant_be_modified: "Ce modèle de courriel ne peut pas être modifié"
-  invalid_whisper_access: "Les murmures ne sont pas activés ou vous n'avez pas accès à la création des messages murmurés."
+  invalid_whisper_access: "Les murmures ne sont pas activés ou vous n'avez pas accès à la création des messages murmures."
   not_in_group:
     title_topic: "Vous devez demander l'adhésion au groupe « %{group} » pour voir ce sujet."
     request_membership: "Demande d'adhésion"
@@ -4235,17 +4236,17 @@ fr:
       name: Passionné
       description: A visité 10 jours consécutifs
       long_description: |
-        Ce badge est décerné pour avoir visité 10 jours consécutifs. Merci d'être resté avec nous pendant plus d'une semaine !
+        Ce badge est attribué lorsque vous vous connectez 10 jours de suite. Merci de nous avoir accompagnés pendant plus d'une semaine !
     aficionado:
       name: Aficionado
       description: A visité 100 jours consécutifs
       long_description: |
-        Ce badge est décerné pour avoir visité 100 jours consécutifs. C'est plus de trois mois !
+        Ce badge est attribué lorsque vous vous connectez 100 jours de suite. C'est plus de trois mois !
     devotee:
       name: Adepte
       description: A visité 365 jours consécutifs
       long_description: |
-        Ce badge est décerné pour avoir visité 365 jours consécutifs. Waouh, une année entière !
+        Ce badge est attribué lorsque vous vous connectez 365 jours de suite. Ouah ! Une année entière !
     badge_title_metadata: "Badge %{display_name} sur %{site_title}"
   admin_login:
     success: "Courriel envoyé"
