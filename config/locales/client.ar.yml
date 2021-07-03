@@ -416,7 +416,7 @@ ar:
       few: "عرض %{count} موضوعات جديدة"
       many: "عرض %{count} موضوعًا جديدًا"
       other: "عرض %{count} موضوع جديد"
-    preview: "المعاينة"
+    preview: "معاينة"
     cancel: "إلغاء"
     deleting: "جارٍ الحذف..."
     save: "حفظ التغييرات"
@@ -3685,7 +3685,7 @@ ar:
         please_upgrade: "يُرجى الترقية!"
         no_check_performed: "لم يتم التحقُّق من وجود تحديثات. تأكَّد أن sidekiq قيد التشغيل."
         stale_data: "لم يتم التحقُّق من توفُّر تحديثات مؤخرًا. تأكَّد أن sidekiq قيد التشغيل."
-        version_check_pending: "يبدو أنك قد حدَّثت مؤخرًت. رائع!"
+        version_check_pending: "يبدو أنك قد حدَّثت مؤخرًا. رائع!"
         installed_version: "المثبَّت"
         latest_version: "الحديثة"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
@@ -3783,57 +3783,57 @@ ar:
         title: "المجموعات"
         edit: "تعديل المجموعات"
         refresh: "تحديث"
-        about: "عدل عضوية المجموعة وأسماءها هنا"
+        about: "يمكنك تعديل عضوية المجموعة والأسماء من هنا"
         group_members: "أعضاء المجموعة"
-        delete: "احذف"
+        delete: "حذف"
         delete_confirm: "هل تريد حذف هذه المجموعة؟"
-        delete_failed: "تعذّر حذف المجموعة. إن كانت مجموعة آليّة، فلا يمكن تدميرها."
-        delete_owner_confirm: "هل تريد إزالة صلاحيات الإدارة من '%{username} ؟"
-        add: "اضافة"
-        custom: "مخصص"
-        automatic: "تلقائي"
-        group_owners: الملّاك
-        add_owners: اضف ملّاكً
-        none_selected: "اختر مجموعة للبدء"
-        no_custom_groups: "انشئ مجموعة جديدة مخصصة"
+        delete_failed: "يتعذَّر حذف المجموعة. إذا كانت هذه مجموعة تلقائية، فلا يمكن تدميرها."
+        delete_owner_confirm: "هل تريد إزالة صلاحيات المالك من \"%{username}\"؟"
+        add: "إضافة"
+        custom: "مخصَّصة"
+        automatic: "تلقائية"
+        group_owners: المالكون
+        add_owners: إضافة مالكين
+        none_selected: "حدِّد مجموعة للبدء"
+        no_custom_groups: "إنشاء مجموعة مخصَّصة جديدة"
       api:
-        generate_master: "توليد مفتاح API رئيسى"
-        none: "لا مفاتيح API نشطة حاليًّا."
-        user: "الاعضاء"
+        generate_master: "إنشاء مفتاح API رئيسى"
+        none: "لا توجد مفاتيح API نشطة حاليًا."
+        user: "المستخدم"
         title: "API"
-        created: أُنشئ في
+        created: تاريخ الإنشاء
         updated: تاريخ التحديث
         generate: "إنشاء"
-        revoke: "الغاء"
-        all_users: "جميع الاعضاء"
+        revoke: "إبطال"
+        all_users: "جميع المستخدمين"
         active_keys: "مفاتيح API النشطة"
-        manage_keys: أدِر المفاتيح
+        manage_keys: إدارة المفاتيح
         show_details: تفاصيل
         description: الوصف
-        no_description: (ما من وصف)
-        all_api_keys: كلّ مفاتيح API
+        no_description: (لا يوجد وصف)
+        all_api_keys: جميع مفاتيح API
         user_mode: مستوى المستخدم
         user_placeholder: أدخِل اسم المستخدم
-        description_placeholder: فيمَ سيُستعمل هذا المفتاح؟
-        save: احفظ
+        description_placeholder: ما الذي سيتم استخدام هذا المفتاح فيه؟
+        save: حفظ
         new_key: مفتاح API جديد
-        revoked: سُحب
-        continue: استمر
+        revoked: تاريخ الإبطال
+        continue: متابعة
         scopes:
-          action: اجراء
+          action: الإجراء
       web_hooks:
-        title: "Webhooks"
-        none: "لا يوجد Webhooks حاليا."
-        instruction: "Webhooks تسمح للموقع باشعار خدمات خارجية عند حدوث حدث محدد في الموقع. عندما يتم تفعيل ال Webhooks سوف يتم ارسال POST request لعنوان ال URL للخدمة."
-        detailed_instruction: "سيتم إرسال طلب منشور إلى عنوان URL المقدَّم عند وقوع الحدث المختار."
+        title: "خطافات الويب"
+        none: "لا توجد خطافات ويب حاليًا."
+        instruction: "تسمح خطافات الويب لمنصة Discourse بإرسال إشعارات إلى الخدمات الخارجية عند وقوع حدث محدَّد في الموقع. وعند تشغيل خطافات الويب، سيتم إرسال طلب POST إلى عنوان URL للخدمة."
+        detailed_instruction: "سيتم إرسال طلب POST إلى عنوان URL المقدَّم عند وقوع الحدث المختار."
         new: "خطاف ويب جديد"
-        create: "أنشئ"
-        save: "احفظ"
-        destroy: "أحذف"
+        create: "إنشاء"
+        save: "حفظ"
+        destroy: "حذف"
         description: "الوصف"
-        controls: "التحكم"
+        controls: "عناصر التحكم"
         go_back: "العودة إلي القائمة"
-        payload_url: "عناون URL للحمولة"
+        payload_url: "عنوان URL للحمولة"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "يجب ألا يحتوي الرمز السري على أية فواصل."
         secret_too_short: "يجب أن يكون الرمز السري 12 حرفا على الأقل."
@@ -3844,7 +3844,7 @@ ar:
         event_chooser: "اي احداي يجب ان تفعل هذا الwebhook؟"
         wildcard_event: "ارسل إلى كل شئ."
         individual_event: "حدد احداث مفردة."
-        verify_certificate: "تحقق من شهادة TLS لعنوان URL للحمولة"
+        verify_certificate: "تحقَّق من شهادة TLS لعنوان URL للحمولة"
         active: "فعل"
         active_notice: "سوف يتم ارسال تفاصيل الحدث عند حدوثة."
         topic_event:
