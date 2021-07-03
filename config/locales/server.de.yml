@@ -4012,27 +4012,27 @@ de:
       name: Anwärter
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Nutzen aller wesentlichen Community-Funktionen
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 1 erreichst. Danke, dass du dabeigeblieben bist und ein paar Themen gelesen hast um zu lernen, worum es in unserer Community geht. Für dich gelten die Einschränkungen für neue Nutzer nicht mehr und du hast nun Zugriff auf alle wichtigen Funktionen, beispielsweise persönliche Nachrichten, die Melden-Funktion, das Bearbeiten von Wiki-Beiträgen und die Fähigkeit, mehrere Bilder und Links in Beiträgen zu verwenden.
+        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 1 erreichst. Danke, dass du dabeigeblieben bist und ein paar Themen gelesen hast, um zu lernen, worum es in unserer Community geht. Für dich gelten die Einschränkungen für neue Benutzer nicht mehr und du hast nun Zugriff auf alle wichtigen Funktionen, beispielsweise persönliche Nachrichten, die Melden-Funktion, das Bearbeiten von Wiki-Beiträgen und die Fähigkeit, mehrere Bilder und Links in Beiträgen zu verwenden.
     member:
       name: Mitglied
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> den Versand von Einladungen, Gruppen-Nachrichten sowie mehr Likes
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> den Versand von Einladungen und Gruppen-Nachrichten sowie die Vergabe von mehr „Gefällt mir“
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 2 erreichst. Danke, dass du einige Wochen mitgemacht hast, um unserer Community richtig beizutreten. Du kannst nun von deiner Benutzerseite und einzelnen Themen-Seiten aus Einladungen versenden, Gruppennachrichten erstellen und mehr Likes pro Tag vergeben.
+        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 2 erreichst. Danke, dass du einige Wochen mitgemacht hast, um unserer Community richtig beizutreten. Du kannst nun von deiner Benutzerseite und einzelnen Themen-Seiten aus Einladungen versenden, Gruppennachrichten erstellen und mehr „Gefällt mir“ pro Tag vergeben.
     regular:
       name: Stammgast
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung verfolgbarer Links, die Umwandlung eines Beitrags in ein Wiki sowie mehr Likes
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung verfolgbarer Links, die Umwandlung eines Beitrags in ein Wiki sowie die Vergabe von mehr „Gefällt mir“
       long_description: |
         Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du in unserer Community über mehrere Monate ein Stammgast gewesen bist. Du bist nun einer unserer aktivsten Leser und ein zuverlässiges Mitglied, das diese Community großartig macht. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen, eine private Lounge nutzen und kannst viel mehr Likes pro Tag erhalten.
     leader:
       name: Anführer
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Bearbeiten aller Beiträge, das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen sowie mehr Likes
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Bearbeiten aller Beiträge, das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen sowie die Vergabe von mehr „Gefällt mir“
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 4 erreichst. Du bist ein vom Team ausgezeichneter Anführer und hast durch deine Aktivität und Worte ein positives Beispiel für die übrige Community abgegeben. Du kannst alle Beiträge bearbeiten und Moderator-Aktionen wie das Anheften, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen.
+        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 4 erreichst. Du bist ein vom Team ausgezeichneter Anführer und hast durch deine Aktivität und Worte ein positives Beispiel für die übrige Community abgegeben. Du kannst alle Beiträge bearbeiten und Moderator-Aktionen wie das Anheften, Schließen, Ausblenden, Archivieren, Teilen und Zusammenführen von Themen durchführen.
     welcome:
       name: Willkommen
-      description: Hat ein Like erhalten
+      description: Hat ein „Gefällt mir“ erhalten
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du den ersten Like auf einen Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
+        Dieses Abzeichen wird verliehen, wenn du das erste „Gefällt mir“ bei einem Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
     autobiographer:
       name: Autobiograf
       description: Hat <a href="%{base_uri}/my/preferences/profile">Benutzerprofil</a> ausgefüllt
@@ -4052,22 +4052,22 @@ de:
       name: Gute Antwort
       description: Hat 25 Likes für eine Antwort erhalten
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn eine deiner Antworten 25 Likes erhält. Deine Antwort war außergewöhnlich und hat den Dialog viel interessanter gemacht.
+        Dieses Abzeichen wird verliehen, wenn eine deiner Antworten 25 „Gefällt mir“-Angaben erhält. Deine Antwort war außergewöhnlich und hat den Dialog viel interessanter gemacht.
     great_post:
       name: Großartige Antwort
-      description: Hat 50 Likes für eine Antwort erhalten
+      description: Hat 50 „Gefällt mir“ für eine Antwort erhalten
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn eine deiner Antworten 50 Likes erhält. Wow! Deine Antwort war inspirierend, faszinierend, wahnsinnig komisch oder aufschlussreich und die Community hat sie geliebt.
+        Dieses Abzeichen wird verliehen, wenn eine deiner Antworten 50 „Gefällt mir“-Angaben erhält. Wow! Deine Antwort war inspirierend, faszinierend, wahnsinnig komisch oder aufschlussreich und die Community hat sie geliebt.
     nice_topic:
       name: Schönes Thema
-      description: Hat 10 Likes für ein Thema erhalten
+      description: Hat 10 „Gefällt mir“ für ein Thema erhalten
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn eines deiner Themen 10 Likes erhält. Du hast einen interessanten Dialog begonnen, den die Community genossen hat!
+        Dieses Abzeichen wird verliehen, wenn eines deiner Themen 10 „Gefällt mir“-Angaben erhält. Du hast einen interessanten Dialog begonnen, den die Community genossen hat!
     good_topic:
       name: Gutes Thema
-      description: Hat 25 Likes für ein Thema erhalten
+      description: Hat 25 „Gefällt mir“ für ein Thema erhalten
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn eines deiner Themen 25 Likes erhält. Du hast einen lebendigen Dialog gestartet, die die Community versammelt hat.
+        Dieses Abzeichen wird verliehen, wenn eines deiner Themen 25 „Gefällt mir“-Angaben erhält. Du hast einen lebendigen Dialog gestartet, die die Community versammelt hat.
     great_topic:
       name: Großartiges Thema
       description: Hat 50 „Gefällt mir“ für ein Thema erhalten
@@ -4105,19 +4105,19 @@ de:
         Das Abzeichen wird verliehen, wenn du jemanden mit der „Einladen“-Schaltfläche auf deiner Benutzerseite dazu einlädst, der Community beizutreten. Freunde einzuladen, die an bestimmten Diskussionen interessiert sind, ist eine großartige Art, neue Leute mit unserer Community vertraut zu machen, also danke!
     campaigner:
       name: Aktivist
-      description: Hat 3 Anwärter (Vertrauensstufe 1) eingeladen
+      description: Hat 3 Anwärter eingeladen
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 3 Leute eingeladen hast, die daraufhin genug Zeit auf der Site verbracht haben, um Anwärter zu werden. Eine lebendige Community benötigt eine regelmäßige Infusion mit Neulingen, die sich regelmäßig beteiligen und neue Stimmen zum Dialog ergänzen.
+        Dieses Abzeichen wird verliehen, wenn du 3 Leute eingeladen hast, die daraufhin genug Zeit auf der Website verbracht haben, um Anwärter zu werden. Eine lebendige Community benötigt eine regelmäßige Infusion mit Neulingen, die sich regelmäßig beteiligen und neue Stimmen zum Dialog ergänzen.
     champion:
       name: Verfechter
-      description: Hat 5 Mitglieder (Vertrauensstufe 2) eingeladen
+      description: Hat 5 Mitglieder eingeladen
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 5 Leute eingeladen hast, die daraufhin genug Zeit auf der Site verbracht haben, um vollwertige Mitglieder zu werden. Wow! Danke dafür, dass du die Vielfalt unserer Community mit neuen Mitgliedern erweiterst!
+        Dieses Abzeichen wird verliehen, wenn du 5 Leute eingeladen hast, die daraufhin genug Zeit auf der Website verbracht haben, um vollwertige Mitglieder zu werden. Wow! Danke dafür, dass du die Vielfalt unserer Community mit neuen Mitgliedern erweiterst!
     first_share:
-      name: Erste Weitergabe
+      name: Erste Verbreitung
       description: Hat einen Beitrag geteilt
       long_description: |
-        Das Abzeichen wird verliehen, wenn du das erste Mal einen Link zu einer Antwort oder einem Thema mit der „Teilen“-Schaltfläche teilst. Das Teilen von Links ist einer großartiger Weg, um interessanten Diskussionen dem Rest der Welt zur Schau zu stellen und die Community wachsen zu lassen.
+        Das Abzeichen wird verliehen, wenn du das erste Mal einen Link zu einer Antwort oder einem Thema mit der „Teilen“-Schaltfläche teilst. Das Teilen von Links ist ein großartiger Weg, um interessanten Diskussionen dem Rest der Welt zur Schau zu stellen und die Community wachsen zu lassen.
     first_link:
       name: Erster Link
       description: Hat einen Link auf einen anderen Beitrag geteilt
@@ -4132,7 +4132,7 @@ de:
       name: Richtlinien gelesen
       description: Hat die <a href="%{base_uri}/guidelines">Community-Richtlinien</a> gelesen
       long_description: |
-        Dieses Abzeichen wird verliehen für das <a href="%{base_uri}/guidelines">Lesen der Communtiy-Richtlinien</a>. Ein Befolgen und Teilen dieser einfachen Richtlinien hilft uns dabei, eine sichere, lustige und nachhaltige Gemeinschaft für alle zu schaffen. Denke immer daran, dass dort ein anderer Mensch, genauso wie du, auf der anderen Seite des Bildschirms ist. Sei nett!
+        Dieses Abzeichen wird verliehen für das <a href="%{base_uri}/guidelines">Lesen der Community-Richtlinien</a>. Ein Befolgen und Teilen dieser einfachen Richtlinien hilft uns dabei, eine sichere, lustige und nachhaltige Gemeinschaft für alle zu schaffen. Denke immer daran, dass dort ein anderer Mensch, genauso wie du, auf der anderen Seite des Bildschirms ist. Sei nett!
     reader:
       name: Leser
       description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
@@ -4140,7 +4140,7 @@ de:
         Das Abzeichen wird verliehen, wenn du das erste Mal ein langes Thema mit mehr als 100 Antworten liest. Einen Dialog genau zu lesen, hilft dir dabei, der Diskussion zu folgen, die verschiedenen Standpunkte zu verstehen und führt zu interessanteren Dialogen. Je mehr du liest, desto besser wird der Dialog. Wie wir zu pflegen sagen: Lesen ist grundlegend! :slight_smile:
     popular_link:
       name: Beliebter Link
-      description: Hat einen Link geteilt, welcher mindestens 50 Klicks erhalten hat
+      description: Hat einen externen Link geteilt, welcher mindestens 50 Klicks erhalten hat
       long_description: |
         Das Abzeichen wird verliehen, wenn ein von dir geteilter Link 50 Klicks erhält. Danke, dass du einen nützlichen Link geteilt hast, der dem Dialog einen interessanten Kontext geliefert hat!
     hot_link:
@@ -4237,7 +4237,7 @@ de:
       name: Verehrer
       description: 365-Tage-Besuch
       long_description: |
-        Dieses Abzeichen wird verliehen für Besuche an 365 aufeinander folgenden Tagen. Wow, ein ganzes Jahr!
+        Dieses Abzeichen wird verliehen für Besuche an 365 aufeinanderfolgenden Tagen. Wow, ein ganzes Jahr!
     badge_title_metadata: "%{display_name} Abzeichen auf %{site_title}"
   admin_login:
     success: "E-Mail gesendet"
@@ -4247,7 +4247,7 @@ de:
     email_input: "Administrator-E-Mail"
     submit_button: "E-Mail senden"
   performance_report:
-    initial_post_raw: Dieser Beitrag enthält tägliche Leistungsberichte deiner Site.
+    initial_post_raw: Dieses Thema enthält tägliche Leistungsberichte für deine Website.
     initial_topic_title: Berichte zur Websitegeschwindigkeit
   tags:
     title: "Schlagwörter"
@@ -4388,19 +4388,19 @@ de:
         fields:
           logo:
             label: "Hauptlogo"
-            description: "Das Logo oben links auf deiner Seite. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1."
+            description: "Das Logo oben links auf deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1."
           logo_small:
             label: "Quadratisches Logo"
-            description: "Eine quadratische Version deines Logos. Es wird beim Scrollen in der oberen linke Ecke deiner Seite gezeigt, im Browser und beim Teilen auf sozialen Netzwerken. Idealerweise größer als 512 x 512."
+            description: "Eine quadratische Version deines Logos. Es wird beim Scrollen in der oberen linke Ecke deiner Website gezeigt, im Browser und beim Teilen auf sozialen Netzwerken. Idealerweise größer als 512 x 512."
       icons:
-        title: "Icons"
+        title: "Symbole"
         fields:
           favicon:
-            label: "Browser Icon"
-            description: "Icon, um deine Seite in Browsern zu repräsentieren, das in kleinen Größen gut aussieht. Empfohlene Formate sind PNG oder JPG. Wir werden standardmäßig das quadratische Logo verwenden."
+            label: "Browser-Symbol"
+            description: "Symbol, um deine Website in Browsern zu repräsentieren, das in kleinen Größen gut aussieht. Empfohlene Formate sind PNG oder JPG. Wir werden standardmäßig das quadratische Logo verwenden."
           large_icon:
-            label: "Großes Icon"
-            description: "Icon, um deine Seite auf modernen Geräten zu repräsentieren, das in größeren Größen gut aussieht. Idealerweise größer als 512 x 512. Wir werden standardmäßig das quadratische Logo verwenden."
+            label: "Großes Symbol"
+            description: "Symbol, um deine Website auf modernen Geräten zu repräsentieren, das in größeren Größen gut aussieht. Idealerweise größer als 512 x 512. Wir werden standardmäßig das quadratische Logo verwenden."
       homepage:
         description: "Wir empfehlen, die aktuellen Themen auf deiner Startseite anzuzeigen, aber du kannst dich auch dafür entscheiden, Kategorien (Gruppen von Themen) auf der Startseite anzuzeigen, wenn dir das lieber ist."
         title: "Homepage"
@@ -4423,7 +4423,7 @@ de:
                 label: "Kategorie-Boxen mit Themen"
       invites:
         title: "Team einladen"
-        description: "Du hast es fast geschafft! Lass’ uns ein paar Leute einladen, die dabei helfen <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>eure Diskussionen anzuregen</a> mit interessanten Themen und Beiträgen, um deine Community zu starten."
+        description: "Du hast es fast geschafft! Lass uns ein paar Leute einladen, die dabei helfen, <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>Diskussionen anzuregen</a> – mit interessanten Themen und Beiträgen, um deine Community in Schwung zu bringen."
         disabled: "Lokale Anmeldungen sind deaktiviert. Daher ist es nicht möglich, Einladungen zu verschicken. Bitte fahre mit dem nächsten Schritt fort."
       finished:
         title: "Dein Discourse ist bereit!"
