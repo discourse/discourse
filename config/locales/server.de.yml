@@ -2942,8 +2942,8 @@ de:
 
         Du hast keine Berechtigung, auf das Thema zu antworten. Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_reply_to_digest:
-      title: "E-Mail ablehnen Antwort auf Zusammenfassung"
-      subject_template: "[%{email_prefix}] E-Mail-Problem -- Auf Zusammenfassung antworten"
+      title: "E-Mail abgelehnt, weil Antwort auf Zusammenfassung"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort auf Zusammenfassung"
       text_body_template: |
         Es tut uns leid, aber Ihre E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
 
@@ -3440,7 +3440,7 @@ de:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
-      title: "Alte E-Mail bestätigen (Hinzufügen)"
+      title: "Bestätigung der alten E-Mail-Adresse (hinzufügen)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
         Bevor wir eine neue E-Mail-Adresse hinzufügen können, benötigen wir deine Bestätigung, dass du das aktuelle E-Mail-Konto kontrollierst. Sobald du diesen Schritt erledigt hast, schicken wir dir eine Anfrage, die neue E-Mail-Adresse zu bestätigen.
@@ -3458,7 +3458,7 @@ de:
 
         %{new_email}
     notify_old_email_add:
-      title: "Alte E-Mail benachrichtigen (Hinzufügen)"
+      title: "Benachrichtigung an alte E-Mail-Adresse (hinzufügen)"
       subject_template: "[%{email_prefix}] Eine neue E-Mail-Adresse wurde hinzugefügt"
       text_body_template: |
         Dies ist eine automatisierte Nachricht, die Sie darüber informiert, dass eine E-Mail-Adresse für
@@ -3487,8 +3487,8 @@ de:
 
         Genieße deinen Aufenthalt!
     signup_after_reject:
-      title: "Anmelden nach Ablehnung"
-      subject_template: "Du wurdest von %{site_name} abgelehnt"
+      title: "Registrierung nach Ablehnung"
+      subject_template: "Du wurdest bei %{site_name} abgelehnt"
       text_body_template: |
         Ein Team-Mitglied hat dein Konto bei %{site_name} abgelehnt.
 
@@ -3539,7 +3539,7 @@ de:
         dies ist eine automatisierte Nachricht von %{site_name}, um dich darüber zu informieren, dass [dein Beitrag](%{base_url}%{post_url}) genehmigt wurde.
   page_forbidden:
     title: "Hoppla! Diese Seite ist privat."
-  site_setting_missing: "„%{name}“ Site-Einstellung muss festgelegt werden."
+  site_setting_missing: "Website-Einstellung `%{name}` muss festgelegt werden."
   page_not_found:
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
     popular_topics: "Beliebt"

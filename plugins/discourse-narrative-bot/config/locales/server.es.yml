@@ -203,7 +203,7 @@ es:
 
           Si te gusta (¡y a quién no!), pulsa el botón me gusta :heart: debajo de este mensaje para que lo sepa.
         reply: |-
-          ¡Gracias por darle me gusta a mi mensaje!
+          ¡Gracias por darle me gusta a mi publicación!
         not_found: |-
           ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
       formatting:
@@ -351,7 +351,7 @@ es:
 
           Para preservar la continuidad de las discusiones, las supresiones no son inmediatas, por lo que la publicación se eliminará después de algún tiempo.
       recover:
-        deleted_post_raw: "¿Por qué @%{discobot_username} eliminó mi mensaje? :anguished:"
+        deleted_post_raw: "¿Por qué @%{discobot_username} eliminó mi publicación? :anguished:"
         instructions: |-
           ¡Oh, no! Parece que accidentalmente eliminé una publicación nueva que acababa de crear para ti.
 

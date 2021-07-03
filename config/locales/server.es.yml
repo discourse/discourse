@@ -233,7 +233,7 @@ es:
     rate_limit:
       one: "Ya has enviado %{count} invitación en el último día, espera %{time_left} antes de volverlo a intentar."
       other: "Ya has enviado %{count} invitaciones en el último día, espera %{time_left} antes de volverlo a intentar."
-    confirm_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a tu dirección de correo electrónico. Sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
+    confirm_email: "<p>¡Ya casi has terminado! Te enviamos un correo electrónico de activación a tu dirección de correo electrónico. Sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo electrónico no deseado.</p>"
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres propietario en los grupos a los que estás intentando invitar."
     disabled_errors:
       discourse_connect_enabled: "Las invitaciones están desactivadas porque DiscourseConnect está activado."
@@ -313,11 +313,11 @@ es:
     new_topic: "Crear tema nuevo"
   no_mentions_allowed: "Lo sentimos, no puedes mencionar a otros usuarios."
   too_many_mentions:
-    one: "Lo sentimos, solo puedes mencionar a un usuario en un post."
+    one: "Lo sentimos, solo puedes mencionar a un usuario en una publicación."
     other: "Lo sentimos, solo puedes mencionar a %{count} usuarios en una publicación."
   no_mentions_allowed_newuser: "Lo sentimos, los usuarios nuevos no pueden mencionar a otros usuarios."
   too_many_mentions_newuser:
-    one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en un post."
+    one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en una publicación."
     other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en una publicación."
   no_embedded_media_allowed_trust: "Lo sentimos, no puedes insertar elementos multimedia en una publicación."
   no_embedded_media_allowed: "Lo sentimos, los nuevos usuarios no pueden insertar elementos multimedia en las publicaciones."
@@ -326,12 +326,12 @@ es:
     other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} elementos multimedia incrustados en una publicación."
   no_attachments_allowed: "Lo sentimos, los usuarios nuevos no pueden adjuntar archivos en publicaciones."
   too_many_attachments:
-    one: "Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por post"
+    one: "Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por publicación"
     other: "Lo sentimos, los usuarios nuevos solo pueden adjuntar %{count} archivos por publicación."
   no_links_allowed: "Lo sentimos, los nuevos usuarios no pueden poner enlaces en publicaciones."
   links_require_trust: "Lo sentimos, no puedes incluir enlaces en tus publicaciones."
   too_many_links:
-    one: "Lo sentimos, los nuevos usuarios solo pueden poner un link en un post."
+    one: "Lo sentimos, los usuarios nuevos solo pueden poner un enlace en una publicación."
     other: "Lo sentimos, los usuarios nuevos solo pueden poner %{count} enlaces en una publicación."
   contains_blocked_word: "Tu publicación contiene una palabra que no está permitida: %{word}"
   contains_blocked_words: "Tu publicación contiene varias palabras que no están permitidas: %{words}"
@@ -819,7 +819,7 @@ es:
     error_staged: "Se produjo un error al cambiar tu correo electrónico. La dirección ya está en uso por un usuario temporal."
     already_done: "Lo sentimos, este enlace de confirmación ya no es válido. ¿Quizá tu correo electrónico ya fue cambiado?"
     confirm: "Confirmar"
-    max_secondary_emails_error: "Has llegado al límite de cuentas de correo secundarias."
+    max_secondary_emails_error: "Has llegado al límite de cuentas de correo electrónico secundarias."
     authorizing_new:
       title: "Confirmar tu nuevo correo electrónico"
       description: "Confirma que quieres cambiar tu dirección de correo electrónico a:"
@@ -831,7 +831,7 @@ es:
       old_email: "Correo electrónico antiguo: %{email}"
       new_email: "Correo electrónico nuevo: %{email}"
       almost_done_title: "Confirmando la nueva dirección de correo electrónico"
-      almost_done_description: "¡Enviamos un correo a tu nueva dirección de correo electrónico para confirmar el cambio!"
+      almost_done_description: "¡Enviamos un correo electrónico a tu nueva dirección de correo electrónico para confirmar el cambio!"
   associated_accounts:
     revoke_failed: "No pudo revocar la conexión con %{provider_name}."
     connected: "(conectados)"
@@ -982,9 +982,9 @@ es:
     mute_topic: "Silenciar todas las notificaciones de este tema, %{link}"
     unwatch_category: "Dejar de vigilar todos los temas de %{category}"
     mailing_list_mode: "Desactivar el modo lista de correo"
-    all: "No enviarme ningún correo desde %{sitename}"
+    all: "No enviarme ningún correo electrónico desde %{sitename}"
     different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo electrónico. Cierra sesión o entra en modo anónimo antes de intentarlo de nuevo."
-    not_found_description: "Lo sentimos, pero no hemos encontrado este enlace de baja. ¿Es posible que el enlace en el correo sea antiguo y haya caducado?"
+    not_found_description: "Lo sentimos, pero no hemos encontrado este enlace de baja. ¿Es posible que el enlace en el correo electrónico sea antiguo y haya caducado?"
     log_out: "Cerrar sesión"
     submit: "Guardar preferencias"
     digest_frequency:
@@ -1590,7 +1590,7 @@ es:
     discourse_connect_provider_secrets: "Una lista de pares de dominio-secreto que utiliza Discourse como proveedor de SSO. Asegúrate de que la clave secreta SSO tenga de 10 caracteres o más. El símbolo de comodín * se puede usar para hacer coincidir cualquier dominio o solo una parte de él (por ejemplo, *.ejemplo.com)."
     discourse_connect_overrides_bio: "Sobrescribir la biografía del usuario y evita que los usuarios la cambien"
     discourse_connect_overrides_groups: "Sincronizar todas las membresías manuales a grupos con los grupos especificados en el atributo groups (CUIDADO: si indicas grupos, todas las membresías manuales del usuario serán borradas)"
-    auth_overrides_email: "Sobrescribir la dirección de correo local con la del sitio externo en cada inicio de sesión, y evitar cambios locales. Aplica a todos los proveedores de autenticación (CUIDADO: puede haber diferencias por la normalización de direcciones locales de correo)"
+    auth_overrides_email: "Sobrescribir la dirección de correo electrónico local con la del sitio externo en cada inicio de sesión, y evitar cambios locales. Aplica a todos los proveedores de autenticación (CUIDADO: puede haber diferencias por la normalización de direcciones locales de correo)"
     auth_overrides_username: "Sobrescribe el nombre de usuario local con el del sitio externo en cada inicio de sesión, y evita cambios locales. Se aplica a todos los proveedores de autenticación. (CUIDADO: puede haber diferencias si hay distintos requisitos en los nombres de usuarios, como los caracteres o la longitud)"
     auth_overrides_name: "Sobrescribir nombre completo local con el del sitio externo en cada inicio de sesión, y evitar cambios locales. Aplica a todos los proveedores de autenticación."
     discourse_connect_overrides_avatar: "Sobrescribir el avatar del usuario por el dado por DiscourseConnect. Si se activa, los usuarios no podrán cambiar su avatar ni subir nuevos desde Discourse."
@@ -1849,7 +1849,7 @@ es:
     always_show_trimmed_content: "Mostrar siempre la parte recortada de los correos electrónicos entrantes. AVISO: podría revelar direcciones de correo electrónico."
     trim_incoming_emails: "Recortar las partes irrelevantes de mensajes de correo entrantes."
     private_email: "No incluir contenido de publicaciones o temas en el título o el cuerpo del correo electrónico. NOTA: también desactiva los boletines por correo electrónico."
-    email_total_attachment_size_limit_kb: "Tamaño máximo de archivos adjuntos de mensajes de correo salientes en kB. Poner a 0 para desactivar el envío de adjuntos."
+    email_total_attachment_size_limit_kb: "Tamaño máximo de archivos adjuntos de mensajes de correo electrónico salientes en kB. Poner a 0 para desactivar el envío de adjuntos."
     post_excerpts_in_emails: "En los correos electrónicos de notificación, siempre incluye extractos en lugar de publicaciones enteras."
     raw_email_max_length: "Cuántos caracteres deben almacenarse para el correo electrónico entrante."
     raw_rejected_email_max_length: "Cuántos caracteres deben almacenarse para el correo electrónico entrante rechazado."
@@ -1998,7 +1998,7 @@ es:
     watched_words_regular_expressions: "Las palabras vigiladas son expresiones regulares."
     enable_diffhtml_preview: "Funcionalidad experimental, usar diffHTML para sincronizar la vista previa en lugar de volver a renderizar toda de nuevo."
     old_post_notice_days: "Tiempo a partir del cual una publicación se considera antigua"
-    new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios nuevos."
+    new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de publicaciones de usuarios nuevos."
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
     review_media_unless_trust_level: "El personal revisará las publicaciones de los usuarios con niveles de confianza bajos si tiene contenidos multimedia integrados."
@@ -2246,7 +2246,7 @@ es:
     incorrect_password: "Contraseña incorrecta"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
     active: "Tu cuenta está activa y lista para usar."
-    activate_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a <b>%{email}</b>. Sigue las instrucciones que se encuentran ese correo para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam.</p>"
+    activate_email: "<p>¡Ya casi has terminado! Te enviamos un correo electrónico de activación a <b>%{email}</b>. Sigue las instrucciones que se encuentran ese correo electrónico para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam.</p>"
     not_activated: "Aún no puedes iniciar sesión. Te hemos enviado un correo electrónico de activación. Sigue las instrucciones en el correo electrónico para activar tu cuenta."
     not_allowed_from_ip_address: "No puedes iniciar sesión como %{username} desde esa dirección IP."
     admin_not_allowed_from_ip_address: "No puedes iniciar sesión como administrador desde esta dirección IP."
@@ -2267,7 +2267,7 @@ es:
     authenticator_error_no_valid_email: "Ninguna dirección de correo electrónico asociada a %{account} está permitida. Puede que necesites configurar tu cuenta con una dirección de correo electrónico diferente."
     new_registrations_disabled: "El registro de nuevas cuentas no está permitido en este momento."
     password_too_long: "Las contraseñas están limitadas a 200 caracteres."
-    email_too_long: "El correo electrónico que has proporcionado es demasiado largo. Las direcciones de correo no deben tener más de 254 caracteres y los nombres de dominio no más de 253."
+    email_too_long: "El correo electrónico que has proporcionado es demasiado largo. Las direcciones de correo electrónico no deben tener más de 254 caracteres y los nombres de dominio no más de 253."
     wrong_invite_code: "El código de invitación que has introducido es incorrecto."
     reserved_username: "Ese nombre de usuario no está permitido."
     missing_user_field: "No has completado todos los campos de usuario"
@@ -2479,11 +2479,11 @@ es:
 
       - ¿Es correcto el [registro DKIM][3] de tu dominio? Esto mejorará significativamente la capacidad de entrega del correo electrónico. Prueba tu registro DKIM][7] aquí.
 
-      - Si diriges tu propio servidor de correo, comprueba que las IP de tu servidor de correo no están [en ninguna lista de bloqueo de correo electrónico][4]. Comprueba también que definitivamente está enviando un nombre de host totalmente calificado que se resuelve en DNS en su mensaje HELO. Si no es así, tu correo será rechazado por muchos servicios de correo.
+      - Si diriges tu propio servidor de correo, comprueba que las IP de tu servidor de correo electrónico no están [en ninguna lista de bloqueo de correo electrónico][4]. Comprueba también que definitivamente está enviando un nombre de host totalmente calificado que se resuelve en DNS en su mensaje HELO. Si no es así, tu correo electrónico será rechazado por muchos servicios de correo.
 
       - Te recomendamos encarecidamente que **envíes un correo electrónico de prueba a [mail-tester.com][mt]** para verificar que todo lo anterior funciona correctamente.
 
-      (La forma *fácil* es crear una cuenta en [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], que tienen planes de correo de bajo coste y estarán bien para comunidades pequeñas. No obstante, tendrás que configurar los registros SPF y DKIM en tus DNS)
+      (La forma *fácil* es crear una cuenta en [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], que tienen planes de correo electrónico de bajo coste y estarán bien para comunidades pequeñas. No obstante, tendrás que configurar los registros SPF y DKIM en tus DNS)
 
       Esperamos que hayas recibido bien esta prueba de entregabilidad del correo electrónico.
 
@@ -2554,7 +2554,7 @@ es:
     contents_hidden: "Visita la publicación para ver su contenido."
     post_hidden:
       title: "Publicación oculta"
-      subject_template: "Mensaje ocultado debido a denuncias de la comunidad"
+      subject_template: "Publicación ocultada debido a denuncias de la comunidad"
       text_body_template: |
         Hola:
 
@@ -2570,8 +2570,8 @@ es:
 
         Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     post_hidden_again:
-      title: "Mensaje ocultado de nuevo"
-      subject_template: "Mensaje ocultado debido a denuncias de la comunidad, se ha informado al personal"
+      title: "Publicación ocultada de nuevo"
+      subject_template: "Publicación ocultada debido a denuncias de la comunidad, se ha informado al personal"
       text_body_template: |
         Hola:
 
@@ -2613,8 +2613,8 @@ es:
         ```
         [/details]
     flags_agreed_and_post_deleted:
-      title: "Tema denunciado y eliminado por el personal"
-      subject_template: "Tema denunciado y eliminado por el personal"
+      title: "Publicación denunciada y eliminada por el personal"
+      subject_template: "Publicación denunciada y eliminada por el personal"
       text_body_template: |
         Hola,
 
@@ -2778,16 +2778,16 @@ es:
       title: "Correo electrónico rechazado. Nivel de confianza insuficiente"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Nivel de confianza insuficiente"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (titulado %{former_title}) no funcionó.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (titulado %{former_title}) no funcionó.
 
         Tu cuenta no tiene el nivel de confianza suficiente para publicar nuevos temas con esta dirección de correo. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_user_not_found:
       title: "Correo electrónico rechazado. Cuenta de usuario no encontrada"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Usuario no encontrado"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título %{former_title}) no funcionó.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título %{former_title}) no funcionó.
 
-        Tu respuesta se envió desde un correo electrónico desconocido. Intenta usar otro correo o [contacta con un miembro del personal](%{base_url}/about).
+        Tu respuesta se envió desde un correo electrónico desconocido. Intenta usar otro correo electrónico o [contacta con un miembro del personal](%{base_url}/about).
     email_reject_screened_email:
       title: "Correo electrónico rechazado. Correo bloqueado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
@@ -2820,9 +2820,9 @@ es:
       title: "Correo electrónico rechazado. El usuario no coincide"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Dirección de respuesta inesperada"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu respuesta se envió desde un correo diferente al que esperábamos, así que no estamos seguros de que seas la misma persona. Intenta usar otro correo, o [contacta con un miembro del personal](%{base_url}/about).
+        Tu respuesta se envió desde un correo electrónico diferente al que esperábamos, así que no estamos seguros de que seas la misma persona. Intenta usar otro correo, o [contacta con un miembro del personal](%{base_url}/about).
     email_reject_empty:
       title: "Correo electrónico rechazado. Vacío"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Sin contenido"
@@ -2843,14 +2843,14 @@ es:
       title: "Correo electrónico rechazado. Acceso no válido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acceso no válido"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
         Tu cuenta no tiene los permisos para crear nuevos temas en esta categoría. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Rechazar correos electrónicos desconocidos No permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acceso no válido"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
         La categoría a la que envió este correo electrónico solo permite respuestas de usuarios con cuentas válidas y direcciones de correo electrónico conocidas. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_invalid_post:
@@ -2876,7 +2876,7 @@ es:
       title: "Correo electrónico de rechazo. Publicación muy corta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Publicación muy corta"
       text_body_template: |
-        Lo sentimos, tu correo para %{destination} (con el título %{former_title}) no funcionó.
+        Lo sentimos, tu correo electrónico para %{destination} (con el título %{former_title}) no funcionó.
 
         Para asegurar la calidad de las conversaciones, no están permitidas las respuestas muy cortas. ¿Podrías responder con al menos %{count} caracteres? Alternativamente, puedes darle me gusta a un mensaje respondiendo por correo electrónico con «+1».
     email_reject_invalid_post_action:
@@ -2890,14 +2890,14 @@ es:
       title: "Correo electrónico de rechazo. Clave de respuesta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Clave de respuesta desconocida"
       text_body_template: |
-        Lo sentimos, tu correo a %{destination} (con el título%{former_title}) no funcionó.
+        Lo sentimos, tu correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
         La clave de respuesta no es válida o es desconocida, así que no podemos determinar a qué estás respondiendo. [Contacta con un miembro del personal](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "Correo electrónico de rechazo. Dirección del destinatario incorrecta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Dirección desconocida"
       text_body_template: |
-        Lo sentimos, pero tu correo a %{destination} (con título %{former_title}) no ha funcionado.
+        Lo sentimos, pero tu correo electrónico a %{destination} (con título %{former_title}) no ha funcionado.
 
         Algunas cosas que comprobar:
 
@@ -2919,21 +2919,21 @@ es:
       title: "Correo electrónico de rechazo. Tema no encontrado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Tema no encontrado"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
         El tema al que estás respondiendo ya no existe -- ¿quizás ha sido eliminado? Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_topic_closed:
       title: "Correo electrónico de rechazo. Tema cerrado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Tema cerrado"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título %{former_title}) no ha funcionado.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título %{former_title}) no ha funcionado.
 
         El tema al que estás respondiendo está cerrado y no permite más respuestas. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_auto_generated:
       title: "Correo electrónico de rechazo. Autogenerado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Respuesta generada automaticamente"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título%{former_title}) no funcionó.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
         Tu correo electrónico ha sido marcado como «autogenerado», lo que significa que ha sido creado automáticamente por un ordenador en lugar de haber sido escrito por un ser humano; no podemos aceptar este tipo de correos. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_unrecognized_error:
@@ -2947,7 +2947,7 @@ es:
       title: "Correo electrónico de rechazo. Archivos adjuntos"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Archivos adjuntos rechazados"
       text_body_template: |
-        Lamentablemente, algunos archivos adjuntos de tu correo a %{destination} (con el título %{former_title}) han sido rechazados.
+        Lamentablemente, algunos archivos adjuntos de tu correo electrónico a %{destination} (con el título %{former_title}) han sido rechazados.
 
         Detalles:
         %{rejected_errors}
@@ -2957,7 +2957,7 @@ es:
       title: "Correo electrónico de rechazo. No permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Respuesta no permitida"
       text_body_template: |
-        Lo sentimos, tu mensaje de correo a %{destination} (con el título %{former_title}) no funcionó.
+        Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título %{former_title}) no funcionó.
 
         Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
     email_reject_reply_to_digest:
@@ -3102,8 +3102,8 @@ es:
     queued_posts_reminder:
       title: "Recordatorio de publicación en revisión"
       subject_template:
-        one: "%{count} post esperando a ser revisado"
-        other: "%{count} publicaciones en espera de ser revisados"
+        one: "%{count} publicación en espera de ser revisada"
+        other: "%{count} publicaciones en espera de ser revisadas"
       text_body_template: |
         Hola,
 
@@ -3390,7 +3390,7 @@ es:
       text_body_template: |
         Alguien ha pedido restablecer tu contraseña en [%{site_name}](%{base_url}).
 
-        Si no fuiste tú, puedes ignorar este correo de forma segura.
+        Si no fuiste tú, puedes ignorar este correo electrónico de forma segura.
 
         Haz clic en el siguiente enlace para cambiar tu contraseña:
         %{base_url}/u/password-reset/%{email_token}
@@ -3465,7 +3465,7 @@ es:
       subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"
       text_body_template: |
         Antes de que podamos añadir una nueva dirección de correo electrónico, necesitamos que confirmes que controlas
-        tu cuenta de correo actual. Después de completar este paso, te pediremos que confirmes
+        tu cuenta de correo electrónico actual. Después de completar este paso, te pediremos que confirmes
         la nueva dirección de correo electrónico.
 
         Confirma su dirección de correo electrónico actual para %{site_name} haciendo clic en el siguiente enlace:
@@ -3601,7 +3601,7 @@ es:
   skipped_email_log:
     exceeded_emails_limit: "max_emails_per_day_per_user excedido"
     exceeded_bounces_limit: "bounce_score_threshold excedido"
-    mailing_list_no_echo_mode: "Notificaciones de la lista de correo deshabilitadas para las publicaciones del propio usuario"
+    mailing_list_no_echo_mode: "Notificaciones de la lista de correo electrónico deshabilitadas para las publicaciones del propio usuario"
     user_email_no_user: "No se puede encontrar al usuario con la ID %{user_id}"
     user_email_post_not_found: "No se encuentra ninguna publicación con la ID %{post_id}"
     user_email_anonymous_user: "El usuario es anónimo"
@@ -3805,11 +3805,11 @@ es:
 
       3. No puedes comprar, vender o intercambiar nombres de usuario u otros identificadores únicos en el foro.
 
-      4. No puedes enviar anuncios publicitarios, mensajes en cadena u otras solicitudes a través del foro, o utilizar el foro para recopilar direcciones u otros datos personales para listas de correo comerciales o bases de datos.
+      4. No puedes enviar anuncios publicitarios, mensajes en cadena u otras solicitudes a través del foro, o utilizar el foro para recopilar direcciones u otros datos personales para listas de correo electrónico comerciales o bases de datos.
 
       5. No puedes automatizar el acceso al foro ni monitorizar el foro mediante un rastreador web, complemento del navegador u otro programa informático que no sea un navegador web. Puedes rastrear el foro para indexarlo en un motor de búsqueda disponible públicamente si eres el administrador de uno.
 
-      6. No puedes usar el foro para enviar correos electrónicos a listas de distribución, grupos de noticias o alias de correo grupales.
+      6. No puedes usar el foro para enviar correos electrónicos a listas de distribución, grupos de noticias o alias de correo electrónico grupales.
 
       7. No puedes afirmar de manera implícita o explícita falsamente que estás afiliado o respaldado por la compañía.
 
@@ -4025,7 +4025,7 @@ es:
       name: Editor de wiki
       description: Primera edición de un tema wiki
       long_description: |
-        Esta insignia se concede la primera vez que editas un tema de tipo wiki.
+        Esta insignia se concede la primera vez que editas una publicación de tipo wiki.
     basic_user:
       name: Básico
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Acceso</a> a todas las funciones esenciales de la comunidad
@@ -4297,10 +4297,10 @@ es:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"
       help: "registra una cuenta para empezar"
-      no_emails: "Por desgracia, no se definió ningún correo electrónico de administrador durante la configuración inicial, por lo que terminar de instalar el foro será complicado. Añade un correo de desarrollador en el archivo de configuración o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea una cuenta de administrador desde la consola</a>."
+      no_emails: "Por desgracia, no se definió ningún correo electrónico de administrador durante la configuración inicial, por lo que terminar de instalar el foro será complicado. Añade un correo electrónico de desarrollador en el archivo de configuración o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea una cuenta de administrador desde la consola</a>."
     confirm_email:
       title: "Confirmar tu correo electrónico"
-      message: "<p>Hemos enviado un correo de activación a <b>%{email}</b>. Sigue las instrucciones en el correo para activar tu cuenta.</p><p>Si no llega, revisa tu carpeta de spam y <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>asegúrate de configurar el correo electrónico correctamente</a>.</p>"
+      message: "<p>Hemos enviado un correo electrónico de activación a <b>%{email}</b>. Sigue las instrucciones en el correo electrónico para activar tu cuenta.</p><p>Si no llega, revisa tu carpeta de spam y <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>asegúrate de configurar el correo electrónico correctamente</a>.</p>"
     resend_email:
       title: "Volver a enviar el correo electrónico de activación"
       message: "<p>Hemos reenviado el correo electrónico de activación a <b>%{email}</b>"

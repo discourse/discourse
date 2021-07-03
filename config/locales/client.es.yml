@@ -157,7 +157,7 @@ es:
       forwarded: "reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
     wizard_required: "¡Te damos la bienvenida a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
-    emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo de ningún tipo."
+    emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     software_update_prompt:
       message: "Hemos actualizado este sitio, <span>vuelve a cargarlo</span>, o podrías experimentar un comportamiento inesperado."
       dismiss: "Descartar"
@@ -645,7 +645,7 @@ es:
           settings_required: "Todos los ajustes son obligatorios. Completa todos los campos antes de validar."
           smtp_settings_valid: "Ajustes de SMTP válidos."
           smtp_title: "SMTP"
-          smtp_instructions: "Cuando activas SMTP para el grupo, todos los correos salientes enviados desde la bandeja de entrada del grupo se enviarán mediante la configuración SMTP especificada aquí en lugar del servidor de correo configurado para otros correos enviados por su foro."
+          smtp_instructions: "Cuando activas SMTP para el grupo, todos los correos salientes enviados desde la bandeja de entrada del grupo se enviarán mediante la configuración SMTP especificada aquí en lugar del servidor de correo electrónico configurado para otros correos enviados por su foro."
           imap_title: "IMAP"
           imap_additional_settings: "Ajustes adicionales"
           imap_instructions: 'Cuando activas IMAP para el grupo, los correos electrónicos se sincronizan entre la bandeja de entrada del grupo y el servidor IMAP y el buzón proporcionados. El SMTP debe estar habilitado con credenciales válidas y probadas antes de activar IMAP. El nombre de usuario y la contraseña de correo electrónico utilizados para SMTP se utilizarán para IMAP. Para más información, consulta <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anuncio de características en Discourse Meta</a>.'
@@ -672,8 +672,8 @@ es:
             allow_unknown_sender_topic_replies: "Permitir respuestas a temas de remitentes desconocidos."
             allow_unknown_sender_topic_replies_hint: "Permite a remitentes desconocidos responder a temas de grupo. Si esto no está activado, las respuestas de direcciones de correo electrónico no invitadas todavía al tema crearán un nuevo tema."
           mailboxes:
-            synchronized: "Bandeja de correo sincronizada"
-            none_found: "No se han encontrado bandejas de correo para esta cuenta de correo electrónico."
+            synchronized: "Bandeja de correo electrónico sincronizada"
+            none_found: "No se han encontrado bandejas de correo electrónico para esta cuenta de correo electrónico."
             disabled: "Desactivado"
         membership:
           title: Membresía
@@ -684,7 +684,7 @@ es:
           description: "Cuando se agregan usuarios a este grupo, la configuración de notificaciones de categorías será establecida a estos valores predeterminados. Después, pueden cambiarla."
           watched_categories_instructions: "Vigilar automáticamente todos los temas en estas categorías. Se notificará a los miembros del grupo sobre cada nueva respuesta y tema, y aparecerá un contador de respuestas nuevas al lado del tema."
           tracked_categories_instructions: "Seguir automáticamente todos los temas en estas categorías. Aparecerá un contador de nuevas respuestas al lado del tema."
-          watching_first_post_categories_instructions: "Se notificará a los usuarios sobre la primera respuesta en cada tema nuevo en estas categorías."
+          watching_first_post_categories_instructions: "Se notificará a los usuarios sobre la primera publicación en cada tema nuevo en estas categorías."
           regular_categories_instructions: "Si estas categorías están silenciadas, no estarán silenciadas para los miembros del grupo. Se les notificará a los usuarios si son mencionados o si alguien les responde."
           muted_categories_instructions: "No se notificará a los usuarios acerca de temas nuevos en estas categorías, y no aparecerán en las categorías o páginas de temas recientes."
         tags:
@@ -693,7 +693,7 @@ es:
           description: "Cuando se agreguen usuarios a este grupo, su configuración de notificaciones de etiquetas será establecida a estos valores predeterminados. Después, pueden cambiarla."
           watched_tags_instructions: "Vigilar automáticamente todos los temas con estas etiquetas. Se notificará a los miembros del grupo sobre todos los nuevos temas y respuestas, y aparecerá un contador con el número de mensajes nuevos junto al tema."
           tracked_tags_instructions: "Seguir automáticamente todos los temas con estas etiquetas. Aparecerá un contador con el número de mensajes nuevos junto al tema."
-          watching_first_post_tags_instructions: "Se notificará a los usuarios cuando se publique un nuevo tema con estas etiquetas."
+          watching_first_post_tags_instructions: "Se notificará a los usuarios cuando se realice la primera publicación en un nuevo tema con estas etiquetas."
           regular_tags_instructions: "Si estas etiquetas están silenciadas, dejarán de estarlo para los miembros del grupo. Se notificará a los usuarios si se les menciona o alguien les responde."
           muted_tags_instructions: "No se notificará de nada relacionado con nuevos temas con estas etiquetas, y no aparecerán en recientes."
         logs:
@@ -992,7 +992,7 @@ es:
         Añade publicaciones a tus marcadores con el botón %{icon}, y aparecerán aquí para que puedas volver fácilmente a ellos. ¡Hasta programarte recordatorios!
       no_notifications_title: "No tienes ninguna notificación todavía"
       no_notifications_body: >
-        En esta pestaña te avisaremos sobre actividad relevante para ti incluyendo respuestas a tus temas y mensajes, <b>@menciones</b> o citas, y respuestas a los temas que estés siguiendo. También te notificaremos por correo si hace tiempo que no te conectas.<br><br>A través del icono %{icon} puedes decidir sobre qué temas, categorías y etiquetas quieres que te avisemos. Ve a tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a> para más detalles.
+        En esta pestaña te avisaremos sobre actividad relevante para ti incluyendo respuestas a tus temas y mensajes, <b>@menciones</b> o citas, y respuestas a los temas que estés siguiendo. También te notificaremos por correo electrónico si hace tiempo que no te conectas.<br><br>A través del icono %{icon} puedes decidir sobre qué temas, categorías y etiquetas quieres que te avisemos. Ve a tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a> para más detalles.
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
       dynamic_favicon: "Mostrar número en el icono del navegador"
       skip_new_user_tips:
@@ -1040,7 +1040,7 @@ es:
         individual_no_echo: "Enviar un correo electrónico por cada publicación nueva excepto aquellas publicadas por mí"
         many_per_day: "Envíame un correo electrónico por cada publicación nueva (unos %{dailyEmailEstimate} por día)"
         few_per_day: "Envíame un correo electrónico por cada publicación nueva (unos 2 por día)"
-        warning: "Modo de lista de correo activado. Se sobrescribe la configuración de notificaciones por correo electrónico."
+        warning: "Modo de lista de correo electrónico activado. Se sobrescribe la configuración de notificaciones por correo electrónico."
       tag_settings: "Etiquetas"
       watched_tags: "Vigilados"
       watched_tags_instructions: "Vigilarás automáticamente todos los temas con estas etiquetas. Se te notificarán todas las publicaciones y temas nuevos y aparecerá un contador de publicaciones nuevas al lado del tema."
@@ -1241,7 +1241,7 @@ es:
         resending_label: "enviando..."
         resent_label: "correo electrónico enviado"
         update_email: "Cambiar correo electrónico"
-        set_primary: "Establecer como correo principal"
+        set_primary: "Establecer como correo electrónico principal"
         destroy: "Quitar correo electrónico"
         add_email: "Añadir correo electrónico alternativo"
         auth_override_instructions: "El correo electrónico se puede actualizar desde el proveedor de autenticación."
@@ -1461,7 +1461,7 @@ es:
           instructions: |
             <p>Invita una lista de usuarios para lanzar rápidamente la comunidad. Prepara un <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">archivo CSV</a> con al menos una fila por cada correo electrónico de los usuarios a los que quieras invitar. Además, se puede añadir en cada fila la siguiente información separada por comas si quieres añadir a los usuarios a grupos o enviarles a un tema específico la primera vez que inicien sesión.</p>
             <pre>correo@ejemplo.com,primer_nombre_de_un_grupo,segundo_grupo,id_de_tema</pre>
-            <p>Se enviará una invitación por correo a cada una de las direcciones que incluyas en el archivo CSV, que podrás gestionar después.</p>
+            <p>Se enviará una invitación por correo electrónico a cada una de las direcciones que incluyas en el archivo CSV, que podrás gestionar después.</p>
           progress: "%{progress}% subido..."
           success: "Archivo subido con éxito. Se te notificará a través de un mensaje cuando el proceso se complete."
           error: "Lo sentimos, el formato del archivo debe ser CSV. "
@@ -1653,7 +1653,7 @@ es:
       complete_email_found: "Hemos encontrado una cuenta que coincide con el correo electrónico <b>%{email}</b>. Deberías recibir pronto un correo electrónico con instrucciones para restablecer tu contraseña."
       complete_username_not_found: "No hay ninguna cuenta que coincida con el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "No hay ninguna cuenta que coincida con el correo electrónico <b>%{email}</b>"
-      help: "¿No te ha llegado el correo? Asegúrate de revisar primero tu carpeta de correo no deseado. <p>¿No estás seguro de qué correo has usado? Introduce tu correo electrónico y te avisaremos si lo tenemos registrado.</p><p>Si no tienes acceso al correo electrónico asociado a tu cuenta, contacta <a href='%{basePath}/about'>con nuestro amable equipo.</a></p>"
+      help: "¿No te ha llegado el correo? Asegúrate de revisar primero tu carpeta de correo electrónico no deseado. <p>¿No estás seguro de qué correo electrónico has usado? Introduce tu correo electrónico y te avisaremos si lo tenemos registrado.</p><p>Si no tienes acceso al correo electrónico asociado a tu cuenta, contacta <a href='%{basePath}/about'>con nuestro amable equipo.</a></p>"
       button_ok: "Aceptar"
       button_help: "Ayuda"
     email_login:
@@ -1711,8 +1711,8 @@ es:
       change_email: "Cambiar dirección de correo electrónico"
       provide_new_email: "Introduce una dirección de correo electrónico nueva y te reenviaremos el correo electrónico de confirmación."
       submit_new_email: "Actualizar dirección de correo electrónico"
-      sent_activation_email_again: "Te hemos enviado otro correo electrónico de activación a <b>%{currentEmail}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar la carpeta de correo no deseado."
-      sent_activation_email_again_generic: "Te hemos enviado otro correo electrónico de activación. Podría tardar algunos minutos en llegar. Asegúrate de revisar la carpeta de correo no deseado."
+      sent_activation_email_again: "Te hemos enviado otro correo electrónico de activación a <b>%{currentEmail}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar la carpeta de correo electrónico no deseado."
+      sent_activation_email_again_generic: "Te hemos enviado otro correo electrónico de activación. Podría tardar algunos minutos en llegar. Asegúrate de revisar la carpeta de correo electrónico no deseado."
       to_continue: "Por favor, inicia sesión"
       preferences: "Debes iniciar sesión para poder cambiar tus preferencias de usuario."
       not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para que inicies sesión."
@@ -1900,7 +1900,7 @@ es:
       view_new_post: "Ver tu publicación nueva."
       saving: "Guardando"
       saved: "¡Guardado!"
-      saved_draft: "Publica el borrador en progreso. Escribe para reanudar."
+      saved_draft: "Borrador de publicación en progreso. Escribe para reanudar."
       uploading: "Subiendo..."
       show_preview: "mostrar vista previa"
       hide_preview: "ocultar vista previa"
@@ -2182,7 +2182,7 @@ es:
           other: "Descartar (%{count})…"
         dismiss_tooltip: "Descartar solamente las nuevas publicaciones o dejar de seguir los temas"
         also_dismiss_topics: "Dejar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
-        dismiss_new: "Ignorar nuevos"
+        dismiss_new: "Descartar nuevos"
         dismiss_new_with_selected:
           one: "Descartar nuevo (%{count})"
           other: "Descartar nuevos (%{count})"
@@ -2413,8 +2413,8 @@ es:
         jump_bottom: "saltar a la última publicación"
         jump_prompt: "saltar a..."
         jump_prompt_of:
-          one: "de %{count} mensaje"
-          other: "de %{count} mensajes"
+          one: "de %{count} publicación"
+          other: "de %{count} publicaciones"
         jump_prompt_long: "Saltar a..."
         jump_bottom_with_number: "saltar a la publicación %{post_number}"
         jump_prompt_to_date: "hasta hoy"
@@ -2424,7 +2424,7 @@ es:
       notifications:
         title: cambiar la frecuencia con la que se te notifica acerca de este tema
         reasons:
-          mailing_list_mode: "El modo lista de correo se encuentra activado, por lo que se te notificarán las respuestas a este tema por correo electrónico."
+          mailing_list_mode: "El modo lista de correo electrónico se encuentra activado, por lo que se te notificarán las respuestas a este tema por correo electrónico."
           "3_10": "Recibirás notificaciones porque estás vigilando una etiqueta de este tema."
           "3_10_stale": "Recibirás notificaciones porque vigilaste una etiqueta de este tema en el pasado."
           "3_6": "Recibirás notificaciones porque estás vigilando esta categoría."
@@ -2693,7 +2693,7 @@ es:
       follow_quote: "ir a la publicación citada"
       show_full: "Mostrar la publicación completa"
       show_hidden: "Ver contenido ignorado."
-      deleted_by_author_simple: "(mensaje eliminado por su autor/a)"
+      deleted_by_author_simple: "(publicación eliminada por su autor/a)"
       collapse: "contraer"
       expand_collapse: "expandir/contraer"
       locked: "un miembro del equipo bloqueó la posibilidad de editar esta publicación"
@@ -2703,7 +2703,7 @@ es:
       notice:
         new_user: "Esta es la primera vez que %{user} ha publicado — ¡démosle la bienvenida a nuestra comunidad!"
         returning_user: "Hacía tiempo que no veíamos a %{user}, su última publicación fue %{time}."
-      unread: "Publicaciones sin leer"
+      unread: "La publicación está sin leer"
       has_replies:
         one: "%{count} Respuesta"
         other: "%{count} Respuestas"
@@ -2712,7 +2712,7 @@ es:
       has_likes_title:
         one: "%{count} persona le ha dado Me gusta a esta publicación"
         other: "%{count} personas le han dado me gusta a esta publicación"
-      has_likes_title_only_you: "te ha gustado este mensaje"
+      has_likes_title_only_you: "te ha gustado esta publicación"
       has_likes_title_you:
         one: "A ti y a %{count} persona os ha gustado esta publicación"
         other: "A ti y a otras %{count} personas os ha gustado esta publicación"
@@ -2878,11 +2878,11 @@ es:
             name: "Editar marcador"
             description: "Editar el nombre del marcador o cambia la fecha y hora del recordatorio"
           pin_bookmark:
-            name: "Fijar marcador"
-            description: "Fijar el marcador. Esto hará que aparezca al principio de tu lista de marcadores."
+            name: "Anclar marcador"
+            description: "Anclar el marcador. Esto hará que aparezca al principio de tu lista de marcadores."
           unpin_bookmark:
-            name: "Desfijar marcador"
-            description: "Desfijar el marcador. Ya no aparecerá siempre arriba de la lista."
+            name: "Desanclar marcador"
+            description: "Desanclar el marcador. Ya no aparecerá siempre arriba de la lista."
       filtered_replies:
         viewing_posts_by: "Viendo %{post_count} publicaciones de"
         viewing_subset: "Algunas respuestas no se muestran"
@@ -2965,7 +2965,7 @@ es:
       num_featured_topics: "Número de temas que se muestran en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página principal de categorías:"
       all_topics_wiki: "Hacer que los temas nuevos tengan formato wiki por defecto"
-      allow_unlimited_owner_edits_on_first_post: "Permitir que los autores editen los primeros mensajes de sus temas en cualquier momento."
+      allow_unlimited_owner_edits_on_first_post: "Permitir que el propietario edite de forma ilimitada en su primera publicación"
       subcategory_list_style: "Estilo de lista de subcategorías:"
       sort_order: "Ordenar lista de temas:"
       default_view: "Lista de temas por defecto:"
@@ -3516,8 +3516,8 @@ es:
       reports:
         title: "Lista de informes disponibles"
       dashboard:
-        title: "Panel"
-        last_updated: "Última actualización del panel:"
+        title: "Panel de control"
+        last_updated: "Última actualización del panel de control:"
         discourse_last_updated: "Última actualización de Discourse:"
         version: "Versión"
         up_to_date: "Estás en la última versión"
@@ -3648,8 +3648,8 @@ es:
             trust_levels_none: "Ninguno"
             automatic_membership_email_domains: "Los usuarios que se registren con un dominio de correo electrónico que esté en esta lista se añadirán automáticamente a este grupo:"
             automatic_membership_user_count:
-              one: "%{count} usuario tiene el nuevo dominio de correo y será añadido al grupo"
-              other: "%{count} usuarios tienen el nuevo dominio de correo y serán añadidos al grupo"
+              one: "%{count} usuario tiene el nuevo dominio de correo electrónico y será añadido al grupo"
+              other: "%{count} usuarios tienen el nuevo dominio de correo electrónico y serán añadidos al grupo"
             primary_group: "Establecer automáticamente como grupo principal"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que los nombres de usuarios"
         primary: "Grupo principal"
@@ -4194,7 +4194,7 @@ es:
           elided: "Texto elidido"
         sending_test: "Enviando correo electrónico de prueba..."
         error: "<b>ERROR</b> - %{server_error}"
-        test_error: "Se produjo un error al enviar el correo electrónico de prueba. Revisa la configuración de correo, verifica que tu servicio de alojamiento no esté bloqueando los puertos de conexión de correo y prueba de nuevo."
+        test_error: "Se produjo un error al enviar el correo electrónico de prueba. Revisa la configuración de correo, verifica que tu servicio de alojamiento no esté bloqueando los puertos de conexión de correo electrónico y prueba de nuevo."
         sent: "Enviado"
         skipped: "Omitido"
         bounced: "Rebotado"
@@ -4454,7 +4454,7 @@ es:
           require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el personal antes de que se puedan visualizar."
           flag: "Permitir publicaciones que contengan estas palabras, pero denunciar el mensaje como inapropiado para que los moderadores puedan revisarlo."
           replace: "Reemplazar palabras en publicaciones por otras palabras"
-          tag: "Etiquetar temas automáticamente basándose en su primer mensaje."
+          tag: "Etiquetar temas automáticamente basándose en su primera publicación."
           silence: "Las primeras publicaciones de usuarios que contengan estas palabras deberán ser aprobadas por el personal antes de que se puedan ver, y el usuario será silenciado automáticamente."
           link: "Reemplazar palabras en publicaciones por enlaces"
         form:
@@ -4578,7 +4578,7 @@ es:
         logged_out: "El usuario cerró sesión en todos los dispositivos"
         revoke_admin: "Revocar administración"
         grant_admin: "Conceder administración"
-        grant_admin_confirm: "Te hemos enviado un correo electrónico para verificar al nuevo administrador. Abre el correo y sigue las instrucciones."
+        grant_admin_confirm: "Te hemos enviado un correo electrónico para verificar al nuevo administrador. Abre el correo electrónico y sigue las instrucciones."
         revoke_moderation: "Revocar moderación"
         grant_moderation: "Conceder moderación"
         unsuspend: "Desbloquear"
@@ -4676,7 +4676,7 @@ es:
         visit_profile: "Visita <a href='%{url}'>la página de preferencias de este usuario</a> para editar su perfil"
         deactivate_explanation: "Un usuario desactivado debe volver a validar su correo electrónico."
         suspended_explanation: "Un usuario suspendido no puede iniciar sesión."
-        silence_explanation: "Un usuario silenciado no puede crear mensajes ni temas."
+        silence_explanation: "Un usuario silenciado no puede crear publicaciones ni temas."
         staged_explanation: "Un usuario temporal solo puede publicar por correo electrónico en temas específicos."
         bounce_score_explanation:
           none: "No se han recibido rebotes recientemente de este correo electrónico."
@@ -4835,7 +4835,7 @@ es:
           tags: "Etiquetas"
           search: "Buscar"
           groups: "Grupos"
-          dashboard: "Panel"
+          dashboard: "Panel de control"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
         default_categories:
