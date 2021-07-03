@@ -3691,7 +3691,7 @@ ar:
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         new_features:
           dismiss: "تجاهل"
-        last_checked: "تاريخ آخر تحقُّق"
+        last_checked: "آخر تحقُّق"
         refresh_problems: "تحديث"
         no_problems: "لم يتم العثور على مشكلات."
         moderators: "المشرفون:"
@@ -3699,89 +3699,89 @@ ar:
         suspended: "معلَّق:"
         private_messages_short: "الرسائل"
         private_messages_title: "الرسائل"
-        mobile_title: "متنقل"
+        mobile_title: "الجوَّال"
         uploads: "التحميلات"
         backups: "النسخ الاحتياطية"
         backup_count:
-          zero: "ما من نسخ احتياطية"
-          one: "ثمّة نسخة احتياطية واحدة في %{location}"
-          two: "ثمّة نسختين احتياطيتين في %{location}"
-          few: "ثمّة %{count} نسخ احتياطية في %{location}"
-          many: "ثمّة %{count} نسخة احتياطية في %{location}"
-          other: "ثمّة %{count} نسخة احتياطية في %{location}"
-        traffic_short: "المرور"
-        traffic: "طلبات تطبيقات الويب"
-        page_views: "زيارات الصفحة"
-        page_views_short: "زيارات الصفحة"
-        show_traffic_report: "عرض تقرير مرور مفصل"
-        whats_new_in_discourse: ما جديد دِسكورس؟
+          zero: "%{count} نسخة احتياطية في %{location}"
+          one: "نسخة احتياطية واحدة (%{count}) في %{location}"
+          two: "نسختان احتياطيتان (%{count}) في %{location}"
+          few: "%{count} نسخ احتياطية في %{location}"
+          many: "%{count} نسخة احتياطية في %{location}"
+          other: "%{count} نسخة احتياطية في %{location}"
+        traffic_short: "الزيارات"
+        traffic: "طلبات الويب للتطبيق"
+        page_views: "مرات عرض الصفحة"
+        page_views_short: "مرات عرض الصفحة"
+        show_traffic_report: "عرض تقرير مفصَّل عن الزيارات"
+        whats_new_in_discourse: ما الجديد في Discourse؟
         general_tab: "عام"
-        moderation_tab: "مشرف"
-        security_tab: "الأمن"
+        moderation_tab: "الإشراف"
+        security_tab: "الأمان"
         report_filter_any: "أي"
         too_many_requests: لقد نفَّذت هذا الإجراء مرات كثيرة جدًا. يُرجى الانتظار قليلًا قبل إعادة المحاولة.
         reports:
           today: "اليوم"
-          yesterday: "امس"
+          yesterday: "أمس"
           last_7_days: "آخر 7"
           last_30_days: "آخر 30"
-          all_time: "كل الوقت"
-          7_days_ago: "منذ ٧ ايام"
-          30_days_ago: "منذ ٣٠ يوم"
+          all_time: "طوال الوقت"
+          7_days_ago: "منذ ٧ أيام"
+          30_days_ago: "منذ 30 يومًا"
           all: "الكل"
           view_table: "جدول"
           view_graph: "رسم بياني"
           refresh_report: "تحديث التقرير "
-          daily: اليومية
-          monthly: الشهرية
-          weekly: الأسبوعية
+          daily: يوميًا
+          monthly: شهريًا
+          weekly: أسبوعيًا
           groups: "كل المجموعات"
-          disabled: "هذا التقرير معطّل"
-          total: "مجموع الوقت الكلي"
-          no_data: "لا توجد بيانات للعرض"
+          disabled: "هذا التقرير معطَّل"
+          total: "إجمالي الوقت الكلي"
+          no_data: "لا توجد بيانات لعرضها."
           filters:
             file_extension:
-              label: إمتداد الملف
+              label: امتداد الملف
             group:
               label: المجموعة
             category:
-              label: تصنيف
+              label: الفئة
       commits:
-        latest_changes: "آخر تغيير: يرجى التحديث"
+        latest_changes: "آخر التغييرات: يُرجى التحديث باستمرار!"
         by: "بواسطة"
       groups:
         new:
           title: "مجموعة جديدة"
-          create: "إنشاء:"
+          create: "إنشاء"
           name:
-            too_short: "إسم المجموعة قصير جداً"
-            too_long: "إسم المجموعة طويل جداً"
-            checking: "التأكد من توفر إسم المجموعة"
+            too_short: "اسم المجموعة قصير جدًا"
+            too_long: "اسم المجموعة طويل جدًا"
+            checking: "جارٍ التحقُّق من إتاحة الاسم..."
             available: "اسم المجموعة متاح"
             not_available: "اسم المجموعة غير متاح"
             blank: "يجب تحديد اسم للمجموعة"
         manage:
           interaction:
             email: البريد الإلكتروني
-            incoming_email: "تعيين بريد إلكتروني خاص:"
-            incoming_email_placeholder: "يرجى إدخال بريد الكتروني فعّال."
+            incoming_email: "عنوان مخصَّص للبريد الوارد"
+            incoming_email_placeholder: "أدخل عنوان البريد الإلكتروني"
             visibility_levels:
-              title: "من يستطيع رؤية هذه المجموعة؟"
-              public: "الكل"
+              title: "من يمكنه رؤية هذه المجموعة؟"
+              public: "الجميع"
             members_visibility_levels:
-              title: "مَن يرى أعضاء هذه المجموعة؟"
-              description: "يمكن للمدراء رؤية أعضاء كلّ المجموعات."
+              title: "من يمكنه رؤية أعضاء هذه المجموعة؟"
+              description: "يمكن للمسؤولين رؤية أعضاء كل المجموعات."
           membership:
-            automatic: تلقائي
-            trust_levels_title: "مستوى الثقة الذي يُعطى للأعضاء آليا عندما يضافون:"
-            trust_levels_none: "لا شيء"
-            automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
-            primary_group: "تعيين تلقائيا كمجموعة أساسية"
-        name_placeholder: "اسم المجموعة، بدون مسافات، كما هو الحال مع أسماء المستخدمين"
+            automatic: تلقائية
+            trust_levels_title: "مستوى الثقة الذي يتم منحه للأعضاء تلقائيًا عند إضافتهم:"
+            trust_levels_none: "لا يوجد"
+            automatic_membership_email_domains: "ستتم إضافة المستخدمين الذين يسجِّلون بنطاق بريد إلكتروني مطابق لنطاق في هذه القائمة إلى هذه المجموعة تلقائيًا:"
+            primary_group: "التعيين تلقائيًا كمجموعة أساسية"
+        name_placeholder: "اسم المجموعة بلا مسافات، على غرار قاعدة اسم المستخدم"
         primary: "المجموعة الأساسية"
-        no_primary: "(لا يوجد مجموعة أساسية)"
-        title: "مجموعات"
-        edit: "تعديل المجموعة"
+        no_primary: "(لا توجد مجموعة أساسية)"
+        title: "المجموعات"
+        edit: "تعديل المجموعات"
         refresh: "تحديث"
         about: "عدل عضوية المجموعة وأسماءها هنا"
         group_members: "أعضاء المجموعة"
@@ -3825,15 +3825,15 @@ ar:
         title: "Webhooks"
         none: "لا يوجد Webhooks حاليا."
         instruction: "Webhooks تسمح للموقع باشعار خدمات خارجية عند حدوث حدث محدد في الموقع. عندما يتم تفعيل ال Webhooks سوف يتم ارسال POST request لعنوان ال URL للخدمة."
-        detailed_instruction: "سيُرسل POST request إلى العنوان الURL للموفر عند حدوث الحدث المنشود."
-        new: "Webhook جديد"
+        detailed_instruction: "سيتم إرسال طلب منشور إلى عنوان URL المقدَّم عند وقوع الحدث المختار."
+        new: "خطاف ويب جديد"
         create: "أنشئ"
         save: "احفظ"
         destroy: "أحذف"
         description: "الوصف"
         controls: "التحكم"
         go_back: "العودة إلي القائمة"
-        payload_url: "الURL المستهدف"
+        payload_url: "عناون URL للحمولة"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "يجب ألا يحتوي الرمز السري على أية فواصل."
         secret_too_short: "يجب أن يكون الرمز السري 12 حرفا على الأقل."
@@ -3844,7 +3844,7 @@ ar:
         event_chooser: "اي احداي يجب ان تفعل هذا الwebhook؟"
         wildcard_event: "ارسل إلى كل شئ."
         individual_event: "حدد احداث مفردة."
-        verify_certificate: "تحقق من شهادة TLS لعنوان الURL المستهدف"
+        verify_certificate: "تحقق من شهادة TLS لعنوان URL للحمولة"
         active: "فعل"
         active_notice: "سوف يتم ارسال تفاصيل الحدث عند حدوثة."
         topic_event:

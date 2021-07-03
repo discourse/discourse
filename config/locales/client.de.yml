@@ -257,7 +257,7 @@ de:
         last_day: "Letzte 24 Stunden"
         last_7_days: "Letzte 7 Tage"
         last_30_days: "Letzte 30 Tage"
-      like_count: "Likes"
+      like_count: "„Gefällt mir“"
       topic_count: "Themen"
       post_count: "Beiträge"
       user_count: "Benutzer"
@@ -633,7 +633,7 @@ de:
           smtp_instructions: "Wenn du SMTP für die Gruppe aktivierst, werden alle ausgehenden E-Mails, die aus dem Posteingang der Gruppe gesendet werden, über die hier angegebenen SMTP-Einstellungen anstelle des E-Mail-Servers gesendet, der für andere von deinem Forum gesendete E-Mails konfiguriert ist."
           imap_title: "IMAP"
           imap_additional_settings: "Weitere Einstellungen"
-          imap_instructions: 'Wenn du IMAP für die Gruppe aktivierst, werden E-Mails zwischen dem Gruppenposteingang und dem bereitgestellten IMAP-Server und -Postfach synchronisiert. SMTP muss mit gültigen und getesteten Anmeldeinformationen aktiviert werden, bevor IMAP aktiviert werden kann. Der für SMTP verwendete E-Mail-Benutzername und das Passwort werden für IMAP verwendet. Weitere Informationen findest du unter <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Feature-Ankündigung auf Discourse Meta</a>.'
+          imap_instructions: 'Wenn du IMAP für die Gruppe aktivierst, werden E-Mails zwischen dem Gruppenposteingang und dem bereitgestellten IMAP-Server und -Postfach synchronisiert. SMTP muss mit gültigen und getesteten Anmeldedaten aktiviert werden, bevor IMAP aktiviert werden kann. Der für SMTP verwendete E-Mail-Benutzername und das Passwort werden für IMAP verwendet. Weitere Informationen findest du unter <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Feature-Ankündigung auf Discourse Meta</a>.'
           imap_alpha_warning: "Warnung: Dies ist eine Alpha-Phasen-Funktion. Nur Gmail wird offiziell unterstützt. Benutzung auf eigene Gefahr!"
           imap_settings_valid: "IMAP-Einstellungen gültig."
           smtp_disable_confirm: "Wenn du SMTP deaktivierst, werden alle SMTP- und IMAP-Einstellungen zurückgesetzt und die zugehörigen Funktionen deaktiviert. Bist du sicher, dass du fortfahren möchtest?"
@@ -643,7 +643,7 @@ de:
             title: "Vorbefüllen mit Einstellungen für:"
             gmail: "GMail"
           credentials:
-            title: "Anmeldeinformationen"
+            title: "Anmeldedaten"
             smtp_server: "SMTP-Server"
             smtp_port: "SMTP-Port"
             smtp_ssl: "SSL für SMTP verwenden"
@@ -815,8 +815,8 @@ de:
         icon: "Wähle ein Symbol"
         image: "Lade ein Bild hoch"
     user_action_groups:
-      "1": "Abgegebene Likes"
-      "2": "Erhaltene Likes"
+      "1": "Abgegebene „Gefällt mir“"
+      "2": "Erhaltene „Gefällt mir“"
       "3": "Lesezeichen"
       "4": "Themen"
       "5": "Beiträge"
@@ -999,9 +999,9 @@ de:
       dark_mode_enable: "Dunkles Farbschema automatisch aktivieren"
       text_size_default_on_all_devices: "Mache diese Schriftgröße zum Standard für alle meine Geräte"
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
-      external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
+      external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
-      enable_defer: "Zurückstellen aktivieren, um Themen als ungelesen zu markieren"
+      enable_defer: "Aufschieben aktivieren, um Themen als ungelesen zu markieren"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -1318,10 +1318,10 @@ de:
         notifications: "Neue Benachrichtigungen"
         contextual: "Neuer Seiteninhalt"
       like_notification_frequency:
-        title: "Benachrichtigung für erhaltene Likes anzeigen"
+        title: "Benachrichtigung für erhaltene „Gefällt mir“ anzeigen"
         always: "Immer"
-        first_time_and_daily: "Für den ersten Like sowie maximal täglich"
-        first_time: "Nur für den ersten Like eines Beitrags"
+        first_time_and_daily: "Für das erste „Gefällt mir“ sowie maximal täglich"
+        first_time: "Nur für das erste „Gefällt mir“ eines Beitrags"
         never: "Nie"
       email_previous_replies:
         title: "Füge vorherige Beiträge ans Ende von E-Mails an"
@@ -1497,10 +1497,10 @@ de:
         more_badges: "Weitere Abzeichen"
         top_links: "Die besten Links"
         no_links: "Noch keine Links."
-        most_liked_by: "Häufigste Likes von"
-        most_liked_users: "Häufigste Likes für"
+        most_liked_by: "Häufigste „Gefällt mir“ von"
+        most_liked_users: "Häufigste „Gefällt mir“ für"
         most_replied_to_users: "Häufigste Antworten an"
-        no_likes: "Noch keine Likes."
+        no_likes: "Noch keine „Gefällt mir“."
         top_categories: "Top-Kategorien"
         topics: "Themen"
         replies: "Antworten"
@@ -1555,7 +1555,7 @@ de:
     refresh: "Aktualisieren"
     home: "Startseite"
     read_only_mode:
-      enabled: "Diese Website befindet sich im Nur-Lesen-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von Likes und Durchführen einiger weiterer Aktionen ist derzeit nicht möglich."
+      enabled: "Diese Website befindet sich im Nur-Lesen-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nicht möglich."
       login_disabled: "Die Anmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
       logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_and_posts_notice_MF: >-
@@ -1589,7 +1589,7 @@ de:
       hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, wir fragen dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
       intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber du hast bislang noch kein Konto angelegt."
-      value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn jemand auf deine Beiträge antwortet. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartpulse:"
+      value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn jemand auf deine Beiträge antwortet. Beiträge, die dir gefallen, kannst du mit einem „Gefällt mir“ versehen und diese Freude mit allen teilen. :heartpulse:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
       description:
@@ -1669,7 +1669,7 @@ de:
       security_key_alternative: "Versuche es anderweitig"
       security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
       security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
-      security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldeinformationen gefunden."
+      security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldedaten gefunden."
       security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
       email_placeholder: "E-Mail/Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
@@ -2058,7 +2058,7 @@ de:
       latest_post: "Neuester Beitrag"
       latest_topic: "Neuestes Thema"
       most_viewed: "Anzahl der Aufrufe"
-      most_liked: "Anzahl der Likes"
+      most_liked: "Anzahl der „Gefällt mir“"
       select_all: "Alle auswählen"
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
@@ -2224,7 +2224,7 @@ de:
         title: "Bearbeiten"
       defer:
         help: "Als ungelesen markieren"
-        title: "Ignorieren"
+        title: "Aufschieben"
       feature_on_profile:
         help: "Füge eine Verknüpfung zu diesem Thema zu deiner Benutzerkarte und deinem Profil hinzu"
         title: "Auf Profil hervorheben"
@@ -2262,8 +2262,8 @@ de:
         one: "Es gibt %{count} neuen Beitrag in diesem Thema, seit du es das letzte Mal gelesen hast"
         other: "Es gibt %{count} neue Beiträge in diesem Thema, seit du es das letzte Mal gelesen hast"
       likes:
-        one: "Es gibt %{count} Like in diesem Thema"
-        other: "Es gibt %{count} Likes in diesem Thema"
+        one: "Es gibt %{count} „Gefällt mir“ in diesem Thema"
+        other: "Es gibt %{count} „Gefällt mir“ in diesem Thema"
       back_to_list: "Zurück zur Themenliste"
       options: "Themen-Optionen"
       show_links: "zeige Links innerhalb dieses Themas"
@@ -2648,7 +2648,7 @@ de:
         description:
           one: Du hast <b>%{count}</b> Beitrag ausgewählt.
           other: "Du hast <b>%{count}</b> Beiträge ausgewählt."
-      deleted_by_author_simple: "(Thema vom Autor gelöscht)"
+      deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
     post:
       quote_reply: "Zitat"
       quote_share: "Teilen"
@@ -2663,7 +2663,7 @@ de:
       follow_quote: "springe zum zitierten Beitrag"
       show_full: "Zeige ganzen Beitrag"
       show_hidden: "Ignorierte Inhalte anzeigen."
-      deleted_by_author_simple: "(Beitrag vom Autor gelöscht)"
+      deleted_by_author_simple: "(Beitrag vom Verfasser gelöscht)"
       collapse: "zuklappen"
       expand_collapse: "erweitern/zuklappen"
       locked: "ein Team-Mitglied hat diesen Beitrag für die weitere Bearbeitung gesperrt"
@@ -2719,7 +2719,7 @@ de:
         about: "dieser Beitrag ist ein Wiki"
       archetypes:
         save: "Speicheroptionen"
-      few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige Likes übrig."
+      few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“ übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
         like: "dieser Beitrag gefällt mir"
@@ -2983,8 +2983,8 @@ de:
           very_high: "Sehr hoch"
       sort_options:
         default: "Standard"
-        likes: "Likes"
-        op_likes: "Likes des Originalbeitrags"
+        likes: "„Gefällt mir“"
+        op_likes: "„Gefällt mir“ des Originalbeitrags"
         views: "Ansichten"
         posts: "Beiträge"
         activity: "Aktivität"
@@ -3094,9 +3094,9 @@ de:
     posts: "Beiträge"
     posts_likes_MF: |
       Dieses Thema hat {count, plural, one {# Antwort} other {# Antworten}} {ratio, select,
-        low {mit einem hohen Verhältnis von Likes zu Beiträgen}
-        med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen}
-        high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen}
+        low {mit einem hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
+        med {mit einem sehr hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
+        high {mit einem extrem hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
         other {}}
     original_post: "Original-Beitrag"
     views: "Aufrufe"
@@ -3108,10 +3108,10 @@ de:
       one: "dieses Thema wurde %{count}-mal betrachtet"
       other: "dieses Thema wurde %{number}-mal betrachtet"
     activity: "Aktivität"
-    likes: "Likes"
+    likes: "„Gefällt mir“"
     likes_lowercase:
-      one: "Like"
-      other: "Likes"
+      one: "„Gefällt mir“"
+      other: "„Gefällt mir“"
     users: "Benutzer"
     users_lowercase:
       one: "Benutzer"
@@ -3338,7 +3338,7 @@ de:
       synonyms: "Synonyme"
       synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
       tag_groups_info:
-        one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}”.'
+        one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}“.'
         other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
       category_restrictions:
         one: "Es kann nur in dieser Kategorie verwendet werden:"
@@ -3769,8 +3769,8 @@ de:
           name: "Gruppenbenutzer-Ereignis"
           details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."
         like_event:
-          name: "Like-Ereignis"
-          details: "Wenn ein Benutzer einen Beitrag mit einem Like versieht."
+          name: "„Gefällt mir“-Ereignis"
+          details: "Wenn ein Benutzer einen Beitrag mit einem „Gefällt mir“ versieht."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -4133,7 +4133,7 @@ de:
             description: "Zeigt an, dass eine Aktion erfolgreich war."
           love:
             name: "Liebe"
-            description: "Die Farbe der Like-Schaltfläche."
+            description: "Die Farbe der „Gefällt mir“-Schaltfläche."
         robots:
           title: "Überschreibe die robots.txt-Datei deiner Website:"
           warning: "Dies wird sämtliche zugehörigen Website-Einstellungen dauerhaft überschreiben."
@@ -4554,7 +4554,7 @@ de:
         reputation: Reputation
         permissions: Berechtigungen
         activity: Aktivität
-        like_count: Abgegebene/Erhaltene Likes
+        like_count: Abgegebene/Erhaltene „Gefällt mir“
         last_100_days: "in den letzten 100 Tagen"
         private_topics_count: Private Themen
         posts_read_count: Gelesene Beiträge
@@ -4670,10 +4670,10 @@ de:
           posts_read_all_time: "Gelesene Beiträge (gesamt)"
           flagged_posts: "Gemeldete Beiträge"
           flagged_by_users: "Von Benutzern gemeldet"
-          likes_given: "Abgegebene Likes"
-          likes_received: "Erhaltene Likes"
-          likes_received_days: "Erhaltene Likes: eindeutige Tage"
-          likes_received_users: "Erhaltene Likes: eindeutige Benutzer"
+          likes_given: "Abgegebene „Gefällt mir“"
+          likes_received: "Erhaltene „Gefällt mir“"
+          likes_received_days: "Erhaltene „Gefällt mir“: eindeutige Tage"
+          likes_received_users: "Erhaltene „Gefällt mir“: eindeutige Benutzer"
           suspended: "Gesperrt (letzte 6 Monate)"
           silenced: "Stummgeschaltet (letzte 6 Monate)"
           qualifies: "Erfüllt die Anforderungen für Vertrauensstufe 3."

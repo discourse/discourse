@@ -186,9 +186,9 @@ de:
 
           Kannst du **mit einem Bild antworten?** Das Bild spielt dabei keine Rolle! Ziehe das Bild einfach ins Fenster, drücke die Hochladen-Schaltfläche oder kopiere und füge es ein.
         reply: |-
-          Hübsches Bild – ich habe die Like-Schaltfläche :heart: gedrückt, um dich wissen zu lassen, wie sehr es mir gefällt :heart_eyes:
+          Hübsches Bild – ich habe die „Gefällt mir“-Schaltfläche :heart: gedrückt, um dich wissen zu lassen, wie sehr es mir gefällt :heart_eyes:
         like_not_found: |-
-          Hast du vergessen, meinen [Beitrag](%{url}) mit einem Like :heart: zu versehen? :crying_cat_face:
+          Hast du vergessen, meinen [Beitrag](%{url}) mit einem „Gefällt mir“ :heart: zu versehen? :crying_cat_face:
         not_found: |-
           Sieht so aus, als hättest du kein Bild hochgeladen. Deshalb habe ich ein Bild ausgesucht, von dem ich _sicher_ bin, dass es dir gefällt.
 
@@ -242,7 +242,7 @@ de:
         instructions: |-
           Wenn du gerne mehr darüber erfahren möchtest, wähle unten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> aus und klicke auf <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **Lesezeichen für diese Nachricht**. Wenn du das machst, wird es demnächst vielleicht ein :gift: geben!
         reply: |-
-          Ausgezeichnet! Jetzt kannst du jederzeit leicht wieder zu unserem privaten Gespräch zurückkehren, direkt vom [the bookmarks tab on your profile](%{bookmark_url}). Wähle einfach Dein Profilbild oben rechts &#8599;
+          Ausgezeichnet! Jetzt kannst du jederzeit leicht zu unserer privaten Unterhaltung zurückfinden, direkt über [die Lesezeichen-Registerkarte auf deinem Profil](%{bookmark_url}). Wähle einfach dein Profilbild oben rechts aus &#8599;
         not_found: |-
           Oh je, ich sehe keine Lesezeichen in diesem Thema. Hast du das Lesezeichen unter jedem Beitrag gefunden? Verwende das „Mehr anzeigen“-Symbol <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, um bei Bedarf weitere Aktionen anzuzeigen.
       emoji:

@@ -412,7 +412,7 @@ ar:
         web_hook:
           attributes:
             payload_url:
-              invalid: "رابط غير صالح. يجب أن يحتوي الرابط على http:// او https://. المساحة الفارغة غير مسموح بها."
+              invalid: "عنوان URL صالح. يجب أن يحتوي الرابط على http:// أو https://. وغير مسموح بالمسافات الفارغة."
       <<: *errors
   vip_category_name: "استراحة"
   vip_category_description: "قسم خاص للمستخدمين ذوي مستوى الثقة 3 فأعلى."
