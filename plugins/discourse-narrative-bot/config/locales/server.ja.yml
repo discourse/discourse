@@ -6,11 +6,13 @@
 
 ja:
   site_settings:
+    discourse_narrative_bot_enabled: "Discourse Narrative Bot (discobot) を有効化"
     disable_discourse_narrative_bot_welcome_post: "Discourse Narrative Bot のウェルカム投稿を無効にする"
     discourse_narrative_bot_ignored_usernames: "Discourse Narrative Bot が無視するユーザー名"
     discourse_narrative_bot_disable_public_replies: "Discourse Narrative Bot の公開返信を無効にする"
     discourse_narrative_bot_welcome_post_type: "Discourse Narrative Bot が送信するウェルカム投稿のタイプ"
     discourse_narrative_bot_welcome_post_delay: "Discourse Narrative Bot のウェルカム投稿を送信するまで (n) 秒待ちます。"
+    discourse_narrative_bot_skip_tutorials: "スキップする Discourse Narrative Bot チュートリアル"
   badges:
     certified:
       name: 修了証
@@ -23,6 +25,11 @@ ja:
       long_description: |
         このバッジは上級インタラクティブユーザーチュートリアルを修了したときに与えられます。ディスカッションの高度なツールをマスターし、ディスカッションユーザーのライセンスを取得しました！
   discourse_narrative_bot:
+    bio: "こんにちは。私は人ではありません。このサイトを案内するボットです。対話するには、私にメッセージを送るか、名前でメンションしてください。"
+    tl2_promotion_message:
+      subject_template: "昇格されたので、高度な機能についていくつか学びましょう！"
+      text_body_template: |
+        何ができるかを確認するには、`@%{discobot_username} %{reset_trigger}` という内容でこのメッセージに返信してください。
     timeout:
       message: |-
         %{username} さん、こんにちは。しばらくログインしていないようなので、こちらから連絡してみました。

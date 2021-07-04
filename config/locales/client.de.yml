@@ -1596,7 +1596,7 @@ de:
         one: "Es gibt <b>%{count}</b> Antwort."
         other: "Es gibt <b>%{count}</b> Antworten."
       description_time_MF: "Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>."
-      enable: "Zusammenfassung vom Thema erstellen"
+      enable: "Dieses Thema zusammenfassen"
       disable: "Alle Beiträge anzeigen"
     deleted_filter:
       enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit versteckt sind."
@@ -3034,9 +3034,9 @@ de:
       cant: "Entschuldige, du kannst diesen Beitrag derzeit nicht melden."
       notify_staff: "Team privat benachrichtigen"
       formatted_name:
-        off_topic: "Es ist am Thema vorbei"
-        inappropriate: "Es ist unangemessen"
-        spam: "Es ist Spam"
+        off_topic: "Am Thema vorbei"
+        inappropriate: "Unangemessen"
+        spam: "Spam"
       custom_placeholder_notify_user: "Sei konkret, konstruktiv und immer freundlich."
       custom_placeholder_notify_moderators: "Bitte lass uns wissen, was genau dich beunruhigt. Verweise, wenn möglich, auf relevante Links und Beispiele."
       custom_message:
