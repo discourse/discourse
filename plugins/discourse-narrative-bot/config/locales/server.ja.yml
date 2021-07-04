@@ -115,6 +115,27 @@ ja:
       random_mention:
         reply: |-
           こんにちは！私ができることを知るには `@%{discobot_username} %{help_trigger}` と言ってください。
+        tracks: |-
+          今のところ次のやり方を知っています。
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > あなただけのインタラクティブなチュートリアルを開始します。`{name-of-tutorial}` は次のいずれかです: `%{tracks}`
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3、6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: 期待していいですよ
+        discobot_disabled: 設定で私を無効にしましたね。私と対話するには新規ユーザーのオンボーディングヒントを許可する必要があります。
+      do_not_understand:
+        first_response: |-
+          返信してくれてありがとう！
+
+          残念ながら、プログラムがまだ不十分なボットなので、そのことがあまりよくわかりません。:frowning:
+        track_response: もう一度試すことができます。それともこのステップをスキップするなら `%{skip_trigger}` 、最初からやり直すには `%{reset_trigger}` と言ってください。
     new_user_narrative:
       hello:
         message: |-
@@ -125,3 +146,83 @@ ja:
           - セキュリティの都合上、新規ユーザーはできることには限られています。使用回数が増えれば、新しい機能 (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (とバッジ (%{base_uri}/badges)) を得られます。
 
           - コミュニティでは常に礼節ある行動 (%{base_uri}/guidelines) を取ってもらえると信じています。
+    advanced_user_narrative:
+      delete:
+        reply: |-
+          おっと！:boom:
+
+          ディスカッションの継続性を維持するために、削除はすぐには行われません。この投稿はしばらくしてから削除されます。
+      recover:
+        deleted_post_raw: "なぜ @%{discobot_username} は私の投稿を削除したのですか？:anguished:"
+        instructions: |-
+          どうしよう！作成したばかりの新しい投稿を誤って削除してしまったようです。
+
+          私の代わりに投稿の<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **削除を取り消し** てもらえませんか？
+        not_found: |-
+          うまく行きませんか？<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">「もっと表示」を使うと<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">「削除を取り消す」が表示されますよ。
+        reply: |-
+          よかった！あれは複製した投稿でした。助けてくれてありがとう :wink:
+
+          投稿の削除を取り消せるのは %{deletion_after} 時間以内ですので、注意しましょう。
+      category_hashtag:
+        instructions: |-
+          投稿内でカテゴリとタグを言及できることを知っていますか？たとえば、%{category} カテゴリというのを見たことがありませんか？
+
+          文中で `#` を入力すると、カテゴリまたはタグを選択できます。
+        not_found: |-
+          あれ？どこにもカテゴリが見当たりません。`#` を最初の文字として使用することはできません。次の返信に、これをコピーしてみてください。
+
+          ```テキスト
+          # を使ってカテゴリリンクを作成できます
+          ```
+        reply: |-
+          お見事！これはカテゴリだけでなく、タグが有効になっている場合にはタグでも動作します。
+      change_topic_notification_level:
+        instructions: |-
+          すべてのトピックに通知レベルがあります。誰かがあなたに直接話しかけている場合にのみ通知される「通常」で始まります。
+
+          デフォルトでは、非公開メッセージの通知レベルは最高レベルの 'ウォッチ中' に設定されています。この設定では、新しい返信があるたびに通知が届きます。ただし、トピックの通知レベルを 'ウォッチ'、'追跡'、または 'ミュート' にオーバーライドすることができます。
+
+          このトピックの通知レベルを変更してみましょう。トピックの一番下に、このトピックを **ウォッチ中** と示されています。この通知レベルを **追跡** に変更できますか？
+        not_found: |-
+          まだこのトピックをウォッチ中 :eyes: のようです！設定の場所がわかりませんか？通知レベルボタンは、トピックの一番下にあります。
+        reply: |-
+          よくできました！私がおしゃべりしすぎだからといって、このトピックをミュートしていませんよね？:grin:
+
+          トピックに返信する際、またはトピックを数分以上閲覧している場合は、自動的に通知レベルが '追跡' に設定されます。この設定は[ユーザー設定](%{base_uri}/my/preferences)で変更可能です。
+      poll:
+        instructions: |-
+          投稿に投票を追加できることを知っていますか？エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車を使って**投票を作成**してみましょう。
+        not_found: |-
+          あれれ？返信に投票がありませんよ。
+
+          エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車アイコンを使うか、この投票をコピーして、次の返信に貼り付けてください。
+
+          ```テキスト
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
+        reply: |-
+          素敵な投票ですね！私の教え方はどうですか？
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        instructions: |-
+          たまに、返信の**詳細を非表示**にしたいことがあるかもしれません。
+
+          - 映画またはテレビ番組のあらすじについて話している場合は、ネタバレと思われる可能性がある場合。
+
+          - まとめて一度に読むと多すぎる可能性のある詳細な情報を投稿に含める必要がある場合。
+
+          [詳細=これを選択してどのように動作するか見てみましょう！]
+          1. エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車を選択します。
+          2. "詳細を非表示" を選択します。
+          3. 詳細の要約を編集して、コンテンツを追加します。
+          [/details]
+
+          エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車を使って、次の返信に詳細セクションを追加してみましょう。

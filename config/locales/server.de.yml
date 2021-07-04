@@ -123,7 +123,7 @@ de:
         unsubscribe_not_allowed: "Passiert, wenn die Abbestellung per E-Mail für diesen Benutzer nicht erlaubt ist."
         email_not_allowed: "Passiert, wenn die E-Mail-Adresse nicht auf der Positivliste oder auf der Negativliste ist."
       unrecognized_error: "Unbekannter Fehler"
-    secure_media_placeholder: "Redigiert: Auf dieser Website sind sichere Medien aktiviert, besuche das Thema oder klicke auf „Medien anzeigen“, um die angehängten Medien zu sehen."
+    secure_media_placeholder: "Geschwärzt: Auf dieser Website sind sichere Medien aktiviert, besuche das Thema oder klicke auf „Medien anzeigen“, um die angehängten Medien zu sehen."
     view_redacted_media: "Medien anzeigen"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -1949,21 +1949,21 @@ de:
     embed_topics_list: "HTML-Einbettung von Themenlisten unterstützen"
     embed_set_canonical_url: "Lege die kanonische URL für eingebettete Themen auf die URL des eingebetteten Inhalts fest."
     embed_truncate: "Kürze die eingebetteten Beiträge."
-    embed_unlisted: "Importierte Themen werden nicht aufgelistet, bis ein Benutzer antwortet."
+    embed_unlisted: "Importierte Themen sind unsichtbar, bis ein Benutzer antwortet."
     embed_support_markdown: "Markdown-Formatierung für eingebettete Beiträge unterstützen."
-    allowed_embed_selectors: "Eine durch Kommas getrennte Liste von CSS-Elementen, die in Einbettungen zulässig sind."
+    allowed_embed_selectors: "Eine kommaseparierte Liste von CSS-Elementen, die in Einbettungen erlaubt sind."
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
     embed_post_limit: "Maximale Anzahl der Beiträge, die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig."
     notify_about_flags_after: "Wenn es Meldungen gibt, die nicht innerhalb der angegebenen Anzahl von Stunden bearbeitet wurden, sende eine persönliche Nachricht an die Moderatoren. Zum Deaktivieren auf 0 setzen."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die älter als (n) Tage sind."
-    delete_merged_stub_topics_after_days: "Anzahl der Tage, die gewartet werden müssen, bevor automatisch vollständig zusammengeführte Stub-Themen gelöscht werden. Setze auf 0, um niemals Stub-Themen zu löschen."
+    delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen)"
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
-    secure_media: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, Zips und andere). Wenn „Login erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienhochladungen in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein tiefes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">das Secure Media Thema auf Meta</a> für Details.'
-    secure_media_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung 'Secure Media max E-Mail eingebettete Bildgröße kb'."
-    secure_media_max_email_embed_image_size_kb: "Der Größengrenzwert für sichere Bilder, die in E-Mails eingebettet werden, wenn die Einstellung \"Sichere Medien ermöglichen das Einbetten in E-Mails\" aktiviert ist. Ohne diese Einstellung hat diese Einstellung keine Auswirkung."
+    secure_media: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, Zips und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">das Thema „Sichere Medien“ auf Meta</a> für Details.'
+    secure_media_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure media max email embed image size kb“."
+    secure_media_max_email_embed_image_size_kb: "Der Größengrenzwert für sichere Bilder, die in E-Mails eingebettet werden, wenn die Einstellung „secure media allow embed in emails“ aktiviert ist. Anderweitig hat diese Einstellung keine Auswirkung."
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. „encoded“ erzeugt einen Prozent-encodierten String, bei „none“ wird kein Kürzel verwendet."
     enable_emoji: "Emoji aktivieren"
     enable_emoji_shortcuts: "Geläufige Text-Smileys wie :) :p :( werden in Emojis umgewandelt"
@@ -1977,7 +1977,7 @@ de:
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
-    auto_close_topics_create_linked_topic: "Erstelle ein neues verknüpftes Thema, wenn ein Thema automatisch geschlossen wird, basierend auf der Einstellung \"Automatisches Schließen des Themas wegen maximaler Beitragsanzahl\""
+    auto_close_topics_create_linked_topic: "Erstelle ein neues verknüpftes Thema, wenn ein Thema basierend auf der Einstellung „auto close topics post count“ automatisch geschlossen wird"
     code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
@@ -1986,9 +1986,9 @@ de:
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
-    review_media_unless_trust_level: "Mitarbeiter werden Beiträge von Benutzern mit niedrigeren Vertrauensstufen überprüfen, wenn sie eingebettete Medien enthalten."
-    blur_tl0_flagged_posts_media: "Mit Unschärfe gekennzeichnete Beiträge Bilder, um potenziell NSFW-Inhalte zu verbergen."
-    enable_page_publishing: "Erlauben Sie Mitarbeitern, Themen in neuen URLs mit ihrem eigenen Styling zu veröffentlichen."
+    review_media_unless_trust_level: "Das Team wird Beiträge von Benutzern mit niedrigeren Vertrauensstufen überprüfen, wenn sie eingebettete Medien enthalten."
+    blur_tl0_flagged_posts_media: "Bilder von gemeldeten Beiträgen mit Unschärfe versehen, um potenzielle NSFW-Inhalte auszublenden."
+    enable_page_publishing: "Erlaube Team-Mitgliedern, Themen unter neuen URLs mit eigenem Styling zu veröffentlichen."
     show_published_pages_login_required: "Anonyme Benutzer können veröffentlichte Seiten sehen, auch wenn eine Anmeldung erforderlich ist."
     skip_auto_delete_reply_likes: "Beim automatischen Löschen alter Antworten Beiträge mit mindestens dieser Anzahl von „Gefällt mir“ auslassen."
     default_email_digest_frequency: "Wie oft Benutzer standardmäßig E-Mail-Zusammenfassungen erhalten."
@@ -1997,7 +1997,7 @@ de:
     default_email_messages_level: "Lege die Standard-E-Mail-Benachrichtigungsstufe fest, wenn jemand einem Benutzer eine Nachricht sendet."
     default_email_mailing_list_mode: "Für jeden neuen Beitrag standardmäßig eine E-Mail senden."
     default_email_mailing_list_mode_frequency: "Benutzer, die den Mailinglisten-Modus einschalten, werden standardmäßig so häufig eine E-Mail erhalten."
-    disable_mailing_list_mode: "Benutzern das Aktivieren des Mailinglisten-Modus verbieten (verhindert, dass E-Mails von Mailinglisten gesendet werden.)"
+    disable_mailing_list_mode: "Benutzern das Aktivieren des Mailinglisten-Modus verbieten (verhindert, dass E-Mails von Mailinglisten gesendet werden)."
     default_email_previous_replies: "Standardmäßig vorhergehende Antworten in E-Mails einschließen."
     default_email_in_reply_to: "Standardmäßig einen Auszug aus dem beantworteten Beitrag in E-Mails einfügen."
     default_other_new_topic_duration_minutes: "Globale Standardbedingung, nach der ein Thema als neu gilt."
@@ -2007,14 +2007,14 @@ de:
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort-Funktion für hervorgehobenen Text."
     default_other_enable_defer: "Aktiviere standardmäßig die Funktion zum Aufschieben von Themen."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl der neuen/aktualisierten Themen im Browser-Symbol an."
-    default_other_skip_new_user_tips: "Überspringen Sie Tipps und Abzeichen für das Onboarding neuer Benutzer."
+    default_other_skip_new_user_tips: "Überspringe Tipps und Abzeichen für das Onboarding neuer Benutzer."
     default_other_like_notification_frequency: "Benutzer standardmäßig bei erhaltenen „Gefällt mir“ benachrichtigen."
     default_topics_automatic_unpin: "Themen standardmäßig automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
     default_categories_tracking: "Liste der standardmäßig verfolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
     default_categories_watching_first_post: "Liste der Kategorien, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
-    default_categories_regular: "Liste der Kategorien, die nicht standardmäßig stumm sind. Nützlich, wenn `mute_all_categories_by_default` Einstellung aktiviert ist."
+    default_categories_regular: "Liste der Kategorien, die nicht standardmäßig stummgeschaltet sind. Nützlich, wenn die Website-Einstellung `mute_all_categories_by_default` aktiviert ist."
     mute_all_categories_by_default: "Setze die Standard-Benachrichtigungsstufe für alle Kategorien auf stumm. Erfordere die Aktivierung der Kategorien durch die Benutzer, damit sie auf den Seiten „Aktuell“ und „Kategorien“ erscheinen. Wenn du die Standardeinstellungen für anonyme Benutzer ändern möchtest, bearbeite die „default_categories_“-Einstellungen."
     default_tags_watching: "Liste der Schlagwörter, die standardmäßig beobachtet werden."
     default_tags_tracking: "Liste der Schlagwörter, die standardmäßig verfolgt werden."
@@ -2049,11 +2049,11 @@ de:
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Entwürfe“, indem du eine Kategorie für Themenentwürfe bestimmst. Themen in dieser Kategorie werden in den Themenlisten für Team-Mitglieder unterdrückt."
-    shared_drafts_min_trust_level: "Ermöglichen Sie Benutzern das Anzeigen und Bearbeiten von freigegebenen Entwürfen."
+    shared_drafts_min_trust_level: "Erlaube Benutzern, gemeinsame Entwürfe einzusehen und zu bearbeiten."
     push_notifications_prompt: "Zeige eine Aufforderung zur Benutzerzustimmung an."
-    push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein 96 × 96 monochromatisches PNG mit Transparenz wird empfohlen."
-    base_font: "Basisschriftart für die meisten Texte auf der Website. Themes können über die `--font-family` CSS-benutzerdefinierte Eigenschaft überschrieben werden."
-    heading_font: "Schriftart für Überschriften auf der Website. Themes können über die `--heading-font-family` CSS-benutzerdefinierte Eigenschaft überschrieben werden."
+    push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein monochromatisches PNG mit Transparenz (96 × 96) wird empfohlen."
+    base_font: "Basisschriftart für die meisten Texte auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--font-family` überschreiben."
+    heading_font: "Schriftart für Überschriften auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--heading-font-family` überschreiben."
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
@@ -2061,9 +2061,9 @@ de:
     gravatar_name: "Name des Gravatar-Anbieters"
     gravatar_base_url: "URL der API-Basis des Gravatar-Anbieters"
     gravatar_login_url: "URL relativ zu gravatar_base_url, die dem Benutzer die Anmeldung beim Gravatar-Dienst ermöglicht"
-    share_quote_buttons: "Legen Sie fest, welche Elemente im Quote-Sharing-Widget erscheinen und in welcher Reihenfolge."
-    share_quote_visibility: "Legen Sie fest, wann die Quote-Sharing-Buttons angezeigt werden sollen: Niemals, für anonyme Benutzer nur oder alle Benutzer. "
-    create_revision_on_bulk_topic_moves: "Erstelle Revision für erste Beiträge, wenn Themen in eine neue Kategorie in Masse verschoben werden."
+    share_quote_buttons: "Lege fest, welche Elemente im Widget zum Teilen von Zitaten erscheinen und in welcher Reihenfolge."
+    share_quote_visibility: "Bestimme, wann die Schaltflächen zum Teilen von Zitaten angezeigt werden sollen: nie, nur für anonyme Benutzer oder für alle Benutzer. "
+    create_revision_on_bulk_topic_moves: "Erstelle eine Überarbeitung für die ersten Beiträge, wenn Themen massenweise in eine neue Kategorie verschoben werden."
     errors:
       invalid_email: "Ungültige E-Mail-Adresse."
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
@@ -2092,7 +2092,7 @@ de:
       email_editable_enabled: "Du musst „email editable“ deaktivieren, bevor du diese Einstellung aktivierst."
       staged_users_disabled: "Du musst erst „staged users“ aktivieren, bevor du diese Einstellung aktivierst."
       reply_by_email_disabled: "Du musst erst „reply by email“ aktivieren, bevor du diese Einstellung aktivierst."
-      discourse_connect_url_is_empty: "Du musst eine „Discourse Connect URL“ festlegen, bevor du diese Einstellung aktivierst."
+      discourse_connect_url_is_empty: "Du musst eine „discourse connect url'“ festlegen, bevor du diese Einstellung aktivierst."
       discourse_connect_invite_only: "Du kannst DiscourseConnect und „invite only“ nicht gleichzeitig aktivieren."
       enable_local_logins_disabled: "Du musst erst „enable local logins“ aktivieren, bevor du diese Einstellung aktivierst."
       min_username_length_exists: "Du kannst die Mindestlänge von Benutzernamen nicht über den kürzesten Benutzernamen (%{username}) setzen."
@@ -2450,39 +2450,39 @@ de:
 
       [**%{base_url}**][0]
 
-      E-Mail-Zustellbarkeit ist kompliziert. Hier sind ein paar wichtige Dinge, die du zuerst überprüfen solltest:
+      Die Zustellbarkeit von E-Mails ist eine komplizierte Angelegenheit. Nachfolgend ein paar wichtige Aspekte, die du zuerst überprüfen solltest:
 
-      - Sei *sicher* um die `Benacrichtigungs-E-Mail` zu senden: Adresse korrekt in den Einstellungen deiner Seite zu setzen. **Die Domäne, die inadresse der von Ihnen gesendeten E-Mails angegeben ist, ist die Domäne, gegen die Ihre E-Mail bestätigt wird**.
+      - Stelle *sicher*, dass du die „from:“-Adresse für die `notification email` in den Einstellungen deiner Website korrekt festlegst. **Die Domain, die in der „from“-Adresse deiner E-Mails angegeben ist, ist die Domain, gegen die deine E-Mail validiert wird.**
 
-      - Erfahren Sie, wie Sie die Rohquelle der E-Mail in Ihrem Mail-Client einsehen können, damit Sie die E-Mail-Kopfzeilen auf wichtige Hinweise überprüfen können. In Google Mail ist es die Option "Original anzeigen" im Dropdown-Menü oben rechts auf jeder Mail.
+      - Du solltest wissen, wie du den Roh-Quelltext der E-Mail in deinem Mail-Client anzeigst, damit du die E-Mail-Header auf wichtige Hinweise untersuchen kannst. In Gmail ist es die Option „Original anzeigen“ im Drop-down-Menü oben rechts bei jeder Mail.
 
-      - **WICHTIG:** Hat Ihr ISP einen Reverse-DNS-Eintrag eingegeben, um Domainnamen und IP-Adressen zu verknüpfen, von denen Sie E-Mails senden? [Testen Sie Ihren Reverse PTR Datensatz][2] hier. Wenn Ihr ISP nicht den richtigen Reverse DNS-Zeigereintrag eingibt, ist es sehr unwahrscheinlich, dass einer Ihrer E-Mails ausgeliefert wird.
+      - **WICHTIG:** Hat dein ISP einen Reverse-DNS-Eintrag festgelegt, um die Domain-Namen und IP-Adressen, von denen du Mails sendest, zu verknüpfen? [Teste deinen Reverse-PTR-Eintrag][2] hier. Wenn dein ISP nicht den richtigen Reverse-DNS-Pointer-Record einträgt, ist es sehr unwahrscheinlich, dass deine E-Mails zugestellt werden können.
 
-      - Ist der [SPF record][8] Ihrer Domäne korrekt? [Testen Sie Ihren SPF-Eintrag][1] hier. Beachten Sie, dass TXT der korrekte offizielle Datensatztyp für SPF ist.
+      - Ist der [SPF-Eintrag][8] deiner Domain korrekt? [Teste deinen SPF-Eintrag][1] hier. Beachte, dass TXT der korrekte offizielle Eintragstyp für SPF ist.
 
-      - Ist der [DKIM record][3] Ihrer Domäne korrekt? Dies wird die Zustellbarkeit von E-Mails deutlich verbessern. [DKIM-Eintrag testen][7] hier.
+      - Ist der [DKIM-Eintrag][3] deiner Domain korrekt? Dies wird die Zustellbarkeit von E-Mails deutlich verbessern. [Teste deinen DKIM-Eintrag][7] hier.
 
-      - Wenn Sie Ihren eigenen Mailserver laufen lassen überprüfen, stellen Sie sicher, dass die IPs Ihres Mailservers [nicht auf E-Mail-Blockierlisten][4]sind. Überprüfen Sie auch, ob es definitiv einen vollqualifizierten Hostnamen sendet, der in seiner HELO-Nachricht im DNS aufgelöst wird. Wenn nicht, wird Ihre E-Mail von vielen Mail-Diensten abgelehnt.
+      - Wenn du deinen eigenen Mailserver betreibst, überprüfe, ob die IPs deines Mailservers [nicht auf irgendwelchen E-Mail-Negativlisten][4] stehen. Überprüfe auch, ob er definitiv einen vollqualifizierten Hostnamen, der im DNS aufgelöst wird, in seiner HELO-Nachricht sendet. Wenn nicht, wird deine E-Mail von vielen Maildiensten abgelehnt.
 
-      - Wir empfehlen dringend, dass Sie **eine Test-E-Mail an [mail-tester.com][mt]** senden, um zu überprüfen, ob all das korrekt funktioniert.
+      - Wir empfehlen dir dringend, **eine Test-E-Mail an [mail-tester.com][mt]** zu senden, um zu überprüfen, ob alles oben genannte korrekt funktioniert.
 
-      (Der *einfache* Weg ist ein Konto auf [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] oder [Mailjet][mj] anzulegen, die kostengünstige Mailingpläne haben und für kleine Gemeinschaften in Ordnung sind. Sie müssen noch die SPF und DKIM Datensätze in Ihrem DNS einrichten!)
+      (Am *einfachsten* ist es, ein Konto bei [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] oder [Mailjet][mj] zu erstellen, die günstige Mailing-Tarife anbieten und für kleine Communitys gut geeignet sind. Du musst allerdings trotzdem noch die SPF- und DKIM-Einträge in deinem DNS einrichten!)
 
-      Wir hoffen, dass Sie diesen Email-Lieferungstest erhalten haben!
+      Wir hoffen, dass du diesen E-Mail-Zustellbarkeitstest erhalten hast!
 
-      Viel Glück,
+      Viel Erfolg!
 
-      Deine Freunde auf [Discourse](https://www.discourse.org)
+      Deine Freunde von [Discourse](https://www.discourse.org)
 
       [0]: %{base_url}
       [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup. spx
+      [2]: https://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
       [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester. om/spf-dkim-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
       [8]: http://www.openspf.org/SPF_Record_Syntax
       [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www. parkpost.com/
+      [sp]: https://www.sparkpost.com/
       [mg]: https://www.mailgun.com/
       [mj]: https://www.mailjet.com/pricing/
       [mt]: https://www.mail-tester.com/
