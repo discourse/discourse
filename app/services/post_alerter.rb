@@ -658,7 +658,11 @@ class PostAlerter
     # Send a single email using group SMTP settings to cut down on the
     # number of emails sent via SMTP, also to replicate how support systems
     # and group inboxes generally work in other systems.
-    Jobs.enqueue(
+    #
+    # We need to send this on a delay to allow for editing and finalising
+    # posts, the same way we do for private_message user emails/notifications.
+    Jobs.enqueue_in(
+      SiteSetting.personal_email_time_window_seconds,
       :group_smtp_email,
       group_id: group.id,
       post_id: post.id,
