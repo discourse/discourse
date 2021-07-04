@@ -4913,7 +4913,7 @@ de:
         title: "Einbettung"
         host: "Erlaubte Hosts"
         class_name: "Klassenname"
-        allowed_paths: "Pfad-Zulassungsliste"
+        allowed_paths: "Pfad-Positivliste"
         edit: "bearbeiten"
         category: "In Kategorie posten"
         add_host: "Host hinzufügen"

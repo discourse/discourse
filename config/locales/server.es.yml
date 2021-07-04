@@ -216,9 +216,9 @@ es:
     comma: ", "
   invite:
     expired: "Tu token de invitación ha caducado.  <a href='%{base_url}/about'>Ponte en contacto con el personal</a>."
-    not_found: "El código de invitación no es válido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro equipo</a>."
+    not_found: "El código de invitación no es válido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro personal</a>."
     not_found_json: "El código de invitación no es válido. Por favor, ponte en contacto con nuestro equipo."
-    not_matching_email: "Tu dirección de correo electrónico y la dirección asociada al token de invitación no coinciden. Contacta con la administración del sitio."
+    not_matching_email: "Tu dirección de correo electrónico y la dirección asociada al token de invitación no coinciden. Contacta con el personal del sitio."
     not_found_template: |
       <p>Tu invitación a <a href="%{base_url}">%{site_name}</a> ya ha sido utilizada.</p>
 
@@ -876,7 +876,7 @@ es:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: "Esta publicación requiere la atención del equipo de moderación por una razón no especificada arriba."
+      description: "Esta publicación requiere la atención del personal por una razón no especificada arriba."
       short_description: "Requiere atención del personal por otro motivo"
       email_title: 'Una publicación en «%{title}» requiere atención del personal'
       email_body: "%{link}\n\n%{message}"
@@ -1537,8 +1537,8 @@ es:
     top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
     post_menu: "Determinar los elementos que aparecen en el menú de publicación y su orden. Ejemplo: me gusta|editar|denunciar|eliminar|compartir|guardar en marcadores|responder"
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
-    share_links: "Determinar los elementos que aparecen en el cuadro de compartir y su orden."
-    site_contact_username: "Nombre de usuario de miembro del personal desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
+    share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
+    site_contact_username: "Nombre de usuario de miembro del equipo desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
     site_contact_group_name: "Un nombre de grupo válido para que sea invitado a todos los mensajes automáticos."
     send_welcome_message: "Enviar a todos los usuarios nuevos un mensaje de bienvenida con una guía rápida de inicio."
     send_tl1_welcome_message: "Enviar a los nuevos usuarios con nivel de confianza 1 un mensaje de bienvenida."
@@ -1580,7 +1580,7 @@ es:
     min_admin_password_length: "Longitud mínima de la contraseña para un administrador."
     password_unique_characters: "Número mínimo de caracteres únicos que la contraseña debe tener."
     block_common_passwords: "No permitir contraseñas que formen parte de las 10.000 contraseñas más comunes."
-    auth_skip_create_confirm: Al registrarse a través de autenticación externa, saltarse la ventana de creación de cuenta. Funciona mejor si los ajustes auth_overrides_email, auth_overrides_username y auth_overrides_name están activados.
+    auth_skip_create_confirm: Al registrarse a través de autenticación externa, omitir la ventana de creación de cuenta. Funciona mejor si los ajustes auth_overrides_email, auth_overrides_username y auth_overrides_name están activados.
     auth_immediately: "Redireccionar automáticamente al sistema de inicio de sesión externo sin interacción del usuario. Solo funciona cuando el ajuste login_required está activado, y solo hay un método de autenticación externo."
     enable_discourse_connect: "Activar inicio de sesión a través de DiscourseConnect (antiguamente «Discourse SSO») (CUIDADO: ¡LAS DIRECCIONES DE CORREO ELECTRÓNICO *DEBEN* SER VALIDADAS POR EL SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Guardar registros detallados de diagnóstico de DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1664,7 +1664,7 @@ es:
     invite_link_max_redemptions_limit_users: "El número máximo de usuarios que pueden registrarse desde un enlace de invitación generado por usuarios habituales no puede sobrepasar este valor."
     alert_admins_if_errors_per_minute: "Número de errores por minuto que activa la alerta a los administradores. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar."
     alert_admins_if_errors_per_hour: "Número de errores por hora que activa la alerta a los administradores. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar."
-    categories_topics: "Número de temas que se muestran en la pagina de /categories. Si estableces el valor en 0, automáticamente intentará conseguir un valor para mantener las dos columnas simétricas (categorías y temas)."
+    categories_topics: "Número de temas que se muestran en la página de /categories. Si estableces el valor en 0, automáticamente intentará conseguir un valor para mantener las dos columnas simétricas (categorías y temas)."
     suggested_topics: "Número de temas sugeridos que se muestran en la parte inferior del tema."
     limit_suggested_to_category: "Solo mostrar temas de la categoría actual en los temas sugeridos."
     suggested_topics_max_days_old: "Los temas sugeridos no deben ser más antiguos de n días."
@@ -2036,7 +2036,7 @@ es:
     default_tags_muted: "Lista de etiquetas silenciadas por defecto."
     default_tags_watching_first_post: "Lista de etiquetas cuya primera publicación de cada tema nuevo estará vigilada por defecto."
     default_text_size: "Tamaño de texto seleccionado por defecto"
-    default_title_count_mode: "Modo por defecto para el contador del título"
+    default_title_count_mode: "Modo por defecto para el contador del título de la página"
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
     retry_web_hook_events: "Reintentar automáticamente 4 veces los eventos del web hook fallidos. Los intervalos de tiempo entre los reintentos son 1, 5, 25 y 125 minutos."
     revoke_api_keys_days: "Número de días antes de que una clave de API sin usar sea revocada automáticamente (0 para nunca)"
@@ -2056,7 +2056,7 @@ es:
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
     tag_style: "Estilo visual de las etiquetas."
     allow_staff_to_tag_pms: "Permitir a los miembros del personal etiquetar cualquier mensaje personal"
-    min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
+    min_trust_level_to_tag_topics: "Nivel mínimo de confianza requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
@@ -2539,7 +2539,7 @@ es:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
     inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva o que vulnera alguna de las [directrices de la comunidad](%{base_path}/directrices)."
     spam: "Tu publicación fue denunciada como **spam**: la comunidad piensa que se trata de un anuncio, algo de naturaleza promocional, en vez de algo útil o relevante para lo que se espera del tema."
-    notify_moderators: "Tu publicación fue denunciada para la **atención de un moderador**: la comunidad piensa que algo de esta publicación requiere la intervención manual de un miembro del personal."
+    notify_moderators: "Tu publicación fue denunciada para la **atención de un moderador**: la comunidad piensa que algo de esta publicación requiere la intervención manual de un miembro del equipo."
   flags_dispositions:
     agreed: "Gracias por avisarnos. Coincidimos con tu denuncia en que hay un problema y lo estamos revisando."
     agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu denuncia en que hay un problema y hemos quitado la publicación."
@@ -2581,7 +2581,7 @@ es:
 
         %{flag_reason}
 
-        La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del personal.**
+        La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del equipo.**
 
         Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     queued_by_staff:
@@ -2653,7 +2653,7 @@ es:
 
         Nos alegramos de ver que estés pasando tiempo con nosotros, y nos gustaría saber más sobre ti. Cuando puedas, [rellena tu perfil](%{base_url}/my/preferences/profile) o [crea un nuevo tema](%{base_url}/categories).
     welcome_staff:
-      title: "Te damos la bienvenida al equipo del foro"
+      title: "Te damos la bienvenida al personal del foro"
       subject_template: "Felicidades, ¡te han hecho %{role}!"
       text_body_template: |
         ¡Felicidades! Un miembro del equipo del foro te ha hecho %{role}.
@@ -2780,28 +2780,28 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (titulado %{former_title}) no funcionó.
 
-        Tu cuenta no tiene el nivel de confianza suficiente para publicar nuevos temas con esta dirección de correo. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
+        Tu cuenta no tiene el nivel de confianza suficiente para publicar nuevos temas con esta dirección de correo. Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_user_not_found:
       title: "Correo electrónico rechazado. Cuenta de usuario no encontrada"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Usuario no encontrado"
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título %{former_title}) no funcionó.
 
-        Tu respuesta se envió desde un correo electrónico desconocido. Intenta usar otro correo electrónico o [contacta con un miembro del personal](%{base_url}/about).
+        Tu respuesta se envió desde un correo electrónico desconocido. Intenta usar otro correo electrónico o [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_screened_email:
       title: "Correo electrónico rechazado. Correo bloqueado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
       text_body_template: |
         Lo sentimos, pero tu mensaje a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contacta con un miembro del personal](%{base_url}/about).
+        Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Correo electrónico rechazado. Correo electrónico no permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
       text_body_template: |
         Lo sentimos, pero tu mensaje a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contacta con un miembro del personal](%{base_url}/about).
+        Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_inactive_user:
       title: "Correo electrónico rechazado. Usuario inactivo"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Usuario inactivo"
@@ -2822,7 +2822,7 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu respuesta se envió desde un correo electrónico diferente al que esperábamos, así que no estamos seguros de que seas la misma persona. Intenta usar otro correo, o [contacta con un miembro del personal](%{base_url}/about).
+        Tu respuesta se envió desde un correo electrónico diferente al que esperábamos, así que no estamos seguros de que seas la misma persona. Intenta usar otro correo, o [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_empty:
       title: "Correo electrónico rechazado. Vacío"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Sin contenido"
@@ -2845,14 +2845,14 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu cuenta no tiene los permisos para crear nuevos temas en esta categoría. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
+        Tu cuenta no tiene los permisos para crear nuevos temas en esta categoría. Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Rechazar correos electrónicos desconocidos No permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Acceso no válido"
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
-        La categoría a la que envió este correo electrónico solo permite respuestas de usuarios con cuentas válidas y direcciones de correo electrónico conocidas. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
+        La categoría a la que envió este correo electrónico solo permite respuestas de usuarios con cuentas válidas y direcciones de correo electrónico conocidas. Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_invalid_post:
       title: "Correo electrónico de rechazo. Publicación no válida"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de publicación"
@@ -2892,7 +2892,7 @@ es:
       text_body_template: |
         Lo sentimos, tu correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
-        La clave de respuesta no es válida o es desconocida, así que no podemos determinar a qué estás respondiendo. [Contacta con un miembro del personal](%{base_url}/about).
+        La clave de respuesta no es válida o es desconocida, así que no podemos determinar a qué estás respondiendo. [Contacta con un miembro del equipo](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "Correo electrónico de rechazo. Dirección del destinatario incorrecta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Dirección desconocida"
@@ -2921,28 +2921,28 @@ es:
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
-        El tema al que estás respondiendo ya no existe -- ¿quizás ha sido eliminado? Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
+        El tema al que estás respondiendo ya no existe -- ¿quizás ha sido eliminado? Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_topic_closed:
       title: "Correo electrónico de rechazo. Tema cerrado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Tema cerrado"
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título %{former_title}) no ha funcionado.
 
-        El tema al que estás respondiendo está cerrado y no permite más respuestas. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
+        El tema al que estás respondiendo está cerrado y no permite más respuestas. Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_auto_generated:
       title: "Correo electrónico de rechazo. Autogenerado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Respuesta generada automaticamente"
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título%{former_title}) no funcionó.
 
-        Tu correo electrónico ha sido marcado como «autogenerado», lo que significa que ha sido creado automáticamente por un ordenador en lugar de haber sido escrito por un ser humano; no podemos aceptar este tipo de correos. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
+        Tu correo electrónico ha sido marcado como «autogenerado», lo que significa que ha sido creado automáticamente por un ordenador en lugar de haber sido escrito por un ser humano; no podemos aceptar este tipo de correos. Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_unrecognized_error:
       title: "Correo electrónico de rechazo. Error no identificado"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error no reconocido"
       text_body_template: |
         Lo sentimos, tu mensaje a %{destination} (con el título %{former_title}) no funcionó.
 
-        Se produjo un error desconocido mientras se procesaba tu correo electrónico y no se pudo publicar. Inténtalo de nuevo o [contacta con un miembro del personal](%{base_url}/about).
+        Se produjo un error desconocido mientras se procesaba tu correo electrónico y no se pudo publicar. Inténtalo de nuevo o [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_attachment:
       title: "Correo electrónico de rechazo. Archivos adjuntos"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Archivos adjuntos rechazados"
@@ -2952,14 +2952,14 @@ es:
         Detalles:
         %{rejected_errors}
 
-        Si crees que se trata de un error, [contacta con un miembro del personal](%{base_url}/about).
+        Si crees que se trata de un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_reply_not_allowed:
       title: "Correo electrónico de rechazo. No permitido"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Respuesta no permitida"
       text_body_template: |
         Lo sentimos, tu mensaje de correo electrónico a %{destination} (con el título %{former_title}) no funcionó.
 
-        Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta con un miembro del personal](%{base_url}/about).
+        Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Correo electrónico de rechazo por respuesta al resumen"
       subject_template: "[%{email_prefix}] Problema de correo electrónico — Responder al resumen"
@@ -2968,7 +2968,7 @@ es:
 
         Has respondido a un correo electrónico de resumen, lo cual no es aceptable.
 
-        Si crees que se trata de un error, [ponte en contacto con un miembro del personal] (%{base_url}/acerca de).
+        Si crees que se trata de un error, [ponte en contacto con un miembro del equipo] (%{base_url}/acerca de).
     email_error_notification:
       title: "Error de notificación de correo electrónico"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de autenticación POP"
@@ -3012,7 +3012,7 @@ es:
 
         Esto es un mensaje automatizado de %{site_name} para hacerte saber que tus publicaciones han sido ocultadas temporalmente porque la comunidad las ha denunciado.
 
-        Como medida preventiva, tu nueva cuenta ha sido silenciada y no podrás crear respuestas o temas hasta que un miembro del personal la revise. Lamentamos las molestias.
+        Como medida preventiva, tu nueva cuenta ha sido silenciada y no podrás crear respuestas o temas hasta que un miembro del equipo la revise. Lamentamos las molestias.
 
         Para más información, echa un vistazo a nuestras [directrices de la comunidad](%{base_url}/directrices).
     too_many_tl3_flags:
@@ -3023,7 +3023,7 @@ es:
 
         Esto es un mensaje automátizado de %{site_name} para hacerte saber que tu cuenta se encuentra suspendida debido a numerosas denuncias de la comunidad.
 
-        Como medida preventiva, tu cuenta nueva ha sido silenciada y no podrás crear nuevas respuestas o temas hasta que un miembro del personal la revise. Lamentamos las molestias ocasionadas.
+        Como medida preventiva, tu cuenta nueva ha sido silenciada y no podrás crear nuevas respuestas o temas hasta que un miembro del equipo la revise. Lamentamos las molestias ocasionadas.
 
         Para más información, lee las [directrices de la comunidad](%{base_url}/directrices).
     silenced_by_staff:
@@ -3034,7 +3034,7 @@ es:
 
         Esto es un mensaje automatizado de %{site_name} para hacerte saber que tu cuenta ha sido temporalmente retenida como medida preventiva.
 
-        Puedes seguir navegando, pero no podrás responder o crear temas hasta que un [miembro del personal](%{base_url}/about) revise tus últimos mensajes. Lamentamos las molestias ocasionadas.
+        Puedes seguir navegando, pero no podrás responder o crear temas hasta que un [miembro del equipo](%{base_url}/about) revise tus últimos mensajes. Lamentamos las molestias ocasionadas.
 
         Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/directrices).
     user_automatically_silenced:
@@ -3491,7 +3491,7 @@ es:
       text_body_template: |
         ¡Te damos la bienvenida a %{site_name}!
 
-        Un miembro del personal aprobó tu cuenta en %{site_name}.
+        Un miembro del equipo aprobó tu cuenta en %{site_name}.
 
         Puedes ahora acceder a tu nueva cuenta iniciando sesión en:
         %{base_url}
@@ -4341,7 +4341,7 @@ es:
             label: "Tema de bienvenida"
             description: "<p>¿Cómo le describirías tu comunidad a un desconocido en alrededor de 1 minuto?</p> <ul> <li>¿A quién va dirigido el contenido?</li> <li> ¿Qué puedo encontrar aquí?</li> <li>¿Por qué debería visitar esta página?</li> </ul> <p> Tu tema de bienvenida es lo primero que los nuevos visitantes verán en el sitio. Piensa que es el <b>párrafo</b> que define la esencia de tu comunidad.</p>"
             one_paragraph: "El mensaje de bienvenida no debería ser más de un párrafo."
-            extra_description: "Si no te decides, puedes saltarte este paso y editar el tema de bienvenida más adelante."
+            extra_description: "Si no te decides, puedes omitir este paso y editar el tema de bienvenida más adelante."
       privacy:
         title: "Acceso"
         description: "<p>¿Tu comunidad está abierta a todo el mundo o está restringida a miembros con membresía, invitación o aprobación? Si lo prefieres, puedes hacer que sea privada y hacerla pública más tarde.</p>"
@@ -4379,7 +4379,7 @@ es:
             description: "Todos los mensajes personales automatizados de Discourse serán enviados desde este usuario, tales como denuncias de advertencia y notificaciones de copias de seguridad exitosas."
       corporate:
         title: "Organización"
-        description: "Esta información se introducirá en tus <a href='%{base_path}/tos' target='blank'>Términos de servicio</a>, las cuales podrás editar en todo momento en la categoría Personal. Si no tienes una empresa, puedes saltarte este paso por ahora."
+        description: "Esta información se introducirá en tus <a href='%{base_path}/tos' target='blank'>Términos de servicio</a>, las cuales podrás editar en todo momento en la categoría Personal. Si no tienes una empresa, puedes omitir este paso por ahora."
         fields:
           company_name:
             label: "Nombre de la compañía"

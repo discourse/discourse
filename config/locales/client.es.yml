@@ -378,7 +378,7 @@ es:
           title: "Los elementos revisables creados por usuarios con niveles de confianza elevados reciben una puntuación más alta."
         type_bonus:
           name: "tipo de bonificación"
-          title: "Algunos tipos revisables pueden recibir una bonificación por parte del equipo para que tengan mayor prioridad."
+          title: "Algunos tipos revisables pueden recibir una bonificación por parte del personal para que tengan mayor prioridad."
       stale_help: "Este elemento ha sido atendido por otra persona."
       claim_help:
         optional: "Puedes reclamar este elemento para evitar que otros lo revisen."
@@ -998,7 +998,7 @@ es:
       skip_new_user_tips:
         description: "Omitir consejos e insignias de bienvenida"
         not_first_time: "¿No es tu primera vez?"
-        skip_link: "Saltarse estos consejos"
+        skip_link: "Omitir estos consejos"
         read_later: "Lo leeré más adelante."
       theme_default_on_all_devices: "Hacer que este sea el tema por defecto en todos mis dispositivos"
       color_scheme_default_on_all_devices: "Establecer la combinación de colores como predeterminada en todos mis dispositivos"
@@ -1659,7 +1659,7 @@ es:
     email_login:
       link_label: "Enviarme un enlace para iniciar sesión por correo electrónico"
       button_label: "con correo electrónico"
-      login_link: "Saltarse la contraseña y enviar por correo electrónico un enlace para iniciar sesión"
+      login_link: "Omitir la contraseña y enviar por correo electrónico un enlace para iniciar sesión"
       emoji: "emoji de candado"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con un enlace para iniciar sesión en tu cuenta."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con un enlace para iniciar sesión en tu cuenta."
@@ -1943,7 +1943,7 @@ es:
         body: "¡Vas a enviarte este mensaje solo a ti mismo!"
       slow_mode:
         error: "Este tema está en modo lento. Hace poco que has publicado, pero podrás volver a hacerlo en %{timeLeft}."
-      admin_options_title: "Configuración opcional del administrador para este tema"
+      admin_options_title: "Configuración opcional del personal para este tema"
       composer_actions:
         reply: Responder
         draft: Borrador
@@ -1966,7 +1966,7 @@ es:
           desc: Responder al tema, no a una publicación específica
         toggle_whisper:
           label: Activar/desactivar susurro
-          desc: Los susurros son visibles solo para los miembros del equipo
+          desc: Los susurros son visibles solo para los miembros del personal
         create_topic:
           label: "Nuevo tema"
         shared_draft:
@@ -2776,8 +2776,8 @@ es:
         admin: "acciones de administrador para la publicación"
         wiki: "Transformar en formato wiki"
         unwiki: "Deshacer formato wiki"
-        convert_to_moderator: "Añadir color del equipo"
-        revert_to_regular: "Revertir color del equipo"
+        convert_to_moderator: "Añadir color del personal"
+        revert_to_regular: "Revertir color del personal"
         rebake: "Reconstruir HTML"
         publish_page: "Publicación de página"
         unhide: "Deshacer ocultar"
@@ -3062,7 +3062,7 @@ es:
       submit_tooltip: "Enviar la denuncia privada"
       take_action_tooltip: "Alcanzar el umbral de denuncias inmediatamente en vez de esperar más denuncias de la comunidad"
       cant: "Lo sentimos, no puedes denunciar esta publicación en este momento."
-      notify_staff: "Notificar a los administradores de forma privada"
+      notify_staff: "Notificar al personal de forma privada"
       formatted_name:
         off_topic: "No tiene relación con el tema"
         inappropriate: "Es inapropiado"
@@ -3911,7 +3911,7 @@ es:
         button_text: "Exportar"
         button_title:
           user: "Exportar la lista completa de usuarios en formato CSV."
-          staff_action: "Exportar el registro completo de acciones de administradores en formato CSV."
+          staff_action: "Exportar el registro completo de acciones del personal en formato CSV."
           screened_email: "Exportar la lista completa de correos electrónicos bloqueados en formato CSV."
           screened_ip: "Exportar la lista completa de direcciones IP bloqueadas en formato CSV."
           screened_url: "Exportar la lista completa de URL bloqueadas en formato CSV."
@@ -5008,7 +5008,7 @@ es:
       upload_error: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
       quit: "Tal vez más tarde"
       staff_count:
-        one: "Tu comunidad tiene %{count} miembro del personal (tú)."
+        one: "Tu comunidad tiene %{count} miembro del equipo (tú)."
         other: "Tu comunidad tiene %{count} miembros del personal, tú incluido."
       invites:
         add_user: "añadir"
