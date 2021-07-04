@@ -9,7 +9,7 @@ fr:
     number:
       format:
         separator: ","
-        delimiter: " "
+        delimiter: ","
       human:
         storage_units:
           format: "%n %u"
@@ -22,7 +22,7 @@ fr:
             mb: Mo
             tb: To
       short:
-        thousands: "%{number} k"
+        thousands: "%{number} 000"
         millions: "%{number} M"
     dates:
       time: "HH:mm"
@@ -44,11 +44,11 @@ fr:
       tiny:
         half_a_minute: "< 1 min"
         less_than_x_seconds:
-          one: "< %{count} s"
-          other: "< %{count} s"
+          one: "< %{count} sec"
+          other: "< %{count} sec"
         x_seconds:
-          one: "%{count} s"
-          other: "%{count} s"
+          one: "%{count} sec"
+          other: "%{count} sec"
         less_than_x_minutes:
           one: "< %{count} min"
           other: "< %{count} min"

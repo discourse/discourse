@@ -673,9 +673,9 @@ de:
     by_type:
       first_day_replies_per_day: "Wir bedanken uns für Deine Begeisterung, mach Sie weiter so! Aus Sicherheitsgründen hast Du jedoch die maximale Anzahl von Antworten erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, dann kannst Du weitere Antworten erstellen."
       first_day_topics_per_day: "Wir bedanken uns für Deine Begeisterung! Aus Sicherheitsgründen hast Du jedoch die maximale Anzahl von Themen erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, dann kannst Du weitere neue Themen erstellen."
-      create_topic: "Du erstellst etwas zu schnell zu viele Themen hintereinander. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_post: "Du antwortest etwas zu schnell. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      delete_post: "Du löschst etwas zu schnell Beiträge. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      create_topic: "Du erstellst etwas zu schnell zu viele Themen hintereinander. Bitte warte %{time_left}, bevor du es erneut versuchst."
+      create_post: "Du antwortest etwas zu schnell. Bitte warte %{time_left}, bevor du es erneut versuchst."
+      delete_post: "Du löschst etwas zu schnell Beiträge. Bitte warte %{time_left}, bevor du es erneut versuchst."
       public_group_membership: "Du wechselst die Gruppenzugehörigkeit etwas zu häufig. Bitte warte %{time_left}, bevor du es erneut versuchst."
       topics_per_day: "Du hast die maximal zulässigen neuen Themen pro Tag erreicht. Du kannst weitere neue Themen in %{time_left}erstellen."
       pms_per_day: "Du hast die maximal zulässigen Nachrichten pro Tag erreicht. Du kannst weitere neue Nachrichten in %{time_left}erstellen."
@@ -2112,7 +2112,7 @@ de:
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
-        value: "DiscourseConnect Secret"
+        value: "DiscourseConnect-Geheimnis"
   search:
     extreme_load_error: "Website ist besonders stark ausgelastet, die Suche ist deaktiviert, versuche es später noch einmal"
     within_post: "#%{post_number} von %{username}"
@@ -2124,15 +2124,15 @@ de:
     audio: "[Audio]"
     video: "[Video]"
   discourse_connect:
-    login_error: "Login Fehler"
+    login_error: "Fehler bei der Anmeldung"
     not_found: "Dein Konto konnte nicht gefunden werden. Bitte wende dich an den Administrator der Website."
     account_not_approved: "Dein Konto wurde noch nicht genehmigt. Du erhältst eine E-Mail-Benachrichtigung, wenn du genehmigt wurdest."
     unknown_error: "Es liegt ein Problem mit deinem Konto vor. Bitte wende dich an den Administrator der Website."
-    timeout_expired: "Zeitüberschreitung bei der Kontoanmeldung. Bitte versuche erneut dich anzumelden."
-    no_email: "Es wurde keine E-Mail-Adresse angegeben. Bitte wenden dich an den Administrator der Website."
+    timeout_expired: "Zeitüberschreitung bei der Kontoanmeldung. Bitte versuche erneut, dich anzumelden."
+    no_email: "Es wurde keine E-Mail-Adresse angegeben. Bitte wende dich an den Administrator der Website."
     blank_id_error: "Die `external_id` ist erforderlich, war aber leer"
-    email_error: "Ein Konto konnte nicht mit der E-Mail-Adresse <b>%{email}</b>registriert werden. Bitte wenden dich an den Administrator der Website."
-    missing_secret: "Die Authentifizierung wegen fehlendem Secret fehlgeschlagen. Kontaktiere die Seiten-Administration, damit dieses Problem behoben wird."
+    email_error: "Ein Konto konnte nicht mit der E-Mail-Adresse <b>%{email}</b> registriert werden. Bitte wende dich an den Administrator der Website."
+    missing_secret: "Die Authentifizierung ist aufgrund des fehlenden Geheimnisses fehlgeschlagen. Kontaktiere die Website-Administratoren, um dieses Problem zu beheben."
     invite_redeem_failed: "Einlösung der Einladung fehlgeschlagen. Bitte kontaktiere den Administrator der Website."
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
@@ -2235,7 +2235,7 @@ de:
     not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als %{username} anmelden."
     admin_not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als Administrator anmelden."
-    reset_not_allowed_from_ip_address: "Sie können kein Zurücksetzen des Kennworts von dieser IP-Adresse anfordern."
+    reset_not_allowed_from_ip_address: "Du kannst keine Passwort-Zurücksetzung von dieser IP-Adresse aus anfordern."
     suspended: "Du kannst dich bis zum %{date} nicht anmelden."
     suspended_with_reason: "Konto gesperrt bis zum %{date}: %{reason}"
     errors: "%{errors}"
@@ -2246,14 +2246,14 @@ de:
       csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Versuche es bitte noch einmal."
       request_error: "Beim Start der Authentifizierung ist ein Fehler aufgetreten. Versuche es bitte noch einmal."
       invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server-Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
-    omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
+    omniauth_error_unknown: "Bei der Verarbeitung deiner Anmeldung ist etwas schiefgelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"
     omniauth_confirm_button: "Weiter"
     authenticator_error_no_valid_email: "E-Mail-Adressen mit Bezug zu %{account} sind nicht erlaubt. Du musst möglicherweise dein Konto mit einer anderen E-Mail-Adresse einrichten."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
     email_too_long: "Die von dir eingegebene E-Mail-Adresse ist zu lang. Der Teil vor dem @ darf maximal 254 Zeichen lang sein und Domain-Namen maximal 253 Zeichen."
-    wrong_invite_code: "Der von Ihnen eingegebene Einladungscode war falsch."
+    wrong_invite_code: "Der von dir eingegebene Einladungscode war falsch."
     reserved_username: "Der Benutzername ist nicht erlaubt."
     missing_user_field: "Du hast nicht alle Benutzerangaben ausgefüllt"
     auth_complete: "Authentifizierung ist abgeschlossen."
@@ -2265,8 +2265,8 @@ de:
     second_factor_backup_title: "Wiederherstellungscode für Zwei-Faktor-Authentifizierung"
     invalid_second_factor_code: "Ungültiger Authentifizierungscode. Jeder Code kann nur einmal benutzt werden."
     invalid_security_key: "Ungültiger Sicherheitsschlüssel."
-    missing_second_factor_name: "Bitte geben Sie einen Namen an."
-    missing_second_factor_code: "Bitte geben Sie einen Code an."
+    missing_second_factor_name: "Bitte gib einen Namen an."
+    missing_second_factor_code: "Bitte gib einen Code an."
     second_factor_toggle:
       totp: "Verwende stattdessen eine Authentifizierungs-App oder einen Sicherheitsschlüssel"
       backup_code: "Benutze stattdessen einen Wiederherstellungscode"
@@ -2275,16 +2275,16 @@ de:
       sent_test: "gesendet!"
     user:
       merge_user:
-        updating_username: "Aktualisiere Benutzername..."
+        updating_username: "Aktualisiere Benutzernamen …"
         changing_post_ownership: "Ändern des Beitragseigentümers …"
-        merging_given_daily_likes: "Zusammenführen gegebener täglicher „Gefällt mir“ ..."
-        merging_post_timings: "Beitragszeiten zusammenführen ..."
-        merging_user_visits: "Zusammenführen von Benutzerbesuchen ..."
-        updating_site_settings: "Site-Einstellungen aktualisieren..."
-        updating_user_stats: "Aktualisiere Benutzerstatistik..."
-        merging_user_attributes: "Benutzerattribute zusammenführen..."
-        updating_user_ids: "Aktualisiere Benutzer-Ids..."
-        deleting_source_user: "Lösche Quellbenutzer..."
+        merging_given_daily_likes: "Zusammenführen vergebener täglicher „Gefällt mir“ …"
+        merging_post_timings: "Zusammenführen von Beitragszeiten …"
+        merging_user_visits: "Zusammenführen von Benutzerbesuchen …"
+        updating_site_settings: "Website-Einstellungen aktualisieren …"
+        updating_user_stats: "Benutzerstatistik aktualisieren …"
+        merging_user_attributes: "Zusammenführen von Benutzerattributen …"
+        updating_user_ids: "Benutzer-IDs aktualisieren …"
+        deleting_source_user: "Quellbenutzer löschen …"
   user:
     deactivated: "Wurde aufgrund zu vieler unzustellbarer E-Mails an „%{email}“ deaktiviert."
     deactivated_by_staff: "Deaktiviert vom Team"
@@ -2293,7 +2293,7 @@ de:
       other: "Automatische Deaktivierung nach %{count} Tagen Inaktivität"
     activated_by_staff: "Aktiviert vom Team"
     new_user_typed_too_fast: "Neuer Benutzer hat zu schnell getippt"
-    content_matches_auto_silence_regex: "Inhalt entspricht der automatischen Stummschaltung-Regex"
+    content_matches_auto_silence_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Stummschaltung überein"
     content_matches_auto_block_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Block überein"
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
@@ -2311,7 +2311,7 @@ de:
       not_allowed: "ist für diesen E-Mail-Anbieter nicht erlaubt. Bitte verwende eine andere E-Mail-Adresse."
       blocked: "ist nicht erlaubt."
       revoked: "Es werden bis zum %{date} keine E-Mails an „%{email}“ verschickt."
-      does_not_exist: "N / A"
+      does_not_exist: "N/A"
     ip_address:
       blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
       max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere ein Team-Mitglied."
@@ -2326,8 +2326,8 @@ de:
       reviewable_reject_auto: "Überprüfbare Elemente in der Warteschlange automatisch verarbeiten"
       reviewable_reject: "Überprüfbarer Benutzer abgelehnt"
     email_in_spam_header: "Die erste E-Mail des Benutzers wurde als Spam gekennzeichnet"
-    already_silenced: "Benutzer wurde bereits von %{staff} %{time_ago} stumm geschaltet."
-    already_suspended: "Benutzer wurde bereits von %{staff} %{time_ago}gesperrt."
+    already_silenced: "Benutzer wurde bereits von %{staff} %{time_ago} stummgeschaltet."
+    already_suspended: "Benutzer wurde bereits von %{staff} %{time_ago} gesperrt."
   reviewables_reminder:
     submitted:
       one: "Elemente wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
@@ -2439,9 +2439,9 @@ de:
     title: "Administrator-Bestätigung"
     subject_template: "[%{email_prefix}] Bestätige neues Administrator-Konto"
     text_body_template: |
-      Bitte bestätigen Sie, dass Sie **%{target_username} (%{target_email}) ** als Administrator für Ihr Forum hinzufügen möchten.
+      Bitte bestätige, dass du **%{target_username} (%{target_email})** als Administrator für dein Forum hinzufügen möchtest.
 
-      [Administratorkonto bestätigen] (%{admin_confirm_url})
+      [Administrator-Konto bestätigen](%{admin_confirm_url})
   test_mailer:
     title: "Test-E-Mail"
     subject_template: "[%{email_prefix}] Test der E-Mail-Zustellbarkeit"
@@ -2573,13 +2573,13 @@ de:
       text_body_template: |
         Hallo,
 
-        Dies ist eine automatisierte Nachricht von %{site_name} , um dich darüber zu informieren, dass dein Beitrag ausgeblendet wurde.
+        dies ist eine automatisierte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag ausgeblendet wurde.
 
         <%{base_url}%{url}>
 
         Dein Beitrag bleibt verborgen, bis ein Team-Mitglied ihn überprüft.
 
-        Weitere Informationen findest du in unseren [community guidelines](%{base_url}/guidelines).
+        Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     flags_disagreed:
       title: "Gemeldeter Beitrag vom Team wiederhergestellt"
       subject_template: "Gemeldeter Beitrag vom Team wiederhergestellt"
@@ -2732,14 +2732,14 @@ de:
         ```
     user_added_to_group_as_owner:
       title: "Als Eigentümer zur Gruppe hinzugefügt"
-      subject_template: "Sie wurden als Eigentümer der %{group_name} Gruppe hinzugefügt"
+      subject_template: "Du wurdest als Eigentümer der Gruppe %{group_name} hinzugefügt"
       text_body_template: |
-        Sie wurden als Eigentümer der Gruppe [%{group_name}] (%{base_url}%{group_path}) hinzugefügt.
+        Du wurdest als Eigentümer der Gruppe [%{group_name}](%{base_url}%{group_path}) hinzugefügt.
     user_added_to_group_as_member:
       title: "Als Mitglied zur Gruppe hinzugefügt"
-      subject_template: "Sie wurden als Mitglied der %{group_name} Gruppe hinzugefügt"
+      subject_template: "Du wurdest als Mitglied der Gruppe %{group_name} hinzugefügt"
       text_body_template: |
-        Sie wurden als Mitglied der Gruppe [%{group_name}] (%{base_url}%{group_path}) hinzugefügt.
+        Du wurdest als Mitglied der Gruppe [%{group_name}](%{base_url}%{group_path}) hinzugefügt.
     csv_export_succeeded:
       title: "CSV-Export erfolgreich"
       subject_template: "[%{export_title}] Datenexport abgeschlossen"
@@ -2878,17 +2878,17 @@ de:
       title: "E-Mail abgelehnt, weil unbekannte Empfänger-Adresse"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Empfängeradresse unbekannt"
       text_body_template: |
-        Es tut uns leid, aber Deine E-Mail an %{destination} (Titel %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Hier sind einige Dinge zu überprüfen:
+        Überprüfe Folgendes:
 
-          - Verwendest Du mehr als eine E-Mail-Adresse? Hast Du von einer anderen E-Mail-Adresse als der ursprünglich verwendeten geantwortet? E-Mail-Antworten erfordern, dass Du dieselbe E-Mail-Adresse verwendest, wenn Du antwortest.
+          - Verwendest du mehr als eine E-Mail-Adresse? Hast du von einer anderen E-Mail-Adresse als der ursprünglich verwendeten geantwortet? E-Mail-Antworten erfordern, dass du dieselbe E-Mail-Adresse verwendest, wenn du antwortest.
 
-          - Hat Deine E-Mail-Software die Antwort-an: E-Mail-Adresse beim Beantworten richtig verwendet? Leider sendet manche E-Mail-Software fehlerhaft Antworten an die Von: Adresse, die nicht funktionieren wird.
+          - Hat deine E-Mail-Software die „Antwort an:“-E-Mail-Adresse beim Beantworten richtig verwendet? Leider sendet manche E-Mail-Software fehlerhaft Antworten an die „Von:“-Adresse, was nicht funktioniert.
 
           - Wurde der Nachrichten-ID-Header in der E-Mail geändert? Die Nachrichten-ID muss konsistent und unverändert sein.
 
-        Brauchst Du weitere Hilfe? Kontaktiere uns über die Kontaktdetails unter %{base_url}/about
+        Brauchst du weitere Hilfe? Kontaktiere uns über die Kontaktdetails unter %{base_url}/about
     email_reject_old_destination:
       title: "E-Mail abgelehnt, weil alter Empfänger"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- du versuchst, auf eine alte Benachrichtigung zu antworten"
@@ -2945,11 +2945,11 @@ de:
       title: "E-Mail abgelehnt, weil Antwort auf Zusammenfassung"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort auf Zusammenfassung"
       text_body_template: |
-        Es tut uns leid, aber Ihre E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Sie haben auf eine zusammenfassende E-Mail geantwortet, was nicht akzeptiert wird.
+        Du hast auf eine E-Mail-Zusammenfassung geantwortet, was nicht zulässig ist.
 
-        Wenn Sie glauben, dass dies ein Fehler ist, [wenden Sie sich an einen Mitarbeiter] (%{base_url}/ ungefähr).
+        Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-Fehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
@@ -3035,11 +3035,11 @@ de:
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
 
-        Der neue Benutzer [%{username}](%{user_url}) hat versucht, mehrere Beiträge mit Links zur Domain %{domains} zu erstellen, aber diese Beiträge wuden blockiert, um Spam zu vermeiden. Der Benutzer kann weiter neue Beiträge erstellen, die nicht auf %{domains} verlinken.
+        Der neue Benutzer [%{username}](%{user_url}) hat versucht, mehrere Beiträge mit Links zu %{domains} zu erstellen, aber diese Beiträge wurden blockiert, um Spam zu vermeiden. Der Benutzer kann weiter neue Beiträge erstellen, die nicht auf %{domains} verlinken.
 
         Bitte [überprüfe den Benutzer](%{user_url}).
 
-        Dies kann über die Einstellungen `newuser_spam_host_threshold` und `allowed_spam_host_domains` geändert werden. Erwäge, %{domains}in die Ausnahmeliste aufzunehmen.
+        Dies kann über die Website-Einstellungen `newuser_spam_host_threshold` und `allowed_spam_host_domains` geändert werden. Erwäge gegebenenfalls, %{domains} in die Zulassungsliste aufzunehmen.
     unsilenced:
       title: "Stummschaltung aufgehoben"
       subject_template: "Konto nicht mehr gesperrt"
@@ -3118,45 +3118,45 @@ de:
     posted_by: "Erstellt von %{username} am %{post_date}"
     pm_participants: "Teilnehmer: %{participants}"
     invited_group_to_private_message_body: |
-      %{username} lud @%{group_name} zu einer Nachricht
+      %{username} hat @%{group_name} zu einer Unterhaltung eingeladen
 
       > **[%{topic_title}](%{topic_url})**
-      >
-      > %{topic_excerpt}
-
-      um
-
-      > %{site_title} -- %{site_description}
-
-      Um der Nachricht beizutreten, klicke unten auf den Link:
-
-      %{topic_url}
-    invited_to_private_message_body: |
-      %{username} hat dich zu einer Nachricht eingeladen:
-
-      > **[%{topic_title}](%{topic_url})**
-      >
-      > %{topic_excerpt}
-
-      um
-
-      > %{site_title} -- %{site_description}
-
-      Um der Nachricht beizutreten, klicke unten auf den Link:
-
-      %{topic_url}
-    invited_to_topic_body: |
-      %{username} lud Sie zu einer Diskussion ein
-
-      > ** [%{topic_title}] (%{topic_url}) **
       >
       > %{topic_excerpt}
 
       bei
 
-      > %{site_title} — %{site_description}
+      > %{site_title} -- %{site_description}
 
-      Um an der Diskussion teilzunehmen, klicken Sie auf den folgenden Link:
+      Um der Unterhaltung beizutreten, klicke auf den Link unten:
+
+      %{topic_url}
+    invited_to_private_message_body: |
+      %{username} hat dich zu einer Unterhaltung eingeladen
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      bei
+
+      > %{site_title} -- %{site_description}
+
+      Um der Unterhaltung beizutreten, klicke auf den Link unten:
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} hat dich zu einer Diskussion eingeladen
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      bei
+
+      > %{site_title} -- %{site_description}
+
+      Um der Diskussion beizutreten, klicke auf den Link unten:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
@@ -3315,16 +3315,16 @@ de:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
       text_body_template: |
-        Du wurdest vom Forum bis zum %{suspended_till}gesperrt.
+        Du wurdest im Forum bis zum %{suspended_till} gesperrt.
 
-        Grund - %{reason}
+        Grund – %{reason}
     account_silenced:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
       text_body_template: |
-        Du wurdest vom Forum bis zum %{silenced_till} stumm geschaltet.
+        Du wurdest im Forum bis zum %{silenced_till} stummgeschaltet.
 
-        Grund - %{reason}
+        Grund – %{reason}
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"

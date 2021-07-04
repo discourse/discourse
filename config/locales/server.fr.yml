@@ -969,30 +969,30 @@ fr:
   unsubscribed:
     title: "Préférences de courriel enregistrées !"
     description: "les préférences de courriel pour <b>%{email}</b> ont été mises à jour. Pour modifier vos paramètres de messagerie, <a href='%{url}'>consultez vos préférences utilisateur</a>."
-    topic_description: "Pour vous ré-abonner à %{link}, utilisez le contrôle des notifications en bas ou à droite du sujet."
-    private_topic_description: "Pour vous ré-abonner, utilisez le contrôle des notifications en bas ou à droite du sujet."
+    topic_description: "Pour vous réabonner à %{link}, utilisez le contrôle des notifications en bas ou à droite du sujet."
+    private_topic_description: "Pour vous réabonner, utilisez le contrôle des notifications en bas ou à droite du sujet."
   uploads:
     marked_insecure_from_theme_component_reason: "fichier utilisé dans un composant de thème"
   unsubscribe:
     title: "Se désabonner"
     stop_watching_topic: "Arrêter de surveiller ce sujet, %{link}"
     mute_topic: "Ignorer toutes les notifications pour ce sujet, %{link}"
-    unwatch_category: "Arrêter de surveiller les sujets dans %{category}"
+    unwatch_category: "Arrêter de surveiller les sujets de la catégorie %{category}"
     mailing_list_mode: "Désactiver la liste de diffusion"
     all: "Ne pas m'envoyer de courriel de %{sitename}"
-    different_user_description: "Vous êtes actuellement connecté avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter, ou utiliser le mode anonyme, et essayer à nouveau."
-    not_found_description: "Désolé, nous n'avons pas pu trouver ce désabonnement. Il est possible que le lien dans votre courriel soit trop ancien et ait expiré."
+    different_user_description: "Vous êtes actuellement connecté(e) avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter ou utiliser le mode anonyme avant de réessayer."
+    not_found_description: "Nous sommes désolés, nous n'avons pas pu trouver ce désabonnement. Il est possible que le lien dans votre courriel soit trop ancien et qu'il ait expiré."
     log_out: "Déconnexion"
     submit: "Enregistrer les préférences"
     digest_frequency:
       title: "Vous recevez des courriels de résumé %{frequency}"
       never_title: "Vous ne recevez pas de courriels de résumé"
-      select_title: "Régler la fréquence des courriels de résumé à :"
+      select_title: "Régler la fréquence des courriels de résumé sur :"
       never: "jamais"
       every_30_minutes: "toutes les 30 minutes"
       every_hour: "toutes les heures"
-      daily: "quotidien"
-      weekly: "hebdomadaires"
+      daily: "tous les jours"
+      weekly: "toutes les semaines"
       every_month: "tous les mois"
       every_six_months: "tous les six mois"
   user_api_key:
@@ -1006,9 +1006,9 @@ fr:
     otp_confirmation:
       confirm_title: Continuer vers %{site_name}
       logging_in_as: Connexion en tant que %{username}
-      confirm_button: Complétez la connexion
-    no_trust_level: "Désolé, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
-    generic_error: "Désolé, nous n'avons pu générer de clés pour l'API utilisateur, cette fonctionnalité a peut-être été désactivée par l'administrateur"
+      confirm_button: Terminer la connexion
+    no_trust_level: "Nous sommes désolés, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
+    generic_error: "Nous sommes désolés, nous n'avons pu générer de clés pour l'API utilisateur. Cette fonctionnalité a peut-être été désactivée par l'administrateur"
     scopes:
       message_bus: "Mises à jour en temps réel"
       notifications: "Lire et supprimer les notifications"
@@ -1018,8 +1018,8 @@ fr:
       write: "Tout écrire"
       one_time_password: "Créer un jeton à accès unique"
       bookmarks_calendar: "Lire les rappels de signet"
-    invalid_public_key: "Désolé, la clé publique est invalide."
-    invalid_auth_redirect: "Désolé, cet hôte auth_redirect n'est pas autorisé."
+    invalid_public_key: "Nous sommes désolés, la clé publique est invalide."
+    invalid_auth_redirect: "Nous sommes désolés, cet hôte auth_redirect n'est pas autorisé."
     invalid_token: "Jeton manquant, invalid ou échu."
   flags:
     errors:
@@ -1072,7 +1072,7 @@ fr:
         poster: Auteur
         flagger: Signaleur
         time_to_resolution: Temps de résolution
-      description: "Liste de statuts de signalements : type de signalement, auteur, signaleur, et temps de résolution."
+      description: "Liste des statuts de signalement : type de signalement, auteur, signaleur et temps de résolution."
     visits:
       title: "Visites d'utilisateurs"
       xaxis: "Jour"
@@ -1114,12 +1114,12 @@ fr:
       title: "DAU/MAU"
       xaxis: "Jour"
       yaxis: "DAU/MAU"
-      description: "Nombre d'utilisateurs qui se sont connectés dans la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés dans le dernier mois – en % qui représente le taux d'adhésion de la communauté. Viser > 30%."
+      description: "Nombre d'utilisateurs qui se sont connectés au cours de la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés au cours du dernier mois. Valeur exprimée en % qui représente le taux d'adhésion de la communauté. Viser > 30 %."
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"
       yaxis: "Utilisateurs impliqués"
-      description: "Nombre d'utilisateurs ayant aimé ou publié un message dans les dernières 24 heures."
+      description: "Nombre d'utilisateurs ayant aimé ou publié un message au cours des dernières 24 heures."
     profile_views:
       title: "Vues des profils d'utilisateur"
       xaxis: "Jour"
@@ -1134,7 +1134,7 @@ fr:
       title: "Messages"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux messages"
-      description: "Nouveaux messages créés pour cette période"
+      description: "Nouveaux messages créés pendant cette période"
     likes:
       title: "J'aime"
       xaxis: "Jour"
@@ -1168,15 +1168,15 @@ fr:
         admin: Administrateur
         moderator: Modérateur
         suspended: Suspendu
-        silenced: Sous silence
-      description: "Nombre d'utilisateurs regroupés par administrateurs, modérateurs, suspendus et mis sous silence."
+        silenced: En sourdine
+      description: "Nombre d'utilisateurs regroupés par administrateurs, modérateurs, suspendus et mis en sourdine."
     trending_search:
-      title: Critères de recherche tendance
+      title: Critères de recherche populaires
       labels:
         term: Terme
         searches: Recherches
         click_through: CTR
-      description: "Les critères de recherche les plus tendances avec leur taux de clics."
+      description: "Les critères de recherche les plus tendances avec leurs taux de clics."
     emails:
       title: "Courriels envoyés"
       xaxis: "Jour"
@@ -1206,12 +1206,12 @@ fr:
       title: "Notifications aux modérateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
-      description: "Nombre de fois que les modérateurs ont été informés d'un signalement par message direct."
+      description: "Nombre de fois où les modérateurs ont été informés d'un signalement par message direct."
     notify_user_private_messages:
       title: "Notifications aux utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
-      description: "Nombre de fois que les utilisateurs ont été informés d'un signalement par message direct."
+      description: "Nombre de fois où les utilisateurs ont été informés d'un signalement par message direct."
     top_referrers:
       title: "Meilleurs référents"
       xaxis: "Utilisateurs"
@@ -1221,7 +1221,7 @@ fr:
         user: "Utilisateur"
         num_clicks: "Clics"
         num_topics: "Sujets"
-      description: "Utilisateurs par ordre du nombre de clics sur des liens qu'ils ont partagés."
+      description: "Utilisateurs par nombre de clics sur les liens qu'ils ont partagés."
     top_traffic_sources:
       title: "Meilleures sources de trafic"
       xaxis: "Domaine"
@@ -1232,7 +1232,7 @@ fr:
         domain: Domaine
         num_clicks: Clics
         num_topics: Sujets
-      description: "Liens externes qui ont envoyés le plus de clics ici."
+      description: "Liens externes qui ont envoyés le plus de clics à ce site."
     top_referred_topics:
       title: "Sujets les plus référencés"
       labels:
@@ -1263,12 +1263,12 @@ fr:
       title: "Nombre de vues par les utilisateurs connectés"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs connectés sur mobile"
-      description: "Nombre de nouvelles vues de pages par des utilisateurs connectés depuis des appareils mobiles."
+      description: "Nombre de nouvelles vues de pages par les utilisateurs connectés depuis des appareils mobiles."
     page_view_anon_mobile_reqs:
       title: "Nombre de vues par les utilisateurs non connectés"
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés sur mobile"
-      description: "Nombre de nouvelles vues de pages par des utilisateurs anonymes depuis des appareils mobiles."
+      description: "Nombre de nouvelles vues de pages par les utilisateurs anonymes depuis des appareils mobiles."
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"
@@ -1297,7 +1297,7 @@ fr:
       title: "Délai de première réponse"
       xaxis: "Jour"
       yaxis: "Temps moyen (heures)"
-      description: "Temps moyen (en heures) avant la première réponse dans des nouveaux sujets."
+      description: "Temps moyen (en heures) avant la première réponse dans les nouveaux sujets."
     topics_with_no_response:
       title: "Sujets sans réponses"
       xaxis: "Jour"
@@ -1324,7 +1324,7 @@ fr:
         device: Appareil
         os: Système d'exploitation
         login_time: Heure de connexion
-      description: "Détails des nouvelles connexions qui diffèrent de manière suspecte avec les connexions précédentes."
+      description: "Détails des nouvelles connexions qui diffèrent de manière suspecte des connexions précédentes."
     staff_logins:
       title: "Connexions des administrateurs"
       labels:

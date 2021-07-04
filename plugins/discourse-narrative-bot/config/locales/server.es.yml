@@ -6,10 +6,10 @@
 
 es:
   site_settings:
-    discourse_narrative_bot_enabled: "Habilitar el bot de narrativa de Discourse (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "Deshabilitar la publicación de bienvenida del «Discourse Narrative Bot»"
+    discourse_narrative_bot_enabled: "Activar el bot de narrativa de Discourse (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Desactivar la publicación de bienvenida del «Discourse Narrative Bot»"
     discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el bot de narrativa de Discourse debe ignorar."
-    discourse_narrative_bot_disable_public_replies: "Deshabilitar las respuestas públicas del bot de narrativa de Discourse"
+    discourse_narrative_bot_disable_public_replies: "Desactivar las respuestas públicas del bot de narrativa de Discourse"
     discourse_narrative_bot_welcome_post_type: "Tipo de publicación de bienvenida que debe enviar el bot de narrativa de Discourse"
     discourse_narrative_bot_welcome_post_delay: "Esperar (n) segundos antes de enviar la publicación de bienvenida del bot de narrativa de Discourse."
     discourse_narrative_bot_skip_tutorials: "Tutoriales de Discourse Narrative Bot que saltar"
