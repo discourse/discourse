@@ -1369,6 +1369,7 @@ describe PostAlerter do
     end
 
     it "sends the group smtp email job with a delay of personal_email_time_window_seconds" do
+      freeze_time
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
