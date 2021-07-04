@@ -456,11 +456,11 @@ ar:
       in_reply_to: "ردًا على"
       explain:
         why: "اشرح سبب دخول هذا العنصر في قائمة الانتظار"
-        title: "النقاط القابلة للمراجعة"
+        title: "التقييم القابل للمراجعة"
         formula: "المعادلة"
         subtotal: "الإجمالي الفرعي"
         total: "الإجمالي"
-        min_score_visibility: "الحد الأدنى من النقاط للإظهار"
+        min_score_visibility: "الحد الأدنى من النقاط للرؤية"
         score_to_hide: "النقاط اللازمة لإخفاء المنشور"
         take_action_bonus:
           name: "اتخذ إجراءً"
@@ -505,7 +505,7 @@ ar:
         other: "هذا الموضوع به <b>%{count}</b> منشور في انتظار الموافقة"
       title: "المراجعة"
       topic: "الموضوع:"
-      filtered_topic: "تمت التصفية لعرض المحتوى القابل للمراجعة في موضوع واحد."
+      filtered_topic: "لقد قمت بالتصفية لعرض المحتوى القابل للمراجعة في موضوع واحد."
       filtered_user: "المستخدم"
       filtered_reviewed_by: "تمت المراجعة بواسطة"
       show_all_topics: "عرض كل الموضوعات"
@@ -641,8 +641,8 @@ ar:
         one: "يوم واحد"
         two: "يومان"
         few: "أيام"
-        many: "أيام"
-        other: "أيام"
+        many: "يومًا"
+        other: "يوم"
     time_shortcut:
       later_today: "لاحقًا اليوم"
       next_business_day: "يوم العمل التالي"
