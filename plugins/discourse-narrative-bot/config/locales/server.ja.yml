@@ -45,6 +45,8 @@ ja:
       trigger: "サイコロを振る"
       invalid: |-
         ごめんなさい。このサイコロの組み合わせを出すのは数学的に無理です。:confounded:
+      out_of_range: |-
+        数学的に公正なサイコロの[目の最大数](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)は 120 であることを知っていますか？
       results: |-
         > :game_die: %{results}
     quote:
@@ -60,22 +62,44 @@ ja:
         author: "ドクター・スース"
       "4":
         quote: "うまくいくことを望むのなら自分でやりたまえ。"
+        author: "シャルル＝ギヨーム・エティアンヌ"
+      "5":
+        quote: "自分はできると信じなさい。そうすれば、目的の半分は達成されている。"
+        author: "セオドア・ルーズベルト"
+      "6":
+        quote: "人生はチョコレートの箱。 開けてみないと分からない。"
+        author: "フォレスト・ガンプのお母さん"
+      "7":
+        quote: "男にとっては小さな一歩だが、人類にとっては偉大な一歩である。"
+        author: "二―ル・アームストロング"
+      "8":
+        quote: "恐れていることに毎日 1 つずつ取り組みなさい。"
+        author: "エレノア・ルーズベルト"
+      "9":
+        quote: "失敗は、それを認める勇気さえあれば、いつでも許されるものだ。"
+        author: "ブルース・リー"
+      "10":
+        quote: "人の心が思い描き信じたものは何でも、実現可能である。"
+        author: "ナポレオン・ヒル"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: "フォーチュン"
       answers:
-        "1": "It is certain"
-        "2": "It is decidedly so"
-        "3": "Without a doubt"
-        "4": "Yes definitely"
-        "5": "You may rely on it"
-        "6": "As I see it, yes"
-        "7": "Most likely"
-        "8": "Outlook good"
+        "1": "確かです"
+        "2": "ズバリそうです"
+        "3": "間違いない"
+        "4": "そう、絶対に"
+        "5": "期待していいよ"
+        "6": "そうなるのが見える"
+        "7": "きっと、そう"
+        "8": "見通しは良好"
         "9": "はい"
-        "10": "Signs point to yes"
-        "11": "Reply hazy, try again"
-        "12": "Ask again later"
-        "13": "Better not tell you now"
-        "14": "Cannot predict now"
+        "10": "そうなる兆し有り"
+        "11": "曇っています。もう一度試してください"
+        "12": "後でまた尋ねてください"
+        "13": "今は答えを聞かないほうがいいでしょう"
+        "14": "今は予測できません"
         "15": "Concentrate and ask again"
         "16": "Don't count on it"
         "17": "My reply is no"
