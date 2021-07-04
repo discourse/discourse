@@ -226,3 +226,11 @@ ja:
           [/details]
 
           エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車を使って、次の返信に詳細セクションを追加してみましょう。
+        not_found: |-
+          詳細ウィジェットを作成できませんか？次の返信に以下のテキストを含めてみてください。
+
+          ```text
+          [details=選択して詳細を表示]
+          これが詳細です
+          [/details]
+          ```
