@@ -135,9 +135,19 @@ ja:
           返信してくれてありがとう！
 
           残念ながら、プログラムがまだ不十分なボットなので、そのことがあまりよくわかりません。:frowning:
-        track_response: もう一度試すことができます。それともこのステップをスキップするなら `%{skip_trigger}` 、最初からやり直すには `%{reset_trigger}` と言ってください。
+        track_response: もう一度試すことができます。もしくは、このステップをスキップするなら `%{skip_trigger}` 、最初からやり直すには `%{reset_trigger}` と言ってください。
+        second_response: |-
+          ごめんなさい。まだ意味がわかりません。 :anguished:
+
+          私はただのボットですが、人と話す場合は、[お問い合わせページ](%{base_path}/about)をご覧ください。
+
+          それまでは、あなたの邪魔にならないようにします。
     new_user_narrative:
+      reset_trigger: "チュートリアル"
+      title: "新規ユーザーチュートリアルの修了証書"
+      cert_title: "新規ユーザーチュートリアルを修了したことをここに証します"
       hello:
+        title: "こんにちは！"
         message: |-
           ようこそ。そして %{title} に参加してくれてありがとう！
 
@@ -146,6 +156,15 @@ ja:
           - セキュリティの都合上、新規ユーザーはできることには限られています。使用回数が増えれば、新しい機能 (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (とバッジ (%{base_uri}/badges)) を得られます。
 
           - コミュニティでは常に礼節ある行動 (%{base_uri}/guidelines) を取ってもらえると信じています。
+      onebox:
+        instructions: |-
+          次に、下のいずれかのリンクを私にシェアしてください。**リンクだけを 1 行で**返信すると、気の利いた要約を含めて自動的に展開表示されます。
+
+          リンクは、モバイルでは長押しし、マウスを使用している場合は右クリックするとコピーできます。
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
     advanced_user_narrative:
       delete:
         reply: |-
@@ -176,7 +195,7 @@ ja:
           # を使ってカテゴリリンクを作成できます
           ```
         reply: |-
-          お見事！これはカテゴリだけでなく、タグが有効になっている場合にはタグでも動作します。
+          お見事！これはカテゴリだけでなく、_さらに_タグが有効になっている場合にはタグでも動作します。
       change_topic_notification_level:
         instructions: |-
           すべてのトピックに通知レベルがあります。誰かがあなたに直接話しかけている場合にのみ通知される「通常」で始まります。
@@ -234,3 +253,16 @@ ja:
           これが詳細です
           [/details]
           ```
+        reply: |-
+          上出来です - _細部_ への気配りにあっぱれです！
+      end:
+        message: |-
+          まさに_上級ユーザー_のようにこのチュートリアルを完了しました :bow:
+
+          %{certificate}
+
+          これで以上です。
+
+          それでは今日はこの辺で！また私と話すことがあれば、いつでもメッセージを送ってください :sunglasses:
+      certificate:
+        alt: "上級ユーザートラック修了証書"
