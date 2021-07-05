@@ -1026,7 +1026,7 @@ end
 #  min_tags_from_required_group              :integer          default(1), not null
 #  read_only_banner                          :string
 #  default_list_filter                       :string(20)       default("all")
-#  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE)
+#  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
 #
 # Indexes
 #

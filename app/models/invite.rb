@@ -290,6 +290,7 @@ end
 #  max_redemptions_allowed :integer          default(1), not null
 #  redemption_count        :integer          default(0), not null
 #  expires_at              :datetime         not null
+#  email_token             :string
 #
 # Indexes
 #
