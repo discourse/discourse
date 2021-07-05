@@ -752,7 +752,12 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
 
-    already_seen_user_ids = Set.new TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
+    already_seen_user_ids = Set.new(
+      TopicUser
+        .where(topic_id: post.topic.id)
+        .where("last_read_post_number >= ?", post.post_number)
+        .pluck(:user_id)
+    )
 
     each_user_in_batches(notify) do |user|
       notification_type = !new_record && already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]

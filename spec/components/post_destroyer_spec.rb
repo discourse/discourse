@@ -652,10 +652,6 @@ describe PostDestroyer do
       it "sets the second user's last_read_post_number back to 1" do
         expect(topic_user.last_read_post_number).to eq(1)
       end
-
-      it "sets the second user's last_read_post_number back to 1" do
-        expect(topic_user.highest_seen_post_number).to eq(1)
-      end
     end
   end
 

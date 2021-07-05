@@ -577,6 +577,20 @@ blockquote {
   }
 }
 
+.topic-post-visited-line {
+  width: calc(
+    #{$topic-body-width} + #{$topic-avatar-width} +
+      (#{$topic-body-width-padding} * 2)
+  );
+
+  + .topic-post {
+    .topic-avatar,
+    .topic-body {
+      border-top: none;
+    }
+  }
+}
+
 // variables are used to calculate the width of .gap
 .topic-body {
   width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));

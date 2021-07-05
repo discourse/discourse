@@ -178,9 +178,8 @@
     color: var(--secondary);
   }
 
-  // New posts
+  // Unread posts
 
-  &.new-posts,
   &.unread-posts {
     background-color: var(--tertiary-med-or-tertiary);
     color: var(--secondary);

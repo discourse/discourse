@@ -72,7 +72,7 @@ class TopicsBulkAction
     highest_number_source_column = @user.staff? ? 'highest_staff_post_number' : 'highest_post_number'
     sql = <<~SQL
       UPDATE topic_users tu
-      SET highest_seen_post_number = t.#{highest_number_source_column} , last_read_post_number = t.#{highest_number_source_column}
+      SET last_read_post_number = t.#{highest_number_source_column}
       FROM topics t
       WHERE t.id = tu.topic_id AND tu.user_id = :user_id AND t.id IN (:topic_ids)
     SQL

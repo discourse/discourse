@@ -434,7 +434,7 @@ describe TopicUser do
     p2 = Fabricate(:post, user: p1.user, topic: p1.topic, post_number: 2)
     p1.topic.notifier.watch_topic!(p1.user_id)
 
-    DB.exec("UPDATE topic_users set highest_seen_post_number=1, last_read_post_number=0
+    DB.exec("UPDATE topic_users set last_read_post_number=0
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: p1.topic_id, user_id: p1.user_id)
 
     [p1, p2].each do |p|
@@ -445,7 +445,6 @@ describe TopicUser do
 
     tu = TopicUser.find_by(user_id: p1.user_id, topic_id: p1.topic_id)
     expect(tu.last_read_post_number).to eq(p2.post_number)
-    expect(tu.highest_seen_post_number).to eq(2)
 
   end
 
