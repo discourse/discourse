@@ -57,6 +57,7 @@ ja:
   themes:
     bad_color_scheme: "テーマを更新できません。無効なカラーパレットです"
     other_error: "テーマの更新中に問題が発生しました"
+    ember_selector_error: "#ember または .ember-view CSS セレクタは使用できません。これらの名前はランタイムに動的に生成されるため、時間の経過とともに変化し、最終的には CSS が破損するためです。別のセレクタを試してください。"
     compile_error:
       unrecognized_extension: "ファイル拡張子を認識できません: %{extension}"
     import_error:
@@ -65,9 +66,11 @@ ja:
       about_json_values: "about.json に無効な値が含まれます: %{errors}"
       modifier_values: "about.json 修飾子に無効な値が含まれます: %{errors}"
       git: "git リポジトリのクローニング中にエラーが発生しました。アクセスが拒否されたか、リポジトリが見つかりません"
+      git_ref_not_found: "git の参照をチェックアウトできません: %{ref}"
       unpack_failed: "ファイルの解凍に失敗しました"
       file_too_big: "解凍されたファイルが大きすぎます。"
       unknown_file_type: "アップロードしたファイルは、有効な Discourse テーマではないようです。"
+      not_allowed_theme: "`%{repo}` は許可されたテーマのリストにありません (`allowed_theme_repos` グローバル設定を確認してください)。"
     errors:
       component_no_user_selectable: "テーマコンポーネントをユーザー選択可能にできません"
       component_no_default: "テーマコンポーネントをデフォルトテーマにできません"
@@ -91,13 +94,18 @@ ja:
       string_value_not_valid_min: "%{min} 文字以上である必要があります。"
       string_value_not_valid_max: "%{max} 文字以下である必要があります。"
     locale_errors:
+      top_level_locale: "ロケールファイルのトップレベルキーはロケール名と一致している必要があります"
       invalid_yaml: "翻訳 YAML が無効です"
   emails:
     incoming:
       default_subject: "このトピックはタイトルが必要です"
       show_trimmed_content: "続きを表示"
+      maximum_staged_user_per_email_reached: "メールごとに作成されたステージングユーザーの最大数に達しました。"
       no_subject: "(件名なし)"
       no_body: "(本文なし)"
+      missing_attachment: "(添付ファイル %{filename} が見つかりません)"
+      continuing_old_discussion:
+        other: "[%{title}](%{url})のディスカッションは %{count} 日以上前に作成されたため、継続中です。"
       errors:
         empty_email_error: "受け取ったメールが空白である場合に発生します。"
         no_message_id_error: "メールに 'Message-Id' ヘッダーがない場合に発生します。"
@@ -110,9 +118,15 @@ ja:
         bad_destination_address: "宛先と CC フィールドのいずれのメールアドレスも、設定された受信メールアドレスと一致しない場合に発生します。"
         strangers_not_allowed_error: "ユーザーがメンバーではないカテゴリに新しいトピックを作成しようとしたときに発生します。"
         insufficient_trust_level_error: "必要な信頼レベルを持たないユーザーが新しいトピックを作成しようとしたときに発生します。"
+        reply_user_not_matching_error: "通知が送信されたものとは異なるメールアドレスから返信が届いた場合に発生します。"
+        topic_not_found_error: "返信が届いても、関連トピックが削除されている場合に発生します。"
+        topic_closed_error: "返信が届いても、関連トピックがクローズされている場合に発生します。"
         bounced_email_error: "メールはバウンスメールのレポートです。"
         screened_email_error: "送信者のメールアドレスがすでにスクリーン対象である場合に発生します。"
+        unsubscribe_not_allowed: "このユーザーがメール経由で購読を解除できない場合に発生します。"
+        email_not_allowed: "メールリストがホワイトリストにないか、ブラックリストに含まれている場合に発生します。"
       unrecognized_error: "不明なエラー"
+    secure_media_placeholder: "編集済み: このサイトではセキュリティで保護されたメディアが有効になってインす。トピックにアクセスしたり、「メディアを表示」をクリックすると、添付されたメディアが表示されます。"
     view_redacted_media: "メディアを表示"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -135,6 +149,9 @@ ja:
       inclusion: はリストに含まれていません
       invalid: は無効です
       is_invalid: "は曖昧です。完全な文ですか？"
+      is_invalid_meaningful: "は曖昧です。ほとんどの語に同じ文字が繰り返し含まれています。"
+      is_invalid_unpretentious: "は曖昧です。1 つ以上の語が非常に長いようです。"
+      is_invalid_quiet: "は曖昧です。意図的にすべて大文字で入力しましたか？"
       invalid_timezone: "'%{tz}' は有効なタイムゾーンではありません"
       contains_censored_words: "次の検閲された単語が含まれています: %{censored_words}"
       less_than: は %{count} より小さい値である必要があります
@@ -143,6 +160,7 @@ ja:
       not_an_integer: は整数である必要があります
       odd: は奇数である必要があります
       record_invalid: ! "検証に失敗しました: %{errors}"
+      max_emojis: "%{max_emojis_count} 個以上の絵文字を使用できません"
       emojis_disabled: "は絵文字を使用できません"
       ip_address_already_screened: "はすでに既存のルールに含まれています"
       restrict_dependent_destroy:
@@ -155,6 +173,7 @@ ja:
       wrong_length:
         other: は %{count} 文字である必要があります
       other_than: "は %{count} 以外の値である必要があります"
+      auth_overrides_username: "'auth_overrides_username` 設定が有奥であるため、認証サービスプロバイダー側でユーザー名を更新する必要があります。"
     template:
       body: ! "次のフィールドに問題があります:"
       header:
@@ -162,8 +181,27 @@ ja:
     embed:
       load_from_remote: "投稿を読み込み中にエラーが発生しました。"
     site_settings:
+      invalid_category_id: "存在しないカテゴリを指定しました"
+      invalid_choice:
+        other: "無効な選択肢 %{name} を指定しました"
       default_categories_already_selected: "他のリストで使われているカテゴリは選択できません。"
+      default_tags_already_selected: "別のリストに使用されているタグを選択できません。"
       s3_upload_bucket_is_required: "'s3_upload_bucket' を入力しない限り、S3 へのアップロードを有効にすることはできません。"
+      enable_s3_uploads_is_required: "S3 アップロードが有効でない限り、S3 インベントリを 使用できません。"
+      page_publishing_requirements: "セキュリティで保護されているメディアが有効である場合、ページの公開を有効にできません。"
+      s3_backup_requires_s3_settings: "'%{setting_name}' が入力されていない場合、S3 をバックアップとして使用することはできません。"
+      s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
+      secure_media_requirements: "セキュリティで保護されたメディアを有効にする前に、S3 アップロードを有効にする必要があります。"
+      share_quote_facebook_requirements: "Facebook に引用を共有できるようにするには、Facebook アプリの ID を設定する必要があります。"
+      second_factor_cannot_enforce_with_socials: "ソーシャルログインが有効になっている状態で 2FA を適用することはできません。先に、%{auth_provider_names} でログインを無効にする必要があります。"
+      second_factor_cannot_be_enforced_with_disabled_local_login: "ログインが無効になっている場合、2FA を適用することはできません。"
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect が有効になっている場合、2FA を適用することはできません。"
+      local_login_cannot_be_disabled_if_second_factor_enforced: "2FA が適用されている場合、ローカルログインを無効にすることはできません。ローカルログインを無効にする前に、適用されている 2FA を無効にしてください。"
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 アップロードはすでにグローバルに有効になっているため、S3 アップロードを有効にできません。サイトレベルでこれを有効にすると、アップロードで重大な問題が発生する可能性があります。"
+      cors_origins_should_not_have_trailing_slash: "CORS オリジンに末尾のスラッシュ (/) を追加しないでください。"
+    conflicting_google_user_id: 'このアカウントの Google アカウント ID が変更されました。セキュリティの理由により、スタッフによる介入が必要です。スタッフに連絡し、<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a> を示してください。'
+    onebox:
+      invalid_address: "サーバー '%{hostname}' が見つからなかったため、プレビューを生成できませんでした。投稿には、プレビューの代わりにリンクのみが表示されます。:cry:"
   invite:
     user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     disabled_errors:

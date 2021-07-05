@@ -45,6 +45,8 @@ ja:
       trigger: "サイコロを振る"
       invalid: |-
         ごめんなさい。このサイコロの組み合わせを出すのは数学的に無理です。:confounded:
+      not_enough_dice:
+        other: "サイコロは %{count} 個しかありません。[Shameful]\n(https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)"
       out_of_range: |-
         数学的に公正なサイコロの[目の最大数](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)は 120 であることを知っていますか？
       results: |-
@@ -278,8 +280,71 @@ ja:
           > :imp: 不愉快なことを書き込みました
 
           早速**この投稿を通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> して、理由に「**不適切**」を選択しましょう！
+        reply: |-
+          この通報は[スタッフ](%{base_uri}/groups/staff)に非公開で通知されます。十分な数のコミュニティメンバーからこの投稿への通報が寄せられた場合は、予防措置として自動的に非表示になります。(実際には、不愉快な内容は書き込まなかった :angel: ので、この通報は取り消しておきました。）
+        not_found: |-
+          おや？私の不愉快な投稿はまだ不適切の通報を受けていないようです。:worried: **通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> を使って投稿を不適切だと通報してみてください。投稿の操作をさらに表示するには、もっと表示ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使用してくださいね。
+      search:
+        instructions: |-
+          _ちょっと_ … このトピックにサプライズを仕掛けましたよ。受けて立つなら、右上&#8599; にある**検索アイコンを選択** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">して、サプライズを検索してみましょう。
+
+          このトピックから "カピ&#8203;バラ" という言葉を探してみましょう
+        hidden_message: |-
+          カピバラを見逃しましたか？:wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          先頭に戻ったことに気づきましたか？**`%{search_answer}` 絵文字を使って返信**し、このお腹を空かせた可哀そうなカピバラにエサを上げましょう。自動的に、最後に移動されます。
+        reply: |-
+          わーい！よく見つけましたね :tada:
+
+          - より詳細な検索機能については、[フル検索ページ](%{search_url})をご覧ください。
+
+          - 長いディスカッションの好きな場所にジャンプするには、右側 (モバイルでは下) にあるトピックのタイムラインコントロールを使ってください。
+
+          - 物理的な :keyboard: を使っている場合は、<kbd>?</kbd> を押すと、便利なキーボードショートカットが表示されます。
+        not_found: |-
+          うーん… うまくいかないようですね。**カピ&#8203;バラ** という語を検索 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> しましたか？
+      end:
+        message: |-
+          @%{username} さん、最後まで付き合ってくれてありがとう！あなただけに作りました。あなたの努力の賜物です。
+
+          %{certificate}
+
+          これで以上です！[**ディスカッションの最新のトピック**](%{base_uri}/latest)か[**ディスカッションのカテゴリ**](%{base_uri}/categories)をご覧ください。:sunglasses:
+
+          (また私と話すことがあれば、`@%{discobot_username}` を使っていつでもメッセージを送るか、メンションしてくださいね！)
+      certificate:
+        alt: "修了証書"
     advanced_user_narrative:
+      reset_trigger: "上級チュートリアル"
+      cert_title: "上級ユーザーチュートリアルを修了したことをここに証します"
+      title: ":arrow_up:上級ユーザーの機能"
+      start_message: |-
+        @%{username} さん、_上級_ユーザーとして、[あなたの設定ページ](%{base_uri}/my/preferences)にアクセスしましたか？ダークテーマやライトテーマなど、エクスペリエンスをカスタマイズする方法がたくさんあります。
+
+        話がはずれましたね。それでは始めましょう！
+      edit:
+        bot_created_post_raw: "@%{discobot_username} は、私が知っている中でも最もクールなボットです :wink:"
+        instructions: |-
+          誰でもミスは起こします。でも心配する必要はありません。投稿はいつでも編集して修正することができます！
+
+          まずは、あなたの代わりに作成した投稿を**削除**することから始めましょう。
+        not_found: |-
+          あなたのために私が作成した[post](%{url})をまだ編集していないようです。もう一度やってみましょう。
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> アイコンを使って、エディタを開いてください。
+        reply: |-
+          よくできました！
+
+          5 分後に行った編集は、公開編集リビジョンとして表示され、右上にリビジョン番号とともに小さな鉛筆アイコンが表示されます。
       delete:
+        instructions: |-
+          作成した投稿を取り消す場合は、削除できます。
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **削除** 操作で、上の投稿をどれか**削除してみましょう**。ただし、最初の投稿は削除しないでくださいね！
+        not_found: |-
+          投稿が削除されていないようですね。<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">もっと表示を使うと、<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> 削除が表示されますよ。
         reply: |-
           おっと！:boom:
 
