@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe UploadsController do
+describe UploadsController, type: :multisite do
   let!(:user) { Fabricate(:user) }
 
   describe "#show_short" do
@@ -19,7 +19,7 @@ describe UploadsController do
           upload.update(secure: true)
         end
 
-        context "when running on a multisite connection", type: :multisite do
+        context "when running on a multisite connection" do
           it "redirects to the signed_url_for_path with the multisite DB name in the url" do
             sign_in(user)
             freeze_time

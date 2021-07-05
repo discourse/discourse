@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Discourse/OnlyTopLevelMultisiteSpecs
 
 shared_context "backups" do
   before { create_backups }

@@ -175,19 +175,6 @@ describe "S3Inventory" do
     expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
   end
 
-  it "can create per-site files", type: :multisite do
-    freeze_time
-
-    inventory.stubs(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }])
-
-    files = inventory.prepare_for_all_sites
-    db1 = files["default"].read
-    db2 = files["second"].read
-    expect(db1.lines.count).to eq(3)
-    expect(db2.lines.count).to eq(1)
-    files.values.each { |f| f.close; f.unlink }
-  end
-
   context "s3 inventory configuration" do
     let(:bucket_name) { "s3-upload-bucket" }
     let(:subfolder_path) { "subfolder" }
