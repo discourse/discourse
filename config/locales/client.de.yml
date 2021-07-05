@@ -1084,11 +1084,9 @@ de:
         sent: "Gesendet"
         archive: "Archiv"
         groups: "Meine Gruppen"
-        bulk_select: "Nachrichten auswählen"
         move_to_inbox: "In Posteingang verschieben"
         move_to_archive: "Archivieren"
         failed_to_move: "Die ausgewählten Nachrichten konnten nicht verschoben werden. Vielleicht gibt es ein Netzwerkproblem."
-        select_all: "Alle auswählen"
         tags: "Schlagwörter"
       preferences_nav:
         account: "Konto"

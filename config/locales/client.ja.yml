@@ -979,11 +979,9 @@ ja:
         sent: "送信済み"
         archive: "アーカイブ"
         groups: "自分のグループ"
-        bulk_select: "メッセージを選択"
         move_to_inbox: "受信トレイへ移動"
         move_to_archive: "アーカイブ"
         failed_to_move: "選択されたメッセージを移動できませんでした (ネットワークがダウンしている可能性があります)"
-        select_all: "すべて選択"
         tags: "タグ"
       preferences_nav:
         account: "アカウント"

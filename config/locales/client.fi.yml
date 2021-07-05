@@ -1061,11 +1061,9 @@ fi:
         sent: "Lähetetyt"
         archive: "Arkisto"
         groups: "Omat ryhmät"
-        bulk_select: "Valitse viestejä"
         move_to_inbox: "Siirrä saapuneisiin"
         move_to_archive: "Arkisto"
         failed_to_move: "Valittujen viestien siirto epäonnistui (vika saattaa olla verkkoyhteydessäsi)"
-        select_all: "Valitse kaikki"
         tags: "Tunnisteet"
       preferences_nav:
         account: "Tili"

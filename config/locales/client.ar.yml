@@ -1146,11 +1146,9 @@ ar:
         sent: "المرسلة"
         archive: "الأرشيف"
         groups: "مجموعاتي"
-        bulk_select: "تحديد الرسائل"
         move_to_inbox: "نقل إلى صندوق الوارد"
         move_to_archive: "أرشفة"
         failed_to_move: "فشل نقل الرسائل المحدَّدة (قد تكون شبكتك معطَّلة)"
-        select_all: "حدّد الكلّ"
         tags: "الوسوم"
       preferences_nav:
         account: "الحساب"

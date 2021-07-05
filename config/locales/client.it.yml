@@ -1080,11 +1080,9 @@ it:
         sent: "Inviati"
         archive: "Archiviati"
         groups: "I Miei Gruppi"
-        bulk_select: "Seleziona messaggi"
         move_to_inbox: "Sposta nella posta in arrivo"
         move_to_archive: "Archivia"
         failed_to_move: "Errore nello spostare i messaggi selezionati (forse la tua connessione non è attiva)"
-        select_all: "Seleziona Tutti"
         tags: "Etichette"
       preferences_nav:
         account: "Account"

@@ -1100,11 +1100,9 @@ es:
         sent: "Enviados"
         archive: "Archivo"
         groups: "Mis grupos"
-        bulk_select: "Mensajes seleccionados"
         move_to_inbox: "Mover a la bandeja de entrada"
         move_to_archive: "Archivar"
         failed_to_move: "No se han podido mover los mensajes seleccionados (podrías estar teniendo problemas de conexión)"
-        select_all: "Seleccionar todo"
         tags: "Etiquetas"
         warnings: "Advertencias oficiales"
       preferences_nav:

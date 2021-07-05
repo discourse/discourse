@@ -1036,11 +1036,9 @@ pt_BR:
         sent: "Enviadas"
         archive: "Arquivo"
         groups: "Meus Grupos"
-        bulk_select: "Selecionar mensagens"
         move_to_inbox: "Mover para Caixa de entrada"
         move_to_archive: "Arquivar"
         failed_to_move: "Falha ao mover as mensagens selecionadas (talvez você esteja sem conexão com a Internet)"
-        select_all: "Selecionar Tudo"
         tags: "Etiquetas"
       preferences_nav:
         account: "Conta"

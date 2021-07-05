@@ -1084,11 +1084,9 @@ fr:
         sent: "Envoyés"
         archive: "Archivés"
         groups: "Mes groupes"
-        bulk_select: "Sélectionner des messages"
         move_to_inbox: "Déplacer dans la boîte de réception"
         move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (votre connexion est peut-être en panne)"
-        select_all: "Tout sélectionner"
         tags: "Étiquettes"
       preferences_nav:
         account: "Compte"
