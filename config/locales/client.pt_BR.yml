@@ -112,8 +112,8 @@ pt_BR:
         x_years:
           one: "%{count} ano depois"
           other: "%{count} anos depois"
-      previous_month: "Mês Anterior"
-      next_month: "Próximo Mês"
+      previous_month: "Mês anterior"
+      next_month: "Próximo mês"
       placeholder: data
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
@@ -125,32 +125,32 @@ pt_BR:
       url: "Copiar e compartilhar a URL"
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
-      private_topic: "tornou este tópico em uma mensagem pessoal %{when}"
+      private_topic: "tornou este tópico uma mensagem pessoal em %{when}"
       split_topic: "dividiu este tópico %{when}"
-      invited_user: "convidou %{who} %{when}"
-      invited_group: "convidou %{who} %{when}"
-      user_left: "%{who} se removeram desta mensagem %{when}"
-      removed_user: "removido %{who} %{when}"
-      removed_group: "removido %{who} %{when}"
-      autobumped: "automaticamente promovido %{when}"
+      invited_user: "convidou %{who} em %{when}"
+      invited_group: "convidou %{who} em %{when}"
+      user_left: "%{who} foi removido(a) desta mensagem em %{when}"
+      removed_user: "%{who} foi removido(a) em %{when}"
+      removed_group: "%{who} foi removido(a) em %{when}"
+      autobumped: "automaticamente promovido(a) em %{when}"
       autoclosed:
-        enabled: "fechou %{when}"
-        disabled: "abriu %{when}"
+        enabled: "fechado(a) em %{when}"
+        disabled: "aberto(a) em %{when}"
       closed:
-        enabled: "fechou %{when}"
-        disabled: "abriu %{when}"
+        enabled: "fechado(a) em %{when}"
+        disabled: "aberto(a) em %{when}"
       archived:
-        enabled: "arquivou %{when}"
-        disabled: "desarquivou %{when}"
+        enabled: "arquivado(a) em %{when}"
+        disabled: "desarquivado(a) em %{when}"
       pinned:
-        enabled: "fixou %{when}"
-        disabled: "desafixou %{when}"
+        enabled: "fixado(a) em %{when}"
+        disabled: "desafixado(a) em %{when}"
       pinned_globally:
-        enabled: "fixou globalmente %{when}"
-        disabled: "desafixou %{when}"
+        enabled: "fixado(a) globalmente em %{when}"
+        disabled: "desafixado(a) em %{when}"
       visible:
-        enabled: "listou %{when}"
-        disabled: "desalistou %{when}"
+        enabled: "listado(a) em %{when}"
+        disabled: "removido(a) da lista em %{when}"
       banner:
         enabled: "tornou isto um banner %{when}. Isto será mostrado no topo de todas as páginas até que seja descartado pelo usuário."
         disabled: "removeu este banner %{when}. Ele não vai mais aparecer no topo de todas as páginas."
