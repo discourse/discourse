@@ -40,8 +40,8 @@ class SkippedEmailLog < ActiveRecord::Base
       sender_topic_deleted: 23,
       user_email_no_email: 24,
       group_smtp_post_deleted: 25,
-      group_smtp_topic_deleted: 25,
-      group_smtp_disabled_for_group: 25,
+      group_smtp_topic_deleted: 26,
+      group_smtp_disabled_for_group: 27,
       # you need to add the reason in server.en.yml below the "skipped_email_log" key
       # when you add a new enum value
     )

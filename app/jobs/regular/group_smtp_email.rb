@@ -12,39 +12,23 @@ module Jobs
       return if quit_email_early?
 
       group = Group.find_by(id: args[:group_id])
+      return if group.blank?
+
       post = Post.find_by(id: args[:post_id])
       email = args[:email]
       cc_addresses = args[:cc_emails]
-      recipient_user = ::UserEmail.find_by(email: email, primary: true)&.user
+      recipient_user = User.find_by_email(email, primary: true)
 
       if post.blank?
-        return create_skipped_email_log(
-          email_type: :group_smtp,
-          to_address: email,
-          user_id: recipient_user&.id,
-          post_id: nil,
-          reason_type: SkippedEmailLog.reason_types[:group_smtp_post_deleted]
-        )
+        return skip(email, nil, recipient_user, :group_smtp_post_deleted)
       end
 
-      if post.topic.blank?
-        return create_skipped_email_log(
-          email_type: :group_smtp,
-          to_address: email,
-          user_id: recipient_user&.id,
-          post_id: post.id,
-          reason_type: SkippedEmailLog.reason_types[:group_smtp_topic_deleted]
-        )
+      if !Topic.exists?(id: post.topic_id)
+        return skip(email, post, recipient_user, :group_smtp_topic_deleted)
       end
 
       if !group.smtp_enabled
-        return create_skipped_email_log(
-          email_type: :group_smtp,
-          to_address: email,
-          user_id: recipient_user&.id,
-          post_id: post.id,
-          reason_type: SkippedEmailLog.reason_types[:group_smtp_disabled_for_group]
-        )
+        return skip(email, post, recipient_user, :group_smtp_disabled_for_group)
       end
 
       # There is a rare race condition causing the Imap::Sync class to create
@@ -88,6 +72,16 @@ module Jobs
 
     def quit_email_early?
       SiteSetting.disable_emails == 'yes' || !SiteSetting.enable_smtp
+    end
+
+    def skip(email, post, recipient_user, reason)
+      create_skipped_email_log(
+        email_type: :group_smtp,
+        to_address: email,
+        user_id: recipient_user&.id,
+        post_id: post&.id,
+        reason_type: SkippedEmailLog.reason_types[reason]
+      )
     end
   end
 end
