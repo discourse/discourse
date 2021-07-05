@@ -1043,6 +1043,10 @@ a.mention-group {
     font-size: $font-down-1;
     padding: 0 8px;
   }
+
+  + .small-action {
+    border-top: none;
+  }
 }
 
 // Select posts
