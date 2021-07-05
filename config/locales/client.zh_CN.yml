@@ -3414,58 +3414,58 @@ zh_CN:
             visibility_levels:
               title: "谁能看到此群组？"
               public: "所有人"
-              logged_on_users: "已登录用户"
-              members: "群组的所有者、成员还有版主"
-              staff: "群组的所有者和成员"
+              logged_on_users: "已登录的用户"
+              members: "群组所有者、成员和版主"
+              staff: "群组所有者和版主"
               owners: "群组拥有者"
-              description: "管理员能看到所有群组。"
+              description: "管理员可以看到所有群组。"
             members_visibility_levels:
-              title: "谁可以看见这个群组的成员？"
-              description: "管理员可以查看所有群组的成员。"
+              title: "谁可以看到此群组的成员？"
+              description: "管理员可以看到所有群组的成员。"
             publish_read_state: "在群组消息中发布群组阅读状态"
           membership:
             automatic: 自动
-            trust_levels_title: "这些用户加入时，将自动赋予信任等级："
+            trust_levels_title: "当用户加入时自动授予其信任级别："
             effects: 影响
             trust_levels_none: "无"
-            automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
+            automatic_membership_email_domains: "使用与此列表中的电子邮件域名完全匹配的电子邮件域名注册的用户将被自动添加到此群组："
             automatic_membership_user_count:
-              other: "%{count}个拥有域名邮件地址的用户将会被添加到这个群组中。"
+              other: "%{count} 个用户具有新的电子邮件域名，将被添加到群组中。"
             primary_group: "自动设置为主要群组"
-        name_placeholder: "群组名，没有空格，和用户名一样的规则"
+        name_placeholder: "群组名称，没有空格，与用户名规则相同"
         primary: "主要群组"
-        no_primary: "(无主要群组)"
+        no_primary: "（无主要群组）"
         title: "群组"
         edit: "编辑群组"
         refresh: "刷新"
-        about: "在这里编辑群组的名字和成员"
+        about: "在此处编辑您的群组成员资格和名称"
         group_members: "群组成员"
         delete: "删除"
-        delete_confirm: "删除这个群组吗？"
+        delete_confirm: "删除此群组？"
         delete_with_messages_confirm:
-          other: "删除此群组将导致 %{count} 条消息被孤立，群组成员将无法再访问它们。<br><br>你确定吗？"
-        delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
-        delete_automatic_group: 这是一个自动群组，不能删除。
-        delete_owner_confirm: "移除“%{username}”的权限？"
+          other: "删除此群组将导致 %{count} 条消息被孤立，群组成员将无法再访问它们。<br><br>确定吗？"
+        delete_failed: "无法删除群组。如果此群组是自动生成的，则无法删除。"
+        delete_automatic_group: 这是一个自动生成的群组，无法删除。
+        delete_owner_confirm: "移除 '%{username}' 的所有者权限？"
         add: "添加"
-        custom: "定制"
+        custom: "自定义"
         automatic: "自动"
         default_title: "默认头衔"
-        default_title_description: "将会应用给此群组所有用户"
+        default_title_description: "将应用于该群组中的所有用户"
         group_owners: 所有者
         add_owners: 添加所有者
         none_selected: "选择一个群组以开始"
         no_custom_groups: "创建一个自定义群组"
       api:
         generate_master: "生成主 API 密钥"
-        none: "当前没有可用的 API 密钥。"
+        none: "当前没有有效的 API 密钥。"
         user: "用户"
         title: "API"
         key: "密钥"
         created: 创建时间
         updated: 已更新
         last_used: 最后使用
-        never_used: '（从不）'
+        never_used: '（从未）'
         generate: "生成"
         undo_revoke: "取消撤销"
         revoke: "撤销"
