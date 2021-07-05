@@ -217,7 +217,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
 
   context "when smtp is not enabled for the group" do
     it "returns without sending email" do
-      group.update(smtp_enabled: false)
+      group.update!(smtp_enabled: false)
       subject.execute(args)
       expect(ActionMailer::Base.deliveries.count).to eq(0)
       expect(SkippedEmailLog.exists?(
