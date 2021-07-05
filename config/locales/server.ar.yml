@@ -39,17 +39,17 @@ ar:
   title: "Discourse"
   topics: "المواضيع"
   posts: "المشاركات"
-  views: "المشاهدات"
+  views: "مرات العرض"
   loading: "جارٍ التحميل"
   powered_by_html: 'بدعم من <a href="http://www.discourse.org">Discourse</a>، يُفضَّل عرضه مع تفعيل JavaScript'
   sign_up: "الاشتراك"
-  log_in: "لِج"
+  log_in: "تسجيل الدخول"
   submit: "إرسال"
-  purge_reason: "حُذف تلقائيًا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
-  disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
+  purge_reason: "تم حذفه تلقائيًا باعتباره حسابًا تم تجاهله أو غير مفعَّل"
+  disable_remote_images_download_reason: "تم تعطيل تنزيل الصور عن بُعد بسبب عدم كفاية مساحة القرص."
   anonymous: "مجهول"
-  remove_posts_deleted_by_author: "حذفها الكاتب"
-  redirect_warning: "تعذّر تأكيد أنّ الرابط الذي حدّدته نُشر في هذا المنتدى حقًا. مع ذلك إن أردت المواصلة، فحدّد الرابط أسفله."
+  remove_posts_deleted_by_author: "تم الحذف بواسطة الكاتب"
+  redirect_warning: "تعذَّر علينا التحقُّق من نشر الرابط الذي حدَّدته في المنتدى. إذا كنت تريد المتابعة على أي حال، فحدِّد الرابط أدناه."
   on_another_topic: "في موضوع آخر"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
@@ -60,19 +60,19 @@ ar:
     compile_error:
       unrecognized_extension: "امتداد الملف غير معروف: %{extension}"
     import_error:
-      generic: حدث عُطل أثناء استيراد هذه السمة
+      generic: حدث خطأ في أثناء استيراد هذه السمة
       about_json: "خطأ في الاستيراد: ملف about.json غير موجود أو غير صالح. هل أنت متأكد أن هذه سمة Discourse؟"
       about_json_values: "يتضمَّن ملف about.json قيمًا غير صالحة: %{errors}"
       modifier_values: "تتضمَّن معدِّلات ملف about.json قيمًا غير صالحة: %{errors}"
       git: "حدث خطأ في أثناء استنساخ مستودع Git، تم رفض الوصول أو لم يتم العثور على المستودع"
-      unpack_failed: "فشل فك ضغط الملف"
+      unpack_failed: "فشل إلغاء ضغط الملف"
       file_too_big: "الملف غير المضغوط كبير جدًا."
       unknown_file_type: "يبدو أن الملف الذي حمَّلته ليس سمة Discourse صالحة."
     errors:
-      component_no_user_selectable: "لا يمكن أن تكون مكونات السمة قابلة للتحديد من قبل المستخدم"
-      component_no_default: "مكونات السمة لا يمكن أن تكون السمة الافتراضية"
-      component_no_color_scheme: "مكونات السمة لا يمكن أن تحتوي على لوحات الألوان"
-      no_multilevels_components: "السمات ذات السمات الفرعية لا يمكن أن تكون موضوعات فرعية نفسها"
+      component_no_user_selectable: "لا يمكن أن تكون مكونات السمة قابلة للتحديد بواسطة المستخدم"
+      component_no_default: "لا يمكن أن تكون مكونات السمة تابعة للسمة الافتراضية"
+      component_no_color_scheme: "لا يمكن أن تحتوي مكونات السمة على لوحات الألوان"
+      no_multilevels_components: "لا يمكن أن تكون السمات ذات السمات الفرعية سمات فرعية في حد ذاتها"
     settings_errors:
       invalid_yaml: "ملف YAML الذي أدخلته غير صالح."
       data_type_not_a_number: "نوع الإعداد \"%{name}\" غير مدعوم. الأنواع المدعومة هي: `integer`، و`bool`، و`list`، و`enum` و`upload`"
@@ -89,55 +89,55 @@ ar:
       string_value_not_valid_min: "يجب ألا يقل طولها عن %{min} على الأقل."
       string_value_not_valid_max: "يجب أن يزيد عدد حروفها عن %{max} على الأكثر."
     locale_errors:
-      invalid_yaml: "ملف YAML الترجمي غير صالحة"
+      invalid_yaml: "ملف YAML للترجمة غير صالح"
   emails:
     incoming:
-      default_subject: "يحتاج هذا الموضوع عنوانًا"
-      show_trimmed_content: "اعرف المحتوى المقصوص"
-      maximum_staged_user_per_email_reached: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم بالبريد الالكتروني."
+      default_subject: "هذا الموضوع بحاجة إلى عنوان"
+      show_trimmed_content: "إظهار المحتوى المقتطع"
+      maximum_staged_user_per_email_reached: "لقد بلغت أقصى عدد من المستخدمين المؤقتين الذين يمكن إنشاؤهم لكل بريد إلكتروني."
       no_subject: "(بلا موضوع)"
       no_body: "(بلا نص)"
       errors:
-        empty_email_error: "يحدث عندما يكون البريد المستَلم فارغ"
-        no_message_id_error: "يحدث عندما لا يحتوي البريد ترويسة ’Message-Id‘."
-        no_body_detected_error: "يحدث عندما يتعذّر استخراج المتن وعدم وجود مرفقات."
-        inactive_user_error: "يحدث عندما يكون المرسل خاملًا."
-        strangers_not_allowed_error: "يحدث عندما يحاول العضو إنشاء موضوع جديد في قسم و هو ليس عضوًا به."
-        insufficient_trust_level_error: "يحدث عندما يحاول العضو إنشاء موضوع جديد في قسم و هو لا يملك مستوى الثّقة المطلوب لذلك."
-        reply_user_not_matching_error: "يحدث عندما يأتي الرّدّ من بريد إلكترونيّ مختلف عن الذي أُرسل إليه الإشعار."
-        topic_not_found_error: "يحدث عندما يصل ردّ لموضوع قد حُذف."
-        topic_closed_error: "يحدث عندما يصل ردّ لموضوع قد أُغلق."
-        bounced_email_error: "هذا البريد الالكتروني هو تقرير ترويجي بالبريد الالكتروني"
-        screened_email_error: "وحدث هذا عندما تم حجب عنوان البريد الالكتروني للمرسل"
-      unrecognized_error: "خطا غير محدد السبب"
+        empty_email_error: "يحدث ذلك عندما تكون النسخة الأولية من الرسالة الإلكترونية التي استلمناها فارغة."
+        no_message_id_error: "يحدث ذلك عندما لا تحتوي الرسالة الإلكترونية على الرأس 'Message-Id'."
+        no_body_detected_error: "يحدث ذلك عندما يتعذَّر علينا استخراج نص ولا توجد مرفقات."
+        inactive_user_error: "يحدث ذلك عندما يكون المُرسِل غير نشط."
+        strangers_not_allowed_error: "يحدث ذلك عندما يحاول مستخدم إنشاء موضوع جديد في فئة ليس عضوًا فيها."
+        insufficient_trust_level_error: "يحدث ذلك عندما يحاول العضو إنشاء موضوع جديد في فئة لا يملك مستوى الثقة المطلوب لها."
+        reply_user_not_matching_error: "يحدث ذلك عندما يأتي الرد من عنوان بريد إلكتروني مختلف عن العنوان الذي تم إرسال الإشعار إليه."
+        topic_not_found_error: "يحدث ذلك عندما يصل رد على موضوع تم حذفه."
+        topic_closed_error: "يحدث ذلك عندما يصل رد على موضوع تم إغلاقه."
+        bounced_email_error: "هذه الرسالة الإلكترونية عبارة عن تقرير بارتداد الرسالة."
+        screened_email_error: "يحدث ذلك عندما يكون عنوان البريد الإلكتروني للمُرسِل قد تم حجبه بالفعل."
+      unrecognized_error: "خطأ غير معروف"
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
-      too_long_validation: "إنها محددة بعدد حروف %{max} حرف; لقد أدخلت %{length}."
+      too_long_validation: "الحد الأقصى هو %{max} حرف؛ لقد أدخلت %{length}."
       invalid_boolean: "قيمة منطقية غير صالحة."
-      taken: "أُخذ بالفعل"
-      accepted: يجب أن تُقبل.
-      blank: لا يمكن جعله فارغا.
-      present: يجب أن يكون فارغ.
-      confirmation: ! "ليست مطابقة ل %{attribute}."
-      empty: لا يمكن جعله فارغا.
-      equal_to: يجب أن تكون مساوي لـ %{count}
-      even: يجب أن يكون العدد زوجي.
-      exclusion: محجوز.
+      taken: "مُستخدَم بالفعل"
+      accepted: يجب قبولها
+      blank: لا يمكن تركها فارغة.
+      present: يجب تركها فارغة
+      confirmation: ! "لا تطابق %{attribute}"
+      empty: لا يمكن تركها فارغة
+      equal_to: يجب أن تساوي %{count}
+      even: يجب أن تكون عددًا زوجيًا
+      exclusion: محجوزة
       greater_than: يجب أن تكون أكبر من %{count}
       greater_than_or_equal_to: يجب أن تكون أكبر من أو تساوي %{count}
-      has_already_been_used: "مستخدم بالفعل "
-      inclusion: غير متضمن في القائمة
-      invalid: غير صالح
+      has_already_been_used: "تم استخدامها بالفعل"
+      inclusion: غير متضمَّنة في القائمة
+      invalid: غير صالحة
       is_invalid: "تبدو غير واضحة، هل هذه الجملة كاملة؟"
       invalid_timezone: "\"%{tz}\" ليست منطقة زمنية صالحة"
-      contains_censored_words: "تحتوي الكلمات الآتية الخاضعة للرّقابة: %{censored_words}"
-      less_than: يجب أن يكون أقل من %{count}
+      contains_censored_words: "تتضمَّن الكلمات المحجوبة التالية: %{censored_words}"
+      less_than: يجب أن تكون أقل من %{count}
       less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
-      not_a_number: ليس عدد
-      not_an_integer: يجب أن يكون عدد صحيح
-      odd: يجب أن يكون مفرد
-      record_invalid: ! "التأكد من الصلاحية غير ممكن : %{errors}"
+      not_a_number: ليست عددًا
+      not_an_integer: يجب أن تكون عددًا صحيحًا
+      odd: يجب أن تكون عددًا فرديًا
+      record_invalid: ! "فشل التحقُّق: %{errors}"
       restrict_dependent_destroy:
         one: "لا يمكن حذف السجل لإعتماد سجل آخر عليه %{record} "
         many: "لا يمكن حذف السجل لاعتماده %{record} موجود"
