@@ -212,6 +212,36 @@ ja:
           - または、エディタの <kbd><b>B</b></kbd> または <kbd><i>I</i></kbd> ボタンを押すこともできます。
         reply: |-
           よくできました！HTML と BBCode はフォーマットにも使用できます。さらに詳しくは、[こちらのチュートリアルを試してみましょう](http://commonmark.org/help) :nerd:
+        not_found: |-
+          あれれ？返信にフォーマットが付けられていないようです。:pencil2:
+
+          もう一度試してもらえますか？迷ったら、エディタの <kbd><b>B</b></kbd> の太字か <kbd><i>I</i></kbd> の斜体ボタンを使ってください。
+      quoting:
+        instructions: |-
+          何に対して返信しているのかがわかるように、返信に引用を含めてみましょう。
+
+          > これがコーヒーなら紅茶を持ってきてください。紅茶ならコーヒーを持ってきてください。
+          >
+          > 独り言には、少なくとも誰かが聞いてくれているというメリットがあります。
+          >
+          > 言葉をうまく操れる人もいれば、為す術がない人もいます。
+
+          &uarr; から好きな引用を選択して、**引用**ボタンを押すと、選択がポップアップ表示されます。またはこの投稿の**返信**ボタンを押します。
+
+          引用の下になぜそれを選んだのか簡単な理由を入力してください。興味があります :thinking:
+        reply: |-
+          よくできました。私のお気に入りの引用を選びましたね！:left_speech_bubble:
+        not_found: |-
+          うーん、返信に私を引用しなかったようですね。
+
+          投稿内のテキストを選択すると、<kbd>**引用**</kbd>ボタンが表示されます。テキストを選択して**返信**を押すこともできますよ！もう一度試してみてください。
+      bookmark:
+        instructions: |-
+          もっと詳しく知るには、下の <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を選択して<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **この個人メッセージをブックマーク**してください。ブックマークすると、後で :gift: がもらえるかも！
+        reply: |-
+          お見事！これで、[プロフィールのブックマークタブ](%{bookmark_url})からこの非公開の会話にいつでも簡単に戻れるようになりました。右上のプロフィール写真を選択するだけです &#8599;
+        not_found: |-
+          あれ？このトピックにはブックマークがありませんね。投稿の下にあるブックマークを見つけられましたか？必要であれば、もっと表示 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使うと、ほかの操作を表示できます。
     advanced_user_narrative:
       delete:
         reply: |-

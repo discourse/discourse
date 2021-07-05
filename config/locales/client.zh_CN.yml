@@ -3467,146 +3467,146 @@ zh_CN:
         last_used: 最后使用
         never_used: '（从未）'
         generate: "生成"
-        undo_revoke: "取消撤销"
-        revoke: "撤销"
+        undo_revoke: "取消撤消"
+        revoke: "撤消"
         all_users: "所有用户"
-        active_keys: "激活API密钥"
+        active_keys: "有效 API 密钥"
         manage_keys: 管理密钥
-        show_details: 详情
+        show_details: 详细信息
         description: 描述
-        no_description: '（没有描述）'
-        all_api_keys: 所有API密钥
-        user_mode: 用户等级
+        no_description: '（无描述）'
+        all_api_keys: 所有 API 密钥
+        user_mode: 用户级别
         impersonate_all_users: 模拟任意用户
         single_user: "单个用户"
         user_placeholder: 输入用户名
         description_placeholder: 此密钥将被如何使用？
         save: 保存
-        new_key: 新建API密钥
-        revoked: 已撤销
+        new_key: 新 API 密钥
+        revoked: 已撤消
         delete: 永久删除
-        not_shown_again: 此key只展示一次，请妥善保存。
+        not_shown_again: 此密钥将不会再显示。在继续之前，请务必进行备份。
         continue: 继续
         use_global_key: 全局密钥（允许所有操作）
         scopes:
           description: |
-            使用作用域时，你可以将一个API密钥限定于一组特定的终端节点。
-            你还可以定义允许哪些参数。使用逗号分隔多个值。
+            使用范围时，您可以将一个 API 密钥限制到一组特定的端点。
+            您还可以定义允许哪些参数。使用逗号分隔多个值。
           title: 范围
           resource: 资源
           action: 操作
           allowed_parameters: 允许的参数
-          optional_allowed_parameters: 允许的参数 (可选)
+          optional_allowed_parameters: 允许的参数（可选）
           any_parameter: '（任意参数）'
-          allowed_urls: 允许的URL
+          allowed_urls: 允许的 URL
           descriptions:
             topics:
-              read: 阅读一个话题或其中的一个帖子。支持RSS。
-              write: 创建一个新的话题或发表到一个现有的话题。
-              read_lists: 阅读如热门、最新、新的话题这样的话题列表。支持RSS。
-              wordpress: 需要 WordPress 才能使 wp-discourse 插件正常工作。
+              read: 阅读一个话题或其中的一个帖子。也支持 RSS。
+              write: 创建一个新话题或发布到现有话题。
+              read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
+              wordpress: WordPress wp-discussion 插件正常工作所必需。
             users:
-              bookmarks: 列出用户收藏。使用 ICS 格式时返回收藏提醒。
+              bookmarks: 列出用户书签。使用 ICS 格式时返回书签提醒。
               sync_sso: 使用 DiscoursetConnect 同步用户。
               show: 获取有关用户的信息。
               check_emails: 列出用户电子邮件。
               update: 更新用户个人资料信息。
-              log_out: 注销用户的所有会话。
-              anonymize: 匿名用户帐户。
+              log_out: 退出用户的所有会话。
+              anonymize: 对用户帐户进行匿名化处理。
               delete: 删除用户帐户。
             email:
-              receive_emails: 将此范围与邮件收件人结合起来处理传入的电子邮件。
+              receive_emails: 将此范围与邮件收件人结合来处理传入的电子邮件。
       web_hooks:
-        title: "Webhooks"
-        none: "当前没有 Webhooks。"
-        instruction: "Webhook 让 Discourse 可以在特定事件发生时通知外部服务。当 webhook 事件触发时，一个 POST 请求将发向指定URL。"
-        detailed_instruction: "一个 POST 请求将在选定事件发生时发至指定 URL。"
-        new: "新建 Webhook"
+        title: "网络钩子"
+        none: "当前没有网络钩子。"
+        instruction: "网络钩子让 Discourse 可以在您的站点发生特定事件时通知外部服务。当网络钩子被触发时，将向提供的 URL 发送一个 POST 请求。"
+        detailed_instruction: "当选择的事件发生时，将向提供的 URL 发送一个 POST 请求。"
+        new: "新网络钩子"
         create: "创建"
         save: "保存"
         destroy: "删除"
         description: "描述"
-        controls: "控制"
+        controls: "控件"
         go_back: "返回列表"
-        payload_url: "Payload URL"
+        payload_url: "有效负载 URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "似乎您正在尝试将 Webhook 设置为本地 URL。传递到本地地址的事件可能会导致副作用或意外行为。继续吗？"
-        secret_invalid: "密钥不能包含空白字符。"
-        secret_too_short: "密钥必须至少有 12 个字符。"
-        secret_placeholder: "可选字符，用于生成签名"
-        event_type_missing: "你必须设置一个事件类型。"
-        content_type: "内容格式"
+        warn_local_payload_url: "您似乎正在尝试将网络钩子设置为本地 URL。传递到本地地址的事件可能会导致副作用或意外行为。继续吗？"
+        secret_invalid: "密钥不得包含任何空白字符。"
+        secret_too_short: "密钥应至少为 12 个字符。"
+        secret_placeholder: "可选字符串，用于生成签名"
+        event_type_missing: "您需要设置至少一种事件类型。"
+        content_type: "内容类型"
         secret: "密钥"
-        event_chooser: "哪些事件可以触发该 webhook？"
-        wildcard_event: "给我发送所有事件。"
+        event_chooser: "哪些事件应触发此网络钩子？"
+        wildcard_event: "向我发送所有事件。"
         individual_event: "选择个别事件。"
-        verify_certificate: "检查 Payload URL 的 TLS 证书"
-        active: "启用"
-        active_notice: "当事件发生时，我们会推送细节"
-        categories_filter_instructions: "相关 Webhook 事件将在满足特定分类的情况下才发送。留空忽略分类限制。"
-        categories_filter: "触发的分类"
-        tags_filter_instructions: "相关Webhook事件将在满足特定标签的情况下才发送。留空忽略标签限制。"
+        verify_certificate: "检查有效负载 URL 的 TLS 证书"
+        active: "有效"
+        active_notice: "当事件发生时，我们会推送详细信息。"
+        categories_filter_instructions: "只有当事件与指定类别相关时，才会触发相关的网络钩子。留空将触发所有类别的网络钩子。"
+        categories_filter: "触发的类别"
+        tags_filter_instructions: "只有当事件与指定标签相关时，才会触发相关的网络钩子。留空将触发所有标签的网络钩子。"
         tags_filter: "触发的标签"
-        groups_filter_instructions: "相关 Webhook 事件将在满足特定群组的情况下才发送。留空忽略群组限制。"
+        groups_filter_instructions: "只有当事件与指定群组相关时，才会触发相关的网络钩子。留空将触发所有群组的网络钩子。"
         groups_filter: "触发的群组"
-        delete_confirm: "删除这个 webhook？"
+        delete_confirm: "删除此网络钩子？"
         topic_event:
           name: "话题事件"
-          details: "当有新话题、话题被修订、修改或者删除时。"
+          details: "有新的话题，话题被修改、更改或删除时。"
         post_event:
           name: "帖子事件"
-          details: "当有新回复、编辑、帖子被删除或者恢复时。"
+          details: "有新的回复、编辑，帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
-          details: "用户登录，注销后，确认其电子邮件已创建，批准或更新。"
+          details: "当用户登录、退出、确认其电子邮件，用户被创建、批准或更新时。"
         group_event:
           name: "群组事件"
-          details: "当群组创建，更新或销毁时。"
+          details: "当群组被创建、更新或销毁时。"
         category_event:
-          name: "分类事件"
-          details: "当分类创建，更新或销毁时。"
+          name: "类别事件"
+          details: "当类别被创建、更新或销毁时。"
         tag_event:
           name: "标签事件"
-          details: "当标签创建，更新或销毁时。"
+          details: "当标签被创建、更新或销毁时。"
         reviewable_event:
-          name: "需审核事件"
-          details: "当新条目准备审核时及其状态更新时。"
+          name: "可审查的事件"
+          details: "当新条目可以进行审查及其状态更新时。"
         notification_event:
           name: "通知事件"
-          details: "当用户在其feed中收到通知时。"
+          details: "当用户在 Feed 中收到通知时。"
         user_badge_event:
           name: "徽章授予事件"
-          details: "当一个用户收到一个徽章时。"
+          details: "当用户收到徽章时。"
         group_user_event:
-          name: "组用户事件"
-          details: "在组中添加或删除用户时。"
+          name: "群组用户事件"
+          details: "在群组中添加或移除用户时。"
         like_event:
           name: "点赞事件"
-          details: "当用户点赞一个贴子时"
+          details: "当用户点赞一个帖子时。"
         delivery_status:
-          title: "分发状态"
-          inactive: "不活跃"
+          title: "传送状态"
+          inactive: "停用"
           failed: "失败"
           successful: "成功"
-          disabled: "停用"
+          disabled: "已禁用"
         events:
           none: "没有相关事件。"
-          redeliver: "重新发送"
+          redeliver: "重新传送"
           incoming:
             other: "有 %{count} 个新事件。"
           completed_in:
             other: "在 %{count} 秒内完成。"
           request: "请求"
           response: "回应"
-          redeliver_confirm: "你确定要再次发送一样的内容吗？"
-          headers: "头部"
-          payload: "内容"
-          body: "内容"
+          redeliver_confirm: "确定要重新传送相同的有效负载吗？"
+          headers: "标题"
+          payload: "有效负载"
+          body: "正文"
           go_list: "转到列表"
-          go_details: "编辑 Webhook"
+          go_details: "编辑网络钩子"
           go_events: "转到事件"
           ping: "Ping"
-          status: "状态码"
+          status: "状态代码"
           event_id: "ID"
           timestamp: "创建时间"
           completion: "完成时间"
@@ -3614,10 +3614,10 @@ zh_CN:
       plugins:
         title: "插件"
         installed: "安装的插件"
-        name: "插件名"
-        none_installed: "你没有安装任何插件。"
+        name: "名称"
+        none_installed: "您没有安装任何插件。"
         version: "版本"
-        enabled: "启用？"
+        enabled: "已启用？"
         is_enabled: "是"
         not_enabled: "否"
         change_settings: "更改设置"
@@ -3629,66 +3629,66 @@ zh_CN:
         menu:
           backups: "备份"
           logs: "日志"
-        none: "无可用备份"
+        none: "无可用备份。"
         read_only:
           enable:
-            title: "开启只读模式"
-            label: "开启只读模式"
-            confirm: "你确定要开启只读模式么？"
+            title: "启用只读模式"
+            label: "启用只读模式"
+            confirm: "确定要启用只读模式吗？"
           disable:
-            title: "关闭只读模式"
-            label: "关闭只读模式"
+            title: "禁用只读模式"
+            label: "禁用只读模式"
         logs:
-          none: "暂无日志"
+          none: "暂无日志…"
         columns:
           filename: "文件名"
           size: "大小"
         upload:
           label: "上传"
-          title: "上传备份至实例"
-          uploading: "上传中…"
-          uploading_progress: "上传中……%{progress}%"
-          success: "'%{filename}'已成功上传。文件正在被处理将在几分钟后显示在列表中。"
-          error: "上传“%{filename}”时出错：%{message}"
+          title: "将备份上传到此实例"
+          uploading: "正在上传…"
+          uploading_progress: "正在上传…%{progress}%"
+          success: "'%{filename}' 已成功上传。文件正在处理，将在几分钟后显示在列表中。"
+          error: "上传 '%{filename}' 时出错：%{message}"
         operations:
-          is_running: "已有操作正在执行"
-          failed: "%{operation}执行失败。请检查日志。"
+          is_running: "一项操作当前正在运行…"
+          failed: "%{operation}失败。请检查日志。"
           cancel:
             label: "取消"
             title: "取消当前操作"
-            confirm: "你确定要取消当前操作吗？"
+            confirm: "确定要取消当前操作吗？"
           backup:
             label: "备份"
-            title: "建立一个备份"
-            confirm: "你确定要开始建立一个备份吗？"
+            title: "创建备份"
+            confirm: "要开始新备份吗？"
             without_uploads: "是（不包括上传）"
           download:
             label: "下载"
-            title: "发送含下载链接的邮件"
-            alert: "包含下载备份链接的邮件已经发送给你了。"
+            title: "发送带有下载链接的电子邮件"
+            alert: "已通过电子邮件发送给您下载此备份的链接。"
           destroy:
-            title: "删除备份"
-            confirm: "你确定要删除该备份吗？"
+            title: "移除备份"
+            confirm: "确定要删除此备份吗？"
           restore:
-            is_disabled: "站点设置中禁用了恢复功能。"
+            is_disabled: "恢复在站点设置中已被禁用。"
             label: "恢复"
             title: "恢复该备份"
-            confirm: "你确定要从该备份中恢复吗？"
+            confirm: "确定要恢复此备份吗？"
           rollback:
             label: "回滚"
             title: "将数据库回滚到之前的工作状态"
-            confirm: "你确定要将数据库回滚到之前的工作状态吗？"
+            confirm: "确定要将数据库回滚到之前的工作状态吗？"
         location:
           local: "本地存储"
           s3: "S3"
-        backup_storage_error: "无法访问备份：%{error_message}"
+        backup_storage_error: "无法访问备份存储：%{error_message}"
       export_csv:
-        success: "导出开始，完成后你将被通过私信通知。"
+        success: "导出已启动，完成后您将收到消息通知。"
         failed: "导出失败。请检查日志。"
         button_text: "导出"
         button_title:
-          user: "以CSV格式导出所有用户列表"
-          staff_action: "以CSV格式导出所有管理人员操作历史记录"
+          user: "以 CSV 格式导出完整的用户列表。"
+          staff_action: "以 CSV 格式导出完整的管理人员操作日志。"
           screened_email: "以 CSV 格式导出所有已屏蔽的电子邮件列表。"
           screened_ip: "以 CSV 格式导出所有已屏蔽的 IP 地址列表。"
           screened_url: "以 CSV 格式导出所有已屏蔽的 URL 列表。"
@@ -3698,50 +3698,50 @@ zh_CN:
         button_text: "发送邀请"
         button_title: "发送邀请"
       customize:
-        title: "定制"
-        long_title: "站点定制"
+        title: "自定义"
+        long_title: "站点自定义"
         preview: "预览"
-        explain_preview: "看看站点应用该主题后的样子"
+        explain_preview: "查看启用此主题的站点"
         save: "保存"
-        new: "新建"
+        new: "新"
         new_style: "新样式"
         install: "安装"
         delete: "删除"
-        delete_confirm: '你确定要删除“%{theme_name}”？'
+        delete_confirm: '确定要删除“%{theme_name}”吗？'
         color: "颜色"
-        opacity: "透明度"
+        opacity: "不透明度"
         copy: "复制"
         copy_to_clipboard: "复制到剪贴板"
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
-        theme_owner: "禁止编辑，拥有者："
+        theme_owner: "不可编辑，拥有者："
         email_templates:
-          title: "邮箱"
-          subject: "话题"
-          multiple_subjects: "这个邮件模板包括多个话题。"
-          body: "内容"
-          revert: "撤销变更"
-          revert_confirm: "你确定要撤销你的修改吗？"
+          title: "电子邮件"
+          subject: "主题"
+          multiple_subjects: "此电子邮件模板具有多个主题。"
+          body: "正文"
+          revert: "还原变更"
+          revert_confirm: "确定要还原您的变更吗？"
         theme:
           theme: "主题"
           component: "组件"
           components: "组件"
           theme_name: "主题名称"
           component_name: "组件名称"
-          themes_intro: "选择现有主题或安装新主题即可开始使用"
+          themes_intro: "选择现有主题或安装新主题以开始"
           themes_intro_emoji: "女艺术家表情符号"
-          beginners_guide_title: "Discourse 主题的初学者使用指导"
-          developers_guide_title: "Discourse 主题的开发者指导"
+          beginners_guide_title: "Discourse 主题初学者使用指南"
+          developers_guide_title: "Discourse 主题开发者指南"
           browse_themes: "浏览社区主题"
-          customize_desc: "定制："
+          customize_desc: "自定义："
           title: "主题"
           create: "创建"
           create_type: "类型"
           create_name: "名称"
-          long_title: "修改你的站点的色彩、CSS 和HTML内容"
+          long_title: "修改您的站点的颜色、CSS 和 HTML 内容"
           edit: "编辑"
-          edit_confirm: "这是一个远程主题，如果你编辑了 CSS/HTML，在下一次更新时这些变动将会被删除。"
-          update_confirm: "这些本地更改将被更新删除。你确定你要继续吗？"
+          edit_confirm: "这是一个远程主题，如果您编辑 CSS/HTML，在下一次更新该主题时这些变更将被擦除。"
+          update_confirm: "这些本地变更将被更新擦除。确定要继续吗？"
           update_confirm_yes: "是，继续更新"
           common: "通用"
           desktop: "桌面"
@@ -3751,42 +3751,42 @@ zh_CN:
           extra_scss: "附加 SCSS"
           extra_files: "附加文件"
           extra_files_upload: "导出主题以查看这些文件。"
-          extra_files_remote: "导出主题或查看git仓库以查看这些文件。"
+          extra_files_remote: "导出主题或检查 git 仓库以查看这些文件。"
           preview: "预览"
-          show_advanced: "显示高级设置"
-          hide_advanced: "隐藏高级设置"
-          hide_unused_fields: "隐藏未使用的设置"
+          show_advanced: "显示高级字段"
+          hide_advanced: "隐藏高级字段"
+          hide_unused_fields: "隐藏未使用的字段"
           is_default: "主题默认启用"
-          user_selectable: "用户可选择主题"
+          user_selectable: "用户可以选择主题"
           color_scheme_user_selectable: "配色方案可由用户选择"
           auto_update: "当 Discourse 更新时自动更新"
           color_scheme: "调色板"
           default_light_scheme: "浅色（默认）"
           color_scheme_select: "选择主题使用的颜色"
-          custom_sections: "自定义段落："
+          custom_sections: "自定义部分："
           theme_components: "主题组件"
           add_all_themes: "添加所有主题"
           convert: "转换"
-          convert_component_alert: "你确定转换此组件到主题吗？将会从组件%{relatives}中移除。"
-          convert_component_tooltip: "转换此组件到主题"
-          convert_component_alert_generic: "你确定要将这个组件转换成主题吗？"
-          convert_theme_alert: "你确定转换此组件到主题吗？它将作为%{relatives}的上级删除。"
-          convert_theme_alert_generic: "你确定要将这个主题转换成组件吗？"
-          convert_theme_tooltip: "转换此主题到组件"
-          inactive_themes: "未使用的主题："
+          convert_component_alert: "确定要将此组件转换为主题吗？它将从%{relatives}的组件中移除。"
+          convert_component_tooltip: "将此组件转换为主题"
+          convert_component_alert_generic: "确定要将此组件转换为主题吗？"
+          convert_theme_alert: "确定要将此主题转换为组件吗？它将从%{relatives}的父级中移除。"
+          convert_theme_alert_generic: "确定要将此主题转换为组件吗？"
+          convert_theme_tooltip: "将此主题转换为组件"
+          inactive_themes: "停用主题："
           inactive_components: "未使用的组件："
-          broken_theme_tooltip: "此主题的CSS，HTML或YAML中存在错误"
-          disabled_component_tooltip: "此组件已被停用"
+          broken_theme_tooltip: "此主题的 CSS、HTML 或 YAML 中存在错误"
+          disabled_component_tooltip: "此组件已被禁用"
           default_theme_tooltip: "此主题是站点的默认主题"
-          updates_available_tooltip: "此主题有更新可用"
-          and_x_more: "和%{count}更多。"
-          collapse: 折叠
+          updates_available_tooltip: "此主题有可用更新"
+          and_x_more: "和其他 %{count} 个。"
+          collapse: 收起
           uploads: "上传"
-          no_uploads: "你可以上传与主题相关的组件，例如字体和图片"
+          no_uploads: "您可以上传与您的主题相关的资产，例如字体和图片"
           add_upload: "添加上传"
-          upload_file_tip: "选择要上传的资源（png、woff2等）"
+          upload_file_tip: "选择要上传的资源（png、woff2 等）"
           variable_name: "SCSS 变量名："
-          variable_name_invalid: "变量名无效。只允许使用字母数字。必须以字母开头。必须是独特的。"
+          variable_name_invalid: "变量名无效。只允许使用字母数字。必须以字母开头。必须是独一无二的。"
           variable_name_error:
             invalid_syntax: "变量名无效。只允许使用字母数字。必须以字母开头。"
             no_overwrite: "变量名无效。不得覆盖现有变量。"
@@ -3815,10 +3815,10 @@ zh_CN:
           install: "安装"
           installed: "已安装"
           install_popular: "热门"
-          install_upload: "来自你的设备"
+          install_upload: "从您的设备"
           install_git_repo: "从 git 仓库"
-          install_create: "创建新的"
-          duplicate_remote_theme: "主题组件 “%{name}” 已经安装，你确定要安装另一个副本吗？"
+          install_create: "创建新主题"
+          duplicate_remote_theme: "主题组件“%{name}”已安装，确定要安装另一个副本吗？"
           about_theme: "关于"
           license: "许可证"
           version: "版本："
@@ -3826,57 +3826,57 @@ zh_CN:
           creator: "创建者："
           source_url: "来源"
           enable: "启用"
-          disable: "停用"
-          disabled: "此组件已被停用。"
+          disable: "禁用"
+          disabled: "此组件已被禁用。"
           disabled_by: "此组件已被禁用，操作者："
           required_version:
-            error: "此主题已被自动禁用，因为它与此版本的Discourse不兼容。"
-            minimum: "需要Discourse%{version}版本或以上。"
-            maximum: "需要Discourse%{version}版本或以下。"
+            error: "此主题已被自动禁用，因为它与此版本的 Discourse 不兼容。"
+            minimum: "需要 Discourse 版本 %{version} 或更高版本。"
+            maximum: "需要 Discourse 版本 %{version} 或更低版本。"
           component_of: "组件："
           update_to_latest: "更新到最新"
           check_for_updates: "检查更新"
-          updating: "更新…"
-          up_to_date: "主题已经是最新版本，上次检查："
+          updating: "正在更新…"
+          up_to_date: "主题已经是最新版本，上次检查日期："
           has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           add: "添加"
           theme_settings: "主题设置"
-          no_settings: "这个主题内没有设置"
-          theme_translations: "翻译主题"
-          empty: "无项目"
+          no_settings: "此主题没有设置。"
+          theme_translations: "主题翻译"
+          empty: "无条目"
           commits_behind:
-            other: "主题落后了 %{count} 个变更！"
+            other: "主题落后了 %{count} 次提交！"
           compare_commits: "（查看新提交）"
-          remote_theme_edits: "如果你想要编辑此主题，你必须 <a href='%{repoURL}' target='_blank'>在其资源库上提交一个更改</a>"
-          repo_unreachable: "无法联系此主题的Git存储库。错误信息："
-          imported_from_archive: "此主题是从一个.zip文件导入的"
+          remote_theme_edits: "如果您想要编辑此主题，您必须<a href='%{repoURL}' target='_blank'>在其仓库上提交变更</a>"
+          repo_unreachable: "无法联系此主题的 Git 仓库。错误消息："
+          imported_from_archive: "此主题是从一个 .zip 文件导入的"
           scss:
             text: "CSS"
             title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"
           header:
-            text: "Header"
-            title: "输入需要显示在网站顶部的HTML"
+            text: "页眉"
+            title: "输入要显示在站点页眉上方的 HTML"
           after_header:
-            text: "After Header"
-            title: "输入需要显示在所有页面的Header下方的HTML"
+            text: "页眉后"
+            title: "输入要显示在所有页面的页眉后的 HTML"
           footer:
-            text: "Footer"
-            title: "输入需要显示在页面底部的HTML"
+            text: "页脚"
+            title: "输入需要显示在页面页脚的 HTML"
           embedded_scss:
-            text: "Embedded CSS"
-            title: "输入自定义的CSS"
+            text: "嵌入式 CSS"
+            title: "输入要随嵌入式版本的注释传送的自定义 CSS"
           color_definitions:
-            text: "颜色配置"
-            title: "输入自定义颜色配置（仅限高级用户）"
+            text: "颜色定义"
+            title: "输入自定义颜色定义（仅限高级用户）"
             placeholder: |2-
 
-              使用这个样式表将自定义的颜色添加到CSS自定义属性列表。
+              使用此样式表将自定义颜色添加到 CSS 自定义属性列表中。
 
-              例如：
+              示例：
 
               %{example}
 
-              强烈建议使用前缀为属性命名以避免与插件或核心程序冲突。
+              强烈建议为属性名称添加前缀以避免与插件和/或核心冲突。
           head_tag:
             text: "</head>"
             title: "将在 </head> 标签前插入的 HTML"
@@ -3952,15 +3952,15 @@ zh_CN:
           heading: "自定义邮件样式"
           html: "HTML模板"
           css: "CSS"
-          reset: "重置为默认"
+          reset: "重置为默认值"
           reset_confirm: "你确定要重设为默认值%{fieldName}并且丢弃所有修改吗？"
           save_error_with_reason: "你的修改没有保存。%{error}"
           instructions: "自定义所有HTML邮件渲染所使用的模板，使用CSS样式化。"
       email:
-        title: "邮件"
+        title: "电子邮件"
         settings: "设置"
         templates: "模板"
-        preview_digest: "预览"
+        preview_digest: "预览摘要"
         advanced_test:
           title: "高级测试"
           desc: "了解Discourse如何处理收到的电子邮件。为了能够正确处理电子邮件，请在下方粘贴整个原始邮件。"
@@ -3993,16 +3993,16 @@ zh_CN:
         format: "格式"
         html: "html"
         text: "text"
-        html_preview: "预览邮件内容"
+        html_preview: "电子邮件内容预览"
         last_seen_user: "用户最后登录时间:"
-        no_result: "没有找到摘要信息。"
+        no_result: "没有找到摘要的结果。"
         reply_key: "回复关键字"
-        skipped_reason: "跳过理由"
+        skipped_reason: "跳过原因"
         incoming_emails:
-          from_address: "来自"
-          to_addresses: "发至"
+          from_address: "发件人"
+          to_addresses: "收件人"
           cc_addresses: "抄送"
-          subject: "话题"
+          subject: "主题"
           error: "错误"
           none: "没有找到进站邮件。"
           modal:
