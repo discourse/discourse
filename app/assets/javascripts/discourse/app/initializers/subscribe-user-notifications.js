@@ -92,22 +92,19 @@ export default {
               );
             }
 
-            for (let idx = 0; idx < data.recent.length; idx++) {
-              let old;
-              while ((old = oldNotifications[idx])) {
-                const info = data.recent[idx];
+            const read = {};
+            data.recent.forEach((notification) => {
+              read[notification[0]] = notification[1];
+            });
 
-                if (old.get("id") !== info[0]) {
-                  oldNotifications.removeAt(idx);
-                } else {
-                  if (old.get("read") !== info[1]) {
-                    old.set("read", info[1]);
-                  }
-                  break;
-                }
-              }
-              if (!old) {
-                break;
+            // remove stale notifications and update existing ones
+            for (let idx = 0; idx < oldNotifications.length; ) {
+              const notification = oldNotifications[idx];
+              if (read[notification.id] === undefined) {
+                oldNotifications.removeAt(idx);
+              } else {
+                notification.set("read", read[notification.id]);
+                ++idx;
               }
             }
           }
