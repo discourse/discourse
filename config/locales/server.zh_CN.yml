@@ -643,8 +643,8 @@ zh_CN:
     has_likes:
       other: "%{count}赞"
   rate_limiter:
-    slow_down: "您执行这个操作太多次了，请稍后再试。"
-    too_many_requests: "您执行这个操作太多次了，请等待%{time_left}后再试。"
+    slow_down: "您执行此操作的次数过多，请稍后再试。"
+    too_many_requests: "您执行此操作的次数过多。请等待 %{time_left}后再试。"
     by_type:
       first_day_replies_per_day: "我们赞赏您的热情，保持这样！ 话虽如此，为了社区的安全，您已经达到了新用户第一天可以回复的最多数量。 请等待 %{time_left} ，您将可以继续回复。"
       first_day_topics_per_day: "我们赞赏您的热情！ 话虽如此，为了社区的安全，您已经达到了新用户第一天可以创建的话题的最大数量。 请等待 %{time_left}，您讲可以继续创建新的话题。"

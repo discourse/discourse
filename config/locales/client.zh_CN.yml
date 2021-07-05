@@ -3333,7 +3333,7 @@ zh_CN:
         uploads: "上传"
         backups: "备份"
         backup_count:
-          other: "%{count}备份在%{location}"
+          other: "%{count} 个备份，%{location}"
         lastest_backup: "最新：%{date}"
         traffic_short: "流量"
         traffic: "应用程序 Web 请求"
@@ -3352,67 +3352,67 @@ zh_CN:
         report_filter_any: "任意"
         disabled: 已禁用
         timeout_error: 抱歉，查询时间过长，请选择更短的时间间隔
-        exception_error: 抱歉，执行查询时发生错误
-        too_many_requests: 你执行这个操作太多次了，请稍后再试。
-        not_found_error: 抱歉，报告不存在
+        exception_error: 抱歉，执行查询时出错
+        too_many_requests: 您执行此操作的次数过多。请稍后再试。
+        not_found_error: 抱歉，此报告不存在
         filter_reports: 筛选报告
         reports:
-          trend_title: "%{percent}更改。目前%{current}，在前一期间是%{prev}。"
+          trend_title: "变化 %{percent}。目前为 %{current}，上一个期间为 %{prev}。"
           today: "今天"
           yesterday: "昨天"
-          last_7_days: "过去7天"
-          last_30_days: "过去30天"
+          last_7_days: "过去 7 天"
+          last_30_days: "过去 30 天"
           all_time: "所有时间"
           7_days_ago: "7 天前"
-          30_days_ago: "30天之前"
-          all: "全部"
+          30_days_ago: "30 天前"
+          all: "所有"
           view_table: "表格"
           view_graph: "图表"
           refresh_report: "刷新报告"
           daily: 每天
-          monthly: 月度
+          monthly: 每月
           weekly: 每周
-          dates: "日期（UTC）"
+          dates: "日期 (UTC)"
           groups: "所有群组"
           disabled: "此报告已禁用"
-          totals_for_sample: "总计样本"
-          average_for_sample: "平均样本"
+          totals_for_sample: "样本总数"
+          average_for_sample: "样本平均值"
           total: "所有时间总计"
-          no_data: "没有数据显示。"
+          no_data: "没有要显示的数据。"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
-            disabled: '趋势搜索报告已停用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
+            disabled: '趋势搜索报告已禁用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
           filters:
             file_extension:
               label: 文件扩展名
             group:
               label: 群组
             category:
-              label: 分类
+              label: 类别
             include_subcategories:
-              label: "包括子分类"
+              label: "包括子类别"
       commits:
-        latest_changes: "最近的更新：请经常升级！"
+        latest_changes: "最新变化：请经常更新！"
         by: "来自"
       groups:
         new:
-          title: "新建群组"
+          title: "新群组"
           create: "创建"
           name:
-            too_short: "群组名太短"
-            too_long: "群组名太长"
-            checking: "查看群组名是否可用……"
-            available: "群组名可用"
-            not_available: "群组名不可用"
-            blank: "群组名不能为空"
+            too_short: "群组名称过短"
+            too_long: "群组名称过长"
+            checking: "正在检查群组名称是否可用…"
+            available: "群组名称可用"
+            not_available: "群组名称不可用"
+            blank: "群组名称不能为空"
         manage:
           interaction:
-            email: 邮箱
-            incoming_email: "自定义进站电子邮件地址"
-            incoming_email_placeholder: "输入邮箱地址"
-            visibility: 可见
+            email: 电子邮件
+            incoming_email: "自定义传入电子邮件地址"
+            incoming_email_placeholder: "输入电子邮件地址"
+            visibility: 公开范围
             visibility_levels:
-              title: "此群组对谁可见？"
+              title: "谁能看到此群组？"
               public: "所有人"
               logged_on_users: "已登录用户"
               members: "群组的所有者、成员还有版主"

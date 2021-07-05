@@ -165,6 +165,53 @@ ja:
           <https://en.wikipedia.org/wiki/Inherently_funny_word>
           <https://en.wikipedia.org/wiki/Death_by_coconut>
           <https://en.wikipedia.org/wiki/Calculator_spelling>
+        reply: |-
+          うまくいきましたね！この方法は、ほとんどの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> リンクでし応できます。_リンクだけ_を 1 行に入力し、前後にリンクに含まれない文字などを含めないようにしましょう。
+        not_found: |-
+          残念ですが、返信にリンクが見つかりませんでした！:cry:
+
+          次のリンクを追加してみてください。次の返信にリンクだけを 1 行に含めてください。
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+      images:
+        instructions: |-
+          ここにユニコーンの画像があります。
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          これが気に入ったら（気に入らないわけないですよね！）、この投稿の下にある「いいね！」:heart: ボタンを押して気に入ったことを教えてください。
+
+          **画像付きで返信**できますか？どんな画像でもかまいません！画像をドラッグアンドドロップしてアップロードボタンを押すか、コピーして貼り付けるだけでもアップロードできます。
+        reply: |-
+          いい画像ですね – 「いいね！」:heart: ボタンを押して、画像を気に入ったことを伝えましたよ :heart_eyes:
+        like_not_found: |-
+          私の[投稿](%{url})に「いいね！」:heart: し忘れてませんか？:crying_cat_face:
+        not_found: |-
+          画像をアップロードしなかったようなので、_絶対に_あなたが気に入ると思う画像を選びました。
+
+          <%{image_url}>
+
+          この画像をアップロードしてみてください。またはリンクを独立した行に貼り付けてみましょう！
+      likes:
+        instructions: |-
+          ここにユニコーンの画像があります。
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          これが気に入ったら（気に入らないわけないですよね！）、この投稿の下にある「いいね！」:heart: ボタンを押して気に入ったことを教えてください。
+        reply: |-
+          投稿に「いいね！」してくれてありがとう！
+        not_found: |-
+          私の[投稿](%{url})に「いいね！」:heart: し忘れてませんか？:crying_cat_face:
+      formatting:
+        instructions: |-
+          返信の文字を**太字**や_斜体_にできますか？
+
+          - `**太字**` または `_斜体_` と入力してみましょう。
+
+          - または、エディタの <kbd><b>B</b></kbd> または <kbd><i>I</i></kbd> ボタンを押すこともできます。
+        reply: |-
+          よくできました！HTML と BBCode はフォーマットにも使用できます。さらに詳しくは、[こちらのチュートリアルを試してみましょう](http://commonmark.org/help) :nerd:
     advanced_user_narrative:
       delete:
         reply: |-
