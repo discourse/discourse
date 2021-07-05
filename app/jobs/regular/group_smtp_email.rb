@@ -4,13 +4,32 @@ require_dependency 'email/sender'
 
 module Jobs
   class GroupSmtpEmail < ::Jobs::Base
+    include Skippable
+
     sidekiq_options queue: 'critical'
 
     def execute(args)
+      return if quit_email_early?
+
       group = Group.find_by(id: args[:group_id])
+      return if group.blank?
+
       post = Post.find_by(id: args[:post_id])
       email = args[:email]
       cc_addresses = args[:cc_emails]
+      recipient_user = User.find_by_email(email, primary: true)
+
+      if post.blank?
+        return skip(email, nil, recipient_user, :group_smtp_post_deleted)
+      end
+
+      if !Topic.exists?(id: post.topic_id)
+        return skip(email, post, recipient_user, :group_smtp_topic_deleted)
+      end
+
+      if !group.smtp_enabled
+        return skip(email, post, recipient_user, :group_smtp_disabled_for_group)
+      end
 
       # There is a rare race condition causing the Imap::Sync class to create
       # an incoming email and associated post/topic, which then kicks off
@@ -27,12 +46,10 @@ module Jobs
 
       ImapSyncLog.debug("Sending SMTP email for post #{post.id} in topic #{post.topic_id} to #{email}.", group)
 
-      recipient_user = ::UserEmail.find_by(email: email, primary: true)&.user
-      message = GroupSmtpMailer.send_mail(group, email, post, cc_addresses)
-
       # The EmailLog record created by the sender will have the raw email
       # stored, the group smtp ID, and any cc addresses recorded for later
       # cross referencing.
+      message = GroupSmtpMailer.send_mail(group, email, post, cc_addresses)
       Email::Sender.new(message, :group_smtp, recipient_user).send
 
       # Create an incoming email record to avoid importing again from IMAP
@@ -50,6 +67,20 @@ module Jobs
         cc_addresses: message.cc,
         from_address: message.from,
         created_via: IncomingEmail.created_via_types[:group_smtp]
+      )
+    end
+
+    def quit_email_early?
+      SiteSetting.disable_emails == 'yes' || !SiteSetting.enable_smtp
+    end
+
+    def skip(email, post, recipient_user, reason)
+      create_skipped_email_log(
+        email_type: :group_smtp,
+        to_address: email,
+        user_id: recipient_user&.id,
+        post_id: post&.id,
+        reason_type: SkippedEmailLog.reason_types[reason]
       )
     end
   end

@@ -193,6 +193,10 @@ class User < ActiveRecord::Base
     joins(:user_emails).where("lower(user_emails.email) IN (?)", email)
   end
 
+  scope :with_primary_email, ->(email) do
+    joins(:user_emails).where("lower(user_emails.email) IN (?) AND user_emails.primary", email)
+  end
+
   scope :human_users, -> { where('users.id > 0') }
 
   # excluding fake users like the system user or anonymous users
@@ -371,8 +375,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.find_by_email(email)
-    self.with_email(Email.downcase(email)).first
+  def self.find_by_email(email, primary: false)
+    if primary
+      self.with_primary_email(Email.downcase(email)).first
+    else
+      self.with_email(Email.downcase(email)).first
+    end
   end
 
   def self.find_by_username(username)

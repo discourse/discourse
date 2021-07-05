@@ -4043,6 +4043,9 @@ en:
     sender_post_deleted: "post has been deleted"
     sender_message_to_invalid: "recipient has invalid email address"
     sender_topic_deleted: "topic has been deleted"
+    group_smtp_post_deleted: "post has been deleted"
+    group_smtp_topic_deleted: "topic has been deleted"
+    group_smtp_disabled_for_group: "smtp has been disabled for the group"
 
   color_schemes:
     base_theme_name: "Base"
