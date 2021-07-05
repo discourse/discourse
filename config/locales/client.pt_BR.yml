@@ -152,22 +152,22 @@ pt_BR:
         enabled: "listado(a) em %{when}"
         disabled: "removido(a) da lista em %{when}"
       banner:
-        enabled: "tornou isto um banner %{when}. Isto será mostrado no topo de todas as páginas até que seja descartado pelo usuário."
-        disabled: "removeu este banner %{when}. Ele não vai mais aparecer no topo de todas as páginas."
-      forwarded: "encaminhado o e-mail acima"
+        enabled: "tornou um banner em %{when}. Isso será mostrado no topo de todas as páginas até que seja descartado pelo usuário."
+        disabled: "removeu este banner em %{when}. Ele não irá mais aparecer no topo de todas as páginas."
+      forwarded: "encaminhou o e-mail acima"
     topic_admin_menu: "ações de tópico"
-    wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
-    emails_are_disabled: "Todo o envio de e-mail foi globalmente desabilitado por um administrador. Nenhum e-mail de notificações de qualquer tipo será enviado."
+    wizard_required: "Boas-vindas ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
+    emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     software_update_prompt:
-      message: "Nós atualizamos este site, <span>por favor recarregue a página</span>, ou você poderá enfrentar um comportamento inesperado."
-      dismiss: "Dispensar"
+      message: "Nós atualizamos este site, <span>atualize a página</span>, ou você poderá enfrentar uma situação inesperada."
+      dismiss: "Descartar"
     bootstrap_mode_enabled:
-      one: "Para facilitar o lançamento do seu novo site, você está no modo de bootstrap. Todos os novos usuários receberão o nível de confiança 1 e terão os e-mails diários de resumo ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
-      other: "Para facilitar o lançamento do seu novo site, você está no modo de bootstrap. Todos os novos usuários receberão o nível de confiança 1 e terão os e-mails diários de resumo ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
-    bootstrap_mode_disabled: "O modo bootstrap será desativado em 24 horas."
+      one: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
+      other: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
+    bootstrap_mode_disabled: "O modo de inicialização será desativado em 24 horas."
     themes:
       default_description: "Padrão"
-      broken_theme_alert: "Seu site pode não funcionar porque o tema / componente %{theme} tem erros. Desabilite-o em %{path}."
+      broken_theme_alert: "Seu site pode não funcionar porque o tema/componente %{theme} tem erros. Desative-o em %{path}."
     s3:
       regions:
         ap_northeast_1: "Ásia Pacífico (Tóquio)"
@@ -294,18 +294,18 @@ pt_BR:
         today_with_time: "hoje à(s) %{time}"
         tomorrow_with_time: "amanhã à(s) %{time}"
         at_time: "em %{date_time}"
-        existing_reminder: "Você possui um lembrete definido para esta mensagem que será enviado %{at_date_time}"
+        existing_reminder: "Você tem um lembrete definido para este favorito que será enviado em %{at_date_time}"
     copy_codeblock:
       copied: "copiado!"
     drafts:
-      resume: "Resumir"
-      remove: "Remova"
+      resume: "Retomar"
+      remove: "Remover"
       remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
       new_topic: "Novo rascunho de tópico"
       new_private_message: "Novo rascunho de mensagem privada"
-      topic_reply: "Resposta rascunho"
+      topic_reply: "Rascunho de resposta"
       abandon:
-        confirm: "Você tem um rascunho em andamento para este tópico. O que você gostaria de fazer com ele?"
+        confirm: "Você tem um rascunho em andamento para este tópico. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
     topic_count_latest:
@@ -317,10 +317,10 @@ pt_BR:
     topic_count_new:
       one: "Veja %{count} novo tópico"
       other: "Veja %{count} novos tópicos"
-    preview: "pré-visualização"
+    preview: "pré-visualizar"
     cancel: "cancelar"
     deleting: "Excluindo..."
-    save: "Salvar Mudanças"
+    save: "Salvar alterações"
     saving: "Salvando..."
     saved: "Salvo!"
     upload: "Enviar"
@@ -330,16 +330,16 @@ pt_BR:
     clipboard: "área de transferência"
     uploaded: "Enviado!"
     pasting: "Colando..."
-    enable: "Habilitar"
-    disable: "Desabilitar"
+    enable: "Ativar"
+    disable: "Desativar"
     continue: "Continuar"
     undo: "Desfazer"
     revert: "Reverter"
     failed: "Falhou"
-    switch_to_anon: "Entrar no Modo Anônimo"
-    switch_from_anon: "Sair do Modo Anônimo"
+    switch_to_anon: "Entrar no Modo anônimo"
+    switch_from_anon: "Sair do Modo anônimo"
     banner:
-      close: "Ignorar este banner."
+      close: "Descarte este banner."
       edit: "Editar este banner >>"
     pwa:
       install_banner: "Você quer <a href>instalar %{title} no seu dispositivo?</a>"
@@ -355,10 +355,10 @@ pt_BR:
         placeholder: "digite o título da mensagem, URL ou ID aqui"
     review:
       order_by: "Ordenar por"
-      in_reply_to: "Em resposta a"
+      in_reply_to: "em resposta a"
       explain:
-        why: "explique por que esse item terminou na fila"
-        title: "Pontuação Revisável"
+        why: "explique por que este item foi colocado na fila"
+        title: "Pontuação revisável"
         formula: "Fórmula"
         subtotal: "Subtotal"
         total: "Total"
@@ -434,10 +434,10 @@ pt_BR:
       topics:
         topic: "Tópico"
         reviewable_count: "Contagem"
-        reported_by: "Reportado por"
-        deleted: "[Tópico Excluído]"
+        reported_by: "Relatado(a) por"
+        deleted: "[Tópico excluído]"
         original: "(tópico original)"
-        details: "detalhes"
+        details: "informações"
         unique_users:
           one: "%{count} usuário"
           other: "%{count} usuários"
@@ -453,17 +453,17 @@ pt_BR:
         type:
           title: "Tipo"
           all: "(todos os tipos)"
-        minimum_score: "Pontuação Mínima:"
+        minimum_score: "Pontuação mínima:"
         refresh: "Atualizar"
         status: "Status"
         category: "Categoria"
         orders:
           score: "Pontuação"
           score_asc: "Pontuação (reversa)"
-          created_at: "Criado a"
-          created_at_asc: "Criado Em (reverso)"
+          created_at: "Criado em"
+          created_at_asc: "Criado em (reverso)"
         priority:
-          title: "Prioridade Mínima"
+          title: "Prioridade mínima"
           any: "(qualquer um)"
           low: "Baixa"
           medium: "Média"
@@ -471,42 +471,42 @@ pt_BR:
       conversation:
         view_full: "visualizar conversa completa"
       scores:
-        about: "Essa pontuação é calculada com base no nível de confiança do relator, na precisão de suas sinalizações anteriores e na prioridade do item que está sendo reportado."
+        about: "Esta pontuação é calculada com base no nível de confiança do relator, na precisão de suas sinalizações anteriores e na prioridade do item que está sendo relatado."
         score: "Pontuação"
         date: "Data"
         type: "Tipo"
         status: "Status"
-        submitted_by: "Submetido Por"
-        reviewed_by: "Revisado Por"
+        submitted_by: "Enviado por"
+        reviewed_by: "Revisado por"
       statuses:
         pending:
-          title: "Pendentes"
+          title: "Pendente"
         approved:
           title: "Aprovado"
         rejected:
-          title: "Rejeitados"
+          title: "Rejeitado"
         ignored:
-          title: "Ignorados"
+          title: "Ignorado"
         deleted:
           title: "Excluído"
         reviewed:
-          title: "(Tudo Revisado)"
+          title: "(Tudo revisado)"
         all:
           title: "(tudo)"
       types:
         reviewable_flagged_post:
-          title: "Postagem Sinalizada"
+          title: "Postagem sinalizada"
           flagged_by: "Sinalizado por"
         reviewable_queued_topic:
-          title: "Tópico Enfileirado"
+          title: "Tópico na fila"
         reviewable_queued_post:
-          title: "Postagem Enfileirada"
+          title: "Postagem na fila"
         reviewable_user:
           title: "Usuário"
         reviewable_post:
           title: "Postagem"
       approval:
-        title: "Postagem Precisa de Aprovação"
+        title: "A postagem precisa de aprovação"
         description: "Nós recebemos sua nova postagem, mas é necessário que seja aprovada por um moderador antes de ser exibida. Por favor, tenha paciência."
         pending_posts:
           one: "Você tem <strong>%{count}</strong> postagem pendente."
@@ -575,16 +575,16 @@ pt_BR:
       post_count_long: "Respostas Postadas"
       no_results: "Nenhum resultado foi encontrado."
       days_visited: "Visitas"
-      days_visited_long: "Dias Visitados"
+      days_visited_long: "Dias visitados"
       posts_read: "Lidos"
-      posts_read_long: "Postagens Lidas"
+      posts_read_long: "Postagens lidas"
       last_updated: "Última atualização:"
       total_rows:
         one: "%{count} usuário"
         other: "%{count} usuários"
       edit_columns:
         save: "Salvar"
-        reset_to_default: "Restaurar ao padrão"
+        reset_to_default: "Restaurar para padrão"
       group:
         all: "todos os grupos"
     group_histories:
@@ -603,16 +603,16 @@ pt_BR:
         title: "Solicitações"
         reason: "Motivo"
         accept: "Aceitar"
-        accepted: "aceito"
+        accepted: "aceito(a)"
         deny: "Negar"
-        denied: "negado"
+        denied: "negado(a)"
         undone: "solicitação desfeita"
-        handle: "tratar pedido de associação"
+        handle: "manipular solicitação de associação"
       manage:
         title: "Gerenciar"
         name: "Nome"
-        full_name: "Nome Completo"
-        delete_member_confirm: "Remover '%{username}' do '%{group}' grupo?"
+        full_name: "Nome completo"
+        delete_member_confirm: "Remover %{username} do %{group} grupo?"
         profile:
           title: Perfil
         interaction:
@@ -621,18 +621,18 @@ pt_BR:
           notification: Notificação
         email:
           title: "E-mail"
-          status: "Sincronizado %{old_emails} / %{total_emails} dos emails via IMAP."
-          enable_smtp: "Habilitar SMTP"
-          enable_imap: "Habilitar IMAP"
-          test_settings: "Configurações de Teste"
-          save_settings: "Salvar Configurações"
-          settings_required: "Todas as configurações são obrigatórias, por favor preencha todos os campos antes de validar."
+          status: "Sincronizado(s) %{old_emails}/%{total_emails} e-mail(s) via IMAP."
+          enable_smtp: "Ativar SMTP"
+          enable_imap: "Ativar IMAP"
+          test_settings: "Configurações de teste"
+          save_settings: "Salvar configurações"
+          settings_required: "Todas as configurações são obrigatórias, preencha todos os campos antes de validar."
           smtp_settings_valid: "Configurações de SMTP válidas."
           smtp_title: "SMTP"
-          smtp_instructions: "Quando você habilita o SMTP para o grupo, todos os e-mails enviados da caixa de entrada do grupo serão enviados por meio das configurações de SMTP especificadas aqui, ao invés do servidor de e-mail configurado para outros e-mails enviados por seu fórum."
+          smtp_instructions: "Quando você ativa o SMTP para o grupo, todos os e-mails enviados da caixa de entrada do grupo serão enviados pelas configurações de SMTP especificadas aqui, em vez do servidor de e-mail configurado para outros e-mails enviados pelo seu fórum."
           imap_title: "IMAP"
-          imap_additional_settings: "Configurações Adicionais"
-          imap_instructions: 'Quando você habilita o IMAP para o grupo, os e-mails são sincronizados entre a caixa de entrada do grupo e o servidor IMAP e a caixa de correio fornecidos. O SMTP deve ser habilitado com credenciais válidas e testadas antes que o IMAP possa ser habilitado. O nome de usuário e a senha de e-mail usados para SMTP serão usados para IMAP. Para obter mais informações, consulte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anúncio de recurso no Discourse Meta</a>.'
+          imap_additional_settings: "Configurações adicionais"
+          imap_instructions: 'Quando você ativa o IMAP para o grupo, os e-mails são sincronizados entre a caixa de entrada do grupo, o servidor IMAP e a caixa de mensagens fornecidos. O SMTP deve ser ativado com as credenciais válidas e testadas antes que o IMAP possa ser ativado. O nome do usuário e a senha de e-mail usados para o SMTP serão aplicados ao IMAP. Para obter mais informações, consulte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anúncio de recursos no Discourse Meta</a>.'
           imap_alpha_warning: "Aviso: este recurso está no estágio alfa. Apenas o Gmail é oficialmente compatível. Use por sua conta e risco!"
           imap_settings_valid: "Configurações IMAP válidas."
           credentials:

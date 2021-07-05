@@ -3124,51 +3124,51 @@ zh_CN:
         quote_post: "%{shortcut} 引用帖子"
         like: "%{shortcut} 点赞帖子"
         flag: "%{shortcut} 举报帖子"
-        bookmark: "%{shortcut} 收藏帖子"
+        bookmark: "%{shortcut} 将帖子加入书签"
         edit: "%{shortcut} 编辑帖子"
         delete: "%{shortcut} 删除帖子"
-        mark_muted: "%{shortcut} 忽略话题"
+        mark_muted: "%{shortcut} 将话题设为免打扰"
         mark_regular: "%{shortcut} 常规（默认）话题"
-        mark_tracking: "%{shortcut} 追踪话题"
-        mark_watching: "%{shortcut} 看话题"
+        mark_tracking: "%{shortcut} 跟踪话题"
+        mark_watching: "%{shortcut} 关注话题"
         print: "%{shortcut} 打印话题"
-        defer: "%{shortcut}延迟话题"
-        topic_admin_actions: "%{shortcut}打开话题管理"
+        defer: "%{shortcut} 延迟话题"
+        topic_admin_actions: "%{shortcut} 打开话题管理员操作"
       search_menu:
         title: "搜索菜单"
-        prev_next: "%{shortcut}上下移动所选内容"
-        insert_url: "%{shortcut}将选定内容插入到打开的编辑器"
+        prev_next: "%{shortcut} 上下移动所选内容"
+        insert_url: "%{shortcut} 将所选内容插入到打开的编辑器"
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
       granted_on: "%{date}授予"
-      others_count: "其他有该徽章的人（%{count}）"
+      others_count: "其他拥有此徽章的人 (%{count})"
       title: 徽章
-      allow_title: "你可以将该徽章设为头衔"
-      multiple_grant: "可多次获得"
+      allow_title: "您可以将此徽章用作头衔"
+      multiple_grant: "您可以多次获得"
       badge_count:
         other: "%{count} 个徽章"
       more_badges:
-        other: "+%{count} 更多"
+        other: "其他 (+%{count})"
       granted:
-        other: "%{count} 已授予"
-      select_badge_for_title: 选择一个徽章作为你的头衔使用
+        other: "已被授予 %{count} 个"
+      select_badge_for_title: 选择一个徽章作为您的头衔使用
       none: "（无）"
-      successfully_granted: "成功将 %{badge} 授予 %{username}"
+      successfully_granted: "已成功将“%{badge}”授予 %{username}"
       badge_grouping:
         getting_started:
-          name: 入门指南
+          name: 入门
         community:
           name: 社区
         trust_level:
-          name: 信任等级
+          name: 信任级别
         other:
-          name: 其它
+          name: 其他
         posting:
           name: 发帖
-      favorite_max_reached: "您不能收藏更多徽章。"
-      favorite_max_not_reached: "收藏此徽章"
-      favorite_count: "%{count}/%{max} 个徽章已被收藏"
+      favorite_max_reached: "您无法将更多徽章加入书签。"
+      favorite_max_not_reached: "将此徽章标记为收藏"
+      favorite_count: "%{count}/%{max} 个徽章已被标记为收藏"
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"
@@ -3177,25 +3177,25 @@ zh_CN:
       changed: "标签被修改："
       tags: "标签"
       choose_for_topic: "可选标签"
-      info: "详情"
-      category_restricted: "此标签仅限于你无权访问的分类。"
+      info: "信息"
+      category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
-      synonyms_description: "使用以下标签时，它们将被替换为<b>%{base_tag_name}</b> 。"
+      synonyms_description: "使用以下标签时，它们将被替换为 <b>%{base_tag_name}</b>。"
       tag_groups_info:
-        other: "此标签属于这些标签组：%{tag_groups}。"
+        other: "此标签属于以下群组：%{tag_groups}。"
       category_restrictions:
-        other: "只能在这些分类中使用："
+        other: "它只能用于以下类别："
       edit_synonyms: "管理同义词"
       add_synonyms_label: "添加同义词："
-      add_synonyms: "新增"
+      add_synonyms: "添加"
       add_synonyms_explanation:
-        other: "当前任何使用了此标签的地方都将被改为使用<b>%{tag_name}</b>代替。你确定要应用此更改吗？"
-      add_synonyms_failed: "不能将以下标记添加为同义词： <b>%{tag_names}</b> 。确保它们没有同义词并且不是其他标签的同义词。"
-      remove_synonym: "删除同义词"
-      delete_synonym_confirm: '您确定要删除同义词“ %{tag_name}”吗？'
+        other: "当前使用这些标签的任何地方都将被改为使用 <b>%{tag_name}</b>。确定要应用此更改吗？"
+      add_synonyms_failed: "无法将以下标签添加为同义词：<b>%{tag_names}</b>。确保它们没有同义词并且不是其他标签的同义词。"
+      remove_synonym: "移除同义词"
+      delete_synonym_confirm: '确定要删除同义词“%{tag_name}”吗？'
       delete_tag: "删除标签"
       delete_confirm:
-        other: "你确定你想要删除这个标签以及撤销在%{count}个话题中的关联么？"
+        other: "确定要删除此标签并将其从分配到的 %{count} 个话题移除吗？"
       delete_confirm_no_topics: "你确定你想要删除这个标签吗？"
       delete_confirm_synonyms:
         other: "其%{count}个同义词也将被删除。"
