@@ -97,7 +97,11 @@ after_initialize do
           raise Discourse::InvalidParameters.new("#{key} must be present") unless params[key]&.present?
         end
 
-        rate_limiter = RateLimiter.new(current_user, 'svg_certificate', 3, 1.minute)
+        if params[:user_id].to_i != current_user.id
+          rate_limiter = RateLimiter.new(current_user, 'svg_certificate', 3, 1.minute)
+        else
+          rate_limiter = RateLimiter.new(current_user, 'svg_certificate_self', 30, 10.minutes)
+        end
         rate_limiter.performed! unless current_user.staff?
 
         user = User.find_by(id: params[:user_id])
