@@ -2179,7 +2179,6 @@ it:
         top: "Non ci sono argomenti popolari."
         educate:
           new: '<p>I tuoi nuovi argomenti appariranno qui. Di default, gli argomenti sono considerati nuovi e mostreranno un indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> se sono stati creati negli ultimi 2 giorni.</p><p>Visita le tue <a href="%{userPrefsUrl}">preferenze</a> per cambiarle.</p>'
-          unread: "<p>I tuoi argomenti non letti appaiono qui.</p><p>Di default, gli argomenti sono considerati non letti e mostreranno conteggi non letti <span class=\"badge new-posts badge-notification\">1</span> se tu:</p><ul><li>Hai creato l'argomento</li><li>Hai risposto all'argomento</li><li>Leggi l'argomento per più di 4 minuti</li></ul><p>O hai esplicitamente impostato l'argomento su Seguito o Osservato tramite \U0001F514 in ogni argomento.</p><p>Visita le tue <a href=\"%{userPrefsUrl}\">preferenze</a> per cambiare queste impostazioni.</p>"
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         posted: "Non ci sono altri argomenti pubblicati."
@@ -2237,15 +2236,6 @@ it:
       not_found:
         title: "Argomento non trovato"
         description: "Spiacenti, non abbiamo trovato l'argomento. Forse è stato rimosso da un moderatore?"
-      total_unread_posts:
-        one: "hai %{count} messaggio non letto in questa discussione"
-        other: "hai %{count} messaggi non letti in questo argomento"
-      unread_posts:
-        one: "Hai %{count} vecchio messaggio non letto in questo argomento"
-        other: "hai %{count} vecchi messaggi non letti in questo argomento"
-      new_posts:
-        one: "c'è %{count} nuovo messaggio in questo argomento dalla tua ultima lettura"
-        other: "ci sono %{count} nuovi messaggi in questo argomento dalla tua ultima lettura"
       likes:
         one: "c'è %{count} \"Mi piace\" in questo argomento"
         other: "ci sono %{count} \"Mi piace\" in questo argomento"

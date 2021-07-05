@@ -2052,15 +2052,6 @@ pt_BR:
       not_found:
         title: "Tópico não encontrado"
         description: "Desculpe, não foi possível encontrar aquele tópico. Talvez ele tenha sido removido por um moderador?"
-      total_unread_posts:
-        one: "você tem %{count} postagem não lida neste tópico"
-        other: "você tem %{count} postagens não lidas neste tópico"
-      unread_posts:
-        one: "você tem %{count} postagem antiga não lida neste tópico"
-        other: "você tem %{count} postagens antigas não lidas neste tópico"
-      new_posts:
-        one: "há %{count} postagem nova neste tópico desde a sua última leitura"
-        other: "há %{count} postagens novas neste tópico desde a sua última leitura"
       likes:
         one: "há %{count} curtida neste tópico"
         other: "há %{count} curtidas neste tópico"

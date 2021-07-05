@@ -2192,7 +2192,6 @@ de:
         top: "Es gibt keine angesagten Themen."
         educate:
           new: '<p>Hier werden deine neuen Themen angezeigt. Standardmäßig werden Themen als neu erachtet und mit einem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-Indikator dargestellt, wenn sie in den letzten 2 Tagen erstellt wurden. </p><p>Besuche deine <a href="%{userPrefsUrl}">Einstellungen</a>, um dies zu ändern.</p>'
-          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Standardmäßig werden Themen als ungelesen erachtet und mit einem Zähler für ungelesene Beiträge <span class=\"badge new-posts badge-notification\">1</span> dargestellt, wenn du:</p><ul><li>das Thema erstellt hast;</li><li>auf das Thema geantwortet hast;</li><li>das Thema für mehr als 4 Minuten gelesen hast.</li></ul><p>Oder falls du das Thema über \U0001F514 ausdrücklich auf „Verfolgen“ oder „Beobachten“ eingestellt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a>, um dies zu ändern.</p>"
       bottom:
         latest: "Das waren die aktuellen Themen."
         posted: "Das waren alle Themen."
@@ -2250,15 +2249,6 @@ de:
       not_found:
         title: "Thema nicht gefunden"
         description: "Entschuldige, wir konnten dieses Thema nicht finden. Wurde es vielleicht von einem Moderator entfernt?"
-      total_unread_posts:
-        one: "du hast %{count} ungelesenen Beitrag in diesem Thema"
-        other: "du hast %{count} ungelesene Beiträge in diesem Thema"
-      unread_posts:
-        one: "Du hast %{count} ungelesenen alten Beitrag in diesem Thema"
-        other: "Du hast %{count} ungelesene alte Beiträge in diesem Thema"
-      new_posts:
-        one: "Es gibt %{count} neuen Beitrag in diesem Thema, seit du es das letzte Mal gelesen hast"
-        other: "Es gibt %{count} neue Beiträge in diesem Thema, seit du es das letzte Mal gelesen hast"
       likes:
         one: "Es gibt %{count} „Gefällt mir“ in diesem Thema"
         other: "Es gibt %{count} „Gefällt mir“ in diesem Thema"

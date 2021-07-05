@@ -2219,7 +2219,6 @@ es:
         top: "No hay temas destacados."
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
-          unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge new-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 4 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
       bottom:
         latest: "No hay más temas recientes."
         posted: "No hay más temas publicados."
@@ -2277,15 +2276,6 @@ es:
       not_found:
         title: "Tema no encontrado"
         description: "Lo sentimos, no pudimos encontrar ese tema. ¿Tal vez fue eliminado por un moderador?"
-      total_unread_posts:
-        one: "tienes %{count} publicación sin leer en este tema"
-        other: "tienes %{count} publicaciones sin leer en este tema"
-      unread_posts:
-        one: "tienes %{count} publicación antigua sin leer en este tema"
-        other: "tienes %{count} publicaciones antiguas sin leer en este tema"
-      new_posts:
-        one: "hay %{count} nueva publicación en este tema desde la última vez que lo leíste"
-        other: "hay %{count} publicaciones nuevas en este tema desde la última vez que lo leíste"
       likes:
         one: "este tema le gusta a %{count} persona"
         other: "este tema les gusta a %{count} personas"

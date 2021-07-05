@@ -1996,12 +1996,6 @@ ja:
       not_found:
         title: "トピックが見つかりませんでした"
         description: "トピックが見つかりませんでした。モデレーターによって削除された可能性があります。"
-      total_unread_posts:
-        other: "このトピックに %{count} 件の未読の投稿があります"
-      unread_posts:
-        other: "このトピックに %{count} 件の古い未読の投稿があります"
-      new_posts:
-        other: "このトピックには最後に閲覧してから %{count} 件が投稿されています"
       likes:
         other: "このトピックには %{count} 個の「いいね！」があります"
       back_to_list: "トピックリストに戻る"
