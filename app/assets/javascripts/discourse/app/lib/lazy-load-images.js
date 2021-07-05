@@ -18,7 +18,7 @@ export function nativeLazyLoading(api) {
           if (!img.complete) {
             if (!img.onload) {
               img.onload = () => {
-                img.style = '';
+                img.style = "";
               };
             }
 
