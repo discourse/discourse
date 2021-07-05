@@ -50,3 +50,22 @@ class DirectoryColumn < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: directory_columns
+#
+#  id                 :bigint           not null, primary key
+#  name               :string
+#  automatic_position :integer
+#  icon               :string
+#  user_field_id      :integer
+#  enabled            :boolean          not null
+#  position           :integer          not null
+#  created_at         :datetime
+#  type               :integer          default("automatic"), not null
+#
+# Indexes
+#
+#  directory_column_index  (enabled,position,user_field_id)
+#

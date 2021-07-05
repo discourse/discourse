@@ -90,6 +90,6 @@ end
 #
 # Indexes
 #
-#  index_blocked_emails_on_email          (email) UNIQUE
-#  index_blocked_emails_on_last_match_at  (last_match_at)
+#  index_screened_emails_on_email          (email) UNIQUE
+#  index_screened_emails_on_last_match_at  (last_match_at)
 #

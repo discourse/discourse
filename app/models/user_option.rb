@@ -210,6 +210,7 @@ end
 #  external_links_in_new_tab        :boolean          default(FALSE), not null
 #  enable_quoting                   :boolean          default(TRUE), not null
 #  dynamic_favicon                  :boolean          default(FALSE), not null
+#  disable_jump_reply               :boolean          default(FALSE), not null
 #  automatically_unpin_topics       :boolean          default(TRUE), not null
 #  digest_after_minutes             :integer
 #  auto_track_topics_after_msecs    :integer
