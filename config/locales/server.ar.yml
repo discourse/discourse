@@ -1095,7 +1095,7 @@ ar:
     rate_limit_create_post: "بعد النّشر، على المستخدمين الانتظار (n) ثانية قبل إنشاء مشاركة أخرى."
     rate_limit_new_user_create_topic: "بعد إنشاء الموضوع، على المستخدمين الجدد الانتظار (n) ثانية قبل إنشاء موضوع آخر."
     rate_limit_new_user_create_post: "بعد النّشر، على المستخدمين الجدد الانتظار (n) ثانية قبل إنشاء مشاركة أخرى."
-    max_likes_per_day: "الحد الأقصى اليومي لمرات الإعجاب لكل مستخدم"
+    max_likes_per_day: "أقصى عدد من الإعجابات لكل مستخدم"
     max_flags_per_day: "أقصى عدد للإعلامات لكل عضو باليوم."
     max_bookmarks_per_day: "الحد الأقصى اليومي للإشارات المرجعية لكل مستخدم"
     max_edits_per_day: "الحد الأقصى اليومي للتعديلات لكل مستخدم"
@@ -1514,7 +1514,7 @@ ar:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في %{last_seen_at}"
       since_last_visit: "منذ زيارتك الأخيرة"
       new_topics: "المواضيع الجديدة"
-      liked_received: "الإعجابات المستلمة"
+      liked_received: "الإعجابات المتلقاة"
       new_users: "المستخدمون الجدد"
       popular_topics: "أشهر المواضيع"
       join_the_discussion: "إقرأ المزيد"
@@ -1930,7 +1930,7 @@ ar:
       confirm_title: "فُعّلت الإخطارات - %{site_title}"
   staff_action_logs:
     api_key:
-      revoked: سُحب
+      revoked: تم الإلغاء
   reviewables:
     priorities:
       low: "منخفض"

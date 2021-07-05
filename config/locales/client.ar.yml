@@ -348,7 +348,7 @@ ar:
       moderators: "المشرفون"
       stat:
         all_time: "طوال الوقت"
-      like_count: "مرات الإعجاب"
+      like_count: "الإعجابات"
       topic_count: "الموضوعات"
       post_count: "المشاركات"
       user_count: "المستخدمون"
@@ -893,8 +893,8 @@ ar:
         icon: "اختيار أيقونة"
         image: "تحميل صورة"
     user_action_groups:
-      "1": "مرات الإعجاب"
-      "2": "مرات الإعجاب"
+      "1": "الإعجابات"
+      "2": "الإعجابات"
       "3": "الإشارات المرجعية"
       "4": "الموضوعات"
       "5": "الردود"
@@ -1312,7 +1312,7 @@ ar:
       associated_accounts:
         title: "الحسابات المرتبطة"
         connect: "ربط"
-        revoke: "إبطال"
+        revoke: "إلغاء"
         cancel: "إلغاء"
         not_connected: "(غير مرتبط)"
         confirm_modal_title: "ربط حساب %{provider}"
@@ -3089,8 +3089,8 @@ ar:
           very_high: "مرتفعة جدًا"
       sort_options:
         default: "افتراضي"
-        likes: "مرات الإعجاب"
-        op_likes: "مرات الإعجاب على المنشور الأصلي"
+        likes: "الإعجابات"
+        op_likes: "الإعجابات على المنشور الأصلي"
         views: "مرات العرض"
         posts: "المنشورات"
         activity: "النشاط"
@@ -3233,7 +3233,7 @@ ar:
       many: "لقد تم عرض هذا الموضوع %{number} مرة"
       other: "لقد تم عرض هذا الموضوع %{number} مرة"
     activity: "النشاط"
-    likes: "مرات الإعجاب"
+    likes: "الإعجابات"
     likes_lowercase:
       zero: "مرة إعجاب"
       one: "مرة إعجاب واحدة"
@@ -3790,7 +3790,7 @@ ar:
         created: تاريخ الإنشاء
         updated: تاريخ التحديث
         generate: "إنشاء"
-        revoke: "إبطال"
+        revoke: "إلغاء"
         all_users: "جميع المستخدمين"
         active_keys: "مفاتيح API النشطة"
         manage_keys: إدارة المفاتيح
@@ -3803,7 +3803,7 @@ ar:
         description_placeholder: ما الذي سيتم استخدام هذا المفتاح فيه؟
         save: حفظ
         new_key: مفتاح API جديد
-        revoked: تاريخ الإبطال
+        revoked: تم الإلغاء
         continue: متابعة
         scopes:
           action: الإجراء
@@ -4140,7 +4140,7 @@ ar:
           email: "الرسالة الأصلية"
         sending_test: "جارٍ إرسال رسالة إلكترونية للاختبار..."
         error: "<b>خطأ</b> - %{server_error}"
-        test_error: "حدثت مشكلة في أثناء إرسال الرسالة الإلكترونية للاختبار. يُرجى التحقُّق من إعدادات البريد الإلكتروني، والتأكُّد أن خدمة الاستضافة لا تحجب اتصالات البريد الإلكتروني، وإعادة المحاولة."
+        test_error: "حدثت مشكلة في أثناء إرسال الرسالة الإلكترونية للاختبار. يُرجى التحقُّق من إعدادات البريد الإلكتروني، والتأكُّد أن المضيف لا يحجب اتصالات البريد الإلكتروني، وإعادة المحاولة."
         sent: "المُرسَلة"
         skipped: "المتخطاة"
         bounced: "المرتدة"
@@ -4232,7 +4232,7 @@ ar:
           details: "التفاصيل"
           previous_value: "السابق"
           new_value: "جديد"
-          diff: "مقارنة"
+          diff: "Diff"
           show: "إظهار"
           modal_title: "التفاصيل"
           no_previous: "لا توجد قيمة سابقة."
@@ -4420,7 +4420,7 @@ ar:
         reputation: الشهرة
         permissions: الأذونات
         activity: النشاط
-        like_count: مرات الإعجاب المعطاة/المُستلَمة
+        like_count: الإعجابات المعطاة/المتلقاة
         last_100_days: "في آخر 100 يوم"
         private_topics_count: موضوع خاص
         posts_read_count: منشور مقروء
@@ -4529,108 +4529,108 @@ ar:
           flagged_posts: "المنشورات المُبلَغ عنها"
           flagged_by_users: "المستخدمون المُبلِغون"
           likes_given: "الإعجابات المعطاة"
-          likes_received: "الإعجابات المستلمة"
-          likes_received_days: "الإعجابات المستلمة : الايام الغير عادية"
-          likes_received_users: "الإعجابات المستلمة : الأعضاء المميزين"
-          qualifies: "مستوى الثقة الممنوحة للمستوى "
-          does_not_qualify: "غير مستحق للمستوى"
-          will_be_promoted: "سيتم الترقية عنه قريبا"
-          will_be_demoted: "سيتم التخفيض قريبا"
-          on_grace_period: "حاليا في فترة مهلة ترقية، لن يتم تخفيض رتب."
-          locked_will_not_be_promoted: "مستوى الثفة هذا لن يتم الترقية له نهائيا"
-          locked_will_not_be_demoted: "مستوى الثفة هذا لن يتم الخفض له نهائيا"
+          likes_received: "الإعجابات المتلقاة"
+          likes_received_days: "الإعجابات المتلقاة: الأيام المميزة"
+          likes_received_users: "الإعجابات المتلقاة: الأعضاء المميزون"
+          qualifies: "مؤهل لمستوى الثقة 3."
+          does_not_qualify: "غير مؤهل لمستوى الثقة 3."
+          will_be_promoted: "ستتم ترقيته قريبًا."
+          will_be_demoted: "سيتم خفض رتبته قريبًا."
+          on_grace_period: "في مهلة الترقية حاليًا، ولن يتم خفض رتبته."
+          locked_will_not_be_promoted: "مستوى الثقة مقفل. لن يتم ترقيته أبدًا."
+          locked_will_not_be_demoted: "مستوى الثقة مقفل. لن يتم خفض رتبته أبدًا."
         discourse_connect:
-          external_id: "ID الخارجي"
+          external_id: "المعرِّف الخارجي"
           external_username: "اسم المستخدم"
           external_name: "الاسم"
           external_email: "البريد الإلكتروني"
-          external_avatar_url: "رابط الملف الشخصي"
+          external_avatar_url: "عنوان URL لصورة الملف الشخصي"
       user_fields:
         title: "حقول المستخدم"
-        help: "أضف حقولا يمكن للمستخدمين ملئها."
-        create: "أضف حقل مستخدم"
+        help: "إضافة حقول يمكن لمستخدميك ملئها."
+        create: "إنشاء حقل المستخدم"
         untitled: "بلا لقب"
         name: "اسم الحقل"
-        type: "نوع الحقل "
+        type: "نوع الحقل"
         description: "وصف الحقل"
         save: "حفظ"
         edit: "تعديل"
         delete: "حذف"
         cancel: "إلغاء"
-        delete_confirm: "هل انت متأكد من انك تريد حذف هذا الحقل ؟"
-        options: "خيارات"
+        delete_confirm: "هل تريد بالتأكيد حذف حقل المستخدم هذا؟"
+        options: "الخيارات"
         required:
-          title: "مطلوب عند التّسجيل؟"
+          title: "مطلوب عند الاشتراك؟"
           enabled: "مطلوب"
           disabled: "غير مطلوب"
         editable:
-          title: "يمكن تعديله بعد التّسجيل؟"
+          title: "يمكن تعديله بعد التسجيل؟"
           enabled: "يمكن تعديله"
           disabled: "لا يمكن تعديله"
         show_on_profile:
-          title: "أيظهر في اللاحة العامّة؟"
-          enabled: "يظهر في اللاحة"
-          disabled: "لا يظهر في اللاحة"
+          title: "العرض في الملف الشخصي العام؟"
+          enabled: "معروض في الملف الشخصي"
+          disabled: "غير معروض في الملف الشخصي"
         show_on_user_card:
-          title: "اظهارها على كرت المستخدم؟"
-          enabled: "ظاهرة على كرت المستخدم"
-          disabled: "غير ظاهرة على كرت المستخدم"
+          title: "العرض على بطاقة المستخدم؟"
+          enabled: "العرض على بطاقة المستخدم"
+          disabled: "غير معروض على بطاقة المستخدم"
         field_types:
-          text: "حقل النص"
+          text: "حقل نصي"
           confirm: "تأكيد"
-          dropdown: "القائمة المنسدلة"
+          dropdown: "قائمة منسدلة"
       site_text:
-        description: "يمكنك تخصيص أيّ من نصوص هذا المنتدى. يمكنك استكشاف ذلك أدناه:"
-        search: "ابحث عن النص الذي تريد تعديله"
-        title: "نص"
+        description: "يمكنك تخصيص أي من النصوص في منتداك. يُرجى البدء بالبحث أدناه:"
+        search: "البحث عن النص الذي تريد تعديله"
+        title: "النص"
         edit: "تعديل"
-        revert: "حفظ التعديلات"
+        revert: "التراجع عن التغييرات"
         revert_confirm: "هل تريد بالتأكيد التراجع عن التغييرات؟"
         go_back: "العودة إلى البحث"
         recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: "إظهار التجاوزات فقط"
       settings:
         show_overriden: "إظهار التجاوزات فقط"
-        reset: "إعادة تعيين"
-        none: "لا شيء"
+        reset: "إعادة التعيين"
+        none: "لا يوجد"
       site_settings:
         title: "الإعدادات"
-        no_results: "لا نتائج."
+        no_results: "لم يتم العثور على نتائج."
         clear_filter: "مسح"
-        add_url: "اضافة رابط"
-        add_host: "اضافة نطاق"
+        add_url: "إضافة عنوان URL"
+        add_host: "إضافة مضيف"
         uploaded_image_list:
           upload:
-            label: "رفع"
-            title: "رفع صور(ه)"
+            label: "التحميل"
+            title: "تحميل الصور"
         categories:
           all_results: "الكل"
-          required: "المعلومات الأساسية"
-          basic: "الإعدادات العامة"
-          users: "الأعضاء"
-          posting: "المنشورات"
+          required: "مطلوب"
+          basic: "الإعداد الأساسي"
+          users: "المستخدمون"
+          posting: "النشر"
           email: "البريد الإلكتروني"
           files: "الملفات"
           trust: "مستويات الثقة"
-          security: "الأمن"
-          onebox: "لوحة المُعاينة"
-          seo: "SEO"
+          security: "الأمان"
+          onebox: "لوحة المعاينة"
+          seo: "تحسين محركات البحث"
           spam: "غير مرغوب فيه"
-          rate_limits: "الحدود"
-          developer: "المطورون"
-          embedding: "تضمين"
-          legal: "الأمور القانونية"
+          rate_limits: "حدود المعدلات"
+          developer: "المطور"
+          embedding: "التضمين"
+          legal: "المسائل القانونية"
           api: "API"
-          user_api: "API المستخدمين"
+          user_api: "API للمستخدم"
           uncategorized: "أخرى"
-          backups: "النُسخ الإحتياطية"
+          backups: "النسخ الاحتياطية"
           login: "تسجيل الدخول"
-          plugins: "الإضافات "
-          user_preferences: "تفضيلات العضو"
+          plugins: "الإضافات"
+          user_preferences: "تفضيلات المستخدم"
           tags: "الوسوم"
           search: "البحث"
           groups: "المجموعات"
-          dashboard: "لوحة التحكم"
+          dashboard: "لوحة المعلومات"
         default_categories:
           modal_yes: "نعم"
       badges:
@@ -4657,7 +4657,7 @@ ar:
         expand: توسيع&hellip;
         revoke_confirm: هل تريد بالتأكيد سحب هذه الشارة؟
         edit_badges: تعديل الشارات
-        grant_badge: منح شارة
+        grant_badge: منح الشارة
         granted_badges: الشارات الممنوحة
         grant: منح
         no_user_badges: "لم يتم منح %{name} أي شارة."
@@ -4672,13 +4672,13 @@ ar:
         icon_help: "إدخال اسم أيقونة Font Awesome (استخدم البادئة \"far-\" للأيقونات العادية والبادئة \"fab-‎\" لأيقونات العلامات التجارية)"
         query: استعلام الشارة (SQL)
         target_posts: استهداف الاستعلام للمنشورات
-        auto_revoke: إلغاء الاستعلام اليومي
+        auto_revoke: تشغيل استفسار الإلغاء يوميًا
         trigger: المشغِّل
         trigger_type:
-          none: "تحديث يومي"
+          none: "التحديث يوميًا"
           post_action: "عند تفاعل مستخدم على المنشور"
           post_revision: "عند تعديل مستخدم لمنشور أو إنشائه لمنشور"
-          trust_level_change: "حين يعدّل المستخدم مستوى الثقة"
+          trust_level_change: "عند تغيير مستوى الثقة للمستخدم"
           user_change: "عن تعديل مستخدم أو إنشاء مستخدم"
           post_processed: "بعد معالجة منشور"
         preview:
@@ -4692,12 +4692,12 @@ ar:
             text: "بعض أمثلة المنح مفقودة. يحدث ذلك عندما يُعيد استعلام الشارات مُعرِّفات مستخدمين أو مُعرِّفات منشورات غير موجودة. قد يتسبَّب ذلك في نتائج غير متوقعة لاحقًا. يُرجى التحقُّق من صحة الاستعلام."
           no_grant_count: "لا توجد شارات ليتم تخصيصها."
           grant_count:
-            zero: "لن تمنح أيّ شارة."
-            one: "ستمنح شارة واحدة."
-            two: "ستمنح شارتين."
-            few: "ستمنح <b>%{count}</b> شارات."
-            many: "ستمنح <b>%{count}</b> شارة."
-            other: "ستمنح <b>%{count}</b> شارة."
+            zero: "<b>%{count}</b> شارة بانتظار التخصيص."
+            one: "شارة واحدة <b>(%{count})</b> بانتظار التخصيص."
+            two: "شارتان <b>(%{count})</b> بانتظار التخصيص."
+            few: "<b>%{count}</b> شارات بانتظار التخصيص."
+            many: "<b>%{count}</b> شارة بانتظار التخصيص."
+            other: "<b>%{count}</b> شارة بانتظار التخصيص."
           sample: "مثال:"
           grant:
             with: <span class="username">%{username}</span>
@@ -4714,26 +4714,26 @@ ar:
           success: تم استلام ملف CSV وسيتلقَّى المستخدمون الشارة قريبًا.
           replace_owners: إزالة الشارة من مالكيها السابقين
       emoji:
-        title: "الوجه التعبيري"
-        help: "أضف رموز تعبيرية جديدة التي سوف تكون متاحة للكل . (PROTIP: drag & drop multiple files at once)"
-        add: "أضافة وجه تعبيري جديد ؟"
-        uploading: "جاري الرفع..."
-        name: "الأسم"
+        title: "الرمز التعبيري"
+        help: "إضافة رمز تعبيري جديد سيكون متاحًا للجميع. (تلميح احترافي: يمكنك سحب وإفلات عدة ملفات في الوقت نفسه)"
+        add: "إضافة رمز تعبيري جديد"
+        uploading: "جارٍ التحميل..."
+        name: "الاسم"
         group: "المجموعة"
-        image: "صورة"
-        delete_confirm: "أمتأكّد من حذف الإيموجي :%{name}: هذا؟"
+        image: "الصورة"
+        delete_confirm: "هل تريد بالتأكيد حذف الرمز التعبيري :%{name}:؟"
       embedding:
-        get_started: "إذا أردت تضمين Discourse في موقع اخر، أبدأ بإضافة مضيف."
-        confirm_delete: "أمتأكّد من حذف هذا المضيف؟"
-        sample: "استخدم كود HTML التالي لموقعك لإنشاء وتضمين موضوع discourse. استبدل <b>REPLACE_ME</b> مع الرابط الاساسي لصفحة قمت بتضمينها فيه."
-        title: "تضمين"
-        host: "المُظيفين المسموح بهم"
-        class_name: "اسم الصنف"
+        get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
+        confirm_delete: "هل تريد بالتأكيد حذف هذا المضيف؟"
+        sample: "استخدم رمز HTML التالي في موقعك لإنشاء موضوعات discourse وتضمينها. استبدل <b>REPLACE_ME</b> بالرابط الأساسي للصفحة التي تضمِّنه فيها."
+        title: "التضمين"
+        host: "المضيفون المسموح بهم"
+        class_name: "اسم الفئة"
         edit: "تعديل"
-        category: "انشر في قسم"
-        add_host: "أضف مضيف"
-        settings: "تضمين إعدادات"
-        crawling_settings: "اعدادات الزاحف"
+        category: "النشر في الفئة"
+        add_host: "إضافة مضيف"
+        settings: "إعدادات التضمين"
+        crawling_settings: "إعدادات الزاحف"
         crawling_description: "عندما ينشأ Discourse مواضيع لمشاركتك، إذا لم يتوفر مغذي RSS/ATOM سيحاول تحليل محتواك من HTML الخاص بك. أحيانا يمكن أن يكون تحديا استخراج محتواك، لذا نمنحك القدرة لتحديد قواعد CSS لجعل الاستخراج أسهل."
         embed_by_username: "اسم العضو للموضوع المنشأ"
         embed_post_limit: "أقصى عدد مشاركات مضمنة"

@@ -202,7 +202,14 @@ ja:
     conflicting_google_user_id: 'このアカウントの Google アカウント ID が変更されました。セキュリティの理由により、スタッフによる介入が必要です。スタッフに連絡し、<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a> を示してください。'
     onebox:
       invalid_address: "サーバー '%{hostname}' が見つからなかったため、プレビューを生成できませんでした。投稿には、プレビューの代わりにリンクのみが表示されます。:cry:"
+      error_response: "ウェブサーバーがエラーコード %{status_code} を返したため、このウェブページのプレビューを生成できませんでした。投稿には、プレビューの代わりにリンクのみが表示されます。:cry:"
+      missing_data:
+        other: "次の oEmbed / OpenGraph タグが見つからなかったため、このウェブページのプレビューを生成できませんでした: %{missing_attributes}"
+  word_connector:
+    comma: "、"
   invite:
+    expired: "招待トークンの有効期限が切れています。<a href='%{base_url}/about'>スタッフに連絡</a>してください。"
+    not_found: "招待トークンは無効です。<a href='%{base_url}/about'>スタッフに連絡</a>してください。"
     user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     disabled_errors:
       invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
