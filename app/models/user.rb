@@ -293,21 +293,6 @@ class User < ActiveRecord::Base
     fields.uniq
   end
 
-  def self.register_plugin_editable_user_custom_field(custom_field_name, plugin, staff_only: false)
-    Discourse.deprecate("Editable user custom fields should be registered using the plugin API", since: "v2.4.0.beta4", drop_from: "v2.5.0")
-    DiscoursePluginRegistry.register_editable_user_custom_field(custom_field_name, plugin, staff_only: staff_only)
-  end
-
-  def self.register_plugin_staff_custom_field(custom_field_name, plugin)
-    Discourse.deprecate("Staff user custom fields should be registered using the plugin API",  since: "v2.4.0.beta4", drop_from: "v2.5.0")
-    DiscoursePluginRegistry.register_staff_user_custom_field(custom_field_name, plugin)
-  end
-
-  def self.register_plugin_public_custom_field(custom_field_name, plugin)
-    Discourse.deprecate("Public user custom fields should be registered using the plugin API", since: "v2.4.0.beta4", drop_from: "v2.5.0")
-    DiscoursePluginRegistry.register_public_user_custom_field(custom_field_name, plugin)
-  end
-
   def self.allowed_user_custom_fields(guardian)
     fields = []
 
