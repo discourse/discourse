@@ -266,10 +266,13 @@ de:
       contact_info: "Im Falle eines kritischen Problems oder einer dringenden Angelegenheit, die diese Website betrifft, kontaktiere uns bitte unter %{contact_info}."
     bookmarked:
       title: "Lesezeichen setzen"
+      edit_bookmark: "Lesezeichen bearbeiten"
       clear_bookmarks: "Lesezeichen entfernen"
       help:
         bookmark: "Klicke hier, um den ersten Beitrag in diesem Thema mit einem Lesezeichen zu versehen."
+        edit_bookmark: "Klicke, um das Lesezeichen zu diesem Thema zu bearbeiten"
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
+        unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen."
     bookmarks:
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
@@ -539,9 +542,12 @@ de:
       tomorrow: "Morgen"
       post_local_date: "Datum im Beitrag"
       later_this_week: "Später in dieser Woche"
+      this_weekend: "Dieses Wochenende"
       start_of_next_business_week: "Montag"
       start_of_next_business_week_alt: "Am kommenden Montag"
+      two_weeks: "Zwei Wochen"
       next_month: "Nächsten Monat"
+      six_months: "Sechs Monate"
       custom: "Datum und Uhrzeit auswählen"
       relative: "Relative Zeit"
       none: "Nicht notwendig"
@@ -599,7 +605,12 @@ de:
       member_added: "Hinzugefügt"
       member_requested: "Angefragt am"
       add_members:
+        title: "Benutzer zu %{group_name} hinzufügen"
+        description: "Gib eine Liste von Benutzern ein, die du in die Gruppe einladen möchtest, oder füge eine kommagetrennte Liste ein:"
+        usernames_placeholder: "Benutzernamen"
+        usernames_or_emails_placeholder: "Benutzernamen oder E-Mail-Adressen"
         notify_users: "Benutzer benachrichtigen"
+        set_owner: "Benutzer als Eigentümer dieser Gruppe festlegen"
       requests:
         title: "Anfragen"
         reason: "Grund"
@@ -613,6 +624,8 @@ de:
         title: "Verwalten"
         name: "Name"
         full_name: "Vollständiger Name"
+        add_members: "Benutzer hinzufügen"
+        invite_members: "Einladen"
         delete_member_confirm: "Entferne „%{username}“ aus der Gruppe „%{group}“?"
         profile:
           title: Profil
@@ -627,6 +640,8 @@ de:
           enable_imap: "IMAP aktivieren"
           test_settings: "Test-Einstellungen"
           save_settings: "Einstellungen speichern"
+          last_updated: "Zuletzt aktualisiert:"
+          last_updated_by: "von"
           settings_required: "Alle Einstellungen sind erforderlich, bitte fülle alle Felder vor der Validierung aus."
           smtp_settings_valid: "SMTP-Einstellungen gültig."
           smtp_title: "SMTP"
@@ -655,6 +670,7 @@ de:
           settings:
             title: "Einstellungen"
             allow_unknown_sender_topic_replies: "Unbekannten Absendern das Antworten auf Gruppenthemen erlauben."
+            allow_unknown_sender_topic_replies_hint: "Erlaubt unbekannten Absendern, auf Gruppenthemen zu antworten. Wenn dies nicht aktiviert ist, werden Antworten von E-Mail-Adressen, die nicht bereits zu dem Thema eingeladen wurden, ein neues Thema erstellen."
           mailboxes:
             synchronized: "Synchronisierte Mailbox"
             none_found: "In diesem E-Mail-Konto wurden keine Postfächer gefunden."
@@ -1088,6 +1104,7 @@ de:
         move_to_archive: "Archivieren"
         failed_to_move: "Die ausgewählten Nachrichten konnten nicht verschoben werden. Vielleicht gibt es ein Netzwerkproblem."
         tags: "Schlagwörter"
+        warnings: "Offizielle Warnungen"
       preferences_nav:
         account: "Konto"
         security: "Sicherheit"
@@ -2048,6 +2065,7 @@ de:
         votes_released: "Abstimmung wurde freigegeben"
     upload_selector:
       uploading: "Wird hochgeladen"
+      processing: "Upload wird verarbeitet"
       select_file: "Datei auswählen"
       default_image_alt_text: Bild
     search:
@@ -2153,10 +2171,19 @@ de:
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
+        dismiss_read_with_selected:
+          one: "%{count} ungelesenes Thema ignorieren"
+          other: "%{count} ungelesene Themen ignorieren"
         dismiss_button: "Ignorieren …"
+        dismiss_button_with_selected:
+          one: "Ignorieren (%{count}) …"
+          other: "Ignorieren (%{count}) …"
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new: "Neue Themen ignorieren"
+        dismiss_new_with_selected:
+          one: "Neues Thema ignorieren (%{count})"
+          other: "Neue Themen ignorieren (%{count})"
         toggle: "Massenauswahl von Themen umschalten"
         actions: "Massenoperationen"
         change_category: "Kategorie auswählen"
@@ -2192,6 +2219,7 @@ de:
         top: "Es gibt keine angesagten Themen."
         educate:
           new: '<p>Hier werden deine neuen Themen angezeigt. Standardmäßig werden Themen als neu erachtet und mit einem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-Indikator dargestellt, wenn sie in den letzten 2 Tagen erstellt wurden. </p><p>Besuche deine <a href="%{userPrefsUrl}">Einstellungen</a>, um dies zu ändern.</p>'
+          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Standardmäßig werden Themen als ungelesen erachtet und mit einem Zähler für ungelesene Beiträge <span class=\"badge unread-posts badge-notification\">1</span> dargestellt, wenn du:</p><ul><li>das Thema erstellt hast;</li><li>auf das Thema geantwortet hast;</li><li>das Thema für mehr als 4 Minuten gelesen hast.</li></ul><p>Oder falls du das Thema über \U0001F514 ausdrücklich auf „Verfolgen“ oder „Beobachten“ eingestellt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a>, um dies zu ändern.</p>"
       bottom:
         latest: "Das waren die aktuellen Themen."
         posted: "Das waren alle Themen."
@@ -2249,6 +2277,9 @@ de:
       not_found:
         title: "Thema nicht gefunden"
         description: "Entschuldige, wir konnten dieses Thema nicht finden. Wurde es vielleicht von einem Moderator entfernt?"
+      unread_posts:
+        one: "du hast %{count} ungelesenen Beitrag in diesem Thema"
+        other: "du hast %{count} ungelesene Beiträge in diesem Thema"
       likes:
         one: "Es gibt %{count} „Gefällt mir“ in diesem Thema"
         other: "Es gibt %{count} „Gefällt mir“ in diesem Thema"
@@ -2265,6 +2296,7 @@ de:
       browse_all_categories: Alle Kategorien durchsehen
       browse_all_tags: Alle Schlagwörter durchsuchen
       view_latest_topics: aktuelle Themen anzeigen
+      suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
@@ -2326,6 +2358,8 @@ de:
         title: "Veröffentlichung planen"
       temp_open:
         title: "Vorübergehend öffnen"
+      auto_reopen:
+        title: "Thema automatisch öffnen"
       temp_close:
         title: "Vorübergehend schließen"
       auto_close:
@@ -3232,6 +3266,7 @@ de:
         show_incoming_updated_topics: "%{shortcut} Aktualisierte Themen anzeigen"
         search: "%{shortcut} Suche"
         help: "%{shortcut} Tastenkombinationen anzeigen"
+        dismiss_new: "%{shortcut} Neue Themen ignorieren"
         dismiss_topics: "%{shortcut} Themen ignorieren"
         log_out: "%{shortcut} Abmelden"
       composing:
@@ -3556,6 +3591,7 @@ de:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokolle</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
+          average_chart_label: Durchschnitt
           filters:
             file_extension:
               label: Dateiendung
@@ -3681,6 +3717,8 @@ de:
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
               wordpress: Notwendig, damit das „wp-discourse“-Plug-in für WordPress funktioniert.
+            posts:
+              edit: Bearbeite jeden Beitrag oder einen bestimmten.
             users:
               bookmarks: Listet die Lesezeichen des Benutzers auf. Gibt Lesezeichen-Erinnerungen zurück, wenn du das ICS-Format verwendest.
               sync_sso: Synchronisiere einen Benutzer mit DiscourseConnect.
@@ -4339,6 +4377,8 @@ de:
             post_staff_note_create: "Team-Notiz hinzufügen"
             post_staff_note_destroy: "Team-Notiz entfernen"
             delete_group: "Gruppe löschen"
+            watched_word_create: "beobachtetes Wort hinzufügen"
+            watched_word_destroy: "beobachtetes Wort löschen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -4393,6 +4433,7 @@ de:
         clear_all: Alle löschen
         clear_all_confirm: "Bist du sicher, dass du alle beobachteten Wörter für die Aktion %{action} löschen möchtest?"
         invalid_regex: 'Das beobachtete Wort „%{word}“ ist ein ungültiger regulärer Ausdruck.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Beobachtete Wörter sind reguläre Ausdrücke</a> und sie schließen nicht automatisch Wortgrenzen ein. Wenn du möchtest, dass der reguläre Ausdruck ganze Wörter erfasst, füge <code>\b</code> am Anfang und Ende deines regulären Ausdrucks ein.'
         actions:
           block: "Blockieren"
           censor: "Zensieren"
@@ -4427,6 +4468,7 @@ de:
           upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
         test:
           button_label: "Test"
+          modal_title: "%{action}: Beobachtete Wörter testen"
           description: "Füge unten Text ein, um auf Übereinstimmungen mit beobachteten Wörtern zu prüfen"
           found_matches: "Gefundene Übereinstimmungen:"
           no_matches: "Keine Übereinstimmungen gefunden"
@@ -4552,6 +4594,8 @@ de:
         flags_given_count: Gemachte Meldungen
         flags_received_count: Erhaltene Meldungen
         warnings_received_count: Warnungen erhalten
+        warnings_list_warning: |
+          Als Moderator kannst du unter Umständen nicht alle diese Themen sehen. Falls nötig, bitte einen Administrator oder den ausstellenden Moderator, <b>@Moderatoren</b> Zugriff auf die Nachricht zu gewähren.
         flags_given_received_count: "Gemachte/Erhaltene Meldungen"
         approve: "Genehmigen"
         approved_by: "genehmigt von"
@@ -4719,6 +4763,7 @@ de:
           text: "Textfeld"
           confirm: "Bestätigung"
           dropdown: "Drop-down-Liste"
+          multiselect: "Mehrfachauswahl"
       site_text:
         description: "Du kannst jeden Text deines Forums anpassen. Benutze dazu die Suche:"
         search: "Suche nach dem Text, den du bearbeiten möchtest"

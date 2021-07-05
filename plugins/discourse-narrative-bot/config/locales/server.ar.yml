@@ -34,9 +34,9 @@ ar:
 
         ان كنت لا ترغب بالقيام بذلك فلا بأس ايضاً, انا روبوت. و لن تجرح مشاعري. :sob:
     dice:
-      trigger: "دحرج"
+      trigger: "رمي النرد"
       invalid: |-
-        عذرا, من المستحيل رياضياً دحرجة النرد للحصول على هذه التركيبة :confounded:
+        عذرًا، من المستحيل رياضيًا الحصول على هذه التركيبة في النرد. :confounded:
       out_of_range: |-
         هل تعلم ان [ اقصي عدد من اوجة حجر النرد ] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) الذي ينتج احتمال رياضي متساوي لظهور كل الاوجة هو 120 ؟!
       results: |-

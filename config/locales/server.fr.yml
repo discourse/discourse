@@ -2282,7 +2282,7 @@ fr:
         changing_post_ownership: "Modification de la propriété du message…"
         merging_given_daily_likes: "Fusion des « J'aime » quotidiens…"
         merging_post_timings: "Fusion des horaires des messages…"
-        merging_user_visits: "Fusion des visites utilisateur…"
+        merging_user_visits: "Fusion des visites des utilisateurs…"
         updating_site_settings: "Mise à jour des paramètres du site…"
         updating_user_stats: "Mise à jour des statistiques utilisateur…"
         merging_user_attributes: "Fusion des attributs utilisateur…"
@@ -2296,7 +2296,7 @@ fr:
       other: "Désactivé automatiquement après %{count} jours d'inactivité"
     activated_by_staff: "Activé par un responsable"
     new_user_typed_too_fast: "Le nouvel utilisateur écrivait trop rapidement"
-    content_matches_auto_silence_regex: "Le contenu correspond à l'expression régulière de mise sous silence automatique"
+    content_matches_auto_silence_regex: "Le contenu correspond à l'expression régulière de mise en sourdine automatique"
     content_matches_auto_block_regex: "Le contenu correspond à l'expression régulière de blocage automatique"
     username:
       short: "doit contenir au moins %{min} caractères"
@@ -2307,20 +2307,20 @@ fr:
       blank: "doit être présent"
       must_begin_with_alphanumeric_or_underscore: "doit commencer par une lettre, un chiffre ou un tiret bas"
       must_end_with_alphanumeric: "doit finir par une lettre ou un chiffre"
-      must_not_contain_two_special_chars_in_seq: "ne doit pas contenir une séquence de 2 caractères spéciaux ou plus (.-_)"
-      must_not_end_with_confusing_suffix: "ne doit pas se terminer avec un suffixe déroutant comme .json ou .png etc."
+      must_not_contain_two_special_chars_in_seq: "ne doit pas contenir une séquence de 2 caractères spéciaux ou plus (« . », « - », « _ »)"
+      must_not_end_with_confusing_suffix: "ne doit pas se terminer par un suffixe déroutant comme « .json » ou « .png » etc."
     email:
       invalid: "est invalide."
       not_allowed: "n'est pas autorisé pour ce fournisseur de courriels. Veuillez utiliser une autre adresse."
       blocked: "n'est pas autorisé."
-      revoked: "N'enverra plus de courriels à « %{email} » jusqu'à %{date}."
+      revoked: "N'enverra plus de courriels à « %{email} » jusqu'au %{date}."
       does_not_exist: "S.O."
     ip_address:
       blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
       max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
     website:
-      domain_not_allowed: "Site web invalide. Les domaines autorisés sont : %{domains}"
-    auto_rejected: "Rejeté automatiquement car le délai d'action est dépassé. Voir le paramètre auto_handle_queued_age."
+      domain_not_allowed: "Site Web invalide. Les domaines autorisés sont : %{domains}"
+    auto_rejected: "Refusé automatiquement en raison de l'âge. Voir le paramètre de site « auto_handle_queued_age »."
     destroy_reasons:
       unused_staged_user: "Utilisateur distant inutilisé"
       fixed_primary_email: "Correction du courriel principal pour l'utilisateur distant"
@@ -2329,8 +2329,8 @@ fr:
       reviewable_reject_auto: "Traiter automatiquement les éléments à examiner en file d'attente"
       reviewable_reject: "L'inscription de cet utilisateur a été refusée"
     email_in_spam_header: "Le premier courriel de l'utilisateur a été signalé comme spam"
-    already_silenced: "L'utilisateur a déjà été mis sous silence par %{staff} %{time_ago}."
-    already_suspended: "L'utilisateur a déjà été suspendu par %{staff} %{time_ago}."
+    already_silenced: "L'utilisateur a déjà été mis en sourdine par %{staff} il y a %{time_ago}."
+    already_suspended: "L'utilisateur a déjà été suspendu par %{staff} il y a %{time_ago}."
   reviewables_reminder:
     submitted:
       one: "Ces éléments ont été soumis il y a plus de %{count} heure. [Nous vous invitons à les examiner](%{base_path}/review)."
@@ -2442,11 +2442,11 @@ fr:
     text_body_template: |
       Voici le lien vers la [sauvegarde du site](%{backup_file_path}) que vous avez demandée.
 
-      Nous vous avons envoyé ce lien par courriel validée pour des raisons de sécurité.
+      Nous avons envoyé ce lien à votre adresse courriel validée pour des raisons de sécurité.
 
       (Si vous *n'avez pas* effectué cette demande, il y a lieu de vous inquiéter : quelqu'un a accès à l'administration de votre site.)
     no_token: |
-      Désolé, ce lien de téléchargement a déjà été utilisé ou a expiré.
+      Nous sommes désolés, ce lien de téléchargement a déjà été utilisé ou a expiré.
   admin_confirmation_mailer:
     title: "Confirmation de l'administrateur"
     subject_template: "[%{email_prefix}] Confirmer votre nouveau compte"
@@ -2456,7 +2456,7 @@ fr:
       [Confirmer le compte administrateur](%{admin_confirm_url})
   test_mailer:
     title: "Envoyer un courriel de test"
-    subject_template: "[%{email_prefix}] Test de délivrabilité courriel"
+    subject_template: "[%{email_prefix}] Test de délivrabilité du courriel"
     text_body_template: |
       Ceci est un message de test envoyé par
 
@@ -2464,11 +2464,11 @@ fr:
 
       La bonne remise des courriels est une affaire un peu compliquée. Voici quelques points importants qu'il vous faudra examiner en premier lieu :
 
-      - Soyez *certain* de définir l'adresse d'expéditeur (le champ « from: ») utilisé par les courriels de notification dans les paramètres de votre site. **Le nom de domaine indiqué dans le champ « from: » des courriels que vous émettez est examiné par des entités tierces pour déterminer si ces courriels sont légitimes ou non**.
+      - Assurez-vous de définir l'adresse de l'expéditeur (le champ « from: ») utilisé par les courriels de notification dans les paramètres de votre site. **Le nom de domaine indiqué dans le champ « from: » des courriels que vous émettez est examiné par des entités tierces pour déterminer si ces courriels sont légitimes ou non**.
 
-      - Assurez-vous de savoir afficher la source d'un courriel dans votre client de messagerie, afin d'en inspecter les en-têtes et d'y chercher des indices importants. Dans Gmail, la fonctionnalité "afficher l'original" (accessible depuis le menu déroulant situé en haut à droite lorsque vous affichez un message) vous permet de le faire.
+      - Assurez-vous de savoir afficher la source d'un courriel dans votre client de messagerie, afin d'en inspecter les en-têtes et d'y chercher des indices importants. Dans Gmail, la fonctionnalité « afficher l'original » (accessible depuis le menu déroulant situé en haut à droite lorsque vous affichez un message) vous permet de le faire.
 
-      - **IMPORTANT:** Votre fournisseur d'accès à Internet a-t-il créé un enregistrement dans le DNS inversé qui permette de faire correspondre le nom de domaine avec les adresses IP depuis lesquels vos courriels sont expédiés ? Vous pouvez [examiner les enregistrement de DNS inversé][2] ici. Si votre fournisseur d'accès n'a pas défini les enregistrements de DNS inversé requis, il est très peu probable que le moindre de vos courriels soit remis à son destinataire.
+      - **IMPORTANT :** Votre fournisseur d'accès à Internet a-t-il créé un enregistrement dans le DNS inversé qui permette de faire correspondre le nom de domaine avec les adresses IP depuis lesquels vos courriels sont expédiés ? Vous pouvez [examiner les enregistrement de DNS inversé][2] ici. Si votre fournisseur d'accès n'a pas défini les enregistrements de DNS inversé requis, il est très peu probable que le moindre de vos courriels soit remis à son destinataire.
 
       - L'[enregistrement SPF][8] de votre nom de domaine est-il valable ? [Examinez votre enregistrement SPF][1] ici. Notez que le type d'enregistrement TXT est celui qui est officiellement requis par le système SPF.
 
@@ -2476,11 +2476,11 @@ fr:
 
       - Si vous exploitez votre propre serveur de courriel, assurez-vous que les adresses IP de celui-ci [ne soient pas inscrites sur une ou plusieurs listes de blocage][4]. Assurez-vous aussi que votre serveur, lorsqu'il émet son message HELO, indique un nom d'hôte pleinement qualifié qu'une requête DNS permette de résoudre en adresse IP. Si cette condition n'est pas satisfaite, de nombreux services de courriel rejetteront vos courriels.
 
-      - Nous vous recommandons chaudement d'**expédier un courriel de test à l'adresse [mail-tester.com][mt]** pour vous assurer que l'ensemble des choses indiquées ci-dessus fonctionnent correctement.
+      - Nous vous recommandons fortement d'**expédier un courriel de test à l'adresse [mail-tester.com][mt]** pour vous assurer que l'ensemble des éléments indiqués ci-dessus fonctionnent correctement.
 
-      (*Le plus simple* est de créer un compte chez [SendGrid][sg], chez [SparkPost][sp], chez [Mailgun][mg] ou chez [Mailjet][mj]. Ces fournisseurs proposent des forfaits d'envoi de courriel à bas coût, qui suffiront aux petites communautés. Néanmoins, il vous faudra tout de même configurer les enregistrement DNS ayant trait à SPF et à DKIM !)
+      (*Le plus simple* est de créer un compte chez [SendGrid][sg], chez [SparkPost][sp], chez [Mailgun][mg] ou chez [Mailjet][mj]. Ces fournisseurs proposent des forfaits d'envoi de courriel à faible coût, qui suffiront aux petites communautés. Néanmoins, il vous faudra tout de même configurer les enregistrement DNS ayant trait à SPF et à DKIM !)
 
-      En espérant que ce test de bonne remise vous aura bien été remis !
+      En espérant que ce courriel de test de bonne remise vous sera bien parvenu !
 
       Bonne chance,
 
@@ -2511,7 +2511,7 @@ fr:
 
       - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions et de l'aide concernant Discourse
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour obtenir des actualités, des discussions et de l'aide concernant Discourse
   new_version_mailer_with_notes:
     title: "Nouvelle version avec notes de modifications"
     subject_template: "[%{email_prefix}] Mise à jour disponible"
@@ -2525,15 +2525,15 @@ fr:
 
       - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions et de l'aide concernant Discourse
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour obtenir des actualités, des discussions et de l'aide concernant Discourse
 
       ### Notes de version
 
       %{notes}
   flag_reasons:
-    off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en discussion qui est défini par son titre et son premier message."
-    inappropriate: "Votre message a été signalé comme étant **répréhensible**&nbsp;: la communauté a estimé que son contenu était offensant, injurieux, violent ou qu'il enfreignait notre [charte communautaire](%{base_path}/guidelines)."
-    spam: "Votre message a été signalé comme étant du **spam** : la communauté considère qu'il s'agit d'une publicité ou du contenu trop promotionnel au lieu d'être utile et pertinent au sujet."
+    off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
+    inappropriate: "Votre message a été signalé comme étant **répréhensible** : la communauté a estimé que son contenu était offensant, injurieux, violent ou qu'il enfreignait notre [charte communautaire](%{base_path}/guidelines)."
+    spam: "Votre message a été signalé comme étant du **spam** : la communauté considère qu'il s'agit d'une publicité ou du contenu trop promotionnel au lieu d'être utile et pertinent au regard du sujet."
     notify_moderators: "Votre message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
   flags_dispositions:
     agreed: "Merci de nous en informer. Nous sommes en accord avec votre signalement et nous travaillons à sa résolution."
@@ -2561,7 +2561,7 @@ fr:
 
         Ce message a été masqué suite à des signalements de la communauté. Nous vous invitons par conséquent à envisager de le modifier en prenant en considération leurs commentaires. **Vous pourrez modifier votre message d'ici %{edit_delay} minutes, et il sera ensuite rendu automatiquement visible à nouveau.**
 
-        Toutefois, si ce message était masqué par la communauté une seconde fois, il le resterait jusqu'à ce qu'il soit examiné par des responsables.
+        Toutefois, si ce message est masqué par la communauté une seconde fois, il le restera jusqu'à ce qu'il soit examiné par des responsables.
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/charte).
     post_hidden_again:
@@ -2580,7 +2580,7 @@ fr:
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/charte).
     queued_by_staff:
-      title: "Message En Attente de Vérification"
+      title: "Message en attente de vérification"
       subject_template: "Message masqué par un responsable, en attente de vérification"
       text_body_template: |
         Bonjour,
@@ -2626,20 +2626,20 @@ fr:
         Pour plus d'informations, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        Pour connaître quelques astuces qui vont vous aider à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).
+        Pour connaître quelques astuces qui vous aideront à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).
 
-        Au fur et à mesure que vous participerez ici, nous apprendrons à vous connaître et les limitations temporaires des nouveaux utilisateurs seront levées. Avec le temps, vous gagnerez [des niveaux de confiance](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (en anglais) qui incluent des fonctionnalités spéciales pour nous aider à gérer notre communauté ensemble.
+        À mesure que vous participerez ici, nous apprendrons à vous connaître et les limitations temporaires des nouveaux utilisateurs seront levées. Avec le temps, vous gagnerez [des niveaux de confiance](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) qui incluent des fonctionnalités spéciales pour nous aider à gérer notre communauté ensemble.
     welcome_user:
       title: "Bienvenue utilisateur"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
-        Merci d'avoir rejoint %{site_name}, bievenue&nbsp;!
+        Merci d'avoir rejoint %{site_name}, nous vous souhaitons la bienvenue !
 
         %{new_user_tips}
 
-        Nous prônons [la civilité au sein de notre communauté](%{base_url}/guidelines) dans toutes les circonstances.
+        Nous prônons [la civilité au sein de notre communauté](%{base_url}/guidelines) en toutes circonstances.
 
-        En vous souhaitant d'agréables moments parmi nous&nbsp;!
+        En vous souhaitant d'agréables moments parmi nous !
     welcome_tl1_user:
       title: "Bienvenue utilisateur"
       subject_template: "Merci de passer du temps avec nous"
@@ -2660,27 +2660,27 @@ fr:
       title: "Bienvenue invité"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
-        Merci d'avoir accepté l'invitation sur %{site_name}, bienvenue&nbsp;!
+        Merci d'avoir accepté l'invitation sur %{site_name}. Nous vous souhaitons la bienvenue !
 
-        - Nous vous avons créé un nouveau compte&nbsp;: **%{username}**. Vous pourrez modifier votre nom d'utilisateur ou votre mot de passe en vous rendant sur [votre profil utilisateur][prefs].
+        - Nous vous avons créé un nouveau compte : **%{username}**. Vous pourrez modifier votre nom d'utilisateur ou votre mot de passe en vous rendant sur [votre profil utilisateur][prefs].
 
-        - Au moment de vous connecter, nous vous prions **d'indiquer l'adresse de courriel à laquelle votre invitation a été adressée** — autrement, nous ne saurons pas qu'il s'agit de vous&nbsp;!
+        - Au moment de vous connecter, nous vous prions **d'indiquer l'adresse de courriel à laquelle votre invitation a été adressée**. Autrement, nous ne saurons pas qu'il s'agit de vous !
 
         %{new_user_tips}
 
-        Nous prônons [la civilité au sein de notre communauté](%{base_url}/guidelines) dans toutes les circonstances.
+        Nous prônons [la civilité au sein de notre communauté](%{base_url}/guidelines) en toutes circonstances.
 
-        En vous souhaitant d'agréables moments parmi nous&nbsp;!
+        En vous souhaitant d'agréables moments parmi nous !
 
         [prefs] : %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Félicitations pour votre promotion de niveau de confiance !"
       text_body_template: |
-        Nous vous avons promu à un [niveau de confiance ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) supérieur !
+        Nous vous avons accordé un [niveau de confiance ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) supérieur !
 
-        En votre qualité d'utilisateur expérimenté, vous apprécierez peut-être [ces différents trucs et astuces (en anglais)](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        En votre qualité d'utilisateur(rice) expérimenté(e), vous apprécierez peut-être [ces différents trucs et astuces (en anglais)](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        Votre présence est appréciée, et nous vous encourageons à continuer de vous impliquer.
+        Votre présence est appréciée et nous vous encourageons à continuer de vous impliquer.
     backup_succeeded:
       title: "Sauvegarde effectuée"
       subject_template: "Sauvegarde terminée avec succès"
@@ -2743,12 +2743,12 @@ fr:
         %{logs}
         ```
     user_added_to_group_as_owner:
-      title: "Désigné comme propriétaire du groupe"
-      subject_template: "Vous avez été désigné comme l'un des propriétaire du groupe %{group_name}"
+      title: "Désigné(e) comme propriétaire du groupe"
+      subject_template: "Vous avez été désigné(e) comme l'un(e) des propriétaire du groupe %{group_name}"
       text_body_template: |
-        Vous avez été désigné comme l'un des propriétaires du groupe [%{group_name}] (%{base_url}%{group_path}).
+        Vous avez été désigné(e) comme l'un(e) des propriétaires du groupe [%{group_name}] (%{base_url}%{group_path}).
     user_added_to_group_as_member:
-      title: "Désigné comme membre du groupe"
+      title: "Désigné(e) comme membre du groupe"
       subject_template: "Vous êtes maintenant membre du groupe %{group_name}."
       text_body_template: |
         Vous êtes maintenant membre du groupe [%{group_name}](%{base_url}%{group_path}).
@@ -2762,100 +2762,100 @@ fr:
 
         Ce lien de téléchargement fonctionnera pendant 48 heures.
 
-        Les données sont compressées dans une archive au format <em>zip</em>. Si vous ne parvenez pas à en extraire les fichiers, nous vous recommandons d'utiliser l'outil suivant&nbsp;: https://www.7-zip.org/.
+        Les données sont compressées dans une archive au format <em>zip</em>. Si vous ne parvenez pas à en extraire les fichiers, nous vous recommandons d'utiliser l'outil suivant : https://www.7-zip.org/.
     csv_export_failed:
       title: "Export CSV échoué"
       subject_template: "Échec de l'exportation des données"
-      text_body_template: "Nous sommes désolés, votre export de données a échoué. Veuillez consulter les journaux ou [contacter un responsable](%{base_url}/about)."
+      text_body_template: "Nous sommes désolés, votre exportation de données a échoué. Veuillez consulter les journaux ou [contacter un responsable](%{base_url}/about)."
     email_reject_insufficient_trust_level:
       title: "Courriel rejeté - Niveau de confiance insuffisant"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Niveau de confiance insuffisant"
+      subject_template: "[%{email_prefix}] Problème de courriel - Niveau de confiance insuffisant"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse courriel. Si vous pensez qu'il s'agit d'une erreur, [contacter un responsable](%{base_url}/about).
+        Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse courriel. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_user_not_found:
       title: "Courriel rejeté - Utilisateur introuvable"
       subject_template: "[%{site_name}] Problème de courriel -- L'utilisateur est introuvable"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre réponse a été envoyée depuis une adresse inconnue. Essayez de l'envoyer depuis une autre adresse, ou [contactez un responsable](%{base_url}/about).
+        Votre réponse a été envoyée depuis une adresse inconnue. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_screened_email:
       title: "Courriel rejeté - Courriel sous surveillance"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Courriel bloqué"
+      subject_template: "[%{email_prefix}] Problème de courriel - Courriel bloqué"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre réponse a été envoyée depuis une adresse qui est sous surveillance. Essayez de l'envoyer depuis une autre adresse, ou [contactez un responsable](%{base_url}/about).
+        Votre réponse a été envoyée depuis une adresse qui est sous surveillance. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Courriel rejeté - Courriel bloqué"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Courriel bloqué"
+      subject_template: "[%{email_prefix}] Problème de courriel - Courriel bloqué"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse, ou [contactez un responsable](%{base_url}/about).
+        Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_inactive_user:
       title: "Courriel rejeté - Utilisateur inactif"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Utilisateur inactif"
+      subject_template: "[%{email_prefix}] Problème de courriel - Utilisateur inactif"
       text_body_template: |
-        Malheureusement votre courriel à %{destination} (intitulé %{former_title}) a échoué.
+        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Le compte associé à cette adresse n'est pas activé. Veuillez activer votre compte avant d'envoyer des courriels.
     email_reject_silenced_user:
-      title: "Courriel rejeté - Utilisateur sous silence"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Utilisateur sous silence"
+      title: "Courriel rejeté - Utilisateur mis en sourdine"
+      subject_template: "[%{email_prefix}] Problème de courriel - Utilisateur mis en sourdine"
       text_body_template: |
-        Malheureusement votre courriel à %{destination} (intitulé %{former_title}) a échoué.
+        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Le compte associé à cette adresse a été mis sous silence.
+        Le compte associé à cette adresse a été mis en sourdine.
     email_reject_reply_user_not_matching:
-      title: "Courriel rejeté - Utilisateur ne correspond pas"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Adresse de réponse inattendue"
+      title: "Courriel rejeté - L'utilisateur ne correspond pas"
+      subject_template: "[%{email_prefix}] Problème de courriel - Adresse de réponse inattendue"
       text_body_template: |
-        Malheureusement votre courriel à %{destination} (intitulé %{former_title}) a échoué.
+        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre réponses nous est parvenue d'une autre adresse courriel que celle attendue, nous ne savons donc pas s'il s'agit de la même personne. Essayez de l'envoyer depuis une autre adresse, ou [contactez un responsable](%{base_url}/about).
+        Votre réponse nous est parvenue d'une autre adresse courriel que celle attendue, nous ne savons donc pas s'il s'agit de la même personne. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_empty:
       title: "Courriel rejeté - Vide"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Aucun contenu"
+      subject_template: "[%{email_prefix}] Problème de courriel - Aucun contenu"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Assurez-vous d'avoir écrit votre réponse au début du courriel.
 
-        Si vous obtenez ce message alors que vous _aviez_ inclus une réponse, réessayez avec une mise en forme plus simple.
+        Si vous obtenez ce message alors que vous aviez inclus une réponse, réessayez avec une mise en forme plus simple.
     email_reject_parsing:
       title: "Courriel rejeté - Parsing"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Contenu non reconnu"
+      subject_template: "[%{email_prefix}] Problème de courriel - Contenu non reconnu"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Nous n'avons pas pu trouver votre réponse dans le courriel. **Assurez-vous que votre réponse se trouve au début du courriel** -- nous ne pouvons pas traiter les réponses en ligne.
+        Nous n'avons pas pu trouver votre réponse dans le courriel. **Assurez-vous que votre réponse se trouve au début du courriel** - nous ne pouvons pas traiter les réponses en ligne.
     email_reject_invalid_access:
       title: "Courriel rejeté - Accès invalide"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Accès invalide"
+      subject_template: "[%{email_prefix}] Problème de courriel - Accès invalide"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet dans cette catégorie. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Courriel rejeté - Inconnus interdits"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Accès invalide"
+      subject_template: "[%{email_prefix}] Problème de courriel - Accès invalide"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         La catégorie vers laquelle vous avez envoyé ce courriel autorise uniquement les réponses d'utilisateurs avec un compte valide et une adresse courriel connue. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_invalid_post:
       title: "Courriel rejeté - Message invalide"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Erreur d'envoi d'un message"
+      subject_template: "[%{email_prefix}] Problème de courriel - Erreur d'envoi d'un message"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Cela peut-être à cause d'une mise en forme trop complexe, d'un message trop long ou trop court. Veuillez réessayer ou rédigez votre message directement sur le site si le problème persiste.
+        Cela peut-être dû à une mise en forme trop complexe ou à un message trop long ou trop court. Veuillez réessayer ou rédigez votre message directement sur le site si le problème persiste.
     email_reject_invalid_post_specified:
       title: "Courriel rejeté - Message invalide spécifié"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Erreur d'envoi d'un message"
+      subject_template: "[%{email_prefix}] Problème de courriel - Erreur d'envoi d'un message"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -2864,83 +2864,83 @@ fr:
         %{post_error}
 
         Si vous pouvez corriger les erreurs, veuillez réessayer.
-      date_invalid: "Aucune date de création de message trouvée. Est-ce qu'il manque une entête Date à ce courriel ?"
+      date_invalid: "Aucune date de création de message trouvée. Est-ce qu'il manque un en-tête Date à ce courriel ?"
     email_reject_post_too_short:
       title: "Courriel rejeté trop court"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Message trop court"
+      subject_template: "[%{email_prefix}] Problème de courriel - Message trop court"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Afin de favoriser des discussions plus approfondies, les réponses très courtes ne sont pas permises. Est-ce que vous pouvez reformuler votre réponse avec au moins %{count} caractères ? Vous pouvez aussi aimer un message par courriel en répondant « +1 ».
     email_reject_invalid_post_action:
       title: "Courriel rejeté - Message action invalide"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Action de message invalide"
+      subject_template: "[%{email_prefix}] Problème de courriel - Action de message invalide"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Le Post Action n'était pas reconnu. Veuillez réessayer ou rédigez votre message directement sur le site si le problème persiste.
     email_reject_reply_key:
       title: "Courriel rejeté - Clé de réponse"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Clé de réponse inconnue"
+      subject_template: "[%{email_prefix}] Problème de courriel - Clé de réponse inconnue"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s’adresse cette réponse. [Contactez un responsable](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "Courriel rejeté - Mauvaise adresse de destination"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Adresse de destinataire inconnue"
+      subject_template: "[%{email_prefix}] Problème de courriel - Adresse de destinataire inconnue"
       text_body_template: |
-        Nous sommes désolés, votre courriel adressé à %{destination} (intitulé %{former_title}) n'a pas pu être expédié.
+        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Voici quelques points à vérifier :
 
           - Utilisez-vous plusieurs adresses de courriel ? Avez-vous répondu en utilisant une adresse différente de celle que vous avez utilisé au départ ? Les réponses par courriel nécessitent que vous utilisiez la même adresse de courriel.
 
-          - Votre client de messagerie a-t-il correctement utilisé le champ Reply-To: pour définir le destinataire de votre réponse ? Certains logiciels utilisent malheureusement le champ From: à la place, ce qui est incorrect et ne fonctionne pas dans le cas qui nous préoccupe.
+          - Votre client de messagerie a-t-il correctement utilisé le champ « Reply-To: » pour définir le destinataire de votre réponse ? Certains logiciels utilisent malheureusement le champ « From: » à la place, ce qui est incorrect et ne fonctionne pas dans le cas qui nous préoccupe.
 
-          - L'en-tête 'Message-ID' du courriel a-t-il été modifié ? Cet en-tête doit conserver une valeur constante.
+          - L'en-tête « Message-ID » du courriel a-t-il été modifié ? Cet en-tête doit conserver une valeur constante.
 
         En cas de besoin, vous pourrez obtenir davantage d'aide en consultant la page %{base_url}/about.
     email_reject_old_destination:
       title: "Courriel rejeté - Destination obsolète"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Vous essayez de répondre à une ancienne notification"
+      subject_template: "[%{email_prefix}] Problème de courriel - Vous essayez de répondre à une ancienne notification"
       text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Pour des raisons de sécurité, nous n'acceptons des réponses aux notifications que pendant %{number_of_days} jours. Veuillez vous rendre sur [le sujet](%{short_url}) pour continuer la conversation.
+        Pour des raisons de sécurité, nous n'acceptons les réponses aux notifications que pendant %{number_of_days} jours. Veuillez vous rendre sur [le sujet](%{short_url}) pour continuer la conversation.
     email_reject_topic_not_found:
       title: "Courriel rejeté - Sujet introuvable"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Sujet introuvable"
+      subject_template: "[%{email_prefix}] Problème de courriel - Sujet introuvable"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Le sujet à lequel vous répondez n'existe plus. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
+        Le sujet auquel vous répondez n'existe plus. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_topic_closed:
       title: "Courriel rejeté - Sujet fermé"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Sujet fermé"
+      subject_template: "[%{email_prefix}] Problème de courriel - Sujet fermé"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Le sujet à lequel vous répondez est actuellement fermé et n'accepte plus de réponses. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
+        Le sujet auquel vous répondez est actuellement fermé et n'accepte plus de réponses. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_auto_generated:
       title: "Courriel rejeté - Réponse automatique"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Réponse automatique"
+      subject_template: "[%{email_prefix}] Problème de courriel - Réponse automatique"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre courriel a été marqué comme « généré automatiquement  », ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain ; nous ne pouvons pas accepter ce type de courriel. Si vous pensez qu'il s'agit d'une erreur, [contacter un responsable](%{base_url}/about).
+        Votre courriel a été marqué comme « généré automatiquement  », ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain ; nous ne pouvons pas accepter ce type de courriel. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_unrecognized_error:
       title: "Courriel rejeté - Erreur inconnue"
       subject_template: "[%{email_prefix}] Problème de courriel - Erreur inconnue"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Une erreur inconnue est survenue lors du traitement de votre courriel. Essayez de l'envoyer depuis une autre adresse, ou [contactez un responsable](%{base_url}/about).
+        Une erreur inconnue est survenue lors du traitement de votre courriel. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_attachment:
       title: "Pièce jointe rejetée"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Pièce jointe rejetée"
+      subject_template: "[%{email_prefix}] Problème de courriel - Pièce jointe rejetée"
       text_body_template: |
-        Nous sommes désolés, mais des pièces jointes à votre courriel à %{destination} (intitulé %{former_title}) ont été rejetées.
+        Nous sommes désolés, mais des pièces jointes au courriel que vous avez envoyé à %{destination} (intitulé %{former_title}) ont été rejetées.
 
         Détails :
         %{rejected_errors}
@@ -2948,29 +2948,29 @@ fr:
         Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_reply_not_allowed:
       title: "Courriel rejeté - Réponses interdites"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Réponse non autorisée"
+      subject_template: "[%{email_prefix}] Problème de courriel - Réponse non autorisée"
       text_body_template: |
-        Nous sommes désolés, mais l'envoie de courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
+        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Vous n'êtes pas autorisé à répondre au sujet. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
+        Vous n'êtes pas autorisé(e) à répondre au sujet. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Courriel rejeté - Réponse au résumé"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Réponse au résumé"
+      subject_template: "[%{email_prefix}] Problème de courriel - Réponse au résumé"
       text_body_template: |
-        Nous sommes désolés, mais l'envoie de courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
+        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Vous avez répondu à un courriel de résumé, ce qui n'est pas accepté.
 
         Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_error_notification:
       title: "Notification d'erreur courriel"
-      subject_template: "[%{email_prefix}] Problème de courriel -- Erreur d'authentification POP3"
+      subject_template: "[%{email_prefix}] Problème de courriel - Erreur d'authentification POP3"
       text_body_template: |
-        Malheureusement il y a eu un erreur d'authentification lors de la récupération des courriels depuis le serveur POP.
+        Malheureusement, une erreur d'authentification s'est produite lors de la récupération des courriels depuis le serveur POP.
 
         Assurez-vous que les paramètres de connexion POP sont corrects dans les [paramètres du site](%{base_url}/admin/site_settings/category/email).
 
-        S'il y a une interface web pour le compte POP, vous devrez peut-être vous y connecter pour vérifier les paramètres.
+        S'il y a une interface Web pour le compte POP, vous devrez peut-être vous y connecter pour vérifier les paramètres.
     email_revoked:
       title: "Courriel révoqué"
       subject_template: "Est-ce que votre adresse courriel est correcte ?"
@@ -2989,7 +2989,7 @@ fr:
     ignored_users_summary:
       title: "Un utilisateur ignoré a dépassé le seuil"
       subject_template: "Un utilisateur a été ignoré par de nombreux utilisateurs"
-      text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation d'autres utilisateurs figurant dans le [rapport d'utilisateurs ignorés et mis sous silence](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).\n"
+      text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation des autres utilisateurs figurant dans le [rapport des utilisateurs ignorés et mis en sourdine](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).\n"
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
@@ -2998,7 +2998,7 @@ fr:
 
         Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que vos messages ont été provisoirement masqués suite à des signalements de la communauté.
 
-        Par mesure de précaution, votre nouveau compte a été mis sous silence. Vous ne pourrez plus publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
+        Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez plus publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -3009,31 +3009,31 @@ fr:
 
         Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que votre compte a été restreint suite à un grand nombre de signalements de la communauté.
 
-        Par mesure de précaution, votre nouveau compte a été mis sous silence. Vous ne pourrez pas publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
+        Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez pas publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
     silenced_by_staff:
-      title: "Mis sous silence par un responsable"
+      title: "Mis en sourdine par un responsable"
       subject_template: "Compte temporairement bloqué"
       text_body_template: |
         Bonjour,
 
-        Ceci est un message automatique de %{site_name} pour vous informer que votre compte a été provisoirement restreint par mesure de précaution.
+        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que votre compte a été provisoirement restreint par mesure de précaution.
 
         Vous pouvez continuer de consulter le forum, mais vous ne pourrez plus répondre ni créer de sujets tant qu'[un responsable](%{base_url}/about) n'aura pas examiné vos messages récents. Nous vous prions de nous excuser pour la gêne occasionnée.
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
     user_automatically_silenced:
       title: "Utilisateur automatiquement mis sous silence"
-      subject_template: "Nouvel utilisateur %{username} mis sous silence suite à des signalements de la communauté"
+      subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
       text_body_template: |
         Ce message vous est envoyé de manière automatisée.
 
-        Le nouvel utilisateur [%{username}](%{user_url}) a été automatiquement mis sous silence car plusieurs utilisateurs ont signalé des messages publiés par %{username}.
+        Le nouvel utilisateur [%{username}](%{user_url}) a été automatiquement mis en sourdine car plusieurs utilisateurs ont signalé des messages publiés par %{username}.
 
-        Nous vous invitons à [examiner ces signalements](%{base_url}/admin/flags). Si %{username} a été mis sous silence de façon injustifiée, utilisez le bouton d'annulation de la mise sous silence situé sur la [page d'administration de cet utilisateur](%{user_url}).
+        Nous vous invitons à [examiner ces signalements](%{base_url}/admin/flags). Si %{username} a été mis en sourdine de façon injustifiée, utilisez le bouton d'annulation de la mise en sourdine situé sur la [page d'administration de cet utilisateur](%{user_url}).
 
-        Le seuil de signalements déclenchant l'envoi de ce message peut être modifié avec le paramètre `silence_new_user`.
+        Le seuil de signalements déclenchant l'envoi de ce message peut être modifié avec le paramètre « silence_new_user ».
     spam_post_blocked:
       title: "Message spam bloqué"
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
@@ -3044,14 +3044,14 @@ fr:
 
         Nous vous invitons à [examiner la situation de cet utilisateur](%{user_url}).
 
-        Cette règle peut être modifiée avec les paramètres `newuser_spam_host_threshold` et `allowed_spam_host_domains`. Le paramètre `allowed_spam_host_domains` constitue une liste d'autorisation qui vous permettra d'exempter %{domains} de cette vérification.
+        Cette règle peut être modifiée avec les paramètres « newuser_spam_host_threshold » et « allowed_spam_host_domains ». Le paramètre « allowed_spam_host_domains » constitue une liste d'autorisations qui vous permettra d'exempter %{domains} de cette vérification.
     unsilenced:
-      title: "Mise sous silence annulée"
+      title: "Mise en sourdine annulée"
       subject_template: "Compte débloqué"
       text_body_template: |
         Bonjour,
 
-        Ceci est un message automatique de %{site_name} pour vous informer que les restrictions sur votre compte ont été levées suite à l'intervention d'un responsable.
+        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que les restrictions sur votre compte ont été levées suite à l'intervention d'un responsable.
 
         Vous pouvez à nouveau publier des messages. Nous vous remercions de votre patience.
     pending_users_reminder:
@@ -3066,7 +3066,7 @@ fr:
     download_remote_images_disabled:
       title: "Téléchargement d'images distantes désactivé"
       subject_template: "Téléchargement d'images distantes désactivé"
-      text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
+      text_body_template: "Le paramètre « download_remote_images_to_local » a été désactivé car la limite (« download_remote_images_threshold ») d'espace disque utilisé par les images vient d'être dépassée."
     dashboard_problems:
       title: "Problèmes du tableau de bord"
       subject_template: "Des nouveaux conseils sur votre tableau de bord"
@@ -3077,14 +3077,14 @@ fr:
 
         Si rien n'est visible sur votre tableau de bord, il est possible qu'un autre responsable ait déjà appliqué ces conseils. Une liste des actions réalisées par les responsables se trouve sur la page [Actions des responsables](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
-      title: "Vous êtes un nouvel utilisateur du mois !"
-      subject_template: "Vous êtes un nouvel utilisateur du mois !"
+      title: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
+      subject_template: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
       text_body_template: |
         Félicitations, vous avez reçu le prix du **nouveau membre du mois de %{month_year}**. :trophy:
 
         Ce prix est seulement accordé à deux nouveaux membres par mois et sera listé [dans vos badges](%{url}).
 
-        Vous êtes rapidement devenu un membre précieux de notre communauté. Merci de nous avoir rejoint et continuez à participer ainsi !
+        Vous êtes rapidement devenu(e) un membre précieux de notre communauté. Merci de nous avoir rejoint et continuez à participer de cette manière !
     queued_posts_reminder:
       title: "Messages dans la file d'attente"
       subject_template:

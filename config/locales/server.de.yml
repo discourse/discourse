@@ -103,6 +103,7 @@ de:
       maximum_staged_user_per_email_reached: "Maximale Anzahl vorbereiteter Benutzer erreicht, die per E-Mail erstellt wurden."
       no_subject: "(kein Betreff)"
       no_body: "(kein Inhalt)"
+      missing_attachment: "(Anhang %{filename} fehlt)"
       errors:
         empty_email_error: "Passiert, wenn die empfangene E-Mail leer war."
         no_message_id_error: "Passiert, wenn die E-Mail keinen „Message-Id“-Header hat."
@@ -269,6 +270,7 @@ de:
   invalid_whisper_access: "Entweder sind geflüsterte Beiträge nicht aktiviert oder du hast keinen Zugang, um geflüsterte Beiträge zu erstellen"
   not_in_group:
     title_topic: "Um dieses Thema zu sehen, musst du die Mitgliedschaft in der Gruppe „%{group}“ anfordern."
+    title_category: "Um diese Kategorie zu sehen, musst du die Mitgliedschaft in der Gruppe „%{group}“ anfordern."
     request_membership: "Mitgliedschaft anfordern"
     join_group: "Gruppe beitreten"
   deleted_topic: "Ups! Dieses Thema wurde gelöscht und ist nicht mehr verfügbar."
@@ -3603,6 +3605,9 @@ de:
     sender_post_deleted: "Beitrag wurde gelöscht"
     sender_message_to_invalid: "Empfänger hat eine ungültige E-Mail-Adresse"
     sender_topic_deleted: "Thema wurde gelöscht"
+    group_smtp_post_deleted: "Beitrag wurde gelöscht"
+    group_smtp_topic_deleted: "Thema wurde gelöscht"
+    group_smtp_disabled_for_group: "SMTP wurde für die Gruppe deaktiviert"
   color_schemes:
     base_theme_name: "Basis"
     light: "Hell"

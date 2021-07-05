@@ -1177,7 +1177,7 @@ ar:
     user_profile_view_duration_hours: "احسب عدد ملفات التعريف للعضو التي تمت مشاهدتها مرة لكل IP/عضو في N ساعات."
     levenshtein_distance_spammer_emails: "عند ربط رسائل البريد الإلكتروني spammer، الأرقام والحروف تختلف التي ستبقى تسمح بربط غامض."
     max_new_accounts_per_registration_ip: "اذا كان هناك بالفعل (N) مستوي ثقه الحسابات 0 من هذا IP ( و لم يكن عضو في الطاقم او TL2 او اعلى), توقف عن قبول تسجيلات الدخول الجديده من هذا IP"
-    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
+    min_ban_entries_for_roll_up: "عند النقر على الزر \"تجميع\"، سيتم إنشاء إدخال حظر جديد في الشبكة الفرعية إذا كان هناك (N) من الإدخالات على الأقل."
     max_age_unmatched_emails: "احذف عرض عدد مرات ادخال البريد الالكتروني الغير متطابق بعد (N) ايام."
     max_age_unmatched_ips: "احذف عرض عدد مرات ادخال IP الغير متطابق بعد (N)ايام."
     num_flaggers_to_close_topic: "ادني عدد من تبليغات المميزه المطلوبه ليتم ايقاف الموضوع تلفائيا ليدخل"

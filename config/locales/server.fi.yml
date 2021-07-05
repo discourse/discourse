@@ -2076,6 +2076,9 @@ fi:
     gravatar_name: "Gravatar-palveluntarjoajan nimi"
     gravatar_base_url: "Gravatar-palveluntarjoajan API-kannan URL-osoite"
     gravatar_login_url: "URL suhteessa gravatar_base_url-osoitteeseen, jolla käyttäjä kirjautuut Gravatar-palveluun"
+    share_quote_buttons: "Mitkä kohteet näytetään lainauksen jakamispienoisohjelmassa ja missä järjestyksessä."
+    share_quote_visibility: "Milloin lainauksen jakamispainikkeet näytetään: ei koskaan, vain anonyymeille käyttäjille tai kaikille käyttäjille. "
+    create_revision_on_bulk_topic_moves: "Luo revisio ensimmäisille viesteille, kun ketjut siirretään uuteen alueeseen joukkona."
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä käyttäjätunnuksella ei löydy käyttäjää."
@@ -2090,6 +2093,7 @@ fi:
       invalid_string_min_max: "Merkkien lukumäärän täytyy olla %{min}–%{max}."
       invalid_string_min: "Täytyy olla vähintään %{min} merkkiä."
       invalid_string_max: "Ei saa olla yli %{max} merkkiä."
+      invalid_json: "Virheellinen JSON."
       invalid_reply_by_email_address: "Arvon täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
       invalid_alternative_reply_by_email_addresses: "Kaikkien arvojen täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
       pop3_polling_host_is_empty: "Sinun täytyy asettaa 'pop3 polling host' ennen POP3-pollauksen käyttöönottoa."
@@ -2103,12 +2107,18 @@ fi:
       email_editable_enabled: "Sähköpostin muokkausmahdollisuus on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       staged_users_disabled: "Esikäyttäjät on otettava käyttöön ennen tämän asetuksen käyttöönottoa."
       reply_by_email_disabled: "Vastaus sähköpostilla täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
+      discourse_connect_url_is_empty: "Sinun täytyy määrittää \"discourse connect url'\" ennen kuin otat tämän asetuksen käyttöön."
+      discourse_connect_invite_only: "DiscourseConnect ja vain kutsulla -tila eivät voi olla käytössä samaan aikaan."
       enable_local_logins_disabled: "Paikalliset kirjautumiset täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
       min_username_length_exists: "Käyttäjätunnuksen vähimmäispituus ei voi olla suurempi kuin lyhin käyttäjätunnus (%{username})."
       min_username_length_range: "Vähimmäisarvo ei voi olla suurempi kuin enimmäisarvo."
       max_username_length_exists: "Käyttäjätunnuksen enimmäispituus ei voi olla suurempi kuin pisin käyttäjätunnus (%{username})."
       max_username_length_range: "Enimmäisarvo ei voi olla pienempi kuin vähimmäisarvo."
       invalid_hex_value: "Väriarvon täytyy olla kuusinumeroinen heksadesimaalikoodi."
+      empty_selectable_avatars: "Sinun täytyy ladata ensin vähintään kaksi valittavaa avataria ennen kuin otat tämän asetuksen käyttöön."
+      category_search_priority:
+        low_weight_invalid: "Et voi asettaa painoa suuremmaksi tai yhtä suureksi kuin 1."
+        high_weight_invalid: "Et voi asettaa painoa pienemmäksi tai yhtä suureksi kuin 1."
       allowed_unicode_usernames:
         regex_invalid: "Säännöllinen lauseke ei kelpaa: %{error}"
         leading_trailing_slash: "Säännöllinen lauseke ei voi alkaa eikä loppua kauttaviivalla."
@@ -2117,6 +2127,7 @@ fi:
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
+        value: "DiscourseConnect-salausavain"
   search:
     extreme_load_error: "Sivusto on erittäin raskaan kuormituksen alla, yritä myöhemmin uudelleen"
     within_post: "#%{post_number} käyttäjältä %{username}"
@@ -2136,6 +2147,8 @@ fi:
     no_email: "Sähköpostiosoitetta ei annettu. Ota yhteyttä sivuston ylläpitäjään."
     blank_id_error: "`External_id` on pakollinen, mutta se on tyhjä"
     email_error: "Tiliä ei voitu luoda sähköpostiosoitteella <b>%{email}</b>. Ota yhteyttä sivuston ylläpitäjään."
+    missing_secret: "Todennus epäonnistui puuttuvan salausavaimen (secret) vuoksi. Ota yhteyttä sivuston ylläpitoon ongelman korjaamiseksi."
+    invite_redeem_failed: "Kutsun lunastus epäonnistui. Ota yhteyttä sivuston ylläpitäjään."
   original_poster: "Alkuperäinen kirjoittaja"
   most_posts: "Eniten viestejä"
   most_recent_poster: "Uusin kirjoittaja"
@@ -2151,6 +2164,7 @@ fi:
     errors:
       different_topics: "Eri ketjuissa olevia viestejä ei voi yhdistää."
       different_users: "Eri käyttäjien viestejä ei voi yhdistää."
+      max_post_length: "Viestejä ei voi yhdistää, koska viestin yhteenlaskettu pituus on sallittua suurempi."
   move_posts:
     new_topic_moderator_post:
       one: "Viesti erotettiin uuteen ketjuun: %{topic_link}"
@@ -2169,6 +2183,7 @@ fi:
   publish_page:
     slug_errors:
       blank: "ei voi olla tyhjä"
+      unavailable: "ei ole saatavilla"
       invalid: "sisältää epäkelpoja merkkejä"
   topic_statuses:
     autoclosed_message_max_posts:
@@ -2217,6 +2232,8 @@ fi:
     autoclosed_disabled_lastpost: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     auto_deleted_by_timer: "Poistettiin ajastetusti."
   login:
+    invalid_second_factor_method: "Valittu kaksivaiheinen tunnistustapa ei kelpaa."
+    not_enabled_second_factor_method: "Valittu kaksivaiheinen tunnistustapa ei ole käytössä tililläsi."
     security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
     security_key_alternative: "Kokeile muuta tapaa"
     security_key_authenticate: "Tee todennus tunnistautumislaitteella"
@@ -2233,6 +2250,7 @@ fi:
     not_activated: "Et voi vielä kirjautua sisään. Lähetimme sinulle vahvistusviestin. Seuraa sähköpostiviestin ohjeita tilisi aktivoimiseksi."
     not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
+    reset_not_allowed_from_ip_address: "Et voi pyytää salasanan palauttamista tästä IP-osoitteesta."
     suspended: "Et voi kirjautu sisään ennen %{date}."
     suspended_with_reason: "Tili on hyllytetty %{date} asti: %{reason}"
     errors: "%{errors}"
@@ -2243,27 +2261,45 @@ fi:
       csrf_detected: "Valtuuttaminen aikakatkaistiin tai vaihdoit selainta. Yritä uudelleen."
       request_error: "Valtuuttamista aloitettaessa tapahtui virhe. Yritä uudelleen."
       invalid_iat: "Valtuutustunnistetta ei voida vahvistaa palvelinkellojen eron vuoksi. Yritä uudelleen."
+    omniauth_error_unknown: "Jokin meni vikaan kirjautumisesi käsittelyssä, yritä uudelleen."
     omniauth_confirm_title: "Kirjaudu tavalla %{provider}"
     omniauth_confirm_button: "Jatka"
     authenticator_error_no_valid_email: "Mikään tiliin %{account} liittyvistä sähköpostiosoitteista ei ole sallittu. Voit joutua määrittämään tilisi eri sähköpostiosoitteella."
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
     password_too_long: "Salasanan enimmäispituus on 200 merkkiä."
     email_too_long: "Antamasi sähköpostiosoite on liian pitkä. Postilaatikon nimi ei saa olla yli 254 merkkiä pitkä, eikä verkkotunnuksen nimi yli 253 merkkiä pitkä."
+    wrong_invite_code: "Antamasi kutsukoodi oli väärä."
     reserved_username: "Käyttäjätunnus ei ole sallittu."
     missing_user_field: "Et ole täyttänyt kaikkia käyttäjäkenttiä"
     auth_complete: "Todennus suoritettu."
     click_to_continue: "Jatka klikkaamalla tästä."
+    already_logged_in: "Tämä kutsu on tarkoitettu uusille käyttäjille, joilla ei vielä ole olemassa olevaa tiliä."
     second_factor_title: "Kaksivaiheinen tunnistus"
     second_factor_description: "Syötä vaadittava todennuskoodi sovelluksestasi:"
     second_factor_backup_description: "Syötä yksi varakoodeistasi:"
+    second_factor_backup_title: "Kaksivaiheisen tunnistuksen varakoodi"
     invalid_second_factor_code: "Todennuskoodi ei kelpaa. Kunkin koodin voi käyttää vain kerran."
     invalid_security_key: "Tunnistautumislaite ei kelpaa."
+    missing_second_factor_name: "Anna nimi."
+    missing_second_factor_code: "Anna koodi."
     second_factor_toggle:
       totp: "Käytä todennussovellusta tai tunnistautumislaitetta tämän sijaan"
       backup_code: "Käytä varakoodia tämän sijaan"
   admin:
     email:
       sent_test: "lähetettiin!"
+    user:
+      merge_user:
+        updating_username: "Päivitetään käyttäjätunnusta..."
+        changing_post_ownership: "Muutetaan viestin omistajuutta..."
+        merging_given_daily_likes: "Yhdistetään annettuja päivittäisiä tykkäyksiä..."
+        merging_post_timings: "Yhdistetään viestien ajoituksia..."
+        merging_user_visits: "Yhdistetään käyttäjien käyntejä..."
+        updating_site_settings: "Päivitetään sivuston asetuksia..."
+        updating_user_stats: "Päivitetään käyttäjätilastoja..."
+        merging_user_attributes: "Yhdistetään käyttäjien määritteitä..."
+        updating_user_ids: "Päivitetään käyttäjätunnuksia..."
+        deleting_source_user: "Poistetaan lähdekäyttäjää..."
   user:
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     deactivated_by_staff: "Henkilökunta poisti käytöstä"
@@ -2272,6 +2308,7 @@ fi:
       other: "Deaktivoitiin automaattisesti %{count} päivän epäaktiivisuuden vuoksi"
     activated_by_staff: "Henkilökunta aktivoi"
     new_user_typed_too_fast: "Uusi käyttäjä näppäili liian nopeasti"
+    content_matches_auto_silence_regex: "Sisältö vastaa automaattisesti hiljennettävää säännöllistä lauseketta"
     content_matches_auto_block_regex: "Sisältö vastaa automaattisesti estettävää säännöllistä lauseketta"
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
@@ -2285,9 +2322,11 @@ fi:
       must_not_contain_two_special_chars_in_seq: "ei saa sisältää peräkkäin kahta tai useampaa erikoismerkkiä (.-_)"
       must_not_end_with_confusing_suffix: "ei voi päättyä harhaanjohtavaan päätteeseen, kuten .json tai .png jne."
     email:
+      invalid: "ei kelpaa."
       not_allowed: "ei sallita tältä sähköpostipalvelunatarjoajalta. Käytä toista sähköpostiosoitetta."
       blocked: "ei ole sallittu."
       revoked: "Sähköpostia ei lähetetä osoitteeseen '%{email}' ennen %{date}."
+      does_not_exist: "N/A"
     ip_address:
       blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
       max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
@@ -2296,8 +2335,17 @@ fi:
     auto_rejected: "Hylättiin automaattisesti iän perusteella. Katso auto_handle_queued_age-sivustoasetus."
     destroy_reasons:
       unused_staged_user: "Käyttämätön esikäyttäjä"
+      fixed_primary_email: "Kiinteä ensisijainen sähköpostiosoite esikäyttäjälle"
       same_ip_address: "Sama IP-osoite (%{ip_address}) kuin muilla käyttäjillä"
       inactive_user: "Ei-aktiivinen käyttäjä"
+      reviewable_reject_auto: "Jonossa olevien käsiteltävien kohteiden automaattinen käsittely"
+      reviewable_reject: "Tarkistettava käyttäjä hylätty"
+    email_in_spam_header: "Käyttäjän ensimmäinen sähköposti merkittiin roskapostiksi"
+    already_silenced: "%{staff} hiljensi jo käyttäjän %{time_ago}."
+    already_suspended: "%{staff} hyllytti jo käyttäjän %{time_ago}."
+    cannot_delete_has_posts:
+      one: "Käyttäjällä %{username} on %{count} viesti julkisessa ketjussa tai yksityisviestissä, joten häntä ei voida poistaa."
+      other: "Käyttäjällä %{username} on %{count} viestiä julkisessa ketjussa tai yksityisviestissä, joten häntä ei voida poistaa."
   reviewables_reminder:
     submitted:
       one: "Kohteet lähetettiin yli %{count} tunti sitten. [Tarkasta ne](%{base_path}/review)."
@@ -2414,6 +2462,47 @@ fi:
   test_mailer:
     title: "Sähköpostipalvelun testaus"
     subject_template: "[%{email_prefix}] Sähköpostin toimitettavuustesti"
+    text_body_template: |
+      Tämä on testiviesti lähettäjältä
+
+      [**%{base_url}**][0]
+
+      Sähköpostien toimittaminen on monimutkaista. Tässä on muutamia tärkeitä asioita, jotka sinun tulisi tarkistaa ensin:
+
+      – *Varmista*, ett' asetat "notification email" -asetuksen lähettäjän osoitteen oikein sivustosi asetuksissa. **Lähettämiesi sähköpostien lähettäjäosoitteessa määritetty verkkotunnus on se verkkotunnus, jota vastaan sähköpostisi tarkistetaan**.
+
+      – Tiedä, miten voit tarkastella sähköpostin raakaa lähdettä sähköpostiohjelmassasi, jotta voit etsiä tärkeitä vihjeitä sähköpostien otsikkotiedoista. Gmailissa se on "näytä alkuperäinen" -valinta avattavassa valikossa jokaisen postin oikeassa yläkulmassa.
+
+      – **TÄRKEÄÄ:** Onko internetpalveluntarjoajallasi käänteinen DNS-tietue, joka yhdistää verkkotunnukset ja IP-osoitteet, joista lähetät sähköpostia? [Testaa käänteinen PTR- tietueesi][2] täällä. Jos internetpalveluntarjoaja ei anna asianmukaista käänteistä DNS-osoitustietuetta, sähköpostiviestisi toimittaminen on erittäin epätodennäköistä.
+
+      – Onko verkkotunnuksesi [SPF-tietue][8] oikein? [Testaa SPF-tietueesi][1] täällä. Huomaa, että TXT on oikea virallinen tietuetyyppi SPF:lle.
+
+      – Onko verkkotunnuksesi [DKIM-tietue][3] oikein? Tämä parantaa merkittävästi sähköpostien toimitusta. [Testaa DKIM-tietueesi][7] täällä.
+
+      – Jos käytät omaa sähköpostipalvelintasi, tarkista, etteivät sähköpostipalvelimesi IP-osoitteet [eivät ole millään sähköpostien estolistalla][4]. Varmista myös, että se lähettää täysin pätevän isäntänimen, joka selvittää DNS:nsä HELO-viestissään. Jos näin ei ole, monet postipalvelut hylkäävät sähköpostiviestisi.
+
+      – Suosittelemme **lähettämään testisähköpostin osoitteeseen [mail-tester.com][mt]** varmistaaksesi, että kaikki edellä mainitut toimivat oikein.
+
+      (*Helppo* tapa on luoda tili [SendGridissä][sg], [SparkPostissa][sp], [Mailgunissa][mg] tai [Mailjetissä][mj], joilla on edullisia postituspaketteja ja soveltuvat pienille yhteisöille. Sinun täytyy kuitenkin vielä määrittää SPF- ja DKIM-tietueet DNS:ssäsi!)
+
+      Toivomme, että tämä sähköpostien toimitettavuustesti tuli perille ongelmitta!
+
+      Onnea,
+
+      Ystäväsi [Discoursella](https://www. iscourse.org)
+
+      [0]: %{base_url}
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup. spx
+      [3]: http://www.dkim.org/
+      [4]: https://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester. om/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www. parkpost.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Uusi versio"
     subject_template: "[%{email_prefix}] Uusi Discourse-versio, päivitys saatavilla"
@@ -2497,6 +2586,7 @@ fi:
         Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     queued_by_staff:
       title: "Viesti odottaa hyväksyntää"
+      subject_template: "Henkilökunnan piilottama viesti odottaa hyväksyntää"
     flags_disagreed:
       title: "Henkilökunta palautti merkityn viestin"
       subject_template: "Henkilökunta palautti merkityn viestin"
@@ -2627,6 +2717,16 @@ fi:
         ``` text
         %{logs}
         ```
+    user_added_to_group_as_owner:
+      title: "Lisätty ryhmään omistajana"
+      subject_template: "Sinut on lisätty ryhmän %{group_name} omistajaksi"
+      text_body_template: |
+        Sinut on lisätty ryhmän [%{group_name}](%{base_url}%{group_path}) omistajaksi.
+    user_added_to_group_as_member:
+      title: "Lisätty ryhmään jäsenenä"
+      subject_template: "Sinut on lisätty ryhmän %{group_name} jäseneksi"
+      text_body_template: |
+        Sinut on lisätty ryhmän [%{group_name}](%{base_url}%{group_path}) jäseneksi.
     csv_export_succeeded:
       title: "CSV:n vienti onnistui"
       subject_template: "[%{export_title}] Tiedostojen vienti valmis"
@@ -2816,6 +2916,9 @@ fi:
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Sinulla ei ole oikeuksia vastata ketjuun. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
+    email_reject_reply_to_digest:
+      title: "Sähköposti hylätty – vastaus yhteenvetoon"
+      subject_template: "%{email_prefix} Sähköpostiongelma – vastaus yhteenvetoon"
     email_error_notification:
       title: "Ilmoitus sähköpostivirheestä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma – virhe POP-todennuksessa"

@@ -242,6 +242,42 @@ ja:
           お見事！これで、[プロフィールのブックマークタブ](%{bookmark_url})からこの非公開の会話にいつでも簡単に戻れるようになりました。右上のプロフィール写真を選択するだけです &#8599;
         not_found: |-
           あれ？このトピックにはブックマークがありませんね。投稿の下にあるブックマークを見つけられましたか？必要であれば、もっと表示 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使うと、ほかの操作を表示できます。
+      emoji:
+        instructions: |-
+          返信に小さな画像を使用していたのに気づきましたか？:blue_car: これらは[emoji](https://en.wikipedia.org/wiki/Emoji)と呼ばれています。次のいずれかの方法で、返信に**絵文字を追加**してみましょう。
+
+          - `:) ;) :D :P :O` と入力します。
+
+          - コロン <kbd>:</kbd> を入力して、絵文字名を補完します `:tada:`
+
+          - エディタの絵文字ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> を押すか、モバイルキーボードの絵文字ボタンを押します。
+        reply: |-
+          :sparkles: _素敵な絵文字になりました!_ :sparkles:
+        not_found: |-
+          おっとっと。返信に絵文字がないようです。なんてこった！:sob:
+
+          コロン <kbd>:</kbd> を入力すると、絵文字ピッカーが表示されるので、`:bird:` のような語の最初の数文字を入力してください。
+
+          または、エディターの絵文字ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> も使用できます。
+      mention:
+        instructions: |-
+          直接返信せずに誰かの注意を引きたいことがあるかもしれません。`@` を入力してから相手のユーザー名を入力すると、メンションすることができます。
+
+          返信で **`@%{discobot_username}`** をメンションできますか？
+        reply: |-
+          _誰か私を呼びましたか？_ :raised_hand: あなたですよね！:wave: 参上しました！メンションしてくれてありがとう。:ok_hand:
+        not_found: |-
+          どこにも私の名前がないようです :frowning: `@%{discobot_username}` と入力して、もう一度私をメンションしてみてください。
+
+          (そうです。私のユーザー名は 70年代ダンスブームの _disco_ と綴ります。[ナイトライフ万歳!
+          ](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          有効的なディスカッションが子のみです。そこで、[礼節を維持](%{guidelines_url})するにはあなたの力が必要です。問題に遭遇したら、非公開で作者に知らせるか、[スタッフ](%{about_url})に通報してください。投稿を通報する理由は、無害なトピックの分割から明確なコミュニティ規則の違反までさまざまです。**その他**を選択すると、モデレーターと非公開メッセージでのディスカッションを始められます。さらに詳しく質問できます。
+
+          > :imp: 不愉快なことを書き込みました
+
+          早速**この投稿を通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> して、理由に「**不適切**」を選択しましょう！
     advanced_user_narrative:
       delete:
         reply: |-
