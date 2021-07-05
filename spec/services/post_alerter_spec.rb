@@ -1368,6 +1368,24 @@ describe PostAlerter do
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
+    it "sends the group smtp email job with a delay of personal_email_time_window_seconds" do
+      freeze_time
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic)
+      PostAlerter.new.after_save_post(post, true)
+      job_enqueued?(
+        job: :group_smtp_email,
+        args: {
+          group_id: group.id,
+          post_id: post.id,
+          email: topic.reload.topic_allowed_users.order(:created_at).first.user.email,
+          cc_emails: ["bar@discourse.org", "jim@othersite.com"]
+        },
+        at: Time.zone.now + SiteSetting.personal_email_time_window_seconds.seconds
+      )
+    end
+
     it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,
     sends a group_smtp_email instead" do
       NotificationEmailer.enable
