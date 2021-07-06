@@ -70,11 +70,11 @@ acceptance("Admin - User Index", function (needs) {
 
     assert.ok(
       exists(".post-edits-count .controls .btn.btn-icon"),
-      "View Edits button exits"
+      "View edits button exists"
     );
   });
 
-  test("a link to view post edits report exits", async function (assert) {
+  test("a link to view post edits report exists", async function (assert) {
     await visit("/admin/users/1/eviltrout");
 
     let filter = encodeURIComponent('{"editor":"eviltrout"}');

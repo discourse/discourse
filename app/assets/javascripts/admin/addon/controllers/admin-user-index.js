@@ -121,9 +121,9 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
-  @discourseComputed
-  postEditsByEditorFilter() {
-    return { editor: this.model.username };
+  @discourseComputed("model.username")
+  postEditsByEditorFilter(username) {
+    return { editor: username };
   },
 
   groupAdded(added) {
