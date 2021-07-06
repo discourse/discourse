@@ -8,10 +8,6 @@ class ApiKeyScope < ActiveRecord::Base
     def list_actions
       actions = %w[list#category_feed]
 
-      TopTopic.periods.each do |p|
-        actions.concat(["list#category_top_#{p}", "list#top_#{p}", "list#top_#{p}_feed"])
-      end
-
       %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
 
       actions

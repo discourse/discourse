@@ -35,6 +35,7 @@ export default {
         "latest",
         "unread",
         "new",
+        "top",
         "starred",
         "read",
         "posted",

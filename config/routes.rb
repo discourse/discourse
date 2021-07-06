@@ -705,8 +705,8 @@ Discourse::Application.routes.draw do
       get "/none" => "list#category_none_latest"
 
       TopTopic.periods.each do |period|
-        get "/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"
-        get "/l/top/#{period}" => "list#category_top_#{period}", as: "category_top_#{period}"
+        get "/none/l/top/#{period}", to: redirect("/none/l/top?period=#{period}", status: 301)
+        get "/l/top/#{period}", to: redirect("/l/top?period=#{period}", status: 301)
       end
 
       Discourse.filters.each do |filter|
@@ -721,8 +721,9 @@ Discourse::Application.routes.draw do
     get "hashtags" => "hashtags#show"
 
     TopTopic.periods.each do |period|
-      get "top/#{period}.rss" => "list#top_#{period}_feed", format: :rss
-      get "top/#{period}" => "list#top_#{period}"
+      get "top/#{period}.rss", to: redirect("top.rss?period=#{period}", status: 301)
+      get "top/#{period}.json", to: redirect("top.json?period=#{period}", status: 301)
+      get "top/#{period}", to: redirect("top?period=#{period}", status: 301)
     end
 
     Discourse.anonymous_filters.each do |filter|

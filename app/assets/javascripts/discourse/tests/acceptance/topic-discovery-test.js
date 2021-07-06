@@ -124,7 +124,7 @@ acceptance("Topic Discovery", function (needs) {
     await periodChooser.selectRowByValue("yearly");
 
     assert.ok(
-      DiscourseURL.routeTo.calledWith("/top/yearly?f=foo&d=bar"),
+      DiscourseURL.routeTo.calledWith("/top?f=foo&d=bar&period=yearly"),
       "it keeps the query params"
     );
   });

@@ -412,7 +412,7 @@ RSpec.describe ListController do
 
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
-        get "/top/#{period}.rss"
+        get "/top.rss?period=#{period}"
         expect(response.status).to eq(200)
         expect(response.media_type).to eq('application/rss+xml')
       end
