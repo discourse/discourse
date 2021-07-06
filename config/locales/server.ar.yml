@@ -947,42 +947,42 @@ ar:
       xaxis: "اليوم"
       yaxis: "أخطاء في العميل (الحالة 4xx)"
     http_5xx_reqs:
-      title: "HTTP 5xx (خطأ الخادم)"
-      xaxis: "يوم"
-      yaxis: "خطأ الخادم (الحالة 5xx)"
+      title: "HTTP 5xx (خطأ في الخادم)"
+      xaxis: "اليوم"
+      yaxis: "أخطاء في الخادم (الحالة 5xx)"
     http_total_reqs:
-      title: "مجموع"
-      xaxis: "يوم"
+      title: "الإجمالي"
+      xaxis: "اليوم"
       yaxis: "إجمالي الطلبات"
     time_to_first_response:
-      title: "وقت أول استجابة"
+      title: "الوقت حتى أول استجابة"
       xaxis: "اليوم"
-      yaxis: "متوسط الوقت (ساعات)"
+      yaxis: "متوسط الوقت (بالساعات)"
     topics_with_no_response:
-      title: "مواضيع بدون استجابة"
+      title: "الموضوعات دون استجابة"
       xaxis: "اليوم"
-      yaxis: "مجموع"
+      yaxis: "الإجمالي"
     mobile_visits:
       xaxis: "اليوم"
       yaxis: "عدد الزيارات"
     web_crawlers:
       labels:
-        page_views: "زيارات الصفحة"
+        page_views: "مرات عرض الصفحة"
     suspicious_logins:
       labels:
-        user: مستخدم
+        user: المستخدم
         location: الموقع الجغرافي
     staff_logins:
       labels:
-        user: مستخدم
+        user: المستخدم
         location: الموقع الجغرافي
     top_uploads:
       labels:
-        filename: اسم الملفّ
+        filename: اسم الملف
   dashboard:
-    rails_env_warning: "يعمل الخادوم في وضع %{env}."
-    host_names_warning: "يستخدم ملفّ config/database.yml اسم المضيف الافتراضيّ localhost. حدّثه ليستخدم اسم مضيف الموقع."
-    sidekiq_warning: "\"Sidekiq\" لا يعمل! \nالعديد من المهام, كإرسال البريدوغيرها, يتم تنفيذها بشكل غير متزامن من قبل \"sidekiq\". الرجاء التحقيق من عمل احدى وضائف الـ\"Sidekiq\". <a href=\"https://github.com/mperham/sidekiq\" target=\"_blank\">Learn about Sidekiq here</a>."
+    rails_env_warning: "الخادم يعمل في وضع %{env}."
+    host_names_warning: "يستخدم ملف config/database.yml اسم المضيف الافتراضي localhost. حدِّثه لاستخدام اسم مضيف موقعك."
+    sidekiq_warning: 'Sidekiq ليس قيد التشغيل! يتم تنفيذ العديد من المهام، مثل إرسال الرسائل الإلكترونية، بشكلٍ غير متزامن من خلال sidekiq. يُرجى التأكد من وجود عملية sidekiq واحدة على الأقل قيد التشغيل. <a href="https://github.com/mperham/sidekiq" target="_blank">معرفة المزيد عن Sidekiq من هنا</a>.'
     queue_size_warning: "عدد المهام في الطّابور هو %{queue_size}، وهذا رقم كبير. قد يكون هذا مؤشّرًا لوجود مشكلة بعمليّات Sidekiq، أو قد تحتاج إضافة عاملي Sidekiq أخرى."
     memory_warning: "يعمل الخادم بإجمالي ذاكرة أقل من 1 غ.ب. يوصى بتوفُّر 1 غ.ب من الذاكرة على الأقل."
     subfolder_ends_in_slash: "إعداد المجلد الفرعي غير صحيح، تنتهي قيمة DISCOURSE_RELATIVE_URL_ROOT بشرطة مائلة."
