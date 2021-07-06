@@ -945,7 +945,7 @@ ar:
     http_4xx_reqs:
       title: "HTTP 4xx (خطأ في العميل)"
       xaxis: "اليوم"
-      yaxis: "خطأ العميل (الحالة 4xx)"
+      yaxis: "أخطاء في العميل (الحالة 4xx)"
     http_5xx_reqs:
       title: "HTTP 5xx (خطأ الخادم)"
       xaxis: "يوم"
