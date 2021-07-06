@@ -5,7 +5,6 @@ module Jobs
   # Asynchronously send an email to a user
   class UserEmail < ::Jobs::Base
     include Skippable
-    include SmtpRetryable
 
     sidekiq_options queue: 'low'
 
