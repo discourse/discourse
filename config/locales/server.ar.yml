@@ -935,16 +935,16 @@ ar:
       xaxis: "اليوم"
       yaxis: "الطلبات المُستخدَمة في التحديث المباشر والتتبُّع"
     http_2xx_reqs:
-      title: "الحالة 2xx ‏(OK)"
-      xaxis: "يوم"
+      title: "الحالة 2xx ‏(موافق)"
+      xaxis: "اليوم"
       yaxis: "الطلبات الناجحة (الحالة 2xx)"
     http_3xx_reqs:
-      title: "HTTP 3xx (تحويلة)"
-      xaxis: "يوم"
+      title: "HTTP 3xx (إعادة التوجيه)"
+      xaxis: "اليوم"
       yaxis: "إعادة توجيه الطلبات (الحالة 3xx)"
     http_4xx_reqs:
-      title: "HTTP 4xx (خطأ العميل)"
-      xaxis: "يوم"
+      title: "HTTP 4xx (خطأ في العميل)"
+      xaxis: "اليوم"
       yaxis: "خطأ العميل (الحالة 4xx)"
     http_5xx_reqs:
       title: "HTTP 5xx (خطأ الخادم)"

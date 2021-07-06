@@ -931,10 +931,10 @@ pt_BR:
         time_to_resolution: Tempo de Resolução
       description: "Lista de status das sinalizações, incluindo o tipo de sinalização, autor, sinalizador e hora da resolução."
     visits:
-      title: "Visitas do Usuário"
+      title: "Acessos do(a) usuário(a)"
       xaxis: "Dia"
-      yaxis: "Número de visitas"
-      description: "Número de todas as visitas do usuário."
+      yaxis: "Quantidade de acessos"
+      description: "Quantidade de acessos de todos(as) os(as) usuários(as)."
     signups:
       title: "Inscrições"
       xaxis: "Dia"
@@ -1155,10 +1155,10 @@ pt_BR:
       yaxis: "Total"
       description: "Número de novos tópicos criados que não receberam uma resposta."
     mobile_visits:
-      title: "Visitas de usuários (móveis)"
+      title: "Acessos de usuários(as) (móveis)"
       xaxis: "Dia"
-      yaxis: "Número de visitas"
-      description: "Número de usuários únicos que visitaram usando um dispositivo móvel."
+      yaxis: "Quantidade de acessos"
+      description: "Quantidade de usuários(as) exclusivos(as) que acessaram com um dispositivo móvel."
     web_crawlers:
       title: "Agentes de Usuários de Crawlers da Web"
       labels:

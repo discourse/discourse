@@ -396,7 +396,7 @@ de:
     reminders:
       at_desktop: "Nächstes Mal, wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
-      next_business_day: "Nächster Werktag"
+      next_business_day: "Nächster Arbeitstag"
       tomorrow: "Morgen"
       next_week: "Nächste Woche"
       next_month: "Nächster Monat"
@@ -710,17 +710,17 @@ de:
         one: "%{count} s"
         other: "%{count} s"
       less_than_x_minutes:
-        one: "< %{count} Min."
-        other: "< %{count} Min."
+        one: "< %{count} min"
+        other: "< %{count} min"
       x_minutes:
-        one: "%{count} Min."
-        other: "%{count} Min."
+        one: "%{count} min"
+        other: "%{count} min"
       about_x_hours:
-        one: "%{count} Std."
-        other: "%{count} Std."
+        one: "%{count} h"
+        other: "%{count} h"
       x_days:
-        one: "%{count} Tag"
-        other: "%{count} Tage"
+        one: "%{count} d"
+        other: "%{count} d"
       about_x_months:
         one: "%{count} Monat"
         other: "%{count} Monate"
@@ -728,14 +728,14 @@ de:
         one: "%{count} Monat"
         other: "%{count} Monate"
       about_x_years:
-        one: "%{count} Jahr"
-        other: "%{count} Jahre"
+        one: "%{count} a"
+        other: "%{count} a"
       over_x_years:
-        one: "> %{count} Jahr"
-        other: "> %{count} Jahre"
+        one: "> %{count} a"
+        other: "> %{count} a"
       almost_x_years:
-        one: "%{count} Jahr"
-        other: "%{count} Jahre"
+        one: "%{count} a"
+        other: "%{count} a"
     distance_in_words_verbose:
       half_a_minute: "gerade eben"
       less_than_x_seconds: "gerade eben"
@@ -1178,7 +1178,7 @@ de:
       labels:
         term: Begriff
         searches: Suchen
-        click_through: CTR
+        click_through: Klickrate
       description: "Beliebteste Suchbegriffe mit ihren Klickraten."
     emails:
       title: "Gesendete E-Mails"
