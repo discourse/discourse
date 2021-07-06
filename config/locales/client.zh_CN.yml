@@ -3970,7 +3970,7 @@ zh_CN:
           elided: "省略的文本"
         sending_test: "正在发送测试电子邮件…"
         error: "<b>错误</b> - %{server_error}"
-        test_error: "发送测试电子邮件时遇到问题。请重新检查您的邮件设置，确认您的主机没有禁止邮件连接，然后重试。"
+        test_error: "发送测试电子邮件时出现问题。请重新检查您的邮件设置，确认您的主机没有禁止邮件连接，然后重试。"
         sent: "已发送"
         skipped: "已跳过"
         bounced: "被退回"
@@ -4089,7 +4089,7 @@ zh_CN:
             recover_topic: "取消删除话题"
             delete_post: "删除帖子"
             impersonate: "模拟"
-            anonymize_user: "匿名用户"
+            anonymize_user: "对用户进行匿名化处理"
             roll_up: "汇总 IP 地址段"
             change_category_settings: "更改类别设置"
             delete_category: "删除类别"
@@ -4327,61 +4327,61 @@ zh_CN:
         delete_posts_failed: "删除帖子时出现问题。"
         penalty_post_actions: "您想对关联帖子做什么？"
         penalty_post_delete: "删除帖子"
-        penalty_post_delete_replies: "删除帖子+所有回复"
+        penalty_post_delete_replies: "删除帖子 + 任何回复"
         penalty_post_edit: "编辑帖子"
-        penalty_post_none: "什么都不做"
+        penalty_post_none: "无操作"
         penalty_count: "处罚计数"
         clear_penalty_history:
-          title: "清除处罚历史"
-          description: "有处罚的用户无法达到信任等级3"
-        delete_all_posts_confirm_MF: "你将要删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个话题} other {# 个话题}}。确定吗？"
+          title: "清除处罚历史记录"
+          description: "有处罚的用户无法达到信任级别 3"
+        delete_all_posts_confirm_MF: "你将删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个话题} other {# 个话题}}。确定吗？"
         silence: "禁言"
-        unsilence: "解除禁言"
+        unsilence: "取消禁言"
         silenced: "已禁言？"
         moderator: "版主？"
         admin: "管理员？"
         suspended: "已封禁？"
         staged: "暂存？"
         show_admin_profile: "管理员"
-        show_public_profile: "显示公开介绍"
-        impersonate: "模拟用户"
+        show_public_profile: "显示公开个人资料"
+        impersonate: "模拟"
         action_logs: "操作日志"
         ip_lookup: "IP 查询"
-        log_out: "退出登录"
-        logged_out: "用户已退出了所有设备上的登录"
-        revoke_admin: "吊销管理员资格"
-        grant_admin: "赋予管理员资格"
-        grant_admin_confirm: "我们已经发送了一封邮件以验证新管理员。请打开邮件并按照指示完成确认。"
-        revoke_moderation: "吊销论坛版主资格"
-        grant_moderation: "赋予论坛版主资格"
-        unsuspend: "解禁"
+        log_out: "退出"
+        logged_out: "用户已在所有设备上退出"
+        revoke_admin: "撤消管理员权限"
+        grant_admin: "授予管理员权限"
+        grant_admin_confirm: "我们已向您发送电子邮件以验证新管理员。请打开它并按照说明进行操作。"
+        revoke_moderation: "撤消审核权限"
+        grant_moderation: "授予审核权限"
+        unsuspend: "取消封禁"
         suspend: "封禁"
-        show_flags_received: "显示收到的标记"
-        flags_received_by: "%{username}收到的标记"
-        flags_received_none: "此用户未收到任何标记。"
+        show_flags_received: "显示收到的举报"
+        flags_received_by: "%{username} 收到的举报"
+        flags_received_none: "此用户未收到任何举报。"
         reputation: 声誉
         permissions: 权限
         activity: 活动
-        like_count: 点赞 / 获赞
+        like_count: 点赞/获赞
         last_100_days: "在最近 100 天"
-        private_topics_count: 私有话题数量
+        private_topics_count: 不公开话题
         posts_read_count: 已阅帖子
-        post_count: 发表的帖子数量
-        second_factor_enabled: 双重认证已启用
-        topics_entered: 已查看的话题数量
-        flags_given_count: 提交标记数量
-        flags_received_count: 被他人标记数量
-        warnings_received_count: 收到警告
-        flags_given_received_count: "给出的标记 / 收到的标记"
+        post_count: 创建的帖子
+        second_factor_enabled: 双重身份验证已启用
+        topics_entered: 浏览的话题
+        flags_given_count: 提交的举报
+        flags_received_count: 收到的举报
+        warnings_received_count: 收到的警告
+        flags_given_received_count: "提交的举报/收到的举报"
         approve: "批准"
-        approved_by: "批准人"
-        approve_success: "用户已被批准， 激活邮件已发送。"
-        approve_bulk_success: "成功！所有选定的用户已批准并通知。"
+        approved_by: "批准者"
+        approve_success: "用户已被批准， 包含激活说明的电子邮件已发送。"
+        approve_bulk_success: "成功！所有选定用户已被批准并通知。"
         time_read: "阅读时间"
-        anonymize: "匿名用户"
-        anonymize_confirm: "你确定要匿名化该账户信息吗？这将改变用户名和邮件地址，并且重置所有个人主页信息。"
-        anonymize_yes: "是的，匿名化该账户"
-        anonymize_failed: "在匿名化该账户时遇到问题。"
+        anonymize: "对用户进行匿名化处理"
+        anonymize_confirm: "确定要对此帐户进行匿名化处理吗？这将更改用户名和电子邮件，并重置所有个人资料信息。"
+        anonymize_yes: "是，对此帐户进行匿名化处理"
+        anonymize_failed: "对帐户进行匿名化处理时出现问题。"
         delete: "删除用户"
         delete_posts:
           progress:
@@ -4389,72 +4389,72 @@ zh_CN:
         merge:
           button: "合并"
           prompt:
-            title: "迁移并删除 @%{username}"
+            title: "转移并删除 @%{username}"
             description: |
-              <p>请为<b>@%{username} </b>的内容选择一个新的主人。</p>
+              <p>请为 <b>@%{username} </b> 的内容选择一个新的所有者。</p>
 
-              <p>所有话题、帖子、消息或其它由<b>@%{username}</b>所创作的内容将被过户。</p>
-            target_username_placeholder: "新的所有者的用户名"
-            transfer_and_delete: "迁移并删除 @%{username}"
+              <p>所有话题、帖子、消息或由 <b>@%{username}</b> 创建的其他内容都将被转移。</p>
+            target_username_placeholder: "新所有者的用户名"
+            transfer_and_delete: "转移并删除 @%{username}"
             cancel: "取消"
           progress:
             title: "合并进度"
           confirmation:
-            title: "迁移并删除 @%{username}"
+            title: "转移并删除 @%{username}"
             description: |
-              <p><b>@%{username}</b>的所有内容将被过户到<b>%{targetUsername}</b>。在内容被过户后，<b>@%{username}</b>的账户将被删除。</p>
+              <p><b>@%{username}</b> 的所有内容将被转移到 <b>%{targetUsername}</b>。在内容转移后，<b>@%{username}</b> 的帐户将被删除。</p>
 
-              <p><b>该操作无法被撤销</b></p>
+              <p><b>此操作无法撤消！</b></p>
 
-              <p>要继续请输入：<code>%{text}</code></p>
-            text: "迁移 @%{username} 到 @%{targetUsername}"
-            transfer_and_delete: "迁移并删除 @%{username}"
+              <p>要继续，请输入 <code>%{text}</code></p>
+            text: "将 @%{username} 转移到 @%{targetUsername}"
+            transfer_and_delete: "转移并删除 @%{username}"
             cancel: "取消"
-        merging_user: "合并用户..."
+        merging_user: "正在合并用户…"
         merge_failed: "合并用户时出错。"
-        delete_forbidden_because_staff: "不能删除管理员和版主。"
-        delete_posts_forbidden_because_staff: "不能完全删除管理员和版主的帖子。"
+        delete_forbidden_because_staff: "无法删除管理员和版主。"
+        delete_posts_forbidden_because_staff: "无法删除管理员和版主的所有帖子。"
         delete_forbidden:
-          other: "用户如果有帖子将不能删除。在试图尝试删除一个用户前删除所有的帖子（%{count} 天前的帖子不能被删除）"
+          other: "如果用户有帖子，则无法删除用户。在尝试删除用户之前请删除所有帖子。（无法删除超过 %{count} 天的帖子。）"
         cant_delete_all_posts:
-          other: "不能删除所有帖子。一些帖子发表于 %{count} 天前。（设置项：delete_user_max_post_age）"
+          other: "无法删除所有帖子。某些帖子的存在时间超过 %{count} 天。（delete_user_max_post_age 设置。）"
         cant_delete_all_too_many_posts:
-          other: "不能删除所有帖子，因为用户有超过 %{count} 个帖子。（delete_all_posts_max）"
-        delete_confirm: "通常最好匿名用户而不是删除它们，以避免删除 Discourse 的现有内容。<br><br>您确定要删除此用户吗？这项操作是不可逆的！"
-        delete_and_block: "删除并<b>封禁</b>该邮件地址和IP地址"
+          other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 个。(delete_all_posts_max)"
+        delete_confirm: "一般而言，最好对用户进行匿名化而不是删除它们，以避免移除现有讨论中的内容。<br><br>确定要删除此用户吗？此操作无法撤消！"
+        delete_and_block: "删除并<b>禁止</b>该电子邮件和 IP 地址"
         delete_dont_block: "仅删除"
-        deleting_user: "删除用户"
+        deleting_user: "正在删除用户…"
         deleted: "该用户已被删除。"
-        delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
-        send_activation_email: "发送激活邮件"
-        activation_email_sent: "激活邮件已发送。"
-        send_activation_email_failed: "在发送激活邮件时发生了错误。%{error}"
-        activate: "激活账户"
-        activate_failed: "在激活用户帐号时发生了错误。"
-        deactivate_account: "停用账户"
-        deactivate_failed: "在停用用户帐号时发生了错误。"
-        unsilence_failed: "解除禁言时出错了。"
-        silence_failed: "禁言用户时出错了。"
-        silence_confirm: "你确定要禁言该用户吗？他们将不能发或创建话题。"
-        silence_accept: "是的，禁言该用户"
-        bounce_score: "累计退信分值"
+        delete_failed: "删除该用户时出错。在尝试删除用户之前，请确保已删除所有帖子。"
+        send_activation_email: "发送激活电子邮件"
+        activation_email_sent: "激活电子邮件已发送。"
+        send_activation_email_failed: "发送另一封激活电子邮件时出现问题。%{error}"
+        activate: "激活帐户"
+        activate_failed: "激活用户时出现问题。"
+        deactivate_account: "停用帐户"
+        deactivate_failed: "停用用户时出现问题。"
+        unsilence_failed: "取消禁言用户时出现问题。"
+        silence_failed: "禁言用户时出现问题。"
+        silence_confirm: "确定要禁言此用户吗？他们将无法创建任何新话题或帖子。"
+        silence_accept: "是，禁言此用户"
+        bounce_score: "退回分数"
         reset_bounce_score:
           label: "重置"
-          title: "重置累计退信分值为 0"
-        visit_profile: "访问<a href='%{url}'>用户设置页面</a>编辑他们的个人页"
-        deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
-        suspended_explanation: "已禁封的用户不能登录。"
-        silence_explanation: "已禁言的用户不能发帖或创建话题。"
-        staged_explanation: "暂存用户只能通过邮件回复指定话题。"
+          title: "将退回分数重置为 0"
+        visit_profile: "访问<a href='%{url}'>此用户的偏好设置页面</a>以编辑他们的个人资料"
+        deactivate_explanation: "停用的用户必须重新验证他们的电子邮件。"
+        suspended_explanation: "被禁封的用户无法登录。"
+        silence_explanation: "被禁言的用户无法发帖或创建话题。"
+        staged_explanation: "暂存用户只能通过电子邮件在特定话题中发帖。"
         bounce_score_explanation:
-          none: "近期该邮箱没有退信。"
-          some: "近期该邮箱有少量退信。"
-          threshold_reached: "近期该邮箱有过多退信。"
-        trust_level_change_failed: "改变用户等级时出现了一个问题。"
+          none: "最近没有收到来自该电子邮件的退回。"
+          some: "最近收到一些来自该电子邮件的退回。"
+          threshold_reached: "最近收到太多来自该电子邮件的退回。"
+        trust_level_change_failed: "更改用户的信任级别时出现问题。"
         suspend_modal_title: "封禁用户"
-        confirm_cancel_penalty: "你确定要放弃惩罚吗？"
-        trust_level_2_users: "信任等级2用户"
-        trust_level_3_requirements: "信任等级 3 要求"
+        confirm_cancel_penalty: "确定要放弃惩罚吗？"
+        trust_level_2_users: "信任级别 2 用户"
+        trust_level_3_requirements: "信任级别 3 要求"
         trust_level_locked_tip: "信任等级已经被锁定，系统将不会升降用户的信任等级"
         trust_level_unlocked_tip: "信任等级已经解锁，系统将自动升降用户的信任等级"
         lock_trust_level: "锁定信任等级"

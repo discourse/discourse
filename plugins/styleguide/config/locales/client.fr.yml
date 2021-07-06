@@ -80,7 +80,7 @@ fr:
           header: "Titre de la modale"
           footer: "Pied de la modale"
         user_about:
-          title: "Boîte à propos de l'utilisateur"
+          title: "Boîte « à propos » de l'utilisateur"
         header_icons:
           title: "Icônes d'en-tête"
         spinners:

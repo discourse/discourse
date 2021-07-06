@@ -106,11 +106,11 @@ fr:
       missing_attachment: "(La pièce jointe %{filename} est manquante)"
       errors:
         empty_email_error: "Se produit quand le courriel reçu est vide."
-        no_message_id_error: "Se produit quand le courriel n'a pas d'entête « Message-Id »."
-        auto_generated_email_error: "Se produit quand l'entête « precedence » est : list, junk, bulk ou auto-reply, ou lorsque n'importe quel autre entête contient : auto-submitted, auto-replied ou auto-generated."
+        no_message_id_error: "Se produit quand le courriel n'a pas d'en-tête « Message-Id »."
+        auto_generated_email_error: "Se produit quand l'en-tête « precedence » est : list, junk, bulk ou auto-reply, ou lorsque n'importe quel autre en-tête contient : auto-submitted, auto-replied ou auto-generated."
         no_body_detected_error: "Se produit quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces jointes."
-        no_sender_detected_error: "Se produit lorsque nous n'avons pas trouvé une adresse courriel valide dans l'entête From."
-        from_reply_by_address_error: "Survient quand l'entête « From » correspond à l'adresse courriel « Reply by »."
+        no_sender_detected_error: "Se produit lorsque nous n'avons pas trouvé une adresse courriel valide dans l'en-tête From."
+        from_reply_by_address_error: "Survient quand l'en-tête « From » correspond à l'adresse courriel « Reply by »."
         inactive_user_error: "Se produit quand l'expéditeur n'est pas actif."
         silenced_user_error: "Se produit lorsque l'expéditeur a été mis en sourdine."
         bad_destination_address: "Se produit quand aucune des adresses courriel reprises dans les champs To/Cc ne correspond à une adresse courriel entrante configurée."
@@ -245,7 +245,7 @@ fr:
   topic_invite:
     failed_to_invite: "L'utilisateur ne peut pas être invité dans ce sujet sans être membre d'un des groupes suivants : %{group_names}."
     user_exists: "Nous sommes désolés, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
-    muted_invitee: "Nous sommes désolés, cet utilisateur vous a mis en sourdine."
+    muted_invitee: "Nous sommes désolés, cet utilisateur vous a mis(e) en sourdine."
     muted_topic: "Nous sommes désolés, cet utilisateur a mis ce sujet en sourdine."
     receiver_does_not_allow_pm: "Nous sommes désolés, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
     sender_does_not_allow_pm: "Nous sommes désolés, vous n'autorisez pas cet utilisateur à vous envoyer des messages directs."
@@ -1457,7 +1457,7 @@ fr:
     opengraph_image: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée"
     twitter_summary_large_image: "Carte Twitter « Summary Card with Large Image » (sa taille doit être d'au moins 280 en largeur et d'au moins 150 en hauteur). Si vous laissez ce champ vide, les métadonnées normales de carte sont générées à l'aide d'« opengraph_image »."
     notification_email: "L'adresse courriel utilisée pour envoyer les courriels systèmes essentiels et affichée dans le champs « De ». Le nom de domaine spécifié doit comprendre les informations SPF, DKIM et PTR inversé correctement renseignées pour que le courriel arrive à destination."
-    email_custom_headers: "Une liste délimité par des barres verticales d'entêtes de courriel"
+    email_custom_headers: "Une liste délimitée par des barres verticales d'en-têtes de courriel"
     email_subject: "Format du sujet personnalisable pour les courriels normaux. Voir <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Donne plus d'informations aux utilisateurs concernant la raison pour laquelle ils ne peuvent pas accéder à ce sujet en particulier. Note : cela est moins sécurisé car les utilisateurs sauront si une URL pointe vers un sujet valide ou non."
     enforce_second_factor: "Force les utilisateurs à activer l'authentification à deux facteurs. Sélectionner « tous » pour l'appliquer à tous les utilisateurs. Sélectionner « responsables » pour l'appliquer aux responsables uniquement."
@@ -3024,7 +3024,7 @@ fr:
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
     user_automatically_silenced:
-      title: "Utilisateur automatiquement mis sous silence"
+      title: "Utilisateur automatiquement mis en sourdine"
       subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
       text_body_template: |
         Ce message vous est envoyé de manière automatisée.
@@ -4497,8 +4497,8 @@ fr:
       category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir les paramètres de la catégorie."
       must_approve_users: "Tous les nouveaux utilisateurs doivent être approuvés par un responsable. Voir `must_approve_users`."
       invite_only: "Tous les nouveaux utilisateurs doivent être invités. Voir `invite_only`."
-      email_auth_res_enqueue: "Ce courriel n'a pas passé une vérification DMARC, il est fort probable qu'il ne provienne pas de l'expéditeur annoncé. Vérifiez les entêtes du courriel brut pour plus d'informations."
-      email_spam: "Ce courriel a été signalé comme spam par l'entête définie dans `email_in_spam_header`."
+      email_auth_res_enqueue: "Ce courriel n'a pas passé une vérification DMARC, il est fort probable qu'il ne provienne pas de l'expéditeur annoncé. Vérifiez les en-têtes du courriel brut pour plus d'informations."
+      email_spam: "Ce courriel a été signalé comme spam par l'en-tête défini dans « email_in_spam_header »."
       suspect_user: "Ce nouvel utilisateur a renseigné des informations sur son profil sans lire de sujets ou messages, ce qui indique qu'il pourrait être un spammeur. Voir `approve_suspect_users`."
       contains_media: "Ce message contient un média intégré. Voir `review_media_unless_trust_level`."
       queued_by_staff: "Un responsable a estimé que ce message devait être examiné avant sa publication. Il restera masqué jusqu'à son approbation par un modérateur."
@@ -4515,8 +4515,8 @@ fr:
         title: "Suspendre l'utilisateur"
         description: "Accepter le signalement et suspendre l'utilisateur."
       agree_and_silence:
-        title: "Mettre l'utilisateur sous silence"
-        description: "Accepter le signalement et mettre l'utilisateur sous silence."
+        title: "Mettre l'utilisateur en sourdine"
+        description: "Accepter le signalement et mettre l'utilisateur en sourdine."
       agree_and_restore:
         title: "Rétablir le message"
         description: "Rétablir le message afin que tous les utilisateurs puissent le voir."

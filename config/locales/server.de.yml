@@ -3471,7 +3471,7 @@ de:
       title: "Benachrichtigung an alte E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"
       text_body_template: |
-        Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere ein Team-Mitglied, wenn du von einem Fehler ausgehst.
+        Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere einen Website-Administrator, wenn du von einem Fehler ausgehst.
 
         Deine E-Mail-Adresse wurde geändert zu:
 

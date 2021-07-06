@@ -18,7 +18,7 @@ fr:
         title: "Les votes sont <strong>publics</strong>."
       results:
         groups:
-          title: "Vous devez être membre du groupe %{groups} pour voter à ce sondage."
+          title: "Vous devez être membre du groupe %{groups} pour participer à ce sondage."
         vote:
           title: "Les résultats sont affichés après le <strong>vote</strong>."
         closed:
@@ -82,7 +82,7 @@ fr:
           invalid_min_value: Cette valeur doit être supérieure à 1.
           invalid_max_value: Cette valeur doit être supérieure à 1, mais inférieure ou égale au nombre de réponses possibles.
           invalid_values: La valeur minimale doit être plus petite que la valeur maximale.
-          min_step_value: Le valeur minimum du pas est 1
+          min_step_value: Le valeur minimale du pas est de 1
         poll_type:
           label: Type
           regular: Choix unique

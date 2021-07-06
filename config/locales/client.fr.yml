@@ -270,6 +270,7 @@ fr:
       help:
         bookmark: "Cliquez pour mettre un signet sur le premier message de ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
+        unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet."
     bookmarks:
       created: "Vous avez mis un signet à ce message. %{name}"
       not_bookmarked: "mettre un signet à ce message"
@@ -599,6 +600,7 @@ fr:
       member_added: "Ajouté"
       member_requested: "Demandé à"
       add_members:
+        title: "Ajouter des utilisateurs à %{group_name}"
         notify_users: "Notifications aux utilisateurs"
       requests:
         title: "Demandes"
@@ -845,7 +847,7 @@ fr:
       latest: "Récents"
       toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories"
-      muted: "Catégories mises sous en sourdine"
+      muted: "Catégories mises en sourdine"
       topic_sentence:
         one: "%{count} sujet"
         other: "%{count} sujets"
@@ -4034,10 +4036,10 @@ fr:
             title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
           header:
             text: "Entête"
-            title: "Saisissez du code HTML à afficher au dessus de l'entête du site"
+            title: "Saisissez du code HTML à afficher au dessus de l'en-tête du site"
           after_header:
-            text: "Après l'entête"
-            title: "Saisissez du code HTML à afficher sur toutes les pages après l'entête"
+            text: "Après l'en-tête"
+            title: "Saisissez du code HTML à afficher sur toutes les pages après l'en-tête"
           footer:
             text: "Pied de page"
             title: "Saisissez du code HTML à afficher dans le pied de page"
@@ -4099,11 +4101,11 @@ fr:
             name: "quaternaire"
             description: "Liens de navigation."
           header_background:
-            name: "arrière-plan de l'entête"
-            description: "Couleur d'arrière-plan de l'entête du site."
+            name: "arrière-plan de l'en-tête"
+            description: "Couleur d'arrière-plan de l'en-tête du site."
           header_primary:
-            name: "primaire de l'entête"
-            description: "Textes et icônes dans l'entête du site."
+            name: "en-tête principal"
+            description: "Textes et icônes dans l'en-tête du site."
           highlight:
             name: "accentuation"
             description: "La couleur de fond des éléments mis en surbrillance sur la page, comme les messages et sujets."
@@ -4379,7 +4381,7 @@ fr:
             header: "Entête"
             full_page: "Page complète"
             click_through_only: "Tous (clics uniquement)"
-          header_search_results: "Résultats de recherche d'entête"
+          header_search_results: "Résultats de recherche d'en-tête"
         logster:
           title: "Journal d'erreurs"
       watched_words:
@@ -4516,7 +4518,7 @@ fr:
           description: "les utilisateurs ayant des pénalités ne peuvent pas atteindre le niveau de confiance 3"
         delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {# message} other {# messages}} et {TOPICS, plural, one {# sujet} other {# sujets}}. Voulez-vous continuer ?"
         silence: "Mettre en sourdine"
-        unsilence: "Ne plus mettre sous silence"
+        unsilence: "Ne plus mettre en sourdine"
         silenced: "En sourdine ?"
         moderator: "Modérateur ?"
         admin: "Administrateur ?"

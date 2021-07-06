@@ -156,7 +156,7 @@ de:
 
           - Ich bin nur ein Roboter, aber [unser freundliches Team](%{base_uri}/about) ist auch hier und kann helfen, wenn du einen Menschen erreichen musst.
 
-          - Aus Sicherheitsgründen limitieren wir vorübergehend, was neue Benutzer machen können. Du erhältst [neue Fähigkeiten](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) und [Abzeichen](%{base_uri}/badges)), wenn wir dich besser kennenlernen.
+          - Aus Sicherheitsgründen limitieren wir vorübergehend, was neue Benutzer machen können. Du erhältst [neue Fähigkeiten](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) und [Abzeichen](%{base_uri}/badges), wenn wir dich besser kennenlernen.
 
           - Wir glauben an [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu jeder Zeit.
       onebox:
