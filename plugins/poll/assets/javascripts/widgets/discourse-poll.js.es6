@@ -32,16 +32,6 @@ function infoTextHtml(text) {
   });
 }
 
-function _fetchVoters(data) {
-  return ajax("/polls/voters.json", { data }).catch((error) => {
-    if (error) {
-      popupAjaxError(error);
-    } else {
-      bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
-    }
-  });
-}
-
 function checkUserGroups(user, poll) {
   const pollGroups =
     poll && poll.groups && poll.groups.split(",").map((g) => g.toLowerCase());
@@ -125,14 +115,6 @@ createWidget("discourse-poll-voters", {
   tagName: "ul.poll-voters-list",
   buildKey: (attrs) => `poll-voters-${attrs.optionId}`,
 
-  defaultState() {
-    return {
-      loaded: "new",
-      voters: [],
-      page: 1,
-    };
-  },
-
   html(attrs) {
     const contents = attrs.voters.map((user) =>
       h("li", [
@@ -156,50 +138,13 @@ createWidget("discourse-poll-standard-results", {
   tagName: "ul.results",
   buildKey: (attrs) => `poll-standard-results-${attrs.id}`,
 
-  defaultState() {
-    return { loaded: false };
-  },
-
-  fetchVoters(optionId) {
-    const { attrs, state } = this;
-
-    if (!state.page) {
-      state.page = {};
-    }
-
-    if (!state.page[optionId]) {
-      state.page[optionId] = 1;
-    }
-
-    return _fetchVoters({
-      post_id: attrs.post.id,
-      poll_name: attrs.poll.name,
-      option_id: optionId,
-      page: state.page[optionId] + 1,
-      limit: FETCH_VOTERS_COUNT,
-    }).then((result) => {
-      if (!state.voters[optionId]) {
-        state.voters[optionId] = [];
-      }
-
-      if (result.voters[optionId] && result.voters[optionId].length > 0) {
-        state.voters[optionId] = [
-          ...new Set([...state.voters[optionId], ...result.voters[optionId]]),
-        ];
-        state.page[optionId]++;
-      }
-
-      this.scheduleRerender();
-    });
-  },
-
-  html(attrs, state) {
+  html(attrs) {
     const { poll } = attrs;
-    const options = poll.get("options");
+    const options = poll.options;
 
     if (options) {
-      const voters = poll.get("voters");
-      const isPublic = poll.get("public");
+      const voters = poll.voters;
+      const isPublic = poll.public;
 
       const ordered = [...options].sort((a, b) => {
         if (a.votes < b.votes) {
@@ -214,11 +159,6 @@ createWidget("discourse-poll-standard-results", {
           return -1;
         }
       });
-
-      if (isPublic && !state.loaded) {
-        state.voters = poll.get("preloaded_voters");
-        state.loaded = true;
-      }
 
       const percentages =
         voters === 0
@@ -253,9 +193,9 @@ createWidget("discourse-poll-standard-results", {
             this.attach("discourse-poll-voters", {
               postId: attrs.post.id,
               optionId: option.id,
-              pollName: poll.get("name"),
+              pollName: poll.name,
               totalVotes: option.votes,
-              voters: (state.voters && state.voters[option.id]) || [],
+              voters: (attrs.voters && attrs.voters[option.id]) || [],
             })
           );
         }
@@ -269,45 +209,14 @@ createWidget("discourse-poll-standard-results", {
 createWidget("discourse-poll-number-results", {
   buildKey: (attrs) => `poll-number-results-${attrs.id}`,
 
-  defaultState() {
-    return { loaded: false };
-  },
-
-  fetchVoters(optionId) {
-    const { attrs, state } = this;
-
-    if (!state.page) {
-      state.page = 1;
-    }
-
-    return _fetchVoters({
-      post_id: attrs.post.id,
-      poll_name: attrs.poll.name,
-      option_id: optionId,
-      page: state.page + 1,
-      limit: FETCH_VOTERS_COUNT,
-    }).then((result) => {
-      if (!state.voters) {
-        state.voters = [];
-      }
-
-      if (result.voters && result.voters.length > 0) {
-        state.voters = [...new Set([...state.voters, ...result.voters])];
-        state.page++;
-      }
-
-      this.scheduleRerender();
-    });
-  },
-
-  html(attrs, state) {
+  html(attrs) {
     const { poll } = attrs;
 
-    const totalScore = poll.get("options").reduce((total, o) => {
+    const totalScore = poll.options.reduce((total, o) => {
       return total + parseInt(o.html, 10) * parseInt(o.votes, 10);
     }, 0);
 
-    const voters = poll.get("voters");
+    const voters = poll.voters;
     const average = voters === 0 ? 0 : round(totalScore / voters, -2);
     const averageRating = I18n.t("poll.average_rating", { average });
     const contents = [
@@ -317,19 +226,14 @@ createWidget("discourse-poll-number-results", {
       ),
     ];
 
-    if (poll.get("public")) {
-      if (!state.loaded) {
-        state.voters = poll.get("preloaded_voters");
-        state.loaded = true;
-      }
-
+    if (poll.public) {
       contents.push(
         this.attach("discourse-poll-voters", {
-          totalVotes: poll.get("voters"),
-          voters: state.voters || [],
+          totalVotes: poll.voters,
+          voters: attrs.voters || [],
           postId: attrs.post.id,
-          pollName: poll.get("name"),
-          pollType: poll.get("type"),
+          pollName: poll.name,
+          pollType: poll.type,
         })
       );
     }
@@ -340,10 +244,15 @@ createWidget("discourse-poll-number-results", {
 
 createWidget("discourse-poll-container", {
   tagName: "div.poll-container",
+  buildKey: (attrs) => `poll-container-${attrs.id}`,
 
-  html(attrs) {
+  defaultState() {
+    return { voters: [] };
+  },
+
+  html(attrs, state) {
     const { poll } = attrs;
-    const options = poll.get("options");
+    const options = poll.options;
 
     if (attrs.showResults) {
       const contents = [];
@@ -352,12 +261,21 @@ createWidget("discourse-poll-container", {
         contents.push(new RawHtml({ html: attrs.titleHTML }));
       }
 
-      const type = poll.get("type") === "number" ? "number" : "standard";
+      if (poll.public) {
+        state.voters = poll.preloaded_voters;
+      }
+
+      const type = poll.type === "number" ? "number" : "standard";
       const resultsWidget =
         type === "number" || attrs.poll.chart_type !== PIE_CHART_TYPE
           ? `discourse-poll-${type}-results`
           : "discourse-poll-pie-chart";
-      contents.push(this.attach(resultsWidget, attrs));
+      contents.push(
+        this.attach(
+          resultsWidget,
+          Object.assign({}, attrs, { voters: state.voters })
+        )
+      );
 
       return contents;
     } else if (options) {
@@ -392,6 +310,68 @@ createWidget("discourse-poll-container", {
       return contents;
     }
   },
+
+  fetchVoters(optionId) {
+    const { attrs, state } = this;
+
+    if (optionId) {
+      if (!state.voters) {
+        state.voters = {};
+      }
+
+      if (!state.voters[optionId]) {
+        state.voters[optionId] = [];
+      }
+    } else {
+      if (!state.voters) {
+        state.voters = [];
+      }
+    }
+
+    return ajax("/polls/voters.json", {
+      data: {
+        post_id: attrs.post.id,
+        poll_name: attrs.poll.name,
+        option_id: optionId,
+        page: optionId
+          ? Math.floor(state.voters[optionId].length / FETCH_VOTERS_COUNT) + 1
+          : Math.floor(state.voters.length / FETCH_VOTERS_COUNT) + 1,
+        limit: FETCH_VOTERS_COUNT,
+      },
+    })
+      .then((result) => {
+        const voters = optionId ? state.voters[optionId] : state.voters;
+        const newVoters = optionId ? result.voters[optionId] : result.voters;
+
+        const votersSet = new Set(voters.map((voter) => voter.username));
+        newVoters.forEach((voter) => {
+          if (!votersSet.has(voter.username)) {
+            votersSet.add(voter.username);
+            voters.push(voter);
+          }
+        });
+
+        // remove users who changed their vote
+        if (attrs.poll.type === "regular") {
+          Object.keys(state.voters).forEach((otherOptionId) => {
+            if (optionId !== otherOptionId) {
+              state.voters[otherOptionId] = state.voters[otherOptionId].filter(
+                (voter) => !votersSet.has(voter.username)
+              );
+            }
+          });
+        }
+
+        this.scheduleRerender();
+      })
+      .catch((error) => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
+        }
+      });
+  },
 });
 
 createWidget("discourse-poll-info", {
@@ -422,7 +402,7 @@ createWidget("discourse-poll-info", {
 
   html(attrs) {
     const { poll } = attrs;
-    const count = poll.get("voters");
+    const count = poll.voters;
     const contents = [
       h("p", [
         h("span.info-number", count.toString()),
@@ -432,7 +412,7 @@ createWidget("discourse-poll-info", {
 
     if (attrs.isMultiple) {
       if (attrs.showResults || attrs.isClosed) {
-        const totalVotes = poll.get("options").reduce((total, o) => {
+        const totalVotes = poll.options.reduce((total, o) => {
           return total + parseInt(o.votes, 10);
         }, 0);
 
@@ -449,7 +429,7 @@ createWidget("discourse-poll-info", {
         const help = this.multipleHelpText(
           attrs.min,
           attrs.max,
-          poll.get("options.length")
+          poll.options.length
         );
         if (help) {
           contents.push(infoTextHtml(help));
@@ -562,7 +542,7 @@ createWidget("discourse-poll-buttons", {
   html(attrs) {
     const contents = [];
     const { poll, post } = attrs;
-    const topicArchived = post.get("topic.archived");
+    const topicArchived = post.topic.archived;
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
@@ -600,9 +580,9 @@ createWidget("discourse-poll-buttons", {
         })
       );
     } else {
-      if (poll.get("results") === "on_vote" && !attrs.hasVoted && !isMe) {
+      if (poll.results === "on_vote" && !attrs.hasVoted && !isMe) {
         contents.push(infoTextHtml(I18n.t("poll.results.vote.title")));
-      } else if (poll.get("results") === "on_close" && !closed) {
+      } else if (poll.results === "on_close" && !closed) {
         contents.push(infoTextHtml(I18n.t("poll.results.closed.title")));
       } else if (poll.results === "staff_only" && !isStaff) {
         contents.push(infoTextHtml(I18n.t("poll.results.staff.title")));
@@ -613,7 +593,7 @@ createWidget("discourse-poll-buttons", {
             label: "poll.show-results.label",
             title: "poll.show-results.title",
             icon: "far-eye",
-            disabled: poll.get("voters") === 0,
+            disabled: poll.voters === 0,
             action: "toggleResults",
           })
         );
@@ -645,8 +625,8 @@ createWidget("discourse-poll-buttons", {
       );
     }
 
-    if (poll.get("close")) {
-      const closeDate = moment(poll.get("close"));
+    if (poll.close) {
+      const closeDate = moment(poll.close);
       if (closeDate.isValid()) {
         const title = closeDate.format("LLL");
         let label;
@@ -669,7 +649,7 @@ createWidget("discourse-poll-buttons", {
 
     if (
       this.currentUser &&
-      (this.currentUser.get("id") === post.get("user_id") || isStaff) &&
+      (this.currentUser.id === post.user_id || isStaff) &&
       !topicArchived
     ) {
       if (closed) {
@@ -712,8 +692,8 @@ export default createWidget("discourse-poll", {
     }
     return {
       class: cssClasses,
-      "data-poll-name": attrs.poll.get("name"),
-      "data-poll-type": attrs.poll.get("type"),
+      "data-poll-name": attrs.poll.name,
+      "data-poll-type": attrs.poll.type,
     };
   },
 
@@ -722,7 +702,7 @@ export default createWidget("discourse-poll", {
     const staffOnly = attrs.poll.results === "staff_only";
 
     const showResults =
-      (post.get("topic.archived") && !staffOnly) ||
+      (post.topic.archived && !staffOnly) ||
       (this.isClosed() && !staffOnly) ||
       (poll.results !== "on_close" && this.hasVoted() && !staffOnly);
 
@@ -733,7 +713,7 @@ export default createWidget("discourse-poll", {
     const staffOnly = attrs.poll.results === "staff_only";
     const showResults =
       state.showResults ||
-      (attrs.post.get("topic.archived") && !staffOnly) ||
+      (attrs.post.topic.archived && !staffOnly) ||
       (this.isClosed() && !staffOnly);
 
     const newAttrs = jQuery.extend({}, attrs, {
@@ -755,7 +735,7 @@ export default createWidget("discourse-poll", {
   },
 
   min() {
-    let min = parseInt(this.attrs.poll.get("min"), 10);
+    let min = parseInt(this.attrs.poll.min, 10);
     if (isNaN(min) || min < 0) {
       min = 0;
     }
@@ -763,8 +743,8 @@ export default createWidget("discourse-poll", {
   },
 
   max() {
-    let max = parseInt(this.attrs.poll.get("max"), 10);
-    const numOptions = this.attrs.poll.get("options.length");
+    let max = parseInt(this.attrs.poll.max, 10);
+    const numOptions = this.attrs.poll.options.length;
     if (isNaN(max) || max > numOptions) {
       max = numOptions;
     }
@@ -773,17 +753,17 @@ export default createWidget("discourse-poll", {
 
   isAutomaticallyClosed() {
     const { poll } = this.attrs;
-    return poll.get("close") && moment.utc(poll.get("close")) <= moment();
+    return poll.close && moment.utc(poll.close) <= moment();
   },
 
   isClosed() {
     const { poll } = this.attrs;
-    return poll.get("status") === "closed" || this.isAutomaticallyClosed();
+    return poll.status === "closed" || this.isAutomaticallyClosed();
   },
 
   isMultiple() {
     const { poll } = this.attrs;
-    return poll.get("type") === "multiple";
+    return poll.type === "multiple";
   },
 
   hasVoted() {
@@ -829,14 +809,14 @@ export default createWidget("discourse-poll", {
           ajax("/polls/toggle_status", {
             type: "PUT",
             data: {
-              post_id: post.get("id"),
-              poll_name: poll.get("name"),
+              post_id: post.id,
+              poll_name: poll.name,
               status,
             },
           })
             .then(() => {
               poll.set("status", status);
-              if (poll.get("results") === "on_close") {
+              if (poll.results === "on_close") {
                 state.showResults = status === "closed";
               }
               this.scheduleRerender();
@@ -955,7 +935,7 @@ export default createWidget("discourse-poll", {
       type: "PUT",
       data: {
         post_id: attrs.post.id,
-        poll_name: attrs.poll.get("name"),
+        poll_name: attrs.poll.name,
         options: attrs.vote,
       },
     })
@@ -963,11 +943,11 @@ export default createWidget("discourse-poll", {
         attrs.poll.setProperties(poll);
         this.appEvents.trigger("poll:voted", poll, attrs.post, attrs.vote);
 
-        if (attrs.poll.get("results") !== "on_close") {
+        if (attrs.poll.results !== "on_close") {
           state.showResults = true;
         }
         if (attrs.poll.results === "staff_only") {
-          if (this.currentUser && this.currentUser.get("staff")) {
+          if (this.currentUser && this.currentUser.staff) {
             state.showResults = true;
           } else {
             state.showResults = false;
