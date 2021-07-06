@@ -907,7 +907,7 @@ class User < ActiveRecord::Base
   end
 
   def increment_post_edits_count
-    stat.update!(post_edits_count: stat.post_edits_count + 1)
+    stat.increment!(:post_edits_count)
   end
 
   def flags_given_count
