@@ -404,4 +404,27 @@ describe Invite do
       expect(invite.invalidated_at).to be_nil
     end
   end
+
+  describe '#warnings' do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:invite) { Fabricate(:invite) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:secured_category) do
+      secured_category = Fabricate(:category)
+      secured_category.permissions = { group.name => :full }
+      secured_category.save!
+      secured_category
+    end
+
+    it 'does not return any warnings for simple invites' do
+      expect(invite.warnings(admin.guardian)).to be_blank
+    end
+
+    it 'returns a warning if topic is private' do
+      topic = Fabricate(:topic, category: secured_category)
+      TopicInvite.create!(topic: topic, invite: invite)
+
+      expect(invite.warnings(admin.guardian)).to contain_exactly(I18n.t("invite.requires_groups", groups: group.name))
+    end
+  end
 end
