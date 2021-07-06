@@ -3108,8 +3108,8 @@ fr:
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
-      one: "Rappel : nous envoyons un maximum de %{count} courriel quotidien. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
-      other: "Rappel : nous envoyons un maximum de %{count} courriels quotidiens. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
+      one: "Rappel : nous envoyons un maximum de %{count} courriel quotidien. Accédez au site pour le consulter."
+      other: "Rappel : nous envoyons un maximum de %{count} courriels quotidiens. Accédez au site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
     in_reply_to: "En réponse à"
     unsubscribe:
       title: "Se désabonner"
@@ -3133,7 +3133,7 @@ fr:
 
       > %{site_title} -- %{site_description}
 
-      Pour rejoindre la discussion, cliquez le lien ci-dessous :
+      Pour rejoindre la discussion, cliquez sur le lien ci-dessous :
 
       %{topic_url}
     invited_to_private_message_body: |
@@ -3147,7 +3147,7 @@ fr:
 
       > %{site_title} -- %{site_description}
 
-      Pour rejoindre la discussion, cliquez le lien ci-dessous :
+      Pour rejoindre la discussion, cliquez sur le lien ci-dessous :
 
       %{topic_url}
     invited_to_topic_body: |
@@ -3161,7 +3161,7 @@ fr:
 
       > %{site_title} -- %{site_description}
 
-      Pour rejoindre la discussion, cliquez le lien ci-dessous :
+      Pour rejoindre la discussion, cliquez sur le lien ci-dessous :
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
@@ -3175,7 +3175,7 @@ fr:
         %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Utilisateur invité au MD"
-      subject_template: "[%{email_prefix}] %{username} vous a invité dans la conversation « %{topic_title} »"
+      subject_template: "[%{email_prefix}] %{username} vous a invité(e) dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -3184,7 +3184,7 @@ fr:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Utilisateur distant invité au MD"
-      subject_template: "[%{email_prefix}] %{username} vous a invité dans la conversation « %{topic_title} »"
+      subject_template: "[%{email_prefix}] %{username} vous a invité(e) dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -3193,7 +3193,7 @@ fr:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Utilisateur invité au sujet"
-      subject_template: "[%{email_prefix}] %{username} vous a invité dans « %{topic_title} »"
+      subject_template: "[%{email_prefix}] %{username} vous a invité(e) dans « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -3278,7 +3278,7 @@ fr:
 
         %{respond_instructions}
     user_posted:
-      title: "Posté par l'utilisateur"
+      title: "Publié par l'utilisateur"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3300,7 +3300,7 @@ fr:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Utilisateur a posté un MD"
+      title: "Utilisateur a publié un MD"
       subject_template: "[%{email_prefix}] [MD] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3311,7 +3311,7 @@ fr:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Utilisateur distant a posté un MD"
+      title: "Utilisateur distant a publié un MD"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3324,8 +3324,8 @@ fr:
 
         Motif : %{reason}
     account_silenced:
-      title: "Compte mis sous silence"
-      subject_template: "[%{email_prefix}] Votre compte a été mis sous silence"
+      title: "Compte mis en sourdine"
+      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
       text_body_template: |
         Votre compte sur le forum a été mis en sourdine jusqu'à %{silenced_till}.
 
@@ -3336,9 +3336,9 @@ fr:
       text_body_template: |
         Vous venez d'essayer de créer un compte sur %{site_name}, ou d'essayer de changer l'adresse courriel d'un compte vers %{email}. Cependant, un compte existe déjà pour %{email}.
 
-        Si vous avez oublié votre mot de passe, [réinitialisez le maintenant](%{base_url}/password-reset).
+        Si vous avez oublié votre mot de passe, [réinitialisez-le maintenant](%{base_url}/password-reset).
 
-        Si vous n'avez pas essayé de créer un compte pour %{email} ou de changer votre adresse courriel, ne vous inquiétez pas – vous pouvez ignorer ce message.
+        Si vous n'avez pas essayé de créer un compte avec l'adresse %{email} ou de changer votre adresse courriel, ne vous inquiétez pas. Vous pouvez ignorer ce message.
 
         Si vous avez des questions, [contactez notre équipe](%{base_url}/about).
     account_second_factor_disabled:
@@ -3364,7 +3364,7 @@ fr:
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
       subject_template: "[%{email_prefix}] Résumé"
-      unsubscribe: "Ce résumé vous est envoyé par %{site_link} lorsqu'on ne vous aperçoit pas pendant un petit moment. Vous pouvez %{email_preferences_link}, ou %{unsubscribe_link} pour vous désabonner."
+      unsubscribe: "Ce résumé vous est envoyé par %{site_link} lorsque vous ne vous connectez pas pendant un moment. Vous pouvez %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       your_email_settings: "vos préférences de courriel"
       click_here: "cliquez ici"
       from: "%{site_name}"

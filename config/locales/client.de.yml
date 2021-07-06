@@ -1624,7 +1624,7 @@ de:
       edit: "Hinzufügen oder entfernen …"
       remove: "Entfernen …"
       add: "Hinzufügen …"
-      leave_message: "Möchtest du diese Nachricht wirklich hinterlassen?"
+      leave_message: "Möchtest du diese Unterhaltung wirklich verlassen?"
       remove_allowed_user: "Willst du %{name} wirklich aus dieser Nachricht entfernen?"
       remove_allowed_group: "Willst du %{name} wirklich aus dieser Nachricht entfernen?"
     email: "E-Mail-Adresse"

@@ -1745,7 +1745,7 @@ it:
     auto_respond_to_flag_actions: "Attiva risposta automatica quando viene fatta una segnalazione."
     min_first_post_typing_time: "Quantità minima di tempo in millisecondi che un utente deve impiegare per la digitazione del primo messaggio, se non viene raggiunta la soglia il messaggio verrà automaticamente inserito nella coda dei messaggi da approvare. Impostare su 0 per disabilitare (non consigliato)"
     auto_silence_fast_typers_on_first_post: "Silenzia automaticamente gli utenti che non soddisfano min_first_post_typing_time"
-    auto_silence_fast_typers_max_trust_level: "Livello di attendibilità massimo per silenziare automaticamente chi scrive troppo spesso."
+    auto_silence_fast_typers_max_trust_level: "Livello di attendibilità massimo per silenziare automaticamente chi scrive troppo spesso o troppo velocemente."
     reviewable_claiming: "È necessario rivendicare il contenuto revisionabile prima che possa essere manipolato?"
     reviewable_default_topics: "Mostra contenuto revisionabile raggruppato per argomento per impostazione predefinita"
     reviewable_default_visibility: "Non mostrare elementi revisionabili a meno che non soddisfino questa priorità"

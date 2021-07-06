@@ -2587,6 +2587,16 @@ fi:
     queued_by_staff:
       title: "Viesti odottaa hyväksyntää"
       subject_template: "Henkilökunnan piilottama viesti odottaa hyväksyntää"
+      text_body_template: |
+        Hei,
+
+        Tämä on automaattinen viesti sivustolta %{site_name}, joka ilmoittaa sinulle, että viestisi on piilotettu.
+
+        <%{base_url}%{url}>
+
+        Viestisi pysyy piilossa, kunnes henkilökunnan jäsen tarkistaa sen.
+
+        Lisätietoja on [yhteisön ohjeissa] (%{base_url}/guidelines).
     flags_disagreed:
       title: "Henkilökunta palautti merkityn viestin"
       subject_template: "Henkilökunta palautti merkityn viestin"
@@ -2605,6 +2615,20 @@ fi:
     flags_agreed_and_post_deleted:
       title: "Henkilökunta poisti merkityn viestin"
       subject_template: "Henkilökunta poisti merkityn viestin"
+      text_body_template: |
+        Hei,
+
+        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme sinulle että [viestisi](%{base_url}%{url}) poistettiin.
+
+        %{flag_reason}
+
+        Yhteisö merkitsi viestin, ja henkilökunnan jäsen päätti poistaa sen.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Kertaa [yhteisön säännöt](%{base_url}/guidelines), jos haluat lisätietoa.
     usage_tips:
       text_body_template: |
         [Tässä blogikirjoituksessa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
@@ -2656,6 +2680,12 @@ fi:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Onnittelut luottamustason noususta!"
+      text_body_template: |
+        Olemme ylentäneet sinut toiselle [luottamustasolle](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        Kokeneena käyttäjänä saatat arvostaa [tätä hyödyllisten vinkkien luetteloa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Kutsumme sinut jatkamaan osallistumistasi – on mukavaa, että olet seurassamme.
     backup_succeeded:
       title: "Varmuuskopiointi onnistui"
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
@@ -2864,6 +2894,18 @@ fi:
     email_reject_bad_destination_address:
       title: "Sähköposti hylätty – tuntematon vastaanottajaosoite"
       subject_template: "[%{email_prefix}] Sähköpostiongelma – tuntematon vastaanottajan osoite"
+      text_body_template: |
+        Sähköpostiviestisi toimittaminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+
+        Tässä on muutamia tarkistettavia asioita:
+
+          – Käytätkö useampaa kuin yhtä sähköpostiosoitetta? Vastasitko eri sähköpostiosoitteella kuin mitä alun perin käytit? Sähköpostivastaukset edellyttävät, että käytät samaa sähköpostiosoitetta vastatessasi.
+
+          – Onko sähköpostiohjelmasi käyttänyt vastaussähköpostiosoitetta oikein vastatessasi? Valitettavasti jotkin sähköpostiohjelmat lähettävät virheellisesti vastaukset lähettäjän osoitteeseen, mikä ei toimi.
+
+          – Muutettiinko sähköpostiviestin viestitunnusotsikkotietoa? Viestitunnuksen on oltava johdonmukainen ja muuttumaton.
+
+        Tarvitsetko lisää apua? Ota yhteyttä meihin käyttämällä osoitteesta %{base_url}/about löytyviä yhteystietoja
     email_reject_old_destination:
       title: "Sähköposti hylätty – vanha kohde"
       subject_template: "[%{email_prefix}] Sähköpostiongelma – yrität vastata vanhaan ilmoitukseen"
@@ -2919,6 +2961,12 @@ fi:
     email_reject_reply_to_digest:
       title: "Sähköposti hylätty – vastaus yhteenvetoon"
       subject_template: "%{email_prefix} Sähköpostiongelma – vastaus yhteenvetoon"
+      text_body_template: |
+        Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+
+        Vastasit yhteenvetosähköpostiin, mitä ei hyväksytä.
+
+        Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_error_notification:
       title: "Ilmoitus sähköpostivirheestä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma – virhe POP-todennuksessa"
@@ -3001,6 +3049,14 @@ fi:
     spam_post_blocked:
       title: "Roskapostiviesti estettiin"
       subject_template: "Uuden käyttäjän %{username} viestit estettiin toistuvien linkkien vuoksi"
+      text_body_template: |
+        Tämä on automaattinen viesti.
+
+        Uusi käyttäjä [%{username}](%{user_url}) yritti lähettää useita viestejä, joissa oli linkkejä kohteisiin %{domains}, mutta viestit torjuttiin roskapostin ehkäisemiseksi. Käyttäjä voi silti kirjoittaa viestejä, joissa ei ole linkkejä kohteisiin %{domains}.
+
+        [Arvioi käyttäjä](%{user_url}).
+
+        Tätä voi muuttaa sivustoasetuksilla "newuser_spam_host_threshold" ja "allowed_spam_host_domains". Harkitse kohteiden %{domains} lisäämistä sallittujen luetteloon, jos niiden ei pidä aiheuttaa toimenpiteitä.
     unsilenced:
       title: "Hiljennys kumottu"
       subject_template: "Käyttäjätili ei ole enää pidossa"
@@ -3076,6 +3132,7 @@ fi:
     only_reply_by_email_pm: "Vastaa käyttäjille %{participants} vastaamalla tähän sähköpostiin."
     visit_link_to_respond: "[Vieraile ketjussa](%{base_url}%{url}) vastataksesi."
     visit_link_to_respond_pm: "Vastaa käyttäjille %{participants} [vierailemalla viestissä](%{base_url}%{url})."
+    reply_above_line: "## Kirjoita vastauksesi tämän viivan yläpuolelle. ##"
     posted_by: "Käyttäjältä %{username} %{post_date}"
     pm_participants: "Osanottajat: %{participants}"
     invited_group_to_private_message_body: |
@@ -3275,9 +3332,17 @@ fi:
     account_suspended:
       title: "Tili hyllytetty"
       subject_template: "[%{email_prefix}] Tilisi on hyllytetty"
+      text_body_template: |
+        Sinut hyllytettiin foorumilta %{suspended_till} asti.
+
+        Syy – %{reason}
     account_silenced:
       title: "Tili hiljennetty"
       subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
+      text_body_template: |
+        Sinut hiljennettiin foorumilta %{silenced_till} asti.
+
+        Syy – %{reason}
     account_exists:
       title: "Tili on jo olemassa"
       subject_template: "[%{email_prefix}] TIli on jo olemassa"
@@ -3289,11 +3354,21 @@ fi:
         Jos et yrittänyt luoda tunnusta sähköpostiosoitteella %{email} tai vaihtaa sähköpostiosoitettasi, älä huoli – voit huoletta jättää tämän viestin huomiotta.
 
         Jos sinulla on kysyttävää, [ota yhteyttä avuliaaseen henkilökuntaamme](%{base_url}/about).
+    account_second_factor_disabled:
+      title: "Kaksivaiheinen tunnistus poistettu käytöstä"
+      subject_template: "[%{email_prefix}] Kaksivaiheinen tunnistus poistettu käytöstä"
+      text_body_template: |
+        Kaksivaiheinen tunnistus poistettiin käytöstä tililtäsi sivustolla %{site_name}. Voit nyt kirjautua pelkällä salasanallasi; erillistä todennuskoodia ei enää vaadita lisäksi.
+
+        Jos et poistanut kaksivaiheista tunnistusta käytöstä, joku on saattanut murtautua tilillesi.
+
+        Jos sinulla on kysyttävää, [ota yhteyttä avuliaaseen henkilökuntaamme](%{base_url}/about).
     digest:
       why: "Lyhyt kooste siitä mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
       since_last_visit: "Viime vierailusi jälkeen"
       new_topics: "Uutta ketjua"
       unread_notifications: "Lukematonta ilmoitusta"
+      unread_high_priority: "Lukemattomia korkean prioriteetin ilmoituksia"
       liked_received: "Saatua tykkäystä"
       new_users: "Uutta käyttäjää"
       popular_topics: "Suosittuja ketjuja"
@@ -3340,6 +3415,13 @@ fi:
     admin_login:
       title: "Ylläpitäjäkirjautuminen"
       subject_template: "[%{email_prefix}] Kirjautuminen"
+      text_body_template: |
+        Joku haluaa kirjautua tilillesi sivustolla [%{site_name}](%{base_url}).
+
+        Jos se et ole sinä, voit huoletta jättää tämän viestin huomiotta.
+
+        Kirjaudu sisään klikkaamalla linkkiä:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Tili luotu"
       subject_template: "[%{email_prefix}] Uusi tilisi"
@@ -3351,9 +3433,21 @@ fi:
     confirm_new_email:
       title: "Vahvista uusi sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista uusi sähköpostiosoite"
+      text_body_template: |
+        Vahvista uusi sähköpostiosoitteesi sivustolla %{site_name} napsauttamalla seuraavaa linkkiä:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Jos et pyytänyt tätä muutosta, ota yhteyttä [sivuston ylläpitäjään](%{base_url}/about).
     confirm_new_email_via_admin:
       title: "Vahvista uusi sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista uusi sähköpostiosoite"
+      text_body_template: |
+        Vahvista uusi sähköpostiosoitteesi sivustolla %{site_name} napsauttamalla seuraavaa linkkiä:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Sivuston ylläpitäjä pyysi tätä muutosta. Jos et pyytänyt tätä muutosta, ota yhteyttä [sivuston ylläpitäjään](%{base_url}/about).
     confirm_old_email:
       title: "Vahvista vanha sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
@@ -3364,7 +3458,14 @@ fi:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
+      title: "Vahvista vanha sähköpostiosoite (Lisää)"
       subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
+      text_body_template: |
+        Ennen kuin voimme lisätä uuden sähköpostiosoitteen, meidän tulee varmistua siitä että hallitset nykyistä sähköpostitiliäsi. Kun ensin suoriudut tästä vaiheesta, pyydämme sinua sitten vahvistamaan uuden sähköpostiosoitteesi.
+
+        Vahvista nykyinen sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Ilmoita vanhaan sähköpostiosoitteeseen"
       subject_template: "[%{email_prefix}] Sähköpostiosoitteesi on vaihdettu"
@@ -3372,6 +3473,15 @@ fi:
         Tämä on automaattinen vahvistus siitä, että sähköpostiosoitteesi sivustolle %{site_name} on vaihdettu. Jos on tapahtunut virhe, ota yhteyttä sivuston ylläpitäjään.
 
         Sähköpostiosoitteeksesi on vaihdettu:
+
+        %{new_email}
+    notify_old_email_add:
+      title: "Ilmoitus vanhaan sähköpostiosoitteeseen (Lisää)"
+      subject_template: "[%{email_prefix}] Uusi sähköpostiosoite on lisätty"
+      text_body_template: |
+        Tämä on automaattinen vahvistus siitä, että sähköpostiosoite sivustolle %{site_name} on lisätty. Jos on tapahtunut virhe, ota yhteyttä sivuston ylläpitäjään.
+
+        Lisätty sähköpostiosoitteesi on:
 
         %{new_email}
     signup_after_approval:
@@ -3438,6 +3548,11 @@ fi:
         Jollet se ollut sinä, [tarkastele käynnissä olevia istuntojasi](%{base_url}/my/preferences/account) ja harkitse salasanasi vaihtamista.
     post_approved:
       title: "Viestisi hyväksyttiin"
+      subject_template: "[%{site_name}] Viestisi hyväksyttiin"
+      text_body_template: |
+        Hei,
+
+        Tämä on automaattinen viesti sivustolta %{site_name}, joka ilmoittaa sinulle, että [viestisi](%{base_url}%{post_url}) on hyväksytty.
   page_forbidden:
     title: "Hups! Tämä sivu on yksityinen."
   site_setting_missing: "Asetus \"%{name}\" on pakollinen."
@@ -3506,6 +3621,9 @@ fi:
     sender_post_deleted: "viesti on poistettu"
     sender_message_to_invalid: "vastaanottajan sähköpostiosoite ei kelpaa"
     sender_topic_deleted: "ketju poistettiin"
+    group_smtp_post_deleted: "viesti on poistettu"
+    group_smtp_topic_deleted: "ketju poistettiin"
+    group_smtp_disabled_for_group: "smtp on poistettu käytöstä ryhmässä"
   color_schemes:
     base_theme_name: "Perus"
     light: "Vaalea"
@@ -3516,6 +3634,8 @@ fi:
     latte: "Latte"
     summer: "Kesäinen"
     dark_rose: "Tumma ruusu"
+    wcag: "WCAG-vaalea"
+    wcag_theme_name: "WCAG-vaalea"
     wcag_dark: "WCAG Tumma"
     wcag_dark_theme_name: "WCAG Tumma"
     default_theme_name: "Oletus"
@@ -3626,6 +3746,7 @@ fi:
     mass_award:
       errors:
         invalid_csv: Rivillä %{line_number} havaittiin virhe. Varmista, että CSV:ssä on yksi sähköpostiosoite riviä kohden.
+        badge_disabled: Ota kunniamerkki %{badge_name} käyttöön ensin.
     editor:
       name: Muokkaaja
       description: Ensimmäinen viestin muokkaus
@@ -3808,6 +3929,7 @@ fi:
         Tämä kunniamerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi viitenä päivänä. Kiitos kun vaivaudut aktiivisesti kannustamaan muita hyviin keskusteluihin joka päivä!
     crazy_in_love:
       name: Korviaan myöten rakastunut
+      description: Käytti %{max_likes_per_day} tykkäystä päivässä 20 kertaa
       long_description: |
         Tämä kunniamerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi 20 päivänä. Vau! Esimerkillistä muiden palstan käyttäjien kannustamista!
     thank_you:
@@ -3878,6 +4000,8 @@ fi:
     initial_topic_title: Sivuston suorituskykyraportit
   tags:
     title: "Tunnisteet"
+    restricted_tag_disallowed: 'Et voi käyttää tunnistetta "%{tag}".'
+    restricted_tag_remove_disallowed: 'Et voi poistaa tunnistetta "%{tag}".'
     minimum_required_tags:
       one: "Sinun täytyy valita ainakin %{count} tunniste."
       other: "Sinun täytyy valita ainakin %{count} tunnistetta."
@@ -3892,6 +4016,9 @@ fi:
         other: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan seuraavilla alueilla: %{category_names}'
       synonym: 'Synonyymit kielletty. Käytä sen sijaan tunnistetta "%{tag_name}".'
       has_synonyms: 'Tunnistetta "%{tag_name}" ei voi käyttää, koska sillä on synonyymejä.'
+    required_tags_from_group:
+      one: "Sinun täytyy lisätä vähintään %{count} ryhmän %{tag_group_name} tunniste. Tämän ryhmän tunnisteet ovat: %{tags}."
+      other: "Sinun täytyy lisätä vähintään %{count} ryhmän %{tag_group_name} tunnistetta. Tämän ryhmän tunnisteet ovat: %{tags}."
     invalid_target_tag: "ei voi olla synonyymin synonyymi"
     synonyms_exist: "ei ole sallittua, kun synonyymejä on olemassa"
   rss_by_tag: "Ketjut tunnisteella %{tag}"
@@ -4074,6 +4201,7 @@ fi:
     unknown: "tuntematon"
     user_merged: "%{username} yhdistettiin tähän käyttäjätiliin"
     user_delete_self: "Poisti itsensä asetuksistaan %{url}"
+    webhook_deactivation_reason: "Webhookisi on poistettu käytöstä automaattisesti. Saimme useita \"%{status}\"-HTTP-tilavirhevastauksia."
     api_key:
       automatic_revoked:
         one: "Peruutettiin automaattisesti, toimintaa viimeksi yli %{count} päivä sitten"
@@ -4199,6 +4327,20 @@ fi:
     not_in_allowed_guild: "Todennus epäonnistui. Et ole sallitun Discord-killan jäsen."
   old_keys_reminder:
     title: "Muistutus vanhoista tunnistetiedoista"
+    body: |
+      Hei! Tämä on vuosittainen tietoturvamuistutus Discourse-instanssistasi.
+
+      Seuraavia Discourse-instanssissasi käytettyjä tunnistetietoja ei ole päivitetty yli kahden vuoden aikana:
+
+      %{keys}
+
+      Toimenpiteitä ei tällä hetkellä tarvita, mutta on kuitenkin hyvä turvallisuuskäytäntö vaihtaa kaikki tärkeät tunnistetiedot muutaman vuoden välein.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (osa %{count})"
+      other: "%{topic_title} (osa %{count})"
+    post_raw: "Jatkaa keskustelua ketjusta %{parent_url}.\n\nAikaisemmat keskustelut:\n\n%{previous_topics}"
+    small_action_post_raw: "Jatka keskustelua ketjussa %{new_title}."
   activemodel:
     errors:
       <<: *errors
