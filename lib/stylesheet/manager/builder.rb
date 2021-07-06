@@ -117,7 +117,7 @@ class Stylesheet::Manager::Builder
     if is_theme?
       "#{@target}_#{theme&.id}"
     elsif @color_scheme
-      "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}"
+      "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}_#{@theme&.id}"
     else
       scheme_string = theme&.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"
@@ -137,6 +137,10 @@ class Stylesheet::Manager::Builder
     !!(@target.to_s =~ Stylesheet::Manager::THEME_REGEX)
   end
 
+  def is_color_scheme?
+    !!(@target.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET)
+  end
+
   def scheme_slug
     Slug.for(ActiveSupport::Inflector.transliterate(@color_scheme.name), 'scheme')
   end
@@ -146,8 +150,10 @@ class Stylesheet::Manager::Builder
     @digest ||= begin
       if is_theme?
         theme_digest
-      else
+      elsif is_color_scheme?
         color_scheme_digest
+      else
+        default_digest
       end
     end
   end
@@ -171,7 +177,7 @@ class Stylesheet::Manager::Builder
   end
 
   def theme_digest
-    Digest::SHA1.hexdigest(scss_digest.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest + uploads_digest)
+    Digest::SHA1.hexdigest(scss_digest.to_s + color_scheme_digest.to_s + settings_digest + uploads_digest)
   end
 
   # this protects us from situations where new versions of a plugin removed a file
@@ -216,6 +222,10 @@ class Stylesheet::Manager::Builder
     end
 
     Digest::SHA1.hexdigest(sha1s.sort!.join("\n"))
+  end
+
+  def default_digest
+    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.last_file_updated}-#{plugins_digest}"
   end
 
   def color_scheme_digest

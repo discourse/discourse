@@ -39,7 +39,7 @@ describe Stylesheet::Manager do
     }}
 
     it "generates the right links for non-theme targets" do
-      manager = manager(theme.id)
+      manager = manager(nil)
 
       hrefs = manager.stylesheet_details(:desktop, 'all')
 
@@ -188,22 +188,12 @@ describe Stylesheet::Manager do
       DiscoursePluginRegistry.reset!
     end
 
-    it 'can correctly account for plugins in digest' do
-      theme = Fabricate(:theme)
-      manager = manager(theme.id)
-
-      builder = Stylesheet::Manager::Builder.new(
-        target: :desktop_theme, theme: theme, manager: manager
-      )
-
+    it 'can correctly account for plugins in default digest' do
+      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
       digest1 = builder.digest
 
       DiscoursePluginRegistry.stylesheets["fake"] = Set.new(["fake_file"])
-
-      builder = Stylesheet::Manager::Builder.new(
-        target: :desktop_theme, theme: theme, manager: manager
-      )
-
+      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
       digest2 = builder.digest
 
       expect(digest1).not_to eq(digest2)
@@ -281,6 +271,21 @@ describe Stylesheet::Manager do
       digest2 = builder.digest
 
       expect(digest1).not_to eq(digest2)
+    end
+
+    it 'returns different digest based on target' do
+      theme = Fabricate(:theme)
+      builder = Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+      expect(builder.digest).to eq(builder.theme_digest)
+
+      builder = Stylesheet::Manager::Builder.new(target: :color_definitions, manager: manager)
+      expect(builder.digest).to eq(builder.color_scheme_digest)
+
+      builder = Stylesheet::Manager::Builder.new(target: :admin, manager: manager)
+      expect(builder.digest).to eq(builder.default_digest)
+
+      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
+      expect(builder.digest).to eq(builder.default_digest)
     end
   end
 
@@ -497,6 +502,15 @@ describe Stylesheet::Manager do
       expect(stylesheet2).to include("--primary: #c00;")
     end
 
+    it "includes updated font definitions" do
+      details1 = manager.color_scheme_stylesheet_details(nil, "all")
+
+      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+
+      details2 = manager.color_scheme_stylesheet_details(nil, "all")
+      expect(details1[:new_href]).not_to eq(details2[:new_href])
+    end
+
     context "theme colors" do
       let(:theme) { Fabricate(:theme).tap { |t|
         t.set_field(target: :common, name: "color_definitions", value: ':root {--special: rebeccapurple;}')
@@ -602,8 +616,7 @@ describe Stylesheet::Manager do
     end
   end
 
-  # this test takes too long, we don't run it by default
-  describe ".precompile_css", if: ENV["RUN_LONG_TESTS"] == "1" do
+  describe ".precompile css" do
     before do
       class << STDERR
         alias_method :orig_write, :write
@@ -626,7 +639,6 @@ describe Stylesheet::Manager do
       scheme2 = ColorScheme.create!(name: "scheme2")
       core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin, :wizard]
       theme_targets = [:desktop_theme, :mobile_theme]
-      color_scheme_targets = ["color_definitions_scheme1_#{scheme1.id}", "color_definitions_scheme2_#{scheme2.id}"]
 
       Theme.update_all(user_selectable: false)
       user_theme = Fabricate(:theme, user_selectable: true, color_scheme: scheme1)
@@ -657,19 +669,30 @@ describe Stylesheet::Manager do
 
       StylesheetCache.destroy_all
 
+      # only core
       output = capture_output(:stderr) do
         Stylesheet::Manager.precompile_css
+      end
+
+      results = StylesheetCache.pluck(:target)
+      expect(results.size).to eq(core_targets.size)
+
+      StylesheetCache.destroy_all
+
+      # only themes
+      output = capture_output(:stderr) do
+        Stylesheet::Manager.precompile_theme_css
       end
 
       # Ensure we force compile each theme only once
       expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2)
       results = StylesheetCache.pluck(:target)
+      expect(results.size).to eq(16) # (3 themes * 2 targets) + 10 color schemes (2 themes * 5 color schemes (4 defaults + 1 theme scheme))
 
-      expect(results.size).to eq(24) # (2 themes x 8 targets) + (1 child Theme x 2 targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
-
-      core_targets.each do |tar|
-        expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
-      end
+      # themes + core
+      Stylesheet::Manager.precompile_css
+      results = StylesheetCache.pluck(:target)
+      expect(results.size).to eq(22) # 6 core targets + 6 theme + 10 color schemes
 
       theme_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
@@ -678,21 +701,14 @@ describe Stylesheet::Manager do
       Theme.clear_default!
       StylesheetCache.destroy_all
 
+      # themes + core with no theme set as default
       Stylesheet::Manager.precompile_css
+      Stylesheet::Manager.precompile_theme_css
       results = StylesheetCache.pluck(:target)
+      expect(results.size).to eq(22) # 6 core targets + 6 theme + 10 color schemes
 
-      expect(results.size).to eq(30) # (2 themes x 8 targets) + (1 child Theme x 2 targets) + (1 no/default/core theme x 6 core targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
-
-      core_targets.each do |tar|
-        expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)
-      end
-
-      theme_targets.each do |tar|
-        expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
-      end
-
-      expect(results).to include(color_scheme_targets[0])
-      expect(results).to include(color_scheme_targets[1])
+      expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
+      expect(results).to include("color_definitions_#{scheme2.name}_#{scheme2.id}_#{default_theme.id}")
     end
   end
 end

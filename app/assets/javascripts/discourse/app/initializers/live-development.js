@@ -1,7 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 import Handlebars from "handlebars";
 import { isDevelopment } from "discourse-common/config/environment";
-import { refreshCSS } from "discourse/lib/theme-selector";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -51,7 +50,7 @@ export default {
     // Observe file changes
     messageBus.subscribe(
       "/file-change",
-      function (data) {
+      (data) => {
         if (Handlebars.compile && !Ember.TEMPLATES.empty) {
           // hbs notifications only happen in dev
           Ember.TEMPLATES.empty = Handlebars.compile("<div></div>");
@@ -60,25 +59,36 @@ export default {
           if (me === "refresh") {
             // Refresh if necessary
             document.location.reload(true);
-          } else {
-            $("link").each(function () {
-              if (me.hasOwnProperty("theme_id") && me.new_href) {
-                const target = $(this).data("target");
-                const themeId = $(this).data("theme-id");
-                if (
-                  target === me.target &&
-                  (!themeId || themeId === me.theme_id)
-                ) {
-                  refreshCSS(this, null, me.new_href);
-                }
-              } else if (this.href.match(me.name) && (me.hash || me.new_href)) {
-                refreshCSS(this, me.hash, me.new_href);
-              }
+          } else if (me.new_href && me.target) {
+            const link_target = me.theme_id
+              ? `[data-target="${me.target}"][data-theme-id="${me.theme_id}"]`
+              : `[data-target="${me.target}"]`;
+            document.querySelectorAll(`link${link_target}`).forEach((link) => {
+              this.refreshCSS(link, me.new_href);
             });
           }
         });
       },
       session.mbLastFileChangeId
     );
+  },
+
+  refreshCSS(node, newHref) {
+    if (node.dataset.reloading) {
+      clearTimeout(node.dataset.timeout);
+    }
+
+    node.dataset.reloading = true;
+
+    let reloaded = node.cloneNode(true);
+    reloaded.href = newHref;
+    node.insertAdjacentElement("afterend", reloaded);
+
+    let timeout = setTimeout(() => {
+      node.parentNode.removeChild(node);
+      reloaded.dataset.reloading = false;
+    }, 2000);
+
+    node.dataset.timeout = timeout;
   },
 };
