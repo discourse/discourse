@@ -51,7 +51,7 @@ it:
         label: "Mostra la suddivisione"
       export-results:
         title: "Esporta i risultati del sondaggio"
-        label: "Esportare"
+        label: "Esporta"
       open:
         title: "Apri il sondaggio"
         label: "Apri"

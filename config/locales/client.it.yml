@@ -131,7 +131,7 @@ it:
       invited_group: "ha invitato %{who} %{when}"
       user_left: "%{who} ha rimosso se stesso da questo messaggio %{when}"
       removed_user: "ha rimosso %{who} %{when}"
-      removed_group: "rimosso %{who} %{when}"
+      removed_group: "ha rimosso %{who} %{when}"
       autobumped: "riproposto automaticamente %{when}"
       autoclosed:
         enabled: "chiuso %{when}"
@@ -141,7 +141,7 @@ it:
         disabled: "aperto %{when}"
       archived:
         enabled: "archiviato %{when}"
-        disabled: "dearchiviato %{when}"
+        disabled: "archiviazione annullata %{when}"
       pinned:
         enabled: "appuntato %{when}"
         disabled: "spuntato %{when}"
@@ -152,8 +152,8 @@ it:
         enabled: "visibile in elenco %{when}"
         disabled: "invisibile in elenco %{when}"
       banner:
-        enabled: "lo ha reso un annuncio il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente. "
-        disabled: "ha rimosso questo annuncio il %{when}. Non apparirà più in cima ad ogni pagina."
+        enabled: "lo ha reso un banner il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente."
+        disabled: "ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
       forwarded: "ha inoltrato l'email sopra"
     topic_admin_menu: "azioni argomento"
     wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
@@ -162,8 +162,8 @@ it:
       message: "Abbiamo aggiornato il sito, <span>si prega di aggiornare</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
     bootstrap_mode_enabled:
-      one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di esperienza 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
-      other: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di esperienza 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utenti si saranno uniti."
+      one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
+      other: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utenti si saranno uniti."
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
     themes:
       default_description: "Predefinito"
@@ -171,7 +171,7 @@ it:
     s3:
       regions:
         ap_northeast_1: "Asia Pacifico (Tokyo)"
-        ap_northeast_2: "Asia Pacifico (Seoul)"
+        ap_northeast_2: "Asia Pacifico (Seul)"
         ap_east_1: "Asia Pacifico (Hong Kong)"
         ap_south_1: "Asia Pacifico (Mumbai)"
         ap_southeast_1: "Asia Pacifico (Singapore)"

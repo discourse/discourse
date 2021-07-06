@@ -9,7 +9,7 @@ fr:
     number:
       format:
         separator: ","
-        delimiter: ","
+        delimiter: " "
       human:
         storage_units:
           format: "%n %u"
@@ -187,8 +187,8 @@ fr:
         sa_east_1: "Amérique du Sud (São Paulo)"
         us_east_1: "États-Unis - Est (Virginie)"
         us_east_2: "États-Unis - Est (Ohio)"
-        us_gov_east_1: "AWS GovCloud (É.-U.-Est)"
-        us_gov_west_1: "AWS GovCloud (É.-U.-Ouest)"
+        us_gov_east_1: "AWS GovCloud (É.-U. - Est)"
+        us_gov_west_1: "AWS GovCloud (É.-U. - Ouest)"
         us_west_1: "États-Unis - Ouest (Californie)"
         us_west_2: "États-Unis - Ouest (Oregon)"
     clear_input: "Effacer la saisie"
@@ -263,7 +263,7 @@ fr:
       user_count: "Utilisateurs"
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
-      contact_info: "En cas de problèmes critiques ou sujets urgents concernant ce site, veuillez nous contacter à : %{contact_info}"
+      contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
     bookmarked:
       title: "Mettre un signet"
       clear_bookmarks: "Retirer les signets"
@@ -310,7 +310,7 @@ fr:
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
     topic_count_latest:
-      one: "Voir %{count} sujet récent ou mis à jour."
+      one: "Voir %{count} sujet récent ou mis à jour"
       other: "Voir %{count} sujets récents ou mis à jour"
     topic_count_unread:
       one: "Voir %{count} sujet non lu"
@@ -668,7 +668,7 @@ fr:
           title: Catégories
           long_title: "Notifications par défaut de la catégorie"
           description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification de catégorie seront définis à ces valeurs par défaut. Ils pourront les modifier par la suite."
-          watched_categories_instructions: "Surveiller automatiquement tous les sujets de ces catégories. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
+          watched_categories_instructions: "Surveiller automatiquement tous les sujets de ces catégories. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à côté de leur sujet."
           tracked_categories_instructions: "Suivre automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
           watching_first_post_categories_instructions: "Les utilisateurs seront notifiés du premier message de chaque sujet dans ces catégories."
           regular_categories_instructions: "Si ces catégories sont désactivées, elles ne le seront pas pour les membres du groupe. Les utilisateurs seront avertis s'ils sont mentionnés ou si quelqu'un leur répond."
@@ -677,7 +677,7 @@ fr:
           title: Étiquettes
           long_title: "Notifications par défaut des étiquettes"
           description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification d'étiquettes seront définis à ces valeurs par défaut. Ils pourront les modifier par la suite."
-          watched_tags_instructions: "Surveiller automatiquement tous les sujets avec ces étiquettes. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
+          watched_tags_instructions: "Surveiller automatiquement tous les sujets avec ces étiquettes. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à côté de leur sujet."
           tracked_tags_instructions: "Suivre automatiquement tous les sujets avec ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
           watching_first_post_tags_instructions: "Les utilisateurs seront notifiés du premier message de chaque sujet avec ces étiquettes."
           regular_tags_instructions: "Si ces étiquettes sont désactivées, elles ne le seront pas pour les membres du groupe. Les utilisateurs seront avertis s'ils sont mentionnés ou si quelqu'un leur répond."
@@ -701,7 +701,7 @@ fr:
       empty:
         posts: "Aucun message n'a été envoyé par les membres de ce groupe."
         members: "Il n' y a aucun membre dans ce groupe."
-        requests: "Il n'y a aucune demande pour rejoindre ce groupe"
+        requests: "Il n'y a aucune demande pour rejoindre ce groupe."
         mentions: "Il n'y a aucune mention de ce groupe."
         messages: "Il n'y a aucun message pour ce groupe."
         topics: "Aucun sujet n'a été créé par les membres de ce groupe."
@@ -803,7 +803,7 @@ fr:
           title: "Normal"
           description: "Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra."
         muted:
-          title: "Désactivée"
+          title: "En sourdine"
           description: "Vous ne recevrez aucune notification concernant les messages de ce groupe."
       flair_url: "Image de la vignette d'avatar"
       flair_upload_description: "Utilisez des images carrées d'une taille minimale de 20px par 20px."
@@ -817,7 +817,7 @@ fr:
         icon: "Sélectionner une icône"
         image: "Insérer une image"
     user_action_groups:
-      "1": "« J'aime » donnés"
+      "1": "« J'aime » attribués"
       "2": "« J'aime » reçus"
       "3": "Signets"
       "4": "Sujets"
@@ -890,7 +890,7 @@ fr:
     user:
       said: "%{username} :"
       profile: "Profil"
-      mute: "Désactiver"
+      mute: "Mettre en sourdine"
       edit: "Modifier les préférences"
       download_archive:
         button_text: "Tout télécharger"
@@ -982,7 +982,7 @@ fr:
       first_notification: "Votre première notification ! Sélectionnez-la pour commencer."
       dynamic_favicon: "Afficher un compteur de notifications sur l'icône du navigateur"
       skip_new_user_tips:
-        description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs."
+        description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs"
         not_first_time: "Vous connaissez déjà ?"
         skip_link: "Ignorer ces conseils"
         read_later: "J'y jetterai un œil plus tard."
@@ -1029,13 +1029,13 @@ fr:
         warning: "Mode liste de diffusion activé. Les paramètres de notification par courriel sont remplacés."
       tag_settings: "Étiquettes"
       watched_tags: "Surveillées"
-      watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets marqués par ces étiquettes. Vous recevrez des notifications pour tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
+      watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets marqués par ces étiquettes. Vous recevrez des notifications pour tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à côté du sujet."
       tracked_tags: "Suivies"
       tracked_tags_instructions: "Vous suivrez automatiquement tous les sujets marqués par ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       muted_tags: "En sourdine"
       muted_tags_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets marqués par ces étiquettes et ces sujets n'apparaîtront pas sur la page des sujets récents."
       watched_categories: "Surveillées"
-      watched_categories_instructions: "Vous surveillerez automatiquement tous les sujets de ces catégories. Vous recevrez des notifications pour tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
+      watched_categories_instructions: "Vous surveillerez automatiquement tous les sujets de ces catégories. Vous recevrez des notifications pour tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à côté du sujet."
       tracked_categories: "Suivies"
       tracked_categories_instructions: "Vous suivrez automatiquement tous les sujets repris dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       watched_first_post_categories: "Surveiller les nouveaux sujets"
@@ -1341,7 +1341,7 @@ fr:
         always: "toujours"
         only_when_away: "seulement en cas d'absence"
         never: "jamais"
-      email_messages_level: "M'envoyer un courriel quand quelqu'un m'envoie un message direct."
+      email_messages_level: "M'envoyer un courriel quand quelqu'un m'envoie un message direct"
       include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par courriel"
       email_in_reply_to: "En plus du message notifié par courriel, inclure un extrait du message auquel il répond"
       other_settings: "Autre"
@@ -1572,7 +1572,7 @@ fr:
     learn_more: "en savoir plus…"
     first_post: Premier message
     mute: Désactiver
-    unmute: Activer
+    unmute: Rétablir
     last_post: Dernier message
     local_time: "Heure locale"
     time_read: Temps de lecture
@@ -1842,7 +1842,7 @@ fr:
       duplicate_link: "Il semblerait que votre lien vers <b>%{domain}</b> a déjà été publié dans le sujet par <b>@%{username}</b> dans <a href='%{post_url}'>une réponse de %{ago}</a>. Voulez-vous vraiment le publier à nouveau ?"
       reference_topic_title: "RE : %{title}"
       error:
-        title_missing: "Le titre est obligatoire."
+        title_missing: "Le titre est requis"
         title_too_short:
           one: "Le titre doit avoir au moins %{count} caractère"
           other: "Le titre doit faire au moins %{count} caractères"
@@ -1876,7 +1876,7 @@ fr:
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
       topic_featured_link_placeholder: "Saisissez le lien à afficher avec le titre."
-      remove_featured_link: "Retirer le lien du sujet"
+      remove_featured_link: "Retirer le lien du sujet."
       reply_placeholder: "Saisissez votre message ici. Pour le mettre en forme, utilisez du Markdown, du BBCode ou du HTML. Glissez-déposez ou collez des images."
       reply_placeholder_no_images: "Saisissez votre message ici. Pour le mettre en forme, utilisez du Markdown, du BBCode ou du HTML."
       reply_placeholder_choose_category: "Sélectionnez une catégorie avant de rédigez ici."
@@ -2019,7 +2019,7 @@ fr:
         posted: '%{username} a publié un message dans « %{topic} » - %{site_title}'
         private_message: '%{username} vous a envoyé un message direct dans « %{topic} » - %{site_title}'
         linked: '%{username} a inséré un lien vers votre message dans le sujet « %{topic} » - %{site_title}'
-        watching_first_post: '%{username} a crée un nouveau sujet « %{topic} » - %{site_title}'
+        watching_first_post: '%{username} a créé un nouveau sujet « %{topic} » - %{site_title}'
         confirm_title: "Notifications activées - %{site_title}"
         confirm_body: "Les notifications ont été activées."
         custom: "Notification de %{username} sur %{site_title}"
@@ -2159,7 +2159,7 @@ fr:
         dismiss_tooltip: "Marquer les nouveaux messages comme vus, ou arrêter de suivre des sujets"
         also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
         dismiss_new: "Marquer comme vu(s)"
-        toggle: "activer/déactiver la sélection multiple de sujets"
+        toggle: "activer/désactiver la sélection multiple de sujets"
         actions: "Actions sur la sélection"
         change_category: "Définir la catégorie"
         close_topics: "Fermer les sujets"
@@ -2250,7 +2250,7 @@ fr:
         description: "Nous sommes désolés, nous n'avons pas pu charger ce sujet, probablement à cause d'un problème de connexion. Veuillez réessayer. Si le problème persiste, merci de nous le faire savoir."
       not_found:
         title: "Sujet non trouvé"
-        description: "Nous sommes désolés, nous n'avons pas trouvé ce sujet. Peut-être a t-il été retiré par un modérateur ?"
+        description: "Nous sommes désolés, nous n'avons pas trouvé ce sujet. Peut-être a-t-il été retiré par un modérateur ?"
       likes:
         one: "%{count} personne a aimé ce sujet"
         other: "%{count} personnes ont aimé ce sujet"
@@ -2865,7 +2865,7 @@ fr:
       tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
       tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
-      tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés au dessus ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
+      tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés au-dessus ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
       tag_groups_placeholder: "(Facultatif) liste des groupes d'étiquettes autorisées"
       manage_tag_groups_link: "Gérer les groupes d'étiquettes"
       allow_global_tags_label: "Permettre aussi d'autres étiquettes"
@@ -2920,7 +2920,7 @@ fr:
       email_in_disabled: "La création de nouveaux sujets par courriel est désactivée dans les paramètres. Pour activer la création de nouveaux sujets par courriel, "
       email_in_disabled_click: 'activez le paramètre « e-mail entrant ».'
       mailinglist_mirror: "La catégorie reflète une liste de diffusion"
-      show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
+      show_subcategory_list: "Afficher la liste des sous-catégories au-dessus des sujets dans cette catégorie."
       read_only_banner: "Texte du bandeau à afficher lorsqu'un utilisateur ne peut pas créer un sujet dans cette catégorie :"
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
       subcategory_num_featured_topics: "Nombre de sujets à la une sur la page de la catégorie parente :"
@@ -3192,7 +3192,7 @@ fr:
       previous: "Précédent (touche flèche gauche)"
       next: "Suivant (touche flèche droite)"
       counter: "%curr% sur %total%"
-      close: "Fermer (Echap)"
+      close: "Fermer (Échap)"
       content_load_error: '<a href="%url%">Ce contenu</a> n''a pas pu être chargé.'
       image_load_error: '<a href="%url%">Cette image</a> n''a pas pu être chargée.'
     cannot_render_video: Cette vidéo ne peut pas être lue car votre navigateur ne prend pas en charge le codec requis.
@@ -3779,7 +3779,7 @@ fr:
           request: "Requête"
           response: "Réponse"
           redeliver_confirm: "Voulez-vous vraiment redélivrer les mêmes données ?"
-          headers: "Entêtes"
+          headers: "En-têtes"
           payload: "Données"
           body: "Corps"
           go_list: "Accéder à la liste"
@@ -4035,8 +4035,8 @@ fr:
             text: "CSS"
             title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
           header:
-            text: "Entête"
-            title: "Saisissez du code HTML à afficher au dessus de l'en-tête du site"
+            text: "En-tête"
+            title: "Saisissez du code HTML à afficher au-dessus de l'en-tête du site"
           after_header:
             text: "Après l'en-tête"
             title: "Saisissez du code HTML à afficher sur toutes les pages après l'en-tête"
@@ -4189,7 +4189,7 @@ fr:
           modal:
             title: "Détails du courriel entrant"
             error: "Erreur"
-            headers: "Entêtes"
+            headers: "En-têtes"
             subject: "Objet"
             body: "Corps"
             rejection_message: "Courriel de refus"
@@ -4370,7 +4370,7 @@ fr:
             filter: "Rechercher"
           roll_up:
             text: "Consolider"
-            title: "Créer de nouvelles plages de sous réseaux à bannir s'il y a au moins 'min_ban_entries_for_roll_up' entrées."
+            title: "Créer de nouvelles plages de sous réseaux à bannir s'il y a au moins « min_ban_entries_for_roll_up » entrées."
         search_logs:
           title: "Journaux de recherche"
           term: "Terme"
@@ -4378,7 +4378,7 @@ fr:
           click_through_rate: "CTR"
           types:
             all_search_types: "Tous les types de recherche"
-            header: "Entête"
+            header: "En-tête"
             full_page: "Page complète"
             click_through_only: "Tous (clics uniquement)"
           header_search_results: "Résultats de recherche d'en-tête"

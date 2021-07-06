@@ -4365,7 +4365,7 @@ zh_CN:
         like_count: 点赞/获赞
         last_100_days: "在最近 100 天"
         private_topics_count: 不公开话题
-        posts_read_count: 已阅帖子
+        posts_read_count: 已读帖子
         post_count: 创建的帖子
         second_factor_enabled: 双重身份验证已启用
         topics_entered: 浏览的话题
@@ -4455,78 +4455,78 @@ zh_CN:
         confirm_cancel_penalty: "确定要放弃惩罚吗？"
         trust_level_2_users: "信任级别 2 用户"
         trust_level_3_requirements: "信任级别 3 要求"
-        trust_level_locked_tip: "信任等级已经被锁定，系统将不会升降用户的信任等级"
-        trust_level_unlocked_tip: "信任等级已经解锁，系统将自动升降用户的信任等级"
-        lock_trust_level: "锁定信任等级"
-        unlock_trust_level: "解锁信任等级"
+        trust_level_locked_tip: "信任级别已被锁定，系统将不会升降用户的信任级别"
+        trust_level_unlocked_tip: "信任级别已被解锁，系统可能会升降用户的信任级别"
+        lock_trust_level: "锁定信任级别"
+        unlock_trust_level: "解锁信任级别"
         tl3_requirements:
-          title: "信任等级3的要求"
+          title: "信任级别 3 的要求"
           table_title:
-            other: "这最近 %{count} 天："
-          value_heading: "当前"
+            other: "在过去 %{count} 天内："
+          value_heading: "值"
           requirement_heading: "要求"
-          visits: "访问"
+          visits: "访问次数"
           days: "天数"
           topics_replied_to: "回复的话题"
-          topics_viewed: "已读话题"
-          topics_viewed_all_time: "已阅的话题（全部）"
+          topics_viewed: "浏览的话题"
+          topics_viewed_all_time: "浏览的话题（所有时间）"
           posts_read: "已读帖子"
-          posts_read_all_time: "已读的帖子（全部）"
-          flagged_posts: "被标记的帖子"
-          flagged_by_users: "标记其的用户"
+          posts_read_all_time: "已读帖子（所有时间）"
+          flagged_posts: "被举报的帖子"
+          flagged_by_users: "发起举报的用户"
           likes_given: "点赞"
           likes_received: "获赞"
-          likes_received_days: "获赞：独立天数"
-          likes_received_users: "获赞：每用户"
-          suspended: "已封禁（最近6个月）"
-          silenced: "禁言（最近6个月）"
-          qualifies: "符合信任等级3要求"
-          does_not_qualify: "不符合信任等级3要求"
-          will_be_promoted: "将在近期被提升。"
-          will_be_demoted: "将在近期被降级。"
+          likes_received_days: "获赞：单日最高数量"
+          likes_received_users: "获赞：点赞用户数量"
+          suspended: "被封禁（过去 6 个月）"
+          silenced: "被禁言（过去 6 个月）"
+          qualifies: "符合信任级别 3 要求。"
+          does_not_qualify: "不符合信任级别 3 要求。"
+          will_be_promoted: "很快会被提升。"
+          will_be_demoted: "很快会被降级。"
           on_grace_period: "目前在升级宽限期，不会被降级。"
-          locked_will_not_be_promoted: "信任等级被锁定。将不再被提升。"
+          locked_will_not_be_promoted: "信任级别被锁定。将不再被提升。"
           locked_will_not_be_demoted: "信任等级被锁定。将不再被降级。"
         discourse_connect:
           title: "DiscourseConnect 单点登录"
           external_id: "外部 ID"
           external_username: "用户名"
-          external_name: "昵称"
-          external_email: "邮箱"
-          external_avatar_url: "头像 URL"
-          last_payload: "上次 Payload"
+          external_name: "名称"
+          external_email: "电子邮件"
+          external_avatar_url: "个人资料照片 URL"
+          last_payload: "最后有效负载"
           delete_sso_record: "删除 SSO 记录"
-          confirm_delete: "你确定要删除 DiscourseConnect 记录吗？"
+          confirm_delete: "确定要删除此 DiscourseConnect 记录吗？"
       user_fields:
-        title: "用户属性"
-        help: "增加用户能填写的字段。"
-        create: "创建用户属性 "
+        title: "用户字段"
+        help: "添加您的用户可以填写的字段。"
+        create: "创建用户字段"
         untitled: "无标题"
         name: "字段名称"
         type: "字段类型"
-        description: "字段描述信息"
+        description: "字段描述"
         save: "保存"
         edit: "编辑"
         delete: "删除"
         cancel: "取消"
-        delete_confirm: "你确定要删除这个用户字段么？"
+        delete_confirm: "确定要删除该用户字段吗？"
         options: "选项"
         required:
-          title: "在注册时需要填写？"
-          enabled: "必填"
-          disabled: "可选"
+          title: "注册时需要？"
+          enabled: "必选"
+          disabled: "非必选"
         editable:
-          title: "在注册后可以修改？"
-          enabled: "可修改"
-          disabled: "不可修改"
+          title: "注册后可以编辑？"
+          enabled: "可编辑"
+          disabled: "不可编辑"
         show_on_profile:
-          title: "在个人信息页显示？"
-          enabled: "在个人信息页显示"
-          disabled: "未在个人信息页显示"
+          title: "在公开个人资料中显示？"
+          enabled: "在个人资料中显示"
+          disabled: "不在个人资料中显示"
         show_on_user_card:
           title: "在用户卡片上显示？"
           enabled: "在用户卡片上显示"
-          disabled: "在用户卡片上隐藏"
+          disabled: "不在用户卡片上显示"
         searchable:
           title: "可搜索？"
           enabled: "可搜索"
@@ -4536,33 +4536,33 @@ zh_CN:
           confirm: "确认"
           dropdown: "下拉菜单"
       site_text:
-        description: "你可以自定义论坛的任意文本。请按以下搜索："
-        search: "搜索你想要编辑的文本"
-        title: "文字"
+        description: "您可以自定义论坛上的任何文本。请从在下面搜索开始："
+        search: "搜索您要编辑的文本"
+        title: "文本"
         edit: "编辑"
-        revert: "撤销更变"
-        revert_confirm: "你确定要撤销你的更变吗？"
+        revert: "还原变更"
+        revert_confirm: "确定要还原您的变更吗？"
         go_back: "返回搜索"
-        recommended: "我们建议自定义以下文本以符合你的需求："
-        show_overriden: "只显示修改过的"
+        recommended: "我们建议自定义以下文本以符合您的需求："
+        show_overriden: "只显示被覆盖"
         locale: "语言："
         fallback_locale_warning: "您正在基于 %{fallback}编辑语言。选择 %{fallback} 作为界面语言的用户将看不到你的更改。"
-        more_than_50_results: "有超过50个结果。请优化您的搜索。"
+        more_than_50_results: "结果超过 50 个。请优化您的搜索。"
       settings:
         show_overriden: "只显示被覆盖"
-        history: "查看变更历史"
+        history: "查看变更历史记录"
         reset: "重置"
         none: "无"
       site_settings:
         emoji_list:
-          invalid_input: "Emoji 列表只能包含有效的 Emoji 名，例如 hugs"
+          invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"
           add_emoji_button:
-            label: "添加 Emoji"
+            label: "添加表情符号"
         title: "设置"
         no_results: "找不到结果。"
-        more_than_30_results: "超过30个结果。请优化你的搜索或选择一个分类。"
+        more_than_30_results: "结果超过 30 个。请优化您的搜索或选择一个类别。"
         clear_filter: "清除"
-        add_url: "增加链接"
+        add_url: "添加 URL"
         add_host: "添加主机"
         add_group: "添加群组"
         uploaded_image_list:
@@ -4572,17 +4572,17 @@ zh_CN:
             label: "上传"
             title: "上传图片"
         selectable_avatars:
-          title: "用户可选择的头像列表"
+          title: "用户可以选择的头像列表"
         categories:
-          all_results: "全部"
-          required: "必填"
-          branding: "站点图标"
+          all_results: "所有"
+          required: "必选"
+          branding: "品牌化"
           basic: "基本设置"
           users: "用户"
           posting: "发帖"
           email: "电子邮件"
           files: "文件"
-          trust: "信任等级"
+          trust: "信任级别"
           security: "安全性"
           onebox: "Onebox"
           seo: "搜索引擎优化"
@@ -4593,93 +4593,93 @@ zh_CN:
           legal: "法律信息"
           api: "API"
           user_api: "用户 API"
-          uncategorized: "未分类"
+          uncategorized: "其他"
           backups: "备份"
           login: "登录"
           plugins: "插件"
-          user_preferences: "用户设置"
+          user_preferences: "用户偏好设置"
           tags: "标签"
           search: "搜索"
           groups: "群组"
-          dashboard: "仪表盘"
+          dashboard: "信息中心"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:
-          modal_description: "你想在已存在的设置上应用此更改吗？这将更改%{count}位现有用户的自定义设置。"
+          modal_description: "要回溯应用此变更吗？这将更改 %{count} 个现有用户的偏好设置。"
           modal_yes: "是"
-          modal_no: "不，仅应用以后的更改"
+          modal_no: "不，仅对以后应用变更"
         simple_list:
-          add_item: "添加项..."
+          add_item: "添加条目…"
         json_schema:
-          edit: 打开编辑器
+          edit: 启动编辑器
           modal_title: "编辑 %{name}"
       badges:
         title: 徽章
         new_badge: 新徽章
-        new: 新建
+        new: 新
         name: 名称
         badge: 徽章
         display_name: 显示名称
         description: 描述
-        long_description: 详情
-        badge_type: 徽章分类
-        badge_grouping: 群组
+        long_description: 长描述
+        badge_type: 徽章类型
+        badge_grouping: 组
         badge_groupings:
           modal_title: 徽章组
-        granted_by: 授予由
-        granted_at: 授予于
-        reason_help: '（一个至话题或帖子的链接）'
+        granted_by: 授予者
+        granted_at: 授予时间
+        reason_help: '（帖子或话题的链接）'
         save: 保存
         delete: 删除
-        delete_confirm: 你确定要删除此徽章吗？
-        revoke: 撤销
-        reason: 理由
-        expand: 展开 &hellip;
-        revoke_confirm: 你确定要撤销此徽章吗？
+        delete_confirm: 确定要删除此徽章吗？
+        revoke: 撤消
+        reason: 原因
+        expand: 展开…
+        revoke_confirm: 确定要撤消此徽章吗？
         edit_badges: 编辑徽章
         grant_badge: 授予徽章
-        granted_badges: 已授予的徽章
+        granted_badges: 授予的徽章
         grant: 授予
         no_user_badges: "%{name} 尚未被授予任何徽章。"
         no_badges: 没有可供授予的徽章。
-        none_selected: "选择一个徽章开始"
+        none_selected: "选择一个徽章以开始"
         allow_title: 允许将徽章用作头衔
-        multiple_grant: 能被授予多次
-        listable: 在公共徽章页面显示徽章
-        enabled: 启用徽章系统
+        multiple_grant: 可以多次授予
+        listable: 在公共徽章页面上显示徽章
+        enabled: 启用徽章
         icon: 图标
         image: 图片
         graphic: 图形
-        icon_help: "输入一个 Font Awsome 图标的名称（使用前缀“far-”表示常规图标，“fab-”表示品牌图标）"
-        image_help: "如果两者都已设置，正在上传的图像将覆盖图标字段。"
+        icon_help: "输入一个 Font Awsome 图标名称（使用前缀“far-”表示常规图标，使用前缀“fab-”表示品牌图标）"
+        image_help: "如果两者都设置，则上传图像会覆盖图标字段。"
         select_an_icon: "选择一个图标"
         upload_an_image: "上传图片"
         read_only_setting_help: "自定义文本"
-        query: 徽章查询（SQL）
-        target_posts: 查询到的帖子
-        auto_revoke: 每天运行撤销查询
-        show_posts: 在徽章页面显示被授予帖子的徽章
+        query: 徽章查询 (SQL)
+        target_posts: 查询目标帖子
+        auto_revoke: 每天运行撤消查询
+        show_posts: 在徽章页面上显示授予徽章的帖子
         trigger: 触发条件
         trigger_type:
           none: "每日更新"
-          post_action: "当用户操作一个帖子时"
+          post_action: "当用户对帖子进行操作时"
           post_revision: "当用户编辑或者创建帖子时"
-          trust_level_change: "当用户信任等级改变时"
+          trust_level_change: "当用户信任级别改变时"
           user_change: "当用户被编辑或创建时"
-          post_processed: "在帖子被处理之后"
+          post_processed: "在帖子被处理后"
         preview:
-          link_text: "预览将授予的徽章"
-          plan_text: "预览查询计划"
+          link_text: "预览授予的徽章"
+          plan_text: "使用查询计划进行预览"
           modal_title: "徽章查询预览"
           sql_error_header: "查询时出错。"
-          error_help: "查看下列关于徽章查询的帮助链接。"
+          error_help: "有关徽章查询的帮助，请参阅以下链接。"
           bad_count_warning:
             header: "警告！"
-            text: "缺少授予徽章的样本。这在徽章查询返回用户 ID 或者帖子 ID 不存在的时候发生。这可能导致未预期的结果发生——请再次检查你的查询。"
-          no_grant_count: "没有徽章可以被授予。"
+            text: "缺少授予示例。当徽章查询返回用户 ID 或者帖子 ID 不存在时，就会发生这种情况。这可能导致以后出现意外结果，请再次检查您的查询。"
+          no_grant_count: "没有要授予的徽章。"
           grant_count:
-            other: "已授予 <b>%{count}</b> 个徽章。"
-          sample: "样本："
+            other: "待授予 <b>%{count}</b> 个徽章。"
+          sample: "示例："
           grant:
             with: <span class="username">%{username}</span>
             with_post: <span class="username">%{username}</span>因 %{link} 帖子
@@ -4700,7 +4700,7 @@ zh_CN:
           success: 你的CSV已收到，用户很快就会收到他们的徽章。
           replace_owners: 从所有者中删除这个徽章
       emoji:
-        title: "Emoji"
+        title: "表情符号"
         help: "增加所有人可用的 emoji。（提示：一次性拖进多个文件）"
         add: "增加新的 Emoji"
         uploading: "上传中…"
