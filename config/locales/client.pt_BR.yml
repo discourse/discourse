@@ -231,64 +231,64 @@ pt_BR:
     never: "nunca"
     every_30_minutes: "a cada 30 minutos"
     every_hour: "a cada hora"
-    daily: "diário"
+    daily: "a cada dia"
     weekly: "semanal"
     every_month: "a cada mês"
     every_six_months: "a cada seis meses"
     max_of_count: "máx de %{count}"
     character_count:
-      one: "%{count} caracter"
+      one: "%{count} carácter"
       other: "%{count} caracteres"
     related_messages:
-      title: "Mensagens Relacionadas"
+      title: "Mensagens relacionadas"
       see_all: 'Ver <a href="%{path}">todas as mensagens</a> de @ %{username} ...'
     suggested_topics:
-      title: "Tópicos Sugeridos"
-      pm_title: "Mensagens Sugeridas"
+      title: "Tópicos sugeridos"
+      pm_title: "Mensagens sugeridas"
     about:
       simple_title: "Sobre"
       title: "Sobre %{title}"
-      stats: "Estatísticas do Site"
-      our_admins: "Nossos Administradores"
-      our_moderators: "Nossos Moderadores"
+      stats: "Estatísticas do site"
+      our_admins: "Nossos administradores"
+      our_moderators: "Nossos moderadores"
       moderators: "Moderadores"
       stat:
-        all_time: "Desde o Começo"
+        all_time: "Desde o início"
         last_day: "Últimas 24 horas"
-        last_7_days: "Últimos 7 dias"
+        last_7_days: "Últimos sete dias"
         last_30_days: "Últimos 30 dias"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
       user_count: "Usuários"
-      active_user_count: "Usuários Ativos"
-      contact: "Contate-nos"
-      contact_info: "Em caso de um evento crítico ou de urgência afetando este site, por favor nos contate em %{contact_info}."
+      active_user_count: "Usuários ativos"
+      contact: "Fale conosco"
+      contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
     bookmarked:
       title: "Favorito"
-      clear_bookmarks: "Limpar Favoritos"
+      clear_bookmarks: "Limpar favoritos"
       help:
-        bookmark: "Clique para adicionar o primeiro post deste tópico aos favoritos"
+        bookmark: "Clique para adicionar a primeira postagem deste tópico aos favoritos"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
     bookmarks:
-      created: "Você marcou esta mensagem como favorita. %{name}"
+      created: "Você marcou esta postagem como favorita. %{name}"
       not_bookmarked: "marcar postagem como favorita"
-      created_with_reminder: "Você marcou esta publicação com um lembrete %{date}. %{name}"
-      remove: "Remover Favorito"
-      delete: "Excluir Favorito"
+      created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
+      remove: "Remover favorito"
+      delete: "Excluir favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
       confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
       save: "Salvar"
-      no_timezone: 'Você ainda não definiu um fuso horário. VOcê não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
-      invalid_custom_datetime: "A data e a hora que você forneceu são inválidas, por favor tente novamente."
-      list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário."
-      no_user_bookmarks: "Você não possui mensagens marcadas como favoritas; os favoritos permitem que você acesse, rapidamente, mensagens específicas."
+      no_timezone: 'Você ainda não definiu um fuso horário. Você não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
+      invalid_custom_datetime: "A data e a hora que você informou são inválidas, tente novamente."
+      list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário(a)."
+      no_user_bookmarks: "Você não tem mensagens marcadas como favoritas. Os favoritos permitem que você acesse rapidamente mensagens específicas."
       auto_delete_preference:
         label: "Excluir automaticamente"
         never: "Nunca"
         when_reminder_sent: "Assim que o lembrete for enviado"
-        on_owner_reply: "Após eu responder a este tópico"
-      search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da mensagem"
+        on_owner_reply: "Após responder a este tópico"
+      search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da postagem"
       search: "Pesquisar"
       reminders:
         today_with_time: "hoje à(s) %{time}"
@@ -366,10 +366,10 @@ pt_BR:
         score_to_hide: "Pontuação para ocultar postagem"
         take_action_bonus:
           name: "tomou medidas"
-          title: "Quando um membro da equipe decide agir, a bandeira recebe um bônus."
+          title: "Quando qualquer membro da equipe decide agir, o sinalizador recebe um bônus."
         user_accuracy_bonus:
-          name: "precisão do usuário"
-          title: "Os usuários cujas bandeiras foram historicamente acordadas recebem um bônus."
+          name: "precisão do(a) usuário(a)"
+          title: "Os(as) usuários(as) com sinalizadores historicamente acordados recebem um bônus."
         trust_level_bonus:
           name: "nível de confiança"
           title: "Itens revisáveis criados por usuários com nível de confiança mais alto têm uma pontuação mais alta."
@@ -420,8 +420,8 @@ pt_BR:
         reject_reason: "Motivo"
       user_percentage:
         summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (da última flag)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (das últimas %{count} flags)"
+          one: "%{agreed}, %{disagreed}, %{ignored} (do último sinalizador)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (dos últimos %{count} sinalizadores)"
         agreed:
           one: "%{count}% concorda"
           other: "%{count}% concordam"
@@ -2247,7 +2247,7 @@ pt_BR:
       flag_topic:
         title: "Sinalizar"
         help: "sinaliza privativamente este tópico para chamar atenção ou notificar privativamente sobre isto"
-        success_message: "Você sinalizou com sucesso este tópico."
+        success_message: "Você sinalizou com êxito este tópico."
       make_public:
         title: "Converter para o tópico público"
         choose_category: "Por favor, escolha uma categoria para o tópico público:"
@@ -2498,7 +2498,7 @@ pt_BR:
         lock_post_description: "impedir que o autor edite esta postagem"
         unlock_post: "Desbloquear postagem"
         unlock_post_description: "permitir que o autor edite esta postagem"
-        delete_topic_disallowed_modal: "Você não tem permissão para apagar este tópico. Se você realmente quiser que ele seja excluído, envie um sinalizador para a atenção do moderador juntamente com o raciocínio."
+        delete_topic_disallowed_modal: "Você não tem permissão para apagar este tópico. Se realmente quiser que seja excluído, envie um sinalizador para alertar a moderação, além dos argumentos."
         delete_topic_disallowed: "você não tem permissão para apagar este tópico"
         delete_topic: "apagar tópico"
         add_post_notice: "Adicionar Aviso da Staff"
@@ -2518,7 +2518,7 @@ pt_BR:
             one: "e %{count} outra leu isto"
             other: "e %{count} outras leram isto"
         by_you:
-          off_topic: "Você sinalizou isto como off-topic"
+          off_topic: "Você sinalizou isto como desvio de tópico"
           spam: "Você sinalizou isto como spam"
           inappropriate: "Você sinalizou isto como inapropriado"
           notify_moderators: "Você sinalizou isto para a moderação"
@@ -2717,35 +2717,35 @@ pt_BR:
         appearance: "Aparência"
         email: "E-mail"
     flagging:
-      title: "Obrigado por ajudar a manter a civilidade da nossa comunidade!"
+      title: "Obrigado por ajudar a tornar a nossa comunidade um ambiente seguro!"
       action: "Sinalizar resposta"
       take_action_options:
         default:
-          title: "Tome uma ação"
+          title: "Tomar medida"
           details: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
         suspend:
-          title: "Suspender usuário"
+          title: "Suspender usuário(a)"
         silence:
-          title: "Silenciar Usuário"
+          title: "Silenciar usuário(a)"
       notify_action: "Mensagem"
-      official_warning: "Aviso Oficial"
-      delete_spammer: "Apagar Spammer"
-      yes_delete_spammer: "Sim, Apagar Spammer"
+      official_warning: "Aviso oficial"
+      delete_spammer: "Excluir remetente de spam"
+      yes_delete_spammer: "Sim, excluir remetente de spam"
       ip_address_missing: "(N/D)"
-      hidden_email_address: "(escondido)"
+      hidden_email_address: "(oculto)"
       submit_tooltip: "Enviar uma sinalização privada"
       take_action_tooltip: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
       cant: "Desculpe, não é possível colocar uma sinalização neste momento."
-      notify_staff: "Avisar a equipe privadamente"
+      notify_staff: "Avisar a equipe de forma privada"
       formatted_name:
-        off_topic: "É Off-Tópico"
-        inappropriate: "É inapropriado"
+        off_topic: "É um desvio de tópico"
+        inappropriate: "Isto não é apropriado"
         spam: "É spam"
-      custom_placeholder_notify_user: "Seja específico, construtivo e sempre seja gentil."
-      custom_placeholder_notify_moderators: "Deixe-nos saber especificamente com o que você está preocupado, e nos forneça links relevantes e exemplos quando possível."
+      custom_placeholder_notify_user: "Seja objetivo(a), positivo(a) e sempre gentil."
+      custom_placeholder_notify_moderators: "Diga-nos o motivo da sua preocupação e envie links e eventos relevantes sempre que for possível."
       custom_message:
         at_least:
-          one: "insira pelo menos %{count} caractere"
+          one: "insira pelo menos %{count} carácter"
           other: "insira pelo menos %{count} caracteres"
         more:
           one: "Falta apenas %{count}..."
@@ -2967,7 +2967,7 @@ pt_BR:
         reply_post: "%{shortcut} Responder a mensagem"
         quote_post: "%{shortcut} Citar resposta"
         like: "%{shortcut} Curtir a postagem"
-        flag: "%{shortcut} Sinalizar mensagem"
+        flag: "%{shortcut} Sinalizar postagem"
         bookmark: "%{shortcut} Favoritar mensagem"
         edit: "%{shortcut} Editar mensagem"
         delete: "%{shortcut} Excluir mensagem"
@@ -3984,7 +3984,7 @@ pt_BR:
           block: "Bloqueado"
           censor: "Censor"
           require_approval: "Requerer aprovação"
-          flag: "Bandeira,Sinalização"
+          flag: "Sinalizar"
           replace: "Substituir"
           silence: "Silenciar"
           link: "Link"
@@ -3992,7 +3992,7 @@ pt_BR:
           block: "Impedir que postagens contendo estas palavras sejam postadas. O usuário verá uma mensagem de erro quando tentar enviar a postagem."
           censor: "Permitir postagens contendo estas palavras, mas substituí-las por caracteres que ocultem as palavras censuradas."
           require_approval: "As postagens contendo estas palavras exigirão aprovação da equipe antes que elas possam ser vistas."
-          flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que os moderadores possam analisá-las."
+          flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que a moderação possa analisá-las."
         form:
           placeholder_regexp: "expressão regular"
           link_label: "Link"
@@ -4106,7 +4106,7 @@ pt_BR:
         suspend: "Suspender"
         show_flags_received: "Mostrar sinalizações recebidas"
         flags_received_by: "sinalizações recebidas por %{username}"
-        flags_received_none: "Este usuário não recebeu nenhum sinalizador."
+        flags_received_none: "Este(a) usuário(a) não recebeu nenhum sinalizador."
         reputation: Reputação
         permissions: Permissões
         activity: Atividade
@@ -4119,7 +4119,7 @@ pt_BR:
         flags_given_count: Sinalizações dadas
         flags_received_count: Sinalizações recebidas
         warnings_received_count: Avisos Recebidos
-        flags_given_received_count: "Sinalizações dados / recebidos"
+        flags_given_received_count: "Sinalizações dadas/recebidas"
         approve: "Aprovar"
         approved_by: "aprovado por"
         approve_success: "Usuário aprovado e e-mail enviado com instruções de ativação."
@@ -4221,8 +4221,8 @@ pt_BR:
           topics_viewed_all_time: "Tópicos vistos (todos os tempos)"
           posts_read: "Posts Lidos"
           posts_read_all_time: "Posts Lidos (todo o período)"
-          flagged_posts: "Mensagens Sinalizadas"
-          flagged_by_users: "Usuários que foram denunciados"
+          flagged_posts: "Mensagens sinalizadas"
+          flagged_by_users: "Usuários(as) que foram sinalizados(as)"
           likes_given: "Curtidas dadas"
           likes_received: "Curtidas recebidas"
           likes_received_days: "Curtidas recebidas: dias únicos"

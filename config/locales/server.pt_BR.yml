@@ -525,21 +525,21 @@ pt_BR:
 
       Parabéns! :confetti_ball:
 
-      Se você puder ver este tópico, você foi promovido recentemente para **regular** (nível de confiança 3).
+      Se puder ver este tópico, você acabou de ser promovido(a) para **regular** (nível de confiança 3).
 
       Agora você pode &hellip;
 
       * Editar o título de qualquer tópico
       * Alterar a categoria de qualquer tópico
-      * Ter todos os seus links seguidos ([nofollow automático](https://en.wikipedia.org/wiki/Nofollow) é removido)
-      * Acessar uma categoria privada visível apenas para os usuários com nível de confiança 3 e superior
-      * Ocultar spam com uma única sinalização
+      * Ter todos os seus links seguidos ([nofollow automático](https://en.wikipedia.org/wiki/Nofollow) foi removido(a))
+      * Acessar uma categoria privada visível apenas para os(as) usuários(as) com nível de confiança 3 e maior
+      * Ocultar spam com apenas um sinalizador
 
-      Aqui está a [lista atual de companheiros regulares](%{base_path}/badges/3/regular). Não deixe de dizer oi.
+      Aqui está a [lista atual de amigos(as) regulares](%{base_path}/badges/3/regular). Não deixe de dizer "olá".
 
       Obrigado por ser uma parte importante desta comunidade!
 
-      (Para mais informações sobre níveis de confiança, [veja este tópico][trust]. Observe que somente os membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
+      (Para obter mais informações sobre níveis de confiança, [veja este tópico][trust]. Observe que somente membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEIA-ME PRIMEIRO: Guia de Início Rápido do Administrador"
@@ -915,7 +915,7 @@ pt_BR:
         post_count: Publicações criadas
         pm_count: MPs criadas
         revision_count: Revisões
-      description: Lista de atividades moderadoras, incluindo sinalizações revisadas, tempo de leitura, tópicos criados, postagens criadas, mensagens pessoais criadas e revisões.
+      description: Lista de atividades de moderadores, inclusive sinalizadores revisados, tempo de leitura, tópicos criados, postagens criadas, mensagens pessoais criadas e revisões.
     flags_status:
       title: "Status da Sinalização"
       values:
@@ -1057,12 +1057,12 @@ pt_BR:
       title: "Notificação aos Moderadores"
       xaxis: "Dia"
       yaxis: "Número de mensagens particulares"
-      description: "Número de vezes que os moderadores foram notificados em particular por uma sinalização."
+      description: "Quantidade de vezes que os moderadores foram notificados em particular por um sinalizador."
     notify_user_private_messages:
       title: "Notificar Usuário"
       xaxis: "Dia"
       yaxis: "Número de mensagens particulares"
-      description: "Número de vezes que os usuários foram notificados em particular por uma sinalização."
+      description: "Quantidade de vezes que os(as) usuários(as) foram notificados(as) em particular por um sinalizador."
     top_referrers:
       title: "Top Referrers"
       xaxis: "Usuário"
@@ -1300,25 +1300,25 @@ pt_BR:
     polling_interval: "Com que frequencia os clientes podem solicitar o servidor em milisegundos"
     anon_polling_interval: "Com que frequencia os clientes não registrados podem solicitar o servidor em milisegundos"
     background_polling_interval: "Com que frequência os clientes podem solicitar o servidor em milisegundos ( em segundo plano )"
-    hide_post_sensitivity: "A probabilidade de uma postagem sinalizada ficar oculta"
-    silence_new_user_sensitivity: "A probabilidade de um novo usuário ser silenciado com base em sinalizadores de spam"
+    hide_post_sensitivity: "A probabilidade de uma postagem sinalizada ser oculta"
+    silence_new_user_sensitivity: "A probabilidade de um(a) novo(a) usuário(a) ser silenciado(a) com base em sinalizadores de spam"
     auto_close_topic_sensitivity: "A probabilidade de um tópico sinalizado ser automaticamente fechado"
-    cooldown_minutes_after_hiding_posts: "Número de minutos que um usuário deve esperar antes de poder editar uma publicação que foi ocultada devido a sinalização da comunidade."
+    cooldown_minutes_after_hiding_posts: "Quantidade de minutos que um(a) usuário(a) deve esperar antes de poder editar uma postagem oculta devido a sinalizadores da comunidade."
     max_topics_in_first_day: "Número máximo de tópicos que um usuário pode criar num período de 24 horas após a criação de sua primeira publicação"
     max_replies_in_first_day: "O número máximo de respostas que um usuário está habilitado para criar é de 24 horas após a criação de sua primeira postagem. "
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl2 (membros) multiplicando por esse número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de curtidas por dia para tl3 (regular) multiplicando por esse número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de curtidas por dia para tl4 (líderes) multiplicando por esse número"
-    num_users_to_silence_new_user: "Se as postagens de um novo usuário receberem um sinal num_spam_flags_to_silence_new_user spam de vários usuários diferentes, oculte todas as postagens e evite postagens futuras. 0 para desabilitar."
+    num_users_to_silence_new_user: "Se as postagens de um(a) novo(a) usuário(a) receberem num_spam_flags_to_silence_new_user spam sinalizador(es) de usuários(as) diferentes, oculte todas as suas postagens e evite postagens futuras. 0 para desativar."
     num_tl3_flags_to_silence_new_user: "Se as postagens de um novo usuário obtiverem muitos sinalizadores de num_tl3_users_to_silence_new_user diferentes usuários do nível de confiança 3, oculte todos os posts e evite postagens futuras. 0 para desabilitar."
-    num_tl3_users_to_silence_new_user: "Se as postagens de um novo usuário obtiverem sinalizadores num_tl3_flags_to_silence_new_user a partir dos vários usuários diferentes do nível de confiança 3, oculte todas as postagens e evite postagens futuras. 0 para desativar."
+    num_tl3_users_to_silence_new_user: "Se as postagens de um(a) novo(a) usuário(a) receberem num_tl3_flags_to_silence_new_user sinalizador(es) de usuários(as) de nível de confiança 3, oculte todas as suas postagens e evite postagens futuras. 0 para desativar."
     notify_mods_when_user_silenced: "Se um usuário for silenciado automaticamente, envie uma mensagem para todos os moderadores."
     flag_sockpuppets: "Se um novo usuário responder a um tópico a partir do mesmo endereço IP do usuário que iniciou o tópico, marque ambas as suas postagens como possível spam."
     traditional_markdown_linebreaks: "Use quebras de linhas tradicionais em Markdown, as quais requerem dois espaços à direita para uma quebra de linha."
     enable_markdown_typographer: "Use as regras de tipografia para melhorar a legibilidade do texto: substitua as aspas normais por \"aspas curvas\", (c) (tm) pelos símbolos, - pelo emdash -, etc."
     enable_markdown_linkify: "Automaticamente tratar como link textos que se parecem com links: www.example.com e https://example.com serão linkados automaticamente"
     markdown_linkify_tlds: "Lista de domínios de nível superior que são tratados automaticamente como links"
-    post_undo_action_window_mins: "Número de minutos permitidos aos usuários para desfazerem uma ação recente em uma publicação (curtir, sinalizar, etc)"
+    post_undo_action_window_mins: "Quantidade de minutos permitidos para que os(as) usuários(as desfaçam ações recentes em uma postagem (curtir, sinalizar, etc.)."
     must_approve_users: "Gerenciadores deverão aprovar novas contas de usuários antes das mesmas serem permitidas o acesso ao site."
     maximum_session_age: "Usuário continuará logado por n horas desde a última visita"
     enable_escaped_fragments: "Voltar para a API do Google Ajax-Crawling se não for encontrado um webcrawler. Consulte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
@@ -1335,7 +1335,7 @@ pt_BR:
     content_security_policy_collect_reports: "Habilitar a coleta de relatórios de violação de CSP em /csp_reports"
     invalidate_inactive_admin_email_after_days: "As contas de administrador que não visitaram o site neste número de dias precisarão validar novamente seu endereço de e-mail antes de efetuar login. Defina como 0 para desabilitar."
     top_menu: "Determina quais items aparecem na navegação da homepage, e em qual ordem. Exemplo latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Determine quais itens aparecem no menu de postagem e em qual ordem. Exemplo: like|edit|flag|delete|share|bookmark|reply"
+    post_menu: "Determine os itens e a ordem em que aparecem no menu de postagens. Por exemplo: curtir|editar|sinalizar|excluir|compartilhar|favorito|responder"
     post_menu_hidden_items: "Os items de menu a ser escondidos por padrão no menu de postagem, a menos que uma elipse de expansão seja clicada."
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
     site_contact_username: "Um nome de usuário válido de membro da equipe para enviar todas mensagens automáticas por ele. Se deixado em branco a conta padrão System será utilizada."
@@ -1652,7 +1652,7 @@ pt_BR:
     native_app_install_banner_ios: "Exibir o banner do aplicativo DiscourseHub em dispositivos iOS para usuários regulares (nível de confiança 1 e superior)."
     native_app_install_banner_android: "Exibir o banner do aplicativo DiscourseHub em dispositivos Android para usuários regulares (nível de confiança 1 e superior)."
     share_anonymized_statistics: "Compartilhar estatísticas de uso anônimas."
-    auto_handle_queued_age: "Lidar automaticamente com os registros que estão aguardando revisão após vários dias. Sinalizadores serão ignorados. Postagens enfileiradas e usuários serão rejeitados. Defina como 0 para desabilitar esse recurso."
+    auto_handle_queued_age: "Trate automaticamente os registros que estão aguardando revisão há vários dias. Sinalizadores serão ignorados. Postagens na fila e usuários serão rejeitados. Defina como 0 para desativar esse recurso."
     svg_icon_subset: "Adicionar mais ícones FontAwesome 5 que você gostaria de incluir em seus ativos. Use o prefixo 'fa-' para ícones sólidos, 'far-' para ícones regulares e 'fab-' para ícones de marca."
     max_prints_per_hour_per_user: "Número máximo de impressões de páginas / impressão (definido como 0 para desativar)"
     full_name_required: "Nome completo é um campo obrigatório do perfil do usuário."
@@ -2104,37 +2104,37 @@ pt_BR:
     contents_hidden: "Por favor, visite o post para ver o seu conteúdo."
     post_hidden:
       title: "Post oculto"
-      subject_template: "Post oculto pelas sinalizações da comunidade"
+      subject_template: "Post oculto pelos sinalizadores da comunidade"
       text_body_template: |
-        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi ocultada.
+        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi oculta.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        Esta postagem foi ocultada devido a sinalizações da comunidade; portanto, considere como você pode revisar sua postagem para refletir os comentários deles. **Você pode editar sua postagem após %{edit_delay} minutos e ela será automaticamente mostrada novamente.**
+        Esta postagem foi oculta devido às sinalizações da comunidade. Portanto, considere como você pode alterar sua postagem para atender aos seus comentários. **Você pode editar sua postagem após %{edit_delay} minutos e ela será automaticamente exibida.**
 
-        No entanto, se a postagem for ocultada pela comunidade uma segunda vez, ela permanecerá oculta até ser tratada pela staff.
+        No entanto, se a postagem for oculta pela comunidade outra vez, permanecerá assim até ser tratada pela equipe.
 
-        Para obter orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
+        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     post_hidden_again:
       title: "Posto oculto novamente"
-      subject_template: "Post escondido por sinalizações da comunidade, equipe notificada"
+      subject_template: "Postagem oculta por sinalizadores da comunidade, a equipe foi notificada"
       text_body_template: |
-        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi ocultada novamente.
+        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi oculta outra vez.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        A comunidade sinalizou esta postagem e agora está oculta. **Como esta postagem foi ocultada mais de uma vez, sua postagem permanecerá oculta até ser tratada por um membro da staff.**
+        A comunidade sinalizou esta postagem e agora está oculta. **Como a postagem foi oculta mais de uma vez, ela permanecerá assim até ser tratada por um membro da equipe.**
 
-        Para obter orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
+        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     queued_by_staff:
       title: "Postagem Precisa de Aprovação"
     flags_disagreed:
-      title: "Postagem sinalizada restaurada pela staff"
-      subject_template: "Postagem sinalizada restaurada pela staff"
+      title: "Postagem sinalizada restaurada pela equipe"
+      subject_template: "Postagem sinalizada restaurada pela equipe"
       text_body_template: |
         Olá,
 
@@ -2476,27 +2476,27 @@ pt_BR:
 
         Para obter orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     too_many_spam_flags:
-      title: "Muitas Sinalizações de Spam"
+      title: "Muitas sinalizadores de spam"
       subject_template: "Nova conta suspensa"
       text_body_template: |
         Olá,
 
-        Esta é uma mensagem automática de %{site_name} para informá-lo de que suas postagens estão temporariamente ocultas porque foram sinalizadas pela comunidade.
+        Esta é uma mensagem automática de %{site_name} para informar que suas postagens estão temporariamente ocultas porque foram sinalizadas pela comunidade.
 
-        Como medida de precaução, sua nova conta foi silenciada e não será possível criar respostas ou tópicos até que um membro da staff possa revisar sua conta. Pedimos desculpas pela inconveniência.
+        Como medida de precaução, sua nova conta foi silenciada e não será possível criar respostas ou tópicos até que um membro da equipe possa revisá-la. Pedimos desculpas pelo inconveniente.
 
-        Para orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
+        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     too_many_tl3_flags:
-      title: "Muitas Sinalizações TL3"
+      title: "Muitos sinalizadores TL3"
       subject_template: "Nova conta suspensa"
       text_body_template: |
         Olá,
 
-        Essa é uma mensagem automatizada de %{site_name} para informá-lo de que sua conta foi colocada em espera devido a um grande número de sinalizações da comunidade.
+        Esta é uma mensagem automática de %{site_name} para informar que sua conta foi colocada em espera devido a uma grande quantidade de sinalizadores da comunidade.
 
-        Como medida de precaução, sua nova conta foi silenciada para criar novas respostas ou tópicos até que um membro da equipe possa revisar sua conta. Pedimos desculpas pela inconveniência.
+        Como medida de precaução, sua nova conta foi silenciada para impedir a criação de novas respostas ou tópicos até que um membro da equipe possa revisá-la. Pedimos desculpas pelo inconveniente.
 
-        Para orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
+        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
     silenced_by_staff:
       title: "Silenciado pelo Staff"
       subject_template: "Conta temporariamente em espera"
@@ -2510,15 +2510,15 @@ pt_BR:
         Para orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
     user_automatically_silenced:
       title: "Usuário Silenciado Automaticamente"
-      subject_template: "Novo usuário %{username} silenciado por sinalizações da comunidade"
+      subject_template: "O(a) novo(a) usuário(a) %{username} silenciado(a) devido aos sinalizadores da comunidade"
       text_body_template: |
-        Está é uma mensagem automática.
+        Esta é uma mensagem automática.
 
-        O novo usuário [%{username}](%{user_url}) foi automaticamente silenciado porque vários usuários sinalizaram suas postagens.
+        O(a) novo(a) usuário(a) [%{username}](%{user_url}) foi silenciado(a) automaticamente porque usuários(as) sinalizaram suas postagens de %{username}.
 
-        Por favor [revise as sinalizações](%{base_url}/admin/flags). Se o usuário %{username} tiver sido incorretamente silenciado de postar, clique no botão de remover silenciamento na [página de administração desse usuário](%{user_url}).
+        Por favor, [revise os sinalizadores](%{base_url}/admin/flags). Se o(a) usuário(a) %{username} tiver sido silenciado(a) por engano para não postar, clique no botão de remover silenciamento na [página de administração do(a) usuário(a)](%{user_url}).
 
-        Este limite pode ser alterado através da configuração do site `silence_new_user`.
+        Este limite pode ser alterado pela configuração do site "silence_new_user".
     spam_post_blocked:
       title: "Postagem de spam bloqueada"
       subject_template: "Novo usuário%{username} postagens bloqueadas devido a links repetidos"
@@ -3135,7 +3135,7 @@ pt_BR:
       name: Básico
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> todas as funções essenciais da comunidade
       long_description: |
-        Este emblema é concedido quando você atinge o nível de confiança 1. Obrigado por ficar por perto e ler alguns tópicos para aprender sobre o que é a nossa comunidade. As restrições de usuário novo foram removidas; você recebeu todas as habilidades essenciais da comunidade, como mensagens pessoais, sinalização, edição de wiki e a capacidade de postar várias imagens e links.
+        Este emblema é concedido quando você atinge o nível de confiança 1. Obrigado por acompanhar o fórum e ler alguns tópicos para aprender o que é a nossa comunidade. As restrições de novo(a) usuário(a) foram removidas. Você recebeu todos os recursos essenciais, como mensagens pessoais, sinalizadores, edição de wiki e capacidade de postar várias imagens e links.
     member:
       name: Membro
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> convites, mensagens de grupo, mais curtidas
@@ -3217,7 +3217,7 @@ pt_BR:
       long_description: |
         Este emblema é concedido na primeira vez que você curtir uma postagem usando o botão :heart:. Curtir postagens é uma ótima maneira de mostrar aos outros membros da comunidade que o que eles postaram era interessante, útil, legal ou divertido. Compartilhe o amor!
     first_flag:
-      name: Primeira Sinalização
+      name: Primeiro sinalizador
       description: Sinalizou uma postagem
       long_description: |
         Este emblema é concedido na primeira vez que você sinaliza uma postagem. Sinalizar é como todos nós ajudamos a manter este local agradável para todos. Se você perceber qualquer postagem que exija atenção de moderadores por qualquer motivo, não hesite em sinalizar. Se você encontrar um problema, :flag_black: sinalize!
