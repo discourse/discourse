@@ -313,6 +313,7 @@ createWidget("discourse-poll-container", {
 
   fetchVoters(optionId) {
     const { attrs, state } = this;
+    let votersCount;
 
     if (optionId) {
       if (!state.voters) {
@@ -322,10 +323,14 @@ createWidget("discourse-poll-container", {
       if (!state.voters[optionId]) {
         state.voters[optionId] = [];
       }
+
+      votersCount = state.voters[optionId].length;
     } else {
       if (!state.voters) {
         state.voters = [];
       }
+
+      votersCount = state.voters.length;
     }
 
     return ajax("/polls/voters.json", {
@@ -333,9 +338,7 @@ createWidget("discourse-poll-container", {
         post_id: attrs.post.id,
         poll_name: attrs.poll.name,
         option_id: optionId,
-        page: optionId
-          ? Math.floor(state.voters[optionId].length / FETCH_VOTERS_COUNT) + 1
-          : Math.floor(state.voters.length / FETCH_VOTERS_COUNT) + 1,
+        page: Math.floor(votersCount / FETCH_VOTERS_COUNT) + 1,
         limit: FETCH_VOTERS_COUNT,
       },
     })
