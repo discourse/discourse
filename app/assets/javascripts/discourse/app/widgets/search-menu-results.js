@@ -2,6 +2,7 @@ import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
 import { avatarImg } from "discourse/widgets/post";
+import Category from "discourse/models/category";
 import { createWidget } from "discourse/widgets/widget";
 import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
@@ -9,6 +10,26 @@ import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
+
+const searchAssistantTerms = ["#", "in:"];
+const inSearchEntries = [
+  {
+    slug: "in:title",
+    description: I18n.t("search.in.title"),
+  },
+  {
+    slug: "in:personal",
+    description: I18n.t("search.in.personal"),
+  },
+  {
+    slug: "in:seen",
+    description: I18n.t("search.in.seen"),
+  },
+  {
+    slug: "in:likes",
+    description: I18n.t("search.in.likes"),
+  },
+];
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
@@ -207,6 +228,10 @@ createWidget("search-menu-results", {
   tagName: "div.results",
 
   html(attrs) {
+    if (searchAssistantTerms.includes(attrs.term)) {
+      return this.attach("search-menu-assistant", { term: attrs.term });
+    }
+
     if (attrs.invalidTerm) {
       return h("div.no-results", I18n.t("search.too_short"));
     }
@@ -318,5 +343,87 @@ createWidget("search-menu-results", {
     }
 
     return content;
+  },
+});
+
+createWidget("search-menu-assistant", {
+  tagName: "ul.search-menu-assistant",
+
+  html(attrs) {
+    const content = [];
+    switch (attrs.term) {
+      case "#":
+        const limit = 10;
+        content.push(
+          h(
+            "li.assistant-description",
+            I18n.t("search.assistant.category_description")
+          )
+        );
+
+        Category.search("", { limit }).map((category) => {
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              category,
+              slug: `#${category.slug} `,
+            })
+          );
+        });
+        break;
+      case "in:":
+        content.push(
+          h(
+            "li.assistant-description",
+            I18n.t("search.assistant.in_modifiers_description")
+          )
+        );
+
+        inSearchEntries.map((item) => {
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              description: item.description,
+              slug: `${item.slug} `,
+            })
+          );
+        });
+        break;
+    }
+
+    return content;
+  },
+});
+
+createWidget("search-menu-assistant-item", {
+  tagName: "li.search-menu-assistant-item",
+
+  html(attrs) {
+    if (attrs.category) {
+      return this.attach("category-link", {
+        category: attrs.category,
+        extraClasses: "widget-link search-link",
+      });
+    } else {
+      return h(
+        "a.widget-link.search-link.in-modifier-link",
+        {
+          attributes: {
+            href: "#",
+          },
+        },
+        [
+          h("span.in-modifier-slug", attrs.slug),
+          h("span.in-modifier-description", attrs.description),
+        ]
+      );
+    }
+  },
+
+  click(e) {
+    const searchInput = document.querySelector("#search-term");
+    searchInput.value = this.attrs.slug;
+    searchInput.focus();
+    this.sendWidgetAction("triggerAutocomplete", this.attrs.slug);
+    e.preventDefault();
+    return false;
   },
 });

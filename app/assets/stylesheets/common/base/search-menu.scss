@@ -251,6 +251,24 @@
         }
       }
     }
+
+    .search-menu-assistant {
+      min-width: 100%;
+      margin-top: -1em;
+
+      .assistant-description {
+        color: var(--primary-low-mid);
+        padding: var(--search-padding);
+      }
+
+      .in-modifier-slug {
+        display: inline-block;
+        width: 125px;
+      }
+      .in-modifier-description {
+        color: var(--primary-low-mid);
+      }
+    }
   }
 
   .searching {

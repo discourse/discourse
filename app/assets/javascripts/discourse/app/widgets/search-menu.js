@@ -17,6 +17,7 @@ export function initSearchData() {
   searchData.typeFilter = null;
   searchData.invalidTerm = false;
   searchData.topicId = null;
+  searchData.afterAutocomplete = false;
 }
 
 initSearchData();
@@ -73,6 +74,7 @@ const SearchHelper = {
         .catch(popupAjaxError)
         .finally(() => {
           searchData.loading = false;
+          searchData.afterAutocomplete = false;
           widget.scheduleRerender();
         });
     }
@@ -132,10 +134,14 @@ export default createWidget("search-menu", {
   },
 
   panelContents() {
-    const contextEnabled = searchData.contextEnabled;
+    const { contextEnabled, afterAutocomplete } = searchData;
 
     let searchInput = [
-      this.attach("search-term", { value: searchData.term, contextEnabled }),
+      this.attach(
+        "search-term",
+        { value: searchData.term, contextEnabled },
+        { state: { afterAutocomplete } }
+      ),
     ];
     if (searchData.term && searchData.loading) {
       searchInput.push(h("div.searching", h("div.spinner")));
@@ -211,7 +217,7 @@ export default createWidget("search-menu", {
       return false;
     }
 
-    if (searchData.loading || searchData.noResults) {
+    if (searchData.loading) {
       return;
     }
 
@@ -304,6 +310,11 @@ export default createWidget("search-menu", {
     searchData.typeFilter = null;
     searchData.term = term;
     this.triggerSearch();
+  },
+
+  triggerAutocomplete(term) {
+    searchData.afterAutocomplete = true;
+    this.searchTermChanged(term);
   },
 
   fullSearch() {

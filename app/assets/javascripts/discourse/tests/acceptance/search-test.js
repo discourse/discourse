@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
@@ -245,5 +246,44 @@ acceptance("Search - with tagging enabled", function (needs) {
       .trim();
 
     assert.equal(tags, "dev slow");
+  });
+});
+
+acceptance("Search - assistant", function (needs) {
+  needs.user();
+
+  test("shows category shortcuts when typing #", async function (assert) {
+    await visit("/");
+
+    await click("#search-button");
+
+    await fillIn("#search-term", "#");
+    await triggerKeyEvent("#search-term", "keyup", 51);
+
+    const firstCategory =
+      ".search-menu .results ul.search-menu-assistant .search-link";
+    assert.ok(exists(query(firstCategory)));
+
+    const firstResultSlug = query(
+      `${firstCategory} .category-name`
+    ).innerText.trim();
+
+    await click(firstCategory);
+    assert.equal(query("#search-term").value, `#${firstResultSlug} `);
+  });
+
+  test("shows in: shortcuts", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+
+    await fillIn("#search-term", "in:");
+    await triggerKeyEvent("#search-term", "keyup", 51);
+
+    assert.equal(
+      query(
+        ".search-menu .results ul.search-menu-assistant .search-link .in-modifier-slug"
+      ).innerText,
+      "in:title"
+    );
   });
 });
