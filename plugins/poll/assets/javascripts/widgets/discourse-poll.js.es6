@@ -698,13 +698,11 @@ export default createWidget("discourse-poll", {
   },
 
   defaultState(attrs) {
-    const { post, poll } = attrs;
+    const { poll } = attrs;
     const staffOnly = attrs.poll.results === "staff_only";
 
     const showResults =
-      (post.topic.archived && !staffOnly) ||
-      (this.isClosed() && !staffOnly) ||
-      (poll.results !== "on_close" && this.hasVoted() && !staffOnly);
+      poll.results !== "on_close" && this.hasVoted() && !staffOnly;
 
     return { loading: false, showResults };
   },
