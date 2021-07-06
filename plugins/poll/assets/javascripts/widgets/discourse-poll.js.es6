@@ -542,7 +542,7 @@ createWidget("discourse-poll-buttons", {
   html(attrs) {
     const contents = [];
     const { poll, post } = attrs;
-    const topicArchived = post.topic.archived;
+    const topicArchived = post.get("topic.archived");
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
@@ -711,7 +711,7 @@ export default createWidget("discourse-poll", {
     const staffOnly = attrs.poll.results === "staff_only";
     const showResults =
       state.showResults ||
-      (attrs.post.topic.archived && !staffOnly) ||
+      (attrs.post.get("topic.archived") && !staffOnly) ||
       (this.isClosed() && !staffOnly);
 
     const newAttrs = jQuery.extend({}, attrs, {

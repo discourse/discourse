@@ -560,6 +560,10 @@ acceptance("Poll results", function (needs) {
       find(".poll-container .results li:nth-child(1) .poll-voters li").length,
       1
     );
+    assert.equal(
+      find(".poll-container .results li:nth-child(2) .poll-voters li").length,
+      0
+    );
 
     publishToMessageBus("/polls/134", {
       post_id: "156",
@@ -579,10 +583,10 @@ acceptance("Poll results", function (needs) {
             {
               id: "d8c22ff912e03740d9bc19e133e581e0",
               html: 'Option <span class="hashtag">#2</span>',
-              votes: 1,
+              votes: 2,
             },
           ],
-          voters: 2,
+          voters: 3,
           preloaded_voters: {
             db753fe0bc4e72869ac1ad8765341764: [
               {
@@ -611,14 +615,25 @@ acceptance("Poll results", function (needs) {
     });
     await visit("/t/-/load-more-poll-voters");
 
-    await click(".poll-voters-toggle-expand a");
     assert.equal(
       find(".poll-container .results li:nth-child(1) .poll-voters li").length,
-      0
+      1
     );
     assert.equal(
       find(".poll-container .results li:nth-child(2) .poll-voters li").length,
       1
+    );
+
+    await click(".poll-voters-toggle-expand a");
+    await visit("/t/-/load-more-poll-voters");
+
+    assert.equal(
+      find(".poll-container .results li:nth-child(1) .poll-voters li").length,
+      2
+    );
+    assert.equal(
+      find(".poll-container .results li:nth-child(2) .poll-voters li").length,
+      0
     );
   });
 });
