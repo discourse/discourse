@@ -372,11 +372,11 @@ pt_BR:
           title: "Os(as) usuários(as) com sinalizadores historicamente acordados recebem um bônus."
         trust_level_bonus:
           name: "nível de confiança"
-          title: "Itens revisáveis criados por usuários com nível de confiança mais alto têm uma pontuação mais alta."
+          title: "Itens revisáveis criados por usuários(as) com nível de confiança mais alto têm uma pontuação maior."
         type_bonus:
-          name: "tipo de bônus"
-          title: "Certos tipos passíveis de revisão podem receber um bônus da equipe para torná-los uma prioridade mais alta."
-      stale_help: "Esta revisão foi resolvida por outra pessoa."
+          name: "bônus de tipo"
+          title: "Certos tipos revisáveis podem receber um bônus da equipe para aumentar sua prioridade."
+      stale_help: "Esta revisão foi solucionada por outra pessoa."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."
@@ -386,34 +386,34 @@ pt_BR:
         title: "reivindicar este tópico"
       unclaim:
         help: "remover esta reivindicação"
-      awaiting_approval: "Aguardando Aprovação"
+      awaiting_approval: "Aguardando aprovação"
       delete: "Excluir"
       settings:
         saved: "Salvo"
-        save_changes: "Salvar Mudanças"
+        save_changes: "Salvar alterações"
         title: "Configurações"
         priorities:
-          title: "Prioridades Revisáveis"
-      moderation_history: "Histórico de Moderação"
-      view_all: "Visualizar Todos"
-      grouped_by_topic: "Agrupado por Tópico"
+          title: "Prioridades revisáveis"
+      moderation_history: "Histórico de moderação"
+      view_all: "Visualizar tudo"
+      grouped_by_topic: "Agrupado por tópico"
       none: "Não há itens para revisar."
       view_pending: "visualização pendente"
       topic_has_pending:
-        one: "Este tópico tem <b>%{count}</b> postagem pendente de aprovação"
-        other: "Este tópico tem <b>%{count}</b> postagens pendentes de aprovação"
+        one: "Este tópico tem <b>%{count}</b> postagem com aprovação pendente"
+        other: "Este tópico tem <b>%{count}</b> postagens com aprovação pendente"
       title: "Revisar"
       topic: "Tópico:"
-      filtered_topic: "Você filtrou para conteúdo de revisão em um único tópico."
-      filtered_user: "Usuário"
-      filtered_reviewed_by: "Revisado Por"
+      filtered_topic: "Você filtrou para conteúdo revisável em um único tópico."
+      filtered_user: "Usuário(a)"
+      filtered_reviewed_by: "Revisado por"
       show_all_topics: "mostrar todos os tópicos"
       deleted_post: "(postagem excluída)"
-      deleted_user: "(usuário excluído)"
+      deleted_user: "(usuário(a) excluído)"
       user:
         bio: "Bio"
-        website: "Website"
-        username: "Nome de Usuário"
+        website: "Site"
+        username: "Nome do usuário(a)"
         email: "E-mail"
         name: "Nome"
         fields: "Campos"
@@ -507,14 +507,14 @@ pt_BR:
           title: "Postagem"
       approval:
         title: "A postagem precisa de aprovação"
-        description: "Nós recebemos sua nova postagem, mas é necessário que seja aprovada por um moderador antes de ser exibida. Por favor, tenha paciência."
+        description: "Nós recebemos sua nova postagem, mas é necessário ter aprovação da moderação antes de ser exibida. Pedimos paciência."
         pending_posts:
           one: "Você tem <strong>%{count}</strong> postagem pendente."
           other: "Você tem postagens <strong>%{count}</strong> pendentes."
-        ok: "OK"
-      example_username: "nome de usuário"
+        ok: "Ok"
+      example_username: "nome do usuário(a)"
       reject_reason:
-        title: "Por que você está rejeitando esse usuário?"
+        title: "Por que você está rejeitando este(a) usuário(a)?"
         send_email: "Enviar e-mail de rejeição"
     relative_time_picker:
       minutes:
@@ -607,7 +607,7 @@ pt_BR:
         deny: "Negar"
         denied: "negado(a)"
         undone: "solicitação desfeita"
-        handle: "manipular solicitação de associação"
+        handle: "tratar solicitação de adesão"
       manage:
         title: "Gerenciar"
         name: "Nome"
@@ -649,29 +649,29 @@ pt_BR:
             title: "Configurações"
             allow_unknown_sender_topic_replies: "Permitir que remetentes desconhecidos respondam a tópicos."
           mailboxes:
-            synchronized: "Caixa de Correio Sincronizada"
-            none_found: "Nenhuma caixa de correio foi encontrada nesta conta de e-mail."
+            synchronized: "Caixa de mensagens sincronizada"
+            none_found: "Nenhuma caixa de mensagens foi encontrada nesta conta de e-mail."
         membership:
-          title: Associação
+          title: Assinatura
           access: Acesso
         categories:
           title: Categorias
           long_title: "Notificações padrão da categoria"
-          description: "Quando usuários são adicionados a esse grupo, suas configurações de notificação de categoria serão definidas com esses padrões. Depois, eles poderão alterá-las."
-          watched_categories_instructions: "Você será inscrito automaticamente em todos os tópicos destas categorias. Você será notificado de todas as novas postagens e tópicos, e uma contagem de novas postagens também aparecerá ao lado do tópico."
-          tracked_categories_instructions: "Você será inscrito automaticamente em todos os tópicos nestas categorias. Uma contagem de postagens novas aparecerá ao lado do tópico."
-          watching_first_post_categories_instructions: "Usuários serão notificados sobre a primeira mensagem postada em cada tópico novo destas categorias."
-          regular_categories_instructions: "Se estas categorias forem silenciadas, elas apenas não serão silenciadas para membros do grupo. Os usuários serão notificados se forem mencionados ou se alguém responder a eles."
-          muted_categories_instructions: "Os usuários não serão notificados sobre novos tópicos nessas categorias e eles não aparecerão nas categorias ou nas páginas de tópicos mais recentes."
+          description: "Quando usuários(as) são adicionados(as) a esse grupo, suas configurações de notificação de categoria serão definidas para estes padrões. Em seguida, poderão ser alteradas."
+          watched_categories_instructions: "Você acompanha todos os tópicos destas categorias automaticamente. Membros do grupo serão notificados de todas as postagens novas, e varias delas também serão exibidas perto do tópico."
+          tracked_categories_instructions: "Você monitora todos os tópicos nestas categorias automaticamente . Várias postagens novas serão exibidas ao lado do tópico."
+          watching_first_post_categories_instructions: "Usuários(as) serão notificados(as) sobre a primeira mensagem postada em cada tópico novo destas categorias."
+          regular_categories_instructions: "Se estas categorias forem silenciadas, elas não serão silenciadas para membros do grupo. Os(as) usuários(as) serão notificados em caso de menção ou resposta."
+          muted_categories_instructions: "Os(as) usuários(as) não serão notificados sobre novos tópicos nestas categorias nem aparecerão nas categorias ou nas páginas de tópicos mais recentes."
         tags:
-          title: Tags
-          long_title: "Notificações padrão das tags"
+          title: Etiquetas
+          long_title: "Notificações padrão das etiquetas"
         logs:
           title: "Registros"
           when: "Quando"
           action: "Ação"
           acting_user: "Usuário agindo"
-          target_user: "Usuário alvo"
+          target_user: "Usuário(a)-alvo"
           subject: "Assunto"
           details: "Detalhes"
           from: "De"
@@ -691,15 +691,15 @@ pt_BR:
         topics: "Não há tópicos de membros deste grupo."
         logs: "Não há registros para este grupo."
       add: "Adicionar"
-      join: "Entrar"
+      join: "Ingressar"
       leave: "Sair"
       request: "Solicitar"
       message: "Mensagem"
-      confirm_leave: "Tem certeza de que deseja sair desse grupo?"
-      allow_membership_requests: "Permitir que usuários enviem pedidos de adesão a donos do grupo (Requer grupo visível ao público)"
-      membership_request_template: "Modelo personalizado para exibir aos usuários ao enviar uma solicitação de associação"
+      confirm_leave: "Tem certeza de que deseja sair deste grupo?"
+      allow_membership_requests: "Permitir que usuários enviem pedidos de associação a donos do grupo (requer grupo visível ao público)"
+      membership_request_template: "Modelo personalizado para exibir aos usuários ao enviar um pedido de associação"
       membership_request:
-        submit: "Enviar Solicitação"
+        submit: "Enviar solicitação"
         title: "Pedir para entrar no grupo @%{group_name}"
         reason: "Diga aos proprietários do grupo por que você pertence a este grupo"
       membership: "Associação"

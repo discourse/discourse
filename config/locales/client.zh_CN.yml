@@ -3301,8 +3301,8 @@ zh_CN:
         title: "可用举报列表"
       dashboard:
         title: "信息中心"
-        last_updated: "仪表盘更新于："
-        discourse_last_updated: "Discourse 更新于："
+        last_updated: "信息中心更新："
+        discourse_last_updated: "Discourse 更新："
         version: "版本"
         up_to_date: "您已经是最新版本！"
         critical_available: "有一个可用的关键更新。"
@@ -3341,7 +3341,7 @@ zh_CN:
         page_views_short: "浏览量"
         show_traffic_report: "显示详细的流量报告"
         community_health: 社区健康状况
-        moderators_activity: 版主活跃度
+        moderators_activity: 版主活动
         whats_new_in_discourse: Discourse 最新变化
         activity_metrics: 活动指标
         all_reports: "所有报告"
@@ -3462,8 +3462,8 @@ zh_CN:
         user: "用户"
         title: "API"
         key: "密钥"
-        created: 创建时间
-        updated: 已更新
+        created: 创建
+        updated: 更新
         last_used: 最后使用
         never_used: '（从未）'
         generate: "生成"
@@ -3482,7 +3482,7 @@ zh_CN:
         user_placeholder: 输入用户名
         description_placeholder: 此密钥将被如何使用？
         save: 保存
-        new_key: 新 API 密钥
+        new_key: 新建 API 密钥
         revoked: 已撤消
         delete: 永久删除
         not_shown_again: 此密钥将不会再显示。在继续之前，请务必进行备份。
@@ -3790,28 +3790,28 @@ zh_CN:
           variable_name_error:
             invalid_syntax: "变量名无效。只允许使用字母数字。必须以字母开头。"
             no_overwrite: "变量名无效。不得覆盖现有变量。"
-            must_be_unique: "变量名无效。必须是独特的。"
+            must_be_unique: "变量名无效。必须是独一无二的。"
           upload: "上传"
-          select_component: "选择一个组件……"
-          unsaved_changes_alert: "你还未保存更改，舍弃并继续？"
-          unsaved_parent_themes: "你尚未将组件分配给主题，是否要继续？"
-          discard: "舍去"
+          select_component: "选择一个组件…"
+          unsaved_changes_alert: "您尚未保存变更，要舍弃变更并继续吗？"
+          unsaved_parent_themes: "您尚未将组件分配给主题，要继续吗？"
+          discard: "舍弃"
           stay: "保留"
           css_html: "自定义 CSS/HTML"
           edit_css_html: "编辑 CSS/HTML"
-          edit_css_html_help: "你还未编辑任何 CSS 或 HTML"
-          delete_upload_confirm: "删除这个上传？（主题 CSS 可能会出问题！）"
-          component_on_themes: "在这些主题上包括组件"
+          edit_css_html_help: "您尚未编辑任何 CSS 或 HTML"
+          delete_upload_confirm: "删除此上传？（主题 CSS 可能会停止工作！）"
+          component_on_themes: "包含这些主题的组件"
           included_components: "包含的组件"
-          add_all: "添加所有"
-          import_web_tip: "目录包含主题"
-          direct_install_tip: "你确定要从下面列出的仓库中安装<strong>%{name}</strong>吗？"
-          import_web_advanced: "高级..."
-          import_file_tip: "包含主题的.tar.gz、.zip或.dcstyle.json文件"
-          is_private: "主题在私有git存储库中"
+          add_all: "全部添加"
+          import_web_tip: "包含主题的仓库"
+          direct_install_tip: "确定要从下面列出的仓库中安装 <strong>%{name}</strong> 吗？"
+          import_web_advanced: "高级…"
+          import_file_tip: "包含主题的 .tar.gz、.zip 或 .dcstyle.json 文件"
+          is_private: "主题位于私有 git 仓库中"
           remote_branch: "分支名称（可选）"
-          public_key: "授予对repo的以下公钥访问权限："
-          public_key_note: "在上面输入一个有效的私有仓库 URL 后，将生成一个 SSH 密钥并显示在这里。"
+          public_key: "授予以下公钥访问仓库的权限："
+          public_key_note: "在上面输入有效的私有仓库 URL 后，将生成 SSH 密钥并在此处显示。"
           install: "安装"
           installed: "已安装"
           install_popular: "热门"
@@ -3882,58 +3882,58 @@ zh_CN:
             title: "将在 </head> 标签前插入的 HTML"
           body_tag:
             text: "</body>"
-            title: "将在 </body> 标签前插入的 HTML"
+            title: "将在 </body> 标记前插入的 HTML"
           yaml:
             text: "YAML"
-            title: "用 YAML 格式定义主题设置"
-          scss_color_variables_warning: '不建议在主题中使用核心 SCSS 颜色变量，请改用 CSS 自定义属性，详细信息参见 <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">本指南</a>'
-          scss_warning_inline: "不建议在主题中使用核心 SCSS 颜色变量。"
+            title: "使用 YAML 格式定义主题设置"
+          scss_color_variables_warning: '在主题中使用核心 SCSS 颜色变量已弃用。请改用 CSS 自定义属性。请参阅<a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">本指南</a>，了解更多详细信息。'
+          scss_warning_inline: "在主题中使用核心 SCSS 颜色变量已弃用。"
         colors:
           select_base:
-            title: "选择基色调色板"
-            description: "基础颜色"
+            title: "选择基础调色板"
+            description: "基础调色板："
           title: "颜色"
           edit: "编辑调色板"
           long_title: "调色板"
-          about: "修改主题使用的颜色。创建一个新的调色板以开始。"
+          about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
           copy_name_prefix: "复制于"
-          delete_confirm: "删除这个调色板？"
-          undo: "重置"
-          undo_title: "撤销你对这个颜色的编辑至上一次保存的状态。"
-          revert: "撤销"
-          revert_title: "重置颜色至 Discourse 的默认调色板。"
+          delete_confirm: "删除此调色板？"
+          undo: "撤消"
+          undo_title: "撤消自上次保存以来对此颜色所做的变更。"
+          revert: "还原"
+          revert_title: "将此颜色重置为 Discourse 的默认调色板。"
           primary:
             name: "主要"
-            description: "大部分的文字、图标和边框。"
+            description: "大多数文本、图标和边框。"
           primary-medium:
             name: "主要-中"
           primary-low-mid:
             name: "主要-低-中"
           secondary:
             name: "次要"
-            description: "主要背景颜色和一些按钮的文字颜色。"
+            description: "主背景颜色和一些按钮的文本颜色。"
           tertiary:
-            name: "再次"
-            description: "链接、一些按钮、提示和强调颜色。"
+            name: "第三"
+            description: "链接、一些按钮、通知和主题色。"
           quaternary:
-            name: "备选"
-            description: "导航链接"
+            name: "第四"
+            description: "导航链接。"
           header_background:
-            name: "顶栏背景"
-            description: "站点顶栏背景颜色"
+            name: "页眉背景"
+            description: "站点页眉的背景色。"
           header_primary:
-            name: "顶栏主要"
-            description: "顶栏的文字和图标"
+            name: "页眉主要"
+            description: "站点页眉的文本和图标。"
           highlight:
-            name: "高亮显示"
-            description: "页面中高亮元素的背景色，如帖子和话题。"
+            name: "突出显示"
+            description: "页面上突出显示元素的背景色，例如帖子和话题。"
           highlight-high:
-            name: "高亮-高"
+            name: "突出显示-高"
           highlight-medium:
-            name: "高亮-中"
+            name: "突出显示-中"
           highlight-low:
-            name: "高亮-低"
+            name: "突出显示-低"
           danger:
             name: "危险"
             description: "突出显示删除帖子和话题等操作的颜色。"
@@ -3941,21 +3941,21 @@ zh_CN:
             name: "成功"
             description: "用于指示操作成功。"
           love:
-            name: "赞"
-            description: "赞同按钮的颜色。"
+            name: "爱"
+            description: "点赞按钮的颜色。"
         robots:
-          title: "覆盖你的站点的robots.txt文件："
-          warning: "这会永久性地覆盖所有相关的站点设置。"
-          overridden: 你的站点的默认robots.txt文件已被覆盖。
+          title: "覆盖您的站点 robots.txt 文件："
+          warning: "这将永久覆盖任何相关的站点设置。"
+          overridden: 您的站点的默认 robots.txt 文件已被覆盖。
         email_style:
-          title: "邮件样式"
-          heading: "自定义邮件样式"
-          html: "HTML模板"
+          title: "电子邮件样式"
+          heading: "自定义电子邮件样式"
+          html: "HTML 模板"
           css: "CSS"
           reset: "重置为默认值"
-          reset_confirm: "你确定要重设为默认值%{fieldName}并且丢弃所有修改吗？"
-          save_error_with_reason: "你的修改没有保存。%{error}"
-          instructions: "自定义所有HTML邮件渲染所使用的模板，使用CSS样式化。"
+          reset_confirm: "确定要重置为默认%{fieldName}并舍弃所有变更吗？"
+          save_error_with_reason: "您的变更未保存。%{error}"
+          instructions: "自定义呈现所有 HTML 电子邮件的模板，并使用 CSS 设置样式。"
       email:
         title: "电子邮件"
         settings: "设置"
@@ -3963,38 +3963,38 @@ zh_CN:
         preview_digest: "预览摘要"
         advanced_test:
           title: "高级测试"
-          desc: "了解Discourse如何处理收到的电子邮件。为了能够正确处理电子邮件，请在下方粘贴整个原始邮件。"
+          desc: "了解 Discourse 如何处理收到的电子邮件。为了能够正确处理电子邮件，请将整个原始电子邮件消息粘贴到下方。"
           email: "原始消息"
           run: "运行测试"
-          text: "已选择的测试正文"
-          elided: "省略文本"
-        sending_test: "发送测试邮件…"
+          text: "选择的文本正文"
+          elided: "省略的文本"
+        sending_test: "正在发送测试电子邮件…"
         error: "<b>错误</b> - %{server_error}"
-        test_error: "发送测试邮件时遇到问题。请再检查一遍邮件设置，确认你的主机没有封锁邮件链接，然后重试。"
+        test_error: "发送测试电子邮件时遇到问题。请重新检查您的邮件设置，确认您的主机没有屏蔽邮件连接，然后重试。"
         sent: "已发送"
-        skipped: "跳过"
-        bounced: "退回"
-        received: "收到"
-        rejected: "已驳回"
+        skipped: "已跳过"
+        bounced: "被退回"
+        received: "已收到"
+        rejected: "遭拒"
         sent_at: "发送时间"
         time: "时间"
         user: "用户"
-        email_type: "邮件类型"
-        to_address: "目的地址"
-        test_email_address: "测试电子邮件地址"
+        email_type: "电子邮件类型"
+        to_address: "目标地址"
+        test_email_address: "要测试的电子邮件地址"
         send_test: "发送测试电子邮件"
         sent_test: "已发送！"
-        delivery_method: "发送方式"
-        preview_digest_desc: "预览发送给不活跃用户的摘要邮件内容。"
+        delivery_method: "投递方式"
+        preview_digest_desc: "预览发送给停用用户的摘要电子邮件的内容。"
         refresh: "刷新"
-        send_digest_label: "发送结果至："
+        send_digest_label: "将此结果发送至："
         send_digest: "发送"
-        sending_email: "发送邮件…"
+        sending_email: "正在发送电子邮件…"
         format: "格式"
         html: "html"
-        text: "text"
+        text: "文本"
         html_preview: "电子邮件内容预览"
-        last_seen_user: "用户最后登录时间:"
+        last_seen_user: "最后活动："
         no_result: "没有找到摘要的结果。"
         reply_key: "回复关键字"
         skipped_reason: "跳过原因"
@@ -4004,38 +4004,38 @@ zh_CN:
           cc_addresses: "抄送"
           subject: "主题"
           error: "错误"
-          none: "没有找到进站邮件。"
+          none: "未找到收到的电子邮件。"
           modal:
-            title: "进站邮件详情"
+            title: "收到的电子邮件详细信息"
             error: "错误"
-            headers: "头部"
-            subject: "标题"
-            body: "内容"
-            rejection_message: "驳回邮件"
+            headers: "标头"
+            subject: "主题"
+            body: "正文"
+            rejection_message: "遭拒邮件"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "话题…"
+            subject_placeholder: "主题…"
             error_placeholder: "错误"
         logs:
-          none: "未发现日志。"
+          none: "找不到日志。"
           filters:
             title: "筛选器"
-            user_placeholder: "username"
+            user_placeholder: "用户名"
             address_placeholder: "name@example.com"
             type_placeholder: "摘要、注册…"
             reply_key_placeholder: "回复键"
       moderation_history:
-        performed_by: "执行由"
-        no_results: "暂无管理历史。"
+        performed_by: "执行者"
+        no_results: "没有可用的审核历史记录。"
         actions:
-          delete_user: "删除的用户"
-          suspend_user: "封禁的用户"
-          silence_user: "禁言的用户"
-          delete_post: "删除的帖子"
-          delete_topic: "删除的话题"
-          post_approved: "帖子已审批"
+          delete_user: "已删除用户"
+          suspend_user: "已封禁用户"
+          silence_user: "已禁言用户"
+          delete_post: "已删除帖子"
+          delete_topic: "已删除话题"
+          post_approved: "已批准帖子"
       logs:
         title: "日志"
         action: "操作"
@@ -4065,9 +4065,9 @@ zh_CN:
           details: "详情"
           previous_value: "之前"
           new_value: "新建"
-          diff: "差别"
+          diff: "差异"
           show: "显示"
-          modal_title: "详情"
+          modal_title: "详细信息"
           no_previous: "没有之前的值。"
           deleted: "没有新的值。记录被删除。"
           actions:

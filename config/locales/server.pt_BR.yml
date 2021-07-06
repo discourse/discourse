@@ -801,17 +801,17 @@ pt_BR:
   topic_flag_types:
     spam:
       title: "Spam"
-      description: "Este tópico é uma propaganda. Não é útil ou relevante a este site mas de natureza promocional."
+      description: "Este tópico é um anúncio. Não é útil ou relevante para este site, mas tem fins promocionais."
       long_form: "sinalizar como spam"
-      short_description: "Este é um anúncio"
+      short_description: "Isto é um anúncio"
     inappropriate:
-      title: "Impróprio"
-      description: 'Este tópico contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
+      title: "Inapropriado(a)"
+      description: 'Este tópico contém conteúdo que uma pessoa sensata consideraria ofensivo, abusivo ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: "sinalizar como impróprio"
       short_description: 'Uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>'
     notify_moderators:
       title: "Algo mais"
-      description: 'Este tópico requer atenção geral da staff com base nas <a href="%{base_path}/guidelines">diretrizes</a>, nos <a href="%{tos_url}">Termos de Uso</a> ou por outro motivo não listado acima.'
+      description: 'Este tópico requer a atenção total da equipe com base nas <a href="%{base_path}/guidelines">diretrizes</a>, nos <a href="%{tos_url}">Termos de Uso</a> ou em outro motivo não listado antes.'
       long_form: "sinalizar isso para atenção da moderação"
       short_description: "Requer atenção da equipe por outro motivo"
       email_title: 'O tópico "%{title}" requer atenção do moderador'
@@ -3145,7 +3145,7 @@ pt_BR:
       name: Habitual
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> recategorizar, renomear, links seguidos, wiki, mais curtidas
       long_description: |
-        Este emblema é concedido quando você atinge o nível de confiança 3. Obrigado por ser uma parte constante de nossa comunidade durante meses. Agora você é um dos leitores mais ativos e um colaborador confiável que torna nossa comunidade excelente. Agora você pode recategorizar e renomear tópicos, utilizar os sinalizadores de spam mais poderosos, acessar uma área de lounge privada e também aproveitar muito mais curtidas por dia.
+        Este emblema é concedido quando você atinge o nível de confiança 3. Obrigado por ser uma parte constante de nossa comunidade há meses. Agora você é um dos leitores(as) mais ativos(as) e um(a) colaborador(a) confiável que torna a nossa comunidade excelente. Já é possível recategorizar e renomear tópicos, utilizar os sinalizadores de spam mais eficientes, acessar uma área de descanso privada e também aproveitar muito mais curtidas por dia.
     leader:
       name: Líder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> editar globalmente, fixar, fechar, arquivar, dividir e mesclar, mais curtidas
@@ -3470,14 +3470,14 @@ pt_BR:
           contact_email:
             label: "E-mail"
             placeholder: "nome@exemplo.com"
-            description: "Endereço de e-mail da pessoa ou grupo responsável por essa comunidade. Usado para notificações críticas, como sinalizadores não tratados, atualizações de segurança e <a href='%{base_path}/about' target='_blank'>sua sobre a página para contato urgente da comunidade."
+            description: "Endereço de e-mail da pessoa ou grupo responsável por essa comunidade. Usado para notificações críticas, como sinalizadores não tratados, atualizações de segurança e <a href='%{base_path}/about' target='_blank'>sua página Sobre, para entrar em contato com a comunidade imediatamente."
           contact_url:
             label: "Página da Web"
             placeholder: "https://www.example.com/contact-us"
             description: "Página de contato geral para você ou sua organização. Será exibido no <a href='%{base_path}/about' target='_blank'>sua sobre a página</a>."
           site_contact:
             label: "Mensagens Automatizadas"
-            description: "Todas as mensagens pessoais do Discourse automatizadas serão enviadas a partir desse usuário, como avisos de sinalização e avisos de conclusão de backup."
+            description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
       corporate:
         title: "Organização"
         description: "Estas informações serão inseridas nos seus <a href='%{base_path}/tos' target='blank'>Termos de Serviço</a>, que é um tópico que você pode editar na categoria da staff. Se você não tem uma empresa, sinta-se à vontade para pular esta etapa por enquanto."
@@ -3566,7 +3566,7 @@ pt_BR:
     api_key:
       revoked: Regovado
   reviewables:
-    already_handled: "Obrigado, mas já analisamos essa postagem e determinamos que ela não precisa ser sinalizada novamente."
+    already_handled: "Obrigado, mas já analisamos esta postagem e determinamos que não precisa ser sinalizada novamente."
     priorities:
       low: "Baixo"
       medium: "Média"
@@ -3590,7 +3590,7 @@ pt_BR:
       category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."
       must_approve_users: "Todos os novos usuários precisam ser aprovados pela staff. Veja `must_approve_users`."
       invite_only: "Todos os novos usuários devem ser convidados. Veja `invite_only`."
-      email_spam: "Este e-mail foi sinalizado como spam pelo cabeçalho definido em `email_in_spam_header`."
+      email_spam: "Este e-mail foi sinalizado como spam pelo cabeçalho definido em \"email_in_spam_header\"."
     actions:
       agree:
         title: "Concordar…"
@@ -3599,13 +3599,13 @@ pt_BR:
         description: "Concorde com o sinalizador e mantenha a postagem inalterada."
       agree_and_keep_hidden:
         title: "Manter Postagem Escondida"
-        description: "Concordar com o sinalizador e manter a postagem escondida"
+        description: "Concorde com o sinalizador e mantenha a postagem oculta."
       agree_and_suspend:
         title: "Suspender usuário"
-        description: "Concordar com o sinalizador e suspender o usuário."
+        description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
       agree_and_silence:
         title: "Silenciar Usuário"
-        description: "Concorde com a bandeira e silencie o usuário."
+        description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
       agree_and_restore:
         title: "Restaurar Postagem"
         description: "Restaure a postagem para que todos os usuários possam vê-la."
