@@ -1030,6 +1030,25 @@ a.mention-group {
   }
 }
 
+.topic-post-visited-line {
+  border-bottom: 1px solid var(--danger-medium);
+  line-height: 0.1em;
+  text-align: center;
+  margin: 1rem 0px;
+
+  .topic-post-visited-message {
+    position: relative; // Chrome needs this, otherwise the line is above the text
+    background-color: var(--secondary);
+    color: var(--danger-medium);
+    font-size: $font-down-1;
+    padding: 0 8px;
+  }
+
+  + .small-action {
+    border-top: none;
+  }
+}
+
 // Select posts
 
 .topic-post {

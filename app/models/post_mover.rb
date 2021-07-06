@@ -352,7 +352,7 @@ class PostMover
     }
 
     DB.exec(<<~SQL, params)
-      INSERT INTO topic_users(user_id, topic_id, posted, last_read_post_number, highest_seen_post_number,
+      INSERT INTO topic_users(user_id, topic_id, posted, last_read_post_number,
                               last_emailed_post_number, first_visited_at, last_visited_at, notification_level,
                               notifications_changed_at, notifications_reason_id)
       SELECT tu.user_id,
@@ -371,12 +371,6 @@ class PostMover
                  AND lr.old_post_number <= tu.last_read_post_number
              )                                           AS last_read_post_number,
              (
-               SELECT MAX(hs.new_post_number)
-               FROM moved_posts hs
-               WHERE hs.old_topic_id = tu.topic_id
-                 AND hs.old_post_number <= tu.highest_seen_post_number
-             )                                           AS highest_seen_post_number,
-             (
                SELECT MAX(le.new_post_number)
                FROM moved_posts le
                WHERE le.old_topic_id = tu.topic_id
@@ -392,7 +386,6 @@ class PostMover
       WHERE tu.topic_id = :old_topic_id
         AND GREATEST(
                 tu.last_read_post_number,
-                tu.highest_seen_post_number,
                 tu.last_emailed_post_number
               ) >= (SELECT MIN(old_post_number) FROM moved_posts)
       ON CONFLICT (topic_id, user_id) DO UPDATE
@@ -409,18 +402,6 @@ class PostMover
                                            GREATEST(topic_users.last_read_post_number,
                                                     excluded.last_read_post_number)
                                          ELSE topic_users.last_read_post_number END,
-            highest_seen_post_number = CASE
-                                         WHEN topic_users.highest_seen_post_number = :old_highest_staff_post_number OR (
-                                             :old_highest_post_number < :old_highest_staff_post_number
-                                             AND topic_users.highest_seen_post_number = :old_highest_post_number
-                                             AND NOT EXISTS(SELECT 1
-                                                            FROM users u
-                                                            WHERE u.id = topic_users.user_id
-                                                              AND (admin OR moderator))
-                                           ) THEN
-                                           GREATEST(topic_users.highest_seen_post_number,
-                                                    excluded.highest_seen_post_number)
-                                         ELSE topic_users.highest_seen_post_number END,
             last_emailed_post_number = CASE
                                          WHEN topic_users.last_emailed_post_number = :old_highest_staff_post_number OR (
                                              :old_highest_post_number < :old_highest_staff_post_number

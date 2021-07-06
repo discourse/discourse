@@ -142,8 +142,8 @@ export default Component.extend({
       classes.push("unseen-topic");
     }
 
-    if (topic.get("displayNewPosts")) {
-      classes.push("new-posts");
+    if (topic.unread_posts) {
+      classes.push("unread-posts");
     }
 
     ["liked", "archived", "bookmarked", "pinned", "closed"].forEach((name) => {

@@ -173,40 +173,19 @@ createWidget("discourse-poll-standard-results", {
 
     return _fetchVoters({
       post_id: attrs.post.id,
-      poll_name: attrs.poll.get("name"),
+      poll_name: attrs.poll.name,
       option_id: optionId,
-      page: state.page[optionId],
+      page: state.page[optionId] + 1,
       limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
       if (!state.voters[optionId]) {
         state.voters[optionId] = [];
       }
 
-      const voters = state.voters[optionId];
-      const newVoters = result.voters[optionId];
-
-      // remove users who changed their vote
-      const newVotersSet = new Set(newVoters.map((voter) => voter.username));
-      Object.keys(state.voters).forEach((otherOptionId) => {
-        if (optionId !== otherOptionId) {
-          state.voters[otherOptionId] = state.voters[otherOptionId].filter(
-            (voter) => !newVotersSet.has(voter.username)
-          );
-        }
-      });
-
-      const votersSet = new Set(voters.map((voter) => voter.username));
-      let count = 0;
-      newVoters.forEach((voter) => {
-        if (!votersSet.has(voter.username)) {
-          voters.push(voter);
-          count++;
-        }
-      });
-
-      // request next page in the future only if a complete set was
-      // returned this time
-      if (count >= FETCH_VOTERS_COUNT) {
+      if (result.voters[optionId] && result.voters[optionId].length > 0) {
+        state.voters[optionId] = [
+          ...new Set([...state.voters[optionId], ...result.voters[optionId]]),
+        ];
         state.page[optionId]++;
       }
 
@@ -303,30 +282,17 @@ createWidget("discourse-poll-number-results", {
 
     return _fetchVoters({
       post_id: attrs.post.id,
-      poll_name: attrs.poll.get("name"),
+      poll_name: attrs.poll.name,
       option_id: optionId,
-      page: state.page,
+      page: state.page + 1,
       limit: FETCH_VOTERS_COUNT,
     }).then((result) => {
       if (!state.voters) {
         state.voters = [];
       }
 
-      const voters = state.voters;
-      const newVoters = result.voters;
-
-      const votersSet = new Set(voters.map((voter) => voter.username));
-      let count = 0;
-      newVoters.forEach((voter) => {
-        if (!votersSet.has(voter.username)) {
-          voters.push(voter);
-          count++;
-        }
-      });
-
-      // request next page in the future only if a complete set was
-      // returned this time
-      if (count >= FETCH_VOTERS_COUNT) {
+      if (result.voters && result.voters.length > 0) {
+        state.voters = [...new Set([...state.voters, ...result.voters])];
         state.page++;
       }
 

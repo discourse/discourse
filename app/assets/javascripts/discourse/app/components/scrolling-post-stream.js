@@ -49,7 +49,9 @@ export default MountWidget.extend({
       "selectedPostsCount",
       "searchService",
       "showReadIndicator",
-      "streamFilters"
+      "streamFilters",
+      "lastReadPostNumber",
+      "highestPostNumber"
     );
   },
 

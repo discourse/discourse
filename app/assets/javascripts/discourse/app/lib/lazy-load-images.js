@@ -15,7 +15,15 @@ export function nativeLazyLoading(api) {
       forEachImage(post, (img) => {
         img.loading = "lazy";
         if (img.dataset.smallUpload) {
-          img.style = `background-image: url(${img.dataset.smallUpload}); background-size: cover;`;
+          if (!img.complete) {
+            if (!img.onload) {
+              img.onload = () => {
+                img.removeAttribute("style");
+              };
+            }
+
+            img.style = `background-image: url(${img.dataset.smallUpload}); background-size: cover;`;
+          }
         }
       }),
     {

@@ -1010,7 +1010,6 @@ RSpec.describe TopicsController do
 
         topic_user.update!(
           last_read_post_number: 2,
-          highest_seen_post_number: 2
         )
 
         # ensure we have 2 notifications
@@ -1036,7 +1035,7 @@ RSpec.describe TopicsController do
         expect(PostTiming.where(topic: topic, user: user, post_number: 2).exists?).to eq(false)
         expect(PostTiming.where(topic: topic, user: user, post_number: 1).exists?).to eq(true)
 
-        expect(TopicUser.where(topic: topic, user: user, last_read_post_number: 1, highest_seen_post_number: 1).exists?).to eq(true)
+        expect(TopicUser.where(topic: topic, user: user, last_read_post_number: 1).exists?).to eq(true)
 
         user.user_stat.reload
         expect(user.user_stat.first_unread_at).to eq_time(topic.updated_at)
@@ -1051,7 +1050,7 @@ RSpec.describe TopicsController do
         delete "/t/#{topic.id}/timings.json?last=1"
 
         expect(PostTiming.where(topic: topic, user: user, post_number: 1).exists?).to eq(false)
-        expect(TopicUser.where(topic: topic, user: user, last_read_post_number: nil, highest_seen_post_number: nil).exists?).to eq(true)
+        expect(TopicUser.where(topic: topic, user: user, last_read_post_number: nil).exists?).to eq(true)
       end
     end
 

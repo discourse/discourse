@@ -346,7 +346,6 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
       ["post_timings", "post_number"],
       ["posts", "reply_to_post_number"],
       ["topic_users", "last_read_post_number"],
-      ["topic_users", "highest_seen_post_number"],
       ["topic_users", "last_emailed_post_number"],
     ].each do |table, column|
       builder = DB.build <<~SQL

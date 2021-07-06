@@ -62,7 +62,7 @@
     .badge-wrapper {
       margin-right: 0.5em;
     }
-    .badge-notification.new-posts {
+    .badge-notification.unread-posts {
       display: block;
       padding: 0;
     }
@@ -87,7 +87,7 @@
     .topic-statuses {
       margin-right: 0.15em;
     }
-    .topic-post-badges .badge.new-posts,
+    .topic-post-badges .badge.unread-posts,
     .title {
       margin-right: 5px;
     }
