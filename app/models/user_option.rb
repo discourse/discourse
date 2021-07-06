@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
+  self.ignored_columns = [
+    "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
+  ]
+
   self.primary_key = :user_id
   belongs_to :user
   before_create :set_defaults
@@ -210,7 +214,6 @@ end
 #  external_links_in_new_tab        :boolean          default(FALSE), not null
 #  enable_quoting                   :boolean          default(TRUE), not null
 #  dynamic_favicon                  :boolean          default(FALSE), not null
-#  disable_jump_reply               :boolean          default(FALSE), not null
 #  automatically_unpin_topics       :boolean          default(TRUE), not null
 #  digest_after_minutes             :integer
 #  auto_track_topics_after_msecs    :integer
