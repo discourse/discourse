@@ -20,27 +20,36 @@ fr:
       long_description: |
         Ce badge est attribué quand vous terminez avec succès le tutoriel interactif des nouveaux utilisateurs. Vous avez pris l'initiative d'apprendre les outils de base de la discussion et vous êtes désormais certifié(e) !
     licensed:
-      name: Certifié
-      description: "A terminé le tutoriel utilisateur avancé"
+      name: Certifié(e)
+      description: "A terminé le tutoriel des utilisateurs avancés"
       long_description: |
         Ce badge est attribué quand vous terminez avec succès le tutoriel interactif des utilisateurs avancés. Vous avez pris l'initiative d'apprendre les outils avancés de la discussion et vous êtes désormais certifié(e) à 100 % !
   discourse_narrative_bot:
-    bio: "Bonjour,\n\nJe ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez mon nom."
+    bio: "Bonjour,\n\nJe ne suis pas une personne réelle. Je suis un robot destiné à vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez mon nom."
     tl2_promotion_message:
-      subject_template: "Maintenant que vous avez été promu, il est temps d'en apprendre davantage sur certaines fonctionnalités avancées !"
+      subject_template: "Maintenant que vous avez été promu(e), il est temps d'en apprendre davantage sur certaines fonctionnalités avancées !"
       text_body_template: |
-        Répondez à ce message avec `@%{discobot_username} %{reset_trigger}` pour en savoir plus sur ce que vous pouvez faire.
+        Répondez à ce message avec « @%{discobot_username} %{reset_trigger} » pour en savoir plus sur ce que vous pouvez faire.
     timeout:
-      message: "Salut @%{username}, \n\nJe viens voir si tout va bien car je n'ai pas eu de tes nouvelles depuis un moment.\n\n- Pour continuer, réponds-moi quand tu le souhaites.\n\n- Si tu veux passer cette étape, dit `%{skip_trigger}`.\n\n- Pour recommencer, dit ``%{reset_trigger}`.\n\nSi tu préfères ne rien faire, ça me va aussi.\nJe suis un robot. Tu ne me blesseras pas. :sob:"
+      message: |-
+        Bonjour @%{username}, je viens voir si tout va bien car je n'ai pas eu de vos nouvelles depuis un moment.
+
+        - Pour continuer, répondez-moi quand vous le souhaitez.
+
+        - Si vous voulez passer cette étape, dites « %{skip_trigger} ».
+
+        - Pour recommencer, dites « %{reset_trigger} ».
+
+        Si vous préférez ne rien faire, il n'y a aucun problème. Je suis un robot, vous ne me blesserez pas. :sob:
     dice:
-      trigger: "Jet"
+      trigger: "jet"
       invalid: |-
-        Je suis désolé, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
+        Je regrette, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
       not_enough_dice:
-        one: "Je n'ai que %{count} dé(s). [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
+        one: "Je n'ai que %{count} dé. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
         other: "Je n'ai que %{count} dés. [Honteux](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
       out_of_range: |-
-        Saviez-vous que [le nombre maximal de face](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pour un dé non truqué est de 120 ?
+        Saviez-vous que [le nombre maximal de faces](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) d'un dé non truqué est de 120 ?
       results: |-
         > :game_die: %{results}
     quote:
@@ -49,7 +58,7 @@ fr:
         quote: "La difficulté est porteuse d'occasions"
         author: "Albert Einstein"
       "2":
-        quote: "La liberté ne signifie rien s'il n'y a pas la liberté de se tromper."
+        quote: "La liberté ne signifie rien sans la liberté de se tromper."
         author: "Mahatma Gandhi"
       "3":
         quote: "Ne pleurez pas parce que c'est fini, souriez parce que c'est arrivé !"
@@ -61,13 +70,13 @@ fr:
         quote: "Croyez en vous et vous avez fait la moitié du chemin."
         author: "Theodore Roosevelt"
       "6":
-        quote: "La vie est comme une boîte de chocolats. On ne sait jamais sur quoi on va tomber."
+        quote: "La vie est comme une boîte de chocolats : on ne sait jamais sur quoi on va tomber."
         author: "La maman de Forrest Gump"
       "7":
-        quote: "C'est un petit pas pour un homme, un saut géant pour l'humanité."
+        quote: "C'est un petit pas pour l'homme, mais un saut de géant pour l'humanité."
         author: "Neil Armstrong"
       "8":
-        quote: "Fais une chose qui t'effraie chaque jour."
+        quote: "Faites chaque jour une chose qui vous effraie."
         author: "Eleanor Roosevelt"
       "9":
         quote: "Les erreurs sont toujours pardonnables, si l'on a le courage de les admettre."
@@ -85,11 +94,11 @@ fr:
         "3": "Sans aucun doute"
         "4": "Définitivement oui"
         "5": "Vous pouvez compter dessus"
-        "6": "Comme je le vois, oui"
+        "6": "D'après ce que je vois, oui"
         "7": "Probablement"
         "8": "De bonnes perspectives"
         "9": "Oui"
-        "10": "Les signent tendent vers le oui"
+        "10": "Les signes tendent vers le oui"
         "11": "Réponse incertaine, essayez de nouveau"
         "12": "Demander à nouveau plus tard"
         "13": "Il vaut mieux ne pas vous le dire maintenant"

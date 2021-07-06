@@ -2013,7 +2013,7 @@ fr:
         mentioned: '%{username} vous a mentionné(e) dans « %{topic} » - %{site_title}'
         group_mentioned: '%{username} vous a mentionné(e) dans « %{topic} » - %{site_title}'
         quoted: '%{username} vous a cité(e) dans « %{topic} » - %{site_title}'
-        replied: '%{username} vous a répondu(e) dans « %{topic} » - %{site_title}'
+        replied: '%{username} vous a répondu dans « %{topic} » - %{site_title}'
         posted: '%{username} a publié un message dans « %{topic} » - %{site_title}'
         private_message: '%{username} vous a envoyé un message direct dans « %{topic} » - %{site_title}'
         linked: '%{username} a inséré un lien vers votre message dans le sujet « %{topic} » - %{site_title}'
