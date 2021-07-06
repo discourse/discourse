@@ -2715,7 +2715,7 @@ zh_CN:
         post_number: "%{username}，帖子 #%{post_number}"
         show_all: "全部显示"
     category:
-      can: "能够&hellip; "
+      can: "能够&hellip;"
       none: "（无类别）"
       all: "所有类别"
       choose: "类别&hellip;"
@@ -4682,107 +4682,107 @@ zh_CN:
           sample: "示例："
           grant:
             with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span>因 %{link} 帖子
-            with_post_time: <span class="username">%{username}</span> 因在 <span class="time">%{time}</span> 时的 %{link} 帖子
-            with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
+            with_post: <span class="username">%{username}</span>，因 %{link} 下的帖子
+            with_post_time: <span class="username">%{username}</span>，因 <span class="time">%{time}</span> 在 %{link} 下的帖子
+            with_time: <span class="username">%{username}</span>，在 <span class="time">%{time}</span>
         badge_intro:
-          title: "选择现一个现有的徽章或创建一个新的徽章来开始使用"
+          title: "选择现有徽章或创建新徽章以开始"
           emoji: "女学生表情符号"
           what_are_badges_title: "什么是徽章？"
           badge_query_examples_title: "徽章查询示例"
         mass_award:
           title: 批量授予
-          description: 一次性将同一个的徽章授予多个用户。
-          no_badge_selected: 请选择一个徽章开始使用。
-          perform: "授予徽章给用户"
-          upload_csv: 上传包含用户邮箱或用户名的CSV文件
-          aborted: 请上传一个包含用户电子邮件或用户名的CSV文件
-          success: 你的CSV已收到，用户很快就会收到他们的徽章。
-          replace_owners: 从所有者中删除这个徽章
+          description: 一次将同一个徽章授予多个用户。
+          no_badge_selected: 请选择一个徽章以开始.
+          perform: "向用户授予徽章"
+          upload_csv: 上传包含用户电子邮件或用户名的 CSV
+          aborted: 请上传包含用户电子邮件或用户名的 CSV
+          success: 您的 CSV 已收到，用户很快就会收到他们的徽章。
+          replace_owners: 将徽章从以前的所有者移除
       emoji:
         title: "表情符号"
-        help: "增加所有人可用的 emoji。（提示：一次性拖进多个文件）"
-        add: "增加新的 Emoji"
-        uploading: "上传中…"
+        help: "添加可供所有人使用的新表情符号。（高级提示：一次拖放多个文件）"
+        add: "添加新表情符号"
+        uploading: "正在上传…"
         name: "名称"
-        group: "群组"
+        group: "组"
         image: "图片"
         alt: "自定义表情符号预览"
-        delete_confirm: "你确定要删除 :%{name}: emoji 么？"
+        delete_confirm: "确定要删除 :%{name}: 表情符号吗？"
       embedding:
-        get_started: "如果你想要将 Discourse 嵌入至其他网站，请添加他们的域名。"
-        confirm_delete: "你确定要删除这个主机吗？"
-        sample: "使用下列 HTML 代码至你的站点创建和嵌入 Discourse 话题。把<b>REPLACE_ME</b> 替换成你将嵌入至的网址。"
+        get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
+        confirm_delete: "确定要删除该主机吗？"
+        sample: "在您的站点中使用以下 HTML 代码来创建和嵌入 Discourse 话题。将 <b>REPLACE_ME</b> 替换为您嵌入它的页面的规范 URL。"
         title: "嵌入"
         host: "允许的主机"
         class_name: "类名"
-        allowed_paths: "路径允许列表"
+        allowed_paths: "路径许可名单"
         edit: "编辑"
-        category: "发布到分类"
-        add_host: "增加主机"
+        category: "发布到类别"
+        add_host: "添加主机"
         settings: "嵌入设置"
         crawling_settings: "爬虫设置"
-        crawling_description: "当 Discourse 为你的帖子创建了话题时，如果没有 RSS/ATOM 流存在，它将尝试从 HTML 中解析内容。有时分离其中的内容时可能是很有挑战性的，所以我们提供了指定 CSS 规则的能力来帮助分离过程。"
+        crawling_description: "当 Discourse 为您的帖子创建话题时，如果不存在 RSS/ATOM Feed，它将尝试从您的 HTML 中解析您的内容。有时提取您的内容可能充满挑战，因此我们提供了指定 CSS 规则的功能，以便更轻松地提取内容。"
         embed_by_username: "话题创建者的用户名"
-        embed_post_limit: "嵌入的最大帖子数量。"
+        embed_post_limit: "要嵌入的最大帖子数"
         embed_title_scrubber: "从帖子中提取标题的正则表达式"
         embed_truncate: "截断嵌入的帖子"
-        embed_unlisted: "直到有一个回复前，导入的话题不会被列出。"
-        allowed_embed_selectors: "允许嵌入的元素的CSS选择器"
-        blocked_embed_selectors: "从嵌入中移除的元素的CSS选择器"
-        allowed_embed_classnames: "允许的CSS类名"
+        embed_unlisted: "在收到回复之前，导入的话题将被取消公开。"
+        allowed_embed_selectors: "嵌入中允许的元素的 CSS 选择器"
+        blocked_embed_selectors: "从嵌入中移除的元素的 CSS 选择器"
+        allowed_embed_classnames: "允许的 CSS 类名"
         save: "保存嵌入设置"
       permalink:
         title: "永久链接"
-        description: "所应用的重定向链接无法被论坛识别。"
+        description: "为论坛无法识别的 URL 应用的重定向。"
         url: "URL"
         topic_id: "话题 ID"
         topic_title: "话题"
         post_id: "帖子 ID"
         post_title: "帖子"
-        category_id: "分类 ID"
-        category_title: "分类"
+        category_id: "类别 ID"
+        category_title: "类别"
         tag_name: "标签名称"
         external_url: "外部或相关 URL"
         destination: "目标"
-        copy_to_clipboard: "拷贝永久链接到剪贴板"
-        delete_confirm: 你确定要删除该永久链接？
+        copy_to_clipboard: "将永久链接复制到剪贴板"
+        delete_confirm: 确定要删除此永久链接吗？
         form:
           label: "新："
           add: "添加"
           filter: "搜索（URL 或外部 URL）"
       reseed:
         action:
-          label: "替换文本..."
-          title: "用翻译替换分类和话题的文本"
+          label: "替换文本…"
+          title: "使用翻译替换类别和话题的文本"
         modal:
           title: "替换文本"
-          subtitle: "用最新的翻译替换系统生成的类别和话题的文本"
-          categories: "分类"
+          subtitle: "使用最新翻译替换系统生成的类别和话题的文本"
+          categories: "类别"
           topics: "话题"
           replace: "替换"
   wizard_js:
     wizard:
       done: "完成"
       finish: "结束"
-      back: "上一步"
+      back: "返回"
       next: "下一步"
-      step: "%{current} / %{total}"
+      step: "%{current}/%{total}"
       upload: "上传"
-      uploading: "上传中…"
-      upload_error: "抱歉，上传文件时发生了错误。请重试。"
+      uploading: "正在上传…"
+      upload_error: "抱歉，上传该文件时出错。请重试。"
       quit: "以后再说"
       staff_count:
-        other: "你的社区中包括你在内有 %{count} 位工作人员。"
+        other: "您的社区有 %{count} 位管理人员，包括您。"
       invites:
         add_user: "添加"
-        none_added: "你还没有邀请任何工作人员。你确定要继续吗？"
+        none_added: "您还没有邀请任何管理人员。确定要继续吗？"
         roles:
           admin: "管理员"
           moderator: "版主"
           regular: "普通用户"
       previews:
         topic_title: "讨论话题"
-        font_title: "%{font}字体"
+        font_title: "%{font} 字体"
         share_button: "分享"
         reply_button: "回复"

@@ -270,6 +270,7 @@ it:
       help:
         bookmark: "Clicca per aggiungere un segnalibro al primo messaggio di questo argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
+        unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento."
     bookmarks:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
@@ -293,7 +294,7 @@ it:
       reminders:
         today_with_time: "oggi alle %{time}"
         tomorrow_with_time: "domani alle %{time}"
-        at_time: "a %{date_time}"
+        at_time: "il %{date_time}"
         existing_reminder: "Hai un promemoria impostato per questo segnalibro, che verrà inviato il %{at_date_time}"
     copy_codeblock:
       copied: "copiato!"
@@ -309,7 +310,7 @@ it:
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
     topic_count_latest:
-      one: "Visualizza %{count} argomento nuovi o aggiornato"
+      one: "Visualizza %{count} argomento nuovo o aggiornato"
       other: "Visualizza %{count} argomenti nuovi o aggiornati."
     topic_count_unread:
       one: "Visualizza %{count} argomento non letto"
@@ -366,13 +367,13 @@ it:
         score_to_hide: "Punteggio per nascondere messaggio"
         take_action_bonus:
           name: "ha preso provvedimenti"
-          title: "Quando un membro dello staff sceglie intervenire, la segnalazione riceve un bonus."
+          title: "Quando un membro dello staff sceglie di intervenire, la segnalazione riceve un bonus."
         user_accuracy_bonus:
           name: "precisione dell'utente"
           title: "Agli utenti le cui segnalazioni sono state storicamente accettate viene concesso un bonus."
         trust_level_bonus:
-          name: "livello di esperienza"
-          title: "Gli articoli revisionabili creati da utenti con un livello di esperienza più elevato hanno un punteggio più alto."
+          name: "livello di attendibilità"
+          title: "Gli articoli revisionabili creati da utenti con un livello di attendibilità più elevato hanno un punteggio più alto."
         type_bonus:
           name: "tipo di bonus"
           title: "Ad alcune tipologie revisionabili può essere assegnato un bonus dallo staff, per aumentare la loro priorità."
@@ -380,7 +381,7 @@ it:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
         required: "Per poter revisionare gli elementi devi prima rivendicarli."
         claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
-        claimed_by_other: "Questo elemento può essere revisionato esclusivamente da <b>%{username}</b>."
+        claimed_by_other: "Questo elemento può essere rivisto esclusivamente da <b>%{username}</b>."
       claim:
         title: "rivendica questo argomento"
       unclaim:
@@ -393,19 +394,19 @@ it:
         title: "Impostazioni"
         priorities:
           title: "Priorità Rivedibili"
-      moderation_history: "Storico Moderazione"
+      moderation_history: "Cronologia moderazione"
       view_all: "Vedi tutti"
       grouped_by_topic: "Raggruppati per Argomento"
-      none: "Non ci sono elementi da revisionare."
+      none: "Non ci sono elementi da rivedere."
       view_pending: "vedi in attesa"
       topic_has_pending:
         one: "Questo argomento ha <b>%{count}</b> messaggio in attesa di approvazione"
-        other: "Questo Argomento ha <b>%{count}</b> messaggi in attesa di approvazione"
+        other: "Questo argomento ha <b>%{count}</b> messaggi in attesa di approvazione"
       title: "Revisiona"
       topic: "Argomento:"
       filtered_topic: "Hai filtrato il contenuto revisionabile in un singolo Argomento"
       filtered_user: "Utente"
-      filtered_reviewed_by: "Revisionato da"
+      filtered_reviewed_by: "Rivisto da"
       show_all_topics: "mostra tutti gli argomenti"
       deleted_post: "(messaggio eliminato)"
       deleted_user: "(utente eliminato)"
@@ -470,20 +471,20 @@ it:
       conversation:
         view_full: "vedi l'intera conversazione"
       scores:
-        about: "Questo punteggio è calcolato sulla base del Livello di Esperienza del segnalante, dell'accuratezza delle precedenti segnalazioni e della priorità dell'elemento segnalato."
+        about: "Questo punteggio è calcolato sulla base del Livello di attendibilità dell'autore della segnalazione, dell'accuratezza delle precedenti segnalazioni e della priorità dell'elemento segnalato."
         score: "Punteggio"
         date: "Data"
         type: "Tipo"
         status: "Stato"
         submitted_by: "Inviato da"
-        reviewed_by: "Revisionato da"
+        reviewed_by: "Rivisto da"
       statuses:
         pending:
           title: "In attesa"
         approved:
           title: "Approvato"
         rejected:
-          title: "Rifiutate"
+          title: "Rifiutato"
         ignored:
           title: "Ignorato"
         deleted:
@@ -497,7 +498,7 @@ it:
           title: "Messaggio segnalato"
           flagged_by: "Segnalato da"
         reviewable_queued_topic:
-          title: "Argomenti in coda"
+          title: "Argomento accodato"
         reviewable_queued_post:
           title: "Messaggio accodato"
         reviewable_user:
@@ -508,8 +509,8 @@ it:
         title: "Messaggio Da Approvare"
         description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia deve essere approvato da un moderatore. Attendi."
         pending_posts:
-          one: "Hai<strong>%{count}</strong> messaggio in attesa."
-          other: "Hai<strong>%{count}</strong> messaggi in attesa."
+          one: "Hai <strong>%{count}</strong> messaggio in attesa."
+          other: "Hai <strong>%{count}</strong> messaggi in attesa."
         ok: "OK"
       example_username: "nome utente"
       reject_reason:
@@ -543,7 +544,7 @@ it:
       next_month: "Il prossimo mese"
       custom: "Data e ora personalizzate"
       relative: "Tempo relativo"
-      none: "Nessuno necessario"
+      none: "Nessun orario richiesto"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha pubblicato <a href='%{topicUrl}'>l'argomento</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tu</a> hai pubblicato <a href='%{topicUrl}'>l'argomento</a>"
@@ -597,6 +598,8 @@ it:
       member_added: "Aggiunto"
       member_requested: "Richiesto alle"
       add_members:
+        title: "Aggiungi utenti a %{group_name}"
+        description: "Inserisci un elenco di utenti che desideri invitare al gruppo o incollalo in un elenco separato da virgole:"
         notify_users: "Notifica gli utenti"
       requests:
         title: "Richieste"
@@ -626,17 +629,17 @@ it:
           enable_imap: "Abilita IMAP"
           test_settings: "Prova le impostazioni"
           save_settings: "Salva Impostazioni"
-          settings_required: "Tutte le impostazioni sono obbligatorie, si prega di compilare tutti i campi prima della convalida."
+          settings_required: "Tutte le impostazioni sono obbligatorie, compilare tutti i campi prima della convalida."
           smtp_settings_valid: "Impostazioni SMTP valide."
           smtp_title: "SMTP"
           smtp_instructions: "Quando abiliti l'SMTP di gruppo, tutte le email in uscita dalla casella di posta del gruppo saranno inviate usando queste impostazioni SMTP, invece che tramite il server di posta configurato per le altre email inviate dal forum."
           imap_title: "IMAP"
           imap_additional_settings: "Altre impostazioni"
-          imap_instructions: 'Quando si abilita l''IMAP di gruppo, le e-mail vengono sincronizzate tra la casella di posta del gruppo e il server IMAP e la casella di posta forniti. Affinché l''IMAP possa essere abilitato, l''SMTP deve prima essere impostato con credenziali valide e verificate. Il nome utente e la password di posta elettronica utilizzati per SMTP saranno utilizzati anche per IMAP. Per ulteriori informazioni vedi l''annuncio della funzionalità su <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta</a>.'
-          imap_alpha_warning: "Attenzione: questa è una funzionalità in stadio alfa. Solo Gmail è ufficialmente supportato. Usare a proprio rischio e pericolo!"
+          imap_instructions: 'Abilitando l''IMAP di gruppo, le e-mail vengono sincronizzate tra la casella di posta del gruppo e il server e la casella di posta IMAP forniti. Affinché l''IMAP possa essere abilitato, l''SMTP deve prima essere impostato con credenziali valide e verificate. Il nome utente e la password di posta elettronica utilizzati per SMTP saranno utilizzati anche per IMAP. Per ulteriori informazioni, consulta <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588"> l''annuncio della funzionalità su Discourse Meta</a>.'
+          imap_alpha_warning: "Attenzione: questa è una funzionalità in fase alfa. Solo Gmail è ufficialmente supportato. Gli utenti che la usano se ne assumono il rischio!"
           imap_settings_valid: "Impostazioni IMAP valide."
           smtp_disable_confirm: "Se disabiliti SMTP, tutte le impostazioni SMTP e IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
-          imap_disable_confirm: "Se disabiliti IMAP tutte le impostazioni IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
+          imap_disable_confirm: "Se disabiliti IMAP, tutte le impostazioni IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
           imap_mailbox_not_selected: "Devi selezionare una casella di posta per questa configurazione IMAP, altrimenti non verrà sincronizzata nessuna casella di posta!"
           prefill:
             title: "Precompila con impostazioni per:"
@@ -653,7 +656,8 @@ it:
             password: "Password"
           settings:
             title: "Impostazioni"
-            allow_unknown_sender_topic_replies: "Consenti a mittenti sconosciuti di rispondere all'argomento."
+            allow_unknown_sender_topic_replies: "Consenti a mittenti sconosciuti di rispondere agli argomenti."
+            allow_unknown_sender_topic_replies_hint: "Consenti a mittenti sconosciuti di rispondere agli argomenti del gruppo. Se l'opzione è disabilitata, le risposte provenienti da indirizzi e-mail non invitati all'argomento causeranno la creazione di un nuovo argomento in cui saranno incluse."
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
@@ -663,21 +667,21 @@ it:
         categories:
           title: Categorie
           long_title: "Notifiche predefinite di categoria"
-          description: "Quando gli utenti vengono aggiunti a questo gruppo, le loro impostazioni di notifica di categoria verranno impostate su questi valori predefiniti. Potranno essere cambiati in un secondo momento."
+          description: "Quando gli utenti vengono aggiunti a questo gruppo, le impostazioni di notifica della loro categoria verranno impostate su questi valori predefiniti. Potranno essere cambiate in un secondo momento."
           watched_categories_instructions: "Osserva automaticamente tutti gli argomenti in queste categorie. I membri del Gruppo riceveranno notifica di tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
           tracked_categories_instructions: "Seguirai automaticamente tutti gli argomenti appartenenti a queste categorie. Accanto all'argomento comparirà il conteggio dei nuovi messaggi."
           watching_first_post_categories_instructions: "Gli utenti riceveranno una notifica alla pubblicazione del primo messaggio in ogni nuovo argomento in queste categorie."
-          regular_categories_instructions: "Se queste categorie saranno silenziate, saranno silenziate per tutti i membri del gruppo. Gli utenti saranno avvisati se menzionati o se qualcuno risponde ai loro messaggi."
+          regular_categories_instructions: "Se queste categorie saranno silenziate, ciò non si applica ai membri del gruppo. Gli utenti saranno avvisati se menzionati o se qualcuno risponde ai loro messaggi."
           muted_categories_instructions: "Gli utenti non riceveranno alcuna notifica su nuovi argomenti in queste categorie, né verranno visualizzati nella pagina delle Categorie o degli argomenti Recenti."
         tags:
           title: Etichette
           long_title: "Notifiche predefinite delle Etichette"
           description: "Quando vengono aggiunti utenti a questo gruppo, le loro impostazioni di notifica delle etichette verranno impostate su questi valori predefiniti, che potranno essere cambiati in seguito."
-          watched_tags_instructions: "Osserva automaticamente tutti gli argomenti con queste etichette. Ai membri del gruppo saranno notificati tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà anche il numero di nuovi messaggi."
+          watched_tags_instructions: "Osserva automaticamente tutti gli argomenti con queste etichette. I membri del gruppo saranno notificati di tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà anche il numero di nuovi messaggi."
           tracked_tags_instructions: "Segui automaticamente tutti gli argomenti con queste etichette. Accanto all'argomento apparirà il numero di nuovi messaggi."
           watching_first_post_tags_instructions: "Gli utenti riceveranno una notifica alla pubblicazione del primo messaggio in ogni nuovo argomento con queste etichette."
-          regular_tags_instructions: "Se queste etichette vengono silenziate, ciò non si applicherà ai membri del gruppo. Agli utenti arriverà una notifica quando verranno menzionati o riceveranno una risposta."
-          muted_tags_instructions: "Gli utenti non riceveranno notifiche su nessun nuovo argomento con queste etichette, e non appariranno in Recenti."
+          regular_tags_instructions: "Se queste etichette vengono silenziate, ciò non si applicherà ai membri del gruppo. Gli utenti riceveranno una notifica quando sono menzionati o ricevono una risposta."
+          muted_tags_instructions: "Gli utenti non riceveranno notifiche su nessun nuovo argomento con queste etichette, e non appariranno tra i Recenti."
         logs:
           title: "Log"
           when: "Quando"
@@ -756,20 +760,20 @@ it:
         remove_owner_description: "Rimuovi <b>%{username}</b> come proprietario di questo gruppo "
         make_primary: "Rendi Primario"
         make_primary_description: "Rendi questo gruppo primario per <b>%{username}</b>"
-        remove_primary: "Rimuovi come primario"
+        remove_primary: "Rimuovi dai primari"
         remove_primary_description: "Rimuovi questo gruppo primario per <b>%{username}</b>"
         remove_members: "Rimuovi Membri"
         remove_members_description: "Rimuovi gli utenti selezionati da questo gruppo"
-        make_owners: "Rendi Proprietario"
+        make_owners: "Rendi Proprietari"
         make_owners_description: "Rendi gli utenti selezionati proprietari di questo gruppo"
         remove_owners: "Rimuovi Proprietari"
         remove_owners_description: "Rimuovi gli utenti selezionati dai proprietari di questo gruppo"
         make_all_primary: "Rendi tutto primario"
-        make_all_primary_description: "Rendi questo gruppo il gruppo principale per tutti gli utenti selezionati"
-        remove_all_primary: "Rimuovi come primario"
-        remove_all_primary_description: "Rimuovi questo gruppo come primario"
+        make_all_primary_description: "Rendi questo il gruppo principale per tutti gli utenti selezionati"
+        remove_all_primary: "Rimuovi dai primari"
+        remove_all_primary_description: "Rimuovi questo gruppo dai primari"
         owner: "Proprietario"
-        primary: "Principale"
+        primary: "Primario"
         forbidden: "Non puoi visualizzare i membri."
       topics: "Argomenti"
       posts: "Messaggi"
@@ -787,7 +791,7 @@ it:
         everyone: "Chiunque"
       notifications:
         watching:
-          title: "Osservate"
+          title: "In osservazione"
           description: "Verrai avvertito per ogni nuovo invio in qualsiasi messaggio, e verrà mostrato il conteggio delle nuove risposte."
         watching_first_post:
           title: "Osserva Primo Messaggio"
@@ -800,7 +804,7 @@ it:
           description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde."
         muted:
           title: "Silenziato"
-          description: "Non verrai avvertito di nulla riguardo ai messaggi in questo gruppo."
+          description: "Non riceverai alcuna notifica relativa ai messaggi in questo gruppo."
       flair_url: "Immagine Avatar Flair"
       flair_upload_description: "Usa immagini quadrate non inferiori a 20px per 20px."
       flair_bg_color: "Colore Sfondo Avatar Flair"
@@ -862,7 +866,7 @@ it:
       topic_stat_sentence_month:
         one: "%{count} nuovo argomento nell'ultimo mese."
         other: "%{count} nuovi argomenti nell'ultimo mese."
-      n_more: "Categorie (%{count} di più)..."
+      n_more: "Categorie (altre %{count})..."
     ip_lookup:
       title: Ricerca Indirizzo IP
       hostname: Nome host
@@ -906,11 +910,11 @@ it:
         ignore_duration_username: "Nome utente"
         ignore_duration_when: "Durata:"
         ignore_duration_save: "Ignora"
-        ignore_duration_note: "Si prega di notare che tutti gli utenti ignorati saranno rimossi allo scadere del relativo periodo di attesa."
-        ignore_duration_time_frame_required: "Per favore, seleziona un lasso di tempo"
+        ignore_duration_note: "Nota: tutti gli utenti ignorati saranno rimossi allo scadere del relativo periodo di attesa."
+        ignore_duration_time_frame_required: "Selezionare un intervallo di tempo"
         ignore_no_users: "Non ci sono utenti ignorati."
         ignore_option: "Ignorato"
-        ignore_option_title: "Non riceverai più notifiche relative a questo utente, ed i suoi Argomenti e le sue risposte saranno nascoste."
+        ignore_option_title: "Non riceverai più notifiche relative a questo utente, e i suoi argomenti e risposte saranno nascosti."
         add_ignored_user: "Aggiungi..."
         mute_option: "Silenziati"
         mute_option_title: "Non riceverai più notifiche relative a questo utente."
@@ -919,9 +923,9 @@ it:
       notification_schedule:
         title: "Programmazione delle notifiche"
         label: "Attiva pianificazione delle notifiche personalizzata"
-        tip: "Al di fuori di queste ore sarai impostato a 'non disturbare' automaticamente."
+        tip: "Al di fuori di questo orario, il tuo stato sarà automaticamente impostato su 'non disturbare'."
         midnight: "Mezzanotte"
-        none: "Nessuno"
+        none: "Nessun orario"
         monday: "lunedi"
         tuesday: "martedì"
         wednesday: "mercoledì"
@@ -961,7 +965,7 @@ it:
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
-        each_browser_note: 'Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando in "non disturbare", indipendentemente da questa impostazione.'
+        each_browser_note: 'Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando l''utente è in stato "non disturbare", indipendentemente da questa impostazione.'
         consent_prompt: "Desideri ricevere notifiche in tempo reale quando qualcuno risponde a un tuo messaggio?"
       dismiss: "Ignora"
       dismiss_notifications: "Ignora tutti"
@@ -971,28 +975,28 @@ it:
         Hai la necessità di avere una conversazione privata con qualcuno? Invia un messaggio selezionando l'avatar e utilizzando il pulsante del messaggio %{icon}<br><br> Se hai bisogno di aiuto, puoi <a href='%{aboutUrl}'>inviare un messaggio a un membro dello staff</a>.
       no_bookmarks_title: "Non hai ancora aggiunto alcun segnalibro"
       no_bookmarks_body: >
-        Inizia ad aggiungere segnalibri ai messaggi con il bottone %{icon} e verranno elencati qui per una facile consultazione. Puoi anche impostare un promemoria!
+        Inizia ad aggiungere segnalibri ai messaggi con il pulsante %{icon}. Essi saranno elencati qui per facilitarne la consultazione. Puoi anche impostare un promemoria!
       no_notifications_title: "Non hai ancora notifiche"
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
         description: "Salta i suggerimenti e i distintivi per l'inserimento dei nuovi utenti"
-        not_first_time: "Non è la tua prima volta?"
+        not_first_time: "Non sei nuovo qui?"
         skip_link: "Ignora questi consigli"
         read_later: "Lo leggerò più tardi."
       theme_default_on_all_devices: "Rendi questo il tema predefinito su tutti i miei dispositivi."
-      color_scheme_default_on_all_devices: "Imposta questa combinazione (o combinazioni) di colori come predefinita/e su tutti i miei dispositivi"
+      color_scheme_default_on_all_devices: "Imposta questa combinazione di colori predefinita su tutti i miei dispositivi"
       color_scheme: "Combinazione di colori"
       color_schemes:
         default_description: "Tema predefinito"
         disable_dark_scheme: "Come di norma"
-        dark_instructions: "Puoi provare i colori del tema scuro attivando il tema scuro sul tuo dispositivo."
-        undo: "Reimposta"
-        regular: "Abituale"
-        dark: "Modo scuro"
+        dark_instructions: "Puoi provare i colori del tema scuro attivandolo sul tuo dispositivo."
+        undo: "Annulla"
+        regular: "Normale"
+        dark: "Modalità scura"
         default_dark_scheme: "(predefinito del sito)"
-      dark_mode: "Modo scuro"
-      dark_mode_enable: "Attiva lo schema di colori automatico del modo scuro"
+      dark_mode: "Modalità scura"
+      dark_mode_enable: "Attiva lo schema di colori automatico della modalità scura"
       text_size_default_on_all_devices: "Rendi questa la dimensione del testo predefinita su tutti i miei dispositivi"
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi personali"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
@@ -1014,11 +1018,11 @@ it:
         label: "Modalità Mailing list"
         enabled: "Abilita la modalità mailing list"
         instructions: |
-          Questa impostazione modifica il riassunto attività.<br />
+          Questa impostazione modifica il riepilogo delle attività.<br />
           Gli argomenti e le categorie silenziate non sono incluse in queste email.
         individual: "Invia una email per ogni nuovo messaggio"
         individual_no_echo: "Invia una email per ogni nuovo messaggio, eccetto per i miei"
-        many_per_day: "Inviamo una email per ogni nuovo messaggio (circa %{dailyEmailEstimate} al giorno)"
+        many_per_day: "Inviami un'email per ogni nuovo messaggio (circa %{dailyEmailEstimate} al giorno)"
         few_per_day: "Inviami una email per ogni nuovo messaggio (circa 2 al giorno)"
         warning: "Modalità Mailing List attiva. Le impostazioni per la notifica via email verranno ignorate."
       tag_settings: "Etichette"
@@ -1050,12 +1054,12 @@ it:
       admin_delete: "Cancella"
       users: "Utenti"
       muted_users: "Silenziati"
-      muted_users_instructions: "Elimina tutte le notifiche e i PM da questi utenti."
+      muted_users_instructions: "Elimina tutte le notifiche e gli MP da questi utenti."
       allowed_pm_users: "Consentito"
-      allowed_pm_users_instructions: "Consenti i PM solo da questi utenti."
+      allowed_pm_users_instructions: "Consenti MP solo da questi utenti."
       allow_private_messages_from_specific_users: "Consenti solo a utenti specifici di inviarmi messaggi personali"
       ignored_users: "Ignorato"
-      ignored_users_instructions: "Elimina tutti i post, le notifiche e i PM da questi utenti."
+      ignored_users_instructions: "Elimina tutti i messaggi, le notifiche e MP da questi utenti."
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
       apps: "Applicazioni"
@@ -1135,7 +1139,7 @@ it:
         label: "Codice"
         rate_limit: "Attendi prima di provare un altro codice di autenticazione."
         enable_description: |
-          Scansiona il QR code con una delle app supportate (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> e inserisci il tuo codice di autenticazione.
+          Scansiona il codice QR con una delle app supportate (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e inserisci il tuo codice di autenticazione.
         disable_description: "Inserisci il codice di autenticazione dalla tua app"
         show_key_description: "Inserisci manualmente"
         short_description: |

@@ -6,7 +6,7 @@
 
 zh_CN:
   dates:
-    short_date_no_year: "M[月]D[日]"
+    short_date_no_year: "M 月 D 日"
     short_date: "YYYY[年]M[月]D[日]"
     long_date: "MMMM[年]YY[月]DD[日] LT"
   datetime_formats: &datetime_formats

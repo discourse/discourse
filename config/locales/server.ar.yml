@@ -214,7 +214,7 @@ ar:
     start_discussion: "بدء المناقشة"
     continue: "متابعة المناقشة"
     error: "خطأ في التضمين"
-    referer: "المرجع:"
+    referer: "المُحيل:"
     more_replies:
       zero: "%{count} رد آخر"
       one: "رد واحد (%{count}) آخر"
@@ -377,256 +377,256 @@ ar:
         name: "اسم الفئة"
       topic:
         title: "العنوان"
-        featured_link: "رابط مميَّز"
-        category_id: "تصنيف"
+        featured_link: "رابط مميز"
+        category_id: "الفئة"
       post:
-        raw: "متن النص"
+        raw: "النص"
       user_profile:
-        bio_raw: "معلومات عنّي"
+        bio_raw: "نبذة عني"
     errors:
       models:
         topic:
           attributes:
             base:
-              too_many_users: "يمكنك إرسال التحذيرات إلى مستخدم واحد كل مرة."
-              no_user_selected: "عليك تحديد مستخدم صالح."
-              reply_by_email_disabled: "عُطّل الردّ بالبريد الإلكتروني."
+              too_many_users: "يمكنك إرسال التحذيرات إلى مستخدم واحد فقط في الوقت نفسه."
+              no_user_selected: "يجب عليك تحديد مستخدم صالح."
+              reply_by_email_disabled: "تم تعطيل الرد عبر البريد الإلكتروني."
             featured_link:
-              invalid_category: "لا يمكن التعديل في هذا القسم"
+              invalid_category: "لا يمكن التعديل في هذه الفئة."
         user:
           attributes:
             password:
-              common: "هي واحدة من أكثر 10000 كلمة مرور شائعة. من فضلك استخدم كلمة مرور آمنة أكثر."
-              same_as_username: "هي نفس اسم المستخدم. من فضلك استخدم كلمة مرور آمنة أكثر."
-              same_as_email: "هي نفس بريدك الإلكتروني. من فضلك استخدم كلمة مرور آمنة أكثر."
-              same_as_current: "هي نفس كلمة السر الحاليةالخاصة بك"
+              common: "هي واحدة من أكثر 10000 كلمة مرور شائعة. يُرجى استخدام كلمة مرور أكثر أمانًا."
+              same_as_username: "هي نفس اسم المستخدم. يُرجى استخدام كلمة مرور أكثر أمانًا."
+              same_as_email: "هي نفس عنوان بريدك الإلكتروني. يُرجى استخدام كلمة مرور أكثر أمانًا."
+              same_as_current: "هي نفس كلمة مرورك الحالية"
             ip_address:
-              signup_not_allowed: "التسجيل غير مسموح من هذا الحساب."
+              signup_not_allowed: "الاشتراك غير مسموح به من هذا الحساب."
         color_scheme_color:
           attributes:
             hex:
-              invalid: "ليس لونا صالحا"
+              invalid: "ليس لونًا صالحًا"
         post_reply:
           base:
-            different_topic: "المنشور و الرد لابد ان يكونا في نفس الموضوع"
+            different_topic: "يجب أن ينتمي المنشور والرد إلى الموضوع نفسه."
         web_hook:
           attributes:
             payload_url:
               invalid: "عنوان URL صالح. يجب أن يحتوي الرابط على http:// أو https://. وغير مسموح بالمسافات الفارغة."
       <<: *errors
-  vip_category_name: "استراحة"
-  vip_category_description: "قسم خاص للمستخدمين ذوي مستوى الثقة 3 فأعلى."
-  meta_category_name: "موقع التغذية الإرتجاعية"
-  meta_category_description: "النقاش حول هذا الموقع، وتنظيمه، وكيفية عمله وطرق تطويره."
-  staff_category_name: "الطاقم"
-  staff_category_description: "قسم مخصص للنقاش في موضوعات الإدارة. الموضوعات مرئية فقط للمديرين وللمشرفين."
+  vip_category_name: "الاستراحة"
+  vip_category_description: "فئة حصرية للأعضاء ذوي مستوى الثقة 3 وأعلى."
+  meta_category_name: "التعليقات على الموقع"
+  meta_category_description: "مناقشة حول هذا الموقع، ومؤسسته، وطريقة عمله، وكيف يمكننا تحسينه."
+  staff_category_name: "طاقم العمل"
+  staff_category_description: "فئة خاصة لمناقشات طاقم العمل. تكون الموضوعات مرئية للمسؤولين والمشرفين فقط."
   discourse_welcome_topic:
-    title: "مرحبًا بك في دسكورس"
+    title: "مرحبًا بك في Discourse"
   lounge_welcome:
-    title: "مرحبا بك في الاستراحة"
+    title: "مرحبًا بك في الاستراحة"
   category:
-    topic_prefix: "عن القسم %{category}."
-    post_template: "%{replace_paragraph}\n\nإستخدم الأسئلة الآتية لوضع وصف أطول ، أو لإنشاء تعليمات او قوانين للقسم الجديد:\n\n- لماذا يجب على الأعضاء والزوار استخدام هذا القسم؟ ولم اُنشئ؟\n\n- ما هو الاختلاف بين هذا القسم و الأقسام الأخرى التي لدينا؟\n\n- ما هي انواع الموضوعات التي تصنف تحت هذا القسم؟\n\n- هل نحتاج حقا إلى هذا القسم؟ وهل نستطيع دمجة مع قسم رئيسي أو فرعية أخر؟\n"
+    topic_prefix: "نبذة عن الفئة %{category}"
+    post_template: "%{replace_paragraph}\n\nاستخدام الفقرات التالية لوضع وصف أطول، أو لوضع إرشادات أو قواعد الفئة:\n\n- لماذا قد يستخدم الأشخاص هذه الفئة؟ ما الغرض منها؟\n\n- ما الاختلاف بين هذه الفئة و الفئات الأخرى لدينا؟\n\n- ما الذي يمكن أن تتضمَّنه الموضوعات في هذه الفئة بشكلٍ عام؟\n\n- هل نحتاج حقًا إلى هذه الفئة؟ وهل يمكننا دمجها مع فئة أو فئة فرعية أخرى؟\n"
     errors:
-      uncategorized_parent: "قسم \"غير مصنف\" لا يمكن أن يكون له قسم رئيسي"
-      self_parent: "لا يمكن أن يكون القسم الرئيسي للقسم هو نفسة"
-      depth: "لا يمكنك وضع قسم فرعي تحت قسم فرعي اخر"
-      invalid_email_in: "ليس '%{email}' عنوان بريد إلكترونيّ صالح."
-      email_already_used_in_group: "'%{email}' مستخدم من قبل المجموعه '%{group_name}'. "
-      email_already_used_in_category: "'%{email}' مستخدم من قبل القسم '%{category_name}'."
-      description_incomplete: "منشور وصف القسم يجب علي الاقل ان يحتوي علي فقرة واحدة."
+      uncategorized_parent: "لا يمكن للفئات غير المصنَّفة أن يكون لها فئة رئيسية"
+      self_parent: "لا يمكن أن تكون الفئة الرئيسية للفئة الفرعية هي الفئة الفرعية نفسها"
+      depth: "لا يمكنك وضع فئة فرعية تحت أخرى"
+      invalid_email_in: "'%{email}' ليس عنوان بريد إلكتروني صالحًا."
+      email_already_used_in_group: "'%{email}' مُستخدَم بالفعل بواسطة المجموعه '%{group_name}'."
+      email_already_used_in_category: "'%{email}' مُستخدَم بالفعل بواسطة الفئة '%{category_name}'."
+      description_incomplete: "يجب أن يتضمَّن منشور وصف الفئة فقرة واحدة على الأقل."
     cannot_delete:
-      has_subcategories: "لا يمكن حذف هذا القسم لأن له أقسام فرعيّة."
-      topic_exists_no_oldest: "لا يمكن حذف هذا القسم لأن عدد الموضوعات به هو %{count}."
-    uncategorized_description: "الموضوعات التي لا تحتاج الي ان تصنف تحت قسم معين, او لا تندرج تحت الأقسام الأخري."
+      has_subcategories: "لا يمكن حذف هذه الفئة لأنها تتضمَّن فئات فرعية."
+      topic_exists_no_oldest: "لا يمكن حذف هذه الفئة لأن عدد الموضوعات هو %{count}."
+    uncategorized_description: "الموضوعات التي لا تحتاج إلي فئة أو لا تندرج تحت أي فئة أخرى."
   trust_levels:
-    admin: "المدير"
-    staff: "الطاقم"
-    change_failed_explanation: "حاولت تخفيض رتبة %{user_name} إلى '%{new_trust_level}'. أيضا مستوى الثقة لهم حاليا '%{current_trust_level}'. %{user_name} سيبقى في '%{current_trust_level}' - إذا رغبت في تخفيض رتبة عضو أنظر لمستوى الثقة أولاً."
+    admin: "المسؤول"
+    staff: "طاقم العمل"
+    change_failed_explanation: "لقد حاولت خفض رتبة %{user_name} إلى '%{new_trust_level}'، لكن مستوى الثقة لديه حاليًا هو '%{current_trust_level}'. سيظل %{user_name} عند مستوى الثقة '%{current_trust_level}' - إذا كنت ترغب في خفض رتبة المستخدم، فاقفل مستوى الثقة أولًا."
   rate_limiter:
     hours:
-      zero: "أقلّ من ساعة"
-      one: "ساعة واحدة"
-      two: "ساعتان"
+      zero: "%{count} ساعة"
+      one: "ساعة واحدة (%{count})"
+      two: "ساعتان (%{count})"
       few: "%{count} ساعات"
       many: "%{count} ساعة"
       other: "%{count} ساعة"
     minutes:
-      zero: "أقلّ من دقيقة"
-      one: "دقيقة واحدة"
-      two: "دقيقتان"
+      zero: "%{count} دقيقة"
+      one: "دقيقة واحدة (%{count})"
+      two: "دقيقتان (%{count})"
       few: "%{count} دقائق"
       many: "%{count} دقيقة"
       other: "%{count} دقيقة"
     seconds:
-      zero: "أقلّ من ثانية"
-      one: "ثانية واحدة"
-      two: "ثانيتان"
-      few: "%{count} ثوان"
+      zero: "%{count} ثانية"
+      one: "ثانية واحدة (%{count})"
+      two: "ثانيتان (%{count})"
+      few: "%{count} ثوانٍ"
       many: "%{count} ثانية"
       other: "%{count} ثانية"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1دق"
+      half_a_minute: "< 1د"
       less_than_x_seconds:
-        zero: "< %{count}ثا"
-        one: "< %{count}ثا"
-        two: "< %{count}ثا"
-        few: "< %{count}ثا"
-        many: "< %{count}ثا"
-        other: "< %{count}ثا"
+        zero: "< %{count}ث"
+        one: "< %{count}ث"
+        two: "< %{count}ث"
+        few: "< %{count}ث"
+        many: "< %{count}ث"
+        other: "< %{count}ث"
       x_seconds:
-        zero: "%{count}ثا"
-        one: "%{count}ثا"
-        two: "%{count}ثا"
-        few: "%{count}ثا"
-        many: "%{count}ثا"
-        other: "%{count}ثا"
+        zero: "%{count}ث"
+        one: "%{count}ث"
+        two: "%{count}ث"
+        few: "%{count}ث"
+        many: "%{count}ث"
+        other: "%{count}ث"
       less_than_x_minutes:
-        zero: "< %{count}دق"
-        one: "< %{count}دق"
-        two: "< %{count}دق"
-        few: "< %{count}دق"
-        many: "< %{count}دق"
-        other: "< %{count}دق"
+        zero: "< %{count}د"
+        one: "< %{count}د"
+        two: "< %{count}د"
+        few: "< %{count}د"
+        many: "< %{count}د"
+        other: "< %{count}د"
       x_minutes:
-        zero: "%{count}دق"
-        one: "%{count}دق"
-        two: "%{count}دق"
-        few: "%{count}دق"
-        many: "%{count}دق"
-        other: "%{count}دق"
+        zero: "< %{count}د"
+        one: "< %{count}د"
+        two: "< %{count}د"
+        few: "< %{count}د"
+        many: "< %{count}د"
+        other: "< %{count}د"
       about_x_hours:
-        zero: "%{count}سا"
-        one: "%{count}سا"
-        two: "%{count}سا"
-        few: "%{count}سا"
-        many: "%{count}سا"
-        other: "%{count}سا"
+        zero: "%{count}س"
+        one: "%{count}س"
+        two: "%{count}س"
+        few: "%{count}س"
+        many: "%{count}س"
+        other: "%{count}س"
       x_days:
-        zero: "%{count}يوم"
-        one: "%{count}يوم"
-        two: "%{count}يوم"
-        few: "%{count}يوم"
-        many: "%{count}يوم"
-        other: "%{count}يوم"
+        zero: "%{count}ي"
+        one: "%{count}ي"
+        two: "%{count}ي"
+        few: "%{count}ي"
+        many: "%{count}ي"
+        other: "%{count}ي"
       about_x_months:
-        zero: "%{count}شهر"
-        one: "%{count}شهر"
-        two: "%{count}شهر"
-        few: "%{count}شهر"
-        many: "%{count}شهر"
-        other: "%{count}شهر"
+        zero: "%{count} ش"
+        one: "%{count} ش"
+        two: "%{count} ش"
+        few: "%{count} ش"
+        many: "%{count} ش"
+        other: "%{count} ش"
       x_months:
-        zero: "%{count}شهر"
-        one: "%{count}شهر"
-        two: "%{count}شهر"
-        few: "%{count}شهر"
-        many: "%{count}شهر"
-        other: "%{count}شهر"
+        zero: "%{count} ش"
+        one: "%{count} ش"
+        two: "%{count} ش"
+        few: "%{count} ش"
+        many: "%{count} ش"
+        other: "%{count} ش"
       about_x_years:
-        zero: "%{count}عام"
-        one: "%{count}عام"
-        two: "%{count}عام"
-        few: "%{count}عام"
-        many: "%{count}عام"
-        other: "%{count}عام"
+        zero: "%{count} ع"
+        one: "%{count} ع"
+        two: "%{count} ع"
+        few: "%{count} ع"
+        many: "%{count} ع"
+        other: "%{count} ع"
       over_x_years:
-        zero: "> %{count}عام"
-        one: "> %{count}عام"
-        two: "> %{count}عام"
-        few: "> %{count}عام"
-        many: "> %{count}عام"
-        other: "> %{count}عام"
+        zero: "> %{count} ع"
+        one: "> %{count} ع"
+        two: "> %{count} ع"
+        few: "> %{count} ع"
+        many: "> %{count} ع"
+        other: "> %{count} ع"
       almost_x_years:
-        zero: "%{count}عام"
-        one: "%{count}عام"
-        two: "%{count}عام"
-        few: "%{count}عام"
-        many: "%{count}عام"
-        other: "%{count}عام"
+        zero: "%{count} ع"
+        one: "%{count} ع"
+        two: "%{count} ع"
+        few: "%{count} ع"
+        many: "%{count} ع"
+        other: "%{count} ع"
     distance_in_words_verbose:
-      half_a_minute: "منذ لحظات"
-      less_than_x_seconds: "منذ لحظات"
+      half_a_minute: "الآن"
+      less_than_x_seconds: "الآن"
       x_seconds:
-        zero: "قبل لحظات"
-        one: "قبل ثانية واحدة"
-        two: "قبل ثانيتين"
-        few: "قبل %{count} ثوان"
-        many: "قبل %{count} ثانية"
-        other: "قبل %{count} ثانية"
+        zero: "منذ %{count} ثانية"
+        one: "منذ ثانية واحدة (%{count})"
+        two: "منذ ثانيتين (%{count})"
+        few: "منذ %{count} ثوانٍ"
+        many: "منذ %{count} ثانية"
+        other: "منذ %{count} ثانية"
       less_than_x_minutes:
-        zero: "قبل لحظات"
-        one: "قبل أقل من دقيقة"
-        two: "قبل أقل من دقيقتين"
-        few: "قبل أقل من %{count} دقائق"
-        many: "قبل أقل من %{count} دقيقة"
-        other: "قبل أقل من %{count} دقيقة"
+        zero: "منذ أقل من %{count} دقيقة"
+        one: "منذ أقل من دقيقة واحدة (%{count})"
+        two: "منذ أقل من دقيقتين (%{count})"
+        few: "منذ أقل من %{count} دقائق"
+        many: "منذ أقل من %{count} دقيقة"
+        other: "منذ أقل من %{count} دقيقة"
       x_minutes:
-        zero: "قبل أقل من دقيقة"
-        one: "قبل دقيقة واحدة"
-        two: "قبل دقيقتين"
-        few: "قبل %{count} دقائق"
-        many: "قبل %{count} دقيقة"
-        other: "قبل %{count} دقيقة"
+        zero: "منذ %{count} دقيقة"
+        one: "منذ دقيقة واحدة (%{count})"
+        two: "منذ دقيقتين (%{count})"
+        few: "منذ %{count} دقائق"
+        many: "منذ %{count} دقيقة"
+        other: "منذ %{count} دقيقة"
       about_x_hours:
-        zero: "قبل أقل من ساعة"
-        one: "قبل ساعة واحدة"
-        two: "قبل ساعتين"
-        few: "قبل %{count} ساعات"
-        many: "قبل %{count} ساعة"
-        other: "قبل %{count} ساعة"
+        zero: "منذ %{count} ساعة"
+        one: "منذ ساعة واحدة (%{count})"
+        two: "منذ ساعتين (%{count})"
+        few: "منذ %{count} ساعات"
+        many: "منذ %{count} ساعة"
+        other: "منذ %{count} ساعة"
       x_days:
-        zero: "قبل أقل من يوم"
-        one: "قبل يوم واحد"
-        two: "قبل يومين"
-        few: "قبل %{count} أيام"
-        many: "قبل %{count} يوما"
-        other: "قبل %{count} يوم"
+        zero: "منذ %{count} يوم"
+        one: "منذ يوم واحد (%{count})"
+        two: "منذ يومين (%{count})"
+        few: "منذ %{count} أيام"
+        many: "منذ %{count} يومًا"
+        other: "منذ %{count} يوم"
       about_x_months:
-        zero: "قبل حوالي أقل من شهر"
-        one: "قبل حوالي شهر واحد"
-        two: "قبل حوالي شهرين"
-        few: "قبل حوالي %{count} أشهر"
-        many: "قبل حوالي %{count} شهرا"
-        other: "قبل حوالي %{count} شهر"
+        zero: "منذ حوالي %{count} شهر"
+        one: "منذ حوالي شهر واحد (%{count})"
+        two: "منذ حوالي شهرين (%{count})"
+        few: "منذ حوالي %{count} أشهر"
+        many: "منذ حوالي %{count} شهرًا"
+        other: "منذ حوالي %{count} شهر"
       x_months:
-        zero: "قبل أقل من شهر"
-        one: "قبل شهر واحد"
-        two: "قبل شهرين"
-        few: "قبل %{count} أشهر"
-        many: "قبل %{count} شهرا"
-        other: "قبل %{count} شهر"
+        zero: "منذ %{count} شهر"
+        one: "منذ شهر واحد (%{count})"
+        two: "منذ شهرين (%{count})"
+        few: "منذ %{count} أشهر"
+        many: "منذ %{count} شهرًا"
+        other: "منذ %{count} شهر"
       about_x_years:
-        zero: "قبل حوالي أقل من سنة"
-        one: "قبل حوالي سنة واحدة"
-        two: "قبل حوالي سنتين"
-        few: "قبل حوالي %{count} سنوات"
-        many: "قبل حوالي %{count} سنة"
-        other: "قبل حوالي %{count} سنة"
+        zero: "منذ حوالي %{count} عام"
+        one: "منذ حوالي عام واحد (%{count})"
+        two: "منذ حوالي عامين (%{count})"
+        few: "منذ حوالي %{count} أعوام"
+        many: "منذ حوالي %{count} عامًا"
+        other: "منذ حوالي %{count} عام"
       over_x_years:
-        zero: "قبل أكثر من أقل من سنة"
-        one: "قبل أكثر من سنة واحد"
-        two: "قبل أكثر من سنتين"
-        few: "قبل أكثر من %{count} سنوات"
-        many: "قبل أكثر من %{count} سنة"
-        other: "قبل أكثر من %{count} سنة"
+        zero: "منذ أكثر من %{count} عام"
+        one: "منذ أكثر من عام واحد (%{count})"
+        two: "منذ أكثر من عامين (%{count})"
+        few: "منذ أكثر من %{count} أعوام"
+        many: "منذ أكثر من %{count} عامًا"
+        other: "منذ أكثر من %{count} عام"
       almost_x_years:
-        zero: "قبل حوالي أقل من سنة"
-        one: "قبل حوالي سنة واحدة"
-        two: "قبل حوالي سنتين"
-        few: "قبل حوالي %{count} سنوات"
-        many: "قبل حوالي %{count} سنة"
-        other: "قبل حوالي %{count} سنة"
+        zero: "منذ حوالي %{count} عام تقريبًا"
+        one: "منذ حوالي عام واحد (%{count}) تقريبًا"
+        two: "منذ حوالي عامين (%{count}) تقريبًا"
+        few: "منذ حوالي %{count} أعوام تقريبًا"
+        many: "منذ حوالي %{count} عامًا تقريبًا"
+        other: "منذ حوالي %{count} عام تقريبًا"
   password_reset:
-    no_token: "نأسف، رابط تغيير كلمة السّرّ قديم جدًّا. انقر زرّ ”لِج“ واختر ”نسيت كلمة السّرّ“ لنرسل لك رابطًا آخر."
-    choose_new: "اختر كلمة المرور الجديدة"
-    choose: "اختر كلمة المرور"
-    update: "حدّث كلمة السّرّ"
-    save: "تعين كلمة المرور"
-    title: "إعادة تعين كلمة المرور"
-    success: "غُيّرت كلمة السّرّ بنجاح وقد ولجت الآن."
-    success_unapproved: "غُيّرت كلمة السّرّ بنجاح."
+    no_token: "عذرًا، رابط تغيير كلمة المرور قديم جدًا. اضغط على زر \"تسجيل الدخول\" واستخدم \"نسيت كلمة المرور\" لنُرسل إليك رابطًا جديدًا."
+    choose_new: "اختيار كلمة مرور جديدة"
+    choose: "اختيار كلمة مرور"
+    update: "تحديث كلمة المرور"
+    save: "ضبط كلمة المرور"
+    title: "إعادة تعيين كلمة المرور"
+    success: "لقد غيَّرت كلمة مرورك وسجَّلت الدخول بنجاح."
+    success_unapproved: "لقد غيَّرت كلمة مرورك بنجاح."
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
@@ -656,141 +656,141 @@ ar:
       unknown: "نظام تشغيل مجهول"
   change_email:
     confirmed: "تم تحديث بريدك الإلكتروني."
-    please_continue: "تابع إلى %{site_name}"
-    error: "حدث خطأ في تغيير عنوان بريدك الإلكتروني. لربما يكون العنوان مستخدما بالفعل."
-    error_staged: "حدث خطأ في تغيير عنوان بريدك الإلكتروني. العنوان الذى ادخلته مستخدم من قبل مشترك عبر البريد الالكترونى."
-    already_done: "نأسف عنوان التاكيد هدا لم يعد صالحا بعد الان. ربما تم تغيير بريدك بالفعل؟"
+    please_continue: "المتابعة إلى %{site_name}"
+    error: "حدث خطأ في أثناء تغيير عنوان بريدك الإلكتروني. ربما يكون العنوان مستخدمًا بالفعل."
+    error_staged: "حدث خطأ في أثناء تغيير عنوان بريدك الإلكتروني. العنوان الذى ادخلته مُستخدَم بواسطة مستخدم مؤقت."
+    already_done: "عذرًا، لم يعُد رابط التأكيد هذا صالحًا. ربما تم تغيير بريدك الإلكتروني بالفعل."
   activation:
-    action: "انقر هنا لتنشيط حسابك."
-    already_done: "آسفون، لم يعد رابط تأكيد الحساب صالحا. لربما يكون الحساب نشطا بالفعل."
-    please_continue: "أُكّد حسابك الجديد، سيُعاد توجيهك إلى الصفحة الرئيسية."
-    continue_button: "واصِل نحو %{site_name}"
+    action: "انقر هنا لتفعيل حسابك."
+    already_done: "عذرًا، لم يعُد رابط تأكيد الحساب صالحًا. ربما يكون الحساب نشطًا بالفعل."
+    please_continue: "تم تأكيد حسابك الجديد؛ ستتم إعادة توجيهك إلى الصفحة الرئيسية."
+    continue_button: "المتابعة إلى %{site_name}"
     welcome_to: "مرحبًا بك في %{site_name}!"
-    approval_required: "يجب على المشرف أن يقبل حسابك الجديد قبل أن تستطيع الدخول لهذا المنتدى. سوف تتلقى بريد إلكتروني عندما يتم قبول حسابك."
-    missing_session: "لا نستظيع تحديد اذا كان حسابك قد أنشئ. رجاء التأكد من أن (الكوكيز) بالمتصفح الذى تستخدمة منشطة."
+    approval_required: "يجب على المشرف الموافقة على حسابك الجديد يدويًا للوصول إلى هذا المنتدى. ستتلقى رسالة إلكترونية عندما يتم قبول حسابك."
+    missing_session: "لا يمكننا تحديد ما إذا كان حسابك قد تم إنشاؤه. يُرجى التأكد من تمكين ملفات تعريف الارتباط."
     admin_confirm:
-      title: "تاكيد حساب المدير"
-      grant: "اجعلة مُديراً"
-      complete: "المستخدم <b>%{target_username}</b> مدير الآن."
-      back_to: "العودة إلي %{title}"
+      title: "تأكيد حساب المسؤول"
+      grant: "منح إذن وصول المسؤول"
+      complete: "أصبح المستخدم <b>%{target_username}</b> مسؤولًا الآن."
+      back_to: "الرجوع إلي %{title}"
   reviewable_score_types:
     needs_approval:
-      title: "تحتاج موافقة"
+      title: "بحاجة إلى الموافقة"
   post_action_types:
     off_topic:
       title: "خارج الموضوع"
-      description: "لا صلة للمنشور بالنقاش الحالي على النحو المحدد بواسطة العنوان و المنشور الاول، وربما ينبغي نقلها لمكان أخر."
+      description: "لا صلة للمنشور بالمناقشة الحالية كما هو محدَّد في العنوان وأول منشور، وربما ينبغي نقله إلى مكان أخر."
     spam:
-      title: "مزعج"
-      description: "هذا المنشور هو اعلان او منشور تخريبي. لا صلة له بالموضوع الحالي."
-      email_title: '"%{title}" عُلّم على أنّه موضوع غير لائق'
+      title: "غير مرغوب فيه"
+      description: "هذا المنشور عبارة عن إعلان أو منشور تخريبي. ولا صلة له بالموضوع الحالي."
+      email_title: 'تم الإبلاغ عن "%{title}" كمنشور غير مرغوب فيه'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: "غير مناسب"
+      title: "غير لائق"
     notify_user:
-      title: "أرسل رسالة إلى @%{username}"
+      title: "مراسلة @%{username}"
       email_title: 'منشورك في "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: "شيء آخر "
-      description: "يحتاج هذا المنشور إجراء من الطاقم لسبب آخر لم يُذكر أعلاه."
-      email_title: 'النشر في "%{title}" تتطلب تنبيه الطاقم.'
+      title: "سبب آخر"
+      description: "يستدعي هذا المنشور انتباه طاقم العمل لسبب آخر لم يتم ذكره أعلاه."
+      email_title: 'يستدعي منشور في "%{title}" انتباه طاقم العمل'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: "علامة مرجعية"
-      description: "فضل هذا المنشور"
-      short_description: "فضل هذا المنشور"
+      title: "إشارة مرجعية"
+      description: "وضع إشارة مرجعية على هذا المنشور"
+      short_description: "وضع إشارة مرجعية على هذا المنشور"
     like:
-      title: "إعجاب"
-      description: "أُعجَب بهذا المنشور"
-      short_description: "أُعجَب بهذا المنشور"
+      title: "تسجيل الإعجاب"
+      description: "تسجيل الإعجاب بهذا المنشور"
+      short_description: "تسجيل الإعجاب بهذا المنشور"
   draft:
     sequence_conflict_error:
-      description: "أنت تُحرّر المسودّة في نافذة أخرى. من فضلك أعِد تحميل هذه الصفحة."
+      description: "المسودة قيد التعديل في نافذة أخرى. يُرجى إعادة تحميل هذه الصفحة."
   user_activity:
     no_bookmarks:
-      self: "ما من مشاركات عليها علامة. تُتيح لك العلامات الرجوع إلى المشاركات التي تريد بسرعة."
-      others: "لا علامات."
+      self: "ليس لديك منشورات عليها إشارة مرجعية؛ تُتيح لك الإشارات المرجعية الرجوع إلى المنشورات التي تريدها بسرعة."
+      others: "لا توجد إشارات مرجعية."
     no_likes_given:
-      self: "لم تعجبك أيّة منشور."
-      others: "لا يوجد منشورات اعجبت بها."
+      self: "لم تسجِّل إعجابك بأي منشور."
+      others: "لا توجد منشورات سجَّلت إعجابك بها."
     no_replies:
-      self: "لم تقم بالرد علي اي منشور."
-      others: "لا يوجد ردود ."
+      self: "لم ترد على أي منشور."
+      others: "لا توجد ردود."
   topic_flag_types:
     spam:
-      title: "مزعج"
-      description: "هذا الموضوع يُعتبر إعلانًا. ليس مفيدًا أو ذا علاقة بالموقع هذا، بل ترويجيّ فحسب."
-      long_form: "ترفع علم هذا كدعاية"
+      title: "غير مرغوب فيه"
+      description: "هذا الموضوع عبارة عن إعلان. وليس مفيدًا أو ذا صلة بهذا الموقع؛ إنه ترويجي فقط."
+      long_form: "أبلغ عن هذا الموضوع كغير مرغوب فيه"
     inappropriate:
-      title: "غير مناسب"
-      long_form: "ترفع علم هذا عن صورة غير ملائمة"
+      title: "غير لائق"
+      long_form: "أبلغ عن هذا الموضوع كغير لائق"
     notify_moderators:
-      title: "شيء آخر "
-      long_form: "علم هذا لتنبيه المراقب"
-      email_title: 'الموضوع "%{title}" يتطلب موافقة المشرف'
+      title: "سبب آخر"
+      long_form: "أبلغ عن هذا الموضوع لتنبيه المشرفين"
+      email_title: 'يستدعي الموضوع "%{title}" انتباه المشرفين'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: "<p>هذا المنشور كان مبلغ عنه بواسطة المجتمع وهو مخفي مؤقتاً.</p>"
+    user_must_edit: "<p>أبلغ المجتمع عن هذا المنشور وتم إخفاؤه مؤقتًا.</p>"
   archetypes:
     regular:
       title: "موضوع عادي"
     banner:
-      title: "موضوع إعلاني"
+      title: "موضوع بانر"
       message:
-        make: "هذا الموضوع معلّم الآن. سوف يظهر في أعلى كل صفحة حتى يرفض من قبل المستخدم."
-        remove: "هذا الموضوع لم يعد معلّم. لن يظهر في أعلى كل صفحة."
+        make: "لقد أصبح هذا الموضوع بانرًا الآن. وسيظهر في أعلى كل صفحة حتى يزيله المستخدم."
+        remove: "لم يعُد هذا الموضوع بانرًا. ولن يظهر بعد الآن في أعلى كل صفحة."
   unsubscribed:
-    topic_description: "لإعادة الاشتراك لل %{link}، استخدم ادارة التنبيهات في أسفل او يمين الموضوع."
+    topic_description: "لإعادة الاشتراك في %{link}، استخدم إدارة التنبيهات في أسفل أو يسار الموضوع."
   unsubscribe:
-    title: "إلغاء الإشتراك"
-    stop_watching_topic: "ألغِ مراقبة هذا الموضوع، %{link}"
-    mute_topic: "اكتم كلّ إشعارات هذا الموضوع، %{link}"
-    unwatch_category: "ألغِ مراقبة كلّ الموضوعات في %{category}"
-    mailing_list_mode: "الغاء وضعية قائمة المراسلات"
-    different_user_description: "أنت حالياً سجلت دخولك كمستخدم مختلف عن الذي كان يُرسله له الملخص. الرجاء تسجيل الخروج ثم الدخول مرة أخرى والمحاولة مجدداً."
-    log_out: "تسجيل خروج"
+    title: "إلغاء الاشتراك"
+    stop_watching_topic: "إيقاف مراقبة هذا الموضوع، %{link}"
+    mute_topic: "كتم جميع الإشعارات لهذا الموضوع، %{link}"
+    unwatch_category: "إيقاف مراقبة جميع الموضوعات في %{category}"
+    mailing_list_mode: "إيقاف تشغيل وضع القائمة البريدية"
+    different_user_description: "لقد سجَّلت الدخول حاليًا كمستخدم مختلف عن الذي راسلناه. يُرجى تسجيل الخروج أو دخول وضع التخفي، ثم إعادة المحاولة."
+    log_out: "تسجيل الخروج"
     digest_frequency:
-      never: "أبدا"
+      never: "أبدًا"
       every_30_minutes: "كل 30 دقيقة"
       every_hour: "كل ساعة"
-      daily: "يوميا"
-      weekly: "أسبوعيا"
+      daily: "يوميًا"
+      weekly: "أسبوعيًا"
       every_month: "كل شهر"
       every_six_months: "كل ستة اشهر"
   user_api_key:
-    title: "منح الصلاحية لدخول التطبيق"
-    authorize: "منح الصلاحية"
+    title: "السماح بوصول التطبيق"
+    authorize: "السماح"
     read: "قراءة"
     read_write: "قراءة/كتابة"
-    description: '"%{application_name}": يطلب الصلاحيات التالية لحسابك'
+    description: 'يطلب "%{application_name}" إذن الوصول التالي إلى حسابك:'
     otp_confirmation:
-      confirm_title: تابع إلى %{site_name}
+      confirm_title: المتابعة إلى %{site_name}
       logging_in_as: تسجيل الدخول باسم %{username}
       confirm_button: إنهاء تسجيل الدخول
-    no_trust_level: "نأسف، لست بمستوى الثّقة الكافي للوصول إلى واجهة برمجة التّطبيقات (API) للمستخدمين"
-    generic_error: "نأسف، لا نستطيع إصدار مفاتيح API للمستخدمين؛ عطّل مدير الموقع هذه الميزة"
+    no_trust_level: "عذرًا، ليس لديك مستوى الثقة المطلوب للوصول إلى API للمستخدم"
+    generic_error: "عذرًا، لا يمكننا إصدار مفاتيح API للمستخدمين؛ ربما يكون مسؤول الموقع قد عطَّل هذه الميزة"
     scopes:
-      message_bus: "تحديثات فورية"
+      message_bus: "التحديثات المباشرة"
       notifications: "قراءة الإشعارات ومسحها"
       session_info: "قراءة معلومات جلسة المستخدم"
-      read: "قراءة الكلّ"
-      write: "كتابة الكلّ"
+      read: "قراءة الكل"
+      write: "كتابة الكل"
   reports:
     default:
       labels:
-        count: العد
+        count: العدد
         day: اليوم
     post_edits:
       labels:
         edited_at: التاريخ
-        post: مشاركة
-        editor: مُصحح
-        edit_reason: سبب
+        post: المنشور
+        editor: المحرِّر
+        edit_reason: السبب
     user_flagging_ratio:
       labels:
-        user: مستخدم
-        score: نقاط
+        user: المستخدم
+        score: النقاط
     moderators_activity:
       labels:
         moderator: مشرف
@@ -800,7 +800,7 @@ ar:
     visits:
       title: "زيارات المستخدم"
       xaxis: "اليوم"
-      yaxis: "مرّات الزّيارة"
+      yaxis: "عدد الزيارات"
     signups:
       xaxis: "اليوم"
     new_contributors:
@@ -810,40 +810,40 @@ ar:
     consolidated_page_views:
       yaxis: "اليوم"
       labels:
-        post: مشاركة
-        editor: مُصحح
-        edit_reason: سبب
+        post: المنشور
+        editor: المحرِّر
+        edit_reason: السبب
     dau_by_mau:
       xaxis: "اليوم"
     daily_engaged_users:
       xaxis: "اليوم"
     profile_views:
-      title: "مشاهدات الحساب الشخصي للعضو"
+      title: "مرات عرض الملف التعريفي للمستخدم"
       xaxis: "اليوم"
-      yaxis: "عدد مشاهدات الحساب الشخصي العضو"
+      yaxis: "عدد الملفات الشخصية للمستخدمين التي تم عرضها"
     topics:
-      title: "المواضيع"
+      title: "الموضوعات"
       xaxis: "اليوم"
-      yaxis: "عدد المواضيع الجديدة"
+      yaxis: "عدد الموضوعات الجديدة"
     posts:
       title: "المنشورات"
       xaxis: "اليوم"
-      yaxis: "عدد المنشورات الجديدة الجديدة"
+      yaxis: "عدد المنشورات الجديدة"
     likes:
       title: "اﻹعجابات"
       xaxis: "اليوم"
       yaxis: "عدد اﻹعجابات الجديدة"
       description: "عدد اﻹعجابات الجديدة."
     flags:
-      title: "الأبلاغ"
-      xaxis: "يوم"
-      yaxis: "عدد الإبلاغات"
-    bookmarks:
-      title: "العلامات"
+      title: "البلاغات"
       xaxis: "اليوم"
-      yaxis: "عدد العلامات الجديدة"
+      yaxis: "عدد البلاغات"
+    bookmarks:
+      title: "الإشارات المرجعية"
+      xaxis: "اليوم"
+      yaxis: "عدد الإشارات المرجعية الجديدة"
     users_by_trust_level:
-      title: "الأعضاء في مستوى الثقة"
+      title: "المستخدمون لكل مستوى ثقة"
       xaxis: "مستوى الثقة"
       yaxis: "عدد المستخدمين"
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
@@ -853,15 +853,15 @@ ar:
       labels:
         type: النوع
       xaxis_labels:
-        admin: مدير
+        admin: مسؤول
         moderator: مشرف
-        suspended: موقوف
+        suspended: معلَّق
     emails:
-      title: "رسائل البريد المرسلَة"
-      xaxis: "يوم"
-      yaxis: "عدد رسائل البريد الإلكتروني"
+      title: "الرسائل الإلكترونية المُرسَلة"
+      xaxis: "اليوم"
+      yaxis: "عدد الرسائل الإلكترونية"
     user_to_user_private_messages:
-      xaxis: "يوم"
+      xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     user_to_user_private_messages_with_replies:
       xaxis: "اليوم"
@@ -871,69 +871,69 @@ ar:
       xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     moderator_warning_private_messages:
-      title: "تحذير مشرف "
-      xaxis: "يوم"
+      title: "تحذير من المشرف"
+      xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     notify_moderators_private_messages:
-      title: "أبلغ المراقبين"
+      title: "إرسال إشعار إلى المشرفين"
       xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     notify_user_private_messages:
-      title: "أبلاغ عضو"
+      title: "إرسال إشعار إلى المستخدم"
       xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     top_referrers:
-      title: "أفضل الصفحات المرجعية"
-      xaxis: "مستخدم"
-      num_clicks: "نقرات"
-      num_topics: "المواضيع"
+      title: "أفضل المُحيلين"
+      xaxis: "المستخدم"
+      num_clicks: "النقرات"
+      num_topics: "الموضوعات"
       labels:
         user: "مستخدم"
-        num_clicks: "نقرات"
-        num_topics: "المواضيع"
+        num_clicks: "النقرات"
+        num_topics: "الموضوعات"
     top_traffic_sources:
-      title: "أعلى مصادر مرور"
-      xaxis: "مجال"
-      num_clicks: "نقرات"
-      num_topics: "المواضيع"
-      num_users: "اﻷعضاء"
+      title: "أفضل مصادر الزيارات"
+      xaxis: "النطاق"
+      num_clicks: "النقرات"
+      num_topics: "الموضوعات"
+      num_users: "المستخدمون"
       labels:
-        domain: مجال
-        num_clicks: نقرات
-        num_topics: المواضيع
+        domain: النطاق
+        num_clicks: النقرات
+        num_topics: الموضوعات
     top_referred_topics:
-      title: "أعلى مواضيع مشارة"
+      title: "أفضل الموضوعات المحال إليها"
       labels:
-        num_clicks: "نقرات"
+        num_clicks: "النقرات"
         topic: "موضوع"
     page_view_anon_reqs:
-      title: "مجهولون"
-      xaxis: "يوم"
-      yaxis: "عدد قراءات الصفحات للمجهولين"
+      title: "مجهول"
+      xaxis: "اليوم"
+      yaxis: "مرات العرض المجهولة للصفحة"
     page_view_logged_in_reqs:
-      title: "مسجل دخول"
-      xaxis: "يوم"
-      yaxis: "عدد قراءات الصفحات للمسجلين دخول"
+      title: "مسجِّل الدخول"
+      xaxis: "اليوم"
+      yaxis: "مرات عرض مُسجلي الدخول للصفحة"
     page_view_crawler_reqs:
-      title: "عدد قراءات الصفحات لزواحف الانترنت"
-      xaxis: "يوم"
-      yaxis: "عدد قراءات الصفحات لزواحف الانترنت"
+      title: "مرات عرض زاحف الويب للصفحة"
+      xaxis: "اليوم"
+      yaxis: "مرات عرض زاحف الويب للصفحة"
     page_view_total_reqs:
-      title: "زيارات الصفحة"
-      xaxis: "يوم"
-      yaxis: "عدد قراءات الصفحات الكلى"
+      title: "مرات عرض الصفحة"
+      xaxis: "اليوم"
+      yaxis: "إجمالي مرات عرض الصفحة"
     page_view_logged_in_mobile_reqs:
-      title: "عدد قراءات الصفحات للمسجلين دخول"
-      xaxis: "يوم"
-      yaxis: "عدد قراءات الصفحات للمسجلين دخول عن طريق المحمول"
+      title: "مرات عرض مُسجلي الدخول للصفحة"
+      xaxis: "اليوم"
+      yaxis: "مرات عرض مُسجلي الدخول على الجوَّال للصفحة"
     page_view_anon_mobile_reqs:
-      title: "عدد قراءات الصفحات للمجهولين"
+      title: "مرات عرض المجهولين للصفحة"
       xaxis: "اليوم"
-      yaxis: "عدد قراءات الصفحات للمجهولين عن طريق المحمول"
+      yaxis: "مرات عرض المجهولين للصفحة على الجوَّال"
     http_background_reqs:
-      title: "خلفية"
+      title: "الخلفية"
       xaxis: "اليوم"
-      yaxis: "طلبات تستخدم اﻷن وتتبع"
+      yaxis: "الطلبات المُستخدَمة في التحديث المباشر والتتبُّع"
     http_2xx_reqs:
       title: "الحالة 2xx ‏(OK)"
       xaxis: "يوم"
@@ -953,7 +953,7 @@ ar:
     http_total_reqs:
       title: "مجموع"
       xaxis: "يوم"
-      yaxis: "إجمالي طلبات"
+      yaxis: "إجمالي الطلبات"
     time_to_first_response:
       title: "وقت أول استجابة"
       xaxis: "اليوم"
@@ -1780,19 +1780,19 @@ ar:
         تُمنح هذة الشارة عند اول مرة تقرا موضوع طويل به اكثر من 100 رد. قراءة المحادثة بدقة يساعدك علي متابعة النقاش, و فهم وجهات النظر المختلفة و تؤدي إلي نقاشات اكثر تشويقا. فكلما قرات اكثر, كلما فهمت الموضوع بشكل افضل.
     popular_link:
       name: رابط محبوب
-      description: نشرت رابطًا خارجيًا تم فتحه 50 مرة
+      description: نشرت رابطًا خارجيًا تم النقر عليه 50 مرة
       long_description: |
-        يتم منح هذة الشارة عندما يتم فتح رابط نشرته 50 مرة. شكرًا لك على نشر رابط مفيد أضاف قيمة كبيرة إلى المناقشة!
+        يتم منح هذة الشارة عندما يتم النقر على رابط نشرته 50 مرة. شكرًا لك على نشر رابط مفيد أضاف قيمة كبيرة إلى المناقشة!
     hot_link:
       name: رابط نشط
-      description: نشرت رابطًا خارجيًا تم فتحه 300 مرة
+      description: نشرت رابطًا خارجيًا تم النقر عليه 300 مرة
       long_description: |
-        يتم منح هذة الشارة عندما يتم فتح رابط نشرته 300 مرة. شكرًا لك على نشر رابط مذهل دفع المناقشة إلى الأمام وأضفى عليها طابعًا مشوقًا!
+        يتم منح هذة الشارة عندما يتم النقر على رابط نشرته 300 مرة. شكرًا لك على نشر رابط مذهل دفع المناقشة إلى الأمام وأضفى عليها طابعًا مشوقًا!
     famous_link:
       name: رابط مشهور
-      description: نشرت رابطًا خارجيًا تم فتحه 1000 مرة
+      description: نشرت رابطًا خارجيًا تم النقر عليه 1000 مرة
       long_description: |
-        يتم منح هذة الشارة عندما يتم فتح رابط نشرته 300 مرة. شكرًا لك على نشر رابط مذهل دفع المناقشة إلى الأمام وأضفى عليها طابعًا مشوقًا!
+        يتم منح هذة الشارة عندما يتم النقر على رابط نشرته 300 مرة. شكرًا لك على نشر رابط مذهل دفع المناقشة إلى الأمام وأضفى عليها طابعًا مشوقًا!
     appreciated:
       name: محل تقدير
       description: تلقيت اعجاب واحد علي 20 منشور
