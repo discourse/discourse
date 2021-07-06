@@ -92,21 +92,17 @@ export default {
               );
             }
 
-            const read = {};
-            data.recent.forEach((notification) => {
-              read[notification[0]] = notification[1];
-            });
-
             // remove stale notifications and update existing ones
-            for (let idx = 0; idx < oldNotifications.length; ) {
-              const notification = oldNotifications[idx];
-              if (read[notification.id] === undefined) {
-                oldNotifications.removeAt(idx);
-              } else {
-                notification.set("read", read[notification.id]);
-                ++idx;
-              }
-            }
+            const read = Object.fromEntries(data.recent);
+            const newNotifications = oldNotifications
+              .map((notification) => {
+                if (read[notification.id] !== undefined) {
+                  notification.set("read", read[notification.id]);
+                  return notification;
+                }
+              })
+              .filter(Boolean);
+            stale.results.set("content", newNotifications);
           }
         },
         user.notification_channel_position
