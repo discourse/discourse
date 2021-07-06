@@ -136,5 +136,65 @@ acceptance("User Notifications", function (needs) {
         .innerText,
       "Second notification"
     );
+
+    // updates existing notifications
+
+    publishToMessageBus("/notification/19", {
+      unread_notifications: 8,
+      unread_private_messages: 0,
+      unread_high_priority_notifications: 1,
+      read_first_notification: false,
+      last_notification: {
+        notification: {
+          id: 44,
+          user_id: 1,
+          notification_type: 5,
+          high_priority: true,
+          read: true,
+          high_priority: false,
+          created_at: "2021-01-01 12:00:00 UTC",
+          post_number: 1,
+          topic_id: 42,
+          fancy_title: "Third notification",
+          slug: "topic",
+          data: {
+            topic_title: "Third notification",
+            original_post_id: 42,
+            original_post_type: 1,
+            original_username: "foo",
+            revision_number: null,
+            display_username: "foo",
+          },
+        },
+      },
+      recent: [
+        [5678, false],
+        [1234, false],
+        [789, false],
+        [456, true],
+        [123, true],
+        [44, false],
+        [43, false],
+        [42, true],
+      ],
+      seen_notification_id: null,
+    });
+
+    await visit("/"); // wait for re-render
+    assert.equal(count("#quick-access-notifications li"), 8);
+    const texts = [];
+    queryAll("#quick-access-notifications li").each((_, el) =>
+      texts.push(el.innerText.trim())
+    );
+    assert.deepEqual(texts, [
+      "foo First notification",
+      "foo Third notification",
+      "foo Second notification",
+      "velesin some title",
+      "aquaman liked 5 of your posts",
+      "5 messages in your test inbox",
+      "test1 accepted your invitation",
+      "Membership accepted in 'test'",
+    ]);
   });
 });
