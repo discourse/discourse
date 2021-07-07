@@ -23,9 +23,13 @@ describe UploadsController do
       let(:fake_jpg) { Rack::Test::UploadedFile.new(file_from_fixtures("fake.jpg")) }
       let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
 
-      it 'expects a type' do
+      it 'expects a type or upload_type' do
         post "/uploads.json", params: { file: logo }
         expect(response.status).to eq(400)
+        post "/uploads.json", params: { file: Rack::Test::UploadedFile.new(logo_file), type: "avatar" }
+        expect(response.status).to eq 200
+        post "/uploads.json", params: { file: Rack::Test::UploadedFile.new(logo_file), upload_type: "avatar" }
+        expect(response.status).to eq 200
       end
 
       it 'is successful with an image' do

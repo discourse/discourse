@@ -16,8 +16,12 @@ class UploadsController < ApplicationController
     # capture current user for block later on
     me = current_user
 
+    params.permit(:type, :upload_type)
+    if params[:type].blank? && params[:upload_type].blank?
+      raise Discourse::InvalidParameters
+    end
     # 50 characters ought to be enough for the upload type
-    type = params.require(:type).parameterize(separator: "_")[0..50]
+    type = (params[:upload_type].presence || params[:type].presence).parameterize(separator: "_")[0..50]
 
     if type == "avatar" && !me.admin? && (SiteSetting.discourse_connect_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
       return render json: failed_json, status: 422
