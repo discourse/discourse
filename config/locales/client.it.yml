@@ -935,7 +935,7 @@ it:
         sunday: "domenica"
         to: "a"
       activity_stream: "Attività"
-      read: "Leggi"
+      read: "Letti"
       read_help: "Argomenti letti di recente"
       preferences: "Preferenze"
       feature_topic_on_profile:
@@ -1820,11 +1820,11 @@ it:
       drafts_offline: "bozze offline"
       edit_conflict: "modifica conflitto"
       group_mentioned_limit:
-        one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Nessuno verra' notificato."
-        other: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzioni di utenti configurato dall'amministratore. Nessuno verra' notificato."
+        one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Non ci saranno notifiche."
+        other: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzioni di utenti configurato dall'amministratore. Non ci saranno notifiche."
       group_mentioned:
-        one: "Menzionando %{group}, verrà notificata <a href='%{group_link}'>%{count} persona</a> – sei sicuro?"
-        other: "Menzionando %{group}, verranno notificate <a href='%{group_link}'>%{count} persone</a> – sei sicuro?"
+        one: "Menzionando %{group}, una notifica sarà inviata a <a href='%{group_link}'>%{count} persona</a>. Vuoi procedere?"
+        other: "Menzionando %{group}, saranno inviate notifiche a <a href='%{group_link}'>%{count} persone</a>. Vuoi procedere?"
       cannot_see_mention:
         category: "Hai menzionato %{username} ma non verranno notificati perché non hanno accesso a questa categoria. Dovrai aggiungerli ad un gruppo che ha accesso a questa categoria."
         private: "Hai menzionato %{username} ma non verranno notificati perché non hanno accesso a questo messaggio personale. Dovrai invitarli a questo MP."
@@ -1836,8 +1836,8 @@ it:
           one: "Il titolo deve contenere almeno %{count} carattere"
           other: "Il titolo deve contenere almeno %{count} caratteri"
         title_too_long:
-          one: "Il titolo deve contenere almeno %{count} carattere"
-          other: "Il titolo deve contenere almeno %{count} caratteri"
+          one: "Il titolo non può contenere più di %{count} carattere"
+          other: "Il titolo non può contenere più di %{count} caratteri"
         post_missing: "Il messaggio non può essere vuoto"
         post_length:
           one: "Il messaggio deve contenere almeno %{count} carattere"
@@ -1914,7 +1914,7 @@ it:
         title: "Hai dimenticato di aggiungere i destinatari?"
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
       slow_mode:
-        error: "Questo argomento è in modalità lenta. Hai già postato di recente, puoi postare di nuovo tra %{timeLeft}."
+        error: "Questo argomento è in modalità lenta. Hai già pubblicato qualcosa di recente, potrai scrivere di nuovo tra %{timeLeft}."
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       composer_actions:
         reply: Rispondi
@@ -1978,7 +1978,7 @@ it:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} altro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e altri %{count}</span> %{description}"
       liked_consolidated_description:
-        one: "ha messo \"mi piace\" ad %{count} tuo messaggio"
+        one: "ha messo \"mi piace\" a %{count} tuo messaggio"
         other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
@@ -1987,10 +1987,10 @@ it:
       invitee_accepted: "<span>%{username}</span> ha accettato il tuo invito"
       moved_post: "<span>%{username}</span> ha spostato %{description}"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "Guadagnato '%{description}'"
+      granted_badge: "Ha guadagnato '%{description}'"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nuovo Argomento</span> %{description}"
-      membership_request_accepted: "Iscrizione accettata in &quot;%{group_name}&quot;"
+      membership_request_accepted: "Iscrizione accettata in '%{group_name}'"
       membership_request_consolidated:
         one: "%{count} richiesta di iscrizione aperta per '%{group_name}'"
         other: "%{count} richieste di iscrizione aperte per '%{group_name}'"
@@ -2005,7 +2005,7 @@ it:
         group_mentioned: '%{username} ti ha menzionato in "%{topic}" - %{site_title}'
         quoted: '%{username} ti ha citato in "%{topic}" - %{site_title}'
         replied: '%{username} ti ha risposto in "%{topic}" - %{site_title}'
-        posted: '%{username} ha pubblicato in "%{topic}" - %{site_title}'
+        posted: '%{username} ha pubblicato qualcosa in "%{topic}" - %{site_title}'
         private_message: '%{username} ti ha inviato un messaggio personale in "%{topic}" - %{site_title}'
         linked: '%{username} ha aggiunto un collegamento a un tuo messaggio da "%{topic}" - %{site_title}'
         watching_first_post: '%{username} ha creato il nuovo argomento "%{topic}" - %{site_title}'
@@ -2132,7 +2132,7 @@ it:
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
     current_user: "vai alla pagina utente"
-    view_all: "visualizza tutti i %{tab}"
+    view_all: "visualizza tutto in %{tab}"
     topics:
       new_messages_marker: "ultima visita"
       bulk:
@@ -2142,7 +2142,7 @@ it:
         relist_topics: "Ripubblica Argomenti"
         reset_read: "Reimposta stato lettura"
         delete: "Elimina argomenti"
-        dismiss: "Letti"
+        dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
         dismiss_button: "Ignora…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
@@ -2165,7 +2165,7 @@ it:
         choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
         choose_append_tags: "Scegli nuove etichette da aggiungere a questi argomenti:"
         changed_tags: "Le etichette per quegli argomenti sono state cambiate."
-        remove_tags: "Rimuovi tutti i tag"
+        remove_tags: "Rimuovi tutte le etichette"
         confirm_remove_tags:
           one: "Tutti i tag verranno rimossi da questo argomento. Sei sicuro?"
           other: "Tutti i tag verranno rimossi da <b>%{count}</b> argomenti. Sei sicuro?"
@@ -2182,7 +2182,8 @@ it:
         category: "Non ci sono argomenti in %{category}."
         top: "Non ci sono argomenti popolari."
         educate:
-          new: '<p>I tuoi nuovi argomenti appariranno qui. Di default, gli argomenti sono considerati nuovi e mostreranno un indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> se sono stati creati negli ultimi 2 giorni.</p><p>Visita le tue <a href="%{userPrefsUrl}">preferenze</a> per cambiarle.</p>'
+          new: '<p>I tuoi nuovi argomenti appariranno qui. Per impostazione predefinita, gli argomenti sono considerati nuovi e mostreranno un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>indicatore se sono stati creati negli ultimi 2 giorni.</p><p>Visita le tue <a href="%{userPrefsUrl}">preferenze</a> per cambiare questa opzione.</p>'
+          unread: "<p>I tuoi argomenti non letti appaiono qui.</p><p>Per impostazione predefinita, gli argomenti sono considerati non letti e mostreranno un contatore <span class=\"badge unread-posts badge-notification\">1</span> se :</p><ul><li>Hai creato l'argomento</li><li>Hai risposto all'argomento</li><li>Hai letto l'argomento per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l'argomento come Seguito o in Osservazione attivando \U0001F514 in ogni argomento.</p><p>Visita le tue <a href=\"%{userPrefsUrl}\">preferenze</a> per cambiare queste impostazioni.</p>"
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         posted: "Non ci sono altri argomenti pubblicati."
@@ -2215,7 +2216,7 @@ it:
         title: "Leggi più tardi"
       feature_on_profile:
         help: "Aggiungi un collegamento a questo argomento sulla tua scheda utente e sul tuo profilo"
-        title: "Feature Sul Profilo"
+        title: "In evidenza Sul Profilo"
       remove_from_profile:
         warning: "Il tuo profilo ha già un argomento in primo piano. Se continui, questo argomento sostituirà l'argomento esistente."
         help: "Rimuovi il collegamento a questo argomento dal tuo profilo utente"
@@ -2240,6 +2241,9 @@ it:
       not_found:
         title: "Argomento non trovato"
         description: "Spiacenti, non abbiamo trovato l'argomento. Forse è stato rimosso da un moderatore?"
+      unread_posts:
+        one: "hai %{count} messaggio non letto in questo argomento"
+        other: "hai %{count} messaggi non letti in questo argomento"
       likes:
         one: "c'è %{count} \"Mi piace\" in questo argomento"
         other: "ci sono %{count} \"Mi piace\" in questo argomento"
@@ -2249,13 +2253,14 @@ it:
       collapse_details: "comprimi i dettagli dell'argomento"
       expand_details: "espandi i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
-      read_more: "Vuoi saperne di più? %{catLink} o %{latestLink}."
-      unread_indicator: "Nessun utente ha ancora letto l'ultimo post di questo Argomento."
+      read_more: "Vuoi saperne di più? Consulta %{catLink} o %{latestLink}."
+      unread_indicator: "Nessun utente ha ancora letto l'ultimo messaggio di questo Argomento."
       read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'># non letto</a> } other { Ci sono <a href='{basePath}/unread'># non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/new'># nuovo</a> argomento} other { {BOTH, select, true{e } false {ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {sfoglia altri argomenti in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
       browse_all_tags: Sfoglia tutte le etichette
       view_latest_topics: visualizza gli argomenti più recenti
+      suggest_create_topic: Pronto per <a href>iniziare una nuova conversazione?</a>
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato eliminato"
@@ -2338,16 +2343,16 @@ it:
         auto_publish_to_category: "Questo argomento verrà pubblicato su <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}"
         auto_close_after_last_post: "Questo Argomento si chiuderà %{duration} dopo l'ultima risposta."
         auto_delete: "Questo argomento verrà automaticamente cancellato %{timeLeft}."
-        auto_bump: "Questo argomento sarà riproposto automaticamente %{timeLeft}."
+        auto_bump: "Questo argomento sarà riproposto automaticamente tra %{timeLeft}."
         auto_reminder: "Questo argomento ti verrà ricordato %{timeLeft}."
         auto_delete_replies: "Le risposte in questo argomento vengono automaticamente cancellate dopo %{duration}."
       auto_close_title: "Impostazioni di auto-chiusura"
       auto_close_immediate:
-        one: "L'ultimo messaggio nell'argomento ha già %{count} ora, per cui l'argomento verrà chiuso immediatamente."
-        other: "L'ultimo messaggio nell'argomento ha già %{count} ore, per cui l'argomento verrà chiuso immediatamente."
+        one: "L'ultimo messaggio nell'argomento risale a %{count} ora fa, per cui l'argomento verrà chiuso immediatamente."
+        other: "L'ultimo messaggio nell'argomento risale a %{count} ore fa, per cui l'argomento verrà chiuso immediatamente."
       auto_close_momentarily:
-        one: "L'ultimo messaggio dell'Argomento risale a %{count} ora fa, quindi l'Argomento verrà chiuso momentaneamente."
-        other: "L'ultimo messaggio dell'Argomento risale a %{count} ore fa, quindi l'Argomento verrà chiuso momentaneamente."
+        one: "L'ultimo messaggio dell'argomento risale a %{count} ora fa, quindi l'argomento verrà chiuso momentaneamente."
+        other: "L'ultimo messaggio dell'argomento risale a %{count} ore fa, quindi l'argomento verrà chiuso momentaneamente."
       timeline:
         back: "Indietro"
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
@@ -2373,7 +2378,7 @@ it:
         reasons:
           mailing_list_mode: "Hai la modalità mailing list abilitata, verrai notificato delle risposte a questo argomento via email."
           "3_10": "Riceverai notifiche perché stai osservando un'etichetta in questo argomento."
-          "3_10_stale": "Riceverai notifiche perché in passato stavi seguendo un’etichetta su questo argomento."
+          "3_10_stale": "Riceverai notifiche perché in passato stavi osservando un’etichetta su questo argomento."
           "3_6": "Riceverai notifiche perché stai osservando questa categoria."
           "3_5": "Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente."
           "3_2": "Riceverai notifiche perché stai osservando questo argomento."
