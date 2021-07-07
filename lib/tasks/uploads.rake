@@ -1046,7 +1046,7 @@ def fix_missing_s3
         end
 
         if save_error
-          puts "Failed to save upload #{saved.errors.full_messages}"
+          puts "Failed to save upload #{save_error}"
         else
           OptimizedImage.where(upload_id: upload.id).destroy_all
           rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
