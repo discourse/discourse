@@ -225,7 +225,7 @@ zh_CN:
     confirm_email: "<p>快完成了！我们向您的电子邮件地址发送了一封激活邮件。请按照邮件中的说明操作来激活您的帐户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件文件夹。</p>"
     cant_invite_to_group: "您无权邀请用户加入指定群组。请确保您是邀请其他人加入的群组的所有者。"
     disabled_errors:
-      discourse_connect_enabled: "邀请已被禁用，因为已启用 DiscourseConnect。"
+      discourse_connect_enabled: "邀请已被禁用，因为 DiscourseConnect 已启用。"
       invalid_access: "您没有权限查看请求的资源。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
@@ -307,39 +307,39 @@ zh_CN:
   no_attachments_allowed: "抱歉，新用户不能在帖子中上传附件。"
   too_many_attachments:
     other: "抱歉，新用户在一个帖子中仅能上传 %{count} 个附件。"
-  no_links_allowed: "抱歉，新用户不能在帖子中发表链接。"
+  no_links_allowed: "抱歉，新用户不能在帖子中发布链接。"
   links_require_trust: "抱歉，您的帖子中不能包含链接。"
   too_many_links:
-    other: "抱歉，新用户在一个帖子中仅能发表 %{count} 条链接。"
-  contains_blocked_word: "您的帖子中包含不允许的词：%{word}"
-  contains_blocked_words: "您的帖子中含有多个被禁止的词：%{words}"
-  spamming_host: "抱歉，您不能发表该主机的链接。"
-  user_is_suspended: "被封禁的用户不允许发贴。"
-  topic_not_found: "出现问题。或许这个话题在您看的时候已经被关闭或删除了。"
-  not_accepting_pms: "对不起，%{username} 目前不接收讯息。"
-  max_pm_recipients: "抱歉，您至多可以向%{recipients_limit}个收件人发送私信。"
-  pm_reached_recipients_limit: "抱歉，私信中的收信人不能超过%{recipients_limit}。"
-  removed_direct_reply_full_quotes: "自动删除对上一个帖子的完整引用。"
-  watched_words_auto_tag: "自动标记话题"
-  secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开的话题中使用以下安全上传：%{upload_filenames}。"
-  create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建PM。"
-  slow_mode_enabled: "本话题处于慢速模式。"
-  just_posted_that: "太类似于您最近发表的内容"
+    other: "抱歉，新用户在一个帖子中仅能发布 %{count} 个链接。"
+  contains_blocked_word: "您的帖子中包含一个不被允许的字词：%{word}"
+  contains_blocked_words: "您的帖子中包含多个不被允许的字词：%{words}"
+  spamming_host: "抱歉，您不能发布指向该主机的链接。"
+  user_is_suspended: "被封禁的用户不允许发帖。"
+  topic_not_found: "出了点问题。或许此话题在您查看时已被关闭或删除。"
+  not_accepting_pms: "抱歉，%{username} 目前不接受消息。"
+  max_pm_recipients: "抱歉，您最多可以向 %{recipients_limit} 个收件人发送消息。"
+  pm_reached_recipients_limit: "抱歉，消息中的收件人不能超过 %{recipients_limit} 个。"
+  removed_direct_reply_full_quotes: "已自动移除对上一个完整帖子的引用。"
+  watched_words_auto_tag: "已自动为话题添加标签"
+  secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开话题中使用以下安全上传：%{upload_filenames}。"
+  create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建私信。"
+  slow_mode_enabled: "此话题处于慢速模式。"
+  just_posted_that: "与您最近发布的内容过于相似"
   invalid_characters: "包含无效字符"
-  is_invalid: "似乎不清楚，这是一个完整的句子？ "
+  is_invalid: "似乎不清楚，这是一个完整的句子？"
   next_page: "下一页 →"
   prev_page: "← 上一页"
-  page_num: "第%{num}页"
+  page_num: "第 %{num} 页"
   home_title: "首页"
-  topics_in_category: "“%{category}”分类中的话题"
-  rss_posts_in_topic: " '%{topic}'的RSS源"
-  rss_topics_in_category: "'%{category}'分类中话题的RSS源"
+  topics_in_category: "'%{category}' 类别中的话题"
+  rss_posts_in_topic: "'%{topic}' 的 RSS Feed"
+  rss_topics_in_category: "'%{category}' 类别中话题的 RSS Feed"
   rss_num_posts:
-    other: "%{count} 个帖"
+    other: "%{count} 个帖子"
   rss_num_participants:
     other: "%{count} 位参与者"
-  read_full_topic: "阅读整个话题"
-  private_message_abbrev: "私信"
+  read_full_topic: "阅读完整话题"
+  private_message_abbrev: "消息"
   rss_description:
     latest: "最新话题"
     top: "热门话题"
@@ -350,82 +350,82 @@ zh_CN:
     top_weekly: "每周热门话题"
     top_daily: "每日热门话题"
     posts: "最新帖子"
-    private_posts: "最近个人消息"
-    group_posts: "%{group_name}组最近的帖子"
-    group_mentions: "%{group_name}组最近的提及"
-    user_posts: "最新贴子由 @%{username}发表"
-    user_topics: "最新话题由 @%{username}发表"
-    tag: "加标签的话题"
-    badge: "%{site_title}的%{display_name}徽章"
-  too_late_to_edit: "这个话题在很早之前创建。不能被编辑或者被删除。"
-  edit_conflict: "该帖子由其他用户编辑，您的更改无法再保存。"
-  revert_version_same: "目前的版本和您想要回退至的版本一样。"
-  cannot_edit_on_slow_mode: "本话题处于慢速模式。为了鼓励优质的讨论，目前不允许编辑本话题的旧帖。"
+    private_posts: "最新个人消息"
+    group_posts: "%{group_name} 的最近帖子"
+    group_mentions: "%{group_name} 的最近提及"
+    user_posts: "%{username} 的最新帖子"
+    user_topics: "%{username} 的最新话题"
+    tag: "带标签的话题"
+    badge: "%{site_title} 上的%{display_name}徽章"
+  too_late_to_edit: "该话题在很早之前创建。无法再编辑或者删除。"
+  edit_conflict: "该帖子已由其他用户编辑，您的变更无法再保存。"
+  revert_version_same: "当前版本与您尝试还原到的版本相同。"
+  cannot_edit_on_slow_mode: "此话题处于慢速模式。为了鼓励深思熟虑的讨论，目前不允许编辑此话题中的旧帖子。"
   excerpt_image: "图片"
   bookmarks:
     errors:
-      already_bookmarked_post: "您不能将同一帖子收藏两次。"
-      too_many: "抱歉，您不能添加超过 %{limit} 个收藏内容，请访问 <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 删除一些收藏。"
-      cannot_set_past_reminder: "您不能在此话题设置收藏提醒。"
-      cannot_set_reminder_in_distant_future: "您不能够设置一个大于十年的收藏提醒。"
+      already_bookmarked_post: "您不能将同一个帖子加入书签两次。"
+      too_many: "抱歉，您不能添加超过 %{limit} 个书签，请访问 <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 移除一些书签。"
+      cannot_set_past_reminder: "您不能设置时间为过去的书签提醒。"
+      cannot_set_reminder_in_distant_future: "您不能设置时间距离现在超过 10 年以后的书签提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
-      later_today: "今天的某个时候"
+      later_today: "今天晚些时候"
       next_business_day: "下一个工作日"
       tomorrow: "明天"
-      next_week: "下个星期"
+      next_week: "下周"
       next_month: "下个月"
       custom: "自定义日期和时间"
   groups:
     success:
       bulk_add:
-        other: "%{count}个用户已被添加到这个群组。"
+        other: "%{count} 个用户已被添加到该群组。"
     errors:
-      grant_trust_level_not_valid: "'%{trust_level}'不是有效的信任等级。"
-      can_not_modify_automatic: "您不能修改自动组"
+      grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任级别。"
+      can_not_modify_automatic: "您不能修改自动生成的群组"
       member_already_exist:
-        other: "以下用户已经是该群组的成员：%{username}"
-      invalid_domain: "“%{domain}”不是有效域名。"
-      invalid_incoming_email: "“%{email}”不是有效邮箱地址。"
-      email_already_used_in_group: "“%{email}”已经被群组“%{group_name}”使用了。"
-      email_already_used_in_category: "“%{email}”已经被分类“%{category_name}”使用了。"
-      cant_allow_membership_requests: "对没有拥有者的群组，您无法批准成员请求。"
-      already_requested_membership: "您已请求成为该群组的成员。"
+        other: "以下用户已是此群组的成员：%{username}"
+      invalid_domain: "'%{domain}' 不是有效域名。"
+      invalid_incoming_email: "'%{email}' 不是有效的电子邮件地址。"
+      email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
+      email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
+      cant_allow_membership_requests: "您不能允许没有任何所有者的组的成员资格请求。"
+      already_requested_membership: "您已请求成为此群组的成员。"
       adding_too_many_users:
-        other: "单次最多可添加%{count}个用户"
-      usernames_or_emails_required: "用户名和电子邮件是必须的"
-      no_invites_with_discourse_connect: "启用 DiscourseConnect 时，您只能邀请注册用户"
-      no_invites_without_local_logins: "本地登录禁用时，您只能邀请已经注册的用户"
+        other: "一次最多可以添加 %{count} 个用户"
+      usernames_or_emails_required: "必须存在用户名或电子邮件"
+      no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
+      no_invites_without_local_logins: "如果已启用社交登录，您只能邀请注册用户"
     default_names:
-      everyone: "任何人"
+      everyone: "所有人"
       admins: "管理员"
       moderators: "版主"
       staff: "管理人员"
-      trust_level_0: "信任等级0"
-      trust_level_1: "信任等级1"
-      trust_level_2: "信任等级2"
-      trust_level_3: "信任等级3"
-      trust_level_4: "信任等级4"
+      trust_level_0: "trust_level_0"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
     request_membership_pm:
-      title: "%{group_name}的成员请求"
+      title: "%{group_name} 的成员资格请求"
     request_accepted_pm:
-      title: "您已接受加入@%{group_name}"
+      title: "您已被接受加入@%{group_name}"
       body: |
-        您要加入@%{group_name}的请求已被允许，现在您是其中一员了。
+        您加入 @%{group_name} 的请求已被接受，现在您是其中一员了。
   education:
     until_posts:
       other: "%{count} 个帖子"
     "new-topic": |
-      欢迎使用 %{site_name} &mdash; **感谢您开始新的对话！**
+      欢迎加入 %{site_name} &mdash; **感谢您开始新对话**！
 
       - 如果您大声朗读出标题，听起来有趣吗？能否很好地概括内容？
 
       - 谁会对此感兴趣？为什么会感兴趣？您想得到怎样的回应？
 
-      - 在您的话题中包含常用词，以便其他人能够“找到”它。要将您的话题与相关的话题关联，请选择一个分类（或标签）。
+      - 在您的话题中包含常用词，以便其他人能够“找到”它。要将您的话题与相关的话题关联，请选择一个类别（或标签）。
 
-      更多内容，请[请参阅我们的社区准则](%{base_path}/guidelines)。该面板仅在您的前 %{education_posts_text}出现。
+      更多内容，[请参阅我们的社区准则](%{base_path}/guidelines)。此面板仅在您的前 %{education_posts_text}出现。
     "new-reply": |
       欢迎来到%{site_name} &mdash; **感谢您的贡献！**
 
@@ -481,15 +481,15 @@ zh_CN:
   activerecord:
     attributes:
       category:
-        name: "分类名称"
+        name: "类别名称"
       topic:
         title: "标题"
-        featured_link: "特色链接"
-        category_id: "分类"
+        featured_link: "精选链接"
+        category_id: "类别"
       post:
-        raw: "内容"
+        raw: "正文"
       user_profile:
-        bio_raw: "关于我"
+        bio_raw: "自我介绍"
     errors:
       models:
         topic:
