@@ -2267,15 +2267,6 @@ en:
       search_google: "Try searching with Google instead:"
       search_google_button: "Google"
       search_button: "Search"
-      assistant:
-        category_description: "Filter search results by category:"
-        in_modifiers_description: "Use these special keywords to further filter the results:"
-      in:
-        title: "Matching in title only"
-        personal: "In personal messages"
-        seen: "In topics I have read"
-        likes: "In posts I have liked"
-
 
       context:
         user: "Search posts by @%{username}"

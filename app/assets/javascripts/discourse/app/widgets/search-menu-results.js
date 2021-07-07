@@ -11,25 +11,29 @@ import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 
-const searchAssistantTerms = ["#", "in:"];
-const inSearchEntries = [
-  {
-    slug: "in:title",
-    description: I18n.t("search.in.title"),
-  },
-  {
-    slug: "in:personal",
-    description: I18n.t("search.in.personal"),
-  },
-  {
-    slug: "in:seen",
-    description: I18n.t("search.in.seen"),
-  },
-  {
-    slug: "in:likes",
-    description: I18n.t("search.in.likes"),
-  },
+const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]+)$/gi;
+
+const searchAssistantTerms = ["#", "in:", "status:"];
+const inSearchShortcuts = [
+  "in:title",
+  "in:personal",
+  "in:seen",
+  "in:likes",
+  "in:bookmarks",
+  "in:created",
 ];
+const statusSearchShortcuts = [
+  "status:open",
+  "status:closed",
+  "status:public",
+  "status:noreplies",
+];
+
+export function addInSearchShortcut(value) {
+  if (inSearchShortcuts.indexOf(value) === -1) {
+    inSearchShortcuts.push(value);
+  }
+}
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
@@ -228,8 +232,25 @@ createWidget("search-menu-results", {
   tagName: "div.results",
 
   html(attrs) {
-    if (searchAssistantTerms.includes(attrs.term)) {
-      return this.attach("search-menu-assistant", { term: attrs.term });
+    const searchModifier = searchAssistantTerms.find(
+      (mod) => attrs.term === mod || attrs.term.endsWith(` ${mod}`)
+    );
+
+    if (searchModifier) {
+      return this.attach("search-menu-assistant", {
+        fullTerm: attrs.term,
+        searchModifier,
+      });
+    }
+
+    const categorySlugMatch = attrs.term.match(CATEGORY_SLUG_REGEXP);
+
+    if (categorySlugMatch) {
+      return this.attach("search-menu-assistant", {
+        fullTerm: attrs.term,
+        searchModifier: "#",
+        categorySlugMatch,
+      });
     }
 
     if (attrs.invalidTerm) {
@@ -350,43 +371,45 @@ createWidget("search-menu-assistant", {
   tagName: "ul.search-menu-assistant",
 
   html(attrs) {
-    const content = [];
-    switch (attrs.term) {
-      case "#":
-        const limit = 10;
-        content.push(
-          h(
-            "li.assistant-description",
-            I18n.t("search.assistant.category_description")
-          )
-        );
+    if (this.siteSettings.tagging_enabled) {
+      addInSearchShortcut("in:tagged");
+    }
 
-        Category.search("", { limit }).map((category) => {
+    const content = [];
+    const { fullTerm, searchModifier } = attrs;
+    const prefix = fullTerm.split(searchModifier)[0].trim() || null;
+
+    switch (searchModifier) {
+      case "#":
+        const match = attrs.categorySlugMatch
+          ? attrs.categorySlugMatch[0].replace("#", "")
+          : "";
+
+        Category.search(match).map((category) => {
+          const slug = prefix
+            ? `${prefix} #${category.slug} `
+            : `#${category.slug} `;
+
           content.push(
             this.attach("search-menu-assistant-item", {
+              prefix: prefix,
               category,
-              slug: `#${category.slug} `,
+              slug,
             })
           );
         });
         break;
       case "in:":
-        content.push(
-          h(
-            "li.assistant-description",
-            I18n.t("search.assistant.in_modifiers_description")
-          )
-        );
-
-        inSearchEntries.map((item) => {
-          content.push(
-            this.attach("search-menu-assistant-item", {
-              description: item.description,
-              slug: `${item.slug} `,
-            })
-          );
+        inSearchShortcuts.map((item) => {
+          const slug = prefix ? `${prefix} ${item} ` : item;
+          content.push(this.attach("search-menu-assistant-item", { slug }));
         });
         break;
+      case "status:":
+        statusSearchShortcuts.map((item) => {
+          const slug = prefix ? `${prefix} ${item} ` : item;
+          content.push(this.attach("search-menu-assistant-item", { slug }));
+        });
     }
 
     return content;
@@ -398,22 +421,30 @@ createWidget("search-menu-assistant-item", {
 
   html(attrs) {
     if (attrs.category) {
-      return this.attach("category-link", {
-        category: attrs.category,
-        extraClasses: "widget-link search-link",
-      });
+      return h(
+        "a.widget-link.search-link",
+        {
+          attributes: {
+            href: attrs.category.url,
+          },
+        },
+        [
+          h("span.search-item-prefix", attrs.prefix),
+          this.attach("category-link", {
+            category: attrs.category,
+            allowUncategorized: true,
+          }),
+        ]
+      );
     } else {
       return h(
-        "a.widget-link.search-link.in-modifier-link",
+        "a.widget-link.search-link",
         {
           attributes: {
             href: "#",
           },
         },
-        [
-          h("span.in-modifier-slug", attrs.slug),
-          h("span.in-modifier-description", attrs.description),
-        ]
+        h("span.search-item-slug", attrs.slug)
       );
     }
   },

@@ -270,20 +270,35 @@ acceptance("Search - assistant", function (needs) {
 
     await click(firstCategory);
     assert.equal(query("#search-term").value, `#${firstResultSlug} `);
+
+    await fillIn("#search-term", "sam #");
+    await triggerKeyEvent("#search-term", "keyup", 51);
+
+    assert.ok(exists(query(firstCategory)));
+    assert.equal(
+      query(
+        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
+      ).innerText,
+      "sam"
+    );
+
+    await click(firstCategory);
+    assert.equal(query("#search-term").value, `sam #${firstResultSlug} `);
   });
 
   test("shows in: shortcuts", async function (assert) {
     await visit("/");
     await click("#search-button");
 
+    const firstTarget =
+      ".search-menu .results ul.search-menu-assistant .search-link .search-item-slug";
+
     await fillIn("#search-term", "in:");
     await triggerKeyEvent("#search-term", "keyup", 51);
+    assert.equal(query(firstTarget).innerText, "in:title");
 
-    assert.equal(
-      query(
-        ".search-menu .results ul.search-menu-assistant .search-link .in-modifier-slug"
-      ).innerText,
-      "in:title"
-    );
+    await fillIn("#search-term", "sam in:");
+    await triggerKeyEvent("#search-term", "keyup", 51);
+    assert.equal(query(firstTarget).innerText, "sam in:title");
   });
 });

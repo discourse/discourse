@@ -256,16 +256,18 @@
       min-width: 100%;
       margin-top: -1em;
 
-      .assistant-description {
-        color: var(--primary-low-mid);
-        padding: var(--search-padding);
+      .search-menu-assistant-item {
+        > span {
+          vertical-align: baseline;
+          display: inline-block;
+        }
       }
 
-      .in-modifier-slug {
-        display: inline-block;
-        width: 125px;
+      .search-item-prefix {
+        margin-right: 0.5em;
       }
-      .in-modifier-description {
+
+      .search-item-everything {
         color: var(--primary-low-mid);
       }
     }
