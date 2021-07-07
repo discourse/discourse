@@ -3620,7 +3620,7 @@ ar:
     invite:
       custom_message: "جعل دعوتك أكثر اتسامًا بالطابع الشخصي عن طريق كتابة <a href>رسالة مخصَّصة</a>."
       custom_message_placeholder: "أدخِل رسالتك المخصَّصة"
-      custom_message_template_forum: "مرحبًا. عليك الانضمام إلى هذا المنتدى!"
+      custom_message_template_forum: "مرحبًا. يجب عليك الانضمام إلى هذا المنتدى!"
       custom_message_template_topic: "مرحبًا. أظن أنك ستستمتع بهذا الموضوع!"
     forced_anonymous: "بسبب الضغط الشديد، يتم عرض هذا الموضوع للجميع مؤقتًا كما يراه مستخدم سجَّل الخروج."
     footer_nav:

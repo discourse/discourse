@@ -237,7 +237,7 @@ de:
     cant_invite_to_group: "Du darfst keine Benutzer in die angegebene(n) Gruppe(n) einladen. Vergewissere dich, dass du der Eigentümer der Gruppe(n) bist, in die du einladen möchtest."
     disabled_errors:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
-      invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
+      invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV-Format vorliegen."
     max_rows: "Die ersten %{max_bulk_invites} Einladungen wurden versandt. Versuche, die Datei in kleinere Teile aufzuteilen."
@@ -943,7 +943,7 @@ de:
       title: "Spam"
       description: "Dieses Thema besteht effektiv nur aus Werbung, die nicht als solche ausgewiesen ist. Es trägt nichts zur Website bei."
       long_form: "als Spam gemeldet"
-      short_description: "Dies ist ist Werbung"
+      short_description: "Dies ist Werbung"
     inappropriate:
       title: "Unangemessen"
       description: 'Dieses Thema enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
@@ -1321,7 +1321,7 @@ de:
       title: "Verdächtige Anmeldungen"
       labels:
         user: Benutzer
-        client_ip: IP-Adresse
+        client_ip: Client-IP
         location: Ort
         browser: Browser
         device: Gerät
@@ -2249,12 +2249,12 @@ de:
     activate_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungs-E-Mail an <b>%{email}</b> geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
     not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als %{username} anmelden."
-    admin_not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als Administrator anmelden."
+    admin_not_allowed_from_ip_address: "Von dieser IP-Adresse aus darfst du dich nicht als Administrator anmelden."
     reset_not_allowed_from_ip_address: "Du kannst keine Passwort-Zurücksetzung von dieser IP-Adresse aus anfordern."
     suspended: "Du kannst dich bis zum %{date} nicht anmelden."
     suspended_with_reason: "Konto gesperrt bis zum %{date}: %{reason}"
     errors: "%{errors}"
-    not_available: "Nicht verfügbar. Versuche %{suggestion}?"
+    not_available: "Nicht verfügbar. Wie wäre es mit %{suggestion}?"
     something_already_taken: "Etwas ist schiefgelaufen. Vielleicht ist dieser Benutzername oder diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
     omniauth_error:
       generic: "Entschuldige, bei der Authentifizierung deines Kontos ist ein Fehler aufgetreten. Versuche es bitte noch einmal."
@@ -2789,7 +2789,7 @@ de:
         Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_screened_email:
       title: "E-Mail abgelehnt, weil E-Mail-Adresse gesperrt"
-      subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail-Adresse blockiert"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail blockiert"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
@@ -2800,7 +2800,7 @@ de:
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) konnte nicht zugestellt werden.
 
-        Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Versuche, von einer anderen E-Mail-Adresse zu schicken, oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
+        Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_inactive_user:
       title: "E-Mail abgelehnt, weil Benutzer inaktiv"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer inaktiv"
@@ -4258,7 +4258,7 @@ de:
       description: Hat das Forum an 365 aufeinanderfolgenden Tagen besucht
       long_description: |
         Dieses Abzeichen wird verliehen für Besuche an 365 aufeinanderfolgenden Tagen. Wow, ein ganzes Jahr!
-    badge_title_metadata: "%{display_name} Abzeichen auf %{site_title}"
+    badge_title_metadata: "„%{display_name}“-Abzeichen auf %{site_title}"
   admin_login:
     success: "E-Mail gesendet"
     errors:

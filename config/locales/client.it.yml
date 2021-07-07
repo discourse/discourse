@@ -1711,7 +1711,7 @@ it:
         backup_code: "Utilizza un codice di backup"
     invites:
       accept_title: "Invito"
-      emoji: "emoji busta"
+      emoji: "emoji envelope"
       welcome_to: "Benvenuto su %{site_name}!"
       invited_by: "Sei stato invitato da:"
       social_login_available: "Sarai anche in grado di accedere con qualsiasi account social usando questa email."
@@ -3638,7 +3638,7 @@ it:
         description: Descrizione
         no_description: (nessuna descrizione)
         all_api_keys: Tutte le Chiavi API
-        user_mode: Livello Esperienza
+        user_mode: Livello utente
         impersonate_all_users: Impersona qualsiasi utente
         single_user: "Utente Singolo"
         user_placeholder: Inserisci nome utente
@@ -3664,7 +3664,7 @@ it:
           descriptions:
             topics:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
-              write: Crea un nuovo argomento o pubblica su uno esistente.
+              write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.
               read_lists: Leggi liste di argomenti come Popolari, Nuovi, Recenti, ecc. E' supportato anche l'RSS.
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             users:
@@ -3674,7 +3674,7 @@ it:
               check_emails: Elenca le email degli utenti.
               update: Aggiorna le informazioni del profilo utente.
               log_out: Disconnetti tutte le sessioni per un utente.
-              anonymize: Anonimizza gli account utente.
+              anonymize: Rendi anonimi gli account utente.
               delete: Elimina account utente.
             email:
               receive_emails: Combina questo ambito con il destinatario della posta per elaborare le email in arrivo.
@@ -3720,7 +3720,7 @@ it:
           details: "Quando c'è una nuova risposta, modifica, cancellazione o recupero."
         user_event:
           name: "Evento Utente"
-          details: "Quando un utente si connette, si disconnette, viene creato, approvato o aggiornato."
+          details: "Quando un utente si connette, si disconnette, conferma email, viene creato, approvato o aggiornato."
         group_event:
           name: "Evento di Gruppo"
           details: "Quando un Gruppo viene creato, aggiornato o eliminato."
@@ -3740,7 +3740,7 @@ it:
           name: "Evento Assegnazione Distintivo"
           details: "Quando un utente riceve un distintivo."
         group_user_event:
-          name: "Raggruppa Evento Utente"
+          name: "Evento Utente in un gruppo"
           details: "Quando un utente viene aggiunto o rimosso da un gruppo."
         like_event:
           name: "Evento Mi Piace"
@@ -3758,7 +3758,7 @@ it:
             one: "C'è un nuovo evento."
             other: "Ci sono %{count} nuovi eventi."
           completed_in:
-            one: "Compleato in %{count} secondo."
+            one: "Completato in %{count} secondo."
             other: "Completato in %{count} secondi."
           request: "Richiesta"
           response: "Risposta"
@@ -3843,7 +3843,7 @@ it:
             title: "Ripristina il database a una versione precedente funzionante"
             confirm: "Sei sicuro di voler ripristinare il database alla versione funzionante precedente?"
         location:
-          local: "Salvataggio in locale"
+          local: "Archiviazione locale"
           s3: "S3"
         backup_storage_error: "Errore di accesso all'archivio dei backup: %{error_message}"
       export_csv:
@@ -3969,20 +3969,20 @@ it:
           included_components: "Componenti inclusi"
           add_all: "Aggiungi tutti"
           import_web_tip: "Archivio contenente il tema"
-          direct_install_tip: "Sei sicuro di voler installare <strong>%{name}</strong> dal deposito elencato di seguito?"
+          direct_install_tip: "Sei sicuro di voler installare <strong>%{name}</strong> dall'archivio elencato di seguito?"
           import_web_advanced: "Avanzate..."
           import_file_tip: "File .tar.gz, .zip, o .dcstyle.json contenente il tema"
           is_private: "Il tema è in un archivio git privato"
           remote_branch: "Nome del branch (opzionale)"
           public_key: "Concedi l'accesso all'archivio con la seguente chiave pubblica:"
-          public_key_note: "Dopo l’inserimento di una valida repository URL riservata, verrà generata e qui visualizzata una corrispondente chiave SSH."
+          public_key_note: "Dopo l’inserimento di un URL valido di archivio riservato, verrà generata e qui visualizzata una corrispondente chiave SSH."
           install: "Installa"
           installed: "Installato"
           install_popular: "Popolare"
           install_upload: "Dal tuo dispositivo"
           install_git_repo: "Da un archivio git"
           install_create: "Crea nuovo"
-          duplicate_remote_theme: "Il componente «%{name}» è già installato, sei sicuro di volerne installare un'altra copia?"
+          duplicate_remote_theme: "Il componente del tema «%{name}» è già installato, sei sicuro di volerne installare un'altra copia?"
           about_theme: "Informazioni su"
           license: "Licenza"
           version: "Versione:"
@@ -4009,10 +4009,10 @@ it:
           theme_translations: "Traduzioni Tema"
           empty: "Nessun elemento"
           commits_behind:
-            one: "Il tema è indietro di %{count} aggiornamento!"
+            one: "Il tema è indietro di %{count} commit!"
             other: "Il tema è indietro di %{count} commit!"
           compare_commits: "(Vedi i nuovi commit)"
-          remote_theme_edits: "Se si desidera modificare questo tema, è necessario <a href='%{repoURL}' target='_blank'>inviare una modifica sul suo repository</a>"
+          remote_theme_edits: "Se si desidera modificare questo tema, è necessario <a href='%{repoURL}' target='_blank'>inviare una modifica sul suo archivio</a>"
           repo_unreachable: "Impossibile accedere all'archivio Git di questo tema. Messaggio di errore:"
           imported_from_archive: "Questo tema è stato importato da un file .zip"
           scss:
@@ -4041,7 +4041,7 @@ it:
 
               %{example}
 
-              E' fortemente raccomandato assegnare un prefisso ai nomi delle proprietà per evitare conflitti con i plugin e/o il kernel.
+              Si consiglia di assegnare un prefisso ai nomi delle proprietà per evitare conflitti con i plugin e/o il kernel.
           head_tag:
             text: "</head>"
             title: "HTML che sarà inserito prima del tag </head> "
@@ -4110,17 +4110,17 @@ it:
             description: "Il colore del pulsante \"Mi piace\"."
         robots:
           title: "Sostituisci il file robots.txt del tuo sito:"
-          warning: "Questo sostituirà in modo permanente tutte le impostazioni del sito correlate."
+          warning: "Questo sostituirà in modo permanente tutte le impostazioni relative al sito."
           overridden: Il file robots.txt predefinito del tuo sito è sovrascritto.
         email_style:
           title: "Stile Email"
           heading: "Personalizza Stile Email"
           html: "Modello HTML"
           css: "CSS"
-          reset: "Ripristina le impostazioni di default"
+          reset: "Ripristina impostazioni predefinite"
           reset_confirm: "Sei sicuro di voler ripristinare il %{fieldName} predefinito e perdere tutte le modifiche?"
           save_error_with_reason: "Le tue modifiche non sono state salvate. %{error}"
-          instructions: "Personalizza il modello in cui vengono visualizzate tutte le email html e personalizza con CSS."
+          instructions: "Personalizza il modello con cui vengono visualizzate tutte le email html e lo stile usando CSS."
       email:
         title: "Email"
         settings: "Impostazioni"
@@ -4312,7 +4312,7 @@ it:
             api_key_create: "crea chiave api"
             api_key_update: "aggiorna chiave api"
             api_key_destroy: "distruggi chiave api"
-            override_upload_secure_status: "sovrascrivere stato caricamento sicuro"
+            override_upload_secure_status: "sovrascrivi stato caricamento sicuro"
             page_published: "pagina pubblicata"
             page_unpublished: "pagina non pubblicata"
             add_email: "aggiungi email"
@@ -4321,9 +4321,9 @@ it:
             topic_closed: "argomento chiuso"
             topic_opened: "argomento aperto"
             topic_archived: "argomento archiviato"
-            topic_unarchived: "argomento de-archiviato"
+            topic_unarchived: "argomento rimosso da archivio"
             post_staff_note_create: "aggiungi note dello staff"
-            post_staff_note_destroy: "distruggi la nota dello staff"
+            post_staff_note_destroy: "distruggi nota dello staff"
             delete_group: "elimina gruppo"
         screened_emails:
           title: "Email scansionate"
@@ -4378,7 +4378,7 @@ it:
         download: Scarica
         clear_all: Deseleziona Tutto
         clear_all_confirm: "Vuoi davvero cancellare tutte le parole che osservi per l'azione %{action}?"
-        invalid_regex: 'La parola controllata "%{word}" è un''espressione regolare non valida.'
+        invalid_regex: 'La parola osservata "%{word}" è un''espressione regolare non valida.'
         actions:
           block: "Blocca"
           censor: "Censura"
@@ -4386,15 +4386,15 @@ it:
           flag: "Segnala"
           replace: "Sostituisci"
           tag: "Etichetta"
-          silence: "Silenzio"
-          link: "Collegamento"
+          silence: "Silenzia"
+          link: "Link"
         action_descriptions:
           block: "Impedisci che i messaggi contenenti queste parole siano pubblicati. L'utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio."
           censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
           require_approval: "I messaggi contenenti queste parole richiederanno l'approvazione dello staff prima di poter essere visualizzati."
           flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
           silence: "I primi post degli utenti che contengono queste parole richiederanno l'approvazione dello staff prima di essere visibili, e l'utente verrà automaticamente silenziato."
-          link: "Nei messaggi sostituisce le parole con collegamenti"
+          link: "Nei messaggi sostituisce le parole con link"
         form:
           placeholder_regexp: "espressione regolare"
           replace_label: "Sostituzione"
@@ -4457,8 +4457,8 @@ it:
           title: "Rivela il payload SSO"
           text: "Mostra"
       user:
-        suspend_failed: "Si è verificato un errore sospendendo questo utente %{error}"
-        unsuspend_failed: "Si è verificato un errore riabilitando questo utente %{error}"
+        suspend_failed: "Si è verificato un errore durante la sospensione di questo utente %{error}"
+        unsuspend_failed: "Si è verificato un errore durante la riattivazione di questo utente %{error}"
         suspend_duration: "Per quanto tempo l'utente sarà sospeso?"
         suspend_reason_label: "Perché stai sospendendo l'utente? Questo testo <b>sarà visibile a tutti</b> nella pagina del profilo dell'utente, e gli verrà mostrato tutte le volte che tenterà di accedere. Scrivi un testo breve."
         suspend_reason_hidden_label: "Perché stai sospendendo l'utente? Questo testo gli verrà mostrato tutte le volte che tenterà di accedere. Scrivi un testo breve."
@@ -4470,7 +4470,7 @@ it:
           combative: "Troppo veemente"
           in_wrong_place: "Al posto sbagliato"
           no_constructive_purpose: "Azioni senza fini costruttivi se non creare disaccordo nella comunità"
-          custom: "Personalizzato..."
+          custom: "Personalizza..."
         suspend_message: "Messaggio Email"
         suspend_message_placeholder: "Facoltativamente, fornisci ulteriori informazioni sulla sospensione e verranno inviate via email all'utente."
         suspended_by: "Sospeso da"
@@ -4496,7 +4496,7 @@ it:
         clear_penalty_history:
           title: "Cancella cronologia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello di affidabilità 3"
-        delete_all_posts_confirm_MF: "Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Sei sicuro?"
+        delete_all_posts_confirm_MF: "Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Vuoi continuare?"
         silence: "Silenzia"
         unsilence: "Riattiva utente"
         silenced: "Silenziato?"
@@ -4555,12 +4555,12 @@ it:
             description: |
               <p>Scegli un nuovo proprietario per i contenuti di <b>@%{username}</b></p>
 
-              <p>Tutti gli argomenti, messaggi, messaggi personali e altri contenuti creati da <b>@%{username}</b> verranno trasferiti.</p>
+              <p>Tutti gli argomenti, messaggi pubblici e privati e altri contenuti creati da <b>@%{username}</b> verranno trasferiti.</p>
             target_username_placeholder: "Nome utente del nuovo proprietario"
             transfer_and_delete: "Trasferisci ed Elimina @%{username}"
             cancel: "Annulla"
           progress:
-            title: "Avanzamento unione"
+            title: "Avanzamento fusione"
           confirmation:
             title: "Trasferisci ed Elimina @%{username}"
             description: |
@@ -4577,13 +4577,13 @@ it:
         delete_forbidden_because_staff: "Amministratori e moderatori non possono essere cancellati."
         delete_posts_forbidden_because_staff: "Impossibile cancellare tutti i messaggi degli amministratori e dei moderatori."
         delete_forbidden:
-          one: "Non è possibile cancellare utenti se hanno post attivi. Elimina tutti i posti prima di cancellare un utente (post più vecchi di %{count} giorni non possono essere cancellati)."
+          one: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorno non possono essere cancellati)."
           other: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorni non possono essere cancellati)."
         cant_delete_all_posts:
-          one: "Non posso cancellare tutti i post. Alcuni sono più vecchi di %{count} giorno. (L'impostazione delete_user_max_post_age.)"
+          one: "Impossibile cancellare tutti i messaggi. Alcuni sono più vecchi di %{count} giorno. (L'impostazione delete_user_max_post_age.)"
           other: "Impossibile cancellare tutti i messaggi. Alcuni sono più vecchi di %{count} giorni. (L'impostazione delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Non posso cancellare tutti i post perché l'utente ha più di %{count} post. (delete_all_posts_max.)"
+          one: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggio. (delete_all_posts_max)"
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
         delete_confirm: "E' preferibile rendere anonimo un utente anziché eliminarlo, per evitare di rimuovere contenuti dalle discussioni esistenti.<br><br> Sei SICURO di voler eliminare questo utente? Questa azione è permanente!"
         delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
@@ -4654,7 +4654,7 @@ it:
           locked_will_not_be_promoted: "Livello di attendibilità bloccato. L'utente non verrà mai promosso."
           locked_will_not_be_demoted: "Livello di attendibilità bloccato. L'utente non verrà mai degradato."
         discourse_connect:
-          title: "DiscourseConnect Single Sign On"
+          title: "Accesso singolo DiscourseConnect"
           external_id: "ID esterno"
           external_username: "Nome utente"
           external_name: "Nome"
@@ -4712,7 +4712,7 @@ it:
         recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         locale: "Lingua:"
-        fallback_locale_warning: "Stai modificando una varietà di %{fallback}. Gli utenti che scelgono %{fallback} come lingua dell'interfaccia non visualizzeranno le modifiche apportate."
+        fallback_locale_warning: "Stai modificando una lingua in base a %{fallback}. Gli utenti che scelgono %{fallback} come lingua dell'interfaccia non visualizzeranno le modifiche apportate."
         more_than_50_results: "Ci sono più di 50 risultati. Restringi i criteri di ricerca."
       settings:
         show_overriden: "Mostra solo le opzioni sovrascritte"
@@ -4721,7 +4721,7 @@ it:
         none: "nessuno"
       site_settings:
         emoji_list:
-          invalid_input: "L'elenco di emoji dovrebbe contenere solo nomi emoji validi, ad esempio: abbracci"
+          invalid_input: "L'elenco di emoji dovrebbe contenere solo nomi emoji validi, ad esempio: hugs."
           add_emoji_button:
             label: "Aggiungi Emoji"
         title: "Impostazioni"
@@ -4858,12 +4858,12 @@ it:
           what_are_badges_title: "Cosa sono i Distintivi?"
           badge_query_examples_title: "Esempi di Query Distintivo"
         mass_award:
-          title: Assegna in Massa
+          title: Assegna in blocco
           description: Assegna lo stesso distintivo a più utenti contemporaneamente.
           no_badge_selected: Seleziona un distintivo per iniziare.
           perform: "Assegna Distintivo agli Utenti"
-          upload_csv: Carica un CSV con indirizzi email o nomi utente degli utenti
-          aborted: Carica un CSV contenente indirizzi email o i nomi utente degli utenti
+          upload_csv: Carica un CSV con indirizzi email o nomi degli utenti
+          aborted: Carica un CSV contenente indirizzi email o i nomi degli utenti
           success: Il tuo CSV è stato ricevuto e gli utenti riceveranno il loro distintivo a breve.
           replace_owners: Rimuovi il distintivo dai precedenti proprietari
       emoji:
@@ -4883,7 +4883,7 @@ it:
         title: "Integrato"
         host: "Host Abilitati"
         class_name: "Nome Classe"
-        allowed_paths: "Lista path permessi"
+        allowed_paths: "Lista percorsi permessi"
         edit: "modifica"
         category: "Pubblica nella Categoria"
         add_host: "Aggiungi Host"
@@ -4895,9 +4895,9 @@ it:
         embed_title_scrubber: "Espressione regolare usata per ripulire i titoli dei messaggi"
         embed_truncate: "Tronca i messaggi incorporati"
         embed_unlisted: "Gli argomenti importati non saranno visibili fino a quando non ci sarà una risposta."
-        allowed_embed_selectors: "Selettore CSS per gli elementi ammessi negli inserimenti"
-        blocked_embed_selectors: "Selettore CSS per elementi rimossi dagli inserimenti"
-        allowed_embed_classnames: "Nomi di classe CSS consentiti"
+        allowed_embed_selectors: "Selettore CSS per gli elementi ammessi negli incorporamenti"
+        blocked_embed_selectors: "Selettore CSS per elementi rimossi dagli incorporamenti"
+        allowed_embed_classnames: "Nomi di classi CSS consentiti"
         save: "Salva Impostazioni Inclusione"
       permalink:
         title: "Collegamenti permanenti"
@@ -4912,7 +4912,7 @@ it:
         tag_name: "Nome etichetta"
         external_url: "URL esterno o relativo"
         destination: "Destinazione"
-        copy_to_clipboard: "Copia Permalink nella clipboard"
+        copy_to_clipboard: "Copia permalink negli appunti"
         delete_confirm: Sei sicuro di voler cancellare questo collegamento permanente?
         form:
           label: "Nuovo:"
@@ -4940,8 +4940,8 @@ it:
       upload_error: "Spiacenti, c'è stato un errore caricando il file. Per favore, prova di nuovo."
       quit: "Forse Dopo"
       staff_count:
-        one: "Your community has %{count} staff (you). "
-        other: "La tua comunità ha %{count} membri dello staff, te incluso."
+        one: "La tua comunità ha %{count} membro dello staff (sei tu)."
+        other: "La tua comunità ha %{count} membri dello staff, te compreso."
       invites:
         add_user: "aggiungi"
         none_added: "Non hai invitato nessuno a far parte dello staff. Vuoi proseguire lo stesso?"
@@ -4951,6 +4951,6 @@ it:
           regular: "Utente Normale"
       previews:
         topic_title: "Argomento di discussione"
-        font_title: "Font %{font}"
+        font_title: "Carattere %{font}"
         share_button: "Condividi"
         reply_button: "Rispondi"

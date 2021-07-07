@@ -8,7 +8,7 @@ it:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
-    long_date: "D MMMM YYYY h:mma"
+    long_date: "D MMMM YYYY h:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
@@ -55,7 +55,7 @@ it:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} di %{username}"
   themes:
-    bad_color_scheme: "Impossibile aggiornare il tema, paletta dei colori non valida"
+    bad_color_scheme: "Impossibile aggiornare il tema, tavolozza dei colori non valida"
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
     ember_selector_error: "Spiacenti, l'utilizzo dei selettori CSS #ember o .ember-view non è consentito perché questi nomi vengono generati dinamicamente in fase di runtime e cambieranno nel tempo generando un errore CSS. Prova un altro selettore."
     compile_error:
@@ -65,7 +65,7 @@ it:
       about_json: "Errore di importazione: about.json non esiste o non è valido. Sei sicuro che questo sia un tema di Discourse?"
       about_json_values: "about.json contiene valori non validi: %{errors}"
       modifier_values: "I modificatori about.json contengono valori non validi: %{errors}"
-      git: "Errore nella clonazione del repository git, accesso negato o repository non trovato"
+      git: "Errore nella clonazione dell'archivio git, accesso negato o archivio non trovato"
       git_ref_not_found: "Impossibile eseguire il checkout del riferimento git: %{ref}"
       unpack_failed: "Impossibile decomprimere il file"
       file_too_big: "Il file non compresso è troppo grande."
@@ -74,7 +74,7 @@ it:
     errors:
       component_no_user_selectable: "I componenti del tema non sono selezionabili dall'utente"
       component_no_default: "I componenti del tema non possono essere il tema predefinito"
-      component_no_color_scheme: "I componenti dei temi non possono avere palette dei colori"
+      component_no_color_scheme: "I componenti dei temi non possono avere tavolozze dei colori"
       no_multilevels_components: "I temi con elementi figli non possono a loro volta essere temi figli"
       optimized_link: I collegamenti ad immagini ottimizzate sono effimeri e non devono essere inclusi nel codice sorgente del tema.
     settings_errors:
@@ -103,16 +103,17 @@ it:
       maximum_staged_user_per_email_reached: "E' stato raggiunto il numero massimo di utenti temporanei creati via email."
       no_subject: "(nessun oggetto)"
       no_body: "(nessun corpo del messaggio)"
+      missing_attachment: "(Allegato %{filename} mancante)"
       errors:
         empty_email_error: "Succede quando l'email ricevuta era vuota."
         no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
         auto_generated_email_error: "Succede quando l'intestazione 'precedence' è impostata su: list, junk, bulk oppure auto_reply, oppure quando qualunque altra intestazione contiene: auto-submitted, auto-replied o auto-generated."
         no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
         no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione Da."
-        from_reply_by_address_error: "Accade quando l'intestazione From corrisponde all'indirizzo email della risposta."
+        from_reply_by_address_error: "Accade quando l'intestazione Da corrisponde all'indirizzo email della risposta."
         inactive_user_error: "Succede quando il mittente non è attivo."
         silenced_user_error: "Succede quando il mittente è stato silenziato."
-        bad_destination_address: "Succede quando nessuno degli indirizzi email nei campi A/Cc corrisponde a un indirizzo email entrante configurato."
+        bad_destination_address: "Succede quando nessuno degli indirizzi email nei campi A/Cc corrisponde a un indirizzo configurato per email entranti."
         strangers_not_allowed_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria della quale non è membro."
         insufficient_trust_level_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria per la quale non ha il livello di attendibilità richiesto."
         reply_user_not_matching_error: "Succede quando arriva una risposta da un indirizzo email diverso da quello cui la notifica era stata inviata."
@@ -123,7 +124,7 @@ it:
         unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
         email_not_allowed: "Succede quando l'indirizzo e-mail non è nella lista di contatti permessi o è in quella di contatti bloccati."
       unrecognized_error: "Errore Non Riconosciuto"
-    secure_media_placeholder: "Redatto: i media sicuri sono attivati su questo sito; visita l'argomento o clicca su Visualizza media per vedere i media allegati."
+    secure_media_placeholder: "Oscurato: l'opzione per la sicurezza dei contenuti multimediali è attivata su questo sito; visita l'argomento o clicca su Visualizza media per vedere gli allegati."
     view_redacted_media: "Visualizza media"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -173,11 +174,11 @@ it:
         one: ha una lunghezza errata (dovrebbe essere di %{count} carattere)
         other: ha una lunghezza errata (dovrebbe essere di %{count} caratteri)
       other_than: "deve essere diverso da %{count}"
-      auth_overrides_username: "L'impostazione `auth_overrides_username` é abilitata e il nome utente deve essere aggiornato sul provider di autenticazione (SSO)."
+      auth_overrides_username: "L'impostazione `auth_overrides_username` è abilitata e il nome utente deve essere aggiornato sul provider di autenticazione (SSO)."
     template:
       body: ! "Sono stati riscontrati problemi con i seguenti campi:"
       header:
-        one: "%{count} errore ha impedito il salvataggio di questo %{model}"
+        one: "%{count} errore ha impedito il salvataggio di %{model}"
         other: ! "%{count} errori hanno impedito il salvataggio di %{model}"
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
@@ -189,22 +190,22 @@ it:
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       default_tags_already_selected: "Non è possibile selezionare un'etichetta utilizzata in un altro elenco."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
-      enable_s3_uploads_is_required: "Non puoi abilitare l'inventario su S3 se non hai abilitato i caricamenti S3."
-      page_publishing_requirements: "La pubblicazione di pagine non può essere attivata se sono attivati i media sicuri."
+      enable_s3_uploads_is_required: "Non puoi abilitare l'uso dell'inventario su S3 se non hai abilitato i caricamenti S3."
+      page_publishing_requirements: "La pubblicazione di pagine non può essere attivata se sono attivati i supporti sicuri."
       s3_backup_requires_s3_settings: "Non è possibile utilizzare S3 per i backup a meno che non sia stato fornito '%{setting_name}'."
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
-      secure_media_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i supporti sicuri."
+      secure_media_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i contenuti multimediali sicuri."
       share_quote_facebook_requirements: "Devi impostare un ID app Facebook per attivare la condivisione delle citazioni per Facebook."
-      second_factor_cannot_enforce_with_socials: "Non si può applicare l'autenticazione a due fattori se il login tramite social è attivo. Devi prima disattivarlo tramite %{auth_provider_names}"
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare 2FA se i login locali sono disabilitati."
-      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Non è possibile attivare il 2FA quando DiscourseConnect è abilitato."
+      second_factor_cannot_enforce_with_socials: "Non si può applicare l'autenticazione a due fattori se l'acceso tramite social è attivo. Devi prima disattivarlo tramite %{auth_provider_names}"
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare l'autenticazione a due fattori se gli accessi locali sono disabilitati."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Non è possibile attivare l'autenticazione a due fattori quando DiscourseConnect è abilitato."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non puoi abilitare i caricamenti S3 perché sono già abilitati a livello globale e l'abilitazione dei caricamenti S3 a livello di sito potrebbe causare problemi critici con i caricamenti"
       cors_origins_should_not_have_trailing_slash: "Non aggiungere la barra finale (/) alle origini CORS."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Purtroppo è stato impossibile creare un'anteprima per questa pagina, perché non è stato trovato il server '%{hostname}'. Nel tuo post apparirà solo un link senza anteprima. :cry:"
-      error_response: "Purtroppo è stato impossibile creare un'anteprima per questa pagina, perché il server ha dato un codice d'errore %{status_code}. Nel tuo post apparirà solo un link senza anteprima. :cry:"
+      error_response: "Purtroppo è stato impossibile creare un'anteprima per questa pagina, perché il server ha dato il codice d'errore %{status_code}. Nel tuo post apparirà solo un link senza anteprima. :cry:"
       missing_data:
         one: "Siamo spiacenti, non è stato possibile generare un'anteprima per questa pagina web perché non è stato trovato il seguente tag oEmbed / OpenGraph: %{missing_attributes}"
         other: "Siamo spiacenti, non è stato possibile generare un'anteprima per questa pagina web, perché i seguenti tag oEmbed / OpenGraph non sono stati trovati: %{missing_attributes}"
@@ -212,8 +213,8 @@ it:
     comma: ", "
   invite:
     expired: "Il tuo token di invito è scaduto. <a href='%{base_url}/about'>Contatta lo staff</a>."
-    not_found: "Il token del tuo invito non è valido. Per favore <a href='%{base_url}/about'>contatta lo staff</a>."
-    not_found_json: "Il token del tuo invito non è valido. Per favore contatta lo staff."
+    not_found: "Il tuo token di invito non è valido. <a href='%{base_url}/about'>Contatta lo staff</a>."
+    not_found_json: "Il tuo token di invito non è valido. Contatta lo staff."
     not_matching_email: "Il tuo indirizzo email e l'indirizzo email associato al token di invito non corrispondono. Contatta lo staff."
     not_found_template: |
       <p>Il tuo invito a <a href="%{base_url}">%{site_name}</a> è già stato riscattato.</p>

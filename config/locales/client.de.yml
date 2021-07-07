@@ -364,7 +364,7 @@ de:
         title: "Überprüfbares Scoring"
         formula: "Formel"
         subtotal: "Zwischensumme"
-        total: "Insgesamt"
+        total: "Gesamt"
         min_score_visibility: "Minimaler Score für Sichtbarkeit"
         score_to_hide: "Score, um den Beitrag zu verbergen"
         take_action_bonus:
@@ -975,7 +975,7 @@ de:
         label: "Live-Benachrichtigungen"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_default: "Benachrichtigungen einschalten"
-        perm_denied_btn: "Zugriff verweigert"
+        perm_denied_btn: "Berechtigung verweigert"
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
@@ -1705,7 +1705,7 @@ de:
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse aus darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       omniauth_disallow_totp: "Für dein Benutzerkonto ist die Zwei-Faktor-Authentifizierung aktiviert. Bitte melde dich mit deinem Passwort an."
-      resend_title: "Aktivierungsmail erneut senden"
+      resend_title: "Aktivierungs-E-Mail erneut senden"
       change_email: "E-Mail-Adresse ändern"
       provide_new_email: "Gib eine neue Adresse an und wir senden deine Bestätigungsmail erneut."
       submit_new_email: "E-Mail-Adresse aktualisieren"
@@ -1828,7 +1828,7 @@ de:
       title: "Gemeinsame Entwürfe"
       notice: "Dieses Thema ist nur für diejenigen sichtbar, die gemeinsame Entwürfe veröffentlichen können."
       destination_category: "Ziel-Kategorie"
-      publish: "Gemeinsame Vorlage veröffentlichen"
+      publish: "Gemeinsamen Entwurf veröffentlichen"
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
       publishing: "Thema wird veröffentlicht …"
     composer:
@@ -2097,7 +2097,7 @@ de:
       context:
         user: "Beiträge von @%{username} durchsuchen"
         category: "Kategorie #%{category} durchsuchen"
-        tag: "Den #%{tag} tag suchen"
+        tag: "Das Schlagwort #%{tag} suchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
       advanced:
@@ -4202,7 +4202,7 @@ de:
         send_test: "Test-E-Mail senden"
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
-        preview_digest_desc: "Vorschau des Inhalts der Zusammenfassungs-E-Mails, die an inaktive Benutzer gesendet werden."
+        preview_digest_desc: "Vorschau des Inhalts der E-Mail-Zusammenfassungen, die an inaktive Benutzer gesendet werden."
         refresh: "Aktualisieren"
         send_digest_label: "Sende das Ergebnis an:"
         send_digest: "Senden"
