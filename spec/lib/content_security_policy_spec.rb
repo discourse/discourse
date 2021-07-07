@@ -19,9 +19,9 @@ describe ContentSecurityPolicy do
   end
 
   describe 'base-uri' do
-    it 'is set to none' do
+    it 'is set to self' do
       base_uri = parse(policy)['base-uri']
-      expect(base_uri).to eq(["'none'"])
+      expect(base_uri).to eq(["'self'"])
     end
   end
 
