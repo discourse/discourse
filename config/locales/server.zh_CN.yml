@@ -423,11 +423,11 @@ zh_CN:
 
       - 谁会对此感兴趣？为什么会感兴趣？您想得到怎样的回应？
 
-      - 在您的话题中包含常用词，以便其他人能够“找到”它。要将您的话题与相关的话题关联，请选择一个类别（或标签）。
+      - 在您的话题中包含常用词，以便其他人能够“找到”它。要将您的话题与相关话题并为一组，请选择一个类别（或标签）。
 
-      更多内容，[请参阅我们的社区准则](%{base_path}/guidelines)。此面板仅在您的前 %{education_posts_text}出现。
+      有关详情，[请参阅我们的社区准则](%{base_path}/guidelines)。此面板仅在您的前 %{education_posts_text}出现。
     "new-reply": |
-      欢迎来到%{site_name} &mdash; **感谢您的贡献！**
+      欢迎加入 %{site_name} &mdash; **感谢您的贡献**！
 
       - 请对其他社区成员保持友善。
 
@@ -435,49 +435,49 @@ zh_CN:
 
       - 欢迎有建设性的批评，但是请对事不对人。
 
-      更多内容，[请查看我们的社区准则](%{base_path}/guidelines)。此信息面板只会在您发表前 %{education_posts_text} 时显示。
+      有关详情，[请参阅我们的社区准则](%{base_path}/guidelines)。此面板仅在您的前 %{education_posts_text}出现。
     avatar: |
-      ### 想更改您的头像吗?
+      ### 想更改您的头像吗？
 
-      您已经发表和回复了几个话题，但您的头像并不像您自己一样独一无二——它仅仅是一个字母。
+      您已经发布了几个话题和回复，但您的个人资料照片并不像您自己一样独一无二，它仅仅是一个字母。
 
-      您想过更改您的头像 **[查看您的个人资料](%{profile_path})** 并上传一张代表您自己的照片吗?
+      您想过**[访问您的用户个人资料](%{profile_path})**并上传一张代表您自己的照片吗？
 
-      如果每个人都有自己独特的头像会让人更加容易参与讨论和发现有趣的人!
+      如果每个人都有自己独特的头像，会让人更加容易参与讨论和发现有趣的人！
     sequential_replies: |
-      ### 考虑只回复帖子一次
+      ### 考虑一次回复多个帖子
 
-      与其回复话题多次，不如只回复一次，包括引用前面的帖子或者@用户名。
+      与其对某个话题连续回复多次，不如只回复一次，并包括对之前的帖子的引用或者用户名引用。
 
-      您可以在您的回复中添加引用。只要选择您想引用的文字，然后点击随后出现的<b>引用回复</b>按钮。
+      您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
 
-      这样其它人会更容易地看一个长的回复，而不是多个分开的回复。
+      这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
     dominating_topic: |
-      ### 让其他人也加入到讨论中
+      ### 让其他人也加入讨论
 
-      显然这个话题对您很重要 &ndash；但所有回复中您的发言占比超过%{percent}%
+      此话题显然对您很重要 - 在所有回复中您的发言占比超过 %{percent}%。
 
       留一点空间给其他人分享他们自己的见解会更好。您能邀请他们吗？
     get_a_room: |
-      ### 鼓励每一个人都参与到讨论当中
+      ### 鼓励每一个人都参与到讨论中
 
-      您已经在这个话题中给@%{reply_username}回复了%{count}次了！
+      您已经在这个话题中给 @%{reply_username} 回复 %{count} 次了！
 
-      良好讨论应该包含许多不同的声音和观点。您能让其他人也参与进来吗？
+      良好的讨论应该包含许多不同的声音和观点。您能让其他人也参与进来吗？
 
-      不要忘记了，如果您想私下继续与特定用户进行对话，可以[给他们发送私信](%{base_path}/u/%{reply_username})。
+      不要忘了，如果您想私下继续与此特定用户进行对话，可以[给他们发送个人消息](%{base_path}/u/%{reply_username})。
     too_many_replies: |
-      ### 您发表的回复数量已经达到了上限。
+      ### 您已达到此话题的回复上限
 
-      非常抱歉，但新用户被限制只能在同一话题中回复 %{newuser_max_replies_per_topic} 次。
+      抱歉，但新用户被暂时限制为只能在同一个话题中回复 %{newuser_max_replies_per_topic} 次。
 
-      与其添加另一个回复不如考虑编辑您以前的回复，或访问其他话题。
+      与其添加另一个回复，不如考虑编辑您以前的回复，或访问其他话题。
     reviving_old_topic: |
-      ### 重新激活这个话题？
+      ### 复活此话题？
 
-      该话题最后的回复是**%{time_ago}**。您的回复将让话题重新出现在列表的顶端并通知所有原先参与过讨论的人。
+      此话题的最后回复是 **%{time_ago}**。您的回复将让话题重新出现在列表的顶部并通知所有原先参与过讨论的人。
 
-      您确定要延续这个久远的话题吗？
+      确定要继续这个久远的对话吗？
   activerecord:
     attributes:
       category:
@@ -496,133 +496,133 @@ zh_CN:
           attributes:
             base:
               warning_requires_pm: "您只能在个人消息中附加警告。"
-              too_many_users: "一次只能发送警告给一个用户。"
-              cant_send_pm: "抱歉，您不能向该用户发送消息。"
+              too_many_users: "一次只能向一个用户发送警告。"
+              cant_send_pm: "抱歉，您不能向该用户发送个人消息。"
               no_user_selected: "您必须选择一个有效的用户。"
-              reply_by_email_disabled: "用邮件回复已被禁止"
-              send_to_email_disabled: "抱歉，您不能向该邮件发送消息。"
-              target_user_not_found: "未找到您要向其发送此消息的其中一个用户"
-              unable_to_update: "更新该话题时发生错误。"
-              unable_to_tag: "给话题设置标签时发生错误。"
+              reply_by_email_disabled: "通过电子邮件回复已被禁用。"
+              send_to_email_disabled: "抱歉，您不能向该电子邮件发送个人消息。"
+              target_user_not_found: "未找到您要向其发送此消息的其中一个用户。"
+              unable_to_update: "更新该话题时出错。"
+              unable_to_tag: "给话题添加标签时出错。"
             featured_link:
-              invalid: "不合法。URL 应包括 http:// 或 https://。"
-              invalid_category: "无法编辑该分类。"
+              invalid: "无效。URL 应包括 http:// 或 https://。"
+              invalid_category: "无法在此类别中编辑。"
         user:
           attributes:
             password:
-              common: "是 10000 个最常用的密码之一。请用一个更安全的密码。"
+              common: "是 10000 个最常用的密码之一。请使用一个更安全的密码。"
               same_as_username: "与您的用户名相同。请使用一个更安全的密码。"
-              same_as_email: "与您的邮件地址相同。请使用一个更安全的密码。"
-              same_as_current: "和您当前的密码相同"
-              same_as_name: "和您的名字一样。"
+              same_as_email: "与您的电子邮件相同。请使用一个更安全的密码。"
+              same_as_current: "与您当前的密码相同"
+              same_as_name: "与您的名字相同。"
               unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
             username:
-              same_as_password: "和您的密码相同。"
+              same_as_password: "与您的密码相同。"
             name:
-              same_as_password: "和您的密码相同。"
+              same_as_password: "与您的密码相同。"
             ip_address:
-              signup_not_allowed: "不能使用这个账户登录。"
+              signup_not_allowed: "不允许从此帐户注册。"
         user_profile:
           attributes:
             featured_topic_id:
-              invalid: "该话题不能显示在您的个人资料中。"
+              invalid: "此话题不能出现在您的个人资料中。"
         user_email:
           attributes:
             user_id:
-              reassigning_primary_email: "不允许将主电子邮件重新分配给其他用户。"
+              reassigning_primary_email: "不允许将常用电子邮件重新分配给其他用户。"
         color_scheme_color:
           attributes:
             hex:
-              invalid: "不是有效颜色值"
+              invalid: "不是有效颜色"
         post_reply:
           base:
             different_topic: "帖子和回复必须属于同一话题。"
         web_hook:
           attributes:
             payload_url:
-              invalid: "URL 不合法。URL 应包括 http:// 或 https://。并且其中没有空格。"
+              invalid: "URL 无效。URL 应包括 http:// 或 https://，并且其中没有空格。"
         custom_emoji:
           attributes:
             name:
-              taken: 已被另一个 emoji 使用
+              taken: 已被另一个表情符号使用
         topic_timer:
           attributes:
             execute_at:
-              in_the_past: "必须是未来。"
+              in_the_past: "必须是未来的时间。"
             duration_minutes:
               cannot_be_zero: "必须大于 0。"
               exceeds_maximum: "不能超过 20 年。"
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: '以下内插键值无效：“%{keys}”'
+              invalid_interpolation_keys: '以下插值键无效："%{keys}"'
         watched_word:
           attributes:
             word:
               too_many: "对该操作敏感词过多"
             base:
-              invalid_url: "用于替换的网址无效"
+              invalid_url: "替换 URL 无效"
       <<: *errors
   uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
-  vip_category_description: "信任等级3的用户参与讨论的分类。"
+  vip_category_description: "信任级别为 3 及更高级别的成员专属的类别。"
   meta_category_name: "站点反馈"
-  meta_category_description: "讨论该站点的站务、组织、如何运作和如何改善它。"
+  meta_category_description: "有关此站点、其组织、运作方式以及如何改进的讨论。"
   staff_category_name: "管理人员"
-  staff_category_description: "管理人员可见的分类。只有管理员和版主才能阅览话题。"
+  staff_category_description: "适用于管理人员讨论的不公开类别。话题仅对管理员和版主可见。"
   discourse_welcome_topic:
     title: "欢迎来到 Discourse"
     body: |2
 
-      置顶话题的第一段是访客在主页看到的欢迎私信。这很重要！
+      此置顶话题的第一段是所有新访客在首页看到的欢迎消息。这很重要！
 
-      **编辑**它作为社区的简要介绍：
+      **编辑**它，作为您的社区的简要介绍：
 
-      - 什么人想参与？
-      - 他们能在这找到什么？
+      - 您的社区面向哪些人？
+      - 他们能在这里找到什么？
       - 为什么他们要来这？
-      - 他们能在哪里阅读更多的内容（链接、资源等）？
+      - 他们能在哪里阅读更多内容（链接、资源等）？
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      您可能想要在管理 :wrench: （右上角）中关闭这个话题，这样回复就不会积压在这个通告下。
+      您可能需要通过管理员设置 :wrench: （右上角和底部）关闭此话题，这样回复就不会积压在此公告下。
   lounge_welcome:
     title: "欢迎来到贵宾室"
     body: |2
 
       恭喜！:confetti_ball:
 
-      如果您看到了这个话题，说明您已经被提升至**常规**（信任等级3）了。
+      如果您看到此话题，说明您已经被提升至**常规**（信任级别 3）。
 
       您现在可以&hellip;
 
       * 编辑任何话题的标题
-      * 改变任何话题的分类
-      * 让您的链接设置为 follow 属性（[自动不跟踪](https://en.wikipedia.org/wiki/Nofollow)限制已经移除）
-      * 访问一个只有信任等级3及更高才能见到的贵宾室分类
-      * 一次标记即可隐藏垃圾信息
+      * 更改任何话题的类别
+      * 为您的链接设置 follow 属性（[自动 nofollow](https://en.wikipedia.org/wiki/Nofollow) 已被移除）
+      * 访问只有信任级别为 3 及更高的用户才能看到的贵宾室类别
+      * 一次举报即可隐藏垃圾信息
 
-      这里是[目前达到常规的用户列表](%{base_path}/badges/3/regular)。一定要来问个好！
+      这是[目前达到“常规”级别的用户列表](%{base_path}/badges/3/regular)。一定要向他们打声招呼！
 
       感谢成为社区的重要一员！
 
-      （想了解关于信任等级的更多信息，[参见这个话题][trust]。请注意成员需要在将来也维持一定的选择条件的成员才能保持在常规。）
+      （如需详细了解信任级别，请[参阅此话题][trust]。请注意，只有不断继续满足要求的成员才能保持“常规”级别。）
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "首先阅读：管理员快速入门指南"
   category:
-    topic_prefix: "关于“%{category}”分类"
-    replace_paragraph: "（将第一段替换为新类别的简要说明。此指南将显示在类别选择区域中，因此请尽量将其保留在200个字符以内。）"
-    post_template: "%{replace_paragraph}\n\n在接下来的这段话中多写一些分类的用途，或者设定一个该分类的规则：\n\n- 为什么我们要用这个分类？它用来做什么？\n\n- 这个分类和我们已经有的分类究竟有什么不同？\n\n- 这个分类中一般会包含哪些话题？\n\n- 我们需要这个分类么？我们可以把它和别的分类、或者子分类合并吗？\n"
+    topic_prefix: "关于%{category}类别"
+    replace_paragraph: "（将第一段替换为新类别的简要说明。此指导将显示在类别选择区域中，因此请尽量将其保持在 200 个字符以内。）"
+    post_template: "%{replace_paragraph}\n\n使用以下段落提供详细描述或者建立类别准则或规则：\n\n- 为什么应使用此类别？它用来做什么？\n\n- 此类别和我们已经有的类别究竟有什么不同？\n\n- 此类别中的话题一般包含什么？\n\n- 我们需要此类别吗？我们可以将其与其他类别或子类别合并吗？"
     errors:
-      not_found: "未找到分类！"
-      uncategorized_parent: "未分类不能有一个父分类"
-      self_parent: "一个子分类不能属于它自己。"
-      depth: "您不能在一个子分类下再包含一个子分类。"
-      invalid_email_in: "'%{email}'不是一个有效邮箱地址。"
-      email_already_used_in_group: "'%{email}' 已经被群组'%{group_name}'使用了。"
-      email_already_used_in_category: "'%{email}' 已经被分类'%{category_name}'使用了。"
-      description_incomplete: "分类描述帖至少要有一段。"
+      not_found: "找不到类别！"
+      uncategorized_parent: "未分类不能有父类别"
+      self_parent: "子类别的父类别不能是它自己。"
+      depth: "您不能将一个子类别嵌套在其他子类别下。"
+      invalid_email_in: "'%{email}' 不是一个有效的电子邮件地址。"
+      email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
+      email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
+      description_incomplete: "类别描述帖子至少要有一段。"
       permission_conflict: "所有被允许访问一个子分类的群组也必须能够访问其上级分类。下列群组能够访问某个子分类，但不能访问上级分类： %{group_names}。"
       disallowed_topic_tags: "此话题含有不允许在该分类中使用的标签：%{tags}"
       disallowed_tags_generic: "此话题有反对标签。"
@@ -661,11 +661,11 @@ zh_CN:
       unsubscribe_via_email: "您已经达到了用邮件解除订阅的最大数量限制。请等待%{time_left}后再试。"
       topic_invitations_per_day: "您已经达到了话题邀请的最大数量。您可以在 %{time_left} 后发送更多邀请。"
     hours:
-      other: "%{count}小时"
+      other: "%{count} 小时"
     minutes:
-      other: "%{count}分"
+      other: "%{count} 分钟"
     seconds:
-      other: "%{count}秒"
+      other: "%{count} 秒"
     short_time: "几秒后"
   datetime:
     distance_in_words:

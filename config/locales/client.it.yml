@@ -3401,7 +3401,7 @@ it:
         tags_placeholder: "Cerca o crea etichette"
         parent_tag_placeholder: "Facoltativo"
         select_groups_placeholder: "Seleziona gruppi..."
-        disabled: "L’etichettatura è disabilitata. "
+        disabled: "Etichette disabilitate. "
       topics:
         none:
           unread: "Non hai argomenti non letti."
@@ -3442,7 +3442,7 @@ it:
       names:
         newuser: "nuovo utente"
         basic: "utente base"
-        member: "assiduo"
+        member: "membro"
         regular: "esperto"
         leader: "veterano"
       detailed_name: "%{level} - %{name}"
@@ -3604,8 +3604,8 @@ it:
         delete: "Cancella"
         delete_confirm: "Cancellare questo gruppo?"
         delete_with_messages_confirm:
-          one: "L'eliminazione di questo gruppo farà sì che %{count} messaggio sia orfano, e i membri del gruppo non ne avranno più accesso.<br><br>Sei sicuro?"
-          other: "L'eliminazione di questo gruppo farà sì che %{count} messaggi siano orfani, e i membri del gruppo non ne avranno più accesso.<br><br>Sei sicuro?"
+          one: "L'eliminazione di questo gruppo farà sì che %{count} messaggio sia orfano, e i membri del gruppo non potranno più accedervi.<br><br>Proseguire?"
+          other: "L'eliminazione di questo gruppo farà sì che %{count} messaggi siano orfani, e i membri del gruppo non potranno più accedervi.<br><br>Proseguire?"
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
         delete_automatic_group: Questo è un gruppo automatico e non può essere eliminato.
         delete_owner_confirm: "Rimuovere i privilegi per '%{username}'?"
