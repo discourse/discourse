@@ -771,13 +771,14 @@ Discourse::Application.routes.draw do
       get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", defaults: { format: :json }
       get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", defaults: { format: :json }
       get "private-messages-new/:username" => "list#private_messages_new", as: "topics_private_messages_new", defaults: { format: :json }
-      get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", defaults: { format: :json }
       get "private-messages-warnings/:username" => "list#private_messages_warnings", as: "topics_private_messages_warnings", defaults: { format: :json }
       get "groups/:group_name" => "list#group_topics", as: "group_topics", group_name: RouteFormat.username
 
       scope "/private-messages-group/:username", group_name: RouteFormat.username do
         get ":group_name.json" => "list#private_messages_group", as: "topics_private_messages_group"
         get ":group_name/archive.json" => "list#private_messages_group_archive", as: "topics_private_messages_group_archive"
+        get ":group_name/new.json" => "list#private_messages_group_new", as: "topics_private_messages_group_new"
+        get ":group_name/unread.json" => "list#private_messages_group_unread", as: "topics_private_messages_group_unread"
       end
     end
 

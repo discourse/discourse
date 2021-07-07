@@ -1,68 +1,30 @@
+# frozen_string_literal: true
+
 class TopicQuery
   module PrivateMessageLists
     def list_private_messages_all(user)
       list = private_messages_for(user, :all)
-
-      list = list.joins(<<~SQL)
-      LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id
-      LEFT JOIN user_archived_messages um
-        ON um.user_id = #{user.id.to_i}
-        AND um.topic_id = topics.id
-      SQL
-
-      list = list.where("um.user_id IS NULL AND gm.topic_id IS NULL")
+      list = filter_archived(list, user, archived: false)
       create_list(:private_messages, {}, list)
     end
 
     def list_private_messages_all_sent(user)
       list = private_messages_for(user, :all)
-      list = list.where('EXISTS (
-                        SELECT 1 FROM posts
-                        WHERE posts.topic_id = topics.id AND
-                              posts.user_id = ?
-                       )', user.id)
 
-      list = list.joins(<<~SQL)
-      LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id
-      LEFT JOIN user_archived_messages um
-        ON um.user_id = #{user.id.to_i}
-        AND um.topic_id = topics.id
+      list = list.where(<<~SQL, user.id)
+      EXISTS (
+        SELECT 1 FROM posts
+        WHERE posts.topic_id = topics.id AND posts.user_id = ?
+      )
       SQL
 
-      list = list.where("um.user_id IS NULL AND gm.topic_id IS NULL")
+      list = filter_archived(list, user, archived: false)
       create_list(:private_messages, {}, list)
     end
 
     def list_private_messages_all_archive(user)
       list = private_messages_for(user, :all)
-
-      list = list.joins(<<~SQL)
-      LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id
-      LEFT JOIN user_archived_messages um
-        ON um.user_id = #{user.id.to_i}
-        AND um.topic_id = topics.id
-      SQL
-
-      list = list.where("um.user_id IS NOT NULL OR gm.topic_id IS NOT NULL")
-      create_list(:private_messages, {}, list)
-    end
-
-    def list_private_messages_all_new(user)
-      list = private_messages_for(user, :all)
-      list = list.where('EXISTS (
-                        SELECT 1 FROM posts
-                        WHERE posts.topic_id = topics.id AND
-                              posts.user_id = ?
-                       )', user.id)
-
-      list = list.joins(<<~SQL)
-      LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id
-      LEFT JOIN user_archived_messages um
-        ON um.user_id = #{user.id.to_i}
-        AND um.topic_id = topics.id
-      SQL
-
-      list = list.where("um.user_id IS NULL OR gm.topic_id IS NULL")
+      list = filter_archived(list, user, archived: true)
       create_list(:private_messages, {}, list)
     end
 
@@ -88,11 +50,14 @@ class TopicQuery
 
     def list_private_messages_sent(user)
       list = private_messages_for(user, :user)
-      list = list.where('EXISTS (
-                        SELECT 1 FROM posts
-                        WHERE posts.topic_id = topics.id AND
-                              posts.user_id = ?
-                       )', user.id)
+
+      list = list.where(<<~SQL, user.id)
+      EXISTS (
+        SELECT 1 FROM posts
+        WHERE posts.topic_id = topics.id AND posts.user_id = ?
+      )
+      SQL
+
       list = not_archived(list, user)
       create_list(:private_messages, {}, list)
     end
@@ -114,36 +79,74 @@ class TopicQuery
         staff: user.staff?
       )
 
-      first_unread_pm_at = UserStat.where(user_id: user.id).pluck_first(:first_unread_pm_at)
-      list = list.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
+      first_unread_pm_at = UserStat
+        .where(user_id: user.id)
+        .pluck_first(:first_unread_pm_at)
+
+      if first_unread_pm_at
+        list = list.where("topics.updated_at >= ?", first_unread_pm_at)
+      end
+
       create_list(:private_messages, {}, list)
     end
 
     def list_private_messages_group(user)
       list = private_messages_for(user, :group)
-      group = Group.where('name ilike ?', @options[:group_name]).select(:id, :publish_read_state).first
-      publish_read_state = !!group&.publish_read_state
-      list = list.joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
-                        gm.group_id = #{group&.id&.to_i}")
+
+      list = list.joins(<<~SQL)
+      LEFT JOIN group_archived_messages gm
+      ON gm.topic_id = topics.id AND gm.group_id = #{group&.id&.to_i}
+      SQL
+
       list = list.where("gm.id IS NULL")
+      publish_read_state = !!group&.publish_read_state
       list = append_read_state(list, group) if publish_read_state
       create_list(:private_messages, { publish_read_state: publish_read_state }, list)
     end
 
     def list_private_messages_group_archive(user)
       list = private_messages_for(user, :group)
-      group_id = Group.where('name ilike ?', @options[:group_name]).pluck_first(:id)
-      list = list.joins("JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
-                        gm.group_id = #{group_id.to_i}")
-      create_list(:private_messages, {}, list)
+
+      list = list.joins(<<~SQL)
+      INNER JOIN group_archived_messages gm
+      ON gm.topic_id = topics.id AND gm.group_id = #{group&.id.to_i}
+      SQL
+
+      publish_read_state = !!group&.publish_read_state
+      list = append_read_state(list, group) if publish_read_state
+      create_list(:private_messages, { publish_read_state: publish_read_state }, list)
     end
 
-    def list_private_messages_tag(user)
-      list = private_messages_for(user, :all)
-      list = list.joins("JOIN topic_tags tt ON tt.topic_id = topics.id
-                        JOIN tags t ON t.id = tt.tag_id AND t.name = '#{@options[:tags][0]}'")
-      create_list(:private_messages, {}, list)
+    def list_private_messages_group_new(user)
+      list = TopicQuery.new_filter(
+        private_messages_for(user, :group),
+        treat_as_new_topic_start_date: user.user_option.treat_as_new_topic_start_date
+      )
+
+      publish_read_state = !!group&.publish_read_state
+      list = append_read_state(list, group) if publish_read_state
+      create_list(:private_messages, { publish_read_state: publish_read_state }, list)
     end
+
+    def list_private_messages_group_unread(user)
+      list = TopicQuery.unread_filter(
+        private_messages_for(user, :group),
+        staff: user.staff?
+      )
+
+      first_unread_pm_at = UserStat
+        .where(user_id: user.id)
+        .pluck_first(:first_unread_pm_at)
+
+      if first_unread_pm_at
+        list = list.where("topics.updated_at >= ?", first_unread_pm_at)
+      end
+
+      publish_read_state = !!group&.publish_read_state
+      list = append_read_state(list, group) if publish_read_state
+      create_list(:private_messages, { publish_read_state: publish_read_state }, list)
+    end
+
 
     def list_private_messages_warnings(user)
       list = private_messages_for(user, :user)
@@ -190,6 +193,10 @@ class TopicQuery
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
 
+      if @options[:tag]
+        byebug
+      end
+
       if options[:page]
         offset = options[:page].to_i * options[:per_page]
         result = result.offset(offset) if offset > 0
@@ -211,10 +218,37 @@ class TopicQuery
         .select(*selected_values)
     end
 
+    def filter_archived(list, user, archived: true)
+      list = list.joins(<<~SQL)
+      LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id
+      LEFT JOIN user_archived_messages um
+        ON um.user_id = #{user.id.to_i}
+        AND um.topic_id = topics.id
+      SQL
+
+      list =
+        if archived
+          list.where("um.user_id IS NOT NULL OR gm.topic_id IS NOT NULL")
+        else
+          list.where("um.user_id IS NULL AND gm.topic_id IS NULL")
+        end
+
+      list
+    end
+
     def not_archived(list, user)
       list.joins("LEFT JOIN user_archived_messages um
                          ON um.user_id = #{user.id.to_i} AND um.topic_id = topics.id")
         .where('um.user_id IS NULL')
+    end
+
+    def group
+      @group ||= begin
+        Group
+          .where('name ilike ?', @options[:group_name])
+          .select(:id, :publish_read_state)
+          .first
+      end
     end
   end
 end

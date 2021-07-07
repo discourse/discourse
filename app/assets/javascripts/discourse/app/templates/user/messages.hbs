@@ -1,42 +1,53 @@
 {{#d-section class="user-messages-navigation" pageClass="user-messages"}}
   <div class="navigation-container">
-    {{#mobile-nav class="messages-nav" desktopClass="nav-pills action-list"}}
-      <li class="noGlyph">
-        {{combo-box
-          content=inboxes
-          value=selectedInbox
-          onChange=(action "updateInbox")
-          options=(hash
-            filterable=true
-            caretDownIcon="caret-right"
-            caretUpIcon="caret-down"
-          )
-        }}
-      </li>
+    {{combo-box
+      content=inboxes
+      classNames="user-messages-inboxes-drop"
+      value=selectedInbox
+      onChange=(action "updateInbox")
+      options=(hash
+        filterable=true
+        caretDownIcon="caret-right"
+        caretUpIcon="caret-down"
+      )
+    }}
 
+    {{combo-box
+      content=tagsContent
+      classNames="user-messages-tags-drop"
+      value=tag
+      options=(hash
+        filterable=true
+        none="tagging.selector_all_tags"
+        caretDownIcon="caret-right"
+        caretUpIcon="caret-down"
+      )
+    }}
+
+    {{#mobile-nav class="messages-nav" desktopClass="nav-pills action-list"}}
       {{#if isAllInbox}}
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.index" model}}
+          {{#link-to "userPrivateMessages.index" model (query-params tag=tag)}}
             {{i18n "user.messages.latest"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.sent" model}}
+          {{#link-to "userPrivateMessages.sent" model (query-params tag=tag)}}
             {{i18n "user.messages.sent"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.new" model}}
+          {{#link-to "userPrivateMessages.new" model (query-params tag=tag)}}
             {{i18n "user.messages.new"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.unread" model}}
+          {{#link-to "userPrivateMessages.unread" model (query-params tag=tag)}}
             {{i18n "user.messages.unread"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.archive" model}}
+          {{#link-to "userPrivateMessages.archive" model (query-params tag=tag)}}
             {{i18n "user.messages.archive"}}
           {{/link-to}}
         </li>
@@ -44,12 +55,22 @@
 
       {{#if group}}
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.group" group.name}}
+          {{#link-to "userPrivateMessages.group" group.name (query-params tag=tag)}}
             {{i18n "user.messages.latest"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.groupArchive" group.name}}
+          {{#link-to "userPrivateMessages.groupNew" group.name (query-params tag=tag)}}
+            {{i18n "user.messages.new"}}
+          {{/link-to}}
+        </li>
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.groupUnread" group.name (query-params tag=tag)}}
+            {{i18n "user.messages.unread"}}
+          {{/link-to}}
+        </li>
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.groupArchive" group.name (query-params tag=tag)}}
             {{i18n "user.messages.archive"}}
           {{/link-to}}
         </li>
@@ -57,27 +78,27 @@
 
       {{#if isPersonalInbox}}
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.personal" model}}
+          {{#link-to "userPrivateMessages.personal" model (query-params tag=tag)}}
             {{i18n "user.messages.latest"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.personalSent" model}}
+          {{#link-to "userPrivateMessages.personalSent" model (query-params tag=tag)}}
             {{i18n "user.messages.sent"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.personalNew" model}}
+          {{#link-to "userPrivateMessages.personalNew" model (query-params tag=tag)}}
             {{i18n "user.messages.new"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.personalUnread" model}}
+          {{#link-to "userPrivateMessages.personalUnread" model (query-params tag=tag)}}
             {{i18n "user.messages.unread"}}
           {{/link-to}}
         </li>
         <li class="noGlyph">
-          {{#link-to "userPrivateMessages.personalArchive" model}}
+          {{#link-to "userPrivateMessages.personalArchive" model (query-params tag=tag)}}
             {{i18n "user.messages.archive"}}
           {{/link-to}}
         </li>

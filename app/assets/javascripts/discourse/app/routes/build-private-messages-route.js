@@ -20,13 +20,18 @@ export default (viewName, path, channel) => {
       },
     },
 
-    model() {
+    model(params) {
       const filter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
+
       const lastTopicList = findOrResetCachedTopicList(this.session, filter);
+
       return lastTopicList
         ? lastTopicList
-        : this.store.findFiltered("topicList", { filter });
+        : this.store.findFiltered("topicList", {
+            filter,
+            params,
+          });
     },
 
     setupController() {

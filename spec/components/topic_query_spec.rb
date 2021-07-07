@@ -1039,18 +1039,6 @@ describe TopicQuery do
           end
         end
 
-        context "by tag filter" do
-          let(:tag) { Fabricate(:tag) }
-          let!(:user) { group_user }
-
-          it 'should return only tagged topics' do
-            Fabricate(:topic_tag, topic: private_message, tag: tag)
-            Fabricate(:topic_tag, topic: private_group_topic)
-
-            expect(TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics).to eq([private_message])
-          end
-
-        end
       end
 
       context 'with some existing topics' do
@@ -1175,75 +1163,6 @@ describe TopicQuery do
     end
   end
 
-  describe '#list_private_messages_group' do
-    fab!(:group) { Fabricate(:group) }
-
-    let!(:group_message) do
-      Fabricate(:private_message_topic,
-        allowed_groups: [group],
-        topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: Fabricate(:user)),
-        ]
-      )
-    end
-
-    before do
-      group.add(creator)
-    end
-
-    it 'should return the right list for a group user' do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(creator)
-        .topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it 'should return the right list for an admin not part of the group' do
-      group.update!(name: group.name.capitalize)
-
-      topics = TopicQuery.new(nil, group_name: group.name.upcase)
-        .list_private_messages_group(Fabricate(:admin))
-        .topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it "should not allow a moderator not part of the group to view the group's messages" do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(Fabricate(:moderator))
-        .topics
-
-      expect(topics).to eq([])
-    end
-
-    it "should not allow a user not part of the group to view the group's messages" do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(Fabricate(:user))
-        .topics
-
-      expect(topics).to eq([])
-    end
-
-    context "Calculating minimum unread count for a topic" do
-      before { group.update!(publish_read_state: true) }
-
-      let(:listed_message) do
-        TopicQuery.new(nil, group_name: group.name)
-          .list_private_messages_group(creator)
-          .topics.first
-      end
-
-      it 'returns the last read post number' do
-        topic_group = TopicGroup.create!(
-          topic: group_message, group: group, last_read_post_number: 10
-        )
-
-        expect(listed_message.last_read_post_number).to eq(topic_group.last_read_post_number)
-      end
-    end
-  end
-
   context "shared drafts" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
@@ -1329,82 +1248,6 @@ describe TopicQuery do
         expect(TopicQuery.new(admin).list_latest.topics).not_to include(partially_read) # Check we set up the topic/category correctly
         expect(TopicQuery.new(admin).list_unread.topics).to include(partially_read)
       end
-    end
-  end
-
-  describe '#list_private_messages_unread' do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
-
-    fab!(:pm) do
-      create_post(
-        user: user,
-        target_usernames: [user_2.username],
-        archetype: Archetype.private_message
-      ).topic
-    end
-
-    fab!(:pm_2) do
-      create_post(
-        user: user,
-        target_usernames: [user_2.username],
-        archetype: Archetype.private_message
-      ).topic
-    end
-
-    fab!(:pm_3) do
-      create_post(
-        user: user,
-        target_usernames: [user_2.username],
-        archetype: Archetype.private_message
-      ).topic
-    end
-
-    it 'returns a list of private messages with unread posts that user is at least tracking' do
-      freeze_time 1.minute.from_now do
-        create_post(user: user_2, topic_id: pm.id)
-        create_post(user: user_2, topic_id: pm_3.id)
-      end
-
-      TopicUser.find_by(user: user, topic: pm_3).update!(
-        notification_level: TopicUser.notification_levels[:regular]
-      )
-
-      expect(TopicQuery.new(user).list_private_messages_unread(user).topics)
-        .to contain_exactly(pm)
-    end
-  end
-
-  describe '#list_private_messages_new' do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
-
-    fab!(:pm) do
-      create_post(
-        user: user,
-        target_usernames: [user_2.username],
-        archetype: Archetype.private_message
-      ).topic
-    end
-
-    it 'returns a list of new private messages' do
-      expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics)
-        .to contain_exactly(pm)
-    end
-
-    it 'returns a list of new private messages accounting of muted tags' do
-      tag = Fabricate(:tag)
-
-      pm.tags << tag
-
-      TagUser.create!(
-        tag: tag,
-        user: user_2,
-        notification_level: TopicUser.notification_levels[:muted]
-      )
-
-      expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics)
-        .to eq([])
     end
   end
 end

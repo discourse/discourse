@@ -1,19 +1,41 @@
+import EmberObject from "@ember/object";
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import Draft from "discourse/models/draft";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default DiscourseRoute.extend({
+  queryParams: {
+    tag: {
+      refreshModel: true,
+    },
+  },
+
   renderTemplate() {
     this.render("user/messages");
   },
 
   model() {
-    return this.modelFor("user");
+    const user = this.modelFor("user");
+
+    return ajax(`/tags/personal_messages/${user.username_lower}`)
+      .then((result) => {
+        return {
+          user,
+          tags: result.tags.map((tag) => EmberObject.create(tag)),
+        };
+      })
+      .catch(popupAjaxError);
   },
 
-  setupController(controller, user) {
+  setupController(controller, model) {
     const composerController = this.controllerFor("composer");
-    controller.set("model", user);
+
+    controller.setProperties({
+      model: model.user,
+      tags: model.tags,
+    });
 
     if (this.currentUser) {
       Draft.get("new_private_message").then((data) => {
