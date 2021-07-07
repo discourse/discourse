@@ -1038,16 +1038,20 @@ def fix_missing_s3
         # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
         # we may end up breaking posts
         upload.assign_attributes(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
-        upload.save!(validate: false)
+        saved = upload.save(validate: false)
 
-        OptimizedImage.where(upload_id: upload.id).destroy_all
-        rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
+        if saved
+          OptimizedImage.where(upload_id: upload.id).destroy_all
+          rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
 
-        if rebake_ids.present?
-          Post.where(id: rebake_ids).each do |post|
-            puts "rebake post #{post.id}"
-            post.rebake!
+          if rebake_ids.present?
+            Post.where(id: rebake_ids).each do |post|
+              puts "rebake post #{post.id}"
+              post.rebake!
+            end
           end
+        else
+          puts "Failed to save upload #{saved.errors.full_messages}"
         end
       end
     end
