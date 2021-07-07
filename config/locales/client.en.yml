@@ -1167,8 +1167,9 @@ en:
         rejected_posts: "rejected posts"
 
       messages:
-        all: "All"
+        all: "all inboxes"
         inbox: "Inbox"
+        personal: "Personal"
         latest: "Latest"
         sent: "Sent"
         unread: "Unread"

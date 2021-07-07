@@ -14,6 +14,7 @@ export default DiscourseRoute.extend({
   setupController(controller, user) {
     const composerController = this.controllerFor("composer");
     controller.set("model", user);
+
     if (this.currentUser) {
       Draft.get("new_private_message").then((data) => {
         if (data.draft) {

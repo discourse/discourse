@@ -1,33 +1,20 @@
-{{#d-section class="user-secondary-navigation" pageClass="user-messages"}}
-  {{#unless site.mobileView}}
-    {{#if showNewPM}}
-      {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
-    {{/if}}
-  {{/unless}}
+{{#d-section class="user-messages-navigation" pageClass="user-messages"}}
+  <div class="navigation-container">
+    {{#mobile-nav class="messages-nav" desktopClass="nav-pills action-list"}}
+      <li class="noGlyph">
+        {{combo-box
+          content=inboxes
+          value=selectedInbox
+          onChange=(action "updateInbox")
+          options=(hash
+            filterable=true
+            caretDownIcon="caret-right"
+            caretUpIcon="caret-down"
+          )
+        }}
+      </li>
 
-  {{#if pmView}}
-    {{combo-box
-      content=inboxes
-      value=selectedInbox
-      onChange=(action "updateInbox")
-      options=(hash
-        filterable=true
-      )
-    }}
-
-    {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list"}}
-      {{#if group}}
-        <li class="noGlyph">
-          {{#link-to "userPrivateMessages.group" group.name}}
-            {{i18n "user.messages.latest"}}
-          {{/link-to}}
-        </li>
-        <li class="noGlyph">
-          {{#link-to "userPrivateMessages.groupArchive" group.name}}
-            {{i18n "user.messages.archive"}}
-          {{/link-to}}
-        </li>
-      {{else}}
+      {{#if isAllInbox}}
         <li class="noGlyph">
           {{#link-to "userPrivateMessages.index" model}}
             {{i18n "user.messages.latest"}}
@@ -54,30 +41,67 @@
           {{/link-to}}
         </li>
       {{/if}}
+
+      {{#if group}}
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.group" group.name}}
+            {{i18n "user.messages.latest"}}
+          {{/link-to}}
+        </li>
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.groupArchive" group.name}}
+            {{i18n "user.messages.archive"}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+
+      {{#if isPersonalInbox}}
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.personal" model}}
+            {{i18n "user.messages.latest"}}
+          {{/link-to}}
+        </li>
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.personalSent" model}}
+            {{i18n "user.messages.sent"}}
+          {{/link-to}}
+        </li>
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.personalNew" model}}
+            {{i18n "user.messages.new"}}
+          {{/link-to}}
+        </li>
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.personalUnread" model}}
+            {{i18n "user.messages.unread"}}
+          {{/link-to}}
+        </li>
+        <li class="noGlyph">
+          {{#link-to "userPrivateMessages.personalArchive" model}}
+            {{i18n "user.messages.archive"}}
+          {{/link-to}}
+        </li>
+      {{/if}}
     {{/mobile-nav}}
-  {{/if}}
+
+    <div class="list-actions">
+      {{#if group}}
+        {{group-notifications-button
+          value=group.group_user.notification_level
+          onChange=(action "changeGroupNotificationLevel")
+        }}
+      {{/if}}
+
+      {{#unless site.mobileView}}
+        {{#if showNewPM}}
+          {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+        {{/if}}
+      {{/unless}}
+    </div>
+  </div>
 {{/d-section}}
 
 <section class="user-content">
-  <div class="list-actions">
-    {{#if site.mobileView}}
-      {{#if showNewPM}}
-        {{d-button
-          class="btn-primary new-private-message"
-          action=(route-action "composePrivateMessage")
-          icon="envelope"
-          label="user.new_private_message"}}
-      {{/if}}
-    {{/if}}
-
-
-    {{#if group}}
-      {{group-notifications-button
-        value=group.group_user.notification_level
-        onChange=(action "changeGroupNotificationLevel")
-      }}
-    {{/if}}
-  </div>
   {{#if showWarningsWarning}}
     <div class="alert alert-info">{{html-safe (i18n "admin.user.warnings_list_warning")}}</div>
   {{/if}}
