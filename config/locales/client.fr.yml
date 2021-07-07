@@ -266,9 +266,11 @@ fr:
       contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
     bookmarked:
       title: "Mettre un signet"
+      edit_bookmark: "Modifier le signet"
       clear_bookmarks: "Retirer les signets"
       help:
         bookmark: "Cliquez pour mettre un signet sur le premier message de ce sujet"
+        edit_bookmark: "Cliquez pour modifier le signet sur ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet."
     bookmarks:
@@ -540,9 +542,12 @@ fr:
       tomorrow: "Demain"
       post_local_date: "Date indiquée dans le message"
       later_this_week: "Plus tard dans la semaine"
+      this_weekend: "Ce week-end"
       start_of_next_business_week: "Lundi"
       start_of_next_business_week_alt: "Lundi prochain"
+      two_weeks: "Deux semaines"
       next_month: "Le mois prochain"
+      six_months: "Six mois"
       custom: "Date et heure personnalisées"
       relative: "Me le rappeler d'ici"
       none: "Ne pas me le rappeler"
@@ -601,7 +606,11 @@ fr:
       member_requested: "Demandé à"
       add_members:
         title: "Ajouter des utilisateurs à %{group_name}"
+        description: "Saisissez une liste d'utilisateurs que vous souhaitez inviter dans le groupe ou collez-la dans une liste séparée par des virgules :"
+        usernames_placeholder: "noms d'utilisateur"
+        usernames_or_emails_placeholder: "noms d'utilisateur ou courriels"
         notify_users: "Notifications aux utilisateurs"
+        set_owner: "Définir les utilisateurs comme propriétaires de ce groupe"
       requests:
         title: "Demandes"
         reason: "Raison"
@@ -615,6 +624,8 @@ fr:
         title: "Gérer"
         name: "Nom"
         full_name: "Nom complet"
+        add_members: "Ajouter des utilisateurs"
+        invite_members: "Inviter"
         delete_member_confirm: "Supprimer %{username} du groupe « %{group} » ?"
         profile:
           title: Profil
@@ -629,6 +640,8 @@ fr:
           enable_imap: "Activer l'IMAP"
           test_settings: "Tester les paramètres"
           save_settings: "Enregistrer les paramètres"
+          last_updated: "Dernière mise à jour :"
+          last_updated_by: "par"
           settings_required: "Tous les paramètres sont requis. Veuillez renseigner chaque champ avant de valider."
           smtp_settings_valid: "Paramètres SMTP valides."
           smtp_title: "SMTP"
@@ -657,6 +670,7 @@ fr:
           settings:
             title: "Paramètres"
             allow_unknown_sender_topic_replies: "Autoriser les réponses par un expéditeur inconnu."
+            allow_unknown_sender_topic_replies_hint: "Permet aux expéditeurs inconnus de répondre aux sujets du groupe. Si cette option n'est pas activée, les réponses provenant d'adresses courriel qui ne sont pas encore invitées dans le sujet créeront un nouveau sujet."
           mailboxes:
             synchronized: "Boîte de réception à synchroniser"
             none_found: "Aucune boîte de réception n'a été trouvée pour ce compte de courriel."
@@ -1090,6 +1104,7 @@ fr:
         move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (votre connexion est peut-être en panne)"
         tags: "Étiquettes"
+        warnings: "Avertissements officiels"
       preferences_nav:
         account: "Compte"
         security: "Sécurité"
@@ -2050,6 +2065,7 @@ fr:
         votes_released: "Le vote a été publié"
     upload_selector:
       uploading: "En cours d'envoi"
+      processing: "Traitement du téléversement"
       select_file: "Sélectionner un fichier"
       default_image_alt_text: image
     search:
@@ -2155,10 +2171,19 @@ fr:
         delete: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
+        dismiss_read_with_selected:
+          one: "Marquer %{count} sujet comme lu"
+          other: "Marquer %{count} sujets comme lus"
         dismiss_button: "Vu…"
+        dismiss_button_with_selected:
+          one: "Marquer comme lu (%{count})…"
+          other: "Marquer comme lus (%{count})…"
         dismiss_tooltip: "Marquer les nouveaux messages comme vus, ou arrêter de suivre des sujets"
         also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
         dismiss_new: "Marquer comme vu(s)"
+        dismiss_new_with_selected:
+          one: "Marquer le nouveau sujet comme lu (%{count})"
+          other: "Marquer les nouveaux sujets comme lus (%{count})"
         toggle: "activer/désactiver la sélection multiple de sujets"
         actions: "Actions sur la sélection"
         change_category: "Définir la catégorie"
@@ -2194,6 +2219,7 @@ fr:
         top: "Il n'y a pas de meilleurs sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
+          unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge unread-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondu</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
       bottom:
         latest: "Il n'y a pas d'autres sujets récents à consulter."
         posted: "Il n'y a pas d'autres sujets publiés à consulter."
@@ -2251,6 +2277,9 @@ fr:
       not_found:
         title: "Sujet non trouvé"
         description: "Nous sommes désolés, nous n'avons pas trouvé ce sujet. Peut-être a-t-il été retiré par un modérateur ?"
+      unread_posts:
+        one: "il y a %{count} message non lu dans ce sujet"
+        other: "il y a %{count} messages non lus dans ce sujet"
       likes:
         one: "%{count} personne a aimé ce sujet"
         other: "%{count} personnes ont aimé ce sujet"
@@ -2267,6 +2296,7 @@ fr:
       browse_all_categories: Voir toutes les catégories
       browse_all_tags: Parcourir toutes les étiquettes
       view_latest_topics: consulter les sujets récents
+      suggest_create_topic: Prêt à <a href>démarrer une nouvelle conversation ?</a>
       jump_reply_up: accéder aux réponses précédentes
       jump_reply_down: accéder aux réponses ultérieures
       deleted: "Ce sujet a été supprimé"
@@ -2328,6 +2358,8 @@ fr:
         title: "Planifier la publication"
       temp_open:
         title: "Ouvrir temporairement"
+      auto_reopen:
+        title: "Ouvrir automatiquement le sujet"
       temp_close:
         title: "Fermer temporairement"
       auto_close:
@@ -3234,6 +3266,7 @@ fr:
         show_incoming_updated_topics: "%{shortcut} Afficher les sujets mis à jour"
         search: "%{shortcut} Rechercher"
         help: "%{shortcut} Ouvrir l'aide du clavier"
+        dismiss_new: "%{shortcut} Ignorer les nouveaux messages"
         dismiss_topics: "%{shortcut} Ignorer les sujets"
         log_out: "%{shortcut} Se déconnecter"
       composing:
@@ -3558,6 +3591,7 @@ fr:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activez la <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collecter des données.'
+          average_chart_label: Moyenne
           filters:
             file_extension:
               label: Extension de fichier
@@ -3683,6 +3717,8 @@ fr:
               write: Créer un nouveau sujet ou publier sur un sujet existant.
               read_lists: Lire les listes de sujets comme top, nouveaux, récents, etc. Le RSS est aussi accepté.
               wordpress: Nécessaire pour le fonctionnement de l'extension WordPress wp-discourse.
+            posts:
+              edit: Modifiez n'importe quel message ou un message spécifique.
             users:
               bookmarks: Lister les signets des utilisateurs. Les rappels de signet sont retournés lorsque le format ICS est utilisé.
               sync_sso: Synchroniser un utilisateur en utilisant DiscourseConnect.
@@ -4341,6 +4377,8 @@ fr:
             post_staff_note_create: "ajouter une note pour les responsables"
             post_staff_note_destroy: "supprimer une note pour les responsables"
             delete_group: "Supprimer le groupe"
+            watched_word_create: "ajouter un mot surveillé"
+            watched_word_destroy: "supprimer le mot surveillé"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -4395,6 +4433,7 @@ fr:
         clear_all: Tout supprimer
         clear_all_confirm: "Voulez-vous vraiment effacer l'ensemble des mots surveillés en rapport à l'action %{action} ?"
         invalid_regex: 'Le mot surveillé « %{word} » n''est pas une expression régulière valide.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Les mots surveillés sont des expressions régulières</a> et ils n''incluent pas automatiquement les limites des mots. Si vous voulez que l''expression régulière corresponde à des mots entiers, ajoutez <code>\b</code> au début et à la fin de votre expression régulière.'
         actions:
           block: "Bloquer"
           censor: "Censurer"
@@ -4429,6 +4468,7 @@ fr:
           upload_successful: "Envoi effectué avec succès. Les mots et expressions à surveiller ont été ajoutés."
         test:
           button_label: "Tester"
+          modal_title: "%{action} : Tester les mots surveillés"
           description: "Saisissez du texte dans le champ ci-dessous pour vérifier le fonctionnement des mots ou expressions surveillés"
           found_matches: "Correspondances trouvées :"
           no_matches: "Aucune correspondance trouvée"
@@ -4554,6 +4594,8 @@ fr:
         flags_given_count: Signalements effectués
         flags_received_count: Signalements reçus
         warnings_received_count: Avertissements reçus
+        warnings_list_warning: |
+          En tant que modérateur, vous ne pourrez peut-être pas voir tous ces sujets. Si nécessaire, demandez à un administrateur ou au modérateur émetteur d'accorder l'accès au message aux <b>@modérateurs</b>.
         flags_given_received_count: "Signalements effectués/reçus"
         approve: "Approuver"
         approved_by: "approuvé par"
@@ -4721,6 +4763,7 @@ fr:
           text: "Zone de texte"
           confirm: "Confirmation"
           dropdown: "Menu déroulant"
+          multiselect: "Sélection multiple"
       site_text:
         description: "Vous pouvez personnaliser n'importe quel texte de votre forum. Commencez en utilisant la recherche ci-dessous :"
         search: "Recherchez le texte que vous souhaitez modifier"

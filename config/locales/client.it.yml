@@ -1218,7 +1218,7 @@ it:
         secondary: "Email secondaria"
         primary_label: "primaria"
         unconfirmed_label: "non confermata"
-        resend_label: "Reinvia email di conferma"
+        resend_label: "Invia di nuovo email di conferma"
         resending_label: "invio in corso..."
         resent_label: "email inviata"
         update_email: "Cambia email"
@@ -1237,8 +1237,8 @@ it:
         authenticated_by_invite: "La tua email è stata autenticata dall'invito"
         frequency_immediately: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
         frequency:
-          one: "TI invieremo un email solo se non ti avremo visto nell'ultimo minuto."
-          other: "Ti invieremo una email solo se non ti si vede da almeno %{count} minuti."
+          one: "TI invieremo un'email solo se non ti avremo visto nell'ultimo minuto."
+          other: "Ti invieremo un'email solo se manchi da almeno %{count} minuti."
       associated_accounts:
         title: "Account associati"
         connect: "Connetti"
@@ -1259,9 +1259,9 @@ it:
       username:
         title: "Nome utente"
         instructions: "univoco, senza spazi, breve"
-        short_instructions: "Gli utenti possono citarti scrivendo @%{username}"
+        short_instructions: "Gli utenti possono menzionarti scrivendo @%{username}"
         available: "Il nome utente è disponibile"
-        not_available: "Non disponibile. Prova %{suggestion}?"
+        not_available: "Non disponibile. Provare %{suggestion}?"
         not_available_no_suggestion: "Non disponibile"
         too_short: "Il nome utente è troppo corto"
         too_long: "Il nome utente è troppo lungo"
@@ -1371,9 +1371,9 @@ it:
         expired_tab: "Scaduto"
         expired_tab_with_count: "Scaduti (%{count})"
         redeemed_tab: "Riscattato"
-        redeemed_tab_with_count: "Riscattato (%{count})"
+        redeemed_tab_with_count: "Accettati (%{count})"
         invited_via: "Invito"
-        invited_via_link: "Link %{key} (%{count} / %{max} rimborsate)"
+        invited_via_link: "Link %{key} (%{count} / %{max} accettati)"
         groups: "Gruppi"
         topic: "Argomento"
         sent: "Creato/Ultimo Invio"
@@ -1388,8 +1388,8 @@ it:
         user: "Utente Invitato"
         none: "Nessun invito da visualizzare."
         truncated:
-          one: "Mostro il primo invito."
-          other: "Mostro i primi %{count} inviti."
+          one: "Visualizzazione del primo invito."
+          other: "Visualizzazione dei primi %{count} inviti."
         redeemed: "Inviti Accettati"
         redeemed_at: "Accettato"
         pending: "Inviti in sospeso"
@@ -1413,7 +1413,7 @@ it:
         multiple_user: "Invita tramite link"
         invite_link:
           title: "Link di invito"
-          success: "Collegamento di invito generato con successo!"
+          success: "Link di invito generato con successo!"
           error: "Si è verificato un errore durante la generazione del link di invito"
           max_redemptions_allowed_label: "Quante persone sono autorizzate a registrarsi utilizzando questo link?"
           expires_at: "Quando scadrà questo link di invito?"
@@ -1431,9 +1431,9 @@ it:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
           instructions: |
-            <p>Invita un elenco di utenti per avviare rapidamente la tua comunità. Prepara un file CSV <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank"></a> contenente almeno una riga per indirizzo email degli utenti che desideri invitare. Le seguenti informazioni, separate da virgola, possono essere fornite se desideri aggiungere persone a gruppi o inviarle a un argomento specifico la prima volta che</p>
-            <pre>john @ smith.com, first_group_name; second_group_name, topic_id</pre>
-            <p>Per ogni indirizzo email inserito nel tuo file CSV verrà inviato un invito e potrai gestirlo in seguito.</p>
+            <p>Invita un elenco di utenti per avviare rapidamente la tua comunità. Prepara un <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">file CSV</a> contenente almeno una riga per indirizzo email degli utenti che desideri invitare. Le seguenti informazioni, separate da virgola, possono essere fornite se desideri aggiungere persone a gruppi o inviarle a un argomento specifico la prima volta che accedono.</p>
+            <pre>john@smith.com, first_group_name; second_group_name, topic_id</pre>
+            <p>A ogni indirizzo email inserito nel file CSV sarà inviato un invito che potrà essere gestito in seguito.</p>
           progress: "Caricamento %{progress}%..."
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
           error: "Spiacenti, il file deve essere in formato CSV."
@@ -1458,16 +1458,16 @@ it:
           one: "messaggio creato"
           other: "messaggi creati"
         likes_given:
-          one: "assegnati"
-          other: "assegnati"
+          one: "dato"
+          other: "dati"
         likes_received:
-          one: "ricevuti"
+          one: "ricevuto"
           other: "ricevuti"
         days_visited:
           one: "giorno di frequenza"
           other: "giorni di frequenza"
         topics_entered:
-          one: "argomenti visualizzati"
+          one: "argomento visualizzato"
           other: "argomenti visualizzati"
         posts_read:
           one: "messaggio letto"
@@ -1552,12 +1552,12 @@ it:
     too_few_topics_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono<strong>#</strong> argomenti}}. I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}}. Solo lo staff può vedere questo messaggio.
     too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentPosts, plural, one {C'è <strong>#</strong> messaggio} other {Ci sono <strong>#</strong> messaggi}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentPosts, plural, one {C'è <strong>#</strong> messaggio} other {Ci sono <strong>#</strong> messaggi}}. I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# error/hour} other {# errors/hour}} impostato dal sito."
-      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di impostazione del sito di {limit, plural, one {# errore/minuto} other {# errori/minuto}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di impostazione del sito di {limit, plural, one {# errore/ora} other {# errori/ora}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di impostazione del sito di {limit, plural, one {# errore/minuto} other {# errori/minuto}}."
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito."
+      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
+      exceeded_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito."
+      exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
     learn_more: "per saperne di più..."
     first_post: Primo messaggio
     mute: Ignora
@@ -1599,8 +1599,8 @@ it:
       remove: "Rimuovi..."
       add: "Aggiungi..."
       leave_message: "Vuoi veramente abbandonare questo messaggio?"
-      remove_allowed_user: "Davvero vuoi rimuovere %{name} da questo messaggio?"
-      remove_allowed_group: "Vuoi veramente rimuovere %{name} da questo messaggio?"
+      remove_allowed_user: "Vuoi davvero rimuovere %{name} da questo messaggio?"
+      remove_allowed_group: "Vuoi davvero rimuovere %{name} da questo messaggio?"
     email: "Email"
     username: "Nome utente"
     last_seen: "Ultima visita"
@@ -1611,7 +1611,7 @@ it:
     create_account:
       header_title: "Benvenuti!"
       subheader_title: "Creiamo il tuo account"
-      disclaimer: "Registrandoti accetti il <a href='%{privacy_link}' target='blank'>regolamento sulla Privacy</a> e <a href='%{tos_link}' target='blank'>i termini di servizio</a>."
+      disclaimer: "Registrandoti accetti <a href='%{privacy_link}' target='blank'>Informativa sulla privacy</a> e <a href='%{tos_link}' target='blank'>termini del servizio</a>."
       title: "Crea il tuo account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
     forgot_password:
@@ -1632,7 +1632,7 @@ it:
       link_label: "Inviami un link di accesso"
       button_label: "con email"
       login_link: "Salta la password; inviami un link di accesso"
-      emoji: "emoji lock"
+      emoji: "blocco emoji"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b> , a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_username_found: "Abbiamo trovato un account che corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
@@ -1659,7 +1659,7 @@ it:
       security_key_authenticate: "Autentica con Chiave di Sicurezza"
       security_key_not_allowed_error: "Il processo di autenticazione con Chiave di Sicurezza è scaduto o è stato annullato."
       security_key_no_matching_credential_error: "Non è stato possibile trovare credenziali corrispondenti nella chiave di sicurezza fornita."
-      security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l'uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
+      security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l'uso di chiavi di sicurezza. Prova un altro metodo."
       email_placeholder: "Email / Nome Utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
@@ -1674,7 +1674,7 @@ it:
       awaiting_activation: "Il tuo account è in attesa di attivazione, utilizza il collegamento per la password dimenticata per ricevere un'altra email di attivazione."
       awaiting_approval: "Il tuo account non è stato ancora approvato da un membro dello staff. Ti invieremo un'email non appena verrà approvato."
       requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
-      not_activated: "Non puoi ancora connetterti. Abbiamo inviato un'email di attivazione a <b>%{sentTo}</b>. Per favore segui le istruzioni contenute nell'email per attivare l'account."
+      not_activated: "Non puoi ancora accedere. Abbiamo inviato un'email di attivazione a <b>%{sentTo}</b>. Ti preghiamo di seguire le istruzioni contenute nell'email per attivare l'account."
       not_allowed_from_ip_address: "Non puoi accedere da quell'indirizzo IP."
       admin_not_allowed_from_ip_address: "Non puoi accedere come amministratore da quell'indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
@@ -1683,8 +1683,8 @@ it:
       change_email: "Cambia Indirizzo Email"
       provide_new_email: "Fornisci un nuovo indirizzo e invieremo nuovamente la tua email di conferma."
       submit_new_email: "Aggiorna Indirizzo Email"
-      sent_activation_email_again: "Ti abbiamo mandato un'altra email di attivazione su <b>%{currentEmail}</b>. Potrebbero essere necessari alcuni minuti di attesa; assicurati di controllare anche la cartella  spam."
-      sent_activation_email_again_generic: "Abbiamo inviato un'altra email di attivazione. Potrebbero passare alcuni minuti prima che arrivi; assicurati di controllare la tua cartella spam."
+      sent_activation_email_again: "Ti abbiamo mandato un'altra email di attivazione su <b>%{currentEmail}</b>. Potrebbero essere necessari alcuni minuti di attesa; controlla anche nella cartella spam."
+      sent_activation_email_again_generic: "Abbiamo inviato un'altra email di attivazione. Potrebbero passare alcuni minuti prima che arrivi; controlla anche nella cartella spam."
       to_continue: "Effettua l'accesso"
       preferences: "Devi effettuare l'accesso per cambiare le tue impostazioni."
       not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via email quando potrai collegarti."
@@ -1711,7 +1711,7 @@ it:
         backup_code: "Utilizza un codice di backup"
     invites:
       accept_title: "Invito"
-      emoji: "emoji envelope"
+      emoji: "emoji busta"
       welcome_to: "Benvenuto su %{site_name}!"
       invited_by: "Sei stato invitato da:"
       social_login_available: "Sarai anche in grado di accedere con qualsiasi account social usando questa email."
@@ -1773,7 +1773,7 @@ it:
         other: "La selezione deve contenere almeno %{count} caratteri."
       components:
         tag_drop:
-          filter_for_more: Filtra di più...
+          filter_for_more: Filtra per altri risultati...
         categories_admin_dropdown:
           title: "Gestisci le categorie"
     date_time_picker:

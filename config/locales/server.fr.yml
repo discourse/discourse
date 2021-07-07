@@ -104,6 +104,9 @@ fr:
       no_subject: "(aucun objet)"
       no_body: "(aucun texte)"
       missing_attachment: "(La pièce jointe %{filename} est manquante)"
+      continuing_old_discussion:
+        one: "Poursuite de la discussion à partir de [%{title}](%{url}), car elle a été créée il y a plus de %{count} jour."
+        other: "Poursuite de la discussion à partir de [%{title}](%{url}), car elle a été créée il y a plus de %{count} jours."
       errors:
         empty_email_error: "Se produit quand le courriel reçu est vide."
         no_message_id_error: "Se produit quand le courriel n'a pas d'en-tête « Message-Id »."
@@ -235,6 +238,7 @@ fr:
     disabled_errors:
       discourse_connect_enabled: "Les invitations sont désactivées car DiscourseConnect est activé."
       invalid_access: "Vous n'êtes pas autorisé(e) à afficher la ressource demandée."
+    requires_groups: "Invitation enregistrée. Pour donner accès au sujet spécifié, ajoutez l'un des groupes suivants : %{groups}."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     max_rows: "Les premières %{max_bulk_invites} invitations ont été envoyées. Essayez de diviser le fichier en parties plus petites."
@@ -1411,6 +1415,7 @@ fr:
     title: "Le nom du site utilisé dans la balise title."
     site_description: "Décrivez ce site en une seule phrase qui sera utilisée dans la métabalise de description."
     short_site_description: "Description courte utilisée dans la balise « title » de la page d'accueil."
+    contact_email: "Adresse courriel de la personne responsable de ce site. Elle est utilisée pour les notifications critiques et également affichée sur la page <a href='%{base_path}/about' target='_blank'>/about</a> pour les questions urgentes."
     contact_url: "URL de contact pour ce site. Elle est affichée sur la page <a href='%{base_path}/about' target='_blank'>À propos</a> et les utilisateurs sont invités à l'utiliser en cas de problème urgent."
     crawl_images: "Récupérer les images provenant de sources tierces pour y insérer les dimensions correctes (hauteur et largeur)."
     download_remote_images_to_local: "Transformer les images distantes en images locales en les téléchargeant ; cela permet d'éviter les liens morts."
@@ -1504,6 +1509,7 @@ fr:
     invite_code: "Les utilisateurs doivent saisir ce code pour pouvoir créer un compte (cette obligation est ignorée si le champ est laissé vide, insensible à la casse)"
     approve_suspect_users: "Ajouter les utilisateurs suspects à la file des éléments en attente d'examen. Les utilisateurs qui ont renseigné une biographie ou un site Web sur leur profil mais n'ont pas parcouru le forum sont définis comme suspects."
     review_every_post: "Chaque message doit être examiné par un responsable avant sa publication. AVERTISSEMENT : DÉCONSEILLÉ POUR UN SITE À FORTE FRÉQUENTATION."
+    pending_users_reminder_delay_minutes: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre de minutes. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur Web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
     ga_version: "Version de Google Universal Analytics à utiliser : v3 (analytics.js), v4 (gtag)"
@@ -1553,6 +1559,7 @@ fr:
     send_old_credential_reminder_days: "Rappeler l'utilisation de vieux identifiants après ce nombre de jours"
     email_token_valid_hours: "Les jetons (tokens) de mot de passe oublié/activation de compte sont valides (n) jours."
     enable_badges: "Activer le système de badges"
+    max_favorite_badges: "Nombre maximal de badges que l'utilisateur peut sélectionner"
     enable_whispers: "Autoriser les communications privées entre responsables au sein d'un sujet."
     allow_index_in_robots_txt: "Indiquer dans le fichier robots.txt que ce site peut être indexé par les moteurs de recherche Web. Dans des cas exceptionnels, vous pouvez remplacer définitivement le fichier <a href='%{base_path}/admin/customize/robots'>robots.txt</a>."
     blocked_email_domains: "Une liste de domaines de courriels, séparés par des barres verticales (caractère « | ») que les utilisateurs ne sont pas autorisés à utiliser pour s'inscrire. Exemple : mailinator.com|trashmail.net"
@@ -1688,6 +1695,11 @@ fr:
     image_preview_jpg_quality: "Qualité des fichiers image redimensionnés (1 représente la qualité la plus faible, et 99 la meilleure qualité, 100 sert à désactiver)."
     allow_staff_to_upload_any_file_in_pm: "Autoriser les responsables à envoyer n'importe quel fichier dans les messages directs."
     strip_image_metadata: "Enlever les métadonnées de l'image."
+    composer_media_optimization_image_enabled: "Permet l'optimisation multimédia côté client des fichiers image téléversés."
+    composer_media_optimization_image_kilobytes_optimization_threshold: "Taille minimale du fichier image pour déclencher l'optimisation côté client"
+    composer_media_optimization_image_resize_dimensions_threshold: "Largeur d'image minimale pour déclencher le redimensionnement côté client"
+    composer_media_optimization_image_resize_width_target: "Les images dont la largeur est supérieure à « composer_media_optimization_image_dimensions_resize_threshold » seront redimensionnées à cette largeur. Doit être >= à « composer_media_optimization_image_dimensions_resize_threshold »."
+    composer_media_optimization_image_encode_quality: "Qualité d'encodage JPEG utilisée dans le processus de réencodage."
     min_ratio_to_crop: "Ratio utilisé pour recadrer les images en hauteur. Saisissez le résultat de la largeur/hauteur."
     simultaneous_uploads: "Nombre maximal de fichiers qui peuvent être glissés et déposés dans l'éditeur"
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
@@ -1807,6 +1819,7 @@ fr:
     reviewable_low_priority_threshold: "Le filtre de niveau de priorité masque les éléments à examiner dont le score est inférieur au niveau spécifié, sauf lorsque le filtre « (tous) » est appliqué."
     high_trust_flaggers_auto_hide_posts: "Les messages des nouveaux utilisateurs seront automatiquement masqués après avoir été signalés comme spam par un utilisateur d'un niveau de confiance 3 et plus"
     cooldown_hours_until_reflag: "Combien de temps les utilisateurs doivent attendre avant de pouvoir signaler à nouveau un message"
+    slow_mode_prevents_editing: "Le « mode lent » empêche-t-il l'édition après editing_grace_period ?"
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant, exemple : %%{reply_key}@reply.example.com ou replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des modèles alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2331,6 +2344,9 @@ fr:
     email_in_spam_header: "Le premier courriel de l'utilisateur a été signalé comme spam"
     already_silenced: "L'utilisateur a déjà été mis en sourdine par %{staff} il y a %{time_ago}."
     already_suspended: "L'utilisateur a déjà été suspendu par %{staff} il y a %{time_ago}."
+    cannot_delete_has_posts:
+      one: "L'utilisateur %{username} a %{count} message dans un sujet public ou message personnel, vous ne pouvez donc pas le supprimer."
+      other: "L'utilisateur %{username} a %{count} messages dans des sujets publics ou messages personnels, vous ne pouvez donc pas le supprimer."
   reviewables_reminder:
     submitted:
       one: "Ces éléments ont été soumis il y a plus de %{count} heure. [Nous vous invitons à les examiner](%{base_path}/review)."
@@ -3120,6 +3136,7 @@ fr:
     only_reply_by_email_pm: "Répondre à ce courriel pour répondre à %{participants}."
     visit_link_to_respond: "[Voir le sujet](%{base_url}%{url}) pour répondre."
     visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre à %{participants}."
+    reply_above_line: "## Veuillez saisir votre réponse au-dessus de cette ligne. ##"
     posted_by: "Publié par %{username} le %{post_date}"
     pm_participants: "Participants : %{participants}"
     invited_group_to_private_message_body: |
@@ -3616,6 +3633,9 @@ fr:
     sender_post_deleted: "le message a été supprimé"
     sender_message_to_invalid: "le destinataire a une adresse courriel invalide"
     sender_topic_deleted: "le sujet a été supprimé"
+    group_smtp_post_deleted: "le message a été supprimé"
+    group_smtp_topic_deleted: "le sujet a été supprimé"
+    group_smtp_disabled_for_group: "SMTP a été désactivé pour le groupe"
   color_schemes:
     base_theme_name: "Base"
     light: "Clair"

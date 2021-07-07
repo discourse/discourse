@@ -138,11 +138,11 @@ zh_CN:
       confirmation: ! "与 %{attribute} 不匹配"
       empty: 不能为空
       equal_to: 必须等于 %{count}
-      even: 必须为奇数
+      even: 必须为偶数
       exclusion: 被保留
       greater_than: 必须大于 %{count}
       greater_than_or_equal_to: 必须大于或等于 %{count}
-      has_already_been_used: "已经被使用"
+      has_already_been_used: "已被使用"
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
@@ -150,65 +150,65 @@ zh_CN:
       is_invalid_unpretentious: "似乎不清楚，一个或多个单词很长？"
       is_invalid_quiet: "似乎不清楚，您是要用全部大写字母输入吗？"
       invalid_timezone: "“%{tz}”不是一个有效的时区"
-      contains_censored_words: "包含了以下敏感词:%{censored_words}"
+      contains_censored_words: "包含以下敏感词：%{censored_words}"
       less_than: 必须小于 %{count}
       less_than_or_equal_to: 必须小于或等于 %{count}
       not_a_number: 不是数字
       not_an_integer: 必须是整数
-      odd: 必须是偶数
+      odd: 必须是奇数
       record_invalid: ! "验证失败：%{errors}"
       max_emojis: "不能超过 %{max_emojis_count} 个表情符号"
       emojis_disabled: "不能有表情符号"
       ip_address_already_screened: "已包含在现有规则中"
       restrict_dependent_destroy:
-        one: "因为独立的%{record}存在不能删除记录"
-        many: "因为独立的%{record}存在不能删除记录"
+        one: "由于存在独立的%{record}，无法删除记录"
+        many: "由于存在独立的%{record}，无法删除记录"
       too_long:
-        other: 太长（最多 %{count} 个字）
+        other: 过长（最多 %{count} 个字符）
       too_short:
-        other: 太短（最多 %{count} 个字）
+        other: 过短（最多 %{count} 个字符）
       wrong_length:
-        other: 长度错误（应为 %{count} 个字）
+        other: 长度错误（应为 %{count} 个字符）
       other_than: "必须不为 %{count}"
-      auth_overrides_username: "由于启用了 `auth_overrides_username` 设置，因此需要在身份验证提供商处更新用户名。"
+      auth_overrides_username: "由于启用了 `auth_overrides_username` 设置，因此需要在身份验证服务提供商处更新用户名。"
     template:
-      body: ! "以下字段有问题："
+      body: ! "以下字段存在问题："
       header:
-        other: ! "有 %{count} 个错误使得 %{model} 无法被保存"
+        other: ! "%{count} 个错误使得 %{model} 无法保存"
     embed:
-      load_from_remote: "载入帖子时出错了。"
+      load_from_remote: "加载该帖子时出错。"
     site_settings:
-      invalid_category_id: "您所指定的一个分类是不存在的"
+      invalid_category_id: "您指定了一个不存在的类别"
       invalid_choice:
         other: "您指定了无效的选择 %{name}"
-      default_categories_already_selected: "您不能选择一个已经被用在其它列表中的分类。"
-      default_tags_already_selected: "您不能选择一个已经被使用在其它列表中的标签。"
-      s3_upload_bucket_is_required: "您没有填写“s3_upload_bucket”，不能开启上传至 S3。"
-      enable_s3_uploads_is_required: "除非已启用上传到 S3，否则您无法存储到S3。"
+      default_categories_already_selected: "您不能选择其他列表中使用的类别。"
+      default_tags_already_selected: "您不能选择在另一个列表中使用的标签。"
+      s3_upload_bucket_is_required: "除非提供 's3_upload_bucket'，否则您无法启用上传到 S3。"
+      enable_s3_uploads_is_required: "除非已启用 S3 上传，否则您无法使用 S3 清单。"
       page_publishing_requirements: "如果启用了安全媒体，则无法启用页面发布。"
-      s3_backup_requires_s3_settings: "除非您提供了'%{setting_name}'，否则无法将S3用作备份位置。"
-      s3_bucket_reused: "您不可以将同一个 bucket 同时用作 ‘s3_upload_bucket’ 和 ‘s3_backup_bucket’。请选择一个不同的 bucket 或为每个 bucket 使用不同的路径。"
-      secure_media_requirements: "在启用安全媒体之前，必须先启用S3上传。"
-      share_quote_facebook_requirements: "您必须设置一个Facebook app id 才能启用Facebook的引用分享功能。"
-      second_factor_cannot_enforce_with_socials: "您不能在启用社交登录时强制启用双重认证。您必须先禁用以下登录方式：%{auth_provider_names}"
-      second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录则无法强制启用2FA。"
-      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行 2FA。"
-      local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制启用2FA则不能禁用本地登录。在禁用本地登录之前，请禁用强制启用2FA。"
-      cannot_enable_s3_uploads_when_s3_enabled_globally: "您无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
-      cors_origins_should_not_have_trailing_slash: "您不应该将尾随斜线 (/) 添加到 Cross Origins。"
-    conflicting_google_user_id: '此账户的Google账户ID已更改; 出于安全原因，需要管理人员干预。请联系工作人员并指引他们前往<a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+      s3_backup_requires_s3_settings: "除非提供 '%{setting_name}'，否则无法将 S3 用作备份位置。"
+      s3_bucket_reused: "您无法将同一个存储桶同时用作 's3_upload_bucket' 和 's3_backup_bucket'。请选择一个不同的存储桶或为每个存储桶使用不同的路径。"
+      secure_media_requirements: "在启用安全媒体之前，必须启用 S3 上传。"
+      share_quote_facebook_requirements: "您必须设置 Facebook 应用 ID 才能为 Facebook 启用引用共享。"
+      second_factor_cannot_enforce_with_socials: "您无法在启用社交登录的情况下强制执行双重身份验证。您必须首先通过以下方式禁用登录：%{auth_provider_names}"
+      second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录，则无法强制执行双重身份验证。"
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行双重身份验证。"
+      local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法禁用本地登录。先禁用强制双重身份验证，然后再禁用本地登录。"
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "您无法启用 S3 上传，因为 S3 上传已全局启用，启用此站点级设置可能会导致上传出现严重问题"
+      cors_origins_should_not_have_trailing_slash: "您不应该将尾部反斜杠 (/) 添加到 CORS 源。"
+    conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
-      invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 “%{hostname}”。您的帖子中只会显示链接，而不是预览。 :cry:"
-      error_response: "抱歉，我们无法为此网页生成预览，因为该服务器返回错误代码 %{status_code}。您的帖子中只会显示链接，而不是预览。 :cry:"
+      invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 '%{hostname}'。您的帖子中只会显示链接，而不会显示预览。 :cry:"
+      error_response: "抱歉，我们无法为此网页生成预览，因为服务器返回错误代码 %{status_code}。您的帖子中只会显示链接，而不会显示预览。:cry:"
       missing_data:
-        other: "抱歉，我们无法为该网页生成预览，因为找不到 oEmbed / OpenGraph 标签： %{missing_attributes}"
+        other: "抱歉，我们无法为此网页生成预览，因为找不到以下 oEmbed / OpenGraph 标签：%{missing_attributes}"
   word_connector:
-    comma: "， "
+    comma: "，"
   invite:
-    expired: "您的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
-    not_found: "您的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
-    not_found_json: "您的邀请码不正确。请联系工作人员。"
-    not_matching_email: "您的电子邮件地址和与邀请关联的电子邮件地址不符。请联系管理员。"
+    expired: "您的邀请令牌已过期。请<a href='%{base_url}/about'>联系管理人员</a>。"
+    not_found: "您的邀请令牌无效。请<a href='%{base_url}/about'>联系管理人员</a>。"
+    not_found_json: "您的邀请令牌无效。请联系管理人员。"
+    not_matching_email: "您的电子邮件地址和与邀请令牌关联的电子邮件地址不匹配。请联系管理人员。"
     not_found_template: |
       <p>邀请您加入<a href="%{base_url}">%{site_name}</a>的邀请函已被激活。</p>
 
