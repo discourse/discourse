@@ -749,7 +749,6 @@ class TopicView
   end
 
   def filter_posts_by_ids(post_ids)
-    # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
       .includes(
         { user: :primary_group },
