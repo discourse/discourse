@@ -577,12 +577,7 @@ blockquote {
   }
 }
 
-.topic-post-visited-line {
-  width: calc(
-    #{$topic-body-width} + #{$topic-avatar-width} +
-      (#{$topic-body-width-padding} * 2)
-  );
-
+.topic-post-visited {
   + .topic-post {
     .topic-avatar,
     .topic-body {
