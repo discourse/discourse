@@ -139,7 +139,7 @@ class Reviewable < ActiveRecord::Base
     )
     reviewable.created_new!
 
-    if target.blank?
+    if target.blank? || !Reviewable.where(target: target, type: reviewable.type).exists?
       # If there is no target there's no chance of a conflict
       reviewable.save!
     else
