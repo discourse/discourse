@@ -279,9 +279,9 @@ fi:
         instructions: |-
           Haluamme pitää keskustelumme ystävällisinä ja tarvitsemme apuasi [pitääksemme asiat sivistyneinä](%{guidelines_url}). Jos huomaat ongelman, ilmoita siitä yksityisesti kirjoittajalle tai [avuliaalle henkilökunnallemme](%{about_url}) merkitsemällä asian. Viestin merkitsemiselle on monia syitä viattomasta ketjun jakavasta ehdotuksesta aina selkeään yhteisön standardien rikkomukseen. Jos valitset **Jotain muuta**, aloitat yksityisviestikeskustelun valvojien kanssa, jossa voit kysyä lisäkysymyksiä.
 
-          > :imp: Kirjoitin täällä jotain ikävää
+          > :imp: Kirjoitin tässä jotain ikävää
 
-          Mene eteenpäin ja ** merkitse tämä viesti ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ja valitse ** Se on sopimaton ** syyksi!
+          **Merkitse tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ja valitse **Se on sopimaton** syyksi!
         reply: |-
           [Henkilökuntamme](%{base_uri}/groups/staff) saa yksityisen ilmoituksen merkinnästä. Jos riittävän moni yhteisön jäsen merkitsee viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin merkintäsi.)
         not_found: |-
