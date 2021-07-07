@@ -51,4 +51,5 @@ define("uppy", ["exports"], function (__exports__) {
   __exports__.XHRUpload = window.Uppy.XHRUpload;
   __exports__.AwsS3 = window.Uppy.AwsS3;
   __exports__.AwsS3Multipart = window.Uppy.AwsS3Multipart;
+  __exports__.DropTarget = window.Uppy.DropTarget;
 });

@@ -437,6 +437,13 @@
     namespace-emitter "^2.0.1"
     preact "8.2.9"
 
+"@uppy/drop-target@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@uppy/drop-target/-/drop-target-0.2.4.tgz#92e4ffa0d34781a37760e98850262c14b8718c2d"
+  integrity sha512-aRACD7f5jznt7NhLAtw/Nyi94XVjgYnqO3LN2mIbBQrsoQ+mINMzIu4rdVBhpGvk7qNM6961d5jPmPYSUBNiUw==
+  dependencies:
+    "@uppy/utils" "^3.6.2"
+
 "@uppy/store-default@^1.2.7":
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/@uppy/store-default/-/store-default-1.2.7.tgz#41a0b1579f4d5b86c236e7f5e52fdc01960bb011"
