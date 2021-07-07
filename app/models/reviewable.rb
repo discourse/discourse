@@ -139,8 +139,8 @@ class Reviewable < ActiveRecord::Base
     )
     reviewable.created_new!
 
-    if target.blank? || !Reviewable.where(target: target, type: reviewable.type).exists?
-      # If there is no target there's no chance of a conflict
+    if target.blank? || !where(target: target, type: reviewable.type).exists?
+      # If there is no target, and no existing reviewable with matching target and type, there's no chance of a conflict
       reviewable.save!
     else
       # In this case, a reviewable might already exist for this (type, target_id) index.
