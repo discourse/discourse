@@ -12,7 +12,7 @@ class InvitesController < ApplicationController
 
   before_action :ensure_invites_allowed, only: [:show, :perform_accept_invitation]
   before_action :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
-  before_action :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
+  before_action :ensure_not_logged_in, only: :perform_accept_invitation
 
   def show
     expires_now
@@ -21,6 +21,32 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
+      if current_user
+        added_to_group = false
+
+        if invite.groups.present?
+          invite_by_guardian = Guardian.new(invite.invited_by)
+          new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
+          new_group_ids.each do |id|
+            if group = Group.find_by(id: id)
+              if invite_by_guardian.can_edit_group?(group)
+                group.add(current_user)
+                added_to_group = true
+              end
+            end
+          end
+        end
+
+        if topic = invite.topics.first
+          new_guardian = Guardian.new(current_user)
+          return redirect_to(topic.url) if new_guardian.can_see?(topic)
+        elsif added_to_group
+          return redirect_to(path("/"))
+        end
+
+        return ensure_not_logged_in
+      end
+
       email = Email.obfuscate(invite.email)
 
       # Show email if the user already authenticated their email
