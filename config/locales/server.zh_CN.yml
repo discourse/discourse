@@ -7,8 +7,8 @@
 zh_CN:
   dates:
     short_date_no_year: "M 月 D 日"
-    short_date: "YYYY[年]M[月]D[日]"
-    long_date: "MMMM[年]YY[月]DD[日] LT"
+    short_date: "YYYY 年 M 月 D 日"
+    long_date: "MMMM 年 YY 月 DD 日 h:mma"
   datetime_formats: &datetime_formats
     formats:
       short: "%Y-%m-%d"
@@ -19,70 +19,70 @@ zh_CN:
   date:
     month_names:
     - null
-    - 一月
-    - 二月
-    - 三月
-    - 四月
-    - 五月
-    - 六月
-    - 七月
-    - 八月
-    - 九月
-    - 十月
-    - 十一月
-    - 十二月
+    - 1 月
+    - 2 月
+    - 3 月
+    - 4 月
+    - 5 月
+    - 6 月
+    - 7 月
+    - 8 月
+    - 9 月
+    - 10 月
+    - 11 月
+    - 12 月
     <<: *datetime_formats
   time:
     am: "上午"
     pm: "下午"
     <<: *datetime_formats
   title: "Discourse"
-  topics: "话题列表"
+  topics: "话题"
   posts: "帖子"
-  views: "浏览"
-  loading: "载入中"
-  powered_by_html: '由 <a href="https://www.discourse.org">Discourse</a>提供支持，启用 JavaScript 以获得最佳体验'
+  views: "浏览量"
+  loading: "正在加载"
+  powered_by_html: '由 <a href="https://www.discourse.org">Discourse</a> 提供技术支持，启用 JavaScript 以获得最佳体验'
   sign_up: "注册"
   log_in: "登录"
   submit: "提交"
-  purge_reason: "自动删除已废弃或已停用的账户"
-  disable_remote_images_download_reason: "远程图像下载因为磁盘空间不足已经被停用。"
+  purge_reason: "作为已弃用、停用的帐户自动删除"
+  disable_remote_images_download_reason: "由于没有足够的可用磁盘空间，远程图片下载被禁用。"
   anonymous: "匿名"
   remove_posts_deleted_by_author: "被作者删除"
-  redirect_warning: "我们无法验证您选择的链接是否已实际发布到论坛。如果您仍想继续，请选择以下链接。"
+  redirect_warning: "我们无法验证您选择的链接是否确实发布到了论坛。如果您仍想继续，请选择下面的链接。"
   on_another_topic: "在另外的话题中"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
-    topic_page_title_post_number_by_user: "#%{post_number} 由 %{username}"
+    topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
   themes:
-    bad_color_scheme: "无法更新主题，无效的调色板"
+    bad_color_scheme: "无法更新主题，调色板无效"
     other_error: "更新主题时出错"
     ember_selector_error: "抱歉 - 不允许使用 #ember 或 .ember-view CSS 选择器，因为这些名称是在运行时动态生成的，并且会随着时间变化，最终会导致 CSS 损坏。尝试其他选择器。"
     compile_error:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
-      generic: 导入该主题时发生了错误
-      about_json: "导入错误：about.json不存在或无效。您确定这是一个Discourse主题码？"
+      generic: 导入该主题时发生错误
+      about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
       about_json_values: "about.json 包含无效值：%{errors}"
-      modifier_values: "about.json 的修改包含无效值：%{errors}"
-      git: "克隆git仓库时出错，访问被拒绝或找不到仓库"
-      git_ref_not_found: "无法切换到git引用：%{ref}"
+      modifier_values: "about.json 修饰符包含无效值：%{errors}"
+      git: "克隆 git 仓库时出错，访问被拒绝或找不到仓库"
+      git_ref_not_found: "无法签出 git 参考：%{ref}"
       unpack_failed: "无法解压缩文件"
-      file_too_big: "未压缩的文件太大。"
+      file_too_big: "未压缩的文件过大。"
       unknown_file_type: "您上传的文件似乎不是一个有效的 Discourse 主题。"
-      not_allowed_theme: "`%{repo}` 不在允许的主题列表中(请检查全局设置中的 `allowed_theme_repos`)。"
+      not_allowed_theme: "`%{repo}` 不在允许的主题列表中（请检查 `allowed_theme_repos` 全局设置）。"
     errors:
-      component_no_user_selectable: "主题组件不能由用户选择"
+      component_no_user_selectable: "主题组件无法由用户选择"
       component_no_default: "主题组件不能是默认主题"
       component_no_color_scheme: "主题组件不能有调色板"
       no_multilevels_components: "具有子主题的主题本身不能是子主题"
-      optimized_link: 优化过的图像其链接是暂时的，不应包含在主题源代码中。
+      optimized_link: 优化的图片链接是暂时的，不应包含在主题源代码中。
     settings_errors:
-      invalid_yaml: "提供的 YAML 无效"
-      data_type_not_a_number: "设置`%{name}`的值是不支持的类型。支持的类型为`integer`、`bool`、`list` 、`enum`和`upload`"
-      name_too_long: "有一个设置的名字太长了。名称的最大长度为 255"
+      invalid_yaml: "提供的 YAML 无效。"
+      data_type_not_a_number: "设置 `%{name}` 的类型不受支持。支持的类型为 `integer`、`bool`、`list` 、`enum` 和 `upload`"
+      name_too_long: "有一个设置的名称过长。最大长度为 255"
       default_value_missing: "设置 `%{name}` 无默认值"
-      default_not_match_type: "设置 `%{name}` 默认值的类型不匹配设置类型。"
+      default_not_match_type: "设置 `%{name}` 默认值的类型与设置类型不匹配。"
       default_out_range: "设置 `%{name}` 的默认值不在指定范围内。"
       enum_value_not_valid: "选择的值不是枚举选项之一。"
       number_value_not_valid: "新值不在允许的范围内。"
@@ -94,24 +94,24 @@ zh_CN:
       string_value_not_valid_min: "它必须至少为 %{min} 个字符。"
       string_value_not_valid_max: "它必须至多为 %{max} 个字符。"
     locale_errors:
-      top_level_locale: "语言环境文件中的顶级键必须与语言环境名称匹配"
-      invalid_yaml: "本地化翻译 YAML 文件无效"
+      top_level_locale: "区域设置文件中的顶级键必须与区域设置名称匹配"
+      invalid_yaml: "翻译 YAML 文件无效"
   emails:
     incoming:
       default_subject: "此话题需要一个标题"
-      show_trimmed_content: "显示被截短的内容"
-      maximum_staged_user_per_email_reached: "已达到每个电子邮件可以创建暂存用户的上限。"
-      no_subject: "（无标题）"
+      show_trimmed_content: "显示修剪的内容"
+      maximum_staged_user_per_email_reached: "已达到每个电子邮件可以创建的暂存用户的上限。"
+      no_subject: "（无主题）"
       no_body: "（无正文）"
       errors:
-        empty_email_error: "收到空白邮件。"
-        no_message_id_error: "邮件报头没有“Message-Id”。"
-        auto_generated_email_error: "邮件报头的优先级（precedence）设置为：list、junk、bulk 或 auto_reply，或者头部的其他部分包含了：auto-submitted、auto-replied 或 auto-generated。"
-        no_body_detected_error: "无法解析正文并且没有附件。"
-        no_sender_detected_error: "当无法在邮件头中找到有效邮件地址时发生。"
-        from_reply_by_address_error: "报头的 From 字段与回复的电子邮件地址相匹配。"
-        inactive_user_error: "发件人未激活。"
-        silenced_user_error: "发件人被禁言。"
+        empty_email_error: "当我们收到的原始邮件为空白时，就会发生这种情况。"
+        no_message_id_error: "当邮件没有“Message-Id”标头时，就会发生这种情况。"
+        auto_generated_email_error: "当 'precedence' 标头设置为 list、junk、bulk 或 auto_reply，或者任何其他标头包含 auto-submitted、auto-replied 或 auto-generated 时，就会发生这种情况。"
+        no_body_detected_error: "当我们无法提取正文且没有附件时，就会发生这种情况。"
+        no_sender_detected_error: "当我们在“发件人”标头中找不到有效的电子邮件地址时，就会发生这种情况。"
+        from_reply_by_address_error: "当“发件人”标头与答复者电子邮件地址时，就会发生这种情况。"
+        inactive_user_error: "当发件人不活跃时，就会发生这种情况。"
+        silenced_user_error: "当发件人被禁言时，就会发生这种情况。"
         bad_destination_address: "“收件人/抄送”字段中的电子邮件地址无法与已配置的传入电子邮件地址匹配。"
         strangers_not_allowed_error: "用户尝试在一个其未加入的分类中创建话题。"
         insufficient_trust_level_error: "用户尝试在一个其不满足信任等级要求的分类下发表话题。"
