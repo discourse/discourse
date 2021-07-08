@@ -3337,8 +3337,8 @@ zh_CN:
         lastest_backup: "最新：%{date}"
         traffic_short: "流量"
         traffic: "应用程序 Web 请求"
-        page_views: "浏览量"
-        page_views_short: "浏览量"
+        page_views: "页面浏览量"
+        page_views_short: "页面浏览量"
         show_traffic_report: "显示详细的流量报告"
         community_health: 社区健康状况
         moderators_activity: 版主活动

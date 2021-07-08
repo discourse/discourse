@@ -1063,52 +1063,52 @@ zh_CN:
       title: "DAU/MAU"
       xaxis: "天"
       yaxis: "DAU/MAU"
-      description: "在最后一天登录的成员数除以上个月登录的成员数——返回表示社区“粘性”的%。目标是>30％。"
+      description: "在过去一天内登录的成员数除以过去一个月内登录的成员数 - 返回表示社区“粘性”的 %。目标是 >30％。"
     daily_engaged_users:
-      title: "每日活跃用户"
+      title: "每日参与用户"
       xaxis: "天"
-      yaxis: "活跃的用户"
-      description: "在过去一天中赞过或发表过的用户数量。"
+      yaxis: "参与用户"
+      description: "在过去一天内赞过或发过帖子的用户数量。"
     profile_views:
-      title: "浏览用户资料"
+      title: "用户个人资料浏览量"
       xaxis: "天"
-      yaxis: "用户资料访问量"
-      description: "用户个人信息页的新访问数。"
+      yaxis: "浏览的用户个人资料数量"
+      description: "用户个人资料的新浏览量。"
     topics:
-      title: "新发表话题"
+      title: "话题"
       xaxis: "天"
       yaxis: "新话题的数量"
       description: "在此期间创建的新话题。"
     posts:
-      title: "新发表帖子"
+      title: "帖子"
       xaxis: "天"
-      yaxis: "新帖子数"
-      description: "此期间创建的新帖子"
+      yaxis: "新帖子的数量"
+      description: "在此期间创建的新帖子。"
     likes:
       title: "赞"
       xaxis: "天"
-      yaxis: "新的赞数量"
-      description: "新的赞数量。"
+      yaxis: "新赞的数量"
+      description: "新赞的数量。"
     flags:
-      title: "标记"
+      title: "举报"
       xaxis: "天"
-      yaxis: "标记数"
-      description: "新标记数。"
+      yaxis: "举报数量"
+      description: "新举报的数量。"
     bookmarks:
-      title: "收藏"
+      title: "书签"
       xaxis: "天"
-      yaxis: "新收藏数"
-      description: "新话题和帖子的收藏数量。"
+      yaxis: "新书签的数量"
+      description: "加入书签的新话题和帖子的数量。"
     users_by_trust_level:
-      title: "各信任等级的用户数"
-      xaxis: "信任等级"
+      title: "每个信任级别的用户"
+      xaxis: "信任级别"
       yaxis: "用户数"
       labels:
-        level: 等级
+        level: 级别
       description: "按信任级别分组的用户数。"
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
-      title: "用户类型"
+      title: "每种类型的用户"
       xaxis: "类型"
       yaxis: "用户数"
       labels:
@@ -1116,63 +1116,63 @@ zh_CN:
       xaxis_labels:
         admin: 管理员
         moderator: 版主
-        suspended: 已封禁
-        silenced: 禁言
-      description: "按管理员，版主，封禁和禁言所分组的用户数量。"
+        suspended: 被封禁
+        silenced: 被禁言
+      description: "按管理员、版主、被封禁和被禁言分组的用户数量。"
     trending_search:
-      title: 热门搜寻字词
+      title: 热门搜索词
       labels:
-        term: 术语
+        term: 搜索词
         searches: 搜索
         click_through: CTR
-      description: "最受欢迎的搜索字词及其点击率。"
+      description: "最受欢迎的搜索词及其点击率。"
     emails:
-      title: "已发送邮件"
+      title: "发送的电子邮件"
       xaxis: "天"
-      yaxis: "邮件数"
+      yaxis: "电子邮件数量"
       description: "发送的新电子邮件数量。"
     user_to_user_private_messages:
       title: "用户至用户（不包括回复）"
       xaxis: "天"
-      yaxis: "私信数"
+      yaxis: "消息数量"
       description: "新发起的个人消息的数量。"
     user_to_user_private_messages_with_replies:
       title: "用户至用户（包括回复）"
       xaxis: "天"
       yaxis: "消息数量"
-      description: "所有新的个人消息和回复的数量。"
+      description: "所有新的个人消息和回应的数量。"
     system_private_messages:
       title: "系统"
       xaxis: "天"
-      yaxis: "私信数"
-      description: "系统自动发送的个人消息数。"
+      yaxis: "消息数量"
+      description: "系统自动发送的个人消息数量。"
     moderator_warning_private_messages:
       title: "版主警告"
       xaxis: "天"
-      yaxis: "私信数"
-      description: "来自版主的警告消息数量。"
+      yaxis: "消息数量"
+      description: "版主通过个人消息发送的警告数量。"
     notify_moderators_private_messages:
-      title: "版主通知"
+      title: "通知版主"
       xaxis: "天"
-      yaxis: "私信数"
-      description: "因为标记的原因，版主被私下通知的次数。"
+      yaxis: "消息数量"
+      description: "版主通过举报被私下通知的次数。"
     notify_user_private_messages:
-      title: "用户通知"
+      title: "通知用户"
       xaxis: "天"
-      yaxis: "私信数"
-      description: "因为标记的原因，用户被私下通知的次数。"
+      yaxis: "消息数量"
+      description: "用户通过举报被私下通知的次数。"
     top_referrers:
-      title: "最高引用"
+      title: "热门推荐人"
       xaxis: "用户"
       num_clicks: "点击数"
       num_topics: "话题数"
       labels:
         user: "用户"
         num_clicks: "点击数"
-        num_topics: "话题"
-      description: "按用户共享的链接的点击次数列出的用户。"
+        num_topics: "话题数"
+      description: "用户按他们分享的链接的点击次数列出。"
     top_traffic_sources:
-      title: "最高流量来源"
+      title: "热门流量来源"
       xaxis: "域名"
       num_clicks: "点击数"
       num_topics: "话题数"
@@ -1180,10 +1180,10 @@ zh_CN:
       labels:
         domain: 域名
         num_clicks: 点击数
-        num_topics: 话题
-      description: "与此网站链接最多的外部资源。"
+        num_topics: 话题数
+      description: "链接到此站点最多的外部来源。"
     top_referred_topics:
-      title: "被引用最多的话题"
+      title: "热门推荐主题"
       labels:
         num_clicks: "点击数"
         topic: "话题"
@@ -1191,18 +1191,18 @@ zh_CN:
     page_view_anon_reqs:
       title: "匿名"
       xaxis: "天"
-      yaxis: "匿名访问量（PV）"
-      description: "未登录访问者的页面访问量（PV）。"
+      yaxis: "匿名页面浏览量"
+      description: "未登录帐户的访客的新页面浏览量。"
     page_view_logged_in_reqs:
-      title: "已登录"
+      title: "登录"
       xaxis: "天"
-      yaxis: "已登录访问量（PV）"
-      description: "新的已登陆用户访问量"
+      yaxis: "登录页面浏览量"
+      description: "登录用户的新页面浏览量"
     page_view_crawler_reqs:
-      title: "Web爬虫页面访问量"
+      title: "Web 爬虫页面浏览量"
       xaxis: "天"
-      yaxis: "Web 爬虫访问量（PV）"
-      description: "一段时间内的Web爬虫页面访问量。"
+      yaxis: "Web 爬虫页面浏览量"
+      description: "一段时间内来自网络爬虫的总页面浏览量。"
     page_view_total_reqs:
       title: "浏览量"
       xaxis: "天"

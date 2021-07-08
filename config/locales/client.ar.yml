@@ -671,7 +671,7 @@ ar:
       username: "اسم المستخدم"
       filter_name: "التصفية حسب اسم المستخدم"
       title: "المستخدمون"
-      likes_given: "المعطاة"
+      likes_given: "الممنوحة"
       likes_received: "المتلقاة"
       topics_entered: "المعروضة"
       topics_entered_long: "الموضوعات المعروضة"
@@ -1514,12 +1514,12 @@ ar:
           many: "منشورات تم إنشاؤها"
           other: "منشورات تم إنشاؤها"
         likes_given:
-          zero: "المعطاة"
-          one: "المعطاة"
-          two: "المعطاة"
-          few: "المعطاة"
-          many: "المعطاة"
-          other: "المعطاة"
+          zero: "ممنوح"
+          one: "ممنوح"
+          two: "ممنوحان"
+          few: "ممنوحة"
+          many: "ممنوحًا"
+          other: "ممنوح"
         likes_received:
           zero: "المتلقاة"
           one: "المتلقاة"
@@ -2962,7 +2962,7 @@ ar:
             description: "يزيل هذا الإجراء الإشارة المرجعية من ملفك الشخصي ويوقف كل التذكيرات المرتبطة بها"
           edit_bookmark:
             name: "تعديل الإشارة المرجعية"
-            description: "عدِّل اسم الإشارة المرجعية أو غيِّر تاريخ التذكير ووقته"
+            description: "تعديل اسم الإشارة المرجعية أو تغيير تاريخ التذكير ووقته"
       filtered_replies:
         viewing_posts_by: "يتم الآن عرض %{post_count} منشور بواسطة"
         viewing_subset: "بعض الردود مطوية"
@@ -4420,7 +4420,7 @@ ar:
         reputation: الشهرة
         permissions: الأذونات
         activity: النشاط
-        like_count: الإعجابات المعطاة/المتلقاة
+        like_count: الإعجابات الممنوحة/المتلقاة
         last_100_days: "في آخر 100 يوم"
         private_topics_count: موضوع خاص
         posts_read_count: منشور مقروء
@@ -4528,7 +4528,7 @@ ar:
           posts_read_all_time: "المنشورات المقروءة (طوال الوقت)"
           flagged_posts: "المنشورات المُبلَغ عنها"
           flagged_by_users: "المستخدمون المُبلِغون"
-          likes_given: "الإعجابات المعطاة"
+          likes_given: "الإعجابات الممنوحة"
           likes_received: "الإعجابات المتلقاة"
           likes_received_days: "الإعجابات المتلقاة: الأيام المميزة"
           likes_received_users: "الإعجابات المتلقاة: الأعضاء المميزون"
