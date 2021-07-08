@@ -644,7 +644,7 @@
   <div class="display-row post-edits-count">
     <div class="field">{{i18n "admin.user.post_edits_count" }}</div>
     <div class="value">
-      {{model.post_edits_count}}
+      {{if (gt model.post_edits_count 0) model.post_edits_count "0"}}
     </div>
     <div class="controls">
       {{#if (gt model.post_edits_count 0) }}

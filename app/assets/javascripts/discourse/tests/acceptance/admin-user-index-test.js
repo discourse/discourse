@@ -3,7 +3,7 @@ import {
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 
@@ -79,10 +79,12 @@ acceptance("Admin - User Index", function (needs) {
 
     let filter = encodeURIComponent('{"editor":"eviltrout"}');
 
+    await click(".post-edits-count .controls .btn.btn-icon");
+
     assert.equal(
-      queryAll(".post-edits-count .controls .btn.btn-icon").attr("href"),
+      currentURL(),
       `/admin/reports/post_edits?filters=${filter}`,
-      "it links to the post edits report"
+      "it redirects to the right admin report"
     );
   });
 
