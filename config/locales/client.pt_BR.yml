@@ -2099,7 +2099,7 @@ pt_BR:
         later_today: "Hoje mais tarde"
         tomorrow: "Amanhã"
         later_this_week: "Mais tarde nesta semana"
-        this_weekend: "Este fim de semana"
+        this_weekend: "Neste fim de semana"
         next_week: "Próxima semana"
         two_weeks: "Duas semanas"
         next_month: "Próximo mês"
@@ -2108,45 +2108,45 @@ pt_BR:
         four_months: "Quatro meses"
         six_months: "Seis meses"
         one_year: "Um ano"
-        forever: "Para Sempre"
-        pick_date_and_time: "Escolha data e hora"
-        set_based_on_last_post: "Fechar baseado na última postagem"
+        forever: "Para sempre"
+        pick_date_and_time: "Escolher data e hora"
+        set_based_on_last_post: "Fechar com base na última postagem"
       publish_to_category:
-        title: "Agendar Publicação"
+        title: "Agendar publicação"
       temp_open:
-        title: "Abrir Temporariamente"
+        title: "Abrir temporariamente"
       temp_close:
-        title: "Fechar Temporariamente"
+        title: "Fechar temporariamente"
       auto_close:
-        title: "Fechar Tópico Automaticamente"
+        title: "Fechar tópico automaticamente"
         label: "Fechar tópico automaticamente após:"
-        error: "Por favor insira um valor válido."
-        based_on_last_post: "Não fechar até que a última postagem do tópico tenha pelo menos esta idade."
+        error: "Digite um valor válido."
+        based_on_last_post: "Não fechaeaté que a última postagem do tópico tenha pelo menos esta duração."
       auto_delete:
-        title: "Excluir Tópico Automaticamente"
+        title: "Excluir tópico automaticamente"
       auto_bump:
-        title: "Promover Tópico Automaticamente"
+        title: "Promover tópico automaticamente"
       reminder:
-        title: "Lembrar-me"
+        title: "Lembrar"
       auto_delete_replies:
         title: "Excluir respostas automaticamente"
       status_update_notice:
         auto_open: "Este tópico abrirá automaticamente em %{timeLeft}."
-        auto_close: "Este tópico fechará automaticamente %{timeLeft}."
+        auto_close: "Este tópico fechará automaticamente em %{timeLeft}."
         auto_publish_to_category: "Este tópico será publicado em <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_after_last_post: "Este tópico fechará %{duration} após a última resposta."
-        auto_delete: "Este tópico será automaticamente excluído %{timeLeft}."
-        auto_bump: "Este tópico será automaticamente promovido %{timeLeft}."
-        auto_reminder: "Você será lembrado sobre este tópico %{timeLeft}."
+        auto_delete: "Este tópico será automaticamente excluído em %{timeLeft}."
+        auto_bump: "Este tópico será automaticamente promovido em %{timeLeft}."
+        auto_reminder: "Você será lembrado sobre este tópico em %{timeLeft}."
         auto_delete_replies: "As respostas deste tópico são excluídas automaticamente após %{duration}."
-      auto_close_title: "Configurações de Fechamento Automático"
+      auto_close_title: "Configurações de fechamento automático"
       auto_close_immediate:
         one: "A última postagem no tópico foi feita há %{count} hora, portanto o tópico será fechado imediatamente."
         other: "A última postagem no tópico já foi feita há %{count} horas, portanto o tópico será fechado imediatamente."
       timeline:
         back: "Voltar"
         back_description: "Voltar para a sua última postagem não lida"
-        replies_short: "%{current} / %{total}"
+        replies_short: "%{current}/%{total}"
       progress:
         title: progresso do tópico
         go_top: "topo"
@@ -2158,12 +2158,12 @@ pt_BR:
         jump_bottom_with_number: "pular para postagem %{post_number}"
         jump_prompt_to_date: "até agora"
         jump_prompt_or: "ou"
-        total: total de mensagens
-        current: resposta atual
+        total: total de postagens
+        current: postagem atual
       notifications:
-        title: altere a frequência de notificações deste tópico
+        title: altere a frequência de notificações sobre este tópico
         reasons:
-          mailing_list_mode: "Você está com o modo de lista de discussão ativado, portanto será notificado sobre as respostas deste tópico por e-mail."
+          mailing_list_mode: "Você está com o modo lista de discussão ativado, por isso receberá por e-mail notificações sobre as respostas."
           "3_10": "Você receberá notificações porque está acompanhando uma etiqueta neste tópico."
           "3_10_stale": "Você receberá notificações porque estava acompanhando uma etiqueta neste tópico."
           "3_6": "Você receberá notificações porque você está acompanhando esta categoria."
@@ -2437,43 +2437,43 @@ pt_BR:
         other: "você e mais %{count} outras pessoas curtiram esta postagem"
       filtered_replies_viewing:
         one: "Exibindo %{count} resposta a"
-        other: "Vendo %{count} respostas a"
+        other: "Exibindo %{count} respostas a"
       errors:
-        create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
-        edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
-        upload: "Desculpe, houve um erro ao enviar este arquivo. Por favor, tente outra vez."
-        file_too_large: "Desculpe, este arquivo é muito grande (o tamanho máximo é %{max_size_kb}kb). Por que não faz o upload de seu arquivo grande em um serviço de nuvem e compartilha o link?"
-        too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
+        create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
+        edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."
+        upload: "Desculpe, houve um erro ao enviar o arquivo. Tente outra vez."
+        file_too_large: "Desculpe, este arquivo é muito grande (o tamanho máximo é de %{max_size_kb} KB). Que tal enviar o arquivo grande para um serviço de nuvem e compartilhar o link?"
+        too_many_uploads: "Desculpe, você pode enviar apenas um arquivo por vez."
         upload_not_authorized: "Desculpe, o arquivo que você está tentando enviar não é permitido (extensões permitidas: %{authorized_extensions})."
-        image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
-        attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
-        attachment_download_requires_login: "Desculpe, você precisa estar logado para baixar arquivos anexos."
+        image_upload_not_allowed_for_new_user: "Desculpe, usuários(as) novos(as) não podem enviar imagens."
+        attachment_upload_not_allowed_for_new_user: "Desculpe, usuários(as) novos(as) não podem enviar anexos."
+        attachment_download_requires_login: "Desculpe, você precisa entrar para baixar arquivos anexos."
       cancel_composer:
         confirm: "O que gostaria de fazer com sua postagem?"
         discard: "Descartar"
-        save_draft: "Salvar rascunho para depois"
+        save_draft: "Salvar rascunho para mais tarde"
         keep_editing: "Continuar editando"
-      via_email: "post recebido via e-mail"
-      via_auto_generated_email: "esta mensagem chegou através de um e-mail gerado automaticamente"
-      whisper: "esta mensagem é um sussuro privado para moderadores"
+      via_email: "postagem recebida via e-mail"
+      via_auto_generated_email: "esta mensagem chegou por um e-mail gerado automaticamente"
+      whisper: "esta mensagem é um sussuro privado para a moderação"
       wiki:
         about: "esta postagem é uma wiki"
       archetypes:
         save: "Salvar as opções"
-      few_likes_left: "Obrigado por compartilhar o amor! Restam apenas algumas poucas curtidas sobrando para você usar hoje."
+      few_likes_left: "Obrigado por compartilhar o amor! Restam apenas algumas curtidas sobrando para você usar hoje."
       controls:
         reply: "começar a escrever uma resposta para esta postagem"
-        like: "curtir esta resposta"
-        has_liked: "você curtiu esta resposta"
+        like: "curtir esta postagem"
+        has_liked: "você curtiu esta postagem"
         read_indicator: "membros que leram esta postagem"
         undo_like: "desfazer curtida"
-        edit: "editar esta resposta"
+        edit: "editar esta postagem"
         edit_action: "Editar"
-        edit_anonymous: "Você precisa estar conectado para editar esta resposta."
-        flag: "sinalizar em privado para chamar atenção a esta resposta ou enviar uma notificação privada sobre ela"
-        delete: "apagar esta resposta"
-        undelete: "recuperar esta resposta"
-        share: "compartilhar o link desta resposta"
+        edit_anonymous: "Você precisa estar conectado(a) para editar esta postagem."
+        flag: "sinalize esta postagem de forma privada para chamar atenção ou notificar sobre isto"
+        delete: "excluir esta postagem"
+        undelete: "recuperar esta postagem"
+        share: "compartilhar o link desta postagem"
         more: "Mais"
         delete_replies:
           confirm: "Você também deseja excluir as respostas desta postagem?"
@@ -2481,96 +2481,96 @@ pt_BR:
             one: "Sim e %{count} resposta direta"
             other: "Sim e %{count} respostas diretas"
           all_replies:
-            one: "Sim e %{count} resposta"
+            one: "Sim, e %{count} resposta"
             other: "Sim, e todas as %{count} respostas"
-          just_the_post: "Não, apenas este post"
+          just_the_post: "Não, apenas esta postagem"
         admin: "ações administrativas da postagem"
         wiki: "Tornar Wiki"
         unwiki: "Remover Wiki"
-        convert_to_moderator: "Converter para Moderação"
-        revert_to_regular: "Remover da Moderação"
+        convert_to_moderator: "Adicionar cor da equipe"
+        revert_to_regular: "Remover cor da equipe"
         rebake: "Reconstruir HTML"
-        publish_page: "Publicação de páginas"
+        publish_page: "Publicação de página"
         unhide: "Revelar"
-        change_owner: "Trocar Autor"
-        grant_badge: "Conceder Emblema"
-        lock_post: "Bloquear Post"
-        lock_post_description: "impedir que o autor edite esta postagem"
+        change_owner: "Trocar propriedade"
+        grant_badge: "Conceder emblema"
+        lock_post: "Bloquear postagem"
+        lock_post_description: "impedir que o(a) autor(a) edite esta postagem"
         unlock_post: "Desbloquear postagem"
-        unlock_post_description: "permitir que o autor edite esta postagem"
+        unlock_post_description: "permitir que o(a) autor(a) edite esta postagem"
         delete_topic_disallowed_modal: "Você não tem permissão para apagar este tópico. Se realmente quiser que seja excluído, envie um sinalizador para alertar a moderação, além dos argumentos."
-        delete_topic_disallowed: "você não tem permissão para apagar este tópico"
-        delete_topic: "apagar tópico"
-        add_post_notice: "Adicionar Aviso da Staff"
-        remove_timer: "remover contador"
+        delete_topic_disallowed: "você não tem permissão para excluir este tópico"
+        delete_topic: "excluir tópico"
+        add_post_notice: "Adicionar aviso da equipe"
+        remove_timer: "remover timer"
       actions:
         people:
           like:
-            one: "curtiu"
-            other: "curtiram"
+            one: "curtiu isto"
+            other: "curtiram isto"
           read:
             one: "leu isto"
             other: "Leram isto"
           like_capped:
-            one: "e %{count} outro curtiu"
-            other: "e %{count} outros curtiram"
+            one: "e %{count} outro(a) curtiu"
+            other: "e %{count} outros(as) curtiram"
           read_capped:
-            one: "e %{count} outra leu isto"
-            other: "e %{count} outras leram isto"
+            one: "e %{count} outro(a) leu isto"
+            other: "e %{count} outros(as) leram isto"
         by_you:
           off_topic: "Você sinalizou isto como desvio de tópico"
           spam: "Você sinalizou isto como spam"
           inappropriate: "Você sinalizou isto como inapropriado"
           notify_moderators: "Você sinalizou isto para a moderação"
-          notify_user: "Você enviou uma mensagem particular para este usuário"
+          notify_user: "Você enviou uma mensagem particular para este(a) usuário(a)"
       delete:
         confirm:
           one: "Tem certeza de que deseja excluir esta postagem?"
-          other: "Tem certeza de que deseja excluir as postagens de %{count}?"
+          other: "Tem certeza de que deseja excluir estas %{count} postagens?"
       merge:
         confirm:
           one: "Tem certeza de que deseja mesclar estas postagens?"
-          other: "Tem certeza de que deseja mesclar estas postagens de %{count}?"
+          other: "Tem certeza de que deseja mesclar estas %{count} postagens?"
       revisions:
         controls:
           first: "Primeira revisão"
           previous: "Revisão anterior"
           next: "Próxima revisão"
           last: "Última revisão"
-          hide: "Esconder revisão"
+          hide: "Ocultar revisão"
           show: "Exibir revisão"
-          edit_wiki: "Editar Wiki"
-          edit_post: "Editar Postagem"
-          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
+          edit_wiki: "Editar wiki"
+          edit_post: "Editar postagem"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong>/%{total}"
         displays:
           inline:
             title: "Exibir a saída renderizada com adições e remoções em linha"
             button: "HTML"
           side_by_side:
-            title: "Exibir as diferentes saídas renderizadas lado a lado"
+            title: "Exibir diferenças de saídas renderizadas lado a lado"
             button: "HTML"
           side_by_side_markdown:
-            title: "Mostrar a diferença da fonte crua lado-a-lado"
-            button: "Texto Bruto"
+            title: "Exibir diferenças de fontes não processadas lado a lado"
+            button: "Não processado"
       raw_email:
         displays:
           raw:
-            title: "Mostrar Email"
-            button: "Texto Bruto"
+            title: "Mostrar e-mail não processado"
+            button: "Não processado"
           text_part:
-            title: "Mostrar texto do e-mail"
+            title: "Mostrar parte do texto do e-mail"
             button: "Texto"
           html_part:
-            title: "Mostrar texto html do e-mail"
+            title: "Mostrar parte em html do e-mail"
             button: "HTML"
       bookmarks:
-        create: "Criar marcador"
+        create: "Criar favorito"
         edit: "Editar favorito"
         created: "Criado"
         updated: "Atualizado"
         name: "Nome"
         name_placeholder: "Para que serve este favorito?"
-        set_reminder: "Lembre-me"
+        set_reminder: "Lembrar"
         actions:
           delete_bookmark:
             name: "Excluir favorito"
@@ -2580,41 +2580,41 @@ pt_BR:
             description: "Editar o nome do favorito ou alterar a data e hora do lembrete"
       filtered_replies:
         viewing_posts_by: "Vendo %{post_count} postagens de"
-        viewing_subset: "Algumas respostas estão ocultas"
-        viewing_summary: "Vendo um resumo deste tópico"
+        viewing_subset: "Algumas respostas foram recolhidas"
+        viewing_summary: "visualizando um resumo deste tópico"
         show_all: "Mostrar tudo"
     category:
       can: "pode&hellip; "
       none: "(sem categoria)"
       all: "Todas as categorias"
-      choose: "category&hellip;"
+      choose: "categoria&hellip;"
       edit: "Editar"
       edit_dialog_title: "Editar: %{categoryName}"
-      view: "Ver tópicos na categoria"
+      view: "Visualizar tópicos na categoria"
       general: "Geral"
       settings: "Configurações"
-      topic_template: "Modelo de Tópico"
+      topic_template: "Modelo de tópico"
       tags: "Etiquetas"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoria:"
       tags_allowed_tag_groups: "Restringir estes grupos de etiquetas a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
-      tags_tab_description: "As etiquetas e grupos de etiquetas especificadas acima estarão disponíveis apenas nesta categoria e em outras categorias que também as especificarem. Elas não estarão disponíveis para uso em outras categorias."
+      tags_tab_description: "As etiquetas e grupos de etiquetas especificadas acima estarão disponíveis apenas nesta categoria e nas outras categorias que também as especificarem, sendo que não estarão disponíveis para uso em outras categorias."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       allow_global_tags_label: "Permitir também outras etiquetas"
-      tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
-      required_tag_group_description: "Exija que novos tópicos tenham etiquetas de um grupo de etiquetas:"
-      min_tags_from_required_group_label: "Número de Etiquetas:"
+      tag_group_selector_placeholder: "(Opcional) grupo de etiquetas"
+      required_tag_group_description: "Exigir que novos tópicos tenham etiquetas de um grupo de etiquetas:"
+      min_tags_from_required_group_label: "Número de etiquetas:"
       required_tag_group_label: "Grupo de etiquetas:"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
-      delete: "Apagar categoria"
+      delete: "Excluir categoria"
       create: "Nova categoria"
       create_long: "Criar uma nova categoria"
       save: "Salvar categoria"
-      slug: "Slug da Categoria"
+      slug: "Slug da categoria"
       slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
-      name: "Nome da Categoria"
+      name: "Nome da categoria"
       description: "Descrição"
       topic: "tópico da categoria"
       logo: "Imagem do logo da categoria"
@@ -2666,51 +2666,51 @@ pt_BR:
       position_disabled: "Categorias serão mostradas em ordem de atividade. Para controlar a ordem das categorias em listas,"
       position_disabled_click: 'habilitar a configuração de "posição de categoria fixa".'
       minimum_required_tags: "Número mínimo de etiquetas requeridas em um tópico:"
-      parent: "Categoria Principal"
-      num_auto_bump_daily: "Número de tópicos em aberto para dar um bump diário automaticamente:"
+      parent: "Categoria principal"
+      num_auto_bump_daily: "Número de tópicos em aberto para promover automaticamente:"
       navigate_to_first_post_after_read: "Navegue até a primeira postagem depois que os tópicos forem lidos"
       notifications:
         watching:
-          title: "Observar"
-          description: "Você vai observar automaticamente todos os tópicos nesta categoria. Você será notificado de todas as novas mensagens em todos os tópicos. Além disso, uma contagem de novas respostas será exibida."
+          title: "Acompanhando"
+          description: "Você acompanhará automaticamente todos os tópicos nesta categoria. Você será notificado(a) de todas as novas postagens em todos os tópicos. Além disso, uma contagem de novas respostas será exibida."
         watching_first_post:
-          title: "Observando o primeiro post"
-          description: "Você será notificado sobre novos tópicos nesta categoria, mas não sobre respostas aos tópicos."
+          title: "Acompanhando o primeiro post"
+          description: "Você será notificado(a) sobre novos tópicos nesta categoria, mas não sobre respostas dos tópicos."
         tracking:
-          title: "Monitorar"
-          description: "Você vai acompanhar automaticamente todos os tópicos nesta categoria. Você será notificado se alguém mencionar o seu @nome ou responder para você. Além disso, uma contagem de novas respostas será exibida."
+          title: "Monitorando"
+          description: "Você vai monitorar automaticamente todos os tópicos nesta categoria. Você será notificado(a) se alguém mencionar o seu @nome ou responder para você. Além disso, uma contagem de novas respostas será exibida."
         regular:
           title: "Normal"
-          description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
+          description: "Você será notificado(a) se alguém mencionar o seu @nome ou responder às suas mensagens."
         muted:
-          title: "Silenciar"
-          description: "Você nunca será notificado sobre novos tópicos nesta categoria e eles não aparecerão em Recentes."
+          title: "Silenciado(a)"
+          description: "Você nunca será notificado(a) sobre novos tópicos nesta categoria e eles não aparecerão nos mais recentes."
       search_priority:
-        label: "Prioridade de Pesquisa"
+        label: "Prioridade de pesquisa"
         options:
           normal: "Normal"
           ignore: "Ignorar"
-          very_low: "Muito Baixa"
-          low: "Baixo"
+          very_low: "Muito baixa"
+          low: "Baixa"
           high: "Alta"
-          very_high: "Muito Alta"
+          very_high: "Muito alta"
       sort_options:
         default: "padrão"
         likes: "Curtidas"
-        op_likes: "Curtidas da Publicação Original"
+        op_likes: "Curtidas da publicação original"
         views: "Visualizações"
         posts: "Postagens"
         activity: "Atividade"
         posters: "Autores"
         category: "Categoria"
         created: "Criado"
-      sort_ascending: "Ascendente"
-      sort_descending: "Descendente"
+      sort_ascending: "Ordem crescente"
+      sort_descending: "Ordem decrescente"
       subcategory_list_styles:
         rows: "Linhas"
-        rows_with_featured_topics: "Linhas com Tópicos em destaque"
-        boxes: "Caixas"
-        boxes_with_featured_topics: "Caixas com tópicos em destaque"
+        rows_with_featured_topics: "Linhas com tópicos em destaque"
+        boxes: "Caixas de seleção"
+        boxes_with_featured_topics: "Caixas de seleção com tópicos em destaque"
       settings_sections:
         general: "Geral"
         moderation: "Moderação"
@@ -2722,7 +2722,7 @@ pt_BR:
       take_action_options:
         default:
           title: "Tomar medida"
-          details: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
+          details: "Atingir o limite de denuncias imediatamente em vez de esperar por mais denuncias da comunidade"
         suspend:
           title: "Suspender usuário(a)"
         silence:
@@ -2733,9 +2733,9 @@ pt_BR:
       yes_delete_spammer: "Sim, excluir remetente de spam"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
-      submit_tooltip: "Enviar uma sinalização privada"
-      take_action_tooltip: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
-      cant: "Desculpe, não é possível colocar uma sinalização neste momento."
+      submit_tooltip: "Enviar um sinalizador privado"
+      take_action_tooltip: "Atingir o limite de denuncias imediatamente em vez de esperar por mais denuncias da comunidade"
+      cant: "Desculpe, não é possível colocar um sinalizador neste momento."
       notify_staff: "Avisar a equipe de forma privada"
       formatted_name:
         off_topic: "É um desvio de tópico"
@@ -2754,12 +2754,12 @@ pt_BR:
           one: "%{count} restante"
           other: "%{count} restantes"
     flagging_topic:
-      title: "Obrigado por ajudar a manter a civilidade da nossa comunidade!"
-      action: "Sinalizar Tópico"
+      title: "Obrigado por ajudar a tornar a nossa comunidade um ambiente saudável!"
+      action: "Sinalizar tópico"
       notify_action: "Mensagem"
     topic_map:
-      title: "Resumo do Tópico"
-      participants_title: "Autores Frequentes"
+      title: "Resumo do tópico"
+      participants_title: "Autores frequentes"
       links_title: "Links Populares"
       links_shown: "mostrar mais links..."
       clicks:
@@ -2856,7 +2856,7 @@ pt_BR:
           other: "Novos (%{count})"
         help: "tópicos criados nos últimos dias"
       posted:
-        title: "Minhas mensagens"
+        title: "Minhas postagens"
         help: "tópicos nos quais você postou"
       bookmarks:
         title: "Favoritos"
@@ -2871,32 +2871,32 @@ pt_BR:
         title: "Melhores"
         help: "os tópicos mais ativos no último ano, mês, semana ou dia"
         all:
-          title: "Tempo Todo"
+          title: "Desde o início"
         yearly:
-          title: "Anualmente"
+          title: "Todo ano"
         quarterly:
-          title: "Trimestralmente"
+          title: "Todo semestre"
         monthly:
-          title: "Mensalmente"
+          title: "Todo mês"
         weekly:
-          title: "Semanalmente"
+          title: "Toda semana"
         daily:
-          title: "Diariamente"
-        all_time: "Tempo Todo"
+          title: "Todo dia"
+        all_time: "Desde o início"
         this_year: "Ano"
         this_quarter: "Trimestre"
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
-        other_periods: "ver top:"
+        other_periods: "ver melhores:"
     permission_types:
-      full: "Criar / Responder / Ver"
-      create_post: "Responder / Ver"
+      full: "Criar/Responder/Ver"
+      create_post: "Responder/Ver"
       readonly: "Ver"
     lightbox:
       download: "download"
-      previous: "Anterior (tecla de seta para a esquerda)"
-      next: "Próximo (tecla de seta para a direita)"
+      previous: "Anterior (seta para a esquerda)"
+      next: "Próximo (seta para a direita)"
       counter: "%curr% de %total%"
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'
@@ -2907,15 +2907,15 @@ pt_BR:
       shortcut_delimiter_or: "%{shortcut1} ou %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      title: "Atalhos de teclado"
+      title: "Atalhos do teclado"
       jump_to:
-        title: "Ir Para"
+        title: "Pular para"
         home: "%{shortcut} Início"
         latest: "%{shortcut} Mais recentes"
         new: "%{shortcut} Novos"
-        unread: "%{shortcut} Não Lidos"
+        unread: "%{shortcut} Não lidos"
         categories: "%{shortcut} Categorias"
-        top: "%{shortcut} Topo"
+        top: "%{shortcut} Melhores"
         bookmarks: "%{shortcut} Favoritos"
         profile: "%{shortcut} Perfil"
         messages: "%{shortcut} Mensagens"
@@ -2973,21 +2973,21 @@ pt_BR:
         delete: "%{shortcut} Excluir mensagem"
         mark_muted: "%{shortcut} Silenciar tópico"
         mark_regular: "%{shortcut} Tópico regular (padrão)"
-        mark_tracking: "%{shortcut} Monitorar o tópico"
-        mark_watching: "%{shortcut} Observar o tópico"
+        mark_tracking: "%{shortcut} Monitorar tópico"
+        mark_watching: "%{shortcut} Acompanhar tópico"
         print: "%{shortcut} Imprimir tópico"
         defer: "%{shortcut} Adiar tópico"
-        topic_admin_actions: "%{shortcut} Abrir ações de administração de tópicos"
+        topic_admin_actions: "%{shortcut} Abrir ações de administração de tópico"
       search_menu:
         title: "Menu de pesquisa"
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
-        insert_url: "%{shortcut} Inserir seleção no compositor aberto"
+        insert_url: "%{shortcut} Inserir seleção no(a) criador(a) aberto"
     badges:
       earned_n_times:
-        one: "Emblema adquirido %{count} vez"
-        other: "Emblema adquirido %{count} vezes"
+        one: "Emblema obtido %{count} vez"
+        other: "Emblema obtido %{count} vezes"
       granted_on: "Concedido em %{date}"
-      others_count: "Outros com este emblema (%{count})"
+      others_count: "Outros(as) com este emblema (%{count})"
       title: Emblemas
       allow_title: "Você pode usar este emblema como um título"
       multiple_grant: "Você pode ganhar isto várias vezes"
@@ -2995,27 +2995,27 @@ pt_BR:
         one: "%{count} Emblema"
         other: "%{count} Emblemas"
       more_badges:
-        one: "+%{count} Mais"
-        other: "+%{count} Mais"
+        one: "Mais %{count}"
+        other: "Mais %{count}"
       granted:
         one: "%{count} concedido"
         other: "%{count} concedidos"
       select_badge_for_title: Selecione um emblema para usar como o seu título
       none: "(nenhum)"
-      successfully_granted: "%{badge} concedido com sucesso para %{username}"
+      successfully_granted: "%{badge} concedido com êxito para %{username}"
       badge_grouping:
         getting_started:
-          name: Primeiros Passos
+          name: Primeiros passos
         community:
           name: Comunidade
         trust_level:
-          name: Nível de Confiança
+          name: Nível de confiança
         other:
-          name: Outros
+          name: Outros(as)
         posting:
           name: Publicando
     tagging:
-      all_tags: "Todas as Etiquetas"
+      all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
@@ -3025,30 +3025,30 @@ pt_BR:
       info: "Informações"
       category_restricted: "Essa tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
-      synonyms_description: "Quando as seguintes tags forem usadas, eles serão substituídas por <b>%{base_tag_name}</b>."
+      synonyms_description: "Quando as seguintes etiquetas forem usadas, serão substituídas por <b>%{base_tag_name}</b>."
       tag_groups_info:
-        one: 'Esta tag pertence ao grupo: %{tag_groups}.'
-        other: "Esta tag pertence aos grupos: %{tag_groups}."
+        one: 'Esta etiqueta pertence ao grupo: %{tag_groups}.'
+        other: "Esta etiqueta pertence aos grupos: %{tag_groups}."
       category_restrictions:
-        one: "Pode ser usada nesta categoria:"
-        other: "Pode ser usada nestas categorias:"
+        one: "Pode ser usada apenas nesta categoria:"
+        other: "Pode ser usada apenas nestas categorias:"
       edit_synonyms: "Gerenciar sinônimos"
       add_synonyms_label: "Adicionar sinônimos:"
       add_synonyms: "Adicionar"
       add_synonyms_explanation:
         one: "Qualquer local que atualmente use essa tag será alterado para usar <b>%{tag_name}</b> . Tem certeza de que deseja fazer essa alteração?"
-        other: "Qualquer local que atualmente use essas etiquetas será alterado para usar <b>%{tag_name}</b>. Tem certeza de que deseja fazer essa alteração?"
-      add_synonyms_failed: "As seguintes etiquetas não podem ser adicionadas como sinônimos: <b>%{tag_names}</b>. Se assegure de que elas não tenham sinônimos e não sejam sinônimos de outras etiquetas."
+        other: "Locais que usam estas etiquetas serão alterados para <b>%{tag_name}</b>. Tem certeza de que deseja fazer essa alteração?"
+      add_synonyms_failed: "As etiquetas a seguir não podem ser adicionadas como sinônimos: <b>%{tag_names}</b>. Verifique se elas não têm sinônimos nem sejam sinônimos de outras etiquetas."
       remove_synonym: "Remover sinônimo"
       delete_synonym_confirm: 'Você tem certeza que deseja excluir o sinônimo "%{tag_name}"?'
-      delete_tag: "Apagar marcação"
+      delete_tag: "Excluir etiqueta"
       delete_confirm:
         one: "Tem certeza de que deseja excluir esta etiqueta e removê-la de %{count} tópico para o qual ela está atribuída?"
-        other: "Tem certeza de que deseja excluir esta etiqueta e removê-la de %{count} tópicos aos quais ela está atribuída?"
-      delete_confirm_no_topics: "Tem certeza de que deseja excluir esta tag?"
+        other: "Tem certeza de que deseja excluir esta etiqueta e removê-la dos %{count} tópicos aos quais ela está atribuída?"
+      delete_confirm_no_topics: "Tem certeza de que deseja excluir esta etiqueta?"
       delete_confirm_synonyms:
-        one: "O sinônimo dela também será excluído."
-        other: "Os %{count} sinônimos dela também serão excluídos."
+        one: "Seu sinônimo também será excluído."
+        other: "Seus %{count} sinônimos também serão excluídos."
       rename_tag: "Renomear marcador"
       rename_instructions: "Escolha um novo nome para o marcador"
       sort_by: "Ordenar por"
@@ -3115,10 +3115,10 @@ pt_BR:
       custom_message_placeholder: "Insira a sua mensagem personalizada"
       custom_message_template_forum: "Ei, você devia entrar neste fórum!"
       custom_message_template_topic: "Ei, eu acho que você vai gostar deste tópico!"
-    forced_anonymous: "Devido à carga extrema, isto está sendo exibido temporariamente para todos, visto que um usuário desconectado o veria."
+    forced_anonymous: "Devido à quantidade de acessos, o conteúdo está sendo exibido temporariamente para todos(as) como se fossem um(a) usuário(a) que não entrou com a conta."
     footer_nav:
       back: "Voltar"
-      forward: "Seguinte"
+      forward: "Avançar"
       share: "Compartilhar"
       dismiss: "Descartar"
     safe_mode:

@@ -623,31 +623,31 @@ zh_CN:
       email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
       email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
       description_incomplete: "类别描述帖子至少要有一段。"
-      permission_conflict: "所有被允许访问一个子分类的群组也必须能够访问其上级分类。下列群组能够访问某个子分类，但不能访问上级分类： %{group_names}。"
-      disallowed_topic_tags: "此话题含有不允许在该分类中使用的标签：%{tags}"
-      disallowed_tags_generic: "此话题有反对标签。"
+      permission_conflict: "任何被允许访问子类别的组也必须被允许访问父类别。以下群组可以访问子类别之一，但无法访问父类别：%{group_names}。"
+      disallowed_topic_tags: "此话题包含此类别不允许的标签：%{tags}"
+      disallowed_tags_generic: "此话题包含禁止的标签。"
     cannot_delete:
-      uncategorized: "这个分类是特殊的。它用于存放没有分类的话题；不能被删除。"
-      has_subcategories: "不能删除该分类，因为它有子分类"
+      uncategorized: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能删除。"
+      has_subcategories: "无法删除此类别，因为它有子类别。"
       topic_exists:
-        other: "不能删除该分类，因为它有%{count}个话题。最久远的话题是%{topic_link}。"
-      topic_exists_no_oldest: "不能删除该分类，因为话题数量为 %{count}。"
-    uncategorized_description: "不需要分类或者不适合放在现有的任何分类中的话题。"
+        other: "无法删除此类别，因为它有 %{count} 个话题。时间最久的话题是 %{topic_link}。"
+      topic_exists_no_oldest: "无法删除此类别，因为话题数量为 %{count}。"
+    uncategorized_description: "不需要类别或不适合任何其他现有类别的话题。"
   trust_levels:
     admin: "管理员"
-    staff: "工作人员"
-    change_failed_explanation: "您尝试将%{user_name}降至%{new_trust_level}。然而他们的信任等级已经是%{current_trust_level}。%{user_name}将仍处于%{current_trust_level}——如果您想要降级用户，先锁定信任等级。"
+    staff: "管理人员"
+    change_failed_explanation: "您尝试将 %{user_name} 降级至 '%{new_trust_level}'。不过，他们的信任级别已经是 '%{current_trust_level}'。%{user_name} 将保持 '%{current_trust_level}'。如果您希望降级用户，请先锁定信任级别。"
   post:
     image_placeholder:
       broken: "此图片已损坏"
     has_likes:
-      other: "%{count}赞"
+      other: "%{count} 个赞"
   rate_limiter:
     slow_down: "您执行此操作的次数过多，请稍后再试。"
     too_many_requests: "您执行此操作的次数过多。请等待 %{time_left}后再试。"
     by_type:
-      first_day_replies_per_day: "我们赞赏您的热情，保持这样！ 话虽如此，为了社区的安全，您已经达到了新用户第一天可以回复的最多数量。 请等待 %{time_left} ，您将可以继续回复。"
-      first_day_topics_per_day: "我们赞赏您的热情！ 话虽如此，为了社区的安全，您已经达到了新用户第一天可以创建的话题的最大数量。 请等待 %{time_left}，您讲可以继续创建新的话题。"
+      first_day_replies_per_day: "我们赞赏您的热情，请保持下去！话虽如此，为了社区的安全，您已达到新用户第一天可以创建的最大回复数量。请等待 %{time_left}，之后您可以创建更多新回复。"
+      first_day_topics_per_day: "我们赞赏您的热情！话虽如此，为了社区的安全，您已达到新用户第一天可以创建的最大话题数量。请等待 %{time_left}，之后您可以创建更多新话题。"
       create_topic: "您创建新话题的速度太快了，请等待 %{time_left} 后再试。"
       create_post: "您回帖太快了，请等待 %{time_left} 后再试。"
       delete_post: "您删帖的速度有点太快了。请等待 %{time_left} 再试。"
