@@ -21,25 +21,86 @@ class BadgeGranter
     BadgeGranter.new(badge, user, opts).grant
   end
 
-  def self.mass_grant(badge, users, sequence_map: nil, count_per_user: nil)
+  def self.mass_grant_existing_holders(badge, count_per_user, jobs_id, batch_number)
+    return if !badge.enabled? || count_per_user.blank?
+    if jobs_id.blank? || batch_number.blank?
+      raise "Expected jobs_id and batch_number to be present, instead got jobs_id: #{jobs_id.inspect}, batch_number: #{batch_number.inspect}"
+    end
+
+    processed_batches_redis_key = "badge_mass_grant_#{jobs_id}_processed_batches"
+    users_to_notify_redis_key = "badge_mass_grant_#{jobs_id}_users_to_notfiy"
+    attempts = 1
+    begin
+      if !Discourse.redis.sismember(processed_batches_redis_key, batch_number)
+        system_user_id = Discourse.system_user.id
+        now = Time.zone.now
+        UserBadge.transaction do
+          count_per_user.each do |user_id, count|
+            args = {
+              now: now,
+              system: system_user_id,
+              badge_id: badge.id,
+              user_id: user_id
+            }
+            count.times do
+              DB.exec(<<~SQL, **args)
+                INSERT INTO user_badges
+                (granted_at, created_at, granted_by_id, badge_id, user_id, seq)
+                VALUES
+                (
+                  :now,
+                  :now,
+                  :system,
+                  :badge_id,
+                  :user_id,
+                  COALESCE((SELECT MAX(seq) FROM user_badges WHERE badge_id = :badge_id AND user_id = :user_id), -1) + 1
+                )
+              SQL
+            end
+          end
+          Discourse.redis.multi do
+            Discourse.redis.sadd(processed_batches_redis_key, batch_number)
+            Discourse.redis.expire(processed_batches_redis_key, 7.days)
+            Discourse.redis.sadd(users_to_notify_redis_key, count_per_user.keys)
+            Discourse.redis.expire(users_to_notify_redis_key, 7.days)
+          end
+        end
+      end
+    rescue PG::UniqueViolation => ex
+      if attempts < 10
+        sleep(rand * 2)
+        attempts += 1
+        retry
+      else
+        raise ex
+      end
+    end
+    batches_count = Integer(Discourse.redis.get("badge_mass_grant_#{jobs_id}_batches_count"))
+    processed_batches = Discourse.redis.smembers(processed_batches_redis_key).map(&:to_i).sort
+
+    if (1..batches_count).to_a == processed_batches
+      users_to_notify = User.where(id: Discourse.redis.smembers(users_to_notify_redis_key))
+      users_to_notify.each do |user|
+        notification = send_notification(user.id, user.username, user.locale, badge)
+
+        DB.exec(
+          "UPDATE user_badges SET notification_id = :notification_id WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id",
+          notification_id: notification.id,
+          user_id: user.id,
+          badge_id: badge.id
+        )
+
+        UserBadge.update_featured_ranks!(user.id)
+      end
+    end
+  end
+
+  def self.mass_grant(badge, users)
     return unless badge.enabled?
 
     system_user_id = Discourse.system_user.id
     now = Time.zone.now
-    if sequence_map && count_per_user
-      user_badges = []
-      users.each do |u|
-        row = { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now }
-        count_per_user[u.id].times do
-          sequence_map[u.id] = (sequence_map[u.id] || -1) + 1
-          user_badges << row.merge(seq: sequence_map[u.id])
-        end
-      end
-    else
-      user_badges = users.map do |u|
-        { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now }
-      end
-    end
+    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now } }
     granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
 
     users.each do |user|

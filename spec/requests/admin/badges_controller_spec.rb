@@ -225,7 +225,7 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
       it 'works with a CSV containing nil values' do
@@ -235,7 +235,20 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
+      end
+
+      it 'does not grant the badge again to a user if they already have the badge' do
+        Jobs.run_immediately!
+        badge.update!(multiple_grant: true)
+        BadgeGranter.grant(badge, user)
+        user.reload
+
+        file = file_from_fixtures('usernames_with_nil_values.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
       it 'fails when the badge is disabled' do
@@ -265,22 +278,20 @@ describe Admin::BadgesController do
 
         it "grants the badge to the users in the CSV as many times as they appear in it" do
           Jobs.run_immediately!
-          user_without_badge = Fabricate(:user)
-          user_with_badge = Fabricate(:user)
           badge.update!(multiple_grant: true)
-          BadgeGranter.grant(badge, user_with_badge)
-          expect(user_with_badge.reload.badges.pluck(:id)).to eq([badge.id])
-          expect(user_without_badge.reload.badges.pluck(:id)).to eq([])
+          user_without_badge = Fabricate(:user)
+          user_with_badge = Fabricate(:user).tap { |u| BadgeGranter.grant(badge, u) }
 
+          Notification.destroy_all
           random = Random.new(RSpec.configuration.seed)
           emails_csv_content = [user_without_badge.email.titlecase, user_with_badge.email.titlecase] * 150
           emails_csv_content.shuffle!(random: random)
           usernames_csv_content = [user_without_badge.username.titlecase, user_with_badge.username.titlecase] * 150
           usernames_csv_content.shuffle!(random: random)
 
-          expected = 0
+          count = 0
           [emails_csv_content, usernames_csv_content].each do |content|
-            expected += 150
+            count += 1
             csv = Tempfile.new
             csv.write(content.join("\n"))
             csv.rewind
@@ -290,11 +301,19 @@ describe Admin::BadgesController do
             }
             expect(response.status).to eq(200)
             sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
-            expect(sequence.size).to eq(expected + 1)
-            expect(sequence.sort).to eq((0...(expected + 1)).to_a)
+            expect(sequence.size).to eq((150 * count) + 1)
+            expect(sequence.sort).to eq((0...((150 * count) + 1)).to_a)
             sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
-            expect(sequence.size).to eq(expected)
-            expect(sequence.sort).to eq((0...expected).to_a)
+            expect(sequence.size).to eq((150 * count))
+            expect(sequence.sort).to eq((0...(150 * count)).to_a)
+
+            # each user gets 1 notification no matter how many times
+            # they're repeated in the file.
+            [user_without_badge, user_with_badge].each do |u|
+              notifications = u.reload.notifications
+              expect(notifications.size).to eq(count)
+              expect(notifications.map(&:notification_type).uniq).to eq([Notification.types[:granted_badge]])
+            end
           ensure
             csv&.close
             csv&.unlink
