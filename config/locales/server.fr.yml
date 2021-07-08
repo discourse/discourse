@@ -2854,7 +2854,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet dans cette catégorie. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable](%{base_url}/about).
+        Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet dans cette catégorie. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Courriel rejeté - Inconnus interdits"
       subject_template: "[%{email_prefix}] Problème de courriel - Accès invalide"

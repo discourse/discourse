@@ -599,7 +599,7 @@ fr:
         change_group_setting: "Changer les paramètres du groupe"
         add_user_to_group: "Ajouter l'utilisateur"
         remove_user_from_group: "Supprimer l'utilisateur"
-        make_user_group_owner: "Rendre propriétaire"
+        make_user_group_owner: "Attribuer le statut de propriétaire"
         remove_user_as_group_owner: "Retirer le propriétaire"
     groups:
       member_added: "Ajouté"
@@ -1314,7 +1314,7 @@ fr:
       last_posted: "Dernier message"
       last_emailed: "Dernier courriel reçu"
       last_seen: "Vu"
-      created: "Inscrit"
+      created: "Inscrit(e)"
       log_out: "Se déconnecter"
       location: "Localisation"
       website: "Site Web"

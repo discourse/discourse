@@ -1194,80 +1194,80 @@ zh_CN:
       yaxis: "匿名页面浏览量"
       description: "未登录帐户的访客的新页面浏览量。"
     page_view_logged_in_reqs:
-      title: "登录"
+      title: "登录用户"
       xaxis: "天"
-      yaxis: "登录页面浏览量"
-      description: "登录用户的新页面浏览量"
+      yaxis: "登录用户页面浏览量"
+      description: "来自登录用户的新页面浏览量。"
     page_view_crawler_reqs:
-      title: "Web 爬虫页面浏览量"
+      title: "网络爬虫页面浏览量"
       xaxis: "天"
-      yaxis: "Web 爬虫页面浏览量"
+      yaxis: "网络爬虫页面浏览量"
       description: "一段时间内来自网络爬虫的总页面浏览量。"
     page_view_total_reqs:
-      title: "浏览量"
+      title: "页面浏览量"
       xaxis: "天"
-      yaxis: "总浏览量"
-      description: "所有访问者的新页面访问量。"
+      yaxis: "总页面浏览量"
+      description: "来自所有访客的新页面浏览量。"
     page_view_logged_in_mobile_reqs:
-      title: "已登录页面访问"
+      title: "登录用户页面浏览量"
       xaxis: "天"
-      yaxis: "移动端已登录的访问量（PV）"
-      description: "移动设备上已登录用户的新页面访问量。"
+      yaxis: "移动设备登录用户页面浏览量"
+      description: "来自从移动设备登录帐户的用户的新页面浏览量。"
     page_view_anon_mobile_reqs:
-      title: "未登录页面访问"
+      title: "匿名页面浏览量"
       xaxis: "天"
-      yaxis: "移动端未登录页面访问"
-      description: "移动设备上未登录用户的新页面访问量"
+      yaxis: "移动设备匿名页面浏览量"
+      description: "未登录访客在移动设备上的新页面浏览量。"
     http_background_reqs:
-      title: "静默请求"
+      title: "后台"
       xaxis: "天"
-      yaxis: "实时更新和追踪的请求"
+      yaxis: "用于实时更新和跟踪的请求"
     http_2xx_reqs:
       title: "HTTP 2xx（正常）"
       xaxis: "天"
-      yaxis: "正常的请求（状态码 2xx）"
+      yaxis: "成功的请求（状态 2xx）"
     http_3xx_reqs:
       title: "HTTP 3xx（重定向）"
       xaxis: "天"
-      yaxis: "重定向请求（状态码 3xx）"
+      yaxis: "重定向请求（状态 3xx）"
     http_4xx_reqs:
       title: "HTTP 4xx（客户端错误）"
       xaxis: "天"
-      yaxis: "客户端错误（状态码 4xx）"
+      yaxis: "客户端错误（状态 4xx）"
     http_5xx_reqs:
       title: "HTTP 5xx（服务器错误）"
       xaxis: "天"
-      yaxis: "服务器错误（状态码 5xx）"
+      yaxis: "服务器错误（状态 5xx）"
     http_total_reqs:
-      title: "总请求数"
+      title: "总计"
       xaxis: "天"
-      yaxis: "总请求数"
+      yaxis: "请求总数"
     time_to_first_response:
-      title: "得到第一个响应的时间"
+      title: "第一个响应的时间"
       xaxis: "天"
       yaxis: "平均时间（小时）"
-      description: "新话题首次得到响应的平均时间（每小时）"
+      description: "新话题首次得到响应的平均时间（小时）"
     topics_with_no_response:
-      title: "没有回复的帖子"
+      title: "没有回应的话题"
       xaxis: "天"
-      yaxis: "总量"
-      description: "没有得到响应的新话题数量"
+      yaxis: "总计"
+      description: "未收到回应的新建话题数量。"
     mobile_visits:
       title: "用户访问（移动端）"
       xaxis: "天"
       yaxis: "访问次数"
-      description: "使用移动设备的独立用户访问量"
+      description: "使用移动设备访问的唯一用户数。"
     web_crawlers:
-      title: "网络爬虫UA"
+      title: "网络爬虫用户代理"
       labels:
         user_agent: "用户代理"
-        page_views: "浏览量"
-      description: "网络爬虫用户代理列表，根据访问量排序。"
+        page_views: "页面浏览量"
+      description: "网络爬虫用户代理列表，按页面浏览量排序。"
     suspicious_logins:
       title: "可疑登录"
       labels:
         user: 用户
-        client_ip: 客户端IP
+        client_ip: 客户端 IP
         location: 地点
         browser: 浏览器
         device: 设备
@@ -1275,12 +1275,12 @@ zh_CN:
         login_time: 登录时间
       description: "新登录的详细信息与以前的登录存在可疑差异。"
     staff_logins:
-      title: "管理员登陆"
+      title: "管理员登录"
       labels:
         user: 用户
         location: 位置
-        login_at: 登录于
-      description: "有地点信息的管理员登录时间列表。"
+        login_at: 登录时间
+      description: "带有位置的管理员登录时间列表。"
     top_uploads:
       title: "热门上传"
       labels:
@@ -1288,16 +1288,16 @@ zh_CN:
         extension: 扩展
         author: 作者
         filesize: 文件大小
-      description: "根据文件扩展名、大小和作者排列所有上传内容。"
+      description: "按扩展名、文件大小和作者列出所有上传。"
     top_ignored_users:
-      title: "排名最高的被忽视或忽略的用户"
+      title: "最常被忽略/设为免打扰的用户"
       labels:
-        ignored_user: 忽视的用户
-        ignores_count: 被忽视次数
-        mutes_count: 静音计数
-      description: "被许多其他用户忽略和/或忽视的用户。"
+        ignored_user: 被忽略的用户
+        ignores_count: 被忽略次数
+        mutes_count: 被设为免打扰的次数
+      description: "被许多其他用户设为免打扰和/或忽略的用户。"
   dashboard:
-    rails_env_warning: "您的服务器运行在 %{env} 模式。"
+    rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
     sidekiq_warning: 'Sidekiq未运行。很多任务，例如发送电子邮件，是被Sidekiq异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解Sidekiq</a>。'
     queue_size_warning: "队列中有较多任务，为 %{queue_size} 个。这可能是因为 Sidekiq 进程的问题导致，或者需要更多的 Sidekiq 进程。"

@@ -3267,7 +3267,7 @@ it:
       search_menu:
         title: "Menu Cerca"
         prev_next: "%{shortcut} Sposta la selezione su e giù"
-        insert_url: "%{shortcut} Inserisci la selezione nel composer aperto"
+        insert_url: "%{shortcut} Inserisci la selezione nello strumento di composizione aperto"
     badges:
       earned_n_times:
         one: "Ha guadagnato questo distintivo %{count} volta"
