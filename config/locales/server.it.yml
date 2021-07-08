@@ -628,7 +628,7 @@ it:
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della tua nuova categoria. Questa guida verrà mostrata nell'area di scelta categoria, quindi rimani sotto i 200 caratteri.)"
-    post_template: "%{replace_paragraph}\n\nUsa i seguenti paragrafi per una descrizione più estesa o per stabilire delle regole o linee guida per la categoria:\n\n- Perché la gente dovrebbe usare questa categoria? A che cosaserve? \n\n- In cosa esattamente questa categoria è diversa dalle altre categorie già esistenti? \n\n- Cosa dovrebbero contenere gli argomenti in questa categoria? \n\n- C'è bisogno di questa categoria? Possiamo fonderla con un'altra categoria o sottocategoria?\n"
+    post_template: "%{replace_paragraph}\n\nUsa i seguenti paragrafi per una descrizione più estesa o per stabilire delle regole o linee guida per la categoria:\n\n- Perché la gente dovrebbe usare questa categoria? A che serve? \n\n- In cosa esattamente questa categoria è diversa dalle altre categorie già esistenti? \n\n- Cosa dovrebbero contenere gli argomenti in questa categoria? \n\n- C'è bisogno di questa categoria? Possiamo fonderla con un'altra categoria o sottocategoria?\n"
     errors:
       not_found: "Categoria non trovata!"
       uncategorized_parent: "La categoria predefinita \"Senza categoria\" non può avere una categoria superiore"
@@ -754,7 +754,7 @@ it:
     success: "La tua password è stata cambiata con successo e ora sei connesso."
     success_unapproved: "La tua password è stata cambiata con successo."
   email_login:
-    invalid_token: "Spiacenti, il collegamento per l'accesso via email è scaduto. Seleziona il pulsante Connetti e clicca 'Ho dimenticato la password' per ricevere un nuovo collegamento."
+    invalid_token: "Spiacenti, il collegamento per l'accesso via email è scaduto. Seleziona il pulsante Accedi e clicca 'Ho dimenticato la password' per ricevere un nuovo link."
     title: "Accesso via Email"
   user_auth_tokens:
     browser:
@@ -901,10 +901,10 @@ it:
   webauthn:
     validation:
       invalid_type_error: "Il tipo di webauthn fornito non era valido. I tipi validi sono webauthn.get e webauthn.create."
-      challenge_mismatch_error: "La challenge fornita non corrisponde alla challenge generata dal server di autenticazione."
+      challenge_mismatch_error: "Il codice di verifica fornito non corrisponde a quello generato dal server di autenticazione."
       invalid_origin_error: "L'origine della richiesta di autenticazione non corrisponde all'origine del server."
       malformed_attestation_error: "Si è verificato un errore durante la decodifica dei dati di attestazione."
-      invalid_relying_party_id_error: "L'ID Relying Party della richiesta di autenticazione non corrisponde all'ID Relying Party del server."
+      invalid_relying_party_id_error: "L'ID della Parte in causa della richiesta di autenticazione non corrisponde a quello del server."
       user_verification_error: "È richiesta la verifica dell'utente."
       unsupported_public_key_algorithm_error: "L'algoritmo della chiave pubblica fornito non è supportato dal server."
       unsupported_attestation_format_error: "Il formato dell'attestazione non è supportato dal server."
@@ -926,7 +926,7 @@ it:
       short_description: 'Una violazione delle <a href="%{base_path}/guidelines">linee guida della nostra comunità</a>'
     notify_moderators:
       title: "Altro"
-      description: 'Questo argomento richiede attenzione da parte deilo staff in base alle <a href="%{base_path}/guidelines">linee guida</a>, ai<a href="%{tos_url}">Termini di Servizio</a>, o per altri motivi non elencati.'
+      description: 'Questo argomento richiede attenzione da parte deilo staff in base alle <a href="%{base_path}/guidelines">linee guida</a>, ai <a href="%{tos_url}">Termini di Servizio</a>, o per altri motivi non elencati.'
       long_form: "segnalato all'attenzione dei moderatori"
       short_description: "Richiede l'attenzione dello staff per un altro motivo"
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
@@ -948,7 +948,7 @@ it:
     title: "Preferenze email aggiornate!"
     description: "le preferenze email per <b>%{email}</b> sono state aggiornate. Per cambiare le tue impostazioni email <a href='%{url}'>accedi alle tue preferenze utente</a>."
     topic_description: "Per iscriverti di nuovo a %{link}, usa il controllo notifiche in fondo o a destra dell'argomento."
-    private_topic_description: "Per re-iscriverti, usa il controllo notifica in fondo o sulla destra dell'argomento."
+    private_topic_description: "Per iscriverti di nuovo, usa il controllo notifica in fondo o sulla destra dell'argomento."
   uploads:
     marked_insecure_from_theme_component_reason: "caricamento utilizzato nel componente del tema"
   unsubscribe:
@@ -963,7 +963,7 @@ it:
     log_out: "Disconnetti"
     submit: "Salva preferenze"
     digest_frequency:
-      title: "Stai ricevendo email riepilogative ogni %{frequency}"
+      title: "Stai ricevendo email riepilogative %{frequency}"
       never_title: "Non ricevi e-mail di riepilogo"
       select_title: "Imposta la frequenza delle email riepilogative a:"
       never: "mai"
@@ -1001,12 +1001,12 @@ it:
     invalid_token: "Token mancante, non valido o scaduto."
   flags:
     errors:
-      already_handled: "La segnalazione è già stata gestita."
+      already_handled: "La segnalazione è già stata gestita"
   reports:
     default:
       labels:
         count: Conteggio
-        percent: Per cento
+        percent: Percentuale
         day: Giorno
     post_edits:
       title: "Modifiche Messaggio"
@@ -1018,14 +1018,14 @@ it:
         edit_reason: Motivo
       description: "Numero di nuove modifiche al messaggio."
     user_flagging_ratio:
-      title: "Rapporto Segnalazione Utente"
+      title: "Frequenza Segnalazioni Utente"
       labels:
         user: Utente
         agreed_flags: Segnalazioni accettate
         disagreed_flags: Segnalazioni rifiutate
         ignored_flags: Segnalazioni ignorate
         score: Punteggio
-      description: "Elenco degli utenti ordinato in base al rapporto tra le risposte dello staff alle loro segnalazioni (da rifiutate ad accettate)"
+      description: "Elenco degli utenti ordinato in base alle risposte dello staff alle loro segnalazioni (rapporto tra segnalazioni rifiutate e accettate)."
     moderators_activity:
       title: "Attività Moderatore"
       labels:
@@ -1042,13 +1042,13 @@ it:
       values:
         agreed: Accettate
         disagreed: Rifiutate
-        deferred: Ignorate
+        deferred: Rinviate
         no_action: Nessuna azione
       labels:
         flag: Tipo
         assigned: Assegnato
         poster: Autore
-        flagger: Segnalante
+        flagger: Autore segnalazione
         time_to_resolution: Tempo di risoluzione
       description: "Elenco degli stati delle segnalazioni inclusi tipo di segnalazione, autore, segnalante e tempo di risoluzione."
     visits:
@@ -1064,7 +1064,7 @@ it:
     new_contributors:
       title: "Nuovi collaboratori"
       xaxis: "Giorno"
-      yaxis: "Numero di nuovi contributori"
+      yaxis: "Numero di nuovi collaboratori"
       description: "Numero di utenti che hanno inviato il loro primo messaggio durante questo periodo."
     trust_level_growth:
       title: "Crescita del livello di attendibilità"
@@ -1147,7 +1147,7 @@ it:
         moderator: Moderatore
         suspended: Sospeso
         silenced: Silenziato
-      description: "Numero di utenti raggruppati per amministratore, moderatore, sospeso e silenziato."
+      description: "Numero di utenti raggruppati per stato di amministratore, moderatore, sospeso e silenziato."
     trending_search:
       title: Termini di Ricerca di Tendenza
       labels:
@@ -1226,7 +1226,7 @@ it:
       title: "Connessioni"
       xaxis: "Giorno"
       yaxis: "Pagine viste da utenti connessi"
-      description: "Numero di nuove pagine viste da utenti connessi."
+      description: "Numero di nuove pagine viste da utenti che hanno effettuato l'accesso."
     page_view_crawler_reqs:
       title: "Pagine Viste da Web Crawler"
       xaxis: "Giorno"
@@ -1285,7 +1285,7 @@ it:
       title: "Visite Utente (da mobile)"
       xaxis: "Giorno"
       yaxis: "Numero di visite"
-      description: "Numero di utenti unici che hanno visitato il sito con un dispositivo mobile."
+      description: "Numero di utenti distinti che hanno visitato il sito con un dispositivo mobile."
     web_crawlers:
       title: "User Agents Web Crawler"
       labels:
@@ -1302,7 +1302,7 @@ it:
         device: Dispositivo
         os: Sistema Operativo
         login_time: Ora di Accesso
-      description: "Dettagli delle nuove connessioni sospettosamente diverse dalle precedenti."
+      description: "Dettagli suoi nuovi accessi che differiscono di poco in modo sospetto da precedenti accessi."
     staff_logins:
       title: "Accessi Amministratore"
       labels:

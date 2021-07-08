@@ -110,71 +110,71 @@ pt_BR:
         bad_destination_address: "Ocorre quando nenhum dos endereços de e-mail nos campos Para/Cc/Cco correspondeu ao endereço de e-mail recebido."
         strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
         insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria onde não possui nível de confiança necessário."
-        reply_user_not_matching_error: "Ocorre quando uma resposta chega em um endereço de email diferente ao da notificação enviada."
-        topic_not_found_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi excluído."
-        topic_closed_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi fechado."
-        bounced_email_error: "O e-mail é um relatório de e-mail devolvido."
-        screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi examinado."
-        unsubscribe_not_allowed: "Acontece quando cancelar a inscrição por e-mail não é permitida para este usuário"
-      unrecognized_error: "Erro Desconhecido"
+        reply_user_not_matching_error: "Ocorre quando uma resposta chegou de um endereço de e-mail diferente do qual a notificação foi enviada."
+        topic_not_found_error: "Ocorre quando uma resposta foi recebida, mas o tópico relacionado foi excluído."
+        topic_closed_error: "Ocorre quando uma resposta foi recebida, mas o tópico relacionado foi fechado."
+        bounced_email_error: "O e-mail é um relatório de e-mails devolvido."
+        screened_email_error: "Ocorre quando o endereço de e-mail do remetente já foi examinado."
+        unsubscribe_not_allowed: "Ocorre quando não é permitido cancelar a associação por e-mail para este(a) usuário(a)"
+      unrecognized_error: "Erro desconhecido"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "está limitado para %{max} caracteres; você entrou com %{length}."
+      too_long_validation: "está limitado para %{max} caracteres. Você digitou %{length}."
       invalid_boolean: "Boleano inválido."
-      taken: "já está sendo usado"
-      accepted: tem que ser aceito
+      taken: "já está sendo usado(a)"
+      accepted: tem que ser aceito(a)
       blank: não pode estar em branco
       present: deve estar em branco
-      confirmation: ! "não combina com %{attribute}"
-      empty: não pode estar vazio
+      confirmation: ! "não corresponde a %{attribute}"
+      empty: não pode estar vazio(a)
       equal_to: deve ser igual a %{count}
       even: precisa ser par
-      exclusion: está reservado
+      exclusion: está reservado(a)
       greater_than: precisar ser maior que %{count}
-      greater_than_or_equal_to: precisa ser maior ou igual à %{count}
-      has_already_been_used: "já está sendo usado"
-      inclusion: não está incluído na lista
-      invalid: é inválido
-      is_invalid: "parece pouco claro; é uma frase completa?"
+      greater_than_or_equal_to: precisa ser maior ou igual a %{count}
+      has_already_been_used: "já está sendo usado(a)"
+      inclusion: não está incluso(a) na lista
+      invalid: é inválido(a)
+      is_invalid: "não faz muito sentido. É uma frase completa?"
       invalid_timezone: "'%{tz}' não é um fuso horário válido"
       contains_censored_words: "contém as seguintes palavras censuradas: %{censored_words}"
       less_than: precisa ser menor que %{count}
-      less_than_or_equal_to: deve ser menor ou igual à %{count}
+      less_than_or_equal_to: deve ser menor ou igual a %{count}
       not_a_number: não é um número
       not_an_integer: deve ser um inteiro
       odd: deve ser ímpar
-      record_invalid: ! "A validação falhou: %{errors}"
+      record_invalid: ! "Falha ao validar: %{errors}"
       max_emojis: "não pode ter mais que %{max_emojis_count} emojis"
       emojis_disabled: "Não pode ter emoji"
-      ip_address_already_screened: "já está incluído em uma regra existente"
+      ip_address_already_screened: "já está incluso(a) em uma regra existente"
       restrict_dependent_destroy:
         one: "Não foi possível excluir o registro porque um %{record} dependente existe"
         many: "Não foi possível excluir o registro porque %{record} dependentes existem"
       too_long:
-        one: é muito longo (o máximo é %{count} caractere)
-        other: é muito longo (o máximo é %{count} caracteres)
+        one: é muito longo (no máximo %{count} caractere)
+        other: é muito longo (no máximo %{count} caracteres)
       too_short:
-        one: é muito curto (o mínimo é %{count} caractere)
-        other: é muito curto (o mínimo é %{count} caracteres)
+        one: é muito curto (no mínimo %{count} caractere)
+        other: é muito curto (no mínimo %{count} caracteres)
       wrong_length:
         one: tem o tamanho errado (precisa ter %{count} caractere)
-        other: tem o tamanho errado (precisa ser %{count} caracteres)
-      other_than: "precisa ser outro que não %{count}"
+        other: tem o tamanho errado (precisa ter %{count} caracteres)
+      other_than: "precisa ser diferente de %{count}"
     template:
       body: ! "Houve problemas com os seguintes campos:"
       header:
         one: "%{count} erro impediu este %{model} de ser salvo"
         other: ! "%{count} erros impediram este %{model} de ser salvo"
     embed:
-      load_from_remote: "Houve um erro ao carregar essa mensagem."
+      load_from_remote: "Ocorreu um erro ao carregar esta postagem."
     site_settings:
       invalid_category_id: "Você especificou uma categoria que não existe"
       invalid_choice:
         one: "Você especificou a escolha inválida %{name}"
-        other: "Você especificou a escolha inválida %{name}"
-      default_categories_already_selected: "Você não pode selecionar uma categoria usada noutra lista."
+        other: "Você especificou as escolhas inválidas %{name}"
+      default_categories_already_selected: "Você não pode selecionar uma categoria usada em outra lista."
       default_tags_already_selected: "Você não pode selecionar uma etiqueta usada em outra lista."
       s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Você não pode habilitar o inventário para o S3 a não ser que tenha habilitado os uploads para o S3"

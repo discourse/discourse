@@ -54,11 +54,11 @@ ar:
         topic_list:
           title: "قائمة المواضيع"
         basic_topic_list:
-          title: "عد إلى قائمة الموضوعات"
+          title: "قائمة الموضوعات الأساسية"
         footer_message:
           title: "رسالة التذييل"
         signup_cta:
-          title: "الدعوة إلى التسجيل"
+          title: "عبارة الحث على الاشتراك"
         topic_timer_info:
           title: "مؤقّتات المواضيع"
         topic_footer_buttons:
@@ -76,9 +76,9 @@ ar:
         post_menu:
           title: "قائمة المشاركة"
         modal:
-          title: "نموذج"
-          header: "عنوان دالة"
-          footer: "تذييل مشروط"
+          title: "النافذة المشروطة"
+          header: "العنوان المشروط"
+          footer: "التذييل المشروط"
         user_about:
           title: "مربّع ”عن المستخدم“"
         header_icons:

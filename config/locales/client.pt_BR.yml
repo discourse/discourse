@@ -2776,30 +2776,30 @@ pt_BR:
       bookmarked:
         help: "Você adicionou este tópico aos favoritos"
       locked:
-        help: "Este tópico está fechado; não serão aceitas mais respostas"
+        help: "Este tópico está fechado. Não serão aceitas respostas novas"
       archived:
-        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
+        help: "Este tópico foi arquivado. Está congelado e não pode ser alterado"
       locked_and_archived:
-        help: "Este tópico está fechado e arquivado; ele não aceita novas respostas e não pode ser alterado."
+        help: "Este tópico está fechado e foi arquivado. Não é permitido enviar respostas nem alterar."
       unpinned:
-        title: "Não fixo"
-        help: "Este tópico está desfixado para você; ele será mostrado em ordem normal"
+        title: "Desafixado"
+        help: "Este tópico foi desfixado para você. Será mostrado em ordem normal"
       pinned_globally:
-        title: "Fixo Globalmente"
-        help: "Este tópico está fixado globalmente; ele será exibido no topo da aba Recentes e no topo da sua categoria"
+        title: "Fixado globalmente"
+        help: "Este tópico está fixado globalmente. Será exibido no topo da aba dos mais recentes e da sua categoria"
       pinned:
-        title: "Fixo"
-        help: "Este tópico está fixado para você; ele será mostrado no topo de sua categoria"
+        title: "Fixado"
+        help: "Este tópico está fixado para você. Será exibido no topo de sua categoria"
       unlisted:
-        help: "Este tópico não está listado; ele não será exibido em listas de tópicos e só pode ser acessado por meio de um link direto"
+        help: "Este tópico não está listado. Não será exibido nas listas de tópicos e só poderá ser acessado por meio de um link direto"
       personal_message:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Postagens"
-    original_post: "Resposta original"
+    original_post: "Postagem original"
     views: "Visualizações"
     views_lowercase:
-      one: "visualizar"
+      one: "visualização"
       other: "visualizações"
     replies: "Respostas"
     views_long:
@@ -2808,40 +2808,40 @@ pt_BR:
     activity: "Atividade"
     likes: "Curtidas"
     likes_lowercase:
-      one: "like"
+      one: "curtida"
       other: "curtidas"
-    users: "Usuários"
+    users: "Usuários(as)"
     users_lowercase:
-      one: "usuário"
-      other: "usuários"
+      one: "usuário(a)"
+      other: "usuários(as)"
     category_title: "Categoria"
-    changed_by: "por %{author}"
+    changed_by: "de %{author}"
     raw_email:
-      title: "Detalhes dos Emails Recebidos"
+      title: "E-mails recebidos"
       not_available: "Não disponível!"
     categories_list: "Lista de categorias"
     filters:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       latest:
-        title: "Recente"
+        title: "Recentes"
         title_with_count:
           one: "Recente (%{count})"
           other: "Recentes (%{count})"
-        help: "tópicos com mensagens recentes"
+        help: "tópicos com postagens recentes"
       read:
-        title: "Lido"
-        help: "tópicos que você leu"
+        title: "Lidos"
+        help: "tópicos que você leu em ordem de leitura a partir do mais recente"
       categories:
         title: "Categorias"
         title_in: "Categoria - %{categoryName}"
         help: "todos os tópicos agrupados por categoria"
       unread:
-        title: "Não lidas"
+        title: "Não lidos"
         title_with_count:
           one: "Não lido (%{count})"
           other: "Não lidos (%{count})"
-        help: "tópicos que você está observando ou acompanhando com mensagens não lidas"
+        help: "tópicos que você está acompanhando ou monitorando com postagens não lidas"
         lower_title_with_count:
           one: "%{count} não lido"
           other: "%{count} não lidos"
@@ -3054,29 +3054,29 @@ pt_BR:
       sort_by: "Ordenar por"
       sort_by_count: "quantidade"
       sort_by_name: "nome"
-      manage_groups: "Gerenciar grupos de marcadores"
-      manage_groups_description: "Definir grupos para organizar marcadores"
-      upload: "Enviar Etiquetas"
+      manage_groups: "Gerenciar grupos de etiquetas"
+      manage_groups_description: "Definir grupos para organizar etiquetas"
+      upload: "Enviar etiquetas"
       upload_description: "Enviar um arquivo csv para criar etiquetas em massa"
-      upload_instructions: "Uma por linha, opcionalmente com um grupo de etiquetas no formato 'nome_etiqueta,grupo_etiqueta'."
-      upload_successful: "Etiquetas enviadas com sucesso"
+      upload_instructions: "Uma por linha, opcionalmente com um grupo de etiquetas no formato \"nome_etiqueta,grupo_etiqueta\"."
+      upload_successful: "Etiquetas enviadas com êxito"
       delete_unused_confirmation:
         one: "%{count} etiqueta será excluída: %{tags}"
         other: "%{count} etiquetas serão excluídas: %{tags}"
       delete_unused_confirmation_more_tags:
-        one: "%{tags} e %{count} mais"
-        other: "%{tags} e %{count} mais"
-      delete_unused: "Excluir Etiquetas Não Usadas"
-      delete_unused_description: "Excluir todas as etiquetas que não estão anexadas a nenhum tópico ou mensagem pessoal"
+        one: "%{tags} e mais %{count}"
+        other: "%{tags} e mais %{count}"
+      delete_unused: "Excluir etiquetas não usadas"
+      delete_unused_description: "Excluir todas as etiquetas que não foram anexadas a nenhum tópico ou mensagens pessoais"
       cancel_delete_unused: "Cancelar"
       filters:
-        without_category: "%{filter} %{tag} Tópicos"
+        without_category: "%{filter} %{tag} tópicos"
         with_category: "%{filter} %{tag} tópicos em %{category}"
         untagged_without_category: "%{filter} tópicos não etiquetados"
         untagged_with_category: "%{filter} tópicos não etiquetados em %{category}"
       notifications:
         watching:
-          title: "Observando"
+          title: "Acompanhando"
           description: "Você assistirá automaticamente todos os tópicos com esta tag. Você será notificado sobre todas as novas postagens e tópicos, além da contagem de postagens não lidas e novas também serão exibidas ao lado do tópico."
         watching_first_post:
           title: "Observando o primeiro post"
@@ -3206,25 +3206,25 @@ pt_BR:
         disabled: Desativado(a)
         timeout_error: Desculpe, a consulta está demorando muito, escolha um intervalo menor
         exception_error: Desculpe, ocorreu um erro ao executar a consulta
-        too_many_requests: Você realizou esta ação muitas vezes. Por favor, aguarde antes de tentar novamente.
+        too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
         filter_reports: Filtrar relatórios
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           today: "Hoje"
           yesterday: "Ontem"
-          last_7_days: "Últimos 7"
-          last_30_days: "30 últimos"
-          all_time: "Todo Tempo"
-          7_days_ago: "7 Dias Atrás"
-          30_days_ago: "30 Dias Atrás"
+          last_7_days: "Últimos sete"
+          last_30_days: "últimos 30"
+          all_time: "Desde o início"
+          7_days_ago: "Sete dias atrás"
+          30_days_ago: "30 dias atrás"
           all: "Tudo"
           view_table: "tabela"
           view_graph: "gráfico"
-          refresh_report: "Atualizar Relatório"
-          daily: Diariamente
-          monthly: Mensalmente
-          weekly: Semanalmente
+          refresh_report: "Atualizar relatório"
+          daily: Todo dia
+          monthly: Todo mês
+          weekly: Toda semana
           dates: "Datas (UTC)"
           groups: "Todos os grupos"
           disabled: "Este relatório está desativado"
@@ -3234,7 +3234,7 @@ pt_BR:
           no_data: "Nenhum dado para exibir."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de pesquisa</a>'
-            disabled: 'O relatório de pesquisa em alta está desativado. Habilitar <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de pesquisa de registro</a> para coletar dados.'
+            disabled: 'O relatório de pesquisa de conteúdo em alta está desativado. Ative as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de pesquisa de registro</a> para coletar dados.'
           filters:
             file_extension:
               label: Extensão de arquivo
@@ -3246,7 +3246,7 @@ pt_BR:
               label: "Incluir subcategorias"
       commits:
         latest_changes: "Últimas atualizações: atualize com frequência!"
-        by: "por"
+        by: "de"
       groups:
         new:
           title: "Novo grupo"
@@ -3254,7 +3254,7 @@ pt_BR:
           name:
             too_short: "O nome do grupo é muito curto"
             too_long: "O nome do grupo é muito longo"
-            checking: "Verificando a disponibilidade do nome do grupo ..."
+            checking: "Verificando a disponibilidade do nome do grupo..."
             available: "O nome do grupo está disponível"
             not_available: "O nome do grupo não está disponível"
             blank: "O nome do grupo não pode ficar em branco"
@@ -3262,13 +3262,13 @@ pt_BR:
           interaction:
             email: E-mail
             incoming_email: "Endereço de e-mail de entrada personalizado"
-            incoming_email_placeholder: "insira o endereço de e-mail"
+            incoming_email_placeholder: "digite o endereço de e-mail"
             visibility: Visibilidade
             visibility_levels:
               title: "Quem pode ver este grupo?"
-              public: "Todos"
-              logged_on_users: "Usuários conectados"
-              owners: "Proprietários do grupo"
+              public: "Todos(as)"
+              logged_on_users: "Usuários(as) conectados(as)"
+              owners: "Proprietários(as) do grupo"
               description: "Administradores(as) podem ver todos os grupos."
             members_visibility_levels:
               title: "Quem pode ver os membros deste grupo?"
@@ -3447,11 +3447,11 @@ pt_BR:
         none: "Nenhum backup disponível."
         read_only:
           enable:
-            title: "Ativar o modo somente-leitura"
+            title: "Ativar modo somente leitura"
             label: "Ativar somente leitura"
-            confirm: "Tem certeza que quer habilitar modo somente leitura?"
+            confirm: "Tem certeza de que quer ativar o modo somente leitura?"
           disable:
-            title: "Desativar o modo somente-leitura"
+            title: "Desativar o modo somente leitura"
             label: "Desativar somente leitura"
         logs:
           none: "Nenhum registro ainda..."
@@ -3464,28 +3464,28 @@ pt_BR:
           uploading: "Enviando..."
           uploading_progress: "Enviando... %{progress}%"
           success: "'%{filename} foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
-          error: "Houve um erro ao carregar '%{filename}': %{message}"
+          error: "Houve um erro ao carregar \"%{filename}\": %{message}"
         operations:
           is_running: "Uma operação está sendo executada..."
-          failed: "A %{operation} falhou. Por favor, cheque os registros."
+          failed: "A %{operation} falhou. Confira os registros."
           cancel:
             label: "Cancelar"
             title: "Cancelar a operação atual"
             confirm: "Tem certeza de que deseja cancelar a operação atual?"
           backup:
             label: "Backup"
-            title: "Cria um backup"
+            title: "Criar um backup"
             confirm: "Você quer iniciar um novo backup?"
-            without_uploads: "Sim (não incluir uploads)"
+            without_uploads: "Sim (não incluir envios)"
           download:
             label: "Download"
             title: "Enviar e-mail com link para download"
-            alert: "Um link para fazer o download deste backup foi enviado a você por e-mail."
+            alert: "Um link para fazer o download deste backup foi enviado por e-mail."
           destroy:
-            title: "Remove o backup"
-            confirm: "Tem certeza de que quer destruir este backup?"
+            title: "Remover o backup"
+            confirm: "Tem certeza de que quer desfazer este backup?"
           restore:
-            is_disabled: "Restaurar está desativado nas configurações do site."
+            is_disabled: "A opção de restaurar está desativada nas configurações do site."
             label: "Restaurar"
             title: "Restaurar o backup"
             confirm: "Tem certeza de que deseja restaurar este backup?"
@@ -3494,23 +3494,23 @@ pt_BR:
             title: "Reverter o banco de dados para seu estado anterior"
             confirm: "Tem certeza que deseja reverter o banco de dados para seu estado anterior?"
         location:
-          local: "Armazenamento Local"
+          local: "Armazenamento local"
           s3: "S3"
-        backup_storage_error: "Falha ao acessar armazenamento de backup: %{error_message}"
+        backup_storage_error: "Falha ao acessar o armazenamento do backup: %{error_message}"
       export_csv:
-        success: "Exportação iniciada, você será notificado por mensagem particular quando o processo estiver completo."
-        failed: "Falha na exportação. Por favor verifique os logs."
+        success: "Exportação iniciada, você será notificado(a) por mensagem particular quando o processo for concluído."
+        failed: "Falha ao exportar. Verifique os registros."
         button_text: "Exportar"
         button_title:
-          user: "Exportar lista de usuários completa em formato CSV."
-          staff_action: "Exportar log completo de atividades da staff em formato CSV."
-          screened_email: "Exportar lista completa de e-mails filtrados em formato CSV."
-          screened_ip: "Exportar lista completa de IPs filtrados em formato CSV."
-          screened_url: "Exportar lista completa de URLs filtradas em formato CSV."
+          user: "Exportar lista de usuários(as) completa em formato CSV."
+          staff_action: "Exportar registro completo de atividades da equipe em formato CSV."
+          screened_email: "Exportar lista de e-mails filtrados em tela cheia no formato CSV."
+          screened_ip: "Exportar lista IPs filtrados em tela cheia no formato CSV."
+          screened_url: "Exportar lista de URLs filtradas em tela cheia no formato CSV."
       export_json:
         button_text: "Exportar"
       invite:
-        button_text: "Enviar Convites"
+        button_text: "Enviar convites"
         button_title: "Enviar convites"
       customize:
         title: "Personalizar"
@@ -3676,59 +3676,59 @@ pt_BR:
             title: "O HTML que será inserido antes da</head> etiqueta"
           body_tag:
             text: "</body>"
-            title: "HTML que será inserido antes da</body> tag"
+            title: "O HTML que será inserido antes da</body> etiqueta"
           yaml:
             text: "YAML"
             title: "Definir configurações de tema no formato YAML"
         colors:
           select_base:
-            title: "Selecionar paleta de cores base"
-            description: "Paleta base:"
+            title: "Selecionar paleta de cores básicas"
+            description: "Paleta básica:"
           title: "Cores"
-          edit: "Editar Paletas de Cores"
-          long_title: "Paletas de Cores"
-          about: "Modifique as cores usadas pelos seus temas. Crie uma nova esquema de cores para começar."
-          new_name: "Nova Paleta de Cor"
+          edit: "Editar paletas de cores"
+          long_title: "Paletas de cores"
+          about: "Altere as cores usadas nos seus temas. Crie um novo esquema de cores para começar."
+          new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Excluir esta paleta de cores?"
           undo: "desfazer"
-          undo_title: "Desfazer suas mudanças para esta cor desde a última vez que foi salvo."
+          undo_title: "Desfaça suas alterações nesta cor desde a última vez que foi salva."
           revert: "reverter"
-          revert_title: "Redefinir esta cor na paleta de cores padrão do Discourse."
+          revert_title: "Redefina esta cor na paleta de cores padrão do Discourse."
           primary:
-            name: "primário"
+            name: "primário(a)"
             description: "Maioria dos textos, ícones e bordas."
           secondary:
-            name: "secundário"
-            description: "A cor de fundo principal e o texto de alguns botões."
+            name: "secundário(a)"
+            description: "As cores de fundo principais e do texto de alguns botões."
           tertiary:
-            name: "terciário"
+            name: "terciário(a)"
             description: "Links, alguns botões, notificações e cor realçada."
           quaternary:
-            name: "quaternário"
+            name: "quaternário(a)"
             description: "Links de navegação."
           header_background:
             name: "fundo do cabeçalho"
             description: "Cor de fundo do cabeçalho do site."
           header_primary:
-            name: "cabeçalho: primário"
+            name: "cabeçalho primário"
             description: "Texto e ícones no cabeçalho do site."
           highlight:
             name: "destaque"
-            description: "A cor de fundo dos elementos em destaque na página, como mensagens e tópicos."
+            description: "A cor de fundo dos elementos em destaque na página, como postagens e tópicos."
           danger:
             name: "perigo"
-            description: "Cor de destaque para ações como remover mensagens e tópicos."
+            description: "Cor de destaque para ações como remover postagens e tópicos."
           success:
             name: "sucesso"
-            description: "Usado para indicar que a ação foi bem sucedida."
+            description: "Usadas para indicar que a ação foi bem-sucedida."
           love:
             name: "curtir"
             description: "A cor do botão curtir."
         robots:
-          title: "Sobrepor o arquivo robots.txt do seu site:"
-          warning: "Isso vai sobrepor permanentemente qualquer configuração relacionada do site."
-          overridden: O arquivo robots.txt padrão de seu site foi sobreposto.
+          title: "Substituir o arquivo robots.txt do seu site:"
+          warning: "Isso vai substituir permanentemente qualquer configuração relacionada do site."
+          overridden: O arquivo robots.txt padrão de seu site foi substituído.
         email_style:
           title: "Estilo de email"
           heading: "Personalize o estilo do email"
@@ -3873,37 +3873,37 @@ pt_BR:
             impersonate: "representar"
             anonymize_user: "tornar usuário(a) anônimo(a)"
             roll_up: "Acumular blocos de IP"
-            change_category_settings: "mudas configurações da categoria"
-            delete_category: "apagar a categoria"
-            create_category: "criar uma categoria"
-            silence_user: "Silenciar usuário"
-            unsilence_user: "remover silenciamento de usuário usuário"
-            removed_silence_user: "Silenciar usuário (removido)"
-            removed_unsilence_user: "remover silenciamento de usuário (removido)"
-            grant_admin: "conceder admin"
-            revoke_admin: "revogar admin"
+            change_category_settings: "alterar configurações da categoria"
+            delete_category: "excluir categoria"
+            create_category: "criar categoria"
+            silence_user: "silenciar usuário(a)"
+            unsilence_user: "ativar som do(a) usuário(a)"
+            removed_silence_user: "Silenciar usuário(a) (removido(a))"
+            removed_unsilence_user: "ativar som do(a) usuário(a) (removido(a))"
+            grant_admin: "permitir administrador(a)"
+            revoke_admin: "revogar administrador(a)"
             grant_moderation: "conceder moderação"
             revoke_moderation: "revogar moderação"
             backup_create: "criar backup"
-            deleted_tag: "etiqueta removida"
+            deleted_tag: "etiqueta excluída"
             deleted_unused_tags: "etiquetas não usadas excluídas"
             renamed_tag: "etiqueta renomeada"
             revoke_email: "revogar e-mail"
-            lock_trust_level: "travar nível de confiança"
-            unlock_trust_level: "destravar nível de confiança"
-            activate_user: "ativar usuário"
-            deactivate_user: "desativar usuário"
-            change_readonly_mode: "alterar modo \"somente leitura\""
+            lock_trust_level: "bloquear nível de confiança"
+            unlock_trust_level: "desbloquear nível de confiança"
+            activate_user: "ativar usuário(a)"
+            deactivate_user: "desativar usuário(a)"
+            change_readonly_mode: "alterar modo somente leitura"
             backup_download: "Fazer download do backup"
-            backup_destroy: "destruir backup"
+            backup_destroy: "desfazer backup"
             reviewed_post: "postagem revisada"
             custom_staff: "ação personalizada de plug-in"
-            post_locked: "post bloqueado"
-            post_edit: "edição de publicação"
-            post_unlocked: "pós desbloqueado"
+            post_locked: "postagem bloqueada"
+            post_edit: "edição de postagem"
+            post_unlocked: "postagem desbloqueada"
             check_personal_message: "verificar mensagem pessoal"
             topic_published: "tópico publicado"
-            post_approved: "publicação aprovada"
+            post_approved: "postagem aprovada"
             post_rejected: "publicação rejeitada"
             create_badge: "criar emblema"
             change_badge: "mudar emblema"
@@ -3962,7 +3962,7 @@ pt_BR:
             text: "Combinar"
             title: "Cria novas entradas de banimento por subnet caso existam no mínimo 'min_ban_entries_for_roll_up' entradas."
         search_logs:
-          title: "Logs de pesquisa"
+          title: "Registros de pesquisa"
           term: "Termo"
           searches: "Pesquisas"
           click_through_rate: "CTR"
@@ -3970,24 +3970,24 @@ pt_BR:
             all_search_types: "Todos os tipos de pesquisa"
             header: "Cabeçalho"
             full_page: "Página inteira"
-            click_through_only: "Tudo (somente através de clique)"
+            click_through_only: "Tudo (somente ao clicar)"
           header_search_results: "Resultados da pesquisa de cabeçalho"
         logster:
           title: "Registro de erros"
       watched_words:
-        title: "Palavras assistidas"
+        title: "Palavras acompanhadas"
         search: "pesquisa"
-        clear_filter: "Limpo"
+        clear_filter: "Limpar"
         download: Download
-        clear_all: Limpar Todos
+        clear_all: Limpar tudo
         actions:
-          block: "Bloqueado"
-          censor: "Censor"
+          block: "Bloqueado(a)"
+          censor: "Censurar"
           require_approval: "Requerer aprovação"
           flag: "Sinalizar"
           replace: "Substituir"
           silence: "Silenciar"
-          link: "Link"
+          link: "Vincular"
         action_descriptions:
           block: "Impedir que postagens contendo estas palavras sejam postadas. O usuário verá uma mensagem de erro quando tentar enviar a postagem."
           censor: "Permitir postagens contendo estas palavras, mas substituí-las por caracteres que ocultem as palavras censuradas."
