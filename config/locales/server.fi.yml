@@ -401,7 +401,7 @@ fi:
       tomorrow: "Huomenna"
       next_week: "Ensi viikolla"
       next_month: "Ensi kuussa"
-      custom: "Valitse päivämäärä ja kellonaika"
+      custom: "Mukautettu päivämäärä ja aika"
   groups:
     success:
       bulk_add:
@@ -429,7 +429,7 @@ fi:
       everyone: "kaikki"
       admins: "ylläpitäjät"
       moderators: "valvojat"
-      staff: "henkilokunta"
+      staff: "henkilökunta"
       trust_level_0: "luottamustaso_0"
       trust_level_1: "luottamustaso_1"
       trust_level_2: "luottamustaso_2"
@@ -648,7 +648,7 @@ fi:
       uncategorized_parent: "Alueettomilla ei voi olla ylätason aluetta"
       self_parent: "Alue ei voi olla itsensä ylätason talue"
       depth: "Ala-aluetta voi asettaa toisen ala-alueen alle"
-      invalid_email_in: "'%{email}' ei ole kelvollinen sähköpostiosoite"
+      invalid_email_in: "'%{email}' ei ole kelvollinen sähköpostiosoite."
       email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
       email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
       description_incomplete: "Alueen kuvauksessa on oltava ainakin yksi kappale."
@@ -872,7 +872,7 @@ fi:
     notify_user:
       title: "Lähetä käyttäjälle @%{username} viesti."
       description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
-      short_description: "Haluan keskustella viestistä kirjoittajan kanssa suoraan ja henkilökohtaisesti."
+      short_description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
       email_title: 'Viestisi ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -949,7 +949,7 @@ fi:
       title: "Sopimaton"
       description: 'Ketjussa on sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href="%{base_path}/guidelines">yhteisön sääntöjen</a> vastaisena.'
       long_form: "merkitsi tämän sopimattomaksi"
-      short_description: '<a href="%{base_path}/guidelines">Yhteisön sääntöjen</a> rikkomus'
+      short_description: '<a href="%{base_path}/guidelines">Yhteisön sääntöjen</a> vastainen'
     notify_moderators:
       title: "Jotain muuta"
       description: 'Henkilökunnan tulisi huomioida tämä ketju <a href="%{base_path}/guidelines">sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai jonkun muun edellä listaamattoman syyn vuoksi.'
@@ -1177,7 +1177,7 @@ fi:
     trending_search:
       title: Nousussa olevat hakusanat
       labels:
-        term: Hakusana
+        term: Termi
         searches: Hakuja
         click_through: KS
       description: "Suosituimmat hakusanat ja niiden klikkaussuhteet."
@@ -1194,7 +1194,7 @@ fi:
     user_to_user_private_messages_with_replies:
       title: "Käyttäjältä käyttäjälle (ml. vastaukset)"
       xaxis: "Päivä"
-      yaxis: "Viestien määrä"
+      yaxis: "Viestien lukumäärä"
       description: "Kuinka monta uutta yksityiskeskustelun aloitusta tai vastausta."
     system_private_messages:
       title: "Järjestelmä"
@@ -2063,7 +2063,7 @@ fi:
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
     company_name: "Yrityksen nimi"
     governing_law: "Sovellettava lainsäädäntö"
-    city_for_disputes: "Kaupunki jonka oikeudessa riidat ratkotaan"
+    city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
     shared_drafts_category: "Ota käyttöön jaetut luonnokset -toiminto määrittämällä alue, joka on ketjuluonnoksille varattu. Alueen ketjut eivät näy ketjuluetteloissa henkilökunnan jäsenille."
     shared_drafts_min_trust_level: "Salli käyttäjien nähdä ja muokata jaettuja luonnoksia."
     push_notifications_prompt: "Näytä käyttäjäsuostumuspyyntö."
@@ -2238,7 +2238,7 @@ fi:
     security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
     security_key_alternative: "Kokeile muuta tapaa"
     security_key_authenticate: "Tee todennus tunnistautumislaitteella"
-    security_key_not_allowed_error: "Tunnistaumislaitteella tunnistautumisprosessi joko aikakatkaistiin tai peruutettiin."
+    security_key_not_allowed_error: "Tunnistautumislaitteen todennusprosessi joko vanheni tai peruutettiin."
     security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt kelpaavia tunnistetietoja."
     security_key_support_missing_error: "Laitteesi tai selaimesi ei tue tunnistaumislaitteita. Käytä muuta tapaa."
     security_key_invalid: "Tunnistautumislaitteen vahvistaminen epäonnistui."
@@ -2288,7 +2288,7 @@ fi:
       backup_code: "Käytä varakoodia tämän sijaan"
   admin:
     email:
-      sent_test: "lähetettiin!"
+      sent_test: "lähetetty!"
     user:
       merge_user:
         updating_username: "Päivitetään käyttäjätunnusta..."
@@ -2702,7 +2702,7 @@ fi:
         ```
     backup_failed:
       title: "Varmuuskopiointi epäonnistui"
-      subject_template: "Varmmuskopiointi epäonnistui"
+      subject_template: "Varmuuskopiointi epäonnistui"
       text_body_template: |
         Varmuuskopiointi epäonnistui.
 
@@ -3578,7 +3578,7 @@ fi:
   image: "kuva"
   upload:
     edit_reason: "lataa kuvista paikalliset kopiot"
-    unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut tiedostopäätteet: %{authorized_extensions})."
+    unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut päätteet: %{authorized_extensions})."
     pasted_image_filename: "Liitetty kuva"
     store_failure: "Latauksen #%{upload_id} käyttäjälle #%{user_id} tallentaminen epäonnistui."
     file_missing: "Sinun täytyy valita ladattava tiedosto."
@@ -4304,7 +4304,7 @@ fi:
       title: "Vahvista sähköpostisi"
       message: "<p>Lähetimme aktivointiviestin sähköpostiosoitteeseen <b>%{email}</b>. Aktivoi tili seuraamalla sähköpostiviestin ohjeita.</p><p>Jos viesti ei saavu, tarkista roskapostikansio ja <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>varmista, että määritit sähköpostin oikein</a>.</p>"
     resend_email:
-      title: "Lähetä aktivointiviesti uudelleen"
+      title: "Lähetä aktivointisähköposti uudelleen"
       message: "<p>Lähetimme uuden aktivointiviestin osoitteeseen <b>%{email}</b>"
   safe_mode:
     title: "Siirry vikasietotilaan"
@@ -4432,7 +4432,7 @@ fi:
               categories_only:
                 label: "Vain keskustelualueet"
               categories_with_featured_topics:
-                label: "Alueet ja esiteltyjä ketjuja"
+                label: "Alueet, joissa on esiteltyjä ketjuja"
               categories_and_latest_topics:
                 label: "Alueet ja tuoreimmat ketjut"
               categories_and_top_topics:
@@ -4457,13 +4457,13 @@ fi:
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
-      group_mentioned: '%{username} mainitsi sinut ketjussa "%{topic}"–- %{site_title}'
+      group_mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
       quoted: '%{username} lainasi sinua ketjussa "%{topic}" – %{site_title}'
       replied: '%{username} vastasi sinulle ketjussa "%{topic}" – %{site_title}'
       posted: '%{username} lähetti viestin ketjuun "%{topic}" – %{site_title}'
       private_message: '%{username} lähetti sivulle yksityisviestin keskustelussa "%{topic}" – %{site_title}'
-      linked: '%{username} linkitti viestiisi ketjussa "%{topic}" – %{site_title}'
-      watching_first_post: '%{username} aloitti ketjun "%{topic}" – %{site_title}'
+      linked: '%{username} linkitti viestiisi ketjusta "%{topic}" – %{site_title}'
+      watching_first_post: '%{username} loi uuden ketjun "%{topic}" – %{site_title}'
       confirm_title: "Ilmoitukset käytössä – %{site_title}"
       confirm_body: "Onnistui! Ilmoitukset ovat käytössä."
       custom: "Ilmoitus käyttäjältä %{username} sivustolla %{site_title}"
@@ -4545,7 +4545,7 @@ fi:
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       delete_and_agree:
         title: "Poista viesti ja hyväksy merkintä"
-        description: "Poista viesti; jos viesti on ensimmäinen, poista koko ketju"
+        description: "Poista viesti; jos on viesti on ketjun ensimmäinen, poista myös ketju"
       delete_and_agree_replies:
         title: "Poista viesti + vastaukset ja hyväksy merkintä"
         description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"

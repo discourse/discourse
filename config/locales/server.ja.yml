@@ -209,7 +209,9 @@ ja:
     comma: "、"
   invite:
     expired: "招待トークンの有効期限が切れています。<a href='%{base_url}/about'>スタッフに連絡</a>してください。"
-    not_found: "招待トークンは無効です。<a href='%{base_url}/about'>スタッフに連絡</a>してください。"
+    not_found: "招待トークンが無効です。<a href='%{base_url}/about'>スタッフにお問い合わせ</a>ください。"
+    not_found_json: "招待トークンが無効です。スタッフにお問い合わせください。"
+    not_matching_email: "あなたのメールアドレスと招待トークンに関連付けられたメールアドレスが一致しません。スタッフにお問い合わせください。"
     user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     disabled_errors:
       invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
@@ -231,6 +233,7 @@ ja:
   read_only_mode_enabled: "このサイトは閲覧専用状態です。操作は無効になっています。"
   not_in_group:
     join_group: "グループに参加"
+  delete_topic_failed: "トピックを削除中にエラーが発生しました。サイトの管理者にお問い合わせください。"
   reading_time: "閲覧時間"
   likes: "いいね！"
   too_many_replies:
@@ -823,6 +826,8 @@ ja:
     title: "title タグで使用される、このサイトの名前です。"
     site_description: "description タグで使用される、このサイトについて簡単な説明です。"
     short_site_description: "ホームページの title タグで使用される簡単な説明です。"
+    contact_email: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> にも表示されます。"
+    contact_url: "このサイトの連絡先 URL。緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> ページに表示されます。"
     crawl_images: "リモート URL から画像を取得して、正しい幅と高さの寸法を挿入する。"
     download_remote_images_to_local: "リモート画像をダウンロードしてローカル画像に変換する。画像の破損を防止できます。"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクの最低空き容量 (パーセント表示)"
@@ -1053,7 +1058,13 @@ ja:
       topic: "結果"
       user: "ユーザー"
   discourse_connect:
+    not_found: "あなたのアカウントが見つかりませんでした。サイトの管理者にお問い合わせください。"
+    unknown_error: "あなたのアカウントに問題があります。サイトの管理者にお問い合わせください。"
     timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度ログインしてください。"
+    no_email: "メールアドレスが入力されていません。サイトの管理者にお問い合わせください。"
+    email_error: "メールアドレス <b>%{email}</b> でアカウントを登録できませんでした。サイトの管理者にお問い合わせください。"
+    missing_secret: "シークレットが欠落しているため、認証に失敗しました。この問題を修正するには、サイト管理者にお問い合わせください。"
+    invite_redeem_failed: "招待状の引き換えに失敗しました。サイトの管理者にお問い合わせください。"
   original_poster: "元の投稿者"
   most_posts: "最も多い投稿"
   most_recent_poster: "最も最近の投稿者"
@@ -1253,11 +1264,47 @@ ja:
       subject_template: "ユーザーの一括招待中にエラーが発生しました"
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
+      text_body_template: "データのエクスポートに失敗しました。ログを確認するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。"
+    email_reject_insufficient_trust_level:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        あなたのアカウントに、このメールアドレスに新しいトピックを投稿するための必要な信頼レベルがありません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_user_not_found:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        あなたの返信は不明なメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_screened_email:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        あなたの返信はブロックされているメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_not_allowed_email:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        あなたの返信はブロックされているメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_reply_user_not_matching:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        あなたの返信は期待されたのとは異なるメールアドレスから送信されているため、これが同一人物であるかを確認できません。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_parsing:
       text_body_template: |
         %{destination} へのメールメッセージ (件名: %{former_title}) は処理されませんでした。
 
         メールに返信が見つかりませんでした。**メールのトップに返信が入力されていることを確認してください** インライン返信は処理できません。
+    email_reject_invalid_access:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        あなたのアカウントに、このカテゴリに新しいトピックを投稿するための権限がありません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_strangers_not_allowed:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        このメールの送信先のカテゴリでは、有効なアカウントと既知のメールアドレスを持つユーザーしか返信できません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_invalid_post:
       text_body_template: |
         %{destination} へのメールメッセージ (件名: %{former_title}) は処理されませんでした。
@@ -1272,6 +1319,69 @@ ja:
         %{post_error}
 
         問題を修正できるようであれば、もう一度お試しください。
+    email_reject_reply_key:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        メールの返信キーが無効であるか不明であるため、このメールの返信先を確認できません。[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_bad_destination_address:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        次のことを確認してください。
+
+          - 複数のメールアドレスを使用していませんか？最初に使用したのとは異なるメールアドレスから返信していませんか？メール返信では、同一のメールアドレスから返信する必要があります。
+
+          - メールソフトで返信先メールアドレスが正しく使用されましたか？残念ながら、一部のメールソフトは誤って送信者アドレスに返信するため、機能しません。
+
+          - メールアドレスの Message-ID ヘッダーが変更されていませんか？Message-ID は同一であり、変更されてはいけません。
+
+        もっとヘルプが必要ですか？%{base_url}/about の連絡先情報からお問い合わせください。
+    email_reject_topic_not_found:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        返信しようとしているトピックはなくなりました。削除された可能性があります。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_topic_closed:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        返信しようとしているトピックは現在クローズされており、返信を受け付けていません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_auto_generated:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        あなたのメールは「自動生成」とマークされており、人が入力する代わりにコンピューターが自動で作成したメールです。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_unrecognized_error:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        あなたのメールを処理中に不明なエラーが発生したため、投稿されませんでした。もう一度試すか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_attachment:
+      text_body_template: |
+        残念ながら、%{destination} へのメールメッセージ (件名:「%{former_title}」) に含まれる添付ファイルは拒否されました。
+
+        詳細:
+        %{rejected_errors}
+
+        これがエラーだと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_reply_not_allowed:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        トピックに返信する権限がありません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_reply_to_digest:
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
+
+        要約メールに返信したため、受領されていません。
+
+        これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_revoked:
+      text_body_template: |
+        あなたにメールでご連絡できません。あなたへの最後の数通のメールは配達不能としてすべて返送されました。
+
+        [あなたのメールアドレス](%{base_url}/my/preferences/email)が有効であり機能していることを確認してください。また、配達が可能になるように、あなたのアドレス帳/連絡先リストにこのメールアドレスを追加してください。
     spam_post_blocked:
       subject_template: "同一リンクの連続投稿により、新規ユーザー %{username} の投稿をブロック"
     pending_users_reminder:
@@ -1298,6 +1408,15 @@ ja:
     reply_by_email: "返信するには、[トピックにアクセス](%{base_url}%{url})するか、このメールに返信してください。"
     visit_link_to_respond: "返信するには[トピックにアクセス](%{base_url}%{url})してください。"
     posted_by: "%{post_date} に %{username} が投稿"
+    account_exists:
+      text_body_template: |
+        %{site_name} にアカウントを作成しようとしたか、アカウントのメールを %{email} に変更しようとしましたが、%{email} のアカウントはすでに存在します。
+
+        パスワードを忘れた場合は、[今すぐリセット](%{base_url}/password-reset)してください。
+
+        %{email} のアカウントを作成しようとしなかった場合、またはメールアドレスを変更しようとしなかった場合は、このメッセージを無視してかまいません。
+
+        ご質問があれば、[気さくなスタッフにお問い合わせ](%{base_url}/about)ください。
     account_second_factor_disabled:
       text_body_template: |
         %{site_name} のアカウントの二要素認証が無効になったため、パスワードのみでログインできるようになりました。今後、追加の認証コードは不要です。
@@ -1356,14 +1475,44 @@ ja:
     confirm_new_email:
       title: "新しいメールを確認してください"
       subject_template: "[%{email_prefix}] 新しいメールアドレスを確認してください"
+      text_body_template: |
+        次のリンクをクリックして、%{site_name} の新しいメールアドレスを確認してください。
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        この変更をリクエストしなかった場合は、[サイト管理者](%{base_url}/about)にご連絡ください。
     confirm_new_email_via_admin:
       title: "新しいメールを確認してください"
       subject_template: "[%{email_prefix}] 新しいメールアドレスを確認してください"
+      text_body_template: |
+        次のリンクをクリックして、%{site_name} の新しいメールアドレスを確認してください。
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        このメール変更はサイト管理者によってリクエストされました。この変更をリクエストしなかった場合は、[サイト管理者](%{base_url}/about)にご連絡ください。
     confirm_old_email:
       title: "古いメールを確認してください"
       subject_template: "[%{email_prefix}] 現在のメールアドレスを確認してください"
     confirm_old_email_add:
       subject_template: "[%{email_prefix}] 現在のメールアドレスを確認してください"
+    notify_old_email:
+      text_body_template: |
+        これは、%{site_name} のあなたのメールアドレスが変更されたことを
+        知らせる自動メッセージです。誤って変更された場合は、サイト管理者に
+        ご連絡ください。
+
+        あなたのメールアドレスは次のアドレスに変更されました。
+
+        %{new_email}
+    notify_old_email_add:
+      text_body_template: |
+        これは、%{site_name} のメールアドレスが追加されたことを知らせる
+        自動メッセージです。誤って追加された場合は、サイト管理者に
+        ご連絡ください。
+
+        次のメールアドレスが追加されました。
+
+        %{new_email}
     signup_after_approval:
       subject_template: "%{site_name} での承認が完了しました！"
     signup:
@@ -1715,9 +1864,18 @@ ja:
               restricted:
                 label: "非公開"
       contact:
+        title: "連絡先"
         fields:
           contact_email:
             placeholder: "name@example.com"
+            description: "このコミュニティの責任者またはグループのメールアドレス。未対応の通知、セキュリティ更新などの重要な通知に使用され、緊急時のコミュニティ連絡先として、<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>にも表示されます。"
+          contact_url:
+            label: "ウェブページ"
+            placeholder: "https://www.example.com/contact-us"
+            description: "あなたまたは組織の一般的な連絡先ウェブページ。<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>に表示されます。"
+          site_contact:
+            label: "自動メッセージ"
+            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
       corporate:
         title: "組織"
       colors:
