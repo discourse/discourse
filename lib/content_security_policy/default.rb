@@ -9,7 +9,7 @@ class ContentSecurityPolicy
       @base_url = base_url
       @directives = {}.tap do |directives|
         directives[:upgrade_insecure_requests] = [] if SiteSetting.force_https
-        directives[:base_uri] = [:none]
+        directives[:base_uri] = [:self]
         directives[:object_src] = [:none]
         directives[:script_src] = script_src
         directives[:worker_src] = worker_src

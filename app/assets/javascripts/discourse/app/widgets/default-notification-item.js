@@ -14,6 +14,7 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { isEmpty } from "@ember/utils";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import cookie from "discourse/lib/cookie";
 
 export const DefaultNotificationItem = createWidget(
   "default-notification-item",
@@ -147,11 +148,8 @@ export const DefaultNotificationItem = createWidget(
       this.attrs.set("read", true);
       const id = this.attrs.id;
       setTransientHeader("Discourse-Clear-Notifications", id);
-      if (document && document.cookie) {
-        document.cookie = `cn=${id}; path=${getURL(
-          "/"
-        )}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
-      }
+      cookie("cn", id, { path: getURL("/") });
+
       if (wantsNewWindow(e)) {
         return;
       }

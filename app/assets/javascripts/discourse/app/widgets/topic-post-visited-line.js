@@ -3,16 +3,12 @@ import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 
 export default createWidget("topic-post-visited-line", {
-  tagName: "div.topic-post-visited-line",
+  tagName: "div.small-action.topic-post-visited",
 
-  buildClasses(attrs) {
-    return [`post-${attrs.post_number}`];
-  },
-
-  html() {
+  html(attrs) {
     return h(
-      "span.topic-post-visited-message",
-      I18n.t("topics.new_messages_marker")
+      `div.topic-post-visited-line.post-${attrs.post_number}}`,
+      h("span.topic-post-visited-message", I18n.t("topics.new_messages_marker"))
     );
   },
 });

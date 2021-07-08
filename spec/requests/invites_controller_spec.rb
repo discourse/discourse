@@ -57,6 +57,45 @@ describe InvitesController do
       end
     end
 
+    it 'adds logged in users to invite groups' do
+      group = Fabricate(:group)
+      group.add_owner(invite.invited_by)
+      InvitedGroup.create!(group: group, invite: invite)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(response).to redirect_to("/")
+      expect(user.reload.groups).to include(group)
+    end
+
+    it 'redirects logged in users to invite topic if they can see it' do
+      topic = Fabricate(:topic)
+      TopicInvite.create!(topic: topic, invite: invite)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(response).to redirect_to(topic.url)
+    end
+
+    it 'adds logged in user to group and redirects them to invite topic' do
+      group = Fabricate(:group)
+      group.add_owner(invite.invited_by)
+      secured_category = Fabricate(:category)
+      secured_category.permissions = { group.name => :full }
+      secured_category.save!
+      topic = Fabricate(:topic, category: secured_category)
+      TopicInvite.create!(invite: invite, topic: topic)
+      InvitedGroup.create!(invite: invite, group: group)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(user.reload.groups).to include(group)
+      expect(response).to redirect_to(topic.url)
+    end
+
     it 'fails for logged in users' do
       sign_in(Fabricate(:user))
 
