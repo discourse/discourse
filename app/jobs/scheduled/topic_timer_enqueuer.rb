@@ -19,7 +19,7 @@ module Jobs
         begin
           timer.enqueue_typed_job
         rescue => err
-          Rails.logger.error("Error when attempting to enqueue topic timer job for timer #{timer.id}: #{err.class} #{err.message}: #{err.backtrace.join("\n")}")
+          Discourse.warn_exception(err, message: "Error when attempting to enqueue topic timer job for timer #{timer.id}")
         end
       end
     end
