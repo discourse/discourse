@@ -1252,7 +1252,7 @@ pt_BR:
         always: "sempre"
         never: "nunca"
       email_digests:
-        title: "Quando eu não acessar o site, envie um resumo por e-mail de tópicos e respostas em destaque"
+        title: "Quando eu não acessar o site, envie um resumo por e-mail de tópicos e respostas mais acessadas"
         every_30_minutes: "a cada 30 minutos"
         every_hour: "a cada hora"
         daily: "a cada dia"
@@ -2344,61 +2344,61 @@ pt_BR:
         radio_label: "Mensagem existente"
         participants: "Participantes"
         instructions:
-          one: "Por favor escolha a mensagem para a qual você gostaria de mover aquela postagem."
-          other: "Por favor escolha a mensagem para a qual você gostaria de mover aquelas <b>%{count}</b> postagens."
+          one: "Escolha a mensagem para a qual você gostaria de mover aquela postagem."
+          other: "Escolha a mensagem para a qual você gostaria de mover aquelas <b>%{count}</b> postagens."
       merge_posts:
-        title: "Unificar as Mensagens Selecionadas"
-        action: "unificar as mensagens selecionadas"
-        error: "Houve um erro ao unificar as mensagens selecionadas."
+        title: "Mesclar as postagens selecionadas"
+        action: "mesclar as postagens selecionadas"
+        error: "Houve um erro ao mesclar as postagens selecionadas."
       publish_page:
         title: "Publicação de páginas"
         publish: "Publicar"
-        description: "Quando um tópico é publicado como uma página, sua URL pode ser compartilhada e ela será exibida com um estilo personalizado."
+        description: "Quando um tópico for publicado como uma página, sua URL pode ser compartilhada e será exibida com um estilo personalizado."
         slug: "Slug"
-        public: "Público"
+        public: "Público(a)"
         publish_url: "Sua página foi publicada em:"
         topic_published: "Seu tópico foi publicado em:"
         preview_url: "Sua página será publicada em:"
         invalid_slug: "Desculpe, você não pode publicar esta página."
-        unpublish: "Despublicar"
-        unpublished: "Sua página foi despublicada e não está mais acessível."
+        unpublish: "Cancelar publicação"
+        unpublished: "A publicação da sua página foi cancelada e ela não está mais acessível."
         publishing_settings: "Configurações de publicação"
       change_owner:
-        title: "Trocar Autor"
-        action: "trocar autor"
-        error: "Houve um erro ao alterar o autor destas mensagens."
-        placeholder: "novo autor"
+        title: "Trocar autor(a)"
+        action: "trocar autor(a)"
+        error: "Houve um erro ao alterar o(a) autor(a) destas publicações."
+        placeholder: "novo(a) autor(a)"
         instructions:
-          one: "Por favor escolha um novo autor para a postagem de <b>@%{old_user}</b>"
-          other: "Por favor escolha um novo autor para as %{count} postagens de <b>@%{old_user}</b>"
+          one: "Escolha um(a) novo(a) proprietário(a) para a postagem de <b>@%{old_user}</b>"
+          other: "Escolha um(a) novo(a) proprietário(a) para as %{count} postagens de <b>@%{old_user}</b>"
         instructions_without_old_user:
-          one: "Escolha um novo proprietário para a postagem"
-          other: "Escolha um novo proprietário para as %{count} postagens"
+          one: "Escolha um(a) novo(a) proprietário(a) para a postagem"
+          other: "Escolha um(a) novo(a) proprietário(a) para as %{count} postagens"
       change_timestamp:
-        title: "Alterar o timestamp ..."
-        action: "alterar horário"
-        invalid_timestamp: "Horário não pode ser no futuro."
-        error: "Ocorreu um erro alterando o horário do tópico."
-        instructions: "Por favor selecione um novo horário para o tópico. Mensagens no tópico serão atualizadas para manter a mesma diferença de tempo."
+        title: "Alterar carimbo de data/hora..."
+        action: "alterar carimbo de data/hora"
+        invalid_timestamp: "O carimbo de data/hora não pode ser posterior ao atual."
+        error: "Ocorreu um erro ao alterar o carimbo de data/hora do tópico."
+        instructions: "Selecione um novo carimbo de data/hora para o tópico. As publicações do tópico serão atualizadas para terem a mesma diferença de tempo."
       multi_select:
         select: "selecionar"
-        selected: "(%{count}) selecionados"
+        selected: "(%{count}) selecionados(as)"
         select_post:
-          label: "selecione"
+          label: "selecionar"
           title: "Adicionar postagem à seleção"
         selected_post:
-          label: "selecionado"
+          label: "selecionado(a)"
           title: "Clique para remover a postagem da seleção"
         select_replies:
-          label: "selecionar + respostas"
-          title: "Adicionar post e todas as suas respostas à seleção"
+          label: "selecionar +respostas"
+          title: "Adicionar postagem e todas as suas respostas à seleção"
         select_below:
-          label: "selecione + abaixo"
-          title: "Adicionar post e tudo depois dele para seleção"
-        delete: apagar selecionados
+          label: "selecionar +abaixo"
+          title: "Adicionar a postagem e todo o conteúdo abaixo à seleção"
+        delete: Excluir selecionados(as)
         cancel: cancelar seleção
         select_all: selecionar tudo
-        deselect_all: deselecionar tudo
+        deselect_all: cancelar todas as seleções
         description:
           one: <b>%{count}</b> resposta selecionada.
           other: "<b>%{count}</b> respostas selecionadas."
@@ -2406,11 +2406,11 @@ pt_BR:
       quote_reply: "Citação"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
-      post_number: "resposta %{number}"
+      post_number: "postagem %{number}"
       ignored: "Conteúdo ignorado"
-      reply_as_new_topic: "Responder como um Tópico linkado"
+      reply_as_new_topic: "Responder como um tópico vinculado"
       reply_as_new_private_message: "Responder como nova mensagem aos mesmos destinatários"
-      continue_discussion: "Continuando a discussão do %{postLink}:"
+      continue_discussion: "Continuando a discussão de %{postLink}:"
       follow_quote: "ir para a resposta citada"
       show_full: "Exibir postagem completa"
       show_hidden: "Ver o conteúdo ignorado."
@@ -2760,7 +2760,7 @@ pt_BR:
     topic_map:
       title: "Resumo do tópico"
       participants_title: "Autores frequentes"
-      links_title: "Links Populares"
+      links_title: "Links mais acessados"
       links_shown: "mostrar mais links..."
       clicks:
         one: "%{count} clique"
@@ -3122,33 +3122,33 @@ pt_BR:
       share: "Compartilhar"
       dismiss: "Descartar"
     safe_mode:
-      enabled: "O modo seguro está habilitado. Para sair do modo seguro feche esta janela do navegador"
+      enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
     do_not_disturb:
       title: "Não perturbe por..."
       label: "Não perturbe"
-      remaining: "%{remaining} restantes"
+      remaining: "%{remaining} restante(s)"
       options:
         half_hour: "30 minutos"
         one_hour: "1 hora"
         two_hours: "2 horas"
         tomorrow: "Até amanhã"
-        custom: "Definidos"
+        custom: "Personalizado(a)"
     trust_levels:
       names:
-        newuser: "usuário novo"
-        basic: "usuário básico"
+        newuser: "usuário(a) novo(a)"
+        basic: "usuário(a) básico(a)"
         member: "membro"
         regular: "regular"
         leader: "líder"
   admin_js:
-    type_to_filter: "escreva para filtrar..."
+    type_to_filter: "Digite para filtrar..."
     admin:
-      title: "Discourse Admin"
-      moderator: "Moderador"
+      title: "Administrador(a) do Discourse"
+      moderator: "Moderador(a)"
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
-          only_muted: "quando usado sozinho ou com outras etiquetas silenciadas"
+          only_muted: "quando for usado sozinho ou com outras etiquetas silenciadas"
           never: "nunca"
       reports:
         title: "Lista de relatórios disponíveis"
@@ -3622,7 +3622,7 @@ pt_BR:
           public_key: "Conceda o seguinte acesso de chave pública ao repo:"
           install: "Instalar"
           installed: "Instalado"
-          install_popular: "Popular"
+          install_popular: "Mais acessados(as)"
           install_upload: "Do seu dispositivo"
           install_git_repo: "De um repositório git"
           install_create: "Criar novo"

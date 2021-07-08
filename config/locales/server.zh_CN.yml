@@ -648,85 +648,85 @@ zh_CN:
     by_type:
       first_day_replies_per_day: "我们赞赏您的热情，请保持下去！话虽如此，为了社区的安全，您已达到新用户第一天可以创建的最大回复数量。请等待 %{time_left}，之后您可以创建更多新回复。"
       first_day_topics_per_day: "我们赞赏您的热情！话虽如此，为了社区的安全，您已达到新用户第一天可以创建的最大话题数量。请等待 %{time_left}，之后您可以创建更多新话题。"
-      create_topic: "您创建新话题的速度太快了，请等待 %{time_left} 后再试。"
-      create_post: "您回帖太快了，请等待 %{time_left} 后再试。"
-      delete_post: "您删帖的速度有点太快了。请等待 %{time_left} 再试。"
-      public_group_membership: "您加入/离开小组的频率有点高，请等待 %{time_left} 后再试。"
-      topics_per_day: "您已经达到了每天允许的最大新话题数。您可以在 %{time_left} 后创建更多新话题。"
-      pms_per_day: "您已经达到了每天允许的最大私信数。您可以在 %{time_left} 后发送新私信。"
-      create_like: "哇！您已经分享了很多爱！今天您已经达到了每日点赞上限，但是随着您的信任等级提升，您将获得更高的每日点赞上限。您将在 %{time_left} 后可再次为帖子点赞。"
-      create_bookmark: "您已达到每日收藏的最大使用数量。您可以在 %{time_left} 后添加更多收藏。"
-      edit_post: "您已经达到了每日编辑的最大数量。您可以在 %{time_left} 后编辑更多内容。"
-      live_post_counts: "您请求帖子数量的速度太快了，请等待%{time_left}后再试。"
-      unsubscribe_via_email: "您已经达到了用邮件解除订阅的最大数量限制。请等待%{time_left}后再试。"
-      topic_invitations_per_day: "您已经达到了话题邀请的最大数量。您可以在 %{time_left} 后发送更多邀请。"
+      create_topic: "您创建话题的频率太快了。请等待 %{time_left}后再试。"
+      create_post: "您回复的频率太快了。请等待 %{time_left}后再试。"
+      delete_post: "您删除帖子的频率太快了。请等待 %{time_left}后再试。"
+      public_group_membership: "您加入/离开群组的频率太快了。请等待 %{time_left}后再试。"
+      topics_per_day: "您已经达到每天允许的最大新话题数。您可以在 %{time_left}后创建更多新话题。"
+      pms_per_day: "您已经达到每天允许的最大消息数。您可以在 %{time_left}后创建更多新消息。"
+      create_like: "哇！您一直在分享爱！今天您已经达到每日点赞上限，但是随着您的信任级别提升，您将获得更高的每日点赞上限。您可以在 %{time_left}后再次点赞帖子。"
+      create_bookmark: "您已经达到每日书签的最大数量。您可以在 %{time_left}后创建更多书签。"
+      edit_post: "您已经达到每日编辑的最大数量。您可以在 %{time_left}后提交更多编辑。"
+      live_post_counts: "您请求实时帖子数量的频率太快了。请等待 %{time_left}后再试。"
+      unsubscribe_via_email: "您已经达到通过电子邮件退订的最大次数。请等待 %{time_left}后再试。"
+      topic_invitations_per_day: "您已经达到话题邀请的最大数量。您可以在 %{time_left}后发送更多邀请。"
     hours:
       other: "%{count} 小时"
     minutes:
       other: "%{count} 分钟"
     seconds:
       other: "%{count} 秒"
-    short_time: "几秒后"
+    short_time: "几秒"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1分"
+      half_a_minute: "< 1 分钟"
       less_than_x_seconds:
-        other: "< %{count}秒"
+        other: "< %{count} 秒"
       x_seconds:
-        other: "%{count}秒"
+        other: "%{count} 秒"
       less_than_x_minutes:
-        other: "< %{count}分"
+        other: "< %{count} 分钟"
       x_minutes:
-        other: "%{count}分"
+        other: "%{count} 分钟"
       about_x_hours:
-        other: "%{count}小时"
+        other: "%{count} 小时"
       x_days:
-        other: "%{count}天"
+        other: "%{count} 天"
       about_x_months:
-        other: "%{count}分钟"
+        other: "%{count} 个月"
       x_months:
-        other: "%{count}分钟"
+        other: "%{count} 个月"
       about_x_years:
-        other: "%{count}年"
+        other: "%{count} 年"
       over_x_years:
-        other: "> %{count}年"
+        other: "> %{count} 年"
       almost_x_years:
-        other: "%{count}年"
+        other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "刚刚"
       less_than_x_seconds: "刚刚"
       x_seconds:
-        other: "%{count}秒之前"
+        other: "%{count} 秒前"
       less_than_x_minutes:
-        other: "少于%{count}分钟前"
+        other: "不到 %{count} 分钟前"
       x_minutes:
-        other: "%{count}分钟前"
+        other: "%{count} 分钟前"
       about_x_hours:
-        other: "%{count}小时前"
+        other: "%{count} 小时前"
       x_days:
-        other: "%{count}天前"
+        other: "%{count} 天前"
       about_x_months:
-        other: "大约%{count}个月前"
+        other: "大约 %{count} 个月前"
       x_months:
-        other: "%{count}个月前"
+        other: "%{count} 个月前"
       about_x_years:
-        other: "大约%{count}年前"
+        other: "大约 %{count} 年前"
       over_x_years:
-        other: "超过%{count}年前"
+        other: "超过 %{count} 年前"
       almost_x_years:
-        other: "将近%{count}年前"
+        other: "将近 %{count} 年前"
   password_reset:
-    no_token: "抱歉，密码修改链接已过期。选择登录按钮再使用“我忘记了密码”获得一个新链接。"
+    no_token: "抱歉，该密码更改链接已过期。选择“登录”按钮并使用“我忘记密码了”获得新链接。"
     choose_new: "选择一个新密码"
     choose: "选择一个密码"
     update: "更新密码"
     save: "设置密码"
     title: "重置密码"
-    success: "您的密码已经修改成功，您现在已经登录。"
-    success_unapproved: "您的密码已经修改成功。"
+    success: "您已成功更改密码，现已登录。"
+    success_unapproved: "您已成功更改密码。"
   email_login:
-    invalid_token: "抱歉，邮件登录链接已过期。选择登录按钮再使用“我忘记了密码”获得一个新链接。"
-    title: "邮件登录"
+    invalid_token: "抱歉，该电子邮件登录链接已过期。选择“登录”按钮并使用“我忘记密码了”获得新链接。"
+    title: "电子邮件登录"
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
@@ -738,18 +738,18 @@ zh_CN:
       safari: "Safari"
       unknown: "未知浏览器"
     device:
-      android: "安卓设备"
+      android: "Android 设备"
       chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
-      linux: "GNU/Linux电脑"
+      linux: "GNU/Linux 计算机"
       mac: "Mac"
       mobile: "移动设备"
-      windows: "Windows电脑"
+      windows: "Windows 计算机"
       unknown: "未知设备"
     os:
-      android: "安卓"
+      android: "Android"
       chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
@@ -757,142 +757,142 @@ zh_CN:
       windows: "Microsoft Windows"
       unknown: "未知操作系统"
   change_email:
-    wrong_account_error: "您登录了错误的账户，请退出后重试。"
-    confirmed: "您的电子邮箱已被更新。"
-    please_continue: "转入到%{site_name}"
-    error: "在修改您的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
-    doesnt_exist: "这个电子邮件地址与您的账户没有关联。"
-    error_staged: "在修改您的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
-    already_done: "抱歉，此激活链接已经失效。可能您已经修改了邮箱？"
+    wrong_account_error: "您登录了错误的帐户，请退出并重试。"
+    confirmed: "您的电子邮件已被更新。"
+    please_continue: "继续访问 %{site_name}"
+    error: "更改您的电子邮件地址时出错。也许该地址已被使用？"
+    doesnt_exist: "该电子邮件地址未与您的帐户关联。"
+    error_staged: "更改您的电子邮件地址时出错。该地址已被用户使用。"
+    already_done: "抱歉，此确认链接不再有效。也许您的电子邮件已被更改？"
     confirm: "确认"
-    max_secondary_emails_error: "您已达到所允许的辅助电子邮件数量最大限制。"
+    max_secondary_emails_error: "您已达到允许的最大辅助电子邮件数量。"
     authorizing_new:
-      title: "确认您的新邮箱"
-      description: "请确认您想要修改的电子邮件地址："
-      description_add: "请确认您要添加的次要电子邮件地址："
+      title: "确认您的新电子邮件"
+      description: "请确认您要使用的新电子邮件地址："
+      description_add: "请确认您要添加的备用电子邮件地址："
     authorizing_old:
-      title: "修改您的电子邮件地址"
+      title: "更改您的电子邮件地址"
       description: "请确认您的电子邮件地址更改"
-      description_add: "请确认您要添加的次要电子邮件地址："
-      old_email: "旧邮件：%{email}"
-      new_email: "新邮件：%{email}"
-      almost_done_title: "确认新的电子邮件地址"
-      almost_done_description: "我们需要发送一封电子邮件到您的新电子邮件地址以确认更改！"
+      description_add: "请确认您要添加的备用电子邮件地址："
+      old_email: "旧电子邮件：%{email}"
+      new_email: "新电子邮件：%{email}"
+      almost_done_title: "确认新电子邮件地址"
+      almost_done_description: "我们已向您的新电子邮件地址发送电子邮件以确认更改！"
   associated_accounts:
-    revoke_failed: "无法使用%{provider_name}吊销您的账户。"
+    revoke_failed: "无法使用 %{provider_name} 撤消您的帐户。"
     connected: "（已连接）"
   activation:
-    action: "点击这儿激活您的账户"
-    already_done: "抱歉，此账户激活链接已经失效。可能您的账户已经被激活了？"
-    please_continue: "您的新账户已激活；即将转到主页。"
-    continue_button: "转入到%{site_name}"
-    welcome_to: "欢迎来到%{site_name}！"
-    approval_required: "您的新账户需要由一位论坛版主手动批准方可使用。一旦您的账户获得批准，您将收到一封电子邮件通知！"
-    missing_session: "无法确认您是否注册了账户，请确认您已经启用了 cookie。"
-    activated: "抱歉，这个账户已经被激活了。"
+    action: "点击此处激活您的帐户"
+    already_done: "抱歉，此帐户确认链接不再有效。也许您的帐户已经处于有效状态？"
+    please_continue: "您的新帐户已确认；您将被重定向到首页。"
+    continue_button: "继续访问 %{site_name}"
+    welcome_to: "欢迎来到 %{site_name}！"
+    approval_required: "版主必须手动批准您的新帐户，然后您才可以访问此论坛。当您的帐户获得批准时，您会收到一封电子邮件！"
+    missing_session: "我们无法检测您的帐户是否已创建，请确保您已启用 Cookie。"
+    activated: "抱歉，此帐户已被激活。"
     admin_confirm:
-      title: "确认管理员账户"
-      description: "您确定要将<b>%{target_username}（%{target_email}）</b>设为管理员吗？"
+      title: "确认管理员帐户"
+      description: "确定要将 <b>%{target_username} (%{target_email})</b> 设为管理员吗？"
       grant: "授予管理员权限"
-      complete: "<b>%{target_username}</b>现在是管理员了。"
+      complete: "<b>%{target_username}</b> 现在是管理员了。"
       back_to: "返回%{title}"
   reviewable_score_types:
     needs_approval:
-      title: "需要审核"
+      title: "需要审批"
   post_action_types:
     off_topic:
       title: "偏离话题"
-      description: "该帖子与当前话题的标题和首帖内容所无关，可能需要被移动到其它地方。"
-      short_description: "和讨论不相关"
+      description: "此帖子与标题和第一个帖子定义的当前讨论无关，可能应该移到其他地方。"
+      short_description: "与讨论无关"
     spam:
-      title: "垃圾内容"
-      description: "该帖子是广告或破坏。帖子没有价值或者与当前话题无关。"
-      short_description: "这是广告或者破坏行为"
-      email_title: '“%{title}”被标记为垃圾'
+      title: "垃圾信息"
+      description: "此帖子是广告或者蓄意破坏讨论。帖子没有价值或者与当前话题无关。"
+      short_description: "这是广告或者蓄意破坏行为"
+      email_title: '“%{title}”被举报为垃圾信息'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: "不当内容"
-      description: '该帖子的内容包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区指引</a>。'
-      short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
+      title: "不当言论"
+      description: '此帖子包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
+      short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     notify_user:
-      title: "给@%{username}发送一条私信"
-      description: "我想亲自与此人私下交流关于该帖子的事情。"
-      short_description: "我想亲自与此人私下交流关于该帖子的事情。"
+      title: "向 @%{username} 发送消息"
+      description: "我想亲自与此人私下交流关于其帖子的事情。"
+      short_description: "我想亲自与此人私下交流关于其帖子的事情。"
       email_title: '您在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: "其他事项"
-      description: "这个帖子需要版主的注意，但是原因没有包括在上述选项中。"
-      short_description: "需要管理人员注意的其他原因"
-      email_title: '"%{title}" 话题需要版主的注意'
+      title: "其他内容"
+      description: "由于上面未列出的另一个原因，此帖子需要管理人员注意。"
+      short_description: "因其他原因需要管理人员注意"
+      email_title: '“%{title}”中的一个帖子需要工作人员注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: "收藏"
-      description: "收藏本帖"
-      short_description: "收藏该帖子"
+      title: "加入书签"
+      description: "将此帖子加入书签"
+      short_description: "将此帖子加入书签"
     like:
-      title: "赞"
-      description: "赞这个帖子"
-      short_description: "赞这个帖子"
+      title: "点赞"
+      description: "点赞此帖子"
+      short_description: "点赞此帖子"
   draft:
     sequence_conflict_error:
       title: "草稿错误"
-      description: "草稿正在其它窗口中被编辑。请重新加载此页面。"
+      description: "正在另一个窗口中编辑草稿。请重新加载此页面。"
   draft_backup:
-    pm_title: "将正在的编辑中的话题备份为草稿"
-    pm_body: "话题包含备份的草稿"
+    pm_title: "正在进行的话题的备份草稿"
+    pm_body: "包含备份草稿的话题"
   user_activity:
     no_default:
       self: "您还没有活动。"
       others: "无活动。"
     no_bookmarks:
-      self: "您没有收藏帖子；收藏可让您快速查阅特定帖子。"
-      search: "在所提供的搜索查询中没有找到收藏内容。"
-      others: "没有收藏。"
+      self: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
+      search: "使用提供的搜索查询未找到书签。"
+      others: "无书签。"
     no_likes_given:
       self: "您还没有点赞任何帖子。"
-      others: "没有被赞的帖子。"
+      others: "没有赞过的帖子。"
     no_replies:
-      self: "您还未回复任何话题"
-      others: "无回复"
+      self: "您还没有回复任何帖子。"
+      others: "无回复。"
     no_drafts:
-      self: "您没有草稿；任何话题中撰写回复，它将自动保存为新草稿。"
+      self: "您没有草稿；开始在任何话题中撰写回复，它将自动保存为新草稿。"
   email_settings:
-    pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码后重试。"
-    imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码后重试。"
-    imap_no_response_error: "与 IMAP 服务器通信时发生错误，%{message}"
-    smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码后重试。"
-    authentication_error_gmail_app_password: '需要特定应用程序的密码，请在 <a target="_blank" href="https://support.google.com/accounts/answer/185833">Google 帮助文章</a> 了解更多信息'
+    pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码并重试。"
+    imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码并重试。"
+    imap_no_response_error: "与 IMAP 服务器通信时出错。%{message}"
+    smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码并重试。"
+    authentication_error_gmail_app_password: '需要应用程序特定的密码。请在<a target="_blank" href="https://support.google.com/accounts/answer/185833">此 Google 帮助文章</a>中了解详情'
     smtp_server_busy_error: "SMTP 服务器当前正忙，请稍后再试。"
-    smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误，%{message}"
-    imap_unhandled_error: "与 IMAP 服务器通信时发生未处理错误， %{message}"
-    connection_error: "连接服务器时出现问题，请检查服务器名称和端口后重试。"
-    timeout_error: "连接服务器时超时，请检查服务器名称和端口后重试。"
-    unhandled_error: "测试电子邮件设置时出现未处理的错误，%{message}"
+    smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误。%{message}"
+    imap_unhandled_error: "与 IMAP 服务器通信时发生未处理错误。%{message}"
+    connection_error: "与服务器连接时出现问题，请检查服务器名称和端口并重试。"
+    timeout_error: "连接服务器时超时，请检查服务器名称和端口后并重试。"
+    unhandled_error: "测试电子邮件设置时出现未处理的错误。%{message}"
   webauthn:
     validation:
-      invalid_type_error: "提供的webauthn类型无效。有效类型为webauthn.get和webauthn.create。"
+      invalid_type_error: "提供的 webauthn 类型无效。有效类型为 webauthn.get 和 webauthn.create。"
       challenge_mismatch_error: "提供的质询与身份验证服务器生成的质询不匹配。"
-      invalid_origin_error: "身份验证请求的来源与源服务器不匹配。"
-      malformed_attestation_error: "解码验证数据时出错。"
-      invalid_relying_party_id_error: "认证请求的依赖方ID与服务器的依赖方ID不匹配。"
+      invalid_origin_error: "身份验证请求的来源与服务器来源不匹配。"
+      malformed_attestation_error: "解码证明数据时出错。"
+      invalid_relying_party_id_error: "身份验证请求的依赖方 ID 与服务器依赖方 ID 不匹配。"
       user_verification_error: "需要用户验证。"
-      unsupported_public_key_algorithm_error: "服务器不支持所提供公钥的算法。"
-      unsupported_attestation_format_error: "服务器不支持的证明格式。"
-      credential_id_in_use_error: "提供的凭据ID已在使用中。"
+      unsupported_public_key_algorithm_error: "服务器不支持提供的公钥算法。"
+      unsupported_attestation_format_error: "服务器不支持该证明格式。"
+      credential_id_in_use_error: "提供的凭据 ID 已被使用。"
       public_key_error: "凭据的公钥验证失败。"
       ownership_error: "安全密钥不归用户所有。"
-      not_found_error: "找不到具有提供凭据ID的安全密钥。"
-      unknown_cose_algorithm_error: "无法识别安全密钥所使用的算法。"
+      not_found_error: "找不到具有提供的凭据 ID 的安全密钥。"
+      unknown_cose_algorithm_error: "无法识别用于安全密钥的算法。"
   topic_flag_types:
     spam:
-      title: "垃圾"
-      description: "该话题是一个广告。它对本网站没有用处或相关性，仅仅是推销内容。"
-      long_form: "标记为垃圾"
+      title: "垃圾信息"
+      description: "此话题是一个广告。它对本站点没有用或不相关，仅仅是促销内容。"
+      long_form: "将此举报为垃圾信息"
       short_description: "这是广告"
     inappropriate:
-      title: "不当内容"
-      description: '该帖子的内容包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
+      title: "不当言论"
+      description: '此话题包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       long_form: "标记为不当内容"
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
     notify_moderators:
@@ -931,7 +931,7 @@ zh_CN:
     all: "不要从%{sitename}给我发送任何邮件"
     different_user_description: "您当前登录的账户与我们所发送邮件的用户不符。请登出，或进入隐私模式，然后重试。"
     not_found_description: "抱歉，我们未能找到此退订。或许是因为您的邮件中的链接是很久以前的并且过期了？"
-    log_out: "退出登录"
+    log_out: "退出"
     submit: "保存设置"
     digest_frequency:
       title: "您将每%{frequency}接收摘要邮件"

@@ -1027,7 +1027,7 @@ pt_BR:
         term: Termo
         searches: Pesquisas
         click_through: CTR
-      description: "Termos de pesquisa mais populares com suas taxas de cliques."
+      description: "Termos de pesquisa mais acessador com suas taxas de cliques."
     emails:
       title: "Emails Enviados"
       xaxis: "Dia"
@@ -1519,7 +1519,7 @@ pt_BR:
     max_similar_results: "Quantos tópicos semelhantes exibir acima do editor quando compondo um novo tópico. A comparação é baseada no título e no corpo."
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     title_remove_extraneous_space: "Remover os espaços em branco iniciais à frente da pontuação final."
-    automatic_topic_heat_values: 'Atualizar automaticamente as configurações "visualizações de tópico populares" e "curtidas de postagens de tópicos populares" com base na atividade do site.'
+    automatic_topic_heat_values: 'Atualize automaticamente as configurações "volume de visualizações do tópico" e "volume de curtidas de postagens no tópico" com base na atividade do site.'
     topic_views_heat_low: "Após este tanto de visualizações, o campo de visualizações é levemente realçado."
     topic_views_heat_medium: "Após este tanto de visualizações, o campo de visualizações é moderadamente realçado."
     topic_views_heat_high: "Após este tanto de visualizações, o campo de visualizações é fortemente realçado."
@@ -1608,8 +1608,8 @@ pt_BR:
     allow_uploaded_avatars: "Permitir aos usuários carregar fotos em seu perfil personalizado."
     default_avatars: "URLs para avatars que serão usadas por padrão para novos usuários até que sejam alteradas por eles."
     automatically_download_gravatars: "Fazer download de Gravatars dos usuários ao criar conta ou mudança de email."
-    digest_topics: "O número máximo de tópicos populares a serem exibidos no resumo de e-mail."
-    digest_posts: "O número máximo de postagens populares a serem exibidas no resumo de e-mail."
+    digest_topics: "A quantidade máxima de tópicos mais acessados para exibir no resumo de e-mail."
+    digest_posts: "A quantidade máxima de postagens mais acessadas para exibir no resumo de e-mail."
     digest_other_topics: "O número máximo de tópicos a serem exibidos na seção \"Novos tópicos e categorias que você segue\" do resumo por e-mail."
     digest_min_excerpt_length: "Trecho de postagem mínima no resumo de e-mail, em caracteres."
     suppress_digest_email_after_days: "Suprima e-mails de resumo para usuários não vistos no site por mais de (n) dias."
@@ -1730,7 +1730,7 @@ pt_BR:
     max_tag_length: "A quantidade máxima de caracteres que podem ser usados ​​em uma tag."
     max_tag_search_results: "Ao pesquisar por tags, o número máximo de resultados a serem exibidos."
     max_tags_in_filter_list: "Número máximo de tags para mostrar no menu suspenso do filtro. As tags mais usadas serão mostradas."
-    tags_sort_alphabetically: "Mostrar as tags em ordem alfabética. O padrão é mostrar em ordem de popularidade."
+    tags_sort_alphabetically: "Exiba as etiquetas em ordem alfabética. O padrão é mostrar em ordem de popularidade."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas na <a href='%{base_path}/tags' target='_blank'>página de Etiquetas</a>."
     tag_style: "Estilo visual para emblemas."
     allow_staff_to_tag_pms: "Permitir que os membros da equipe marquem qualquer mensagem pessoal"
@@ -1809,8 +1809,8 @@ pt_BR:
   most_recent_poster: "Autor Mais Recente"
   frequent_poster: "Autor Frequente"
   redirected_to_top_reasons:
-    new_user: "Bem vindo a nossa comunidade! Aqui estão os nosso tópicos populares mais recentes."
-    not_seen_in_a_month: "Bem-vindo de volta! Nós não o vemos a um tempo. Estes são os principais tópicos de discussão desde que você foi embora."
+    new_user: "Boas-vindas à nossa comunidade! Confira os nossos tópicos mais acessados recentemente."
+    not_seen_in_a_month: "Boas-vindas outra vez! Faz tempo desde o seu último acesso. Confira os principais tópicos mais acessados desde a sua última visita."
   merge_posts:
     edit_reason:
       one: "Uma publicação foi combinada por %{username}"
@@ -2585,8 +2585,8 @@ pt_BR:
   user_notifications:
     previous_discussion: "Respostas Anteriores"
     reached_limit:
-      one: "Atenção: enviamos no máximo %{count} e-mail diário. Verifique o site para ver os que podem ser retidos."
-      other: "Atenção: enviamos no máximo %{count} e-mails diários. Verifique o site para ver os que podem ser retidos. PS obrigado por ser popular!"
+      one: "Atenção: enviamos no máximo %{count} e-mail diário. Verifique no site para ver os que podem não ter sido enviados."
+      other: "Atenção: enviamos no máximo %{count} e-mails diários. Verifique no site para ver os que podem não ter sido enviados. PS: obrigado pelos acessos!"
     in_reply_to: "Em réplica a"
     unsubscribe:
       title: "Desinscrever"
@@ -2817,10 +2817,10 @@ pt_BR:
       unread_notifications: "Notificações Não-lidas"
       liked_received: "Curtidas Recebidas"
       new_users: "Usuários Novos"
-      popular_topics: "Tópicos Populares"
+      popular_topics: "Tópicos mais acessados"
       follow_topic: "Seguir esse tópico"
       join_the_discussion: "Leia Mais"
-      popular_posts: "Publicações Populares"
+      popular_posts: "Publicações mais acessadas"
       more_new: "Novo para você"
       subject_template: "[%{email_prefix}] Resumo"
       unsubscribe: "Este resumo é enviado de %{site_link} quando não te vemos há algum tempo. Mude%{email_preferences_link}, ou%{unsubscribe_link} para cancelar a inscrição."
@@ -2943,7 +2943,7 @@ pt_BR:
       title: "Sua postagem foi aprovada"
   page_not_found:
     title: "Oops! Essa página não existe ou é privada."
-    popular_topics: "Popular"
+    popular_topics: "Mais acessados(as)"
     recent_topics: "Recente"
     see_more: "Mais"
     search_title: "Procurar neste site"
@@ -3262,12 +3262,12 @@ pt_BR:
       long_description: |
         Esse emblema é concedido na primeira vez que você lê um tópico longo com mais de 100 respostas. Ler uma conversa de perto ajuda você a acompanhar a discussão, entender diferentes pontos de vista e leva a conversas mais interessantes. Quanto mais você lê, melhor a conversa fica. Como gostamos de dizer, a leitura é fundamental! :slight_smile:
     popular_link:
-      name: Link Popular
-      description: Postou um link externo com 50 clicks
+      name: Link mais acessado
+      description: Postou um link externo com 50 cliques
       long_description: |
-        Este emblema é concedido quando um link que você compartilhou recebe 50 cliques. Obrigado por postar um link útil que adicionou um contexto interessante à conversa!
+        Este emblema é concedido quando um link que você compartilhou recebe 50 cliques. Obrigado por postar um link que contribuiu para a discussão!
     hot_link:
-      name: Link Popular
+      name: Link muito acessado
       description: Postou um link externo com 300 clicks
       long_description: |
         Esse emblema é concedido quando um link compartilhado recebe 300 cliques. Obrigado por postar um link fascinante que levou a conversa adiante e iluminou a discussão!
