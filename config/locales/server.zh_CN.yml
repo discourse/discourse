@@ -893,27 +893,27 @@ zh_CN:
     inappropriate:
       title: "不当言论"
       description: '此话题包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
-      long_form: "标记为不当内容"
-      short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
+      long_form: "将此话题举报为不当言论"
+      short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     notify_moderators:
       title: "其他内容"
-      description: '该话题需要版主依据<a href="%{base_path}/guidelines">社区准则</a>、<a href="%{tos_url}">服务条款（TOS）</a>或其它未列出的原因给予关注。'
-      long_form: "标记以让版主注意"
+      description: '依据<a href="%{base_path}/guidelines">准则</a>、<a href="%{tos_url}">服务条款</a>或由于上面未列出的其他原因，此话题需要管理人员注意。'
+      long_form: "举报以引起版主注意"
       short_description: "因其他原因需要管理人员注意"
       email_title: '话题“%{title}”需要版主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>您的帖子被社区标记了。请<a href="%{path}">查看您的消息</a>。</p>'
-    user_must_edit: "<p>您的帖子已经被社区标记并被临时隐藏。</p>"
+    you_must_edit: '<p>您的帖子已被社区举报。请<a href="%{path}">查看您的消息</a>。</p>'
+    user_must_edit: "<p>此帖子已被社区举报，现已被临时隐藏。</p>"
   ignored:
-    hidden_content: "<p>忽视的内容</p>"
+    hidden_content: "<p>忽略的内容</p>"
   archetypes:
     regular:
       title: "常规话题"
     banner:
       title: "横幅话题"
       message:
-        make: "本话题现在是横幅话题。它将出现在每页的顶部，除非用户将其隐藏。"
+        make: "此话题现在是一个横幅。它会出现在每个页面的顶部，直到被用户关闭。"
         remove: "本话题已经不再是横幅话题。它将不在每个页面的顶部显示。"
   unsubscribed:
     title: "已更新电子邮件偏好设置！"

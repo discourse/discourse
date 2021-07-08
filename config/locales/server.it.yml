@@ -219,18 +219,18 @@ it:
     not_found_template: |
       <p>Il tuo invito a <a href="%{base_url}">%{site_name}</a> è già stato riscattato.</p>
 
-      <p>Se ti ricordi la password, puoi fare il <a href="%{base_url}/login">login</a>.</p>
+      <p>Se ti ricordi la password, puoi effettuare l'<a href="%{base_url}/login">accesso</a>.</p>
 
       <p>In caso contrario, <a href="%{base_url}/password-reset">reimposta la password</a>.</p>
     not_found_template_link: |
       <p>L'invito a <a href="%{base_url}">%{site_name}</a> non può più essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito.</p>
-    user_exists: "Non è necessario invitare X, hanno già un account!\nNon è necessario invitare <b>%{email}</b>,  <a href='%{base_path}/u/%{username}/summary'>hanno già un account!</a>"
+    user_exists: "Non è necessario invitare <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>ha già un account!</a>"
     invite_exists: "Hai già invitato <b>%{email}</b>."
     invalid_email: "%{email} non è un indirizzo email valido."
     rate_limit:
       one: "Hai già inviato %{count} invito nell'ultimo giorno; aspetta %{time_left} prima di riprovare."
       other: "Hai già inviato %{count} inviti nell'ultimo giorno; aspetta %{time_left} prima di riprovare."
-    confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per favore per attivare il tuo account segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
+    confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per attivare il tuo account, segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
     cant_invite_to_group: "Non hai il permesso di invitare utenti ai gruppi specificati. Assicurati di essere il proprietario dei gruppi a cui stai provando a invitarli."
     disabled_errors:
       discourse_connect_enabled: "Gli inviti sono disabilitati perché è abilitato DiscourseConnect."
@@ -240,7 +240,7 @@ it:
     max_rows: "I primi %{max_bulk_invites} inviti sono stati spediti. Prova a dividere il file in parti più piccole."
     error: "Si è verificato un errore durante il caricamento del file. Per favore riprova più tardi."
   invite_link:
-    email_taken: "Questa e-mail è già in uso. Se hai già un account, effettua il login o reimposta la password."
+    email_taken: "Questa e-mail è già in uso. Se hai già un account, effettua l'accesso o reimposta la password."
     max_redemptions_limit: "dovrebbe essere compreso tra 2 e %{max_limit}."
   topic_invite:
     failed_to_invite: "L'utente non può essere invitato in questo argomento senza essere membro di uno dei seguenti gruppi: %{group_names}."
@@ -266,7 +266,7 @@ it:
   provider_not_found: "Non ti è consentito visualizzare la risorsa richiesta. Il provider di autenticazione non esiste."
   read_only_mode_enabled: "Il sito è in modalità di sola lettura. Le interazioni sono disabilitate."
   invalid_grant_badge_reason_link: "Il collegamento esterno o il collegamento Discourse non  valido non è consentito nella motivazione di assegnazione di un distintivo"
-  email_template_cant_be_modified: "Questo modello di email non può essere modificato."
+  email_template_cant_be_modified: "Questo modello di email non può essere modificato"
   invalid_whisper_access: "I sussurri non sono abilitati oppure non hai i permessi per creare sussurri"
   not_in_group:
     title_topic: "Devi richiedere l'iscrizione al gruppo \"%{group}\" per visualizzare questo argomento."
@@ -278,8 +278,8 @@ it:
   reading_time: "Tempo di lettura"
   likes: "Mi piace"
   too_many_replies:
-    one: "Spiacenti, ma i nuovi utenti possono inserire solo %{count} risposta nello stesso argomento."
-    other: "Spiacenti, ma i nuovi utenti possono inserire solo %{count} risposte nello stesso argomento."
+    one: "Spiacenti, ma i nuovi utenti possono temporaneamente inserire solo %{count} risposta nello stesso argomento."
+    other: "Spiacenti, ma i nuovi utenti possono temporaneamente inserire solo %{count} risposte nello stesso argomento."
   max_consecutive_replies:
     one: "Non sono consentite risposte consecutive. Per favore modifica la tua risposta precedente o attendi che qualcuno ti risponda."
     other: "Non sono consentite più di %{count} risposte consecutive. Per favore modifica le tue risposte precedenti oppure attendi che qualcuno ti risponda."
@@ -289,7 +289,7 @@ it:
     error: "Errore Inclusione"
     referer: "Referer:"
     error_topics: "L'impostazione del sito `embed topics list` non è stata abilitata"
-    mismatch: "Il referer non è stato inviato o non corrispondeva ad alcuno dei seguenti host:"
+    mismatch: "Il referer non è stato inviato o non corrispondeva a nessuno dei seguenti host:"
     no_hosts: "Non sono stati configurati host per l'inclusione."
     configure: "Configura Inclusione"
     more_replies:
@@ -307,7 +307,7 @@ it:
       other: "%{count} \"Mi piace\""
     last_reply: "Ultima risposta"
     created: "Creazione"
-    new_topic: "Inizia un nuovo argomento"
+    new_topic: "Crea un nuovo argomento"
   no_mentions_allowed: "Spiacenti, non puoi menzionare altri utenti."
   too_many_mentions:
     one: "Spiacenti, puoi menzionare al massimo un utente in un messaggio."
@@ -316,8 +316,8 @@ it:
   too_many_mentions_newuser:
     one: "Spiacenti, i nuovi utenti possono menzionare al massimo un utente in un messaggio."
     other: "Spiacenti, i nuovi utenti possono menzionare al massimo %{count} utenti in un messaggio."
-  no_embedded_media_allowed_trust: "Siamo spiacenti, non puoi incorporare elementi multimediali in un messaggio."
-  no_embedded_media_allowed: "Siamo spiacenti, i nuovi utenti non possono incorporare elementi multimediali nei messaggi."
+  no_embedded_media_allowed_trust: "Spiacenti, non puoi incorporare elementi multimediali in un messaggio."
+  no_embedded_media_allowed: "Spiacenti, i nuovi utenti non possono incorporare elementi multimediali nei messaggi."
   too_many_embedded_media:
     one: "Spiacenti, i nuovi utenti possono inserire solo un elemento multimediale incorporato in un messaggio."
     other: "Spiacenti, i nuovi utenti possono inserire solo %{count} elementi multimediali incorporati in un messaggio."
@@ -328,8 +328,8 @@ it:
   no_links_allowed: "Spiacenti, i nuovi utenti non possono inserire collegamenti nei messaggi."
   links_require_trust: "Spiacenti, non puoi includere collegamenti nei tuoi messaggi."
   too_many_links:
-    one: "Spiacenti, i nuovi utenti possono inserire al massimo un collegamento in un messaggio."
-    other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} collegamenti in un messaggio."
+    one: "Spiacenti, i nuovi utenti possono inserire al massimo un link in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} link in un messaggio."
   contains_blocked_word: "Il tuo messaggio contiene una parola non consentita: %{word}"
   contains_blocked_words: "Il tuo messaggio contiene parole non consentite: %{words}"
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quell'host."
@@ -337,11 +337,11 @@ it:
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
   not_accepting_pms: "Spiacenti, %{username} non accetta messaggi al momento."
   max_pm_recipients: "Spiacenti, puoi inviare un messaggio ad un massimo di %{recipients_limit} destinatari."
-  pm_reached_recipients_limit: "Spiacente, non sono consentiti più di %{recipients_limit} destinatari in un messaggio."
+  pm_reached_recipients_limit: "Spiacenti, non sono consentiti più di %{recipients_limit} destinatari in un messaggio."
   removed_direct_reply_full_quotes: "La citazione dell'intero messaggio precedente è stata rimossa automaticamente."
   watched_words_auto_tag: "Argomento etichettato automaticamente"
   secure_upload_not_allowed_in_public_topic: "Siamo spiacenti, i seguenti caricamenti sicuri non possono essere utilizzati in un argomento pubblico: %{upload_filenames}."
-  create_pm_on_existing_topic: "Spiacenti, non puoi creare un PM su un argomento esistente."
+  create_pm_on_existing_topic: "Spiacenti, non puoi creare un MP su un argomento esistente."
   slow_mode_enabled: "Questo argomento è in modalità lenta."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
   invalid_characters: "contiene caratteri non validi"
@@ -388,7 +388,7 @@ it:
       too_many: "Siamo spiacenti, non puoi aggiungere più di %{limit} segnalibri, visita <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> per rimuoverne alcuni."
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
-      time_must_be_provided: "l'ora deve essere fornita per tutti i promemoria"
+      time_must_be_provided: "l'orario deve essere fornito per tutti i promemoria"
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -400,7 +400,7 @@ it:
   groups:
     success:
       bulk_add:
-        one: "%{count} utente sono stati aggiunti al gruppo."
+        one: "%{count} utente è stato aggiunto al gruppo."
         other: "%{count} utenti sono stati aggiunti al gruppo."
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' non è un livello di esperienza valido."
@@ -415,11 +415,11 @@ it:
       cant_allow_membership_requests: "Non è possibile permettere le richieste di adesione in un gruppo senza proprietari."
       already_requested_membership: "Hai già richiesto di iscriverti a questo gruppo."
       adding_too_many_users:
-        one: "È possibile aggiungere un massimo di %{count} utenti contemporaneamente"
-        other: "È possibile aggiungere al massimo %{count} utenti contemporaneamente"
+        one: "È possibile aggiungere al massimo %{count} utente per volta"
+        other: "È possibile aggiungere al massimo %{count} utenti per volta"
       usernames_or_emails_required: "I nomi utente o le e-mail devono essere presenti"
       no_invites_with_discourse_connect: "Puoi invitare solo utenti registrati quando DiscourseConnect è abilitato"
-      no_invites_without_local_logins: "Puoi invitare solo utenti registrati quando i login locali sono disabilitati"
+      no_invites_without_local_logins: "Puoi invitare solo utenti registrati quando gli accessi locali sono disabilitati"
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -433,9 +433,9 @@ it:
     request_membership_pm:
       title: "Richesta di Adesione per @%{group_name}"
     request_accepted_pm:
-      title: "Sei stato accettato in @ %{group_name}"
+      title: "Sei stato accettato in @%{group_name}"
       body: |
-        La tua richiesta di far parte di @ %{group_name} è stata accettata e ora sei un membro.
+        La tua richiesta di far parte di @%{group_name} è stata accettata e ora sei un membro.
   education:
     until_posts:
       one: "%{count} messaggio"
@@ -459,7 +459,7 @@ it:
 
       - La critica costruttiva è benvenuta, ma critica le idee*, non le persone.
 
-      Per ulteriori informazioni, [vedi le nostre linee guida della comunità](%{base_path}/guidelines). Questo pannello apparirà solo per i primi %{education_posts_text}.
+      Per ulteriori informazioni, [vedi le nostre linee guida della comunità](%{base_path}/guidelines). Questo pannello apparirà solo per il primo %{education_posts_text}.
     avatar: |
       ### Che ne dici di aggiungere un'immagine al tuo account?
 
@@ -473,12 +473,14 @@ it:
 
       Piuttosto che inviare più risposte di seguito in un argomento, considera la possibilità di inserire un'unica risposta con riferimenti ai messaggi precedenti o citazioni di @nome .
 
-      Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Cita<b> che comparirà.
+      Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
-      E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte individuali.
+      E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
     dominating_topic: |
-      ### Consenti ad altri di partecipare alla conversazione Questo argomento è chiaramente importante per te: hai pubblicato più di %{percent}% delle risposte. Potrebbe essere ancora meglio se dessi ad altre persone lo spazio per condividere anche i loro punti di vista. Puoi invitarli?
-    get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione in privato con questo particolare utente, [invia un messaggio personale](%{base_path}/u/%{reply_username}).\n"
+      ### Consenti ad altri di partecipare alla conversazione Questo argomento è chiaramente importante per te&ndash;: hai pubblicato più di %{percent}% delle risposte.
+
+      Potrebbe essere ancora meglio se dessi ad altre persone lo spazio per condividere anche i loro punti di vista. Puoi invitarli?
+    get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione in privato con questo particolare utente, [puoi inviargli un messaggio personale](%{base_path}/u/%{reply_username}).\n"
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
@@ -486,7 +488,7 @@ it:
 
       Invece di aggiungere un'altra risposta, per favore valuta la possibilità di modificare le tue precedenti risposte o di visitare altri argomenti.
     reviving_old_topic: |
-      ### Vuoi resuscitare questo argomento?
+      ### Vuoi riportare in vita questo argomento?
 
       L'ultima risposta a questo argomento risale a **%{time_ago}**. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti saranno avvertiti.
 
@@ -576,29 +578,29 @@ it:
             base:
               invalid_url: "L'URL sostitutivo non è valido"
       <<: *errors
-  uncategorized_category_name: "Non categorizzato"
+  uncategorized_category_name: "Senza categoria"
   vip_category_name: "Salotto"
   vip_category_description: "Una categoria esclusiva per i membri con livello di attendibilità 3 o superiore."
   meta_category_name: "Feedback Sito"
-  meta_category_description: "Discussioni su questo sito, la sua organizzazione, come funziona e su come possiamo migliorarlo."
+  meta_category_description: "Discussioni su questo sito, la sua organizzazione, su come funziona e come possiamo migliorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni dello staff. Gli argomenti sono visibili solo agli amministratori e ai moderatori."
   discourse_welcome_topic:
     title: "Benvenuto in Discourse"
     body: |2
 
-      Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
+      Il primo paragrafo di questo argomento appuntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
 
       **Modificalo** con una breve descrizione della tua comunità:
 
       - A chi è rivolto?
       - Cosa possono trovare qui?
       - Perché dovrebbero venire qui?
-      - Dove possono leggere di più (collegamenti, risorse, ecc)?
+      - Dove possono saperne di più (collegamenti, risorse, ecc)?
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Potresti voler chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
+      Potresti chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino sull'annuncio.
   lounge_welcome:
     title: "Benvenuto nel Salotto"
     body: |2
@@ -611,18 +613,18 @@ it:
 
       * Cambiare il titolo a qualsiasi argomento
       * Cambiare la categoria di qualsiasi argomento
-      * I tuoi collegamenti saranno seguibili ([il nofollow automatico](http://en.wikipedia.org/wiki/Nofollow) è stato rimosso)
-      * Accedere alla categoria privata Salotto visibile ai soli utenti che hanno raggiunto il livello di esperienza 3 o superiore
+      * I tuoi link potranno essere seguiti ([il nofollow automatico](http://en.wikipedia.org/wiki/Nofollow) è stato rimosso)
+      * Accedere alla categoria privata Salotto visibile ai soli utenti che hanno raggiunto il livello di attendibilità 3 o superiore
       * Nascondere messaggi spam con una sola segnalazione
 
-      Ecco la [lista degli attuali utenti con Livello Esperienza 3](%{base_path}/badges/3/regular). Lascia loro un saluto.
+      Ecco la [lista degli attuali utenti con Livello di attendibilità 3](%{base_path}/badges/3/regular). Lascia loro un saluto.
 
       Grazie per essere un importante membro della nostra comunità!
 
-      (Per ulteriori informazioni sui Livelli Esperienza dai [uno sguardo a questo Argomento][trust]. Tieni presente che solo gli utenti che continuano a rispettare i requisiti nel tempo resteranno assidui.)
+      (Per ulteriori informazioni sui Livelli di attendibilità dai [uno sguardo a questo Argomento][trust]. Tieni presente che solo gli utenti che continuano a rispettare i requisiti nel tempo resteranno assidui.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
-  admin_quick_start_title: "READ ME FIRST: Guida Rapida per Amministratore"
+  admin_quick_start_title: "DA LEGGERE SUBITO: Guida Rapida per Amministratore"
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della tua nuova categoria. Questa guida verrà mostrata nell'area di scelta categoria, quindi rimani sotto i 200 caratteri.)"
