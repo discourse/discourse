@@ -370,6 +370,21 @@ describe UserUpdater do
       end
     end
 
+    context 'when updating flair group' do
+      let(:group) { Fabricate(:group, name: "Group", flair_bg_color: "#111111", flair_color: "#999999", flair_icon: "icon") }
+      let(:user) { Fabricate(:user) }
+
+      it 'updates when setting is enabled' do
+        group.add(user)
+
+        UserUpdater.new(acting_user, user).update(flair_group_id: group.id)
+        expect(user.reload.flair_group_id).to eq(group.id)
+
+        UserUpdater.new(acting_user, user).update(flair_group_id: "")
+        expect(user.reload.flair_group_id).to eq(nil)
+      end
+    end
+
     context 'when update fails' do
       it 'returns false' do
         user = Fabricate(:user)
