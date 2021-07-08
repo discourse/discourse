@@ -9,7 +9,7 @@ ar:
     poll_enabled: "هل تسمح بالاستطلاعات؟"
     poll_maximum_options: "أقصى عدد من الخيارات في كلّ استطلاع."
     poll_edit_window_mins: "عدد الدقائق المسموح خلالها تعديل الاستطلاع بعد نشر المشاركة."
-    poll_minimum_trust_level_to_create: "حدّد أدنى ”مستوى ثقة“ مطلوب لصنع الاستطلاعات."
+    poll_minimum_trust_level_to_create: "حدِّد الحد الأدنى لمستوى الثقة المطلوب لإنشاء استطلاعات الرأي."
     poll_groupable_user_fields: "مجموعة من أسماء حقول المستخدمين لتجميع نتائج الاستطلاعات وترشيحها."
   poll:
     invalid_argument: "القيمة ”%{value}“ غير صالحة حسب المُعطى ”%{argument}“"
