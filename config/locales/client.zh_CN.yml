@@ -340,7 +340,7 @@ zh_CN:
           title: "当管理人员选择采取行动时，举报会获得加分。"
         user_accuracy_bonus:
           name: "用户准确性"
-          title: "所提交的举报一直都获得同意的用户将获得加分。"
+          title: "所提交的举报一直都获得确认的用户将获得加分。"
         trust_level_bonus:
           name: "信任等级"
           title: "由较高信任级别的用户创建的可审查条目具有较高的分数。"
@@ -392,9 +392,9 @@ zh_CN:
         summary:
           other: "%{agreed}，%{disagreed}，%{ignored}（共 %{count} 个举报）"
         agreed:
-          other: "%{count}% 同意"
+          other: "%{count}% 确认"
         disagreed:
-          other: "%{count}% 不同意"
+          other: "%{count}% 否决"
         ignored:
           other: "%{count}% 忽略"
       topics:

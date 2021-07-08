@@ -716,7 +716,7 @@ zh_CN:
       almost_x_years:
         other: "将近 %{count} 年前"
   password_reset:
-    no_token: "抱歉，该密码更改链接已过期。选择“登录”按钮并使用“我忘记密码了”获得新链接。"
+    no_token: "抱歉，该密码更改链接太旧。选择“登录”按钮并使用“我忘记密码了”获得新链接。"
     choose_new: "选择一个新密码"
     choose: "选择一个密码"
     update: "更新密码"
@@ -725,7 +725,7 @@ zh_CN:
     success: "您已成功更改密码，现已登录。"
     success_unapproved: "您已成功更改密码。"
   email_login:
-    invalid_token: "抱歉，该电子邮件登录链接已过期。选择“登录”按钮并使用“我忘记密码了”获得新链接。"
+    invalid_token: "抱歉，该电子邮件登录链接太旧。选择“登录”按钮并使用“我忘记密码了”获得新链接。"
     title: "电子邮件登录"
   user_auth_tokens:
     browser:
@@ -914,65 +914,65 @@ zh_CN:
       title: "横幅话题"
       message:
         make: "此话题现在是一个横幅。它会出现在每个页面的顶部，直到被用户关闭。"
-        remove: "本话题已经不再是横幅话题。它将不在每个页面的顶部显示。"
+        remove: "此话题不再是横幅。它将不再显示在每个页面的顶部。"
   unsubscribed:
     title: "已更新电子邮件偏好设置！"
-    description: "<b>%{email}</b>的电子邮件设置已更新。要更改您的电子邮件设置，访问<a href='%{url}'>您的用户设置页面</a>。"
-    topic_description: "点击链接 %{link} 重新订阅，或是使用话题底部或右侧的通知控制。"
-    private_topic_description: "使用话题底部或右侧的通知控制重新订阅。"
+    description: "<b>%{email}</b> 的电子邮件偏好设置已更新。要更改您的电子邮件设置，请<a href='%{url}'>访问您的用户偏好设置</a>。"
+    topic_description: "要重新订阅 %{link}，请使用话题底部或右侧的通知控件。"
+    private_topic_description: "要重新订阅，请使用话题底部或右侧的通知控件。"
   uploads:
-    marked_insecure_from_theme_component_reason: "在主题组件中使用的上传"
+    marked_insecure_from_theme_component_reason: "在主题组件中使用上传"
   unsubscribe:
     title: "退订"
-    stop_watching_topic: "不再关注该话题，%{link}"
-    mute_topic: "关闭此话题的所有通知，%{link}"
-    unwatch_category: "不再关注%{category}分类中的所有话题"
-    mailing_list_mode: "停用邮件列表模式"
-    all: "不要从%{sitename}给我发送任何邮件"
-    different_user_description: "您当前登录的账户与我们所发送邮件的用户不符。请登出，或进入隐私模式，然后重试。"
-    not_found_description: "抱歉，我们未能找到此退订。或许是因为您的邮件中的链接是很久以前的并且过期了？"
+    stop_watching_topic: "停止关注此话题，%{link}"
+    mute_topic: "将此话题的所有通知设为免打扰，%{link}"
+    unwatch_category: "停止关注%{category}中的所有话题"
+    mailing_list_mode: "关闭邮寄名单模式"
+    all: "不要从 %{sitename} 向我发送任何邮件"
+    different_user_description: "您当前登录的用户与我们通过电子邮件联系的用户不同。请退出，或进入匿名模式，然后重试。"
+    not_found_description: "抱歉，我们找不到此退订。可能是您电子邮件中的链接太旧并且已过期？"
     log_out: "退出"
-    submit: "保存设置"
+    submit: "保存偏好设置"
     digest_frequency:
-      title: "您将每%{frequency}接收摘要邮件"
-      never_title: "您将不再收到摘要邮件"
-      select_title: "将摘要邮件的频率设为："
+      title: "您将%{frequency}接收摘要电子邮件"
+      never_title: "您将不再接收摘要电子邮件"
+      select_title: "将接收摘要电子邮件的频率设为："
       never: "从不"
-      every_30_minutes: "每半小时"
+      every_30_minutes: "每 30 分钟"
       every_hour: "每小时"
       daily: "每天"
       weekly: "每周"
       every_month: "每月"
-      every_six_months: "每6个月"
+      every_six_months: "每六个月"
   user_api_key:
-    title: "授权应用访问"
+    title: "授权应用程序访问"
     authorize: "授权"
     read: "阅读"
     read_write: "读/写"
-    description: '“%{application_name}”正在请求访问您的账户中的以下权限：'
-    instructions: '我们刚刚生成了一个新的用户API密钥供您使用“%{application_name}”，请将以下密钥粘贴到您的应用程序中：'
-    otp_description: '您要允许“%{application_name}”访问此网站吗？'
+    description: '“%{application_name}”请求对您的帐户进行以下访问：'
+    instructions: '我们刚刚生成了一个新的用户 API 密钥供您与“%{application_name}”搭配使用，请将以下密钥粘贴到您的应用程序中：'
+    otp_description: '要允许“%{application_name}”访问此站点吗？'
     otp_confirmation:
-      confirm_title: 转入到%{site_name}
-      logging_in_as: 用%{username}登录
-      confirm_button: 登录完成
-    no_trust_level: "抱歉，您没有使用用户 API 所需要的信任等级"
-    generic_error: "抱歉，我们不能分发用户 API 密钥，该特性已经被站点管理员禁用"
+      confirm_title: 继续访问 %{site_name}
+      logging_in_as: 以 %{username} 登录
+      confirm_button: 完成登录
+    no_trust_level: "抱歉，您没有访问用户 API 所需的信任级别"
+    generic_error: "抱歉，我们无法发布用户 API 密钥，此功能可能被站点管理员禁用"
     scopes:
       message_bus: "实时更新"
       notifications: "读取并清除通知"
-      push: "推送通知到外部服务"
+      push: "向外部服务推送通知"
       session_info: "读取用户会话信息"
       read: "读取所有"
       write: "写入所有"
-      one_time_password: "创建一个一次性登录口令"
-      bookmarks_calendar: "读取收藏提醒"
-    invalid_public_key: "抱歉，公钥无效。"
-    invalid_auth_redirect: "抱歉，auth_redirect主机不被允许。"
-    invalid_token: "令牌丢失，无效或过期。"
+      one_time_password: "创建一次性登录令牌"
+      bookmarks_calendar: "读取书签提醒"
+    invalid_public_key: "抱歉，该公钥无效。"
+    invalid_auth_redirect: "抱歉，此 auth_redirect 主机不被允许。"
+    invalid_token: "令牌缺失、无效或已过期。"
   flags:
     errors:
-      already_handled: "标记已被处理"
+      already_handled: "举报已被处理"
   reports:
     default:
       labels:
@@ -987,78 +987,78 @@ zh_CN:
         editor: 编辑器
         author: 作者
         edit_reason: 原因
-      description: "新增的帖子编辑次数。"
+      description: "新帖子编辑的数量。"
     user_flagging_ratio:
-      title: "用户标记比率"
+      title: "用户举报率"
       labels:
         user: 用户
-        agreed_flags: 确认的标记
-        disagreed_flags: 否决的标记
-        ignored_flags: 忽略的标记
-        score: 评分
-      description: "按管理人员对标记的反馈比例排序的用户列表（反对到同意）。"
+        agreed_flags: 确认的举报
+        disagreed_flags: 否决的举报
+        ignored_flags: 忽略的举报
+        score: 分数
+      description: "按管理人员对其举报的响应比例排序的用户列表（否决到确认）。"
     moderators_activity:
-      title: "版主活跃度"
+      title: "版主活动"
       labels:
         moderator: 版主
-        flag_count: 收到的标记
-        time_read: 阅读时长
+        flag_count: 收到的举报
+        time_read: 阅读时间
         topic_count: 创建的话题
         post_count: 创建的帖子
         pm_count: 创建的私信
-        revision_count: 版本
-      description: 版主活动列表，包括已审核的标记，阅读时间，创建的话题，创建的帖子，创建的个人消息以及修订。
+        revision_count: 修订
+      description: 版主活动列表，包括审查的举报、阅读时间、创建的话题、创建的帖子、创建的个人消息和修订。
     flags_status:
-      title: "标记状态"
+      title: "举报状态"
       values:
-        agreed: 同意
+        agreed: 确认
         disagreed: 否决
-        deferred: 已推迟
-        no_action: 无动作
+        deferred: 推迟
+        no_action: 无行动
       labels:
         flag: 类型
-        assigned: 已指派
-        poster: 发表人
-        flagger: 标记人
+        assigned: 已分配
+        poster: 发帖人
+        flagger: 举报人
         time_to_resolution: 解决时间
-      description: "标记状态列表，包括标记类型，作者，标记人和解决时间。"
+      description: "举报状态列表，包括举报类型、发帖人、举报人和解决时间。"
     visits:
-      title: "用户访问量（UV）"
+      title: "用户访问"
       xaxis: "天"
       yaxis: "访问量"
-      description: "用户浏览数"
+      description: "所有用户访问量。"
     signups:
       title: "注册"
       xaxis: "天"
-      yaxis: "注册次数"
-      description: "此期间注册的新账户。"
+      yaxis: "注册量"
+      description: "此期间的新帐户注册。"
     new_contributors:
       title: "新贡献者"
       xaxis: "天"
-      yaxis: "新贡献者数"
-      description: "此期间首次发布帖子的用户数。"
+      yaxis: "新贡献者数量"
+      description: "此期间首次发帖的用户数。"
     trust_level_growth:
-      title: "信任等级提升"
+      title: "信任级别提升"
       xaxis:
-        tl1_reached: "达到信任等级1"
-        tl2_reached: "达到信任等级2"
-        tl3_reached: "达到信任等级3"
-        tl4_reached: "达到信任等级4"
+        tl1_reached: "达到信任级别 1"
+        tl2_reached: "达到信任级别 2"
+        tl3_reached: "达到信任级别 3"
+        tl4_reached: "达到信任级别 4"
       yaxis: "天"
-      description: "在此期间提升了其信任等级的用户数量。"
+      description: "在此期间提升其信任级别的用户量。"
     consolidated_page_views:
-      title: "合并的页面访问量"
+      title: "合并页面浏览量"
       xaxis:
         page_view_crawler: "爬虫"
         page_view_anon: "匿名用户"
-        page_view_logged_in: "已登录用户"
+        page_view_logged_in: "登录用户"
       yaxis: "天"
-      description: "登录用户，匿名用户和爬虫的页面访问总量。"
+      description: "登录用户、匿名用户和爬虫的页面浏览量。"
       labels:
         post: 帖子
         editor: 编辑器
         author: 作者
-        edit_reason: 理由
+        edit_reason: 原因
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
