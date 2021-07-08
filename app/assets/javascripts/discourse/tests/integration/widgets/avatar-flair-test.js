@@ -17,9 +17,9 @@ discourseModule(
       template: hbs`{{mount-widget widget="avatar-flair" args=args}}`,
       beforeEach() {
         this.set("args", {
-          primary_group_flair_url: "fa-bars",
-          primary_group_flair_bg_color: "CC0000",
-          primary_group_flair_color: "FFFFFF",
+          flair_url: "fa-bars",
+          flair_bg_color: "CC0000",
+          flair_color: "FFFFFF",
         });
       },
       test(assert) {
@@ -37,7 +37,7 @@ discourseModule(
       template: hbs`{{mount-widget widget="avatar-flair" args=args}}`,
       beforeEach() {
         this.set("args", {
-          primary_group_flair_url: "/images/avatar.png",
+          flair_url: "/images/avatar.png",
         });
       },
       test(assert) {

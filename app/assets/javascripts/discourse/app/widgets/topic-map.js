@@ -79,7 +79,7 @@ createWidget("topic-participant", {
       linkContents.push(h("span.post-count", attrs.post_count.toString()));
     }
 
-    if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
+    if (attrs.flair_url || attrs.flair_bg_color) {
       linkContents.push(this.attach("avatar-flair", attrs));
     } else {
       const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);

@@ -175,9 +175,10 @@ discourseModule(
           admin: false,
           moderator: false,
           trust_level: 3,
-          primary_group_flair_url: "fa-times",
-          primary_group_flair_bg_color: "123456",
-          primary_group_flair_color: "B0B0B0",
+          flair_name: "Band Geeks",
+          flair_url: "fa-times",
+          flair_bg_color: "123456",
+          flair_color: "B0B0B0",
           primary_group_name: "Band Geeks",
         });
         setupSiteGroups(this);

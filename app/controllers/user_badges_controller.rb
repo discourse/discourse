@@ -10,7 +10,7 @@ class UserBadgesController < ApplicationController
 
     badge = fetch_badge_from_params
     user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(MAX_BADGES)
-    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic, user: :primary_group)
+    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic, user: [:primary_group, :flair_group])
 
     grant_count = nil
 

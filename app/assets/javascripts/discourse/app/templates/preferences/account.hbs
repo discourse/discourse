@@ -158,6 +158,26 @@
         onChange=(action (mut newTitleInput))
       }}
     </div>
+    <div class="instructions">
+      {{i18n "user.title.instructions"}}
+    </div>
+  </div>
+{{/if}}
+
+{{#if canSelectFlair}}
+  <div class="control-group pref-flair">
+    <label class="control-label">{{i18n "user.flair.title"}}</label>
+    <div class="controls">
+      {{flair-chooser
+        value=newFlairGroupId
+        content=model.availableFlairs
+        none="user.flair.none"
+        onChange=(action (mut newFlairGroupId))
+      }}
+    </div>
+    <div class="instructions">
+      {{i18n "user.flair.instructions"}}
+    </div>
   </div>
 {{/if}}
 

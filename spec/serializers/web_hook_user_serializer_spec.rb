@@ -22,14 +22,59 @@ RSpec.describe WebHookUserSerializer do
   end
 
   it 'should only include the required keys' do
-    count = serializer.as_json.keys.count
-    difference = count - 51
-
-    expect(difference).to eq(0), lambda {
-      message = (difference < 0 ?
-                "#{difference * -1} key(s) have been removed from this serializer." :
-                "#{difference} key(s) have been added to this serializer.") +
-                "\nPlease verify if those key(s) are required as part of the web hook's payload."
-    }
+    expect(serializer.as_json.keys).to contain_exactly(
+      :id,
+      :username,
+      :name,
+      :avatar_template,
+      :email,
+      :secondary_emails,
+      :last_posted_at,
+      :last_seen_at,
+      :created_at,
+      :muted,
+      :trust_level,
+      :moderator,
+      :admin,
+      :title,
+      :badge_count,
+      :time_read,
+      :recent_time_read,
+      :primary_group_id,
+      :primary_group_name,
+      :flair_name,
+      :flair_url,
+      :flair_bg_color,
+      :flair_color,
+      :featured_topic,
+      :staged,
+      :pending_count,
+      :profile_view_count,
+      :second_factor_enabled,
+      :can_upload_profile_header,
+      :can_upload_user_card_background,
+      :post_count,
+      :locale,
+      :muted_category_ids,
+      :regular_category_ids,
+      :watched_tags,
+      :watching_first_post_tags,
+      :tracked_tags,
+      :muted_tags,
+      :tracked_category_ids,
+      :watched_category_ids,
+      :watched_first_post_category_ids,
+      :system_avatar_template,
+      :muted_usernames,
+      :ignored_usernames,
+      :allowed_pm_usernames,
+      :mailing_list_posts_per_day,
+      :user_notification_schedule,
+      :external_id,
+      :featured_user_badge_ids,
+      :invited_by,
+      :groups,
+      :user_option
+    )
   end
 end
