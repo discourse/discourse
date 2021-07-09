@@ -3833,7 +3833,7 @@ pt_BR:
           title: "Ações da equipe"
           clear_filters: "Mostrar tudo"
           staff_user: "Usuário(a)"
-          target_user: "Usuário Destino"
+          target_user: "Usuário(a) de destino"
           subject: "Assunto"
           when: "Quando"
           context: "Contexto"
@@ -3843,9 +3843,9 @@ pt_BR:
           show: "Exibir"
           modal_title: "Detalhes"
           no_previous: "Não há valor anterior."
-          deleted: "Não há valor novo. O registro foi removido."
+          deleted: "Não há valor novo. O registro foi excluído."
           actions:
-            delete_user: "removeu usuário"
+            delete_user: "remover usuário(a)"
             change_trust_level: "alterar nível de confiança"
             change_username: "alterar nome do(a) usuário(a)"
             change_site_setting: "alterar configurações do site"
@@ -3896,15 +3896,15 @@ pt_BR:
             check_personal_message: "verificar mensagem pessoal"
             topic_published: "tópico publicado"
             post_approved: "postagem aprovada"
-            post_rejected: "publicação rejeitada"
+            post_rejected: "postagem rejeitada"
             create_badge: "criar emblema"
-            change_badge: "mudar emblema"
-            delete_badge: "Apagar emblema"
-            merge_user: "mesclar usuário"
+            change_badge: "alterar emblema"
+            delete_badge: "excluir emblema"
+            merge_user: "mesclar usuário(a)"
             entity_export: "exportar entidade"
-            change_name: "modificar nome"
-            topic_timestamps_changed: "timestamps do tópico modificadas"
-            approve_user: "usuário aprovado"
+            change_name: "alterar nome"
+            topic_timestamps_changed: "carimbo de data/hora de tópico alterado"
+            approve_user: "usuário(a) aprovado(a)"
             web_hook_create: "criação de webhook"
             web_hook_update: "atualização de webhook"
             web_hook_destroy: "exclusão de webhook"
@@ -3912,31 +3912,31 @@ pt_BR:
             embeddable_host_create: "criação de host incorporável"
             embeddable_host_update: "atualização de host incorporável"
             embeddable_host_destroy: "exclusão de host incorporável"
-            change_theme_setting: "alterar configurações do tema"
-            disable_theme_component: "desabilitar componente de tema"
-            enable_theme_component: "habilitar componente de tema"
-            revoke_title: "Revogar título"
-            change_title: "Mudar título"
-            api_key_create: "Criar Chave de API"
-            api_key_update: "Atualizar Chave de API"
-            api_key_destroy: "Destruir Chave de API"
-            override_upload_secure_status: "Sobrescrever o status seguro do upload"
+            change_theme_setting: "alterar configuração do tema"
+            disable_theme_component: "desativar componente do tema"
+            enable_theme_component: "ativar componente do tema"
+            revoke_title: "revogar título"
+            change_title: "alterar título"
+            api_key_create: "criação de chave da API"
+            api_key_update: "atualização de chave da API"
+            api_key_destroy: "exclusão de chave da API"
+            override_upload_secure_status: "substituir status seguro do envio"
             page_published: "página publicada"
-            page_unpublished: "página despublicada"
-            delete_group: "apagar grupo"
+            page_unpublished: "publicação de página cancelada"
+            delete_group: "excluir grupo"
         screened_emails:
-          title: "Emails Filtrados"
-          description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
-          email: "Endereço de Email"
+          title: "E-mails filtrados"
+          description: "Quando alguém tentar criar uma conta nova, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
+          email: "Endereço de e-mail"
           actions:
-            allow: "Permitido"
+            allow: "Permitir"
         screened_urls:
-          title: "URLs Filtradas"
-          description: "As URLs listadas aqui foram usadas em mensagens de usuários que foram identificados como spammers."
+          title: "URLs filtradas"
+          description: "As URLs listadas aqui foram usadas em postagens de usuários(as) que foram identificados como remetentes de spam."
           url: "URL"
           domain: "Domínio"
         screened_ips:
-          title: "IPs Filtrados"
+          title: "IPs filtrados"
           delete_confirm: "Tem certeza que deseja remover a regra para %{ip_address}?"
           roll_up_confirm: "Tem certeza que deseja acumular endereços IP filtrados comuns em subnets?"
           rolled_up_some_subnets: "Entradas de IP banidos acumulados nestas subnets: %{subnets}."
@@ -4028,7 +4028,7 @@ pt_BR:
           newuser: "Usuários(as) no nível de confiança 0 (usuário(a) novo(a))"
           basic: "Usuários(as) no nível de confiança 1 (usuário(a) básico(a))"
           member: "Usuários(as) no nível de confiança 2 (membro)"
-          regular: "Usuário em Nível de Confiança 3 (Habitual)"
+          regular: "Usuário(as) em nível de confiança 3 (regular)"
           leader: "Usuário em Nível de Confiança 4 (Líder)"
           staff: "Equipe de apoio"
           admins: "Usuários Administradores"
@@ -4084,16 +4084,16 @@ pt_BR:
         staged: "Testado?"
         show_admin_profile: "Administrador(a)"
         show_public_profile: "Mostrar Perfil Público"
-        impersonate: "Personificar"
-        action_logs: "Registro de Atividades"
+        impersonate: "Representar"
+        action_logs: "Registro de atividades"
         ip_lookup: "Pesquisa do IP"
         log_out: "Sair"
-        logged_out: "Usuário foi desconectado em todos os dipositivos"
-        revoke_admin: "Revogar Admin"
-        grant_admin: "Conceder Admin"
-        grant_admin_confirm: "Nós o enviamos um e-mail para verificar o novo administrador. Por favor abra-o e siga as instruções."
-        revoke_moderation: "Revogar Moderação"
-        grant_moderation: "Conceder Moderação"
+        logged_out: "O usuário(a) foi desconectado(a) em todos os dispositivos"
+        revoke_admin: "Revogar administração"
+        grant_admin: "Conceder administração"
+        grant_admin_confirm: "Enviamos um e-mail para verificar o novo administrador(a). Abra-o e siga as instruções."
+        revoke_moderation: "Revogar moderação"
+        grant_moderation: "Conceder moderação"
         unsuspend: "Readmitir"
         suspend: "Suspender"
         show_flags_received: "Mostrar sinalizações recebidas"
@@ -4102,26 +4102,26 @@ pt_BR:
         reputation: Reputação
         permissions: Permissões
         activity: Atividade
-        like_count: Curtidas dadas / recebidas
+        like_count: Curtidas dadas/recebidas
         last_100_days: "nos últimos 100 dias"
-        private_topics_count: Tópicos Privados
-        posts_read_count: Mensagens lidas
-        post_count: Mensagens criadas
-        topics_entered: Tópicos Vistos
+        private_topics_count: Tópicos privados
+        posts_read_count: Postagens lidas
+        post_count: Postagens criadas
+        topics_entered: Tópicos visualizados
         flags_given_count: Sinalizações dadas
         flags_received_count: Sinalizações recebidas
-        warnings_received_count: Avisos Recebidos
+        warnings_received_count: Avisos recebidos
         flags_given_received_count: "Sinalizações dadas/recebidas"
         approve: "Aprovar"
-        approved_by: "aprovado por"
-        approve_success: "Usuário aprovado e e-mail enviado com instruções de ativação."
-        approve_bulk_success: "Sucesso! Todos os usuários selecionados foram aprovados e notificados."
+        approved_by: "aprovado(a) por"
+        approve_success: "Usuário(a) aprovado(a) e e-mail enviado com instruções de ativação."
+        approve_bulk_success: "Sucesso! Todos os(as) usuários(as) selecionados(as) foram aprovados(as) e notificados(as)."
         time_read: "Tempo de leitura"
-        anonymize: "Tornar usuário anônimo"
-        anonymize_confirm: "Você TEM CERTEZA que gostaria de tornar esta conta anônima? Esta mudança irá alterar o nome de usuário e e-mail, e resetar todas informações do perfil."
+        anonymize: "Tornar usuário(a) anônimo(a)"
+        anonymize_confirm: "Você TEM CERTEZA de que gostaria de tornar esta conta anônima? Essa mudança irá alterar o nome do(a) usuário(a) e o e-mail, além de redefinir todas informações do perfil."
         anonymize_yes: "Sim, tornar esta conta anônima"
         anonymize_failed: "Ocorreu um problema ao tornar a conta anônima."
-        delete: "Apagar Usuário"
+        delete: "Excluir usuário(a)"
         delete_posts:
           progress:
             title: "Progresso da exclusão de postagens"
@@ -4130,10 +4130,10 @@ pt_BR:
           prompt:
             title: "Transferir e excluir @%{username}"
             description: |
-              <p>Escolha um novo proprietário para o conteúdo de <b>@%{username}</b>.</p>
+              <p>Escolha um(a) novo(a) proprietário(a) para o conteúdo de <b>@%{username}</b>.</p>
 
               <p>Todos os tópicos, postagens, mensagens e outros conteúdos criados por <b>@%{username}</b> serão transferidos.</p>
-            target_username_placeholder: "Nome de usuário do novo proprietário"
+            target_username_placeholder: "Nome do(a) usuário(a) do(a) novo(a) proprietário(a)"
             transfer_and_delete: "Transferir e excluir @%{username}"
             cancel: "Cancelar"
           confirmation:
@@ -4141,22 +4141,22 @@ pt_BR:
             description: |
               <p>Todo o conteúdo de <b>@%{username}</b> será transferido e atribuído a <b>@%{targetUsername}</b>. Após a transferência do conteúdo, a conta de <b>@%{username}</b> será excluída.</p>
 
-              <p> <b>Isto não pode ser desfeito!</b> </p>
+              <p> <b>Isso não pode ser desfeito!</b> </p>
 
               <p> Para continuar, digite: <code>%{text}</code> </p>
             text: "transferir @%{username} para @%{targetUsername}"
             transfer_and_delete: "Transferir e excluir @%{username}"
             cancel: "Cancelar"
-        merging_user: "Mesclando usuário..."
-        merge_failed: "Ocorreu um erro ao mesclar os usuários."
-        delete_forbidden_because_staff: "Administradores e moderadores não podem ser excluidos."
-        delete_posts_forbidden_because_staff: "Não posso excluir todas as mensagens de administradores e moderadores."
+        merging_user: "Mesclando usuário(a)..."
+        merge_failed: "Ocorreu um erro ao mesclar os(as) usuários(as)."
+        delete_forbidden_because_staff: "Administradores(as) e moderadores(as) não podem ser excluídos(as)."
+        delete_posts_forbidden_because_staff: "Não é possível excluir todas as postagens de administradores(as) e moderadores(as)."
         delete_forbidden:
-          one: "Usuários não podem ser excluídos se eles têm mensagens. Excluir todas as mensagens antes de tentar excluir um usuário. (Mensagens mais antigas que %{count} dia não podem ser excluídas.)"
-          other: "Usuários não podem ser excluídos se eles têm mensagens. Remova todas as mensagens antes de tentar excluir um usuário. (Mensagens mais antigas que %{count} dias não podem ser excluídas.)"
+          one: "Usuários(as) não podem ser excluídos(as) se tiverem postagens. Exclua todas as postagens antes de tentar excluir um(a) usuário(a). (Mensagens com mais de %{count} dia não podem ser excluídas.)"
+          other: "Usuários(as) não podem ser excluídos(as) se tiverem postagens. Exclua todas as postagens antes de tentar excluir um(a) usuário(a). (Mensagens com mais de %{count} dias não podem ser excluídas.)"
         cant_delete_all_posts:
-          one: "Não é possível excluir todas as mensagens. Algumas mensagens são mais antigas do que %{count} dia. (Configuração delete_user_max_post_age.)"
-          other: "Não é possível remover todas as mensagens. Algumas mensagens são mais antigas do que %{count} dias. (Configuração delete_user_max_post_age.)"
+          one: "Não é possível excluir todas as postagens. Algumas postagens têm mais de %{count} dia. (Configuração delete_user_max_post_age.)"
+          other: "Não é possível excluir todas as postagens. Algumas postagens têm mais de %{count} dias. (Configuração delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           one: "Não pode remover porque o usuário tem mais de %{count} mensagem (delete_all_posts_max)"
           other: "Não pode remover porque o usuário tem mais de %{count} mensagens. (delete_all_posts_max)"
@@ -4218,8 +4218,8 @@ pt_BR:
           likes_given: "Curtidas dadas"
           likes_received: "Curtidas recebidas"
           likes_received_days: "Curtidas recebidas: dias únicos"
-          likes_received_users: "Curtidas recebidas: usuários únicos"
-          suspended: "Suspenso (últimos 6 meses)"
+          likes_received_users: "Curtidas recebidas: usuários(as) únicos(as)"
+          suspended: "Suspenso(a) (últimos seis meses)"
           silenced: "Silenciado (últimos 6 meses)"
           qualifies: "Qualificado para o nível 3 de confiança."
           does_not_qualify: "Não qualificado para o nível 3 de confiança."
