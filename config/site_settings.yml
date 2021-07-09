@@ -2294,6 +2294,8 @@ uncategorized:
   create_revision_on_bulk_topic_moves:
     default: true
 
+  allow_changing_staged_user_tracking: false
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"

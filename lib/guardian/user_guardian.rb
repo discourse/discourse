@@ -179,4 +179,9 @@ module UserGuardian
   def can_delete_sso_record?(user)
     SiteSetting.enable_discourse_connect && user && is_admin?
   end
+
+  def can_change_tracking_preferences?(user)
+    can_edit_user?(user) &&
+      (!user.staged || SiteSetting.allow_changing_staged_user_tracking)
+  end
 end

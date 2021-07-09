@@ -2324,6 +2324,8 @@ en:
 
     create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
 
+    allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."

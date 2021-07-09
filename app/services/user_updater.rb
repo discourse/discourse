@@ -128,15 +128,17 @@ class UserUpdater
       user.flair_group_id = attributes[:flair_group_id]
     end
 
-    CATEGORY_IDS.each do |attribute, level|
-      if ids = attributes[attribute]
-        CategoryUser.batch_set(user, level, ids)
+    if @guardian.can_change_tracking_preferences?(user)
+      CATEGORY_IDS.each do |attribute, level|
+        if ids = attributes[attribute]
+          CategoryUser.batch_set(user, level, ids)
+        end
       end
-    end
 
-    TAG_NAMES.each do |attribute, level|
-      if attributes.has_key?(attribute)
-        TagUser.batch_set(user, level, attributes[attribute]&.split(',') || [])
+      TAG_NAMES.each do |attribute, level|
+        if attributes.has_key?(attribute)
+          TagUser.batch_set(user, level, attributes[attribute]&.split(',') || [])
+        end
       end
     end
 
