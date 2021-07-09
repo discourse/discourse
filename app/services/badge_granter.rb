@@ -66,7 +66,7 @@ class BadgeGranter
           end
         end
       end
-    rescue PG::UniqueViolation => ex
+    rescue PG::UniqueViolation, PG::TRDeadlockDetected => ex
       if attempts < 10
         sleep(rand * 2)
         attempts += 1

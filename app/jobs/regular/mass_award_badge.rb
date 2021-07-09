@@ -5,6 +5,7 @@ module Jobs
     def execute(args)
       return unless mode = args[:mode]
       badge = Badge.find_by(id: args[:badge_id])
+      return if !badge&.enabled?
 
       users = User.select(:id, :username, :locale)
 
@@ -17,7 +18,7 @@ module Jobs
         users = users.where(username_lower: args[:users_batch])
       end
 
-      return if users.empty? || badge.nil? || !badge.enabled?
+      return if users.empty?
 
       if args[:grant_existing_holders] && (batch_number = args[:batch_number]) && (jobs_id = args[:jobs_id])
         if email_mode
