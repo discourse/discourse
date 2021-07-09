@@ -346,7 +346,7 @@ fi:
 
           **Poista** yltä mikä tahansa viestisi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **poista**-toiminnon avulla. Älä kuitenkaan erehdy poistamaan ketjun ensimmäistä viestiä!
         not_found: |-
-          Minusta viestejä ei vielä poistettu? Muista, että <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> näytä lisää -kuvake paljastaa <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> poista-kuvakkeen.
+          Minusta viestejä ei vielä poistettu? Muista, että <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> näytä lisää -kuvake paljastaa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> poista-kuvakkeen.
         reply: |-
           Vau! :boom:
 

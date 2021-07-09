@@ -330,7 +330,7 @@ fi:
     one: "Uudet käyttäjät voivat liittää vain yhden liitteen viestiin."
     other: "Uudet käyttäjätvat liittää vain %{count} liitettä viestiin."
   no_links_allowed: "Uudet käyttäjät eivät voi lisätä linkkejä viesteihin."
-  links_require_trust: "Et voi voi lisätä linkkejä viesteihin."
+  links_require_trust: "Et voi lisätä linkkejä viesteihin."
   too_many_links:
     one: "Uudet käyttäjät voivat lisätä vain yhden linkin viestiin."
     other: "Uudet käyttäjät voivat lisätä vain %{count} linkkiä viestiin."
@@ -627,7 +627,7 @@ fi:
 
       * Muokata minkä hyvänsä ketjun otsikkoa
       * Siirtää minkä tahansa ketjun toiselle alueelle
-      * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](http://en.wikipedia.org/wiki/Nofollow) on poistettu)
+      * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](https://en.wikipedia.org/wiki/Nofollow) on poistettu)
       * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
       * Piilottaa roskapostiviestin yhdellä liputuksella
 
@@ -1362,7 +1362,7 @@ fi:
     twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Twitterin kautta (enable_twitter_logins), mutta key- ja secret-arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Lue lisää tästä oppaasta</a>.'
     github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen GitHubin kautta (enable_github_logins), mutta client id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Lue lisää tästä oppaasta</a>.'
     s3_config_warning: 'Palvelin on konfiguroitu tallentamaan sivustolle ladatut tiedostot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
-    s3_backup_config_warning: 'Palvelin on konfiguroitu tallentamaan varmuuskopiot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
+    s3_backup_config_warning: 'Palvelin on konfiguroitu tallentamaan varmuuskopiot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">How to set up image uploads to S3?</a>.'
     s3_cdn_warning: 'Palvelin on määritetty käyttämään S3-latausta, mutta S3:n CDN-asetuksia ei ole määritelty. Tämä voi johtaa kalliisiin S3-kustannuksiin ja hitaampaan sivuston suorituskykyyn. <a href="https://meta.discourse.org/t/-/148916" target="_blank"> Lue lisää aiheesta täältä</a>.'
     image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="https://www.imagemagick.org/script/download.php" target="_blank">lataa uusin versio</a>.'
     failing_emails_warning: '%{num_failed_jobs} sähköpostitehtävää on epäonnistunut. Tarkista app.yml ja varmista, että sähköpostipalvelimen asetukset ovat kunnossa. <a href="%{base_path}/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
@@ -1460,7 +1460,7 @@ fi:
     favicon: "Sivuston favicon, ks. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa. Skaalataan kokoon 32x32. Jos jätetty tyhjäksi, large_icon-kuvaketta käytetään."
     apple_touch_icon: "Applen kosketuslaitteissa käytettävä kuvake. Skaalataan automaattisesti kokoon 180x180. Jos jätetään tyhjäksi, large_icon-kuvaketta käytetään."
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
-    twitter_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 180 ja korkeus vähintään 150). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa."
+    twitter_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu luettelo mukautetuista sähköpostin otsikkotiedoista"
     email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1900,7 +1900,7 @@ fi:
     digest_suppress_categories: "Älä liitä näiden alueiden viestejä yhteenvetosähköposteihin."
     disable_digest_emails: "Poista yhteenvetosähköpostit käytöstä kaikilta käyttäjiltä."
     apply_custom_styles_to_digest: "Mukautettua sähköpostipohjaa ja CSS:ää käytetään yhteenvetosähköposteihin."
-    email_accent_bg_color: "Kakkosväri, jota käytetään joidenkin elementtien taustavärinä HTML-sähköpostiviesteissä. Anna värin nimi englanniksi ('red') tai sen hex-arvo ('#FFF000')."
+    email_accent_bg_color: "Kakkosväri, jota käytetään joidenkin elementtien taustavärinä HTML-sähköpostiviesteissä. Anna värin nimi englanniksi ('red') tai sen hex-arvo ('#FFF0000')."
     email_accent_fg_color: "Sähköpostiviestin taustavärin päällä olevan tekstin väri HTML-sähköpostiviesteissä. Anna värin nimi englanniksi ('white') tai sen hex-arvo ('#FFFFFF')."
     email_link_color: "Linkkien väri HTML-sähköpostiviesteissä. Anna värin nimi englanniksi ('blue') tai sen hex-arvo ('#0000FF')."
     detect_custom_avatars: "Tarkistetaanko, ovatko käyttäjät ladanneet oman profiilikuvan."
@@ -1980,7 +1980,7 @@ fi:
     secure_media: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">turvallista mediaa käsittelevästä ketjusta Metassa</a>.'
     secure_media_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure media max email embed image size kb\" -asetus."
     secure_media_max_email_embed_image_size_kb: "Sähköposteihin upotettavien turvallisten kuvien kokoraja, jos \"secure media allow embed in emails\" -asetus on käytössä. Ilman kyseistä asetusta tällä asetuksella ei ole vaikutusta."
-    slug_generation_method: "Valitse polkulyhenteen luomisen metodi, 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
+    slug_generation_method: "Valitse polkutunnuksen luomisen metodi, 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkutunnukset käytöstä."
     enable_emoji: "Ota emoji käyttöön"
     enable_emoji_shortcuts: "Yleiset tekstiemojit, kuten :), :p ja :(, muunnetaan emojeiksi"
     emoji_set: "Millaiset emojit haluat?"
@@ -2018,7 +2018,7 @@ fi:
     default_email_in_reply_to: "Sisällytä katkelma vastattavasta viestistä sähköpostiin oletuksena."
     default_other_new_topic_duration_minutes: "Yleinen oletusarvo sille, milloin ketju tulkitaan uudeksi."
     default_other_auto_track_topics_after_msecs: "Yleinen oletusarvo sille, missä ajassa ketjua aletaan seurata."
-    default_other_notification_level_when_replying: "Yleinen oletusasetus ilmoitusasetukselle, kun käyttäjä vastaa ketjuun."
+    default_other_notification_level_when_replying: "Yleinen oletusilmoitustaso, kun käyttäjä vastaa ketjuun."
     default_other_external_links_in_new_tab: "Avaa oletuksena ulkopuoliset linkit uudessa välilehdessä."
     default_other_enable_quoting: "Ota oletuksena käyttöön lainaaminen valitsemalla tekstiä."
     default_other_enable_defer: "Ota ketjun lykkäystoiminto käyttöön oletuksena."
@@ -3106,7 +3106,7 @@ fi:
       text_body_template: |
         Hei,
 
-        Uusien käyttäjien viestejä on jonossa odottamassa tarkastusta.  [Hyväksy tai hylkää ne täällä](%{base_url}/review?type=ReviewableQueuedPost).
+        Uusien käyttäjien viestejä on jonossa odottamassa tarkastusta. [Hyväksy tai hylkää ne täällä](%{base_url}/review?type=ReviewableQueuedPost).
   unsubscribe_link: |
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -3365,7 +3365,7 @@ fi:
 
         Jos sinulla on kysyttävää, [ota yhteyttä avuliaaseen henkilökuntaamme](%{base_url}/about).
     digest:
-      why: "Lyhyt kooste siitä mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
+      why: "Lyhyt kooste siitä, mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
       since_last_visit: "Viime vierailusi jälkeen"
       new_topics: "Uutta ketjua"
       unread_notifications: "Lukematonta ilmoitusta"
@@ -3562,7 +3562,7 @@ fi:
     popular_topics: "Suosittuja"
     recent_topics: "Tuoreimpia"
     see_more: "Lisää"
-    search_title: "Etsi tältä sivustolta"
+    search_title: "Hae tältä sivustolta"
     search_button: "Haku"
   offline:
     title: "Sovellusta ei voida ladata"
@@ -4172,7 +4172,7 @@ fi:
       name: Kuuluisa linkki
       description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 1 000 kertaa
       long_description: |
-        Tämä ansiomerkki myönnetään, kun jakamasi linkkisi saa 1 000 klikkausta. Vau! Sen sisältö paransi keskustelua merkittävästi. Hyvin tehty!
+        Tämä kunniamerkki myönnetään, kun jakamasi linkkisi saa 1 000 klikkausta. Vau! Sen sisältö paransi keskustelua merkittävästi. Hyvin tehty!
     appreciated:
       name: Arvostettu
       description: 20 viestiä sai tykkäyksen
@@ -4299,7 +4299,7 @@ fi:
       button: "Rekisteröidy"
       title: "Rekisteröi ylläpitäjän tili"
       help: "aloita rekisteröimällä uusi tili"
-      no_emails: "Ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely voi olla vaikeaa. Lisää kehittäjän sähköpostiosoite määritystiedostoon tai <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>luo ylläpitäjän tili konsolissa</a>."
+      no_emails: "Ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely voi olla vaikeaa. Lisää kehittäjän sähköpostiosoite määritystiedostoon tai <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>luo ylläpitäjän tili konsolissa</a>."
     confirm_email:
       title: "Vahvista sähköpostisi"
       message: "<p>Lähetimme aktivointiviestin sähköpostiosoitteeseen <b>%{email}</b>. Aktivoi tili seuraamalla sähköpostiviestin ohjeita.</p><p>Jos viesti ei saavu, tarkista roskapostikansio ja <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>varmista, että määritit sähköpostin oikein</a>.</p>"
@@ -4588,7 +4588,7 @@ fi:
       approve_and_restore:
         title: "Hyväksy ja palauta viesti"
       delete_user:
-        reason: "Poistettiin hyväksyntäjonon kautta"
+        reason: "Poistettiin tarkastusjonon kautta"
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"
   notification_level:
