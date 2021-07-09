@@ -1826,8 +1826,8 @@ it:
         one: "Menzionando %{group}, una notifica sarà inviata a <a href='%{group_link}'>%{count} persona</a>. Vuoi procedere?"
         other: "Menzionando %{group}, saranno inviate notifiche a <a href='%{group_link}'>%{count} persone</a>. Vuoi procedere?"
       cannot_see_mention:
-        category: "Hai menzionato %{username} ma non verranno notificati perché non hanno accesso a questa categoria. Dovrai aggiungerli ad un gruppo che ha accesso a questa categoria."
-        private: "Hai menzionato %{username} ma non verranno notificati perché non hanno accesso a questo messaggio personale. Dovrai invitarli a questo MP."
+        category: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questa categoria. Dovrai aggiungerlo ad un gruppo che ha accesso a questa categoria."
+        private: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questo messaggio personale. Dovrai invitarlo a questo MP."
       duplicate_link: "Sembra che il tuo collegamento a <b>%{domain}</b> sia già stato pubblicato in questo argomento da <b>@%{username}</b> in <a href='%{post_url}'>una risposta di %{ago}</a> - sei sicuro di volerlo pubblicare ancora?"
       reference_topic_title: "RE: %{title}"
       error:

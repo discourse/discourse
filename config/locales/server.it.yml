@@ -3088,11 +3088,11 @@ it:
         Ora puoi accedere al tuo nuovo account a questo indirizzo:
         %{base_url}
 
-        Se il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
+        Se il link qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
 
         %{new_user_tips}
 
-        Noi crediamo da sempre in un [comportamento civile](%{base_url}/guidelines).
+        Promuoviamo da sempre un [comportamento civile della comunità](%{base_url}/guidelines).
 
         Buona permanenza!
     signup:
@@ -3101,18 +3101,18 @@ it:
       text_body_template: |
         Benvenuto su %{site_name}!
 
-        Clicca sul collegamento seguente per confermare ed attivare il tuo nuovo account:
+        Clicca sul link seguente per confermare ed attivare il tuo nuovo account:
         %{base_url}/u/activate-account/%{email_token}
 
-        Se il collegamento non è cliccabile, copialo ed incollalo nella barra degli indirizzi del tuo browser.
+        Se il link non è cliccabile, copialo ed incollalo nella barra degli indirizzi del tuo browser.
     activation_reminder:
       title: "Promemoria di attivazione"
       subject_template: "[%{email_prefix}] Promemoria per la conferma del tuo account"
-      text_body_template: "Benvenuto in %{site_name}! \n\nQuesto è un promemoria per l'attivazione del tuo account. \n\nFai clic sul seguente collegamento per confermare e attivare il tuo nuovo account:\n %{base_url}/u/activate-account/%{email_token} \n\nSe il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser web.\n"
+      text_body_template: "Benvenuto in %{site_name}! \n\nQuesto è un promemoria per l'attivazione del tuo account. \n\nFai clic sul seguente link per confermare e attivare il tuo nuovo account:\n %{base_url}/u/activate-account/%{email_token} \n\nSe il link qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser web.\n"
     suspicious_login:
       title: "Nuovo avviso di accesso"
       subject_template: "[%{site_name}] Nuovo accesso da %{location}"
-      text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Sei stato tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, fantastico! Non c'è nient'altro che devi fare. Se non sei stato tu, ti preghiamo di [controllare le tue sessioni esistenti] (%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
+      text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Sei stato tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, fantastico! Non c'è nient'altro che devi fare. \n\nSe non sei stato tu, ti preghiamo di [controllare le tue sessioni esistenti] (%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
     post_approved:
       title: "Il tuo messaggio è stato approvato"
       subject_template: "[%{site_name}] Il tuo messaggio è stato approvato"
@@ -3122,7 +3122,7 @@ it:
         Questo è un messaggio automatico da %{site_name} per farti sapere che [il tuo messaggio](%{base_url}%{post_url}) è stato approvato.
   page_forbidden:
     title: "Ops! Quella pagina è privata."
-  site_setting_missing: "Deve essere impostata l'impostazione del sito `%{name}`."
+  site_setting_missing: "L'impostazione del sito `%{name}` deve essere definita."
   page_not_found:
     title: "Ops! La pagina richiesta non esiste oppure è privata."
     popular_topics: "Popolari"
@@ -3136,7 +3136,7 @@ it:
   login_required:
     welcome_message: |
       ## [Benvenuto su %{title}](#welcome)
-      E' richiesto un account. Per continuare, crea un nuovo account oppure connettiti.
+      E' richiesto un account. Per continuare, crea un nuovo account oppure accedi.
     welcome_message_invite_only: "## [Benvenuto su %{title}](#benvenuto) \nÈ richiesto un account. Per favore, chiedi a un membro esistente un invito o accedi per continuare.\n"
   deleted: "cancellati"
   image: "immagine"
@@ -3176,7 +3176,7 @@ it:
     user_email_post_deleted: "il messaggio è stato cancellato dal suo autore"
     user_email_user_suspended: "l'utente è stato sospeso"
     user_email_already_read: "l'utente ha già letto questo messaggio"
-    user_email_access_denied: "l'utente non è abilitato alla visualizzazione di questo post"
+    user_email_access_denied: "l'utente non è abilitato alla visualizzazione di questo messaggio"
     user_email_no_email: "Nessuna email associata all'ID utente %{user_id}"
     sender_message_blank: "il messaggio è vuoto"
     sender_message_to_blank: "message.to è vuoto"
@@ -3189,10 +3189,10 @@ it:
     base_theme_name: "Base"
     light: "Chiaro"
     dark: "Scuro"
-    neutral: "Neutrale"
+    neutral: "Neutro"
     grey_amber: "Ambra grigia"
     shades_of_blue: "Sfumature di blu"
-    latte: "Latte"
+    latte: "Color latte"
     summer: "Estate"
     dark_rose: "Rosa scuro"
     wcag: "WCAG Chiaro"
@@ -3226,9 +3226,9 @@ it:
 
       ## [Quali informazioni raccogliamo?](#collect)
 
-      Raccogliamo informazioni su di te quando ti registri sul nostro sito e raccogliamo i dati quando partecipi alle attività del sito con la lettura, la scrittura, e la valutazione del contenuto condiviso qui.
+      Raccogliamo informazioni su di te quando ti registri sul nostro sito e raccogliamo i dati quando partecipi alle attività del forum con la lettura, la scrittura, e la valutazione del contenuto condiviso qui.
 
-      Quando ti registri al nostro sito, ti potrebbe essere richiesto di inserire il tuo nome e l'indirizzo email. Puoi tuttavia visitare il nostro sito senza effettuare la registrazione. Il tuo indirizzo email sarà verificato da una email contenente un link unico. Se tale link è cliccato, sapremo che hai controllato l'indirizzo email.
+      Quando ti registri al nostro sito, ti potrebbe essere richiesto di inserire il tuo nome e l'indirizzo email. Puoi tuttavia visitare il nostro sito senza effettuare la registrazione. Il tuo indirizzo email sarà confermato, da una email contenente un link univoco. Cliccando tale link, sapremo che controlli l'indirizzo email.
 
       Quando ti registri e pubblichi un messaggio, registriamo l'indirizzo IP da cui il messaggio ha origine. Possiamo anche conservare i log del server che includono gli indirizzi IP di ogni richiesta al nostro server.
 
@@ -3240,49 +3240,49 @@ it:
 
       * Per personalizzare la tua esperienza &mdash; le tue informazioni ci aiutano a rispondere meglio alle tue esigenze individuali.
       * Per migliorare il nostro sito &mdash; ci sforziamo continuamente di migliorare il nostro sito sulla base delle informazioni e dei feedback che riceviamo da te.
-      * Per migliorare il servizio clienti &mdash; le tue informazioni ci aiutano per rispondere più efficacemente alle richieste di assistenza e alle esigenze di supporto.
-      * Per inviare email periodiche &mdash; l'indirizzo email che ci fornisci può essere usato per inviarti informazioni, notifiche sulle modifche di argomenti che stai seguendo o in risposta alla citazione del tuo nome utente, per rispondere alle domande, e/o altre richieste.
+      * Per migliorare il servizio clienti &mdash; le tue informazioni ci aiutano a rispondere più efficacemente alle richieste di assistenza e alle esigenze di supporto.
+      * Per inviare email periodiche &mdash; l'indirizzo email che ci fornisci può essere usato per inviarti informazioni, notifiche sulle modifiche di argomenti che stai seguendo o in risposta alla citazione del tuo nome utente, per rispondere alle domande, e/o altre richieste.
 
       <a name="protect"></a>
 
       ## [Come proteggiamo i tuoi dati?](#protect)
 
-      Attuiamo una serie di misure di sicurezza per garantire la sicurezza dei tuoi dati personali quando accedi al forum, invii o accedi alle tue informazioni personali.
+      Attuiamo una serie di misure di sicurezza per garantire la protezione dei tuoi dati personali quando accedi al forum, invii o accedi alle tue informazioni personali.
 
       <a name="data-retention"></a>
 
       ## [Qual è a vostra politica di conservazione dei dati?](#data-retention)
 
-      Faremo uno sforzo per:
+      Ci impegneremo a:
 
-      * Conservare i log del server contenenti l'indirizzo IP di tutte le richieste al server non più di 90 giorni.
-      * Conservare gli indirizzi IP associati a utenti registrati e i loro post non più di 5 anni.
+      * Conservare i log del server contenenti l'indirizzo IP di tutte le richieste al server per non più di 90 giorni.
+      * Conservare gli indirizzi IP associati a utenti registrati e i loro messaggi per non più di 5 anni.
 
       <a name="cookies"></a>
 
       ## [Usiamo i cookie?](#cookies)
 
-      Sì. I cookie sono piccoli file che un sito o il suo fornitore di servizi trasferiscono sul disco rigido del tuo computer tramite il browser Web (se acconsenti). Questi cookie consentono al sito di riconoscere il tuo browser e, se hai un account registrato, associa il tuo account registrato.
+      Sì. I cookie sono piccoli file che un sito o il suo fornitore di servizi trasferiscono sul disco rigido del tuo computer tramite il browser Web (se acconsenti). Questi cookie consentono al sito di riconoscere il tuo browser e, se hai un account registrato, di associare il browser al tuo account registrato.
 
-      Utilizziamo i cookie per comprendere e salvare le tue preferenze per visite future e compilare dati aggregati sul traffico del sito e l'interazione del sito in modo da offrire migliori esperienze e strumenti in futuro. Possiamo contrattare con fornitori di servizi di terze parti per aiutarci a comprendere meglio i visitatori del sito. Questi fornitori di servizi non sono autorizzati a utilizzare le informazioni raccolte per nostro conto, tranne che per aiutarci a condurre e migliorare la nostra attività.
+      Utilizziamo i cookie per comprendere e salvare le tue preferenze per visite future e compilare dati aggregati sul traffico del sito e l'interazione del sito in modo da offrire migliori esperienze e strumenti in futuro. Possiamo stipulare contrati con fornitori di servizi di terze parti per aiutarci a comprendere meglio i visitatori del sito. Questi fornitori di servizi non sono autorizzati a utilizzare le informazioni raccolte per nostro conto, tranne che per aiutarci a condurre e migliorare la nostra attività.
 
       <a name="disclose"></a>
 
       ## [Divulghiamo informazioni a terze parti?](#disclose)
 
-      Non vendiamo, commerciamo o trasferiamo a terzi i tuoi dati personali. Questo non include i terzi di fiducia che ci aiutano nella gestione del nostro sito e a mantenere la nostra attività, finché tali parti si impegnano a mantenere tali informazioni riservate. Potremmo anche rilasciare i tuoi dati quando crediamo che il rilascio sia opportuno per rispettare la legge, far rispettare le nostre politiche del sito, o proteggere il nostro o altri diritti, la proprietà o la sicurezza. Tuttavia, le informazioni dei visitatori non identificabili personalmente possono essere fornite ad altre parti per marketing, pubblicità o altri usi.
+      Non vendiamo, commerciamo o trasferiamo a terzi i tuoi dati personali. Questi soggetti non comprendono terze parti di nostra fiducia che ci aiutano nella gestione del nostro sito e a mantenere la nostra attività, nella misura in cui tali parti si impegnano a mantenere tali informazioni riservate. Potremmo anche condividere i tuoi dati quando crediamo che ciò sia opportuno per rispettare la legge, far rispettare le nostre politiche del sito, o proteggere i nostri diritti, proprietà e sicurezza, e quelli di altri. Tuttavia, le informazioni dei visitatori che non consentono l'identificazione personale possono essere fornite ad altre parti per marketing, pubblicità o altri usi.
 
       <a name="third-party"></a>
 
       ## [Link di terze parti](#third-party)
 
-      Occasionalmente, a nostra discrezione, possiamo includere o offrire prodotti o servizi di terzi sul nostro sito. Questi siti di terze parti hanno politiche sulla privacy separate e indipendenti. Non abbiamo quindi alcuna responsabilità per il contenuto e le attività di questi siti collegati. Tuttavia, cerchiamo di proteggere l'integrità del nostro sito, ed eventuali feedback su altri siti sono i benvenuti.
+      Occasionalmente, a nostra discrezione, possiamo includere o offrire prodotti o servizi di terzi sul nostro sito. Questi siti di terze parti hanno politiche sulla privacy separate e indipendenti. Non abbiamo quindi alcuna responsabilità per il contenuto e le attività di questi siti collegati. Tuttavia, cerchiamo di proteggere l'integrità del nostro sito, ed eventuali feedback sulla sicurezza di altri siti ci saranno molto utili.
 
       <a name="coppa"></a>
 
       ## [Legge sulla protezione dei dati personali dei bambini](#coppa)
 
-      Il nostro sito, i prodotti e i servizi sono tutti rivolti a persone di almeno 13 anni. Se questo server è negli Stati Uniti e sei al di sotto dei 13 anni per i requisiti del COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), non utilizzare questo sito.
+      Il nostro sito, i prodotti e i servizi sono tutti rivolti a persone di almeno 13 anni. Se questo server è negli Stati Uniti e sei al di sotto dei 13 anni, nel rispetto delle norme del COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), non dovrai utilizzare questo sito.
 
       <a name="online"></a>
 
@@ -3319,24 +3319,24 @@ it:
         Questo Distintivo è assegnato la prima volta che modifichi un post wiki.
     basic_user:
       name: Base
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> a tutte le funzioni essenziali della comunità
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> tutte le funzioni essenziali della comunità
       long_description: |
-        Questo distintivo è assegnato quando si raggiunge il livello di esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi sospetti, la possibilità di modificare gli argomenti Wiki e l'abilità di inviare immagini e collegamenti multipli.
+        Questo distintivo è assegnato quando si raggiunge il livello di di attendibilità1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi sospetti, la possibilità di modificare gli argomenti Wiki e l'abilità di inviare immagini e collegamenti multipli.
     member:
       name: Membro
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> inviti, messaggi di gruppo e più "mi piace"
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> inviti, messaggi di gruppo e mettere più "mi piace"
       long_description: |
-        Questo distintivo è assegnato quando si raggiunge il livello di esperienza 2. Grazie per esserti unito e per aver partecipato per qualche settimana alla nostra comunità. Ora puoi mandare inviti dalla tua pagina utente o dai singoli argomenti, creare messaggi personali di gruppo, e mettere un numero maggiore di "Mi piace" al giorno.
+        Questo distintivo è assegnato quando si raggiunge il livello di attendibilità 2. Grazie per esserti unito e per aver partecipato per qualche settimana alla nostra comunità. Ora puoi mandare inviti dalla tua pagina utente o dai singoli argomenti, creare messaggi personali di gruppo, e mettere un numero maggiore di "Mi piace" al giorno.
     regular:
       name: Assiduo
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> ricategorizza, rinomina, collegamenti seguiti, wiki e ulteriori "mi piace"
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> opzioni come cambio categoria, rinomina, seguire link, usare wiki e mettere ancora più "mi piace"
       long_description: |
-        Questo distintivo viene assegnato quando raggiungi il livello di esperienza 3. Grazie per essere stato parte attiva della nostra comunità per qualche mese. Ora sei uno dei lettori più attivi e un collaboratore affidabile che rende grande la nostra comunità. Ora puoi ricategorizzare e rinominare gli argomenti, usare le segnalazioni spam più potenti, accedere a un'area Lounge privata, e puoi mettere un numero maggiore di "Mi piace" al giorno.
+        Questo distintivo viene assegnato quando raggiungi il livello di attendibilità 3. Grazie per essere stato parte attiva della nostra comunità per qualche mese. Ora sei uno dei lettori più attivi e un collaboratore affidabile che rende grande la nostra comunità. Ora puoi cambiare categorie e rinominare gli argomenti, usare le segnalazioni spam più potenti, accedere a un'area Lounge privata e puoi mettere un numero maggiore di "Mi piace" al giorno.
     leader:
       name: Veterano
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> modifica globale, appuntare, chiudere, archiviare, dividere e unire argomenti, e ulteriori "mi piace"
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> modifica globale, appuntare, chiudere, archiviare, dividere e unire argomenti, e mettere più "mi piace"
       long_description: |
-        Questo distintivo è assegnato quando si raggiunge il livello di esperienza 4. Sei un veterano in questa comunità selezionato dallo staff, e qui sei un esempio positivo per il resto della comunità con le tue azioni e parole. Hai la possibilità di modificare tutti i messaggi, agire come un moderatore con azioni comuni quali puntare, chiudere, rendere invisibile, archiviare, dividere e unire, e hai tonnellate di mi piace al giorno.
+        Questo distintivo è assegnato quando si raggiunge il livello di attendibilità 4. Sei un veterano in questa comunità selezionato dallo staff, e qui sei un esempio positivo per il resto della comunità con le tue azioni e parole. Hai la possibilità di modificare tutti i messaggi, agire come un moderatore con azioni comuni quali appuntare, chiudere, rendere invisibile, archiviare, dividere e unire argomenti.
     welcome:
       name: Benvenuto
       description: Ha ricevuto un "Mi piace"
@@ -3346,7 +3346,7 @@ it:
       name: Autobiografo
       description: Ha compilato le informazioni del <a href="%{base_uri}/my/preferences/profile">profilo</a>
       long_description: |
-        Questo Distintivo viene assegnato per aver compilato il <a href="%{base_uri}/my/preferences/profile">tuo Profilo utente</a> e aver impostato un'immagine di profilo. Far sì che la comunità sappia qualcosa di te e dei tuoi interessi aiuta a creare un gruppo migliore e più coeso. Unisciti a noi!
+        Questo Distintivo viene assegnato per aver compilato il <a href="%{base_uri}/my/preferences/profile">tuo Profilo utente</a> e aver impostato un'immagine per il profilo. Far sì che la comunità sappia qualcosa di te e dei tuoi interessi aiuta a creare un gruppo migliore e più coeso. Unisciti a noi!
     anniversary:
       name: Anniversario
       description: Membro attivo per un anno, ha scritto almeno una volta
@@ -3386,7 +3386,7 @@ it:
       name: Piacevole Condivisione
       description: Ha condiviso un messaggio con 25 visitatori diversi
       long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 25 visitatori esterni. Grazie per diffondere la parola circa le nostre discussioni e questa comunità.
+        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 25 visitatori esterni. Grazie per aver fatto conoscere le nostre discussioni e questa comunità.
     good_share:
       name: Buona Condivisione
       description: Ha condiviso un messaggio con 300 visitatori diversi
@@ -3401,7 +3401,7 @@ it:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
       long_description: |
-        Questo distintivo è assegnato la prima volta che metti "Mi piace" ad un messaggio usando il pulsante :heart:. Mettere mi piace a dei messaggi è un ottimo modo per far sapere a tutti i membri della tua comunità che ciò che hanno pubblicato è stato interessante, utile, forte o divertente. Condividi l'amore!
+        Questo distintivo è assegnato la prima volta che metti "Mi piace" ad un messaggio usando il pulsante :heart:. Mettere mi piace a dei messaggi è un ottimo modo per far sapere a tutti i membri della tua comunità che ciò che hanno pubblicato è stato interessante, utile, forte o divertente. Condividi affetto!
     first_flag:
       name: Prima Segnalazione
       description: Segnalato un messaggio
@@ -3416,7 +3416,7 @@ it:
       name: Attivista
       description: Ha invitato 3 utenti
       long_description: |
-        Questo Distintivo è assegnato quando hai invitato 3 persone che successivamente hanno trascorso abbastanza tempo sul sito per diventare utenti di base. Una comunità vivace ha bisogno dell'arrivo costante di nuovi arrivati che partecipino regolarmente e aggiungano nuove voci alle conversazioni.
+        Questo Distintivo è assegnato quando hai invitato 3 persone che successivamente hanno trascorso abbastanza tempo sul sito per diventare utenti di base. Una comunità vivace ha bisogno dell'arrivo costante di nuovi membri che partecipino regolarmente e aggiungano nuove voci alle conversazioni.
     champion:
       name: Campione
       description: Ha invitato 5 membri

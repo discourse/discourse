@@ -163,6 +163,8 @@ ja:
       max_emojis: "%{max_emojis_count} 個以上の絵文字を使用できません"
       emojis_disabled: "は絵文字を使用できません"
       ip_address_already_screened: "はすでに既存のルールに含まれています"
+      restrict_dependent_destroy:
+        other: "依存する %{record} が存在するため、レコードを削除できません"
       too_long:
         other: は長すぎます (最大 %{count} 文字です)
       too_short:
@@ -325,6 +327,7 @@ ja:
   watched_words_auto_tag: "自動的にタグ付けされたトピック"
   secure_upload_not_allowed_in_public_topic: "次のセキュアアップロードを公開トピックで使用することはできません: %{upload_filenames}"
   create_pm_on_existing_topic: "既存のトピックに PM を作成することはできません。"
+  slow_mode_enabled: "このトピックは低速モードです。"
   just_posted_that: "は最近の投稿に非常に似ています"
   invalid_characters: "に無効な文字が含まれています"
   is_invalid: "は曖昧です。完全な文ですか？"
@@ -337,6 +340,8 @@ ja:
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
   rss_num_posts:
     other: "投稿 %{count} 件"
+  rss_num_participants:
+    other: "参加者: %{count}"
   read_full_topic: "全トピックを読む"
   private_message_abbrev: "メッセージ"
   rss_description:
@@ -355,10 +360,21 @@ ja:
     user_posts: "@%{username} の最新の投稿"
     user_topics: "@%{username} の最新のトピック"
     tag: "タグ付きトピック"
+    badge: "%{site_title} の %{display_name} バッジ"
   too_late_to_edit: "この投稿はかなり前に作成されました。編集または削除はできなくなりました。"
+  edit_conflict: "その投稿は別のユーザーによって編集されたため、あなたの変更は保存できなくなりました。"
+  revert_version_same: "現在のバージョンは、元に戻そうとしているバージョンと同じです。"
+  cannot_edit_on_slow_mode: "このトピックは低速モードです。よく考えられたディスカッションを奨励するため、このトピックの古い投稿の編集は、現在の低速モード中、許可されません。"
   excerpt_image: "画像"
   bookmarks:
+    errors:
+      already_bookmarked_post: "同じ投稿を 2 回ブックマークすることはできません。"
+      too_many: "ブックマークを %{limit} 件以上追加できません。<a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>にアクセスして、いくつか削除してください。"
+      cannot_set_past_reminder: "ブックマークリマインダーを過去の時間に設定できません。"
+      cannot_set_reminder_in_distant_future: "ブックマークリマインダーは 10 年以上先の日時に設定できません。"
+      time_must_be_provided: "すべてのリマインダーには時間の指定が必要です。"
     reminders:
+      at_desktop: "次にデスクトップに戻ったとき"
       later_today: "今日の後程"
       next_business_day: "翌営業日"
       tomorrow: "明日"
@@ -366,10 +382,25 @@ ja:
       next_month: "来月"
       custom: "カスタムの日付と時刻"
   groups:
+    success:
+      bulk_add:
+        other: "%{count} 人のユーザーがグループに追加されました。"
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' は有効な信頼レベルではありません。"
+      can_not_modify_automatic: "自動グループを変更することはできません"
+      member_already_exist:
+        other: "次のユーザーはすでにこのグループのメンバーです: %{username}"
+      invalid_domain: "'%{domain}' は有効なドメインではありません。"
       invalid_incoming_email: "%{email} は有効なメールアドレスではありません。"
       email_already_used_in_group: "'%{email}' はすでに '%{group_name}' グループに使われています。"
       email_already_used_in_category: "'%{email}' はすでに '%{category_name}' カテゴリに使われています。"
+      cant_allow_membership_requests: "オーナーのいないグループのメンバーシップリクエストを許可できません。"
+      already_requested_membership: "このグループのメンバーシップはすでにリクエスト済みです。"
+      adding_too_many_users:
+        other: "最大 %{count} 人のユーザーを一度に追加できます"
+      usernames_or_emails_required: "ユーザー名またはメールアドレスが必要です"
+      no_invites_with_discourse_connect: "DiscourseConnect が有効である場合にのみ、登録済みユーザーを招待できます"
+      no_invites_without_local_logins: "ローカルログインが無効である場合にのみ、登録済みユーザーを招待できます"
     default_names:
       everyone: "全員"
       admins: "管理者"
@@ -380,9 +411,35 @@ ja:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    request_membership_pm:
+      title: "@%{group_name} のメンバーシップリクエスト"
+    request_accepted_pm:
+      title: "@%{group_name} に承諾されました"
+      body: |
+        @%{group_name} に参加するリクエストが承諾されたため、メンバーになりました。
   education:
     until_posts:
       other: "投稿 %{count} 件"
+    "new-topic": |
+      %{site_name} へようこそ &mdash; **新しい会話を開始していただきありがとうございます！**
+
+      - タイトルを声を出して読み上げたとき、興味深いと感じられますか？要約はわかりやすいですか？
+
+      - どのようなユーザーが興味を持ちますか？なぜ重要ですか？どのような回答を求めていますか？
+
+      - 一般的にしよされている言葉をトピックに含めると、ほかのユーザーが*検索*しやすくなります。トピックを関連トピックとグループ化するには、カテゴリ（またはタグ）を選択してください。
+
+      詳細については、[コミュニティガイドラインをご覧ください](%{base_path}/guidelines)。このパネルは最初の%{education_posts_text}にのみ表示されます。
+    "new-reply": |
+      %{site_name} へようこそ &mdash; **貢献していただきありがとうございます！**
+
+      - 他のコミュニティメンバーに親切に接してください。
+
+      ‐ あなたの返信によって会話が改善されますか？
+
+      ‐ 建設的な批判は歓迎されますが、ユーザーではなく*アイデア*を批判してください。
+
+      詳細は、[コミュニティガイドラインをご覧ください](%{base_path}/guidelines)。このパネルは最初の%{education_posts_text}にのみ表示されます。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
@@ -905,6 +962,11 @@ ja:
       description: "すべてのアップロードを拡張し、ファイルサイズ、および作者別に一覧表示します。"
     top_ignored_users:
       title: "上位無視/ミュートユーザー"
+      labels:
+        ignored_user: 無視されたユーザー
+        ignores_count: 無視数
+        mutes_count: ミュート数
+      description: "他多数のユーザーによってミュートまたは無視されたユーザー。"
   dashboard:
     rails_env_warning: "サーバーは %{env} モードで実行中です。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
