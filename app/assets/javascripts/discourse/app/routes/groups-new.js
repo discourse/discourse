@@ -10,7 +10,11 @@ export default DiscourseRoute.extend({
   },
 
   model() {
-    return Group.create({ automatic: false, visibility_level: 0 });
+    return Group.create({
+      automatic: false,
+      visibility_level: 0,
+      can_admin_group: true,
+    });
   },
 
   setupController(controller, model) {
