@@ -947,7 +947,7 @@ fr:
       short_description: "Ceci est une publicité"
     inappropriate:
       title: "Répréhensible"
-      description: 'Le contenu de ce message serait jugé offensant, injurieux, violent ou en infraction de la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
+      description: 'Le contenu de ce sujet serait jugé offensant, injurieux, violent ou en infraction de la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
       long_form: "signalé comme répréhensible"
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
     notify_moderators:
@@ -1218,7 +1218,7 @@ fr:
       description: "Nombre de fois où les utilisateurs ont été informés d'un signalement par message direct."
     top_referrers:
       title: "Meilleurs référents"
-      xaxis: "Utilisateurs"
+      xaxis: "Utilisateur"
       num_clicks: "Clics"
       num_topics: "Sujets"
       labels:

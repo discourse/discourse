@@ -2109,7 +2109,7 @@ fr:
         in_group:
           label: Groupe
         with_badge:
-          label: Badge
+          label: Avec un badge
         with_tags:
           label: Étiquettes
         filters:
@@ -3498,7 +3498,7 @@ fr:
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
-      title: "Administrateur"
+      title: "Administrateur Discourse"
       moderator: "Modérateur"
       tags:
         remove_muted_tags_from_latest:
@@ -3758,11 +3758,11 @@ fr:
         active: "Actif"
         active_notice: "Nous délivrerons les détails de l'évènement quand il se produira."
         categories_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux catégories définies. Laissez l'espace vide pour les déclencher pour toutes les catégories."
-        categories_filter: "Catégories"
+        categories_filter: "Catégories déclenchées"
         tags_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux étiquettes définies. Laissez l'espace vide pour les déclencher pour toutes les étiquettes."
-        tags_filter: "Étiquettes"
+        tags_filter: "Étiquettes déclenchées"
         groups_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux groupes définis. Laissez l'espace vide pour les déclencher pour tous les groupes."
-        groups_filter: "Groupes"
+        groups_filter: "Groupes déclenchés"
         delete_confirm: "Supprimer ce Webhook ?"
         topic_event:
           name: "Événement de sujet"
@@ -4382,7 +4382,7 @@ fr:
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
-          email: "Courriel"
+          email: "Adresse courriel"
           actions:
             allow: "Autoriser"
         screened_urls:
@@ -5011,7 +5011,7 @@ fr:
         roles:
           admin: "Administrateur"
           moderator: "Modérateur"
-          regular: "Utilisateur"
+          regular: "Utilisateur normal"
       previews:
         topic_title: "Sujet de discussion"
         font_title: "Police %{font}"
