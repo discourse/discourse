@@ -609,7 +609,7 @@ describe PostRevisor do
       it 'increases the post_edits stat count' do
         expect do
           subject.revise!(post.user, { raw: "This is a new revision" }, increment_edits_count: true)
-        end.to change { post.user.user_stat.reload.post_edits_count }.by(1)
+        end.to change { post.user.user_stat.post_edits_count.to_i }.by(1)
       end
 
       context 'second poster posts again quickly' do
