@@ -29,7 +29,9 @@ const SiteHeaderComponent = MountWidget.extend(
     @observes(
       "currentUser.unread_notifications",
       "currentUser.unread_high_priority_notifications",
-      "currentUser.reviewable_count"
+      "currentUser.reviewable_count",
+      "session.defaultColorSchemeIsDark",
+      "session.darkModeAvailable"
     )
     notificationsChanged() {
       this.queueRerender();
