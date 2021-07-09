@@ -179,20 +179,51 @@ task 'emails:test', [:email] => [:environment] do |_, args|
   end
   begin
     puts "Sending to #{email}. . . "
-    Email::Sender.new(TestMailer.send_test(email), :test_message).send
+    email_log = Email::Sender.new(TestMailer.send_test(email), :test_message).send
+    case email_log
+    when SkippedEmailLog
+      puts <<~STR
+        Mail was not sent.
+
+        Reason: #{email_log.reason}
+      STR
+    when EmailLog
+      puts <<~STR
+        Mail accepted by SMTP server.
+        Message-ID: #{email_log.message_id}
+
+        If you do not receive the message, check your SPAM folder
+        or test again using a service like http://www.mail-tester.com/.
+
+        If the message is not delivered it is not a problem with Discourse.
+        Check the SMTP server logs for the above Message ID to see why it
+        failed to deliver the message.
+      STR
+    when nil
+      puts <<~STR
+        Mail was not sent.
+
+        Verify the status of the `disable_emails` site setting.
+      STR
+    else
+      puts <<~STR
+        SCRIPT BUG: Got back a #{email_log.class}
+        #{email_log.inspect}
+
+        Mail may or may not have been sent. Check the destination mailbox.
+      STR
+    end
   rescue => error
     puts "Sending mail failed."
     puts error.message
-  else
+  end
+
+  if SiteSetting.disable_emails != 'no'
     puts <<~STR
-      Mail accepted by SMTP server.
 
-      If you do not receive the message, check your SPAM folder
-      or test again using a service like http://www.mail-tester.com/.
-
-      If the message is not delivered it is not a problem with Discourse.
-
-      Check the SMTP server logs to see why it failed to deliver the message.
+      ### WARNING
+      The `disable_emails` site setting is currently set to #{SiteSetting.disable_emails}.
+      Consider changing it to 'no' before performing any further troubleshooting.
     STR
   end
 end
