@@ -164,9 +164,6 @@ fr:
       max_emojis: "ne peut pas contenir plus de %{max_emojis_count} émojis"
       emojis_disabled: "ne peut pas contenir des émojis"
       ip_address_already_screened: "est déjà inclus dans une règle existante"
-      restrict_dependent_destroy:
-        one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
-        many: "Impossible de supprimer l'enregistrement car un %{record} existe et en dépend"
       too_long:
         one: 'est trop long (nombre maximal de caractères : %{count})'
         other: 'est trop long (nombre maximal de caractères : %{count})'
@@ -1354,7 +1351,7 @@ fr:
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
-    sidekiq_warning: 'Sidekiq n''est pas en cours d''exécution. De nombreuses tâches, comme l''envoi de courriels, sont exécutées de manière asynchrone par Sidekiq. Assurez-vous d''avoir au moins un processus Sidekiq en exécution. <a href="https://github.com/mperham/sidekiq">En savoir plus sur Sidekiq</a>.'
+    sidekiq_warning: 'Sidekiq n''est pas en cours d''exécution. De nombreuses tâches, comme l''envoi de courriels, sont exécutées de manière asynchrone par Sidekiq. Assurez-vous d''avoir au moins un processus Sidekiq en exécution. <a href="https://github.com/mperham/sidekiq" target="_blank">En savoir plus sur Sidekiq</a>.'
     queue_size_warning: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est assez élevé. Cela peut indiquer un problème avec les processus Sidekiq ou que ces derniers ne sont pas assez nombreux pour traiter efficacement les tâches."
     memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
     google_oauth2_config_warning: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les valeurs de l''identifiant client et le secret client ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">paramètres du site</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voir le guide pour en savoir plus</a>.'
@@ -1377,7 +1374,6 @@ fr:
     force_https_warning: "Votre site Web utilise SSL. Mais l'option « <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a> » n'est pas encore activée dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
-    watched_word_regexp_error: "L'expression régulière pour %{action} des mots surveillés n'est pas valable. Veuillez vérifier la <a href='%{base_path}/admin/customize/watched_words'>configuration des mots surveillés</a>, ou désactiver le paramètre « watched words regular expressions »."
   site_settings:
     display_local_time_in_user_card: "Afficher l'heure locale en fonction du fuseau horaire de l'utilisateur quand sa carte est ouverte."
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
@@ -1515,7 +1511,7 @@ fr:
     ga_version: "Version de Google Universal Analytics à utiliser : v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics, par exemple : UA-12345678-9 ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics, par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Activer le suivi de plusieurs domaines pour Google Universal Analytics. Les liens sortants vers ces domaines seront accompagnés de l'identifiant client. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=fr' target='_blank'>Configurer le suivi de plusieurs domaines</a>."
+    ga_universal_auto_link_domains: "Activer le suivi de plusieurs domaines pour Google Universal Analytics. Les liens sortants vers ces domaines seront accompagnés de l'identifiant client. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Configurer le suivi de plusieurs domaines</a>."
     gtm_container_id: "Identifiant de conteneur Google Tag Manager, par exemple : GTM-ABCDEF. <br/>Note : les scripts tiers chargés par GTM devront peut-être être ajoutés à la liste d'autorisation « content security policy script src »."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Autoriser les modérateurs à gérer les catégories et les groupes"
@@ -1812,7 +1808,7 @@ fr:
     min_first_post_typing_time: "Durée minimale en millisecondes qu'un utilisateur doit passer à saisir son premier message, si le seuil n'est pas atteint, le message rejoindra automatiquement la file d'attente pour approbation. Mettre à 0 pour désactiver (non recommandé)"
     auto_silence_fast_typers_on_first_post: "Mettre en sourdine automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximal pour automatiquement mettre en sourdine les utilisateurs rédigeant des messages trop rapidement."
-    auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est détectée, déclenchera la mise en sourdine du premier message de tout utilisateur et ajoutera ce message à la liste des messages à valider. Exemple : « rageux|a[bc]a » mettra en sourdine les premiers messages contenant « rageux » ou « aba » ou « aca ». DÉPRÉCIÉ : utilisez la fonctionnalité <em>Mettre en sourdine</em> à la place."
+    auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est détectée, déclenchera la mise en sourdine du premier message de tout utilisateur et ajoutera ce message à la liste des messages à valider. Exemple : « rageux|a[bc]a » mettra en sourdine les premiers messages contenant « rageux » ou « aba » ou « aca ». DÉPRÉCIÉ : utilisez la fonctionnalité « Mettre en sourdine » à la place."
     reviewable_claiming: "Les éléments à examiner doivent-ils être réservés avant de pouvoir être traités ?"
     reviewable_default_topics: "Par défaut, afficher les éléments à examiner en les regroupant par sujet"
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils aient ce niveau de priorité"
@@ -1975,7 +1971,7 @@ fr:
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: "Supprimer les brouillons remontant à plus de (n) jours."
     delete_merged_stub_topics_after_days: "Délai (en jours) de suppression automatique des sujets fusionnés, c'est-à-dire les sujets sans réponses résultant de la fusion de deux sujets par déplacement de messages. Si la valeur est fixée à 0, les sujets fusionnés ne seront pas supprimés."
-    bootstrap_mode_min_users: "Nombre minimal d'utilisateurs nécessaire pour désactiver le mode spécial de lancement (mettre à 0 pour désactiver)"
+    bootstrap_mode_min_users: "Nombre minimal d'utilisateurs nécessaire pour désactiver le mode d'amorçage (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_media: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux médias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ce sujet sur les médias sécurisés</a> pour en savoir plus.'
     secure_media_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les courriels, si leur taille est inférieure à la valeur du paramètre « secure media max email embed image size kb »."
@@ -2657,7 +2653,7 @@ fr:
 
         En vous souhaitant d'agréables moments parmi nous !
     welcome_tl1_user:
-      title: "Bienvenue utilisateur"
+      title: "Bienvenue utilisateur de niveau 1"
       subject_template: "Merci de passer du temps avec nous"
       text_body_template: |
         Salut ! Nous avons vu que vous lisez beaucoup, ce qui est super, alors nous vous avons monté d'un [niveau de confiance](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) !
@@ -2778,7 +2774,7 @@ fr:
 
         Ce lien de téléchargement fonctionnera pendant 48 heures.
 
-        Les données sont compressées dans une archive au format <em>zip</em>. Si vous ne parvenez pas à en extraire les fichiers, nous vous recommandons d'utiliser l'outil suivant : https://www.7-zip.org/.
+        Les données sont compressées dans une archive au format zip. Si vous ne parvenez pas à en extraire les fichiers, nous vous recommandons d'utiliser l'outil suivant : https://www.7-zip.org/.
     csv_export_failed:
       title: "Export CSV échoué"
       subject_template: "Échec de l'exportation des données"
@@ -2944,7 +2940,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre courriel a été marqué comme « généré automatiquement  », ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain ; nous ne pouvons pas accepter ce type de courriel. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
+        Votre courriel a été marqué comme « généré automatiquement », ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain ; nous ne pouvons pas accepter ce type de courriel. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_unrecognized_error:
       title: "Courriel rejeté - Erreur inconnue"
       subject_template: "[%{email_prefix}] Problème de courriel - Erreur inconnue"

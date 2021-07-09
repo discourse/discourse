@@ -2440,14 +2440,10 @@ it:
         pin: "Appunta Argomento"
         unpin: "Spunta Argomento"
         pin_globally: "Appunta Argomento Globalmente"
-        make_banner: "Argomento banner"
         remove_banner: "Rimuovi Argomento banner"
       reply:
         title: "Rispondi"
         help: "inizia a comporre una risposta a questo argomento"
-      clear_pin:
-        title: "Spunta"
-        help: "Rimuovi lo stato appuntato da questo argomento, così non comparirà più in cima alla lista degli argomenti"
       share:
         title: "Condividi"
         extended_title: "Condividi un collegamento"
@@ -3551,9 +3547,6 @@ it:
               label: Categoria
             include_subcategories:
               label: "Includi Sottocategorie"
-      commits:
-        latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
-        by: "da"
       groups:
         new:
           title: "Nuovo Gruppo"
@@ -4230,7 +4223,6 @@ it:
           details: "Dettagli"
           previous_value: "Precedente"
           new_value: "Nuovo"
-          diff: "Diff"
           show: "Mostra"
           modal_title: "Dettagli"
           no_previous: "Non c'è un valore precedente."

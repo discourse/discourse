@@ -2143,14 +2143,10 @@ ja:
         pin: "トピックを固定"
         unpin: "トピックを固定解除"
         pin_globally: "トピックを全体に固定"
-        make_banner: "バナートピック"
         remove_banner: "バナートピックを削除"
       reply:
         title: "返信"
         help: "このトピックへの返信を作成する"
-      clear_pin:
-        title: "固定をクリア"
-        help: "このトピックの固定ステータスを解除し、トピックリストの先頭に表示されないようにする"
       share:
         title: "共有"
         help: "このトピックのリンクを共有する"
@@ -2841,9 +2837,6 @@ ja:
               label: グループ
             category:
               label: カテゴリ
-      commits:
-        latest_changes: "最新の更新: 頻繁に更新してください！"
-        by: "コミット:"
       groups:
         new:
           title: "新しいグループ"
@@ -3177,7 +3170,6 @@ ja:
           details: "詳細"
           previous_value: "変更前"
           new_value: "変更後"
-          diff: "差分"
           show: "表示"
           modal_title: "詳細"
           no_previous: "変更前の値がありません。"

@@ -163,9 +163,6 @@ ja:
       max_emojis: "%{max_emojis_count} 個以上の絵文字を使用できません"
       emojis_disabled: "は絵文字を使用できません"
       ip_address_already_screened: "はすでに既存のルールに含まれています"
-      restrict_dependent_destroy:
-        one: "依存する %{record} が存在するため、レコードを削除できません"
-        many: "依存する %{record} が存在するため、レコードを削除できません"
       too_long:
         other: は長すぎます (最大 %{count} 文字です)
       too_short:

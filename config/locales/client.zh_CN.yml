@@ -182,7 +182,7 @@ zh_CN:
     age: "年龄"
     joined: "加入日期："
     admin_title: "管理员"
-    show_more: "展开"
+    show_more: "显示更多"
     show_help: "选项"
     links: "链接"
     links_lowercase:
@@ -2343,14 +2343,10 @@ zh_CN:
         pin: "置顶话题"
         unpin: "取消置顶话题"
         pin_globally: "全局置顶话题"
-        make_banner: "横幅话题"
         remove_banner: "移除横幅话题"
       reply:
         title: "回复"
         help: "开始撰写此话题的回复"
-      clear_pin:
-        title: "清除置顶"
-        help: "清除此话题的置顶状态，使其不再出现在您的话题列表顶部"
       share:
         title: "分享"
         extended_title: "分享链接"
@@ -3391,9 +3387,6 @@ zh_CN:
               label: 类别
             include_subcategories:
               label: "包括子类别"
-      commits:
-        latest_changes: "最新变化：请经常更新！"
-        by: "来自"
       groups:
         new:
           title: "新群组"
@@ -4065,7 +4058,6 @@ zh_CN:
           details: "详细信息"
           previous_value: "上一个"
           new_value: "新"
-          diff: "差异"
           show: "显示"
           modal_title: "详细信息"
           no_previous: "没有之前的值。"
@@ -4721,7 +4713,7 @@ zh_CN:
         category: "发布到类别"
         add_host: "添加主机"
         settings: "嵌入设置"
-        crawling_settings: "爬虫设置"
+        crawling_settings: "抓取工具设置"
         crawling_description: "当 Discourse 为您的帖子创建话题时，如果不存在 RSS/ATOM Feed，它将尝试从您的 HTML 中解析您的内容。有时提取您的内容可能充满挑战，因此我们提供了指定 CSS 规则的功能，以便更轻松地提取内容。"
         embed_by_username: "话题创建者的用户名"
         embed_post_limit: "要嵌入的最大帖子数"

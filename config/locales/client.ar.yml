@@ -2509,14 +2509,10 @@ ar:
         pin: "تثبيت الموضوع"
         unpin: "إلغاء تثبيت الموضوع"
         pin_globally: "تثبيت الموضوع بشكلٍ عمومي"
-        make_banner: "التحويل إلى موضوع بانر"
         remove_banner: "إزالة الموضوع البانر"
       reply:
         title: "الرد"
         help: "ابدأ في كتابة رد على هذه الموضوع"
-      clear_pin:
-        title: "إلغاء التثبيت"
-        help: "إلغاء تثبيت الموضوع حتى لا يظهر في أعلى قائمة الموضوعات لديك"
       share:
         title: "المشاركة"
         extended_title: "مشاركة رابط"
@@ -3732,9 +3728,6 @@ ar:
               label: المجموعة
             category:
               label: الفئة
-      commits:
-        latest_changes: "آخر التغييرات: يُرجى التحديث باستمرار!"
-        by: "بواسطة"
       groups:
         new:
           title: "مجموعة جديدة"
@@ -4232,7 +4225,6 @@ ar:
           details: "التفاصيل"
           previous_value: "السابق"
           new_value: "جديد"
-          diff: "Diff"
           show: "إظهار"
           modal_title: "التفاصيل"
           no_previous: "لا توجد قيمة سابقة."

@@ -2228,14 +2228,10 @@ pt_BR:
         pin: "Fixar tópico"
         unpin: "Desafixar tópico"
         pin_globally: "Fixar tópico globalmente"
-        make_banner: "Tópico de banner"
         remove_banner: "Remover tópico de banner"
       reply:
         title: "Responder"
         help: "começar a escrever uma resposta para este tópico"
-      clear_pin:
-        title: "Remover fixado"
-        help: "Retirar o status fixado do tópico para que não seja mais exibido mais no topo da sua lista de tópicos"
       share:
         title: "Compartilhar"
         extended_title: "Compartilhar um link"
@@ -3244,9 +3240,6 @@ pt_BR:
               label: Categoria
             include_subcategories:
               label: "Incluir subcategorias"
-      commits:
-        latest_changes: "Últimas atualizações: atualize com frequência!"
-        by: "de"
       groups:
         new:
           title: "Novo grupo"
@@ -3847,7 +3840,6 @@ pt_BR:
           details: "Detalhes"
           previous_value: "Anterior"
           new_value: "Nova"
-          diff: "Diferenças"
           show: "Exibir"
           modal_title: "Detalhes"
           no_previous: "Não há valor anterior."

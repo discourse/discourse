@@ -2482,14 +2482,10 @@ de:
         pin: "Thema anheften"
         unpin: "Thema loslösen"
         pin_globally: "Thema global anheften"
-        make_banner: "Ankündigungsbanner erstellen"
         remove_banner: "Thema des Ankündigungsbanners entfernen"
       reply:
         title: "Antworten"
         help: "beginne damit, eine Antwort auf dieses Thema zu verfassen"
-      clear_pin:
-        title: "Loslösen"
-        help: "Dieses Thema von der Themenliste loslösen, sodass es nicht mehr am Anfang der Liste steht."
       share:
         title: "Teilen"
         extended_title: "Link teilen"
@@ -3601,9 +3597,6 @@ de:
               label: Kategorie
             include_subcategories:
               label: "Unterkategorien einschließen"
-      commits:
-        latest_changes: "Letzte Änderungen: Bitte häufig updaten!"
-        by: "von"
       groups:
         new:
           title: "Neue Gruppe"
@@ -4282,7 +4275,6 @@ de:
           details: "Details"
           previous_value: "Alt"
           new_value: "Neu"
-          diff: "Vergleich"
           show: "Anzeigen"
           modal_title: "Details"
           no_previous: "Es gibt keinen vorherigen Wert."

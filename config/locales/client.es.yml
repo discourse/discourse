@@ -2478,14 +2478,10 @@ es:
         pin: "Anclar tema"
         unpin: "Desanclar tema"
         pin_globally: "Anclar tema globalmente"
-        make_banner: "Tema de banner"
         remove_banner: "Quitar tema de banner"
       reply:
         title: "Responder"
         help: "comienza a escribir un mensaje en este tema"
-      clear_pin:
-        title: "Quitar anclado"
-        help: "Desanclar este tema para que no aparezca más de primero en tu lista de temas"
       share:
         title: "Compartir"
         extended_title: "Compartir un enlace"
@@ -3597,9 +3593,6 @@ es:
               label: Categoría
             include_subcategories:
               label: "Incluir subcategoría"
-      commits:
-        latest_changes: "Cambios recientes: ¡por favor, actualiza a menudo!"
-        by: "por"
       groups:
         new:
           title: "Crear grupo"
@@ -4277,7 +4270,6 @@ es:
           details: "Detalles"
           previous_value: "Anterior"
           new_value: "Nuevo"
-          diff: "Diferente"
           show: "Mostrar"
           modal_title: "Detalles"
           no_previous: "No existe un valor anterior."

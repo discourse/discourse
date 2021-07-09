@@ -149,9 +149,6 @@ pt_BR:
       max_emojis: "não pode ter mais que %{max_emojis_count} emojis"
       emojis_disabled: "Não pode ter emoji"
       ip_address_already_screened: "já está incluso(a) em uma regra existente"
-      restrict_dependent_destroy:
-        one: "Não foi possível excluir o registro porque um %{record} dependente existe"
-        many: "Não foi possível excluir o registro porque %{record} dependentes existem"
       too_long:
         one: é muito longo (no máximo %{count} caractere)
         other: é muito longo (no máximo %{count} caracteres)

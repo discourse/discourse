@@ -164,9 +164,6 @@ fi:
       max_emojis: "ei voi sisältää yli %{max_emojis_count} emojia"
       emojis_disabled: "ei voi sisältää emojeita"
       ip_address_already_screened: "sisältyy jo olemassa olevaan sääntöön"
-      restrict_dependent_destroy:
-        one: "Tietuetta ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa"
-        many: "Tietuetta ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa"
       too_long:
         one: on liian pitkä (enintään %{count} merkki)
         other: on liian pitkä (enintään %{count} merkkiä)
@@ -1377,7 +1374,6 @@ fi:
     force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna sivuston asetuksissa."
     out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
     unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
-    watched_word_regexp_error: "Säännöllinen lauseke %{action}-tyypin tarkkailuille sanoille ei kelpaa. Tarkista <a href='%{base_path}/admin/customize/watched_words'>tarkkailtujen sanojen asetukset</a> tai poista käytöstä \"watched words regular expressions\"-sivustoasetus."
   site_settings:
     display_local_time_in_user_card: "Näytä käyttäjän aikavyöhykkeeseen perustuva paikallinen aika hänen käyttäjäkortissaan."
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"

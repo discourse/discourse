@@ -166,7 +166,7 @@ fr:
           Pour copier un lien, maintenez votre doigt appuyé sur mobile ou utilisez le clic droit de votre souris :
 
           <https://fr.wikipedia.org/wiki/Jeu_de_mots>
-          <https://fr.wikipedia.org/wiki/Liste_de_morts_insolites>
+          <https://fr.wikipedia.org/wiki/Mort_provoqu%C3%A9e_par_une_noix_de_coco>
           <https://fr.wikipedia.org/wiki/Orthographe_pour_calculatrice>
         reply: |-
           Super ! Ça fonctionne pour la plupart <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> des liens. N'oubliez pas, ils doivent être sur une ligne vide, sans rien devant ni derrière.
@@ -359,7 +359,7 @@ fr:
 
           Pouvez-vous me faire une faveur et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> le **restaurer** ?
         not_found: |-
-          Je ne vois toujours aucun message supprimé ! Rappelez-vous, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> « Afficher plus » révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> supprimer.
+          Vous rencontrez des difficultés ? Rappelez-vous, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> « Afficher plus » révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> supprimer.
         reply: |-
           Pfiou, c'était moins une ! Merci d'avoir réparé ça ! :wink:
 
@@ -403,7 +403,7 @@ fr:
           * :cat:
           * :dog:
           [/poll]
-           »
+          »
         reply: |-
           Hé, bon sondage ! Comment s'est passée votre formation ?
 
@@ -433,7 +433,7 @@ fr:
           [details=Sélectionnez-moi pour obtenir des détails]
           Voici les détails
           [/details]
-           »
+          »
         reply: |-
           Beau travail ! Votre attention pour les _détails_ est admirable !
       end:

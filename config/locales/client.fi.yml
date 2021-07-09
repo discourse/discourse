@@ -2487,14 +2487,10 @@ fi:
         pin: "Kiinnitä ketju"
         unpin: "Poista ketjun kiinnitys"
         pin_globally: "Kiinnitä ketju koko palstalle"
-        make_banner: "Banneriketju"
         remove_banner: "Poista banneriketju"
       reply:
         title: "Vastaa"
         help: "aloita kirjoittamaan vastausta tähän ketjuun"
-      clear_pin:
-        title: "Poista kiinnitys"
-        help: "Poista ketjun kiinnitys, jottei se näy enää ketjuluettelon yläosassa"
       share:
         title: "Jaa"
         extended_title: "Jaa linkki"
@@ -3606,9 +3602,6 @@ fi:
               label: Alue
             include_subcategories:
               label: "Sisällytä ala-alueet"
-      commits:
-        latest_changes: "Viimeisimmät muutokset: päivitä usein!"
-        by: "käyttäjältä"
       groups:
         new:
           title: "Uusi ryhmä"
@@ -4286,7 +4279,6 @@ fi:
           details: "Tiedot"
           previous_value: "Edellinen"
           new_value: "Uusi"
-          diff: "Ero"
           show: "Näytä"
           modal_title: "Tiedot"
           no_previous: "Aikaisempaa arvoa ei ole."
