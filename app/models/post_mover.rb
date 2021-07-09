@@ -79,7 +79,6 @@ class PostMover
     moving_all_posts = original_topic_posts_count == posts.length
 
     create_temp_table
-    delete_invalid_post_timings
     move_each_post
     create_moderator_post_in_original_topic
     update_statistics
@@ -146,6 +145,7 @@ class PostMover
     update_quotes
     move_first_post_replies
     delete_post_replies
+    delete_invalid_post_timings
     copy_first_post_timings
     move_post_timings
     copy_topic_users
@@ -318,16 +318,12 @@ class PostMover
   end
 
   def delete_invalid_post_timings
-    DB.exec(<<~SQL, topid_id: destination_topic.id)
+    DB.exec <<~SQL
       DELETE
       FROM post_timings pt
-      WHERE pt.topic_id = :topid_id
-        AND NOT EXISTS(
-          SELECT 1
-          FROM posts p
-          WHERE p.topic_id = pt.topic_id
-            AND p.post_number = pt.post_number
-        )
+      USING moved_posts mp
+      WHERE pt.topic_id = mp.new_topic_id
+        AND pt.post_number = mp.new_post_number
     SQL
   end
 
