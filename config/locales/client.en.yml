@@ -224,7 +224,6 @@ en:
     submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
-    go_ahead: "Go ahead"
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -253,7 +252,6 @@ en:
     x_more:
       one: "%{count} More"
       other: "%{count} More"
-    less: "Less"
     never: "never"
     every_30_minutes: "every 30 minutes"
     every_hour: "every hour"
@@ -262,7 +260,6 @@ en:
     every_month: "every month"
     every_six_months: "every six months"
     max_of_count: "max of %{count}"
-    alternation: "or"
     character_count:
       one: "%{count} character"
       other: "%{count} characters"
@@ -301,8 +298,9 @@ en:
       clear_bookmarks: "Clear Bookmarks"
       help:
         bookmark: "Click to bookmark the first post on this topic"
+        edit_bookmark: "Click to edit the bookmark on this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
-        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
+        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic."
 
     bookmarks:
       created: "You've bookmarked this post. %{name}"
@@ -668,15 +666,12 @@ en:
       member_added: "Added"
       member_requested: "Requested at"
       add_members:
-        title: "Add members to %{group_name}"
-        description: "You can also paste in a comma separated list."
-        usernames_or_emails:
-          title: "Enter usernames or email addresses"
-          input_placeholder: "Usernames or emails"
-        usernames:
-          title: "Enter usernames"
-          input_placeholder: "Usernames"
+        title: "Add Users to %{group_name}"
+        description: "Enter a list of users you want to invite to the group or paste in a comma separated list:"
+        usernames_placeholder: "usernames"
+        usernames_or_emails_placeholder: "usernames or emails"
         notify_users: "Notify users"
+        set_owner: "Set users as owners of this group"
       requests:
         title: "Requests"
         reason: "Reason"
@@ -690,7 +685,8 @@ en:
         title: "Manage"
         name: "Name"
         full_name: "Full Name"
-        add_members: "Add Members"
+        add_members: "Add Users"
+        invite_members: "Invite"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         profile:
           title: Profile
@@ -1176,11 +1172,9 @@ en:
         sent: "Sent"
         archive: "Archive"
         groups: "My Groups"
-        bulk_select: "Select messages"
         move_to_inbox: "Move to Inbox"
         move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
-        select_all: "Select All"
         tags: "Tags"
         warnings: "Official Warnings"
 
@@ -1652,6 +1646,11 @@ en:
       title:
         title: "Title"
         none: "(none)"
+        instructions: "appears after your username"
+      flair:
+        title: "Flair"
+        none: "(none)"
+        instructions: "icon displayed next to your profile picture"
       primary_group:
         title: "Primary Group"
         none: "(none)"
@@ -2242,20 +2241,10 @@ en:
         votes_released: "Vote was released"
 
     upload_selector:
-      title: "Add an image"
-      title_with_attachments: "Add an image or a file"
-      from_my_computer: "From my device"
-      from_the_web: "From the web"
-      remote_tip: "link to image"
-      remote_tip_with_attachments: "link to image or file"
-      local_tip: "select images from your device"
-      local_tip_with_attachments: "select images or files from your device"
-      hint: "(you can also drag & drop into the editor to upload)"
-      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
+      processing: "Processing Upload"
       select_file: "Select File"
       default_image_alt_text: image
-      supported_formats: "supported formats"
 
     search:
       sort_by: "Sort by"
@@ -2364,13 +2353,19 @@ en:
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
-        dismiss_read_with_selected: "Dismiss %{count} unread"
+        dismiss_read_with_selected:
+          one: "Dismiss %{count} unread"
+          other: "Dismiss %{count} unread"
         dismiss_button: "Dismiss…"
-        dismiss_button_with_selected: "Dismiss (%{count})…"
+        dismiss_button_with_selected:
+          one: "Dismiss (%{count})…"
+          other: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
-        dismiss_new_with_selected: "Dismiss New (%{count})"
+        dismiss_new_with_selected:
+          one: "Dismiss New (%{count})"
+          other: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Set Category"
@@ -2401,14 +2396,13 @@ en:
         new: "You have no new topics."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
-        ready_to_create: "Ready to "
         latest: "You're all caught up!"
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no %{category} topics."
         top: "There are no top topics."
         educate:
           new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
-          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge unread-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "There are no more latest topics."
         posted: "There are no more posted topics."
@@ -2468,15 +2462,9 @@ en:
       not_found:
         title: "Topic not found"
         description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
-      total_unread_posts:
+      unread_posts:
         one: "you have %{count} unread post in this topic"
         other: "you have %{count} unread posts in this topic"
-      unread_posts:
-        one: "you have %{count} unread old post in this topic"
-        other: "you have %{count} unread old posts in this topic"
-      new_posts:
-        one: "there is %{count} new post in this topic since you last read it"
-        other: "there are %{count} new posts in this topic since you last read it"
       likes:
         one: "there is %{count} like in this topic"
         other: "there are %{count} likes in this topic"
@@ -2511,7 +2499,7 @@ en:
       browse_all_tags: Browse all tags
 
       view_latest_topics: view latest topics
-      suggest_create_topic: start a new conversation?
+      suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
@@ -2575,7 +2563,7 @@ en:
       temp_open:
         title: "Open Temporarily"
       auto_reopen:
-        title: "Auto-open Topic"
+        title: "Auto-Open Topic"
       temp_close:
         title: "Close Temporarily"
       auto_close:
@@ -3550,7 +3538,7 @@ en:
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
         help: "%{shortcut} Open keyboard help"
-        dismiss_new_posts: "%{shortcut} Dismiss New/Posts"
+        dismiss_new: "%{shortcut} Dismiss New"
         dismiss_topics: "%{shortcut} Dismiss Topics"
         log_out: "%{shortcut} Log Out"
       composing:
@@ -3895,6 +3883,7 @@ en:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
+          average_chart_label: Average
           filters:
             file_extension:
               label: File extension
@@ -3920,8 +3909,6 @@ en:
             available: "Group name is available"
             not_available: "Group name is not available"
             blank: "Group name cannot be blank"
-        add_members:
-          as_owner: "Set user(s) as owner(s) of this group"
         manage:
           interaction:
             email: Email
@@ -4026,6 +4013,8 @@ en:
               write: Create a new topic or post to an existing one.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
+            posts:
+              edit: Edit any post or a specific one.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
@@ -4698,6 +4687,8 @@ en:
             post_staff_note_create: "add staff note"
             post_staff_note_destroy: "destroy staff note"
             delete_group: "delete group"
+            watched_word_create: "add watched word"
+            watched_word_destroy: "delete watched word"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -4753,6 +4744,7 @@ en:
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
         invalid_regex: 'The watched word "%{word}" is an invalid regular expression.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Watched words are regular expressions</a> and they do not automatically include word boundaries. If you want the regular expression to match whole words, include <code>\b</code> at the start and end of your regular expression.'
         actions:
           block: "Block"
           censor: "Censor"
@@ -4787,7 +4779,7 @@ en:
           upload_successful: "Upload successful. Words have been added."
         test:
           button_label: "Test"
-          modal_title: "Test %{action} Watched Words"
+          modal_title: "%{action}: Test Watched Words"
           description: "Enter text below to check for matches with watched words"
           found_matches: "Found matches:"
           no_matches: "No matches found"
@@ -5093,6 +5085,7 @@ en:
           text: "Text Field"
           confirm: "Confirmation"
           dropdown: "Dropdown"
+          multiselect: "Multiselect"
 
       site_text:
         description: "You can customize any of the text on your forum. Please start by searching below:"

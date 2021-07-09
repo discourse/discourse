@@ -118,6 +118,7 @@
                           popupMenuOptions=popupMenuOptions
                           draftStatus=model.draftStatus
                           isUploading=isUploading
+                          isProcessingUpload=isProcessingUpload
                           allowUpload=allowUpload
                           uploadIcon=uploadIcon
                           isCancellable=isCancellable
@@ -168,7 +169,11 @@
 
             {{#if isUploading}}
               <div id="file-uploading">
-                {{loading-spinner size="small"}}<span>{{i18n "upload_selector.uploading"}} {{uploadProgress}}%</span>
+                {{#if isProcessingUpload}}
+                  {{loading-spinner size="small"}}<span>{{i18n "upload_selector.processing"}}</span>
+                {{else}}
+                  {{loading-spinner size="small"}}<span>{{i18n "upload_selector.uploading"}} {{uploadProgress}}%</span>
+                {{/if}}
                 {{#if isCancellable}}
                   <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{d-icon "times"}}</a>
                 {{/if}}
@@ -195,7 +200,7 @@
             {{plugin-outlet name="composer-mobile-buttons-bottom" connectorTagName="" args=(hash model=model)}}
 
             {{#if allowUpload}}
-              <a class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}"  aria-label={{i18n "composer.upload_title"}}>
+              <a id="mobile-file-upload" class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}"  aria-label={{i18n "composer.upload_title"}}>
                 {{d-icon uploadIcon}}
               </a>
             {{/if}}

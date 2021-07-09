@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserBadgesController < ApplicationController
-  MAX_FAVORITES = 2
   MAX_BADGES = 96 # This was limited in PR#2360 to make it divisible by 8
 
   before_action :ensure_badges_enabled
@@ -11,7 +10,7 @@ class UserBadgesController < ApplicationController
 
     badge = fetch_badge_from_params
     user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(MAX_BADGES)
-    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic, user: :primary_group)
+    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic, user: [:primary_group, :flair_group])
 
     grant_count = nil
 
@@ -51,7 +50,6 @@ class UserBadgesController < ApplicationController
       user_badges,
       DetailedUserBadgeSerializer,
       root: :user_badges,
-      meta: { max_favorites: MAX_FAVORITES },
     )
   end
 
@@ -107,11 +105,13 @@ class UserBadgesController < ApplicationController
       return render json: failed_json, status: 403
     end
 
-    if !user_badge.is_favorite && user_badges.where(is_favorite: true).count >= MAX_FAVORITES
+    if !user_badge.is_favorite && user_badges.select(:badge_id).distinct.where(is_favorite: true).count >= SiteSetting.max_favorite_badges
       return render json: failed_json, status: 400
     end
 
-    user_badge.toggle!(:is_favorite)
+    UserBadge
+      .where(user_id: user_badge.user_id, badge_id: user_badge.badge_id)
+      .update(is_favorite: !user_badge.is_favorite)
     UserBadge.update_featured_ranks!(user_badge.user_id)
     render_serialized(user_badge, DetailedUserBadgeSerializer, root: :user_badge)
   end

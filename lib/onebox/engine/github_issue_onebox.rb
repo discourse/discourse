@@ -31,19 +31,23 @@ module Onebox
         body, excerpt = compute_body(raw['body'])
         ulink = URI(link)
 
+        labels = raw['labels'].map do |l|
+          { name: Emoji.codes_to_img(l['name']) }
+        end
+
         {
           link: @url,
-          title: raw["title"],
+          title: raw['title'],
           body: body,
           excerpt: excerpt,
-          labels: raw["labels"],
+          labels: labels,
           user: raw['user'],
-          created_at: created_at.strftime("%I:%M%p - %d %b %y %Z"),
-          created_at_date: created_at.strftime("%F"),
-          created_at_time: created_at.strftime("%T"),
-          closed_at: closed_at&.strftime("%I:%M%p - %d %b %y %Z"),
-          closed_at_date: closed_at&.strftime("%F"),
-          closed_at_time: closed_at&.strftime("%T"),
+          created_at: created_at.strftime('%I:%M%p - %d %b %y %Z'),
+          created_at_date: created_at.strftime('%F'),
+          created_at_time: created_at.strftime('%T'),
+          closed_at: closed_at&.strftime('%I:%M%p - %d %b %y %Z'),
+          closed_at_date: closed_at&.strftime('%F'),
+          closed_at_time: closed_at&.strftime('%T'),
           closed_by: raw['closed_by'],
           avatar: "https://avatars1.githubusercontent.com/u/#{raw['user']['id']}?v=2&s=96",
           domain: "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}",

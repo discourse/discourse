@@ -196,6 +196,7 @@ class FinalDestination
     response = Excon.public_send(@http_verb,
       @uri.to_s,
       read_timeout: timeout,
+      connect_timeout: timeout,
       headers: headers,
       middlewares: middlewares
     )

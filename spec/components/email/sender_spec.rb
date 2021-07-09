@@ -336,17 +336,17 @@ describe Email::Sender do
         expect(email_log.email_type).to eq('valid_type')
         expect(email_log.to_address).to eq('eviltrout@test.domain')
         expect(email_log.user_id).to be_blank
+        expect(email_log.raw).to eq(nil)
       end
 
       context 'when the email is sent using group SMTP credentials' do
         let(:reply) { Fabricate(:post, topic: post.topic, reply_to_user: post.user, reply_to_post_number: post.post_number) }
         let(:notification) { Fabricate(:posted_notification, user: post.user, post: reply) }
         let(:message) do
-          UserNotifications.user_private_message(
-            post.user,
-            post: reply,
-            notification_type: notification.notification_type,
-            notification_data_hash: notification.data_hash
+          GroupSmtpMailer.send_mail(
+            group,
+            post.user.email,
+            post
           )
         end
         let(:group) { Fabricate(:smtp_group) }
@@ -355,7 +355,7 @@ describe Email::Sender do
           SiteSetting.enable_smtp = true
         end
 
-        it 'adds the group id to the email log' do
+        it 'adds the group id and raw content to the email log' do
           TopicAllowedGroup.create(topic: post.topic, group: group)
 
           email_sender.send
@@ -365,6 +365,18 @@ describe Email::Sender do
           expect(email_log.to_address).to eq(post.user.email)
           expect(email_log.user_id).to be_blank
           expect(email_log.smtp_group_id).to eq(group.id)
+          expect(email_log.raw).to include("Hello world")
+        end
+
+        it "does not add any of the mailing list headers" do
+          TopicAllowedGroup.create(topic: post.topic, group: group)
+          email_sender.send
+
+          expect(message.header['List-ID']).to eq(nil)
+          expect(message.header['List-Post']).to eq(nil)
+          expect(message.header['List-Archive']).to eq(nil)
+          expect(message.header['Precedence']).to eq(nil)
+          expect(message.header['List-Unsubscribe']).to eq(nil)
         end
       end
     end
@@ -382,6 +394,7 @@ describe Email::Sender do
       it 'should create the right log' do
         email_sender.send
         expect(email_log.post_id).to eq(post.id)
+        expect(email_log.topic_id).to eq(topic.id)
         expect(email_log.topic.id).to eq(topic.id)
       end
     end
@@ -676,4 +689,30 @@ describe Email::Sender do
     end
   end
 
+  context "with cc addresses" do
+    let(:message) do
+      message = Mail::Message.new to: 'eviltrout@test.domain', body: 'test body', cc: 'someguy@test.com;otherguy@xyz.com'
+      message.stubs(:deliver_now)
+      message
+    end
+
+    fab!(:user) { Fabricate(:user) }
+    let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
+
+    it "logs the cc addresses in the email log (but not users if they do not match the emails)" do
+      email_sender.send
+      email_log = EmailLog.last
+      expect(email_log.cc_addresses).to eq("someguy@test.com;otherguy@xyz.com")
+      expect(email_log.cc_users).to eq([])
+    end
+
+    it "logs the cc users if they match the emails" do
+      user1 = Fabricate(:user, email: "someguy@test.com")
+      user2 = Fabricate(:user, email: "otherguy@xyz.com")
+      email_sender.send
+      email_log = EmailLog.last
+      expect(email_log.cc_addresses).to eq("someguy@test.com;otherguy@xyz.com")
+      expect(email_log.cc_users).to match_array([user1, user2])
+    end
+  end
 end

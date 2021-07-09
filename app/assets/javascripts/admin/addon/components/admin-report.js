@@ -383,7 +383,7 @@ export default Component.extend({
       return EmberObject.create(
         Object.assign(tableOptions, this.get("reportOptions.table") || {})
       );
-    } else {
+    } else if (mode === "chart") {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
       return EmberObject.create(
         Object.assign(chartOptions, this.get("reportOptions.chart") || {}, {

@@ -214,6 +214,7 @@ class CategoriesController < ApplicationController
           'not in group',
           @category,
           custom_message: 'not_in_group.title_category',
+          custom_message_params: { group: group.name },
           group: group
         )
       else

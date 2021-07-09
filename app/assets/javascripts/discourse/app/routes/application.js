@@ -94,13 +94,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     error(err, transition) {
-      let xhr = {};
-      if (err.jqXHR) {
-        xhr = err.jqXHR;
-      }
-
-      const xhrOrErr = err.jqXHR ? xhr : err;
-
+      const xhrOrErr = err.jqXHR ? err.jqXHR : err;
       const exceptionController = this.controllerFor("exception");
 
       const c = window.console;
@@ -143,11 +137,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       showModal("not-activated", { title: "log_in" }).setProperties(props);
     },
 
-    showUploadSelector(toolbarEvent) {
-      showModal("uploadSelector").setProperties({
-        toolbarEvent,
-        imageUrl: null,
-      });
+    showUploadSelector() {
+      document.getElementById("file-uploader").click();
     },
 
     showKeyboardShortcutsHelp() {

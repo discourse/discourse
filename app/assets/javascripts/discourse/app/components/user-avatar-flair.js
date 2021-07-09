@@ -10,28 +10,23 @@ export default Component.extend({
     if (!user) {
       return;
     }
-    return this.primaryGroupFlair(user) || this.automaticGroupFlair(user);
-  },
 
-  primaryGroupFlair(user) {
-    if (user.primary_group_flair_url || user.primary_group_flair_bg_color) {
+    if (user.flair_url || user.flair_bg_color) {
       return {
-        flairURL: user.primary_group_flair_url,
-        flairBgColor: user.primary_group_flair_bg_color,
-        flairColor: user.primary_group_flair_color,
-        groupName: user.primary_group_name,
+        flairName: user.flair_name,
+        flairUrl: user.flair_url,
+        flairBgColor: user.flair_bg_color,
+        flairColor: user.flair_color,
       };
     }
-  },
 
-  automaticGroupFlair(user) {
     const autoFlairAttrs = autoGroupFlairForUser(this.site, user);
     if (autoFlairAttrs) {
       return {
-        flairURL: autoFlairAttrs.primary_group_flair_url,
-        flairBgColor: autoFlairAttrs.primary_group_flair_bg_color,
-        flairColor: autoFlairAttrs.primary_group_flair_color,
-        groupName: autoFlairAttrs.primary_group_name,
+        flairName: autoFlairAttrs.flair_name,
+        flairUrl: autoFlairAttrs.flair_url,
+        flairBgColor: autoFlairAttrs.flair_bg_color,
+        flairColor: autoFlairAttrs.flair_color,
       };
     }
   },

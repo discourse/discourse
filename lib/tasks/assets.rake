@@ -45,13 +45,13 @@ task 'assets:precompile:css' => 'environment' do
     STDERR.puts "Start compiling CSS: #{Time.zone.now}"
 
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      next if ENV["PRECOMPILE_SHARED_MULTISITE_CSS"] == "1" && db != "default"
-
-      # css will get precompiled during first request if tables do not exist.
+      # CSS will get precompiled during first request if tables do not exist.
       if ActiveRecord::Base.connection.table_exists?(Theme.table_name)
-        STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
+        STDERR.puts "-------------"
+        STDERR.puts "Compiling CSS for #{db} #{Time.zone.now}"
         begin
-          Stylesheet::Manager.precompile_css
+          Stylesheet::Manager.precompile_css if db == "default"
+          Stylesheet::Manager.precompile_theme_css
         rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e
           STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
           STDERR.puts "Skipping precompilation of CSS cause schema is old, you are precompiling prior to running migrations."
@@ -281,6 +281,8 @@ task 'assets:precompile' => 'assets:precompile:before' do
           max_compress = max_compress?(info["logical_path"], locales)
           if File.exists?(_path)
             STDERR.puts "Skipping: #{file} already compressed"
+          elsif file.include? "discourse/tests"
+            STDERR.puts "Skipping: #{file}"
           else
             proc.call do
               start = Process.clock_gettime(Process::CLOCK_MONOTONIC)

@@ -553,3 +553,23 @@ acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
     );
   });
 });
+
+acceptance("Topic last visit line", function (needs) {
+  needs.user({ moderator: false, admin: false, trust_level: 1 });
+
+  test("visit topic", async function (assert) {
+    await visit("/t/-/280");
+
+    assert.ok(
+      exists(".topic-post-visited-line.post-10"),
+      "shows the last visited line on the right post"
+    );
+
+    await visit("/t/-/9");
+
+    assert.ok(
+      !exists(".topic-post-visited-line"),
+      "does not show last visited line if post is the last post"
+    );
+  });
+});

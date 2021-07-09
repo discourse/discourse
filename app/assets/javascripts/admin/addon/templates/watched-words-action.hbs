@@ -26,6 +26,10 @@
 
 <p class="about">{{actionDescription}}</p>
 
+{{#if siteSettings.watched_words_regular_expressions}}
+  <p>{{html-safe (i18n "admin.watched_words.regex_warning" basePath=(base-path))}}</p>
+{{/if}}
+
 {{watched-word-form
   actionKey=actionNameKey
   action=(action "recordAdded")

@@ -3,6 +3,7 @@ import { scheduleOnce } from "@ember/runloop";
 export default Component.extend({
   classNames: ["modal-body"],
   fixed: false,
+  submitOnEnter: true,
   dismissable: true,
   autoFocus: true,
 
@@ -49,6 +50,7 @@ export default Component.extend({
         "fixed",
         "subtitle",
         "rawSubtitle",
+        "submitOnEnter",
         "dismissable",
         "headerClass",
         "autoFocus"
@@ -60,7 +62,12 @@ export default Component.extend({
     const modalAlert = document.getElementById("modal-alert");
     if (modalAlert) {
       modalAlert.style.display = "none";
-      modalAlert.classList.remove("alert-info", "alert-error", "alert-success");
+      modalAlert.classList.remove(
+        "alert-error",
+        "alert-info",
+        "alert-success",
+        "alert-warning"
+      );
     }
   },
 

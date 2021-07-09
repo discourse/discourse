@@ -597,7 +597,6 @@ describe TopicTrackingState do
     tracking = {
       notification_level: TopicUser.notification_levels[:tracking],
       last_read_post_number: 1,
-      highest_seen_post_number: 1
     }
 
     TopicUser.change(user.id, post1.topic_id, tracking)

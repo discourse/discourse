@@ -385,4 +385,48 @@ describe ::DiscoursePoll::PollsController do
 
   end
 
+  describe '#current_user_voted' do
+    let(:logged_user) { Fabricate(:user) }
+    let(:post_with_poll) { Fabricate(:post, raw: "[poll]\n- A\n- B\n[/poll]") }
+
+    before { log_in_user(logged_user) }
+
+    it 'returns true if the logged user already voted' do
+      poll = post_with_poll.polls.last
+      PollVote.create!(poll: poll, user: logged_user)
+
+      get :current_user_voted, params: { id: poll.id }, format: :json
+      parsed_body = JSON.parse(response.body)
+
+      expect(response.status).to eq(200)
+      expect(parsed_body['voted']).to eq(true)
+    end
+
+    it 'returns a 404 if there is no poll' do
+      unknown_poll_id = 999999
+
+      get :current_user_voted, params: { id: unknown_poll_id }, format: :json
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns a 404 if the user doesn't have access to the poll" do
+      pm_with_poll = Fabricate(:private_message_post, raw: "[poll]\n- A\n- B\n[/poll]")
+      poll = pm_with_poll.polls.last
+
+      get :current_user_voted, params: { id: poll.id }, format: :json
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns false if the user didn't vote yet" do
+      poll = post_with_poll.polls.last
+
+      get :current_user_voted, params: { id: poll.id }, format: :json
+      parsed_body = JSON.parse(response.body)
+
+      expect(response.status).to eq(200)
+      expect(parsed_body['voted']).to eq(false)
+    end
+  end
 end

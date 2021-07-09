@@ -91,7 +91,6 @@ zh_TW:
       maximum_staged_user_per_email_reached: "以達成分期使用者能創造的最大數量信件"
       no_subject: "(無主旨)"
       no_body: "(無內文)"
-      missing_attachment: "(附加檔案%{filename}不存在)"
       errors:
         empty_email_error: "當我們收到的原生郵件空白時發生。"
         no_message_id_error: "當郵件沒有「Message-Id」標頭訊息時發生。"
@@ -183,9 +182,6 @@ zh_TW:
     not_enough_space_on_disk: "沒有足夠的磁碟空間可供備份檔案上傳"
     invalid_filename: "備份檔案名包含無效字元。有效字元為 a-z 0-9 . - _."
     file_exists: "你嘗試上傳的檔案已存在。"
-    location:
-      local: "本地"
-      s3: "Amazon S3"
   invalid_params: "提供的參數是無效的，請求失敗：%{message}"
   not_logged_in: "你需要先登入才能那樣做。"
   not_found: "所請求的URL或資源無法找到。"
@@ -1182,7 +1178,6 @@ zh_TW:
     markdown_linkify_tlds: "自動設為連結的最上層網域列表"
     post_undo_action_window_mins: "允許使用者還原貼文上近期動作（讚、標記等）的時間長度（分鐘數）。"
     must_approve_users: "新註冊用戶必須由管理員進行審核，才能進行相關操作"
-    pending_users_reminder_delay: "如果新使用者等待批准時間超過此小時設置則通知版主。設置 -1 關閉通知。"
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
     enable_escaped_fragments: "如未偵測到爬蟲，將會使用 Google Ajax-Crawling API。參閱<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
@@ -3250,10 +3245,6 @@ zh_TW:
       agree_and_hide:
         title: "隱藏貼文"
         description: "隱藏此貼文並自動傳送訊息通知使用者重新編輯貼文內容。"
-      delete_spammer:
-        title: "刪除垃圾貼文發送者"
-        description: "刪除此使用者與他的所有貼文與討論話題"
-        confirm: "你確定要刪除該 <b>%{username}</b> 使用者嗎？此操作將移除使用者所有的貼文，並封鎖其電子郵件與 IP 位置。"
       delete_single:
         title: "刪除"
       delete:
@@ -3298,8 +3289,6 @@ zh_TW:
       reject:
         title: "拒絕"
       delete_user:
-        title: "刪除使用者"
-        confirm: "你確定要刪除該 <b>%{username}</b> 使用者嗎？此操作將移除使用者所有的貼文，並封鎖其電子郵件與 IP 位置。"
         reason: "透過排隊中的審核刪除"
   activemodel:
     errors:

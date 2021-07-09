@@ -114,7 +114,9 @@ class UserHistory < ActiveRecord::Base
       topic_archived: 93,
       topic_unarchived: 94,
       post_staff_note_create: 95,
-      post_staff_note_destroy: 96
+      post_staff_note_destroy: 96,
+      watched_word_create: 97,
+      watched_word_destroy: 98
     )
   end
 
@@ -205,7 +207,9 @@ class UserHistory < ActiveRecord::Base
       :topic_archived,
       :topic_unarchived,
       :post_staff_note_create,
-      :post_staff_note_destroy
+      :post_staff_note_destroy,
+      :watched_word_create,
+      :watched_word_destroy
     ]
   end
 
@@ -304,10 +308,10 @@ end
 #
 # Indexes
 #
-#  index_staff_action_logs_on_action_and_id                        (action,id)
-#  index_staff_action_logs_on_subject_and_id                       (subject,id)
-#  index_staff_action_logs_on_target_user_id_and_id                (target_user_id,id)
 #  index_user_histories_on_acting_user_id_and_action_and_id        (acting_user_id,action,id)
+#  index_user_histories_on_action_and_id                           (action,id)
 #  index_user_histories_on_category_id                             (category_id)
+#  index_user_histories_on_subject_and_id                          (subject,id)
+#  index_user_histories_on_target_user_id_and_id                   (target_user_id,id)
 #  index_user_histories_on_topic_id_and_target_user_id_and_action  (topic_id,target_user_id,action)
 #

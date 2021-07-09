@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";
-const { isEmpty } = Ember;
+import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
 import layout from "select-kit/templates/components/select-kit/select-kit-filter";
 

@@ -989,7 +989,7 @@ describe PostsController do
 
       it "returns the nested post with a param" do
         post "/posts.json", params: {
-          raw: 'this is the test content',
+          raw: 'this is the test content  ',
           title: 'this is the test title for the topic',
           nested_post: true
         }
@@ -997,6 +997,7 @@ describe PostsController do
         expect(response.status).to eq(200)
         parsed = response.parsed_body
         expect(parsed['post']).to be_present
+        expect(parsed['post']['raw']).to eq('this is the test content')
         expect(parsed['post']['cooked']).to be_present
       end
 

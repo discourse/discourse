@@ -57,6 +57,45 @@ describe InvitesController do
       end
     end
 
+    it 'adds logged in users to invite groups' do
+      group = Fabricate(:group)
+      group.add_owner(invite.invited_by)
+      InvitedGroup.create!(group: group, invite: invite)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(response).to redirect_to("/")
+      expect(user.reload.groups).to include(group)
+    end
+
+    it 'redirects logged in users to invite topic if they can see it' do
+      topic = Fabricate(:topic)
+      TopicInvite.create!(topic: topic, invite: invite)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(response).to redirect_to(topic.url)
+    end
+
+    it 'adds logged in user to group and redirects them to invite topic' do
+      group = Fabricate(:group)
+      group.add_owner(invite.invited_by)
+      secured_category = Fabricate(:category)
+      secured_category.permissions = { group.name => :full }
+      secured_category.save!
+      topic = Fabricate(:topic, category: secured_category)
+      TopicInvite.create!(invite: invite, topic: topic)
+      InvitedGroup.create!(invite: invite, group: group)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(user.reload.groups).to include(group)
+      expect(response).to redirect_to(topic.url)
+    end
+
     it 'fails for logged in users' do
       sign_in(Fabricate(:user))
 
@@ -682,6 +721,40 @@ describe InvitesController do
         expect(invite.invited_users).to be_blank
         expect(invite.redeemed?).to be_falsey
         expect(response.body).to include(I18n.t('login.already_logged_in', current_user: user.username))
+      end
+    end
+
+    context 'topic invites' do
+      fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
+
+      fab!(:secured_category) do
+        secured_category = Fabricate(:category)
+        secured_category.permissions = { staff: :full }
+        secured_category.save!
+        secured_category
+      end
+
+      it 'redirects user to topic if activated' do
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+      end
+
+      it 'sets destination_url cookie if user is not activated' do
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        put "/invites/show/#{invite.invite_key}.json"
+        expect(cookies['destination_url']).to eq(topic.relative_url)
+      end
+
+      it 'does not redirect user if they cannot see topic' do
+        TopicInvite.create!(invite: invite, topic: Fabricate(:topic, category: secured_category))
+
+        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        expect(response.parsed_body['redirect_to']).to eq("/")
       end
     end
   end

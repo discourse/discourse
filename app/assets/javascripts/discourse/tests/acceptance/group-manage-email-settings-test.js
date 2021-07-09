@@ -1,7 +1,7 @@
 import {
   acceptance,
+  exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
@@ -14,7 +14,7 @@ acceptance("Managing Group Email Settings - SMTP Disabled", function (needs) {
   test("When SiteSetting.enable_smtp is false", async function (assert) {
     await visit("/g/discourse/manage/email");
     assert.notOk(
-      queryAll(".user-secondary-navigation").text().includes("Email"),
+      query(".user-secondary-navigation").innerText.includes("Email"),
       "email link is not shown in the sidebar"
     );
     assert.equal(
@@ -34,7 +34,7 @@ acceptance(
     test("When SiteSetting.enable_smtp is true but SiteSetting.enable_imap is false", async function (assert) {
       await visit("/g/discourse/manage/email");
       assert.ok(
-        queryAll(".user-secondary-navigation").text().includes("Email"),
+        query(".user-secondary-navigation").innerText.includes("Email"),
         "email link is shown in the sidebar"
       );
       assert.equal(
@@ -72,7 +72,7 @@ acceptance(
     test("enabling SMTP, testing, and saving", async function (assert) {
       await visit("/g/discourse/manage/email");
       assert.ok(
-        queryAll(".user-secondary-navigation").text().includes("Email"),
+        query(".user-secondary-navigation").innerText.includes("Email"),
         "email link is shown in the sidebar"
       );
       assert.ok(
@@ -85,12 +85,12 @@ acceptance(
 
       await click("#prefill_smtp_gmail");
       assert.equal(
-        queryAll("input[name='smtp_server']").val(),
+        query("input[name='smtp_server']").value,
         "smtp.gmail.com",
         "prefills SMTP server settings for gmail"
       );
       assert.equal(
-        queryAll("input[name='smtp_port']").val(),
+        query("input[name='smtp_port']").value,
         "587",
         "prefills SMTP port settings for gmail"
       );
@@ -113,7 +113,7 @@ acceptance(
       await click(".group-manage-save");
 
       assert.equal(
-        queryAll(".group-manage-save-button > span").text(),
+        query(".group-manage-save-button > span").innerText,
         "Saved!"
       );
 
@@ -124,7 +124,7 @@ acceptance(
 
       await click("#enable_smtp");
       assert.equal(
-        queryAll(".modal-body").text(),
+        query(".modal-body").innerText,
         I18n.t("groups.manage.email.smtp_disable_confirm"),
         "shows a confirm dialogue warning SMTP settings will be wiped"
       );
@@ -156,12 +156,12 @@ acceptance(
 
       await click("#prefill_imap_gmail");
       assert.equal(
-        queryAll("input[name='imap_server']").val(),
+        query("input[name='imap_server']").value,
         "imap.gmail.com",
         "prefills IMAP server settings for gmail"
       );
       assert.equal(
-        queryAll("input[name='imap_port']").val(),
+        query("input[name='imap_port']").value,
         "993",
         "prefills IMAP port settings for gmail"
       );
@@ -176,7 +176,7 @@ acceptance(
       await click(".group-manage-save");
 
       assert.equal(
-        queryAll(".group-manage-save-button > span").text(),
+        query(".group-manage-save-button > span").innerText,
         "Saved!"
       );
 
@@ -200,7 +200,7 @@ acceptance(
 
       await click("#enable_imap");
       assert.equal(
-        queryAll(".modal-body").text(),
+        query(".modal-body").innerText,
         I18n.t("groups.manage.email.imap_disable_confirm"),
         "shows a confirm dialogue warning IMAP settings will be wiped"
       );
@@ -333,38 +333,38 @@ acceptance(
   }
 );
 
-// acceptance(
-//   "Managing Group Email Settings - SMTP and IMAP Enabled - Email Test Invalid",
-//   function (needs) {
-//     needs.user();
-//     needs.settings({ enable_smtp: true, enable_imap: true });
+acceptance(
+  "Managing Group Email Settings - SMTP and IMAP Enabled - Email Test Invalid",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_smtp: true, enable_imap: true });
 
-//     needs.pretender((server, helper) => {
-//       server.post("/groups/47/test_email_settings", () => {
-//         return helper.response(400, {
-//           success: false,
-//           errors: [
-//             "There was an issue with the SMTP credentials provided, check the username and password and try again.",
-//           ],
-//         });
-//       });
-//     });
+    needs.pretender((server, helper) => {
+      server.post("/groups/47/test_email_settings", () => {
+        return helper.response(422, {
+          success: false,
+          errors: [
+            "There was an issue with the SMTP credentials provided, check the username and password and try again.",
+          ],
+        });
+      });
+    });
 
-//     test("enabling IMAP, testing, and saving", async function (assert) {
-//       await visit("/g/discourse/manage/email");
+    test("enabling IMAP, testing, and saving", async function (assert) {
+      await visit("/g/discourse/manage/email");
 
-//       await click("#enable_smtp");
-//       await click("#prefill_smtp_gmail");
-//       await fillIn('input[name="username"]', "myusername@gmail.com");
-//       await fillIn('input[name="password"]', "password@gmail.com");
-//       await click(".test-smtp-settings");
+      await click("#enable_smtp");
+      await click("#prefill_smtp_gmail");
+      await fillIn('input[name="username"]', "myusername@gmail.com");
+      await fillIn('input[name="password"]', "password@gmail.com");
+      await click(".test-smtp-settings");
 
-//       assert.equal(
-//         queryAll(".modal-body").text(),
-//         "There was an issue with the SMTP credentials provided, check the username and password and try again.",
-//         "shows a dialogue with the error message from the server"
-//       );
-//       await click(".modal-footer .btn.btn-primary");
-//     });
-//   }
-// );
+      assert.equal(
+        query(".modal-body").innerText,
+        "There was an issue with the SMTP credentials provided, check the username and password and try again.",
+        "shows a dialogue with the error message from the server"
+      );
+      await click(".modal-footer .btn.btn-primary");
+    });
+  }
+);

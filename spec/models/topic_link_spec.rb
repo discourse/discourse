@@ -58,8 +58,8 @@ describe TopicLink do
       TopicLink.extract_from(post)
 
       # we have a special rule for images title where we pull them out of the filename
-      expect(topic.topic_links.where(url: png).pluck(:title).first).to eq(png_title)
-      expect(topic.topic_links.where(url: non_png).pluck(:title).first).to eq("amazing")
+      expect(topic.topic_links.where(url: png).pluck_first(:title)).to eq(png_title)
+      expect(topic.topic_links.where(url: non_png).pluck_first(:title)).to eq("amazing")
 
       expect(topic.topic_links.pluck(:url)).to contain_exactly(
         png,

@@ -8,10 +8,6 @@ class ApiKeyScope < ActiveRecord::Base
     def list_actions
       actions = %w[list#category_feed]
 
-      TopTopic.periods.each do |p|
-        actions.concat(["list#category_top_#{p}", "list#top_#{p}", "list#top_#{p}_feed"])
-      end
-
       %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
 
       actions
@@ -32,6 +28,9 @@ class ApiKeyScope < ActiveRecord::Base
             aliases: { category_id: :category_slug_path_with_id }
           },
           wordpress: { actions: %w[topics#wordpress], params: %i[topic_id] }
+        },
+        posts: {
+          edit: { actions: %w[posts#update], params: %i[id] }
         },
         users: {
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
@@ -84,7 +83,9 @@ class ApiKeyScope < ActiveRecord::Base
         excluded_paths = %w[/new-topic /new-message /exception]
 
         memo.tap do |m|
-          m << path if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
+          if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
+            m << "#{path} (#{route.verb})"
+          end
         end
       end
     end

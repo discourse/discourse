@@ -2,18 +2,12 @@
 
 desc "run chrome headless smoke tests on current build"
 task "smoke:test" do
-  if RbConfig::CONFIG['host_os'][/darwin|mac os/]
-    google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-  else
-    google_chrome_cli = "google-chrome"
-  end
+  require "chrome_installed_checker"
 
-  unless system("command -v \"#{google_chrome_cli}\" >/dev/null")
-    abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
-  end
-
-  if Gem::Version.new(`\"#{google_chrome_cli}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
-    abort "Chrome 59 or higher is required to run tests in headless mode."
+  begin
+    ChromeInstalledChecker.run
+  rescue ChromeNotInstalled, ChromeVersionTooLow => err
+    abort err.message
   end
 
   system("yarn install")

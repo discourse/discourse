@@ -113,6 +113,8 @@ def dependencies
     }, {
       source: 'blueimp-file-upload/js/jquery.iframe-transport.js',
     }, {
+      source: 'blueimp-file-upload/js/jquery.fileupload-process.js',
+    }, {
       source: 'blueimp-file-upload/js/vendor/jquery.ui.widget.js',
     }, {
       source: 'jquery/dist/jquery.js'
@@ -140,9 +142,6 @@ def dependencies
       source: 'mousetrap/plugins/global-bind/mousetrap-global-bind.js'
     }, {
       source: 'resumablejs/resumable.js'
-    }, {
-      # TODO: drop when we eventually drop IE11, this will land in iOS in version 13
-      source: 'intersection-observer/intersection-observer.js'
     }, {
       source: 'workbox-sw/build/.',
       destination: 'workbox',
@@ -194,7 +193,34 @@ def dependencies
     {
       source: 'sinon/pkg/sinon.js'
     },
-
+    {
+      source: 'squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js',
+      destination: 'squoosh',
+      public: true,
+      skip_versioning: true
+    },
+    {
+      source: 'squoosh/codecs/mozjpeg/enc/mozjpeg_enc.wasm',
+      destination: 'squoosh',
+      public: true,
+      skip_versioning: true
+    },
+    {
+      source: 'squoosh/codecs/resize/pkg/squoosh_resize.js',
+      destination: 'squoosh',
+      public: true,
+      skip_versioning: true
+    },
+    {
+      source: 'squoosh/codecs/resize/pkg/squoosh_resize_bg.wasm',
+      destination: 'squoosh',
+      public: true,
+      skip_versioning: true
+    },
+    {
+      source: 'custom-uppy-build.js',
+      destination: 'uppy.js'
+    }
   ]
 end
 
@@ -316,7 +342,14 @@ task 'javascript:update' => 'clean_up' do
     # lodash.js needs building
     if src.include? "lodash.js"
       puts "Building custom lodash.js build"
-      system('yarn run lodash include="each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce,debounce,throttle,values,pick,keys,flatten,min,max,isArray,delay,isString,isEqual,without,invoke,clone,findIndex,find,groupBy" minus="template" -d -o "node_modules/lodash.js"')
+      system('yarn run lodash include="escapeRegExp,each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce,debounce,throttle,values,pick,keys,flatten,min,max,isArray,delay,isString,isEqual,without,invoke,clone,findIndex,find,groupBy" minus="template" -d -o "node_modules/lodash.js"')
+    end
+
+    # we need a custom build of uppy because we cannot import
+    # their modules easily, using browserify to do so
+    if src.include? "custom-uppy-build"
+      puts "Building custom uppy using browserify"
+      system("yarn run browserify #{vendor_js}/custom-uppy.js -o node_modules/custom-uppy-build.js")
     end
 
     unless File.exists?(dest)

@@ -307,6 +307,11 @@ basic:
     client: true
     default: false
     hidden: true
+  max_favorite_badges:
+    client: true
+    default: 2
+    min: 0
+    max: 6
   enable_whispers:
     client: true
     default: false
@@ -495,9 +500,9 @@ login:
     list_type: simple
   hide_email_address_taken: false
   log_out_strict: false
-  pending_users_reminder_delay:
+  pending_users_reminder_delay_minutes:
     min: -1
-    default: 8
+    default: 480
   persistent_sessions: true
   maximum_session_age:
     default: 1440
@@ -1400,6 +1405,33 @@ files:
   decompressed_backup_max_file_size_mb:
     default: 100000
     hidden: true
+  composer_media_optimization_image_enabled:
+    default: false
+    client: true
+  composer_media_optimization_image_kilobytes_optimization_threshold:
+    default: 524288
+    client: true
+  composer_media_optimization_image_resize_dimensions_threshold:
+    default: 1920
+    client: true
+  composer_media_optimization_image_resize_width_target:
+    default: 1920
+    client: true
+  composer_media_optimization_image_resize_pre_multiply:
+    default: false
+    hidden: true
+    client: true
+  composer_media_optimization_image_resize_linear_rgb:
+    default: false
+    hidden: true
+    client: true
+  composer_media_optimization_image_encode_quality:
+    default: 75
+    client: true
+  composer_media_optimization_debug_mode:
+    default: false
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:
@@ -1699,6 +1731,7 @@ spam:
   cooldown_hours_until_reflag:
     default: 24
     min: 0
+  slow_mode_prevents_editing: true
 
   reviewable_claiming:
     client: true
@@ -2260,11 +2293,6 @@ uncategorized:
 
   create_revision_on_bulk_topic_moves:
     default: true
-
-  disable_image_size_calculations:
-    default: false
-    hidden: true
-    client: true
 
 user_preferences:
   default_email_digest_frequency:

@@ -6,38 +6,38 @@
 
 ja:
   site_settings:
-    disable_discourse_narrative_bot_welcome_post: "ディスコースナレーター、ボットからのようこそ投稿を無効にしてください。"
-    discourse_narrative_bot_ignored_usernames: "ディスコースナレーター、ボットのユーザー名は気にするべきではありません。"
-    discourse_narrative_bot_disable_public_replies: "ディスコースナレーター、ボットからの返信を無効にして下さい。"
-    discourse_narrative_bot_welcome_post_type: "ディスコースナレーター、ボットが送るようこそ投稿のタイプ"
-    discourse_narrative_bot_welcome_post_delay: "ディスコースのナレーター、ボットのようこそ投稿を送信する前に(n)秒待ってください。"
+    disable_discourse_narrative_bot_welcome_post: "Discourse Narrative Bot のウェルカム投稿を無効にする"
+    discourse_narrative_bot_ignored_usernames: "Discourse Narrative Bot が無視するユーザー名"
+    discourse_narrative_bot_disable_public_replies: "Discourse Narrative Bot の公開返信を無効にする"
+    discourse_narrative_bot_welcome_post_type: "Discourse Narrative Bot が送信するウェルカム投稿のタイプ"
+    discourse_narrative_bot_welcome_post_delay: "Discourse Narrative Bot のウェルカム投稿を送信するまで (n) 秒待ちます。"
   badges:
     certified:
-      name: 認証済
-      description: "新規ユーザーのチュートリアルが完了しました。"
+      name: 修了証
+      description: "新しいユーザーチュートリアルを修了"
       long_description: |
-        このバッジは新規ユーザーチュートリアルの優れた結果のもと授与されました。あなたはディスカッションの基礎的なツールを学ぶための主導権を獲得したことが証明されました!
+        このバッジは新しいインタラクティブチュートリアルを修了したときに与えられます。ディスカッションの基本ツールを学習し、修了したことを証します！
     licensed:
-      name: 許可済
-      description: "上級のユーザーチュートリアルが完了しました。"
+      name: ライセンス取得
+      description: "上級ユーザーチュートリアルを修了"
       long_description: |
-        このバッジは上級ユーザーチュートリアルの優れた結果において授与されました。あなたは上級ディスカッションツールをマスターし、完全に許可されました。
+        このバッジは上級インタラクティブユーザーチュートリアルを修了したときに与えられます。ディスカッションの高度なツールをマスターし、ディスカッションユーザーのライセンスを取得しました！
   discourse_narrative_bot:
     timeout:
       message: |-
-        こんにちは%{username}、しばらく便りがなかったのでチェックをしているところです。
+        %{username} さん、こんにちは。しばらくログインしていないようなので、こちらから連絡してみました。
 
-        続けるためには、私に時間のある時に返信してください。
+        - 会話を続ける場合は、いつでも私に返信してください。
 
-        もしこのステップをスキップしたい場合、%{skip_trigger}とおっしゃってください。
+        - このステップを省略する場合は、「%{skip_trigger}」を入力してください。
 
-        やり直したい場合、%{reset_trigger}とおっしゃってください。
+        - 始めからやり直す場合は、「%{reset_trigger}」を入力してください。
 
-        仮にこれらをしたくなくても、それもOKです。私はプログラムですから傷つきません。:くすん:
+        何もしない場合は、それでも結構。私は単なるロボットなので、傷ついたりしませんよ。:sob:
     dice:
       trigger: "サイコロを振る"
       invalid: |-
-        ごめんなさい、この組み合わせのサイコロを振ることは数学的に困難です。:confounded:
+        ごめんなさい。このサイコロの組み合わせを出すのは数学的に無理です。:confounded:
       results: |-
         > :game_die: %{results}
     quote:
@@ -46,13 +46,13 @@ ja:
         quote: "困難の中に、機会がある。"
         author: "アルベルト・アインシュタイン"
       "2":
-        quote: "失敗する自由がないならば、それは自由ではない。"
+        quote: "過ちを犯す自由がないのならば、自由を持つ価値はない。"
         author: "マハトマガンジー"
       "3":
         quote: "終わってしまったことを嘆くのではなく、それを経験したことを喜ぼう。"
         author: "ドクター・スース"
       "4":
-        quote: "あなたが誰かに正しい行いを求めるのであれば、自分自身で行ってください。"
+        quote: "うまくいくことを望むのなら自分でやりたまえ。"
     magic_8_ball:
       answers:
         "1": "It is certain"
@@ -80,10 +80,10 @@ ja:
     new_user_narrative:
       hello:
         message: |-
-          ようこそ、%{title}へ参加ありがとうございます！
+          ようこそ。そして %{title} に参加してくれてありがとう！
 
-          - 私はただのロボットですが、必要な時のサポートのため[我々の友好的なスタッフ](%{base_uri}/about)がいます。
+          - 私はただのロボットですが、人間と話がしたいなら、気さくなスタッフ (%{base_uri}/about) もお手伝いできます。
 
-          - セキュリティの都合上、新しいユーザーは出来ることが限られています。[新しい権限](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (あるいは[バッジ](%{base_uri}/badges))が与えられた際にはお知らせします。
+          - セキュリティの都合上、新規ユーザーはできることには限られています。使用回数が増えれば、新しい機能 (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (とバッジ (%{base_uri}/badges)) を得られます。
 
-          - 我々は[まともなコミュニティのありかた](%{base_uri}/guidelines)に常に従っています。
+          - コミュニティでは常に礼節ある行動 (%{base_uri}/guidelines) を取ってもらえると信じています。

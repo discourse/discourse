@@ -12,13 +12,13 @@ class SvgSpriteController < ApplicationController
     no_cookies
 
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      theme_ids = params[:theme_ids].split(",").map(&:to_i)
+      theme_id = params[:theme_id].to_i if params[:theme_id].present?
 
-      if SvgSprite.version(theme_ids) != params[:version]
-        return redirect_to path(SvgSprite.path(theme_ids))
+      if SvgSprite.version(theme_id) != params[:version]
+        return redirect_to UrlHelper.absolute((SvgSprite.path(theme_id)))
       end
 
-      svg_sprite = "window.__svg_sprite = #{SvgSprite.bundle(theme_ids).inspect};"
+      svg_sprite = "window.__svg_sprite = #{SvgSprite.bundle(theme_id).inspect};"
 
       response.headers["Last-Modified"] = 10.years.ago.httpdate
       response.headers["Content-Length"] = svg_sprite.bytesize.to_s

@@ -112,6 +112,9 @@ en:
       no_subject: "(no subject)"
       no_body: "(no body)"
       missing_attachment: "(Attachment %{filename} is missing)"
+      continuing_old_discussion:
+        one: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} day ago."
+        other: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} days ago."
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
@@ -251,6 +254,7 @@ en:
     disabled_errors:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
       invalid_access: "You are not permitted to view the requested resource."
+    requires_groups: "Invite saved. To give access to the specified topic, add one of the following groups: %{groups}."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -276,9 +280,6 @@ en:
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
     invalid_filename: "The backup filename contains invalid characters. Valid characters are a-z 0-9 . - _."
     file_exists: "The file you are trying to upload already exists."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
 
   invalid_params: "You supplied invalid parameters to the request: %{message}"
   not_logged_in: "You need to be logged in to do that."
@@ -294,7 +295,7 @@ en:
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
   not_in_group:
     title_topic: "You need to request membership to the '%{group}' group to see this topic."
-    title_category: "You must be in a group to see this category."
+    title_category: "You need to request membership to the '%{group}' group to see this category."
     request_membership: "Request Membership"
     join_group: "Join Group"
   deleted_topic: "Oops! This topic has been deleted and is no longer available."
@@ -1601,7 +1602,7 @@ en:
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
     review_every_post: "All posts must be reviewed. WARNING! NOT RECOMMENDED FOR BUSY SITES."
-    pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
+    pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
     ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"
@@ -1653,6 +1654,7 @@ en:
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
     enable_badges: "Enable the badge system"
+    max_favorite_badges: "Maximum number of badges that user can select"
     enable_whispers: "Allow staff private communication within topics."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
@@ -1823,6 +1825,12 @@ en:
 
     strip_image_metadata: "Strip image metadata."
 
+    composer_media_optimization_image_enabled: "Enables client-side media optimization of uploaded image files."
+    composer_media_optimization_image_kilobytes_optimization_threshold: "Minimum image file size to trigger client-side optimization"
+    composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
+    composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
+    composer_media_optimization_image_encode_quality: "JPEG encode quality used in the re-encode process."
+
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
     simultaneous_uploads: "Maximum number of files that can be dragged & dropped in the composer"
@@ -1970,9 +1978,10 @@ en:
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
-    reviewable_low_priority_threshold: "The priority filter hides reviewable that doesn't meet this score unless the '(any)' filter is used."
+    reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
+    slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -2594,7 +2603,9 @@ en:
     email_in_spam_header: "User's first email was flagged as spam"
     already_silenced: "User was already silenced by %{staff} %{time_ago}."
     already_suspended: "User was already suspended by %{staff} %{time_ago}."
-    cannot_delete_has_posts: "User %{username} has %{post_count} posts(s), either public posts or personal messages, so they can't be deleted."
+    cannot_delete_has_posts:
+      one: "User %{username} has %{count} post in a public topic or personal message, so they can't be deleted."
+      other: "User %{username} has %{count} posts in public topics or personal messages, so they can't be deleted."
 
   reviewables_reminder:
     submitted:
@@ -3462,6 +3473,7 @@ en:
     only_reply_by_email_pm: "Reply to this email to respond to %{participants}."
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
     visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond to %{participants}."
+    reply_above_line: "## Please type your reply above this line. ##"
 
     posted_by: "Posted by %{username} on %{post_date}"
 
@@ -4032,6 +4044,9 @@ en:
     sender_post_deleted: "post has been deleted"
     sender_message_to_invalid: "recipient has invalid email address"
     sender_topic_deleted: "topic has been deleted"
+    group_smtp_post_deleted: "post has been deleted"
+    group_smtp_topic_deleted: "topic has been deleted"
+    group_smtp_disabled_for_group: "smtp has been disabled for the group"
 
   color_schemes:
     base_theme_name: "Base"

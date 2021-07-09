@@ -3,11 +3,12 @@
 class DirectoryColumnSerializer < ApplicationSerializer
   attributes :id,
              :name,
-             :automatic,
-             :enabled,
-             :automatic_position,
+             :type,
              :position,
-             :icon
+             :icon,
+             :user_field_id
 
-  has_one :user_field, serializer: UserFieldSerializer, embed: :objects
+  def name
+    object.name || object.user_field.name
+  end
 end

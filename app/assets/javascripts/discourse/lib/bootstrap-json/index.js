@@ -34,10 +34,15 @@ function head(buffer, bootstrap) {
     buffer.push(`<meta name="csrf-param" content="authenticity_token">`);
     buffer.push(`<meta name="csrf-token" content="${bootstrap.csrf_token}">`);
   }
-  if (bootstrap.theme_ids) {
+
+  if (bootstrap.theme_id) {
     buffer.push(
-      `<meta name="discourse_theme_ids" content="${bootstrap.theme_ids}">`
+      `<meta name="discourse_theme_id" content="${bootstrap.theme_id}">`
     );
+  }
+
+  if (bootstrap.theme_color) {
+    buffer.push(`<meta name="theme-color" content="${bootstrap.theme_color}">`);
   }
 
   let setupData = "";
@@ -65,9 +70,12 @@ function head(buffer, bootstrap) {
     if (s.theme_id) {
       attrs.push(`data-theme-id="${s.theme_id}"`);
     }
+    if (s.class) {
+      attrs.push(`class="${s.class}"`);
+    }
     let link = `<link rel="stylesheet" type="text/css" href="${
       s.href
-    }" ${attrs.join(" ")}></script>\n`;
+    }" ${attrs.join(" ")}>`;
     buffer.push(link);
   });
 

@@ -320,6 +320,7 @@ class ColorScheme < ActiveRecord::Base
     end
     if theme_ids.present?
       Stylesheet::Manager.cache.clear
+
       Theme.notify_theme_change(
         theme_ids,
         with_scheme: true,

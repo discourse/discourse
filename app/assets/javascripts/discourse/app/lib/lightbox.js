@@ -8,16 +8,21 @@ import User from "discourse/models/user";
 import loadScript from "discourse/lib/load-script";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { helperContext } from "discourse-common/lib/helpers";
 
 export default function (elem, siteSettings) {
   if (!elem) {
     return;
   }
 
+  const caps = helperContext().capabilities;
+  const imageClickNavigation = caps.touch;
+
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
     const lightboxes = elem.querySelectorAll(
       "*:not(.spoiler):not(.spoiled) a.lightbox"
     );
+
     $(lightboxes).magnificPopup({
       type: "image",
       closeOnContentClick: false,
@@ -31,6 +36,7 @@ export default function (elem, siteSettings) {
         tPrev: I18n.t("lightbox.previous"),
         tNext: I18n.t("lightbox.next"),
         tCounter: I18n.t("lightbox.counter"),
+        navigateByImgClick: imageClickNavigation,
       },
 
       ajax: {
@@ -39,17 +45,19 @@ export default function (elem, siteSettings) {
 
       callbacks: {
         open() {
-          const wrap = this.wrap,
-            img = this.currItem.img,
-            maxHeight = img.css("max-height");
+          if (!imageClickNavigation) {
+            const wrap = this.wrap,
+              img = this.currItem.img,
+              maxHeight = img.css("max-height");
 
-          wrap.on("click.pinhandler", "img", function () {
-            wrap.toggleClass("mfp-force-scrollbars");
-            img.css(
-              "max-height",
-              wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
-            );
-          });
+            wrap.on("click.pinhandler", "img", function () {
+              wrap.toggleClass("mfp-force-scrollbars");
+              img.css(
+                "max-height",
+                wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
+              );
+            });
+          }
 
           if (isAppWebview()) {
             postRNWebviewMessage(
@@ -57,6 +65,9 @@ export default function (elem, siteSettings) {
               $(".mfp-bg").css("background-color")
             );
           }
+        },
+        change() {
+          this.wrap.removeClass("mfp-force-scrollbars");
         },
         beforeClose() {
           this.wrap.off("click.pinhandler");

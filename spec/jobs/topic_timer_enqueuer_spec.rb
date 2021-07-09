@@ -47,4 +47,9 @@ RSpec.describe Jobs::TopicTimerEnqueuer do
     Jobs.enqueue_at(1.hours.from_now, :close_topic, topic_timer_id: timer1.id)
     subject.execute
   end
+
+  it "does not fail to enqueue other timers just because one timer errors" do
+    TopicTimer.any_instance.stubs(:enqueue_typed_job).raises(StandardError).then.returns(true)
+    expect { subject.execute }.not_to raise_error
+  end
 end

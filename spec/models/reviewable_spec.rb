@@ -78,6 +78,14 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
       expect(r0.pending?).to eq(false)
     end
+
+    it "will create a new reviewable when an existing reviewable exists the same target with different type" do
+      r0 = Fabricate(:reviewable_queued_post)
+      r0.perform(admin, :approve_post)
+
+      r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+      expect(r1.pending?).to eq(true)
+    end
   end
 
   context ".list_for" do

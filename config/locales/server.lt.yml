@@ -1114,8 +1114,6 @@ lt:
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_hide:
         title: "Paslėpti įrašą"
-      delete_spammer:
-        title: "Ištrinti Vartotoją"
       delete_single:
         title: "Pašalinti"
       disagree:
@@ -1129,8 +1127,6 @@ lt:
           title: "Ištrinti vartotoją"
       reject:
         title: "Atmesti"
-      delete_user:
-        title: "Ištrinti vartotoją"
   activemodel:
     errors:
       <<: *errors

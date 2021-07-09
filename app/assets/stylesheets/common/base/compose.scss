@@ -362,6 +362,10 @@
   #file-uploading {
     color: var(--primary-high);
   }
+
+  #file-uploader {
+    display: none;
+  }
 }
 
 .autocomplete {

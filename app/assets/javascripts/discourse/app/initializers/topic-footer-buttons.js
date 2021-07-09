@@ -1,5 +1,4 @@
 import I18n from "I18n";
-import { formattedReminderTime } from "discourse/lib/bookmark";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import showModal from "discourse/lib/show-modal";
 
@@ -12,8 +11,7 @@ const DEFER_PRIORITY = 500;
 export default {
   name: "topic-footer-buttons",
 
-  initialize(container) {
-    const currentUser = container.lookup("current-user:main");
+  initialize() {
     registerTopicFooterButton({
       id: "share-and-invite",
       icon: "link",
@@ -66,22 +64,27 @@ export default {
     });
 
     registerTopicFooterButton({
-      dependentKeys: ["topic.bookmarked", "topic.bookmarkedPosts"],
+      dependentKeys: ["topic.bookmarked", "topic.bookmarksWereChanged"],
       id: "bookmark",
       icon() {
-        if (this.get("topic.bookmark_reminder_at")) {
+        const bookmarkedPosts = this.topic.bookmarked_posts;
+        if (bookmarkedPosts && bookmarkedPosts.find((x) => x.reminder_at)) {
           return "discourse-bookmark-clock";
         }
         return "bookmark";
       },
       priority: BOOKMARK_PRIORITY,
       classNames() {
-        const bookmarked = this.get("topic.bookmarked");
-        return bookmarked ? ["bookmark", "bookmarked"] : ["bookmark"];
+        return this.topic.bookmarked
+          ? ["bookmark", "bookmarked"]
+          : ["bookmark"];
       },
       label() {
-        if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
-          const bookmarkedPostsCount = this.get("topic.bookmarkedPosts").length;
+        if (!this.topic.isPrivateMessage || this.site.mobileView) {
+          const bookmarkedPosts = this.topic.bookmarked_posts;
+          const bookmarkedPostsCount = bookmarkedPosts
+            ? bookmarkedPosts.length
+            : 0;
 
           if (bookmarkedPostsCount === 0) {
             return "bookmarked.title";
@@ -93,20 +96,16 @@ export default {
         }
       },
       translatedTitle() {
-        const bookmarked = this.get("topic.bookmarked");
-        const bookmark_reminder_at = this.get("topic.bookmark_reminder_at");
-        if (bookmarked) {
-          if (bookmark_reminder_at) {
-            return I18n.t("bookmarked.help.unbookmark_with_reminder", {
-              reminder_at: formattedReminderTime(
-                bookmark_reminder_at,
-                currentUser.resolvedTimezone(currentUser)
-              ),
-            });
-          }
+        const bookmarkedPosts = this.topic.bookmarked_posts;
+        if (!bookmarkedPosts || bookmarkedPosts.length === 0) {
+          return I18n.t("bookmarked.help.bookmark");
+        } else if (bookmarkedPosts.length === 1) {
+          return I18n.t("bookmarked.help.edit_bookmark");
+        } else if (bookmarkedPosts.find((x) => x.reminder_at)) {
+          return I18n.t("bookmarked.help.unbookmark_with_reminder");
+        } else {
           return I18n.t("bookmarked.help.unbookmark");
         }
-        return I18n.t("bookmarked.help.bookmark");
       },
       action: "toggleBookmark",
       dropdown() {

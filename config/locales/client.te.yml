@@ -132,13 +132,11 @@ te:
     now: "ఇప్పుడే"
     read_more: "మరింత చదువు"
     more: "మరింత"
-    less: "తక్కువ"
     never: "ఎప్పటికీ వద్దు"
     every_hour: "ప్రతి గంట"
     daily: "ప్రతిరోజూ"
     weekly: "ప్రతీవారం"
     max_of_count: "%{count} గరిష్టం"
-    alternation: "లేదా"
     character_count:
       one: "%{count} అక్షరం"
       other: "%{count} అక్షరాలు"
@@ -266,6 +264,7 @@ te:
       manage:
         name: "పేరు"
         full_name: "పూర్తి పేరు"
+        invite_members: "ఆహ్వానించు"
         delete_member_confirm: " '%{group}' గుంపు నుండి '%{username}' ను తొలగించాలా?"
         profile:
           title: ప్రవర
@@ -273,6 +272,7 @@ te:
           posting: రాస్తున్నారు
         email:
           title: "ఈమెయిల్"
+          last_updated_by: "నుండి"
           credentials:
             username: "వాడుకరి పేరు"
             password: "సంకేతపదం"
@@ -1293,7 +1293,6 @@ te:
         user_profile_menu: "%{shortcut} యూజర్ మెనూ తెరువు"
         show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"
         help: "%{shortcut} కీ బోర్డ్ సహాయాన్ని తెరువు"
-        dismiss_new_posts: "%{shortcut} తీసివేసిన కొత్త/టపాలు"
         dismiss_topics: "%{shortcut} తీసివేసిన విషయాలు"
       actions:
         title: "చర్యలు"

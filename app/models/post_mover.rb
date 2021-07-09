@@ -66,6 +66,18 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
+    # when a topic contains some posts after moving posts to another topic we shouldn't close it
+    # two types of posts should prevent a topic from closing:
+    #   1. regular posts
+    #   2. almost all whispers
+    # we should only exclude whispers with action_code: 'split_topic'
+    # because we use such whispers as a small-action posts when moving posts to the secret message
+    # (in this case we don't want everyone to see that posts were moved, that's why we use whispers)
+    original_topic_posts_count = @original_topic.posts
+      .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
+      .count
+    moving_all_posts = original_topic_posts_count == posts.length
+
     create_temp_table
     delete_invalid_post_timings
     move_each_post
@@ -76,11 +88,7 @@ class PostMover
     update_upload_security_status
     update_bookmarks
 
-    posts_left = @original_topic.posts
-      .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
-      .count
-
-    if posts_left == 1
+    if moving_all_posts
       close_topic_and_schedule_deletion
     end
 
@@ -344,7 +352,7 @@ class PostMover
     }
 
     DB.exec(<<~SQL, params)
-      INSERT INTO topic_users(user_id, topic_id, posted, last_read_post_number, highest_seen_post_number,
+      INSERT INTO topic_users(user_id, topic_id, posted, last_read_post_number,
                               last_emailed_post_number, first_visited_at, last_visited_at, notification_level,
                               notifications_changed_at, notifications_reason_id)
       SELECT tu.user_id,
@@ -363,12 +371,6 @@ class PostMover
                  AND lr.old_post_number <= tu.last_read_post_number
              )                                           AS last_read_post_number,
              (
-               SELECT MAX(hs.new_post_number)
-               FROM moved_posts hs
-               WHERE hs.old_topic_id = tu.topic_id
-                 AND hs.old_post_number <= tu.highest_seen_post_number
-             )                                           AS highest_seen_post_number,
-             (
                SELECT MAX(le.new_post_number)
                FROM moved_posts le
                WHERE le.old_topic_id = tu.topic_id
@@ -384,7 +386,6 @@ class PostMover
       WHERE tu.topic_id = :old_topic_id
         AND GREATEST(
                 tu.last_read_post_number,
-                tu.highest_seen_post_number,
                 tu.last_emailed_post_number
               ) >= (SELECT MIN(old_post_number) FROM moved_posts)
       ON CONFLICT (topic_id, user_id) DO UPDATE
@@ -401,18 +402,6 @@ class PostMover
                                            GREATEST(topic_users.last_read_post_number,
                                                     excluded.last_read_post_number)
                                          ELSE topic_users.last_read_post_number END,
-            highest_seen_post_number = CASE
-                                         WHEN topic_users.highest_seen_post_number = :old_highest_staff_post_number OR (
-                                             :old_highest_post_number < :old_highest_staff_post_number
-                                             AND topic_users.highest_seen_post_number = :old_highest_post_number
-                                             AND NOT EXISTS(SELECT 1
-                                                            FROM users u
-                                                            WHERE u.id = topic_users.user_id
-                                                              AND (admin OR moderator))
-                                           ) THEN
-                                           GREATEST(topic_users.highest_seen_post_number,
-                                                    excluded.highest_seen_post_number)
-                                         ELSE topic_users.highest_seen_post_number END,
             last_emailed_post_number = CASE
                                          WHEN topic_users.last_emailed_post_number = :old_highest_staff_post_number OR (
                                              :old_highest_post_number < :old_highest_staff_post_number

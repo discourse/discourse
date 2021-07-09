@@ -377,10 +377,10 @@ table.screened-ip-addresses {
   .d-icon {
     margin-right: 0.25em;
     color: var(--primary-medium);
-  }
 
-  &:hover .d-icon {
-    color: var(--danger);
+    &:hover {
+      color: var(--danger);
+    }
   }
 }
 
@@ -395,6 +395,11 @@ table.screened-ip-addresses {
   .about,
   .watched-word-form {
     margin-bottom: 1em;
+  }
+
+  .watched-word-controls .btn {
+    margin-bottom: 0.25em;
+    margin-right: 0.25em;
   }
 }
 

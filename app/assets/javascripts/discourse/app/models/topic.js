@@ -7,7 +7,6 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
-import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
@@ -21,6 +20,7 @@ import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
+import deprecated from "discourse-common/lib/deprecated";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -239,10 +239,16 @@ const Topic = RestModel.extend({
     return url;
   },
 
-  @discourseComputed("new_posts", "unread")
-  totalUnread(newPosts, unread) {
-    const count = (unread || 0) + (newPosts || 0);
-    return count > 0 ? count : null;
+  @discourseComputed("unread_posts", "new_posts")
+  totalUnread(unreadPosts, newPosts) {
+    deprecated("The totalUnread property of the topic model is deprecated");
+    return unreadPosts || newPosts;
+  },
+
+  @discourseComputed("unread_posts", "new_posts")
+  displayNewPosts(unreadPosts, newPosts) {
+    deprecated("The displayNewPosts property of the topic model is deprecated");
+    return unreadPosts || newPosts;
   },
 
   @discourseComputed("last_read_post_number", "url")
@@ -284,25 +290,6 @@ const Topic = RestModel.extend({
     return userPath(username);
   },
 
-  // The amount of new posts to display. It might be different than what the server
-  // tells us if we are still asynchronously flushing our "recently read" data.
-  // So take what the browser has seen into consideration.
-  @discourseComputed("new_posts", "id")
-  displayNewPosts(newPosts, id) {
-    const highestSeen = Session.currentProp("highestSeenByTopic")[id];
-    if (highestSeen) {
-      const delta = highestSeen - this.last_read_post_number;
-      if (delta > 0) {
-        let result = newPosts - delta;
-        if (result < 0) {
-          result = 0;
-        }
-        return result;
-      }
-    }
-    return newPosts;
-  },
-
   @discourseComputed("views")
   viewsHeat(v) {
     if (v >= this.siteSettings.topic_views_heat_high) {
@@ -320,11 +307,6 @@ const Topic = RestModel.extend({
   @discourseComputed("archetype")
   archetypeObject(archetype) {
     return Site.currentProp("archetypes").findBy("id", archetype);
-  },
-
-  @discourseComputed("bookmarksWereChanged")
-  bookmarkedPosts() {
-    return this.postStream.posts.filterBy("bookmarked", true);
   },
 
   isPrivateMessage: equal("archetype", "private_message"),
@@ -363,7 +345,6 @@ const Topic = RestModel.extend({
 
   afterPostBookmarked(post) {
     post.set("bookmarked", true);
-    this.set("bookmark_reminder_at", post.bookmark_reminder_at);
   },
 
   firstPost() {
@@ -376,20 +357,38 @@ const Topic = RestModel.extend({
 
     const postId = postStream.findPostIdForPostNumber(1);
     if (postId) {
-      // try loading from identity map first
-      firstPost = postStream.findLoadedPost(postId);
-      if (firstPost) {
-        return Promise.resolve(firstPost);
-      }
-
-      return this.postStream.loadPost(postId);
+      return this.postById(postId);
     } else {
       return this.postStream.loadPostByPostNumber(1);
     }
   },
 
-  deleteBookmark() {
+  postById(id) {
+    const loaded = this.postStream.findLoadedPost(id);
+    if (loaded) {
+      return Promise.resolve(loaded);
+    }
+
+    return this.postStream.loadPost(id);
+  },
+
+  deleteBookmarks() {
     return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" });
+  },
+
+  clearBookmarks() {
+    this.toggleProperty("bookmarked");
+
+    const postIds = this.bookmarked_posts.mapBy("post_id");
+    postIds.forEach((postId) => {
+      const loadedPost = this.postStream.findLoadedPost(postId);
+      if (loadedPost) {
+        loadedPost.clearBookmark();
+      }
+    });
+    this.set("bookmarked_posts", []);
+
+    return postIds;
   },
 
   createGroupInvite(group) {

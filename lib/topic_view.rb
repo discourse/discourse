@@ -395,13 +395,14 @@ class TopicView
     @topic.bookmarks.exists?(user_id: @user.id)
   end
 
-  def first_post_bookmark_reminder_at
-    @first_post_bookmark_reminder_at ||= \
-      begin
-        first_post = @topic.posts.with_deleted.find_by(post_number: 1)
-        return if !first_post
-        first_post.bookmarks.where(user: @user).pluck_first(:reminder_at)
-      end
+  def bookmarked_posts
+    return nil unless has_bookmarks?
+    @topic.bookmarks.where(user: @user).pluck(:post_id, :reminder_at).map do |post_id, reminder_at|
+      {
+        post_id: post_id,
+        reminder_at: reminder_at
+      }
+    end
   end
 
   MAX_PARTICIPANTS = 24
@@ -509,7 +510,8 @@ class TopicView
           reviewable_scores s ON reviewable_id = r.id
         WHERE
           r.target_id IN (:post_ids) AND
-          r.target_type = 'Post'
+          r.target_type = 'Post' AND
+          COALESCE(s.reason, '') != 'category'
         GROUP BY
           target_id
       SQL
@@ -747,7 +749,6 @@ class TopicView
   end
 
   def filter_posts_by_ids(post_ids)
-    # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
       .includes(
         { user: :primary_group },

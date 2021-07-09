@@ -1,4 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
+import Group from "discourse/models/group";
 import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import showModal from "discourse/lib/show-modal";
@@ -19,28 +20,44 @@ export default Controller.extend({
   isLoading: false,
   columns: null,
   groupsOptions: null,
+  params: null,
 
   showTimeRead: equal("period", "all"),
 
-  loadUsers(params) {
-    this.set("isLoading", true);
+  loadUsers(params = null) {
+    if (params) {
+      this.set("params", params);
+    }
 
-    this.set("nameInput", params.name);
-    this.set("order", params.order);
+    this.setProperties({
+      isLoading: true,
+      nameInput: this.params.name,
+      order: this.params.order,
+    });
 
-    const custom_field_columns = this.columns.filter((c) => !c.automatic);
-    const user_field_ids = custom_field_columns
+    const userFieldIds = this.columns
+      .filter((c) => c.type === "user_field")
       .map((c) => c.user_field_id)
+      .join("|");
+    const pluginColumnIds = this.columns
+      .filter((c) => c.type === "plugin")
+      .map((c) => c.id)
       .join("|");
 
     return this.store
-      .find("directoryItem", Object.assign(params, { user_field_ids }))
+      .find(
+        "directoryItem",
+        Object.assign(this.params, {
+          user_field_ids: userFieldIds,
+          plugin_column_ids: pluginColumnIds,
+        })
+      )
       .then((model) => {
         const lastUpdatedAt = model.get("resultSetMeta.last_updated_at");
         this.setProperties({
           model,
           lastUpdatedAt: lastUpdatedAt ? longDate(lastUpdatedAt) : null,
-          period: params.period,
+          period: this.params.period,
         });
       })
       .finally(() => {
@@ -49,11 +66,11 @@ export default Controller.extend({
   },
 
   loadGroups() {
-    return this.store.findAll("group").then((groups) => {
+    return Group.findAll({ ignore_automatic: true }).then((groups) => {
       const groupOptions = groups.map((group) => {
         return {
-          name: group.name,
-          id: group.id,
+          name: group.full_name || group.name,
+          id: group.name,
         };
       });
       this.set("groupOptions", groupOptions);
@@ -63,7 +80,7 @@ export default Controller.extend({
   @action
   groupChanged(_, groupAttrs) {
     // First param is the group name, which include none or 'all groups'. Ignore this and look at second param.
-    this.set("group", groupAttrs.id ? groupAttrs.name : null);
+    this.set("group", groupAttrs.id);
   },
 
   @action
@@ -73,11 +90,15 @@ export default Controller.extend({
 
   @action
   onUsernameFilterChanged(filter) {
-    discourseDebounce(this, this._setName, filter, 500);
+    discourseDebounce(this, this._setUsernameFilter, filter, 500);
   },
 
-  _setName(name) {
-    this.set("name", name);
+  _setUsernameFilter(username) {
+    this.setProperties({
+      name: username,
+      "params.name": username,
+    });
+    this.loadUsers();
   },
 
   @observes("model.canLoadMore")

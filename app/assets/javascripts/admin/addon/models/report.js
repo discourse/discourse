@@ -504,7 +504,12 @@ const Report = EmberObject.extend({
 });
 
 export const WEEKLY_LIMIT_DAYS = 365;
-export const DAILY_LIMIT_DAYS = 30;
+export const DAILY_LIMIT_DAYS = 34;
+
+function applyAverage(value, start, end) {
+  const count = end.diff(start, "day") + 1; // 1 to include start
+  return parseFloat((value / count).toFixed(2));
+}
 
 Report.reopenClass({
   groupingForDatapoints(count) {
@@ -562,6 +567,7 @@ Report.reopenClass({
         },
       ];
 
+      let appliedAverage = false;
       data.forEach((d) => {
         const date = moment(d.x, "YYYY-MM-DD");
 
@@ -569,9 +575,21 @@ Report.reopenClass({
           !date.isSame(currentStart) &&
           !date.isBetween(currentStart, currentEnd)
         ) {
+          if (model.average) {
+            transformedData[currentIndex].y = applyAverage(
+              transformedData[currentIndex].y,
+              currentStart,
+              currentEnd
+            );
+
+            appliedAverage = true;
+          }
+
           currentIndex += 1;
           currentStart = currentStart.add(1, kind).startOf(isoKind);
           currentEnd = currentEnd.add(1, kind).endOf(isoKind);
+        } else {
+          appliedAverage = false;
         }
 
         if (transformedData[currentIndex]) {
@@ -583,6 +601,14 @@ Report.reopenClass({
           };
         }
       });
+
+      if (model.average && !appliedAverage) {
+        transformedData[currentIndex].y = applyAverage(
+          transformedData[currentIndex].y,
+          currentStart,
+          moment(model.end_date).subtract(1, "day") // remove 1 day as model end date is at 00:00 of next day
+        );
+      }
 
       return transformedData;
     }

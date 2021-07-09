@@ -36,9 +36,12 @@ module Onebox
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
         canonical_uri = Addressable::URI.parse(canonical_link)
-        if canonical_link && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
-          response = (fetch_response(canonical_uri.to_s, headers: headers, body_cacher: body_cacher) rescue nil)
-          doc = Nokogiri::HTML(response) if response
+        if canonical_link && canonical_uri && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
+          uri = FinalDestination.new(canonical_link, Oneboxer.get_final_destination_options(canonical_link)).resolve
+          if uri.present?
+            response = (fetch_response(uri.to_s, headers: headers, body_cacher: body_cacher) rescue nil)
+            doc = Nokogiri::HTML(response) if response
+          end
         end
       end
 
@@ -63,8 +66,7 @@ module Onebox
       end
 
       result = StringIO.new
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.normalized_scheme == 'https') do |http|
-        http.open_timeout = Onebox.options.connect_timeout
+      Net::HTTP.start(uri.host, uri.port, open_timeout: Onebox.options.connect_timeout, use_ssl: uri.normalized_scheme == 'https') do |http|
         http.read_timeout = Onebox.options.timeout
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # Work around path building bugs
 
@@ -118,8 +120,7 @@ module Onebox
     def self.fetch_content_length(location)
       uri = URI(location)
 
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.is_a?(URI::HTTPS)) do |http|
-        http.open_timeout = Onebox.options.connect_timeout
+      Net::HTTP.start(uri.host, uri.port, open_timeout: Onebox.options.connect_timeout, use_ssl: uri.is_a?(URI::HTTPS)) do |http|
         http.read_timeout = Onebox.options.timeout
         if uri.is_a?(URI::HTTPS)
           http.use_ssl = true

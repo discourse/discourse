@@ -1,46 +1,31 @@
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { emailValid } from "discourse/lib/utilities";
-import { extractError } from "discourse/lib/ajax-error";
 import { isEmpty } from "@ember/utils";
-import { reads } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import { extractError } from "discourse/lib/ajax-error";
+import { emailValid } from "discourse/lib/utilities";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import I18n from "I18n";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,
-  setAsOwner: false,
-  notifyUsers: false,
+
   usernamesAndEmails: null,
-  emailsPresent: reads("emails.length"),
+  setOwner: false,
+  notifyUsers: false,
 
   onShow() {
     this.setProperties({
-      usernamesAndEmails: [],
-      setAsOwner: false,
+      loading: false,
+      setOwner: false,
       notifyUsers: false,
+      usernamesAndEmails: [],
     });
   },
 
-  @discourseComputed("usernamesAndEmails", "loading")
-  disableAddButton(usernamesAndEmails, loading) {
-    return loading || !usernamesAndEmails || !(usernamesAndEmails.length > 0);
-  },
-
-  @discourseComputed("usernamesAndEmails")
-  notifyUsersDisabled() {
-    return this.usernames.length === 0 && this.emails.length > 0;
-  },
-
   @discourseComputed("model.name", "model.full_name")
-  title(name, fullName) {
+  rawTitle(name, fullName) {
     return I18n.t("groups.add_members.title", { group_name: fullName || name });
-  },
-
-  @discourseComputed("usernamesAndEmails.[]")
-  emails(usernamesAndEmails) {
-    return usernamesAndEmails.filter(emailValid).join(",");
   },
 
   @discourseComputed("usernamesAndEmails.[]")
@@ -48,23 +33,33 @@ export default Controller.extend(ModalFunctionality, {
     return usernamesAndEmails.reject(emailValid).join(",");
   },
 
+  @discourseComputed("usernamesAndEmails.[]")
+  emails(usernamesAndEmails) {
+    return usernamesAndEmails.filter(emailValid).join(",");
+  },
+
+  @action
+  setUsernamesAndEmails(usernamesAndEmails) {
+    this.set("usernamesAndEmails", usernamesAndEmails);
+
+    if (this.emails) {
+      if (!this.usernames) {
+        this.set("notifyUsers", false);
+      }
+
+      this.set("setOwner", false);
+    }
+  },
+
   @action
   addMembers() {
-    this.set("loading", true);
-
-    if (this.emailsPresent) {
-      this.set("setAsOwner", false);
-    }
-
-    if (this.notifyUsersDisabled) {
-      this.set("notifyUsers", false);
-    }
-
     if (isEmpty(this.usernamesAndEmails)) {
       return;
     }
 
-    const promise = this.setAsOwner
+    this.set("loading", true);
+
+    const promise = this.setOwner
       ? this.model.addOwners(this.usernames, true, this.notifyUsers)
       : this.model.addMembers(
           this.usernames,
@@ -75,14 +70,8 @@ export default Controller.extend(ModalFunctionality, {
 
     promise
       .then(() => {
-        let queryParams = {};
-
-        if (this.usernames) {
-          queryParams.filter = this.usernames;
-        }
-
         this.transitionToRoute("group.members", this.get("model.name"), {
-          queryParams,
+          queryParams: this.usernames ? { filter: this.usernames } : {},
         });
 
         this.send("closeModal");

@@ -810,11 +810,7 @@ class Topic < ActiveRecord::Base
       SET last_read_post_number = CASE
                                   WHEN last_read_post_number > :highest THEN :highest
                                   ELSE last_read_post_number
-                                  END,
-          highest_seen_post_number = CASE
-                            WHEN highest_seen_post_number > :highest THEN :highest
-                            ELSE highest_seen_post_number
-                            END
+                                  END
       WHERE topic_id = :topic_id
     SQL
   end
@@ -1093,7 +1089,15 @@ class Topic < ActiveRecord::Base
     @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
   end
 
-  def make_banner!(user)
+  def make_banner!(user, bannered_until = nil)
+    if bannered_until
+      bannered_until = begin
+        Time.parse(bannered_until)
+      rescue ArgumentError
+        raise Discourse::InvalidParameters.new(:bannered_until)
+      end
+    end
+
     # only one banner at the same time
     previous_banner = Topic.where(archetype: Archetype.banner).first
     previous_banner.remove_banner!(user) if previous_banner.present?
@@ -1102,18 +1106,25 @@ class Topic < ActiveRecord::Base
       .update_all(dismissed_banner_key: nil)
 
     self.archetype = Archetype.banner
+    self.bannered_until = bannered_until
     self.add_small_action(user, "banner.enabled")
     self.save
 
     MessageBus.publish('/site/banner', banner)
+
+    Jobs.cancel_scheduled_job(:remove_banner, topic_id: self.id)
+    Jobs.enqueue_at(bannered_until, :remove_banner, topic_id: self.id) if bannered_until
   end
 
   def remove_banner!(user)
     self.archetype = Archetype.default
+    self.bannered_until = nil
     self.add_small_action(user, "banner.disabled")
     self.save
 
     MessageBus.publish('/site/banner', nil)
+
+    Jobs.cancel_scheduled_job(:remove_banner, topic_id: self.id)
   end
 
   def banner
@@ -1199,12 +1210,13 @@ class Topic < ActiveRecord::Base
     TopicUser.change(user.id, id, cleared_pinned_at: nil)
   end
 
-  def update_pinned(status, global = false, pinned_until = "")
-    pinned_until ||= ''
-
-    pinned_until = begin
-      Time.parse(pinned_until)
-    rescue ArgumentError
+  def update_pinned(status, global = false, pinned_until = nil)
+    if pinned_until
+      pinned_until = begin
+        Time.parse(pinned_until)
+      rescue ArgumentError
+        raise Discourse::InvalidParameters.new(:pinned_until)
+      end
     end
 
     update_columns(
@@ -1233,7 +1245,10 @@ class Topic < ActiveRecord::Base
 
   def self.ensure_consistency!
     # unpin topics that might have been missed
-    Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
+    Topic.where('pinned_until < ?', Time.now).update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
+    Topic.where('bannered_until < ?', Time.now).find_each do |topic|
+      topic.remove_banner!(Discourse.system_user)
+    end
   end
 
   def inherit_auto_close_from_category(timer_type: :close)
@@ -1300,19 +1315,13 @@ class Topic < ActiveRecord::Base
   #  * by_user: User who is setting the topic's status update.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  #  * duration: TODO(2021-06-01): DEPRECATED - do not use
   #  * duration_minutes: The duration of the timer in minutes, which is used if the timer is based
   #                      on the last post or if the timer type is delete_replies.
   #  * silent: Affects whether the close topic timer status change will be silent or not.
-  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, duration_minutes: nil, silent: nil)
-    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration_minutes.blank? && duration.blank?
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration_minutes: nil, silent: nil)
+    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration_minutes.blank?
 
     duration_minutes = duration_minutes ? duration_minutes.to_i : 0
-
-    # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
-    # have been fixed to use duration_minutes
-    duration = duration ? duration.to_i : 0
-
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
     topic_timer_options.merge!(user: by_user) unless public_topic_timer
@@ -1328,29 +1337,15 @@ class Topic < ActiveRecord::Base
     end
 
     if topic_timer.based_on_last_post
-      if duration > 0 || duration_minutes > 0
+      if duration_minutes > 0
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
-
-        # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
-        # have been fixed to use duration_minutes
-        if duration > 0
-          duration_minutes = duration * 60
-        end
-
         topic_timer.duration_minutes = duration_minutes
         topic_timer.execute_at = last_post_created_at + duration_minutes.minutes
         topic_timer.created_at = last_post_created_at
       end
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
-      if duration > 0 || duration_minutes > 0
+      if duration_minutes > 0
         first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
-
-        # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
-        # have been fixed to use duration_minutes
-        if duration > 0
-          duration_minutes = duration * 60 * 24
-        end
-
         topic_timer.duration_minutes = duration_minutes
         topic_timer.execute_at = first_reply_created_at + duration_minutes.minutes
         topic_timer.created_at = first_reply_created_at
@@ -1831,13 +1826,15 @@ end
 #  reviewable_score          :float            default(0.0), not null
 #  image_upload_id           :bigint
 #  slow_mode_seconds         :integer          default(0), not null
+#  bannered_until            :datetime
 #
 # Indexes
 #
 #  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
 #  idx_topics_user_id_deleted_at           (user_id) WHERE (deleted_at IS NULL)
 #  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
-#  index_forum_threads_on_bumped_at        (bumped_at)
+#  index_topics_on_bannered_until          (bannered_until) WHERE (bannered_until IS NOT NULL)
+#  index_topics_on_bumped_at               (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
@@ -1845,6 +1842,7 @@ end
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
+#  index_topics_on_pinned_until            (pinned_until) WHERE (pinned_until IS NOT NULL)
 #  index_topics_on_timestamps_private      (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
 #  index_topics_on_updated_at_public       (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

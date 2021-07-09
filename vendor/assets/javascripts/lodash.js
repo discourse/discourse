@@ -1,7 +1,7 @@
 /**
  * @license
  * Lodash (Custom Build) <https://lodash.com/>
- * Build: `lodash include="each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce,debounce,throttle,values,pick,keys,flatten,min,max,isArray,delay,isString,isEqual,without,invoke,clone,findIndex,find,groupBy" minus="template" -d -o node_modules/lodash.js`
+ * Build: `lodash include="escapeRegExp,each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce,debounce,throttle,values,pick,keys,flatten,min,max,isArray,delay,isString,isEqual,without,invoke,clone,findIndex,find,groupBy" minus="template" -d -o node_modules/lodash.js`
  * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
  * Released under MIT license <https://lodash.com/license>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -125,7 +125,8 @@
    * Used to match `RegExp`
    * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
    */
-  var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+  var reRegExpChar = /[\\^$.*+?()[\]{}|]/g,
+      reHasRegExpChar = RegExp(reRegExpChar.source);
 
   /** Used to match leading whitespace. */
   var reTrimStart = /^\s+/;
@@ -7374,6 +7375,30 @@
   /*------------------------------------------------------------------------*/
 
   /**
+   * Escapes the `RegExp` special characters "^", "$", "\", ".", "*", "+",
+   * "?", "(", ")", "[", "]", "{", "}", and "|" in `string`.
+   *
+   * @static
+   * @memberOf _
+   * @since 3.0.0
+   * @category String
+   * @param {string} [string=''] The string to escape.
+   * @returns {string} Returns the escaped string.
+   * @example
+   *
+   * _.escapeRegExp('[lodash](https://lodash.com/)');
+   * // => '\[lodash\]\(https://lodash\.com/\)'
+   */
+  function escapeRegExp(string) {
+    string = toString(string);
+    return (string && reHasRegExpChar.test(string))
+      ? string.replace(reRegExpChar, '\\$&')
+      : string;
+  }
+
+  /*------------------------------------------------------------------------*/
+
+  /**
    * Creates a function that returns `value`.
    *
    * @static
@@ -7759,6 +7784,7 @@
   // Add methods that return unwrapped values in chain sequences.
   lodash.clone = clone;
   lodash.eq = eq;
+  lodash.escapeRegExp = escapeRegExp;
   lodash.every = every;
   lodash.find = find;
   lodash.findIndex = findIndex;

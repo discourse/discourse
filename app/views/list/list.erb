@@ -136,7 +136,7 @@
 <% if @rss %>
   <% content_for :head do %>
     <%= auto_discovery_link_tag(:rss, "#{Discourse.base_url}/posts.rss", title: I18n.t("rss_description.posts")) %>
-    <%= auto_discovery_link_tag(:rss, { action: "#{@rss}_feed" }, title: I18n.t("rss_description.#{@rss}")) %>
+    <%= auto_discovery_link_tag(:rss, { action: "#{@rss}_feed", params: @params || {} }, title: I18n.t("rss_description.#{@rss_description}")) %>
   <% end %>
 <% end %>
 

@@ -502,11 +502,19 @@ describe PostCreator do
             end
 
             context "without regular expressions" do
-              it "works" do
+              it "works with many tags" do
                 Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings , hey")
 
                 @post = creator.create
                 expect(@post.topic.tags.map(&:name)).to match_array(['greetings', 'hey'])
+              end
+
+              it "works with overlapping words" do
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "art", replacement: "about-art")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "artist*", replacement: "about-artists")
+
+                post = PostCreator.new(user, title: "hello world topic", raw: "this is topic abour artists", archetype_id: 1).create
+                expect(post.topic.tags.map(&:name)).to match_array(['about-artists'])
               end
 
               it "does not treat as regular expressions" do

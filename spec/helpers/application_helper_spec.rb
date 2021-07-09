@@ -89,7 +89,7 @@ describe ApplicationHelper do
           user_id: -1,
           color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
         )
-        helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+        helper.request.env[:resolved_theme_id] = dark_theme.id
       end
       context "on desktop" do
         before do
@@ -406,7 +406,7 @@ describe ApplicationHelper do
     end
 
     it 'returns two color scheme link tags when dark mode is enabled' do
-      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
+      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck_first(:id)
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
 
       expect(cs_stylesheets).to include("(prefers-color-scheme: dark)")
@@ -462,7 +462,7 @@ describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
         @new_cs = Fabricate(:color_scheme, name: 'Custom Color Scheme')
 
-        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
+        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck_first(:id)
       end
 
       it "returns no dark scheme stylesheet when user has disabled that option" do
@@ -509,7 +509,7 @@ describe ApplicationHelper do
         user_id: -1,
         color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
       )
-      helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+      helper.request.env[:resolved_theme_id] = dark_theme.id
 
       expect(helper.dark_color_scheme?).to eq(true)
     end

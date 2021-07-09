@@ -246,7 +246,6 @@ uk:
     submit: "Надіслати"
     generic_error: "Даруйте, виникла помилка."
     generic_error_with_reason: "Виникла помилка: %{error}"
-    go_ahead: "Вперед"
     sign_up: "Зареєструватись"
     log_in: "Увійти"
     age: "Вік"
@@ -279,7 +278,6 @@ uk:
       few: "Ще %{count}"
       many: "Ще %{count}"
       other: "Ще %{count}"
-    less: "Менше"
     never: "ніколи"
     every_30_minutes: "кожні 30 хвилин"
     every_hour: "щогодини"
@@ -288,7 +286,6 @@ uk:
     every_month: "щомісяця"
     every_six_months: "що шість місяців"
     max_of_count: "не більше %{count}"
-    alternation: "або"
     character_count:
       one: "%{count} символ"
       few: "%{count} символи"
@@ -325,7 +322,6 @@ uk:
       help:
         bookmark: "Натисніть, щоб закласти перший допис у цій темі"
         unbookmark: "Натисніть, щоб видалити усі закладки у цій темі"
-        unbookmark_with_reminder: "Клацніть, щоб видалити всі закладки та нагадування в цій темі. Ви маєте набір нагадувань %{reminder_at} для цієї теми."
     bookmarks:
       created: "Ви додали повідомлення в закладки. %{name}"
       not_bookmarked: "додати цей допис до закладок"
@@ -689,13 +685,6 @@ uk:
       member_added: "Додано"
       member_requested: "Запит подано"
       add_members:
-        title: "Додати учасників до %{group_name}"
-        description: "Ви також можете додати список учасників – значення, розділені комами."
-        usernames_or_emails:
-          title: "Введіть імена користувачів або адреси електронної пошти"
-          input_placeholder: "Ім'я користувачів або адреси електронної пошти"
-        usernames:
-          input_placeholder: "Імена користувачів"
         notify_users: "Сповістити користувачів"
       requests:
         title: "Запити"
@@ -710,7 +699,7 @@ uk:
         title: "Керувати"
         name: "Ім'я"
         full_name: "Повне ім'я"
-        add_members: "Додати учасників"
+        invite_members: "Запрошення"
         delete_member_confirm: "Вилучити '%{username}' з групи '%{group}'?"
         profile:
           title: Профіль
@@ -721,6 +710,7 @@ uk:
         email:
           title: "Електронна пошта"
           status: "Синхронізовано %{old_emails} / %{total_emails} листів через IMAP."
+          last_updated_by: "від"
           credentials:
             title: "Дані доступу"
             smtp_server: "SMTP-сервер"
@@ -734,7 +724,6 @@ uk:
           settings:
             title: "Налаштування"
             allow_unknown_sender_topic_replies: "Дозволити у темі відповіді невідомого відправника."
-            allow_unknown_sender_topic_replies_hint: "Дозволяє невідомим відправникам відповідати на теми групи. Якщо це не ввімкнено, відповіді з електронних адрес, які ще не включені в групу, або не запрошені до теми, створять нову тему."
           mailboxes:
             synchronized: "Синхронізована поштова скринька"
             none_found: "Не знайдено поштових скриньок в цьому обліковому записі."
@@ -2303,10 +2292,25 @@ uk:
         delete: "Видалити теми"
         dismiss: "Відкинути"
         dismiss_read: "Відхилити всі непрочитані"
+        dismiss_read_with_selected:
+          one: "Позначити прочитаним %{count}"
+          few: "Позначити прочитаними %{count}"
+          many: "Позначити прочитаними %{count}"
+          other: "Позначити прочитаними %{count}"
         dismiss_button: "Відкласти..."
+        dismiss_button_with_selected:
+          one: "Позначити прочитаним (%{count})..."
+          few: "Позначити прочитаними (%{count})..."
+          many: "Позначити прочитаними (%{count})..."
+          other: "Позначити прочитаними (%{count})..."
         dismiss_tooltip: "Відкласти нові повідомлення, або перестати стежити за цими темами"
         also_dismiss_topics: "Перестати стежити за цими темами, щоб вони ніколи більше не висвітлювались як непрочитані"
         dismiss_new: "Dismiss New"
+        dismiss_new_with_selected:
+          one: "Відхилити новий (%{count})..."
+          few: "Відхилити нові (%{count})..."
+          many: "Відхилити нові (%{count})..."
+          other: "Відхилити нові (%{count})..."
         toggle: "перемикач масової дії над темами"
         actions: "Масові дії"
         change_category: "Задати розділ"
@@ -2342,7 +2346,6 @@ uk:
         new: "У Вас немає нових тем."
         read: "Ви ще не прочитали жодної теми."
         posted: "Ви ще не дописували в жодну тему."
-        ready_to_create: "Готовий до "
         latest: "Немає оновлених чи нових тем!"
         bookmarks: "У вас немає обраних тем."
         category: "В категорії %{category} немає тем."
@@ -2444,7 +2447,6 @@ uk:
       browse_all_categories: Переглянути всі категорії
       browse_all_tags: Переглянути всі теги
       view_latest_topics: перегляньте останні теми
-      suggest_create_topic: розпочати нову бесіду?
       jump_reply_up: перейти до ранішої відповіді
       jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
@@ -3501,7 +3503,6 @@ uk:
         show_incoming_updated_topics: "%{shortcut} Показати оновлені теми"
         search: "%{shortcut} Пошук"
         help: "%{shortcut} Показати поєднання клавіш"
-        dismiss_new_posts: "%{shortcut} Відкласти нові повідомлення"
         dismiss_topics: "%{shortcut} Відкласти теми"
         log_out: "%{shortcut} Вийти"
       composing:
@@ -3855,8 +3856,6 @@ uk:
             available: "Назва групи є"
             not_available: "Назва групи недоступно"
             blank: "Ім’я групи не може бути порожнім"
-        add_members:
-          as_owner: "Встановити користувача (їй) в якості власника (ів) цієї групи"
         manage:
           interaction:
             email: Електронна пошта

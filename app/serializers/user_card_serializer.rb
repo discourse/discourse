@@ -59,9 +59,10 @@ class UserCardSerializer < BasicUserSerializer
              :recent_time_read,
              :primary_group_id,
              :primary_group_name,
-             :primary_group_flair_url,
-             :primary_group_flair_bg_color,
-             :primary_group_flair_color,
+             :flair_name,
+             :flair_url,
+             :flair_bg_color,
+             :flair_color,
              :featured_topic,
              :timezone
 
@@ -181,19 +182,23 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def primary_group_name
-    object.primary_group.try(:name)
+    object.primary_group&.name
   end
 
-  def primary_group_flair_url
-    object.try(:primary_group).try(:flair_url)
+  def flair_name
+    object.flair_group&.name
   end
 
-  def primary_group_flair_bg_color
-    object.try(:primary_group).try(:flair_bg_color)
+  def flair_url
+    object.flair_group&.flair_url
   end
 
-  def primary_group_flair_color
-    object.try(:primary_group).try(:flair_color)
+  def flair_bg_color
+    object.flair_group&.flair_bg_color
+  end
+
+  def flair_color
+    object.flair_group&.flair_color
   end
 
   def featured_topic

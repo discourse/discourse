@@ -19,7 +19,8 @@ class StylesheetsController < ApplicationController
     params.require("id")
     params.permit("theme_id")
 
-    stylesheet = Stylesheet::Manager.color_scheme_stylesheet_details(params[:id], 'all', params[:theme_id])
+    manager = Stylesheet::Manager.new(theme_id: params[:theme_id])
+    stylesheet = manager.color_scheme_stylesheet_details(params[:id], 'all')
     render json: stylesheet
   end
   protected
@@ -40,16 +41,19 @@ class StylesheetsController < ApplicationController
       # we hold off re-compilation till someone asks for asset
       if target.include?("color_definitions")
         split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
-        Stylesheet::Manager.color_scheme_stylesheet_link_tag(color_scheme_id)
+
+        Stylesheet::Manager.new.color_scheme_stylesheet_link_tag(color_scheme_id)
       else
-        if target.include?("theme")
-          split_target, theme_id = target.split(/_(-?[0-9]+)/)
-          theme = Theme.find_by(id: theme_id) if theme_id.present?
-        else
-          split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
-          theme = Theme.find_by(color_scheme_id: color_scheme_id)
-        end
-        Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.id)
+        theme_id =
+          if target.include?("theme")
+            split_target, theme_id = target.split(/_(-?[0-9]+)/)
+            theme_id if theme_id.present? && Theme.exists?(id: theme_id)
+          else
+            split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
+            Theme.where(color_scheme_id: color_scheme_id).pluck_first(:id)
+          end
+
+        Stylesheet::Manager.new(theme_id: theme_id).stylesheet_link_tag(split_target, nil)
       end
     end
 

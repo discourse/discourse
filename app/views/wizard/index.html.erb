@@ -1,6 +1,6 @@
 <html class="discourse-wizard">
   <head>
-    <%= discourse_stylesheet_link_tag :wizard, theme_ids: nil %>
+    <%= discourse_stylesheet_link_tag :wizard, theme_id: nil %>
     <%= discourse_color_scheme_stylesheets %>
     <%= preload_script "locales/#{I18n.locale}" %>
     <%- if ExtraLocalesController.client_overrides_exist? %>

@@ -26,10 +26,13 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend]
+        build_type: [backend, frontend, annotations]
         target: [core, plugins]
         postgres: ["13"]
         redis: ["6.x"]
+        exclude:
+          - build_type: annotations
+            target: plugins
 
     services:
       postgres:
@@ -130,4 +133,21 @@ jobs:
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: bin/rake plugin:qunit['*','1200000']
+        timeout-minutes: 30
+
+      - name: Check Annotations
+        if: matrix.build_type == 'annotations'
+        run: |
+          bin/rake annotate:ensure_all_indexes
+          bin/annotate --models --model-dir app/models
+
+          if [ ! -z "$(git status --porcelain app/models/)" ]; then
+            echo "Core annotations are not up to date. To resolve, run:"
+            echo "  bin/rake annotate:clean"
+            echo
+            echo "Or manually apply the diff printed below:"
+            echo "---------------------------------------------"
+            git -c color.ui=always diff app/models/
+            exit 1
+          fi
         timeout-minutes: 30

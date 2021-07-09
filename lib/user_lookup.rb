@@ -12,13 +12,33 @@ class UserLookup
   end
 
   def primary_groups
-    @groups ||= group_lookup_hash
+    @primary_groups ||= begin
+      hash = {}
+      users.values.each do |u|
+        if u.primary_group_id
+          hash[u.id] = groups[u.primary_group_id]
+        end
+      end
+      hash
+    end
+  end
+
+  def flair_groups
+    @flair_groups ||= begin
+      hash = {}
+      users.values.each do |u|
+        if u.flair_group_id
+          hash[u.id] = groups[u.flair_group_id]
+        end
+      end
+      hash
+    end
   end
 
   private
 
   def self.lookup_columns
-    @user_lookup_columns ||= %i{id username name uploaded_avatar_id primary_group_id admin moderator trust_level}
+    @user_lookup_columns ||= %i{id username name uploaded_avatar_id primary_group_id flair_group_id admin moderator trust_level}
   end
 
   def self.group_lookup_columns
@@ -37,23 +57,21 @@ class UserLookup
     hash
   end
 
-  def group_lookup_hash
-    users_with_primary_group = users.values.reject { |u| u.primary_group_id.nil? }
+  def groups
+    @group_lookup = begin
+      group_ids = users.values.map { |u| [u.primary_group_id, u.flair_group_id] }
+      group_ids.flatten!
+      group_ids.uniq!
+      group_ids.compact!
 
-    group_lookup = {}
-    group_ids = users_with_primary_group.map { |u| u.primary_group_id }
-    group_ids.uniq!
+      hash = {}
 
-    Group.includes(:flair_upload)
-      .where(id: group_ids)
-      .select(self.class.group_lookup_columns)
-      .each { |g| group_lookup[g.id] = g }
+      Group.includes(:flair_upload)
+        .where(id: group_ids)
+        .select(self.class.group_lookup_columns)
+        .each { |g| hash[g.id] = g }
 
-    hash = {}
-    users_with_primary_group.each do |u|
-      hash[u.id] = group_lookup[u.primary_group_id]
+      hash
     end
-    hash
   end
-
 end

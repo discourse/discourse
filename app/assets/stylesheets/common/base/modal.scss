@@ -477,10 +477,14 @@
   }
   .modal-body {
     overflow-y: visible;
-    #post-jump,
-    .date-picker {
+    #post-jump {
       margin: 0;
       width: 100px;
+    }
+
+    .date-picker {
+      margin: 0;
+      width: 180px;
     }
 
     .input-hint-text {
@@ -491,8 +495,13 @@
       color: var(--primary-medium);
     }
 
-    .jump-to-date-control .input-hint-text {
-      margin-left: 0;
+    .jump-to-date-control {
+      display: flex;
+      align-items: center;
+      .input-hint-text {
+        margin-left: 0;
+        margin-right: 0.5em;
+      }
     }
 
     .separator {
@@ -847,8 +856,7 @@
     .group-chooser,
     .user-chooser,
     .future-date-input-selector {
-      margin-left: 25px;
-      width: calc(100% - 25px);
+      width: 100%;
     }
 
     &.invite-to-topic input[type="radio"] {
@@ -947,6 +955,19 @@
   }
 }
 
+.create-invite-modal {
+  .input-group {
+    textarea#invite-message,
+    &.invite-to-topic input[type="text"],
+    .group-chooser,
+    .user-chooser,
+    .future-date-input-selector {
+      margin-left: 25px;
+      width: calc(100% - 25px);
+    }
+  }
+}
+
 .share-topic-modal {
   .sources {
     align-items: center;
@@ -972,5 +993,19 @@
         font-size: $font-up-3;
       }
     }
+  }
+}
+
+.group-add-members-modal {
+  .input-group {
+    margin-bottom: 0.5em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .user-chooser {
+    width: calc(100%);
   }
 }

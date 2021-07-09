@@ -505,6 +505,12 @@ pre.onebox code {
     color: var(--secondary) !important;
     padding: 2px 4px !important;
   }
+
+  .emoji {
+    max-height: 15px;
+    margin: 0.2em;
+    min-width: 15px;
+  }
 }
 
 .onebox.githubactions {
@@ -632,6 +638,28 @@ aside.onebox.twitterstatus .onebox-body {
       }
     }
   }
+
+  .date {
+    display: flex;
+    line-height: $line-height-small;
+
+    .timestamp {
+      color: var(--primary-medium);
+    }
+  }
+
+  .like,
+  .retweet {
+    align-items: center;
+    color: var(--primary-medium);
+    display: flex;
+    margin-left: 0.75em;
+
+    svg {
+      fill: currentColor;
+      margin-right: 0.25em;
+    }
+  }
 }
 
 // Onebox - Imgur/Flickr - Album
@@ -680,11 +708,9 @@ aside.onebox.stackexchange .onebox-body {
   color: var(--primary-med-or-secondary-med);
 }
 
-.onebox.xkcd .onebox-body {
-  img {
-    max-width: 100% !important;
-    float: none !important;
-  }
+aside.onebox.xkcd .onebox-body img {
+  float: none;
+  max-height: unset;
 }
 
 // pdf onebox
@@ -774,18 +800,6 @@ aside.onebox.stackexchange .onebox-body {
 .onebox.githubcommit {
   pre.message {
     padding: 0;
-  }
-}
-
-.onebox.twitterstatus {
-  .like,
-  .retweet {
-    color: var(--primary-med-or-secondary-med);
-    padding-left: 10px;
-    svg {
-      fill: currentColor;
-      vertical-align: middle;
-    }
   }
 }
 

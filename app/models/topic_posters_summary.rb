@@ -33,6 +33,7 @@ class TopicPostersSummary
     topic_poster.user = user
     topic_poster.description = descriptions_for(user)
     topic_poster.primary_group = user_lookup.primary_groups[user.id]
+    topic_poster.flair_group = user_lookup.flair_groups[user.id]
     if topic.last_post_user_id == user.id
       topic_poster.extras = +'latest'
       topic_poster.extras << ' single' if user_ids.uniq.size == 1

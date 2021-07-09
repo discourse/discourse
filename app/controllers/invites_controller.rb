@@ -12,7 +12,7 @@ class InvitesController < ApplicationController
 
   before_action :ensure_invites_allowed, only: [:show, :perform_accept_invitation]
   before_action :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
-  before_action :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
+  before_action :ensure_not_logged_in, only: :perform_accept_invitation
 
   def show
     expires_now
@@ -21,6 +21,32 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
+      if current_user
+        added_to_group = false
+
+        if invite.groups.present?
+          invite_by_guardian = Guardian.new(invite.invited_by)
+          new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
+          new_group_ids.each do |id|
+            if group = Group.find_by(id: id)
+              if invite_by_guardian.can_edit_group?(group)
+                group.add(current_user)
+                added_to_group = true
+              end
+            end
+          end
+        end
+
+        if topic = invite.topics.first
+          new_guardian = Guardian.new(current_user)
+          return redirect_to(topic.url) if new_guardian.can_see?(topic)
+        elsif added_to_group
+          return redirect_to(path("/"))
+        end
+
+        return ensure_not_logged_in
+      end
+
       email = Email.obfuscate(invite.email)
 
       # Show email if the user already authenticated their email
@@ -102,7 +128,7 @@ class InvitesController < ApplicationController
       )
 
       if invite.present?
-        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
       else
         render json: failed_json, status: 422
       end
@@ -121,7 +147,7 @@ class InvitesController < ApplicationController
 
     guardian.ensure_can_invite_to_forum!(nil)
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
   end
 
   def update
@@ -194,7 +220,7 @@ class InvitesController < ApplicationController
       Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: params[:invite_to_topic])
     end
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
   end
 
   def destroy
@@ -251,11 +277,19 @@ class InvitesController < ApplicationController
       topic = invite.topics.first
       response = {}
 
-      if user.present? && user.active?
-        response[:redirect_to] = topic.present? ? path(topic.relative_url) : path("/")
-      elsif user.present?
-        response[:message] = I18n.t('invite.confirm_email')
-        cookies[:destination_url] = path(topic.relative_url) if topic.present?
+      if user.present?
+        if user.active?
+          if user.guardian.can_see?(topic)
+            response[:redirect_to] = path(topic.relative_url)
+          else
+            response[:redirect_to] = path("/")
+          end
+        else
+          response[:message] = I18n.t('invite.confirm_email')
+          if user.guardian.can_see?(topic)
+            cookies[:destination_url] = path(topic.relative_url)
+          end
+        end
       end
 
       render json: success_json.merge(response)

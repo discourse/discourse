@@ -57,8 +57,8 @@ def insert_topic_users
   log "Inserting topic users..."
 
   DB.exec <<-SQL
-    INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, highest_seen_post_number, first_visited_at, last_visited_at, total_msecs_viewed)
-         SELECT user_id, topic_id, 't' , MAX(post_number), MAX(post_number), MIN(created_at), MAX(created_at), COUNT(id) * #{MS_SPEND_CREATING_POST}
+    INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, first_visited_at, last_visited_at, total_msecs_viewed)
+         SELECT user_id, topic_id, 't' , MAX(post_number), MIN(created_at), MAX(created_at), COUNT(id) * #{MS_SPEND_CREATING_POST}
            FROM posts
           WHERE user_id > 0
        GROUP BY user_id, topic_id

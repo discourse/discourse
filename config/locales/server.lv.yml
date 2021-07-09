@@ -454,8 +454,6 @@ lv:
     actions:
       agree_and_suspend:
         title: "Apturētie lietotāji"
-      delete_spammer:
-        title: "Izdzēst spamotāju"
       delete_single:
         title: "Dzēst"
       disagree:
@@ -469,8 +467,6 @@ lv:
           title: "Dzēst lietotāju."
       reject:
         title: "Noraidīt"
-      delete_user:
-        title: "Dzēst lietotāju."
   time:
     <<: *datetime_formats
   activemodel:

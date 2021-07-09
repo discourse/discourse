@@ -8,10 +8,12 @@
           <div class="left-content">
             <label class="column-name">
               {{input type="checkbox" checked=column.enabled}}
-              {{#if column.automatic}}
+              {{#if (directory-column-is-automatic column=column)}}
                 {{directory-table-header-title field=column.name labelKey=labelKey icon=column.icon}}
-              {{else}}
+              {{else if (directory-column-is-user-field column=column)}}
                 {{directory-table-header-title field=column.user_field.name translated=true}}
+              {{else}}
+                {{directory-table-header-title field=(i18n column.name) translated=true}}
               {{/if}}
             </label>
           </div>

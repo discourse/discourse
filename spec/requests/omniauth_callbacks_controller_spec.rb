@@ -600,108 +600,98 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
       end
 
-      context 'with full screen login' do
-        before do
-          cookies['fsl'] = true
-        end
+      it "doesn't attempt redirect to external origin" do
+        post "/auth/google_oauth2?origin=https://example.com/external"
+        get "/auth/google_oauth2/callback"
 
-        it "doesn't attempt redirect to external origin" do
-          post "/auth/google_oauth2?origin=https://example.com/external"
-          get "/auth/google_oauth2/callback"
+        expect(response.status).to eq 302
+        expect(response.location).to eq "http://test.localhost/"
 
-          expect(response.status).to eq 302
-          expect(response.location).to eq "http://test.localhost/"
+        cookie_data = JSON.parse(response.cookies['authentication_data'])
+        expect(cookie_data["destination_url"]).to eq('/')
+      end
 
-          cookie_data = JSON.parse(response.cookies['authentication_data'])
-          expect(cookie_data["destination_url"]).to eq('/')
-        end
+      it "redirects to internal origin" do
+        post "/auth/google_oauth2?origin=http://test.localhost/t/123"
+        get "/auth/google_oauth2/callback"
 
-        it "redirects to internal origin" do
-          post "/auth/google_oauth2?origin=http://test.localhost/t/123"
-          get "/auth/google_oauth2/callback"
+        expect(response.status).to eq 302
+        expect(response.location).to eq "http://test.localhost/t/123"
 
-          expect(response.status).to eq 302
-          expect(response.location).to eq "http://test.localhost/t/123"
+        cookie_data = JSON.parse(response.cookies['authentication_data'])
+        expect(cookie_data["destination_url"]).to eq('/t/123')
+      end
 
-          cookie_data = JSON.parse(response.cookies['authentication_data'])
-          expect(cookie_data["destination_url"]).to eq('/t/123')
-        end
+      it "redirects to internal origin on subfolder" do
+        set_subfolder "/subpath"
 
-        it "redirects to internal origin on subfolder" do
-          set_subfolder "/subpath"
+        post "/auth/google_oauth2?origin=http://test.localhost/subpath/t/123"
+        get "/auth/google_oauth2/callback"
 
-          post "/auth/google_oauth2?origin=http://test.localhost/subpath/t/123"
-          get "/auth/google_oauth2/callback"
+        expect(response.status).to eq 302
+        expect(response.location).to eq "http://test.localhost/subpath/t/123"
 
-          expect(response.status).to eq 302
-          expect(response.location).to eq "http://test.localhost/subpath/t/123"
+        cookie_data = JSON.parse(response.cookies['authentication_data'])
+        expect(cookie_data["destination_url"]).to eq('/subpath/t/123')
+      end
 
-          cookie_data = JSON.parse(response.cookies['authentication_data'])
-          expect(cookie_data["destination_url"]).to eq('/subpath/t/123')
-        end
+      it "never redirects to /auth/ origin" do
+        post "/auth/google_oauth2?origin=http://test.localhost/auth/google_oauth2"
+        get "/auth/google_oauth2/callback"
 
-        it "never redirects to /auth/ origin" do
-          post "/auth/google_oauth2?origin=http://test.localhost/auth/google_oauth2"
-          get "/auth/google_oauth2/callback"
+        expect(response.status).to eq 302
+        expect(response.location).to eq "http://test.localhost/"
 
-          expect(response.status).to eq 302
-          expect(response.location).to eq "http://test.localhost/"
+        cookie_data = JSON.parse(response.cookies['authentication_data'])
+        expect(cookie_data["destination_url"]).to eq('/')
+      end
 
-          cookie_data = JSON.parse(response.cookies['authentication_data'])
-          expect(cookie_data["destination_url"]).to eq('/')
-        end
+      it "never redirects to /auth/ origin on subfolder" do
+        set_subfolder "/subpath"
 
-        it "never redirects to /auth/ origin on subfolder" do
-          set_subfolder "/subpath"
+        post "/auth/google_oauth2?origin=http://test.localhost/subpath/auth/google_oauth2"
+        get "/auth/google_oauth2/callback"
 
-          post "/auth/google_oauth2?origin=http://test.localhost/subpath/auth/google_oauth2"
-          get "/auth/google_oauth2/callback"
+        expect(response.status).to eq 302
+        expect(response.location).to eq "http://test.localhost/subpath"
 
-          expect(response.status).to eq 302
-          expect(response.location).to eq "http://test.localhost/subpath"
+        cookie_data = JSON.parse(response.cookies['authentication_data'])
+        expect(cookie_data["destination_url"]).to eq('/subpath')
+      end
 
-          cookie_data = JSON.parse(response.cookies['authentication_data'])
-          expect(cookie_data["destination_url"]).to eq('/subpath')
-        end
+      it "redirects to relative origin" do
+        post "/auth/google_oauth2?origin=/t/123"
+        get "/auth/google_oauth2/callback"
 
-        it "redirects to relative origin" do
-          post "/auth/google_oauth2?origin=/t/123"
-          get "/auth/google_oauth2/callback"
+        expect(response.status).to eq 302
+        expect(response.location).to eq "http://test.localhost/t/123"
 
-          expect(response.status).to eq 302
-          expect(response.location).to eq "http://test.localhost/t/123"
+        cookie_data = JSON.parse(response.cookies['authentication_data'])
+        expect(cookie_data["destination_url"]).to eq('/t/123')
+      end
 
-          cookie_data = JSON.parse(response.cookies['authentication_data'])
-          expect(cookie_data["destination_url"]).to eq('/t/123')
-        end
+      it "redirects with query" do
+        post "/auth/google_oauth2?origin=/t/123?foo=bar"
+        get "/auth/google_oauth2/callback"
 
-        it "redirects with query" do
-          post "/auth/google_oauth2?origin=/t/123?foo=bar"
-          get "/auth/google_oauth2/callback"
+        expect(response.status).to eq 302
+        expect(response.location).to eq "http://test.localhost/t/123?foo=bar"
 
-          expect(response.status).to eq 302
-          expect(response.location).to eq "http://test.localhost/t/123?foo=bar"
+        cookie_data = JSON.parse(response.cookies['authentication_data'])
+        expect(cookie_data["destination_url"]).to eq('/t/123?foo=bar')
+      end
 
-          cookie_data = JSON.parse(response.cookies['authentication_data'])
-          expect(cookie_data["destination_url"]).to eq('/t/123?foo=bar')
-        end
+      it "removes authentication_data cookie on logout" do
+        post "/auth/google_oauth2?origin=https://example.com/external"
+        get "/auth/google_oauth2/callback"
 
-        it "removes authentication_data cookie on logout" do
-          post "/auth/google_oauth2?origin=https://example.com/external"
-          get "/auth/google_oauth2/callback"
+        provider = log_in_user(Fabricate(:user))
 
-          provider = log_in_user(Fabricate(:user))
+        expect(cookies['authentication_data']).to be
 
-          expect(cookies['authentication_data']).to be
+        log_out_user(provider)
 
-          log_out_user(provider)
-
-          expect(cookies['authentication_data']).to be_nil
-        end
-
-        after do
-          cookies.delete('fsl')
-        end
+        expect(cookies['authentication_data']).to be_nil
       end
     end
 

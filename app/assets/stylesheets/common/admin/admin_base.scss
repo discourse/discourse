@@ -425,6 +425,9 @@ $mobile-breakpoint: 700px;
   .controls {
     @include clearfix;
   }
+  .users-list-container {
+    overflow-x: auto;
+  }
 }
 
 .admin-title {

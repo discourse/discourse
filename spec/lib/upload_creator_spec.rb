@@ -570,17 +570,50 @@ RSpec.describe UploadCreator do
     end
   end
 
-  describe "svg sizing" do
-    let(:svg_filename) { "pencil.svg" }
-    let(:svg_file) { file_from_fixtures(svg_filename) }
+  describe "svg sizes expressed in units other than pixels" do
+    let(:tiny_svg_filename) { "tiny.svg" }
+    let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
 
-    it "should handle units in width and height" do
-      upload = UploadCreator.new(svg_file, svg_filename,
+    let(:massive_svg_filename) { "massive.svg" }
+    let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
+
+    let(:zero_sized_svg_filename) { "zero_sized.svg" }
+    let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
+
+    it "should be viewable when a dimension is a fraction of a unit" do
+      upload = UploadCreator.new(tiny_svg_file, tiny_svg_filename,
         force_optimize: true,
       ).create_for(user.id)
 
-      expect(upload.width).to be > 100
-      expect(upload.height).to be > 100
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
+
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+    end
+
+    it "should not be larger than the maximum thumbnail size" do
+      upload = UploadCreator.new(massive_svg_file, massive_svg_filename,
+        force_optimize: true,
+      ).create_for(user.id)
+
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
+
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+    end
+
+    it "should handle zero dimension files" do
+      upload = UploadCreator.new(zero_sized_svg_file, zero_sized_svg_filename,
+        force_optimize: true,
+      ).create_for(user.id)
+
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
+
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
     end
   end
 

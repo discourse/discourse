@@ -8,6 +8,7 @@ import Topic from "discourse/models/topic";
 import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
 import { queryParams } from "discourse/controllers/discovery-sortable";
+import { endWith } from "discourse/lib/computed";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   application: controller(),
@@ -27,6 +28,8 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   max_posts: null,
   q: null,
   showInfo: false,
+  top: endWith("list.filter", "top"),
+  period: alias("list.for_period"),
 
   @discourseComputed(
     "canCreateTopic",
@@ -131,8 +134,30 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         this.setProperties({ order, ascending: false });
       }
 
+      let params = { order, ascending: this.ascending };
+      if (this.period) {
+        params.period = this.period;
+      }
+
       this.transitionToRoute({
-        queryParams: { order, ascending: this.ascending },
+        queryParams: params,
+      });
+    },
+
+    changePeriod(p) {
+      this.set("period", p);
+
+      let params = { period: this.period };
+
+      if (!(this.order === "default" && this.ascending === false)) {
+        params = Object.assign(params, {
+          order: this.order,
+          ascending: this.ascending,
+        });
+      }
+
+      this.transitionToRoute({
+        queryParams: params,
       });
     },
 

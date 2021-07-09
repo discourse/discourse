@@ -131,6 +131,11 @@
             {{/if}}
 
             {{#if isChartMode}}
+              {{#if model.average}}
+                <span class="average-chart">
+                  {{i18n "admin.dashboard.reports.average_chart_label"}}
+                </span>
+              {{/if}}
               <div class="chart-groupings">
                 {{#each chartGroupings as |chartGrouping|}}
                   {{d-button

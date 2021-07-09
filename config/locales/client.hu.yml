@@ -198,7 +198,6 @@ hu:
     submit: "Beküldés"
     generic_error: "Sajnos hiba történt."
     generic_error_with_reason: "Hiba történt: %{error}"
-    go_ahead: "Folytatás"
     sign_up: "Regisztráció"
     log_in: "Bejelentkezés"
     age: "Életkor"
@@ -227,7 +226,6 @@ hu:
     x_more:
       one: "Még %{count}"
       other: "Még %{count}"
-    less: "Kevesebb"
     never: "soha"
     every_30_minutes: "30 percenként"
     every_hour: "óránként"
@@ -236,7 +234,6 @@ hu:
     every_month: "havonta"
     every_six_months: "hat havonta"
     max_of_count: "legfeljebb %{count}"
-    alternation: "vagy"
     character_count:
       one: "%{count} karakter"
       other: "%{count} karakter"
@@ -268,7 +265,6 @@ hu:
       help:
         bookmark: "Kattintson a téma első bejegyzésének könyvjelzőzéséhez"
         unbookmark: "Kattintson a téma valamennyi könyvjelzőjének törléséhez"
-        unbookmark_with_reminder: "Kattintson ide minden könyvjelző és emlékeztető törléséhez ebben a témában. Ezt az emlékeztetőt állította be a témához: %{reminder_at} ."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       not_bookmarked: "bejegyzés könyvjelzőzése"
@@ -576,12 +572,6 @@ hu:
       member_added: "Hozzáadva"
       member_requested: "Kérve"
       add_members:
-        title: "Tagok hozzáadása a(z) %{group_name} csoporthoz"
-        usernames_or_emails:
-          title: "Adja meg a felhasználóneveket vagy e-mail-címeket"
-          input_placeholder: "Felhasználónév vagy e-mail-cím"
-        usernames:
-          input_placeholder: "Felhasználónevek"
         notify_users: "Felhasználók értesítése"
       requests:
         title: "Kérelmek"
@@ -596,7 +586,7 @@ hu:
         title: "Kezelés"
         name: "Név"
         full_name: "Teljes név"
-        add_members: "Tagok hozzáadása"
+        invite_members: "Meghívás"
         delete_member_confirm: "Eltávolítja „%{username}” felhasználót a(z) „%{group}” csoportból?"
         profile:
           title: Profil
@@ -607,6 +597,7 @@ hu:
         email:
           title: "E-mail-cím"
           status: "A %{total_emails}ből %{old_emails} e-mailt szinkronizáltunk az IMAP-on keresztül."
+          last_updated_by: "általa: "
           credentials:
             title: "Hitelesítő adatok"
             smtp_server: "SMTP-kiszolgáló"
@@ -619,7 +610,6 @@ hu:
           settings:
             title: "Beállítások"
             allow_unknown_sender_topic_replies: "Engedélyezze az ismeretlen feladóktól érkező témaválaszokat."
-            allow_unknown_sender_topic_replies_hint: "Lehetővé teszi az ismeretlen feladók számára, hogy válaszoljanak a csoport témáira. Ha ez nincs engedélyezve, akkor az e-mail címekről érkező válaszok, amelyek még nem szerepelnek az IMAP e-mail szálában, vagy meghívást kaptak a témára, új témát hoznak létre."
         membership:
           title: Tagság
           access: Hozzáférés
@@ -1829,7 +1819,6 @@ hu:
         new: "Nincsenek új témakörök."
         read: "Még egy témakört sem olvastál el."
         posted: "Még egy témakörhöz sem szóltál hozzá."
-        ready_to_create: "Hozd létre "
         bookmarks: "Még nem adtál hozzá témakört a könyvjelzőidhez."
         category: "Nincsenek témakörök a %{category} kategóriában."
         top: "Nincsenek top témák"
@@ -1900,7 +1889,6 @@ hu:
       read_more: "Szeretnél mégtöbbet olvasni? %{catLink} vagy %{latestLink}."
       browse_all_categories: Böngéssz a kategóriák között
       view_latest_topics: legújabb témák megtekintése
-      suggest_create_topic: az első témát te!
       jump_reply_up: ugrás régebbi válaszhoz
       jump_reply_down: ugrás újabb válaszhoz
       deleted: "Ez a témakör ki lett törölve"
@@ -2570,7 +2558,6 @@ hu:
         show_incoming_updated_topics: "%{shortcut}Frissített téma mutatása"
         search: "%{shortcut} Keresés"
         help: "%{shortcut}Billentyűzet segítségek megnyitása"
-        dismiss_new_posts: "%{shortcut}Új/Témák elvetése"
         dismiss_topics: "%{shortcut} Témák elvetése"
         log_out: "%{shortcut} Kijelentkezés"
       composing:
