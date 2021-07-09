@@ -1273,7 +1273,7 @@ zh_CN:
         device: 设备
         os: 操作系统
         login_time: 登录时间
-      description: "新登录的详细信息与以前的登录存在可疑差异。"
+      description: "与以前的登录有可疑不同的新登录的详细信息。"
     staff_logins:
       title: "管理员登录"
       labels:
@@ -1299,39 +1299,39 @@ zh_CN:
   dashboard:
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
-    sidekiq_warning: 'Sidekiq未运行。很多任务，例如发送电子邮件，是被Sidekiq异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解Sidekiq</a>。'
-    queue_size_warning: "队列中有较多任务，为 %{queue_size} 个。这可能是因为 Sidekiq 进程的问题导致，或者需要更多的 Sidekiq 进程。"
-    memory_warning: "您的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。"
-    google_oauth2_config_warning: '设置中允许使用Google OAuth2（enable_google_oauth2_logins）登录，但是没有设置client id和secret的值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>更新设置。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">查看文档</a>。'
-    facebook_config_warning: '设置中允许使用Facebook（enable_facebook_login）登录，但是没有设置app id和secret的值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>更新设置。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">查看文档</a>。'
-    twitter_config_warning: '设置允许使用Twitter（enable_twitter_logins）登录，但没有设置 key 和 secret的值。 前往<a href="%{base_path}/admin/site_settings">站点设置</a>更新设置。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
-    github_config_warning: '设置允许使用GitHub（enable_github_logins）登录，但没有设置 client id 和 secret。前往<a href="%{base_path}/admin/site_settings">站点设置</a>更新设置。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
-    s3_config_warning: '服务器被配置为上传文件到s3，但以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">站点设置</a>中更新设置。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
-    s3_backup_config_warning: '服务器被配置为上传备份到S3，但是以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。到<a href="%{base_path}/admin/site_settings">站点设置</a>中更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
-    s3_cdn_warning: '服务器配置为将文件上传到 S3，但没有配置 S3 CDN。这可能会导致昂贵的 S3 成本和站点性能降低。 <a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅 “使用对象存储进行上传” 了解更多信息</a>.'
-    image_magick_warning: '服务器被设置为给大图片创建缩略图，但是ImageMagick没有被安装。用您最喜爱的包管理器安装ImageMagick或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
-    failing_emails_warning: '有%{num_failed_jobs}个邮件任务失败。请检查app.yml文件是否正确配置了邮件服务器。<a href="%{base_path}/sidekiq/retries" target="_blank">查看Sidekiq中失败的任务</a>。'
-    subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
+    sidekiq_warning: 'Sidekiq 未运行。许多任务，例如发送电子邮件，是通过 Sidekiq 异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
+    queue_size_warning: "队列中有 %{queue_size} 个作业，比较多。这可能表明 Sidekiq 进程存在问题，或者需要添加更多 Sidekiq 工作进程。"
+    memory_warning: "您的服务器运行的总内存不足 1 GB。建议使用至少 1 GB 的内存。"
+    google_oauth2_config_warning: '服务器被配置为允许通过 Google OAuth2 注册和登录 (enable_google_oauth2_logins)，但是没有设置客户端 ID 和客户端密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">请参阅此指南以了解详情</a>。'
+    facebook_config_warning: '服务器被配置为允许通过 Facebook 注册和登录 (enable_facebook_logins)，但是没有设置应用 ID 和应用密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">请参阅此指南以了解详情</a>。'
+    twitter_config_warning: '服务器被配置为允许通过 Twitter 注册和登录 (enable_twitter_logins)，但是没有设置键和密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">请参阅此指南以了解详情</a>。'
+    github_config_warning: '服务器被配置为允许通过 GitHub 注册和登录 (enable_github_logins)，但是没有设置客户端 ID 和密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">请参阅此指南以了解详情</a>。'
+    s3_config_warning: '服务器被配置为将文件上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
+    s3_backup_config_warning: '服务器被配置为将备份上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
+    s3_cdn_warning: '服务器被配置为将文件上传到 S3，但未配置 S3 CDN。这可能会导致昂贵的 S3 成本和站点性能降低。<a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅“使用对象存储进行上传”以了解详情</a>。'
+    image_magick_warning: '服务器被配置为创建大图片缩略图，但是未安装 ImageMagick。使用您喜爱的软件包管理器安装 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
+    failing_emails_warning: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
+    subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT 以斜杠结尾。"
     email_polling_errored_recently:
-      other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='%{base_path}/logs' target='_blank'>日志</a>寻找详情。"
-    missing_mailgun_api_key: "服务器设置使用Mailgun发送邮件，但并未设置验证webhook私信的API密钥。"
-    bad_favicon_url: "网站图标无法载入。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的图标设置。"
-    poll_pop3_timeout: "连接 POP3 服务器超时。无法获取进站邮件。请检查您的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
-    poll_pop3_auth_error: "连接至 POP3 服务器因身份验证错误而失败。请检查您的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
-    force_https_warning: "您的网站使用了SSL。但是，您的网站设置中尚未启用`<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
+      other: "电子邮件轮询在过去的 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>，了解更多详细信息。"
+    missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
+    bad_favicon_url: "网站图标无法加载。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的网站图标设置。"
+    poll_pop3_timeout: "连接到 POP3 服务器超时。无法检索收到的电子邮件。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a> 和服务提供商。"
+    poll_pop3_auth_error: "连接到 POP3 服务器因身份验证错误而失败。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
+    force_https_warning: "您的网站正在使用 SSL。但是，您的站点设置中尚未启用 `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
     out_of_date_themes: "以下主题有更新："
     unreachable_themes: "我们无法检查以下主题的更新："
-    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查您的 <a href='%{base_path}/admin/customize/watched_words'>敏感词设置</a>，或禁用 “敏感词正则表达式” 设置。"
+    watched_word_regexp_error: "%{action}敏感词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>敏感词设置</a>，或禁用 'watched words regular expressions' 设置。"
   site_settings:
-    display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示本地时间。"
-    censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
+    display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示当地时间。"
+    censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632; 的字词"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
-    default_locale: "此Discourse实例的默认语言。您可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本内容</a>替换系统生成的分类或话题的文本。"
-    allow_user_locale: "允许用户选择他们自己的语言界面"
-    set_locale_from_accept_language_header: "使用浏览器的语言标头为匿名用户设置界面语言"
-    support_mixed_text_direction: "支持混合的从左到右和从右到左的文本方向。"
-    min_post_length: "帖子允许的最少字符数"
-    min_first_post_length: "第一帖（话题内容）允许的最少字符数"
+    default_locale: "此 Discourse 实例的默认语言。您可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本</a>中替换系统生成的类别和话题的文本。"
+    allow_user_locale: "允许用户选择他们自己的语言界面偏好设置"
+    set_locale_from_accept_language_header: "从网络浏览器的语言标头为匿名用户设置界面语言"
+    support_mixed_text_direction: "支持从左到右和从右到左的混合文本方向。"
+    min_post_length: "允许的最小帖子长度（以字符为单位）"
+    min_first_post_length: "允许的第一个帖子最小长度（以字符为单位）"
     min_personal_message_post_length: "私信允许的最小字符数"
     max_post_length: "帖子允许的最大字符数"
     topic_featured_link_enabled: "允许发链接帖。"
