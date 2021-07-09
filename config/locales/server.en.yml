@@ -175,7 +175,7 @@ en:
       ip_address_already_screened: "is already included in an existing rule"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
-        many: "Cannot delete record because dependent %{record} exist"
+        other: "Cannot delete record because dependent %{record} exist"
       too_long:
         one: is too long (maximum is %{count} character)
         other: is too long (maximum is %{count} characters)
