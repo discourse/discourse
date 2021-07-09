@@ -18,7 +18,7 @@ task 'assets:precompile:before' do
   # is recompiled
   Emoji.clear_cache
 
-  if !`which uglifyjs`.empty? && !ENV['SKIP_NODE_UGLIFY']
+  if (!`which terser`.empty? || !`which uglifyjs`.empty?) && !ENV['SKIP_NODE_UGLIFY']
     $node_uglify = true
   end
 
