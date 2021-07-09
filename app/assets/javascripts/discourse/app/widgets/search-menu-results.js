@@ -13,7 +13,7 @@ import renderTag from "discourse/lib/render-tag";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]+)$/gi;
 
-const searchAssistantTerms = ["#", "in:", "status:"];
+const searchAssistantTerms = ["#", "in:", "status:", "order:"];
 const inSearchShortcuts = [
   "in:title",
   "in:personal",
@@ -27,6 +27,12 @@ const statusSearchShortcuts = [
   "status:closed",
   "status:public",
   "status:noreplies",
+];
+const orderSearchShortcuts = [
+  "order:latest",
+  "order:views",
+  "order:likes",
+  "order:latest_topic",
 ];
 
 export function addInSearchShortcut(value) {
@@ -410,6 +416,13 @@ createWidget("search-menu-assistant", {
           const slug = prefix ? `${prefix} ${item} ` : item;
           content.push(this.attach("search-menu-assistant-item", { slug }));
         });
+        break;
+      case "order:":
+        orderSearchShortcuts.map((item) => {
+          const slug = prefix ? `${prefix} ${item} ` : item;
+          content.push(this.attach("search-menu-assistant-item", { slug }));
+        });
+        break;
     }
 
     return content;
