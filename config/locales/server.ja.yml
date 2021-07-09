@@ -887,13 +887,24 @@ ja:
         user: ユーザー
         location: 場所
         login_time: ログイン時間
+      description: "以前のログインとは異なる疑いのある新しいログインの詳細。"
     staff_logins:
+      title: "管理者ログイン"
       labels:
         user: ユーザー
         location: 場所
+        login_at: ログイン日時
+      description: "管理者のログイン時間と場所のリスト。"
     top_uploads:
+      title: "上位アップロード"
       labels:
         filename: ファイル名
+        extension: 拡張
+        author: 作者
+        filesize: ファイルサイズ
+      description: "すべてのアップロードを拡張し、ファイルサイズ、および作者別に一覧表示します。"
+    top_ignored_users:
+      title: "上位無視/ミュートユーザー"
   dashboard:
     rails_env_warning: "サーバーは %{env} モードで実行中です。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"

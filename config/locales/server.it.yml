@@ -2111,7 +2111,7 @@ it:
     security_key_authenticate: "Autenticare con Chiave di Sicurezza"
     security_key_not_allowed_error: "Il processo di autenticazione con Chiave di Sicurezza è scaduto o è stato annullato."
     security_key_no_matching_credential_error: "Non è stato possibile trovare credenziali corrispondenti nella chiave di sicurezza fornita."
-    security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l&#39;uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
+    security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l'uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
     security_key_invalid: "Si è verificato un errore durante la convalida della chiave di sicurezza."
     not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
     incorrect_username_email_or_password: "Nome utente, email o password errati"
@@ -2130,7 +2130,7 @@ it:
     omniauth_error:
       generic: "Siamo spiacenti, c'è stato un errore durante l'autorizzazione del tuo account. Per favore riprova."
       csrf_detected: "L'autorizzazione è scaduta, o hai cambiato browser. Per favore riprova."
-      invalid_iat: "Impossibile verificare il token di autorizzazione a causa della differenza di orario degli orologi dei servers. Per favore riprova."
+      invalid_iat: "Impossibile verificare il token di autorizzazione a causa della differenza di orario dei server. Per favore riprova."
     omniauth_confirm_title: "Accedi usando %{provider}"
     omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "Non sono ammessi gli indirizzi email associati a %{account}. Potrebbe essere necessario configurare il tuo account con un diverso indirizzo email."
@@ -2142,8 +2142,8 @@ it:
     auth_complete: "L'autenticazione è completa"
     click_to_continue: "Clicca qui per continuare."
     second_factor_title: "Autenticazione a due fattori"
-    second_factor_description: "Per favore, inserisci il codice di autenticazione della tua app:"
-    second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
+    second_factor_description: "Inserisci il codice di autenticazione richiesto della tua app:"
+    second_factor_backup_description: "Inserisci uno dei tuoi codici di backup:"
     invalid_second_factor_code: "Codice di autenticazione non valido Ogni codice può essere utilizzato solo una volta."
     invalid_security_key: "Chiave di sicurezza non valida."
     missing_second_factor_name: "Si prega di fornire un nome."
@@ -2192,17 +2192,17 @@ it:
     already_suspended: "L'utente è già stato sospeso da %{staff} %{time_ago}."
   reviewables_reminder:
     submitted:
-      one: "Gli articoli sono stati inviati oltre %{count} ora fa. [Si prega di rivederli] (%{base_path} / recensione)."
-      other: "Alcuni elementi sono stati inviati oltre %{count} ore fa. [Si prega di revisionarli] (%{base_path}/review)."
+      one: "Gli elementi sono stati inviati oltre %{count} ora fa. [Si prega di rivederli] (%{base_path}/review)."
+      other: "Gli elementi sono stati inviati oltre %{count} ore fa. [Si prega di revisionarli] (%{base_path}/review)."
     subject_template:
-      one: "%{count}elemento da revisionare"
+      one: "%{count} elemento da revisionare"
       other: "%{count} elementi da revisionare"
   unsubscribe_mailer:
     title: "Annullare Iscrizione Mailer"
     subject_template: "Conferma che non desideri più ricevere aggiornamenti via email da %{site_title}"
     text_body_template: |
-      Qualcuno (probabilmente tu?) ha chiesto di non inviare più aggiornamenti via email da%{site_domain_name} a questo indirizzo.
-      Se desideri confermare, clicca su questo collegamento:
+      Qualcuno (sei stato tu?) ha chiesto di non inviare più aggiornamenti via email da %{site_domain_name} a questo indirizzo.
+      Se desideri confermare, clicca su questo link:
 
       %{confirm_unsubscribe_link}
 
@@ -2260,7 +2260,7 @@ it:
   custom_invite_forum_mailer:
     title: "Mailer Invito Forum Personalizzato"
     subject_template: "%{inviter_name} ti ha invitato a partecipare a %{site_domain_name}"
-    text_body_template: "%{inviter_name} ti ha invitato a iscriverti\n\n> ** %{site_title} **\n\n> %{site_description} \n\nCon questa nota\n\n> %{user_custom_message} \n\nSe sei interessato, fai clic sul seguente collegamento: \n\n%{invite_link}\n"
+    text_body_template: "%{inviter_name} ti ha invitato a iscriverti\n\n> ** %{site_title} **\n\n> %{site_description} \n\nCon questa nota\n\n> %{user_custom_message} \n\nSe sei interessato, fai clic sul seguente link: \n\n%{invite_link}\n"
   invite_password_instructions:
     title: "Invito Istruzioni Password"
     subject_template: "Imposta la password per il tuo account su %{site_name}"
@@ -2270,16 +2270,16 @@ it:
       Clicca questo collegamento per scegliere adesso una password:
       %{base_url}/u/password-reset/%{email_token}
 
-      (Se il collegamento qui sopra è scaduto, scegli "Ho dimenticato la password" quando accedi con il tuo indirizzo email.)
+      (Se il link qui sopra è scaduto, scegli "Ho dimenticato la password" quando accedi con il tuo indirizzo email).
   download_backup_mailer:
     title: "Mailer Scaricamento Backup"
     subject_template: "[%{email_prefix}] Download Backup Sito"
     text_body_template: |
       Ecco il [download del backup del sito](%{backup_file_path}) che hai richiesto.
 
-      Per motivi di sicurezza abbiamo inviato questo collegamento per il download al tuo indirizzo email convalidato.
+      Per motivi di sicurezza abbiamo inviato questo link per il download al tuo indirizzo email convalidato.
 
-      (Se *non hai* richiesto questo download, dovresti seriamente preoccuparti -- : qualcuno ha un accesso amministratore al tuo sito.)
+      (Se *non hai* richiesto questo download, dovresti seriamente preoccuparti: qualcuno ha un accesso da amministratore al tuo sito.)
     no_token: |
       Spiacenti, questo collegamento per il download del backup è già stato utilizzato o è scaduto.
   admin_confirmation_mailer:
@@ -2306,7 +2306,7 @@ it:
     ignored: "Grazie per averci informato. Stiamo provvedendo."
     ignored_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
   temporarily_closed_due_to_flags:
-    one: "Questo argomento è temporaneamente chiuso per almeno un'ora %{count} a causa di un numero elevato di flag di comunità."
+    one: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ora a causa di un numero elevato di segnalazioni dalla comunità."
     other: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ore a causa di un numero elevato di segnalazioni dalla comunità."
   system_messages:
     private_topic_title: "Argomento #%{id}"
@@ -2323,14 +2323,14 @@ it:
 
         %{flag_reason}
 
-        Questo messaggio è stato nascosto perché segnalato dalla comunità, quindi cerca di riscriverlo tenendo conto del loro feedback. **Puoi editare il tuo messaggio dopo %{edit_delay} minuti e ritornerà visibile.**
+        Questo messaggio è stato nascosto perché segnalato dalla comunità, quindi cerca di riscriverlo tenendo conto del loro feedback. **Puoi modificare il tuo messaggio dopo %{edit_delay} minuti e ritornerà visibile.**
 
         Tuttavia, se il messaggio verrà nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che non interverrà lo staff.
 
-        Per ulteriori informazioni, per favore fai riferimento alle nostre [community guidelines](%{base_url}/guidelines).
+        Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     post_hidden_again:
       title: "Messaggio nascosto nuovamente"
-      subject_template: "Messaggio nascosto dalle segnalazioni della comunità, Lo staff è stato informato"
+      subject_template: "Messaggio nascosto dalle segnalazioni della comunità. Lo staff è stato informato"
       text_body_template: |
         Ciao,
 
@@ -2340,9 +2340,9 @@ it:
 
         %{flag_reason}
 
-        La comunità ha segnalato questo messaggio ed è ora nascosto. **Siccome questo messaggio è stato nascosto più di una volta, il tuo messaggio rimarrà ora nascosto fino ad intervento dello staff.**
+        La comunità ha segnalato questo messaggio ed è ora nascosto. **Siccome questo messaggio è stato nascosto più di una volta, il tuo messaggio rimarrà nascosto fino all'intervento dello staff.**
 
-        Per ulteriori informazioni, per favore fai riferimento alle nostre [community guidelines](%{base_url}/guidelines).
+        Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     queued_by_staff:
       title: "Messaggio da approvare"
       subject_template: "Messaggio nascosto dallo staff, in attesa di approvazione"
@@ -2356,7 +2356,7 @@ it:
       text_body_template: |
         Per leggere alcuni veloci suggerimenti su come iniziare se sei un nuovo utente [dai una lettura a questo articolo](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)
 
-        Partecipando ti conosceremo meglio, e le limitazioni temporanee per i nuovi utenti saranno rimosse. Col tempo incrementerai il tuo [Livello Esperienza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), sbloccando ulteriori funzionalità che ci aiuteranno a gestire insieme la comunità.
+        Partecipando ti conosceremo meglio, e le limitazioni temporanee per i nuovi utenti saranno rimosse. Col tempo incrementerai il tuo [livello di attendibilità](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), sbloccando ulteriori funzionalità che ci aiuteranno a gestire insieme la comunità.
     welcome_user:
       title: "Benvenuto Utente"
       subject_template: "Benvenuto su %{site_name}!"
@@ -2380,7 +2380,7 @@ it:
 
         - Abbiamo creato questo nuovo account **%{username}** per te. Cambia il tuo nome o la password visitando il [tuo profilo utente][prefs].
 
-        - Quando effettui il login **usa lo stesso indirizzo email del tuo invito originale** — altrimenti non saremo in grado di capire che sei tu!
+        - Quando accedi **usa lo stesso indirizzo email del tuo invito originale**, altrimenti non saremo in grado di capire che sei tu!
 
         %{new_user_tips}
 
@@ -2390,11 +2390,11 @@ it:
 
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
-      subject_template: "Congratulazioni per la promozione a un livello di fiducia superiore!"
+      subject_template: "Congratulazioni per la promozione a un livello di attendibilità superiore!"
     backup_succeeded:
       title: "Backup Riuscito"
       subject_template: "Backup completato correttamente"
-      text_body_template: "Il backup ha avuto successo. \n\nVisita la sezione [admin > backup] (%{base_url}/admin/backup) per scaricare il nuovo backup.\n\nEcco il log\n``` text\n%{logs}\n```\n"
+      text_body_template: "Il backup ha avuto successo. \n\nVisita la sezione [amministrazione > backup] (%{base_url}/admin/backup) per scaricare il nuovo backup.\n\nEcco il log:\n\n``` text\n%{logs}\n```\n"
     backup_failed:
       title: "Backup Fallito"
       subject_template: "Backup fallito"
@@ -2409,12 +2409,7 @@ it:
     restore_succeeded:
       title: "Ripristino Riuscito"
       subject_template: "Il ripristino è avvenuto con successo."
-      text_body_template: |
-        Il ripristino ha avuto successo. Ecco il log:
-
-        ``` text
-        %{logs}
-        ```
+      text_body_template: "Il ripristino ha avuto successo. \n\nEcco il log:\n\n``` text\n%{logs}\n```\n"
     restore_failed:
       title: "Ripristino Fallito"
       subject_template: "Ripristino fallito"
@@ -2433,7 +2428,7 @@ it:
     bulk_invite_failed:
       title: "Invito di Massa Fallito"
       subject_template: "Invito di massa processato con errori"
-      text_body_template: "È stato elaborato il tuo file di invito massivo per utenti, %{sent} inviti inviati con %{failed}errori. \n\nEcco il registro:\n\n``` text\n%{logs}\n```\n"
+      text_body_template: "Il tuo file di invito di utenti in massa è stato elaborato, %{sent} inviti inviati con errore/i %{failed}. \n\nEcco il registro:\n\n``` text\n%{logs}\n```\n"
     user_added_to_group_as_owner:
       title: "Aggiunto al gruppo come proprietario"
       subject_template: "Sei stato aggiunto come proprietario del gruppo %{group_name}"
@@ -2448,7 +2443,7 @@ it:
       title: "Esportazione CSV Riuscita"
       subject_template: "[%{export_title}] Esportazione dati completata"
       text_body_template: |
-        L'export dei dati è avvenuto con successo! :dvd:
+        L'esportazione dei dati è avvenuto con successo! :dvd:
 
         %{download_link}
 
@@ -2465,7 +2460,7 @@ it:
       text_body_template: |
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
-        Il tuo account non dispone del livello di esperienza richiesto per inserire nuovi argomenti da questo indirizzo email. Se pensi che sia un errore, [contatta un membro dello staff](%{base_url}/about).
+        Il tuo account non dispone del livello di attendibilità richiesto per inserire nuovi argomenti da questo indirizzo email. Se pensi che sia un errore, [contatta un membro dello staff](%{base_url}/about).
     email_reject_user_not_found:
       title: "Email Rifiutata Utente Non Trovato"
       subject_template: "[%{email_prefix}] Problema email -- Utente Non Trovato"
@@ -2556,11 +2551,11 @@ it:
         %{post_error}
 
         Se è possibile correggere il problema, prova nuovamente.
-      date_invalid: "Nessuna data di creazione del messaggio trovata. L'email manca dell'header Date:?"
+      date_invalid: "Nessuna data di creazione del messaggio trovata. L'email manca di Date:header?"
     email_reject_post_too_short:
       title: "Email Rifiutate - Post troppo breve"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica - Messaggio troppo breve"
-      text_body_template: "Siamo spiacenti, ma il tuo messaggio di posta elettronica su %{destination} (titolo %{former_title}) non ha funzionato. \n\nPer promuovere conversazioni più approfondite, non sono consentite risposte troppo brevi. Puoi rispondere con almeno %{count} caratteri? In alternativa, puoi mettere un Mi Piace ad un messaggio via email rispondendo con '+1'.\n"
+      text_body_template: "Siamo spiacenti, ma il tuo messaggio di posta elettronica per %{destination} (titolo %{former_title}) non ha funzionato. \n\nPer promuovere conversazioni più approfondite, non sono consentite risposte troppo brevi. Puoi rispondere con almeno %{count} caratteri? In alternativa, puoi mettere un Mi Piace a un messaggio via email rispondendo con '+1'.\n"
     email_reject_invalid_post_action:
       title: "Email Rifiutata Azione Post Non Valida"
       subject_template: "[%{email_prefix}] Problema email -- Azione Post Non Valida"
@@ -2582,7 +2577,7 @@ it:
       title: "Email Rifiutate - Vecchia Destinazione"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica: stai tentando di rispondere a una vecchia notifica"
       text_body_template: |
-        Siamo spiacenti, ma il tuo messaggio di posta elettronica su %{destination} (denominato %{former_title}) non ha funzionato.
+        Siamo spiacenti, ma il tuo messaggio di posta elettronica per %{destination} (intitolato %{former_title}) non ha funzionato.
 
         Accettiamo solo le risposte alle notifiche originali per %{number_of_days} giorni. Per favore [visita l'argomento] (%{short_url}) per continuare la conversazione.
     email_reject_topic_not_found:
@@ -2620,7 +2615,7 @@ it:
     email_reject_reply_not_allowed:
       title: "Email Rifiutate - Risposta Non Consentita"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica - Risposta non consentita"
-      text_body_template: "Siamo spiacenti, ma il tuo messaggio di posta elettronica su %{destination} (soggetto %{former_title}) non ha funzionato. \n\nNon hai le autorizzazioni per rispondere all'argomento. Se ritieni che si tratti di un errore, [contatta un membro dello staff] (%{base_url}/about).\n"
+      text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nNon hai le autorizzazioni per rispondere all'argomento. Se ritieni che si tratti di un errore, [contatta un membro dello staff] (%{base_url}/about).\n"
     email_error_notification:
       title: "Notifica Errore Email"
       subject_template: "[%{email_prefix}] Problema email -- errore di autenticazione POP"
@@ -2629,11 +2624,11 @@ it:
 
         Assicurati di aver configurato correttamente le credenziali POP nelle [impostazioni del sito](%{base_url}/admin/site_settings/category/email).
 
-        Se esiste un interfaccia web per l'account di posta POP, potrebbe essere necessario accedere al web e controllare le impostazioni.
+        Se esiste un'interfaccia web per l'account di posta POP, potrebbe essere necessario accedere al web e controllare le impostazioni.
     email_revoked:
       title: "Email revocata"
       subject_template: "Il tuo indirizzo e-mail è corretto?"
-      text_body_template: "Siamo spiacenti, ma abbiamo problemi a raggiungerti via email. Le nostre ultime email a te sono state tutte riportate come non recapitabili. \n\nPuoi assicurarti che [il tuo indirizzo email] (%{base_url}/my/preferences/email) sia valido e funzionante? Potresti anche voler aggiungere il nostro indirizzo email alla tua rubrica / lista contatti per evitare che finisca nello Spam.\n"
+      text_body_template: "Siamo spiacenti, ma abbiamo problemi a raggiungerti via email. Le nostre ultime email a te dirette sono tutte rimbalzate in quanto non recapitabili. \n\nPuoi assicurarti che [il tuo indirizzo email](%{base_url}/my/preferences/email) sia valido e funzionante? Potresti aggiungere il nostro indirizzo email alla tua rubrica / lista contatti per evitare che i nostri messaggi finiscano nello Spam.\n"
     email_bounced: |
       Il messaggio a %{email} non è arrivato a destinazione.
 
@@ -2643,16 +2638,16 @@ it:
       %{raw}
       ```
     ignored_users_summary:
-      title: "Utenti Ignorati che hanno superato il limite"
+      title: "Superato il limite di utenti ignorati"
       subject_template: "Un utente è stato ignorato da vari altri utenti"
       text_body_template: |
         Ciao,
 
         Questo è un messaggio automatico da %{site_name} per informarti che @%{username} è stato ignorato da %{ignores_threshold} utenti. Questo può indicare un potenziale problema nella tua comunità.
 
-        Potresti  [review recent posts](%{base_url}/u/%{username}/summary) di questo utente, e in caso anche degli altri utenti nella [ignored and muted user report](%{base_url}/admin/reports/top_ignored_users).
+        Potresti [rivedere i messaggi recenti](%{base_url}/u/%{username}/summary) di questo utente e anche degli altri utenti nel [report degli utenti silenziati e ignorati](%{base_url}/admin/reports/top_ignored_users).
 
-        Per ulteriori informazioni, per favore fai riferimento alle nostre [community guidelines](%{base_url}/guidelines).
+        Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Troppe Segnalazioni Spam"
       subject_template: "Nuovo account sospeso"
@@ -2663,7 +2658,7 @@ it:
 
         Per precauzione il tuo nuovo account è stato silenziato e ti sarà impossibile creare risposte o Argomenti fino a quando un membro dello Staff non lo avrà esaminato. Ci scusiamo per l'inconveniente.
 
-        Per ulteriore supporto, per favore riferimento alle [linee guida della comunità](%{base_url}/guidelines).
+        Per ulteriore supporto, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Troppe Segnalazioni Da TL3"
       subject_template: "Nuovo account sospeso"
@@ -2672,7 +2667,7 @@ it:
 
         questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato bloccato a causa di un gran numero di segnalazioni da parte della comunità.
 
-        Come misura precauzionale, il tuo nuovo account è stato silenziato e non può creare altre risposte o argomenti finché non verrà revisionato da un membro dello staff. Ci scusiamo per l'inconveniente
+        Come misura precauzionale, il tuo nuovo account è stato silenziato e non può creare altre risposte o argomenti finché non verrà controllato da un membro dello staff. Ci scusiamo per l'inconveniente
 
         Per maggiori dettagli, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     silenced_by_staff:
@@ -2683,7 +2678,7 @@ it:
 
         questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato temporaneamente bloccato come misura precauzionale.
 
-        Per favore continua pure a navigare, anche se non potrai rispondere o creare argomenti fino a che un [membro dello staff](%{base_url}/about) avrà revisionato i tuoi messaggi più recenti. Ci scusiamo per l'inconveniente.
+        Continua pure a navigare, anche se non potrai rispondere o creare argomenti fino a che un [membro dello staff](%{base_url}/about) avrà revisionato i tuoi messaggi più recenti. Ci scusiamo per l'inconveniente.
 
         Per maggiori dettagli, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     user_automatically_silenced:
@@ -2692,14 +2687,14 @@ it:
       text_body_template: |
         Questo è un messaggio automatico.
 
-        Il nuovo utente [%{username}](%{user_url}) è stato automaticamente silenziato perché più utenti hanno contrassegnato i messaggi di %{username}.
+        Il nuovo utente [%{username}](%{user_url}) è stato automaticamente silenziato perché più utenti hanno segnalato i messaggi di %{username}.
 
         Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato silenziato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{user_url}).
 
-        Questa impostazione può essere modificata tramite l'impostazione del sito `silence_new_user`.
+        Questa soglia può essere modificata tramite l'impostazione del sito `silence_new_user`.
     spam_post_blocked:
       title: "Messaggio di Spam bloccato"
-      subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
+      subject_template: "I messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio ripetuto di link"
     unsilenced:
       title: "Non silenziato"
       subject_template: "Account non più sospeso"
@@ -2725,9 +2720,9 @@ it:
       text_body_template: |
         Abbiamo alcuni nuovi consigli e raccomandazioni per te in base alle attuali impostazioni del sito.
 
-        [Visita il Cruscotto del tuo sito](%{base_url}/admin) per vederlo.
+        [Visita il dashboard del tuo sito](%{base_url}/admin) per vederli.
 
-        Se sul cruscotto non è visibile nulla, è possibile che un altro membro del personale abbia già agito su questo avviso. Un elenco delle azioni staff è disponibile nei [Log Azioni Staff](%{base_url}/admin/logs/staff_action_logs).
+        Se sul dashboard non è visibile nulla, è possibile che un altro membro del personale abbia già agito su questo avviso. Un elenco delle azioni dello staff è disponibile nei [Log delle Azioni Staff](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Sei il Nuovo Utente del Mese!"
       subject_template: "Sei il Nuovo Utente del Mese!"
@@ -2813,7 +2808,7 @@ it:
 
       > %{site_title} -- %{site_description}
 
-      Per partecipare alla discussione, clicca sul seguente collegamento:
+      Per partecipare alla discussione, clicca sul seguente link:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
@@ -2988,7 +2983,7 @@ it:
     account_second_factor_disabled:
       title: "Autenticazione a due fattori disabilitata"
       subject_template: "[%{email_prefix}] Autenticazione a due fattori disabilitata"
-      text_body_template: "L'autenticazione a due fattori è stata disabilitata per il tuo account su %{site_name}. Ora puoi accedere solo con la tua password; non è più richiesto un codice di autenticazione aggiuntivo. \n\nSe non hai disabilitato tu l'autenticazione a due fattori, qualcuno potrebbe aver compromesso il tuo account. \n\nSe hai domande, [contatta il nostro staff](%{base_url}/about).\n"
+      text_body_template: "L'autenticazione a due fattori è stata disabilitata per il tuo account su %{site_name}. Ora puoi accedere con la tua sola password; non è più richiesto un codice di autenticazione aggiuntivo. \n\nSe non hai disabilitato tu l'autenticazione a due fattori, qualcuno potrebbe aver violato il tuo account. \n\nSe hai domande, [contatta il nostro staff](%{base_url}/about).\n"
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       since_last_visit: "Dalla tua ultima visita"
@@ -3012,11 +3007,11 @@ it:
       title: "Password Dimenticata"
       subject_template: "[%{email_prefix}] Reimposta password"
       text_body_template: |
-        Qualcuno ha richiesto l'azzeramento della tua password su [%{site_name}](%{base_url}).
+        Qualcuno ha richiesto di reimpostare la tua password su [%{site_name}](%{base_url}).
 
         Se non sei stato tu, puoi tranquillamente ignorare questa email.
 
-        Clicca il seguente collegamento per scegliere una nuova password:
+        Clicca il seguente link per scegliere una nuova password:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Accedi tramite collegamento"
@@ -3026,11 +3021,11 @@ it:
       title: "Imposta Password"
       subject_template: "[%{email_prefix}] Imposta Password"
       text_body_template: |
-        Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook, ecc) associato con questo indirizzo email validato.
+        Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi accedere usando uno dei servizi online supportati (Google, Facebook, ecc) associato con questo indirizzo email validato.
 
         Se non hai fatto tu questa richiesta, ignora tranquillamente questa email.
 
-        Clicca sul seguente collegamento per scegliere una password:
+        Clicca sul seguente link per scegliere una password:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Accesso Amministratore"
@@ -3041,7 +3036,7 @@ it:
       text_body_template: |
         E' stato creato un nuovo account per te su %{site_name}
 
-        Clicca sul seguente collegamento per scegliere una password per il tuo nuovo account:
+        Clicca sul seguente link per scegliere una password per il tuo nuovo account:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "Conferma Nuova Email"
@@ -3055,9 +3050,9 @@ it:
       text_body_template: |
         Prima di poter cambiare il tuo indirizzo email devi confermare di disporre dell'indirizzo email attuale. Dopo aver completato questo passaggio, dovrai confermare il nuovo indirizzo email.
 
-        Conferma il tuo attuale indirizzo email su %{site_name} cliccando il seguente collegamento:
+        Conferma il tuo attuale indirizzo email su %{site_name} cliccando il seguente link:
 
-        %{base_url}/u/confirm-old-email/%{email_token}%{email_token}
+        %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
       subject_template: "[%{email_prefix}] Conferma il tuo attuale indirizzo email"
     notify_old_email:
@@ -3071,12 +3066,13 @@ it:
 
         %{new_email}
     notify_old_email_add:
-      title: "Notifica Vecchia Email (Aggiungi)"
+      title: "Notifica Vecchia Email (Aggiunta)"
       subject_template: "[%{email_prefix}] È stato aggiunto un nuovo indirizzo email"
       text_body_template: |
         Questo è un messaggio automatico per farti sapere che è stato aggiunto un indirizzo email per
-        %{site_name} . Se questo è stato fatto in errore, si prega di contattare
-        un amministratore del sito.
+        %{site_name} . Se questo è stato fatto per sbaglio, contatta
+        un amministratore
+        del sito.
 
         Il tuo indirizzo email aggiunto è:
 
