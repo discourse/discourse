@@ -28,6 +28,7 @@ export default Controller.extend(
 
     invitedBy: readOnly("model.invited_by"),
     email: alias("model.email"),
+    accountEmail: alias("email"),
     hiddenEmail: alias("model.hidden_email"),
     emailVerifiedByLink: alias("model.email_verified_by_link"),
     accountUsername: alias("model.username"),

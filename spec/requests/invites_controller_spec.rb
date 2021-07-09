@@ -37,6 +37,7 @@ describe InvitesController do
       expect(response.body).to have_tag("div#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
         invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['username']).to eq(staged_user.username)
         expect(invite_info['user_fields'][user_field.id.to_s]).to eq('some value')
       end
     end
@@ -755,6 +756,39 @@ describe InvitesController do
 
         put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
         expect(response.parsed_body['redirect_to']).to eq("/")
+      end
+    end
+
+    context 'staged user' do
+      fab!(:invite) { Fabricate(:invite) }
+      fab!(:staged_user) { Fabricate(:user, staged: true, email: invite.email) }
+
+      it 'can keep the old username' do
+        old_username = staged_user.username
+
+        put "/invites/show/#{invite.invite_key}.json", params: {
+          username: staged_user.username,
+          password: "Password123456",
+          email_token: invite.email_token,
+        }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload.redeemed?).to be_truthy
+        user = invite.invited_users.first.user
+        expect(user.username).to eq(old_username)
+      end
+
+      it 'can change the username' do
+        put "/invites/show/#{invite.invite_key}.json", params: {
+          username: "new_username",
+          password: "Password123456",
+          email_token: invite.email_token,
+        }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload.redeemed?).to be_truthy
+        user = invite.invited_users.first.user
+        expect(user.username).to eq("new_username")
       end
     end
   end
