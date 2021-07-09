@@ -478,6 +478,14 @@ describe Upload do
         upload.update_secure_status
         expect(upload.reload.secure).to eq(false)
       end
+
+      it "does not throw an error if the object storage provider does not support ACLs" do
+        FileStore::S3Store.any_instance.stubs(:update_upload_ACL).raises(
+          Aws::S3::Errors::NotImplemented.new("A header you provided implies functionality that is not implemented", "")
+        )
+        upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+        expect { upload.update_secure_status }.not_to raise_error
+      end
     end
   end
 
