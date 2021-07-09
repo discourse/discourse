@@ -591,7 +591,7 @@ fr:
       edit_columns:
         title: "Modifier les colonnes de l'annuaire"
         save: "Enregistrer"
-        reset_to_default: "Réinitialiser aux valeurs par défaut"
+        reset_to_default: "Rétablir les valeurs par défaut"
       group:
         all: "tous les groupes"
     group_histories:
@@ -910,7 +910,7 @@ fr:
         button_text: "Tout télécharger"
         confirm: "Voulez-vous vraiment télécharger vos messages ?"
         success: "Le téléchargement a démarré ; vous recevrez une notification lorsqu'il sera terminé."
-        rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
+        rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez réessayer demain."
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
@@ -1235,7 +1235,7 @@ fr:
         secondary: "Adresses courriel secondaires"
         primary_label: "principale"
         unconfirmed_label: "non confirmée"
-        resend_label: "renvoyer le courriel d'activation"
+        resend_label: "renvoyer le courriel de confirmation"
         resending_label: "envoi en cours…"
         resent_label: "courriel envoyé"
         update_email: "Modifier l'adresse courriel"
@@ -1278,7 +1278,7 @@ fr:
         instructions: "unique, sans espace, court"
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @%{username}"
         available: "Votre nom d'utilisateur est disponible"
-        not_available: "Indisponible. Essayez %{suggestion} ?"
+        not_available: "Indisponible. Essayer %{suggestion} ?"
         not_available_no_suggestion: "Non disponible"
         too_short: "Votre nom d'utilisateur est trop court"
         too_long: "Votre nom d'utilisateur est trop long"
@@ -1420,7 +1420,7 @@ fr:
         reinvite_all_confirm: "Voulez-vous vraiment renvoyer toutes les invitations ?"
         reinvited_all: "Toutes les invitations ont été envoyées !"
         time_read: "Temps de lecture"
-        days_visited: "Ratio de présence"
+        days_visited: "Jours visités"
         account_age_days: "Âge du compte en jours"
         create: "Inviter"
         generate_link: "Créer un lien d'invitation"
@@ -1475,7 +1475,7 @@ fr:
       summary:
         title: "Résumé"
         stats: "Statistiques"
-        time_read: "de lecture"
+        time_read: "temps de lecture"
         recent_time_read: "de lecture récente"
         topic_count:
           one: "sujet créé"
@@ -1586,7 +1586,7 @@ fr:
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
     learn_more: "en savoir plus…"
     first_post: Premier message
-    mute: Désactiver
+    mute: Mettre en sourdine
     unmute: Rétablir
     last_post: Dernier message
     local_time: "Heure locale"
@@ -3175,7 +3175,7 @@ fr:
           one: "%{count} nouveau"
           other: "%{count} nouveaux"
         lower_title: "nouveau"
-        title: "Nouveaux"
+        title: "Nouveau"
         title_with_count:
           one: "Nouveau (%{count})"
           other: "Nouveaux (%{count})"
@@ -3350,7 +3350,7 @@ fr:
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
-      selector_all_tags: "étiquettes"
+      selector_all_tags: "toutes les étiquettes"
       selector_no_tags: "aucune étiquette"
       changed: "étiquettes modifiées :"
       tags: "Étiquettes"
@@ -4487,7 +4487,7 @@ fr:
         show_emails: "Afficher les adresses courriel"
         hide_emails: "Masquer les adresses courriel"
         nav:
-          new: "Nouveaux"
+          new: "Nouveau"
           active: "Actifs"
           staff: "Responsables"
           suspended: "Suspendus"

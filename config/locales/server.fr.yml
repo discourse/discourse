@@ -137,7 +137,7 @@ fr:
       invalid_boolean: "Booléen invalide."
       taken: "a déjà été pris"
       accepted: doit être accepté
-      blank: ne peut être vide
+      blank: ne peut pas être vide
       present: doit être vide
       confirmation: ! "ne correspond pas à %{attribute}"
       empty: ne peut pas être vide
@@ -381,7 +381,7 @@ fr:
     user_posts: "Derniers messages de @%{username}"
     user_topics: "Derniers sujets de @%{username}"
     tag: "Sujets étiquetés"
-    badge: "%{display_name} badge sur %{site_title}"
+    badge: "Badge %{display_name} sur %{site_title}"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   edit_conflict: "Vos modifications ne peuvent plus être enregistrées car ce message a été modifié par un autre utilisateur."
   revert_version_same: "La version actuelle est identique à celle vers laquelle vous essayez de revenir."
@@ -414,9 +414,9 @@ fr:
         one: "%{username} est déjà membre de ce groupe."
         other: "Les utilisateurs suivants sont déjà membres de ce groupe : %{username}"
       invalid_domain: "« %{domain} » n'est pas un domaine valide."
-      invalid_incoming_email: "« %{email} » n'est pas une adresse courriel valide."
-      email_already_used_in_group: "« %{email} » est déjà utilisée par le groupe « %{group_name} »."
-      email_already_used_in_category: "« %{email} » est déjà utilisée par la catégorie « %{category_name} »."
+      invalid_incoming_email: "L'adresse « %{email} » n'est pas une adresse courriel valide."
+      email_already_used_in_group: "L'adresse « %{email} » est déjà utilisée par le groupe « %{group_name} »."
+      email_already_used_in_category: "L'adresse « %{email} » est déjà utilisée par la catégorie « %{category_name} »."
       cant_allow_membership_requests: "Vous ne pouvez pas autoriser les requêtes d'adhésion pour un groupe sans propriétaire."
       already_requested_membership: "Vous avez déjà demandé à adhérer à ce groupe."
       adding_too_many_users:
@@ -2235,12 +2235,12 @@ fr:
   login:
     invalid_second_factor_method: "La méthode à deux facteurs sélectionnée n'est pas valide."
     not_enabled_second_factor_method: "La méthode à deux facteurs sélectionnée n'est pas activée pour votre compte."
-    security_key_description: "Dès que votre clé de sécurité physique est prête, appuyer sur le bouton « S'authentifier avec une clé de sécurité » ci-dessous."
+    security_key_description: "Dès que votre clé de sécurité physique est prête, appuyez sur le bouton « S'authentifier avec une clé de sécurité » ci-dessous."
     security_key_alternative: "Essayer une autre méthode"
     security_key_authenticate: "S'authentifier avec une clé de sécurité"
     security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
     security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
-    security_key_support_missing_error: "Votre appareil ou navigateur actuel ne supporte pas l'utilisation de clés de sécurité. Veuillez utiliser une autre méthode."
+    security_key_support_missing_error: "Votre appareil ou navigateur actuel ne prend pas en charge l'utilisation des clés de sécurité. Veuillez utiliser une autre méthode."
     security_key_invalid: "Une erreur est survenue lors de la validation de la clé de sécurité."
     not_approved: "Votre compte n'a pas encore été approuvé. Vous recevrez une notification par courriel lorsque vous pourrez vous connecter."
     incorrect_username_email_or_password: "Nom d'utilisateur, adresse courriel ou mot de passe incorrect(e)"
@@ -2250,7 +2250,7 @@ fr:
     activate_email: "<p>C'est presque terminé ! Nous avons envoyé un courriel d'activation à <b>%{email}</b>. Merci de suivre les instructions qui y figurent pour activer votre compte.</p><p>Si vous ne recevez pas ce courriel, vérifiez le dossier du courrier indésirable dans votre messagerie.</p>"
     not_activated: "Vous ne pouvez pas vous connecter pour le moment. Nous vous avons envoyé un courriel d'activation. Merci de suivre les instructions qui y figurent pour activer votre compte."
     not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant que %{username} depuis cette adresse IP."
-    admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant qu'administrateur depuis cette adresse IP."
+    admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant qu'administrateur à partir de cette adresse IP."
     reset_not_allowed_from_ip_address: "Vous ne pouvez pas réinitialiser le mot de passe depuis cette adresse IP."
     suspended: "Vous ne pouvez pas vous connecter jusqu'au %{date}."
     suspended_with_reason: "Compte suspendu jusqu'au %{date} : %{reason}"
@@ -2803,7 +2803,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre réponse a été envoyée depuis une adresse qui est sous surveillance. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
+        Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Courriel rejeté - Courriel bloqué"
       subject_template: "[%{email_prefix}] Problème de courriel - Courriel bloqué"
@@ -3449,8 +3449,8 @@ fr:
 
         Si vous n'avez pas demandé ce changement, veuillez contacter un [administrateur](%{base_url}/about).
     confirm_new_email_via_admin:
-      title: "Confirmer votre nouvelle adresse de courriel"
-      subject_template: "[%{email_prefix}] Confirmez votre nouvelle adresse de courriel"
+      title: "Confirmer votre nouvelle adresse courriel"
+      subject_template: "[%{email_prefix}] Confirmez votre nouvelle adresse courriel"
       text_body_template: |
         Confirmez votre nouvelle adresse courriel pour %{site_name} en cliquant sur le lien suivant :
 
@@ -4494,12 +4494,12 @@ fr:
     already_handled: "Merci, mais nous avons déjà examiné ce message et avons décidé d'approuver sa publication."
     already_handled_and_user_not_exist: "Merci, mais cet élément a déjà été examiné entre-temps, et l'utilisateur concerné n'est plus inscrit."
     priorities:
-      low: "Basse"
+      low: "Faible"
       medium: "Moyenne"
       high: "Élevée"
     sensitivity:
       disabled: "Désactivée"
-      low: "Basse"
+      low: "Faible"
       medium: "Moyenne"
       high: "Élevée"
     must_claim: "Vous devez réserver des éléments avant d'agir dessus."
