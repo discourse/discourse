@@ -114,7 +114,7 @@ pt_BR:
         topic_not_found_error: "Ocorre quando uma resposta foi recebida, mas o tópico relacionado foi excluído."
         topic_closed_error: "Ocorre quando uma resposta foi recebida, mas o tópico relacionado foi fechado."
         bounced_email_error: "O e-mail é um relatório de e-mails devolvido."
-        screened_email_error: "Ocorre quando o endereço de e-mail do remetente já foi examinado."
+        screened_email_error: "Ocorre quando o endereço de e-mail do remetente já foi filtrado."
         unsubscribe_not_allowed: "Ocorre quando não é permitido cancelar a associação por e-mail para este(a) usuário(a)"
       unrecognized_error: "Erro desconhecido"
   errors: &errors
