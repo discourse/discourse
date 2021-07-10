@@ -3,6 +3,8 @@
 require 'csv'
 
 class Admin::BadgesController < Admin::AdminController
+  MAX_CSV_LINES = 50_000
+  BATCH_SIZE = 200
 
   def index
     data = {
@@ -63,58 +65,57 @@ class Admin::BadgesController < Admin::AdminController
 
     BadgeGranter.revoke_all(badge) if replace_badge_owners
 
-    batch_number = 1
     line_number = 1
-    batch = []
-    jobs_id = SecureRandom.hex
-
+    count_per_user = {}
     File.open(csv_file) do |csv|
-      mode = Email.is_valid?(CSV.parse_line(csv.first).first) ? 'email' : 'username'
+      email_mode = Email.is_valid?(CSV.parse_line(csv.first).first)
       csv.rewind
 
-      entries_count = 0
-      line_number = 1
-      csv.each_line do |raw_entry|
-        entry = CSV.parse_line(raw_entry).first
-        entries_count += 1 if entry.present?
-        line_number += 1
-      end
-      csv.rewind
-
-      line_number = 1
-      batches_count = entries_count / BadgeGranter::MAX_ITEMS_FOR_DELTA
-      batches_count += 1 if entries_count % BadgeGranter::MAX_ITEMS_FOR_DELTA != 0
-      Discourse.redis.setex("badge_mass_grant_#{jobs_id}_batches_count", 7.days, batches_count)
-      csv.each_line do |raw_entry|
-        entry = CSV.parse_line(raw_entry).first
+      batch = []
+      total_entries = 0
+      csv.each_line do |line|
+        line = CSV.parse_line(line).first&.strip&.downcase
         line_number += 1
 
-        if entry.present?
-          batch << entry.strip.downcase
+        if line.present?
+          batch << (email_mode ? line : User.normalize_username(line))
+          total_entries += 1
         end
 
-        # Split the emails in batches of 200 elements.
-        full_batch = csv.lineno % (BadgeGranter::MAX_ITEMS_FOR_DELTA * batch_number) == 0
-        last_batch_item = full_batch || csv.eof?
+        if total_entries > MAX_CSV_LINES
+          return render_json_error I18n.t('badges.mass_award.errors.too_many_csv_entries', count: MAX_CSV_LINES), status: 400
+        end
+
+        last_batch_item = (total_entries % BATCH_SIZE == 0) || csv.eof?
 
         if last_batch_item
-          args = {
-            users_batch: batch,
-            badge_id: badge.id,
-            mode: mode
-          }
-          if grant_existing_holders
-            args.merge!(
-              jobs_id: jobs_id,
-              batch_number: batch_number,
-              grant_existing_holders: true
-            )
+          if email_mode
+            users = User.with_email(batch).pluck('LOWER(user_emails.email)', :id).to_h
+          else
+            users = User.where(username_lower: batch).pluck(:username_lower, :id).to_h
           end
-          Jobs.enqueue(:mass_award_badge, **args)
+          batch.each do |entry|
+            user_id = users[entry]
+            if grant_existing_holders
+              count_per_user[user_id] ||= 0
+              count_per_user[user_id] += 1
+            else
+              count_per_user[user_id] = 1
+            end
+          end
           batch = []
-          batch_number += 1
         end
       end
+    end
+
+    count_per_user.each do |user_id, count|
+      Jobs.enqueue(
+        :mass_award_badge,
+        user: user_id,
+        badge: badge.id,
+        count: count,
+        grant_existing_holders: grant_existing_holders
+      )
     end
 
     head :ok

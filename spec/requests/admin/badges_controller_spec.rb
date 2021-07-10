@@ -276,6 +276,24 @@ describe Admin::BadgesController do
           ])
         end
 
+        it "fails when CSV file contains more entries that it's allowed" do
+          badge.update!(multiple_grant: true)
+          csv = Tempfile.new
+          csv.write("#{user.username}\n" * 101)
+          csv.rewind
+          stub_const(Admin::BadgesController, "MAX_CSV_LINES", 100) do
+            post "/admin/badges/award/#{badge.id}.json", params: {
+              file: fixture_file_upload(csv),
+              grant_existing_holders: true
+            }
+          end
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to include(I18n.t("badges.mass_award.errors.too_many_csv_entries", count: 100))
+        ensure
+          csv&.close
+          csv&.unlink
+        end
+
         it "grants the badge to the users in the CSV as many times as they appear in it" do
           Jobs.run_immediately!
           badge.update!(multiple_grant: true)
