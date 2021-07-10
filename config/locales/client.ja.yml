@@ -2169,45 +2169,73 @@ ja:
           12_hours: "12 時間"
           24_hours: "24 時間"
           custom: "カスタム期間"
+      slow_mode_notice:
+        duration: "このトピックでは次の投稿まで %{duration} お待ちください"
       topic_status_update:
+        title: "トピックタイマー"
         save: "タイマーをセット"
         num_of_hours: "時間:"
+        num_of_days: "日数:"
         remove: "タイマーを削除"
         publish_to: "公開先:"
         when: "公開時間:"
         time_frame_required: "時間枠を選択してください"
+        min_duration: "機関は 0 より大きくする必要があります"
+        max_duration: "期間は 20 年未満である必要があります"
       auto_update_input:
+        none: "時間枠を選択してください"
+        now: "今"
         later_today: "今日の後程"
         tomorrow: "明日"
         later_this_week: "今週の後半"
         this_weekend: "今週末"
         next_week: "来週"
+        two_weeks: "2 週間"
         next_month: "来月"
+        two_months: "2 か月"
+        three_months: "3 か月"
+        four_months: "4 か月"
+        six_months: "6 か月"
+        one_year: "1 年"
+        forever: "永遠"
         pick_date_and_time: "日時を選択"
         set_based_on_last_post: "最後の投稿でクローズ"
       publish_to_category:
         title: "公開スケジュール"
       temp_open:
         title: "一時的にオープン"
+      auto_reopen:
+        title: "トピックを自動オープン"
       temp_close:
         title: "一時的にクローズ"
       auto_close:
         title: "トピックを自動的にクローズ"
+        label: "次の後トピックを自動的にクローズ:"
         error: "有効な値を入力してください。"
         based_on_last_post: "トピックの最後の投稿が古くなるまでクローズしない。"
+      auto_close_after_last_post:
+        title: "最後の投稿の後トピックを自動的にクローズ"
       auto_delete:
         title: "トピックを自動的に削除"
+      auto_bump:
+        title: "トピックの自動バンプ"
       reminder:
         title: "リマインダー"
+      auto_delete_replies:
+        title: "返信の自動削除"
       status_update_notice:
         auto_open: "このトピックは後 %{timeLeft}で自動的にオープンします。"
         auto_close: "このトピックは後 %{timeLeft}で自動的にクローズします。"
         auto_publish_to_category: "このトピックは後 %{timeLeft}で <a href=%{categoryUrl}>#%{categoryName}</a> に公開されます。"
         auto_close_after_last_post: "このトピックは最後の返信から%{duration}後にクローズされます。"
         auto_delete: "このトピックは後 %{timeLeft}で自動的に削除されます。"
+        auto_bump: "このトピックは後 %{timeLeft}で自動的にバンプされます。"
         auto_reminder: "このトピックについて %{timeLeft}後にリマインダーを通知します。"
+        auto_delete_replies: "このトピックへの返信は、%{duration}後に自動的に削除されます。"
       auto_close_title: "自動クローズの設定"
       auto_close_immediate:
+        other: "このトピックは最終投稿からすでに %{count} 時間経過しているため、すぐにクローズされます。"
+      auto_close_momentarily:
         other: "このトピックは最終投稿からすでに %{count} 時間経過しているため、すぐにクローズされます。"
       timeline:
         back: "戻る"
@@ -2224,6 +2252,7 @@ ja:
           other: "/ %{count} の投稿"
         jump_prompt_long: "ジャンプ..."
         jump_bottom_with_number: "%{post_number} 番へジャンプ"
+        jump_prompt_to_date: "日付"
         jump_prompt_or: "または"
         total: 全投稿
         current: 現在の投稿
@@ -2232,15 +2261,18 @@ ja:
         reasons:
           mailing_list_mode: "メーリングリストモードになっているため、このトピックへの返信はメールで通知されます。"
           "3_10": "このトピックのタグをウォッチしているため通知されます。"
+          "3_10_stale": "このトピックのタグを過去にウォッチしていたため通知されます。"
           "3_6": "このカテゴリをウォッチしているため通知されます。"
+          "3_6_stale": "このカテゴリを過去にウォッチしていたため通知されます。"
           "3_5": "このトピックを自動的にウォッチし始めたため通知されます。"
           "3_2": "このトピックをウォッチしているため通知されます。"
           "3_1": "このトピックを作成したため通知されます。"
           "3": "このトピックをウォッチしているため通知されます。"
           "2_8": "このカテゴリを追跡しているため、新しい返信の件数が表示されます。"
+          "2_8_stale": "このカテゴリを過去に追跡していたため、新しい返信の件数が表示されます。"
           "2_4": "このトピックに返信したので、新しい返信の件数が表示されます。"
           "2_2": "このトピックを追跡しているので、新しい返信の件数が表示されます。"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": '<a href="%{basePath}/u/%{username}/preferences/notifications">このトピックを読んでいる</a>ため、新しい返信の件数が表示されます。'
           "1_2": "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
           "1": "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
           "0_7": "このカテゴリのすべての通知を無視しています。"
@@ -2277,6 +2309,7 @@ ja:
         open: "トピックをオープン"
         close: "トピックをクローズ"
         multi_select: "投稿を選択..."
+        slow_mode: "低速モードを設定"
         timed_update: "トピックにタイマーをセット..."
         pin: "トピックを固定..."
         unpin: "トピックを固定解除..."
@@ -2287,17 +2320,27 @@ ja:
         reset_read: "閲覧データをリセット"
         make_public: "公開トピックにする"
         make_private: "個人メッセージにする"
+        reset_bump_date: "バンプ日をリセット"
       feature:
         pin: "トピックを固定"
         unpin: "トピックを固定解除"
         pin_globally: "トピックを全体に固定"
+        make_banner: "バナートピックにする"
         remove_banner: "バナートピックを削除"
       reply:
         title: "返信"
         help: "このトピックへの返信を作成する"
       share:
         title: "共有"
+        extended_title: "リンクの共有"
         help: "このトピックのリンクを共有する"
+        instructions: "このトピックへのリンクを共有します:"
+        copied: "トピックのリンクをコピーしました。"
+        notify_users:
+          title: "通知"
+          instructions: "このトピックについて次のユーザーに通知します:"
+          success:
+            other: "このトピックについてすべてのユーザーに正常に通知しました。"
         invite_users: "招待"
       print:
         title: "印刷"
@@ -2306,6 +2349,9 @@ ja:
         title: "通報"
         help: "このトピックを非公開に通報するか、または非公開の通知を送信する"
         success_message: "このトピックを通報しました。"
+      make_public:
+        title: "公開トピックに変換"
+        choose_category: "公開トピックのカテゴリを選択してください:"
       feature_topic:
         title: "これを注目のトピックにする"
         pin: "このトピックを %{categoryLink} カテゴリのトップに次の期間表示する:"
@@ -2340,6 +2386,7 @@ ja:
         success: "ユーザーをこのメッセージへ招待しました。"
         success_group: "グループをこのメッセージへ招待しました。"
         error: "ユーザーを招待中にエラーが発生しました。"
+        not_allowed: "そのユーザーを招待できません。"
         group_name: "グループ名"
       controls: "トピックの管理"
       invite_reply:
@@ -2347,6 +2394,7 @@ ja:
         username_placeholder: "ユーザー名"
         action: "招待状を送信"
         help: "メールまたは通知で、ほかのユーザーをこのトピックに招待する"
+        to_forum: "あなたの友人がリンクをクリックしてすぐに参加できるように、簡単なメールを送信します。"
         discourse_connect_enabled: "このトピックに招待する人のユーザー名を入力してください。"
         to_topic_blank: "このトピックに招待する人のユーザー名またはメールアドレスを入力してください。"
         to_topic_email: "あなたはメールアドレスを入力しました。フレンドがすぐにこのトピックへ返信できるようにメールで招待します。"
@@ -2362,6 +2410,9 @@ ja:
         n_posts:
           other: "%{count} 件の投稿"
         cancel: "フィルタを削除"
+      move_to:
+        title: "移動先"
+        action: "移動先"
       split_topic:
         title: "新規トピックに移動"
         action: "新規トピックに移動"
@@ -2477,20 +2528,46 @@ ja:
         convert_to_moderator: "スタッフの色を追加"
         revert_to_regular: "スタッフの色を削除"
         rebake: "HTML を再作成"
+        publish_page: "ページの公開"
         unhide: "表示"
         change_owner: "オーナーシップを変更"
         grant_badge: "バッジを付与"
+        lock_post: "投稿をロック"
+        lock_post_description: "投稿者がこの投稿を編集できないようにします"
+        unlock_post: "投稿のロックを解除"
+        unlock_post_description: "投稿者がこの投稿を編集できるようにします"
+        delete_topic_disallowed_modal: "このトピックを削除する権限がありません。本当に削除したい場合は、モデレーターの注意要として、理由と共に通報してください。"
+        delete_topic_disallowed: "このトピックを削除する権限がありません。"
+        delete_topic_confirm_modal:
+          other: "このトピックの閲覧数は現在 %{count} 回を超えており、人気の検索先となっているようです。トピックの編集や改善を行わずに、本当にこのトピック全体を削除しますか？"
+        delete_topic_confirm_modal_yes: "はい。このトピックを削除する"
+        delete_topic_confirm_modal_no: "いいえ。このトピックを維持する"
+        delete_topic_error: "このトピックを削除中にエラーが発生しました"
         delete_topic: "トピックを削除"
+        add_post_notice: "スタッフ通知を追加"
+        change_post_notice: "スタッフ通知を変更"
+        delete_post_notice: "スタッフ通知を削除"
+        remove_timer: "タイマーを削除"
+        edit_timer: "タイマーを編集"
       actions:
         people:
           like:
             other: "「いいね！」しました"
+          read:
+            other: "これを読む"
+          like_capped:
+            other: "および他 %{count} 人がこれに「いいね！」と言いました"
+          read_capped:
+            other: "および他 %{count} 人がこれを読みました"
         by_you:
           off_topic: "関係のない話題として通報しました"
           spam: "迷惑として通報しました"
           inappropriate: "不適切として通報しました"
           notify_moderators: "スタッフによる確認が必要として通報しました"
           notify_user: "このユーザーにメッセージを送信しました"
+      delete:
+        confirm:
+          other: "本当に %{count} 件の投稿を削除しますか？"
       merge:
         confirm:
           other: "これらの %{count} 件の投稿をマージしてよろしいですか？"
@@ -2502,8 +2579,10 @@ ja:
           last: "最後のリビジョン"
           hide: "リビジョンを非表示"
           show: "リビジョンを表示"
+          revert: "リビジョン %{revision} に戻す"
           edit_wiki: "ウィキを編集"
           edit_post: "投稿を編集"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
             title: "追加・削除箇所をインラインで表示"
@@ -2526,8 +2605,16 @@ ja:
             title: "メールの HTML 部分を表示"
             button: "HTML"
       bookmarks:
+        create: "ブックマークを作成"
+        edit: "ブックマークを編集"
         created: "作成"
+        updated: "更新"
         name: "名前"
+        name_placeholder: "これは何のブックマークですか？"
+        set_reminder: "リマインダー"
+        actions:
+          delete_bookmark:
+            name: "ブックマークを削除"
     category:
       can: "できること&hellip; "
       none: "(カテゴリなし)"
