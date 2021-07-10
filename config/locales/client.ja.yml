@@ -137,6 +137,7 @@ ja:
     wizard_required: "Discourse へようこそ！ <a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
     software_update_prompt:
+      message: "このサイトを更新たので、<span>再読み込みしてください</span>。再読み込みしない場合、予期しない動作が発生する可能性があります。"
       dismiss: "閉じる"
     bootstrap_mode_enabled:
       other: "新しいサイトを簡単に立ち上げられるように、ブートストラップモードになっています。すべての新規ユーザーの信頼レベルは 1 となり、要約メールを毎日受け取るように設定されています。この設定は %{count} 名のユーザーが参加すると自動的に無効になります。"
@@ -148,6 +149,7 @@ ja:
       regions:
         ap_northeast_1: "アジア・太平洋 (東京)"
         ap_northeast_2: "アジア・太平洋 (ソウル)"
+        ap_east_1: "アジア・太平洋 (香港)"
         ap_south_1: "アジア・太平洋 (ムンバイ)"
         ap_southeast_1: "アジア・太平洋 (シンガポール)"
         ap_southeast_2: "アジア・太平洋 (シドニー)"
@@ -226,6 +228,9 @@ ja:
       moderators: "モデレーター"
       stat:
         all_time: "全期間"
+        last_day: "過去 24 時間"
+        last_7_days: "過去 7 日間"
+        last_30_days: "過去 30 日間"
       like_count: "「いいね！」数"
       topic_count: "トピック"
       post_count: "投稿"
@@ -235,10 +240,13 @@ ja:
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、%{contact_info} までご連絡ください。"
     bookmarked:
       title: "ブックマーク"
+      edit_bookmark: "ブックマークを編集"
       clear_bookmarks: "ブックマークをクリア"
       help:
         bookmark: "クリックしてこのトピックの最初の投稿をブックマークします"
+        edit_bookmark: "クリックしてこのトピックのブックマークを編集します"
         unbookmark: "クリックしてこのトピック内のすべてのブックマークを削除します"
+        unbookmark_with_reminder: "クリックしてこのトピック内のすべてのブックマークとリマインダーを削除します。"
     bookmarks:
       created: "この投稿をブックマークしました。%{name}"
       not_bookmarked: "この投稿をブックマークする"
@@ -273,6 +281,10 @@ ja:
       new_topic: "新しいトピックの下書き"
       new_private_message: "新しいプライベートメッセージの下書き"
       topic_reply: "返信の下書き"
+      abandon:
+        confirm: "このトピックの作成中の下書きがあります。どうしますか？"
+        yes_value: "破棄"
+        no_value: "編集を再開"
     topic_count_latest:
       other: "%{count} 件の新規/更新トピックを見る"
     topic_count_unread:
@@ -288,6 +300,7 @@ ja:
     upload: "アップロード"
     uploading: "アップロード中..."
     uploading_filename: "アップロード中: %{filename}…"
+    processing_filename: "処理中: %{filename}..."
     clipboard: "クリップボード"
     uploaded: "アップロードしました！"
     pasting: "貼り付け中..."
@@ -337,8 +350,10 @@ ja:
         type_bonus:
           name: "タイプボーナス"
           title: "特定のレビュー待ち項目タイプには、スタッフがボーナスを割り当てて優先順位を上げられます。"
+      stale_help: "このレビュー待ち項目は他の人によって解決されました。"
       claim_help:
         optional: "この項目を自分に割り当ててほかのユーザーがレビューしないようにできます。"
+        required: "レビューする前に項目を自分に割り当てる必要があります。"
         claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
         claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
       claim:
@@ -377,6 +392,8 @@ ja:
         fields: "フィールド"
         reject_reason: "理由"
       user_percentage:
+        summary:
+          other: "%{agreed}、%{disagreed}、%{ignored} (最後の %{count} 件の通報の内)"
         agreed:
           other: "同意 %{count}%"
         disagreed:
@@ -415,6 +432,7 @@ ja:
         priority:
           title: "最低優先度"
           any: "(すべて)"
+          low: "低"
           medium: "普通"
           high: "高"
       conversation:
@@ -473,18 +491,25 @@ ja:
         other: "日"
       months:
         other: "か月"
+      years:
+        other: "年"
+      relative: "相対"
     time_shortcut:
       later_today: "今日の後程"
       next_business_day: "翌営業日"
       tomorrow: "明日"
       post_local_date: "投稿の日付"
       later_this_week: "今週の後半"
+      this_weekend: "今週末"
       start_of_next_business_week: "月曜日"
       start_of_next_business_week_alt: "来週の月曜日"
+      two_weeks: "2 週間"
       next_month: "来月"
+      six_months: "6 か月"
       custom: "カスタムの日付と時刻"
       relative: "相対時間"
       none: "不要"
+      last_custom: "最後のカスタム日時"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が<a href='%{topicUrl}'>トピック</a>を作成しました"
       you_posted_topic: "<a href='%{userUrl}'>あなた</a>が<a href='%{topicUrl}'>トピック</a>を作成しました"
@@ -521,7 +546,9 @@ ja:
       total_rows:
         other: "ユーザー: %{count} 人"
       edit_columns:
+        title: "ディレクトリ列の編集"
         save: "保存"
+        reset_to_default: "デフォルトにリセット"
       group:
         all: "すべてのグループ"
     group_histories:
@@ -535,7 +562,12 @@ ja:
       member_added: "追加済み"
       member_requested: "リクエスト日:"
       add_members:
+        title: "ユーザーを %{group_name} に追加"
+        description: "グループに招待するユーザーのリストを入力するか、カンマ区切りのリストを貼り付けます:"
+        usernames_placeholder: "ユーザー名"
+        usernames_or_emails_placeholder: "ユーザー名またはメール"
         notify_users: "ユーザーに通知"
+        set_owner: "ユーザーをこのグループのオーナーに設定する"
       requests:
         title: "リクエスト"
         reason: "理由"
@@ -549,6 +581,8 @@ ja:
         title: "管理"
         name: "名前"
         full_name: "フルネーム"
+        add_members: "ユーザーを追加"
+        invite_members: "招待"
         delete_member_confirm: "%{username} を %{group} グループから削除しますか？"
         profile:
           title: プロフィール
@@ -559,6 +593,27 @@ ja:
         email:
           title: "メール"
           status: "IMAP 経由で %{old_emails} / %{total_emails} のメールを同期しました。"
+          enable_smtp: "SMTP を有効化"
+          enable_imap: "IMAP を有効化"
+          test_settings: "設定をテスト"
+          save_settings: "設定を保存"
+          last_updated: "最終更新:"
+          last_updated_by: "更新者:"
+          settings_required: "すべての設定は必須です。すべてのフィールドに入力してから検証してください。"
+          smtp_settings_valid: "SMTP 設定は有効です。"
+          smtp_title: "SMTP"
+          smtp_instructions: "このグループで SMTP を有効化すると、グループの受信トレイから送信されるすべての送信メールは、フォーラムが送信するほかのメール用に構成されているメールサーバーではなく、ここで指定される SMTP 設定を介して送信されます。"
+          imap_title: "IMAP"
+          imap_additional_settings: "追加設定"
+          imap_instructions: 'このグループで IMAP を有効化すると、グループの受信トレイと指定された IMAP サーバーとメールボックスの間でメールが同期されます。IMAP を有効にする前に、テスト済みの有効な資格情報で SMTP を有効にする必要があります。SMTP に使用されるメールのユーザー名とパスワードが IMAP にも使用されます。詳細は、<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta の機能に関するお知らせ</a>をご覧ください。'
+          imap_alpha_warning: "警告: これはアルファステージの機能です。Gmail のみが公式にサポートされています。自己責任でご利用ください！"
+          imap_settings_valid: "IMAP の設定は有効です。"
+          smtp_disable_confirm: "SMTP を無効にすると、すべての SMTP と IMAP の設定がリセットされ、関連付けられている機能が無効になります。本当に続行しますか？"
+          imap_disable_confirm: "IMAP を無効にすると、すべての IMAP 設定がリセットされ、関連付けられている機能が無効になります。本当に続行しますか？"
+          imap_mailbox_not_selected: "この IMAP 構成のメールボックスを選択する必要があります。選択しない場合、メールボックスは同期されません！"
+          prefill:
+            title: "次の設定で事前入力:"
+            gmail: "GMail"
           credentials:
             title: "資格情報"
             smtp_server: "SMTP サーバー"
@@ -572,9 +627,11 @@ ja:
           settings:
             title: "設定"
             allow_unknown_sender_topic_replies: "不明な送信者によるトピックの返信を許可します。"
+            allow_unknown_sender_topic_replies_hint: "不明な送信者がグループトピックに返信できるようにします。これが有効になっていない場合、トピックに招待されていないメールアドレスからの返信があった場合は、新しいトピックを作成します。"
           mailboxes:
             synchronized: "同期メールボックス"
             none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
+            disabled: "無効"
         membership:
           title: メンバーシップ
           access: アクセス
@@ -686,6 +743,7 @@ ja:
         remove_all_primary: "プライマリとして削除"
         remove_all_primary_description: "このグループをプライマリとして削除する"
         owner: "オーナー"
+        primary: "プライマリ"
         forbidden: "メンバーの表示は許可されていません。"
       topics: "トピック"
       posts: "投稿"
@@ -762,9 +820,13 @@ ja:
       muted: "ミュートされたカテゴリ"
       topic_sentence:
         other: "%{count}トピック"
+      topic_stat:
+        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "週"
         month: "月"
+      topic_stat_all_time:
+        other: "全 %{number} 件"
       topic_stat_sentence_week:
         other: "先週、新しいトピックが %{count} 件投稿されました。"
       topic_stat_sentence_month:
@@ -873,12 +935,22 @@ ja:
       dismiss: "閉じる"
       dismiss_notifications: "すべて閉じる"
       dismiss_notifications_tooltip: "すべての未読の通知を既読にします"
+      no_messages_title: "メッセージはありません"
+      no_messages_body: >
+        通常の会話から外れて、誰かと個人的に直接話す必要がありますか？相手のアバターを選択して、%{icon} メッセージボタンを使うと、その人にメッセージを送信できます。<br><br> ヘルプが必要な場合は、<a href='%{aboutUrl}'>スタッフメンバーにメッセージを送信</a>してください。
+      no_bookmarks_title: "まだ何もブックマークしていません"
+      no_bookmarks_body: >
+        %{icon} ボタンを使って投稿をブックマークしましょう。すぐに参照できるように、ここに一覧表示されます。リマインダーもスケジュール設定可能です！
+      no_notifications_title: "まだ通知はありません"
+      no_notifications_body: >
+        あなたのトピックや投稿に対する返信があったとき、誰かがあなたを <b>@メンション</b>または引用したとき、あなたがウォッチ中のトピックに返信があったときなど、あなたに直接関連するアクティビティはこのパネルで通知されます。あなたがしばらくログインしていない場合は、メールにも通知が送信されます。<br><br>%{icon} を探して、どの特定のトピック、カテゴリ、およびタグについて通知するかを決めましょう。詳細については、<a href='%{preferencesUrl}'>通知の設定</a>をご覧ください。
       first_notification: "最初の通知です！選択して開始してください。"
       dynamic_favicon: "ブラウザのアイコンに件数を表示する"
       skip_new_user_tips:
         description: "新規ユーザー向けオンボーディングのヒントとバッジをスキップする"
         not_first_time: "初めてのご利用ではありませんか？"
         skip_link: "これらのヒントをスキップ"
+        read_later: "後で読む。"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトのテーマにする"
       color_scheme_default_on_all_devices: "デフォルトの色スキームをすべてのデバイスに設定する"
       color_scheme: "色スキーム"
@@ -983,6 +1055,7 @@ ja:
         move_to_archive: "アーカイブ"
         failed_to_move: "選択されたメッセージを移動できませんでした (ネットワークがダウンしている可能性があります)"
         tags: "タグ"
+        warnings: "運営スタッフからの警告"
       preferences_nav:
         account: "アカウント"
         security: "セキュリティ"
@@ -1095,6 +1168,7 @@ ja:
         uploaded_avatar_empty: "カスタム画像を追加する"
         upload_title: "画像をアップロードする"
         image_is_not_a_square: "警告: 幅と高さが等しくないため、画像をトリミングしました。"
+        logo_small: "サイトの小さなロゴ。デフォルトで使用されます。"
       change_profile_background:
         title: "プロフィールヘッダー"
         instructions: "プロフィールヘッダーは中央揃えで、デフォルトの幅は 1110 px です。"
@@ -1125,6 +1199,8 @@ ja:
         required: "メールアドレスを入力してください"
         invalid: "正しいメールアドレスを入力してください"
         authenticated: "あなたのメールアドレスは %{provider} によって認証されました"
+        invite_auth_email_invalid: "あなたの招待メールは %{provider} が認証したメールと一致しません"
+        authenticated_by_invite: "あなたのメールは招待によって認証されました"
         frequency_immediately: "メールの内容をまだ読んでいない場合は、今すぐメールを送信します。"
         frequency:
           other: "最後のアクセスから %{count} 分以上アクセスがない場合にのみメールを送信します。"
@@ -1201,6 +1277,7 @@ ja:
         larger: "大"
         largest: "最大"
       title_count_mode:
+        title: "背景ページのタイトルに表示する件数:"
         notifications: "新しい通知"
         contextual: "新しいページのコンテンツ"
       like_notification_frequency:
@@ -1256,15 +1333,22 @@ ja:
         title: "招待"
         pending_tab: "保留中"
         pending_tab_with_count: "保留中 (%{count})"
+        expired_tab: "期限切れ"
+        expired_tab_with_count: "期限切れ (%{count})"
         redeemed_tab: "承諾済み"
         redeemed_tab_with_count: "承諾済み (%{count})"
         invited_via: "招待状"
+        invited_via_link: "リンク %{key} (%{count}/%{max} 承諾済み)"
         groups: "グループ"
         topic: "トピック"
+        sent: "作成日/最終送信日"
         expires_at: "有効期限"
         edit: "編集"
         remove: "削除"
+        copy_link: "リンクを取得"
+        reinvite: "メールを再送信"
         reinvited: "再度招待しました"
+        removed: "削除"
         search: "招待履歴を検索"
         user: "招待したユーザー"
         none: "表示する招待はありません。"
@@ -1279,7 +1363,9 @@ ja:
         remove_all: "期限切れの招待を削除"
         removed_all: "期限切れの招待はすべて削除されました！"
         remove_all_confirm: "期限切れの招待をすべて削除してもよろしいですか？"
+        reinvite_all: "すべての招待を再送信"
         reinvite_all_confirm: "すべての招待を再送してもよろしいですか？"
+        reinvited_all: "すべての招待が送信されました！"
         time_read: "閲覧時間"
         days_visited: "アクセス日数"
         account_age_days: "アカウント有効日数"
@@ -1295,9 +1381,34 @@ ja:
           error: "招待リンクの生成中にエラーが発生しました"
           max_redemptions_allowed_label: "このリンクを使用して登録できるのは何人ですか？"
           expires_at: "この招待リンクはいつまで有効ですか？"
+        invite:
+          new_title: "招待状の作成"
+          edit_title: "招待状の編集"
+          instructions: "このサイトへのアクセスと即時に許可するにはこのリンクを共有します"
+          copy_link: "リンクをコピー"
+          expires_in_time: "%{time} で期限切れ"
+          expired_at_time: "%{time} に期限切れ"
+          show_advanced: "高度なオプションを表示"
+          hide_advanced: "高度なオプションを非表示"
+          restrict_email: "1 つのメールアドレスに制限"
+          max_redemptions_allowed: "最大使用回数"
+          add_to_groups: "グループに追加"
+          invite_to_topic: "このトピックに到着"
+          expires_at: "有効期限"
+          custom_message: "オプションの個人メッセージ"
+          send_invite_email: "保存してメールを送信"
+          save_invite: "招待状を保存"
+          invite_saved: "招待状は保存されました。"
+          invite_copied: "招待リンクがコピーされました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
+          instructions: |
+            <p>コミュニティをすばやく拡大するには、ユーザーのリストを招待します。招待するユーザーンおメールアドレスごとに少なくとも 1 行を含む <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV ファイル</a>を準備してください。カンマ区切りの情報は、グループに人を追加したい場合、またはそれらのユーザーが初めてサインインしたときに特定のトピックに移動させる場合に利用できます。</p>
+            <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
+            <p>アップロードされる CSV ファイルに含まれるメールアドレスに招待状が送られ、後で管理することができます。</p>
+          progress: "%{progress}% アップロード済み..."
+          success: "ファイルは正常にアップロードされました。処理が完了すると、メッセージで通知されます。"
           error: "ファイルは CSV 形式である必要があります。"
       password:
         title: "パスワード"
@@ -1354,10 +1465,16 @@ ja:
       avatar:
         title: "プロフィール画像"
         header_title: "プロフィール、メッセージ、ブックマーク、設定"
+        name_and_description: "%{name} - %{description}"
         edit: "プロフィール画像を編集"
       title:
         title: "タグライン"
         none: "(なし)"
+        instructions: "ユーザー名の後に表示されます"
+      flair:
+        title: "フレア"
+        none: "(なし)"
+        instructions: "プロファイル写真の横に表示されるアイコン"
       primary_group:
         title: "プライマリーグループ"
         none: "(なし)"
@@ -1392,6 +1509,7 @@ ja:
       close: "閉じる"
       dismiss_error: "エラーを閉じる"
     close: "閉じる"
+    assets_changed_confirm: "このサイトのソフトウェアはたった今アップグレードされました。今すぐ最新バージョンを入手しますか？"
     logout: "ログアウトしました。"
     refresh: "更新"
     home: "ホーム"
@@ -1427,12 +1545,14 @@ ja:
       sign_up: "サインアップ"
       hide_session: "明日リマインダーを通知する"
       hide_forever: "いいえ、結構です"
+      hidden_for_session: "了解です。明日お尋ねします。'ログイン' からでもアカウントを作成できます。"
       intro: "こんにちは！ ディスカッションを楽しんでいるようですね。ですが、サインアップはまだのようです。"
       value_prop: "アカウントを作成した後、今読んでいるページへ戻ります。また、新しい投稿があった場合はそのことをメールでお知らせします。 「いいね！」を使って気に入った投稿をみんなに教えましょう。:heartpulse:"
     summary:
       enabled_description: "このトピックの要約を閲覧しています。コミュニティが最も面白いとした投稿のまとめです。"
       description:
         other: "<b>%{count}</b> 件の返信があります。"
+      description_time_MF: "{replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。"
       enable: "このトピックを要約する"
       disable: "すべての投稿を表示"
     deleted_filter:
@@ -1479,6 +1599,7 @@ ja:
     email_login:
       link_label: "ログインリンクをメールする"
       button_label: "メール"
+      login_link: "パスワードをスキップします。ログインリンクを送信してください"
       emoji: "絵文字をロックする"
       complete_username: "アカウントがユーザー名 <b>%{username}</b> と一致する場合、まもなくログインリンクが記載されたメールが届きます。"
       complete_email: "アカウントが <b>%{email}</b> と一致する場合、まもなくログインリンクが記載されたメールが届きます。"
@@ -1490,7 +1611,9 @@ ja:
       logging_in_as: '%{email} としてログイン'
       confirm_button: ログイン完了
     login:
+      header_title: "おかえりなさい"
       subheader_title: "アカウントにログインする"
+      title: "ログイン"
       username: "ユーザー"
       password: "パスワード"
       second_factor_title: "二要素認証"
@@ -1611,6 +1734,8 @@ ja:
       invalid_selection_length:
         other: "選択は %{count} 文字以上である必要があります。"
       components:
+        tag_drop:
+          filter_for_more: もっとフィルタ…
         categories_admin_dropdown:
           title: "カテゴリの管理"
     date_time_picker:
@@ -1705,6 +1830,8 @@ ja:
       saved: "保存しました！"
       saved_draft: "下書きを投稿中です。タップして再開します。"
       uploading: "アップロード中..."
+      show_preview: "プレビューを表示"
+      hide_preview: "プレビューを非表示"
       quote_post_title: "投稿全体を引用"
       bold_label: "B"
       bold_title: "太字"
@@ -1727,24 +1854,37 @@ ja:
       olist_title: "番号付きリスト"
       ulist_title: "箇条書き"
       list_item: "リスト項目"
+      toggle_direction: "方向の切り替え"
       help: "Markdown 編集のヘルプ"
+      collapse: "コンポーザーパネルを最小化"
+      open: "コンポーザーパネルを開く"
+      abandon: "コンポーザーを閉じて下書きを破棄"
+      enter_fullscreen: "全画面コンポーザーを開始"
+      exit_fullscreen: "全画面コンポーザーを終了"
+      show_toolbar: "コンポーザーツールバーを表示"
+      hide_toolbar: "コンポーザーツールバーを非表示"
       modal_ok: "OK"
       modal_cancel: "キャンセル"
       cant_send_pm: "%{username} にメッセージを送ることはできません。"
       yourself_confirm:
         title: "受信者を追加し忘れましたか？"
         body: "現時点では、このメッセージは自分にしか送信されません！"
+      slow_mode:
+        error: "このトピックは低速モードです。最近投稿したばかりです。%{timeLeft} してからもう一度投稿できます。"
       admin_options_title: "このトピックのオプションのスタッフ設定"
       composer_actions:
         reply: 返信
         draft: 下書き
         edit: 編集
         reply_to_post:
+          label: '%{postUsername} の投稿に返信'
           desc: 特定の投稿に返信する
         reply_as_new_topic:
           label: リンクトピックとして返信
           desc: このトピックにリンクしている新しいトピックを作成する
           confirm: 新しいトピックの下書きが保存されていますが、リンクトピックを作成すると上書きされます。
+        reply_as_new_group_message:
+          label: 新しいグループメッセージとして返信
         reply_as_private_message:
           label: 新規メッセージ
           desc: 新しい個人メッセージを作成する
@@ -2014,6 +2154,9 @@ ja:
         select: "ユーザーはこのトピックに次の頻度でのみ投稿できます。"
         enable: "有効化"
         remove: "無効化"
+        hours: "時間:"
+        minutes: "分:"
+        seconds: "秒:"
         durations:
           10_minutes: "10 分間"
           15_minutes: "15分"
@@ -2021,6 +2164,11 @@ ja:
           45_minutes: "45分"
           1_hour: "１時間"
           2_hours: "２時間"
+          4_hours: " 4 時間"
+          8_hours: "8 時間"
+          12_hours: "12 時間"
+          24_hours: "24 時間"
+          custom: "カスタム期間"
       topic_status_update:
         save: "タイマーをセット"
         num_of_hours: "時間:"

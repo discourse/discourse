@@ -1738,11 +1738,11 @@ pt_BR:
       list_item: "Item da lista"
       toggle_direction: "Alternar direção"
       help: "Ajuda de edição de redução"
-      collapse: "minimizar o painel do(a) criador(a)"
-      open: "abrir o painel do(a) criador(a)"
-      abandon: "fechar criador(a) e descartar rascunho"
-      enter_fullscreen: "entrar no(a) criador(a) em tela cheia"
-      exit_fullscreen: "sair do(a) criador(a) em tela cheia"
+      collapse: "minimizar o painel do compositor"
+      open: "abrir o painel do compositor"
+      abandon: "fechar compositor e descartar rascunho"
+      enter_fullscreen: "entrar no compositor em tela cheia"
+      exit_fullscreen: "sair do compositor em tela cheia"
       modal_ok: "Ok"
       modal_cancel: "Cancelar"
       cant_send_pm: "Desculpe, você não pode enviar uma mensagem para %{username}."
@@ -2937,8 +2937,8 @@ pt_BR:
         log_out: "%{shortcut} Sair"
       composing:
         title: "Criação"
-        return: "%{shortcut} Retornar ao criador(a)"
-        fullscreen: "%{shortcut} Criador(a) em tela cheia"
+        return: "%{shortcut} Retornar ao compositor"
+        fullscreen: "%{shortcut} Compositor em tela cheia"
       bookmarks:
         title: "Favoritos"
         enter: "%{shortcut} Salvar e fechar"
@@ -2977,7 +2977,7 @@ pt_BR:
       search_menu:
         title: "Menu de pesquisa"
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
-        insert_url: "%{shortcut} Inserir seleção no(a) criador(a) aberto"
+        insert_url: "%{shortcut} Inserir seleção no compositor aberto"
     badges:
       earned_n_times:
         one: "Emblema obtido %{count} vez"

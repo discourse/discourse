@@ -1244,7 +1244,7 @@ pt_BR:
     allow_uncategorized_topics: "Permitir criação de tópicos sem categoria. AVISO: se existe algum tópico sem categoria, você deve movê-los para uma categoria antes de desativar esta opção."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos duplicados e idênticos."
     unique_posts_mins: "Com quantos minutos de antecedência um(a) usuário(a) pode criar uma postagem com o mesmo conteúdo outra vez"
-    educate_until_posts: "Quando o(a) usuário(a) começa a digitar suas primeiras (n) postagens novas, exiba o pop-up com o painel instrutivo do novo(a) usuário(a) no criador(a)."
+    educate_until_posts: "Quando o(a) usuário(a) começa a digitar suas primeiras (n) postagens novas, exiba o pop-up com o painel instrutivo do novo(a) usuário(a) no compositor."
     title: "O nome deste site, como na etiqueta do título."
     site_description: "Descreva este site com uma frase, como na etiqueta de metadescrição."
     short_site_description: "Breve descrição, como etiqueta do título na página inicial."
@@ -1326,46 +1326,46 @@ pt_BR:
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o Discourse pode permitir com segurança em postagens"
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
     slow_down_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter taxa limitada em robots.txt usando a diretiva de rastreamento atrasado"
-    slow_down_crawler_rate: "Se slow_down_crawler_user_agents for especificado, essa taxa será aplicada a todos os rastreadores (número de segundos de atraso entre as solicitações)"
-    content_security_policy: "Habilitar Content-Security-Policy"
-    content_security_policy_report_only: "Habilitar Content-Security-Policy-Report-Only"
-    content_security_policy_collect_reports: "Habilitar a coleta de relatórios de violação de CSP em /csp_reports"
-    invalidate_inactive_admin_email_after_days: "As contas de administrador que não visitaram o site neste número de dias precisarão validar novamente seu endereço de e-mail antes de efetuar login. Defina como 0 para desabilitar."
-    top_menu: "Determina quais items aparecem na navegação da homepage, e em qual ordem. Exemplo latest|new|unread|categories|top|read|posted|bookmarks"
+    slow_down_crawler_rate: "Se slow_down_crawler_user_agents for especificado, essa taxa será aplicada a todos os rastreadores (quantidade de segundos de atraso entre os pedidos)"
+    content_security_policy: "Ativar Content-Security-Policy"
+    content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only"
+    content_security_policy_collect_reports: "Ativar a coleta de relatórios de violação de CSP em /csp_reports"
+    invalidate_inactive_admin_email_after_days: "As contas de administrador(a) que não acessaram o site nesta quantidade de dias precisarão validar novamente seu endereço de e-mail antes de entrarem com a conta. Defina como 0 para desativar."
+    top_menu: "Determine os items que aparecem ao navegar pela página inicial e em qual ordem. Por exemplo: mais recentes|novos|não lidos|categorias|melhores|lidos|postados|favoritos"
     post_menu: "Determine os itens e a ordem em que aparecem no menu de postagens. Por exemplo: curtir|editar|sinalizar|excluir|compartilhar|favorito|responder"
-    post_menu_hidden_items: "Os items de menu a ser escondidos por padrão no menu de postagem, a menos que uma elipse de expansão seja clicada."
-    share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
-    site_contact_username: "Um nome de usuário válido de membro da equipe para enviar todas mensagens automáticas por ele. Se deixado em branco a conta padrão System será utilizada."
-    site_contact_group_name: "Um nome de grupo válido a ser convidado para todas as mensagens automáticas."
-    send_welcome_message: "Enviar a todos novos usuários uma mensagem de boas vindas com um guia de início rápido."
-    send_tl1_welcome_message: "Envie aos novos usuários do nível de confiança 1 uma mensagem de boas-vindas."
-    suppress_reply_directly_below: "Não mostrar a contagem de respostas expansível em um post quando há apenas uma única resposta diretamente abaixo deste post."
-    suppress_reply_directly_above: "Não mostrar a em-resposta-à expansível em um post quando há apenas uma única resposta diretamente acima deste post."
-    remove_full_quote: "Remover automaticamente citações completas nas respostas diretas."
-    suppress_reply_when_quoting: "Não mostrar a em-resposta-à expansível em um post quando o post cita a resposta."
-    max_reply_history: "Número máximo de respostas para expandir quando expandindo em-resposta-à"
-    topics_per_period_in_top_summary: "Número de melhores tópicos mostrados no sumário padrão de melhores tópicos."
-    topics_per_period_in_top_page: "Número de melhores tópicos mostrados no 'Exibir Mais' melhores tópicos quando expandido."
-    redirect_users_to_top_page: "Automaticamente redirecionar usuários novos e há muito ausentes para a página melhores."
-    top_page_default_timeframe: "Intervalo de tempo padrão para a página de melhores publicações. "
-    moderators_view_emails: "Permitir que moderadores visualizem e-mails de usuários"
-    prioritize_username_in_ux: "Mostrar primeiro o nome de usuário na página do usuário, cartão do usuário e publicações (quando desabilitado, o nome será mostrado primeiro) "
+    post_menu_hidden_items: "Os items de menu para ocultar por padrão no menu de postagem, a menos que cliquem em uma elipse de expansão."
+    share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento e em qual ordem."
+    site_contact_username: "Um nome de usuário(a) válido da equipe do qual enviar todas as mensagens automáticas. Se for deixado em branco, a conta padrão do sistema será utilizada."
+    site_contact_group_name: "Um nome de grupo válido para ser convidado para todas as mensagens automáticas."
+    send_welcome_message: "Envie aos(às) novos(as) usuários(as) uma mensagem de boas-vindas com um guia de início rápido."
+    send_tl1_welcome_message: "Envie aos(às) novos(as) usuários(as) do nível de confiança 1 uma mensagem de boas-vindas."
+    suppress_reply_directly_below: "Não exiba a contagem de respostas expansível em um postagem quando há apenas uma única resposta direto abaixo desta postagem."
+    suppress_reply_directly_above: "Não exiba a \"em resposta a\" expansível em uma postagem quando há apenas uma única resposta direto acima desta postagem."
+    remove_full_quote: "Remova automaticamente citações completas nas respostas diretas."
+    suppress_reply_when_quoting: "Não exiba a \"em resposta a\" expansível em uma postagem quando a postagem citar a resposta."
+    max_reply_history: "Quantidade máxima de respostas para expandir ao expandir \"em resposta a\""
+    topics_per_period_in_top_summary: "Quantidade de melhores tópicos exibidos no resumo de melhores tópicos padrão."
+    topics_per_period_in_top_page: "Quantidade de melhores tópicos exibidos nos melhores tópicos de \"Exibir mais\" expandido."
+    redirect_users_to_top_page: "Redirecione automaticamente usuários(as) novos(as) e ausentes há muito tempo para a melhor página."
+    top_page_default_timeframe: "Intervalo de tempo padrão para a página de melhores exibições. "
+    moderators_view_emails: "Permitir que moderadores(as) visualizem e-mails de usuários(as)"
+    prioritize_username_in_ux: "Mostrar primeiro o nome de usuário(a) na página do(a) usuário(a), cartão de usuário(a) e postagens (ao desativar, o nome será mostrado primeiro)"
     enable_rich_text_paste: "Ative a conversão automática de HTML para Markdown ao colar texto no compositor. (Experimental)"
-    email_token_valid_hours: "Tokens de Esqueceu senha / ativar conta são válidas por (n) horas."
-    enable_badges: "Habilita o sistema de emblemas"
+    email_token_valid_hours: "Tokens de Esqueceu a senha/ativar conta são válidos por (n) h."
+    enable_badges: "Ativar o sistema de emblemas"
     enable_whispers: "Permitir a comunicação pessoal da equipe nos tópicos."
-    blocked_email_domains: "Lista delimitada por barras (|) de domínios de email que não são permitidos registros de contas. Exemplo: mailinator.com|trashmail.net"
-    allowed_email_domains: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
-    hide_email_address_taken: "Não informe os usuários de que existe uma conta com um determinado endereço de e-mail durante a inscrição e o formulário de senha esquecida."
-    log_out_strict: "Quando deslogando, deslogar TODAS as sessões do usuário em todos os dispositivos"
-    version_checks: "Verificar no Hub do Discourse por atualizações de versão e mostre novas mensagens de versão no painel <a href='%{base_path}/admin' target='_blank'>/admin</a>"
+    blocked_email_domains: "Lista delimitada por barras de domínios de e-mail que não são permitidos para registrar contas. Por exemplo: mailinator.com|trashmail.net"
+    allowed_email_domains: "Lista delimitada por barras de domínios de e-mail que os(as) usuários(as) DEVEM usar para registrar contas. AVISO: usuários(as) com domínios de e-mail que não estão na lista não terão permissão!"
+    hide_email_address_taken: "Não informe os(as) usuários(as) de que existe uma conta com um determinado endereço de e-mail durante o cadastro e o formulário de recuperação de senha."
+    log_out_strict: "Ao sair com a conta, sair de TODAS as sessões do(a) usuário(a) em todos os dispositivos"
+    version_checks: "Procurar na central do Discourse por atualizações de versão e exibir mensagens de nova versão no painel de controle <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."
-    invite_expiry_days: "Quantos dias as chaves de convite são válidas."
-    invite_only: "Todos os novos usuários precisam ser convidados explicitamente por usuários confiáveis ou pela staff. O cadastro público está desabilitado."
-    login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
-    min_username_length: "Tamanho mínimo de nome de usuário em caracteres. ATENÇÃO: se algum usuário ou grupo existente tiver nomes menores que isso, seu site irá quebrar!"
-    max_username_length: "Tamanho máximo de nome de usuário em caracteres. ATENÇÃO: se algum usuário ou grupo existente tiver nomes maiores que isso, seu site irá quebrar!"
-    unicode_usernames: "Permitir que nomes de usuários e grupos contenham letras e números Unicode."
+    invite_expiry_days: "Por quantos dias as chaves de convite são válidas"
+    invite_only: "Todos os(as) novos(as) usuários(as) precisam ser convidados(as) explicitamente por usuários(as) de confiança ou pela equipe. O cadastro público está desativado."
+    login_required: "Exija autenticação para ler o conteúdo deste site, desative o acesso anônimo."
+    min_username_length: "Tamanho mínimo do nome do(a) usuário(a) em caracteres. AVISO: se algum usuário(a) ou grupo existente tiver nomes menores do que esse, seu site irá apresentar falhas!"
+    max_username_length: "Tamanho máximo de nome do(a) usuário(a) em caracteres. VISO: se algum usuário(a) ou grupo existente tiver nomes maiores do que esse, seu site irá apresentar falhas!"
+    unicode_usernames: "Permita nomes de usuários(a) e grupos contenham letras e números Unicode."
     reserved_usernames: "Nomes de usuário para os quais a inscrição não é permitida. O símbolo curinga * pode ser usado para corresponder a qualquer caractere zero ou mais vezes."
     min_password_length: "Comprimento mínimo da senha."
     min_admin_password_length: "Tamanho de senha mínima para Administradores."
@@ -1416,56 +1416,56 @@ pt_BR:
     max_bookmarks_per_day: "Número máximo de novos favoritos por usuário por dia."
     max_edits_per_day: "Número máximo de edições que um usuário pode fazer por dia."
     max_topics_per_day: "Número máximo de postagens que um usuário pode criar por dia."
-    max_invites_per_day: "Número máximo de convites que um usuário pode enviar por dia."
-    max_topic_invitations_per_day: "Número máximo de convites para tópicos que um usuário pode enviar por dia."
-    max_logins_per_ip_per_hour: "Número máximo de logins permitidos por endereço IP por hora"
-    max_logins_per_ip_per_minute: "Número máximo de logins permitidos por endereço IP por minuto"
-    alert_admins_if_errors_per_minute: "Número de erros por minutos para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
-    alert_admins_if_errors_per_hour: "Número de erros por hora para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
-    suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
-    limit_suggested_to_category: "Mostrar apenas tópicos da categoria atual em tópicos sugeridos."
-    suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dias."
+    max_invites_per_day: "Quantidade máxima de convites que um(a) usuário(a) pode enviar por dia."
+    max_topic_invitations_per_day: "Quantidade máxima de convites para tópicos que um(a) usuário(a) pode enviar por dia."
+    max_logins_per_ip_per_hour: "Quantidade máxima de entradas com a conta permitidas por endereço IP a cada hora"
+    max_logins_per_ip_per_minute: "Quantidade máxima de entradas com a conta permitidas por endereço IP a cada minuto"
+    alert_admins_if_errors_per_minute: "Quantidade de erros por minuto para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
+    alert_admins_if_errors_per_hour: "Quantidade de erros por hora para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
+    suggested_topics: "Quantidade de tópicos sugeridos exibidos no final de um tópico."
+    limit_suggested_to_category: "Exiba apenas tópicos da categoria atual nos tópicos sugeridos."
+    suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dia(s)."
     suggested_topics_unread_max_days_old: "Os tópicos não lidos sugeridos não devem ter mais de n dia(s)."
-    clean_up_uploads: "Remover envios sem referência para evitar hospedagem ilegal. AVISO: você pode querer fazer um backup do seu diretório de /uploads antes de habilitar essa configuração."
-    clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
-    purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
-    purge_unactivated_users_grace_period_days: "Período de carência (em dias) antes que um usuário que não tenha ativado sua conta seja excluído. Defina como 0 para nunca eliminar usuários não ativados."
-    enable_s3_uploads: "Colocar uploads no armazenamento da Amazon S3. IMPORTANTE: exige credenciais válidas da S3 (ambos id da chave de acesso & segredo da chave de acesso)."
-    s3_use_iam_profile: 'Use um <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 instance profile</a> para conceder acesso ao bucket S3. NOTA: habilitar isso requer que o Discourse esteja sendo executado em uma instância EC2 apropriadamente configurada, e sobrescreve as configurações "s3 access key key" e "s3 secret access key".'
-    s3_upload_bucket: "Nome do bucket da Amazon S3 no qual os arquivos serão enviados. AVISO: precisa ser em minúsculas, sem pontos, sem underscores."
-    s3_access_key_id: "O ID da chave de acesso do Amazon S3 que será usado para fazer upload de imagens, anexos e backups."
-    s3_secret_access_key: "A chave de acesso secreta do Amazon S3 que será usada para fazer upload de imagens, anexos e backups."
-    s3_region: "O nome da região do Amazon S3 que será usado para fazer upload de imagens e backups."
-    s3_cdn_url: "O endereço do CDN para usar para todos artefatos do s3 (por exemplo: https://cdn.algumlugar.com). AVISO: depois de mudar esta configuração você deve reconverter todas mensagens antigas."
-    avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
-    external_system_avatars_enabled: "Usar serviço de avatar externo."
+    clean_up_uploads: "Remover envios órfãos sem referência para evitar hospedagem ilegal. AVISO: você pode querer fazer um backup do seu diretório /uploads antes de ativar esta configuração."
+    clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um envio órfão ser removido."
+    purge_deleted_uploads_grace_period_days: "Carência (em dias) antes de um envio excluído ser apagado."
+    purge_unactivated_users_grace_period_days: "Período de carência (em dias) antes que um(a) usuário(a) que não tenha ativado sua conta seja excluído(a). Defina como 0 para nunca eliminar usuários(as) não ativados(as)."
+    enable_s3_uploads: "Colocar envios no armazenamento do Amazon S3. IMPORTANTE: requer credenciais válidas da S3 (A ID da chave de acesso e a chave de acesso secreta)."
+    s3_use_iam_profile: 'Use um <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil de instância AWS EC2</a> para conceder acesso ao bucket S3. OBSERVAÇÃO: ativar isso requer que o Discourse esteja sendo executado em uma instância EC2 apropriadamente configurada e sobrescreve as configurações "ID da chave de acesso S3" e "chave de acesso secreta S3".'
+    s3_upload_bucket: "Nome do bucket do Amazon S3 para o qual os arquivos serão enviados. AVISO: precisa ser em maiúsculo, sem pontos e não sublinhado."
+    s3_access_key_id: "A ID da chave de acesso do Amazon S3 que será usada para enviar imagens, anexos e backups."
+    s3_secret_access_key: "A chave de acesso secreta do Amazon S3 que será usada para enviar imagens, anexos e backups."
+    s3_region: "O nome da região do Amazon S3 que será usado para enviar imagens e backups."
+    s3_cdn_url: "A URL do CDN para usar para todos ativos do s3 (por exemplo: https://cdn.algumlugar.com). AVISO: depois de mudar esta configuração, você deve reconverter todas postagens antigas."
+    avatar_sizes: "Lista de tamanhos de avatares gerados automaticamente."
+    external_system_avatars_enabled: "Usar serviço de avatares de sistema externo."
     external_system_avatars_url: "URL do sistema externo do serviço de avatares. Substituições permitidas são {username} {first_letter} {color} {size}"
-    restrict_letter_avatar_colors: "Uma lista de valores de cor hexadecimais de 6 dígitos a serem usados para o plano de fundo do avatar de carta."
-    selectable_avatars_enabled: "Force os usuários a escolher um avatar da lista."
-    selectable_avatars: "Lista de usuários avatares podem escolher."
+    restrict_letter_avatar_colors: "Uma lista de valores de cor hexadecimais de 6 dígitos para serem usados no plano de fundo do avatar da letra."
+    selectable_avatars_enabled: "Obrigue os(as) usuários(as) a escolher um avatar da lista."
+    selectable_avatars: "Lista de avatares que os(as) usuários(as) podem escolher."
     allow_all_attachments_for_group_messages: "Permitir todos os anexos de e-mail para mensagens de grupo."
-    png_to_jpg_quality: "Qualidade do arquivo JPG convertido (1 é a qualidade mais baixa, 99 é a melhor qualidade, 100 a desabilitar)."
-    allow_staff_to_upload_any_file_in_pm: "Permitir que membros da equipe façam upload de arquivos no PM."
+    png_to_jpg_quality: "Qualidade do arquivo JPG convertido (1 é a qualidade mais baixa, 99 é a melhor qualidade, 100 para desativar)."
+    allow_staff_to_upload_any_file_in_pm: "Permita que membros da equipe enviem de arquivos em MP."
     strip_image_metadata: "Retire os metadados da imagem."
-    min_ratio_to_crop: "Taxa usada para cortar imagens altas. Digite o resultado da largura / altura."
-    simultaneous_uploads: "Número máximo de arquivos que podem ser arrastados e soltos no compositor"
-    default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
-    default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
-    tl1_requires_topics_entered: "Quantos tópicos um usuário novo deve entrar antes de ser promovido a nível de confiança 1."
-    tl1_requires_read_posts: "Quantas postagens um usuário novo deve ler antes de ser promovido a nível de confiança 1."
-    tl1_requires_time_spent_mins: "Quantos minutos um usuário novo deve ler postagens antes de ser promovido a nível de confiança 1."
-    tl2_requires_topics_entered: "Quantos tópicos um usuário deve entrar antes de ser promovido a nível de confiança 2."
-    tl2_requires_read_posts: "Quantas postagens um usuário deve ler antes de ser promovido a nível de confiança 2."
-    tl2_requires_time_spent_mins: "Quantos minutos um usuário deve ler posts antes de ser promovido a nível de confiança 2."
-    tl2_requires_days_visited: "Quantos dias um usuário deve visitar o site antes de ser promovido a nível de confiança 2."
-    tl2_requires_likes_received: "Quantas curtidas um usuário deve receber antes de ser promovido a nível de confiança 2."
-    tl2_requires_likes_given: "Quantas curtidas um usuário deve dar antes de ser promovido a nível de confiança 2."
-    tl2_requires_topic_reply_count: "Quantos tópicos um usuário deve responder antes de ser promovido a nível de confiança 2."
-    tl3_time_period: "Período de tempo (em dias) requerido para o Nível de Confiança 3"
-    tl3_requires_days_visited: "Número mínimo de dias que um usuário precisa ter visitado o site nos últimos (tl3 período de tempo) dias para se qualificar para promoção ao nível de confiança 3. Defina um período de tempo maior que tl3 para desabilitar as promoções para tl3. (0 ou superior)"
-    tl3_requires_topics_replied_to: "Número mínimo de tópicos para os quais um usuário precisa responder no último (tl3 período de tempo) dias para se qualificar para promoção ao nível de confiança 3. (0 ou superior)"
-    tl3_requires_topics_viewed: "A porcentagem de tópicos criados no último (tl3 período de tempo) dias que um usuário precisa ter visto para se qualificar para promoção para o nível de confiança 3. (0 a 100)"
-    tl3_requires_topics_viewed_cap: "O número máximo necessário de tópicos visualizados nos últimos (tl3 período de tempo) dias."
+    min_ratio_to_crop: "Taxa usada para cortar imagens altas. Digite o resultado da largura/altura."
+    simultaneous_uploads: "Quantidade máxima de arquivos que podem ser arrastados e soltos no compositor"
+    default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários(as) convidados(as)."
+    default_trust_level: "Nível de confiança (0-4) para todos(as) os novos(as) usuários(as). CUIDADO! Alterar essa configuração irá causar sérios riscos de spam."
+    tl1_requires_topics_entered: "Quantos tópicos um(a) usuário(a) novo(a) deve entrar antes de ser promovido(a) ao nível de confiança 1."
+    tl1_requires_read_posts: "Quantas postagens um(a) usuário(a) novo(a) deve ler antes de ser promovido(a) ao nível de confiança 1."
+    tl1_requires_time_spent_mins: "Por quantos minutos um(a) usuário(a) novo(a) deve ler postagens antes de ser promovido(a) ao nível de confiança 1."
+    tl2_requires_topics_entered: "Quantos tópicos um(a) usuário(a) deve inserir antes de ser promovido(a) ao nível de confiança 2."
+    tl2_requires_read_posts: "Quantas postagens um(a) usuário(a) deve ler antes de ser promovido(a) ao nível de confiança 2."
+    tl2_requires_time_spent_mins: "Por quantos minutos um(a) usuário(a) deve ler postagens antes de ser promovido(a) ao nível de confiança 2."
+    tl2_requires_days_visited: "Por quantos dias um(a) usuário(a) deve acessar o site antes de ser promovido(a) ao nível de confiança 2."
+    tl2_requires_likes_received: "Quantas curtidas um(a) usuário(a) deve receber antes de ser promovido(a) ao nível de confiança 2."
+    tl2_requires_likes_given: "Quantas curtidas um(a) usuário(a) deve dar antes de ser promovido(a) a(a) nível de confiança 2."
+    tl2_requires_topic_reply_count: "A quantos tópicos um usuário(a) deve responder antes de ser promovido(a) ao nível de confiança 2."
+    tl3_time_period: "Período de tempo (em dias) requerido para o nível de confiança 3"
+    tl3_requires_days_visited: "Quantidade mínima de dias durante os quais um(a) usuário(a) precisa ter acessado o site nos últimos (tl3 período de tempo) dias para se qualificar para ser promovido(a) ao nível de confiança 3. Defina um período de tempo maior do que tl3 para desativar as promoções para tl3. (0 ou superior)"
+    tl3_requires_topics_replied_to: "Quantidade mínima de tópicos aos quais um(a) usuário(a) precisa ter respondido nos últimos (tl3 período de tempo) dias para se qualificar para ser promovido(a) ao nível de confiança 3. (0 ou superior)"
+    tl3_requires_topics_viewed: "A porcentagem de tópicos criados nos últimos (tl3 período de tempo) dias que um usuário precisa ter visualizado para se qualificar para ser promovido(a) ao nível de confiança 3. (0 a 100)"
+    tl3_requires_topics_viewed_cap: "A quantidade máxima necessária de tópicos visualizados nos últimos (tl3 período de tempo) dias."
     tl3_requires_posts_read: "A porcentagem de postagens criadas no último (tl3 período de tempo) dias que um usuário precisa ter visto para se qualificar para a promoção para o nível de confiança 3. (0 a 100)"
     tl3_requires_posts_read_cap: "O número máximo necessário de postagens lidas nos últimos (tl3 período de tempo) dias."
     tl3_requires_topics_viewed_all_time: "O mínimo total de tópicos que um usuário precisa ter visto para se qualificar a promoção ao nível de confiança 3."
@@ -2551,49 +2551,49 @@ pt_BR:
 
         Se nada estiver visível no seu painel, outro membro da equipe pode já ter agido com base neste conselho. Uma lista de ações da staff pode ser encontrada em seus [Logs de ação da staff](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
-      title: "Você é um novo usuário do mês!"
-      subject_template: "Você é um novo usuário do mês!"
+      title: "Você é um(a) novo(a) usuário(a) do mês!"
+      subject_template: "Você é um(a) novo(a) usuário(a) do mês!"
       text_body_template: |
-        Parabéns, você ganhou o prêmio **Novo Usuário do Mês de %{month_year}**. :trophy:
+        Parabéns, você ganhou o prêmio **Novo(a) usuário(a) do mês de %{month_year}**. :trophy:
 
-        Este prêmio é concedido apenas a dois novos usuários por mês e ficará permanentemente visível na [página de emblemas].(%{url}).
+        Este prêmio é concedido apenas a dois usuários(as) novos(as) por mês e ficará permanentemente visível na [página de emblemas].(%{url}).
 
-        Você rapidamente se tornou um membro valioso da nossa comunidade. Obrigado por se cadastrar e manter o excelente trabalho!
+        Você logo se tornou um(a) integrante valioso(a) da nossa comunidade. Obrigado por se cadastrar e manter o excelente trabalho!
     queued_posts_reminder:
-      title: "Lembrete de postagens enfileiradas"
+      title: "Lembrete de postagens na fila"
       subject_template:
-        one: "%{count} post esperando para ser revisado"
-        other: "%{count} postagens esperando para serem revisadas"
+        one: "%{count} postagem aguardando revisão"
+        other: "%{count} postagens aguardando revisão"
       text_body_template: |
         Olá,
 
-        Postagens de novos usuários foram retidas para moderação e estão atualmente aguardando revisão. [Aprove-as ou rejeite-as aqui](%{base_url}/review?type=ReviewableQueuedPost).
+        Algumas postagens de novos(as) usuários(as) foram removidas pela moderação e estão aguardando revisão. [Aprove-as ou rejeite-as aqui](%{base_url}/review?type=ReviewableQueuedPost).
   unsubscribe_link: |
     Para cancelar a subscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
-    Para cancelar a subscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
+    Para cancelar a inscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
-    Você está recebendo isso porque ativou o modo de lista de discussão.
+    Você está recebendo isso porque ativou o modo lista de discussão.
 
-    Para cancelar a inscrição desses e-mails, clique [aqui](%{unsubscribe_url}).
+    Para cancelar a inscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
   email_from: "%{user_name} via %{site_name}"
   user_notifications:
-    previous_discussion: "Respostas Anteriores"
+    previous_discussion: "Respostas anteriores"
     reached_limit:
       one: "Atenção: enviamos no máximo %{count} e-mail diário. Verifique no site para ver os que podem não ter sido enviados."
       other: "Atenção: enviamos no máximo %{count} e-mails diários. Verifique no site para ver os que podem não ter sido enviados. PS: obrigado pelos acessos!"
-    in_reply_to: "Em réplica a"
+    in_reply_to: "Em resposta a"
     unsubscribe:
-      title: "Desinscrever"
-      description: "Não está interessado em receber estes emails? Não tem problema! Clique em baixo para se desinscrever instantaneamente:"
-    reply_by_email: "[Visite o Tópico](%{base_url}%{url}) ou responda este email para responder."
-    reply_by_email_pm: "[Visite a mensagem](%{base_url}%{url}) ou responda a este e-mail para responder a %{participants}."
+      title: "Cancelar associação"
+      description: "Não tem interesse em receber estes e-mails? Não tem problema! Clique abaixo para se cancelar a associação imediatamente:"
+    reply_by_email: "[Acesse o tópico](%{base_url}%{url}) ou responda a este e-mail para responder."
+    reply_by_email_pm: "[Acesse a mensagem](%{base_url}%{url}) ou responda a este e-mail para responder a %{participants}."
     only_reply_by_email: "Responda a este email para responder."
     only_reply_by_email_pm: "Responda a este e-mail para responder a %{participants}."
-    visit_link_to_respond: "[Visite o Tópico](%{base_url}%{url}) para responder."
-    visit_link_to_respond_pm: "[Visite a Mensagem](%{base_url}%{url}) para responder a %{participants}."
+    visit_link_to_respond: "[Acesse o tópico](%{base_url}%{url}) para responder."
+    visit_link_to_respond_pm: "[Acesser a mensagem](%{base_url}%{url}) para responder a %{participants}."
     posted_by: "Postado por %{username} em %{post_date}"
     pm_participants: "Participantes: %{participants}"
     invited_group_to_private_message_body: |
@@ -2611,7 +2611,7 @@ pt_BR:
 
       %{topic_url}
     invited_to_private_message_body: |
-      %{username} convidou você para uma mensagem
+      %{username} convidou para uma mensagem
 
       > **[%{topic_title}](%{topic_url})**
       >
@@ -2625,7 +2625,7 @@ pt_BR:
 
       %{topic_url}
     invited_to_topic_body: |
-      %{username} convidou você para uma discussão
+      %{username} convidou para uma discussão
 
       > **[%{topic_title}](%{topic_url})**
       >
@@ -2639,8 +2639,8 @@ pt_BR:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "Grupo Convidado do Usuário para MP"
-      subject_template: "[%{email_prefix}] %{username} convidou @%{group_name} para a mensagem '%{topic_title}'"
+      title: "Grupo convidado(a) por usuário(a) para MP"
+      subject_template: "[%{email_prefix}] %{username} convidou @%{group_name} para a mensagem \"%{topic_title}\""
       text_body_template: |
         %{header_instructions}
 
@@ -2648,8 +2648,8 @@ pt_BR:
 
         %{respond_instructions}
     user_invited_to_private_message_pm:
-      title: "Usuário Convidado para MP"
-      subject_template: "[%{email_prefix}] %{username} convidou você para uma mensagem '%{topic_title}'"
+      title: "Usuário(a) convidado(a) para MP"
+      subject_template: "[%{email_prefix}] %{username} convidou para uma mensagem \"%{topic_title}\""
       text_body_template: |
         %{header_instructions}
 
@@ -2666,8 +2666,8 @@ pt_BR:
 
         %{respond_instructions}
     user_invited_to_topic:
-      title: "Usuário convidado para o tópico"
-      subject_template: "[%{email_prefix}] %{username} te convidou para '%{topic_title}'"
+      title: "Usuário(a) convidado(a) para o tópico"
+      subject_template: "[%{email_prefix}] %{username} convidou para \"%{topic_title}\""
       text_body_template: |
         %{header_instructions}
 
@@ -2675,7 +2675,7 @@ pt_BR:
 
         %{respond_instructions}
     user_replied:
-      title: "Usuário Respondido"
+      title: "Respondido(a) pelo usuário(a)"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2686,8 +2686,8 @@ pt_BR:
 
         %{respond_instructions}
     user_replied_pm:
-      title: "Usuário respondido MP"
-      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      title: "PM respondida pelo(a) usuário(a)"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2697,7 +2697,7 @@ pt_BR:
 
         %{respond_instructions}
     user_quoted:
-      title: "Citações do usuário"
+      title: "Citações do(a) usuário(a)"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
