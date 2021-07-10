@@ -277,7 +277,7 @@ it:
         reply: |-
           [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-
-          Oh no, il mio brutto messaggio non e' ancora stato segnalato come inappropriato. :worried: Puoi contrassegnarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante 'mostra altro' <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
+          Oh no, il mio brutto messaggio non è ancora stato segnalato come inappropriato. :worried: Puoi contrassegnarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante 'mostra altro' <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
         instructions: |-
           _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per trovarla.

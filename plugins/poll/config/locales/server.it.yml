@@ -23,7 +23,7 @@ it:
       one: "Il sondaggio deve avere meno di una opzione."
       other: "Il sondaggio deve avere meno di %{count} opzioni."
     named_poll_must_have_less_options:
-      one: "Il sondaggio <strong>%{name}</strong> deve avere meno di una opzione."
+      one: "Il sondaggio <strong>%{name}</strong> deve avere meno di %{count} opzione."
       other: "Il sondaggio <strong>%{name}</strong> deve avere meno di %{count} opzioni."
     default_poll_must_have_different_options: "Il sondaggio deve avere opzioni diverse."
     named_poll_must_have_different_options: "Il sondaggio di nome <strong>%{name}</strong> deve avere opzioni diverse."

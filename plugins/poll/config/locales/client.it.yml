@@ -28,7 +28,7 @@ it:
       multiple:
         help:
           at_least_min_options:
-            one: "Scegli almeno un&#39;opzione <strong>%{count}</strong> ."
+            one: "Scegli almeno <strong>%{count}</strong> opzione."
             other: "Scegli almeno <strong>%{count}</strong> opzioni."
           up_to_max_options:
             one: "Scegli fino a <strong>%{count}</strong> opzione."
@@ -77,7 +77,7 @@ it:
         title: Crea Sondaggio
         insert: Inserisci Sondaggio
         help:
-          options_min_count: Inserisci almeno una opzione.
+          options_min_count: Inserisci almeno un'opzione.
           options_max_count: Inserisci al massimo %{count} opzioni.
           invalid_min_value: Il valore minimo deve essere almeno 1.
           invalid_max_value: Il valore massimo deve essere almeno 1, ma inferiore o uguale al numero di opzioni.

@@ -2034,7 +2034,7 @@ it:
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Questi sono gli argomenti più popolari da quando sei stato via."
   merge_posts:
     edit_reason:
-      one: "A post was merged in by %{username}"
+      one: "Un post è stato unito da %{username}"
       other: "%{count} messaggi sono stati fusi da %{username}"
     errors:
       different_topics: "I messaggi appartenenti a diversi argomenti non possono essere fusi."
@@ -2735,7 +2735,7 @@ it:
     queued_posts_reminder:
       title: "Promemoria Messaggi in Coda"
       subject_template:
-        one: "messaggi in attesa di essere revisionati "
+        one: "%{count} messaggio in attesa di essere revisionato"
         other: "%{count} messaggi in attesa di essere revisionati"
       text_body_template: |
         Ciao,
@@ -2755,7 +2755,7 @@ it:
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     reached_limit:
-      one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
+      one: "Avvertimento: Inviamo un massimo di %{count} email al giorno. Controlla il sito per vedere quelle che potrebbero essere state trattenute."
       other: "Avvertimento: Inviamo un massimo di %{count} email giornaliere. Controlla il sito per vedere quelle che potrebbero essere state trattenute. PS grazie per essere popolare!"
     in_reply_to: "In Risposta A"
     unsubscribe:
@@ -3479,9 +3479,9 @@ it:
         Questo distintivo è assegnato quando ricevi almeno 5 "Mi piace" su 300 messaggi differenti. Wow! La comunità ammira i tuoi contributi frequenti e di alta qualità nelle conversazioni.
     out_of_love:
       name: Amato
-      description: Usato %{max_likes_per_day} "Mi piace" in un giorno
+      description: Ha usato %{max_likes_per_day} "Mi piace" in un giorno
       long_description: |
-        Questo distintivo è concesso quando usi tutti i tuoi %{max_likes_per_day} "Mi piace" quotidiani. Ricordarsi di dedicare un momento e di apprezzare i messaggi che ti piacciono e apprezzi incoraggia gli altri membri della community a creare discussioni ancora più interessanti in futuro.
+        Questo distintivo è concesso quando usi tutti i tuoi %{max_likes_per_day} "Mi piace" quotidiani. Dedicare un momento per mettere "mi piace" ai messaggi che ti piacciono e apprezzi incoraggia gli altri membri della community a creare discussioni ancora più interessanti in futuro.
     higher_love:
       name: Adorato
       description: Ha messo %{max_likes_per_day} Mi piace al giorno per 5 volte
@@ -3489,7 +3489,7 @@ it:
         Questo distintivo è assegnato quando usi tutti i %{max_likes_per_day} mi piace giornalieri per 5 giorni. Grazie per aver dedicato del tempo ad incoraggiare le migliori conversazioni ogni giorno!
     crazy_in_love:
       name: Pazzo d’Amore
-      description: Usato %{max_likes_per_day} "Mi piace" in un giorno per 20 volte
+      description: Ha usato %{max_likes_per_day} "Mi piace" in un giorno per 20 volte
       long_description: |
         Questo distintivo è assegnato quando usi tutti i %{max_likes_per_day} mi piace giornalieri per 20 giorni. Wow, sei davvero un modello di comportamento per i tuoi compagni di comunità!
     thank_you:
@@ -3511,7 +3511,7 @@ it:
       name: Prima Emoji
       description: Ha usato una Emoji in un messaggio
       long_description: |
-        Questo badge è concesso la prima volta che aggiungi Emoji al tuo post: thumbsup :. Gli Emoji ti permettono di trasmettere emozioni nei tuoi messaggi, dalla felicità: smiley: alla tristezza :anguished: alla rabbia :angry: e tutte le sfumature nel mezzo :sunglasses:. Basta digitare : (due punti) o premere il pulsante della barra degli strumenti Emoji nell'editor per selezionare una tra le centinaia di scelte disponibili :ok_hand:
+        Questo distintivo è assegnato la prima volta che aggiungi Emoji a un tuo messaggio :thumbsup:. Gli Emoji ti permettono di trasmettere emozioni nei tuoi messaggi, dalla felicità :smiley: alla tristezza :anguished: alla rabbia :angry: e tutte le sfumature nel mezzo :sunglasses:. Basta digitare : (due punti) o premere il pulsante della barra degli strumenti Emoji nell'editor per selezionare una tra le centinaia di scelte disponibili :ok_hand:
     first_mention:
       name: Prima Menzione
       description: Ha menzionato un utente in un messaggio
@@ -3531,20 +3531,20 @@ it:
       name: "Nuovo Utente del Mese"
       description: Contributi eccezionali nel primo mese
       long_description: |
-        Questo distintivo è assegnato per congratularsi con due nuovi utenti ogni mese per i loro ottimi contributi globali, misurati sulla frequenza dei like ricevuti per i loro messaggi e da chi li ha dati.
+        Questo distintivo è assegnato per congratularsi con due nuovi utenti ogni mese per i loro ottimi contributi globali, misurati sulla frequenza dei "mi piace" ricevuti per i loro messaggi e da chi li ha dati.
     enthusiast:
       name: Appassionato
-      description: Visitato 10 giorni consecutivi
+      description: Presente per 10 giorni consecutivi
       long_description: |
         Questo distintivo è assegnato per aver visitato il sito per 10 giorni consecutivi. Grazie per essere rimasto nei paraggi per oltre una settimana!
     aficionado:
       name: Amatoriale
-      description: Visitato 100 giorni consecutivi
+      description: Presente per 100 giorni consecutivi
       long_description: |
         Questo distintivo è assegnato per aver visitato il sito per oltre 100 giorni consecutivi. Si tratta di oltre tre mesi!
     devotee:
       name: Devoto
-      description: Visitato 365 giorni consecutivi
+      description: Presente per 365 giorni consecutivi
       long_description: |
         Questo distintivo è assegnato per aver visitato il sito per 365 giorni consecutivi. Wow, un intero anno!
     badge_title_metadata: "%{display_name}distintivo su %{site_title}"
@@ -3563,8 +3563,8 @@ it:
     restricted_tag_disallowed: 'Non puoi applicare l''etichetta "%{tag}".'
     restricted_tag_remove_disallowed: 'Non puoi rimuovere l''etichetta "%{tag}".'
     minimum_required_tags:
-      one: "Devi selezionare almeno un'Etichetta %{count}."
-      other: "Devi selezionare almeno le Etichette %{count}."
+      one: "Devi selezionare almeno %{count} etichetta."
+      other: "Devi selezionare almeno %{count} etichette."
     upload_row_too_long: "Il file CSV dovrebbe avere un'Etichetta per riga. Opzionalmente l'Etichetta può essere seguita da una virgola, quindi dal nome del gruppo dell'Etichetta."
     forbidden:
       invalid:
@@ -3574,8 +3574,8 @@ it:
       restricted_to:
         one: '"%{tag_name}" è limitato alla categoria "%{category_names}"'
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
-      synonym: 'I sinonimi non sono ammessi. Utilizza invece &quot;%{tag_name}&quot;.'
-      has_synonyms: '&quot;%{tag_name}&quot; non può essere utilizzato perché ha dei sinonimi.'
+      synonym: 'I sinonimi non sono ammessi. Utilizza invece "%{tag_name}".'
+      has_synonyms: '"%{tag_name}" non può essere utilizzato perché ha dei sinonimi.'
     invalid_target_tag: "non può essere sinonimo di un sinonimo"
     synonyms_exist: "non è consentito finché esistono sinonimi"
   rss_by_tag: "Argomenti etichettati %{tag}"
@@ -3588,7 +3588,7 @@ it:
       no_emails: "Sfortunatamente, nessuna email amministratore è stata definita durante l'installazione, quindi potrebbe essere difficile completare la configurazione . Aggiungi una email sviluppatore nel file di configurazione o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea un account amministratore dalla console</a> ."
     confirm_email:
       title: "Conferma la tua Email"
-      message: "<p> Abbiamo inviato una mail di attivazione a <b>%{email}</b> . Segui le istruzioni nell'email per attivare il tuo account. </p><p> Se non dovesse arrivare, controlla la tua cartella spam e <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>assicurati di aver configurato correttamente l'email</a> . </p>"
+      message: "<p> Abbiamo inviato una mail di attivazione a <b>%{email}</b> . Segui le istruzioni nell'email per attivare il tuo account. </p><p> Se non dovesse arrivare, controlla la tua cartella spam e <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>assicurati di aver configurato correttamente l'email</a> .</p>"
     resend_email:
       title: "Rispedire Email di Attivazione"
       message: "<p>Abbiamo rispedito una email di attivazione a <b>%{email}</b>"
@@ -3623,7 +3623,7 @@ it:
             placeholder: "La miglior comunità di sempre"
       introduction:
         title: "Introduzione"
-        disabled: "<p> Non è stato possibile trovare alcun argomento con il titolo '%{topic_title}'. </p><ul><li> Se hai cambiato il titolo, modifica quell'argomento per cambiare il testo introduttivo del tuo sito. </li><li> Se hai eliminato questo argomento, creane un altro avente per titolo '%{topic_title}'. Il contenuto del primo messaggio è il testo introduttivo del tuo sito. </li></ul>"
+        disabled: "<p> Non è stato possibile trovare alcun argomento con il titolo \"%{topic_title}\". </p><ul><li> Se hai cambiato il titolo, modifica quell'argomento per cambiare il testo introduttivo del tuo sito. </li><li> Se hai eliminato questo argomento, creane un altro avente per titolo '%{topic_title}'. Il contenuto del primo messaggio è il testo introduttivo del tuo sito. </li></ul>"
         fields:
           welcome:
             label: "Argomento di Benvenuto"
@@ -3638,10 +3638,10 @@ it:
             choices:
               open:
                 label: "Pubblico"
-                description: "Chiunque può accedere a questa community"
+                description: "Chiunque può accedere a questa comunità"
               restricted:
                 label: "Privato"
-                description: "Solo gli utenti registrati possono accedere a questa community"
+                description: "Solo gli utenti registrati possono accedere a questa comunità"
           privacy_options:
             description: "Come fanno i nuovi utenti a registrare un account?"
             choices:
@@ -3694,7 +3694,7 @@ it:
         fields:
           logo:
             label: "Logo Primario"
-            description: "L'immagine del logo nell'angolo in alto a sinistra del tuo sito. Usa un'ampia immagine rettangolare con un'altezza di 120 e un rapporto d'aspetto superiore a 3:1"
+            description: "L'immagine del logo nell'angolo in alto a sinistra del tuo sito. Usa un'ampia immagine rettangolare con un'altezza di 120 e una proporzione superiore a 3:1"
           logo_small:
             label: "Logo quadrato"
             description: "Una versione quadrata del tuo logo. Mostrata nell'angolo in alto a sinistra del tuo sito quando scorri verso il basso, sul browser, e nelle condivisioni su social media. Idealmente più grande di 512x512."
@@ -3730,11 +3730,11 @@ it:
       invites:
         title: "Invita lo Staff"
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."
-        disabled: "Poiché le connessioni locali sono disabilitate, non è possibile inviare inviti a nessuno. Per favore, prosegui con il passo successivo."
+        disabled: "Poiché gli accessi locali sono disabilitati, non è possibile inviare inviti a nessuno. Per favore, prosegui con il passo successivo."
       finished:
         title: "Il tuo Discourse è Pronto!"
         description: |
-          <p>Se vuoi cambiare queste impostazioni, <b>riesegui questa procedura guidata in qualsiasi momento</b>, o visita <a href='%{base_path}/admin' target='_blank'>il pannello amministrativo</a>; lo trovi accanto all'icona della chiave inglese nel menu del sito.</p>
+          <p>Se vuoi cambiare queste impostazioni, <b>riesegui questa procedura guidata in qualsiasi momento</b>, o visita <a href='%{base_path}/admin' target='_blank'>il pannello di amministrazione</a>; lo trovi accanto all'icona della chiave inglese nel menu del sito.</p>
           <p>È facile personalizzare il tuo Discourse ancora di più utilizzando il nostro potente sistema di temi. Per esempio, consulta i <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">temi e componenti principali</a> su <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
           <p>Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>nel costruire la tua nuova comunità!</a></p>
   search_logs:
@@ -3745,13 +3745,13 @@ it:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'
       group_mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'
       quoted: '%{username} ti ha citato in ''%{topic}'' - %{site_title}'
-      replied: '%{username} ti ha risposto ''%{topic}'' - %{site_title}'
+      replied: '%{username} ti ha risposto in ''%{topic}'' - %{site_title}'
       posted: '%{username} ha pubblicato in ''%{topic}'' - %{site_title}'
       private_message: '%{username} ti ha inviato un messaggio privato in ''%{topic}'' - %{site_title}'
-      linked: '%{username} collegato al tuo post da ''%{topic}'' - %{site_title}'
+      linked: '%{username} ha collegato il tuo messaggio da ''%{topic}'' - %{site_title}'
       watching_first_post: '%{username} ha creato un nuovo Argomento ''%{topic}'' - %{site_title}'
       confirm_title: "Notifiche abilitate - %{site_title}"
-      confirm_body: "Successo! Le notifiche sono state abilitate."
+      confirm_body: "Operazione riuscite! Le notifiche sono state abilitate."
       custom: "Notifica da %{username} su %{site_title}"
   staff_action_logs:
     not_found: "non trovato"
@@ -3783,11 +3783,11 @@ it:
     conflict: "C'è stato un conflitto di aggiornamento che ti impedisce di compiere questa azione."
     reasons:
       post_count: "I primi messaggi di ogni utente devono essere approvati dallo staff. Vedi 'approve_post_count'."
-      trust_level: "Le risposte degli utenti con un basso Livello di Esperienza devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Gli Argomenti di utenti con basso Livello Esperienza devono essere approvati dallo staff. Vedi `approve_new_topics_unless_trust_level`."
+      trust_level: "Le risposte degli utenti con un basso livello di attendibilità devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."
+      new_topics_unless_trust_level: "Gli Argomenti di utenti con basso livello di attendibilità devono essere approvati dallo staff. Vedi `approve_new_topics_unless_trust_level`."
       fast_typer: "Il nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido, sembrerebbe il comportamento di un bot o di uno spammer. Vedi `min_first_post_typing_time`."
       auto_silence_regexp: "Nuovo utente il cui primo post corrisponde all'impostazione `auto_silence_first_post_regex`."
-      staged: "Nuovi argomenti e post per gli Utenti Temporanei devono essere approvati dallo staff. Vedi `approve_unless_staged`."
+      staged: "Nuovi argomenti e messaggi per gli Utenti Temporanei devono essere approvati dallo staff. Vedi `approve_unless_staged`."
       category: "I post in questa Categoria richiedono l'approvazione manuale da parte dello staff. Vedi le impostazioni della categoria."
       must_approve_users: "Tutti i nuovi utenti devono essere approvati dallo staff. Vedi 'must_approve_users'."
       invite_only: "Tutti i nuovi utenti dovrebbero essere invitati. Vedi `invite_only`."
@@ -3847,7 +3847,7 @@ it:
         title: "Approva Messaggio"
         confirm_closed: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"
       reject_post:
-        title: "Scarta Messaggio"
+        title: "Rifiuta Messaggio"
       approve_user:
         title: "Approva Utente"
       reject_user:
@@ -3859,7 +3859,7 @@ it:
           title: "Elimina e blocca Utente"
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
       reject:
-        title: "Scarta"
+        title: "Rifiuta"
         bundle_title: "Rifiuta..."
       reject_and_suspend:
         title: "Rifiuta e Sospendi l'utente"
@@ -3882,8 +3882,7 @@ it:
     not_in_allowed_guild: "Autenticazione non riuscita. Non sei un membro di una gilda Discord consentita."
   old_keys_reminder:
     title: "Promemoria sulle vecchie credenziali"
-    body: |
-      Ciao! Questo è un promemoria di sicurezza annuale di routine dall&#39;istanza di Discourse. A titolo di cortesia, desideriamo informarti che le seguenti credenziali utilizzate nell&#39;istanza di Discourse non sono state aggiornate da più di due anni: %{keys} Al momento non è richiesta alcuna azione, tuttavia è considerata una buona pratica di sicurezza eseguire un aggiornamento di tutte le credenziali importanti ogni pochi anni.
+    body: "Ciao! Questo è un promemoria di sicurezza annuale di routine dalla tua istanza Discourse. \n\nPer tua utilità, desideriamo informarti che le seguenti credenziali utilizzate nella tua istanza di Discourse non sono state aggiornate da più di due anni: \n\n%{keys} \n\nAl momento non è richiesta alcuna azione, tuttavia è considerata una buona pratica di sicurezza eseguire un aggiornamento di tutte le credenziali importanti periodicamente.\n"
   create_linked_topic:
     topic_title_with_sequence:
       one: "%{topic_title} (Parte %{count})"
