@@ -18,7 +18,7 @@ task 'assets:precompile:before' do
   # is recompiled
   Emoji.clear_cache
 
-  if (!`which terser`.empty? || !`which uglifyjs`.empty?) && !ENV['SKIP_NODE_UGLIFY']
+  if !`which terser`.empty? && !ENV['SKIP_NODE_UGLIFY']
     $node_uglify = true
   end
 
@@ -102,11 +102,8 @@ def compress_node(from, to)
   source_map_url = cdn_path "/assets/#{to}.map"
   base_source_map = assets_path + assets_additional_path
 
-  # TODO: Remove uglifyjs when base image only includes terser
-  js_compressor = `which terser`.empty? ? 'uglifyjs' : 'terser'
-
   cmd = <<~EOS
-    #{js_compressor} '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}'"
+    terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}'"
   EOS
 
   STDERR.puts cmd
