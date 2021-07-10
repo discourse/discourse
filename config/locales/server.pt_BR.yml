@@ -64,52 +64,52 @@ pt_BR:
       modifier_values: "about.json contém valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
       unpack_failed: "Falha ao descompactar o arquivo"
-      file_too_big: "O arquivo não-comprimido é muito grande."
+      file_too_big: "O arquivo não compactado é muito grande."
       unknown_file_type: "O arquivo que você enviou não parece ser um tema válido do Discourse."
     errors:
-      component_no_user_selectable: "Componentes do tema não podem ser selecionados pelo usuário"
+      component_no_user_selectable: "Componentes do tema não podem ser selecionados pelo(a) usuário(a)"
       component_no_default: "Componentes do tema não podem ser o tema padrão"
       component_no_color_scheme: "Componentes do tema não podem ter paletas de cores"
-      no_multilevels_components: "Temas com temas filhos não podem ser temas filhos em si"
-      optimized_link: Links otimizados de imagem são efêmeros e não devem ser incluídos no código-fonte do tema.
+      no_multilevels_components: "Temas com temas filhos não podem ser temas filhos"
+      optimized_link: Links otimizados de imagem são temporários e não devem ser incluídos no código-fonte do tema.
     settings_errors:
-      invalid_yaml: "O YAML fornecido é inválido."
-      data_type_not_a_number: "A configuração do tipo `%{name}` não é suportada. Os tipos suportados são `integer`, `bool`, `list`, `enum` e `upload`"
-      name_too_long: "Aqui está uma configuração com um nome muito longo. Comprimento máximo é de 255"
-      default_value_missing: "Definindo `%{name}` não tem valor padrão"
-      default_not_match_type: "Definindo `%{name}` o tipo de valor padrão não corresponde ao tipo de configuração."
-      default_out_range: "Definindo `%{name}` o valor padrão não está no intervalo especificado."
+      invalid_yaml: "O YAML informado é inválido."
+      data_type_not_a_number: "A configuração do tipo \"%{name}\" não é compatível. Os tipos compatíveis são \"integer\", \"bool\", \"list\", \"enum\" e \"upload\""
+      name_too_long: "Esta é uma configuração com um nome muito longo. O comprimento máximo é de 255"
+      default_value_missing: "A configuração \"%{name}\" não tem valor padrão"
+      default_not_match_type: "O tipo de valor padrão da configuração \"%{name}\" não corresponde ao tipo de configuração."
+      default_out_range: "O valor padrão da configuração \"%{name}\" não está no intervalo especificado."
       enum_value_not_valid: "O valor selecionado não é uma das opções de enumeração."
       number_value_not_valid: "O novo valor não está dentro do intervalo permitido."
       number_value_not_valid_min_max: "Deve estar entre %{min} e %{max}."
-      number_value_not_valid_min: "Deve ser maior ou igual a%{min}."
-      number_value_not_valid_max: "Deve ser menor ou igual a%{max}."
-      string_value_not_valid: "O novo valor não está dentro do intervalo permitido."
+      number_value_not_valid_min: "Deve ser maior ou igual a %{min}."
+      number_value_not_valid_max: "Deve ser menor ou igual a %{max}."
+      string_value_not_valid: "O tamanho do novo valor não está dentro do intervalo permitido."
       string_value_not_valid_min_max: "Precisa ter entre %{min} e %{max} caracteres."
-      string_value_not_valid_min: "Deve ser pelo menos%{min} characters long."
-      string_value_not_valid_max: "Deve ser no máximo%{max} characters long."
+      string_value_not_valid_min: "Deve ser pelo menos %{min} caracteres."
+      string_value_not_valid_max: "Deve ser no máximo %{max} caracteres."
     locale_errors:
-      top_level_locale: "A chave de nível superior em um arquivo de código de idioma precisa corresponder ao nome do código do idioma"
+      top_level_locale: "A chave de nível superior em um arquivo local deve corresponder ao nome do local"
       invalid_yaml: "Tradução YAML inválida"
   emails:
     incoming:
       default_subject: "Este tópico precisa de um título"
       show_trimmed_content: "Exibir conteúdo abreviado"
-      maximum_staged_user_per_email_reached: "Atingido número máximo de usuários de teste criados por email."
+      maximum_staged_user_per_email_reached: "A quantidade máxima de usuários(as) de teste criados(as) por email foi atingida."
       no_subject: "(sem assunto)"
       no_body: "(sem corpo)"
       errors:
-        empty_email_error: "Ocorre quando o email bruto recebido estiver em branco."
-        no_message_id_error: "Ocorre quando o email não possui cabeçalho 'id-mensagem'."
-        auto_generated_email_error: "Ocorre quando o cabeçalho 'precedência' estiver definido como: lista, lixo eletrônico, lote ou resposta_automática, ou quando outro cabeçalho contiver: enviado_automaticamente, respondido_automaticamente ou gerado_automaticamente."
-        no_body_detected_error: "Ocorre quando não conseguimos extrair um corpo e não há anexos."
-        no_sender_detected_error: "Acontece quando não conseguimos encontrar um endereço de e-mail válido no cabeçalho \"De\"."
-        from_reply_by_address_error: "Acontece quando o cabeçalho De corresponde à resposta por endereço de e-mail."
-        inactive_user_error: "Ocorre quando o remetente não está ativo."
-        silenced_user_error: "Acontece quando o remetente foi silenciado."
-        bad_destination_address: "Ocorre quando nenhum dos endereços de e-mail nos campos Para/Cc/Cco correspondeu ao endereço de e-mail recebido."
-        strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
-        insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria onde não possui nível de confiança necessário."
+        empty_email_error: "Ocorre quando o e-mail não processado recebido estiver em branco."
+        no_message_id_error: "Ocorre quando o e-mail não tem cabeçalho \"Message-Id\"."
+        auto_generated_email_error: "Ocorre quando o cabeçalho \"precedência\" estiver definido como: lista, lixo eletrônico, em massa ou resposta automática, ou quando outro cabeçalho contiver: enviado automaticamente, respondido automaticamente ou gerado automaticamente."
+        no_body_detected_error: "Ocorre quando não for possível extrair o corpo e não houver anexos."
+        no_sender_detected_error: "Ocorre quando não for possível encontrar um endereço de e-mail válido no cabeçalho De."
+        from_reply_by_address_error: "Ocorre quando o cabeçalho De corresponder à resposta por endereço de e-mail."
+        inactive_user_error: "Ocorre quando o(a) remetente não está ativo(a)."
+        silenced_user_error: "Ocorre quando o(a) remetente for silenciado(a)."
+        bad_destination_address: "Ocorre quando nenhum dos endereços de e-mail nos campos Para/Cc/Cco tiver correspondido ao endereço do e-mail recebido."
+        strangers_not_allowed_error: "Ocorre quando um(a) usuário(a) tiver tentado criar um novo tópico em uma categoria da qual não é membro."
+        insufficient_trust_level_error: "Ocorre quando um(a) usuário(a) tenta criar um novo tópico em uma categoria para a qual não tem o nível de confiança necessário."
         reply_user_not_matching_error: "Ocorre quando uma resposta chegou de um endereço de e-mail diferente do qual a notificação foi enviada."
         topic_not_found_error: "Ocorre quando uma resposta foi recebida, mas o tópico relacionado foi excluído."
         topic_closed_error: "Ocorre quando uma resposta foi recebida, mas o tópico relacionado foi fechado."
@@ -173,12 +173,12 @@ pt_BR:
         other: "Você especificou as escolhas inválidas %{name}"
       default_categories_already_selected: "Você não pode selecionar uma categoria usada em outra lista."
       default_tags_already_selected: "Você não pode selecionar uma etiqueta usada em outra lista."
-      s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
-      enable_s3_uploads_is_required: "Você não pode habilitar o inventário para o S3 a não ser que tenha habilitado os uploads para o S3"
-      s3_backup_requires_s3_settings: "Você não pode usar o S3 como local de backup não ser que você tenha provido o '%{setting_name}'."
-      s3_bucket_reused: "Você não pode usar o mesmo bucket para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um bucket diferente ou use um caminho diferente para cada bucket."
-      secure_media_requirements: "Uploads S3 devem ser habilitados antes da habilitação de media segura."
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode forçar 2FA se a autenticação local está desabilitada."
+      s3_upload_bucket_is_required: "Você não pode ativar envios para o S3, a não ser que tenha informado o \"s3_upload_bucket\"."
+      enable_s3_uploads_is_required: "Você não pode ativar o inventário para o S3, a não ser que tenha ativado os envios para o S3."
+      s3_backup_requires_s3_settings: "Você não pode usar o S3 como local de backup, a não ser que você tenha informado o \"%{setting_name}\"."
+      s3_bucket_reused: "Você não pode usar o mesmo bucket para \"s3_upload_bucket\" e \"s3_backup_bucke\"'. Escolha um bucket diferente ou use um caminho diferente para cada bucket."
+      secure_media_requirements: "Envios S3 devem ser ativados antes da mídia segura."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode impor a 2FA se a autenticação local estiver desativada."
     conflicting_google_user_id: 'O ID da Conta do Google para esta conta foi alterado. A intervenção do pessoal é necessária por razões de segurança. Por favor contate a equipe e aponte-os para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Desculpe, não foi possível gerar uma visualização para esta página web, porque o servidor '%{hostname}' não pôde ser encontrado. Em vez de uma pré-visualização, apenas um link aparecerá em sua postagem. :cry:"
@@ -245,7 +245,7 @@ pt_BR:
       other: "%{count} respostas a mais"
     loading: "Carregando Discussão..."
     permalink: "Permalink"
-    imported_from: "Este é um tópico de discussão companheiro para a mensagem original em %{link}"
+    imported_from: "Este é um tópico de discussão auxiliar para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
     replies:
       one: "%{count} resposta"
@@ -254,45 +254,45 @@ pt_BR:
       one: "%{count} curtida"
       other: "%{count} curtidas"
     last_reply: "Última resposta"
-    created: "Criado"
+    created: "Criado(a)"
     new_topic: "Criar um novo tópico"
-  no_mentions_allowed: "Desculpe, você não pode mencionar outros usuários."
+  no_mentions_allowed: "Desculpe, você não pode mencionar outros(as) usuários(as)."
   too_many_mentions:
-    one: "Desculpe, você pode mencionar apenas %{count} usuário em um post."
-    other: "Desculpe, você pode mencionar apenas %{count} usuários em uma mensagem."
-  no_mentions_allowed_newuser: "Desculpe, usuários novos não podem mencionar outros usuários."
+    one: "Desculpe, você pode mencionar apenas um(a) usuário(a) em uma postagem."
+    other: "Desculpe, você pode mencionar apenas %{count} usuários(as) em uma postagem."
+  no_mentions_allowed_newuser: "Desculpe, usuários(as) novos(as) não podem mencionar outros(as) usuários(as)."
   too_many_mentions_newuser:
-    one: "Desculpe, usuários novos podem mencionar apenas um usuário em uma mensagem."
-    other: "Desculpe, usuários novos podem mencionar apenas %{count} usuários em uma mensagem."
-  no_attachments_allowed: "Desculpe, novos usuários não podem colocar anexos nas mensagens."
+    one: "Desculpe, usuários(as) novos(as) podem mencionar apenas um(a) usuário(as) em uma postagem."
+    other: "Desculpe, usuários(as) novos(as) podem mencionar apenas %{count} usuários(as) em uma postagem."
+  no_attachments_allowed: "Desculpe, novos(as) usuários(as) não podem inserir anexos nas postagens."
   too_many_attachments:
-    one: "Desculpe, novos usuários podem colocar apenas %{count} anexo nas suas postagens."
-    other: "Desculpe, novos usuários podem colocar apenas %{count} anexos nas suas mensagens."
-  no_links_allowed: "Desculpe, usuários novos não podem colocar links nas postagens."
+    one: "Desculpe, novos(as) usuários(as) podem inserir apenas %{count} anexo em uma postagem."
+    other: "Desculpe, novos(as) usuários(as) podem inserir apenas %{count} anexos em uma postagem."
+  no_links_allowed: "Desculpe, usuários(as) novos(as) não podem inserir links nas postagens."
   links_require_trust: "Desculpe, você não pode incluir links em suas postagens."
   too_many_links:
-    one: "Desculpe, usuários novos podem colocar apenas %{count} link nas postagens."
-    other: "Desculpe, usuários novos podem colocar apenas %{count} links nas postagens."
-  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida:%{word}"
+    one: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} link em uma postagem."
+    other: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} links em uma postagem."
+  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida: %{word}"
   contains_blocked_words: "Sua postagem contém várias palavras que não são permitidas: %{words}"
-  spamming_host: "Desculpe, você não pode colocar um link para este site."
-  user_is_suspended: "Usuários suspensos não tem permissão para postar."
-  topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
+  spamming_host: "Desculpe, você não pode postar um link para esse host."
+  user_is_suspended: "Usuários(as) suspensos(as) não têm permissão para postar."
+  topic_not_found: "Ocorreu um erro. Talvez este tópico tenha sido fechado ou removido enquanto você estava visualizando."
   not_accepting_pms: "Desculpe, %{username} não está aceitando mensagens no momento."
-  max_pm_recipients: "Desculpe, você pode enviar uma mensagem para o máximo %{recipients_limit} destinatários."
+  max_pm_recipients: "Desculpe, você pode enviar uma mensagem para no máximo %{recipients_limit} destinatários."
   pm_reached_recipients_limit: "Desculpe, você não pode ter mais de %{recipients_limit} destinatários em uma mensagem."
-  removed_direct_reply_full_quotes: "Citação removida automaticamente de todo a postagem anterior."
+  removed_direct_reply_full_quotes: "Citação removida automaticamente de toda a postagem anterior."
   create_pm_on_existing_topic: "Desculpe, você não pode criar uma MP em um tópico existente."
-  just_posted_that: "é demasiado similar ao que postaste recentemente"
+  just_posted_that: "é muito parecido com a sua postagem recente"
   invalid_characters: "contém caracteres inválidos"
-  is_invalid: "parece pouco claro; é uma frase completa?"
+  is_invalid: "não faz muito sentido. É uma frase completa?"
   next_page: "próxima página →"
   prev_page: "← página anterior"
   page_num: "Página %{num}"
   home_title: "Início"
-  topics_in_category: "Tópicos na categoria '%{category}'"
-  rss_posts_in_topic: "RSS feed de '%{topic}'"
-  rss_topics_in_category: "RSS feed dos tópicos da categoria '%{category}'"
+  topics_in_category: "Tópicos na categoria \"%{category}\""
+  rss_posts_in_topic: "RSS feed de \"%{topic}\""
+  rss_topics_in_category: "RSS feed dos tópicos da categoria \"%{category}\""
   rss_num_posts:
     one: "%{count} mensagem"
     other: "%{count} mensagens"
@@ -300,16 +300,16 @@ pt_BR:
   private_message_abbrev: "Msg"
   rss_description:
     latest: "Últimos tópicos"
-    top: "Principais tópicos"
+    top: "Tópicos principais"
     top_all: "Todos os tópicos principais"
     top_yearly: "Tópicos principais anuais"
-    top_quarterly: "Principais tópicos trimestrais"
+    top_quarterly: "Tópicos principais trimestrais"
     top_monthly: "Tópicos principais mensais"
     top_weekly: "Tópicos principais semanais"
     top_daily: "Tópicos principais diários"
-    posts: "Últimos tópicos"
+    posts: "Últimas postagens"
     private_posts: "Últimas mensagens pessoais"
-    group_posts: "Últimos posts de %{group_name}"
+    group_posts: "Últimas postagens de %{group_name}"
     group_mentions: "Últimas citações de %{group_name}"
     user_posts: "Últimos posts por @%{username}"
     user_topics: "Últimos tópicos por @%{username}"
@@ -424,56 +424,56 @@ pt_BR:
         name: "Nome da Categoria"
       topic:
         title: "Título"
-        featured_link: "Link Em Destaque"
+        featured_link: "Link em destaque"
         category_id: "Categoria"
       post:
         raw: "Corpo"
       user_profile:
-        bio_raw: "Sobre Mim"
+        bio_raw: "Sobre mim"
     errors:
       models:
         topic:
           attributes:
             base:
               warning_requires_pm: "Você só pode anexar avisos a mensagens pessoais."
-              too_many_users: "Você só pode enviar avisos para um usuário de cada vez."
-              cant_send_pm: "Desculpe, você não pode enviar uma mensagem pessoal para esse usuário."
-              no_user_selected: "Você deve escolher um usuário válido."
-              reply_by_email_disabled: "Responder por e-mail foi desativado."
-              target_user_not_found: "Um dos usuários para os quais você está enviando esta mensagem não foi encontrado."
+              too_many_users: "Você só pode enviar avisos para um(a) usuário(a) de cada vez."
+              cant_send_pm: "Desculpe, você não pode enviar uma mensagem pessoal para esse(a) usuário(a)."
+              no_user_selected: "Você deve escolher um(a) usuário(a) válido(a)."
+              reply_by_email_disabled: "Respostas por e-mail foram desativadas."
+              target_user_not_found: "Um(a) dos(as) usuários(as) para quem você está enviando esta mensagem não foi encontrado(a)."
             featured_link:
               invalid: "é inválida. A URL deve conter http:// ou https://."
-              invalid_category: "não pode ser editado nesta categoria."
+              invalid_category: "não pode ser editado(a) nesta categoria."
         user:
           attributes:
             password:
-              common: "é uma das 10000 senhas mais comuns. Por favor, use uma senha mais segura."
-              same_as_username: "é igual o seu nome de usuário. Por favor use uma senha mais segura."
-              same_as_email: "é igual o seu email. Por favor use uma senha mais segura."
-              same_as_current: "A senha inserida é a mesma que a sua atual senha. Favor inserir uma nova e mais segura."
-              same_as_name: "é o mesmo que o seu nome."
-              unique_characters: "tem muitos caracteres repetidos. Por favor, use uma senha mais segura."
+              common: "é uma das 10.000 senhas mais comuns. Use uma senha mais segura."
+              same_as_username: "é igual o seu nome do(a) usuário(a). Use uma senha mais segura."
+              same_as_email: "é igual o seu e-mail. Use uma senha mais segura."
+              same_as_current: "é igual à sua senha atual."
+              same_as_name: "é igual ao seu nome."
+              unique_characters: "tem muitos caracteres repetidos. Use uma senha mais segura."
             username:
-              same_as_password: "é o mesmo que sua senha."
+              same_as_password: "é igual à sua senha."
             name:
-              same_as_password: "é o mesmo que sua senha."
+              same_as_password: "é igual à sua senha."
             ip_address:
-              signup_not_allowed: "Cadastro não é permitido a partir desta conta."
+              signup_not_allowed: "Não é permitido cadastrar esta conta."
         user_email:
           attributes:
             user_id:
-              reassigning_primary_email: "A reatribuição de um e-mail principal a outro usuário não é permitida."
+              reassigning_primary_email: "A reatribuição de um e-mail primário a outro(a) usuário(a) não é permitida."
         color_scheme_color:
           attributes:
             hex:
               invalid: "Não é uma cor válida"
         post_reply:
           base:
-            different_topic: "Postar e responder devem pertencer ao mesmo tópico."
+            different_topic: "A postagem e a resposta devem pertencer ao mesmo tópico."
         web_hook:
           attributes:
             payload_url:
-              invalid: "URL inválida. A URL deve conter http:// ou https://. Espaço em branco não é permitido."
+              invalid: "URL inválida. A URL deve conter http:// ou https://. Não é permitido ter espaço em branco."
         custom_emoji:
           attributes:
             name:
@@ -487,7 +487,7 @@ pt_BR:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'As seguintes chave(s) de interpolação são inválidas: "%{keys}"'
+              invalid_interpolation_keys: 'As seguintes chaves de interpolação são inválidas: "%{keys}"'
         watched_word:
           attributes:
             word:
