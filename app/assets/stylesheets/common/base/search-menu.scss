@@ -267,8 +267,10 @@
         margin-right: 0.5em;
       }
 
-      .search-item-everything {
-        color: var(--primary-low-mid);
+      .search-item-user {
+        .avatar {
+          margin-right: 0.5em;
+        }
       }
     }
   }

@@ -2,7 +2,6 @@ import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
 import { avatarImg } from "discourse/widgets/post";
-import Category from "discourse/models/category";
 import { createWidget } from "discourse/widgets/widget";
 import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
@@ -11,9 +10,6 @@ import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 
-const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]+)$/gi;
-
-const searchAssistantTerms = ["#", "in:", "status:", "order:"];
 const inSearchShortcuts = [
   "in:title",
   "in:personal",
@@ -238,24 +234,11 @@ createWidget("search-menu-results", {
   tagName: "div.results",
 
   html(attrs) {
-    const searchModifier = searchAssistantTerms.find(
-      (mod) => attrs.term === mod || attrs.term.endsWith(` ${mod}`)
-    );
-
-    if (searchModifier) {
+    if (attrs.suggestionKeyword) {
       return this.attach("search-menu-assistant", {
         fullTerm: attrs.term,
-        searchModifier,
-      });
-    }
-
-    const categorySlugMatch = attrs.term.match(CATEGORY_SLUG_REGEXP);
-
-    if (categorySlugMatch) {
-      return this.attach("search-menu-assistant", {
-        fullTerm: attrs.term,
-        searchModifier: "#",
-        categorySlugMatch,
+        suggestionKeyword: attrs.suggestionKeyword,
+        results: attrs.suggestionResults || [],
       });
     }
 
@@ -382,16 +365,12 @@ createWidget("search-menu-assistant", {
     }
 
     const content = [];
-    const { fullTerm, searchModifier } = attrs;
-    const prefix = fullTerm.split(searchModifier)[0].trim() || null;
+    const { fullTerm, suggestionKeyword } = attrs;
+    const prefix = fullTerm.split(suggestionKeyword)[0].trim() || null;
 
-    switch (searchModifier) {
+    switch (suggestionKeyword) {
       case "#":
-        const match = attrs.categorySlugMatch
-          ? attrs.categorySlugMatch[0].replace("#", "")
-          : "";
-
-        Category.search(match).map((category) => {
+        attrs.results.map((category) => {
           const slug = prefix
             ? `${prefix} #${category.slug} `
             : `#${category.slug} `;
@@ -400,6 +379,21 @@ createWidget("search-menu-assistant", {
             this.attach("search-menu-assistant-item", {
               prefix: prefix,
               category,
+              slug,
+            })
+          );
+        });
+        break;
+      case "@":
+        attrs.results.map((user) => {
+          const slug = prefix
+            ? `${prefix} @${user.username} `
+            : `@${user.username} `;
+
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              prefix: prefix,
+              user,
               slug,
             })
           );
@@ -447,6 +441,27 @@ createWidget("search-menu-assistant-item", {
             category: attrs.category,
             allowUncategorized: true,
           }),
+        ]
+      );
+    } else if (attrs.user) {
+      const userResult = [
+        avatarImg("small", {
+          template: attrs.user.avatar_template,
+          username: attrs.user.username,
+        }),
+        h("span.username", formatUsername(attrs.user.username)),
+      ];
+
+      return h(
+        "a.widget-link.search-link",
+        {
+          attributes: {
+            href: "#",
+          },
+        },
+        [
+          h("span.search-item-prefix", attrs.prefix),
+          h("span.search-item-user", userResult),
         ]
       );
     } else {
