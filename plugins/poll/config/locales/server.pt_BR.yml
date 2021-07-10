@@ -41,9 +41,9 @@ pt_BR:
     topic_must_be_open_to_vote: "O tópico precisa estar aberto para votar."
     poll_must_be_open_to_vote: "A votação precisa estar aberta para votar."
     topic_must_be_open_to_toggle_status: "O tópico precisar estar aberto para mudar seu status."
-    only_staff_or_op_can_toggle_status: "Somente um membro da staff ou o criador do tópico pode mudar o status da votação."
-    insufficient_rights_to_create: "Você não tem permissão para criar votações."
+    only_staff_or_op_can_toggle_status: "Somente um membro da equipe ou o autor(a) original pode mudar o status da enquete."
+    insufficient_rights_to_create: "Você não tem permissão para criar enquetes."
     email:
-      link_to_poll: "Clique para ver a votação."
+      link_to_poll: "Clique para visualizar a enquete."
     user_field:
-      no_data: "Sem Dados"
+      no_data: "Sem dados"

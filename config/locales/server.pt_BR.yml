@@ -6,9 +6,9 @@
 
 pt_BR:
   dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "D de MMMM de YYYY h:mma"
+    short_date_no_year: "D de MMM"
+    short_date: "D de MMM de YYYY"
+    long_date: "D de MMMM de YYYY, h:mma"
   datetime_formats: &datetime_formats
     formats:
       short: "%d/%m/%Y"
@@ -38,28 +38,28 @@ pt_BR:
     <<: *datetime_formats
   title: "Discourse"
   topics: "Tópicos"
-  posts: "mensagens"
+  posts: "postagens"
   views: "visualizações"
   loading: "Carregando"
-  powered_by_html: 'Desenvolvido por <a href="https://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript habilitado'
+  powered_by_html: 'Desenvolvido por <a href="https://www.discourse.org">Discourse</a>, melhor visualizado com o JavaScript ativado'
   sign_up: "Cadastrar-se"
   log_in: "Entrar"
   submit: "Enviar"
-  purge_reason: "Automaticamente eliminada por ser uma conta abandonada, não ativada"
-  disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
-  anonymous: "Anônimo"
-  remove_posts_deleted_by_author: "Deletado pelo autor"
-  redirect_warning: "Não foi possível confirmar se o link selecionado foi publicado no fórum. Se você deseja continuar mesmo assim, selecione o link abaixo."
+  purge_reason: "Automaticamente excluída por ser uma conta abandonada, desativada"
+  disable_remote_images_download_reason: "O download de imagens remotas foi desativado porque não havia espaço suficiente disponível em disco."
+  anonymous: "Anônimo(a)"
+  remove_posts_deleted_by_author: "Excluído(a) pelo autor(a)"
+  redirect_warning: "Não foi possível confirmar se o link selecionado foi postado no fórum. Se deseja continuar mesmo assim, selecione o link abaixo."
   on_another_topic: "Em outro tópico"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, paleta de cores inválida"
-    other_error: "Algo de errado aconteceu ao atualizar o tema"
+    other_error: "Ocorreu um erro ao atualizar o tema"
     compile_error:
       unrecognized_extension: "Extensão de arquivo não reconhecida: %{extension}"
     import_error:
-      about_json: "Erro de importação: about.json não existe ou é inválido. Tem certeza de que esse é um tema para Discourse?"
+      about_json: "Erro ao importar: about.json não existe ou é inválido. Tem certeza de que é um tema do Discourse?"
       about_json_values: "about.json contém valores inválidos: %{errors}"
       modifier_values: "about.json contém valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
@@ -95,7 +95,7 @@ pt_BR:
     incoming:
       default_subject: "Este tópico precisa de um título"
       show_trimmed_content: "Exibir conteúdo abreviado"
-      maximum_staged_user_per_email_reached: "A quantidade máxima de usuários(as) de teste criados(as) por email foi atingida."
+      maximum_staged_user_per_email_reached: "A quantidade máxima de usuários(as) encenados(as) criados(as) por e-mail foi atingida."
       no_subject: "(sem assunto)"
       no_body: "(sem corpo)"
       errors:
@@ -494,30 +494,30 @@ pt_BR:
               too_many: "Muitas palavras para esta ação"
       <<: *errors
   uncategorized_category_name: "Sem categoria"
-  vip_category_name: "Salão"
+  vip_category_name: "Saguão"
   vip_category_description: "Uma categoria exclusiva para membros com nível de confiança 3 e superior."
-  meta_category_name: "Feedback do Site"
-  meta_category_description: "Discussão sobre este fórum, sua organização, como ele funciona e como podemos melhorá-lo."
+  meta_category_name: "Feedback do site"
+  meta_category_description: "Discussão sobre este site, sua organização, funcionamento e maneiras de melhorá-lo."
   staff_category_name: "Equipe"
-  staff_category_description: "Categoria particular para as discussões da equipe. Tópicos só são visíveis para os administradores e moderadores."
+  staff_category_description: "Categoria particular para discussões da equipe. Tópicos só são visíveis para administradores(as) e moderadores(as)."
   discourse_welcome_topic:
-    title: "Bem vindo ao Discourse"
+    title: "Boas-vindas ao Discourse"
     body: |2
 
-      O primeiro parágrafo deste tópico fixo será visto como uma mensagem de boas vindas a todos os novos visitantes em sua página inicial. É muito importante!
+      O primeiro parágrafo deste tópico fixado será visto como uma mensagem de boas-vindas a todos(as) os(as) novos(as) visitantes em sua página inicial. É muito importante!
 
       **Edite isso** em uma breve descrição da sua comunidade:
 
-      - Para quem ela é?
+      - Para quem é?
       - O que será encontrado aqui?
-      - Porque as pessoas deveria vir aqui?
-      - Onde é possível saber mais a respeito (links, fontes, etc)?
+      - Por que as pessoas devem participar?
+      - Onde é possível saber mais a respeito dela (links, fontes, etc)?
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Você pode querer fechar este tópico através do Administrador :wrench: (na parte superior direita e inferior), para que não se acumulem respostas num tópico de boas vindas.
+      Talvez você queira fechar este tópico pelo(a) administrador(a) :wrench: (na parte superior à direita e na parte inferior), para que as respostas não se acumulem em um anúncio.
   lounge_welcome:
-    title: "Bem-vindo ao Salão"
+    title: "Boas-vindas ao saguão"
     body: |2
 
       Parabéns! :confetti_ball:
@@ -539,16 +539,16 @@ pt_BR:
       (Para obter mais informações sobre níveis de confiança, [veja este tópico][trust]. Observe que somente membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
-  admin_quick_start_title: "LEIA-ME PRIMEIRO: Guia de Início Rápido do Administrador"
+  admin_quick_start_title: "LEIA-ME PRIMEIRO: Guia de início rápido do(a) administrador(a)"
   category:
     topic_prefix: "Sobre a categoria %{category} "
-    replace_paragraph: "(Substitua este primeiro parágrafo por uma breve descrição de sua nova categoria. Esta orientação aparecerá na área de seleção da categoria, então tente mantê-la abaixo de 200 caracteres.)"
-    post_template: "%{replace_paragraph}\n\nUse os parágrafos a seguir para uma descrição mais longa, ou para estabelecer as instruções ou regras da categoria:\n\n- Por que as pessoas devem usar essa categoria? Para que ela serve?\n\n- Como exatamente ela é diferente das outras categorias que já existem?\n\n- O que os tópicos nessa categoria devem conter, em geral?\n\n- Precisamos dessa categoria? Podemos juntá-la com outra categoria ou subcategoria?\n"
+    replace_paragraph: "(Substitua este primeiro parágrafo por uma breve descrição da sua nova categoria. Esta orientação aparecerá na área de seleção da categoria, então tente mantê-la com menos de 200 caracteres.)"
+    post_template: "%{replace_paragraph}\n\nUse os parágrafos a seguir para uma descrição mais longa, ou para estabelecer as instruções ou regras da categoria:\n\n- Por que as pessoas devem usar esta categoria? Para que serve?\n\n- Como exatamente é diferente das outras categorias que já existem?\n\n- O que os tópicos desta categoria devem conter em geral?\n\n- Precisamos desta categoria? Podemos mesclá-la com outra categoria ou subcategoria?\n"
     errors:
       not_found: "Categoria não encontrada!"
-      uncategorized_parent: "Sem categoria não pode ter uma categoria pai"
-      self_parent: "A subcategoria mãe não pode ser ela mesma"
-      depth: "Você não pode aninhar uma subcategoria sob outra"
+      uncategorized_parent: "Não categorizados não podem ter uma categoria pai"
+      self_parent: "A subcategoria pai não pode ser ela mesma"
+      depth: "Você não pode aninhar uma subcategoria sob uma outra"
       invalid_email_in: "'%{email}' não é um endereço de e-mail válido."
       email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
       email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
@@ -664,13 +664,13 @@ pt_BR:
     choose_new: "Escolha uma nova senha"
     choose: "Escolha uma senha"
     update: "Atualizar Senha"
-    save: "Definir Senha"
-    title: "Redefinir Senha"
-    success: "Sua senha foi modificado com sucesso e você está conectado agora."
-    success_unapproved: "Senha modificada com sucesso."
+    save: "Definir senha"
+    title: "Redefinir senha"
+    success: "Sua senha foi modificada com êxito e você já entrou com a sua conta."
+    success_unapproved: "Senha modificada com êxito."
   email_login:
-    invalid_token: "Desculpe, esse link de login de e-mail é muito antigo. Selecione o botão Login e use 'Esqueci minha senha' para obter um novo link."
-    title: "E-mail login"
+    invalid_token: "Desculpe, este link enviado por e-mail para entrar com sua conta é muito antigo. Selecione o botão Entrar e use \"Esqueci minha senha\" para obter um novo link."
+    title: "E-mail para entrar"
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
@@ -688,7 +688,7 @@ pt_BR:
       ipod: "iPod"
       linux: "Computador GNU/Linux"
       mac: "Mac"
-      mobile: "Dispositivo Móvel"
+      mobile: "Dispositivo móvel"
       windows: "Computador Windows"
       unknown: "dispositivo desconhecido"
     os:
@@ -699,31 +699,31 @@ pt_BR:
       windows: "Microsoft Windows"
       unknown: "sistema operacional desconhecido"
   change_email:
-    wrong_account_error: "Você está logado na conta errada, desconecte-se e tente novamente."
+    wrong_account_error: "Você entrou com a conta errada, saia e tente novamente."
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar no %{site_name}"
-    error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
-    error_staged: "Houve um erro ao alterar o seu endereço de email. O endereço já está usado por outro usuário que ainda não confirmou seu email."
-    already_done: "Desculpe, este link de confirmação não está mais válido. Talvez o seu e-mail já foi alterado?"
+    error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
+    error_staged: "Ocorreu um erro ao alterar o seu endereço de e-mail. O endereço já está usado por outro(a) usuário(a) encenado(a)."
+    already_done: "Desculpe, este link de confirmação não é mais válido. Talvez o seu e-mail já tenha sido alterado?"
     confirm: "Confirmar"
     authorizing_new:
       title: "Confirme seu novo e-mail"
     authorizing_old:
       title: "Troque seu endereço de e-mail"
-      description: "Por favor confirme a alteração do seu endereço de e-mail"
+      description: "Confirme a alteração do seu endereço de e-mail"
       old_email: "E-mail antigo: %{email}"
       new_email: "Novo e-mail: %{email}"
       almost_done_title: "Confirmando seu novo endereço de e-mail"
-      almost_done_description: "Nós enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
+      almost_done_description: "Enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
   associated_accounts:
     revoke_failed: "Falha ao revogar sua conta com %{provider_name}."
-    connected: "(conectado)"
+    connected: "(conectado(a))"
   activation:
     action: "Clique aqui para ativar sua conta"
-    already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
-    please_continue: "Sua conta agora está confirmada; você vai ser redirecionado para a página inicial."
+    already_done: "Desculpe, este link de confirmação não é mais válido. Talvez a sua conta já esteja ativa?"
+    please_continue: "Sua conta já foi confirmada. Você vai ser redirecionado(a) para a página inicial."
     continue_button: "Continuar no %{site_name}"
-    welcome_to: "Bem-vindo a %{site_name}!"
+    welcome_to: "Boas-vindas ao %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
     missing_session: "Não conseguimos detectar se sua conta foi criada. Por favor, certifique-se de que você está com os cookies do navegador habilitados."
     activated: "Desculpe, esta conta já foi ativada."
@@ -1565,8 +1565,8 @@ pt_BR:
     delete_email_logs_after_days: "Apagar logs de e-mail depois de (n) dias. 0 para mantê-lo definitivamente."
     disallow_reply_by_email_after_days: "Não permitir resposta por e-mail após (N) dias. 0 para manter indefinidamente"
     max_emails_per_day_per_user: "Número máximo de emails para enviar usuários por dia. 0 para desabilitar o limite"
-    enable_staged_users: "Crie automaticamente usuários temporários durante o processamento de emails recebidos."
-    maximum_staged_users_per_email: "Número máximo de usuários preparados usando o processamento de um e-mail recebido."
+    enable_staged_users: "Crie automaticamente usuários(as) encenados(as) ao processar os e-mails recebidos."
+    maximum_staged_users_per_email: "Quantidade máxima de usuários(as) encenados(as) criados(as) ao processar um e-mail recebido."
     auto_generated_allowlist: "Lista de endereços de e-mail que não serão verificados quanto a conteúdo gerado automaticamente. Exemplo: foo@bar.com | discourse@bar.com"
     block_auto_generated_emails: "Bloqueie os e-mails recebidos identificados como gerados automaticamente."
     ignore_by_title: "Ignore os e-mails recebidos com base no título deles."
@@ -1679,7 +1679,7 @@ pt_BR:
     approve_post_count: "A quantidade de postagens de um usuário novo ou básico que deve ser aprovado"
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
     approve_new_topics_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados."
-    approve_unless_staged: "Novos tópicos e postagens para usuários temporários devem ser aprovados"
+    approve_unless_staged: "Novos tópicos e postagens para usuários(as) encenados(as) devem ser aprovados"
     notify_about_queued_posts_after: "Se houver postagens que estão aguardando revisão por mais que muitas horas, envie uma notificação a todos os moderadores. Defina como 0 para desativar essas notificações."
     auto_close_messages_post_count: "Número máximo de postagens permitidas em uma mensagem antes de ser automaticamente fechada (0 para desativar)"
     auto_close_topics_post_count: "Número máximo de postagens permitidas em um tópico antes de ser automaticamente fechado (0 para desativar)"
@@ -1768,7 +1768,7 @@ pt_BR:
       user_locale_not_enabled: "Você deve primeiro habilitar 'permitir localidade do usuário' antes de habilitar essa configuração."
       invalid_regex: "Expressão regular inválida ou não permitida."
       email_editable_enabled: "Você deve desativar o \"e-mail editável\" antes de ativar essa configuração."
-      staged_users_disabled: "Você deve primeiro ativar os \"usuários preparados\" antes de ativar essa configuração."
+      staged_users_disabled: "Primeiro você deve ativar os \"usuários(as) encenados(as)\" antes de ativar esta configuração."
       reply_by_email_disabled: "Você deve primeiro ativar \"responder por e-mail\" antes de ativar essa configuração."
       enable_local_logins_disabled: "Você deve primeiro habilitar 'habilitar logins locais' antes de ativar esta configuração."
       min_username_length_exists: "Você não pode definir o comprimento de nome de usuário mínimo acima do nome de usuário mais curto (%{username})."
@@ -1953,8 +1953,8 @@ pt_BR:
       domain_not_allowed: "O site é inválido. Domínios permitidos são: %{domains}"
     auto_rejected: "Rejeitado automaticamente devido à idade. Veja a configuração do site auto_handle_queued_age."
     destroy_reasons:
-      unused_staged_user: "Usuário encenado sem uso"
-      fixed_primary_email: "E-mail principal fixo para usuário testado"
+      unused_staged_user: "Usuário(a) encenado(a) sem uso"
+      fixed_primary_email: "E-mail principal fixo para usuário(a) encenado(a)"
       same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
       inactive_user: "Usuário inativo"
       reviewable_reject_auto: "Tratamento automático de revisáveis na fila"
@@ -2657,8 +2657,8 @@ pt_BR:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      title: "Usuário Convidado para o Encaminhamento MP"
-      subject_template: "[%{email_prefix}] %{username} convidou você para uma mensagem '%{topic_title}'"
+      title: "Usuário(a) convidado(a) para MP encenado(a)"
+      subject_template: "[%{email_prefix}] %{username} convidou você para uma mensagem \"%{topic_title}\""
       text_body_template: |
         %{header_instructions}
 
@@ -2785,7 +2785,7 @@ pt_BR:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Usuário Postado por PM Staged"
+      title: "MP postada por usuário(a) encenado(a)"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3583,7 +3583,7 @@ pt_BR:
       new_topics_unless_trust_level: "Usuários com níveis de confiança baixos precisam ter tópicos aprovados pela staff. Veja `approve_new_topics_unless_trust_level`."
       fast_typer: "Novo usuário digitou sua primeira postagem desconfiadamente rápido, suspeita de comportamento de bot ou spammer. Veja `min_first_post_typing_time`."
       auto_silence_regexp: "Novo usuário cuja primeira postagem corresponde à configuração `auto_silence_first_post_regex`."
-      staged: "Novos tópicos e postagens para usuários fictícios precisam ser aprovados pela staff. Veja `approve_unless_staged`."
+      staged: "Novos tópicos e postagens para usuários encenados(as) precisam ser aprovados pela equipe. Veja \"approve_unless_staged\"."
       category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."
       must_approve_users: "Todos os novos usuários precisam ser aprovados pela staff. Veja `must_approve_users`."
       invite_only: "Todos os novos usuários devem ser convidados. Veja `invite_only`."

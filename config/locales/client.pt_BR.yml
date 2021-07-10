@@ -1022,7 +1022,7 @@ pt_BR:
       theme: "Tema"
       save_to_change_theme: 'O tema será atualizado quando você clicar em "%{save_text}"'
       home: "Página inicial padrão"
-      staged: "Fictício(a)"
+      staged: "Encenado(a)"
       staff_counters:
         flags_given: "sinalizações úteis"
         flagged_posts: "postagens sinalizadas"
@@ -4035,7 +4035,7 @@ pt_BR:
           moderators: "Moderadores(as)"
           silenced: "Usuários(as) silenciados(as)"
           suspended: "Usuários(as) suspensos(as)"
-          staged: "Usuários(as) preparados(as)"
+          staged: "Usuários(as) encenados(as)"
         not_verified: "Não verificado(a)"
         check_email:
           title: "Mostrar endereço de e-mail deste(a) usuário(a)"
@@ -4081,7 +4081,7 @@ pt_BR:
         moderator: "Moderador(a)?"
         admin: "Administrador(a)?"
         suspended: "Suspenso(a)?"
-        staged: "Preparado(a)?"
+        staged: "Encenado(a)?"
         show_admin_profile: "Administrador(a)"
         show_public_profile: "Exibir perfil público"
         impersonate: "Representar"
@@ -4185,7 +4185,7 @@ pt_BR:
         deactivate_explanation: "Usuários(as) desativados(as) devem revalidar seu e-mail."
         suspended_explanation: "Usuários(as) suspensos(as) não podem entrar."
         silence_explanation: "Usuários(as) silenciados(as) não podem postar ou iniciar tópicos."
-        staged_explanation: "Usuários(as) de teste só podem postar por e-mail em tópicos específicos."
+        staged_explanation: "Usuários(as) encenados(as) só podem postar por e-mail em tópicos específicos."
         bounce_score_explanation:
           none: "Nenhuma devolução foi recebida recentemente desse e-mail."
           some: "Algumas devoluções foram recebidas recentemente desse e-mail."
@@ -4262,62 +4262,62 @@ pt_BR:
           disabled: "não exibido(a) no perfil"
         show_on_user_card:
           title: "Exibir no cartão de usuário(a)?"
-          enabled: "exibir no cartão de usuário"
-          disabled: "não exibido no cartão de usuário"
+          enabled: "exibir no cartão de usuário(a)"
+          disabled: "não exibido no cartão de usuário(a)"
         searchable:
           title: "Pesquisável?"
           enabled: "pesquisável"
           disabled: "não pesquisável"
         field_types:
-          text: "Campo Texto"
+          text: "Campo de texto"
           confirm: "Confirmação"
-          dropdown: "Caixa de seleção"
+          dropdown: "Menu suspenso"
       site_text:
-        description: "Você pode personalizar qualquer parte do texto em seu fórum. Por favor, comece pesquisando abaixo:"
-        search: "Procure pelo texto que você gostaria de editar"
+        description: "Você pode personalizar qualquer parte do texto em seu fórum. Comece pesquisando abaixo:"
+        search: "Pesquise o texto que você gostaria de editar"
         title: "Texto"
         edit: "editar"
         revert: "Reverter alterações"
-        revert_confirm: "Tem certeza que deseja reverter as alterações?"
+        revert_confirm: "Tem certeza que deseja reverter suas alterações?"
         go_back: "Voltar para pesquisa"
-        recommended: "Recomendamos a personalização do seguinte texto para se adequar as suas necessidades:"
-        show_overriden: "Apenas mostrar valores alterados"
-        more_than_50_results: "Existem mais de 50 resultados. Por favor, refine sua pesquisa."
+        recommended: "Recomendamos personalizar o texto a seguir para atender às suas necessidades:"
+        show_overriden: "Exibir apenas substituídos"
+        more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
       settings:
-        show_overriden: "Mostrar apenas substituído"
-        reset: "resetar"
-        none: "nenhum"
+        show_overriden: "Exibir apenas substituídos"
+        reset: "redefinir"
+        none: "nenhum(a)"
       site_settings:
         title: "Configurações"
         no_results: "Nenhum resultado encontrado."
-        more_than_30_results: "Existem mais de 30 resultados. Por favor, refine sua pesquisa ou selecione uma categoria."
+        more_than_30_results: "Existem mais de 30 resultados. Refine sua pesquisa ou selecione uma categoria."
         clear_filter: "Limpar"
         add_url: "adicionar URL"
         add_host: "adicionar host"
         add_group: "adicionar grupo"
         uploaded_image_list:
-          label: "Lista de edição"
-          empty: "Não há fotos ainda. Por favor, faça o upload de uma."
+          label: "Editar lista"
+          empty: "Não há fotos ainda. Envie uma."
           upload:
-            label: "Upload"
-            title: "Enviar Imagem(s)"
+            label: "Enviar"
+            title: "Enviar imagem(ns)"
         selectable_avatars:
-          title: "Lista de usuários avatares podem escolher"
+          title: "Lista de avatares que os usuários podem escolher"
         categories:
-          all_results: "Todas"
-          required: "Requerido"
-          branding: "Branding"
-          basic: "Configuração Básica"
-          users: "Usuários"
-          posting: "Publicando"
+          all_results: "Tudo"
+          required: "Necessário(a)"
+          branding: "Identidade visual"
+          basic: "Configuração básica"
+          users: "Usuários(as)"
+          posting: "Postando"
           email: "E-mail"
           files: "Arquivos"
-          trust: "Níveis de Confiança"
+          trust: "Níveis de confiança"
           security: "Segurança"
           onebox: "Onebox"
           seo: "SEO"
           spam: "Spam"
-          rate_limits: "Taxa de Limites"
+          rate_limits: "Limites de taxa"
           developer: "Desenvolvedor"
           embedding: "Incorporação"
           legal: "Jurídico"
@@ -4376,26 +4376,26 @@ pt_BR:
         image: Imagem
         icon_help: "Digite um nome de ícone do tipo Font Awesome (use o prefixo \"far-\" para ícones comuns e \"fab-\" para ícones de marca)"
         query: Badge Query (SQL)
-        target_posts: Consultar respostas selecionadas
-        auto_revoke: Rodar revocation query todo dia
-        show_posts: Mostrar as concessões de emblemas na página de emblemas
-        trigger: Trigger
+        target_posts: Consultar postagens de destino
+        auto_revoke: Rodar consulta de revogação todos os dias
+        show_posts: Mostrar as concessões de emblemas por postagens na página de emblemas
+        trigger: Gatilho
         trigger_type:
           none: "Atualizado diariamente"
-          post_action: "Quando um usuário age em uma resposta"
-          post_revision: "Quando um usuário edita ou cria uma resposta"
-          trust_level_change: "Quando um usuário muda seu nível de confiança"
-          user_change: "Quando um usuário é editado ou criado"
-          post_processed: "Após o processamento da mensagem"
+          post_action: "Quando um(a) usuário(a) age em uma postagem"
+          post_revision: "Quando um(a) usuário(a) edita ou cria uma postagem"
+          trust_level_change: "Quando um(a) usuário(a) muda seu nível de confiança"
+          user_change: "Quando um(a) usuário(a) é editado(a) ou criado(a)"
+          post_processed: "Após o processamento da postagem"
         preview:
           link_text: "Pré-visualizar emblemas concedidos"
-          plan_text: "Prever com plano de busca"
-          modal_title: "Preview da Busca de Medalhas"
-          sql_error_header: "Houve um erro com a busca."
-          error_help: "Veja os seguintes links para ajuda com consulta de emblemas."
+          plan_text: "Pré-visualizar com plano de consulta"
+          modal_title: "Pré-visualização da consulta de emblemas"
+          sql_error_header: "Houve um erro com a consulta."
+          error_help: "Veja os seguintes links para obter ajuda sobre consultas de emblemas."
           bad_count_warning:
-            header: "CUIDADO!"
-            text: "Faltam amostras de concessão. Isso acontece quando a consulta de emblemas retorna IDs de usuários ou IDs de postagens que não existem. Isso pode causar resultados inesperados futuramente - por favor verifique novamente a sua consulta."
+            header: "AVISO!"
+            text: "Faltam amostras de concessão. Ocorre quando a consulta de emblemas retorna IDs de usuários(as) ou IDs de postagens que não existem. Isso pode causar resultados inesperados futuramente. Verifique novamente sua consulta."
           no_grant_count: "Sem emblemas para serem atribuídos."
           grant_count:
             one: "<b>%{count}</b> emblema para ser atribuído."
@@ -4408,34 +4408,34 @@ pt_BR:
             with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
         badge_intro:
           title: "Selecione um emblema ou crie um novo para começar"
-          emoji: "emoji de estudante mulher"
+          emoji: "emoji de aluna"
           what_are_badges_title: "O que são emblemas?"
-          badge_query_examples_title: "Exemplos de pesquisas de emblemas"
+          badge_query_examples_title: "Exemplos de consultas de emblemas"
         mass_award:
           title: Concessão em massa
-          description: Conceder o mesmo emblema a vários usuários ao mesmo tempo.
+          description: Conceda o mesmo emblema a vários(as) usuários(as) ao mesmo tempo.
           no_badge_selected: Selecione um emblema para começar.
-          perform: "Conceder de Emblema aos Usuários"
-          upload_csv: Fazer o upload de um CSV com e-mails ou nomes de usuário
-          aborted: Por favor faça o upload de um CSV contendo e-mails ou nomes de usuário
-          success: Seu CSV foi recebido e os usuários receberão seus emblemas em breve.
-          replace_owners: Remover o emblema dos proprietários anteriores
+          perform: "Conceder emblema a usuários(as)"
+          upload_csv: Enviar um CSV com e-mails ou nomes de usuário(a)
+          aborted: Envie um CSV contendo e-mails ou nomes de usuário(a)
+          success: Seu CSV foi recebido e os(as) usuários(as) receberão seus emblemas em breve.
+          replace_owners: Remover o emblema dos(as) proprietários(as) anteriores
       emoji:
         title: "Emoji"
-        help: "Adicionar novo emoji que estará disponível para todos. (DICA: arraste & solte diversos arquivos de uma vez)"
-        add: "Adicionar Novo Emoji"
+        help: "Adicionar novo emoji que estará disponível para todos(as). (DICA: arraste e solte diversos arquivos de uma vez)"
+        add: "Adicionar novo emoji"
         uploading: "Enviando..."
         name: "Nome"
         group: "Grupo"
         image: "Imagem"
-        alt: "prévia do emoji personalizado"
-        delete_confirm: "Tem certeza que deseja excluir o emoji :%{name}: ?"
+        alt: "pré-visualização do emoji personalizado"
+        delete_confirm: "Tem certeza que deseja excluir o emoji :%{name}:?"
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
-        confirm_delete: "Você tem certeza que deseja apagar este host?"
-        sample: "Use o seguinte código HTML no seu site para criar e incorporar tópicos do Discourse. Troque <b>REPLACE_ME</b> com a URL canônica da página na qual você está incorporando."
+        confirm_delete: "Você tem certeza que deseja excluir este host?"
+        sample: "Use o seguinte código HTML no seu site para criar e incorporar tópicos do Discourse. Substitua <b>REPLACE_ME</b> pela URL canônica da página na qual você está incorporando."
         title: "Incorporar"
-        host: "Hosts Permitidos"
+        host: "Hosts permitidos"
         class_name: "Nome da classe"
         edit: "editar"
         category: "Postar na categoria"
@@ -4497,9 +4497,9 @@ pt_BR:
         none_added: "Você ainda não convidou ninguém para a equipe. Tem certeza que deseja continuar?"
         roles:
           admin: "Administrador(a)?"
-          moderator: "Moderador"
-          regular: "Usuário Regular"
+          moderator: "Moderador(a)"
+          regular: "Usuário regular"
       previews:
-        topic_title: "Tópico de Discussão"
+        topic_title: "Tópico de discussão"
         share_button: "Compartilhar"
         reply_button: "Responder"
