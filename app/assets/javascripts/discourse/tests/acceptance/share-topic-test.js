@@ -33,12 +33,12 @@ acceptance("Share and Invite modal", function (needs) {
     assert.ok(count(".social-link") > 1, "it shows social sources");
 
     assert.ok(
-      exists(".btn-primary[aria-label='Notify']"),
+      exists(".btn[aria-label='Notify']"),
       "it shows the notify button"
     );
 
     assert.ok(
-      exists(".btn-primary[aria-label='Invite']"),
+      exists(".btn[aria-label='Invite']"),
       "it shows the invite button"
     );
   });
