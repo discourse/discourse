@@ -608,8 +608,8 @@ ja:
           imap_instructions: 'このグループで IMAP を有効化すると、グループの受信トレイと指定された IMAP サーバーとメールボックスの間でメールが同期されます。IMAP を有効にする前に、テスト済みの有効な資格情報で SMTP を有効にする必要があります。SMTP に使用されるメールのユーザー名とパスワードが IMAP にも使用されます。詳細は、<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta の機能に関するお知らせ</a>をご覧ください。'
           imap_alpha_warning: "警告: これはアルファステージの機能です。Gmail のみが公式にサポートされています。自己責任でご利用ください！"
           imap_settings_valid: "IMAP の設定は有効です。"
-          smtp_disable_confirm: "SMTP を無効にすると、すべての SMTP と IMAP の設定がリセットされ、関連付けられている機能が無効になります。本当に続行しますか？"
-          imap_disable_confirm: "IMAP を無効にすると、すべての IMAP 設定がリセットされ、関連付けられている機能が無効になります。本当に続行しますか？"
+          smtp_disable_confirm: "SMTP を無効にすると、すべての SMTP と IMAP の設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
+          imap_disable_confirm: "IMAP を無効にすると、すべての IMAP 設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
           imap_mailbox_not_selected: "この IMAP 構成のメールボックスを選択する必要があります。選択しない場合、メールボックスは同期されません！"
           prefill:
             title: "次の設定で事前入力:"
@@ -2666,7 +2666,7 @@ ja:
         delete_topic_disallowed_modal: "このトピックを削除する権限がありません。本当に削除したい場合は、モデレーターの注意要として、理由と共に通報してください。"
         delete_topic_disallowed: "このトピックを削除する権限がありません。"
         delete_topic_confirm_modal:
-          other: "このトピックの閲覧数は現在 %{count} 回を超えており、人気の検索先となっているようです。トピックの編集や改善を行わずに、本当にこのトピック全体を削除しますか？"
+          other: "このトピックの閲覧数は現在 %{count} 回を超えており、人気の検索先となっているようです。トピックの編集や改善を行わずに、このトピック全体を削除してもよろしいですか？"
         delete_topic_confirm_modal_yes: "はい。このトピックを削除する"
         delete_topic_confirm_modal_no: "いいえ。このトピックを維持する"
         delete_topic_error: "このトピックを削除中にエラーが発生しました"
@@ -2694,7 +2694,7 @@ ja:
           notify_user: "このユーザーにメッセージを送信しました"
       delete:
         confirm:
-          other: "本当に %{count} 件の投稿を削除しますか？"
+          other: "%{count} 件の投稿を削除してもよろしいですか？"
       merge:
         confirm:
           other: "これらの %{count} 件の投稿をマージしてよろしいですか？"
@@ -2924,7 +2924,7 @@ ja:
       official_warning: "運営スタッフからの警告"
       delete_spammer: "迷惑行為者を削除"
       flag_for_review: "レビューのキューに入れる"
-      delete_confirm_MF: "このユーザーの {POSTS, plural, other {<b>#</b> 件の投稿}}と{TOPICS, plural, other {<b>#</b> 件のトピック}}を削除し、アカウントを削除し、IP アドレス <b>{ip_address}</b> からの登録をブロックし、メールアドレス <b>{email}</b> を永久ブロックリストに追加しようとしています。本当にこのユーザーは迷惑行為者ですか？"
+      delete_confirm_MF: "このユーザーの {POSTS, plural, other {<b>#</b> 件の投稿}}と{TOPICS, plural, other {<b>#</b> 件のトピック}}を削除し、アカウントを削除し、IP アドレス <b>{ip_address}</b> からの登録をブロックし、メールアドレス <b>{email}</b> を永久ブロックリストに追加しようとしています。このユーザーは本当に迷惑行為者ですか？"
       yes_delete_spammer: "はい、迷惑行為者を削除する"
       ip_address_missing: "(該当なし)"
       hidden_email_address: "(非表示)"
@@ -3226,14 +3226,14 @@ ja:
       add_synonyms_label: "同義語の追加:"
       add_synonyms: "追加"
       add_synonyms_explanation:
-        other: "これらのタグが現在使用されている場所は、<b>%{tag_name}</b> を使用するように変更されます。本当にこの変更を行いますか？"
+        other: "これらのタグが現在使用されている場所は、<b>%{tag_name}</b> を使用するように変更されます。この変更を行ってもよろしいですか？"
       add_synonyms_failed: "次のタグを同義語として追加できませんでした: <b>%{tag_names}</b>。同義語が存在せず、別のタグの同義語でないことを確認してください。"
       remove_synonym: "同義語を削除"
       delete_synonym_confirm: '本当に同義語 "%{tag_name}" を削除しますか？'
       delete_tag: "タグを削除"
       delete_confirm:
-        other: "本当にこのタグを削除して、それが割り当てられている %{count} 件のトピックから削除しますか？"
-      delete_confirm_no_topics: "本当にこのタグを削除しますか？"
+        other: "このタグを削除して、それが割り当てられている %{count} 件のトピックから削除してもよろしいですか？"
+      delete_confirm_no_topics: "このタグを削除してもよろしいですか？"
       delete_confirm_synonyms:
         other: "その %{count} 個の同義語も削除されます。"
       rename_tag: "タグの名前を変更"
@@ -3542,16 +3542,66 @@ ja:
         new_key: 新しい API キー
         revoked: 取り消し済み
         delete: 永久に削除
+        not_shown_again: このキーは二度と表示されません。続行する前に必ずコピーしてください。
         continue: 続行
+        use_global_key: グローバルキー (すべてのアクションを許可)
         scopes:
+          description: |
+            スコープを使用する場合、API キーを特定のエンドポイントのセットに制限できます。
+            また、どのパラメーターが許可されるかを定義することもできます。複数の値はカンマ区切りで指定してください。
+          title: スコープ
+          resource: リソース
           action: 操作
+          allowed_parameters: 許可されたパラメーター
+          optional_allowed_parameters: 許可されたパラメーター (オプション)
+          any_parameter: (任意のパラメーター)
+          allowed_urls: 許可された URL
+          descriptions:
+            topics:
+              read: トピックまたはその中の特定の投稿を読み取ります。RSS もサポートされています。
+              write: 新しいトピックまたは既存のトピックに投稿を作成します。
+              read_lists: 人気、新規、最新などのトピックリストを読み取ります。RSS もサポートされています。
+              wordpress: WordPress wp-discourse プラグインが動作するために必要です。
+            posts:
+              edit: 任意の投稿または特定の投稿を編集します。
+            users:
+              bookmarks: ユーザーブックマークを一覧表示します。ICS 形式を使用している場合は、ブックマークのリマインダーが返されます。
+              sync_sso: DiscourseConnect を使用してユーザーを同期します。
+              show: ユーザーに関する情報を取得します。
+              check_emails: ユーザーのメールを一覧表示します。
+              update: ユーザープロフィール情報を更新します。
+              log_out: ユーザーのすべてのセッションをログアウトします。
+              anonymize: ユーザーのアカウントを匿名化します。
+              delete: ユーザーのアカウントを削除します。
+            email:
+              receive_emails: このスコープを mail-receiver と組み合わせて、受信メールを処理します。
       web_hooks:
         title: "Webhook"
         none: "現在、Webhook はありません。"
+        instruction: "Webhook を使うと、サイトで特定のイベントが発生したときに、Discourse から外部サービスに通知できるようになります。Webhook がトリガーされると、指定された URL に POST リスクエストが送信されます。"
+        detailed_instruction: "選択したイベントが発生すると、指定した URL に POST リクエストが送信されます。"
+        new: "新しい Webhook"
+        create: "作成"
         save: "保存"
         destroy: "削除"
         description: "説明"
+        controls: "コントロール"
+        go_back: "リストに戻る"
+        payload_url: "ペイロード URL"
+        payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Webhook をローカル URL にセットアップしようとしているようです。ローカルアドレスに配信されるイベントによって、副作用または予期しない動作が発生する可能性があります。続行しますか？"
+        secret_invalid: "シークレットには空白文字を使用できません。"
+        secret_too_short: "シークレットは 12 文字以上です。"
+        secret_placeholder: "署名の生成に使用されるオプションの文字列"
+        event_type_missing: "少なくとも 1 つのイベントタイプをセットアップする必要があります。"
+        content_type: "コンテンツタイプ"
+        secret: "シークレット"
+        event_chooser: "どのイベントがこの Webhook をトリガーしますか？"
+        wildcard_event: "すべてを受け取る。"
+        individual_event: "個別のイベントを選択してください。"
+        verify_certificate: "ペイロード URL の TLS 証明書を確認してください"
         active: "アクティブ"
+        active_notice: "イベントが発生したらその詳細を通知します。"
         categories_filter_instructions: "関連する Webhook はイベントが指定されたカテゴリに関連している場合にのみトリガーされます。すべてのカテゴリに Webhook をトリガーするには空のままにします。"
         categories_filter: "トリガーされたカテゴリ"
         tags_filter_instructions: "関連する Webhook はイベントが指定されたタグに関連している場合にのみトリガーされます。すべてのタグに Webhook をトリガーするには空のままにします。"
@@ -3607,7 +3657,7 @@ ja:
             other: "%{count} 秒で完了しました。"
           request: "リクエスト"
           response: "応答"
-          redeliver_confirm: "本当に同じペイロードを再配信しますか？"
+          redeliver_confirm: "同じペイロードを再配信してもよろしいですか？"
           headers: "ヘッダー"
           payload: "ペイロード"
           body: "本文"
@@ -3686,7 +3736,7 @@ ja:
           rollback:
             label: "ロールバック"
             title: "データベースを前回の状態に戻す"
-            confirm: "本当にデータベースを以前の稼働状態にロールバックしますか？"
+            confirm: "データベースを以前の稼働状態にロールバックしてもよろしいですか？"
         location:
           local: "ロカールストレージ"
           s3: "S3"
@@ -3716,7 +3766,7 @@ ja:
         new_style: "新規スタイル"
         install: "インストール"
         delete: "削除"
-        delete_confirm: '本当に "%{theme_name}" を削除しますか？'
+        delete_confirm: '"%{theme_name}" を削除してもよろしいですか？'
         color: "色"
         opacity: "透明度"
         copy: "コピー"
@@ -3750,7 +3800,7 @@ ja:
           long_title: "サイトの色、CSS、HTML コンテンツの修正"
           edit: "編集"
           edit_confirm: "これはリモートのテーマです。CSS/HTML を編集しても、その変更は次にテーマを更新する際に消去されます。"
-          update_confirm: "これらのローカルの変更は更新によって消去されます。本当に続行しますか？"
+          update_confirm: "これらのローカルの変更は更新によって消去されます。続行してもよろしいですか？"
           update_confirm_yes: "はい。更新を続行します"
           common: "共通"
           desktop: "デスクトップ"
@@ -3776,11 +3826,11 @@ ja:
           theme_components: "テーマのコンポーネント"
           add_all_themes: "すべてのテーマを追加"
           convert: "変換"
-          convert_component_alert: "本当にこのコンポーネントをテーマに変換しますか？%{relatives} からコンポーネントとして削除されます。"
+          convert_component_alert: "このコンポーネントをテーマに変換してもよろしいですか？%{relatives} からコンポーネントとして削除されます。"
           convert_component_tooltip: "このコンポーネントをテーマに変換します"
-          convert_component_alert_generic: "本当にこのコンポーネントをテーマに変換しますか？"
-          convert_theme_alert: "本当にこのテーマをコンポーネントに変換しますか？%{relatives} から親として削除されます。"
-          convert_theme_alert_generic: "本当にこのテーマをコンポーネントに変換しますか？"
+          convert_component_alert_generic: "このコンポーネントをテーマに変換してもよろしいですか？"
+          convert_theme_alert: "このテーマをコンポーネントに変換してもよろしいですか？%{relatives} から親として削除されます。"
+          convert_theme_alert_generic: "このテーマをコンポーネントに変換してもよろしいですか？"
           convert_theme_tooltip: "このテーマをコンポーネントに変換します"
           inactive_themes: "非アクティブなテーマ:"
           inactive_components: "未使用のコンポーネント:"
@@ -3814,7 +3864,7 @@ ja:
           included_components: "含まれているコンポーネント"
           add_all: "すべてを追加"
           import_web_tip: "テーマを含むリポジトリ"
-          direct_install_tip: "本当に下にリストされているリポジトリから <strong>%{name}</strong> をインストールしますか？"
+          direct_install_tip: "下にリストされているリポジトリから <strong>%{name}</strong> をインストールしてもよろしいですか？"
           import_web_advanced: "高度…"
           import_file_tip: "テーマを含む .tar.gz、.zip、または .dcstyle.json ファイル"
           is_private: "テーマはプライベート git リポジトリにあります"
@@ -3827,7 +3877,7 @@ ja:
           install_upload: "自分のデバイスから"
           install_git_repo: "git リポジトリから"
           install_create: "新規作成"
-          duplicate_remote_theme: "テーマのコンポーネント “%{name}” はすでにインストールされています。本当に別のコピーをインストールしますか？"
+          duplicate_remote_theme: "テーマのコンポーネント “%{name}” はすでにインストールされています。別のコピーをインストールしてもよろしいですか？"
           about_theme: "テーマについて"
           license: "ライセンス"
           version: "バージョン:"
@@ -3962,7 +4012,7 @@ ja:
           html: "HTML テンプレート"
           css: "CSS"
           reset: "デフォルトにリセット"
-          reset_confirm: "本当にデフォルトの %{fieldName} にリセットしてすべての変更を失いますか？"
+          reset_confirm: "デフォルトの %{fieldName} にリセットしてすべての変更を失ってもよろしいですか？"
           save_error_with_reason: "変更は保存されませんでした。%{error}"
           instructions: "すべての HTML メールがレンダリングされるテンプレートをカスタマイズし、CSS を使ってスタイルを設定します。"
       email:
@@ -4221,7 +4271,7 @@ ja:
           other: "%{count} 語を表示"
         download: ダウンロード
         clear_all: すべてクリア
-        clear_all_confirm: "本当に%{action}アクションのすべてのウォッチ中の語をクリアしますか？"
+        clear_all_confirm: "%{action}アクションのすべてのウォッチ中の語をクリアしてもよろしいですか？"
         invalid_regex: 'ウォッチ語 "%{word}" は無効な正規表現です。'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">ウォッチ語は正規表現</a>で、語の境界は自動的に含まれることはありません。全語に一致する正規表現が必要な場合は、正規表現の最初と最後に <code>\b</code> を含めます。'
         actions:
@@ -4411,8 +4461,21 @@ ja:
             target_username_placeholder: "新しいオーナーのユーザー名"
             transfer_and_delete: "@%{username} を転送して削除"
             cancel: "キャンセル"
+          progress:
+            title: "マージの進行状況"
           confirmation:
+            title: "@%{username} を転送して削除"
+            description: |
+              <p><b>@%{username}</b> のすべてのコンテンツは、<b>@%{targetUsername}</b> に転送されて配下に置かれます。コンテンツが転送された後、<b>@%{username}</b> のアカウントは削除されます。</p>
+
+              <p><b>この操作を元に戻すことはできません！</b></p>
+
+              <p>続行するには次を入力してください: <code>%{text}</code></p>
+            text: "@%{username} を @%{targetUsername} に転送する"
+            transfer_and_delete: "@%{username} を転送して削除"
             cancel: "キャンセル"
+        merging_user: "ユーザーをマージ中..."
+        merge_failed: "ユーザーをマージ中にエラーが発生しました。"
         delete_forbidden_because_staff: "管理者およびモデレーターアカウントは削除できません。"
         delete_posts_forbidden_because_staff: "管理者とモデレーターのすべての投稿を削除できません。"
         delete_forbidden:
@@ -4421,8 +4484,10 @@ ja:
           other: "すべての投稿を削除できません。%{count} 日以上経過した投稿があります。(delete_user_max_post_age の設定)"
         cant_delete_all_too_many_posts:
           other: "すべての投稿を削除することはできませんでした。ユーザーは %{count} 件以上投稿しています。(delete_all_posts_max)"
+        delete_confirm: "既存のディスカッションからコンテンツを削除しないようにするには、通常、ユーザーを削除するよりも匿名化することが推奨されます。<br><br>このユーザーを削除してもよろしいですか？この決定は永久的です！"
         delete_and_block: "このメールと IP アドレスを削除して<b>ブロック</b>する"
         delete_dont_block: "削除のみ"
+        deleting_user: "ユーザーを削除中…"
         deleted: "ユーザーが削除されました。"
         delete_failed: "ユーザーを削除中にエラーが発生しました。このユーザーのすべての投稿を削除したことを確認してから、ユーザーを削除してください。"
         send_activation_email: "アクティベーションメールを送信"
@@ -4432,6 +4497,10 @@ ja:
         activate_failed: "ユーザーのアクティベーションに問題が発生しました。"
         deactivate_account: "アカウントを無効化"
         deactivate_failed: "ユーザーのアクティベーション解除に問題が発生しました。"
+        unsilence_failed: "ユーザーの投稿禁止を解除中に問題が発生しました。"
+        silence_failed: "ユーザーを投稿禁止中に問題が発生しました。"
+        silence_confirm: "このユーザーを投稿禁止にしてもよろしいですか？このユーザーは新しいトピックや投稿を作成できなくなります。"
+        silence_accept: "はい、このユーザーを投稿禁止にする"
         bounce_score: "バウンススコア"
         reset_bounce_score:
           label: "リセット"
@@ -4439,6 +4508,7 @@ ja:
         visit_profile: "このユーザーのプロフィールは、<a href='%{url}'>このユーザーの設定ページ</a>で編集します"
         deactivate_explanation: "アクティベーションを解除されたユーザーは、メールアドレスを確認し直す必要があります。"
         suspended_explanation: "凍結中のユーザーはログインできません。"
+        silence_explanation: "投稿禁止になったユーザーは、投稿したり、トピックを開始することはできません。"
         staged_explanation: "ステージングユーザーは特定のトピックにメールでのみ投稿することができます。"
         bounce_score_explanation:
           none: "このメールから最近受信したバウンスメールはありません。"
@@ -4446,6 +4516,7 @@ ja:
           threshold_reached: "そのメールから多数のバウンスを受信しました。"
         trust_level_change_failed: "ユーザーの信頼レベルを変更中に問題が発生しました。"
         suspend_modal_title: "ユーザーを凍結"
+        confirm_cancel_penalty: "ペナルティを消去してもよろしいですか？"
         trust_level_2_users: "信頼レベル 2 のユーザー"
         trust_level_3_requirements: "信頼レベル 3 の要件"
         trust_level_locked_tip: "信頼レベルはロックされています。システムがユーザーを昇格または降格することはありません"
@@ -4454,6 +4525,8 @@ ja:
         unlock_trust_level: "信頼レベルをロック解除"
         tl3_requirements:
           title: "信頼レベル 3 の要件"
+          table_title:
+            other: "過去 %{count} 日:"
           value_heading: "値"
           requirement_heading: "要件"
           visits: "アクセス"
@@ -4469,6 +4542,8 @@ ja:
           likes_received: "「いいね！」された数"
           likes_received_days: "「いいね！」された数: 日別"
           likes_received_users: "「いいね！」された数: ユニークユーザー"
+          suspended: "凍結 (過去 6 か月)"
+          silenced: "投稿禁止 (過去 6 か月)"
           qualifies: "信頼レベル 3 の要件を満たしています。"
           does_not_qualify: "信頼レベル 3 の要件を満たしていません。"
           will_be_promoted: "もうすぐ昇格です。"
@@ -4477,11 +4552,15 @@ ja:
           locked_will_not_be_promoted: "信頼レベルはロックされました。今後昇格することはありません。"
           locked_will_not_be_demoted: "信頼レベルはロックされました。今後降格することはありません。"
         discourse_connect:
+          title: "DiscourseConnect シングルサインオン"
           external_id: "外部 ID"
           external_username: "ユーザー名"
           external_name: "名前"
           external_email: "メール"
           external_avatar_url: "プロフィール画像 URL"
+          last_payload: "最後のペイロード"
+          delete_sso_record: "SSO レコードを削除"
+          confirm_delete: "この DiscourseConnect レコードを削除してもよろしいですか？"
       user_fields:
         title: "ユーザーフィールド"
         help: "ユーザーが入力できるフィールドを追加します。"
@@ -4512,10 +4591,15 @@ ja:
           title: "ユーザーカードに表示しますか？"
           enabled: "ユーザーカードに表示する"
           disabled: "ユーザーカードに表示しない"
+        searchable:
+          title: "検索可能？"
+          enabled: "検索できる"
+          disabled: "検索できない"
         field_types:
           text: "テキストフィールド"
           confirm: "確認"
           dropdown: "ドロップダウン"
+          multiselect: "複数選択"
       site_text:
         description: "フォーラム上のテキストを編集することができます。まずは、以下で検索してください。"
         search: "編集するテキストを検索"
@@ -4526,22 +4610,38 @@ ja:
         go_back: "検索に戻る"
         recommended: "ニーズに合わせて次のテキストをカスタマイズすることをお勧めします。"
         show_overriden: "上書き部分のみ表示"
+        locale: "言語:"
+        fallback_locale_warning: "%{fallback} に基づいて言語を編集しています。%{fallback} をインターフェース言語として選択したユーザーに変更内容は表示されません。"
+        more_than_50_results: "結果が 50 件以上あります。検索を絞り込んでください。"
       settings:
         show_overriden: "上書き部分のみ表示"
+        history: "変更履歴を表示する"
         reset: "リセット"
         none: "なし"
       site_settings:
+        emoji_list:
+          invalid_input: "絵文字リストには、有効な絵文字名のみを含める必要があります。例: ハグ"
+          add_emoji_button:
+            label: "絵文字を追加"
         title: "設定"
         no_results: "何も見つかりませんでした。"
+        more_than_30_results: "結果が 30 件以上あります。検索を絞り込むかカテゴリを選択してください。"
         clear_filter: "クリア"
         add_url: "URL を追加"
         add_host: "ホストを追加"
+        add_group: "グループの追加"
         uploaded_image_list:
+          label: "リストの編集"
+          empty: "写真はまだありません。アップロードしてください。"
           upload:
             label: "アップロード"
+            title: "画像のアップロード"
+        selectable_avatars:
+          title: "ユーザーが選択できるアバターのリスト"
         categories:
           all_results: "すべて"
           required: "必須"
+          branding: "ブランディング"
           basic: "基本設定"
           users: "ユーザー"
           posting: "投稿"
@@ -4567,8 +4667,17 @@ ja:
           search: "検索"
           groups: "グループ"
           dashboard: "ダッシュボード"
+        secret_list:
+          invalid_input: "入力フィールドを空にしたり、縦棒文字を含めることはできません。"
         default_categories:
+          modal_description: "この変更を過去に適用しますか？これにより、既存の %{count} 人のユーザーの設定が変更されます。"
           modal_yes: "はい"
+          modal_no: "いいえ。今後のみに変更を適用する"
+        simple_list:
+          add_item: "項目の追加…"
+        json_schema:
+          edit: エディタを起動
+          modal_title: "%{name} の編集"
       badges:
         title: バッジ
         new_badge: 新しいバッジ
@@ -4605,6 +4714,11 @@ ja:
         enabled: バッジを有効にする
         icon: アイコン
         image: 画像
+        graphic: グラフィック
+        icon_help: "Font Awesome アイコン名を入力します (通常のアイコンには接頭辞 'far-' を、ブランドアイコンには 'fab-' を使用します)"
+        image_help: "画像をアップロードすると、両方が設定されている場合、アイコンフィールドがオーバーライドされます。"
+        select_an_icon: "アイコンを選択"
+        upload_an_image: "画像をアップロード"
         read_only_setting_help: "テキストをカスタマイズする"
         query: バッジクエリ (SQL)
         target_posts: クエリターゲット投稿
