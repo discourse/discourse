@@ -2851,48 +2851,80 @@ ja:
       default_position: "デフォルトの位置"
       position_disabled: "カテゴリはアクティビティ順で表示されます。リスト内のカテゴリの順番を管理するには、 "
       position_disabled_click: '「カテゴリの位置の固定」の設定を有効にしてください。'
+      minimum_required_tags: "トピックに必要なタグの最小数:"
       parent: "親カテゴリ"
+      num_auto_bump_daily: "毎日自動的にバンプするオープントピックの数:"
+      navigate_to_first_post_after_read: "トピックが読まれた後最初の東欧に移動する"
       notifications:
         watching:
           title: "ウォッチ中"
+          description: "このカテゴリのすべてのトピックを自動的にウォッチします。各トピックに新しい投稿があるたびに通知され、新しい返信の数が表示されます。"
         watching_first_post:
           title: "最初の投稿をウォッチ中"
+          description: "このカテゴリの新しいトピックについて通知されますが、トピックへの返信は通知されません。"
         tracking:
           title: "追跡中"
+          description: "カテゴリ内のすべてのトピックを自動的に追跡します。誰かがあなたを @name でメンションした場合やあなたに返信した場合は通知され、新しい返信の数が表示されます。"
         regular:
           title: "通常"
           description: "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
         muted:
           title: "ミュート"
+          description: "このカテゴリの新しいトピックについて何も通知されません。また最新にも表示されません。"
       search_priority:
+        label: "検索の優先度"
         options:
           normal: "通常"
           ignore: "無視"
+          very_low: "非常に低い"
+          low: "低"
           high: "高"
+          very_high: "非常に高い"
       sort_options:
         default: "デフォルト"
         likes: "いいね！"
+        op_likes: "元の投稿の「いいね！」"
         views: "表示"
         posts: "投稿"
         activity: "アクティビティ"
         posters: "投稿者"
         category: "カテゴリ"
         created: "作成"
+      sort_ascending: "昇順"
+      sort_descending: "降順"
+      subcategory_list_styles:
+        rows: "行"
+        rows_with_featured_topics: "注目のトピックのある行"
+        boxes: "ボックス"
+        boxes_with_featured_topics: "注目のトピックのあるボックス"
       settings_sections:
         general: "一般"
+        moderation: "介入"
+        appearance: "外観"
         email: "メール"
+      list_filters:
+        all: "すべてのトピック"
+        none: "サブカテゴリなし"
+      colors_disabled: "category style が none であるため色を選択できません。"
     flagging:
       title: "報告していただきありがとうございます。"
       action: "投稿を通報"
+      take_action: "対応する..."
       take_action_options:
         default:
           title: "対応する"
           details: "誰かの通報を待たずに、今すぐ通報する"
         suspend:
           title: "ユーザーを凍結"
+          details: "通報のしきい値に達すると、ユーザーを凍結します"
+        silence:
+          title: "ユーザーを投稿禁止にする"
+          details: "通報のしきい値に達すると、ユーザーを投稿禁止にします"
       notify_action: "メッセージ"
       official_warning: "運営スタッフからの警告"
       delete_spammer: "迷惑行為者を削除"
+      flag_for_review: "レビューのキューに入れる"
+      delete_confirm_MF: "このユーザーの {POSTS, plural, other {<b>#</b> 件の投稿}}と{TOPICS, plural, other {<b>#</b> 件のトピック}}を削除し、アカウントを削除し、IP アドレス <b>{ip_address}</b> からの登録をブロックし、メールアドレス <b>{email}</b> を永久ブロックリストに追加しようとしています。本当にこのユーザーは迷惑行為者ですか？"
       yes_delete_spammer: "はい、迷惑行為者を削除する"
       ip_address_missing: "(該当なし)"
       hidden_email_address: "(非表示)"
@@ -2950,7 +2982,16 @@ ja:
         help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
       unlisted:
         help: "このトピックは非表示です。トピックリストには表示されません。直リンクでのみアクセス可能です"
+      personal_message:
+        title: "このトピックは個人メッセージです"
+        help: "このトピックは個人メッセージです"
     posts: "投稿"
+    posts_likes_MF: |
+      このトピックには{ratio, select,
+        low {「いいね！」率が高い}
+        med {「いいね！」率がとても高い}
+        high {「いいね！」率が非常に高い}
+        other {}}{count, plural, other {返信が # 件}}あります
     original_post: "元の投稿"
     views: "表示"
     views_lowercase:
@@ -2966,6 +3007,7 @@ ja:
     users_lowercase:
       other: "ユーザー"
     category_title: "カテゴリ"
+    history: "履歴、直近の 100 回のレビジョン"
     changed_by: "%{author}"
     raw_email:
       title: "受信メール"
@@ -3033,14 +3075,27 @@ ja:
         this_month: "今月"
         this_week: "今週"
         today: "今日"
+        other_periods: "上を参照:"
+    browser_update: '残念な我愛羅、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザは古すぎるため、このサイトを処理できません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">ブラウザをアップグレード</a>してからログインして、返信してください。'
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
       readonly: "閲覧"
     lightbox:
       download: "ダウンロード"
+      previous: "前へ (左矢印キー)"
+      next: "次へ (右矢印キー)"
       counter: "%curr% / %total%"
+      close: "閉じる (Esc)"
+      content_load_error: '<a href="%url%">コンテンツ</a>を読み込めませんでした。'
+      image_load_error: '<a href="%url%">画像</a>を読み込めませんでした。'
+    cannot_render_video: ブラウザがコーデックをサポートしていないため、この動画をレンダリングできません。
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: "、"
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} または %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "ショートカットキー"
       jump_to:
         title: "ページ移動"
@@ -3053,6 +3108,9 @@ ja:
         bookmarks: "%{shortcut} ブックマーク"
         profile: "%{shortcut} プロフィール"
         messages: "%{shortcut} メッセージ"
+        drafts: "%{shortcut} 下書き"
+        next: "%{shortcut} 次のトピック"
+        previous: "%{shortcut} 前のトピック"
       navigation:
         title: "ナビゲーション"
         jump: "%{shortcut} 投稿へ移動"
@@ -3060,6 +3118,7 @@ ja:
         up_down: "%{shortcut} 選択を移動 &uarr; &darr;"
         open: "%{shortcut} 選択したトピックを開く"
         next_prev: "%{shortcut} 次/前のセクション"
+        go_to_unread_post: "%{shortcut} 最初の未読の投稿に移動"
       application:
         title: "アプリケーション"
         create: "%{shortcut} 新しいトピックを作成"
@@ -3475,7 +3534,14 @@ ja:
         no_description: (説明なし)
         all_api_keys: すべての API キー
         user_mode: ユーザーレベル
+        impersonate_all_users: ユーザーを代理して操作
+        single_user: "単一ユーザー"
+        user_placeholder: ユーザー名を入力
+        description_placeholder: このキーは何に使用されますか？
         save: 保存
+        new_key: 新しい API キー
+        revoked: 取り消し済み
+        delete: 永久に削除
         continue: 続行
         scopes:
           action: 操作
@@ -3786,27 +3852,73 @@ ja:
           theme_settings: "テーマの設定"
           no_settings: "このテーマには設定がありません。"
           theme_translations: "テーマの翻訳"
+          empty: "項目なし"
+          commits_behind:
+            other: "テーマは %{count} コミット遅れです！"
+          compare_commits: "(新しいコミットを参照)"
+          remote_theme_edits: "このテーマを編集する場合は、<a href='%{repoURL}' target='_blank'>そのリポジトリに変更を送信</a>する必要があります"
+          repo_unreachable: "このテーマの Git リポジトリに接続できませんでした。エラーメッセージ:"
+          imported_from_archive: "このテーマは .zip ファイルからインポートされました"
           scss:
             text: "CSS"
+            title: "カスタム CSS を入力してください。すべての有効な CSS および SCSS スタイルを受け入れます"
           header:
             text: "ヘッダー"
+            title: "サイトヘッダーの上に表示する HTML を入力してください"
+          after_header:
+            text: "ヘッダーの後"
+            title: "すべてのページのヘッダーの後に表示する HTML を入力してください"
           footer:
             text: "フッター"
+            title: "ページのフッターに表示する HTML を入力してください"
+          embedded_scss:
+            text: "埋め込み CSS"
+            title: "埋め込みバージョンのコメントとともに配信するカスタム CSS を入力してください"
+          color_definitions:
+            text: "色の定義"
+            title: "カスタム色定義を入力してください (上級ユーザーのみ)"
+            placeholder: |2-
+
+              このスタイルシートを使用して、カスタム色を CSS カスタムプロパティのリストに追加します。
+
+              例:
+
+              %{example}
+
+              プラグインやコアとの競合を避けるには、プロパティ名に接頭辞を付けることを強くお勧めします。
           head_tag:
             text: "</head>"
             title: "</head> タグの前に挿入される HTML"
           body_tag:
             text: "</body>"
             title: "</body> タグの前に挿入される HTML"
+          yaml:
+            text: "YAML"
+            title: "YAML 形式でテーマ設定を定義してください"
+          scss_color_variables_warning: 'テーマにコア SCSS 色変数を使用することは推奨されません。CSS カスタムプロパティを使用してください。詳細については、<a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">こちらのガイド</a>を参照してください。'
+          scss_warning_inline: "テーマにコア SCSS 色変数を使用するのは推奨されません。"
         colors:
+          select_base:
+            title: "基本色パレットを選択してください"
+            description: "基本パレット:"
           title: "色"
+          edit: "色パレットを編集"
+          long_title: "色パレット"
+          about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
+          new_name: "新しい色パレット"
           copy_name_prefix: "コピー元:"
+          delete_confirm: "この色パレットを削除しますか？"
           undo: "元に戻す"
           undo_title: "変更を元に戻して、前回保存された色にします。"
           revert: "戻す"
+          revert_title: "この色を Discourse のデフォルトの色パレットにリセットします。"
           primary:
             name: "プライマリー"
             description: "ほとんどのテキスト、アイコン、ボーダー。"
+          primary-medium:
+            name: "primary-medium"
+          primary-low-mid:
+            name: "primary-low-mid"
           secondary:
             name: "セカンダリー"
             description: "メインの背景色とボタンのテキスト色。"
@@ -3825,6 +3937,12 @@ ja:
           highlight:
             name: "ハイライト"
             description: "投稿やトピックなど、ページのハイライトされた要素の背景色。"
+          highlight-high:
+            name: "highlight-high"
+          highlight-medium:
+            name: "highlight-medium"
+          highlight-low:
+            name: "highlight-low"
           danger:
             name: "危険"
             description: "投稿やトピックの削除といった操作の強調色。"
@@ -3834,12 +3952,31 @@ ja:
           love:
             name: "ラブ"
             description: "「いいね！」ボタンの色。"
+        robots:
+          title: "サイトの robots.txt ファイルをオーバーライド:"
+          warning: "これにより、関連するすべてのサイト設定が永久にオーバーライドされます。"
+          overridden: サイトのデフォルトの robots.txt ファイルがオーバーライドされています。
         email_style:
+          title: "メールのスタイル"
+          heading: "メールのスタイルをカスタマイズ"
+          html: "HTML テンプレート"
           css: "CSS"
+          reset: "デフォルトにリセット"
+          reset_confirm: "本当にデフォルトの %{fieldName} にリセットしてすべての変更を失いますか？"
+          save_error_with_reason: "変更は保存されませんでした。%{error}"
+          instructions: "すべての HTML メールがレンダリングされるテンプレートをカスタマイズし、CSS を使ってスタイルを設定します。"
       email:
         title: "メール"
         settings: "設定"
         templates: "テンプレート"
+        preview_digest: "要約をプレビュー"
+        advanced_test:
+          title: "高度なテスト"
+          desc: "Discourse が受信したメールをどのように処理するのかご覧ください。メールを正しく処理できるようにするには、元のメールメッセージ全体を以下に貼り付けてください。"
+          email: "元のメッセージ"
+          run: "テストを実行"
+          text: "選択されたテキスト本文"
+          elided: "省略テキスト"
         sending_test: "テストメールを送信中..."
         error: "<b>エラー</b> - %{server_error}"
         test_error: "テストメールを送信中に問題が発生しました。メール設定を再確認し、ホストがメール接続をブロックしていないことを確認してから、もう一度お試しください。"
@@ -4090,6 +4227,7 @@ ja:
         actions:
           block: "ブロック"
           censor: "検閲"
+          require_approval: "要承認"
           flag: "通報"
           replace: "置換"
           tag: "タグ"
@@ -4097,8 +4235,16 @@ ja:
           link: "リンク"
         action_descriptions:
           block: "これらの語を含む投稿が投稿されないようにします。投稿しようとすると、エラーメッセージが表示されます。"
+          censor: "これらの語を含む投稿を許可しますが、検閲された語を非表示にする文字に置き換えられます。"
+          require_approval: "これらの語を含む投稿は、表示される前にスタッフによる承認が必要です。"
           flag: "これらの言葉を含む投稿を許可しますが、モデレーターがこれをレビューできるよう、不適切として通報されます。"
+          replace: "投稿内の語を他の語に置き換えます"
+          tag: "最初の投稿に基づいてトピックに自動的にタグを付けます"
+          silence: "これらの語を含むユーザーの最初の投稿には、表示される前とユーザーが自動的に投稿禁止になる前にスタッフによる承認が必要です。"
+          link: "投稿内の語をリンクに置き換えます"
         form:
+          label: "語またはフレーズがある"
+          placeholder: "語またはフレーズを入力してください (* はワイルカード)"
           placeholder_regexp: "正規表現"
           replace_label: "置換"
           replace_placeholder: "例"
