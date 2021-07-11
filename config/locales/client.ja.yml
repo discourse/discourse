@@ -1885,16 +1885,24 @@ ja:
           confirm: 新しいトピックの下書きが保存されていますが、リンクトピックを作成すると上書きされます。
         reply_as_new_group_message:
           label: 新しいグループメッセージとして返信
+          desc: 同じ受信者で新しい非公開メッセージを作成します
         reply_as_private_message:
           label: 新規メッセージ
           desc: 新しい個人メッセージを作成する
         reply_to_topic:
           label: トピックへ返信
           desc: 特定の投稿ではなく、トピックに返信する
+        toggle_whisper:
+          label: ささやきを切り替える
+          desc: ささやきはスタッフメンバーにのみ表示されます
         create_topic:
           label: "新規トピック"
         shared_draft:
           label: "共有の下書き"
+          desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
+        toggle_topic_bump:
+          label: "トピックのバンプを切り替える"
+          desc: "最新の返信日を変更せずに返信する"
       reload: "再読み込み"
       ignore: "無視する"
     notifications:
@@ -1921,6 +1929,8 @@ ja:
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
       liked_many:
         other: "<span class='multi-user'>%{username}、%{username2}、他 %{count} 人</span> %{description}"
+      liked_consolidated_description:
+        other: "はあなたの %{count} 件の投稿に「いいね！」しました"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1931,6 +1941,9 @@ ja:
       granted_badge: "「%{description}」をゲット！"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>新規トピック</span> %{description}"
+      membership_request_accepted: "%{group_name} のメンバーシップが承認されました"
+      membership_request_consolidated:
+        other: "'%{group_name}' の %{count} 件のオープンメンバーシップリクエスト"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 完了"
@@ -1947,24 +1960,35 @@ ja:
         watching_first_post: '%{username} が新規トピック「%{topic}」を作成しました - %{site_title}'
         confirm_title: "通知を有効にしました - %{site_title}"
         confirm_body: "成功！通知を有効にしました！"
+        custom: "%{username} からの通知（%{site_title}）"
       titles:
         mentioned: "メンション"
         replied: "新しい返信"
         quoted: "引用"
         edited: "編集"
+        liked: "新しい「いいね！」"
         private_message: "新しい個人メッセージ"
         invited_to_private_message: "個人メッセージに招待"
         invitee_accepted: "招待が承諾されました"
         posted: "新しい投稿"
         moved_post: "投稿が移動されました"
+        linked: "リンクされました"
+        bookmark_reminder: "ブックマークのリマインダー"
+        bookmark_reminder_with_name: "ブックマークのリマインダー - %{name}"
         granted_badge: "バッジを獲得しました"
         invited_to_topic: "トピックに招待されました"
         group_mentioned: "グループがメンションされました"
         group_message_summary: "新着のグループメッセージ"
         watching_first_post: "新着トピック"
         topic_reminder: "トピックのリマインダー"
+        liked_consolidated: "新しい「いいね！」"
+        post_approved: "投稿が承認されました"
+        membership_request_consolidated: "新しいメンバーシップリクエスト"
+        reaction: "新しいリアクション"
+        votes_released: "投票がリリースされました"
     upload_selector:
       uploading: "アップロード中"
+      processing: "アップロードを処理中"
       select_file: "ファイル選択"
       default_image_alt_text: 画像
     search:
@@ -1977,10 +2001,14 @@ ja:
       select_all: "すべて選択"
       clear_all: "すべてクリア"
       too_short: "検索文字が短すぎます。"
+      result_count:
+        other: "<span class='term'>%{term}</span> の <span>%{count}%{plus} 件の結果</span>"
       title: "トピック、投稿、ユーザー、カテゴリを検索"
+      full_page_title: "トピックまたは投稿を検索"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
       post_format: "%{username} の #%{post_number}"
+      results_page: "'%{term}' の検索結果"
       more_results: "検索結果が多数あります。検索条件を絞ってください。"
       cant_find: "探しているものが見つかりませんか？"
       start_new_topic: "新しいトピックを始めてみては？"
@@ -1991,6 +2019,7 @@ ja:
       context:
         user: "@%{username} の投稿を検索"
         category: "#%{category} カテゴリを検索"
+        tag: "#%{tag} タグを検索"
         topic: "このトピックを検索"
         private_messages: "メッセージを検索"
       advanced:
@@ -2006,9 +2035,11 @@ ja:
         with_tags:
           label: タグ
         filters:
+          label: トピック/投稿のみを返す...
           title: タイトルが一致するもの
           likes: '「いいね！」した項目'
           posted: 投稿したもの
+          created: 自分が作成したもの
           watching: ウォッチ中
           tracking: 追跡中
           private: メッセージ内
@@ -2024,23 +2055,33 @@ ja:
           label: トピック
           open: オープン
           closed: クローズ
+          public: 公開のもの
           archived: アーカイブ済み
           noreplies: 返信がない
           single_user: ユーザーが 1 人
         post:
           count:
             label: 投稿
+          min:
+            placeholder: 最小
+          max:
+            placeholder: 最ぢあ
           time:
             label: 投稿時期
             before: 以前
             after: 以降
         views:
           label: 表示回数
+        min_views:
+          placeholder: 最小
+        max_views:
+          placeholder: 最大
     hamburger_menu: "他のトピックリストやカテゴリに移動"
     new_item: "新着"
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"
     current_user: "ユーザーページに移動"
+    view_all: "すべての %{tab} を表示"
     topics:
       new_messages_marker: "最後の訪問"
       bulk:
@@ -2052,10 +2093,16 @@ ja:
         delete: "トピックを削除"
         dismiss: "無視"
         dismiss_read: "未読をすべて無視する"
+        dismiss_read_with_selected:
+          other: "未読の %{count} 件を閉じる"
         dismiss_button: "無視..."
+        dismiss_button_with_selected:
+          other: "閉じる (%{count})…"
         dismiss_tooltip: "新規投稿のみを無視するかトピックの追跡を停止します"
         also_dismiss_topics: "これらのトピックの追跡を停止して、未読として表示されないようにする"
         dismiss_new: "新規を無視"
+        dismiss_new_with_selected:
+          other: "新規を閉じる (%{count})"
         toggle: "トピックの一括選択を切り替える"
         actions: "一括操作"
         change_category: "カテゴリを設定"
@@ -2063,6 +2110,7 @@ ja:
         archive_topics: "トピックをアーカイブ"
         move_messages_to_inbox: "受信トレイへ移動"
         notification_level: "通知"
+        change_notification_level: "通知レベルを変更"
         choose_new_category: "このトピックの新しいカテゴリを選択:"
         selected:
           other: "<b>%{count}</b> 件のトピックを選択しました。"
@@ -2071,6 +2119,11 @@ ja:
         choose_new_tags: "これらのトピックに新しいタグを選択:"
         choose_append_tags: "これらのトピックに追加する新しいタグを選択:"
         changed_tags: "トピックのタグが変更されました。"
+        remove_tags: "すべてのタグを削除"
+        confirm_remove_tags:
+          other: "<b>%{count}</b> 件のトピックからすべてのタグが削除されます。よろしいですか？"
+        progress:
+          other: "進捗状況: <strong>%{count}</strong> 件のトピック"
       none:
         unread: "未読のトピックはありません。"
         new: "新しいトピックはありません。"
@@ -2082,6 +2135,7 @@ ja:
         top: "人気のトピックはありません。"
         educate:
           new: '<p>新しいトピックがここに表示されます。デフォルトでは、2 日以内に作成されたトピックは新しいトピックとみなされ、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> が表示されます。</p><p>この設定はユーザー<a href="%{userPrefsUrl}">設定</a>で変更できます。</p>'
+          unread: "<p>新しいトピックがここに表示されます。</p><p>デフォルトでは次の場合にトピックは未読とされ未読数 <span class=\"badge unread-posts badge-notification\">1</span> が表示されます。</p><ul><li>トピックを作成した場合</li><li>トピックに返信した場合</li><li>トピックを 4 分以上閲覧した場合</li></ul><p>または各トピックの \U0001F514 を通じて明示的にトピックを「追跡」または「ウォッチ中」に設定した場合</p><p>これを変更するには、<a href=\"%{userPrefsUrl}\">設定</a>にアクセスしてください。</p>"
       bottom:
         latest: "最新のトピックは以上です。"
         posted: "投稿のあるトピックは以上です。"
@@ -2136,23 +2190,34 @@ ja:
       not_found:
         title: "トピックが見つかりませんでした"
         description: "トピックが見つかりませんでした。モデレーターによって削除された可能性があります。"
+      unread_posts:
+        other: "このトピックに %{count} 件の未読の投稿があります"
       likes:
         other: "このトピックには %{count} 個の「いいね！」があります"
       back_to_list: "トピックリストに戻る"
       options: "トピックのオプション"
       show_links: "このトピック内のリンクを表示する"
+      collapse_details: "トピックの詳細を折りたたむ"
+      expand_details: "トピックの詳細を展開する"
       read_more_in_category: "もっと読みますか？%{catLink} または %{latestLink} での他のトピックを閲覧できます。"
       read_more: "もっと読みますか？%{catLink} または %{latestLink}。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
+      read_more_MF: "{ UNREAD, plural, =0 {} other {<a href='{basePath}/unread'># 件の未読</a>} }{ NEW, plural, =0 {} other { {BOTH, select, true{と} false {} other{}} <a href='{basePath}/new'># 件の新しい</a>トピック} } が残っています。または {CATEGORY, select, true {{catLink} のほかのトピックを閲覧してください} false {{latestLink}} other {}}"
+      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: すべてのカテゴリを閲覧する
       browse_all_tags: すべてのタグを閲覧する
       view_latest_topics: 最新のトピックを表示する
+      suggest_create_topic: <a href>新しい会話を開始しますか？</a>
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
       slow_mode_update:
+        title: "低速モード"
         select: "ユーザーはこのトピックに次の頻度でのみ投稿できます。"
+        description: "流れの速いディスカッションや論争になりがちなディスカッションで建設的な対話を奨励するため、このトピックへの投稿はしばらく待ってから行う必要があります。"
         enable: "有効化"
+        update: "更新"
+        enabled_until: "有効期限:"
         remove: "無効化"
         hours: "時間:"
         minutes: "分:"
@@ -2615,6 +2680,22 @@ ja:
         actions:
           delete_bookmark:
             name: "ブックマークを削除"
+            description: "プロフィールからブックマークを削除し、ブックマークのすべてのリマインダーを停止します"
+          edit_bookmark:
+            name: "ブックマークを編集"
+            description: "ブックマーク名を編集するか、リマインダーの日時を変更します"
+          pin_bookmark:
+            name: "ブックマークを固定"
+            description: "ブックマークを固定します。固定すると、ブックマークリストの一番上に表示されるようになります。"
+          unpin_bookmark:
+            name: "ブックマークの固定を解除"
+            description: "ブックマークの固定を解除します。解除すると、ブックマークリストの一番上に表示されなくなります。"
+      filtered_replies:
+        viewing_posts_by: "次の投稿者の %{post_count} 件の投稿を閲覧中"
+        viewing_subset: "一部の返信は折りたたまれています"
+        viewing_summary: "このトピックの要約を表示しています"
+        post_number: "%{username}、投稿 #%{post_number}"
+        show_all: "すべて表示"
     category:
       can: "できること&hellip; "
       none: "(カテゴリなし)"
@@ -2623,12 +2704,23 @@ ja:
       edit: "編集"
       edit_dialog_title: "編集: %{categoryName}"
       view: "カテゴリのトピックを表示"
+      back: "カテゴリに戻る"
       general: "一般"
       settings: "設定"
       topic_template: "トピックテンプレート"
       tags: "タグ"
+      tags_allowed_tags: "これらのタグをこのカテゴリに制限する:"
+      tags_allowed_tag_groups: "これらのタググループをこのカテゴリに制限する:"
       tags_placeholder: "(オプション) 許可されたタグのリスト"
+      tags_tab_description: "上記に指定されたタグとタググループはこのカテゴリと、それらを同様に指定したほかのカテゴリでのみ利用できるようになります。指定されていないカテゴリでは利用できません。"
       tag_groups_placeholder: "(オプション) 許可されたタググループのリスト"
+      manage_tag_groups_link: "タググループの管理"
+      allow_global_tags_label: "他のタグも許可"
+      tag_group_selector_placeholder: "(オプション) タググループ"
+      required_tag_group_description: "新しいトピックでタググループのタグの使用を必須とする:"
+      min_tags_from_required_group_label: "タグ数:"
+      required_tag_group_label: "タググループ:"
+      topic_featured_link_allowed: "このカテゴリに注目のリンクを許可する"
       delete: "カテゴリを削除"
       create: "新規カテゴリ"
       create_long: "新しいカテゴリを作成する"
@@ -2654,15 +2746,34 @@ ja:
       change_in_category_topic: "説明を編集"
       already_used: "この色は他のカテゴリで使用されています。"
       security: "セキュリティ"
+      security_add_group: "グループの追加"
       permissions:
         group: "グループ"
         see: "閲覧"
         reply: "返信"
+        create: "作成"
+        no_groups_selected: "アクセスを許可されたグループはありません。このカテゴリはスタッフにのみ表示されます。"
+        everyone_has_access: 'このカテゴリは公開されており、全員が閲覧、返信、および投稿の作成を行えます。権限を制限するには、"全員" グループに付与されている 1 つ以上の権限を削除してください。'
+        toggle_reply: "返信権限の切り替え"
+        toggle_full: "作成権限の切り替え"
+        inherited: 'この権限は "全員" から継承されます'
+      special_warning: "警告: このカテゴリは事前にシードされたカテゴリであるため、セキュリティ設定を編集できません。このカテゴリを使用しない場合は、転用せずに削除してください。"
+      uncategorized_security_warning: "このカテゴリは特殊です。カテゴリのないトピックを保存するために用意されているため、セキュリティを設定できません。"
+      uncategorized_general_warning: 'このカテゴリは特殊です。カテゴリが選択されていない新しいトピックのデフォルトのカテゴリとして使用されます。この動作を適用せずにカテゴリの選択を強制するには、<a href="%{settingLink}">ここで設定を無効にしてください</a>。名前または説明を変更するには、<a href="%{customizeLink}">カスタマイズ/テキストコンテンツ</a>に移動してください。'
+      pending_permission_change_alert: "このカテゴリに %{group} を追加していません。このボタンをクリックして追加してください。"
       images: "画像"
       email_in: "カスタム受信メールアドレス:"
       email_in_allow_strangers: "登録されていない匿名のユーザーからのメールを受け取る"
       email_in_disabled: "メールによる新しいトピックの投稿は、サイトの設定で無効になっています。メールによる新しいトピックの投稿を有効にするには、 "
       email_in_disabled_click: '"email in" 設定を有効にする。'
+      mailinglist_mirror: "カテゴリはメーリングリストを反映"
+      show_subcategory_list: "このカテゴリのトピックの上にサブカテゴリのリストを表示します。"
+      read_only_banner: "ユーザーがこのカテゴリにトピックを作成できない場合のバナーテキスト:"
+      num_featured_topics: "カテゴリページに表示するトピック数:"
+      subcategory_num_featured_topics: "上位カテゴリのページに掲載する注目のトピック数:"
+      all_topics_wiki: "デフォルトで新しいトピックをウィキにする"
+      allow_unlimited_owner_edits_on_first_post: "最初の投稿へのオーナーによる無制限の編集を許可する"
+      subcategory_list_style: "サブカテゴリのリストのスタイル:"
       allow_badges_label: "このカテゴリでバッジの付与を許可する"
       edit_permissions: "権限を編集"
       review_group_name: "グループ名"
