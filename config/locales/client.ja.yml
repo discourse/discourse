@@ -2478,9 +2478,11 @@ ja:
       move_to:
         title: "移動先"
         action: "移動先"
+        error: "投稿を移動中にエラーが発生しました。"
       split_topic:
         title: "新規トピックに移動"
         action: "新規トピックに移動"
+        topic_name: "新しいトピックのタイトル"
         radio_label: "新規トピック"
         error: "投稿を新規トピックに移動する際にエラーが発生しました。"
         instructions:
@@ -2489,6 +2491,7 @@ ja:
         title: "既存のトピックに移動"
         action: "既存のトピックに移動"
         error: "指定されたトピックへの投稿移動中にエラーが発生しました。"
+        radio_label: "既存のトピック"
         instructions:
           other: "<b>%{count}</b> 件の投稿を移動するトピックを選択してください。"
       move_to_new_message:
@@ -2497,21 +2500,42 @@ ja:
         message_title: "新規メッセージタイトル"
         radio_label: "新規メッセージ"
         participants: "参加者"
+        instructions:
+          other: "新しいメッセージを作成し、選択した <b>%{count}</b> 件の投稿をそれに挿入しようとしています。"
       move_to_existing_message:
         title: "既存のメッセージに移動"
         action: "既存のメッセージに移動"
         radio_label: "既存のメッセージ"
         participants: "参加者"
+        instructions:
+          other: "<b>%{count}</b> 件の投稿を移動するメッセージを選択してください。"
       merge_posts:
         title: "選択した投稿をマージ"
         action: "選択した投稿をマージ"
         error: "選択した投稿をマージ中にエラーが発生しました。"
       publish_page:
+        title: "ページの公開"
+        publish: "公開"
+        description: "トピックがページとして公開されると、その URL を共有できるようになり、カスタムスタイルで表示されるようになります。"
+        slug: "スラッグ"
         public: "公開"
+        public_description: "関連するトピックが非公開である場合でも、ページを閲覧できます。"
+        publish_url: "ページは次の場所に公開されました:"
+        topic_published: "トピックは次の場所に公開されました:"
+        preview_url: "ページは次の場所に公開されます:"
+        invalid_slug: "このページを公開できません。"
+        unpublish: "公開を取り消す"
+        unpublished: "ページの公開は取り消され、アクセスできなくなりました。"
+        publishing_settings: "公開設定"
       change_owner:
+        title: "オーナーを変更"
         action: "オーナーシップを変更"
         error: "投稿のオーナーシップを変更中にエラーが発生しました。"
         placeholder: "新しいオーナーのユーザー名"
+        instructions:
+          other: "<b>@%{old_user}</b> の %{count} 件の投稿に新しいオーナーを選択してください"
+        instructions_without_old_user:
+          other: "%{count} 件の投稿に新しいオーナーを選択してください。"
       change_timestamp:
         title: "タイムスタンプを変更..."
         action: "タイムスタンプを変更"
@@ -2523,59 +2547,92 @@ ja:
         selected: "選択済み (%{count})"
         select_post:
           label: "選択"
+          title: "選択に投稿を追加する"
+        selected_post:
+          label: "選択済み"
+          title: "クリックして選択から投稿を削除する"
         select_replies:
           label: "複数の返信を選択"
+          title: "投稿とすべての返信を選択に追加する"
+        select_below:
+          label: "+下を選択"
+          title: "投稿とその後のすべてを選択に追加する"
         delete: 選択済みを削除
         cancel: 選択をキャンセル
         select_all: すべて選択
         deselect_all: すべて選択解除
         description:
           other: "<b>%{count}</b> 件の投稿を選択しました。"
+      deleted_by_author_simple: "(作成者が削除したトピック)"
     post:
       quote_reply: "引用"
       quote_share: "共有"
       edit_reason: "理由: "
       post_number: "投稿 %{number}"
       ignored: "無視したコンテンツ"
+      wiki_last_edited_on: "%{dateTime}に最終編集されたウィキ"
+      last_edited_on: "%{dateTime} に最終編集された投稿"
       reply_as_new_topic: "リンクトピックとして返信"
       reply_as_new_private_message: "同じ受信者に新規メッセージとして返信する"
       continue_discussion: "%{postLink} からディスカッションを続行:"
       follow_quote: "引用した投稿に移動"
       show_full: "投稿全文を表示"
       show_hidden: "無視したコンテンツを表示します。"
+      deleted_by_author_simple: "(作成者が削除した投稿)"
       collapse: "折りたたむ"
       expand_collapse: "展開/折りたたむ"
+      locked: "スタッフメンバーは、この投稿を編集できないようにロックしました"
       gap:
         other: "%{count} 件の非表示の返信を表示する"
       notice:
         new_user: "%{user} が投稿するのはこれが初めてです。コミュニティで歓迎しましょう！"
+        returning_user: "%{user} を見かけてからしばらく経ちました。最後の投稿は %{time} でした。"
       unread: "投稿は未読です"
       has_replies:
         other: "%{count} 件の返信"
+      has_replies_count: "%{count} 件"
+      unknown_user: "(不明/削除されたユーザー)"
       has_likes_title:
         other: "%{count} 人がこの投稿に「いいね！」しました"
       has_likes_title_only_you: "この投稿に「いいね！」しました"
       has_likes_title_you:
         other: "あなたと他 %{count} 人がこの投稿に「いいね！」しました"
+      filtered_replies_hint:
+        other: "この投稿との %{count} 件の返信を表示します"
+      filtered_replies_viewing:
+        other: "%{count} 件の返信を表示中:"
+      in_reply_to: "上位投稿を読み込む"
+      view_all_posts: "すべての投稿を表示"
       errors:
         create: "投稿を作成中にエラーが発生しました。もう一度やり直してください。"
         edit: "投稿を編集中にエラーが発生しました。もう一度やり直してください。"
         upload: "ファイルのアップロード中にエラーが発生しました。もう一度やり直してください。"
+        file_too_large: "ファイルが大きすぎます (最大サイズは %{max_size_kb} kb です)。クラウド共有サービスにアップロードしてから、そのリンクを貼り付けませんか？"
         too_many_uploads: "複数のファイルを同時にアップロードすることはできません。"
+        too_many_dragged_and_dropped_files:
+          other: "一度に %{count} 個のファイルまでアップロードできます。"
         upload_not_authorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
         image_upload_not_allowed_for_new_user: "新規ユーザーは画像をアップロードできません。"
         attachment_upload_not_allowed_for_new_user: "新規ユーザーはファイルを添付できません。"
         attachment_download_requires_login: "添付ファイルをダウンロードするには、ログインする必要があります。"
+      cancel_composer:
+        confirm: "投稿をどうしますか？"
+        discard: "破棄"
+        save_draft: "後で使用するために下書きとして保存"
+        keep_editing: "編集を続ける"
       via_email: "これはメールで投稿されました"
+      via_auto_generated_email: "この投稿は自動生成メールで届きました"
       whisper: "この投稿はモデレーターの非公開のささやきです"
       wiki:
         about: "この投稿はウィキです"
       archetypes:
         save: "保存オプション"
+      few_likes_left: "愛を共有してくれてありがとう！今日は後数個しか「いいね！」できません。"
       controls:
         reply: "この投稿の返信を作成する"
         like: "この投稿に「いいね！」する"
         has_liked: "この投稿に「いいね！」しました"
+        read_indicator: "この投稿を読んだメンバー"
         undo_like: "「いいね！」を取り消す"
         edit: "この投稿を編集"
         edit_action: "編集"
@@ -2586,6 +2643,11 @@ ja:
         share: "この投稿へのリンクを共有する"
         more: "もっと"
         delete_replies:
+          confirm: "この投稿への返信も削除しますか？"
+          direct_replies:
+            other: "はい。%{count} 件のダイレクト返信も削除"
+          all_replies:
+            other: "はい。全 %{count} 件の返信も削除"
           just_the_post: "いいえ、この投稿のみ"
         admin: "投稿の管理者操作"
         wiki: "ウィキにする"
@@ -3128,31 +3190,59 @@ ja:
       upload_successful: "タグを正常にアップロードしました"
       delete_unused_confirmation:
         other: "%{count} 個のタグが削除されます: %{tags}"
+      delete_unused_confirmation_more_tags:
+        other: "%{tags} と他 %{count} 個"
+      delete_no_unused_tags: "未使用のタグはありません。"
+      tag_list_joiner: "、"
       delete_unused: "未使用のタグを削除"
+      delete_unused_description: "どのトピックまたは個人メッセージにも添付されていないすべてのタグを削除します"
       cancel_delete_unused: "キャンセル"
       filters:
         without_category: "%{filter} %{tag} トピック"
+        with_category: "%{filter} %{category} の %{tag} 件のトピック"
+        untagged_without_category: "%{filter} タグなしのトピック"
+        untagged_with_category: "%{filter} %{category} のタグなしのトピック"
       notifications:
         watching:
           title: "ウォッチ中"
+          description: "このタグのついたすべてのトピックを自動的にウォッチします。すべての新しい投稿とトピックが通知され、トピックの隣に未読と新しい投稿の件数が表示されます。"
         watching_first_post:
           title: "最初の投稿をウォッチ中"
           description: "このタグの新着トピックは通知されますが、トピックへの返信は通知されません。"
         tracking:
           title: "追跡中"
+          description: "このタグが付いたすべてのトピックを自動的に追跡します。トピックの隣に未読と新しい投稿の件数が表示されます。"
         regular:
           title: "通常"
           description: "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
         muted:
           title: "ミュート"
+          description: "このタグのついた新しいトピックについては何も通知されず、未読タブにも表示されません。"
       groups:
         title: "タグのグループ"
+        about_heading: "タググループの選択または新しいタググループの作成"
+        about_heading_empty: "まず新しいタググループを作成します"
+        about_description: "タググループでは、1 か所で複数のタグの権限を管理できます。"
         new: "新しいグループ"
+        new_title: "グループの新規作成"
+        edit_title: "タググループの編集"
+        tags_label: "このグループのタグ"
+        parent_tag_label: "親タグ"
+        parent_tag_description: "親タグがある場合、このグループのタグのみを使用できます。"
+        one_per_topic_label: "トピック当たりこのグループから 1 つのタグに制限する"
         new_name: "新しいタグのグループ"
+        name_placeholder: "名前"
         save: "保存"
         delete: "削除"
         confirm_delete: "このタググループを削除してもよろしいですか？"
         everyone_can_use: "全員がタグを使用できます。"
+        usable_only_by_groups: "タグは全員に表示されますが、次のグループのみが使用できます。"
+        visible_only_to_groups: "タグは次のグループにのみ表示されます"
+        cannot_save: "タググループを保存できません。少なくとも 1 つのタグが存在し、タググループ名が空でなく、タグ権限のグループが選択されていることを確認してください。"
+        tags_placeholder: "タグを検索または作成"
+        parent_tag_placeholder: "オプション"
+        select_groups_placeholder: "グループを選択..."
+        disabled: "タグ付けは無効になっています。 "
       topics:
         none:
           unread: "未読のトピックはありません。"
@@ -3165,6 +3255,9 @@ ja:
     invite:
       custom_message: "<a href>カスタムメッセージ</a>で、招待状をもう少し個人的にします。"
       custom_message_placeholder: "カスタムメッセージを入力"
+      approval_not_required: "ユーザーはこの招待を承認するとすぐに自動認証されます。"
+      custom_message_template_forum: "このフォーラムに参加しませんか？"
+      custom_message_template_topic: "このトピックを読んでみませんか？"
     footer_nav:
       back: "戻る"
       share: "共有"
@@ -4050,6 +4143,12 @@ ja:
           button: "マージ"
           prompt:
             title: "@%{username} を転送して削除"
+            description: |
+              <p><b>@%{username}</b> のコンテンツの新しいオーナーを選択してください。</p>
+
+              <p><b>@%{username}</b> が作成したすべてのトピック、投稿、メッセージ、およびその他のコンテンツは転送されます。</p>
+            target_username_placeholder: "新しいオーナーのユーザー名"
+            transfer_and_delete: "@%{username} を転送して削除"
             cancel: "キャンセル"
           confirmation:
             cancel: "キャンセル"
@@ -4245,6 +4344,7 @@ ja:
         enabled: バッジを有効にする
         icon: アイコン
         image: 画像
+        read_only_setting_help: "テキストをカスタマイズする"
         query: バッジクエリ (SQL)
         target_posts: クエリターゲット投稿
         auto_revoke: クエリの取り消しを毎日実行する
@@ -4275,6 +4375,20 @@ ja:
             with_post: '%{link} で行われた投稿の <span class="username">%{username}</span>'
             with_post_time: '%{link} で <span class="time">%{time}</span> に行われた投稿の <span class="username">%{username}</span>'
             with_time: <span class="time">%{time}</span> の <span class="username">%{username}</span>
+        badge_intro:
+          title: "既存のバッジを選択するか、新しいバッジを作成してください"
+          emoji: "女子学生の絵文字"
+          what_are_badges_title: "バッジとは何ですか？"
+          badge_query_examples_title: "バッジクエリの例"
+        mass_award:
+          title: 一括授与
+          description: 一度に複数のユーザーに同じバッジを授与します。
+          no_badge_selected: まずバッジを選択してください。
+          perform: "ユーザーにバッジを授与"
+          upload_csv: ユーザーのメールまたはユーザー名が含まれる CSV をアップロード
+          aborted: ユーザーのメールまたはユーザー名が含まれる CSV をアップロードしてください
+          success: CSV を受信しました。間もなくユーザーにバッジが授与されます。
+          replace_owners: 以前のオーナーからバッジを削除する
       emoji:
         title: "絵文字"
         help: "みんなが利用できる新しい絵文字を追加します。(ヒント: 複数のファイルを一度にドラッグアンドドロップできます)"
@@ -4283,23 +4397,34 @@ ja:
         name: "名前"
         group: "グループ"
         image: "画像"
+        alt: "カスタム絵文字のプレビュー"
         delete_confirm: ":%{name}: 絵文字を削除してもよろしいですか？"
       embedding:
+        get_started: "ほかのウェブサイトに Discourse を埋め込む場合は、まずホストを追加してください。"
         confirm_delete: "このホストを削除してもよろしいですか？"
+        sample: "次の HTML コードをサイトに使用して、Discourse のトピックを作成して埋め込みます。<b>REPLACE_ME</b> を埋め込み先の正規 URL に置き換えてください。"
         title: "埋め込み"
         host: "許可されたホスト"
         class_name: "クラス名"
+        allowed_paths: "パスのホワイトリスト"
         edit: "編集"
         category: "カテゴリへ投稿"
         add_host: "ホストを追加"
         settings: "埋め込みの設定"
+        crawling_settings: "クローラーの設定"
+        crawling_description: "Discourse が投稿のトピックを作成する際に RSS/ATOM フィードが存在しない場合、HTML からコンテンツを解析しようとします。コンテンツの抽出が困難な場合があるため、抽出を容易にする CSS ルールを指定する機能を提供しています。"
+        embed_by_username: "トピック作成のユーザー名"
+        embed_post_limit: "埋め込める投稿の最大数"
+        embed_title_scrubber: "投稿のタイトルをスクラブするために使用される正規表現"
         embed_truncate: "埋め込まれた投稿を切り捨てる"
+        embed_unlisted: "インポートされたトピックは、返信があるまでリストされません。"
         allowed_embed_selectors: "埋め込みで許可される要素の CSS セレクタ"
         blocked_embed_selectors: "埋め込みから削除された要素の CSS セレクタ"
         allowed_embed_classnames: "許可された CSS クラス名"
         save: "埋め込みの設定を保存"
       permalink:
         title: "パーマリンク"
+        description: "フォーラムが認識していない URL に適用するリダイレクト。"
         url: "URL"
         topic_id: "トピック ID"
         topic_title: "トピック"
@@ -4307,15 +4432,25 @@ ja:
         post_title: "投稿"
         category_id: "カテゴリ ID"
         category_title: "カテゴリ"
+        tag_name: "タグ名"
+        external_url: "外部または相対 URL"
+        destination: "リンク先"
+        copy_to_clipboard: "パーマリンクをクリップボードにコピー"
         delete_confirm: このパーマリンクを削除してもよろしいですか？
         form:
           label: "新規:"
           add: "追加"
           filter: "検索 (URL または外部 URL)"
       reseed:
+        action:
+          label: "テキストを置換..."
+          title: "カテゴリとトピックのテキストを翻訳に置き換える"
         modal:
+          title: "テキストを置換"
+          subtitle: "システム生成カテゴリとトピックのテキストを最新の翻訳に置き換えます"
           categories: "カテゴリ"
           topics: "トピック"
+          replace: "置換"
   wizard_js:
     wizard:
       done: "完了"
@@ -4338,5 +4473,6 @@ ja:
           regular: "レギュラーユーザー"
       previews:
         topic_title: "ディスカッショントピック"
+        font_title: "%{font} フォント"
         share_button: "共有"
         reply_button: "返信"
