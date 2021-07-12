@@ -327,7 +327,7 @@ pt_BR:
       time_must_be_provided: "a hora deve ser informada para todos os lembretes"
     reminders:
       at_desktop: "Da próxima vez que estiver em meu desktop"
-      later_today: "Mais tarde hoje"
+      later_today: "Hoje mais tarde"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       next_week: "Próxima semana"
@@ -336,25 +336,25 @@ pt_BR:
   groups:
     success:
       bulk_add:
-        one: "%{count} usuário foi adicionado ao grupo."
-        other: "%{count} usuários foram adicionados ao grupo."
+        one: "%{count} usuário(a) foi adicionado(a) ao grupo."
+        other: "%{count} usuários(as) foram adicionados(as) ao grupo."
     errors:
-      grant_trust_level_not_valid: "'%{trust_level}' não é um nível de confiança válido."
+      grant_trust_level_not_valid: "\"%{trust_level}\" não é um nível de confiança válido."
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
       member_already_exist:
-        one: "'%{username}' já é membro deste grupo."
-        other: "Os seguintes usuários já são membros deste grupo:%{username}"
-      invalid_domain: "'%{domain}' não é um domínio válido."
-      invalid_incoming_email: "'%{email}' não é um endereço de e-mail válido."
-      email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
-      email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
-      cant_allow_membership_requests: "Você não pode permitir solicitações de associação para um grupo sem nenhum proprietário."
-      already_requested_membership: "Você já solicitou associação para este grupo."
+        one: "\"%{username}\" já é membro deste grupo."
+        other: "Os seguintes usuários(as) já são membros deste grupo:%{username}"
+      invalid_domain: "\"%{domain}\" não é um domínio válido."
+      invalid_incoming_email: "\"%{email}\" não é um endereço de e-mail válido."
+      email_already_used_in_group: "\"%{email}\" já foi utilizado pelo grupo \"%{group_name}\"."
+      email_already_used_in_category: "\"%{email}\" já foi utilizado pela categoria \"%{category_name}\"."
+      cant_allow_membership_requests: "Você não pode permitir pedidos de associação para um grupo sem proprietário(a)."
+      already_requested_membership: "Você já pediu associação para este grupo."
     default_names:
-      everyone: "todos"
-      admins: "admins"
-      moderators: "moderadores"
-      staff: "staff"
+      everyone: "todos(as)"
+      admins: "administração"
+      moderators: "moderadores(as)"
+      staff: "equipe"
       trust_level_0: "nivel_de_confianca_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
@@ -365,23 +365,23 @@ pt_BR:
     request_accepted_pm:
       title: "Você foi aceito em @%{group_name}"
       body: |
-        Seu pedido para entrar no @%{group_name} foi aceito e você agora é um membro.
+        Seu pedido para entrar no @%{group_name} foi aceito e agora você é um membro.
   education:
     until_posts:
-      one: "%{count} mensagem"
-      other: "%{count} mensagens"
+      one: "%{count} postagem"
+      other: "%{count} postagens"
     "new-topic": |
-      Bem vindo ao %{site_name} &mdash; **obrigado por iniciar uma nova conversa!**
+      Boas-vindas ao %{site_name} &mdash; **obrigado por iniciar uma nova conversa!**
 
       - O título parece interessante se você ler em voz alta? É um bom resumo?
 
-      - Quem estaria interessado nisto? Por que é relevante? Que tipo de respostas você quer?
+      - Quem estaria interessado(a) nisto? Por que é relevante? Que tipo de respostas você quer?
 
-      - Inclua as palavras mais usadas no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria (ou tag).
+      - Inclua as palavras mais usadas no seu tópico para que outros(as) possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria (ou etiqueta).
 
-      Para mais, [veja os guias da comunidade](%{base_path}/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
+      Para saber mais, [veja as diretrizes da comunidade](%{base_path}/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
     "new-reply": |
-      Bem-vindo ao %{site_name} &mdash; ** obrigado por contribuir! **
+      Boas-vindas ao %{site_name} &mdash; ** obrigado por contribuir! **
 
       - Seja gentil com os outros membros da comunidade.
 
@@ -389,39 +389,39 @@ pt_BR:
 
       - Crítica construtiva é bem-vinda, mas critique *ideias*, não pessoas.
 
-      Para saber mais, [consulte nossas diretrizes da comunidade] (%{base_path}/guidelines). Este painel aparecerá apenas para suas primeiras %{education_posts_text}.
+      Para saber mais, [consulte nossas diretrizes da comunidade] (%{base_path}/guidelines). Este painel aparecerá apenas para seu primeiro %{education_posts_text}.
     avatar: |
       ### Que tal usar uma imagem para a sua conta?
 
-      Você tem postado alguns tópicos e respostas, mas sua foto de perfil não tão única quando você - é apenas uma carta.
+      Você tem postado alguns tópicos e respostas, mas sua foto de perfil não é tão especial quanto você, é apenas uma letra.
 
-      Já pensou em **[visitar seu perfil de usuário](%{profile_path})** e enviar uma foto que representa você?
+      Já pensou em **[visitar seu perfil de usuário(a)](%{profile_path})** e enviar uma foto que representa você?
 
       É mais fácil manter discussões e encontrar pessoas interessantes durante as conversas quando todos têm uma foto de perfil única!
     sequential_replies: |
-      ### Considere responder várias postagem de uma só vez
+      ### Considere responder a várias postagens de uma só vez
 
-      Em vez de responder um tópico várias vezes em sequência, por favor considere fazer uma única resposta que inclua citações de postagens anteriores ou referencie alguém usando @name.
+      Em vez de responder a um tópico várias vezes em sequência, considere fazer uma única resposta que inclua citações de postagens anteriores ou referencie alguém usando @name.
 
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
-      Fica mais fácil para todo mundo ler tópicos que possuem poucas respostas com muita informação em vez de muitas respostas individuais com pouca informação cada.
+      Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
 
-      Sentimos muito, mas novos usuários são temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
+      Sentimos muito, mas novos(as) usuários(as) são temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
 
-      Em vez de adicionar outra resposta, por favor considere editar suas respostas anteriores, ou visite outros tópicos.
+      Em vez de adicionar outra resposta, considere editar suas respostas anteriores, ou acesse outros tópicos.
     reviving_old_topic: |
       ### Reviver este tópico?
 
-      A última resposta para esse tópico foi **%{time_ago}**. Sua resposta colocará o tópico no topo da sua lista e notificará qualquer pessoa anteriormente envolvida na conversa.
+      A última resposta para esse tópico foi **%{time_ago}**. Sua resposta promoverá o tópico para o topo da sua lista e notificará qualquer pessoa que estava envolvida na conversa.
 
       Tem certeza de que deseja continuar esta conversa antiga?
   activerecord:
     attributes:
       category:
-        name: "Nome da Categoria"
+        name: "Nome da categoria"
       topic:
         title: "Título"
         featured_link: "Link em destaque"
@@ -724,87 +724,87 @@ pt_BR:
     please_continue: "Sua conta já foi confirmada. Você vai ser redirecionado(a) para a página inicial."
     continue_button: "Continuar no %{site_name}"
     welcome_to: "Boas-vindas ao %{site_name}!"
-    approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
-    missing_session: "Não conseguimos detectar se sua conta foi criada. Por favor, certifique-se de que você está com os cookies do navegador habilitados."
+    approval_required: "Um(a) moderador(a) precisa aprovar a sua conta para que você possa acessar este fórum. Você receberá um e-mail quando for aprovada!"
+    missing_session: "Não foi possível detectar se sua conta foi criada. Verifique se os cookies do navegador estão ativados."
     activated: "Desculpe, esta conta já foi ativada."
     admin_confirm:
-      title: "Confirmar Conta de Administrador"
-      description: "Tem certeza de que deseja que <b>%{target_username} (%{target_email})</b> seja um administrador?"
-      grant: "Conceder acesso de administrador"
-      complete: "<b>%{target_username}</b> é agora um administrador."
+      title: "Confirmar conta de administrador(a)"
+      description: "Tem certeza de que deseja que <b>%{target_username} (%{target_email})</b> seja administrador(a)?"
+      grant: "Conceder acesso de administrador(a)"
+      complete: "<b>%{target_username}</b> agora é administrador(a)."
       back_to: "Retornar para %{title}"
   reviewable_score_types:
     needs_approval:
-      title: "Aprovação Necessária"
+      title: "Aprovação necessária"
   post_action_types:
     off_topic:
-      title: "Off-Topic"
-      description: "Essa mensagem não é relevante para a discussão definida pelo título e primeira mensagem, e deveria ser movida para outro local."
-      short_description: "Isso não é relevante à discussão"
+      title: "Desvio de tópico"
+      description: "Esta postagem não é relevante para a discussão atual conforme definida pelo título e primeira postagem. Deveria ser movida para outro local."
+      short_description: "Isto não é relevante para a discussão"
     spam:
       title: "Spam"
-      description: "Este post é um anúncio ou vandalismo. Não é útil ou relevante para o tópico atual."
+      description: "Esta postagem é um anúncio ou vandalismo. Não é útil ou relevante para o tópico atual."
       short_description: "Isto é uma propaganda ou vandalismo"
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: "Inapropriado"
-      description: 'Esta postagem contém conteúdo que uma pessoa razoável consideraria ofensiva, abusiva ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
-      short_description: 'Uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>'
+      title: "Inapropriado(a)"
+      description: 'Esta postagem contém conteúdo que uma pessoa sensata consideraria ofensivo, abusivo ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
+      short_description: 'Uma violação das <a href="%{base_path}/guidelines">diretrizes da nossa comunidade</a>'
     notify_user:
       title: "Enviar uma mensagem para @%{username}"
-      description: "Eu quero falar com essa pessoa diretamente e pessoalmente sobre o seu post."
-      short_description: "Eu quero falar com essa pessoa diretamente e pessoalmente sobre o seu post."
-      email_title: 'Sobre a sua postagem "%{title}"'
+      description: "Quero falar com esta pessoa direto e pessoalmente sobre a sua postagem."
+      short_description: "Quero falar com esta pessoa direto e pessoalmente sobre a sua postagem."
+      email_title: 'Sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: "Algo mais"
-      description: "Esta postagem requer atenção da moderação por outra razão não listada acima."
+      title: "Outro(a)"
+      description: "Esta postagem requer atenção da equipe por outra razão não listada acima."
       short_description: "Requer atenção da equipe por outro motivo"
-      email_title: 'Um post em "%{title}" requer a atenção da equipe'
+      email_title: 'Uma postagem em "%{title}" requer a atenção da equipe'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: "Adicionar Marcador"
-      description: "Adicionar um marcador a esta postagem"
-      short_description: "Favoritar esta publicação"
+      title: "Adicionar aos favoritos"
+      description: "Adicionar esta postagem aos favoritos"
+      short_description: "Adicionar esta postagem aos favoritos"
     like:
       title: "Curtir"
       description: "Curtir esta postagem"
-      short_description: "Curtir esta publicação"
+      short_description: "Curtir esta postagem"
   draft:
     sequence_conflict_error:
       title: "erro no rascunho"
-      description: "O rascunho está sendo editado em outra janela. Por favor recarregue esta página."
+      description: "O rascunho está sendo editado em outra janela. Recarregue esta página."
   draft_backup:
-    pm_body: "Tópico contém rascunhos salvos"
+    pm_body: "Tópico contendo rascunhos salvos"
   user_activity:
     no_default:
-      self: "Você não tem nenhuma atividade ainda."
+      self: "Você ainda não tem nenhuma atividade."
       others: "Nenhuma atividade."
     no_bookmarks:
-      self: "Você não tem postagens favoritas; favoritos permitem que você se refira rapidamente a postagens específicas."
+      self: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
       others: "Nenhum favorito."
     no_likes_given:
       self: "Você não curtiu nenhuma postagem."
       others: "Nenhuma postagem curtida."
     no_replies:
       self: "Você não respondeu a nenhuma postagem."
-      others: "Sem Respostas."
+      others: "Sem respostas."
     no_drafts:
-      self: "Você não tem rascunhos; comece a compor uma resposta em qualquer tópico e ela será salva automaticamente como um novo rascunho."
+      self: "Você não tem rascunhos. Comece a compor uma resposta em qualquer tópico e ela será salva automaticamente como um novo rascunho."
   webauthn:
     validation:
-      user_verification_error: "Verificação de usuário é requerida."
+      user_verification_error: "É preciso verificar o(a) usuário(a)."
   topic_flag_types:
     spam:
       title: "Spam"
       description: "Este tópico é um anúncio. Não é útil ou relevante para este site, mas tem fins promocionais."
-      long_form: "sinalizar como spam"
+      long_form: "sinalizado(a) como spam"
       short_description: "Isto é um anúncio"
     inappropriate:
       title: "Inapropriado(a)"
       description: 'Este tópico contém conteúdo que uma pessoa sensata consideraria ofensivo, abusivo ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
-      long_form: "sinalizar como impróprio"
+      long_form: "sinalizado(a) como inapropriado(a)"
       short_description: 'Uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>'
     notify_moderators:
       title: "Algo mais"
@@ -877,7 +877,7 @@ pt_BR:
     invalid_token: "Token ausente, inválido ou expirado."
   flags:
     errors:
-      already_handled: "A sinalização já foi tratada"
+      already_handled: "O sinalizador já foi tratado"
   reports:
     default:
       labels:
@@ -885,63 +885,63 @@ pt_BR:
         percent: Porcento
         day: Dia
     post_edits:
-      title: "Postar Edições"
+      title: "Postar edições"
       labels:
         edited_at: Data
-        post: Publicar
+        post: Postar
         editor: Editor
-        author: Autor
-        edit_reason: Razão
+        author: Autor(a)
+        edit_reason: Motivo
       description: "Número de novas edições de postagens."
     user_flagging_ratio:
-      title: "Taxa de Sinalização do Usuário"
+      title: "Taxa de sinalização do(a) usuário(a)"
       labels:
-        user: Usuário
-        agreed_flags: Sinalizações Concordadas
-        disagreed_flags: Sinalizações Discordadas
-        ignored_flags: Sinalizações Ignoradas
+        user: Usuário(a)
+        agreed_flags: Sinalizadores acordados
+        disagreed_flags: Sinalizadores não acordados
+        ignored_flags: Sinalizadores ignorados
         score: Nota
-      description: "Lista de usuários ordenados por taxa de resposta da staff às suas sinalizações (de discordado para acordado)."
+      description: "Lista de usuários(as) ordenados(as) por taxa de resposta da equipe às suas sinalizações (de acordada a não acordada)."
     moderators_activity:
-      title: "Atividade Moderadora"
+      title: "Atividade de moderação"
       labels:
-        moderator: Moderador
-        flag_count: sinalizações revisadas
+        moderator: Moderador(a)
+        flag_count: sinalizadores revisados
         time_read: Leitura do tempo
         topic_count: Tópicos criados
-        post_count: Publicações criadas
+        post_count: Postagens criadas
         pm_count: MPs criadas
         revision_count: Revisões
       description: Lista de atividades de moderadores, inclusive sinalizadores revisados, tempo de leitura, tópicos criados, postagens criadas, mensagens pessoais criadas e revisões.
     flags_status:
-      title: "Status da Sinalização"
+      title: "Status do sinalizador"
       values:
-        agreed: Acordado
-        disagreed: Discordado
-        deferred: Diferido
-        no_action: Sem Ação
+        agreed: Acordado(a)
+        disagreed: Não acordado(a)
+        deferred: Diferido(a)
+        no_action: Sem ação
       labels:
         flag: Tipo
-        assigned: Atribuído
-        poster: Autor
-        flagger: Sinalizador
-        time_to_resolution: Tempo de Resolução
-      description: "Lista de status das sinalizações, incluindo o tipo de sinalização, autor, sinalizador e hora da resolução."
+        assigned: Atribuído(a)
+        poster: Autor(a) da postagem
+        flagger: Criador(a) do sinalizador
+        time_to_resolution: Hora de resolução
+      description: "Lista de status dos sinalizadores, incluindo o tipo de sinalizador, autor(a) da postagem, criador(a) do sinalizador e hora da resolução."
     visits:
       title: "Acessos do(a) usuário(a)"
       xaxis: "Dia"
       yaxis: "Quantidade de acessos"
       description: "Quantidade de acessos de todos(as) os(as) usuários(as)."
     signups:
-      title: "Inscrições"
+      title: "Cadastros"
       xaxis: "Dia"
-      yaxis: "Número de Inscrições"
-      description: "Novos registros de conta para este período."
+      yaxis: "Quantidade de cadastros"
+      description: "Novos cadastros de conta para este período."
     new_contributors:
-      title: "Novos contribuidores"
+      title: "Novos(as) contribuidores(as)"
       xaxis: "Dia"
-      yaxis: "Número de novos colaboradores"
-      description: "Número de usuários que fizeram sua primeira postagem durante este período."
+      yaxis: "Quantidade de novos(as) colaboradores(as)"
+      description: "Quantidade de usuários(as) que fizeram sua primeira postagem durante este período."
     trust_level_growth:
       title: "Crescimento de nível de confiança"
       yaxis: "Dia"
@@ -1150,66 +1150,66 @@ pt_BR:
       title: "Tópicos sem resposta"
       xaxis: "Dia"
       yaxis: "Total"
-      description: "Número de novos tópicos criados que não receberam uma resposta."
+      description: "Quantidade de novos tópicos criados que não receberam uma resposta."
     mobile_visits:
       title: "Acessos de usuários(as) (móveis)"
       xaxis: "Dia"
       yaxis: "Quantidade de acessos"
       description: "Quantidade de usuários(as) exclusivos(as) que acessaram com um dispositivo móvel."
     web_crawlers:
-      title: "Agentes de Usuários de Crawlers da Web"
+      title: "Agentes de usuários(as) de rastreadores da web"
       labels:
-        user_agent: "Agente de usuário"
+        user_agent: "Agente de usuário(a)"
         page_views: "Visualizações de página"
-      description: "Lista de agentes de usuários de crawlers da web, classificados por visualizações de página."
+      description: "Lista de agentes de usuários(a) de rastreadores da web, classificados por visualizações de página."
     suspicious_logins:
-      title: "Logins Suspeitos"
+      title: "Entradas com conta suspeitas"
       labels:
-        user: Usuário
-        client_ip: IP do Cliente
+        user: Usuário(a)
+        client_ip: IP do(a) cliente
         location: Localização
         browser: Navegador
         device: Dispositivo
-        os: Sistema Operacional
-        login_time: Hora do Login
-      description: "Detalhes de novos logins que diferem de forma suspeita de logins anteriores."
+        os: Sistema operacional
+        login_time: Hora do login
+      description: "Detalhes de novas entradas com conta que diferem de forma suspeita das anteriores."
     staff_logins:
-      title: "Logins de Admin"
+      title: "Entradas com conta de administrador(a)"
       labels:
-        user: Usuário
+        user: Usuário(a)
         location: Localização
-        login_at: Login em
-      description: "Lista de hora de logins de admin com localizações."
+        login_at: Entrada com conta em
+      description: "Lista de hora de entradas com conta de administrador(a) com as localizações."
     top_uploads:
-      title: "Uploads Principais"
+      title: "Envios principais"
       labels:
         filename: Nome do arquivo
         extension: Extensão
-        author: Autor
+        author: Autor(a)
         filesize: Tamanho do arquivo
-      description: "Listar todos os uploads por extensão, tamanho do arquivo e autor."
+      description: "Listar todos os envios por extensão, tamanho do arquivo e autor(a)."
     top_ignored_users:
-      title: "Principais Usuários Ignorados / Silenciados"
+      title: "Principais usuários(as) ignorados(as)/silenciados(as)"
       labels:
-        ignored_user: Usuário Ignorado
-        ignores_count: Contagem de "Ignores"
-        mutes_count: Contagem de Silenciamentos
-      description: "Usuários que foram silenciados e/ou ignorados por muitos outros usuários."
+        ignored_user: Usuário(a) ignorado(a)
+        ignores_count: Contagem de ações de ignorar
+        mutes_count: Contagem de ações de silenciar
+      description: "Usuários(as) que foram silenciados(as) e/ou ignorados(as) por muitos outros(as) usuários(as)."
   dashboard:
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
-    host_names_warning: "O arquivo config/database.yml está usando hostname padrão localhost. Modifique para usar o hostname do seu site."
-    sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
-    queue_size_warning: "O número de processos na fila é %{queue_size}, o que é alto. Isso pode ser indicação de um problema com o(s) processo(s) do Sidekiq, ou você pode ter que adicionar mais Sidekiq workers."
+    host_names_warning: "O arquivo config/database.yml está usando hostname do localhost padrão. Modifique para usar o hostname do seu site."
+    sidekiq_warning: 'O Sidekiq não está em execução. Muitas tarefas, como envio de e-mails, são executadas de forma assíncrona pelo Sidekiq. Verifique-se que pelo menos um processo sidekiq esteja em execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
+    queue_size_warning: "A quantidade de processos na fila é de %{queue_size}, o que é um número alto. Isso pode indicar um problema com os processos do Sidekiq, ou pode ser necessário adicionar mais trabalhadores do Sidekiq."
     memory_warning: "Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada."
-    s3_config_warning: 'O servidor está configurado para fazer upload de arquivos para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "How to set up image uploads to S3?" para aprender mais</a>.'
-    s3_backup_config_warning: 'O servidor está configurado para fazer upload de backups para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "How to set up image uploads to S3?" para aprender mais</a>.'
-    image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes favorito ou faça o <a href="https://www.imagemagick.org/script/download.php" target="_blank">download da versão mais recente</a>.'
-    failing_emails_warning: 'Existem tarefas de e-mail %{num_failed_jobs} que falharam. Verifique seu app.yml e certifique-se de que as configurações do servidor de e-mail estão corretas. <a href="%{base_path}/sidekiq/retries" target="_blank">Veja os trabalhos com falha no Sidekiq</a>.'
-    subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta; DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
+    s3_config_warning: 'O servidor está configurado para enviar arquivos para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Acesse <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "Como configurar envio de imagens para o S3?" para saber mais</a>.'
+    s3_backup_config_warning: 'O servidor está configurado para enviar de backup para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Acesse <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "Como configurar envio de imagens para o S3?" para saber mais</a>.'
+    image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes favorito ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">baixe a versão mais recente</a>.'
+    failing_emails_warning: 'Existem tarefas de e-mail %{num_failed_jobs} que falharam. Verifique seu app.yml e se as configurações do servidor de e-mail estão corretas. <a href="%{base_path}/sidekiq/retries" target="_blank">Veja os trabalhos com falha no Sidekiq</a>.'
+    subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta. DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
     email_polling_errored_recently:
-      one: "A apuração de email gerou um erro nas últimas 24 horas. Veja <a href='%{base_path}/logs' target='_blank'>os logs</a> para mais detalhes."
-      other: "A apuração de email gerou %{count} erros nas últimas 24 horas. Veja <a href='%{base_path}/logs' target='_blank'>os logs</a> para mais detalhes."
-    missing_mailgun_api_key: "O servidor está configurado para enviar e-mails por meio do Mailgun, mas você não forneceu uma chave de API usada para verificar as mensagens do webhook."
+      one: "A sondagem do e-mail gerou um erro nas últimas 24 horas. Consulte <a href='%{base_path}/logs' target='_blank'>os registros</a> para obter mais detalhes."
+      other: "A sondagem do e-mail gerou %{count} erros nas últimas 24 horas. Consulte <a href='%{base_path}/logs' target='_blank'>os registros</a> para obter mais detalhes."
+    missing_mailgun_api_key: "O servidor está configurado para enviar e-mails pelo Mailgun, mas você não informou a chave de API usada para verificar as mensagens do webhook."
     bad_favicon_url: "O favicon está falhando ao carregar. Verifique sua configuração de favicon nas <a href='%{base_path}/admin/site_settings'>configurações do site</a> ."
     poll_pop3_timeout: "A conexão com o servidor POP3 está atingindo o tempo limite. Verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a> e selecione um provedor de serviço."
     poll_pop3_auth_error: "A conexão com o servidor POP3 está falhando com um erro de autenticação. Verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a>."
@@ -1258,33 +1258,33 @@ pt_BR:
     staff_edit_locks_post: "As postagens não poderão ser editadas se forem editadas por membros da equipe"
     edit_history_visible_to_public: "Permitir que todos(as) vejam as versões anteriores de uma postagem editada. Ao desativar, somente membros da equipe podem ver o histórico de alterações."
     delete_removed_posts_after: "Postagens removidas pelo(a) autor(a) serão excluídas automaticamente após (n) horas. Se o valor definido for 0, as postagens serão excluídas imediatamente."
-    max_image_width: "Largura máxima do thumbnail de imagens em uma postagem"
-    max_image_height: "Altura máxima do thumbnail de imagens em uma postagem"
+    max_image_width: "Largura máxima da miniatura de imagens em uma postagem"
+    max_image_height: "Altura máxima da miniatura de imagens em uma postagem"
     responsive_post_image_sizes: "Redimensione as imagens de pré-visualização do lightbox para permitir telas com DPI alto com as seguintes proporções de pixels. Remova todos os valores para desativar imagens responsivas."
-    fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
-    fixed_category_positions_on_create: "Se ativado, a ordenação das categorias vai ser mantida no formulário de criação de tópico. (requer fixed_category_positions)"
-    add_rel_nofollow_to_user_content: 'Adicionar "nofollow" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar "rake posts:rebake".'
-    exclude_rel_nofollow_domains: "Uma lista de domínios onde o nofollow não deve ser adicionado aos links. example.com também permitirá automaticamente sub.example.com. No mínimo, você deve adicionar o domínio deste site para ajudar os rastreadores da web a encontrar todo o conteúdo. Se outras partes do seu site estiverem em outros domínios, adicione-as também."
-    post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
-    show_pinned_excerpt_mobile: "Mostrar excerto de tópicos fixos na exibição para celular."
-    show_pinned_excerpt_desktop: "Mostrar excerto de tópicos fixos na exibição para desktop."
-    post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
-    blocked_onebox_domains: "Uma lista de domínios que nunca serão transformados em oneboxes."
-    allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura se vinculados sem um título"
-    max_oneboxes_per_post: "Número máximos de oneboxes em uma publicação."
-    logo: "A imagem do logotipo no canto superior esquerdo do seu site. Use uma imagem retangular larga com uma altura de 120 e uma proporção maior que 3:1. Se deixado em branco, o texto do título do site será exibido."
-    logo_small: "A pequena imagem do logotipo no canto superior esquerdo do site, vista ao rolar para baixo. Use uma imagem quadrada de 120 × 120. Se deixado em branco, um glifo de página inicial será exibido."
-    digest_logo: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Use uma imagem retangular larga. Não use uma imagem SVG. Se deixado em branco, a imagem da configuração `logo` será usada."
-    mobile_logo: "O logotipo usado na versão para celular do seu site. Use uma imagem retangular larga com uma altura de 120 e uma proporção maior que 3:1. Se deixado em branco, a imagem da configuração `logo` será usada."
-    large_icon: "Imagem usada como base para outros ícones de metadados. Idealmente, deve ser maior que 512 x 512. Se for deixado em branco, logo_small será usado."
-    manifest_icon: "Imagem usada como logotipo/splash no Android. Será redimensionada automaticamente para 512 × 512. Se deixado em branco, large_icon será usado."
-    favicon: "Um favicon para o seu site, veja <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar corretamente em um CDN, precisa ser um png. Será redimensionado para 32x32. Se deixado em branco, large_icon será usado."
-    apple_touch_icon: "Ícone usado para dispositivos Apple touch. Será automaticamente redimensionado para 180x180. Se deixado em branco, large_icon será usado."
-    opengraph_image: "Imagem opengraph padrão, usada quando a página não possui outra imagem adequada. Se deixado em branco, large_icon será usado."
-    twitter_summary_large_image: "Cartão do Twitter \"resumo de imagem grande\" (deve ter pelo menos 280 de largura e pelo menos 150 de altura). Se deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image."
-    notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
-    email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
-    email_subject: "Formato de assunto personalizável para e-mails padrão. Veja <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    fixed_category_positions: "Se for selecionado, você será capaz de organizar as categorias em uma ordem fixa. Caso contrário, as categorias serão listadas em ordem de atividade."
+    fixed_category_positions_on_create: "Se for selecionado, a ordenação das categorias será mantida no formulário de criação de tópico (requer fixed_category_positions)."
+    add_rel_nofollow_to_user_content: 'Adicione nofollow a todo conteúdo incluído pelo(a) usuário(a), exceto links internos (incluindo domínios pai). Para que as mudanças sejam aplicadas, é necessário rodar "rake posts:rebake"'
+    exclude_rel_nofollow_domains: "Uma lista de domínios em que o nofollow não deve ser adicionado aos links. example.com também permitirá sub.example.com automaticamente. No mínimo, você deve adicionar o domínio deste site para ajudar os rastreadores da web a encontrar todo o conteúdo. Se outras partes do seu site estiverem em outros domínios, adicione-as também."
+    post_excerpt_maxlength: "Tamanho máximo de caracteres para o resumo/trecho de uma postagem."
+    show_pinned_excerpt_mobile: "Mostre trecho de tópicos fixados na visualização para dispositivos móveis."
+    show_pinned_excerpt_desktop: "Mostrar trecho de tópicos fixados na visualização para desktop."
+    post_onebox_maxlength: "Tamanho máximo para uma postagem do Discourse no Onebox."
+    blocked_onebox_domains: "Uma lista de domínios que nunca serão transformados em Onebox."
+    allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura no Onebox se forem vinculados sem um título"
+    max_oneboxes_per_post: "Quantidade máxima de Onebox em uma postagem."
+    logo: "A imagem do logotipo no canto superior à esquerda do seu site. Use uma imagem retangular larga com 120 de altura e proporção maior que 3:1. Se for deixada em branco, o texto do título do site será exibido."
+    logo_small: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Use uma imagem quadrada de 120×120. Se for deixada em branco, um glifo de página inicial será exibido."
+    digest_logo: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Use uma imagem retangular larga. Não use uma imagem SVG. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
+    mobile_logo: "O logotipo usado na versão do seu site para dispositivos móveis. Use uma imagem retangular larga com 120 de altura e proporção maior que 3:1. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
+    large_icon: "Imagem usada como base para outros ícones de metadados. Idealmente, deve ser maior que 512x512. Se for deixada em branco, logo_small será usado."
+    manifest_icon: "Imagem usada como logotipo/splash no Android. Será redimensionada automaticamente para 512×512. Se for deixada em branco, large_icon será usado."
+    favicon: "Um favicon para o seu site, consulte <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar corretamente em um CDN, precisa ser um png, que será redimensionado para 32x32. Se for deixado em branco, large_icon será usado."
+    apple_touch_icon: "Ícone usado para dispositivos Apple touch, que será automaticamente redimensionado para 180x180. Se for deixado em branco, large_icon será usado."
+    opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
+    twitter_summary_large_image: "Cartão do Twitter \"resumo de imagem grande\" (deve ter pelo menos 280 de largura e pelo menos 150 de altura). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image."
+    notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
+    email_custom_headers: "Uma lista delimitada por barras de cabeçalhos de e-mail personalizados"
+    email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     force_https: "Force seu site a usar apenas HTTPS. AVISO: NÃO ative até que você tenha verificado que o HTTPS está completamente configurado e funcionando em absolutamente todos os lugares! Você verificou se seu CDN, todos os logins sociais e quaisquer logos e dependências externos são todos compatíveis com HTTPS, também?"
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída no \"Resuma este tópico\" "
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
@@ -1399,7 +1399,7 @@ pt_BR:
     backup_with_uploads: "Incluir uploads nos backups programados. Desabilite para copiar apenas a base de dados. "
     backup_location: "Local onde os backups são armazenados. IMPORTANTE: O S3 requer credenciais S3 válidas inseridas nas configurações de Arquivos."
     backup_gzip_compression_level_for_uploads: "Nível de compactação Gzip usado para compactar uploads."
-    include_thumbnails_in_backups: "Incluir miniaturas geradas em backups. Desabilitar isto tornará os backups menores, mas exigirá um reprocessamento de todas as postagens após uma restauração."
+    include_thumbnails_in_backups: "Incluir miniaturas geradas em backups. Desativar isto tornará os backups menores, mas exigirá o reprocessamento de todas as postagens após a restauração."
     active_user_rate_limit_secs: "Qual a frequencia de atualização do campo 'última vez visto em', em segundos."
     verbose_localization: "Mostrar dicas estendidas de localização na UI"
     previous_visit_timeout_hours: "Quanto tempo uma visita dura antes de considerarmos como 'última visita', em horas."
@@ -1493,7 +1493,7 @@ pt_BR:
     max_mentions_per_post: "Número máximo de notificações @nome que quem quer que seja pode usar em um post."
     max_users_notified_per_group_mention: "Número máximo de usuários que podem receber uma notificação se um grupo for mencionado (se o limite for atingido, nenhuma notificação será gerada)"
     enable_mentions: "Permitir que os usuários mencionem outros usuários."
-    create_thumbnails: "Criar thumbnails e lightbox para imagens que são muito largas para caber em uma postagem."
+    create_thumbnails: "Criar miniaturas e imagens lightbox que são muito grandes para caber em uma postagem."
     email_time_window_mins: "Aguardar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos usuários uma chance de editarem e finalizarem seus posts."
     personal_email_time_window_seconds: "Aguarde (n) segundos antes de enviar qualquer e-mail de notificação de mensagem pessoal, para dar aos usuários a chance de editar e finalizar suas mensagens."
     email_posts_context: "Quantas respostas prévias incluir como contexto em emails de notificação."
