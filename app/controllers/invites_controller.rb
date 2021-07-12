@@ -74,6 +74,7 @@ class InvitesController < ApplicationController
       }
 
       if staged_user = User.where(staged: true).with_email(invite.email).first
+        info[:username] = staged_user.username
         info[:user_fields] = staged_user.user_fields
       end
 

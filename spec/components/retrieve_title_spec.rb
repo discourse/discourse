@@ -33,7 +33,7 @@ describe RetrieveTitle do
       expect(title).to eq("Good Title")
     end
 
-    it "will prefer the title from an opengraph tag" do
+    it "will prefer the title over the opengraph tag" do
       title = RetrieveTitle.extract_title(<<~HTML
         <html>
           <title>Good Title</title>

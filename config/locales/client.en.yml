@@ -4858,6 +4858,7 @@ en:
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
+        penalty_history: "Penalty History"
         clear_penalty_history:
           title: "Clear Penalty History"
           description: "users with penalties cannot reach TL3"
@@ -4997,6 +4998,9 @@ en:
         trust_level_unlocked_tip: "trust level is unlocked, system will may promote or demote user"
         lock_trust_level: "Lock Trust Level"
         unlock_trust_level: "Unlock Trust Level"
+        silenced_count: "Silenced"
+        suspended_count: "Suspended"
+        last_six_months: "Last 6 months"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
           table_title:

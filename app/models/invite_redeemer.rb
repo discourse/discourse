@@ -13,16 +13,15 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
 
   # extracted from User cause it is very specific to invites
   def self.create_user_from_invite(email:, invite:, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
-    user = User.where(staged: true).with_email(email.strip.downcase).first
-    user.unstage! if user
-
-    user ||= User.new
-
-    if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
+    if username && UsernameValidator.new(username).valid_format? && User.username_available?(username, email)
       available_username = username
     else
       available_username = UserNameSuggester.suggest(email)
     end
+
+    user = User.where(staged: true).with_email(email.strip.downcase).first
+    user.unstage! if user
+    user ||= User.new
 
     user.attributes = {
       email: email,
