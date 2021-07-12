@@ -44,7 +44,7 @@
 
             {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
 
-            <div class="edit-controls" aria-label="helo">
+            <div class="edit-controls">
               {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check" ariaLabel="composer.save_edit"}}
               {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times" ariaLabel="composer.cancel"}}
 
