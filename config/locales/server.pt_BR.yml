@@ -2016,16 +2016,16 @@ pt_BR:
 
       %{invite_link}
   invite_forum_mailer:
-    title: "Convidar remetente do Fórum"
-    subject_template: "%{inviter_name} convidou você para se cadastrar em %{site_domain_name}"
+    title: "Convidar remetente do fórum"
+    subject_template: "%{inviter_name} convidou para participar de %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} convidou você para se cadastrar em
+      %{inviter_name} convidou para participar
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      Se estiver interessado, clique no link abaixo:
+      Se tiver interesse, clique no link abaixo:
 
       %{invite_link}
   custom_invite_forum_mailer:
@@ -2305,19 +2305,19 @@ pt_BR:
       title: "E-mail rejeitado, usuário(a) silenciado(a)"
       subject_template: "[%{email_prefix}] Problema no e-mail, usuário(a) silenciado(a)"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
         Sua conta associada a este endereço de e-mail foi silenciada.
     email_reject_reply_user_not_matching:
-      title: "E-mail Rejeitar Usuário Não Correspondente"
-      subject_template: "[%{email_prefix}] Problema de e-mail - Endereço de resposta inesperado"
+      title: "E-mail rejeitado, usuário não correspondente"
+      subject_template: "[%{email_prefix}] Problema no e-mail, endereço de resposta inesperado"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail %{destination} (com o título de %{former_title}) não funcionou.
 
-        Sua resposta foi enviada de um endereço de e-mail diferente daquele que esperávamos, por isso não temos certeza se essa é a mesma pessoa. Tente enviar de outro endereço de e-mail, ou[contate um membro da equipe](%{base_url}/sobre isso).
+        Sua resposta foi enviada de um endereço de e-mail diferente do esperado, por isso não temos certeza se é a mesma pessoa. Tente enviar de outro endereço de e-mail, ou [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_empty:
-      title: "E-mail Rejeitado, Vazio"
-      subject_template: "[%{email_prefix}] Problema de e-mail - sem conteúdo"
+      title: "E-mail rejeitado, vazio"
+      subject_template: "[%{email_prefix}] Problema no e-mail, sem conteúdo"
       text_body_template: |
         Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
 
@@ -2325,7 +2325,7 @@ pt_BR:
 
         Se você está recebendo isso e você _disse_ uma resposta, tente novamente com formatação mais simples.
     email_reject_parsing:
-      title: "E-mail Rejeitado, Análise"
+      title: "E-mail rejeitado em análise"
       subject_template: "[%{email_prefix}] Problema por e-mail - conteúdo não reconhecido"
       text_body_template: |
         Nos desculpamos, mas sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
@@ -2436,45 +2436,45 @@ pt_BR:
       title: "Rejeição de E-mail de Resposta Não Permitida"
       subject_template: "[%{email_prefix}] Problema de e-mail -- Resposta Não Permitida"
       text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Você não tem permissão para responder ao tópico. Se você acredita que isto é um erro, [contate um membro da staff](%{base_url}/about).
+        Você não tem permissão para responder ao tópico. Se acha que é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
     email_error_notification:
       title: "Notificação de erro por e-mail"
-      subject_template: "[%{email_prefix}] Problema de e-mail - erro de autenticação POP"
+      subject_template: "[%{email_prefix}] Problema no e-mail, erro de autenticação do POP"
       text_body_template: |
-        Infelizmente, houve um erro de autenticação ao pesquisar e-mails do servidor POP.
+        Infelizmente houve um erro de autenticação ao sondar e-mails do servidor POP.
 
-        Certifique-se de ter configurado corretamente as credenciais POP em [as configurações do site](%{base_url}/admin/site_settings/category/email).
+        Verifique se as credenciais POP foram configuradas corretamente nas [configurações do site](%{base_url}/admin/site_settings/category/email).
 
-        Se houver uma interface de usuário da web para a conta de e-mail POP, talvez seja necessário fazer login na web e verificar suas configurações lá.
+        Se houver uma interface do(a) usuário(a) da web para a conta de e-mail POP, pode ser necessário entrar com a conta na web e verificar suas configurações lá.
     email_revoked:
-      title: "E-mail Revogado"
+      title: "E-mail revogado"
       subject_template: "Seu endereço de e-mail está correto?"
       text_body_template: |
-        Pedimos desculpa, mas estamos com problemas para entrar em contato com você por e-mail. Nossos últimos e-mails para você retornaram como impossíveis de serem entregues.
+        Desculpe, mas estamos com problemas para entrar em contato com você por e-mail. Os últimos e-mails que enviamos retornaram como impossíveis de serem entregues.
 
-        Você pode se certificar de que o [seu endereço de e-mail](%{base_url}/my/preferences/email) é válido e funciona? Você também pode adicionar nosso endereço de e-mail à sua lista de contatos para melhorar a capacidade de entrega.
+        Verifique se o [seu endereço de e-mail](%{base_url}/my/preferences/email) é válido e está funcionando. Você também pode adicionar nosso endereço de e-mail à sua lista de contatos para melhorar a capacidade de entrega.
     email_bounced: |
       A mensagem para %{email} retornou.
 
       ### Detalhes
 
-      ``` text
+      ``` texto
       %{raw}
       ```
     ignored_users_summary:
-      title: "Usuário Ignorado passou o limite"
-      subject_template: "Um usuário está sendo ignorado por muitos outros usuários"
+      title: "Usuários(as) ignorado(as) excederam o limite"
+      subject_template: "Um(a) usuário(a) está sendo ignorado(a) por muitos outros(as) usuários(as)"
       text_body_template: |
-        Olá, esta é uma mensagem automática de %{site_name} para informar que @%{username} foi ignorado por %{ignores_threshold} usuários. Isso pode indicar que um problema está se desenvolvendo em sua comunidade.
+        Olá, esta é uma mensagem automática de %{site_name} para informar que @%{username} foi ignorado(a) por %{ignores_threshold} usuários(as). Isso pode indicar que um problema está ocorrendo em sua comunidade.
 
-        Você pode querer [revisar postagens recentes](%{base_url}/u/%{username}/summary) desse usuário e, possivelmente, outros usuários no [relatório de usuários ignorados e silenciados](%{base_url}/admin/reports/top_ignored_users).
+        Você pode querer [revisar postagens recentes](%{base_url}/u/%{username}/summary) desse(a) usuário(a) e possivelmente outros(as) usuários(as) no [relatório de usuários(as) ignorados(as) e silenciados(as)](%{base_url}/admin/reports/top_ignored_users).
 
-        Para obter orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
+        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Muitas sinalizadores de spam"
-      subject_template: "Nova conta suspensa"
+      subject_template: "Nova conta em espera"
       text_body_template: |
         Olá,
 
@@ -2485,7 +2485,7 @@ pt_BR:
         Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Muitos sinalizadores TL3"
-      subject_template: "Nova conta suspensa"
+      subject_template: "Nova conta em espera"
       text_body_template: |
         Olá,
 
@@ -2495,18 +2495,18 @@ pt_BR:
 
         Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
     silenced_by_staff:
-      title: "Silenciado pelo Staff"
+      title: "Silenciado(a) pela equipe"
       subject_template: "Conta temporariamente em espera"
       text_body_template: |
         Olá,
 
-        Esta é uma mensagem automatizada de %{site_name} para informá-lo de que sua conta foi temporariamente suspensa como medida de precaução.
+        Esta é uma mensagem automática de %{site_name} para informar que sua conta foi temporariamente suspensa como medida de precaução.
 
-        Por favor, continue a navegar, mas você não poderá responder ou criar tópicos até que um [membro da equipe](%{base_url}/sobre) analisa seus posts mais recentes. Pedimos desculpas pela inconveniência.
+        Continue a navegar, mas não será possível responder ou criar tópicos até que um [membro da equipe](%{base_url}/sobre) analise suas postagens mais recentes. Pedimos desculpas pelo inconveniente.
 
-        Para orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
+        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/diretrizes).
     user_automatically_silenced:
-      title: "Usuário Silenciado Automaticamente"
+      title: "Usuário(a) silenciado(a) automaticamente"
       subject_template: "O(a) novo(a) usuário(a) %{username} silenciado(a) devido aos sinalizadores da comunidade"
       text_body_template: |
         Esta é uma mensagem automática.
@@ -2518,38 +2518,38 @@ pt_BR:
         Este limite pode ser alterado pela configuração do site "silence_new_user".
     spam_post_blocked:
       title: "Postagem de spam bloqueada"
-      subject_template: "Novo usuário%{username} postagens bloqueadas devido a links repetidos"
+      subject_template: "Postagens de novo(a) usuário(a )%{username} bloqueadas devido a links repetidos"
     unsilenced:
-      title: "Silenciamento removido"
-      subject_template: "Conta não está mais em espera"
+      title: "Som ativado"
+      subject_template: "A conta não está mais em espera"
       text_body_template: |
         Olá,
 
-        Esta é uma mensagem automatizada de %{site_name} para que você saiba que sua conta não está mais em espera após a revisão da equipe.
+        Esta é uma mensagem automática de %{site_name} para que você saiba que sua conta não está mais em espera após a revisão da equipe.
 
-        Agora você pode criar novas respostas e tópicos novamente. Obrigado pela sua paciência.
+        Agora você pode criar novas respostas e tópicos novamente. Agradecemos sua paciência.
     pending_users_reminder:
-      title: "Lembrete de usuários pendentes"
+      title: "Lembrete de usuários(as) pendentes"
       subject_template:
-        one: "%{count} usuário aguardando aprovação"
-        other: "%{count} usuários aguardando aprovação"
+        one: "%{count} usuário(a) aguardando aprovação"
+        other: "%{count} usuários(as) aguardando aprovação"
       text_body_template: |
-        Há novas inscrições de usuários esperando para serem aprovadas (ou rejeitadas) antes de poderem acessar este fórum.
+        Há novas contas de usuários esperando para serem aprovadas (ou rejeitadas) antes de poderem acessar este fórum.
 
-        [Por favor, revise-as](%{base_url}/review).
+        [Revise-as](%{base_url}/review).
     download_remote_images_disabled:
-      title: "Baixar imagens remotas desativadas"
-      subject_template: "Baixar imagens remotas desativado"
-      text_body_template: "A configuração `download_remote_images_to_local` está desativada porque o espaço limite no disco configurado em `download_remote_images_threshold` foi alcançado."
+      title: "Desativar download de imagens remotas"
+      subject_template: "Desativar download de imagens remotas em andamento"
+      text_body_template: "A configuração \"download_remote_images_to_local\" está desativada porque o limite de espaço no disco configurado em \"download_remote_images_threshold\" foi alcançado."
     dashboard_problems:
-      title: "Problemas do painel"
-      subject_template: "Nova recomendação no painel do seu site"
+      title: "Problemas do painel de controle"
+      subject_template: "Nova recomendação no painel de controle do seu site"
       text_body_template: |
-        Temos alguns novos conselhos e recomendações para você, com base nas configurações atuais do site.
+        Temos dicas e recomendações novas para você baseadas nas configurações atuais do site.
 
-        [Visite o painel do site](%{base_url}/admin) para vê-los.
+        [Acesse o painel do site](%{base_url}/admin) para conferir.
 
-        Se nada estiver visível no seu painel, outro membro da equipe pode já ter agido com base neste conselho. Uma lista de ações da staff pode ser encontrada em seus [Logs de ação da staff](%{base_url}/admin/logs/staff_action_logs).
+        Se não houver nada visível no seu painel de controle, talvez outro membro da equipe já tenha agido com base neste conselho. Uma lista de ações da equipe pode ser encontrada em seus [registros de ação da equipe](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Você é um(a) novo(a) usuário(a) do mês!"
       subject_template: "Você é um(a) novo(a) usuário(a) do mês!"
@@ -2708,7 +2708,7 @@ pt_BR:
 
         %{respond_instructions}
     user_linked:
-      title: "Usuário vinculado"
+      title: "Usuário(a) vinculado(a)"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2719,7 +2719,7 @@ pt_BR:
 
         %{respond_instructions}
     user_mentioned:
-      title: "Usuário mencionado"
+      title: "Usuário(a) mencionado(a)"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2730,7 +2730,7 @@ pt_BR:
 
         %{respond_instructions}
     user_mentioned_pm:
-      title: "MP mencionada pelo usuário"
+      title: "MP mencionada pelo(a) usuário(a)"
       subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2741,7 +2741,7 @@ pt_BR:
 
         %{respond_instructions}
     user_group_mentioned:
-      title: "Grupo de usuários mencionado"
+      title: "Grupo de usuários(as) mencionado"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2752,7 +2752,7 @@ pt_BR:
 
         %{respond_instructions}
     user_posted:
-      title: "Usuário Postado"
+      title: "Postado(a) pelo(a) usuário(a)"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2763,7 +2763,7 @@ pt_BR:
 
         %{respond_instructions}
     user_watching_first_post:
-      title: "Usuário assistindo primeiro post"
+      title: "Usuário(a) acompanhando a primeira postagem"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2883,59 +2883,59 @@ pt_BR:
 
         %{new_email}
     signup_after_approval:
-      title: "Inscrição Após Aprovação"
-      subject_template: "Você foi aprovado no %{site_name}!"
+      title: "Inscrição após aprovação"
+      subject_template: "Você foi aprovado(a) no %{site_name}!"
       text_body_template: |
-        Bem-vindo ao %{site_name}!
+        Boas-vindas ao %{site_name}!
 
         Um membro da equipe aprovou sua conta em %{site_name}.
 
-        Agora você pode acessar sua nova conta fazendo login em:
+        Agora você pode acessar sua nova conta entrando em:
         %{base_url}
 
-        Se o link acima não for clicável, tente copiá-lo e colá-lo na barra de endereços do seu navegador da Web..
+        Se não for possível clicar no link acima, tente copiar e colar na barra de endereço do seu navegador.
 
         %{new_user_tips}
 
-        Nós acreditamos em [comportamento comunitário civilizado](%{base_url}/diretrizes) em todos os momentos.
+        Acreditamos em [comportamento comunitário saudável](%{base_url}/diretrizes) em todos os momentos.
 
-        Aproveite sua estadia!
+        Aproveite sua visita!
     signup:
-      title: "Inscrever-se"
+      title: "Criar conta"
       subject_template: "[%{email_prefix}] Confirme sua nova conta"
       text_body_template: |
-        Bem-vindo(a) %{site_name}!
+        Boas-vindas ao %{site_name}!
 
         Clique no link a seguir para confirmar e ativar sua nova conta:
         %{base_url}/u/activate-account/%{email_token}
 
-        Se o link acima não for clicável, tente copiá-lo e colá-lo na barra de endereços do seu navegador da Web..
+        Se não for possível clicar no link acima, tente copiar e colar na barra de endereço do seu navegador.
     activation_reminder:
-      title: "Lembrete de Ativação"
+      title: "Lembrete de ativação"
       subject_template: "[%{email_prefix}] Lembrete para confirmar sua conta"
       text_body_template: |
-        Bem-vindo a %{site_name}!
+        Boas-vindas ao %{site_name}!
 
-        Este é um lembrete amigável para ativar sua conta.
+        Este é um lembrete para ativar sua conta.
 
         Clique no link a seguir para confirmar e ativar sua nova conta:
         %{base_url}/u/activate-account/%{email_token}
 
-        Se o link acima não for clicável, tente copiá-lo e colá-lo na barra de endereços do seu navegador da web.
+        Se não for possível clicar no link acima, tente copiar e colar na barra de endereço do seu navegador.
     suspicious_login:
-      title: "Alerta de Novo Login"
-      subject_template: "[%{site_name}] Novo Login a partir de %{location}"
+      title: "Alerta de nova entrada com conta"
+      subject_template: "[%{site_name}] Nova entrada com conta em %{location}"
       text_body_template: |
         Olá,
 
-        Notamos um login em um dispositivo ou local que você não costuma usar. Foi você?
+        Notamos que a sua conta foi usada para entrar em um dispositivo ou local que você não costuma usar. Foi você?
 
          - Localização: %{location} (%{client_ip})
          - Navegador: %{browser}
          - Dispositivo: %{device} -- %{os}
 
-        Se foi você, ótimo! Não há mais nada que você precise fazer.
-        Se não foi você, por favor [revise suas sessões existentes](%{base_url}/my/preferences/account) e considere alterar sua senha.
+        Se tiver sido você, ótimo! Não há mais nada que precise ser feito.
+        Caso contrário, [revise suas sessões existentes](%{base_url}/my/preferences/account) e considere alterar sua senha.
     post_approved:
       title: "Sua postagem foi aprovada"
   page_not_found:
@@ -2943,53 +2943,53 @@ pt_BR:
     popular_topics: "Mais acessados(as)"
     recent_topics: "Recente"
     see_more: "Mais"
-    search_title: "Procurar neste site"
+    search_title: "Pesquisar neste site"
     search_button: "Pesquisar"
   offline:
     title: "Não é possível carregar o aplicativo"
-    offline_page_message: "Parece que você está off-line! Por favor, verifique sua conexão de rede e tente novamente."
+    offline_page_message: "Parece que você está off-line! Verifique sua conexão de rede e tente novamente."
   login_required:
     welcome_message: |
-      ## [Bem-vindo à %{title}](#bem-vindo)
-      Uma conta é necessária. Por favor, crie uma conta ou faça o login para continuar.
+      ## [Boas-vindas ao %{title}](#boas-vindas)
+      É preciso ter uma conta. Crie ou entre com uma para continuar.
     welcome_message_invite_only: |
-      ## [Bem-vindo a %{title}](#welcome)
-      É necessária uma conta. Por favor, peça a um membro existente um convite ou faça o login para continuar.
-  deleted: "removido"
+      ## [Boas-vindas ao %{title}](#boas-vindas)
+      É preciso ter uma conta. Peça que a um membro um convite ou entre com uma conta para continuar.
+  deleted: "excluído(a)"
   image: "imagem"
   upload:
-    edit_reason: "cópias baixadas das imagens remotas"
-    unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
+    edit_reason: "cópias locais de imagens baixadas"
+    unauthorized: "Desculpe, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
-    store_failure: "Falha ao arquivar o upload #%{upload_id} do usuário #%{user_id}."
+    store_failure: "Falha ao arquivar o envio #%{upload_id} do(a) usuário(a) #%{user_id}."
     file_missing: "Desculpe, você deve fornecer um arquivo para upload."
     empty: "Desculpe, mas o arquivo que você forneceu está vazio."
-    png_to_jpg_conversion_failure_message: "Ocorreu um erro ao converter de PNG para JPG."
+    png_to_jpg_conversion_failure_message: "Ocorreu um erro ao converter PNG em JPG."
     attachments:
-      too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB)."
+      too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo é de %{max_size_kb} KB)."
     images:
-      too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor a redimensione e tente novamente."
-      larger_than_x_megapixels: "Desculpe, a imagem que você está tentando enviar é muito grande (a dimensão máxima é %{max_image_megapixels}-megapixels), redimensione e tente novamente."
-      size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
+      too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é de %{max_size_kb} KB). Redimensione e tente novamente."
+      larger_than_x_megapixels: "Desculpe, a imagem que você está tentando enviar é muito grande (a dimensão máxima é de %{max_image_megapixels} megapixels). Redimensione e tente novamente."
+      size_not_found: "Desculpe, mas não foi possível determinar o tamanho da imagem. O arquivo de imagem pode estar corrompido."
     placeholders:
-      too_large: "(imagem mais larga que%{max_size_kb}KB)"
+      too_large: "(imagem maior do que %{max_size_kb} KB)"
   avatar:
-    missing: "Desculpe! Não conseguimos achar nenhum avatar associado a esse endereço de email. Você pode tentar novamente?"
+    missing: "Desculpe! Não foi possível encontrar nenhum avatar associado a esse endereço de email. Você pode tentar novamente?"
   flag_reason:
-    sockpuppet: "Um novo usuário criou um tópico, e um outro novo usuário no mesmo endereço IP (%{ip_address}) respondeu. Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> do site."
-    spam_hosts: "Este novo usuário tentou criar várias postagens com links para o mesmo domínio. Todas as postagens deste usuário que incluam links devem ser revisadas. Veja a configuração do site <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+    sockpuppet: "Um(a) novo(a) usuário(a) criou um tópico, e um outro(a) novo(a) usuário(a) no mesmo endereço IP (%{ip_address}) respondeu. Veja a configuração <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> do site."
+    spam_hosts: "Este(a) novo(a) usuário(a) tentou criar várias postagens com links para o mesmo domínio. Todas as postagens deste(a) usuário(a) que incluam links devem ser revisadas. Veja a configuração do site <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
-    exceeded_emails_limit: "Excedido max_emails_per_day_per_user"
-    exceeded_bounces_limit: "Excedido bounce_score_threshold"
-    mailing_list_no_echo_mode: "Notificações da lista de discussão desativadas para as próprias postagens do usuário"
-    user_email_no_user: "Não é possível encontrar usuário com id %{user_id}"
-    user_email_post_not_found: "Não é possível encontrar uma postagem com o ID%{post_id}"
-    user_email_anonymous_user: "Usuário é anônimo"
-    user_email_user_suspended_not_pm: "Usuário está suspenso, não é uma mensagem"
-    user_email_seen_recently: "Usuário foi visto recentemente"
-    user_email_notification_already_read: "A notificação deste e-mail já foi lida"
+    exceeded_emails_limit: "Excedido(s) max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Excedido(s) bounce_score_threshold"
+    mailing_list_no_echo_mode: "Notificações da lista de discussão desativadas para as próprias postagens do(a) usuário(a)"
+    user_email_no_user: "Não foi possível encontrar usuário(a) com a ID %{user_id}"
+    user_email_post_not_found: "Não foi possível encontrar postagem com a ID %{post_id}"
+    user_email_anonymous_user: "O(a) usuário(a) é anônimo(a)"
+    user_email_user_suspended_not_pm: "O(a) usuário(a) foi suspenso(a), não é uma mensagem"
+    user_email_seen_recently: "O(a) usuário(a) acessou recentemente"
+    user_email_notification_already_read: "A notificação sobre o assunto deste e-mail já foi lida"
     user_email_notification_topic_nil: "post.topic é nulo"
-    user_email_post_user_deleted: "O usuário da postagem foi excluído."
+    user_email_post_user_deleted: "O(a) usuário(a) da postagem foi excluído(a)."
     user_email_post_deleted: "post foi excluído pelo autor"
     user_email_user_suspended: "usuário foi suspenso"
     user_email_already_read: "usuário já leu este post"
@@ -3140,16 +3140,16 @@ pt_BR:
         Este emblema é concedido quando você atinge o nível de confiança 2. Obrigado por participar durante semanas para se juntar à nossa comunidade completamente. Agora você pode enviar convites a partir de sua página de usuário ou tópicos individuais, criar mensagens pessoais de grupo e ter mais curtidas por dia.
     regular:
       name: Habitual
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> recategorizar, renomear, links seguidos, wiki, mais curtidas
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido(s)</a> recategorizar, renomear, links seguidos, wiki, mais curtidas
       long_description: |
         Este emblema é concedido quando você atinge o nível de confiança 3. Obrigado por ser uma parte constante de nossa comunidade há meses. Agora você é um dos leitores(as) mais ativos(as) e um(a) colaborador(a) confiável que torna a nossa comunidade excelente. Já é possível recategorizar e renomear tópicos, utilizar os sinalizadores de spam mais eficientes, acessar uma área de descanso privada e também aproveitar muito mais curtidas por dia.
     leader:
       name: Líder
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> editar globalmente, fixar, fechar, arquivar, dividir e mesclar, mais curtidas
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido(s)</a> editar globalmente, fixar, fechar, arquivar, dividir e mesclar, mais curtidas
       long_description: |
-        Esse emblema é concedido quando você atinge o nível de confiança 4. Você é um líder nessa comunidade, conforme selecionado pela equipe, e você dá o exemplo positivo para o restante da comunidade com suas ações e palavras aqui. Você pode editar todas as postagens, realizar ações comuns de moderador de tópicos, como fixar, fechar, retirar de listagem, arquivar, dividir e mesclar.
+        Este emblema é concedido ao alcançar o nível de confiança 4. Você é um(a) líder desta comunidade, conforme selecionado(a) pela equipe, e dá um exemplo positivo para o restante dos integrantes com suas ações e palavras. Você pode editar todas as postagens e realizar ações típicas de moderador de tópicos, como fixar, fechar, retirar de listagem, arquivar, dividir e mesclar.
     welcome:
-      name: Bem-Vindo
+      name: Boas-vindas
       description: Recebeu uma curtida
       long_description: |
         Este emblema é concedido quando você recebe sua primeira curtida numa postagem. Parabéns, você postou algo que sua comunidade achou interessante, legal ou útil!.

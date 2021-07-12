@@ -556,6 +556,16 @@ ja:
             duration_minutes:
               cannot_be_zero: "は 0 より大きい必要があります。"
               exceeds_maximum: "は 20 年を越えてはいけません。"
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: '次の補間キーは無効です: "%{keys}"'
+        watched_word:
+          attributes:
+            word:
+              too_many: "そのアクションには語が多すぎます"
+            base:
+              invalid_url: "置換 URL は無効です"
       <<: *errors
   uncategorized_category_name: "未分類"
   vip_category_name: "ラウンジ"
@@ -566,11 +576,50 @@ ja:
   staff_category_description: "スタッフディスカッション用の非公開カテゴリです。トピックは管理者とモデレーターのみが閲覧できます。"
   discourse_welcome_topic:
     title: "Discourse へようこそ"
+    body: |2
+
+      この固定トピックの最初の写真は、ウェルカムメッセージとしてホームページを初めて訪問するすべてのユーザーに表示されるものであるため、重要です！
+
+      コミュニティの簡単な説明になるように、**これを編集**しましょう。
+
+      - これは誰のためのコミュニティですか？
+      - どのような情報を得られますか？
+      - 参加するメリットは何ですか？
+      - 詳細 (リンク、リソースなど) はどこに記載されていますか？
+
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      お知らせに返信が溜まらないように、管理からこのトピックをクローズすることができます :wrench: (右上と下)。
   lounge_welcome:
     title: "ラウンジへようこそ"
+    body: |2
+
+      おめでとうございます！ :confetti_ball:
+
+      このトピックを閲覧できるのであれば、最近**レギュラー** (信頼レベル 3) に昇格したということです。
+
+      次のことができるようになりました &hellip;
+
+      * トピックのタイトルの編集
+      * トピックのカテゴリの変更
+      * すべてのリンクのフォロー ([自動 nofollow](https://en.wikipedia.org/wiki/Nofollow) が削除されました)
+      * 信頼レベル 3 以上のユーザーのみが閲覧できる非公開のラウンジカテゴリへのアクセス
+      * 1 回の通報による迷惑の非表示
+
+      [現在のレギュラーユーザーのリスト](%{base_path}/badges/3/regular)をご覧ください。ご挨拶しましょう。
+
+      このコミュニティの大切な一員としての活動に感謝いたします！
+
+      (信頼レベルについて詳しくは、[こちらのトピック][trust] をご覧ください。要件を継続して満たすメンバーのみがレギュラーレベルを維持することができます。)
+
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
+  admin_quick_start_title: "最初にお読みください: 管理者クイックスタートガイド"
   category:
     topic_prefix: "%{category} カテゴリについて"
+    replace_paragraph: "(この最初の段落を、新しいカテゴリの簡単な説明に置き換えてください。このガイダンスはカテゴリ選択エリアに表示されるため、200 文字未満で記述してください。)"
+    post_template: "%{replace_paragraph}\n\nより長い説明またはカテゴリのガイドラインやルールを記述するには次の段落を使用してください。\n\n- メンバーはなぜこのカテゴリを使用する必要がありますか？何のために使用されますか？\n\n- これと、ほかの既存のカテゴリでは何が異なりますか？\n\n- このカテゴリには、一般的にどのようなトピックが含まれますか？\n\n- このカテゴリが必要ですか？ほかのカテゴリとマージしたり、サブカテゴリ化することはできませんか？\n"
     errors:
+      not_found: "カテゴリが見つかりません！"
       uncategorized_parent: "未分類カテゴリに親カテゴリを設定できません"
       self_parent: "サブカテゴリの親をそのサブカテゴリに設定できません"
       depth: "サブカテゴリの下に別のサブカテゴリを作成することはできません"
@@ -578,8 +627,14 @@ ja:
       email_already_used_in_group: "'%{email}' はすでに '%{group_name}' グループに使われています。"
       email_already_used_in_category: "'%{email}' はすでに '%{category_name}' カテゴリに使われています。"
       description_incomplete: "カテゴリの説明の投稿には少なくとも 1 段落必要です。"
+      permission_conflict: "サブカテゴリにアクセスできるグループは、その親カテゴリにもアクセスできます。次のグループは、サブカテゴリの 1 つにアクセスできますが、親カテゴリにはアクセスできません: %{group_names}"
+      disallowed_topic_tags: "このトピックにはこのカテゴリで許可されていないタグがあります: '%{tags}'"
+      disallowed_tags_generic: "このトピックはタグを許可していません。"
     cannot_delete:
+      uncategorized: "このカテゴリは特殊です。カテゴリのないトピックを保存するために用意されているため、削除できません。"
       has_subcategories: "サブカテゴリがあるためこのカテゴリを削除できません。"
+      topic_exists:
+        other: "%{count} 件のトピックがあるため、このカテゴリを削除できません。最も古いトピックは %{topic_link} です。"
       topic_exists_no_oldest: "%{count} 件のトピックがあるためこのカテゴリを削除できません。"
     uncategorized_description: "カテゴリが不要なトピック、または既存のカテゴリに当てはまらないトピックです。"
   trust_levels:
@@ -589,10 +644,22 @@ ja:
   post:
     image_placeholder:
       broken: "この画像は破損しています"
+    has_likes:
+      other: "「いいね！」 %{count}"
   rate_limiter:
     slow_down: "この操作の実行回数が多すぎます。後でもう一度お試しください。"
     too_many_requests: "この操作の実行回数が多すぎます。%{time_left}経ってからもう一度お試しください。"
     by_type:
+      first_day_replies_per_day: "あなたの熱意には感謝していますが、コミュニティの安全上の理由により、新規ユーザーが初日に作成できる返信の上限に達しました。%{time_left}経ってから、返信を作成してください。"
+      first_day_topics_per_day: "あなたの熱意には感謝していますが、コミュニティの安全上の理由により、新規ユーザーが初日に作成できるトピックの上限に達しました。%{time_left}経ってから、新しいトピックを作成してください。"
+      create_topic: "トピックの作成に急ぎ過ぎているようです。%{time_left}経ってから、もう一度お試しください。"
+      create_post: "返信に急ぎ過ぎているようです。%{time_left}経ってから、もう一度お試しください。"
+      delete_post: "投稿の削除に急ぎ過ぎているようです。%{time_left}経ってから、もう一度お試しください。"
+      public_group_membership: "グループへの参加/退出を頻繁に行い過ぎているようです。%{time_left}経ってから、もう一度お試しください。"
+      topics_per_day: "1 日に作成できる新規トピックの上限に達しました。%{time_left}後に新しいトピックを作成できるようになります。"
+      pms_per_day: "1 日に作成できるメッセージの上限に達しました。%{time_left}後に新しいメッセージを作成できるようになります。"
+      create_like: "わぉ！愛をたくさん分かち合っていますね！今日の「いいね！」の上限に達しました。信頼レベルが高くなると、1 日に「いいね！」できる上限が高くなります。%{time_left}経ったら、また投稿に「いいね！」できるようになります。"
+      create_bookmark: "1 日のブックマークの上限に達しました。%{time_left}経ってから、ブックマークを設定してください。"
       unsubscribe_via_email: "メールでの購読解除数の上限に達しました。%{time_left}経ってからもう一度お試しください。"
     hours:
       other: "%{count} 時間"
@@ -755,6 +822,14 @@ ja:
     no_replies:
       self: "まだ投稿に返信していません。"
       others: "返信はありません。"
+  webauthn:
+    validation:
+      unsupported_attestation_format_error: "この認証形式はサーバーでサポートされていません。"
+      credential_id_in_use_error: "入力された資格情報 ID はすでに使用されています。"
+      public_key_error: "資格情報の公開鍵の確認に失敗しました。"
+      ownership_error: "セキュリティキーはユーザーに所有されていません。"
+      not_found_error: "入力された資格情報 ID のセキュリティキーが見つかりませんでした。"
+      unknown_cose_algorithm_error: "セキュリティキーに使用されているアルゴリズムは認識されていません。"
   topic_flag_types:
     spam:
       title: "迷惑"
@@ -765,6 +840,7 @@ ja:
       title: "不適切"
       description: 'このトピックには一般的な人が攻撃的、虐待的、または<a href="%{base_path}/guidelines">コミュニティガイドライン</a>に違反すると見なすコンテンツが含まれています。'
       long_form: "不適切として通報"
+      short_description: '<a href="%{base_path}/guidelines">コミュニティガイドライン</a>の違反'
     notify_moderators:
       title: "その他"
       description: 'このトピックは<a href="%{base_path}/guidelines">ガイドライン</a>、<a href="%{tos_url}">利用規約</a>または上記に記載されていない別の理由で、一般のスタッフによる注意が必要です。'
@@ -775,6 +851,8 @@ ja:
   flagging:
     you_must_edit: '<p>あなたの投稿はコミュニティから通報されました。<a href="%{path}">投稿したメッセージを確認</a>してください。</p>'
     user_must_edit: "<p>この投稿はコミュニティから通報されたため、一時的に非表示にされています。</p>"
+  ignored:
+    hidden_content: "<p>無視されたコンテンツ</p>"
   archetypes:
     regular:
       title: "通常のトピック"
@@ -788,15 +866,23 @@ ja:
     description: "<b>%{email}</b> のメールの設定が更新されました。変更するには<a href='%{url}'>あなたのユーザー設定にアクセス</a>してください。"
     topic_description: "%{link} を購読し直すには、トピックの下または右にある通知の管理を使用してください。"
     private_topic_description: "購読し直すには、トピックの下か右にある通知の管理を使用してください。"
+  uploads:
+    marked_insecure_from_theme_component_reason: "アップロードはテーマのコンポーネントに使用されています"
   unsubscribe:
     title: "購読解除"
     stop_watching_topic: "%{link} のトピックのウォッチを停止する"
     mute_topic: "%{link} のトピックのすべての通知をミュートにする"
     unwatch_category: "%{category} 内のすべてのトピックのウォッチを停止する"
     mailing_list_mode: "メーリンリストモードをオフにする"
+    all: "%{sitename} からメールを送信しない"
     different_user_description: "メールで送信したものとは異なるユーザーとしてログインしています。 ログアウトするか、匿名モードを開始して、もう一度お試しください。"
+    not_found_description: "この購読解除が見つかりませんでした。メールのリンクが古すぎるか期限切れになっています。"
     log_out: "ログアウト"
+    submit: "設定を保存"
     digest_frequency:
+      title: "要約メールを %{frequency}に受信しています"
+      never_title: "要約メールを受信していません"
+      select_title: "要約メールの頻度を次のように設定します:"
       never: "送信しない"
       every_30_minutes: "30 分毎"
       every_hour: "1 時間毎"
@@ -810,6 +896,8 @@ ja:
     read: "読み取り"
     read_write: "読み取り/書き込み"
     description: '"%{application_name}" があなたのアカウントへの次のアクセス権を要求しています:'
+    instructions: '"%{application_name}" で使用できる新しいユーザー API キーを生成しました。次のキーをアプリケーションに貼り付けてください。'
+    otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
     otp_confirmation:
       confirm_title: '%{site_name} に進む'
       logging_in_as: '%{username} としてログイン'
@@ -819,26 +907,52 @@ ja:
     scopes:
       message_bus: "ライプアップデート"
       notifications: "通知を読み取ってクリアする"
+      push: "外部サービスへのプッシュ通知"
       session_info: "ユーザーセッション情報を読み取る"
       read: "すべて読み取る"
+      write: "すべて書き込み"
+      one_time_password: "ワンタイムログイントークンの作成"
+      bookmarks_calendar: "ブックマークのリマインダーの読み取り"
+    invalid_public_key: "公開鍵は無効です。"
+    invalid_auth_redirect: "この auth_redirect ホストは許可されていません。"
+    invalid_token: "欠落しているか、無効または期限切れのトークンです。"
+  flags:
+    errors:
+      already_handled: "通報はすでに処理されました"
   reports:
     default:
       labels:
         count: 件数
+        percent: パーセント
         day: 日
     post_edits:
+      title: "投稿の編集"
       labels:
         edited_at: 日付
         post: 投稿
         editor: 編集者
+        author: 作者
         edit_reason: 理由
+      description: "新しい投稿の編集回数。"
     user_flagging_ratio:
+      title: "ユーザー通報率"
       labels:
         user: ユーザー
+        agreed_flags: 合意された通報
+        disagreed_flags: 却下された通報
+        ignored_flags: 無視された通報
         score: スコア
+      description: "通報へのスタッフ対応率順で示したユーザーのリスト (却下から合意)"
     moderators_activity:
+      title: "モデレーターのアクティビティ"
       labels:
         moderator: モデレーター
+        flag_count: 通報をレビュー
+        time_read: 閲覧時間
+        topic_count: 作成したトピック数
+        post_count: 作成した投稿数
+        pm_count: 作成した PM 数
+        revision_count: リビジョン
     flags_status:
       labels:
         flag: タイプ
