@@ -796,13 +796,13 @@ describe TopicView do
   end
 
   describe '#filtered_post_stream' do
-    let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
-    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
+    let!(:post) { Fabricate(:post, topic: topic, user: first_poster, created_at: 18.hours.ago) }
+    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout, created_at: 6.hours.ago) }
     let!(:post3) { Fabricate(:post, topic: topic, user: first_poster) }
 
     it 'should return the right columns' do
       expect(topic_view.filtered_post_stream).to eq([
-        [post.id, 0],
+        [post.id, 1],
         [post2.id, 0],
         [post3.id, 0]
       ])
