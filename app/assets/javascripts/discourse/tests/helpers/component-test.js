@@ -133,7 +133,7 @@ export default function (name, opts) {
     }).finally(async () => {
       if (opts.afterEach) {
         await andThen(() => {
-          return opts.afterEach.call(opts);
+          return opts.afterEach.call(this);
         });
       }
     });
