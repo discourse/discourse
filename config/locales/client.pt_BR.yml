@@ -3343,7 +3343,7 @@ pt_BR:
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "O segredo não deve conter caracteres em branco."
         secret_too_short: "O segredo deve ter pelo menos 12 caracteres."
-        secret_placeholder: "Um texto opcional, usado para gerar a assinatura"
+        secret_placeholder: "Uma linha opcional, usado para gerar a assinatura"
         event_type_missing: "Você deve configurar apenas um tipo de evento."
         content_type: "Tipo de conteúdo"
         secret: "Segredo"

@@ -266,9 +266,11 @@ it:
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_info}."
     bookmarked:
       title: "Segnalibro"
+      edit_bookmark: "Modifica Segnalibro"
       clear_bookmarks: "Cancella Segnalibri"
       help:
         bookmark: "Clicca per aggiungere un segnalibro al primo messaggio di questo argomento"
+        edit_bookmark: "Clicca per modificare il segnalibro a questo argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
         unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento."
     bookmarks:
@@ -377,6 +379,7 @@ it:
         type_bonus:
           name: "tipo di bonus"
           title: "Ad alcune tipologie revisionabili può essere assegnato un bonus dallo staff, per aumentare la loro priorità."
+      stale_help: "La revisione di questo elemento è stata condotta da qualcun altro."
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
         required: "Per poter revisionare gli elementi devi prima rivendicarli."
@@ -539,12 +542,16 @@ it:
       tomorrow: "Domani"
       post_local_date: "Data nel messaggio"
       later_this_week: "Più tardi questa settimana"
+      this_weekend: "Questo fine settimana"
       start_of_next_business_week: "Lunedì"
       start_of_next_business_week_alt: "Lunedì prossimo"
+      two_weeks: "Due settimane"
       next_month: "Il prossimo mese"
+      six_months: "Sei mesi"
       custom: "Data e ora personalizzate"
       relative: "Tempo relativo"
       none: "Nessun orario richiesto"
+      last_custom: "Ultima data e ora personalizzata"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha pubblicato <a href='%{topicUrl}'>l'argomento</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tu</a> hai pubblicato <a href='%{topicUrl}'>l'argomento</a>"
@@ -600,7 +607,10 @@ it:
       add_members:
         title: "Aggiungi utenti a %{group_name}"
         description: "Inserisci un elenco di utenti che desideri invitare al gruppo o incollalo in un elenco separato da virgole:"
+        usernames_placeholder: "nomi utente"
+        usernames_or_emails_placeholder: "nomi utente o email"
         notify_users: "Notifica gli utenti"
+        set_owner: "Imposta utenti come proprietari di questo gruppo"
       requests:
         title: "Richieste"
         reason: "Motivo"
@@ -615,6 +625,7 @@ it:
         name: "Nome"
         full_name: "Nome Completo"
         add_members: "Aggiungi utenti"
+        invite_members: "Invita"
         delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
         profile:
           title: Profilo
@@ -629,6 +640,8 @@ it:
           enable_imap: "Abilita IMAP"
           test_settings: "Prova le impostazioni"
           save_settings: "Salva Impostazioni"
+          last_updated: "Ultimo aggiornamento:"
+          last_updated_by: "di"
           settings_required: "Tutte le impostazioni sono obbligatorie, compilare tutti i campi prima della convalida."
           smtp_settings_valid: "Impostazioni SMTP valide."
           smtp_title: "SMTP"
@@ -661,6 +674,7 @@ it:
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
+            disabled: "Disabilitato"
         membership:
           title: Iscrizione
           access: Accesso
@@ -977,6 +991,8 @@ it:
       no_bookmarks_body: >
         Inizia ad aggiungere segnalibri ai messaggi con il pulsante %{icon}. Essi saranno elencati qui per facilitarne la consultazione. Puoi anche impostare un promemoria!
       no_notifications_title: "Non hai ancora notifiche"
+      no_notifications_body: >
+        Riceverai una notifica in questo pannello sulle attività che ti riguardano direttamente, quali risposte ai tuoi argomenti e messaggi. quando qualcuno ti <b>@menziona</b> o ti cita e risponde agli argomenti che stai osservando. Le notifiche verranno inviate anche alla tua e-mail quando non hai effettuato l'accesso per un po' di tempo. <br><br> Cerca %{icon} per decidere su quali argomenti, categorie e tag essere informato. Per ulteriori informazioni, consulta le tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
@@ -1088,6 +1104,7 @@ it:
         move_to_archive: "Archivia"
         failed_to_move: "Errore nello spostare i messaggi selezionati (forse la tua connessione non è attiva)"
         tags: "Etichette"
+        warnings: "Avvertimenti ufficiali"
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
@@ -1420,9 +1437,18 @@ it:
         invite:
           new_title: "Crea invito"
           edit_title: "Modifica invito"
+          instructions: "Condividi questo link per garantire l'accesso istantaneo a questo sito"
           copy_link: "copia link"
+          expires_in_time: "Scade tra %{time}"
+          expired_at_time: "Scaduto alle %{time}"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
+          restrict_email: "Limita a un solo indirizzo email"
+          max_redemptions_allowed: "Limite max di utilizzi"
+          add_to_groups: "Aggiungi ai gruppi"
+          invite_to_topic: "Invia a questo argomento"
+          expires_at: "Scadenza dopo"
+          custom_message: "Messaggio personale facoltativo"
           send_invite_email: "Salva e invia Email"
           save_invite: "Salva invito"
           invite_saved: "Invito salvato."
@@ -1505,6 +1531,11 @@ it:
       title:
         title: "Titolo"
         none: "(nessuno)"
+        instructions: "appare dopo il tuo nome utente"
+      flair:
+        title: "Flair"
+        none: "(nessuno)"
+        instructions: "icona visualizzata accanto alla tua immagine del profilo"
       primary_group:
         title: "Gruppo Primario"
         none: "(nessuno)"
@@ -2039,6 +2070,7 @@ it:
         votes_released: "Il voto è stato sbloccato"
     upload_selector:
       uploading: "In caricamento"
+      processing: "Caricamento in corso"
       select_file: "Seleziona File"
       default_image_alt_text: immagine
     search:
@@ -2144,10 +2176,19 @@ it:
         delete: "Elimina argomenti"
         dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
+        dismiss_read_with_selected:
+          one: "Ignora %{count} argomento non letto"
+          other: "Ignora %{count} argomenti non letti"
         dismiss_button: "Ignora…"
+        dismiss_button_with_selected:
+          one: "Ignora (%{count})…"
+          other: "Ignora (%{count})…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new: "Ignora i nuovi messaggi"
+        dismiss_new_with_selected:
+          one: "Ignora nuovo (%{count})"
+          other: "Ignora i nuovi (%{count})"
         toggle: "interruttore di selezione multipla degli argomenti"
         actions: "Azioni Multiple"
         change_category: "Imposta categoria"
@@ -2287,6 +2328,8 @@ it:
           12_hours: "12 Ore"
           24_hours: "24 Ore"
           custom: "Durata personalizzata"
+      slow_mode_notice:
+        duration: "Devi aspettare %{duration} tra ciascun messaggio inserito in questo argomento"
       topic_status_update:
         title: "Timer Argomento"
         save: "Imposta Timer"
@@ -2320,6 +2363,8 @@ it:
         title: "Pianifica Pubblicazione"
       temp_open:
         title: "Apri Temporaneamente"
+      auto_reopen:
+        title: "Apri automaticamente Argomento"
       temp_close:
         title: "Chiudi Temporaneamente"
       auto_close:
@@ -2380,11 +2425,13 @@ it:
           "3_10": "Riceverai notifiche perché stai osservando un'etichetta in questo argomento."
           "3_10_stale": "Riceverai notifiche perché in passato stavi osservando un’etichetta su questo argomento."
           "3_6": "Riceverai notifiche perché stai osservando questa categoria."
+          "3_6_stale": "Riceverai notifiche perché hai osservato questa categoria in passato."
           "3_5": "Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente."
           "3_2": "Riceverai notifiche perché stai osservando questo argomento."
           "3_1": "Riceverai notifiche perché hai creato questo argomento."
           "3": "Riceverai notifiche perché stai osservando questo argomento."
           "2_8": "Vedrai un conteggio delle nuove risposte perché stai seguendo questa categoria."
+          "2_8_stale": "Vedrai un conteggio delle nuove risposte perché hai seguito questa categoria in passato."
           "2_4": "Vedrai un conteggio delle nuove risposte perché hai pubblicato una risposta in questo argomento."
           "2_2": "Vedrai un conteggio delle nuove risposte perché stai seguendo questo argomento."
           "2": 'Vedrai un conteggio delle nuove risposte perché <a href="%{basePath}/u/%{username}/preferences/notifications">hai letto questo argomento</a>.'
@@ -2440,6 +2487,7 @@ it:
         pin: "Appunta Argomento"
         unpin: "Spunta Argomento"
         pin_globally: "Appunta Argomento Globalmente"
+        make_banner: "Crea argomento banner"
         remove_banner: "Rimuovi Argomento banner"
       reply:
         title: "Rispondi"
@@ -3093,6 +3141,7 @@ it:
       one: "utente"
       other: "utenti"
     category_title: "Categoria"
+    history: "Cronologia, ultime 100 revisioni"
     changed_by: "da %{author}"
     raw_email:
       title: "Email In Arrivo"
@@ -3219,6 +3268,7 @@ it:
         show_incoming_updated_topics: "%{shortcut} Mostra argomenti aggiornati"
         search: "%{shortcut} Cerca"
         help: "%{shortcut} Apri la legenda tasti"
+        dismiss_new: "%{shortcut} Ignora i nuovi"
         dismiss_topics: "%{shortcut} Ignora Argomenti"
         log_out: "%{shortcut} Disconnetti"
       composing:
@@ -3308,6 +3358,7 @@ it:
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
       info: "Info"
+      default_info: "Questa etichetta non è limitata ad alcuna categoria e non ha sinonimi. Per aggiungere restrizioni, inseriscila in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>."
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
       synonyms: "Sinonimi"
       synonyms_description: "Quando vengono utilizzate le seguenti etichette, verranno sostituite con <b>%{base_tag_name}</b>."
@@ -3385,8 +3436,12 @@ it:
         new: "Nuovo Gruppo"
         new_title: "Crea nuovo gruppo"
         edit_title: "Modifica gruppo di etichette"
+        tags_label: "Etichette in questo gruppo"
+        parent_tag_label: "Etichetta padre"
+        parent_tag_description: "Le etichette di questo gruppo possono essere usate solo se è presente l'etichetta padre."
         one_per_topic_label: "Limita ad una sola etichetta per argomento in questo gruppo"
         new_name: "Nuovo Gruppo Etichette"
+        name_placeholder: "Nome"
         save: "Salva"
         delete: "Elimina"
         confirm_delete: "Sicuro di voler cancellare questo gruppo di etichette?"
@@ -3538,6 +3593,7 @@ it:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'
+          average_chart_label: Media
           filters:
             file_extension:
               label: Estensione file
@@ -3660,6 +3716,8 @@ it:
               write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.
               read_lists: Leggi liste di argomenti come Popolari, Nuovi, Recenti, ecc. E' supportato anche l'RSS.
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
+            posts:
+              edit: Modifica qualsiasi messaggio o uno specifico.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.
@@ -4317,6 +4375,8 @@ it:
             post_staff_note_create: "aggiungi note dello staff"
             post_staff_note_destroy: "distruggi nota dello staff"
             delete_group: "elimina gruppo"
+            watched_word_create: "aggiungi parola osservata"
+            watched_word_destroy: "cancella parola osservata"
         screened_emails:
           title: "Email scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, i seguenti indirizzi email saranno controllati e la loro registrazione bloccata, oppure sarà eseguita qualche altra azione."
@@ -4371,6 +4431,7 @@ it:
         clear_all: Deseleziona Tutto
         clear_all_confirm: "Vuoi davvero cancellare tutte le parole che osservi per l'azione %{action}?"
         invalid_regex: 'La parola osservata "%{word}" è un''espressione regolare non valida.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Le parole osservate sono espressioni regolari</a> e non includono automaticamente i limiti delle parole. Se vuoi che l''espressione regolare corrisponda solo a parole intere, includi <code>\b</code> all''inizio e alla fine dell''espressione regolare in questione.'
         actions:
           block: "Blocca"
           censor: "Censura"
