@@ -22,6 +22,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :full_suspend_reason,
              :suspended_till,
              :silence_reason,
+             :penalty_counts,
+             :next_penalty,
              :primary_group_id,
              :badge_count,
              :warnings_received_count,
@@ -94,6 +96,20 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def silence_reason
     object.silence_reason
+  end
+
+  def penalty_counts
+    TrustLevel3Requirements.new(object).penalty_counts
+  end
+
+  def next_penalty
+    step_number = penalty_counts.total
+    steps = SiteSetting.penalty_step_hours.split('|')
+    step_number = [step_number, steps.length].min
+    penalty_hours = steps[step_number]
+    Integer(penalty_hours, 10).hours.from_now
+  rescue
+    nil
   end
 
   def silenced_by

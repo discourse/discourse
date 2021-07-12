@@ -48,7 +48,6 @@ export default Service.extend({
 
   _showControlModal(type, user, opts) {
     opts = opts || {};
-
     let controller = showModal(`admin-${type}-user`, {
       admin: true,
       modalClass: `${type}-user-modal`,
@@ -65,6 +64,8 @@ export default Service.extend({
         before: opts.before,
         successCallback: opts.successCallback,
       });
+
+      controller.finishedSetup();
     });
   },
 

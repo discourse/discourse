@@ -12,6 +12,10 @@ export default Controller.extend(PenaltyController, {
     this.setProperties({ silenceUntil: null, silencing: false });
   },
 
+  finishedSetup() {
+    this.set("silenceUntil", this.user?.next_penalty);
+  },
+
   @discourseComputed("silenceUntil", "reason", "silencing")
   submitDisabled(silenceUntil, reason, silencing) {
     return silencing || isEmpty(silenceUntil) || !reason || reason.length < 1;

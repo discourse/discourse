@@ -2270,6 +2270,11 @@ uncategorized:
     default: 60
     min: 0
 
+  penalty_step_hours:
+    default: "24|72|168|720"
+    type: "list"
+    list_type: "compact"
+
   svg_icon_subset:
     default: ""
     type: "list"
