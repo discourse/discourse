@@ -163,7 +163,10 @@ class CategoriesController < ApplicationController
         end
       end
 
-      DiscourseEvent.trigger(:category_updated, cat) if result
+      if result
+        DiscourseEvent.trigger(:category_updated, cat)
+      end
+
       result
     end
   end
