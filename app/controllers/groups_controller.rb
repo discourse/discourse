@@ -121,6 +121,7 @@ class GroupsController < ApplicationController
 
       format.html do
         @title = group.full_name.present? ? group.full_name.capitalize : group.name
+        @full_title = "#{@title} - #{SiteSetting.title}"
         @description_meta = group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 300) : @title
         render :show
       end
