@@ -2,11 +2,6 @@
   {{#unless complete}}
     {{plugin-outlet name="create-account-before-modal-body"}}
     {{#d-modal-body class=modalBodyClasses}}
-
-      {{#if skipConfirmation}}
-        {{loading-spinner size="large"}}
-      {{/if}}
-
       <div class="create-account-form">
         <div class="login-welcome-header">
           <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
@@ -169,6 +164,10 @@
 
           {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
 
+        {{/if}}
+
+        {{#if skipConfirmation}}
+          {{loading-spinner size="large"}}
         {{/if}}
       </div>
     {{/d-modal-body}}
