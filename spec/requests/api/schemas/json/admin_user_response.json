@@ -8,10 +8,7 @@
       "type": "string"
     },
     "name": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "avatar_template": {
       "type": "string"
@@ -21,9 +18,7 @@
     },
     "secondary_emails": {
       "type": "array",
-      "items": [
-
-      ]
+      "items": []
     },
     "active": {
       "type": "boolean"
@@ -56,19 +51,13 @@
       "type": "integer"
     },
     "manual_locked_trust_level": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "flag_level": {
       "type": "integer"
     },
     "title": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "time_read": {
       "type": "integer"
@@ -90,9 +79,7 @@
     },
     "associated_accounts": {
       "type": "array",
-      "items": [
-
-      ]
+      "items": []
     },
     "can_send_activation_email": {
       "type": "boolean"
@@ -107,10 +94,7 @@
       "type": "string"
     },
     "registration_ip_address": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "can_grant_admin": {
       "type": "boolean"
@@ -158,22 +142,13 @@
       "type": "boolean"
     },
     "full_suspend_reason": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "silence_reason": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "primary_group_id": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "badge_count": {
       "type": "integer"
@@ -185,10 +160,7 @@
       "type": ""
     },
     "reset_bounce_score_after": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "can_view_action_logs": {
       "type": "boolean"
@@ -203,10 +175,7 @@
       "type": "integer"
     },
     "single_sign_on_record": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "approved_by": {
       "type": ["object", "null"],
@@ -225,24 +194,29 @@
           "type": "string"
         }
       },
-      "required": [
-        "id",
-        "username",
-        "name",
-        "avatar_template"
-      ]
+      "required": ["id", "username", "name", "avatar_template"]
     },
     "suspended_by": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "silenced_by": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
+    },
+    "penalty_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "silenced": {
+          "type": "integer"
+        },
+        "suspended": {
+          "type": "integer"
+        }
+      },
+      "required": ["silenced", "suspended"]
+    },
+    "next_penalty": {
+      "type": "string"
     },
     "tl3_requirements": {
       "type": "object",
@@ -349,11 +323,7 @@
               "type": "integer"
             }
           },
-          "required": [
-            "silenced",
-            "suspended",
-            "total"
-          ]
+          "required": ["silenced", "suspended", "total"]
         }
       },
       "required": [
@@ -424,61 +394,34 @@
               "type": "boolean"
             },
             "title": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "grant_trust_level": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "incoming_email": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "has_messages": {
               "type": "boolean"
             },
             "flair_url": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "flair_bg_color": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "flair_color": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "bio_raw": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "bio_cooked": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "bio_excerpt": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "public_admission": {
               "type": "boolean"
@@ -490,19 +433,13 @@
               "type": "boolean"
             },
             "full_name": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "default_notification_level": {
               "type": "integer"
             },
             "membership_request_template": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "members_visibility_level": {
               "type": "integer"
