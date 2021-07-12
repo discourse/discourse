@@ -213,6 +213,29 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["destination_url"]).to eq(destination_url)
       end
 
+      it 'should return the right response for staged users' do
+        Fabricate(:user, username: "Staged_User", email: email, staged: true)
+
+        destination_url = '/somepath'
+        Rails.application.env_config["omniauth.origin"] = destination_url
+
+        events = DiscourseEvent.track_events { get "/auth/google_oauth2/callback.json" }
+        expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
+        expect(events.any? { |e| e[:event_name] === :after_auth && Auth::GoogleOAuth2Authenticator === e[:params][0] && !e[:params][1].failed? }).to eq(true)
+
+        expect(response.status).to eq(302)
+
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["email"]).to eq(email)
+        expect(data["username"]).to eq("Staged_User")
+        expect(data["auth_provider"]).to eq("google_oauth2")
+        expect(data["email_valid"]).to eq(true)
+        expect(data["can_edit_username"]).to eq(true)
+        expect(data["name"]).to eq("Some Name")
+        expect(data["destination_url"]).to eq(destination_url)
+      end
+
       it 'should include destination url in response' do
         destination_url = '/cookiepath'
         cookies[:destination_url] = destination_url
