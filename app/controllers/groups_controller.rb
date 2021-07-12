@@ -781,7 +781,7 @@ class GroupsController < ApplicationController
       category_ids.each do |category_id|
         category_id = category_id.to_i
         old_value = category_notifications[category_id]
-        category_actions[category_id] = value
+        category_notifications[category_id] = value
 
         if old_value.blank?
           category_actions[:create] << category_id
@@ -851,23 +851,27 @@ class GroupsController < ApplicationController
     tag_actions[:delete] = tag_notifications.keys - (tag_actions[:create] + tag_actions[:update])
 
     if category_actions[:create].present? || tag_actions[:create].present?
-      group.users.select(:id).find_in_batches do |users|
+      group.group_users.select(:id, :user_id).find_in_batches do |group_users|
+        user_ids = group_users.pluck(:user_id)
+
         category_actions[:create].each do |category_id|
           category_users = []
-          skip_user_ids = CategoryUser.where(category_id: category_id, user: users).pluck(:user_id)
-          users.each do |user|
-            next if skip_user_ids.include?(user.id)
-            category_users << { category_id: category_id, user_id: user.id, notification_level: category_actions[category_id] }
+          existing_users = CategoryUser.where(category_id: category_id, user_id: user_ids).where("notification_level IS NOT NULL")
+          skip_user_ids = existing_users.pluck(:user_id)
+
+          group_users.each do |group_user|
+            next if skip_user_ids.include?(group_user.user_id)
+            category_users << { category_id: category_id, user_id: group_user.user_id, notification_level: category_notifications[category_id] }
           end
           CategoryUser.insert_all!(category_users)
         end
 
         tag_actions[:create].each do |tag_id|
           tag_users = []
-          skip_user_ids = TagUser.where(category_id: category_id).pluck(:user_id)
-          users.each do |user|
-            next if skip_user_ids.include?(user.id)
-            tag_users << { tag_id: tag_id, user_id: user.id, notification_level: tag_actions[tag_id] }
+          skip_user_ids = TagUser.where(tag_id: tag_id, user_id: user_ids).where("notification_level IS NOT NULL").pluck(:user_id)
+          group_users.each do |group_user|
+            next if skip_user_ids.include?(group_user.user_id)
+            tag_users << { tag_id: tag_id, user_id: group_user.user_id, notification_level: tag_notifications[tag_id] }
           end
           TagUser.insert_all!(tag_users)
         end
