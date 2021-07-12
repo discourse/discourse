@@ -1526,6 +1526,9 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   moderators_manage_categories_and_groups: false
+  moderators_change_post_ownership:
+    client: true
+    default: false
   moderators_view_emails:
     client: true
     default: false
