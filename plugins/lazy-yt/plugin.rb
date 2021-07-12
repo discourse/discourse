@@ -5,13 +5,11 @@
 # version: 1.0.1
 # authors: Arpit Jalan
 # url: https://github.com/discourse/discourse/tree/master/plugins/lazy-yt
+# transpile_js: true
 
 hide_plugin if self.respond_to?(:hide_plugin)
 
 require "onebox"
-
-# javascript
-register_asset "javascripts/lazyYT.js"
 
 # stylesheet
 register_asset "stylesheets/lazyYT.css"
