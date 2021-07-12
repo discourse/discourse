@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'guardian/category_guardian'
 require 'guardian/ensure_magic'
 require 'guardian/post_guardian'
