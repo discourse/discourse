@@ -947,15 +947,25 @@ ja:
       title: "モデレーターのアクティビティ"
       labels:
         moderator: モデレーター
-        flag_count: 通報をレビュー
+        flag_count: レビューした通報数
         time_read: 閲覧時間
         topic_count: 作成したトピック数
         post_count: 作成した投稿数
         pm_count: 作成した PM 数
         revision_count: リビジョン
+      description: レビューした通報数、閲覧時間、作成されたトピック数、作成された投稿数、作成された個人メッセージ数、およびレビジョンを含むモデレーターアクティビティのリスト。
     flags_status:
+      title: "通報ステータス"
+      values:
+        agreed: 合意
+        disagreed: 却下
+        deferred: 延期
+        no_action: 未対応
       labels:
         flag: タイプ
+        assigned: 割り当て済み
+        poster: 投稿者
+        flagger: 通報者
     visits:
       title: "ユーザーアクセス"
       xaxis: "日"
@@ -1041,6 +1051,7 @@ ja:
       title: "ユーザーに通知"
       xaxis: "日"
       yaxis: "メッセージ件数"
+      description: "ユーザーが通報によって非公開で通知された回数。"
     top_referrers:
       title: "上位リファラー"
       xaxis: "ユーザー"
@@ -1050,6 +1061,7 @@ ja:
         user: "ユーザー"
         num_clicks: "クリック"
         num_topics: "トピック"
+      description: "共有したリンクのクリック数で表示されたユーザー。"
     top_traffic_sources:
       title: "上位トラフィックソース"
       xaxis: "ドメイン"
@@ -1060,35 +1072,43 @@ ja:
         domain: ドメイン
         num_clicks: クリック
         num_topics: トピック
+      description: "このサイトに最もリンクしている外部ソース。"
     top_referred_topics:
       title: "人気の参照先トピック"
       labels:
         num_clicks: "クリック"
         topic: "トピック"
+      description: "外部ソースから最も多くクリックされたトピック。"
     page_view_anon_reqs:
       title: "匿名ユーザー"
       xaxis: "日"
       yaxis: "匿名のページビュー"
+      description: "アカウントにログインしていない訪問者による新しいページビュー数。"
     page_view_logged_in_reqs:
       title: "ログイン"
       xaxis: "日"
       yaxis: "ログインユーザーのページビュー"
+      description: "ログインユーザーによる新しいページビュー数。"
     page_view_crawler_reqs:
       title: "ウェブクローラーのページビュー"
       xaxis: "日"
       yaxis: "ウェブクローラーのページビュー"
+      description: "ウェブクローラ―による合計ページビュー数。"
     page_view_total_reqs:
       title: "ページビュー"
       xaxis: "日"
       yaxis: "合計ページビュー"
+      description: "全訪問者による新しいページビュー数。"
     page_view_logged_in_mobile_reqs:
       title: "ログインユーザーのページビュー"
       xaxis: "日"
       yaxis: "モバイルログインユーザーのページビュー"
+      description: "アカウントにログインしているモバイルデバイスのユーザーによる新しいページビュー数。"
     page_view_anon_mobile_reqs:
       title: "匿名ページビュー"
       xaxis: "日"
       yaxis: "モバイル匿名ページビュー"
+      description: "ログインしていないモバイルデバイスの訪問者による新しいページビュー数。"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -1117,20 +1137,32 @@ ja:
       title: "最初の応答までの時間"
       xaxis: "日"
       yaxis: "平均時間 (時間)"
+      description: "新しいトピックに最初の応答があるまでの平均時間 (時間)。"
     topics_with_no_response:
       title: "応答のないトピック"
       xaxis: "日"
       yaxis: "合計"
+      description: "応答を受け取らなかった新規トピックの作成数。"
     mobile_visits:
+      title: "ユーザー訪問数 (モバイル)"
       xaxis: "日"
       yaxis: "アクセス数"
+      description: "モバイルデバイスを使って訪問したユニークユーザー数。"
     web_crawlers:
+      title: "ウェブクローラーユーザーエージェント"
       labels:
+        user_agent: "ユーザーエージェント"
         page_views: "ページビュー"
+      description: "ウェブクローラーユーザーエージェントのリスト (ページビュー順)。"
     suspicious_logins:
+      title: "不審なログイン"
       labels:
         user: ユーザー
+        client_ip: クライアント IP
         location: 場所
+        browser: ブラウザ
+        device: デバイス
+        os: オペレーティングシステム
         login_time: ログイン時間
       description: "以前のログインとは異なる疑いのある新しいログインの詳細。"
     staff_logins:
@@ -1161,6 +1193,16 @@ ja:
     sidekiq_warning: 'Sidekiq が実行していません。メール送信などの多くのタスクは sidekiq により非同期に実行されます。少なくとも 1 つの sidekiq プロセスが実行していることを確認してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらをご覧ください</a>。'
     queue_size_warning: "キューに入れられたジョブの数は %{queue_size} で、これは高い数字です。Sidekiq プロセスに問題があるか、Sidekiq ワーカーを増やす必要があります。"
     memory_warning: "現在サーバーは 1 GB 未満の総メモリで実行しています。推奨メモリサイズは 1 GB 以上です。"
+    google_oauth2_config_warning: 'サーバーは Google OAuth2 を使った登録とログインを許可 (enable_google_oauth2_logins) するように構成されていますが、クライアント ID とクライアントシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
+    facebook_config_warning: 'サーバーは Facebook を使った登録とログインを許可 (enable_facebook_logins) するように構成されていますが、アプリ ID とアプリシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
+    twitter_config_warning: 'サーバーは Twitter を使った登録とログインを許可 (enable_twitter_logins) するように構成されていますが、キーとシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
+    github_config_warning: 'サーバーは GitHub を使った登録とログインを許可 (enable_github_logins) するように構成されていますが、クライアント ID とシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
+    s3_config_warning: 'サーバーはファイルを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 が設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_upload_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
+    s3_backup_config_warning: 'サーバーはバックアップを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 が設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_backup_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
+    s3_cdn_warning: 'サーバーはファイルを S3 にアップロードするように構成されていますが、S3 CDN が構成されていません。これにより、S3 のコストが高くなり、サイトパフォーマンスが低下する可能性があります。<a href="https://meta.discourse.org/t/-/148916" target="_blank">詳しくは、「アップロードにオブジェクトストレージを使用する」をご覧ください</a>。'
+    image_magick_warning: 'サーバーは大きな画像のサムネイルを作成するように構成されていますが、ImageMagick がインストールされていません。パッケージマネージャーを使用して ImageMagick をインストールするか、<a href="https://www.imagemagick.org/script/download.php" target="_blank">最新リリースをダウンロード</a>してください。'
+    failing_emails_warning: '失敗したメールジョブが %{num_failed_jobs} 件あります。app.yml を確認し、メールサーバーの設定が正しいことを確認してください。<a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを参照</a>してください。'
+    subfolder_ends_in_slash: "サブフォルダのセットアップが誤っています。DISCOURSE_RELATIVE_URL_ROOT はスラッシュで終了します。"
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; に置換される語"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動的に削除します。"
