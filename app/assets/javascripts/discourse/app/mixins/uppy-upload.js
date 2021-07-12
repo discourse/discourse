@@ -6,7 +6,7 @@ import {
 import { deepMerge } from "discourse-common/lib/object";
 import getUrl from "discourse-common/lib/get-url";
 import I18n from "I18n";
-import Uppy, { DropTarget, XHRUpload } from "uppy";
+import Uppy, { DropTarget, XHRUpload } from "@uppy/core";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
 
