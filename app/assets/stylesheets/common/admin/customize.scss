@@ -596,7 +596,6 @@
   }
   label input {
     width: auto;
-    margin: 3px 0;
   }
 }
 .public-key {
@@ -604,7 +603,17 @@
   textarea {
     cursor: auto;
     min-height: 220px;
+    margin-bottom: 0;
   }
+  button {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+.public-key-text-wrapper {
+  position: relative;
 }
 
 .public-key-note {
