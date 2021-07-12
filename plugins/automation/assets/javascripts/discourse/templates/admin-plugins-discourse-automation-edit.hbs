@@ -82,8 +82,15 @@
 
       {{#if automationForm.trigger}}
         {{#if model.automation.next_pending_automation_at}}
-          <div class="alert alert-info">
-            {{i18n "discourse_automation.edit_automation.trigger_section.next_pending_automation" date=nextPendingAutomationAtFormatted}}
+          <div class="alert alert-info next-trigger">
+            <p>{{i18n "discourse_automation.edit_automation.trigger_section.next_pending_automation" date=nextPendingAutomationAtFormatted}}</p>
+
+            {{d-button
+              label="discourse_automation.edit_automation.trigger_section.trigger_now"
+              class="btn-primary trigger-now-btn"
+              isLoading=isTriggeringAutomation
+              action=(action "onManualAutomationTrigger" model.automation.id)
+            }}
           </div>
         {{/if}}
 

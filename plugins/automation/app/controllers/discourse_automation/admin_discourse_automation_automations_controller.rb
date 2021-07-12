@@ -64,6 +64,12 @@ module DiscourseAutomation
       render json: success_json
     end
 
+    def trigger
+      automation = DiscourseAutomation::Automation.find(params[:id])
+      automation.trigger!('kind' => 'manual')
+      render json: success_json
+    end
+
     private
 
     def enforce_trigger!(params)

@@ -7,10 +7,12 @@ en:
       select_script: Select a script
       select_trigger: Select a trigger
       confirm_automation_reset: This action will reset script and trigger options, do you want to proceed?
+      confirm_automation_trigger: This action will trigger the automation, do you want to proceed?
       edit_automation:
         trigger_section:
           forced: This trigger is forced by script.
           next_pending_automation: "Next automation will trigger at: %{date}"
+          trigger_now: "Trigger now"
           title: When/What...
         fields_section:
           title: Script options

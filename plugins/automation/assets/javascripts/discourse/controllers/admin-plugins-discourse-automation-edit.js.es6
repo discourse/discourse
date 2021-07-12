@@ -12,6 +12,7 @@ export default Ember.Controller.extend({
   automation: reads("model.automation"),
 
   isUpdatingAutomation: false,
+  isTriggeringAutomation: false,
 
   scriptFields: filterBy("automationForm.fields", "target", "script"),
 
@@ -63,6 +64,24 @@ export default Ember.Controller.extend({
   },
 
   @action
+  onManualAutomationTrigger(id) {
+    this._confirmTrigger(() => {
+      this.set("isTriggeringAutomation", true);
+
+      return ajax(
+        `/admin/plugins/discourse-automation/automations/${id}/trigger`,
+        {
+          type: "post"
+        }
+      )
+        .catch(e => this.set("error", extractError(e)))
+        .finally(() => {
+          this.set("isTriggeringAutomation", false);
+        });
+    });
+  },
+
+  @action
   onChangeScript(id) {
     if (this.automationForm.script !== id) {
       this._confirmReset(() => {
@@ -75,6 +94,19 @@ export default Ember.Controller.extend({
   _confirmReset(callback) {
     bootbox.confirm(
       I18n.t("discourse_automation.confirm_automation_reset"),
+      I18n.t("no_value"),
+      I18n.t("yes_value"),
+      result => {
+        if (result) {
+          callback && callback();
+        }
+      }
+    );
+  },
+
+  _confirmTrigger(callback) {
+    bootbox.confirm(
+      I18n.t("discourse_automation.confirm_automation_trigger"),
       I18n.t("no_value"),
       I18n.t("yes_value"),
       result => {

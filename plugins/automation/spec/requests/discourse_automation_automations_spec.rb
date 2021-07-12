@@ -9,6 +9,18 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
     sign_in(admin)
   end
 
+  describe '#trigger' do
+    fab!(:automation) { Fabricate(:automation) }
+
+    it 'triggers the automation' do
+      output = capture_stdout do
+        post "/admin/plugins/discourse-automation/automations/#{automation.id}/trigger.json"
+      end
+
+      expect(output).to include('"kind":"manual"')
+    end
+  end
+
   describe '#destroy' do
     fab!(:automation) { Fabricate(:automation) }
 
