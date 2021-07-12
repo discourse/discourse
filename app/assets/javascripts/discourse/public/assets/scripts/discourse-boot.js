@@ -167,6 +167,16 @@
     return I18n;
   });
 
+  define("uppy", ["exports"], function (exports) {
+    exports.default = window.Uppy.Core;
+    exports.Plugin = window.Uppy.Plugin;
+    exports.XHRUpload = window.Uppy.XHRUpload;
+    exports.AwsS3 = window.Uppy.AwsS3;
+    exports.AwsS3Multipart = window.Uppy.AwsS3Multipart;
+    exports.DropTarget = window.Uppy.DropTarget;
+    return exports;
+  });
+
   define("htmlbars-inline-precompile", ["exports"], function (exports) {
     exports.default = function tag(strings) {
       return Ember.Handlebars.compile(strings[0]);
