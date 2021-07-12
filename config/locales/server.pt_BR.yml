@@ -1518,58 +1518,58 @@ pt_BR:
     title_remove_extraneous_space: "Remova os espaços em branco iniciais à frente da pontuação final."
     automatic_topic_heat_values: 'Atualize automaticamente as configurações "volume de visualizações do tópico" e "volume de curtidas de postagens no tópico" com base na atividade do site.'
     topic_views_heat_low: "Após uma quantidade de visualizações, o campo de visualizações é levemente realçado."
-    topic_views_heat_medium: "Após este tanto de visualizações, o campo de visualizações é moderadamente realçado."
-    topic_views_heat_high: "Após este tanto de visualizações, o campo de visualizações é fortemente realçado."
-    cold_age_days_low: "Depois de N dias de conversa, a última atividade é suavemente escurecida."
-    cold_age_days_medium: "Depois de N dias de conversa, a última atividade é moderadamente escurecida."
-    cold_age_days_high: "Depois de N dias de conversa, a última atividade é fortemente escurecida."
-    history_hours_low: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição levemente realçado."
-    history_hours_medium: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição moderadamente realçado."
-    history_hours_high: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição fortemente realçado."
-    topic_post_like_heat_low: "Após a proporção curtidas:postagens exceder esta proporção, o campo de contagem de postagens é levemente realçado."
-    topic_post_like_heat_medium: "Após a proporção curtidas:postagens exceder esta proporção, o campo de contagem de postagens é moderadamente realçado."
-    topic_post_like_heat_high: "Após a proporção curtidas:postagens exceder esta proporção, o campo de contagem de postagens é fortemente realçado."
-    faq_url: "Se você possui um FAQ hospedado em outro local e que você queira usar, forneça a URL completa aqui."
-    tos_url: "Se você tem um documento de Termos de Serviço hospedado em algum outro local que você queira usar, forneça a URL completa aqui."
-    privacy_policy_url: "Se você tem um documento de Política de Privacidade hospedado em algum outro local que você queira usar, forneça a URL completa aqui."
-    log_anonymizer_details: "Se deseja manter os detalhes de um usuário no log depois de ser anonimizado. Ao cumprir com o GDPR, você precisará desativá-lo."
-    newuser_spam_host_threshold: "Quantas vezes um novo usuário pode postar um link para o mesmo host em suas postagens `newuser_spam_host_threshold` antes de ser considerado spam."
-    allowed_spam_host_domains: "Uma lista de domínios excluídas do teste de spam. Usuários novos nunca serão restringidos de criar posts com links para estes domínios."
-    topic_view_duration_hours: "Conte uma nova visualização de tópico uma vez por IP / Usuário a cada N horas"
-    user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário uma vez por IP / Usuário a cada N horas"
-    levenshtein_distance_spammer_emails: "Ao equiparar emails de spammers, o número da diferença de caracteres que ainda assim irá permitir uma equiparação imprecisa."
-    max_new_accounts_per_registration_ip: "Se já houver (n) contas com o nível de confiança 0 deste IP (e nenhum for membro da staff ou tiver NC2 ou mais alto), parar de aceitar novas assinaturas daquele IP."
-    min_ban_entries_for_roll_up: "Ao clicar no botão Combinar, criará uma entrada de banimento de subrede se houverem ao menos (N) entradas."
-    max_age_unmatched_emails: "Excluir entradas de emails filtrados não combinadas após (N) dias."
-    max_age_unmatched_ips: "Excluir entradas de IPs filtrados não combinadas após (N) dias."
-    num_flaggers_to_close_topic: "Número mínimo de usuários sinalizadores únicos que são exigidos para que um tópico seja automaticamente pausado por intervenção"
-    num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
-    auto_respond_to_flag_actions: "Habilitar resposta automática quando eliminada marcação."
-    min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que um usuário deve digitar durante a primeira postagem; se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação de necessidades. Defina como 0 para desativar (não recomendado)"
-    auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários que não atendem a min_first_post_typing_time"
-    auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente os tipos rápidos"
+    topic_views_heat_medium: "Após esta quantidade de visualizações, o campo de visualizações é moderadamente realçado."
+    topic_views_heat_high: "Após esta quantidade de visualizações, o campo de visualizações é fortemente realçado."
+    cold_age_days_low: "Após esta quantidade de dias de conversa, a última atividade é suavemente escurecida."
+    cold_age_days_medium: "Após esta quantidade de dias de conversa, a última atividade é moderadamente escurecida."
+    cold_age_days_high: "Após esta quantidade de dias de conversa, a última atividade é fortemente escurecida."
+    history_hours_low: "Uma postagem editada dentro deste período de horas tem o indicador de edição levemente realçado."
+    history_hours_medium: "Uma postagem editada dentro deste período de horas tem o indicador de edição moderadamente realçado."
+    history_hours_high: "Uma postagem editada dentro deste período de horas tem o indicador de edição fortemente realçado."
+    topic_post_like_heat_low: "Após as curtidas: a taxa de postagem excede esta proporção, o campo de contagem de postagens é levemente realçado."
+    topic_post_like_heat_medium: "Após as curtidas: a taxa de postagem excede esta proporção, o campo de contagem de postagens é moderadamente realçado."
+    topic_post_like_heat_high: "Após as curtidas: a taxa de postagem excede esta proporção, o campo de contagem de postagens é fortemente realçado."
+    faq_url: "Se tiver um FAQ hospedado em outro local que você queira usar, informe a URL completa aqui."
+    tos_url: "Se tiver um documento dos Termos de Serviço hospedado em algum outro local que você queira usar, informe a URL completa aqui."
+    privacy_policy_url: "Se tiver um documento de Política de Privacidade hospedado em algum outro local que você queira usar, informe a URL completa aqui."
+    log_anonymizer_details: "Se deseja manter os detalhes de um(a) usuário(a) no registro depois de ser se tornar anônimo(a). Ao estar em conformidade com o GDPR, será preciso desativá-lo."
+    newuser_spam_host_threshold: "Quantidade de vezes que um(a) novo(a) usuário(a) pode postar um link para o mesmo host em suas postagens \"newuser_spam_host_threshold\" antes de ser considerado spam."
+    allowed_spam_host_domains: "Uma lista de domínios excluídos do teste de spam. Usuários(as) novos(as) nunca serão restringidos(as) de criar postagens com links para esses domínios."
+    topic_view_duration_hours: "Conte uma nova visualização de tópico uma vez por IP/usuário(a) a cada N horas"
+    user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário(a) uma vez por IP/usuário(a) a cada N horas"
+    levenshtein_distance_spammer_emails: "Ao fazer correspondência de e-mails de remetentes de spam, o tamanho da diferença de caracteres que ainda causará uma correspondência aproximada."
+    max_new_accounts_per_registration_ip: "Se já houver (n) contas com o nível de confiança 0 deste IP (e nenhum for membro da equipe ou tiver NC2 ou mais alto), pare de aceitar novas assinaturas desse IP."
+    min_ban_entries_for_roll_up: "Ao clicar no botão Combinar, uma entrada de banimento de subrede será criada se houver ao menos (N) entradas."
+    max_age_unmatched_emails: "Excluir entradas de e-mails filtrados sem correspondência após (N) dias."
+    max_age_unmatched_ips: "Excluir entradas de IPs filtrados sem correspondência após (N) dias."
+    num_flaggers_to_close_topic: "Quantidade mínima de usuários(as) sinalizadores únicos(as) exigidos para que um tópico seja automaticamente pausado por intervenção"
+    num_hours_to_close_topic: "Quantidade de horas para pausar um tópico para intervenção."
+    auto_respond_to_flag_actions: "Ative resposta automática ao remover sinalizador."
+    min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que o(a) usuário(a) deve passar digitando durante a primeira postagem. Se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação necessária. Defina como 0 para desativar (não recomendado)"
+    auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atendem a min_first_post_typing_time"
+    auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente usuários(as) que digitam rápido"
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"
-    reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que eles atendam a esta prioridade"
-    reply_by_email_enabled: "Habilitar responder tópicos via email"
-    reply_by_email_address: "Template de resposta por email, por exemplo: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder por e-mail a endereços de e-mail recebidos. Exemplo:%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
-    incoming_email_prefer_html: "Use HTML em vez de texto para email recebido."
+    reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que atendam a esta prioridade"
+    reply_by_email_enabled: "Ative resposta a tópicos via e-mail"
+    reply_by_email_address: "Modelo de resposta por e-mail, por exemplo: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder por e-mail a endereços de e-mail recebidos. Por exemplo:%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
+    incoming_email_prefer_html: "Use HTML em vez de texto para e-mail recebido."
     strip_incoming_email_lines: "Remova os espaços em branco iniciais e finais de cada linha de e-mails recebidos."
-    disable_emails: "Evite Discurso de enviar qualquer tipo de e-mails. Selecione \"sim\" para desativar os e-mails de todos os usuários. Selecione \"não pessoal\" para desativar os e-mails apenas para usuários que não são funcionários."
-    strip_images_from_short_emails: "Arrancar imagens de emails cujo tamanho seja menor que 2800 Bytes"
-    short_email_length: "Tamanho de email curto em Bytes"
+    disable_emails: "Evite que o Discourse envie qualquer tipo de e-mail. Selecione \"sim\" para desativar os e-mails de todos(as) os(as) usuários(as). Selecione \"não pertence à equipe\" para desativar os e-mails apenas para usuários(as) que não fizerem parte da equipe."
+    strip_images_from_short_emails: "Tirar imagens de e-mails cujo tamanho seja menor que 2.800 bytes"
+    short_email_length: "Tamanho de e-mail curto em bytes"
     display_name_on_email_from: "Exibir nomes completos no e-mail dos campos"
-    unsubscribe_via_email: "Permitir que os usuários cancelem a inscrição de e-mails enviando um e-mail com \"cancelamento de inscrição\" no assunto ou no corpo"
-    unsubscribe_via_email_footer: "Anexar um cancelamento de inscrição via email mailto: link para o rodapé dos emails enviados"
-    delete_email_logs_after_days: "Apagar logs de e-mail depois de (n) dias. 0 para mantê-lo definitivamente."
+    unsubscribe_via_email: "Permitir que os(as) usuários(as) cancelem a inscrição destes e-mails enviando um e-mail com \"cancelamento de inscrição\" no assunto ou no corpo"
+    unsubscribe_via_email_footer: "Anexar um cancelamento de inscrição via e-mail mailto: link ao o rodapé dos e-mails enviados"
+    delete_email_logs_after_days: "Exclua registros de e-mail após (n) dias. 0 para manter indefinidamente"
     disallow_reply_by_email_after_days: "Não permitir resposta por e-mail após (N) dias. 0 para manter indefinidamente"
-    max_emails_per_day_per_user: "Número máximo de emails para enviar usuários por dia. 0 para desabilitar o limite"
+    max_emails_per_day_per_user: "Quantidade máxima de e-mails para enviar a usuários(as) por dia. 0 para desativar o limite"
     enable_staged_users: "Crie automaticamente usuários(as) encenados(as) ao processar os e-mails recebidos."
     maximum_staged_users_per_email: "Quantidade máxima de usuários(as) encenados(as) criados(as) ao processar um e-mail recebido."
-    auto_generated_allowlist: "Lista de endereços de e-mail que não serão verificados quanto a conteúdo gerado automaticamente. Exemplo: foo@bar.com | discourse@bar.com"
+    auto_generated_allowlist: "Lista de endereços de e-mail que não serão verificados em busca de conteúdo gerado automaticamente. Por exemplo: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloqueie os e-mails recebidos identificados como gerados automaticamente."
-    ignore_by_title: "Ignore os e-mails recebidos com base no título deles."
+    ignore_by_title: "Ignore os e-mails recebidos com base no título."
     mailgun_api_key: "A chave da API secreta do Mailgun é usada para verificar as mensagens do webhook."
     soft_bounce_score: "Pontuação de rejeição adicionada ao(à) usuário(a) quando ocorre uma devolução temporária."
     hard_bounce_score: "Pontuação de rejeição adicionada ao(à) usuário(a) quando ocorre uma devolução permanente."
@@ -1700,37 +1700,37 @@ pt_BR:
     default_email_in_reply_to: "Incluir trecho de resposta para postar em e-mails por padrão."
     default_other_new_topic_duration_minutes: "Condição padrão global para a qual um tópico é considerado novo."
     default_other_auto_track_topics_after_msecs: "Tempo padrão global antes de um tópico ser rastreado automaticamente."
-    default_other_notification_level_when_replying: "Nível de notificação padrão global quando o usuário responde a um tópico."
-    default_other_external_links_in_new_tab: "Abrir links externos em uma nova aba por padrão."
-    default_other_enable_quoting: "Ative a resposta de cotação para texto realçado por padrão."
-    default_other_enable_defer: "Habilitar a funcionalidade de adiar tópico por padrão."
-    default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do navegador por padrão."
-    default_other_like_notification_frequency: "Notificar usuários de curtidas por padrão"
-    default_topics_automatic_unpin: "Desvincular tópicos automaticamente quando o usuário alcança a parte inferior por padrão."
-    default_categories_watching: "Lista de categorias que são observadas por padrão."
+    default_other_notification_level_when_replying: "Nível de notificação padrão global quando o(a) usuário(a) responde a um tópico."
+    default_other_external_links_in_new_tab: "Abra links externos em uma nova aba por padrão."
+    default_other_enable_quoting: "Ative a citação de resposta para texto realçado por padrão."
+    default_other_enable_defer: "Ative a funcionalidade de adiar tópico por padrão."
+    default_other_dynamic_favicon: "Mostre contagem de tópicos novos/atualizados no ícone do navegador por padrão."
+    default_other_like_notification_frequency: "Notificar usuários(as) sobre curtidas por padrão"
+    default_topics_automatic_unpin: "Desvincule tópicos automaticamente quando o(a) usuário(a) alcançar a parte inferior por padrão."
+    default_categories_watching: "Lista de categorias que são acompanhadas por padrão."
     default_categories_tracking: "Lista de categorias que são monitoradas por padrão."
     default_categories_muted: "Lista de categorias que são silenciadas por padrão."
-    default_categories_watching_first_post: "Lista de categorias nas quais a primeira postagem em cada novo tópico será assistida por padrão."
+    default_categories_watching_first_post: "Lista de categorias nas quais a primeira postagem em cada novo tópico será acompanhada por padrão."
     default_text_size: "Tamanho do texto que é selecionado por padrão"
-    default_title_count_mode: "Modo padrão para o contador do título da página"
-    retain_web_hook_events_period_days: "Número de dias para reter registros de eventos do web hook."
-    retry_web_hook_events: "Repita automaticamente os eventos com falha do web hook por 4 vezes. Os intervalos de tempo entre as tentativas são de 1, 5, 25 e 125 minutos."
-    allow_user_api_keys: "Permitir geração de chaves de API do usuário"
-    allow_user_api_key_scopes: "Lista de escopos permitidos para chaves de API do usuário"
-    min_trust_level_for_user_api_key: "Nível de confiança necessário para geração de chaves de API do usuário"
-    allowed_user_api_auth_redirects: "URL permitido para o redirecionamento de autenticação para as chaves da API do usuário. O símbolo curinga * pode ser usado para corresponder qualquer parte dele (por exemplo, www.example.com/*)."
-    allowed_user_api_push_urls: "URLs permitidos para push de servidor para API do usuário"
-    expire_user_api_keys_days: "Número de dias antes de uma chave de API do usuário expirar automaticamente (0 para nunca)"
-    tagging_enabled: "Habilitar etiquetas em tópicos?"
-    min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma tag."
-    max_tags_per_topic: "As tags máximas que podem ser aplicadas a um tópico."
-    max_tag_length: "A quantidade máxima de caracteres que podem ser usados ​​em uma tag."
-    max_tag_search_results: "Ao pesquisar por tags, o número máximo de resultados a serem exibidos."
-    max_tags_in_filter_list: "Número máximo de tags para mostrar no menu suspenso do filtro. As tags mais usadas serão mostradas."
+    default_title_count_mode: "Modo padrão para o contador de títulos da página"
+    retain_web_hook_events_period_days: "Quantidade de dias para manter registros de eventos de webhook."
+    retry_web_hook_events: "Repita automaticamente os eventos com falha do webhook quatro vezes. Os intervalos de tempo entre as tentativas são de 1, 5, 25 e 125 minutos."
+    allow_user_api_keys: "Permitir geração de chaves de API do(a) usuário(a)"
+    allow_user_api_key_scopes: "Lista de escopos permitidos para chaves de API do(a) usuário(a)"
+    min_trust_level_for_user_api_key: "Nível de confiança necessário para geração de chaves de API do(a) usuário(a)"
+    allowed_user_api_auth_redirects: "URL permitida para o redirecionamento de autenticação das chaves de API do(a) usuário(a). O símbolo curinga * pode ser usado para corresponder a qualquer parte dele (por exemplo, www.example.com/*)."
+    allowed_user_api_push_urls: "URLs permitidas para push de servidor para API do(a) usuário(a)"
+    expire_user_api_keys_days: "Quantidade de dias antes de uma chave de API do(a) usuário(a) expirar automaticamente (0 para nunca)"
+    tagging_enabled: "Ativar etiquetas em tópicos?"
+    min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma etiqueta."
+    max_tags_per_topic: "As etiquetas máximas que podem ser aplicadas a um tópico."
+    max_tag_length: "A quantidade máxima de caracteres que podem ser usados ​​em uma etiqueta."
+    max_tag_search_results: "Ao pesquisar etiquetas, a quantidade máxima de resultados a serem exibidos."
+    max_tags_in_filter_list: "Quantidade máxima de etiquetas para mostrar no menu suspenso do filtro. As etiquetas mais usadas serão exibidas."
     tags_sort_alphabetically: "Exiba as etiquetas em ordem alfabética. O padrão é mostrar em ordem de popularidade."
-    tags_listed_by_group: "Listar etiquetas por grupo de etiquetas na <a href='%{base_path}/tags' target='_blank'>página de Etiquetas</a>."
-    tag_style: "Estilo visual para emblemas."
-    allow_staff_to_tag_pms: "Permitir que os membros da equipe marquem qualquer mensagem pessoal"
+    tags_listed_by_group: "Listar etiquetas por grupo de etiquetas na <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
+    tag_style: "Estilo de visual para emblemas de etiquetas."
+    allow_staff_to_tag_pms: "Permitir que membros da equipe etiquetem qualquer mensagem pessoal"
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para etiquetar tópicos"
     suppress_overlapping_tags_in_list: "Se as etiquetas corresponderem a palavras exatas em títulos de tópicos, não mostrar a etiqueta"
     remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados apenas com etiquetas silenciadas na lista de tópicos mais recentes."
@@ -1789,32 +1789,32 @@ pt_BR:
     types:
       category: "Categorias"
       topic: "Resultados"
-      user: "Utilizadores"
-    results_page: "Buscar resultados para '%{term}'"
+      user: "Usuários(as)"
+    results_page: "Pesquisar resultados para \"%{term}\""
     audio: "[audio]"
     video: "[video]"
   discourse_connect:
-    login_error: "Erro de Login"
-    not_found: "Sua conta não pode ser encontrada. Por favor, entre em contato com o administrador do site."
-    account_not_approved: "Sua conta está aguardando aprovação. Você receberá uma notificação por email quando ela for aprovada."
-    unknown_error: "Há um problema com sua conta. Por favor, entre em contato com o administrador do site."
-    timeout_expired: "O login de sua conta expirou, por favor tente logar novamente."
-    no_email: "Nenhum endereço de e-mail foi fornecido. Por favor, entre em contato com o administrador do site."
-    email_error: "Uma conta não pôde ser registrada com o endereço de e-mail <b>%{email}</b>. Por favor, entre em contato com o administrador do site."
-  original_poster: "Autor Original"
+    login_error: "Erro ao entrar com conta"
+    not_found: "Sua conta não pôde ser encontrada. Entre em contato com o(a) administrador(a) do site."
+    account_not_approved: "Sua conta está aguardando aprovação. Você receberá uma notificação por e-mail quando for aprovada."
+    unknown_error: "Há um problema com sua conta. Entre em contato com o(a) administrador(a) do site."
+    timeout_expired: "A entrada com a sua conta expirou, entrar novamente."
+    no_email: "Nenhum endereço de e-mail foi informado. Entre em contato com o(a) administrador(a) do site."
+    email_error: "Não foi possível registrar uma conta com o endereço de e-mail <b>%{email}</b>. Entre em contato com o(a) administrador(a) do site."
+  original_poster: "Autor(a) original"
   most_posts: "Maior parte das postagens"
-  most_recent_poster: "Autor Mais Recente"
-  frequent_poster: "Autor Frequente"
+  most_recent_poster: "Autor(a) mais recente"
+  frequent_poster: "Autor(a) frequente"
   redirected_to_top_reasons:
     new_user: "Boas-vindas à nossa comunidade! Confira os nossos tópicos mais acessados recentemente."
     not_seen_in_a_month: "Boas-vindas outra vez! Faz tempo desde o seu último acesso. Confira os principais tópicos mais acessados desde a sua última visita."
   merge_posts:
     edit_reason:
-      one: "Uma publicação foi combinada por %{username}"
-      other: "%{count} publicações foram combinadas por %{username}"
+      one: "Uma postagem foi mesclada por %{username}"
+      other: "%{count} postagens foram mescladas por %{username}"
     errors:
-      different_topics: "Publicações que pertencem a tópicos diferentes não podem ser combinadas."
-      different_users: "Publicações que pertencem a usuários diferentes não podem ser combinadas."
+      different_topics: "Postagens que pertencem a tópicos diferentes não podem ser mescladas."
+      different_users: "Postagens que pertencem a usuários(as) diferentes não podem ser mescladas."
   move_posts:
     new_topic_moderator_post:
       one: "Uma postagem foi dividida em um novo tópico: %{topic_link}"
@@ -1909,110 +1909,110 @@ pt_BR:
     omniauth_confirm_title: "Efetuar login usando %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Nenhum endereço de e-mail associado a%{account} são autorizados. Você pode precisar configurar sua conta com um endereço de e-mail diferente."
-    new_registrations_disabled: "Novas contas não são permitidas neste momento."
+    new_registrations_disabled: "Não é permitido cadastrar novas contas por enquanto."
     password_too_long: "Senhas são limitadas a 200 caracteres."
-    email_too_long: "O email fornecido é muito longo. Os endereços de email não devem ter mais de 254 caracteres e nomes de domínio devem ter no máximo 253 caracteres."
-    reserved_username: "Este nome de usuário não é permitido."
-    missing_user_field: "Você não completou todos campos de usuário"
+    email_too_long: "O e-mail informado é muito longo. Os endereços de e-mail não devem ter mais de 254 caracteres, e nomes de domínio devem ter no máximo 253 caracteres."
+    reserved_username: "Este nome de usuário(a) não é permitido."
+    missing_user_field: "Você não completou todos campos de usuário(a)"
     auth_complete: "A autenticação está completa."
     click_to_continue: "Clique aqui para continuar."
     second_factor_description: "Insira o código de autenticação necessário no seu aplicativo:"
-    second_factor_backup_description: "Por favor, insira um dos seus códigos de backup:"
+    second_factor_backup_description: "Insira um dos seus códigos de backup:"
     invalid_second_factor_code: "Código de autenticação inválido. Cada código só pode ser usado uma vez."
     second_factor_toggle:
       totp: "Usar um aplicativo autenticador ou chave de segurança"
-      backup_code: "Use um código de backup"
+      backup_code: "Usar um código de backup"
   admin:
     email:
-      sent_test: "enviado!"
+      sent_test: "enviou!"
   user:
-    deactivated: "Foi desativado devido a muitos e-mails devolvidos para '%{email}'."
+    deactivated: "Desativado(a) por causa de muitos e-mails devolvidos para \"%{email}\"."
     deactivated_by_staff: "Desativado pela equipe"
     activated_by_staff: "Ativado pela equipe"
-    new_user_typed_too_fast: "Novo usuário digitado muito rápido"
-    content_matches_auto_block_regex: "Conteúdo corresponde a regex de bloco automático"
+    new_user_typed_too_fast: "O(a) novo(a) usuário(a) digitou muito rápido"
+    content_matches_auto_block_regex: "O conteúdo corresponde ao regex de bloco automático"
     username:
       short: "deve ter no mínimo %{min} caracteres"
-      long: "precisa ter não mais que %{max} caracteres"
+      long: "não pode ter mais de %{max} caracteres"
       too_long: "é muito longo"
       characters: "deve incluir apenas números, letras, traços, pontos e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
-      must_begin_with_alphanumeric_or_underscore: "deve começar com uma letra, número ou um underline"
+      must_begin_with_alphanumeric_or_underscore: "deve começar com uma letra, número ou um sublinhado"
       must_end_with_alphanumeric: "deve terminar com uma letra ou número"
-      must_not_contain_two_special_chars_in_seq: "não deve conter uma seqüência de 2 ou mais caracteres especiais (.-_)"
+      must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de dois ou mais caracteres especiais (.-_)"
       must_not_end_with_confusing_suffix: "não deve terminar com um sufixo confuso como .json ou .png etc."
     email:
-      not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
+      not_allowed: "este provedor de e-mail não é permitido. Utilize outro endereço de e-mail."
       blocked: "não é permitido."
-      revoked: "Não vai estar enviando e-mails para '%{email}' até %{date}."
+      revoked: "Não enviará e-mails para \"%{email}\" até %{date}."
     ip_address:
       blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
-      max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Contate um membro da equipe."
+      max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Entre em contato com um membro da equipe."
     website:
-      domain_not_allowed: "O site é inválido. Domínios permitidos são: %{domains}"
+      domain_not_allowed: "O site é inválido. Os domínios permitidos são: %{domains}"
     auto_rejected: "Rejeitado automaticamente devido à idade. Veja a configuração do site auto_handle_queued_age."
     destroy_reasons:
       unused_staged_user: "Usuário(a) encenado(a) sem uso"
       fixed_primary_email: "E-mail principal fixo para usuário(a) encenado(a)"
-      same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
-      inactive_user: "Usuário inativo"
+      same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros(as) usuários(as)"
+      inactive_user: "Usuário(a) inativo(a)"
       reviewable_reject_auto: "Tratamento automático de revisáveis na fila"
-      reviewable_reject: "Usuário revisável rejeitado"
+      reviewable_reject: "Usuário(a) revisável rejeitado(a)"
     email_in_spam_header: "O primeiro e-mail do usuário foi sinalizado como spam"
   reviewables_reminder:
     submitted:
-      one: "Itens foram enviados durante %{count} hora atrás. [Por favor, revise-os] (%{base_path}/review)."
-      other: "Itens foram submetidos ao longo de %{count} horas atrás. [Por favor, revise-os] (%{base_path}/review)."
+      one: "Os itens foram enviados durante %{count} hora atrás. [Revise-os] (%{base_path}/review)."
+      other: "Os itens foram enviados durante %{count} horas atrás. [Revise-os] (%{base_path}/review)."
     subject_template:
       one: "%{count} item precisa ser revisado"
       other: "%{count} itens precisam ser revisados"
   unsubscribe_mailer:
-    title: "Cancelar mensagem do remetente"
-    subject_template: "Confirme que você não deseja mais receber atualizações de e-mail de %{site_title}"
+    title: "Cancelar inscrição do remetente"
+    subject_template: "Confirme que você não deseja mais receber atualizações por e-mail de %{site_title}"
     text_body_template: |
-      Alguém (possivelmente você?) solicitou a não enviar mais atualizações de e-mail de%{site_domain_name} para esse endereço.
-      Se você deseja confirmar isto, por favor clique no link:
+      Alguém (possivelmente você? solicitou que não fossem mais enviadas atualizações de %{site_domain_name} por e-mail para este endereço.
+      Se você deseja confirmar isto, clique no link:
 
       %{confirm_unsubscribe_link}
 
-      Se você deseja continuar recebendo atualizações de e-mail, você deve ignorar este e-mail.
+      Se você deseja continuar recebendo atualizações por e-mail, ignore esta mensagem.
   invite_mailer:
     title: "Convidar remetente"
-    subject_template: "%{inviter_name} te convidou para '%{topic_title}' no%{site_domain_name}"
+    subject_template: "%{inviter_name} convidou para \"%{topic_title}\" no%{site_domain_name}"
     text_body_template: |
-      %{inviter_name} te convidou para uma discussão
+      %{inviter_name} convidou para uma discussão
 
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      no
+      em
 
       > %{site_title} -- %{site_description}
 
-      Se te interessou, clique no link abaixo:
+      Caso tenha interesse, clique no link abaixo:
 
       %{invite_link}
   custom_invite_mailer:
     title: "convite de remetente personalizado"
-    subject_template: "%{inviter_name} te convidou para '%{topic_title}' no %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou para \"%{topic_title}\" em %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} te convidou para uma discussão
+      %{inviter_name} convidou para uma discussão
 
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      no
+      em
 
       > %{site_title} -- %{site_description}
 
-      Com essa nota
+      Com esta nota
 
       > %{user_custom_message}
 
-      Se te interessou, clique no link abaixo:
+      Caso tenha interesse, clique no link abaixo:
 
       %{invite_link}
   invite_forum_mailer:
@@ -2192,118 +2192,118 @@ pt_BR:
     tl2_promotion_message:
       subject_template: "Parabéns pela sua promoção em nível de confiança!"
     backup_succeeded:
-      title: "Backup foi bem-sucedido"
-      subject_template: "Backup completado com sucesso"
+      title: "Backup realizado com êxito"
+      subject_template: "Backup concluído com êxito"
       text_body_template: |
-        O backup foi bem sucedido.
+        O backup foi bem-sucedido.
 
-        Visite a [seção admin > backup](%{base_url}/admin/backups) para fazer o download do seu novo backup.
+        Acesse a seção [administrador(a) > backup](%{base_url}/admin/backups) para baixar o seu novo backup.
 
-        Aqui está o log:
+        Aqui está o registro:
 
-        ``` text
+        ``` texto
         %{logs}
         ```
     backup_failed:
-      title: "Backup Falhou"
-      subject_template: "O backup falhou"
+      title: "Falha ao fazer backup"
+      subject_template: "Falha ao fazer backup"
       text_body_template: |
         O backup falhou.
 
-        Aqui está o log:
+        Aqui está o registro:
 
-        ``` text
+        ``` texto
         %{logs}
         ```
     restore_succeeded:
-      title: "Restauração com Sucesso"
-      subject_template: "Restauração terminada com sucesso"
+      title: "Restauração realizada"
+      subject_template: "Restauração concluída com sucesso"
       text_body_template: |
-        A restauração foi bem sucedida.
+        A restauração foi realizada.
 
-        Aqui está o log:
+        Aqui está o registro:
 
-        ``` text
+        ``` texto
         %{logs}
         ```
     restore_failed:
-      title: "Restauração falhou"
+      title: "A restauração falhou"
       subject_template: "A restauração falhou"
       text_body_template: |
         A restauração falhou
 
-        Aqui está o log:
+        Aqui está o registro:
 
-        ``` text
+        ``` texto
         %{logs}
         ```
     bulk_invite_succeeded:
-      title: "Convite em massa foi bem-sucedido"
-      subject_template: "Seus convites foram enviados com sucesso."
-      text_body_template: "Seus convites foram enviados com sucesso: %{sent}."
+      title: "Convites em massa realizados"
+      subject_template: "Seus convites foram enviados com êxito."
+      text_body_template: "Seu arquivo de convites em massa para usuários(as) foi processado: %{sent} convites enviados por e-mail."
     bulk_invite_failed:
-      title: "Convite em massa falhou"
-      subject_template: "Seus convites não forma enviados, contate os moderadores."
+      title: "Os convites em massa falharam"
+      subject_template: "Seus convites em massa não foram enviados, entre em contato com os(as) moderadores(as)."
       text_body_template: |
-        O arquivo com a lista de convites de usuários em massa foi processado, %{sent} convites foram enviados por e-mail com %{failed} erro(s).
+        Seu arquivo de convites em massa para usuários(as) foi processado, %{sent} convites foram enviados por e-mail com %{failed} erro(s).
 
-        Aqui está o log:
+        Aqui está o registro:
 
-        ``` text
+        ``` texto
         %{logs}
         ```
     user_added_to_group_as_owner:
-      title: "Adicionado ao Grupo como Proprietário"
+      title: "Adicionado ao grupo como proprietário(a)"
     user_added_to_group_as_member:
-      title: "Adicionado ao Grupo como Membro"
-      subject_template: "Você foi adicionado como membro do grupo %{group_name}"
+      title: "Adicionado ao grupo como membro"
+      subject_template: "Você foi adicionado(a) como membro do grupo %{group_name}"
       text_body_template: |
-        Você foi adicionado como membro do grupo [%{group_name}] (%{base_url}%{group_path}).
+        Você foi adicionado(a) como membro do grupo [%{group_name}] (%{base_url}%{group_path}).
     csv_export_succeeded:
-      title: "Exportação CSV foi bem-sucedida"
-      subject_template: "[%{export_title}] Exportação de dados completa"
+      title: "A exportação CSV foi bem-sucedida"
+      subject_template: "[%{export_title}] exportação de dados concluída"
     csv_export_failed:
       title: "Falha na exportação de CSV"
       subject_template: "A exportação de dados falhou"
-      text_body_template: "Desculpe, mas sua exportação de dados falhou. Por favor, verifique os registros ou [contate um membro da equipe] (%{base_url}/about)."
+      text_body_template: "Desculpe, mas sua exportação de dados falhou. Verifique os registros ou [entre em contato com um membro da equipe] (%{base_url}/about)."
     email_reject_insufficient_trust_level:
-      title: "E-mail Rejeitado, nível de confiabilidade insuficiente"
-      subject_template: "[%{email_prefix}] Problema de email - nível de confiança insuficiente"
+      title: "E-mail rejeitado, nível de confiança insuficiente"
+      subject_template: "[%{email_prefix}] Problema no email, nível de confiança insuficiente"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não fucionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Sua conta não tem o nível de confiança requerido para postar novos tópicos para esse endereço de e-mail. Se acredita que é um erro, [contate um membro da equipe](%{base_url}/sobre isso).
+        Sua conta não tem o nível de confiança necessário para postar novos tópicos para este endereço de e-mail. Se acha que é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_user_not_found:
-      title: "Email rejeitado, usuário não encontrado"
-      subject_template: "[%{email_prefix}] Problema de e-mail - Usuário não encontrado"
+      title: "Email rejeitado, usuário(a) não encontrado(a)"
+      subject_template: "[%{email_prefix}] Problema no e-mail: usuário(a) não encontrado(a)"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o titulo de %{former_title}) não funcionou.
 
-        Sua resposta foi enviada por um endereço de e-mail desconhecido. Tente enviar por outro endereço de e-mail, ou [contate um membro da equipe](%{base_url}/sobre isso).
+        Sua resposta foi enviada de um endereço de e-mail desconhecido. Tente enviar por outro endereço de e-mail, ou [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_screened_email:
-      title: "E-mail Rejeitar E-mail Filtrado"
-      subject_template: "[%{email_prefix}] Problema de e-mail - e-mail bloqueado"
+      title: "E-mail rejeitado, e-mail filtrado"
+      subject_template: "[%{email_prefix}] Problema no e-mail, e-mail bloqueado"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail %{destination} (intitulado %{former_title}) não funcionou
+        Desculpe, mas sua mensagem de e-mail %{destination} (com o título de %{former_title}) não funcionou.
 
-        Sua resposta foi enviada de um endereço de e-mail bloqueado. Tente enviar de um outro endereço de e-mail, ou [contate um membro da equipe](%{base_url}/sobre isso).
+        Sua resposta foi enviada de um endereço de e-mail bloqueado. Tente enviar de um outro endereço de e-mail, ou [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_not_allowed_email:
-      title: "E-mail rejeitado não permitido E-mail"
-      subject_template: "[%{email_prefix}] Problema de e-mail - e-mail bloqueado"
+      title: "E-mail rejeitado, e-mail não permitido"
+      subject_template: "[%{email_prefix}] Problema no e-mail, e-mail bloqueado"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail %{destination} (intitulada%{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail %{destination} (com o título de %{former_title}) não funcionou.
 
-        Sua resposta foi enviada de um endereço de e-mail bloqueado. Tente enviar de outro endereço de e-mail, ou [contate um membro da equipe](%{base_url}/sobre isso).
+        Sua resposta foi enviada de um endereço de e-mail bloqueado. Tente enviar de um outro endereço de e-mail, ou [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_inactive_user:
-      title: "E-mail Rejeitar Usuário Inativo"
-      subject_template: "[%{email_prefix}] Problema de e-mail - usuário inativo"
+      title: "E-mail rejeitado, usuário(a) inativo(a)"
+      subject_template: "[%{email_prefix}] Problema no e-mail, usuário(a) inativo(a)"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada%{former_title}) não funcionou
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Sua conta associada a este endereço de e-mail não está ativada. Por favor, ative sua conta antes de enviar e-mails.
+        Sua conta associada a este endereço de e-mail não está ativada. Ative sua conta antes de enviar e-mails.
     email_reject_silenced_user:
-      title: "E-mail Rejeitar Usuário Silenciado"
-      subject_template: "[%{email_prefix}] Problema de e-mail - Usuário Silenciado"
+      title: "E-mail rejeitado, usuário(a) silenciado(a)"
+      subject_template: "[%{email_prefix}] Problema no e-mail, usuário(a) silenciado(a)"
       text_body_template: |
         Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
 

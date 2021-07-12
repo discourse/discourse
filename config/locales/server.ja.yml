@@ -440,18 +440,55 @@ ja:
       ‐ 建設的な批判は歓迎されますが、ユーザーではなく*アイデア*を批判してください。
 
       詳細は、[コミュニティガイドラインをご覧ください](%{base_path}/guidelines)。このパネルは最初の%{education_posts_text}にのみ表示されます。
+    avatar: |
+      ### アカウントに写真はいかがですか？
+
+      トピックと返信をいくつか投稿していますが、プロフィール写真が単なる文字になっています。
+
+      **[ユーザープロフィールにアクセス](%{profile_path})**して、あなたを表す写真をアップロードしませんか？
+
+      全員が特有のプロフィール写真を設定していれば、会話のディスカッションをフォローしやすく、面白い人たちを見つけやすくなります！
+    sequential_replies: |
+      ### 複数の投稿にまとめて返信しましょう
+
+      複数の返信をトピックに続けて投稿するのではなく、1 つの返信に前の投稿の引用や @name 参照を含めて投稿することができます。
+
+      前の返信を編集する際に、テキストをハイライトして<b>引用して返信</b>ボタンを選択すると、返信に引用を追加することができます。
+
+      短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
+    dominating_topic: |
+      ### ほかのユーザーを会話に参加させましょう
+
+      %{percent} 件以上の返信をここに投稿しているわけですから、このトピックがあなたにとって重要であることは明確です。
+
+      ほかのユーザーにも意見を共有できる余裕を与えれば、さらに改善されるでしょう。ほかのユーザーを招待しませんか？
+    get_a_room: |
+      ### 全員が会話に参加できるように奨励しましょう
+
+      この特定のトピックで @%{reply_username} に %{count} 回返信しています！
+
+      素晴らしいディスカッションには多数の人の意見と観点が含まれるものです。ほかに参加できる人はいませんか？
+
+      周りの視線を気にせずにこの特定のユーザーと長い会話を続けるには、[個人メッセージを送信](%{base_path}/u/%{reply_username})できることもお忘れなく。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
       新しいユーザーの同じトピックへの返信は、一時的に %{newuser_max_replies_per_topic} 件に制限されています。
 
       返信を追加する代わりに、前の返信を編集するかほかのトピックにアクセスしてください。
+    reviving_old_topic: |
+      ### このトピックを復活させませんか？
+
+      このトピックの最後の返信は **%{time_ago}**でした。あなたの返信によってこのトピックをリストのトップにバンプすれば、会話に以前参加していたユーザーに通知されます。
+
+      この古い会話を続けてもよろしいですか？
   activerecord:
     attributes:
       category:
         name: "カテゴリ名"
       topic:
         title: "タイトル"
+        featured_link: "注目のリンク"
         category_id: "カテゴリ"
       post:
         raw: "本文"
@@ -462,8 +499,18 @@ ja:
         topic:
           attributes:
             base:
+              warning_requires_pm: "警告は個人メッセージにのみ添付できます。"
               too_many_users: "一度に 1 人のユーザーにのみ警告を送ることができます。"
+              cant_send_pm: "そのユーザーに個人メッセージを送信することはできません。"
               no_user_selected: "有効なユーザーを選択してください。"
+              reply_by_email_disabled: "メールでの返信は無効になっています。"
+              send_to_email_disabled: "メールに個人メッセージを送信することはできません。"
+              target_user_not_found: "このメッセージの宛先の 1 人が見つかりませんでした。"
+              unable_to_update: "トピックを更新中にエラーが発生しました。"
+              unable_to_tag: "トピックにタグ付け中にエラーが発生しました。"
+            featured_link:
+              invalid: "は無効です。URL には http:// または https:// を含める必要があります。"
+              invalid_category: "をこのカテゴリで編集することはできません。"
         user:
           attributes:
             password:
@@ -471,17 +518,44 @@ ja:
               same_as_username: "はあなたのユーザー名と同じです。より安全なパスワードを使用してください。"
               same_as_email: "はあなたのメールアドレスと同じです。より安全なパスワードを使用してください。"
               same_as_current: "はあなたの現在のパスワードと同じです。"
+              same_as_name: "はあなたの名前と同じです。"
               unique_characters: "パスワードに繰り返しが多すぎます。より安全なものを使用してください。"
+            username:
+              same_as_password: "はあなたのパスワードと同じです。"
+            name:
+              same_as_password: "はあなたのパスワードと同じです。"
             ip_address:
               signup_not_allowed: "このアカウントからサインアップできません。"
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "このトピックをプロフィールに掲載することはできません。"
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "プライマリメールを別のユーザーに割り当て直すことはできません。"
         color_scheme_color:
           attributes:
             hex:
               invalid: "は有効な色ではありません"
+        post_reply:
+          base:
+            different_topic: "投稿と返信は同じトピックに属している必要があります。"
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL が無効です。URL には http:// または https:// が含まれている必要があります。また空白にすることはできません。"
         custom_emoji:
           attributes:
             name:
               taken: はすでに別の絵文字で使用されています
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "は未来である必要があります。"
+            duration_minutes:
+              cannot_be_zero: "は 0 より大きい必要があります。"
+              exceeds_maximum: "は 20 年を越えてはいけません。"
       <<: *errors
   uncategorized_category_name: "未分類"
   vip_category_name: "ラウンジ"
