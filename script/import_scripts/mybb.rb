@@ -26,6 +26,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   BATCH_SIZE = 1000
   BASE = ""
   QUIET = true
+  IMPORT_DELETED_POSTS = false
 
   def initialize
     super
@@ -115,6 +116,7 @@ class ImportScripts::MyBB < ImportScripts::Base
           FROM #{TABLE_PREFIX}posts p,
                #{TABLE_PREFIX}threads t
          WHERE p.tid = t.tid
+        #{'AND (p.visible = 1 AND t.visible = 1)' unless IMPORT_DELETED_POSTS}
       ORDER BY p.dateline
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset};
