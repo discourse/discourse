@@ -411,6 +411,7 @@ describe GroupsController do
 
       expect(response.status).to eq(200)
 
+      expect(response.body).to have_tag "title", text: "#{group.name} - #{SiteSetting.title}"
       expect(response.body).to have_tag(:meta, with: {
         property: 'og:title', content: group.name
       })

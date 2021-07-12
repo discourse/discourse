@@ -1,4 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
+import Session from "discourse/models/session";
 import {
   iOSWithVisualViewport,
   isiPad,
@@ -392,8 +393,10 @@ export default Controller.extend({
           this.themeId,
           true
         );
+        Session.currentProp("darkModeAvailable", false);
       } else {
         loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
+        Session.currentProp("darkModeAvailable", true);
       }
     },
 
