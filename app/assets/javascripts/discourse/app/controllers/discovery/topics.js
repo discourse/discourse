@@ -179,7 +179,7 @@ const controllerOpts = {
 
     return I18n.t("topics.none.educate." + tab, {
       userPrefsUrl: userPath(
-        `${this.currentUser.get("username_lower")}/preferences`
+        `${this.currentUser.get("username_lower")}/preferences/notifications`
       ),
     });
   },
