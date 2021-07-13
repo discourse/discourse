@@ -817,6 +817,7 @@ class GroupsController < ApplicationController
           metadata[:action] = :create
         elsif old_value == value
           tag_notifications.delete(tag_id)
+          next
         else
           metadata[:action] = :update
         end
@@ -841,9 +842,9 @@ class GroupsController < ApplicationController
     update
   }.each do |action|
     define_method("#{action}_existing_users") do |group_users, categories, tags|
-      return if categories.blank? && tags.blank?
+      return 0 if categories.blank? && tags.blank?
 
-      count = 0
+      ids = []
 
       categories.each do |category_id, data|
         if data[:action] == :update || data[:action] == :delete
@@ -852,7 +853,7 @@ class GroupsController < ApplicationController
           if action == :update
             category_users.delete_all
           else
-            count += category_users.count
+            ids += category_users.pluck(:user_id)
           end
 
           categories.delete(category_id) if data[:action] == :delete && action == :update
@@ -866,7 +867,7 @@ class GroupsController < ApplicationController
           if action == :update
             tag_users.delete_all
           else
-            count += tag_users.count
+            ids += tag_users.pluck(:user_id)
           end
 
           tags.delete(tag_id) if data[:action] == :delete && action == :update
@@ -892,7 +893,7 @@ class GroupsController < ApplicationController
             if action == :update
               CategoryUser.insert_all!(category_users)
             else
-              count += category_users.count
+              ids += category_users.pluck(:user_id)
             end
           end
 
@@ -911,13 +912,13 @@ class GroupsController < ApplicationController
             if action == :update
               TagUser.insert_all!(tag_users)
             else
-              count += tag_users.count
+              ids += tag_users.pluck(:user_id)
             end
           end
         end
       end
 
-      return count if action == :count
+      ids.uniq.count
     end
   end
 end
