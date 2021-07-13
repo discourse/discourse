@@ -253,7 +253,7 @@
     grid: auto-flow / repeat(2, 1fr);
   }
 
-  @include breakpoint(mobile-large) {
+  @include breakpoint(mobile-extra-large) {
     grid: auto-flow / 1fr;
   }
 
