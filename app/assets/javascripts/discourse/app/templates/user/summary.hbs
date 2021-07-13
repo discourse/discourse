@@ -46,7 +46,7 @@
           <li>
             {{user-stat value=model.likes_received icon="heart" label="user.summary.likes_received"}}
           </li>
-          {{plugin-outlet name="user-summary-stat" tagName="" connectorTagName="li" args=(hash model=model)}}
+          {{plugin-outlet name="user-summary-stat" connectorTagName="li" args=(hash model=model)}}
         </ul>
       </div>
     {{/if}}

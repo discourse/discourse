@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    {{plugin-outlet name="web-hook-fields" args=(hash model=model)}}
+    {{plugin-outlet name="web-hook-fields" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
     <div>
       {{input type="checkbox" name="verify_certificate" checked=model.verify_certificate}} {{i18n "admin.web_hooks.verify_certificate"}}

@@ -1,4 +1,4 @@
-{{plugin-outlet name="before-groups-index-container" tagName=""}}
+{{plugin-outlet name="before-groups-index-container" connectorTagName="div"}}
 
 {{#d-section pageClass="groups"}}
   <div class="groups-header">
@@ -87,7 +87,7 @@
                       {{/if}}
                     {{/group-membership-button}}
 
-                    {{plugin-outlet name="group-index-box-after" args=(hash model=group)}}
+                    {{plugin-outlet name="group-index-box-after" tagName="span" connectorTagName="div" args=(hash model=group)}}
                   </div>
                 </div>
               {{/link-to}}
@@ -104,4 +104,4 @@
 
 {{/d-section}}
 
-{{plugin-outlet name="after-groups-index-container" tagName=""}}
+{{plugin-outlet name="after-groups-index-container" connectorTagName="div"}}

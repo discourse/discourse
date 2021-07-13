@@ -47,7 +47,7 @@
   </div>
   {{preference-checkbox labelKey="user.email_in_reply_to" checked=model.user_option.email_in_reply_to}}
 
-  {{plugin-outlet name="user-preferences-emails-pref-email-settings" args=(hash model=model save=(action "save"))}}
+  {{plugin-outlet name="user-preferences-emails-pref-email-settings" tagName="span" connectorTagName="div" args=(hash model=model save=(action "save"))}}
 </div>
 
 {{#unless siteSettings.disable_digest_emails}}
@@ -87,10 +87,10 @@
   </div>
 {{/unless}}
 
-{{plugin-outlet name="user-preferences-emails" args=(hash model=model save=(action "save"))}}
+{{plugin-outlet name="user-preferences-emails" tagName="span" connectorTagName="div" args=(hash model=model save=(action "save"))}}
 
 <br>
 
-{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+{{plugin-outlet name="user-custom-controls" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
 {{save-controls model=model action=(action "save") saved=saved}}

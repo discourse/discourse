@@ -8,7 +8,7 @@
       {{nav-item route="adminUsersList.show" routeParam="silenced" label="admin.users.nav.silenced" class="silenced-users"}}
       {{nav-item route="adminUsersList.show" routeParam="staged" label="admin.users.nav.staged" class="staged-users"}}
       {{nav-item route="groups" label="groups.index.title" class="groups"}}
-      {{plugin-outlet name="admin-users-list-nav-after" tagName="" connectorTagName=""}}
+      {{plugin-outlet name="admin-users-list-nav-after"}}
 
       <li class="admin-actions">
         {{#if currentUser.can_invite_to_forum}}

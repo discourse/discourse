@@ -1,6 +1,6 @@
 {{#create-account email=accountEmail disabled=submitDisabled action=(action "createAccount")}}
   {{#unless complete}}
-    {{plugin-outlet name="create-account-before-modal-body"}}
+    {{plugin-outlet name="create-account-before-modal-body" tagName="span" connectorTagName="div"}}
     {{#d-modal-body class=modalBodyClasses}}
       <div class="create-account-form">
         <div class="login-welcome-header">
@@ -75,7 +75,6 @@
 
               {{plugin-outlet
               name="create-account-before-password"
-                noTags=true
                 args=(hash
                   accountName=accountName
                   accountUsername=accountUsername
@@ -119,7 +118,6 @@
 
               {{plugin-outlet
                 name="create-account-after-password"
-                noTags=true
                 args=(hash
                   accountName=accountName
                   accountUsername=accountUsername
@@ -162,7 +160,7 @@
             </div>
           </div>
 
-          {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
+          {{plugin-outlet name="create-account-after-modal-footer" connectorTagName="div"}}
 
         {{/if}}
 

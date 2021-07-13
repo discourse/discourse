@@ -47,7 +47,7 @@
       focusIn=(action "focusIn")
       focusOut=(action "focusOut")}}
     {{popup-input-tip validation=validation}}
-    {{plugin-outlet name="after-d-editor" tagName="" args=outletArgs}}
+    {{plugin-outlet name="after-d-editor" connectorTagName="div" args=outletArgs}}
   </div>
 
   <div class="d-editor-preview-wrapper {{if forcePreview "force-preview"}}">
@@ -56,7 +56,7 @@
         {{html-safe preview}}
       {{/unless}}
     </div>
-    {{plugin-outlet name="editor-preview" classNames="d-editor-plugin" args=outletArgs}}
+    {{plugin-outlet name="editor-preview" classNames="d-editor-plugin" tagName="span" connectorTagName="div" args=outletArgs}}
   </div>
 </div>
 

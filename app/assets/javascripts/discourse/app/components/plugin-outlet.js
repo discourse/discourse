@@ -36,16 +36,11 @@ import {
 import Component from "@ember/component";
 
 export default Component.extend({
-  tagName: "span",
+  tagName: "",
+  connectorTagName: "",
   connectors: null,
 
   init() {
-    // This should be the future default
-    if (this.noTags) {
-      this.set("tagName", "");
-      this.set("connectorTagName", "");
-    }
-
     this._super(...arguments);
     const name = this.name;
     if (name) {

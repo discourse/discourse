@@ -84,7 +84,7 @@
         value=model.incoming_email
         placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"}}
 
-    {{plugin-outlet name="group-email-in" args=(hash model=model)}}
+    {{plugin-outlet name="group-email-in" tagName="span" connectorTagName="div" args=(hash model=model)}}
   </div>
 {{/if}}
 

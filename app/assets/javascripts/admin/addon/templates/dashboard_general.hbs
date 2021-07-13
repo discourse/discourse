@@ -1,5 +1,5 @@
 {{#conditional-loading-spinner condition=isLoading}}
-  {{plugin-outlet name="admin-dashboard-general-top"}}
+  {{plugin-outlet name="admin-dashboard-general-top" tagName="span" connectorTagName="div"}}
 
   {{#if isCommunityHealthVisible}}
     <div class="community-health section">
@@ -156,5 +156,5 @@
     {{/if}}
   </div>
 
-  {{plugin-outlet name="admin-dashboard-general-bottom"}}
+  {{plugin-outlet name="admin-dashboard-general-bottom" tagName="span" connectorTagName="div"}}
 {{/conditional-loading-spinner}}

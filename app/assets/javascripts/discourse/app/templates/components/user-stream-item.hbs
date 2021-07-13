@@ -28,7 +28,7 @@
     </span>
   {{/if}}
 
-  {{plugin-outlet name="user-stream-item-header" args=(hash item=@item)}}
+  {{plugin-outlet name="user-stream-item-header" tagName="span" connectorTagName="div" args=(hash item=@item)}}
 </div>
 
 {{#if this.actionDescription}}

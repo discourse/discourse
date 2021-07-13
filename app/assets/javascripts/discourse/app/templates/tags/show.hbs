@@ -25,7 +25,7 @@
         {{plugin-outlet
           name="tag-navigation"
           args=(hash category=category tag=tag)
-          tagName=""
+          connectorTagName="div"
         }}
       </section>
     </div>
@@ -35,7 +35,7 @@
     {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
   {{/if}}
 
-  {{plugin-outlet name="discovery-list-container-top" args=(hash category=category)}}
+  {{plugin-outlet name="discovery-list-container-top" tagName="span" connectorTagName="div" args=(hash category=category)}}
 
   {{topic-dismiss-buttons position="top" selectedTopics=selected
     model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
@@ -98,5 +98,5 @@
     </div>
   </div>
 
-  {{plugin-outlet name="discovery-below"}}
+  {{plugin-outlet tagName="span" connectorTagName="div" name="discovery-below"}}
 {{/d-section}}

@@ -26,9 +26,7 @@
     {{/if}}
     {{plugin-outlet
       name="admin-user-controls-after"
-      args=(hash model=model)
-      tagName=""
-      connectorTagName=""}}
+      args=(hash model=model)}}
   </div>
 
   <div class="display-row username">
@@ -47,9 +45,7 @@
 
   {{plugin-outlet
     name="admin-user-below-names"
-    args=(hash user=model)
-    tagName=""
-    connectorTagName=""}}
+    args=(hash user=model)}}
 
   {{#if canCheckEmails}}
     <div class="display-row email">
@@ -235,7 +231,7 @@
   </section>
 {{/if}}
 
-{{plugin-outlet name="admin-user-details" args=(hash model=model)}}
+{{plugin-outlet name="admin-user-details" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
 <section class="details">
   <h1>{{i18n "admin.user.permissions"}}</h1>
@@ -712,7 +708,7 @@
   </section>
 {{/if}}
 
-{{plugin-outlet name="after-user-details" args=(hash model=model)}}
+{{plugin-outlet name="after-user-details" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
 <section>
   <hr>

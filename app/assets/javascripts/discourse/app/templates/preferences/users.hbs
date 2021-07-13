@@ -48,6 +48,6 @@
   </div>
 {{/if}}
 
-{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+{{plugin-outlet name="user-custom-controls" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
 {{#save-controls model=model action=(action "save") saved=saved}}{{/save-controls}}

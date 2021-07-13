@@ -1,5 +1,5 @@
 <div class="sections">
-  {{plugin-outlet name="admin-dashboard-security-top"}}
+  {{plugin-outlet name="admin-dashboard-security-top" tagName="span" connectorTagName="div"}}
 
   <div class="main-section">
     {{admin-report
@@ -10,6 +10,6 @@
       dataSourceName="staff_logins"
       filters=lastWeekfilters}}
 
-    {{plugin-outlet name="admin-dashboard-security-bottom"}}
+    {{plugin-outlet name="admin-dashboard-security-bottom" tagName="span" connectorTagName="div"}}
   </div>
 </div>
