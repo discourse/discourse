@@ -10,7 +10,9 @@ import { userPath } from "discourse/lib/url";
 
 export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);
-  const when = autoUpdatingRelativeAge(dt, { format: "medium-with-ago" });
+  const when = autoUpdatingRelativeAge(dt, {
+    format: "medium-with-ago-and-on",
+  });
 
   let who = "";
   if (username) {
