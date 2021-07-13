@@ -970,16 +970,16 @@ pt_BR:
       github_profile: "GitHub"
       email_activity_summary: "Resumo de atividades"
       mailing_list_mode:
-        label: "Modo Lista de endereçamento"
-        enabled: "Ativar modo Lista de endereçamento"
+        label: "Modo lista de endereçamento"
+        enabled: "Ativar modo lista de endereçamento"
         instructions: |
           Esta opção substitui o resumo de atividades.<br />
           Tópicos e categorias silenciadas não são incluídas nestes e-mails.
-        individual: "Enviar um e-mail para cada postagem nova"
-        individual_no_echo: "Enviar um e-mail para cada postagem nova, exceto as minhas"
-        many_per_day: "Me envie um e-mail para cada postagem nova (aproximadamente %{dailyEmailEstimate} por dia)"
-        few_per_day: "Me envie um e-mail para cada postagem nova (aproximadamente dois por dia)"
-        warning: "Modo Lista de endereçamento ativado. As configurações de notificação por e-mail serão substituídas."
+        individual: "Enviar um e-mail a cada postagem nova"
+        individual_no_echo: "Enviar um e-mail a cada postagem nova, exceto as minhas"
+        many_per_day: "Me envie um e-mail a cada postagem nova (aproximadamente %{dailyEmailEstimate} por dia)"
+        few_per_day: "Me envie um e-mail a cada postagem nova (aproximadamente dois por dia)"
+        warning: "Modo lista de endereçamento ativado. As configurações de notificação por e-mail serão substituídas."
       tag_settings: "Etiquetas"
       watched_tags: "Acompanhados(as)"
       watched_tags_instructions: "Você acompanhará automaticamente todos os tópicos com estas etiquetas. Você receberá notificação de todas as novas postagens e tópicos, e uma contagem de postagens novas também será exibida ao lado do tópico."
@@ -2163,7 +2163,7 @@ pt_BR:
       notifications:
         title: altere a frequência de notificações sobre este tópico
         reasons:
-          mailing_list_mode: "Você está com o modo lista de discussão ativado, por isso receberá por e-mail notificações sobre as respostas."
+          mailing_list_mode: "Você está com o modo lista de endereçamento ativado, por isso receberá por e-mail notificações sobre as respostas."
           "3_10": "Você receberá notificações porque está acompanhando uma etiqueta neste tópico."
           "3_10_stale": "Você receberá notificações porque estava acompanhando uma etiqueta neste tópico."
           "3_6": "Você receberá notificações porque você está acompanhando esta categoria."
@@ -2641,7 +2641,7 @@ pt_BR:
       email_in_allow_strangers: "Aceitar e-mails de usuários anônimos sem contas"
       email_in_disabled: "Postar novos tópicos via e-mail está desativado nas configurações do site. Para ativar respostas em novos tópicos via e-mail, "
       email_in_disabled_click: 'ative a configuração de "e-mail em".'
-      mailinglist_mirror: "A categoria espelha uma lista de discussão"
+      mailinglist_mirror: "A categoria espelha uma lista de endereçamento"
       show_subcategory_list: "Exibir lista de subcategorias acima dos tópicos nesta categoria."
       read_only_banner: "Texto do banner quando um usuário não pode criar um tópico nesta categoria:"
       num_featured_topics: "Quantidade de tópicos exibidos na página de categorias:"
