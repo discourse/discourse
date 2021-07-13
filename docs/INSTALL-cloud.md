@@ -39,11 +39,13 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 > ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
 
+> 💡 Email here refers to [Transactional Email](https://www.google.com/search?q=what+is+transactional+email) not the usual email service like Gmail, Outlook and/or Yahoo.
+
 - No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
 
-- Already have a mail server? Great. Use your existing mail server credentials. (Free services like Gmail/Outlook/Yahoo do no support Transactional emails.)
+- Already have a mail server? Great. Use your existing mail server credentials. (Free email services like Gmail/Outlook/Yahoo do not support transactional emails.)
 
-- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=spf+dkim) in your DNS. See your mail provider instructions for specifics.
+- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=what+is+spf+dkim) in your DNS. See your mail provider instructions for specifics.
 
 - If you're having trouble getting emails to work, Follow our [Email Troubleshooting Guide](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326)
 
@@ -71,11 +73,14 @@ Answer the following questions when prompted:
     SMTP port? [587]: 
     SMTP user name? [user@example.com]: 
     SMTP password? [pa$$word]: 
-    notification email address? [noreply@x.y.com]: 
-    Optional email address for Let's Encrypt warnings? (ENTER to skip) [me@example.com]: 
-    Optional Maxmind License key (ENTER to continue without MAXMIND GeoLite2 geolocation database) [1234567890123456]: 
+    Let's Encrypt account email? (ENTER to skip) [me@example.com]: 
+    Optional Maxmind License key () [xxxxxxxxxxxxxxxx]:
 
-Optional: You may want to enable reverse IP lookup via maxmind. Follow [this guide](https://meta.discourse.org/t/configuring-maxmind-for-reverse-ip-lookups/173941) 
+You'll get the SMTP details from your [email](#email) setup, be sure to complete that section.
+
+Let's Encrypt account setup is to give you a free HTTPS certificate for your site, be sure to set that up if you want your site secure.
+
+Optional: If you want to be able to see the approximate geographical location of people in your community to help combat spam and trolls, you may want to enable reverse IP lookup via maxmind. Follow [this guide](https://meta.discourse.org/t/configuring-maxmind-for-reverse-ip-lookups/173941) 
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will re-use your previous values from the file) or edit `/containers/app.yml` manually with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
 
@@ -155,7 +160,7 @@ Do you want...
 
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857). We recommend [Fastly](http://www.fastly.com/).
 
-- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/main/script/import_scripts).
+- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/master/script/import_scripts).
 
 - A user friendly [offline page when rebuilding or upgrading?](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
 
@@ -168,4 +173,4 @@ Help us improve this guide! Feel free to ask about it on [meta.discourse.org][me
  [meta]: https://meta.discourse.org
    [do]: https://www.digitalocean.com/?refcode=5fa48ac82415
   [put]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
-  [mailconfig]: https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md
+  [mailconfig]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-email.md
