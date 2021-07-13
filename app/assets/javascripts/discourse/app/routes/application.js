@@ -170,11 +170,19 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         const controller = getOwner(this).lookup(
           `controller:${controllerName}`
         );
-        if (controller && controller.onClose) {
-          controller.onClose({
-            initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
-            initiatedByClickOut: initiatedBy === "initiatedByClickOut",
+
+        if (controller) {
+          this.appEvents.trigger("modal:closed", {
+            name: controllerName,
+            controller: controller,
           });
+
+          if (controller.onClose) {
+            controller.onClose({
+              initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
+              initiatedByClickOut: initiatedBy === "initiatedByClickOut",
+            });
+          }
         }
         modalController.set("name", null);
       }
