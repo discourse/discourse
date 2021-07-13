@@ -7,14 +7,18 @@ export default createPMRoute("groups", "private-messages-groups").extend({
 
   titleToken() {
     const groupName = this.groupName;
+
     if (groupName) {
-      return [groupName.capitalize(), I18n.t("user.private_messages")];
+      return [
+        `${groupName.capitalize()} ${I18n.t("user.messages.new")}`,
+        I18n.t("user.private_messages"),
+      ];
     }
   },
 
   model(params) {
     const username = this.modelFor("user").get("username_lower");
-    const filter = `topics/private-messages-group/${username}/${params.name}`;
+    const filter = `topics/private-messages-group/${username}/${params.name}/new`;
     const lastTopicList = findOrResetCachedTopicList(this.session, filter);
     return lastTopicList
       ? lastTopicList
@@ -22,7 +26,8 @@ export default createPMRoute("groups", "private-messages-groups").extend({
   },
 
   afterModel(model) {
-    const groupName = model.get("filter").split("/").pop();
+    const split = model.get("filter").split("/");
+    const groupName = split[split.length - 2];
     this.set("groupName", groupName);
     const group = this.modelFor("user")
       .get("groups")
@@ -32,14 +37,15 @@ export default createPMRoute("groups", "private-messages-groups").extend({
 
   setupController(controller, model) {
     this._super.apply(this, arguments);
-    const group = model.get("filter").split("/").pop();
+    const split = model.get("filter").split("/");
+    const group = split[split.length - 2];
 
     this.controllerFor("user-private-messages").setProperties({
       archive: false,
     });
 
     this.controllerFor("user-topics-list").subscribe(
-      `/private-messages/group/${group}`
+      `/private-messages/group/${group}/new`
     );
   },
 });

@@ -6,10 +6,6 @@
       margin-top: 10px;
     }
   }
-
-  .show-mores {
-    position: absolute;
-  }
 }
 
 .form-horizontal .control-group.category {
@@ -22,6 +18,13 @@
 }
 .user-secondary-navigation {
   min-width: 150px;
+  margin-right: 5px;
+
+  .combo-box {
+    width: 100%;
+    margin-top: 1px;
+  }
+
   .nav-stacked {
     background-color: transparent;
 

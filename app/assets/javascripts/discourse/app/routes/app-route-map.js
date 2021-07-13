@@ -140,13 +140,22 @@ export default function () {
         "userPrivateMessages",
         { path: "/messages", resetNamespace: true },
         function () {
-          this.route("sent");
+          this.route("new");
+          this.route("unread");
           this.route("archive");
+          this.route("sent");
+          this.route("tag", { path: ":filter/tag/:tag" });
+          this.route("inboxTag", { path: ":inbox/:filter/tag/:tag" });
+          this.route("personal");
+          this.route("personalSent", { path: "personal/sent" });
+          this.route("personalNew", { path: "personal/new" });
+          this.route("personalUnread", { path: "personal/unread" });
+          this.route("personalArchive", { path: "personal/archive" });
           this.route("warnings");
           this.route("group", { path: "group/:name" });
           this.route("groupArchive", { path: "group/:name/archive" });
-          this.route("tags");
-          this.route("tagsShow", { path: "tags/:id" });
+          this.route("groupNew", { path: "group/:name/new" });
+          this.route("groupUnread", { path: "group/:name/unread" });
         }
       );
 

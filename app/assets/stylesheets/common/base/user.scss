@@ -20,6 +20,39 @@
     grid-row-start: 2;
     grid-row-end: 3;
   }
+  .user-messages-navigation {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+
+    + .user-content {
+      grid-row-start: 3;
+      grid-row-end: 5;
+    }
+
+    .user-messages-inboxes-drop,
+    .user-messages-tags-drop {
+      margin-right: 0.5em;
+    }
+
+    .navigation-container {
+      display: flex;
+
+      ul {
+        margin: 0;
+      }
+
+      .list-actions {
+        display: flex;
+        margin-left: auto;
+
+        button {
+          margin-left: 0.5em;
+        }
+      }
+    }
+  }
   .solo-preference,
   .user-content,
   .spinner {
@@ -31,6 +64,7 @@
   .user-content {
     min-width: 100%;
   }
+
   .user-additional-controls + .user-content,
   .user-secondary-navigation + .user-content {
     grid-column-start: 2;
