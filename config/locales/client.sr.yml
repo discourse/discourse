@@ -692,7 +692,6 @@ sr:
         sent: "Poslato"
         archive: "Arhiviraj"
         move_to_archive: "Arhiviraj"
-        select_all: "Izaberi sve"
       preferences_nav:
         security: "Sigurnost"
         profile: "Profil"
@@ -1102,13 +1101,6 @@ sr:
       titles:
         watching_first_post: "nova tema"
     upload_selector:
-      title: "Dodaj sliku"
-      title_with_attachments: "Dodaj sliku ili datoteku"
-      from_my_computer: "S mog uređaja"
-      from_the_web: "S interneta"
-      remote_tip: "link za sliku"
-      local_tip: "Izaberite slike sa Vašeg uređaja"
-      hint_for_supported_browsers: "možete takođe prevući ili nalepiti slike u editor"
       uploading: "Učitavanje"
       default_image_alt_text: slika
     search:
@@ -1207,18 +1199,6 @@ sr:
       not_found:
         title: "Tema nije pronađena"
         description: "Žao nam je, nismo mogli pronaći temu. Možda ju je moderator uklonio?"
-      total_unread_posts:
-        one: "Imate %{count} nepročitanu poruku u ovoj temi"
-        few: "Imate %{count} nepročitanih poruka u ovoj temi"
-        other: "Imate %{count} nepročitanih poruka u ovoj temi"
-      unread_posts:
-        one: "Imate %{count} staru nepročitanu poruku u ovoj temi"
-        few: "Imate %{count} starih nepročitanih poruka u ovoj temi"
-        other: "Imate %{count} starih nepročitanih poruka u ovoj temi"
-      new_posts:
-        one: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
-        few: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
-        other: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
       likes:
         one: "Ima %{count} sviđanja u temi"
         few: "Ima %{count} sviđanja u temi"

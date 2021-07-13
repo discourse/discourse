@@ -89,7 +89,7 @@ de:
           multiple: Mehrfachauswahl
           number: Bewertung
         poll_result:
-          label: Ergebnisse anzeigen...
+          label: Ergebnisse anzeigen …
           always: Immer sichtbar
           vote: Nur nach Stimmabgabe
           closed: Wenn die Umfrage geschlossen ist

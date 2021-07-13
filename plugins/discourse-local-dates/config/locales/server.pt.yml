@@ -6,5 +6,7 @@
 
 pt:
   site_settings:
-    discourse_local_dates_default_timezones: "A lista das zonas horárias predefinida, deve ser <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> válido"
-    discourse_local_dates_email_format: "O formato utilizado para exibir uma data nas mensagens."
+    discourse_local_dates_enabled: "Habilita o recurso de datas locais do Discourse. Isso irá adicionar suporte a datas do fuso horário local nas postagens usando o elemento [date]."
+    discourse_local_dates_default_formats: "Formatos de data e hora usados com frequência, consulte: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>formatação de string do momentjs</a>"
+    discourse_local_dates_default_timezones: "A lista das zonas horárias predefinida, deve ser uma <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> válida"
+    discourse_local_dates_email_format: "O formato utilizado para exibir uma data nos e-mails."

@@ -60,6 +60,7 @@ ja:
         age: "<strong>%{age}</strong> にクローズ"
       breakdown:
         title: "投票結果"
+        votes: "%{count} 票"
         breakdown: "内訳"
         percentage: "割合"
         count: "票数"
@@ -72,6 +73,9 @@ ja:
         insert: 投票の挿入
         help:
           options_min_count: 少なくとも1つのオプションを入力してください。
+          options_max_count: オプションを %{count} 個まで入力してください。
+          invalid_min_value: 最小値は少なくとも 1 である必要があります。
+          invalid_max_value: 最大値は少なくとも 1 である必要がありますが、オプションの数以下である必要があります。
           invalid_values: 最小値は最大値より小さくなければなりません。
           min_step_value: 最小ステップの値は 1 です
         poll_type:
@@ -80,16 +84,29 @@ ja:
           multiple: 複数選択
           number: 数字評価
         poll_result:
+          label: 結果を表示する...
           always: 常に表示
+          vote: 投票後のみ
+          closed: 投票がクローズされたとき
           staff: スタッフのみ
+        poll_groups:
+          label: 次のグループに投票を制限する
         poll_chart_type:
+          label: 結果グラフ
           bar: 棒
           pie: 円グラフ
         poll_config:
+          max: 最大選択肢数
+          min: 最小選択肢数
           step: 間隔
         poll_public:
           label: 投票者を表示する
         poll_title:
           label: タイトル (オプション)
+        poll_options:
+          label: オプション（1 行に 1 つ）
+          add: オプションを追加
         automatic_close:
           label: 投票を自動的にクローズする
+        show_advanced: "高度なオプションを表示"
+        hide_advanced: "高度なオプションを非表示"

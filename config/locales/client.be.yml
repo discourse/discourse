@@ -483,7 +483,6 @@ be:
         groups: "Мае Групы"
         move_to_inbox: "Перамясціць у тэчцы Уваходныя"
         move_to_archive: "архіў"
-        select_all: "выбраць усе"
         tags: "Тэгі"
       preferences_nav:
         account: "Аккаўнт"
@@ -874,10 +873,6 @@ be:
       titles:
         watching_first_post: "новая тэма"
     upload_selector:
-      title: "дадаць малюнак"
-      title_with_attachments: "Дадаць малюнак або файл"
-      from_my_computer: "З майго прылады"
-      from_the_web: "з інтэрнэту"
       uploading: "загрузка"
       select_file: "выбраць файл"
       default_image_alt_text: малюнак

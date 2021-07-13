@@ -506,6 +506,8 @@ lt:
         remove_user_as_group_owner: "Atšaukti valdytoją"
     groups:
       member_added: "Pridėta"
+      add_members:
+        usernames_placeholder: "slapyvardžiai"
       requests:
         reason: "Priežastis"
         accepted: "patvirtinta"
@@ -818,11 +820,9 @@ lt:
         sent: "Išsiųsti"
         archive: "Archyvuoti"
         groups: "Grupės"
-        bulk_select: "Pasirinkti žinutę"
         move_to_inbox: "Perkelti į Pranešimų dėžutę"
         move_to_archive: "Archyvuoti"
         failed_to_move: "Įvyko klaida! (patikrinkite interneto ryšį)"
-        select_all: "Pažymėti visus"
         tags: "Gairės"
       preferences_nav:
         account: "Paskyra"
@@ -1399,13 +1399,6 @@ lt:
       titles:
         watching_first_post: "nauja tema"
     upload_selector:
-      title: "Pridėti nuotrauką"
-      title_with_attachments: "Pridėti nautrauką arba dokumentą"
-      from_my_computer: "Iš įrenginio"
-      from_the_web: "Iš naršyklės"
-      remote_tip: "nuoroda į nuotrauką"
-      local_tip: "Pasirinkti nuotraukas iš įrenginio"
-      hint_for_supported_browsers: "gali perstumti, numesti ir kopijuoti nuotraukas į redagavimo skydą"
       uploading: "Įkeliama"
       select_file: "Pasirinkti failus"
       default_image_alt_text: pveikslėlis
@@ -1570,21 +1563,6 @@ lt:
       not_found:
         title: "Tema nerasta"
         description: "Atsiprašome, bet mes negalėjome rasti jūsų temos. Gal ji buvo ištrinta moderatoriaus?"
-      total_unread_posts:
-        one: "šioje temoje turi %{count} neperskaitytą įrašą"
-        few: "šioje temoje tu turi %{count} neperskaitytų įrašų"
-        many: "šioje temoje tu turi %{count} neperskaitytų įrašų"
-        other: "šioje temoje tu turi %{count} neperskaitytų įrašų"
-      unread_posts:
-        one: "šioje temoje tu turi %{count} neperskaitytą seną įrašą"
-        few: "šioje temoje tu turi %{count} neperskaitytų senų įrašų"
-        many: "šioje temoje tu turi %{count} neperskaitytų senų įrašų"
-        other: "šioje temoje tu turi %{count} neperskaitytų senų įrašų"
-      new_posts:
-        one: "šioje temoje yra %{count} naujas įrašas nuo paskutinio tavo skaitymo"
-        few: "šioje temoje yra %{count} naujų įrašų nuo paskutinio tavo skaitymo"
-        many: "šioje temoje yra %{count} naujų įrašų nuo paskutinio tavo skaitymo"
-        other: "šioje temoje yra %{count} naujų įrašų nuo paskutinio tavo skaitymo"
       likes:
         one: "Šiuo metu temą mėgsta %{count} vartotojas"
         few: "Šiuo metu temą mėgsta %{count} vartotojų"

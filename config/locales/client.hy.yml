@@ -529,6 +529,8 @@ hy:
     groups:
       member_added: "Ավելացված"
       member_requested: "Հարցով "
+      add_members:
+        usernames_placeholder: "օգտանուններ"
       requests:
         title: "Հարցումներ "
         reason: "Պատճառ"
@@ -895,11 +897,9 @@ hy:
         sent: "Ուղարկված"
         archive: "Արխիվ"
         groups: "Իմ Խմբերը"
-        bulk_select: "Ընտրել հաղորդագրություններ"
         move_to_inbox: "Տեղափոխել Մուտքերի արկղ"
         move_to_archive: "Արխիվացնել"
         failed_to_move: "Չհաջողվեց տեղափոխել ընտրված հաղորդագրությունները (հնարավոր է՝ համացանցի հետ կապված խնդիր կա)"
-        select_all: "Ընտրել Բոլորը"
         tags: "Թեգեր"
       preferences_nav:
         account: "Հաշիվ"
@@ -1682,13 +1682,6 @@ hy:
         post_approved: "գրառումը հաստատված է"
         membership_request_consolidated: "Մշակել անդամակցության նոր հարցումները"
     upload_selector:
-      title: "Ավելացնել նկար"
-      title_with_attachments: "Ավելացնել նկար կամ ֆայլ"
-      from_my_computer: "Իմ սարքից"
-      from_the_web: "Համացանցից"
-      remote_tip: "նկարի հղումը"
-      local_tip: "ընտրեք նկարներ Ձեր սարքից"
-      hint_for_supported_browsers: "Դուք կարող եք նաև քաշել և գցել կամ տեղադրել նկարները խմբագրիչի մեջ"
       uploading: "Վերբեռնվում է"
       select_file: "Ընտրել Ֆայլ"
       default_image_alt_text: նկար
@@ -1871,15 +1864,6 @@ hy:
       not_found:
         title: "Թեման չի գտնվել"
         description: "Ներողություն, մենք չկարողացանք գտնել այդ թեման: Միգուցե՞ այն հեռացվել է մոդերատորի կողմից:"
-      total_unread_posts:
-        one: "Դուք ունեք %{count} չկարդացած հրապարակում այս թեմայում"
-        other: "Այս թեմայում Դուք ունեք %{count} չկարդացած գրառում"
-      unread_posts:
-        one: "Դուք ունեք %{count} չկարդացած հին հրապարակում այս թեմայում"
-        other: "Այս թեմայում Դուք ունեք %{count} հին չկարդացած գրառում"
-      new_posts:
-        one: "Այս թեմայում կա %{count} նոր հրապարակում՝ Ձեր վերջին կարդալուց հետո:"
-        other: "Ձեր վերջին կարդալուց հետո այս թեմայում կա %{count} նոր գրառում"
       likes:
         one: "Այս թեմայում կա %{count} հավանում:"
         other: "Այս թեմայում կա %{count} հավանում"
@@ -1922,8 +1906,6 @@ hy:
         title: "Պլանավորել Հրատարակումը"
       temp_open:
         title: "Ժամանակավորապես Բացել"
-      auto_reopen:
-        title: "Ավտոմատ բացել Թեման "
       temp_close:
         title: "Ժամանակավորապես Փակել"
       auto_close:

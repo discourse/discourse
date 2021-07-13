@@ -2994,6 +2994,9 @@ da:
     sender_post_deleted: "indlæg er blevet slettet"
     sender_message_to_invalid: "modtager har ugyldig e-mailadresse"
     sender_topic_deleted: "emne er blevet slettet"
+    group_smtp_post_deleted: "indlæg er blevet slettet"
+    group_smtp_topic_deleted: "emne er blevet slettet"
+    group_smtp_disabled_for_group: "smtp er blevet deaktiveret for gruppen"
   color_schemes:
     base_theme_name: "Base"
     light: "Lys"

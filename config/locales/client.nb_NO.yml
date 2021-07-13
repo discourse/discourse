@@ -450,6 +450,8 @@ nb_NO:
         make_user_group_owner: "Gjør til eier"
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
+      add_members:
+        usernames_placeholder: "brukernavn"
       requests:
         title: "Forespørsler"
         reason: "Begrunnelse"
@@ -774,11 +776,9 @@ nb_NO:
         sent: "Sendt"
         archive: "Arkiver"
         groups: "Mine grupper"
-        bulk_select: "Velg meldinger"
         move_to_inbox: "Flytt til innboks"
         move_to_archive: "Arkiver"
         failed_to_move: "Kunne ikke flytte valgte meldinger (kanskje nettforbindelsen din er nede)"
-        select_all: "Velg alle"
         tags: "Stikkord"
       preferences_nav:
         account: "Konto"
@@ -1417,13 +1417,6 @@ nb_NO:
         watching_first_post: "nytt emne"
         post_approved: "innlegg godkjent"
     upload_selector:
-      title: "Legg til bilde"
-      title_with_attachments: "Legg til et bilde eller en fil"
-      from_my_computer: "Fra min enhet"
-      from_the_web: "Fra nettet"
-      remote_tip: "lenke til bilde"
-      local_tip: "velg bilder fra din enhet"
-      hint_for_supported_browsers: "du kan også dra og slippe eller lime inn bilder i tekstbehandleren"
       uploading: "Laster opp bilde"
       select_file: "Velg fil"
       default_image_alt_text: bilde
@@ -1595,15 +1588,6 @@ nb_NO:
       not_found:
         title: "Fant ikke emnet"
         description: "Beklager, vi kunne ikke finne det emnet. Kanskje det ble fjernet av en moderator?"
-      total_unread_posts:
-        one: "du har %{count} ulest innlegg i dette emnet"
-        other: "du har %{count} uleste innlegg i dette emnet"
-      unread_posts:
-        one: "du har %{count} ulest gammelt innlegg i dette emnet"
-        other: "du har %{count} uleste gamle innlegg i dette emnet"
-      new_posts:
-        one: "det er %{count} nytt innlegg i dette emnet siden sist du leste det"
-        other: "det er %{count} nye innlegg i dette emnet siden sist du leste det"
       likes:
         one: "det er én like i dette emnet"
         other: "det er %{number} likes i dette emnet"
@@ -1642,8 +1626,6 @@ nb_NO:
         title: "Planlegg publisering"
       temp_open:
         title: "Åpne midlertidig"
-      auto_reopen:
-        title: "Automatisk åpning av emne"
       temp_close:
         title: "Lukk midlertidig"
       auto_close:

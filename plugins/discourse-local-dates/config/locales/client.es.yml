@@ -25,7 +25,7 @@ es:
           recurring_title: Recurrencia
           recurring_description: "Definir la recurrencia de un evento. También puedes editar manualmente la opción recurrente generada por el formulario y usar una de las siguientes claves: años, trimestre, meses, semanas, días, horas, minutos, segundos, milisegundos."
           recurring_none: Sin recurrencia
-          invalid_date: Fecha inválida, asegúrate de que la fecha y hora sean correctas
+          invalid_date: Fecha no válida, asegúrate de que la fecha y hora sean correctas
           date_title: Fecha
           time_title: Hora
           format_title: Formato de fecha

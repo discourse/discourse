@@ -2272,6 +2272,8 @@ ko:
     email_in_spam_header: "사용자의 첫 번째 이메일이 스팸으로 표시되었습니다"
     already_silenced: "사용자가 이미 %{time_ago}전 %{staff}의해 글 작성이 금지되었습니다."
     already_suspended: "사용자의 계정이 이미 %{time_ago}전 %{staff}의해 일시 중지되었습니다."
+    cannot_delete_has_posts:
+      other: "사용자 %{username}님은 %{count}개의 게시물이 있으므로 삭제할 수 없습니다."
   reviewables_reminder:
     submitted:
       other: "항목이 %{count}시간 전에 제출되었습니다. [검토해주세요] (%{base_path}/review)."
@@ -3532,6 +3534,9 @@ ko:
     sender_post_deleted: "게시물이 삭제되었습니다"
     sender_message_to_invalid: "수신자에게 잘못된 이메일 주소가 있습니다"
     sender_topic_deleted: "주제가 삭제되었습니다"
+    group_smtp_post_deleted: "게시물이 삭제되었습니다"
+    group_smtp_topic_deleted: "주제가 삭제되었습니다"
+    group_smtp_disabled_for_group: "그룹에 대해 smtp가 비활성화되었습니다."
   color_schemes:
     base_theme_name: "기본 테마 색상"
     light: "라이트"

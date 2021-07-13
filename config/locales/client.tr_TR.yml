@@ -590,6 +590,8 @@ tr_TR:
       add_members:
         title: "%{group_name} grubuna üye ekleyin"
         description: "Gruba davet etmek istediğiniz kullanıcıları birer birer veya virgülle ayrılmış bir liste olarak yapıştırarak girin :"
+        usernames_placeholder: "kullanıcı adları"
+        usernames_or_emails_placeholder: "kullanıcı adı ya da e-posta"
         notify_users: "Kullanıcıları bilgilendir"
         set_owner: "Kullanıcıları bu grubun sahipleri olarak ayarla"
       requests:
@@ -1076,11 +1078,9 @@ tr_TR:
         sent: "Gönderilen"
         archive: " Arşiv"
         groups: "Gruplarım"
-        bulk_select: "Mesajları seç"
         move_to_inbox: "Gelen kutusuna taşı"
         move_to_archive: " Arşiv"
         failed_to_move: "Seçilen mesajların taşınması başarısız oldu (muhtemelen şebeke çöktü)"
-        select_all: "Tümünü seç"
         tags: "Etiketler"
         warnings: "Resmi Uyarılar"
       preferences_nav:
@@ -1996,17 +1996,10 @@ tr_TR:
         reaction: "yeni tepki"
         votes_released: "Oyladınız"
     upload_selector:
-      title: "Resim ekle"
-      title_with_attachments: "Resim ya da dosya ekle"
-      from_my_computer: "Kendi cihazımdan"
-      from_the_web: "Webden"
-      remote_tip: "resme bağlantı ata"
-      local_tip: "cihazından resimler seç"
-      hint_for_supported_browsers: "ayrıca resimleri düzenleyiciye sürükleyip bırakabilir ya da yapıştırabilirsin"
       uploading: "Yükleniyor"
+      processing: "Yükleme İşleniyor"
       select_file: "Dosya seç"
       default_image_alt_text: resim
-      supported_formats: "desteklenen formatlar"
     search:
       sort_by: "Sırala"
       relevance: "Uygunluk "
@@ -2211,15 +2204,6 @@ tr_TR:
       not_found:
         title: "Konu bulunamadı."
         description: "Üzgünüz, bu konuyu bulamadık. Bu konu moderatör tarafından kaldırılmış olabilir..."
-      total_unread_posts:
-        one: "bu konuda %{count} okunmamış gönderi var"
-        other: "bu konuda %{count} okunmamış gönderi var"
-      unread_posts:
-        one: "bu konuda %{count} tane okunmamış eski gönderi var"
-        other: "bu konuda %{count} okunmamış eski gönderi var"
-      new_posts:
-        one: "bu konuda, son okumanızdan bu yana %{count} yeni gönderi var"
-        other: "bu konuda, son okumandan bu yana %{count} yeni gönderi var"
       likes:
         one: "bu konuda %{count} beğeni var"
         other: "bu konuda %{count} beğeni var"
@@ -2285,8 +2269,6 @@ tr_TR:
         title: "Program yayını"
       temp_open:
         title: "Geçici Olarak Aç"
-      auto_reopen:
-        title: "Konuyu Otomatik Aç"
       temp_close:
         title: "Geçici Olarak Kapat"
       auto_close:
@@ -4100,6 +4082,8 @@ tr_TR:
             api_key_destroy: "api anahtarını yok et"
             override_upload_secure_status: "yükleme güvenlik durumunu geçersiz kıl"
             delete_group: "grubu sil"
+            watched_word_create: "izlenen kelime ekle"
+            watched_word_destroy: "izlenen kelimeyi sil"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek ya da başka bir eylem gerçekleşecek."
@@ -4431,6 +4415,7 @@ tr_TR:
           text: "Metin Alanı"
           confirm: "Onay"
           dropdown: "Açılır"
+          multiselect: "Çoklu seçim"
       site_text:
         description: "Forumdaki herhangi bir metni isteğine göre uyarlayabilirsin. Lütfen aşağıda arayarak başla: "
         search: "Düzenlemek istediğin metni ara"

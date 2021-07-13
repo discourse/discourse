@@ -2066,6 +2066,7 @@ be:
     sender_body_blank: "цела пуста"
     sender_post_deleted: "Паведамленне было выдаленае"
     sender_message_to_invalid: "атрымальнік мае недапушчальны адрас электроннай пошты"
+    group_smtp_post_deleted: "Паведамленне было выдаленае"
   color_schemes:
     base_theme_name: "база"
     light: "святло"

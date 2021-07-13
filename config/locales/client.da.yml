@@ -601,6 +601,8 @@ da:
       member_added: "Tilføjet"
       member_requested: "Anmodet kl"
       add_members:
+        usernames_placeholder: "brugernavne"
+        usernames_or_emails_placeholder: "brugernavne eller e-mail adresser"
         notify_users: "Giv brugerne besked"
       requests:
         title: "Anmodninger"
@@ -1078,11 +1080,9 @@ da:
         sent: "Sendt"
         archive: "Arkiv"
         groups: "Mine Grupper"
-        bulk_select: "Vælg beskeder"
         move_to_inbox: "Flyt til Indbakke"
         move_to_archive: "Arkiv"
         failed_to_move: "Kunne ikke flytte valgte beskeder (måske er dit netværket nede)"
-        select_all: "Vælg alle"
         tags: "Mærker"
       preferences_nav:
         account: "Konto"
@@ -2028,17 +2028,9 @@ da:
         reaction: "ny reaktion"
         votes_released: "Afstemningen blev frigivet"
     upload_selector:
-      title: "Indsæt billede"
-      title_with_attachments: "Tilføj et billede eller en fil"
-      from_my_computer: "Fra min enhed"
-      from_the_web: "Fra internettet"
-      remote_tip: "link til billede"
-      local_tip: "vælg billeder fra din enhed"
-      hint_for_supported_browsers: "du kan også bruge træk-og-slip eller indsætte billeder i editoren"
       uploading: "Overfører billede"
       select_file: "Vælg fil"
       default_image_alt_text: billede
-      supported_formats: "understøttede formater"
     search:
       sort_by: "Sorter efter"
       relevance: "Relevans"
@@ -2181,7 +2173,6 @@ da:
         top: "Der er ingen top emner"
         educate:
           new: '<p>Dine nye emner vil blive vist her. Som standard betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator, hvis de blev oprettet inden for de sidste 2 dage.</p><p>Besøg dine <a href="%{userPrefsUrl}">præferencer</a> for at ændre dette.</p>'
-          unread: "<p>Dine ulæste emner vises her.</p><p>Som standard betragtes emner som ulæste og vil vise antal af ulæste <span class=\"badge new-posts badge-notification\">1</span> hvis du:</p><ul><li>Oprettede emnet</li><li>Svarede på emnet</li><li>Læste emnet i mere end 4 minutter</li></ul><p>Eller hvis du udtrykkeligt har indstillet emnet til fulgt eller overvåget via \U0001F514 i hvert emne.</p><p>Besøg dine <a href=\"%{userPrefsUrl}\">præferencer</a> for at ændre dette.</p>"
       bottom:
         latest: "Der er ikke flere populære emner."
         posted: "Der er ikke flere emner."
@@ -2239,15 +2230,6 @@ da:
       not_found:
         title: "Emne ikke fundet"
         description: "Beklager, vi kunne ikke finde det emne i databasen. Måske er det blevet fjernet af moderator?"
-      total_unread_posts:
-        one: "du har %{count} ulæst indlæg i dette enme"
-        other: "du har %{count} ulæste indlæg i dette enme"
-      unread_posts:
-        one: "du har %{count} ulæst gammelt indlæg i dette enme"
-        other: "du har %{count} ulæste gamle indlæg i dette enme"
-      new_posts:
-        one: "der er kommet %{count} nyt indlæg i dette emne siden du læste det sidst"
-        other: "der er kommet %{count} nye indlæg i dette emne siden du læste det sidst"
       likes:
         one: "der er %{count} \"synes godt om\" i dette emne"
         other: "der er %{count} \"synes godt om\" i dette emne"
@@ -2323,8 +2305,6 @@ da:
         title: "Planlæg Udgivelse"
       temp_open:
         title: "Åbn Midlertidigt"
-      auto_reopen:
-        title: "Åbn Automatisk Emnet"
       temp_close:
         title: "Luk Midlertidigt"
       auto_close:
@@ -4321,6 +4301,8 @@ da:
             post_staff_note_create: "tilføj personalenotat"
             post_staff_note_destroy: "Slet personalenote"
             delete_group: "slet gruppe"
+            watched_word_create: "tilføj overvåget ord"
+            watched_word_destroy: "slet overvåget ord"
         screened_emails:
           title: "Blokerede e-mails"
           description: "Følgende e-mail-adresser kontrolleres når nogen prøver at oprette en konto, og oprettelsen vil enten blive blokeret, eller der vil blive foretaget en anden handling."
@@ -4581,7 +4563,7 @@ da:
         delete_confirm: "Det foretrækkes generelt at anonymisere brugere i stedet for at slette dem for at undgå at fjerne indhold fra eksisterende diskussioner. <br><br> Er du SIKKER på, at du vil slette denne bruger? Dette er permanent!"
         delete_and_block: "Slet og <b>bloker</b> denne email og IP-adresse"
         delete_dont_block: "Slet kun"
-        deleting_user: "Sleter bruger ..."
+        deleting_user: "Sletter bruger ..."
         deleted: "Brugeren blev slettet."
         delete_failed: "Der opstod en fejl ved sletning af brugeren. Kontrollér om alle indlæg er slettet før du prøver at slette brugeren."
         send_activation_email: "Send aktiverings-e-mail"

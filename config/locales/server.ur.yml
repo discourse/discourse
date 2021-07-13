@@ -2885,6 +2885,7 @@ ur:
     sender_body_blank: "متن خالی ہے"
     sender_post_deleted: "پوسٹ حذف کردی گئی ہے"
     sender_message_to_invalid: "وصول کنندہ کا ایمیل ایڈریس غلط ہے"
+    group_smtp_post_deleted: "پوسٹ حذف کردی گئی ہے"
   color_schemes:
     base_theme_name: "بَیس"
     light: "لائٹ"

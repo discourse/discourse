@@ -621,6 +621,8 @@ id:
   skipped_email_log:
     user_email_no_user: "Tidak dapat menemukan pengguna dengan id %{user_id}"
     user_email_post_not_found: "Tidak dapat menemukan post dengan id %{post_id}"
+    group_smtp_post_deleted: "postingan telah dihapus"
+    group_smtp_topic_deleted: "topik telah dihapus"
   color_schemes:
     default_theme_name: "Asal"
   csv_export:

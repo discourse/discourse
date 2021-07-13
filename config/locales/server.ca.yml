@@ -2675,6 +2675,7 @@ ca:
     sender_body_blank: "el cos és buit"
     sender_post_deleted: "s'ha suprimit la publicació"
     sender_message_to_invalid: "el destinatari té una adreça de correu electrònic no vàlida"
+    group_smtp_post_deleted: "s'ha suprimit la publicació"
   color_schemes:
     base_theme_name: "Base"
     light: "Clar"

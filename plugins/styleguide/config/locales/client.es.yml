@@ -80,7 +80,7 @@ es:
           header: "Título de la ventana modal"
           footer: "Pie de página de la ventana modal"
         user_about:
-          title: "Caja de acerca de usuario"
+          title: "Caja de Acerca del usuario"
         header_icons:
           title: "Iconos de encabezado"
         spinners:

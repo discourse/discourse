@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 pt:
+  site_settings:
+    styleguide_enabled: "Ativa um caminho `/styleguide` para ajudar no estilo do Discourse"
+    styleguide_admin_only: "Limita a visibilidade do guia de estilo aos administradores"

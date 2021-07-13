@@ -457,6 +457,8 @@ th:
     groups:
       member_added: "เพิ่ม"
       member_requested: "ร้องขอเมื่อ"
+      add_members:
+        usernames_placeholder: "ชื่อผู้ใช้"
       requests:
         title: "คำร้องขอ"
         reason: "เหตุผล"
@@ -790,11 +792,9 @@ th:
         sent: "ส่ง"
         archive: "คลัง"
         groups: "กลุ่มของฉัน"
-        bulk_select: "เลือกข้อความ"
         move_to_inbox: "ย้ายไปกล่องขาเข้า"
         move_to_archive: "เก็บเข้าคลัง"
         failed_to_move: "เกิดความผิดพลาดในการย้ายข้อความที่เลือก (เครือข่ายของคุณอาจล่ม)"
-        select_all: "เลือกทั้งหมด"
         tags: "แท็ก"
       preferences_nav:
         account: "บัญชี"
@@ -1480,13 +1480,6 @@ th:
         liked_consolidated: "ไลค์ใหม่"
         post_approved: "โพสต์ได้รับอนุมัติ"
     upload_selector:
-      title: "เพิ่มรูปภาพ"
-      title_with_attachments: "เพิ่มรูปภาพหรือไฟล์"
-      from_my_computer: "จากอุปกรณ์ของฉัน"
-      from_the_web: "จากเว็บ"
-      remote_tip: "ลิงก์ไปยังรูปภาพ"
-      local_tip: "เลือกรูปภาพจากอุปกรณ์ของคุณ"
-      hint_for_supported_browsers: "คุณสามารถลากหรือวางรูปภาพในช่องแก้ไขได้ด้วย"
       uploading: "กำลังอัปโหลด"
       select_file: "เลือกไฟล์"
       default_image_alt_text: รูปภาพ
@@ -1646,12 +1639,6 @@ th:
       not_found:
         title: "ไม่พบกระทู้"
         description: "ขออภัย ไม่สามารถค้นหากระทู้นั้นได้ อาจถูกลบโดยผู้ดูแลระบบ"
-      total_unread_posts:
-        other: "คุณมี %{count} โพสต์ที่ยังไม่ได้อ่านในกระทู้นี้"
-      unread_posts:
-        other: "คุณมี %{count} โพสต์เก่าที่ยังไม่ได้อ่านในกระทู้นี้"
-      new_posts:
-        other: "มี %{count}โพสต์ใหม่ในกระทู้นี้ตั้งแต่คุณอ่านครั้งล่าสุด"
       likes:
         other: "มี %{count}ถูกใจในกระทู้นี้"
       back_to_list: "กลับไปที่รายชื่อกระทู้"
@@ -1686,8 +1673,6 @@ th:
         pick_date_and_time: "เลือกวันและเวลา"
       temp_open:
         title: "เปิดชั่วคราว"
-      auto_reopen:
-        title: "กระทู้ที่เปิดอัตโนมัติ"
       temp_close:
         title: "ปิดชั่วคราว"
       auto_close:

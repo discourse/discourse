@@ -553,6 +553,8 @@ ca:
       member_added: "Afegit"
       member_requested: "Sol·licitat"
       add_members:
+        usernames_placeholder: "noms d'usuari"
+        usernames_or_emails_placeholder: "noms d’usuari o correus electrònics"
         notify_users: "Notifiqueu els usuaris"
       requests:
         title: "Sol·licituds"
@@ -928,11 +930,9 @@ ca:
         sent: "Enviat"
         archive: "Arxiva"
         groups: "Els meus grups"
-        bulk_select: "Selecciona missatges"
         move_to_inbox: "Mou a la safata d'entrada"
         move_to_archive: "Arxiva"
         failed_to_move: "Error en moure els missatges seleccionats (potser ha caigut la xarxa)."
-        select_all: "Selecciona-ho tot"
         tags: "Etiquetes"
       preferences_nav:
         account: "Compte"
@@ -1707,13 +1707,6 @@ ca:
         liked_consolidated: "nous 'm'agrada'"
         post_approved: "publicació aprovada"
     upload_selector:
-      title: "Afegeix una imatge"
-      title_with_attachments: "Afegeix una imatge o un fitxer"
-      from_my_computer: "Des del meu dispositiu"
-      from_the_web: "Des de la web"
-      remote_tip: "enllaç a imatge"
-      local_tip: "seleccioneu imatges des del vostre dispositiu"
-      hint_for_supported_browsers: "també podeu arrossegar i deixar anar o enganxar imatges en l'editor"
       uploading: "Carregant"
       select_file: "Tria un fitxer"
       default_image_alt_text: imatge
@@ -1887,15 +1880,6 @@ ca:
       not_found:
         title: "Tema no trobat"
         description: "No hem pogut trobar aquest tema. Potser ha estat eliminat per un moderador."
-      total_unread_posts:
-        one: "teniu %{count} missatge no llegit en aquest tema"
-        other: "teniu %{count} missatges no llegits en aquest tema"
-      unread_posts:
-        one: "teniu %{count} publicació antiga no llegida en aquest tema"
-        other: "teniu %{count} publicacions antigues no llegides en aquest tema"
-      new_posts:
-        one: "hi ha %{count} publicació nova en aquest tema des de la vostra darrera lectura"
-        other: "hi ha %{count} publicacions noves en aquest tema des de la vostra darrera lectura"
       likes:
         one: "hi ha %{count} 'M'agrada' en aquest tema"
         other: "hi ha %{count} 'M'agrada' en aquest tema"
@@ -1936,8 +1920,6 @@ ca:
         title: "Programa la publicació"
       temp_open:
         title: "Obre temporalment"
-      auto_reopen:
-        title: "Obre automàticament el tema"
       temp_close:
         title: "Tanca temporalment"
       auto_close:

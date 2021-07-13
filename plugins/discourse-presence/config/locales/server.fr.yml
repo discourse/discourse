@@ -6,5 +6,5 @@
 
 fr:
   site_settings:
-    presence_enabled: "Afficher les utilisateurs qui sont en train de répondre au sujet actuel ou modifier le message actuel ?"
+    presence_enabled: "Afficher les utilisateurs qui sont en train de répondre au sujet actuel ou de modifier le message actuel ?"
     presence_max_users_shown: "Nombre maximal d'utilisateurs affichés."

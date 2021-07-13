@@ -600,6 +600,8 @@ nl:
       member_added: "Toegevoegd"
       member_requested: "Aangevraagd:"
       add_members:
+        usernames_placeholder: "gebruikersnamen"
+        usernames_or_emails_placeholder: "gebruikersnamen of e-mailadressen"
         notify_users: "Gebruikers een melding sturen"
       requests:
         title: "Aanvragen"
@@ -1064,11 +1066,9 @@ nl:
         sent: "Verzonden"
         archive: "Archief"
         groups: "Mijn groepen"
-        bulk_select: "Berichten selecteren"
         move_to_inbox: "Verplaatsen naar Postvak IN"
         move_to_archive: "Archiveren"
         failed_to_move: "Het verplaatsen van geselecteerde berichten is niet gelukt (misschien is uw netwerkverbinding verbroken)"
-        select_all: "Alles selecteren"
         tags: "Tags"
       preferences_nav:
         account: "Account"
@@ -2019,20 +2019,9 @@ nl:
         reaction: "nieuwe reactie"
         votes_released: "Stem is vrijgegeven"
     upload_selector:
-      title: "Een afbeelding toevoegen"
-      title_with_attachments: "Een afbeelding of bestand toevoegen"
-      from_my_computer: "Vanaf mijn apparaat"
-      from_the_web: "Vanaf het web"
-      remote_tip: "koppeling naar afbeelding"
-      remote_tip_with_attachments: "koppeling naar afbeelding of bestand"
-      local_tip: "selecteer afbeeldingen vanaf uw apparaat"
-      local_tip_with_attachments: "selecteer afbeeldingen of bestanden vanaf uw apparaat"
-      hint: "(u kunt ook afbeeldingen naar de editor slepen om deze te uploaden)"
-      hint_for_supported_browsers: "u kunt ook afbeeldingen naar de editor slepen of hierin plakken"
       uploading: "Uploaden"
       select_file: "Bestand selecteren"
       default_image_alt_text: afbeelding
-      supported_formats: "ondersteunde formaten"
     search:
       sort_by: "Sorteren op"
       relevance: "Relevantie"
@@ -2175,7 +2164,6 @@ nl:
         top: "Er zijn geen toptopics."
         educate:
           new: '<p>Hier verschijnen uw nieuwe topics. Standaard worden topics als nieuw beschouwd en verschijnt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> als deze in de afgelopen 2 dagen zijn aangemaakt.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
-          unread: "<p>Uw ongelezen topics verschijnen hier.</p><p>Standaard worden topics als ongelezen beschouwd en zullen ze het aantal ongelezen berichten laten zien <span class=\"badge new-posts badge-notification\">1</span> als u:</p><ul><li>Het topic heeft aangemaakt</li><li>Op het topic heeft geantwoord</li><li>Het topic langer dan 4 minuten heeft gelezen</li></ul><p>Of als u het topic expliciet heeft ingesteld op \"Gevolgd\" of \"In de gaten gehouden\" via de \U0001F514 in elk topic.</p><p>Bezoek uw <a href=\"%{userPrefsUrl}\">voorkeuren</a> om dit te wijzigen.</p>"
       bottom:
         latest: "Er zijn geen nieuwste topics meer."
         posted: "Er zijn geen topics meer geplaatst."
@@ -2233,15 +2221,6 @@ nl:
       not_found:
         title: "Topic niet gevonden"
         description: "Sorry, we konden het opgevraagde topic niet vinden. Misschien is het verwijderd door een moderator?"
-      total_unread_posts:
-        one: "u hebt %{count} ongelezen bericht in dit topic"
-        other: "u hebt %{count} ongelezen berichten in dit topic"
-      unread_posts:
-        one: "u hebt %{count} ongelezen bericht in dit topic"
-        other: "u hebt %{count} ongelezen berichten in dit topic"
-      new_posts:
-        one: "er is %{count} nieuw bericht in dit topic sinds u het voor het laatst hebt gelezen"
-        other: "er zijn %{count} nieuwe berichten in dit topic sinds u het voor het laatst hebt gelezen"
       likes:
         one: "er is %{count} like in dit topic"
         other: "er zijn %{count} likes in dit topic"
@@ -2317,8 +2296,6 @@ nl:
         title: "Publicatie plannen"
       temp_open:
         title: "Tijdelijk openen"
-      auto_reopen:
-        title: "Topic automatisch openen"
       temp_close:
         title: "Tijdelijk sluiten"
       auto_close:

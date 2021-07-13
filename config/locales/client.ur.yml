@@ -582,6 +582,8 @@ ur:
     groups:
       member_added: "شامل کر دیا گیا"
       member_requested: "درخواست کیا گیا"
+      add_members:
+        usernames_placeholder: "صارف نام"
       requests:
         title: "درخواستیں"
         reason: "وجہ"
@@ -994,11 +996,9 @@ ur:
         sent: "بھیجا جا چکا"
         archive: "آر کائیو"
         groups: "میرے گروپ"
-        bulk_select: "پیغامات منتخب کریں"
         move_to_inbox: "اِنباکس میں منتقل کریں"
         move_to_archive: "آر کائیو"
         failed_to_move: "منتخب شدہ پیغامات کو منتقل کرنے میں ناکامی (شاید آپ کے نیٹ ورک بند ہے)"
-        select_all: "تمام منتخب کریں"
         tags: "ٹیگز"
       preferences_nav:
         account: "اکاؤنٹ"
@@ -1854,13 +1854,6 @@ ur:
         liked_consolidated: "نئے لائیکس"
         post_approved: "منظورشدہ پوسٹ"
     upload_selector:
-      title: "ایک تصویر شامل کریں"
-      title_with_attachments: "ایک تصویر یا ایک فائل شامل کریں"
-      from_my_computer: "میری ڈیوائس سے"
-      from_the_web: "انٹرنیٹ سے"
-      remote_tip: "تصویر کا لنک"
-      local_tip: "اپنے ڈیوائس سے تصاویر منتخب کریں"
-      hint_for_supported_browsers: "آپ تصاویر کو ایڈیٹر میں ڈرَیگ & ڈراپ یا پَیسٹ بھی کر سکتے ہیں"
       uploading: "اَپ لوڈ کیا جا رہا ہے"
       select_file: "فائل منتخب کریں"
       default_image_alt_text: تصویر
@@ -2033,15 +2026,6 @@ ur:
       not_found:
         title: "ٹاپک نہیں ملا"
         description: "معزرت، ہم یہ ٹاپک نہیں ڈھونڈ سکے۔ شاید یہ کسی ماڈریٹر نے ہٹا دیا ہو؟"
-      total_unread_posts:
-        one: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پوسٹ موجود ہے"
-        other: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پوسٹ موجود ہیں"
-      unread_posts:
-        one: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پرانی پوسٹ موجود ہے"
-        other: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پرانی پوسٹ موجود ہیں"
-      new_posts:
-        one: "آپ کے آخری دفع یہ ٹاپک پڑھنے کے بعد %{count} نئی پوسٹ شائع ہوئی"
-        other: "آپ کے آخری دفع یہ ٹاپک پڑھنے کے بعد %{count} نئی پوسٹ شائع ہوئیں"
       likes:
         one: "اِس ٹاپک میں %{count} لائیک ہے"
         other: "اِس ٹاپک میں %{count} لائیکس ہیں"
@@ -2104,8 +2088,6 @@ ur:
         title: "اشاعت شیڈول کریں"
       temp_open:
         title: "عارضی طور پر کھولیں"
-      auto_reopen:
-        title: "خود کار طریقے سے ٹاپک کھولیں"
       temp_close:
         title: "عارضی طور پر بند کریں"
       auto_close:

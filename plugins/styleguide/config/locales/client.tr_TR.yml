@@ -35,6 +35,8 @@ tr_TR:
           title: "Açılır Menüler"
         categories:
           title: "Kategoriler"
+        bread_crumbs:
+          title: "Yer Göstergeçleri"
         navigation:
           title: "Navigasyon"
         navigation_bar:

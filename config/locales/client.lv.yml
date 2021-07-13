@@ -685,11 +685,9 @@ lv:
         sent: "Nosūtne"
         archive: "Arhīvs"
         groups: "Manas grupas"
-        bulk_select: "Atlasīt ziņas"
         move_to_inbox: "Pārvietot uz iesūtni"
         move_to_archive: "Arhivēt"
         failed_to_move: "Neizdevās pārvietot izvēlētas ziņas (varbūt pazudis pieslēgums internetam)"
-        select_all: "Izvēlēties visu"
         tags: "Birkas"
       preferences_nav:
         account: "Konts"
@@ -1224,13 +1222,6 @@ lv:
       titles:
         watching_first_post: "Jauna tēma"
     upload_selector:
-      title: "Pievienot attēlu"
-      title_with_attachments: "Pievienot attēlu vai failu"
-      from_my_computer: "No manas ierīces"
-      from_the_web: "No interneta"
-      remote_tip: "saite uz attēlu"
-      local_tip: "izvēlēties attēlus no jūsu ierīces"
-      hint_for_supported_browsers: "Jūs varat arī ievilkt vai ielīmēt redaktorā attēlus"
       uploading: "Augšuplādē"
       select_file: "Izvēlēties failu"
       default_image_alt_text: bilde
@@ -1384,18 +1375,6 @@ lv:
       not_found:
         title: "Tēma nav atrasta "
         description: "Atvainojiet, šo tēmu neatradām. Varbūt to noņēma moderators? "
-      total_unread_posts:
-        zero: "Tev šajā tēmā nav neizlasītu ziņojumu"
-        one: "Tev šajā tēmā ir %{count} neizlasīts ziņojums"
-        other: "Tev šajā tēmā ir %{count} neizlasītu ziņojumu "
-      unread_posts:
-        zero: "Tev šajā tēmā nav vecu neizlasītu ziņojumu"
-        one: "Tev šajā tēmā ir %{count} vecs neizlasīts ziņojums"
-        other: "Tev šajā tēmā ir %{count} vecu neizlasītu ziņojumu. "
-      new_posts:
-        zero: "Šajā tēmā nav jaunu nelasītu ziņojumu"
-        one: "Šajā tēmā ir %{count} jauns nelasīts ziņojums"
-        other: "Šajā tēmā ir %{count} jauni nelasīti ziņojumi"
       likes:
         zero: "Šai tēmai nav \"patīk\""
         one: "Šai tēmai ir viens \"patīk\""
@@ -1432,8 +1411,6 @@ lv:
         title: "Ieplānot publicēšanu "
       temp_open:
         title: "Atvērts uz laiku "
-      auto_reopen:
-        title: "Automātiski atvērt tēmu "
       temp_close:
         title: "Aizvērt uz laiku "
       auto_close:

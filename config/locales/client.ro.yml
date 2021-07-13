@@ -603,6 +603,8 @@ ro:
       member_added: "Adăugat"
       member_requested: "Solicitat la"
       add_members:
+        usernames_placeholder: "nume de utilizatori"
+        usernames_or_emails_placeholder: "nume de utilizator sau e-mailuri"
         notify_users: "Notifică utilizatorii"
       requests:
         title: "Cereri"
@@ -1002,11 +1004,9 @@ ro:
         sent: "Trimise"
         archive: "Arhivă"
         groups: "Grupurile mele"
-        bulk_select: "Selectează mesaje"
         move_to_inbox: "Mută în „Primite”"
         move_to_archive: "Arhivează"
         failed_to_move: "Mutarea mesajelor selectate a eșuat (poate că v-a căzut rețeaua)"
-        select_all: "Selectează tot"
         tags: "Etichete"
       preferences_nav:
         account: "Cont"
@@ -1679,13 +1679,6 @@ ro:
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
     upload_selector:
-      title: "Adaugă o imagine"
-      title_with_attachments: "Adaugă o imagine sau un fișier"
-      from_my_computer: "Din dispozitivul meu"
-      from_the_web: "De pe web"
-      remote_tip: "link către imagine"
-      local_tip: "alege imagini de pe dispozitivul tău"
-      hint_for_supported_browsers: "Poți de asemenea să faci drag and drop sau să lipești imagini în editor"
       uploading: "Se încarcă"
       select_file: "Alege fișier"
       default_image_alt_text: imagine
@@ -1807,8 +1800,6 @@ ro:
         bookmarks: "Nu ai nici un semn de carte încă."
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
-        educate:
-          unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge new-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."
@@ -1859,18 +1850,6 @@ ro:
       not_found:
         title: "Subiectul nu a fost găsit"
         description: "Ne pare rău, Nu am putut găsi subiectul. Poate a fost șters de un moderator?"
-      total_unread_posts:
-        one: "ai un mesaj necitit în această discuţie."
-        few: "ai %{count} mesaje necitite în această discuţie."
-        other: "ai %{count} de mesaje necitite în această discuţie."
-      unread_posts:
-        one: "ai un mesaj vechi necitit în această discuţie."
-        few: "ai %{count} mesaje vechi necitite în această discuţie."
-        other: "ai %{count} de mesaje vechi necitite în această discuţie."
-      new_posts:
-        one: "este un mesaj nou în această discuţie de la ultima citire"
-        few: "sunt %{count} mesaje noi în această discuţie de la ultima citire"
-        other: "sunt %{count} de mesaje noi în această discuţie de la ultima citire"
       likes:
         one: "există o apreciere pentru această discuţie"
         few: "sunt %{count} aprecieri pentru această discuţie"
@@ -1912,8 +1891,6 @@ ro:
         title: "Programează publicarea"
       temp_open:
         title: "Deschide temporar"
-      auto_reopen:
-        title: "Deschide automat subiect"
       temp_close:
         title: "Închide temporar"
       auto_close:

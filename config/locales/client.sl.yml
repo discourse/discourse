@@ -618,6 +618,8 @@ sl:
       member_added: "Dodano"
       member_requested: "Zahtevano ob"
       add_members:
+        usernames_placeholder: "uporabniška imena"
+        usernames_or_emails_placeholder: "uporabniki ali e-poštni naslovi"
         notify_users: "Obvesti uporabnike"
       requests:
         title: "Zahtevki"
@@ -1088,11 +1090,9 @@ sl:
         sent: "Poslano"
         archive: "Arhiv"
         groups: "Moje Skupine"
-        bulk_select: "Izberi Sporočila"
         move_to_inbox: "Prestavi v Prejeto"
         move_to_archive: "Arhiv"
         failed_to_move: "Premik izbranih sporočil ni uspel (mogoče je vaša povezava prekinjena)"
-        select_all: "Izberi vse"
         tags: "Oznake"
       preferences_nav:
         account: "Račun"
@@ -1995,14 +1995,6 @@ sl:
         liked_consolidated: "novi všečki"
         post_approved: "prispevek odobren"
     upload_selector:
-      title: "Dodaj sliko"
-      title_with_attachments: "Dodaj sliko ali datoteko"
-      from_my_computer: "Iz moje naprave"
-      from_the_web: "Iz spletne strani"
-      remote_tip: "povezava do slike"
-      local_tip: "izberite slike iz vaše naprave"
-      hint: "(slike lahko naložite tudi tako, da jih povlečete in spustite v urejevalnik)"
-      hint_for_supported_browsers: "slike lahko naložite tudi tako, da jih povlečete in spustite v urejevalnik"
       uploading: "Nalagam"
       select_file: "Izberite datoteko"
       default_image_alt_text: slika
@@ -2208,21 +2200,6 @@ sl:
       not_found:
         title: "Ne najdemo temo."
         description: "Oprostite, ne najdemo te teme. Mogoče jo je odstranil moderator?"
-      total_unread_posts:
-        one: "imate %{count} neprebran prispevek v tej temi"
-        two: "imate %{count} neprebrana prispevka v tej temi"
-        few: "imate %{count} neprebrane prispevke v tej temi"
-        other: "imate %{count} neprebranih prispevkov v tej temi"
-      unread_posts:
-        one: "imate %{count} neprebran star prispevek v tej temi"
-        two: "imate %{count} neprebrana stara prispevka v tej temi"
-        few: "imate %{count} neprebrane stare prispevke v tej temi"
-        other: "imate %{count} neprebranih starih prispevkov v tej temi"
-      new_posts:
-        one: "%{count} nov prispevek v tej temi od kar ste jo zadnjič brali"
-        two: "%{count} nova prispevka v tej temi od kar ste jo zadnjič brali"
-        few: "%{count} novi prispevki v tej temi od kar ste jo zadnjič brali"
-        other: "%{count} novih prispevkov v tej temi od kar ste jo zadnjič brali"
       likes:
         one: "%{count} všeček na tej temi"
         two: "%{count} všečka na tej temi"
@@ -2290,8 +2267,6 @@ sl:
         title: "Objavi kasneje"
       temp_open:
         title: "Začasno odpri"
-      auto_reopen:
-        title: "Samodejno odpri temo"
       temp_close:
         title: "Začasno zapri"
       auto_close:

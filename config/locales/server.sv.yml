@@ -238,6 +238,7 @@ sv:
     disabled_errors:
       discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
+    requires_groups: "Inbjudan sparad. För att ge tillgång till det angivna ämnet lägger du till en av följande grupper: %{groups}."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -3417,6 +3418,9 @@ sv:
     sender_post_deleted: "inlägget har raderats"
     sender_message_to_invalid: "mottagaren har en ogiltig e-postadress"
     sender_topic_deleted: "ämnet har raderats"
+    group_smtp_post_deleted: "inlägget har raderats"
+    group_smtp_topic_deleted: "ämnet har raderats"
+    group_smtp_disabled_for_group: "smtp har inaktiverats för gruppen"
   color_schemes:
     base_theme_name: "Bas"
     light: "Ljust"

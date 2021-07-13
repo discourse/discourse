@@ -3729,6 +3729,9 @@ he:
     sender_post_deleted: "פוסט נמחק"
     sender_message_to_invalid: "כתובת דוא״ל הנמען שגויה"
     sender_topic_deleted: "הנושא נמחק"
+    group_smtp_post_deleted: "פוסט נמחק"
+    group_smtp_topic_deleted: "הנושא נמחק"
+    group_smtp_disabled_for_group: "smtp הושבת עבור הקבוצה"
   color_schemes:
     base_theme_name: "בסיס"
     light: "בהיר"

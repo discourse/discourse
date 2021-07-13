@@ -25,6 +25,9 @@ tr_TR:
           title: "Sonuçlar oylama <strong>kapatıldıktan</strong> sonra gösterilecektir."
         staff:
           title: "Sonuçlar yalnızca <strong>moderatöre</strong> gösterilir."
+      multiple:
+        help:
+          between_min_and_max_options: "En az <strong>%{min}</strong>, en çok <strong>%{max}</strong> seçeneği seçin."
       cast-votes:
         title: "Oyunuzu kullanın"
         label: "Şimdi oylayın!"
@@ -54,6 +57,7 @@ tr_TR:
       breakdown:
         title: "Anket sonuçları"
         votes: "%{count} oy"
+        breakdown: "Detaylar"
         percentage: "Yüzde"
         count: "say"
       error_while_toggling_status: "Üzgünüz, anket durumunu değiştirme sırasında hata meydana geldi."
@@ -76,15 +80,27 @@ tr_TR:
           multiple: Çoklu Seçim
           number: Sayısal Değerlendirme
         poll_result:
+          label: Sonuçları göster...
           always: Her zaman görünür
+          vote: Sadece oylamadan sonra
+          closed: Anket kapatıldığında
           staff: Yalnızca moderatörler
+        poll_groups:
+          label: Oylamayı bu gruplarla sınırlandırın
+        poll_chart_type:
+          label: Sonuç grafiği
+          bar: Çubuk
+          pie: Pasta
         poll_config:
+          max: Maksimum Seçenek
+          min: Minimum Seçenek
           step: Aralık
         poll_public:
           label: Kimlerin oy verdiğini göster
         poll_title:
           label: Başlık (isteğe bağlı)
         poll_options:
+          label: Seçenekler (satır başına bir tane)
           add: Seçenek ekle
         automatic_close:
           label: Seçimi otomatik olarak kapat

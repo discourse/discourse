@@ -157,7 +157,7 @@ zh_CN:
       not_an_integer: 必须是整数
       odd: 必须是偶数
       record_invalid: ! "验证失败：%{errors}"
-      max_emojis: "不能超过%{max_emojis_count}个表情符号"
+      max_emojis: "不能超过 %{max_emojis_count} 个表情符号"
       emojis_disabled: "不能有表情符号"
       ip_address_already_screened: "已包含在现有规则中"
       restrict_dependent_destroy:
@@ -643,8 +643,8 @@ zh_CN:
     has_likes:
       other: "%{count}赞"
   rate_limiter:
-    slow_down: "您执行这个操作太多次了，请稍后再试。"
-    too_many_requests: "您执行这个操作太多次了，请等待%{time_left}后再试。"
+    slow_down: "您执行此操作的次数过多，请稍后再试。"
+    too_many_requests: "您执行此操作的次数过多。请等待 %{time_left}后再试。"
     by_type:
       first_day_replies_per_day: "我们赞赏您的热情，保持这样！ 话虽如此，为了社区的安全，您已经达到了新用户第一天可以回复的最多数量。 请等待 %{time_left} ，您将可以继续回复。"
       first_day_topics_per_day: "我们赞赏您的热情！ 话虽如此，为了社区的安全，您已经达到了新用户第一天可以创建的话题的最大数量。 请等待 %{time_left}，您讲可以继续创建新的话题。"
@@ -2155,13 +2155,13 @@ zh_CN:
     security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
     security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
     security_key_invalid: "验证安全密钥时出错。"
-    not_approved: "您的账户尚未获得批准。一旦您的账户获得批准，您会收到一封电子邮件。"
+    not_approved: "您的帐户尚未获得批准。一旦可以登录，您会收到电子邮件通知。"
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
     incorrect_password: "密码错误"
     wait_approval: "谢谢注册账户。我们会在您的账户获得批准之后通知您。"
     active: "您的账户已经被激活，可以使用了。"
     activate_email: "<p>快完成了！我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活您的账户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件收件箱。</p>"
-    not_activated: "您还不能登录。我们发送了一封激活邮件给您，请按照邮件中的步骤来激活您的账户。"
+    not_activated: "您还无法登录。我们向您发送了一封激活电子邮件。请按照电子邮件中的说明操作来激活您的帐户。"
     not_allowed_from_ip_address: "您不能以 %{username} 身份从该 IP 地址登录。"
     admin_not_allowed_from_ip_address: "您不能从该 IP 地址以管理员身份登录。"
     reset_not_allowed_from_ip_address: "您不能够从当前的IP地址请求重置密码。"
@@ -2440,15 +2440,15 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是%{site_name}通知您的帖子再次被隐藏了的自动消息。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被重新隐藏。
 
         <%{base_url}}%{url}>
 
         %{flag_reason}
 
-        社区成员标记了该帖子，现已被隐藏。**由于此帖子已被隐藏超过一次，您的帖子现在将持续隐藏，直到由工作人员作出处理。**
+        此帖子被社区举报，现已被隐藏。**由于此帖子已被隐藏超过一次，您的帖子现在将持续隐藏，直至由管理人员处理**。
 
-        有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
+        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     queued_by_staff:
       title: "等待审核中"
       subject_template: "帖子被管理员隐藏，等待批准"
@@ -2468,11 +2468,11 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是%{site_name}通知[您的贴子](%{base_url}%{url})已被恢复的自动消息。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知[您的帖子](%{base_url}%{url})已被恢复。
 
-        此贴曾被社区标记过，管理人员选择将其恢复。
+        此帖子被社区举报，管理人员选择将其恢复。
 
-        [详情=“点击展开被恢复的贴子”]
+        [details="点击以展开恢复的帖子"]
         ```markdown
         %{flagged_post_raw_content}
         ```
@@ -2483,17 +2483,17 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是一则由%{site_name}自动发送的消息，告知[您的帖子](%{base_url}%{url})被移除了。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知[您的帖子](%{base_url}%{url})已被移除。
 
         %{flag_reason}
 
-        这个帖子被社区所标记后，工作人员选择将其移除。
+        此帖子被社区举报，管理人员选择将其移除。
 
         ``` markdown
         %{flagged_post_raw_content}
         ```
 
-        要了解详情，请阅读我们的[社区守则](%{base_url}/guidelines)。
+        请阅读我们的[社区准则](%{base_url}/guidelines)以了解详情。
     usage_tips:
       text_body_template: |
         要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
@@ -2873,11 +2873,11 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是%{site_name}通知您的帖子因被社区成员标记已被暂时隐藏的自动消息
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知由于您的帖子被社区举报，它们已被暂时隐藏。
 
-        作为预防措施，您的新账户已被停用，并且在管理人员审核您的账户前您无法创建回复或话题。我们对此深表抱歉。
+        作为预防措施，您的新帐户已被禁言，并且在管理人员审查您的帐户前您无法创建回复或话题。对于任何不便之处，我们深表歉意。
 
-        有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
+        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "太多信任等级3用户标记"
       subject_template: "新账户被暂时封禁"
@@ -3412,8 +3412,8 @@ zh_CN:
 
         如果不是您，请[查看您现有的会话](%{base_url}/my/preferences/account)并考虑更改密码。
     post_approved:
-      title: "您的帖子已通过审核"
-      subject_template: "[%{site_name}] 您的帖子已通过审核"
+      title: "您的帖子已被批准"
+      subject_template: "[%{site_name}] 您的帖子已被批准"
       text_body_template: |
         您好：
 

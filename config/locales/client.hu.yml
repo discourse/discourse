@@ -572,6 +572,8 @@ hu:
       member_added: "Hozzáadva"
       member_requested: "Kérve"
       add_members:
+        usernames_placeholder: "felhasználónevek"
+        usernames_or_emails_placeholder: "felhasználónév vagy e-mail-cím"
         notify_users: "Felhasználók értesítése"
       requests:
         title: "Kérelmek"
@@ -964,11 +966,9 @@ hu:
         sent: "Elküldött"
         archive: "Archívum"
         groups: "Saját csoportok"
-        bulk_select: "Üzenetek kiválasztása"
         move_to_inbox: "Áthelyezés a bejövő üzenetek közé"
         move_to_archive: "Archiválás"
         failed_to_move: "A kijelölt üzenetek áthelyezése nem sikerült (lehet, hogy nincs hálózat)"
-        select_all: "Összes kiválasztása"
         tags: "Címkék"
       preferences_nav:
         account: "Fiók"
@@ -1713,12 +1713,6 @@ hu:
         watching_first_post: "új téma"
         post_approved: "bejegyzés jóváhagyva"
     upload_selector:
-      title: "Kép hozzáadása"
-      title_with_attachments: "Kép vagy file hozzáadása"
-      from_my_computer: "Saját gépről"
-      from_the_web: "Az internetről"
-      remote_tip: "kép linkje"
-      local_tip: "Kép kiválasztása a készülékről"
       uploading: "Feltöltés"
       select_file: "File kiválasztása."
       default_image_alt_text: Kép
@@ -1873,15 +1867,6 @@ hu:
       not_found:
         title: "Nem létező témakör"
         description: "Sajnáljuk, de nem tudtuk megtalálni ezt a témakört. Talán egy moderátor kitörölte volna?"
-      total_unread_posts:
-        one: "%{count} hozzászólást nem olvastál a témában"
-        other: "%{count} hozzászólást nem olvastál a témában"
-      unread_posts:
-        one: "%{count} nem olvasott bejegyzés van ebben a témában"
-        other: "%{count} nem olvasott bejegyzés van ebben a témában"
-      new_posts:
-        one: "%{count} új bejegyzés van ebben a témában."
-        other: "%{count} új bejegyzés van ebben a témában."
       back_to_list: "Vissza a témakörök listájára"
       options: "Témakör beállításai"
       show_links: "linkek megjelenítése ebben a témakörben"
@@ -1926,8 +1911,6 @@ hu:
         next_month: "Jövő hónapban"
         forever: "Örökre"
         pick_date_and_time: "Dátum és idő kiválasztása"
-      auto_reopen:
-        title: "Téma automatikus megynitása"
       auto_close:
         title: "Téma automatikus lezárása"
         error: "Érvényes dátumot kérek!"

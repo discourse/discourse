@@ -2801,6 +2801,7 @@ uk:
     sender_body_blank: "body is blank"
     sender_post_deleted: "допис видалено"
     sender_message_to_invalid: "одержувач має недійсну електронну адресу"
+    group_smtp_post_deleted: "допис видалено"
   color_schemes:
     base_theme_name: "База"
     light: "Світла"

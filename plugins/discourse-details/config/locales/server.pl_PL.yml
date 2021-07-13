@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  site_settings:
+    details_enabled: 'Uwzględnij możliwość dodawania rozwijanych szczegółów do posta. Tę funkcję można znaleźć w menu podręcznym paska narzędzi kompozytora. Jeśli zmienisz to ustawienie, musisz ponownie przeładować wszystkie posty przez polecenie "rake posts:rebake".'
   details:
     excerpt_details: "(kliknij, by wyświetlić więcej szczegółów)"

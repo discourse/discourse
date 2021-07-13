@@ -2626,6 +2626,7 @@ hy:
     sender_body_blank: "body-ն դատարկ է"
     sender_post_deleted: "գրառումը ջնջվել է"
     sender_message_to_invalid: "ստացողը ունի անվավեր էլ. հասցե"
+    group_smtp_post_deleted: "գրառումը ջնջվել է"
   color_schemes:
     base_theme_name: "Հիմնական"
     light: "Բաց"

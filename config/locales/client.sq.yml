@@ -606,11 +606,9 @@ sq:
         sent: "Të dërguara"
         archive: "Arkivi"
         groups: "Grupet e mia"
-        bulk_select: "Zgjidh mesazhet"
         move_to_inbox: "Transfero në inbox"
         move_to_archive: "Arkivo"
         failed_to_move: "Nuk i transferuam dot mesazhet e zgjedhura (ka mundësi që të jeni shkëputur nga rrjeti)"
-        select_all: "Zgjidh të gjitha"
         tags: "Etiketat"
       preferences_nav:
         account: "Llogaria"
@@ -1095,13 +1093,6 @@ sq:
       titles:
         watching_first_post: "temë e re"
     upload_selector:
-      title: "Shto një imazh"
-      title_with_attachments: "Shto një imazh ose një skedar"
-      from_my_computer: "Nga kompiuteri im"
-      from_the_web: "Nga Interneti"
-      remote_tip: "lidhje tek imazhi"
-      local_tip: "zgjidh imazhet nga aparati"
-      hint_for_supported_browsers: "ju mund të tërhiqni e lëshoni imazhet në editorin e tekstit"
       uploading: "Duke ngarkuar"
       select_file: "Zgjdhni një Skedar"
       default_image_alt_text: imazh
@@ -1225,15 +1216,6 @@ sq:
       not_found:
         title: "Tema nuk u gjet"
         description: "Na vjen keq, nuk e gjetëm dot temën. Mund të jetë fshirë nga një moderator... "
-      total_unread_posts:
-        one: "ju keni %{count} postim të palexuar në këtë temë"
-        other: "ju keni %{count} postime të palexuara në këtë temë"
-      unread_posts:
-        one: "ju keni %{count} postim të vjetër të palexuar në këtë temë"
-        other: "ju keni %{count} postime të vjetra të palexuara në këtë temë"
-      new_posts:
-        one: "ka %{count} postim të ri në këtë temë që nga hera e fundit që ishit këtu"
-        other: "ka %{count} postime të reja në këtë temë që nga hera e fundit që ishit këtu"
       likes:
         one: "ka %{count} pëlqim në këtë temë"
         other: "ka %{count} pëlqime në këtë temë"

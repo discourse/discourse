@@ -2682,6 +2682,8 @@ nl:
     sender_post_deleted: "bericht is verwijderd"
     sender_message_to_invalid: "ontvanger heeft een ongeldig e-mailadres"
     sender_topic_deleted: "topic is verwijderd"
+    group_smtp_post_deleted: "bericht is verwijderd"
+    group_smtp_topic_deleted: "topic is verwijderd"
   color_schemes:
     base_theme_name: "Basis"
     light: "Licht"

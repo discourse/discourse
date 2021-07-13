@@ -480,6 +480,8 @@ et:
         remove_user_as_group_owner: "Eemalda omanik"
     groups:
       member_added: "Lisatud"
+      add_members:
+        usernames_placeholder: "kasutajanimed"
       requests:
         reason: "Põhjus"
         accepted: "aktsepteeritud"
@@ -850,11 +852,9 @@ et:
         sent: "Saadetud"
         archive: "Arhiiv"
         groups: "Minu grupid"
-        bulk_select: "Vali sõnumid"
         move_to_inbox: "Liiguta sisendkausta"
         move_to_archive: "Arhiiv"
         failed_to_move: "Valitud sõnumite teisaldamine ebaõnnestus (võrguühendus võib olla häiritud)"
-        select_all: "Vali kõik"
         tags: "Sildid"
       preferences_nav:
         account: "Konto"
@@ -1456,13 +1456,6 @@ et:
       titles:
         watching_first_post: "uus teema"
     upload_selector:
-      title: "Lisa pilt"
-      title_with_attachments: "Lisa pilt või fail"
-      from_my_computer: "Minu seadmest"
-      from_the_web: "Veebist"
-      remote_tip: "viide pildile"
-      local_tip: "vali pildid oma seadmest"
-      hint_for_supported_browsers: "võid pildi redaktorisse ka pukseerida või kleepida"
       uploading: "Laen üles"
       select_file: "Vali fail"
       default_image_alt_text: pilt
@@ -1646,15 +1639,6 @@ et:
       not_found:
         title: "Teemat ei leitud"
         description: "Vabanda, meil ei õnnestunud seda teemat leida. Võimalik, et moderaator eemaldas selle?"
-      total_unread_posts:
-        one: "Sul on selles teemas %{count} lugemata postitus"
-        other: "Sul on selles teemas %{count} lugemata postitust"
-      unread_posts:
-        one: "Sul on selles teemas %{count} lugemata vana postitus"
-        other: "Sul on selles teemas %{count} lugemata vana postitust"
-      new_posts:
-        one: "selles teemas on %{count} uus postitus Sinu viimasest külastusest"
-        other: "selles teemas on %{count} uut postitust Sinu viimasest külastusest"
       likes:
         one: "selles teemas on %{count} meeldimine"
         other: "selles teemas on %{count} meeldimist"
@@ -1713,8 +1697,6 @@ et:
         title: "Ajastatud avaldamine"
       temp_open:
         title: "Ava ajutiselt"
-      auto_reopen:
-        title: "Loo teema automaatselt"
       temp_close:
         title: "Sulge ajutiselt"
       auto_close:

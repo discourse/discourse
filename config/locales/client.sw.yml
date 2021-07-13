@@ -382,6 +382,8 @@ sw:
         make_user_group_owner: "Mfanye awe mmiliki"
         remove_user_as_group_owner: "Ondoa mmiliki"
     groups:
+      add_members:
+        usernames_placeholder: "majina la watumiaji"
       requests:
         reason: "Sababu"
         accepted: "imeruhusiwa"
@@ -700,11 +702,9 @@ sw:
         sent: "Imetumwa"
         archive: "Hifadhi"
         groups: "Makundi yangu"
-        bulk_select: "Chagua jumbe"
         move_to_inbox: "Hamishia kwenye kisanduku-pokezi"
         move_to_archive: "Hifadhi"
         failed_to_move: "Uhamishaji wa ujumbe uliochaguliwa umeshindikana (laba hauna mtandao wa intaneti uko chini)"
-        select_all: "Chagua vyote"
         tags: "Lebo"
       preferences_nav:
         account: "Akaunti"
@@ -1332,13 +1332,6 @@ sw:
         watching_first_post: "mada mpya"
         post_approved: "Chapisho Limepitishwa"
     upload_selector:
-      title: "Ongeza picha au faili"
-      title_with_attachments: "Ongeza picha au faili"
-      from_my_computer: "Kutoka kwenye kifaa changu"
-      from_the_web: "Kutoka kwenye mtandao"
-      remote_tip: "kiungo cha picha"
-      local_tip: "chagua picha kwenye kifaa chako"
-      hint_for_supported_browsers: "Unaweza pia kuvuta na kudondosha kwenye kihariri"
       uploading: "Inapakiwa"
       select_file: "Chagua Faili"
       default_image_alt_text: picha
@@ -1508,15 +1501,6 @@ sw:
       not_found:
         title: "Mada haijapatikana"
         description: "Samahani, tumeshindwa kupata hiyo mada. Labda iliondolewa na msimamizi?"
-      total_unread_posts:
-        one: "Una chapisho %{count} halijasomwa kwenye mada hii"
-        other: "Una machapisho %{count} hayajasomwa kwenye mada hii"
-      unread_posts:
-        one: "Una chapisho %{count} kwenye mada hii ambayo halijasomwa"
-        other: "Una machapisho %{count} kwenye mada hii ambayo hayajasomwa"
-      new_posts:
-        one: "Kuna chapisho jipya %{count} kwenye mada hii tangu mara ya mwisho usome"
-        other: "Kuna mchapisho mapya %{count} kwenye mada hii tangu mara ya mwisho usome"
       likes:
         one: "Kuna pendwa %{count} kwenye mada hii"
         other: "Kuna pendwa %{count} kwenye mada hii"
@@ -1555,8 +1539,6 @@ sw:
         title: "Panga Uchapishaji"
       temp_open:
         title: "Fungua kwa Mda Mfupi"
-      auto_reopen:
-        title: "Fungua Mada otomatikali"
       temp_close:
         title: "Funga kwa Sasa"
       auto_close:

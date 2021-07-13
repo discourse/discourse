@@ -2228,9 +2228,9 @@ tr_TR:
       title: "Hoşgeldiniz GS1 Kullanıcı"
       subject_template: "Bizimle zaman geçirdiğiniz için teşekkürler"
       text_body_template: |
-        Selam. Okumakla meşgul olduğunuzu görüyoruz, bu harika bir şey, bu yüzden sizi bir [güven düzeyi!] Yükselttik (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+        Merhaba. Forumda yazılanları okuduğunu görüyoruz, bu harika bir şey. Bu yüzden seni bir [güven seviyesi](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) yükselttik.
 
-         Bizimle zaman geçirdiğiniz için gerçekten mutluyuz ve sizinle ilgili daha fazla bilgi edinmek isteriz. [Profilinizi doldurun] (%{base_url} / my / preferences / profil) için bir dakikanızı ayırın veya [yeni bir konu başlatmak] (%{base_url} / kategorileri) için çekinmeyin.
+        Bizimle zaman geçirdiğin için gerçekten mutluyuz ve seninle ilgili daha fazla bilgi edinmek isteriz. [Profilini](%{base_url}/my/preferences/profile) güncellemek için bir dakikanı ayır veya [yeni bir konu başlat](%{base_url}/categories).
     welcome_staff:
       title: "Hoşgeldiniz Yetkili"
       subject_template: "Tebrikler, size %{role} statüsü verildi!"
@@ -3027,6 +3027,9 @@ tr_TR:
     sender_body_blank: "içerik boş"
     sender_post_deleted: "gönderi silindi"
     sender_message_to_invalid: "alıcının e-posta adresi geçersiz"
+    group_smtp_post_deleted: "gönderi silindi"
+    group_smtp_topic_deleted: "konu silindi"
+    group_smtp_disabled_for_group: "grup için smtp devre dışı bırakıldı"
   color_schemes:
     base_theme_name: "Baz"
     light: "Aydınlık"
