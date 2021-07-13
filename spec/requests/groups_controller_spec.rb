@@ -713,7 +713,8 @@ describe GroupsController do
               name: 'testing',
               tracking_category_ids: [category.id],
               tracking_tags: [tag.name]
-            }
+            },
+            update_existing_users: false
           }
         end.to change { GroupHistory.count }.by(13)
 
@@ -782,7 +783,8 @@ describe GroupsController do
             members_visibility_level: 3,
             tracking_category_ids: [category.id],
             tracking_tags: [tag.name]
-          }
+          },
+          update_existing_users: false
         }
 
         expect(response.status).to eq(200)
@@ -851,6 +853,75 @@ describe GroupsController do
         expect(event[:event_name]).to eq(:group_updated)
         expect(event[:params].first).to eq(group)
       end
+
+      context "user default notifications" do
+        it "should update default notification preference for existing users" do
+          user1 = Fabricate(:user)
+          user2 = Fabricate(:user)
+          CategoryUser.create!(user: user1, category: category, notification_level: 4)
+          TagUser.create!(user: user1, tag: tag, notification_level: 4)
+          TagUser.create!(user: user2, tag: tag, notification_level: 4)
+          group.add(user1)
+          group.add(user2)
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              flair_color: 'BBB',
+              name: 'testing',
+              incoming_email: 'test@mail.org',
+              primary_group: true,
+              automatic_membership_email_domains: 'test.org',
+              grant_trust_level: 2,
+              visibility_level: 1,
+              members_visibility_level: 3,
+              tracking_category_ids: [category.id],
+              tracking_tags: [tag.name]
+            }
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_count"]).to eq(group.group_users.count - 1)
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              flair_color: 'BBB',
+              name: 'testing',
+              incoming_email: 'test@mail.org',
+              primary_group: true,
+              automatic_membership_email_domains: 'test.org',
+              grant_trust_level: 2,
+              visibility_level: 1,
+              members_visibility_level: 3,
+              tracking_category_ids: [category.id],
+              tracking_tags: [tag.name]
+            },
+            update_existing_users: true
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              flair_color: 'BBB',
+              name: 'testing',
+              incoming_email: 'test@mail.org',
+              primary_group: true,
+              automatic_membership_email_domains: 'test.org',
+              grant_trust_level: 2,
+              visibility_level: 1,
+              members_visibility_level: 3,
+              watching_category_ids: [category.id],
+              tracking_tags: [tag.name]
+            },
+            update_existing_users: true
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+          expect(CategoryUser.exists?(user: user2, category: category, notification_level: 3)).to be_truthy
+        end
+      end
     end
 
     context "when user is a site moderator" do
@@ -888,7 +959,8 @@ describe GroupsController do
             members_visibility_level: 3,
             tracking_category_ids: [category.id],
             tracking_tags: [tag.name]
-          }
+          },
+          update_existing_users: false
         }
 
         expect(response.status).to eq(200)

@@ -779,7 +779,7 @@ class GroupsController < ApplicationController
     tags = {}
 
     NotificationLevels.all.each do |key, value|
-      category_ids = params["#{key}_category_ids".to_sym] - ["-1"]
+      category_ids = (params["#{key}_category_ids".to_sym] || []) - ["-1"]
 
       category_ids.each do |category_id|
         category_id = category_id.to_i
@@ -802,7 +802,7 @@ class GroupsController < ApplicationController
         categories[category_id] = metadata
       end
 
-      tag_names = params["#{key}_tags".to_sym] - ["-1"]
+      tag_names = (params["#{key}_tags".to_sym] || []) - ["-1"]
       tag_ids = Tag.where(name: tag_names).pluck(:id)
 
       tag_ids.each do |tag_id|
