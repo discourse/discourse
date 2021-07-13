@@ -2705,7 +2705,7 @@ zh_CN:
             name: "取消置顶书签"
             description: "取消置顶该书签。它将不再显示在您的书签列表的顶部。"
       filtered_replies:
-        viewing_posts_by: "查看 %{post_count} 个帖子"
+        viewing_posts_by: "正在查看此用户的 %{post_count} 个帖子："
         viewing_subset: "某些回复已被收起"
         viewing_summary: "查看此话题的摘要"
         post_number: "%{username}，帖子 #%{post_number}"

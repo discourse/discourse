@@ -289,7 +289,7 @@ zh_CN:
     likes:
       other: "%{count} 个赞"
     last_reply: "最后回复"
-    created: "创建时间"
+    created: "创建日期"
     new_topic: "创建新话题"
   no_mentions_allowed: "抱歉，您无法提及其他用户。"
   too_many_mentions:
