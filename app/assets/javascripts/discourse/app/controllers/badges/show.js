@@ -1,7 +1,7 @@
+import EmberObject, { action } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Badge from "discourse/models/badge";
-import EmberObject from "@ember/object";
 import I18n from "I18n";
 import UserBadge from "discourse/models/user-badge";
 
@@ -50,35 +50,6 @@ export default Controller.extend({
     return this.siteSettings.enable_badges && hasTitleBadges && hasBadge;
   },
 
-  actions: {
-    loadMore() {
-      if (this.loadingMore) {
-        return;
-      }
-      this.set("loadingMore", true);
-
-      const userBadges = this.userBadges;
-
-      UserBadge.findByBadgeId(this.get("model.id"), {
-        offset: userBadges.length,
-        username: this.username,
-      })
-        .then((result) => {
-          userBadges.pushObjects(result);
-          if (userBadges.length === 0) {
-            this.set("noMoreBadges", true);
-          }
-        })
-        .finally(() => {
-          this.set("loadingMore", false);
-        });
-    },
-
-    toggleSetUserTitle() {
-      return this.toggleProperty("hiddenSetTitle");
-    },
-  },
-
   @discourseComputed("noMoreBadges", "grantCount", "userBadges.length")
   canLoadMore(noMoreBadges, grantCount, userBadgeLength) {
     if (noMoreBadges) {
@@ -95,5 +66,38 @@ export default Controller.extend({
   @observes("canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.canLoadMore);
+  },
+
+  @action
+  loadMore() {
+    if (!this.canLoadMore) {
+      return;
+    }
+
+    if (this.loadingMore) {
+      return;
+    }
+    this.set("loadingMore", true);
+
+    const userBadges = this.userBadges;
+
+    UserBadge.findByBadgeId(this.get("model.id"), {
+      offset: userBadges.length,
+      username: this.username,
+    })
+      .then((result) => {
+        userBadges.pushObjects(result);
+        if (userBadges.length === 0) {
+          this.set("noMoreBadges", true);
+        }
+      })
+      .finally(() => {
+        this.set("loadingMore", false);
+      });
+  },
+
+  @action
+  toggleSetUserTitle() {
+    return this.toggleProperty("hiddenSetTitle");
   },
 });
