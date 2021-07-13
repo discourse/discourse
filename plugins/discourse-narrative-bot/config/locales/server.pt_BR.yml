@@ -97,30 +97,30 @@ pt_BR:
         "8": "Boa perspectiva"
         "9": "Sim"
         "10": "Sinais apontam que sim"
-        "11": "Resposta nebulosa, tente novamente"
+        "11": "Resposta confusa, tente novamente"
         "12": "Pergunte novamente depois"
-        "13": "Melhor não falar pra você agora"
+        "13": "Melhor não falar agora"
         "14": "Não é possível prever agora"
         "15": "Concentre-se e pergunte novamente"
         "16": "Não conte com isto"
         "17": "Minha resposta é não"
         "18": "Minhas fontes dizem que não"
-        "19": "Perspectiva não tão boa"
+        "19": "A perspectiva não é tão boa"
         "20": "Muito duvidoso"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
       reset_trigger: "começar"
       skip_trigger: "pular"
-      help_trigger: "mostrar ajuda"
+      help_trigger: "exibir ajuda"
       random_mention:
         reply: |-
-          Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
+          Oi! Para descobrir o que eu posso fazer, diga "@%{discobot_username} %{help_trigger}".
         tracks: |-
-          Eu atualmente sei como fazer as seguintes coisas:
+          Por enquanto, sei fazer isto:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Inicia um tutorial interativo só para você, em uma mensagem pessoal. `{name-of-tutorial}` pode ser um entre: `%{tracks}`.
+          > Inicia um tutorial interativo só para você, em uma mensagem pessoal. "{name-of-tutorial}` pode ser um entre: `%{tracks}".
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -129,36 +129,36 @@ pt_BR:
           %{quote_sample}
 
           `@%{discobot_username}%{magic_8_ball_trigger}`
-          > :crystal_ball: Você pode contar com ele
+          > :crystal_ball: Você pode confiar
       do_not_understand:
         first_response: |-
-          Ei, obrigado pela resposta!
+          Olá, obrigado pela resposta!
 
-          Infelizmente, como um robô mal programado, eu meio que não consigo entender aquela lá. :frowning:
-        track_response: Você pode tentar novamente, ou se quiser pular este passo, diga `%{skip_trigger}`. Ou então, para começar de novo, diga `%{reset_trigger}`.
+          Infelizmente, como um robô mal programado, meio que não consigo entender. :frowning:
+        track_response: Você pode tentar novamente, ou, se quiser pular este passo, diga "%{skip_trigger}". Ou então, para começar de novo, diga "%{reset_trigger}".
         second_response: |-
-          Aaah, desculpa. Mas eu ainda não estou entendendo. :anguished:
+          Aaah, desculpa. Mas ainda não estou entendendo. :anguished:
 
-          Eu sou apenas um robô, mas se você quiser falar com uma pessoal real, veja [nossa página de contato](%{base_path}/about).
+          Eu sou apenas um robô, mas, se você quiser falar com uma pessoal real, acesse [nossa página de contato](%{base_path}/about).
 
-          Enquanto isso, eu vou ficar fora do seu caminho.
+          Enquanto isso, não vou atrapalhar.
     new_user_narrative:
       reset_trigger: "tutorial"
-      title: "Certificado de conclusão de tutorial de novo usuário"
-      cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial de novo usuário"
+      title: "Certificado de conclusão de tutorial de novo(a) usuário(a)"
+      cert_title: "Como forma de reconhecimento por concluir o tutorial de novo(a) usuário(a)"
       hello:
         title: "Saudações!"
         message: |-
-          Obrigado por se juntar a %{title}, e seja bem vindo!
+          Obrigado por participar de %{title}, boas-vindas!
 
-          - Eu sou apenas um robô, mas [nossa amigável staff](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
+          - Eu sou apenas um robô, mas [nossa equipe prestativa](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
 
-          - Por motivos de segurança, limitamos temporariamente o que os novos usuários podem fazer. Você ganhará [novas habilidades](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [emblemas](%{base_uri}/badges)) à medida que o conhecermos.
+          - Por motivos de segurança, limitamos temporariamente o que os(as) novos(as) usuários(as) podem fazer. Você ganhará [novas capacidades](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [badges](%{base_uri}/badges)) à medida que sabemos mais sobre você.
 
-          - Nós acreditamos em [comportamento comunitário civilizado](%{base_uri}/guidelines) em todos os momentos.
+          - Acreditamos em [comportamento comunitário saudável](%{base_uri}/guidelines) em todos os momentos.
       onebox:
         instructions: |-
-          Próximo, você pode compartilhar um destes links comigo? Responda com **um link em uma linha por si só**, e ele irá automaticamente expandir para incluir um elegante resumo.
+          Em seguida, você pode compartilhar um destes links comigo? Responda com **um link em apenas uma linha**, e ele irá automaticamente se expandir para incluir um belo resumo.
 
           Para copiar qualquer link, toque e segure em dispositivos móveis, ou clique com o botão direito do mouse:
 
@@ -166,11 +166,11 @@ pt_BR:
           <https://en.wikipedia.org/wiki/Death_by_coconut>
           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
-          Legal! Isto vai funcionar para a maioria dos <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Lembre-se, ele precisa estar em um linha _por si só_, com nada mais na frente, ou atrás.
+          Legal! Isto vai funcionar para a maioria dos <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Lembre-se de que ele precisa estar sozinho em uma linha, com nada mais à frente ou atrás.
         not_found: |-
-          Desculpa, eu não consegui encontrar o link na sua resposta! :cry:
+          Desculpe, não consegui encontrar o link na sua resposta! :cry:
 
-          Você pode tentar adicionar o link abaixo, em sua própria linha, na sua próxima resposta?
+          Você pode tentar adicionar o link abaixo, sozinho em uma linha, na sua próxima resposta?
 
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
@@ -179,9 +179,9 @@ pt_BR:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Se você gostou (e quem não gostaria), vá em frente e aperte o botão :heart: de curtir abaixo da postagem para que eu fique sabendo.
+          Se você tiver gostado (e quem não gostaria), vá em frente e aperte o botão :heart: de curtir abaixo da postagem para que eu fique sabendo.
 
-          Você pode **responder com uma imagem?** Qualquer imagem serve! Arraste e solte, pressione o botão de upload, ou até mesmo copie e cole.
+          Você pode **responder com uma imagem?** Qualquer imagem serve! Arraste e solte, pressione o botão de envio, ou até copie e cole.
         reply: |-
           Imagem bacana – eu pressionei o botão :heart: de curtir para que você saiba o quanto eu gostei dela :heart_eyes:
         like_not_found: |-
@@ -239,9 +239,9 @@ pt_BR:
         instructions: |-
           Se você quiser saber mais, selecione <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> abaixo e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marque esta mensagem pessoal como favorita**. Se você fizer isto, pode haver um :gift: no seu futuro!
         reply: |-
-          Excelente! Agora você pode facilmente encontrar o caminho de volta para nossa conversa privada a qualquer momento, direto da [aba favoritos em seu perfil] (%{bookmark_url}). Basta selecionar sua foto de perfil no canto superior direito &#8599;
+          Excelente! Agora você pode encontrar facilmente o caminho de volta para nossa conversa privada a qualquer momento, direto n [aba favoritos em seu perfil] (%{bookmark_url}). Basta selecionar sua foto de perfil no canto superior à direita &#8599;
         not_found: |-
-          Oh oh, não vejo nenhum favorito neste tópico. Você encontrou o marcador embaixo de cada postagem? Use o mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar ações adicionais, se necessário.
+          Ah não, não vejo nenhum favorito neste tópico. Você encontrou o marcador embaixo de cada postagem? Use o Mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar ações adicionais, se necessário.
       emoji:
         instructions: |-
           Você pode ter me visto usando pequenas imagens em minhas respostas :blue_car::dash: elas são chamadas de [emoji](https://en.wikipedia.org/wiki/Emoji). Você pode **adicionar um emoji** à sua resposta? Qualquer um destes irá funcionar:

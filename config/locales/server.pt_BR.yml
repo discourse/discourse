@@ -3004,11 +3004,11 @@ pt_BR:
     light: "Claro"
     dark: "Escuro"
     neutral: "Neutro"
-    grey_amber: "Âmbar cinza"
+    grey_amber: "Âmbar cinzento"
     shades_of_blue: "Tons de azul"
     latte: "Latte"
     summer: "Verão"
-    dark_rose: "Rosa Escura"
+    dark_rose: "Rosa-escuro"
     default_theme_name: "Padrão"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
@@ -3017,16 +3017,16 @@ pt_BR:
     shades_of_blue_theme_name: "Tons de azul"
     latte_theme_name: "Latte"
     summer_theme_name: "Verão"
-    dark_rose_theme_name: "Rosa Escura"
+    dark_rose_theme_name: "Rosa-escuro"
   edit_this_page: "Editar esta página"
   csv_export:
     boolean_yes: "Sim"
     boolean_no: "Não"
-    rate_limit_error: "Postagens podem ser baixadas somente uma vez por dia, por favor tente novamente amanhã."
+    rate_limit_error: "Postagens podem ser baixadas somente uma vez por dia, tente novamente amanhã."
   static_topic_first_reply: |
     Altere o primeiro post desse tópico para mudar seu conteúdo na página de %{page_name}
   guidelines_topic:
-    title: "Perguntas frequentes/Diretrizes"
+    title: "Perguntas frequentes/diretrizes"
   tos_topic:
     title: "Termos de Serviço"
   privacy_topic:
@@ -3036,28 +3036,28 @@ pt_BR:
 
       ## [Quais informações coletamos?] (# Coletar)
 
-      Coletamos informações de você quando você se registra em nosso site e coletamos dados quando você participa do fórum lendo, escrevendo e avaliando o conteúdo compartilhado aqui.
+      Coletamos informações quando você se cadastra no nosso site e coletamos dados quando você participa do fórum lendo, escrevendo e avaliando o conteúdo compartilhado aqui.
 
-      Ao se registrar em nosso site, você pode ser solicitado a digitar seu nome e endereço de e-mail. Você pode, no entanto, visitar o nosso site sem se registrar. Seu endereço de e-mail será verificado por um e-mail contendo um link exclusivo. Se esse link for visitado, sabemos que você controla o endereço de e-mail.
+      Ao se cadastrar no nosso site, pode ser solicitado que você digite seu nome e endereço de e-mail. É possível, no entanto, acessar sem se cadastrar. Seu endereço de e-mail será verificado com um e-mail contendo um link exclusivo. Se esse link for acessado, saberemos que você controla o endereço de e-mail.
 
-      Quando registrado e postando, nós registramos o endereço IP de onde a postagem se originou. Também podemos reter logs do servidor, que incluem o endereço IP de cada solicitação para o nosso servidor.
+      Ao se cadastrar e postar, registramos o endereço IP de onde a postagem se originou. Também podemos manter registros do servidor, que incluem o endereço IP de cada solicitação para o nosso servidor.
 
       <a name="use"></a>
 
       ## [Para que usamos suas informações?] (# Use)
 
-      Qualquer informação que coletamos de você pode ser usada de uma das seguintes formas:
+      Qualquer informação coletada pode ser usada de uma das seguintes formas:
 
-      * Para personalizar sua experiência & mdash; suas informações nos ajudam a responder melhor às suas necessidades individuais.
-      * Para melhorar nosso site & mdash; nos esforçamos continuamente para melhorar nossas ofertas de sites com base nas informações e comentários que recebemos de você.
-      * Para melhorar o atendimento ao cliente & mdash; suas informações nos ajudam a responder com mais eficácia às suas solicitações de atendimento ao cliente e às necessidades de suporte.
-      * Para enviar emails periódicos & mdash; O endereço de e-mail que você fornece pode ser usado para enviar informações, notificações que você solicita sobre alterações em tópicos ou em resposta ao seu nome de usuário, responder a perguntas e / ou outras solicitações ou perguntas.
+      * Para personalizar sua experiência &mdash; suas informações nos ajudam a atender melhor suas necessidades individuais.
+      * Para melhorar nosso site &mdash; nos esforçamos continuamente para melhorar nossas ofertas de sites com base nas informações e comentários que recebemos de você.
+      * Para melhorar o atendimento ao cliente &mdash; suas informações nos ajudam a responder com mais eficácia às suas solicitações de atendimento ao cliente e a atender necessidades de suporte.
+      * Para enviar e-mails periódicos &mdash; o endereço de e-mail que você informa pode ser usado para enviar informações, notificações solicitadas sobre alterações em tópicos ou respostas vinculadas ao seu nome de usuário(a), responder a perguntas e/ou outras solicitações ou dúvidas.
 
       <a name="protect"></a>
 
-      ## [Como protegemos suas informações?] (# Protect)
+      ## [Como protegemos suas informações?] (#protect)
 
-      Implementamos uma variedade de medidas de segurança para manter a segurança de suas informações pessoais quando você insere, envia ou acessa suas informações pessoais..
+      Implementamos uma variedade de medidas de segurança para manter a segurança de suas informações pessoais quando você as insere, envia ou acessa.
 
       <a name="data-retention"></a>
 
@@ -3065,52 +3065,52 @@ pt_BR:
 
       Faremos um esforço de boa fé para:
 
-      * Manter logs do servidor contendo o endereço IP de todas as solicitações para esse servidor por no máximo 90 dias.
-      * Manter os endereços IP associados aos usuários registrados e suas postagens não mais que 5 anos.
+      * Manter os registros do servidor contendo o endereço IP de todas as solicitações para esse servidor por no máximo 90 dias.
+      * Manter os endereços IP associados aos(às) usuários(as) cadastrados(as) e suas postagens por menos de cinco anos.
 
       <a name="cookies"></a>
 
-      ## [Nós usamos cookies?] (# Cookies)
+      ## [Nós usamos cookies?] (#cookies)
 
-      Sim. Cookies são pequenos arquivos que um site ou seu provedor de serviços transfere para o disco rígido do seu computador através do navegador da Web (se você permitir). Esses cookies permitem que o site reconheça seu navegador e, se você tiver uma conta registrada, associe-a à sua conta registrada.
+      Sim. Cookies são pequenos arquivos que um site ou seu provedor de serviços transfere para o disco rígido do seu computador pelo navegador (se você permitir). Esses cookies permitem que o site reconheça seu navegador e, se você tiver uma conta cadastrada, o associe à sua conta registrada.
 
-      Usamos cookies para entender e salvar suas preferências para futuras visitas e compilar dados agregados sobre o tráfego do site e a interação no site para que possamos oferecer melhores experiências e ferramentas ao site no futuro. Podemos contratar prestadores de serviços terceirizados para nos ajudar a entender melhor os visitantes do nosso site. Esses provedores de serviços não têm permissão para usar as informações coletadas em nosso nome, exceto para nos ajudar a conduzir e melhorar nossos negócios.
+      Usamos cookies para entender e salvar suas preferências para as próximas visitas e compilar os dados agregados sobre tráfego e interação no site para que possamos proporcionar melhores experiências e ferramentas ao site no futuro. Podemos contratar prestadores de serviços terceirizados para nos ajudar a entender melhor os visitantes do nosso site. Esses prestadores de serviços não têm permissão para usar as informações coletadas em nosso nome, exceto para nos ajudar a conduzir e melhorar nossos negócios.
 
       <a name="disclose"></a>
 
-      ## [Nós divulgamos qualquer informação a terceiros?] (# Divulgue)
+      ## [Nós divulgamos qualquer informação a terceiros?] (#divulgue)
 
-      Nós não vendemos, comercializamos ou transferimos de outra forma para terceiros suas informações pessoalmente identificáveis. Isso não inclui terceiros confiáveis ​​que nos auxiliam a operar nosso site, conduzir nossos negócios ou prestar serviços a você, desde que essas partes concordem em manter essas informações confidenciais. Também podemos liberar suas informações quando acreditarmos que a divulgação é apropriada para cumprir a lei, aplicar as políticas do nosso site ou proteger os direitos, propriedade ou segurança da nossa empresa ou de terceiros. No entanto, informações de visitantes não pessoalmente identificáveis ​​podem ser fornecidas a terceiros para fins de marketing, publicidade ou outros usos.
+      Nós não vendemos, comercializamos ou transferimos de outra forma para terceiros suas informações pessoalmente identificáveis. Isso não inclui terceiros confiáveis ​​que nos auxiliam a operar nosso site, conduzir nossos negócios ou prestar serviços a você, desde que as partes concordem em manter essas informações confidenciais. Também podemos liberar suas informações quando acreditarmos que a divulgação é apropriada para cumprir a lei, aplicar as políticas do nosso site ou proteger os direitos, propriedade ou segurança da nossa empresa ou de terceiros. No entanto, informações de visitantes não pessoalmente identificáveis ​​podem ser fornecidas a terceiros para fins de marketing, publicidade ou outros usos.
 
       <a name="third-party"></a>
 
-      ## [Links de terceiros] (# terceiros)
+      ## [Links de terceiros] (#terceiros)
 
-      Ocasionalmente, a nosso critério, podemos incluir ou oferecer produtos ou serviços de terceiros em nosso site. Esses sites de terceiros possuem políticas de privacidade separadas e independentes. Portanto, não temos responsabilidade nem obrigação pelo conteúdo e atividades desses sites vinculados. No entanto, procuramos proteger a integridade do nosso site e agradecemos qualquer feedback sobre esses sites.
+      Ocasionalmente, a nosso critério, podemos incluir ou oferecer produtos ou serviços de terceiros em nosso site. Esses sites de terceiros têm políticas de privacidade separadas e independentes. Portanto, não temos responsabilidade nem obrigação em relação ao conteúdo e atividades desses sites vinculados. No entanto, procuramos proteger a integridade do nosso site e agradecemos qualquer comentário sobre esses sites.
 
       <a name="coppa"></a>
 
-      ## [Cumprimento da Lei de Proteção à Privacidade Online das Crianças] (#coppa)
+      ## [Cumprimento da Lei de Proteção à Privacidade On-line das Crianças] (#coppa)
 
-      Nosso site, produtos e serviços são direcionados para pessoas com pelo menos 13 anos de idade ou mais. Se este servidor estiver nos EUA e você tiver menos de 13 anos, de acordo com os requisitos da COPPA (https://en.wikipedia.org/wiki/Children_Online_Privacy_Privection_Act), não use esse site.
+      Nosso site, produtos e serviços são direcionados para pessoas com pelo menos 13 anos de idade. Se este servidor estiver nos EUA e você tiver menos de 13 anos, de acordo com os requisitos da COPPA (https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act), não use este site.
 
       <a name="online"></a>
 
-      ## [Política de Privacidade Online Apenas] (#online)
+      ## [Apenas Política de Privacidade On-line] (#online)
 
-      Esta política de privacidade on-line se aplica somente a informações coletadas por meio de nosso site e não a informações coletadas off-line.
+      Esta política de privacidade on-line se aplica somente a informações coletadas pelo nosso site e não a informações coletadas off-line.
 
       <a name="consent"></a>
 
       ## [Seu consentimento] (#consentimento)
 
-      Ao utilizar o nosso site, você concorda com a política de privacidade do nosso site..
+      Ao utilizar o nosso site, você concorda com a nossa política de privacidade.
 
       <a name="changes"></a>
 
       ## [Alterações à nossa Política de Privacidade] (#alterações)
 
-      Se decidirmos alterar nossa política de privacidade, publicaremos essas alterações nesta página.
+      Se decidirmos alterar nossa política de privacidade, elas serão publicadas nesta página.
 
       Este documento é CC-BY-SA. Última atualização em 31 de maio de 2013.
   badges:
@@ -3118,10 +3118,10 @@ pt_BR:
       errors:
         invalid_csv: Encontramos um erro na linha %{line_number}. Confirme se o CSV possui um e-mail por linha.
     editor:
-      name: Editor
+      name: Editor(a)
       description: Primeira edição de postagem
       long_description: |
-        Esse emblema é concedido na primeira vez que você edita uma de suas postagens. Embora você não possa editar suas postagens depois de muito tempo, a edição é incentivada. Você pode melhorar a formatação, corrigir pequenos erros ou adicionar alguma coisa que tenha esquecido quando postou originalmente. Edite para tornar suas postagens ainda melhores!
+        Este emblema é concedido na primeira vez que você edita uma de suas postagens. Embora não possa editar suas postagens depois de muito tempo, incentivamos a edição. Você pode melhorar a formatação, corrigir pequenos erros ou adicionar alguma coisa que tenha esquecido quando postou pela primeira vez. Faça edições para tornar suas postagens ainda melhores!
     wiki_editor:
       name: Editor de Wiki
       description: Primeira edição de wiki
@@ -3129,16 +3129,16 @@ pt_BR:
         Este emblema é concedido na primeira vez que você edita uma postagem wiki.
     basic_user:
       name: Básico
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> todas as funções essenciais da comunidade
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> uso de todas as funções essenciais da comunidade
       long_description: |
         Este emblema é concedido quando você atinge o nível de confiança 1. Obrigado por acompanhar o fórum e ler alguns tópicos para aprender o que é a nossa comunidade. As restrições de novo(a) usuário(a) foram removidas. Você recebeu todos os recursos essenciais, como mensagens pessoais, sinalizadores, edição de wiki e capacidade de postar várias imagens e links.
     member:
       name: Membro
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> convites, mensagens de grupo, mais curtidas
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> uso de convites, mensagens de grupo, mais curtidas
       long_description: |
-        Este emblema é concedido quando você atinge o nível de confiança 2. Obrigado por participar durante semanas para se juntar à nossa comunidade completamente. Agora você pode enviar convites a partir de sua página de usuário ou tópicos individuais, criar mensagens pessoais de grupo e ter mais curtidas por dia.
+        Este emblema é concedido quando você atinge o nível de confiança 2. Obrigado por participar durante semanas para se juntar à nossa comunidade. Agora você pode enviar convites pela sua página de usuário(a) ou tópicos individuais, criar mensagens pessoais de grupo e ter mais curtidas por dia.
     regular:
-      name: Habitual
+      name: Regular
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido(s)</a> recategorizar, renomear, links seguidos, wiki, mais curtidas
       long_description: |
         Este emblema é concedido quando você atinge o nível de confiança 3. Obrigado por ser uma parte constante de nossa comunidade há meses. Agora você é um dos leitores(as) mais ativos(as) e um(a) colaborador(a) confiável que torna a nossa comunidade excelente. Já é possível recategorizar e renomear tópicos, utilizar os sinalizadores de spam mais eficientes, acessar uma área de descanso privada e também aproveitar muito mais curtidas por dia.
@@ -3151,29 +3151,29 @@ pt_BR:
       name: Boas-vindas
       description: Recebeu uma curtida
       long_description: |
-        Este emblema é concedido quando você recebe sua primeira curtida numa postagem. Parabéns, você postou algo que sua comunidade achou interessante, legal ou útil!.
+        Este emblema é concedido quando você recebe sua primeira curtida em uma postagem. Parabéns, você postou algo que sua comunidade achou interessante, legal ou útil!
     autobiographer:
       name: Autobiógrafo
       description: Preencheu informações de <a href="%{base_uri}/my/preferences/profile">Perfil</a>
       long_description: |
-        Este emblema é concedido por preencher <a href="%{base_uri}/my/preferences/profile">seu perfil de usuário</a> e selecionar uma foto de perfil. Permitir que a comunidade saiba um pouco mais sobre quem você é e sobre o que você está interessado contribui para uma comunidade melhor e mais conectada. Junte-se a nós!
+        Este emblema é concedido por preencher <a href="%{base_uri}/my/preferences/profile">seu perfil de usuário(a)</a> e selecionar uma foto de perfil. Permitir que saibam um pouco mais sobre quem você é e sobre os seus interesses contribui para uma comunidade melhor e mais conectada. Junte-se a nós!
     anniversary:
       name: Aniversário
       description: Membro ativo por um ano, postou ao menos uma vez
       long_description: |
-        Este emblema é concedido quando você é membro por um ano com pelo menos uma postagem nesse ano. Obrigado por ficar por aqui e contribuir com a nossa comunidade. Nós não poderíamos fazer isso sem você.
+        Este emblema é concedido quando você é membro por um ano com pelo menos uma postagem neste ano. Obrigado por ficar e contribuir para a nossa comunidade. Nosso trabalho não seria possível sem você.
     nice_post:
-      name: Resposta Interessante
-      description: Recebeu 10 curtidas em uma resposta
+      name: Resposta interessante
+      description: Recebeu dez curtidas em uma resposta
       long_description: |
-        Esse emblema é concedido quando sua resposta recebe 10 curtidas. Sua resposta causou uma boa impressão na comunidade e ajudou a levar a conversa adiante.
+        Este emblema é concedido quando sua resposta recebe dez curtidas. Sua resposta causou uma boa impressão na comunidade e ajudou a levar a conversa adiante.
     good_post:
-      name: Boa Resposta
+      name: Resposta boa
       description: Recebeu 25 curtidas em uma resposta
       long_description: |
-        Esse emblema é concedido quando sua resposta recebe 25 curtidas. Sua resposta foi excepcional e tornou a conversa muito mais interessante.
+        Este emblema é concedido quando sua resposta recebe 25 curtidas. Sua resposta foi excepcional e tornou a conversa muito mais interessante.
     great_post:
-      name: Excelente Resposta
+      name: Resposta excelente
       description: Recebeu 50 curtidas em uma resposta
       long_description: |
         Este emblema é concedido quando sua resposta recebe 50 curtidas. Uau! Sua resposta foi inspiradora, fascinante, hilária ou perspicaz, e a comunidade adorou!
@@ -3278,7 +3278,7 @@ pt_BR:
       long_description: |
         Este emblema é concedido quando você recebe ao menos uma curtida em 20 postagens diferentes. A comunidade está gostando das suas contribuições para as conversas!
     respected:
-      name: Respeitado
+      name: Respeitado(a)
       description: Recebeu 2 curtidas em 100 postagens
       long_description: |
         Este emblema é concedido quando você recebe ao menos duas curtidas em 100 postagens diferentes. A comunidade está desenvolvendo respeito por suas várias contribuições e conversas aqui.
@@ -3433,15 +3433,15 @@ pt_BR:
             placeholder: "Melhor comunidade de todos os tempos"
       introduction:
         title: "Introdução"
-        disabled: "<p>Não encontramos nenhum tópico com o título “%{topic_title}”.</p> <ul> <li>Se você alterou o título, edite aquele tópico para modificar o texto introdutório do seu site.</li> <li>Se você tiver excluído este tópico, crie outro tópico com “%{topic_title}” como título. O conteúdo da primeira postagem é o texto introdutório do seu site.</li> </ul>"
+        disabled: "<p>Não encontramos nenhum tópico com o título de “%{topic_title}”.</p> <ul> <li>Se você tiver alterado o título, edite o tópico para modificar o texto introdutório do seu site.</li> <li>Se tiver excluído o tópico, crie outro com o título de “%{topic_title}”. O conteúdo da primeira postagem é o texto introdutório do seu site.</li> </ul>"
         fields:
           welcome:
             label: "Tópico de boas-vindas"
-            description: "<p>Como você descreveria sua comunidade para um estranho em um elevador em cerca de 1 minuto?</p> <ul> <li>Para quem são essas discussões?</li> <li>O que posso encontrar aqui?</li> <li>Por que eu deveria visitar?</li> </ul> <p>Seu tópico de boas vindas é a primeira coisa que os recém-chegados vão ler. Pense nele como um \"argumento de elevador\" ou \"declaração de missão\" de <b>um parágrafo</b>.</p>"
+            description: "<p>Como você descreveria sua comunidade para um(a) estranho(a) em um elevador durante cerca de 1 minuto?</p> <ul> <li>Para quem são essas discussões?</li> <li>O que posso encontrar aqui?</li> <li>Por que eu deveria acessar?</li> </ul> <p>Seu tópico de boas-vindas é a primeira coisa que os(as) recém-chegados(as) vão ler. Pense nele como um \"argumento de elevador\" ou \"declaração de missão\" de <b>um parágrafo</b>.</p>"
             one_paragraph: "Reduza sua mensagem de boas-vindas para um parágrafo."
       privacy:
         title: "Acesso"
-        description: "<p>A sua comunidade é aberta a todos ou é restrita por associação, convite ou aprovação? Se preferir, você pode configurar as coisas de forma privada e depois mudar para o público mais tarde.</p>"
+        description: "<p>A sua comunidade é aberta a todos ou é restrita por associação, convite ou aprovação? Se preferir, você pode configurar as coisas de forma privada e depois torná-la pública mais tarde.</p>"
         fields:
           privacy:
             choices:
@@ -3450,12 +3450,12 @@ pt_BR:
                 description: "Qualquer um(a) pode acessar esta comunidade"
               restricted:
                 label: "Privado(a)"
-                description: "Somente usuários logados podem acessar esta comunidade"
+                description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
           privacy_options:
-            description: "Como novos usuários se cadastram para uma conta?"
+            description: "Como novos(as) usuários(as) criam uma conta?"
             choices:
               open:
-                label: "Usuários podem se cadastrar por conta própria."
+                label: "Os usuários(as) podem criar uma conta por conta própria."
               invite_only:
                 label: "Usuários precisam ser convidados por usuários confiáveis ou pela staff antes de poderem se cadastrar."
               must_approve:
