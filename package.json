@@ -13,6 +13,7 @@
     "@uppy/aws-s3": "^1.7.12",
     "@uppy/aws-s3-multipart": "^1.8.18",
     "@uppy/core": "^1.19.2",
+    "@uppy/drop-target": "^0.2.4",
     "@uppy/xhr-upload": "^1.7.5",
     "ace-builds": "1.4.12",
     "blueimp-file-upload": "10.13.0",

@@ -267,6 +267,10 @@ basic:
     client: true
     default: true
     hidden: true
+  enable_experimental_image_uploader:
+    client: true
+    default: false
+    hidden: true
   default_theme_id:
     default: -1
     hidden: true

@@ -9,3 +9,4 @@ Uppy.Plugin = Uppy.Core.Plugin
 Uppy.XHRUpload = require('@uppy/xhr-upload')
 Uppy.AwsS3 = require('@uppy/aws-s3')
 Uppy.AwsS3Multipart = require('@uppy/aws-s3-multipart')
+Uppy.DropTarget = require('@uppy/drop-target')

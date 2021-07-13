@@ -500,7 +500,7 @@ var MultipartUploader = /*#__PURE__*/function () {
 }();
 
 module.exports = MultipartUploader;
-},{"@uppy/utils/lib/AbortController":20,"@uppy/utils/lib/delay":26}],3:[function(require,module,exports){
+},{"@uppy/utils/lib/AbortController":21,"@uppy/utils/lib/delay":27}],3:[function(require,module,exports){
 var _class, _temp;
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -1078,7 +1078,7 @@ module.exports = (_temp = _class = /*#__PURE__*/function (_Plugin) {
 
   return AwsS3Multipart;
 }(Plugin), _class.VERSION = "1.8.18", _temp);
-},{"./MultipartUploader":2,"@uppy/companion-client":12,"@uppy/core":15,"@uppy/utils/lib/EventTracker":21,"@uppy/utils/lib/RateLimitedQueue":24,"@uppy/utils/lib/emitSocketProgress":27,"@uppy/utils/lib/getSocketHost":34}],4:[function(require,module,exports){
+},{"./MultipartUploader":2,"@uppy/companion-client":12,"@uppy/core":15,"@uppy/utils/lib/EventTracker":22,"@uppy/utils/lib/RateLimitedQueue":25,"@uppy/utils/lib/emitSocketProgress":28,"@uppy/utils/lib/getSocketHost":40}],4:[function(require,module,exports){
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 var cuid = require('cuid');
@@ -1492,7 +1492,7 @@ module.exports = /*#__PURE__*/function () {
 
   return MiniXHRUpload;
 }();
-},{"@uppy/companion-client":12,"@uppy/utils/lib/EventTracker":21,"@uppy/utils/lib/NetworkError":22,"@uppy/utils/lib/ProgressTimeout":23,"@uppy/utils/lib/emitSocketProgress":27,"@uppy/utils/lib/getSocketHost":34,"@uppy/utils/lib/isNetworkError":38,"cuid":43}],5:[function(require,module,exports){
+},{"@uppy/companion-client":12,"@uppy/utils/lib/EventTracker":22,"@uppy/utils/lib/NetworkError":23,"@uppy/utils/lib/ProgressTimeout":24,"@uppy/utils/lib/emitSocketProgress":28,"@uppy/utils/lib/getSocketHost":40,"@uppy/utils/lib/isNetworkError":44,"cuid":50}],5:[function(require,module,exports){
 var _class, _temp;
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -1829,7 +1829,7 @@ module.exports = (_temp = _class = /*#__PURE__*/function (_Plugin) {
 
   return AwsS3;
 }(Plugin), _class.VERSION = "1.7.12", _temp);
-},{"./MiniXHRUpload":4,"./isXml":6,"@uppy/companion-client":12,"@uppy/core":15,"@uppy/utils/lib/RateLimitedQueue":24,"@uppy/utils/lib/Translator":25,"@uppy/utils/lib/hasProperty":36,"@uppy/utils/lib/settle":40,"qs-stringify":51,"url-parse":54}],6:[function(require,module,exports){
+},{"./MiniXHRUpload":4,"./isXml":6,"@uppy/companion-client":12,"@uppy/core":15,"@uppy/utils/lib/RateLimitedQueue":25,"@uppy/utils/lib/Translator":26,"@uppy/utils/lib/hasProperty":42,"@uppy/utils/lib/settle":46,"qs-stringify":58,"url-parse":61}],6:[function(require,module,exports){
 /**
  * Remove parameters like `charset=utf-8` from the end of a mime type string.
  *
@@ -2069,7 +2069,7 @@ module.exports = /*#__PURE__*/function (_RequestClient) {
 
   return Provider;
 }(RequestClient);
-},{"./RequestClient":9,"./tokenStorage":13,"qs-stringify":51,"url-parse":54}],9:[function(require,module,exports){
+},{"./RequestClient":9,"./tokenStorage":13,"qs-stringify":58,"url-parse":61}],9:[function(require,module,exports){
 'use strict';
 
 var _class, _temp;
@@ -2289,7 +2289,7 @@ module.exports = (_temp = _class = /*#__PURE__*/function () {
 
   return RequestClient;
 }(), _class.VERSION = "1.10.2", _temp);
-},{"./AuthError":7,"@uppy/utils/lib/fetchWithNetworkError":28}],10:[function(require,module,exports){
+},{"./AuthError":7,"@uppy/utils/lib/fetchWithNetworkError":29}],10:[function(require,module,exports){
 'use strict';
 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
@@ -2424,7 +2424,7 @@ module.exports = /*#__PURE__*/function () {
 
   return UppySocket;
 }();
-},{"namespace-emitter":49}],12:[function(require,module,exports){
+},{"namespace-emitter":56}],12:[function(require,module,exports){
 'use strict';
 /**
  * Manages communications with Companion
@@ -2669,7 +2669,7 @@ module.exports = /*#__PURE__*/function () {
 
   return Plugin;
 }();
-},{"@uppy/utils/lib/findDOMElement":29,"preact":50}],15:[function(require,module,exports){
+},{"@uppy/utils/lib/findDOMElement":30,"preact":57}],15:[function(require,module,exports){
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -4592,7 +4592,7 @@ module.exports = function core(opts) {
 module.exports.Uppy = Uppy;
 module.exports.Plugin = Plugin;
 module.exports.debugLogger = debugLogger;
-},{"../package.json":18,"./Plugin":14,"./loggers":16,"./supportsUploadProgress":17,"@transloadit/prettier-bytes":1,"@uppy/store-default":19,"@uppy/utils/lib/Translator":25,"@uppy/utils/lib/findIndex":30,"@uppy/utils/lib/generateFileID":31,"@uppy/utils/lib/getFileNameAndExtension":32,"@uppy/utils/lib/getFileType":33,"cuid":43,"lodash.throttle":47,"mime-match":48,"namespace-emitter":49}],16:[function(require,module,exports){
+},{"../package.json":18,"./Plugin":14,"./loggers":16,"./supportsUploadProgress":17,"@transloadit/prettier-bytes":1,"@uppy/store-default":20,"@uppy/utils/lib/Translator":26,"@uppy/utils/lib/findIndex":31,"@uppy/utils/lib/generateFileID":32,"@uppy/utils/lib/getFileNameAndExtension":38,"@uppy/utils/lib/getFileType":39,"cuid":50,"lodash.throttle":54,"mime-match":55,"namespace-emitter":56}],16:[function(require,module,exports){
 var getTimeStamp = require('@uppy/utils/lib/getTimeStamp'); // Swallow all logs, except errors.
 // default if logger is not set or debug: false
 
@@ -4646,7 +4646,7 @@ module.exports = {
   justErrorsLogger: justErrorsLogger,
   debugLogger: debugLogger
 };
-},{"@uppy/utils/lib/getTimeStamp":35}],17:[function(require,module,exports){
+},{"@uppy/utils/lib/getTimeStamp":41}],17:[function(require,module,exports){
 // Edge 15.x does not fire 'progress' events on uploads.
 // See https://github.com/transloadit/uppy/issues/945
 // And https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/12224510/
@@ -4720,6 +4720,171 @@ module.exports={
 }
 
 },{}],19:[function(require,module,exports){
+var _class, _temp;
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var _require = require('@uppy/core'),
+    Plugin = _require.Plugin;
+
+var getDroppedFiles = require('@uppy/utils/lib/getDroppedFiles');
+
+var toArray = require('@uppy/utils/lib/toArray');
+/**
+ * Drop Target plugin
+ *
+ */
+
+
+module.exports = (_temp = _class = /*#__PURE__*/function (_Plugin) {
+  _inheritsLoose(DropTarget, _Plugin);
+
+  function DropTarget(uppy, opts) {
+    var _this;
+
+    _this = _Plugin.call(this, uppy, opts) || this;
+
+    _this.addFiles = function (files) {
+      var descriptors = files.map(function (file) {
+        return {
+          source: _this.id,
+          name: file.name,
+          type: file.type,
+          data: file,
+          meta: {
+            // path of the file relative to the ancestor directory the user selected.
+            // e.g. 'docs/Old Prague/airbnb.pdf'
+            relativePath: file.relativePath || null
+          }
+        };
+      });
+
+      try {
+        _this.uppy.addFiles(descriptors);
+      } catch (err) {
+        _this.uppy.log(err);
+      }
+    };
+
+    _this.handleDrop = function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      clearTimeout(_this.removeDragOverClassTimeout); // 2. Remove dragover class
+
+      event.currentTarget.classList.remove('uppy-is-drag-over');
+
+      _this.setPluginState({
+        isDraggingOver: false
+      }); // 3. Add all dropped files
+
+
+      _this.uppy.log('[DropTarget] Files were dropped');
+
+      var logDropError = function logDropError(error) {
+        _this.uppy.log(error, 'error');
+      };
+
+      getDroppedFiles(event.dataTransfer, {
+        logDropError: logDropError
+      }).then(function (files) {
+        return _this.addFiles(files);
+      });
+    };
+
+    _this.handleDragOver = function (event) {
+      event.preventDefault();
+      event.stopPropagation(); // 1. Add a small (+) icon on drop
+      // (and prevent browsers from interpreting this as files being _moved_ into the browser,
+      // https://github.com/transloadit/uppy/issues/1978)
+
+      event.dataTransfer.dropEffect = 'copy';
+      clearTimeout(_this.removeDragOverClassTimeout);
+      event.currentTarget.classList.add('uppy-is-drag-over');
+
+      _this.setPluginState({
+        isDraggingOver: true
+      });
+    };
+
+    _this.handleDragLeave = function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var currentTarget = event.currentTarget;
+      clearTimeout(_this.removeDragOverClassTimeout); // Timeout against flickering, this solution is taken from drag-drop library.
+      // Solution with 'pointer-events: none' didn't work across browsers.
+
+      _this.removeDragOverClassTimeout = setTimeout(function () {
+        currentTarget.classList.remove('uppy-is-drag-over');
+
+        _this.setPluginState({
+          isDraggingOver: false
+        });
+      }, 50);
+    };
+
+    _this.addListeners = function () {
+      var target = _this.opts.target;
+
+      if (target instanceof Element) {
+        _this.nodes = [target];
+      } else if (typeof target === 'string') {
+        _this.nodes = toArray(document.querySelectorAll(target));
+      }
+
+      if (!_this.nodes && !_this.nodes.length > 0) {
+        throw new Error("\"" + target + "\" does not match any HTML elements");
+      }
+
+      _this.nodes.forEach(function (node) {
+        node.addEventListener('dragover', _this.handleDragOver, false);
+        node.addEventListener('dragleave', _this.handleDragLeave, false);
+        node.addEventListener('drop', _this.handleDrop, false);
+      });
+    };
+
+    _this.removeListeners = function () {
+      if (_this.nodes) {
+        _this.nodes.forEach(function (node) {
+          node.removeEventListener('dragover', _this.handleDragOver, false);
+          node.removeEventListener('dragleave', _this.handleDragLeave, false);
+          node.removeEventListener('drop', _this.handleDrop, false);
+        });
+      }
+    };
+
+    _this.type = 'acquirer';
+    _this.id = _this.opts.id || 'DropTarget';
+    _this.title = 'Drop Target'; // Default options
+
+    var defaultOpts = {
+      target: null
+    }; // Merge default options with the ones set by user
+
+    _this.opts = _extends({}, defaultOpts, opts);
+    _this.removeDragOverClassTimeout = null;
+    return _this;
+  }
+
+  var _proto = DropTarget.prototype;
+
+  _proto.install = function install() {
+    this.setPluginState({
+      isDraggingOver: false
+    });
+    this.addListeners();
+  };
+
+  _proto.uninstall = function uninstall() {
+    this.removeListeners();
+  };
+
+  return DropTarget;
+}(Plugin), _class.VERSION = "0.2.4", _temp);
+},{"@uppy/core":15,"@uppy/utils/lib/getDroppedFiles":33,"@uppy/utils/lib/toArray":47}],20:[function(require,module,exports){
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 /**
@@ -4775,7 +4940,7 @@ DefaultStore.VERSION = "1.2.7";
 module.exports = function defaultStore() {
   return new DefaultStore();
 };
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /**
  * Little AbortController proxy module so we can swap out the implementation easily later.
  */
@@ -4801,7 +4966,7 @@ function createAbortError(message) {
 exports.AbortController = AbortController;
 exports.AbortSignal = AbortSignal;
 exports.createAbortError = createAbortError;
-},{"abortcontroller-polyfill/dist/abortcontroller":42}],21:[function(require,module,exports){
+},{"abortcontroller-polyfill/dist/abortcontroller":49}],22:[function(require,module,exports){
 /**
  * Create a wrapper around an event emitter with a `remove` method to remove
  * all events that were added using the wrapped emitter.
@@ -4833,7 +4998,7 @@ module.exports = /*#__PURE__*/function () {
 
   return EventTracker;
 }();
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 
 function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
@@ -4868,7 +5033,7 @@ var NetworkError = /*#__PURE__*/function (_Error) {
 }( /*#__PURE__*/_wrapNativeSuper(Error));
 
 module.exports = NetworkError;
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /**
  * Helper to abort upload requests if there has not been any progress for `timeout` ms.
  * Create an instance using `timer = new ProgressTimeout(10000, onTimeout)`
@@ -4911,7 +5076,7 @@ var ProgressTimeout = /*#__PURE__*/function () {
 }();
 
 module.exports = ProgressTimeout;
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var findIndex = require('./findIndex');
 
 function createCancelError() {
@@ -5093,7 +5258,7 @@ module.exports = /*#__PURE__*/function () {
 
   return RateLimitedQueue;
 }();
-},{"./findIndex":30}],25:[function(require,module,exports){
+},{"./findIndex":31}],26:[function(require,module,exports){
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 var has = require('./hasProperty');
@@ -5259,7 +5424,7 @@ module.exports = /*#__PURE__*/function () {
 
   return Translator;
 }();
-},{"./hasProperty":36}],26:[function(require,module,exports){
+},{"./hasProperty":42}],27:[function(require,module,exports){
 var _require = require('./AbortController'),
     createAbortError = _require.createAbortError;
 /**
@@ -5299,7 +5464,7 @@ module.exports = function delay(ms, opts) {
     }
   });
 };
-},{"./AbortController":20}],27:[function(require,module,exports){
+},{"./AbortController":21}],28:[function(require,module,exports){
 var throttle = require('lodash.throttle');
 
 function _emitSocketProgress(uploader, progressData, file) {
@@ -5321,7 +5486,7 @@ module.exports = throttle(_emitSocketProgress, 300, {
   leading: true,
   trailing: true
 });
-},{"lodash.throttle":47}],28:[function(require,module,exports){
+},{"lodash.throttle":54}],29:[function(require,module,exports){
 var NetworkError = require('./NetworkError');
 /**
  * Wrapper around window.fetch that throws a NetworkError when appropriate
@@ -5337,7 +5502,7 @@ module.exports = function fetchWithNetworkError() {
     }
   });
 };
-},{"./NetworkError":22}],29:[function(require,module,exports){
+},{"./NetworkError":23}],30:[function(require,module,exports){
 var isDOMElement = require('./isDOMElement');
 /**
  * Find a DOM element.
@@ -5360,7 +5525,7 @@ module.exports = function findDOMElement(element, context) {
     return element;
   }
 };
-},{"./isDOMElement":37}],30:[function(require,module,exports){
+},{"./isDOMElement":43}],31:[function(require,module,exports){
 /**
  * Array.prototype.findIndex ponyfill for old browsers.
  *
@@ -5375,7 +5540,7 @@ module.exports = function findIndex(array, predicate) {
 
   return -1;
 };
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /**
  * Takes a file object and turns it into fileID, by converting file.name to lowercase,
  * removing extra characters and adding type, size and lastModified
@@ -5422,7 +5587,147 @@ function encodeFilename(name) {
 function encodeCharacter(character) {
   return character.charCodeAt(0).toString(32);
 }
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
+var webkitGetAsEntryApi = require('./utils/webkitGetAsEntryApi/index');
+
+var fallbackApi = require('./utils/fallbackApi');
+/**
+ * Returns a promise that resolves to the array of dropped files (if a folder is dropped, and browser supports folder parsing - promise resolves to the flat array of all files in all directories).
+ * Each file has .relativePath prop appended to it (e.g. "/docs/Prague/ticket_from_prague_to_ufa.pdf") if browser supports it. Otherwise it's undefined.
+ *
+ * @param {DataTransfer} dataTransfer
+ * @param {Function} logDropError - a function that's called every time some folder or some file error out (e.g. because of the folder name being too long on Windows). Notice that resulting promise will always be resolved anyway.
+ *
+ * @returns {Promise} - Array<File>
+ */
+
+
+module.exports = function getDroppedFiles(dataTransfer, _temp) {
+  var _ref = _temp === void 0 ? {} : _temp,
+      _ref$logDropError = _ref.logDropError,
+      logDropError = _ref$logDropError === void 0 ? function () {} : _ref$logDropError;
+
+  // Get all files from all subdirs. Works (at least) in Chrome, Mozilla, and Safari
+  if (dataTransfer.items && dataTransfer.items[0] && 'webkitGetAsEntry' in dataTransfer.items[0]) {
+    return webkitGetAsEntryApi(dataTransfer, logDropError); // Otherwise just return all first-order files
+  }
+
+  return fallbackApi(dataTransfer);
+};
+},{"./utils/fallbackApi":34,"./utils/webkitGetAsEntryApi/index":37}],34:[function(require,module,exports){
+var toArray = require('../../toArray'); // .files fallback, should be implemented in any browser
+
+
+module.exports = function fallbackApi(dataTransfer) {
+  var files = toArray(dataTransfer.files);
+  return Promise.resolve(files);
+};
+},{"../../toArray":47}],35:[function(require,module,exports){
+/**
+ * Recursive function, calls the original callback() when the directory is entirely parsed.
+ *
+ * @param {FileSystemDirectoryReader} directoryReader
+ * @param {Array} oldEntries
+ * @param {Function} logDropError
+ * @param {Function} callback - called with ([ all files and directories in that directoryReader ])
+ */
+module.exports = function getFilesAndDirectoriesFromDirectory(directoryReader, oldEntries, logDropError, _ref) {
+  var onSuccess = _ref.onSuccess;
+  directoryReader.readEntries(function (entries) {
+    var newEntries = [].concat(oldEntries, entries); // According to the FileSystem API spec, getFilesAndDirectoriesFromDirectory() must be called until it calls the onSuccess with an empty array.
+
+    if (entries.length) {
+      setTimeout(function () {
+        getFilesAndDirectoriesFromDirectory(directoryReader, newEntries, logDropError, {
+          onSuccess: onSuccess
+        });
+      }, 0); // Done iterating this particular directory
+    } else {
+      onSuccess(newEntries);
+    }
+  }, // Make sure we resolve on error anyway, it's fine if only one directory couldn't be parsed!
+  function (error) {
+    logDropError(error);
+    onSuccess(oldEntries);
+  });
+};
+},{}],36:[function(require,module,exports){
+/**
+ * Get the relative path from the FileEntry#fullPath, because File#webkitRelativePath is always '', at least onDrop.
+ *
+ * @param {FileEntry} fileEntry
+ *
+ * @returns {string|null} - if file is not in a folder - return null (this is to be consistent with .relativePath-s of files selected from My Device). If file is in a folder - return its fullPath, e.g. '/simpsons/hi.jpeg'.
+ */
+module.exports = function getRelativePath(fileEntry) {
+  // fileEntry.fullPath - "/simpsons/hi.jpeg" or undefined (for browsers that don't support it)
+  // fileEntry.name - "hi.jpeg"
+  if (!fileEntry.fullPath || fileEntry.fullPath === "/" + fileEntry.name) {
+    return null;
+  }
+
+  return fileEntry.fullPath;
+};
+},{}],37:[function(require,module,exports){
+var toArray = require('../../../toArray');
+
+var getRelativePath = require('./getRelativePath');
+
+var getFilesAndDirectoriesFromDirectory = require('./getFilesAndDirectoriesFromDirectory');
+
+module.exports = function webkitGetAsEntryApi(dataTransfer, logDropError) {
+  var files = [];
+  var rootPromises = [];
+  /**
+   * Returns a resolved promise, when :files array is enhanced
+   *
+   * @param {(FileSystemFileEntry|FileSystemDirectoryEntry)} entry
+   * @returns {Promise} - empty promise that resolves when :files is enhanced with a file
+   */
+
+  var createPromiseToAddFileOrParseDirectory = function createPromiseToAddFileOrParseDirectory(entry) {
+    return new Promise(function (resolve) {
+      // This is a base call
+      if (entry.isFile) {
+        // Creates a new File object which can be used to read the file.
+        entry.file(function (file) {
+          file.relativePath = getRelativePath(entry);
+          files.push(file);
+          resolve();
+        }, // Make sure we resolve on error anyway, it's fine if only one file couldn't be read!
+        function (error) {
+          logDropError(error);
+          resolve();
+        }); // This is a recursive call
+      } else if (entry.isDirectory) {
+        var directoryReader = entry.createReader();
+        getFilesAndDirectoriesFromDirectory(directoryReader, [], logDropError, {
+          onSuccess: function onSuccess(entries) {
+            var promises = entries.map(function (entry) {
+              return createPromiseToAddFileOrParseDirectory(entry);
+            });
+            Promise.all(promises).then(function () {
+              return resolve();
+            });
+          }
+        });
+      }
+    });
+  }; // For each dropped item, - make sure it's a file/directory, and start deepening in!
+
+
+  toArray(dataTransfer.items).forEach(function (item) {
+    var entry = item.webkitGetAsEntry(); // :entry can be null when we drop the url e.g.
+
+    if (entry) {
+      rootPromises.push(createPromiseToAddFileOrParseDirectory(entry));
+    }
+  });
+  return Promise.all(rootPromises).then(function () {
+    return files;
+  });
+};
+},{"../../../toArray":47,"./getFilesAndDirectoriesFromDirectory":35,"./getRelativePath":36}],38:[function(require,module,exports){
 /**
  * Takes a full filename string and returns an object {name, extension}
  *
@@ -5444,7 +5749,7 @@ module.exports = function getFileNameAndExtension(fullFileName) {
     extension: fullFileName.slice(lastDot + 1)
   };
 };
-},{}],33:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var getFileNameAndExtension = require('./getFileNameAndExtension');
 
 var mimeTypes = require('./mimeTypes');
@@ -5466,7 +5771,7 @@ module.exports = function getFileType(file) {
 
   return 'application/octet-stream';
 };
-},{"./getFileNameAndExtension":32,"./mimeTypes":39}],34:[function(require,module,exports){
+},{"./getFileNameAndExtension":38,"./mimeTypes":45}],40:[function(require,module,exports){
 module.exports = function getSocketHost(url) {
   // get the host domain
   var regex = /^(?:https?:\/\/|\/\/)?(?:[^@\n]+@)?(?:www\.)?([^\n]+)/i;
@@ -5474,7 +5779,7 @@ module.exports = function getSocketHost(url) {
   var socketProtocol = /^http:\/\//i.test(url) ? 'ws' : 'wss';
   return socketProtocol + "://" + host;
 };
-},{}],35:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /**
  * Returns a timestamp in the format of `hours:minutes:seconds`
  */
@@ -5493,11 +5798,11 @@ module.exports = function getTimeStamp() {
 function pad(str) {
   return str.length !== 2 ? 0 + str : str;
 }
-},{}],36:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 module.exports = function has(object, key) {
   return Object.prototype.hasOwnProperty.call(object, key);
 };
-},{}],37:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /**
  * Check if an object is a DOM element. Duck-typing based on `nodeType`.
  *
@@ -5506,7 +5811,7 @@ module.exports = function has(object, key) {
 module.exports = function isDOMElement(obj) {
   return obj && typeof obj === 'object' && obj.nodeType === Node.ELEMENT_NODE;
 };
-},{}],38:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 function isNetworkError(xhr) {
   if (!xhr) {
     return false;
@@ -5516,7 +5821,7 @@ function isNetworkError(xhr) {
 }
 
 module.exports = isNetworkError;
-},{}],39:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 // ___Why not add the mime-types package?
 //    It's 19.7kB gzipped, and we only need mime types for well-known extensions (for file previews).
 // ___Where to take new extensions from?
@@ -5572,7 +5877,7 @@ module.exports = {
   gz: 'application/gzip',
   dmg: 'application/x-apple-diskimage'
 };
-},{}],40:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 module.exports = function settle(promises) {
   var resolutions = [];
   var rejections = [];
@@ -5595,7 +5900,14 @@ module.exports = function settle(promises) {
     };
   });
 };
-},{}],41:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
+/**
+ * Converts list into array
+ */
+module.exports = function toArray(list) {
+  return Array.prototype.slice.call(list || [], 0);
+};
+},{}],48:[function(require,module,exports){
 var _class, _temp;
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -6335,7 +6647,7 @@ module.exports = (_temp = _class = /*#__PURE__*/function (_Plugin) {
 
   return XHRUpload;
 }(Plugin), _class.VERSION = "1.7.5", _temp);
-},{"@uppy/companion-client":12,"@uppy/core":15,"@uppy/utils/lib/EventTracker":21,"@uppy/utils/lib/NetworkError":22,"@uppy/utils/lib/ProgressTimeout":23,"@uppy/utils/lib/RateLimitedQueue":24,"@uppy/utils/lib/Translator":25,"@uppy/utils/lib/emitSocketProgress":27,"@uppy/utils/lib/getSocketHost":34,"@uppy/utils/lib/isNetworkError":38,"@uppy/utils/lib/settle":40,"cuid":43}],42:[function(require,module,exports){
+},{"@uppy/companion-client":12,"@uppy/core":15,"@uppy/utils/lib/EventTracker":22,"@uppy/utils/lib/NetworkError":23,"@uppy/utils/lib/ProgressTimeout":24,"@uppy/utils/lib/RateLimitedQueue":25,"@uppy/utils/lib/Translator":26,"@uppy/utils/lib/emitSocketProgress":28,"@uppy/utils/lib/getSocketHost":40,"@uppy/utils/lib/isNetworkError":44,"@uppy/utils/lib/settle":46,"cuid":50}],49:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -6665,7 +6977,7 @@ exports.AbortController = AbortController;
 exports.AbortSignal = AbortSignal;
 exports.default = AbortController;
 
-},{}],43:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -6751,7 +7063,7 @@ cuid.fingerprint = fingerprint;
 
 module.exports = cuid;
 
-},{"./lib/fingerprint.js":44,"./lib/getRandomValue.js":45,"./lib/pad.js":46}],44:[function(require,module,exports){
+},{"./lib/fingerprint.js":51,"./lib/getRandomValue.js":52,"./lib/pad.js":53}],51:[function(require,module,exports){
 var pad = require('./pad.js');
 
 var env = typeof window === 'object' ? window : self;
@@ -6765,7 +7077,7 @@ module.exports = function fingerprint () {
   return clientId;
 };
 
-},{"./pad.js":46}],45:[function(require,module,exports){
+},{"./pad.js":53}],52:[function(require,module,exports){
 
 var getRandomValue;
 
@@ -6785,13 +7097,13 @@ if (crypto) {
 
 module.exports = getRandomValue;
 
-},{}],46:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 module.exports = function pad (num, size) {
   var s = '000000000' + num;
   return s.substr(s.length - size);
 };
 
-},{}],47:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 (function (global){(function (){
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -7234,7 +7546,7 @@ function toNumber(value) {
 module.exports = throttle;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],48:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 var wildcard = require('wildcard');
 var reMimePartSplit = /[\/\+\.]/;
 
@@ -7260,7 +7572,7 @@ module.exports = function(target, pattern) {
   return pattern ? test(pattern.split(';')[0]) : test;
 };
 
-},{"wildcard":55}],49:[function(require,module,exports){
+},{"wildcard":62}],56:[function(require,module,exports){
 /**
 * Create an event emitter with namespaces
 * @name createNamespaceEmitter
@@ -7398,7 +7710,7 @@ module.exports = function createNamespaceEmitter () {
   return emitter
 }
 
-},{}],50:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 !function() {
     'use strict';
     function VNode() {}
@@ -7807,7 +8119,7 @@ module.exports = function createNamespaceEmitter () {
     if ('undefined' != typeof module) module.exports = preact; else self.preact = preact;
 }();
 
-},{}],51:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 var has = Object.prototype.hasOwnProperty
 
 /**
@@ -7839,7 +8151,7 @@ module.exports = function queryStringify (obj, prefix) {
   return pairs.join('&')
 }
 
-},{}],52:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -7959,7 +8271,7 @@ function querystringify(obj, prefix) {
 exports.stringify = querystringify;
 exports.parse = querystring;
 
-},{}],53:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7999,7 +8311,7 @@ module.exports = function required(port, protocol) {
   return port !== 0;
 };
 
-},{}],54:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -8465,7 +8777,7 @@ Url.qs = qs;
 module.exports = Url;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"querystringify":52,"requires-port":53}],55:[function(require,module,exports){
+},{"querystringify":59,"requires-port":60}],62:[function(require,module,exports){
 /* jshint node: true */
 'use strict';
 
@@ -8560,7 +8872,7 @@ module.exports = function(text, test, separator) {
   return matcher;
 };
 
-},{}],56:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 // We need a custom build of Uppy because we do not use webpack for
 // our JS modules/build. The only way to get what you want from Uppy
 // is to use the webpack modules or to include the entire Uppy project
@@ -8572,5 +8884,6 @@ Uppy.Plugin = Uppy.Core.Plugin
 Uppy.XHRUpload = require('@uppy/xhr-upload')
 Uppy.AwsS3 = require('@uppy/aws-s3')
 Uppy.AwsS3Multipart = require('@uppy/aws-s3-multipart')
+Uppy.DropTarget = require('@uppy/drop-target')
 
-},{"@uppy/aws-s3":5,"@uppy/aws-s3-multipart":3,"@uppy/core":15,"@uppy/xhr-upload":41}]},{},[56]);
+},{"@uppy/aws-s3":5,"@uppy/aws-s3-multipart":3,"@uppy/core":15,"@uppy/drop-target":19,"@uppy/xhr-upload":48}]},{},[63]);
