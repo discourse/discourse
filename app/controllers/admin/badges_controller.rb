@@ -63,8 +63,6 @@ class Admin::BadgesController < Admin::AdminController
       return
     end
 
-    BadgeGranter.revoke_all(badge) if replace_badge_owners
-
     line_number = 1
     entries = []
     File.open(csv_file) do |csv|
@@ -79,6 +77,8 @@ class Admin::BadgesController < Admin::AdminController
         end
       end
     end
+
+    BadgeGranter.revoke_all(badge) if replace_badge_owners
 
     usernames = []
     emails = []
