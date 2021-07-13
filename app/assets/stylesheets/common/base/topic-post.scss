@@ -124,27 +124,27 @@ $quote-share-maxwidth: 150px;
   }
 
   h1 {
-    font-size: $font-up-3-rem;
+    font-size: var(--font-up-3-rem);
   }
 
   h2 {
-    font-size: $font-up-2-rem;
+    font-size: var(--font-up-2-rem);
   }
 
   h3 {
-    font-size: $font-up-1-rem;
+    font-size: var(--font-up-1-rem);
   }
 
   h4 {
-    font-size: $font-0-rem;
+    font-size: var(--font-0-rem);
   }
 
   h5 {
-    font-size: $font-down-1-rem;
+    font-size: var(--font-down-1-rem);
   }
 
   h6 {
-    font-size: $font-down-2-rem;
+    font-size: var(--font-down-2-rem);
   }
 
   a {
