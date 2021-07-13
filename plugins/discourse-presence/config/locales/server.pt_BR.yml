@@ -6,5 +6,5 @@
 
 pt_BR:
   site_settings:
-    presence_enabled: "Mostrar usuários que estão atualmente respondendo ao tópico atual, ou editando a postagem atual?"
-    presence_max_users_shown: "Número máximo de usuários mostrados."
+    presence_enabled: "Mostrar usuários(as) que estão agora respondendo ao tópico atual, ou editando a postagem atual?"
+    presence_max_users_shown: "Quantidade máximo de usuários(as) exibidos(as)."

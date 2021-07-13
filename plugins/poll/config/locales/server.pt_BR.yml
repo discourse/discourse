@@ -8,9 +8,9 @@ pt_BR:
   site_settings:
     poll_enabled: "Permitir votações?"
     poll_maximum_options: "Número máximo de opções permitidas em uma votação."
-    poll_edit_window_mins: "Número de minutos após a criação de uma postagem durante os quais votações podem ser editadas."
+    poll_edit_window_mins: "Quantidade de minutos após a criação de uma postagem pelos quais as enquetes podem ser editadas."
     poll_minimum_trust_level_to_create: "Defina o nível de confiança mínimo necessário para criar votações."
-    poll_groupable_user_fields: "Um conjunto de nomes de campo de usuário que podem ser usados para agrupar e filtrar os resultados da pesquisa."
+    poll_groupable_user_fields: "Um conjunto de nomes para o campo do(a) usuário(a) que podem ser usados para agrupar e filtrar os resultados da enquete."
     poll_export_data_explorer_query_id: "ID da consulta do Data Explorer para usar para exportar resultados de enquetes (0 para desativar)."
   poll:
     poll: "enquete"

@@ -2803,56 +2803,56 @@ pt_BR:
 
         Se você esqueceu sua senha, [redefina agora](%{base_url}/password-reset).
 
-        Se você não tentou criar uma conta para %{email} ou altere seu endereço de e-mail, não se preocupe. Você pode ignorar essa mensagem com segurança.
+        Se você não tiver tentado criar uma conta para %{email} ou alterar seu endereço de e-mail, não se preocupe. Você pode ignorar essa mensagem com segurança.
 
-        Se você tiver alguma dúvida, [entre em contato com nossa equipe amigável](%{base_url}/sobre).
+        Se você tiver alguma dúvida, [entre em contato com nossa equipe prestativa](%{base_url}/sobre).
     digest:
-      why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
+      why: "Um breve resumo de %{site_link} desde a sua última visita em %{last_seen_at}."
       since_last_visit: "Desde a sua última visita"
-      new_topics: "Novos Tópicos"
-      unread_notifications: "Notificações Não-lidas"
-      liked_received: "Curtidas Recebidas"
-      new_users: "Usuários Novos"
+      new_topics: "Novos tópicos"
+      unread_notifications: "Notificações não lidas"
+      liked_received: "Curtidas recebidas"
+      new_users: "Usuários(as) novos(as)"
       popular_topics: "Tópicos mais acessados"
-      follow_topic: "Seguir esse tópico"
-      join_the_discussion: "Leia Mais"
+      follow_topic: "Seguir este tópico"
+      join_the_discussion: "Leia mais"
       popular_posts: "Publicações mais acessadas"
       more_new: "Novo para você"
       subject_template: "[%{email_prefix}] Resumo"
-      unsubscribe: "Este resumo é enviado de %{site_link} quando não te vemos há algum tempo. Mude%{email_preferences_link}, ou%{unsubscribe_link} para cancelar a inscrição."
+      unsubscribe: "Este resumo foi enviado de %{site_link}, já que faz tempo que não nos vemos. Mude %{email_preferences_link} ou%{unsubscribe_link} para cancelar a inscrição."
       your_email_settings: "suas configurações de e-mail"
       click_here: "clique aqui"
-      preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita no dia %{last_seen_at}"
+      preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita em %{last_seen_at}"
     forgot_password:
-      title: "Esqueceu a senha"
-      subject_template: "[%{email_prefix}] Resetar a senha"
+      title: "Esqueci a senha"
+      subject_template: "[%{email_prefix}] Redefinição de senha"
       text_body_template: |
         Alguém pediu para redefinir sua senha [%{site_name}](%{base_url}).
 
-        Se não foi você, você pode ignorar com segurança este e-mail.
+        Caso não tenha sido você, ignore este e-mail.
 
         Clique no link a seguir para escolher uma nova senha:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
-      title: "Faça o login via link"
-      subject_template: "[%{email_prefix}] Faça o login via link"
+      title: "Entrar com sua conta pelo link"
+      subject_template: "[%{email_prefix}] Entre com sua conta pelo link"
       text_body_template: |
         Aqui está o seu link para entrar em [%{site_name}](%{base_url}).
 
-        Se você não solicitou este link, pode ignorar esse e-mail com segurança.
+        Caso não tenha solicitado este link, ignore este e-mail.
 
-        Clique no link a seguir para fazer login:
+        Clique no link a seguir para entrar com a conta:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Configurar senha"
       subject_template: "[%{email_prefix}] Configurar senha"
-      text_body_template: "Alguém pediu para adicionar uma senha à sua conta em [%{site_name}](%{base_url}). \nComo alternativa, você pode fazer login usando qualquer serviço online suportado (Google, Facebook, etc.) associado a esse endereço de e-mail validado.\n\nSe você não fez essa solicitação, pode ignorar esse e-mail com segurança.\n\nClique no link a seguir para escolher uma senha:\n%{base_url}/u/password-reset/%{email_token}\n"
+      text_body_template: "Alguém pediu para adicionar uma senha à sua conta em [%{site_name}](%{base_url}). \nComo alternativa, você pode entrar com a conta qualquer serviço on-line compatível (Google, Facebook, etc.) associado a esse endereço de e-mail validado.\n\nCaso não tenha feito esta solicitação, ignore este e-mail.\n\nClique no link a seguir para entrar com a conta:\n%{base_url}/session/email-login/%{email_token}\n"
     admin_login:
-      title: "Login de administrador"
-      subject_template: "[%{email_prefix}] Login"
+      title: "Entrar com conta de administrador(a)"
+      subject_template: "[%{email_prefix}] Entrar com conta"
     account_created:
-      title: "Conta Criada"
-      subject_template: "[%{email_prefix}] Sua Nova Conta"
+      title: "Conta criada"
+      subject_template: "[%{email_prefix}] Sua nova conta"
       text_body_template: |
         Uma nova conta foi criada para você em%{site_name}
 
@@ -2865,20 +2865,20 @@ pt_BR:
       title: "Confirmar novo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
     confirm_old_email:
-      title: "Confirmar Antigo e-mail"
+      title: "Confirmar antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
-      text_body_template: "Antes de podermos alterar seu endereço de e-mail, precisamos confirmar que você \ncontrola a conta de e-mail atual. Depois de concluir esta etapa, solicitaremos que você \nconfirme o novo endereço de e-mail.\n\nConfirme seu endereço de email atual para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
+      text_body_template: "Antes de podermos alterar seu endereço de e-mail, precisamos confirmar que você \ncontrola a conta de e-mail atual. Depois de concluir esta etapa, solicitaremos que você \nconfirme o novo endereço de e-mail.\n\nConfirme seu endereço de e-mail atual para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     confirm_old_email_add:
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
     notify_old_email:
       title: "Notificar e-mail antigo"
       subject_template: "[%{email_prefix}] Seu endereço de e-mail foi alterado"
       text_body_template: |
-        Esta é uma mensagem automática para lhe avisar que seu endereço de email para
-        %{site_name} foi modificado. Se isso foi um erro, por favor entre em contato
-        com um administrador do site.
+        Esta é uma mensagem automática para avisar que seu endereço de e-mail para
+        %{site_name} foi modificado. Caso tenha sido um erro, entre em contato
+        com um(a) administrador(a) do site.
 
-        Seu endereço de email foi modificado para:
+        Seu endereço de e-mail foi modificado para:
 
         %{new_email}
     signup_after_approval:
@@ -2997,14 +2997,14 @@ pt_BR:
     sender_message_to_blank: "message.to está em branco"
     sender_text_part_body_blank: "text_part.body está em branco"
     sender_body_blank: "o corpo está em branco"
-    sender_post_deleted: "postagem foi excluída"
-    sender_message_to_invalid: "destinatário tem endereço de e-mail inválido"
+    sender_post_deleted: "a postagem foi excluída"
+    sender_message_to_invalid: "o destinatário tem o endereço de e-mail inválido"
   color_schemes:
     base_theme_name: "Base"
     light: "Claro"
     dark: "Escuro"
     neutral: "Neutro"
-    grey_amber: "Âmbar cinzento"
+    grey_amber: "Âmbar cinza"
     shades_of_blue: "Tons de azul"
     latte: "Latte"
     summer: "Verão"
@@ -3176,87 +3176,87 @@ pt_BR:
       name: Excelente Resposta
       description: Recebeu 50 curtidas em uma resposta
       long_description: |
-        Esse emblema é concedido quando sua resposta recebe 50 curtidas. Uau! Sua resposta foi inspiradora, fascinante, hilária ou perspicaz e a comunidade adorou!
+        Este emblema é concedido quando sua resposta recebe 50 curtidas. Uau! Sua resposta foi inspiradora, fascinante, hilária ou perspicaz, e a comunidade adorou!
     nice_topic:
       name: Tópico Interessante
       description: Recebeu 10 curtidas em um tópico
       long_description: |
-        Esse emblema é concedido quando seu tópico recebe 10 curtidas. Você começou uma conversa interessante que a comunidade gostou.
+        Este emblema é concedido quando seu tópico recebe 10 curtidas. Você começou uma conversa interessante que a comunidade gostou.
     good_topic:
-      name: Bom Tópico
+      name: Bom tópico
       description: Recebeu 25 curtidas em um tópico
       long_description: |
-        Esse emblema é concedido quando seu tópico recebe 25 curtidas. Você lançou uma conversa vibrante em que a comunidade se reuniu.
+        Este emblema é concedido quando seu tópico recebe 25 curtidas. Você começou uma conversa eletrizante que movimentou a comunidade.
     great_topic:
-      name: Excelente Tópico
+      name: Tópico excelente
       description: Recebeu 50 curtidas em um tópico
       long_description: |
-        Esse emblema é concedido quando seu tópico recebe 50 curtidas. Você iniciou uma conversa fascinante e a comunidade amou a discussão animada que resultou!
+        Este emblema é concedido quando seu tópico recebe 50 curtidas. Você começou uma conversa fascinante e a comunidade amou a discussão toda a discussão que gerou!
     nice_share:
-      name: Compartilhamento Interessante
-      description: Compartilhou uma postagem com 25 visitas únicas
+      name: Compartilhamento interessante
+      description: Compartilhou uma postagem com 25 visitantes exclusivos
       long_description: |
         Este emblema é concedido por ter compartilhado um link que foi clicado por 25 visitantes externos. Obrigado por divulgar nossas discussões e esta comunidade.
     good_share:
-      name: Bom Compartilhamento
-      description: Compartilhou uma postagem com 300 visitas únicas
+      name: Compartilhamento bom
+      description: Compartilhou uma postagem com 300 visitantes exclusivos
       long_description: |
-        Esse emblema é concedido por compartilhar um link que foi clicado por 300 visitantes externos. Bom trabalho! Você mostrou uma ótima discussão para várias pessoas novas e ajudou a comunidade a crescer.
+        Este emblema é concedido por compartilhar um link que foi clicado por 300 visitantes externos. Bom trabalho! Você mostrou uma ótima discussão para várias pessoas novas e ajudou a comunidade a crescer.
     great_share:
-      name: Excelente Compartilhamento
-      description: Compartilhou uma postagem com 1000 visitas únicas
+      name: Compartilhamento excelente
+      description: Compartilhou uma postagem com 1.000 visitantes exclusivos
       long_description: |
         Este emblema é concedido por compartilhar um link que foi clicado por 1.000 visitantes externos. Uau! Você promoveu uma discussão interessante para um grande público novo e ajudou a nossa comunidade crescer em grande escala!
     first_like:
-      name: Primeira Curtida
+      name: Primeira curtida
       description: Curtiu uma postagem
       long_description: |
-        Este emblema é concedido na primeira vez que você curtir uma postagem usando o botão :heart:. Curtir postagens é uma ótima maneira de mostrar aos outros membros da comunidade que o que eles postaram era interessante, útil, legal ou divertido. Compartilhe o amor!
+        Este emblema é concedido na primeira vez que você curtir uma postagem usando o botão :heart:. Curtir postagens é uma ótima maneira de mostrar aos outros membros da comunidade que o que postaram era interessante, útil, legal ou divertido. Compartilhe o amor!
     first_flag:
       name: Primeiro sinalizador
       description: Sinalizou uma postagem
       long_description: |
-        Este emblema é concedido na primeira vez que você sinaliza uma postagem. Sinalizar é como todos nós ajudamos a manter este local agradável para todos. Se você perceber qualquer postagem que exija atenção de moderadores por qualquer motivo, não hesite em sinalizar. Se você encontrar um problema, :flag_black: sinalize!
+        Este emblema é concedido na primeira vez que você sinaliza uma postagem. Sinalizar é uma forma de ajudar a manter este local agradável para todos. Se você perceber qualquer postagem que exija atenção de moderadores(as) por qualquer motivo, não hesite em sinalizar. Se encontrar um problema, :flag_black: sinalize!
     promoter:
-      name: Promotor
-      description: Convidou um usuário
+      name: Promotor(a)
+      description: Convidou um(a) usuário(a)
       long_description: |
-        Esse emblema é concedido quando você convida alguém para participar da comunidade por meio do botão de convite na sua página de usuário ou na parte inferior de um tópico. Convidar amigos que possam estar interessados ​​em discussões específicas é uma ótima maneira de apresentar novas pessoas à nossa comunidade, então, obrigado!
+        Este emblema é concedido quando você convida alguém para participar da comunidade pelo botão de convite na sua página de usuário(a) ou na parte inferior de um tópico. Convidar amigos(as) que possam ter interesse em discussões específicas é uma ótima maneira de apresentar novas pessoas à nossa comunidade. Muito obrigado!
     campaigner:
       name: Ativista
-      description: Convidou 3 usuários básicos
+      description: Convidou três usuários(as) básicos(as)
       long_description: |
-        Este emblema é concedido quando você tiver convidado 3 pessoas que, posteriormente, passarem tempo no site o suficiente para se tornarem usuários básicos. Uma comunidade vibrante precisa de uma infusão constante de recém-chegados que participam regularmente e adicionam novas vozes às conversas.
+        Este emblema é concedido quando você tiver convidado três pessoas que, posteriormente, passaram tempo suficiente no site para se tornarem usuários(as) básicos(as). Uma comunidade vibrante precisa de um fluxo constante de recém-chegados que participam regularmente e contribuem para as conversas.
     champion:
-      name: Campeão
-      description: Convidou 5 membros
+      name: Campeão(ã)
+      description: Convidou cinco membros
       long_description: |
-        Este emblema é concedido quando você tiver convidado cinco pessoas que, posteriormente, passarem tempo no site o suficiente para se tornarem membros plenos. Uau! Obrigado por expandir a diversidade da nossa comunidade com novos membros!
+        Este emblema é concedido quando você tiver convidado cinco pessoas que, posteriormente, passaram tempo suficiente no site para se tornarem membros plenos. Uau! Obrigado por expandir a diversidade da nossa comunidade com novos membros!
     first_share:
-      name: Primeiro Compartilhamento
+      name: Primeiro compartilhamento
       description: Compartilhou uma postagem
       long_description: |
-        Esse emblema é concedido na primeira vez que você compartilha um link para uma resposta ou um tópico usando o botão de compartilhamento. Compartilhar links é uma ótima maneira de mostrar discussões interessantes com o resto do mundo e aumentar sua comunidade.
+        Este emblema é concedido na primeira vez que você compartilha um link para uma resposta ou um tópico usando o botão de compartilhamento. Compartilhar links é uma ótima maneira de mostrar discussões interessantes com o resto do mundo e aumentar sua comunidade.
     first_link:
-      name: Primeiro Link
+      name: Primeiro link
       description: Adicionou um link para outro tópico
       long_description: |
-        Esse emblema é concedido na primeira vez que você linka para um outro tópico. Linkar tópicos ajuda colegas leitores a encontrar conversas relacionadas interessantes, mostrando as conexões entre os tópicos em ambas as direções. Link livremente!
+        Este emblema é concedido na primeira vez que você vincula outro tópico. Vincular tópicos ajuda colegas leitores(as) a encontrar conversas relacionadas interessantes, mostrando as conexões entre os tópicos. Sinta-se livre para adicionar links!
     first_quote:
-      name: Primeira Citação
+      name: Primeira citação
       description: Citou uma postagem
       long_description: |
-        Esse emblema é concedido na primeira vez que você citar uma postagem em uma resposta. Citar partes relevantes de postagens anteriores na sua resposta ajuda a manter as discussões conectadas juntas e a não divergir do tópico. A maneira mais fácil de citar é selecionar uma parte de uma postagem e, em seguida, pressionar qualquer botão de resposta. Cite à vontade!
+        Esse emblema é concedido na primeira vez que você citar uma postagem em uma resposta. Citar partes relevantes de postagens anteriores na sua resposta ajuda a manter as discussões conectadas e a não sair do tópico. A maneira mais fácil de citar é selecionar uma parte de uma postagem e, em seguida, pressionar qualquer botão de resposta. Cite à vontade!
     read_guidelines:
       name: Leu as regras
       description: Leia as <a href="%{base_uri}/guidelines">diretrizes da comunidade</a>
       long_description: |
-        Este emblema é concedido por <a href="%{base_uri}/guidelines">ter lido as diretrizes da comunidade</a>. Seguir e compartilhar essas diretrizes simples ajuda a criar uma comunidade segura, divertida e sustentável para todos. Lembre-se sempre de que há outro ser humano, um muito parecido com você, do outro lado da tela. Seja legal!
+        Este emblema é concedido por <a href="%{base_uri}/guidelines">ter lido as diretrizes da comunidade</a>. Seguir e compartilhar essas diretrizes simples ajuda a criar uma comunidade segura, divertida e sustentável para todos. Sempre Lembre que há outro ser humano muito parecido com você no outro lado da tela. Seja legal!
     reader:
-      name: Leitor
+      name: Leitor(a)
       description: Leu todas as respostas em um tópico com mais de 100 respostas
       long_description: |
-        Esse emblema é concedido na primeira vez que você lê um tópico longo com mais de 100 respostas. Ler uma conversa de perto ajuda você a acompanhar a discussão, entender diferentes pontos de vista e leva a conversas mais interessantes. Quanto mais você lê, melhor a conversa fica. Como gostamos de dizer, a leitura é fundamental! :slight_smile:
+        Este emblema é concedido na primeira vez que você lê um tópico longo com mais de 100 respostas. Ler uma conversa atentamente ajuda a acompanhar a discussão, entender diferentes pontos de vista, além de levar a assuntos mais interessantes. Quanto mais você lê, melhor a conversa fica. Como gostamos de dizer, leitura é fundamental! :slight_smile:
     popular_link:
       name: Link mais acessado
       description: Postou um link externo com 50 cliques
@@ -3264,12 +3264,12 @@ pt_BR:
         Este emblema é concedido quando um link que você compartilhou recebe 50 cliques. Obrigado por postar um link que contribuiu para a discussão!
     hot_link:
       name: Link muito acessado
-      description: Postou um link externo com 300 clicks
+      description: Postou um link externo com 300 cliques
       long_description: |
-        Esse emblema é concedido quando um link compartilhado recebe 300 cliques. Obrigado por postar um link fascinante que levou a conversa adiante e iluminou a discussão!
+        Este emblema é concedido quando um link compartilhado recebe 300 cliques. Obrigado por postar um link fascinante que levou a conversa adiante e iluminou a discussão!
     famous_link:
       name: Link famoso
-      description: Postou um link externo com 1000 clicks
+      description: Postou um link externo com 1.000 cliques
       long_description: |
         Esse emblema é concedido quando um link compartilhado recebe 1.000 cliques. Uau! Você postou um link que melhorou significativamente a conversa adicionando detalhes, contexto e informações essenciais. Ótimo trabalho!
     appreciated:
@@ -3354,22 +3354,22 @@ pt_BR:
         Este distintivo é concedido para visitas de 100 dias consecutivos. Isso é mais do que três meses!
     devotee:
       name: Devoto
-      description: Visitou 365 dias consecutivos
+      description: Acessou 365 dias consecutivos
       long_description: |
-        Este emblema é concedido por ter visitado 365 dias consecutivos. Uau, um ano inteiro!
+        Este emblema é concedido por ter acessado 365 dias consecutivos. Uau, um ano inteiro!
     badge_title_metadata: "%{display_name} emblema em %{site_title}"
   admin_login:
-    success: "Email Enviado"
+    success: "E-mail enviado"
     errors:
       unknown_email_address: "endereço de e-mail desconhecido."
-      invalid_token: "token inválido"
-    email_input: "Email do Administrador"
-    submit_button: "Enviar Email"
+      invalid_token: "token inválido."
+    email_input: "E-mail do(a) administrador(a)"
+    submit_button: "Enviar e-mail"
   performance_report:
-    initial_post_raw: Este tópico inclui relatórios de performance diários de seu site.
-    initial_topic_title: Relatórios de performance do Site
+    initial_post_raw: Este tópico inclui relatórios de desempenho diários do seu site.
+    initial_topic_title: Relatórios de desempenho do site
   tags:
-    title: "Marcações"
+    title: "Etiquetas"
     restricted_tag_disallowed: 'Você não pode aplicar a etiqueta "%{tag}".'
     restricted_tag_remove_disallowed: 'Você não pode remover a etiqueta "%{tag}".'
     minimum_required_tags:
@@ -3378,55 +3378,55 @@ pt_BR:
     upload_row_too_long: "O arquivo CSV deve ter uma etiqueta por linha. Opcionalmente, a etiqueta pode ser seguida por uma vírgula e, em seguida, pelo nome do grupo de etiquetas."
     forbidden:
       invalid:
-        one: "A tag que você selecionou não pode ser usada"
-        other: "Nenhuma das tags que você selecionou pode ser usada"
+        one: "A etiqueta que você selecionou não pode ser usada"
+        other: "Nenhuma das etiquetas que você selecionou pode ser usada"
       in_this_category: '"%{tag_name}" não pode ser usado nesta categoria'
       restricted_to:
         one: '"%{tag_name}" é restrito à categoria "%{category_names}"'
         other: '"%{tag_name}" é restrito às seguintes categorias: %{category_names}'
-      synonym: 'Sinônimos não são permitidos. Use "%{tag_name}" em seu lugar.'
-      has_synonyms: '"%{tag_name}"  não pode ser usado porque possui sinônimos.'
+      synonym: 'Sinônimos não são permitidos. Use "%{tag_name}".'
+      has_synonyms: '"%{tag_name}" não pode ser usado porque tem sinônimos.'
     invalid_target_tag: "não pode ser um sinônimo de um sinônimo"
-    synonyms_exist: "não é permitido pois existem sinônimos"
-  rss_by_tag: "Tópicos marcados com %{tag}"
+    synonyms_exist: "não é permitido, pois existem sinônimos"
+  rss_by_tag: "Tópicos etiquetados com %{tag}"
   finish_installation:
     congratulations: "Parabéns, você instalou o Discourse!"
     register:
-      button: "Registro"
-      title: "Registro da Conta Administradora"
-      help: "registro de uma nova conta para ser iniciado"
-      no_emails: "Infelizmente, nenhum e-mail de administrador foi definido durante a configuração, portanto, a finalização da configuração pode ser difícil. Por favor, adicione o e-mail no arquivo de configuração ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>criar uma conta de administrador a partir do console</a>."
+      button: "Cadastrar"
+      title: "Cadastrar conta de administrador(a)"
+      help: "Início do registro de uma nova conta"
+      no_emails: "Infelizmente, nenhum e-mail de administrador(a) foi definido durante a configuração, portanto a finalização da configuração pode ser difícil. Adicione o e-mail ao arquivo de configuração ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crie uma conta de administrador(a) a partir do console</a>."
     confirm_email:
-      title: "Confirme seu email"
-      message: "<p>Enviamos um e-mail de ativação para <b>%{email}</b>. Por favor, siga as instruções no e-mail para ativar sua conta.</p><p>Se não chegar, verifique sua pasta de spam e <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>certifique-se de que você configurou o e-mail corretamente</a>.</p>"
+      title: "Confirme seu e-mail"
+      message: "<p>Enviamos um e-mail de ativação para <b>%{email}</b>. Por favor, siga as instruções no e-mail para ativar sua conta.</p><p>Se não chegar, verifique sua pasta de spam e <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>se o e-mail foi configurado corretamente</a>.</p>"
     resend_email:
-      title: "Reenviar Email de Confirmação"
-      message: "<p>Reenviamos o email de confirmação para <b>%{email}</b>"
+      title: "Reenviar e-mail de confirmação"
+      message: "<p>Reenviamos o e-mail de confirmação para <b>%{email}</b>"
   safe_mode:
-    title: "Entre no modo de segurança"
-    description: "O modo de segurança permite que você teste seu site sem carregar plug-ins ou personalizações de site."
-    no_customizations: "Desabilitar tema atual"
-    only_official: "Desabilitar plugins não oficiais"
-    no_plugins: "Desabilitar todos os plugins"
-    enter: "Entre no modo de segurança"
+    title: "Entrar no modo de segurança"
+    description: "O modo de segurança permite que você teste seu site sem carregar plug-ins ou personalizações."
+    no_customizations: "Desativar tema atual"
+    only_official: "Desativar plug-ins não oficiais"
+    no_plugins: "Desativar todos os plug-ins"
+    enter: "Entrar no modo de segurança"
     must_select: "Você deve selecionar pelo menos uma opção para entrar no modo de segurança."
   wizard:
     title: "Configuração do Discourse"
     step:
       locale:
-        title: "Bem-vindo ao seu Discourse!"
+        title: "Boas-vindas ao seu Discourse!"
         fields:
           default_locale:
             description: "Qual é o idioma padrão para sua comunidade?"
       forum_title:
         title: "Nome"
-        description: "Seu nome é um sinal visível à distância, a <i>primeira</i> coisa que os potenciais visitantes notarão sobre a sua comunidade. O que seu nome e título dizem sobre sua comunidade?"
+        description: "Seu nome é o seu cartão de visita, a <i>primeira</i> coisa que os possíveis visitantes notarão na sua comunidade. O que seu nome e título dizem sobre ela?"
         fields:
           title:
-            label: "O nome de sua comunidade"
+            label: "Nome de sua comunidade"
             placeholder: "Hangout de Jane"
           site_description:
-            label: "Descreva sua comunidade numa frase curta."
+            label: "Descreva sua comunidade com uma frase curta."
             placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
           short_site_description:
             label: "Descreva sua comunidade em poucas palavras"
@@ -3577,58 +3577,58 @@ pt_BR:
     missing_version: "Você precisa fornecer um parâmetro de versão"
     conflict: "Houve um conflito de atualização impedindo você de fazer isso."
     reasons:
-      post_count: "As primeiras postagens de todos os usuários devem ser aprovadas pela staff. Veja `approve_post_count`."
-      trust_level: "Usuários com níveis de confiança baixos precisam ter respostas aprovadas pela staff. Veja `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Usuários com níveis de confiança baixos precisam ter tópicos aprovados pela staff. Veja `approve_new_topics_unless_trust_level`."
-      fast_typer: "Novo usuário digitou sua primeira postagem desconfiadamente rápido, suspeita de comportamento de bot ou spammer. Veja `min_first_post_typing_time`."
-      auto_silence_regexp: "Novo usuário cuja primeira postagem corresponde à configuração `auto_silence_first_post_regex`."
+      post_count: "As primeiras postagens de todos os(as) usuários(as) devem ser aprovadas pela equipe. Acesse \"approve_post_count\"."
+      trust_level: "Usuários(as) com níveis de confiança baixos precisam ter respostas aprovadas pela equipe. Veja \"approve_unless_trust_level\"."
+      new_topics_unless_trust_level: "Usuários(as) com níveis de confiança baixos precisam ter tópicos aprovados pela equipe. Veja \"approve_unless_trust_level\"."
+      fast_typer: "O(a) novo(a) usuário(a) digitou sua primeira postagem desconfiadamente rápido, há suspeita de comportamento de robô ou remetente de spam. Veja \"min_first_post_typing_time\"."
+      auto_silence_regexp: "Novo(a) usuário(a) cuja primeira postagem corresponde à configuração \"auto_silence_first_post_regex\"."
       staged: "Novos tópicos e postagens para usuários encenados(as) precisam ser aprovados pela equipe. Veja \"approve_unless_staged\"."
-      category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."
-      must_approve_users: "Todos os novos usuários precisam ser aprovados pela staff. Veja `must_approve_users`."
-      invite_only: "Todos os novos usuários devem ser convidados. Veja `invite_only`."
+      category: "Postagens nesta categoria exigem aprovação manual pela equipe. Veja as configurações da categoria."
+      must_approve_users: "Todos os novos(as) usuários(as) precisam ser aprovados(as) pela equipe. Veja \"must_approve_users\"."
+      invite_only: "Todos os(as) novos(as) usuários(as) devem ser convidados(as). Veja \"invite_only\"."
       email_spam: "Este e-mail foi sinalizado como spam pelo cabeçalho definido em \"email_in_spam_header\"."
     actions:
       agree:
         title: "Concordar…"
       agree_and_keep:
-        title: "Manter Post"
+        title: "Manter postagem"
         description: "Concorde com o sinalizador e mantenha a postagem inalterada."
       agree_and_keep_hidden:
-        title: "Manter Postagem Escondida"
+        title: "Manter postagem oculta"
         description: "Concorde com o sinalizador e mantenha a postagem oculta."
       agree_and_suspend:
-        title: "Suspender usuário"
+        title: "Suspender usuário(a)"
         description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
       agree_and_silence:
-        title: "Silenciar Usuário"
+        title: "Silenciar usuário(a)"
         description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
       agree_and_restore:
-        title: "Restaurar Postagem"
-        description: "Restaure a postagem para que todos os usuários possam vê-la."
+        title: "Restaurar postagem"
+        description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
       agree_and_hide:
-        title: "Esconder publicação"
-        description: "Esconder esta publicação e enviar automaticamente ao usuário uma mensagem pedindo-lhe para editá-lo."
+        title: "Ocultar publicação"
+        description: "Oculte esta publicação e envie automaticamente ao(à) usuário(as) uma mensagem pedindo que edite."
       delete_single:
         title: "Excluir"
       delete:
         title: "Excluir…"
       delete_and_ignore:
-        title: "Excluir Postagem e Ignorar"
-        description: "Excluir postagem; se for a primeira postagem, excluir o tópico também"
+        title: "Excluir postagem e ignorar"
+        description: "Excluir postagem. Se for a primeira postagem, excluir o tópico também"
       delete_and_ignore_replies:
-        title: "Excluir Postagem + Respostas e Ignorar"
-        description: "Excluir postagem e todas as suas respostas; se for a primeira postagem, excluir o tópico também"
+        title: "Excluir postagem + respostas e ignorar"
+        description: "Excluir postagem e todas as suas respostas. Se for a primeira postagem, excluir o tópico também"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
       delete_and_agree:
-        title: "Excluir Postagem e Concordar"
-        description: "Excluir postagem; se for a primeira postagem, excluir o tópico também"
+        title: "Excluir postagem e concordar"
+        description: "Excluir postagem. Se for a primeira postagem, excluir o tópico também"
       delete_and_agree_replies:
-        title: "Excluir Postagem + Respostas e Concordar"
-        description: "Excluir postagem e todas as suas respostas; se for a primeira postagem, excluir o tópico também"
+        title: "Excluir postagem + respostas e concordar"
+        description: "Excluir postagem e todas as suas respostas. Se for a primeira postagem, excluir o tópico também"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
       disagree_and_restore:
-        title: "Discordar e Restaurar Postagem"
-        description: "Restaure a postagem para que todos os usuários possam vê-la."
+        title: "Discordar e restaurar postagem"
+        description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
       disagree:
         title: "Discordar"
       ignore:
@@ -3636,28 +3636,28 @@ pt_BR:
       approve:
         title: "Aprovar"
       approve_post:
-        title: "Aprovar Postagem"
+        title: "Aprovar postagem"
         confirm_closed: "Este tópico está fechado. Gostaria de criar a postagem mesmo assim?"
       reject_post:
-        title: "Rejeitar Postagem"
+        title: "Rejeitar postagem"
       approve_user:
-        title: "Aprovar Usuário"
+        title: "Aprovar usuário(a)"
       reject_user:
-        title: "Excluir Usuário…"
+        title: "Excluir usuário(a)…"
         delete:
-          title: "Excluir Usuário"
-          description: "O usuário será excluído do fórum."
+          title: "Excluir usuário(a)"
+          description: "O(a) usuário(a) será excluído(a) do fórum."
         block:
-          title: "Excluir e Bloquear Usuário"
-          description: "O usuário será excluído e bloquearemos seu endereço IP e de e-mail."
+          title: "Excluir e bloquear usuário(a)"
+          description: "O(a) usuário(a) será excluído(a) e bloquearemos seu endereço IP e de e-mail."
       reject:
         title: "Rejeitar"
       delete_user:
-        reason: "Excluído via fila de revisão"
+        reason: "Excluído(a) via fila de revisão"
   email_style:
     html_missing_placeholder: "O modelo HTML deve incluir %{placeholder}"
   discord:
-    not_in_allowed_guild: "Falha na autenticação. Você não é um membro de uma guilda Discord com permissões."
+    not_in_allowed_guild: "Falha na autenticação. Você não é um membro de uma organização permitida do Discord."
   activemodel:
     errors:
       <<: *errors
