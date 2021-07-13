@@ -1405,7 +1405,6 @@ fi:
     category_search_priority_high_weight: "Korkean hakuprioriteetin painoarvo."
     allow_uncategorized_topics: "Salli ketjujen aloittaminen valitsematta aluetta. VAROITUS: alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun aloittaminen identtisellä otsikolla."
-    allow_duplicate_topic_titles_category: "Salli ketjut, joilla on identtiset otsikot, jos ketjut on eri alueella. Asetuksen allow_duplicate_topic_titles on oltava pois päältä."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
     title: "Tämän sivuston nimi, käytetään otsikkotunnisteessa."
@@ -1620,7 +1619,6 @@ fi:
     discord_secret: "Discordin salainen avain"
     discord_trusted_guilds: 'Salli vain näiden Discord-kiltojen jäsenten kirjautua Discordin avulla. Käytä killan numeerista tunnusta. Jos tarvitset lisätietoa, ohjeet löytyy <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">täältä</a>. Jätä tyhjäksi, jos et halua rajoittaa killan perusteella.'
     enable_backups: "Salli ylläpitäjien tehdä varmuuskopioita foorumista"
-    allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden enimmäismäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
     automatic_backups_enabled: "Tee automaattinen varmuuskopiointi varmuuskopiotiheydessä määritetyn mukaisesti"
     backup_frequency: "Kuinka monen päivän välein otetaan varmuuskopio."

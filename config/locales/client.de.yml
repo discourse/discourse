@@ -41,6 +41,7 @@ de:
       long_date_without_year_with_linebreak: "D. MMM<br/>HH:mm"
       long_date_with_year_with_linebreak: "D. MMM YYYY<br/>HH:mm"
       wrap_ago: "vor %{date}"
+      wrap_on: "am %{date}"
       tiny:
         half_a_minute: "< 1 Min."
         less_than_x_seconds:
@@ -1677,7 +1678,7 @@ de:
       second_factor_title: "Zwei-Faktor-Authentifizierung"
       second_factor_description: "Bitte gib den Authentifizierungscode aus deiner App ein:"
       second_factor_backup: "Anmeldung mit einem Wiederherstellungscode"
-      second_factor_backup_title: "Zwei-Faktor-Back-up"
+      second_factor_backup_title: "Zwei-Faktor-Backup"
       second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungscodes ein:"
       second_factor: "Anmeldung mit einer Authentifizierungs-App"
       security_key_description: "Wenn du deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche „Mit Sicherheitsschlüssel authentifizieren“."
@@ -3535,10 +3536,10 @@ de:
         space_used: "%{usedSize} verwendet"
         space_used_and_free: "%{usedSize} (%{freeSize} frei)"
         uploads: "Uploads"
-        backups: "Back-ups"
+        backups: "Backups"
         backup_count:
-          one: "%{count} Back-up auf %{location}"
-          other: "%{count} Back-ups auf %{location}"
+          one: "%{count} Backup auf %{location}"
+          other: "%{count} Backups auf %{location}"
         lastest_backup: "Letztes: %{date}"
         traffic_short: "Traffic"
         traffic: "Webanfragen der Anwendung"
@@ -3834,11 +3835,11 @@ de:
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Plug-in"
       backups:
-        title: "Back-ups"
+        title: "Backups"
         menu:
-          backups: "Back-ups"
+          backups: "Backups"
           logs: "Protokolle"
-        none: "Kein Back-up verfügbar."
+        none: "Kein Backup verfügbar."
         read_only:
           enable:
             title: "Nur-Lesen-Modus aktivieren"
@@ -3854,7 +3855,7 @@ de:
           size: "Größe"
         upload:
           label: "Hochladen"
-          title: "Ein Back-up zu dieser Instanz hochladen"
+          title: "Ein Backup zu dieser Instanz hochladen"
           uploading: "Wird hochgeladen …"
           uploading_progress: "Wird hochgeladen … %{progress} %"
           success: "„%{filename}“ wurde erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu eine Minute dauern, bis sie in der Liste erscheint."
@@ -3867,22 +3868,22 @@ de:
             title: "Den aktuellen Vorgang abbrechen"
             confirm: "Möchtest du wirklich den aktuellen Vorgang abbrechen?"
           backup:
-            label: "Back-up"
-            title: "Ein Back-up erstellen"
-            confirm: "Möchtest du ein neues Back-up starten?"
+            label: "Backup"
+            title: "Ein Backup erstellen"
+            confirm: "Möchtest du ein neues Backup starten?"
             without_uploads: "Ja (ohne Dateien)"
           download:
             label: "Herunterladen"
             title: "Sende E-Mail mit Download-Link"
-            alert: "Ein Link zum Download dieses Back-ups wurde dir per E-Mail geschickt."
+            alert: "Ein Link zum Download dieses Backups wurde dir per E-Mail geschickt."
           destroy:
-            title: "Das Back-up löschen"
-            confirm: "Möchtest du wirklich das Back-up löschen?"
+            title: "Das Backup löschen"
+            confirm: "Möchtest du wirklich das Backup löschen?"
           restore:
             is_disabled: "Wiederherstellung ist in den Website-Einstellungen deaktiviert."
             label: "Wiederherstellen"
-            title: "Das Back-up wiederherstellen"
-            confirm: "Bist du sicher, dass du dieses Back-up wiederherstellen möchtest?"
+            title: "Das Backup wiederherstellen"
+            confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
           rollback:
             label: "Zurücksetzen"
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
@@ -3890,7 +3891,7 @@ de:
         location:
           local: "Lokaler Speicher"
           s3: "S3"
-        backup_storage_error: "Zugriff auf Back-up-Speicher fehlgeschlagen: %{error_message}"
+        backup_storage_error: "Zugriff auf Backup-Speicher fehlgeschlagen: %{error_message}"
       export_csv:
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Protokolle."
@@ -4311,7 +4312,7 @@ de:
             revoke_admin: "Administrationsrechte entziehen"
             grant_moderation: "Moderationsrechte vergeben"
             revoke_moderation: "Moderationsrechte entziehen"
-            backup_create: "Back-up erstellen"
+            backup_create: "Backup erstellen"
             deleted_tag: "Schlagwort gelöscht"
             deleted_unused_tags: "nicht verwendete Schlagwörter gelöscht"
             renamed_tag: "Schlagwort umbenannt"
@@ -4321,8 +4322,8 @@ de:
             activate_user: "Benutzer aktivieren"
             deactivate_user: "Benutzer deaktivieren"
             change_readonly_mode: "Nur-Lesen-Modus ändern"
-            backup_download: "Back-up herunterladen"
-            backup_destroy: "Back-up löschen"
+            backup_download: "Backup herunterladen"
+            backup_destroy: "Backup löschen"
             reviewed_post: "Geprüfter Beitrag"
             custom_staff: "Plug-in-spezifische Aktion"
             post_locked: "Beitrag gesperrt"
@@ -4815,7 +4816,7 @@ de:
           api: "API-Schnittstelle"
           user_api: "Benutzer-API"
           uncategorized: "Sonstiges"
-          backups: "Back-ups"
+          backups: "Backups"
           login: "Anmeldung"
           plugins: "Plug-ins"
           user_preferences: "Benutzereinstellungen"

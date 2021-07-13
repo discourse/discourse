@@ -1349,7 +1349,6 @@ zh_CN:
     category_search_priority_high_weight: "应用于高类别搜索优先级排名的权重。"
     allow_uncategorized_topics: "允许创建没有类别的话题。警告：如果有任何未分类的话题，您必须先对它们进行重新分类，然后才能将其关闭。"
     allow_duplicate_topic_titles: "允许有相同或重复标题的话题。"
-    allow_duplicate_topic_titles_category: "如果类别不同，允许有相同或重复标题的话题。\nallow_duplicate_topic_titles 必须设置为 false。"
     unique_posts_mins: "用户可以再次发布相同内容的帖子前需要等待的分钟数"
     educate_until_posts: "当用户开始输入他们的前几 (n) 个新帖子时，在编辑器中显示弹出式新用户教育面板。"
     title: "此站点的名称，在标题标签中使用。"
@@ -1561,7 +1560,6 @@ zh_CN:
     discord_secret: "Discord Secret Key"
     discord_trusted_guilds: '只允许这些 Discord 公会的成员通过 Discord 登录。使用公会的数字 ID。更多有关信息，请查看<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">这里</a>的说明。留空则允许任意公会。'
     enable_backups: "允许管理员创建论坛备份"
-    allow_restore: "允许导入数据，这将能替换所有全站数据！除非您计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     automatic_backups_enabled: "按照定义的备份频率运行自动备份计划"
     backup_frequency: "备份之间的天数。"

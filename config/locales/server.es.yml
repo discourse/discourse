@@ -1404,7 +1404,6 @@ es:
     category_search_priority_high_weight: "Peso aplicado para la ordenación de categorías con prioridad alta."
     allow_uncategorized_topics: "Permitir la creación de temas sin categoría. AVISO: Si ya hay algún tema sin categoría, debes recategorizarlo antes de desactivar esta opción."
     allow_duplicate_topic_titles: "Permitir temas con títulos idénticos, duplicados."
-    allow_duplicate_topic_titles_category: "Permitir temas con títulos idénticos/duplicados si la categoría es diferente. allow_duplicate_topic_titles debe tener el valor false."
     unique_posts_mins: "Cantidad de minutos que deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo"
     educate_until_posts: "Cuando el usuario comienza a escribir sus primeras (n) publicaciones, mostrar el panel emergente de consejos para usuarios nuevos en el editor."
     title: "El nombre de este sitio, utilizada en la etiqueta título."
@@ -1619,7 +1618,6 @@ es:
     discord_secret: "Clave secreta de Discord"
     discord_trusted_guilds: 'Solo permitir iniciar sesión con Discord a miembros de estas guilds de Discord. Usa la ID numérica del guild. Para más información, mira las instrucciones <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Deja en blanco para permitir cualquier guild.'
     enable_backups: "Permitir a los administradores crear respaldos del foro"
-    allow_restore: "Permitir restaurar, ¡lo cual puede remplazar TODOS los datos del sitio! Dejar en falso a menos de que tengas planeado recuperar los datos desde una copia de seguridad."
     maximum_backups: "La cantidad máxima de copias de seguridad que se mantendrán en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     automatic_backups_enabled: "Ejecutar respaldos automáticos definidos por la opción de frecuencia de respaldos"
     backup_frequency: "El número de días entre respaldos."

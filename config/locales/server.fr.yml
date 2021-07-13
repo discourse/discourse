@@ -1405,7 +1405,6 @@ fr:
     category_search_priority_high_weight: "Pondération appliquée au classement des résultats de recherche pour les catégories à priorité élevée."
     allow_uncategorized_topics: "Autoriser la création de sujets sans catégorie. ATTENTION : s'il existe des sujets sans catégorie, vous devez les classer avant de désactiver ce paramètre."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
-    allow_duplicate_topic_titles_category: "Autoriser les sujets avec un titre identique si la catégorie est différente. Le paramètre « allow_duplicate_topic_titles » doit être désactivé."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse publier le même contenu à nouveau"
     educate_until_posts: "Lors de la rédaction des (n) premiers nouveaux sujets de l'utilisateur, afficher le panneau d'aide à la saisie."
     title: "Le nom du site utilisé dans la balise title."
@@ -1620,7 +1619,6 @@ fr:
     discord_secret: "Clé secrète Discord"
     discord_trusted_guilds: 'Seuls les membres de ces guildes Discord peuvent se connecter via Discord. Utilisez les identifiants numériques des guildes. Pour plus d''informations, suivez les instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">ici</a>. Laissez vide pour autoriser toutes les guildes.'
     enable_backups: "Autoriser les administrateurs à créer des sauvegardes du forum"
-    allow_restore: "Autoriser la restauration, qui peut écraser TOUTES les données du site ! Laissez ce paramètre désactivé sauf si vous envisagez de restaurer une sauvegarde"
     maximum_backups: "Nombre maximal de sauvegardes à conserver sur le disque. Les anciennes sauvegardes seront automatiquement supprimées"
     automatic_backups_enabled: "Créer automatiquement des sauvegardes suivant la fréquence définie dans le paramètre « backup frequency »"
     backup_frequency: "Nombre de jours entre chaque sauvegarde"

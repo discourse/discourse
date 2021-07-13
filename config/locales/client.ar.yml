@@ -2347,6 +2347,7 @@ ar:
       read_more_in_category: "هل تريد قراءة المزيد؟ تصفَّح الموضوعات الأخرى في %{catLink} أو %{latestLink}."
       read_more: "هل تريد قراءة المزيد؟ %{catLink} أو %{latestLink}."
       unread_indicator: "لم يقرأ أي عضو آخر منشور في هذا الموضوع بعد."
+      read_more_MF: "متبقٍ {UNREAD, plural, zero {<a href='{basePath}/unread'># موضوع غير مقروء</a>} one {<a href='{basePath}/unread'>موضوع واحد غير مقروء (#)</a>} two {<a href='{basePath}/unread'>موضوعان غير مقروءَين (#)</a>} few {<a href='{basePath}/unread'># موضوعات غير مقروءة</a>} many {<a href='{basePath}/unread'># موضوعًا غير مقروء</a>} other {<a href='{basePath}/unread'># موضوع غير مقروء</a>}} و{NEW, plural, zero {<a href='{basePath}/new'># موضوع جديد</a>} one {<a href='{basePath}/new'>موضوع واحد جديد (#)</a>} two {<a href='{basePath}/new'>موضوعان جديدان (#)</a>} few {<a href='{basePath}/new'># موضوعات جديدة</a>} many {<a href='{basePath}/new'># موضوعًا جديدًا</a>} other {<a href='{basePath}/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {يمكنك تصفُّح الموضوعات الأخرى في {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: تصفُّح كل الفئات
       browse_all_tags: تصفُّح كل الوسوم

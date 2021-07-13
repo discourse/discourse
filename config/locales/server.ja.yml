@@ -1318,7 +1318,6 @@ ja:
     allow_new_registrations: "新しいユーザーの登録を許可。新規アカウントを作成できないようにするには、これをオフにします。"
     google_oauth2_client_id: "あなたの Google アプリケーションのクライアント ID"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアントシークレット"
-    allow_restore: "復元を許可。サイトの全データが置き換えられます！バックアップを復元しない場合は、false のままにしてください"
     maximum_backups: "ディスクに保存するバックアップの最大数。古いバックアップは自動的に削除されます"
     s3_backup_bucket: "バックアップを保持するリモートバケット。警告: 必ずプライベートバケットになっていることを確認してください"
     active_user_rate_limit_secs: "'last_seen_at' フィールドを更新する頻度 (秒)"

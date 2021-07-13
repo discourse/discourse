@@ -1387,7 +1387,6 @@ pt_BR:
     facebook_app_secret: "Segredo do aplicativo para autenticação do Facebook, registrado em <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     discord_secret: "Chave secreta do Discord"
     enable_backups: "Permitir que administradores(as) criem backups do fórum"
-    allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe a opção falsa, a menos que você pretenda restaurar um backup"
     maximum_backups: "A quantidade máxima de backups para manter no disco. Backups mais antigos são excluídos automaticamente"
     automatic_backups_enabled: "Realizar backups automáticos, como definido na frequência de backup"
     backup_frequency: "A quantidade de dias entre os backups."
