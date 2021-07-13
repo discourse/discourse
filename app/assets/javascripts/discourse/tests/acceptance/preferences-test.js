@@ -524,3 +524,36 @@ acceptance("Security", function (needs) {
     );
   });
 });
+
+acceptance(
+  "User Preferences for staged user and don't allow tracking prefs",
+  function (needs) {
+    needs.settings({
+      allow_changing_staged_user_tracking: false,
+      tagging_enabled: true,
+    });
+    needs.pretender(preferencesPretender);
+
+    test("staged user doesn't show category and tag preferences", async function (assert) {
+      await visit("/u/staged/preferences");
+
+      assert.ok($("body.user-preferences-page").length, "has the body class");
+      assert.equal(
+        currentURL(),
+        "/u/staged/preferences/account",
+        "defaults to account tab"
+      );
+      assert.ok(exists(".user-preferences"), "it shows the preferences");
+
+      assert.ok(
+        !exists(".preferences-nav .nav-categories a"),
+        "categories tab isn't there for staged users"
+      );
+
+      assert.ok(
+        !exists(".preferences-nav .nav-tags a"),
+        "tags tab isn't there for staged users"
+      );
+    });
+  }
+);

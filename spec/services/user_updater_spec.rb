@@ -52,7 +52,7 @@ describe UserUpdater do
 
     it 'can update categories and tags' do
       user = Fabricate(:user)
-      updater = UserUpdater.new(acting_user, user)
+      updater = UserUpdater.new(user, user)
       updater.update(watched_tags: "#{tag.name},#{tag2.name}", muted_category_ids: [category.id])
 
       expect(TagUser.where(
@@ -72,7 +72,40 @@ describe UserUpdater do
         category_id: category.id,
         notification_level: CategoryUser.notification_levels[:muted]
       ).count).to eq(1)
+    end
 
+    context "staged user" do
+      let(:staged_user) { Fabricate(:staged) }
+
+      context "allow_changing_staged_user_tracking is false" do
+        before { SiteSetting.allow_changing_staged_user_tracking = false }
+
+        it "doesn't update categories and tags" do
+          updater = UserUpdater.new(Fabricate(:admin), staged_user)
+          updater.update(watched_tags: "#{tag.name}", muted_category_ids: [category.id])
+          expect(TagUser.where(user_id: staged_user.id).count).to eq(0)
+          expect(CategoryUser.where(user_id: staged_user.id).count).to eq(0)
+        end
+      end
+
+      context "allow_changing_staged_user_tracking is true" do
+        before { SiteSetting.allow_changing_staged_user_tracking = true }
+
+        it "updates categories and tags" do
+          updater = UserUpdater.new(Fabricate(:admin), staged_user)
+          updater.update(watched_tags: "#{tag.name}", muted_category_ids: [category.id])
+          expect(TagUser.where(
+            user_id: staged_user.id,
+            tag_id: tag.id,
+            notification_level: TagUser.notification_levels[:watching]
+          ).exists?).to eq(true)
+          expect(CategoryUser.where(
+            user_id: staged_user.id,
+            category_id: category.id,
+            notification_level: CategoryUser.notification_levels[:muted]
+          ).exists?).to eq(true)
+        end
+      end
     end
 
     it "doesn't remove notification prefs when updating something else" do
