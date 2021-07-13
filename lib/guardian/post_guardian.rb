@@ -251,7 +251,9 @@ module PostGuardian
   end
 
   def can_change_post_owner?
-    is_admin?
+    return true if is_admin?
+
+    SiteSetting.moderators_change_post_ownership && is_staff?
   end
 
   def can_change_post_timestamps?
