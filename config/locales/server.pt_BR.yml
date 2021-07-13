@@ -2325,115 +2325,115 @@ pt_BR:
         Se você está recebendo isso e você incluiu uma resposta, tente novamente com uma formatação mais simples.
     email_reject_parsing:
       title: "E-mail rejeitado em análise"
-      subject_template: "[%{email_prefix}] Problema por e-mail - conteúdo não reconhecido"
+      subject_template: "[%{email_prefix}] Problema no e-mai, conteúdo não reconhecido"
       text_body_template: |
-        Nos desculpamos, mas sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Não pudemos encontrar seu resposta no email. **Certifique-se que sua resposta está no topo do email** -- não conseguimos processar respostas em linha.
+        Não pudemos encontrar seu resposta no e-mail. **Verifique se sua resposta está no topo do e-mail**, não foi possível processar respostas em linha.
     email_reject_invalid_access:
-      title: "E-mail Rejeitado, acesso inválido"
-      subject_template: "[%{email_prefix}] Problema de e-mail - Acesso inválido"
+      title: "E-mail rejeitado, acesso inválido"
+      subject_template: "[%{email_prefix}] Problema no e-mail, acesso inválido"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intulada %{former_title}) não furcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Sua conta não tem os privilégios para postar novos tópicos nessa categoria. Se você acredita que isso é um erro, [contate um membro da equipe](%{base_url}/sobre isso).
+        Sua conta não tem os privilégios para postar novos tópicos nesta categoria. Se você acha que isso é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_strangers_not_allowed:
-      title: "E-mail Rejeitado, Estranhos Não Permitidos"
-      subject_template: "[%{email_prefix}] Problema de e-mail - Acesso inválido"
+      title: "E-mail rejeitado, estranhos(as) não permitidos(as)"
+      subject_template: "[%{email_prefix}] Problema no e-mail, acesso inválido"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de  %{former_title}) não funcionou.
 
-        A categoria para a qual você enviou este e-mail permite somente respostas de usuários com contas válidas e endereços de e-mail conhecidos. Se você acredita que isso é um erro, [entre em contato com um funcionário](%{base_url}/sobre isso).
+        A categoria para a qual você enviou este e-mail permite somente respostas de usuários(as) com contas válidas e endereços de e-mail conhecidos. Se você acha que isso é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_invalid_post:
-      title: "E-mail Rejeitado, Post inválido"
-      subject_template: "[%{email_prefix}] Problema de e-mail - erro de postagem"
+      title: "E-mail rejeitado, postagem inválida"
+      subject_template: "[%{email_prefix}] Problema no e-mail, erro na postagem"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Algumas causas possíveis são: formatação complexa, mensagem muito grande, mensagem muito pequena. Por favor, tente novamente, ou poste através do site, se isso continuar.
+        Algumas causas possíveis são: formatação complexa, mensagem muito grande, mensagem muito pequena. Tente novamente, ou poste pelo site se isso continuar.
     email_reject_invalid_post_specified:
-      title: "E-mail Rejeitado, especificado inválido do post"
-      subject_template: "[%{email_prefix}] Problema de e-mail - erro de postagem"
+      title: "E-mail rejeitado, postagem inválida especificada"
+      subject_template: "[%{email_prefix}] Problema no e-mail, erro na postagem"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para%{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para%{destination} (com o título de %{former_title}) não funcionou.
 
-        Razão:
+        Motivo:
 
         %{post_error}
 
-        Se você puder corrigir o problema, tente novamente
-      date_invalid: "Nenhuma data de criação de postagem foi encontrada. O e-mail está faltando um cabeçalho Date:?"
+        Se você puder corrigir o problema, tente novamente.
+      date_invalid: "Nenhuma data de criação para postagem foi encontrada. Falta data no e-mail: cabeçalho?"
     email_reject_post_too_short:
-      title: "Rejeição de E-mail de Postagem Muito Curta"
-      subject_template: "[%{email_prefix}] Problema de e-mail -- postagem muito curta"
+      title: "Rejeição de e-mail, postagem muito curta"
+      subject_template: "[%{email_prefix}] Problema no e-mail, postagem muito curta"
       text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
+        Desculpe, mas a sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Para promover conversas mais profundas, respostas muito curtas não são permitidas. Você pode por favor responder com pelo menos %{count} caracteres? Como alternativa, você pode curtir uma postagem por e-mail respondendo com "+1".
+        Para promover conversas mais complexas, respostas muito curtas não são permitidas. Você pode responder com pelo menos %{count} caracteres? Como alternativa, também é possível curtir uma postagem por e-mail respondendo com "+1".
     email_reject_invalid_post_action:
-      title: "E-mail Rejeitado por Publicação de Ação Inválida"
-      subject_template: "[%{email_prefix}] Problema por e-mail - ação de postagem inválida"
+      title: "E-mail rejeitado por publicação de ação inválida"
+      subject_template: "[%{email_prefix}] Problema no e-mail, ação de postagem inválida"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada%{former_title}) não funcionou.
-        A ação de postagem não foi reconhecida. Por favor, tente novamente, ou poste através do site, se isso continuar.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
+        A ação de postagem não foi reconhecida. Tente novamente, ou poste pelo site se isso continuar.
     email_reject_reply_key:
-      title: "E-mail Rejeitado por Chave de Resposta"
-      subject_template: "[%{email_prefix}] Problema de e-mail - chave de resposta desconhecida"
+      title: "E-mail rejeitado por chave de resposta"
+      subject_template: "[%{email_prefix}] Problema no e-mail, chave de resposta desconhecida"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        A chave de resposta no e-mail é inválida ou desconhecida, por isso não podemos descobrir em que este e-mail está em resposta. [Entre em contato com um membro da equipe](%{base_url}/sobre).
+        A chave de resposta no e-mail é inválida ou desconhecida, por isso não podemos descobrir ao que este e-mail está respondendo. [Entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_bad_destination_address:
-      title: "E-mail Rejeitado por endereço de destino inválido"
-      subject_template: "[%{email_prefix}] Problema de e-mail - desconhecido para: endereço"
+      title: "E-mail rejeitado por endereço de destino inválido"
+      subject_template: "[%{email_prefix}] Problema no e-mail, desconhecido para: endereço"
     email_reject_old_destination:
-      title: "E-mail Rejeitado por Destino Antigo"
-      subject_template: "[%{email_prefix}] Problema de e-mail: você está tentando responder a uma notificação antiga"
+      title: "E-mail rejeitado por destino antigo"
+      subject_template: "[%{email_prefix}] Problema no e-mail, você está tentando responder a uma notificação antiga"
       text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
+        Desculpe, mas a sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Nós só aceitamos respostas às notificações originais por %{number_of_days} dias. Por favor, [visite o tópico](%{short_url}) para continuar a conversa.
+        Só aceitamos respostas às notificações originais por %{number_of_days} dias. [Acesse o tópico](%{short_url}) para continuar a conversa.
     email_reject_topic_not_found:
-      title: "E-mail Rejeitado por Tópico Não Encontrado"
-      subject_template: "[%{email_prefix}] Problema de e-mail - Tópico não encontrado"
+      title: "E-mail rejeitado por tópico não encontrado"
+      subject_template: "[%{email_prefix}] Problema no e-mail, tópico não encontrado"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        O tópico para o qual você está respondendo não existe mais - talvez tenha sido excluído? Se você acredita que isso é um erro, [contate um membro da equipe](%{base_url}/sobre).
+        O tópico para o qual você está respondendo não existe mais, pode ter sido excluído. Se você acha que isso é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_topic_closed:
-      title: "E-mail Rejeitado por Tópico fechado"
-      subject_template: "[%{email_prefix}] Problema de e-mail - Tópico fechado"
+      title: "E-mail rejeitado por tópico fechado"
+      subject_template: "[%{email_prefix}] Problema no e-mail, tópico fechado"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para%{destination} (intitulada %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para%{destination} (com o título de %{former_title}) não funcionou.
 
-        O tópico para o qual você está respondendo está atualmente fechado e não aceita mais respostas. Se você acredita que isso é um erro, [contate um membro da equipe](%{base_url}/sobre).
+        O tópico ao o qual você está respondendo está fechado por enquanto e não aceita mais respostas. Se você acha que isso é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_auto_generated:
-      title: "E-mail Rejeitado Gerado automaticamente"
-      subject_template: "[%{email_prefix}] Problema de e-mail - Resposta gerada automaticamente"
+      title: "E-mail rejeitado, gerado automaticamente"
+      subject_template: "[%{email_prefix}] Problema no e-mail, resposta gerada automaticamente"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Seu e-mail foi marcado como "gerado automaticamente", o que significa que foi criado automaticamente por um computador em vez de ser digitado por um ser humano; não podemos aceitar esses tipos de e-mails. Se você acredita que isso é um erro, [entre em contato com um funcionário](%{base_url}/sobre).
+        Seu e-mail foi marcado como "gerado automaticamente", o que significa que foi criado automaticamente por um computador em vez de ser digitado por um ser humano. Não podemos aceitar esses tipos de e-mails. Se você acha que isso é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
     email_reject_unrecognized_error:
-      title: "E-mail Rejeitado Erro não reconhecido"
-      subject_template: "[%{email_prefix}] Problema de e-mail - erro não reconhecido"
+      title: "E-mail rejeitado, erro não reconhecido"
+      subject_template: "[%{email_prefix}] Problema no e-mail, erro não reconhecido"
       text_body_template: |
-        Desculpe, mas sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
-        Ocorreu um erro não reconhecido ao processar seu e-mail e não foi publicado. Você deve tentar novamente ou [contatar um membro da equipe](%{base_url}/sobre).
+        Ocorreu um erro não reconhecido ao processar seu e-mail e ele não foi publicado. Você deve tentar novamente ou [entrar em contato com um membro da equipe](%{base_url}/about).
     email_reject_attachment:
-      title: "Anexo do E-mail Rejeitado"
-      subject_template: "[%{email_prefix}] Problema de e-mail -- Anexo Rejeitado"
+      title: "Anexo do e-mail rejeitado"
+      subject_template: "[%{email_prefix}] Problema no e-mail, anexo rejeitado"
       text_body_template: |
-        Infelizmente alguns anexos em sua mensagem de e-mail para %{destination} (intitulado %{former_title}) foram rejeitados.
+        Infelizmente alguns anexos em sua mensagem de e-mail para %{destination} (com o título de %{former_title}) foram rejeitados.
 
         Detalhes:
         %{rejected_errors}
 
-        Se você acredita que isto é um erro, [contate um membro da staff](%{base_url}/about).
+        Se você acha que isto é um erro, [entre em contato um membro da equipe](%{base_url}/about).
     email_reject_reply_not_allowed:
-      title: "Rejeição de E-mail de Resposta Não Permitida"
-      subject_template: "[%{email_prefix}] Problema de e-mail -- Resposta Não Permitida"
+      title: "Rejeição de e-mail, resposta não permitida"
+      subject_template: "[%{email_prefix}] Problema no e-mail, resposta não permitida"
       text_body_template: |
         Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
@@ -2790,10 +2790,10 @@ pt_BR:
 
         %{message}
     account_suspended:
-      title: "Conta Suspença"
+      title: "Conta suspença"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"
     account_silenced:
-      title: "Conta Silenciada"
+      title: "Conta silenciada"
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
     account_exists:
       title: "esta conta já existe"
@@ -3271,89 +3271,89 @@ pt_BR:
       name: Link famoso
       description: Postou um link externo com 1.000 cliques
       long_description: |
-        Esse emblema é concedido quando um link compartilhado recebe 1.000 cliques. Uau! Você postou um link que melhorou significativamente a conversa adicionando detalhes, contexto e informações essenciais. Ótimo trabalho!
+        Este emblema é concedido quando um link compartilhado recebe 1.000 cliques. Uau! Você postou um link que melhorou consideravelmente a conversa adicionando detalhes, contexto e informações essenciais. Ótimo trabalho!
     appreciated:
-      name: Agradecido
-      description: Teve 20 mensagens curtidas
+      name: Apreciado
+      description: Recebeu uma curtida em 20 postagens
       long_description: |
-        Esse emblema é concedido quando você recebe ao menos uma curtida em 20 postagens diferentes. A comunidade está gostando das suas contribuições às conversas aqui!
+        Este emblema é concedido quando você recebe ao menos uma curtida em 20 postagens diferentes. A comunidade está gostando das suas contribuições para as conversas!
     respected:
       name: Respeitado
       description: Recebeu 2 curtidas em 100 postagens
       long_description: |
-        Esse emblema é concedido quando você recebe ao menos 2 curtidas em 100 posts diferentes. A comunidade está cultivando um respeito por suas várias contribuições e conversas aqui.
+        Este emblema é concedido quando você recebe ao menos duas curtidas em 100 postagens diferentes. A comunidade está desenvolvendo respeito por suas várias contribuições e conversas aqui.
     admired:
-      name: Admirado
-      description: Recebeu 5 curtidas em 300 postagens
+      name: Admirado(a)
+      description: Recebeu cinco curtidas em 300 postagens
       long_description: |
-        Esse emblema é concedido quando você recebe pelo menos 5 curtidas em 300 postagens diferentes. Uau! A comunidade admira suas contribuições freqüentes e de alta qualidade para as conversas aqui.
+        Este emblema é concedido quando você recebe pelo menos cinco curtidas em 300 postagens diferentes. Uau! A comunidade admira suas contribuições frequentes e de alta qualidade para as conversas aqui.
     out_of_love:
-      name: Por Amor
+      name: Por amor
       description: Usou %{max_likes_per_day} curtidas no mesmo dia
       long_description: |
-        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias. Lembrar-se de curtir as postagens que você gosta e aprecia incentiva seus colegas membros da comunidade a criar ainda mais discussões de qualidade no futuro.
+        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias. Lembre-se de que curtir as suas postagens favoritas incentiva seus colegas da comunidade a criar ainda mais discussões de qualidade no futuro.
     higher_love:
-      name: Amor Maior
-      description: Usou %{max_likes_per_day} curtidas no mesmo dia 5 vezes
+      name: Amor maior
+      description: Usou %{max_likes_per_day} curtidas no mesmo dia cinco vezes
       long_description: |
-        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias durante 5 dias. Obrigado por dedicar um tempo para incentivar ativamente as melhores conversas todos os dias!
+        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias durante cinco dias. Obrigado por dedicar um tempo para incentivar ativamente as melhores conversas todos os dias!
     crazy_in_love:
-      name: Apaixonado
+      name: Apaixonado(a)
       description: Usou %{max_likes_per_day} curtidas no mesmo dia 20 vezes
       long_description: |
-        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias durante 20 dias. Uau! Você é um modelo para incentivar seus colegas membros da comunidade!
+        Este emblema é concedido quando você usa todas as suas %{max_likes_per_day} curtidas diárias durante 20 dias. Uau! Você é um exemplo para incentivar os membros da comunidade!
     thank_you:
       name: Obrigado
-      description: Teve 20 postagens curtidas e curtiu 10 postagens
+      description: Teve 20 postagens curtidas e curtiu dez postagens
       long_description: |
-        Esse emblema é concedido quando você tem 20 postagens curtidas e dá 10 curtidas ou mais em troca. Quando alguém curte suas postagens, você encontra tempo de curtir o que os outros estão postando também.
+        Este emblema é concedido quando você tem 20 postagens curtidas e dá 10 curtidas ou mais em troca. Quando alguém curte suas postagens, você dedica tempo para curtir o que os(as) outros(as) estão postando também.
     gives_back:
-      name: Retribuidor
+      name: Retribuidor(a)
       description: Curtiu 100 postagens e teve 100 postagens curtidas
       long_description: |
-        Esse emblema é concedido quando você tem 100 postagens curtidas e dá 100 curtidas ou mais em troca. Obrigado por passar pra frente!
+        Este emblema é concedido quando você tem 100 postagens curtidas e dá 100 curtidas ou mais em troca. Obrigado por passar para frente!
     empathetic:
-      name: Empático
-      description: Curtiu 1000 mensagens e recebeu 500 curtidas
+      name: Empático(a)
+      description: Curtiu 1.000 mensagens e recebeu 500 curtidas
       long_description: |
-        Esse emblema é concedido quando você tem 500 postagens e recebe 1.000 curtidas ou mais em troca. Uau! Você é um modelo de generosidade e apreciação mútua :two_hearts:.
+        Este emblema é concedido quando você tem 500 postagens e recebe 1.000 curtidas ou mais em troca. Uau! Você é um modelo de generosidade e apreciação mútua :two_hearts:.
     first_emoji:
       name: Primeiro emoji
-      description: Utilizou um emoji em uma publicação
+      description: Utilizou um emoji em uma postagem
       long_description: |
-        Este emblema é concedido na primeira vez que você adicionar um Emoji à sua postagem :thumbsup:. Emojis permitem que você transmita emoção em suas postagens, desde felicidade :smiley: até tristeza :anguished:, raiva :angry: e todo o resto :sunglasses:. Basta digitar um : (dois pontos) ou pressionar o botão de Emoji na barra de ferramentas do editor para selecionar uma das centenas de opções :ok_hand:
+        Este emblema é concedido na primeira vez que você adicionar um Emoji à sua postagem :thumbsup:. Emojis permitem que você transmita emoção em suas postagens, de felicidade :smiley: até tristeza :anguished:, raiva :angry: e todo o resto :sunglasses:. Basta digitar um : (dois pontos) ou pressionar o botão de emoji na barra de ferramentas do editor para selecionar uma das centenas de opções :ok_hand:
     first_mention:
       name: Primeira menção
-      description: Mencionou um usuário em uma postagem
+      description: Mencionou um(a) usuário(a) em uma postagem
       long_description: |
-        Este emblema é concedido na primeira vez em que você menciona o @nome_de_usuário de alguém na sua postagem. Cada menção gera uma notificação para essa pessoa, para que ela saiba sobre sua postagem. Basta começar a digitar @ (arroba) para mencionar qualquer usuário ou, se permitido, um grupo – é uma maneira conveniente de chamar a atenção de outros usuários para algo.
+        Este emblema é concedido na primeira vez em que você menciona o @nome_de_usuário de alguém na sua postagem. Cada menção gera uma notificação para essa pessoa, para que saiba sobre sua postagem. Basta começar a digitar @ (arroba) para mencionar qualquer usuário(a) ou, se permitido, um grupo. É uma maneira conveniente de chamar a atenção de outros(as) usuários(as) para algo.
     first_onebox:
       name: Primeiro Onebox
-      description: Postou um link que foi embutido na mensagem
+      description: Postou um link que foi acrescentado ao Onebox
       long_description: |
-        Esse emblema é concedido na primeira vez em que você publica um link em uma linha sozinho, que é automaticamente expandido para um embed com um resumo, título e (quando disponível) imagem.
+        Este emblema é concedido na primeira vez em que você publica um link em uma linha sozinho, que é automaticamente expandido para um Onebox com um resumo, título e (quando disponível) imagem.
     first_reply_by_email:
-      name: Primeira Resposta por email
+      name: Primeira resposta por e-mail
       description: Respondeu a uma postagem por e-mail
       long_description: |
-        Este emblema é concedido na primeira vez que você responder a uma postagem por email :e-mail:.
+        Este emblema é concedido na primeira vez que você responder a uma postagem por e-mail :e-mail:.
     new_user_of_the_month:
-      name: "Novo usuário do mês"
+      name: "Novo(a) usuário(a) do mês"
       description: Contribuições pendentes no primeiro mês
       long_description: |
-        Este emblema é concedido para parabenizar dois novos usuários a cada mês por suas excelentes contribuições gerais, de acordo com quantas e quais pessoas curtiram suas postagens.
+        Este emblema é concedido para parabenizar dois(duas) novos(as) usuários(as) a cada mês por suas excelentes contribuições gerais, de acordo com quantas e quais pessoas curtiram suas postagens.
     enthusiast:
       name: Entusiasta
-      description: Visitou 10 dias consecutivos
+      description: Acessou durante dez dias consecutivos
       long_description: |
-        Este emblema é concedido ao visitar durante 10 dias consecutivos. Obrigado por ficar com a gente por mais de uma semana!
+        Este emblema é concedido ao acessar durante dez dias consecutivos. Obrigado por ficar com a gente por mais de uma semana!
     aficionado:
-      name: Aficionado
-      description: Visitou 100 dias consecutivos
+      name: Aficionado(a)
+      description: Acessou durante 100 dias consecutivos
       long_description: |
-        Este distintivo é concedido para visitas de 100 dias consecutivos. Isso é mais do que três meses!
+        Este distintivo é concedido por acessar durante 100 dias consecutivos. Isso é mais do que três meses!
     devotee:
-      name: Devoto
+      name: Devoto(a)
       description: Acessou 365 dias consecutivos
       long_description: |
         Este emblema é concedido por ter acessado 365 dias consecutivos. Uau, um ano inteiro!
@@ -3574,8 +3574,8 @@ pt_BR:
       high: "Alta"
     must_claim: "Você precisa reivindicar itens antes de agir sobre eles."
     user_claimed: "Este item foi reivindicado por outro usuário."
-    missing_version: "Você precisa fornecer um parâmetro de versão"
-    conflict: "Houve um conflito de atualização impedindo você de fazer isso."
+    missing_version: "Você precisa informar um parâmetro de versão"
+    conflict: "Houve um conflito de atualização impedindo de fazer isso."
     reasons:
       post_count: "As primeiras postagens de todos os(as) usuários(as) devem ser aprovadas pela equipe. Acesse \"approve_post_count\"."
       trust_level: "Usuários(as) com níveis de confiança baixos precisam ter respostas aprovadas pela equipe. Veja \"approve_unless_trust_level\"."

@@ -3288,6 +3288,12 @@ it:
     confirm_new_email_via_admin:
       title: "Conferma nuova e-mail"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo indirizzo mail"
+      text_body_template: |
+        Conferma il tuo nuovo indirizzo mail per %{site_name} cliccando sul seguente link:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Questa modifica dell'e-mail è stata richiesta da un amministratore del sito. Se non hai richiesto tu questa modifica, contatta un [amministratore del sito](%{base_url}/about).
     confirm_old_email:
       title: "Conferma Vecchia Email"
       subject_template: "[%{email_prefix}] Conferma il tuo attuale indirizzo email"
@@ -3298,7 +3304,14 @@ it:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
+      title: "Conferma vecchia email (Aggiunta)"
       subject_template: "[%{email_prefix}] Conferma il tuo attuale indirizzo email"
+      text_body_template: |
+        Prima di poter aggiungere un nuovo indirizzo email, devi confermare di essere il titolare dell'indirizzo email attuale. Dopo aver completato questo passaggio, dovrai confermare il nuovo indirizzo email.
+
+        Conferma il tuo attuale indirizzo email per %{site_name} cliccando il seguente link:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Notifica Vecchia Email"
       subject_template: "[%{email_prefix}] Il tuo indirizzo email è stato cambiato"
@@ -3339,6 +3352,13 @@ it:
         Promuoviamo da sempre un [comportamento civile della comunità](%{base_url}/guidelines).
 
         Buona permanenza!
+    signup_after_reject:
+      title: "Registrazione dopo un rifiuto"
+      subject_template: "Sei stato rifiutato su %{site_name}"
+      text_body_template: |
+        Un membro dello staff ha rifiutato il tuo account su %{site_name}.
+
+        %{reject_reason}
     signup:
       title: "Iscrizione"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo account"
@@ -3405,6 +3425,7 @@ it:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:
     sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto dallo stesso indirizzo IP (%{ip_address}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Questo nuovo utente ha provato a creare numerosi messaggi contenenti link allo stesso dominio. Tutti i messaggi di questo utente che contengono link devono essere controllati. Verifica l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   skipped_email_log:
     exceeded_emails_limit: "Ha superato max_emails_per_day_per_user"
     exceeded_bounces_limit: "Ha superato bounce_score_threshold"
@@ -3429,6 +3450,9 @@ it:
     sender_post_deleted: "il messaggio è stato cancellato"
     sender_message_to_invalid: "il destinatario ha un indirizzo email non valido"
     sender_topic_deleted: "L'argomento è stato eliminato"
+    group_smtp_post_deleted: "il messaggio è stato cancellato"
+    group_smtp_topic_deleted: "l'argomento è stato cancellato"
+    group_smtp_disabled_for_group: "smtp disabilitato per il gruppo"
   color_schemes:
     base_theme_name: "Base"
     light: "Chiaro"
@@ -3461,6 +3485,7 @@ it:
     Modifica il primo messaggio in questo argomento per cambiare il contenuto della pagina %{page_name}.
   guidelines_topic:
     title: "FAQ/Linee Guida"
+    body: "<a name=\"civilized\"></a>\n\n## [Questo è un posto destinato a discussioni pubbliche con toni civili](#civilized)\n\nTi preghiamo di tenere in questo forum di discussione lo stesso comportamento rispettoso che avresti in un parco pubblico. Anche la nostra è una comunità che condivide risorse &mdash; un posto in cui condividere competenze, conoscenze e interessi tramite un dialogo continuo.\n\nQueste regole non sono ferree. Sono linee guida per orientare il buon senso dei membri della nostra comunità e per mantenere questa sede un posto per conversazioni pubbliche condotte in modo gentile, amichevole e civile.\n\n<a name=\"improve\"></a>\n\n## [Migliora la Discussione](#improve)\n\nAiutaci a rendere questo posto la sede ideale per discussioni, aggiungendo sempre qualcosa di positivo, per quanto semplice o breve. Se hai dei dubbi sui messaggi da aggiungere alla conversazione, ripensa a quello che vuoi dire e ritorna a scriverlo più tardi.\n\nUn buon modo per migliorare le discussioni è quello di dare un'occhiata alle conversazioni già in corso. Passa un po' di tempo a leggere gli argomenti aperti prima di aggiungervi risposte o prima di crearne di nuovi. In questo modo, avrai maggiori possibilità di incontrare altre persone che condividono i tuoi interessi.\n\nGli argomenti qui discussi sono importanti per noi e ci aspettiamo che lo siano anche per te e che ti comporti di conseguenza. Devi sempre essere rispettoso degli argomenti discussi e delle persone che discutono, anche se non condividi le opinioni espresse.\n\n<a name=\"agreeable\"></a>\n\n## [Cerca di essere gradevole, anche quando sei in disaccordo](#agreeable)\n\nPuoi sempre rispondere in disaccordo a quanto detto, ci sta. Ma ricorda di _criticare le idee non le persone_. Quindi evita di:\n\n* Offendere\n* Portare attacchi _ad personam_\n* Rispondere al tono di un messaggio invece che al suo reale contenuto \n* Avviare un contraddittorio per partito preso\n\nPiuttosto, fornisci contro-argomentazioni valide che migliorino la discussione\n\n<a name=\"participate\"></a>\n\n## [Your Participation Counts](#participate)\n\nThe conversations we have here set the tone for every new arrival. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.\n\nDiscourse provides tools that enable the community to collectively identify the best (and worst) contributions: bookmarks, likes, flags, replies, edits, watching, muting and so forth. Use these tools to improve your own experience, and everyone else’s, too.\n\nLet’s leave our community better than we found it.\n\n<a name=\"flag-problems\"></a>\n\n## [If You See a Problem, Flag It](#flag-problems)\n\nModerators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.\n\nWhen you see bad behavior, don’t reply. Replying encourages bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.\n\nIn order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts; the moderators and site operators take no responsibility for any content posted by the community.\n\n<a name=\"be-civil\"></a>\n\n## [Always Be Civil](#be-civil)\n\nNothing sabotages a healthy conversation like rudeness:\n\n* Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.\n* Keep it clean. Don’t post anything obscene or sexually explicit.\n* Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.\n* Respect our forum. Don’t post spam or otherwise vandalize the forum.\n\nThese are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of a major news site.\n\nThis is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.\n\n<a name=\"keep-tidy\"></a>\n\n## [Keep It Tidy](#keep-tidy)\n\nMake the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:\n\n* Don’t start a topic in the wrong category; please read the category definitions.\n* Don’t cross-post the same thing in multiple topics.\n* Don’t post no-content replies.\n* Don’t divert a topic by changing it midstream.\n* Don’t sign your posts &mdash; every post has your profile information attached to it.\n\nRather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.\n\n<a name=\"stealing\"></a>\n\n## [Post Only Your Own Stuff](#stealing)\n\nYou may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.\n\n<a name=\"power\"></a>\n\n## [Powered by You](#power)\n\nThis site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](%{base_path}/c/site-feedback) and let’s discuss! If there’s a critical or urgent issue that can’t be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).\n\n<a name=\"tos\"></a>\n\n## [Terms of Service](#tos)\n\nYes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](%{base_path}/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](%{base_path}/tos).\n"
   tos_topic:
     title: "Termini del Servizio"
   privacy_topic:

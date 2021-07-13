@@ -763,6 +763,22 @@ ja:
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     error_staged: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでにステージングユーザーに使われている可能性があります。"
     already_done: "この確認リンクは有効ではありません。すでにメールアドレスが変更されている可能性があります。"
+    confirm: "確認"
+    authorizing_new:
+      title: "新しいメールの確認"
+      description: "メールアドレスを次のように変更することを確認してください:"
+      description_add: "代替メールアドレスを追加することを確認してください:"
+    authorizing_old:
+      title: "メールアドレスの変更"
+      description: "メールアドレスの変更を確認してください"
+      description_add: "代替メールアドレスを追加することを確認してください:"
+      old_email: "古いメール: %{email}"
+      new_email: "新しいメール: %{email}"
+      almost_done_title: "新しいメールアドレスの確認"
+      almost_done_description: "新しいメールアドレスに変更を確認するためのメールを送信しました！"
+  associated_accounts:
+    revoke_failed: "%{provider_name} のアカウントを取り消せませんでした。"
+    connected: "(接続済み)"
   activation:
     action: "クリックしてアカウントを確認する"
     already_done: "このアカウントの確認リンクは無効です。すでにアカウントがアクティブになっている可能性があります。"
@@ -774,6 +790,10 @@ ja:
     activated: "このアカウントはすでに確認済みです。"
     admin_confirm:
       title: "管理者アカウントの確認"
+      description: "<b>%{target_username} (%{target_email})</b> を管理者にしてもよろしいですか？"
+      grant: "管理者アクセスを付与"
+      complete: "<b>%{target_username}</b> は管理者になりました。"
+      back_to: "%{title} に戻る"
   reviewable_score_types:
     needs_approval:
       title: "承認待ち"
@@ -790,6 +810,8 @@ ja:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不適切"
+      description: 'この投稿には一般的な人が攻撃的、虐待的、または<a href="%{base_path}/guidelines">コミュニティガイドライン</a>に違反すると見なすコンテンツが含まれています。'
+      short_description: '<a href="%{base_path}/guidelines">コミュニティガイドライン</a>の違反'
     notify_user:
       title: "@%{username} にメッセージを送る"
       description: "この投稿についてこのユーザーと直接話すことを希望します。"
@@ -800,6 +822,7 @@ ja:
       title: "その他"
       description: "この投稿は上記以外の理由でスタッフの注意が必要です。"
       short_description: "その他の理由でスタッフの注意が必要"
+      email_title: '"%{title}" の投稿にはスタッフの注意が必要です'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "ブックマーク"
@@ -809,12 +832,20 @@ ja:
       title: "いいね！"
       description: "この投稿を「いいね！」する"
       short_description: "この投稿を「いいね！」する"
+  draft:
+    sequence_conflict_error:
+      title: "下書きエラー"
+      description: "下書きは別のウィンドウで編集されています。このページを再読み込みしてください。"
+  draft_backup:
+    pm_title: "進行中のトピックのバックアップ下書き"
+    pm_body: "バックアップの下書きを含むトピック"
   user_activity:
     no_default:
       self: "まだアクティビティがありません。"
       others: "アクティビティがありません。"
     no_bookmarks:
       self: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
+      search: "指定された検索クエリでブックマークは見つかりませんでした。"
       others: "ブックマークはありません。"
     no_likes_given:
       self: "「いいね！」した投稿はありません。"
@@ -822,8 +853,29 @@ ja:
     no_replies:
       self: "まだ投稿に返信していません。"
       others: "返信はありません。"
+    no_drafts:
+      self: "下書きはありません。トピックで返信の作成を始めると、新しい下書きとして自動保存されます。"
+  email_settings:
+    pop3_authentication_error: "指定された POP3 の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
+    imap_authentication_error: "指定された IMAP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
+    imap_no_response_error: "IMAP サーバーとの通信中にエラーが発生しました。%{message}"
+    smtp_authentication_error: "指定された SMTP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
+    authentication_error_gmail_app_password: 'アプリケーション固有のパスワードが必要です。<a target="_blank" href="https://support.google.com/accounts/answer/185833">こちらの Google ヘルプ記事</a>をご覧ください。'
+    smtp_server_busy_error: "SMTP サーバーは現在ビジー状態です。後でもう一度お試しください。"
+    smtp_unhandled_error: "SMTP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
+    imap_unhandled_error: "IMAP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
+    connection_error: "サーバーとの接続に問題が発生しました。サーバー名とポートを確認して、もう一度お試しください。"
+    timeout_error: "サーバーへの接続がタイムアウトしました。サーバー名とポートを確認して、もう一度お試しください。"
+    unhandled_error: "メールの設定をテスト中に未処理のエラーが発生しました。%{message}"
   webauthn:
     validation:
+      invalid_type_error: "指定された webauthn タイプが無効です。有効なタイプは webauthn.get と webauthn.create です。"
+      challenge_mismatch_error: "指定されたチャレンジは認証サーバーが生成したチャレンジに一致しません。"
+      invalid_origin_error: "認証リクエストの発信元がサーバーの発信元と一致しません。"
+      malformed_attestation_error: "認証データのデコード中にエラーが発生しました。"
+      invalid_relying_party_id_error: "認証リクエストの依拠当事者 ID がサーバーの依拠当事者 ID と一致しません。"
+      user_verification_error: "ユーザー確認が必要です。"
+      unsupported_public_key_algorithm_error: "指定された公開鍵アルゴリズムはサーバーでサポートされていません。"
       unsupported_attestation_format_error: "この認証形式はサーバーでサポートされていません。"
       credential_id_in_use_error: "入力された資格情報 ID はすでに使用されています。"
       public_key_error: "資格情報の公開鍵の確認に失敗しました。"
@@ -1032,21 +1084,27 @@ ja:
     user_to_user_private_messages:
       xaxis: "日"
       yaxis: "メッセージ件数"
+      description: "新たに開始された個人メッセージの数。"
     user_to_user_private_messages_with_replies:
+      title: "ユーザー間 (返信あり)"
       xaxis: "日"
       yaxis: "メッセージ件数"
+      description: "すべての新しい個人メッセージと応答の数。"
     system_private_messages:
       title: "システム"
       xaxis: "日"
       yaxis: "メッセージ件数"
+      description: "システムによって自動送信された個人メッセージの数。"
     moderator_warning_private_messages:
       title: "モデレーター警告"
       xaxis: "日"
       yaxis: "メッセージ件数"
+      description: "モデレーターからの個人メッセージで送信された警告の数。"
     notify_moderators_private_messages:
       title: "管理人に通知"
       xaxis: "日"
       yaxis: "メッセージ件数"
+      description: "モデレーターが通報によって非公開に通知された回数。"
     notify_user_private_messages:
       title: "ユーザーに通知"
       xaxis: "日"
@@ -1234,8 +1292,17 @@ ja:
     max_emojis_in_title: "トピックタイトルに許可される最大絵文字数"
     min_search_term_length: "有効な検索語の最小文字数"
     search_tokenize_chinese_japanese_korean: "CJK 以外のサイトでも強制検索で中国語/日本語/韓国語をトークン化する"
+    search_prefer_recent_posts: "大規模なフォーラムの検索が遅い場合、このオプションは先により直近の投稿のインデックスを試す"
+    search_recent_posts_size: "インデックスに保持する直近の投稿の数"
+    log_search_queries: "ユーザーが実行した検索クエリをログに記録する"
+    search_query_log_max_size: "保持する検索クエリの最大数"
+    search_query_log_max_retention_days: "検索クエリを保持する最大時間 (日数)。"
+    search_ignore_accents: "テキストを検索する際にアクセントを無視する。"
+    category_search_priority_low_weight: "カテゴリの検索優先度が低いランキングに適用される重み。"
+    category_search_priority_high_weight: "カテゴリの検索優先度が高いランキングに適用される重み。"
     allow_uncategorized_topics: "カテゴリなしでトピックを作成することを許可する。警告: 未分類のトピックがある場合は、これをオフにする前に、カテゴリを設定する必要があります。"
     allow_duplicate_topic_titles: "トピックに同一の重複するタイトルを指定することを許可する。"
+    allow_duplicate_topic_titles_category: "カテゴリが異なる場合、同一の重複したタイトルを持つトピックを許可する。allow_duplicate_topic_titles は無効にする必要があります。"
     unique_posts_mins: "同じコンテンツを投稿できるまでの時間 (分)"
     educate_until_posts: "最初の (n) 件の新規投稿を入力し始めたときに、新規ユーザーチュートリアルのパネルをポップアップ表示します。"
     title: "title タグで使用される、このサイトの名前です。"
@@ -1248,6 +1315,8 @@ ja:
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクの最低空き容量 (パーセント表示)"
     disabled_image_download_domains: "これらのドメインのリモート画像をダウンロードしない (パイプ区切りのリスト)。"
     editing_grace_period: "投稿から (n) 秒間は、編集しても投稿履歴に新しいバージョンを作成しない。"
+    editing_grace_period_max_diff: "編集猶予期間で変更が許可される最大文字数。さらに変更された場合は別の投稿リビジョンを保存します (信頼レベル 0 および 1)"
+    editing_grace_period_max_diff_high_trust: "編集猶予期間で変更が許可される最大文字数。さらに変更された場合は別の投稿リビジョンを保存します (信頼レベル 2 以上 )"
     edit_history_visible_to_public: "編集した投稿の前のバージョンをすべてのユーザーが閲覧することを許可する。無効である場合、スタッフメンバーのみが閲覧できます。"
     delete_removed_posts_after: "作者が削除した投稿は (n) 時間後に自動的に削除される。0 に設置すると、投稿は直ちに削除されます。"
     max_image_width: "投稿内のサムネイル画像の最大幅"
