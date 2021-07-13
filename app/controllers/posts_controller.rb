@@ -241,6 +241,8 @@ class PostsController < ApplicationController
     topic = post.topic
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 
+    opts[:increment_edits_count] = true
+
     revisor = PostRevisor.new(post, topic)
     revisor.revise!(current_user, changes, opts)
 

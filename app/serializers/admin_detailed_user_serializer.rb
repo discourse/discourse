@@ -12,6 +12,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :like_given_count,
              :post_count,
              :topic_count,
+             :post_edits_count,
              :flags_given_count,
              :flags_received_count,
              :private_topics_count,

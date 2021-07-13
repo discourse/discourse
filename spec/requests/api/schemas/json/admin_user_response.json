@@ -147,6 +147,12 @@
     "silence_reason": {
       "type": ["string", "null"]
     },
+    "post_edits_count": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
     "primary_group_id": {
       "type": ["string", "null"]
     },

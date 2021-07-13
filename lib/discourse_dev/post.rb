@@ -103,5 +103,9 @@ module DiscourseDev
       puts "Done!"
     end
 
+    def self.random
+      super(::Post)
+    end
+
   end
 end
