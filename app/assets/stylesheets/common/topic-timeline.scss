@@ -186,6 +186,8 @@
       margin-top: 1.5em;
       transition: opacity 0.2s ease-in;
       display: flex;
+      flex-wrap: wrap;
+      max-width: 9em;
 
       .reply-to-post {
         margin-right: 0.5em;
@@ -194,6 +196,9 @@
       button:last-child {
         margin-right: 0;
       }
+    }
+    .show-summary {
+      margin-bottom: 0.5em;
     }
 
     .start-date {
