@@ -104,7 +104,7 @@ export default class PostCooked {
       for (let i = 1; i <= 6; ++i) {
         const hLinks = onebox.querySelectorAll(`h${i} a[href]`);
         if (hLinks.length > 0) {
-          bestElements[onebox] = hLinks[0];
+          bestElements.push([onebox, hLinks[0]]);
           return;
         }
       }
@@ -112,7 +112,7 @@ export default class PostCooked {
       // use the header otherwise
       const hLinks = onebox.querySelectorAll("header a[href]");
       if (hLinks.length > 0) {
-        bestElements[onebox] = hLinks[0];
+        bestElements.push([onebox, hLinks[0]]);
       }
     });
 
@@ -140,11 +140,16 @@ export default class PostCooked {
         // don't display badge counts on category badge & oneboxes (unless when explicitly stated)
         if (valid && isValidLink($link)) {
           const $onebox = $link.closest(".onebox");
-          if (
-            $onebox.length === 0 ||
-            !bestElements[$onebox[0]] ||
-            bestElements[$onebox[0]] === $link[0]
-          ) {
+
+          let bestElement;
+          if ($onebox.length > 0) {
+            bestElement = bestElements.find((x) => x[0] === $onebox[0]);
+            if (bestElement) {
+              bestElement = bestElement[1];
+            }
+          }
+
+          if (!bestElement || bestElement === $link[0]) {
             const title = I18n.t("topic_map.clicks", { count: lc.clicks });
             $link.append(
               ` <span class='badge badge-notification clicks' title='${title}'>${number(
