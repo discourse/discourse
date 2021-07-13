@@ -292,10 +292,10 @@ const Group = RestModel.extend({
     });
   },
 
-  save() {
+  save(opts = {}) {
     return ajax(`/groups/${this.id}`, {
       type: "PUT",
-      data: { group: this.asJSON() },
+      data: Object.assign({ group: this.asJSON() }, opts),
     });
   },
 
