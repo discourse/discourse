@@ -582,6 +582,8 @@ ur:
     groups:
       member_added: "شامل کر دیا گیا"
       member_requested: "درخواست کیا گیا"
+      add_members:
+        usernames_placeholder: "صارف نام"
       requests:
         title: "درخواستیں"
         reason: "وجہ"
@@ -611,6 +613,8 @@ ur:
             password: "پاسورڈ"
           settings:
             title: "سیٹِنگ"
+          mailboxes:
+            disabled: "غیر فعال"
         membership:
           title: ممبرشپ
           access: رسائی
@@ -922,6 +926,7 @@ ur:
       enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
       enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
       change: "بدلیں"
+      featured_topic: "نمایاں موضوع"
       moderator: "%{user} ایک ماڈریٹر ہے"
       admin: "%{user} ایک ایڈمِن ہے"
       moderator_tooltip: "یہ صارف ایک ماڈریٹر ہے"
@@ -994,11 +999,9 @@ ur:
         sent: "بھیجا جا چکا"
         archive: "آر کائیو"
         groups: "میرے گروپ"
-        bulk_select: "پیغامات منتخب کریں"
         move_to_inbox: "اِنباکس میں منتقل کریں"
         move_to_archive: "آر کائیو"
         failed_to_move: "منتخب شدہ پیغامات کو منتقل کرنے میں ناکامی (شاید آپ کے نیٹ ورک بند ہے)"
-        select_all: "تمام منتخب کریں"
         tags: "ٹیگز"
       preferences_nav:
         account: "اکاؤنٹ"
@@ -1015,6 +1018,7 @@ ur:
         success: "(اِی میل بھیج دی گئ)"
         in_progress: "(اِی میل بھیجی جا رہی ہے)"
         error: "(خرابی)"
+        emoji: "لاک ایموجی"
         action: " پاس ورڈ دوبارہ سیٹ کرنے کی اِی میل بھیجیں"
         set_password: "پاس ورڈ رکھیں"
         choose_new: "نیا پاس ورڈ منتخب کریں"
@@ -1031,6 +1035,7 @@ ur:
           title: "بیک اپ کوڈز تیار"
           description: "اِن بیک اپ کوڈز میں سے ہر ایک کو صرف ایک بار استعمال کیا جاسکتا ہے۔ انہیں کہیں محفوظ لیکن قابل رسائی رکھیں۔"
       second_factor:
+        title: "دو عنصری کی تصدیق"
         confirm_password_description: "جاری رکھنے کیلئے براہ کرم اپنے پاسوَرڈ کی تصدیق کریں"
         name: "نام"
         label: "کَوڈ"
@@ -1360,6 +1365,8 @@ ur:
         header_title: "پروفائل، پیغامات، بک مارکس اور ترجیحات"
       title:
         title: "عنوان"
+        none: "(کوئی نہیں)"
+      flair:
         none: "(کوئی نہیں)"
       primary_group:
         title: "پرائمری گروپ"
@@ -1854,13 +1861,6 @@ ur:
         liked_consolidated: "نئے لائیکس"
         post_approved: "منظورشدہ پوسٹ"
     upload_selector:
-      title: "ایک تصویر شامل کریں"
-      title_with_attachments: "ایک تصویر یا ایک فائل شامل کریں"
-      from_my_computer: "میری ڈیوائس سے"
-      from_the_web: "انٹرنیٹ سے"
-      remote_tip: "تصویر کا لنک"
-      local_tip: "اپنے ڈیوائس سے تصاویر منتخب کریں"
-      hint_for_supported_browsers: "آپ تصاویر کو ایڈیٹر میں ڈرَیگ & ڈراپ یا پَیسٹ بھی کر سکتے ہیں"
       uploading: "اَپ لوڈ کیا جا رہا ہے"
       select_file: "فائل منتخب کریں"
       default_image_alt_text: تصویر
@@ -2033,15 +2033,9 @@ ur:
       not_found:
         title: "ٹاپک نہیں ملا"
         description: "معزرت، ہم یہ ٹاپک نہیں ڈھونڈ سکے۔ شاید یہ کسی ماڈریٹر نے ہٹا دیا ہو؟"
-      total_unread_posts:
+      unread_posts:
         one: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پوسٹ موجود ہے"
         other: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پوسٹ موجود ہیں"
-      unread_posts:
-        one: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پرانی پوسٹ موجود ہے"
-        other: "آپ کے پاس اِس ٹاپک میں %{count} بغیر پڑھی پرانی پوسٹ موجود ہیں"
-      new_posts:
-        one: "آپ کے آخری دفع یہ ٹاپک پڑھنے کے بعد %{count} نئی پوسٹ شائع ہوئی"
-        other: "آپ کے آخری دفع یہ ٹاپک پڑھنے کے بعد %{count} نئی پوسٹ شائع ہوئیں"
       likes:
         one: "اِس ٹاپک میں %{count} لائیک ہے"
         other: "اِس ٹاپک میں %{count} لائیکس ہیں"
@@ -2059,7 +2053,10 @@ ur:
       slow_mode_update:
         enable: "فعال کریں"
         remove: "غیر فعال کریں"
+        hours: "گھنٹے:"
         durations:
+          10_minutes: "10 منٹ"
+          15_minutes: "15 منٹ"
           30_minutes: "30 منٹ"
           45_minutes: "45 منٹ"
           1_hour: "1 گھنٹہ"
@@ -2104,8 +2101,6 @@ ur:
         title: "اشاعت شیڈول کریں"
       temp_open:
         title: "عارضی طور پر کھولیں"
-      auto_reopen:
-        title: "خود کار طریقے سے ٹاپک کھولیں"
       temp_close:
         title: "عارضی طور پر بند کریں"
       auto_close:
@@ -2225,14 +2220,10 @@ ur:
         pin: "ٹاپک پِن کریں"
         unpin: "ٹاپک سے پِن ہٹائیں"
         pin_globally: "عالمی سطح پر ٹاپک پِن کریں"
-        make_banner: "بینر ٹاپک"
         remove_banner: "بینر ٹاپک ہٹائیں"
       reply:
         title: "جواب"
         help: "اس ٹاپک کا جواب لکھنا شروع کریں"
-      clear_pin:
-        title: "پِن صاف کریں"
-        help: "اِس ٹاپک کے پِن کا درجہ ہٹائیں تاکہ یہ آپ کے ٹاپکس کی فہرست کے سب سے اوپر ظاہر نہ ہو"
       share:
         title: "شیئر"
         extended_title: "لِنک شیئر کریں"
@@ -2491,6 +2482,7 @@ ur:
         convert_to_moderator: "اسٹاف رنگ شامل کریں"
         revert_to_regular: "اسٹاف رنگ ختم کریں"
         rebake: "HTML دوبارہ بِلڈ کریں"
+        publish_page: "صفحہ اشاعت"
         unhide: "چھپانا ختم کریں"
         change_owner: "پوسٹس کے مالک کو تبدیل کریں"
         grant_badge: "بَیج دیں"
@@ -3021,8 +3013,11 @@ ur:
       groups:
         title: "ٹیگ گروپس"
         new: "نیا گروپ"
+        tags_label: "اِس گروپ میں ٹیگز"
+        parent_tag_label: "بالائی ٹیگ"
         one_per_topic_label: "اِس گروپ سے ایک ٹیگ فی ٹاپک محدود کریں"
         new_name: "نیا ٹیگ گروپ"
+        name_placeholder: "نام"
         save: "محفوظ کریں"
         delete: "حذف کریں"
         confirm_delete: "کیا آپ واقعی اِس ٹیگ گروپ کو حذف کرنا چاہتے ہیں؟"
@@ -3051,6 +3046,9 @@ ur:
     do_not_disturb:
       remaining: "%{remaining} باقی رہتا ہے..."
       options:
+        half_hour: "30 منٹ"
+        one_hour: "1 گھنٹہ"
+        two_hours: "2 گھنٹے"
         custom: "اپنی مرضی کا"
     trust_levels:
       names:
@@ -3159,9 +3157,6 @@ ur:
               label: گروپ
             category:
               label: زمرہ
-      commits:
-        latest_changes: "تازہ ترین تبدیلیاں: براہ مہربانی اکثر اَپ ڈیٹ کیا کریں!"
-        by: "تک"
       groups:
         new:
           title: "نیا گروپ"
@@ -3726,7 +3721,6 @@ ur:
           details: "تفصیلات"
           previous_value: "پچھلی"
           new_value: "نئی"
-          diff: "فرق"
           show: "دکھائیں"
           modal_title: "تفصیلات"
           no_previous: "کوئی پچھلی وَیلیو نہیں ہے۔"
@@ -4052,6 +4046,8 @@ ur:
         trust_level_unlocked_tip: "ٹرسٹ لَیول لاک نہیں ہے، سِسٹم صارف کا لَیول زیادہ یا کم کرسکتا ہے"
         lock_trust_level: "ٹرسٹ لَیول لاک کریں"
         unlock_trust_level: "ٹرسٹ لَیول کا لاک ختم کریں"
+        silenced_count: "خاموش کیو ہوئے"
+        suspended_count: "معطل کردہ"
         tl3_requirements:
           title: "ٹرسٹ لَیول 3 کے تقاضے"
           table_title:

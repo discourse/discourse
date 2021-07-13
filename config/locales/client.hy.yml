@@ -529,6 +529,8 @@ hy:
     groups:
       member_added: "Ավելացված"
       member_requested: "Հարցով "
+      add_members:
+        usernames_placeholder: "օգտանուններ"
       requests:
         title: "Հարցումներ "
         reason: "Պատճառ"
@@ -558,6 +560,8 @@ hy:
             password: "Գաղտնաբառ"
           settings:
             title: "Կարգավորումներ"
+          mailboxes:
+            disabled: "Անջատված"
         membership:
           title: Անդամակցություն
           access: Թույլտվություն
@@ -895,11 +899,9 @@ hy:
         sent: "Ուղարկված"
         archive: "Արխիվ"
         groups: "Իմ Խմբերը"
-        bulk_select: "Ընտրել հաղորդագրություններ"
         move_to_inbox: "Տեղափոխել Մուտքերի արկղ"
         move_to_archive: "Արխիվացնել"
         failed_to_move: "Չհաջողվեց տեղափոխել ընտրված հաղորդագրությունները (հնարավոր է՝ համացանցի հետ կապված խնդիր կա)"
-        select_all: "Ընտրել Բոլորը"
         tags: "Թեգեր"
       preferences_nav:
         account: "Հաշիվ"
@@ -1235,6 +1237,8 @@ hy:
         header_title: "պրոֆիլ, հաղորդագրություններ, էջանշաններ և նախընտրություններ"
       title:
         title: "Վերնագիր"
+        none: "(ոչ մի)"
+      flair:
         none: "(ոչ մի)"
       primary_group:
         title: "Հիմնական Խումբ"
@@ -1682,13 +1686,6 @@ hy:
         post_approved: "գրառումը հաստատված է"
         membership_request_consolidated: "Մշակել անդամակցության նոր հարցումները"
     upload_selector:
-      title: "Ավելացնել նկար"
-      title_with_attachments: "Ավելացնել նկար կամ ֆայլ"
-      from_my_computer: "Իմ սարքից"
-      from_the_web: "Համացանցից"
-      remote_tip: "նկարի հղումը"
-      local_tip: "ընտրեք նկարներ Ձեր սարքից"
-      hint_for_supported_browsers: "Դուք կարող եք նաև քաշել և գցել կամ տեղադրել նկարները խմբագրիչի մեջ"
       uploading: "Վերբեռնվում է"
       select_file: "Ընտրել Ֆայլ"
       default_image_alt_text: նկար
@@ -1871,15 +1868,9 @@ hy:
       not_found:
         title: "Թեման չի գտնվել"
         description: "Ներողություն, մենք չկարողացանք գտնել այդ թեման: Միգուցե՞ այն հեռացվել է մոդերատորի կողմից:"
-      total_unread_posts:
+      unread_posts:
         one: "Դուք ունեք %{count} չկարդացած հրապարակում այս թեմայում"
         other: "Այս թեմայում Դուք ունեք %{count} չկարդացած գրառում"
-      unread_posts:
-        one: "Դուք ունեք %{count} չկարդացած հին հրապարակում այս թեմայում"
-        other: "Այս թեմայում Դուք ունեք %{count} հին չկարդացած գրառում"
-      new_posts:
-        one: "Այս թեմայում կա %{count} նոր հրապարակում՝ Ձեր վերջին կարդալուց հետո:"
-        other: "Ձեր վերջին կարդալուց հետո այս թեմայում կա %{count} նոր գրառում"
       likes:
         one: "Այս թեմայում կա %{count} հավանում:"
         other: "Այս թեմայում կա %{count} հավանում"
@@ -1922,8 +1913,6 @@ hy:
         title: "Պլանավորել Հրատարակումը"
       temp_open:
         title: "Ժամանակավորապես Բացել"
-      auto_reopen:
-        title: "Ավտոմատ բացել Թեման "
       temp_close:
         title: "Ժամանակավորապես Փակել"
       auto_close:
@@ -2033,14 +2022,10 @@ hy:
         pin: "Ամրակցել Թեման"
         unpin: "Ապակցել Թեման"
         pin_globally: "Ամրակցել Թեման Գլոբալ կերպով"
-        make_banner: "Բաններ Թեմա"
         remove_banner: "Հեռացնել Բաններ Թեման"
       reply:
         title: "Պատասխանել"
         help: "այս թեմային պատասխան գրել"
-      clear_pin:
-        title: "Հեռացնել ամրակցումը"
-        help: "Հեռացնել այս թեմայի ամրակցված կարգավիճակը, որպեսզի այն այլևս չհայտնվի Ձեր թեմաների ցանկի վերևում:"
       share:
         title: "Կիսվել"
         extended_title: "Կիսվել հղումով"
@@ -2866,6 +2851,7 @@ hy:
         new: "Նոր Խումբ"
         one_per_topic_label: "Սահմանափակել այս խմբի յուրաքանչյուր թեման մեկ թեգով:"
         new_name: "Նոր Թեգի Խումբ"
+        name_placeholder: "Անուն"
         save: "Պահպանել"
         delete: "Ջնջել"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգի խումբը:"
@@ -3006,9 +2992,6 @@ hy:
               label: Կատեգորիա
             include_subcategories:
               label: "Ներառել Ենթակատեգորիաներ"
-      commits:
-        latest_changes: "Վերջին փոփոխությունները. խնդրում ենք ավելի հաճախ թարմացնել!"
-        by: "կողմից"
       groups:
         new:
           title: "Նոր Խումբ"
@@ -3606,7 +3589,6 @@ hy:
           details: "Մանրամասներ"
           previous_value: "Նախորդը"
           new_value: "Նոր"
-          diff: "Համեմատել (Diff)"
           show: "Ցուցադրել"
           modal_title: "Մանրամասներ"
           no_previous: "Նախորդ արժեք չկա:"
@@ -3960,6 +3942,8 @@ hy:
         trust_level_unlocked_tip: "վստահության մակարդակը արգելաբացված է, համակարգը կարող է խթանել կամ խանգարել օգտատիրոջը"
         lock_trust_level: "Արգելափակել Վստահության Մակարդակը"
         unlock_trust_level: "Արգելաբացել Վստահության Մակարդակը"
+        silenced_count: "Լռեցված"
+        suspended_count: "Սառեցված"
         tl3_requirements:
           title: "Վստահության 3-րդ Մակարդակի Պահանջներ"
           table_title:

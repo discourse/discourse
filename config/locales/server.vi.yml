@@ -128,8 +128,7 @@ vi:
       odd: phải là số lẻ
       record_invalid: ! "Xác nhận thất bại: %{errors}"
       restrict_dependent_destroy:
-        one: "Không thể xóa bản ghi bởi vì một bản ghi %{record} phụ thuộc đang tồn tại"
-        many: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
+        other: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
       too_long:
         other: quá dài (tối đa %{count} ký tự)
       too_short:
@@ -658,7 +657,7 @@ vi:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Mức độ tin cậy của họ trong khoảng thời gian này."
     consolidated_page_views:
-      title: "Số lượt xem hợp nhất"
+      title: "Số lần xem trang tổng hợp"
       xaxis:
         page_view_crawler: "Trình thu thập thông tin"
         page_view_anon: "Người dùng ẩn danh"
@@ -961,7 +960,6 @@ vi:
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     google_oauth2_client_id: "Client ID ứng dụng Google của bạn."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
-    allow_restore: "Cho phép phục hồi, nó có thể thay thế TẤT CẢ dữ liệu trang web! Bỏ chọn, trừ khi bạn có kế hoạch phục hồi một bản sao lưu"
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."

@@ -515,6 +515,7 @@ id:
       member_added: "Ditambahkan"
       member_requested: "Diminta pada"
       add_members:
+        usernames_placeholder: "nama Pengguna"
         notify_users: "Beritahu pengguna"
       requests:
         title: "Permintaan"
@@ -856,11 +857,9 @@ id:
         sent: "Mengirim"
         archive: "Arsip"
         groups: "Kelompok Saya"
-        bulk_select: "Pilih Pesan"
         move_to_inbox: "Pindah ke Kotak Masuk"
         move_to_archive: "Arsip"
         failed_to_move: "Gagal memindahkan pesan terpilih (mungkin internet kamu putus ?)"
-        select_all: "Pilih Semua"
         tags: "Label"
       preferences_nav:
         account: "Akun"
@@ -1097,6 +1096,8 @@ id:
         title: "Gambar Profil"
       title:
         title: "Judul"
+        none: "(kosong)"
+      flair:
         none: "(kosong)"
       primary_group:
         none: "(kosong)"
@@ -1362,10 +1363,6 @@ id:
         post_approved: "tulisan disetujui"
         membership_request_consolidated: "permintaan keanggotaan baru"
     upload_selector:
-      title: "Tambahkan gambar"
-      title_with_attachments: "Tambahkan gambar atau berkas"
-      from_my_computer: "Dari perangkat saya"
-      from_the_web: "Dari web"
       uploading: "Mengunggah"
       select_file: "Pilih Berkas"
       default_image_alt_text: gambar
@@ -1415,8 +1412,6 @@ id:
         title: "Gagal membuka topik"
       not_found:
         title: "Tidak ada topik"
-      new_posts:
-        other: "ada %{count} posting baru di topik ini sejak terakhir Anda mengunjunginya"
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
@@ -1431,8 +1426,12 @@ id:
       auto_update_input:
         later_today: "Nanti hari ini"
         tomorrow: "Besok"
+        later_this_week: "Nanti pekan ini"
+        this_weekend: "Akhir pekan ini"
         next_week: "Minggu depan"
+        two_weeks: "Dua pekan"
         next_month: "Bulan depan"
+        six_months: "Enam bulan"
       progress:
         jump_prompt_or: "atau"
       notifications:
@@ -1494,6 +1493,8 @@ id:
       errors:
         image_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah gambar."
         attachment_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah lampiran."
+      cancel_composer:
+        discard: "Batalkan"
       controls:
         edit_action: "Ubah"
         more: "Selengkapnya"
@@ -1632,6 +1633,7 @@ id:
         muted:
           title: "Bisukan"
       groups:
+        name_placeholder: "Nama"
         save: "Simpan"
         delete: "Hapus"
       topics:
@@ -1750,6 +1752,7 @@ id:
           settings: "Pengaturan"
           collapse: Persempit
           upload: "Unggah"
+          discard: "Batalkan"
           direct_install_tip: "Apakah Anda yakin ingin memasang <strong>%{name}</strong> dari repositori yang tercantum di bawah ini?"
           about_theme: "Tentang"
           enable: "Aktifkan"
@@ -1866,6 +1869,7 @@ id:
         delete_and_block: "Hapus dan <b>block</b> email dan alamat IP ini"
         tl3_requirements:
           visits: "mengunjungi"
+          days: "hari"
           topics_viewed: "Topik dilihat"
           posts_read: "Tulisan dilihat"
           likes_given: "Likes Diberikan"
@@ -1917,6 +1921,7 @@ id:
         edit: "ubah"
       permalink:
         topic_title: "Topik"
+        post_title: "Postingan"
         category_title: "Kategori"
         form:
           label: "Baru:"

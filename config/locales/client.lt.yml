@@ -506,6 +506,8 @@ lt:
         remove_user_as_group_owner: "Atšaukti valdytoją"
     groups:
       member_added: "Pridėta"
+      add_members:
+        usernames_placeholder: "slapyvardžiai"
       requests:
         reason: "Priežastis"
         accepted: "patvirtinta"
@@ -529,6 +531,8 @@ lt:
             password: "Slaptažodis"
           settings:
             title: "Nustatymai"
+          mailboxes:
+            disabled: "Uždrausta"
         membership:
           title: Narystė
           access: Prieiga
@@ -818,11 +822,9 @@ lt:
         sent: "Išsiųsti"
         archive: "Archyvuoti"
         groups: "Grupės"
-        bulk_select: "Pasirinkti žinutę"
         move_to_inbox: "Perkelti į Pranešimų dėžutę"
         move_to_archive: "Archyvuoti"
         failed_to_move: "Įvyko klaida! (patikrinkite interneto ryšį)"
-        select_all: "Pažymėti visus"
         tags: "Gairės"
       preferences_nav:
         account: "Paskyra"
@@ -1078,6 +1080,8 @@ lt:
         header_title: "Profilis, žinutės, žymės ir nustatymai"
       title:
         title: "Antraštė"
+        none: "(nieko)"
+      flair:
         none: "(nieko)"
       primary_group:
         title: "Pagrindinė Grupė"
@@ -1399,13 +1403,6 @@ lt:
       titles:
         watching_first_post: "nauja tema"
     upload_selector:
-      title: "Pridėti nuotrauką"
-      title_with_attachments: "Pridėti nautrauką arba dokumentą"
-      from_my_computer: "Iš įrenginio"
-      from_the_web: "Iš naršyklės"
-      remote_tip: "nuoroda į nuotrauką"
-      local_tip: "Pasirinkti nuotraukas iš įrenginio"
-      hint_for_supported_browsers: "gali perstumti, numesti ir kopijuoti nuotraukas į redagavimo skydą"
       uploading: "Įkeliama"
       select_file: "Pasirinkti failus"
       default_image_alt_text: pveikslėlis
@@ -1570,21 +1567,11 @@ lt:
       not_found:
         title: "Tema nerasta"
         description: "Atsiprašome, bet mes negalėjome rasti jūsų temos. Gal ji buvo ištrinta moderatoriaus?"
-      total_unread_posts:
+      unread_posts:
         one: "šioje temoje turi %{count} neperskaitytą įrašą"
         few: "šioje temoje tu turi %{count} neperskaitytų įrašų"
         many: "šioje temoje tu turi %{count} neperskaitytų įrašų"
         other: "šioje temoje tu turi %{count} neperskaitytų įrašų"
-      unread_posts:
-        one: "šioje temoje tu turi %{count} neperskaitytą seną įrašą"
-        few: "šioje temoje tu turi %{count} neperskaitytų senų įrašų"
-        many: "šioje temoje tu turi %{count} neperskaitytų senų įrašų"
-        other: "šioje temoje tu turi %{count} neperskaitytų senų įrašų"
-      new_posts:
-        one: "šioje temoje yra %{count} naujas įrašas nuo paskutinio tavo skaitymo"
-        few: "šioje temoje yra %{count} naujų įrašų nuo paskutinio tavo skaitymo"
-        many: "šioje temoje yra %{count} naujų įrašų nuo paskutinio tavo skaitymo"
-        other: "šioje temoje yra %{count} naujų įrašų nuo paskutinio tavo skaitymo"
       likes:
         one: "Šiuo metu temą mėgsta %{count} vartotojas"
         few: "Šiuo metu temą mėgsta %{count} vartotojų"
@@ -1703,14 +1690,10 @@ lt:
         pin: "Prisegti Temą"
         unpin: "Atsegti Temą"
         pin_globally: "Prisegti Temą Globaliai"
-        make_banner: "Paryškinta Tema"
         remove_banner: "Išjungti Paryškintą Temą"
       reply:
         title: "Atsakyti"
         help: "Pradėk rašyti atsakymą į šią temą"
-      clear_pin:
-        title: "Išstrinti Prisegimą"
-        help: "Ištrinti Prisegimą šioje temoje, kad tema daugiau nebūtų rodoma viršuje."
       share:
         title: "Pasidalinti"
         help: "Pasidalink šios temos nuoroda"
@@ -2363,7 +2346,9 @@ lt:
       groups:
         title: "Žymos grupės"
         new: "Nauja grupė"
+        parent_tag_label: "Panašios žymos"
         new_name: "Nauja žymos grupė"
+        name_placeholder: "Vardas"
         save: "Saugoti"
         delete: "Pašalinti"
       topics:
@@ -2464,9 +2449,6 @@ lt:
               label: Grupė
             category:
               label: Kategorija
-      commits:
-        latest_changes: "Paskutiniai pakeitimai:"
-        by: "nuo"
       groups:
         new:
           title: "Nauja Grupė"
@@ -2811,7 +2793,6 @@ lt:
           details: "Detalės"
           previous_value: "Buvęs"
           new_value: "Naujas"
-          diff: "Skirtumas"
           show: "Rodyti"
           modal_title: "Detalės"
           no_previous: "There is no previous value."
@@ -3047,6 +3028,8 @@ lt:
         trust_level_unlocked_tip: "pasitikėjimo statusas yra atrakintas, sistema gali reklamuoti ir žeminti vartotoją"
         lock_trust_level: "Užrakinti pasitikėjimo lygį"
         unlock_trust_level: "Atrakinti pasitikėjimo lygį"
+        silenced_count: "Nutildytas"
+        suspended_count: "Suspenduotas"
         tl3_requirements:
           title: "Reikalavimai 3 pasitikėjimo lygiui"
           value_heading: "Reikšmė"

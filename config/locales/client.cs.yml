@@ -559,6 +559,8 @@ cs:
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
       member_added: "Přidáno"
+      add_members:
+        usernames_placeholder: "uživatelská jména"
       requests:
         reason: "Reason"
         accepted: "přijato"
@@ -934,11 +936,9 @@ cs:
         sent: "Odeslané"
         archive: "Archív"
         groups: "Moje skupiny"
-        bulk_select: "Vybrat zprávy"
         move_to_inbox: "Přesunout do doručených"
         move_to_archive: "Archivovat"
         failed_to_move: "Nepodařilo se přesunout vybrané zprávy (možná vám spadlo připojení)"
-        select_all: "Vybrat vše"
         tags: "Štítek"
       preferences_nav:
         account: "Účet"
@@ -1291,6 +1291,8 @@ cs:
         header_title: "profil, zprávy, záložky a nastavení"
       title:
         title: "Titul"
+        none: "(žádný)"
+      flair:
         none: "(žádný)"
       primary_group:
         title: "Hlavní skupina"
@@ -1685,13 +1687,6 @@ cs:
       titles:
         watching_first_post: "nové téma"
     upload_selector:
-      title: "Vložit obrázek"
-      title_with_attachments: "Nahrát obrázek nebo soubor"
-      from_my_computer: "Z mého zařízení"
-      from_the_web: "Z webu"
-      remote_tip: "odkaz na obrázek"
-      local_tip: "vyber obrázky z tvého zařízení"
-      hint_for_supported_browsers: "také můžeš obrázky do editoru přetáhnout nebo vložit"
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"
       default_image_alt_text: obrázek
@@ -1873,21 +1868,11 @@ cs:
       not_found:
         title: "Téma nenalezeno"
         description: "Bohužel se nám nepovedlo najít toto téma. Nebylo odstraněno moderátorem?"
-      total_unread_posts:
+      unread_posts:
         one: "máte %{count} nepřečtený příspěvek v tomto tématu"
         few: "máte %{count} nepřečtené příspěvky v tomto tématu."
         many: "máte %{count} nepřečtených příspěvků v tomto tématu."
         other: "máte %{count} nepřečtených příspěvků v tomto tématu."
-      unread_posts:
-        one: "máte %{count} nepřečtený příspěvěk v tomto tématu"
-        few: "máte %{count} nepřečtené příspěvky v tomto tématu"
-        many: "máte %{count} nepřečtených příspěvků v tomto tématu"
-        other: "máte %{count} nepřečtených příspěvků v tomto tématu"
-      new_posts:
-        one: "je zde %{count} nový příspěvek od doby, kdy jste toto téma naposledy četli"
-        few: "jsou zde %{count} nové příspěvky od doby, kdy jste toto téma naposledy četli"
-        many: "je zde %{count} nových příspěvků od doby, kdy jste toto téma naposledy četli"
-        other: "je zde %{count} nových příspěvků od doby, kdy jste toto téma naposledy četli"
       likes:
         one: "v tomto tématu je jedno 'líbí se'"
         few: "v tomto tématu tématu je %{count} 'líbí se'"
@@ -1929,8 +1914,6 @@ cs:
         title: "Naplánovat publikování"
       temp_open:
         title: "Otevřít dočasně"
-      auto_reopen:
-        title: "Automaticky otevřít téma"
       temp_close:
         title: "Zavřít dočasně"
       auto_close:
@@ -2036,14 +2019,10 @@ cs:
         pin: "Připevnit téma"
         unpin: "Odstranit připevnění"
         pin_globally: "Připnout téma globálně"
-        make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
       reply:
         title: "Odpovědět"
         help: "Začít psát odpověď na toto téma"
-      clear_pin:
-        title: "Odstranit připnutí"
-        help: "Odebere připnutí tohoto tématu, takže se již nebude zobrazovat na vrcholu seznamu témat"
       share:
         title: "Sdílet"
         help: "sdílet odkaz na toto téma"
@@ -2806,8 +2785,11 @@ cs:
       groups:
         title: "Skupiny štítků"
         new: "Nová skupina"
+        tags_label: "Štítky v této skupině"
+        parent_tag_label: "Nadřazený štítek"
         one_per_topic_label: "Omezit na jeden štítek k tématu z této skupiny"
         new_name: "Nová skupina štítků"
+        name_placeholder: "Jméno"
         save: "Uložit"
         delete: "Smazat"
         confirm_delete: "Jste si jistí, že chcete smazat tuto skupinu štítků?"
@@ -2910,9 +2892,6 @@ cs:
               label: Skupina
             category:
               label: Kategorie
-      commits:
-        latest_changes: "Poslední změny:"
-        by: "od"
       groups:
         new:
           title: "Nová skupina"
@@ -3367,7 +3346,6 @@ cs:
           details: "Podrobnosti"
           previous_value: "Předchozí"
           new_value: "Nové"
-          diff: "Rozdíly"
           show: "Zobrazit"
           modal_title: "Podrobnosti"
           no_previous: "Předchozí hodnota neexistuje."
@@ -3654,6 +3632,8 @@ cs:
         trust_level_unlocked_tip: "úroveň důvěryhodnosti odemčena. Systém může povyšovat nebo degradovat uživatele"
         lock_trust_level: "Zamknout úroveň důvěryhodnosti"
         unlock_trust_level: "Odemknout úroveň důvěryhodnosti"
+        silenced_count: "Ztišení"
+        suspended_count: "Zakázaní"
         tl3_requirements:
           title: "Požadavky pro důvěryhodnost 3"
           table_title:

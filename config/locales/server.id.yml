@@ -94,8 +94,7 @@ id:
       odd: harus ganjil
       record_invalid: ! "Validasi gagal: %{errors}"
       restrict_dependent_destroy:
-        one: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
-        many: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
+        other: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
       too_long:
         other: terlalu panjang (panjang maksimum adalah %{count} karakter)
       too_short:
@@ -385,6 +384,7 @@ id:
     post_edits:
       labels:
         edited_at: Tanggal
+        post: Postingan
         edit_reason: Alasan
     user_flagging_ratio:
       labels:
@@ -409,6 +409,7 @@ id:
     consolidated_page_views:
       yaxis: "Hari"
       labels:
+        post: Postingan
         edit_reason: Alasan
     dau_by_mau:
       xaxis: "Hari"
@@ -621,6 +622,10 @@ id:
   skipped_email_log:
     user_email_no_user: "Tidak dapat menemukan pengguna dengan id %{user_id}"
     user_email_post_not_found: "Tidak dapat menemukan post dengan id %{post_id}"
+    sender_post_deleted: "postingan telah dihapus"
+    sender_topic_deleted: "topik telah dihapus"
+    group_smtp_post_deleted: "postingan telah dihapus"
+    group_smtp_topic_deleted: "topik telah dihapus"
   color_schemes:
     default_theme_name: "Asal"
   csv_export:

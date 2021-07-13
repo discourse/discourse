@@ -774,11 +774,6 @@ te:
       titles:
         watching_first_post: "కొత్త విషయం"
     upload_selector:
-      title: "ఒక బొమ్మ కలుపు"
-      title_with_attachments: "ఒక బొమ్మ లేదా దస్త్రం కలుపు"
-      from_my_computer: "నా పరికరం నుండి"
-      from_the_web: "జాలం నుండి"
-      remote_tip: "బొమ్మకు లంకె"
       uploading: "ఎగుమతవుతోంది"
       default_image_alt_text: బొమ్మ
     search:
@@ -862,15 +857,9 @@ te:
       not_found:
         title: "విషయం కనిపించలేదు"
         description: "క్షమించాలి. ఆ విషయం మేము కనుగొనలేకున్నాము. బహుశా నిర్వాహకులు దాన్ని తొలగించారేమో?"
-      total_unread_posts:
+      unread_posts:
         one: "మీకు ఈ విషయంలో %{count} చదవని టపా ఉంది"
         other: "మీకు ఈ విషయంలో %{count} చదవని టపాలు ఉన్నాయి"
-      unread_posts:
-        one: "మీకు ఈ విషయంలో %{count} చదవని పాత టపా ఉంది"
-        other: "మీకు ఈ విషయంలో %{count} చదవని పాత టపాలు ఉన్నాయి"
-      new_posts:
-        one: "మీరు చివరసారి చదివాక ఈ విషయంలో %{count} కొత్త టపా వచ్చింది"
-        other: "మీరు చివరసారి చదివాక ఈ విషయంలో %{count} కొత్త టపాలు వచ్చాయి"
       likes:
         one: "ఈ విషయానికి %{count} ఇష్టం ఉంది"
         other: "ఈ విషయానికి %{count} ఇష్టాలు ఉన్నాయి"
@@ -950,14 +939,10 @@ te:
         pin: "విషయం గుచ్చు"
         unpin: "విషయం అగ్గుచ్చు"
         pin_globally: "సార్వత్రికంగా విషయాన్ని గుచ్చు"
-        make_banner: "బ్యానరు విషయం"
         remove_banner: "బ్యానరు విషయం తొలగించు"
       reply:
         title: "జవాబు"
         help: "ఈ విషయానికి జవాబివ్వుట ప్రారంభించు"
-      clear_pin:
-        title: "గుచ్చు శుభ్రపరుచు"
-        help: "ఈ విషయపు గుచ్చు స్థితి శుభ్రపరుచు. తద్వారా అది ఇహ అగ్ర భాగాన కనిపించదు"
       share:
         title: "పంచు"
         help: "ఈ విషయపులంకెను పంచు"
@@ -1245,6 +1230,9 @@ te:
           one: "%{count} చదవనవి"
           other: "%{count} చదవనవి"
       new:
+        lower_title_with_count:
+          one: "%{count} కొత్త"
+          other: "%{count} కొత్త"
         lower_title: "కొత్త"
         title: "కొత్త"
         help: "గత కొద్ది రోజులలో సృష్టించిన టపాలు"
@@ -1343,6 +1331,7 @@ te:
         muted:
           title: "నిశ్శబ్దం"
       groups:
+        name_placeholder: "పేరు"
         save: "భద్రపరచు"
         delete: "తొలగించు"
       topics:
@@ -1416,9 +1405,6 @@ te:
               label: సమూహం
             category:
               label: వర్గం
-      commits:
-        latest_changes: "తాజా మార్పులు: దయచేసి తరచూ ఉన్నతీకరించండి!"
-        by: "నుండి"
       groups:
         manage:
           interaction:
@@ -1683,7 +1669,6 @@ te:
           details: "వివరాలు"
           previous_value: "గత"
           new_value: "కొత్త"
-          diff: "తేడా"
           show: "చూపు"
           modal_title: "వివరాలు"
           no_previous: "గత విలువ లేదు"
@@ -1848,6 +1833,7 @@ te:
         trust_level_unlocked_tip: "నమ్మకపు స్థాయి బంధింపబడలేదు, వ్యవస్థ వినియోగదారుని ప్రోత్సాహించవచ్చు లేదా స్థాయి తగ్గించవచ్చు"
         lock_trust_level: "నమ్మకపు స్థాయి ని బంధించు"
         unlock_trust_level: "నమ్మకపు స్థాయిని వదిలేయి"
+        suspended_count: "సస్పెడయ్యాడు"
         tl3_requirements:
           title: "నమ్మకపు స్థాయి 3 అవసరాలు"
           value_heading: "విలువ"

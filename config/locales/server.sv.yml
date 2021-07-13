@@ -166,7 +166,7 @@ sv:
       ip_address_already_screened: "ingår redan i en befintlig regel"
       restrict_dependent_destroy:
         one: "Kan inte radera post på grund av att det finns en beroende %{record}"
-        many: "Kan inte radera post på grund av att det finns beroende %{record}"
+        other: "Kan inte radera post på grund av att det finns beroende %{record}"
       too_long:
         one: är för långt (högsta tillåtna är %{count} tecken)
         other: är för långt (högsta tillåtna är %{count} tecken)
@@ -238,6 +238,7 @@ sv:
     disabled_errors:
       discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
+    requires_groups: "Inbjudan sparad. För att ge tillgång till det angivna ämnet lägger du till en av följande grupper: %{groups}."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -1356,7 +1357,7 @@ sv:
     force_https_warning: "Din webbplats använder SSL, men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` har inte aktiverats i inställningarna för din webbplats."
     out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
-    watched_word_regexp_error: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a>eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
+    watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
@@ -1388,7 +1389,7 @@ sv:
     category_search_priority_high_weight: "Vikt tillämpad på rangordning vid hög sökprioritet för kategori"
     allow_uncategorized_topics: "Tillåt att ämnen skapas utan en kategori. VARNING: Om det finns några okategoriserade ämnen så måste dessa omkategoriseras innan den här inställningen stängs av."
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
-    allow_duplicate_topic_titles_category: "Tillåt ämnen med identisk, duplicerad titel om kategorierna är olika. allow_duplicate_topic_titles måste vara avbockad."
+    allow_duplicate_topic_titles_category: "Tillåt ämnen med identiska dubblettitlar om kategorin skiljer sig åt. allow_duplicate_topic_titles måste inaktiveras."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     educate_until_posts: "Visa hjälppanelen för nya användare tills användaren har gjort (n) nya inlägg."
     title: "Namnet på denna webbplats som används i titel-taggen."
@@ -1603,7 +1604,7 @@ sv:
     discord_secret: "Discord hemlig nyckel"
     discord_trusted_guilds: 'Tillåt bara medlemmar i dessa Discord-sällskap att logga in via Discord. Använd numeriskt ID för sällskapet. För mer information, se instruktionerna <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">här</a>. Lämna tomt för att tilllåta alla sällskap.'
     enable_backups: "Tillåt att administratörer skapar säkerhetskopior av forumet"
-    allow_restore: "Tillåt återställning, vilket kan ersätta ALL data på webbplatsen! Lämna avbockad om du inte planerar att återställa en säkerhetskopia"
+    allow_restore: "Tillåt återställning, som kan ersätta ALL data på webbplatsen! Lämna detta inaktiverat om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
     automatic_backups_enabled: "Kör automatiska säkerhetskopior som definierats i säkerhetskopieringsfrekvens"
     backup_frequency: "Antalet dagar mellan säkerhetskopieringar."
@@ -1928,6 +1929,7 @@ sv:
     app_association_ios: "Innehållet i slutpunkten <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, används för att skapa universella länkar mellan denna webbplats och iOS-appar."
     share_anonymized_statistics: "Dela anonymiserad användningsstatistik."
     auto_handle_queued_age: "Hantera automatiskt inlägg som väntar på att granskas efter detta antal dagar. Flaggor ignoreras. Inlägg och användare i kö avvisas. Ställ in till 0 för att inaktivera den här funktionen."
+    penalty_step_hours: "Standardstraff, uttryckt i timmar, för att ha tystat eller stängt av användare. Förval för den första överträdelsen är det första värdet, förval för den andra överträdelsen är det andra värdet etc."
     svg_icon_subset: "Lägg till ytterligare FontAwesome 5-ikoner som du vill inkludera i dina tillgångar. Använd prefixet 'fa-' för solida ikoner, 'far-' för vanliga ikoner och 'fab-' för märkesikoner."
     max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
@@ -3417,6 +3419,9 @@ sv:
     sender_post_deleted: "inlägget har raderats"
     sender_message_to_invalid: "mottagaren har en ogiltig e-postadress"
     sender_topic_deleted: "ämnet har raderats"
+    group_smtp_post_deleted: "inlägget har raderats"
+    group_smtp_topic_deleted: "ämnet har raderats"
+    group_smtp_disabled_for_group: "smtp har inaktiverats för gruppen"
   color_schemes:
     base_theme_name: "Bas"
     light: "Ljust"

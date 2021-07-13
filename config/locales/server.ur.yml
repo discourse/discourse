@@ -144,7 +144,7 @@ ur:
       ip_address_already_screened: "پہلے سے موجودہ ایک اصول میں شامل ہے"
       restrict_dependent_destroy:
         one: "ریکارڈ حذف نہیں کیا جا سکتا کیونکہ ایک انحصار %{record} موجود ہے"
-        many: "ریکارڈ حذف نہیں کیا جا سکتا کیونکہ ایک انحصار %{record} موجود ہے"
+        other: "ریکارڈ حذف نہیں کیا جا سکتا کیونکہ ایک انحصار %{record} موجود ہے"
       too_long:
         one: بہت لمبا ہے (زیادہ سے زیادہ %{count} حرف ہو سکتا ہے)
         other: بہت لمبا ہے (زیادہ سے زیادہ %{count} حروف ہو سکتے ہیں)
@@ -307,6 +307,7 @@ ur:
       tomorrow: "کَل"
       next_week: "اگلے ہفتے"
       next_month: "اگلے ماہ"
+      custom: "حسب ضرورت تاریخ اور وقت"
   groups:
     success:
       bulk_add:
@@ -1319,7 +1320,6 @@ ur:
     discord_client_id: 'ڈِسکَورڈ کلائنٹ ID (ایک کی ضرورت ہے؟ <a href="https://discordapp.com/developers/applications/me">ڈِسکَورڈ ڈَوَیلپر پَورٹل</a> ملاحظہ کریں)'
     discord_secret: "ڈِسکَورڈ سیکرٹ کی۔"
     enable_backups: "ایڈمِنِسٹریٹروں کو فورم کے بیک اَپ بنانے کی اجازت دیں"
-    allow_restore: "رِیسٹور کی اجازت دیں، جو سائٹ کا تمام ڈیٹا تبدیل کر سکتا ہے! فالس چھوڑ دیں جب تک کہ آپ بیک اَپ بحال نہ کرنے لگیں"
     maximum_backups: "ڈِسک پر رکھے جانے بیک اَپس کی زیادہ سے زیادہ تعداد۔ پرانے بیک اَپس خود کار طریقے سے حذف کر دیے جاتے ہیں"
     automatic_backups_enabled: "خودکار بیک اَپس چلائیں جیسا کہ بیک اَپ فریکوئنسی میں بیان کیا گیا ہے"
     backup_frequency: "بَیک اَپس کے درمیان دنوں کی تعداد۔"
@@ -1816,6 +1816,12 @@ ur:
     autoclosed_disabled_lastpost: "یہ ٹاپک اب کھول دیا گیا ہے. نئے جوابات کی اجازت ہے۔"
     auto_deleted_by_timer: "ٹائمر کی طرف سے خود بخود حذف کر دیا گیا۔"
   login:
+    security_key_description: "جب آپ کے پاس آپ کی سکیورٹی کی تیار ہوجائے تو نیچے سکیورٹی کی کے ساتھ تصدیق کریں کا بٹن دبائیں۔"
+    security_key_alternative: "دوسرا راستہ آزمائیں"
+    security_key_authenticate: "سیکیورٹی کی کے ساتھ تصدیق کریں"
+    security_key_not_allowed_error: "سیکیورٹی کی, کی تصدیق کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
+    security_key_no_matching_credential_error: "فراہم کردہ سیکیورٹی کی میں کوئی مماثلت نہیں مل سکی۔"
+    security_key_support_missing_error: "آپ کا موجودہ آلہ یا براؤزر سیکیورٹی کیز کے استعمال کی حمایت نہیں کرتا ہے۔ براہ کرم کوئی مختلف طریقہ استعمال کریں۔"
     not_approved: "آپ کا اکاؤنٹ ابھی تک منظور نہیں کیا گیا ہے۔ جب آپ لاگ اِن کر سکیں گے تو آپ کو بذریعہ اِی میل مطلع کر دیا جائے گا۔"
     incorrect_username_email_or_password: "غلط صارف نام، ای میل یا پاسوَرڈ"
     incorrect_password: "غلط پاسوَرڈ"
@@ -1845,6 +1851,7 @@ ur:
     missing_user_field: "آپ نے تمام صارف فیلڈز مکمل نہیں کی ہیں"
     auth_complete: "تصدیق مکمل ہوگئی ہے۔"
     click_to_continue: "جاری رکھنے کیلئے یہاں کلِک کریں۔"
+    second_factor_title: "دو عنصری کی تصدیق"
     second_factor_description: "براہ مہربانی اپنی اَیپ میں سے مطلوبہ توثیقی کَوڈ درج کریں:"
     second_factor_backup_description: "براہ مہربانی اپنے بیک اپ کوڈز میں سے ایک درج کریں:"
     invalid_second_factor_code: "غلط توثیقی کَوڈ۔ ہر کَوڈ صرف ایک بار ہی استعمال کیا جاسکتا ہے۔"
@@ -2885,6 +2892,7 @@ ur:
     sender_body_blank: "متن خالی ہے"
     sender_post_deleted: "پوسٹ حذف کردی گئی ہے"
     sender_message_to_invalid: "وصول کنندہ کا ایمیل ایڈریس غلط ہے"
+    group_smtp_post_deleted: "پوسٹ حذف کردی گئی ہے"
   color_schemes:
     base_theme_name: "بَیس"
     light: "لائٹ"

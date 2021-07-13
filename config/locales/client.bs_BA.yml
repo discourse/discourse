@@ -594,6 +594,8 @@ bs_BA:
       member_added: "Doodano"
       member_requested: "zatraženo na"
       add_members:
+        usernames_placeholder: "korisnička imena"
+        usernames_or_emails_placeholder: "korisnička imena ili e-adrese"
         notify_users: "Obavijesti korisnike"
       requests:
         title: "Zahtjevi"
@@ -635,6 +637,7 @@ bs_BA:
           mailboxes:
             synchronized: "Sinkronizirani poštanski sandučić"
             none_found: "Na ovom računu e-pošte nisu pronađeni poštanski sandučići."
+            disabled: "Neomogućen"
         membership:
           title: Članstvo
           access: Pristup
@@ -1013,11 +1016,9 @@ bs_BA:
         sent: "Poslano"
         archive: "Arhiva"
         groups: "Moje grupe"
-        bulk_select: "Izaberi poruke"
         move_to_inbox: "Idi u inbox"
         move_to_archive: "Arhiva"
         failed_to_move: "Greška u pomjeranju označenih poruka (vjerovatni mrežni problemi)"
-        select_all: "Izaberi sve"
         tags: "Oznake"
       preferences_nav:
         account: "Račun"
@@ -1385,6 +1386,8 @@ bs_BA:
         header_title: "profil, poruke, zabilješke i postavke"
       title:
         title: "Naslov"
+        none: "(ništa)"
+      flair:
         none: "(ništa)"
       primary_group:
         title: "Primary Group"
@@ -1839,13 +1842,6 @@ bs_BA:
         liked_consolidated: "novi lajkovi"
         post_approved: "post odobreno"
     upload_selector:
-      title: "Dodaj sliku"
-      title_with_attachments: "Dodaj sliku ili fajl"
-      from_my_computer: "Sa mog uređaja"
-      from_the_web: "Sa neta"
-      remote_tip: "link do slike http://primjer.com/slika.jpg"
-      local_tip: "Izaberi slike sa svog uređaja"
-      hint_for_supported_browsers: "također možete povući i ispustiti ili zalijepiti slike u editor teksta"
       uploading: "Učitavam"
       select_file: "Izaberi fajl"
       default_image_alt_text: slika
@@ -2025,18 +2021,10 @@ bs_BA:
       not_found:
         title: "Tema nije pronađena"
         description: "Nažalost, nismo pronašli tu temu. Možda je uklonjena od strane moderatora?"
-      total_unread_posts:
+      unread_posts:
         one: "imate %{count} nepročitanu objavu u ovoj temi"
         few: "imate %{count} nepročitane objave u ovoj temi"
         other: "imate %{count} nepročitanih objava u ovoj temi"
-      unread_posts:
-        one: "imate %{count} nepročitanu staru objavu u ovoj temi"
-        few: "imate %{count} nepročitane stare objave u ovoj temi"
-        other: "imate %{count} nepročitane stare objave u ovoj temi"
-      new_posts:
-        one: "imate %{count} novu objavu u ovoj temi od trenutka vaše zadnje posjete"
-        few: "imate %{count} nove objave u ovoj temi od trenutka vaše zadnje posjete"
-        other: "imate %{count} nove objave u ovoj temi od trenutka vaše zadnje posjete"
       likes:
         one: "postoji %{count} sviđanje u ovoj temi"
         few: "postoji %{count} sviđanja u ovoj temi"
@@ -2077,8 +2065,6 @@ bs_BA:
         title: "Vremenski organizuj objavljivanje"
       temp_open:
         title: "Privremeno otvori"
-      auto_reopen:
-        title: "Automatski otvori temu"
       temp_close:
         title: "Privremeno zatvori"
       auto_close:
@@ -2186,14 +2172,10 @@ bs_BA:
         pin: "Zakvači temu"
         unpin: "Otkvači temu"
         pin_globally: "Zakvači temu globalno"
-        make_banner: "Banner tema"
         remove_banner: "Odstrani Banner temu"
       reply:
         title: "Odgovori"
         help: "počni sastavljati odgovor za ovu temu"
-      clear_pin:
-        title: "Clear pin"
-        help: "Ukloni status zakvačenog s ove teme da se vise ne pojavljuje na vrhu liste tema"
       share:
         title: "Dijeli"
         extended_title: "Dijeli link"
@@ -3050,8 +3032,11 @@ bs_BA:
       groups:
         title: "Označite grupe"
         new: "Nova grupa "
+        tags_label: "Oznake u ovoj grupi"
+        parent_tag_label: "Roditeljska oznaka"
         one_per_topic_label: "Ograničite jednu oznaku po temi iz ove grupe"
         new_name: "Nova Grupa Oznaka"
+        name_placeholder: "Ime"
         save: "Sačuvaj"
         delete: "Delete"
         confirm_delete: "Jeste li sigurni da želite izbrisati ovu grupu oznaka?"
@@ -3194,9 +3179,6 @@ bs_BA:
               label: Kategorija
             include_subcategories:
               label: "Uključi potkategorije"
-      commits:
-        latest_changes: "Latest changes: please update often!"
-        by: "by"
       groups:
         new:
           title: "Nova Grupa"
@@ -3767,7 +3749,6 @@ bs_BA:
           details: "Details"
           previous_value: "Previous"
           new_value: "New"
-          diff: "Diff"
           show: "Show"
           modal_title: "Details"
           no_previous: "There is no previous value."
@@ -4093,6 +4074,8 @@ bs_BA:
         trust_level_unlocked_tip: "trust level is unlocked, system will may promote or demote user"
         lock_trust_level: "Lock Trust Level"
         unlock_trust_level: "Unlock Trust Level"
+        silenced_count: "Stišano"
+        suspended_count: "Suspended"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
           table_title:

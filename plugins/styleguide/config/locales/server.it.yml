@@ -7,4 +7,4 @@
 it:
   site_settings:
     styleguide_enabled: "Abilita un percorso `/styleguide` per aiutarti nella personalizzazione di Discourse"
-    styleguide_admin_only: "Limita la visibilità della guida stilistica agli amministratori"
+    styleguide_admin_only: "Limita la visibilità della guida di stile agli amministratori"
