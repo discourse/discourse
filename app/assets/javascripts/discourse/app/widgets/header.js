@@ -2,7 +2,6 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import I18n from "I18n";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
-import { applySearchAutocomplete } from "discourse/lib/search";
 import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import { get } from "@ember/object";
@@ -484,17 +483,9 @@ export default createWidget("header", {
 
     if (this.state.searchVisible) {
       schedule("afterRender", () => {
-        const $searchInput = $("#search-term");
-        $searchInput.focus().select();
-
-        applySearchAutocomplete(
-          $searchInput,
-          this.siteSettings,
-          this.appEvents,
-          {
-            appendSelector: ".menu-panel",
-          }
-        );
+        const searchInput = document.querySelector("#search-term");
+        searchInput.focus();
+        searchInput.select();
       });
     }
   },

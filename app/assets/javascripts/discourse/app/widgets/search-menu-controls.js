@@ -13,10 +13,6 @@ createWidget("search-term", {
     return { afterAutocomplete: false };
   },
 
-  searchAutocompleteAfterComplete() {
-    this.state.afterAutocomplete = true;
-  },
-
   buildAttributes(attrs) {
     return {
       type: "text",
@@ -28,12 +24,8 @@ createWidget("search-term", {
   },
 
   keyUp(e) {
-    if (e.which === 13) {
-      if (this.state.afterAutocomplete) {
-        this.state.afterAutocomplete = false;
-      } else {
-        return this.sendWidgetAction("fullSearch");
-      }
+    if (e.which === 13 && !this.state.afterAutocomplete) {
+      return this.sendWidgetAction("fullSearch");
     }
 
     const val = this.attrs.value;
