@@ -66,48 +66,53 @@ class Admin::BadgesController < Admin::AdminController
     BadgeGranter.revoke_all(badge) if replace_badge_owners
 
     line_number = 1
-    count_per_user = {}
+    entries = []
     File.open(csv_file) do |csv|
-      email_mode = Email.is_valid?(CSV.parse_line(csv.first).first)
-      csv.rewind
-
-      batch = []
-      total_entries = 0
       csv.each_line do |line|
         line = CSV.parse_line(line).first&.strip&.downcase
         line_number += 1
 
-        if line.present?
-          batch << (email_mode ? line : User.normalize_username(line))
-          total_entries += 1
-        end
+        entries << line if line.present?
 
-        if total_entries > MAX_CSV_LINES
+        if entries.size > MAX_CSV_LINES
           return render_json_error I18n.t('badges.mass_award.errors.too_many_csv_entries', count: MAX_CSV_LINES), status: 400
-        end
-
-        last_batch_item = (total_entries % BATCH_SIZE == 0) || csv.eof?
-
-        if last_batch_item
-          if email_mode
-            users = User.with_email(batch).pluck('LOWER(user_emails.email)', :id).to_h
-          else
-            users = User.where(username_lower: batch).pluck(:username_lower, :id).to_h
-          end
-          batch.each do |entry|
-            user_id = users[entry]
-            if grant_existing_holders
-              count_per_user[user_id] ||= 0
-              count_per_user[user_id] += 1
-            else
-              count_per_user[user_id] = 1
-            end
-          end
-          batch = []
         end
       end
     end
 
+    usernames = []
+    emails = []
+    entries.each do |entry|
+      if entry.include?('@')
+        emails << entry
+      else
+        usernames << entry
+      end
+    end
+
+    usernames_map_to_ids = emails_map_to_ids = {}
+    if usernames.size > 0
+      usernames_map_to_ids = User.where(username_lower: usernames).pluck(:username_lower, :id).to_h
+    end
+    if emails.size > 0
+      emails_map_to_ids = User.with_email(emails).pluck('LOWER(user_emails.email)', :id).to_h
+    end
+
+    count_per_user = {}
+    unmatched = Set.new
+    entries.each do |entry|
+      id = usernames_map_to_ids[entry] || emails_map_to_ids[entry]
+      if id.blank?
+        unmatched << entry
+        next
+      end
+      if grant_existing_holders
+        count_per_user[id] ||= 0
+        count_per_user[id] += 1
+      else
+        count_per_user[id] = 1
+      end
+    end
     count_per_user.each do |user_id, count|
       Jobs.enqueue(
         :mass_award_badge,
@@ -118,7 +123,10 @@ class Admin::BadgesController < Admin::AdminController
       )
     end
 
-    head :ok
+    render json: {
+      unmatched_entries: unmatched.to_a,
+      matched_users_count: count_per_user.size
+    }, status: :ok
   rescue CSV::MalformedCSVError
     render_json_error I18n.t('badges.mass_award.errors.invalid_csv', line_number: line_number), status: 400
   end

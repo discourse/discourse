@@ -294,6 +294,35 @@ describe Admin::BadgesController do
           csv&.unlink
         end
 
+        it "includes unmatched entries and the number of users who will receive the badge in the response" do
+          Jobs.run_immediately!
+          badge.update!(multiple_grant: true)
+          csv = Tempfile.new
+          content = [
+            "nonexistentuser",
+            "nonexistentuser",
+            "nonexistentemail@discourse.fake"
+          ]
+          content << user.username
+          content << user.username
+          csv.write(content.join("\n"))
+          csv.rewind
+          post "/admin/badges/award/#{badge.id}.json", params: {
+            file: fixture_file_upload(csv),
+            grant_existing_holders: true
+          }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['unmatched_entries'].sort).to eq([
+            "nonexistentuser",
+            "nonexistentemail@discourse.fake"
+          ].sort)
+          expect(response.parsed_body['matched_users_count']).to eq(1)
+          expect(UserBadge.where(user: user, badge: badge).count).to eq(2)
+        ensure
+          csv&.close
+          csv&.unlink
+        end
+
         it "grants the badge to the users in the CSV as many times as they appear in it" do
           Jobs.run_immediately!
           badge.update!(multiple_grant: true)
@@ -302,40 +331,41 @@ describe Admin::BadgesController do
 
           Notification.destroy_all
           random = Random.new(RSpec.configuration.seed)
-          emails_csv_content = [user_without_badge.email.titlecase, user_with_badge.email.titlecase] * 150
-          emails_csv_content.shuffle!(random: random)
-          usernames_csv_content = [user_without_badge.username.titlecase, user_with_badge.username.titlecase] * 150
-          usernames_csv_content.shuffle!(random: random)
+          csv_content = [
+            user_with_badge.email.titlecase,
+            user_with_badge.username.titlecase,
+            user_without_badge.email.titlecase,
+            user_without_badge.username.titlecase
+          ] * 20
+          csv_content.shuffle!(random: random)
 
-          count = 0
-          [emails_csv_content, usernames_csv_content].each do |content|
-            count += 1
-            csv = Tempfile.new
-            csv.write(content.join("\n"))
-            csv.rewind
-            post "/admin/badges/award/#{badge.id}.json", params: {
-              file: fixture_file_upload(csv),
-              grant_existing_holders: true
-            }
-            expect(response.status).to eq(200)
-            sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
-            expect(sequence.size).to eq((150 * count) + 1)
-            expect(sequence.sort).to eq((0...((150 * count) + 1)).to_a)
-            sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
-            expect(sequence.size).to eq((150 * count))
-            expect(sequence.sort).to eq((0...(150 * count)).to_a)
+          csv = Tempfile.new
+          csv.write(csv_content.join("\n"))
+          csv.rewind
+          post "/admin/badges/award/#{badge.id}.json", params: {
+            file: fixture_file_upload(csv),
+            grant_existing_holders: true
+          }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['unmatched_entries']).to eq([])
+          expect(response.parsed_body['matched_users_count']).to eq(2)
+          sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
+          expect(sequence.size).to eq(40 + 1)
+          expect(sequence.sort).to eq((0...(40 + 1)).to_a)
+          sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
+          expect(sequence.size).to eq(40)
+          expect(sequence.sort).to eq((0...40).to_a)
 
-            # each user gets 1 notification no matter how many times
-            # they're repeated in the file.
-            [user_without_badge, user_with_badge].each do |u|
-              notifications = u.reload.notifications
-              expect(notifications.size).to eq(count)
-              expect(notifications.map(&:notification_type).uniq).to eq([Notification.types[:granted_badge]])
-            end
-          ensure
-            csv&.close
-            csv&.unlink
+          # each user gets 1 notification no matter how many times
+          # they're repeated in the file.
+          [user_without_badge, user_with_badge].each do |u|
+            notifications = u.reload.notifications
+            expect(notifications.size).to eq(1)
+            expect(notifications.map(&:notification_type).uniq).to eq([Notification.types[:granted_badge]])
           end
+        ensure
+          csv&.close
+          csv&.unlink
         end
       end
     end
