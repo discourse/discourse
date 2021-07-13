@@ -116,6 +116,21 @@
     </label>
   </section>
 
+  <section class="field default-slow-mode">
+    <div class="control-group">
+      <label for="category-default-slow-mode">
+        {{i18n "category.default_slow_mode"}}
+      </label>
+      <div class="category-default-slow-mode-seconds">
+        {{relative-time-picker
+            id="category-default-slow-mode"
+            durationMinutes=category.defaultSlowModeMinutes
+            hiddenIntervals=hiddenRelativeIntervals
+            onChange=(action "onDefaultSlowModeDurationChange")}}
+      </div>
+    </div>
+  </section>
+
   <section class="field auto-close">
     <div class="control-group">
       <label for="topic-auto-close">

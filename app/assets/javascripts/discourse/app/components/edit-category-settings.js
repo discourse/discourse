@@ -138,4 +138,10 @@ export default buildCategoryPanel("settings", {
     let hours = minutes ? minutes / 60 : null;
     this.set("category.auto_close_hours", hours);
   },
+
+  @action
+  onDefaultSlowModeDurationChange(minutes) {
+    let seconds = minutes ? minutes * 60 : null;
+    this.set("category.default_slow_mode_seconds", seconds);
+  },
 });

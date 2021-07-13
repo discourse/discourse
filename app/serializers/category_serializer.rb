@@ -20,7 +20,8 @@ class CategorySerializer < SiteCategorySerializer
              :custom_fields,
              :topic_featured_link_allowed,
              :search_priority,
-             :reviewable_by_group_name
+             :reviewable_by_group_name,
+             :default_slow_mode_seconds
 
   def reviewable_by_group_name
     object.reviewable_by_group.name
