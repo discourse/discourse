@@ -48,7 +48,11 @@ export default Controller.extend({
                   )
                 );
               } else {
-                bootbox.alert(I18n.t("admin.badges.mass_award.success"));
+                bootbox.alert(
+                  I18n.t("admin.badges.mass_award.success", {
+                    count: matchedCount,
+                  })
+                );
               }
             }
           )
