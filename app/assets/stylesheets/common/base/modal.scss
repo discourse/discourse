@@ -969,30 +969,32 @@
 }
 
 .share-topic-modal {
+  form {
+    margin-bottom: 0;
+  }
   .sources {
-    align-items: center;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
-    margin-bottom: 1em;
-
-    .social-link {
-      font-size: $font-up-6;
-      margin-right: 8px;
+    align-items: stretch;
+    button {
+      margin-right: 0.5em;
+      margin-bottom: 0.5em;
     }
+  }
 
-    .btn-primary {
-      border-radius: 4px;
-      height: calc(#{$font-up-6} - 4px);
-      margin-bottom: 2px;
-      margin-right: 8px;
-      padding-left: 8px;
-      padding-right: 8px;
-
-      .d-icon {
-        font-size: $font-up-3;
-      }
+  .share-twitter {
+    .d-icon {
+      color: var(--twitter);
     }
+  }
+  .share-facebook {
+    .d-icon {
+      color: var(--facebook);
+    }
+  }
+
+  .invite-users {
+    margin: 1em 0;
   }
 }
 

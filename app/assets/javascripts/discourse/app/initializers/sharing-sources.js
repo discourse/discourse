@@ -9,7 +9,7 @@ export default {
 
     Sharing.addSource({
       id: "twitter",
-      icon: "fab-twitter-square",
+      icon: "fab-twitter",
       generateUrl: function (link, title, quote = "") {
         const text = quote ? `"${quote}" -- ` : title;
         return `http://twitter.com/intent/tweet?url=${encodeURIComponent(
@@ -39,7 +39,7 @@ export default {
 
     Sharing.addSource({
       id: "email",
-      icon: "envelope-square",
+      icon: "envelope",
       title: I18n.t("share.email"),
       generateUrl: function (link, title, quote = "") {
         const body = quote ? `${quote} \n\n ${link}` : link;
