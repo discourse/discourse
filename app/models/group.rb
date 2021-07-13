@@ -437,7 +437,7 @@ class Group < ActiveRecord::Base
     end
 
     # don't allow shoddy localization to break this
-    localized_name = User.normalize_username(I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale))
+    localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
     validator = UsernameValidator.new(localized_name)
 
     if validator.valid_format? && !User.username_exists?(localized_name)
