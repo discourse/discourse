@@ -23,7 +23,7 @@ module Onebox
         html.css('meta').each do |m|
           if m.attribute('property') && m.attribute('property').to_s.match(/^og:/i)
             m_content = m.attribute('content').to_s.strip
-            m_property = m.attribute('property').to_s.gsub('og:', '')
+            m_property = m.attribute('property').to_s.gsub('og:', '').gsub(':', '_')
             twitter_data[m_property.to_sym] = m_content
           end
         end
@@ -100,7 +100,7 @@ module Onebox
         if twitter_api_credentials_present?
           access(:user, :profile_image_url_https).sub('normal', '400x400')
         elsif twitter_data[:image]
-          twitter_data[:image]
+          twitter_data[:image] unless twitter_data[:image_user_generated]
         end
       end
 
