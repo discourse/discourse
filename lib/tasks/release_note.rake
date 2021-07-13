@@ -1,10 +1,19 @@
 # frozen_string_literal: true
 
+DATE_REGEX = /\A\d{4}-\d{2}-\d{2}/
+
 desc "generate a release note from the important commits"
 task "release_note:generate", :from, :to, :repo do |t, args|
   repo = args[:repo] || "."
-  from = args[:from] || `git -C #{repo} describe --tags --abbrev=0`.strip
-  to = args[:to] || "HEAD"
+
+  from = args[:from]
+  to = args[:to]
+  dates = from&.match?(DATE_REGEX) || to&.match?(DATE_REGEX)
+
+  if !dates
+    from ||= `git -C #{repo} describe --tags --abbrev=0`.strip
+    to ||= "HEAD"
+  end
 
   bug_fixes = Set.new
   new_features = Set.new
@@ -13,7 +22,15 @@ task "release_note:generate", :from, :to, :repo do |t, args|
   perf_changes = Set.new
   a11y_changes = Set.new
 
-  out = `git -C #{repo} log --pretty="tformat:%s" '#{from}..#{to}'`
+  cmd = "git -C #{repo} log --pretty='tformat:%s' "
+  if dates
+    cmd += "--after '#{from}' " if from
+    cmd += "--before '#{to}' " if to
+  else
+    cmd += "#{from}..#{to}"
+  end
+
+  out = `#{cmd}`
   next "Status #{$?.exitstatus} running git log\n#{out}" if !$?.success?
 
   out.each_line do |comment|
@@ -51,7 +68,7 @@ end
 #  1. Make sure you have a local, up-to-date clone of https://github.com/discourse/all-the-plugins
 #  2. In all-the-plugins, `git submodule update --init --recursive --remote`
 #  3. Change back to your discourse directory
-#  4. rake "release_note:plugins:generate[ HEAD@{2021-06-01} , HEAD@{now} , /path/to/all-the-plugins/plugins/* , discourse ]"
+#  4. rake "release_note:plugins:generate[ 2021-06-01 , 2021-07-01 , /path/to/all-the-plugins/plugins/* , discourse ]"
 desc "generate release notes for all official plugins in a directory"
 task "release_note:plugins:generate", :from, :to, :plugin_glob, :org do |t, args|
   from = args[:from]
