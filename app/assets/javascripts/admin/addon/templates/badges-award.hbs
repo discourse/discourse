@@ -14,7 +14,7 @@
       </div>
       <div>
         <h4>{{i18n "admin.badges.mass_award.upload_csv"}}</h4>
-        <input type="file" id="massAwardCSVUpload" accept=".csv">
+        <input type="file" id="massAwardCSVUpload" accept=".csv" onchange={{action "onFileInputChange"}}>
       </div>
       <div>
         <label>
@@ -32,13 +32,38 @@
           class="btn-primary"
           action=(action "massAward")
           type="submit"
-          disabled=saving
+          disabled=massAwardButtonDisabled
+          icon="certificate"
           label="admin.badges.mass_award.perform"}}
-      {{#link-to "adminBadges.index" class="btn btn-danger"}}
+      {{#link-to "adminBadges.index" class="btn btn-normal"}}
         {{d-icon "times"}}
         <span>{{i18n "cancel"}}</span>
       {{/link-to}}
     </form>
+    {{#if saving}}
+      {{i18n "uploading"}}
+    {{/if}}
+    {{#if resultsMessage}}
+      <p>
+        {{#if success}}
+          {{d-icon "check" class="bulk-award-status-icon success"}}
+        {{else}}
+          {{d-icon "times" class="bulk-award-status-icon failure"}}
+        {{/if}}
+        {{resultsMessage}}
+      </p>
+      {{#if unmatchedEntries.length}}
+        <p>
+          {{d-icon "exclamation-triangle" class="bulk-award-status-icon failure"}}
+          {{i18n "admin.badges.mass_award.csv_has_unmatched_users"}}
+        </p>
+        <ul>
+          {{#each unmatchedEntries as |entry|}}
+            <li>{{entry}}</li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    {{/if}}
   {{else}}
     <span class="badge-required">{{i18n "admin.badges.mass_award.no_badge_selected"}}</span>
   {{/if}}
