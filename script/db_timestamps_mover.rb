@@ -9,9 +9,9 @@ Commands:
 END
 
 class TimestampsUpdater
-  TABLE_SCHEMA = 'public'
-
-  def initialize
+  def initialize(schema, ignore_tables)
+    @schema = schema
+    @ignore_tables = ignore_tables
     @raw_connection = PG.connect(
       host: ENV['DISCOURSE_DB_HOST'] || 'localhost',
       port: ENV['DISCOURSE_DB_PORT'] || 5432,
@@ -31,7 +31,9 @@ class TimestampsUpdater
       columns = all_columns_of_type(data_type)
       columns.each do |c|
         table = c["table_name"]
+        next if @ignore_tables.include? table
         column = c["column_name"]
+
         move_timestamps table, column, days
       end
     end
@@ -50,7 +52,7 @@ class TimestampsUpdater
       FROM information_schema.columns AS c
       JOIN information_schema.tables AS t
         ON c.table_name = t.table_name
-      WHERE c.table_schema = '#{TABLE_SCHEMA}'
+      WHERE c.table_schema = '#{@schema}'
         AND c.data_type = '#{data_type}'
         AND t.table_type = 'BASE TABLE'
     SQL
@@ -75,12 +77,19 @@ def is_date?(string)
   true if Date.parse(string) rescue false
 end
 
+def create_updater
+  ignore_tables = %w[application_requests user_visits]
+  TimestampsUpdater.new "public", ignore_tables
+end
+
 if ARGV.length == 2 && ARGV[0] == "yesterday" && is_date?(ARGV[1])
   date = Date.parse(ARGV[1])
-  TimestampsUpdater.new.move_to_yesterday date
+  updater = create_updater
+  updater.move_to_yesterday date
 elsif ARGV.length == 1 && is_i?(ARGV[0])
   days = ARGV[0].to_i
-  TimestampsUpdater.new.move_by days
+  updater = create_updater
+  updater.move_by days
 else
   puts usage
   exit 1
