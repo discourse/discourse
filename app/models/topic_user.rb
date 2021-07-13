@@ -372,20 +372,26 @@ class TopicUser < ActiveRecord::Base
 
   end
 
-  def self.update_post_action_cache(opts = {})
-    user_id = opts[:user_id]
-    post_id = opts[:post_id]
-    topic_id = opts[:topic_id]
-    action_type = opts[:post_action_type]
-
-    action_type_name = "liked" if action_type == :like
-
-    raise ArgumentError, "action_type" if action_type && !action_type_name
-
-    unless action_type_name
-      update_post_action_cache(opts.merge(post_action_type: :like))
-      return
-    end
+  # Update the cached topic_user.liked column based on data
+  # from the post_actions table. This is useful when posts
+  # have moved around, or to ensure integrity of the data.
+  #
+  # By default this will update data for all topics and all users.
+  # The parameters can be used to shrink the scope, and make it faster.
+  # user_id, post_id and topic_id can optionally be arrays of ids.
+  #
+  # Providing post_id will automatically scope to the relavent user_id and topic_id.
+  # A provided `topic_id` value will always take presedence, which is
+  # useful when a post has been moved between topics.
+  def self.update_post_action_cache(
+    user_id: nil,
+    post_id: nil,
+    topic_id: nil,
+    post_action_type: :like
+  )
+    raise ArgumentError, "post_action_type must equal :like" if post_action_type != :like
+    raise ArgumentError, "post_id and user_id cannot be supplied together" if user_id && post_id
+    action_type_name = "liked"
 
     builder = DB.build <<~SQL
       UPDATE topic_users tu
@@ -411,21 +417,25 @@ class TopicUser < ActiveRecord::Base
     SQL
 
     if user_id
-      builder.where("tu2.user_id = :user_id", user_id: user_id)
+      builder.where("tu2.user_id IN (:user_id)", user_id: user_id)
     end
 
     if topic_id
-      builder.where("tu2.topic_id = :topic_id", topic_id: topic_id)
+      builder.where("tu2.topic_id IN (:topic_id)", topic_id: topic_id)
     end
 
     if post_id
-      builder.where("tu2.topic_id IN (SELECT topic_id FROM posts WHERE id = :post_id)", post_id: post_id)
-      builder.where("tu2.user_id IN (SELECT user_id FROM post_actions
-                                     WHERE post_id = :post_id AND
-                                           post_action_type_id = :action_type_id)")
+      builder.where("tu2.topic_id IN (SELECT topic_id FROM posts WHERE id IN (:post_id))", post_id: post_id) if !topic_id
+      builder.where(<<~SQL, post_id: post_id)
+        tu2.user_id IN (
+          SELECT user_id FROM post_actions
+          WHERE post_id IN (:post_id)
+          AND post_action_type_id = :action_type_id
+        )
+      SQL
     end
 
-    builder.exec(action_type_id: PostActionType.types[action_type])
+    builder.exec(action_type_id: PostActionType.types[post_action_type])
   end
 
   # cap number of unread topics at count, bumping up last_read if needed

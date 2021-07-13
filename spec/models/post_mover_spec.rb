@@ -769,6 +769,19 @@ describe PostMover do
             end
           end
 
+          it "updates topic_user.liked values for both source and destination topics" do
+            expect(TopicUser.find_by(topic: topic, user: user).liked).to eq(false)
+
+            like = Fabricate(:post_action, post: p3, user: user, post_action_type_id: PostActionType.types[:like])
+            expect(TopicUser.find_by(topic: topic, user: user).liked).to eq(true)
+
+            expect(TopicUser.find_by(topic: destination_topic, user: user)).to eq(nil)
+            topic.move_posts(user, [p3.id], destination_topic_id: destination_topic.id)
+
+            expect(TopicUser.find_by(topic: topic, user: user).liked).to eq(false)
+            expect(TopicUser.find_by(topic: destination_topic, user: user).liked).to eq(true)
+          end
+
           context "read state and other stats per user" do
             def create_topic_user(user, topic, opts = {})
               notification_level = opts.delete(:notification_level) || :regular
