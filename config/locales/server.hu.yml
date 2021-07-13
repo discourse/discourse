@@ -132,7 +132,7 @@ hu:
       emojis_disabled: "nem tartalmazhat emodzsit"
       restrict_dependent_destroy:
         one: "Nem lehet törölni a rekordot, mert létezik egy függő %{record}"
-        many: "Nem lehet törölni a rekordot, mert létezik függő %{record}"
+        other: "Nem lehet törölni a rekordot, mert létezik függő %{record}"
       too_long:
         one: túl hosszú (legfeljebb %{count} karakter lehet)
         other: túl hosszú (legfeljebb %{count} karakter lehet)
@@ -1640,6 +1640,8 @@ hu:
     sender_post_deleted: "a választ törölték"
     sender_message_to_invalid: "a címzett e-mail címe érvénytelen"
     sender_topic_deleted: "Ez a témakör ki lett törölve"
+    group_smtp_post_deleted: "a választ törölték"
+    group_smtp_topic_deleted: "Ez a témakör ki lett törölve"
   color_schemes:
     base_theme_name: "Alap"
     light: "Világos"

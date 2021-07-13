@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  site_settings:
+    details_enabled: 'Bir gönderiye genişletilebilir ayrıntılar ekleme özelliğini açın. Bu özelliğe, oluşturucunun araç çubuğundaki açılır menüden ulaşılabilir. Bu ayarı değiştirirseniz, tüm gönderileri "rake posts:rebake" komutu ile yeniden düzenlemeniz gerekir.'
   details:
     excerpt_details: "(daha fazla ayrıntı için tıklayın)"

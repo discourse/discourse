@@ -12,6 +12,7 @@ tr_TR:
     discourse_narrative_bot_disable_public_replies: "Discourse Hikaye Botu tarafından verilen cevapları devre dışı bırak"
     discourse_narrative_bot_welcome_post_type: "Forum Anlatı Botunun göndermesi gereken karşılama gönderisinin türü"
     discourse_narrative_bot_welcome_post_delay: "Söylem Anlatı Botu karşılama gönderisini göndermeden önce (n) saniye bekleyin."
+    discourse_narrative_bot_skip_tutorials: "Pas geçilecek Discourse Bot eğitimleri"
   badges:
     certified:
       name: Sertifikalı
@@ -24,6 +25,11 @@ tr_TR:
       long_description: |
         Bu rozet, interaktif ileri kullanıcı eğitiminin başarılı tamamlanmasının ardından verilir. Gelişmiş tartışma araçlarına hakim oldunuz - ve şimdi tamamen lisanslısınız!
   discourse_narrative_bot:
+    bio: "Merhaba, ben gerçek bir insan değilim. Ben size bu siteyi öğretebilecek bir botum. Benimle etkileşim kurmak için bana bir mesaj gönderin veya adımı kullanarak benden bahsedin."
+    tl2_promotion_message:
+      subject_template: "Artık güvenlik seviyeniz arttığına göre, bazı gelişmiş özellikler hakkında bilgi edinmenin zamanı geldi!"
+      text_body_template: |
+        Neler yapabileceğinize dair daha fazla bilgi edinmek için bu iletiyi `@%{discobot_username} %{reset_trigger}` kullanarak yanıtlayın.
     timeout:
       message: |-
         Merhaba @ %{username}, uzun süredir sizden haber alamadık.
@@ -39,6 +45,9 @@ tr_TR:
       trigger: "yuvarla"
       invalid: |-
         Üzgünüm, bu zar kombinasyonunu tutturmak matematiksel olarak imkansız. :confounded:
+      not_enough_dice:
+        one: "Sadece %{count} zarım var. [Utanç verici] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), biliyorum!"
+        other: "Sadece %{count} zarım var. [Utanç verici] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), biliyorum!"
       out_of_range: |-
         (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) Matematiksel olarak bir zarın en fazla 120 yüzeyi olabildiğini biliyor muydunuz?
       results: |-
@@ -70,7 +79,7 @@ tr_TR:
         quote: "Her gün seni korkutan bir şey yap."
         author: "Eleanor Roosevelt"
       "9":
-        quote: "Onları kabul etme cesareti varsa, hatalar daima affedilebilirdir."
+        quote: "Onları kabul etme cesareti varsa, hatalar daima affedilebilir."
         author: "Bruce Lee"
       "10":
         quote: "İnsan zihni ne olursa olsun düşünebilir ve inanabilir, başarabilir."
@@ -109,6 +118,11 @@ tr_TR:
       random_mention:
         reply: |-
           Selam! Neler yapabileceğimi öğrenmek için `@ %{discobot_username} %{help_trigger}` komutunu girin.
+        tracks: |-
+          Şu an için aşağıdakileri nasıl yapacağımı biliyorum:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Kişisel bir mesajla yalnızca sizin için etkileşimli bir eğitim başlatır. `{name-of-tutorial}` şunlardan biri olabilir: `%{tracks}`.
         bot_actions: |-
           @ @ %{discobot_username} %{dice_trigger} 2d6`
           &gt;: game_die: 3, 6
@@ -117,6 +131,7 @@ tr_TR:
 
           ` @%{discobot_username}%{magic_8_ball_trigger}`
           > :crystal_ball: You may rely on it
+        discobot_disabled: Tercihlerinde beni devre dışı bıraktın. Benimle iletişim kurmak için yeni kullanıcı alıştırma ipuçlarına izin vermen gerekiyor.
       do_not_understand:
         first_response: |-
           Hey, cevabın için teşekkürler!
@@ -166,7 +181,21 @@ tr_TR:
           Şık resim -  :heart: :heart_eyes:
         like_not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
+        not_found: |-
+          Görünüşe göre bir resim yüklememişsin, bu yüzden ben senin beğeneceğinden _emin olduğum_ bir resim seçtim.
+
+          <%{image_url}>
+
+          Bunu yüklemeyi veya bağlantıyı tek başına bir satıra yapıştırmayı deneyin!
       likes:
+        instructions: |-
+          İşte bir tek boynuzlu at resmi:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Beğendiğinizi (kim beğenmez ki!) anlamam için bu gönderinin altındaki :heart: düğmesini tıklayın.
+        reply: |-
+          Gönderimi beğendiğiniz için teşekkürler!
         not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
       formatting:
@@ -202,6 +231,8 @@ tr_TR:
       bookmark:
         instructions: |-
           Daha fazla bilgi edinmek istiyorsanız aşağıdan seç<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ve ** bu özel ileti yi yer im lerine ekle<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
+        reply: |-
+          Mükemmel! Artık istediğiniz zaman doğrudan [profilinizdeki yer imleri sekmesinden](%{bookmark_url}) özel sohbetimize geri dönüş yolunu kolayca bulabilirsiniz. Sağ üstteki &#8599; profil resminizi seçmeniz yeterli
         not_found: |-
           Ah, bu konuda hiçbir yer işareti görmüyorum. Her gönderinin altındaki yer işaretlerini gördünüz mü? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">Ek eylemleri ortaya çıkarmak için daha fazla göster seçeneğini kullanın.
       emoji:
@@ -226,8 +257,16 @@ tr_TR:
 
           (Ve evet, kullanıcı adım 1970&#39;ler dans çılgınlığında olduğu gibi _disco_ olarak yazılmıştır. [Gece hayatını seviyorum!] (Https://www.youtube.com/watch?v=B_wGI3_sGf8): dansçı :)
       flag:
+        instructions: |-
+          Tartışmalarımızı arkadaşça yapmayı seviyoruz ve [işleri medeni tutmak](%{guidelines_url}) için yardımınıza ihtiyacımız var. Bir sorun görürseniz, yazara veya [moderatörelere](%{about_url}) özel olarak bildirmek için lütfen sorunlu olarak işaretleyin (bayrak). Bir gönderiyi sorunlu olarak işaretlemek isteyebileceğiniz, zararsız bir konu ayırma önerisinden net bir topluluk standartları ihlaline kadar birçok neden vardır. **Başka Bir Şey**'i seçerseniz, moderatörlerle daha fazla soru sorabileceğiniz özel bir mesajlaşma başlatırsınız.
+
+          > :imp: Burada kötü bir şey yazdım
+
+          Hadi **bu gönderiyi sorunlu olarak işaretleyin** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ve neden olarak **Uygunsuz**'u seçin!
         reply: |-
           [Moderatörümüz] (%{base_uri}/grup/moderatör) raporunuz hakkında özel olarak bilgilendirilecektir. Yeterli topluluk üyesi bir gönderiyi işaretlerse, önlem olarak otomatik olarak gizlenir. (Aslında kötü bir yazı yazmadığım için :melek:, devam ettim ve şu an için bu raporu kaldırdım.)
+        not_found: |-
+          Aa hayır, nahoş paylaşımım henüz uygunsuz olarak işaretlenmedi. :worried: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kullanarak uygunsuz olarak işaretleyebilir misiniz? Her gönderi için daha fazla eylem görmek için daha fazla göster düğmesini <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> kullanabileceğinizi unutmayın.
       search:
         instructions: |-
           _psst_ … Bu konuda bir sürprizim var. Eğer meydan okumaya hazırsanız, **arama simgesini seçin** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> sağ üstte ↗ arayın.

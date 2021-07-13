@@ -44,7 +44,7 @@ fi:
         navigation_stacked:
           title: "Pystynavigointi"
         categories_list:
-          title: "Luokkaluettelo"
+          title: "Alueluettelo"
         topic_link:
           title: "Ketjun linkki"
         topic_list_item:

@@ -12,5 +12,7 @@ id:
           title: "Kategori"
         navigation:
           title: "Navigasi"
+        post:
+          title: "Postingan"
         suggested_topics:
           title: "Topik Yang Disarankan"

@@ -160,7 +160,7 @@ da:
       ip_address_already_screened: "er allerede inkluderet i en eksisterende regel"
       restrict_dependent_destroy:
         one: "Kan ikke slette registrering fordi et afhængig %{record} findes"
-        many: "Kan ikke slette registrering fordi afhængig %{record} findes"
+        other: "Kan ikke slette registrering fordi afhængig %{record} findes"
       too_long:
         one: er for lang (maximum er %{count} tegn)
         other: er for lang (maximum er %{count} tegn)
@@ -1354,7 +1354,6 @@ da:
     category_search_priority_high_weight: "Vægt anvendt på rangering for høj kategori søgeprioritet."
     allow_uncategorized_topics: "Tillad at emner kan oprettes uden et kategori. ADVARSEL: Hvis der er nogen ikke-kategoriserede emner, skal du først kategorisere dem inden du deaktiverer dette."
     allow_duplicate_topic_titles: "Tillad emner med identiske titler ."
-    allow_duplicate_topic_titles_category: "Tillad emner med identiske, duplikerede titler, hvis kategorien er anderledes. allow_duplicate_topic_titles skal være falsk."
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "Sitets navn, som anvendt i tittel."
@@ -2994,6 +2993,9 @@ da:
     sender_post_deleted: "indlæg er blevet slettet"
     sender_message_to_invalid: "modtager har ugyldig e-mailadresse"
     sender_topic_deleted: "emne er blevet slettet"
+    group_smtp_post_deleted: "indlæg er blevet slettet"
+    group_smtp_topic_deleted: "emne er blevet slettet"
+    group_smtp_disabled_for_group: "smtp er blevet deaktiveret for gruppen"
   color_schemes:
     base_theme_name: "Base"
     light: "Lys"
@@ -3776,6 +3778,10 @@ da:
         title: "Slet..."
       delete_and_ignore:
         title: "Slet Indlæg og Ignorer"
+        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
+      delete_and_ignore_replies:
+        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
+        confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       delete_and_agree:
         title: "Slet Indlæg og Accepter"
         description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"

@@ -160,7 +160,7 @@ gl:
       ip_address_already_screened: "xa está incluído nunha regra existente"
       restrict_dependent_destroy:
         one: "Non se pode eliminar porque existe outro %{record} dependente"
-        many: "Non se pode eliminar porque existen outros %{record} dependentes"
+        other: "Non se pode eliminar porque existen outros %{record} dependentes"
       too_long:
         one: é longo de máis (o máximo é %{count}caracter)
         other: é longo de máis (o máximo son %{count} caracteres)
@@ -1363,7 +1363,6 @@ gl:
     category_search_priority_high_weight: "Peso aplicado para a ordenación de categorías con prioridade alta."
     allow_uncategorized_topics: "Permitir a creación de temas sen categoría. AVISO: se hai algún tema sen categoría, debe recategorizalos antes de desactivar esta opción."
     allow_duplicate_topic_titles: "Permitir temas con títulos idénticos, duplicados."
-    allow_duplicate_topic_titles_category: "Permitir temas con títulos idénticos, duplicados, se a categoría é diferente. allow_duplicate_topic_titles debe ser falso."
     unique_posts_mins: "Minutos que deben transcorrer antes de que un usuario poida volver publicar o mesmo contido"
     educate_until_posts: "Cando o usuario comeza a escribir as súas primeiras (n) publicacións, mostrarlle o panel emerxente cos consellos para usuarios novos no editor."
     title: "O nome deste sitio, utilizado na etiqueta título."
@@ -1570,7 +1569,6 @@ gl:
     discord_secret: "Chave secreta de Discord"
     discord_trusted_guilds: 'Só lles permite aos membros destes colectivos de Discord iniciar sesión a través de Discord. Utilice o identificador numérico para o colectivo. Para saber máis, consulte as instrucións <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Déixeo en branco para permitirllo a calquera colectivo.'
     enable_backups: "Permitir que os administradores creen copias de seguranza do foro"
-    allow_restore: "Permitir restaurar, o que pode substituír TODOS os datos do sitio! Deixar en False a non ser que prevexa restaurar desde unha copia de seguranza"
     maximum_backups: "Número máximo de copias de seguranza que se manterán no disco. Aquelas máis antigas eliminaranse automaticamente"
     automatic_backups_enabled: "Executar copias de seguranza automáticas segundo se defina en Frecuencia das copias de seguranza"
     backup_frequency: "O número de días entre unha e outra copia de seguranza."
@@ -3552,6 +3550,8 @@ gl:
     sender_post_deleted: "a publicación foi eliminada"
     sender_message_to_invalid: "o destinatario ten un enderezo electrónico non válido"
     sender_topic_deleted: "o tema foi eliminado"
+    group_smtp_post_deleted: "a publicación foi eliminada"
+    group_smtp_topic_deleted: "o tema foi eliminado"
   color_schemes:
     base_theme_name: "Base"
     light: "Claro"

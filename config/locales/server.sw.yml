@@ -121,7 +121,7 @@ sw:
       ip_address_already_screened: "tayari ipo ndani ya kanuni iliyopo"
       restrict_dependent_destroy:
         one: "Hauwezi kufuta kumbukumbu kwa sababu %{record}inayoitegemea ipo"
-        many: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
+        other: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
       other_than: "lazima iwe nyingine zaidi ya %{count}"
     template:
       body: ! "Matatizo yametokea kwenye sehemu zifuatazo:"
@@ -825,7 +825,6 @@ sw:
     google_oauth2_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Programu-timizi ya Google"
     google_oauth2_client_secret: "Siri ya Mtumiaji kwa ajili ya Programu-timizi ya Google"
     enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
-    allow_restore: "ruhusu urejeshaji, itabadilisha taarifa zote za tovuti! Acha iwe hapana, badilisha kama unataka kurejesha chelezo"
     maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
     backup_frequency: "idadi ya siku kati ya machelezo."
     rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."

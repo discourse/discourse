@@ -6,13 +6,13 @@
 
 es:
   site_settings:
-    discourse_narrative_bot_enabled: "Habilitar el bot de narrativa de Discourse (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "Deshabilitar la publicación de bienvenida del «Discourse Narrative Bot»"
+    discourse_narrative_bot_enabled: "Activar el bot de narrativa de Discourse (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Desactivar la publicación de bienvenida del «Discourse Narrative Bot»"
     discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el bot de narrativa de Discourse debe ignorar."
-    discourse_narrative_bot_disable_public_replies: "Deshabilitar las respuestas públicas del bot de narrativa de Discourse"
+    discourse_narrative_bot_disable_public_replies: "Desactivar las respuestas públicas del bot de narrativa de Discourse"
     discourse_narrative_bot_welcome_post_type: "Tipo de publicación de bienvenida que debe enviar el bot de narrativa de Discourse"
     discourse_narrative_bot_welcome_post_delay: "Esperar (n) segundos antes de enviar la publicación de bienvenida del bot de narrativa de Discourse."
-    discourse_narrative_bot_skip_tutorials: "Tutoriales de Discourse Narrative Bot que saltar"
+    discourse_narrative_bot_skip_tutorials: "Tutoriales de Discourse Narrative Bot que omitir"
   badges:
     certified:
       name: Certificado
@@ -46,7 +46,7 @@ es:
       invalid: |-
         Lo siento, es matemáticamente imposible tirar esa combinación de dados. :confounded:
       not_enough_dice:
-        one: "Solo tengo %{count} dados. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
+        one: "Solo tengo %{count} dado. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
         other: "Solo tengo %{count} dados. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
       out_of_range: |-
         ¿Sabías que [el número máximo de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) que un dado matemáticamente correcto puede tener es 120?
@@ -99,7 +99,7 @@ es:
         "8": "La perspectiva es buena"
         "9": "Sí"
         "10": "Las señales apuntan a que sí"
-        "11": "Respuesta confusa, intenta otra vez"
+        "11": "Respuesta confusa, inténtalo de nuevo"
         "12": "Pregunta de nuevo más tarde"
         "13": "Mejor no te digo ahora"
         "14": "No se puede predecir ahora"
@@ -113,11 +113,11 @@ es:
         > :crystal_ball: %{result}
     track_selector:
       reset_trigger: "empezar"
-      skip_trigger: "saltar"
+      skip_trigger: "omitir"
       help_trigger: "mostrar ayuda"
       random_mention:
         reply: |-
-          ¡Hola! Para saber qué puedo hacer, escribe `@%{discobot_username} %{help_trigger}`.
+          ¡Hola! Para saber qué puedo hacer, escribe «@%{discobot_username} %{help_trigger}».
         tracks: |-
           Actualmente Sé cómo hacer las siguientes cosas:
 
@@ -138,7 +138,7 @@ es:
           ¡Hey, gracias por la respuesta!
 
           Desafortunadamente, como el bot mal programado que soy, no puedo entenderla. :frowning:
-        track_response: Puedes intentarlo de nuevo, o si quieres omitir este paso, escribe `%{skip_trigger}`. De lo contrario, para comenzar de nuevo, escribe `%{reset_trigger}`.
+        track_response: Puedes intentarlo de nuevo, o si quieres omitir este paso, escribe «%{skip_trigger}». De lo contrario, para comenzar de nuevo, escribe «%{reset_trigger}».
         second_response: |-
           Oh, lo siento. Todavía no entiendo. :anguished:
 
@@ -184,7 +184,7 @@ es:
 
           Si te gusta (¡y a quién no!), adelante, presiona el botón me gusta :heart: debajo de esta publicación para avisarme.
 
-          ¿Puedes **responder con una imagen?** ¡Cualquier imagen servirá! Arrastra y suelta, presiona el botón de carga o incluso cópiala y pégala.
+          ¿Puedes **responder con una imagen?** ¡Cualquier imagen servirá! Arrastra y suelta, presiona el botón de subida o incluso cópiala y pégala.
         reply: |-
           Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié :heart_eyes:
         like_not_found: |-
@@ -203,14 +203,14 @@ es:
 
           Si te gusta (¡y a quién no!), pulsa el botón me gusta :heart: debajo de este mensaje para que lo sepa.
         reply: |-
-          ¡Gracias por darle me gusta a mi mensaje!
+          ¡Gracias por darle me gusta a mi publicación!
         not_found: |-
-          ¿Te has olvidado de darle :heart: me gusta a mi [mensaje](%{url})? :crying_cat_face:
+          ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           ¿Puedes poner algunas letras en **negrita** o _cursiva_ en tu respuesta?
 
-          - escribe `**negrita**` o `_cursiva_`
+          - escribe «**negrita**» o «_cursiva_»
 
           - o, presiona los botones <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> en el editor
         reply: |-
@@ -249,7 +249,7 @@ es:
         instructions: |-
           Me has visto usando imágenes pequeñas en mis respuestas :blue_car::dash: se llaman [emoji](https://es.wikipedia.org/wiki/Emoji). ¿Puedes **añadir un emoji** a tu próxima respuesta? Cualquiera de estos funcionará:
 
-          - Escribe `:) ;) :D :P :O`
+          - Escribe «:) ;) :D :P :O»
 
           - Escribe dos puntos <kbd>:</kbd> y luego puedes completar con la palabra para elegir el emoji «:tada:»
 
@@ -259,7 +259,7 @@ es:
         not_found: |-
           ¡Ups!, no veo ningún emoji en tu respuesta. ¡Oh no! :sob:
 
-          Prueba escribiendo primero <kbd>:</kbd> y de esa forma el foro te mostrará emojis para elegir, luego puedes seguir escribiendo el nombre del emoji que quieres seleccionar, por ejemplo `:bird:`
+          Prueba escribiendo primero <kbd>:</kbd> y de esa forma el foro te mostrará emojis para elegir, luego puedes seguir escribiendo el nombre del emoji que quieres seleccionar, por ejemplo «:bird:»
 
           O presiona en botón de emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> en el editor.
 
@@ -351,7 +351,7 @@ es:
 
           Para preservar la continuidad de las discusiones, las supresiones no son inmediatas, por lo que la publicación se eliminará después de algún tiempo.
       recover:
-        deleted_post_raw: "¿Por qué @%{discobot_username} eliminó mi mensaje? :anguished:"
+        deleted_post_raw: "¿Por qué @%{discobot_username} eliminó mi publicación? :anguished:"
         instructions: |-
           ¡Oh, no! Parece que accidentalmente eliminé una publicación nueva que acababa de crear para ti.
 
@@ -366,9 +366,9 @@ es:
         instructions: |-
           ¿Sabías que puedes hacer referencia a categorías y etiquetas en tu publicación? Por ejemplo, ¿has visto la categoría %{category}?
 
-          Escribe `#` en el medio de una oración y selecciona cualquier categoría o etiqueta.
+          Escribe «#» en el medio de una oración y selecciona cualquier categoría o etiqueta.
         not_found: |-
-          Umm, no veo ninguna categoría. Ten en cuenta que `#` no puede ser el primer carácter. ¿Puedes copiar esto en tu próxima respuesta?
+          Umm, no veo ninguna categoría. Ten en cuenta que «#» no puede ser el primer carácter. ¿Puedes copiar esto en tu próxima respuesta?
 
           ```text
           Yo puedo crear un enlace a la categoría usando #

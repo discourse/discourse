@@ -591,6 +591,8 @@ fa_IR:
       member_added: "اضافه شده"
       member_requested: "درخواست شده در"
       add_members:
+        usernames_placeholder: "نام های کاربری"
+        usernames_or_emails_placeholder: "نام‌کاربری یا ایمیل"
         notify_users: "اطلاع رسانی به کاربران"
       requests:
         title: "درخواست ها"
@@ -628,6 +630,8 @@ fa_IR:
             password: "رمزعبور"
           settings:
             title: "تنظیمات"
+          mailboxes:
+            disabled: "غیرفعال"
         membership:
           title: عضویت
           access: دسترسی
@@ -989,11 +993,9 @@ fa_IR:
         sent: "ارسال شد"
         archive: "بایگانی"
         groups: "گروه‌های من"
-        bulk_select: "انتخاب پیام‌ها"
         move_to_inbox: "انتقال به صندوق دریافت"
         move_to_archive: "بایگانی"
         failed_to_move: "انتقال پیام‌های انتخاب شده با اشکال مواجه شد (شاید اتصال شما در دسترس نیست)"
-        select_all: "انتخاب همه"
         tags: "برچسب‌ها"
         warnings: "هشدارهای رسمی"
       preferences_nav:
@@ -1285,9 +1287,12 @@ fa_IR:
         invite:
           new_title: "ایجاد دعوت‌نامه"
           edit_title: "ویرایش دعوت‌نامه"
+          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید"
           copy_link: "کپی پیوند"
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
+          add_to_groups: "افزودن به گروه‌ها"
+          expires_at: "انقضا بعد از"
           send_invite_email: "ذخیره و ارسال ایمیل"
           save_invite: "ذخیره دعوت‌نامه"
           invite_saved: "دعوتنامه ذخیره شد."
@@ -1365,6 +1370,8 @@ fa_IR:
         edit: "ویرایش تصویر پروفایل"
       title:
         title: "عنوان"
+        none: "(هیچی)"
+      flair:
         none: "(هیچی)"
       primary_group:
         title: "گروه اصلی"
@@ -1838,17 +1845,9 @@ fa_IR:
         liked_consolidated: "لایک جدید"
         post_approved: "نوشته تایید شده"
     upload_selector:
-      title: "افزودن تصویر"
-      title_with_attachments: "افزودن یک تصویر یا پرونده"
-      from_my_computer: "از دستگاه من"
-      from_the_web: "از وب"
-      remote_tip: "پیوند به تصویر"
-      local_tip: "عکس ها را از روی سیستم خود انتخاب کنید"
-      hint_for_supported_browsers: "شما همچنین میتوانید عکس ها را به داخل ویرایشگر بکشید و رها کنید یا کپی کنید"
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
       default_image_alt_text: تصویر
-      supported_formats: "فرمت‌های پشتیبانی شده"
     search:
       sort_by: "مرتب سازی بر اساس"
       relevance: "ارتباطات"
@@ -2027,15 +2026,9 @@ fa_IR:
       not_found:
         title: "موضوع پیدا نشد"
         description: "متأسفیم، نتوانستیم آن موضوع را پیدا کنیم. شاید یکی از همکاران آن را پاک کرده؟"
-      total_unread_posts:
+      unread_posts:
         one: "شما %{count} نوشته‌ی خوانده نشده در این موضوع دارید"
         other: "شما %{count} نوشته‌ی خوانده نشده در این موضوع دارید"
-      unread_posts:
-        one: "شما %{count} نوشته‌ی خوانده نشده قدیمی در این موضوع دارید"
-        other: "شما %{count} نوشته‌ی خوانده نشده قدیمی در این موضوع دارید"
-      new_posts:
-        one: "%{count} نوشته‌ی جدید از آخرین خواندن شما در این موضوع وجود دارد"
-        other: "%{count} نوشته‌ی جدید از آخرین خواندن شما در این موضوع وجود دارد"
       likes:
         one: "%{count} پسند به این موضوع داده شده است"
         other: "%{count} پسند به این موضوع داده شده است"
@@ -2098,8 +2091,6 @@ fa_IR:
         title: "زمان‌بندی انتشار"
       temp_open:
         title: "باز کردن موقتی"
-      auto_reopen:
-        title: "باز کردن خودکار موضوع"
       temp_close:
         title: "بستن موقتی"
       auto_close:
@@ -2207,14 +2198,10 @@ fa_IR:
         pin: "سنجاق زدن موضوع"
         unpin: "برداشتن سنجاق موضوع"
         pin_globally: "سنجاق کردن موضوع در سطح سراسری"
-        make_banner: "موضوع سرصفحه"
         remove_banner: "حذف موضوع سرصفحه"
       reply:
         title: "پاسخ"
         help: "شروع ارسال پاسخ به این موضوع"
-      clear_pin:
-        title: "برداشتن سنجاق"
-        help: "سنجاق وضعیت این موضوع را بردارید تا دیگر در بالای فهرست موضوعات شما دیده نشود."
       share:
         title: "اشتراک‌گذاری"
         extended_title: "اشتراک‌گذاری یک پیوند"
@@ -2964,8 +2951,11 @@ fa_IR:
       groups:
         title: "برچسب گروه‌ها"
         new: "گروه جدید"
+        tags_label: "برچسب‌های گروه"
+        parent_tag_label: "برچسب مادر"
         one_per_topic_label: "محدودیت یک برچسب به ازای هر موضوع در این گروه"
         new_name: "گروه برچسب جدید"
+        name_placeholder: "نام"
         save: "ذخیره"
         delete: "حذف"
         confirm_delete: "آیا از حذف گروه برچسب‌ها اطمینان دارید؟"
@@ -3097,9 +3087,6 @@ fa_IR:
               label: گروه
             category:
               label: دسته‌بندی
-      commits:
-        latest_changes: "آخرین تغییرات: لطفا بیشتر به‌روز‌رسانی کنید!"
-        by: "توسط"
       groups:
         new:
           title: "گروه جدید"
@@ -3596,7 +3583,6 @@ fa_IR:
           details: "جزئیات"
           previous_value: "پیشین"
           new_value: "جدید"
-          diff: "تفاوت"
           show: "نمایش"
           modal_title: "جزئیات"
           no_previous: "هیچ مقدار قبلی وجود ندارد."
@@ -3846,6 +3832,7 @@ fa_IR:
         trust_level_unlocked_tip: "سطح اعتماد باز شده است. سیستم قادر به ترفیع/تنزل درجه‌ی کاربر خواهد بود."
         lock_trust_level: "قفل سطح اعتماد"
         unlock_trust_level: "باز کردن سطح اعتماد"
+        suspended_count: "تعلیق شد "
         tl3_requirements:
           title: "شرایط لازم برای سطح اعتماد 3."
           table_title:

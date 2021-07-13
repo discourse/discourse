@@ -603,6 +603,8 @@ ro:
       member_added: "Adăugat"
       member_requested: "Solicitat la"
       add_members:
+        usernames_placeholder: "nume de utilizatori"
+        usernames_or_emails_placeholder: "nume de utilizator sau e-mailuri"
         notify_users: "Notifică utilizatorii"
       requests:
         title: "Cereri"
@@ -1002,11 +1004,9 @@ ro:
         sent: "Trimise"
         archive: "Arhivă"
         groups: "Grupurile mele"
-        bulk_select: "Selectează mesaje"
         move_to_inbox: "Mută în „Primite”"
         move_to_archive: "Arhivează"
         failed_to_move: "Mutarea mesajelor selectate a eșuat (poate că v-a căzut rețeaua)"
-        select_all: "Selectează tot"
         tags: "Etichete"
       preferences_nav:
         account: "Cont"
@@ -1324,6 +1324,8 @@ ro:
         header_title: "profil, mesaje, semne de carte și preferințe"
       title:
         title: "Titlu"
+        none: "(nimic)"
+      flair:
         none: "(nimic)"
       primary_group:
         title: "Grup primar"
@@ -1679,13 +1681,6 @@ ro:
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
     upload_selector:
-      title: "Adaugă o imagine"
-      title_with_attachments: "Adaugă o imagine sau un fișier"
-      from_my_computer: "Din dispozitivul meu"
-      from_the_web: "De pe web"
-      remote_tip: "link către imagine"
-      local_tip: "alege imagini de pe dispozitivul tău"
-      hint_for_supported_browsers: "Poți de asemenea să faci drag and drop sau să lipești imagini în editor"
       uploading: "Se încarcă"
       select_file: "Alege fișier"
       default_image_alt_text: imagine
@@ -1808,7 +1803,7 @@ ro:
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
         educate:
-          unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge new-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
+          unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge unread-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."
@@ -1859,18 +1854,10 @@ ro:
       not_found:
         title: "Subiectul nu a fost găsit"
         description: "Ne pare rău, Nu am putut găsi subiectul. Poate a fost șters de un moderator?"
-      total_unread_posts:
+      unread_posts:
         one: "ai un mesaj necitit în această discuţie."
         few: "ai %{count} mesaje necitite în această discuţie."
         other: "ai %{count} de mesaje necitite în această discuţie."
-      unread_posts:
-        one: "ai un mesaj vechi necitit în această discuţie."
-        few: "ai %{count} mesaje vechi necitite în această discuţie."
-        other: "ai %{count} de mesaje vechi necitite în această discuţie."
-      new_posts:
-        one: "este un mesaj nou în această discuţie de la ultima citire"
-        few: "sunt %{count} mesaje noi în această discuţie de la ultima citire"
-        other: "sunt %{count} de mesaje noi în această discuţie de la ultima citire"
       likes:
         one: "există o apreciere pentru această discuţie"
         few: "sunt %{count} aprecieri pentru această discuţie"
@@ -1912,8 +1899,6 @@ ro:
         title: "Programează publicarea"
       temp_open:
         title: "Deschide temporar"
-      auto_reopen:
-        title: "Deschide automat subiect"
       temp_close:
         title: "Închide temporar"
       auto_close:
@@ -2011,14 +1996,10 @@ ro:
         pin: "Fixează subiectul"
         unpin: "Anulează subiect fixat"
         pin_globally: "Promovează discuţia global"
-        make_banner: "Adaugă statutul de banner"
         remove_banner: "Șterge statutul de banner"
       reply:
         title: "Răspunde"
         help: "începe să scrii un răspuns la acest subiect"
-      clear_pin:
-        title: "Anulează subiect fixat"
-        help: "Elimină subiectul fixat pentru a nu mai apărea la începutul listei de subiecte."
       share:
         title: "Distribuie"
         help: "distribuie un link cu acest subiect"
@@ -2738,8 +2719,11 @@ ro:
       groups:
         title: "Grupuri de etichete"
         new: "Grup nou"
+        tags_label: "Etichete din acest grup"
+        parent_tag_label: "Etichetă părinte"
         one_per_topic_label: "Limitare la o singură etichetă pe subiect din acest grup"
         new_name: "Grup nou de etichete"
+        name_placeholder: "Nume"
         save: "Salvează"
         delete: "Șterge"
         confirm_delete: "Ești sigur că vrei să ștergi acest grup de etichete?"
@@ -2836,9 +2820,6 @@ ro:
               label: Grup
             category:
               label: Categorie
-      commits:
-        latest_changes: "Cele mai recente schimbări: te rugăm actualizează frecvent!"
-        by: "de către"
       groups:
         new:
           title: "Grup nou"
@@ -3263,7 +3244,6 @@ ro:
           details: "Detalii"
           previous_value: "Precedent"
           new_value: "Nou"
-          diff: "Diff"
           show: "Arată"
           modal_title: "Detalii"
           no_previous: "Nu există valoare precedentă."
@@ -3513,6 +3493,7 @@ ro:
         trust_level_unlocked_tip: "Nivelul de încredere este deblocat, sistemul poate promova sau retrograda utilizatorii"
         lock_trust_level: "Blochează nivelul de încredere"
         unlock_trust_level: "Deblochează nivelul de încredere"
+        suspended_count: "Suspendați"
         tl3_requirements:
           title: "Cerințe pentru nivelul 3 de încredere"
           table_title:

@@ -457,6 +457,8 @@ th:
     groups:
       member_added: "เพิ่ม"
       member_requested: "ร้องขอเมื่อ"
+      add_members:
+        usernames_placeholder: "ชื่อผู้ใช้"
       requests:
         title: "คำร้องขอ"
         reason: "เหตุผล"
@@ -483,6 +485,8 @@ th:
             password: "รหัสผ่าน"
           settings:
             title: "การตั้งค่า"
+          mailboxes:
+            disabled: "ปิดใช้งานแล้ว"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -790,11 +794,9 @@ th:
         sent: "ส่ง"
         archive: "คลัง"
         groups: "กลุ่มของฉัน"
-        bulk_select: "เลือกข้อความ"
         move_to_inbox: "ย้ายไปกล่องขาเข้า"
         move_to_archive: "เก็บเข้าคลัง"
         failed_to_move: "เกิดความผิดพลาดในการย้ายข้อความที่เลือก (เครือข่ายของคุณอาจล่ม)"
-        select_all: "เลือกทั้งหมด"
         tags: "แท็ก"
       preferences_nav:
         account: "บัญชี"
@@ -1087,6 +1089,8 @@ th:
         header_title: "โปรไฟล์ ข้อความ บุ๊กมาร์ก และการตั้งค่า"
       title:
         title: "ชื่อเรื่อง"
+        none: "(ไม่มี)"
+      flair:
         none: "(ไม่มี)"
       primary_group:
         title: "กลุ่มหลัก"
@@ -1480,13 +1484,6 @@ th:
         liked_consolidated: "ไลค์ใหม่"
         post_approved: "โพสต์ได้รับอนุมัติ"
     upload_selector:
-      title: "เพิ่มรูปภาพ"
-      title_with_attachments: "เพิ่มรูปภาพหรือไฟล์"
-      from_my_computer: "จากอุปกรณ์ของฉัน"
-      from_the_web: "จากเว็บ"
-      remote_tip: "ลิงก์ไปยังรูปภาพ"
-      local_tip: "เลือกรูปภาพจากอุปกรณ์ของคุณ"
-      hint_for_supported_browsers: "คุณสามารถลากหรือวางรูปภาพในช่องแก้ไขได้ด้วย"
       uploading: "กำลังอัปโหลด"
       select_file: "เลือกไฟล์"
       default_image_alt_text: รูปภาพ
@@ -1646,12 +1643,8 @@ th:
       not_found:
         title: "ไม่พบกระทู้"
         description: "ขออภัย ไม่สามารถค้นหากระทู้นั้นได้ อาจถูกลบโดยผู้ดูแลระบบ"
-      total_unread_posts:
-        other: "คุณมี %{count} โพสต์ที่ยังไม่ได้อ่านในกระทู้นี้"
       unread_posts:
-        other: "คุณมี %{count} โพสต์เก่าที่ยังไม่ได้อ่านในกระทู้นี้"
-      new_posts:
-        other: "มี %{count}โพสต์ใหม่ในกระทู้นี้ตั้งแต่คุณอ่านครั้งล่าสุด"
+        other: "คุณมี %{count} โพสต์ที่ยังไม่ได้อ่านในกระทู้นี้"
       likes:
         other: "มี %{count}ถูกใจในกระทู้นี้"
       back_to_list: "กลับไปที่รายชื่อกระทู้"
@@ -1686,8 +1679,6 @@ th:
         pick_date_and_time: "เลือกวันและเวลา"
       temp_open:
         title: "เปิดชั่วคราว"
-      auto_reopen:
-        title: "กระทู้ที่เปิดอัตโนมัติ"
       temp_close:
         title: "ปิดชั่วคราว"
       auto_close:
@@ -1788,13 +1779,10 @@ th:
         pin: "ปักหมุดกระทู้"
         unpin: "เลิกปักหมุดกระทู้"
         pin_globally: "ปักหมุดกระทู้ทั้งหมด"
-        make_banner: "ป้ายกระทู้"
         remove_banner: "ยกเลิกป้ายกระทู้"
       reply:
         title: "ตอบ"
         help: "เริ่มเขียนตอบกระทู้นี้"
-      clear_pin:
-        title: "ล้างหมุด"
       share:
         title: "แบ่งปัน"
         extended_title: "แบ่งปันลิงก์"
@@ -2403,6 +2391,7 @@ th:
       groups:
         new: "กลุ่มใหม่"
         one_per_topic_label: "จำกัดหนึ่งแท็กต่อหนึ่งกระทู้จากกลุ่มนี้"
+        name_placeholder: "ชื่อ"
         save: "บันทึก"
         delete: "ลบ"
         everyone_can_use: "ทุกคนสามารถใช้แท็กได้"
@@ -2492,9 +2481,6 @@ th:
               label: หมวดหมู่
             include_subcategories:
               label: "รวมหมวดหมู่ย่อย"
-      commits:
-        latest_changes: "การเปลี่ยนแปลงล่าสุด: กรุณาอัปเดตบ่อยๆ"
-        by: "โดย"
       groups:
         new:
           title: "กลุ่มใหม่"
@@ -2931,6 +2917,7 @@ th:
         trust_level_unlocked_tip: "ระดับความไว้ใจถูกปลดล็อก ระบบจะปรับระดับความไว้ใจขึ้นหรือลงของผู้ใช้ตามปกติ"
         lock_trust_level: "ล็อกระดับความไว้ใจ"
         unlock_trust_level: "ปลดล็อกระดับความไว้ใจ"
+        suspended_count: "ระงับการใช้งาน"
         tl3_requirements:
           title: "ความต้องการเพิ่มปรับระดับความไว้ใจเป็น 3"
           table_title:

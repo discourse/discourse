@@ -12,7 +12,7 @@ ja:
         tomorrow: 明日 %{time}
         yesterday: 昨日 %{time}
         countdown:
-          passed: 日付が過ぎた
+          passed: 終了しました
       title: 日付/時刻を挿入
       create:
         form:

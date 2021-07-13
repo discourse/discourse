@@ -142,7 +142,7 @@ hy:
       ip_address_already_screened: "արդեն ներառված է գոյություն ունեցող կանոնի մեջ"
       restrict_dependent_destroy:
         one: "Անհնար է ջնջել գրառումը, քանի որ գոյություն ունի կախյալ %{record} "
-        many: "Անհնար է ջնջել տվյալները, քանի որ գոյություն ունի կախյալ%{record} "
+        other: "Անհնար է ջնջել տվյալները, քանի որ գոյություն ունի կախյալ%{record} "
       too_long:
         one: չափազանց երկար է (առավելագույնը %{count} սիմվոլ)
         other: չափազանց երկար է (առավելագույնը %{count} սիմվոլ)
@@ -1214,7 +1214,6 @@ hy:
     enable_facebook_logins: "Միացնել Facebook նույնականացումը, պահանջում է facebook_app_id և facebook_app_secret: Այցելեք <a href='https://meta.discourse.org/t/13394' target='_blank'>Facebook մուտքի կարգավորում Discourse-ի համար</a>:"
     facebook_app_secret: "Հավելվածի գաղտնի արժեք Facebook նույնականացման համար, գրանցված այստեղ՝ <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_backups: "Թույլատրել ադմինիստրատորներին ստեղծել ֆորումի պահուստներ"
-    allow_restore: "Թույլատրել վերականգնումը, որը կարող է փոխարինել կայքի ԲՈԼՈՐ տվյալները: Թողեք սխալ, մինչև որ չպլանավորեք վերականգնել պահուստ:"
     maximum_backups: "Պահուստների՝ դիսկի վրա պահելու առավելագույն քանակը: Ավելի հին պահուստները ավտոմատ կերպով ջնջվում են:"
     automatic_backups_enabled: "Գործարկել ավտոմատ պահուստները որոշված հաճախականությամբ"
     backup_frequency: "Պահուստներ ստեղծելու հաճախականությունը օրերով"
@@ -2626,6 +2625,7 @@ hy:
     sender_body_blank: "body-ն դատարկ է"
     sender_post_deleted: "գրառումը ջնջվել է"
     sender_message_to_invalid: "ստացողը ունի անվավեր էլ. հասցե"
+    group_smtp_post_deleted: "գրառումը ջնջվել է"
   color_schemes:
     base_theme_name: "Հիմնական"
     light: "Բաց"

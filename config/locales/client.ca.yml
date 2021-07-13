@@ -553,6 +553,8 @@ ca:
       member_added: "Afegit"
       member_requested: "Sol·licitat"
       add_members:
+        usernames_placeholder: "noms d'usuari"
+        usernames_or_emails_placeholder: "noms d’usuari o correus electrònics"
         notify_users: "Notifiqueu els usuaris"
       requests:
         title: "Sol·licituds"
@@ -590,6 +592,8 @@ ca:
             password: "Contrasenya"
           settings:
             title: "Configuració"
+          mailboxes:
+            disabled: "Desactivat"
         membership:
           title: Membres
           access: Accés
@@ -928,11 +932,9 @@ ca:
         sent: "Enviat"
         archive: "Arxiva"
         groups: "Els meus grups"
-        bulk_select: "Selecciona missatges"
         move_to_inbox: "Mou a la safata d'entrada"
         move_to_archive: "Arxiva"
         failed_to_move: "Error en moure els missatges seleccionats (potser ha caigut la xarxa)."
-        select_all: "Selecciona-ho tot"
         tags: "Etiquetes"
       preferences_nav:
         account: "Compte"
@@ -1264,6 +1266,8 @@ ca:
         header_title: "perfil, missatges, preferits i preferències"
       title:
         title: "Títol"
+        none: "(cap)"
+      flair:
         none: "(cap)"
       primary_group:
         title: "Grup primari"
@@ -1707,13 +1711,6 @@ ca:
         liked_consolidated: "nous 'm'agrada'"
         post_approved: "publicació aprovada"
     upload_selector:
-      title: "Afegeix una imatge"
-      title_with_attachments: "Afegeix una imatge o un fitxer"
-      from_my_computer: "Des del meu dispositiu"
-      from_the_web: "Des de la web"
-      remote_tip: "enllaç a imatge"
-      local_tip: "seleccioneu imatges des del vostre dispositiu"
-      hint_for_supported_browsers: "també podeu arrossegar i deixar anar o enganxar imatges en l'editor"
       uploading: "Carregant"
       select_file: "Tria un fitxer"
       default_image_alt_text: imatge
@@ -1887,15 +1884,9 @@ ca:
       not_found:
         title: "Tema no trobat"
         description: "No hem pogut trobar aquest tema. Potser ha estat eliminat per un moderador."
-      total_unread_posts:
+      unread_posts:
         one: "teniu %{count} missatge no llegit en aquest tema"
         other: "teniu %{count} missatges no llegits en aquest tema"
-      unread_posts:
-        one: "teniu %{count} publicació antiga no llegida en aquest tema"
-        other: "teniu %{count} publicacions antigues no llegides en aquest tema"
-      new_posts:
-        one: "hi ha %{count} publicació nova en aquest tema des de la vostra darrera lectura"
-        other: "hi ha %{count} publicacions noves en aquest tema des de la vostra darrera lectura"
       likes:
         one: "hi ha %{count} 'M'agrada' en aquest tema"
         other: "hi ha %{count} 'M'agrada' en aquest tema"
@@ -1936,8 +1927,6 @@ ca:
         title: "Programa la publicació"
       temp_open:
         title: "Obre temporalment"
-      auto_reopen:
-        title: "Obre automàticament el tema"
       temp_close:
         title: "Tanca temporalment"
       auto_close:
@@ -2044,14 +2033,10 @@ ca:
         pin: "Afixa tema"
         unpin: "Desafixa tema"
         pin_globally: "Afixa tema globalment"
-        make_banner: "Converteix tema en bàner"
         remove_banner: "Elimina el bàner de tema"
       reply:
         title: "Respon"
         help: "comença a redactar una resposta al tema"
-      clear_pin:
-        title: "Neteja afixat"
-        help: "Neteja l'estat afixat del tema perquè no torni a aparèixer al principi de la vostra llista de temes"
       share:
         title: "Comparteix"
         extended_title: "Comparteix un enllaç"
@@ -2821,8 +2806,11 @@ ca:
       groups:
         title: "Grups d'etiquetes"
         new: "Nou grup"
+        tags_label: "Etiquetes en aquest grup"
+        parent_tag_label: "Etiqueta primària"
         one_per_topic_label: "Limita a una etiqueta per cada tema d'aquest grup"
         new_name: "Nou grup d'etiquetes"
+        name_placeholder: "Nom"
         save: "Desa"
         delete: "Suprimeix"
         confirm_delete: "Esteu segur que voleu suprimir aquest grup d'etiquetes?"
@@ -2959,9 +2947,6 @@ ca:
               label: Grup
             category:
               label: Categoria
-      commits:
-        latest_changes: "Canvis més recents: actualitzeu sovint!"
-        by: "per"
       groups:
         new:
           title: "Grup nou"
@@ -3543,7 +3528,6 @@ ca:
           details: "Detalls"
           previous_value: "Previ"
           new_value: "Nou"
-          diff: "Diferències"
           show: "Mostra"
           modal_title: "Detalls"
           no_previous: "No hi ha valor previ."
@@ -3872,6 +3856,8 @@ ca:
         trust_level_unlocked_tip: "el nivell de confiança està desblocat, el sistema pot promoure o degradar l'usuari"
         lock_trust_level: "Bloca el nivell de confiança"
         unlock_trust_level: "Desbloca el nivell de confiança"
+        silenced_count: "Silenciat"
+        suspended_count: "Suspesos"
         tl3_requirements:
           title: "Requisits per al nivell de confiança 3"
           table_title:

@@ -564,6 +564,8 @@ ko:
       add_members:
         title: "%{group_name}에 사용자 추가"
         description: "그룹에 초대 할 사용자 목록을 입력하거나 쉼표로 구분해 목록에 붙여 넣으십시오."
+        usernames_placeholder: "아이디"
+        usernames_or_emails_placeholder: "사용자 이름 또는 이메일"
         notify_users: "사용자에게 알림"
         set_owner: "사용자를 이 그룹의 소유자로 설정"
       requests:
@@ -1049,11 +1051,9 @@ ko:
         sent: "보낸 편지함"
         archive: "저장함"
         groups: "내 그룹"
-        bulk_select: "메시지 선택"
         move_to_inbox: "받은 편지함으로 이동"
         move_to_archive: "저장함"
         failed_to_move: "선택한 메시지를 이동하지 못했습니다. (네트워크가 다운되었을 수 있음)"
-        select_all: "모두 선택"
         tags: "태그"
         warnings: "공식 경고"
       preferences_nav:
@@ -1469,6 +1469,11 @@ ko:
       title:
         title: "제목"
         none: "(없음)"
+        instructions: "사용자 아이디 뒤에 나타납니다."
+      flair:
+        title: "플레어"
+        none: "(없음)"
+        instructions: "프로필 사진 옆에 아이콘이 표시됩니다."
       primary_group:
         title: "기본 그룹"
         none: "(없음)"
@@ -1980,20 +1985,10 @@ ko:
         reaction: "새로운 반응"
         votes_released: "투표가 발표되었습니다"
     upload_selector:
-      title: "이미지 추가"
-      title_with_attachments: "이미지 또는 파일 추가"
-      from_my_computer: "내 기기에서"
-      from_the_web: "웹에서"
-      remote_tip: "이미지 링크"
-      remote_tip_with_attachments: "이미지 또는 파일 링크"
-      local_tip: "기기에서 이미지 선택"
-      local_tip_with_attachments: "장치에서 이미지 또는 파일 선택"
-      hint: "(편집기로 드래그 앤 드롭하여 업로드 할 수도 있습니다)"
-      hint_for_supported_browsers: "편집기로 이미지를 끌어다 놓거나 붙여 넣을 수도 있습니다."
       uploading: "업로드 중"
+      processing: "업로드 처리 중"
       select_file: "파일 선택"
       default_image_alt_text: 이미지
-      supported_formats: "지원되는 형식"
     search:
       sort_by: "정렬 기준"
       relevance: "관련성"
@@ -2138,7 +2133,7 @@ ko:
         top: "주요 글이 없습니다."
         educate:
           new: '<p>새로운 글이 여기에 표시됩니다. 기본적으로 지난 2일 이내에 작성된 글은 새로운 글로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 가 표시됩니다.</p><p>이 기준을 변경하려면 <a href="%{userPrefsUrl}">환경설정</a>에서 변경 하십시오.</p>'
-          unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>새로운 글 작성</li><li>글에 댓글 작성</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포함됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
+          unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글수 <span class="badge unread-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>새로운 글 작성</li><li>글에 댓글 작성</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포함됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 글이 없습니다."
         posted: "더 이상 작성한 글이 없습니다."
@@ -2193,12 +2188,8 @@ ko:
       not_found:
         title: "글을 찾을 수 없음"
         description: "죄송합니다. 해당 글을 찾을 수 없습니다. 관리자가 삭제 한 것일 수 있습니다."
-      total_unread_posts:
-        other: "이 글에 %{count}개의 읽지 않은 게시 글이 있습니다."
       unread_posts:
-        other: "이 글에 %{count}개의 읽지 않은 예전 게시물이 있습니다."
-      new_posts:
-        other: "마지막으로 읽은 이후 이 글에 %{count}개의 새로운 게시물이 있습니다."
+        other: "이 글에 %{count}개의 읽지 않은 댓글이 있습니다."
       likes:
         other: "이 글에 %{count}개의 좋아요가 있습니다."
       back_to_list: "글 목록으로 돌아 가기"
@@ -2396,14 +2387,11 @@ ko:
         pin: "글 고정"
         unpin: "글 고정 해제"
         pin_globally: "전체 공지글로 설정하기"
-        make_banner: "배너 주제"
+        make_banner: "배너 글 만들기"
         remove_banner: "배너 주제 제거"
       reply:
         title: "댓글쓰기"
         help: "이 글에 대한 댓글을 작성합니다"
-      clear_pin:
-        title: "고정 취소"
-        help: "더 이상 목록의 맨 위에 표시하지 않도록 이 주제의 고정 상태를 해제합니다."
       share:
         title: "공유하기"
         extended_title: "링크 공유"
@@ -2933,6 +2921,7 @@ ko:
       official_warning: "공식 경고"
       delete_spammer: "네, 스패머 회원을 삭제합니다"
       flag_for_review: "검토 대기열"
+      delete_confirm_MF: "이 사용자의 {POSTS, plural, other {<b>#</b>개의 댓글}} 그리고 {TOPICS, plural, other {<b>#</b>개의 글}} 을 삭제하고, 계정을 제거한 다음 IP 주소 <b>{ip_address}</b>를 차단하고 이메일 주소 <b>{email}</b>를 영구 차단 목록에 추가합니다. 이 사용자가 정말 스팸 발송자입니까?"
       yes_delete_spammer: "예, 스팸 회원을 삭제합니다"
       ip_address_missing: "(알 수 없음)"
       hidden_email_address: "(숨김)"
@@ -3453,9 +3442,6 @@ ko:
               label: 카테고리
             include_subcategories:
               label: "하위카테고리 포함"
-      commits:
-        latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
-        by: "에 의해"
       groups:
         new:
           title: "새 그룹"
@@ -4129,7 +4115,6 @@ ko:
           details: "상세"
           previous_value: "이전값"
           new_value: "새값"
-          diff: "차이점"
           show: "보기"
           modal_title: "상세"
           no_previous: "이전 값이 없습니다."
@@ -4224,6 +4209,8 @@ ko:
             post_staff_note_create: "관리자 메모 추가"
             post_staff_note_destroy: "관리자 메모 삭제"
             delete_group: "그룹 삭제"
+            watched_word_create: "감시 단어 추가"
+            watched_word_destroy: "감시 단어 삭제"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -4277,6 +4264,7 @@ ko:
         clear_all: 모두 지우기
         clear_all_confirm: "%{action} 작업에 대한 모든 관심 단어를 지우시겠습니까?"
         invalid_regex: '감시 단어 "%{word}"은 잘못된 정규식입니다.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">감시 된 단어는 정규식</a> 이며 단어 경계를 자동으로 포함하지 않습니다. 정규식이 전체 단어와 일치하도록하려면 정규식의 시작과 끝에 <code>\b</code>를 사용하세요.'
         actions:
           block: "차단"
           censor: "가리기"
@@ -4526,6 +4514,8 @@ ko:
         trust_level_unlocked_tip: "회원등급 고정이 풀렸습니다. 시스템이 회원등급을 자동적으로 올리거나 내릴 것입니다."
         lock_trust_level: "회원등급 고정"
         unlock_trust_level: "회원등급 고정 해제"
+        silenced_count: "쓰기 금지"
+        suspended_count: "차단됨"
         tl3_requirements:
           title: "3등급 회원이 되기 위한 자격"
           table_title:
@@ -4602,6 +4592,7 @@ ko:
           text: "텍스트 필드"
           confirm: "확인"
           dropdown: "드롭다운"
+          multiselect: "다중 선택"
       site_text:
         description: "포럼에 있는 그 어떤 텍스트도 수정이 가능합니다. 아래의 검색기능을 통해 시작하세요."
         search: "편집하고 싶은 텍스트를 검색하세요."

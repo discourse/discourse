@@ -97,7 +97,7 @@ et:
       record_invalid: ! "Valideerimine ebaõnnestus: %{errors}"
       restrict_dependent_destroy:
         one: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
-        many: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
+        other: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
       too_long:
         one: on liiga pikk (maksimum on %{count} tähemärk)
         other: on liiga pikk (maksimum on %{count} tähemärki)
@@ -907,6 +907,7 @@ et:
       description: Olnud aktiivne kasutaja vähemalt aasta, postitanud vähemalt ühe korra
     nice_post:
       name: Mõnus vastus
+      description: Kogus vastusele 10 like'i
     good_post:
       name: Hea vastus
       description: Kogus vastusele 25 like'i

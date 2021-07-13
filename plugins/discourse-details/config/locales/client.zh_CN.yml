@@ -7,7 +7,7 @@
 zh_CN:
   js:
     details:
-      title: 隐藏详情
+      title: 隐藏详细信息
     composer:
-      details_title: 概要
-      details_text: "此本文本将被隐藏"
+      details_title: 摘要
+      details_text: "此文本将被隐藏"
