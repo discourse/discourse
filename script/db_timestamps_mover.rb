@@ -53,6 +53,7 @@ class TimestampsUpdater
       JOIN information_schema.tables AS t
         ON c.table_name = t.table_name
       WHERE c.table_schema = '#{@schema}'
+        AND t.table_schema = '#{@schema}'
         AND c.data_type = '#{data_type}'
         AND t.table_type = 'BASE TABLE'
     SQL
