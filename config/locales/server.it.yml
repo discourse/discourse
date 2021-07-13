@@ -2833,6 +2833,10 @@ it:
       title: "Email Rifiutate - Risposta Non Consentita"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica - Risposta non consentita"
       text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nNon hai le autorizzazioni per rispondere all'argomento. Se ritieni che si tratti di un errore, [contatta un membro dello staff] (%{base_url}/about).\n"
+    email_reject_reply_to_digest:
+      title: "Email di risposta a un messaggio di riepilogo rifiutata"
+      subject_template: "[%{email_prefix}] Problema e-mail - Risposta a un messaggio di riepilogo"
+      text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai risposto a un'e-mail di riepilogo, e questo non è consentito.\n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff] (%{base_url}/about).\n"
     email_error_notification:
       title: "Notifica Errore Email"
       subject_template: "[%{email_prefix}] Problema email -- errore di autenticazione POP"
@@ -2912,6 +2916,7 @@ it:
     spam_post_blocked:
       title: "Messaggio di Spam bloccato"
       subject_template: "I messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio ripetuto di link"
+      text_body_template: "Questo è un messaggio automatico.\n\nIl nuovo utente [%{username}] (%{user_url}) ha provato a creare numerosi messaggi contenenti link a %{domains}, ma quei messaggi sono stati bloccati per evitare fenomeni di spam. L'utente è ancora in grado di creare nuovi messaggi purché non contengano link a %{domains}. \n\nPer favore [controlla l'utente] (%{user_url}). \n\nQuesto comportamento può essere modificato agendo sulle impostazioni del sito `newuser_spam_host_threshold` e `allowed_spam_host_domains`. Puoi anche aggiungere %{domains} alla lista dei consentiti se vuoi ammettere tali link.\n"
     unsilenced:
       title: "Non silenziato"
       subject_template: "Account non più sospeso"
@@ -2984,6 +2989,7 @@ it:
     only_reply_by_email_pm: "Rispondi a questa email per replicare a %{participants}."
     visit_link_to_respond: "[Visita Argomento](%{base_url}%{url}) per replicare."
     visit_link_to_respond_pm: "[Visita Messaggio](%{base_url}%{url}) per rispondere a %{participants}."
+    reply_above_line: "## Inserisci la tua risposta al di sopra di questa riga. ##"
     posted_by: "Pubblicato da %{username} il %{post_date}"
     pm_participants: "Partecipanti: %{participants}"
     invited_group_to_private_message_body: |
@@ -3183,9 +3189,17 @@ it:
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
+      text_body_template: |
+        Sei stato sospeso dal forum fino a %{suspended_till}.
+
+        Motivo: %{reason}
     account_silenced:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
+      text_body_template: |
+        Sei stato silenziato nel forum fino a %{silenced_till}.
+
+        Motivo: %{reason}
     account_exists:
       title: "L'account esiste già"
       subject_template: "[%{email_prefix}] L'account esiste già"
@@ -3247,6 +3261,13 @@ it:
     admin_login:
       title: "Accesso Amministratore"
       subject_template: "[%{email_prefix}] Accesso"
+      text_body_template: |
+        Qualcuno ha richiesto di accedere con il tuo account su [%{site_name}](%{base_url}).
+
+        Se non sei stato tu a fare questa richiesta, puoi tranquillamente ignorare questa email.
+
+        Clicca sul seguente link per accedere:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account Creato"
       subject_template: "[%{email_prefix}] Il Tuo Nuovo Account"
@@ -3258,6 +3279,12 @@ it:
     confirm_new_email:
       title: "Conferma Nuova Email"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo indizzo email"
+      text_body_template: |
+        Conferma il tuo nuovo indirizzo mail per %{site_name} cliccando sul seguente link:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Se non hai richiesto tu questa modifica, contatta un [amministratore del sito](%{base_url}/about).
     confirm_new_email_via_admin:
       title: "Conferma nuova e-mail"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo indirizzo mail"
