@@ -183,7 +183,7 @@ describe Admin::BadgesController do
     end
 
     describe '#mass_award' do
-      before { @user = Fabricate(:user, email: 'user1@test.com', username: 'username1') }
+      fab!(:user) { Fabricate(:user, email: 'user1@test.com', username: 'username1') }
 
       it 'does nothing when there is no file' do
         post "/admin/badges/award/#{badge.id}.json", params: { file: '' }
@@ -210,9 +210,12 @@ describe Admin::BadgesController do
 
         file = file_from_fixtures('user_emails.csv', 'csv')
 
+        UserBadge.destroy_all
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
+        expect(response.status).to eq(200)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
+        expect(UserBadge.where(user: user, badge: badge).first.seq).to eq(0)
       end
 
       it 'awards the badge using a list of usernames' do
@@ -222,7 +225,7 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
       it 'works with a CSV containing nil values' do
@@ -232,7 +235,20 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
+      end
+
+      it 'does not grant the badge again to a user if they already have the badge' do
+        Jobs.run_immediately!
+        badge.update!(multiple_grant: true)
+        BadgeGranter.grant(badge, user)
+        user.reload
+
+        file = file_from_fixtures('usernames_with_nil_values.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
       it 'fails when the badge is disabled' do
@@ -243,6 +259,84 @@ describe Admin::BadgesController do
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
         expect(response.status).to eq(422)
+      end
+
+      context "when grant_existing_holders is true" do
+        it "fails when the badge cannot be granted multiple times" do
+          file = file_from_fixtures('user_emails.csv', 'csv')
+          badge.update!(multiple_grant: false)
+          post "/admin/badges/award/#{badge.id}.json", params: {
+            file: fixture_file_upload(file),
+            grant_existing_holders: true
+          }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body['errors']).to eq([
+            I18n.t("badges.mass_award.errors.cant_grant_multiple_times", badge_name: badge.name)
+          ])
+        end
+
+        it "fails when CSV file contains more entries that it's allowed" do
+          badge.update!(multiple_grant: true)
+          csv = Tempfile.new
+          csv.write("#{user.username}\n" * 101)
+          csv.rewind
+          stub_const(Admin::BadgesController, "MAX_CSV_LINES", 100) do
+            post "/admin/badges/award/#{badge.id}.json", params: {
+              file: fixture_file_upload(csv),
+              grant_existing_holders: true
+            }
+          end
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to include(I18n.t("badges.mass_award.errors.too_many_csv_entries", count: 100))
+        ensure
+          csv&.close
+          csv&.unlink
+        end
+
+        it "grants the badge to the users in the CSV as many times as they appear in it" do
+          Jobs.run_immediately!
+          badge.update!(multiple_grant: true)
+          user_without_badge = Fabricate(:user)
+          user_with_badge = Fabricate(:user).tap { |u| BadgeGranter.grant(badge, u) }
+
+          Notification.destroy_all
+          random = Random.new(RSpec.configuration.seed)
+          emails_csv_content = [user_without_badge.email.titlecase, user_with_badge.email.titlecase] * 150
+          emails_csv_content.shuffle!(random: random)
+          usernames_csv_content = [user_without_badge.username.titlecase, user_with_badge.username.titlecase] * 150
+          usernames_csv_content.shuffle!(random: random)
+
+          count = 0
+          [emails_csv_content, usernames_csv_content].each do |content|
+            count += 1
+            csv = Tempfile.new
+            csv.write(content.join("\n"))
+            csv.rewind
+            post "/admin/badges/award/#{badge.id}.json", params: {
+              file: fixture_file_upload(csv),
+              grant_existing_holders: true
+            }
+            expect(response.status).to eq(200)
+            sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
+            expect(sequence.size).to eq((150 * count) + 1)
+            expect(sequence.sort).to eq((0...((150 * count) + 1)).to_a)
+            sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
+            expect(sequence.size).to eq((150 * count))
+            expect(sequence.sort).to eq((0...(150 * count)).to_a)
+
+            # each user gets 1 notification no matter how many times
+            # they're repeated in the file.
+            [user_without_badge, user_with_badge].each do |u|
+              notifications = u.reload.notifications
+              expect(notifications.size).to eq(count)
+              expect(notifications.map(&:notification_type).uniq).to eq([Notification.types[:granted_badge]])
+            end
+          ensure
+            csv&.close
+            csv&.unlink
+          end
+        end
       end
     end
   end

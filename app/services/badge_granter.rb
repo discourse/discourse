@@ -21,23 +21,41 @@ class BadgeGranter
     BadgeGranter.new(badge, user, opts).grant
   end
 
-  def self.mass_grant(badge, users)
-    return unless badge.enabled?
+  def self.mass_grant(badge, user, count:, allow_multiple_grants: false)
+    return if !badge.enabled?
 
-    system_user_id = Discourse.system_user.id
-    now = Time.zone.now
-    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now } }
-    granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
+    raise ArgumentError.new("count can't be less than 1") if count < 1
+    if count > 1 && !allow_multiple_grants
+      raise ArgumentError.new("count can't be larger than 1 when allow_multiple_grants is false.")
+    end
 
-    users.each do |user|
+    return if !allow_multiple_grants && UserBadge.exists?(badge: badge, user: user)
+
+    UserBadge.transaction do
+      DB.exec(<<~SQL * count, now: Time.zone.now, system: Discourse.system_user.id, user: user.id, badge: badge.id)
+        INSERT INTO user_badges
+        (granted_at, created_at, granted_by_id, user_id, badge_id, seq)
+        VALUES
+        (
+          :now,
+          :now,
+          :system,
+          :user,
+          :badge,
+          COALESCE((
+            SELECT MAX(seq) + 1
+            FROM user_badges
+            WHERE badge_id = :badge AND user_id = :user
+          ), 0)
+        );
+      SQL
       notification = send_notification(user.id, user.username, user.locale, badge)
 
-      DB.exec(
-        "UPDATE user_badges SET notification_id = :notification_id WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id",
-        notification_id: notification.id,
-        user_id: user.id,
-        badge_id: badge.id
-      )
+      DB.exec(<<~SQL, notification_id: notification.id, user_id: user.id, badge_id: badge.id)
+        UPDATE user_badges
+        SET notification_id = :notification_id
+        WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id
+      SQL
 
       UserBadge.update_featured_ranks!(user.id)
     end

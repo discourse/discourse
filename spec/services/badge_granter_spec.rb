@@ -486,4 +486,18 @@ describe BadgeGranter do
       expect(BadgeGranter.notification_locale('pl_PL')).to eq('pl_PL')
     end
   end
+
+  describe '.mass_grant' do
+    it 'raises an error if the count argument is less than 1' do
+      expect do
+        BadgeGranter.mass_grant(badge, user, count: 0)
+      end.to raise_error(ArgumentError, "count can't be less than 1")
+    end
+
+    it 'raises an error if the count argument is larger than 1 and allow_multiple_grants is false' do
+      expect do
+        BadgeGranter.mass_grant(badge, user, count: 2, allow_multiple_grants: false)
+      end.to raise_error(ArgumentError, "count can't be larger than 1 when allow_multiple_grants is false.")
+    end
+  end
 end
