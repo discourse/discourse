@@ -10,7 +10,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import userSearch from "discourse/lib/user-search";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
-const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
+// The backend user search query returns zero results for a term-free search
+// so the regexp below only matches @ followed by a valid character
+const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]+)$/gi;
 
 const searchData = {};
 const suggestionTriggers = ["in:", "status:", "order:"];
@@ -74,11 +76,14 @@ const SearchHelper = {
             term: matchSuggestions.usernamesMatch[0],
             includeGroups: true,
           }).then((result) => {
-            if (result?.users) {
+            if (result?.users.length > 0) {
               searchData.suggestionResults = result.users;
               searchData.suggestionKeyword = "@";
-              widget.scheduleRerender();
+            } else {
+              searchData.noResults = true;
+              searchData.suggestionKeyword = false;
             }
+            widget.scheduleRerender();
           });
           return;
         }
