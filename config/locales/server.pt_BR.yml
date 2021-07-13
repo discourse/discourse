@@ -2029,9 +2029,9 @@ pt_BR:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "Convite personalizado de remetente do fórum"
-    subject_template: "%{inviter_name} convidou você para se cadastrar em %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou para se participar de %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} convidou você para se cadastrar em
+      %{inviter_name} convidou para participar
 
       > **%{site_title}**
       >
@@ -2041,65 +2041,65 @@ pt_BR:
 
       > %{user_custom_message}
 
-      Se estiver interessado, clique no link abaixo:
+      Se tiver interesse, clique no link abaixo:
 
       %{invite_link}
   invite_password_instructions:
-    title: "Convidar instruções de senha"
-    subject_template: "Defina uma senha para a sua %{site_name} conta"
+    title: "Instruções da senha do convite"
+    subject_template: "Defina uma senha para a sua conta %{site_name}"
     text_body_template: |
-      Obrigado por aceitar o convite para %{site_name} -- bem-vindo!
+      Obrigado por aceitar o convite para %{site_name}. Boas-vindas!
 
-      Clique nesse link para escolher uma senha agora:
+      Clique neste link para escolher uma senha:
       %{base_url}/u/password-reset/%{email_token}
 
-      (Se o link acima espirou, escolha "Esqueci minha senha" quando logar com seu endereço de e-mail)
+      (Se o link acima expirou, escolha "Esqueci minha senha" quando entrar com sua conta no seu endereço de e-mail)
   download_backup_mailer:
-    title: "Faça o download do Mailer de Backup"
-    subject_template: "[%{email_prefix}] Download do Backup do Site"
+    title: "Baixe o mensageiro de backup"
+    subject_template: "[%{email_prefix}] Baixando o backup do site"
     text_body_template: |
-      Aqui está o [ download de backup do site](%{backup_file_path}) que você requeriu.
+      Aqui está o [download de backup do site](%{backup_file_path}) que você solicitou.
 
-      Nós enviamos este link de download para seu e-mail validado por razões de segurança.
+      Enviamos este link de download para o seu e-mail validado por razões de segurança.
 
-      (Se você não requeriu este download, você deveria estar seriamente preocupado -- alguém tem acesso de administrador ao seu site.)
+      (Caso não tenha solicitado este download, você deveria estar seriamente preocupado(a). Alguém tem acesso de administrador(a) ao seu site.)
     no_token: |
       Desculpe, este link de download de backup já foi usado ou expirou.
   admin_confirmation_mailer:
-    title: "Confirmação do administrador"
-    subject_template: "[%{email_prefix}] Confirmar nova conta de administrador"
+    title: "Confirmação do(a) administrador(a)"
+    subject_template: "[%{email_prefix}] Confirmar nova conta de administrador(a)"
     text_body_template: |
-      Por favor confirme que você deseja adicionar **%{target_username} (%{target_email})** como administrador do seu fórum.
+      Confirme que você deseja adicionar **%{target_username} (%{target_email})** como administrador(a) do seu fórum.
 
-      [Confirmar conta de administrador](%{admin_confirm_url})
+      [Confirmar conta de administrador(a)](%{admin_confirm_url})
   test_mailer:
-    title: "Teste de remetente"
+    title: "Testar mensageiro"
     subject_template: "[%{email_prefix}] Teste de entrega de e-mail"
   new_version_mailer:
-    title: "Nova versão do remetente"
-    subject_template: "[%{email_prefix}] Nova versão do discurso, atualização disponível"
+    title: "Nova versão do mensageiro"
+    subject_template: "[%{email_prefix}] Nova versão do Discourse, atualização disponível"
   new_version_mailer_with_notes:
-    title: "Nova versão do remetente com notas"
+    title: "Nova versão do mensageiro com notas"
     subject_template: "[%{email_prefix}] atualização disponível"
   flag_reasons:
-    off_topic: "Sua postagem foi sinalizada como **off-topic**: a comunidade sente que não é uma boa adequação ao tópico, como atualmante definido de acordo com o título e o primeiro post."
-    inappropriate: "Sua postagem foi sinalizada como **não apropriada**: a comunidade sente que ela é ofensiva, abusiva, ou uma violação das [nossas orientações da comunidade](%{base_path}/guidelines)."
-    spam: "Sua postagem foi sinalizada como **spam**: a comunidade sente que ela é um anúncio, algo que é demasiadamente promocional em natureza ao invés de ser útil ou relevante ao tópico como esperado."
-    notify_moderators: "Sua postagem foi sinalizada como **para a atenção do moderador**: a comunidade sente que algo a respeito do post exige intervenção manual por um membro da staff."
+    off_topic: "Sua postagem foi sinalizada como **desvio de tópico**. A comunidade acha que não é compatível com o tópico conforme definida no título e na primeira postagem."
+    inappropriate: "Sua postagem foi sinalizada como **não apropriada**: A comunidade acha que é ofensiva, abusiva, ou uma violação das [nossas diretrizes da comunidade](%{base_path}/guidelines)."
+    spam: "Sua postagem foi sinalizada como **spam**. A comunidade acha que é um anúncio, algo que de natureza excessivamente promocional em vez de ser útil ou relevante ao tópico como esperado."
+    notify_moderators: "Sua postagem foi sinalizada como **para a atenção do(a) moderador(a)**. A comunidade acha quea algo na postagem exige intervenção manual por um membro da equipe."
   flags_dispositions:
-    agreed: "Obrigado por nos avisar. Concordamos que há um problema e nós estamos olhando para ele."
-    agreed_and_deleted: "Obrigado por nos avisar. Concordamos que há um problema e nós removemos o post."
-    disagreed: "Obrigado por nos avisar. Nós estamos olhando nele."
-    ignored: "Obrigado por nos avisar. Nós estamos olhando nele."
-    ignored_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
+    agreed: "Obrigado por nos avisar. Concordamos que há um problema, estamos analisando."
+    agreed_and_deleted: "Obrigado por nos avisar. Concordamos que há um problema, e removemos a postagem."
+    disagreed: "Obrigado por nos avisar. Estamos analisando."
+    ignored: "Obrigado por nos avisar. Estamos analisando."
+    ignored_and_deleted: "Obrigado por nos avisar. Removemos a postagem."
   temporarily_closed_due_to_flags:
-    one: "Este tópico está temporariamente fechado por pelo menos %{count} hora devido a um grande número de sinalizações da comunidade."
-    other: "Este tópico está temporariamente fechado por pelo menos %{count} horas devido a um grande número de sinalizações da comunidade."
+    one: "Este tópico está temporariamente fechado por pelo menos %{count} hora devido a um grande número de sinalizadores da comunidade."
+    other: "Este tópico está temporariamente fechado por pelo menos %{count} horas devido a um grande número de sinalizadores da comunidade."
   system_messages:
     private_topic_title: "Tópico #%{id}"
-    contents_hidden: "Por favor, visite o post para ver o seu conteúdo."
+    contents_hidden: "Acesse a postagem para ver o seu conteúdo."
     post_hidden:
-      title: "Post oculto"
+      title: "Postagem oculta"
       subject_template: "Post oculto pelos sinalizadores da comunidade"
       text_body_template: |
         Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi oculta.
@@ -2114,7 +2114,7 @@ pt_BR:
 
         Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     post_hidden_again:
-      title: "Posto oculto novamente"
+      title: "Postagem oculta novamente"
       subject_template: "Postagem oculta por sinalizadores da comunidade, a equipe foi notificada"
       text_body_template: |
         Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi oculta outra vez.
@@ -2127,16 +2127,16 @@ pt_BR:
 
         Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     queued_by_staff:
-      title: "Postagem Precisa de Aprovação"
+      title: "A postagem requer aprovação"
     flags_disagreed:
       title: "Postagem sinalizada restaurada pela equipe"
       subject_template: "Postagem sinalizada restaurada pela equipe"
       text_body_template: |
         Olá,
 
-        Esta é uma mensagem automatizada de %{site_name} para informar que [sua postagem](%{base_url}%{url}) foi restaurada.
+        Esta é uma mensagem automática de %{site_name} para informar que [sua postagem](%{base_url}%{url}) foi restaurada.
 
-        Esta postagem foi sinalizada pela comunidade e um membro da staff optou por restaurá-la.
+        Esta postagem foi sinalizada pela comunidade e um membro da equipe optou por restaurá-la.
 
         [details="Clique para expandir a postagem restaurada"]
         ``` markdown
@@ -2148,48 +2148,48 @@ pt_BR:
       subject_template: "Postagem sinalizada removida pela equipe"
     usage_tips:
       text_body_template: |
-        Para algumas dicas rápidas sobre como começar como um novo usuário, [confira este post no blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Para obter algumas dicas rápidas sobre como começar como um(a) novo(a) usuário(a), [confira esta postagem no blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        À medida que você participa aqui, nós vamos conhecê-lo e as novas limitações temporárias do usuário serão suspensas. Com o tempo, você ganhará [níveis de confiança] (https://blog.discourse.org/20/20/entrevista-conhecimento-disco-trustes-levels/) que incluem habilidades especiais para nos ajudar a administrar nossa comunidade juntos.
+        Enquanto você participa, saberemos mais sobre você e as limitações temporárias de novo(a) usuário(a) serão suspensas. Ao longo do tempo, você ganhará [níveis de confiança] (https://blog.discourse.org/20/20/entrevista-conhecimento-disco-trustes-levels/) que incluem capacidades especiais para nos ajudar a administrar a nossa comunidade.
     welcome_user:
-      title: "Usuário de boas-vindas"
-      subject_template: "Bem-vindo ao %{site_name}!"
+      title: "Boas-vindas, usuário(a)"
+      subject_template: "Boas-vindas ao %{site_name}!"
       text_body_template: |
-        Obrigado por se cadastrar em %{site_name}, e seja bem-vindo!
+        Obrigado por participar de %{site_name}, boas-vindas!
 
         %{new_user_tips}
 
-        Nós acreditamos em [comportamento comunitário civilizado](%{base_url}/guidelines) em todo o tempo.
+        Acreditamos em [comportamento comunitário saudável](%{base_url}/guidelines) em todos os momentos.
 
-        Aproveite sua estadia!
+        Aproveite sua visita!
     welcome_tl1_user:
-      title: "Bem vindo Usuário TL1"
-      subject_template: "Obrigado por passar tempo conosco"
+      title: "Boas-vindas, usuário(a) TL1"
+      subject_template: "Obrigado pela visita"
       text_body_template: |
-        Opa, tudo bom? Nós vemos que você tem estado ocupado lendo, o que é fantástico, então nós te promovemos a um [nível de confiança!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) mais alto.
+        Olá, tudo bem? Você está lendo bastante os tópicos da comunidade, o que é fantástico. Por isso, você foi promovido(a) a um [nível de confiança!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) mais alto.
 
-        Estamos realmente felizes por você estar passando tempo conosco e adoraríamos saber mais sobre você. Tire um momento para [preencher seu perfil](%{base_url}/my/preferences/profile) ou sinta-se à vontade para [iniciar um novo tópico](%{base_url}/categories).
+        Estamos muito felizes com a sua visita e adoraríamos saber mais sobre você. Tire um momento para [preencher seu perfil](%{base_url}/my/preferences/profile) ou sinta-se à vontade para [iniciar um novo tópico](%{base_url}/categories).
     welcome_staff:
       subject_template: "Parabéns, você recebeu o status %{role}!"
     welcome_invite:
       title: "Convite de boas-vindas"
-      subject_template: "Bem-vindo ao %{site_name}!"
+      subject_template: "Boas-vindas ao %{site_name}!"
       text_body_template: |
-        Obrigado por aceitar o seu convite para %{site_name} -- bem-vindo!
+        Obrigado por aceitar o seu convite para %{site_name}, boas-vindas!
 
-        - Nós criamos esta nova conta **%{username}** para você. Altere seu nome ou senha visitando [seu perfil de usuário] [prefs].
+        - Criamos esta nova conta **%{username}** para você. Altere seu nome ou senha acessando [seu perfil de usuário] [prefs].
 
-        - Quando você fizer login, ** use o mesmo endereço de e-mail do seu convite original **. Caso contrário, não poderemos dizer que é você!
+        - Quando entrar com sua conta, ** use o mesmo endereço de e-mail do seu convite original **. Caso contrário, não poderemos saber que é você!
 
         %{new_user_tips}
 
-        Nós acreditamos em [comportamento comunitário civilizado](%{base_url}/diretrizes) em todos os momentos.
+        Acreditamos em [comportamento comunitário saudável](%{base_url}/diretrizes) em todos os momentos.
 
         Aproveite sua estadia!
 
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
-      subject_template: "Parabéns pela sua promoção em nível de confiança!"
+      subject_template: "Parabéns pela sua promoção de nível de confiança!"
     backup_succeeded:
       title: "Backup realizado com êxito"
       subject_template: "Backup concluído com êxito"
@@ -2320,9 +2320,9 @@ pt_BR:
       text_body_template: |
         Desculpe, mas sua mensagem de e-mail para %{destination} (intitulada %{former_title}) não funcionou.
 
-        Não conseguimos encontrar qualquer conteúdo de resposta no seu e-mail.
+        Não foi possível conteúdo na resposta no seu e-mail.
 
-        Se você está recebendo isso e você _disse_ uma resposta, tente novamente com formatação mais simples.
+        Se você está recebendo isso e você incluiu uma resposta, tente novamente com uma formatação mais simples.
     email_reject_parsing:
       title: "E-mail rejeitado em análise"
       subject_template: "[%{email_prefix}] Problema por e-mail - conteúdo não reconhecido"
@@ -2797,7 +2797,7 @@ pt_BR:
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
     account_exists:
       title: "esta conta já existe"
-      subject_template: "[%{email_prefix}] essa conta já existe"
+      subject_template: "[%{email_prefix}] esta conta já existe"
       text_body_template: |
         Você acabou de tentar criar uma conta em %{site_name}, ou tentou alterar o e-mail de uma conta para %{email}. No entanto, já existe uma conta para %{email}.
 

@@ -2399,12 +2399,79 @@ it:
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Test di Consegna Email"
+    text_body_template: |
+      Questa è un'e-mail di prova da
+
+      [**%{base_url}**][0]
+
+      La consegna delle e-mail è complicata. Ecco alcune cose importanti da controllare prima:
+
+      - *Assicurati* di impostare correttamente l'indirizzo da: `notification email` nelle impostazioni del sito. **Il dominio specificato nell'indirizzo "da" delle e-mail inviate è il dominio rispetto al quale avverrà la convalida delle tue e-mail**.
+
+      - Mettiti in condizione di poter analizzare il sorgente non elaborato dell'e-mail nel client di posta, in modo da poter esaminare le intestazioni e-mail per individuare indizi importanti. In Gmail, puoi usare l'opzione "mostra originale" nel menu a discesa in alto a destra di ogni messaggio email.
+
+      - **IMPORTANTE: ** Il tuo ISP ha inserito un record DNS inverso per associare i nomi di dominio e gli indirizzi IP da cui invii la posta? [Prova il tuo record PTR inverso][2] qui. Se il tuo ISP non inserisce il record del puntatore DNS inverso corretto, l'e-mail molto probabilmente non verrà recapitata.
+
+      - Il [record SPF][8] del tuo dominio è corretto? [Prova il tuo record SPF][1] qui. Si noti che TXT è il tipo di record ufficiale corretto per SPF.
+
+      - Il [record DKIM][3] del tuo dominio è corretto? Ciò migliorerà significativamente il corretto recapito delle e-mail. [Prova il tuo record DKIM][7] qui.
+
+      - Se gestisci personalmente il tuo server di posta elettronica, verifica che gli IP del tuo server di posta [non si trovino in elenchi di e-mail bloccate][4]. Verifica inoltre che il server stia inviando un nome host completo traducibile in DNS nel suo messaggio HELO. In caso contrario, si verificherà il rifiuto della tua e-mail da parte di molti servizi di posta elettronica.
+
+      - Consigliamo vivamente di **inviare un'e-mail di prova a [mail-tester.com][mt]** per verificare che tutto quanto sopra indicato funzioni correttamente.
+
+      (Il modo *facile* consiste nel creare un account su [SendGrid],[sg], [SparkPost],[sp], [Mailgun],[mg] o [Mailjet][mj], che offrono piani di abbonamento a servizi e-mail a basso costo e adatti a piccole comunità di utenti. Dovrai comunque configurare i record SPF e DKIM nel tuo DNS!)
+
+      Ci auguriamo che tu abbia ricevuto correttamente questa e-mail di verifica della consegna dei messaggi!
+
+      Cordiali saluti,
+
+      I tuoi amici del team [Discourse](https://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: https://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
+    text_body_template: |
+      Evviva, è finalmente disponibile una nuova versione di [Discourse](https://www.discourse.org)!
+
+      La tua versione: %{installed_version}
+      Nuova versione: **%{new_version}**
+
+      - Passa subito all'ultima versione utilizzando il nostro semplice strumento di **[aggiornamento da browser in un solo clic](%{base_url}/admin/upgrade)**
+
+      - Scopri le novità nelle [note di rilascio](https://meta.discourse.org/tag/release-notes) o visualizza il [log originale delle modifiche GitHub](https://github.com/discourse/discourse/commits/master)
+
+      - Visita [meta.discourse.org](https://meta.discourse.org) per scoprire notizie, discussioni e ricevere supporto su Discourse
   new_version_mailer_with_notes:
     title: "Mailer Nuova Versione con Note"
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
+    text_body_template: |
+      Evviva, è finalmente disponibile una nuova versione di [Discourse](https://www.discourse.org)!
+
+      La tua versione: %{installed_version}
+      Nuova versione: **%{new_version}**
+
+      - Passa subito all'ultima versione utilizzando il nostro semplice strumento di **[aggiornamento da browser in un solo clic](%{base_url}/admin/upgrade)**
+
+      - Scopri le novità nelle [note di rilascio](https://meta.discourse.org/tag/release-notes) o visualizza il [log originale delle modifiche GitHub](https://github.com/discourse/discourse/commits/master)
+
+      - Visita [meta.discourse.org](https://meta.discourse.org) per scoprire notizie, discussioni e ricevere supporto su Discourse
+
+      ### Note di rilascio
+
+      %{notes}
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa che non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](%{base_path}/guidelines)."
@@ -2457,12 +2524,24 @@ it:
     queued_by_staff:
       title: "Messaggio da approvare"
       subject_template: "Messaggio nascosto dallo staff, in attesa di approvazione"
+      text_body_template: |
+        Ciao,
+
+        Questo è un messaggio automatico generato da %{site_name} per informarti che il tuo messaggio è stato nascosto.
+
+        <%{base_url}%{url}>
+
+        Il tuo messaggio rimarrà nascosto finché un membro dello staff non lo avrà esaminato.
+
+        Per ulteriori indicazioni, consulta le nostre [linee guida della comunità](%{base_url}/guidelines).
     flags_disagreed:
       title: "Messaggio segnalato ripristinato dallo saff"
       subject_template: "Messaggio segnalato ripristinato dallo saff"
+      text_body_template: "Ciao,\n\nQuesto è un messaggio automatico generato da %{site_name} per informarti che [il tuo messaggio](%{base_url}%{url}) è stato ripristinato. \n\nIl messaggio è stato segnalato dalla comunità e un membro dello staff ha deciso di ripristinarlo. \n\n[details=\"Fai clic per espandere il messaggio ripristinato\"] \n```markdown\n%{flagged_post_raw_content}\n```\n[/details]\n"
     flags_agreed_and_post_deleted:
       title: "Post segnalato rimosso dallo staff"
       subject_template: "Post segnalato rimosso dallo staff"
+      text_body_template: "Ciao,\n\nQuesto è un messaggio automatico generato da %{site_name} per informarti che [il tuo messaggio](%{base_url}%{url}) è stato rimosso. \n\n%{flag_reason}\n\nIl messaggio è stato segnalato dalla comunità e un membro dello staff ha deciso di rimuoverlo. \n \n```markdown\n%{flagged_post_raw_content}\n```\n\nPer ulteriori dettagli, consulta le nostre [linee guida della community](%{base_url}/guidelines).\n"
     usage_tips:
       text_body_template: |
         Per leggere alcuni veloci suggerimenti su come iniziare se sei un nuovo utente [dai una lettura a questo articolo](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)
@@ -2483,6 +2562,15 @@ it:
       title: "Benvenuto utente TL1"
       subject_template: "Grazie per aver passato del tempo con noi"
       text_body_template: "Salve! \nAbbiamo notato con piacere che hai letto molto, quindi ti abbiamo promosso al successivo [Livello di attendibilità!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nSiamo davvero felici che tu stia trascorrendo del tempo con noi e ci piacerebbe sapere di più su di te. Prenditi un momento per [compilare il tuo profilo](%{base_url}/my/preferences/profile), o sentiti libero di [iniziare un nuovo argomento](%{base_url}/categories).\n"
+    welcome_staff:
+      title: "Staff di benvenuto"
+      subject_template: "Congratulazioni, ti è stato riconosciuto lo stato di %{role}!"
+      text_body_template: |
+        Ti è stato riconosciuto lo stato di %{role} da un altro membro dello staff.
+
+        In qualità di %{role}, ora hai accesso all'<a href='%{base_url}/admin' target='_blank'>interfaccia di amministratore</a>.
+
+        Da un grande potere derivano grandi responsabilità. Se non hai mai svolto attività di moderatore, puoi consultare la nostra [Guida per moderatori](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Invito di Benvenuto"
       subject_template: "Benvenuto su %{site_name}!"
@@ -2502,6 +2590,12 @@ it:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Congratulazioni per la promozione a un livello di attendibilità superiore!"
+      text_body_template: |
+        Ti abbiamo promosso a un [livello di attendibilità](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) superiore!
+
+        Da utente esperto, potresti trovare interessante [questo elenco di utili suggerimenti e trucchi](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Ti invitiamo a partecipare sempre più alle nostre attività: ci fa piacere vederti spesso qui.
     backup_succeeded:
       title: "Backup Riuscito"
       subject_template: "Backup completato correttamente"
@@ -2684,6 +2778,18 @@ it:
     email_reject_bad_destination_address:
       title: "Email Rifiutata Indirizzo di Destinazione Errato"
       subject_template: "[%{email_prefix}] Problema email -- Indirizzo A: sconosciuto"
+      text_body_template: |
+        Siamo spiacenti, ma il tuo messaggio e-mail a %{destination} (intitolato %{former_title}) non ha funzionato.
+
+        Ecco alcune cose da controllare:
+
+          - Utilizzi più di un indirizzo email? Hai risposto da un indirizzo email diverso da quello che hai utilizzato originariamente? Le risposte e-mail richiedono l'utilizzo dello stesso indirizzo e-mail quando si risponde.
+
+          - Il tuo software di posta elettronica ha utilizzato correttamente l'indirizzo email Rispondi a: durante la risposta? Purtroppo, alcuni software di posta elettronica inviano erroneamente risposte all'indirizzo Da:, che non funzionerà.
+
+          - L'intestazione Message-ID nell'e-mail è stata modificata? Il campo Mesage-ID deve essere usato correttamente e senza variazioni.
+
+        Hai bisogno ancora di assistenza? Faccelo sapere tramite i recapiti della sezione Contattaci riportati in %{base_url}/about
     email_reject_old_destination:
       title: "Email Rifiutate - Vecchia Destinazione"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica: stai tentando di rispondere a una vecchia notifica"

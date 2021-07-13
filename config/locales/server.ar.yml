@@ -952,11 +952,11 @@ ar:
       xaxis: "اليوم"
       yaxis: "إجمالي الطلبات"
     time_to_first_response:
-      title: "الوقت حتى أول استجابة"
+      title: "الوقت حتى أول رد"
       xaxis: "اليوم"
       yaxis: "متوسط الوقت (بالساعات)"
     topics_with_no_response:
-      title: "الموضوعات دون استجابة"
+      title: "الموضوعات دون رد"
       xaxis: "اليوم"
       yaxis: "الإجمالي"
     mobile_visits:
