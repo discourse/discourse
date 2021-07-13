@@ -1906,9 +1906,9 @@ pt_BR:
       csrf_detected: "A autorização demorou muito ou você mudou de navegador. Tente novamente."
       request_error: "Ocorreu um erro ao iniciar a autorização. Tente novamente."
     omniauth_error_unknown: "Algo deu errado ao processar seu login, por favor tente novamente."
-    omniauth_confirm_title: "Efetuar login usando %{provider}"
+    omniauth_confirm_title: "Entrar com a conta usando %{provider}"
     omniauth_confirm_button: "Continuar"
-    authenticator_error_no_valid_email: "Nenhum endereço de e-mail associado a%{account} são autorizados. Você pode precisar configurar sua conta com um endereço de e-mail diferente."
+    authenticator_error_no_valid_email: "Não é autorizado nenhum endereço de e-mail associado a %{account}. Você pode precisar configurar sua conta com um endereço de e-mail diferente."
     new_registrations_disabled: "Não é permitido cadastrar novas contas por enquanto."
     password_too_long: "Senhas são limitadas a 200 caracteres."
     email_too_long: "O e-mail informado é muito longo. Os endereços de e-mail não devem ter mais de 254 caracteres, e nomes de domínio devem ter no máximo 253 caracteres."
@@ -2774,7 +2774,7 @@ pt_BR:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Usuário Postado MP"
+      title: "MP postada pelo(a) usuário(a)"
       subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2797,7 +2797,7 @@ pt_BR:
       title: "Conta Silenciada"
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
     account_exists:
-      title: "essa conta já existe"
+      title: "esta conta já existe"
       subject_template: "[%{email_prefix}] essa conta já existe"
       text_body_template: |
         Você acabou de tentar criar uma conta em %{site_name}, ou tentou alterar o e-mail de uma conta para %{email}. No entanto, já existe uma conta para %{email}.
@@ -2990,10 +2990,10 @@ pt_BR:
     user_email_notification_already_read: "A notificação sobre o assunto deste e-mail já foi lida"
     user_email_notification_topic_nil: "post.topic é nulo"
     user_email_post_user_deleted: "O(a) usuário(a) da postagem foi excluído(a)."
-    user_email_post_deleted: "post foi excluído pelo autor"
-    user_email_user_suspended: "usuário foi suspenso"
-    user_email_already_read: "usuário já leu este post"
-    user_email_access_denied: "usuário não tem permissão para ver esta postagem"
+    user_email_post_deleted: "a postagem foi excluído(a) pelo autor(a)"
+    user_email_user_suspended: "o(a) usuário(a) foi suspenso(a)"
+    user_email_already_read: "o(a) usuário(a) já leu esta postagem"
+    user_email_access_denied: "o(a) usuário(a) não tem permissão para ver esta postagem"
     sender_message_blank: "mensagem está em branco"
     sender_message_to_blank: "message.to está em branco"
     sender_text_part_body_blank: "text_part.body está em branco"
@@ -3269,7 +3269,7 @@ pt_BR:
       long_description: |
         Esse emblema é concedido quando um link compartilhado recebe 300 cliques. Obrigado por postar um link fascinante que levou a conversa adiante e iluminou a discussão!
     famous_link:
-      name: Link Famoso
+      name: Link famoso
       description: Postou um link externo com 1000 clicks
       long_description: |
         Esse emblema é concedido quando um link compartilhado recebe 1.000 cliques. Uau! Você postou um link que melhorou significativamente a conversa adicionando detalhes, contexto e informações essenciais. Ótimo trabalho!
@@ -3437,9 +3437,9 @@ pt_BR:
         disabled: "<p>Não encontramos nenhum tópico com o título “%{topic_title}”.</p> <ul> <li>Se você alterou o título, edite aquele tópico para modificar o texto introdutório do seu site.</li> <li>Se você tiver excluído este tópico, crie outro tópico com “%{topic_title}” como título. O conteúdo da primeira postagem é o texto introdutório do seu site.</li> </ul>"
         fields:
           welcome:
-            label: "Tópico de Boas Vindas"
+            label: "Tópico de boas-vindas"
             description: "<p>Como você descreveria sua comunidade para um estranho em um elevador em cerca de 1 minuto?</p> <ul> <li>Para quem são essas discussões?</li> <li>O que posso encontrar aqui?</li> <li>Por que eu deveria visitar?</li> </ul> <p>Seu tópico de boas vindas é a primeira coisa que os recém-chegados vão ler. Pense nele como um \"argumento de elevador\" ou \"declaração de missão\" de <b>um parágrafo</b>.</p>"
-            one_paragraph: "Por favor, reduza sua mensagem de boas-vindas para um parágrafo."
+            one_paragraph: "Reduza sua mensagem de boas-vindas para um parágrafo."
       privacy:
         title: "Acesso"
         description: "<p>A sua comunidade é aberta a todos ou é restrita por associação, convite ou aprovação? Se preferir, você pode configurar as coisas de forma privada e depois mudar para o público mais tarde.</p>"
@@ -3448,9 +3448,9 @@ pt_BR:
             choices:
               open:
                 label: "Público"
-                description: "Qualquer um pode acessar esta comunidade"
+                description: "Qualquer um(a) pode acessar esta comunidade"
               restricted:
-                label: "Privado"
+                label: "Privado(a)"
                 description: "Somente usuários logados podem acessar esta comunidade"
           privacy_options:
             description: "Como novos usuários se cadastram para uma conta?"
@@ -3469,48 +3469,48 @@ pt_BR:
             placeholder: "nome@exemplo.com"
             description: "Endereço de e-mail da pessoa ou grupo responsável por essa comunidade. Usado para notificações críticas, como sinalizadores não tratados, atualizações de segurança e <a href='%{base_path}/about' target='_blank'>sua página Sobre, para entrar em contato com a comunidade imediatamente."
           contact_url:
-            label: "Página da Web"
+            label: "Página da web"
             placeholder: "https://www.example.com/contact-us"
             description: "Página de contato geral para você ou sua organização. Será exibido no <a href='%{base_path}/about' target='_blank'>sua sobre a página</a>."
           site_contact:
-            label: "Mensagens Automatizadas"
+            label: "Mensagens automáticas"
             description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
       corporate:
         title: "Organização"
         description: "Estas informações serão inseridas nos seus <a href='%{base_path}/tos' target='blank'>Termos de Serviço</a>, que é um tópico que você pode editar na categoria da staff. Se você não tem uma empresa, sinta-se à vontade para pular esta etapa por enquanto."
         fields:
           company_name:
-            label: "Nome da Empresa"
-            placeholder: "Organização Exemplo"
+            label: "Nome da empresa"
+            placeholder: "Exemplo de organização"
           governing_law:
-            label: "Lei Aplicável"
+            label: "Lei aplicável"
             placeholder: "Lei da Califórnia"
           city_for_disputes:
-            label: "Cidade para Disputas"
+            label: "Cidade para disputas"
             placeholder: "São Francisco, Califórnia"
       colors:
         title: "Cores"
       fonts:
         fields:
           font_preview:
-            label: "Prévia"
+            label: "Pré-visualização"
       logos:
         title: "Logotipos"
         fields:
           logo:
-            label: "Logotipo Primário"
+            label: "Logotipo primário"
             description: "A imagem do logotipo no canto superior esquerdo do seu site. Use uma imagem retangular larga com uma altura de 120 e uma proporção maior que 3:1"
           logo_small:
-            label: "Logotipo Quadrado"
+            label: "Logotipo quadrado"
             description: "Uma versão quadrada do seu logotipo. Mostrado no canto superior esquerdo do seu site ao rolar para baixo, no navegador e ao compartilhar em plataformas sociais. Idealmente maior que 512x512."
       icons:
         title: "Ícones"
         fields:
           favicon:
-            label: "Ícone de Navegador"
+            label: "Ícone do navegador"
             description: "Imagem de ícone usada para representar seu site em navegadores da Web com boa aparência em tamanhos pequenos. As extensões de imagem recomendadas são PNG ou JPG. Vamos usar o logotipo quadrado por padrão."
           large_icon:
-            label: "Ícone Largo"
+            label: "Ícone grande"
             description: "Imagem de ícone usada para representar seu site em dispositivos modernos com boa aparência em tamanhos maiores. Idealmente maior que 512 × 512. Usaremos o logotipo quadrado por padrão."
       homepage:
         description: "Recomendamos que você mostre os tópicos mais recentes em sua página inicial, mas também pode mostrar categorias (grupos de tópicos) na página inicial, se preferir."
@@ -3519,13 +3519,13 @@ pt_BR:
           homepage_style:
             choices:
               latest:
-                label: "Últimos tópicos"
+                label: "Tópicos mais recentes"
               categories_only:
                 label: "Apenas categorias"
               categories_with_featured_topics:
                 label: "Categorias com tópicos em destaque"
               categories_and_latest_topics:
-                label: "Categorias e Tópicos Mais Recentes"
+                label: "Categorias e tópicos mais recentes"
               categories_and_top_topics:
                 label: "Categorias e tópicos principais"
               categories_boxes:
