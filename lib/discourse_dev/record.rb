@@ -46,12 +46,15 @@ module DiscourseDev
         puts "Creating #{@count} sample #{type} records"
       end
 
+      records = []
       @count.times do
-        create!
+        records << create!
         putc "."
       end
 
+      DiscourseEvent.trigger(:after_populate_dev_records, records, type)
       puts
+      records
     end
 
     def current_count
