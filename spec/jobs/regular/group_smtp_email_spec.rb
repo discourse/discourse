@@ -171,9 +171,27 @@ RSpec.describe Jobs::GroupSmtpEmail do
 
   context "when the post in the argument is the OP" do
     let(:post_id) { post.topic.posts.first.id }
-    it "aborts and does not send a group SMTP email; the OP is the one that sent the email in the first place" do
-      expect { subject.execute(args) }.not_to(change { EmailLog.count })
-      expect(ActionMailer::Base.deliveries.count).to eq(0)
+
+    context "when the group has imap enabled" do
+      before do
+        group.update!(imap_enabled: true)
+      end
+
+      it "aborts and does not send a group SMTP email; the OP is the one that sent the email in the first place" do
+        expect { subject.execute(args) }.not_to(change { EmailLog.count })
+        expect(ActionMailer::Base.deliveries.count).to eq(0)
+      end
+    end
+
+    context "when the group does not have imap enabled" do
+      before do
+        group.update!(imap_enabled: false)
+      end
+
+      it "sends the email as expected" do
+        subject.execute(args)
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
+      end
     end
   end
 
