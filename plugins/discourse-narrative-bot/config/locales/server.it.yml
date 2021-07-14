@@ -25,6 +25,7 @@ it:
       long_description: |
         Questo distintivo è assegnato al completamento del tutorial interattivo per utenti avanzati. Hai imparato gli strumenti avanzati di discussione — e ora sei un diplomato!
   discourse_narrative_bot:
+    bio: "Ciao, non sono una persona reale. Sono un bot che ti può insegnare a usare questo sito. Per interagire con me inviami un messaggio o menzionami per nome."
     tl2_promotion_message:
       subject_template: "Ora che sei stato promosso, è il momento di conoscere alcune funzionalità avanzate!"
       text_body_template: |

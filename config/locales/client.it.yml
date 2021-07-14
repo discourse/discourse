@@ -41,6 +41,7 @@ it:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} fa"
+      wrap_on: "il %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -2864,6 +2865,7 @@ it:
         name: "Nome"
         name_placeholder: "A cosa serve questo segnalibro?"
         set_reminder: "Ricordamelo"
+        options: "Opzioni"
         actions:
           delete_bookmark:
             name: "Cancella segnalibro"
@@ -4446,9 +4448,13 @@ it:
           censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
           require_approval: "I messaggi contenenti queste parole richiederanno l'approvazione dello staff prima di poter essere visualizzati."
           flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
+          replace: "Sostituisci le parole nei messaggi con altre parole"
+          tag: "Etichetta automaticamente gli argomenti in base al primo messaggio"
           silence: "I primi post degli utenti che contengono queste parole richiederanno l'approvazione dello staff prima di essere visibili, e l'utente verrà automaticamente silenziato."
           link: "Nei messaggi sostituisce le parole con link"
         form:
+          label: "Ha una parola o frase"
+          placeholder: "Inserisci parola o frase (* è un carattere jolly)"
           placeholder_regexp: "espressione regolare"
           replace_label: "Sostituzione"
           replace_placeholder: "esempio"
@@ -4462,6 +4468,7 @@ it:
           upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
         test:
           button_label: "Test"
+          modal_title: "%{action}: Test delle parole osservate"
           description: "Inserisci il testo qui sotto per verificare la corrispondenza con le parole osservate"
           found_matches: "Trovate corrispondenze:"
           no_matches: "Nessun risultato trovato"
@@ -4546,6 +4553,7 @@ it:
         penalty_post_edit: "Modifica il messaggio"
         penalty_post_none: "Non fare nulla"
         penalty_count: "Conteggio Penalità"
+        penalty_history: "Cronologia delle penalizzazioni"
         clear_penalty_history:
           title: "Cancella cronologia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello di affidabilità 3"
@@ -4587,6 +4595,8 @@ it:
         flags_given_count: Segnalazioni Fatte
         flags_received_count: Segnalazioni Ricevute
         warnings_received_count: Avvertimenti Ricevuti
+        warnings_list_warning: |
+          In qualità di moderatore, potresti non essere in grado di visualizzare tutti questi argomenti. Se necessario, chiedi a un amministratore o al moderatore addetto alla pubblicazione di concedere ai <b>@moderatori</b> accesso al messaggio.
         flags_given_received_count: "Segnalazioni Fatte / Ricevute"
         approve: "Approva"
         approved_by: "approvato da"
@@ -4677,6 +4687,9 @@ it:
         trust_level_unlocked_tip: "il livello di attendibilità è sbloccato, il sistema può promuovere o degradare l'utente"
         lock_trust_level: "Blocca livello di attendibilità"
         unlock_trust_level: "Sblocca livello di attendibilità"
+        silenced_count: "Silenziati"
+        suspended_count: "Sospesi"
+        last_six_months: "Ultimi 6 mesi"
         tl3_requirements:
           title: "Requisiti per livello di attendibilità 3"
           table_title:
@@ -4754,6 +4767,7 @@ it:
           text: "Campo Testo"
           confirm: "Conferma"
           dropdown: "A discesa"
+          multiselect: "Selezione multipla"
       site_text:
         description: "Puoi personalizzare qualsiasi testo del tuo forum. Comincia effettuando una ricerca qui sotto:"
         search: "Trova il testo che vorresti modificare"
