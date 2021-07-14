@@ -1972,17 +1972,31 @@ ja:
         high_weight_invalid: "重みを 1 以下に設定することはできません。"
       allowed_unicode_usernames:
         regex_invalid: "正規表現は無効です: %{error}"
+        leading_trailing_slash: "正規表現の開始と終了にスラッシュを使用してはいけません。"
+      unicode_usernames_avatars: "内部システムのアバターは Unicode のユーザー名をサポートしていません。"
+      list_value_count: "リストには正確に %{count} この値が含まれている必要があります。"
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.example.com"
+        value: "DiscourseConnect シークレット"
   search:
+    extreme_load_error: "サイトに極端な負荷がかかっているため、検索が無効になっています。後でもう一度お試しください。"
     within_post: "%{username} の #%{post_number}"
     types:
       category: "カテゴリ"
       topic: "結果"
       user: "ユーザー"
+    results_page: "'%{term}' の検索結果"
+    audio: "[audio]"
+    video: "[video]"
   discourse_connect:
+    login_error: "ログインエラー"
     not_found: "あなたのアカウントが見つかりませんでした。サイトの管理者にお問い合わせください。"
+    account_not_approved: "あなたのアカウントは承認待ちです。承認されると、メール通知が届きます。"
     unknown_error: "あなたのアカウントに問題があります。サイトの管理者にお問い合わせください。"
     timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度ログインしてください。"
     no_email: "メールアドレスが入力されていません。サイトの管理者にお問い合わせください。"
+    blank_id_error: "`external_id` は必須ですが空白になっています"
     email_error: "メールアドレス <b>%{email}</b> でアカウントを登録できませんでした。サイトの管理者にお問い合わせください。"
     missing_secret: "シークレットが欠落しているため、認証に失敗しました。この問題を修正するには、サイト管理者にお問い合わせください。"
     invite_redeem_failed: "招待状の引き換えに失敗しました。サイトの管理者にお問い合わせください。"
@@ -1990,12 +2004,26 @@ ja:
   most_posts: "最も多い投稿"
   most_recent_poster: "最も最近の投稿者"
   frequent_poster: "頻繁な投稿者"
+  poster_description_joiner: "、"
   redirected_to_top_reasons:
     new_user: "コミュニティへようこそ！最も人気のある最近のトピックはこちらです。"
     not_seen_in_a_month: "お帰りなさい！最近見かけませんでしたね。あなたがいない間に最も人気の高かったトピックはこちらです。"
+  merge_posts:
+    edit_reason:
+      other: "%{count} 件の投稿が %{username} によってマージされました"
+    errors:
+      different_topics: "異なるトピックに属する投稿をマージすることはできません。"
+      different_users: "異なるユーザーに属する投稿をマージすることはできません。"
+      max_post_length: "結合された投稿の長さが許容範囲を超えているため、投稿をマージできません。"
   move_posts:
+    new_topic_moderator_post:
+      other: "%{count} 件の投稿は新しいトピックに分割されました: %{topic_link}"
+    new_message_moderator_post:
+      other: "%{count} 件の投稿は新しいメッセージに分割されました: %{topic_link}"
     existing_topic_moderator_post:
       other: "%{count} 件の投稿は次の既存のトピックにマージされました: %{topic_link}"
+    existing_message_moderator_post:
+      other: "%{count} 件の投稿は次の既存のメッセージにマージされました: %{topic_link}"
   publish_page:
     slug_errors:
       blank: "は空にできません"
@@ -2062,14 +2090,49 @@ ja:
       blank: "は空にできません"
       must_begin_with_alphanumeric_or_underscore: "は英数字またはアンダースコアで始まる必要があります"
       must_end_with_alphanumeric: "は英数字で終わる必要があります"
+      must_not_end_with_confusing_suffix: "は、.json や .png などの紛らわしいサフィックスで終了することはできません。"
     email:
+      invalid: "は無効です。"
       not_allowed: "はこのメールプロバイダーを許可していません。別のメールアドレスを使用してください。"
       blocked: "は許可されていません。"
+      revoked: "%{date} まで '%{email}' にメールは送信されません。"
       does_not_exist: "該当なし"
     ip_address:
       blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
       max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
+    website:
+      domain_not_allowed: "ウェブサイトは無効です。許可されるドメイン: %{domains}"
+    auto_rejected: "年齢により自動的に拒否されました。auto_handle_queued_age サイト設定をご覧ください。"
+    destroy_reasons:
+      unused_staged_user: "未使用のステージングユーザー"
+      fixed_primary_email: "ステージングユーザーの固定プライマリーメール"
+      same_ip_address: "ほかのユーザーと同じ IP アドレス (%{ip_address})"
+      inactive_user: "非アクティブユーザー"
+      reviewable_reject_auto: "キューにあるレビュー待機項目の自動処理"
+      reviewable_reject: "レビュー待ちユーザーを拒否"
+    email_in_spam_header: "ユーザーの最初のメールは迷惑として通報されました"
+    already_silenced: "ユーザーは %{staff} によって %{time_ago}に投稿禁止にされています。"
+    already_suspended: "ユーザーは %{staff} によって %{time_ago}に凍結されています。"
+    cannot_delete_has_posts:
+      other: "ユーザー %{username} には公開トピックまたは個人メッセージに %{count} 件の投稿があるため、削除できません。"
+  reviewables_reminder:
+    submitted:
+      other: "%{count} 時間前に項目が送信されました。[レビューしてください](%{base_path}/review)。"
+    subject_template:
+      other: "%{count} 個の項目にレビューが必要です"
+  unsubscribe_mailer:
+    title: "購読解除メーラー"
+    subject_template: "今後 %{site_title} からの更新メールの受信を希望しないことを確認してください"
+    text_body_template: |
+      誰かが (あなたですか？) %{site_domain_name} からこのアドレスに更新メールを送信しないようリクエストしました。
+      これを確定する場合は、次のリンクをクリックしてください。
+
+      %{confirm_unsubscribe_link}
+
+
+      更新メールの受信を続行する場合は、このメールを無視してかまいません。
   invite_mailer:
+    title: "招待メーラー"
     subject_template: "%{inviter_name} があなたを %{site_domain_name} の「%{topic_title}」に招待しました"
     text_body_template: |
       %{inviter_name} があなたをディスカッションに招待しました
@@ -2086,6 +2149,7 @@ ja:
 
       %{invite_link}
   custom_invite_mailer:
+    title: "カスタム招待メーラー"
     subject_template: "%{inviter_name} があなたを %{site_domain_name} の「%{topic_title}」に招待しました"
     text_body_template: |
       %{inviter_name} があなたをディスカッションに招待しました
@@ -2106,6 +2170,7 @@ ja:
 
       %{invite_link}
   invite_forum_mailer:
+    title: "フォーラム招待メーター"
     subject_template: "%{inviter_name} があなたを %{site_domain_name} に招待しました"
     text_body_template: |
       %{inviter_name} があなたを招待しました
@@ -2118,6 +2183,7 @@ ja:
 
       %{invite_link}
   custom_invite_forum_mailer:
+    title: "カスタムフォーラム招待メーラー"
     subject_template: "%{inviter_name} があなたを %{site_domain_name} に招待しました"
     text_body_template: |
       %{inviter_name} があなたを招待しました
@@ -2134,10 +2200,106 @@ ja:
 
       %{invite_link}
   invite_password_instructions:
+    title: "招待のパスワードに関する指示"
     subject_template: "%{site_name} アカウントのパスワード設定"
     text_body_template: "%{site_name} への招待を承諾いただきありがとうございます。ようこそ！\n\nリンクをクリックしてパスワードを設定してください: \n%{base_url}/u/password-reset/%{email_token}\n\n(リンクの有効期限が切れている場合は、メールアドレスでログインする時に「パスワードを忘れました」を選択してください。)\n"
+  download_backup_mailer:
+    title: "バックアップダウンロードのメーラー"
+    subject_template: "[%{email_prefix}] サイトバックアップのダウンロード"
+    text_body_template: |
+      こちらが、あなたがリクエストした[サイトバックアップのダウンロード](%{backup_file_path})です。
+
+      セキュリティ上の理由により、このダウンロードリンクをあなたの有効なメールアドレスに送信しました。
+
+      (このダウンロードを*リクエストしなかった*場合は、これを深刻にみなす必要があります。誰かがあなたのサイトへの管理者アクセスを有しているということです。)
+    no_token: |
+      個のバックアップのダウンロードリンクはすでに使用されたか、期限切れとなっています。
+  admin_confirmation_mailer:
+    title: "管理者の確認"
+    subject_template: "[%{email_prefix}] 新しい管理者アカウントを確認してください"
+    text_body_template: |
+      **%{target_username} (%{target_email})**をあなたのフォーラムの管理者として追加することを確認してください。
+
+      [管理者アカウントの確認](%{admin_confirm_url})
+  test_mailer:
+    title: "テストメーラー"
+    subject_template: "[%{email_prefix}] メール配信テスト"
+    text_body_template: |
+      これは次から送信されたテストメールです。
+
+      [**%{base_url}**][0]
+
+      メールの配信可能性は複雑な課題です。最初に確認すべき重要な事項を以下に示します。
+
+      - `notification email` の from: アドレスがサイト設定で正しく設定されていることを*確認してください*。**送信するメールの "from" アドレスに指定されたドメインがメールの検証対象のドメインです**。
+
+      - メールクライアントでメールの生のソースを表示する方法を確認してください。メールのヘッダーを調査すると、重要な手がかりを得ることができます。Gmail では、各メールの右上にあるドロップダウンメニューに含まれる "メッセージのソースを表示" オプションを使用できます。
+
+      - **重要:** あなたの ISP には、メールの送信元のドメイン名と IP アドレスを関連付ける逆引き DNS レコードが入力されていますか？こちらで[逆引き PTR レコードをテストしてください][2]。あなたの ISP が適切な逆引き DNS ポインターレコードを登録しない場合、メールが配信される可能性はほぼありません。
+
+      - あなたのドメインの [SPF レコード][8]は正しいですか？こちらで [SPF レコードをテストしてください][1]。TXT は SPF の正しい正式なレコードタイプであることに注意してください。
+
+      - ドメインの [DKIM レコード][3]は正しいですか？これによりメールの配信可能性が大幅に改善されます。こちらで [DKIM レコードをテストしてください][7]。
+
+      - 独自のメールサーバーを実行している場合は、メールサーバーの IP が[どのメールのブロックリストにも追加されていない][4]ことを確認してください。また、HELO メッセージで DNS に解決する完全修飾ホスト名を確実に送信していることを確認してください。送信していない場合は、多数のメールサーバーによってメールが拒否されることになります。
+
+      - **テストメールを [mail-tester.com][mt] に送信**して、上記すべてが正しく機能していることを確認することを強くお勧めします。
+
+      ([SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg]、または [Mailjet][mj] でアカウントを作成するのが*簡単*な方法です。これらは安価なメールプランを提供しており、小規模のコミュニティに最適です。ただし、DNS に SPF と DKIM レコードをセットアップする必要はあります！)
+
+      このメールの配信可能性テストがあなたのところに届きますように！
+
+      それでは幸運を。
+
+      [Discourse](https://www.discourse.org) 一同より
+
+      [0]: %{base_url}
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: https://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
+  new_version_mailer:
+    title: "新しいバージョンメーラー"
+    subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"
+    text_body_template: |
+      やったー！新バージョンの [Discourse](https://www.discourse.org) が公開されました！
+
+      あなたのバージョン: %{installed_version}
+      新しいバージョン: **%{new_version}**
+
+      - **[ワンクリックのブラウザアップデート](%{base_url}/admin/upgrade)**で簡単にアップグレード
+
+      - 新機能については、[リリースノート](https://meta.discourse.org/tag/release-notes)か[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/master)をご覧ください。
+
+      - Discourse のニュース、ディスカッション、およびサポートは、[meta.discourse.org](https://meta.discourse.org)にアクセス！
+  new_version_mailer_with_notes:
+    title: "注意付きの新しいバージョンメーラー"
+    subject_template: "[%{email_prefix}] 更新が利用可能になりました"
+    text_body_template: |
+      やったー！新バージョンの [Discourse](https://www.discourse.org) が公開されました！
+
+      あなたのバージョン: %{installed_version}
+      新しいバージョン: **%{new_version}**
+
+      - **[ワンクリックのブラウザアップデート](%{base_url}/admin/upgrade)**で簡単にアップグレード
+
+      - 新機能については、[リリースノート](https://meta.discourse.org/tag/release-notes)か[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/master)をご覧ください。
+
+      - Discourse のニュース、ディスカッション、およびサポートは、[meta.discourse.org](https://meta.discourse.org)にアクセス！
+
+      ### リリースノート
+
+      %{notes}
   flag_reasons:
     off_topic: "あなたの投稿は「話題に関係ない」として通報されました。コミュニティはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
+    inappropriate: "あなたの投稿は**不適切**として通報されました。コミュニティは投稿が攻撃的、虐待的、または[コミュニティガイドライン](%{base_path}/guidelines)に違反すると感じています。"
     spam: "あなたの投稿は「迷惑」として通報されました。コミュニティはあなたの投稿に営利目的、宣伝目的の性質があり、トピックに意図される有用性または関連性がないと判断しました。"
     notify_moderators: "あなたの投稿は「モデレーターの注意要」として通報されました。コミュニティはあなたの投稿にスタッフメンバーによる手動介入が必要であると判断しました。"
   flags_dispositions:
@@ -2146,17 +2308,59 @@ ja:
     disagreed: "ご連絡いただきありがとうございます。現在調査しています。"
     ignored: "ご連絡いただきありがとうございます。現在調査しています。"
     ignored_and_deleted: "ご連絡いただきありがとうございます。投稿を削除しました。"
+  temporarily_closed_due_to_flags:
+    other: "このトピックは、大量のコミュニティ通報が寄せられたため、一時的に %{count} 時間以上クローズされています。"
   system_messages:
     private_topic_title: "トピック #%{id}"
     contents_hidden: "コンテンツを見るには投稿にアクセスしてください。"
     post_hidden:
       title: "非表示の投稿"
       subject_template: "コミュニティ通報によって非表示にされた投稿"
+      text_body_template: |
+        こんにちは。
+
+        これは %{site_name} からの自動メッセージです。あなたの投稿が非表示になっていることをお知らせします。
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        この投稿は、コミュニティからの通報により非表示にされました。そのため、コミュニティからのフィードバックを反省するようにあなたの投稿を書き直すことを検討してください。**%{edit_delay} 分後に編集を開始できます。編集が終わると、自動的に非表示状態が解除されます。**
+
+        ただし、投稿が再びコミュニティによって非表示にされると、スタッフが処理するまで非表示のママとなります。
+
+        その他のガイダンスについては、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
     post_hidden_again:
       title: "再度非表示"
       subject_template: "コミュニティ通報によって非表示にされた投稿、スタッフ通知済み"
+      text_body_template: |
+        こんにちは。
+
+        これは %{site_name} からの自動メッセージです。あなたの投稿が再び非表示になったことをお知らせします。
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        コミュニティがこの投稿を通報したため、非表示になっています。**この投稿は 2 回以上非表示となったため、スタッフメンバーが処理するまで非表示のままとなります。**
+
+        その他のガイダンスについては、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
     queued_by_staff:
       title: "承認待ちの投稿"
+      subject_template: "スタッフが投稿を非表示にしました。承認待ち"
+      text_body_template: |
+        こんにちは。
+
+        これは %{site_name} からの自動メッセージです。あなたの投稿が非表示になったことをお知らせします。
+
+        <%{base_url}%{url}>
+
+        あなたの投稿は、スタッフがレビューするまで非表示のままとなります。
+
+        その他のガイダンスについては、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
+    flags_disagreed:
+      title: "通報された投稿をスタッフが復元しました"
+      subject_template: "通報された投稿をスタッフが復元しました"
     welcome_user:
       title: "ようこそ"
       subject_template: "%{site_name} へようこそ！"
