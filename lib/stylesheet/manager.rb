@@ -188,11 +188,6 @@ class Stylesheet::Manager
 
   def stylesheet_link_tag(target = :desktop, media = 'all')
     stylesheets = stylesheet_details(target, media)
-    if !!(target.to_s =~ THEME_REGEX) && stylesheets.size > 1
-      stylesheets = stylesheets.sort_by { |s|
-        [s[:remote] ? 0 : 1, s[:theme_id] == @theme_id ? 1 : 0, s[:theme_name]]
-      }
-    end
     stylesheets.map do |stylesheet|
       href = stylesheet[:new_href]
       theme_id = stylesheet[:theme_id]
@@ -232,6 +227,12 @@ class Stylesheet::Manager
 
           data[:new_href] = href
           stylesheets << data
+        end
+
+        if stylesheets.size > 1
+          stylesheets = stylesheets.sort_by { |s|
+            [s[:remote] ? 0 : 1, s[:theme_id] == @theme_id ? 1 : 0, s[:theme_name]]
+          }
         end
       else
         builder = Builder.new(target: target, manager: self)
