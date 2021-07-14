@@ -98,13 +98,13 @@ export default class PostCooked {
     // find the best <a> element in each onebox and display link counts only
     // for that one (the best element is the most significant one to the
     // viewer)
-    const bestElements = [];
+    const bestElements = new Map();
     $html[0].querySelectorAll("aside.onebox").forEach((onebox) => {
       // look in headings first
       for (let i = 1; i <= 6; ++i) {
         const hLinks = onebox.querySelectorAll(`h${i} a[href]`);
         if (hLinks.length > 0) {
-          bestElements[onebox] = hLinks[0];
+          bestElements.set(onebox, hLinks[0]);
           return;
         }
       }
@@ -112,7 +112,7 @@ export default class PostCooked {
       // use the header otherwise
       const hLinks = onebox.querySelectorAll("header a[href]");
       if (hLinks.length > 0) {
-        bestElements[onebox] = hLinks[0];
+        bestElements.set(onebox, hLinks[0]);
       }
     });
 
@@ -142,8 +142,8 @@ export default class PostCooked {
           const $onebox = $link.closest(".onebox");
           if (
             $onebox.length === 0 ||
-            !bestElements[$onebox[0]] ||
-            bestElements[$onebox[0]] === $link[0]
+            !bestElements.has($onebox[0]) ||
+            bestElements.get($onebox[0]) === $link[0]
           ) {
             const title = I18n.t("topic_map.clicks", { count: lc.clicks });
             $link.append(
