@@ -18,7 +18,7 @@ module DiscourseDev
       end
 
       @model = model
-      @type = model.to_s.downcase
+      @type = model.to_s.downcase.to_sym
       @count = count
     end
 
@@ -26,6 +26,7 @@ module DiscourseDev
       record = model.create!(data)
       yield(record) if block_given?
       DiscourseEvent.trigger(:after_create_dev_record, record, type)
+      record
     end
 
     def populate!
