@@ -115,8 +115,9 @@ GEM
       railties (>= 3.1)
     discourse-ember-source (3.12.2.3)
     discourse-fonts (0.0.8)
-    discourse_dev_assets (0.0.2)
+    discourse_dev_assets (0.0.3)
       faker (~> 2.16)
+      literate_randomizer
     docile (1.4.0)
     ecma-re-validator (0.3.0)
       regexp_parser (~> 2.0)
@@ -202,6 +203,7 @@ GEM
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    literate_randomizer (0.4.0)
     lograge (0.11.2)
       actionpack (>= 4)
       activesupport (>= 4)
