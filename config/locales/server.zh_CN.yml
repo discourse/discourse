@@ -50,7 +50,7 @@ zh_CN:
   anonymous: "匿名"
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证您选择的链接是否确实发布到了论坛。如果您仍想继续，请选择下面的链接。"
-  on_another_topic: "在另外的话题中"
+  on_another_topic: "在另一个话题中"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
@@ -981,7 +981,7 @@ zh_CN:
       labels:
         edited_at: 日期
         post: 帖子
-        editor: 编辑器
+        editor: 编辑者
         author: 作者
         edit_reason: 原因
       description: "新帖子编辑的数量。"
@@ -1053,7 +1053,7 @@ zh_CN:
       description: "登录用户、匿名用户和抓取工具的页面浏览量。"
       labels:
         post: 帖子
-        editor: 编辑器
+        editor: 编辑者
         author: 作者
         edit_reason: 原因
     dau_by_mau:
@@ -1628,7 +1628,7 @@ zh_CN:
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     recompress_original_jpg_quality: "上传的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     image_preview_jpg_quality: "调整大小的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
-    allow_staff_to_upload_any_file_in_pm: "允许管理人员在 PM 中上传任何文件。"
+    allow_staff_to_upload_any_file_in_pm: "允许管理人员在私信中上传任何文件。"
     strip_image_metadata: "剥离图片元数据。"
     min_ratio_to_crop: "用于裁剪高图片的比率。输入宽度/高度的结果。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
@@ -3776,7 +3776,7 @@ zh_CN:
         invalid_csv: 我们在第%{line_number}行遇到一个错误。请确认CSV中每一行有一个电子邮件地址。
         badge_disabled: 请先启用 %{badge_name} 徽章。
     editor:
-      name: 编辑
+      name: 编辑者
       description: 首次编辑帖子
       long_description: |
         该徽章授予给第一次编辑自己帖子的您。虽然您不能永远在编辑自己的帖子，但鼓励编辑 - 您可以改进格式，修正小错误，或者是增补您原来没有写的内容。编辑能让您的帖子质量变得更好！
