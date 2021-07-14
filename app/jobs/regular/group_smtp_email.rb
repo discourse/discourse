@@ -52,7 +52,11 @@ module Jobs
       #
       # Basically, we should never be sending this notification for the first
       # post in a topic.
-      if post.is_first_post?
+      #
+      # If the group does not have IMAP enabled then this could be legitimate,
+      # for example in cases where we are creating a new topic to reply to another
+      # group PM and we need to send the participants the group OP email.
+      if post.is_first_post? && group.imap_enabled
         ImapSyncLog.warn("Aborting SMTP email for post #{post.id} in topic #{post.topic_id} to #{email}, the post is the OP and should not send an email.", group)
         return
       end
