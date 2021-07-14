@@ -8,6 +8,7 @@ class LocaleFileChecker
   TYPE_UNSUPPORTED_INTERPOLATION_KEYS = 2
   TYPE_MISSING_PLURAL_KEYS = 3
   TYPE_INVALID_MESSAGE_FORMAT = 4
+  TYPE_INVALID_MARKDOWN_LINK = 5
 
   def check(locale)
     @errors = {}
@@ -20,9 +21,12 @@ class LocaleFileChecker
       @locale_yaml = YAML.load_file(locale_path)
       @reference_yaml = YAML.load_file(reference_path)
 
+      next if @locale_yaml.blank? || @locale_yaml.first[1].blank?
+
       check_interpolation_keys
       check_plural_keys
       check_message_format
+      check_markdown_links
     end
 
     @errors
@@ -90,6 +94,16 @@ class LocaleFileChecker
 
       add_error(keys, TYPE_MISSING_INTERPOLATION_KEYS, missing_keys, pluralized: pluralized) unless missing_keys.empty?
       add_error(keys, TYPE_UNSUPPORTED_INTERPOLATION_KEYS, unsupported_keys, pluralized: pluralized) unless unsupported_keys.empty?
+    end
+  end
+
+  def check_markdown_links
+    traverse_hash(@locale_yaml, []) do |keys, value|
+      next if value.is_a?(Array)
+
+      if /\[.*?\]\s+\(.*?\)/.match?(value)
+        add_error(keys, TYPE_INVALID_MARKDOWN_LINK, nil, pluralized: false)
+      end
     end
   end
 
