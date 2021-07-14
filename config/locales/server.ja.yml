@@ -2361,6 +2361,18 @@ ja:
     flags_disagreed:
       title: "通報された投稿をスタッフが復元しました"
       subject_template: "通報された投稿をスタッフが復元しました"
+      text_body_template: |
+        こんにちは。
+
+        これは %{site_name} からの自動メッセージです。[あなたの投稿](%{base_url}%{url})が復元されたことをお知らせします。
+
+        この投稿はコミュニティによって通報され、スタッフメンバーがそれを復元することを選択しました。
+
+        [details="クリックして復元された投稿を展開"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
     welcome_user:
       title: "ようこそ"
       subject_template: "%{site_name} へようこそ！"
@@ -2411,31 +2423,51 @@ ja:
 
         あなたの返信はブロックされているメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_reply_user_not_matching:
+      subject_template: "[%{email_prefix}] メールの問題 -- 予期しない返信アドレス"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
         あなたの返信は期待されたのとは異なるメールアドレスから送信されているため、これが同一人物であるかを確認できません。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_empty:
+      title: "メールの拒否 - 空です"
+      subject_template: "[%{email_prefix}] メールの問題 -- コンテンツがありません"
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        返信のコンテンツがあなたのメールに見つかりませんでした。
+
+        これを受信し、_実際に_返信を含めていた場合は、より単純なフォーマットでもう一度お試しください。
     email_reject_parsing:
+      title: "メールの拒否 - 解析"
+      subject_template: "[%{email_prefix}] メールの問題 -- コンテンツが認識されません"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: %{former_title}) は処理されませんでした。
 
         メールに返信が見つかりませんでした。**メールのトップに返信が入力されていることを確認してください** インライン返信は処理できません。
     email_reject_invalid_access:
+      title: "メールの拒否 - 無効なアクセス"
+      subject_template: "[%{email_prefix}] メールの問題 -- 無効なアクセス"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         あなたのアカウントに、このカテゴリに新しいトピックを投稿するための権限がありません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_strangers_not_allowed:
+      title: "メールの拒否 - 未確認者は許可されていません"
+      subject_template: "[%{email_prefix}] メールの問題 -- 無効なアクセス"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         このメールの送信先のカテゴリでは、有効なアカウントと既知のメールアドレスを持つユーザーしか返信できません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_invalid_post:
+      title: "メールの拒否 - 無効な投稿"
+      subject_template: "[%{email_prefix}] メールの問題 -- 投稿エラー"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: %{former_title}) は処理されませんでした。
 
         複雑な書式、メッセージのサイズなどの原因が考えられます。もう一度お試しください。このエラーが続くようであれば、ウェブサイトから投稿してください。
     email_reject_invalid_post_specified:
+      title: "メールの拒否 - 無効な投稿が指定されました"
+      subject_template: "[%{email_prefix}] メールの問題 -- 投稿エラー"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: %{former_title}) は処理されませんでした。
 
@@ -2444,12 +2476,31 @@ ja:
         %{post_error}
 
         問題を修正できるようであれば、もう一度お試しください。
+      date_invalid: "投稿の作成日が見つかりません。メールに Date: ヘッダーが欠けているようです。"
+    email_reject_post_too_short:
+      title: "メールの拒否 - 投稿が短すぎます"
+      subject_template: "[%{email_prefix}] メールの問題 -- 投稿が短すぎます"
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        より詳細な会話を促進するため、非常に短い返信は許可されていません。%{count} 文字以上で返信してください。または、"+1" と返信すれば、メールを介して投稿に「いいね！」することができます。
+    email_reject_invalid_post_action:
+      title: "メールの拒否 - 無効な投稿アクション"
+      subject_template: "[%{email_prefix}] メールの問題 -- 無効な投稿アクション"
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        投稿アクションが認識されませんでした。もう一度お試しいただくか、これが続く場合はウェブサイトから投稿してください。
     email_reject_reply_key:
+      title: "メールの拒否 - 返信キー"
+      subject_template: "[%{email_prefix}] メールの問題 -- 不明な返信キー"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
         メールの返信キーが無効であるか不明であるため、このメールの返信先を確認できません。[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_bad_destination_address:
+      title: "メールの拒否 - 不正な宛先アドレス"
+      subject_template: "[%{email_prefix}] メールの問題 -- 不明な To: アドレス"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
@@ -2462,27 +2513,44 @@ ja:
           - メールアドレスの Message-ID ヘッダーが変更されていませんか？Message-ID は同一であり、変更されてはいけません。
 
         もっとヘルプが必要ですか？%{base_url}/about の連絡先情報からお問い合わせください。
+    email_reject_old_destination:
+      title: "メールの拒否 - 古い宛先"
+      subject_template: "[%{email_prefix}] メールの問題 -- 古い通知に返信しようとしています"
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでshチア。
+
+        元の通知への返信は %{number_of_days} 日間のみ受け付けています。会話を続けるには、[トピックにアクセス](%{short_url})してください。
     email_reject_topic_not_found:
+      title: "メールの拒否 - トピックが見つかりません"
+      subject_template: "[%{email_prefix}] メールの問題 -- トピックが見つかりません"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         返信しようとしているトピックはなくなりました。削除された可能性があります。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_topic_closed:
+      title: "メールの拒否 - トピックがクローズされています"
+      subject_template: "[%{email_prefix}] メールの問題 -- トピックがクローズされています"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         返信しようとしているトピックは現在クローズされており、返信を受け付けていません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_auto_generated:
+      title: "メールの拒否 - 自動生成"
+      subject_template: "[%{email_prefix}] メールの問題 -- 自動生成の返信"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         あなたのメールは「自動生成」とマークされており、人が入力する代わりにコンピューターが自動で作成したメールです。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_unrecognized_error:
+      title: "メールの拒否 - 認識されないエラー"
+      subject_template: "[%{email_prefix}] メールの問題 -- 認識されないエラー"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         あなたのメールを処理中に不明なエラーが発生したため、投稿されませんでした。もう一度試すか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_attachment:
+      title: "メールの添付ファイルは拒否されました"
+      subject_template: "[%{email_prefix}] メールの問題 -- 添付ファイルは拒否されました"
       text_body_template: |
         残念ながら、%{destination} へのメールメッセージ (件名:「%{former_title}」) に含まれる添付ファイルは拒否されました。
 
@@ -2491,22 +2559,48 @@ ja:
 
         これがエラーだと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_reply_not_allowed:
+      title: "メールの拒否 - 返信は許可されていません"
+      subject_template: "[%{email_prefix}] メールの問題 -- 返信は許可されていません"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         トピックに返信する権限がありません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_reply_to_digest:
+      title: "メールの拒否 - 要約への返信"
+      subject_template: "[%{email_prefix}] メールの問題 -- 要約への返信"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         要約メールに返信したため、受領されていません。
 
         これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_error_notification:
+      title: "メールエラー通知"
+      subject_template: "[%{email_prefix}] メールの問題 -- POP 認証エラー"
+      text_body_template: |
+        残念ながら、POP サーバーからのメールのポーリング中に認証エラーが発生しました。
+
+        [サイト設定](%{base_url}/admin/site_settings/category/email) で POP の資格情報が正しく構成されていることを確認してください。
+
+        POP メールアカウントのウェブ UI がある場合は、ウェブにログインしてから、そこで設定を確認する必要がある場合があります。
     email_revoked:
+      title: "メールが取り消されました"
+      subject_template: "メールアドレスは正しいですか？"
       text_body_template: |
         あなたにメールでご連絡できません。あなたへの最後の数通のメールは配達不能としてすべて返送されました。
 
         [あなたのメールアドレス](%{base_url}/my/preferences/email)が有効であり機能していることを確認してください。また、配達が可能になるように、あなたのアドレス帳/連絡先リストにこのメールアドレスを追加してください。
+    email_bounced: |
+      %{email} へのメッセージは返送されました。
+
+      ### 詳細
+
+      ``` text
+      %{raw}
+      ```
+    ignored_users_summary:
+      title: "無視されたユーザーがしきい値を超えました"
+      subject_template: "ユーザーは多数のユーザーから無視されています"
     spam_post_blocked:
       subject_template: "同一リンクの連続投稿により、新規ユーザー %{username} の投稿をブロック"
     pending_users_reminder:
@@ -2533,7 +2627,154 @@ ja:
     reply_by_email: "返信するには、[トピックにアクセス](%{base_url}%{url})するか、このメールに返信してください。"
     visit_link_to_respond: "返信するには[トピックにアクセス](%{base_url}%{url})してください。"
     posted_by: "%{post_date} に %{username} が投稿"
+    user_invited_to_private_message_pm_staged:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      title: "ユーザーがトピックに招待されました"
+      subject_template: "[%{email_prefix}] %{username} があなたを '%{topic_title}' に招待しました"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_replied:
+      title: "ユーザーが返信しました"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      title: "ユーザーが PM に返信しました"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_quoted:
+      title: "ユーザーが引用しました"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      title: "ユーザーがリンクしました"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      title: "ユーザーがメンションしました"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      title: "ユーザーが PM をメンションしました"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      title: "ユーザーグループがメンションしました"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted:
+      title: "ユーザーが投稿しました"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      title: "ユーザーが最初の投稿をウォッチ中です"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm:
+      title: "ユーザーが PM を投稿しました"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+    account_suspended:
+      title: "アカウントが凍結されました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
+      text_body_template: |
+        あなたは %{suspended_till} までフォーラムから凍結されました。
+
+        理由 - %{reason}
+    account_silenced:
+      title: "アカウントが投稿禁止にされました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
+      text_body_template: |
+        あなたは %{silenced_till} までフォーラムから投稿禁止にされました。
+
+        理由 - %{reason}
     account_exists:
+      title: "アカウントはすでに存在します"
+      subject_template: "[%{email_prefix}] アカウントはすでに存在します"
       text_body_template: |
         %{site_name} にアカウントを作成しようとしたか、アカウントのメールを %{email} に変更しようとしましたが、%{email} のアカウントはすでに存在します。
 
@@ -2543,6 +2784,8 @@ ja:
 
         ご質問があれば、[気さくなスタッフにお問い合わせ](%{base_url}/about)ください。
     account_second_factor_disabled:
+      title: "二要素認証が無効です"
+      subject_template: "[%{email_prefix}] 二要素認証が無効です"
       text_body_template: |
         %{site_name} のアカウントの二要素認証が無効になったため、パスワードのみでログインできるようになりました。今後、追加の認証コードは不要です。
 
@@ -2554,16 +2797,19 @@ ja:
       since_last_visit: "最終アクセス以降"
       new_topics: "新規トピック"
       unread_notifications: "未読の通知"
+      unread_high_priority: "優先度の高い未読の通知"
       liked_received: "受け取った「いいね！」"
       new_users: "新規ユーザー"
       popular_topics: "人気のトピック"
       follow_topic: "このトピックをフォロー"
       join_the_discussion: "もっと読む"
       popular_posts: "人気の投稿"
+      more_new: "あなたへの新着情報"
       subject_template: "[%{email_prefix}] 要約"
       unsubscribe: "この要約は、しばらくアクセスがなかった場合に %{site_link} から送信されます。%{email_preferences_link} を変更するか、%{unsubscribe_link} で購読を解除できます。"
       your_email_settings: "メール設定"
       click_here: "こちらをクリック"
+      from: "%{site_name}"
       preheader: "%{last_seen_at} の最終アクセス以降の要約"
     forgot_password:
       title: "パスワードを忘れました"
@@ -2698,7 +2944,26 @@ ja:
     sender_topic_deleted: "トピックは削除されています"
   color_schemes:
     base_theme_name: "ベース"
+    dark: "ダーク"
+    neutral: "ニュートラル"
+    grey_amber: "グレーアンバー"
+    shades_of_blue: "青系の色"
+    latte: "ラテ"
+    summer: "夏"
+    dark_rose: "ダークローズ"
+    wcag: "WCAG ライト"
+    wcag_theme_name: "WCAG ライト"
+    wcag_dark: "WCAG ダーク"
+    wcag_dark_theme_name: "WCAG ダーク"
     default_theme_name: "デフォルト"
+    light_theme_name: "ライト"
+    dark_theme_name: "ダーク"
+    neutral_theme_name: "ニュートラル"
+    grey_amber_theme_name: "グレーアンバー"
+    shades_of_blue_theme_name: "青系の色"
+    latte_theme_name: "ラテ"
+    summer_theme_name: "夏"
+    dark_rose_theme_name: "ダークローズ"
   edit_this_page: "このページを編集"
   csv_export:
     boolean_yes: "はい"
