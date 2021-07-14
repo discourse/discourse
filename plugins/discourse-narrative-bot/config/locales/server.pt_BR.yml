@@ -91,12 +91,12 @@ pt_BR:
         "2": "É bem assim"
         "3": "Sem dúvida"
         "4": "Sim, com certeza"
-        "5": "Você pode contar com isto"
+        "5": "Você pode confiar"
         "6": "Ao meu ver, sim"
         "7": "Bem provavelmente"
         "8": "Boa perspectiva"
         "9": "Sim"
-        "10": "Sinais apontam que sim"
+        "10": "Sinais indicam que sim"
         "11": "Resposta confusa, tente novamente"
         "12": "Pergunte novamente depois"
         "13": "Melhor não falar agora"
@@ -183,15 +183,15 @@ pt_BR:
 
           Você pode **responder com uma imagem?** Qualquer imagem serve! Arraste e solte, pressione o botão de envio, ou até copie e cole.
         reply: |-
-          Imagem bacana – eu pressionei o botão :heart: de curtir para que você saiba o quanto eu gostei dela :heart_eyes:
+          Imagem bacana. Apertei o botão :heart: de curtir para que você saiba como eu gostei dela :heart_eyes:
         like_not_found: |-
-          Você esqueceu de curtir :heart: minha [postagem?](%{url}) :crying_cat_face:
+          Você se esqueceu de curtir :heart: minha [postagem?](%{url}) :crying_cat_face:
         not_found: |-
-          Parece que você não fez o upload de uma imagem, então eu escolhi uma foto que eu tenho _certeza_ que você vai gostar.
+          Parece que você não enviou uma imagem, então eu escolhi uma foto que eu tenho _certeza_ de que você vai gostar.
 
           <%{image_url}>
 
-          Tente fazer o upload desta foto a seguir ou colar o link em uma linha por si só!
+          Tente enviar a foto a seguir ou colar o link em uma linha!
       likes:
         instructions: |-
           Aqui está a foto de um unicórnio:
@@ -207,37 +207,37 @@ pt_BR:
         instructions: |-
           Você pode colocar algumas palavras em **negrito** ou _itálico_ na sua resposta?
 
-          - digite `**negrito**` ou `_itálico_`
+          - digite "**negrito**" ou "_itálico_"
 
           - ou, aperte o botão <kbd><b>B</b></kbd> ou <kbd><i>I</i></kbd> no editor
         reply: |-
-          Ótimo! HTML e BBCode também servem para formatação – para saber mais, [veja este tutorial](http://commonmark.org/help) :nerd:
+          Ótimo! HTML e BBCode também servem para formatação. Para saber mais, [acesse este tutorial](http://commonmark.org/help) :nerd:
         not_found: |-
           Aww, não encontrei nenhuma formatação na sua resposta. :pencil2:
 
-          Você pode tentar de novo? Use o botão <kbd><b>B</b></kbd> negrito ou <kbd><i>I</i></kbd> itálico no editor se você tiver dificuldades.
+          Você pode tentar de novo? Use o botão <kbd><b>B</b></kbd> negrito ou <kbd><i>I</i></kbd> itálico no editor se você tiver dificuldade.
       quoting:
         instructions: |-
-          Você pode tentar me citar quando responder, para que eu saiba exatamente a qual parte você está respondendo?
+          Você pode tentar me citar quando responder, para que eu saiba exatamente à qual parte você está respondendo?
 
-          > Se isto é café, por favor me traga um pouco de chá; mas se isto é chá, por favor me traga um pouco de café.
+          > Se isto é café, traga um pouco de chá, por favor. Mas se for chá, traga um pouco de café, por favor.
           >
-          > Uma vantagem de falar consigo mesmo é que você sabe que pelo menos alguém está ouvindo.
+          > Uma vantagem de falar consigo é que você sabe que pelo menos alguém está ouvindo.
           >
-          > Algumas pessoas têm jeito com as palavras, e outras pessoas… hum, eh, não ter jeito.
+          > Algumas pessoas levam jeito com as palavras, enquanto outras… hum, eh, não nasceram para isso.
 
-          Selecione o texto de qualquer &uarr; citação que você preferir, e então pressione o botão **Citação** que aparece em cima da sua seleção – ou o botão **Responder** embaixo desta postagem.
+          Selecione o texto de qualquer &uarr; citação que você preferir, então pressione o botão **Citação** que aparece em cima da sua seleção, ou o botão **Responder** abaixo desta postagem.
 
-          Abaixo da citação, digite uma palavra ou outra sobre por que você a escolheu, porque eu estou curioso :thinking:
+          Abaixo da citação, digite algumas palavras sobre por que você a escolheu. Estou morrendo de curiosidade :thinking:
         reply: |-
           Bom trabalho, você escolheu minha citação favorita! :left_speech_bubble:
         not_found: |-
-          Hmm, parece que você não me citou na sua resposta?
+          Hmm, será que você não me citou na sua resposta?
 
-          Selecionar qualquer texto na minha postagem trará o botão<kbd>**Citação**</kbd>. E pressionar **Responder** com qualquer texto selecionado também funcionará! Você pode tentar de novo?
+          Selecione qualquer texto na minha postagem para exibir o botão<kbd>**Citação**</kbd>. Pressionar **Responder** com qualquer texto selecionado também funcionará! Pode tentar de novo?
       bookmark:
         instructions: |-
-          Se você quiser saber mais, selecione <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> abaixo e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marque esta mensagem pessoal como favorita**. Se você fizer isto, pode haver um :gift: no seu futuro!
+          Se quiser saber mais, selecione <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> abaixo e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marque esta mensagem pessoal como favorita**. Se fizer isto, pode ter um :gift: no seu futuro!
         reply: |-
           Excelente! Agora você pode encontrar facilmente o caminho de volta para nossa conversa privada a qualquer momento, direto n [aba favoritos em seu perfil] (%{bookmark_url}). Basta selecionar sua foto de perfil no canto superior à direita &#8599;
         not_found: |-

@@ -3457,9 +3457,9 @@ pt_BR:
               open:
                 label: "Os usuários(as) podem criar uma conta por conta própria."
               invite_only:
-                label: "Usuários precisam ser convidados por usuários confiáveis ou pela staff antes de poderem se cadastrar."
+                label: "Usuários(as) precisam ser convidados(as) por usuários(as) confiáveis ou pela equipe antes de poderem criar a conta."
               must_approve:
-                label: "Usuários podem se cadastrar por conta própria, mas devem ser aprovados pela staff."
+                label: "Usuários(as) podem criar sua conta por conta própria, mas devem ser aprovados pela equipe."
       contact:
         title: "Contato"
         fields:
@@ -3470,13 +3470,13 @@ pt_BR:
           contact_url:
             label: "Página da web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Página de contato geral para você ou sua organização. Será exibido no <a href='%{base_path}/about' target='_blank'>sua sobre a página</a>."
+            description: "Página de contato geral para você ou sua organização. Será exibida no <a href='%{base_path}/about' target='_blank'>sua página Sobre</a>."
           site_contact:
             label: "Mensagens automáticas"
             description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
       corporate:
         title: "Organização"
-        description: "Estas informações serão inseridas nos seus <a href='%{base_path}/tos' target='blank'>Termos de Serviço</a>, que é um tópico que você pode editar na categoria da staff. Se você não tem uma empresa, sinta-se à vontade para pular esta etapa por enquanto."
+        description: "Estas informações serão inseridas nos seus <a href='%{base_path}/tos' target='blank'>Termos de Serviço</a>, que é um tópico que você pode editar na categoria da equipe. Se você não tem uma empresa, sinta-se à vontade para pular esta etapa por enquanto."
         fields:
           company_name:
             label: "Nome da empresa"
@@ -3498,21 +3498,21 @@ pt_BR:
         fields:
           logo:
             label: "Logotipo primário"
-            description: "A imagem do logotipo no canto superior esquerdo do seu site. Use uma imagem retangular larga com uma altura de 120 e uma proporção maior que 3:1"
+            description: "A imagem do logotipo no canto superior à esquerda do seu site. Use uma imagem retangular larga com 120 de altura e uma proporção maior que 3:1"
           logo_small:
             label: "Logotipo quadrado"
-            description: "Uma versão quadrada do seu logotipo. Mostrado no canto superior esquerdo do seu site ao rolar para baixo, no navegador e ao compartilhar em plataformas sociais. Idealmente maior que 512x512."
+            description: "Uma versão quadrada do seu logotipo. Exibido no canto superior à esquerda do seu site ao rolar para baixo, no navegador, e ao compartilhar em plataformas de redes sociais. Idealmente maior que 512x512."
       icons:
         title: "Ícones"
         fields:
           favicon:
             label: "Ícone do navegador"
-            description: "Imagem de ícone usada para representar seu site em navegadores da Web com boa aparência em tamanhos pequenos. As extensões de imagem recomendadas são PNG ou JPG. Vamos usar o logotipo quadrado por padrão."
+            description: "Imagem de ícone usada para representar seu site em navegadores com boa aparência em tamanhos pequenos. As extensões de imagem recomendadas são PNG ou JPG. Vamos usar o logotipo quadrado por padrão."
           large_icon:
             label: "Ícone grande"
-            description: "Imagem de ícone usada para representar seu site em dispositivos modernos com boa aparência em tamanhos maiores. Idealmente maior que 512 × 512. Usaremos o logotipo quadrado por padrão."
+            description: "Imagem do ícone usada para representar seu site em dispositivos modernos com boa aparência em tamanhos maiores. Idealmente maior que 512×512. Usaremos o logotipo quadrado por padrão."
       homepage:
-        description: "Recomendamos que você mostre os tópicos mais recentes em sua página inicial, mas também pode mostrar categorias (grupos de tópicos) na página inicial, se preferir."
+        description: "Recomendamos mostrar os tópicos mais recentes na sua página inicial, mas você também pode mostrar categorias (grupos de tópicos) na página inicial, se preferir."
         title: "Página Inicial"
         fields:
           homepage_style:
@@ -3530,11 +3530,11 @@ pt_BR:
               categories_boxes:
                 label: "Caixas de categorias"
               categories_boxes_with_topics:
-                label: "Caixas de categorias com Tópicos"
+                label: "Caixas de categorias com tópicos"
       invites:
-        title: "Convidar um grupo"
-        description: "Você está quase pronto! Vamos convidar algumas pessoas para ajudar <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\nsemear suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."
-        disabled: "Como os logins locais estão desabilitados, não é possível enviar convites para ninguém. Por favor, prossiga para o próximo passo."
+        title: "Convidar equipe"
+        description: "Você está quase pronto(as)! Vamos convidar algumas pessoas para ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\ndivulgar as suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."
+        disabled: "Como as entradas com conta foram desativadas, não é possível enviar convites para ninguém. Prossiga para o próximo passo."
       finished:
         title: "Seu Discourse está pronto!"
   search_logs:
@@ -3542,38 +3542,38 @@ pt_BR:
   joined: "Ingressou"
   discourse_push_notifications:
     popup:
-      mentioned: '%{username} mencionou você em "%{topic}" - %{site_title}'
-      group_mentioned: '%{username} mencionou você em "%{topic}" - %{site_title}'
-      quoted: '%{username} citou você em "%{topic}" - %{site_title}'
-      replied: '%{username} respondeu-lhe em "%{topic}" - %{site_title}'
+      mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'
+      group_mentioned: 'Você foi mencionado(a) %{username} em "%{topic}" - %{site_title}'
+      quoted: 'Você foi citado(a) por %{username} em "%{topic}" - %{site_title}'
+      replied: '%{username} respondeu em "%{topic}" - %{site_title}'
       posted: '%{username} postou em "%{topic}" - %{site_title}'
-      private_message: '%{username} enviou-lhe uma mensagem privada em "%{topic}" - %{site_title}'
-      linked: '%{username} linkou para a sua postagem de "%{topic}" - %{site_title}'
+      private_message: '%{username} enviou uma mensagem privada em "%{topic}" - %{site_title}'
+      linked: '%{username} vinculou sua postagem em "%{topic}" - %{site_title}'
       watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
       confirm_title: "Notificações ativadas - %{site_title}"
-      confirm_body: "Sucesso! Notificações foram ativadas."
+      confirm_body: "Tudo pronto! As notificações foram ativadas."
       custom: "Notificação de %{username} em %{site_title}"
   staff_action_logs:
-    not_found: "não encontrado"
-    unknown: "desconhecido"
-    user_merged: "%{username} foi mesclado nessa conta"
-    user_delete_self: "Excluído por si mesmo de %{url}"
-    webhook_deactivation_reason: "Seu webhook foi desativado automaticamente. Recebemos várias respostas de falha de status HTTP '%{status}'."
+    not_found: "não encontrado(a)"
+    unknown: "desconhecido(a)"
+    user_merged: "%{username} foi mesclado(a) nesta conta"
+    user_delete_self: "Autoexcluído(a) de %{url}"
+    webhook_deactivation_reason: "Seu webhook foi desativado automaticamente. Recebemos várias respostas de falha de status HTTP \"%{status}\"."
     api_key:
-      revoked: Regovado
+      revoked: Regovado(a)
   reviewables:
     already_handled: "Obrigado, mas já analisamos esta postagem e determinamos que não precisa ser sinalizada novamente."
     priorities:
-      low: "Baixo"
-      medium: "Média"
-      high: "Alta"
+      low: "Baixo(a)"
+      medium: "Médio(a)"
+      high: "Alto(a)"
     sensitivity:
-      disabled: "Desativado"
-      low: "Baixo"
-      medium: "Média"
-      high: "Alta"
-    must_claim: "Você precisa reivindicar itens antes de agir sobre eles."
-    user_claimed: "Este item foi reivindicado por outro usuário."
+      disabled: "Desativado(a)"
+      low: "Baixo(a)"
+      medium: "Médio(a)"
+      high: "Alto(a)"
+    must_claim: "Você precisa reivindicar itens antes de agir."
+    user_claimed: "Este item foi reivindicado por outro(a) usuário(a)."
     missing_version: "Você precisa informar um parâmetro de versão"
     conflict: "Houve um conflito de atualização impedindo de fazer isso."
     reasons:

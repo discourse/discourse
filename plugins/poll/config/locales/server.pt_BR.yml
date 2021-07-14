@@ -6,8 +6,8 @@
 
 pt_BR:
   site_settings:
-    poll_enabled: "Permitir votações?"
-    poll_maximum_options: "Número máximo de opções permitidas em uma votação."
+    poll_enabled: "Permitir enquetes?"
+    poll_maximum_options: "Quantidade máxima de opções permitidas em uma enquete."
     poll_edit_window_mins: "Quantidade de minutos após a criação de uma postagem pelos quais as enquetes podem ser editadas."
     poll_minimum_trust_level_to_create: "Defina o nível de confiança mínimo necessário para criar votações."
     poll_groupable_user_fields: "Um conjunto de nomes para o campo do(a) usuário(a) que podem ser usados para agrupar e filtrar os resultados da enquete."
