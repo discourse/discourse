@@ -660,7 +660,10 @@ ja:
       pms_per_day: "1 日に作成できるメッセージの上限に達しました。%{time_left}後に新しいメッセージを作成できるようになります。"
       create_like: "わぉ！愛をたくさん分かち合っていますね！今日の「いいね！」の上限に達しました。信頼レベルが高くなると、1 日に「いいね！」できる上限が高くなります。%{time_left}経ったら、また投稿に「いいね！」できるようになります。"
       create_bookmark: "1 日のブックマークの上限に達しました。%{time_left}経ってから、ブックマークを設定してください。"
+      edit_post: "1 日に編集できる回数の上限に達しました。%{time_left}経ってから、編集を送信してください。"
+      live_post_counts: "ライブ投稿の件数を短時間で尋ねています。%{time_left}経ってから、もう一度お試しください。"
       unsubscribe_via_email: "メールでの購読解除数の上限に達しました。%{time_left}経ってからもう一度お試しください。"
+      topic_invitations_per_day: "トピック招待数の上限に達しました。%{time_left}経ってから、招待を送信してください。"
     hours:
       other: "%{count} 時間"
     minutes:
@@ -758,12 +761,15 @@ ja:
       windows: "Microsoft Windows"
       unknown: "不明なオペレーティングシステム"
   change_email:
+    wrong_account_error: "間違ったアカウントにログインしています。ログアウトして、もう一度お試しください。"
     confirmed: "メールアドレスが更新されました。"
     please_continue: "%{site_name} に進む"
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
+    doesnt_exist: "そのメールアドレスは、あなたのアカウントに関連付けられていません。"
     error_staged: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでにステージングユーザーに使われている可能性があります。"
     already_done: "この確認リンクは有効ではありません。すでにメールアドレスが変更されている可能性があります。"
     confirm: "確認"
+    max_secondary_emails_error: "セカンダリメールアドレスの上限に達しました。"
     authorizing_new:
       title: "新しいメールの確認"
       description: "メールアドレスを次のように変更することを確認してください:"
@@ -1018,39 +1024,70 @@ ja:
         assigned: 割り当て済み
         poster: 投稿者
         flagger: 通報者
+        time_to_resolution: 解決時間
+      description: "通報の種類、投稿者、通報者、および解決までの時間など、通報のステータスのリスト。"
     visits:
       title: "ユーザーアクセス"
       xaxis: "日"
       yaxis: "アクセス数"
+      description: "すべてのユーザー訪問数"
     signups:
       title: "登録"
       xaxis: "日"
       yaxis: "登録数"
+      description: "この期間の新規アカウント登録。"
     new_contributors:
+      title: "新しい貢献者"
       xaxis: "日"
+      yaxis: "新しい貢献者数"
+      description: "この期間に初めて投稿したユーザーの数。"
     trust_level_growth:
+      title: "信頼レベルの増加"
+      xaxis:
+        tl1_reached: "TL1 に達した"
+        tl2_reached: "TL2 に達した"
+        tl3_reached: "TL3 に達した"
+        tl4_reached: "TL4 に達した"
       yaxis: "日"
+      description: "この期間に信頼レベルが上がったユーザーの数。"
     consolidated_page_views:
+      title: "統合ページビュー"
+      xaxis:
+        page_view_crawler: "クローラー"
+        page_view_anon: "匿名ユーザー"
+        page_view_logged_in: "ログインユーザー"
       yaxis: "日"
+      description: "ログインユーザー、匿名ユーザー、およびクローラーのページビュー。"
       labels:
         post: 投稿
         editor: 編集者
+        author: 作者
         edit_reason: 理由
     dau_by_mau:
+      title: "DAU/MAU"
       xaxis: "日"
+      yaxis: "DAU/MAU"
+      description: "前日にログインしたメンバーの数を先月にログインしたメンバーの数で割った数 - コミュニティの「粘着性」を示す割合 % を返します。30% 以上を目指してください。"
     daily_engaged_users:
+      title: "1 日のエンゲージユーザー"
       xaxis: "日"
+      yaxis: "エンゲージユーザー"
+      description: "前日に「いいね！」または投稿したユーザーの数。"
     profile_views:
+      title: "ユーザープロフィールビュー"
       xaxis: "日"
       yaxis: "ユーザープロフィールの閲覧数"
+      description: "ユーザープロフィールの新しいビューの合計。"
     topics:
       title: "トピック"
       xaxis: "日"
       yaxis: "新しいトピックの数"
+      description: "この期間に作成された新しいトピック。"
     posts:
       title: "投稿"
       xaxis: "日"
       yaxis: "新しい投稿の数"
+      description: "この期間に作成された新しい投稿"
     likes:
       title: "いいね！"
       xaxis: "日"
@@ -1060,15 +1097,22 @@ ja:
       title: "通報"
       xaxis: "日"
       yaxis: "通報の数"
+      description: "新しい通報の数"
     bookmarks:
       title: "ブックマーク"
       xaxis: "日"
       yaxis: "新しいブックマークの数"
+      description: "ブックマークされた新しいトピックと投稿の数。"
     users_by_trust_level:
       title: "信頼レベル別ユーザー"
       xaxis: "信頼レベル"
       yaxis: "ユーザー数"
+      labels:
+        level: レベル
+      description: "信頼レベル別のユーザー数。"
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
+      title: "タイプ別ユーザー数"
       xaxis: "タイプ"
       yaxis: "ユーザー数"
       labels:
@@ -1077,11 +1121,22 @@ ja:
         admin: 管理者
         moderator: モデレーター
         suspended: 凍結中
+        silenced: 投稿禁止
+      description: "管理者、モデレーター、凍結、および投稿禁止別ユーザー数。"
+    trending_search:
+      title: トレンド検索語
+      labels:
+        term: 用語
+        searches: 検索数
+        click_through: CTR
+      description: "クリックスルー率による最も人気の高い検索語。"
     emails:
       title: "送信されたメール"
       xaxis: "日"
       yaxis: "メール件数"
+      description: "送信された新しいメールの数。"
     user_to_user_private_messages:
+      title: "ユーザー間 (返信を除く)"
       xaxis: "日"
       yaxis: "メッセージ件数"
       description: "新たに開始された個人メッセージの数。"
@@ -1562,13 +1617,34 @@ ja:
     tl3_requires_days_visited: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが過去 (tl3 time period) 日間でサイトにアクセスする必要がある最低日数。tl3 time period よりも高い値を設定すると、tl3 への昇格が無効になります。(0 以上)"
     tl3_requires_topics_replied_to: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが過去 (tl3 time period) 日間で返信する必要のある最低トピック数。(0 以上)"
     tl3_requires_topics_viewed: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが閲覧する必要のある過去 (tl3 time period) 日間に作成されたトピックのパーセント率。(0～100)"
+    tl3_requires_topics_viewed_cap: "過去 (tl3 time period) 日間で閲覧されたトピックの最大必要件数。"
+    tl3_requires_posts_read: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが閲覧する必要のある過去 (tl3 time period) 日間に作成された投稿のパーセント率。(0～100)"
+    tl3_requires_posts_read_cap: "過去 (tl3 time period) 日間で閲覧された投稿の最大必要件数。"
     tl3_requires_topics_viewed_all_time: "ユーザーが信頼レベル 3 に昇格するために閲覧しなければならないトピックの合計数。"
     tl3_requires_posts_read_all_time: "ユーザーが信頼レベル 3 に昇格するために読まなければならない投稿の合計数。"
+    tl3_requires_max_flagged: "信頼レベル 3 への昇格資格を満たすには、過去 (tl3 time period) 日間で x 件を超える投稿が x 人のユーザーから通報されていない必要があります。x はこの設定の値です。(0 以上)"
     tl3_promotion_min_duration: "信頼レベル 3 に昇格したユーザーが、信頼レベル 2 に降格しない日数。"
+    tl3_requires_likes_given: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが過去 (tl3 time period) 日間で与える必要のある「いいね！」の最小数。"
+    tl3_requires_likes_received: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが過去 (tl3 time period) 日間で得る必要のある「いいね！」の最小数。"
     tl3_links_no_follow: "信頼レベル 3 のユーザーが投稿したリンクから rel=nofolow を削除しない。"
+    trusted_users_can_edit_others: "信頼レベルの高いユーザーがほかのユーザーのコンテンツを編集することを許可する"
     min_trust_to_create_topic: "新規トピックを作成するために必要な最低信頼レベル。"
+    allow_flagging_staff: "有効にすると、ユーザーはスタッフアカウントの投稿を通報できるようになります。"
     min_trust_to_edit_wiki_post: "ウィキとしてマークされた投稿を編集するために必要な最低信頼レベル。"
+    min_trust_to_edit_post: "投稿を編集するために必要な最低信頼レベル。"
+    min_trust_to_allow_self_wiki: "ユーザー自身の投稿をウィキにするために必要な最低信頼レベル。"
+    min_trust_to_send_messages: "新しい個人メッセージを作成するために必要な最低信頼レベル。"
+    min_trust_to_send_email_messages: "メールで個人メッセージを送信するために必要な最低信頼レベル。"
+    min_trust_to_flag_posts: "投稿を通報するために必要な最低信頼レベル"
+    min_trust_to_post_links: "投稿にリンクを含めるために必要な最低信頼レベル"
+    min_trust_to_post_embedded_media: "投稿にメディア項目を埋め込むために必要な最低信頼レベル"
+    min_trust_level_to_allow_profile_background: "プロフィールの背景をアップロードするために必要な最低信頼レベル"
+    min_trust_level_to_allow_user_card_background: "ユーザーカードの背景をアップロードするために必要な最低信頼レベル"
+    min_trust_level_to_allow_invite: "ユーザーを招待するために必要な最低信頼レベル"
+    min_trust_level_to_allow_ignore: "ユーザーを無視するために必要な最低信頼レベル"
+    allowed_link_domains: "リンクを投稿するための適切な信頼レベルに達していなくてもリンクできるドメイン"
     newuser_max_links: "新規ユーザーが投稿に追加できるリンクの数"
+    newuser_max_embedded_media: "新規ユーザーが投稿に追加できる埋め込みメディア項目の数。"
     newuser_max_attachments: "新規ユーザーが投稿に追加できる添付ファイルの数"
     newuser_max_mentions_per_post: "新規ユーザーが投稿で @name 通知を行える最大回数"
     newuser_max_replies_per_topic: "他のユーザーが返信するまで、新規ユーザーが 1 つのトピックで行える返信の最大数。"
@@ -1614,8 +1690,40 @@ ja:
     auto_respond_to_flag_actions: "通報を解除したときの自動返信を有効にします。"
     min_first_post_typing_time: "最初の投稿時にユーザーが入力する必要のある最低時間 (ミリ秒)。しきい値を満たさない場合、投稿は自動的に要承認キューに追加されます。無効にするには 0 を設定します (非推奨)"
     reply_by_email_enabled: "メールでのトピックへの返信を有効化します。"
+    reply_by_email_address: "メールによる返信の受信メールアドレスのテンプレート。例: %%{reply_key}@reply.example.com または replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "メールによる返信の受信メールアドレスの代替テンプレートのリスト。例: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
+    incoming_email_prefer_html: "受信メールにテキストの代わりに HTML を使用する。"
+    strip_incoming_email_lines: "受信メールの各行から先頭と末尾の空白を削除する。"
+    disable_emails: "Discourse があらゆる種類のメールを送信しないようにする。'yes' を選択するとすべてのユーザーのメールが無効になります。'non-staff' を選択すると、スタッフ以外のユーザーのみのメールを無効にします。"
     strip_images_from_short_emails: "2800 バイト未満のメールから画像を削除します。"
     short_email_length: "短いメールのバイト数"
+    display_name_on_email_from: "email from フィールドにフルネームを表示する"
+    unsubscribe_via_email: "件名または本文に 'unsubscribe' を含めてメールを送信することで、ユーザーがメールの購読を解除できるようにする"
+    unsubscribe_via_email_footer: "送信されるメールのフッターにメールで購読解除の mailto: リンクを添付する"
+    delete_email_logs_after_days: "(N) 日後にメールログを削除する。0 に設定すると無期限に保持します"
+    disallow_reply_by_email_after_days: "(N) 日後のメールによる返信を許可しない。0 に設定すると無限に保持します"
+    max_emails_per_day_per_user: "1 日にユーザーに送信されるメールの最大数。0 を設定すると、制限が無効になります"
+    enable_staged_users: "受信メールを処理するときにステージングユーザーを自動的に作成する。"
+    maximum_staged_users_per_email: "受信メールを処理するときに作成されるステージングユーザーの最大数。"
+    auto_generated_allowlist: "自動生成コンテンツがチェックされないメールアドレスのリスト。例: foo@bar.com|discourse@bar.com"
+    block_auto_generated_emails: "自動生成として識別された受信メールをブロックする。"
+    ignore_by_title: "件名に基づいて受信メールを無視する。"
+    mailgun_api_key: "Webhook メッセージを検証するために使用される Mailgun Secret API キー。"
+    soft_bounce_score: "一時的なバウンスが発生したときにユーザーに追加されるバウンススコア。"
+    hard_bounce_score: "永久的なバウンスが発生したときにユーザーに追加されるバウンススコア。"
+    bounce_score_threshold: "ユーザーへのメール送信を停止する最大バウンススコア。"
+    reset_bounce_score_after_days: "X 日後にバウンススコアを自動的にリセットする。"
+    blocked_attachment_content_types: "コンテンツタイプに基づいて添付ファイルをブロックするために使用されるキーワードのリスト。"
+    blocked_attachment_filenames: "ファイル名に基づいて添付ファイルをブロックするために使用されるキーワードのリスト。"
+    forwarded_emails_behaviour: "Discourse に転送されたメールの処理方法"
+    always_show_trimmed_content: "受信メールのトリミングされた部分を常に表示する。警告: メールアドレスが表示される可能性があります。"
+    trim_incoming_emails: "受信メールの関連性のない部分をトリミングする。"
+    private_email: "投稿またはトピックのコンテンツをメールの件名または本文に含めない。注意: ダイジェストメールも無効にします。"
+    email_total_attachment_size_limit_kb: "送信メールに添付されたファイルの最大合計サイズ (kB)。0 に設定すると、添付ファイルの送信が無効になります。"
+    post_excerpts_in_emails: "通知メールで、常に投稿全文の代わりに抜粋を送信する"
+    raw_email_max_length: "受信メールに格納される必要のある文字数。"
+    raw_rejected_email_max_length: "拒否された受信メールに格納される必要のある文字数。"
+    delete_rejected_email_after_days: "(n) 日間経過した拒否メールを削除する。"
     pop3_polling_enabled: "メール返信のために POP3 をポーリングします。"
     pop3_polling_ssl: "POP3 サーバーへ SSL 接続します (推奨)。"
     pop3_polling_period_mins: "POP3 アカウントのメールを確認する期間 (分)。注意: 再起動が必要です。"
