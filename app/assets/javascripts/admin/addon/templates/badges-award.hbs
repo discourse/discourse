@@ -14,7 +14,7 @@
       </div>
       <div>
         <h4>{{i18n "admin.badges.mass_award.upload_csv"}}</h4>
-        <input type="file" id="massAwardCSVUpload" accept=".csv" onchange={{action "onFileInputChange"}}>
+        <input type="file" id="massAwardCSVUpload" accept=".csv" onchange={{action "updateFileSelected"}}>
       </div>
       <div>
         <label>
@@ -55,7 +55,13 @@
       {{#if unmatchedEntries.length}}
         <p>
           {{d-icon "exclamation-triangle" class="bulk-award-status-icon failure"}}
-          {{i18n "admin.badges.mass_award.csv_has_unmatched_users"}}
+          <span>
+            {{#if unmatchedEntriesTruncated}}
+              {{i18n "admin.badges.mass_award.csv_has_unmatched_users_truncated_list" count=unmatchedEntriesCount}}
+            {{else}}
+              {{i18n "admin.badges.mass_award.csv_has_unmatched_users"}}
+            {{/if}}
+          </span>
         </p>
         <ul>
           {{#each unmatchedEntries as |entry|}}

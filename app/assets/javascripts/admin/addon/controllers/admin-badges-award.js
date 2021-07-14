@@ -14,6 +14,7 @@ export default Controller.extend({
   unmatchedEntries: null,
   resultsMessage: null,
   success: false,
+  unmatchedEntriesCount: 0,
 
   resetState() {
     this.setProperties({
@@ -21,15 +22,9 @@ export default Controller.extend({
       unmatchedEntries: null,
       resultsMessage: null,
       success: false,
+      unmatchedEntriesCount: 0,
     });
-    this.updateFileSelected();
-  },
-
-  updateFileSelected() {
-    this.set(
-      "fileSelected",
-      !!document.querySelector("#massAwardCSVUpload")?.files?.length
-    );
+    this.send("updateFileSelected");
   },
 
   @discourseComputed("fileSelected", "saving")
@@ -37,9 +32,17 @@ export default Controller.extend({
     return !fileSelected || saving;
   },
 
+  @discourseComputed("unmatchedEntriesCount", "unmatchedEntries.length")
+  unmatchedEntriesTruncated(unmatchedEntriesCount, length) {
+    return unmatchedEntriesCount && length && unmatchedEntriesCount > length;
+  },
+
   @action
-  onFileInputChange() {
-    this.updateFileSelected();
+  updateFileSelected() {
+    this.set(
+      "fileSelected",
+      !!document.querySelector("#massAwardCSVUpload")?.files?.length
+    );
   },
 
   @action
@@ -66,6 +69,7 @@ export default Controller.extend({
           ({
             matched_users_count: matchedCount,
             unmatched_entries: unmatchedEntries,
+            unmatched_entries_count: unmatchedEntriesCount,
           }) => {
             this.setProperties({
               resultsMessage: I18n.t("admin.badges.mass_award.success", {
@@ -74,7 +78,10 @@ export default Controller.extend({
               success: true,
             });
             if (unmatchedEntries.length) {
-              this.set("unmatchedEntries", unmatchedEntries);
+              this.setProperties({
+                unmatchedEntries,
+                unmatchedEntriesCount,
+              });
             }
           }
         )

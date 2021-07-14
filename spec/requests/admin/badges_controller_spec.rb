@@ -225,6 +225,7 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
+        expect(response.status).to eq(200)
         expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
@@ -235,6 +236,7 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
+        expect(response.status).to eq(200)
         expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
@@ -248,6 +250,7 @@ describe Admin::BadgesController do
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
+        expect(response.status).to eq(200)
         expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
@@ -279,16 +282,16 @@ describe Admin::BadgesController do
         it "fails when CSV file contains more entries that it's allowed" do
           badge.update!(multiple_grant: true)
           csv = Tempfile.new
-          csv.write("#{user.username}\n" * 101)
+          csv.write("#{user.username}\n" * 11)
           csv.rewind
-          stub_const(Admin::BadgesController, "MAX_CSV_LINES", 100) do
+          stub_const(Admin::BadgesController, "MAX_CSV_LINES", 10) do
             post "/admin/badges/award/#{badge.id}.json", params: {
               file: fixture_file_upload(csv),
               grant_existing_holders: true
             }
           end
           expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"]).to include(I18n.t("badges.mass_award.errors.too_many_csv_entries", count: 100))
+          expect(response.parsed_body["errors"]).to include(I18n.t("badges.mass_award.errors.too_many_csv_entries", count: 10))
         ensure
           csv&.close
           csv&.unlink
@@ -312,11 +315,12 @@ describe Admin::BadgesController do
             grant_existing_holders: true
           }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['unmatched_entries'].sort).to eq([
+          expect(response.parsed_body['unmatched_entries']).to contain_exactly(
             "nonexistentuser",
             "nonexistentemail@discourse.fake"
-          ].sort)
+          )
           expect(response.parsed_body['matched_users_count']).to eq(1)
+          expect(response.parsed_body['unmatched_entries_count']).to eq(2)
           expect(UserBadge.where(user: user, badge: badge).count).to eq(2)
         ensure
           csv&.close
@@ -329,15 +333,12 @@ describe Admin::BadgesController do
           user_without_badge = Fabricate(:user)
           user_with_badge = Fabricate(:user).tap { |u| BadgeGranter.grant(badge, u) }
 
-          Notification.destroy_all
-          random = Random.new(RSpec.configuration.seed)
           csv_content = [
             user_with_badge.email.titlecase,
             user_with_badge.username.titlecase,
             user_without_badge.email.titlecase,
             user_without_badge.username.titlecase
           ] * 20
-          csv_content.shuffle!(random: random)
 
           csv = Tempfile.new
           csv.write(csv_content.join("\n"))
@@ -349,20 +350,11 @@ describe Admin::BadgesController do
           expect(response.status).to eq(200)
           expect(response.parsed_body['unmatched_entries']).to eq([])
           expect(response.parsed_body['matched_users_count']).to eq(2)
+          expect(response.parsed_body['unmatched_entries_count']).to eq(0)
           sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
-          expect(sequence.size).to eq(40 + 1)
           expect(sequence.sort).to eq((0...(40 + 1)).to_a)
           sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
-          expect(sequence.size).to eq(40)
           expect(sequence.sort).to eq((0...40).to_a)
-
-          # each user gets 1 notification no matter how many times
-          # they're repeated in the file.
-          [user_without_badge, user_with_badge].each do |u|
-            notifications = u.reload.notifications
-            expect(notifications.size).to eq(1)
-            expect(notifications.map(&:notification_type).uniq).to eq([Notification.types[:granted_badge]])
-          end
         ensure
           csv&.close
           csv&.unlink

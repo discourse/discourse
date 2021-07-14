@@ -39,6 +39,7 @@ describe Jobs::MassAwardBadge do
       execute_job(user, count: 4, grant_existing_holders: true)
       instances = UserBadge.where(user: user, badge: badge)
       expect(instances.count).to eq(4)
+      expect(instances.pluck(:seq).sort).to eq((0...4).to_a)
       notifications = Notification.where(user: user)
       expect(notifications.count).to eq(1)
       expect(instances.map(&:notification_id).uniq).to eq([notifications.first.id])
