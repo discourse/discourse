@@ -7,9 +7,9 @@
 ar:
   site_settings:
     discourse_narrative_bot_enabled: "تفعيل Discourse Narrative Bot (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "تعطيل مشاركة المنشور الترحيبي من Discourse Narrative Bot"
+    disable_discourse_narrative_bot_welcome_post: "إيقاف مشاركة المنشور الترحيبي من Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "أسماء المستخدمين المفترض أن يتجاهلها Discourse Narrative Bot"
-    discourse_narrative_bot_disable_public_replies: "تعطيل الردود العامة من Discourse Narrative Bot"
+    discourse_narrative_bot_disable_public_replies: "إيقاف الردود العامة من Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_type: "نوع المنشور الترحيبي المفترض أن يُرسله Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_delay: "انتظر (ن) ثانية قبل إرسال المنشور الترحيبي من Discourse Narrative Bot."
   badges:

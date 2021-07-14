@@ -2648,7 +2648,7 @@ de:
 
         Wir sind sehr froh, dass du deine Zeit mit uns verbringst, und wir würden uns freuen, mehr über dich zu erfahren. Nimm dir etwas Zeit, um [dein Profil auszufüllen](%{base_url}/my/preferences/profile), oder zögere nicht, [ein neues Thema zu beginnen](%{base_url}/categories).
     welcome_staff:
-      title: "Begrüßungsteam"
+      title: "Teambegrüßung"
       subject_template: "Herzlichen Glückwunsch, du hast den Status %{role} erhalten!"
       text_body_template: |
         Ein Team-Mitglied hat dir den Status „%{role}“ verliehen.
@@ -4199,19 +4199,19 @@ de:
         Dieses Abzeichen wird verliehen, wenn du alle %{max_likes_per_day} deiner täglichen „Gefällt mir“ an 20 Tagen verwendest. Wahnsinn! Du bist ein Vorbild darin, deine Community-Mitglieder zu ermutigen!
     thank_you:
       name: Dankeschön
-      description: Hat 20 Beiträge mit „Gefällt mir“ und 10 „Gefällt mir“ vergeben
+      description: Hat 20 „Gefällt mir“ für Beiträge erhalten und 10 „Gefällt mir“ vergeben
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 20 Beiträge mit „Gefällt mir“ hast und im Gegenzug mindestens 10 „Gefällt mir“ vergeben hast. Wenn jemand deine Beiträge mit „Gefällt mir“ markiert, findest du auch die Zeit, mit „Gefällt mir“ zu markieren, was andere schreiben.
+        Dieses Abzeichen wird verliehen, wenn du für 20 Beiträge ein „Gefällt mir“ erhalten und im Gegenzug mindestens 10 „Gefällt mir“ vergeben hast. Wenn jemand deine Beiträge mit „Gefällt mir“ markiert, findest du auch die Zeit, mit „Gefällt mir“ zu markieren, was andere schreiben.
     gives_back:
       name: Geben und nehmen
-      description: Hat 100 Beiträge mit „Gefällt mir“ und 100 „Gefällt mir“ vergeben
+      description: Hat 100 „Gefällt mir“ für Beiträge erhalten und 100 „Gefällt mir“ vergeben
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 100 Beiträge mit „Gefällt mir“ hast und im Gegenzug mindestens 100 „Gefällt mir“ vergeben hast. Danke für deine Selbstlosigkeit!
+        Dieses Abzeichen wird verliehen, wenn du für 100 Beiträge ein „Gefällt mir“ erhalten und im Gegenzug mindestens 100 „Gefällt mir“ vergeben hast. Danke für deine Selbstlosigkeit!
     empathetic:
       name: Empathisch
-      description: Hat 500 Beiträge mit „Gefällt mir“ und 1000 „Gefällt mir“ vergeben
+      description: Hat 500 „Gefällt mir“ für Beiträge erhalten und 1000 „Gefällt mir“ vergeben
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 500 Beiträge mit „Gefällt mir“ hast und im Gegenzug mindestens 1000 „Gefällt mir“ vergeben hast. Wow! Du bist ein Vorbild für Großzügigkeit und gegenseitige Wertschätzung :two_hearts:.
+        Dieses Abzeichen wird verliehen, wenn du für 500 Beiträge ein „Gefällt mir“ erhalten und im Gegenzug mindestens 1000 „Gefällt mir“ vergeben hast. Wow! Du bist ein Vorbild für Großzügigkeit und gegenseitige Wertschätzung :two_hearts:.
     first_emoji:
       name: Erstes Emoji
       description: Hat ein Emoji in einem Beitrag verwendet
