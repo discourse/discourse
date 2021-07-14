@@ -264,6 +264,19 @@ describe SvgSprite do
       expect(SvgSprite.bundle(theme.id)).to match(/my-custom-theme-icon/)
     end
 
+    it 'does not fail on bad XML in custom icon sprite' do
+      theme = Fabricate(:theme)
+      fname = "bad-xml-icon-sprite.svg"
+
+      upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+      theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
+      theme.save!
+
+      expect(Upload.where(id: upload.id)).to be_exist
+      expect(SvgSprite.bundle(theme.id)).to match(/arrow-down/)
+    end
+
     it 'includes custom icons in a child theme' do
       theme = Fabricate(:theme)
       fname = "custom-theme-icon-sprite.svg"
