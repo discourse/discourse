@@ -554,6 +554,12 @@ class ThemeField < ActiveRecord::Base
     MessageBus.publish "/footer-change/#{theme.id}", self.value if theme && self.name == "footer"
   end
 
+  after_destroy do
+    if svg_sprite_field?
+      DB.after_commit { SvgSprite.expire_cache }
+    end
+  end
+
   private
 
   JAVASCRIPT_TYPES = %w(
