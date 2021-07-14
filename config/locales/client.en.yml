@@ -3113,6 +3113,7 @@ en:
         name: "Name"
         name_placeholder: "What is this bookmark for?"
         set_reminder: "Remind me"
+        options: "Options"
         actions:
           delete_bookmark:
             name: "Delete bookmark"
