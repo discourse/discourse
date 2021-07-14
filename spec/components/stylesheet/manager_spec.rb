@@ -135,6 +135,30 @@ describe Stylesheet::Manager do
       )
     end
 
+    it 'orders theme stylesheets correctly' do
+      z_child_theme = Fabricate(:theme, component: true, name: "ze component").tap { |z|
+        z.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
+        z.save!
+      }
+
+      theme.add_relative_theme!(:child, z_child_theme)
+
+      manager = manager(theme.id)
+      hrefs = manager.stylesheet_details(:desktop_theme, 'all')
+
+      main_theme = hrefs.select { |href| href[:theme_id] == theme.id }.first
+      child_themeA = hrefs.select { |href| href[:theme_id] == child_theme.id }.first
+      child_themeZ = hrefs.select { |href| href[:theme_id] == z_child_theme.id }.first
+
+      child_themeA_href = "<link href=\"#{child_themeA[:new_href]}\" media=\"all\" rel=\"stylesheet\" data-target=\"desktop_theme\" data-theme-id=\"#{child_theme.id}\" data-theme-name=\"#{child_themeA[:theme_name]}\"/>"
+      child_themeZ_href = "<link href=\"#{child_themeZ[:new_href]}\" media=\"all\" rel=\"stylesheet\" data-target=\"desktop_theme\" data-theme-id=\"#{z_child_theme.id}\" data-theme-name=\"#{child_themeZ[:theme_name]}\"/>"
+      theme_href = "<link href=\"#{main_theme[:new_href]}\" media=\"all\" rel=\"stylesheet\" data-target=\"desktop_theme\" data-theme-id=\"#{theme.id}\" data-theme-name=\"#{main_theme[:theme_name]}\"/>"
+
+      link_hrefs = manager.stylesheet_link_tag(:desktop_theme)
+      # sort by child theme stylesheets (alphabetically), then parent theme
+      expect(link_hrefs).to eq([child_themeA_href, child_themeZ_href, theme_href].join("\n").html_safe)
+    end
+
     it 'outputs tags for non-theme targets for theme component' do
       child_theme = Fabricate(:theme, component: true)
 
