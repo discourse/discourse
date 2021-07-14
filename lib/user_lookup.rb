@@ -10,7 +10,7 @@ class UserLookup
   end
 
   def initialize(user_ids = [])
-    @user_ids = user_ids.compact.uniq.flatten
+    @user_ids = user_ids.tap(&:compact!).tap(&:uniq!).tap(&:flatten!)
   end
 
   # Lookup a user by id
@@ -19,21 +19,19 @@ class UserLookup
   end
 
   def primary_groups
-    @primary_groups ||= users
-      .values
-      .filter(&:primary_group_id)
-      .each_with_object({}) do |user, hash|
+    @primary_groups ||= users.values.each_with_object({}) do |user, hash|
+      if user.primary_group_id
         hash[user.id] = groups[user.primary_group_id]
       end
+    end
   end
 
   def flair_groups
-    @flair_groups ||= users
-      .values
-      .filter(&:flair_group_id)
-      .each_with_object({}) do |user, hash|
+    @flair_groups ||= users.values.each_with_object({}) do |user, hash|
+      if user.flair_group_id
         hash[user.id] = groups[user.flair_group_id]
       end
+    end
   end
 
   private
@@ -47,12 +45,10 @@ class UserLookup
 
   def groups
     @group_lookup ||= begin
-      group_ids = users
-        .values
-        .map { |u| [u.primary_group_id, u.flair_group_id] }
-        .flatten
-        .uniq
-        .compact
+      group_ids = users.values.map { |u| [u.primary_group_id, u.flair_group_id] }
+      group_ids.flatten!
+      group_ids.uniq!
+      group_ids.compact!
 
       Group
         .includes(:flair_upload)
