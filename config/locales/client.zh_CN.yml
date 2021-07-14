@@ -242,7 +242,7 @@ zh_CN:
       title: "加入书签"
       clear_bookmarks: "清除书签"
       help:
-        bookmark: "点击以将此话题的第一个帖子加入书签"
+        bookmark: "点击以将此话题的第一篇帖子加入书签"
         unbookmark: "点击以移除此话题中的所有书签"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
@@ -371,7 +371,7 @@ zh_CN:
       none: "没有要审查的条目"
       view_pending: "查看待审查条目"
       topic_has_pending:
-        other: "此话题有 <b>%{count}</b> 个帖子等待审批"
+        other: "此话题有 <b>%{count}</b> 篇帖子等待审批"
       title: "审查"
       topic: "话题："
       filtered_topic: "您已筛选到一个话题下的可审查内容。"
@@ -473,7 +473,7 @@ zh_CN:
         title: "帖子需要审批"
         description: "我们已收到您的帖子，不过需要由版主批准才能显示。请耐心等待。"
         pending_posts:
-          other: "您有 <strong>%{count}</strong> 个帖子正在审批。"
+          other: "您有 <strong>%{count}</strong> 篇帖子等待处理。"
         ok: "确认"
       example_username: "用户名"
       reject_reason:
@@ -624,7 +624,7 @@ zh_CN:
           description: "将用户添加到此群组时，其类别通知设置将被设置为这些默认值。之后，他们可以进行更改。"
           watched_categories_instructions: "自动关注这些类别中的所有话题。组成员将收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
           tracked_categories_instructions: "自动跟踪这些类别中的所有话题。新帖子的数量将显示在话题旁边。"
-          watching_first_post_categories_instructions: "用户将收到这些类别中每个新话题的第一个帖子的通知。"
+          watching_first_post_categories_instructions: "用户将收到这些类别中每个新话题的第一篇帖子的通知。"
           regular_categories_instructions: "如果已被设为免打扰，这些类别将对群组成员取消免打扰。当用户被提及或其他人回复他们时，他们将收到通知。"
           muted_categories_instructions: "用户不会收到有关这些类别中新话题的任何通知，它们也不会出现在类别或最新话题页面上。"
         tags:
@@ -633,7 +633,7 @@ zh_CN:
           description: "将用户添加到此群组时，其标签通知设置将被设置为这些默认值。之后，他们可以进行更改。"
           watched_tags_instructions: "自动关注带有这些标签的所有话题。组成员将收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
           tracked_tags_instructions: "自动跟踪带有这些标签的所有话题。新帖子的数量将显示在话题旁边。"
-          watching_first_post_tags_instructions: "用户将收到带有这些标签的每个新话题的第一个帖子的通知。"
+          watching_first_post_tags_instructions: "用户将收到带有这些标签的每个新话题的第一篇帖子的通知。"
           regular_tags_instructions: "如果已被设为免打扰，这些标签将对群组成员取消免打扰。当用户被提及或其他人回复他们时，他们将收到通知。"
           muted_tags_instructions: "用户不会收到有关带有这些标签的新话题的任何通知，它们也不会出现在最新话题页面上。"
         logs:
@@ -747,7 +747,7 @@ zh_CN:
           title: "关注"
           description: "您将在每个消息有新帖子时收到通知，并且会显示新回复数量。"
         watching_first_post:
-          title: "关注第一个帖子"
+          title: "关注第一篇帖子"
           description: "您将收到此群组中新消息的通知，但不会收到消息回复。"
         tracking:
           title: "跟踪"
@@ -984,10 +984,10 @@ zh_CN:
       watched_categories_instructions: "您将自动关注这些类别中的所有话题。您会收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
       tracked_categories: "已跟踪"
       tracked_categories_instructions: "您将自动跟踪这些类别中的所有话题。新帖子的数量将显示在话题旁边。"
-      watched_first_post_categories: "关注第一个帖子"
-      watched_first_post_categories_instructions: "您将收到这些类别中每个新话题的第一个帖子的通知。"
-      watched_first_post_tags: "关注第一个帖子"
-      watched_first_post_tags_instructions: "您将收到带有这些标签的每个新话题的第一个帖子的通知。"
+      watched_first_post_categories: "关注第一篇帖子"
+      watched_first_post_categories_instructions: "您将收到这些类别中每个新话题的第一篇帖子的通知。"
+      watched_first_post_tags: "关注第一篇帖子"
+      watched_first_post_tags_instructions: "您将收到带有这些标签的每个新话题的第一篇帖子的通知。"
       muted_categories: "已设为免打扰"
       muted_categories_instructions: "您不会收到有关这些类别中新话题的任何通知，它们也不会出现在类别或最新话题页面上。"
       muted_categories_instructions_dont_hide: "您不会收到有关这些类别中新话题的任何通知。"
@@ -1239,7 +1239,7 @@ zh_CN:
         device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
         browser_active: '%{browser} | <span class="active">正在使用</span>'
         browser_last_seen: "%{browser} | %{date}"
-      last_posted: "最后一个帖子"
+      last_posted: "最后一篇帖子"
       last_emailed: "最后一次发送电子邮件"
       last_seen: "最后活动"
       created: "加入日期："
@@ -1484,18 +1484,18 @@ zh_CN:
       login_disabled: "当站点处于只读模式时，登录被禁用。"
       logout_disabled: "当站点处于只读模式时，退出被禁用。"
     too_few_topics_and_posts_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {currentPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {requiredPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。只有管理人员可以看到此消息。
+      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {currentPosts, plural, one {<strong>#</strong> 篇帖子} other {<strong>#</strong> 篇帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {requiredPosts, plural, one {<strong>#</strong> 篇帖子} other {<strong>#</strong> 篇帖子}}。只有管理人员可以看到此消息。
     too_few_topics_notice_MF: >-
       让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}。只有管理人员可以看到此消息。
     too_few_posts_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。只有管理人员可以看到此消息。
+      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentPosts, plural, one {<strong>#</strong> 篇帖子} other {<strong>#</strong> 篇帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredPosts, plural, one {<strong>#</strong> 篇帖子} other {<strong>#</strong> 篇帖子}}。只有管理人员可以看到此消息。
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。"
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>达到了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。"
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。"
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>超过了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。"
     learn_more: "了解更多…"
-    first_post: 第一个帖子
+    first_post: 第一篇帖子
     mute: 免打扰
     unmute: 取消免打扰
     last_post: 发布时间
@@ -1798,7 +1798,7 @@ zh_CN:
       uploading: "正在上传…"
       show_preview: "显示预览"
       hide_preview: "隐藏预览"
-      quote_post_title: "引用整个帖子"
+      quote_post_title: "引用整篇帖子"
       bold_label: "B"
       bold_title: "粗体"
       bold_text: "粗体文本"
@@ -1896,7 +1896,7 @@ zh_CN:
       liked_many:
         other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 人</span> %{description}"
       liked_consolidated_description:
-        other: "点赞了您的 %{count} 个帖子"
+        other: "点赞了您的 %{count} 篇帖子"
       liked_consolidated: "<span>%{username}</span>%{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2009,7 +2009,7 @@ zh_CN:
           tracking: 我正在跟踪
           private: 在我的消息中
           bookmarks: 我已加入书签
-          first: 是第一个帖子
+          first: 是第一篇帖子
           pinned: 被置顶
           seen: 我读过
           unseen: 我还没读过
@@ -2106,7 +2106,7 @@ zh_CN:
         bookmarks: "没有更多已加入书签的话题了。"
     topic:
       filter_to:
-        other: "话题中的 %{count} 个帖子"
+        other: "话题中的 %{count} 篇帖子"
       create: "新建话题"
       create_long: "创建新话题"
       open_draft: "打开草稿"
@@ -2118,7 +2118,7 @@ zh_CN:
         title: "移至收件箱"
         help: "将消息移回收件箱"
       edit_message:
-        help: "编辑消息的第一个帖子"
+        help: "编辑消息的第一篇帖子"
         title: "编辑"
       defer:
         help: "标记为未读"
@@ -2219,7 +2219,7 @@ zh_CN:
         one_year: "一年"
         forever: "永远"
         pick_date_and_time: "选择日期和时间"
-        set_based_on_last_post: "根据最后一个帖子关闭"
+        set_based_on_last_post: "根据最后一篇帖子关闭"
       publish_to_category:
         title: "排定发布时间表"
       temp_open:
@@ -2230,9 +2230,9 @@ zh_CN:
         title: "自动关闭话题"
         label: "自动关闭话题前等待："
         error: "请输入一个有效值。"
-        based_on_last_post: "在话题中最后一个帖子的存在时间至少达到此时长之前不关闭。"
+        based_on_last_post: "在话题中最后一篇帖子的存在时间至少达到此时长之前不关闭。"
       auto_close_after_last_post:
-        title: "在最后一个帖子后自动关闭话题"
+        title: "在最后一篇帖子后自动关闭话题"
       auto_delete:
         title: "自动删除话题"
       auto_bump:
@@ -2245,16 +2245,16 @@ zh_CN:
         auto_open: "此话题将在 %{timeLeft}后自动开启。"
         auto_close: "此话题将在 %{timeLeft}后自动关闭。"
         auto_publish_to_category: "此话题将在%{timeLeft}后发布到<a href=%{categoryUrl}>#%{categoryName}</a>。"
-        auto_close_after_last_post: "此话题将在最后一个帖子的%{duration}后关闭。"
+        auto_close_after_last_post: "此话题将在最后一篇帖子的%{duration}后关闭。"
         auto_delete: "此话题将在 %{timeLeft}后自动删除。"
         auto_bump: "此话题将在 %{timeLeft}后自动顶帖。"
         auto_reminder: "您将在 %{timeLeft}后收到此话题的提醒。"
         auto_delete_replies: "此话题的回复会在%{duration}后自动删除。"
       auto_close_title: "自动关闭设置"
       auto_close_immediate:
-        other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即关闭。"
+        other: "该话题中的最后一篇帖子已经存在 %{count} 小时，因此该话题将被立即关闭。"
       auto_close_momentarily:
-        other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被暂时关闭。"
+        other: "该话题中的最后一篇帖子已经存在 %{count} 小时，因此该话题将被暂时关闭。"
       timeline:
         back: "返回"
         back_description: "返回上一个未读帖子"
@@ -2264,10 +2264,10 @@ zh_CN:
         go_top: "顶部"
         go_bottom: "底部"
         go: "前往"
-        jump_bottom: "跳转到最后一个帖子"
+        jump_bottom: "跳转到最后一篇帖子"
         jump_prompt: "跳转到…"
         jump_prompt_of:
-          other: "/%{count} 个帖子"
+          other: "/%{count} 篇帖子"
         jump_prompt_long: "跳转到…"
         jump_bottom_with_number: "跳转到帖子 %{post_number}"
         jump_prompt_to_date: "到日期"
@@ -2425,7 +2425,7 @@ zh_CN:
       login_reply: "登录以回复"
       filters:
         n_posts:
-          other: "%{count} 个帖子"
+          other: "%{count} 篇帖子"
         cancel: "移除筛选器"
       move_to:
         title: "移至"
@@ -2438,14 +2438,14 @@ zh_CN:
         radio_label: "新话题"
         error: "将帖子移至新话题时出错。"
         instructions:
-          other: "您将创建一个新话题，并使用您选择的 <b>%{count}</b> 个帖子填充。"
+          other: "您将创建一个新话题，并使用您选择的 <b>%{count}</b> 篇帖子填充。"
       merge_topic:
         title: "移至现有话题"
         action: "移至现有话题"
         error: "将帖子移至该话题时出错。"
         radio_label: "现有话题"
         instructions:
-          other: "请选择您要将这 <b>%{count}</b> 个帖子移至的话题。"
+          other: "请选择您要将这 <b>%{count}</b> 篇帖子移至的话题。"
       move_to_new_message:
         title: "移至新消息"
         action: "移至新消息"
@@ -2453,14 +2453,14 @@ zh_CN:
         radio_label: "新消息"
         participants: "参与者"
         instructions:
-          other: "您将创建一个新消息，并使用您选择的 <b>%{count}</b> 个帖子填充。"
+          other: "您将创建一个新消息，并使用您选择的 <b>%{count}</b> 篇帖子填充。"
       move_to_existing_message:
         title: "移至现有消息"
         action: "移至现有消息"
         radio_label: "现有消息"
         participants: "参与者"
         instructions:
-          other: "请选择您要将这 <b>%{count}</b> 个帖子移至的消息。"
+          other: "请选择您要将这 <b>%{count}</b> 篇帖子移至的消息。"
       merge_posts:
         title: "合并所选帖子"
         action: "合并所选帖子"
@@ -2485,9 +2485,9 @@ zh_CN:
         error: "更改帖子的所有权时出错。"
         placeholder: "新所有者的用户名"
         instructions:
-          other: "请为 <b>@%{old_user}</b> 创建的 %{count} 个帖子选择新所有者。"
+          other: "请为 <b>@%{old_user}</b> 创建的 %{count} 篇帖子选择新所有者。"
         instructions_without_old_user:
-          other: "请为 %{count} 个帖子选择新所有者。"
+          other: "请为 %{count} 篇帖子选择新所有者。"
       change_timestamp:
         title: "更改时间戳…"
         action: "更改时间戳"
@@ -2514,7 +2514,7 @@ zh_CN:
         select_all: 全选
         deselect_all: 取消全选
         description:
-          other: "您已选择 <b>%{count}</b> 个帖子。"
+          other: "您已选择 <b>%{count}</b> 篇帖子。"
       deleted_by_author_simple: "（话题已被作者删除）"
     post:
       quote_reply: "引用"
@@ -2576,7 +2576,7 @@ zh_CN:
       via_auto_generated_email: "通过自动生成邮件发表的帖子"
       whisper: "此帖子是对版主的密语"
       wiki:
-        about: "此帖子是 wiki"
+        about: "此帖子是一个 Wiki"
       archetypes:
         save: "保存选项"
       few_likes_left: "谢谢您分享爱！您今天只剩下几个赞了。"
@@ -2646,10 +2646,10 @@ zh_CN:
           notify_user: "您向此用户发送了一条消息"
       delete:
         confirm:
-          other: "确定要删除这 %{count} 个帖子吗？"
+          other: "确定要删除这 %{count} 篇帖子吗？"
       merge:
         confirm:
-          other: "确定要合并这 %{count} 个帖子吗？"
+          other: "确定要合并这 %{count} 篇帖子吗？"
       revisions:
         controls:
           first: "第一版"
@@ -2705,7 +2705,7 @@ zh_CN:
             name: "取消置顶书签"
             description: "取消置顶该书签。它将不再显示在您的书签列表的顶部。"
       filtered_replies:
-        viewing_posts_by: "正在查看此用户的 %{post_count} 个帖子："
+        viewing_posts_by: "正在查看此用户的 %{post_count} 篇帖子："
         viewing_subset: "某些回复已被收起"
         viewing_summary: "查看此话题的摘要"
         post_number: "%{username}，帖子 #%{post_number}"
@@ -2786,7 +2786,7 @@ zh_CN:
       num_featured_topics: "类别页面上显示的主题数："
       subcategory_num_featured_topics: "父类别页面上的精选话题数量："
       all_topics_wiki: "默认将新话题设为 Wiki"
-      allow_unlimited_owner_edits_on_first_post: "允许所有者对话题中的第一篇帖子进行无限的编辑"
+      allow_unlimited_owner_edits_on_first_post: "允许所有者不受限制地编辑第一篇帖子"
       subcategory_list_style: "子类别列表样式："
       sort_order: "话题列表排序依据："
       default_view: "默认话题列表："
@@ -2806,13 +2806,13 @@ zh_CN:
       minimum_required_tags: "话题中所需的最少标签数："
       parent: "父类别"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
-      navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
+      navigate_to_first_post_after_read: "阅读话题后导航到第一篇帖子"
       notifications:
         watching:
           title: "关注"
           description: "您将自动关注此类别中的所有话题。您会收到每个话题中每个新帖子的通知，并且会显示新回复数量。"
         watching_first_post:
-          title: "关注第一个帖子"
+          title: "关注第一篇帖子"
           description: "您将收到此类别中新话题的通知，但不会收到话题回复。"
         tracking:
           title: "跟踪"
@@ -2876,7 +2876,7 @@ zh_CN:
       official_warning: "官方警告"
       delete_spammer: "删除垃圾信息发布者"
       flag_for_review: "加入审查队列"
-      delete_confirm_MF: "您将删除此用户的 {POSTS, plural, one {<b>1</b> 个帖子} other {<b>#</b> 个帖子}}和 {TOPICS, plural, one {<b>#</b> 个话题} other {<b>#</b> 个话题}}，移除他们的帐户，阻止其 IP 地址 <b>{ip_address}</b> 再次注册，同时将其电子邮件地址 <b>{email}</b> 加入永久黑名单。确定此用户是垃圾信息发布者吗？"
+      delete_confirm_MF: "您将删除此用户的 {POSTS, plural, one {<b>1</b> 篇帖子} other {<b>#</b> 篇帖子}}和 {TOPICS, plural, one {<b>#</b> 个话题} other {<b>#</b> 个话题}}，移除他们的帐户，阻止其 IP 地址 <b>{ip_address}</b> 再次注册，同时将其电子邮件地址 <b>{email}</b> 加入永久黑名单。确定此用户是垃圾信息发布者吗？"
       yes_delete_spammer: "是，删除垃圾信息发布者"
       ip_address_missing: "（不适用）"
       hidden_email_address: "（已隐藏）"
@@ -3216,7 +3216,7 @@ zh_CN:
           title: "关注"
           description: "您将自动关注带有此标签的所有话题。您会收到所有新帖子和话题的通知，话题旁还会显示未读和新帖子的数量。"
         watching_first_post:
-          title: "关注第一个帖子"
+          title: "关注第一篇帖子"
           description: "您将收到此标签中新话题的通知，但不会收到话题回复。"
         tracking:
           title: "跟踪"
@@ -3494,7 +3494,7 @@ zh_CN:
           allowed_urls: 允许的 URL
           descriptions:
             topics:
-              read: 阅读一个话题或其中的一个帖子。也支持 RSS。
+              read: 阅读一个话题或其中的一篇帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
               wordpress: WordPress wp-discussion 插件正常工作所必需。
@@ -3575,7 +3575,7 @@ zh_CN:
           details: "在群组中添加或移除用户时。"
         like_event:
           name: "点赞事件"
-          details: "当用户点赞一个帖子时。"
+          details: "当用户点赞一篇帖子时。"
         delivery_status:
           title: "传送状态"
           inactive: "停用"
@@ -3890,7 +3890,7 @@ zh_CN:
           long_title: "调色板"
           about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
-          copy_name_prefix: "复制于"
+          copy_name_prefix: "副本 -"
           delete_confirm: "删除此调色板？"
           undo: "撤消"
           undo_title: "撤消自上次保存以来对此颜色所做的变更。"
@@ -4220,8 +4220,8 @@ zh_CN:
           require_approval: "包含这些单词的帖子需通过人工批准才能被看到。"
           flag: "允许包含这些单词的帖子，但将其举报为不当，以便版主对其进行审查。"
           replace: "使用其他单词替换帖子中的单词"
-          tag: "根据第一个帖子自动为话题添加标签"
-          silence: "用户包含这些单词的首个帖子需要工作人员批准才能被看到，该用户将被自动禁言。"
+          tag: "根据第一篇帖子自动为话题添加标签"
+          silence: "用户包含这些单词的第一篇帖子需要工作人员批准才能被看到，该用户将被自动禁言。"
           link: "使用链接替换帖子中的单词"
         form:
           label: "包含单词或短语"
@@ -4326,7 +4326,7 @@ zh_CN:
         clear_penalty_history:
           title: "清除处罚历史记录"
           description: "有处罚的用户无法达到信任级别 3"
-        delete_all_posts_confirm_MF: "你将删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个话题} other {# 个话题}}。确定吗？"
+        delete_all_posts_confirm_MF: "你将删除 {POSTS, plural, one {1 篇帖子} other {# 篇帖子}}和 {TOPICS, plural, one {1 个话题} other {# 个话题}}。确定吗？"
         silence: "禁言"
         unsilence: "取消禁言"
         silenced: "已禁言？"
@@ -4411,7 +4411,7 @@ zh_CN:
         cant_delete_all_posts:
           other: "无法删除所有帖子。某些帖子的存在时间超过 %{count} 天。（delete_user_max_post_age 设置。）"
         cant_delete_all_too_many_posts:
-          other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 个。(delete_all_posts_max)"
+          other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
         delete_confirm: "一般而言，最好对用户进行匿名化而不是删除它们，以避免移除现有讨论中的内容。<br><br>确定要删除此用户吗？此操作无法撤消！"
         delete_and_block: "删除并<b>禁止</b>该电子邮件和 IP 地址"
         delete_dont_block: "仅删除"
@@ -4538,7 +4538,7 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合您的需求："
         show_overriden: "只显示被覆盖"
         locale: "语言："
-        fallback_locale_warning: "您正在基于 %{fallback}编辑语言。选择 %{fallback} 作为界面语言的用户将看不到你的更改。"
+        fallback_locale_warning: "您正在编辑基于%{fallback}语言。选择%{fallback}作为界面语言的用户不会看到您的变更。"
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
       settings:
         show_overriden: "只显示被覆盖"
