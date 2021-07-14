@@ -55,15 +55,6 @@
   background-color: var(--secondary);
   box-sizing: border-box;
 
-  &.user-badges-list {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  &.user-badges-list .favorite-count {
-    flex: 100%;
-  }
-
   .btn.right {
     float: right;
   }
