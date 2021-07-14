@@ -132,6 +132,7 @@ it:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Ci puoi contare
+        discobot_disabled: Mi hai disabilitato nelle tue preferenze. Devi attivare i suggerimenti per l'onboarding dei nuovi utenti per interagire con me.
       do_not_understand:
         first_response: |-
           Ciao, grazie per la risposta!
@@ -275,6 +276,12 @@ it:
 
           (E sì, il mio username inizia con _disco_, come ai tempi della dance mania degli anni 70. Io [amo la vita notturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          Ci piacciono le nostre discussioni amichevoli e abbiamo bisogno del tuo aiuto per [mantenere questo forum un posto civile](%{guidelines_url}). Se riscontri un problema, segnalalo per farlo sapere in privato all'autore o al [nostro staff](%{about_url}). Ci sono molte ragioni per cui potresti decidere di segnalare un messaggio, che vanno da un semplice suggerimento di suddivisione degli argomenti, fino alle più serie segnalazioni di evidenti violazioni degli standard della comunità. Se selezioni **Qualcos'altro**, avvierai una discussione con messaggi privati con i moderatori dove potrai porre ulteriori domande.
+
+          > :imp: Ho scritto qualcosa di brutto qui
+
+          Vai avanti e **segnala questo post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> e seleziona **Contenuto inappropriato** come motivo!
         reply: |-
           [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-
