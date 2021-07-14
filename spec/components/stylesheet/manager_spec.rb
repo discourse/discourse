@@ -20,7 +20,7 @@ describe Stylesheet::Manager do
   end
 
   context "themes with components" do
-    let(:child_theme) { Fabricate(:theme, component: true).tap { |c|
+    let(:child_theme) { Fabricate(:theme, component: true, name: "a component").tap { |c|
       c.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
       c.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
       c.set_field(target: :mobile, name: "scss", value: ".child_mobile{.scss{color: red;}}")
@@ -135,28 +135,65 @@ describe Stylesheet::Manager do
       )
     end
 
-    it 'orders theme stylesheets correctly' do
-      z_child_theme = Fabricate(:theme, component: true, name: "ze component").tap { |z|
+    context "stylesheet order " do
+      let(:z_child_theme) { Fabricate(:theme, component: true, name: "ze component").tap { |z|
         z.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
         z.save!
-      }
+      }}
 
-      theme.add_relative_theme!(:child, z_child_theme)
+      let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/remote-theme1") }
 
-      manager = manager(theme.id)
-      hrefs = manager.stylesheet_details(:desktop_theme, 'all')
+      let(:child_remote) { Fabricate(:theme, remote_theme: remote, component: true).tap { |t|
+        t.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
+        t.save!
+      }}
 
-      main_theme = hrefs.select { |href| href[:theme_id] == theme.id }.first
-      child_themeA = hrefs.select { |href| href[:theme_id] == child_theme.id }.first
-      child_themeZ = hrefs.select { |href| href[:theme_id] == z_child_theme.id }.first
+      it 'output remote child, then sort children alphabetically, then local parent' do
+        theme.add_relative_theme!(:child, z_child_theme)
+        theme.add_relative_theme!(:child, child_remote)
 
-      child_themeA_href = "<link href=\"#{child_themeA[:new_href]}\" media=\"all\" rel=\"stylesheet\" data-target=\"desktop_theme\" data-theme-id=\"#{child_theme.id}\" data-theme-name=\"#{child_themeA[:theme_name]}\"/>"
-      child_themeZ_href = "<link href=\"#{child_themeZ[:new_href]}\" media=\"all\" rel=\"stylesheet\" data-target=\"desktop_theme\" data-theme-id=\"#{z_child_theme.id}\" data-theme-name=\"#{child_themeZ[:theme_name]}\"/>"
-      theme_href = "<link href=\"#{main_theme[:new_href]}\" media=\"all\" rel=\"stylesheet\" data-target=\"desktop_theme\" data-theme-id=\"#{theme.id}\" data-theme-name=\"#{main_theme[:theme_name]}\"/>"
+        manager = manager(theme.id)
+        hrefs = manager.stylesheet_details(:desktop_theme, 'all')
 
-      link_hrefs = manager.stylesheet_link_tag(:desktop_theme)
-      # sort by child theme stylesheets (alphabetically), then parent theme
-      expect(link_hrefs).to eq([child_themeA_href, child_themeZ_href, theme_href].join("\n").html_safe)
+        parent = hrefs.select { |href| href[:theme_id] == theme.id }.first
+        childA = hrefs.select { |href| href[:theme_id] == child_theme.id }.first
+        childZ = hrefs.select { |href| href[:theme_id] == z_child_theme.id }.first
+        childR = hrefs.select { |href| href[:theme_id] == child_remote.id }.first
+
+        child_local_A = "<link href=\"#{childA[:new_href]}\" data-theme-id=\"#{childA[:theme_id]}\" data-theme-name=\"#{childA[:theme_name]}\"/>"
+        child_local_Z = "<link href=\"#{childZ[:new_href]}\" data-theme-id=\"#{childZ[:theme_id]}\" data-theme-name=\"#{childZ[:theme_name]}\"/>"
+        child_remote_R = "<link href=\"#{childR[:new_href]}\" data-theme-id=\"#{childR[:theme_id]}\" data-theme-name=\"#{childR[:theme_name]}\"/>"
+        parent_local = "<link href=\"#{parent[:new_href]}\" data-theme-id=\"#{parent[:theme_id]}\" data-theme-name=\"#{parent[:theme_name]}\"/>"
+
+        link_hrefs = manager.stylesheet_link_tag(:desktop_theme).gsub('media="all" rel="stylesheet" data-target="desktop_theme" ', '')
+
+        expect(link_hrefs).to eq([child_remote_R, child_local_A, child_local_Z, parent_local].join("\n").html_safe)
+      end
+
+      it "output remote child, remote parent, local child" do
+        remote2 = RemoteTheme.create!(remote_url: "https://github.com/org/remote-theme2")
+        remote_main_theme = Fabricate(:theme, remote_theme: remote2, name: "remote main").tap { |t|
+          t.set_field(target: :desktop, name: "scss", value: ".el{color: red;}")
+          t.save!
+        }
+
+        remote_main_theme.add_relative_theme!(:child, z_child_theme)
+        remote_main_theme.add_relative_theme!(:child, child_remote)
+
+        manager = manager(remote_main_theme.id)
+        hrefs = manager.stylesheet_details(:desktop_theme, 'all')
+
+        parentR = hrefs.select { |href| href[:theme_id] == remote_main_theme.id }.first
+        childZ = hrefs.select { |href| href[:theme_id] == z_child_theme.id }.first
+        childR = hrefs.select { |href| href[:theme_id] == child_remote.id }.first
+
+        parent_remote = "<link href=\"#{parentR[:new_href]}\" data-theme-id=\"#{parentR[:theme_id]}\" data-theme-name=\"#{parentR[:theme_name]}\"/>"
+        child_local = "<link href=\"#{childZ[:new_href]}\" data-theme-id=\"#{childZ[:theme_id]}\" data-theme-name=\"#{childZ[:theme_name]}\"/>"
+        child_remote = "<link href=\"#{childR[:new_href]}\" data-theme-id=\"#{childR[:theme_id]}\" data-theme-name=\"#{childR[:theme_name]}\"/>"
+
+        link_hrefs = manager.stylesheet_link_tag(:desktop_theme).gsub('media="all" rel="stylesheet" data-target="desktop_theme" ', '')
+        expect(link_hrefs).to eq([child_remote, parent_remote, child_local].join("\n").html_safe)
+      end
     end
 
     it 'outputs tags for non-theme targets for theme component' do

@@ -189,10 +189,9 @@ class Stylesheet::Manager
   def stylesheet_link_tag(target = :desktop, media = 'all')
     stylesheets = stylesheet_details(target, media)
     if !!(target.to_s =~ THEME_REGEX) && stylesheets.size > 1
-      stylesheets = stylesheets.sort_by { |sty| sty[:theme_name] }
-      stylesheets = stylesheets.sort_by.with_index do |s, i|
-        s[:theme_id] == @theme_id ? (stylesheets.length + i) : i
-      end
+      stylesheets = stylesheets.sort_by { |s|
+        [s[:remote] ? 0 : 1, s[:theme_id] == @theme_id ? 1 : 0, s[:theme_name]]
+      }
     end
     stylesheets.map do |stylesheet|
       href = stylesheet[:new_href]
@@ -224,7 +223,7 @@ class Stylesheet::Manager
         themes = load_themes(@theme_ids)
         themes.each do |theme|
           theme_id = theme&.id
-          data = { target: target, theme_id: theme_id, theme_name: theme&.name.downcase }
+          data = { target: target, theme_id: theme_id, theme_name: theme&.name.downcase, remote: theme.remote_theme_id? }
           builder = Builder.new(target: target, theme: theme, manager: self)
 
           next if builder.theme&.component && !scss_checker.has_scss(theme_id)
