@@ -75,10 +75,17 @@ module ApplicationHelper
         path = "#{GlobalSetting.s3_cdn_url}#{path}"
       end
 
-      if is_brotli_req?
-        path = path.gsub(/\.([^.]+)$/, '.br.\1')
-      elsif is_gzip_req?
-        path = path.gsub(/\.([^.]+)$/, '.gz.\1')
+      # assets needed for theme testing are not compressed because they take a fair
+      # amount of time to compress (+30 seconds) during rebuilds/deploys when the
+      # vast majority of sites will never need them, so it makes more sense to serve
+      # them uncompressed instead of making everyone's rebuild/deploy take +30 more
+      # seconds.
+      if !script.start_with?("discourse/tests/")
+        if is_brotli_req?
+          path = path.gsub(/\.([^.]+)$/, '.br.\1')
+        elsif is_gzip_req?
+          path = path.gsub(/\.([^.]+)$/, '.gz.\1')
+        end
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req? && Rails.env != "development"
