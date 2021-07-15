@@ -229,11 +229,11 @@ class Stylesheet::Manager
           stylesheets << data
         end
 
-        if stylesheets.size > 1
+        if SiteSetting.order_stylesheets && stylesheets.size > 1
           stylesheets = stylesheets.sort_by do |s|
             [
-              s[:remote] ? 0 : 1, 
-              s[:theme_id] == @theme_id ? 1 : 0, 
+              s[:remote] ? 0 : 1,
+              s[:theme_id] == @theme_id ? 1 : 0,
               s[:theme_name]
             ]
           end

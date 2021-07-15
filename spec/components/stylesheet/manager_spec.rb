@@ -135,8 +135,8 @@ describe Stylesheet::Manager do
       )
     end
 
-    context "stylesheet order " do
-      let(:z_child_theme) do 
+    context "stylesheet order" do
+      let(:z_child_theme) do
         Fabricate(:theme, component: true, name: "ze component").tap do |z|
           z.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
           z.save!
@@ -145,11 +145,15 @@ describe Stylesheet::Manager do
 
       let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/remote-theme1") }
 
-      let(:child_remote) do 
+      let(:child_remote) do
         Fabricate(:theme, remote_theme: remote, component: true).tap do |t|
           t.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
           t.save!
         end
+      end
+
+      before do
+        SiteSetting.order_stylesheets = true
       end
 
       it 'output remote child, then sort children alphabetically, then local parent' do
