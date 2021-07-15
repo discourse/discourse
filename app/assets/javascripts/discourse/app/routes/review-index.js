@@ -41,7 +41,7 @@ export default DiscourseRoute.extend({
     });
 
     controller.reviewables.forEach((reviewable) => {
-      reviewable.set("stale", false);
+      reviewable.set("last_performing_username", null);
     });
   },
 
@@ -66,7 +66,6 @@ export default DiscourseRoute.extend({
           const updates = data.updates[reviewable.id];
           if (updates) {
             reviewable.setProperties(updates);
-            reviewable.set("stale", true);
           }
         });
       }
