@@ -136,10 +136,12 @@ describe Stylesheet::Manager do
     end
 
     context "stylesheet order " do
-      let(:z_child_theme) { Fabricate(:theme, component: true, name: "ze component").tap { |z|
-        z.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
-        z.save!
-      }}
+      let(:z_child_theme) do 
+        Fabricate(:theme, component: true, name: "ze component").tap do |z|
+          z.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
+          z.save!
+        end
+      end
 
       let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/remote-theme1") }
 
