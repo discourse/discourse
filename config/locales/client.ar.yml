@@ -890,7 +890,7 @@ ar:
       flair_preview_icon: "معاينة الأيقونة"
       flair_preview_image: "معاينة الصورة"
       flair_type:
-        icon: "اختيار أيقونة"
+        icon: "تحديد أيقونة"
         image: "تحميل صورة"
     user_action_groups:
       "1": "الإعجابات"
