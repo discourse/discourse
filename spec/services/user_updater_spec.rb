@@ -94,16 +94,17 @@ describe UserUpdater do
         it "updates muted categories and watched tags" do
           updater = UserUpdater.new(Fabricate(:admin), staged_user)
           updater.update(watched_tags: "#{tag.name}", muted_category_ids: [category.id])
-          expect(TagUser.where(
+          expect(TagUser.exists?(
             user_id: staged_user.id,
             tag_id: tag.id,
             notification_level: TagUser.notification_levels[:watching]
-          ).exists?).to eq(true)
-          expect(CategoryUser.where(
+          )).to eq(true)
+          
+          expect(CategoryUser.exists?(
             user_id: staged_user.id,
             category_id: category.id,
             notification_level: CategoryUser.notification_levels[:muted]
-          ).exists?).to eq(true)
+          )).to eq(true)
         end
       end
     end
