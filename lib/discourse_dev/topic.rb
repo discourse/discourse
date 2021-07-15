@@ -67,21 +67,24 @@ module DiscourseDev
     def create!
       @category = Category.random
       user = self.user
-      topic = Faker::DiscourseMarkdown.with_user(user.id) { data }
-      post = PostCreator.new(user, topic).create!
+      topic_data = Faker::DiscourseMarkdown.with_user(user.id) { data }
+      post = PostCreator.new(user, topic_data).create!
 
-      if override = @settings.dig(:replies, :overrides).find { |o| o[:title] == topic[:title] }
+      if override = @settings.dig(:replies, :overrides).find { |o| o[:title] == topic_data[:title] }
         reply_count = override[:count]
       else
         reply_count = Faker::Number.between(from: @settings.dig(:replies, :min), to: @settings.dig(:replies, :max))
       end
 
-      Post.new(post.topic, reply_count).populate!
+      topic = post.topic
+      Post.new(topic, reply_count).populate!
+      topic
     end
 
     def populate!
-      super
+      topics = super
       delete_unwanted_sidekiq_jobs
+      topics
     end
 
     def user

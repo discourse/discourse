@@ -38,6 +38,7 @@ module DiscourseDev
       post = PostCreator.new(user, data).create!
       topic.reload
       generate_likes(post)
+      post
     end
 
     def generate_likes(post)
@@ -63,9 +64,11 @@ module DiscourseDev
     def populate!
       generate_likes(topic.first_post)
 
-      @count.times do
-        create!
-      end
+      super(ignore_current_count: true)
+    end
+
+    def current_count
+      topic.posts_count - 1
     end
 
     def self.add_replies!(args)
