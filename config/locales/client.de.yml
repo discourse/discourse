@@ -4920,7 +4920,6 @@ de:
           perform: "Verleihe Abzeichen an Benutzer"
           upload_csv: Lade eine CSV-Datei mit entweder den E-Mail-Adressen oder den Benutzernamen hoch
           aborted: Bitte lade eine CSV-Datei hoch, die entweder E-Mail-Adressen oder Benutzernamen enthält
-          success: Deine CSV-Datei wurde empfangen und die Benutzer werden ihr Abzeichen in Kürze erhalten.
           replace_owners: Entferne das Abzeichen von vorherigen Eigentümern
       emoji:
         title: "Emoji"

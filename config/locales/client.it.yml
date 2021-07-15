@@ -4931,7 +4931,6 @@ it:
           perform: "Assegna Distintivo agli Utenti"
           upload_csv: Carica un CSV con indirizzi email o nomi degli utenti
           aborted: Carica un CSV contenente indirizzi email o i nomi degli utenti
-          success: Il tuo CSV è stato ricevuto e gli utenti riceveranno il loro distintivo a breve.
           replace_owners: Rimuovi il distintivo dai precedenti proprietari
       emoji:
         title: "Emoji"

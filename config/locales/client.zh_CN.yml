@@ -4689,7 +4689,6 @@ zh_CN:
           perform: "向用户授予徽章"
           upload_csv: 上传包含用户电子邮件或用户名的 CSV
           aborted: 请上传包含用户电子邮件或用户名的 CSV
-          success: 您的 CSV 已收到，用户很快就会收到他们的徽章。
           replace_owners: 将徽章从以前的所有者移除
       emoji:
         title: "表情符号"

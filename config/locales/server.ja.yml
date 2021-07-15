@@ -1909,6 +1909,9 @@ ja:
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (auto、nohighlight、ruby、python など)"
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
+    highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"
+    show_copy_button_on_codeblocks: "コードブロックのコンテンツをユーザーのクリップボードにコピーするためのボタンをコードブロックに追加する。この機能は Internet Explorer ではサポートされていません。"
+    embed_any_origin: "オリジンに関係なく、埋め込み可能なコンテンツを許可する。これは静的 HTML を使用するモバイルアプリに必要です。"
     embed_topics_list: "トピックリストの HTML 埋め込みをサポートする"
     embed_set_canonical_url: "埋め込みトピックの正規 URL を埋め込みコンテンツの URL に設定する。"
     embed_truncate: "埋め込まれた投稿切り捨てます。"
@@ -2071,9 +2074,12 @@ ja:
       other: "%{count} 件の投稿は次の既存のトピックにマージされました: %{topic_link}"
     existing_message_moderator_post:
       other: "%{count} 件の投稿は次の既存のメッセージにマージされました: %{topic_link}"
+  change_owner:
+    post_revision_text: "所有権が譲渡されました"
   publish_page:
     slug_errors:
       blank: "は空にできません"
+      unavailable: "は利用できません"
       invalid: "に無効な文字が含まれています"
   topic_statuses:
     autoclosed_message_max_posts:
@@ -2092,51 +2098,109 @@ ja:
       other: "このトピックは最後の返信から %{count} 時間が経過したので自動的にクローズされました。新たに返信することはできません。"
     autoclosed_enabled_lastpost_minutes:
       other: "このトピックは最後の返信から %{count} 分が経過したので自動的にクローズされました。新たに返信することはできません。"
+    autoclosed_disabled_days:
+      other: "このトピックは %{count} 日後に自動的にオープンになりました。"
+    autoclosed_disabled_hours:
+      other: "このトピックは %{count} 時間後に自動的にオープンになりました。"
+    autoclosed_disabled_minutes:
+      other: "このトピックは %{count} 分後に自動的にオープンになりました。"
+    autoclosed_disabled_lastpost_days:
+      other: "このトピックは最後の返信から %{count} 日後に自動的にオープンになりました。"
+    autoclosed_disabled_lastpost_hours:
+      other: "このトピックは最後の返信から %{count} 時間後に自動的にオープンになりました。"
+    autoclosed_disabled_lastpost_minutes:
+      other: "このトピックは最後の返信から %{count} 分後に自動的にオープンになりました。"
     autoclosed_disabled: "このトピックはオープンになりました。新しい返信を投稿できます。"
     autoclosed_disabled_lastpost: "このトピックはオープンになりました。新しい返信を投稿できます。"
+    auto_deleted_by_timer: "タイマーにより自動的に削除されました。"
   login:
+    invalid_second_factor_method: "選択された二要素方式は無効です。"
+    not_enabled_second_factor_method: "選択された二要素方式は、アカウントで有効になっていません。"
     security_key_description: "物理的なセキュリティキーの準備ができたら、[セキュリティキーで認証] ボタンを押します。"
     security_key_alternative: "別の方法を試してください"
     security_key_authenticate: "セキュリティキーで認証"
     security_key_not_allowed_error: "セキュリティキーの認証プロセスがタイムアウトしたかキャンセルされました。"
     security_key_no_matching_credential_error: "提供されたセキュリティキーに一致する資格情報が見つかりませんでした。"
     security_key_support_missing_error: "現在のデバイスまたはブラウザではセキュリティキーの使用がサポートされていません。別の方法を使用してください。"
+    security_key_invalid: "セキュリティキーを検証中にエラーが発生しました"
     not_approved: "あなたのアカウントはまだ承認されていません。ログインできるようになったら、メールで通知します。"
     incorrect_username_email_or_password: "ユーザー名、メールアドレス、またはパスワードが誤っています"
     incorrect_password: "パスワードが誤っています"
     wait_approval: "ご登録いただきありがとうございます。アカウントが承認され次第メールで通知いたします。"
     active: "アカウントの確認が完了し、利用可能になりました。"
+    activate_email: "<p>ほぼ完了です！<b>%{email}</b> にアクティベーションメールを送信しました。メールに記載の手順に従って、アカウントを確認してください。</p><p>まだ届いていない場合は、迷惑フォルダを確認してください。</p>"
     not_activated: "まだログインできません。確認メールを送信しましたので、メールに記載の指示に従ってあなたのアカウントを有効にしてください。"
     not_allowed_from_ip_address: "その IP アドレスからは %{username} としてログインできません。"
     admin_not_allowed_from_ip_address: "その IP アドレスからは管理者としてログインできません。"
+    reset_not_allowed_from_ip_address: "その IP アドレスからパスワードリセットをリクエストできません。"
     suspended: "%{date} までログインできません。"
     suspended_with_reason: "%{date} までアカウントが凍結されました: %{reason}"
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion}を試しますか？"
     something_already_taken: "エラーが発生しました。ユーザー名またはメールアドレスがすでに登録されている可能性があります。パスワードリセットを行ってください。"
+    omniauth_error:
+      generic: "アカウントを認証中にエラーが発生しました。もう一度やり直してください。"
+      csrf_detected: "認証がタイムアウトしたか、ブラウザを切り替えました。もう一度お試しください。"
+      request_error: "認証を開始中にエラーが発生しました。もう一度お試しください。"
+      invalid_iat: "サーバークロックの差により認証トークンを検証できません。もう一度お試しください。"
+    omniauth_error_unknown: "ログインを処理中に問題が発生しました。もう一度お試しください。"
+    omniauth_confirm_title: "%{provider} を使用してログイン"
     omniauth_confirm_button: "続行"
+    authenticator_error_no_valid_email: "%{account} に関連付けられたメールアドレスは許可されていません。別のメールアドレスでアカウントを構成する必要がある場合があります。"
     new_registrations_disabled: "現在、新しいアカウントの登録を行えません。"
     password_too_long: "パスワードは 200 文字までです。"
     email_too_long: "メールアドレスが長すぎます。メールボックス名は 254 文字以内、ドメイン名は 253 文字以内である必要があります。"
+    wrong_invite_code: "入力した招待コードは間違っています。"
     reserved_username: "そのユーザー名は許可されていません"
     missing_user_field: "すべてのユーザーフィールドに入力されていません。"
     auth_complete: "認証が完了しました。"
     click_to_continue: "ここをクリックして続行します。"
+    already_logged_in: "この招待は既存のアカウントが存在しない新規ユーザーを対象としています。"
     second_factor_title: "二要素認証"
+    second_factor_description: "アプリから要求された認証コードを入力してください。"
     second_factor_backup_description: "バックアップコードの 1 つを入力してください。"
+    second_factor_backup_title: "二要素認証のバックアップコード"
+    invalid_second_factor_code: "無効な認証コードです。コードはそれぞれ一度しか使用できません。"
+    invalid_security_key: "無効なセキュリティキーです。"
+    missing_second_factor_name: "名前を入力してください。"
+    missing_second_factor_code: "コードを入力してください。"
     second_factor_toggle:
+      totp: "代わりに認証アプリまたはセキュリティキーを使用してください"
       backup_code: "代わりにバックアップコードを使用する"
   admin:
     email:
       sent_test: "送信完了！"
+    user:
+      merge_user:
+        updating_username: "ユーザー名を更新中…"
+        changing_post_ownership: "投稿の所有権を変更中…"
+        merging_given_daily_likes: "付与した 1 日の「いいね！」をマージ中…"
+        merging_post_timings: "投稿のタイミングをマージ中…"
+        merging_user_visits: "ユーザーの訪問をマージ中…"
+        updating_site_settings: "サイト設定を更新中…"
+        updating_user_stats: "ユーザー統計を更新中…"
+        merging_user_attributes: "ユーザー属性をマージ中…"
+        updating_user_ids: "ユーザー ID を更新中…"
+        deleting_source_user: "ソースユーザーを削除中…"
   user:
+    deactivated: "'%{email}' からのバウンスメールが多すぎるため無効化されました。"
+    deactivated_by_staff: "スタッフによる無効化"
+    deactivated_by_inactivity:
+      other: "%{count} 日間非アクティブ状態が続いたため自動的に無効化されました"
+    activated_by_staff: "スタッフによる有効化"
+    new_user_typed_too_fast: "新規ユーザーは入力が速すぎます"
+    content_matches_auto_silence_regex: "コンテンツは自動投稿禁止の正規表現に一致します"
+    content_matches_auto_block_regex: "コンテンツは自動ブロックの正規表現に一致します"
     username:
       short: "は少なくとも %{min} 文字である必要があります"
       long: "は %{max} 文字以下である必要があります"
+      too_long: "は長すぎます"
+      characters: "には数字、文字、ダッシュ、ドット、およびアンダースコアのみを含める必要があります"
       unique: "は一意である必要があります"
       blank: "は空にできません"
       must_begin_with_alphanumeric_or_underscore: "は英数字またはアンダースコアで始まる必要があります"
       must_end_with_alphanumeric: "は英数字で終わる必要があります"
+      must_not_contain_two_special_chars_in_seq: "には 2 つ以上の特殊文字(.-_) のシーケンスを含めることはできません"
       must_not_end_with_confusing_suffix: "は、.json や .png などの紛らわしいサフィックスで終了することはできません。"
     email:
       invalid: "は無効です。"
@@ -2648,6 +2712,17 @@ ja:
     ignored_users_summary:
       title: "無視されたユーザーがしきい値を超えました"
       subject_template: "ユーザーは多数のユーザーから無視されています"
+      text_body_template: |
+        こんにちは。
+
+        これは、%{site_name} からの自動メッセージです。@%{username} が %{ignores_threshold} 人のユーザーから無視されていることをお知らせします。これは、コミュニティに問題が発生している可能性があることを示します。
+
+        このユーザーからの[最近の投稿をレビュー](%{base_url}/u/%{username}/summary)し、場合によっては[無視およびミュートされたユーザーのレポート](%{base_url}/admin/reports/top_ignored_users)のほかのユーザーについてもレビューすることをお勧めします。
+
+        その他のガイダンスについては、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
+    too_many_spam_flags:
+      title: "迷惑通報が多すぎます"
+      subject_template: "保留中の新規アカウント"
     spam_post_blocked:
       subject_template: "同一リンクの連続投稿により、新規ユーザー %{username} の投稿をブロック"
     pending_users_reminder:

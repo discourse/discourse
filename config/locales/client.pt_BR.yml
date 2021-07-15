@@ -4418,7 +4418,6 @@ pt_BR:
           perform: "Conceder emblema a usuários(as)"
           upload_csv: Enviar um CSV com e-mails ou nomes de usuário(a)
           aborted: Envie um CSV contendo e-mails ou nomes de usuário(a)
-          success: Seu CSV foi recebido e os(as) usuários(as) receberão seus emblemas em breve.
           replace_owners: Remover o emblema dos(as) proprietários(as) anteriores
       emoji:
         title: "Emoji"

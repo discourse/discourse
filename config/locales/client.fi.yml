@@ -4923,7 +4923,6 @@ fi:
           perform: "Myönnä kunniamerkki käyttäjille"
           upload_csv: Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
           aborted: Lataa CSV, joka sisältää joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
-          success: CSV tuli perille ja käyttäjät saavat kunniamerkkinsä pian.
           replace_owners: Poista kunniamerkki aiemmilta omistajilta
       emoji:
         title: "Emoji"

@@ -4912,7 +4912,6 @@ es:
           perform: "Conceder insignia a los usuarios"
           upload_csv: Sube un archivo CSV con correos electrónicos o nombres de usuario
           aborted: Sube un archivo CSV que contenga correos electrónicos o nombres de usuario
-          success: Se recibió el CSV y los usuarios recibirán la insignia dentro de poco.
           replace_owners: Quitar insignia de los anteriores propietarios
       emoji:
         title: "Emoji"

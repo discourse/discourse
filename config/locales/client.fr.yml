@@ -4919,7 +4919,6 @@ fr:
           perform: "Attribuer ce badge à ces utilisateurs"
           upload_csv: Envoyez un fichier CSV contenant les adresses courriel ou les noms d'utilisateur
           aborted: Envoyez d'abord un fichier CSV contenant des adresses de courriel ou des noms d'utilisateur
-          success: Votre fichier CSV a été envoyé, les utilisateurs obtiendront leur badge d'ici peu de temps.
           replace_owners: Retirer le badge des propriétaires précédents
       emoji:
         title: "Émoji"
