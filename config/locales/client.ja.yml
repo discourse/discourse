@@ -40,6 +40,7 @@ ja:
       long_date_without_year_with_linebreak: "MMM D 日 <br/>LT"
       long_date_with_year_with_linebreak: "'YY 年 MMM D 日 <br/>LT"
       wrap_ago: "%{date}前"
+      wrap_on: "%{date}"
       tiny:
         half_a_minute: "1 分未満"
         less_than_x_seconds:
@@ -2229,7 +2230,7 @@ ja:
           45_minutes: "45分"
           1_hour: "１時間"
           2_hours: "２時間"
-          4_hours: " 4 時間"
+          4_hours: "4 時間"
           8_hours: "8 時間"
           12_hours: "12 時間"
           24_hours: "24 時間"
@@ -2739,6 +2740,7 @@ ja:
         name: "名前"
         name_placeholder: "これは何のブックマークですか？"
         set_reminder: "リマインダー"
+        options: "オプション"
         actions:
           delete_bookmark:
             name: "ブックマークを削除"
@@ -4393,6 +4395,7 @@ ja:
         penalty_post_edit: "投稿を編集する"
         penalty_post_none: "何もしない"
         penalty_count: "ペナルティ数"
+        penalty_history: "ペナルティ履歴"
         clear_penalty_history:
           title: "ペナルティ履歴をクリア"
           description: "ペナルティのあるユーザーは TL3 に昇格されません"
@@ -4523,6 +4526,9 @@ ja:
         trust_level_unlocked_tip: "信頼レベルのロックは解除されています。システムがユーザーを昇格または降格することがあります"
         lock_trust_level: "信頼レベルをロック"
         unlock_trust_level: "信頼レベルをロック解除"
+        silenced_count: "投稿禁止"
+        suspended_count: "凍結"
+        last_six_months: "過去 6 か月"
         tl3_requirements:
           title: "信頼レベル 3 の要件"
           table_title:
@@ -4762,7 +4768,11 @@ ja:
           perform: "ユーザーにバッジを授与"
           upload_csv: ユーザーのメールまたはユーザー名が含まれる CSV をアップロード
           aborted: ユーザーのメールまたはユーザー名が含まれる CSV をアップロードしてください
+          success: CSV を受信しました。間もなく %{count} 人のユーザーにバッジが授与されます。
+          csv_has_unmatched_users: "次のエントリは CSV ファイルにありますが、既存のユーザーと照合できませんでした。そのため、バッジは授与されません:"
+          csv_has_unmatched_users_truncated_list: "CSV ファイルに、既存のユーザーに照合できないエントリが %{count} 件あったため、バッジは授与されません。照合されなかったエントリが多数あるため、最初の 100 件のみが表示されています:"
           replace_owners: 以前のオーナーからバッジを削除する
+          grant_existing_holders: 既存のバッジ保有者に追加のバッジを付与する
       emoji:
         title: "絵文字"
         help: "みんなが利用できる新しい絵文字を追加します。(ヒント: 複数のファイルを一度にドラッグアンドドロップできます)"

@@ -181,7 +181,7 @@ ja:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          これが気に入ったら（気に入らないわけないですよね！）、この投稿の下にある「いいね！」:heart: ボタンを押して気に入ったことを教えてください。
+          これが気に入ったら (気に入らないわけないですよね！)、この投稿の下にある「いいね！」:heart: ボタンを押して気に入ったことを教えてください。
 
           **画像付きで返信**できますか？どんな画像でもかまいません！画像をドラッグアンドドロップしてアップロードボタンを押すか、コピーして貼り付けるだけでもアップロードできます。
         reply: |-
@@ -200,7 +200,7 @@ ja:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          これが気に入ったら（気に入らないわけないですよね！）、この投稿の下にある「いいね！」:heart: ボタンを押して気に入ったことを教えてください。
+          これが気に入ったら (気に入らないわけないですよね！)、この投稿の下にある「いいね！」:heart: ボタンを押して気に入ったことを教えてください。
         reply: |-
           投稿に「いいね！」してくれてありがとう！
         not_found: |-
@@ -246,7 +246,7 @@ ja:
           あれ？このトピックにはブックマークがありませんね。投稿の下にあるブックマークを見つけられましたか？必要であれば、もっと表示 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使うと、ほかの操作を表示できます。
       emoji:
         instructions: |-
-          返信に小さな画像を使用していたのに気づきましたか？:blue_car: これらは[emoji](https://en.wikipedia.org/wiki/Emoji)と呼ばれています。次のいずれかの方法で、返信に**絵文字を追加**してみましょう。
+          返信に小さな画像を使用していたのに気づきましたか？:blue_car::dash: これらは[emoji](https://en.wikipedia.org/wiki/Emoji)と呼ばれています。次のいずれかの方法で、返信に**絵文字を追加**してみましょう。
 
           - `:) ;) :D :P :O` と入力します。
 
@@ -261,6 +261,8 @@ ja:
           コロン <kbd>:</kbd> を入力すると、絵文字ピッカーが表示されるので、`:bird:` のような語の最初の数文字を入力してください。
 
           または、エディターの絵文字ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> も使用できます。
+
+          (モバイルデバイスを使用している場合は、キーボードから直接絵文字を入力することもできます。)
       mention:
         instructions: |-
           直接返信せずに誰かの注意を引きたいことがあるかもしれません。`@` を入力してから相手のユーザー名を入力すると、メンションすることができます。
@@ -281,7 +283,7 @@ ja:
 
           早速**この投稿を通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> して、理由に「**不適切**」を選択しましょう！
         reply: |-
-          この通報は[スタッフ](%{base_uri}/groups/staff)に非公開で通知されます。十分な数のコミュニティメンバーからこの投稿への通報が寄せられた場合は、予防措置として自動的に非表示になります。(実際には、不愉快な内容は書き込まなかった :angel: ので、この通報は取り消しておきました。）
+          この通報は[スタッフ](%{base_uri}/groups/staff)に非公開で通知されます。十分な数のコミュニティメンバーからこの投稿への通報が寄せられた場合は、予防措置として自動的に非表示になります。(実際には、不愉快な内容は書き込まなかった :angel: ので、この通報は取り消しておきました。)
         not_found: |-
           おや？私の不愉快な投稿はまだ不適切の通報を受けていないようです。:worried: **通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> を使って投稿を不適切だと通報してみてください。投稿の操作をさらに表示するには、もっと表示ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使用してくださいね。
       search:

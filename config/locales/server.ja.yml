@@ -427,7 +427,7 @@ ja:
 
       - どのようなユーザーが興味を持ちますか？なぜ重要ですか？どのような回答を求めていますか？
 
-      - 一般的にしよされている言葉をトピックに含めると、ほかのユーザーが*検索*しやすくなります。トピックを関連トピックとグループ化するには、カテゴリ（またはタグ）を選択してください。
+      - 一般的に使用されている言葉をトピックに含めると、ほかのユーザーが*検索*しやすくなります。トピックを関連トピックとグループ化するには、カテゴリ (またはタグ) を選択してください。
 
       詳細については、[コミュニティガイドラインをご覧ください](%{base_path}/guidelines)。このパネルは最初の%{education_posts_text}にのみ表示されます。
     "new-reply": |
@@ -1351,7 +1351,7 @@ ja:
     search_recent_posts_size: "インデックスに保持する直近の投稿の数"
     log_search_queries: "ユーザーが実行した検索クエリをログに記録する"
     search_query_log_max_size: "保持する検索クエリの最大数"
-    search_query_log_max_retention_days: "検索クエリを保持する最大時間 (日数)。"
+    search_query_log_max_retention_days: "検索クエリを保持する最大日数。"
     search_ignore_accents: "テキストを検索する際にアクセントを無視する。"
     category_search_priority_low_weight: "カテゴリの検索優先度が低いランキングに適用される重み。"
     category_search_priority_high_weight: "カテゴリの検索優先度が高いランキングに適用される重み。"
@@ -2602,43 +2602,142 @@ ja:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "信頼レベルの昇格おめでとうございます！"
+      text_body_template: |
+        あなたの[信頼レベル](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)をもう 1 つ昇格しました！
+
+        経験豊富なユーザーとして、[便利なヒントとコツ](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)が役に立つことと思います。
+
+        ぜひ参加し続けてください。あなたの投稿を楽しみにしています。
     backup_succeeded:
+      title: "バックアップに成功しました"
       subject_template: "バックアップは正常に完了しました"
+      text_body_template: |
+        バックアップに成功しました。
+
+        [管理者 > バックアップセクション](%{base_url}/admin/backups)にアクセスして、新しいバックアップをダウンロードしてください。
+
+        こちらはログです。
+
+        ``` text
+        %{logs}
+        ```
     backup_failed:
+      title: "バックアップに失敗しました"
       subject_template: "バックアップに失敗しました"
+      text_body_template: |
+        バックアップに失敗しました。
+
+        こちらがログです。
+
+        ``` text
+        %{logs}
+        ```
     restore_succeeded:
+      title: "復元に成功しました"
       subject_template: "復元は正常に完了しました"
+      text_body_template: |
+        復元に成功しました。
+
+        こちらがログです。
+
+        ``` text
+        %{logs}
+        ```
     restore_failed:
+      title: "復元に失敗しました"
       subject_template: "復元に失敗しました"
+      text_body_template: |
+        復元に失敗しました。
+
+        こちらがログです。
+
+        ``` text
+        %{logs}
+        ```
     bulk_invite_succeeded:
+      title: "一括招待に成功しました"
       subject_template: "ユーザーの一括招待に成功しました"
       text_body_template: "ユーザーの一括招待ファイルが処理され、%{sent} 件の招待状が送信されました。"
     bulk_invite_failed:
+      title: "一括招待に失敗しました"
       subject_template: "ユーザーの一括招待中にエラーが発生しました"
+      text_body_template: |
+        あなたの一括ユーザー招待ファイルは処理されました。招待状を %{sent} 通メール送信し、%{failed} 個のエラーが発生しました。
+
+        こちらがログです。
+
+        ``` text
+        %{logs}
+        ```
+    user_added_to_group_as_owner:
+      title: "オーナーとしてグループに追加しました"
+      subject_template: "%{group_name} グループのオーナーとして追加されました"
+      text_body_template: |
+        [%{group_name}](%{base_url}%{group_path})グループのオーナーとして追加されました。
+    user_added_to_group_as_member:
+      title: "メンバーとしてグループに追加しました"
+      subject_template: "%{group_name} グループのメンバーとして追加されました"
+      text_body_template: |
+        [%{group_name}](%{base_url}%{group_path})グループのメンバーとして追加されました。
+    csv_export_succeeded:
+      title: "CSV エクスポートに成功しました"
+      subject_template: "[%{export_title}] データのエクスポートが完了しました"
+      text_body_template: |
+        あなたのデータエクスポートは成功しました！:dvd:
+
+        %{download_link}
+
+        上記のリンクは 48 時間有効です。
+
+        データは zip アーカイブとして圧縮されています。アーカイブを開いたときに自己解凍されない場合は、こちらに推奨されるツールを使用してください: https://www.7-zip.org/
     csv_export_failed:
+      title: "CSV エクスポートに失敗しました"
       subject_template: "データのエクスポートに失敗しました"
       text_body_template: "データのエクスポートに失敗しました。ログを確認するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。"
     email_reject_insufficient_trust_level:
+      title: "メールの拒否 - 信頼レベルが不十分です"
+      subject_template: "[%{email_prefix}] メールの問題 -- 信頼レベルが不十分です"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
         あなたのアカウントに、このメールアドレスに新しいトピックを投稿するための必要な信頼レベルがありません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_user_not_found:
+      title: "メールの拒否 - ユーザーが見つかりません"
+      subject_template: "[%{email_prefix}] メールの問題 -- ユーザーが見つかりません"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
         あなたの返信は不明なメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_screened_email:
+      title: "メールの拒否 - スクリーン対象メール"
+      subject_template: "[%{email_prefix}] メールの問題 -- メールがブロックされています"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
         あなたの返信はブロックされているメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_not_allowed_email:
+      title: "メールの拒否 - 許可されていないメール"
+      subject_template: "[%{email_prefix}] メールの問題 -- メールがブロックされています"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
         あなたの返信はブロックされているメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
+    email_reject_inactive_user:
+      title: "メールの拒否 - 非アクティブユーザー"
+      subject_template: "[%{email_prefix}] メールの問題 -- 非アクティブユーザー"
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        このメールアドレスに関連付けれらているあなたのアカウントは有効ではありません。アカウントを有効化してからメールを送信してください。
+    email_reject_silenced_user:
+      title: "メールの拒否 - 投稿禁止ユーザー"
+      subject_template: "[%{email_prefix}] メールの問題 -- 投稿禁止ユーザー"
+      text_body_template: |
+        %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
+
+        このメールアドレスに関連付けれらているあなたのアカウントは投稿禁止になっています。
     email_reject_reply_user_not_matching:
+      title: "メールの拒否 - ユーザーが一致しません"
       subject_template: "[%{email_prefix}] メールの問題 -- 予期しない返信アドレス"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
@@ -4069,8 +4168,12 @@ ja:
       description: 365 日連続でアクセスしました
       long_description: |
         このバッジは、365 日間連続でアクセスしたときに付与されます。なんと、丸 1 年間です！
+    badge_title_metadata: "%{site_title} の %{display_name} バッジ"
   admin_login:
     success: "メールを送信しました"
+    errors:
+      unknown_email_address: "不明なメールアドレスです。"
+      invalid_token: "無効なトークンです。"
     email_input: "管理者メール"
     submit_button: "メールを送信"
   performance_report:
@@ -4078,25 +4181,89 @@ ja:
     initial_topic_title: ウェブサイトパフォーマンスレポート
   tags:
     title: "タグ"
+    restricted_tag_disallowed: 'タグ "%{tag}" を適用できません。'
+    restricted_tag_remove_disallowed: 'タグ "%{tag}" を削除できません。'
+    minimum_required_tags:
+      other: "少なくとも %{count} 個のタグを選択する必要があります。"
+    upload_row_too_long: "CSV ファイルには 1 行につき 1 つのタグが必要です。オプションで、タグの後にカンマを付け、その後のグループ名を続けることができます。"
+    forbidden:
+      invalid:
+        other: "選択したタブはどれも使用できません"
+      in_this_category: '"%{tag_name}" をこのカテゴリで使用できません'
+      restricted_to:
+        other: '"%{tag_name}" は次のカテゴリに制限されています: %{category_names}'
+      synonym: '同義語は許可されていません。代わりに "%{tag_name}" を使用してください。'
+      has_synonyms: '"%{tag_name}" は同義語が含まれるため使用できません。'
+    required_tags_from_group:
+      other: "少なくとも %{count} 個の %{tag_group_name} タグを含める必要があります。このグループのタグ: %{tags}。"
+    invalid_target_tag: "同義語の同義語にすることはできません"
+    synonyms_exist: "は同義語が存在する限り許可されません"
+  rss_by_tag: "%{tag} がタグ付けされたトピック"
   finish_installation:
+    congratulations: "おめでとうございます。Discourse をインストールしました！"
     register:
       button: "登録"
+      title: "管理者アカウントの登録"
+      help: "まず、新しいアカウントを登録してください"
+      no_emails: "残念ながら、セットアップ中に管理者メールが定義されなかったため、構成を完了するのが困難です。構成ファイルに開発者のメールを追加するか、<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>コンソールから管理者アカウントを作成</a>してください。"
+    confirm_email:
+      title: "メールの確認"
+      message: "<p><b>%{email}</b> にアクティベーションメールを送信しました。メールに記載の指示に従って、アカウントを有効化してください。</p><p>そのメールが届かない場合は、迷惑フォルダをご確認の上、<a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>メールが正しくセットアップされていることを確認</a>してください。</p>"
     resend_email:
       title: "アクティベーションメールの再送"
+      message: "<p><b>%{email}</b> にアクティベーションメールを再送信しました"
+  safe_mode:
+    title: "セーフモードを開始"
+    description: "セーフモードでは、プラグインやサイトのカスタマイズを読み込まずにサイトをテストすることができます。"
+    no_customizations: "現在のテーマを無効にする"
+    only_official: "非公式のプラグインを無効にする"
+    no_plugins: "すべてのプラグインを無効にする"
+    enter: "セーフモードを開始"
+    must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
   wizard:
+    title: "Discourse のセットアップ"
     step:
+      locale:
+        title: "Discourse へようこそ！"
+        fields:
+          default_locale:
+            description: "コミュニティで使用するデフォルトの言語は何ですか？"
       forum_title:
         title: "名前"
+        description: "あなたの名前は遠くから見える標識であり、潜在的な訪問者がコミュニティについて<i>最初</i>に気づくものです。名前とタイトルはコミュニティをどのように説明していますか？"
+        fields:
+          title:
+            label: "コミュニティの名前"
+            placeholder: "Janes のハングアウト"
+          site_description:
+            label: "コミュニティについて簡単な一文で説明してください"
+            placeholder: "Jane と Jane の友人が素晴らしいことについて話し合う場所"
+          short_site_description:
+            label: "コミュニティについて短い言葉で説明してください"
+            placeholder: "史上最高のコミュニティ"
+      introduction:
+        title: "紹介"
+        disabled: "<p>タイトル「%{topic_title}」のトピックが見つかりませんでした。</p><ul><li>タイトルを変更した場合は、トピックを編集してサイトの紹介文を変更してください。</li><li>このトピックを削除してしまった場合は、タイトルが「“%{topic_title}”」の別のトピックを作成してください。最初の投稿のコンテンツはあなたのサイトの紹介文です。</li></ul>"
+        fields:
+          welcome:
+            label: "ようこそ - トピック"
+            description: "<p>エレベーターで約 1 分間、知らない人にどのようにコミュニティを説明しますか？</p><ul><li>誰のためのディスカッションですか？</li><li>ここで何を見つけられるか</li><li>なぜアクセスする必要がありますか？</li></ul><p>新たにたどり着いた人が最初に読むのがあなたのようこそトピックです。<b>1 段落</b>にまとめた 'エレベーター' または 'ミッションステートメント' として考えてください。 </p>"
+            one_paragraph: "ようこそメッセージを 1 段落に制限してください。"
+            extra_description: "よくわからない場合は、このステップを省略して、後でようこそトピックを編集することができます。"
       privacy:
         title: "アクセス"
+        description: "<p>あなたのコミュニティは誰にでもオープンされていますか、それともメンバーシップ、招待、または承認によって制限されていますか？必要に応じて、非公開でセットアップしてから、後で公開に切り替えることができます。</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "公開"
+                description: "このコミュニティには誰でもアクセスできる"
               restricted:
                 label: "非公開"
+                description: "ログインユーザーのみがこのコミュニティにアクセスできる"
           privacy_options:
+            description: "新しいユーザーはどのようにしてアカウントに登録しますか？"
             choices:
               open:
                 label: "ユーザーは自己登録できます。"
@@ -4236,22 +4403,91 @@ ja:
     reasons:
       post_count: "すべてのユーザーの最初の数件の投稿はスタッフによって承認される必要があります。`approve_post_count` をご覧ください。"
       trust_level: "信頼レベルが低いユーザーはその返信をスタッフが承認する必要があります。`approve_unless_trust_level` をご覧ください。"
+      new_topics_unless_trust_level: "信頼レベルが低いユーザーはそのトピックをスタッフが承認する必要があります。`pprove_new_topics_unless_trust_level` をご覧ください。"
+      fast_typer: "新規ユーザーは、最初の投稿を、ボットまたは迷惑行為者と疑われる速さで入力しました。`min_first_post_typing_time` をご覧ください。"
+      auto_silence_regexp: "最初の投稿が `auto_silence_first_post_regex` 設定に一致する新規ユーザー。"
+      watched_word: "この投稿にはウォッチ語が含まれていました。<a href='%{base_url}/admin/customize/watched_words'>ウォッチ語のリスト</a>をご覧ください"
+      staged: "ステージングユーザーの新しいトピックと投稿はスタッフによる承認が必要です。`approve_unless_staged` をご覧ください。"
+      category: "このカテゴリの投稿には、スタッフによる手動の承認が必要です。カテゴリ設定をご覧ください。"
+      must_approve_users: "すべての新規ユーザーはスタッフによる承認が必要です。`must_approve_users` をご覧ください。"
+      invite_only: "すべての新規ユーザーは招待される必要があります。`invite_only` をご覧ください。"
+      email_auth_res_enqueue: "このメールは DMARC チェックに失敗しました。これは誰からのものでもないようです。詳細については、生のメールヘッダーを確認してください。"
+      email_spam: "このメールは、`email_in_spam_header` に定義されているヘッダーによって、迷惑として通報されました。"
+      suspect_user: "この新規ユーザーは、トピックまたは投稿を一切読まずにプロフィール情報を入力しました。これは、迷惑行為者であることを強く示唆しています。`approve_suspect_users` をご覧ください。"
+      contains_media: "この投稿には埋め込みメディアが含まれています。`review_media_unless_trust_level` をご覧ください。"
+      queued_by_staff: "スタッフメンバーは、この投稿にレビューが必要だと考えています。それまで非表示のままになります。"
     actions:
+      agree:
+        title: "同意…"
+      agree_and_keep:
+        title: "投稿を維持"
+        description: "通報に同意し、投稿を変更しないままにします。"
+      agree_and_keep_hidden:
+        title: "投稿を非表示のままに維持"
+        description: "通報に同意し、投稿を非表示のままにします。"
       agree_and_suspend:
         title: "ユーザーの凍結"
+        description: "通報に同意し、ユーザーを凍結します。"
+      agree_and_silence:
+        title: "投稿禁止ユーザー"
+        description: "通報に同意し、ユーザーを投稿禁止にします。"
+      agree_and_restore:
+        title: "投稿の復元"
+        description: "すべてのユーザーが閲覧できるように投稿を復元します。"
+      agree_and_hide:
+        title: "投稿を非表示"
+        description: "この投稿を非表示にして、ユーザーに投稿の編集を促すメッセージをユーザーに送信します。"
       delete_single:
         title: "削除"
+      delete:
+        title: "削除…"
+      delete_and_ignore:
+        title: "投稿の削除と無視"
+        description: "投稿を削除します。最初の投稿である場合、トピックも削除されます"
+      delete_and_ignore_replies:
+        title: "投稿と返信を削除して無視する"
+        description: "投稿とそのすべての返信を削除します。最初の投稿である場合、トピックも削除されます"
+        confirm: "投稿への返信も削除してよろしいですか？"
+      delete_and_agree:
+        title: "投稿の削除と同意"
+        description: "投稿を削除します。最初の投稿である場合、トピックも削除されます"
+      delete_and_agree_replies:
+        title: "投稿と返信を削除して同意する"
+        description: "投稿とそのすべての返信を削除します。最初の投稿である場合、トピックも削除されます"
+        confirm: "投稿への返信も削除してよろしいですか？"
+      disagree_and_restore:
+        title: "却下して投稿を復元"
+        description: "すべてのユーザーが閲覧できるように投稿を復元します。"
       disagree:
         title: "同意しない"
       ignore:
         title: "無視"
       approve:
         title: "承認"
+      approve_post:
+        title: "投稿の承認"
+        confirm_closed: "このトピックはクローズされました。それでも投稿を作成しますか？"
+      reject_post:
+        title: "投稿の拒否"
+      approve_user:
+        title: "ユーザーの承認"
       reject_user:
+        title: "ユーザーの削除…"
         delete:
           title: "ユーザーの削除"
+          description: "ユーザーはフォーラムから削除されます。"
+        block:
+          title: "ユーザーの削除とブロック"
+          description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
       reject:
         title: "却下"
+        bundle_title: "拒否..."
+      reject_and_suspend:
+        title: "ユーザーの拒否と凍結"
+      reject_and_silence:
+        title: "ユーザーの拒否と投稿禁止"
+      reject_and_delete:
+        title: "投稿の拒否と削除"
       reject_and_keep_deleted:
         title: "投稿を削除されたままにする"
       approve_and_restore:
