@@ -60,12 +60,14 @@ export default {
             // Refresh if necessary
             document.location.reload(true);
           } else if (me.new_href && me.target) {
-            const link_target = me.theme_id
-              ? `[data-target="${me.target}"][data-theme-id="${me.theme_id}"]`
-              : `[data-target="${me.target}"]`;
-            document.querySelectorAll(`link${link_target}`).forEach((link) => {
-              this.refreshCSS(link, me.new_href);
-            });
+            const link_target = !!me.theme_id
+              ? `[data-target='${me.target}'][data-theme-id='${me.theme_id}']`
+              : `[data-target='${me.target}']`;
+
+            const links = document.querySelectorAll(`link${link_target}`);
+            if (links.length === 1) {
+              this.refreshCSS(links[0], me.new_href);
+            }
           }
         });
       },
