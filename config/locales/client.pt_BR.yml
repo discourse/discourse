@@ -41,6 +41,7 @@ pt_BR:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} atrás"
+      wrap_on: "em %{date}"
       tiny:
         half_a_minute: "< 1 m"
         less_than_x_seconds:
@@ -266,10 +267,13 @@ pt_BR:
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
     bookmarked:
       title: "Favorito"
+      edit_bookmark: "Editar favorito"
       clear_bookmarks: "Limpar favoritos"
       help:
         bookmark: "Clique para adicionar a primeira postagem deste tópico aos favoritos"
+        edit_bookmark: "Clique para editar o favorito neste tópico"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
+        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
     bookmarks:
       created: "Você marcou esta postagem como favorita. %{name}"
       not_bookmarked: "marcar postagem como favorita"
@@ -539,9 +543,12 @@ pt_BR:
       tomorrow: "Amanhã"
       post_local_date: "Data na postagem"
       later_this_week: "Mais tarde nesta semana"
+      this_weekend: "Neste fim de semana"
       start_of_next_business_week: "Segunda-feira"
       start_of_next_business_week_alt: "Próxima segunda-feira"
+      two_weeks: "Duas semanas"
       next_month: "Próximo mês"
+      six_months: "Seis meses"
       custom: "Data e hora personalizadas"
       relative: "Tempo relativo"
       none: "Nenhum necessário"
@@ -583,6 +590,7 @@ pt_BR:
         one: "%{count} usuário"
         other: "%{count} usuários"
       edit_columns:
+        title: "Editar colunas do diretório"
         save: "Salvar"
         reset_to_default: "Restaurar para padrão"
       group:
@@ -598,7 +606,12 @@ pt_BR:
       member_added: "Adicionado"
       member_requested: "Solicitado em"
       add_members:
+        title: "Adicionar usuários (a) a %{group_name}"
+        description: "Insira uma lista de usuários(as) que você quer convidar para o grupo ou cole em uma lista separada por vírgulas:"
+        usernames_placeholder: "nomes de usuário(a)"
+        usernames_or_emails_placeholder: "nomes de usuário(a) ou e-maiis"
         notify_users: "Notificar usuários"
+        set_owner: "Definir usuários(as) como proprietários(as) deste grupo"
       requests:
         title: "Solicitações"
         reason: "Motivo"
@@ -612,6 +625,8 @@ pt_BR:
         title: "Gerenciar"
         name: "Nome"
         full_name: "Nome completo"
+        add_members: "Adicionar usuários(as)"
+        invite_members: "Convidar"
         delete_member_confirm: "Remover %{username} do %{group} grupo?"
         profile:
           title: Perfil
@@ -626,6 +641,8 @@ pt_BR:
           enable_imap: "Ativar IMAP"
           test_settings: "Configurações de teste"
           save_settings: "Salvar configurações"
+          last_updated: "Última atualização:"
+          last_updated_by: "de"
           settings_required: "Todas as configurações são obrigatórias, preencha todos os campos antes de validar."
           smtp_settings_valid: "Configurações de SMTP válidas."
           smtp_title: "SMTP"
@@ -635,6 +652,12 @@ pt_BR:
           imap_instructions: 'Quando você ativa o IMAP para o grupo, os e-mails são sincronizados entre a caixa de entrada do grupo, o servidor IMAP e a caixa de mensagens fornecidos. O SMTP deve ser ativado com as credenciais válidas e testadas antes que o IMAP possa ser ativado. O nome do(a) usuário(a) e a senha de e-mail usados para o SMTP serão aplicados ao IMAP. Para obter mais informações, consulte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anúncio de recursos no Discourse Meta</a>.'
           imap_alpha_warning: "Aviso: este recurso está no estágio alfa. Apenas o Gmail é oficialmente compatível. Use por sua conta e risco!"
           imap_settings_valid: "Configurações IMAP válidas."
+          smtp_disable_confirm: "Se você desativar o SMTP, todas as configurações de SMTP e IMAP serão redefinidas e os recursos correspondentes serão desativados. Tem certeza de que quer continuar?"
+          imap_disable_confirm: "Se você desativar o IMAP, todas as configurações de IMAP serão redefinidas e os recursos correspondentes serão desativados. Tem certeza de que quer continuar?"
+          imap_mailbox_not_selected: "Se você selecionar uma caixa de entrada para esta configuração IMAP ou nenhuma caixa postal será sincronizada!"
+          prefill:
+            title: "Preencher com configurações para:"
+            gmail: "Gmail"
           credentials:
             title: "Credenciais"
             smtp_server: "Servidor SMTP"
@@ -648,9 +671,11 @@ pt_BR:
           settings:
             title: "Configurações"
             allow_unknown_sender_topic_replies: "Permita que remetentes desconhecidos respondam a tópicos."
+            allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos(as) respondam a tópicos de grupo. Se não estiver ativado, será criado um novo tópico para respostas de endereços de e-mail de usuários(as) não convidados para o tópico."
           mailboxes:
             synchronized: "Caixa de mensagens sincronizada"
             none_found: "Nenhuma caixa de mensagens foi encontrada nesta conta de e-mail."
+            disabled: "Desativado(a)"
         membership:
           title: Assinatura
           access: Acesso
@@ -666,6 +691,12 @@ pt_BR:
         tags:
           title: Etiquetas
           long_title: "Notificações padrão das etiquetas"
+          description: "Quando usuários(as) são adicionados(as) a esse grupo, suas configurações de notificação de etiqueta serão definidas para estes padrões. Em seguida, poderão ser alteradas."
+          watched_tags_instructions: "Você acompanha todos os tópicos com estas etiquetas automaticamente. Membros do grupo serão notificados de todas as postagens novas, e varias delas também serão exibidas perto do tópico."
+          tracked_tags_instructions: "Monitore automaticamente todos os tópicos com estas etiquetas. Uma contagem de postagens novas será exibida ao lado do tópico."
+          watching_first_post_tags_instructions: "Os(as) usuários(as) receberão uma notificação sobre a primeira postagem em cada tópico novo com estas etiquetas."
+          regular_tags_instructions: "Se estas etiquetas forem silenciadas, elas não serão silenciadas para membros do grupo. Os(as) usuários(as) serão notificados em caso de menção ou resposta."
+          muted_tags_instructions: "Os(as) usuários(as) não receberão notificação sobre novos tópicos com estas etiquetas, e eles não serão exibidas nos mais recentes."
         logs:
           title: "Registros"
           when: "Quando"
@@ -800,6 +831,11 @@ pt_BR:
       flair_type:
         icon: "Selecione um ícone"
         image: "Enviar arquivo"
+      default_notifications:
+        modal_title: "Notificações padrão do(a) usuário(a)"
+        modal_description: "Você gostaria de aplicar esta alteração historicamente? Isto mudará as preferências de %{count} usuários(as) existentes."
+        modal_yes: "Sim"
+        modal_no: "Não, apenas aplique alterações daqui para frente"
     user_action_groups:
       "1": "Curtidas"
       "2": "Curtidas"

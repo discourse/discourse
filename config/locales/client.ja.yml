@@ -138,7 +138,7 @@ ja:
     wizard_required: "Discourse へようこそ！ <a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
     software_update_prompt:
-      message: "このサイトを更新たので、<span>再読み込みしてください</span>。再読み込みしない場合、予期しない動作が発生する可能性があります。"
+      message: "このサイトを更新したので、<span>再読み込みしてください</span>。再読み込みしない場合、予期しない動作が発生する可能性があります。"
       dismiss: "閉じる"
     bootstrap_mode_enabled:
       other: "新しいサイトを簡単に立ち上げられるように、ブートストラップモードになっています。すべての新規ユーザーの信頼レベルは 1 となり、要約メールを毎日受け取るように設定されています。この設定は %{count} 名のユーザーが参加すると自動的に無効になります。"
@@ -606,7 +606,7 @@ ja:
           smtp_instructions: "このグループで SMTP を有効化すると、グループの受信トレイから送信されるすべての送信メールは、フォーラムが送信するほかのメール用に構成されているメールサーバーではなく、ここで指定される SMTP 設定を介して送信されます。"
           imap_title: "IMAP"
           imap_additional_settings: "追加設定"
-          imap_instructions: 'このグループで IMAP を有効化すると、グループの受信トレイと指定された IMAP サーバーとメールボックスの間でメールが同期されます。IMAP を有効にする前に、テスト済みの有効な資格情報で SMTP を有効にする必要があります。SMTP に使用されるメールのユーザー名とパスワードが IMAP にも使用されます。詳細は、<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta の機能に関するお知らせ</a>をご覧ください。'
+          imap_instructions: 'このグループで IMAP を有効化すると、グループの受信トレイと指定された IMAP サーバーとメールボックスの間でメールが同期されます。IMAP を有効にする前に、テスト済みの有効な資格情報で SMTP を有効にする必要があります。SMTP に使用されるメールのユーザー名とパスワードが IMAP にも使用されます。詳細は、「<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta の機能に関するお知らせ</a>」をご覧ください。'
           imap_alpha_warning: "警告: これはアルファステージの機能です。Gmail のみが公式にサポートされています。自己責任でご利用ください！"
           imap_settings_valid: "IMAP の設定は有効です。"
           smtp_disable_confirm: "SMTP を無効にすると、すべての SMTP と IMAP の設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
@@ -1475,7 +1475,7 @@ ja:
       flair:
         title: "フレア"
         none: "(なし)"
-        instructions: "プロファイル写真の横に表示されるアイコン"
+        instructions: "プロフィール写真の横に表示されるアイコン"
       primary_group:
         title: "プライマリーグループ"
         none: "(なし)"
@@ -1860,8 +1860,8 @@ ja:
       collapse: "コンポーザーパネルを最小化"
       open: "コンポーザーパネルを開く"
       abandon: "コンポーザーを閉じて下書きを破棄"
-      enter_fullscreen: "全画面コンポーザーを開始"
-      exit_fullscreen: "全画面コンポーザーを終了"
+      enter_fullscreen: "コンポーザーの全画面表示を開始"
+      exit_fullscreen: "コンポーザーの全画面表示を終了"
       show_toolbar: "コンポーザーツールバーを表示"
       hide_toolbar: "コンポーザーツールバーを非表示"
       modal_ok: "OK"
@@ -1871,7 +1871,7 @@ ja:
         title: "受信者を追加し忘れましたか？"
         body: "現時点では、このメッセージは自分にしか送信されません！"
       slow_mode:
-        error: "このトピックは低速モードです。最近投稿したばかりです。%{timeLeft} してからもう一度投稿できます。"
+        error: "このトピックは低速モードです。最近投稿したばかりです。%{timeLeft} してから投稿してください。"
       admin_options_title: "このトピックのオプションのスタッフ設定"
       composer_actions:
         reply: 返信
@@ -1903,7 +1903,7 @@ ja:
           desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
         toggle_topic_bump:
           label: "トピックのバンプを切り替える"
-          desc: "最新の返信日を変更せずに返信する"
+          desc: "最新の返信日を変更せずに返信します"
       reload: "再読み込み"
       ignore: "無視する"
     notifications:
@@ -1942,7 +1942,7 @@ ja:
       granted_badge: "「%{description}」をゲット！"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>新規トピック</span> %{description}"
-      membership_request_accepted: "%{group_name} のメンバーシップが承認されました"
+      membership_request_accepted: "'%{group_name}' のメンバーシップが承認されました"
       membership_request_consolidated:
         other: "'%{group_name}' の %{count} 件のオープンメンバーシップリクエスト"
       reaction: "<span>%{username}</span> %{description}"
@@ -2005,7 +2005,7 @@ ja:
       result_count:
         other: "<span class='term'>%{term}</span> の <span>%{count}%{plus} 件の結果</span>"
       title: "トピック、投稿、ユーザー、カテゴリを検索"
-      full_page_title: "トピックまたは投稿を検索"
+      full_page_title: "トピックまたは投稿の検索"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
       post_format: "%{username} の #%{post_number}"
@@ -2536,7 +2536,7 @@ ja:
         instructions:
           other: "<b>@%{old_user}</b> の %{count} 件の投稿に新しいオーナーを選択してください"
         instructions_without_old_user:
-          other: "%{count} 件の投稿に新しいオーナーを選択してください。"
+          other: "%{count} 件の投稿に新しいオーナーを選択してください"
       change_timestamp:
         title: "タイムスタンプを変更..."
         action: "タイムスタンプを変更"
@@ -2757,7 +2757,7 @@ ja:
       filtered_replies:
         viewing_posts_by: "次の投稿者の %{post_count} 件の投稿を閲覧中"
         viewing_subset: "一部の返信は折りたたまれています"
-        viewing_summary: "このトピックの要約を表示しています"
+        viewing_summary: "このトピックの要約を表示中"
         post_number: "%{username}、投稿 #%{post_number}"
         show_all: "すべて表示"
     category:
@@ -2821,7 +2821,7 @@ ja:
         toggle_reply: "返信権限の切り替え"
         toggle_full: "作成権限の切り替え"
         inherited: 'この権限は "全員" から継承されます'
-      special_warning: "警告: このカテゴリは事前にシードされたカテゴリであるため、セキュリティ設定を編集できません。このカテゴリを使用しない場合は、転用せずに削除してください。"
+      special_warning: "警告: このカテゴリは事前作成されたカテゴリであるため、セキュリティ設定を編集できません。このカテゴリを使用しない場合は、転用せずに削除してください。"
       uncategorized_security_warning: "このカテゴリは特殊です。カテゴリのないトピックを保存するために用意されているため、セキュリティを設定できません。"
       uncategorized_general_warning: 'このカテゴリは特殊です。カテゴリが選択されていない新しいトピックのデフォルトのカテゴリとして使用されます。この動作を適用せずにカテゴリの選択を強制するには、<a href="%{settingLink}">ここで設定を無効にしてください</a>。名前または説明を変更するには、<a href="%{customizeLink}">カスタマイズ/テキストコンテンツ</a>に移動してください。'
       pending_permission_change_alert: "このカテゴリに %{group} を追加していません。このボタンをクリックして追加してください。"
@@ -2834,13 +2834,13 @@ ja:
       show_subcategory_list: "このカテゴリのトピックの上にサブカテゴリのリストを表示します。"
       read_only_banner: "ユーザーがこのカテゴリにトピックを作成できない場合のバナーテキスト:"
       num_featured_topics: "カテゴリページに表示するトピック数:"
-      subcategory_num_featured_topics: "上位カテゴリのページに掲載する注目のトピック数:"
+      subcategory_num_featured_topics: "親カテゴリのページに掲載する注目のトピック数:"
       all_topics_wiki: "デフォルトで新しいトピックをウィキにする"
       allow_unlimited_owner_edits_on_first_post: "最初の投稿へのオーナーによる無制限の編集を許可する"
       subcategory_list_style: "サブカテゴリのリストのスタイル:"
       sort_order: "トピックリストの並べ替え順:"
       default_view: "デフォルトのトピックリスト:"
-      default_top_period: "デフォルトの上位の期間:"
+      default_top_period: "デフォルトのトップの期間:"
       default_list_filter: "デフォルトのリストのフィルタ:"
       allow_badges_label: "このカテゴリでバッジの付与を許可する"
       edit_permissions: "権限を編集"
@@ -3130,13 +3130,13 @@ ja:
         show_incoming_updated_topics: "%{shortcut} 更新されたトピックを表示する"
         search: "%{shortcut} 検索"
         help: "%{shortcut} キーボードヘルプを表示する"
-        dismiss_new: "%{shortcut} 新規と閉じる"
+        dismiss_new: "%{shortcut} 新規を閉じる"
         dismiss_topics: "%{shortcut} トピックを閉じる"
         log_out: "%{shortcut} ログアウト"
       composing:
         title: "作成"
-        return: "%{shortcut}コンポーザーに戻る"
-        fullscreen: "%{shortcut} コンポーザーを全画面モードにする"
+        return: "%{shortcut} コンポーザーに戻る"
+        fullscreen: "%{shortcut} コンポーザーを全画面表示にする"
       bookmarks:
         title: "ブックマークの設定"
         enter: "%{shortcut} 保存して閉じる"
@@ -3170,12 +3170,12 @@ ja:
         mark_tracking: "%{shortcut} トピックを追跡"
         mark_watching: "%{shortcut} トピックをウォッチ"
         print: "%{shortcut} トピックを印刷"
-        defer: "%{shortcut} トピックを延期"
+        defer: "%{shortcut} トピックを未読にする"
         topic_admin_actions: "%{shortcut} トピックの管理者アクションを開く"
       search_menu:
         title: "検索メニュー"
         prev_next: "%{shortcut} 選択を上下に移動"
-        insert_url: "%{shortcut} 開いているコンポーザーに選択を挿入する"
+        insert_url: "%{shortcut} 開いたコンポーザーに選択を挿入する"
     badges:
       earned_n_times:
         other: "このバッジを %{count} 回獲得しました"

@@ -2160,7 +2160,7 @@ de:
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
     current_user: "zu deiner Benutzerseite gehen"
-    view_all: "Alle anzeigen %{tab}"
+    view_all: "Alle %{tab} anzeigen"
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
@@ -3015,8 +3015,8 @@ de:
       subcategory_list_styles:
         rows: "Zeilen"
         rows_with_featured_topics: "Zeilen mit hervorgehobenen Themen"
-        boxes: "Spalten"
-        boxes_with_featured_topics: "Spalten mit hervorgehobenen Themen"
+        boxes: "Boxen"
+        boxes_with_featured_topics: "Boxen mit hervorgehobenen Themen"
       settings_sections:
         general: "Allgemein"
         moderation: "Moderation"
