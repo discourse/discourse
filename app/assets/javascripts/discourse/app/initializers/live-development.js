@@ -65,8 +65,8 @@ export default {
               : `[data-target='${me.target}']`;
 
             const links = document.querySelectorAll(`link${link_target}`);
-            if (links.length === 1) {
-              this.refreshCSS(links[0], me.new_href);
+            if (links.length > 0) {
+              this.refreshCSS(links[links.length - 1], me.new_href);
             }
           }
         });
@@ -76,21 +76,14 @@ export default {
   },
 
   refreshCSS(node, newHref) {
-    if (node.dataset.reloading) {
-      clearTimeout(node.dataset.timeout);
-    }
-
-    node.dataset.reloading = true;
-
     let reloaded = node.cloneNode(true);
     reloaded.href = newHref;
     node.insertAdjacentElement("afterend", reloaded);
 
-    let timeout = setTimeout(() => {
-      node.parentNode.removeChild(node);
-      reloaded.dataset.reloading = false;
-    }, 2000);
-
-    node.dataset.timeout = timeout;
+    setTimeout(() => {
+      if (node && node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+    }, 500);
   },
 };
