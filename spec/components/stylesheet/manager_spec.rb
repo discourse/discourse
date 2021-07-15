@@ -176,10 +176,10 @@ describe Stylesheet::Manager do
 
       it "output remote child, remote parent, local child" do
         remote2 = RemoteTheme.create!(remote_url: "https://github.com/org/remote-theme2")
-        remote_main_theme = Fabricate(:theme, remote_theme: remote2, name: "remote main").tap { |t|
+        remote_main_theme = Fabricate(:theme, remote_theme: remote2, name: "remote main").tap do |t|
           t.set_field(target: :desktop, name: "scss", value: ".el{color: red;}")
           t.save!
-        }
+        end
 
         remote_main_theme.add_relative_theme!(:child, z_child_theme)
         remote_main_theme.add_relative_theme!(:child, child_remote)
