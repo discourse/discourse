@@ -145,10 +145,12 @@ describe Stylesheet::Manager do
 
       let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/remote-theme1") }
 
-      let(:child_remote) { Fabricate(:theme, remote_theme: remote, component: true).tap { |t|
-        t.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
-        t.save!
-      }}
+      let(:child_remote) do 
+        Fabricate(:theme, remote_theme: remote, component: true).tap do |t|
+          t.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
+          t.save!
+        end
+      end
 
       it 'output remote child, then sort children alphabetically, then local parent' do
         theme.add_relative_theme!(:child, z_child_theme)
