@@ -164,13 +164,13 @@ describe Stylesheet::Manager do
         hrefs = manager.stylesheet_details(:desktop_theme, 'all')
 
         parent = hrefs.select { |href| href[:theme_id] == theme.id }.first
-        childA = hrefs.select { |href| href[:theme_id] == child_theme.id }.first
-        childZ = hrefs.select { |href| href[:theme_id] == z_child_theme.id }.first
-        childR = hrefs.select { |href| href[:theme_id] == child_remote.id }.first
+        child_a = hrefs.select { |href| href[:theme_id] == child_theme.id }.first
+        child_z = hrefs.select { |href| href[:theme_id] == z_child_theme.id }.first
+        child_r = hrefs.select { |href| href[:theme_id] == child_remote.id }.first
 
-        child_local_A = "<link href=\"#{childA[:new_href]}\" data-theme-id=\"#{childA[:theme_id]}\" data-theme-name=\"#{childA[:theme_name]}\"/>"
-        child_local_Z = "<link href=\"#{childZ[:new_href]}\" data-theme-id=\"#{childZ[:theme_id]}\" data-theme-name=\"#{childZ[:theme_name]}\"/>"
-        child_remote_R = "<link href=\"#{childR[:new_href]}\" data-theme-id=\"#{childR[:theme_id]}\" data-theme-name=\"#{childR[:theme_name]}\"/>"
+        child_local_A = "<link href=\"#{child_a[:new_href]}\" data-theme-id=\"#{child_a[:theme_id]}\" data-theme-name=\"#{child_a[:theme_name]}\"/>"
+        child_local_Z = "<link href=\"#{child_z[:new_href]}\" data-theme-id=\"#{child_z[:theme_id]}\" data-theme-name=\"#{child_z[:theme_name]}\"/>"
+        child_remote_R = "<link href=\"#{child_r[:new_href]}\" data-theme-id=\"#{child_r[:theme_id]}\" data-theme-name=\"#{child_r[:theme_name]}\"/>"
         parent_local = "<link href=\"#{parent[:new_href]}\" data-theme-id=\"#{parent[:theme_id]}\" data-theme-name=\"#{parent[:theme_name]}\"/>"
 
         link_hrefs = manager.stylesheet_link_tag(:desktop_theme).gsub('media="all" rel="stylesheet" data-target="desktop_theme" ', '')
@@ -191,13 +191,13 @@ describe Stylesheet::Manager do
         manager = manager(remote_main_theme.id)
         hrefs = manager.stylesheet_details(:desktop_theme, 'all')
 
-        parentR = hrefs.select { |href| href[:theme_id] == remote_main_theme.id }.first
-        childZ = hrefs.select { |href| href[:theme_id] == z_child_theme.id }.first
-        childR = hrefs.select { |href| href[:theme_id] == child_remote.id }.first
+        parent_r = hrefs.select { |href| href[:theme_id] == remote_main_theme.id }.first
+        child_z = hrefs.select { |href| href[:theme_id] == z_child_theme.id }.first
+        child_r = hrefs.select { |href| href[:theme_id] == child_remote.id }.first
 
-        parent_remote = "<link href=\"#{parentR[:new_href]}\" data-theme-id=\"#{parentR[:theme_id]}\" data-theme-name=\"#{parentR[:theme_name]}\"/>"
-        child_local = "<link href=\"#{childZ[:new_href]}\" data-theme-id=\"#{childZ[:theme_id]}\" data-theme-name=\"#{childZ[:theme_name]}\"/>"
-        child_remote = "<link href=\"#{childR[:new_href]}\" data-theme-id=\"#{childR[:theme_id]}\" data-theme-name=\"#{childR[:theme_name]}\"/>"
+        parent_remote = "<link href=\"#{parent_r[:new_href]}\" data-theme-id=\"#{parent_r[:theme_id]}\" data-theme-name=\"#{parent_r[:theme_name]}\"/>"
+        child_local = "<link href=\"#{child_z[:new_href]}\" data-theme-id=\"#{child_z[:theme_id]}\" data-theme-name=\"#{child_z[:theme_name]}\"/>"
+        child_remote = "<link href=\"#{child_r[:new_href]}\" data-theme-id=\"#{child_r[:theme_id]}\" data-theme-name=\"#{child_r[:theme_name]}\"/>"
 
         link_hrefs = manager.stylesheet_link_tag(:desktop_theme).gsub('media="all" rel="stylesheet" data-target="desktop_theme" ', '')
         expect(link_hrefs).to eq([child_remote, parent_remote, child_local].join("\n").html_safe)
