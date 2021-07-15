@@ -297,10 +297,10 @@ describe UserBadgesController do
 
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["user_badge"]["is_favorite"]).to be true
+      expect(parsed["user_badge"]["is_favorite"]).to eq(true)
 
       user_badge = UserBadge.find_by(user: user, badge: badge)
-      expect(user_badge.is_favorite).to be true
+      expect(user_badge.is_favorite).to eq(true)
     end
 
     it "unfavorites a badge" do
@@ -310,10 +310,10 @@ describe UserBadgesController do
 
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["user_badge"]["is_favorite"]).to be false
+      expect(parsed["user_badge"]["is_favorite"]).to eq(false)
 
       user_badge = UserBadge.find_by(user: user, badge: badge)
-      expect(user_badge.is_favorite).to be false
+      expect(user_badge.is_favorite).to eq(false)
     end
 
     it "works with multiple grants" do
@@ -330,21 +330,21 @@ describe UserBadgesController do
       put "/user_badges/#{user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["user_badge"]["is_favorite"]).to be false
+      expect(parsed["user_badge"]["is_favorite"]).to eq(false)
       expect(user_badge.reload.is_favorite).to eq(false)
       expect(user_badge2.reload.is_favorite).to eq(false)
 
       put "/user_badges/#{user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["user_badge"]["is_favorite"]).to be true
+      expect(parsed["user_badge"]["is_favorite"]).to eq(true)
       expect(user_badge.reload.is_favorite).to eq(true)
       expect(user_badge2.reload.is_favorite).to eq(true)
 
       put "/user_badges/#{other_user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["user_badge"]["is_favorite"]).to be true
+      expect(parsed["user_badge"]["is_favorite"]).to eq(true)
       expect(other_user_badge.reload.is_favorite).to eq(true)
     end
   end
