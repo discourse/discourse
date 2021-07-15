@@ -29,31 +29,33 @@ module DiscourseDev
       record
     end
 
-    def populate!
-      if current_count >= @count
-        puts "Already have #{current_count} #{type} records"
+    def populate!(ignore_current_count: false)
+      unless ignore_current_count
+        if current_count >= @count
+          puts "Already have #{current_count} #{type} records"
 
-        Rake.application.top_level_tasks.each do |task_name|
-          Rake::Task[task_name].reenable
+          Rake.application.top_level_tasks.each do |task_name|
+            Rake::Task[task_name].reenable
+          end
+
+          Rake::Task['dev:repopulate'].invoke
+          return
+        elsif current_count > 0
+          @count -= current_count
+          puts "There are #{current_count} #{type} records. Creating #{@count} more."
+        else
+          puts "Creating #{@count} sample #{type} records"
         end
-
-        Rake::Task['dev:repopulate'].invoke
-        return
-      elsif current_count > 0
-        @count -= current_count
-        puts "There are #{current_count} #{type} records. Creating #{@count} more."
-      else
-        puts "Creating #{@count} sample #{type} records"
       end
 
       records = []
       @count.times do
         records << create!
-        putc "."
+        putc "." unless type == :post
       end
 
+      puts unless type == :post
       DiscourseEvent.trigger(:after_populate_dev_records, records, type)
-      puts
       records
     end
 
