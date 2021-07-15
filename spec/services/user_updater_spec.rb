@@ -80,7 +80,7 @@ describe UserUpdater do
       context "allow_changing_staged_user_tracking is false" do
         before { SiteSetting.allow_changing_staged_user_tracking = false }
 
-        it "doesn't update categories and tags" do
+        it "doesn't update muted categories and watched tags" do
           updater = UserUpdater.new(Fabricate(:admin), staged_user)
           updater.update(watched_tags: "#{tag.name}", muted_category_ids: [category.id])
           expect(TagUser.where(user_id: staged_user.id).count).to eq(0)
