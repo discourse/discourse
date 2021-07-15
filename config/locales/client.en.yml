@@ -4017,6 +4017,7 @@ en:
               log_out: Log out all sessions for a user.
               anonymize: Anonymize user accounts.
               delete: Delete user accounts.
+              list: Get a list of users.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
 
