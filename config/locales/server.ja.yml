@@ -1972,9 +1972,53 @@ ja:
     default_other_external_links_in_new_tab: "デフォルトで、外部リンクを新しいタブで開く。"
     default_other_enable_quoting: "デフォルトで、選択したテキストを引用して返信する。"
     default_other_enable_defer: "デフォルトで、トピックの延期機能を有効にする。"
+    default_other_dynamic_favicon: "デフォルトで、ブラウザアイコンに新規/更新されたトピック数を表示する。"
     default_other_skip_new_user_tips: "新規ユーザーオンボーディングのヒントとバッジをスキップします。"
+    default_other_like_notification_frequency: "デフォルトで「いいね！」をユーザーに通知する"
+    default_topics_automatic_unpin: "ユーザーが最後に達したら、デフォルトで自動的にトピックの固定表示を解除する。"
+    default_categories_watching: "デフォルトでウォッチされるカテゴリのリスト。"
+    default_categories_tracking: "デフォルトで追跡されるカテゴリのリスト。"
+    default_categories_muted: "デフォルトでミュートされるカテゴリのリスト。"
+    default_categories_watching_first_post: "デフォルトで新規トピックの最初の投稿がウォッチされるカテゴリのリスト。"
+    default_categories_regular: "デフォルトでミュートされないカテゴリのリスト。`mute_all_categories_by_default` サイト設定が有効である場合に役立ちます。"
+    mute_all_categories_by_default: "すべてのカテゴリのデフォルトの通知レベルをミュートに設定する。カテゴリが '最新' と 'カテゴリ' ページに表示されるように、ユーザーがカテゴリを選択する必要があります。匿名ユーザーのデフォルトを変更する場合は、'default_categories_' 設定を設定してください。"
+    default_tags_watching: "デフォルトでウォッチされるタグのリスト。"
+    default_tags_tracking: "デフォルトで追跡されるタグのリスト。"
+    default_tags_muted: "デフォルトでミュートされるタグのリスト。"
+    default_tags_watching_first_post: "デフォルトで新規トピックの最初の投稿がウォッチされるタグのリスト。"
+    default_text_size: "デフォルトで選択されるテキストサイズ"
+    default_title_count_mode: "ページタイトルカウンターのデフォルトモード"
+    retain_web_hook_events_period_days: "Webhook イベントレコードを保持する日数。"
+    retry_web_hook_events: "失敗した Webhook イベントを自動的に 4 回再試行する。再試行間の時間差は、1、5、25、および 125 分です。"
+    revoke_api_keys_days: "未使用の API キーが自動的に取り消されるまでの日数 (0 に設定すると取り消されません)"
+    allow_user_api_keys: "ユーザー API キーの生成を許可する"
+    allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
+    min_trust_level_for_user_api_key: "ユーザー API キーの生成に必要な信頼レベル"
+    allowed_user_api_auth_redirects: "ユーザー API キーの認証リダイレクトに許可された URL。任意の部分を照合するには、ワイルドカード記号 * を使用できます (例: www.example.com/*)。"
+    allowed_user_api_push_urls: "ユーザー API へのサーバープッシュで許可される URL"
+    expire_user_api_keys_days: "ユーザー API キーが自動的に期限切れになるまでの日数 (0 に設定すると期限切れになりません)"
     tagging_enabled: "トピックでタグを有効にしますか？"
+    min_trust_to_create_tag: "タグを作成するために必要な最低信頼レベル。"
+    max_tags_per_topic: "トピックに適用できる最大タグ数。"
+    max_tag_length: "タグに使用できる最大文字数。"
+    max_tag_search_results: "タグを検索する際に表示する結果の最大件数。"
+    max_tags_in_filter_list: "フィルタのドロップダウンに表示するタグの最大数。最も使用されているタグが表示されます。"
+    tags_sort_alphabetically: "タグをアルファベット順に表示する。デフォルトでは人気順に表示されます。"
+    tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>タグページ</a>にタググループごとにタグをリストする。"
     tag_style: "タグバッジの視覚的スタイル"
+    allow_staff_to_tag_pms: "スタッフメンバーが個人メッセージにタグ付けすることを許可する"
+    min_trust_level_to_tag_topics: "トピックのタグ付けに必要な最低信頼レベル"
+    suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
+    remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
+    force_lowercase_tags: "すべての新しいタグが完全に小文字になるように強制する。"
+    company_name: "会社名"
+    governing_law: "準拠法"
+    city_for_disputes: "紛争都市"
+    shared_drafts_category: "トピック下書き用のカテゴリを指定して、共有下書き機能を有効にする。このカテゴリのトピックは、スタッフユーザーのトピックリストから除外されます。"
+    shared_drafts_min_trust_level: "ユーザーが共有下書きを閲覧して編集することを許可する。"
+    push_notifications_prompt: "ユーザー同意プロンプトを表示する。"
+    push_notifications_icon: "通知コーナーに表示されるバッジアイコン。透明度が適用された 96x96 のモノクロ PNG が推奨されます。"
+    base_font: "サイトのほとんどのテキストに使用されるベースフォント。テーマは `--font-family` CSS カスタムプロパティを介してオーバーライドできます。"
     gravatar_base_url: "Gravatar プロバイダーの API ベースの URL"
     gravatar_login_url: "gravatar_base_url への相対 URL。ユーザーに Gravatar サービスへのログインを提供します"
     share_quote_buttons: "引用の共有ウィジェットに表示される項目と表示順を決定する。"
@@ -2722,15 +2766,106 @@ ja:
         その他のガイダンスについては、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
     too_many_spam_flags:
       title: "迷惑通報が多すぎます"
-      subject_template: "保留中の新規アカウント"
+      subject_template: "新規アカウントは保留中です"
+      text_body_template: |
+        こんにちは。
+
+        これは、%{site_name} からの自動メッセージです。あなたの投稿はコミュニティから通報されたため、一時的に非表示になっていることをお知らせします。
+
+        予防措置としてあなたの新しいアカウントは投稿禁止となっているため、スタッフメンバーがあなたのアカウントをレビューするまで返信またはトピックを作成することはできません。ご不便をおかけして申し訳ありません。
+
+        その他のガイダンスについては、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
+    too_many_tl3_flags:
+      title: "TL3 通報が多すぎます"
+      subject_template: "新規アカウントは保留中です"
+      text_body_template: |
+        こんにちは。
+
+        これは、%{site_name} からの自動メッセージです。あなたのアカウントとは、コミュニティ通報が多数あるため保留中になっていることをお知らせします。
+
+        予防措置としてあなたの新しいアカウントは投稿禁止となっているため、スタッフメンバーがあなたのアカウントをレビューするまで新しい返信またはトピックを作成することはできません。ご不便をおかけして申し訳ありません。
+
+        その他のガイダンスについては、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
+    silenced_by_staff:
+      title: "スタッフにより投稿禁止にされました"
+      subject_template: "アカウントは一時的に保留中です"
+      text_body_template: |
+        こんにちは。
+
+        これは、%{site_name} からの自動メッセージです。あなたのアカウントは、予防措置として一時的に保留中となっていることをお知らせします。
+
+        引き続き閲覧できますが、[スタッフメンバー](%{base_url}/about)があなたの直近の投稿をレビューするまで返信またはトピックを作成することはできません。ご不便をおかけして申し訳ありません。
+
+        その他のガイダンスについては、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
+    user_automatically_silenced:
+      title: "ユーザーは自動的に投稿禁止にされました"
+      subject_template: "新規ユーザー %{username} はコミュニティ通報により投稿禁止になりました"
+      text_body_template: |
+        これは自動メッセージです。
+
+        新規ユーザー [%{username}](%{user_url}) は、複数のユーザーが %{username} の投稿を通報したため自動的に投稿禁止になりました。
+
+        [通報をレビュー](%{base_url}/admin/flags)してください。%{username} が誤って投稿禁止になっている場合は、[このユーザーの管理者ページ](%{user_url})にある投稿禁止解除ボタンをクリックしてください。
+
+        このしきい値は、`silence_new_user` サイト設定から変更できます。
     spam_post_blocked:
+      title: "迷惑投稿はブロックされました"
       subject_template: "同一リンクの連続投稿により、新規ユーザー %{username} の投稿をブロック"
+      text_body_template: |
+        これは自動メッセージです。
+
+        新規ユーザー [%{username}](%{user_url}) は、%{domains} へのリンクが含まれる複数の投稿を作成しようとしましたが、迷惑投稿を避けるため、これらの投稿はブロックされました。このユーザーは引き続き、%{domains} にリンクしていない新しい投稿を作成できます。
+
+        [このユーザーをレビュー](%{user_url})してください。
+
+        これは、`newuser_spam_host_threshold` および `allowed_spam_host_domains` サイト設定から変更できます。例外である場合は、ホワイトリストに %{domains} を追加することを検討してください。
+    unsilenced:
+      title: "投稿禁止が解除されました"
+      subject_template: "アカウントは保留状態でなくなりました"
+      text_body_template: |
+        こんにちは。
+
+        これは、%{site_name} からの自動メッセージです。あなたのアカウントはスタッフがレビューし、保留状態でなくなりました。
+
+        新しい返信とトピックの作成を再開できます。ご協力ありがとうございました。
     pending_users_reminder:
+      title: "保留中のユーザーに関するリマインダー"
       subject_template:
         other: "承認待ちのユーザーが %{count} 人います"
+      text_body_template: |
+        新規ユーザー登録は承認 (または拒否) 待ちであり、このフォーラムにアクセスできません。
+
+        [これらの登録をレビュー](%{base_url}/review)してください。
     download_remote_images_disabled:
+      title: "リモート画像のダウンロードは無効化されています"
       subject_template: "リモート画像のダウンロードは無効化されました"
       text_body_template: "`download_remote_images_threshold` のディスク空き容量制限に達したため、`download_remote_images_to_local` 設定は無効になりました。"
+    dashboard_problems:
+      title: "ダッシュボードの問題"
+      subject_template: "サイトダッシュボードに関する新しいアドバイス"
+      text_body_template: |
+        あなたの現在のサイト設定に基づき、新しいアドバイスと推奨事項がいくつかあります。
+
+        [サイトダッシュボードにアクセス](%{base_url}/admin)して、それらをご覧ください。
+
+        ダッシュボードに何も表示されない場合は、別のスタッフメンバーがすでにこのアドバイスに対応した可能性があります。スタッフアクションのリストは[スタッフアクションログ](%{base_url}/admin/logs/staff_action_logs)をご覧ください。
+    new_user_of_the_month:
+      title: "あなたは今月の新規ユーザーです！"
+      subject_template: "あなたは今月の新規ユーザーです！"
+      text_body_template: |
+        おめでとうございます。**%{month_year}の「今月の新規ユーザー」アワード**を獲得しました。:trophy:
+
+        このアワードは毎月 2 つの新規ユーザーのみに与えられるもので、[バッジページ](%{url})に永久的に表示されるようになります。
+
+        あなたは、あっという間にコミュニティの貴重なメンバーとなりました。参加していただきありがとうございます。これからも素晴らしい貢献を楽しみにしています！
+    queued_posts_reminder:
+      title: "キューに入れられた投稿に関するリマインダー"
+      subject_template:
+        other: "%{count} 件の投稿がレビュー待ちです"
+      text_body_template: |
+        こんにちは。
+
+        新規ユーザーの投稿が介入を必要としており、現在レビュー待ちとなっています。[こちらから承認または拒否](%{base_url}/review?type=ReviewableQueuedPost)してください。
   unsubscribe_link: |
     メールの購読を解除するには、[こちらをクリック](%{unsubscribe_url})してください。
   unsubscribe_link_and_mail: |
@@ -2741,15 +2876,87 @@ ja:
     メールの購読を解除するには、[こちらをクリック](%{unsubscribe_url})してください。
   subject_re: "Re: "
   subject_pm: "[PM] "
+  email_from: "%{site_name} 経由の %{user_name}"
   user_notifications:
     previous_discussion: "以前の返信"
+    reached_limit:
+      other: "注意: 1 日あたり最大 %{count} 通のメールを送信します。サイトをチェックして、抑制されているメールを確認してください。追伸: 人気者でいてくれてありがとう！"
+    in_reply_to: "返信:"
     unsubscribe:
       title: "購読解除"
       description: "メールの購読に興味がありませんか？下のリンクをクリックすると、すぐに購読を解除できます:"
     reply_by_email: "返信するには、[トピックにアクセス](%{base_url}%{url})するか、このメールに返信してください。"
+    reply_by_email_pm: "%{participants} に返答するには、[メッセージにアクセス](%{base_url}%{url})するか、このメールに返信してください。"
+    only_reply_by_email: "返答するにはこのメールに返信してください。"
+    only_reply_by_email_pm: "%{participants} に返答するには、このメールに返信してください。"
     visit_link_to_respond: "返信するには[トピックにアクセス](%{base_url}%{url})してください。"
+    visit_link_to_respond_pm: "%{participants} に返答するには、[メッセージにアクセス](%{base_url}%{url})してください。"
+    reply_above_line: "## このラインより上に返信を入力してください。 ##"
     posted_by: "%{post_date} に %{username} が投稿"
+    pm_participants: "参加者: %{participants}"
+    invited_group_to_private_message_body: |
+      %{username} が @%{group_name} をメッセージに招待しました
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      次のサイトにあります。
+
+      > %{site_title} -- %{site_description}
+
+      メッセージに参加するには、以下のリンクをクリックしてください。
+
+      %{topic_url}
+    invited_to_private_message_body: |
+      %{username} があなたをメッセージに招待しました
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      次のサイトにあります。
+
+      > %{site_title} -- %{site_description}
+
+      メッセージに参加するには、以下のリンクをクリックしてください。
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} があなたをディスカッションに招待しました
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      次のサイトにあります。
+
+      > %{site_title} -- %{site_description}
+
+      ディスカッションに参加するには、以下のリンクをクリックしてください。
+
+      %{topic_url}
+    user_invited_to_private_message_pm_group:
+      title: "ユーザーが PM にグループを招待しました"
+      subject_template: "[%{email_prefix}] %{username} が @%{group_name} をメッセージ '%{topic_title}' に招待しました"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm:
+      title: "ユーザーが PM に招待されました"
+      subject_template: "[%{email_prefix}] %{username} があなたをメッセージ '%{topic_title}' に招待しました"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
+      title: "ユーザーが PM ステージングに招待されました"
+      subject_template: "[%{email_prefix}] %{username} があなたをメッセージ '%{topic_title}' に招待しました"
       text_body_template: |
         %{header_instructions}
 
@@ -3452,37 +3659,87 @@ ja:
 
       この文章のライセンスはCC-BY-SAです。最終更新: 2013 年 5 月 31 日
   badges:
+    mass_award:
+      errors:
+        invalid_csv: '%{line_number} 行目でエラーが発生しました。1 行ごとにメール 1 つあることを CSV で確認してください。'
+        too_many_csv_entries: CSV ファイルのエントリが多すぎます。%{count} エントリ以下の CSV ファイルを提供してください。
+        badge_disabled: 先に %{badge_name} バッジを有効にしてください。
+        cant_grant_multiple_times: 1 人のユーザーに %{badge_name} バッジを何度も付与することはできません。
     editor:
       name: 編集者
       description: はじめての投稿編集
+      long_description: |
+        このバッジは、投稿の 1 つを初めて編集したときに付与されます。投稿を永遠に編集することはできませんが、編集することをお勧めします。フォーマットを改善したり、小さな間違いを修正したり、最初に投稿したときに欠落していたものを追加したりすることができます。編集して投稿をさらに改善しましょう！
+    wiki_editor:
+      name: ウィキエディター
+      description: はじめてのウィキ編集
+      long_description: |
+        このバッジは、初めてウィキ投稿を編集したときに付与されます。
     basic_user:
       name: ベーシック
+      description: すべての基本コミュニティ機能を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
+      long_description: |
+        このバッジはユーザーが信頼レベル 1 に達すると付与されます。コミュニティの内容を理解するために、いくつかのトピックを読み続けていただきありがとうございます。新規ユーザーの制限は解除され、個人メッセージ、ウィキ編集、複数の画像とリンクを投稿する機能など、すべての基本的なコミュニティ機能が付与されています。
     member:
       name: メンバー
+      description: 招待、グループメッセージ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
+      long_description: |
+        このバッジは、信頼レベル 2 に達すると付与されます。数週間にわたって、コミュニティにしっかりと参加していただきありがとうございました。ユーザーページまたは個別のトピックからの招待状の送信、グループ個人メッセージの作成、1 日の「いいね！」の増量が付与されています。
     regular:
       name: レギュラー
+      description: カテゴリ整理、名前変更、フォローリンク、ウィキ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
+      long_description: |
+        このバッジは、信頼レベル 3 に達すると付与されます。数か月に渡り、コミュニティに定期的に参加していただきありがとうございました。これで、最もアクティブな読者の 1 人となり、コミュニティを素晴らしいものにしてくれる信頼ある貢献者となりました。カテゴリ整理やトピックの名前変更、より強力な迷惑通報の利用、非公開ラウンジエリアへのアクセスが可能となり、1 日当たりの「いいね！」が増えています。
     leader:
       name: リーダー
+      description: グローバル編集、固定、クローズ、アーカイブ、分割とマージ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
+      long_description: |
+        このバッジは、信頼レベル 4 に達すると付与されます。あなたはこのコミュニティのリーダーとしてスタッフに選ばれ、ここでのあなたのアクションや言葉でコミュニティの他のメンバーに前向きな姿勢を示しています。すべての投稿を編集できるほか、表示固定、クローズ、リストから非表示、アーカイブ、分割、マージなどの一般的なトピックモデレーターアクションを実行できるようになりました。
     welcome:
       name: ようこそ
       description: '「いいね！」をゲット'
+      long_description: |
+        このバッジは、投稿ではじめて「いいね！」をもらった時に付与されます。おめでとうございます。ほかのコミュニティメンバーが面白い、すごい、または有益だと思う内容を投稿しました！
     autobiographer:
       name: 自伝作家
+      description: <a href="%{base_uri}/my/preferences/profile">プロフィール</a>情報を入力しました
+      long_description: |
+        このバッジは、<a href="%{base_uri}/my/preferences/profile">あなたのユーザープロフィール</a>を入力し、プロフィール写真を選択したときに付与されます。コミュニティにあなたのことやあなたが興味のあることを知らせることで、より緊密なコミュニティを作ることができます。参加しましょう！
     anniversary:
       name: アニバーサリー
       description: 1 回は投稿したことのあるメンバー歴 1 年のアクティブメンバー
+      long_description: |
+        このバッジは、1 年間メンバーであり、その年に少なくとも 1 件の投稿がある場合に付与されます。参加を続け、コミュニティに貢献していただきありがとうございました。あなたなしでは続けられません。
     nice_post:
       name: ナイスな返事
+      description: 返信に 10 個の「いいね！」を受け取りました
+      long_description: |
+        このバッジは、あなたの返信に「いいね！」が 10 個つけられたときに付与されます。あなたの返信はコミュニティに感動を与え、会話を前進させるのに役立ちました。
     good_post:
       name: イカした返事
+      description: 返信に 25 個の「いいね！」を受け取りました
+      long_description: |
+        このバッジは、あなたの返信に「いいね！」が 25 個つけられたときに付与されます。あなたの返信は並外れており、会話をはるかに面白いものにしました。
     great_post:
       name: グレートな返事
+      description: 返信に 50 個の「いいね！」を受け取りました
+      long_description: |
+        このバッジは、あなたの返信に「いいね！」が 50 個つけられたときに付与されます。わぉ！あなたの返信は刺激的、魅力的、陽気、もしくは洞察に満ちていて、コミュニティにとても気に入られました！
     nice_topic:
       name: ナイスなトピック
+      description: トピックに 10 個の「いいね！」を受け取りました
+      long_description: |
+        このバッジは、あなたのトピックに「いいね！」が 10 個つけられたときに付与されます。あなたはコミュニティが楽しんだ興味深い会話を始めました。
     good_topic:
       name: イカしたトピック
+      description: トピックに 25 個の「いいね！」を受け取りました
+      long_description: |
+        このバッジは、あなたのトピックに「いいね！」が 25 個つけられたときに付与されます。あなたはコミュニティを結集させ、活気に満ちた会話を始めました。
     great_topic:
       name: グレートなトピック
+      description: トピックに 50 個の「いいね！」を受け取りました
+      long_description: |
+        このバッジは、あなたのトピックに「いいね！」が 50 個つけられたときに付与されます。あなたが始めた魅力的な会話から活気にあふれるディスカッションが生まれ、コミュニティに気に入られました！
     nice_share:
       name: ナイスな共有
       description: 25 人の訪問者に投稿を共有
@@ -3491,9 +3748,13 @@ ja:
     good_share:
       name: イカした共有
       description: 300 人の訪問者に投稿を共有
+      long_description: |
+        このバッジは、300 人の外部訪問者がクリックしたリンクを共有したときに付与されます。よくできました！あなたはたくさんの新しい人々に素晴らしいディスカッションを披露し、このコミュニティの成長を助けました。
     great_share:
       name: グレートな共有
       description: 1000 人の訪問者に投稿を共有
+      long_description: |
+        このバッジは、1000 人の外部訪問者がクリックしたリンクを共有したときに付与されます。わぉ！あなたは大勢の新しいオーディエンスに興味深いディスカッションを促進し、コミュニティを大きく成長させることに役立ちました！
     first_like:
       name: 初めての「いいね！」
       description: 投稿に「いいね！」した
@@ -3512,9 +3773,13 @@ ja:
     campaigner:
       name: 活動家
       description: ベーシックユーザー 3 人を招待
+      long_description: |
+        このバッジは、あなたが招待した 3 人がサイトで十分な時間を費やしてベーシックユーザーとなったときに付与されます。コミュニティの活気を維持するには、定期的に参加して会話に新しい意見を加える新人が定期的に加わる必要があります。
     champion:
       name: チャンピオン
       description: メンバー 5 人を招待
+      long_description: |
+        このバッジは、あなたが招待した 5 人がサイトで十分な時間を費やしてフルメンバーとなったときに付与されます。わぉ！新しいメンバーを招待し、コミュニティの多様性を拡大してくれてありがとうございました！
     first_share:
       name: 初めてのシェア
       description: 投稿を共有した
@@ -3533,6 +3798,8 @@ ja:
     read_guidelines:
       name: ガイドライン読者
       description: <a href="%{base_uri}/guidelines">コミュニティガイドライン</a>を読んだ
+      long_description: |
+        このバッジは、<a href="%{base_uri}/guidelines">コミュニティガイドライン</a>を読んだときに付与されます。これらの簡単なガイドラインに従い、共有することで、全員にとって安全で楽しく持続可能なコミュニティを構築することができます。画面の向こうには、あなたのような人がいることを常に忘れないでください。親切に接しましょう！
     reader:
       name: 読者
       description: 1 つのトピックに 100 件以上ある返信をすべて読んだ
@@ -3570,10 +3837,19 @@ ja:
         このバッジは、300 件の異なる投稿で「いいね！」を 5 つ以上もらったときに付与されます。コミュニティは頻繁で質の高いあなたの投稿を心待ちにしています。
     out_of_love:
       name: 愛情
+      description: 1 日に %{max_likes_per_day} 個の「いいね！」を使用しました
+      long_description: |
+        このバッジは、1 日の「いいね！」の全 %{max_likes_per_day} 個を使用したときに付与されます。ちょっと立ち止まって、あなたが楽しんだり称賛したりした投稿に「いいね！」をつけることで、ほかのコミュニティメンバーがさらに素晴らしいディスカッションを作成していく励みになります。
     higher_love:
       name: 愛だらけ
+      description: 1 日の %{max_likes_per_day} 個の「いいね！」を 5 回使用しました
+      long_description: |
+        このバッジは、1 日の「いいね！」を全 %{max_likes_per_day} 個 5 日間使用したときに付与されます。最高の会話を積極的に奨励することに時間を割いていただきありがとうございました！
     crazy_in_love:
       name: 愛は盲目
+      description: 1 日の %{max_likes_per_day} 個の「いいね！」を 20 回使用しました
+      long_description: |
+        このバッジは、1 日の「いいね！」を全 %{max_likes_per_day} 個 20 日間使用したときに付与されます。わぉ！あなたはコミュニティメンバーを励ますロールモデルです！
     thank_you:
       name: ありがとう
       description: もらった「いいね！」が 20 個、あげた「いいね！」が10 個
@@ -3587,6 +3863,8 @@ ja:
     empathetic:
       name: 共感
       description: もらった「いいね！」が 500 個、あげた「いいね！」が1000 個
+      long_description: |
+        このバッジは、500 件の投稿に「いいね！」し、1000 個以上の「いいね！」を受け取ったときに付与されます。わぉ！あなたは寛大さと相互感謝の鏡です :two_hearts:
     first_emoji:
       name: はじめての絵文字
       description: 投稿に絵文字を使った
@@ -3614,10 +3892,19 @@ ja:
         このバッジは、投稿が「いいね！」される頻度と「いいね！」した人を基に総合的な貢献度を讃えるバッジで、毎月 2 人の新規ユーザーに付与されます。
     enthusiast:
       name: 熱狂者
+      description: 10 日連続でアクセスしました
+      long_description: |
+        このバッジは、10 日連続でアクセスしたときに付与されます。1 週間以上お付き合いいただきありがとうございました！
     aficionado:
       name: 愛好家
+      description: 100 日連続でアクセスしました
+      long_description: |
+        このバッジは、100 日間連続でアクセスしたときに付与されます。3 か月以上です！
     devotee:
       name: 献身者
+      description: 365 日連続でアクセスしました
+      long_description: |
+        このバッジは、365 日間連続でアクセスしたときに付与されます。なんと、丸 1 年間です！
   admin_login:
     success: "メールを送信しました"
     email_input: "管理者メール"
