@@ -37,6 +37,24 @@ describe StylesheetCache do
 
       expect(StylesheetCache.order(:id).pluck(:target)).to eq(["desktop", "desktop", "mobile", "mobile"])
     end
+  end
 
+  describe "clean_up" do
+    it "removes items older than 1 year" do
+      StylesheetCache.destroy_all
+
+      StylesheetCache.add("a", "b", "c", "map")
+      StylesheetCache.add("d", "e", "f", "map")
+
+      StylesheetCache.clean_up
+      expect(StylesheetCache.all.size).to eq(2)
+
+      first = StylesheetCache.first
+      first.created_at = 151.days.ago
+      first.save
+
+      StylesheetCache.clean_up
+      expect(StylesheetCache.all.size).to eq(1)
+    end
   end
 end
