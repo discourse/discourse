@@ -353,6 +353,9 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+  order_stylesheets:
+    default: false
+    hidden: true
 
 login:
   invite_only:
