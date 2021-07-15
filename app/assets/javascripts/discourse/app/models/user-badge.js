@@ -22,12 +22,14 @@ const UserBadge = EmberObject.extend({
   },
 
   favorite() {
-    return ajax(`/user_badges/${this.id}/toggle_favorite`, { type: "PUT" })
-      .then(() => {
-        this.set("is_favorite", !this.is_favorite);
-        return this;
-      })
-      .catch(popupAjaxError);
+    this.toggleProperty("is_favorite");
+    return ajax(`/user_badges/${this.id}/toggle_favorite`, {
+      type: "PUT",
+    }).catch((e) => {
+      // something went wrong, switch the UI back:
+      this.toggleProperty("is_favorite");
+      popupAjaxError(e);
+    });
   },
 });
 
