@@ -937,7 +937,7 @@ ja:
       dismiss_notifications_tooltip: "すべての未読の通知を既読にします"
       no_messages_title: "メッセージはありません"
       no_messages_body: >
-        通常の会話から外れて、誰かと個人的に直接話す必要がありますか？相手のアバターを選択して、%{icon} メッセージボタンを使うと、その人にメッセージを送信できます。<br><br> ヘルプが必要な場合は、<a href='%{aboutUrl}'>スタッフメンバーにメッセージを送信</a>してください。
+        通常の会話の外で、誰かと直接個人的に話す必要がありますか？相手のアバターを選択して、%{icon} メッセージボタンを使うと、その人にメッセージを送信できます。<br><br> ヘルプが必要な場合は、<a href='%{aboutUrl}'>スタッフメンバーにメッセージを送信</a>してください。
       no_bookmarks_title: "まだ何もブックマークしていません"
       no_bookmarks_body: >
         %{icon} ボタンを使って投稿をブックマークしましょう。すぐに参照できるように、ここに一覧表示されます。リマインダーもスケジュール設定可能です！
@@ -1277,7 +1277,7 @@ ja:
         larger: "大"
         largest: "最大"
       title_count_mode:
-        title: "背景ページのタイトルに表示する件数:"
+        title: "バックグラウンドのページのタイトルに表示する件数:"
         notifications: "新しい通知"
         contextual: "新しいページのコンテンツ"
       like_notification_frequency:
@@ -1338,7 +1338,7 @@ ja:
         redeemed_tab: "承諾済み"
         redeemed_tab_with_count: "承諾済み (%{count})"
         invited_via: "招待状"
-        invited_via_link: "リンク %{key} (%{count}/%{max} 承諾済み)"
+        invited_via_link: "リンク %{key} (%{count}/%{max} 引き換え済み)"
         groups: "グループ"
         topic: "トピック"
         sent: "作成日/最終送信日"
@@ -3214,7 +3214,7 @@ ja:
       tags: "タグ"
       choose_for_topic: "オプションのタグ"
       info: "情報"
-      default_info: "このタグはどのが手ごりにも制限されておらず、同義語もありません。制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加してください。"
+      default_info: "このタグはどのカテゴリにも制限されておらず、同義語もありません。制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加してください。"
       category_restricted: "このタグは、アクセス権限のないカテゴリに制限されています。"
       synonyms: "同義語"
       synonyms_description: "次のタグが使用されている場合、<b>%{base_tag_name}</b> に置き換えられます。"
@@ -3414,7 +3414,7 @@ ja:
         exception_error: クエリを実行中にエラーが発生しました
         too_many_requests: このアクションの実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
-        filter_reports: レポートのフィルタ
+        filter_reports: レポートをフィルタ
         reports:
           trend_title: "%{percent} 変更。現在 %{current}、前の期間中 %{prev}。"
           today: "今日"
@@ -3439,7 +3439,7 @@ ja:
           total: "全期間合計"
           no_data: "表示するデータはありません。"
           trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">ログの検索</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">検索ログ</a>'
             disabled: 'トレンド検索レポートは無効です。データを収集するには、<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">ログ検索クエリ</a>を有効にしてください。'
           average_chart_label: 平均
           filters:
@@ -3471,7 +3471,7 @@ ja:
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
               public: "全員"
-              logged_on_users: "ログオンしたユーザー"
+              logged_on_users: "ログオンユーザー"
               members: "グループオーナー、メンバー、モデレーター"
               staff: "グループオーナー、モデレーター"
               owners: "グループオーナー"
@@ -3838,7 +3838,7 @@ ja:
           disabled_component_tooltip: "このコンポーネントは削除されています"
           default_theme_tooltip: "このテーマはサイトのデフォルトのテーマです"
           updates_available_tooltip: "このテーマの更新があります"
-          and_x_more: "と他 %{count} 件。"
+          and_x_more: "と他 %{count} 個。"
           collapse: 折りたたむ
           uploads: "アップロード"
           no_uploads: "フォントや画像など、テーマに関連するアセットをアップロードできます"
@@ -3859,7 +3859,7 @@ ja:
           css_html: "カスタム CSS/HTML"
           edit_css_html: "CSS/HTML を編集"
           edit_css_html_help: "CSS または HTML を編集していません"
-          delete_upload_confirm: "個のアップロードを削除しますか？(テーマの CSS が動作しなくなる可能性があります！)"
+          delete_upload_confirm: "このアップロードを削除しますか？(テーマの CSS が動作しなくなる可能性があります！)"
           component_on_themes: "これらのテーマにコンポーネントを含める"
           included_components: "含まれているコンポーネント"
           add_all: "すべてを追加"
@@ -4167,8 +4167,8 @@ ja:
             revoke_email: "メールを取り消し"
             lock_trust_level: "信頼レベルをロック"
             unlock_trust_level: "信頼レベルをロック解除"
-            activate_user: "ユーザーをアクティブ化"
-            deactivate_user: "ユーザーを非アクティブ化"
+            activate_user: "ユーザーを有効化"
+            deactivate_user: "ユーザーを無効化"
             change_readonly_mode: "閲覧専用モードに変更"
             backup_download: "バックアップのダウンロード"
             backup_destroy: "バックアップの消去"
@@ -4193,7 +4193,7 @@ ja:
             web_hook_create: "Webhook を作成"
             web_hook_update: "Webhook を更新"
             web_hook_destroy: "Webhook を消去"
-            web_hook_deactivate: "Webhook を非アクティブ化"
+            web_hook_deactivate: "Webhook を無効化"
             embeddable_host_create: "埋め込み可能なホストを作成"
             embeddable_host_update: "埋め込み可能なホストを更新"
             embeddable_host_destroy: "埋め込み可能なホストを消去"
@@ -4291,7 +4291,7 @@ ja:
           replace: "投稿内の語を他の語に置き換えます"
           tag: "最初の投稿に基づいてトピックに自動的にタグを付けます"
           silence: "これらの語を含むユーザーの最初の投稿には、表示される前とユーザーが自動的に投稿禁止になる前にスタッフによる承認が必要です。"
-          link: "投稿内の語をリンクに置き換えます"
+          link: "投稿内の語をリンクに置き換える"
         form:
           label: "語またはフレーズがある"
           placeholder: "語またはフレーズを入力してください (* はワイルカード)"
@@ -4308,8 +4308,8 @@ ja:
           upload_successful: "アップロードが成功し、言葉が追加されました。"
         test:
           button_label: "テスト"
-          modal_title: "%{action}: ウォッチ中の語をテスト"
-          description: "テキストを入力して、ウォッチ中の語に一致しているかどうかを確認します"
+          modal_title: "%{action}: ウォッチ語をテスト"
+          description: "テキストを入力して、ウォッチ語に一致しているかどうかを確認します"
           found_matches: "見つかった一致:"
           no_matches: "一致する項目が見つかりませんでした"
       impersonate:
@@ -4369,7 +4369,7 @@ ja:
           consuming_staff_time: "スタッフの時間を不当に消耗したため"
           combative: "好戦的過ぎるため"
           in_wrong_place: "場所が誤っているため"
-          no_constructive_purpose: "コミュニティ内で威儀を唱える以外に建設的な目的がないため"
+          no_constructive_purpose: "コミュニティ内で異議を唱える以外に建設的な目的がないため"
           custom: "カスタム..."
         suspend_message: "メールメッセージ"
         suspend_message_placeholder: "必要に応じて、凍結に関する詳細な情報を入力し、ユーザーにメールで送信することができます。"
@@ -4450,7 +4450,7 @@ ja:
         delete: "ユーザーを削除"
         delete_posts:
           progress:
-            title: "投稿の削除の進捗状況"
+            title: "投稿の削除状況"
         merge:
           button: "マージ"
           prompt:

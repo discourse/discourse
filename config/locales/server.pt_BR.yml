@@ -322,6 +322,7 @@ pt_BR:
   bookmarks:
     errors:
       already_bookmarked_post: "Você não pode adicionar a mesma postagem aos favoritos duas vezes."
+      too_many: "Desculpe, não é possível adicionar mais de %{limit} favoritos, acesse <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> para remover alguns."
       cannot_set_past_reminder: "Você não pode definir um lembrete de favorito em uma data passada."
       cannot_set_reminder_in_distant_future: "Você não pode definir um lembrete de favorito mais de dez anos posteriormente."
       time_must_be_provided: "a hora deve ser informada para todos os lembretes"
@@ -350,6 +351,12 @@ pt_BR:
       email_already_used_in_category: "\"%{email}\" já foi utilizado pela categoria \"%{category_name}\"."
       cant_allow_membership_requests: "Você não pode permitir pedidos de associação para um grupo sem proprietário(a)."
       already_requested_membership: "Você já pediu associação para este grupo."
+      adding_too_many_users:
+        one: "No máximo %{count} usuário(a) pode ser adicionado(a) uma vez"
+        other: "No máximo %{count} usuários(as) podem ser adicionados(as) uma vez"
+      usernames_or_emails_required: "Nomes de usuário(a) ou e-mails devem estar presentes"
+      no_invites_with_discourse_connect: "É possível convidar apenas usuários(as) registrados(as) quando o DiscourseConnect estiver ativado"
+      no_invites_without_local_logins: "É possível convidar apenas usuários(as) registrados(as) quando entradas de conta em modo local estiver destivado"
     default_names:
       everyone: "todos(as)"
       admins: "administração"
@@ -406,6 +413,20 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
+    dominating_topic: |
+      ### Permita que outras pessoas participem da conversa
+
+      Este tópico é muito importante para você &ndash; você postou mais de %{percent}% das respostas aqui.
+
+      Seria ainda melhor se você desse espaço para que outras pessoas compartilhassem seus pontos de vista também. Poderia convidá-las?
+    get_a_room: |
+      ### Incentive todos a se envolverem na conversa
+
+      Você respondeu %{count} vezes para @%{reply_username} neste tópico em particular!
+
+      Uma boa discussão inclui muitas vozes e perspectivas. Você consegue envolver mais alguém?
+
+      E não se esqueça, se você quiser continuar sua conversa com este usuário em particular fora da visão pública, [envie-o uma mensagem pessoal](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
 
@@ -440,7 +461,10 @@ pt_BR:
               cant_send_pm: "Desculpe, você não pode enviar uma mensagem pessoal para esse(a) usuário(a)."
               no_user_selected: "Você deve escolher um(a) usuário(a) válido(a)."
               reply_by_email_disabled: "Respostas por e-mail foram desativadas."
+              send_to_email_disabled: "Desculpe, você não pode enviar mensagens pessoais por e-mail."
               target_user_not_found: "Um(a) dos(as) usuários(as) para quem você está enviando esta mensagem não foi encontrado(a)."
+              unable_to_update: "Houve um erro ao atualizar esse tópico."
+              unable_to_tag: "Houve um erro ao etiquetar o tópico."
             featured_link:
               invalid: "é inválida. A URL deve conter http:// ou https://."
               invalid_category: "não pode ser editado(a) nesta categoria."
@@ -459,6 +483,10 @@ pt_BR:
               same_as_password: "é igual à sua senha."
             ip_address:
               signup_not_allowed: "Não é permitido cadastrar esta conta."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "Este tópico não pode ser apresentado no seu perfil."
         user_email:
           attributes:
             user_id:
@@ -484,6 +512,7 @@ pt_BR:
               in_the_past: "deve estar no futuro."
             duration_minutes:
               cannot_be_zero: "deve ser maior que 0."
+              exceeds_maximum: "não pode ter mais de 20 anos."
         translation_overrides:
           attributes:
             value:
@@ -492,6 +521,8 @@ pt_BR:
           attributes:
             word:
               too_many: "Muitas palavras para esta ação"
+            base:
+              invalid_url: "A URL de substituição não é válida"
       <<: *errors
   uncategorized_category_name: "Sem categoria"
   vip_category_name: "Saguão"
@@ -578,8 +609,20 @@ pt_BR:
     slow_down: "Você executou esta ação muitas vezes. Tente novamente mais tarde."
     too_many_requests: "Você já executou esta ação muitas vezes. Espere%{time_left} antes de tentar novamente."
     by_type:
+      first_day_replies_per_day: "Agradecemos o seu entusiasmo, continue assim! Dito isso, para a segurança da nossa comunidade, você alcançou a quantidade máxima de respostas que um(a) novo(a) usuário(a) pode criar no primeiro dia. Aguarde %{time_left} e você poderá criar mais respostas."
+      first_day_topics_per_day: "Agradecemos o seu entusiasmo! Dito isso, para a segurança da nossa comunidade, você alcançou a quantidade máxima de tópicos que um(a) novo(a) usuário(a) pode criar no primeiro dia. Aguarde %{time_left} e você poderá criar mais tópicos."
+      create_topic: "Você está criando tópicos muito rápido. Aguarde %{time_left} antes de tentar novamente."
+      create_post: "Você está respondendo muito rápido. Aguarde %{time_left} antes de tentar novamente."
+      delete_post: "Você está excluindo as postagens muito rápido. Aguarde %{time_left} antes de tentar novamente."
+      public_group_membership: "Você está entrando/saindo de grupos com frequência. Aguarde %{time_left} antes de tentar novamente."
+      topics_per_day: "Você alcançou a quantidade máxima de novos tópicos permitidos por dia. Crie mais tópicos novos em %{time_left}."
+      pms_per_day: "Você alcançou a quantidade máxima de mensagens novas permitidas por dia. Crie mais mensagens novas em %{time_left}."
+      create_like: "Uau! Você está distribuindo muito afeto! Você alcançou a quantidade máxima de curtidas por hoje, Mas, à medida que ganha mais níveis de confiança, você receberá mais curtidas por dia. Você poderá curtir postagens novamente em %{time_left}."
+      create_bookmark: "Você alcançou a quantidade máxima de favoritos por dia. Crie mais favoritos em %{time_left}."
+      edit_post: "Você alcançou a quantidade máxima de edições por dia. Envie mais edições em %{time_left}."
       live_post_counts: "Você está pedindo contagens de postagens em tempo real muito rápido. Espere %{time_left} antes de tentar novamente."
       unsubscribe_via_email: "Você atingiu o número máximo de cancelamentos de associação por e-mail. Espere %{time_left} antes de tentar novamente."
+      topic_invitations_per_day: "Você alcançou a quantidade máxima de convites para tópicos. Envie mais convites em %{time_left}."
     hours:
       one: "%{count} hora"
       other: "%{count} horas"
@@ -683,6 +726,7 @@ pt_BR:
       unknown: "navegador desconhecido"
     device:
       android: "Dispositivo Android"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -693,6 +737,7 @@ pt_BR:
       unknown: "dispositivo desconhecido"
     os:
       android: "Android"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -703,14 +748,19 @@ pt_BR:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar no %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
+    doesnt_exist: "Esse endereço de e-mail não está associado à sua conta."
     error_staged: "Ocorreu um erro ao alterar o seu endereço de e-mail. O endereço já está usado por outro(a) usuário(a) encenado(a)."
     already_done: "Desculpe, este link de confirmação não é mais válido. Talvez o seu e-mail já tenha sido alterado?"
     confirm: "Confirmar"
+    max_secondary_emails_error: "Você alcançou o limite máximo de e-mails secundários."
     authorizing_new:
       title: "Confirme seu novo e-mail"
+      description: "Confirme que gostaria de mudar seu endereço de e-mail para:"
+      description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
     authorizing_old:
       title: "Troque seu endereço de e-mail"
       description: "Confirme a alteração do seu endereço de e-mail"
+      description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
       old_email: "E-mail antigo: %{email}"
       new_email: "Novo e-mail: %{email}"
       almost_done_title: "Confirmando seu novo endereço de e-mail"
@@ -776,6 +826,7 @@ pt_BR:
       title: "erro no rascunho"
       description: "O rascunho está sendo editado em outra janela. Recarregue esta página."
   draft_backup:
+    pm_title: "Rascunhos de backup de tópicos em andamento"
     pm_body: "Tópico contendo rascunhos salvos"
   user_activity:
     no_default:
@@ -783,6 +834,7 @@ pt_BR:
       others: "Nenhuma atividade."
     no_bookmarks:
       self: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
+      search: "Nenhum favorito encontrado com a consulta de pesquisa fornecida."
       others: "Nenhum favorito."
     no_likes_given:
       self: "Você não curtiu nenhuma postagem."
@@ -792,8 +844,25 @@ pt_BR:
       others: "Sem respostas."
     no_drafts:
       self: "Você não tem rascunhos. Comece a compor uma resposta em qualquer tópico e ela será salva automaticamente como um novo rascunho."
+  email_settings:
+    pop3_authentication_error: "Ocorreu um problema com as credenciais POP3 informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
+    imap_authentication_error: "Ocorreu um problema com as credenciais IMAP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
+    imap_no_response_error: "Ocorreu um erro ao se comunicar com o servidor IMAP. %{message}"
+    smtp_authentication_error: "Ocorreu um problema com as credenciais SMTP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
+    authentication_error_gmail_app_password: 'É preciso ter uma senha específica para o aplicativo. Saiba mais neste <a target="_blank" href="https://support.google.com/accounts/answer/185833">artigo de ajuda do Google</a>'
+    smtp_server_busy_error: "O servidor SMTP está ocupado neste momento, tente novamente mais tarde."
+    smtp_unhandled_error: "Ocorreu um erro sem tratamento ao se comunicar com o servidor SMTP. %{message}"
+    imap_unhandled_error: "Ocorreu um erro sem tratamento ao se comunicar com o servidor IMAP. %{message}"
+    connection_error: "Ocorreu um problema ao se conectar com o servidor, verifique o nome e a porta do servidor e tente novamente."
+    timeout_error: "O tempo de conexão com o servidor se esgotou, verifique a porta e o nome do servidor e tente novamente."
+    unhandled_error: "Erro sem tratamento ao testar as configurações do e-mail. %{message}"
   webauthn:
     validation:
+      invalid_type_error: "O tipo de webauthn informado era inválido. Os tipos válidos são webauthn.get e webauthn.create."
+      challenge_mismatch_error: "O desafio fornecido não corresponde ao desafio gerado pelo servidor de autenticação."
+      invalid_origin_error: "A origem do pedido de autenticação não corresponde à origem do servidor."
+      malformed_attestation_error: "Ocorreu um erro ao decodificar os dados de atestado."
+      invalid_relying_party_id_error: "A ID da parte confiável do pedido de autenticação não corresponde à ID da parte confiável do servidor."
       user_verification_error: "É preciso verificar o(a) usuário(a)."
   topic_flag_types:
     spam:
@@ -1393,6 +1462,7 @@ pt_BR:
     s3_backup_bucket: "O bucket remoto para realizar backups. AVISO: verifique se é um bucket privado."
     s3_endpoint: "O ponto de extremindade pode ser modificado para fazer backup em um serviço compatível com S3, como DigitalOcean Spaces ou Minio. AVISO: deixe em branco se estiver usando o AWS S3."
     s3_configure_tombstone_policy: "Ative a política de exclusão automática para envios de marca de exclusão. IMPORTANTE: Se for desativado, nenhum espaço será recuperado depois que os envios forem excluídos."
+    s3_disable_cleanup: "Evite remover backups antigos do S3 quando houver mais backups do que o máximo permitido."
     enable_s3_inventory: "Gere relatórios e verifique os envios usando o inventário do Amazon S3. IMPORTANTE: requer credenciais S3 válidas (ID da chave de acesso e chave de acesso secreta)."
     backup_time_of_day: "Hora do dia, em UTC, em que o backup deve ocorrer."
     backup_with_uploads: "Inclua envios nos backups programados. Desative para copiar apenas a base de dados."

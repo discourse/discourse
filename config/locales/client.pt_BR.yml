@@ -3560,6 +3560,7 @@ pt_BR:
               bookmarks: Liste os favoritos dos(as) usuários(as). Retorna lembretes de favoritos ao usar o formato ICS.
               sync_sso: Sincronize um(a) usuário(a) com o DiscourseConnect.
               show: Obtenha informações sobre um(a) usuário(a).
+              check_emails: Liste e-mails de usuário(a).
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks no momento."
@@ -4218,8 +4219,16 @@ pt_BR:
           censor: "Permita postagens contendo essas palavras, mas substitua-as por caracteres que ocultem as palavras censuradas."
           require_approval: "As postagens contendo essas palavras exigirão aprovação da equipe antes que possam ser vistas."
           flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que a moderação possa analisá-las."
+          tag: "Etiquete tópicos automaticamente conforme a primeira postagem"
+          silence: "As primeiras postagens de usuários(as) com estas palavras precisarão de aprovação da equipe antes que sejam exibidas e o(a) usuário(a) será silenciado(a) automaticamente."
+          link: "Substitua palavras em postagens por links"
         form:
+          label: "Tem palavra ou frase"
+          placeholder: "Digite uma palavra ou frase (* é um curinga)"
           placeholder_regexp: "expressão regular"
+          replace_label: "Substituição"
+          replace_placeholder: "exemplo"
+          tag_label: "Etiqueta"
           link_label: "Link"
           link_placeholder: "https://example.com"
           add: "Adicionar"
@@ -4229,6 +4238,7 @@ pt_BR:
           upload_successful: "Envio bem-sucedido. As palavras foram adicionadas."
         test:
           button_label: "Testar"
+          modal_title: "%{action}: testar palavras acompanhadas"
           description: "Digite o texto abaixo para verificar as correspondências com palavras acompanhadas"
           found_matches: "Correspondências encontradas:"
           no_matches: "Nenhuma correspondência encontrada"
@@ -4274,6 +4284,7 @@ pt_BR:
           title: "Mostrar endereço de e-mail deste(a) usuário(a)"
           text: "Exibir"
         check_sso:
+          title: "Revelar conteúdo do SSO"
           text: "Exibir"
       user:
         suspend_failed: "Algo deu errado ao suspender este(a) usuário(a) %{error}"
@@ -4283,6 +4294,13 @@ pt_BR:
         suspend_reason_hidden_label: "Por que você está suspendendo? Este texto será exibido para o(a) usuário(a) quando tentar entrar. Seja breve."
         suspend_reason: "Motivo"
         suspend_reason_title: "Motivo da suspensão"
+        suspend_reasons:
+          not_listening_to_staff: "Não dava atenção aos comentários da equipe"
+          consuming_staff_time: "Consumia uma quantidade desproporcional de tempo da equipe"
+          combative: "Muito agressivo(a)"
+          in_wrong_place: "No lugar errado"
+          no_constructive_purpose: "Nenhum propósito construtivo em suas ações, exceto criar discórdia na comunidade"
+          custom: "Personalizado..."
         suspend_message: "Mensagem de e-mail"
         suspend_message_placeholder: "Opcionalmente, forneça mais informações sobre a suspensão e elas serão enviadas para o(a) usuário(a) por e-mail."
         suspended_by: "Suspenso(a) por"
@@ -4305,9 +4323,11 @@ pt_BR:
         penalty_post_edit: "Editar a postagem"
         penalty_post_none: "Não fazer nada"
         penalty_count: "Contagem de penalidades"
+        penalty_history: "Histórico de penalidades"
         clear_penalty_history:
           title: "Limpar histórico de penalidades"
           description: "usuários(as) com penalidades não podem alcançar TL3"
+        delete_all_posts_confirm_MF: "Você está prestes a excluir {POSTS, plural, one {# postagem} other {# postagens}} e {TOPICS, plural, one {# tópico} other {# tópicos}}. Deseja prosseguir?"
         silence: "Silenciar"
         unsilence: "Ativar som"
         silenced: "Silenciado(a)?"
@@ -4340,10 +4360,13 @@ pt_BR:
         private_topics_count: Tópicos privados
         posts_read_count: Postagens lidas
         post_count: Postagens criadas
+        second_factor_enabled: Autenticação de dois fatores ativada
         topics_entered: Tópicos visualizados
         flags_given_count: Sinalizações dadas
         flags_received_count: Sinalizações recebidas
         warnings_received_count: Avisos recebidos
+        warnings_list_warning: |
+          Na função de moderador(a), talvez você não consiga visualizar todos estes tópicos. Caso seja necessário, peça a um(a) administrador(a) ou ao(à) moderador(a) emissor(a) que dê acesso às mensagens a <b>@moderators</b> .
         flags_given_received_count: "Sinalizações dadas/recebidas"
         approve: "Aprovar"
         approved_by: "aprovado(a) por"
@@ -4369,6 +4392,8 @@ pt_BR:
             target_username_placeholder: "Nome do(a) usuário(a) do(a) novo(a) proprietário(a)"
             transfer_and_delete: "Transferir e excluir @%{username}"
             cancel: "Cancelar"
+          progress:
+            title: "Progresso da mesclagem"
           confirmation:
             title: "Transferir e excluir @%{username}"
             description: |
@@ -4432,6 +4457,9 @@ pt_BR:
         trust_level_unlocked_tip: "o nível de confiança está desbloqueado, o sistema poderá promover ou rebaixar o(a) usuário(a)"
         lock_trust_level: "Bloquear nível de confiança"
         unlock_trust_level: "Desbloquear nível de confiança"
+        silenced_count: "Silenciado(a)"
+        suspended_count: "Suspenso(a)"
+        last_six_months: "Últimos seis meses"
         tl3_requirements:
           title: "Requisitos para o nível de confiança 3"
           table_title:
@@ -4462,11 +4490,15 @@ pt_BR:
           locked_will_not_be_promoted: "Nível de confiança bloqueado. Nunca será promovido(a)."
           locked_will_not_be_demoted: "Nível de confiança bloqueado(a). Nunca será rebaixado(a)."
         discourse_connect:
+          title: "Entrada única no DiscourseConnect"
           external_id: "ID externa"
           external_username: "Nome do(a) usuário(a)"
           external_name: "Nome"
           external_email: "E-mail"
           external_avatar_url: "URL da imagem do perfil"
+          last_payload: "Último conteúdo"
+          delete_sso_record: "Excluir registro SSO"
+          confirm_delete: "Tem certeza de que gostaria de excluir este registro do DiscourseConnect?"
       user_fields:
         title: "Campos de usuário(a)"
         help: "Adicionar campos que seus(suas) usuários(as) podem preencher."
@@ -4505,6 +4537,7 @@ pt_BR:
           text: "Campo de texto"
           confirm: "Confirmação"
           dropdown: "Menu suspenso"
+          multiselect: "Multisseleção"
       site_text:
         description: "Você pode personalizar qualquer parte do texto em seu fórum. Comece pesquisando abaixo:"
         search: "Pesquise o texto que você gostaria de editar"
@@ -4515,12 +4548,19 @@ pt_BR:
         go_back: "Voltar para pesquisa"
         recommended: "Recomendamos personalizar o texto a seguir para atender às suas necessidades:"
         show_overriden: "Exibir apenas substituídos"
+        locale: "Idioma:"
+        fallback_locale_warning: "Você está editando um idioma com base em %{fallback}. Os(as) usuários(as) que escolherem %{fallback} como idioma de interface não visualizarão suas alterações."
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
       settings:
         show_overriden: "Exibir apenas substituídos"
+        history: "Visualizar histórico de alterações"
         reset: "redefinir"
         none: "nenhum(a)"
       site_settings:
+        emoji_list:
+          invalid_input: "A lista de emojis deve conter apenas nomes de emoji válidos, por exemplo: abraços"
+          add_emoji_button:
+            label: "Adicionar emoji"
         title: "Configurações"
         no_results: "Nenhum resultado encontrado."
         more_than_30_results: "Existem mais de 30 resultados. Refine sua pesquisa ou selecione uma categoria."
@@ -4571,6 +4611,11 @@ pt_BR:
           modal_description: "Você gostaria de aplicar esta alteração historicamente? Isto mudará as preferências de %{count} usuários(as) existentes."
           modal_yes: "Sim"
           modal_no: "Não, apenas aplique alterações daqui para frente"
+        simple_list:
+          add_item: "Adicionar item..."
+        json_schema:
+          edit: Iniciar editor
+          modal_title: "Editar %{name}"
       badges:
         title: Emblemas
         new_badge: Novo emblema
@@ -4607,7 +4652,12 @@ pt_BR:
         enabled: Ativar emblema
         icon: Ícone
         image: Imagem
+        graphic: Gráfico
         icon_help: "Digite um nome de ícone do tipo Font Awesome (use o prefixo \"far-\" para ícones comuns e \"fab-\" para ícones de marca)"
+        image_help: "Enviar uma imagem substitui o campo do ícone se ambos estiverem definidos."
+        select_an_icon: "Selecione um ícone"
+        upload_an_image: "Enviar uma imagem"
+        read_only_setting_help: "Personalizar texto"
         query: Badge Query (SQL)
         target_posts: Consultar postagens de destino
         auto_revoke: Rodar consulta de revogação todos os dias
@@ -4651,7 +4701,11 @@ pt_BR:
           perform: "Conceder emblema a usuários(as)"
           upload_csv: Enviar um CSV com e-mails ou nomes de usuário(a)
           aborted: Envie um CSV contendo e-mails ou nomes de usuário(a)
+          success: Seu CSV foi recebido e %{count} usuários(as) receberão seu emblema em breve.
+          csv_has_unmatched_users: "As entradas a seguir estão no arquivo CSV, mas não corresponderam a nenhum(a) usuário(a) existente e por isso não receberão o emblema:"
+          csv_has_unmatched_users_truncated_list: "Haviam %{count} entradas no arquivo CSV que não corresponderam a nenhum(a) usuário(a) e por isso não receberam o emblema. Devido à grande quantidade de entradas sem correspondência, apenas as primeiras são exibidas:"
           replace_owners: Remover o emblema dos(as) proprietários(as) anteriores
+          grant_existing_holders: Conceder emblemas adicionais a titulares de emblema existentes
       emoji:
         title: "Emoji"
         help: "Adicionar novo emoji que estará disponível para todos(as). (DICA: arraste e solte diversos arquivos de uma vez)"
@@ -4669,6 +4723,7 @@ pt_BR:
         title: "Incorporar"
         host: "Hosts permitidos"
         class_name: "Nome da classe"
+        allowed_paths: "Caminho Allowlist"
         edit: "editar"
         category: "Postar na categoria"
         add_host: "Adicionar host"
@@ -4694,7 +4749,10 @@ pt_BR:
         post_title: "Mensagem"
         category_id: "ID da categoria"
         category_title: "Categoria"
+        tag_name: "Nome da etiqueta"
+        external_url: "URL externa ou relacionada"
         destination: "Destino"
+        copy_to_clipboard: "Copiar permalink para a área de transferência"
         delete_confirm: Você tem certeza que quer excluir este link permanente?
         form:
           label: "Novo:"
