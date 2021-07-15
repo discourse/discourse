@@ -18,18 +18,20 @@ module DiscourseDev
       end
 
       @model = model
-      @type = model.to_s
+      @type = model.to_s.downcase.to_sym
       @count = count
     end
 
     def create!
       record = model.create!(data)
       yield(record) if block_given?
+      DiscourseEvent.trigger(:after_create_dev_record, record, type)
+      record
     end
 
     def populate!
       if current_count >= @count
-        puts "Already have #{current_count} #{type.downcase} records"
+        puts "Already have #{current_count} #{type} records"
 
         Rake.application.top_level_tasks.each do |task_name|
           Rake::Task[task_name].reenable
@@ -39,17 +41,20 @@ module DiscourseDev
         return
       elsif current_count > 0
         @count -= current_count
-        puts "There are #{current_count} #{type.downcase} records. Creating #{@count} more."
+        puts "There are #{current_count} #{type} records. Creating #{@count} more."
       else
-        puts "Creating #{@count} sample #{type.downcase} records"
+        puts "Creating #{@count} sample #{type} records"
       end
 
+      records = []
       @count.times do
-        create!
+        records << create!
         putc "."
       end
 
+      DiscourseEvent.trigger(:after_populate_dev_records, records, type)
       puts
+      records
     end
 
     def current_count
