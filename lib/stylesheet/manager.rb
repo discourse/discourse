@@ -230,9 +230,13 @@ class Stylesheet::Manager
         end
 
         if stylesheets.size > 1
-          stylesheets = stylesheets.sort_by { |s|
-            [s[:remote] ? 0 : 1, s[:theme_id] == @theme_id ? 1 : 0, s[:theme_name]]
-          }
+          stylesheets = stylesheets.sort_by do |s|
+            [
+              s[:remote] ? 0 : 1, 
+              s[:theme_id] == @theme_id ? 1 : 0, 
+              s[:theme_name]
+            ]
+          end
         end
       else
         builder = Builder.new(target: target, manager: self)
