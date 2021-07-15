@@ -233,7 +233,8 @@ class AdminDashboardData
       begin
         WordWatcher.word_matcher_regexp(action, raise_errors: true)
       rescue RegexpError => e
-        return I18n.t('dashboard.watched_word_regexp_error', base_path: Discourse.base_path, action: action)
+        translated_action = I18n.t("admin_js.admin.watched_words.actions.#{action}")
+        I18n.t('dashboard.watched_word_regexp_error', base_path: Discourse.base_path, action: translated_action)
       end
     end
     nil

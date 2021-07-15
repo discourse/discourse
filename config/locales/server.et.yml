@@ -97,7 +97,7 @@ et:
       record_invalid: ! "Valideerimine ebaõnnestus: %{errors}"
       restrict_dependent_destroy:
         one: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
-        many: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
+        other: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
       too_long:
         one: on liiga pikk (maksimum on %{count} tähemärk)
         other: on liiga pikk (maksimum on %{count} tähemärki)
@@ -129,9 +129,6 @@ et:
     backup_file_should_be_tar_gz: "Varukoopia peab olema .tar.gz arhiivifail."
     not_enough_space_on_disk: "Varukoopia üleslaadimiseks pole piisavalt kettaruumi."
     invalid_filename: "Varundusfaili nimi sisaldab keelatud sümboleid. Lubatud sümbolid on a-z 0-9 . - _."
-    location:
-      local: "Kohalik"
-      s3: "Amazon S3"
   not_logged_in: "Selleks peate olema sisse logitud."
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
@@ -910,6 +907,7 @@ et:
       description: Olnud aktiivne kasutaja vähemalt aasta, postitanud vähemalt ühe korra
     nice_post:
       name: Mõnus vastus
+      description: Kogus vastusele 10 like'i
     good_post:
       name: Hea vastus
       description: Kogus vastusele 25 like'i
@@ -1124,8 +1122,6 @@ et:
         title: "Vaigista kasutaja"
       agree_and_hide:
         title: "Peida postitus"
-      delete_spammer:
-        title: "Kustuta spämmija"
       delete_single:
         title: "Kustuta"
       disagree:
@@ -1141,8 +1137,6 @@ et:
           title: "Kustuta kasutaja"
       reject:
         title: "Lükka tagasi"
-      delete_user:
-        title: "Kustuta kasutaja"
   activemodel:
     errors:
       <<: *errors

@@ -5,7 +5,7 @@ import discourseComputed, {
 import Component from "@ember/component";
 import I18n from "I18n";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
-const { makeArray } = Ember;
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default Component.extend({
   @discourseComputed("placeholderKey")

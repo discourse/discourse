@@ -33,7 +33,7 @@ describe RetrieveTitle do
       expect(title).to eq("Good Title")
     end
 
-    it "will prefer the title from an opengraph tag" do
+    it "will prefer the title over the opengraph tag" do
       title = RetrieveTitle.extract_title(<<~HTML
         <html>
           <title>Good Title</title>
@@ -88,6 +88,17 @@ describe RetrieveTitle do
 
       IPSocket.stubs(:getaddress).returns('100.2.3.4')
       expect(RetrieveTitle.crawl("https://brelksdjflaskfj.com/amazing")).to eq("japanese こんにちは website")
+    end
+
+    it "can follow redirect" do
+      stub_request(:get, "http://foobar.com/amazing").
+        to_return(status: 301, body: "", headers: { "location" => "https://wikipedia.com/amazing" })
+
+      stub_request(:get, "https://wikipedia.com/amazing").
+        to_return(status: 200, body: "<html><title>very amazing</title>", headers: {})
+
+      IPSocket.stubs(:getaddress).returns('100.2.3.4')
+      expect(RetrieveTitle.crawl("http://foobar.com/amazing")).to eq("very amazing")
     end
   end
 end

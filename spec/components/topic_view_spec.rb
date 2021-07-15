@@ -4,7 +4,6 @@ require 'rails_helper'
 require 'topic_view'
 
 describe TopicView do
-
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
@@ -219,7 +218,6 @@ describe TopicView do
       PostActionCreator.like(moderator, p2)
       best = TopicView.new(topic.id, nil, best: 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(1)
-
     end
 
     it "raises NotLoggedIn if the user isn't logged in and is trying to view a private message" do
@@ -410,12 +408,19 @@ describe TopicView do
       end
     end
 
-    context "#first_post_bookmark_reminder_at" do
+    context "#bookmarked_posts" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, post: topic.posts[1], user: user) }
 
       it "gets the first post bookmark reminder at for the user" do
-        expect(TopicView.new(topic.id, user).first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+        topic_view = TopicView.new(topic.id, user)
+
+        first, second = topic_view.bookmarked_posts
+        expect(first[:post_id]).to eq(bookmark1.post_id)
+        expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
+        expect(second[:post_id]).to eq(bookmark2.post_id)
+        expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
       end
 
       context "when the topic is deleted" do
@@ -423,7 +428,12 @@ describe TopicView do
           topic_view = TopicView.new(topic, user)
           PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
           topic.reload
-          expect(topic_view.first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+
+          first, second = topic_view.bookmarked_posts
+          expect(first[:post_id]).to eq(bookmark1.post_id)
+          expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
+          expect(second[:post_id]).to eq(bookmark2.post_id)
+          expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
         end
       end
     end
@@ -453,7 +463,6 @@ describe TopicView do
         expect(recent_posts.first.created_at).to be > recent_posts.last.created_at
       end
     end
-
   end
 
   context 'whispers' do
@@ -577,7 +586,6 @@ describe TopicView do
     end
 
     describe "filter_posts_near" do
-
       def topic_view_near(post, show_deleted = false)
         TopicView.new(topic.id, evil_trout, post_number: post.post_number, show_deleted: show_deleted)
       end
@@ -788,13 +796,13 @@ describe TopicView do
   end
 
   describe '#filtered_post_stream' do
-    let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
-    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
+    let!(:post) { Fabricate(:post, topic: topic, user: first_poster, created_at: 18.hours.ago) }
+    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout, created_at: 6.hours.ago) }
     let!(:post3) { Fabricate(:post, topic: topic, user: first_poster) }
 
     it 'should return the right columns' do
       expect(topic_view.filtered_post_stream).to eq([
-        [post.id, 0],
+        [post.id, 1],
         [post2.id, 0],
         [post3.id, 0]
       ])
@@ -802,19 +810,12 @@ describe TopicView do
 
     describe 'for mega topics' do
       it 'should return the right columns' do
-        begin
-          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
-          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
-
+        stub_const(TopicView, "MEGA_TOPIC_POSTS_COUNT", 2) do
           expect(topic_view.filtered_post_stream).to eq([
             post.id,
             post2.id,
             post3.id
           ])
-        ensure
-          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
         end
       end
     end
@@ -920,6 +921,43 @@ describe TopicView do
 
       topic_view = TopicView.new(topic.id, admin)
       expect(topic_view.show_read_indicator?).to be_falsey
+    end
+  end
+
+  describe '#reviewable_counts' do
+    it 'exclude posts queued because the category needs approval' do
+      category = Fabricate.build(:category, user: admin)
+      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.save!
+      manager = NewPostManager.new(
+        user,
+        raw: 'to the handler I say enqueue me!',
+        title: 'this is the title of the queued post',
+        category: category.id
+      )
+      result = manager.perform
+      reviewable = result.reviewable
+      reviewable.perform(admin, :approve_post)
+
+      topic_view = TopicView.new(reviewable.topic, admin)
+
+      expect(topic_view.reviewable_counts).to be_empty
+    end
+
+    it 'include posts queued for other reasons' do
+      Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is darn new post content',
+        title: 'this is the title of the queued post'
+      )
+      result = manager.perform
+      reviewable = result.reviewable
+      reviewable.perform(admin, :approve_post)
+
+      topic_view = TopicView.new(reviewable.topic, admin)
+
+      expect(topic_view.reviewable_counts.keys).to contain_exactly(reviewable.target_id)
     end
   end
 end

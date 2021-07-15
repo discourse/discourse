@@ -17,10 +17,10 @@ class ContentSecurityPolicy
       protocol = (SiteSetting.force_https || request.ssl?) ? "https://" : "http://"
       base_url = protocol + request.host_with_port + Discourse.base_path
 
-      theme_ids = env[:resolved_theme_ids]
+      theme_id = env[:resolved_theme_id]
 
-      headers['Content-Security-Policy'] = policy(theme_ids, base_url: base_url, path_info: env["PATH_INFO"]) if SiteSetting.content_security_policy
-      headers['Content-Security-Policy-Report-Only'] = policy(theme_ids, base_url: base_url, path_info: env["PATH_INFO"]) if SiteSetting.content_security_policy_report_only
+      headers['Content-Security-Policy'] = policy(theme_id, base_url: base_url, path_info: env["PATH_INFO"]) if SiteSetting.content_security_policy
+      headers['Content-Security-Policy-Report-Only'] = policy(theme_id, base_url: base_url, path_info: env["PATH_INFO"]) if SiteSetting.content_security_policy_report_only
 
       response
     end

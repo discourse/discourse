@@ -6,19 +6,16 @@ createWidget("avatar-flair", {
   tagName: "div.avatar-flair",
 
   isIcon(attrs) {
-    return (
-      attrs.primary_group_flair_url &&
-      !attrs.primary_group_flair_url.includes("/")
-    );
+    return attrs.flair_url && !attrs.flair_url.includes("/");
   },
 
   title(attrs) {
-    return attrs.primary_group_name;
+    return attrs.flair_name;
   },
 
   buildClasses(attrs) {
-    let defaultClass = `avatar-flair-${attrs.primary_group_name} ${
-      attrs.primary_group_flair_bg_color ? "rounded" : ""
+    let defaultClass = `avatar-flair-${attrs.flair_name} ${
+      attrs.flair_bg_color ? "rounded" : ""
     }`;
 
     if (!this.isIcon(attrs)) {
@@ -32,26 +29,21 @@ createWidget("avatar-flair", {
     let style = "";
     if (!this.isIcon(attrs)) {
       style +=
-        "background-image: url(" +
-        escapeExpression(attrs.primary_group_flair_url) +
-        "); ";
+        "background-image: url(" + escapeExpression(attrs.flair_url) + "); ";
     }
-    if (attrs.primary_group_flair_bg_color) {
+    if (attrs.flair_bg_color) {
       style +=
-        "background-color: #" +
-        escapeExpression(attrs.primary_group_flair_bg_color) +
-        "; ";
+        "background-color: #" + escapeExpression(attrs.flair_bg_color) + "; ";
     }
-    if (attrs.primary_group_flair_color) {
-      style +=
-        "color: #" + escapeExpression(attrs.primary_group_flair_color) + "; ";
+    if (attrs.flair_color) {
+      style += "color: #" + escapeExpression(attrs.flair_color) + "; ";
     }
-    return { style: style };
+    return { style };
   },
 
   html(attrs) {
     if (this.isIcon(attrs)) {
-      const icon = convertIconClass(attrs.primary_group_flair_url);
+      const icon = convertIconClass(attrs.flair_url);
       return [iconNode(icon)];
     } else {
       return [];

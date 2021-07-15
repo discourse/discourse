@@ -25,7 +25,7 @@ export default ComboBoxComponent.extend({
     const shortcuts = [];
 
     if (this.enableGroupDirectory || this.get("currentUser.staff")) {
-      shortcuts.push(I18n.t("groups.index.all").toLowerCase());
+      shortcuts.push(I18n.t("groups.index.all"));
     }
 
     return shortcuts.concat(this.groups);

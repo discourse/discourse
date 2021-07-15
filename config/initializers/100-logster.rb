@@ -92,6 +92,7 @@ Logster.config.subdirectory = "#{GlobalSetting.relative_url_root}/logs"
 
 Logster.config.application_version = Discourse.git_version
 Logster.config.enable_custom_patterns_via_ui = true
+Logster.config.use_full_hostname = true
 Logster.config.enable_js_error_reporting = GlobalSetting.enable_js_error_reporting
 
 store = Logster.store

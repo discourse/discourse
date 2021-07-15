@@ -14,6 +14,7 @@ class Admin::WatchedWordsController < Admin::AdminController
   def create
     watched_word = WatchedWord.create_or_update_word(watched_words_params)
     if watched_word.valid?
+      StaffActionLogger.new(current_user).log_watched_words_creation(watched_word)
       render json: watched_word, root: false
     else
       render_json_error(watched_word)
@@ -24,6 +25,7 @@ class Admin::WatchedWordsController < Admin::AdminController
     watched_word = WatchedWord.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless watched_word
     watched_word.destroy!
+    StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
     render json: success_json
   end
 
@@ -36,11 +38,14 @@ class Admin::WatchedWordsController < Admin::AdminController
       begin
         CSV.foreach(file.tempfile, encoding: "bom|utf-8") do |row|
           if row[0].present? && (!has_replacement || row[1].present?)
-            WatchedWord.create_or_update_word(
+            watched_word = WatchedWord.create_or_update_word(
               word: row[0],
               replacement: has_replacement ? row[1] : nil,
               action_key: action_key
             )
+            if watched_word.valid?
+              StaffActionLogger.new(current_user).log_watched_words_creation(watched_word)
+            end
           end
         end
 
@@ -79,7 +84,10 @@ class Admin::WatchedWordsController < Admin::AdminController
     action = WatchedWord.actions[name]
     raise Discourse::NotFound if !action
 
-    WatchedWord.where(action: action).delete_all
+    WatchedWord.where(action: action).find_each do |watched_word|
+      watched_word.destroy!
+      StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
+    end
     WordWatcher.clear_cache!
     render json: success_json
   end

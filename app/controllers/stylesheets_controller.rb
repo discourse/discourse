@@ -19,39 +19,20 @@ class StylesheetsController < ApplicationController
     params.require("id")
     params.permit("theme_id")
 
-    stylesheet = Stylesheet::Manager.color_scheme_stylesheet_details(params[:id], 'all', params[:theme_id])
+    manager = Stylesheet::Manager.new(theme_id: params[:theme_id])
+    stylesheet = manager.color_scheme_stylesheet_details(params[:id], 'all')
     render json: stylesheet
   end
+
   protected
 
   def show_resource(source_map: false)
 
     extension = source_map ? ".css.map" : ".css"
 
-    params[:name]
-
     no_cookies
 
     target, digest = params[:name].split(/_([a-f0-9]{40})/)
-
-    if !Rails.env.production?
-      # TODO add theme
-      # calling this method ensures we have a cache for said target
-      # we hold off re-compilation till someone asks for asset
-      if target.include?("color_definitions")
-        split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
-        Stylesheet::Manager.color_scheme_stylesheet_link_tag(color_scheme_id)
-      else
-        if target.include?("theme")
-          split_target, theme_id = target.split(/_(-?[0-9]+)/)
-          theme = Theme.find_by(id: theme_id) if theme_id.present?
-        else
-          split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
-          theme = Theme.find_by(color_scheme_id: color_scheme_id)
-        end
-        Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.id)
-      end
-    end
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
 

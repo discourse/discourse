@@ -412,7 +412,7 @@ RSpec.describe ListController do
 
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
-        get "/top/#{period}.rss"
+        get "/top.rss?period=#{period}"
         expect(response.status).to eq(200)
         expect(response.media_type).to eq('application/rss+xml')
       end
@@ -700,6 +700,58 @@ RSpec.describe ListController do
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
       expect(json["topic_list"]["topics"][0]["id"]).to eq(pm.id)
+    end
+  end
+
+  describe "#private_messages_warnings" do
+    let(:target_user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
+    let(:moderator1) { Fabricate(:moderator) }
+    let(:moderator2) { Fabricate(:moderator) }
+
+    let(:create_args) do
+      { title: 'you need a warning buddy!',
+        raw: "you did something bad and I'm telling you about it!",
+        is_warning: true,
+        target_usernames: target_user.username,
+        archetype: Archetype.private_message }
+    end
+
+    let(:warning_post) do
+      creator = PostCreator.new(moderator1, create_args)
+      creator.create
+    end
+    let(:warning_topic) { warning_post.topic }
+
+    before do
+      warning_topic
+    end
+
+    it "returns 403 error for unrelated users" do
+      sign_in(Fabricate(:user))
+      get "/topics/private-messages-warnings/#{target_user.username}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "shows the warning to moderators and admins" do
+      [moderator1, moderator2, admin].each do |viewer|
+        sign_in(viewer)
+        get "/topics/private-messages-warnings/#{target_user.username}.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topic_list"]["topics"].size).to eq(1)
+        expect(json["topic_list"]["topics"][0]["id"]).to eq(warning_topic.id)
+      end
+    end
+
+    it "does not show the warning as applying to the authoring moderator" do
+      sign_in(admin)
+      get "/topics/private-messages-warnings/#{moderator1.username}.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["topic_list"]["topics"].size).to eq(0)
     end
   end
 

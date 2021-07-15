@@ -193,14 +193,12 @@ sw:
     now: "sasa hivi"
     read_more: "soma zaidi"
     more: "Zaidi"
-    less: "Punguza"
     never: "kamwe"
     every_30_minutes: "kila dakika 30"
     every_hour: "kila saa"
     daily: "kila siku"
     weekly: "kila wiki"
     max_of_count: "kiwango cha juu cha %{count}"
-    alternation: "au"
     character_count:
       one: "Herufi %{count}"
       other: "Herufi %{count}"
@@ -334,8 +332,8 @@ sw:
     time_shortcut:
       later_today: "Baada ya mda leo"
       tomorrow: "Kesho"
-      next_week: "Wiki Ijayo"
       later_this_week: "Baada ya mda ndani ya wiki hii"
+      this_weekend: "Wikiendi hii"
       next_month: "Mwezi ujao"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"
@@ -374,6 +372,8 @@ sw:
         other: "%{count} watumiaji"
       edit_columns:
         save: "hifadhi"
+      group:
+        all: "vikundi vyote"
     group_histories:
       actions:
         change_group_setting: "Badilisha mipangilio ya kikundi"
@@ -383,8 +383,7 @@ sw:
         remove_user_as_group_owner: "Ondoa mmiliki"
     groups:
       add_members:
-        usernames:
-          input_placeholder: "Majina la watumiaji"
+        usernames_placeholder: "majina la watumiaji"
       requests:
         reason: "Sababu"
         accepted: "imeruhusiwa"
@@ -392,7 +391,7 @@ sw:
         title: "Simamia"
         name: "Jina"
         full_name: "Jina Lote"
-        add_members: "Ongeza Wanachama"
+        invite_members: "Mualiko"
         delete_member_confirm: "Ondoa '%{username}' kwenye kikundi '%{group}'?"
         profile:
           title: Umbo
@@ -402,11 +401,14 @@ sw:
           notification: Taarifa
         email:
           title: "Barua Pepe"
+          last_updated_by: "na"
           credentials:
             username: "Jina la mtumiaji"
             password: "Nywila"
           settings:
             title: "Mpangilio"
+          mailboxes:
+            disabled: "Imezuiwa"
         membership:
           title: Uanachama
           access: Ufikivu
@@ -702,11 +704,9 @@ sw:
         sent: "Imetumwa"
         archive: "Hifadhi"
         groups: "Makundi yangu"
-        bulk_select: "Chagua jumbe"
         move_to_inbox: "Hamishia kwenye kisanduku-pokezi"
         move_to_archive: "Hifadhi"
         failed_to_move: "Uhamishaji wa ujumbe uliochaguliwa umeshindikana (laba hauna mtandao wa intaneti uko chini)"
-        select_all: "Chagua vyote"
         tags: "Lebo"
       preferences_nav:
         account: "Akaunti"
@@ -971,6 +971,8 @@ sw:
         header_title: "maelezo mafupi, ujumbe, mialamisho na mapendekezo"
       title:
         title: "Kichwa cha Habari"
+        none: "(hakuna)"
+      flair:
         none: "(hakuna)"
       primary_group:
         title: "Kikundi Msingi"
@@ -1334,13 +1336,6 @@ sw:
         watching_first_post: "mada mpya"
         post_approved: "Chapisho Limepitishwa"
     upload_selector:
-      title: "Ongeza picha au faili"
-      title_with_attachments: "Ongeza picha au faili"
-      from_my_computer: "Kutoka kwenye kifaa changu"
-      from_the_web: "Kutoka kwenye mtandao"
-      remote_tip: "kiungo cha picha"
-      local_tip: "chagua picha kwenye kifaa chako"
-      hint_for_supported_browsers: "Unaweza pia kuvuta na kudondosha kwenye kihariri"
       uploading: "Inapakiwa"
       select_file: "Chagua Faili"
       default_image_alt_text: picha
@@ -1510,15 +1505,9 @@ sw:
       not_found:
         title: "Mada haijapatikana"
         description: "Samahani, tumeshindwa kupata hiyo mada. Labda iliondolewa na msimamizi?"
-      total_unread_posts:
+      unread_posts:
         one: "Una chapisho %{count} halijasomwa kwenye mada hii"
         other: "Una machapisho %{count} hayajasomwa kwenye mada hii"
-      unread_posts:
-        one: "Una chapisho %{count} kwenye mada hii ambayo halijasomwa"
-        other: "Una machapisho %{count} kwenye mada hii ambayo hayajasomwa"
-      new_posts:
-        one: "Kuna chapisho jipya %{count} kwenye mada hii tangu mara ya mwisho usome"
-        other: "Kuna mchapisho mapya %{count} kwenye mada hii tangu mara ya mwisho usome"
       likes:
         one: "Kuna pendwa %{count} kwenye mada hii"
         other: "Kuna pendwa %{count} kwenye mada hii"
@@ -1557,8 +1546,6 @@ sw:
         title: "Panga Uchapishaji"
       temp_open:
         title: "Fungua kwa Mda Mfupi"
-      auto_reopen:
-        title: "Fungua Mada otomatikali"
       temp_close:
         title: "Funga kwa Sasa"
       auto_close:
@@ -1656,14 +1643,10 @@ sw:
         pin: "Bandika Mada"
         unpin: "Ondoa Mada"
         pin_globally: "Bandika Mada kwa ajili ya Umma"
-        make_banner: "Mada ya Bango"
         remove_banner: "Ondoa Bango la Mada"
       reply:
         title: "Jibu"
         help: "anza kuandika jibu lako kwenye mada hii"
-      clear_pin:
-        title: "Futa pini"
-        help: "Futa hali ya ubandikaji wa mada hii ili isitokee tena juu ya orodha ya mada yako."
       share:
         title: "Gawiza"
         help: "gawiza kiungo kwenye mada hii"
@@ -2161,7 +2144,6 @@ sw:
         show_incoming_updated_topics: "%{shortcut} Onyesha mada zilizosasishwa"
         search: "%{shortcut} Tafuta"
         help: "%{shortcut} Fungua msaada wa kibodi"
-        dismiss_new_posts: "%{shortcut} Ondosha Mpya/Machapisho"
         dismiss_topics: "%{shortcut} Puuzia Mada"
         log_out: "%{shortcut} Ondoka"
       composing:
@@ -2254,6 +2236,7 @@ sw:
         new: "Kundi jipya"
         one_per_topic_label: "Weka kikomo cha lebo moja kwenye kila mada iliyo ndani ya kikundi hiki"
         new_name: "Kikundi Kipya cha Lebo"
+        name_placeholder: "Jina"
         save: "Hifadhi"
         delete: "Futa"
         confirm_delete: "Una uhakika unataka kufuta kikundi cha lebo hii?"
@@ -2358,9 +2341,6 @@ sw:
               label: Kikundi
             category:
               label: Kategoria
-      commits:
-        latest_changes: "Mabadiliko ya mwisho: tafadhali sasisha mara kwa mara!"
-        by: "na"
       groups:
         new:
           title: "Kikundi Kipya"
@@ -2372,8 +2352,6 @@ sw:
             available: "Jina la kikundi lipo"
             not_available: "Jina la kikundi halipo"
             blank: "Jina la kikundi haliwezi kuwa wazi"
-        add_members:
-          as_owner: "Fanya w(m)umiaji kuwa w(m)amiliki wa kikundi hiki"
         manage:
           interaction:
             email: Barua Pepe
@@ -2790,7 +2768,6 @@ sw:
           details: "Taarifa"
           previous_value: "Uliopita"
           new_value: "Mpya"
-          diff: "Utofauti"
           show: "Onesha"
           modal_title: "Taarifa"
           no_previous: "Hakuna namba ya zamani."
@@ -3068,6 +3045,8 @@ sw:
         trust_level_unlocked_tip: "kiwango cha uaminifu kimefunguliwa, mfumo unaweza kumvusha au kumshusha mtu daraja"
         lock_trust_level: "Funga Kiwango cha Uaminifu"
         unlock_trust_level: "Fungua Kiwango cha Uaminifu"
+        silenced_count: "Amenyamazishwa"
+        suspended_count: "Alisitishwa"
         tl3_requirements:
           title: "Mahitaji ya Kiwango cha 3 cha uaminifu"
           value_heading: "Thamani"

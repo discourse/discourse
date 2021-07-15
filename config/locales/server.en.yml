@@ -112,6 +112,9 @@ en:
       no_subject: "(no subject)"
       no_body: "(no body)"
       missing_attachment: "(Attachment %{filename} is missing)"
+      continuing_old_discussion:
+        one: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} day ago."
+        other: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} days ago."
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
@@ -172,7 +175,7 @@ en:
       ip_address_already_screened: "is already included in an existing rule"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
-        many: "Cannot delete record because dependent %{record} exist"
+        other: "Cannot delete record because dependent %{record} exist"
       too_long:
         one: is too long (maximum is %{count} character)
         other: is too long (maximum is %{count} characters)
@@ -251,6 +254,7 @@ en:
     disabled_errors:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
       invalid_access: "You are not permitted to view the requested resource."
+    requires_groups: "Invite saved. To give access to the specified topic, add one of the following groups: %{groups}."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -276,9 +280,6 @@ en:
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
     invalid_filename: "The backup filename contains invalid characters. Valid characters are a-z 0-9 . - _."
     file_exists: "The file you are trying to upload already exists."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
 
   invalid_params: "You supplied invalid parameters to the request: %{message}"
   not_logged_in: "You need to be logged in to do that."
@@ -294,7 +295,7 @@ en:
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
   not_in_group:
     title_topic: "You need to request membership to the '%{group}' group to see this topic."
-    title_category: "You must be in a group to see this category."
+    title_category: "You need to request membership to the '%{group}' group to see this category."
     request_membership: "Request Membership"
     join_group: "Join Group"
   deleted_topic: "Oops! This topic has been deleted and is no longer available."
@@ -1458,7 +1459,7 @@ en:
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
-    watched_word_regexp_error: "The regular expression for %{action} watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
+    watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
 
   site_settings:
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
@@ -1491,13 +1492,13 @@ en:
     category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
-    allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be false."
+    allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
     short_site_description: "Short description, as used in the title tag on homepage."
-    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, as well as on the <a href='%{base_path}/about' target='_blank'>/about</a> contact form for urgent matters."
+    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
     contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
@@ -1601,7 +1602,7 @@ en:
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
     review_every_post: "All posts must be reviewed. WARNING! NOT RECOMMENDED FOR BUSY SITES."
-    pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
+    pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
     ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"
@@ -1611,6 +1612,7 @@ en:
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Allow moderators to manage categories and groups"
+    moderators_change_post_ownership: "Allow moderators to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
@@ -1653,6 +1655,7 @@ en:
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
     enable_badges: "Enable the badge system"
+    max_favorite_badges: "Maximum number of badges that user can select"
     enable_whispers: "Allow staff private communication within topics."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
@@ -1733,7 +1736,7 @@ en:
     discord_trusted_guilds: 'Only allow members of these Discord guilds to log in via Discord. Use the numeric ID for the guild. For more information, check the instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">here</a>. Leave blank to allow any guild.'
 
     enable_backups: "Allow administrators to create backups of the forum"
-    allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
+    allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
     backup_frequency: "The number of days between backups."
@@ -1822,6 +1825,12 @@ en:
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
 
     strip_image_metadata: "Strip image metadata."
+
+    composer_media_optimization_image_enabled: "Enables client-side media optimization of uploaded image files."
+    composer_media_optimization_image_kilobytes_optimization_threshold: "Minimum image file size to trigger client-side optimization"
+    composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
+    composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
+    composer_media_optimization_image_encode_quality: "JPEG encode quality used in the re-encode process."
 
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
@@ -1970,9 +1979,10 @@ en:
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
-    reviewable_low_priority_threshold: "The priority filter hides reviewable that doesn't meet this score unless the '(any)' filter is used."
+    reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
+    slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -2151,6 +2161,7 @@ en:
     share_anonymized_statistics: "Share anonymized usage statistics."
 
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
+    penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."
     svg_icon_subset: "Add additional FontAwesome 5 icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
@@ -2594,6 +2605,9 @@ en:
     email_in_spam_header: "User's first email was flagged as spam"
     already_silenced: "User was already silenced by %{staff} %{time_ago}."
     already_suspended: "User was already suspended by %{staff} %{time_ago}."
+    cannot_delete_has_posts:
+      one: "User %{username} has %{count} post in a public topic or personal message, so they can't be deleted."
+      other: "User %{username} has %{count} posts in public topics or personal messages, so they can't be deleted."
 
   reviewables_reminder:
     submitted:
@@ -3461,6 +3475,7 @@ en:
     only_reply_by_email_pm: "Reply to this email to respond to %{participants}."
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
     visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond to %{participants}."
+    reply_above_line: "## Please type your reply above this line. ##"
 
     posted_by: "Posted by %{username} on %{post_date}"
 
@@ -4031,6 +4046,9 @@ en:
     sender_post_deleted: "post has been deleted"
     sender_message_to_invalid: "recipient has invalid email address"
     sender_topic_deleted: "topic has been deleted"
+    group_smtp_post_deleted: "post has been deleted"
+    group_smtp_topic_deleted: "topic has been deleted"
+    group_smtp_disabled_for_group: "smtp has been disabled for the group"
 
   color_schemes:
     base_theme_name: "Base"
@@ -4431,7 +4449,9 @@ en:
     mass_award:
       errors:
         invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
+        too_many_csv_entries: Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entries.
         badge_disabled: Please enable the %{badge_name} badge first.
+        cant_grant_multiple_times: Can't grant the %{badge_name} badge multiple times to a single user.
     editor:
       name: Editor
       description: First post edit
@@ -4986,10 +5006,6 @@ en:
       agree_and_hide:
         title: "Hide Post"
         description: "Hide this post and automatically send the user a message urging them to edit it."
-      delete_spammer:
-        title: "Delete Spammer"
-        description: "Remove the user and all their posts and topics."
-        confirm: "Are you sure you want to delete all that user's posts, topics, and block their IP and email addresses?"
       delete_single:
         title: "Delete"
       delete:
@@ -5046,8 +5062,6 @@ en:
       approve_and_restore:
         title: "Approve and Restore post"
       delete_user:
-        title: "Delete User"
-        confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."
         reason: "Deleted via review queue"
 
   email_style:

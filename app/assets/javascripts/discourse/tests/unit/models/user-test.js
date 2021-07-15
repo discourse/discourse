@@ -2,7 +2,6 @@ import * as ajaxlib from "discourse/lib/ajax";
 import { module, test } from "qunit";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";
-import pretender from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
 
 module("Unit | Model | user", function () {
@@ -74,13 +73,11 @@ module("Unit | Model | user", function () {
   test("resolvedTimezone", function (assert) {
     const tz = "Australia/Brisbane";
     let user = User.create({ timezone: tz, username: "chuck", id: 111 });
-    let stub = sinon.stub(moment.tz, "guess").returns("America/Chicago");
 
-    pretender.put("/u/chuck.json", () => {
-      return [200, { "Content-Type": "application/json" }, {}];
-    });
-
+    sinon.stub(moment.tz, "guess").returns("America/Chicago");
+    sinon.stub(ajaxlib.ajax);
     let spy = sinon.spy(ajaxlib, "ajax");
+
     assert.equal(
       user.resolvedTimezone(user),
       tz,
@@ -119,8 +116,6 @@ module("Unit | Model | user", function () {
       }),
       "if the user has no timezone, and the user is not the current user, do NOT save it with an AJAX update"
     );
-
-    stub.restore();
   });
 
   test("muted ids", function (assert) {

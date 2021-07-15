@@ -45,21 +45,26 @@
       <div class="full-width">
         <div id="list-area">
           {{#unless loading}}
-            {{#if list.topics}}
-              {{#discovery-topics-list
-                model=list
-                refresh=(action "refresh")
-                autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
-                bulkSelectEnabled=bulkSelectEnabled
-                addTopicsToBulkSelect=(action "addTopicsToBulkSelect")
-                as |discoveryTopicList|
+            {{#discovery-topics-list
+              model=list
+              refresh=(action "refresh")
+              autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
+              bulkSelectEnabled=bulkSelectEnabled
+              addTopicsToBulkSelect=(action "addTopicsToBulkSelect")
+              as |discoveryTopicList|
+            }}
+              {{#if top}}
+                <div class="top-lists">
+                  {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
+                </div>
+              {{/if}}
+              {{bulk-select-button
+                selected=selected
+                action=(action "refresh")
+                category=category
               }}
-                {{bulk-select-button
-                  selected=selected
-                  action=(action "refresh")
-                  category=category
-                }}
 
+              {{#if list.topics}}
                 {{topic-list
                   topics=list.topics
                   canBulkSelect=canBulkSelect
@@ -74,8 +79,8 @@
                   onScroll=discoveryTopicList.saveScrollPosition
                   scrollOnLoad=true
                 }}
-              {{/discovery-topics-list}}
-            {{/if}}
+              {{/if}}
+            {{/discovery-topics-list}}
 
             <footer class="topic-list-bottom">
               {{topic-dismiss-buttons position="bottom" selectedTopics=selected

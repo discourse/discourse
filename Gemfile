@@ -165,6 +165,8 @@ group :test, :development do
   gem 'parallel_tests'
 
   gem 'rswag-specs'
+
+  gem 'annotate'
 end
 
 group :development do
@@ -173,8 +175,8 @@ group :development do
   gem 'better_errors', platform: :mri, require: !!ENV['BETTER_ERRORS']
   gem 'binding_of_caller'
   gem 'yaml-lint'
-  gem 'annotate'
-  gem 'discourse_dev'
+  gem 'discourse_dev_assets'
+  gem 'faker', "~> 2.16"
 end
 
 # this is an optional gem, it provides a high performance replacement

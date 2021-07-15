@@ -227,4 +227,11 @@ class DiscoursePluginRegistry
     end
   end
 
+  def self.reset_register!(register_name)
+    found_register = @@register_names.detect { |name| name == register_name }
+
+    if found_register
+      instance_variable_set(:"@#{found_register}", nil)
+    end
+  end
 end

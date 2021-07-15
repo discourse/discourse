@@ -722,12 +722,14 @@ const Composer = RestModel.extend({
     if (!opts) {
       opts = {};
     }
+
     this.set("loading", true);
 
-    const replyBlank = isEmpty(this.reply);
-
-    const composer = this;
-    if (!replyBlank && (opts.reply || isEdit(opts.action)) && this.replyDirty) {
+    if (
+      !isEmpty(this.reply) &&
+      (opts.reply || isEdit(opts.action)) &&
+      this.replyDirty
+    ) {
       return promise;
     }
 
@@ -770,6 +772,15 @@ const Composer = RestModel.extend({
       if (!this.topic) {
         this.set("topic", opts.post.topic);
       }
+    } else if (opts.postId) {
+      promise = promise.then(() =>
+        this.store.find("post", opts.postId).then((post) => {
+          this.set("post", post);
+          if (post) {
+            this.set("topic", post.topic);
+          }
+        })
+      );
     } else {
       this.set("post", null);
     }
@@ -794,19 +805,8 @@ const Composer = RestModel.extend({
       (c) => c.topic_template
     );
 
-    if (opts.postId) {
-      promise = promise.then(() =>
-        this.store.find("post", opts.postId).then((post) => {
-          composer.set("post", post);
-          if (post) {
-            composer.set("topic", post.topic);
-          }
-        })
-      );
-    }
-
     // If we are editing a post, load it.
-    if (isEdit(opts.action) && opts.post) {
+    if (isEdit(opts.action) && this.post) {
       const topicProps = this.serialize(_edit_topic_serializer);
       topicProps.loading = true;
 
@@ -816,30 +816,40 @@ const Composer = RestModel.extend({
       }
       this.setProperties(topicProps);
 
-      promise = promise.then(() =>
-        this.store.find("post", opts.post.id).then((post) => {
-          composer.setProperties({
-            reply: post.raw,
-            originalText: post.raw,
-            post: post,
-          });
+      promise = promise.then(() => {
+        let rawPromise = Promise.resolve();
 
-          promise = Promise.resolve();
-          // edge case ... make a post then edit right away
-          // store does not have topic for the post
-          if (composer.topic && composer.topic.id === post.topic_id) {
-            // nothing to do ... we have the right topic
-          } else {
-            promise = this.store.find("topic", post.topic_id).then((topic) => {
+        if (!this.post.raw) {
+          rawPromise = this.store.find("post", opts.post.id).then((post) => {
+            this.setProperties({
+              post,
+              reply: post.raw,
+              originalText: post.raw,
+            });
+          });
+        } else {
+          this.setProperties({
+            reply: this.post.raw,
+            originalText: this.post.raw,
+          });
+        }
+
+        // edge case ... make a post then edit right away
+        // store does not have topic for the post
+        if (this.topic && this.topic.id === this.post.topic_id) {
+          // nothing to do ... we have the right topic
+        } else {
+          rawPromise = this.store
+            .find("topic", this.post.topic_id)
+            .then((topic) => {
               this.set("topic", topic);
             });
-          }
+        }
 
-          return promise.then(() => {
-            composer.appEvents.trigger("composer:reply-reloaded", composer);
-          });
-        })
-      );
+        return rawPromise.then(() => {
+          this.appEvents.trigger("composer:reply-reloaded", this);
+        });
+      });
     } else if (opts.action === REPLY && opts.quote) {
       this.setProperties({
         reply: opts.quote,
@@ -862,7 +872,7 @@ const Composer = RestModel.extend({
 
     if (!isEdit(opts.action) || !opts.post) {
       promise = promise.then(() =>
-        composer.appEvents.trigger("composer:reply-reloaded", composer)
+        this.appEvents.trigger("composer:reply-reloaded", this)
       );
     }
 
@@ -960,9 +970,7 @@ const Composer = RestModel.extend({
     this.set("composeState", SAVING);
 
     const rollback = throwAjaxError((error) => {
-      post.setProperties({ cooked: oldCooked, staged: false });
-      this.appEvents.trigger("post-stream:refresh", { id: post.id });
-
+      post.setProperties("cooked", oldCooked);
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);
@@ -982,6 +990,7 @@ const Composer = RestModel.extend({
       .catch(rollback)
       .finally(() => {
         post.set("staged", false);
+        this.appEvents.trigger("post-stream:refresh", { id: post.id });
       });
   },
 

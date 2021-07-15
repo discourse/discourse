@@ -57,6 +57,10 @@ export default Controller.extend({
     "model.can_upload_user_card_background"
   ),
 
+  experimentalUserCardImageUpload: readOnly(
+    "siteSettings.enable_experimental_image_uploader"
+  ),
+
   actions: {
     showFeaturedTopicModal() {
       showModal("feature-topic-on-profile", {
@@ -86,21 +90,29 @@ export default Controller.extend({
       this.model.set("user_option.timezone", moment.tz.guess());
     },
 
-    save() {
-      this.set("saved", false);
-
+    _updateUserFields() {
       const model = this.model,
         userFields = this.userFields;
 
-      // Update the user fields
       if (!isEmpty(userFields)) {
         const modelFields = model.get("user_fields");
         if (!isEmpty(modelFields)) {
           userFields.forEach(function (uf) {
-            modelFields[uf.get("field.id").toString()] = uf.get("value");
+            const value = uf.get("value");
+            modelFields[uf.get("field.id").toString()] = isEmpty(value)
+              ? null
+              : value;
           });
         }
       }
+    },
+
+    save() {
+      this.set("saved", false);
+      const model = this.model;
+
+      // Update the user fields
+      this.send("_updateUserFields");
 
       return model
         .save(this.saveAttrNames)

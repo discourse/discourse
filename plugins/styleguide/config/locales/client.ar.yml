@@ -17,7 +17,7 @@ ar:
         typography:
           title: "أسلوب الطباعة"
           example: "مرحبًا بك في دِسكورس"
-          paragraph: "لوريم إيبسوم(Lorem Ipsum) هو ببساطة نص شكلي (بمعنى أن الغاية هي الشكل وليس المحتوى) ويُستخدم في صناعات المطابع ودور النشر. كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر عندما قامت مطبعة مجهولة برص مجموعة من الأحرف بشكل عشوائي أخذتها من نص، لتكوّن كتيّب بمثابة دليل أو مرجع شكلي لهذه الأحرف. خمسة قرون من الزمن لم تقضي على هذا النص، بل انه حتى صار مستخدماً وبشكله الأصلي في الطباعة والتنضيد الإلكتروني. انتشر بشكل كبير في ستينيّات هذا القرن مع إصدار رقائق \"ليتراسيت\" (Letraset) البلاستيكية تحوي مقاطع من هذا النص، وعاد لينتشر مرة أخرى مؤخراَ مع ظهور برامج النشر الإلكتروني مثل \"ألدوس بايج مايكر\" (Aldus PageMaker) والتي حوت أيضاً على نسخ من نص لوريم إيبسوم."
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "حقول إدخال التاريخ/الوقت"
         font_scale:
@@ -32,13 +32,13 @@ ar:
         buttons:
           title: "الأزرار"
         dropdowns:
-          title: "المُنسدلات"
+          title: "القوائم المنسدلة"
         categories:
           title: "الفئات"
         bread_crumbs:
           title: "عناصر التنقّل التفصيلي"
         navigation:
-          title: "التنقّل"
+          title: "التنقل"
         navigation_bar:
           title: "شريط التنقّل"
         navigation_stacked:
@@ -54,17 +54,17 @@ ar:
         topic_list:
           title: "قائمة المواضيع"
         basic_topic_list:
-          title: "عد إلى قائمة الموضوعات"
+          title: "قائمة الموضوعات الأساسية"
         footer_message:
           title: "رسالة التذييل"
         signup_cta:
-          title: "الدعوة إلى التسجيل"
+          title: "عبارة الحث على الاشتراك"
         topic_timer_info:
           title: "مؤقّتات المواضيع"
         topic_footer_buttons:
           title: "أزرار تذييل الموضوع"
         topic_notifications:
-          title: "إخطارات المواضيع"
+          title: "إشعارات الموضوعات"
         post:
           title: "المشاركة"
         topic_map:
@@ -72,13 +72,13 @@ ar:
         site_header:
           title: "رأس الموقع"
         suggested_topics:
-          title: "المواضيع المقترحة"
+          title: "الموضوعات المقترحة"
         post_menu:
           title: "قائمة المشاركة"
         modal:
-          title: "نموذج"
-          header: "عنوان دالة"
-          footer: "تذييل مشروط"
+          title: "النافذة المشروطة"
+          header: "العنوان المشروط"
+          footer: "التذييل المشروط"
         user_about:
           title: "مربّع ”عن المستخدم“"
         header_icons:

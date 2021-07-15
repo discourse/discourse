@@ -3,13 +3,6 @@
     {{avatar topic.lastPosterUser imageSize="large"}}
   {{/user-link}}
   {{user-avatar-flair user=topic.lastPosterUser}}
-  {{#if topic.lastPosterGroup}}
-    {{avatar-flair
-      flairURL=topic.lastPosterGroup.flair_url
-      flairBgColor=topic.lastPosterGroup.flair_bg_color
-      flairColor=topic.lastPosterGroup.flair_color
-      groupName=topic.lastPosterGroup.name}}
-  {{/if}}
 </div>
 <div class="main-link">
   <div class="top-row">
@@ -18,7 +11,7 @@
     {{#if topic.featured_link}}
       {{topic-featured-link topic}}
     {{/if}}
-    {{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
+    {{topic-post-badges unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl}}
   </div>
   <div class="bottom-row">
     {{category-link topic.category}}{{discourse-tags topic mode="list"}}{{! intentionally inline to avoid whitespace}}

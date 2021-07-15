@@ -16,15 +16,31 @@ class EmailLog < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :post
-  has_one :topic, through: :post
+  belongs_to :smtp_group, class_name: 'Group'
 
   validates :email_type, :to_address, presence: true
 
   scope :bounced, -> { where(bounced: true) }
 
+  scope :addressed_to_user, ->(user) do
+    where(<<~SQL, user_id: user.id)
+      EXISTS(
+        SELECT 1
+        FROM user_emails
+        WHERE user_emails.user_id = :user_id AND
+        (email_logs.to_address = user_emails.email OR
+         email_logs.cc_addresses ILIKE '%' || user_emails.email || '%')
+      )
+    SQL
+  end
+
   after_create do
     # Update last_emailed_at if the user_id is present and email was sent
     User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present?
+  end
+
+  def topic
+    @topic ||= self.topic_id.present? ? Topic.find_by(id: self.topic_id) : self.post&.topic
   end
 
   def self.unique_email_per_post(post, user)
@@ -72,22 +88,50 @@ class EmailLog < ActiveRecord::Base
     super&.delete('-')
   end
 
+  def cc_users
+    return [] if !self.cc_user_ids
+    @cc_users ||= User.where(id: self.cc_user_ids)
+  end
+
+  def cc_addresses_split
+    @cc_addresses_split ||= self.cc_addresses&.split(";") || []
+  end
+
+  def as_mail_message
+    return if self.raw.blank?
+    @mail_message ||= Mail.new(self.raw)
+  end
+
+  def raw_headers
+    return if self.raw.blank?
+    as_mail_message.header.raw_source
+  end
+
+  def raw_body
+    return if self.raw.blank?
+    as_mail_message.body
+  end
 end
 
 # == Schema Information
 #
 # Table name: email_logs
 #
-#  id         :integer          not null, primary key
-#  to_address :string           not null
-#  email_type :string           not null
-#  user_id    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  post_id    :integer
-#  bounce_key :uuid
-#  bounced    :boolean          default(FALSE), not null
-#  message_id :string
+#  id            :integer          not null, primary key
+#  to_address    :string           not null
+#  email_type    :string           not null
+#  user_id       :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  post_id       :integer
+#  bounce_key    :uuid
+#  bounced       :boolean          default(FALSE), not null
+#  message_id    :string
+#  smtp_group_id :integer
+#  cc_addresses  :text
+#  cc_user_ids   :integer          is an Array
+#  raw           :text
+#  topic_id      :integer
 #
 # Indexes
 #
@@ -96,5 +140,6 @@ end
 #  index_email_logs_on_created_at  (created_at)
 #  index_email_logs_on_message_id  (message_id)
 #  index_email_logs_on_post_id     (post_id)
+#  index_email_logs_on_topic_id    (topic_id) WHERE (topic_id IS NOT NULL)
 #  index_email_logs_on_user_id     (user_id)
 #

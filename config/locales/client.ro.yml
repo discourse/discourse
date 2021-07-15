@@ -218,7 +218,6 @@ ro:
     submit: "Trimite"
     generic_error: "A apărut o eroare."
     generic_error_with_reason: "A apărut o eroare: %{error}"
-    go_ahead: "Mai departe"
     sign_up: "Înregistrare"
     log_in: "Autentificare"
     age: "Vârsta"
@@ -249,7 +248,6 @@ ro:
       one: "Mai e %{count}"
       few: "Mai e %{count}"
       other: "Mai e %{count}"
-    less: "Mai puțin"
     never: "Niciodată"
     every_30_minutes: "La fiecare 30 de minute"
     every_hour: "La fiecare oră"
@@ -258,7 +256,6 @@ ro:
     every_month: "în fiecare lună"
     every_six_months: "la fiecare șase luni"
     max_of_count: "max din %{count}"
-    alternation: "sau"
     character_count:
       one: "Un caracter"
       few: "%{count} caractere"
@@ -294,7 +291,6 @@ ro:
       help:
         bookmark: "Click pentru a adăuga semn de carte la subiectul acesta"
         unbookmark: "Click pentru a șterge semnele de carte"
-        unbookmark_with_reminder: "Faceți clic pentru a elimina toate marcajele și mementourile din acest subiect. Aveți un set de memento %{reminder_at} pentru acest subiect."
     bookmarks:
       created: "Ai marcat acestă postare %{name} ca semn de carte"
       not_bookmarked: "marchează ca semn de carte acest post"
@@ -549,8 +545,8 @@ ro:
       later_today: "Mai târziu azi"
       next_business_day: "Următoarea zi lucrătoare"
       tomorrow: "Mâine"
-      next_week: "Săptămâna viitoare"
       later_this_week: "Mai târziu săptămâna asta"
+      this_weekend: "Acest weekend"
       start_of_next_business_week: "Luni"
       start_of_next_business_week_alt: "Lunea viitoare"
       next_month: "Luna viitoare"
@@ -594,6 +590,8 @@ ro:
         other: "%{count} de utilizatori"
       edit_columns:
         save: "Salvează"
+      group:
+        all: "toate grupurile"
     group_histories:
       actions:
         change_group_setting: "Schimbă setarea grupului"
@@ -605,13 +603,8 @@ ro:
       member_added: "Adăugat"
       member_requested: "Solicitat la"
       add_members:
-        title: "Adaugă membri la %{group_name}"
-        description: "De asemenea, poți insera o listă separată prin virgulă."
-        usernames_or_emails:
-          title: "Introdu nume de utilizator sau adrese de e-mail"
-          input_placeholder: "Nume de utilizator sau e-mailuri"
-        usernames:
-          input_placeholder: "Nume de utilizatori"
+        usernames_placeholder: "nume de utilizatori"
+        usernames_or_emails_placeholder: "nume de utilizator sau e-mailuri"
         notify_users: "Notifică utilizatorii"
       requests:
         title: "Cereri"
@@ -626,7 +619,7 @@ ro:
         title: "Gestionează"
         name: "Nume"
         full_name: "Nume și prenume"
-        add_members: "Adaugă membri"
+        invite_members: "Invită"
         delete_member_confirm: "Elimini „%{username}” din grupul „%{group}”?"
         profile:
           title: Profil
@@ -637,6 +630,7 @@ ro:
         email:
           title: "Email"
           status: "S-au sincronizat prin IMAP %{old_emails} e-mailuri din %{total_emails} în total."
+          last_updated_by: "de către"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
@@ -1010,11 +1004,9 @@ ro:
         sent: "Trimise"
         archive: "Arhivă"
         groups: "Grupurile mele"
-        bulk_select: "Selectează mesaje"
         move_to_inbox: "Mută în „Primite”"
         move_to_archive: "Arhivează"
         failed_to_move: "Mutarea mesajelor selectate a eșuat (poate că v-a căzut rețeaua)"
-        select_all: "Selectează tot"
         tags: "Etichete"
       preferences_nav:
         account: "Cont"
@@ -1332,6 +1324,8 @@ ro:
         header_title: "profil, mesaje, semne de carte și preferințe"
       title:
         title: "Titlu"
+        none: "(nimic)"
+      flair:
         none: "(nimic)"
       primary_group:
         title: "Grup primar"
@@ -1687,13 +1681,6 @@ ro:
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
     upload_selector:
-      title: "Adaugă o imagine"
-      title_with_attachments: "Adaugă o imagine sau un fișier"
-      from_my_computer: "Din dispozitivul meu"
-      from_the_web: "De pe web"
-      remote_tip: "link către imagine"
-      local_tip: "alege imagini de pe dispozitivul tău"
-      hint_for_supported_browsers: "Poți de asemenea să faci drag and drop sau să lipești imagini în editor"
       uploading: "Se încarcă"
       select_file: "Alege fișier"
       default_image_alt_text: imagine
@@ -1812,12 +1799,11 @@ ro:
         new: "Nu sunt subiecte noi."
         read: "Nu ai citit încă niciun subiect."
         posted: "Nu ai postat încă în niciun subiect."
-        ready_to_create: "Gata pentru "
         bookmarks: "Nu ai nici un semn de carte încă."
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
         educate:
-          unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge new-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
+          unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge unread-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."
@@ -1868,18 +1854,10 @@ ro:
       not_found:
         title: "Subiectul nu a fost găsit"
         description: "Ne pare rău, Nu am putut găsi subiectul. Poate a fost șters de un moderator?"
-      total_unread_posts:
+      unread_posts:
         one: "ai un mesaj necitit în această discuţie."
         few: "ai %{count} mesaje necitite în această discuţie."
         other: "ai %{count} de mesaje necitite în această discuţie."
-      unread_posts:
-        one: "ai un mesaj vechi necitit în această discuţie."
-        few: "ai %{count} mesaje vechi necitite în această discuţie."
-        other: "ai %{count} de mesaje vechi necitite în această discuţie."
-      new_posts:
-        one: "este un mesaj nou în această discuţie de la ultima citire"
-        few: "sunt %{count} mesaje noi în această discuţie de la ultima citire"
-        other: "sunt %{count} de mesaje noi în această discuţie de la ultima citire"
       likes:
         one: "există o apreciere pentru această discuţie"
         few: "sunt %{count} aprecieri pentru această discuţie"
@@ -1921,8 +1899,6 @@ ro:
         title: "Programează publicarea"
       temp_open:
         title: "Deschide temporar"
-      auto_reopen:
-        title: "Deschide automat subiect"
       temp_close:
         title: "Închide temporar"
       auto_close:
@@ -2020,14 +1996,10 @@ ro:
         pin: "Fixează subiectul"
         unpin: "Anulează subiect fixat"
         pin_globally: "Promovează discuţia global"
-        make_banner: "Adaugă statutul de banner"
         remove_banner: "Șterge statutul de banner"
       reply:
         title: "Răspunde"
         help: "începe să scrii un răspuns la acest subiect"
-      clear_pin:
-        title: "Anulează subiect fixat"
-        help: "Elimină subiectul fixat pentru a nu mai apărea la începutul listei de subiecte."
       share:
         title: "Distribuie"
         help: "distribuie un link cu acest subiect"
@@ -2636,7 +2608,6 @@ ro:
         user_profile_menu: "%{shortcut} Deschide meniu utilizator"
         show_incoming_updated_topics: "%{shortcut} Arată subiectele actualizate"
         help: "%{shortcut} Deschide ajutor tastatură"
-        dismiss_new_posts: "%{shortcut} Abandonează postări noi"
         dismiss_topics: "%{shortcut} Abandonează subiecte"
         log_out: "%{shortcut} Ieșire"
       bookmarks:
@@ -2748,8 +2719,11 @@ ro:
       groups:
         title: "Grupuri de etichete"
         new: "Grup nou"
+        tags_label: "Etichete din acest grup"
+        parent_tag_label: "Etichetă părinte"
         one_per_topic_label: "Limitare la o singură etichetă pe subiect din acest grup"
         new_name: "Grup nou de etichete"
+        name_placeholder: "Nume"
         save: "Salvează"
         delete: "Șterge"
         confirm_delete: "Ești sigur că vrei să ștergi acest grup de etichete?"
@@ -2846,9 +2820,6 @@ ro:
               label: Grup
             category:
               label: Categorie
-      commits:
-        latest_changes: "Cele mai recente schimbări: te rugăm actualizează frecvent!"
-        by: "de către"
       groups:
         new:
           title: "Grup nou"
@@ -3273,7 +3244,6 @@ ro:
           details: "Detalii"
           previous_value: "Precedent"
           new_value: "Nou"
-          diff: "Diff"
           show: "Arată"
           modal_title: "Detalii"
           no_previous: "Nu există valoare precedentă."
@@ -3523,6 +3493,7 @@ ro:
         trust_level_unlocked_tip: "Nivelul de încredere este deblocat, sistemul poate promova sau retrograda utilizatorii"
         lock_trust_level: "Blochează nivelul de încredere"
         unlock_trust_level: "Deblochează nivelul de încredere"
+        suspended_count: "Suspendați"
         tl3_requirements:
           title: "Cerințe pentru nivelul 3 de încredere"
           table_title:

@@ -59,13 +59,11 @@ class UploadCreator
           clean_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
-          downsize!        if should_downsize?
-
-          return @upload   if is_still_too_big?
-
           fix_orientation! if should_fix_orientation?
           crop!            if should_crop?
           optimize!        if should_optimize?
+          downsize!        if should_downsize?
+          return @upload   if is_still_too_big?
         end
 
         # conversion may have switched the type
@@ -131,7 +129,7 @@ class UploadCreator
 
           begin
             w, h = Discourse::Utils
-              .execute_command("identify", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+              .execute_command("identify", "-ping", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
               .split(' ')
           rescue
             # use default 0, 0
@@ -153,9 +151,10 @@ class UploadCreator
         @upload.assign_attributes(attrs)
       end
 
-      return @upload unless @upload.save(validate: @opts[:validate])
-
-      DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
+      # Callbacks using this event to validate the upload or the file must add errors to the
+      # upload errors object.
+      DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @upload, @opts[:validate])
+      return @upload unless @upload.errors.empty? && @upload.save(validate: @opts[:validate])
 
       # store the file and update its url
       File.open(@file.path) do |f|
@@ -193,7 +192,7 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.images.not_supported_or_corrupted"))
     elsif filesize <= 0
       @upload.errors.add(:base, I18n.t("upload.empty"))
-    elsif pixels == 0
+    elsif pixels == 0 && @image_info.type.to_s != 'svg'
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
     elsif max_image_pixels > 0 && pixels >= max_image_pixels * 2
       @upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels * 2))

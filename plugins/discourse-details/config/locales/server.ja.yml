@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 ja:
+  site_settings:
+    details_enabled: '投稿に拡張可能な詳細を追加する機能を含めます。この機能はコンポーザーのツールバーポップアップメニューにあります。この設定を変更する場合、「rake posts:rebake」を使用してすべての投稿を作成し直す必要があります。'
   details:
-    excerpt_details: "(詳細を見るためにクリック)"
+    excerpt_details: "(クリックして詳細を表示)"

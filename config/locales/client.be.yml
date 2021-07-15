@@ -95,7 +95,6 @@ be:
     submit: "Адправіць"
     generic_error: "Выбачайце, здарылася памылка."
     generic_error_with_reason: "Паўстала памылка: %{error}"
-    go_ahead: "Далей"
     sign_up: "Рэгістрацыя"
     log_in: "Увайсці"
     age: "Узрост"
@@ -122,7 +121,6 @@ be:
     now: "толькі што"
     read_more: "чытаць далей"
     more: "больш"
-    less: "меньш"
     never: "ніколі"
     every_30_minutes: "кожныя 30 хвілін"
     every_hour: "кожную гадзіну"
@@ -131,7 +129,6 @@ be:
     every_month: "кожны месяц"
     every_six_months: "кожныя паўгады"
     max_of_count: "Не больш за %{count}"
-    alternation: "або"
     character_count:
       one: "%{Count} сімвал"
       few: "%{Count} сімвалы"
@@ -292,6 +289,8 @@ be:
         other: " %{Count} карыстальнікаў"
       edit_columns:
         save: "Захаваць"
+      group:
+        all: "усе групы"
     group_histories:
       actions:
         change_group_setting: "Змяніць наладкі групы"
@@ -304,7 +303,6 @@ be:
       manage:
         name: "Імя"
         full_name: "поўнае Імя"
-        add_members: "Дадаць удзельнікаў"
         delete_member_confirm: "Выдаліць '%{username}' з групы '%{group}'?"
         profile:
           title: Профіль
@@ -312,11 +310,14 @@ be:
           posting: апублікаванне
         email:
           title: "Электронная пошта"
+          last_updated_by: "ад"
           credentials:
             username: "Імя карыстальніка"
             password: "Пароль"
           settings:
             title: "Налады"
+          mailboxes:
+            disabled: "Адключана"
         membership:
           access: доступ
         categories:
@@ -484,7 +485,6 @@ be:
         groups: "Мае Групы"
         move_to_inbox: "Перамясціць у тэчцы Уваходныя"
         move_to_archive: "архіў"
-        select_all: "выбраць усе"
         tags: "Тэгі"
       preferences_nav:
         account: "Аккаўнт"
@@ -875,10 +875,6 @@ be:
       titles:
         watching_first_post: "новая тэма"
     upload_selector:
-      title: "дадаць малюнак"
-      title_with_attachments: "Дадаць малюнак або файл"
-      from_my_computer: "З майго прылады"
-      from_the_web: "з інтэрнэту"
       uploading: "загрузка"
       select_file: "выбраць файл"
       default_image_alt_text: малюнак
@@ -1044,13 +1040,9 @@ be:
       feature:
         pin: "Замацаваць тэму"
         unpin: "Адмацаваць тэму"
-        make_banner: "Тэма-баннер"
       reply:
         title: "Адказаць"
         help: "пачаць складаць адказ на гэтую тэму"
-      clear_pin:
-        title: "распушчае мацаваньне"
-        help: "Адмяніць замацаванне гэтай тэмы, каб яна больш не з'яўлялася ў пачатку Вашага пераліку тэм"
       share:
         title: "Падзяліцца тэмай"
         help: "Распаўсюдзіць спасылку на гэтую тэму"
@@ -1336,6 +1328,7 @@ be:
           title: "ігнараваць"
       groups:
         new: "Новая група"
+        name_placeholder: "Імя"
         save: "Захаваць"
         delete: "выдаліць"
       topics:
@@ -1415,9 +1408,6 @@ be:
               label: Група
             category:
               label: катэгорыя
-      commits:
-        latest_changes: "Апошнія змены: абнаўленне Вашу копію часта!"
-        by: "ад"
       groups:
         new:
           title: "Новая група"
@@ -1819,6 +1809,8 @@ be:
         suspend_modal_title: "прыпыніць карыстальніка"
         trust_level_2_users: "Карыстальнікі з Узроўнем даверу 2"
         trust_level_3_requirements: "Патрабаванні для Узроўня даверу 3"
+        silenced_count: "глушыцелем"
+        suspended_count: "падвешаны"
         tl3_requirements:
           title: "Патрабаванні для Узроўня даверу 3"
           table_title:

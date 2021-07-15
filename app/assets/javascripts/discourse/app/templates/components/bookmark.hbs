@@ -9,7 +9,7 @@
 
   <div class="control-group bookmark-name-wrap">
     {{input id="bookmark-name" value=model.name name="bookmark-name" class="bookmark-name" enter=(action "saveAndClose") placeholder=(i18n "post.bookmarks.name_placeholder") maxlength="100"}}
-    {{d-button icon="cog" action=(action "toggleOptionsPanel") class="bookmark-options-button"}}
+    {{d-button icon="cog" action=(action "toggleOptionsPanel") class="bookmark-options-button" ariaLabel="post.bookmarks.options"}}
   </div>
 
   <div class="bookmark-options-panel">

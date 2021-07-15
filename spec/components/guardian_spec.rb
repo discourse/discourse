@@ -902,6 +902,17 @@ describe Guardian do
         expect(Guardian.new(user_gm).can_see?(post)).to be_truthy
       end
 
+      it 'TL4 users can see their deleted posts' do
+        user = Fabricate(:user, trust_level: 4)
+        user2 = Fabricate(:user, trust_level: 4)
+        post = Fabricate(:post, user: user, topic: Fabricate(:post).topic)
+
+        expect(Guardian.new(user).can_see?(post)).to eq(true)
+        PostDestroyer.new(user, post).destroy
+        expect(Guardian.new(user).can_see?(post)).to eq(true)
+        expect(Guardian.new(user2).can_see?(post)).to eq(false)
+      end
+
       it 'respects whispers' do
         regular_post = post
         whisper_post = Fabricate.build(:post, post_type: Post.types[:whisper])

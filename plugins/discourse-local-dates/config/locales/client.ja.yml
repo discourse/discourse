@@ -8,35 +8,35 @@ ja:
   js:
     discourse_local_dates:
       relative_dates:
-        today: 今日
+        today: 今日 %{time}
         tomorrow: 明日 %{time}
         yesterday: 昨日 %{time}
         countdown:
-          passed: 日付が過ぎた
+          passed: 終了しました
       title: 日付/時刻を挿入
       create:
         form:
           insert: 挿入
-          advanced_mode: アドバンスドモード
+          advanced_mode: 詳細モード
           simple_mode: シンプルモード
-          format_description: "ユーザーに日付を表示するために使用されるフォーマット。タイムゾーン名を表示するにはzz、オフセットを表示するにはZを使用します。"
+          format_description: "ユーザーに日付を表示するために使用されるフォーマット。オフセットを表示するには Z、タイムゾーン名を表示するには zz を使用します。"
           timezones_title: 表示するタイムゾーン
           timezones_description: タイムゾーンは、プレビューとフォールバックで日付を表示するために使用されます。
-          recurring_title: レジューム
+          recurring_title: 繰り返し
           recurring_description: "イベントの繰り返しを設定します。 フォームによって生成された繰り返しオプションを手動で編集して、年、四半期、月、週、日、時間、分、秒、ミリ秒のいずれかのキーを使用することもできます。"
-          recurring_none: レジュームしない
+          recurring_none: 繰り返しなし
           invalid_date: 日付が無効です。日付と時刻が正しいことを確認してください。
           date_title: 日付
           time_title: 時刻
           format_title: 日付のフォーマット
           timezone: タイムゾーン
-          until: まで...
+          until: 終了日...
           recurring:
             every_day: "毎日"
             every_week: "毎週"
-            every_two_weeks: "二週間に一度"
+            every_two_weeks: "隔週"
             every_month: "毎月"
-            every_two_months: "二カ月に一度"
-            every_three_months: "三カ月に一度"
-            every_six_months: "半年に一度"
+            every_two_months: "隔月"
+            every_three_months: "3 か月ごと"
+            every_six_months: "半年ごと"
             every_year: "毎年"

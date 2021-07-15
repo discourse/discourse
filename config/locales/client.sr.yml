@@ -208,7 +208,6 @@ sr:
     submit: "Potvrdi"
     generic_error: "Izvinite, pojavila se greška."
     generic_error_with_reason: "Došlo je do greške: %{error}"
-    go_ahead: "Nastavi"
     sign_up: "Registrujte se"
     log_in: "Prijavi se"
     age: "Godine"
@@ -239,7 +238,6 @@ sr:
       one: "još %{count} član"
       few: "još %{count} člana"
       other: "još %{count} članova"
-    less: "Manje"
     never: "nikad"
     every_30_minutes: "svakih 30 minuta"
     every_hour: "svakog sata"
@@ -248,7 +246,6 @@ sr:
     every_month: "svaki mesec"
     every_six_months: "svakih šest meseci"
     max_of_count: "maksimalno od %{count}"
-    alternation: "ili"
     character_count:
       one: "%{count} karakter"
       few: "%{count} karaktera"
@@ -281,7 +278,6 @@ sr:
       help:
         bookmark: "Klikni da markiraš prvi post u ovoj temi"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
-        unbookmark_with_reminder: "Kliknite da biste uklonili sve obeleživače i podsetnike u ovoj temi. Imate podsetnik %{reminder_at} za ovu temu."
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
@@ -447,7 +443,6 @@ sr:
       later_today: "Kasnije ovog dana"
       next_business_day: "Naredni radni dan"
       tomorrow: "Sutra"
-      next_week: "Sledeće sedmice"
       post_local_date: "Datum u poruci"
       later_this_week: "Kasnije ove sedmice"
       start_of_next_business_week: "Ponedeljak"
@@ -507,6 +502,7 @@ sr:
       manage:
         name: "Ime foruma"
         full_name: "Ime"
+        invite_members: "Pozovi"
         delete_member_confirm: "Uklonite '%{username}' iz '%{group}' grupe?"
         profile:
           title: Profil
@@ -514,6 +510,7 @@ sr:
           posting: Poruke
         email:
           title: "E-mail"
+          last_updated_by: "od"
           credentials:
             username: "Korisničko ime"
             password: "Šifra"
@@ -695,7 +692,6 @@ sr:
         sent: "Poslato"
         archive: "Arhiviraj"
         move_to_archive: "Arhiviraj"
-        select_all: "Izaberi sve"
       preferences_nav:
         security: "Sigurnost"
         profile: "Profil"
@@ -1105,13 +1101,6 @@ sr:
       titles:
         watching_first_post: "nova tema"
     upload_selector:
-      title: "Dodaj sliku"
-      title_with_attachments: "Dodaj sliku ili datoteku"
-      from_my_computer: "S mog uređaja"
-      from_the_web: "S interneta"
-      remote_tip: "link za sliku"
-      local_tip: "Izaberite slike sa Vašeg uređaja"
-      hint_for_supported_browsers: "možete takođe prevući ili nalepiti slike u editor"
       uploading: "Učitavanje"
       default_image_alt_text: slika
     search:
@@ -1210,18 +1199,10 @@ sr:
       not_found:
         title: "Tema nije pronađena"
         description: "Žao nam je, nismo mogli pronaći temu. Možda ju je moderator uklonio?"
-      total_unread_posts:
+      unread_posts:
         one: "Imate %{count} nepročitanu poruku u ovoj temi"
         few: "Imate %{count} nepročitanih poruka u ovoj temi"
         other: "Imate %{count} nepročitanih poruka u ovoj temi"
-      unread_posts:
-        one: "Imate %{count} staru nepročitanu poruku u ovoj temi"
-        few: "Imate %{count} starih nepročitanih poruka u ovoj temi"
-        other: "Imate %{count} starih nepročitanih poruka u ovoj temi"
-      new_posts:
-        one: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
-        few: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
-        other: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
       likes:
         one: "Ima %{count} sviđanja u temi"
         few: "Ima %{count} sviđanja u temi"
@@ -1313,14 +1294,10 @@ sr:
         pin: "Zakači temu"
         unpin: "Otkači temu"
         pin_globally: "Zakači temu globalno"
-        make_banner: "Postavi temu kao banner"
         remove_banner: "Ukloni temu s bannera"
       reply:
         title: "Odgovori"
         help: "Počni pravljenje odgovora na ovu temu"
-      clear_pin:
-        title: "Obriši zakačku"
-        help: "Ukloni status zakačenog s ove teme da se vise ne pojavljuje na vrhu liste tema"
       share:
         title: "Podeli"
         help: "podeli link ka ovoj temi"
@@ -1710,7 +1687,6 @@ sr:
         user_profile_menu: "%{shortcut} Otvori korisnički meni"
         show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
         help: "%{shortcut} Otvori pomoć za tastaturu"
-        dismiss_new_posts: "%{shortcut} Odbaci Nove/Poruke"
         dismiss_topics: "%{shortcut} Odbaci Teme"
       actions:
         title: "Akcije"
@@ -1766,6 +1742,7 @@ sr:
         muted:
           title: "Utišano"
       groups:
+        name_placeholder: "Ime foruma"
         save: "Sačuvaj"
         delete: "Obriši"
       topics:
@@ -1837,9 +1814,6 @@ sr:
               label: Grupa
             category:
               label: Kategorija
-      commits:
-        latest_changes: "Posljednje promene: molimo često nadograđujte!"
-        by: "od"
       groups:
         manage:
           interaction:
@@ -2097,7 +2071,6 @@ sr:
           details: "Detalji"
           previous_value: "Prethodno"
           new_value: "Novo"
-          diff: "Razlike"
           show: "Prikaži"
           modal_title: "Detalji"
           no_previous: "Nema prethodne vrednosti."
@@ -2275,6 +2248,7 @@ sr:
         trust_level_unlocked_tip: "Nivo poverenja zaključan, sistem neće unapređivati ili skidati korisnika"
         lock_trust_level: "Zaključaj Nivo Poverenja"
         unlock_trust_level: "Odključaj Nivo Poverenja"
+        suspended_count: "Suspendovani"
         tl3_requirements:
           title: "Predispozicije Za Nivo Poverenja 3"
           value_heading: "Vriednost"

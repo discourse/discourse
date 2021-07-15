@@ -114,7 +114,7 @@ export default Controller.extend(ModalFunctionality, {
           keysDelimiter: PLUS,
         }),
         help: buildShortcut("application.help", { keys1: ["?"] }),
-        dismiss_new_posts: buildShortcut("application.dismiss_new_posts", {
+        dismiss_new: buildShortcut("application.dismiss_new", {
           keys1: ["x", "r"],
         }),
         dismiss_topics: buildShortcut("application.dismiss_topics", {
@@ -149,10 +149,6 @@ export default Controller.extend(ModalFunctionality, {
         }),
         tomorrow: buildShortcut("bookmarks.tomorrow", {
           keys1: ["n", "d"],
-          shortcutsDelimiter: "space",
-        }),
-        next_week: buildShortcut("bookmarks.next_week", {
-          keys1: ["n", "w"],
           shortcutsDelimiter: "space",
         }),
         next_business_week: buildShortcut("bookmarks.next_business_week", {

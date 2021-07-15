@@ -398,6 +398,17 @@ after_initialize do
       end
     end
 
+    def current_user_voted
+      poll = Poll.includes(:post).find_by(id: params[:id])
+      raise Discourse::NotFound.new(:id) if poll.nil?
+
+      can_see_poll = Guardian.new(current_user).can_see_post?(poll.post)
+      raise Discourse::NotFound.new(:id) if !can_see_poll
+
+      presence = PollVote.where(poll: poll, user: current_user).exists?
+      render json: { voted: presence }
+    end
+
     def toggle_status
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
@@ -453,6 +464,7 @@ after_initialize do
     get "/voters" => 'polls#voters'
     get "/grouped_poll_results" => 'polls#grouped_poll_results'
     get "/groupable_user_fields" => 'polls#groupable_user_fields'
+    get "/:id/votes/current_user_voted" => "polls#current_user_voted"
   end
 
   Discourse::Application.routes.append do

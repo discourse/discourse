@@ -37,9 +37,10 @@ export default Controller.extend({
       }/l`;
     }
 
-    url += "/top/" + period;
+    url += "/top";
 
-    const queryParams = this.router.currentRoute.queryParams;
+    let queryParams = this.router.currentRoute.queryParams;
+    queryParams.period = period;
     if (Object.keys(queryParams).length) {
       url =
         `${url}?` +

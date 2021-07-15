@@ -3098,32 +3098,32 @@ describe UsersController do
         expect(json["user_summary"]["most_liked_by_users"][0]["trust_level"]).to eq(1)
       end
 
-      it "returns data for primary group flair when an icon is used for flair" do
+      it "returns data for flair when an icon is used" do
         group = Fabricate(:group, name: "Groupie", flair_bg_color: "#111111", flair_color: "#999999", flair_icon: "icon")
-        liker = Fabricate(:user, primary_group: group)
+        liker = Fabricate(:user, flair_group: group)
         create_and_like_post(user, liker)
 
         get "/u/#{user.username_lower}/summary.json"
         json = response.parsed_body
 
-        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_url"]).to eq("icon")
-        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_name"]).to eq("Groupie")
-        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_bg_color"]).to eq("#111111")
-        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_color"]).to eq("#999999")
+        expect(json["user_summary"]["most_liked_by_users"][0]["flair_name"]).to eq("Groupie")
+        expect(json["user_summary"]["most_liked_by_users"][0]["flair_url"]).to eq("icon")
+        expect(json["user_summary"]["most_liked_by_users"][0]["flair_bg_color"]).to eq("#111111")
+        expect(json["user_summary"]["most_liked_by_users"][0]["flair_color"]).to eq("#999999")
       end
 
-      it "returns data for primary group flair when an image is used for flair" do
+      it "returns data for flair when an image is used" do
         upload = Fabricate(:upload)
         group = Fabricate(:group, name: "Groupie", flair_bg_color: "#111111", flair_upload: upload)
-        liker = Fabricate(:user, primary_group: group)
+        liker = Fabricate(:user, flair_group: group)
         create_and_like_post(user, liker)
 
         get "/u/#{user.username_lower}/summary.json"
         json = response.parsed_body
 
-        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_url"]).to eq(upload.url)
-        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_name"]).to eq("Groupie")
-        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_bg_color"]).to eq("#111111")
+        expect(json["user_summary"]["most_liked_by_users"][0]["flair_name"]).to eq("Groupie")
+        expect(json["user_summary"]["most_liked_by_users"][0]["flair_url"]).to eq(upload.url)
+        expect(json["user_summary"]["most_liked_by_users"][0]["flair_bg_color"]).to eq("#111111")
       end
 
       def create_and_like_post(likee, liker)

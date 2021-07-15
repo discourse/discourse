@@ -6,6 +6,7 @@ import User from "discourse/models/user";
 import { later } from "@ember/runloop";
 import pretender from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
+import { setPrefix } from "discourse-common/lib/get-url";
 
 const track = ClickTrack.trackClick;
 
@@ -47,6 +48,9 @@ module("Unit | Utility | click-track", function (hooks) {
             <a href="https://discuss.domain.com/t/welcome-to-meta-discourse-org/1/30">foo</a>
             <a href="https://google.com">bar</a>
           </aside>
+          <a class="prefix-url" href="/forum/thing">prefix link</a>
+          <a class="abs-prefix-url" href="${window.location.origin}/forum/thing">prefix link</a>
+          <a class="diff-prefix-url" href="/thing">diff prefix link</a>
         </article>
       </div>`
     );
@@ -83,6 +87,37 @@ module("Unit | Utility | click-track", function (hooks) {
         "http://discuss.domain.com/uploads/default/1234/1532357280.txt"
       )
     );
+  });
+
+  test("routes to internal urls", async function (assert) {
+    setPrefix("/forum");
+    pretender.post("/clicks/track", () => [200, {}, ""]);
+    await track(generateClickEventOn(".prefix-url"), null, {
+      returnPromise: true,
+    });
+    assert.ok(DiscourseURL.routeTo.calledWith("/forum/thing"));
+  });
+
+  test("routes to absolute internal urls", async function (assert) {
+    setPrefix("/forum");
+    pretender.post("/clicks/track", () => [200, {}, ""]);
+    await track(generateClickEventOn(".abs-prefix-url"), null, {
+      returnPromise: true,
+    });
+    assert.ok(
+      DiscourseURL.routeTo.calledWith(window.location.origin + "/forum/thing")
+    );
+  });
+
+  test("redirects to internal urls with a different prefix", async function (assert) {
+    setPrefix("/forum");
+    sinon.stub(DiscourseURL, "redirectAbsolute");
+
+    pretender.post("/clicks/track", () => [200, {}, ""]);
+    await track(generateClickEventOn(".diff-prefix-url"), null, {
+      returnPromise: true,
+    });
+    assert.ok(DiscourseURL.redirectAbsolute.calledWith("/thing"));
   });
 
   skip("tracks external URLs", async function (assert) {

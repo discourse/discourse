@@ -13,6 +13,7 @@ export const queryParams = {
   before: { replace: true, refreshModel: true },
   bumped_before: { replace: true, refreshModel: true },
   f: { replace: true, refreshModel: true },
+  period: { replace: true, refreshModel: true },
 };
 
 // Basic controller options

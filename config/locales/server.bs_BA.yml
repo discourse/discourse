@@ -93,7 +93,6 @@ bs_BA:
       maximum_staged_user_per_email_reached: "Dosegnut je maksimalni broj stupnjevanih korisnika kreiranih po e-pošti."
       no_subject: "(nema naslova)"
       no_body: "(nema teksta)"
-      missing_attachment: "(Nedostaje prilog %{filename})"
       errors:
         empty_email_error: "Dešava se kada je sirova pošta koju smo primili bila prazna."
         no_message_id_error: "Dešava se kada pošta nema zaglavlje 'Message-Id'."
@@ -660,7 +659,6 @@ bs_BA:
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -1113,8 +1111,6 @@ bs_BA:
       agree_and_silence:
         title: "Stišaj korisnika"
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
-      delete_spammer:
-        title: "Obriši Spamera"
       delete_single:
         title: "Delete"
       disagree:
@@ -1128,8 +1124,6 @@ bs_BA:
           title: "Delete User"
       reject:
         title: "Odbij"
-      delete_user:
-        title: "Delete User"
   activemodel:
     errors:
       <<: *errors

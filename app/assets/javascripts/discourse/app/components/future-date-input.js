@@ -14,9 +14,10 @@ export default Component.extend({
   displayLabel: null,
   labelClasses: null,
 
+  timeInputDisabled: empty("date"),
+
   init() {
     this._super(...arguments);
-
     if (this.input) {
       const datetime = moment(this.input);
       this.setProperties({
@@ -26,8 +27,6 @@ export default Component.extend({
       });
     }
   },
-
-  timeInputDisabled: empty("date"),
 
   @observes("date", "time")
   _updateInput() {

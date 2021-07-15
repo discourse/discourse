@@ -88,7 +88,6 @@ vi:
       maximum_staged_user_per_email_reached: "Đạt số lượng thành viên theo giai đoạn tối đa được tạo trên mỗi email."
       no_subject: "(không chủ đề)"
       no_body: "(không ai)"
-      missing_attachment: "(Thiếu tệp đính kèm %{filename})"
       errors:
         empty_email_error: "Xảy ra khi hệ thống nhận được một thư rỗng."
         no_message_id_error: "Xảy ra khi thư không có phần 'Message-Id'."
@@ -129,8 +128,7 @@ vi:
       odd: phải là số lẻ
       record_invalid: ! "Xác nhận thất bại: %{errors}"
       restrict_dependent_destroy:
-        one: "Không thể xóa bản ghi bởi vì một bản ghi %{record} phụ thuộc đang tồn tại"
-        many: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
+        other: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
       too_long:
         other: quá dài (tối đa %{count} ký tự)
       too_short:
@@ -659,7 +657,7 @@ vi:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Mức độ tin cậy của họ trong khoảng thời gian này."
     consolidated_page_views:
-      title: "Số lượt xem hợp nhất"
+      title: "Số lần xem trang tổng hợp"
       xaxis:
         page_view_crawler: "Trình thu thập thông tin"
         page_view_anon: "Người dùng ẩn danh"
@@ -928,7 +926,6 @@ vi:
     traditional_markdown_linebreaks: "Sử dụng ngắt dòng truyền thống trong Markdown, đòi hỏi hai khoảng trống kế tiếp cho một ngắt dòng."
     markdown_typographer_quotation_marks: "Danh sách các cặp thay thế dấu ngoặc kép và dấu ngoặc đơn"
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
-    pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
     use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
@@ -963,7 +960,6 @@ vi:
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     google_oauth2_client_id: "Client ID ứng dụng Google của bạn."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
-    allow_restore: "Cho phép phục hồi, nó có thể thay thế TẤT CẢ dữ liệu trang web! Bỏ chọn, trừ khi bạn có kế hoạch phục hồi một bản sao lưu"
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
@@ -2067,8 +2063,6 @@ vi:
         title: "Tạm khóa Thành viên"
       agree_and_silence:
         title: "Người dùng im lặng"
-      delete_spammer:
-        title: "Xóa người Spam"
       delete_single:
         title: "Xóa"
       disagree:
@@ -2084,8 +2078,6 @@ vi:
         title: "Từ chối"
       reject_and_keep_deleted:
         title: "Giữ bài đăng bị xóa"
-      delete_user:
-        title: "Xóa tài khoản"
   old_keys_reminder:
     body: |
       Xin chào! Đây là lời nhắc bảo mật hàng năm thường xuyên từ phiên bản Discourse của bạn.

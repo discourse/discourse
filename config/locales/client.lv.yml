@@ -212,7 +212,6 @@ lv:
       zero: "Vēl %{count}"
       one: "Vēl %{count}"
       other: "Vēl %{count}"
-    less: "Mazāk"
     never: "nekad"
     every_30_minutes: "katras 30 minūtes"
     every_hour: "katru stundu"
@@ -221,7 +220,6 @@ lv:
     every_month: "katru mēnesi"
     every_six_months: "katrus sešus mēnešus"
     max_of_count: "ne vairāk kā %{count}"
-    alternation: "vai"
     character_count:
       zero: "%{count} zīmes"
       one: "%{count} zīme"
@@ -353,8 +351,8 @@ lv:
     time_shortcut:
       later_today: "Vēlāk šodien"
       tomorrow: "Rītdien"
-      next_week: "Nākamā nedēļā"
       later_this_week: "Vēlāk šonedēļ"
+      this_weekend: "Šajā nedēļas nogalē"
       next_month: "Nākamā mēnesī"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> pievienoja ierakstus <a href='%{topicUrl}'>tēmai</a>"
@@ -394,6 +392,8 @@ lv:
         other: "%{count} lietotāji"
       edit_columns:
         save: "Saglabāt"
+      group:
+        all: "visas grupas"
     group_histories:
       actions:
         change_group_setting: "Mainīt grupas iestatījumus"
@@ -407,7 +407,7 @@ lv:
       manage:
         name: "Vārds"
         full_name: "Pilns vārds"
-        add_members: "Pievienot dalībniekus"
+        invite_members: "Ielūgt"
         delete_member_confirm: "Izņemt '%{username}' no grupas '%{group}'?"
         profile:
           title: Profils
@@ -415,6 +415,7 @@ lv:
           posting: Ieraksti
         email:
           title: "E-pasts"
+          last_updated_by: " "
           credentials:
             username: "Lietotājvārds"
             password: "Parole"
@@ -684,11 +685,9 @@ lv:
         sent: "Nosūtne"
         archive: "Arhīvs"
         groups: "Manas grupas"
-        bulk_select: "Atlasīt ziņas"
         move_to_inbox: "Pārvietot uz iesūtni"
         move_to_archive: "Arhivēt"
         failed_to_move: "Neizdevās pārvietot izvēlētas ziņas (varbūt pazudis pieslēgums internetam)"
-        select_all: "Izvēlēties visu"
         tags: "Birkas"
       preferences_nav:
         account: "Konts"
@@ -949,6 +948,8 @@ lv:
         header_title: "profils, ziņas, grāmatzīmes un iestatījumi"
       title:
         title: "Virsraksts"
+        none: "(neviens)"
+      flair:
         none: "(neviens)"
       primary_group:
         title: "Galvenā grupa"
@@ -1223,13 +1224,6 @@ lv:
       titles:
         watching_first_post: "Jauna tēma"
     upload_selector:
-      title: "Pievienot attēlu"
-      title_with_attachments: "Pievienot attēlu vai failu"
-      from_my_computer: "No manas ierīces"
-      from_the_web: "No interneta"
-      remote_tip: "saite uz attēlu"
-      local_tip: "izvēlēties attēlus no jūsu ierīces"
-      hint_for_supported_browsers: "Jūs varat arī ievilkt vai ielīmēt redaktorā attēlus"
       uploading: "Augšuplādē"
       select_file: "Izvēlēties failu"
       default_image_alt_text: bilde
@@ -1383,18 +1377,10 @@ lv:
       not_found:
         title: "Tēma nav atrasta "
         description: "Atvainojiet, šo tēmu neatradām. Varbūt to noņēma moderators? "
-      total_unread_posts:
-        zero: "Tev šajā tēmā nav neizlasītu ziņojumu"
+      unread_posts:
+        zero: "Tev šajā tēmā ir %{count} neizlasītu ziņojumu "
         one: "Tev šajā tēmā ir %{count} neizlasīts ziņojums"
         other: "Tev šajā tēmā ir %{count} neizlasītu ziņojumu "
-      unread_posts:
-        zero: "Tev šajā tēmā nav vecu neizlasītu ziņojumu"
-        one: "Tev šajā tēmā ir %{count} vecs neizlasīts ziņojums"
-        other: "Tev šajā tēmā ir %{count} vecu neizlasītu ziņojumu. "
-      new_posts:
-        zero: "Šajā tēmā nav jaunu nelasītu ziņojumu"
-        one: "Šajā tēmā ir %{count} jauns nelasīts ziņojums"
-        other: "Šajā tēmā ir %{count} jauni nelasīti ziņojumi"
       likes:
         zero: "Šai tēmai nav \"patīk\""
         one: "Šai tēmai ir viens \"patīk\""
@@ -1431,8 +1417,6 @@ lv:
         title: "Ieplānot publicēšanu "
       temp_open:
         title: "Atvērts uz laiku "
-      auto_reopen:
-        title: "Automātiski atvērt tēmu "
       temp_close:
         title: "Aizvērt uz laiku "
       auto_close:
@@ -1534,14 +1518,10 @@ lv:
         pin: "Piespraust tēmu"
         unpin: "Atspraust tēmu"
         pin_globally: "Piespraust tēmu globāli"
-        make_banner: "Banera tēma"
         remove_banner: "Noņemt banera tēmu"
       reply:
         title: "Atbildēt"
         help: "sākt rakstīt atbildi šai tēmai"
-      clear_pin:
-        title: "Noņemt piespraušanu"
-        help: "Noņemt šai tēmai statusu 'piesprausta', lai tā vairs neparādītos jūsu tēmu saraksta augšgalā"
       share:
         title: "Dalīties"
         help: "dalīties ar saiti uz so tēmu"
@@ -2091,7 +2071,6 @@ lv:
         user_profile_menu: "%{shortcut} Atvērt lietotaja menu"
         show_incoming_updated_topics: "%{shortcut} Parādīt tēmas ar izmaiņām"
         help: "%{shortcut} Atvērt klaviatūras palīdzību"
-        dismiss_new_posts: "%{shortcut} Ignorēt jauno/ierakstus"
         dismiss_topics: "%{shortcut} Ignorēt tēmas"
         log_out: "%{shortcut} Iziet no foruma"
       actions:
@@ -2185,8 +2164,11 @@ lv:
       groups:
         title: "Tagu grupas"
         new: "Jauna grupa"
+        tags_label: "Tagi šai grupā"
+        parent_tag_label: "Vecāktags"
         one_per_topic_label: "No šīs grupas atļaut tikai vienu tagu vienā tēmā"
         new_name: "Jauna tagu grupa"
+        name_placeholder: "Vārds"
         save: "Saglabāt"
         delete: "Dzēst"
         confirm_delete: "Vai jūs esat drošs, ka vēlaties dzēst šo tagu grupu?"
@@ -2276,9 +2258,6 @@ lv:
               label: Grupa
             category:
               label: Sadaļa
-      commits:
-        latest_changes: "Pēdējās izmaiņas: lūdzu atjauniniet bieži!"
-        by: " "
       groups:
         new:
           title: "Jauna grupa"
@@ -2618,7 +2597,6 @@ lv:
           details: "Detaļas"
           previous_value: "Iepriekšējais"
           new_value: "jauns"
-          diff: "Starpība (Diff)"
           show: "Parādīt"
           modal_title: "Detaļas"
           no_previous: "Nav iepriekšējās vērtības."
@@ -2850,6 +2828,7 @@ lv:
         trust_level_unlocked_tip: "Uzticības līmenis ir atslēgts, sistēma paaugstinās vai pazeminās lietotāju"
         lock_trust_level: "Slēgt Uzticības līmeni"
         unlock_trust_level: "Atslēgt Uzticības līmeni"
+        suspended_count: "Apturēts"
         tl3_requirements:
           title: "Prasības uzticības 3. līmenim"
           table_title:

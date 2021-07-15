@@ -2,6 +2,7 @@ import {
   acceptance,
   exists,
   loggedInUser,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -19,6 +20,39 @@ async function openBookmarkModal(postNumber = 1) {
 
 async function openEditBookmarkModal() {
   await click(".topic-post:first-child button.bookmarked");
+}
+
+async function testTopicLevelBookmarkButtonIcon(assert, postNumber) {
+  const iconWithoutClock = "d-icon-bookmark";
+  const iconWithClock = "d-icon-discourse-bookmark-clock";
+
+  await visit("/t/internationalization-localization/280");
+  assert.ok(
+    query("#topic-footer-button-bookmark svg").classList.contains(
+      iconWithoutClock
+    ),
+    "Shows an icon without a clock when there is no a bookmark"
+  );
+
+  await openBookmarkModal(postNumber);
+  await click("#save-bookmark");
+
+  assert.ok(
+    query("#topic-footer-button-bookmark svg").classList.contains(
+      iconWithoutClock
+    ),
+    "Shows an icon without a clock when there is a bookmark without a reminder"
+  );
+
+  await openBookmarkModal(postNumber);
+  await click("#tap_tile_tomorrow");
+
+  assert.ok(
+    query("#topic-footer-button-bookmark svg").classList.contains(
+      iconWithClock
+    ),
+    "Shows an icon with a clock when there is a bookmark with a reminder"
+  );
 }
 
 acceptance("Bookmarking", function (needs) {
@@ -52,11 +86,19 @@ acceptance("Bookmarking", function (needs) {
     function handleRequest(request) {
       const data = helper.parsePostData(request.requestBody);
       steps.push(data.reminder_type || "none");
-      return helper.response({ id: 999, success: "OK" });
+
+      if (data.post_id === "398") {
+        return helper.response({ id: 1, success: "OK" });
+      } else if (data.post_id === "419") {
+        return helper.response({ id: 2, success: "OK" });
+      } else {
+        throw new Error("Pretender: unknown post_id");
+      }
     }
     server.post("/bookmarks", handleRequest);
-    server.put("/bookmarks/999", handleRequest);
-    server.delete("/bookmarks/999", () =>
+    server.put("/bookmarks/1", handleRequest);
+    server.put("/bookmarks/2", handleRequest);
+    server.delete("/bookmarks/1", () =>
       helper.response({ success: "OK", topic_bookmarked: false })
     );
     server.get("/t/280.json", () => helper.response(topicResponse));
@@ -81,9 +123,6 @@ acceptance("Bookmarking", function (needs) {
     await click("#tap_tile_start_of_next_business_week");
 
     await openBookmarkModal();
-    await click("#tap_tile_next_week");
-
-    await openBookmarkModal();
     await click("#tap_tile_next_month");
 
     await openBookmarkModal();
@@ -96,7 +135,6 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, [
       "tomorrow",
       "start_of_next_business_week",
-      "next_week",
       "next_month",
       "custom",
     ]);
@@ -265,5 +303,99 @@ acceptance("Bookmarking", function (needs) {
       exists("#tap_tile_post_local_date"),
       "it does not show the local date tile"
     );
+  });
+
+  test("The topic level bookmark button deletes all bookmarks if several posts on the topic are bookmarked", async function (assert) {
+    const yesButton = "a.btn-primary";
+    const noButton = "a.btn-default";
+
+    await visit("/t/internationalization-localization/280");
+    await openBookmarkModal(1);
+    await click("#save-bookmark");
+    await openBookmarkModal(2);
+    await click("#save-bookmark");
+
+    assert.ok(
+      exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first bookmark is added"
+    );
+    assert.ok(
+      exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
+      "the second bookmark is added"
+    );
+
+    // open the modal and cancel deleting
+    await click("#topic-footer-button-bookmark");
+    await click(noButton);
+
+    assert.ok(
+      exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first bookmark isn't deleted"
+    );
+    assert.ok(
+      exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
+      "the second bookmark isn't deleted"
+    );
+
+    // open the modal and accept deleting
+    await click("#topic-footer-button-bookmark");
+    await click(yesButton);
+
+    assert.ok(
+      !exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first bookmark is deleted"
+    );
+    assert.ok(
+      !exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
+      "the second bookmark is deleted"
+    );
+  });
+
+  test("The topic level bookmark button opens the edit modal if only the first post on the topic is bookmarked", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openBookmarkModal(1);
+    await click("#save-bookmark");
+
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.edit_bookmark"),
+      "A topic level bookmark button has a label 'Edit Bookmark'"
+    );
+
+    await click("#topic-footer-button-bookmark");
+
+    assert.ok(
+      exists("div.modal.bookmark-with-reminder"),
+      "The edit modal is opened"
+    );
+  });
+
+  test("The topic level bookmark button opens the edit modal if only one post in the post stream is bookmarked", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openBookmarkModal(2);
+    await click("#save-bookmark");
+
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.edit_bookmark"),
+      "A topic level bookmark button has a label 'Edit Bookmark'"
+    );
+
+    await click("#topic-footer-button-bookmark");
+
+    assert.ok(
+      exists("div.modal.bookmark-with-reminder"),
+      "The edit modal is opened"
+    );
+  });
+
+  test("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the first post", async function (assert) {
+    const postNumber = 1;
+    await testTopicLevelBookmarkButtonIcon(assert, postNumber);
+  });
+
+  test("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the second post", async function (assert) {
+    const postNumber = 2;
+    await testTopicLevelBookmarkButtonIcon(assert, postNumber);
   });
 });

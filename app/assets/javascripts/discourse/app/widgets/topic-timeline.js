@@ -539,11 +539,14 @@ export default createWidget("topic-timeline", {
     }
 
     if (displayTimeLineScrollArea) {
-      const bottomAge = relativeAge(new Date(topic.last_posted_at), {
-        addAgo: true,
-        defaultFormat: timelineDate,
-      });
-      let scroller = [
+      const bottomAge = relativeAge(
+        new Date(topic.last_posted_at || topic.created_at),
+        {
+          addAgo: true,
+          defaultFormat: timelineDate,
+        }
+      );
+      const scroller = [
         h(
           "div.timeline-date-wrapper",
           this.attach("link", {

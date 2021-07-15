@@ -45,8 +45,8 @@
             {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
 
             <div class="edit-controls">
-              {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check"}}
-              {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times"}}
+              {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check" ariaLabel="composer.save_edit"}}
+              {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times" ariaLabel="composer.cancel"}}
 
               {{#if canRemoveTopicFeaturedLink}}
                 <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title={{i18n "composer.remove_featured_link"}}>
@@ -208,6 +208,8 @@
                 gaps=model.postStream.gaps
                 showReadIndicator=model.show_read_indicator
                 streamFilters=model.postStream.streamFilters
+                lastReadPostNumber=userLastReadPostNumber
+                highestPostNumber=highestPostNumber
                 showFlags=(action "showPostFlags")
                 editPost=(action "editPost")
                 showHistory=(route-action "showHistory")

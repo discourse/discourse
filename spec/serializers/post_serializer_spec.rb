@@ -245,14 +245,6 @@ describe PostSerializer do
         it "returns the reminder_at for the bookmark" do
           expect(serialized.as_json[:bookmark_reminder_at]).to eq(bookmark.reminder_at.iso8601)
         end
-
-        context "if topic_view is blank" do
-          let(:topic_view) { nil }
-
-          it "the bookmarked attribute will be false" do
-            expect(serialized.as_json[:bookmarked]).to eq(false)
-          end
-        end
       end
     end
   end

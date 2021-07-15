@@ -103,7 +103,6 @@ pl_PL:
       maximum_staged_user_per_email_reached: "Osiągnięto maksymalną ilość użytkowników etapowych zarejestrowanych przez email."
       no_subject: "(brak tematu)"
       no_body: "(brak treści wpisu)"
-      missing_attachment: "(Brakuje załącznika %{filename})"
       errors:
         empty_email_error: "Zdarza się kiedy e-mail jaki dostaliśmy jest pusty."
         no_message_id_error: "Zdarza się kiedy email nie posiada nagłówka 'Message-Id'."
@@ -163,7 +162,9 @@ pl_PL:
       ip_address_already_screened: "Jest już zawarte w istniejącej regule"
       restrict_dependent_destroy:
         one: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
+        few: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
         many: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
+        other: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
       too_long:
         one: jest za długa (maksymalnie %{count} znak)
         few: jest za długa (maksymalnie %{count} znaków)
@@ -237,6 +238,7 @@ pl_PL:
     not_found_template_link: |
       <p>Zaproszenia do <a href="%{base_url}">%{site_name}</a> nie można już zrealizować. Poproś osobę, która Cię zaprosiła, o przesłanie nowego zaproszenia.</p>
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!</a>"
+    invite_exists: "Zaprosiłeś już <b>%{email}</b>."
     invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy na Twój adres e-mail aktywacyjny. Postępuj zgodnie z instrukcjami w e-mailu, aby aktywować konto.</p><p>Jeśli e-mail nie przyszedł, sprawdź folder ze spamem.</p>"
     cant_invite_to_group: "Nie możesz zapraszać użytkowników do określonej grupy. Upewnij się, że jesteś właścicielem grupy, do których próbujesz zaprosić."
@@ -264,9 +266,6 @@ pl_PL:
     not_enough_space_on_disk: "Nie ma wystarczającej ilości wolnego miejsca, aby wczytać tę kopię zapasową."
     invalid_filename: "Plik kopii zapasowej zawiera nieprawidłowe znaki. Nieprawidłowe znaki to a-z 0-9 . - _."
     file_exists: "Ten plik już istnieje."
-    location:
-      local: "Lokalne"
-      s3: "Amazon S3"
   invalid_params: "Zapytanie zawiera nieprawidłowy parametr: %{message}."
   not_logged_in: "Aby to zrobić musisz się zalogować."
   not_found: "Żądany URL lub źródło nie mógł/mogła zostać znaleziony."
@@ -281,7 +280,7 @@ pl_PL:
   invalid_whisper_access: "Albo szepty nie są włączone, albo nie masz dostępu do tworzenia wpisów szeptanych"
   not_in_group:
     title_topic: "Aby wyświetlić ten temat, musisz poprosić o członkostwo w grupie '%{group}'."
-    title_category: "Musisz być w grupie, aby zobaczyć tę kategorię."
+    title_category: "Aby zobaczyć tę kategorię, musisz poprosić o członkostwo w grupie '%{group}'."
     request_membership: "Poproś o członkostwo"
     join_group: "Dołącz do grupy"
   deleted_topic: "Ups! Ten temat został usunięty i nie jest już dostępny."
@@ -629,6 +628,8 @@ pl_PL:
           attributes:
             word:
               too_many: "Za długi opis akcji"
+            base:
+              invalid_url: "Adres URL zamiany jest nieprawidłowy"
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
   vip_category_name: "Salon"
@@ -1002,6 +1003,13 @@ pl_PL:
       others: "Brak odpowiedzi."
     no_drafts:
       self: "Nie masz żadnych zapisanych wersji roboczych. Zacznij pisać odpowiedź w jakimś temacie, a zostanie ona automatycznie zapisana jako nowa wersja robocza."
+  email_settings:
+    pop3_authentication_error: "Wystąpił problem z podanymi poświadczeniami POP3, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
+    imap_authentication_error: "Wystąpił problem z podanymi poświadczeniami IMAP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
+    imap_no_response_error: "Wystąpił błąd podczas komunikacji z serwerem IMAP. %{message}"
+    smtp_authentication_error: "Wystąpił problem z podanymi poświadczeniami SMTP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
+    smtp_server_busy_error: "Serwer SMTP jest obecnie zajęty, spróbuj ponownie później."
+    smtp_unhandled_error: "Wystąpił nieobsługiwany błąd podczas komunikacji z serwerem SMTP. %{message}"
   webauthn:
     validation:
       invalid_type_error: "Podany typ webauthn był nieprawidłowy. Prawidłowe typy to webauthn.get i webauthn.create."
@@ -1488,13 +1496,11 @@ pl_PL:
     category_search_priority_high_weight: "Waga zastosowana w rankingu dla priorytetu wyszukiwania wysokiej kategorii."
     allow_uncategorized_topics: "Zezwól na tworzenie tematów bez kategorii. UWAGA: jeśli jest jakiś nieskategoryzowany temat, musisz go przypisać do kategorii, zanim wyłączysz tę opcję."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
-    allow_duplicate_topic_titles_category: "Zezwalaj na tematy z identycznymi, zduplikowanymi tytułami, jeśli kategoria jest inna. Opcja allow_duplicate_topic_titles musi mieć wartość false."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł/mogła ponownie zrobić wpis z tą samą treścią"
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania dopóki nowy użytkownik nie napisze tylu wpisów."
     title: "Nazwa tej strony używana w tagu title."
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
     short_site_description: "Krótki opis, użyty w tytule na stronie głównej."
-    contact_email: "Adres e-mail kluczowego kontaktu odpowiedzialnego za tę stronę. Służy do krytycznych powiadomień, a także w formularzu kontaktowym <a href='%{base_path}/about' target='_blank'>/ about</a> w pilnych sprawach."
     contact_url: "Adres URL kontaktu dla tej witryny. Wyświetlany na stronie <a href='%{base_path}/about' target='_blank'>/about</a> dla pilnych spraw."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
@@ -1585,7 +1591,6 @@ pl_PL:
     invite_code: "Użytkownik musi wpisać ten kod, aby zezwolić na rejestrację konta, ignorowany, gdy jest pusty (bez rozróżniania wielkości liter)"
     approve_suspect_users: "Dodaj podejrzanych użytkowników do kolejki recenzji. Podejrzani użytkownicy weszli do biografii / witryny, ale nie czytali."
     review_every_post: "Wszystkie posty muszą zostać sprawdzone. OSTRZEŻENIE! NIE ZALECA SIĘ DLA RUCHLIWYCH WITRYN."
-    pending_users_reminder_delay: "Powiadomić moderatorów jeżeli nowi użytkownicy czekali na zatwierdzenie dłużej niż his mamy godzin. Ustaw -1 aby wyłączyć powiadomienia. "
     persistent_sessions: "Użytkownicy pozostaną zalogowani po zamknięciu przeglądarki internetowej"
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
     ga_version: "Wersja Google Universal Analytics do użycia: v3 (analytics.js), v4 (gtag)"
@@ -1674,6 +1679,7 @@ pl_PL:
     discourse_connect_overrides_card_background: "Zastępuje tło karty użytkownika awatarem witryny zewnętrznej z zapytania DiscourseConnect."
     discourse_connect_not_approved_url: "Przekieruj niezatwierdzone konta DiscourseConnect do tego adresu URL"
     discourse_connect_allows_all_return_paths: "Nie ograniczaj domeny do return_paths dostarczanych przez DiscourseConnect (domyślnie ścieżka zwrotna musi znajdować się w bieżącej witrynie)"
+    enable_local_logins: "Włącz konta oparte na loginach lokalnych i hasłach. OSTRZEŻENIE: jeśli opcja jest wyłączona, zalogowanie się może nie być możliwe, jeśli wcześniej nie skonfigurowano co najmniej jednej alternatywnej metody logowania."
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
@@ -1696,7 +1702,6 @@ pl_PL:
     discord_secret: "Sekretny klucz Discorda"
     discord_trusted_guilds: 'Zezwalaj tylko członkom tych gildii Discorda na logowanie się przez Discord. Użyj numerycznego identyfikatora gildii. Aby uzyskać więcej informacji, zapoznaj się z instrukcjami zamieszczonymi <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">tutaj</a>. Pozostaw puste, aby pozwolić na dołączenie z dowolnej gildii.'
     enable_backups: "Pozwól administratorom tworzyć kopie zapasowe forum"
-    allow_restore: "Dopuść przywracanie kopii zapasowych, które może zamienić WSZYSTKIE dane strony! Zostaw wyłączone, chyba że planujesz przywrócić kopię zapasową"
     maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
     automatic_backups_enabled: "Uruchom automatyczne kopie zapasowe zgodnie z ustawioną częstotliwością kopii"
     backup_frequency: "Liczba dni pomiędzy tworzeniem kopii zapasowych."
@@ -1767,6 +1772,11 @@ pl_PL:
     image_preview_jpg_quality: "Jakość plików graficznych o zmienionym rozmiarze (1 to najniższa jakość, 99 to najlepsza jakość, 100 bez zmian)."
     allow_staff_to_upload_any_file_in_pm: "Pozwól personelowi przesyłać pliki w wiadomościach."
     strip_image_metadata: "Pasek metadanych obrazu."
+    composer_media_optimization_image_enabled: "Umożliwia optymalizację przesyłanych plików graficznych po stronie klienta."
+    composer_media_optimization_image_kilobytes_optimization_threshold: "Minimalny rozmiar pliku obrazu do uruchomienia optymalizacji po stronie klienta"
+    composer_media_optimization_image_resize_dimensions_threshold: "Minimalna szerokość obrazu, aby wywołać zmianę rozmiaru po stronie klienta"
+    composer_media_optimization_image_resize_width_target: "Obrazy o szerokości większej niż `composer_media_optimization_image_dimensions_resize_threshold` zostaną przeskalowane do tej szerokości. Musi być >= niż `composer_media_optimization_image_dimensions_resize_threshold`."
+    composer_media_optimization_image_encode_quality: "Jakość kodowania JPEG używana w procesie ponownego kodowania."
     min_ratio_to_crop: "Współczynnik stosowany do przycinania wysokich zdjęć. Wpisz wynik szerokości / wysokości."
     simultaneous_uploads: "Maksymalna liczba plików, które można przeciągnąć i upuścić w kompozytorze"
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
@@ -1884,6 +1894,7 @@ pl_PL:
     reviewable_default_visibility: "Nie pokazuj elementów, które można przeglądać, chyba że spełniają ten priorytet"
     high_trust_flaggers_auto_hide_posts: "Nowe wpisy użytkowników są automatycznie ukryte po oznaczeniu ich jako spam przez użytkownika TL3 +"
     cooldown_hours_until_reflag: "Ile czasu użytkownicy będą musieli poczekać, aż będą mogli zmienić etykietę wpisu"
+    slow_mode_prevents_editing: "Czy 'Tryb zwolniony' uniemożliwia edycję, po editing_grace_period?"
     reply_by_email_enabled: "Włącz możliwość odpowiadania na wpisy poprzez email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista alternatywnych szablonów do odpowiedzi przez adres email. Przykład: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1912,6 +1923,7 @@ pl_PL:
     blocked_attachment_filenames: "Lista słów kluczowych używanych do blokowania załączników na podstawie nazwy pliku."
     forwarded_emails_behaviour: "Jak traktować przesłaną wiadomość e-mail do Discourse"
     always_show_trimmed_content: "Zawsze pokazuj przyciętą część przychodzących e-maili. UWAGA: może ujawniać adresy e-mail."
+    trim_incoming_emails: "Przytnij część przychodzących e-maili, które nie są istotne."
     private_email: "Nie umieszczaj treści z wpisów lub tematów w tytule lub treści e-maila. UWAGA: wyłącza także przetrawianie wiadomości e-mail."
     post_excerpts_in_emails: "W wiadomościach e-mail zawsze wysyłaj fragmenty zamiast pełnych wpisów"
     raw_email_max_length: "Ile znaków należy przechowywać dla przychodzących wiadomości e-mail."
@@ -2011,6 +2023,7 @@ pl_PL:
     app_association_ios: "Zawartość punktu końcowego <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> używana do tworzenia uniwersalnych linków między tą stroną a aplikacjami iOS."
     share_anonymized_statistics: "Udostępnij anonimowe statystyki użytkowania."
     auto_handle_queued_age: "Automatycznie obsługuj rekordy, które czekają na przejrzenie po tylu dniach. Flagi zostaną zignorowane, a posty oczekujące w kolejce i użytkownicy zostaną odrzuceni. Ustaw na 0, aby wyłączyć tę funkcję."
+    penalty_step_hours: "Domyślne kary za wyciszanie lub zawieszanie użytkowników w godzinach. Pierwsze wykroczenie domyślnie jest pierwszą wartością, drugie wykroczenie jest domyślne do drugiej wartości, itd."
     svg_icon_subset: "Dodaj dodatkowe ikony FontAwesome 5, które chcesz umieścić w swoich zasobach. Użyj przedrostka 'fa-' dla wypełnionych ikon, 'far-' dla zwykłych ikon i 'fab-' dla ikon marek."
     max_prints_per_hour_per_user: "Maksymalna liczba /drukowanych stron (ustaw na 0, aby wyłączyć)"
     full_name_required: "Pełne imię i nazwisko to wymagane pole w profilu użytkownika."
@@ -2410,6 +2423,7 @@ pl_PL:
       other: "Automatycznie dezaktywowano po %{count} dniach braku aktywności"
     activated_by_staff: "Aktywowane przez personel"
     new_user_typed_too_fast: "Nowy użytkownik wpisany zbyt szybko"
+    content_matches_auto_silence_regex: "Treść pasuje do wyrażenia regularnego automatycznego wyciszenia"
     content_matches_auto_block_regex: "Zawartość pasuje do automatycznej blokady regex"
     username:
       short: "musi zawierać co najmniej %{min} znaków"
@@ -2444,6 +2458,11 @@ pl_PL:
     email_in_spam_header: "Pierwszy e-mail użytkownika został oznaczony jako spam"
     already_silenced: "Użytkownik został już wyciszony przez %{staff} %{time_ago}."
     already_suspended: "Użytkownik został już zawieszony przez %{staff} %{time_ago}."
+    cannot_delete_has_posts:
+      one: "Użytkownik %{username} ma %{count} post w publicznym wątku lub prywatnej wiadomości, więc nie można ich usunąć."
+      few: "Użytkownik %{username} ma %{count} posty w publicznym wątku lub prywatnej wiadomości, więc nie można ich usunąć."
+      many: "Użytkownik %{username} ma %{count} posty w publicznym wątku lub prywatnej wiadomości, więc nie można ich usunąć."
+      other: "Użytkownik %{username} ma %{count} postów w publicznych wątkach lub prywatnych wiadomościach, więc nie można ich usunąć."
   reviewables_reminder:
     submitted:
       one: "Wiadomości zostały wysłane ponad %{count} godzinę temu. [Sprawdź je](%{base_path}/review)."
@@ -3239,6 +3258,7 @@ pl_PL:
     only_reply_by_email_pm: "Odpowiedz na tego e‐maila, by odpowiedzieć %{participants}."
     visit_link_to_respond: "[Zobacz Temat](%{base_url}%{url}) aby odpowiedzieć."
     visit_link_to_respond_pm: "[Wyświetl wiadomość] (%{base_url}%{url}), aby odpowiedzieć na %{participants}."
+    reply_above_line: "## Wpisz swoją odpowiedź powyżej tej linii. ##"
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
     pm_participants: "Uczestnicy: %{participants}"
     invited_group_to_private_message_body: |
@@ -3662,6 +3682,7 @@ pl_PL:
         To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że [Twój post](%{base_url}%{post_url}) został zatwierdzony.
   page_forbidden:
     title: "Ups! Ta strona jest prywatna."
+  site_setting_missing: "Ustawienie `%{name}` musi być ustawione."
   page_not_found:
     title: "Ups! Ta strona nie istnieje lub jest prywatna."
     popular_topics: "Popularne"
@@ -3727,6 +3748,9 @@ pl_PL:
     sender_post_deleted: "wpis został usunięty"
     sender_message_to_invalid: "odbiorca ma nieprawidłowy adres e‐mail"
     sender_topic_deleted: "temat został usunięty"
+    group_smtp_post_deleted: "wpis został usunięty"
+    group_smtp_topic_deleted: "temat został usunięty"
+    group_smtp_disabled_for_group: "smtp został wyłączony dla grupy"
   color_schemes:
     base_theme_name: "Podstawa"
     light: "Jasny"
@@ -4492,6 +4516,7 @@ pl_PL:
       restored: Przywrócony
   reviewables:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
+    already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."
     priorities:
       low: "Niski"
       medium: "Średni"
@@ -4542,10 +4567,6 @@ pl_PL:
       agree_and_hide:
         title: "Ukryj post"
         description: "Ukryj ten post i automatycznie wyślij użytkownikowi wiadomość z wezwaniem do jego edycji."
-      delete_spammer:
-        title: "Usuń spamera"
-        description: "Usuń użytkownika oraz wszystkie jego posty i tematy."
-        confirm: "Czy na pewno chcesz usunąć wszystkie posty i tematy tego użytkownika oraz zablokować jego adresy IP i e-mail?"
       delete_single:
         title: "Usuń"
       delete:
@@ -4602,8 +4623,6 @@ pl_PL:
       approve_and_restore:
         title: "Zatwierdź i przywróć post"
       delete_user:
-        title: "Usuń użytkownika"
-        confirm: "Czy na pewno chcesz usunąć tego użytkownika? Spowoduje to usunięcie wszystkich jego postów i zablokowanie adresu e-mail oraz IP."
         reason: "Skasowano z poziomu kolejki moderacji"
   email_style:
     html_missing_placeholder: "Szablon HTML musi zawierać %{placeholder}"

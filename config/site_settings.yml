@@ -47,6 +47,7 @@ required:
     default: ""
     type: group
   exclude_rel_nofollow_domains:
+    client: true
     default: ""
     type: list
     list_type: simple
@@ -266,6 +267,10 @@ basic:
     client: true
     default: true
     hidden: true
+  enable_experimental_image_uploader:
+    client: true
+    default: false
+    hidden: true
   default_theme_id:
     default: -1
     hidden: true
@@ -306,6 +311,11 @@ basic:
     client: true
     default: false
     hidden: true
+  max_favorite_badges:
+    client: true
+    default: 2
+    min: 0
+    max: 6
   enable_whispers:
     client: true
     default: false
@@ -343,6 +353,9 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+  order_stylesheets:
+    default: false
+    hidden: true
 
 login:
   invite_only:
@@ -494,9 +507,9 @@ login:
     list_type: simple
   hide_email_address_taken: false
   log_out_strict: false
-  pending_users_reminder_delay:
+  pending_users_reminder_delay_minutes:
     min: -1
-    default: 8
+    default: 480
   persistent_sessions: true
   maximum_session_age:
     default: 1440
@@ -1399,6 +1412,33 @@ files:
   decompressed_backup_max_file_size_mb:
     default: 100000
     hidden: true
+  composer_media_optimization_image_enabled:
+    default: false
+    client: true
+  composer_media_optimization_image_kilobytes_optimization_threshold:
+    default: 524288
+    client: true
+  composer_media_optimization_image_resize_dimensions_threshold:
+    default: 1920
+    client: true
+  composer_media_optimization_image_resize_width_target:
+    default: 1920
+    client: true
+  composer_media_optimization_image_resize_pre_multiply:
+    default: false
+    hidden: true
+    client: true
+  composer_media_optimization_image_resize_linear_rgb:
+    default: false
+    hidden: true
+    client: true
+  composer_media_optimization_image_encode_quality:
+    default: 75
+    client: true
+  composer_media_optimization_debug_mode:
+    default: false
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:
@@ -1529,6 +1569,9 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   moderators_manage_categories_and_groups: false
+  moderators_change_post_ownership:
+    client: true
+    default: false
   moderators_view_emails:
     client: true
     default: false
@@ -1698,6 +1741,7 @@ spam:
   cooldown_hours_until_reflag:
     default: 24
     min: 0
+  slow_mode_prevents_editing: true
 
   reviewable_claiming:
     client: true
@@ -2236,6 +2280,11 @@ uncategorized:
     default: 60
     min: 0
 
+  penalty_step_hours:
+    default: "24|72|168|720"
+    type: "list"
+    list_type: "compact"
+
   svg_icon_subset:
     default: ""
     type: "list"
@@ -2259,11 +2308,6 @@ uncategorized:
 
   create_revision_on_bulk_topic_moves:
     default: true
-
-  disable_image_size_calculations:
-    default: false
-    hidden: true
-    client: true
 
 user_preferences:
   default_email_digest_frequency:

@@ -6,6 +6,7 @@ export default DiscourseRoute.extend({
     end_date: { refreshModel: true },
     filters: { refreshModel: true },
     chart_grouping: { refreshModel: true },
+    mode: { refreshModel: true },
   },
 
   model(params) {
@@ -55,6 +56,7 @@ export default DiscourseRoute.extend({
     onParamsChange(params) {
       const queryParams = {
         type: params.type,
+        mode: params.mode,
         start_date: params.startDate
           ? params.startDate.toISOString(true).split("T")[0]
           : null,

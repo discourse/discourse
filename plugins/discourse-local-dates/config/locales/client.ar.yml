@@ -11,21 +11,21 @@ ar:
         today: اليوم %{time}
         tomorrow: غدًا %{time}
         yesterday: أمس %{time}
-      title: أدخِل التاريخ / الوقت
+      title: إدخال التاريخ/الوقت
       create:
         form:
-          insert: أدخِل
+          insert: إدراج
           advanced_mode: الوضع المتقدّم
           simple_mode: الوضع البسيط
-          format_description: "النُسق المستعمل لعرض التاريخ على المستخدم. استعمل Z لإزاحة الأرقام بالصفر و zz لاسم المنطقة الزمنية."
+          format_description: "التنسيق المستخدم لعرض التاريخ للمستخدم. استخدم Z لعرض الإزاحة وzz لاسم المنطقة الزمنية."
           timezones_title: المناطق الزمنية لعرضها
           recurring_title: التكرار
-          recurring_description: "حدّد تكرار الحدث. يمكنك أيضًا تعديل خيار التكرار الذي ولّدته الاستمارة تلقائيًا - تعديله يدويًا وثمّ استعمال أحد المفاتيح الآتية: years، ‏quarters، ‏months، ‏days، ‏hours، ‏minutes، ‏seconds، ‏milliseconds."
+          recurring_description: "حدِّد تكرار الحدث. يمكنك أيضًا تعديل خيار التكرار الذي أنشأه النموذج يدويًا واستخدام أحد المفاتيح التالية: years، ‏quarters، ‏months، ‏days، ‏hours، ‏minutes، ‏seconds، ‏milliseconds."
           recurring_none: بلا تكرار
-          invalid_date: التاريخ غير صالح، تأكّد من صحّة التاريخ والوقت
+          invalid_date: التاريخ غير صالح، تأكَّد من صحة التاريخ والوقت
           date_title: التاريخ
           time_title: الوقت
-          format_title: نُسق التاريخ
+          format_title: تنسيق التاريخ
           timezone: المنطقة الزمنية
           until: حتّى...
           recurring:

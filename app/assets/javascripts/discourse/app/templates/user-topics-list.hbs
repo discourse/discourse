@@ -1,3 +1,9 @@
+{{#unless site.mobileView}}
+  {{#if showToggleBulkSelect}}
+    {{bulk-select-button selected=selected action=(route-action "refresh")}}
+  {{/if}}
+{{/unless}}
+
 {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
   {{basic-topic-list topicList=model
                      hideCategory=hideCategory
@@ -9,7 +15,10 @@
                      showInserted=(action "showInserted")
                      tagsForUser=tagsForUser
                      onScroll=saveScrollPosition
-                     scrollOnLoad=true}}
+                     canBulkSelect=canBulkSelect
+                     scrollOnLoad=true
+                     toggleBulkSelect=(action "toggleBulkSelect")
+                     updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")}}
 
   {{conditional-loading-spinner condition=model.loadingMore}}
 {{/load-more}}

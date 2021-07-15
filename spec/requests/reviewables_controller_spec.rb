@@ -182,10 +182,10 @@ describe ReviewablesController do
         user.activate
         reviewable = ReviewableUser.find_by(target: user)
 
-        put "/review/#{reviewable.id}/perform/reject_user_delete.json?version=0"
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
         expect(response.code).to eq("200")
 
-        put "/review/#{reviewable.id}/perform/reject_user_delete.json?version=0&index=2"
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=0&index=2"
         expect(response.code).to eq("404")
         json = response.parsed_body
 

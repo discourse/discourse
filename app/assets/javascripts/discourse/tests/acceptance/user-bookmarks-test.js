@@ -14,7 +14,7 @@ acceptance("User's bookmarks", function (needs) {
 
   test("removing a bookmark with no reminder does not show a confirmation", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.ok(queryAll(".bookmark-list-item").length > 0);
+    assert.ok(exists(".bookmark-list-item"));
 
     const dropdown = selectKit(".bookmark-actions-dropdown:nth-of-type(1)");
     await dropdown.expand();

@@ -38,7 +38,7 @@ module I18n
       end
 
       def self.sort_locale_files(files)
-        files.sort_by do |filename|
+        files.sort.sort_by do |filename|
           matches = /(?:client|server)-([1-9]|[1-9][0-9]|100)\..+\.yml/.match(filename)
           matches&.[](1)&.to_i || 0
         end

@@ -646,7 +646,6 @@ class PostCreator
                       @topic.id,
                       posted: true,
                       last_read_post_number: @post.post_number,
-                      highest_seen_post_number: @post.post_number,
                       last_posted_at: Time.zone.now)
 
     # assume it took us 5 seconds of reading time to make a post

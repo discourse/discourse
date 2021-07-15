@@ -62,7 +62,7 @@ te:
       record_invalid: ! "సరిజూత విఫలమైంది: %{errors}"
       restrict_dependent_destroy:
         one: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
-        many: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
+        other: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
       too_long:
         one: ఇది చాలా పొడుగు (గరిష్ట పరిమితి ఒక అక్షరం)
         other: ఇది చాలా పొడుగు. (గరిష్ట పరిమితి %{count} అక్షరాలు)
@@ -749,8 +749,6 @@ te:
     actions:
       agree_and_suspend:
         title: "సభ్యుడిని సస్పెండు చేయి"
-      delete_spammer:
-        title: "స్పామరును తొలగించు"
       delete_single:
         title: "తొలగించు"
       disagree:
@@ -762,8 +760,6 @@ te:
           title: "సభ్యుడిని తొలగించు"
       reject:
         title: "తిరస్కరించు"
-      delete_user:
-        title: "సభ్యుడిని తొలగించు"
   activemodel:
     errors:
       <<: *errors

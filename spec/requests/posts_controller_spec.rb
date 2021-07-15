@@ -415,10 +415,11 @@ describe PostsController do
       end
 
       it "updates post's raw attribute" do
-        put "/posts/#{post.id}.json", params: update_params
+        put "/posts/#{post.id}.json", params: { post: { raw: 'edited body   ' } }
 
         expect(response.status).to eq(200)
-        expect(post.reload.raw).to eq(update_params[:post][:raw])
+        expect(response.parsed_body['post']['raw']).to eq('edited body')
+        expect(post.reload.raw).to eq('edited body')
       end
 
       it "extracts links from the new body" do
@@ -988,7 +989,7 @@ describe PostsController do
 
       it "returns the nested post with a param" do
         post "/posts.json", params: {
-          raw: 'this is the test content',
+          raw: 'this is the test content  ',
           title: 'this is the test title for the topic',
           nested_post: true
         }
@@ -996,6 +997,7 @@ describe PostsController do
         expect(response.status).to eq(200)
         parsed = response.parsed_body
         expect(parsed['post']).to be_present
+        expect(parsed['post']['raw']).to eq('this is the test content')
         expect(parsed['post']['cooked']).to be_present
       end
 

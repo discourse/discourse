@@ -131,7 +131,7 @@ nb_NO:
       ip_address_already_screened: "er allerede inkludert i en eksisterende regel"
       restrict_dependent_destroy:
         one: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
-        many: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
+        other: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
       too_long:
         one: for lang tekst (maks %{count} tegn)
         other: for lang tekst(maks %{count} tegn)
@@ -1492,8 +1492,6 @@ nb_NO:
       agree_and_hide:
         title: "Skjul innlegg"
         description: "Gjem dette innlegget og send en melding til brukeren automatisk med en forespørsel om gjøre endringer."
-      delete_spammer:
-        title: "Slett spammer"
       delete_single:
         title: "Slett"
       disagree_and_restore:
@@ -1509,8 +1507,6 @@ nb_NO:
           title: "Slett bruker"
       reject:
         title: "Avvis"
-      delete_user:
-        title: "Slett bruker"
   activemodel:
     errors:
       <<: *errors

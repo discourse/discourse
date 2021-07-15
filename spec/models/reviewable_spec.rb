@@ -78,6 +78,14 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
       expect(r0.pending?).to eq(false)
     end
+
+    it "will create a new reviewable when an existing reviewable exists the same target with different type" do
+      r0 = Fabricate(:reviewable_queued_post)
+      r0.perform(admin, :approve_post)
+
+      r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+      expect(r1.pending?).to eq(true)
+    end
   end
 
   context ".list_for" do
@@ -537,6 +545,25 @@ RSpec.describe Reviewable, type: :model do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:deleted])
 
       expect(Reviewable.by_status(Reviewable.all, :reviewed)).to contain_exactly(reviewable)
+    end
+  end
+
+  context 'default actions' do
+    let(:reviewable) { Reviewable.new }
+    let(:actions) { Reviewable::Actions.new(reviewable, Guardian.new) }
+
+    describe '#delete_user_actions' do
+      it 'adds a bundle with the delete_user action' do
+        reviewable.delete_user_actions(actions)
+
+        expect(actions.has?(:delete_user)).to be true
+      end
+
+      it 'adds a bundle with the delete_user_block action' do
+        reviewable.delete_user_actions(actions)
+
+        expect(actions.has?(:delete_user_block)).to be true
+      end
     end
   end
 end

@@ -90,8 +90,6 @@ class Plugin::Instance
         metadata = Plugin::Metadata.parse(source)
         plugins << self.new(metadata, path)
       end
-
-      plugins << DiscourseDev.auth_plugin if Rails.env.development? && DiscourseDev.auth_plugin_enabled?
     }
   end
 
@@ -375,6 +373,14 @@ class Plugin::Instance
     assets
   end
 
+  def add_directory_column(column_name, query:, icon: nil)
+    validate_directory_column_name(column_name)
+
+    DiscourseEvent.on("before_directory_refresh") do
+      DirectoryColumn.find_or_create_plugin_directory_column(column_name: column_name, icon: icon, query: query)
+    end
+  end
+
   def delete_extra_automatic_assets(good_paths)
     return unless Dir.exists? auto_generated_path
 
@@ -595,7 +601,6 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-
     if @path
       root_dir_name = File.dirname(@path)
 
@@ -757,7 +762,7 @@ class Plugin::Instance
       root_path = "#{File.dirname(@path)}/assets/javascripts"
       admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
 
-      Dir.glob(["#{root_path}/**/*", "#{admin_path}/**/*"]) do |f|
+      Dir.glob(["#{root_path}/**/*", "#{admin_path}/**/*"]).sort.each do |f|
         f_str = f.to_s
         if File.directory?(f)
           yield [f, true]
@@ -965,6 +970,11 @@ class Plugin::Instance
   end
 
   private
+
+  def validate_directory_column_name(column_name)
+    match = /^[_a-z]+$/.match(column_name)
+    raise "Invalid directory column name '#{column_name}'. Can only contain a-z and underscores" unless match
+  end
 
   def write_asset(path, contents)
     unless File.exists?(path)

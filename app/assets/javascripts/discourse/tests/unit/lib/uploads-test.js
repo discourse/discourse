@@ -110,7 +110,10 @@ discourseModule("Unit | Utility | uploads", function () {
     assert.ok(
       bootbox.alert.calledWith(
         I18n.t("post.errors.upload_not_authorized", {
-          authorized_extensions: authorizedExtensions(false, this.siteSettings),
+          authorized_extensions: authorizedExtensions(
+            false,
+            this.siteSettings
+          ).join(", "),
         })
       )
     );

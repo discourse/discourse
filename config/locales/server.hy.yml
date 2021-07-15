@@ -91,7 +91,6 @@ hy:
       maximum_staged_user_per_email_reached: "Հասել է յուրաքանչյուր էլ. հասցեի համար աստիճանավորված օգտատերերի առավելագույն քանակին:"
       no_subject: "(թեմա չկա)"
       no_body: "(մարմին չկա)"
-      missing_attachment: "(%{filename} կցորդը բացակայում է)"
       errors:
         empty_email_error: "Պատահում է, երբ մեր ստացած սկզբնական էլ. նամակը դատարկ էր:"
         no_message_id_error: "Պատահում է, երբ էլ. նամակը չունի 'Հաղորդագրության-Id' վերնագիր:"
@@ -143,7 +142,7 @@ hy:
       ip_address_already_screened: "արդեն ներառված է գոյություն ունեցող կանոնի մեջ"
       restrict_dependent_destroy:
         one: "Անհնար է ջնջել գրառումը, քանի որ գոյություն ունի կախյալ %{record} "
-        many: "Անհնար է ջնջել տվյալները, քանի որ գոյություն ունի կախյալ%{record} "
+        other: "Անհնար է ջնջել տվյալները, քանի որ գոյություն ունի կախյալ%{record} "
       too_long:
         one: չափազանց երկար է (առավելագույնը %{count} սիմվոլ)
         other: չափազանց երկար է (առավելագույնը %{count} սիմվոլ)
@@ -188,9 +187,6 @@ hy:
     not_enough_space_on_disk: "Դիսկի վրա չկա բավականաչափ տարածք այս պահուստի վերբեռնման համար:"
     invalid_filename: "Պահուստային ֆայլի անունը պարունակում է անվավեր սիմվոլներ: Վավեր սիմվոլներն են՝ a-z 0-9 . - _"
     file_exists: "Ֆայլը, որ Դուք փորձում եք վերբեռնել, արդեն գոյություն ունի:"
-    location:
-      local: "Լոկալ"
-      s3: "Amazon S3"
   invalid_params: "Դուք առաջարկել եք անվավեր պարամետրեր հարման համար՝ %{message}"
   not_logged_in: "Դա անելու համար Դուք պետք է մուտքագրված լինեք:"
   not_found: "Հարցված URL-ը կամ ռեսուրսը չի գտնվել:"
@@ -1093,7 +1089,6 @@ hy:
     title: "Այս կայքի անունը, ինչպես որ օգտագործված է վերնագրի թեգում:"
     site_description: "Նկարագրեք այս կայքը մեկ նախադասությամբ, ինչպես որ օգտագործված է մետա-նկարագրության թեգում:"
     short_site_description: "Կարճ նկարագրություն, ինչպես որ օգտագործված է գլխավոր էջի վերնագրի թեգում:"
-    contact_email: "Այս կայքի համար պատասխանատու key կոնտակտի էլ. հասցեն: Օգտագործվում է ծայրահեղ ծանուցումների համար, ինչպես նաև՝ <a href='%{base_path}/about' target='_blank'>/about</a> կոնտակտային ֆորմի մեջ՝ հրատապ դեպքերի համար:"
     crawl_images: "Ստանալ նկարներ հեռակա URL-ներից՝ ճշգրիտ լայնության և երկարության չափումները մուտքագրելու համար:"
     download_remote_images_to_local: "Դարձնել հեռակա նկարները տեղական՝ ներբեռնելով դրանք; սա կանխում է նկարների կորչելը: "
     download_remote_images_threshold: "Հեռակա նկարները տեղայնորեն ներբեռնելու համար դիսկի նվազագույն անհրաժեշտ տարածքը (տոկոսներով)"
@@ -1153,7 +1148,6 @@ hy:
     enable_markdown_linkify: "Ավտոմատ կերպով հղում դարձնել տեքստը, որը նման է հղման. www.example.com -ը և https://example.com -ը ավտոմատ կերպով կդառնան հղում"
     markdown_linkify_tlds: "Թոփ մակարդակի դոմենների ցանկ, որոնք ավտոմատ կերպով հղում են դառնում:"
     post_undo_action_window_mins: "Րոպեների քանակը, որոնց ընթացքում օգտատերերին թույլատրվում է ետարկել գրառման վրա կատարված վերջին գործողությունները (հավանում, դրոշակավորում և այլն):"
-    pending_users_reminder_delay: "Ծանուցել մոդերատորներին, եթե նոր օգտատերերը սպասում են հաստատման ավելի երկար, քան այսքան ժամ: Սահմանեք -1՝ ծանուցւոմները անջատելու համար:"
     maximum_session_age: "Օգտատերը կմնա մուտքագրված վերջին այցելությունից n ժամ անց"
     enable_escaped_fragments: "Վերադարձ դեպի Google's Ajax-Crawling API , եթե ոչ մի ցանցային տվայլների հավաքագրիչ (webcrawler) հայտնաբերված չէ: Այցելեք <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Թույլատրելի origin-ներ խաչաձև origin հարցումների համար (CORS): Յուրաքանչյուր origin պետք է ներառի http:// կամ https://: DISCOURSE_ENABLE_CORS env փոփոխականը պետք է սահմանված լինի true ՝ CORS -ի միացման համար:"
@@ -1220,7 +1214,6 @@ hy:
     enable_facebook_logins: "Միացնել Facebook նույնականացումը, պահանջում է facebook_app_id և facebook_app_secret: Այցելեք <a href='https://meta.discourse.org/t/13394' target='_blank'>Facebook մուտքի կարգավորում Discourse-ի համար</a>:"
     facebook_app_secret: "Հավելվածի գաղտնի արժեք Facebook նույնականացման համար, գրանցված այստեղ՝ <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_backups: "Թույլատրել ադմինիստրատորներին ստեղծել ֆորումի պահուստներ"
-    allow_restore: "Թույլատրել վերականգնումը, որը կարող է փոխարինել կայքի ԲՈԼՈՐ տվյալները: Թողեք սխալ, մինչև որ չպլանավորեք վերականգնել պահուստ:"
     maximum_backups: "Պահուստների՝ դիսկի վրա պահելու առավելագույն քանակը: Ավելի հին պահուստները ավտոմատ կերպով ջնջվում են:"
     automatic_backups_enabled: "Գործարկել ավտոմատ պահուստները որոշված հաճախականությամբ"
     backup_frequency: "Պահուստներ ստեղծելու հաճախականությունը օրերով"
@@ -2632,6 +2625,7 @@ hy:
     sender_body_blank: "body-ն դատարկ է"
     sender_post_deleted: "գրառումը ջնջվել է"
     sender_message_to_invalid: "ստացողը ունի անվավեր էլ. հասցե"
+    group_smtp_post_deleted: "գրառումը ջնջվել է"
   color_schemes:
     base_theme_name: "Հիմնական"
     light: "Բաց"
@@ -3172,8 +3166,6 @@ hy:
       agree_and_hide:
         title: "Թաքցնել Գրառումը"
         description: "Թաքցնել այս գրառումը և ավտոմատ կերպով հաղորդագրություն ուղարկել օգտագտիրոջը՝ հորդորելով խմբագրել այն:"
-      delete_spammer:
-        title: "Ջնջել Սպամ տարածողին"
       delete_single:
         title: "Ջնջել"
       disagree_and_restore:
@@ -3189,8 +3181,6 @@ hy:
           title: "Ջնջել Օգտատիրոջը"
       reject:
         title: "Մերժել"
-      delete_user:
-        title: "Ջնջել Օգտատիրոջը"
   activemodel:
     errors:
       <<: *errors

@@ -187,7 +187,7 @@ createWidget("post-avatar", {
 
     const result = [body];
 
-    if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
+    if (attrs.flair_url || attrs.flair_bg_color) {
       result.push(this.attach("avatar-flair", attrs));
     } else {
       const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
@@ -701,7 +701,17 @@ createWidget("post-article", {
         .then((posts) => {
           this.state.repliesAbove = posts.map((p) => {
             let result = transformWithCallbacks(p);
-            result.shareUrl = `${topicUrl}/${p.post_number}`;
+
+            // We don't want to overwrite CPs - we are doing something a bit weird
+            // here by creating a post object from a transformed post. They aren't
+            // 100% the same.
+            delete result.new_user;
+            delete result.deleted;
+            delete result.shareUrl;
+            delete result.firstPost;
+            delete result.usernameUrl;
+
+            result.customShare = `${topicUrl}/${p.post_number}`;
             result.asPost = this.store.createRecord("post", result);
             return result;
           });

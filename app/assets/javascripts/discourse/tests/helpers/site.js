@@ -40,6 +40,7 @@ PreloadStore.store("site", {
     "latest",
     "unread",
     "new",
+    "top",
     "starred",
     "read",
     "posted",

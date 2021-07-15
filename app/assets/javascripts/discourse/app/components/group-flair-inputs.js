@@ -67,8 +67,8 @@ export default Component.extend({
   },
 
   @discourseComputed("model.flair_url")
-  flairImageUrl(flairURL) {
-    return flairURL && flairURL.match(/\//) ? flairURL : null;
+  flairImageUrl(flairUrl) {
+    return flairUrl && flairUrl.includes("/") ? flairUrl : null;
   },
 
   @discourseComputed(
@@ -78,7 +78,7 @@ export default Component.extend({
     "model.flairHexColor"
   )
   flairPreviewStyle(
-    flairURL,
+    flairUrl,
     flairPreviewImage,
     flairBackgroundHexColor,
     flairHexColor
@@ -86,7 +86,7 @@ export default Component.extend({
     let style = "";
 
     if (flairPreviewImage) {
-      style += `background-image: url(${escapeExpression(flairURL)});`;
+      style += `background-image: url(${escapeExpression(flairUrl)});`;
     }
 
     if (flairBackgroundHexColor) {

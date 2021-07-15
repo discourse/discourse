@@ -37,6 +37,7 @@ describe InvitesController do
       expect(response.body).to have_tag("div#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
         invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['username']).to eq(staged_user.username)
         expect(invite_info['user_fields'][user_field.id.to_s]).to eq('some value')
       end
     end
@@ -55,6 +56,45 @@ describe InvitesController do
         invite_info = JSON.parse(json['invite_info'])
         expect(invite_info['email_verified_by_link']).to eq(true)
       end
+    end
+
+    it 'adds logged in users to invite groups' do
+      group = Fabricate(:group)
+      group.add_owner(invite.invited_by)
+      InvitedGroup.create!(group: group, invite: invite)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(response).to redirect_to("/")
+      expect(user.reload.groups).to include(group)
+    end
+
+    it 'redirects logged in users to invite topic if they can see it' do
+      topic = Fabricate(:topic)
+      TopicInvite.create!(topic: topic, invite: invite)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(response).to redirect_to(topic.url)
+    end
+
+    it 'adds logged in user to group and redirects them to invite topic' do
+      group = Fabricate(:group)
+      group.add_owner(invite.invited_by)
+      secured_category = Fabricate(:category)
+      secured_category.permissions = { group.name => :full }
+      secured_category.save!
+      topic = Fabricate(:topic, category: secured_category)
+      TopicInvite.create!(invite: invite, topic: topic)
+      InvitedGroup.create!(invite: invite, group: group)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(user.reload.groups).to include(group)
+      expect(response).to redirect_to(topic.url)
     end
 
     it 'fails for logged in users' do
@@ -684,6 +724,73 @@ describe InvitesController do
         expect(response.body).to include(I18n.t('login.already_logged_in', current_user: user.username))
       end
     end
+
+    context 'topic invites' do
+      fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
+
+      fab!(:secured_category) do
+        secured_category = Fabricate(:category)
+        secured_category.permissions = { staff: :full }
+        secured_category.save!
+        secured_category
+      end
+
+      it 'redirects user to topic if activated' do
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+      end
+
+      it 'sets destination_url cookie if user is not activated' do
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        put "/invites/show/#{invite.invite_key}.json"
+        expect(cookies['destination_url']).to eq(topic.relative_url)
+      end
+
+      it 'does not redirect user if they cannot see topic' do
+        TopicInvite.create!(invite: invite, topic: Fabricate(:topic, category: secured_category))
+
+        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        expect(response.parsed_body['redirect_to']).to eq("/")
+      end
+    end
+
+    context 'staged user' do
+      fab!(:invite) { Fabricate(:invite) }
+      fab!(:staged_user) { Fabricate(:user, staged: true, email: invite.email) }
+
+      it 'can keep the old username' do
+        old_username = staged_user.username
+
+        put "/invites/show/#{invite.invite_key}.json", params: {
+          username: staged_user.username,
+          password: "Password123456",
+          email_token: invite.email_token,
+        }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload.redeemed?).to be_truthy
+        user = invite.invited_users.first.user
+        expect(user.username).to eq(old_username)
+      end
+
+      it 'can change the username' do
+        put "/invites/show/#{invite.invite_key}.json", params: {
+          username: "new_username",
+          password: "Password123456",
+          email_token: invite.email_token,
+        }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload.redeemed?).to be_truthy
+        user = invite.invited_users.first.user
+        expect(user.username).to eq("new_username")
+      end
+    end
   end
 
   context '#destroy_all_expired' do
@@ -744,6 +851,8 @@ describe InvitesController do
     it 'resends all non-redeemed invites by a user' do
       SiteSetting.invite_expiry_days = 30
 
+      freeze_time
+
       user = Fabricate(:admin)
       new_invite = Fabricate(:invite, invited_by: user)
       expired_invite = Fabricate(:invite, invited_by: user)
@@ -756,9 +865,9 @@ describe InvitesController do
       post '/invites/reinvite-all'
 
       expect(response.status).to eq(200)
-      expect(new_invite.reload.expires_at.to_date).to eq(30.days.from_now.to_date)
-      expect(expired_invite.reload.expires_at.to_date).to eq(30.days.from_now.to_date)
-      expect(redeemed_invite.reload.expires_at.to_date).to eq(5.days.ago.to_date)
+      expect(new_invite.reload.expires_at).to eq_time(30.days.from_now)
+      expect(expired_invite.reload.expires_at).to eq_time(2.days.ago)
+      expect(redeemed_invite.reload.expires_at).to eq_time(5.days.ago)
     end
   end
 

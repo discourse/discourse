@@ -4,11 +4,12 @@
     <title>Theme QUnit Test Runner</title>
     <%= discourse_color_scheme_stylesheets %>
     <%- if !@suggested_themes %>
-      <%= discourse_stylesheet_link_tag(:desktop, theme_ids: nil) %>
-      <%= discourse_stylesheet_link_tag(:test_helper, theme_ids: nil) %>
+      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
+      <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
       <%= preload_script "locales/en" %>
-      <%= preload_script "vendor" %>
+      <%= preload_script "discourse/tests/theme_qunit_ember_jquery" %>
       <%= preload_script "discourse/tests/theme_qunit_vendor" %>
+      <%= preload_script "discourse/tests/theme_qunit_tests_vendor" %>
       <%= preload_script "markdown-it-bundle" %>
       <%= preload_script "application" %>
       <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>

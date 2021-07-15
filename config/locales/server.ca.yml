@@ -94,7 +94,6 @@ ca:
       maximum_staged_user_per_email_reached: "S'ha arribat al nombre màxim d'usuaris ficticis creats amb correu electrònic."
       no_subject: "(sense tema)"
       no_body: "(sense cos)"
-      missing_attachment: "(Falta l'adjunt %{filename})"
       errors:
         empty_email_error: "Succeeix quan el correu electrònic en brut que hem rebut és buit."
         no_message_id_error: "Succeeix quan el correu electrònic no conté la capçalera 'Message-Id'."
@@ -148,7 +147,7 @@ ca:
       ip_address_already_screened: "ja és inclòs en una regla existent"
       restrict_dependent_destroy:
         one: "No es pot suprimir el registre perquè existeix un %{record} que en depèn."
-        many: "No es pot suprimir el registre perquè existeix %{record} que en depèn."
+        other: "No es pot suprimir el registre perquè existeix %{record} que en depèn."
       too_long:
         one: és massa llarg (el màxim són %{count} caràcter)
         other: és massa llarg (el màxim són %{count} caràcters)
@@ -197,9 +196,6 @@ ca:
     not_enough_space_on_disk: "No hi ha prou espai en el disc per a desar-hi aquesta còpia de seguretat."
     invalid_filename: "El nom de la còpia de seguretat conté caràcters no vàlids. Els caràcters vàlids són a-z 0-9 . - _."
     file_exists: "El fitxer que intenteu pujar ja existeix."
-    location:
-      local: "Local"
-      s3: "Amazon S3"
   invalid_params: "Heu donat paràmetres no vàlids a la petició: %{message}"
   not_logged_in: "Cal que inicieu sessió per a fer això. "
   not_found: "No s'ha trobat l'URL o el recurs sol·licitat. "
@@ -213,7 +209,6 @@ ca:
   email_template_cant_be_modified: "Aquesta plantilla de correu no es pot modificar."
   invalid_whisper_access: "O bé els xiuxiuejos no estan activats o bé no teniu permís per a crear-ne."
   not_in_group:
-    title_category: "Per a veure aquesta categoria heu d’estar en un grup."
     request_membership: "Sol·liciteu ser-ne membre"
     join_group: "Uneix-me al grup"
   deleted_topic: "Oh! Aquest tema s'ha suprimit i ja no està disponible."
@@ -1221,7 +1216,6 @@ ca:
     title: "El nom d'aquest lloc web per a l'etiqueta de títol."
     site_description: "Descriviu el lloc web amb una frase per a la metaetiqueta de descripció."
     short_site_description: "Descripció breu per a l'etiqueta de títol de la pàgina d'inici."
-    contact_email: "Adreça de correu de contacte del responsable del lloc web. S'utilitza per a notificacions crítiques, i també per al formulari de contacte <a href='%{base_path}/about' target='_blank'>/about</a> per a qüestions urgents."
     crawl_images: "Recupera imatges d'adreces URL remotes per a inserir-hi les dimensions correctes d'amplada i alçada."
     download_remote_images_to_local: "Converteix les imatges remotes en imatges locals en descarregar-les. Això evita les imatges trencades."
     download_remote_images_threshold: "L'espai mínim necessari en el disc per a descarregar imatges remotes en local (percentatge)"
@@ -1296,7 +1290,6 @@ ca:
     markdown_typographer_quotation_marks: "Llista de parelles de reemplaçament de cometes simples i dobles"
     post_undo_action_window_mins: "Nombre de minuts durant els quals es permet als usuaris desfer accions recents sobre una publicació (M'agrada, bandera, etc.)."
     must_approve_users: "L'equip responsable ha d'aprovar tots els comptes d'usuari nous abans que puguin accedir al lloc web."
-    pending_users_reminder_delay: "Notifica als moderadors si hi ha usuaris nous esperant l'aprovació més enllà d'aquest nombre d'hores. -1 per a desactivar les notificacions."
     maximum_session_age: "L'usuari romandrà amb la sessió iniciada durant n hores des de la darrera visita"
     enable_escaped_fragments: "Torna a l'API Ajax-Crawling de Google si no es detecta cap rastrejador web. Consulteu <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>."
     cors_origins: "Orígens permesos per a peticions d'origen encreuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha de ser \"true\" per a habilitar CORS."
@@ -1370,7 +1363,6 @@ ca:
     discord_client_id: 'Identificador de client Discord (si us en cal un, visiteu <a href="https://discordapp.com/developers/applications/me">el portal de desenvolupadors Discord</a>)'
     discord_secret: "Clau secreta de Discord"
     enable_backups: "Permet als administradors crear còpies de seguretat del fòrum"
-    allow_restore: "Permet restaurar, cosa que pot reemplaçar TOTES les dades del lloc web! Deixeu-ho com a \"fals\" si no preteneu restaurar una còpia de seguretat."
     maximum_backups: "Nombre màxim de còpies de seguretat que es mantenen en el disc. Les còpies més antigues seran suprimides automàticament."
     automatic_backups_enabled: "Executa còpies de seguretat automàtiques tal com són definides en la freqüència de les còpies de seguretat"
     backup_frequency: "Nombre de dies entre còpies de seguretat"
@@ -2682,6 +2674,7 @@ ca:
     sender_body_blank: "el cos és buit"
     sender_post_deleted: "s'ha suprimit la publicació"
     sender_message_to_invalid: "el destinatari té una adreça de correu electrònic no vàlida"
+    group_smtp_post_deleted: "s'ha suprimit la publicació"
   color_schemes:
     base_theme_name: "Base"
     light: "Clar"
@@ -3200,10 +3193,6 @@ ca:
       agree_and_hide:
         title: "Amaga la publicació"
         description: "Amaga aquesta publicació i envia automàticament a l'usuari un missatge que l'insti a editar-la."
-      delete_spammer:
-        title: "Suprimeix el generador de brossa"
-        description: "Elimina l'usuari i totes les seves publicacions i temes."
-        confirm: "Esteu segur que voleu eliminar totes les publicacions i temes d'aquest usuari i blocar les seves adreces de correu i IP?"
       delete_single:
         title: "Suprimeix"
       delete:
@@ -3249,8 +3238,6 @@ ca:
       reject:
         title: "Rebutja"
       delete_user:
-        title: "Suprimeix l'usuari"
-        confirm: "Esteu segur que voleu suprimir aquest usuari? Això eliminarà totes les seves publicacions i blocarà el seu correu electrònic i la seva adreça IP."
         reason: "Suprimit mitjançant cua de revisió"
   email_style:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"

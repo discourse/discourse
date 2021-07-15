@@ -170,6 +170,8 @@ describe UrlHelper do
       Rails.configuration.action_controller.asset_host = "https://test.some-cdn.com/dev"
 
       FileStore::S3Store.any_instance.stubs(:has_been_uploaded?).returns(true)
+
+      SiteSetting.secure_media = true
     end
 
     def cooked
@@ -183,6 +185,16 @@ describe UrlHelper do
         expect(cooked).to eq(
           "//test.localhost/secure-media-uploads/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
         )
+      end
+
+      context "and secure_media setting is disabled" do
+        before { SiteSetting.secure_media = false }
+
+        it "returns the local_cdn_url" do
+          expect(cooked).to eq(
+            "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+          )
+        end
       end
     end
 

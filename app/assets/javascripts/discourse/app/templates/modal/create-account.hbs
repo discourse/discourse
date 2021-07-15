@@ -2,11 +2,6 @@
   {{#unless complete}}
     {{plugin-outlet name="create-account-before-modal-body"}}
     {{#d-modal-body class=modalBodyClasses}}
-
-      {{#if skipConfirmation}}
-        {{loading-spinner size="large"}}
-      {{/if}}
-
       <div class="create-account-form">
         <div class="login-welcome-header">
           <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
@@ -35,7 +30,7 @@
                   </label>
                 {{/if}}
                 {{input-tip validation=emailValidation id="account-email-validation"}}
-                <label class="more-info" for="new-account-email">{{i18n "user.email.instructions"}}</label>
+                <span class="more-info">{{i18n "user.email.instructions"}}</span>
               </div>
 
               <div class="input-group">
@@ -53,7 +48,7 @@
                 {{/if}}
 
                 {{input-tip validation=usernameValidation id="username-validation"}}
-                <label class="more-info" for="new-account-username">{{i18n "user.username.instructions"}}</label>
+                <span class="more-info">{{i18n "user.username.instructions"}}</span>
               </div>
 
               <div class="input-group">
@@ -74,7 +69,7 @@
                   {{/if}}
 
                   {{input-tip validation=nameValidation}}
-                  <label class="more-info" for="new-account-name">{{nameInstructions}}</label>
+                  <span class="more-info">{{nameInstructions}}</span>
                 {{/if}}
               </div>
 
@@ -101,7 +96,7 @@
                   </label>
 
                   {{input-tip validation=passwordValidation}}
-                  <label class="more-info" for="new-account-password">{{passwordInstructions}}</label>
+                  <span class="more-info">{{passwordInstructions}}</span>
                   <div class="caps-lock-warning {{unless capsLockOn " hidden"}}">
                     {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
                   </div>
@@ -118,7 +113,7 @@
                 <div class="input-group">
                   {{input value=inviteCode class=(value-entered inviteCode) id="inviteCode"}}
                   <label class="alt-placeholder" for="invite-code">{{i18n "user.invite_code.title"}}</label>
-                  <label class="more-info" for="invite-code">{{i18n "user.invite_code.instructions"}}</label>
+                  <span class="more-info">{{i18n "user.invite_code.instructions"}}</span>
                 </div>
               {{/if}}
 
@@ -169,6 +164,10 @@
 
           {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
 
+        {{/if}}
+
+        {{#if skipConfirmation}}
+          {{loading-spinner size="large"}}
         {{/if}}
       </div>
     {{/d-modal-body}}

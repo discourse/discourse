@@ -7,6 +7,8 @@ class UserBadge < ActiveRecord::Base
   belongs_to :notification, dependent: :destroy
   belongs_to :post
 
+  BOOLEAN_ATTRIBUTES = %w(is_favorite)
+
   scope :grouped_with_count, -> {
     group(:badge_id, :user_id)
       .select_for_grouping
@@ -17,11 +19,8 @@ class UserBadge < ActiveRecord::Base
   scope :select_for_grouping, -> {
     select(
       UserBadge.attribute_names.map do |name|
-        if name == 'is_favorite'
-          "BOOL_OR(user_badges.#{name}) AS is_favorite"
-        else
-          "MAX(user_badges.#{name}) AS #{name}"
-        end
+        operation = BOOLEAN_ATTRIBUTES.include?(name) ? "BOOL_OR" : "MAX"
+        "#{operation}(user_badges.#{name}) AS #{name}"
       end,
       'COUNT(*) AS "count"'
     )
@@ -123,5 +122,4 @@ end
 #  index_user_badges_on_badge_id_and_user_id_and_post_id  (badge_id,user_id,post_id) UNIQUE WHERE (post_id IS NOT NULL)
 #  index_user_badges_on_badge_id_and_user_id_and_seq      (badge_id,user_id,seq) UNIQUE WHERE (post_id IS NULL)
 #  index_user_badges_on_user_id                           (user_id)
-#  index_user_badges_on_is_favorite                       (is_favorite)
 #

@@ -24,6 +24,7 @@
         {{#if mailboxes}}
           <label for="imap_mailbox_name">{{i18n "groups.manage.email.mailboxes.synchronized"}}</label>
           {{combo-box name="imap_mailbox_name"
+            id="imap_mailbox"
             value=group.imap_mailbox_name
             valueProperty="value"
             content=mailboxes
@@ -69,12 +70,12 @@
     {{/if}}
   </div>
 
-  <div class="control-group">
-    <h3>{{i18n "groups.manage.email.imap_additional_settings"}}</h3>
-    <label class="control-group-inline" for="allow_unknown_sender_topic_replies">
-      {{input type="checkbox" name="allow_unknown_sender_topic_replies" id="allow_unknown_sender_topic_replies" checked=group.allow_unknown_sender_topic_replies tabindex="13"}}
-      <span>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies"}}</span>
-    </label>
-    <p>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies_hint"}}</p>
-  </div>
+  {{#if group.imap_updated_at}}
+    <div class="group-email-last-updated-details for-imap">
+      <small>
+        {{i18n "groups.manage.email.last_updated"}} <strong>{{format-date group.imap_updated_at leaveAgo="true"}}</strong>
+        {{i18n "groups.manage.email.last_updated_by"}} {{#link-to "user" group.imap_updated_by.username}}{{group.imap_updated_by.username}}{{/link-to}}
+      </small>
+    </div>
+  {{/if}}
 </div>

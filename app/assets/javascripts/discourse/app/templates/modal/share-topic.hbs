@@ -9,7 +9,7 @@
           value=topicUrl
           readonly=true
         }}
-        {{copy-button selector="input.invite-link" copied=(action "copied")}}
+        {{copy-button selector="input.invite-link"}}
       </div>
     </div>
 
@@ -19,7 +19,7 @@
       {{/each}}
 
       {{d-button
-        class="btn-primary"
+        class="btn-default"
         label="topic.share.notify_users.title"
         icon="hand-point-right"
         action=(action "toggleNotifyUsers")
@@ -27,7 +27,7 @@
 
       {{#if allowInvites}}
         {{d-button
-          class="btn-primary"
+          class="btn-default"
           label="topic.share.invite_users"
           icon="user-plus"
           action=(action "inviteUsers")

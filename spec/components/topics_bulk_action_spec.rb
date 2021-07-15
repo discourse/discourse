@@ -82,7 +82,6 @@ describe TopicsBulkAction do
       tu = TopicUser.find_by(user_id: post1.user_id, topic_id: post1.topic_id)
 
       expect(tu.last_read_post_number).to eq(3)
-      expect(tu.highest_seen_post_number).to eq(3)
     end
 
     context "when the user is staff" do
@@ -106,7 +105,6 @@ describe TopicsBulkAction do
           tu = TopicUser.find_by(user_id: user.id, topic_id: post1.topic_id)
 
           expect(tu.last_read_post_number).to eq(4)
-          expect(tu.highest_seen_post_number).to eq(4)
         end
       end
     end

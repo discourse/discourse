@@ -96,7 +96,8 @@ ro:
       record_invalid: ! "Validarea a eşuat: %{errors}"
       restrict_dependent_destroy:
         one: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
-        many: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
+        few: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
+        other: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
       too_long:
         one: este prea lung (maximum un caracter)
         few: este prea lung (maximum %{count} caractere)
@@ -853,7 +854,6 @@ ro:
     traditional_markdown_linebreaks: "Folosește întreruperi de rând tradiționale în Markdown, ceea ce necesită două spații pentru un capăt de rând. "
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: "Personalul trebuie să aprobe toate conturile utilizatorilor noi înainte ca ei să aibă aces în site."
-    pending_users_reminder_delay: "Notifică moderatorii dacă noii utilizatori sunt în așteptarea aprobării de mai mult de atâtea ore. Setează la -1 pentru a dezactiva notificările."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
@@ -889,7 +889,6 @@ ro:
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     google_oauth2_client_id: "ID client al aplicației tale Google."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
-    allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
@@ -2031,8 +2030,6 @@ ro:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       agree_and_hide:
         title: "Ascunde postarea"
-      delete_spammer:
-        title: "Șterge spammer"
       delete_single:
         title: "Șterge"
       disagree_and_restore:
@@ -2048,8 +2045,6 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
-      delete_user:
-        title: "Şterge utilizatorul"
   activemodel:
     errors:
       <<: *errors

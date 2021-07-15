@@ -420,7 +420,7 @@ class Admin::UsersController < Admin::AdminController
       rescue UserDestroyer::PostsExistError
         render json: {
           deleted: false,
-          message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
+          message: I18n.t("user.cannot_delete_has_posts", username: user.username, count: user.posts.joins(:topic).count),
         }, status: 403
       end
     end

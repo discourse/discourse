@@ -94,7 +94,6 @@ hu:
       show_trimmed_content: "Levágott tartalom megjelenítése"
       no_subject: "(nincs tárgy)"
       no_body: "(nincs törzs)"
-      missing_attachment: "(A(z) %{filename} melléklet hiányzik)"
       errors:
         empty_email_error: "Akkor fordul elő, ha üres volt a kapott nyers e-mail."
         no_message_id_error: "Akkor történik, ha a levélnek nincs „Message-Id” fejléce."
@@ -133,7 +132,7 @@ hu:
       emojis_disabled: "nem tartalmazhat emodzsit"
       restrict_dependent_destroy:
         one: "Nem lehet törölni a rekordot, mert létezik egy függő %{record}"
-        many: "Nem lehet törölni a rekordot, mert létezik függő %{record}"
+        other: "Nem lehet törölni a rekordot, mert létezik függő %{record}"
       too_long:
         one: túl hosszú (legfeljebb %{count} karakter lehet)
         other: túl hosszú (legfeljebb %{count} karakter lehet)
@@ -169,9 +168,6 @@ hu:
     not_enough_space_on_disk: "Nincs elég hely a lemezen a biztonsági mentés feltöltéséhez."
     invalid_filename: "A mentési fájlnév érvénytelen karaktereket tartalmaz. Érvényes karakterek: a-z 0-9 . - _."
     file_exists: "A fájl, amit próbál feltölteni, már létezik."
-    location:
-      local: "Helyi"
-      s3: "Amazon S3"
   invalid_params: "Érvénytelen paramétereket adott meg a kéréshez: %{message}"
   not_logged_in: "Ehhez be kell jelentkeznie."
   not_found: "A kért URL vagy erőforrás nem található."
@@ -1644,6 +1640,8 @@ hu:
     sender_post_deleted: "a választ törölték"
     sender_message_to_invalid: "a címzett e-mail címe érvénytelen"
     sender_topic_deleted: "Ez a témakör ki lett törölve"
+    group_smtp_post_deleted: "a választ törölték"
+    group_smtp_topic_deleted: "Ez a témakör ki lett törölve"
   color_schemes:
     base_theme_name: "Alap"
     light: "Világos"
@@ -2027,8 +2025,6 @@ hu:
       agree_and_hide:
         title: "Bejegyzés elrejtése"
         description: "Bejegyzés elrejtése, és automatikus üzenet küldése a létrehozójának, hogy módosítson rajta."
-      delete_spammer:
-        title: "Spammer törlése"
       delete_single:
         title: "Törlés"
       delete:
@@ -2060,8 +2056,6 @@ hu:
           title: "Felhasználó törlése"
       reject:
         title: "Elutasítás"
-      delete_user:
-        title: "Felhasználó törlése"
   notification_level:
     ignore_error: "Sajnáljuk, de nem tilthatod le ezt a felhasználót"
   old_keys_reminder:

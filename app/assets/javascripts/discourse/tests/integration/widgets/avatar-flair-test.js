@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -16,14 +17,14 @@ discourseModule(
       template: hbs`{{mount-widget widget="avatar-flair" args=args}}`,
       beforeEach() {
         this.set("args", {
-          primary_group_flair_url: "fa-bars",
-          primary_group_flair_bg_color: "CC0000",
-          primary_group_flair_color: "FFFFFF",
+          flair_url: "fa-bars",
+          flair_bg_color: "CC0000",
+          flair_color: "FFFFFF",
         });
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0000; color: #FFFFFF; ",
@@ -36,12 +37,12 @@ discourseModule(
       template: hbs`{{mount-widget widget="avatar-flair" args=args}}`,
       beforeEach() {
         this.set("args", {
-          primary_group_flair_url: "/images/avatar.png",
+          flair_url: "/images/avatar.png",
         });
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg").length === 0, "it does not have an svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(!exists("svg"), "it does not have an svg icon");
       },
     });
   }

@@ -102,7 +102,9 @@ sk:
       record_invalid: ! "Validácia zlyhala s chybami: %{errors}"
       restrict_dependent_destroy:
         one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
+        few: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
         many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
+        other: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
       too_long:
         one: príliš dlhé (maximálne %{count} znak)
         few: príliiš dlhé (maximum je %{count} znaky)
@@ -813,7 +815,6 @@ sk:
     tl4_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 4 (vedúci) vynásobením týmto číslom"
     traditional_markdown_linebreaks: "V Markdown použiť tradičné oddeľovače riadkov, čo vyžaduje dve koncové medzery ako oddeľovač riadku."
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
-    pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     top_menu: "Určuje, ktoré položky sa zobrazia na navigácií na domovskej stránke a v akom poradí. Napríklad posledné|neprečítané|kategórie|naj|prečítané|záložky"
@@ -845,7 +846,6 @@ sk:
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
-    allow_restore: "Umožniť obnovu, ktorá nahradí VŠETKY data na stránkach! Ponechajte prázdne okrem prípadu ak chcete obnoviť zo zálohy."
     maximum_backups: "Maximálny počet záloh udržiavaných na disku. Staršie zálohy budu automaticky vymazané"
     automatic_backups_enabled: "Spustiť automatické zálohy podľa nastavenia intervalu záloh"
     s3_backup_bucket: "Vzdialený S3 bucket na uloženie záloh. VAROVANIE: Uistite sa, že ide o súkromný S3 bucket."
@@ -1437,8 +1437,6 @@ sk:
         title: "Suspendovaný užívateľ"
       agree_and_silence:
         title: "Tichý užívateľ"
-      delete_spammer:
-        title: "Zmazať spammera"
       delete_single:
         title: "Odstrániť"
       disagree:
@@ -1450,8 +1448,6 @@ sk:
           title: "Odstrániť používateľa"
       reject:
         title: "Zamietnuť"
-      delete_user:
-        title: "Odstrániť používateľa"
   activemodel:
     errors:
       <<: *errors

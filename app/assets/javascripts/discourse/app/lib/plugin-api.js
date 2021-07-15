@@ -72,9 +72,10 @@ import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-b
 import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
+import { addSearchResultsCallback } from "discourse/lib/search";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.4";
+const PLUGIN_API_VERSION = "0.11.5";
 
 class PluginApi {
   constructor(version, container) {
@@ -950,8 +951,6 @@ class PluginApi {
   /**
    * Registers a pre-processor for file uploads
    * See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#file-processing-options
-   * Your theme/plugin will also need to load https://github.com/blueimp/jQuery-File-Upload/blob/v10.13.0/js/jquery.fileupload-process.js
-   * for this hook to work.
    *
    * Useful for transforming to-be uploaded files client-side
    *
@@ -1280,6 +1279,21 @@ class PluginApi {
    **/
   setNewCategoryDefaultColors(backgroundColor, textColor) {
     setNewCategoryDefaultColors(backgroundColor, textColor);
+  }
+
+  /**
+   * Add a callback to modify search results before displaying them.
+   *
+   * ```
+   * api.addSearchResultsCallback((results) => {
+   *   results.topics.push(Topic.create({ ... }));
+   *   return results;
+   * });
+   * ```
+   *
+   */
+  addSearchResultsCallback(callback) {
+    addSearchResultsCallback(callback);
   }
 }
 

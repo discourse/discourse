@@ -104,6 +104,9 @@ sv:
       no_subject: "(inget ämne)"
       no_body: "(ingen meddelandetext)"
       missing_attachment: "(Bilagan %{filename} saknas)"
+      continuing_old_discussion:
+        one: "Fortsätter diskussionen från [%{title}](%{url}), eftersom den skapades för mer än %{count} dag sedan."
+        other: "Fortsätter diskussionen från [%{title}](%{url}), eftersom den skapades för mer än %{count} dagar sedan."
       errors:
         empty_email_error: "Händer när rådata vi mottagit är tom."
         no_message_id_error: "Händer när e-post saknar 'Message-Id'-rubrik."
@@ -163,7 +166,7 @@ sv:
       ip_address_already_screened: "ingår redan i en befintlig regel"
       restrict_dependent_destroy:
         one: "Kan inte radera post på grund av att det finns en beroende %{record}"
-        many: "Kan inte radera post på grund av att det finns beroende %{record}"
+        other: "Kan inte radera post på grund av att det finns beroende %{record}"
       too_long:
         one: är för långt (högsta tillåtna är %{count} tecken)
         other: är för långt (högsta tillåtna är %{count} tecken)
@@ -235,6 +238,7 @@ sv:
     disabled_errors:
       discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
+    requires_groups: "Inbjudan sparad. För att ge tillgång till det angivna ämnet lägger du till en av följande grupper: %{groups}."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -256,9 +260,6 @@ sv:
     not_enough_space_on_disk: "Det finns inte tillräckligt mycket utrymme på disken för att ladda upp denna säkerhetskopia."
     invalid_filename: "Säkerhetskopiefilens namn innehåller ogiltiga tecken. Giltiga tecken är a-z 0-9 . - _."
     file_exists: "Filen som du försöker ladda upp finns redan."
-    location:
-      local: "Lokalt"
-      s3: "Amazon S3"
   invalid_params: "Du levererade ogiltiga parametrar till begäran: %{message}"
   not_logged_in: "Du måste vara inloggad för att göra detta."
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
@@ -273,7 +274,7 @@ sv:
   invalid_whisper_access: "Antingen är viskningar inte aktiverade eller så har du inte behörighet för att skapa viskningsinlägg"
   not_in_group:
     title_topic: "Du måste begära medlemskap i gruppen '%{group}' för att se detta ämne."
-    title_category: "Du måste vara i en grupp för att se denna kategori."
+    title_category: "Du måste begära medlemskap i gruppen '%{group}' för att se den här kategorin."
     request_membership: "Begär medlemskap"
     join_group: "Gå med i grupp"
   deleted_topic: "Hoppsan! Detta ämne har tagits bort och är inte längre tillgängligt."
@@ -1356,7 +1357,7 @@ sv:
     force_https_warning: "Din webbplats använder SSL, men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` har inte aktiverats i inställningarna för din webbplats."
     out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
-    watched_word_regexp_error: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a>eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
+    watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
@@ -1388,13 +1389,13 @@ sv:
     category_search_priority_high_weight: "Vikt tillämpad på rangordning vid hög sökprioritet för kategori"
     allow_uncategorized_topics: "Tillåt att ämnen skapas utan en kategori. VARNING: Om det finns några okategoriserade ämnen så måste dessa omkategoriseras innan den här inställningen stängs av."
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
-    allow_duplicate_topic_titles_category: "Tillåt ämnen med identisk, duplicerad titel om kategorierna är olika. allow_duplicate_topic_titles måste vara avbockad."
+    allow_duplicate_topic_titles_category: "Tillåt ämnen med identiska dubblettitlar om kategorin skiljer sig åt. allow_duplicate_topic_titles måste inaktiveras."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     educate_until_posts: "Visa hjälppanelen för nya användare tills användaren har gjort (n) nya inlägg."
     title: "Namnet på denna webbplats som används i titel-taggen."
     site_description: "Beskriv denna webbplats i en mening, som sedan används i metabeskrivningstaggen."
     short_site_description: "Kort beskrivning, som används i titel-taggen på hemsidan."
-    contact_email: "E-postadress till huvudansvarig för denna webbplats. Används för kritiska meddelanden såväl som på <a href='%{base_path}/about' target='_blank'>/about</a> kontaktformuläret för brådskande ärenden."
+    contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a> för brådskande ärenden."
     contact_url: "Kontakt-URL för denna webbplats. Visas på <a href='%{base_path}/about' target='_blank'>/about</a>-sidan för brådskande ärenden."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
     download_remote_images_to_local: "Konvertera externa bilder till lokala bilder genom att hämta dem; det motverkar felaktiga bildlänkar."
@@ -1488,7 +1489,7 @@ sv:
     invite_code: "Användare måste ange denna kod för att ha tillåtelse att registrera ett konto, ignoreras om det lämnas tomt (ej skiftlägeskänslig)"
     approve_suspect_users: "Lägg till misstänkta användare i kön för granskning. Misstänkta användare har angett en bio/webbsida men har ingen läsaktivitet."
     review_every_post: "Alla inlägg måste granskas. VARNING! REKOMMENDERAS INTE FÖR MYCKET AKTIVA WEBBPLATSER."
-    pending_users_reminder_delay: "Avisera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera aviseringar."
+    pending_users_reminder_delay_minutes: "Avisera moderatorer om nya användare har väntat på godkännande längre än så här många minuter. Ange -1 för att inaktivera aviseringar."
     persistent_sessions: "Användarna förblir inloggade när webbläsaren stängs"
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
     ga_version: "Version av Google Universal Analytics att använda: v3 (analytics.js), v4 (gtag)"
@@ -1538,6 +1539,7 @@ sv:
     send_old_credential_reminder_days: "Påminn om gamla behörigheter efter dag"
     email_token_valid_hours: "Länkarna Glömt lösenord/aktivera konto är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
+    max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
     enable_whispers: "Tiliåt privat kommunikation inom ämnena."
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     blocked_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare inte tillåts registrera konton med. Exempel: mailinator.com|trashmail.net"
@@ -1602,7 +1604,7 @@ sv:
     discord_secret: "Discord hemlig nyckel"
     discord_trusted_guilds: 'Tillåt bara medlemmar i dessa Discord-sällskap att logga in via Discord. Använd numeriskt ID för sällskapet. För mer information, se instruktionerna <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">här</a>. Lämna tomt för att tilllåta alla sällskap.'
     enable_backups: "Tillåt att administratörer skapar säkerhetskopior av forumet"
-    allow_restore: "Tillåt återställning, vilket kan ersätta ALL data på webbplatsen! Lämna avbockad om du inte planerar att återställa en säkerhetskopia"
+    allow_restore: "Tillåt återställning, som kan ersätta ALL data på webbplatsen! Lämna detta inaktiverat om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
     automatic_backups_enabled: "Kör automatiska säkerhetskopior som definierats i säkerhetskopieringsfrekvens"
     backup_frequency: "Antalet dagar mellan säkerhetskopieringar."
@@ -1673,6 +1675,11 @@ sv:
     image_preview_jpg_quality: "Kvaliteten på storleksändrade bildfiler (1 är lägsta kvalitet, 99 är bästa kvalitet, 100 för att inaktivera)."
     allow_staff_to_upload_any_file_in_pm: "Låt personalen ladda upp alla filer i PM."
     strip_image_metadata: "Radera metadata för bild."
+    composer_media_optimization_image_enabled: "Möjliggör medieoptimering på klientsidan av uppladdade bildfiler."
+    composer_media_optimization_image_kilobytes_optimization_threshold: "Minsta bildfilstorlek för att utlösa optimering på klientsidan"
+    composer_media_optimization_image_resize_dimensions_threshold: "Minsta bildbredd för att utlösa storleksändring på klientsidan"
+    composer_media_optimization_image_resize_width_target: "Bilder med större bredd än `composer_media_optimization_image_dimensions_resize_threshold` kommer att ändras till denna bredd. Måste vara >= än `composer_media_optimization_image_dimensions_resize_threshold`."
+    composer_media_optimization_image_encode_quality: "JPEG-kodningskvalitet som används i omkodningsprocessen."
     min_ratio_to_crop: "Förhållandet används för att beskära höga bilder. Ange resultatet av bredd/höjd."
     simultaneous_uploads: "Maximalt antal filer som kan dras och släppas in i redigeraren"
     default_invitee_trust_level: "Förvald förtroendenivå (0-4) för inbjudna användare."
@@ -1789,9 +1796,10 @@ sv:
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
     reviewable_default_topics: "Visa granskningsbart innehåll grupperat efter ämne som standard"
     reviewable_default_visibility: "Visa inte artiklar som kan granskas om de inte uppfyller denna prioritering"
-    reviewable_low_priority_threshold: "Prioriteringsfiltret döljer granskningsbara som inte uppfyller denna poäng såvida inte filtret '(valfritt)' används."
+    reviewable_low_priority_threshold: "Prioritetsfiltret döljer granskningsbara objekt som inte uppfyller den här poängen om inte filtret '(valfritt)' används."
     high_trust_flaggers_auto_hide_posts: "Ny användares inlägg döljs automatiskt efter att de har flaggats som skräppost av en användare med minst FN3"
     cooldown_hours_until_reflag: "Hur lång tid användare måste avvakta tills de kan flagga ett inlägg igen"
+    slow_mode_prevents_editing: "Förhindrar 'Långsamt läge' redigering, efter editing_grace_period?"
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
     reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %%{reply_key}@svar.exempel.se eller svar+%%{reply_key}@exempel.se"
     alternative_reply_by_email_addresses: "Lista på alternativa mallar för svar genom inkommen e-post. Exempelvis: %%{reply_key}@svar.exempel.se|replies+%% {reply_key}@exempel.se"
@@ -1921,6 +1929,7 @@ sv:
     app_association_ios: "Innehållet i slutpunkten <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, används för att skapa universella länkar mellan denna webbplats och iOS-appar."
     share_anonymized_statistics: "Dela anonymiserad användningsstatistik."
     auto_handle_queued_age: "Hantera automatiskt inlägg som väntar på att granskas efter detta antal dagar. Flaggor ignoreras. Inlägg och användare i kö avvisas. Ställ in till 0 för att inaktivera den här funktionen."
+    penalty_step_hours: "Standardstraff, uttryckt i timmar, för att ha tystat eller stängt av användare. Förval för den första överträdelsen är det första värdet, förval för den andra överträdelsen är det andra värdet etc."
     svg_icon_subset: "Lägg till ytterligare FontAwesome 5-ikoner som du vill inkludera i dina tillgångar. Använd prefixet 'fa-' för solida ikoner, 'far-' för vanliga ikoner och 'fab-' för märkesikoner."
     max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
@@ -2316,6 +2325,9 @@ sv:
     email_in_spam_header: "Användarens första e-post flaggades som skräppost"
     already_silenced: "Användaren har redan tystats av %{staff} %{time_ago}."
     already_suspended: "Användaren har redan avstängts av %{staff} %{time_ago}."
+    cannot_delete_has_posts:
+      one: "Användaren %{username} har %{count} inlägg i ett offentligt ämne eller personligt meddelande, så den kan inte tas bort."
+      other: "Användaren %{username} har %{count} inlägg i ett offentligt ämne eller personligt meddelande, så de kan inte tas bort."
   reviewables_reminder:
     submitted:
       one: "Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_path}/review)."
@@ -3003,6 +3015,7 @@ sv:
     only_reply_by_email_pm: "Besvara det här e-postmeddelandet för att svara %{participants}."
     visit_link_to_respond: "[Gå till ämnet](%{base_url}%{url}) för att ge ditt svar."
     visit_link_to_respond_pm: "[Gå till meddelandet](%{base_url}%{url}) för att svara till %{participants}."
+    reply_above_line: "## Vi ber dig skriva ditt svar ovanför denna rad. ##"
     posted_by: "Publicerat av %{username} den %{post_date}"
     pm_participants: "Deltagare: %{participants}"
     invited_group_to_private_message_body: "%{username} bjöd in @%{group_name} till ett meddelande\n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n\nOm du är intresserad, klicka på länken nedan:\n\n%{topic_url}\n"
@@ -3406,6 +3419,9 @@ sv:
     sender_post_deleted: "inlägget har raderats"
     sender_message_to_invalid: "mottagaren har en ogiltig e-postadress"
     sender_topic_deleted: "ämnet har raderats"
+    group_smtp_post_deleted: "inlägget har raderats"
+    group_smtp_topic_deleted: "ämnet har raderats"
+    group_smtp_disabled_for_group: "smtp har inaktiverats för gruppen"
   color_schemes:
     base_theme_name: "Bas"
     light: "Ljust"
@@ -4142,10 +4158,6 @@ sv:
       agree_and_hide:
         title: "Dölj inlägg"
         description: "Dölj detta inlägg och sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
-      delete_spammer:
-        title: "Radera skräppostare"
-        description: "Radera användaren och användarens alla inlägg och ämnen."
-        confirm: "Är du säker på att du vill radera användarens alla inlägg, ämnen, samt blockera deras IP och e-postadresser?"
       delete_single:
         title: "Radera"
       delete:
@@ -4202,8 +4214,6 @@ sv:
       approve_and_restore:
         title: "Godkänn och återställ inlägg"
       delete_user:
-        title: "Ta bort användare"
-        confirm: "Är du säker på att du vill radera den här användaren? Detta kommer att ta bort användarens alla inlägg och blockera användarens e-postadress och IP-adress."
         reason: "Raderad via granskningskön"
   email_style:
     html_missing_placeholder: "Html-mallen måste omfatta %{placeholder}"

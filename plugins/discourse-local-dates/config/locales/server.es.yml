@@ -6,7 +6,7 @@
 
 es:
   site_settings:
-    discourse_local_dates_enabled: "Habilitar la característica discourse-local-dates. Esto agregará soporte a las fechas de la zona horaria local en las publicaciones que usan el elemento [fecha]."
+    discourse_local_dates_enabled: "Activar la característica discourse-local-dates. Esto agregará soporte a las fechas de la zona horaria local en las publicaciones que usan el elemento [fecha]."
     discourse_local_dates_default_formats: "Formatos de fecha usados frecuentemente, ver: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>formato momentjs string</a>"
     discourse_local_dates_default_timezones: "Lista por defecto de zonas horarias, debe ser un <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> válido"
     discourse_local_dates_email_format: "Formato usado para mostrar fechas en correos electrónicos."

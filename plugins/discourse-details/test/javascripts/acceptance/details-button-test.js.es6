@@ -1,7 +1,12 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Details Button", function (needs) {
   needs.user();
@@ -26,7 +31,7 @@ acceptance("Details Button", function (needs) {
 
     await fillIn(".d-editor-input", "This is my title");
 
-    const textarea = queryAll(".d-editor-input")[0];
+    const textarea = query(".d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -115,7 +120,7 @@ acceptance("Details Button", function (needs) {
     await click("#create-topic");
     await fillIn(".d-editor-input", multilineInput);
 
-    const textarea = queryAll(".d-editor-input")[0];
+    const textarea = query(".d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 

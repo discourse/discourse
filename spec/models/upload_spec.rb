@@ -3,9 +3,7 @@
 require 'rails_helper'
 
 describe Upload do
-
   let(:upload) { build(:upload) }
-
   let(:user_id) { 1 }
 
   let(:image_filename) { "logo.png" }
@@ -20,8 +18,34 @@ describe Upload do
   let(:attachment_path) { __FILE__ }
   let(:attachment) { File.new(attachment_path) }
 
-  context ".create_thumbnail!" do
+  describe '.with_no_non_post_relations' do
+    it "does not find non-post related uploads" do
+      post_upload = Fabricate(:upload)
+      post = Fabricate(:post, raw: "<img src='#{post_upload.url}'>")
+      post.link_post_uploads
 
+      badge_upload = Fabricate(:upload)
+      Fabricate(:badge, image_upload: badge_upload)
+
+      avatar_upload = Fabricate(:upload)
+      Fabricate(:user, uploaded_avatar: avatar_upload)
+
+      site_setting_upload = Fabricate(:upload)
+      SiteSetting.create!(
+        name: "logo",
+        data_type: SiteSettings::TypeSupervisor.types[:upload],
+        value: site_setting_upload.id
+      )
+
+      upload_ids = Upload
+        .by_users
+        .with_no_non_post_relations
+        .pluck(:id)
+      expect(upload_ids).to eq([post_upload.id])
+    end
+  end
+
+  context ".create_thumbnail!" do
     it "does not create a thumbnail when disabled" do
       SiteSetting.create_thumbnails = false
       OptimizedImage.expects(:create_for).never
@@ -453,6 +477,14 @@ describe Upload do
         upload.update!(secure: false, origin: "http://localhost:3000/images/emoji/test.png")
         upload.update_secure_status
         expect(upload.reload.secure).to eq(false)
+      end
+
+      it "does not throw an error if the object storage provider does not support ACLs" do
+        FileStore::S3Store.any_instance.stubs(:update_upload_ACL).raises(
+          Aws::S3::Errors::NotImplemented.new("A header you provided implies functionality that is not implemented", "")
+        )
+        upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+        expect { upload.update_secure_status }.not_to raise_error
       end
     end
   end

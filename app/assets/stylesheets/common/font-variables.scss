@@ -20,6 +20,14 @@
   --font-down-5: 0.5em;
   --font-down-6: 0.4355em;
 
+  // Font-size definitions in rem used in cooked headings
+  --font-up-3-rem: 1.5157rem;
+  --font-up-2-rem: 1.3195rem;
+  --font-up-1-rem: 1.1487rem;
+  --font-0-rem: 1rem;
+  --font-down-1-rem: 0.8706rem;
+  --font-down-2-rem: 0.7579rem;
+
   // inputs/textareas in iOS need to be at least 16px to avoid triggering zoom on focus
   // with base at 15px, the below gives 16.05px
   --font-size-ios-input: 1.07em;

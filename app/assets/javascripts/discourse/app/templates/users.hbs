@@ -21,9 +21,18 @@
             </span>
             {{input
               value=(readonly nameInput)
-              input=(action "onFilterChanged" value="target.value")
+              input=(action "onUsernameFilterChanged" value="target.value")
               placeholderKey="directory.filter_name"
               class="filter-name no-blur"
+            }}
+            {{combo-box
+              class="directory-group-selector"
+              value=group
+              content=groupOptions
+              onChange=(action groupChanged)
+              options=(hash
+                none="directory.group.all"
+              )
             }}
             {{#if currentUser.staff}}
               {{d-button
@@ -32,6 +41,7 @@
                 class="btn-default open-edit-columns-btn"
               }}
             {{/if}}
+            {{plugin-outlet name="users-directory-controls" connectorTagName="" tagName="" args=(hash model=model)}}
           </div>
         </div>
 

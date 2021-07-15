@@ -97,7 +97,11 @@ after_initialize do
           raise Discourse::InvalidParameters.new("#{key} must be present") unless params[key]&.present?
         end
 
-        rate_limiter = RateLimiter.new(current_user, 'svg_certificate', 3, 1.minute)
+        if params[:user_id].to_i != current_user.id
+          rate_limiter = RateLimiter.new(current_user, 'svg_certificate', 3, 1.minute)
+        else
+          rate_limiter = RateLimiter.new(current_user, 'svg_certificate_self', 30, 10.minutes)
+        end
         rate_limiter.performed! unless current_user.staff?
 
         user = User.find_by(id: params[:user_id])
@@ -192,7 +196,7 @@ after_initialize do
     return if topic_id.blank? || data[:track] != DiscourseNarrativeBot::NewUserNarrative.to_s
 
     topic_user = topic_users.find_by(topic_id: topic_id)
-    return if topic_user.present? && (topic_user.last_read_post_number.present? || topic_user.highest_seen_post_number.present?)
+    return if topic_user.present? && topic_user.last_read_post_number.present?
 
     topic = Topic.find_by(id: topic_id)
     return if topic.blank?

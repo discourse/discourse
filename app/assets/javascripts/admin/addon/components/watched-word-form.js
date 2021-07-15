@@ -89,6 +89,7 @@ export default Component.extend({
               word: "",
               replacement: "",
               formSubmitted: false,
+              selectedTags: [],
               showMessage: true,
               message: I18n.t("admin.watched_words.form.success"),
             });

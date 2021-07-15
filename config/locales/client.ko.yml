@@ -177,7 +177,6 @@ ko:
     submit: "확인"
     generic_error: "죄송합니다. 오류가 발생했습니다."
     generic_error_with_reason: "오류가 발생했습니다: %{error}"
-    go_ahead: "계속하기"
     sign_up: "회원가입"
     log_in: "로그인"
     age: "나이"
@@ -204,7 +203,6 @@ ko:
     more: "더 보기"
     x_more:
       other: "%{count}개 더보기"
-    less: "덜"
     never: "전혀"
     every_30_minutes: "30분마다"
     every_hour: "매 시간마다"
@@ -213,7 +211,6 @@ ko:
     every_month: "매달"
     every_six_months: "6개월마다"
     max_of_count: "최대 %{count}"
-    alternation: "또는"
     character_count:
       other: "%{count} 글자"
     related_messages:
@@ -243,11 +240,13 @@ ko:
       contact_info: "이 사이트에 영향을 미치는 중대한 문제 또는 긴급한 문제가 발생하는 경우 %{contact_info} 에 문의하십시오."
     bookmarked:
       title: "북마크"
+      edit_bookmark: "북마크 수정"
       clear_bookmarks: "북마크 취소"
       help:
         bookmark: "이 글의 첫 번째 게시물을 북마크하려면 클릭하세요."
+        edit_bookmark: "이 글에 대한 북마크를 편집하려면 클릭하십시오."
         unbookmark: "이 항목의 모든 북마크를 제거하려면 클릭하십시오."
-        unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오. 이 글에 대해 알림이 %{reminder_at} 으로 설정되었습니다."
+        unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오."
     bookmarks:
       created: "이 글을 북마크했습니다. %{name}"
       not_bookmarked: "이 글을 북마크"
@@ -499,12 +498,14 @@ ko:
       later_today: "오늘 늦게"
       next_business_day: "다음 영업일"
       tomorrow: "내일"
-      next_week: "다음 주"
       post_local_date: "게시 날짜"
       later_this_week: "이번 주말"
+      this_weekend: "이번 주말"
       start_of_next_business_week: "월요일"
       start_of_next_business_week_alt: "다음 월요일"
+      two_weeks: "2주"
       next_month: "다음 달"
+      six_months: "6개월"
       custom: "사용자 지정 날짜 및 시간"
       relative: "상대 시간"
       none: "필요 없음"
@@ -548,6 +549,8 @@ ko:
         title: "디렉토리 열 편집"
         save: "저장"
         reset_to_default: "기본값으로 재설정"
+      group:
+        all: "모든 그룹"
     group_histories:
       actions:
         change_group_setting: "그룹 설정 변경"
@@ -559,15 +562,12 @@ ko:
       member_added: "추가됨"
       member_requested: "요청됨"
       add_members:
-        title: "%{group_name}에 구성원 추가"
-        description: "쉼표로 구분해 붙여 넣을 수도 있습니다."
-        usernames_or_emails:
-          title: "사용자 이름 또는 이메일 주소를 입력하세요."
-          input_placeholder: "사용자 이름 또는 이메일"
-        usernames:
-          title: "아이디를 입력하세요"
-          input_placeholder: "아이디"
+        title: "%{group_name}에 사용자 추가"
+        description: "그룹에 초대 할 사용자 목록을 입력하거나 쉼표로 구분해 목록에 붙여 넣으십시오."
+        usernames_placeholder: "아이디"
+        usernames_or_emails_placeholder: "사용자 이름 또는 이메일"
         notify_users: "사용자에게 알림"
+        set_owner: "사용자를 이 그룹의 소유자로 설정"
       requests:
         title: "요청"
         reason: "이유"
@@ -581,7 +581,8 @@ ko:
         title: "관리"
         name: "이름"
         full_name: "전체 이름"
-        add_members: "회원 추가"
+        add_members: "사용자 추가"
+        invite_members: "초대"
         delete_member_confirm: "'%{group}'그룹에서 '%{username}' 사용자를 제거 하시겠습니까?"
         profile:
           title: 프로필
@@ -596,11 +597,15 @@ ko:
           enable_imap: "IMAP 활성화"
           test_settings: "테스트 설정"
           save_settings: "설정 저장"
+          last_updated: "마지막 업데이트:"
+          last_updated_by: "에 의해"
           settings_required: "모든 설정은 필수입니다. 유효성 검사 전에 모든 필드를 입력하십시오."
           smtp_settings_valid: "SMTP 설정이 유효합니다."
           smtp_title: "SMTP"
+          smtp_instructions: "그룹에 대해 SMTP를 활성화하면 그룹의받은 편지함에서 보낸 모든 아웃 바운드 이메일이 포럼에서 보낸 다른 이메일에 대해 구성된 메일 서버 대신 여기에 지정된 SMTP 설정을 통해 전송됩니다."
           imap_title: "IMAP"
           imap_additional_settings: "추가 설정"
+          imap_instructions: '그룹에 대해 IMAP을 활성화하면 그룹의 받은 편지함과 제공된 IMAP 서버 및 편지함간에 이메일이 동기화됩니다. IMAP을 사용하려면 먼저 유효한 인증 정보로 SMTP를 사용하도록 설정해야합니다. SMTP에 사용되는 이메일 사용자 이름과 비밀번호는 IMAP에 사용됩니다. 자세한 내용은<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">기능 안내</a>를 참조하십시오.'
           imap_alpha_warning: "경고: 이것은 알파 단계 기능입니다. Gmail만 공식적으로 지원됩니다. 자신의 책임하에 사용하십시오!"
           imap_settings_valid: "IMAP 설정이 유효합니다."
           smtp_disable_confirm: "SMTP를 사용하지 않도록 설정하면 모든 SMTP 및 IMAP 설정이 재설정되고 관련 기능이 비활성화됩니다.계속하시겠습니까?"
@@ -622,7 +627,7 @@ ko:
           settings:
             title: "설정"
             allow_unknown_sender_topic_replies: "알 수 없는 발신자 주제 응답을 허용합니다."
-            allow_unknown_sender_topic_replies_hint: "알 수없는 발신자가 그룹 글에 댓글을 작성 할 수 있습니다. 이 기능이 활성화되어 있지 않으면 IMAP 이메일 스레드에 아직 포함되지 않았거나 글에 초대되지 않은 이메일 주소에서 답장하면 새 글이 생성됩니다."
+            allow_unknown_sender_topic_replies_hint: "알 수없는 발신자가 그룹 글에 댓글을 작성 할 수 있습니다. 이 기능이 활성화되지 않은 경우 글에 아직 초대되지 않은 이메일 주소에서 답장하면 새 글이 생성됩니다."
           mailboxes:
             synchronized: "동기화된 사서함"
             none_found: "현재 이메일 계정에 사서함이 없습니다."
@@ -1046,12 +1051,11 @@ ko:
         sent: "보낸 편지함"
         archive: "저장함"
         groups: "내 그룹"
-        bulk_select: "메시지 선택"
         move_to_inbox: "받은 편지함으로 이동"
         move_to_archive: "저장함"
         failed_to_move: "선택한 메시지를 이동하지 못했습니다. (네트워크가 다운되었을 수 있음)"
-        select_all: "모두 선택"
         tags: "태그"
+        warnings: "공식 경고"
       preferences_nav:
         account: "계정"
         security: "보안"
@@ -1196,6 +1200,7 @@ ko:
         invalid: "유효한 이메일 주소를 입력하십시오."
         authenticated: "사용자님의 이메일은 %{provider}에 의해 인증되었습니다."
         invite_auth_email_invalid: "초대 이메일이 %{provider}에 인증된 이메일과 일치하지 않습니다."
+        authenticated_by_invite: "사용자님의 이메일은 초대에 의해 인증되었습니다"
         frequency_immediately: "만약 전송된 메일을 읽지 않았을 경우, 즉시 메일을 다시 보내드립니다."
         frequency:
           other: "최근 %{count}분 동안 접속하지 않을 경우에만 메일이 전송됩니다."
@@ -1387,6 +1392,7 @@ ko:
           restrict_email: "하나의 이메일 주소로 제한"
           max_redemptions_allowed: "최대 사용"
           add_to_groups: "그룹에 추가"
+          invite_to_topic: "이 글로 이동합니다"
           expires_at: "다음 후 만료"
           custom_message: "개인 메시지 옵션"
           send_invite_email: "이메일 저장 및 보내기"
@@ -1463,6 +1469,11 @@ ko:
       title:
         title: "제목"
         none: "(없음)"
+        instructions: "사용자 아이디 뒤에 나타납니다."
+      flair:
+        title: "플레어"
+        none: "(없음)"
+        instructions: "프로필 사진 옆에 아이콘이 표시됩니다."
       primary_group:
         title: "기본 그룹"
         none: "(없음)"
@@ -1974,20 +1985,10 @@ ko:
         reaction: "새로운 반응"
         votes_released: "투표가 발표되었습니다"
     upload_selector:
-      title: "이미지 추가"
-      title_with_attachments: "이미지 또는 파일 추가"
-      from_my_computer: "내 기기에서"
-      from_the_web: "웹에서"
-      remote_tip: "이미지 링크"
-      remote_tip_with_attachments: "이미지 또는 파일 링크"
-      local_tip: "기기에서 이미지 선택"
-      local_tip_with_attachments: "장치에서 이미지 또는 파일 선택"
-      hint: "(편집기로 드래그 앤 드롭하여 업로드 할 수도 있습니다)"
-      hint_for_supported_browsers: "편집기로 이미지를 끌어다 놓거나 붙여 넣을 수도 있습니다."
       uploading: "업로드 중"
+      processing: "업로드 처리 중"
       select_file: "파일 선택"
       default_image_alt_text: 이미지
-      supported_formats: "지원되는 형식"
     search:
       sort_by: "정렬 기준"
       relevance: "관련성"
@@ -2090,10 +2091,16 @@ ko:
         delete: "글 삭제"
         dismiss: "읽음"
         dismiss_read: "읽지 않은 항목 모두 읽음"
-        dismiss_button: "읽음..."
+        dismiss_read_with_selected:
+          other: "읽지 않은 %{count}개 읽음 처리"
+        dismiss_button: "읽은 글로 표시..."
+        dismiss_button_with_selected:
+          other: "읽음 처리(%{count}개)..."
         dismiss_tooltip: "새 게시물만 닫거나 글 팔로우 중지"
         also_dismiss_topics: "이 글 팔로우를 중지하여 다시 읽지 않은 것으로 표시되지 않도록합니다."
         dismiss_new: "새글 모두 읽음"
+        dismiss_new_with_selected:
+          other: "새글 읽음 처리 (%{count}개)"
         toggle: "글 일괄 선택 전환"
         actions: "일괄 적용"
         change_category: "카테고리 설정"
@@ -2120,14 +2127,13 @@ ko:
         new: "새로운 글이 없습니다."
         read: "아직 읽은 글이 없습니다."
         posted: "아직 어떤 글도 게시하지 않았습니다."
-        ready_to_create: "지금 "
         latest: "모두 확인했습니다!"
         bookmarks: "아직 북마크된 글이 없습니다."
         category: "%{category}에 글이 없습니다."
         top: "주요 글이 없습니다."
         educate:
           new: '<p>새로운 글이 여기에 표시됩니다. 기본적으로 지난 2일 이내에 작성된 글은 새로운 글로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 가 표시됩니다.</p><p>이 기준을 변경하려면 <a href="%{userPrefsUrl}">환경설정</a>에서 변경 하십시오.</p>'
-          unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>새로운 글 작성</li><li>글에 댓글 작성</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포함됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
+          unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글수 <span class="badge unread-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>새로운 글 작성</li><li>글에 댓글 작성</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포함됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 글이 없습니다."
         posted: "더 이상 작성한 글이 없습니다."
@@ -2182,12 +2188,8 @@ ko:
       not_found:
         title: "글을 찾을 수 없음"
         description: "죄송합니다. 해당 글을 찾을 수 없습니다. 관리자가 삭제 한 것일 수 있습니다."
-      total_unread_posts:
-        other: "이 글에 %{count}개의 읽지 않은 게시 글이 있습니다."
       unread_posts:
-        other: "이 글에 %{count}개의 읽지 않은 예전 게시물이 있습니다."
-      new_posts:
-        other: "마지막으로 읽은 이후 이 글에 %{count}개의 새로운 게시물이 있습니다."
+        other: "이 글에 %{count}개의 읽지 않은 댓글이 있습니다."
       likes:
         other: "이 글에 %{count}개의 좋아요가 있습니다."
       back_to_list: "글 목록으로 돌아 가기"
@@ -2202,7 +2204,7 @@ ko:
       browse_all_categories: 모든 카테고리 보기
       browse_all_tags: 모든 태그 보기
       view_latest_topics: 최근 글 보기
-      suggest_create_topic: 새로운 대화를 시작 하시겠습니까?
+      suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되셨습니까?
       jump_reply_up: 이전 답글로 이동
       jump_reply_down: 이후 답글로 이동
       deleted: "글이 삭제되었습니다."
@@ -2385,14 +2387,11 @@ ko:
         pin: "글 고정"
         unpin: "글 고정 해제"
         pin_globally: "전체 공지글로 설정하기"
-        make_banner: "배너 주제"
+        make_banner: "배너 글 만들기"
         remove_banner: "배너 주제 제거"
       reply:
         title: "댓글쓰기"
         help: "이 글에 대한 댓글을 작성합니다"
-      clear_pin:
-        title: "고정 취소"
-        help: "더 이상 목록의 맨 위에 표시하지 않도록 이 주제의 고정 상태를 해제합니다."
       share:
         title: "공유하기"
         extended_title: "링크 공유"
@@ -2922,6 +2921,7 @@ ko:
       official_warning: "공식 경고"
       delete_spammer: "네, 스패머 회원을 삭제합니다"
       flag_for_review: "검토 대기열"
+      delete_confirm_MF: "이 사용자의 {POSTS, plural, other {<b>#</b>개의 댓글}} 그리고 {TOPICS, plural, other {<b>#</b>개의 글}} 을 삭제하고, 계정을 제거한 다음 IP 주소 <b>{ip_address}</b>를 차단하고 이메일 주소 <b>{email}</b>를 영구 차단 목록에 추가합니다. 이 사용자가 정말 스팸 발송자입니까?"
       yes_delete_spammer: "예, 스팸 회원을 삭제합니다"
       ip_address_missing: "(알 수 없음)"
       hidden_email_address: "(숨김)"
@@ -3119,7 +3119,7 @@ ko:
         show_incoming_updated_topics: "%{shortcut} 갱신된 토픽 보기"
         search: "%{shortcut} 를 사용하여 검색"
         help: "%{shortcut} 키보드 도움말 열기"
-        dismiss_new_posts: "%{shortcut} 새글을 읽은 상태로 표시하기"
+        dismiss_new: "%{shortcut} 새 글을 읽은 상태로 표시하기"
         dismiss_topics: "%{shortcut} 토픽 무시하기"
         log_out: "%{shortcut} 로그아웃"
       composing:
@@ -3193,6 +3193,9 @@ ko:
           name: 기타
         posting:
           name: 포스팅
+      favorite_max_reached: "더 이상 좋아하는 배지로 추가할 수 없습니다."
+      favorite_max_not_reached: "이 배지를 좋아하는 배지로 표시"
+      favorite_count: "%{count}/%{max}개의 배지가 좋아하는 배지로 표시"
     tagging:
       all_tags: "모든 태그"
       other_tags: "기타 태그"
@@ -3202,7 +3205,7 @@ ko:
       tags: "태그"
       choose_for_topic: "태그 선택"
       info: "정보"
-      default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
+      default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다. 제한을 추가하려면 이 태그를 <a href=%{basePath}/tag_groups>태그 그룹</a>에 넣으십시오."
       category_restricted: "이 태그는 액세스 권한이없는 카테고리로 제한됩니다."
       synonyms: "동의어"
       synonyms_description: "다음 태그를 사용하면 <b>%{base_tag_name}</b> 으로 대체됩니다."
@@ -3333,6 +3336,7 @@ ko:
         member: "멤버"
         regular: "일반"
         leader: "리더"
+      detailed_name: "%{level}: %{name}"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:
@@ -3428,6 +3432,7 @@ ko:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">검색 로그</a>'
             disabled: '인기 검색 보고서가 비활성화되었습니다. <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">로그 검색 쿼리</a> 를 사용하여 데이터를 수집하십시오.'
+          average_chart_label: 평균
           filters:
             file_extension:
               label: 파일 확장자
@@ -3437,9 +3442,6 @@ ko:
               label: 카테고리
             include_subcategories:
               label: "하위카테고리 포함"
-      commits:
-        latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
-        by: "에 의해"
       groups:
         new:
           title: "새 그룹"
@@ -3451,8 +3453,6 @@ ko:
             available: "사용가능한 그룹 이름"
             not_available: "사용 불가능한 그룹 이름"
             blank: "그룹 이름은 공백이 될 수 없습니다"
-        add_members:
-          as_owner: "사용자를 이 그룹의 소유자로 설정"
         manage:
           interaction:
             email: 이메일
@@ -3553,6 +3553,8 @@ ko:
               write: 새 글 또는 기존 글에 댓글을 작성합니다.
               read_lists: 주요 글, 새 글, 최근 글 등과 같은 글 목록을 읽으십시오. RSS도 지원됩니다.
               wordpress: 워드프레스 wp-discourse 플러그인이 작동하는데 필요합니다.
+            posts:
+              edit: 게시물 또는 특정 게시물을 편집합니다.
             users:
               bookmarks: 사용자 북마크를 나열합니다. ICS 형식을 사용하면 북마크 알림을 반환합니다.
               sync_sso: DiscourseConnect를 사용하여 사용자를 동기화합니다.
@@ -4113,7 +4115,6 @@ ko:
           details: "상세"
           previous_value: "이전값"
           new_value: "새값"
-          diff: "차이점"
           show: "보기"
           modal_title: "상세"
           no_previous: "이전 값이 없습니다."
@@ -4208,6 +4209,8 @@ ko:
             post_staff_note_create: "관리자 메모 추가"
             post_staff_note_destroy: "관리자 메모 삭제"
             delete_group: "그룹 삭제"
+            watched_word_create: "감시 단어 추가"
+            watched_word_destroy: "감시 단어 삭제"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -4260,6 +4263,8 @@ ko:
         download: 다운로드
         clear_all: 모두 지우기
         clear_all_confirm: "%{action} 작업에 대한 모든 관심 단어를 지우시겠습니까?"
+        invalid_regex: '감시 단어 "%{word}"은 잘못된 정규식입니다.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">감시 된 단어는 정규식</a> 이며 단어 경계를 자동으로 포함하지 않습니다. 정규식이 전체 단어와 일치하도록하려면 정규식의 시작과 끝에 <code>\b</code>를 사용하세요.'
         actions:
           block: "차단"
           censor: "가리기"
@@ -4294,7 +4299,7 @@ ko:
           upload_successful: "성공적으로 업로드되었습니다. 단어가 추가되었습니다."
         test:
           button_label: "테스트"
-          modal_title: "테스트 %{action} 감시된 단어"
+          modal_title: "%{action}: 감시 단어 테스트"
           description: "시청 한 단어와 일치하는지 확인하려면 아래에 텍스트를 입력하십시오"
           found_matches: "일치하는 결과 :"
           no_matches: "일치하는 결과가 없습니다"
@@ -4420,6 +4425,8 @@ ko:
         flags_given_count: 작성한 신고
         flags_received_count: 받은 신고
         warnings_received_count: 받은 경고
+        warnings_list_warning: |
+          중재자로서 이러한 글을 모두 보지 못할 수도 있습니다. 필요한 경우 관리자에게 <b>@moderators</b> 권한을 요청하십시오.
         flags_given_received_count: "준/받은 신고"
         approve: "승인"
         approved_by: "승인자"
@@ -4507,6 +4514,8 @@ ko:
         trust_level_unlocked_tip: "회원등급 고정이 풀렸습니다. 시스템이 회원등급을 자동적으로 올리거나 내릴 것입니다."
         lock_trust_level: "회원등급 고정"
         unlock_trust_level: "회원등급 고정 해제"
+        silenced_count: "쓰기 금지"
+        suspended_count: "차단됨"
         tl3_requirements:
           title: "3등급 회원이 되기 위한 자격"
           table_title:
@@ -4536,6 +4545,7 @@ ko:
           locked_will_not_be_promoted: "회원등급이 고정되었습니다. 승급되지 않을 것입니다."
           locked_will_not_be_demoted: "회원등급이 고정되었습니다. 강등되지 않을 것입니다."
         discourse_connect:
+          title: "DiscourseConnect 단일 사인온"
           external_id: "외부 ID"
           external_username: "아이디"
           external_name: "이름"
@@ -4582,6 +4592,7 @@ ko:
           text: "텍스트 필드"
           confirm: "확인"
           dropdown: "드롭다운"
+          multiselect: "다중 선택"
       site_text:
         description: "포럼에 있는 그 어떤 텍스트도 수정이 가능합니다. 아래의 검색기능을 통해 시작하세요."
         search: "편집하고 싶은 텍스트를 검색하세요."

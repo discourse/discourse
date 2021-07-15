@@ -75,10 +75,17 @@ module ApplicationHelper
         path = "#{GlobalSetting.s3_cdn_url}#{path}"
       end
 
-      if is_brotli_req?
-        path = path.gsub(/\.([^.]+)$/, '.br.\1')
-      elsif is_gzip_req?
-        path = path.gsub(/\.([^.]+)$/, '.gz.\1')
+      # assets needed for theme testing are not compressed because they take a fair
+      # amount of time to compress (+30 seconds) during rebuilds/deploys when the
+      # vast majority of sites will never need them, so it makes more sense to serve
+      # them uncompressed instead of making everyone's rebuild/deploy take +30 more
+      # seconds.
+      if !script.start_with?("discourse/tests/")
+        if is_brotli_req?
+          path = path.gsub(/\.([^.]+)$/, '.br.\1')
+        elsif is_gzip_req?
+          path = path.gsub(/\.([^.]+)$/, '.gz.\1')
+        end
       end
 
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req? && Rails.env != "development"
@@ -237,6 +244,7 @@ module ApplicationHelper
     # Add opengraph & twitter tags
     result = []
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
+    result << tag(:meta, property: 'og:type', content: 'website')
 
     if opts[:twitter_summary_large_image].present?
       result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
@@ -407,12 +415,17 @@ module ApplicationHelper
     end
   end
 
-  def theme_ids
+  def theme_id
     if customization_disabled?
-      [nil]
+      nil
     else
-      request.env[:resolved_theme_ids]
+      request.env[:resolved_theme_id]
     end
+  end
+
+  def stylesheet_manager
+    return @stylesheet_manager if defined?(@stylesheet_manager)
+    @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
   end
 
   def scheme_id
@@ -423,12 +436,9 @@ module ApplicationHelper
       return custom_user_scheme_id
     end
 
-    return if theme_ids.blank?
+    return if theme_id.blank?
 
-    @scheme_id = Theme
-      .where(id: theme_ids.first)
-      .pluck(:color_scheme_id)
-      .first
+    @scheme_id = Theme.where(id: theme_id).pluck_first(:color_scheme_id)
   end
 
   def dark_scheme_id
@@ -456,7 +466,7 @@ module ApplicationHelper
 
   def theme_lookup(name)
     Theme.lookup_field(
-      theme_ids,
+      theme_id,
       mobile_view? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?
@@ -465,7 +475,7 @@ module ApplicationHelper
 
   def theme_translations_lookup
     Theme.lookup_field(
-      theme_ids,
+      theme_id,
       :translations,
       I18n.locale,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?
@@ -474,7 +484,7 @@ module ApplicationHelper
 
   def theme_js_lookup
     Theme.lookup_field(
-      theme_ids,
+      theme_id,
       :extra_js,
       nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?
@@ -482,22 +492,26 @@ module ApplicationHelper
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
-    if opts.key?(:theme_ids)
-      ids = opts[:theme_ids] unless customization_disabled?
-    else
-      ids = theme_ids
-    end
+    manager =
+      if opts.key?(:theme_id)
+        Stylesheet::Manager.new(
+          theme_id: customization_disabled? ? nil : opts[:theme_id]
+        )
+      else
+        stylesheet_manager
+      end
 
-    Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
+    manager.stylesheet_link_tag(name, 'all')
   end
 
   def discourse_color_scheme_stylesheets
     result = +""
-    result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(scheme_id, 'all', theme_ids)
+    result << stylesheet_manager.color_scheme_stylesheet_link_tag(scheme_id, 'all')
 
     if dark_scheme_id != -1
-      result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)', theme_ids)
+      result << stylesheet_manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)')
     end
+
     result.html_safe
   end
 
@@ -524,7 +538,7 @@ module ApplicationHelper
       asset_version: Discourse.assets_digest,
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
-      svg_sprite_path: SvgSprite.path(theme_ids),
+      svg_sprite_path: SvgSprite.path(theme_id),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: scheme_id,
@@ -532,7 +546,7 @@ module ApplicationHelper
     }
 
     if Rails.env.development?
-      setup_data[:svg_icon_list] = SvgSprite.all_icons(theme_ids)
+      setup_data[:svg_icon_list] = SvgSprite.all_icons(theme_id)
 
       if ENV['DEBUG_PRELOADED_APP_DATA']
         setup_data[:debug_preloaded_app_data] = true

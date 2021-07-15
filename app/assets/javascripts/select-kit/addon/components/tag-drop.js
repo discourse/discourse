@@ -1,4 +1,4 @@
-import { equal, gte, readOnly } from "@ember/object/computed";
+import { equal, readOnly } from "@ember/object/computed";
 import { i18n, setting } from "discourse/lib/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
@@ -42,8 +42,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
   },
 
   noTagsSelected: equal("tagId", NONE_TAG_ID),
-
-  filterable: gte("content.length", 15),
 
   init() {
     this._super(...arguments);

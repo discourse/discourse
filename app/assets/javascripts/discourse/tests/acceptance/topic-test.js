@@ -1,6 +1,8 @@
 import {
   acceptance,
+  count,
   exists,
+  query,
   queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -140,16 +142,13 @@ acceptance("Topic", function (needs) {
   test("Marking a topic as wiki", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      queryAll("a.wiki").length === 0,
-      "it does not show the wiki icon"
-    );
+    assert.ok(!exists("a.wiki"), "it does not show the wiki icon");
 
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
     await click(".btn.wiki");
 
-    assert.ok(queryAll("button.wiki").length === 1, "it shows the wiki icon");
+    assert.equal(count("button.wiki"), 1, "it shows the wiki icon");
   });
 
   test("Visit topic routes", async function (assert) {
@@ -260,6 +259,45 @@ acceptance("Topic", function (needs) {
     assert.ok(exists(".category-moderator"), "it has a class applied");
     assert.ok(exists(".d-icon-shield-alt"), "it shows an icon");
   });
+});
+
+acceptance("Topic featured links", function (needs) {
+  needs.user();
+  needs.settings({
+    topic_featured_link_enabled: true,
+    max_topic_title_length: 80,
+    exclude_rel_nofollow_domains: "example.com",
+  });
+
+  test("remove nofollow attribute", async function (assert) {
+    await visit("/t/-/299/1");
+
+    const link = queryAll(".title-wrapper .topic-featured-link");
+    assert.equal(link.text(), " example.com");
+    assert.equal(link.attr("rel"), "ugc");
+  });
+
+  test("remove featured link", async function (assert) {
+    await visit("/t/-/299/1");
+    assert.ok(
+      exists(".title-wrapper .topic-featured-link"),
+      "link is shown with topic title"
+    );
+
+    await click(".title-wrapper .edit-topic");
+    assert.ok(
+      exists(".title-wrapper .remove-featured-link"),
+      "link to remove featured link"
+    );
+
+    // TODO: decide if we want to test this, test is flaky so it
+    // was commented out.
+    // If not fixed by May 2021, delete this code block
+    //
+    //await click(".title-wrapper .remove-featured-link");
+    //await click(".title-wrapper .submit-edit");
+    //assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
+  });
 
   test("Converting to a public topic", async function (assert) {
     await visit("/t/test-pm/34");
@@ -337,7 +375,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".gap");
 
-    assert.equal(queryAll(".gap").length, 0, "it hides gap");
+    assert.ok(!exists(".gap"), "it hides gap");
   });
 
   test("Quoting a quote keeps the original poster name", async function (assert) {
@@ -423,14 +461,6 @@ acceptance("Topic featured links", function (needs) {
       exists(".title-wrapper .remove-featured-link"),
       "link to remove featured link"
     );
-
-    // TODO: decide if we want to test this, test is flaky so it
-    // was commented out.
-    // If not fixed by May 2021, delete this code block
-    //
-    //await click(".title-wrapper .remove-featured-link");
-    //await click(".title-wrapper .submit-edit");
-    //assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
   });
 });
 
@@ -448,12 +478,12 @@ acceptance("Topic with title decorated", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
-      queryAll(".fancy-title")[0].innerText.endsWith("-280-topic-title"),
+      query(".fancy-title").innerText.endsWith("-280-topic-title"),
       "it decorates topic title"
     );
 
     assert.ok(
-      queryAll(".raw-topic-link:nth-child(1)")[0].innerText.endsWith(
+      query(".raw-topic-link:nth-child(1)").innerText.endsWith(
         "-27331-topic-list-item-title"
       ),
       "it decorates topic list item title"
@@ -520,6 +550,26 @@ acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
     assert.ok(
       !exists(".make-banner"),
       "it should not show the 'Banner Topic' button"
+    );
+  });
+});
+
+acceptance("Topic last visit line", function (needs) {
+  needs.user({ moderator: false, admin: false, trust_level: 1 });
+
+  test("visit topic", async function (assert) {
+    await visit("/t/-/280");
+
+    assert.ok(
+      exists(".topic-post-visited-line.post-10"),
+      "shows the last visited line on the right post"
+    );
+
+    await visit("/t/-/9");
+
+    assert.ok(
+      !exists(".topic-post-visited-line"),
+      "does not show last visited line if post is the last post"
     );
   });
 });

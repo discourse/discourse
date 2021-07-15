@@ -44,12 +44,12 @@ export default (viewName, path, channel) => {
         canBulkSelect: true,
         tagsForUser: this.modelFor("user").get("username_lower"),
         selected: [],
+        showToggleBulkSelect: true,
       });
 
       this.controllerFor("user-private-messages").setProperties({
         archive: false,
         pmView: viewName,
-        showToggleBulkSelect: true,
       });
 
       this.searchService.set("contextType", "private_messages");

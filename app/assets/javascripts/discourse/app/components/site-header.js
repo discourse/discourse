@@ -29,7 +29,9 @@ const SiteHeaderComponent = MountWidget.extend(
     @observes(
       "currentUser.unread_notifications",
       "currentUser.unread_high_priority_notifications",
-      "currentUser.reviewable_count"
+      "currentUser.reviewable_count",
+      "session.defaultColorSchemeIsDark",
+      "session.darkModeAvailable"
     )
     notificationsChanged() {
       this.queueRerender();
@@ -87,6 +89,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._panMenuOrigin;
       menuPanels.forEach((panel) => {
+        panel.classList.remove("moving");
         if (this._shouldMenuClose(event, menuOrigin)) {
           this._animateClosing(panel, menuOrigin);
         } else {
@@ -129,6 +132,10 @@ const SiteHeaderComponent = MountWidget.extend(
       ) {
         e.originalEvent.preventDefault();
         this._isPanning = true;
+        const panel = document.querySelector(".menu-panel");
+        if (panel) {
+          panel.classList.add("moving");
+        }
       } else {
         this._isPanning = false;
       }

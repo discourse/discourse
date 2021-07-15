@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -61,8 +62,8 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC000A; color: #FFFFFA; ",
@@ -86,8 +87,8 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0005; color: #FFFFF5; ",
@@ -111,11 +112,8 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(
-          queryAll("svg.d-icon-dice-two").length,
-          "it has the svg icon"
-        );
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0002; color: #FFFFF2; ",
@@ -139,16 +137,33 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(
-          queryAll("svg.d-icon-dice-two").length,
-          "it has the svg icon"
-        );
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0002; color: #FFFFF2; ",
           "it has styles"
         );
+      },
+    });
+
+    componentTest("avatar flair for login-required site, before login", {
+      template: hbs`{{user-avatar-flair user=args}}`,
+      beforeEach() {
+        resetFlair();
+        this.set("args", {
+          admin: false,
+          moderator: false,
+          trust_level: 3,
+        });
+        // Groups not serialized for anon on login_required
+        this.site.groups = undefined;
+      },
+      afterEach() {
+        resetFlair();
+      },
+      test(assert) {
+        assert.ok(!exists(".avatar-flair"), "it does not render a flair");
       },
     });
 
@@ -160,9 +175,10 @@ discourseModule(
           admin: false,
           moderator: false,
           trust_level: 3,
-          primary_group_flair_url: "fa-times",
-          primary_group_flair_bg_color: "123456",
-          primary_group_flair_color: "B0B0B0",
+          flair_name: "Band Geeks",
+          flair_url: "fa-times",
+          flair_bg_color: "123456",
+          flair_color: "B0B0B0",
           primary_group_name: "Band Geeks",
         });
         setupSiteGroups(this);
@@ -171,13 +187,31 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(queryAll(".avatar-flair").length, "it has the tag");
-        assert.ok(queryAll("svg.d-icon-times").length, "it has the svg icon");
+        assert.ok(exists(".avatar-flair"), "it has the tag");
+        assert.ok(exists("svg.d-icon-times"), "it has the svg icon");
         assert.equal(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #123456; color: #B0B0B0; ",
           "it has styles"
         );
+      },
+    });
+
+    componentTest("user-avatar-flair for user with no flairs", {
+      template: hbs`{{user-avatar-flair user=args}}`,
+      beforeEach() {
+        resetFlair();
+        this.set("args", {
+          admin: false,
+          moderator: false,
+          trust_level: 1,
+        });
+      },
+      afterEach() {
+        resetFlair();
+      },
+      test(assert) {
+        assert.ok(!exists(".avatar-flair"), "it does not render a flair");
       },
     });
   }

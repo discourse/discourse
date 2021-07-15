@@ -246,7 +246,6 @@ uk:
     submit: "Надіслати"
     generic_error: "Даруйте, виникла помилка."
     generic_error_with_reason: "Виникла помилка: %{error}"
-    go_ahead: "Вперед"
     sign_up: "Зареєструватись"
     log_in: "Увійти"
     age: "Вік"
@@ -279,7 +278,6 @@ uk:
       few: "Ще %{count}"
       many: "Ще %{count}"
       other: "Ще %{count}"
-    less: "Менше"
     never: "ніколи"
     every_30_minutes: "кожні 30 хвилин"
     every_hour: "щогодини"
@@ -288,7 +286,6 @@ uk:
     every_month: "щомісяця"
     every_six_months: "що шість місяців"
     max_of_count: "не більше %{count}"
-    alternation: "або"
     character_count:
       one: "%{count} символ"
       few: "%{count} символи"
@@ -325,7 +322,6 @@ uk:
       help:
         bookmark: "Натисніть, щоб закласти перший допис у цій темі"
         unbookmark: "Натисніть, щоб видалити усі закладки у цій темі"
-        unbookmark_with_reminder: "Клацніть, щоб видалити всі закладки та нагадування в цій темі. Ви маєте набір нагадувань %{reminder_at} для цієї теми."
     bookmarks:
       created: "Ви додали повідомлення в закладки. %{name}"
       not_bookmarked: "додати цей допис до закладок"
@@ -623,12 +619,14 @@ uk:
       later_today: "Пізніше сьогодні"
       next_business_day: "Наступний робочий день"
       tomorrow: "Завтра"
-      next_week: "На наступному тижні"
       post_local_date: "Дата повідомлення"
       later_this_week: "Пізніше на цьому тижні"
+      this_weekend: "В ці вихідні"
       start_of_next_business_week: "Понеділок"
       start_of_next_business_week_alt: "Наступного понеділка"
+      two_weeks: "Два тижні"
       next_month: "В наступному місяці"
+      six_months: "Шість місяців"
       custom: "Вибрати дату та час"
       relative: "Через вказаний час"
       none: "Нічого не потрібно"
@@ -674,6 +672,8 @@ uk:
       edit_columns:
         save: "Зберегти"
         reset_to_default: "Скинути за замовчуванням"
+      group:
+        all: "усі групи"
     group_histories:
       actions:
         change_group_setting: "Змінити налаштування групи"
@@ -685,13 +685,8 @@ uk:
       member_added: "Додано"
       member_requested: "Запит подано"
       add_members:
-        title: "Додати учасників до %{group_name}"
-        description: "Ви також можете додати список учасників – значення, розділені комами."
-        usernames_or_emails:
-          title: "Введіть імена користувачів або адреси електронної пошти"
-          input_placeholder: "Ім'я користувачів або адреси електронної пошти"
-        usernames:
-          input_placeholder: "Імена користувачів"
+        usernames_placeholder: "імена користувачів"
+        usernames_or_emails_placeholder: "ім'я користувачів або адреси електронної пошти"
         notify_users: "Сповістити користувачів"
       requests:
         title: "Запити"
@@ -706,7 +701,7 @@ uk:
         title: "Керувати"
         name: "Ім'я"
         full_name: "Повне ім'я"
-        add_members: "Додати учасників"
+        invite_members: "Запрошення"
         delete_member_confirm: "Вилучити '%{username}' з групи '%{group}'?"
         profile:
           title: Профіль
@@ -717,6 +712,7 @@ uk:
         email:
           title: "Електронна пошта"
           status: "Синхронізовано %{old_emails} / %{total_emails} листів через IMAP."
+          last_updated_by: "від"
           credentials:
             title: "Дані доступу"
             smtp_server: "SMTP-сервер"
@@ -730,10 +726,10 @@ uk:
           settings:
             title: "Налаштування"
             allow_unknown_sender_topic_replies: "Дозволити у темі відповіді невідомого відправника."
-            allow_unknown_sender_topic_replies_hint: "Дозволяє невідомим відправникам відповідати на теми групи. Якщо це не ввімкнено, відповіді з електронних адрес, які ще не включені в групу, або не запрошені до теми, створять нову тему."
           mailboxes:
             synchronized: "Синхронізована поштова скринька"
             none_found: "Не знайдено поштових скриньок в цьому обліковому записі."
+            disabled: "Відключено"
         membership:
           title: Членство
           access: Доступ
@@ -1165,11 +1161,9 @@ uk:
         sent: "Надіслано"
         archive: "Архів"
         groups: "Мої групи"
-        bulk_select: "Вибрати повідомлення"
         move_to_inbox: "Перемістити у Вхідні"
         move_to_archive: "Архівувати"
         failed_to_move: "Не вдалося перемістити обрані повідомлення (можливо, у вас мережа зникла)"
-        select_all: "Обрати все"
         tags: "Теги"
       preferences_nav:
         account: "Обліковий запис"
@@ -1509,9 +1503,13 @@ uk:
         invite:
           new_title: "Створити запрошення"
           edit_title: "Редагувати запрошення"
+          instructions: "Поділіться цим посиланням для миттєвого надання доступу до цього сайту"
           copy_link: "копіювати посилання"
           show_advanced: "Показати додаткові параметри"
           hide_advanced: "Сховати додаткові параметри"
+          add_to_groups: "Додати до груп"
+          expires_at: "Завершується після"
+          custom_message: "Необов’язкове особисте повідомлення"
           send_invite_email: "Зберегти та надіслати Email"
           save_invite: "Зберегти запрошення"
           invite_saved: "Запрошення збережено."
@@ -1609,6 +1607,8 @@ uk:
         edit: "Редагувати зображення профілю"
       title:
         title: "Назва"
+        none: "(немає)"
+      flair:
         none: "(немає)"
       primary_group:
         title: "Primary Group"
@@ -2180,20 +2180,9 @@ uk:
         reaction: "нова реакція"
         votes_released: "Опитування було опубліковано"
     upload_selector:
-      title: "Додати зображення"
-      title_with_attachments: "Додати зображення або файл"
-      from_my_computer: "З мого пристрою"
-      from_the_web: "З інтернету"
-      remote_tip: "посилання на зображення"
-      remote_tip_with_attachments: "посилання на зображення або файл"
-      local_tip: "вибрати зображення з вашого пристрою"
-      local_tip_with_attachments: "виберіть зображення або файли зі свого пристрою"
-      hint: "(Ви також можете перетягнути об’єкт у редактор, щоб завантажити)"
-      hint_for_supported_browsers: "ви так само можете перетягнути або скопіювати зображення в редактор"
       uploading: "Завантаження"
       select_file: "Обрати файл"
       default_image_alt_text: зображення
-      supported_formats: "підтримувані формати"
     search:
       sort_by: "Сортувати за"
       relevance: "За змістом"
@@ -2299,10 +2288,25 @@ uk:
         delete: "Видалити теми"
         dismiss: "Відкинути"
         dismiss_read: "Відхилити всі непрочитані"
+        dismiss_read_with_selected:
+          one: "Позначити прочитаним %{count}"
+          few: "Позначити прочитаними %{count}"
+          many: "Позначити прочитаними %{count}"
+          other: "Позначити прочитаними %{count}"
         dismiss_button: "Відкласти..."
+        dismiss_button_with_selected:
+          one: "Позначити прочитаним (%{count})..."
+          few: "Позначити прочитаними (%{count})..."
+          many: "Позначити прочитаними (%{count})..."
+          other: "Позначити прочитаними (%{count})..."
         dismiss_tooltip: "Відкласти нові повідомлення, або перестати стежити за цими темами"
         also_dismiss_topics: "Перестати стежити за цими темами, щоб вони ніколи більше не висвітлювались як непрочитані"
         dismiss_new: "Dismiss New"
+        dismiss_new_with_selected:
+          one: "Відхилити новий (%{count})..."
+          few: "Відхилити нові (%{count})..."
+          many: "Відхилити нові (%{count})..."
+          other: "Відхилити нові (%{count})..."
         toggle: "перемикач масової дії над темами"
         actions: "Масові дії"
         change_category: "Задати розділ"
@@ -2338,14 +2342,13 @@ uk:
         new: "У Вас немає нових тем."
         read: "Ви ще не прочитали жодної теми."
         posted: "Ви ще не дописували в жодну тему."
-        ready_to_create: "Готовий до "
         latest: "Немає оновлених чи нових тем!"
         bookmarks: "У вас немає обраних тем."
         category: "В категорії %{category} немає тем."
         top: "There are no top topics."
         educate:
           new: '<p>Ваші нові теми з’являтимуться тут. За замовчуванням теми вважаються новими і відображатимуть індикатор <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, якщо її створено за останні 2 дні.</p><p>Відвідайте свої <a href="%{userPrefsUrl}">налаштування</a>, щоб змінити це.</p>'
-          unread: "<p>Ваші непрочитані теми скоро з’являться тут.</p><p>За замовчуванням теми отримують лічильник <span class=\"badge new-posts badge-notification\">1</span>, якщо:</p><ul><li>Створена тема</li><li>Відповіли в темі</li><li>Тема прочитана впродовж більш як 4 хвилин</li></ul><p>Можна задати власні налаштування відстеження, натиснувши \U0001F514 в цільовій темі.</p><p>За потреби зміни стандартних налаштувань перейдіть у <a href=\"%{userPrefsUrl}\">налаштування</a> профілю користувача.</p>"
+          unread: "<p>Ваші непрочитані теми скоро з’являться тут.</p><p>За замовчуванням теми отримують лічильник <span class=\"badge unread-posts badge-notification\">1</span>, якщо:</p><ul><li>Створена тема</li><li>Відповіли в темі</li><li>Тема прочитана впродовж більш як 4 хвилин</li></ul><p>Можна задати власні налаштування відстеження, натиснувши \U0001F514 в цільовій темі.</p><p>За потреби зміни стандартних налаштувань перейдіть у <a href=\"%{userPrefsUrl}\">налаштування</a> профілю користувача.</p>"
       bottom:
         latest: "Більше немає останніх тем."
         posted: "Створених тем більше немає."
@@ -2409,21 +2412,11 @@ uk:
       not_found:
         title: "Тему не знайдено"
         description: "Даруйте, ми не змогли знайти цю тему. Можливо, її було видалено модератором?"
-      total_unread_posts:
+      unread_posts:
         one: "у вас %{count} непрочитане повідомлення в цій темі"
         few: "у вас %{count} непрочитаних повідомлення в цій темі"
         many: "у вас %{count} непрочитаних повідомлення в цій темі"
         other: "у вас %{count} непрочитаних повідомлення в цій темі"
-      unread_posts:
-        one: "у вас %{count} непрочитане старе повідомлення в цій теме"
-        few: "у вас %{count} непрочитаних старих повідомлення в цій темі"
-        many: "у вас %{count} непрочитаних старих повідомлень в цій темі"
-        other: "у вас %{count} непрочитаних старих повідомлень в цій темі"
-      new_posts:
-        one: "в цій темі %{count} нове повідомлення з її останнього перегляду вами"
-        few: "в цій темі %{count} нові повідомлення з її останнього перегляду вами"
-        many: "в цій темі %{count} нових повідомлень з її останнього перегляду вами"
-        other: "в цій темі %{count} нових повідомлень з її останнього перегляду вами"
       likes:
         one: "в темі %{count} лайк"
         few: "в темі %{count} лайка"
@@ -2440,7 +2433,6 @@ uk:
       browse_all_categories: Переглянути всі категорії
       browse_all_tags: Переглянути всі теги
       view_latest_topics: перегляньте останні теми
-      suggest_create_topic: розпочати нову бесіду?
       jump_reply_up: перейти до ранішої відповіді
       jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
@@ -2502,8 +2494,6 @@ uk:
         title: "Розклад публікації"
       temp_open:
         title: "Відкрити на час"
-      auto_reopen:
-        title: "Автоматичне відкриття теми"
       temp_close:
         title: "Закрити на час"
       auto_close:
@@ -2629,14 +2619,10 @@ uk:
         pin: "Закріпити тему"
         unpin: "Відкріпити тему"
         pin_globally: "Закріпити тему глобально"
-        make_banner: "Створити оголошення"
         remove_banner: "Видалити оголошення"
       reply:
         title: "Відповісти"
         help: "почати складати відповідь на цю тему"
-      clear_pin:
-        title: "Відкріпити"
-        help: "Скасувати закріплення цієї теми, щоб вона більше не з'являлася на початку Вашого переліку тем"
       share:
         title: "Поширити"
         extended_title: "Поділитися посиланням"
@@ -3497,7 +3483,6 @@ uk:
         show_incoming_updated_topics: "%{shortcut} Показати оновлені теми"
         search: "%{shortcut} Пошук"
         help: "%{shortcut} Показати поєднання клавіш"
-        dismiss_new_posts: "%{shortcut} Відкласти нові повідомлення"
         dismiss_topics: "%{shortcut} Відкласти теми"
         log_out: "%{shortcut} Вийти"
       composing:
@@ -3592,7 +3577,6 @@ uk:
       tags: "Мітки"
       choose_for_topic: "необов'язкові мітки"
       info: "Інформація"
-      default_info: "Цей тег не обмежений розділами та не має синонімів."
       category_restricted: "Цей тег обмежений категоріями, на які ви не маєте дозволу на доступ."
       synonyms: "Синоніми"
       synonyms_description: "Коли будуть використані наступні теги, вони будуть замінені на <b>%{base_tag_name}</b> ."
@@ -3679,8 +3663,11 @@ uk:
       groups:
         title: "Групи міток"
         new: "Нова група"
+        tags_label: "Мітки у цій групі"
+        parent_tag_label: "Батьківська мітка"
         one_per_topic_label: "Обмежити до однієї мітки з цієї групи на тему"
         new_name: "Нова група міток"
+        name_placeholder: "Назва"
         save: "Зберегти"
         delete: "Видалити"
         confirm_delete: "Ви впевнені, що хочете вилучити цю групу міток?"
@@ -3838,9 +3825,6 @@ uk:
               label: Категорія
             include_subcategories:
               label: "Включити підкатегорії"
-      commits:
-        latest_changes: "Останні зміни: оновлюйте Вашу копію часто!"
-        by: "від"
       groups:
         new:
           title: "Нова група"
@@ -3852,8 +3836,6 @@ uk:
             available: "Назва групи є"
             not_available: "Назва групи недоступно"
             blank: "Ім’я групи не може бути порожнім"
-        add_members:
-          as_owner: "Встановити користувача (їй) в якості власника (ів) цієї групи"
         manage:
           interaction:
             email: Електронна пошта
@@ -4527,7 +4509,6 @@ uk:
           details: "Деталі"
           previous_value: "Попереднє"
           new_value: "Нове"
-          diff: "Різниця"
           show: "Показати"
           modal_title: "Деталі"
           no_previous: "Немає попереднього значення."
@@ -4924,6 +4905,8 @@ uk:
         trust_level_unlocked_tip: "рівень довіри розморожений, система зможе за потреби розжалувати або просунути користувача"
         lock_trust_level: "Заморозити рівень довіри"
         unlock_trust_level: "Розморозити рівень довіри"
+        silenced_count: "Відключений"
+        suspended_count: "Призупинені"
         tl3_requirements:
           title: "Вимоги для Рівня довіри 3"
           table_title:

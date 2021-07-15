@@ -2,7 +2,9 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -27,8 +29,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll(".faq-priority").length);
-        assert.ok(!queryAll(".faq-link").length);
+        assert.ok(exists(".faq-priority"));
+        assert.ok(!exists(".faq-link"));
       },
     });
 
@@ -41,8 +43,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".faq-priority").length);
-        assert.ok(queryAll(".faq-link").length);
+        assert.ok(!exists(".faq-priority"));
+        assert.ok(exists(".faq-link"));
       },
     });
 
@@ -54,7 +56,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".admin-link").length);
+        assert.ok(!exists(".admin-link"));
       },
     });
 
@@ -67,9 +69,9 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll(".admin-link").length);
-        assert.ok(queryAll(".review").length);
-        assert.ok(!queryAll(".settings-link").length);
+        assert.ok(exists(".admin-link"));
+        assert.ok(exists(".review"));
+        assert.ok(!exists(".settings-link"));
       },
     });
 
@@ -81,7 +83,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(queryAll(".settings-link").length);
+        assert.ok(exists(".settings-link"));
       },
     });
 
@@ -89,8 +91,8 @@ discourseModule(
       template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".new-topics-link").length);
-        assert.ok(queryAll(".unread-topics-link").length);
+        assert.ok(exists(".new-topics-link"));
+        assert.ok(exists(".unread-topics-link"));
       },
     });
 
@@ -99,13 +101,13 @@ discourseModule(
       anonymous: true,
 
       test(assert) {
-        assert.ok(queryAll("li[class='']").length === 0);
-        assert.ok(queryAll(".latest-topics-link").length);
-        assert.ok(!queryAll(".new-topics-link").length);
-        assert.ok(!queryAll(".unread-topics-link").length);
-        assert.ok(queryAll(".top-topics-link").length);
-        assert.ok(queryAll(".badge-link").length);
-        assert.ok(queryAll(".category-link").length > 0);
+        assert.ok(!exists("li[class='']"));
+        assert.ok(exists(".latest-topics-link"));
+        assert.ok(!exists(".new-topics-link"));
+        assert.ok(!exists(".unread-topics-link"));
+        assert.ok(exists(".top-topics-link"));
+        assert.ok(exists(".badge-link"));
+        assert.ok(exists(".category-link"));
       },
     });
 
@@ -120,7 +122,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".category-link").length, 8);
+        assert.equal(count(".category-link"), 8);
         assert.equal(
           queryAll(".category-link .category-name").text(),
           this.site
@@ -142,7 +144,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".category-link").length, 8);
+        assert.equal(count(".category-link"), 8);
         assert.equal(
           queryAll(".category-link .category-name").text(),
           this.site
@@ -198,7 +200,7 @@ discourseModule(
 
       test(assert) {
         assert.equal(
-          queryAll(".category-link").length,
+          count(".category-link"),
           maxCategoriesToDisplay,
           "categories displayed limited by header_dropdown_category_count"
         );
@@ -235,7 +237,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".badge-link").length);
+        assert.ok(!exists(".badge-link"));
       },
     });
 
@@ -243,7 +245,7 @@ discourseModule(
       template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".badge-link").length);
+        assert.ok(exists(".badge-link"));
       },
     });
 
@@ -251,7 +253,7 @@ discourseModule(
       template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".user-directory-link").length);
+        assert.ok(exists(".user-directory-link"));
       },
     });
 
@@ -263,7 +265,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".user-directory-link").length);
+        assert.ok(!exists(".user-directory-link"));
       },
     });
 
@@ -271,8 +273,8 @@ discourseModule(
       template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".about-link").length);
-        assert.ok(queryAll(".keyboard-shortcuts-link").length);
+        assert.ok(exists(".about-link"));
+        assert.ok(exists(".keyboard-shortcuts-link"));
       },
     });
   }

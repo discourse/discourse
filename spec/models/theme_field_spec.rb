@@ -4,12 +4,8 @@
 require 'rails_helper'
 
 describe ThemeField do
-  after(:all) do
+  after do
     ThemeField.destroy_all
-  end
-
-  before do
-    I18n.locale = :en
   end
 
   describe "scope: find_by_theme_ids" do
@@ -422,6 +418,17 @@ HTML
     it "is rebaked when upload changes" do
       theme_field.update(upload: Fabricate(:upload))
       expect(theme_field.value_baked).to eq(nil)
+    end
+
+    it "clears SVG sprite cache when upload is deleted" do
+      fname = "custom-theme-icon-sprite.svg"
+      sprite = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+      theme_field.update(upload: sprite)
+      expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(1)
+
+      theme_field.destroy!
+      expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(0)
     end
   end
 

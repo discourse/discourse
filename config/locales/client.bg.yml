@@ -189,7 +189,6 @@ bg:
     submit: "Изпрати"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
-    go_ahead: "Продължете напред"
     sign_up: "Регистрация"
     log_in: "Вход"
     age: "Години"
@@ -215,7 +214,6 @@ bg:
     now: "преди малко"
     read_more: "прочетете повече"
     more: "Повече"
-    less: "По-малко"
     never: "никога"
     every_30_minutes: "на всеки 30 минути"
     every_hour: "на всеки час"
@@ -224,7 +222,6 @@ bg:
     every_month: "всеки месец"
     every_six_months: "на всеки шест месеца"
     max_of_count: "максимално от %{count}"
-    alternation: "или"
     character_count:
       one: "%{count} символ"
       other: "%{count} символа"
@@ -256,7 +253,6 @@ bg:
       help:
         bookmark: "Щракнете за да добавите в отметки първата публикация в тази тема"
         unbookmark: "Щракнете тук за да изтриите всички отметки в тази тема"
-        unbookmark_with_reminder: "Натиснете за да премахнете всички отметки в тази тема. Имате напомняне %{reminder_at} за тази тема."
     bookmarks:
       not_bookmarked: "добавете тази публикация в Отметки"
       remove: "Премахнете отметката"
@@ -420,8 +416,8 @@ bg:
       later_today: "По-късно днес"
       next_business_day: "Следващия работен ден"
       tomorrow: "Утре"
-      next_week: "Следваща седмица"
       later_this_week: "По-късно тази седмица"
+      this_weekend: "Този уикенд"
       start_of_next_business_week_alt: "Следващия понеделник"
       next_month: "Следващия месец"
       custom: "Друга дата и час"
@@ -463,6 +459,8 @@ bg:
         other: "%{count} потребители"
       edit_columns:
         save: "Запази"
+      group:
+        all: "всички групи"
     group_histories:
       actions:
         change_group_setting: "Промени настройки"
@@ -473,8 +471,7 @@ bg:
     groups:
       member_added: "Добавено"
       add_members:
-        usernames:
-          input_placeholder: "Потебителско име"
+        usernames_placeholder: "потебителско име"
       requests:
         title: "Заявки"
         reason: "Причина"
@@ -483,7 +480,7 @@ bg:
         title: "Управление"
         name: "Име"
         full_name: "Пълно име"
-        add_members: "Добавете потребители"
+        invite_members: "Покана"
         delete_member_confirm: "Премахнете '%{username}' от група '%{group}' ?"
         profile:
           title: Профил
@@ -492,6 +489,7 @@ bg:
           notification: Известие
         email:
           title: "Имейл"
+          last_updated_by: "от"
           credentials:
             username: "Потребителско име"
             password: "Парола"
@@ -794,11 +792,9 @@ bg:
         sent: "Изпратени"
         archive: "Архив"
         groups: "Моите групи"
-        bulk_select: "Изберете съобщения"
         move_to_inbox: "Премести във входящи"
         move_to_archive: "Архив"
         failed_to_move: "Грешка при преместването на съобщенията (може би интернета ви спря?)"
-        select_all: "Избери всички"
         tags: "Етикети"
       preferences_nav:
         account: "Профил"
@@ -1040,6 +1036,8 @@ bg:
         header_title: "профил, съобщения, отметки и предпочитания"
       title:
         title: "Заглавие"
+        none: "(никой)"
+      flair:
         none: "(никой)"
       primary_group:
         title: "Главна група"
@@ -1297,13 +1295,6 @@ bg:
         watching_first_post: "нова тема"
         post_approved: "публикацията е одобрена"
     upload_selector:
-      title: "Добавете изображение"
-      title_with_attachments: "Добавете изображение или файл"
-      from_my_computer: "От моето устройство"
-      from_the_web: "От мрежата"
-      remote_tip: "линк към изображение"
-      local_tip: "изберете изображения от вашето устройство"
-      hint_for_supported_browsers: "вие можете винаги да привлачите или поставите картинки върху вашия редактора"
       uploading: "Качване "
       select_file: "Избери файл"
       default_image_alt_text: изображение
@@ -1444,15 +1435,9 @@ bg:
       not_found:
         title: "Темата не е намерена"
         description: "Темата не може да бъде открита. Възможно ли е да е премахната от модератор?"
-      total_unread_posts:
+      unread_posts:
         one: "имате %{count} непрочетено мнение в тази тема"
         other: " Вие имате %{count} непрочетени мнения в тази тема"
-      unread_posts:
-        one: "Вие имате %{count} непрочетено старо мнение в тази тема"
-        other: "Вие имате %{count} непрочетени стари мнения в тази тема"
-      new_posts:
-        one: "има %{count} нова публикация в темата от последното Ви посещение на темата"
-        other: "от последното Ви посещение в темата до сега има %{count} нови публикации"
       likes:
         one: "има %{count} харесване в тази тема"
         other: "има %{count} харесвания в тази тема"
@@ -1558,14 +1543,10 @@ bg:
         pin: "Закови темата"
         unpin: "Отгови темата"
         pin_globally: "Закови темата глобално"
-        make_banner: "Банер тема"
         remove_banner: "Премахни банер тема"
       reply:
         title: "Отговорете"
         help: "започнете да пишете отговор на тази тема"
-      clear_pin:
-        title: "Изчисти пин "
-        help: "Изчисти пиннатия статус на тази тема така, че тя повече да не се появява в горната част на Вашият списък с теми."
       share:
         title: "Споделяне"
         extended_title: "Сподели линк"
@@ -2089,7 +2070,6 @@ bg:
         show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"
         search: "%{shortcut} Отписване"
         help: "%{shortcut} Помощ с клавиатурата "
-        dismiss_new_posts: "%{shortcut} Отхвърляне на Нова/Публикации"
         dismiss_topics: "%{shortcut} Отхвърляне на темите"
         log_out: "%{shortcut} Отписване"
       composing:
@@ -2167,6 +2147,8 @@ bg:
           description: "Няма да бъдете уведомявани относно нови теми с този етикет и те няма да се появяват в 'непрочетени'. "
       groups:
         title: "Групи етикети"
+        tags_label: "Етикети в тази група"
+        name_placeholder: "Име"
         save: "Запази"
         delete: "Изтрий"
         everyone_can_use: "Етикетите могат да се използват от всички"
@@ -2254,9 +2236,6 @@ bg:
               label: Група
             category:
               label: Категория
-      commits:
-        latest_changes: "Последни промени: моля обновявайте често! "
-        by: "от"
       groups:
         manage:
           interaction:
@@ -2569,7 +2548,6 @@ bg:
           details: "Детайли "
           previous_value: "Предишни"
           new_value: "Нови "
-          diff: "Разлика "
           show: "Покажи "
           modal_title: "Детайли"
           no_previous: "Няма предишна стойност. "
@@ -2791,6 +2769,7 @@ bg:
         trust_level_unlocked_tip: "Нивото на доверие е отключено, системата може да насърчава или понижава потребителя "
         lock_trust_level: "Заключете системата с нива на доверие"
         unlock_trust_level: "Отклчете системата с нива"
+        suspended_count: "Отстранени"
         tl3_requirements:
           title: "Изисквания за Ниво на доверие 3"
           value_heading: "Стойност"

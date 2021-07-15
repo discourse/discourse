@@ -7,6 +7,7 @@
 
 class TopicQuery
   PG_MAX_INT ||= 2147483647
+  DEFAULT_PER_PAGE_COUNT ||= 30
 
   def self.validators
     @validators ||= begin
@@ -334,7 +335,7 @@ class TopicQuery
       staff: user.staff?
     )
 
-    first_unread_pm_at = UserStat.where(user_id: user.id).pluck(:first_unread_pm_at).first
+    first_unread_pm_at = UserStat.where(user_id: user.id).pluck_first(:first_unread_pm_at)
     list = list.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
     create_list(:private_messages, {}, list)
   end
@@ -362,6 +363,14 @@ class TopicQuery
     list = private_messages_for(user, :all)
     list = list.joins("JOIN topic_tags tt ON tt.topic_id = topics.id
                       JOIN tags t ON t.id = tt.tag_id AND t.name = '#{@options[:tags][0]}'")
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_warnings(user)
+    list = private_messages_for(user, :user)
+    list = list.where('topics.subtype = ?', TopicSubtype.moderator_warning)
+    # Exclude official warnings that the user created, instead of received
+    list = list.where('topics.user_id <> ?', user.id)
     create_list(:private_messages, {}, list)
   end
 
@@ -570,14 +579,15 @@ class TopicQuery
   protected
 
   def per_page_setting
-    30
+    DEFAULT_PER_PAGE_COUNT
   end
 
   def private_messages_for(user, type)
     options = @options
     options.reverse_merge!(per_page: per_page_setting)
 
-    result = Topic.includes(:tags, :allowed_users)
+    result = Topic.includes(:allowed_users)
+    result = result.includes(:tags) if SiteSetting.tagging_enabled
 
     if type == :group
       result = result.joins(
@@ -694,7 +704,7 @@ class TopicQuery
   # Create results based on a bunch of default options
   def default_results(options = {})
     options.reverse_merge!(@options)
-    options.reverse_merge!(per_page: per_page_setting)
+    options.reverse_merge!(per_page: per_page_setting) unless options[:limit] == false
 
     # Whether to return visible topics
     options[:visible] = true if @user.nil? || @user.regular?
@@ -1003,7 +1013,7 @@ class TopicQuery
       if params[:my_group_ids].present?
         GroupUser.where(user_id: @user.id, group_id: params[:my_group_ids]).minimum(:first_unread_pm_at)
       else
-        UserStat.where(user_id: @user.id).pluck(:first_unread_pm_at).first
+        UserStat.where(user_id: @user.id).pluck_first(:first_unread_pm_at)
       end
 
     query = query.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at

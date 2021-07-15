@@ -112,6 +112,7 @@ class UsersController < ApplicationController
                                               :user_profile,
                                               :card_background_upload,
                                               :primary_group,
+                                              :flair_group,
                                               :primary_email
                                             )
 
@@ -1632,6 +1633,7 @@ class UsersController < ApplicationController
       :profile_background_upload_url,
       :card_background_upload_url,
       :primary_group_id,
+      :flair_group_id,
       :featured_topic_id
     ]
 

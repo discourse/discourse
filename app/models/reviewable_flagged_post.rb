@@ -57,16 +57,6 @@ class ReviewableFlaggedPost < Reviewable
       build_action(actions, :agree_and_silence, icon: 'microphone-slash', bundle: agree, client_action: 'silence')
     end
 
-    if can_delete_spammer = potential_spam? && guardian.can_delete_all_posts?(target_created_by)
-      build_action(
-        actions,
-        :delete_spammer,
-        icon: 'exclamation-triangle',
-        bundle: agree,
-        confirm: true
-      )
-    end
-
     if post.user_deleted?
       build_action(actions, :agree_and_restore, icon: 'far-eye', bundle: agree)
     end
@@ -78,6 +68,10 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     build_action(actions, :ignore, icon: 'external-link-alt')
+
+    if potential_spam? && guardian.can_delete_all_posts?(target_created_by)
+      delete_user_actions(actions)
+    end
 
     if guardian.can_delete_post_or_topic?(post)
       delete = actions.add_bundle("#{id}-delete", icon: "far-trash-alt", label: "reviewables.actions.delete.title")
@@ -134,17 +128,22 @@ class ReviewableFlaggedPost < Reviewable
     agree(performed_by, args)
   end
 
-  def perform_delete_spammer(performed_by, args)
-    UserDestroyer.new(performed_by).destroy(
-      post.user,
-      delete_posts: true,
-      prepare_for_destroy: true,
-      block_email: true,
-      block_urls: true,
-      block_ip: true,
-      delete_as_spammer: true,
-      context: "review"
-    )
+  def perform_delete_user(performed_by, args)
+    delete_options = delete_opts
+
+    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
+
+    agree(performed_by, args)
+  end
+
+  def perform_delete_user_block(performed_by, args)
+    delete_options = delete_opts
+
+    if Rails.env.production?
+      delete_options.merge!(block_email: true, block_ip: true)
+    end
+
+    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
 
     agree(performed_by, args)
   end
@@ -302,6 +301,16 @@ protected
 
 private
 
+  def delete_opts
+    {
+      delete_posts: true,
+      prepare_for_destroy: true,
+      block_urls: true,
+      delete_as_spammer: true,
+      context: "review"
+    }
+  end
+
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable: self)
   end
@@ -343,6 +352,8 @@ end
 #  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  force_review            :boolean          default(FALSE), not null
+#  reject_reason           :text
 #
 # Indexes
 #

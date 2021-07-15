@@ -190,7 +190,6 @@ hy:
     submit: "Հաստատել"
     generic_error: "Տեղի է ունեցել սխալ, ներողություն:"
     generic_error_with_reason: "Տեղի է ունեցել սխալ՝ %{error}"
-    go_ahead: "Գնալ առաջ"
     sign_up: "Գրանցվել"
     log_in: "Մուտք"
     age: "Տարիք"
@@ -219,7 +218,6 @@ hy:
     x_more:
       one: "ևս %{count}"
       other: "ևս %{count}"
-    less: "Կրճատ"
     never: "երբեք"
     every_30_minutes: "30 րոպեն մեկ"
     every_hour: "ժամը մեկ"
@@ -228,7 +226,6 @@ hy:
     every_month: "ամիսը մեկ"
     every_six_months: "վեց ամիսը մեկ"
     max_of_count: "առավելագույնը %{count}"
-    alternation: "կամ"
     character_count:
       one: "%{count} սիմվոլ"
       other: "%{count} սիմվոլ"
@@ -260,7 +257,6 @@ hy:
       help:
         bookmark: "Սեղմեք՝ այս թեմայի առաջին գրառումն էջանշելու համար"
         unbookmark: "Սեղմեք՝ այս թեմայի բոլոր էջանշանները ջնջելու համար"
-        unbookmark_with_reminder: "Բոլոր էջանշանները և այդ թեմայի հիշեցումները ջնջելու համար սեղմել: Դուք արդեն ունեք հիշեցում այդ թեմայի համար, որը կարգավորված է %{reminder_at}."
     bookmarks:
       not_bookmarked: "Էջանշել այս գրառումը"
       remove: "Հեռացնել էջանշանը"
@@ -477,8 +473,8 @@ hy:
       later_today: "Այսօր, մի փոքր ուշ"
       next_business_day: "Հաջորդ աշխատանքային օրը: "
       tomorrow: "Վաղը"
-      next_week: "Հաջորդ շաբաթ"
       later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
+      this_weekend: "Այս շաբաթ-կիրակի"
       start_of_next_business_week_alt: "Հաջորդ Երկուշաբթի: "
       next_month: "Հաջորդ ամիս"
       custom: "Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
@@ -521,6 +517,8 @@ hy:
       edit_columns:
         save: "Պահպանել"
         reset_to_default: "Վերականգնել լռելյայն"
+      group:
+        all: "բոլոր խմբերը"
     group_histories:
       actions:
         change_group_setting: "Փոխել խմբի կարգավորումը"
@@ -532,8 +530,7 @@ hy:
       member_added: "Ավելացված"
       member_requested: "Հարցով "
       add_members:
-        usernames:
-          input_placeholder: "Օգտանուններ"
+        usernames_placeholder: "օգտանուններ"
       requests:
         title: "Հարցումներ "
         reason: "Պատճառ"
@@ -547,7 +544,7 @@ hy:
         title: "Կառավարել"
         name: "Անուն"
         full_name: "Անուն Ազգանուն"
-        add_members: "Ավելացնել Անդամներ"
+        invite_members: "Հրավիրել"
         delete_member_confirm: "Հեռացնե՞լ '%{username}' օգտանունը '%{group}' խմբից:"
         profile:
           title: Պրոֆիլ
@@ -557,11 +554,14 @@ hy:
           notification: Ծանուցում
         email:
           title: "Էլ. հասցե"
+          last_updated_by: "կողմից"
           credentials:
             username: "Օգտանուն"
             password: "Գաղտնաբառ"
           settings:
             title: "Կարգավորումներ"
+          mailboxes:
+            disabled: "Անջատված"
         membership:
           title: Անդամակցություն
           access: Թույլտվություն
@@ -899,11 +899,9 @@ hy:
         sent: "Ուղարկված"
         archive: "Արխիվ"
         groups: "Իմ Խմբերը"
-        bulk_select: "Ընտրել հաղորդագրություններ"
         move_to_inbox: "Տեղափոխել Մուտքերի արկղ"
         move_to_archive: "Արխիվացնել"
         failed_to_move: "Չհաջողվեց տեղափոխել ընտրված հաղորդագրությունները (հնարավոր է՝ համացանցի հետ կապված խնդիր կա)"
-        select_all: "Ընտրել Բոլորը"
         tags: "Թեգեր"
       preferences_nav:
         account: "Հաշիվ"
@@ -1239,6 +1237,8 @@ hy:
         header_title: "պրոֆիլ, հաղորդագրություններ, էջանշաններ և նախընտրություններ"
       title:
         title: "Վերնագիր"
+        none: "(ոչ մի)"
+      flair:
         none: "(ոչ մի)"
       primary_group:
         title: "Հիմնական Խումբ"
@@ -1686,13 +1686,6 @@ hy:
         post_approved: "գրառումը հաստատված է"
         membership_request_consolidated: "Մշակել անդամակցության նոր հարցումները"
     upload_selector:
-      title: "Ավելացնել նկար"
-      title_with_attachments: "Ավելացնել նկար կամ ֆայլ"
-      from_my_computer: "Իմ սարքից"
-      from_the_web: "Համացանցից"
-      remote_tip: "նկարի հղումը"
-      local_tip: "ընտրեք նկարներ Ձեր սարքից"
-      hint_for_supported_browsers: "Դուք կարող եք նաև քաշել և գցել կամ տեղադրել նկարները խմբագրիչի մեջ"
       uploading: "Վերբեռնվում է"
       select_file: "Ընտրել Ֆայլ"
       default_image_alt_text: նկար
@@ -1875,15 +1868,9 @@ hy:
       not_found:
         title: "Թեման չի գտնվել"
         description: "Ներողություն, մենք չկարողացանք գտնել այդ թեման: Միգուցե՞ այն հեռացվել է մոդերատորի կողմից:"
-      total_unread_posts:
+      unread_posts:
         one: "Դուք ունեք %{count} չկարդացած հրապարակում այս թեմայում"
         other: "Այս թեմայում Դուք ունեք %{count} չկարդացած գրառում"
-      unread_posts:
-        one: "Դուք ունեք %{count} չկարդացած հին հրապարակում այս թեմայում"
-        other: "Այս թեմայում Դուք ունեք %{count} հին չկարդացած գրառում"
-      new_posts:
-        one: "Այս թեմայում կա %{count} նոր հրապարակում՝ Ձեր վերջին կարդալուց հետո:"
-        other: "Ձեր վերջին կարդալուց հետո այս թեմայում կա %{count} նոր գրառում"
       likes:
         one: "Այս թեմայում կա %{count} հավանում:"
         other: "Այս թեմայում կա %{count} հավանում"
@@ -1926,8 +1913,6 @@ hy:
         title: "Պլանավորել Հրատարակումը"
       temp_open:
         title: "Ժամանակավորապես Բացել"
-      auto_reopen:
-        title: "Ավտոմատ բացել Թեման "
       temp_close:
         title: "Ժամանակավորապես Փակել"
       auto_close:
@@ -2037,14 +2022,10 @@ hy:
         pin: "Ամրակցել Թեման"
         unpin: "Ապակցել Թեման"
         pin_globally: "Ամրակցել Թեման Գլոբալ կերպով"
-        make_banner: "Բաններ Թեմա"
         remove_banner: "Հեռացնել Բաններ Թեման"
       reply:
         title: "Պատասխանել"
         help: "այս թեմային պատասխան գրել"
-      clear_pin:
-        title: "Հեռացնել ամրակցումը"
-        help: "Հեռացնել այս թեմայի ամրակցված կարգավիճակը, որպեսզի այն այլևս չհայտնվի Ձեր թեմաների ցանկի վերևում:"
       share:
         title: "Կիսվել"
         extended_title: "Կիսվել հղումով"
@@ -2721,7 +2702,6 @@ hy:
         show_incoming_updated_topics: "%{shortcut} Ցուցադրել թարմացված թեմաները"
         search: "%{shortcut} Որոնել"
         help: "%{shortcut} Բացել ստեղնաշարի օգնականը"
-        dismiss_new_posts: "%{shortcut} Չեղարկել Նոր/Գրառումները"
         dismiss_topics: "%{shortcut} Չեղարկել Թեմաները"
         log_out: "%{shortcut} Ելք"
       composing:
@@ -2808,7 +2788,6 @@ hy:
       tags: "Թեգեր"
       choose_for_topic: "ընտրովի թեգեր"
       info: "Ինֆորմացիա"
-      default_info: "Այս տեգը չի սահմանափակվում որևէ կատեգորիայով և չունի հոմանիշ:"
       category_restricted: "Այս տեգը սահմանափակված է այն կատեգորիաներով, որոնցում մուտքի թույլտվություն չունեք:"
       synonyms: "Հոմանիշներ"
       synonyms_description: "Հետևյալ տեգերի օգտագործման դեպքում, դրանք կփոխարինվեն <b>%{base_tag_name}</b> -ով:"
@@ -2872,6 +2851,7 @@ hy:
         new: "Նոր Խումբ"
         one_per_topic_label: "Սահմանափակել այս խմբի յուրաքանչյուր թեման մեկ թեգով:"
         new_name: "Նոր Թեգի Խումբ"
+        name_placeholder: "Անուն"
         save: "Պահպանել"
         delete: "Ջնջել"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգի խումբը:"
@@ -3012,9 +2992,6 @@ hy:
               label: Կատեգորիա
             include_subcategories:
               label: "Ներառել Ենթակատեգորիաներ"
-      commits:
-        latest_changes: "Վերջին փոփոխությունները. խնդրում ենք ավելի հաճախ թարմացնել!"
-        by: "կողմից"
       groups:
         new:
           title: "Նոր Խումբ"
@@ -3026,8 +3003,6 @@ hy:
             available: "Խմբի անունը հասանելի է"
             not_available: "Խմբի անունը հասանելի չէ"
             blank: "Խմբի անունը չի կարող դատարկ լինել"
-        add_members:
-          as_owner: "Սահմանել օգտատիրոջ(երի) որպես այս խմբի սեփականատեր(եր)"
         manage:
           interaction:
             email: Էլ. հասցե
@@ -3614,7 +3589,6 @@ hy:
           details: "Մանրամասներ"
           previous_value: "Նախորդը"
           new_value: "Նոր"
-          diff: "Համեմատել (Diff)"
           show: "Ցուցադրել"
           modal_title: "Մանրամասներ"
           no_previous: "Նախորդ արժեք չկա:"
@@ -3968,6 +3942,8 @@ hy:
         trust_level_unlocked_tip: "վստահության մակարդակը արգելաբացված է, համակարգը կարող է խթանել կամ խանգարել օգտատիրոջը"
         lock_trust_level: "Արգելափակել Վստահության Մակարդակը"
         unlock_trust_level: "Արգելաբացել Վստահության Մակարդակը"
+        silenced_count: "Լռեցված"
+        suspended_count: "Սառեցված"
         tl3_requirements:
           title: "Վստահության 3-րդ Մակարդակի Պահանջներ"
           table_title:

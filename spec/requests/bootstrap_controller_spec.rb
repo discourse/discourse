@@ -27,7 +27,7 @@ describe BootstrapController do
     bootstrap = json['bootstrap']
     expect(bootstrap).to be_present
     expect(bootstrap['title']).to be_present
-    expect(bootstrap['theme_ids']).to eq([theme.id])
+    expect(bootstrap['theme_id']).to eq(theme.id)
     expect(bootstrap['setup_data']['base_url']).to eq(Discourse.base_url)
     expect(bootstrap['stylesheets']).to be_present
 
@@ -73,5 +73,12 @@ describe BootstrapController do
 
     bootstrap = json['bootstrap']
     expect(bootstrap['extra_locales']).to be_present
+  end
+
+  it "returns data when login_required is enabled" do
+    SiteSetting.login_required = true
+    get "/bootstrap.json"
+    expect(response.status).to eq(200)
+    expect(response.parsed_body).to be_present
   end
 end

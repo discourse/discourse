@@ -18,8 +18,6 @@ class Invite < ActiveRecord::Base
 
   rate_limit :limit_invites_per_day
 
-  belongs_to :user
-  belongs_to :topic
   belongs_to :invited_by, class_name: 'User'
 
   has_many :invited_users
@@ -251,6 +249,23 @@ class Invite < ActiveRecord::Base
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
+  def warnings(guardian)
+    @warnings ||= begin
+      warnings = []
+
+      topic = self.topics.first
+      if topic&.read_restricted_category?
+        topic_groups = topic.category.groups
+        if (self.groups & topic_groups).blank?
+          editable_topic_groups = topic_groups.filter { |g| guardian.can_edit_group?(g) }
+          warnings << I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", "))
+        end
+      end
+
+      warnings
+    end
+  end
+
   def limit_invites_per_day
     RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
   end
@@ -292,6 +307,7 @@ end
 #  max_redemptions_allowed :integer          default(1), not null
 #  redemption_count        :integer          default(0), not null
 #  expires_at              :datetime         not null
+#  email_token             :string
 #
 # Indexes
 #

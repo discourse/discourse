@@ -1,41 +1,33 @@
-import MountWidget from "discourse/components/mount-widget";
-import { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default MountWidget.extend({
-  widget: "avatar-flair",
+export default Component.extend({
+  tagName: "",
 
-  @observes("user")
-  _rerender() {
-    this.queueRerender();
-  },
-
-  buildArgs() {
-    if (!this.user) {
+  @discourseComputed("user")
+  flair(user) {
+    if (!user) {
       return;
     }
 
-    if (
-      this.user.primary_group_flair_url ||
-      this.user.primary_group_flair_bg_color
-    ) {
+    if (user.flair_url || user.flair_bg_color) {
       return {
-        primary_group_flair_url: this.user.primary_group_flair_url,
-        primary_group_flair_bg_color: this.user.primary_group_flair_bg_color,
-        primary_group_flair_color: this.user.primary_group_flair_color,
-        primary_group_name: this.user.primary_group_name,
+        flairName: user.flair_name,
+        flairUrl: user.flair_url,
+        flairBgColor: user.flair_bg_color,
+        flairColor: user.flair_color,
       };
-    } else {
-      const autoFlairAttrs = autoGroupFlairForUser(this.site, this.user);
-      if (autoFlairAttrs) {
-        return {
-          primary_group_flair_url: autoFlairAttrs.primary_group_flair_url,
-          primary_group_flair_bg_color:
-            autoFlairAttrs.primary_group_flair_bg_color,
-          primary_group_flair_color: autoFlairAttrs.primary_group_flair_color,
-          primary_group_name: autoFlairAttrs.primary_group_name,
-        };
-      }
+    }
+
+    const autoFlairAttrs = autoGroupFlairForUser(this.site, user);
+    if (autoFlairAttrs) {
+      return {
+        flairName: autoFlairAttrs.flair_name,
+        flairUrl: autoFlairAttrs.flair_url,
+        flairBgColor: autoFlairAttrs.flair_bg_color,
+        flairColor: autoFlairAttrs.flair_color,
+      };
     }
   },
 });

@@ -19,23 +19,7 @@ class ReviewableUser < Reviewable
       end
     end
 
-    reject = actions.add_bundle(
-      'reject_user',
-      icon: 'user-times',
-      label: 'reviewables.actions.reject_user.title'
-    )
-    actions.add(:reject_user_delete, bundle: reject) do |a|
-      a.icon = 'user-times'
-      a.label = "reviewables.actions.reject_user.delete.title"
-      a.require_reject_reason = !is_a_suspect_user?
-      a.description = "reviewables.actions.reject_user.delete.description"
-    end
-    actions.add(:reject_user_block, bundle: reject) do |a|
-      a.icon = 'ban'
-      a.label = "reviewables.actions.reject_user.block.title"
-      a.require_reject_reason = !is_a_suspect_user?
-      a.description = "reviewables.actions.reject_user.block.description"
-    end
+    delete_user_actions(actions, require_reject_reason: !is_a_suspect_user?)
   end
 
   def perform_approve_user(performed_by, args)
@@ -56,7 +40,7 @@ class ReviewableUser < Reviewable
     create_result(:success, :approved)
   end
 
-  def perform_reject_user_delete(performed_by, args)
+  def perform_delete_user(performed_by, args)
     # We'll delete the user if we can
     if target.present?
       destroyer = UserDestroyer.new(performed_by)
@@ -96,10 +80,10 @@ class ReviewableUser < Reviewable
     create_result(:success, :rejected)
   end
 
-  def perform_reject_user_block(performed_by, args)
+  def perform_delete_user_block(performed_by, args)
     args[:block_email] = true
     args[:block_ip] = true
-    perform_reject_user_delete(performed_by, args)
+    perform_delete_user(performed_by, args)
   end
 
   # Update's the user's fields for approval but does not save. This
@@ -137,6 +121,8 @@ end
 #  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  force_review            :boolean          default(FALSE), not null
+#  reject_reason           :text
 #
 # Indexes
 #

@@ -73,6 +73,7 @@
     }
     .login-subheader {
       align-self: start;
+      grid-row-start: 2;
       margin: 0;
     }
     .waving-hand {
@@ -140,7 +141,7 @@
         border: 1px solid var(--tertiary);
         box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
       }
-      label.more-info {
+      span.more-info {
         color: var(--primary-medium);
         min-height: 1.4em; // prevents height increase due to tips
       }

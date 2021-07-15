@@ -4,20 +4,12 @@ desc "Runs the qunit test suite"
 
 task "qunit:test", [:timeout, :qunit_path] do |_, args|
   require "socket"
-  require 'rbconfig'
+  require "chrome_installed_checker"
 
-  if RbConfig::CONFIG['host_os'][/darwin|mac os/]
-    google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-  else
-    google_chrome_cli = "google-chrome"
-  end
-
-  unless system("command -v \"#{google_chrome_cli}\" >/dev/null")
-    abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
-  end
-
-  if Gem::Version.new(`\"#{google_chrome_cli}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
-    abort "Chrome 59 or higher is required to run tests in headless mode."
+  begin
+    ChromeInstalledChecker.run
+  rescue ChromeNotInstalled, ChromeVersionTooLow => err
+    abort err.message
   end
 
   unless system("command -v yarn >/dev/null;")
@@ -49,7 +41,11 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
       "SKIP_ENFORCE_HOSTNAME" => "1",
       "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test_#{port}.pid", # So this can run alongside development
       "UNICORN_PORT" => port.to_s,
-      "UNICORN_SIDEKIQS" => "0"
+      "UNICORN_SIDEKIQS" => "0",
+      "DISCOURSE_SKIP_CSS_WATCHER" => "1",
+      "UNICORN_LISTENER" => "127.0.0.1:#{port}",
+      "LOGSTASH_UNICORN_URI" => nil,
+      "UNICORN_WORKERS" => "3"
     },
     "#{Rails.root}/bin/unicorn -c config/unicorn.conf.rb",
     pgroup: true

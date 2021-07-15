@@ -2,7 +2,7 @@
 
 module QunitHelper
   def theme_tests
-    theme = Theme.find_by(id: request.env[:resolved_theme_ids]&.first)
+    theme = Theme.find_by(id: request.env[:resolved_theme_id])
     return "" if theme.blank?
 
     _, digest = theme.baked_js_tests_with_digest

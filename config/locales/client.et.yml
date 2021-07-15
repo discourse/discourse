@@ -183,7 +183,6 @@ et:
     submit: "Saada"
     generic_error: "Vabandust, tekkis viga."
     generic_error_with_reason: "Tekkis viga: %{error}"
-    go_ahead: "Jätka"
     sign_up: "Liitu"
     log_in: "Logi sisse"
     age: "Vanus"
@@ -212,7 +211,6 @@ et:
     x_more:
       one: "%{count} Veel"
       other: "Veel %{count}"
-    less: "Peida"
     never: "mitte kunagi"
     every_30_minutes: "iga 30 minuti järel"
     every_hour: "iga tund"
@@ -221,7 +219,6 @@ et:
     every_month: "iga kuu"
     every_six_months: "iga kuue kuu tagant"
     max_of_count: "maksimum %{count}-st"
-    alternation: "või"
     character_count:
       one: "%{count} sümbol"
       other: "%{count} sümbolit"
@@ -253,7 +250,6 @@ et:
       help:
         bookmark: "Kliki selle teema esimesele postitusele järjehoidja lisamiseks"
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
-        unbookmark_with_reminder: "Klõpsa et eemaldada teemalt kõik järjehoidjad ja meeldetuletused. Sul on siin teemas meeldetuletus %{reminder_at}."
     bookmarks:
       created: "Oled selle postituse järjehoidjatesse lisanud. %{name}"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
@@ -426,9 +422,9 @@ et:
       later_today: "Täna hiljem"
       next_business_day: "Järgmisel tööpäeval"
       tomorrow: "Homme"
-      next_week: "Järgmisel nädalal"
       post_local_date: "Kuupäev postituses"
       later_this_week: "Hiljem sel nädalal"
+      this_weekend: "Sellel nädalavahetusel"
       start_of_next_business_week: "Esmaspäev"
       start_of_next_business_week_alt: "Järgmisel esmaspäeval"
       next_month: "Järgmisel kuul"
@@ -473,6 +469,8 @@ et:
         other: "%{count} kasutajat"
       edit_columns:
         save: "Salvesta"
+      group:
+        all: "kõik grupid"
     group_histories:
       actions:
         change_group_setting: "Muuda grupi sätteid"
@@ -483,8 +481,7 @@ et:
     groups:
       member_added: "Lisatud"
       add_members:
-        usernames:
-          input_placeholder: "Kasutajanimed"
+        usernames_placeholder: "kasutajanimed"
       requests:
         reason: "Põhjus"
         accepted: "aktsepteeritud"
@@ -492,7 +489,7 @@ et:
         title: "Halda"
         name: "Nimi"
         full_name: "Täisnimi"
-        add_members: "Lisa liikmeid"
+        invite_members: "Kutsu"
         delete_member_confirm: "Kas eemaldada '%{username}' grupist '%{group}'?"
         profile:
           title: Profiil
@@ -501,11 +498,14 @@ et:
           notification: Teavitus
         email:
           title: "E-post"
+          last_updated_by: "autor"
           credentials:
             username: "Kasutajanimi"
             password: "Parool"
           settings:
             title: "Seaded"
+          mailboxes:
+            disabled: "Välja lülitatud"
         membership:
           title: Liikmelisus
           access: Juurdepääs
@@ -854,11 +854,9 @@ et:
         sent: "Saadetud"
         archive: "Arhiiv"
         groups: "Minu grupid"
-        bulk_select: "Vali sõnumid"
         move_to_inbox: "Liiguta sisendkausta"
         move_to_archive: "Arhiiv"
         failed_to_move: "Valitud sõnumite teisaldamine ebaõnnestus (võrguühendus võib olla häiritud)"
-        select_all: "Vali kõik"
         tags: "Sildid"
       preferences_nav:
         account: "Konto"
@@ -1143,6 +1141,8 @@ et:
         header_title: "profiil, sõnumid, järjehoidjad ja eelistused"
       title:
         title: "Pealkiri"
+        none: "(pole)"
+      flair:
         none: "(pole)"
       primary_group:
         title: "Peamine grupp"
@@ -1460,13 +1460,6 @@ et:
       titles:
         watching_first_post: "uus teema"
     upload_selector:
-      title: "Lisa pilt"
-      title_with_attachments: "Lisa pilt või fail"
-      from_my_computer: "Minu seadmest"
-      from_the_web: "Veebist"
-      remote_tip: "viide pildile"
-      local_tip: "vali pildid oma seadmest"
-      hint_for_supported_browsers: "võid pildi redaktorisse ka pukseerida või kleepida"
       uploading: "Laen üles"
       select_file: "Vali fail"
       default_image_alt_text: pilt
@@ -1589,7 +1582,6 @@ et:
         new: "Sul ei ole uusi teemasid."
         read: "Sa ei ole veel ühtegi teemat lugenud."
         posted: "Sa ei ole veel ühtegi teemasse postitanud."
-        ready_to_create: "Valmis "
         latest: "Kõik loetud!"
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
         category: "Foorumis %{category} teemad puuduvad."
@@ -1651,15 +1643,9 @@ et:
       not_found:
         title: "Teemat ei leitud"
         description: "Vabanda, meil ei õnnestunud seda teemat leida. Võimalik, et moderaator eemaldas selle?"
-      total_unread_posts:
+      unread_posts:
         one: "Sul on selles teemas %{count} lugemata postitus"
         other: "Sul on selles teemas %{count} lugemata postitust"
-      unread_posts:
-        one: "Sul on selles teemas %{count} lugemata vana postitus"
-        other: "Sul on selles teemas %{count} lugemata vana postitust"
-      new_posts:
-        one: "selles teemas on %{count} uus postitus Sinu viimasest külastusest"
-        other: "selles teemas on %{count} uut postitust Sinu viimasest külastusest"
       likes:
         one: "selles teemas on %{count} meeldimine"
         other: "selles teemas on %{count} meeldimist"
@@ -1673,7 +1659,6 @@ et:
       browse_all_categories: Vaata kõiki foorumeid
       browse_all_tags: Sirvi kõiki silte
       view_latest_topics: vaata värskeid teemasid
-      suggest_create_topic: alusta uut vestlust?
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
@@ -1719,8 +1704,6 @@ et:
         title: "Ajastatud avaldamine"
       temp_open:
         title: "Ava ajutiselt"
-      auto_reopen:
-        title: "Loo teema automaatselt"
       temp_close:
         title: "Sulge ajutiselt"
       auto_close:
@@ -1815,14 +1798,10 @@ et:
         pin: "Tõsta teema esile"
         unpin: "Eemalda teema esiletõstmine"
         pin_globally: "Tõsta teema esile igal pool"
-        make_banner: "Tee teema bänneriks"
         remove_banner: "Eemalda teema bännerist"
       reply:
         title: "Vasta"
         help: "kirjuta sellele teemale vastus"
-      clear_pin:
-        title: "Kustuta esiletõstmine"
-        help: "Eemalda sellelt teemalt esiletõstetu staatus nii, et ta enam ei ilmuks teemade loetelu tipus"
       share:
         title: "Jaga"
         help: "jaga viidet sellele teemale"
@@ -2440,7 +2419,6 @@ et:
         user_profile_menu: "%{shortcut} Ava kasutajamenüü"
         show_incoming_updated_topics: "%{shortcut} Näita uuendatud teemasid"
         help: "%{shortcut} Ava klaviatuuri abimenüü"
-        dismiss_new_posts: "%{shortcut} Ignoreeri uusi/postitusi"
         dismiss_topics: "%{shortcut} Ignoreeri teemasid"
         log_out: "%{shortcut} Logi välja"
       actions:
@@ -2530,8 +2508,11 @@ et:
       groups:
         title: "Siltide grupid"
         new: "Uus grupp"
+        tags_label: "Sildid selles grupis"
+        parent_tag_label: "Ülemsilt"
         one_per_topic_label: "Vaid üks selle grupi silt teema kohta"
         new_name: "Uus siltide grupp"
+        name_placeholder: "Nimi"
         save: "Salvesta"
         delete: "Kustuta"
         confirm_delete: "Oled kindel, et soovid selle siltide grupi kustutada?"
@@ -2638,9 +2619,6 @@ et:
               label: Grupp
             category:
               label: Foorum
-      commits:
-        latest_changes: "Viimased muudatused: palun värskenda tihti!"
-        by: "autor"
       groups:
         new:
           title: "Uus grupp"
@@ -3061,7 +3039,6 @@ et:
           details: "Detailid"
           previous_value: "Eelmine"
           new_value: "Uus"
-          diff: "Erisused"
           show: "Näita"
           modal_title: "Detailid"
           no_previous: "Varasem väärtus puudub."
@@ -3308,6 +3285,8 @@ et:
         trust_level_unlocked_tip: "usaldustase on lukustamata, süsteem saab kasutajat edutada või alandada."
         lock_trust_level: "Lukusta usaldustase"
         unlock_trust_level: "Eemalda usaldustaseme lukustus"
+        silenced_count: "Vaigistatud"
+        suspended_count: "Peatatud"
         tl3_requirements:
           title: "Usaldustaseme 3 nõuded"
           table_title:

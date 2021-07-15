@@ -1,5 +1,5 @@
 {{raw "topic-status" topic=topic}}
 <a href={{topic.lastUnreadUrl}} class="title">{{html-safe topic.fancyTitle}}</a>
-{{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
+{{topic-post-badges unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl}}
 
 <a href={{topic.lastPostUrl}} class="last-posted-at">{{format-age topic.last_posted_at}}</a>

@@ -20,53 +20,77 @@ export default Controller.extend(ModalFunctionality, {
   loading: false,
   isPublic: "true",
 
-  @discourseComputed("model.closed")
-  publicTimerTypes(closed) {
-    let types = [
-      {
-        id: CLOSE_STATUS_TYPE,
-        name: I18n.t(
-          closed ? "topic.temp_open.title" : "topic.auto_close.title"
-        ),
-      },
-    ];
+  @discourseComputed(
+    "model.closed",
+    "model.category",
+    "model.isPrivateMessage",
+    "model.invisible"
+  )
+  publicTimerTypes(closed, category, isPrivateMessage, invisible) {
+    let types = [];
 
     if (!closed) {
+      types.push({
+        id: CLOSE_STATUS_TYPE,
+        name: I18n.t("topic.auto_close.title"),
+      });
       types.push({
         id: CLOSE_AFTER_LAST_POST_STATUS_TYPE,
         name: I18n.t("topic.auto_close_after_last_post.title"),
       });
     }
 
-    types.push(
-      {
+    if (closed) {
+      types.push({
         id: OPEN_STATUS_TYPE,
-        name: I18n.t(
-          closed ? "topic.auto_reopen.title" : "topic.temp_close.title"
-        ),
-      },
-      {
+        name: I18n.t("topic.auto_reopen.title"),
+      });
+    }
+
+    if (this.currentUser.staff) {
+      types.push({
+        id: DELETE_STATUS_TYPE,
+        name: I18n.t("topic.auto_delete.title"),
+      });
+    }
+
+    types.push({
+      id: BUMP_TYPE,
+      name: I18n.t("topic.auto_bump.title"),
+    });
+
+    if (this.currentUser.staff) {
+      types.push({
+        id: DELETE_REPLIES_TYPE,
+        name: I18n.t("topic.auto_delete_replies.title"),
+      });
+    }
+
+    if (closed) {
+      types.push({
+        id: CLOSE_STATUS_TYPE,
+        name: I18n.t("topic.temp_open.title"),
+      });
+    }
+
+    if (!closed) {
+      types.push({
+        id: OPEN_STATUS_TYPE,
+        name: I18n.t("topic.temp_close.title"),
+      });
+    }
+
+    if (
+      (category && category.read_restricted) ||
+      isPrivateMessage ||
+      invisible
+    ) {
+      types.push({
         id: PUBLISH_TO_CATEGORY_STATUS_TYPE,
         name: I18n.t("topic.publish_to_category.title"),
-      },
-      {
-        id: BUMP_TYPE,
-        name: I18n.t("topic.auto_bump.title"),
-      }
-    );
-
-    if (this.currentUser.get("staff")) {
-      types.push(
-        {
-          id: DELETE_STATUS_TYPE,
-          name: I18n.t("topic.auto_delete.title"),
-        },
-        {
-          id: DELETE_REPLIES_TYPE,
-          name: I18n.t("topic.auto_delete_replies.title"),
-        }
-      );
+      });
     }
+
     return types;
   },
 

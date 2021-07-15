@@ -388,7 +388,8 @@ Discourse::Application.routes.draw do
 
     get "user-cards" => "users#cards", format: :json
     get "directory-columns" => "directory_columns#index", format: :json
-    put "directory-columns" => "directory_columns#update", format: :json
+    get "edit-directory-columns" => "edit_directory_columns#index", format: :json
+    put "edit-directory-columns" => "edit_directory_columns#update", format: :json
 
     %w{users u}.each_with_index do |root_path, index|
       get "#{root_path}" => "users#index", constraints: { format: 'html' }
@@ -519,7 +520,7 @@ Discourse::Application.routes.draw do
 
     get "letter_avatar_proxy/:version/letter/:letter/:color/:size.png" => "user_avatars#show_proxy_letter", constraints: { format: :png }
 
-    get "svg-sprite/:hostname/svg-:theme_ids-:version.js" => "svg_sprite#show", constraints: { hostname: /[\w\.-]+/, version: /\h{40}/, theme_ids: /([0-9]+(,[0-9]+)*)?/, format: :js }
+    get "svg-sprite/:hostname/svg-:theme_id-:version.js" => "svg_sprite#show", constraints: { hostname: /[\w\.-]+/, version: /\h{40}/, theme_id: /([0-9]+)?/, format: :js }
     get "svg-sprite/search/:keyword" => "svg_sprite#search", format: false, constraints: { keyword: /[-a-z0-9\s\%]+/ }
     get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search", defaults: { format: :json }
     get "svg-sprite/:hostname/icon(/:color)/:name.svg" => "svg_sprite#svg_icon", constraints: { hostname: /[\w\.-]+/, name: /[-a-z0-9\s\%]+/, color: /(\h{3}{1,2})/, format: :svg }
@@ -704,8 +705,8 @@ Discourse::Application.routes.draw do
       get "/none" => "list#category_none_latest"
 
       TopTopic.periods.each do |period|
-        get "/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"
-        get "/l/top/#{period}" => "list#category_top_#{period}", as: "category_top_#{period}"
+        get "/none/l/top/#{period}", to: redirect("/none/l/top?period=#{period}", status: 301)
+        get "/l/top/#{period}", to: redirect("/l/top?period=#{period}", status: 301)
       end
 
       Discourse.filters.each do |filter|
@@ -720,8 +721,9 @@ Discourse::Application.routes.draw do
     get "hashtags" => "hashtags#show"
 
     TopTopic.periods.each do |period|
-      get "top/#{period}.rss" => "list#top_#{period}_feed", format: :rss
-      get "top/#{period}" => "list#top_#{period}"
+      get "top/#{period}.rss", to: redirect("top.rss?period=#{period}", status: 301)
+      get "top/#{period}.json", to: redirect("top.json?period=#{period}", status: 301)
+      get "top/#{period}", to: redirect("top?period=#{period}", status: 301)
     end
 
     Discourse.anonymous_filters.each do |filter|
@@ -762,6 +764,7 @@ Discourse::Application.routes.draw do
       get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", defaults: { format: :json }
       get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", defaults: { format: :json }
       get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", defaults: { format: :json }
+      get "private-messages-warnings/:username" => "list#private_messages_warnings", as: "topics_private_messages_warnings", defaults: { format: :json }
       get "groups/:group_name" => "list#group_topics", as: "group_topics", group_name: RouteFormat.username
 
       scope "/private-messages-group/:username", group_name: RouteFormat.username do
@@ -976,10 +979,6 @@ Discourse::Application.routes.draw do
 
     post "/do-not-disturb" => "do_not_disturb#create"
     delete "/do-not-disturb" => "do_not_disturb#destroy"
-
-    if Rails.env.development?
-      mount DiscourseDev::Engine => "/dev/"
-    end
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end

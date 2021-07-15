@@ -15,7 +15,7 @@ class UserDestroyer
   # Returns a frozen instance of the User if the delete succeeded.
   def destroy(user, opts = {})
     raise Discourse::InvalidParameters.new('user is nil') unless user && user.is_a?(User)
-    raise PostsExistError if !opts[:delete_posts] && user.posts.count != 0
+    raise PostsExistError if !opts[:delete_posts] && user.posts.joins(:topic).count != 0
     @guardian.ensure_can_delete_user!(user)
 
     # default to using a transaction
@@ -108,7 +108,7 @@ class UserDestroyer
 
     # After the user is deleted, remove the reviewable
     if reviewable = ReviewableUser.pending.find_by(target: user)
-      reviewable.perform(@actor, :reject_user_delete)
+      reviewable.perform(@actor, :delete_user)
     end
 
     result

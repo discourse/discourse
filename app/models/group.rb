@@ -98,6 +98,7 @@ class Group < ActiveRecord::Base
     "imap_server",
     "imap_port",
     "imap_ssl",
+    "imap_mailbox_name",
     "email_username",
     "email_password"
   ]
@@ -436,7 +437,7 @@ class Group < ActiveRecord::Base
     end
 
     # don't allow shoddy localization to break this
-    localized_name = User.normalize_username(I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale))
+    localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
     validator = UsernameValidator.new(localized_name)
 
     if validator.valid_format? && !User.username_exists?(localized_name)
@@ -893,9 +894,13 @@ class Group < ActiveRecord::Base
     SystemMessage.create_from_system_user(
       user,
       owner ? :user_added_to_group_as_owner : :user_added_to_group_as_member,
-      group_name: self.full_name.presence || self.name,
+      group_name: name_full_preferred,
       group_path: "/g/#{self.name}"
     )
+  end
+
+  def name_full_preferred
+    self.full_name.presence || self.name
   end
 
   def message_count

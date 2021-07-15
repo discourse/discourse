@@ -985,6 +985,127 @@ describe Email::Receiver do
       end
     end
 
+    context "emailing a group by email_username and following reply flow" do
+      let!(:original_inbound_email_topic) do
+        group.update!(
+          email_username: "team@somesmtpaddress.com",
+          smtp_server: "smtp.test.com",
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_enabled: true
+        )
+        process(:email_to_group_email_username_1)
+        Topic.last
+      end
+      fab!(:user_in_group) do
+        u = Fabricate(:user)
+        Fabricate(:group_user, user: u, group: group)
+        u
+      end
+
+      before do
+        NotificationEmailer.enable
+        SiteSetting.disallow_reply_by_email_after_days = 10000
+        Jobs.run_immediately!
+      end
+
+      def reply_as_group_user
+        group_post = PostCreator.create(
+          user_in_group,
+          raw: "Thanks for your request. Please try to restart.",
+          topic_id: original_inbound_email_topic.id
+        )
+        email_log = EmailLog.last
+        [email_log, group_post]
+      end
+
+      it "the inbound processed email creates an incoming email and topic record correctly, and adds the group to the topic" do
+        incoming = IncomingEmail.find_by(topic: original_inbound_email_topic)
+        user = User.find_by_email("two@foo.com")
+        expect(original_inbound_email_topic.topic_allowed_users.first.user_id).to eq(user.id)
+        expect(original_inbound_email_topic.topic_allowed_groups.first.group_id).to eq(group.id)
+        expect(incoming.to_addresses).to eq("team@somesmtpaddress.com")
+        expect(incoming.from_address).to eq("two@foo.com")
+        expect(incoming.message_id).to eq("u4w8c9r4y984yh98r3h69873@foo.bar.mail")
+      end
+
+      it "creates an EmailLog when someone from the group replies, and does not create an IncomingEmail record for the reply" do
+        email_log, group_post = reply_as_group_user
+        expect(email_log.message_id).to eq("topic/#{original_inbound_email_topic.id}/#{group_post.id}@test.localhost")
+        expect(email_log.to_address).to eq("two@foo.com")
+        expect(email_log.email_type).to eq("user_private_message")
+        expect(email_log.post_id).to eq(group_post.id)
+        expect(IncomingEmail.exists?(post_id: group_post.id)).to eq(false)
+      end
+
+      it "processes a reply from the OP user to the group SMTP username, linking the reply_to_post_number correctly by
+      matching in_reply_to to the email log" do
+        email_log, group_post = reply_as_group_user
+
+        reply_email = email(:email_to_group_email_username_2)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        expect(reply_post.reply_to_user).to eq(user_in_group)
+        expect(reply_post.reply_to_post_number).to eq(group_post.post_number)
+      end
+
+      it "processes the reply from the user as a brand new topic if they have replied from a different address (e.g. auto forward) and allow_unknown_sender_topic_replies is disabled" do
+        email_log, group_post = reply_as_group_user
+
+        reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(1).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        expect(reply_post.topic_id).not_to eq(original_inbound_email_topic.id)
+      end
+
+      it "processes the reply from the user as a reply if they have replied from a different address (e.g. auto forward) and allow_unknown_sender_topic_replies is enabled" do
+        group.update!(allow_unknown_sender_topic_replies: true)
+        email_log, group_post = reply_as_group_user
+
+        reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        expect(reply_post.topic_id).to eq(original_inbound_email_topic.id)
+      end
+
+      it "creates a new topic with a reference back to the original if replying to a too old topic" do
+        SiteSetting.disallow_reply_by_email_after_days = 2
+        email_log, group_post = reply_as_group_user
+
+        group_post.update(created_at: 10.days.ago)
+        group_post.topic.update(created_at: 10.days.ago)
+
+        reply_email = email(:email_to_group_email_username_2)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(1).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        new_topic = Topic.last
+
+        expect(reply_post.topic).to eq(new_topic)
+        expect(reply_post.raw).to include(
+          I18n.t(
+            "emails.incoming.continuing_old_discussion",
+            url: group_post.topic.url, title: group_post.topic.title, count: SiteSetting.disallow_reply_by_email_after_days
+          )
+        )
+      end
+    end
+
     context "when message sent to a group has no key and find_related_post_with_key is enabled" do
       let!(:topic) do
         process(:email_reply_1)

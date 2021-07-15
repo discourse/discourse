@@ -2,8 +2,6 @@ div.poll {
   margin: 1em 0;
   border: 1px solid var(--primary-low);
 
-  @include unselectable;
-
   ul,
   ol {
     margin: 0;
@@ -25,10 +23,6 @@ div.poll {
   }
 
   img {
-    // TODO: remove once disable_image_size_calculations is removed
-    // needed to override internal styles in image-sizing hack
-    max-width: 100% !important;
-    height: auto;
     // Hacky way to stop images without width/height
     // from causing abrupt unintended scrolling
     &:not([width]):not(.emoji),

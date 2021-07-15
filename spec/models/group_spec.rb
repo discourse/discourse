@@ -367,7 +367,7 @@ describe Group do
     expect(real_admins).to be_empty
     expect(real_staff).to eq []
 
-    # we need some ninja work to set min username to 6
+    # we need some work to set min username to 6
 
     User.where('length(username) < 6').each do |u|
       u.username = u.username + "ZZZZZZ"

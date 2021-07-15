@@ -6,6 +6,11 @@
     overflow-x: auto;
   }
 
+  .directory-table-top-scroll {
+    width: 100%;
+    overflow-x: auto;
+  }
+
   .open-edit-columns-btn {
     vertical-align: top;
     padding: 0.45em 0.8em;
@@ -19,6 +24,9 @@
       .period-chooser-header .caret-icon {
         margin: 0;
       }
+    }
+    .directory-group-selector {
+      vertical-align: top;
     }
   }
 

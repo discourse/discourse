@@ -4,10 +4,10 @@
       <div class="group-card-avatar">
         <a href={{groupPath}} {{action "showGroup" group}} class="card-huge-avatar">
           {{avatar-flair
-            flairURL=group.flair_url
+            flairName=group.name
+            flairUrl=group.flair_url
             flairBgColor=group.flair_bg_color
             flairColor=group.flair_color
-            groupName=group.name
           }}
         </a>
       </div>

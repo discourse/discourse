@@ -1,6 +1,6 @@
 import {
   acceptance,
-  queryAll,
+  count,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
@@ -60,8 +60,9 @@ acceptance("Category Banners", function (needs) {
     await click(".modal-footer>.btn-primary");
     assert.ok(!visible(".bootbox.modal"), "it closes the modal");
     assert.ok(visible(".category-read-only-banner"), "it shows a banner");
-    assert.ok(
-      queryAll(".category-read-only-banner .inner").length === 1,
+    assert.equal(
+      count(".category-read-only-banner .inner"),
+      1,
       "it allows staff to embed html in the message"
     );
   });

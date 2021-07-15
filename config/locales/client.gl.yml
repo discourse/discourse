@@ -199,7 +199,6 @@ gl:
     submit: "Enviar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
-    go_ahead: "Avanzar"
     sign_up: "Crear unha conta"
     log_in: "Iniciar sesión"
     age: "Idade"
@@ -228,7 +227,6 @@ gl:
     x_more:
       one: "%{count} Máis"
       other: "%{count} Máis"
-    less: "Menos"
     never: "nunca"
     every_30_minutes: "cada 30 minutos"
     every_hour: "cada hora"
@@ -237,7 +235,6 @@ gl:
     every_month: "cada mes"
     every_six_months: "cada seis meses"
     max_of_count: "máx. de %{count}"
-    alternation: "ou"
     character_count:
       one: "%{count} carácter"
       other: "%{count} caracteres"
@@ -269,7 +266,6 @@ gl:
       help:
         bookmark: "Prema para engadir aos marcadores a publicación inicial deste tema"
         unbookmark: "Prema para retirar todos os marcadores deste tema"
-        unbookmark_with_reminder: "Prema para eliminar todos os marcadores e recordatorios deste tema. Configurou o recordatorio %{reminder_at} para este tema."
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
       not_bookmarked: "marcar esta publicación"
@@ -535,12 +531,14 @@ gl:
       later_today: "Hoxe, máis tarde"
       next_business_day: "O vindeiro día laborábel"
       tomorrow: "Mañá"
-      next_week: "A vindeira semana"
       post_local_date: "Data na publicación"
       later_this_week: "Máis tarde, esta semana"
+      this_weekend: "Esta fin de semana"
       start_of_next_business_week: "Luns"
       start_of_next_business_week_alt: "O vindeiro luns"
+      two_weeks: "Dúas semanas"
       next_month: "O vindeiro mes"
+      six_months: "Seis meses"
       custom: "Personalizar data e hora"
       relative: "Tempo relativo"
       none: "Non se necesita"
@@ -583,6 +581,8 @@ gl:
       edit_columns:
         save: "Gardar"
         reset_to_default: "Restabelecer cos valores predeterminados"
+      group:
+        all: "todos os grupos"
     group_histories:
       actions:
         change_group_setting: "Cambiar axustes do grupo"
@@ -594,13 +594,8 @@ gl:
       member_added: "Engadido"
       member_requested: "Solicitado o"
       add_members:
-        title: "Engadir membros a %{group_name}"
-        description: "Tamén pode pegalos nunha lista separada por comas."
-        usernames_or_emails:
-          title: "Escriba nomes de usuario e enderezos de correo"
-          input_placeholder: "Nomes de usuario ou enderezos de correo"
-        usernames:
-          input_placeholder: "Nomes de usuario"
+        usernames_placeholder: "nomes de usuario"
+        usernames_or_emails_placeholder: "nomes de usuario ou enderezos de correo"
         notify_users: "Notificar os usuarios"
       requests:
         title: "Peticións"
@@ -615,7 +610,7 @@ gl:
         title: "Xestionar"
         name: "Nome"
         full_name: "Nome completo"
-        add_members: "Engadir membros"
+        invite_members: "Convidar"
         delete_member_confirm: "Quere eliminar a «%{username}» do grupo «%{group}»?"
         profile:
           title: Perfil
@@ -626,6 +621,7 @@ gl:
         email:
           title: "Correo electrónico"
           status: "Sincronizados os correos %{old_emails} / %{total_emails} vía IMAP."
+          last_updated_by: "por"
           credentials:
             title: "Acreditacións"
             smtp_server: "Servidor SMTP"
@@ -639,10 +635,10 @@ gl:
           settings:
             title: "Configuración"
             allow_unknown_sender_topic_replies: "Permitir respostas ao tema de remitente descoñecido."
-            allow_unknown_sender_topic_replies_hint: "Permítelles aos remitentes descoñecidos responder a temas do grupo. Se isto non está activado, as respostas desde enderezos de correo electrónico non incluídos no fío de correo electrónico IMAP ou convidados ao tema crearán un novo tema."
           mailboxes:
             synchronized: "Caixa de correo sincronizada"
             none_found: "Non se atoparon caixas de correo nesta conta de correo electrónico."
+            disabled: "Desactivado"
         membership:
           title: Incorporación
           access: Acceso
@@ -1058,11 +1054,9 @@ gl:
         sent: "Enviadas"
         archive: "Arquivo"
         groups: "Os meus grupos"
-        bulk_select: "Seleccionar mensaxes"
         move_to_inbox: "Mover á caixa de entrada"
         move_to_archive: "Arquivo"
         failed_to_move: "Produciuse un fallo ao mover as mensaxes seleccionadas (quizais a rede está caída)"
-        select_all: "Seleccionar todo"
         tags: "Etiquetas"
       preferences_nav:
         account: "Conta"
@@ -1394,9 +1388,13 @@ gl:
         invite:
           new_title: "Crear convite"
           edit_title: "Editar convite"
+          instructions: "Compartir esta ligazón para conceder acceso a este sitio"
           copy_link: "copiar a ligazón"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
+          add_to_groups: "Engadir aos grupos"
+          expires_at: "Caduca tras"
+          custom_message: "Mensaxe persoal opcional"
           send_invite_email: "Gardar e enviar mensaxe de correo"
           save_invite: "Gardar convite"
         bulk_invite:
@@ -1476,6 +1474,8 @@ gl:
         edit: "Editar a imaxe do perfil"
       title:
         title: "Título"
+        none: "(ningún)"
+      flair:
         none: "(ningún)"
       primary_group:
         title: "Grupo primario"
@@ -2001,13 +2001,6 @@ gl:
         reaction: "nova reacción"
         votes_released: "O voto foi liberado"
     upload_selector:
-      title: "Engadir unha imaxe"
-      title_with_attachments: "Engadir imaxe ou ficheiro"
-      from_my_computer: "Desde o meu dispositivo"
-      from_the_web: "Desde a Web"
-      remote_tip: "ligazón á imaxe"
-      local_tip: "seleccione imaxes do seu dispositivo"
-      hint_for_supported_browsers: "tamén pode arrastrar e soltar ou pegar imaxes no editor"
       uploading: "Cargando"
       select_file: "Seleccionar ficheiro"
       default_image_alt_text: imaxe
@@ -2147,14 +2140,13 @@ gl:
         new: "Non ten novos temas."
         read: "Aínda non leu ningún tema."
         posted: "Aínda non publicou en ningún tema."
-        ready_to_create: "Listo para "
         latest: "Están todos vostedes atrapados!"
         bookmarks: "Aínda non marcou este tema."
         category: "Non hai temas en %{category}."
         top: "Non hai temas destacados."
         educate:
           new: '<p>Aquí aparecen os seus temas novos. De xeito predeterminado, os temas considéranse novos e amosarán un indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Vexa as súas <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
-          unread: "<p>Os seus temas pendentes aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse pendentes e amosarase o número dos non lidos. <span class=\"badge new-posts badge-notification\">1</span> se vostede:</p><ul><li>Creou o tema</li><li>Respondeu ao tema</li><li>Leu o tema durante máis de catro minutos</li></ul><p>Ou estabeleceu explicitamente o tema para ser observado ou seguido con \U0001F514 de cada tema.</p><p>Vaia ás súas <a href=\"%{userPrefsUrl}\">preferencias</a> se quere cambiar isto.</p>"
+          unread: "<p>Os seus temas pendentes aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse pendentes e amosarase o número dos non lidos. <span class=\"badge unread-posts badge-notification\">1</span> se vostede:</p><ul><li>Creou o tema</li><li>Respondeu ao tema</li><li>Leu o tema durante máis de catro minutos</li></ul><p>Ou estabeleceu explicitamente o tema para ser observado ou seguido con \U0001F514 de cada tema.</p><p>Vaia ás súas <a href=\"%{userPrefsUrl}\">preferencias</a> se quere cambiar isto.</p>"
       bottom:
         latest: "Non hai máis temas."
         posted: "Non hai máis temas publicados."
@@ -2212,15 +2204,9 @@ gl:
       not_found:
         title: "Non foi posíbel atopar o tema"
         description: "Sentímolo pero non foi posíbel atopar este tema. Sería retirado por un moderador?"
-      total_unread_posts:
+      unread_posts:
         one: "ten %{count} publicación pendente de lectura neste tema"
         other: "ten %{count} publicacións pendentes de lectura neste tema"
-      unread_posts:
-        one: "ten %{count} publicación antiga pendente de lectura neste tema"
-        other: "ten %{count} publicacións antigas pendentes de lectura neste tema"
-      new_posts:
-        one: "hai unha nova publicación neste tema desde a súa última lectura"
-        other: "hai %{count} novas publicacións neste tema desde a súa última lectura"
       likes:
         one: "hai un gústame neste tema"
         other: "hai %{count} gústames neste tema"
@@ -2235,7 +2221,6 @@ gl:
       browse_all_categories: Explorar todas as categorías
       browse_all_tags: Explorar todas as etiquetas
       view_latest_topics: ver os últimos temas
-      suggest_create_topic: comezar unha nova conversa?
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
@@ -2294,8 +2279,6 @@ gl:
         title: "Programar publicación"
       temp_open:
         title: "Abrir temporalmente"
-      auto_reopen:
-        title: "Abrir automaticamente o tema"
       temp_close:
         title: "Pechar temporalmente"
       auto_close:
@@ -2415,14 +2398,10 @@ gl:
         pin: "Fixar o tema"
         unpin: "Desprender o tema"
         pin_globally: "Fixar o tema globalmente"
-        make_banner: "Tema do báner"
         remove_banner: "Retirar o tema do báner"
       reply:
         title: "Responder"
         help: "escribir unha resposta a este tema"
-      clear_pin:
-        title: "Despexar o fixado"
-        help: "Despexa o estado fixado deste tema para que xa non apareza por riba na listaxe de temas"
       share:
         title: "Compartir"
         extended_title: "Compartir unha ligazón"
@@ -3186,7 +3165,6 @@ gl:
         show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
         search: "%{shortcut} Buscar"
         help: "%{shortcut} Abrir a axuda do teclado"
-        dismiss_new_posts: "%{shortcut} Desbotar novos/publicacións"
         dismiss_topics: "%{shortcut} Desbotar temas"
         log_out: "%{shortcut} Saír da sesión"
       composing:
@@ -3273,7 +3251,6 @@ gl:
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Información"
-      default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
       synonyms_description: "Cando se usen as seguintes etiquetas, substituílas por <b>%{base_tag_name}</b>."
@@ -3346,8 +3323,11 @@ gl:
       groups:
         title: "Etiquetar grupos"
         new: "Novo grupo"
+        tags_label: "Etiquetas neste grupo"
+        parent_tag_label: "Etiqueta primaria"
         one_per_topic_label: "Limitar a unha etiqueta por tema neste grupo"
         new_name: "Novo grupo de etiquetas"
+        name_placeholder: "Nome"
         save: "Gardar"
         delete: "Eliminar"
         confirm_delete: "Confirma a eliminación deste grupo de etiquetas?"
@@ -3502,9 +3482,6 @@ gl:
               label: Categoría
             include_subcategories:
               label: "Incluír subcategorías"
-      commits:
-        latest_changes: "Últimos cambios: por favor, actualice con frecuencia!"
-        by: "por"
       groups:
         new:
           title: "Novo grupo"
@@ -3516,8 +3493,6 @@ gl:
             available: "O nome do grupo está dispoñíbel"
             not_available: "O nome do grupo non está dispoñíbel"
             blank: "O nome do grupo non pode quedar baleiro"
-        add_members:
-          as_owner: "Estabelecer usuario(s) como propietario(s) deste grupo"
         manage:
           interaction:
             email: Correo electrónico
@@ -4174,7 +4149,6 @@ gl:
           details: "Detalles"
           previous_value: "Anterior"
           new_value: "Novo"
-          diff: "Diferenzas"
           show: "Amosar"
           modal_title: "Detalles"
           no_previous: "Non hai ningún valor previo."
@@ -4563,6 +4537,8 @@ gl:
         trust_level_unlocked_tip: "o nivel de confianza está desbloqueado, o sistema pode promocionar ou rebaixar un usuario"
         lock_trust_level: "Bloquear o nivel de confianza"
         unlock_trust_level: "Desbloquear o nivel de confianza"
+        silenced_count: "Silenciado"
+        suspended_count: "Suspendido"
         tl3_requirements:
           title: "Requirimentos para o nivel 3 de confianza"
           table_title:

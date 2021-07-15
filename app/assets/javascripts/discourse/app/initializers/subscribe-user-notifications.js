@@ -92,24 +92,17 @@ export default {
               );
             }
 
-            for (let idx = 0; idx < data.recent.length; idx++) {
-              let old;
-              while ((old = oldNotifications[idx])) {
-                const info = data.recent[idx];
-
-                if (old.get("id") !== info[0]) {
-                  oldNotifications.removeAt(idx);
-                } else {
-                  if (old.get("read") !== info[1]) {
-                    old.set("read", info[1]);
-                  }
-                  break;
+            // remove stale notifications and update existing ones
+            const read = Object.fromEntries(data.recent);
+            const newNotifications = oldNotifications
+              .map((notification) => {
+                if (read[notification.id] !== undefined) {
+                  notification.set("read", read[notification.id]);
+                  return notification;
                 }
-              }
-              if (!old) {
-                break;
-              }
-            }
+              })
+              .filter(Boolean);
+            stale.results.set("content", newNotifications);
           }
         },
         user.notification_channel_position

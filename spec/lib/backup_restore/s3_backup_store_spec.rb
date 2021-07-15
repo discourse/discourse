@@ -6,7 +6,7 @@ require 'backup_restore/s3_backup_store'
 require_relative 'shared_examples_for_backup_store'
 
 describe BackupRestore::S3BackupStore do
-  before(:all) do
+  before do
     @s3_client = Aws::S3::Client.new(stub_responses: true)
     @s3_options = { client: @s3_client }
 
@@ -65,9 +65,7 @@ describe BackupRestore::S3BackupStore do
         last_modified: Time.zone.now
       }
     end)
-  end
 
-  before do
     SiteSetting.s3_backup_bucket = "s3-backup-bucket"
     SiteSetting.s3_access_key_id = "s3-access-key-id"
     SiteSetting.s3_secret_access_key = "s3-secret-access-key"
@@ -82,7 +80,7 @@ describe BackupRestore::S3BackupStore do
 
   context "S3 specific behavior" do
     before { create_backups }
-    after(:all) { remove_backups }
+    after { remove_backups }
 
     describe "#delete_old" do
       it "doesn't delete files when cleanup is disabled" do

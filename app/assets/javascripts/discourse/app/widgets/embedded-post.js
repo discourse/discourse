@@ -1,5 +1,4 @@
 import DecoratorHelper from "discourse/widgets/decorator-helper";
-import DiscourseURL from "discourse/lib/url";
 import PostCooked from "discourse/widgets/post-cooked";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
@@ -10,19 +9,15 @@ createWidget("post-link-arrow", {
 
   template: hbs`
     {{#if attrs.above}}
-      <a class="post-info arrow" title={{i18n "topic.jump_reply_up"}}>
+      <a href={{attrs.shareUrl}} class="post-info arrow" title={{i18n "topic.jump_reply_up"}}>
         {{d-icon "arrow-up"}}
       </a>
     {{else}}
-      <a class="post-info arrow" title={{i18n "topic.jump_reply_down"}}>
+      <a href={{attrs.shareUrl}} class="post-info arrow" title={{i18n "topic.jump_reply_down"}}>
         {{d-icon "arrow-down"}}
       </a>
     {{/if}}
   `,
-
-  click() {
-    DiscourseURL.routeTo(this.attrs.shareUrl);
-  },
 });
 
 export default createWidget("embedded-post", {
@@ -39,7 +34,7 @@ export default createWidget("embedded-post", {
               this.attach("poster-name", attrs),
               this.attach("post-link-arrow", {
                 above: state.above,
-                shareUrl: attrs.shareUrl,
+                shareUrl: attrs.customShare,
               }),
             ]),
             new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),

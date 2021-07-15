@@ -19,8 +19,14 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import { userPath } from "discourse/lib/url";
 
 const Post = RestModel.extend({
-  @discourseComputed("url")
+  customShare: null,
+
+  @discourseComputed("url", "customShare")
   shareUrl(url) {
+    if (this.customShare) {
+      return this.customShare;
+    }
+
     const user = User.current();
     return resolveShareUrl(url, user);
   },
@@ -308,6 +314,7 @@ const Post = RestModel.extend({
       bookmark_name: data.name,
       bookmark_id: data.id,
     });
+    this.topic.incrementProperty("bookmarksWereChanged");
     this.appEvents.trigger("page:bookmark-post-toggled", this);
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   },
@@ -315,6 +322,7 @@ const Post = RestModel.extend({
   deleteBookmark(bookmarked) {
     this.set("topic.bookmarked", bookmarked);
     this.clearBookmark();
+    this.topic.incrementProperty("bookmarksWereChanged");
     this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 
@@ -327,6 +335,7 @@ const Post = RestModel.extend({
       bookmarked: false,
       bookmark_auto_delete_preference: null,
     });
+    this.topic.incrementProperty("bookmarksWereChanged");
   },
 
   updateActionsSummary(json) {

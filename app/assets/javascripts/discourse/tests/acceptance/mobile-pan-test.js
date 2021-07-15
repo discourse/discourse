@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  exists,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -42,6 +46,7 @@ async function triggerSwipeStart(touchTarget) {
   });
   return touchStart;
 }
+
 async function triggerSwipeMove({ x, y, touchTarget }) {
   const touch = new Touch({
     identifier: "test",
@@ -54,6 +59,7 @@ async function triggerSwipeMove({ x, y, touchTarget }) {
     targetTouches: [touch],
   });
 }
+
 async function triggerSwipeEnd({ x, y, touchTarget }) {
   const touch = new Touch({
     identifier: "test",
@@ -70,6 +76,7 @@ async function triggerSwipeEnd({ x, y, touchTarget }) {
 acceptance("Mobile - menu swipes", function (needs) {
   needs.mobileView();
   needs.user();
+
   test("swipe to close hamburger", async function (assert) {
     await visit("/");
     await click(".hamburger-dropdown");
@@ -81,7 +88,7 @@ acceptance("Mobile - menu swipes", function (needs) {
     await triggerSwipeEnd(swipe);
 
     assert.ok(
-      queryAll(".panel-body").length === 0,
+      !exists(".panel-body"),
       "it should close hamburger on a left swipe"
     );
   });
@@ -98,8 +105,9 @@ acceptance("Mobile - menu swipes", function (needs) {
     await triggerSwipeMove(swipe);
     await triggerSwipeEnd(swipe);
 
-    assert.ok(
-      queryAll(".panel-body").length === 1,
+    assert.equal(
+      count(".panel-body"),
+      1,
       "it should re-open hamburger on a right swipe"
     );
   });
@@ -115,7 +123,7 @@ acceptance("Mobile - menu swipes", function (needs) {
     await triggerSwipeEnd(swipe);
 
     assert.ok(
-      queryAll(".panel-body").length === 0,
+      !exists(".panel-body"),
       "it should close user menu on a left swipe"
     );
   });

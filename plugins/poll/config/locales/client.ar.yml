@@ -8,73 +8,73 @@ ar:
   js:
     poll:
       voters:
-        zero: "لا أحد صوّت"
-        one: "واحد صوّت"
-        two: "إثنان صوّتا"
-        few: "صوّتوا"
-        many: "صوّتوا"
-        other: "الناخبين"
+        zero: "ناخب"
+        one: "ناخب واحد"
+        two: "ناخبان"
+        few: "ناخبين"
+        many: "ناخبًا"
+        other: "ناخب"
       total_votes:
-        zero: "لم يصوت أحد"
-        one: "صوت واحد"
-        two: "صوتان"
-        few: "مجموعة من الأصوات"
-        many: "العديد من الأصوات"
-        other: "مجموع الأصوات"
-      average_rating: "متوسّط التقييمات: <strong>%{average}</strong>."
+        zero: "صوت إجمالي"
+        one: "صوت واحد إجمالي"
+        two: "صوتان إجماليان"
+        few: "أصوات إجمالية"
+        many: "صوتًا إجماليًا"
+        other: "صوت إجمالي"
+      average_rating: "متوسط التقييمات: <strong>%{average}</strong>."
       public:
-        title: "تظهر الأصوات <strong>للعموم</strong>."
+        title: "تكون الأصوات <strong>مرئية للعامة</strong>."
       results:
         groups:
-          title: "عليك أن تكون عضوًا في %{groups} لتُصوّت على هذا الاستطلاع."
+          title: "عليك أن تكون عضوًا في %{groups} للتصويت على استطلاع الرأي هذا."
         vote:
-          title: "تظهر النتائج بعد <strong>التصويت</strong>."
+          title: "ستظهر النتائج بعد <strong>التصويت</strong>."
         closed:
-          title: "تظهر النتائج ما إن <strong>يُغلق الاستطلاع</strong>."
+          title: "ستظهر النتائج بعد <strong>إغلاق الاستطلاع</strong>."
         staff:
-          title: "تظهر النتائج لأعضاء <strong>طاقم الموقع</strong> فقط."
+          title: "تظهر النتائج لأعضاء <strong>طاقم العمل</strong> فقط."
       cast-votes:
-        title: "أدلِ بصوتك"
-        label: "صوّت اﻵن!"
+        title: "الإدلاء بصوتك"
+        label: "صوِّت اﻵن!"
       show-results:
-        title: "اعرض نتائج الاستطلاع"
-        label: "اعرض النتائج"
+        title: "عرض نتائج استطلاع الرأي"
+        label: "عرض النتائج"
       hide-results:
-        title: "ارجع إلى أصواتك"
+        title: "العودة إلى تصويتاتك"
       group-results:
-        title: "جمّع الأصوات حسب حقل المستخدم"
+        title: "تجميع الأصوات حسب حقل المستخدم"
       export-results:
         label: "تصدير"
       open:
-        title: "افتح الاستطلاع"
-        label: "افتح"
-        confirm: "أمتأكد من فتح هذا الاستطلاع؟"
+        title: "فتح استطلاع الرأي"
+        label: "فتح"
+        confirm: "هل تريد بالتأكيد فتح استطلاع الرأي هذا؟"
       close:
-        title: "أغلِق الاستطلاع"
-        label: "أغلِق"
-        confirm: "أمتأكد من إغلاق هذا الاستطلاع؟"
+        title: "إغلاق الاستطلاع"
+        label: "إغلاق"
+        confirm: "هل تريد بالتأكيد إغلاق استطلاع الرأي هذا؟"
       automatic_close:
-        closes_in: "يُغلق الاستطلاع <strong>%{timeLeft}</strong>."
-        age: "أُغلق الاستطلاع <strong>%{age}</strong>."
+        closes_in: "سيتم الإغلاق بعد <strong>%{timeLeft}</strong>."
+        age: "تم الإغلاق منذ <strong>%{age}</strong>."
       breakdown:
-        title: "نتائج الاستطلاع"
-        count: "العد"
-      error_while_toggling_status: "معذرةً، حدث عُطل أثناء تبديل حالة هذا الاستطلاع."
-      error_while_casting_votes: "عذرا، حدث خطأ عند الإدلاء بأصواتكم."
-      error_while_fetching_voters: "عذرا، حدث خطأ في عرض الناخبين."
-      error_while_exporting_results: "معذرةً، حدث عُطل أثناء تصدير نتائج الاستطلاع"
+        title: "نتائج استطلاع الرأي"
+        count: "العدد"
+      error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."
+      error_while_casting_votes: "عذرًا، حدث خطأ في الإدلاء بأصواتك."
+      error_while_fetching_voters: "عذرًا، حدث خطأ في عرض الناخبين."
+      error_while_exporting_results: "عذرًا، حدث خطأ في أثناء تصدير نتائج استطلاع الرأي هذا."
       ui_builder:
-        title: افتح استطلاعًا
-        insert: أدرِج استطلاعًا
+        title: إنشاء استطلاع رأي
+        insert: إدراج استطلاع رأي
         help:
-          invalid_values: يجب أن تكون القيمة الدّنيا أصغر من القيمة العليا.
-          min_step_value: قيمة الخطوة الدنيا هي 1
+          invalid_values: يجب أن يكون الحد الأدنى للقيمة أصغر من الحد الأقصى للقيمة.
+          min_step_value: الحد الأدنى لقيمة المسافة هو 1
         poll_type:
           label: النوع
-          regular: اختيار من متعدّد
-          multiple: اختيارات من متعدّد
-          number: تقييم عددي
+          regular: اختيار فردي
+          multiple: اختيارات متعددة
+          number: التقييم بالأرقام
         poll_config:
-          step: الخطوة
+          step: المسافة
         poll_public:
-          label: اعرض أسماء المصوّتين
+          label: عرض أسماء المصوِّتين

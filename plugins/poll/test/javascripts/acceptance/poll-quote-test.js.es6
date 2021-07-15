@@ -1,5 +1,7 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Poll quote", function (needs) {
   needs.user();
@@ -33,9 +35,9 @@ acceptance("Poll quote", function (needs) {
         topic_slug: "topic-with-two-polls",
         display_username: null,
         primary_group_name: null,
-        primary_group_flair_url: null,
-        primary_group_flair_bg_color: null,
-        primary_group_flair_color: null,
+        flair_url: null,
+        flair_bg_color: null,
+        flair_color: null,
         version: 1,
         can_edit: true,
         can_delete: false,
@@ -152,9 +154,9 @@ acceptance("Poll quote", function (needs) {
               topic_slug: "topic-with-two-quoted-polls",
               display_username: null,
               primary_group_name: null,
-              primary_group_flair_url: null,
-              primary_group_flair_bg_color: null,
-              primary_group_flair_color: null,
+              flair_url: null,
+              flair_bg_color: null,
+              flair_color: null,
               version: 1,
               can_edit: true,
               can_delete: false,
@@ -228,8 +230,7 @@ acceptance("Poll quote", function (needs) {
             archetype: "regular",
             unseen: false,
             last_read_post_number: 1,
-            unread: 0,
-            new_posts: 0,
+            unread_posts: 0,
             pinned: false,
             unpinned: true,
             visible: true,
@@ -273,8 +274,7 @@ acceptance("Poll quote", function (needs) {
             archetype: "regular",
             unseen: false,
             last_read_post_number: 1,
-            unread: 0,
-            new_posts: 0,
+            unread_posts: 0,
             pinned: false,
             unpinned: null,
             visible: true,
@@ -399,9 +399,9 @@ acceptance("Poll quote", function (needs) {
                 "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
               post_count: 1,
               primary_group_name: null,
-              primary_group_flair_url: null,
-              primary_group_flair_color: null,
-              primary_group_flair_bg_color: null,
+              flair_url: null,
+              flair_color: null,
+              flair_bg_color: null,
             },
           ],
           created_by: {
@@ -427,7 +427,7 @@ acceptance("Poll quote", function (needs) {
   test("renders and extends", async function (assert) {
     await visit("/t/-/topic_with_two_quoted_polls");
     await click(".quote-controls");
-    assert.equal(queryAll(".poll").length, 2, "polls are rendered");
-    assert.equal(queryAll(".poll-buttons").length, 2, "polls are extended");
+    assert.equal(count(".poll"), 2, "polls are rendered");
+    assert.equal(count(".poll-buttons"), 2, "polls are extended");
   });
 });

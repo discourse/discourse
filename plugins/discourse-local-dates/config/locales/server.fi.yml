@@ -6,7 +6,7 @@
 
 fi:
   site_settings:
-    discourse_local_dates_enabled: "Ota käyttöön discourse-local-dates -ominaisuus. Tällöin viesteissä voi olla [date]-elementtejä, jotka tuottavat aikavyöhykkeet huomioivia päiväyksiä."
-    discourse_local_dates_default_formats: "Tyypillisiä päiväys-kellonaika-formaatteja, ks: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
-    discourse_local_dates_default_timezones: "Luettelo oletusaikavyöhykkeistä, täytyy olla käypä <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>aikavyöhyke</a>"
+    discourse_local_dates_enabled: "Ota käyttöön discourse-local-dates-ominaisuus. Tällöin viesteissä voi olla [date]-elementtejä, jotka tuottavat aikavyöhykkeet huomioivia päiväyksiä."
+    discourse_local_dates_default_formats: "Tyypillisiä päivämäärän ja kellonajan mutooja, ks: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_default_timezones: "Luettelo oletusaikavyöhykkeistä, täytyy olla kelvollinen <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>aikavyöhyke</a>"
     discourse_local_dates_email_format: "Missä muodossa päiväykset esitetään sähköposteissa."

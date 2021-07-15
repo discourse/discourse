@@ -1,3 +1,5 @@
+<% content_for :title do %><%= @full_title %><% end %>
+
 <% content_for :head do %>
   <%= raw crawlable_meta_data(title: @title, description: @description_meta) %>
 <% end %>

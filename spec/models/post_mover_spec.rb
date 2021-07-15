@@ -425,7 +425,6 @@ describe PostMover do
               bookmarked: true,
               notification_level: TopicUser.notification_levels[:watching],
               last_read_post_number: 4,
-              highest_seen_post_number: 4,
               last_emailed_post_number: 3
             )
             tu2 = Fabricate(
@@ -435,7 +434,6 @@ describe PostMover do
               bookmarked: true,
               notification_level: TopicUser.notification_levels[:watching],
               last_read_post_number: 4,
-              highest_seen_post_number: 4,
               last_emailed_post_number: 3
             )
 
@@ -470,21 +468,18 @@ describe PostMover do
               create_topic_user(
                 user1,
                 last_read_post_number: 4,
-                highest_seen_post_number: 4,
                 last_emailed_post_number: 3,
                 notification_level: :tracking
               )
               create_topic_user(
                 user2,
                 last_read_post_number: 2,
-                highest_seen_post_number: 2,
                 last_emailed_post_number: 2,
                 notification_level: :tracking
               )
               create_topic_user(
                 user3,
                 last_read_post_number: 1,
-                highest_seen_post_number: 2,
                 last_emailed_post_number: 4,
                 notification_level: :watching
               )
@@ -496,28 +491,24 @@ describe PostMover do
               expect(TopicUser.find_by(topic: topic, user: user))
                 .to have_attributes(
                       last_read_post_number: 4,
-                      highest_seen_post_number: 4,
                       last_emailed_post_number: nil,
                       notification_level: TopicUser.notification_levels[:tracking]
                     )
               expect(TopicUser.find_by(topic: topic, user: user1))
                 .to have_attributes(
                       last_read_post_number: 4,
-                      highest_seen_post_number: 4,
                       last_emailed_post_number: 3,
                       notification_level: TopicUser.notification_levels[:tracking]
                     )
               expect(TopicUser.find_by(topic: topic, user: user2))
                 .to have_attributes(
                       last_read_post_number: 2,
-                      highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
                       notification_level: TopicUser.notification_levels[:tracking]
                     )
               expect(TopicUser.find_by(topic: topic, user: user3))
                 .to have_attributes(
                       last_read_post_number: 1,
-                      highest_seen_post_number: 2,
                       last_emailed_post_number: 4,
                       notification_level: TopicUser.notification_levels[:watching]
                     )
@@ -526,7 +517,6 @@ describe PostMover do
               expect(TopicUser.find_by(topic: new_topic, user: user))
                 .to have_attributes(
                       last_read_post_number: 1,
-                      highest_seen_post_number: 1,
                       last_emailed_post_number: nil,
                       notification_level: TopicUser.notification_levels[:watching],
                       posted: true
@@ -534,7 +524,6 @@ describe PostMover do
               expect(TopicUser.find_by(topic: new_topic, user: user1))
                 .to have_attributes(
                       last_read_post_number: 2,
-                      highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
                       notification_level: TopicUser.notification_levels[:tracking],
                       posted: false
@@ -542,7 +531,6 @@ describe PostMover do
               expect(TopicUser.find_by(topic: new_topic, user: user2))
                 .to have_attributes(
                       last_read_post_number: 2,
-                      highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
                       notification_level: TopicUser.notification_levels[:tracking],
                       posted: true
@@ -550,7 +538,6 @@ describe PostMover do
               expect(TopicUser.find_by(topic: new_topic, user: user3))
                 .to have_attributes(
                       last_read_post_number: 1,
-                      highest_seen_post_number: 2,
                       last_emailed_post_number: 2,
                       notification_level: TopicUser.notification_levels[:watching],
                       posted: false
@@ -626,7 +613,17 @@ describe PostMover do
 
           it "doesn't close the topic when not all posts were moved" do
             topic.expects(:add_moderator_post).once
-            posts_to_move = [p1.id, p2.id, p3.id]
+            posts_to_move = [p2.id, p3.id]
+            moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+            expect(moved_to).to be_present
+
+            topic.reload
+            expect(topic).to_not be_closed
+          end
+
+          it "doesn't close the topic when all posts except the first one were moved" do
+            topic.expects(:add_moderator_post).once
+            posts_to_move = [p2.id, p3.id, p4.id]
             moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
@@ -772,6 +769,19 @@ describe PostMover do
             end
           end
 
+          it "updates topic_user.liked values for both source and destination topics" do
+            expect(TopicUser.find_by(topic: topic, user: user).liked).to eq(false)
+
+            like = Fabricate(:post_action, post: p3, user: user, post_action_type_id: PostActionType.types[:like])
+            expect(TopicUser.find_by(topic: topic, user: user).liked).to eq(true)
+
+            expect(TopicUser.find_by(topic: destination_topic, user: user)).to eq(nil)
+            topic.move_posts(user, [p3.id], destination_topic_id: destination_topic.id)
+
+            expect(TopicUser.find_by(topic: topic, user: user).liked).to eq(false)
+            expect(TopicUser.find_by(topic: destination_topic, user: user).liked).to eq(true)
+          end
+
           context "read state and other stats per user" do
             def create_topic_user(user, topic, opts = {})
               notification_level = opts.delete(:notification_level) || :regular
@@ -800,52 +810,44 @@ describe PostMover do
               create_topic_user(
                 user1, topic,
                 last_read_post_number: 3,
-                highest_seen_post_number: 3,
                 last_emailed_post_number: 3
               )
               create_topic_user(
                 user1, destination_topic,
                 last_read_post_number: 1,
-                highest_seen_post_number: 2,
                 last_emailed_post_number: 1
               )
 
               create_topic_user(
                 user2, topic,
                 last_read_post_number: 3,
-                highest_seen_post_number: 3,
                 last_emailed_post_number: 3
               )
               create_topic_user(
                 user2, destination_topic,
                 last_read_post_number: 2,
-                highest_seen_post_number: 1,
                 last_emailed_post_number: 2
               )
 
               create_topic_user(
                 admin1, topic,
                 last_read_post_number: 3,
-                highest_seen_post_number: 3,
                 last_emailed_post_number: 3
               )
               create_topic_user(
                 admin1, destination_topic,
                 last_read_post_number: 2,
-                highest_seen_post_number: 3,
                 last_emailed_post_number: 1
               )
 
               create_topic_user(
                 admin2, topic,
                 last_read_post_number: 3,
-                highest_seen_post_number: 3,
                 last_emailed_post_number: 3
               )
               create_topic_user(
                 admin2, destination_topic,
                 last_read_post_number: 3,
-                highest_seen_post_number: 2,
                 last_emailed_post_number: 3
               )
 
@@ -854,28 +856,24 @@ describe PostMover do
               expect(TopicUser.find_by(topic: moved_to_topic, user: user1))
                 .to have_attributes(
                       last_read_post_number: 1,
-                      highest_seen_post_number: 5,
                       last_emailed_post_number: 1
                     )
 
               expect(TopicUser.find_by(topic: moved_to_topic, user: user2))
                 .to have_attributes(
                       last_read_post_number: 5,
-                      highest_seen_post_number: 1,
                       last_emailed_post_number: 5
                     )
 
               expect(TopicUser.find_by(topic: moved_to_topic, user: admin1))
                 .to have_attributes(
                       last_read_post_number: 2,
-                      highest_seen_post_number: 5,
                       last_emailed_post_number: 1
                     )
 
               expect(TopicUser.find_by(topic: moved_to_topic, user: admin2))
                 .to have_attributes(
                       last_read_post_number: 5,
-                      highest_seen_post_number: 2,
                       last_emailed_post_number: 5
                     )
             end
@@ -885,14 +883,14 @@ describe PostMover do
 
               original_topic_user1 = create_topic_user(
                 user1, topic,
-                highest_seen_post_number: 5,
+                last_read_post_number: 5,
                 first_visited_at: 5.hours.ago,
                 last_visited_at: 30.minutes.ago,
                 notification_level: :tracking
               ).reload
               destination_topic_user1 = create_topic_user(
                 user1, destination_topic,
-                highest_seen_post_number: 5,
+                last_read_post_number: 5,
                 first_visited_at: 7.hours.ago,
                 last_visited_at: 2.hours.ago,
                 notification_level: :watching
@@ -900,14 +898,14 @@ describe PostMover do
 
               original_topic_user2 = create_topic_user(
                 user2, topic,
-                highest_seen_post_number: 5,
+                last_read_post_number: 5,
                 first_visited_at: 3.hours.ago,
                 last_visited_at: 1.hour.ago,
                 notification_level: :watching
               ).reload
               destination_topic_user2 = create_topic_user(
                 user2, destination_topic,
-                highest_seen_post_number: 5,
+                last_read_post_number: 5,
                 first_visited_at: 2.hours.ago,
                 last_visited_at: 1.hour.ago,
                 notification_level: :tracking

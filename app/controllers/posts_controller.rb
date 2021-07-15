@@ -61,7 +61,7 @@ class PostsController < ApplicationController
         .where('posts.id <= ?', last_post_id)
         .where('posts.id > ?', last_post_id - 50)
         .includes(topic: :category)
-        .includes(user: :primary_group)
+        .includes(user: [:primary_group, :flair_group])
         .includes(:reply_to_user)
         .limit(50)
       rss_description = I18n.t("rss_description.private_posts")
@@ -71,7 +71,7 @@ class PostsController < ApplicationController
         .where('posts.id <= ?', last_post_id)
         .where('posts.id > ?', last_post_id - 50)
         .includes(topic: :category)
-        .includes(user: :primary_group)
+        .includes(user: [:primary_group, :flair_group])
         .includes(:reply_to_user)
         .limit(50)
       rss_description = I18n.t("rss_description.posts")
@@ -247,7 +247,7 @@ class PostsController < ApplicationController
     return render_json_error(post) if post.errors.present?
     return render_json_error(topic) if topic.errors.present?
 
-    post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+    post_serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
     post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
     link_counts = TopicLink.counts_for(guardian, topic, [post])
     post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?

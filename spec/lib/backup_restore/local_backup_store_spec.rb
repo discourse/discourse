@@ -5,17 +5,14 @@ require 'backup_restore/local_backup_store'
 require_relative 'shared_examples_for_backup_store'
 
 describe BackupRestore::LocalBackupStore do
-  before(:all) do
+  before do
     @root_directory = Dir.mktmpdir
     @paths = []
-  end
-
-  after(:all) do
-    FileUtils.remove_dir(@root_directory, true)
-  end
-
-  before do
     SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
+  end
+
+  after do
+    FileUtils.remove_dir(@root_directory, true)
   end
 
   subject(:store) { BackupRestore::BackupStore.create(root_directory: @root_directory) }

@@ -477,10 +477,14 @@
   }
   .modal-body {
     overflow-y: visible;
-    #post-jump,
-    .date-picker {
+    #post-jump {
       margin: 0;
       width: 100px;
+    }
+
+    .date-picker {
+      margin: 0;
+      width: 180px;
     }
 
     .input-hint-text {
@@ -491,8 +495,13 @@
       color: var(--primary-medium);
     }
 
-    .jump-to-date-control .input-hint-text {
-      margin-left: 0;
+    .jump-to-date-control {
+      display: flex;
+      align-items: center;
+      .input-hint-text {
+        margin-left: 0;
+        margin-right: 0.5em;
+      }
     }
 
     .separator {
@@ -847,8 +856,7 @@
     .group-chooser,
     .user-chooser,
     .future-date-input-selector {
-      margin-left: 25px;
-      width: calc(100% - 25px);
+      width: 100%;
     }
 
     &.invite-to-topic input[type="radio"] {
@@ -947,30 +955,59 @@
   }
 }
 
+.create-invite-modal {
+  .input-group {
+    textarea#invite-message,
+    &.invite-to-topic input[type="text"],
+    .group-chooser,
+    .user-chooser,
+    .future-date-input-selector {
+      margin-left: 25px;
+      width: calc(100% - 25px);
+    }
+  }
+}
+
 .share-topic-modal {
+  form {
+    margin-bottom: 0;
+  }
   .sources {
-    align-items: center;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
-    margin-bottom: 1em;
-
-    .social-link {
-      font-size: $font-up-6;
-      margin-right: 8px;
+    align-items: stretch;
+    button {
+      margin-right: 0.5em;
+      margin-bottom: 0.5em;
     }
+  }
 
-    .btn-primary {
-      border-radius: 4px;
-      height: calc(#{$font-up-6} - 4px);
-      margin-bottom: 2px;
-      margin-right: 8px;
-      padding-left: 8px;
-      padding-right: 8px;
-
-      .d-icon {
-        font-size: $font-up-3;
-      }
+  .share-twitter {
+    .d-icon {
+      color: var(--twitter);
     }
+  }
+  .share-facebook {
+    .d-icon {
+      color: var(--facebook);
+    }
+  }
+
+  .invite-users {
+    margin: 1em 0;
+  }
+}
+
+.group-add-members-modal {
+  .input-group {
+    margin-bottom: 0.5em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .user-chooser {
+    width: calc(100%);
   }
 }

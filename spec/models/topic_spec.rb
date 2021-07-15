@@ -1380,6 +1380,24 @@ describe Topic do
 
     end
 
+    context "bannered_until date" do
+
+      it 'sets bannered_until to be caught by ensure_consistency' do
+        bannered_until = 5.days.from_now
+        topic.make_banner!(user, bannered_until.to_s)
+
+        freeze_time 6.days.from_now do
+          expect(topic.archetype).to eq(Archetype.banner)
+
+          Topic.ensure_consistency!
+          topic.reload
+
+          expect(topic.archetype).to eq(Archetype.default)
+        end
+      end
+
+    end
+
   end
 
   context 'last_poster info' do
@@ -1597,7 +1615,12 @@ describe Topic do
           end
 
           it 'should generate the modified notification for the topic if already seen' do
-            TopicUser.create!(topic_id: topic.id, highest_seen_post_number: topic.posts.first.post_number, user_id: user.id)
+            TopicUser.create!(
+              topic_id: topic.id,
+              last_read_post_number: topic.posts.first.post_number,
+              user_id: user.id
+            )
+
             expect do
               topic.change_category_to_id(new_category.id)
             end.to change { Notification.count }.by(2)

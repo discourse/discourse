@@ -74,6 +74,23 @@ describe Onebox::Engine::TwitterStatusOnebox do
     let(:retweets_count) { "201" }
   end
 
+  shared_context "featured image info" do
+    before do
+      @link = "https://twitter.com/codinghorror/status/1409351083177046020"
+      @onebox_fixture = "twitterstatus_featured_image"
+
+      stub_request(:get, @link.downcase).to_return(status: 200, body: onebox_response(@onebox_fixture))
+    end
+
+    let(:full_name) { "Jeff Atwood" }
+    let(:screen_name) { "codinghorror" }
+    let(:avatar) { "" }
+    let(:timestamp) { "3:02 PM - 27 Jun 2021" }
+    let(:link) { @link }
+    let(:favorite_count) { "90" }
+    let(:retweets_count) { "0" }
+  end
+
   shared_examples "includes quoted tweet data" do
     it 'includes quoted tweet' do
       expect(html).to include("If you bought a ticket for tonight’s @Metallica show at Stade de France, you have helped")
@@ -114,6 +131,18 @@ describe Onebox::Engine::TwitterStatusOnebox do
       it_behaves_like "an engine"
       it_behaves_like '#to_html'
       it_behaves_like "includes quoted tweet data"
+    end
+
+    context "with a featured image tweet" do
+      let(:tweet_content) do
+        "My first text message from my child! A moment that shall live on in infamy!"
+      end
+
+      include_context "featured image info"
+      include_context "engines"
+
+      it_behaves_like "an engine"
+      it_behaves_like '#to_html'
     end
   end
 

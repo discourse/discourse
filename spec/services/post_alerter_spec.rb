@@ -1259,7 +1259,13 @@ describe PostAlerter do
     fab!(:category) { Fabricate(:category) }
 
     it 'creates single edit notification when post is modified' do
-      TopicUser.create!(user_id: user.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:watching], highest_seen_post_number: post.post_number)
+      TopicUser.create!(
+        user_id: user.id,
+        topic_id: topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+        last_read_post_number: post.post_number
+      )
+
       PostRevisor.new(post).revise!(last_editor, tags: [tag.name])
       PostAlerter.new.notify_post_users(post, [])
       expect(Notification.count).to eq(1)
@@ -1280,7 +1286,7 @@ describe PostAlerter do
         category: category.id
       )
 
-      TopicUser.change(user, post.topic_id, highest_seen_post_number: post.post_number)
+      TopicUser.change(user, post.topic_id, last_read_post_number: post.post_number)
 
       # Manually run job after the user read the topic to simulate a slow
       # Sidekiq.
@@ -1295,7 +1301,7 @@ describe PostAlerter do
   context "SMTP (group_smtp_email)" do
     before do
       SiteSetting.enable_smtp = true
-      SiteSetting.enable_imap = true
+      SiteSetting.email_in = true
       Jobs.run_immediately!
     end
 
@@ -1315,99 +1321,275 @@ describe PostAlerter do
       )
     end
 
-    fab!(:topic) do
-      Fabricate(
-        :private_message_topic,
-        topic_allowed_groups: [
-          Fabricate.build(:topic_allowed_group, group: group)
-        ]
-      )
-    end
-
     def create_post_with_incoming
-      Fabricate(
-        :post,
-        topic: topic,
-        incoming_email:
-        Fabricate(
-          :incoming_email,
-          topic: topic,
-          from_address: "foo@discourse.org",
-          to_addresses: group.email_username,
-          cc_addresses: "bar@discourse.org"
-        )
-      )
+      raw_mail = <<~MAIL
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Cc: bar@discourse.org, jim@othersite.com
+      Subject: Full email group username flow
+      Date: Fri, 15 Jan 2021 00:12:43 +0100
+      Message-ID: <u4w8c9r4y984yh98r3h69873@example.com.mail>
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      This is the first email.
+      MAIL
+
+      Email::Receiver.new(raw_mail, {}).process!
     end
 
-    it "does not send a group smtp email when the post already has an incoming email" do
-      post = create_post_with_incoming
-
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
-    end
-
-    it "sends a group smtp email when the post does not have an incoming email" do
-      create_post_with_incoming
+    it "sends a group smtp email because SMTP is enabled for the site and the group" do
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
       email = ActionMailer::Base.deliveries.last
       expect(email.from).to include(group.email_username)
-      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
+      expect(email.to).to contain_exactly(topic.reload.topic_allowed_users.order(:created_at).first.user.email)
+      expect(email.cc).to match_array(["bar@discourse.org", "jim@othersite.com"])
       expect(email.subject).to eq("Re: #{topic.title}")
     end
 
-    it "does not send a group smtp email if imap is not enabled for the group" do
-      group.update!(imap_enabled: false)
-      create_post_with_incoming
-      post = Fabricate(:post, topic: topic)
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
-    end
-
-    it "does not send a group smtp email if SiteSetting.enable_imap is false" do
-      SiteSetting.enable_imap = false
-      create_post_with_incoming
+    it "does not send a group smtp email if smtp is not enabled for the group" do
+      group.update!(smtp_enabled: false)
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
     it "does not send a group smtp email if SiteSetting.enable_smtp is false" do
       SiteSetting.enable_smtp = false
-      create_post_with_incoming
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
     it "does not send group smtp emails for a whisper" do
-      create_post_with_incoming
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
-    it "does not send a notification email to the group when the post does not have an incoming email" do
-      PostAlerter.any_instance.expects(:create_notification).with(kind_of(User), Notification.types[:private_message], kind_of(Post), skip_send_email_to: ["discourse@example.com"]).at_least_once
-      post = create_post_with_incoming
-      staged_group_user = Fabricate(:staged, email: "discourse@example.com")
-      Fabricate(:topic_user, user: staged_group_user, topic: post.topic)
-      topic.allowed_users << staged_group_user
-      topic.save
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    it "sends the group smtp email job with a delay of personal_email_time_window_seconds" do
+      freeze_time
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic)
+      PostAlerter.new.after_save_post(post, true)
+      job_enqueued?(
+        job: :group_smtp_email,
+        args: {
+          group_id: group.id,
+          post_id: post.id,
+          email: topic.reload.topic_allowed_users.order(:created_at).first.user.email,
+          cc_emails: ["bar@discourse.org", "jim@othersite.com"]
+        },
+        at: Time.zone.now + SiteSetting.personal_email_time_window_seconds.seconds
+      )
     end
 
-    it "skips sending a notification email to the group and all other incoming email addresses" do
+    it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,
+    sends a group_smtp_email instead" do
+      NotificationEmailer.enable
 
-      create_post_with_incoming
-      PostAlerter.any_instance.expects(:create_notification).with(kind_of(User), Notification.types[:private_message], kind_of(Post), skip_send_email_to: ["foo@discourse.org", "bar@discourse.org", "discourse@example.com"]).at_least_once
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+
+      group_user1 = Fabricate(:group_user, group: group)
+      group_user2 = Fabricate(:group_user, group: group)
+      TopicUser.create(user: group_user1.user, notification_level: TopicUser.notification_levels[:watching], topic: topic)
+      post = Fabricate(:post, topic: topic.reload)
+
+      # Sends an email for:
+      #
+      # 1. the group user that is watching the post (but does not send this email with group SMTO)
+      # 2. the group smtp email to notify all topic_users not in the group
+      expect { PostAlerter.new.after_save_post(post, true) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(2).and change { Notification.count }.by(2)
+
+      # The group smtp email
+      email = ActionMailer::Base.deliveries.first
+      expect(email.from).to eq([group.email_username])
+      expect(email.to).to contain_exactly("foo@discourse.org")
+      expect(email.cc).to match_array(["bar@discourse.org", "jim@othersite.com"])
+      expect(email.subject).to eq("Re: #{topic.title}")
+
+      # The watching group user notification email
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to eq([SiteSetting.notification_email])
+      expect(email.to).to contain_exactly(group_user1.user.email)
+      expect(email.cc).to eq(nil)
+      expect(email.subject).to eq("[Discourse] [PM] #{topic.title}")
+    end
+
+    it "skips sending a notification email to the cc address that was added on the same post with an incoming email" do
+      NotificationEmailer.enable
+
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
 
       post = Fabricate(:post, topic: topic.reload)
-      staged_group_user = Fabricate(:staged, email: "discourse@example.com")
-      Fabricate(:topic_user, user: staged_group_user, topic: post.topic)
-      topic.allowed_users << staged_group_user
-      topic.save
-
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change { Notification.count }.by(1)
       email = ActionMailer::Base.deliveries.last
+
+      # the reply post from someone who was emailed
+      reply_raw_mail = <<~MAIL
+      From: Bar <bar@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <sdugj3o4iyu4832x3487@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      Hey here is my reply!
+      MAIL
+
+      reply_post_from_email = nil
+      expect {
+        reply_post_from_email = Email::Receiver.new(reply_raw_mail, {}).process!
+      }.to change {
+        User.count # the two new cc addresses have users created
+      }.by(2).and change {
+        TopicAllowedUser.where(topic: topic).count # and they are added as topic allowed users
+      }.by(2).and change {
+        # but they are not sent emails because they were cc'd on an email, only jim@othersite.com
+        # is emailed because he is a topic allowed user cc'd on the _original_ email and he is not
+        # the one creating the post, and foo@discourse.org, who is the OP of the topic
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change {
+        Notification.count # and they are still sent their normal discourse notification
+      }.by(2)
+
+      email = ActionMailer::Base.deliveries.last
+
+      expect(email.to).to eq(["foo@discourse.org"])
+      expect(email.cc).to eq(["jim@othersite.com"])
       expect(email.from).to eq([group.email_username])
-      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
       expect(email.subject).to eq("Re: #{topic.title}")
+    end
+
+    it "handles the OP of the topic replying by email and sends a group email to the other topic allowed users successfully" do
+      NotificationEmailer.enable
+
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic.reload)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change { Notification.count }.by(1)
+      email = ActionMailer::Base.deliveries.last
+
+      # the reply post from someone who was emailed
+      reply_raw_mail = <<~MAIL
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <sgk094238uc0348c334483@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      I am ~~Commander Shepherd~~ the OP and I approve of this message.
+      MAIL
+
+      reply_post_from_email = nil
+      expect {
+        reply_post_from_email = Email::Receiver.new(reply_raw_mail, {}).process!
+      }.to change {
+        User.count # the two new cc addresses have users created
+      }.by(2).and change {
+        TopicAllowedUser.where(topic: topic).count # and they are added as topic allowed users
+      }.by(2).and change {
+        # but they are not sent emails because they were cc'd on an email, only jim@othersite.com
+        # is emailed because he is a topic allowed user cc'd on the _original_ email and he is not
+        # the one creating the post
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change {
+        Notification.count # and they are still sent their normal discourse notification
+      }.by(2)
+
+      email = ActionMailer::Base.deliveries.last
+
+      expect(email.to).to eq(["bar@discourse.org"])
+      expect(email.cc).to eq(["jim@othersite.com"])
+      expect(email.from).to eq([group.email_username])
+      expect(email.subject).to eq("Re: #{topic.title}")
+    end
+
+    it "handles the OP of the topic replying by email and cc'ing new people, and does not send a group SMTP email to those newly cc'd users" do
+      NotificationEmailer.enable
+
+      # this is a special case where we are not CC'ing on the original email,
+      # only on the follow up email
+      raw_mail = <<~MAIL
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Subject: Full email group username flow
+      Date: Fri, 14 Jan 2021 00:12:43 +0100
+      Message-ID: <f4832ujfc3498u398i3@example.com.mail>
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      This is the first email.
+      MAIL
+
+      incoming_email_post = Email::Receiver.new(raw_mail, {}).process!
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic.reload)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change {
+        ActionMailer::Base.deliveries.size
+      }.by(1).and change { Notification.count }.by(1)
+      email = ActionMailer::Base.deliveries.last
+
+      # the reply post from the OP, cc'ing new people in
+      reply_raw_mail = <<~MAIL
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <3849cu9843yncr9834yr9348x934@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      I am inviting my mates to this email party.
+      MAIL
+
+      reply_post_from_email = nil
+      expect {
+        reply_post_from_email = Email::Receiver.new(reply_raw_mail, {}).process!
+      }.to change {
+        User.count # the two new cc addresses have users created
+      }.by(2).and change {
+        TopicAllowedUser.where(topic: topic).count # and they are added as topic allowed users
+      }.by(2).and change {
+        # but they are not sent emails because they were cc'd on an email.
+        # no group smtp message is sent because the OP is not sent an email,
+        # they made this post.
+        ActionMailer::Base.deliveries.size
+      }.by(0).and change {
+        Notification.count # and they are still sent their normal discourse notification
+      }.by(2)
+
+      last_email = ActionMailer::Base.deliveries.last
+      expect(email).to eq(last_email)
     end
   end
 end

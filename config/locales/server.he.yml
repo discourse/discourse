@@ -102,7 +102,11 @@ he:
       maximum_staged_user_per_email_reached: "הגעת למספר המרבי של משתמשים מבוימים לדוא״ל."
       no_subject: "(אין נושא)"
       no_body: "(אין גוף)"
-      missing_attachment: "(הקובץ המצורף %{filename} חסר)"
+      continuing_old_discussion:
+        one: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיום (%{count})."
+        two: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיומיים (%{count})."
+        many: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מ־%{count} ימים."
+        other: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מ־%{count} ימים."
       errors:
         empty_email_error: "מתרחש כאשר הודעת הדוא״ל הגולמית שקיבלנו הייתה ריקה."
         no_message_id_error: "מתרחש כאשר להודעת הדוא״ל אין כותרת בשם ‚Message-Id’."
@@ -162,7 +166,9 @@ he:
       ip_address_already_screened: "כבר כלול בכלל קיים"
       restrict_dependent_destroy:
         one: "לא ניתן להסיר כיוון שיש רשומה תלויה %{record}"
+        two: "לא ניתן להסיר רשומה כיוון שיש רשומה תלויה %{record}"
         many: "לא ניתן להסיר רשומה כיוון שיש רשומה תלויה %{record}"
+        other: "לא ניתן להסיר רשומה כיוון שיש רשומה תלויה %{record}"
       too_long:
         one: ארוך מדי (תו אחד לכל היותר)
         two: ארוך מדי (%{count} תווים לכל היותר)
@@ -248,6 +254,7 @@ he:
     disabled_errors:
       discourse_connect_enabled: "הזמנות מושבתות כיוון ש־DiscourseConnect מופעל."
       invalid_access: "אין לך הרשאות לצפות במשאב המבוקש."
+    requires_groups: "ההזמנה נשמרה. כדי להעניק גישה לנושא שצוין, יש להוסיף את אחת מהקבוצות הבאות: %{groups}."
   bulk_invite:
     file_should_be_csv: "הקובץ שנשלח אמור להיות בתסדיר csv."
     max_rows: "%{max_bulk_invites} ההזמנות הראשונות נשלחו. כדאי לנסות לפצל את הקובץ לחלקים קטנים יותר."
@@ -269,9 +276,6 @@ he:
     not_enough_space_on_disk: "אין מספיק מקום על הכונן כדי לשלוח את הגיבוי הזה."
     invalid_filename: "שם קובץ הגיבוי מכיל תווים שגויים. תווים תקינים הם a-z 0-9 . - _."
     file_exists: "הקובץ המיועד להעלאה כבר קיים."
-    location:
-      local: "מקומי"
-      s3: "Amazon S3"
   invalid_params: "סיפקת משתנים שגויים לבקשה: %{message}"
   not_logged_in: "עליך להיכנס למערכת כדי לבצע פעולה זו."
   not_found: "המשאב או הכתובת שביקשת לא נמצאים."
@@ -286,7 +290,7 @@ he:
   invalid_whisper_access: "או שלחישות אינן פעילות או שאין לך גישה ליצור פוסטים של לחישות"
   not_in_group:
     title_topic: "עליך לבקש חברות בקבוצה ‚%{group}’ כדי לצפות בנושא הזה."
-    title_category: "עליך להיות בקבוצה כדי לצפות בקטגוריה זו."
+    title_category: "עליך לבקש חברות בקבוצה ‚%{group}’ כדי לצפות בקטגוריה זו."
     request_membership: "בקשת חברות"
     join_group: "הצטרפות לקבוצה"
   deleted_topic: "אופס! נושא זה נמחק ואינו זמין עוד."
@@ -992,6 +996,7 @@ he:
     imap_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור IMAP, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
     imap_no_response_error: "אירעה שגיאה ביצירת קשר עם שרת ה־IMAP. ‏%{message}"
     smtp_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור SMTP, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
+    authentication_error_gmail_app_password: 'נדרשת ססמה ייעודית ליישום. ניתן למצוא מידע נוסף ב<a target="_blank" href="https://support.google.com/accounts/answer/185833?hl=iw">כתבת העזרה הבאה מבית Google</a>'
     smtp_server_busy_error: "שרת ה־SMTP עסוק, נא לנסות שוב בהמשך."
     smtp_unhandled_error: "קרתה תקלה שלא טופלה בעת יצירת הקשר עם שרת ה־SMTP. ‏%{message}"
     imap_unhandled_error: "קרתה תקלה שלא טופלה בעת יצירת הקשר עם שרת ה־IMAP. ‏%{message}"
@@ -1453,7 +1458,6 @@ he:
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
-    watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
   site_settings:
     display_local_time_in_user_card: "להציג את הזמן המקומי בהתאם לאזור הזמן של המשתמש כאשר כרטיס המשתמש שלו נפתח."
     censored_words: "מלים שיוחלפו אוטומטית ב־&#9632;&#9632;&#9632;&#9632;"
@@ -1485,13 +1489,11 @@ he:
     category_search_priority_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה בקטגוריות."
     allow_uncategorized_topics: "לאפשר לפתוח נושאים ללא קטגוריה. אזהרה: אם יש נושאים ללא קטגוריה, יש לסדר אותם לפני שמבטלים את ההגדרה הזאת. "
     allow_duplicate_topic_titles: "לאפשר נושאים עם כותרות זהות או כפולות."
-    allow_duplicate_topic_titles_category: "לאפשר נושאים עם כותרות זהות, כפולות אם הם לא באותה הקטגוריה. ההגדרה allow_duplicate_topic_titles (לאפשר כותרות נושאים כפולות) חייבת להיות שקר."
     unique_posts_mins: "כמה דקות לפני שמשתמש יכול לפרסם את אותו תוכן שוב"
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) הפוסטים הראשונים שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור הפוסטים."
     title: "שם האתר הזה, כפי שהוא משמש בתגית הכותרת."
     site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
     short_site_description: "תיאור קצר, כפי שמתואר בתגית הכותרת באתר הבית."
-    contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, כמו גם לטובת טופס יצירת הקשר ב־<a href='%{base_path}/about' target='_blank'>‎/about</a> לטיפול בנושאים דחופים."
     contact_url: "כתובת יצירת הקשר של האתר הזה. מופיעה בעמוד <a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
@@ -1584,7 +1586,7 @@ he:
     invite_code: "על המשתמש להקליד את הקוד הזה כדי שיתאפשר לו להירשם לחשבון, כשריק אין לזה משמעות (אין משמעות לאותיות גדולות/קטנות)"
     approve_suspect_users: "הוספת משתמשים חשודים לתור הסקירה. משתמשים חשודים מילאו ביוגרפיה/אתר אבל לא קראו שום דבר."
     review_every_post: "כל הפוסטים חייבים בסקירה. אזהרה! לא מומלץ לאתרים עמוסים."
-    pending_users_reminder_delay: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של שעות. יש להגדיר ל־‎-1 כדי לנטרל את ההתראות."
+    pending_users_reminder_delay_minutes: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של דקות. יש להגדיר ל־‎-1 כדי להשבית את ההתראות."
     persistent_sessions: "המשתמשים יישארו במערכת כאשר הדפדפן סגור"
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
     ga_version: "גרסה של Google Universal Analytics לשימוש: v3‏ (analytics.js),‏ v4‏ (gtag)"
@@ -1634,6 +1636,7 @@ he:
     send_old_credential_reminder_days: "להזכיר על פרטי גישה ישנים לאחר ימים"
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
     enable_badges: "הפעלת מערכת העיטורים"
+    max_favorite_badges: "מספר העיטורים המרבי שמשתמש יכול לבחור"
     enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
     allow_index_in_robots_txt: "יש לציין ב־robots.txt שמותר לאתר הזה להצטרף למאגר של מנועי החיפוש. במקרים יוצאי דופן, ניתן <a href='%{base_path}/admin/customize/robots'>לדרוס את robots.txt</a> באופן קבוע."
     blocked_email_domains: "רשימה מופרדת בקווים אנכיים (|) של שמות תחום דוא״ל שאסור להירשם דרכם. למשל: mailinator.com|trashmail.net"
@@ -1698,7 +1701,6 @@ he:
     discord_secret: "מפתח סודי של Discord"
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
-    allow_restore: "אפשר שחזור, אשר יכול להחליף את כל(!) המידע באתר! הותירו על \"שלילי\" (false) אלא אם כן אתם מתכננים לשחזר גיבוי."
     maximum_backups: "המספר המקסימלי של גיבויים לשמירה על הכונן. גיבויים ישנים יותר ימחקו אוטומטית"
     automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
     backup_frequency: "מספר הימים בין גיבויים."
@@ -1769,6 +1771,11 @@ he:
     image_preview_jpg_quality: "איכות קובצי התמונות שגודלם משתנה (1 היא האיכות הנמוכה ביותר, 99 הטובה ביותר, 100 משבית)."
     allow_staff_to_upload_any_file_in_pm: "אפשרו לחברי צוות להעלות כל קובץ בהודעה פרטית."
     strip_image_metadata: "הסרת מטה-דאטה מהתמונה"
+    composer_media_optimization_image_enabled: "מאפשר מיטוב של מדיה בצד הלקוח של קובצי תמונה שהועלו."
+    composer_media_optimization_image_kilobytes_optimization_threshold: "גודל קובץ תמונה מזערי להפעלת מיטוב בצד הלקוח"
+    composer_media_optimization_image_resize_dimensions_threshold: "רוחב תמונה מזערי להפעלת שינוי גודל בצד הלקוח"
+    composer_media_optimization_image_resize_width_target: "תמונות שרוחבן עולה על `composer_media_optimization_image_dimensions_resize_threshold`, גודלן ישתנה לרוחב זה. הערך חייב להיות >= לעומת `composer_media_optimization_image_dimensions_resize_threshold`."
+    composer_media_optimization_image_encode_quality: "איכות קידוד JPEG המשמשת בתהליך הקידוד מחדש."
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
     default_invitee_trust_level: "ברירת מחדל של רמת אמון (0-4) של משתמשים מוזמנים."
@@ -1884,9 +1891,9 @@ he:
     reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
     reviewable_default_topics: "הצגת תוכן שמיועד לסקירה בקיבוץ לפי נושא כבררת מחדל"
     reviewable_default_visibility: "לא להציג פריטים שמיועדים לסקירה אלמלא הם תואמים את העדיפות הזו"
-    reviewable_low_priority_threshold: "מסנן העדיפות מסתיר פריטים לסקירה שלא תואמים לציון אלא אם כן נעשה שימוש במסנן ‚(כלשהו)’"
     high_trust_flaggers_auto_hide_posts: "פוסטים של משתמש חדש מוסתרים אוטומטים לאחר שסומנו כספאם על ידי משתמש בדרגת אמון 3 ומעלה"
     cooldown_hours_until_reflag: "כמה זמן יהיה על משתמשים לחכות לפני שיוכלו לסמן פוסט כספאם פעם נוספת"
+    slow_mode_prevents_editing: "האם ‚מצב אטי’ מונע עריכה לאחר editing_grace_period (תקופת חסד לעריכה)?"
     reply_by_email_enabled: "הפעלת תגובה לנושאים דרך דוא״ל."
     reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2016,6 +2023,7 @@ he:
     app_association_ios: "תכני נקודת הקצה <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> שמשמשת ליצירת Universal Links (קישורים אוניברסליים) בין האתר הזה ויישומוני iOS."
     share_anonymized_statistics: "שיתוף סטטיסטיקת שימוש אלמונית."
     auto_handle_queued_age: "לטפל אוטומטית ברשומות שממתינות לסקירה לאחר כמות כזו של ימים. ללא התחשבות בדגלים. פוסטים ומשתמשים שממתינים בתור יידחו. יש להגדיר ל־0 כדי לנטרל את התכונה הזו."
+    penalty_step_hours: "עונשי ברירת מחדל להשתקה או השעייה של משתמשים בשעות. ברירת המחדל לעבירה הראשונה היא הערך הראשון, ברירת המחדל לעבירה השנייה היא הערך השני וכן הלאה וכן הלאה."
     svg_icon_subset: "הוספת סמלים נוספים מתוך FontAwesome 5 אותם ברצונך לכלול בין המשאבים שלך. יש להשתמש בקידומת ‚fa-‎’ לסמלים אחידים, ‚far-‎’ לסמלים רגילים וב־‚fab-‎’ לסמלים ממותגים."
     max_prints_per_hour_per_user: "מספר מקסימלי של צפיות בדף /print (הדפסה) (קיבעו ל 0 כדי לנטרל)"
     full_name_required: "שם מלא הוא שדה נדרש לפרופיל משתמש/ת."
@@ -3242,6 +3250,7 @@ he:
     only_reply_by_email_pm: "יש להשיב להודעה הזאת כדי להגיב אל %{participants}."
     visit_link_to_respond: "[בקרו בנושא](%{base_url}%{url}) כדי לענות."
     visit_link_to_respond_pm: "יש [לבקר בהודעה](%{base_url}%{url}) כדי להגיב אל %{participants}."
+    reply_above_line: "## נא להקליד את התגובה שלך מעל לשורה הזאת. ##"
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
     pm_participants: "משתתפים: %{participants}"
     invited_group_to_private_message_body: "הקבוצה  @%{group_name} הוזמנה להתכתבות על ידי %{username} \n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nבאתר\n\n> %{site_title} -- %{site_description}\n\nכדי להצטרף להודעה יש ללחוץ על הקישור שלהלן:\n\n%{topic_url}\n"
@@ -3721,6 +3730,9 @@ he:
     sender_post_deleted: "פוסט נמחק"
     sender_message_to_invalid: "כתובת דוא״ל הנמען שגויה"
     sender_topic_deleted: "הנושא נמחק"
+    group_smtp_post_deleted: "פוסט נמחק"
+    group_smtp_topic_deleted: "הנושא נמחק"
+    group_smtp_disabled_for_group: "smtp הושבת עבור הקבוצה"
   color_schemes:
     base_theme_name: "בסיס"
     light: "בהיר"
@@ -4558,10 +4570,6 @@ he:
       agree_and_hide:
         title: "הסתרת פוסט"
         description: "הסתרת הפוסט הזה ושליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
-      delete_spammer:
-        title: "מחק ספאמר"
-        description: "הסרת המשתמש על כל הפוסטים והנושאים שלו."
-        confirm: "למחוק את כל הפוסטים והנושאים של המשתמש וגם לחסום את כתובת ה־IP והדוא״ל שלו?"
       delete_single:
         title: "מחיקה"
       delete:
@@ -4618,8 +4626,6 @@ he:
       approve_and_restore:
         title: "אישור ושחזור הפוסט"
       delete_user:
-        title: "מחק משתמש"
-        confirm: "למחוק את המשתמש הזה? פעולה זו תסיר את כל הפוסטים של המשתמש ותחסום את כתובת הדוא״ל וה־IP שלו."
         reason: "למחוק דרך תור סקירה"
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"

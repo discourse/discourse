@@ -233,9 +233,9 @@ module PostGuardian
     return true if is_admin?
     return false unless can_see_topic?(post.topic)
     return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
-    return false if !(is_moderator? || is_category_group_moderator?(post.topic.category)) && post.deleted_at.present?
-
-    true
+    return true if is_moderator? || is_category_group_moderator?(post.topic.category)
+    return true if post.deleted_at.blank? || (post.deleted_by_id == @user.id && @user.has_trust_level?(TrustLevel[4]))
+    false
   end
 
   def can_view_edit_history?(post)
@@ -251,7 +251,9 @@ module PostGuardian
   end
 
   def can_change_post_owner?
-    is_admin?
+    return true if is_admin?
+
+    SiteSetting.moderators_change_post_ownership && is_staff?
   end
 
   def can_change_post_timestamps?

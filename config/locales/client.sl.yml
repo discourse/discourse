@@ -239,7 +239,6 @@ sl:
     submit: "Išči"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
-    go_ahead: "Nadaljuj"
     sign_up: "Registracija"
     log_in: "Prijava"
     age: "Starost"
@@ -272,7 +271,6 @@ sl:
       two: "%{count} Več"
       few: "%{count} Več"
       other: "%{count} Več"
-    less: "Manj"
     never: "nikoli"
     every_30_minutes: "vsakih 30 minut"
     every_hour: "vsako uro"
@@ -281,7 +279,6 @@ sl:
     every_month: "vsak mesec"
     every_six_months: "vsakih 6 mesecev"
     max_of_count: "največ od %{count}"
-    alternation: "ali"
     character_count:
       one: "%{count} znak"
       two: "%{count} znaka"
@@ -318,7 +315,6 @@ sl:
       help:
         bookmark: "ustvari zaznamek prvega prispevka v tej temi"
         unbookmark: "odstrani vse zaznamke v tej temi"
-        unbookmark_with_reminder: "Kliknite, če želite odstraniti vse zaznamke in opomnike v tej temi. Za to temo imate opomnik nastavljen %{reminder_at}."
     bookmarks:
       created: "To objavo ste dodali med zaznamke. %{name}"
       not_bookmarked: "zaznamuj prispevek"
@@ -560,9 +556,9 @@ sl:
       later_today: "Kasneje danes"
       next_business_day: "Naslednji delovni dan"
       tomorrow: "Jutri"
-      next_week: "Naslednji teden"
       post_local_date: "Datum v objavi"
       later_this_week: "Kasneje v tednu"
+      this_weekend: "Ta vikend"
       start_of_next_business_week: "Ponedeljek"
       start_of_next_business_week_alt: "Naslednji ponedeljek"
       next_month: "Naslednji mesec"
@@ -609,6 +605,8 @@ sl:
         other: "%{count} uporabnikov"
       edit_columns:
         save: "Shrani"
+      group:
+        all: "vse skupine"
     group_histories:
       actions:
         change_group_setting: "Spremeni nastavitve za skupino"
@@ -620,13 +618,8 @@ sl:
       member_added: "Dodano"
       member_requested: "Zahtevano ob"
       add_members:
-        title: "Dodaj člane v %{group_name}"
-        description: "Sem lahko prilepite tudi seznam, ločen z vejicami."
-        usernames_or_emails:
-          title: "Vnesi uporabniška imena ali e-poštne naslove"
-          input_placeholder: "Uporabniki ali e-poštni naslovi"
-        usernames:
-          input_placeholder: "Uporabniška imena"
+        usernames_placeholder: "uporabniška imena"
+        usernames_or_emails_placeholder: "uporabniki ali e-poštni naslovi"
         notify_users: "Obvesti uporabnike"
       requests:
         title: "Zahtevki"
@@ -641,7 +634,7 @@ sl:
         title: "Upravljaj"
         name: "Ime skupine"
         full_name: "Polno ime"
-        add_members: "Dodaj člane"
+        invite_members: "Povabi"
         delete_member_confirm: "Odstrani '%{username}' iz skupine '%{group}'?"
         profile:
           title: Profil
@@ -665,10 +658,10 @@ sl:
           settings:
             title: "Nastavitve"
             allow_unknown_sender_topic_replies: "Dovoli odgovore neznanih pošiljateljev."
-            allow_unknown_sender_topic_replies_hint: "Omogoča neznanim pošiljateljem, da odgovarjajo na teme skupine. Če to ni omogočeno, bodo odgovori iz e-poštnih naslovov, ki še niso vključeni v e-poštno nit IMAP ali niso povabljeni v to temo, ustvarili novo temo."
           mailboxes:
             synchronized: "Sinhronizirani nabiralnik"
             none_found: "V tem računu nismo našli poštnega nabiralnika."
+            disabled: "Onemogočeno"
         membership:
           title: Članstvo
           access: Dostopnost
@@ -1098,11 +1091,9 @@ sl:
         sent: "Poslano"
         archive: "Arhiv"
         groups: "Moje Skupine"
-        bulk_select: "Izberi Sporočila"
         move_to_inbox: "Prestavi v Prejeto"
         move_to_archive: "Arhiv"
         failed_to_move: "Premik izbranih sporočil ni uspel (mogoče je vaša povezava prekinjena)"
-        select_all: "Izberi vse"
         tags: "Oznake"
       preferences_nav:
         account: "Račun"
@@ -1416,7 +1407,10 @@ sl:
           expires_at: "Kdaj bo ta povezava povabila potekla?"
         invite:
           new_title: "Ustvari povabilo"
+          instructions: "Delite to povezavo in takoj omogočite dostop do te strani"
           show_advanced: "Pokaži dodatne možnosti"
+          add_to_groups: "Dodaj v skupine"
+          expires_at: "Poteče po"
         bulk_invite:
           none: "Ni povabil za prikaz na tej strani."
           text: "Skupinsko povabilo"
@@ -1503,6 +1497,8 @@ sl:
         name_and_description: "%{name} - %{description}"
       title:
         title: "Naziv"
+        none: "(brez)"
+      flair:
         none: "(brez)"
       primary_group:
         title: "Primarna skupina"
@@ -2005,14 +2001,6 @@ sl:
         liked_consolidated: "novi všečki"
         post_approved: "prispevek odobren"
     upload_selector:
-      title: "Dodaj sliko"
-      title_with_attachments: "Dodaj sliko ali datoteko"
-      from_my_computer: "Iz moje naprave"
-      from_the_web: "Iz spletne strani"
-      remote_tip: "povezava do slike"
-      local_tip: "izberite slike iz vaše naprave"
-      hint: "(slike lahko naložite tudi tako, da jih povlečete in spustite v urejevalnik)"
-      hint_for_supported_browsers: "slike lahko naložite tudi tako, da jih povlečete in spustite v urejevalnik"
       uploading: "Nalagam"
       select_file: "Izberite datoteko"
       default_image_alt_text: slika
@@ -2151,7 +2139,6 @@ sl:
         new: "Nimate novih tem."
         read: "Niste prebrali še nobene teme."
         posted: "Niste objavili še v nobeni temi."
-        ready_to_create: "Pripravljen "
         latest: "Vse ste že prebrali!"
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji %{category} ."
@@ -2219,21 +2206,11 @@ sl:
       not_found:
         title: "Ne najdemo temo."
         description: "Oprostite, ne najdemo te teme. Mogoče jo je odstranil moderator?"
-      total_unread_posts:
+      unread_posts:
         one: "imate %{count} neprebran prispevek v tej temi"
         two: "imate %{count} neprebrana prispevka v tej temi"
         few: "imate %{count} neprebrane prispevke v tej temi"
         other: "imate %{count} neprebranih prispevkov v tej temi"
-      unread_posts:
-        one: "imate %{count} neprebran star prispevek v tej temi"
-        two: "imate %{count} neprebrana stara prispevka v tej temi"
-        few: "imate %{count} neprebrane stare prispevke v tej temi"
-        other: "imate %{count} neprebranih starih prispevkov v tej temi"
-      new_posts:
-        one: "%{count} nov prispevek v tej temi od kar ste jo zadnjič brali"
-        two: "%{count} nova prispevka v tej temi od kar ste jo zadnjič brali"
-        few: "%{count} novi prispevki v tej temi od kar ste jo zadnjič brali"
-        other: "%{count} novih prispevkov v tej temi od kar ste jo zadnjič brali"
       likes:
         one: "%{count} všeček na tej temi"
         two: "%{count} všečka na tej temi"
@@ -2249,7 +2226,6 @@ sl:
       browse_all_categories: Brskajte po vseh kategorijah
       browse_all_tags: Brskanje po vseh oznakah
       view_latest_topics: poglej najnovejše teme
-      suggest_create_topic: začni nov pogovor?
       jump_reply_up: pojdi na prejšni odgovor
       jump_reply_down: pojdi na naslednji odgovor
       deleted: "Tema je bila izbrisana"
@@ -2302,8 +2278,6 @@ sl:
         title: "Objavi kasneje"
       temp_open:
         title: "Začasno odpri"
-      auto_reopen:
-        title: "Samodejno odpri temo"
       temp_close:
         title: "Začasno zapri"
       auto_close:
@@ -2423,14 +2397,10 @@ sl:
         pin: "Pripni temo"
         unpin: "Odpni temo"
         pin_globally: "Pripni temo globalno"
-        make_banner: "Tema na oglasnem traku"
         remove_banner: "Odstrani temo iz oglasnega traku"
       reply:
         title: "Odgovori"
         help: "sestavi odgovor na to temo"
-      clear_pin:
-        title: "Odpni temo"
-        help: "Odstrani pripeto s te teme, tako da se ne pojavlja več na vrhu seznama tem"
       share:
         title: "Deli"
         extended_title: "Deli povezavo"
@@ -3190,7 +3160,6 @@ sl:
         show_incoming_updated_topics: "%{shortcut} Prikaži osvežene teme"
         search: "%{shortcut} Iskalnik"
         help: "%{shortcut} Odpri bližnjice na tipkovnici"
-        dismiss_new_posts: "%{shortcut} Opusti nov/prispevek"
         dismiss_topics: "%{shortcut} Opusti teme"
         log_out: "%{shortcut} Odjava"
       composing:
@@ -3284,7 +3253,6 @@ sl:
       changed: "spremenjene oznake:"
       tags: "Oznake"
       choose_for_topic: "neobvezne oznake"
-      default_info: "Ta oznaka ni omejena na nobeno kategorijo in nima sopomenk."
       category_restricted: "Ta oznaka je omejena na kategorije, do katerih nimate dovoljenja za dostop."
       synonyms: "Sopomenke"
       synonyms_description: "Ko bodo uporabljene naslednje oznake, bodo nadomeščene z <b>%{base_tag_name}</b>."
@@ -3371,8 +3339,11 @@ sl:
       groups:
         title: "Skupine oznak"
         new: "Nova skupina"
+        tags_label: "Oznake v tej skupini"
+        parent_tag_label: "Nadrejena oznaka"
         one_per_topic_label: "Omeji na eno oznako na temo iz te skupine"
         new_name: "Nova skupina oznak"
+        name_placeholder: "Ime"
         save: "Shrani"
         delete: "Izbriši"
         confirm_delete: "Ali ste prepričani, da hočete izbrisati to skupino oznak?"
@@ -3536,8 +3507,6 @@ sl:
             available: "Ime skupine je na voljo"
             not_available: "Ime skupine ni na voljo"
             blank: "Ime skupine ne more biti prazno"
-        add_members:
-          as_owner: "Dodaj uporabnika(-e) in skrbnika(-e) za to skupino"
         manage:
           interaction:
             email: E-naslov
@@ -3829,7 +3798,6 @@ sl:
           details: "Podrobnosti"
           previous_value: "Prejšnja"
           new_value: "Nova"
-          diff: "Razlika"
           show: "Pokaži"
           modal_title: "Podrobnosti"
           no_previous: "Ni prejšnje vrednosti."
@@ -4100,6 +4068,8 @@ sl:
         trust_level_unlocked_tip: "nivo zaupanja je odklenjen, sistem bo lahko spreminjal nivo zaupanja uporabnika"
         lock_trust_level: "Zakleni nivo zaupanja"
         unlock_trust_level: "Odkleni nivo zaupanja"
+        silenced_count: "Utišani"
+        suspended_count: "Suspendirani"
         tl3_requirements:
           title: "Zahteve za nivo zaupanja 3"
           table_title:

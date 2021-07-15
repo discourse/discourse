@@ -44,3 +44,24 @@ define("@popperjs/core", ["exports"], function (__exports__) {
   __exports__.defaultModifiers = window.Popper.defaultModifiers;
   __exports__.popperGenerator = window.Popper.popperGenerator;
 });
+
+define("@uppy/core", ["exports"], function (__exports__) {
+  __exports__.default = window.Uppy.Core;
+  __exports__.Plugin = window.Uppy.Plugin;
+});
+
+define("@uppy/aws-s3", ["exports"], function (__exports__) {
+  __exports__.default = window.Uppy.AwsS3;
+});
+
+define("@uppy/aws-s3-multipart", ["exports"], function (__exports__) {
+  __exports__.default = window.Uppy.AwsS3Multipart;
+});
+
+define("@uppy/xhr-upload", ["exports"], function (__exports__) {
+  __exports__.default = window.Uppy.XHRUpload;
+});
+
+define("@uppy/drop-target", ["exports"], function (__exports__) {
+  __exports__.default = window.Uppy.DropTarget;
+});

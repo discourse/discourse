@@ -1,3 +1,4 @@
+import Report from "admin/models/report";
 import Component from "@ember/component";
 import discourseDebounce from "discourse-common/lib/debounce";
 import loadScript from "discourse/lib/load-script";
@@ -63,7 +64,7 @@ export default Component.extend({
         return {
           label: cd.label,
           stack: "pageviews-stack",
-          data: cd.data.map((d) => Math.round(parseFloat(d.y))),
+          data: Report.collapse(model, cd.data),
           backgroundColor: cd.color,
         };
       }),
@@ -129,15 +130,14 @@ export default Component.extend({
               },
             },
           ],
+
           xAxes: [
             {
               display: true,
               gridLines: { display: false },
               type: "time",
-              offset: true,
               time: {
-                parser: "YYYY-MM-DD",
-                minUnit: "day",
+                unit: Report.unitForDatapoints(data.labels.length),
               },
               ticks: {
                 sampleSize: 5,

@@ -1675,21 +1675,21 @@ var bar = 'bar';
 
   test("watched words replace", function (assert) {
     const opts = {
-      watchedWordsReplace: { fun: "times" },
+      watchedWordsReplace: { "(?:\\W|^)(fun)(?=\\W|$)": "times" },
     };
 
-    assert.cookedOptions("test fun", opts, "<p>test times</p>");
+    assert.cookedOptions("test fun funny", opts, "<p>test times funny</p>");
   });
 
   test("watched words link", function (assert) {
     const opts = {
-      watchedWordsLink: { fun: "https://discourse.org" },
+      watchedWordsLink: { "(?:\\W|^)(fun)(?=\\W|$)": "https://discourse.org" },
     };
 
     assert.cookedOptions(
-      "test fun",
+      "test fun funny",
       opts,
-      '<p>test <a href="https://discourse.org">fun</a></p>'
+      '<p>test <a href="https://discourse.org">fun</a> funny</p>'
     );
   });
 
@@ -1697,7 +1697,7 @@ var bar = 'bar';
     const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
-      watchedWordsReplace: { "\\bu?\\b": "you" },
+      watchedWordsReplace: { "(\\bu?\\b)": "you" },
     };
 
     assert.cookedOptions(

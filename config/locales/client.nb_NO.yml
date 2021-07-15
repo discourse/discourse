@@ -182,7 +182,6 @@ nb_NO:
     submit: "Utfør"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
-    go_ahead: "Fortsett"
     sign_up: "Registrer deg"
     log_in: "Logg inn"
     age: "Alder"
@@ -207,7 +206,6 @@ nb_NO:
     now: "akkurat nå"
     read_more: "les mer"
     more: "Mer"
-    less: "Mindre"
     never: "aldri"
     every_30_minutes: "hvert 30. minutt"
     every_hour: "hver time"
@@ -216,7 +214,6 @@ nb_NO:
     every_month: "hver måned"
     every_six_months: "hver sjette måned"
     max_of_count: "maksimum av %{count}"
-    alternation: "eller"
     character_count:
       one: "%{count} tegn"
       other: "%{count} tegn"
@@ -402,8 +399,8 @@ nb_NO:
     time_shortcut:
       later_today: "Senere i dag"
       tomorrow: "I morgen"
-      next_week: "Neste uke"
       later_this_week: "Senere denne uken"
+      this_weekend: "Denne uken"
       next_month: "Neste måned"
       custom: "Egendefinert dato og tid"
     user_action:
@@ -443,6 +440,8 @@ nb_NO:
         other: "%{count} brukere"
       edit_columns:
         save: "Lagre"
+      group:
+        all: "alle grupper"
     group_histories:
       actions:
         change_group_setting: "Endre gruppeinnstillinger"
@@ -452,8 +451,7 @@ nb_NO:
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
       add_members:
-        usernames:
-          input_placeholder: "Brukernavn"
+        usernames_placeholder: "brukernavn"
       requests:
         title: "Forespørsler"
         reason: "Begrunnelse"
@@ -463,7 +461,7 @@ nb_NO:
         title: "Behandle"
         name: "Navn"
         full_name: "Fullt navn"
-        add_members: "Legg til medlemmer"
+        invite_members: "Inviter"
         delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
         profile:
           title: Profil
@@ -473,11 +471,14 @@ nb_NO:
           notification: Varsling
         email:
           title: "E-post"
+          last_updated_by: "av"
           credentials:
             username: "Brukernavn"
             password: "Passord"
           settings:
             title: "Innstillinger"
+          mailboxes:
+            disabled: "Deaktivert"
         membership:
           title: Medlemskap
           access: Tilgang
@@ -777,11 +778,9 @@ nb_NO:
         sent: "Sendt"
         archive: "Arkiver"
         groups: "Mine grupper"
-        bulk_select: "Velg meldinger"
         move_to_inbox: "Flytt til innboks"
         move_to_archive: "Arkiver"
         failed_to_move: "Kunne ikke flytte valgte meldinger (kanskje nettforbindelsen din er nede)"
-        select_all: "Velg alle"
         tags: "Stikkord"
       preferences_nav:
         account: "Konto"
@@ -1053,6 +1052,8 @@ nb_NO:
         header_title: "Profil, meldinger, bokmerker og innstillinger"
       title:
         title: "Tittel"
+        none: "(ingen)"
+      flair:
         none: "(ingen)"
       primary_group:
         title: "Primærgruppe"
@@ -1420,13 +1421,6 @@ nb_NO:
         watching_first_post: "nytt emne"
         post_approved: "innlegg godkjent"
     upload_selector:
-      title: "Legg til bilde"
-      title_with_attachments: "Legg til et bilde eller en fil"
-      from_my_computer: "Fra min enhet"
-      from_the_web: "Fra nettet"
-      remote_tip: "lenke til bilde"
-      local_tip: "velg bilder fra din enhet"
-      hint_for_supported_browsers: "du kan også dra og slippe eller lime inn bilder i tekstbehandleren"
       uploading: "Laster opp bilde"
       select_file: "Velg fil"
       default_image_alt_text: bilde
@@ -1598,15 +1592,9 @@ nb_NO:
       not_found:
         title: "Fant ikke emnet"
         description: "Beklager, vi kunne ikke finne det emnet. Kanskje det ble fjernet av en moderator?"
-      total_unread_posts:
+      unread_posts:
         one: "du har %{count} ulest innlegg i dette emnet"
         other: "du har %{count} uleste innlegg i dette emnet"
-      unread_posts:
-        one: "du har %{count} ulest gammelt innlegg i dette emnet"
-        other: "du har %{count} uleste gamle innlegg i dette emnet"
-      new_posts:
-        one: "det er %{count} nytt innlegg i dette emnet siden sist du leste det"
-        other: "det er %{count} nye innlegg i dette emnet siden sist du leste det"
       likes:
         one: "det er én like i dette emnet"
         other: "det er %{number} likes i dette emnet"
@@ -1645,8 +1633,6 @@ nb_NO:
         title: "Planlegg publisering"
       temp_open:
         title: "Åpne midlertidig"
-      auto_reopen:
-        title: "Automatisk åpning av emne"
       temp_close:
         title: "Lukk midlertidig"
       auto_close:
@@ -1753,14 +1739,10 @@ nb_NO:
         pin: "Fest emne"
         unpin: "Løsne emne"
         pin_globally: "Fest emne globalt"
-        make_banner: "Banneremne"
         remove_banner: "Fjern banneremne"
       reply:
         title: "Svar"
         help: "begynn å skrive et svar i dette emnet"
-      clear_pin:
-        title: "Løsne"
-        help: "Fjern festet-statusen til dette emnet slik at det ikke lenger vises øverst i listen din over emner"
       share:
         title: "Del"
         help: "del en lenke til dette emnet"
@@ -2337,7 +2319,6 @@ nb_NO:
         show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
         search: "%{shortcut} Søk"
         help: "%{shortcut} Åpne tastaturhjelp"
-        dismiss_new_posts: "%{shortcut} Forkast Nye/Innlegg"
         dismiss_topics: "%{shortcut} Forkast Emner"
         log_out: "%{shortcut} Logg ut"
       composing:
@@ -2444,8 +2425,11 @@ nb_NO:
       groups:
         title: "Stikkordgrupper"
         new: "Ny gruppe"
+        tags_label: "Stikkord i denne gruppen"
+        parent_tag_label: "Overordnet stikkord"
         one_per_topic_label: "Begrens til ett stikkord fra denne gruppen per emne "
         new_name: "Ny stikkordgruppe"
+        name_placeholder: "Navn"
         save: "Lagre"
         delete: "Slett"
         confirm_delete: "Er du sikker på at du vil slette denne stikkordgruppen?"
@@ -2565,9 +2549,6 @@ nb_NO:
               label: Gruppe
             category:
               label: Kategori
-      commits:
-        latest_changes: "Siste endringer: Oppdater ofte!"
-        by: "av"
       groups:
         new:
           title: "Ny gruppe"
@@ -2579,8 +2560,6 @@ nb_NO:
             available: "Gruppenavn tilgjengelig"
             not_available: "Gruppenavn ikke tilgjengelig"
             blank: "Gruppenavnet kan ikke være tomt"
-        add_members:
-          as_owner: "Sett bruker(e) som eier(e) av denne gruppen"
         manage:
           interaction:
             email: E-post
@@ -3032,7 +3011,6 @@ nb_NO:
           details: "Detaljer"
           previous_value: "Forrige"
           new_value: "Ny"
-          diff: "Diff"
           show: "Vis"
           modal_title: "Detaljer"
           no_previous: "Det finnes ingen forrige verdi."
@@ -3333,6 +3311,8 @@ nb_NO:
         trust_level_unlocked_tip: "tillitsnivå er ulåst, systemet kan forfremme eller degradere bruker"
         lock_trust_level: "Lås tillitsnivå"
         unlock_trust_level: "Lås opp tillitsnivå"
+        silenced_count: "Dempet"
+        suspended_count: "Utestengt"
         tl3_requirements:
           title: "Krav til tillitsnivå 3"
           table_title:

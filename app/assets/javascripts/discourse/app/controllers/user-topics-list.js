@@ -1,8 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 
 // Lists of topics on a user's page.
-export default Controller.extend({
+export default Controller.extend(BulkTopicSelection, {
   application: controller(),
 
   hideCategory: false,

@@ -198,9 +198,14 @@ protected
 
       if lookup_hash.present?
         primary_group = lookup.primary_groups[user_id]
+        flair_group = lookup.flair_groups[user_id]
 
         UserWithCount.new(
-          lookup_hash.attributes.merge(count: user_hash[user_id], primary_group: primary_group)
+          lookup_hash.attributes.merge(
+            count: user_hash[user_id],
+            primary_group: primary_group,
+            flair_group: flair_group
+          )
         )
       end
     end.compact.sort_by { |u| -u[:count] }

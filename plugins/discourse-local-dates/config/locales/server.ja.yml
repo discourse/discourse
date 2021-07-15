@@ -6,4 +6,7 @@
 
 ja:
   site_settings:
-    discourse_local_dates_email_format: "電子メールで日付を表示するために使用される形式。"
+    discourse_local_dates_enabled: "discourse-local-dates 機能を有効にします。これにより、[date] 要素を使用した投稿で現地タイムゾーンに対応した日付がサポートされます。"
+    discourse_local_dates_default_formats: "よく使用される日付時刻フォーマット。<a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs 文字列フォーマット</a>をご覧ください。"
+    discourse_local_dates_default_timezones: "デフォルトのタイムゾーンのリスト。有効な <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> である必要があります"
+    discourse_local_dates_email_format: "メールに日付を表示するために使用されるフォーマット。"

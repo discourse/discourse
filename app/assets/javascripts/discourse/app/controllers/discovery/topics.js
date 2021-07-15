@@ -1,12 +1,4 @@
-import {
-  alias,
-  empty,
-  equal,
-  gt,
-  not,
-  notEmpty,
-  readOnly,
-} from "@ember/object/computed";
+import { alias, empty, equal, gt, not, readOnly } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import DiscoveryController from "discourse/controllers/discovery";
 import I18n from "I18n";
@@ -140,7 +132,7 @@ const controllerOpts = {
   allLoaded: empty("model.more_topics_url"),
   latest: endWith("model.filter", "latest"),
   new: endWith("model.filter", "new"),
-  top: notEmpty("period"),
+  top: endWith("model.filter", "top"),
   yearly: equal("period", "yearly"),
   quarterly: equal("period", "quarterly"),
   monthly: equal("period", "monthly"),
@@ -187,7 +179,7 @@ const controllerOpts = {
 
     return I18n.t("topics.none.educate." + tab, {
       userPrefsUrl: userPath(
-        `${this.currentUser.get("username_lower")}/preferences`
+        `${this.currentUser.get("username_lower")}/preferences/notifications`
       ),
     });
   },

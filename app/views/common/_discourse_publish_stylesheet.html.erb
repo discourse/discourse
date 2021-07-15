@@ -1,4 +1,4 @@
-<%= discourse_stylesheet_link_tag 'publish', theme_ids: nil %>
+<%= discourse_stylesheet_link_tag 'publish', theme_id: nil %>
 
 <%- if rtl? %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :publish_mobile_rtl : :publish_mobile_rtl) %>
@@ -10,6 +10,6 @@
   <%= discourse_stylesheet_link_tag(file) %>
 <%- end %>
 
-<%- if theme_ids.present? %>
+<%- if theme_id.present? %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
 <%- end %>

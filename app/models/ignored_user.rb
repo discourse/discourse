@@ -17,7 +17,7 @@ end
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  summarized_at   :datetime
-#  expiring_at     :datetime
+#  expiring_at     :datetime         not null
 #
 # Indexes
 #

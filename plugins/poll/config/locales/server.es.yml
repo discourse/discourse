@@ -11,10 +11,10 @@ es:
     poll_edit_window_mins: "Número de minutos tras la creación de la publicación durante los cuales las encuestas pueden ser editadas."
     poll_minimum_trust_level_to_create: "Definir el nivel de confianza mínimo requerido para crear encuestas."
     poll_groupable_user_fields: "Un grupo de nombres de campos de usuario que se pueden usar para agrupar y filtrar los resultados de encuestas."
-    poll_export_data_explorer_query_id: "ID de la consulta del explorador de datos que se usa para exportar los resultados de la encuesta (0 para deshabilitar)."
+    poll_export_data_explorer_query_id: "ID de la consulta del explorador de datos que se usa para exportar los resultados de la encuesta (0 para desactivar)."
   poll:
     poll: "encuesta"
-    invalid_argument: "Valor inválido «%{value}» para el argumento «%{argument}»."
+    invalid_argument: "Valor no válido «%{value}» para el argumento «%{argument}»."
     multiple_polls_without_name: "Hay varias encuestas sin nombre. Usa el atributo «<code>nombre</code>» para identificar de forma única tus encuestas."
     multiple_polls_with_same_name: "Hay varias encuestas con el mismo nombre: <strong>%{name}</strong>. Usa el atributo «<code>nombre</code>» para identificar de forma única tus encuestas."
     default_poll_must_have_at_least_1_option: "La encuesta debe tener al menos 1 opción."
@@ -29,7 +29,7 @@ es:
     named_poll_must_have_different_options: "La encuesta nombrada <strong>%{name}</strong> debe tener opciones diferentes."
     default_poll_must_not_have_any_empty_options: "La encuesta no puede tener ninguna opción vacía"
     named_poll_must_not_have_any_empty_options: "La encuesta llamada <strong>%{name}</strong> no puede tener ninguna opción vacía"
-    default_poll_with_multiple_choices_has_invalid_parameters: "La encuesta con opciones múltiples tiene parámetros inválidos."
+    default_poll_with_multiple_choices_has_invalid_parameters: "La encuesta con opciones múltiples tiene parámetros no válidos."
     named_poll_with_multiple_choices_has_invalid_parameters: "La encuesta llamada <strong>%{name}</strong> con opciones múltiples tiene párametros no válidos."
     requires_at_least_1_valid_option: "Debes seleccionar al menos 1 opción válida."
     edit_window_expired:
@@ -41,7 +41,7 @@ es:
     topic_must_be_open_to_vote: "El tema debe estar abierto para votar."
     poll_must_be_open_to_vote: "La encuesta debe estar abierta para votar."
     topic_must_be_open_to_toggle_status: "El tema debe estar abierto para cambiar el estado."
-    only_staff_or_op_can_toggle_status: "Solo un miembro del staff o la persona que realizó la publicación original pueden cambiar el estado de una encuesta."
+    only_staff_or_op_can_toggle_status: "Solo un miembro del equipo o la persona que realizó la publicación original pueden cambiar el estado de una encuesta."
     insufficient_rights_to_create: "No tienes permitido crear encuestas."
     email:
       link_to_poll: "Haz clic para ver la encuesta."

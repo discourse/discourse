@@ -600,4 +600,51 @@ describe Plugin::Instance do
       expect(ApiKeyScope.scope_mappings.dig(:groups, :create, :actions)).to contain_exactly(*actions)
     end
   end
+
+  describe '#add_directory_column' do
+    let!(:plugin) { Plugin::Instance.new }
+
+    before do
+      DirectoryItem.clear_plugin_queries
+    end
+
+    after do
+      DirectoryColumn.clear_plugin_directory_columns
+    end
+
+    describe "with valid column name" do
+      let(:column_name) { "random_c" }
+
+      before do
+        DB.exec("ALTER TABLE directory_items ADD COLUMN IF NOT EXISTS #{column_name} integer")
+      end
+
+      after do
+        DB.exec("ALTER TABLE directory_items DROP COLUMN IF EXISTS #{column_name}")
+        DiscourseEvent.all_off("before_directory_refresh")
+      end
+
+      it 'creates a directory column record when directory items are refreshed' do
+        plugin.add_directory_column(column_name, query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+        expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false)).not_to be_present
+
+        DirectoryItem.refresh!
+        expect(DirectoryColumn.find_by(name: column_name, icon: 'recycle', enabled: false)).to be_present
+      end
+    end
+
+    it 'errors when the column_name contains invalid characters' do
+      expect {
+        plugin.add_directory_column('Capital', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+
+      expect {
+        plugin.add_directory_column('has space', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+
+      expect {
+        plugin.add_directory_column('has_number_1', query: "SELECT COUNT(*) FROM users", icon: 'recycle')
+      }.to raise_error(RuntimeError)
+    end
+  end
 end

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
+  self.ignored_columns = [
+    "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
+  ]
+
   self.primary_key = :user_id
   belongs_to :user
   before_create :set_defaults

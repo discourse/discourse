@@ -121,7 +121,7 @@ sw:
       ip_address_already_screened: "tayari ipo ndani ya kanuni iliyopo"
       restrict_dependent_destroy:
         one: "Hauwezi kufuta kumbukumbu kwa sababu %{record}inayoitegemea ipo"
-        many: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
+        other: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
       other_than: "lazima iwe nyingine zaidi ya %{count}"
     template:
       body: ! "Matatizo yametokea kwenye sehemu zifuatazo:"
@@ -803,7 +803,6 @@ sw:
     notify_mods_when_user_silenced: "Kama mtumiaji akinyamazishwa, tuma ujumbe kwa wasimamizi wote."
     markdown_linkify_tlds: "Orodha ya vikoa vya hali ya juu ambavyo otomatikali ni viungo."
     post_undo_action_window_mins: "Dakika watumiaji wanaruhusiwa kutendua vitendo vya hivi karibuni kwenye chapisho (kupenda, bendera, etc)."
-    pending_users_reminder_delay: "Wajulishe wasimamizi kama watumiaji wapya wamekuwa wanasubiria kibali kwa mda zaidi ya masaa haya. Seti -1 kusitisha taarifa."
     maximum_session_age: "mtumiaji ataendelea kuwa ndani kwa masaa n toka mara ya mwisho alipotembelea"
     site_contact_username: "Jina la msaidizi lililo sahihi litakalotuma ujumbe otomatikali. Kama ikiachwa wazi chaguo-msingi la akaunti ya mfumo litatumika."
     send_welcome_message: "Watumie watumiaji wapya ujumbe wa kuwakaribisha na muongozo mfupi wa kuanzia."
@@ -826,7 +825,6 @@ sw:
     google_oauth2_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Programu-timizi ya Google"
     google_oauth2_client_secret: "Siri ya Mtumiaji kwa ajili ya Programu-timizi ya Google"
     enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
-    allow_restore: "ruhusu urejeshaji, itabadilisha taarifa zote za tovuti! Acha iwe hapana, badilisha kama unataka kurejesha chelezo"
     maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
     backup_frequency: "idadi ya siku kati ya machelezo."
     rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
@@ -2115,8 +2113,6 @@ sw:
       agree_and_hide:
         title: "Ficha Chapisho"
         description: "Ficha chapisho hili na otomatikali mtumie mtumiaji ujumbe wa kumwambia afanye uhariri."
-      delete_spammer:
-        title: "Futa Muandishi wa Taka"
       delete_single:
         title: "Futa"
       disagree_and_restore:
@@ -2132,8 +2128,6 @@ sw:
           title: "Futa Mtumiaji"
       reject:
         title: "Kataa"
-      delete_user:
-        title: "Futa Mtumiaji"
   activemodel:
     errors:
       <<: *errors
