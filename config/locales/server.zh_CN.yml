@@ -2047,228 +2047,228 @@ zh_CN:
         low_weight_invalid: "您不能将权重设置为大于或等于 1。"
         high_weight_invalid: "您不能将权重设置为小于或等于 1。"
       allowed_unicode_usernames:
-        regex_invalid: "该正则表达式无效：%{error}"
-        leading_trailing_slash: "正则表达式不能以斜杠作为开头或结尾。"
-      unicode_usernames_avatars: "内置的头像系统不支持Unicode用户名。"
-      list_value_count: "该列表必须包含%{count}个值。"
+        regex_invalid: "正则表达式无效：%{error}"
+        leading_trailing_slash: "正则表达式不得以斜杠作开头或结尾。"
+      unicode_usernames_avatars: "内部系统头像不支持 Unicode 用户名。"
+      list_value_count: "该列表必须恰好包含 %{count} 个值。"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
         value: "DiscourseConnect 密钥"
   search:
-    extreme_load_error: "站点处于高负荷状态，搜索已关闭，稍后再试。"
-    within_post: "#%{post_number} 由 %{username}"
+    extreme_load_error: "站点负载过大，搜索被禁用，请稍后再试"
+    within_post: "#%{post_number}，来自 %{username}"
     types:
-      category: "分类"
+      category: "类别"
       topic: "结果"
       user: "用户"
-    results_page: "关于“%{term}”的搜索结果"
+    results_page: "'%{term}' 的搜索结果"
     audio: "[音频]"
     video: "[视频]"
   discourse_connect:
     login_error: "登录错误"
-    not_found: "无法找到您的账户。请联系站点管理人员。"
-    account_not_approved: "您的帐户正在等待批准。获得批准时您会收到一封通知邮件。"
-    unknown_error: "您的账户出了一点问题。请联系站点管理人员。"
+    not_found: "找不到您的帐户。请联系站点管理员。"
+    account_not_approved: "您的帐户正在等待审批。当您获得批准时，您将收到一封电子邮件通知。"
+    unknown_error: "您的帐户有问题。请联系站点管理员。"
     timeout_expired: "帐户登录超时，请尝试重新登录。"
-    no_email: "没有找到邮件地址。请联系站点管理员。"
-    blank_id_error: "当前空缺的`external_id`是必需的"
-    email_error: "不能使用邮箱<b>%{email}</b>注册账户。请联系站点管理员。"
-    missing_secret: "身份认证由于缺少密钥而导致失败。请与站点管理员联系以修复此问题。"
-    invite_redeem_failed: "邀请失败。请联系管理员。"
-  original_poster: "原始作者"
-  most_posts: "大部分帖子"
-  most_recent_poster: "最新发帖者"
-  frequent_poster: "频繁发帖者"
-  poster_description_joiner: ", "
+    no_email: "没有提供电子邮件地址。请联系站点管理员。"
+    blank_id_error: "`external_id` 是必需的，但为空"
+    email_error: "无法使用电子邮件地址 <b>%{email}</b> 注册帐户。请联系站点管理员。"
+    missing_secret: "由于缺少密钥，身份验证失败。请联系站点管理员解决此问题。"
+    invite_redeem_failed: "邀请确认失败。请联系站点管理员。"
+  original_poster: "原始发帖人"
+  most_posts: "大多数帖子"
+  most_recent_poster: "最新发帖人"
+  frequent_poster: "频繁发帖人"
+  poster_description_joiner: "、"
   redirected_to_top_reasons:
-    new_user: "欢迎来到我们的社区！这些都是最近热门话题。"
-    not_seen_in_a_month: "欢迎回来！我们已经好久没见到您了。这些是您不在时的最热门话题。"
+    new_user: "欢迎来到我们的社区！这些是最近最热门的话题。"
+    not_seen_in_a_month: "欢迎回来！我们好久没见到您了。这些是您不在时的最热门话题。"
   merge_posts:
     edit_reason:
-      other: "%{username}合并了 %{count} 个帖子"
+      other: "%{username} 并入了 %{count} 篇帖子"
     errors:
-      different_topics: "无法合并不同话题的帖子。"
-      different_users: "无法合并不同用户的帖子。"
-      max_post_length: "帖子无法合并，因为合并后的帖子长度超出了允许的长度。"
+      different_topics: "属于不同话题的帖子无法合并。"
+      different_users: "属于不同用户的帖子无法合并。"
+      max_post_length: "帖子无法合并，因为合并后的帖子长度超过允许值。"
   move_posts:
     new_topic_moderator_post:
-      other: "%{count} 个帖子被拆分到新话题：%{topic_link}"
+      other: "%{count} 篇帖子被拆分为一个新话题：%{topic_link}"
     new_message_moderator_post:
-      other: "%{count} 个帖子被拆分到一个新的私信中：%{topic_link}"
+      other: "%{count} 篇帖子被拆分为一条新消息：%{topic_link}"
     existing_topic_moderator_post:
-      other: "%{count} 个帖子已被合并到了现有话题：%{topic_link}"
+      other: "%{count} 篇帖子被合并到现有话题中：%{topic_link}"
     existing_message_moderator_post:
-      other: "%{count}个帖子已被合并到一个现存的私信中：%{topic_link}"
+      other: "%{count} 篇帖子被合并到现有消息中：%{topic_link}"
   change_owner:
-    post_revision_text: "所有权转移"
+    post_revision_text: "已转让所有权"
   publish_page:
     slug_errors:
       blank: "不能为空"
-      unavailable: "是不可用的"
+      unavailable: "不可用"
       invalid: "包含无效字符"
   topic_statuses:
     autoclosed_message_max_posts:
-      other: "私信中回复已经达到上限 %{count}，自动锁定。"
+      other: "在达到 %{count} 个回复的最大限制后，此消息已被自动关闭。"
     autoclosed_topic_max_posts:
-      other: "话题中回复已经达到上限 %{count}，自动关闭。"
+      other: "在达到 %{count} 个回复的最大限制后，此话题已被自动关闭。"
     autoclosed_enabled_days:
-      other: "该话题在创建%{count}天后自动关闭。不再允许添加新回复。"
+      other: "此话题已在 %{count} 天后被自动关闭。不再允许新回复。"
     autoclosed_enabled_hours:
-      other: "该话题在创建%{count}小时后自动关闭。不再允许新的回复。"
+      other: "此话题已在 %{count} 小时后被自动关闭。不再允许新回复。"
     autoclosed_enabled_minutes:
-      other: "该话题在创建%{count}分钟后自动关闭。不再允许新的回复。"
+      other: "此话题已在 %{count} 分钟后被自动关闭。不再允许新回复。"
     autoclosed_enabled_lastpost_days:
-      other: "该话题在最后一个回复创建后%{count}天后自动关闭。不再允许新的回复。"
+      other: "此话题已在最后回复的 %{count} 天后被自动关闭。不再允许新回复。"
     autoclosed_enabled_lastpost_hours:
-      other: "该话题在最后一个回复创建后%{count}小时后自动关闭。不再允许添加新回复。"
+      other: "此话题已在最后回复的 %{count} 小时后被自动关闭。不再允许新回复。"
     autoclosed_enabled_lastpost_minutes:
-      other: "本话题在最后一个回复创建后%{count}分钟后自动锁定。不再允许添加新回复。"
+      other: "此话题已在最后回复的 %{count} 分钟后被自动关闭。不再允许新回复。"
     autoclosed_disabled_days:
-      other: "该话题开启 %{count} 天后将自动关闭。"
+      other: "此话题已在 %{count} 天后被自动打开。"
     autoclosed_disabled_hours:
-      other: "该话题开启 %{count} 小时后将自动关闭。"
+      other: "此话题已在 %{count} 小时后被自动打开。"
     autoclosed_disabled_minutes:
-      other: "该话题开启 %{count} 分钟后将自动关闭。"
+      other: "此话题已在 %{count} 分钟后被自动打开。"
     autoclosed_disabled_lastpost_days:
-      other: "该话题将在最后一个回复 %{count} 天后自动关闭。"
+      other: "此话题已在最后回复的 %{count} 天后被自动打开。"
     autoclosed_disabled_lastpost_hours:
-      other: "该话题将在最后一个回复 %{count} 小时后自动关闭。"
+      other: "此话题已在最后回复的 %{count} 小时后被自动打开。"
     autoclosed_disabled_lastpost_minutes:
-      other: "该话题将在最后一个回复 %{count} 分钟后自动关闭。"
-    autoclosed_disabled: "本话题是开放的，可以添加新的回复。"
-    autoclosed_disabled_lastpost: "本话题现在开放了。可以添加新的回复。"
-    auto_deleted_by_timer: "由计时器自动删除。"
+      other: "此话题已在最后回复的 %{count} 分钟后被自动打开。"
+    autoclosed_disabled: "此话题现在已被打开。允许新回复。"
+    autoclosed_disabled_lastpost: "此话题现在已被打开。允许新回复。"
+    auto_deleted_by_timer: "已由定时器自动删除。"
   login:
-    invalid_second_factor_method: "所选的双重认证方法无效。"
-    not_enabled_second_factor_method: "您的帐户未启用所选的双重验证方式。"
+    invalid_second_factor_method: "所选双重身份验证方法无效。"
+    not_enabled_second_factor_method: "您的帐户未启用所选双重身份验证方法。"
     security_key_description: "当您准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
     security_key_alternative: "尝试另一种方式"
     security_key_authenticate: "使用安全密钥进行身份验证"
-    security_key_not_allowed_error: "安全密钥验证超时或被取消。"
+    security_key_not_allowed_error: "安全密钥身份验证超时或被取消。"
     security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
-    security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
+    security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用不同的方法。"
     security_key_invalid: "验证安全密钥时出错。"
     not_approved: "您的帐户尚未获得批准。一旦可以登录，您会收到电子邮件通知。"
-    incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
-    incorrect_password: "密码错误"
-    wait_approval: "谢谢注册账户。我们会在您的账户获得批准之后通知您。"
-    active: "您的账户已经被激活，可以使用了。"
-    activate_email: "<p>快完成了！我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活您的账户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件收件箱。</p>"
+    incorrect_username_email_or_password: "用户名、电子邮件或密码不正确"
+    incorrect_password: "密码不正确"
+    wait_approval: "感谢您注册。当您的帐户获得批准后，我们会通知您。"
+    active: "您的帐户已被激活，并且可以使用了。"
+    activate_email: "<p>快完成了！我们向 <b>%{email}</b> 发送了一封激活邮件。请按照邮件中的说明操作来激活您的帐户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件文件夹。</p>"
     not_activated: "您还无法登录。我们向您发送了一封激活电子邮件。请按照电子邮件中的说明操作来激活您的帐户。"
-    not_allowed_from_ip_address: "您不能以 %{username} 身份从该 IP 地址登录。"
-    admin_not_allowed_from_ip_address: "您不能从该 IP 地址以管理员身份登录。"
-    reset_not_allowed_from_ip_address: "您不能够从当前的IP地址请求重置密码。"
-    suspended: "您要等到 %{date} 之后才能登录。"
-    suspended_with_reason: "账户已封禁至 %{date}：%{reason}"
+    not_allowed_from_ip_address: "您无法从该 IP 地址以 %{username} 身份登录。"
+    admin_not_allowed_from_ip_address: "您无法从该 IP 地址以管理员身份登录。"
+    reset_not_allowed_from_ip_address: "您无法从该 IP 地址请求密码重置。"
+    suspended: "您在 %{date}之前无法登录。"
+    suspended_with_reason: "帐户已被封禁至 %{date}：%{reason}"
     errors: "%{errors}"
-    not_available: "不可用，试试%{suggestion}？"
-    something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
+    not_available: "不可用，试试 %{suggestion}？"
+    something_already_taken: "出了点问题，可能该用户名或电子邮件已被注册，试试点击忘记密码链接。"
     omniauth_error:
-      generic: "抱歉，验证您的账户时出错。请重试。"
+      generic: "抱歉，验证您的帐户时出错。请重试。"
       csrf_detected: "授权超时，或者您已切换浏览器。请重试。"
-      request_error: "授权时发生错误。请重试。"
+      request_error: "启动授权时发生错误。请重试。"
       invalid_iat: "由于服务器时钟差异，无法验证授权令牌。请重试。"
-    omniauth_error_unknown: "在处理您的登录过程中发生了错误，请重试。"
-    omniauth_confirm_title: "使用%{provider}登录"
+    omniauth_error_unknown: "处理您的登录时出错，请重试。"
+    omniauth_confirm_title: "使用 %{provider} 登录"
     omniauth_confirm_button: "继续"
-    authenticator_error_no_valid_email: "关联%{account}的账户没有优秀的邮件地址。您可能需要用不同的邮件地址配置您的账户。"
-    new_registrations_disabled: "现在不允许注册新账户。"
-    password_too_long: "密码不能超过 200 个字符。"
-    email_too_long: "您输入的邮件太长了。邮箱名不得超过 254 字符，域名必须不超过 253 字符。"
+    authenticator_error_no_valid_email: "不允许与 %{account} 关联的电子邮件地址。您可能需要使用不同的电子邮件地址配置您的帐户。"
+    new_registrations_disabled: "目前不允许注册新帐户。"
+    password_too_long: "密码不得超过 200 个字符。"
+    email_too_long: "您提供的电子邮件过长。邮箱名称不得超过 254 个字符，域名不得超过 253 个字符。"
     wrong_invite_code: "您输入的邀请码不正确。"
-    reserved_username: "该用户名不可被使用。"
-    missing_user_field: "您还没有填写完所有用户字段"
-    auth_complete: "验证已经完成。"
-    click_to_continue: "点击这里继续。"
-    already_logged_in: "抱歉！这个邀请只用于尚未拥有账户的新用户。"
-    second_factor_title: "双重认证"
-    second_factor_description: "请输入您的APP验证码："
-    second_factor_backup_description: "请输入备用码："
-    second_factor_backup_title: "双重认证备份代码"
+    reserved_username: "不允许使用该用户名。"
+    missing_user_field: "您尚未完成所有用户字段"
+    auth_complete: "身份验证完成。"
+    click_to_continue: "单击此处继续。"
+    already_logged_in: "抱歉！此邀请面向目前没有帐户的新用户。"
+    second_factor_title: "双重身份验证"
+    second_factor_description: "请输入应用中的必需身份验证代码："
+    second_factor_backup_description: "请输入您的备份代码之一："
+    second_factor_backup_title: "双重备份代码"
     invalid_second_factor_code: "验证码无效。每个代码只能使用一次。"
     invalid_security_key: "无效的安全密钥。"
     missing_second_factor_name: "请提供一个名称。"
-    missing_second_factor_code: "请提供一个验证码"
+    missing_second_factor_code: "请提供一个代码。"
     second_factor_toggle:
-      totp: "请改用身份验证器应用或安全密钥"
-      backup_code: "使用备份代码"
+      totp: "改用身份验证器应用或安全密钥"
+      backup_code: "改用备份代码"
   admin:
     email:
       sent_test: "已发送！"
     user:
       merge_user:
-        updating_username: "正在更新用户名..."
-        changing_post_ownership: "更改帖子所有权..."
-        merging_given_daily_likes: "正在合并每日喜欢..."
-        merging_post_timings: "正在合并帖子发布时间..."
-        merging_user_visits: "正在合并用户访问..."
-        updating_site_settings: "正在更新站点设置..."
-        updating_user_stats: "正在更新用户统计信息..."
-        merging_user_attributes: "正在合并用户属性..."
-        updating_user_ids: "正在更新用户ID ..."
-        deleting_source_user: "正在删除源用户..."
+        updating_username: "正在更新用户名…"
+        changing_post_ownership: "正在更改帖子所有权…"
+        merging_given_daily_likes: "正在合并每日赞…"
+        merging_post_timings: "正在合并帖子时间…"
+        merging_user_visits: "正在合并用户访问…"
+        updating_site_settings: "正在更新站点设置…"
+        updating_user_stats: "正在更新用户统计信息…"
+        merging_user_attributes: "正在合并用户特性…"
+        updating_user_ids: "正在更新用户 ID…"
+        deleting_source_user: "正在删除源用户…"
   user:
-    deactivated: "因发送至“%{email}”的邮件被多次退信，取消激活"
-    deactivated_by_staff: "被管理人员禁用"
+    deactivated: "由于 '%{email}' 的退回电子邮件过多，已被停用。"
+    deactivated_by_staff: "被管理人员停用"
     deactivated_by_inactivity:
-      other: "%{count}天不活动后自动停用"
+      other: "已在闲置 %{count} 天后被自动停用"
     activated_by_staff: "被管理人员激活"
-    new_user_typed_too_fast: "新用户打字太快了"
+    new_user_typed_too_fast: "新用户输入过快"
     content_matches_auto_silence_regex: "内容符合自动禁言的正则表达式"
-    content_matches_auto_block_regex: "内容符合自动封禁的正则表达式"
+    content_matches_auto_block_regex: "内容符合自动禁止的正则表达式"
     username:
-      short: "必须超过 %{min} 个字"
-      long: "必须不超过 %{max} 个字"
-      too_long: "太长"
-      characters: "只能使用数字、字母、短横线、小数点和下划线"
-      unique: "已被使用"
+      short: "必须至少为 %{min} 个字符"
+      long: "不得超过 %{max} 个字符"
+      too_long: "过长"
+      characters: "只得包含数字、字母、破折号、点和下划线"
+      unique: "必须唯一"
       blank: "必须存在"
       must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"
       must_end_with_alphanumeric: "必须以字母或数字结尾"
-      must_not_contain_two_special_chars_in_seq: "必须不包括连续的 2 个或更多的特殊字符（.-_）"
-      must_not_end_with_confusing_suffix: "不能以迷惑性的后缀结尾，比如 .json 或者 .png 等"
+      must_not_contain_two_special_chars_in_seq: "不得包含 2 个或更多特殊字符 (.-_) 的序列"
+      must_not_end_with_confusing_suffix: "不得以 .json 或 .png 等令人困惑的后缀结尾。"
     email:
       invalid: "无效。"
-      not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
+      not_allowed: "不允许来自该电子邮件提供商。请使用其他电子邮件地址。"
       blocked: "不被允许。"
-      revoked: "在%{date}之前不发送邮件至“%{email}”"
-      does_not_exist: "N/A"
+      revoked: "在 %{date}之前不会向 '%{email}' 发送电子邮件。"
+      does_not_exist: "不适用"
     ip_address:
-      blocked: "不允许从您的 IP 地址注册新用户。"
-      max_new_accounts_per_registration_ip: "不允许从您的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
+      blocked: "不允许从您的 IP 地址进行新注册。"
+      max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
     website:
-      domain_not_allowed: "网站无效。允许的域名有：%{domains}"
-    auto_rejected: "因时限被自动拒绝。查看站点自动处理队列时限设置。"
+      domain_not_allowed: "网站无效。允许的网域包括：%{domains}"
+    auto_rejected: "因时限被自动拒绝。查看 auto_handle_queued_age 站点设置。"
     destroy_reasons:
       unused_staged_user: "未使用的暂存用户"
-      fixed_primary_email: "为暂存用户固定主要邮箱"
-      same_ip_address: "同一IP地址(%{ip_address})如其他用户"
-      inactive_user: "非活跃用户"
-      reviewable_reject_auto: "自动处理排队的可审核内容"
-      reviewable_reject: "审核用户被拒绝"
-    email_in_spam_header: "用户的第一封电子邮件已被标记为垃圾邮件"
-    already_silenced: "用户已被 %{staff} 在 %{time_ago} 静音。"
-    already_suspended: "用户已被 %{staff} 在 %{time_ago} 封禁。"
+      fixed_primary_email: "修复了暂存用户的常用电子邮件"
+      same_ip_address: "与其他用户相同的 IP 地址 (%{ip_address})"
+      inactive_user: "停用用户"
+      reviewable_reject_auto: "自动处理排队的可审查内容"
+      reviewable_reject: "可审查用户被拒绝"
+    email_in_spam_header: "用户的第一封电子邮件已被举报为垃圾邮件"
+    already_silenced: "用户已在 %{time_ago}被 %{staff} 禁言。"
+    already_suspended: "用户已在 %{time_ago}被 %{staff} 封禁。"
   reviewables_reminder:
     submitted:
-      other: "项目提交于1%{count}小时前。[请审核](%{base_path}/review)。"
+      other: "条目于 %{count} 小时前提交。[请审查](%{base_path}/review)。"
     subject_template:
-      other: "%{count}个项目需要被审核"
+      other: "%{count} 个条目需要审查"
   unsubscribe_mailer:
-    title: "取消订阅发件人"
-    subject_template: "确认您不想要收到%{site_title}的电子邮件更新"
+    title: "退订邮件程序"
+    subject_template: "确认您不再希望收到 %{site_title} 的电子邮件动态"
     text_body_template: |
-      我们收到了取消订阅来自%{site_domain_name}的邮件更新的请求（是您的操作吗？）。
-
-      如果您确认该请求，点击链接：
+      有人（可能是您？）请求不再从 %{site_domain_name} 向此地址发送电子邮件动态。
+      如果您希望确认此操作，请点击此链接：
 
       %{confirm_unsubscribe_link}
 
-      如果您想要继续收到邮件更新，您可以忽略这封邮件。
+
+      如果您想继续接收电子邮件动态，您可以忽略此电子邮件。
   invite_mailer:
-    title: "要求发件人"
-    subject_template: "%{inviter_name} 邀请您参与 '%{topic_title}' 于 %{site_domain_name}"
+    title: "邀请邮件程序"
+    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name} 上的 '%{topic_title}'"
     text_body_template: |
       %{inviter_name} 邀请您参与讨论
 
@@ -2276,16 +2276,16 @@ zh_CN:
       >
       > %{topic_excerpt}
 
-      于
+      -
 
       > %{site_title} -- %{site_description}
 
-      如果您感兴趣，点击以下链接:
+      如果您感兴趣，请点击以下链接：
 
       %{invite_link}
   custom_invite_mailer:
-    title: "自定义邀请发件人"
-    subject_template: "%{inviter_name}邀请您加入'%{topic_title}'于%{site_domain_name}"
+    title: "自定义邀请邮件程序"
+    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name} 上的 '%{topic_title}'"
     text_body_template: |
       %{inviter_name} 邀请您参与讨论
 
@@ -2293,20 +2293,20 @@ zh_CN:
       >
       > %{topic_excerpt}
 
-      于
+      -
 
       > %{site_title} -- %{site_description}
 
-      留言为
+      消息为
 
       > %{user_custom_message}
 
-      如果您感兴趣，点击以下链接:
+      如果您感兴趣，请点击以下链接：
 
       %{invite_link}
   invite_forum_mailer:
-    title: "邀请论坛发件人"
-    subject_template: "%{inviter_name}邀请您加入%{site_domain_name}"
+    title: "邀请论坛邮件程序"
+    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
     text_body_template: |
       %{inviter_name} 邀请您加入
 
@@ -2314,12 +2314,12 @@ zh_CN:
       >
       > %{site_description}
 
-      如果您感兴趣，点击以下链接:
+      如果您感兴趣，请点击以下链接：
 
       %{invite_link}
   custom_invite_forum_mailer:
-    title: "自定义论坛邀请发件人"
-    subject_template: "%{inviter_name}邀请您加入%{site_domain_name}"
+    title: "自定义邀请论坛邮件程序"
+    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
     text_body_template: |
       %{inviter_name} 邀请您加入
 
@@ -2327,41 +2327,41 @@ zh_CN:
       >
       > %{site_description}
 
-      留言为
+      消息为
 
       > %{user_custom_message}
 
-      如果您感兴趣，点击以下链接:
+      如果您感兴趣，请点击以下链接：
 
       %{invite_link}
   invite_password_instructions:
-    title: "邀请密码指示"
-    subject_template: "为 %{site_name} 账户设置密码"
+    title: "邀请密码说明"
+    subject_template: "为您的 %{site_name} 帐户设置密码"
     text_body_template: |
-      感谢您接受来自%{site_name}的邀请——欢迎！
+      感谢您接受加入 %{site_name} 的邀请 - 欢迎！
 
-      点击下面的链接立即选择一个密码：
+      点击此链接立即选择一个密码：
       %{base_url}/u/password-reset/%{email_token}
 
-      （如果链接已经过期，在登录时点击“我忘记了密码”，再次输入您的邮箱即可。）
+      （如果链接已经过期，请在使用您的电子邮件地址登录时选择“我忘记密码了”。）
   download_backup_mailer:
-    title: "下载备份邮件发件人"
+    title: "下载备份邮件程序"
     subject_template: "[%{email_prefix}] 站点备份下载"
     text_body_template: |
-      这是您的[站点备份文件](%{backup_file_path})。
+      这是您请求的[站点备份下载](%{backup_file_path})。
 
-      出于安全原因，我们把下载链接发送至您验证过的邮箱。
+      出于安全原因，我们已将此下载链接发送至您验证过的电子邮件地址。
 
-      （如果您**没有**请求下载，您需要思考一下了——某管理员请求了备份文件）
+      （如果您**没有**请求此下载，您应该予以重视 - 其他人可能拥有您的站点的管理员访问权限。）
     no_token: |
-      抱歉，这个备份下载链接已经被使用或已经过期。
+      抱歉，此备份下载链接已被使用或已过期。
   admin_confirmation_mailer:
     title: "管理员确认"
-    subject_template: "[%{site_name}] 确认新管理员账户"
-    text_body_template: "请确认您要添加**%{target_username}（%{target_email}）**作为您的论坛的管理员。 \n\n[确认管理员账户](%{admin_confirm_url})\n"
+    subject_template: "[%{email_prefix}] 确认新管理员帐户"
+    text_body_template: "请确认您要添加 **%{target_username} (%{target_email})** 作为您的论坛的管理员。 \n\n[确认管理员帐户](%{admin_confirm_url})\n"
   test_mailer:
-    title: "测试发件人"
-    subject_template: "[%{email_prefix}] 邮件可达性测试"
+    title: "测试邮件程序"
+    subject_template: "[%{email_prefix}] 电子邮件能否递送成功测试"
     text_body_template: "这是一封测试邮件，它来自 \n\n[**%{base_url}**][0]\n\n邮件传输是复杂的。下面是几个您需要第一时间留意的重点：\n\n- 请*确保*正确地在站点设置中设置了`notification email`。**您所发出的邮件的来源字段的域名需要被验证**。\n\n- 清楚如何使用您的邮件客户端查看邮件原始内容，这样您能够检查邮件标头以获取重要线索。在Gmail中，每封邮件的右上角下拉菜单中都有“显示原始内容”的选项。\n\n- **重要:**您的ISP是否设置了反向DNS记录以关联您用于发送邮件的域名和IP地址？[测试您的反向PTR记录][2]。如果您的ISP未正确设置反向DNS记录，您的邮件不太可能被正确送达。\n\n- 您的域名的[SPF记录][8]正确吗？[测试您的SPF记录][1]。注意SPF的正确记录类型是TXT.\n\n- 您的域名的[DKIM记录][3]正确吗？这会显著地提升邮件送达。[测试您的DKIM记录][7]。\n\n- 如果您使用自建的邮件服务器，确保您的邮件服务器的IP地址[不在邮件屏蔽列表中][4]。还要验证其在HELO信息中正确地发送出一个DNS解析正常的域名。否则，您的邮件会被许多邮件服务拒收。\n\n- 我们强烈建议您**发送一封测试邮件到[mail-tester.com][mt]**以验证上述所有设置正常。\n\n（较*方便*的方法就是创建一个[SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg]或[Mailjet][mj]的账号，这些平台提供适用于小型社区的低成本邮寄服务。不过，您仍然需要在DNS中设置SPF和DKIM记录！）\n\n希望您能成功收到这封测试邮件！\n\n祝君好运，\n\n您在[Discourse](https://www.discourse.org)的伙伴\n\n[0]: %{base_url}\n[1]: https://www.kitterman.com/spf/validate.html\n[2]: https://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: https://whatismyipaddress.com/blacklist-check\n[7]: https://www.mail-tester.com/spf-dkim-check\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://goo.gl/r1WMF6\n[sp]: https://www.sparkpost.com/\n[mg]: https://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing/\n[mt]: https://www.mail-tester.com/\n"
   new_version_mailer:
     title: "新版本发件人"
