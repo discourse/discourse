@@ -1,9 +1,11 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import initLazyYt from "../lib/lazyYT";
 
 export default {
   name: "apply-lazyYT",
   initialize() {
     withPluginApi("0.1", (api) => {
+      initLazyYt($);
       api.decorateCooked(
         ($elem) => {
           const iframes = $(".lazyYT", $elem);

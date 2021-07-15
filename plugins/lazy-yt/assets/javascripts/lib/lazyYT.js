@@ -11,7 +11,9 @@
  *
  */
 
-(function ($) {
+import escape from "discourse-common/lib/escape";
+
+export default function initLazyYt($) {
   "use strict";
 
   function setUp($el, settings) {
@@ -75,13 +77,13 @@
     innerHtml.push('<div class="html5-title-text-wrapper">');
     innerHtml.push(
       '<a class="html5-title-text" target="_blank" tabindex="3100" href="https://www.youtube.com/watch?v=',
-      id,
+      escape(id),
       '">'
     );
     if (title === undefined || title === null || title === "") {
-      innerHtml.push("youtube.com/watch?v=" + id);
+      innerHtml.push("youtube.com/watch?v=" + escape(id));
     } else {
-      innerHtml.push(title);
+      innerHtml.push(escape(title));
     }
     innerHtml.push("</a>");
     innerHtml.push("</div>"); // .html5-title
@@ -121,7 +123,7 @@
           $(
             [
               '<img class="ytp-thumbnail-image" src="https://img.youtube.com/vi/',
-              id,
+              escape(id),
               "/",
               thumb_img,
               '">',
@@ -143,7 +145,7 @@
           $el
             .html(
               '<iframe src="//www.youtube.com/embed/' +
-                id +
+                escape(id) +
                 "?autoplay=1&" +
                 youtube_parameters +
                 '" frameborder="0" allowfullscreen></iframe>'
@@ -170,4 +172,4 @@
       setUp($el, settings);
     });
   };
-})(jQuery);
+}

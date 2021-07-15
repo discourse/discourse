@@ -89,25 +89,31 @@ module Onebox
 
       def video_id
         @video_id ||= begin
+          id = nil
+
           # http://youtu.be/afyK1HSFfgw
           if uri.host["youtu.be"]
             id = uri.path[/\/([\w\-]+)/, 1]
-            return id if id
           end
 
           # https://www.youtube.com/embed/vsF0K3Ou1v0
           if uri.path["/embed/"]
-            id = uri.path[/\/embed\/([\w\-]+)/, 1]
-            return id if id
+            id ||= uri.path[/\/embed\/([\w\-]+)/, 1]
           end
 
           # https://www.youtube.com/watch?v=Z0UISCEe52Y
-          params['v']
+          id ||= params['v']
+
+          sanitize_yt_id(id)
         end
       end
 
       def list_id
-        @list_id ||= params['list']
+        @list_id ||= sanitize_yt_id(params['list'])
+      end
+
+      def sanitize_yt_id(raw)
+        raw&.match?(/\A[\w-]+\z/) ? raw : nil
       end
 
       def embed_params

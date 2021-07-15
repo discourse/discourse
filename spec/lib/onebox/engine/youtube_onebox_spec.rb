@@ -65,6 +65,17 @@ describe Onebox::Engine::YoutubeOnebox do
     expect(Onebox.preview('https://www.youtube.com/watch?v=21Lk4YiASMo&potential[]=exploit&potential[]=fun').to_s).not_to match(/potential|exploit|fun/)
   end
 
+  it "ignores video_id with unacceptable characters" do
+    # (falls back to generic onebox)
+    Onebox::Engine::AllowlistedGenericOnebox.any_instance.stubs(:to_html).returns(+"allowlisted_html")
+    expect(Onebox.preview('https://www.youtube.com/watch?v=%3C%3E21Lk4YiASMo').to_s).to eq("allowlisted_html")
+  end
+
+  it "ignores list_id with unacceptable characters" do
+    # (falls back to video-only onebox)
+    expect(Onebox.preview('https://www.youtube.com/watch?v=21Lk4YiASMo&list=%3C%3EUUQau-O2C0kGJpR3_CHBTGbw').to_s).not_to include("UUQau-O2C0kGJpR3_CHBTGbw")
+  end
+
   it "converts time strings into a &start= parameter" do
     expect(Onebox.preview('https://www.youtube.com/watch?v=21Lk4YiASMo&start=3782').to_s).to match(/start=3782/)
     expect(Onebox.preview('https://www.youtube.com/watch?start=1h3m2s&v=21Lk4YiASMo').to_s).to match(/start=3782/)
