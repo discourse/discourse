@@ -456,7 +456,7 @@ describe UserGuardian do
     end
   end
 
-  describe "can_change_tracking_preferences?" do
+  describe "#can_change_tracking_preferences?" do
     let(:staged_user) { Fabricate(:staged) }
     let(:admin_user) { Fabricate(:admin) }
 
