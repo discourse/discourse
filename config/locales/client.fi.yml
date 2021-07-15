@@ -305,7 +305,6 @@ fi:
       remove: "Poista"
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
       new_topic: "Uusi ketjuluonnos"
-      new_private_message: "Uusi yksityisviestiluonnos"
       topic_reply: "Vastausluonnos"
       abandon:
         confirm: "Sinulla on meneillään luonnos tätä ketjua varten. Mitä haluaisit tehdä sen kanssa?"
@@ -1960,7 +1959,6 @@ fi:
           confirm: Sinulla on tallennettuna uusi ketjuluonnos, joka korvataan, jos luot liittyvän ketjun.
         reply_as_new_group_message:
           label: Vastaa uudessa ryhmäviestissä
-          desc: Luo uusi yksityisviesti, jossa samat vastaanottajat
         reply_as_private_message:
           label: Uusi viesti
           desc: Luo uusi yksityisviesti

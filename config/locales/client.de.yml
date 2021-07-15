@@ -306,7 +306,6 @@ de:
       remove: "Entfernen"
       remove_confirmation: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
       new_topic: "Neuer Entwurf für Thema"
-      new_private_message: "Neuer Entwurf für private Nachricht"
       topic_reply: "Entwurf für Antwort"
       abandon:
         confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
@@ -1956,7 +1955,6 @@ de:
           confirm: Du hast einen neuen Themen-Entwurf gespeichert. Wenn du ein verknüpftes Thema erstellst, wird er überschrieben.
         reply_as_new_group_message:
           label: Als neue Gruppen-Nachricht antworten
-          desc: Erstelle eine neue private Nachricht mit denselben Empfängern
         reply_as_private_message:
           label: Neue Nachricht
           desc: Erstelle eine neue persönliche Nachricht

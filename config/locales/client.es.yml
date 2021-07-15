@@ -305,7 +305,6 @@ es:
       remove: "Eliminar"
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
       new_topic: "Nuevo borrador de tema"
-      new_private_message: "Nuevo borrador de mensaje privado"
       topic_reply: "Borrador de respuesta"
       abandon:
         confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
@@ -1955,7 +1954,6 @@ es:
           confirm: Tienes un borrador de tema nuevo guardado. Este se sobrescribirá si creas un tema enlazado.
         reply_as_new_group_message:
           label: Responder como un nuevo mensaje de grupo
-          desc: Crear un nuevo mensaje privado con los mismos destinatarios
         reply_as_private_message:
           label: Nuevo mensaje
           desc: Crear un nuevo mensaje personal

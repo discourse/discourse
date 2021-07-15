@@ -280,7 +280,6 @@ ja:
       remove: "削除"
       remove_confirmation: "この下書きを削除してもよろしいですか？"
       new_topic: "新しいトピックの下書き"
-      new_private_message: "新しいプライベートメッセージの下書き"
       topic_reply: "返信の下書き"
       abandon:
         confirm: "このトピックの作成中の下書きがあります。どうしますか？"
@@ -1886,7 +1885,6 @@ ja:
           confirm: 新しいトピックの下書きが保存されていますが、リンクトピックを作成すると上書きされます。
         reply_as_new_group_message:
           label: 新しいグループメッセージとして返信
-          desc: 同じ受信者で新しい非公開メッセージを作成します
         reply_as_private_message:
           label: 新規メッセージ
           desc: 新しい個人メッセージを作成する
@@ -3189,7 +3187,7 @@ ja:
       more_badges:
         other: "他 %{count}"
       granted:
-        other: "%{count} 回付与"
+        other: "%{count} 個付与"
       select_badge_for_title: タグラインとして使用するバッジを選択
       none: "(なし)"
       successfully_granted: "%{badge} を %{username} に正常に付与しました"
@@ -3204,7 +3202,7 @@ ja:
           name: その他
         posting:
           name: 投稿
-      favorite_max_reached: "これ以上バッジをお気に入りにできません。"
+      favorite_max_reached: "これ以上のバッジをお気に入りにできません。"
       favorite_max_not_reached: "このバッジをお気に入りにする"
       favorite_count: "%{count}/%{max} 個のバッジがお気に入りに登録されています"
     tagging:

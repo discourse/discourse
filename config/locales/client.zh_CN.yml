@@ -276,7 +276,6 @@ zh_CN:
       remove: "移除"
       remove_confirmation: "确定要删除此草稿吗？"
       new_topic: "新话题草稿"
-      new_private_message: "新私信草稿"
       topic_reply: "草稿回复"
       abandon:
         confirm: "您在此话题下有一个进行中的草稿。您想对它做什么？"
@@ -1851,7 +1850,6 @@ zh_CN:
           confirm: 您保存了一个新的话题草稿，如果您创建链接话题，它将被覆盖。
         reply_as_new_group_message:
           label: 作为新群组消息回复
-          desc: 创建收件人相同的新私信
         reply_as_private_message:
           label: 新建消息
           desc: 创建新的个人消息

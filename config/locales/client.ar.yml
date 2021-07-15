@@ -393,7 +393,6 @@ ar:
       remove: "إزالة"
       remove_confirmation: "هل تريد بالتأكيد حذف هذه المسودة؟"
       new_topic: "مسودة موضوع جديد"
-      new_private_message: "مسودة رسالة خاصة جديدة"
       topic_reply: "مسودة الرد"
     topic_count_latest:
       zero: "عرض %{count} موضوع جديد أو محدَّث"
@@ -2007,7 +2006,6 @@ ar:
           confirm: لديك مسودة موضوع جديد تم حفظها، وسيتم استبدالها إذا أنشأت موضوعًا مرتبطًا.
         reply_as_new_group_message:
           label: الرد كرسالة جديدة للمجموعة
-          desc: إنشاء رسالة خاصة جديدة مع المستلمين أنفسهم
         reply_as_private_message:
           label: رسالة جديدة
           desc: إنشاء رسالة خاصة جديدة

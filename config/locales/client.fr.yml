@@ -305,7 +305,6 @@ fr:
       remove: "Supprimer"
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
       new_topic: "Nouveau brouillon de sujet"
-      new_private_message: "Nouveau brouillon de message direct"
       topic_reply: "Créer un brouillon de réponse"
       abandon:
         confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
@@ -1955,7 +1954,6 @@ fr:
           confirm: Vos brouillons contiennent un nouveau sujet en cours de rédaction. Ce brouillon sera perdu si vous créez un sujet lié.
         reply_as_new_group_message:
           label: Répondre en créant un nouveau message de groupe
-          desc: Créer un nouveau message direct avec les mêmes destinataires
         reply_as_private_message:
           label: Nouveau message direct
           desc: Créer un nouveau message direct
