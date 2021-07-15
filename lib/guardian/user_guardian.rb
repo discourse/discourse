@@ -181,7 +181,6 @@ module UserGuardian
   end
 
   def can_change_tracking_preferences?(user)
-    can_edit_user?(user) &&
-      (!user.staged || SiteSetting.allow_changing_staged_user_tracking)
+    (SiteSetting.allow_changing_staged_user_tracking || !user.staged) && can_edit_user?(user)
   end
 end
