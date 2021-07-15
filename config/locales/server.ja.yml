@@ -2019,6 +2019,12 @@ ja:
     push_notifications_prompt: "ユーザー同意プロンプトを表示する。"
     push_notifications_icon: "通知コーナーに表示されるバッジアイコン。透明度が適用された 96x96 のモノクロ PNG が推奨されます。"
     base_font: "サイトのほとんどのテキストに使用されるベースフォント。テーマは `--font-family` CSS カスタムプロパティを介してオーバーライドできます。"
+    heading_font: "サイトの見出しに使用されるフォント。テーマは `--heading-font-family` CSS カスタムプロパティを介してオーバーライドできます。"
+    short_title: "短いタイトルはユーザーのホーム画面、ランチャー、またはスペースが限られている場所に使用されます。12 文字に制限する必要があります。"
+    dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
+    dashboard_visible_tabs: "表示するダッシュボードのタブを選択します。"
+    dashboard_general_tab_activity_metrics: "アクティビティメトリクスとして一般タブに表示されるレポートを選択します。"
+    gravatar_name: "Gravatar プロバイダーの名前"
     gravatar_base_url: "Gravatar プロバイダーの API ベースの URL"
     gravatar_login_url: "gravatar_base_url への相対 URL。ユーザーに Gravatar サービスへのログインを提供します"
     share_quote_buttons: "引用の共有ウィジェットに表示される項目と表示順を決定する。"
@@ -2528,6 +2534,28 @@ ja:
         %{flagged_post_raw_content}
         ```
         [/details]
+    flags_agreed_and_post_deleted:
+      title: "通報された投稿をスタッフが削除しました"
+      subject_template: "通報された投稿をスタッフが削除しました"
+      text_body_template: |
+        こんにちは。
+
+        これは、%{site_name} からの自動メッセージです。[あなたの投稿](%{base_url}%{url})が削除されたことをお知らせします。
+
+        %{flag_reason}
+
+        この投稿はコミュニティによって通報され、スタッフメンバーが削除することを選択しました。
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        詳細については、[コミュニティガイドライン](%{base_url}/guidelines)をご覧ください。
+    usage_tips:
+      text_body_template: |
+        新規ユーザーとして開始するための簡単なヒントについては、[こちらのブログ記事をご覧ください](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
+
+        ここで参加すると、あなたのことを知れるようになり、新規ユーザーの制限が一時的に解除されます。時間が経つにつれ、共にコミュニティを管理するための特別な機能が含まれた[信頼レベル](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)を獲得できるようになります。
     welcome_user:
       title: "ようこそ"
       subject_template: "%{site_name} へようこそ！"
@@ -2539,8 +2567,41 @@ ja:
         コミュニティでは常に礼節ある行動 (%{base_url}/guidelines) を取ってもらえると信じています。
 
         ではお楽しみください！
+    welcome_tl1_user:
+      title: "ようこそ、TL1 ユーザー"
+      subject_template: "一緒に時間を過ごしてくれてありがとうございます"
+      text_body_template: |
+        こんにちは。最近読みふけっているようですね。素晴らしいことです。そこで、あなたの[信頼レベル](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)を昇格しました！
+
+        あなたがここで時間を費やしていることを本当に嬉しく思っており、もっとあなたのことを知りたいと思っています。少しお時間をいただいて、[プロフィールを入力](%{base_url}/my/preferences/profile)していただくか、お気軽に[新しいトピックを開始](%{base_url}/categories)してください。
+    welcome_staff:
+      title: "ようこそ - スタッフ"
+      subject_template: "おめでとうございます。あなたに %{role} ステータスが付与されました！"
+      text_body_template: |
+        スタッフメンバーより、あなたに%{role}ステータスが付与されました。
+
+        %{role}として、<a href='%{base_url}/admin' target='_blank'>管理者インターフェース</a>にアクセスできるようになりました。
+
+        偉大な力には大きな責任が伴います。介入に新しい方は、[介入ガイド](https://meta.discourse.org/t/discourse-moderation-guide/63116)をご覧ください。
     welcome_invite:
+      title: "ようこそ - 招待"
       subject_template: "%{site_name} へようこそ！"
+      text_body_template: |
+        %{site_name} への招待を承諾していただき、ありがとうございます -- ようこそ！
+
+        ‐ この新しいアカウント **%{username}** をあなたのために作成しました。[ユーザープロフィール][prefs]にアクセスして、名前またはパスワードを変更してください。
+
+        ‐ ログインする際は、**元の招待状と同じメールアドレスを使用**してください。異なるものを使用すると、あなたであることがわかりません！
+
+        %{new_user_tips}
+
+        コミュニティでは常に[礼節ある行動](%{base_url}/guidelines) を取ってもらえると信じています。
+
+        ではお楽しみください！
+
+        [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "信頼レベルの昇格おめでとうございます！"
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
     backup_failed:
@@ -3083,6 +3144,7 @@ ja:
 
         %{respond_instructions}
     user_posted_pm_staged:
+      title: "ユーザーがステージングに PM を投稿しました"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3162,7 +3224,17 @@ ja:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "パスワードを設定"
+      subject_template: "[%{email_prefix}] パスワードを設定してください"
+      text_body_template: |
+        誰かが [%{site_name}](%{base_url}) のあなたのアカウントにパスワードを追加するよう依頼しました。または、この検証済みのメールアドレスに関連付けられている対応のオンラインサービス (Google、Facebook など) を使用してログインすることもできます。
+
+        これをリクエストしなかった場合は、このメールを無視しても構いません。
+
+        次のリンクをクリックして、パスワードを選択してください。
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
+      title: "管理者ログイン"
+      subject_template: "[%{email_prefix}] ログイン"
       text_body_template: |
         誰かが [%{site_name}](%{base_url}) のアカウントにログインしようとしています。
 
@@ -3171,7 +3243,13 @@ ja:
         ログインするには次のリンクをクリックしてください:
         %{base_url}/session/email-login/%{email_token}
     account_created:
+      title: "アカウントが作成されました"
       subject_template: "[%{email_prefix}] 新しいアカウント"
+      text_body_template: |
+        あなたの新規アカウントが %{site_name} で作成されました
+
+        次のリンクをクリックして、新しいアカウントのパスワードを選択してください。
+        %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "新しいメールを確認してください"
       subject_template: "[%{email_prefix}] 新しいメールアドレスを確認してください"
@@ -3193,9 +3271,24 @@ ja:
     confirm_old_email:
       title: "古いメールを確認してください"
       subject_template: "[%{email_prefix}] 現在のメールアドレスを確認してください"
+      text_body_template: |
+        メールアドレスを変更する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、当たらhしいメールアドレスを確認してください。
+
+        次のリンクをクリックして、%{site_name} の現在のメールアドレスを確認してください。
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
+      title: "古いメールの確認 (追加)"
       subject_template: "[%{email_prefix}] 現在のメールアドレスを確認してください"
+      text_body_template: |
+        新しいメールアドレスを追加する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、当たらhしいメールアドレスを確認してください。
+
+        次のリンクをクリックして、%{site_name} の現在のメールアドレスを確認してください。
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
+      title: "古いメールに通知"
+      subject_template: "[%{email_prefix}] あなたのメールアドレスは変更されました"
       text_body_template: |
         これは、%{site_name} のあなたのメールアドレスが変更されたことを
         知らせる自動メッセージです。誤って変更された場合は、サイト管理者に
@@ -3205,6 +3298,8 @@ ja:
 
         %{new_email}
     notify_old_email_add:
+      title: "古いメールに通知 (追加)"
+      subject_template: "[%{email_prefix}] 新しいメールアドレスが追加されました"
       text_body_template: |
         これは、%{site_name} のメールアドレスが追加されたことを知らせる
         自動メッセージです。誤って追加された場合は、サイト管理者に
@@ -3214,7 +3309,16 @@ ja:
 
         %{new_email}
     signup_after_approval:
+      title: "登録 - 承認後"
       subject_template: "%{site_name} での承認が完了しました！"
+      text_body_template: "%{site_name} へようこそ！\n\nスタッフメンバーが %{site_name} のあなたのアカウントを承認しました。\n\nこれで、次の場所からログインすると、新しいアカウントにアクセスできるようになりました。\n%{base_url}\n\n上記のリンクをクリックできない場合は、それをコピーしてウェブブラウザのアドレスバーに貼り付けてください。\n\n%{new_user_tips}\n\nコミュニティでは常に[礼節ある行動](%{base_url}/guidelines)を取ってもらえると信じています。 \n\nではお楽しみください！\n"
+    signup_after_reject:
+      title: "登録 - 拒否後"
+      subject_template: "%{site_name} での承認が拒否されました"
+      text_body_template: |
+        スタッフメンバーは %{site_name} のあなたのアカウントを拒否しました。
+
+        %{reject_reason}
     signup:
       title: "登録"
       subject_template: "[%{email_prefix}] 新しいアカウントを確認してください"
@@ -3225,8 +3329,43 @@ ja:
         %{base_url}/u/activate-account/%{email_token}
 
         このリンクがクリックできない場合は、リンクをコピーしてウェブブラウザのアドレスバーに貼り付けてください。
+    activation_reminder:
+      title: "アクティベーションに関するリマインダー"
+      subject_template: "[%{email_prefix}] アカウントの確認に関するリマインダー"
+      text_body_template: |
+        %{site_name} へようこそ！
+
+        これはあなたのアカウントのアクティベーションに関するリマインダーです。
+
+        新しいアカウントを確認して有効にするには、次のリンクをクリックしてください:
+        %{base_url}/u/activate-account/%{email_token}
+
+        このリンクがクリックできない場合は、リンクをコピーしてウェブブラウザのアドレスバーに貼り付けてください。
+    suspicious_login:
+      title: "新しいログインのアラート"
+      subject_template: "[%{site_name}] %{location} からの新しいログイン"
+      text_body_template: |
+        こんにちは。
+
+        普段使用されていないデバイスまたは場所からログインがあったようです。これはあなたですか？
+
+         - 場所: %{location} (%{client_ip})
+         - ブラウザ: %{browser}
+         - デバイス: %{device} – %{os}
+
+        これがあなたであったなら良いことです！ほかに何もする必要はありません。
+
+        これがあなたでなかったなら、[既存のセッションをレビュー](%{base_url}/my/preferences/account)し、パスワードを変更することを検討してください。
     post_approved:
       title: "あなたの投稿は承認されました"
+      subject_template: "[%{site_name}] あなたの投稿は承認されました"
+      text_body_template: |
+        こんにちは。
+
+        これは、%{site_name} からの自動メッセージです。[あなたの投稿](%{base_url}%{post_url})が承認されたことをお知らせします。
+  page_forbidden:
+    title: "おっとっと！そのページは非公開です。"
+  site_setting_missing: "`%{name}` サイト設定は、設定されている必要があります。"
   page_not_found:
     title: "おっとっと！ページが存在しないか非公開です。"
     popular_topics: "人気"
@@ -3234,6 +3373,9 @@ ja:
     see_more: "もっと"
     search_title: "このサイトを検索"
     search_button: "検索"
+  offline:
+    title: "アプリを読み込めません"
+    offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
   login_required:
     welcome_message: |
       ## [%{title} へようこそ](#welcome)
@@ -3248,12 +3390,27 @@ ja:
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
     pasted_image_filename: "貼り付けた画像"
     store_failure: "ユーザー #%{user_id} のアップロード #%{upload_id} の保存に失敗しました。"
+    file_missing: "アップロードするファイルを指定する必要があります。"
+    empty: "指定されたファイルは空です。"
+    png_to_jpg_conversion_failure_message: "PNG から JPG への変換中にエラーが発生しました。"
+    optimize_failure_message: "アップロードされた画像を最適化中にエラーが発生しました。"
     attachments:
       too_large: "アップロードしようとしているファイルが大きすぎます (最大サイズは %{max_size_kb} KB です)。"
     images:
       too_large: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size_kb} KB です)。サイズを変更してもう一度お試しください。"
+      larger_than_x_megapixels: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_image_megapixels} メガピクセルです)。サイズを変更してもう一度お試しください。"
       size_not_found: "画像のサイズを判定できませんでした。画像が破損している可能性があります。"
+    placeholders:
+      too_large: "(%{max_size_kb}KB を超える画像)"
+  avatar:
+    missing: "そのメールアドレスに関連付けられたアバターが見つかりません。もう一度アップロードしてください。"
+  flag_reason:
+    sockpuppet: "新規ユーザーがトピックを作成し、別の新規ユーザーが同じ IP アドレス (%{ip_address}) で返信しました。<a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> サイト設定をご覧ください。"
+    spam_hosts: "この新規ユーザーは、同じドメインへのリンクを含む複数の投稿を作成しようとしました。リンクが含まれるこのユーザーからのすべての投稿をレビューする必要があります。<a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> サイト設定をご覧ください。"
   skipped_email_log:
+    exceeded_emails_limit: "max_emails_per_day_per_user を超えました"
+    exceeded_bounces_limit: "bounce_score_threshold を超えました"
+    mailing_list_no_echo_mode: "ユーザー自身の投稿に対するメーリングリスト通知が無効です"
     user_email_no_user: "ID %{user_id} のユーザーが見つかりません"
     user_email_post_not_found: "ID %{post_id} の投稿が見つかりません"
     user_email_anonymous_user: "ユーザーは匿名です"
@@ -3261,9 +3418,12 @@ ja:
     user_email_seen_recently: "最近アクセスしたユーザー"
     user_email_notification_already_read: "このメールに関する通知は既読です"
     user_email_notification_topic_nil: "post.topic は NIL です"
+    user_email_post_user_deleted: "投稿のユーザーは削除されました。"
     user_email_post_deleted: "投稿は作者によって削除されました"
     user_email_user_suspended: "ユーザーは凍結状態です"
     user_email_already_read: "ユーザーはこの投稿を閲覧済みです"
+    user_email_access_denied: "ユーザーはこの投稿を閲覧できません"
+    user_email_no_email: "ユーザー ID %{user_id} に関連付けられたメールはありません"
     sender_message_blank: "メッセージが空です"
     sender_message_to_blank: "message.to が空です"
     sender_text_part_body_blank: "text_part.body が空です"
@@ -3271,8 +3431,12 @@ ja:
     sender_post_deleted: "投稿は削除されています"
     sender_message_to_invalid: "受信者のメールアドレスが無効です"
     sender_topic_deleted: "トピックは削除されています"
+    group_smtp_post_deleted: "投稿は削除されています"
+    group_smtp_topic_deleted: "トピックは削除されています"
+    group_smtp_disabled_for_group: "グループの SMTP は無効になっています"
   color_schemes:
     base_theme_name: "ベース"
+    light: "ライト"
     dark: "ダーク"
     neutral: "ニュートラル"
     grey_amber: "グレーアンバー"
@@ -3932,6 +4096,14 @@ ja:
                 label: "公開"
               restricted:
                 label: "非公開"
+          privacy_options:
+            choices:
+              open:
+                label: "ユーザーは自己登録できます。"
+              invite_only:
+                label: "ユーザーは信頼できるユーザーまたはスタッフから招待されてから登録する必要があります。"
+              must_approve:
+                label: "ユーザーは自己登録できますが、スタッフによる承認が必要です。"
       contact:
         title: "連絡先"
         fields:
@@ -3948,14 +4120,46 @@ ja:
             description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
       corporate:
         title: "組織"
+        description: "この情報は、あなたの<a href='%{base_path}/tos' target='blank'>利用規約</a>に入力されます。これは、「スタッフ」カテゴリで編集できるトピックです。会社がない場合は、今のところはこのステップを省略できます。"
+        fields:
+          company_name:
+            label: "会社名"
+            placeholder: "組織の例"
+          governing_law:
+            label: "準拠法"
+            placeholder: "カリフォルニア州法"
+          city_for_disputes:
+            label: "紛争都市"
+            placeholder: "カリフォルニア州サンフランシスコ"
       colors:
         title: "色"
       fonts:
+        title: "フォント"
         fields:
+          body_font:
+            label: "本文のフォント"
+          heading_font:
+            label: "見出しのフォント"
           font_preview:
             label: "プレビュー"
+      logos:
+        title: "ロゴ"
+        fields:
+          logo:
+            label: "プライマリーロゴ"
+            description: "サイトの左上にあるロゴ画像です。高さ 120、縦横比 3：1を超える広幅の長方形の画像を使用してください。"
+          logo_small:
+            label: "正方形のロゴ"
+            description: "正方形バージョンのロゴ。ブラウザで下にスクロールしたときにサイトの左上に、またソーシャルプラットフォームで共有したときに表示されます。512x512 よりも大きいサイズが最適です。"
       icons:
         title: "アイコン"
+        fields:
+          favicon:
+            label: "ブラウザアイコン"
+            description: "ウェブブラウザでサイトを表現するために使用され、小さいサイズで見栄えが良いアイコン画像。推奨される画像の拡張子は PNG または JPG です。デフォルトでは正方形のロゴを使用します。"
+          large_icon:
+            label: "大きなアイコン"
+            description: "最新のデバイスでサイトを表現するために使用され、大きなサイズで見栄えの良いアイコン画像。512 × 512 より大きいサイズが最適です。デフォルトでは正方形のロゴを使用します。"
       homepage:
         description: "ホームページには最新トピックを表示することを推奨しますが、カテゴリ (トピックをグループ化したもの) を表示することもできます。"
         title: "ホームページ"
@@ -3972,6 +4176,22 @@ ja:
                 label: "カテゴリと最新トピック"
               categories_and_top_topics:
                 label: "カテゴリと人気トピック"
+              categories_boxes:
+                label: "カテゴリボックス"
+              categories_boxes_with_topics:
+                label: "トピック付きのカテゴリボックス"
+      invites:
+        title: "スタッフの招待"
+        description: "ほぼ完了です！コミュニティを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"
+        disabled: "ローカルログインが無効になっているため、誰にも招待状を送れません。次のステップに進んでください。"
+      finished:
+        title: "あなたの Discourse の準備が整いました！"
+        description: |
+          <p>これらの設定を変更することがある場合は、<b>いつでもこのウィザードを実行</b>するか、<a href='%{base_path}/admin' target='_blank'>あなたの管理者セクション</a>にアクセスしてください。このセクションはサイトメニューのレンチアイコンの横にあります。</p>
+          <p>強力なテーマシステムを使用すると、Discourse をさらにカスタマイズすることができます。たとえば、<a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> で<a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">人気のテーマやコンポーネント</a>をご覧ください。</p>
+          <p>それでは、<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>新しいコミュニティの構築</a>をお楽しみください！</p>
+  search_logs:
+    graph_title: "検索数"
   joined: "参加"
   discourse_push_notifications:
     popup:
@@ -3980,18 +4200,42 @@ ja:
       quoted: '%{username} が「%{topic}」であなたを引用しました - %{site_title}'
       replied: '%{username} が「%{topic}」であなたに返信しました - %{site_title}'
       posted: '%{username} が「%{topic}」に投稿しました - %{site_title}'
+      private_message: '「%{topic}」で %{username} があなたに非公開メッセージを送信しました - %{site_title}'
       linked: '%{username} が「%{topic}」のあなたの投稿にリンクしました - %{site_title}'
       watching_first_post: '%{username} が新規トピック「%{topic}」を作成しました - %{site_title}'
       confirm_title: "通知を有効にしました - %{site_title}"
       confirm_body: "成功！通知を有効にしました！"
+      custom: "%{site_title} の %{username} からの通知"
+  staff_action_logs:
+    not_found: "は見つかりません"
+    unknown: "不明"
+    user_merged: "%{username} がこのアカウントにマージされました"
+    user_delete_self: "%{url} から自分で削除"
+    webhook_deactivation_reason: "あなたの Webhook は自動的に無効化されています。複数の '%{status}' HTTP ステータス失敗応答を受信しました。"
+    api_key:
+      automatic_revoked:
+        other: "自動的に取り消されました。最後のアクティビティは %{count} 日以上前です"
+      revoked: 取り消し済み
+      restored: 復元済み
   reviewables:
+    already_handled: "その投稿をすでにレビューし、再通報の必要はないと判断しました。"
+    already_handled_and_user_not_exist: "誰かがすでにレビュー済みで、そのユーザーはもう存在しません。"
     priorities:
+      low: "低"
       medium: "普通"
       high: "高"
     sensitivity:
       disabled: "無効化"
+      low: "低"
       medium: "普通"
       high: "高"
+    must_claim: "対応する前に項目を自分に割り当てる必要があります。"
+    user_claimed: "この項目は別のユーザーに割り当てられています。"
+    missing_version: "バージョンパラメーターを指定する必要があります"
+    conflict: "更新の競合があるため、どれを行えませんでした。"
+    reasons:
+      post_count: "すべてのユーザーの最初の数件の投稿はスタッフによって承認される必要があります。`approve_post_count` をご覧ください。"
+      trust_level: "信頼レベルが低いユーザーはその返信をスタッフが承認する必要があります。`approve_unless_trust_level` をご覧ください。"
     actions:
       agree_and_suspend:
         title: "ユーザーの凍結"
@@ -4008,6 +4252,34 @@ ja:
           title: "ユーザーの削除"
       reject:
         title: "却下"
+      reject_and_keep_deleted:
+        title: "投稿を削除されたままにする"
+      approve_and_restore:
+        title: "投稿の承認と復元"
+      delete_user:
+        reason: "レビューキューを介して削除されました"
+  email_style:
+    html_missing_placeholder: "html テンプレートには %{placeholder} が含まれている必要があります。"
+  notification_level:
+    ignore_error: "そのユーザーを無視できません。"
+    mute_error: "そのユーザーをミュートできません。"
+  discord:
+    not_in_allowed_guild: "認証に失敗しました。許可された Discord ギルドのメンバーではありません。"
+  old_keys_reminder:
+    title: "古い資格情報に関するリマインダー"
+    body: |
+      こんにちは！これは毎年定期的に Discourse インスタンスから送信されるセキュリティリマインダーです。
+
+      礼儀上、Discourse インスタンスで使用されている次の資格情報が 2 年以上更新されていないことをお知らせします。
+
+      %{keys}
+
+      現時点での対応は不要ですが、重要な資格情報は数年ごとに変更することが適切なセキュリティ実勢んであると考えられています。
+  create_linked_topic:
+    topic_title_with_sequence:
+      other: "%{topic_title} (パート %{count})"
+    post_raw: "%{parent_url} のディスカッションを継続中です。\n\n前のディスカッション:\n\n%{previous_topics}"
+    small_action_post_raw: "%{new_title} でディスカッションを続けます。"
   activemodel:
     errors:
       <<: *errors
