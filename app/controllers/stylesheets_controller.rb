@@ -23,39 +23,16 @@ class StylesheetsController < ApplicationController
     stylesheet = manager.color_scheme_stylesheet_details(params[:id], 'all')
     render json: stylesheet
   end
+
   protected
 
   def show_resource(source_map: false)
 
     extension = source_map ? ".css.map" : ".css"
 
-    params[:name]
-
     no_cookies
 
     target, digest = params[:name].split(/_([a-f0-9]{40})/)
-
-    if !Rails.env.production?
-      # TODO add theme
-      # calling this method ensures we have a cache for said target
-      # we hold off re-compilation till someone asks for asset
-      if target.include?("color_definitions")
-        split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
-
-        Stylesheet::Manager.new.color_scheme_stylesheet_link_tag(color_scheme_id)
-      else
-        theme_id =
-          if target.include?("theme")
-            split_target, theme_id = target.split(/_(-?[0-9]+)/)
-            theme_id if theme_id.present? && Theme.exists?(id: theme_id)
-          else
-            split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
-            Theme.where(color_scheme_id: color_scheme_id).pluck_first(:id)
-          end
-
-        Stylesheet::Manager.new(theme_id: theme_id).stylesheet_link_tag(split_target, nil)
-      end
-    end
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
 
