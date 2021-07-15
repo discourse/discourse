@@ -21,23 +21,87 @@ class BadgeGranter
     BadgeGranter.new(badge, user, opts).grant
   end
 
-  def self.mass_grant(badge, users)
-    return unless badge.enabled?
+  def self.enqueue_mass_grant_for_users(badge, emails: [], usernames: [], ensure_users_have_badge_once: true)
+    emails = emails.map(&:downcase)
+    usernames = usernames.map(&:downcase)
+    usernames_map_to_ids = {}
+    emails_map_to_ids = {}
+    if usernames.size > 0
+      usernames_map_to_ids = User.where(username_lower: usernames).pluck(:username_lower, :id).to_h
+    end
+    if emails.size > 0
+      emails_map_to_ids = User.with_email(emails).pluck('LOWER(user_emails.email)', :id).to_h
+    end
 
-    system_user_id = Discourse.system_user.id
-    now = Time.zone.now
-    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now } }
-    granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
+    count_per_user = {}
+    unmatched = Set.new
+    (usernames + emails).each do |entry|
+      id = usernames_map_to_ids[entry] || emails_map_to_ids[entry]
+      if id.blank?
+        unmatched << entry
+        next
+      end
 
-    users.each do |user|
+      if ensure_users_have_badge_once
+        count_per_user[id] = 1
+      else
+        count_per_user[id] ||= 0
+        count_per_user[id] += 1
+      end
+    end
+
+    existing_owners_ids = []
+    if ensure_users_have_badge_once
+      existing_owners_ids = UserBadge.where(badge: badge).distinct.pluck(:user_id)
+    end
+    count_per_user.each do |user_id, count|
+      next if ensure_users_have_badge_once && existing_owners_ids.include?(user_id)
+
+      Jobs.enqueue(
+        :mass_award_badge,
+        user: user_id,
+        badge: badge.id,
+        count: count
+      )
+    end
+
+    {
+      unmatched_entries: unmatched.to_a,
+      matched_users_count: count_per_user.size,
+      unmatched_entries_count: unmatched.size
+    }
+  end
+
+  def self.mass_grant(badge, user, count:)
+    return if !badge.enabled?
+
+    raise ArgumentError.new("count can't be less than 1") if count < 1
+
+    UserBadge.transaction do
+      DB.exec(<<~SQL * count, now: Time.zone.now, system: Discourse.system_user.id, user_id: user.id, badge_id: badge.id)
+        INSERT INTO user_badges
+        (granted_at, created_at, granted_by_id, user_id, badge_id, seq)
+        VALUES
+        (
+          :now,
+          :now,
+          :system,
+          :user_id,
+          :badge_id,
+          COALESCE((
+            SELECT MAX(seq) + 1
+            FROM user_badges
+            WHERE badge_id = :badge_id AND user_id = :user_id
+          ), 0)
+        );
+      SQL
       notification = send_notification(user.id, user.username, user.locale, badge)
 
-      DB.exec(
-        "UPDATE user_badges SET notification_id = :notification_id WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id",
-        notification_id: notification.id,
-        user_id: user.id,
-        badge_id: badge.id
-      )
+      DB.exec(<<~SQL, notification_id: notification.id, user_id: user.id, badge_id: badge.id)
+        UPDATE user_badges
+        SET notification_id = :notification_id
+        WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id
+      SQL
 
       UserBadge.update_featured_ranks!(user.id)
     end

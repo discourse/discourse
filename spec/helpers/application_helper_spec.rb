@@ -69,6 +69,12 @@ describe ApplicationHelper do
 
         expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
       end
+
+      it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
+        helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip, br'
+        link = helper.preload_script('discourse/tests/theme_qunit_ember_jquery')
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js"))
+      end
     end
   end
 

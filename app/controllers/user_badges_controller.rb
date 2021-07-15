@@ -109,10 +109,13 @@ class UserBadgesController < ApplicationController
       return render json: failed_json, status: 400
     end
 
+    new_is_favorite_value = !user_badge.is_favorite
     UserBadge
       .where(user_id: user_badge.user_id, badge_id: user_badge.badge_id)
-      .update(is_favorite: !user_badge.is_favorite)
+      .update_all(is_favorite: new_is_favorite_value)
     UserBadge.update_featured_ranks!(user_badge.user_id)
+
+    user_badge.is_favorite = new_is_favorite_value
     render_serialized(user_badge, DetailedUserBadgeSerializer, root: :user_badge)
   end
 
