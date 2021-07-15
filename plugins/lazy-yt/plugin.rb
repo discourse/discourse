@@ -5,11 +5,9 @@
 # version: 1.0.1
 # authors: Arpit Jalan
 # url: https://github.com/discourse/discourse/tree/master/plugins/lazy-yt
+# transpile_js: true
 
 hide_plugin if self.respond_to?(:hide_plugin)
-
-# javascript
-register_asset "javascripts/lazyYT.js"
 
 # stylesheet
 register_asset "stylesheets/lazyYT.css"
@@ -55,6 +53,20 @@ class Onebox::Engine::YoutubeOnebox
     end
   end
 
+  alias_method :old_video_id, :video_id
+  alias_method :old_list_id, :list_id
+
+  def video_id
+    sanitize_yt_id(old_video_id)
+  end
+
+  def list_id
+    sanitize_yt_id(old_list_id)
+  end
+
+  def sanitize_yt_id(raw)
+    raw&.match?(/\A[\w-]+\z/) ? raw : nil
+  end
 end
 
 after_initialize do
