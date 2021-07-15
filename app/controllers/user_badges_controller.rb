@@ -112,7 +112,7 @@ class UserBadgesController < ApplicationController
     new_is_favorite_value = !user_badge.is_favorite
     UserBadge
       .where(user_id: user_badge.user_id, badge_id: user_badge.badge_id)
-      .update(is_favorite: new_is_favorite_value)
+      .update_all(is_favorite: new_is_favorite_value)
     UserBadge.update_featured_ranks!(user_badge.user_id)
 
     user_badge.is_favorite = new_is_favorite_value
