@@ -206,5 +206,10 @@ acceptance("Review", function (needs) {
     assert.ok(reviewable.className.includes("reviewable-stale"));
     assert.equal(count("[data-reviewable-id=1234] .status .approved"), 1);
     assert.equal(count(".stale-help"), 1);
+
+    await visit("/");
+    await visit("/review"); // reload review
+
+    assert.equal(count(".stale-help"), 0);
   });
 });

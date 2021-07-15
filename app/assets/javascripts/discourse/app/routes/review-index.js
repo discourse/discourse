@@ -39,6 +39,10 @@ export default DiscourseRoute.extend({
       sort_order: meta.sort_order,
       additionalFilters: meta.additional_filters || {},
     });
+
+    controller.reviewables.forEach((reviewable) => {
+      reviewable.set("stale", false);
+    });
   },
 
   activate() {
