@@ -871,9 +871,15 @@ pt_BR:
       topic_sentence:
         one: "%{count} tópico"
         other: "%{count} tópicos"
+      topic_stat:
+        one: "%{number}/%{unit}\n"
+        other: "%{number}/%{unit}"
       topic_stat_unit:
         week: "semana"
         month: "mês"
+      topic_stat_all_time:
+        one: "%{number} no total"
+        other: "%{number} no total"
       topic_stat_sentence_week:
         one: "%{count} novo tópico na última semana."
         other: "%{count} novos tópicos na última semana."
@@ -935,6 +941,9 @@ pt_BR:
         normal_option: "Normal"
         normal_option_title: "Você receberá uma notificação se este(a) usuário(a) responder, citar ou mencionar."
       notification_schedule:
+        title: "Agendamento de notificações"
+        label: "Ativar agendamento de notificações personalizada"
+        tip: "Fora desses horários, você será colocado automaticamente \"não perturbe\"."
         midnight: "Meia-noite"
         none: "Nenhum"
         monday: "Segunda-feira"
@@ -981,6 +990,12 @@ pt_BR:
       dismiss: "Descartar"
       dismiss_notifications: "Descartar tudo"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidas"
+      no_messages_title: "Você não tem mensagens"
+      no_messages_body: >
+        Precisa ter uma conversa pessoal direta, fora do fluxo de conversa normal? Envie uma mensagem ao selecionar o seu avatar e usar o botão de mensagem %{icon}.<br><br> Se precisar de ajuda, envie uma <a href='%{aboutUrl}'>mensagem a um membro da equipe</a>.
+      no_bookmarks_title: "Você ainda não adicionou nada aos favoritos"
+      no_bookmarks_body: >
+        Comece a adicionar postagens aos favoritos com o botão %{icon}, eles serão listados aqui para consulta rápida. Você pode agendar um lembrete também!
       no_notifications_title: "Você ainda não tem nenhuma notificação"
       first_notification: "Sua primeira notificação! Selecione-a para começar."
       dynamic_favicon: "Exibir contagens no ícone do navegador"
