@@ -3260,7 +3260,7 @@ fr:
         show_incoming_updated_topics: "%{shortcut} Afficher les sujets mis à jour"
         search: "%{shortcut} Rechercher"
         help: "%{shortcut} Ouvrir l'aide du clavier"
-        dismiss_new: "%{shortcut} Ignorer les nouveaux messages"
+        dismiss_new: "%{shortcut} Ignorer les nouveaux sujets"
         dismiss_topics: "%{shortcut} Ignorer les sujets"
         log_out: "%{shortcut} Se déconnecter"
       composing:
