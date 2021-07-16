@@ -219,6 +219,7 @@ class Draft < ActiveRecord::Base
   end
 
   def self.stream(opts = nil)
+    puts opts
     opts ||= {}
 
     user_id = opts[:user].id

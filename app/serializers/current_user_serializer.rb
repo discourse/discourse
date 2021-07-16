@@ -64,6 +64,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :skip_new_user_tips,
              :do_not_disturb_until,
              :has_topic_draft,
+             :draft_count,
              :can_review,
 
   def groups
@@ -312,7 +313,15 @@ class CurrentUserSerializer < BasicUserSerializer
     true
   end
 
+  def draft_count
+    Draft.stream({user: object, offset: 0, limit: 30}).length
+  end
+
   def include_has_topic_draft?
+    Draft.has_topic_draft(object)
+  end
+
+  def include_draft_count?
     Draft.has_topic_draft(object)
   end
 end
