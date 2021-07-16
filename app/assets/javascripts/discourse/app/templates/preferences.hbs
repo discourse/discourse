@@ -25,7 +25,7 @@
         {{i18n "user.preferences_nav.notifications"}}
       {{/link-to}}
     </li>
-    {{#if canChangeCategoryPreferences}}
+    {{#if model.can_change_tracking_preferences}}
       <li class="indent nav-categories">
         {{#link-to "preferences.categories"}}
           {{i18n "user.preferences_nav.categories"}}
@@ -37,7 +37,7 @@
         {{i18n "user.preferences_nav.users"}}
       {{/link-to}}
     </li>
-    {{#if canChangeTagPreferences}}
+    {{#if (and model.can_change_tracking_preferences siteSettings.tagging_enabled)}}
       <li class="indent nav-tags">
         {{#link-to "preferences.tags"}}
           {{i18n "user.preferences_nav.tags"}}
