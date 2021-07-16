@@ -43,7 +43,7 @@ class StylesheetCache < ActiveRecord::Base
   end
 
   def self.clean_up
-    StylesheetCache.where('created_at < TIMESTAMP ?', 150.days.ago).delete_all
+    StylesheetCache.where('created_at < ?', 150.days.ago).delete_all
   end
 
 end
