@@ -2851,19 +2851,19 @@ zh_CN:
       %{raw}
       ```
     ignored_users_summary:
-      title: "忽视的用户超过了阈值"
-      subject_template: "一名用户被许多其他用户忽视"
+      title: "忽略的用户超过阈值"
+      subject_template: "一个用户被许多其他用户忽略"
       text_body_template: |
         您好，
 
-        这是 %{site_name} 告知您 @%{username} 已被 %{ignores_threshold} 名用户忽略的自动消息。这可能表示您的社区已开始产生问题。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知您 %{username} 已被 %{ignores_threshold} 个用户忽略。这可能表示您的社区已开始出现问题。
 
-        您可能想查阅[此用户的近期发帖](%{base_url}/u/%{username}/summary)和[忽略及禁言汇报](%{base_url}/admin/reports/top_ignored_users)中的其他用户。
+        您可能需要审查此用户以及[被忽略和被设为免打扰的用户报告](%{base_url}/admin/reports/top_ignored_users)中的其他用户[最近的帖子](%{base_url}/u/%{username}/summary)。
 
-        若您需要额外帮助，请参见我们的[社区准则](%{base_url}/guidelines)。
+        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     too_many_spam_flags:
-      title: "太多垃圾标记"
-      subject_template: "新账户被搁置"
+      title: "垃圾信息举报过多"
+      subject_template: "新帐户被暂停"
       text_body_template: |
         您好，
 
@@ -2873,41 +2873,41 @@ zh_CN:
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     too_many_tl3_flags:
-      title: "太多信任等级3用户标记"
-      subject_template: "新账户被暂时封禁"
+      title: "TL3 举报过多"
+      subject_template: "新帐户被暂停"
       text_body_template: |
         您好，
 
-        这是%{site_name}通知您的帖子因社区标记而被临时禁用的自动消息。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知您由于大量社区举报，您的帐户已被暂停。
 
-        出于谨慎的考虑，在管理人员审核通过前，您的新账户不能再发表新的回复或者话题。我们对此带来的不便表示歉意。
+        作为预防措施，您的新帐户已被禁止创建新回复或话题，直到管理人员可以审查您的帐户。对于任何不便之处，我们深表歉意。
 
-        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
+        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     silenced_by_staff:
       title: "被管理人员禁言"
-      subject_template: "账户临时被禁用"
+      subject_template: "帐户被临时暂停"
       text_body_template: |
         您好，
 
-        %{site_name}提醒您，出于谨慎起见您的账户已被暂时停用。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知您，作为预防措施您的帐户已被临时暂停。
 
-        您可以继续浏览，但在[管理人员](%{base_url}/about)审核您最近的发帖前，您的账户将无法发表新的回复或者话题。我们对此带来的不便表示歉意。
+        您可以继续浏览，但在[管理人员](%{base_url}/about)审查您最近的帖子前，您将无法回复或者创建话题。对于任何不便之处，我们深表歉意。
 
-        要查看更多指引，请参阅我们的[社区指引](%{base_url}/guidelines)。
+        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     user_automatically_silenced:
-      title: "用户自动被禁用"
-      subject_template: "新用户%{username}因社区标记被封禁"
+      title: "用户被自动禁言"
+      subject_template: "新用户 %{username} 因社区举报被禁言"
       text_body_template: |
-        这是自动发出消息。
+        这是一封自动发送的邮件。
 
-        因多位用户标记%{username}的帖子，新用户[%{username}](%{user_url})已被自动禁言。
+        由于多个用户举报了 %{username} 的帖子，新用户 [%{username}](%{user_url}) 已被自动禁言。
 
-        请[查看这些标记](%{base_url}/admin/flags)。如果%{username}被意外禁言，点击[该用户管理页面](%{user_url})内的解除禁言按钮。
+        请[审查举报](%{base_url}/admin/flags)。如果 %{username} 被意外禁言，请点击[此用户管理页面](%{user_url})上的取消禁言按钮。
 
-        该阈值可以通过站点设置中的 `silence_new_user` 更改。
+        此阈值可以通过 `silence_new_user` 站点设置更改。
     spam_post_blocked:
-      title: "垃圾帖子被封锁"
-      subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
+      title: "垃圾信息帖子被屏蔽"
+      subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
       text_body_template: |
         这是一则自动消息。
 
