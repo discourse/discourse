@@ -26,19 +26,20 @@ describe TopicTimestampChanger do
         TopicTimestampChanger.new(topic: topic, timestamp: new_timestamp.to_f).change!
 
         topic.reload
+        p1.reload
+        p2.reload
+        last_post_created_at = p2.created_at
+
         expect(topic.created_at).to eq_time(new_timestamp)
         expect(topic.updated_at).to eq_time(new_timestamp)
-        expect(topic.bumped_at).to eq_time(new_timestamp)
+        expect(topic.bumped_at).to eq_time(last_post_created_at)
+        expect(topic.last_posted_at).to eq_time(last_post_created_at)
 
-        p1.reload
         expect(p1.created_at).to eq_time(new_timestamp)
         expect(p1.updated_at).to eq_time(new_timestamp)
 
-        p2.reload
         expect(p2.created_at).to eq_time(new_timestamp + 1.day)
         expect(p2.updated_at).to eq_time(new_timestamp + 1.day)
-
-        expect(topic.last_posted_at).to eq_time(p2.reload.created_at)
       end
 
       describe 'when posts have timestamps in the future' do
