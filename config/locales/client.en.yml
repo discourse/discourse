@@ -245,7 +245,6 @@ en:
     conduct: "Code of Conduct"
     mobile_view: "Mobile View"
     desktop_view: "Desktop View"
-    you: "You"
     or: "or"
     now: "just now"
     read_more: "read more"
@@ -814,8 +813,6 @@ en:
         public: "Public"
         private: "Private"
         public_groups: "Public Groups"
-        automatic_group: Automatic Group
-        close_group: Close Group
         my_groups: "My Groups"
         group_type: "Group type"
         is_group_user: "Member"
@@ -923,7 +920,6 @@ en:
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
-      toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
       muted: "Muted categories"
       topic_sentence:
@@ -1405,7 +1401,6 @@ en:
         browser_last_seen: "%{browser} | %{date}"
 
       last_posted: "Last Post"
-      last_emailed: "Last Emailed"
       last_seen: "Seen"
       created: "Joined"
       log_out: "Log Out"
@@ -2435,13 +2430,6 @@ en:
       defer:
         help: "Mark as unread"
         title: "Defer"
-      feature_on_profile:
-        help: "Add a link to this topic on your user card and profile"
-        title: "Feature On Profile"
-      remove_from_profile:
-        warning: "Your profile already has a featured topic. If you continue, this topic will replace the existing topic."
-        help: "Remove the link to this topic on your user profile"
-        title: "Remove From Profile"
 
       list: "Topics"
       new: "new topic"
@@ -2982,9 +2970,6 @@ en:
       wiki:
         about: "this post is a wiki"
 
-      archetypes:
-        save: "Save Options"
-
       few_likes_left: "Thanks for sharing the love! You only have a few likes left for today."
 
       controls:
@@ -3136,7 +3121,6 @@ en:
         show_all: "Show all"
 
     category:
-      can: "can&hellip; "
       none: "(no category)"
       all: "All categories"
       choose: "category&hellip;"
@@ -3170,7 +3154,6 @@ en:
       save_error: There was an error saving the category.
       name: "Category Name"
       description: "Description"
-      topic: "category topic"
       logo: "Category Logo Image"
       background_image: "Category Background Image"
       badge_colors: "Badge colors"
