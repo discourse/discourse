@@ -2327,6 +2327,7 @@ en:
     create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
 
     errors:
+      invalid_css_color: "Invalid color."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       invalid_group: "There's no group with that name."

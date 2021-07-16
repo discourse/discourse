@@ -1064,8 +1064,15 @@ email:
   email_accent_bg_color:
     type: color
     default: "#2F70AC"
-  email_accent_fg_color: "#FFFFFF"
-  email_link_color: "#006699"
+    validator: "CssColorValidator"
+  email_accent_fg_color:
+    type: color
+    default: "#FFFFFF"
+    validator: "CssColorValidator"
+  email_link_color:
+    type: color
+    default: "#006699"
+    validator: "CssColorValidator"
   show_topic_featured_link_in_digest: false
   email_custom_headers: "Auto-Submitted: auto-generated"
   email_subject: "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
