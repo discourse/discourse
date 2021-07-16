@@ -2635,56 +2635,56 @@ zh_CN:
       title: "电子邮件被拒 - 信任级别不足"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 信任级别不足"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您的帐户没有所需的信任级别来将新话题发布到此电子邮件地址。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_user_not_found:
       title: "电子邮件被拒 - 找不到用户"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 找不到用户"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您的回复发送自未知电子邮件地址。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_screened_email:
       title: "电子邮件被拒：被屏蔽的电子邮件"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁止的电子邮件"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您的回复发送自被禁止的电子邮件地址。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_not_allowed_email:
       title: "电子邮件被拒：不允许的电子邮件"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁止的电子邮件"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您的回复发送自被禁止的电子邮件地址。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_inactive_user:
       title: "电子邮件被拒：停用用户"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 停用用户"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您与此电子邮件地址关联的帐户未被激活，请先激活您的帐户，然后再发送电子邮件。
     email_reject_silenced_user:
       title: "电子邮件被拒：被禁言的用户"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁言的用户"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您与此电子邮件地址关联的帐户已被禁言。
     email_reject_reply_user_not_matching:
       title: "电子邮件被拒 - 用户不匹配"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 意外回复地址"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您的回复发送自与我们期望的地址不同的电子邮件地址，因此我们无法确定是否为同一个人。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_empty:
       title: "电子邮件被拒：空"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无内容"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         我们在您的电子邮件中找不到任何回复内容。
 
@@ -2693,35 +2693,35 @@ zh_CN:
       title: "电子邮件被拒：解析"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 内容无法识别"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         我们在电子邮件中找不到您的回复。**请确保您的回复位于电子邮件顶部** - 我们无法处理内嵌回复。
     email_reject_invalid_access:
       title: "电子邮件被拒：无效访问"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无效访问"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您的帐户没有权限在该类别下发布新话题。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_strangers_not_allowed:
       title: "电子邮件被拒：不允许陌生人"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无效访问"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您将此电子邮件发送到的类别仅允许来自使用有效帐户和已知电子邮件地址的用户的回复。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_invalid_post:
       title: "电子邮件被拒：无效帖子"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 发帖错误"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         可能的原因是：复杂的格式、消息过长、消息过短。请重试，如果问题仍然存在，请通过网站发帖。
     email_reject_invalid_post_specified:
       title: "电子邮件被拒：指定的帖子无效"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 发帖错误"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         原因：
 
@@ -2733,28 +2733,28 @@ zh_CN:
       title: "电子邮件被拒：帖子过短"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 帖子过短"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         为了促进更深入的对话，不允许进行非常简短的回复。您能回复至少 %{count} 个字符吗？或者，您也可以回复“+1”，通过电子邮件来点赞帖子。
     email_reject_invalid_post_action:
       title: "电子邮件被拒：无效的帖子操作"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无效的帖子操作"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         帖子操作无法被识别。请重试，如果问题仍然存在，请通过网站发帖。
     email_reject_reply_key:
       title: "电子邮件被拒：回复键"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 未知回复键"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         电子邮件中的回复键无效或者未知，因此我们不知道此电子邮件回复给谁。请[联系管理人员](%{base_url}/about)。
     email_reject_bad_destination_address:
       title: "电子邮件被拒：回目标地址错误"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 未知收件人地址"
       text_body_template: |
-        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         以下是一些需要检查的事项：
 
@@ -2769,83 +2769,83 @@ zh_CN:
       title: "电子邮件被拒：旧目标"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 您正尝试回复旧通知"
       text_body_template: |
-        很抱歉，您发送到%{destination}的邮件（标题%{former_title}）无效。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
-        我们只接受%{number_of_days}天的原始通知回复。请[访问话题](%{short_url})继续对话。
+        我们只接受 %{number_of_days} 天的原始通知回复。请[访问话题](%{short_url})继续对话。
     email_reject_topic_not_found:
-      title: "Email被拒绝：话题不存"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 话题未找到"
+      title: "电子邮件被拒 - 找不到话题"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 找不到话题"
       text_body_template: |
-        我们很抱歉，但是您发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
-        您回复的话题不存在——可能已经被删除了？如果您有异议，[联系管理人员](%{base_url}/about)。
+        您正在回复的话题已不存在 - 也许它已被删除？如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_topic_closed:
-      title: "Email被拒绝：话题已关闭"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 话题已关闭"
+      title: "电子邮件被拒 - 话题已被关闭"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 话题已被关闭"
       text_body_template: |
-        我们很抱歉，但是您发送至 %{destination} ( 名为 %{former_title} )的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
-        您回复的话题已经被关闭，不允许回复。如果您有异议，[联系管理人员](%{base_url}/about)。
+        您回复的话题已被关闭，不再接受回复。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_auto_generated:
-      title: "邮件拒绝自动生成"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 自动生成的回复"
+      title: "电子邮件被拒 - 自动生成"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 自动生成的回复"
       text_body_template: |
-        我们很抱歉，但是您发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
-        系统觉得您的邮件是“自动生成”的，即电脑生成了该邮件而不是由您输入的；我们不能接受这样的邮件。如果您有异议，[联系管理人员](%{base_url}/about)。
+        您的电子邮件被标记为“自动生成”，这表示它是由计算机自动创建的，而不是由人输入的；我们不能接受这种电子邮件。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_unrecognized_error:
-      title: "Email被拒绝：无法识别的错误"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 无法识别的错误"
+      title: "电子邮件被拒 - 无法识别的错误"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 无法识别的错误"
       text_body_template: |
-        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
-        在处理您的电子邮件时出现无法识别的错误，它并未发布。您可以再试一次，或者[联系管理人员](%{base_url}/about)。
+        处理您的电子邮件时出现无法识别的错误，因此您的邮件未被发布。您应当重试，或者[联系管理人员](%{base_url}/about)。
     email_reject_attachment:
-      title: "邮件附件被拒"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 附件被拒"
+      title: "电子邮件附件被拒"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 附件被拒"
       text_body_template: |
-        很遗憾，您的邮件中的一些附件（%{destination}（标题%{former_title}）已被拒绝。
+        很抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件中的一些附件被拒绝。
 
-        细节：
+        详细信息：
         %{rejected_errors}
 
-        如果您认为这是一个错误，[联系管理人员](%{base_url}/about)。
+        如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_reply_not_allowed:
-      title: "邮件被拒绝：不允许回复"
-      subject_template: "[%{email_prefix}]邮件问题 -- 不允许回复"
+      title: "电子邮件被拒：不允许回复"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 不允许回复"
       text_body_template: |
-        我们很抱歉，但是您发送至%{destination}（标题 %{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
-        您的账户没有权限回复这个话题。如果您认为这是一个错误，[联系管理人员](%{base_url}/about)。
+        您没有权限回复该话题。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_reply_to_digest:
-      title: "回复摘要邮件被拒"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 回复摘要邮件"
+      title: "电子邮件被拒：回复摘要"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 回复摘要"
       text_body_template: |
-        抱歉，您发送到%{destination}（标题为%{former_title}）的邮件出现了问题。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
-        我们不接受直接回复摘要邮件。
+        我们不接受回复摘要电子邮件。
 
-        如果您认为这是一个错误，[联系我们的管理人员](%{base_url}/about).
+        如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_error_notification:
-      title: "邮件错误提醒"
-      subject_template: "[%{email_prefix}] 电子邮件错误 -- POP 验证错误"
+      title: "电子邮件错误通知"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - POP 身份验证错误"
       text_body_template: |
-        不幸的是，从 POP 服务器查询邮件时遇到了验证错误。
+        很抱歉，从 POP 服务器轮询邮件时出现身份验证错误。
 
-        请确认您在[站点设置](%{base_url}/admin/site_settings/category/email)中已经正确配置了 POP 验证信息。
+        请确保您在[站点设置](%{base_url}/admin/site_settings/category/email)中正确配置了 POP 凭据。
 
-        如果 POP 邮件账户有图形界面，您可以登录后查看邮箱设置。
+        如果 POP 电子邮件帐户有 Web UI，您可能需要登录 Web 并在那里检查您的设置。
     email_revoked:
-      title: "邮件撤销"
-      subject_template: "您的邮箱地址是否正确？"
+      title: "电子邮件已撤销"
+      subject_template: "您的电子邮件地址是否正确？"
       text_body_template: |
-        很抱歉，我们无法通过邮件与您联系。我们最后几封给您的邮件都因无法投递而全部退回。
+        抱歉，我们无法通过电子邮件与您联系。我们给您发送的最后几封电子邮件都因无法投递而被全部退回。
 
-        您能否确保[您的邮件地址](%{base_url}/我的/设置/邮件)有效且有效？您可能还希望将我们的邮件地址添加到您的地址簿/联系人列表中，以提高可投递性。
+        您能否确保[您的邮件地址](%{base_url}/my/preferences/email)有效？您可能还需要将我们的电子邮件地址添加到您的地址簿/联系人列表中，以提高成功投递几率。
     email_bounced: |
-      %{email}的邮件已退回。
+      发送至 %{email} 的邮件被退回。
 
-      ### 细节
+      ### 详细信息
 
       ```text
       %{raw}

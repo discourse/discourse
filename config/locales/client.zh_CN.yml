@@ -3026,7 +3026,7 @@ zh_CN:
         this_week: "周"
         today: "今天"
         other_periods: "查看热门："
-    browser_update: '抱歉，<a href="https://www.discourse.org/faq/#browser">您的浏览器太旧了，无法在本站点上运行</a>。请<a href="https://browsehappy.com">升级您的浏览器</a>以浏览丰富的内容，登录和回复。'
+    browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">您的浏览器太旧了，无法在本站点上运行</a>。请<a href="https://browsehappy.com">升级您的浏览器</a>以浏览丰富的内容，登录和回复。'
     permission_types:
       full: "创建/回复/查看"
       create_post: "回复/查看"

@@ -3591,7 +3591,7 @@ it:
           total: "Totale generale"
           no_data: "Non ci sono dati da mostrare."
           trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Cerca nei log</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Ricerche nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'
           average_chart_label: Media
           filters:
