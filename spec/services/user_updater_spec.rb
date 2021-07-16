@@ -99,7 +99,7 @@ describe UserUpdater do
             tag_id: tag.id,
             notification_level: TagUser.notification_levels[:watching]
           )).to eq(true)
-          
+
           expect(CategoryUser.exists?(
             user_id: staged_user.id,
             category_id: category.id,
