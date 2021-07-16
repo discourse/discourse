@@ -2365,7 +2365,7 @@ zh_CN:
     text_body_template: "这是一封测试电子邮件，来自 \n\n[**%{base_url}**][0]\n\n电子邮件能否递送成功取决于很多因素。下面是几个您需要首先留意的重要方面：\n\n- 请*确保*在站点设置中正确设置 `notification email` from: 地址。**您所发出的电子邮件的“发件人”地址中指定的网域需要进行验证**。\n\n- 知道如何使用您的邮件客户端查看电子邮件原始内容，这样您能够检查电子邮件标头以获取重要线索。在 Gmail 中，每封邮件右上角的下拉菜单中都会提供“显示原始邮件”选项。\n\n- **重要提示**：您的 ISP 是否输入了反向 DNS 记录以关联您用于发送邮件的域名和 IP 地址？[测试您的反向 PTR 记录][2]。如果您的 ISP 未输入正确的反向 DNS 记录，您的电子邮件不太可能递送成功。\n\n- 您的网域的 [SPF 记录][8]正确吗？[测试您的 SPF 记录][1]。注意 SPF 的官方记录类型是 TXT。\n\n- 您的网域的 [DKIM 记录][3]正确吗？这会显著提升电子邮件递送成功几率。[测试您的 DKIM 记录][7]。\n\n- 如果您使用自建的邮件服务器，请确保您的邮件服务器的 IP [不在电子邮件屏蔽名单中][4]。还要验证它肯定发送一个可以在 HELO 消息中解析 DNS 的完全限定主机名。否则，您的电子邮件会被许多邮件服务拒绝。\n\n- 强烈建议您**向 [mail-tester.com][mt] 发送一封测试邮件**以验证上述所有设置正常。\n\n（一种*简单的*方法是创建一个 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 或 [Mailjet][mj] 帐户，这些平台提供适用于小型社区的低成本邮寄方案。不过，您仍然需要在 DNS 中设置 SPF 和 DKIM 记录！）\n\n希望您能成功收到这封测试邮件！\n\n祝君好运，\n\n您在 [Discourse](https://www.discourse.org) 的伙伴\n\n[0]: %{base_url}\n[1]: https://www.kitterman.com/spf/validate.html\n[2]: https://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: https://whatismyipaddress.com/blacklist-check\n[7]: https://www.mail-tester.com/spf-dkim-check\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://goo.gl/r1WMF6\n[sp]: https://www.sparkpost.com/\n[mg]: https://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing/\n[mt]: https://www.mail-tester.com/\n"
   new_version_mailer:
     title: "新版本邮件"
-    subject_template: "[%{email_prefix}] 新 Discourse 版本可供更新"
+    subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
     text_body_template: |
       万岁，新版本的 [Discourse](https://www.discourse.org) 现已发布！
 
@@ -2429,8 +2429,8 @@ zh_CN:
 
         有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     post_hidden_again:
-      title: "再次发布隐藏"
-      subject_template: "被社区标记所隐藏，已通知管理人员"
+      title: "帖子被再次隐藏"
+      subject_template: "帖子因社区举报而被隐藏，已通知管理人员"
       text_body_template: |
         您好，
 
@@ -2444,21 +2444,21 @@ zh_CN:
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     queued_by_staff:
-      title: "等待审核中"
-      subject_template: "帖子被管理员隐藏，等待批准"
+      title: "帖子需要审批"
+      subject_template: "帖子被管理人员隐藏，等待审批"
       text_body_template: |
-        Hello，
+        您好，
 
-        这是一条从 %{site_name} 发来的自动消息，，您的帖子已隐藏。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被隐藏。
 
         <%{base_url}%{url}>
 
-        您的帖子将一直隐藏，直到管理员对其进行审核。
+        在管理人员审查之前，您的帖子将保持隐藏状态。
 
-        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
+        有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     flags_disagreed:
-      title: "管理人员恢复了被标记的帖子"
-      subject_template: "管理人员恢复了被标记的帖子"
+      title: "遭到举报的帖子被管理人员恢复"
+      subject_template: "遭到举报的帖子被管理人员恢复"
       text_body_template: |
         您好，
 
@@ -2472,8 +2472,8 @@ zh_CN:
         ```
         [/details]
     flags_agreed_and_post_deleted:
-      title: "管理人员删除了已标记的帖子"
-      subject_template: "管理人员删除了已标记的帖子"
+      title: "遭到举报的帖子被管理人员移除"
+      subject_template: "遭到举报的帖子被管理人员移除"
       text_body_template: |
         您好，
 
@@ -2490,9 +2490,9 @@ zh_CN:
         请阅读我们的[社区准则](%{base_url}/guidelines)以了解详情。
     usage_tips:
       text_body_template: |
-        要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
+        有关作为新用户入门的一些快速提示，请[查看此博文](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
 
-        只要您不断参与，我们将更了解您，并且新用户的临时限制将被移除。一段时间后您将获得[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)，这将提供一些特殊功能来帮助我们更好地管理社区。
+        当您在这里参与时，我们将了解您，并且临时的新用户限制将被取消。随着时间的推移，您将获得[信任级别](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)，其中包括帮助我们共同管理社区的特殊权限。
     welcome_user:
       title: "欢迎用户"
       subject_template: "欢迎来到 %{site_name}！"
@@ -2501,56 +2501,56 @@ zh_CN:
 
         %{new_user_tips}
 
-        我们始终相信[讨论应该文明](%{base_url}/guidelines)。
+        我们始终相信[文明社区行为](%{base_url}/guidelines)。
 
         好好享受您在社区的时光吧！
     welcome_tl1_user:
-      title: "欢迎信任等级1用户"
+      title: "欢迎 TL1 用户"
       subject_template: "感谢与我们共度时光"
       text_body_template: |
-        嘿。我们看到您一直在忙着阅读，这太棒了，所以我们已经提升您了[信任等级！](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+        嘿！我们看到您一直在忙着阅读，这太棒了，所以我们提升了您的[信任级别](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)！
 
-        我们很高兴您和我们共度时光，我们很想知道更多关于您的事情。花一点时间[填写您的个人资料](%{base_url}/my/preferences/profile)，或随时[开始一个新话题](%{base_url}/categories)。
+        我们很高兴您和我们共度时光，我们很想详细地了解您。花一点时间[填写您的个人资料](%{base_url}/my/preferences/profile)，或者随时[开始一个新话题](%{base_url}/categories)。
     welcome_staff:
       title: "欢迎管理人员"
       subject_template: "恭喜，您已获得%{role}身份！"
       text_body_template: |
-        一位管理员已授予您%{role}身份。
+        一位管理人员已授予您%{role}身份。
 
-        作为一名%{role}，现在您可以访问<a href='%{base_url}/admin' target='_blank'>管理面板</a>。
+        作为一名%{role}，现在您可以访问<a href='%{base_url}/admin' target='_blank'>管理界面</a>。
 
-        拥有权利的同时也被赋予了重大的责任。如果您不熟悉管理，请参考[管理指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
+        拥有权利的同时也需要承担重大责任。如果您不熟悉管理，请参阅[管理指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
     welcome_invite:
       title: "欢迎邀请"
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
-        感谢您接受邀请加入%{site_name} —— 欢迎！
+        感谢您接受邀请加入 %{site_name} - 欢迎！
 
-        - 我们为您创建了账户**%{username}**。访问[您的用户设置][prefs]修改名字或密码。
+        - 我们为您创建了帐户 **%{username}**。访问[您的用户个人资料][prefs]修改名字或密码。
 
-        - 您登录的时候，请**使用收到邀请的邮箱地址**登录——否则我们就无法分辨是不是您本人！
+        - 请**使用原始邀请中的电子邮件地址**登录，否则我们无法分辨是不是您本人！
 
         - %{new_user_tips}
 
-        我们始终相信[讨论应该文明](%{base_url}/guidelines)。
+        我们始终相信[文明社区行为](%{base_url}/guidelines)。
 
-        好好享受您在论坛的时光吧！
+        好好享受您在社区的时光吧！
 
-        [prefs]: %{user_preferences_url}
+        [prefs]：%{user_preferences_url}
     tl2_promotion_message:
-      subject_template: "恭喜！您的信任等级提升了！"
+      subject_template: "恭喜您的信任级别提升！"
       text_body_template: |
-        我们已经为您提升到另一个[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)！
+        我们已将您提升到另一个[信任级别](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)！
 
-        作为经验丰富的用户，您可能会喜欢[这个方便实用的技巧清单](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
+        作为有经验的用户，您可能需要[这份方便的提示和技巧列表](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
 
-        希望您能够继续活跃 —— 感谢您的参与。
+        我们邀请您继续参与 - 我们很高兴有您在身边。
     backup_succeeded:
       title: "备份成功"
       subject_template: "备份成功完成"
       text_body_template: |
         备份成功。
-        访问[管理 > 备份](%{base_url}/admin/backups)下载您的新备份。
+        访问[管理员 > 备份](%{base_url}/admin/backups)下载您的新备份。
 
         以下为日志：
 
@@ -2564,18 +2564,18 @@ zh_CN:
       text_body_template: |
         备份失败。
 
-        日志：
+        以下为日志：
 
         ```text
         1%{logs}
         ```
     restore_succeeded:
-      title: "成功恢复"
+      title: "恢复成功"
       subject_template: "恢复成功完成"
       text_body_template: |
         恢复成功。
 
-        日志：
+        以下为日志：
 
         ```text
         %{logs}
@@ -2586,20 +2586,20 @@ zh_CN:
       text_body_template: |
         恢复失败。
 
-        日志：
+        以下为日志：
 
         ```text
         %{logs}
         ```
     bulk_invite_succeeded:
       title: "批量邀请成功"
-      subject_template: "批量用户邀请成功完成"
-      text_body_template: "您的批量邀请用户已经完成，发送了 %{sent} 个邀请。"
+      subject_template: "批量用户邀请处理成功"
+      text_body_template: "您的批量用户邀请文件已被处理，发送了 %{sent} 个邀请。"
     bulk_invite_failed:
       title: "批量邀请失败"
-      subject_template: "批量邀请完成，并有一些错误"
+      subject_template: "批量用户邀请已被处理，但存在错误"
       text_body_template: |
-        正在处理批量邀请用户文件中，%{sent}个邀请已经发送，其中有%{failed}个失败。
+        您的批量用户邀请已被处理，%{sent} 个邀请已发送，其中 %{failed} 个存在错误。
 
         以下为日志：
 
@@ -2607,167 +2607,167 @@ zh_CN:
         %{logs}
         ```
     user_added_to_group_as_owner:
-      title: "添加为群组的所有者"
+      title: "作为所有者被添加到群组"
       subject_template: "您已被添加为 %{group_name} 群组的所有者"
       text_body_template: |
         您已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的所有者。
     user_added_to_group_as_member:
-      title: "添加为群组的成员"
+      title: "作为成员被添加到群组"
       subject_template: "您已被添加为 %{group_name} 群组的成员"
       text_body_template: |
         您已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的成员。
     csv_export_succeeded:
-      title: "CSV导出成功"
-      subject_template: "[%{export_title}]数据导出完成"
+      title: "CSV 导出成功"
+      subject_template: "[%{export_title}] 数据导出完成"
       text_body_template: |
         您的数据导出成功！:dvd:
 
         %{download_link}
 
-        上方的下载地址将在 48 小时后失效。
+        以上下载链接的有效期为 48 小时。
 
-        用户数据以 Zip 格式归档。若归档文件无法在您打开时自动解压，请使用此处推荐的工具：https://www.7-zip.org/
+        数据被压缩为 zip 归档。如果归档在您打开时未自行解压缩，请使用此处推荐的工具：https://www.7-zip.org/
     csv_export_failed:
-      title: "导致CSV失败"
+      title: "CSV 导出失败"
       subject_template: "数据导出失败"
-      text_body_template: "我们很抱歉，但是您的数据导出请求失败了。请检查日志或[联系管理人员](%{base_url}/about)。"
+      text_body_template: "抱歉，您的数据导出失败。请查看日志或[联系管理人员](%{base_url}/about)。"
     email_reject_insufficient_trust_level:
-      title: "拒收邮件 信任等级不足"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 信任等级不足"
+      title: "电子邮件被拒 - 信任级别不足"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 信任级别不足"
       text_body_template: |
-        我们很抱歉，但是您发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        您的账户没有足够的信任等级以该邮件地址发布新话题。如果您有异议，[联系管理人员](%{base_url}/about)。
+        您的帐户没有所需的信任级别来将新话题发布到此电子邮件地址。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_user_not_found:
-      title: "Email被拒绝：用户未找到"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 未找到用户"
+      title: "电子邮件被拒 - 找不到用户"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 找不到用户"
       text_body_template: |
-        我们非常抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        您发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+        您的回复发送自未知电子邮件地址。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_screened_email:
-      title: "Email 被拒绝：已屏蔽的 Email 地址"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的邮件地址"
+      title: "电子邮件被拒：被屏蔽的电子邮件"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁止的电子邮件"
       text_body_template: |
-        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        您发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+        您的回复发送自被禁止的电子邮件地址。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_not_allowed_email:
-      title: "邮件被拒绝：不被允许的邮件地址"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的邮件地址"
+      title: "电子邮件被拒：不允许的电子邮件"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁止的电子邮件"
       text_body_template: |
-        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        您发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+        您的回复发送自被禁止的电子邮件地址。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_inactive_user:
-      title: "Email被拒绝：未激活的用户"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 未激活用户"
+      title: "电子邮件被拒：停用用户"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 停用用户"
       text_body_template: |
-        我们非常抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        与您账户关联的邮件地址没有激活，请先激活您的账户再发送邮件。
+        您与此电子邮件地址关联的帐户未被激活，请先激活您的帐户，然后再发送电子邮件。
     email_reject_silenced_user:
-      title: "Email 被拒绝：已禁言的用户"
-      subject_template: "[%{email_prefix}] 邮件问题——已禁言的用户"
+      title: "电子邮件被拒：被禁言的用户"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁言的用户"
       text_body_template: |
-        我们非常抱歉，但是您发送至 （%{destination}题为 %{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        与您邮件地址关联的账户已被禁言。
+        您与此电子邮件地址关联的帐户已被禁言。
     email_reject_reply_user_not_matching:
-      title: "Email 被拒绝：用户不匹配"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 未预期的回复地址"
+      title: "电子邮件被拒 - 用户不匹配"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 意外回复地址"
       text_body_template: |
-        我们非常抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        您发送回复的邮件地址与我们预期的地址不同，所以我们不确定您是不是同一个人。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+        您的回复发送自与我们期望的地址不同的电子邮件地址，因此我们无法确定是否为同一个人。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_empty:
-      title: "Email被拒绝：空"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 无内容"
+      title: "电子邮件被拒：空"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 无内容"
       text_body_template: |
-        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件没有成功。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        我们不能找到您邮件中的任何回复内容。
+        我们在您的电子邮件中找不到任何回复内容。
 
-        如果您**确定**您的邮件中有回复内容，试试用更简单的格式。
+        如果您收到此邮件，但您_确实_包含了回复，请使用更简单的格式重试。
     email_reject_parsing:
-      title: "邮件拒绝解析"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 无法识别内容"
+      title: "电子邮件被拒：解析"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 内容无法识别"
       text_body_template: |
-        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        我们不能找到您邮件中的回复。**请确认将您的回复置于邮件顶端**——我们不能处理行内回复。
+        我们在电子邮件中找不到您的回复。**请确保您的回复位于电子邮件顶部** - 我们无法处理内嵌回复。
     email_reject_invalid_access:
-      title: "Email被拒绝：无效访问"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 无效访问"
+      title: "电子邮件被拒：无效访问"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 无效访问"
       text_body_template: |
-        我们很抱歉，但是您发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        您的账户没有达到足够的信任等级在该分类发布新话题。如果您有异议，[联系管理人员](%{base_url}/about)。
+        您的帐户没有权限在该类别下发布新话题。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_strangers_not_allowed:
-      title: "Email被拒绝：不允许陌生人"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 无效访问"
+      title: "电子邮件被拒：不允许陌生人"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 无效访问"
       text_body_template: |
-        我们非常抱歉，但是您发送至%{destination}（标题为%{former_title}）无效。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        邮件所发送的分类只接受来自拥有邮箱地址的有效账户的回复。如果您认为这是一个错误，[联系管理人员](%{base_url}/about)。
+        您将此电子邮件发送到的类别仅允许来自使用有效帐户和已知电子邮件地址的用户的回复。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_invalid_post:
-      title: "邮件拒绝无效话题"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 发表错误"
+      title: "电子邮件被拒：无效帖子"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 发帖错误"
       text_body_template: |
-        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        可能的原因是：复杂的格式、私信超长、私信太短。请再试一次，如果还不行，使用网站发表。
+        可能的原因是：复杂的格式、消息过长、消息过短。请重试，如果问题仍然存在，请通过网站发帖。
     email_reject_invalid_post_specified:
-      title: "邮件拒绝指定的帖子无效"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 发表错误"
+      title: "电子邮件被拒：指定的帖子无效"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 发帖错误"
       text_body_template: |
-        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
         原因：
 
         %{post_error}
 
-        如果您能解决错误，请再试一次。
-      date_invalid: "没有找到帖子的创建时间。电子邮件是否缺少日期header？"
+        如果您可以解决问题，请重试。
+      date_invalid: "找不到帖子创建日期。电子邮件是否缺少 Date: 标头？"
     email_reject_post_too_short:
-      title: "邮件拒绝帖子过短"
-      subject_template: "[%{email_prefix}] 邮件问题 - 帖子过短"
+      title: "电子邮件被拒：帖子过短"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 帖子过短"
       text_body_template: |
-        很抱歉，您发送到%{destination}的邮件（标题%{former_title}）无效。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        为了促进更深入的对话，不允许进行非常简短的回复。您能回复至少%{count}个字符吗？或者回复“+1”来发送邮件。
+        为了促进更深入的对话，不允许进行非常简短的回复。您能回复至少 %{count} 个字符吗？或者，您也可以回复“+1”，通过电子邮件来点赞帖子。
     email_reject_invalid_post_action:
-      title: "邮件拒绝无效的帖子动作"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 无效帖子动作"
+      title: "电子邮件被拒：无效的帖子操作"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 无效的帖子操作"
       text_body_template: |
-        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        发送的命令无法被识别。请再试一次，如果还有问题，使用网站发表。
+        帖子操作无法被识别。请重试，如果问题仍然存在，请通过网站发帖。
     email_reject_reply_key:
-      title: "邮件拒绝回复键"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 未知回复键"
+      title: "电子邮件被拒：回复键"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 未知回复键"
       text_body_template: |
-        我们非常抱歉，但是您发送至%{destination}（名为%{former_title}）的邮件出问题了。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
-        邮件中的回复信令是无效或者未知的，所以我们不知道这封邮件回复给谁了。请[联系管理人员](%{base_url}/about)。
+        电子邮件中的回复键无效或者未知，因此我们不知道此电子邮件回复给谁。请[联系管理人员](%{base_url}/about)。
     email_reject_bad_destination_address:
-      title: "Email被拒绝：收件人地址不正确"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 未知的发至：地址"
+      title: "电子邮件被拒：回目标地址错误"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 未知收件人地址"
       text_body_template: |
-        很抱歉，但是您发送给 %{destination}  (标题 %{former_title}) 的电子邮件不起作用。
+        抱歉，但是您向 %{destination}（名为 %{former_title}）发送的邮件未成功。
 
         以下是一些需要检查的事项：
 
-          - 您使用多个电子邮件地址吗？您回复的电子邮件地址不同于原来使用的电子邮件地址吗？电子邮件回复要求您在回复时使用相同的电子邮件地址。
+          - 您是否使用多个电子邮件地址？您回复的电子邮件地址是否与您最初使用的电子邮件地址不同？电子邮件回复要求您在回复时使用相同的电子邮件地址。
 
-          - 回复时，您的电子邮件软件是否正确使用 Reply-To: email address？不幸的是，某些电子邮件软件错误地使用 From: address，这不起作用。
+          - 您的电子邮件软件在回复时是否正确使用了“回复给”电子邮件地址？不幸的是，一些电子邮件软件错误地将回复发送到“发件人”地址，在这种情况下将不成功。
 
-          - 电子邮件中的 Message-ID 标题是否已修改？Message-ID 必须保持一致且不变。
+          - 电子邮件中的 Message-ID 标头是否已被修改？Message-ID 必须一致且不变。
 
-        需要更多帮助？联系我们： %{base_url}/about
+        需要更多帮助？通过 %{base_url}/about 下的“联系我们”详细信息与我们联系
     email_reject_old_destination:
-      title: "邮件拒绝老地址"
-      subject_template: "[%{email_prefix}] 邮件问题 - 您正尝试回复旧通知"
+      title: "电子邮件被拒：旧目标"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 您正尝试回复旧通知"
       text_body_template: |
         很抱歉，您发送到%{destination}的邮件（标题%{former_title}）无效。
 
