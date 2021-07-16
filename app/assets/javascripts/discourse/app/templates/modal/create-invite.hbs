@@ -2,7 +2,7 @@
   <form>
     <div class="input-group invite-link">
       <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
-      <div class="invite-input-with-button">
+      <div class="share-link-container">
         {{input
           name="invite-link"
           class="invite-link"
@@ -19,7 +19,7 @@
 
     <div class="input-group input-email">
       <label for="invite-email">{{d-icon "envelope"}}{{i18n "user.invited.invite.restrict_email"}}</label>
-      <div class="invite-input-with-button">
+      <div class="share-link-container">
         {{input
           id="invite-email"
           value=buffered.email
