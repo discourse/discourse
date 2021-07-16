@@ -193,8 +193,16 @@ class PostSerializer < BasicPostSerializer
     object.user&.flair_group&.name
   end
 
+  def include_flair_name?
+    object.user&.flair_group&.name.present? && can_see_flair_group?
+  end
+
   def flair_url
     object.user&.flair_group&.flair_url
+  end
+
+  def include_flair_url?
+    object.user&.flair_group&.flair_url.present? && can_see_flair_group?
   end
 
   def flair_bg_color
@@ -560,4 +568,7 @@ private
     @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
   end
 
+  def can_see_flair_group?
+    scope.can_see_group?(object.user&.flair_group)
+  end
 end

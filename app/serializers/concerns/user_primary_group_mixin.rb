@@ -25,8 +25,8 @@ module UserPrimaryGroupMixin
     object&.flair_group&.name
   end
 
-  def include_flair_group_name?
-    object&.flair_group.present?
+  def include_flair_name?
+    object&.flair_group.present? && can_see_flair_group?
   end
 
   def flair_url
@@ -34,7 +34,7 @@ module UserPrimaryGroupMixin
   end
 
   def include_flair_url?
-    object&.flair_group&.flair_url.present?
+    object&.flair_group&.flair_url.present? && can_see_flair_group?
   end
 
   def flair_bg_color
@@ -42,7 +42,7 @@ module UserPrimaryGroupMixin
   end
 
   def include_flair_bg_color?
-    object&.flair_group&.flair_bg_color.present?
+    object&.flair_group&.flair_bg_color.present? && can_see_flair_group?
   end
 
   def flair_color
@@ -50,7 +50,7 @@ module UserPrimaryGroupMixin
   end
 
   def include_flair_color?
-    object&.flair_group&.flair_color.present?
+    object&.flair_group&.flair_color.present? && can_see_flair_group?
   end
 
   def include_admin?
@@ -67,5 +67,11 @@ module UserPrimaryGroupMixin
 
   def moderator
     true
+  end
+
+  private
+
+  def can_see_flair_group?
+    scope.can_see_group?(object&.flair_group)
   end
 end

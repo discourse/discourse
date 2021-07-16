@@ -189,8 +189,16 @@ class UserCardSerializer < BasicUserSerializer
     object.flair_group&.name
   end
 
+  def include_flair_name?
+    object.flair_group.present? && can_see_flair_group?
+  end
+
   def flair_url
     object.flair_group&.flair_url
+  end
+
+  def include_flair_url?
+    object.flair_group&.flair_url.present? && can_see_flair_group?
   end
 
   def flair_bg_color
@@ -222,5 +230,9 @@ class UserCardSerializer < BasicUserSerializer
   def custom_field_keys
     # Can be extended by other serializers
     User.allowed_user_custom_fields(scope)
+  end
+
+  def can_see_flair_group?
+    scope.can_see_group?(object.flair_group)
   end
 end
