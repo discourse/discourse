@@ -1,4 +1,5 @@
 import { isValidSearchTerm, searchForTerm } from "discourse/lib/search";
+import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -6,8 +7,15 @@ import { get } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import userSearch from "discourse/lib/user-search";
+
+const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
+// The backend user search query returns zero results for a term-free search
+// so the regexp below only matches @ followed by a valid character
+const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]+)$/gi;
 
 const searchData = {};
+const suggestionTriggers = ["in:", "status:", "order:"];
 
 export function initSearchData() {
   searchData.loading = false;
@@ -17,6 +25,7 @@ export function initSearchData() {
   searchData.typeFilter = null;
   searchData.invalidTerm = false;
   searchData.topicId = null;
+  searchData.afterAutocomplete = false;
 }
 
 initSearchData();
@@ -39,6 +48,49 @@ const SearchHelper = {
     const { term, typeFilter, contextEnabled } = searchData;
     const searchContext = contextEnabled ? widget.searchContext() : null;
     const fullSearchUrl = widget.fullSearchUrl();
+    const matchSuggestions = this.matchesSuggestions();
+
+    if (matchSuggestions) {
+      searchData.noResults = true;
+      searchData.results = [];
+      searchData.loading = false;
+
+      if (typeof matchSuggestions === "string") {
+        searchData.suggestionKeyword = matchSuggestions;
+        widget.scheduleRerender();
+        return;
+      } else {
+        if (matchSuggestions.type === "category") {
+          const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
+            "#",
+            ""
+          );
+
+          searchData.suggestionResults = Category.search(categorySearchTerm);
+          searchData.suggestionKeyword = "#";
+          widget.scheduleRerender();
+          return;
+        }
+        if (matchSuggestions.type === "username") {
+          userSearch({
+            term: matchSuggestions.usernamesMatch[0],
+            includeGroups: true,
+          }).then((result) => {
+            if (result?.users.length > 0) {
+              searchData.suggestionResults = result.users;
+              searchData.suggestionKeyword = "@";
+            } else {
+              searchData.noResults = true;
+              searchData.suggestionKeyword = false;
+            }
+            widget.scheduleRerender();
+          });
+          return;
+        }
+      }
+    }
+
+    searchData.suggestionKeyword = false;
 
     if (!isValidSearchTerm(term, widget.siteSettings)) {
       searchData.noResults = true;
@@ -73,9 +125,37 @@ const SearchHelper = {
         .catch(popupAjaxError)
         .finally(() => {
           searchData.loading = false;
+          searchData.afterAutocomplete = false;
           widget.scheduleRerender();
         });
     }
+  },
+
+  matchesSuggestions() {
+    if (searchData.term === undefined) {
+      return false;
+    }
+
+    const simpleSuggestion = suggestionTriggers.find(
+      (mod) => searchData.term === mod || searchData.term.endsWith(` ${mod}`)
+    );
+
+    if (simpleSuggestion) {
+      return simpleSuggestion;
+    }
+
+    const categoriesMatch = searchData.term.match(CATEGORY_SLUG_REGEXP);
+
+    if (categoriesMatch) {
+      return { type: "category", categoriesMatch };
+    }
+
+    const usernamesMatch = searchData.term.match(USERNAME_REGEXP);
+    if (usernamesMatch) {
+      return { type: "username", usernamesMatch };
+    }
+
+    return false;
   },
 };
 
@@ -132,10 +212,14 @@ export default createWidget("search-menu", {
   },
 
   panelContents() {
-    const contextEnabled = searchData.contextEnabled;
+    const { contextEnabled, afterAutocomplete } = searchData;
 
     let searchInput = [
-      this.attach("search-term", { value: searchData.term, contextEnabled }),
+      this.attach(
+        "search-term",
+        { value: searchData.term, contextEnabled },
+        { state: { afterAutocomplete } }
+      ),
     ];
     if (searchData.term && searchData.loading) {
       searchInput.push(h("div.searching", h("div.spinner")));
@@ -157,6 +241,8 @@ export default createWidget("search-menu", {
           results: searchData.results,
           invalidTerm: searchData.invalidTerm,
           searchContextEnabled: searchData.contextEnabled,
+          suggestionKeyword: searchData.suggestionKeyword,
+          suggestionResults: searchData.suggestionResults,
         })
       );
     }
@@ -211,7 +297,7 @@ export default createWidget("search-menu", {
       return false;
     }
 
-    if (searchData.loading || searchData.noResults) {
+    if (searchData.loading) {
       return;
     }
 
@@ -304,6 +390,11 @@ export default createWidget("search-menu", {
     searchData.typeFilter = null;
     searchData.term = term;
     this.triggerSearch();
+  },
+
+  triggerAutocomplete(term) {
+    searchData.afterAutocomplete = true;
+    this.searchTermChanged(term);
   },
 
   fullSearch() {

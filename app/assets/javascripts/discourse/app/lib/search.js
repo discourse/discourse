@@ -206,53 +206,30 @@ export function isValidSearchTerm(searchTerm, siteSettings) {
   }
 }
 
-export function applySearchAutocomplete(
-  $input,
-  siteSettings,
-  appEvents,
-  options
-) {
-  const afterComplete = function () {
-    if (appEvents) {
-      appEvents.trigger("search-autocomplete:after-complete");
-    }
-  };
-
+export function applySearchAutocomplete($input, siteSettings) {
   $input.autocomplete(
-    deepMerge(
-      {
-        template: findRawTemplate("category-tag-autocomplete"),
-        key: "#",
-        width: "100%",
-        treatAsTextarea: true,
-        autoSelectFirstSuggestion: false,
-        transformComplete(obj) {
-          return obj.text;
-        },
-        dataSource(term) {
-          return searchCategoryTag(term, siteSettings);
-        },
-        afterComplete,
-      },
-      options
-    )
+    deepMerge({
+      template: findRawTemplate("category-tag-autocomplete"),
+      key: "#",
+      width: "100%",
+      treatAsTextarea: true,
+      autoSelectFirstSuggestion: false,
+      transformComplete: (obj) => obj.text,
+      dataSource: (term) => searchCategoryTag(term, siteSettings),
+    })
   );
 
   if (siteSettings.enable_mentions) {
     $input.autocomplete(
-      deepMerge(
-        {
-          template: findRawTemplate("user-selector-autocomplete"),
-          key: "@",
-          width: "100%",
-          treatAsTextarea: true,
-          autoSelectFirstSuggestion: false,
-          transformComplete: (v) => v.username || v.name,
-          dataSource: (term) => userSearch({ term, includeGroups: true }),
-          afterComplete,
-        },
-        options
-      )
+      deepMerge({
+        template: findRawTemplate("user-selector-autocomplete"),
+        key: "@",
+        width: "100%",
+        treatAsTextarea: true,
+        autoSelectFirstSuggestion: false,
+        transformComplete: (v) => v.username || v.name,
+        dataSource: (term) => userSearch({ term, includeGroups: true }),
+      })
     );
   }
 }
