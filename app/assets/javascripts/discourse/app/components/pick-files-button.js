@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
-import { default as computed } from "discourse-common/utils/decorators";
+import { bind, default as computed } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 
 export default Component.extend({
@@ -11,7 +11,20 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this._bindControls();
+    const fileInput = this.element.querySelector("input");
+    this.set("fileInput", fileInput);
+    fileInput.addEventListener("change", this.onChange, false);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.fileInput.removeEventListener("change", this.onChange);
+  },
+
+  @bind
+  onChange() {
+    const files = this.fileInput.files;
+    this._filesPicked(files);
   },
 
   @computed
@@ -45,19 +58,7 @@ export default Component.extend({
 
   @action
   openSystemFilePicker() {
-    document.querySelector("#file-input").click();
-  },
-
-  _bindControls() {
-    const fileInput = document.getElementById("file-input");
-    fileInput.addEventListener(
-      "change",
-      () => {
-        const files = fileInput.files;
-        this._filesPicked(files);
-      },
-      false
-    );
+    this.fileInput.click();
   },
 
   _filesPicked(files) {

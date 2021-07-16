@@ -1,6 +1,6 @@
 {{d-button action=(action "openSystemFilePicker") label=label icon=icon}}
 {{#if acceptAnyFile}}
-  <input type="file"  id="file-input">
+  <input type="file">
 {{else}}
-  <input type="file"  id="file-input" accept={{acceptedFileTypesString}}>
+  <input type="file" accept={{acceptedFileTypesString}}>
 {{/if}}
