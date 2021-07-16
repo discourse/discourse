@@ -7,7 +7,7 @@
   }
   input {
     width: 100%;
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
     margin-bottom: 0;
     &:focus + button {
       outline: 1px solid var(--tertiary);
