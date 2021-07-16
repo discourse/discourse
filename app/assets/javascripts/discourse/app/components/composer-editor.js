@@ -652,7 +652,6 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: false,
-          isProcessingUpload: false,
           isCancellable: false,
         });
       }
@@ -683,6 +682,14 @@ export default Component.extend({
     });
 
     $element
+      .on("fileuploadprocessstart", () => {
+        this.setProperties({
+          uploadProgress: 0,
+          isUploading: true,
+          isProcessingUpload: true,
+          isCancellable: false,
+        });
+      })
       .on("fileuploadprocess", (e, data) => {
         this.appEvents.trigger(
           "composer:insert-text",
@@ -690,12 +697,6 @@ export default Component.extend({
             filename: data.files[data.index].name,
           })}]()\n`
         );
-        this.setProperties({
-          uploadProgress: 0,
-          isUploading: true,
-          isProcessingUpload: true,
-          isCancellable: false,
-        });
       })
       .on("fileuploadprocessalways", (e, data) => {
         this.appEvents.trigger(
@@ -705,6 +706,8 @@ export default Component.extend({
           })}]()\n`,
           ""
         );
+      })
+      .on("fileuploadprocessstop", () => {
         this.setProperties({
           uploadProgress: 0,
           isUploading: false,
