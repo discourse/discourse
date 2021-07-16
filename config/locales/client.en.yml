@@ -3784,6 +3784,9 @@ en:
         leader: "leader"
       detailed_name: "%{level}: %{name}"
 
+    pick_files_button:
+      unsupported_file_picked: "You have picked an unsupported file. Supported file types – %{types}."
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
