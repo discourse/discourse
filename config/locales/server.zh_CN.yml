@@ -2256,7 +2256,7 @@ zh_CN:
     subject_template:
       other: "%{count} 个条目需要审查"
   unsubscribe_mailer:
-    title: "退订邮件程序"
+    title: "退订邮件"
     subject_template: "确认您不再希望收到 %{site_title} 的电子邮件动态"
     text_body_template: |
       有人（可能是您？）请求不再从 %{site_domain_name} 向此地址发送电子邮件动态。
@@ -2267,7 +2267,7 @@ zh_CN:
 
       如果您想继续接收电子邮件动态，您可以忽略此电子邮件。
   invite_mailer:
-    title: "邀请邮件程序"
+    title: "邀请邮件"
     subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name} 上的 '%{topic_title}'"
     text_body_template: |
       %{inviter_name} 邀请您参与讨论
@@ -2284,7 +2284,7 @@ zh_CN:
 
       %{invite_link}
   custom_invite_mailer:
-    title: "自定义邀请邮件程序"
+    title: "自定义邀请邮件"
     subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name} 上的 '%{topic_title}'"
     text_body_template: |
       %{inviter_name} 邀请您参与讨论
@@ -2305,7 +2305,7 @@ zh_CN:
 
       %{invite_link}
   invite_forum_mailer:
-    title: "邀请论坛邮件程序"
+    title: "邀请论坛邮件"
     subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
     text_body_template: |
       %{inviter_name} 邀请您加入
@@ -2318,7 +2318,7 @@ zh_CN:
 
       %{invite_link}
   custom_invite_forum_mailer:
-    title: "自定义邀请论坛邮件程序"
+    title: "自定义邀请论坛邮件"
     subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
     text_body_template: |
       %{inviter_name} 邀请您加入
@@ -2345,7 +2345,7 @@ zh_CN:
 
       （如果链接已经过期，请在使用您的电子邮件地址登录时选择“我忘记密码了”。）
   download_backup_mailer:
-    title: "下载备份邮件程序"
+    title: "下载备份邮件"
     subject_template: "[%{email_prefix}] 站点备份下载"
     text_body_template: |
       这是您请求的[站点备份下载](%{backup_file_path})。
@@ -2360,74 +2360,74 @@ zh_CN:
     subject_template: "[%{email_prefix}] 确认新管理员帐户"
     text_body_template: "请确认您要添加 **%{target_username} (%{target_email})** 作为您的论坛的管理员。 \n\n[确认管理员帐户](%{admin_confirm_url})\n"
   test_mailer:
-    title: "测试邮件程序"
+    title: "测试邮件"
     subject_template: "[%{email_prefix}] 电子邮件能否递送成功测试"
     text_body_template: "这是一封测试电子邮件，来自 \n\n[**%{base_url}**][0]\n\n电子邮件能否递送成功取决于很多因素。下面是几个您需要首先留意的重要方面：\n\n- 请*确保*在站点设置中正确设置 `notification email` from: 地址。**您所发出的电子邮件的“发件人”地址中指定的网域需要进行验证**。\n\n- 知道如何使用您的邮件客户端查看电子邮件原始内容，这样您能够检查电子邮件标头以获取重要线索。在 Gmail 中，每封邮件右上角的下拉菜单中都会提供“显示原始邮件”选项。\n\n- **重要提示**：您的 ISP 是否输入了反向 DNS 记录以关联您用于发送邮件的域名和 IP 地址？[测试您的反向 PTR 记录][2]。如果您的 ISP 未输入正确的反向 DNS 记录，您的电子邮件不太可能递送成功。\n\n- 您的网域的 [SPF 记录][8]正确吗？[测试您的 SPF 记录][1]。注意 SPF 的官方记录类型是 TXT。\n\n- 您的网域的 [DKIM 记录][3]正确吗？这会显著提升电子邮件递送成功几率。[测试您的 DKIM 记录][7]。\n\n- 如果您使用自建的邮件服务器，请确保您的邮件服务器的 IP [不在电子邮件屏蔽名单中][4]。还要验证它肯定发送一个可以在 HELO 消息中解析 DNS 的完全限定主机名。否则，您的电子邮件会被许多邮件服务拒绝。\n\n- 强烈建议您**向 [mail-tester.com][mt] 发送一封测试邮件**以验证上述所有设置正常。\n\n（一种*简单的*方法是创建一个 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 或 [Mailjet][mj] 帐户，这些平台提供适用于小型社区的低成本邮寄方案。不过，您仍然需要在 DNS 中设置 SPF 和 DKIM 记录！）\n\n希望您能成功收到这封测试邮件！\n\n祝君好运，\n\n您在 [Discourse](https://www.discourse.org) 的伙伴\n\n[0]: %{base_url}\n[1]: https://www.kitterman.com/spf/validate.html\n[2]: https://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: https://whatismyipaddress.com/blacklist-check\n[7]: https://www.mail-tester.com/spf-dkim-check\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://goo.gl/r1WMF6\n[sp]: https://www.sparkpost.com/\n[mg]: https://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing/\n[mt]: https://www.mail-tester.com/\n"
   new_version_mailer:
-    title: "新版本发件人"
-    subject_template: "[%{email_prefix}] 新 Discourse 版本可供升级"
+    title: "新版本邮件"
+    subject_template: "[%{email_prefix}] 新 Discourse 版本可供更新"
     text_body_template: |
-      Hooray，[Discourse](https://www.discourse.org)的新版本现已发布！
+      万岁，新版本的 [Discourse](https://www.discourse.org) 现已发布！
 
       您的版本：%{installed_version}
       新版本：**%{new_version}**
 
-      - 轻松使用我们的**[浏览器一键式升级](%{base_url}/admin/upgrade)**进行升级
+      - 使用我们简单的**[一键浏览器升级](%{base_url}/admin/upgrade)**进行升级
 
-      - 查看[发行说明](https://meta.discourse.org/tag/release-notes)中的新功能或查看[原始GitHub更新日志](https://github.com/discourse/discourse/commits/master)
+      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化或查看[原始 GitHub 更新日志](https://github.com/discourse/discourse/commits/master)
 
-      - 访问[meta.discourse.org](https://meta.discourse.org)获取资讯、讨论以及对Discourse的支持
+      - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的资讯、讨论和支持
   new_version_mailer_with_notes:
-    title: "带注解的新版本发件人"
-    subject_template: "[%{email_prefix}] 可以升级"
+    title: "带版本说明的新版本邮件"
+    subject_template: "[%{email_prefix}] 有可用更新"
     text_body_template: |
-      Hooray，[Discourse](https://www.discourse.org)的新版本现已发布！
+      万岁，新版本的 [Discourse](https://www.discourse.org) 现已发布！
 
       您的版本：%{installed_version}
       新版本：**%{new_version}**
 
-      - 轻松使用我们的**[浏览器一键式升级](%{base_url}/admin/ upgrade)**进行升级
+      - 使用我们简单的**[一键浏览器升级](%{base_url}/admin/upgrade)**进行升级
 
-      - 查看[发行说明](https://meta.discourse.org/tag/release-notes)中的新功能或查看[原始GitHub更新日志](https://github.com/discourse/discourse/commits/master)
+      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化或查看[原始 GitHub 更新日志](https://github.com/discourse/discourse/commits/master)
 
-      - 访问[meta.discourse.org](https://meta.discourse.org)获取资讯、讨论以及对Discourse的支持
+      - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的资讯、讨论和支持
 
-      ### 发布说明
+      ### 版本说明
 
       %{notes}
   flag_reasons:
-    off_topic: "您的帖子被标记为 **偏离话题**：鉴于当前的话题标题和第一个帖子，社区成员们感觉它不适合处于这个话题中。"
-    inappropriate: "您的帖子被标记为 **不恰当**：社区成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社区准则](%{base_path}/guidelines)。"
-    spam: "您的帖子被标记为 **广告**：社区成员觉得它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
-    notify_moderators: "您的帖子被标记为 **需要版主关注**：社区成员认为帖子需要管理人员介入。"
+    off_topic: "您的帖子被举报为**偏离话题**：鉴于话题标题和第一篇帖子，社区认为它不适合该话题。"
+    inappropriate: "您的帖子被举报为**不当言论**：社区认为它有冒犯或者侮辱的意味，亦或违反了[我们的社区准则](%{base_path}/guidelines)。"
+    spam: "您的帖子被举报为**垃圾信息**：社区认为它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
+    notify_moderators: "您的帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
   flags_dispositions:
-    agreed: "谢谢您的私信。我们认为这是个问题。我们正在进行处理。"
-    agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
-    disagreed: "谢谢您的私信。我们正在进行处理。"
-    ignored: "感谢通知我们。我们正在调查情况。"
-    ignored_and_deleted: "感谢通知我们。我们已经删除了帖子。"
+    agreed: "感谢通知我们。我们认为这是个问题，正在进行调查。"
+    agreed_and_deleted: "感谢通知我们。我们认为这是个问题，并且已将该帖子移除。"
+    disagreed: "感谢通知我们。我们正在进行调查。"
+    ignored: "感谢通知我们。我们正在进行调查。"
+    ignored_and_deleted: "感谢通知我们。我们已将该帖子移除。"
   temporarily_closed_due_to_flags:
-    other: "因为大量社区成员的标记，这个话题被临时关闭 %{count} 小时。"
+    other: "由于大量社区举报，此话题被临时关闭至少 %{count} 小时。"
   system_messages:
     private_topic_title: "话题 #%{id}"
     contents_hidden: "请访问帖子以查看内容。"
     post_hidden:
-      title: "帖子隐藏"
-      subject_template: "帖子因社区标记隐藏"
+      title: "帖子被隐藏"
+      subject_template: "帖子因社区举报而被隐藏"
       text_body_template: |
         您好，
 
-        这是%{site_name}通知您的帖子已被隐藏的自动消息。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被隐藏。
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        这个帖子被隐藏是因为被社区成员所标记，所以请考虑根据他们的反馈修改您的帖子。**您可以在 %{edit_delay} 分钟后开始编辑您的帖子，然后它将重新被显示。**
+        此帖子由于社区举报而被隐藏，因此请考虑根据他们的反馈修改您的帖子。**您可以在 %{edit_delay} 分钟后编辑您的帖子，然后它将自动被取消隐藏**。
 
-        然而，如果帖子再次被社区成员标记并隐藏，它将被隐藏至版主处理后。
+        不过，如果帖子再次由于社区举报而被隐藏，它将保持隐藏至管理人员介入。
 
-        想了解更多，请查看我们的[社区指引](%{base_url}/guidelines)。
+        有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     post_hidden_again:
       title: "再次发布隐藏"
       subject_template: "被社区标记所隐藏，已通知管理人员"
