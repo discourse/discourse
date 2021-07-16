@@ -64,15 +64,17 @@ export default {
               ? `[data-target='${me.target}'][data-theme-id='${me.theme_id}']`
               : `[data-target='${me.target}']`;
 
-            const link = document.querySelector(`link${link_target}`);
-            // this check is useful when message-bus has multiple file updates
-            // it avoids the browser doing a lot of work for nothing
-            // should the filenames be unchanged
-            if (
-              link &&
-              link.href.split("/").pop() !== me.new_href.split("/").pop()
-            ) {
-              this.refreshCSS(link, me.new_href);
+            const links = document.querySelectorAll(`link${link_target}`);
+            if (links.length > 0) {
+              const lastLink = links[links.length - 1];
+              // this check is useful when message-bus has multiple file updates
+              // it avoids the browser doing a lot of work for nothing
+              // should the filenames be unchanged
+              if (
+                lastLink.href.split("/").pop() !== me.new_href.split("/").pop()
+              ) {
+                this.refreshCSS(lastLink, me.new_href);
+              }
             }
           }
         });
