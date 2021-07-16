@@ -342,7 +342,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
     if card_background_url.present?
       card_background_missing = user.user_profile.card_background_upload.blank? || Upload.get_from_url(user.user_profile.card_background_upload.url).blank?
-      if card_background_missing || SiteSetting.discourse_connect_overrides_profile_background
+      if card_background_missing || SiteSetting.discourse_connect_overrides_card_background
         card_background_changed = sso_record.external_card_background_url != card_background_url
         if card_background_changed || card_background_missing
           Jobs.enqueue(:download_profile_background_from_url,
