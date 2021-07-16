@@ -1570,6 +1570,7 @@ pt_BR:
       close: "fechar"
       dismiss_error: "Descartar erro"
     close: "Fechar"
+    assets_changed_confirm: "Este site acabou de receber uma atualização de software. Obter a versão mais recente agora?"
     logout: "Você foi desconectado(a)."
     refresh: "Atualizar"
     home: "Início"
@@ -1606,10 +1607,12 @@ pt_BR:
       sign_up: "Cadastrar-se"
       hide_session: "Lembrar amanhã"
       hide_forever: "não, obrigado(a)"
+      hidden_for_session: "Ok, vamos perguntar amanhã. Você sempre pode usar \"Entrar\" para criar uma conta também."
       intro: "Olá! Parece que você está gostando da discussão, mas ainda não cadastou uma conta."
       value_prop: "Ao cadastrar uma conta, lembramos exatamente o que foi lido para que você sempre continue de onde parou. Você também recebe notificações, por aqui e via e-mail, sempre que alguém responder. E você pode curtir as postagens para compartilhar o amor. :heartpulse:"
     summary:
       enabled_description: "Você está vendo um resumo deste tópico: as postagens mais interessantes segundo a comunidade."
+      description_time_MF: "Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
       enable: "Resumir este tópico"
       disable: "Exibir todas as postagens"
     deleted_filter:
@@ -1621,6 +1624,7 @@ pt_BR:
       title: "Mensagem"
       invite: "Convidar outros..."
       edit: "Adicionar ou remover..."
+      remove: "Remover..."
       add: "Adicionar..."
       leave_message: "Tem certeza de que quer sair desta mensagem?"
       remove_allowed_user: "Tem certeza de que quer remover %{name} desta mensagem?"
@@ -1634,7 +1638,9 @@ pt_BR:
     search_hint: "nome do(a) usuário(a), e-mail ou endereço IP"
     create_account:
       header_title: "Boas-vindas!"
+      subheader_title: "Vamos criar a sua conta"
       disclaimer: "Ao se cadastrar, você concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de serviço</a>."
+      title: "Criar sua conta"
       failed: "Algo deu errado, talvez este e-mail já esteja cadastrado, tente usar o link de senha esquecida."
     forgot_password:
       title: "Redefinição de senha"
@@ -1653,6 +1659,7 @@ pt_BR:
     email_login:
       link_label: "Envie por e-mail um link para entrar"
       button_label: "com e-mail"
+      login_link: "Pular a senha, enviar um link por e-mail para entrar com a conta"
       emoji: "emoji de bloqueio"
       complete_username: "Se uma conta corresponder ao nome de usuário(a) <b>%{username}</b>, em breve você deverá receber um e-mail com um link para entrar."
       complete_email: "Se uma conta corresponder à <b>%{email}</b>, em breve você deverá receber um e-mail com um link para entrar."
@@ -1664,10 +1671,15 @@ pt_BR:
       logging_in_as: Entrando como %{email}
       confirm_button: Terminar de entrar
     login:
+      header_title: "Boas-vinda outra vez"
+      subheader_title: "Entrar com a sua conta"
+      title: "Entrar"
       username: "Usuário(a)"
       password: "Senha"
+      second_factor_title: "Autenticação de dois fatores"
       second_factor_description: "Digite o código de autenticação do seu aplicativo:"
       second_factor_backup: "Entrar usando um código de backup"
+      second_factor_backup_title: "Backup de dois fatores"
       second_factor_backup_description: "Insira um dos seus códigos de backup:"
       second_factor: "Fazer login usando um aplicativo de autenticação"
       security_key_description: "Quando você tiver uma chave física de segurança preparada, pressione o botão abaixo Autenticar com chave de segurança."
@@ -1676,6 +1688,7 @@ pt_BR:
       security_key_not_allowed_error: "O processo de autenticação com chave de segurança atingiu o limite de tempo ou foi cancelado."
       security_key_no_matching_credential_error: "Nenhuma credencial correspondente pôde ser encontrada na chave de segurança informada."
       security_key_support_missing_error: "Seu dispositivo ou navegador atual não são compatíveis com o uso de chaves de segurança. Use um método diferente."
+      email_placeholder: "E-mail/nome do(a) usuário(a)"
       caps_lock_warning: "Caps Lock está ativado"
       error: "Erro desconhecido"
       cookies_error: "Pelo visto, os cookies do seu navegador estão desativados. Talvez você não consiga entrar em ativá-los antes."
@@ -1690,8 +1703,10 @@ pt_BR:
       awaiting_approval: "Sua conta ainda não foi aprovada por um membro da equipe. Você receberá um e-mail quando isso acontecer."
       requires_invite: "Desculpe, o acesso a este fórum é permitido somente pelo convite de outro membro."
       not_activated: "Você não pode entrar ainda. Nós enviamos um e-mail de ativação antes para o endereço <b>%{sentTo}</b>. Siga as instruções deste e-mail para ativar a sua conta."
+      not_allowed_from_ip_address: "Você não pode entrar com este endereço IP."
       admin_not_allowed_from_ip_address: "Você não pode entrar como administrador(a) com este endereço IP."
       resend_activation_email: "Clique aqui para enviar o e-mail de ativação novamente."
+      omniauth_disallow_totp: "Sua conta tem autenticação dois fatores ativada. Entre com sua senha."
       resend_title: "Enviar novamente e-mail de ativação"
       change_email: "Alterar endereço de e-mail"
       provide_new_email: "Informe um novo endereço de e-mail e enviaremos novamente o seu e-mail de confirmação."
@@ -1757,6 +1772,10 @@ pt_BR:
       enter: "Enter"
     conditional_loading_section:
       loading: Carregando...
+    category_row:
+      plus_subcategories_title:
+        one: "%{name} e uma subcategoria"
+        other: "%{name} e %{count} subcategorias"
     select_kit:
       filter_by: "Filtrar por: %{name}"
       select_to_filter: "Selecione um valor para filtrar"
@@ -3131,6 +3150,8 @@ pt_BR:
         profile: "%{shortcut} Perfil"
         messages: "%{shortcut} Mensagens"
         drafts: "%{shortcut} Rascunhos"
+        next: "%{shortcut} próximo tópico"
+        previous: "%{shortcut} tópico anterior"
       navigation:
         title: "Navegação"
         jump: "%{shortcut} Ir para a postagem #"
@@ -3600,6 +3621,12 @@ pt_BR:
               sync_sso: Sincronize um(a) usuário(a) com o DiscourseConnect.
               show: Obtenha informações sobre um(a) usuário(a).
               check_emails: Liste e-mails de usuário(a).
+              update: Atualize as informações de perfil do(a) usuário(a).
+              log_out: Saia de todas as sessões do(a) usuário(a).
+              anonymize: Torne anônimas contas do(a) usuário(a).
+              delete: Excluir contas de usuário(as).
+            email:
+              receive_emails: Combine este escopo com o destinatário(a) para processar e-mails recebidos.
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks no momento."
@@ -3614,6 +3641,7 @@ pt_BR:
         go_back: "Voltar para a lista"
         payload_url: "URL do conteúdo"
         payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Parece que você está tentando configurar um webhook para uma URL local. Eventos entregues a endereços locais podem causar efeitos colaterais ou comportamentos inesperados. Continuar?"
         secret_invalid: "O segredo não deve conter caracteres em branco."
         secret_too_short: "O segredo deve ter pelo menos 12 caracteres."
         secret_placeholder: "Uma linha opcional, usado para gerar a assinatura"
@@ -3641,6 +3669,7 @@ pt_BR:
           details: "Quando existir uma resposta nova, edição, exclusão ou recuperação."
         user_event:
           name: "Evento do(a) usuário(a)"
+          details: "Quando um(a) usuário(a) entrar com a conta e sair, confirma seu e-mail, é criada, aprovada ou atualizada."
         group_event:
           name: "Evento de grupo"
           details: "Quando um grupo é criado, atualizado ou desfeito."
@@ -3659,6 +3688,9 @@ pt_BR:
         user_badge_event:
           name: "Evento de concessão de emblema"
           details: "Quando um(a) usuário(a) recebe um emblema."
+        group_user_event:
+          name: "Evento de usuário(a) em grupo"
+          details: "Quando um(a) usuário(a) for adicionado(a) ou removido(a) em um grupo."
         like_event:
           name: "Evento de curtida"
           details: "Quando um usuário curte uma postagem."
@@ -3839,7 +3871,10 @@ pt_BR:
           hide_unused_fields: "Ocultar campos não usados"
           is_default: "O tema está ativado por padrão"
           user_selectable: "O tema pode ser selecionado pelos(as) usuários(as)"
+          color_scheme_user_selectable: "O esquema de cores pode ser selecionado pelos(as) usuários(as)"
+          auto_update: "Atualizar automaticamente quando o Discourse for atualizado"
           color_scheme: "Paleta de cores"
+          default_light_scheme: "Claro (padrão)"
           color_scheme_select: "Selecione as cores que serão usadas pelo tema"
           custom_sections: "Seções personalizadas:"
           theme_components: "Componentes do tema"
@@ -3847,7 +3882,9 @@ pt_BR:
           convert: "Converter"
           convert_component_alert: "Você tem certeza de que deseja converter este componente em tema? Ele será removido como um componente de %{relatives}."
           convert_component_tooltip: "Converter este componente em tema"
+          convert_component_alert_generic: "Tem certeza de que quer converter este componente em um tema?"
           convert_theme_alert: "Você tem certeza de que deseja converter este tema em componente? Ele será removido como um pai de %{relatives}."
+          convert_theme_alert_generic: "Tem certeza de que quer converter este tema em um componente?"
           convert_theme_tooltip: "Converter este tema em componente"
           inactive_themes: "Temas inativos:"
           inactive_components: "Componentes não usados"
@@ -3881,17 +3918,20 @@ pt_BR:
           included_components: "Componentes incluídos"
           add_all: "Adicionar tudo"
           import_web_tip: "Repositório contendo tema"
+          direct_install_tip: "Tem certeza de que quer instalar <strong>%{name}</strong> do repositório listado abaixo?"
           import_web_advanced: "Avançado…"
           import_file_tip: "Arquivo .tar.gz, .zip ou .dcstyle.json com o tema"
           is_private: "O tema está em um repositório git privado"
           remote_branch: "Nome da unidade (opcional)"
           public_key: "Conceder o seguinte acesso da chave pública ao repo:"
+          public_key_note: "Após digitar uma URL do repositório privada válida, uma chave SSH será gerada e exibida aqui."
           install: "Instalar"
           installed: "Instalado(a)"
           install_popular: "Mais acessados(as)"
           install_upload: "Do seu dispositivo"
           install_git_repo: "De um repositório git"
           install_create: "Criar novo(a)"
+          duplicate_remote_theme: "O componente do tema \"%{name}\" já está instalado, tem certeza de que deseja instalar outra cópia?"
           about_theme: "Sobre"
           license: "Licença"
           version: "Versão:"
@@ -3911,6 +3951,7 @@ pt_BR:
           check_for_updates: "Verificar atualizações"
           updating: "Atualizando..."
           up_to_date: "O tema está atualizado, última verificação:"
+          has_overwritten_history: "A versão atual do tema não existe mais porque o histórico de Git foi sobrescrito por um envio de push forçado."
           add: "Adicionar"
           theme_settings: "Configurações do tema"
           no_settings: "Este tema não tem configurações."
@@ -3920,6 +3961,7 @@ pt_BR:
             one: "O tema tem uma diferença de %{count} confirmação!"
             other: "O tema tem uma diferença de %{count} confirmações!"
           compare_commits: "(Ver novas confirmações)"
+          remote_theme_edits: "Se você quiser editar este tema, é preciso <a href='%{repoURL}' target='_blank'>enviar uma alteração em seu repositório</a>"
           repo_unreachable: "Não foi possível acessar o repositório Git deste tema. Mensagem de erro:"
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
           scss:
@@ -3937,6 +3979,18 @@ pt_BR:
           embedded_scss:
             text: "CSS incorporado"
             title: "Insira o CSS personalizado para entregar com a versão incorporada dos comentários"
+          color_definitions:
+            text: "Definições de cor"
+            title: "Digite definições de cor personalizadas (apeans usuários(as) avançados(as))"
+            placeholder: |2-
+
+              Use esta folha de estilo para adicionar cores personalizadas à lista de propriedades personalizadas do CSS.
+
+              Por exemplo:
+
+              %{example}
+
+              É altamente recomendável adicionar os nomes das propriedades ao prefixo para evitar conflitos com plug-ins e/ou núcleo.
           head_tag:
             text: "</head>"
             title: "O HTML que será inserido antes da</head> etiqueta"
@@ -3946,6 +4000,8 @@ pt_BR:
           yaml:
             text: "YAML"
             title: "Definir configurações de tema no formato YAML"
+          scss_color_variables_warning: 'Usar variáveis de cor SCSS nos temas foi preterido. Use as propriedades personalizadas do CSS. Consulte <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">este guia</a> para obter mais detalhes.'
+          scss_warning_inline: "Usar variáveis de cor SCSS nos temas foi preterido."
         colors:
           select_base:
             title: "Selecionar paleta de cores básicas"
@@ -3964,6 +4020,10 @@ pt_BR:
           primary:
             name: "primário(a)"
             description: "Maioria dos textos, ícones e bordas."
+          primary-medium:
+            name: "primária, média"
+          primary-low-mid:
+            name: "primária, baixa, intermediária"
           secondary:
             name: "secundário(a)"
             description: "As cores de fundo principais e do texto de alguns botões."
@@ -3982,6 +4042,12 @@ pt_BR:
           highlight:
             name: "destaque"
             description: "A cor de fundo dos elementos em destaque na página, como postagens e tópicos."
+          highlight-high:
+            name: "destaque, alta"
+          highlight-medium:
+            name: "destaque, média"
+          highlight-low:
+            name: "destaque, baixa"
           danger:
             name: "perigo"
             description: "Cor de destaque para ações como remover postagens e tópicos."
@@ -4167,6 +4233,7 @@ pt_BR:
             post_edit: "edição de postagem"
             post_unlocked: "postagem desbloqueada"
             check_personal_message: "verificar mensagem pessoal"
+            disabled_second_factor: "desativar a autenticação de dois fatores"
             topic_published: "tópico publicado"
             post_approved: "postagem aprovada"
             post_rejected: "postagem rejeitada"
@@ -4196,7 +4263,18 @@ pt_BR:
             override_upload_secure_status: "substituir status seguro do envio"
             page_published: "página publicada"
             page_unpublished: "publicação de página cancelada"
+            add_email: "adicionar e-mail"
+            update_email: "atualizar e-mail"
+            destroy_email: "destruir e-mail"
+            topic_closed: "tópico fechado"
+            topic_opened: "tópico aberto"
+            topic_archived: "tópico arquivado"
+            topic_unarchived: "tópico desarquivado"
+            post_staff_note_create: "adicionar nota para equipe"
+            post_staff_note_destroy: "destruir nota para equipe"
             delete_group: "excluir grupo"
+            watched_word_create: "adicionar palavra acompanhada"
+            watched_word_destroy: "excluir palavra acompanhada"
         screened_emails:
           title: "E-mails filtrados"
           description: "Quando alguém tentar criar uma conta nova, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -4210,6 +4288,7 @@ pt_BR:
           domain: "Domínio"
         screened_ips:
           title: "IPs filtrados"
+          description: 'Endereços IP que estão sendo observados. Use "Permitir" para adicionar endereços IP à lista de permissões.'
           delete_confirm: "Tem certeza que deseja remover a regra para %{ip_address}?"
           roll_up_confirm: "Tem certeza que deseja acumular endereços IP filtrados comuns em subnets?"
           rolled_up_some_subnets: "Entradas de IP banidos acumulados nestas subnets: %{subnets}."
@@ -4243,14 +4322,21 @@ pt_BR:
         title: "Palavras acompanhadas"
         search: "pesquisa"
         clear_filter: "Limpar"
+        show_words:
+          one: "exibir %{count} palavra"
+          other: "exibir %{count} palavras"
         download: Download
         clear_all: Limpar tudo
+        clear_all_confirm: "Tem certeza de que deseja remover todas as palavras acompanhadas para a ação %{action}?"
+        invalid_regex: 'A palavra companhada ''%{word}" é uma expressão regular inválida.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Palavras acompanhadas são expressões regulares</a> e não incluem automaticamente limites de palavras. Se quiser usar expressões regulares para fazer correpondência a palavras inteiras, inclua <code>\b</code> no início e no fim da sua expressão regular.'
         actions:
           block: "Bloqueado(a)"
           censor: "Censurar"
           require_approval: "Requerer aprovação"
           flag: "Sinalizar"
           replace: "Substituir"
+          tag: "Etiqueta"
           silence: "Silenciar"
           link: "Vincular"
         action_descriptions:
@@ -4258,6 +4344,7 @@ pt_BR:
           censor: "Permita postagens contendo essas palavras, mas substitua-as por caracteres que ocultem as palavras censuradas."
           require_approval: "As postagens contendo essas palavras exigirão aprovação da equipe antes que possam ser vistas."
           flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que a moderação possa analisá-las."
+          replace: "Substituir palavras em postagens com outras palavras"
           tag: "Etiquete tópicos automaticamente conforme a primeira postagem"
           silence: "As primeiras postagens de usuários(as) com estas palavras precisarão de aprovação da equipe antes que sejam exibidas e o(a) usuário(a) será silenciado(a) automaticamente."
           link: "Substitua palavras em postagens por links"
