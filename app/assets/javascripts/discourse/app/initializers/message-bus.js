@@ -86,7 +86,8 @@ export default {
     messageBus.baseUrl =
       siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
 
-    messageBus.enableChunkedEncoding = siteSettings.enable_chunked_encoding;
+    messageBus.enableChunkedEncoding =
+      isProduction() && siteSettings.enable_chunked_encoding;
 
     if (messageBus.baseUrl !== "/") {
       messageBus.ajax = function (opts) {
