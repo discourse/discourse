@@ -43,7 +43,7 @@ export default class MediaOptimizationWorkerService extends Service {
     if (
       file.size <
       this.siteSettings
-        .composer_media_optimization_image_kilobytes_optimization_threshold
+        .composer_media_optimization_image_bytes_optimization_threshold
     ) {
       return data;
     }

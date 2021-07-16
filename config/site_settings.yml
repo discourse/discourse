@@ -1415,7 +1415,7 @@ files:
   composer_media_optimization_image_enabled:
     default: false
     client: true
-  composer_media_optimization_image_kilobytes_optimization_threshold:
+  composer_media_optimization_image_bytes_optimization_threshold:
     default: 524288
     client: true
   composer_media_optimization_image_resize_dimensions_threshold:
