@@ -168,7 +168,7 @@ ja:
           <https://en.wikipedia.org/wiki/Death_by_coconut>
           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
-          うまくいきましたね！この方法は、ほとんどの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> リンクでし応できます。_リンクだけ_を 1 行に入力し、前後にリンクに含まれない文字などを含めないようにしましょう。
+          うまくいきましたね！この方法は、ほとんどの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> リンクで使用できます。_リンクだけ_を 1 行に入力し、前後にリンクに含まれない文字などを含めないようにしましょう。
         not_found: |-
           残念ですが、返信にリンクが見つかりませんでした！:cry:
 

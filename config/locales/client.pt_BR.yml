@@ -306,6 +306,7 @@ pt_BR:
       remove: "Remover"
       remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
       new_topic: "Novo rascunho de tópico"
+      new_private_message: "Novo rascunho de mensagem"
       topic_reply: "Rascunho de resposta"
       abandon:
         confirm: "Você tem um rascunho em andamento para este tópico. O que deseja fazer com ele?"
@@ -1426,9 +1427,41 @@ pt_BR:
         link_generated: "Confira o seu link de convite"
         valid_for: "O link do convite é válido apenas para este endereço de e-mail: %{email}"
         single_user: "Convidar por e-mail"
+        multiple_user: "Convidar por link"
         invite_link:
+          title: "Link de convite"
           success: "Link do convite gerado com sucesso!"
+          error: "Ocorreu um erro ao gerar o link de convite"
+          max_redemptions_allowed_label: "Quantas pessoas têm permissão para se cadastrar usando este link?"
+          expires_at: "Quando este link de convite irá expirar?"
+        invite:
+          new_title: "Criar convite"
+          edit_title: "Editar convite"
+          instructions: "Compartilhar este link para conceder acesso imediato ao site"
+          copy_link: "copiar link"
+          expires_in_time: "Expira em %{time}"
+          expired_at_time: "Expirou em %{time}"
+          show_advanced: "Exibir opções avançadas"
+          hide_advanced: "Ocultar opções avançadas"
+          restrict_email: "Restringir a um endereço de e-mail"
+          max_redemptions_allowed: "Máximo de usos"
+          add_to_groups: "Adicionar a grupos"
+          invite_to_topic: "Buscar tópico"
+          expires_at: "Expira após"
+          custom_message: "Mensagem pessoal opcional"
+          send_invite_email: "Salvar e enviar e-mail"
+          save_invite: "Salvar convite"
+          invite_saved: "Convite salvo"
+          invite_copied: "Link de convite copiado"
         bulk_invite:
+          none: "Nenhum convite para exibir nesta página."
+          text: "Convite em massa"
+          instructions: |
+            <p>Convide uma lista de usuários(as) para promover a sua comunidade rapidamente. Prepare um <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">arquivo CSV</a> contendo pelo menos uma linha por endereço de e-mail dos usuários(as) que você quer convidar. As informações separadas por vírgula a seguir podem ser fornecidas se você quiser adicionar pessoas a grupos ou enviá-las para um tópico específico quando entrarem com a conta pela primeira vez.</p>
+            <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
+            <p>Todos os endereços de e-mail no arquivo CSV enviado serão mandados como convite, e você poderá gerenciá-lo mais tarde.</p>
+          progress: "%{progress} enviado(s)..."
+          success: "Arquivo enviado com sucesso, você será notificado(a) por mensagem quando o processo for concluído."
           error: "Desculpe, o arquivo deve estar no formato CSV."
       password:
         title: "Senha"
@@ -1493,10 +1526,16 @@ pt_BR:
       avatar:
         title: "Imagem do perfil"
         header_title: "perfil, mensagens, favoritos e preferências"
+        name_and_description: "%{name} - %{description}"
         edit: "Editar imagem do perfil"
       title:
         title: "Título"
         none: "(nenhum)"
+        instructions: "aparece depois do seu nome de usuário(a)"
+      flair:
+        title: "Estilo"
+        none: "(nenhum)"
+        instructions: "ícone exibido perto da imagem do seu perfil"
       primary_group:
         title: "Grupo primário"
         none: "(nenhum)"

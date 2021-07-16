@@ -2606,7 +2606,7 @@ ja:
         create: "投稿を作成中にエラーが発生しました。もう一度やり直してください。"
         edit: "投稿を編集中にエラーが発生しました。もう一度やり直してください。"
         upload: "ファイルのアップロード中にエラーが発生しました。もう一度やり直してください。"
-        file_too_large: "ファイルが大きすぎます (最大サイズは %{max_size_kb} kb です)。クラウド共有サービスにアップロードしてから、そのリンクを貼り付けませんか？"
+        file_too_large: "ファイルが大きすぎます (最大サイズは %{max_size_kb} kb です)。クラウド共有サービスにアップロードしてから、そのリンクを貼り付けてはどうですか？"
         too_many_uploads: "複数のファイルを同時にアップロードすることはできません。"
         too_many_dragged_and_dropped_files:
           other: "一度にアップロードできるファイルは %{count} 個までです。"
@@ -2854,7 +2854,7 @@ ja:
       minimum_required_tags: "トピックに必要なタグの最小数:"
       parent: "親カテゴリ"
       num_auto_bump_daily: "毎日自動的にバンプするオープントピックの数:"
-      navigate_to_first_post_after_read: "トピックが読まれた後最初の東欧に移動する"
+      navigate_to_first_post_after_read: "トピックが読まれた後最初の投稿に移動する"
       notifications:
         watching:
           title: "ウォッチ中"
