@@ -167,6 +167,33 @@ RSpec.describe CurrentUserSerializer do
 
   end
 
+  context "#draft_count" do
+    fab!(:user) { Fabricate(:user) }
+    let :serializer do
+      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
+    end
+
+    it "is not included by default" do
+      payload = serializer.as_json
+      expect(payload).not_to have_key(:draft_count)
+    end
+
+    it "returns draft count when user has drafts" do
+      Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
+
+      payload = serializer.as_json
+      expect(payload[:draft_count]).to eq(1)
+    end
+
+    it "clearing a draft removes draft_count from payload" do
+      sequence = Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
+      Draft.clear(user, Draft::NEW_TOPIC, sequence)
+
+      payload = serializer.as_json
+      expect(payload).not_to have_key(:draft_count)
+    end
+  end
+
   context '#can_review' do
     it 'return false for regular users' do
       serializer = serializer(Fabricate(:user))
