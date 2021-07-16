@@ -80,13 +80,22 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
       });
     }
 
+    let draftCount;
+
+    if (this.currentUser) {
+      draftCount = this.currentUser.draft_count
+        ? `${I18n.t("user_action_groups.15")} 
+      (${this.currentUser.draft_count})`
+        : `${I18n.t("user_action_groups.15")}`;
+    } else {
+      draftCount = `${I18n.t("user_action_groups.15")}`;
+    }
+
     defaultItems.push(
       {
         icon: "pencil-alt",
         href: `${this.attrs.path}/activity/drafts`,
-        content: `${I18n.t("user_action_groups.15")} (${
-          this.currentUser.draft_count
-        })`,
+        content: draftCount,
         className: "drafts",
       },
       {
