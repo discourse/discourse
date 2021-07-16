@@ -1413,7 +1413,7 @@ files:
     default: 100000
     hidden: true
   composer_media_optimization_image_enabled:
-    default: false
+    default: true
     client: true
   composer_media_optimization_image_bytes_optimization_threshold:
     default: 524288
