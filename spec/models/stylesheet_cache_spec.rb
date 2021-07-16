@@ -39,7 +39,7 @@ describe StylesheetCache do
     end
   end
 
-  describe "clean_up" do
+  describe ".clean_up" do
     it "removes items older than 1 year" do
       StylesheetCache.destroy_all
 
