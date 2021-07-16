@@ -186,7 +186,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "clearing a draft removes draft_count from payload" do
-      Draft.set(user, Draft::NEW_TOPIC, 0, { reply: "test1", action: "createTopic", title: "test" }.to_json)
+      sequence = Draft.set(user, Draft::NEW_TOPIC, 0, { reply: "test1", action: "createTopic", title: "test" }.to_json)
       Draft.clear(user, Draft::NEW_TOPIC, sequence)
 
       payload = serializer.as_json
