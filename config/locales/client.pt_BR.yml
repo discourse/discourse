@@ -380,7 +380,6 @@ pt_BR:
         type_bonus:
           name: "bônus de tipo"
           title: "Certos tipos revisáveis podem receber um bônus da equipe para aumentar sua prioridade."
-      stale_help: "Esta revisão foi solucionada por outra pessoa."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."

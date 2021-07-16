@@ -346,7 +346,6 @@ zh_CN:
         type_bonus:
           name: "奖励加分"
           title: "某些可审查类型可以由管理人员分配加分，以使其具有更高的优先级。"
-      stale_help: "此可审查对象已被其他人解决。"
       claim_help:
         optional: "您可以认领此条目以避免被他人审查。"
         required: "您必须先认领条目才能进行审查。"

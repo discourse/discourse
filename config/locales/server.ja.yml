@@ -1640,7 +1640,6 @@ ja:
     allow_staff_to_upload_any_file_in_pm: "スタッフメンバーによる PM でのファイルのアップロードを許可する。"
     strip_image_metadata: "画像メタデータを削除する。"
     composer_media_optimization_image_enabled: "アップロードされた画像ファイルのクライアント側のメディア最適化を有効にします。"
-    composer_media_optimization_image_kilobytes_optimization_threshold: "クライアント側の最適化をトリガーする画像ファイルの最小サイズ"
     composer_media_optimization_image_resize_dimensions_threshold: "クライアント側のサイズ変更をトリガーする画像の最小幅"
     composer_media_optimization_image_resize_width_target: "幅が `composer_media_optimization_image_dimensions_resize_threshold` より大きい画像はこの花にサイズ変更されます。`composer_media_optimization_image_dimensions_resize_threshold` 以上 (>=) である必要があります。"
     composer_media_optimization_image_encode_quality: "再エンコードプロセスで使用される JPEG エンコード品質。"

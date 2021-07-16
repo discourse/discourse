@@ -378,7 +378,6 @@ es:
         type_bonus:
           name: "tipo de bonificación"
           title: "Algunos tipos revisables pueden recibir una bonificación por parte del personal para que tengan mayor prioridad."
-      stale_help: "Este elemento ha sido atendido por otra persona."
       claim_help:
         optional: "Puedes reclamar este elemento para evitar que otros lo revisen."
         required: "Debes reclamar los elementos antes de poder revisarlos."
