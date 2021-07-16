@@ -1404,7 +1404,7 @@ ja:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
           instructions: |
-            <p>コミュニティをすばやく拡大するには、ユーザーのリストを招待します。招待するユーザーンおメールアドレスごとに少なくとも 1 行を含む <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV ファイル</a>を準備してください。カンマ区切りの情報は、グループに人を追加したい場合、またはそれらのユーザーが初めてサインインしたときに特定のトピックに移動させる場合に利用できます。</p>
+            <p>コミュニティをすばやく拡大するには、ユーザーのリストを招待します。招待するユーザーのメールアドレスごとに少なくとも 1 行を含む <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV ファイル</a>を準備してください。カンマ区切りの情報は、グループに人を追加したい場合、またはそれらのユーザーが初めてサインインしたときに特定のトピックに移動させる場合に利用できます。</p>
             <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
             <p>アップロードされる CSV ファイルに含まれるメールアドレスに招待状が送られ、後で管理することができます。</p>
           progress: "%{progress}% アップロード済み..."
@@ -2064,7 +2064,7 @@ ja:
           min:
             placeholder: 最小
           max:
-            placeholder: 最ぢあ
+            placeholder: 最大
           time:
             label: 投稿時期
             before: 以前
@@ -2080,7 +2080,7 @@ ja:
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"
     current_user: "ユーザーページに移動"
-    view_all: "すべての %{tab} を表示"
+    view_all: "すべての%{tab}を表示"
     topics:
       new_messages_marker: "最後の訪問"
       bulk:
@@ -2234,7 +2234,7 @@ ja:
           24_hours: "24 時間"
           custom: "カスタム期間"
       slow_mode_notice:
-        duration: "このトピックでは次の投稿まで %{duration} お待ちください"
+        duration: "このトピックでは次の投稿まで %{duration}お待ちください"
       topic_status_update:
         title: "トピックタイマー"
         save: "タイマーをセット"
@@ -2244,7 +2244,7 @@ ja:
         publish_to: "公開先:"
         when: "公開時間:"
         time_frame_required: "時間枠を選択してください"
-        min_duration: "機関は 0 より大きくする必要があります"
+        min_duration: "期間は 0 より大きくする必要があります"
         max_duration: "期間は 20 年未満である必要があります"
       auto_update_input:
         none: "時間枠を選択してください"
@@ -2570,7 +2570,7 @@ ja:
       post_number: "投稿 %{number}"
       ignored: "無視したコンテンツ"
       wiki_last_edited_on: "%{dateTime}に最終編集されたウィキ"
-      last_edited_on: "%{dateTime} に最終編集された投稿"
+      last_edited_on: "%{dateTime}に最終編集された投稿"
       reply_as_new_topic: "リンクトピックとして返信"
       reply_as_new_private_message: "同じ受信者に新規メッセージとして返信する"
       continue_discussion: "%{postLink} からディスカッションを続行:"
@@ -2600,7 +2600,7 @@ ja:
         other: "この投稿との %{count} 件の返信を表示します"
       filtered_replies_viewing:
         other: "%{count} 件の返信を表示中:"
-      in_reply_to: "上位投稿を読み込む"
+      in_reply_to: "親投稿を読み込む"
       view_all_posts: "すべての投稿を表示"
       errors:
         create: "投稿を作成中にエラーが発生しました。もう一度やり直してください。"
@@ -2609,7 +2609,7 @@ ja:
         file_too_large: "ファイルが大きすぎます (最大サイズは %{max_size_kb} kb です)。クラウド共有サービスにアップロードしてから、そのリンクを貼り付けませんか？"
         too_many_uploads: "複数のファイルを同時にアップロードすることはできません。"
         too_many_dragged_and_dropped_files:
-          other: "一度に %{count} 個のファイルまでアップロードできます。"
+          other: "一度にアップロードできるファイルは %{count} 個までです。"
         upload_not_authorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
         image_upload_not_allowed_for_new_user: "新規ユーザーは画像をアップロードできません。"
         attachment_upload_not_allowed_for_new_user: "新規ユーザーはファイルを添付できません。"
@@ -2620,7 +2620,7 @@ ja:
         save_draft: "後で使用するために下書きとして保存"
         keep_editing: "編集を続ける"
       via_email: "これはメールで投稿されました"
-      via_auto_generated_email: "この投稿は自動生成メールで届きました"
+      via_auto_generated_email: "この投稿は自動生成メール経由で届きました"
       whisper: "この投稿はモデレーターの非公開のささやきです"
       wiki:
         about: "この投稿はウィキです"
@@ -3075,8 +3075,8 @@ ja:
         this_month: "今月"
         this_week: "今週"
         today: "今日"
-        other_periods: "上を参照:"
-    browser_update: '残念な我愛羅、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザは古すぎるため、このサイトを処理できません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">ブラウザをアップグレード</a>してからログインして、返信してください。'
+        other_periods: "人気を参照:"
+    browser_update: '残念ながら、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザは古すぎるため、このサイトを処理できません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">ブラウザをアップグレード</a>してからログインして、返信してください。'
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
@@ -3387,8 +3387,8 @@ ja:
         private_messages_short: "メッセージ"
         private_messages_title: "メッセージ"
         mobile_title: "モバイル"
-        space_used: "%{usedSize} 使用中"
-        space_used_and_free: "%{usedSize} (%{freeSize} 空き)"
+        space_used: "使用中: %{usedSize}"
+        space_used_and_free: "%{usedSize} (未使用: %{freeSize})"
         uploads: "アップロード"
         backups: "バックアップ"
         backup_count:
@@ -3815,7 +3815,7 @@ ja:
           show_advanced: "高度なフィールドを表示"
           hide_advanced: "高度なフィールドを非表示"
           hide_unused_fields: "未使用のフィールドを非表示"
-          is_default: "テーマはデフォルトで有効になる"
+          is_default: "テーマはデフォルトで有効"
           user_selectable: "ユーザーがテーマを選択できる"
           color_scheme_user_selectable: "ユーザーが色スキームを選択できる"
           auto_update: "Discourse が更新された時に自動更新する"
@@ -4271,7 +4271,7 @@ ja:
           other: "%{count} 語を表示"
         download: ダウンロード
         clear_all: すべてクリア
-        clear_all_confirm: "%{action}アクションのすべてのウォッチ中の語をクリアしてもよろしいですか？"
+        clear_all_confirm: "%{action}アクションのすべてのウォッチ語をクリアしてもよろしいですか？"
         invalid_regex: 'ウォッチ語 "%{word}" は無効な正規表現です。'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">ウォッチ語は正規表現</a>で、語の境界は自動的に含まれることはありません。全語に一致する正規表現が必要な場合は、正規表現の最初と最後に <code>\b</code> を含めます。'
         actions:
@@ -4624,7 +4624,7 @@ ja:
         none: "なし"
       site_settings:
         emoji_list:
-          invalid_input: "絵文字リストには、有効な絵文字名のみを含める必要があります。例: ハグ"
+          invalid_input: "絵文字リストには、有効な絵文字名のみを含める必要があります。例: hugs"
           add_emoji_button:
             label: "絵文字を追加"
         title: "設定"
