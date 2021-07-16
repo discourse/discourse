@@ -40,9 +40,7 @@ export default DiscourseRoute.extend({
       additionalFilters: meta.additional_filters || {},
     });
 
-    controller.reviewables.forEach((reviewable) => {
-      reviewable.set("last_performing_username", null);
-    });
+    controller.reviewables.setEach("last_performing_username", null);
   },
 
   activate() {
