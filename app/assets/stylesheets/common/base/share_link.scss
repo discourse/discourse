@@ -215,6 +215,13 @@
     }
   }
 
+  .invite-email-container {
+    flex: 1 1 auto;
+    #invite-email {
+      width: 100%;
+    }
+  }
+
   .invite-max-redemptions {
     label {
       display: inline;
