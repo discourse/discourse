@@ -49,9 +49,7 @@ describe StylesheetCache do
       StylesheetCache.clean_up
       expect(StylesheetCache.all.size).to eq(2)
 
-      first = StylesheetCache.first
-      first.created_at = 151.days.ago
-      first.save
+      StylesheetCache.first.update!(created_at: 151.days.ago)
 
       StylesheetCache.clean_up
       expect(StylesheetCache.all.size).to eq(1)
