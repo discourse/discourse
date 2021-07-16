@@ -12,8 +12,6 @@ export default Component.extend({
       const topic = this.topic;
       topic.get("pinned") ? topic.clearPin() : topic.rePin();
     }
-
-    return false;
   },
 
   @discourseComputed("disableActions")
