@@ -126,7 +126,7 @@ ja:
         unsubscribe_not_allowed: "このユーザーがメール経由で購読を解除できない場合に発生します。"
         email_not_allowed: "メールリストがホワイトリストにないか、ブラックリストに含まれている場合に発生します。"
       unrecognized_error: "不明なエラー"
-    secure_media_placeholder: "編集済み: このサイトではセキュリティで保護されたメディアが有効になってインす。トピックにアクセスしたり、「メディアを表示」をクリックすると、添付されたメディアが表示されます。"
+    secure_media_placeholder: "編集済み: このサイトではセキュリティで保護されたメディアが有効になっています。トピックにアクセスしたり、「メディアを表示」をクリックすると、添付されたメディアが表示されます。"
     view_redacted_media: "メディアを表示"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -172,7 +172,7 @@ ja:
       wrong_length:
         other: は %{count} 文字である必要があります
       other_than: "は %{count} 以外の値である必要があります"
-      auth_overrides_username: "'auth_overrides_username` 設定が有奥であるため、認証サービスプロバイダー側でユーザー名を更新する必要があります。"
+      auth_overrides_username: "'auth_overrides_username` 設定が有効であるため、認証サービスプロバイダー側でユーザー名を更新する必要があります。"
     template:
       body: ! "次のフィールドに問題があります:"
       header:
@@ -212,13 +212,13 @@ ja:
     not_found_json: "招待トークンが無効です。スタッフにお問い合わせください。"
     not_matching_email: "あなたのメールアドレスと招待トークンに関連付けられたメールアドレスが一致しません。スタッフにお問い合わせください。"
     not_found_template: |
-      <p><a href="%{base_url}">%{site_name}</a> への招待はすでに承諾されています。</p>
+      <p><a href="%{base_url}">%{site_name}</a> への招待はすでに引き換えられています。</p>
 
       <p>パスワードを覚えている場合は、<a href="%{base_url}/login">ログイン</a>してください。</p>
 
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
     not_found_template_link: |
-      <p><a href="%{base_url}">%{site_name}</a> への招待状は承諾できなくなりました。あなたを招待した人に新しい招待状を送るようリクエストしてください。</p>
+      <p><a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待状を送るようリクエストしてください。</p>
     user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
     invalid_email: "%{email} は有効なメールアドレスではありません。"
@@ -533,7 +533,7 @@ ja:
         user_email:
           attributes:
             user_id:
-              reassigning_primary_email: "プライマリメールを別のユーザーに割り当て直すことはできません。"
+              reassigning_primary_email: "プライマリーメールを別のユーザーに割り当て直すことはできません。"
         color_scheme_color:
           attributes:
             hex:
@@ -544,7 +544,7 @@ ja:
         web_hook:
           attributes:
             payload_url:
-              invalid: "URL が無効です。URL には http:// または https:// が含まれている必要があります。また空白にすることはできません。"
+              invalid: "URL が無効です。URL には http:// または https:// が含まれている必要があります。また空にすることはできません。"
         custom_emoji:
           attributes:
             name:
@@ -1405,7 +1405,7 @@ ja:
     large_icon: "ほかのメタデータアイコンのベースとして使用される画像。理想的には、512 x 512 より大きい必要があります。空のままにすると logo_small が使用されます。"
     manifest_icon: "Android でロゴ/スプラッシュ画像として使用される画像。自動的に 512 × 512 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     manifest_screenshots: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
-    favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧kづ浅井。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
+    favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧ください。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     apple_touch_icon: "Apple タッチデバイスに使用されるアイコン。自動的に 180x180 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     opengraph_image: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます"
     twitter_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があります)。空のままにすると、opengraph_image を使って通常のカードメタデータが生成されます。"
