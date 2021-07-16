@@ -25,17 +25,19 @@
         {{i18n "user.preferences_nav.notifications"}}
       {{/link-to}}
     </li>
-    <li class="indent nav-categories">
-      {{#link-to "preferences.categories"}}
-        {{i18n "user.preferences_nav.categories"}}
-      {{/link-to}}
-    </li>
+    {{#if model.can_change_tracking_preferences}}
+      <li class="indent nav-categories">
+        {{#link-to "preferences.categories"}}
+          {{i18n "user.preferences_nav.categories"}}
+        {{/link-to}}
+      </li>
+    {{/if}}
     <li class="indent nav-users">
       {{#link-to "preferences.users"}}
         {{i18n "user.preferences_nav.users"}}
       {{/link-to}}
     </li>
-    {{#if siteSettings.tagging_enabled}}
+    {{#if (and model.can_change_tracking_preferences siteSettings.tagging_enabled)}}
       <li class="indent nav-tags">
         {{#link-to "preferences.tags"}}
           {{i18n "user.preferences_nav.tags"}}
