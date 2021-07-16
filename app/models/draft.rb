@@ -227,8 +227,10 @@ class Draft < ActiveRecord::Base
 
     stream = Draft.where(user_id: user_id)
       .order(updated_at: :desc)
-      .offset(offset)
-      .limit(limit)
+
+    if !opts[:all]
+      stream = stream.offset(offset).limit(limit)
+    end
 
     # Preload posts and topics to avoid N+1 queries
     Draft.preload_data(stream, opts[:user])

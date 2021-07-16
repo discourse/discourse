@@ -314,7 +314,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def draft_count
-    Draft.stream({ user: object, offset: 0, limit: 30 }).length
+    Draft.stream({ user: object, all: true }).count
   end
 
   def include_has_topic_draft?
