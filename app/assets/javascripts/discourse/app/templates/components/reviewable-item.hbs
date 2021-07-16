@@ -44,8 +44,8 @@
     {{/if}}
   </div>
   <div class="reviewable-actions">
-    {{#if reviewable.stale}}
-      <div class="stale-help">{{i18n "review.stale_help"}}</div>
+    {{#if reviewable.last_performing_username}}
+      <div class="stale-help">{{html-safe (i18n "review.stale_help" username=reviewable.last_performing_username)}}</div>
     {{else}}
       {{#if claimEnabled}}
         <div class="claimed-actions">
