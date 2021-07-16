@@ -151,7 +151,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "returns true when user has a draft" do
-      Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
+      Draft.set(user, Draft::NEW_TOPIC, 0, { reply: "test1", action: "createTopic", title: "test" }.to_json)
 
       payload = serializer.as_json
       expect(payload[:has_topic_draft]).to eq(true)
@@ -179,7 +179,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "returns draft count when user has drafts" do
-      Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
+      Draft.set(user, Draft::NEW_TOPIC, 0, { reply: "test1", action: "createTopic", title: "test" }.to_json)
 
       payload = serializer.as_json
       expect(payload[:draft_count]).to eq(1)
