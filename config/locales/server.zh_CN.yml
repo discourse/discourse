@@ -2550,7 +2550,7 @@ zh_CN:
       title: "欢迎管理人员"
       subject_template: "恭喜，您已获得%{role}身份！"
       text_body_template: |
-        一位管理人员已授予您%{role}身份。
+        一名管理人员已授予您%{role}身份。
 
         作为一名%{role}，现在您可以访问<a href='%{base_url}/admin' target='_blank'>管理界面</a>。
 
@@ -3396,7 +3396,7 @@ zh_CN:
       title: "拒绝后注册"
       subject_template: "您加入 %{site_name} 的请求被拒绝"
       text_body_template: |
-        管理人员拒绝了您在 %{site_name} 上的帐户。
+        一名管理人员拒绝了您在 %{site_name} 上的帐户。
 
         %{reject_reason}
     signup:
@@ -4286,32 +4286,32 @@ zh_CN:
       auto_silence_regexp: "首个帖子符合 `auto_silence_first_post_regex` 设置的新用户。"
       watched_word: "此帖子包含关注词，请参见您的<a href='%{base_url}/admin/customize/watched_words'>关注词列表</a>。"
       staged: "暂存用户的新话题和帖子必须由管理人员审批。请参阅 `approve_unless_staged`。"
-      category: "此分类的帖子需要管理员批准。查看分类设置。"
-      must_approve_users: "所有新用户需由管理员批准。参阅`must_approve_users`。"
-      invite_only: "所有新用户应该是被邀请的。参阅`invite_only`。"
-      email_auth_res_enqueue: "此电子邮件未通过DMARC检查，很可能不是来自其所声称的来源。检查原始电子邮件的标头以获取更多信息。"
-      email_spam: "该电子邮件被`email_in_spam_header`中定义的标头标记为垃圾邮件。"
-      suspect_user: "这位新用户输入的个人资料信息但没有阅读任何话题或帖子，意味着他可能是垃圾发送者。参见`approve_suspect_users`。"
-      contains_media: "该帖包括嵌入式媒体。参见`review_media_unless_trust_level`。"
-      queued_by_staff: "一名管理员认为该帖子需要审查。在此之前，它将一直保持隐藏状态。"
+      category: "此类别中的帖子要求管理人员手动审批。请参阅类别设置。"
+      must_approve_users: "所有新用户都必须由管理人员审批。请参阅 `must_approve_users`。"
+      invite_only: "所有新用户都应是受到邀请的用户。请参阅 `invite_only`。"
+      email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
+      email_spam: "此电子邮件因 `email_in_spam_header` 中定义的标头被标记为垃圾邮件。"
+      suspect_user: "此新用户在没有阅读任何话题或帖子的情况下输入了个人资料信息，这强烈表明他们可能是垃圾信息发布者。请参阅 `approve_suspect_users`。"
+      contains_media: "此帖子包括嵌入式媒体。请参阅 `review_media_unless_trust_level`。"
+      queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
     actions:
       agree:
-        title: "同意......"
+        title: "同意…"
       agree_and_keep:
-        title: "保持帖子"
-        description: "确认标记并保持帖子不变。"
+        title: "保留帖子"
+        description: "同意举报并保持帖子不变。"
       agree_and_keep_hidden:
-        title: "持续隐藏帖子"
-        description: "确认标记并隐藏帖子。"
+        title: "保持帖子隐藏"
+        description: "同意举报并保持帖子隐藏。"
       agree_and_suspend:
         title: "封禁用户"
-        description: "同意标记并暂停用户。"
+        description: "同意举报并封禁用户。"
       agree_and_silence:
         title: "禁言用户"
-        description: "同意标记并禁言用户。"
+        description: "同意举报并禁言用户。"
       agree_and_restore:
         title: "恢复帖子"
-        description: "恢复帖子为所有用户可见。"
+        description: "恢复帖子，以便所有用户都可以看到它。"
       agree_and_hide:
         title: "隐藏帖子"
         description: "隐藏此帖子并自动向用户发送一条消息，敦促他们进行编辑。"
@@ -4325,38 +4325,38 @@ zh_CN:
       delete_and_ignore_replies:
         title: "删除帖子 + 回复并忽略"
         description: "删除帖子及其所有回复；如果是第一个帖子，同时删除话题"
-        confirm: "您确定要删除帖子的这个回复吗"
+        confirm: "确定要同时删除对帖子的回复吗？"
       delete_and_agree:
         title: "删除帖子并同意"
-        description: "删除此帖；如果这是这个话题内的第一个帖子则删除话题"
+        description: "删除帖子；如果是第一个帖子，同时删除话题"
       delete_and_agree_replies:
-        title: "删除帖子+回复并同意"
-        description: "删除帖子和其所有的回复；如果是第一个帖子则删除整个话题。"
-        confirm: "您确定要删除帖子的这个回复吗"
+        title: "删除帖子 + 回复并同意"
+        description: "删除帖子及其所有回复；如果是第一个帖子，同时删除话题"
+        confirm: "确定要同时删除对帖子的回复吗？"
       disagree_and_restore:
         title: "不同意并恢复帖子"
-        description: "恢复帖子为所有用户可见。"
+        description: "恢复帖子，以便所有用户都可以看到它。"
       disagree:
-        title: "否决"
+        title: "不同意"
       ignore:
         title: "忽略"
       approve:
         title: "批准"
       approve_post:
         title: "批准帖子"
-        confirm_closed: "此话题已关闭。您真的要创建帖子吗？"
+        confirm_closed: "此话题已被关闭。仍要创建帖子吗？"
       reject_post:
-        title: "否决帖子"
+        title: "拒绝帖子"
       approve_user:
         title: "批准用户"
       reject_user:
-        title: "删除用户..."
+        title: "删除用户…"
         delete:
           title: "删除用户"
-          description: "该用户将会被删除。"
+          description: "该用户将被从论坛中删除。"
         block:
-          title: "删除并屏蔽用户"
-          description: "这名用户将会被删除，我们会屏蔽其IP和电子邮件地址。"
+          title: "删除并阻止用户"
+          description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
       reject:
         title: "拒绝"
         bundle_title: "拒绝…"

@@ -1510,6 +1510,7 @@ pt_BR:
     discord_secret: "Chave secreta do Discord"
     discord_trusted_guilds: 'Permita que apenas membros destas guildas do Discord entrem com a conta via Discord. Use a ID numérica para a guilda. Para obter mais informações, confira as instruções <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aqui</a>. Deixe em branco para permitir qualquer guilda.'
     enable_backups: "Permitir que administradores(as) criem backups do fórum"
+    allow_restore: "Dar permissão para restauração, que pode substituir TODOS os dados do site! Mantenha desativado a menos que planeje restaurar um backup"
     maximum_backups: "A quantidade máxima de backups para manter no disco. Backups mais antigos são excluídos automaticamente"
     automatic_backups_enabled: "Realizar backups automáticos, como definido na frequência de backup"
     backup_frequency: "A quantidade de dias entre os backups."
@@ -1539,12 +1540,18 @@ pt_BR:
     max_bookmarks_per_day: "Quantidade máxima de favoritos por usuário(a) a cada dia."
     max_edits_per_day: "Quantidade máxima de edições que o(a) usuário(a) pode fazer a cada dia."
     max_topics_per_day: "Quantidade máxima de postagens que um(a) usuário(a) pode criar a cada dia."
+    max_personal_messages_per_day: "Quantidade máxima de novos tópicos de mensagens pessoais que um(a) usuário(a) pode criar a cada dia."
     max_invites_per_day: "Quantidade máxima de convites que um(a) usuário(a) pode enviar por dia."
     max_topic_invitations_per_day: "Quantidade máxima de convites para tópicos que um(a) usuário(a) pode enviar por dia."
     max_logins_per_ip_per_hour: "Quantidade máxima de entradas com a conta permitidas por endereço IP a cada hora"
     max_logins_per_ip_per_minute: "Quantidade máxima de entradas com a conta permitidas por endereço IP a cada minuto"
+    max_post_deletions_per_minute: "Quantidade máxima de postagens que um(a) usuário(a) pode excluir por minuto. Defina como 0 para desativar exclusões de postagens."
+    max_post_deletions_per_day: "Quantidade máxima de postagens que um(a) usuário(a) pode excluir por dia. Defina como 0 para desativar exclusões de postagens."
+    invite_link_max_redemptions_limit: "A quantidade máxima de resgates de links de convite não pode exceder este valor."
+    invite_link_max_redemptions_limit_users: "A quantidade máxima de resgates de links de convite gerados por usuário(a) não pode exceder este valor."
     alert_admins_if_errors_per_minute: "Quantidade de erros por minuto para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
     alert_admins_if_errors_per_hour: "Quantidade de erros por hora para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
+    categories_topics: "Quantidade de tópicos para exibir na página /categorias. Se definido como 0, será realizada uma tentativa de encontrar um valor para manter as duas colunas simétricas (tópicos e categorias)."
     suggested_topics: "Quantidade de tópicos sugeridos exibidos no final de um tópico."
     limit_suggested_to_category: "Exiba apenas tópicos da categoria atual nos tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dia(s)."
@@ -1563,13 +1570,22 @@ pt_BR:
     avatar_sizes: "Lista de tamanhos de avatares gerados automaticamente."
     external_system_avatars_enabled: "Usar serviço de avatares de sistema externo."
     external_system_avatars_url: "URL do sistema externo do serviço de avatares. Substituições permitidas são {username} {first_letter} {color} {size}"
+    external_emoji_url: "URL do serviço externo para imagens de emoji. Deixe em branco para desativar."
+    use_site_small_logo_as_system_avatar: "Use o logotipo pequeno do site em vez do avatar do(a) usuário(a) do sistema. Requer que o logo esteja presente."
     restrict_letter_avatar_colors: "Uma lista de valores de cor hexadecimais de 6 dígitos para serem usados no plano de fundo do avatar da letra."
     selectable_avatars_enabled: "Obrigue os(as) usuários(as) a escolher um avatar da lista."
     selectable_avatars: "Lista de avatares que os(as) usuários(as) podem escolher."
     allow_all_attachments_for_group_messages: "Permitir todos os anexos de e-mail para mensagens de grupo."
     png_to_jpg_quality: "Qualidade do arquivo JPG convertido (1 é a qualidade mais baixa, 99 é a melhor qualidade, 100 para desativar)."
+    recompress_original_jpg_quality: "Qualidade dos arquivos de imagem carregados (1 é a qualidade mais baixa, 99 é a melhor, 100 desativa)."
+    image_preview_jpg_quality: "Qualidade dos arquivos de imagem redimensionados (1 é a qualidade mais baixa, 99 é a melhor, 100 desativa)."
     allow_staff_to_upload_any_file_in_pm: "Permita que membros da equipe enviem de arquivos em MP."
     strip_image_metadata: "Retire os metadados da imagem."
+    composer_media_optimization_image_enabled: "Ativa otimização de mídias do lado do cliente para arquivos de imagem carregados."
+    composer_media_optimization_image_bytes_optimization_threshold: "Tamanho mínimo de imagem para acionar a otimização do lado do cliente"
+    composer_media_optimization_image_resize_dimensions_threshold: "Largura de imagem mínima para acionar o redimensionamento do lado do cliente"
+    composer_media_optimization_image_resize_width_target: "Imagens com larguas maiores do que \"composer_media_optimization_image_dimensions_resize_threshold\" serão redimensionadas para esta largura. Deve ser >= do que \"composer_media_optimization_image_dimensions_resize_threshold\"."
+    composer_media_optimization_image_encode_quality: "Qualidade de codificação de JPG usada no processo de recodificação."
     min_ratio_to_crop: "Taxa usada para cortar imagens altas. Digite o resultado da largura/altura."
     simultaneous_uploads: "Quantidade máxima de arquivos que podem ser arrastados e soltos no compositor"
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários(as) convidados(as)."
@@ -1605,11 +1621,17 @@ pt_BR:
     min_trust_to_edit_post: "O nível mínimo de confiança necessário para editar postagens."
     min_trust_to_allow_self_wiki: "O nível de confiança mínimo necessário para criar o próprio wiki do(a) usuário(a)."
     min_trust_to_send_messages: "O nível de confiança mínimo necessário para criar novas mensagens pessoais."
+    min_trust_to_send_email_messages: "O nível mínimo de confiança necessário para enviar mensagens pessoais via e-mail."
     min_trust_to_flag_posts: "O nível de confiança mínimo necessário para sinalizar postagens"
     min_trust_to_post_links: "O nível de confiança mínimo necessário para incluir links em postagens"
+    min_trust_to_post_embedded_media: "O nível de confiança mínimo necessário para incorporar itens de mídia em uma postagem"
+    min_trust_level_to_allow_profile_background: "O nível de confiança mínimo necessário par a enviar um plano de fundo para perfil"
+    min_trust_level_to_allow_user_card_background: "O nível de confiança mínimo necessário par a enviar um plano de fundo para cartão de usuário(a)"
     min_trust_level_to_allow_invite: "O nível de confiança mínimo necessário para convidar usuários(as)"
+    min_trust_level_to_allow_ignore: "O nível de confiança mínimo necessário para ignorar usuários(as)"
     allowed_link_domains: "Domínios aos quais os(as) usuários(as) podem vincular, mesmo que não tenham o nível de confiança apropriado para postar links"
     newuser_max_links: "Quantos links um(a) usuário(a) novo(a) pode adicionar a uma postagem."
+    newuser_max_embedded_media: "Quantidade de itens de mídia incorporados que um(a) novo(a) usuário(a) pode adicionar a uma postagem."
     newuser_max_attachments: "Quantos arquivos anexos um(a) usuário(a) novo(a) pode adicionar a uma postagem."
     newuser_max_mentions_per_post: "Quantidade máxima de notificações @nome que um(a) usuário(a) novo(a) pode usar em uma postagem."
     newuser_max_replies_per_topic: "Quantidade máxima de respostas que um(a) usuário(a) novo(a) pode fazer em um único tópico até que alguém os responda."
@@ -1626,17 +1648,21 @@ pt_BR:
     body_min_entropy: "A entropia mínima (caracteres únicos e em idioma diferente do inglês contam mais) necessária para o corpo de uma postagem."
     allow_uppercase_posts: "Permita toda as letras maiúsculas no título de um tópico ou no corpo de uma postagem."
     max_consecutive_replies: "Quantidade de postagens que um(a) usuário(a) precisa fazer de uma vez em um tópico antes de ser impedido(a) de adicionar outra resposta."
+    enable_filtered_replies_view: 'o botão "(n) respostas" recolhe todas as outras postagens e exibe apenas a postagem atual e suas respostas.'
     title_fancy_entities: "Converter caracteres ASCII comuns para criar entidades HTML em títulos de tópicos, consulte SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "O tamanho mínimo de um título antes que seja verificado para tópicos semelhantes."
     desktop_category_page_style: "Estilo de visual para a página/categorias."
     category_colors: "Uma lista de valores hexadecimais de cor permitidos para categorias."
     category_style: "Estilo de visual para emblemas de categoria."
+    default_dark_mode_color_scheme_id: "O esquema de cores usado no modo escuro."
     dark_mode_none: "Nenhum"
+    max_image_size_kb: "O tamanho de envio de imagem máximo em KB. Isso deve ser configurado em nginx (client_max_body_size)/apache ou proxy também. Imagens maiores do que esta e menores do que client_max_body_size serão redimensionadas para o tamanho do envio."
     max_attachment_size_kb: "O tamanho máximo de envio de arquivos anexos em kB. Precisa ser configurado no nginx (client_max_body_size)/apache ou proxy também."
     authorized_extensions: "Uma lista de extensões de arquivo permitidas para envio (use '*' para permitir todos os tipos de arquivos)"
     authorized_extensions_for_staff: "Uma lista de extensões de arquivo permitidas para enviar aos usuários(as) da equipe, além da lista definida na configuração do site \"authorized_extensions\". (use '*' para ativar todos os tipos de arquivo)"
     theme_authorized_extensions: "Uma lista de extensões de arquivo permitidas para envio de temas (use '*' para ativar todos os tipos de arquivos)"
     max_similar_results: "Quantidade de tópicos semelhantes para exibir acima do editor ao compor um novo tópico. A comparação é baseada no título e no corpo."
+    max_image_megapixels: "A quantidade máxima de megapixels permitidos para uma imagem. Imagens com uma quantidade maior de megapixels serão recusadas."
     title_prettify: "Evite erros comuns em títulos, incluindo tecla caps lock ligada, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     title_remove_extraneous_space: "Remova os espaços em branco iniciais à frente da pontuação final."
     automatic_topic_heat_values: 'Atualize automaticamente as configurações "volume de visualizações do tópico" e "volume de curtidas de postagens no tópico" com base na atividade do site.'
@@ -1658,6 +1684,7 @@ pt_BR:
     log_anonymizer_details: "Se deseja manter os detalhes de um(a) usuário(a) no registro depois de ser se tornar anônimo(a). Ao estar em conformidade com o GDPR, será preciso desativá-lo."
     newuser_spam_host_threshold: "Quantidade de vezes que um(a) novo(a) usuário(a) pode postar um link para o mesmo host em suas postagens \"newuser_spam_host_threshold\" antes de ser considerado spam."
     allowed_spam_host_domains: "Uma lista de domínios excluídos do teste de spam. Usuários(as) novos(as) nunca serão restringidos(as) de criar postagens com links para esses domínios."
+    staff_like_weight: "Peso dado às curtidas da equipe (curtidas de membros fora da equipe têm o peso de 1)."
     topic_view_duration_hours: "Conte uma nova visualização de tópico uma vez por IP/usuário(a) a cada N horas"
     user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário(a) uma vez por IP/usuário(a) a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer correspondência de e-mails de remetentes de spam, o tamanho da diferença de caracteres que ainda causará uma correspondência aproximada."
@@ -1671,9 +1698,14 @@ pt_BR:
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que o(a) usuário(a) deve passar digitando durante a primeira postagem. Se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação necessária. Defina como 0 para desativar (não recomendado)"
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atendem a min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente usuários(as) que digitam rápido"
+    auto_silence_first_post_regex: "Regex sem diferenciação de maiúsculas ou minúsculas que, caso em caso de aprovação, farão que a primeira postagem de um(a) usuário(a) seja silenciada e enviada para a fila de aprovação. Por exemplo: raging|a[bc]a silenciará todas as postagens contendo raging ou aba, ou aca, imediatamente. Isso se aplica apenas à primeira postagem. PRETERIDO: use Silenciar palavras acompanhadas."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"
     reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que atendam a esta prioridade"
+    reviewable_low_priority_threshold: "O filtro de prioridade oculta itens revisáveis que não atendem a esta pontuação a menos que o filtro \"(qualquer)\" seja usado."
+    high_trust_flaggers_auto_hide_posts: "Novas postagens de usuários(as) são ocultas automaticamente após serem sinalizadas como spam por um(a) usuário(a) TL3+"
+    cooldown_hours_until_reflag: "Quantidade de tempo que os(as) usuários(as) terão que aguardar até poderem sinalizar postagem outra vez"
+    slow_mode_prevents_editing: "O \"modo lento\" evita a edição após editing_grace_period?"
     reply_by_email_enabled: "Ative resposta a tópicos via e-mail"
     reply_by_email_address: "Modelo de resposta por e-mail, por exemplo: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder por e-mail a endereços de e-mail recebidos. Por exemplo:%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1698,9 +1730,17 @@ pt_BR:
     hard_bounce_score: "Pontuação de rejeição adicionada ao(à) usuário(a) quando ocorre uma devolução permanente."
     bounce_score_threshold: "Pontuação máxima de devolução antes de pararmos de enviar um email a um(a) usuário(a)."
     reset_bounce_score_after_days: "Redefinir automaticamente a pontuação de devolução após X dias."
+    blocked_attachment_content_types: "Lista de palavras-chave usadas para adicionar anexos à lista de bloqueio com base no tipo de conteúdo."
+    blocked_attachment_filenames: "Lista de palavras-chave usadas para adicionar anexos à lista de bloqueio com base no nome do arquivo."
+    forwarded_emails_behaviour: "Como tratar um e-mail encaminhado para o Discourse"
     always_show_trimmed_content: "Sempre exiba a parte cortada dos e-mails recebidos. AVISO: pode revelar endereços de e-mail."
     trim_incoming_emails: "Cortar parte dos e-mails recebidos que não são relevantes."
     private_email: "Não inclua o conteúdo de postagens ou tópicos no título ou corpo do e-mail. OBSERVAÇÃO: também desativa e-mails de compilação."
+    email_total_attachment_size_limit_kb: "Tamanho máximo total dos arquivos anexados aos e-mail enviados, em KB. Defina como 0 para desativar o envio de anexos."
+    post_excerpts_in_emails: "Nos e-mails de notificação, sempre enviar trechos em vez de postagens completas"
+    raw_email_max_length: "Quantidade de caracteres que devem ser armazenados para e-mails recebidos."
+    raw_rejected_email_max_length: "Quantidade de caracteres que devem ser armazenados para e-mails rejeitados."
+    delete_rejected_email_after_days: "Exclua rascunhos recusado anteriores a (n) dias."
     manual_polling_enabled: "Envie e-mails usando a API para respostas via e-mail."
     pop3_polling_enabled: "Sondar via POP3 para respostas de e-mail."
     pop3_polling_ssl: "Use SSL ao conectar-se com o servidor POP3. (Recomendado)"
@@ -1714,7 +1754,15 @@ pt_BR:
     log_mail_processing_failures: "Registrar todas as falhas de processamento de e-mail em <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: 'Permita que os(as) usuários(as) postem novos tópicos por e-mail (requer sondagem manual ou POP3). Configure os endereços na aba "Configurações" de cada categoria.'
     email_in_min_trust: "O nível de confiança mínimo que um(a) usuário(a) precisa ter para ter permissão para postar novos tópicos via e-mail."
+    email_in_authserv_id: "O identificador do serviço realizando verificações de autenticação em e-mails recebidos. Confira <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instruções de como configurar isso."
     email_in_spam_header: "O cabeçalho do e-mail para detectar spam."
+    enable_imap: "Ative IMAP para sincronizar mensagens de grupo."
+    enable_imap_write: "Ative sincronização de dois fatores IMAP. Se desativado, desativa todas as operações de escrita para contas IMAP."
+    enable_imap_idle: "Use o mecanismo IMAP IDLE para aguardar novos e-mails."
+    enable_smtp: "Ative SMTP para enviar notificações de mensagens de grupo."
+    imap_polling_period_mins: "O período em minutos entre a conferência de contas IMAP para e-mails."
+    imap_polling_old_emails: "A quantidade máxima de e-mails antigos (processados) a serem enviados sempre que uma caixa IMAP for sondada (0 para todos)."
+    imap_polling_new_emails: "A quantidade máxima de e-mails novos (não processados) a serem enviados sempre que uma caixa IMAP for sondada."
     email_prefix: "A [label] usada no assunto dos e-mails. Por padrão, será \"título\" se não for configurada."
     email_site_title: "O título do site usado como o remetente dos e-mails do site. Por padrão, será \"título' se não for configurado. Caso seu \"título\" contenha caracteres não permitidos em linhas do remetente de e-mails, utilize esta configuração."
     find_related_post_with_key: "Use somente a \"chave de resposta\" para encontrar a postagem respondida. AVISO: desativar isso permite a representação do usuário(a) com base no endereço de e-mail."
@@ -1866,6 +1914,10 @@ pt_BR:
     push_notifications_prompt: "Exiba o prompt de consentimento do(a) usuário(a)."
     short_title: "O título abreviado será usado na tela inicial do(a) usuário(a), no inicializador ou em outros locais com espaço limitado. Deveria ser limitado a 12 caracteres."
     dashboard_general_tab_activity_metrics: "Escolha relatórios para serem exibidos como métricas de atividade na aba geral."
+    share_quote_buttons: "Determine quais e em que ordem os itens são exibidos na citação compartilhando widget."
+    share_quote_visibility: "Determine quando exibir botões de compartilhamento de citações: nunca, apenas para usuários(as) anônimos(as) ou todos(as) os(as) usuários(as). "
+    create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
+    allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
     errors:
       invalid_email: "Endereço de e-mail inválido"
       invalid_username: "Não há nenhum(a) usuário(a) com este nome de usuário(a)."
@@ -1880,6 +1932,7 @@ pt_BR:
       invalid_string_min_max: "Precisa estar entre %{min} e %{max} caracteres."
       invalid_string_min: "Precisa ter no mínimo %{min} caracteres."
       invalid_string_max: "Não pode ter mais que %{max} caracteres."
+      invalid_json: "JSON inválido."
       invalid_reply_by_email_address: "O valor deve conter \"%{reply_key}\" e ser diferente do e-mail de notificação."
       invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter \"%{reply_key}\" e ser diferente do e-mail de notificação."
       pop3_polling_host_is_empty: "Você deve definir um \"host de pesquisa POP3\"' antes de ativar a consulta POP3."
@@ -1893,19 +1946,27 @@ pt_BR:
       email_editable_enabled: "Você deve desativar o \"e-mail editável\" antes de ativar esta configuração."
       staged_users_disabled: "Primeiro você deve ativar os \"usuários(as) encenados(as)\" antes de ativar esta configuração."
       reply_by_email_disabled: "Você deve ativar \"responder por e-mail\" antes de ativar esta configuração primeiro."
+      discourse_connect_url_is_empty: "É preciso definir uma \"url de conexão do Discourse\" antes de ativar esta configuração."
+      discourse_connect_invite_only: "Não é possível ativar o DiscourseConnect e \"apenas convite\" ao mesmo tempo."
       enable_local_logins_disabled: "Você deve ativar \"ativar entradas com e-mail em modo local\" antes de ativar esta configuração."
       min_username_length_exists: "Você não pode definir o tamanho mínimo do nome do(a) usuário(a) acima do nome do(a) usuário(a) mais curto (%{username})."
       min_username_length_range: "Você não pode definir o mínimo acima do máximo."
       max_username_length_exists: "Você não pode definir o tamanho máximo do nome do(a) usuário(a) abaixo do nome do(a) usuário(a) mais longo (%{username})."
       max_username_length_range: "Você não pode definir o máximo abaixo do mínimo."
       invalid_hex_value: "Os valores de cor precisam ser códigos hexadecimais de seis dígitos."
+      empty_selectable_avatars: "É preciso enviar pelo menos dois avatares selecionáveis antes de ativar esta configuração."
+      category_search_priority:
+        low_weight_invalid: "Não é possível definir a largura como um valor maior ou igual a 1."
+        high_weight_invalid: "Não é possível definir uma altura menor ou igual a 1."
       allowed_unicode_usernames:
         regex_invalid: "A expressão regular é inválida: %{error}"
         leading_trailing_slash: "A expressão regular não deve começar e terminar com uma barra."
       unicode_usernames_avatars: "Os avatares internos do sistema não são compatíveis com nomes de usuário(as) Unicode."
+      list_value_count: "A lista deve conter exatamente %{count} valores."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exemplo.com.br"
+        value: "Segredo do DiscourseConnect"
   search:
     extreme_load_error: "O site está recebendo uma quantidade de acessos enorme, a pesquisa está desativada, tente novamente mais tarde"
     within_post: "#%{post_number} de %{username}"
@@ -1923,11 +1984,15 @@ pt_BR:
     unknown_error: "Há um problema com sua conta. Entre em contato com o(a) administrador(a) do site."
     timeout_expired: "A entrada com a sua conta expirou, entrar novamente."
     no_email: "Nenhum endereço de e-mail foi informado. Entre em contato com o(a) administrador(a) do site."
+    blank_id_error: "O \"external_id\" é obrigatório, mas estava vazio"
     email_error: "Não foi possível registrar uma conta com o endereço de e-mail <b>%{email}</b>. Entre em contato com o(a) administrador(a) do site."
+    missing_secret: "Falha na autenticação devido ao segredo ausente. Entre em contato com os(as) administradores(as) do site para solucionar este problema."
+    invite_redeem_failed: "Falha ao resgatar convite. Entre em contato com o(a) administrador(a) do site."
   original_poster: "Autor(a) original"
   most_posts: "Maior parte das postagens"
   most_recent_poster: "Autor(a) mais recente"
   frequent_poster: "Autor(a) frequente"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Boas-vindas à nossa comunidade! Confira os nossos tópicos mais acessados recentemente."
     not_seen_in_a_month: "Boas-vindas outra vez! Faz tempo desde o seu último acesso. Confira os principais tópicos mais acessados desde a sua última visita."
@@ -1938,6 +2003,7 @@ pt_BR:
     errors:
       different_topics: "Postagens que pertencem a tópicos diferentes não podem ser mescladas."
       different_users: "Postagens que pertencem a usuários(as) diferentes não podem ser mescladas."
+      max_post_length: "Não é possível mesclar postagens porque o tamanho das postagens mescladas é maior do que o permitido."
   move_posts:
     new_topic_moderator_post:
       one: "Uma postagem foi dividida em um novo tópico: %{topic_link}"
@@ -1956,6 +2022,7 @@ pt_BR:
   publish_page:
     slug_errors:
       blank: "não pode estar em branco"
+      unavailable: "não está disponível"
       invalid: "contém caracteres inválidos"
   topic_statuses:
     autoclosed_message_max_posts:
@@ -2004,12 +2071,15 @@ pt_BR:
     autoclosed_disabled_lastpost: "Este tópico está aberto agora. Novas respostas são permitidas."
     auto_deleted_by_timer: "Excluído automaticamente pelo temporizador."
   login:
+    invalid_second_factor_method: "O método de autenticação de dois fatores selecionado é inválido."
+    not_enabled_second_factor_method: "O método de autenticação de dois fatores selecionado não foi ativado para sua conta."
     security_key_description: "Quando você tiver sua chave física de segurança preparada, pressione o botão Autenticar com chave de segurança abaixo."
     security_key_alternative: "Tentar de outra forma"
     security_key_authenticate: "Autenticar com chave de segurança"
     security_key_not_allowed_error: "O processo de autenticação de chave de segurança atingiu o limite de tempo ou foi cancelado."
     security_key_no_matching_credential_error: "Nenhuma credencial correspondente pôde ser encontrada na chave de segurança fornecida."
     security_key_support_missing_error: "Seu dispositivo ou navegador atual não é compatível com o uso de chaves de segurança. Use um método diferente."
+    security_key_invalid: "Ocorreu um erro ao validar a chave de segurança."
     not_approved: "Sua conta ainda não foi aprovada. Você será notificado(a) por e-mail quando tudo estiver pronto para entrar."
     incorrect_username_email_or_password: "Usuário(a), e-mail ou senha incorreta"
     incorrect_password: "senha incorreta"
@@ -2019,6 +2089,7 @@ pt_BR:
     not_activated: "Ainda não é possível entrar com a conta. Enviamos um e-mail de ativação. Siga as instruções no e*mail para ativar a sua conta."
     not_allowed_from_ip_address: "Você não pode entrar como %{username} a partir deste endereço IP."
     admin_not_allowed_from_ip_address: "Você não pode entrar como administrador(a) a partir deste endereço IP."
+    reset_not_allowed_from_ip_address: "Não é possível solicitar uma redefinição de senha a partir deste endereço IP."
     suspended: "Você não pode entrar até %{date}."
     suspended_with_reason: "Conta suspensa até %{date}: %{reason}"
     errors: "%{errors}"
@@ -2028,6 +2099,7 @@ pt_BR:
       generic: "Desculpe, houve um erro ao autorizar sua conta. Tente novamente."
       csrf_detected: "A autorização demorou muito ou você mudou de navegador. Tente novamente."
       request_error: "Ocorreu um erro ao iniciar a autorização. Tente novamente."
+      invalid_iat: "Não foi possível verificar o token de autorização devido a diferenças no relógio do servidor. Tente novamente."
     omniauth_error_unknown: "Algo deu errado ao processar seu login, por favor tente novamente."
     omniauth_confirm_title: "Entrar com a conta usando %{provider}"
     omniauth_confirm_button: "Continuar"
@@ -2035,24 +2107,47 @@ pt_BR:
     new_registrations_disabled: "Não é permitido cadastrar novas contas por enquanto."
     password_too_long: "Senhas são limitadas a 200 caracteres."
     email_too_long: "O e-mail informado é muito longo. Os endereços de e-mail não devem ter mais de 254 caracteres, e nomes de domínio devem ter no máximo 253 caracteres."
+    wrong_invite_code: "O código de convite inserido estava incorreto."
     reserved_username: "Este nome de usuário(a) não é permitido."
     missing_user_field: "Você não completou todos campos de usuário(a)"
     auth_complete: "A autenticação está completa."
     click_to_continue: "Clique aqui para continuar."
+    already_logged_in: "Desculpe! Este convite foi elaborado para usuários(as) novos(as), que ainda nao têm uma conta ativa."
+    second_factor_title: "Autenticação de dois fatores"
     second_factor_description: "Insira o código de autenticação necessário no seu aplicativo:"
     second_factor_backup_description: "Insira um dos seus códigos de backup:"
+    second_factor_backup_title: "Código de backup de dois fatores"
     invalid_second_factor_code: "Código de autenticação inválido. Cada código só pode ser usado uma vez."
+    invalid_security_key: "Chave de segurança inválida."
+    missing_second_factor_name: "Informe um nome."
+    missing_second_factor_code: "Informe um código."
     second_factor_toggle:
       totp: "Usar um aplicativo autenticador ou chave de segurança"
       backup_code: "Usar um código de backup"
   admin:
     email:
       sent_test: "enviou!"
+    user:
+      merge_user:
+        updating_username: "Atualizando nome do(a) usuário(a)..."
+        changing_post_ownership: "Alterando propriedade da postagem..."
+        merging_given_daily_likes: "Mesclando curtidas diárias..."
+        merging_post_timings: "Mesclando tempos de postagem..."
+        merging_user_visits: "Mesclando acessos de usuário(a)..."
+        updating_site_settings: "Atualizando configurações do site..."
+        updating_user_stats: "Atualizando estatísticas do(a) usuário(a)..."
+        merging_user_attributes: "Mesclando atributos do(a) usuário(a)..."
+        updating_user_ids: "Atualizando ids de usuário(a)..."
+        deleting_source_user: "Excluindo usuário de origem..."
   user:
     deactivated: "Desativado(a) por causa de muitos e-mails devolvidos para \"%{email}\"."
     deactivated_by_staff: "Desativado pela equipe"
+    deactivated_by_inactivity:
+      one: "Desativado automaticamente após %{count} dia de inatividade"
+      other: "Desativado automaticamente após %{count} dias de inatividade"
     activated_by_staff: "Ativado pela equipe"
     new_user_typed_too_fast: "O(a) novo(a) usuário(a) digitou muito rápido"
+    content_matches_auto_silence_regex: "O conteúdo corresponde ao regex silenciado automaticamente"
     content_matches_auto_block_regex: "O conteúdo corresponde ao regex de bloco automático"
     username:
       short: "deve ter no mínimo %{min} caracteres"
@@ -2066,9 +2161,11 @@ pt_BR:
       must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de dois ou mais caracteres especiais (.-_)"
       must_not_end_with_confusing_suffix: "não deve terminar com um sufixo confuso como .json ou .png etc."
     email:
+      invalid: "é inválido(a)."
       not_allowed: "este provedor de e-mail não é permitido. Utilize outro endereço de e-mail."
       blocked: "não é permitido."
       revoked: "Não enviará e-mails para \"%{email}\" até %{date}."
+      does_not_exist: "N/D"
     ip_address:
       blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
       max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Entre em contato com um membro da equipe."
@@ -2083,6 +2180,11 @@ pt_BR:
       reviewable_reject_auto: "Tratamento automático de revisáveis na fila"
       reviewable_reject: "Usuário(a) revisável rejeitado(a)"
     email_in_spam_header: "O primeiro e-mail do usuário foi sinalizado como spam"
+    already_silenced: "O(a) usuário(a) já foi silenciado(a) por %{staff}%{time_ago}."
+    already_suspended: "O(a) usuário(a) já foi suspenso(a) por %{staff}%{time_ago}."
+    cannot_delete_has_posts:
+      one: "O(a) usuário(a) %{username} tem %{count} postagem em um tópico público ou mensagem pessoal, de forma que não pode ser excluído(a)."
+      other: "O(a) usuário(a) %{username} tem %{count} postagens em um tópico público ou mensagem pessoal, de forma que não pode ser excluído(a)."
   reviewables_reminder:
     submitted:
       one: "Os itens foram enviados durante %{count} hora atrás. [Revise-os] (%{base_path}/review)."
@@ -2199,12 +2301,79 @@ pt_BR:
   test_mailer:
     title: "Testar mensageiro"
     subject_template: "[%{email_prefix}] Teste de entrega de e-mail"
+    text_body_template: |
+      Este é um e-mail de teste de
+
+      [**%{base_url}**][0]
+
+      Estamos com dificuldades para entregar o e-mail. Confira algumas coisas importantes que precisam ser verificadas:
+
+      - Defina o "e-mail de notificação" corretamente nas configurações do site. **O domínio especificado no endereço "de" dos e-mails enviados é o domínio com o qual o seu e-mail será validado**.
+
+      - Visualize a origem não processada no seu cliente de e-mail, de forma que você possa conferir os cabeçalhos de e-mail para obter pistas importantes. No Gmail, é a opção "mostrar original" no menu suspenso, no canto superior à direita de cada e-mail.
+
+      - **IMPORTANTE:** Seu ISP tem um registro de DNS reverso inserido para associar os nomes de domínio e endereços IP a partir dos quais você envia e-mail? [Teste seu registro PTR reverso][2] aqui. Se o seu ISP não inserir o registro de ponteiro DNS reverso apropriado, existe pouquíssima probabilidade de que seu e-mail seja entregue.
+
+      - Se o [registro SPF] do seu domínio[8] está correto. [Teste seu registro SPF][1] aqui. Observe que o TXT é o tipo de registro oficial correto para o SPF.
+
+      - Se o [registro DKIM] do seu domínio[3] está correto. Isso irá aumentará muito a chance de o seu e-mail ser entregue. [Teste seu registro DKIM][7] aqui.
+
+      - Se você rodar seu próprio servidor de e-mail, verifique se os IPs do seu servidor de e-mail não [estão em nenhuma lista de bloqueio de e-mails][4]. Além disso, verifique se está sendo enviado um nome de host plenamente qualificado que é resolvido no DNS da sua mensagem HELO. Caso contrário, isso fará que o seu e-mail seja rejeitado por vários serviços.
+
+      - É altamente recomendável **enviar um e-mail de teste para [mail-tester.com][mt]** para verificar se tudo o que foi mencionado acima está funcionando corretamente.
+
+      (Esta é a maneira *fácil* de criar uma conta em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que tem planos de e-mail de baixo custo para comunidades pequenas. Mas ainda será preciso definir os registros DKIM e SPF no seu DNS!)
+
+      Esperamos que você tenha recebido este teste de entrega de e-mail!
+
+      Boa sorte,
+
+      Seus amigos do [Discourse](https://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: https://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versão do mensageiro"
     subject_template: "[%{email_prefix}] Nova versão do Discourse, atualização disponível"
+    text_body_template: |
+      Viva! Uma nova versão do [Discourse](https://www.discourse.org) está disponível!
+
+      Seu versão: %{installed_version}
+      Nova versão: **%{new_version}**
+
+      - Atualize com facilidade usando a nossa **[atualização no navegador em um clique](%{base_url}/admin/upgrade)**
+
+      - Confira as novidades nas [notas da versão](https://meta.discourse.org/tag/release-notes) ou veja o [registro de alterações não processados GitHub](https://github.com/discourse/discourse/commits/master)
+
+      - Acesse [meta.discourse.org](https://meta.discourse.org) para obter novidades, discussões e suporte para o Discourse
   new_version_mailer_with_notes:
     title: "Nova versão do mensageiro com notas"
     subject_template: "[%{email_prefix}] atualização disponível"
+    text_body_template: |
+      Viva! Uma nova versão do [Discourse](https://www.discourse.org) está disponível!
+
+      Seu versão: %{installed_version}
+      Nova versão: **%{new_version}**
+
+      - Atualize com facilidade usando a nossa **[atualização no navegador em um clique](%{base_url}/admin/upgrade)**
+
+      - Confira as novidades nas [notas da versão](https://meta.discourse.org/tag/release-notes) ou veja o [registro de alterações não processados GitHub](https://github.com/discourse/discourse/commits/master)
+
+      - Acesse [meta.discourse.org](https://meta.discourse.org) para obter novidades, discussões e suporte para o Discourse
+
+      ### Notas da versão
+
+      %{notes}
   flag_reasons:
     off_topic: "Sua postagem foi sinalizada como **desvio de tópico**. A comunidade acha que não é compatível com o tópico conforme definida no título e na primeira postagem."
     inappropriate: "Sua postagem foi sinalizada como **não apropriada**: A comunidade acha que é ofensiva, abusiva, ou uma violação das [nossas diretrizes da comunidade](%{base_path}/guidelines)."
