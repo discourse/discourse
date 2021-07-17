@@ -40,7 +40,7 @@ acceptance("Topic", function (needs) {
   test("Reply as new topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("button.share:nth-of-type(1)");
-    await click(".reply-as-new-topic a");
+    await click("button.new-topic");
 
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
@@ -59,7 +59,7 @@ acceptance("Topic", function (needs) {
   test("Reply as new message", async function (assert) {
     await visit("/t/pm-for-testing/12");
     await click("button.share:nth-of-type(1)");
-    await click(".reply-as-new-topic a");
+    await click("button.new-topic");
 
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
