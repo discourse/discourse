@@ -203,6 +203,8 @@ pt_BR:
       second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode impor a 2FA se a autenticação local estiver desativada."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Não é possível aplicar 2FA se o DiscourseConnect estiver ativado."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Não é possível desativar a entrada com conta em modo local se o 2FA estiver aplicado. Desative o 2FA aplicado antes de desativar entradas com conta em modo local."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "Não possível ativar envios S3 porque os envios S3 já estão ativados globalmente, e ativar este nível do site pode causar problemas críticos com os envios."
+      cors_origins_should_not_have_trailing_slash: "Você não deve adicionar a barra à direita (/) às origens CORS."
     conflicting_google_user_id: 'A ID da conta Google para esta conta foi alterada. A intervenção da equipe é necessária por razões de segurança. Entre em contato com a equipe e direcione para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Desculpe, não foi possível gerar uma pré-visualização desta página, porque o servidor \"%{hostname}\" não pôde ser encontrado. Em vez da pré-visualização, apenas um link aparecerá na sua postagem. :cry:"
@@ -210,21 +212,48 @@ pt_BR:
       missing_data:
         one: "Desculpe, não foi possível gerar uma pré-visualização desta página, porque a etiqueta OEmbed/OpenGraph não foi encontrada: %{missing_attributes}"
         other: "Desculpe, não foi possível gerar uma pré-visualização desta página, porque as etiquetas OEmbed/OpenGraph não foram encontradas: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   invite:
+    expired: "Seu token de convite expirou. Entre em <a href='%{base_url}/about'>contato com a equipe</a>."
     not_found: "Seu token de convite é inválido. Entre em <a href='%{base_url}/about'>contato com a equipe</a>."
     not_found_json: "Seu token de convite é inválido. Entre em contato com a equipe."
+    not_matching_email: "O seu endereço de e-mail e o endereço de e-mail associado com o token de convite não são iguais. Entre em contato com a equipe."
+    not_found_template: |
+      <p>O seu convite <a href="%{base_url}">%{site_name}</a> já foi resgatado.</p>
+
+      <p>Se você se lembrar da sua senha, <a href="%{base_url}/login">entre com a sua conta</a>.</p>
+
+      <p>Caso contrário, <a href="%{base_url}/password-reset">redefina a senha</a>.</p>
+    not_found_template_link: |
+      <p>O convite para <a href="%{base_url}">%{site_name}</a> não pode ser mais resgatado. Peça que enviem outro convite.</p>
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>já tem uma conta!</a>"
+    invite_exists: "Você já convidou <b>%{email}</b>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
+    rate_limit:
+      one: "Você já enviou %{count} convite no último dia, aguarde %{time_left} antes de tentar novamente."
+      other: "Você já enviou %{count} convites no último dia, aguarde %{time_left} antes de tentar novamente."
     confirm_email: "<p>Você está quase pronto(a)! Enviamos um e-mail de ativação para o seu endereço de e-mail. Siga as instruções no e-mail para ativar sua conta.</p><p>Caso contrário, verifique sua pasta de spam.</p>"
+    cant_invite_to_group: "Você não tem permissão para convidar usuários(as) para grupos específicos. Verifique se você e o proprietário do grupo(a) para o qual você está convidando."
     disabled_errors:
+      discourse_connect_enabled: "Convites estão desativados porque o DiscourseConnect está ativado."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
+    requires_groups: "Convite salvo. Para conceder acesso ao tópico especificado, adicione um dos grupos a seguir: %{groups}."
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
     max_rows: "Os primeiros %{max_bulk_invites} convites foram enviados. Tente dividir o arquivo em partes menores."
     error: "Houve um erro ao tentar enviar este arquivo. Tente novamente mais tarde."
+  invite_link:
+    email_taken: "Este e-mail já está em uso. Se você já tiver uma conta, entre com ela ou redefina a senha."
+    max_redemptions_limit: "deve estar entre 2 e %{max_limit}."
   topic_invite:
     failed_to_invite: "O(a) usuário(a) não pode ser convidado(a) para este tópico sem uma associação de grupo em um dos seguintes grupos: %{group_names}."
     user_exists: "Desculpe, este(a) usuário(a) já foi convidado(a). Você pode convidar um(a) usuário(a) para um tópico apenas uma vez."
+    muted_invitee: "Desculpe, você foi silenciado(a) por este(a) usuário(a)."
+    muted_topic: "Desculpe, este(a) usuário(a) silenciou este tópico."
+    receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você envie mensagens privadas."
+    sender_does_not_allow_pm: "Desculpe, você não permite que o(a) usuário(a) envie mensagens privadas."
+    user_cannot_see_topic: "%{username} não pode visualizar o tópico."
   backup:
     operation_already_running: "Uma operação está sendo executada. Não é possível iniciar um novo trabalho agora."
     backup_file_should_be_tar_gz: "O arquivo de backup deve ser um arquivo .tar.gz."
@@ -244,6 +273,8 @@ pt_BR:
   email_template_cant_be_modified: "Este modelo de e-mail não pode ser alterado"
   invalid_whisper_access: "Os sussurros não estão ativados ou você não tem acesso para criar postagens de sussurro"
   not_in_group:
+    title_topic: "Você precisa pedir associação ao grupo \"%{group}\" para ver este tópico."
+    title_category: "Você precisa pedir associação ao grupo \"%{group}\" para ver esta categoria."
     request_membership: "Pedir para se associar"
     join_group: "Participar do grupo"
   deleted_topic: "Ops! Este tópico foi excluído e não está mais disponível."
@@ -261,6 +292,7 @@ pt_BR:
     continue: "Continuar discussão"
     error: "Erro na incorporação"
     referer: "Referencial:"
+    error_topics: "A configuração do site \"lista de tópicos incorporados\" foi ativada"
     mismatch: "O referencial não foi enviado ou não correspondeu a nenhum dos seguintes hosts:"
     no_hosts: "Nenhum host foi configurado para incorporação."
     configure: "Configurar incorporação"
@@ -288,6 +320,11 @@ pt_BR:
   too_many_mentions_newuser:
     one: "Desculpe, usuários(as) novos(as) podem mencionar apenas um(a) usuário(as) em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem mencionar apenas %{count} usuários(as) em uma postagem."
+  no_embedded_media_allowed_trust: "Desculpe, n"
+  no_embedded_media_allowed: "Desculpe, novos(as) usuários(as) não podem incorporar itens de mídia em postagens."
+  too_many_embedded_media:
+    one: "Desculpe, novos(as) usuários(as) só podem inserir um item de mídia incorporado em uma postagem."
+    other: "Desculpe, novos(as) usuários(as) só podem inserir %{count} item de mídia incorporado em uma postagem."
   no_attachments_allowed: "Desculpe, novos(as) usuários(as) não podem inserir anexos nas postagens."
   too_many_attachments:
     one: "Desculpe, novos(as) usuários(as) podem inserir apenas %{count} anexo em uma postagem."
@@ -306,6 +343,7 @@ pt_BR:
   max_pm_recipients: "Desculpe, você pode enviar uma mensagem para no máximo %{recipients_limit} destinatários."
   pm_reached_recipients_limit: "Desculpe, você não pode ter mais de %{recipients_limit} destinatários em uma mensagem."
   removed_direct_reply_full_quotes: "Citação removida automaticamente de toda a postagem anterior."
+  watched_words_auto_tag: "Tópico etiquetado automaticamente"
   secure_upload_not_allowed_in_public_topic: "Desculpe, mas os envios seguros a seguir não podem ser usados em um tópico público: %{upload_filenames}."
   create_pm_on_existing_topic: "Desculpe, você não pode criar uma MP em um tópico existente."
   slow_mode_enabled: "Este tópico está no modo lento."

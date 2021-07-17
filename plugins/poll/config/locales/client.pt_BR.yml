@@ -82,5 +82,10 @@ pt_BR:
           step: Intervalo
         poll_public:
           label: Exibir quem votou
+        poll_options:
+          label: Opções (uma por linha)
+          add: Adicionar opção
         automatic_close:
           label: Fechar automaticamente a enquete
+        show_advanced: "Exibir opções avançadas"
+        hide_advanced: "Ocultar opções avançadas"

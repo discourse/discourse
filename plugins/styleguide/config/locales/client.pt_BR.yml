@@ -18,16 +18,47 @@ pt_BR:
           title: "Tipografia"
           example: "Boas-vindas ao Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Entradas de data/hora"
+        font_scale:
+          title: "Sistema da fonte"
         colors:
           title: "Cores"
         icons:
           title: "Ícones"
+          full_list: "Exibir a lista completa de ícones incríveis de fonte"
+        input_fields:
+          title: "Campos de entrada"
+        buttons:
+          title: "Botões"
+        dropdowns:
+          title: "Menus suspensos"
         categories:
           title: "Categorias"
+        bread_crumbs:
+          title: "Navegação estrutural"
         navigation:
           title: "Navegação"
+        navigation_bar:
+          title: "Barra de navegação"
+        navigation_stacked:
+          title: "Navegação empilhada"
         categories_list:
           title: "Lista de categorias"
+        topic_link:
+          title: "Link de tópico"
+        topic_list_item:
+          title: "Item de lista de tópicos"
+        topic_statuses:
+          title: "Status do tópico"
+        topic_list:
+          title: "Lista de tópicos"
+        basic_topic_list:
+          title: "Lista de tópicos básicos"
+        footer_message:
+          title: "Mensagem de rodapé"
+        signup_cta:
+          title: "CTA de cadastro"
         topic_timer_info:
           title: "Timers de tópico"
         post:
