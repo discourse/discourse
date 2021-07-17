@@ -2977,13 +2977,13 @@ zh_CN:
     unsubscribe:
       title: "退订"
       description: "不再对这些电子邮件感兴趣？没问题！点击下面的按钮可以立即退订："
-    reply_by_email: "[访问话题](%{base_url}%{url})或者发邮件回复。"
-    reply_by_email_pm: "[访问消息](%{base_url}%{url})或用邮件回复%{participants}。"
-    only_reply_by_email: "发邮件回复。"
-    only_reply_by_email_pm: "用邮件回复%{participants}。"
-    visit_link_to_respond: "[访问话题](%{base_url}%{url})以回复."
-    visit_link_to_respond_pm: "[访问消息](%{base_url}%{url})回复%{participants}。"
-    posted_by: "%{username}发表于%{post_date}"
+    reply_by_email: "[访问话题](%{base_url}%{url})或者回复此电子邮件以进行回复。"
+    reply_by_email_pm: "[访问消息](%{base_url}%{url})或者回复此电子邮件以回复 %{participants}。"
+    only_reply_by_email: "回复此电子邮件以进行回复。"
+    only_reply_by_email_pm: "回复此电子邮件以回复 %{participants}。"
+    visit_link_to_respond: "[访问话题](%{base_url}%{url})以回复。"
+    visit_link_to_respond_pm: "[访问消息](%{base_url}%{url})以回复 %{participants}。"
+    posted_by: "由 %{username} 于 %{post_date}发表"
     pm_participants: "参与者：%{participants}"
     invited_group_to_private_message_body: |
       %{username}邀请@%{group_name}到私信
@@ -3076,7 +3076,7 @@ zh_CN:
         %{respond_instructions}
     user_replied_pm:
       title: "用户回复私信"
-      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3164,7 +3164,7 @@ zh_CN:
         %{respond_instructions}
     user_posted_pm:
       title: "用户发布私信"
-      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4353,7 +4353,7 @@ zh_CN:
       目前不需要采取任何行动，但是，每隔几年对所有重要凭证进行周期性更新是一种良好的安全做法。
   create_linked_topic:
     topic_title_with_sequence:
-      other: "%{topic_title} (第 %{count} 部分)"
+      other: "%{topic_title}（第 %{count} 部分）"
     post_raw: "延续 %{parent_url} 的讨论。\n\n之前的讨论：\n\n%{previous_topics}"
     small_action_post_raw: "在 %{new_title} 继续讨论。"
   activemodel:
