@@ -1286,20 +1286,20 @@ ja:
         login_at: ログイン日時
       description: "管理者のログイン時間と場所のリスト。"
     top_uploads:
-      title: "上位アップロード"
+      title: "トップアップロード"
       labels:
         filename: ファイル名
-        extension: 拡張
-        author: 作者
+        extension: 拡張子
+        author: 作成者
         filesize: ファイルサイズ
-      description: "すべてのアップロードを拡張し、ファイルサイズ、および作者別に一覧表示します。"
+      description: "すべてのアップロードを拡張子、ファイルサイズ、および作成者別に一覧表示します。"
     top_ignored_users:
-      title: "上位無視/ミュートユーザー"
+      title: "トップ無視/ミュートユーザー"
       labels:
         ignored_user: 無視されたユーザー
         ignores_count: 無視数
         mutes_count: ミュート数
-      description: "他多数のユーザーによってミュートまたは無視されたユーザー。"
+      description: "多数のユーザーによってミュートまたは無視されたユーザー。"
   dashboard:
     rails_env_warning: "サーバーは %{env} モードで実行中です。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
@@ -1310,8 +1310,8 @@ ja:
     facebook_config_warning: 'サーバーは Facebook を使った登録とログインを許可 (enable_facebook_logins) するように構成されていますが、アプリ ID とアプリシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
     twitter_config_warning: 'サーバーは Twitter を使った登録とログインを許可 (enable_twitter_logins) するように構成されていますが、キーとシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
     github_config_warning: 'サーバーは GitHub を使った登録とログインを許可 (enable_github_logins) するように構成されていますが、クライアント ID とシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-    s3_config_warning: 'サーバーはファイルを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 が設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_upload_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
-    s3_backup_config_warning: 'サーバーはバックアップを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 が設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_backup_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
+    s3_config_warning: 'サーバーはファイルを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 つが設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_upload_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
+    s3_backup_config_warning: 'サーバーはバックアップを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 つが設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_backup_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
     s3_cdn_warning: 'サーバーはファイルを S3 にアップロードするように構成されていますが、S3 CDN が構成されていません。これにより、S3 のコストが高くなり、サイトパフォーマンスが低下する可能性があります。<a href="https://meta.discourse.org/t/-/148916" target="_blank">詳しくは、「アップロードにオブジェクトストレージを使用する」をご覧ください</a>。'
     image_magick_warning: 'サーバーは大きな画像のサムネイルを作成するように構成されていますが、ImageMagick がインストールされていません。パッケージマネージャーを使用して ImageMagick をインストールするか、<a href="https://www.imagemagick.org/script/download.php" target="_blank">最新リリースをダウンロード</a>してください。'
     failing_emails_warning: '失敗したメールジョブが %{num_failed_jobs} 件あります。app.yml を確認し、メールサーバーの設定が正しいことを確認してください。<a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを参照</a>してください。'
@@ -1576,7 +1576,7 @@ ja:
     s3_endpoint: "エンドポイントは DigitalOcean Spaces または Minio などの S3 対応サービスにバックアップするように変更できます。警告: AWS S3 を使用している場合は空のままにしてください。"
     s3_configure_tombstone_policy: "トゥームストーンアップロードの自動削除ポリシーを有効にする。重要: 無効である場合、アップロードが削除された後にスペースを再確保することはありません。"
     s3_disable_cleanup: "最大許容数を超えるバックアップが存在する場合、S3 の古いバックアップの削除を防止する。"
-    enable_s3_inventory: "Amazon S3 インベントリを使ってレポートを生成してアップロードを確認する。重要: 有効な S3 資格情報が必要です (アクセスキー ID とシークレットアクセスキー)。"
+    enable_s3_inventory: "Amazon S3 インベントリを使ってレポートを生成してアップロードを確認する。重要: 有効な S3 資格情報が必要です (access key id と secret access key)。"
     backup_time_of_day: "バックアップが発生する必要のある時刻 (UTC)。"
     backup_with_uploads: "スケジュールされたバックアップにアップロードを含める。これを無効にすると、データベースのみがバックアップされます。"
     backup_location: "バックアップが保存される場所。重要: S3 には、ファイルの設定に入力されている有効な S3 資格情報が必要です。"
@@ -1942,7 +1942,7 @@ ja:
     max_allowed_message_recipients: "メッセージに許可される最大受信者数。"
     watched_words_regular_expressions: "ウォッチ語は正規表現です。"
     enable_diffhtml_preview: "完全な再レンダリングの代わりに diffHTML を使ってプレビューを同期する実験的機能"
-    old_post_notice_days: "投稿の通知が服なるまでの日数"
+    old_post_notice_days: "投稿の通知が古くなるまでの日数"
     new_user_notice_tl: "新しいユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_users_days: "ユーザーがリピートとみなされる経過日数。"
@@ -2325,7 +2325,7 @@ ja:
 
       %{invite_link}
   invite_forum_mailer:
-    title: "フォーラム招待メーター"
+    title: "フォーラム招待メーラー"
     subject_template: "%{inviter_name} があなたを %{site_domain_name} に招待しました"
     text_body_template: |
       %{inviter_name} があなたを招待しました
@@ -3374,7 +3374,7 @@ ja:
       title: "古いメールの確認 (追加)"
       subject_template: "[%{email_prefix}] 現在のメールアドレスを確認してください"
       text_body_template: |
-        新しいメールアドレスを追加する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、当たらhしいメールアドレスを確認してください。
+        新しいメールアドレスを追加する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、新しいメールアドレスを確認してください。
 
         次のリンクをクリックして、%{site_name} の現在のメールアドレスを確認してください。
 
@@ -4393,7 +4393,7 @@ ja:
     must_claim: "対応する前に項目を自分に割り当てる必要があります。"
     user_claimed: "この項目は別のユーザーに割り当てられています。"
     missing_version: "バージョンパラメーターを指定する必要があります"
-    conflict: "更新の競合があるため、どれを行えませんでした。"
+    conflict: "更新の競合があるため、それを行えませんでした。"
     reasons:
       post_count: "すべてのユーザーの最初の数件の投稿はスタッフによって承認される必要があります。`approve_post_count` をご覧ください。"
       trust_level: "信頼レベルが低いユーザーはその返信をスタッフが承認する必要があります。`approve_unless_trust_level` をご覧ください。"
@@ -4412,18 +4412,18 @@ ja:
       queued_by_staff: "スタッフメンバーは、この投稿にレビューが必要だと考えています。それまで非表示のままになります。"
     actions:
       agree:
-        title: "同意…"
+        title: "合意…"
       agree_and_keep:
         title: "投稿を維持"
-        description: "通報に同意し、投稿を変更しないままにします。"
+        description: "通報に合意し、投稿を変更しないままにします。"
       agree_and_keep_hidden:
         title: "投稿を非表示のままに維持"
-        description: "通報に同意し、投稿を非表示のままにします。"
+        description: "通報に合意し、投稿を非表示のままにします。"
       agree_and_suspend:
         title: "ユーザーの凍結"
-        description: "通報に同意し、ユーザーを凍結します。"
+        description: "通報に合意し、ユーザーを凍結します。"
       agree_and_silence:
-        title: "投稿禁止ユーザー"
+        title: "ユーザーを投稿禁止"
         description: "通報に同意し、ユーザーを投稿禁止にします。"
       agree_and_restore:
         title: "投稿の復元"
