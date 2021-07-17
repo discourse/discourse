@@ -280,6 +280,7 @@ ja:
       remove: "削除"
       remove_confirmation: "この下書きを削除してもよろしいですか？"
       new_topic: "新しいトピックの下書き"
+      new_private_message: "新しい個人メッセージの下書き"
       topic_reply: "返信の下書き"
       abandon:
         confirm: "このトピックの作成中の下書きがあります。どうしますか？"
@@ -350,6 +351,7 @@ ja:
         type_bonus:
           name: "タイプボーナス"
           title: "特定のレビュー待ち項目タイプには、スタッフがボーナスを割り当てて優先順位を上げられます。"
+      stale_help: "このレビュー待ち項目は <b>%{username}</b> によって解決されました。"
       claim_help:
         optional: "この項目を自分に割り当ててほかのユーザーがレビューしないようにできます。"
         required: "レビューする前に項目を自分に割り当てる必要があります。"
@@ -785,6 +787,11 @@ ja:
       flair_type:
         icon: "アイコンを選択する"
         image: "画像をアップロードする"
+      default_notifications:
+        modal_title: "ユーザーのデフォルト通知"
+        modal_description: "この変更を過去に適用しますか？これにより、既存の %{count} 人のユーザーの設定が変更されます。"
+        modal_yes: "はい"
+        modal_no: "いいえ。今後のみに変更を適用する"
     user_action_groups:
       "1": "「いいね！」した数"
       "2": "「いいね！」された数"
@@ -1884,6 +1891,7 @@ ja:
           confirm: 新しいトピックの下書きが保存されていますが、リンクトピックを作成すると上書きされます。
         reply_as_new_group_message:
           label: 新しいグループメッセージとして返信
+          desc: 同じ受信者で始まる新しいメッセージを作成します
         reply_as_private_message:
           label: 新規メッセージ
           desc: 新しい個人メッセージを作成する
@@ -3345,6 +3353,8 @@ ja:
         regular: "レギュラー"
         leader: "リーダー"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "サポートされていないファイルを選択しました。サポートされているファイルタイプ – %{types}。"
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:
@@ -3572,6 +3582,7 @@ ja:
               log_out: ユーザーのすべてのセッションをログアウトします。
               anonymize: ユーザーのアカウントを匿名化します。
               delete: ユーザーのアカウントを削除します。
+              list: ユーザーのリストを取得します。
             email:
               receive_emails: このスコープを mail-receiver と組み合わせて、受信メールを処理します。
       web_hooks:

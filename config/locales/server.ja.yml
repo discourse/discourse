@@ -242,7 +242,7 @@ ja:
     user_exists: "そのユーザーはすでに招待されています。ユーザーを一度しかトピックに招待できません。"
     muted_invitee: "そのユーザーはあなたをミュートしています。"
     muted_topic: "そのユーザーはこのトピックをミュートしています。"
-    receiver_does_not_allow_pm: "そのユーザーは、あなたが非公開メッセージを送信することを許可していません。"
+    receiver_does_not_allow_pm: "そのユーザーは、あなたがプライベートメッセージを送信することを許可していません。"
     sender_does_not_allow_pm: "そのユーザーがプライベートメッセージを送信することを許可していません。"
     user_cannot_see_topic: "%{username} はトピックを閲覧できません。"
   backup:
@@ -1543,6 +1543,11 @@ ja:
     auth_overrides_email: "ログインするたびにローカルメールを外部サイトメールでオーバーライドし、ローカルでの変更を防止する。すべての認証プロバイダーに適用されます (警告: ローカルメールの正規化により、矛盾が生じる可能性があります)"
     auth_overrides_username: "ログインするたびにローカルユーザー名を外部サイトのユーザー名でオーバーライドし、ローカルでの変更を防止する。すべての認証プロバイダーに適用されます (警告: ユーザー名の長さ/要件の違いにより、矛盾が発生する可能性があります)。"
     auth_overrides_name: "ログインするたびにローカルのフルネームを外部サイトのフルネームでオーバーライドする。すべての認証プロバイダーに適用されます。"
+    discourse_connect_overrides_avatar: "ユーザーのアバターを DiscourseConnect ペイロードの値でオーバーライドする。有効である場合、ユーザーは Discourse にアバターをアップロードできなくなります。"
+    discourse_connect_overrides_location: "ユーザーの場所を DiscourseConnect ペイロードの値でオーバーライドし、ローカルの変更を防止する。"
+    discourse_connect_overrides_website: "ユーザーのウェブサイトを DiscourseConnect ペイロードの値でオーバーライドし、ローカルの変更を防止する。"
+    discourse_connect_overrides_profile_background: "ユーザープロフィールの背景を DiscourseConnect ペイロードの値でオーバーライドする。"
+    discourse_connect_overrides_card_background: "ユーザーカードの背景を DiscourseConnect ペイロードの値でオーバーライドする。"
     discourse_connect_not_approved_url: "未承認の DiscourseConnect アカウントをこの URL にリダイレクトする"
     discourse_connect_allows_all_return_paths: "DiscourseConnect が指定する return_paths のドメインを制限しない (デフォルトでは、リターンパスは現在のサイトにある必要があります)"
     enable_local_logins: "ローカルのユーザー名とパスワードでログインするアカウントを有効にする。警告: 無効にすると、以前に少なくとも 1 つの代替ログイン方法を構成していない場合にログインできなくなる可能性があります。"
@@ -1640,6 +1645,7 @@ ja:
     allow_staff_to_upload_any_file_in_pm: "スタッフメンバーによる PM でのファイルのアップロードを許可する。"
     strip_image_metadata: "画像メタデータを削除する。"
     composer_media_optimization_image_enabled: "アップロードされた画像ファイルのクライアント側のメディア最適化を有効にします。"
+    composer_media_optimization_image_bytes_optimization_threshold: "クライアント側の最適化をトリガーする画像ファイルの最小サイズ"
     composer_media_optimization_image_resize_dimensions_threshold: "クライアント側のサイズ変更をトリガーする画像の最小幅"
     composer_media_optimization_image_resize_width_target: "幅が `composer_media_optimization_image_dimensions_resize_threshold` より大きい画像はこの花にサイズ変更されます。`composer_media_optimization_image_dimensions_resize_threshold` 以上 (>=) である必要があります。"
     composer_media_optimization_image_encode_quality: "再エンコードプロセスで使用される JPEG エンコード品質。"
@@ -1926,7 +1932,7 @@ ja:
     secure_media_max_email_embed_image_size_kb: "'secure media allow embed in emails' 設定が有効である場合にメールに埋め込まれるセキュリティで保護された画像のサイズのカットオフ。その設定が有効でない場合、この設定の効果はありません。"
     slug_generation_method: "スラッグ生成方法を選択します。'encode' はパーセントエンコード文字列を生成します。'none'は、スラッグを無効にします。"
     enable_emoji: "絵文字を有効にする"
-    enable_emoji_shortcuts: ") :p :( などの一般的なスマイリーテキストは絵文字に変換されます"
+    enable_emoji_shortcuts: ":) :p :( などの一般的なスマイリーテキストは絵文字に変換されます"
     emoji_set: "絵文字はどうですか？"
     emoji_autocomplete_min_chars: "絵文字の自動補完ポップアップをトリガーするために必要な最低文字数"
     enable_inline_emoji_translation: "インライン絵文字の翻訳を有効にする (前にスペースや句読点を使用しない)"
@@ -2024,6 +2030,7 @@ ja:
     share_quote_buttons: "引用の共有ウィジェットに表示される項目と表示順を決定する。"
     share_quote_visibility: "引用の共有ボタンをいつ表示するかを決定する: 表示しない、匿名ユーザーのみ、またはすべてのユーザー。 "
     create_revision_on_bulk_topic_moves: "トピックが新しいカテゴリに一括して移動されたときに、最初の投稿のリビジョンを作成する。"
+    allow_changing_staged_user_tracking: "ステージングユーザーのカテゴリとタグの通知設定を管理者ユーザーが変更することを許可する。"
     errors:
       invalid_email: "無効なメールアドレスです。"
       invalid_username: "そのユーザー名のユーザは存在しません。"
@@ -2244,7 +2251,7 @@ ja:
       blank: "は空にできません"
       must_begin_with_alphanumeric_or_underscore: "は英数字またはアンダースコアで始まる必要があります"
       must_end_with_alphanumeric: "は英数字で終わる必要があります"
-      must_not_contain_two_special_chars_in_seq: "には 2 つ以上の特殊文字(.-_) のシーケンスを含めることはできません"
+      must_not_contain_two_special_chars_in_seq: "には 2 つ以上の特殊文字 (.-_) のシーケンスを含めることはできません"
       must_not_end_with_confusing_suffix: "は、.json や .png などの紛らわしいサフィックスで終了することはできません。"
     email:
       invalid: "は無効です。"
@@ -4361,7 +4368,7 @@ ja:
       quoted: '%{username} が「%{topic}」であなたを引用しました - %{site_title}'
       replied: '%{username} が「%{topic}」であなたに返信しました - %{site_title}'
       posted: '%{username} が「%{topic}」に投稿しました - %{site_title}'
-      private_message: '「%{topic}」で %{username} があなたに非公開メッセージを送信しました - %{site_title}'
+      private_message: '"%{topic}" で %{username} があなたにプライベートメッセージを送信しました - %{site_title}'
       linked: '%{username} が「%{topic}」のあなたの投稿にリンクしました - %{site_title}'
       watching_first_post: '%{username} が新規トピック「%{topic}」を作成しました - %{site_title}'
       confirm_title: "通知を有効にしました - %{site_title}"
