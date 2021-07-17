@@ -3415,37 +3415,37 @@ zh_CN:
     search_button: "搜索"
   offline:
     title: "无法加载应用"
-    offline_page_message: "您似乎正处于离线状态！请检查网络连接并重试。"
+    offline_page_message: "您好像离线了！请检查您的网络连接，然后重试。"
   login_required:
     welcome_message: |
       ## [欢迎来到 %{title}](#welcome)
-      您需要一个账户。请创建一个账户或者登录以继续。
+      需要一个帐户。请创建帐户或登录以继续。
     welcome_message_invite_only: |
-      ## [欢迎来到%{title}](#welcome)
-      您需要一个账号。请从现有用户处获取一个邀请或者登录。
+      ## [欢迎来到 %{title}](#welcome)
+      需要一个帐户。请向现有成员请求邀请或登录以继续。
   deleted: "已删除"
   image: "图片"
   upload:
-    edit_reason: "下载外部图片留作副本"
-    unauthorized: "抱歉，您没有上传文件的权限（验证扩展：%{authorized_extensions}）。"
-    pasted_image_filename: "粘贴的图像"
-    store_failure: "用户#%{user_id} 上传的 #%{upload_id} 保存失败。"
-    file_missing: "抱歉，您必须选择一个文件上传。"
-    empty: "抱歉，但是您提交的文件是空的。"
-    png_to_jpg_conversion_failure_message: "从PNG转换为JPG时发生错误。"
-    optimize_failure_message: "优化上传的图像时出现了错误。"
+    edit_reason: "下载图片的本地副本"
+    unauthorized: "抱歉，您尝试上传的文件未被授权（授权扩展名：%{authorized_extensions}）。"
+    pasted_image_filename: "粘贴图片"
+    store_failure: "无法保存用户 #%{user_id} 的上传 #%{upload_id}。"
+    file_missing: "抱歉，您必须提供要上传的文件。"
+    empty: "抱歉，您提供的文件是空的。"
+    png_to_jpg_conversion_failure_message: "从 PNG 转换为 JPG 时出错。"
+    optimize_failure_message: "优化上传的图片时出错。"
     attachments:
-      too_large: "抱歉，您试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
+      too_large: "抱歉，您尝试上传的文件过大（最大大小为 %{max_size_kb}KB）。"
     images:
-      too_large: "抱歉，您试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
-      larger_than_x_megapixels: "对不起，您上传的图片太大(最大支持%{max_image_megapixels}像素)，请缩小图片然后再试一次。"
-      size_not_found: "抱歉，我们无法获取图片大小。也许是您的图片损坏了？"
+      too_large: "抱歉，您尝试上传的图片过大（最大大小为 %{max_size_kb}KB），请调整大小并重试。"
+      larger_than_x_megapixels: "抱歉，您尝试上传的图片过大（最大大小为 %{max_image_megapixels}00 万像素），请调整大小并重试。"
+      size_not_found: "抱歉，我们无法确定图片的大小。也许您的图片已被损坏？"
     placeholders:
-      too_large: "(图片大小超过%{max_size_kb}KB)"
+      too_large: "（图片大小超过 %{max_size_kb}KB）"
   avatar:
-    missing: "抱歉，我们没法找到与您邮件地址关联的头像。您能再上传一次试试吗？"
+    missing: "抱歉，我们找不到与该电子邮件地址关联的任何头像。您可以尝试重新上传吗？"
   flag_reason:
-    sockpuppet: "新用户创建了话题，而另一个新用户以同一个 IP 在该话题回复。查看站点设置的 <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>。"
+    sockpuppet: "一个新用户创建了一个话题，另一个位于相同 IP 地址 (%{ip_address}) 的新用户回复了。请参阅 <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> 站点设置。"
     spam_hosts: "新用户尝试创建多个链接到相同域名的帖子。此用户所有包含链接的帖子需要审核。详见站点设置<a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>。"
   skipped_email_log:
     exceeded_emails_limit: "超过max_emails_per_day_per_user"
@@ -4318,10 +4318,10 @@ zh_CN:
           title: "删除并屏蔽用户"
           description: "这名用户将会被删除，我们会屏蔽其IP和电子邮件地址。"
       reject:
-        title: "否决"
-        bundle_title: "拒绝..."
+        title: "拒绝"
+        bundle_title: "拒绝…"
       reject_and_suspend:
-        title: "拒绝并暂停用户"
+        title: "拒绝并封禁用户"
       reject_and_silence:
         title: "拒绝并禁言用户"
       reject_and_delete:
@@ -4331,28 +4331,28 @@ zh_CN:
       approve_and_restore:
         title: "批准并恢复帖子"
       delete_user:
-        reason: "通过审核队列删除的"
+        reason: "已通过审核队列删除"
   email_style:
-    html_missing_placeholder: "HTML模板必须包含%{placeholder}"
+    html_missing_placeholder: "HTML 模板必须包含 %{placeholder}"
   notification_level:
-    ignore_error: "对不起，您不能忽略这个用户。"
-    mute_error: "对不起，您不能禁音这个用户。"
+    ignore_error: "抱歉，您不能忽略该用户。"
+    mute_error: "抱歉，您无法将该用户设为免打扰。"
   discord:
-    not_in_allowed_guild: "验证失败。您不是允许的Discord公会的成员。"
+    not_in_allowed_guild: "身份验证失败。您不是允许的 Discord 公会的成员。"
   old_keys_reminder:
-    title: "关于旧凭证的提醒"
+    title: "关于旧凭据的提醒"
     body: |
-      Hello！这是您的 Discourse 实例每年例行安全提醒。
+      您好！这是来自您的 Discourse 实例的例行年度安全提醒。
 
-      出于礼貌，我们想让您知道，您的 Discourse 实例上使用的以下凭证已经两年多没有更新了。
+      为了方便您，我们旨在通知您，在您的 Discourse 实例上使用的以下凭据已超过两年未更新：
 
       %{keys}
 
-      目前不需要采取任何行动，但是，每隔几年对所有重要凭证进行周期性更新是一种良好的安全做法。
+      目前无需采取任何操作，但是，每几年循环一次您的所有重要凭据不失为一种良好的安全做法。
   create_linked_topic:
     topic_title_with_sequence:
       other: "%{topic_title}（第 %{count} 部分）"
-    post_raw: "延续 %{parent_url} 的讨论。\n\n之前的讨论：\n\n%{previous_topics}"
+    post_raw: "继续 %{parent_url} 的讨论。\n\n以前的讨论：\n\n%{previous_topics}"
     small_action_post_raw: "在 %{new_title} 继续讨论。"
   activemodel:
     errors:
