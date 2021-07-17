@@ -602,7 +602,7 @@ it:
         remove_user_as_group_owner: "Revoca proprietà"
     groups:
       member_added: "Aggiunto"
-      member_requested: "Richiesto alle"
+      member_requested: "Richiesto il"
       add_members:
         title: "Aggiungi utenti a %{group_name}"
         description: "Inserisci un elenco di utenti che desideri invitare al gruppo o incollalo in un elenco separato da virgole:"
@@ -1446,7 +1446,7 @@ it:
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
           invite_to_topic: "Invia a questo argomento"
-          expires_at: "Scadenza tra"
+          expires_at: "Scadenza:"
           custom_message: "Messaggio personale facoltativo"
           send_invite_email: "Salva e invia Email"
           save_invite: "Salva invito"
@@ -2401,7 +2401,7 @@ it:
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
         replies_short: "%{current} / %{total}"
       progress:
-        title: Avanzamento dell'argomento
+        title: Avanzamento lettura argomento
         go_top: "alto"
         go_bottom: "basso"
         go: "vai"

@@ -3201,7 +3201,7 @@ zh_CN:
 
         如果您忘记了密码，请[立即重置](%{base_url}/password-reset)。
 
-        如果您没有尝试为 %{email} 创建帐户或更改您的电子邮件地址，请不要担心，您可以安全地忽略此消息。
+        如果您没有尝试为 %{email} 创建帐户或更改您的电子邮件地址，请不要担心，您可以直接忽略此消息。
 
         如果您有任何问题，请[联系我们友好的管理人员](%{base_url}/about)。
     account_second_factor_disabled:
@@ -3218,37 +3218,37 @@ zh_CN:
       since_last_visit: "自从您上次访问以来"
       new_topics: "新话题"
       unread_notifications: "未读通知"
-      unread_high_priority: "未读的高优先级通知"
-      liked_received: "收到的赞"
+      unread_high_priority: "未读高优先级通知"
+      liked_received: "收到赞"
       new_users: "新用户"
       popular_topics: "热门话题"
-      follow_topic: "关注话题"
+      follow_topic: "关注此话题"
       join_the_discussion: "阅读更多"
-      popular_posts: "流行帖子"
-      more_new: "您关注的新帖"
+      popular_posts: "热门帖子"
+      more_new: "新摘要"
       subject_template: "[%{email_prefix}] 摘要"
-      unsubscribe: "这是来自%{site_link}的摘要邮件，因为您长时间没有访问站点而发送。修改您的邮件设置%{email_preferences_link}，或%{unsubscribe_link}取消订阅。"
-      your_email_settings: "您的邮件设置"
+      unsubscribe: "此摘要发送自 %{site_link}，我们已经有一段时间没有看到您了。更改%{email_preferences_link}或%{unsubscribe_link}以退订。"
+      your_email_settings: "您的电子邮件设置"
       click_here: "点击此处"
       from: "%{site_name}"
-      preheader: "在您上次于%{last_seen_at}访问后的新内容摘要"
+      preheader: "自 %{last_seen_at} 您上次访问后的简短摘要"
     forgot_password:
       title: "忘记密码"
       subject_template: "[%{email_prefix}] 密码重置"
       text_body_template: |
-        在[%{site_name}](%{base_url})上有人要求重置您的密码。
+        有人要求重置您在 [%{site_name}](%{base_url}) 上的密码。
 
-        如果不是您，您可以安全地忽略此邮件。
+        如果不是您，您可以直接忽略此电子邮件。
 
-        点击以下链接设置新密码：
+        点击下方链接设置新密码：
         %{base_url}/u/password-reset/%{email_token}
     email_login:
-      title: "用链接登录"
-      subject_template: "[%{email_prefix}]链接登录"
+      title: "通过链接登录"
+      subject_template: "[%{email_prefix}] 通过链接登录"
       text_body_template: |
-        这是您用于登录[%{site_name}](%{base_url})的链接
+        这是您用于登录 [%{site_name}](%{base_url}) 的链接
 
-        如果您未请求过此链接，可以放心地忽略此电子邮件。
+        如果您未请求此链接，您可以直接忽略此电子邮件。
 
         点击下方链接登录：
         %{base_url}/session/email-login/%{email_token}
@@ -3256,167 +3256,165 @@ zh_CN:
       title: "设置密码"
       subject_template: "[%{email_prefix}] 设置密码"
       text_body_template: |
-        有人尝试设置您在 [%{site_name}](%{base_url}) 的密码。除此之外，您可以从已验证过您邮件地址的在线服务商登录。
+        有人要求为您在 [%{site_name}](%{base_url}) 上的帐户设置密码。您也可以使用与此经过验证的电子邮件地址关联的任何受支持在线服务（Google、Facebook 等）登录。
 
-        如果不是您在请求添加密码，您可以直接忽略本邮件。
+        如果您没有发出此请求，您可以直接忽略此电子邮件。
 
-        点击下面的链接来选择设置密码：
+        点击下方链接设置密码：
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "管理员登录"
       subject_template: "[%{email_prefix}] 登录"
       text_body_template: |
-        有人要登录您在[%{site_name}](%{base_url})上的账户。
+        有人要求登录您在 [%{site_name}](%{base_url}) 上的帐户。
 
-        如果您没有发出此请求，则可以放心地忽略此电子邮件。
+        如果您没有发出此请求，您可以直接忽略此电子邮件。
 
-        单击以下链接登录：
+        点击下方链接登录：
         %{base_url}/session/email-login/%{email_token}
     account_created:
-      title: "账户已创建"
-      subject_template: "[%{email_prefix}] 您的新账户"
+      title: "帐户已创建"
+      subject_template: "[%{email_prefix}] 您的新帐户"
       text_body_template: |
-        %{site_name}已经为您创建了新账户
+        已在 %{site_name} 为您创建一个新帐户
 
-        点击下面的链接设置新账户密码：
+        点击下方链接为您的新帐户设置密码：
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
-      title: "确认新邮箱"
-      subject_template: "[%{email_prefix}] 确认您的新电子邮箱地址"
+      title: "确认新电子邮件"
+      subject_template: "[%{email_prefix}] 确认您的新电子邮件地址"
       text_body_template: |
-        点击以下链接确认您在 %{site_name} 的新电子邮件地址：
+        点击下方链接确认您在 %{site_name} 使用的新电子邮件地址：
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        如果您没有要求此更改，请联系管理员 (%{base_url}/about) 。
+        如果您没有请求此变更，请联系[站点管理员](%{base_url}/about)。
     confirm_new_email_via_admin:
-      title: "确认新邮箱"
-      subject_template: "[%{email_prefix}] 确认您的新电子邮箱地址"
+      title: "确认新电子邮件"
+      subject_template: "[%{email_prefix}] 确认您的新电子邮件地址"
       text_body_template: |
-        点击以下链接确认您在%{site_name}的新电子邮件地址：
+        点击下方链接确认您在 %{site_name} 使用的新电子邮件地址：
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        此电子邮件的更改由网站管理员发送。如果您没有要求此更改，请联系管理员(%{base_url}/about)。
+        此电子邮件变更由站点管理员请求。如果您没有请求此变更，请联系[站点管理员](%{base_url}/about)。
     confirm_old_email:
-      title: "确认旧邮箱"
-      subject_template: "[%{email_prefix}] 确认您现在的电子邮箱地址"
+      title: "确认旧电子邮件"
+      subject_template: "[%{email_prefix}] 确认您当前的电子邮件地址"
       text_body_template: |
-        在我们更改您的邮件地址前，我们需要确认您掌控当前邮件账户。在您完成这一步后，我们会让您确认新的邮件地址。
+        在我们更改您的电子邮件地址之前，我们需要您确认您可以控制当前的电子邮件帐户。完成此步骤后，我们将让您确认新电子邮件地址。
 
-        点击下面链接以确认您当前在%{site_name}的邮件地址：
+        点击下方链接，确认您当前的电子邮件地址 %{site_name}
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
-      title: "确认旧邮箱（添加）"
-      subject_template: "[%{email_prefix}] 确认您现在的电子邮箱地址"
+      title: "确认旧电子邮件（添加）"
+      subject_template: "[%{email_prefix}] 确认您当前的电子邮件地址"
       text_body_template: |
-        在我们添加新的电子邮件地址之前，我们需要确认您掌控当前的电子邮件账户。在您完成这一步后，我们会让您确认新的电子邮件地址。
+        在我们添加新的电子邮件地址之前，我们需要您确认您可以控制当前的电子邮件帐户。完成此步骤后，我们将让您确认新电子邮件地址。
 
-        点击以下链接，确认您当前在%{site_name}电子邮件地址：
+        点击下方链接，确认您当前的电子邮件地址 %{site_name}
 
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
-      title: "通知旧邮箱"
-      subject_template: "[%{email_prefix}] 您的邮箱已经修改成功"
+      title: "通知旧电子邮件"
+      subject_template: "[%{email_prefix}] 您的电子邮件地址已更改"
       text_body_template: |
-        这是%{site_name}自动发出的邮件，以告知您的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
+        这是一条自动发送的邮件，旨在通知您为 %{site_name} 使用的电子邮件地址已更改。如果有误，请联系站点管理员。
 
-        您的邮箱地址被修改为：
+        您的电子邮件地址已更改为：
 
         %{new_email}
     notify_old_email_add:
-      title: "通知旧邮件（添加）"
-      subject_template: "[%{email_prefix}]一个新的电子邮件已被添加。"
+      title: "通知旧电子邮件（添加）"
+      subject_template: "[%{email_prefix}] 已添加新的电子邮件地址"
       text_body_template: |
-        请了解，这是一条自动的私信/消息，这个电子邮件地址
-        已添加至%{site_name}。如果有误，请联系
-        网站管理员。
+        这是一条自动发送的邮件，旨在通知您为 %{site_name} 使用的电子邮件地址已添加。如果有误，请联系站点管理员。
 
-        您添加的电子邮件地址是：
+        添加的电子邮件地址为：
 
         %{new_email}
     signup_after_approval:
-      title: "在审批之后注册"
-      subject_template: "您通过了%{site_name}的审核！"
+      title: "批准后注册"
+      subject_template: "您已被批准加入 %{site_name}！"
       text_body_template: |
-        欢迎来到%{site_name}！
+        欢迎来到 %{site_name}！
 
-        管理人员在%{site_name}上批准了您的账户。
+         管理人员批准了您在 %{site_name} 上的帐户。
 
-        您现在可以通过以下登录访问您的新账户：
+        您现在可以通过以下网址访问您的新帐户：
         %{base_url}
 
-        如果上述链接无法点击，请尝试将其复制并粘贴到浏览器的地址栏中。
+        如果无法点击以上链接，请尝试将其复制并粘贴到您的网络浏览器的地址栏中。
 
         %{new_user_tips}
 
         我们始终相信[文明社区行为](%{base_url}/guidelines)。
 
-        入住愉快！
+        好好享受您在社区的时光吧！
     signup_after_reject:
-      title: "拒绝后的注册"
-      subject_template: "您在 %{site_name}上被拒绝"
+      title: "拒绝后注册"
+      subject_template: "您加入 %{site_name} 的请求被拒绝"
       text_body_template: |
-        一名工作人员拒绝了您在 %{site_name} 上的帐户。
+        管理人员拒绝了您在 %{site_name} 上的帐户。
 
         %{reject_reason}
     signup:
       title: "注册"
-      subject_template: "[%{email_prefix}] 确认您的新账户"
+      subject_template: "[%{email_prefix}] 确认您的新帐户"
       text_body_template: |
         欢迎来到 %{site_name}！
 
-        点击下面链接确认并激活您的新账户：
+        点击下方链接确认并激活您的新帐户：
         %{base_url}/u/activate-account/%{email_token}
 
-        如果以上链接无法点击，请将它复制并粘贴到您的浏览器的地址栏。
+        如果无法点击以上链接，请尝试将其复制并粘贴到您的网络浏览器的地址栏中。
     activation_reminder:
       title: "激活提醒"
-      subject_template: "[%{email_prefix}]记得确认您的账户"
+      subject_template: "[%{email_prefix}] 记得确认您的帐户"
       text_body_template: |
         欢迎来到 %{site_name}！
 
-        这是一个提醒您激活账户的友情提醒。
+        旨在提醒您激活您的帐户。
 
-        请点击下面的链接来确认并激活您的新账户：
+        点击下方链接确认并激活您的新帐户：
         %{base_url}/u/activate-account/%{email_token}
 
-        如果上方的链接无法点击，请尝试将其复制并粘贴到浏览器的地址栏中。
+        如果无法点击以上链接，请尝试将其复制并粘贴到您的网络浏览器的地址栏中。
     suspicious_login:
-      title: "新登录警告"
-      subject_template: "[%{site_name}]新登录于%{location}"
+      title: "新登录提醒"
+      subject_template: "[%{site_name}] 来自%{location}的新登录"
       text_body_template: |
         您好，
 
-        我们注意到您从通常不使用的设备或位置登录。 这是您吗？
+        我们注意到从您不常用的设备或位置登录。这是您吗？
 
-         - 位置：%{location}(%{client_ip})
-         - 浏览器：%{browser}
-         - 设备：%{device} - %{os}
+         - 位置：%{location} (%{client_ip})
+         - 浏览器：%{browser}
+         - 设备：%{device} – %{os}
 
-        如果这是您，太棒了！您不需要做任何其他事情。
+        如果这是您，太好了！您无需执行任何操作。
 
-        如果不是您，请[查看您现有的会话](%{base_url}/my/preferences/account)并考虑更改密码。
+        如果不是您，请[查看您现有的会话](%{base_url}/my/preferences/account)并考虑更改您的密码。
     post_approved:
       title: "您的帖子已被批准"
       subject_template: "[%{site_name}] 您的帖子已被批准"
       text_body_template: |
-        您好：
+        您好，
 
-        这是来自 %{site_name} 的自动消息，[您的帖子] (%{base_url}%{post_url}) 已通过审核。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知[您的帖子](%{base_url}%{post_url})已被批准。
   page_forbidden:
-    title: "啊噢！该页面是私密的。"
-  site_setting_missing: "站点设定 `%{name}` 必须被设置。"
+    title: "糟糕！该页面是一个不公开页面。"
+  site_setting_missing: "必须设置 `%{name}` 站点设置。"
   page_not_found:
-    title: "抱歉！这个页面不存在或者是私密的。"
+    title: "糟糕！该页面不存在或者是一个不公开页面。"
     popular_topics: "热门"
     recent_topics: "最近"
     see_more: "更多"
-    search_title: "搜索该网页"
+    search_title: "搜索此站点"
     search_button: "搜索"
   offline:
-    title: "无法载入应用"
+    title: "无法加载应用"
     offline_page_message: "您似乎正处于离线状态！请检查网络连接并重试。"
   login_required:
     welcome_message: |
@@ -3696,73 +3694,73 @@ zh_CN:
 
       ## [我们如何使用您的信息？](#use)
 
-      从您那收集的任何数据将以以下方式使用：
+      我们从您那里收集的任何信息可能通过以下方式之一使用：
 
-      * 改进您的个人体验 &mdash; 您的信息帮助我们更好地满足您的个人需求。
-      * 改进我们的站点 &mdash; 我们基于信息和我们从您那收到的反馈不断地试图改进我们的站点。
-      * 改善我们的客户服务 &mdash; 您的信息帮助我们更有效地回应用户服务请求和支持。
-      * 用于发送阶段性的邮件 &mdash; 您提供的邮件地址可能用于接受信息、您想看到的通知或与您用户名有关的回复和询问，或是其他的请求和问题。
+      * 个性化您的个人体验 - 您的信息将帮助我们更好地满足您的个人需求。
+      * 改进我们的站点 - 我们基于从您那里收到的信息和反馈不断改进我们的站点。
+      * 改善我们的客户服务 - 您的信息将帮助我们更有效地响应客户服务请求和支持需求。
+      * 发送定期电子邮件 - 您提供的电子邮件地址可用于向您发送信息、您请求的有关话题更改的通知，响应您的用户名，回复查询和/或其他请求或问题。
 
       <a name="protect"></a>
 
-      ## [我们如何保护您的信息?](#protect)
+      ## [我们如何保护您的信息？](#protect)
 
-      我们实现了一系列的安全措施保证您输入、提交或者访问您个人信息的数据安全。
+      我们实现了一系列安全措施，在您输入、提交或者访问您个人信息时保障您的个人信息的安全。
 
       <a name="data-retention"></a>
 
-      ## [数据保存政策是什么？](#data-retention)
+      ## [数据保留政策是什么？](#data-retention)
 
-      我们将善意地：
+      我们会善意地：
 
-      * 保存 90 天内的所有向服务器的包含 IP 地址的请求。
-      * 保存 5 年内已注册用户和与他们的帖子有关的 IP 地址。
+      * 将包含对此服务器的所有请求的 IP 地址的服务器日志保留不超过 90 天。
+      * 将与注册用户及其帖子相关联的 IP 地址保留不超过 5 年。
 
       <a name="cookies"></a>
 
       ## [我们使用 Cookie 吗？](#cookies)
 
-      是的。Cookie 是网站或它的服务商通过网页浏览器存储在您电脑硬盘上的小文件（如果您同意）。这些 Cookie 使站点能分辨您的浏览器，并且，如果您注册了一个账户，与您的注册账户关联。
+      是的。Cookie 是站点或其服务提供商通过网络浏览器存储在您计算机硬盘上的小文件（如果您同意）。这些 Cookie 使站点可以识别您的浏览器，并且如果您注册了帐户，将其与您的注册帐户关联。
 
-      我们使用 Cookie 为之后的访问和编译一小段关于站点流量和交互的数据来判断并保存您的个人设置，这样我们可以在之后提供更好的站点体验和工具。我们可能使用第三方服务商来帮助我们更好地理解我们的站点访客。这些服务商是不允许代表我们使用收集的信息，除非是在帮助我们执行和改进我们的站点。
+      我们使用 Cookie 来了解和保存您对未来访问的偏好，并编译有关站点流量和站点互动的汇总数据，以便我们在未来提供更好的站点体验和工具。我们可能使用服务提供商来帮助我们更好地理解我们的站点访客。这些服务提供商不会被允许代表我们使用收集的信息，除非可以帮助我们开展和改进我们的业务。
 
       <a name="disclose"></a>
 
-      ## [我们会在站外提供任何信息吗？](#disclose)
+      ## [我们是否将任何信息透露给外界？](#disclose)
 
-      我们绝不销售、教育或任何向外转移您个人信息的行为。这不包括帮助我们管理站点、改进站定或给您提供服务的第三方团体，这些团体需要保证对这些信息保密。当我们认为提交您的信息符合法律、我们的站点政策或保护我们或其他人的权利、知识产权或安全时，我们也可能提交您的信息。然而，非个人访问信息可能供其他团体使用，用于市场、广告或其他用途。
+      我们不会出售、交易或以其他方式将您的个人身份信息转让给外界。这不包括协助我们运营我们的站点、开展我们的业务或为您提供服务的受信任第三方，前提是这些第三方同意对这些信息保密。当我们认为发布您的信息是为了遵守法律、执行我们的网站政策或保护我们或其他人的权利、财产或安全时，我们也可能会发布您的信息。但是，我们可能会将非个人身份访问者信息提供给其他方用于营销、广告或其他用途。
 
       <a name="third-party"></a>
 
       ## [第三方链接](#third-party)
 
-      偶尔地，根据我们的判断，我们可能在我们的站点上包括或提供第三方团体的产品或服务。这些第三方站点用于独立和不同的隐私政策。因此我们对链接到的站点或活动没有责任和权利。尽管如此，我们寻求保护我们的整个站点冰鞋欢迎您给这些站点反馈。
+      有时，根据我们的判断，我们可能会在我们的网站上包含或提供第三方产品或服务。这些第三方网站有单独和独立的隐私政策。因此，我们对这些链接网站的内容和活动不承担任何责任或义务。尽管如此，我们仍力求保护我们网站的完整性，并欢迎对这些网站的任何反馈。
 
       <a name="coppa"></a>
 
       ## [儿童在线隐私保护法案合规](#coppa)
 
-      我们的站点、产品和服务提供给 13 岁以上的人们。如果服务器位于美国，并且您小于 13 岁，根据[儿童在线隐私保护法案合规](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)，不要使用这个站点。
+      我们的网站、产品和服务均面向年满 13 岁或以上的人。如果此服务器在美国，并且您未满 13 岁，则根据 COPPA（[儿童在线隐私保护法案](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)）要求，请勿使用本网站。
 
       <a name="online"></a>
 
-      ## [仅用于在线隐私政策](#online)
+      ## [仅在线隐私政策](#online)
 
-      这个线上隐私政策只适用于通过我们站点收集到的信息，并不包括线下收集的信息。
+      本在线隐私政策仅适用于通过我们网站收集的信息，不适用于离线收集的信息。
 
       <a name="consent"></a>
 
       ## [您的同意](#consent)
 
-      您使用站点的同时，代表您同意了我们网站的隐私政策。
+      使用我们的网站，即表示您同意我们网站的隐私政策。
 
       <a name="changes"></a>
 
-      ## [隐私政策的更改](#changes)
+      ## [隐私政策的变更](#changes)
 
-      如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
+      如果我们决定更改我们的隐私政策，我们将在此页面上发布这些变更。
 
-      文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
+      本文档根据 CC-BY-SA 发布。最后更新时间为 2013 年 5 月 31 日。
   badges:
     mass_award:
       errors:
