@@ -2265,7 +2265,7 @@ zh_CN:
     title: "邀请邮件"
     subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name} 上的 '%{topic_title}'"
     text_body_template: |
-      %{inviter_name} 邀请您参与讨论
+      %{inviter_name} 邀请您加入讨论
 
       > **%{topic_title}**
       >
@@ -2282,7 +2282,7 @@ zh_CN:
     title: "自定义邀请邮件"
     subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name} 上的 '%{topic_title}'"
     text_body_template: |
-      %{inviter_name} 邀请您参与讨论
+      %{inviter_name} 邀请您加入讨论
 
       > **%{topic_title}**
       >
@@ -2986,50 +2986,50 @@ zh_CN:
     posted_by: "由 %{username} 于 %{post_date}发表"
     pm_participants: "参与者：%{participants}"
     invited_group_to_private_message_body: |
-      %{username}邀请@%{group_name}到私信
+      %{username} 邀请 @%{group_name} 加入消息
 
       > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
-      位于
+      -
 
       > %{site_title} -- %{site_description}
 
-      点击以下链接加入私信：
+      要加入消息，请点击以下链接：
 
       %{topic_url}
     invited_to_private_message_body: |
-      %{username}邀请您参与私信
+      %{username} 邀请您加入消息
 
       > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
-      位于
+      -
 
       > %{site_title} -- %{site_description}
 
-      点击以下链接加入私信：
+      要加入消息，请点击以下链接：
 
       %{topic_url}
     invited_to_topic_body: |
-      %{username}邀请您参与讨论
+      %{username} 邀请您加入讨论
 
       > **[%{topic_title}](%{topic_url})**
       >
       > %{topic_excerpt}
 
-      位于
+      -
 
       > %{site_title} -- %{site_description}
 
-      点击以下链接加入讨论：
+      要加入讨论，请点击以下链接：
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "用户邀请群组至私信"
-      subject_template: "[%{email_prefix}] %{username}邀请 @%{group_name} 加入消息交流：“%{topic_title}”"
+      title: "用户邀请群组加入 PM"
+      subject_template: "[%{email_prefix}] %{username} 邀请 @%{group_name} 加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3037,8 +3037,8 @@ zh_CN:
 
         %{respond_instructions}
     user_invited_to_private_message_pm:
-      title: "邀请用户至私信"
-      subject_template: "[%{email_prefix}] %{username}邀请您至私信“%{topic_title}”"
+      title: "用户邀请加入 PM"
+      subject_template: "[%{email_prefix}] %{username} 邀请您加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3046,8 +3046,8 @@ zh_CN:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      title: "邀请用户至暂存私信"
-      subject_template: "[%{email_prefix}] %{username}邀请您至私信“%{topic_title}”"
+      title: "用户邀请加入 PM 暂存"
+      subject_template: "[%{email_prefix}] %{username} 邀请您加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3055,8 +3055,8 @@ zh_CN:
 
         %{respond_instructions}
     user_invited_to_topic:
-      title: "邀请用户至话题"
-      subject_template: "[%{email_prefix}] %{username}邀请您至“%{topic_title}”"
+      title: "用户邀请加入话题"
+      subject_template: "[%{email_prefix}] %{username} 邀请您加入 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3075,7 +3075,7 @@ zh_CN:
 
         %{respond_instructions}
     user_replied_pm:
-      title: "用户回复私信"
+      title: "用户回复 PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3119,7 +3119,7 @@ zh_CN:
 
         %{respond_instructions}
     user_mentioned_pm:
-      title: "用户提及PM"
+      title: "用户提及 PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3141,7 +3141,7 @@ zh_CN:
 
         %{respond_instructions}
     user_posted:
-      title: "用户发表"
+      title: "用户发帖"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3152,7 +3152,7 @@ zh_CN:
 
         %{respond_instructions}
     user_watching_first_post:
-      title: "用户关注新话题"
+      title: "用户关注第一篇帖子"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3163,7 +3163,7 @@ zh_CN:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "用户发布私信"
+      title: "用户发布 PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3174,48 +3174,48 @@ zh_CN:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "用户发表暂存私信"
+      title: "用户发布 PM 暂存"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
         %{message}
     account_suspended:
-      title: "账户已封禁"
-      subject_template: "[%{email_prefix}] 您的账户已经被禁用"
+      title: "帐户被封禁"
+      subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       text_body_template: |
-        您的账号已被论坛禁用，直到 %{suspended_till} 为止。
+        您的帐户被论坛封禁至 %{suspended_till}。
 
         原因 - %{reason}
     account_silenced:
-      title: "账户已禁言"
-      subject_template: "[%{email_prefix}] 您的账户已被禁言"
+      title: "帐户被禁言"
+      subject_template: "[%{email_prefix}] 您的帐户已被禁言"
       text_body_template: |
-        您的账号已经被禁言至 %{silenced_till}。
+        您的帐户被论坛禁言至 %{silenced_till}。
 
         原因 - %{reason}
     account_exists:
-      title: "账户已经存在"
-      subject_template: "[%{email_prefix}] 账户已经存在"
+      title: "帐户已存在"
+      subject_template: "[%{email_prefix}] 帐户已存在"
       text_body_template: |
-        您刚试着在%{site_name}创建账户或者试着将账户的邮箱改为%{email}。然而，%{email}已经绑定于另一账户了。
+        您刚刚尝试在 %{site_name} 创建帐户，或者尝试将帐户的电子邮件更改为 %{email}。但是，已经存在使用 %{email} 的帐户。
 
-        如果您忘记了密码，[立即重置](%{base_url}/password-reset)。
+        如果您忘记了密码，请[立即重置](%{base_url}/password-reset)。
 
-        如果您没有试着用%{email}创建账户或者更改邮件，不要担心——您可以安全地忽略这封邮件。
+        如果您没有尝试为 %{email} 创建帐户或更改您的电子邮件地址，请不要担心，您可以安全地忽略此消息。
 
-        如果您有任何问题，[联系我们友善的工作人员](%{base_url}/about)。
+        如果您有任何问题，请[联系我们友好的管理人员](%{base_url}/about)。
     account_second_factor_disabled:
-      title: "双重认证已停用"
-      subject_template: "[%{email_prefix}] 双重认证已停用"
+      title: "双重身份验证已禁用"
+      subject_template: "[%{email_prefix}] 双重身份验证已禁用"
       text_body_template: |
-        您在 %{site_name} 的账户已停用了双重认证。您现在只需使用密码便可以登录；不再需要额外的验证代码。
+        您在 %{site_name} 的帐户的双重身份验证已被禁用。您现在可以仅使用您的密码登录；不再需要额外的身份验证代码。
 
-        如果您未选择禁用双重验证，则有可能有人入侵了您的账户。
+        如果您没有选择禁用双重身份验证，则可能有人盗用了您的帐户。
 
-        如果有任何疑问，[联系我们友善的管理人员](%{base_url}/about)。
+        如果您有任何问题，请[联系我们友好的管理人员](%{base_url}/about)。
     digest:
-      why: "在您上次于%{last_seen_at}访问后，%{site_link}的新内容摘要。"
-      since_last_visit: "自从您上次访问"
+      why: "自 %{last_seen_at} 您上次访问后 %{site_link} 的简短摘要"
+      since_last_visit: "自从您上次访问以来"
       new_topics: "新话题"
       unread_notifications: "未读通知"
       unread_high_priority: "未读的高优先级通知"
@@ -3516,7 +3516,7 @@ zh_CN:
 
        - [重要条款](#heading--important-terms)
        - [您使用论坛的权限](#heading--permission)
-       - [论坛的使用条件](#heading--conditions)
+       - [使用论坛的条件](#heading--conditions)
        - [可接受的使用](#heading--acceptable-use)
        - [内容标准](#heading--content-standards)
        - [执行](#heading--enforcement)
@@ -3540,7 +3540,7 @@ zh_CN:
 
       在遵守这些条款的前提下，公司授予您使用论坛的权限。每个人都需要同意这些条款才能使用论坛。
 
-      <h2 id="heading--conditions"><a href="#heading--conditions">论坛使用条件</a></h2>
+      <h2 id="heading--conditions"><a href="#heading--conditions">使用论坛的条件</a></h2>
 
       您使用论坛的权限受以下条件限制：
 
@@ -3556,15 +3556,15 @@ zh_CN:
 
       2. 未经特别许可，您不能在论坛上使用或尝试使用他人的帐户。
 
-      3. 您不能在论坛上购买、出售或以其他方式交易用户名或其他唯一标识符。
+      3. 您不得在论坛上购买、出售或以其他方式交易用户名或其他唯一标识符。
 
-      4. 您不能通过论坛发送广告、连锁信或其他请求，或使用论坛为商业邮寄名单或数据库收集地址或其他个人数据。
+      4. 您不得通过论坛发送广告、连锁信或其他请求，或使用论坛为商业邮寄名单或数据库收集地址或其他个人数据。
 
-      5. 您不能使用程序自动访问论坛或监控论坛，例如使用网络抓取工具、浏览器插件或插件，或其他非网络浏览器的计算机程序。如果您运行一个搜索引擎，您可以抓取论坛，为公开搜索引擎编制索引。
+      5. 您不得使用程序自动访问论坛或监控论坛，例如使用网络抓取工具、浏览器插件或插件，或其他非网络浏览器的计算机程序。如果您运行搜索引擎，您可以抓取论坛，为公开搜索引擎编制索引。
 
-      6. 您不能使用论坛将电子邮件发送到分发列表、新闻组或群组邮件别名。
+      6. 您不得使用论坛将电子邮件发送到分发列表、新闻组或群组邮件别名。
 
-      7. 您不能虚假暗示您与本公司有关联或得到许可。
+      7. 您不得虚假暗示您与本公司有关联或得到许可。
 
       8. 您不得在其他网页上超链接到论坛上的图片或其他非超文本内容。
 
@@ -3602,27 +3602,27 @@ zh_CN:
 
       您必须创建并登录帐户才能使用论坛的某些功能。
 
-      要创建帐户，您必须提供有关您自己的一些信息。如果您创建帐户，则表示您同意至少提供有效的电子邮件地址，并使该地址保持最新状态。您可以随时通过电子邮件 <%{contact_email}> 关闭您的帐户。
+      要创建帐户，您必须提供有关您自己的一些信息。如果您创建帐户，则表示您同意至少提供有效的电子邮件地址，并使该地址保持最新状态。您可以随时通过发送电子邮件到 <%{contact_email}> 关闭您的帐户。
 
       您同意对使用您的帐户采取的所有操作负责，无论您是否授权，直到您关闭帐户或通知公司您的帐户已遭到入侵。如果您怀疑自己的帐户遭到入侵，您同意立即通知公司。您同意为您的帐户选择安全密码，并保密。
 
-      公司可以根据处理与版权相关的删除请求的政策，或者如果公司合理地认为您违反了这些条款中的任何规则，限制、暂停或关闭您在论坛上的帐户。
+      公司可能根据处理与版权相关的删除请求的政策，或者如果公司合理地认为您违反了这些条款中的任何规则，限制、暂停或关闭您在论坛上的帐户。
 
       <h2 id="heading--your-content"><a href="#heading--your-content">您的内容</a></h2>
 
       这些条款中的任何内容均未赋予公司您与论坛共享的知识产权（例如您的帐户信息、帖子或提交给论坛的其他内容）的任何所有权。这些条款中的任何内容都不赋予您对公司知识产权的任何所有权。
 
-      在您和公司之间，您仍然对您提交给论坛的内容负全部责任。您同意不会错误地暗示您提交给论坛的内容是由公司赞助或批准的。根据这些条款，这些条款并不要求公司存储、维护或提供您提交的内容的副本，并对其进行更改。
+      在您和公司之间，您仍然对您提交给论坛的内容负全部责任。您同意不会错误地暗示您提交给论坛的内容是由公司赞助或批准的。这些条款并不要求公司存储、维护或提供您提交的内容的副本，并对其进行更改。
 
       您提交给论坛的内容属于您，您决定授予其他人的权限。但至少，您授权公司向论坛的其他用户提供您提交给论坛的内容。该特殊许可允许公司复制、发布和分析您提交给论坛的内容。
 
-      当您提交的内容被从论坛中移除时，无论是您还是公司移除，当最后一个副本从公司的备份、缓存和其他系统中消失时，公司的特殊许可将终止。您提交的内容的其他许可，例如 [Creative Commons](https://creativecommons.org) 许可，可能会在您的内容被移除后继续。这些许可可能会让其他人或公司本身再次通过论坛分享您的内容。
+      当您提交的内容被从论坛中移除时，无论是您还是公司移除，当最后一个副本从公司的备份、缓存和其他系统中消失时，公司的特殊许可将终止。您提交的内容的其他许可，例如 [Creative Commons](https://creativecommons.org) 许可，可能会在您的内容被移除后继续。这些许可可能会让其他人或本公司再次通过论坛分享您的内容。
 
       收到您提交给论坛的内容的其他人可能违反您对内容进行许可的条款。您同意公司不会对这些违规行为或其后果承担责任。
 
       <h2 id="heading--responsibility"><a href="#heading--responsibility">您的责任</a></h2>
 
-      您同意赔偿公司其他人因您违反这些条款或他们因使用您在论坛上的帐户而违反这些条款而提出的法律索赔。您和公司都同意将您可能需要赔偿公司的任何法律索赔通知对方。如果公司未能及时将法律索赔通知您，您无需就您本可以通过及时通知进行抗辩或减轻的损害赔偿公司。您同意允许公司控制您必须赔偿公司的法律索赔的调查、辩护和解决，并配合这些努力。未经您事先同意，公司同意不会同意任何承认您有过错或对您强加义务的和解。
+      您同意就其他人因您违反这些条款或他们因使用您在论坛上的帐户而违反这些条款而提出的法律索赔赔偿公司。您和公司都同意将您可能需要赔偿公司的任何法律索赔通知对方。如果公司未能及时将法律索赔通知您，您无需就您本可以通过及时通知进行抗辩或减轻的损害赔偿公司。您同意允许公司控制您必须赔偿公司的法律索赔的调查、辩护和解决，并配合这些努力。未经您事先同意，公司同意不会同意任何承认您有过错或对您强加义务的和解。
 
       <h2 id="heading--disclaimers"><a href="#heading--disclaimers">免责声明</a></h2>
 
@@ -3638,7 +3638,7 @@ zh_CN:
 
       <h2 id="heading--feedback"><a href="#heading--feedback">反馈</a></h2>
 
-      公司欢迎您对论坛的反馈和建议。请参阅下面的[联系方式](#heading--contact)部分，了解与我们取得联系的方式。
+      公司欢迎您对论坛的反馈和建议。请参阅下面的[联系](#heading--contact)部分，了解与我们取得联系的方式。
 
       您同意公司可以根据您提供的反馈和建议自由行事，并且公司不必通知您的反馈已被使用，获得您的使用许可或付款给您。您同意不向您或他人提交您认为可能是机密或专有内容的反馈或建议。
 
@@ -3654,7 +3654,7 @@ zh_CN:
 
       您和公司同意仅在%{city_for_disputes}的州或联邦法院寻求与这些条款相关的禁令。您和公司都不会反对这些法院的管辖权、法庭或地点。
 
-      ***除了寻求禁令或根据《计算机欺诈和滥用法案》提出的索赔外，您和公司将通过约束美国仲裁协会的仲裁来解决任何争议。仲裁将遵循 AAA 的商业仲裁规则和消费者相关争议的补充程序。仲裁将在%{city_for_disputes}举行。您将作为个人解决任何争议，而不是作为集体诉讼或其他代表诉讼的一部分，无论是作为原告还是集体成员。未经公司许可，任何仲裁员均不得将任何争议与任何其他仲裁合并。***
+      ***除了寻求禁令或根据《计算机欺诈和滥用法案》提出的索赔外，您和公司将通过具有约束力的美国仲裁协会仲裁来解决任何争议。仲裁将遵循 AAA 的商业仲裁规则和消费者相关争议的补充程序。仲裁将在%{city_for_disputes}举行。您将作为个人解决任何争议，而不是作为集体诉讼或其他代表诉讼的一部分，无论是作为原告还是集体成员。未经公司许可，任何仲裁员均不得将任何争议与任何其他仲裁合并。***
 
       任何仲裁裁决将包括仲裁费用、合理的律师费和证人的合理费用。您和公司可以在任何有管辖权的法院进行仲裁裁决。
 
@@ -3686,11 +3686,11 @@ zh_CN:
 
       ## [我们收集什么信息？](#collect)
 
-      我们从您在我们站点注册开始从您那开始收集信息，并收集关于您在论坛的阅读和写作的数据，并评估分享的内容。
+      当您在我们的站点注册时，我们会从您那里收集信息，并在您通过阅读、编辑和评估分享的内容参与论坛时收集数据。
 
-      当在我们站点注册时，您可能被要求输入您的名字和邮件地址。然而您可以在不用注册的情况下访问站点。您的邮件地将通过一个独一无二的链接验证。如果链接被访问了，我们就知道您控制了该邮件地址。
+      在我们的站点上注册时，您可能会被要求输入您的姓名和电子邮件地址 但是，您可以在不注册的情况下访问我们的网站。您的电子邮件地址将通过包含唯一链接的电子邮件进行验证。如果该链接被访问，我们就知道您控制着该电子邮件地址。
 
-      当已注册和发帖时，我们记录发布帖子时的 IP 地址。我们也可能保留服务器日志，其中包括了每一个向我们服务器的请求。
+      注册和发帖时，我们会记录发布帖子时的 IP 地址。我们也可能保留服务器日志，其中包括向我们的服务器发送的每一个请求。
 
       <a name="use"></a>
 

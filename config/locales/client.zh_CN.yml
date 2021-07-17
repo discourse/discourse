@@ -955,7 +955,7 @@ zh_CN:
       moderator_tooltip: "此用户是版主"
       admin_tooltip: "此用户是管理员"
       silenced_tooltip: "此用户已被禁言"
-      suspended_notice: "此用户已被封禁到 %{date}。"
+      suspended_notice: "此用户已被封禁至 %{date}。"
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
       github_profile: "GitHub"
@@ -1537,7 +1537,7 @@ zh_CN:
     username: "用户名"
     last_seen: "最后活动"
     created: "创建日期"
-    created_lowercase: "创建日期"
+    created_lowercase: "创建"
     trust_level: "信任级别"
     search_hint: "用户名、电子邮件或 IP 地址"
     create_account:
@@ -2963,8 +2963,8 @@ zh_CN:
       not_available: "不可用！"
     categories_list: "类别列表"
     filters:
-      with_topics: "%{filter} 话题"
-      with_category: "%{category} 的 %{filter} 话题"
+      with_topics: "%{filter}话题"
+      with_category: "%{filter}%{category}话题"
       latest:
         title: "最新"
         title_with_count:
@@ -3204,10 +3204,10 @@ zh_CN:
       delete_unused_description: "删除所有未与话题或个人消息关联的标签"
       cancel_delete_unused: "取消"
       filters:
-        without_category: "%{tag} 的 %{filter} 话题"
-        with_category: "%{category}中带有 %{tag} 的 %{filter} 话题"
-        untagged_without_category: "无标签的 %{filter} 话题"
-        untagged_with_category: "%{category} 中无标签的 %{filter} 话题"
+        without_category: "%{filter}%{tag}话题"
+        with_category: "%{category}中的%{filter}%{tag}话题"
+        untagged_without_category: "无标签的%{filter}话题"
+        untagged_with_category: "%{category}中无标签的%{filter}话题"
       notifications:
         watching:
           title: "关注"
