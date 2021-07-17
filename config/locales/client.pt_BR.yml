@@ -3194,6 +3194,7 @@ pt_BR:
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'
       image_load_error: '<a href="%url%">A imagem</a> não pôde ser carregada.'
+    cannot_render_video: Este vídeo não pode ser renderizado porque o seu navegador não é compatível com o codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -3461,6 +3462,8 @@ pt_BR:
         regular: "regular"
         leader: "líder"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Você escolheu um arquivo incompatível. Tipos de arquivos compatíveis: %{types}."
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -3688,6 +3691,7 @@ pt_BR:
               log_out: Saia de todas as sessões do(a) usuário(a).
               anonymize: Torne anônimas contas do(a) usuário(a).
               delete: Excluir contas de usuário(as).
+              list: Obtenha uma lista de usuários(as).
             email:
               receive_emails: Combine este escopo com o destinatário(a) para processar e-mails recebidos.
       web_hooks:
@@ -4980,5 +4984,6 @@ pt_BR:
           regular: "Usuário regular"
       previews:
         topic_title: "Tópico de discussão"
+        font_title: "Fonte %{font}"
         share_button: "Compartilhar"
         reply_button: "Responder"

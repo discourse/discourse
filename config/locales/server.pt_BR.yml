@@ -52,20 +52,25 @@ pt_BR:
   redirect_warning: "Não foi possível confirmar se o link selecionado foi postado no fórum. Se deseja continuar mesmo assim, selecione o link abaixo."
   on_another_topic: "Em outro tópico"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, paleta de cores inválida"
     other_error: "Ocorreu um erro ao atualizar o tema"
+    ember_selector_error: "Desculpe, usar #ember or . seletores .ember-view CSS não é permitido, porque esses nomes são gerados dinamicamente durante a execução e mudarão ao longo do tempo, podendo resultar em um CSS quebrado. Tente um seletor diferente."
     compile_error:
       unrecognized_extension: "Extensão de arquivo não reconhecida: %{extension}"
     import_error:
+      generic: Ocorreu um erro ao importar esse tema
       about_json: "Erro ao importar: about.json não existe ou é inválido. Tem certeza de que é um tema do Discourse?"
       about_json_values: "about.json contém valores inválidos: %{errors}"
       modifier_values: "about.json contém valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
+      git_ref_not_found: "Não é possível conseguir a referência GIT: %{ref}"
       unpack_failed: "Falha ao descompactar o arquivo"
       file_too_big: "O arquivo não compactado é muito grande."
       unknown_file_type: "O arquivo que você enviou não parece ser um tema válido do Discourse."
+      not_allowed_theme: "\"%{repo}\" não está na lista de temas permitidos (confira a configuração global \"allowed_theme_repos\")."
     errors:
       component_no_user_selectable: "Componentes do tema não podem ser selecionados pelo(a) usuário(a)"
       component_no_default: "Componentes do tema não podem ser o tema padrão"
@@ -98,6 +103,10 @@ pt_BR:
       maximum_staged_user_per_email_reached: "A quantidade máxima de usuários(as) encenados(as) criados(as) por e-mail foi atingida."
       no_subject: "(sem assunto)"
       no_body: "(sem corpo)"
+      missing_attachment: "(Falta o anexo %{filename})"
+      continuing_old_discussion:
+        one: "Continue a discussão em [%{title}](%{url}), porque foi criada há mais de %{count} dia."
+        other: "Continue a discussão em [%{title}](%{url}), porque foi criada há mais de %{count} dias."
       errors:
         empty_email_error: "Ocorre quando o e-mail não processado recebido estiver em branco."
         no_message_id_error: "Ocorre quando o e-mail não tem cabeçalho \"Message-Id\"."
@@ -116,7 +125,10 @@ pt_BR:
         bounced_email_error: "O e-mail é um relatório de e-mails devolvido."
         screened_email_error: "Ocorre quando o endereço de e-mail do remetente já foi filtrado."
         unsubscribe_not_allowed: "Ocorre quando não é permitido cancelar a associação por e-mail para este(a) usuário(a)"
+        email_not_allowed: "Acontece quando o endereço de e-mail não está na lista de permissões ou está na lista de proibições."
       unrecognized_error: "Erro desconhecido"
+    secure_media_placeholder: "Redigido: este site tem mídias seguras ativada, acesse o tópico ou clique em Visualizar mídias para exibir as mídias anexas."
+    view_redacted_media: "Exibir mídias"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -138,6 +150,9 @@ pt_BR:
       inclusion: não está incluso(a) na lista
       invalid: é inválido(a)
       is_invalid: "não faz muito sentido. É uma frase completa?"
+      is_invalid_meaningful: "parece confuso, a maioria das palavras contém a mesma repetida?"
+      is_invalid_unpretentious: "parece confuso, uma ou mais palavras são muito grandes?"
+      is_invalid_quiet: "parece confuso, você quis digitar tudo em MAIÚSCULO?"
       invalid_timezone: "'%{tz}' não é um fuso horário válido"
       contains_censored_words: "contém as seguintes palavras censuradas: %{censored_words}"
       less_than: precisa ser menor que %{count}
@@ -149,6 +164,9 @@ pt_BR:
       max_emojis: "não pode ter mais que %{max_emojis_count} emojis"
       emojis_disabled: "Não pode ter emoji"
       ip_address_already_screened: "já está incluso(a) em uma regra existente"
+      restrict_dependent_destroy:
+        one: "Não é possível excluir o registro porque existe um registro dependente %{record}"
+        other: "Não é possível excluir o registro porque existem registros dependentes %{record}"
       too_long:
         one: é muito longo (no máximo %{count} caractere)
         other: é muito longo (no máximo %{count} caracteres)
@@ -159,6 +177,7 @@ pt_BR:
         one: tem o tamanho errado (precisa ter %{count} caractere)
         other: tem o tamanho errado (precisa ter %{count} caracteres)
       other_than: "precisa ser diferente de %{count}"
+      auth_overrides_username: "O nome do(a) usuário(a) precisa ser atualizado no provedor de autenticação porque a configuração \"auth_overrides_username\" está ativada."
     template:
       body: ! "Houve problemas com os seguintes campos:"
       header:
@@ -175,10 +194,15 @@ pt_BR:
       default_tags_already_selected: "Você não pode selecionar uma etiqueta usada em outra lista."
       s3_upload_bucket_is_required: "Você não pode ativar envios para o S3, a não ser que tenha informado o \"s3_upload_bucket\"."
       enable_s3_uploads_is_required: "Você não pode ativar o inventário para o S3, a não ser que tenha ativado os envios para o S3."
+      page_publishing_requirements: "A publicação da página não pode ser ativada se houver mídias seguras ativadas."
       s3_backup_requires_s3_settings: "Você não pode usar o S3 como local de backup, a não ser que você tenha informado o \"%{setting_name}\"."
       s3_bucket_reused: "Você não pode usar o mesmo bucket para \"s3_upload_bucket\" e \"s3_backup_bucke\"'. Escolha um bucket diferente ou use um caminho diferente para cada bucket."
       secure_media_requirements: "Envios S3 devem ser ativados antes da mídia segura."
+      share_quote_facebook_requirements: "É preciso definir uma id do app Facebook para permitir o compartilhamento de citação para Facebook."
+      second_factor_cannot_enforce_with_socials: "Você não pode aplicar 2FA com entrada com contas de redes sociais ativada. Primeiro você deve desativar a entrada com conta via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode impor a 2FA se a autenticação local estiver desativada."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Não é possível aplicar 2FA se o DiscourseConnect estiver ativado."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "Não é possível desativar a entrada com conta em modo local se o 2FA estiver aplicado. Desative o 2FA aplicado antes de desativar entradas com conta em modo local."
     conflicting_google_user_id: 'A ID da conta Google para esta conta foi alterada. A intervenção da equipe é necessária por razões de segurança. Entre em contato com a equipe e direcione para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Desculpe, não foi possível gerar uma pré-visualização desta página, porque o servidor \"%{hostname}\" não pôde ser encontrado. Em vez da pré-visualização, apenas um link aparecerá na sua postagem. :cry:"
