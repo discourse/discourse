@@ -8,7 +8,7 @@ zh_CN:
   js:
     poll:
       voters:
-        other: "投票者"
+        other: "投票人"
       total_votes:
         other: "总票数"
       average_rating: "平均评分：<strong>%{average}</strong>。"
@@ -66,7 +66,7 @@ zh_CN:
         count: "计数"
       error_while_toggling_status: "抱歉，切换此投票的状态时出错。"
       error_while_casting_votes: "抱歉，投票时出错。"
-      error_while_fetching_voters: "抱歉，显示投票者时出错。"
+      error_while_fetching_voters: "抱歉，显示投票人时出错。"
       error_while_exporting_results: "抱歉，导出投票结果时出错。"
       ui_builder:
         title: 构建投票

@@ -96,7 +96,7 @@ zh_CN:
         "6": "我觉得是"
         "7": "很可能"
         "8": "看起来不错"
-        "9": "是的"
+        "9": "是"
         "10": "迹象表明是"
         "11": "再随便回复试试"
         "12": "等等再问我"
@@ -273,8 +273,14 @@ zh_CN:
         not_found: |-
           我没有在任何地方看到我的名字 :frowning: 你可以再提及 `@%{discobot_username}` 来试试吗？
 
-          （是的，我的用户名是 _disco_，和 1970 年流行的舞蹈同名。我[喜欢夜生活](https://www.youtube.com/watch?v=B_wGI3_sGf8！:dancer:）
+          （是的，我的用户名是 _disco_，和 1970 年流行的舞蹈同名。我[喜欢夜生活](https://www.youtube.com/watch?v=B_wGI3_sGf8)！:dancer:）
       flag:
+        instructions: |-
+          我们都喜欢友善的讨论，我们也需要您的帮助来[一起保持文明](%{guidelines_url})。如果您发现了问题，请用标记告诉作者，或者通知[我们乐于助人的管理人员](%{about_url})。您可能想要标记帖子的原因有很多，从无害的话题拆分建议到明确的社区标准违规。如果您选择 **其他内容**，您将开始与版主的私信讨论，您可以在其中提出更多问题。
+
+          > :imp: 我在这写了些脏话
+
+          **标记该贴** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 并选择 **不当言论** 作为原因！
         reply: |-
           [我们的管理人员](%{base_uri}/groups/staff)将单独收到你的举报通知。如果有足够的社区成员举报帖子，作为预防措施，它也会被自动隐藏。（因为我实际上并没有写一篇讨厌的帖子:angel:，我现在已经移除了举报。）
         not_found: |-
