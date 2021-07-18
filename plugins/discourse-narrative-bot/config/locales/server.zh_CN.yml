@@ -220,56 +220,56 @@ zh_CN:
           您能再试一次吗？如果遇到困难，请使用编辑器中的 <kbd><b>B</b></kbd> 粗体或 <kbd><i>I</i></kbd> 斜体按钮。
       quoting:
         instructions: |-
-          你能在回复的时候引用我的话吗，这样我就知道你在回复我什么了。
+          您回复的时候可以试着引用我的话吗？这样我就知道您在回复哪一部分。
 
-          > 如果这是咖啡，请给我些茶；但是如果这是茶，请给我些咖啡。
+          > 如果这是咖啡，请给我来杯茶；但如果这是茶，请给我来杯咖啡。
           >
-          > 和你自己说话一个优点是至少你知道有人在听。
+          > 自言自语的一个好处是您至少知道有人在听。
           >
-          > 有些人知道怎么说话，而另一些人……啊，哦，不知道。
+          > 有些人有办法说话，而另一些人… 呃，没有办法。
 
-          选择你喜欢的文字，然后在旁边弹出的地方按下**引用**—或者点击帖子底下的**回复**按钮。
+          选择您喜欢的任何 &uarr; 引文的文字，然后按在您的选择上方弹出的**引用** 按钮或此帖子底部的**回复**按钮。
 
-          在引用下面，输入一两个为什么你这么选的原因，我有点好奇 :thinking:
+          在引文下方，输入一两个词来说明您为什么选择这个，因为我很好奇 :thinking:
         reply: |-
-          干得好，你选择了我最喜欢的一段！:left_speech_bubble:
+          干得好，您选择了我最喜欢的一段！:left_speech_bubble:
         not_found: |-
-          哈，看起来你没有在回复中引用我的话？
+          哈，看起来您没有在回复中引用我的话？
 
-          选择我帖子中的任何文字都会弹出<kbd>**引用**</kbd>按钮。然后选中文字的同时按下**回复**按钮也可以！你可以再试一次吗？
+          选择我帖子中的任何文字都会弹出<kbd>**引用**</kbd>按钮。然后在选中文字的同时按下**回复**按钮也可以！您可以再试一次吗？
       bookmark:
         instructions: |-
-          如果你想了解更多，请选择下方<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做，你一会可能收到份 :gift: ！
+          如果您想了解更多信息，请选择下面的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 和 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **将此个人消息加入书签**。如果这样做，您未来可能会获得 :gift:！
         reply: |-
-          太棒了！现在你可以在任何时候轻松地找到我们的私信，[你的个人页面收藏栏](%{bookmark_url})右边。只需点击你在右上方的个人头像 &#8599;
+          太棒了！现在，您可以随时轻松地从[您个人资料上的“书签”标签页](%{bookmark_url})返回我们的不公开对话。只需在右上角 &#8599; 选择您的个人资料照片
         not_found: |-
-          啊哦，我没有在此话题中看到有任何收藏。你看到每个帖子下方的收藏按钮了吗？如果需要的话，使用显示更多来<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
+          啊哦，我没有在此话题中看到任何书签。您看到每个帖子下方的“加入书签”按钮了吗？如果需要，使用“显示更多”<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示更多操作。
       emoji:
         instructions: |-
-          你可能已经看到我在回复中用了很多小图片 :blue_car::dash: 这些叫做[绘文字（Emoji）](https://zh.wikipedia.org/wiki/%E7%B9%AA%E6%96%87%E5%AD%97)。你能在回复中**使用一个 Emoji **吗？这些都可以用：
+          您可能已经看到我在回复中使用了小图片 :blue_car::dash:，这些图片被称为[表情符号](https://en.wikipedia.org/wiki/Emoji)。您可以在回复中**添加表情符号**吗？任何一个都可以：
 
           - 输入 `:) ;) :D :P :O`
 
-          - 输入冒号 <kbd>:</kbd> 然后输入完整的 Emoji 名字 `:tada:`
+          - 输入冒号 <kbd>:</kbd>，然后输入表情符号名称 `:tada:`
 
-          - 点击编辑器中的 Emoji 按钮<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">，或者使用移动设备的键盘
+          - 在编辑器中或在您的移动键盘上按表情符号按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">
         reply: |-
-          这是 :sparkles: **Emoji 精神!** :sparkles:
+          这是 :sparkles: **表情符号精神！**:sparkles:
         not_found: |-
-          啊，我没有在你的回复中看到任何 Emoji？哦不！ :sob:
+          糟糕，我在您的回复中没有看到任何表情符号？不！:sob:
 
-          试试输入一个半角冒号<kbd>:</kbd>打开 emoji 选择器，然后输入你想要的表情对应单词的几个字母，比如 `:bird`。
+          尝试输入冒号 <kbd>:</kbd> 以调出表情符号选择器，然后输入您想要的前几个字母，例如 `:bird:`
 
-          或者，点击你编辑器里的 emoji 按钮<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">。
+          或者，按编辑器中的表情符号按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">
 
-          （如果你正在用移动设备，你也可以试试直接在你的键盘里输入 Emoji）
+          （如果您使用的是移动设备，也可以直接从键盘输入表情符号。）
       mention:
         instructions: |-
-          有时你可能想要在回复别人的时候提醒另一个人。输入`@`然后是他们的用户名提及他们。
+          有时您可能想要引起某人的注意，即使您不直接回复他们。输入 `@`，然后输入他们的用户名以提及他们。
 
-          你能在回复中提及**@%{discobot_username}**吗？
+          您能在回复中提及 **`@%{discobot_username}`** 吗？
         reply: |-
-          **谁在找我！？** :raised_hand: 我觉得是你！ :wave: 好吧，我在这儿！感谢你提到我。 :ok_hand:
+          _有人叫过我的名字吗！？_ :raised_hand: 我相信是你！:wave: 嗯，我来了！谢谢你提及我。:ok_hand:
         not_found: |-
           我没有在任何地方看到我的名字 :frowning: 你可以再 `@%{discobot_username}` 我试试？
 
