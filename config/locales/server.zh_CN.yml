@@ -3810,70 +3810,70 @@ zh_CN:
       name: 编辑者
       description: 首次编辑帖子
       long_description: |
-        在您第一次编辑您的帖子时授予此徽章。虽然您无法永远编辑您的帖子，但我们鼓励您进行编辑 - 您可以改进格式，修正小错误或添加您最初发布时遗漏的任何内容。编辑以使您的帖子更出色！
+        当您第一次编辑您的帖子时，将授予此徽章。虽然您无法永远编辑您的帖子，但我们鼓励您进行编辑 - 您可以改进格式，修正小错误或添加您最初发布时遗漏的任何内容。编辑以使您的帖子更出色！
     wiki_editor:
       name: Wiki 编辑
       description: 首次编辑维基
       long_description: |
-        在您第一次编辑 Wiki 帖子时授予此徽章。
+        当您第一次编辑 Wiki 帖子时，将授予此徽章。
     basic_user:
       name: 基本用户
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>所有基础社区功能
       long_description: |
-        当您达到信任级别 1 时将授予此徽章。感谢您坚持阅读一些话题以了解我们社区的内容。新用户限制已被取消；您已被授予所有基础社区功能，例如个人消息、举报、Wiki 编辑以及发布多个图片和链接的权限。
+        当您达到信任级别 1 时，将授予此徽章。感谢您坚持阅读一些话题以了解我们社区的内容。新用户限制已被取消；您已被授予所有基础社区功能，例如个人消息、举报、Wiki 编辑以及发布多个图片和链接的权限。
     member:
       name: 成员
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>邀请、群组消息、更多赞
       long_description: |
-        当您达到信任级别 2 时将授予此徽章。感谢您在几周内参与并真正加入我们的社区。您现在可以从您的用户页面或单个话题发送邀请，创建群组个人消息，以及每天获得更多赞。
+        当您达到信任级别 2 时，将授予此徽章。感谢您在几周内参与并真正加入我们的社区。您现在可以从您的用户页面或单个话题发送邀请，创建群组个人消息，以及每天获得更多赞。
     regular:
       name: 活跃用户
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>重新分类、重命名、关注链接、Wiki、更多赞
       long_description: |
-        当您达到信任级别 3 时将授予此徽章。感谢您在几个月的时间里成为我们社区的活跃用户。您现在是最活跃的读者之一，并且是使我们的社区变得伟大的可靠贡献者。现在，您可以重新分类和重命名话题，利用更强大的垃圾信息举报，访问私人贵宾区域，并且每天还会获得更多赞。
+        当您达到信任级别 3 时，将授予此徽章。感谢您在几个月的时间里成为我们社区的活跃用户。您现在是最活跃的读者之一，并且是使我们的社区变得伟大的可靠贡献者。现在，您可以重新分类和重命名话题，利用更强大的垃圾信息举报，访问私人贵宾区域，并且每天还会获得更多赞。
     leader:
       name: 领导者
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>全局编辑、置顶、关闭、归档、拆分与合并、更多赞
       long_description: |
-        当您达到信任级别 4 时将授予此徽章。您被管理人员选为此社区的领导者，您在这里的言行为社区其他人树立了积极的榜样。您可以编辑所有帖子，执行常见的话题版主操作，例如置顶、关闭、取消公开、归档、拆分与合并。
+        当您达到信任级别 4 时，将授予此徽章。您被管理人员选为此社区的领导者，您在这里的言行为社区其他人树立了积极的榜样。您可以编辑所有帖子，执行常见的话题版主操作，例如置顶、关闭、取消公开、归档、拆分与合并。
     welcome:
       name: 欢迎
-      description: 收到了一个赞
+      description: 收到一个赞
       long_description: |
-        该徽章授予给帖子收到了第一个赞的您。恭喜，有社区成员觉得您发布的内容有意思、酷炫或者是有用的！
+        当您在帖子上收到第一个赞时，将授予此徽章。恭喜，您发布了一些社区成员认为有趣、酷或有用的内容！
     autobiographer:
       name: 自传作者
-      description: 填写<a href="%{base_uri}/my/preferences/profile">用户资料</a>信息
+      description: 填写<a href="%{base_uri}/my/preferences/profile">个人资料</a>信息
       long_description: |
-        该徽章授予给填写了<a href="%{base_uri}/my/preferences/profile">用户资料页</a>并设置了用户头像的您。让社区成员们多了解您一点以及您感兴趣的内容，能帮助我们打造一个更好、更团结的社区。让我们一起努力！
+        当您填写<a href="%{base_uri}/my/preferences/profile">用户个人资料</a>并设置了个人资料照片时，将授予此徽章。让社区更多地了解您是谁以及您对什么感兴趣，这有助于建立一个更好、联系更紧密的社区。加入我们！
     anniversary:
-      name: 年度纪念日
-      description: 一年活跃用户，至少发了一个帖子
+      name: 周年纪念日
+      description: 已成为有效用户一年，并且至少发帖一次
       long_description: |
-        该徽章授予给在社群注册一年并超至少发布了一个帖子的您。感谢您的持续关注和对我们社区的贡献！我们希望您继续参与我们的社区。
+        当您成为成员一年并在此期间至少发布一个帖子时，将授予此徽章。感谢您坚持并为我们的社区做出贡献。没有您，我们做不到。
     nice_post:
       name: 不错的回复
-      description: 在单个回复中收获10个赞
+      description: 回复获得 10 个赞
       long_description: |
-        该徽章授予给回复得到10个赞的您。您的回复给社区成员们留下了印象，并且您推动了讨论的进程。
+        当您的回复获得 10 个赞时，将授予此徽章。您的回复给社区留下了深刻印象，并帮助推动了对话。
     good_post:
       name: 很棒的回复
-      description: 在单个回复中收获25个赞
+      description: 回复获得 25 个赞
       long_description: |
-        该徽章授予给回复得到25个赞的您。您的回复很杰出，而且让讨论更有意思了。
+        当您的回复获得 25 个赞时，将授予此徽章。您的回复很特别，让对话变得更有趣。
     great_post:
       name: 精彩的回复
-      description: 单个回复收获50个赞
+      description: 回复获得 50 个赞
       long_description: |
-        该徽章授予给回复收到50个赞的您。哇！您的回复很有启发、引经据典、令人冷俊不禁或者十分有内涵，整个社区都赞它！
+        当您的回复获得 50 个赞时，将授予此徽章。哇！您的回复鼓舞人心、引人入胜、风趣幽默或富有洞察力，社区都很喜欢！
     nice_topic:
       name: 不错的话题
-      description: 单个话题收获10个赞
+      description: 话题获得 10 个赞
       long_description: |
-        该徽章授予给话题收到10个赞的您。您创建了一个社区成员觉得有意思的讨论！
+        当您的话题获得 10 个赞时，将授予此徽章。您开始了一个社区喜欢的有趣对话。
     good_topic:
       name: 很好的话题
-      description: 单个话题收获25个赞
+      description: 话题获得 25 个赞
       long_description: |
         该徽章授予给话题收到25个赞的您。您创建了一个有意义的话题，整个社区都在积极响应。
     great_topic:
