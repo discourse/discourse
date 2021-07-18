@@ -328,7 +328,7 @@ zh_CN:
       in_reply_to: "回复给"
       explain:
         why: "解释为什么此条目最终进入队列"
-        title: "可审查帖子的评分"
+        title: "可审核帖子的评分"
         formula: "公式"
         subtotal: "小计"
         total: "总计"
@@ -342,15 +342,15 @@ zh_CN:
           title: "所提交的举报一直都获得同意的用户将获得加分。"
         trust_level_bonus:
           name: "信任级别"
-          title: "由较高信任级别的用户创建的可审查条目具有较高的分数。"
+          title: "由较高信任级别的用户创建的可审核条目具有较高的分数。"
         type_bonus:
           name: "奖励加分"
-          title: "某些可审查类型可以由管理人员分配加分，以使其具有更高的优先级。"
+          title: "某些可审核类型可以由管理人员分配加分，以使其具有更高的优先级。"
       claim_help:
-        optional: "您可以认领此条目以避免被他人审查。"
-        required: "您必须先认领条目才能进行审查。"
-        claimed_by_you: "您已认领此条目，可以进行审查。"
-        claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审查。"
+        optional: "您可以认领此条目以避免被他人审核。"
+        required: "您必须先认领条目才能进行审核。"
+        claimed_by_you: "您已认领此条目，可以进行审核。"
+        claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审核。"
       claim:
         title: "认领此话题"
       unclaim:
@@ -362,19 +362,19 @@ zh_CN:
         save_changes: "保存变更"
         title: "设置"
         priorities:
-          title: "可审查对象优先级"
+          title: "可审核对象优先级"
       moderation_history: "审核历史记录"
       view_all: "查看全部"
       grouped_by_topic: "按话题分组"
-      none: "没有要审查的条目"
-      view_pending: "查看待审查条目"
+      none: "没有要审核的条目"
+      view_pending: "查看待审核条目"
       topic_has_pending:
         other: "此话题有 <b>%{count}</b> 个帖子等待审批"
-      title: "审查"
+      title: "审核"
       topic: "话题："
-      filtered_topic: "您已筛选到一个话题下的可审查内容。"
+      filtered_topic: "您已筛选到一个话题下的可审核内容。"
       filtered_user: "用户"
-      filtered_reviewed_by: "审查者"
+      filtered_reviewed_by: "审核人"
       show_all_topics: "显示所有话题"
       deleted_post: "（帖子已删除）"
       deleted_user: "（用户已删除）"
@@ -405,7 +405,7 @@ zh_CN:
         unique_users:
           other: "%{count} 位用户"
       replies:
-        other: "%{count} 条回复"
+        other: "%{count} 个回复"
       edit: "编辑"
       save: "保存"
       cancel: "取消"
@@ -439,7 +439,7 @@ zh_CN:
         type: "类型"
         status: "状态"
         submitted_by: "提交者"
-        reviewed_by: "审查者"
+        reviewed_by: "审核人"
       statuses:
         pending:
           title: "待处理"
@@ -452,7 +452,7 @@ zh_CN:
         deleted:
           title: "已删除"
         reviewed:
-          title: "（所有已审查）"
+          title: "（所有已审核）"
         all:
           title: "（全部）"
       types:
@@ -548,7 +548,7 @@ zh_CN:
         add_user_to_group: "添加用户"
         remove_user_from_group: "移除用户"
         make_user_group_owner: "设为所有者"
-        remove_user_as_group_owner: "撤销所有者"
+        remove_user_as_group_owner: "撤消所有者"
     groups:
       member_added: "已添加"
       member_requested: "请求时间"
@@ -836,7 +836,7 @@ zh_CN:
     user:
       said: "%{username}："
       profile: "个人资料"
-      mute: "忽略"
+      mute: "免打扰"
       edit: "编辑偏好设置"
       download_archive:
         button_text: "全部下载"
@@ -1000,12 +1000,12 @@ zh_CN:
       admin_delete: "删除"
       users: "用户"
       muted_users: "已设为免打扰"
-      muted_users_instructions: "屏蔽来自这些用户的所有通知和私信。"
+      muted_users_instructions: "屏蔽来自这些用户的所有通知和 PM。"
       allowed_pm_users: "已允许"
-      allowed_pm_users_instructions: "仅允许来自这些用户的私信。"
+      allowed_pm_users_instructions: "仅允许来自这些用户的 PM。"
       allow_private_messages_from_specific_users: "仅允许特定用户向我发送个人消息"
       ignored_users: "已忽略"
-      ignored_users_instructions: "屏蔽来自这些用户的所有帖子、通知和私信。"
+      ignored_users_instructions: "屏蔽来自这些用户的所有帖子、通知和 PM。"
       tracked_topics_link: "显示"
       automatically_unpin_topics: "当我到达底部时自动取消置顶话题。"
       apps: "应用"
@@ -1509,7 +1509,7 @@ zh_CN:
       sign_up: "注册"
       hide_session: "明天提醒我"
       hide_forever: "不，谢谢"
-      hidden_for_session: "好的，我们会在明天问你。您也可以随时使用“登录”来创建帐户。"
+      hidden_for_session: "好的，我们会在明天问您。您也可以随时使用“登录”来创建帐户。"
       intro: "您好！看起来您很喜欢讨论，但您还没有注册帐户。"
       value_prop: "当您创建帐户时，我们会准确记住您阅读过的内容，因此您总可以从上次停止的地方返回。每当有人回复您时，您还会在此处和通过电子邮件收到通知。您可以为帖子点赞来分享爱。 :heartpulse:"
     summary:
@@ -1880,7 +1880,7 @@ zh_CN:
       none: "目前无法加载通知。"
       empty: "找不到通知。"
       post_approved: "您的帖子已被批准"
-      reviewable_items: "需要审查的条目"
+      reviewable_items: "需要审核的条目"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2136,7 +2136,7 @@ zh_CN:
         other: "%{count} 个未读话题"
       title: "话题"
       invalid_access:
-        title: "这是私密话题"
+        title: "不公开话题"
         description: "抱歉，您无权访问该话题！"
         login_required: "您需要登录才能查看该话题。"
       server_error:
@@ -2468,7 +2468,7 @@ zh_CN:
         description: "当一个话题作为一个页面发布时，可以分享它的 URL，并且它将以自定义样式显示。"
         slug: "缩略名"
         public: "公开"
-        public_description: "即使关联的话题是私有话题，用户也可以看到该页面。"
+        public_description: "即使关联的话题是不公开话题，用户也可以看到该页面。"
         publish_url: "您的页面已发布到："
         topic_published: "您的话题已发布到："
         preview_url: "您的页面将发布到："
@@ -2639,7 +2639,7 @@ zh_CN:
           off_topic: "您将此帖子举报为偏离话题"
           spam: "您将此帖子举报为垃圾信息"
           inappropriate: "您将此帖子举报为不当言论"
-          notify_moderators: "您将此帖子举报为需要由版主核实"
+          notify_moderators: "您将此帖子举报为需要由版主审核"
           notify_user: "您向此用户发送了一条消息"
       delete:
         confirm:
@@ -2661,10 +2661,10 @@ zh_CN:
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
-            title: "内联显示带有添加和删除的渲染输出"
+            title: "内联显示带有添加和删除的呈现输出"
             button: "HTML"
           side_by_side:
-            title: "并排显示渲染的输出差异"
+            title: "并排显示呈现的输出差异"
             button: "HTML"
           side_by_side_markdown:
             title: "并排显示原始源代码差异"
@@ -2737,7 +2737,7 @@ zh_CN:
       create_long: "创建新类别"
       save: "保存类别"
       slug: "类别缩略名"
-      slug_placeholder: "（可选）用于 URL 以“-”分隔的单词"
+      slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
       name: "类别名称"
@@ -2791,14 +2791,14 @@ zh_CN:
       default_list_filter: "默认列表筛选器："
       allow_badges_label: "允许在此类别中授予徽章"
       edit_permissions: "编辑权限"
-      reviewable_by_group: "除管理人员外，此类别中的内容还可以由以下群组审查："
+      reviewable_by_group: "除管理人员外，此类别中的内容还可以由以下群组审核："
       review_group_name: "群组名称"
       require_topic_approval: "所有新话题都需要版主审批"
       require_reply_approval: "所有新回复都需要版主审批"
       this_year: "今年"
       position: "类别页面上的位置："
       default_position: "默认位置"
-      position_disabled: "类别将按照活跃程度顺序显示。要控制类别在列表中的顺序，"
+      position_disabled: "类别将按照活动顺序显示。要控制类别在列表中的顺序，"
       position_disabled_click: '请启用“固定类别位置”设置。'
       minimum_required_tags: "话题中所需的最少标签数："
       parent: "父类别"
@@ -2858,10 +2858,10 @@ zh_CN:
     flagging:
       title: "感谢您帮助我们建设文明社区！"
       action: "举报帖子"
-      take_action: "执行操作…"
+      take_action: "采取行动…"
       take_action_options:
         default:
-          title: "执行操作"
+          title: "采取行动"
           details: "立即达到举报阈值，而不是等待更多社区举报"
         suspend:
           title: "封禁用户"
@@ -2872,7 +2872,7 @@ zh_CN:
       notify_action: "消息"
       official_warning: "官方警告"
       delete_spammer: "删除垃圾信息发布者"
-      flag_for_review: "加入审查队列"
+      flag_for_review: "加入审核队列"
       delete_confirm_MF: "您将删除此用户的 {POSTS, plural, one {<b>1</b> 个帖子} other {<b>#</b> 个帖子}}和 {TOPICS, plural, one {<b>#</b> 个话题} other {<b>#</b> 个话题}}，移除他们的帐户，阻止其 IP 地址 <b>{ip_address}</b> 再次注册，同时将其电子邮件地址 <b>{email}</b> 加入永久黑名单。确定此用户是垃圾信息发布者吗？"
       yes_delete_spammer: "是，删除垃圾信息发布者"
       ip_address_missing: "（不适用）"
@@ -2959,7 +2959,7 @@ zh_CN:
     history: "历史记录，最近 100 次修订"
     changed_by: "作者 %{author}"
     raw_email:
-      title: "收到的电子邮件"
+      title: "传入电子邮件"
       not_available: "不可用！"
     categories_list: "类别列表"
     filters:
@@ -3038,7 +3038,7 @@ zh_CN:
       close: "关闭 (Esc)"
       content_load_error: '<a href="%url%">内容</a>无法加载。'
       image_load_error: '<a href="%url%">图片</a>无法加载。'
-    cannot_render_video: 无法渲染此视频，因为您的浏览器不支持编解码器。
+    cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "，"
       shortcut_key_delimiter_plus: "+"
@@ -3505,7 +3505,7 @@ zh_CN:
               anonymize: 对用户帐户进行匿名化处理。
               delete: 删除用户帐户。
             email:
-              receive_emails: 将此范围与邮件收件人结合来处理传入的电子邮件。
+              receive_emails: 将此范围与邮件收件人结合来处理传入电子邮件。
       web_hooks:
         title: "网络钩子"
         none: "当前没有网络钩子。"
@@ -3559,8 +3559,8 @@ zh_CN:
           name: "标签事件"
           details: "当标签被创建、更新或销毁时。"
         reviewable_event:
-          name: "可审查的事件"
-          details: "当新条目可以进行审查及其状态更新时。"
+          name: "可审核的事件"
+          details: "当新条目可以进行审核及其状态更新时。"
         notification_event:
           name: "通知事件"
           details: "当用户在 Feed 中收到通知时。"
@@ -3994,9 +3994,9 @@ zh_CN:
           cc_addresses: "抄送"
           subject: "主题"
           error: "错误"
-          none: "未找到收到的电子邮件。"
+          none: "未找到传入电子邮件。"
           modal:
-            title: "收到的电子邮件详细信息"
+            title: "传入电子邮件详细信息"
             error: "错误"
             headers: "标头"
             subject: "主题"
@@ -4103,7 +4103,7 @@ zh_CN:
             change_readonly_mode: "更改只读模式"
             backup_download: "下载备份"
             backup_destroy: "销毁备份"
-            reviewed_post: "已审查的帖子"
+            reviewed_post: "已审核的帖子"
             custom_staff: "插件自定义操作"
             post_locked: "已锁定帖子"
             post_edit: "帖子编辑"
@@ -4212,14 +4212,14 @@ zh_CN:
           silence: "禁言"
           link: "链接"
         action_descriptions:
-          block: "防止发布包含这些单词的帖子。用户在尝试提交帖子时会看到一条错误消息。"
-          censor: "允许包含这些单词的帖子，但将其替换为隐藏审查词的字符。"
-          require_approval: "包含这些单词的帖子需通过人工批准才能被看到。"
-          flag: "允许包含这些单词的帖子，但将其举报为不当，以便版主对其进行审查。"
-          replace: "使用其他单词替换帖子中的单词"
+          block: "禁止发布包含这些字词的帖子。用户在尝试提交帖子时会看到一条错误消息。"
+          censor: "允许包含这些字词的帖子，但将其替换为隐藏敏感词的字符。"
+          require_approval: "包含这些字词的帖子需通过人工批准才能被看到。"
+          flag: "允许包含这些字词的帖子，但将其举报为不当，以便版主对其进行审核。"
+          replace: "使用其他字词替换帖子中的字词"
           tag: "根据第一个帖子自动为话题添加标签"
-          silence: "用户包含这些单词的第一个帖子需要工作人员批准才能被看到，该用户将被自动禁言。"
-          link: "使用链接替换帖子中的单词"
+          silence: "用户包含这些字词的第一个帖子需要工作人员批准才能被看到，该用户将被自动禁言。"
+          link: "使用链接替换帖子中的字词"
         form:
           label: "包含字词或短语"
           placeholder: "包含字词或短语（* 为通配符）"
@@ -4236,7 +4236,7 @@ zh_CN:
           upload_successful: "上传成功。关注词已添加。"
         test:
           button_label: "测试"
-          description: "在下方输入文本以检查有无与敏感词的匹配"
+          description: "在下方输入文本以检查有无与关注词的匹配"
           found_matches: "找到匹配："
           no_matches: "未找到匹配项"
       impersonate:
@@ -4264,7 +4264,7 @@ zh_CN:
         titles:
           active: "活跃用户"
           new: "新用户"
-          pending: "等待审查的用户"
+          pending: "等待审核的用户"
           newuser: "信任级别为 0 的用户（新用户）"
           basic: "信任级别为 1 的用户（基本用户）"
           member: "信任级别为 2 的用户（成员）"
@@ -4323,7 +4323,7 @@ zh_CN:
         clear_penalty_history:
           title: "清除处罚历史记录"
           description: "有处罚的用户无法达到信任级别 3"
-        delete_all_posts_confirm_MF: "你将删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个话题} other {# 个话题}}。确定吗？"
+        delete_all_posts_confirm_MF: "您将删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个话题} other {# 个话题}}。确定吗？"
         silence: "禁言"
         unsilence: "取消禁言"
         silenced: "已禁言？"

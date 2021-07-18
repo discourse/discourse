@@ -319,7 +319,7 @@ zh_CN:
   removed_direct_reply_full_quotes: "已自动移除对整个上一个帖子的引用。"
   watched_words_auto_tag: "已自动为话题添加标签"
   secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开话题中使用以下安全上传：%{upload_filenames}。"
-  create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建私信。"
+  create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建 PM。"
   slow_mode_enabled: "此话题处于慢速模式。"
   just_posted_that: "与您最近发布的内容过于相似"
   invalid_characters: "包含无效字符"
@@ -1002,9 +1002,9 @@ zh_CN:
         time_read: 阅读时间
         topic_count: 创建的话题
         post_count: 创建的帖子
-        pm_count: 创建的私信
+        pm_count: 创建的 PM
         revision_count: 修订
-      description: 版主活动列表，包括审查的举报、阅读时间、创建的话题、创建的帖子、创建的个人消息和修订。
+      description: 版主活动列表，包括审核的举报、阅读时间、创建的话题、创建的帖子、创建的个人消息和修订。
     flags_status:
       title: "举报状态"
       values:
@@ -1340,7 +1340,7 @@ zh_CN:
     min_search_term_length: "最小有效搜索词长度（以字符为单位）"
     search_tokenize_chinese_japanese_korean: "即使在非 CJK 站点上也强制搜索将中文/日语/韩语词例化"
     search_prefer_recent_posts: "如果搜索大型论坛的速度很慢，此选项会首先尝试索引最近的帖子"
-    search_recent_posts_size: "在索引中保留多少最近的帖子"
+    search_recent_posts_size: "在索引中保留多少个最近的帖子"
     log_search_queries: "记录用户执行的搜索查询"
     search_query_log_max_size: "要保留的最大搜索查询量"
     search_query_log_max_retention_days: "保留搜索查询的最长时间（以天为单位）。"
@@ -1432,9 +1432,9 @@ zh_CN:
     tl2_additional_edits_per_day_multiplier: "通过乘以此数字来提升 tl2（成员）每天的编辑限值"
     tl3_additional_edits_per_day_multiplier: "通过乘以此数字来提升 tl3（常规）每天的编辑限值"
     tl4_additional_edits_per_day_multiplier: "通过乘以此数字来提升 tl4（领导者）每天的编辑限值"
-    num_users_to_silence_new_user: "如果新用户的帖子收到来自这么多不同用户的 num_spam_flags_to_silence_new_user spam 次举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
-    num_tl3_flags_to_silence_new_user: "如果新用户的帖子收到来自 num_tl3_users_to_silence_new_user 个信任级别为 3 的不同用户的这么多次举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
-    num_tl3_users_to_silence_new_user: "如果新用户的帖子收到这么多来自信任级别为 3 的不同用户的 num_tl3_flags_to_silence_new_user 次举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
+    num_users_to_silence_new_user: "如果新用户的帖子收到来自此数量的不同用户的 num_spam_flags_to_silence_new_user spam 次举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
+    num_tl3_flags_to_silence_new_user: "如果新用户的帖子收到来自 num_tl3_users_to_silence_new_user 个信任级别为 3 的不同用户的此数量的举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
+    num_tl3_users_to_silence_new_user: "如果新用户的帖子收到此数量的来自信任级别为 3 的不同用户的 num_tl3_flags_to_silence_new_user 次举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
     notify_mods_when_user_silenced: "如果用户被自动禁言，则向所有版主发送消息。"
     flag_sockpuppets: "如果新用户从与发起话题的用户相同的 IP 地址回复话题，则将他们的两个帖子举报为潜在垃圾信息。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统的换行符，需要两个尾随空格。"
@@ -1445,8 +1445,8 @@ zh_CN:
     post_undo_action_window_mins: "允许撤消对帖子的最近操作（例如，举报等）的分钟数。"
     must_approve_users: "管理人员必须先批准所有新用户帐户，然后他们才能访问该站点。"
     invite_code: "用户必须输入此代码才能注册帐户，为空时将被忽略（不区分大小写）"
-    approve_suspect_users: "将可疑用户添加到审查队列中。可疑用户已进入个人简介/网站，但没有阅读活动。"
-    review_every_post: "所有帖子都必须经过审查。警告！不建议用于繁忙的站点。"
+    approve_suspect_users: "将可疑用户添加到审核队列中。可疑用户已进入个人简介/网站，但没有阅读活动。"
+    review_every_post: "所有帖子都必须经过审核。警告！不建议用于繁忙的站点。"
     persistent_sessions: "当网络浏览器关闭后，用户将保持登录状态"
     maximum_session_age: "自上次访问以来，用户将保持登录状态 n 小时"
     ga_version: "要使用的 Google Universal Analytics 版本：v3 (analytics.js)、v4 (gtag)"
@@ -1496,7 +1496,7 @@ zh_CN:
     send_old_credential_reminder_days: "几天后提醒旧凭据"
     email_token_valid_hours: "“忘记密码了”/“激活帐户”令牌的有效期为 (n) 小时。"
     enable_badges: "启用徽章系统"
-    enable_whispers: "允许管理人员在话题中进行私人交流。"
+    enable_whispers: "允许管理人员在话题中进行不公开交流。"
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>覆盖 robots.txt</a>。"
     blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
     allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"
@@ -1526,7 +1526,7 @@ zh_CN:
     discourse_connect_secret: "用于加密验证 DiscourseConnect 信息的密钥字符串，确保长度至少为 10 个字符"
     discourse_connect_provider_secrets: "使用 DiscourseConnect 的网域-密钥对列表。确保 DiscourseConnect 密钥长度至少为 10 个字符。通配符 * 可用于匹配任何网域或仅匹配其中的一部分（例如 *.example.com）。"
     discourse_connect_overrides_bio: "覆盖用户个人资料中的用户个人简介，并阻止用户对其进行更改"
-    discourse_connect_overrides_groups: "将所有手动群组成员关系与群组特性中指定的群组同步（警告：如果您不指定群组，将为用户清除所有手动群组成员关系）"
+    discourse_connect_overrides_groups: "将所有手动群组成员资格与群组特性中指定的群组同步（警告：如果您不指定群组，将为用户清除所有手动群组成员关系）"
     auth_overrides_email: "在每次登录时使用外部站点电子邮件覆盖本地电子邮件，并禁止进行本地更改。适用于所有身份验证服务提供商。（警告：由于本地电子邮件的规范化，可能会出现差异）"
     auth_overrides_username: "在每次登录时使用外部站点用户名覆盖本地用户名，并禁止进行本地更改。适用于所有身份验证服务提供商。（警告：由于用户名长度/要求的差异，可能会出现差异）"
     auth_overrides_name: "在每次登录时使用外部站点全名覆盖本地全名，并禁止进行本地更改。适用于所有身份验证服务提供商。"
@@ -1623,7 +1623,7 @@ zh_CN:
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     recompress_original_jpg_quality: "上传的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     image_preview_jpg_quality: "调整大小的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
-    allow_staff_to_upload_any_file_in_pm: "允许管理人员在私信中上传任何文件。"
+    allow_staff_to_upload_any_file_in_pm: "允许管理人员在 PM 中上传任何文件。"
     strip_image_metadata: "去除图片元数据。"
     min_ratio_to_crop: "用于裁剪高图片的比率。输入宽度/高度的结果。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
@@ -1705,15 +1705,15 @@ zh_CN:
     title_prettify: "防止常见的标题拼写错误和错误，包括全部大写、第一个字符小写、多个 ! 和 ?、结尾出现额外的 . 等。"
     title_remove_extraneous_space: "移除末尾标点符号前面的前导空格。"
     automatic_topic_heat_values: '基于站点活动自动更新“topic views heat”和“topic post like heat”设置。'
-    topic_views_heat_low: "获得这么多的浏览后，浏览字段将被稍稍突出显示。"
-    topic_views_heat_medium: "获得这么多的浏览后，浏览字段将被适度突出显示。"
-    topic_views_heat_high: "获得这么多的浏览后，浏览字段将被显著突出显示。"
-    cold_age_days_low: "经过这么多天的对话后，最后一个活动日期稍微变暗。"
-    cold_age_days_medium: "经过这么多天的对话后，最后一个活动日期适度变暗。"
-    cold_age_days_high: "经过这么多天的对话后，最后一个活动日期显著变暗。"
-    history_hours_low: "在这么多小时内编辑过的帖子会略微突出显示编辑指示器"
-    history_hours_medium: "在这么多小时内编辑过的帖子会适度突出显示编辑指示器."
-    history_hours_high: "在这么多小时内编辑过的帖子会强烈突出显示编辑指示器."
+    topic_views_heat_low: "获得此数量的浏览后，浏览字段将被稍稍突出显示。"
+    topic_views_heat_medium: "获得此数量的浏览后，浏览字段将被适度突出显示。"
+    topic_views_heat_high: "获得此数量的浏览后，浏览字段将被显著突出显示。"
+    cold_age_days_low: "经过此天数的对话后，最后一个活动日期稍微变暗。"
+    cold_age_days_medium: "经过此天数的对话后，最后一个活动日期适度变暗。"
+    cold_age_days_high: "经过此天数的对话后，最后一个活动日期显著变暗。"
+    history_hours_low: "在此小时数内编辑过的帖子会略微突出显示编辑指示器"
+    history_hours_medium: "在此小时数内编辑过的帖子会适度突出显示编辑指示器."
+    history_hours_high: "在此小时数内编辑过的帖子会强烈突出显示编辑指示器."
     topic_post_like_heat_low: "在点赞:帖子比例超过此值后，帖子计数字段会被略微突出显示。"
     topic_post_like_heat_medium: "在点赞:帖子比例超过此值后，帖子计数字段会被适度突出显示。"
     topic_post_like_heat_high: "在点赞:帖子比例超过此值后，帖子计数字段会被强烈突出显示。"
@@ -1737,16 +1737,16 @@ zh_CN:
     min_first_post_typing_time: "用户在第一次发帖时必须输入的最短时间（以毫秒为单位），如果未达到阈值，发布将自动进入需求审批队列。设置为 0 将禁用（不推荐）"
     auto_silence_fast_typers_on_first_post: "自动禁言未达到 min_first_post_typing_time 的用户"
     auto_silence_fast_typers_max_trust_level: "自动禁言输入过快的用户的最高信任级别"
-    reviewable_claiming: "可审查的内容是否需要先声明然后再对其采取行动？"
-    reviewable_default_topics: "默认显示按话题分组的可审查内容"
-    reviewable_default_visibility: "除非满足此优先级，否则不显示可审查条目"
+    reviewable_claiming: "可审核的内容是否需要先声明然后再对其采取行动？"
+    reviewable_default_topics: "默认显示按话题分组的可审核内容"
+    reviewable_default_visibility: "除非满足此优先级，否则不显示可审核条目"
     high_trust_flaggers_auto_hide_posts: "新用户帖子在被 TL3+ 用户举报为垃圾信息后会被自动隐藏"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
     reply_by_email_enabled: "启用通过电子邮件回复话题。"
-    reply_by_email_address: "通过传入的电子邮件地址回复的模板。示例：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "通过传入的电子邮件地址回复的备用模板列表。示例：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
-    incoming_email_prefer_html: "对传入的电子邮件使用 HTML 而不是文本。"
-    strip_incoming_email_lines: "从传入的电子邮件的每一行中移除前导和尾随空格。"
+    reply_by_email_address: "通过传入电子邮件地址回复的模板。示例：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "通过传入电子邮件地址回复的备用模板列表。示例：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
+    incoming_email_prefer_html: "对传入电子邮件使用 HTML 而不是文本。"
+    strip_incoming_email_lines: "从传入电子邮件的每一行中移除前导和尾随空格。"
     disable_emails: "禁止 Discourse 发送任何类型的电子邮件。选择“是”将对所有用户禁用电子邮件。选择“非管理人员”将仅对非管理人员用户禁用电子邮件。"
     strip_images_from_short_emails: "从大小小于 2800 字节的电子邮件中去除图片"
     short_email_length: "短电子邮件长度（以字节为单位）"
@@ -1756,11 +1756,11 @@ zh_CN:
     delete_email_logs_after_days: "在 (N) 天后删除电子邮件日志。设置为 0 将无限期保留"
     disallow_reply_by_email_after_days: "禁止在 (N) 天后通过电子邮件回复。设置为 0 将无限期允许"
     max_emails_per_day_per_user: "每天向用户发送的最大电子邮件数。设置为 0 将禁用限制"
-    enable_staged_users: "处理传入的电子邮件时自动创建暂存用户。"
-    maximum_staged_users_per_email: "处理传入的电子邮件时创建的最大暂存用户数。"
+    enable_staged_users: "处理传入电子邮件时自动创建暂存用户。"
+    maximum_staged_users_per_email: "处理传入电子邮件时创建的最大暂存用户数。"
     auto_generated_allowlist: "不会检查自动生成内容的电子邮件地址列表。示例：foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "阻止识别为自动生成的传入电子邮件。"
-    ignore_by_title: "根据标题忽略传入的电子邮件。"
+    ignore_by_title: "根据标题忽略传入电子邮件。"
     mailgun_api_key: "用于验证网络钩子消息的 Mailgun Secret API 密钥。"
     soft_bounce_score: "发生临时退回时，向用户添加的退回分数。"
     hard_bounce_score: "发生永久退回时，向用户添加的退回分数。"
@@ -1774,7 +1774,7 @@ zh_CN:
     private_email: "不在电子邮件标题或电子邮件正文中包含帖子或话题的内容。注意：还会禁用摘要电子邮件。"
     email_total_attachment_size_limit_kb: "附加到外发电子邮件的文件的最大总大小（以 kB 为单位）。设置为 0 将禁用附件发送。"
     post_excerpts_in_emails: "在通知电子邮件中，始终发送摘录而不是完整的帖子"
-    raw_email_max_length: "应为传入的电子邮件存储的字符数。"
+    raw_email_max_length: "应为传入电子邮件存储的字符数。"
     raw_rejected_email_max_length: "应为被拒的传入电子邮件存储的字符数。"
     delete_rejected_email_after_days: "删除超过 (n) 天的被拒电子邮件。"
     manual_polling_enabled: "使用 API 推送电子邮件以进行电子邮件回复。"
@@ -1790,7 +1790,7 @@ zh_CN:
     log_mail_processing_failures: "将所有电子邮件处理失败记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: '允许用户通过电子邮件发布新话题（需要手动或 pop3 轮询）。在每个类别的“设置”标签页中配置地址。'
     email_in_min_trust: "用户要被允许通过电子邮件发布新话题所需的最低信任级别。"
-    email_in_authserv_id: "对传入的电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
+    email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
     email_in_spam_header: "用于检测垃圾信息的电子邮件标头。"
     enable_imap: "启用 IMAP 以同步群组消息。"
     enable_imap_write: "启用双向 IMAP 同步。如果禁用，IMAP 帐户上的所有写入操作都将被禁用。"
@@ -1860,7 +1860,7 @@ zh_CN:
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
     global_notice: "向所有访客显示紧急、突发、不可关闭的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
     disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑提醒。"
-    notification_consolidation_threshold: "合并通知前，收到的赞或成员关系请求通知的数量。设置为 0 将禁用。"
+    notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
     likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
     read_time_word_count: "每分钟可阅读的字数，用于估算阅读时间。"
@@ -1870,13 +1870,13 @@ zh_CN:
     app_association_android: "端点 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 的内容，用于 Google 的 Digital Asset Links API。"
     app_association_ios: "端点 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association </a> 的内容，用于在创建此站点与 iOS 应用之间通用链接。"
     share_anonymized_statistics: "共享匿名使用统计信息。"
-    auto_handle_queued_age: "在此设定天数后自动处理待审查的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
+    auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     svg_icon_subset: "添加您希望包含在资产中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
     max_prints_per_hour_per_user: "/print 页的最大展示次数（设置为 0 将禁用）"
     full_name_required: "全名是用户个人资料的必填字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
-    show_time_gap_days: "如果两个帖子间隔这么多天，在话题中显示时间间隔。"
+    show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
     default_code_lang: "应用于 GitHub 代码块的默认编程语言语法高亮显示（auto、nohighlight、ruby、python 等）"
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
@@ -1893,7 +1893,7 @@ zh_CN:
     allowed_href_schemes: "除了 http 和 https 之外，链接中允许的协议名称。"
     embed_post_limit: "要嵌入的最大帖子数。"
     embed_username_required: "创建话题需要用户名。"
-    notify_about_flags_after: "如果经过这么多小时后仍有未处理的举报，向版主发送个人信息。设置为 0 将禁用。"
+    notify_about_flags_after: "如果经过此小时数后仍有未处理的举报，向版主发送个人信息。设置为 0 将禁用。"
     show_create_topics_notice: "如果站点的公共话题少于 5 个，请显示通知，要求管理员创建一些话题。"
     delete_drafts_older_than_n_days: "删除超过 (n) 天的草稿。"
     bootstrap_mode_min_users: "禁用引导模式所需的最小用户数（设置为 0 将禁用）"
@@ -1911,19 +1911,19 @@ zh_CN:
     approve_unless_trust_level: "低于此信任级别的用户的帖子必须接受审批"
     approve_new_topics_unless_trust_level: "低于此信任级别的用户的新话题必须接受审批"
     approve_unless_staged: "暂存用户的新话题和帖子必须接受审批"
-    notify_about_queued_posts_after: "如果有帖子等待审查的小时超过此数值，向所有版主发送通知。设置为 0 将禁用这些通知。"
+    notify_about_queued_posts_after: "如果有帖子等待审核的小时超过此数值，向所有版主发送通知。设置为 0 将禁用这些通知。"
     auto_close_messages_post_count: "消息被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
     auto_close_topics_post_count: "话题被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
     auto_close_topics_create_linked_topic: "在话题根据 'auto close topics post count' 设置被自动关闭后，创建一个新的链接话题"
     code_formatting_style: "编辑器中的代码按钮将默认为此代码格式样式"
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
     watched_words_regular_expressions: "关注词是正则表达式。"
-    enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新渲染的实验性功能"
+    enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
     old_post_notice_days: "帖子通知变旧前的天数"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
     returning_users_days: "在用户被视为回访之前应经过的天数。"
-    review_media_unless_trust_level: "如果包含嵌入媒体，管理人员将审查信任级别较低的用户的帖子。"
+    review_media_unless_trust_level: "如果包含嵌入媒体，管理人员将审核信任级别较低的用户的帖子。"
     blur_tl0_flagged_posts_media: "模糊被举报的帖子图片以隐藏潜在的 NSFW 内容。"
     enable_page_publishing: "允许管理人员使用自己的样式将话题发布到新 URL。"
     show_published_pages_login_required: "即使需要登录，匿名用户也可以查看已发布的页面。"
@@ -2240,16 +2240,16 @@ zh_CN:
       fixed_primary_email: "修复了暂存用户的常用电子邮件"
       same_ip_address: "与其他用户相同的 IP 地址 (%{ip_address})"
       inactive_user: "停用用户"
-      reviewable_reject_auto: "自动处理排队的可审查内容"
-      reviewable_reject: "可审查用户被拒绝"
+      reviewable_reject_auto: "自动处理排队的可审核内容"
+      reviewable_reject: "可审核用户被拒绝"
     email_in_spam_header: "用户的第一封电子邮件已被举报为垃圾邮件"
     already_silenced: "用户已在 %{time_ago}被 %{staff} 禁言。"
     already_suspended: "用户已在 %{time_ago}被 %{staff} 封禁。"
   reviewables_reminder:
     submitted:
-      other: "条目于 %{count} 小时前提交。[请审查](%{base_path}/review)。"
+      other: "条目于 %{count} 小时前提交。[请审核](%{base_path}/review)。"
     subject_template:
-      other: "%{count} 个条目需要审查"
+      other: "%{count} 个条目需要审核"
   unsubscribe_mailer:
     title: "退订邮件"
     subject_template: "确认您不再希望收到%{site_title}的电子邮件动态"
@@ -2488,7 +2488,7 @@ zh_CN:
 
         <%{base_url}%{url}>
 
-        在管理人员审查之前，您的帖子将保持隐藏状态。
+        在管理人员审核之前，您的帖子将保持隐藏状态。
 
         有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     flags_disagreed:
@@ -2554,7 +2554,7 @@ zh_CN:
 
         作为一名%{role}，现在您可以访问<a href='%{base_url}/admin' target='_blank'>管理界面</a>。
 
-        拥有权利的同时也需要承担重大责任。如果您不熟悉管理，请参阅[管理指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
+        拥有权利的同时也需要承担重大责任。如果您不熟悉审核，请参阅[审核指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
     welcome_invite:
       title: "欢迎邀请"
       subject_template: "欢迎来到 %{site_name}！"
@@ -2871,7 +2871,7 @@ zh_CN:
 
         如果 POP 电子邮件帐户有 Web UI，您可能需要登录 Web 并在那里检查您的设置。
     email_revoked:
-      title: "电子邮件已撤销"
+      title: "电子邮件已撤消"
       subject_template: "您的电子邮件地址是否正确？"
       text_body_template: |
         抱歉，我们无法通过电子邮件与您联系。我们给您发送的最后几封电子邮件都因无法投递而被全部退回。
@@ -2893,7 +2893,7 @@ zh_CN:
 
         这是一封由 %{site_name} 自动发送的邮件，旨在通知您 %{username} 已被 %{ignores_threshold} 个用户忽略。这可能表示您的社区已开始出现问题。
 
-        您可能需要审查此用户以及[被忽略和被设为免打扰的用户报告](%{base_url}/admin/reports/top_ignored_users)中的其他用户[最近的帖子](%{base_url}/u/%{username}/summary)。
+        您可能需要审核此用户以及[被忽略和被设为免打扰的用户报告](%{base_url}/admin/reports/top_ignored_users)中的其他用户[最近的帖子](%{base_url}/u/%{username}/summary)。
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     too_many_spam_flags:
@@ -2904,7 +2904,7 @@ zh_CN:
 
         这是一封由 %{site_name} 自动发送的邮件，旨在通知由于您的帖子被社区举报，它们已被暂时隐藏。
 
-        作为预防措施，您的新帐户已被禁言，并且在管理人员审查您的帐户前您无法创建回复或话题。对于任何不便之处，我们深表歉意。
+        作为预防措施，您的新帐户已被禁言，并且在管理人员审核您的帐户前您无法创建回复或话题。对于任何不便之处，我们深表歉意。
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     too_many_tl3_flags:
@@ -2915,7 +2915,7 @@ zh_CN:
 
         这是一封由 %{site_name} 自动发送的邮件，旨在通知您由于大量社区举报，您的帐户已被暂停。
 
-        作为预防措施，您的新帐户已被禁止创建新回复或话题，直到管理人员可以审查您的帐户。对于任何不便之处，我们深表歉意。
+        作为预防措施，您的新帐户已被禁止创建新回复或话题，直到管理人员可以审核您的帐户。对于任何不便之处，我们深表歉意。
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     silenced_by_staff:
@@ -2926,7 +2926,7 @@ zh_CN:
 
         这是一封由 %{site_name} 自动发送的邮件，旨在通知您，作为预防措施您的帐户已被临时暂停。
 
-        您可以继续浏览，但在[管理人员](%{base_url}/about)审查您最近的帖子前，您将无法回复或者创建话题。对于任何不便之处，我们深表歉意。
+        您可以继续浏览，但在[管理人员](%{base_url}/about)审核您最近的帖子前，您将无法回复或者创建话题。对于任何不便之处，我们深表歉意。
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     user_automatically_silenced:
@@ -2937,7 +2937,7 @@ zh_CN:
 
         由于多个用户举报了 %{username} 的帖子，新用户 [%{username}](%{user_url}) 已被自动禁言。
 
-        请[审查举报](%{base_url}/admin/flags)。如果 %{username} 被意外禁言，请点击[此用户管理页面](%{user_url})上的取消禁言按钮。
+        请[审核举报](%{base_url}/admin/flags)。如果 %{username} 被意外禁言，请点击[此用户管理页面](%{user_url})上的取消禁言按钮。
 
         此阈值可以通过 `silence_new_user` 站点设置更改。
     spam_post_blocked:
@@ -2948,7 +2948,7 @@ zh_CN:
 
         新用户 [%{username}](%{user_url}) 尝试创建多个带有指向 %{domains} 的链接的帖子，但这些帖子被屏蔽以避免垃圾信息。该用户仍然可以创建未链接到 %{domains} 的新帖子。
 
-        请[审查用户](%{user_url})。
+        请[审核用户](%{user_url})。
 
         可以通过 `newuser_spam_host_threshold` 和 `allowed_spam_host_domains` 站点设置对此进行修改。如果他们应该被豁免，请考虑将 %{domains} 添加到许可名单中。
     unsilenced:
@@ -2957,7 +2957,7 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帐户在管理人员审查后不再处于暂停状态。
+        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帐户在管理人员审核后不再处于暂停状态。
 
         您现在又可以创建新回复和话题了。感谢您的耐心等待。
     pending_users_reminder:
@@ -2967,7 +2967,7 @@ zh_CN:
       text_body_template: |
         有新注册的用户正在等待被批准（或者拒绝），以便他们可以访问此论坛。
 
-        [请审查他们](%{base_url}/admin/users/list/pending)。
+        [请审核他们](%{base_url}/admin/users/list/pending)。
     download_remote_images_disabled:
       title: "下载远程图片已被禁用"
       subject_template: "下载远程图片已被禁用"
@@ -2993,7 +2993,7 @@ zh_CN:
     queued_posts_reminder:
       title: "队列帖子提醒"
       subject_template:
-        other: "%{count} 个帖子等待审查"
+        other: "%{count} 个帖子等待审核"
       text_body_template: |
         您好，
 
@@ -3830,7 +3830,7 @@ zh_CN:
       name: 活跃用户
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>重新分类、重命名、关注链接、Wiki、更多赞
       long_description: |
-        当您达到信任级别 3 时，将授予此徽章。感谢您在几个月的时间里成为我们社区的活跃用户。您现在是最活跃的读者之一，并且是使我们的社区变得伟大的可靠贡献者。现在，您可以重新分类和重命名话题，利用更强大的垃圾信息举报，访问私人贵宾区域，并且每天还会获得更多赞。
+        当您达到信任级别 3 时，将授予此徽章。感谢您在几个月的时间里成为我们社区的活跃用户。您现在是最活跃的读者之一，并且是使我们的社区变得伟大的可靠贡献者。现在，您可以重新分类和重命名话题，利用更强大的垃圾信息举报，访问贵宾室区域，并且每天还会获得更多赞。
     leader:
       name: 领导者
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>全局编辑、置顶、关闭、归档、拆分与合并、更多赞
