@@ -2841,6 +2841,18 @@ pt_BR:
     email_reject_bad_destination_address:
       title: "E-mail rejeitado por endereço de destino inválido"
       subject_template: "[%{email_prefix}] Problema no e-mail, desconhecido para: endereço"
+      text_body_template: |
+        Desculpe, mas a sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
+
+        Verifique os itens a seguir:
+
+          - Você usa mais de um endereço de e-mail? Respondeu de um endereço de e-mail diferente? É preciso usar o mesmo endereço de e-mail ao responder.
+
+          - Seu software utilizou o endereço de "Responder para:" ao responder? Infelizmente alguns softwares de e-mail enviam respostas para o endereço em "De:", o que não funciona.
+
+          - O cabeçalho da ID da mensagem foi alterada no e-mail? A ID da mensagem não pode ser alterada e deve ser consistente.
+
+        Precisa de mais ajuda? Fale conosco acessando as informações de contato em %{base_url}/about
     email_reject_old_destination:
       title: "E-mail rejeitado por destino antigo"
       subject_template: "[%{email_prefix}] Problema no e-mail, você está tentando responder a uma notificação antiga"
@@ -2893,6 +2905,15 @@ pt_BR:
         Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
 
         Você não tem permissão para responder ao tópico. Se acha que é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
+    email_reject_reply_to_digest:
+      title: "Rejeição de e-mail, resposta para resumo"
+      subject_template: "[%{email_prefix}] Problema no e-mail, resposta para resumo"
+      text_body_template: |
+        Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
+
+        Você respondeu ao e-mail de resumo, o que não é permitido.
+
+        Se acha que é um erro, [entre em contato com um membro da equipe](%{base_url}/about).
     email_error_notification:
       title: "Notificação de erro por e-mail"
       subject_template: "[%{email_prefix}] Problema no e-mail, erro de autenticação do POP"
@@ -2973,6 +2994,14 @@ pt_BR:
     spam_post_blocked:
       title: "Postagem de spam bloqueada"
       subject_template: "Postagens de novo(a) usuário(a )%{username} bloqueadas devido a links repetidos"
+      text_body_template: |
+        Está é uma mensagem automática.
+
+        O(a) novo(a) usuário(a) [%{username}](%{user_url}) tentou criar várias postagens com links para %{domains}, mas elas foram bloqueadas para evitar spam. O(a) usuário(a) ainda pode criar novas postagens sem links para %{domains}.
+
+        [Verifique o(a) usuário(a)](%{user_url}).
+
+        Isto pode ser modificado nas configurações do site "newuser_spam_host_threshold" e "white_listed_spam_host_domains". Considere adicionar %{domains} à lista de permissões caso precisem ser isentos.
     unsilenced:
       title: "Som ativado"
       subject_template: "A conta não está mais em espera"
@@ -3048,6 +3077,7 @@ pt_BR:
     only_reply_by_email_pm: "Responda a este e-mail para responder a %{participants}."
     visit_link_to_respond: "[Acesse o tópico](%{base_url}%{url}) para responder."
     visit_link_to_respond_pm: "[Acesser a mensagem](%{base_url}%{url}) para responder a %{participants}."
+    reply_above_line: "## Responda acima desta linha. ##"
     posted_by: "Postado por %{username} em %{post_date}"
     pm_participants: "Participantes: %{participants}"
     invited_group_to_private_message_body: |
@@ -3247,9 +3277,17 @@ pt_BR:
     account_suspended:
       title: "Conta suspença"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"
+      text_body_template: |
+        Você foi suspenso(a) do fórum até %{suspended_till}.
+
+        Motivo: %{reason}
     account_silenced:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
+      text_body_template: |
+        Você foi silenciado(a) do fórum até %{silenced_till}.
+
+        Motivo: %{reason}
     account_exists:
       title: "esta conta já existe"
       subject_template: "[%{email_prefix}] esta conta já existe"
@@ -3261,11 +3299,21 @@ pt_BR:
         Se você não tiver tentado criar uma conta para %{email} ou alterar seu endereço de e-mail, não se preocupe. Você pode ignorar essa mensagem com segurança.
 
         Se você tiver alguma dúvida, [entre em contato com nossa equipe prestativa](%{base_url}/sobre).
+    account_second_factor_disabled:
+      title: "Autenticação de dois fatores desativada"
+      subject_template: "[%{email_prefix}] Autenticação de dois fatores desativada"
+      text_body_template: |
+        A autenticação de dois fatores foi desativada na sua conta em %{site_name}. Agora você pode entrar com a conta somente usando a senha. Não é mais necessário um código de autenticação adicional.
+
+        Se você não tiver optado por desativar a autenticação de dois fatores, alguém pode ter comprometido sua conta.
+
+        Se você tiver alguma dúvida, [entre em contato com nossa equipe prestativa](%{base_url}/sobre).
     digest:
       why: "Um breve resumo de %{site_link} desde a sua última visita em %{last_seen_at}."
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"
       unread_notifications: "Notificações não lidas"
+      unread_high_priority: "Notificações de alta prioridade não lidas"
       liked_received: "Curtidas recebidas"
       new_users: "Usuários(as) novos(as)"
       popular_topics: "Tópicos mais acessados"
@@ -3277,6 +3325,7 @@ pt_BR:
       unsubscribe: "Este resumo foi enviado de %{site_link}, já que faz tempo que não nos vemos. Mude %{email_preferences_link} ou%{unsubscribe_link} para cancelar a inscrição."
       your_email_settings: "suas configurações de e-mail"
       click_here: "clique aqui"
+      from: "%{site_name}"
       preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita em %{last_seen_at}"
     forgot_password:
       title: "Esqueci a senha"
@@ -3305,6 +3354,13 @@ pt_BR:
     admin_login:
       title: "Entrar com conta de administrador(a)"
       subject_template: "[%{email_prefix}] Entrar com conta"
+      text_body_template: |
+        Alguém pediu para entrar com a sua conta em [%{site_name}](%{base_url}).
+
+        Caso não tenha feito este pedido, ignore este e-mail.
+
+        Clique no link a seguir para entrar com a conta:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Conta criada"
       subject_template: "[%{email_prefix}] Sua nova conta"
@@ -3316,21 +3372,48 @@ pt_BR:
     confirm_new_email:
       title: "Confirmar novo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
+      text_body_template: |
+        Confirme o seu novo endereço de e-mail para %{site_name} ao clicar no link a seguir:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Caso não tenha solicitado esta alteração, entre em contato com um(a) [administrador(a) do site](%{base_url}/about).
     confirm_new_email_via_admin:
       title: "Confirmar novo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
+      text_body_template: |
+        Confirme o seu novo endereço de e-mail para %{site_name} ao clicar no link a seguir:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Esta alteração foi solicitada pelo(a) administrador(a) do site.
+
+        Caso não tenha solicitado esta alteração, entre em contato com um(a) [administrador(a) do site](%{base_url}/about).
     confirm_old_email:
       title: "Confirmar antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
       text_body_template: "Antes de podermos alterar seu endereço de e-mail, precisamos confirmar que você \ncontrola a conta de e-mail atual. Depois de concluir esta etapa, solicitaremos que você \nconfirme o novo endereço de e-mail.\n\nConfirme seu endereço de e-mail atual para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     confirm_old_email_add:
+      title: "Confirmar antigo e-mail (adicionar)"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
+      text_body_template: "Antes de podermos adicionar um novo endereço de e-mail, precisamos confirmar que você \ncontrola a conta de e-mail atual. Depois de concluir esta etapa, solicitaremos que você \nconfirme o novo endereço de e-mail.\n\nConfirme seu endereço de e-mail atual para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     notify_old_email:
       title: "Notificar e-mail antigo"
       subject_template: "[%{email_prefix}] Seu endereço de e-mail foi alterado"
       text_body_template: |
         Esta é uma mensagem automática para avisar que seu endereço de e-mail para
         %{site_name} foi modificado. Caso tenha sido um erro, entre em contato
+        com um(a) administrador(a) do site.
+
+        Seu endereço de e-mail foi modificado para:
+
+        %{new_email}
+    notify_old_email_add:
+      title: "Notificar e-mail antigo (adicionar)"
+      subject_template: "[%{email_prefix}] Um novo endereço de e-mail foi adicionado"
+      text_body_template: |
+        Esta é uma mensagem automática para avisar que um endereço de e-mail para
+        %{site_name} foi adicionado. Caso tenha sido um erro, entre em contato
         com um(a) administrador(a) do site.
 
         Seu endereço de e-mail foi modificado para:
@@ -3354,6 +3437,13 @@ pt_BR:
         Acreditamos em [comportamento comunitário saudável](%{base_url}/diretrizes) em todos os momentos.
 
         Aproveite sua visita!
+    signup_after_reject:
+      title: "Criar conta após rejeição"
+      subject_template: "Você foi rejeitado(a) em %{site_name}"
+      text_body_template: |
+        Um membro da equipe rejeitou a sua conta em %{site_name}.
+
+        %{reject_reason}
     signup:
       title: "Criar conta"
       subject_template: "[%{email_prefix}] Confirme sua nova conta"
@@ -3392,6 +3482,14 @@ pt_BR:
         Caso contrário, [revise suas sessões existentes](%{base_url}/my/preferences/account) e considere alterar sua senha.
     post_approved:
       title: "Sua postagem foi aprovada"
+      subject_template: "[%{site_name}] Sua postagem foi aprovada"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automática de %{site_name} para avisar que [sua postagem](%{base_url}%{post_url}) foi aprovada.
+  page_forbidden:
+    title: "Ops! Essa página é privada."
+  site_setting_missing: "O site %{name} precisa ser configurado."
   page_not_found:
     title: "Oops! Essa página não existe ou é privada."
     popular_topics: "Mais acessados(as)"
@@ -3419,6 +3517,7 @@ pt_BR:
     file_missing: "Desculpe, você deve fornecer um arquivo para upload."
     empty: "Desculpe, mas o arquivo que você forneceu está vazio."
     png_to_jpg_conversion_failure_message: "Ocorreu um erro ao converter PNG em JPG."
+    optimize_failure_message: "Ocorreu um erro ao otimizar a imagem enviada."
     attachments:
       too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo é de %{max_size_kb} KB)."
     images:
@@ -3448,12 +3547,17 @@ pt_BR:
     user_email_user_suspended: "o(a) usuário(a) foi suspenso(a)"
     user_email_already_read: "o(a) usuário(a) já leu esta postagem"
     user_email_access_denied: "o(a) usuário(a) não tem permissão para ver esta postagem"
+    user_email_no_email: "Nenhum e-mail associado com a id de usuário(a) %{user_id}"
     sender_message_blank: "mensagem está em branco"
     sender_message_to_blank: "message.to está em branco"
     sender_text_part_body_blank: "text_part.body está em branco"
     sender_body_blank: "o corpo está em branco"
     sender_post_deleted: "a postagem foi excluída"
     sender_message_to_invalid: "o destinatário tem o endereço de e-mail inválido"
+    sender_topic_deleted: "o tópico foi excluído"
+    group_smtp_post_deleted: "a postagem foi excluída"
+    group_smtp_topic_deleted: "o tópico foi excluído"
+    group_smtp_disabled_for_group: "o smtp foi desativado para o grupo"
   color_schemes:
     base_theme_name: "Base"
     light: "Claro"
@@ -3464,6 +3568,10 @@ pt_BR:
     latte: "Latte"
     summer: "Verão"
     dark_rose: "Rosa-escuro"
+    wcag: "WCAG claro"
+    wcag_theme_name: "WCAG claro"
+    wcag_dark: "WCAG escuro"
+    wcag_dark_theme_name: "WCAG escuro"
     default_theme_name: "Padrão"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
@@ -3572,6 +3680,7 @@ pt_BR:
     mass_award:
       errors:
         invalid_csv: Encontramos um erro na linha %{line_number}. Confirme se o CSV possui um e-mail por linha.
+        too_many_csv_entries: Muitas entradas para o arquivo CSV. Forneça um arquivo CSV com no máximo %{count} entradas.
     editor:
       name: Editor(a)
       description: Primeira edição de postagem
