@@ -147,7 +147,7 @@ zh_CN:
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
       is_invalid_meaningful: "似乎不清楚，大多数字眼都包含重复的字母？"
-      is_invalid_unpretentious: "似乎不清楚，一个或多个单词很长？"
+      is_invalid_unpretentious: "似乎不清楚，一个或多个字词很长？"
       is_invalid_quiet: "似乎不清楚，您是要用全部大写字母输入吗？"
       invalid_timezone: "“%{tz}”不是一个有效的时区"
       contains_censored_words: "包含以下敏感词：%{censored_words}"
@@ -989,11 +989,11 @@ zh_CN:
       title: "用户举报率"
       labels:
         user: 用户
-        agreed_flags: 确认的举报
-        disagreed_flags: 否决的举报
+        agreed_flags: 同意的举报
+        disagreed_flags: 不同意的举报
         ignored_flags: 忽略的举报
         score: 分数
-      description: "按管理人员对其举报的响应比例排序的用户列表（否决到确认）。"
+      description: "按管理人员对其举报的响应比例排序的用户列表（不同意到同意）。"
     moderators_activity:
       title: "版主活动"
       labels:
@@ -1008,8 +1008,8 @@ zh_CN:
     flags_status:
       title: "举报状态"
       values:
-        agreed: 确认
-        disagreed: 否决
+        agreed: 同意
+        disagreed: 不同意
         deferred: 推迟
         no_action: 无行动
       labels:
@@ -1180,7 +1180,7 @@ zh_CN:
         num_topics: 话题数
       description: "链接到此站点最多的外部来源。"
     top_referred_topics:
-      title: "热门推荐主题"
+      title: "热门推荐话题"
       labels:
         num_clicks: "点击数"
         topic: "话题"
@@ -1360,8 +1360,8 @@ zh_CN:
     download_remote_images_threshold: "将远程图片下载到本地所需的最小磁盘空间（百分比）"
     disabled_image_download_domains: "永远不会从这些网域下载远程图片。以 | 分隔的列表。"
     editing_grace_period: "发布后 (n) 秒内，编辑不会在发布历史记录中创建新版本。"
-    editing_grace_period_max_diff: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订版（信任级别 0 和 1）"
-    editing_grace_period_max_diff_high_trust: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订版（信任级别 2 及更高）"
+    editing_grace_period_max_diff: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订（信任级别 0 和 1）"
+    editing_grace_period_max_diff_high_trust: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订（信任级别 2 及更高）"
     staff_edit_locks_post: "如果管理人员编辑过帖子，将锁定编辑"
     post_edit_time_limit: "信任级别 0 或信任级别 1 的作者可以在发布后的 (n) 分钟内编辑他们的帖子。设置为 0 表示永远可以编辑。"
     tl2_post_edit_time_limit: "信任级别 2 及更高的作者可以在发布后的 (n) 分钟内编辑他们的帖子。设置为 0 表示永远可以编辑。"
@@ -1463,7 +1463,7 @@ zh_CN:
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
     allowed_iframes: "Discourse 可以安全地在帖子中允许的 iframe src 网域前缀列表"
     allowed_crawler_user_agents: "应被允许访问站点的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
-    blocked_crawler_user_agents: "用户代理字符串中唯一不区分大小写的词，用于标识不应被允许访问站点的网抓取工具。如果定义了许可名单，则不适用。"
+    blocked_crawler_user_agents: "用户代理字符串中唯一不区分大小写的字词，用于标识不应被允许访问站点的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: "网络抓取工具的用户代理，应使用 Crawl-delay 指令在 robots.txt 中进行速率限制"
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
     content_security_policy: "启用内容安全策略"
@@ -3813,7 +3813,7 @@ zh_CN:
         当您第一次编辑您的帖子时，将授予此徽章。虽然您无法永远编辑您的帖子，但我们鼓励您进行编辑 - 您可以改进格式，修正小错误或添加您最初发布时遗漏的任何内容。编辑以使您的帖子更出色！
     wiki_editor:
       name: Wiki 编辑
-      description: 首次编辑维基
+      description: 首次编辑 Wiki
       long_description: |
         当您第一次编辑 Wiki 帖子时，将授予此徽章。
     basic_user:

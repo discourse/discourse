@@ -339,9 +339,9 @@ zh_CN:
           title: "当管理人员选择采取行动时，举报会获得加分。"
         user_accuracy_bonus:
           name: "用户准确性"
-          title: "所提交的举报一直都获得确认的用户将获得加分。"
+          title: "所提交的举报一直都获得同意的用户将获得加分。"
         trust_level_bonus:
-          name: "信任等级"
+          name: "信任级别"
           title: "由较高信任级别的用户创建的可审查条目具有较高的分数。"
         type_bonus:
           name: "奖励加分"
@@ -390,9 +390,9 @@ zh_CN:
         summary:
           other: "%{agreed}，%{disagreed}，%{ignored}（共 %{count} 个举报）"
         agreed:
-          other: "%{count}% 确认"
+          other: "%{count}% 同意"
         disagreed:
-          other: "%{count}% 否决"
+          other: "%{count}% 不同意"
         ignored:
           other: "%{count}% 忽略"
       topics:
@@ -472,7 +472,7 @@ zh_CN:
         description: "我们已收到您的帖子，不过需要由版主批准才能显示。请耐心等待。"
         pending_posts:
           other: "您有 <strong>%{count}</strong> 个帖子等待处理。"
-        ok: "确认"
+        ok: "确定"
       example_username: "用户名"
       reject_reason:
         title: "您为什么拒绝此用户？"
@@ -1030,7 +1030,7 @@ zh_CN:
         sent: "已发送"
         archive: "归档"
         groups: "我的群组"
-        move_to_inbox: "移动到收件箱"
+        move_to_inbox: "移至收件箱"
         move_to_archive: "归档"
         failed_to_move: "无法移动所选消息（可能您的网络已掉线）"
         tags: "标签"
@@ -1278,7 +1278,7 @@ zh_CN:
         every_month: "每月"
         every_six_months: "每六个月"
       email_level:
-        title: "当有人引用我的话、回复我的帖子、提及我的用户名或邀请我参与某个话题时，给我发送电子邮件"
+        title: "当有人引用我的话、回复我的帖子、提及我的用户名或邀请我加入某个话题时，给我发送电子邮件"
         always: "始终"
         only_when_away: "只在离开时"
         never: "从不"
@@ -1421,7 +1421,7 @@ zh_CN:
         top_links: "热门链接"
         no_links: "暂无链接。"
         most_liked_by: "被谁赞得最多"
-        most_liked_users: "赞谁最多"
+        most_liked_users: "赞最多"
         most_replied_to_users: "最多回复至"
         no_likes: "暂无赞。"
         top_categories: "热门类别"
@@ -1569,7 +1569,7 @@ zh_CN:
       complete_email: "如果存在与 <b>%{email}</b> 相匹配的帐户，您应该很快就会收到一封包含登录链接的电子邮件。"
       complete_username_found: "我们找到一个与用户名 <b>%{username}</b> 相匹配的帐户，您应该很快就会收到一封包含登录链接的电子邮件。"
       complete_email_found: "我们找到一个与 <b>%{email}</b> 相匹配的帐户，您应该很快就会收到一封包含登录链接的电子邮件。"
-      complete_username_not_found: "没有与用户名 <b>%{username}</b> 相匹配的账户"
+      complete_username_not_found: "没有与用户名 <b>%{username}</b> 相匹配的帐户"
       complete_email_not_found: "没有与 <b>%{email}</b> 相匹配的帐户"
       confirm_title: 继续访问 %{site_name}
       logging_in_as: 以 %{email} 登录
@@ -1740,7 +1740,7 @@ zh_CN:
       add_warning: "这是一个官方警告。"
       toggle_whisper: "切换密语"
       toggle_unlisted: "切换取消公开"
-      posting_not_on_topic: "您想回复哪个主题？"
+      posting_not_on_topic: "您想回复哪个话题？"
       saved_local_draft_tip: "已保存到本地"
       similar_topics: "您的话题类似于…"
       drafts_offline: "离线草稿"
@@ -1751,7 +1751,7 @@ zh_CN:
         other: "提及 %{group} 时，您将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
       cannot_see_mention:
         category: "您提及了 %{username}，但由于他们无法访问此类别，他们将不会收到通知。您需要将其添加到可以访问此类别的群组中。"
-        private: "您提及了 %{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们参与此个人消息。"
+        private: "您提及了 %{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们加入此个人消息。"
       duplicate_link: "好像 <b>@%{username}</b> 在<a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
       reference_topic_title: "回复：%{title}"
       error:
@@ -1884,7 +1884,7 @@ zh_CN:
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
-      bookmark_reminder: "<span>%{username}</span>%{description}"
+      bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
@@ -1894,7 +1894,7 @@ zh_CN:
         other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 人</span> %{description}"
       liked_consolidated_description:
         other: "点赞了您的 %{count} 个帖子"
-      liked_consolidated: "<span>%{username}</span>%{description}"
+      liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -1931,7 +1931,7 @@ zh_CN:
         edited: "被编辑"
         liked: "新赞"
         private_message: "新私信"
-        invited_to_private_message: "被邀请参与私信"
+        invited_to_private_message: "被邀请加入私信"
         invitee_accepted: "邀请已被接受"
         posted: "新帖子"
         moved_post: "帖子已被移动"
@@ -1939,7 +1939,7 @@ zh_CN:
         bookmark_reminder: "书签提醒"
         bookmark_reminder_with_name: "书签提醒 - %{name}"
         granted_badge: "已授予徽章"
-        invited_to_topic: "被邀请参与话题"
+        invited_to_topic: "被邀请加入话题"
         group_mentioned: "群组提及"
         group_message_summary: "新群组消息"
         watching_first_post: "新话题"
@@ -2010,7 +2010,7 @@ zh_CN:
           pinned: 被置顶
           seen: 我读过
           unseen: 我还没读过
-          wiki: wiki
+          wiki: Wiki
           images: 包含图片
           all_tags: 上述所有标签
         statuses:
@@ -2393,12 +2393,12 @@ zh_CN:
       inviting: "正在邀请…"
       automatically_add_to_groups: "此邀请还包括以下群组的访问权限："
       invite_private:
-        title: "邀请参与消息"
+        title: "邀请加入消息"
         email_or_username: "受邀者的电子邮件或用户名"
         email_or_username_placeholder: "电子邮件地址或者用户名"
         action: "邀请"
-        success: "我们已邀请该用户参与此消息。"
-        success_group: "我们已邀请该群组参与此消息。"
+        success: "我们已邀请该用户加入此消息。"
+        success_group: "我们已邀请该群组加入此消息。"
         error: "抱歉，邀请该用户时出错。"
         not_allowed: "抱歉，无法邀请该用户。"
         group_name: "群组名称"
@@ -2407,18 +2407,18 @@ zh_CN:
         title: "邀请"
         username_placeholder: "用户名"
         action: "发送邀请"
-        help: "通过电子邮件或通知邀请其他人参与此话题"
+        help: "通过电子邮件或通知邀请其他人加入此话题"
         to_forum: "我们将发送一封简短的电子邮件，让您的朋友可以通过点击链接立即加入。"
-        discourse_connect_enabled: "输入您要邀请参与此话题的人员的用户名。"
-        to_topic_blank: "输入您要邀请参与此话题的人员的用户名或者电子邮件地址。"
+        discourse_connect_enabled: "输入您要邀请加入此话题的人员的用户名。"
+        to_topic_blank: "输入您要邀请加入此话题的人员的用户名或者电子邮件地址。"
         to_topic_email: "您输入了一个电子邮件地址。我们将通过电子邮件发送邀请，让您的朋友可以直接回复此话题。"
-        to_topic_username: "您输入了一个用户名。我们将向其发送通知，其中包含邀请他们参与此话题的链接。"
-        to_username: "输入您想邀请的人的用户名。我们将向其发送通知，其中包含邀请他们参与此话题的链接。"
+        to_topic_username: "您输入了一个用户名。我们将向其发送通知，其中包含邀请他们加入此话题的链接。"
+        to_username: "输入您想邀请的人的用户名。我们将向其发送通知，其中包含邀请他们加入此话题的链接。"
         email_placeholder: "name@example.com"
         success_email: "我们已向 <b>%{invitee}</b> 发送邀请。在邀请被确认后，我们将通知您。查看您的用户页面上的邀请标签页以跟踪邀请进度。"
-        success_username: "我们已邀请该用户参与此话题。"
+        success_username: "我们已邀请该用户加入此话题。"
         error: "抱歉，我们无法邀请此人。也许他们已经被邀请了？（邀请次数受限）"
-        success_existing_email: "电子邮件为 <b>%{emailOrUsername}</b> 的用户已存在。我们已邀请该用户参与此话题。"
+        success_existing_email: "电子邮件为 <b>%{emailOrUsername}</b> 的用户已存在。我们已邀请该用户加入此话题。"
       login_reply: "登录以回复"
       filters:
         n_posts:
@@ -2519,7 +2519,7 @@ zh_CN:
       edit_reason: "原因："
       post_number: "帖子 %{number}"
       ignored: "已忽略的内容"
-      wiki_last_edited_on: "wiki 最后编辑于 %{dateTime}"
+      wiki_last_edited_on: "Wiki 最后编辑于 %{dateTime}"
       last_edited_on: "帖子最后编辑于 %{dateTime}"
       reply_as_new_topic: "作为链接话题回复"
       reply_as_new_private_message: "作为新消息回复给相同的收件人"
@@ -2649,13 +2649,13 @@ zh_CN:
           other: "确定要合并这 %{count} 个帖子吗？"
       revisions:
         controls:
-          first: "第一版"
-          previous: "上一版"
-          next: "下一版"
-          last: "最新版"
-          hide: "隐藏版本历史"
-          show: "显示版本历史"
-          revert: "还原到版本 %{revision}"
+          first: "第一个修订"
+          previous: "上一个修订"
+          next: "下一个修订"
+          last: "上次修订"
+          hide: "隐藏修订"
+          show: "显示修订"
+          revert: "还原到修订 %{revision}"
           edit_wiki: "编辑 Wiki"
           edit_post: "编辑帖子"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2780,7 +2780,7 @@ zh_CN:
       mailinglist_mirror: "类别镜像一个邮寄名单"
       show_subcategory_list: "在此类别中的话题上方显示子类别列表。"
       read_only_banner: "用户无法在此类别中创建话题时的横幅文本："
-      num_featured_topics: "类别页面上显示的主题数："
+      num_featured_topics: "类别页面上显示的话题数："
       subcategory_num_featured_topics: "父类别页面上的精选话题数量："
       all_topics_wiki: "默认将新话题设为 Wiki"
       allow_unlimited_owner_edits_on_first_post: "允许所有者不受限制地编辑第一个帖子"
@@ -4068,9 +4068,9 @@ zh_CN:
             delete_theme: "删除主题"
             change_site_text: "更改站点文本"
             suspend_user: "封禁用户"
-            unsuspend_user: "解禁用户"
+            unsuspend_user: "取消封禁用户"
             removed_suspend_user: "封禁用户（已移除）"
-            removed_unsuspend_user: "解禁用户（已移除）"
+            removed_unsuspend_user: "取消封禁用户（已移除）"
             grant_badge: "授予徽章"
             revoke_badge: "撤消徽章"
             check_email: "检查电子邮件"
@@ -4197,7 +4197,7 @@ zh_CN:
         search: "搜索"
         clear_filter: "清除"
         show_words:
-          other: "显示 %{count} 个单词"
+          other: "显示 %{count} 个字词"
         download: 下载
         clear_all: 全部清除
         clear_all_confirm: "确定要清除%{action}操作的所有关注词吗？"
@@ -4221,8 +4221,8 @@ zh_CN:
           silence: "用户包含这些单词的第一个帖子需要工作人员批准才能被看到，该用户将被自动禁言。"
           link: "使用链接替换帖子中的单词"
         form:
-          label: "包含单词或短语"
-          placeholder: "包含单词或短语（* 为通配符）"
+          label: "包含字词或短语"
+          placeholder: "包含字词或短语（* 为通配符）"
           placeholder_regexp: "正则表达式"
           replace_label: "替换"
           replace_placeholder: "示例"

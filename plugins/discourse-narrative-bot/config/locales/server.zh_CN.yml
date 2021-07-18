@@ -384,7 +384,7 @@ zh_CN:
           请注意，当你回复话题或阅读话题超过几分钟时，它会被自动设置为“跟踪”通知级别。 你可以在[你的用户偏好设置](%{base_uri}/my/preferences)中更改此设置。
       poll:
         instructions: |-
-          你知道你可以在任何帖子中添加投票吗？尝试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标来**发起投票**。
+          你知道你可以在任何帖子中添加投票吗？尝试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标来**构建投票**。
         not_found: |-
           哎呀！你的回复中还没有任何投票。
 
