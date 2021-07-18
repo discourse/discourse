@@ -1923,7 +1923,7 @@ zh_CN:
         watching_first_post: '%{username} 创建了新话题“%{topic}”- %{site_title}'
         confirm_title: "通知已启用 - %{site_title}"
         confirm_body: "成功！通知已启用。"
-        custom: "来自 %{username} 在 %{site_title} 的通知"
+        custom: "来自%{site_title}上 %{username} 的通知"
       titles:
         mentioned: "被提及"
         replied: "新回复"
@@ -2569,8 +2569,8 @@ zh_CN:
         discard: "舍弃"
         save_draft: "保存草稿供以后使用"
         keep_editing: "继续编辑"
-      via_email: "通过邮件发表的帖子"
-      via_auto_generated_email: "通过自动生成邮件发表的帖子"
+      via_email: "此帖子通过电子邮件送达"
+      via_auto_generated_email: "此帖子通过自动生成的电子邮件送达"
       whisper: "此帖子是对版主的密语"
       wiki:
         about: "此帖子是一个 Wiki"
@@ -2845,7 +2845,7 @@ zh_CN:
         rows: "行"
         rows_with_featured_topics: "有精选话题的行"
         boxes: "方框"
-        boxes_with_featured_topics: "有推荐话题的方框"
+        boxes_with_featured_topics: "带精选话题的框"
       settings_sections:
         general: "常规"
         moderation: "审核"
@@ -3986,7 +3986,7 @@ zh_CN:
         html_preview: "电子邮件内容预览"
         last_seen_user: "最后活动："
         no_result: "没有找到摘要的结果。"
-        reply_key: "回复关键字"
+        reply_key: "回复键"
         skipped_reason: "跳过原因"
         incoming_emails:
           from_address: "发件人"

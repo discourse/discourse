@@ -12,10 +12,10 @@ zh_CN:
   datetime_formats: &datetime_formats
     formats:
       short: "%Y-%m-%d"
-      short_no_year: "%m月%d日"
-      date_only: "%Y年%m月%d日"
-      long: "%Y年%m月%-d日 %H:%M"
-      no_day: "%Y年%m月"
+      short_no_year: "%-m 月 %-d 日"
+      date_only: "%Y 年%-m 月 %-d 日"
+      long: "%Y 年%-m 月 %-d 日 %H:%M"
+      no_day: "%Y 年 %-m 月"
   date:
     month_names:
     - null
@@ -353,7 +353,7 @@ zh_CN:
     user_posts: "%{username} 的最新帖子"
     user_topics: "%{username} 的最新话题"
     tag: "带标签的话题"
-    badge: "%{site_title} 上的%{display_name}徽章"
+    badge: "%{site_title}上的%{display_name}徽章"
   too_late_to_edit: "该话题在很早之前创建。无法再编辑或者删除。"
   edit_conflict: "该帖子已由其他用户编辑，您的变更无法再保存。"
   revert_version_same: "当前版本与您尝试还原到的版本相同。"
@@ -1378,8 +1378,8 @@ zh_CN:
     topic_excerpt_maxlength: "从话题中的第一个帖子生成的话题摘录/摘要的最大长度。"
     show_pinned_excerpt_mobile: "在移动视图中显示置顶话题的摘录。"
     show_pinned_excerpt_desktop: "在桌面视图中显示置顶话题的摘录。"
-    post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大长度（以字符为单位）。"
-    blocked_onebox_domains: "永远不会被 Onebox 处理的域名列表。"
+    post_onebox_maxlength: "Onebox Discourse 帖子的最大长度（以字符为单位）。"
+    blocked_onebox_domains: "永远不会进行 Onebox 处理的域名列表。"
     allowed_inline_onebox_domains: "如果在没有标题的情况下链接，将以微型形式进行 Onebox 处理的域名列表"
     enable_inline_onebox_on_all_domains: "忽略 inline_onebox_domain_allowlist 站点设置并在所有域名上允许内联 Onebox。"
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"
@@ -2252,7 +2252,7 @@ zh_CN:
       other: "%{count} 个条目需要审查"
   unsubscribe_mailer:
     title: "退订邮件"
-    subject_template: "确认您不再希望收到 %{site_title} 的电子邮件动态"
+    subject_template: "确认您不再希望收到%{site_title}的电子邮件动态"
     text_body_template: |
       有人（可能是您？）请求不再从 %{site_domain_name} 向此地址发送电子邮件动态。
       如果您希望确认此操作，请点击此链接：
@@ -3875,208 +3875,208 @@ zh_CN:
       name: 很好的话题
       description: 话题获得 25 个赞
       long_description: |
-        该徽章授予给话题收到25个赞的您。您创建了一个有意义的话题，整个社区都在积极响应。
+        当您的话题获得 25 个赞时，将授予此徽章。您发起了一场充满活力的对话，将社区团结起来。
     great_topic:
       name: 精彩的话题
-      description: 单个话题收获50个赞
+      description: 话题获得 50 个赞
       long_description: |
-        该徽章授予给话题获得50个赞的您。您创建了一个引人入胜的话题，整个社区都沉浸于讨论之中。
+        当您的话题获得 50 个赞时，将授予此徽章。您开启了一场引人入胜的对话，社区喜欢由此产生的热烈讨论！
     nice_share:
       name: 不错的分享
-      description: 分享了一个有 25 个独立访问者的帖子
+      description: 与 25 个唯一身份访客分享帖子
       long_description: |
-        该徽章授予给分享链接给 25 个其他访客的您。感谢您广而告之我们的讨论，和对这个社区的帮助。
+        当您分享的链接被 25 个外部访客点击时，将授予此徽章。感谢您传播有关我们的讨论和这个社区的信息。
     good_share:
       name: 很棒的分享
-      description: 分享了一个有 300 个独立访问者的帖子
+      description: 与 300 个唯一身份访客分享帖子
       long_description: |
-        该徽章授予给分享链接给 300 个其他访客的您。干得漂亮！您把一个有意思的讨论介绍给了许多新的朋友，并且帮助社区前进了一步。
+        当您分享的链接被 300 个外部访客点击时，将授予此徽章。干得漂亮！您向一群新人展示了一场精彩的讨论，并帮助这个社区成长。
     great_share:
       name: 精彩的分享
-      description: 分享了一个有 1000 个独立访问者的帖子
+      description: 与 1000 个唯一身份访客分享帖子
       long_description: |
-        该徽章授予给分享链接给 1000 个其他访客的您。哇！您把一个有意思的讨论推广给了广大的读者们，并且帮助社区前进了一大步！
+        当您分享的链接被 300 个外部访客点击时，将授予此徽章。哇！您将一个有趣的讨论介绍给大量新受众，并帮助社区前进了一大步！
     first_like:
-      name: 首赞
+      name: 第一个赞
       description: 赞了一个帖子
       long_description: |
-        该徽章授予给首次使用 :heart: 按钮赞了一个帖子的您。点赞帖子是一个让社区成员知道他们所发布的内容是实用或有趣的一个好方法。分享这种热情吧！
+        当您首次使用 :heart: 按钮赞一个帖子时，将授予此徽章。点赞帖子是让社区成员知道他们所发布的内容有趣、实用、炫酷的绝佳方法。分享爱！
     first_flag:
-      name: 首次标记
-      description: 已标记过了一个帖子
+      name: 首次举报
+      description: 举报了一个帖子
       long_description: |
-        该徽章授予给第一次标记帖子的您。标记是帮助我们帮助社区保持良好的工具。如果您注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果您注意到别人帖子里的某个问题。如果您发现了问题，:flag_black: 标记吧！
+        当您首次举报帖子时，将授予此徽章。举报是我们所有人帮助保持这里成为适合每个人的好地方的方式。如果您发现任何帖子因任何原因需要版主注意，请尽管举报。如果您看到一个问题，:flag_black: 举报它！
     promoter:
       name: 推广者
-      description: 已邀请了 1 个用户
+      description: 邀请了一个用户
       long_description: |
-        该徽章授予给邀请他人加入社区的您。您曾使用了用户页面的邀请按钮或话题底部的邀请按钮。邀请对某个讨论感兴趣的朋友是引介新人的好办法，非常感谢！
+        当您通过您的用户页面上或话题底部的邀请按钮邀请某人加入社区时，将授予此徽章。邀请可能对特定讨论感兴趣的朋友是向我们的社区介绍新人的绝佳方法，谢谢！
     campaigner:
       name: 活动家
-      description: 已邀请了 3 个初级用户
+      description: 邀请了 3 个基本用户
       long_description: |
-        该徽章授予给邀请了 3 人加入社区的您，您的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
+        当您邀请 3 位随后在站点上花费足够时间成为基本用户的人时，将授予此徽章。一个充满活力的社区需要定期注入新人，他们定期参与并在对话中添加新的声音。
     champion:
-      name: 外交官
-      description: 已邀请了 5 个成员
+      name: 拥护者
+      description: 邀请了 5 个成员
       long_description: |
-        该徽章授予给邀请了 5 人加入社区的您，您的朋友在站点上度过了很长的时间，已经成为了成员。哇！感谢您帮助社区成长，社区因此变得更多元了！
+        当您邀请 5 位随后在网站上花费足够时间成为正式会员的人时，将授予此徽章。哇！感谢您通过新成员扩大我们社区的多元化！
     first_share:
       name: 首次分享
-      description: 已分享了一个帖子
+      description: 分享了一个帖子
       long_description: |
-        该徽章授予给第一次用分享按钮分享了回复或者话题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社区增长。
+        当您第一次使用分享按钮分享回复或话题的链接时，将授予此徽章。分享链接是向世界其他地方展示有趣讨论和发展您的社区的绝佳方法。
     first_link:
-      name: 首个链接
-      description: 已链接了另一个话题
+      name: 首次链接
+      description: 添加了指向另一个话题的链接
       long_description: |
-        该徽章授予给第一次链接到另一个话题的您。联结话题会在各个话题的右侧显示链接和标题，这可以帮助阅读者迅速地找到相关讨论。多链接一些话题吧！
+        当您第一次添加指向其他话题的链接时，将授予此徽章。通过在两个方向上显示话题之间的联系，链接话题可以帮助其他读者找到有趣的相关对话。多链接一些话题吧！
     first_quote:
       name: 首次引用
-      description: 已引用过一个帖子
+      description: 引用了一个帖子
       long_description: |
-        该徽章授予给第一次在回复中引用帖子的您。在您的回复中引用之前帖子中的相关的部分将把话题关联在一起并切题。只要选中别的帖子中的任何文字，然后点击回复按钮将可以引用啦。多引用一些吧！
+        当您首次在回复中引用帖子时，将授予此徽章。在您的回复中引用之前帖子的相关部分有助于将讨论联系在一起并围绕话题进行。最简单的引用方法是突出显示帖子的某个部分，然后按任意回复按钮。慷慨地引用吧！
     read_guidelines:
-      name: 阅读指引
-      description: 阅读<a href="%{base_uri}/guidelines">社区指引</a>
+      name: 阅读准则
+      description: 阅读<a href="%{base_uri}/guidelines">社区准则</a>
       long_description: |
-        该徽章授予给<a href="%{base_uri}/guidelines">阅读了社区指引</a>的您。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社区。永远记住别人，一个和您有很多共同点的人，就在屏幕的那一侧。友好一些！
+        当您<a href="%{base_uri}/guidelines">阅读社区准则</a>后，将授予此徽章。遵守和分享简单的准则可以帮助我们打造一个稳定、有趣和可持续的社区。永远记住其他人，一个和您有很多共同点的人，就在屏幕的那一侧。友好一些！
     reader:
       name: 读者
-      description: 阅读了有至少 100 个回复的话题中的所有回复
+      description: 阅读超过 100 个回复的话题中的每个回复
       long_description: |
-        该徽章授予给第一次阅读了超过 100 个回复的长话题的您。仔细地阅读对话内容能让您关注到讨论的中心，理解不同的观点，而且能帮助我们打造更有趣的对话情景。您读得越多，对话的效果就会越好。就如我们常说的那般，阅读是最重要的！ :slight_smile:
+        当您第一次阅读超过 100 个回复的长话题时，将授予此徽章。仔细阅读对话可以帮助您跟踪讨论，理解不同的观点，并推动更有趣的对话。您读得越多，对话就越好。正如我们常说的，阅读是基础！:slight_smile:
     popular_link:
-      name: 流行链接
+      name: 热门链接
       description: 分享的链接被点击了 50 次
       long_description: |
-        该徽章授予给分享的链接被点击过 50 次的您。感谢您贴出了有用的链接，这让讨论的情节更形象了！
+        当您分享的链接获得 50 次点击时，将授予此徽章。感谢您发布一个有用的链接，为对话添加了有趣的上下文！
     hot_link:
-      name: 热门链接
+      name: 火热链接
       description: 分享的链接被点击了 300 次
       long_description: |
-        该徽章授予给分享的链接被点击过 300 次的您。感谢您贴出了精彩的链接，这推进了讨论的进程，并且装点了讨论！
+        当您分享的链接获得 300 次点击时，将授予此徽章。感谢您发布一个引人入胜的链接，推动对话向前发展并点亮了讨论！
     famous_link:
       name: 著名链接
       description: 分享的链接被点击了 1000 次
       long_description: |
-        该徽章授予给分享的链接被点击过 1000 次的您。哇！您贴出的链接明显地推动了交流，它提供了重要的细节、上下文和其他信息，干得好！
+        当您分享的链接获得 1000 次点击时，将授予此徽章。哇！您发布了一个链接，它通过添加基本细节、上下文和信息显著改善了对话。做得好！
     appreciated:
-      name: 感谢
+      name: 受到赞赏
       description: 有 20 个帖子都被赞了 1 次
       long_description: |
-        该徽章授予给 20 个不同的帖子都收到了至少 1 个赞的您。社区感谢您对讨论的贡献！
+        当您在 20 个不同的帖子上至少获得一个赞时，将授予此徽章。社区正在享受您对这里的对话的贡献！
     respected:
-      name: 尊敬
-      description: 在100个帖子内收获2个赞
+      name: 受人尊敬
+      description: 有 100 个帖子都被赞了 2 次
       long_description: |
-        该徽章授予给 100 个不同的帖子都收到了至少 2 个喜欢的您。社区越来越尊重您在讨论中的贡献了。
+        当您在 100 个不同的帖子上至少获得 2 个赞时，将授予此徽章。社区越来越尊重您对这里的许多对话的贡献。
     admired:
-      name: 敬仰
+      name: 受人敬仰
       description: 有 300 个帖子都被赞了 5 次
       long_description: |
-        该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的您。哇！社区敬仰您在讨论中频繁和高质量的贡献。
+        当您在 300 个不同的帖子上至少获得 5 个赞时，将授予此徽章。哇！社区钦佩您对这里的对话频繁、高质量的贡献。
     out_of_love:
-      name: 热情
-      description: 一天内给出了%{max_likes_per_day}个赞
+      name: 出于爱
+      description: 一天内顶额送出 %{max_likes_per_day} 个赞
       long_description: |
-        该徽章授予给一天内给出了%{max_likes_per_day}个赞的您。别忘记休息一下，喜欢您所欣赏的帖子能鼓励社区在将来创造更多更精彩的讨论。
+        当您一天内顶额送出 %{max_likes_per_day} 个赞时，将授予此徽章。记得花点时间点赞您喜欢和欣赏的帖子，这会鼓励您的社区成员在未来创造更多精彩讨论。
     higher_love:
-      name: 激情
-      description: 共5次一天内给出了%{max_likes_per_day}个赞
+      name: 更多的爱
+      description: 一天内顶额送出 %{max_likes_per_day} 个赞，并达到 5 次
       long_description: |
-        此徽章授予给共5天用完每天%{max_likes_per_day}个赞的您。感谢您每天花时间积极鼓励最好的交流！
+        当您在一天内顶额送出 %{max_likes_per_day} 个赞并达到 5 次时，将授予此徽章。感谢您抽出时间每天积极鼓励进行最佳对话！
     crazy_in_love:
       name: 狂热
-      description: 共20次一天内给出了%{max_likes_per_day}个赞
+      description: 一天内顶额送出 %{max_likes_per_day} 个赞，并达到 20 次
       long_description: |
-        此徽章授予给每天都给出所有%{max_likes_per_day}个赞的您。哇！您是鼓励社区成员的榜样！
+        当您在一天内顶额送出 %{max_likes_per_day} 个赞并达到 20 次时，将授予此徽章。哇！您是鼓励社区成员的榜样！
     thank_you:
-      name: 感谢您
-      description: 有 20 个被赞的帖子，给出过 10 个赞
+      name: 谢谢
+      description: 有 20 个被赞的帖子，并送出了 10 个赞
       long_description: |
-        该徽章授予给收到了 20 个赞，且赞过别人至少 10 次的您。当别人赞您的帖子的时候，您也找机会赞别人的帖子。
+        当您拥有 20 个被赞的帖子并送出 10 个或更多赞作为回报时，将授予此徽章。当有人赞您的帖子时，您也应当花时间去赞其他人的帖子。
     gives_back:
       name: 回馈
-      description: 有 100 个被赞的帖子，给出过 100 个赞
+      description: 有 100 个被赞的帖子，并送出了 100 个赞
       long_description: |
-        该徽章授予给收到了 100 个赞，且赞过别人至少 100 次的您。感谢您分享感激！
+        当您拥有 100 个被赞的帖子并送出 10 个或更多赞作为回报时，将授予此徽章。感谢您分享感激！
     empathetic:
-      name: 感性
-      description: 有 500 个被赞的帖子，并给出过 1000 个赞
+      name: 善解人意
+      description: 有 500 个被赞的帖子，并送出了 1000 个赞
       long_description: |
-        该徽章授予给收到了 500 个赞，且赞过别人至少 1000 次的您。哇！您是一个富有同情心且会换位思考的模范。 :two_hearts:
+        当您拥有 500 个被赞的帖子并送出 1000 个或更多赞作为回报时，将授予此徽章。哇！您是一个慷慨且会换位思考的模范。:two_hearts:
     first_emoji:
-      name: 首个表情
+      name: 第一个表情符号
       description: 在帖子中使用表情符号
       long_description: |
-        该徽章授予给第一次在帖子中使用 Emoji 的您 :thumbsup:。Emoji 让您在帖子中表达快乐 :smiley:、悲伤 :anguished:、愤怒 :angry: 以及任何东西 :sunglasses:。输入 :（冒号）或在编辑器中的 Emoji 工具栏中选择吧 :ok_hand:
+        当您首次在帖子中添加表情符号 :thumbsup: 时，将授予此徽章。表情符号让您可以在帖子中传达情感，从快乐 :smiley: 到悲伤 :anguished:，再到愤怒 :angry:，以及 :sunglasses: 之间的一切。只需输入 :（冒号）或按编辑器中的表情符号工具栏按钮即可从数百个选项中进行选择 :ok_hand:
     first_mention:
       name: 首次提及
-      description: 帖子中提及用户
+      description: 在帖子中提及用户
       long_description: |
-        该徽章授予给第一次在帖子中@别人的您。每个提及都将通知对方，让他们知道您发了贴。输入 @ 提及任何用户，如果可以的话，也可以提及群组——这是个获得他们注意的好办法。
+        当您第一次在帖子中提及 (@) 某人的用户名时，将授予此徽章。每次提及都会向此人发送通知，以便他们了解您的帖子。只需输入 @ 即可提及任何用户或群组（如果允许）- 这是一种引起他们注意的便捷方式。
     first_onebox:
-      name: 首个Onebox
-      description: 发布过 oneboxed 链接
+      name: 首个 Onebox
+      description: 发布了一个 Onebox 链接
       long_description: |
-        该徽章授予给第一次发表单独一行链接的您。链接将展开成一个标签盒，其中包含摘要、标题和（可能的）图片。
+        当您第一次在一行上单独发布链接时，将授予此徽章。该链接会自动扩展为带有摘要、标题和图片（如果可用）的 Onebox。
     first_reply_by_email:
-      name: 首次邮件回复
-      description: 通过邮件回复
+      name: 第一次通过电子邮件回复
+      description: 通过电子邮件回复帖子
       long_description: |
-        该徽章授予给第一次通过邮件回复的您 :e-mail:。
+        当您第一次通过电子邮件 :e-mail: 回复帖子时，将授予此徽章。
     new_user_of_the_month:
-      name: "本月最佳新用户"
-      description: 第一个月做出杰出贡献
+      name: "当月最佳新用户"
+      description: 在第一个月做出杰出贡献
       long_description: |
-        该徽章授予给每个月中做出杰出贡献的两位新用户。这是根据您收到的赞和谁赞了您决定的。
+        此徽章每个月被授予做出杰出贡献的两个新用户。整体贡献根据他们的帖子被赞的频率和被谁赞进行衡量。
     enthusiast:
-      name: 十全十美
+      name: 爱好者
       description: 连续 10 天访问
       long_description: |
-        连续 10 天访问论坛会被授予该勋章。感谢与我们共度超过一周的时光！
+        连续 10 天访问论坛会被授予此勋章。感谢与我们共度超过一周的时光！
     aficionado:
       name: 百尺竿头
       description: 连续 100 天访问
       long_description: |
-        连续 100 天访问论坛会被授予该勋章。这可是超过三个月的时间！
+        连续 100 天访问论坛会被授予此勋章。这可是超过三个月的时间！
     devotee:
       name: 全年不落
       description: 连续 365 天访问
       long_description: |
-        连续365 天访问论坛会被授予该勋章。哇哦，一整年了！
-    badge_title_metadata: "%{site_title}的%{display_name}徽章"
+        连续 365 天访问论坛会被授予此勋章。哇哦，一整年！
+    badge_title_metadata: "%{site_title}上的%{display_name}徽章"
   admin_login:
-    success: "邮件已发送"
+    success: "电子邮件已发送"
     errors:
-      unknown_email_address: "未知电子邮箱地址。"
-      invalid_token: "令牌无效。"
-    email_input: "管理员邮件"
-    submit_button: "发送邮件"
+      unknown_email_address: "未知的电子邮件地址。"
+      invalid_token: "无效令牌。"
+    email_input: "管理员电子邮件"
+    submit_button: "发送电子邮件"
   performance_report:
-    initial_post_raw: 这个话题将用来展示网站每日性能报告。
-    initial_topic_title: 网站性能报告
+    initial_post_raw: 此话题包括您站点的每日表现报告。
+    initial_topic_title: 网站表现报告
   tags:
     title: "标签"
     restricted_tag_disallowed: '您不能添加标签“%{tag}”。'
-    restricted_tag_remove_disallowed: '您不能删除标签“%{tag}”。'
+    restricted_tag_remove_disallowed: '您不能移除标签“%{tag}”。'
     minimum_required_tags:
-      other: "您必须选择至少%{count}个标签"
-    upload_row_too_long: "CSV文件每行应该有一个标签。可选地，标签后面可以是逗号，然后是标签组名称。"
+      other: "您必须至少选择 %{count} 个标签。"
+    upload_row_too_long: "CSV 文件的每行应该有一个标签。或者，标签后面可以跟一个逗号，然后是标签组名称。"
     forbidden:
       invalid:
-        other: "您选择的可以使用的标签为空"
-      in_this_category: '"%{tag_name}不能用于此分类"'
+        other: "您选择的标签均无法使用"
+      in_this_category: '“%{tag_name}”不能用于此类别'
       restricted_to:
-        other: '“%{tag_name}”被限制在以下分类：%{category_names}'
-      synonym: '不允许使用同义词。使用“ %{tag_name}”代替。'
-      has_synonyms: '无法使用“ %{tag_name}”，因为有同义词。'
+        other: '“%{tag_name}”仅限于以下类别：%{category_names}'
+      synonym: '不允许使用同义词。改用“%{tag_name}”。'
+      has_synonyms: '无法使用“%{tag_name}”，因为有同义词。'
     required_tags_from_group:
-      other: "您必须至少包括 %{count} %{tag_group_name} 标签。该组中的标签为：%{tags}。"
+      other: "您必须至少包含 %{count} 个%{tag_group_name}标签。此组中的标签包括：%{tags}。"
     invalid_target_tag: "不能是同义词的同义词"
     synonyms_exist: "存在同义词时不允许"
-  rss_by_tag: "话题标签 %{tag}"
+  rss_by_tag: "使用%{tag}标记的话题"
   finish_installation:
     congratulations: "恭喜，您已安装 Discourse！"
     register:
@@ -4250,7 +4250,7 @@ zh_CN:
       watching_first_post: '%{username} 创建了新话题“%{topic}”- %{site_title}'
       confirm_title: "已启用通知 - %{site_title}"
       confirm_body: "成功！通知已启用。"
-      custom: "来自 %{username} 在 %{site_title} 上的通知"
+      custom: "来自%{site_title}上 %{username} 的通知"
   staff_action_logs:
     not_found: "找不到"
     unknown: "未知"
