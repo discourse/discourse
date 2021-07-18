@@ -974,6 +974,23 @@ class User < ActiveRecord::Base
     nil
   end
 
+  def suspended_message
+    return nil unless suspended?
+
+    message = "login.suspended"
+    if suspend_reason
+      if suspended_till > DateTime.now + 500.years
+        message = "login.suspended_with_reason_forever"
+      else
+        message = "login.suspended_with_reason"
+      end
+    end
+
+    I18n.t(message,
+           date: I18n.l(suspended_till, format: :date_only),
+           reason: Rack::Utils.escape_html(suspend_reason))
+  end
+
   # Use this helper to determine if the user has a particular trust level.
   # Takes into account admin, etc.
   def has_trust_level?(level)
