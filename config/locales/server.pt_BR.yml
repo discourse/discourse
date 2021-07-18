@@ -1489,6 +1489,8 @@ pt_BR:
     tl3_additional_likes_per_day_multiplier: "Aumentar o limite de curtidas por dia para tl3 (regular) ao multiplicar por este número"
     tl4_additional_likes_per_day_multiplier: "Aumentar o limite de curtidas por dia para tl4 (líder) ao multiplicar por este número"
     tl2_additional_edits_per_day_multiplier: "Aumente o limite de edições por dia para tl2 (membro) ao multiplicar por este número"
+    tl3_additional_edits_per_day_multiplier: "Aumentar o limite de edições por dia para tl3 (regular) ao multiplicar por este número"
+    tl4_additional_edits_per_day_multiplier: "Aumentar o limite de edições por dia para tl4 (líder) ao multiplicar por este número"
     num_users_to_silence_new_user: "Se as postagens de um(a) novo(a) usuário(a) receberem num_spam_flags_to_silence_new_user spam sinalizador(es) de usuários(as) diferentes, oculte todas as suas postagens e evite postagens futuras. 0 para desativar."
     num_tl3_flags_to_silence_new_user: "Se as postagens do(a) novo(a) usuário(a) obtiverem muitos sinalizadores de num_tl3_users_to_silence_new_user usuários(as) diferentes do nível de confiança 3, oculte todos as publicações e evite postagens futuras. 0 para desativar."
     num_tl3_users_to_silence_new_user: "Se as postagens de um(a) novo(a) usuário(a) receberem num_tl3_flags_to_silence_new_user sinalizador(es) de usuários(as) de nível de confiança 3, oculte todas as suas postagens e evite postagens futuras. 0 para desativar."
@@ -1498,21 +1500,38 @@ pt_BR:
     enable_markdown_typographer: "Use as regras de tipografia para melhorar a legibilidade do texto: substitua as aspas normais por \"aspas curvas\", (c) (tm) por símbolos, travessão --, etc."
     enable_markdown_linkify: "Tratar como link automaticamente textos parecidos com links: www.example.com e https://example.com serão vinculados automaticamente"
     markdown_linkify_tlds: "Lista de domínios de nível superior que são tratados automaticamente como links"
+    markdown_typographer_quotation_marks: "Lista de pares de substituição de aspas simples e duplas"
     post_undo_action_window_mins: "Quantidade de minutos permitidos para que os(as) usuários(as desfaçam ações recentes em uma postagem (curtir, sinalizar, etc.)."
     must_approve_users: "A equipe deve aprovar novas contas de usuários(as) antes de receberem permissão para acessar o site."
+    invite_code: "O(a) deve digitar este código para poder cadastrar a conta, é ignorado quando vazio (diferencia maiúsculas de minúsculas)"
+    approve_suspect_users: "Adicione usuários(as) suspeitos(as) à fila de revisão. Usuários(as) suspeitos(as) inseriram um site/biografia, mas não têm atividade de leitura."
+    review_every_post: "Todas as postagens devem ser revisadas. AVISO! NÃO É RECOMENDADO PARA SITES CONGESTIONADOS."
+    pending_users_reminder_delay_minutes: "Notifique os moderadores se novos(as) usuários(as) estiverem aguardando aprovação por mais de alguns minutos. Defina como -1 para desativar as notificações."
+    persistent_sessions: "Os(as) usuários(as) permanecerão com a conta conectada ao fechar o navegador"
     maximum_session_age: "O(a) usuário(a) permanecerá com a conta conectada durante n horas desde o último acesso"
+    ga_version: "A versão do Google Universal Analytics para usar: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "ID do código de monitoramento do Google Universal Analytics, por exemplo: UA-12345678-9; consulte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "O nome de domínio do Google Universal Analytics, por exemplo: mysite.com; consulte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Ative o monitoramento de domínio cruzado do Google Universal Analytics. Os links de saída para estes domínios conterão a ID de cliente. Consulte <a href='https://support.google.com/analytics/answer/1034342?hl=pt-BR' target='_blank'>Guia de acompanhamento de vários domínios do Google.</a>"
+    gtm_container_id: "ID do contêiner do Google Tag Manager. Por exemplo: GTM-ABCDEF. <br/>Observação: talvez os scripts de terceiros carregados pelo GTM precisem estar na lista de permissões no \"src de script de política de segurança de conteúdo\"."
     enable_escaped_fragments: "Voltar para a API do Google Ajax-Crawling se um webcrawler não for encontrado. Consulte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories_and_groups: "Permitir que moderadores(as) gerenciem grupos e categorias"
+    moderators_change_post_ownership: "Permitirem que moderadores(as) alterem a propriedade da postagem"
     cors_origins: "Origens permitidas para pedidos de origem cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como verdadeira para ativar CORS."
     use_admin_ip_allowlist: "Administradores(as) só podem entrar com a conta se estiverem na lista de IPs filtrados (Administração > Registros > IPs filtrados)."
     blocked_ip_blocks: "Uma lista de blocos de IP privados que nunca devem ser rastreados pelo Discourse"
     allowed_internal_hosts: "Uma lista de hosts internos que podem ser rastreados com segurança pelo Discourse para uma caixa e outros fins"
+    allowed_onebox_iframes: "Uma lista de domínios do iframe src permitidos via incorporações do Onebox. \"*\" permitirão todos os mecanismos padrão do Onebox."
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o Discourse pode permitir com segurança em postagens"
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
+    blocked_crawler_user_agents: "Palavra sem diferenciação de maiúsculas e minúsculas na linha do agente do(a) usuário(a) que identifica os rastreadores da web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
     slow_down_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter taxa limitada em robots.txt usando a diretiva de rastreamento atrasado"
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents for especificado, essa taxa será aplicada a todos os rastreadores (quantidade de segundos de atraso entre os pedidos)"
     content_security_policy: "Ativar Content-Security-Policy"
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Ativar a coleta de relatórios de violação de CSP em /csp_reports"
+    content_security_policy_frame_ancestors: "Restrinja quem incorpora este site em iframes via CSP. Controle os hosts permitidos em <a href='%{base_path}/admin/customize/embedding'>Incorporação</a>"
+    content_security_policy_script_src: "Fontes de scripts adicionais na lista de permissões. O host e CDN atual estão inclusos por padrão. Consulte<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigue ataques XSS com a política de segurança de conteúdo.</a>"
     invalidate_inactive_admin_email_after_days: "As contas de administrador(a) que não acessaram o site nesta quantidade de dias precisarão validar novamente seu endereço de e-mail antes de entrarem com a conta. Defina como 0 para desativar."
     top_menu: "Determine os items que aparecem ao navegar pela página inicial e em qual ordem. Por exemplo: mais recentes|novos|não lidos|categorias|melhores|lidos|postados|favoritos"
     post_menu: "Determine os itens e a ordem em que aparecem no menu de postagens. Por exemplo: curtir|editar|sinalizar|excluir|compartilhar|favorito|responder"
@@ -1522,6 +1541,7 @@ pt_BR:
     site_contact_group_name: "Um nome de grupo válido para ser convidado para todas as mensagens automáticas."
     send_welcome_message: "Envie aos(às) novos(as) usuários(as) uma mensagem de boas-vindas com um guia de início rápido."
     send_tl1_welcome_message: "Envie aos(às) novos(as) usuários(as) do nível de confiança 1 uma mensagem de boas-vindas."
+    send_tl2_promotion_message: "Envie a usuários(as) de nível de confiança 2 uma mensagem sobre promoção."
     suppress_reply_directly_below: "Não exiba a contagem de respostas expansível em um postagem quando há apenas uma única resposta direto abaixo desta postagem."
     suppress_reply_directly_above: "Não exiba a \"em resposta a\" expansível em uma postagem quando há apenas uma única resposta direto acima desta postagem."
     remove_full_quote: "Remova automaticamente citações completas nas respostas diretas."
@@ -1534,11 +1554,15 @@ pt_BR:
     moderators_view_emails: "Permitir que moderadores(as) visualizem e-mails de usuários(as)"
     prioritize_username_in_ux: "Mostrar primeiro o nome de usuário(a) na página do(a) usuário(a), cartão de usuário(a) e postagens (ao desativar, o nome será mostrado primeiro)"
     enable_rich_text_paste: "Ative a conversão automática de HTML para Markdown ao colar texto no compositor. (Experimental)"
+    send_old_credential_reminder_days: "Lembrar credenciais antigas após dias"
     email_token_valid_hours: "Tokens de Esqueceu a senha/ativar conta são válidos por (n) h."
     enable_badges: "Ativar o sistema de emblemas"
+    max_favorite_badges: "Quantidade máxima de emblemas que o(a) usuário(a) pode selecionar"
     enable_whispers: "Permitir a comunicação pessoal da equipe nos tópicos."
+    allow_index_in_robots_txt: "Especifique em robots.txt que este site tem permissão para ser indexado por mecanismos de busca da web. Em casos excepcionais, é possível <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a>."
     blocked_email_domains: "Lista delimitada por barras de domínios de e-mail que não são permitidos para registrar contas. Por exemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Lista delimitada por barras de domínios de e-mail que os(as) usuários(as) DEVEM usar para registrar contas. AVISO: usuários(as) com domínios de e-mail que não estão na lista não terão permissão!"
+    auto_approve_email_domains: "Os(as) usuários(as) com endereços de e-mail da lista de domínios serão aprovados automaticamente."
     hide_email_address_taken: "Não informe os(as) usuários(as) de que existe uma conta com um determinado endereço de e-mail durante o cadastro e o formulário de recuperação de senha."
     log_out_strict: "Ao sair com a conta, sair de TODAS as sessões do(a) usuário(a) em todos os dispositivos"
     version_checks: "Procurar na central do Discourse por atualizações de versão e exibir mensagens de nova versão no painel de controle <a href='%{base_path}/admin' target='_blank'>/admin</a>"
@@ -1549,12 +1573,33 @@ pt_BR:
     min_username_length: "Tamanho mínimo do nome do(a) usuário(a) em caracteres. AVISO: se algum usuário(a) ou grupo existente tiver nomes menores do que esse, seu site irá apresentar falhas!"
     max_username_length: "Tamanho máximo de nome do(a) usuário(a) em caracteres. VISO: se algum usuário(a) ou grupo existente tiver nomes maiores do que esse, seu site irá apresentar falhas!"
     unicode_usernames: "Permita nomes de usuários(a) e grupos contenham letras e números Unicode."
+    allowed_unicode_username_characters: "Expressão regular para permitir apenas alguns caracteres Unicode dentro de nomes de usuários(as). As letras e os números ASCII sempre serão permitidos e não precisam ser incluídos na lista de permissões."
     reserved_usernames: "Nomes de usuário(a) para os quais o cadastro não é permitido. O símbolo curinga * pode ser usado para corresponder a qualquer caractere zero ou mais vezes."
     min_password_length: "Tamanho mínimo da senha."
     min_admin_password_length: "Tamanho mínimo da senha para administradores(as)."
     password_unique_characters: "Quantidade mínima de caracteres únicos que uma senha deve ter."
     block_common_passwords: "Não permita senhas que estiverem entre as 10.000 senhas mais comuns."
+    auth_skip_create_confirm: Ao criar uma conta por um autenticador externo, pule o pop-up de criação de conta. É recomendável usar junto com auth_overrides_email, auth_overrides_username e auth_overrides_name.
+    auth_immediately: "Redirecione automaticamente para o sistema de entrada com conta externo sem a interação do(a) usuário(a). Isso se aplica apenas quando login_required for verdadeiro e houver apenas um método de autenticação externo"
+    enable_discourse_connect: "Ativar a criação de conta via DiscourseConnect (anteriormente \"Discourse SS\") (ALERTA: OS ENDEREÇOS DE E-MAL DOS(AS) USUÁRIOS(AS) *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
+    verbose_discourse_connect_logging: "Registrar diagnósticos detalhados relacionados ao DiscourseConnec em <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    enable_discourse_connect_provider: "Implementar o protocolo de provedor do DiscourseConnect (anteriormente \"Discourse SSO\") no ponto de extremidade /session/sso_provider, requer que o discourse_connect_provider_secrets seja definido"
+    discourse_connect_url: "URL do ponto de extremidade do DiscourseConnect (deve incluir http:// ou https://)"
+    discourse_connect_secret: "Linha secreta usada para autenticar com criptografia as informações do DiscourseConnect, verifique se tem mais de dez caracteres"
+    discourse_connect_provider_secrets: "Uma lista de pares de segredos de domínio que usam o Discourse. Verifique se o segredo do DiscourseConnect tem pelo menos dez caracteres. O símbolo de curinga * pode ser usado para fazer correspondência com domínios ou partes deles (por exemplo: *.example.com)."
     discourse_connect_overrides_bio: "Sobrescreve a biografia do(a) usuário(a) e o(a) impede de mudá-la."
+    discourse_connect_overrides_groups: "Sincronize todos os membros do grupo manual com grupos especificados no atributo dos grupos (ATENÇÃO: se você não especificar grupos, todos os membros do grupo manual serão removidos para o(a) usuário(a))"
+    auth_overrides_email: "Substitui o e-mail local pelo e-mail de algum site externo a cada vez que entrar com a conta, além de impedir alterações locais. Isso se aplica a todos os provedores de autenticação (AVISO: podem ocorrer diferenças devido à normalização de e-mails locais)"
+    auth_overrides_username: "Substitui o nome do(a) usuário(a) local pelo nome do(a) usuário(a) de algum site externo a cada vez que entrar com a conta, além de impedir alterações locais. Isso se aplica a todos os provedores de autenticação (AVISO: podem ocorrer diferenças devido ao tamanho/requisitos do nome do(a) usuário(a))"
+    auth_overrides_name: "Substitui o nome completo local pelo nome completo de algum site externo a cada vez que entrar com a conta, além de impedir alterações locais. Isso se aplica a todos os provedores de autenticação."
+    discourse_connect_overrides_avatar: "Substitui o avatar do(a) usuário(a) pelo valor do conteúdo do DiscourseConnect. Se for ativado, os(as) usuários(as) não terão permissão para enviar avatares no Discourse."
+    discourse_connect_overrides_location: "Substitui a localização do(a) usuário(a) pelo valor do conteúdo do DiscourseConnect e impede alterações locais."
+    discourse_connect_overrides_website: "Substitui o site do(a) usuário(a) pelo valor do conteúdo do DiscourseConnect e impede alterações locais."
+    discourse_connect_overrides_profile_background: "Substitui o plano de fundo do perfil do(a) usuário(a) pelo valor do conteúdo do DiscourseConnect."
+    discourse_connect_overrides_card_background: "Substitui o plano de fundo do cartão de usuário(a) pelo valor do conteúdo do DiscourseConnect."
+    discourse_connect_not_approved_url: "Redireciona contas não aprovadas do DiscourseConnect para esta URL"
+    discourse_connect_allows_all_return_paths: "Não restrinja o domínio para return_paths fornecidos pelo DiscourseConnect (por padrão, o caminho de retorno deve estar no site atual)"
+    enable_local_logins: "Ative contas baseadas em entrada com senha e usuário(a) local. ALERTA: se estiver desativado, talvez não seja possível entrar com a conta caso você não tenha configurado pelo menos um método de entrada alternativo."
     enable_local_logins_via_email: "Permita que os(as) usuários(as) solicitem um link para entrar com um clique para ser enviado por e-mail."
     allow_new_registrations: "Permita cadastro de novos(as) usuários(as). Desmarque isso para evitar que qualquer pessoa crie uma nova conta."
     enable_signup_cta: "Exiba um aviso aos(as) usuários(as) anônimos(as) que voltaram ao solicitar que criem uma conta."
@@ -1567,7 +1612,12 @@ pt_BR:
     twitter_consumer_key: "Chave do(a) consumidor(a) para autenticação do Twitter, registrada em <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Segredo do(a) consumidor(a) para autenticação do Twitter, registrado em <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     enable_facebook_logins: "Ative a autenticação do Facebook, requer facebook_app_id e facebook_app_secret. Consulte <a href='https://meta.discourse.org/t/13394' target='_blank'>Configurando a entrada com conta do Facebook para o Discourse</a>."
+    facebook_app_id: "ID do app para compartilhamento e autenticaçao do Facebook, registrado em <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "Segredo do aplicativo para autenticação do Facebook, registrado em <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    enable_github_logins: "Ative a autenticação do GitHub, requer github_client_id and github_client_secret. Consulte <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurando a entrada com conta do GitHub para o Discourse</a>."
+    github_client_id: "ID do cliente para autenticação do GitHub, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Segredo do cliente para autenticação do GitHub, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    enable_discord_logins: "Permitir que os(as) usuários(as) façam autenticação via Discord?"
     discord_client_id: 'ID do cliente Discord (precisa de uma? acesse <a href="https://discordapp.com/developers/applications/me">o portal do desenvolvedor Discord</a>)'
     discord_secret: "Chave secreta do Discord"
     discord_trusted_guilds: 'Permita que apenas membros destas guildas do Discord entrem com a conta via Discord. Use a ID numérica para a guilda. Para obter mais informações, confira as instruções <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aqui</a>. Deixe em branco para permitir qualquer guilda.'
@@ -2483,6 +2533,17 @@ pt_BR:
         Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     queued_by_staff:
       title: "A postagem requer aprovação"
+      subject_template: "Postagem oculta pela equipe, aguardando aprovaçao"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automática de %{site_name} para avisar que sua postagem foi oculta.
+
+        <%{base_url}%{url}>
+
+        Sua postagem permanecerá oculta até a revisão de um membro da equipe.
+
+        Para mais informações, consulte as nossas [diretrizes da comunidade](%{base_url}/guidelines).
     flags_disagreed:
       title: "Postagem sinalizada restaurada pela equipe"
       subject_template: "Postagem sinalizada restaurada pela equipe"
@@ -2501,6 +2562,21 @@ pt_BR:
     flags_agreed_and_post_deleted:
       title: "Postagem sinalizada removida pela equipe"
       subject_template: "Postagem sinalizada removida pela equipe"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automática de %{site_name} para informar que a [sua postagem](%{base_url}%{url}) foi removida.
+
+        %{flag_reason}
+
+        Esta postagem foi sinalizada pela comunidade e um membro da equipe optou por removê-la.
+
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Leia novamente as nossas [diretrizes da comunidade](%{base_url}/guidelines) para obter informações.
     usage_tips:
       text_body_template: |
         Para obter algumas dicas rápidas sobre como começar como um(a) novo(a) usuário(a), [confira esta postagem no blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2525,7 +2601,14 @@ pt_BR:
 
         Estamos muito felizes com a sua visita e adoraríamos saber mais sobre você. Tire um momento para [preencher seu perfil](%{base_url}/my/preferences/profile) ou sinta-se à vontade para [iniciar um novo tópico](%{base_url}/categories).
     welcome_staff:
+      title: "Equipe de boas-vindas"
       subject_template: "Parabéns, você recebeu o status %{role}!"
+      text_body_template: |
+        Você recebeu o status %{role} por um membro da equipe.
+
+        Na função de %{role}, você já tem acesso à <a href='%{base_url}/admin' target='_blank'>interface do(a) usuário(a)</a>.
+
+        Grandes poderes trazem grandes responsabilidades. Se você estiver agindo como moderador pela primeira vez, consulte o [Guia de Moderação](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Convite de boas-vindas"
       subject_template: "Boas-vindas ao %{site_name}!"
@@ -2545,6 +2628,12 @@ pt_BR:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Parabéns pela sua promoção de nível de confiança!"
+      text_body_template: |
+        Elaboramos outro [nível de confiança](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        Sendo um(a) usuário(a) experiente, você pode gostar [desta lista de truques e dicas úteis](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Incentivamos ainda mais a sua participação, gostamos de você.
     backup_succeeded:
       title: "Backup realizado com êxito"
       subject_template: "Backup concluído com êxito"
@@ -2608,6 +2697,9 @@ pt_BR:
         ```
     user_added_to_group_as_owner:
       title: "Adicionado ao grupo como proprietário(a)"
+      subject_template: "Você foi adicionado(a) como um(a) dos(as) proprietários(as) do grupo %{group_name}"
+      text_body_template: |
+        Você foi adicionado(a) como um(a) dos(as) proprietários(as) do grupo [%{group_name}](%{base_url}%{group_path}).
     user_added_to_group_as_member:
       title: "Adicionado ao grupo como membro"
       subject_template: "Você foi adicionado(a) como membro do grupo %{group_name}"
@@ -2616,6 +2708,14 @@ pt_BR:
     csv_export_succeeded:
       title: "A exportação CSV foi bem-sucedida"
       subject_template: "[%{export_title}] exportação de dados concluída"
+      text_body_template: |
+        Seus dados foram exportados! :dvd:
+
+        %{download_link}
+
+        O link de download acima permanecerá válido por 48 horas.
+
+        Os dados foram compactados em um arquivo .zip. Caso não seja extraído ao abrir, use a ferramenta recomendada aqui: https://www.7-zip.org/
     csv_export_failed:
       title: "Falha na exportação de CSV"
       subject_template: "A exportação de dados falhou"
