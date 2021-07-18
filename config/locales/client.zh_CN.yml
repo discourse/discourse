@@ -4364,7 +4364,7 @@ zh_CN:
         flags_given_received_count: "提交的举报/收到的举报"
         approve: "批准"
         approved_by: "批准者"
-        approve_success: "用户已被批准， 包含激活说明的电子邮件已发送。"
+        approve_success: "用户已被批准，包含激活说明的电子邮件已发送。"
         approve_bulk_success: "成功！所有选定用户已被批准并通知。"
         time_read: "阅读时间"
         anonymize: "对用户进行匿名化处理"
