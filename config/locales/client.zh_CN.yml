@@ -221,7 +221,7 @@ zh_CN:
       pm_title: "建议的消息"
     about:
       simple_title: "关于"
-      title: "关于 %{title}"
+      title: "关于%{title}"
       stats: "站点统计信息"
       our_admins: "我们的管理员"
       our_moderators: "我们的版主"
@@ -312,7 +312,7 @@ zh_CN:
       close: "关闭此横幅。"
       edit: "编辑此横幅 >>"
     pwa:
-      install_banner: "要<a href>在此设备上安装 %{title}</a> 吗？"
+      install_banner: "要<a href>在此设备上安装%{title}</a> 吗？"
     choose_topic:
       none_found: "未找到话题。"
       title:
@@ -1010,7 +1010,7 @@ zh_CN:
       automatically_unpin_topics: "当我到达底部时自动取消置顶话题。"
       apps: "应用"
       revoke_access: "撤消访问权限"
-      undo_revoke_access: "撤消撤消访问权限"
+      undo_revoke_access: "撤消访问权限撤消操作"
       api_approved: "已批准："
       api_last_used_at: "最后使用时间："
       theme: "主题"
@@ -2523,7 +2523,7 @@ zh_CN:
       last_edited_on: "帖子最后编辑于 %{dateTime}"
       reply_as_new_topic: "作为链接话题回复"
       reply_as_new_private_message: "作为新消息回复给相同的收件人"
-      continue_discussion: "自 %{postLink} 继续讨论："
+      continue_discussion: "继续 %{postLink} 的讨论："
       follow_quote: "转到引用的帖子"
       show_full: "显示完整帖子"
       show_hidden: "查看已忽略的内容。"
@@ -2549,7 +2549,7 @@ zh_CN:
       filtered_replies_hint:
         other: "查看此帖子及其 %{count} 个回复"
       filtered_replies_viewing:
-        other: "查看 %{count} 个回复"
+        other: "查看 %{count} 个回复："
       in_reply_to: "加载父帖子"
       view_all_posts: "查看所有帖子"
       errors:
@@ -3158,7 +3158,7 @@ zh_CN:
       other_tags: "其他标签"
       selector_all_tags: "所有标签"
       selector_no_tags: "无标签"
-      changed: "标签被修改："
+      changed: "标签更改："
       tags: "标签"
       choose_for_topic: "可选标签"
       info: "信息"
@@ -3823,7 +3823,7 @@ zh_CN:
             error: "此主题已被自动禁用，因为它与此版本的 Discourse 不兼容。"
             minimum: "需要 Discourse 版本 %{version} 或更高版本。"
             maximum: "需要 Discourse 版本 %{version} 或更低版本。"
-          component_of: "组件："
+          component_of: "组件所属对象："
           update_to_latest: "更新到最新"
           check_for_updates: "检查更新"
           updating: "正在更新…"

@@ -3458,10 +3458,10 @@ zh_CN:
     offline_page_message: "您好像离线了！请检查您的网络连接，然后重试。"
   login_required:
     welcome_message: |
-      ## [欢迎来到 %{title}](#welcome)
+      ## [欢迎来到%{title}](#welcome)
       需要一个帐户。请创建帐户或登录以继续。
     welcome_message_invite_only: |
-      ## [欢迎来到 %{title}](#welcome)
+      ## [欢迎来到%{title}](#welcome)
       需要一个帐户。请向现有成员请求邀请或登录以继续。
   deleted: "已删除"
   image: "图片"

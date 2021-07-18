@@ -6,71 +6,71 @@
 
 zh_CN:
   site_settings:
-    discourse_narrative_bot_enabled: "启用 Discourse 代表机器人（discobot）"
-    disable_discourse_narrative_bot_welcome_post: "禁止 Discourse 代表机器人发送欢迎帖子"
-    discourse_narrative_bot_ignored_usernames: "Discourse 代表机器人应该忽略的用户名"
-    discourse_narrative_bot_disable_public_replies: "禁止 Discourse 代表机器人发布公开回复"
-    discourse_narrative_bot_welcome_post_type: "Discourse 代表机器人应该发送的欢迎帖子类型"
-    discourse_narrative_bot_welcome_post_delay: "在 Discourse 代表机器人发送欢迎帖子前等待 (n) 秒。"
-    discourse_narrative_bot_skip_tutorials: "跳过Discourse叙事机器人教程"
+    discourse_narrative_bot_enabled: "启用 Discourse Narrative Bot (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "禁用 Discourse Narrative Bot 的欢迎帖子"
+    discourse_narrative_bot_ignored_usernames: "Discourse Narrative Bot 应该忽略的用户名"
+    discourse_narrative_bot_disable_public_replies: "禁用 Discourse Narrative Bot 的公开回复"
+    discourse_narrative_bot_welcome_post_type: "Discourse Narrative Bot 应该发出的欢迎帖子类型"
+    discourse_narrative_bot_welcome_post_delay: "在发送 Discourse Narrative Bot 欢迎帖子之前等待 (n) 秒。"
+    discourse_narrative_bot_skip_tutorials: "要跳过的 Discourse Narrative Bot 教程"
   badges:
     certified:
-      name: 已合格
+      name: 已认证
       description: "已完成我们的新用户教程"
       long_description: |
-        该徽章授予完成我们交互式新用户教程的你。你已经有动力学习了讨论的基础工具，你现在已经合格了！
+        当您成功完成互动式新用户教程后，将授予此徽章。您已主动学习讨论的基本工具，现在您已获得认证！
     licensed:
-      name: 已证明
-      description: "完成了我们的高级用户教程"
+      name: 已授权
+      description: "已完成我们的高级用户教程"
       long_description: |
-        该徽章授予给完成交互式高级用户教程的你。你已经掌握了讨论的高级工具——本徽章就是你的证明！
+        当您成功完成互动式高级用户教程后，将授予此徽章。您已经掌握了讨论的高级工具 - 现在您已获得完全许可！
   discourse_narrative_bot:
-    bio: "你好，我不是一个真实存在的人类。我是一个可以带你了解这个站点的机器人。你可以通过给我发消息或提及我来与我交互。"
+    bio: "嗨，我不是真人。我是一个可以教您使用此网站的机器人。要与我互动，请给我发送消息或通过名字提及我。"
     tl2_promotion_message:
-      subject_template: "现在你已经晋升了，是时候学习高级功能了！"
+      subject_template: "现在，您已经升级，是时候了解一些高级功能了！"
       text_body_template: |
-        使用`@%{discobot_username} %{reset_trigger}`回复本消息可以找出更多功能。
+        使用 `@%{discobot_username} %{reset_trigger}` 回复本消息可以了解您还可以做什么。
     timeout:
       message: |-
-        你好， @%{username}。好久没见到你了，一切可好？
+        嘿，@%{username}。好久不见，一切可好？
 
-        - 你可以在任意时候回复我。
+        - 要继续，您可以随时回复我。
 
-        - 如果你想要跳过这个步骤，说`%{skip_trigger}`。
+        - 如果您想要跳过这个步骤，请说 `%{skip_trigger}`。
 
-        - 要重新开始，说`%{reset_trigger}`。
+        - 要重新开始，请说 `%{reset_trigger}`。
 
-        如果你不想的话也没问题。我是个机器人。你不会伤害到我。 :sob:
+        如果您不想也没问题。我是个机器人。您不会伤害到我。:sob:
     dice:
-      trigger: "骰子"
+      trigger: "投掷"
       invalid: |-
-        我很抱歉，数学上证明了不可能投出这种色子组合。 :confounded:
+        抱歉，数学上无法掷出该骰子组合。:confounded:
       not_enough_dice:
-        other: "我只有 %{count} 骰子。 [Shameful]\n(https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)，我知道！"
+        other: "我只有 %{count} 个骰子。[Shameful]\n(https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)，我知道！"
       out_of_range: |-
-        你知道数学上[面最多](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)的公平色子有 120 面么？
+        您知道数学上公平的骰子[最多有 120 个面](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)吗？
       results: |-
         > :game_die: %{results}
     quote:
       trigger: "引用"
       "1":
-        quote: "每一个困难中存在着机会"
+        quote: "每一个困难中都蕴藏着机遇"
         author: "阿尔伯特·爱因斯坦"
       "2":
-        quote: "如果自由不包括犯错的自由，那么这个自由就不值得拥有。"
-        author: "默罕默德·甘地"
+        quote: "如果自由不包括犯错的自由，那么就不值得拥有。"
+        author: "圣雄甘地"
       "3":
-        quote: "不必为结束而哭泣，而要为曾经拥有而微笑。"
+        quote: "不要为结束而哭泣，而要为曾经拥有而微笑。"
         author: "苏斯博士"
       "4":
-        quote: "自己动手，丰衣足食。"
-        author: "查尔斯·纪尧姆·西安娜"
+        quote: "如果你想把事情做对，那就自己做。"
+        author: "查尔斯·纪尧姆·艾蒂安"
       "5":
         quote: "相信自己能成功，你就已经成功了一半。"
         author: "西奥多·罗斯福"
       "6":
-        quote: "生命就像一盒巧克力。你永远也不会知道你将拿到什么。"
-        author: "福雷斯特·甘普的妈妈"
+        quote: "生活就像一盒巧克力。你永远不知道你会得到什么。"
+        author: "福雷斯特·甘的妈妈"
       "7":
         quote: "这是我个人的一小步，却是全人类的一大步。"
         author: "尼尔·阿姆斯特朗"
@@ -81,7 +81,7 @@ zh_CN:
         quote: "如果一个人敢于承认错误，那么一切的错误都会被原谅。"
         author: "李小龙"
       "10":
-        quote: "心想事成。"
+        quote: "人只要敢于梦想，并对此坚信不疑，就一定能达成目标。"
         author: "拿破仑·希尔"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
@@ -97,7 +97,7 @@ zh_CN:
         "7": "很可能"
         "8": "看起来不错"
         "9": "是的"
-        "10": "标志指的是"
+        "10": "迹象表明是"
         "11": "再随便回复试试"
         "12": "等等再问我"
         "13": "现在最好不告诉你"
@@ -105,7 +105,7 @@ zh_CN:
         "15": "专心然后再问一次"
         "16": "不要指望它"
         "17": "我的回答是不"
-        "18": "我的代码让我不谈钱"
+        "18": "我的消息来源说不"
         "19": "看起来不是很好"
         "20": "很可疑"
       result: |-
@@ -113,111 +113,111 @@ zh_CN:
     track_selector:
       reset_trigger: "开始"
       skip_trigger: "跳过"
-      help_trigger: "帮助"
+      help_trigger: "显示帮助"
       random_mention:
         reply: |-
-          你好！想看看我能做什么吗？说 `@%{discobot_username} %{help_trigger}`。
+          嗨！要了解我能说什么，请说 `@%{discobot_username} %{help_trigger}`。
         tracks: |-
-          我现在知道怎么办了：
+          我目前知道如何执行以下操作：
 
-          `@%{discobot_username}%{reset_trigger}{name-of-tutorial}`
-          > 在私信中为你开设一个交互式的教程。`{name-of-tutorial}` 可以是以下之一： `%{tracks}`。
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > 在个人消息中为您启动交互式教程。`{name-of-tutorial}` 可以是以下之一：`%{tracks}`。
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
+          > :game_die: 3、6
 
           `@%{discobot_username} %{quote_trigger}`
           %{quote_sample}
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: 你可能需要它
-        discobot_disabled: 你已在设置中关闭了我。你需要启用新用户入门技巧才能与我交互。
+          > :crystal_ball: 您可以信赖它
+        discobot_disabled: 您已在偏好设置中将我禁用。您需要允许新用户入门提示才能与我互动。
       do_not_understand:
         first_response: |-
-          你好，感谢回复！
+          嘿，感谢回复！
 
-          不幸的是，我是别人随手写的机器人，我其实不太懂这个。:frowning:
-        track_response: 你可以再试一次，或者你想要跳过这个步骤，说`%{skip_trigger}`。不然的话，说`%{reset_trigger}`重新开始。
+          很抱歉，我是一个随手编写的机器人，我其实不太懂您的回复。:frowning:
+        track_response: 您可以再试一次，或者如果您想跳过这一步，请说 `%{skip_trigger}`。否则，要重新开始，请说 `%{reset_trigger}`。
         second_response: |-
-          啊，抱歉。我还是没懂。 :anguished:
+          抱歉！我还是没懂。:anguished:
 
-          我只是个机器人，但是如果你想要找到真人，看看[我们的联系页面](%{base_path}/about)。
+          我只是个机器人，但是如果您想要联系真人，请参阅[我们的联系页面](%{base_path}/about)。
 
-          同时，我不会再烦你了。
+          同时，我不会再烦您了。
     new_user_narrative:
       reset_trigger: "教程"
-      title: "新用户教程完成证明"
-      cert_title: "你已经成功完成新用户教程了"
+      title: "新用户教程完成证书"
+      cert_title: "表彰成功完成新用户教程"
       hello:
         title: "欢迎！"
         message: |-
           感谢加入%{title}，欢迎！
 
-          - 我只是一个机器人，但是我们[友好的管理员](%{base_uri}/about)可以提供真人帮助。
+          - 我只是一个机器人，但是我们[友好的管理人员](%{base_uri}/about)可以提供真人帮助。
 
-          - 出于安全考虑，我们暂时限制新用户能够使用的功能。当我们更了解你的时候，你就可以获得[新功能](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (还有 [徽章](%{base_uri}/badges))
+          - 出于安全原因，我们暂时限制了新用户的操作。随着我们对您的了解，您将获得[新能力](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)（以及[徽章](%{base_uri}/badges)）。
 
-          - 我们一直坚守[社区文明守则](%{base_uri}/guidelines)。
+          - 我们始终相信[文明社区行为](%{base_uri}/guidelines)。
       onebox:
         instructions: |-
-          接下来，你能分享下列链接给我么？回复**单独一行的链接**，然后它会自动展开显示一个有用的摘要。
+          接下来，您能与我分享其中一个链接吗？以**一行一个链接的形式**回复，然后它会自动展开为包含一个漂亮的的摘要。
 
-          要复制链接，在移动端点击并且保持，或者用你的鼠标右键：
+          要复制链接，在移动端设备上按住链接，或者右键点击您的鼠标：
 
           <https://en.wikipedia.org/wiki/Inherently_funny_word>
           <https://en.wikipedia.org/wiki/Death_by_coconut>
           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
-          酷！这对许多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">链接都管用。请记住，它必须占**单独的一行**，前后都没东西。
+          酷！这将适用于大多数 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 链接。请记住，它必须**独占一行**，前后都没内容。
         not_found: |-
-          抱歉，我没在你的回复中找到链接！ :cry:
+          抱歉，我在您的回复中找不到链接！:cry:
 
-          在你的下个回复中，可以试着另起一行添加下面的链接吗？
+          您可以尝试在下一个回复中以独占一行的形式添加以下链接吗？
 
-          - https://en.wikipedia.org/wiki/Exotic_Shorthair
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
-          这是一只独角兽的照片：
+          这是一张独角兽图片：
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          如果你喜欢它（谁不呢！）就在帖子的下方赞 :heart: 一下让我知道。
+          如果您喜欢它（谁不呢！），就按一下此帖子下方的赞 :heart: 按钮，让我知道。
 
-          你可以**带图片回复**吗？任何图片都行！拖入释放，点击上传按钮，或者把它复制粘贴进来。
+          您可以**带图片回复**吗？任何图片都行！拖放并按上传按钮，或者复制并粘贴。
         reply: |-
-          好赞的图片—我点了赞 :heart: ，你知道我很乐意看见它的 :heart_eyes:
+          漂亮的图片 - 我按下了赞 :heart: 按钮，让您知道我有多欣赏它 :heart_eyes:
         like_not_found: |-
-          你忘记点赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
+          您忘记点赞 :heart: 我的[帖子](%{url})了吗？:crying_cat_face:
         not_found: |-
-          你还没有上传图像，因此我为你选择了一张我觉得你会喜欢的。
+          您好像没有上传图片，所以我选择了一张我_确定_您会喜欢的图片。
 
           <%{image_url}>
 
-          上传另一个试试，也可以单独一行粘贴图片的链接！
+          下次尝试上传一张，或将链接单独粘贴到一行中！
       likes:
         instructions: |-
-          这是一只独角兽的照片：
+          这是一张独角兽图片：
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          如果你喜欢的话（谁会不喜欢呢！）点击帖子底部的赞:heart:按钮让我知道。
+          如果您喜欢它（谁不呢！），就按一下此帖子下方的赞 :heart: 按钮，让我知道。
         reply: |-
-          感谢你喜欢我的帖子！
+          感谢您赞我的帖子！
         not_found: |-
-          你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
+          您忘记点赞 :heart: 我的[帖子](%{url})了吗？:crying_cat_face:
       formatting:
         instructions: |-
-          你可以在下一个回复中加粗或斜体这些词语么？
+          您可以在回复中使用**粗体** 或_斜体_吗？
 
-          - 输入`**粗体**`或`_斜体_`
+          - 输入 `**bold**` 或 `_italic_`
 
-          - 或者，按编辑器上的按钮<kbd><b>B</b></kbd>或<kbd><i>I</i></kbd>
+          - 或者，按编辑器中的 <kbd><b>B</b></kbd> 或 <kbd><i>I</i></kbd> 按钮
         reply: |-
-          干得漂亮！HTML 和 BBCode 也可以用来格式化—想学更多，[试试这个教程](http://commonmark.org/help) :nerd:
+          做得好！HTML 和 BBCode 也适用于格式化 - 要了解更多信息，请[试试本教程](http://commonmark.org/help) :nerd:
         not_found: |-
-          啊，我在你的回复中没找到任何格式。 :pencil2:
+          哇，我在您的回复中没有找到任何格式。:pencil2:
 
-          你能再试试吗？如果你不知道怎么办了，按编辑器上的按钮 <kbd><b>B</b></kbd> 加粗或者<kbd><i>I</i></kbd> 斜体。
+          您能再试一次吗？如果遇到困难，请使用编辑器中的 <kbd><b>B</b></kbd> 粗体或 <kbd><i>I</i></kbd> 斜体按钮。
       quoting:
         instructions: |-
           你能在回复的时候引用我的话吗，这样我就知道你在回复我什么了。
@@ -310,7 +310,7 @@ zh_CN:
 
           （如果你想再次与我交谈以了解更多信息，请随时留言或提及`@%{discobot_username}`！）
       certificate:
-        alt: "成就证明"
+        alt: "成就证书"
     advanced_user_narrative:
       reset_trigger: "高级教程"
       cert_title: "你已经成功完成高级用户教程了"
@@ -438,4 +438,4 @@ zh_CN:
 
           再见啦！如果你想要继续和我交流，随时给我发消息 :sunglasses:
       certificate:
-        alt: "高级用户终身成就证明"
+        alt: "高级用户跟踪成就证书"
