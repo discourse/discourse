@@ -3702,11 +3702,27 @@ en:
 
         Reason - %{reason}
 
+    account_suspended_forever:
+      title: "Account Suspended"
+      subject_template: "[%{email_prefix}] Your account has been suspended"
+      text_body_template: |
+        You have been suspended from the forum.
+
+        Reason - %{reason}
+
     account_silenced:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum until %{silenced_till}.
+
+        Reason - %{reason}
+
+    account_silenced_forever:
+      title: "Account Silenced"
+      subject_template: "[%{email_prefix}] Your account has been silenced"
+      text_body_template: |
+        You have been silenced from the forum.
 
         Reason - %{reason}
 
