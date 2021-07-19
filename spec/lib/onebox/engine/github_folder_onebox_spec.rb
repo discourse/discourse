@@ -16,7 +16,7 @@ describe Onebox::Engine::GithubFolderOnebox do
 
     describe "#to_html" do
       it "includes link to folder with truncated display path" do
-        expect(html).to include("<a href=\"https://github.com/discourse/discourse/tree/main/spec/fixtures\" target=\"_blank\" rel=\"noopener\">master/spec/fixtures</a>")
+        expect(html).to include('<a href="https://github.com/discourse/discourse/tree/main/spec/fixtures" target="_blank" rel="noopener">main/spec/fixtures</a>')
       end
 
       it "includes repository name" do
