@@ -4,7 +4,7 @@
 # about: Show which users are writing a reply to a topic
 # version: 2.0
 # authors: André Pereira, David Taylor, tgxworld
-# url: https://github.com/discourse/discourse/tree/master/plugins/discourse-presence
+# url: https://github.com/discourse/discourse/tree/main/plugins/discourse-presence
 
 enabled_site_setting :presence_enabled
 hide_plugin if self.respond_to?(:hide_plugin)
