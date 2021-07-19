@@ -2,7 +2,7 @@
   <form>
     <div class="input-group invite-link">
       <label for="invite-link">{{i18n "topic.share.instructions"}}</label>
-      <div class="share-link-container">
+      <div class="link-share-container">
         {{input
           name="invite-link"
           class="invite-link"
@@ -12,7 +12,7 @@
         {{copy-button selector="input.invite-link"}}
       </div>
     </div>
-    <div class="share-link-actions">
+    <div class="link-share-actions">
       <div class="sources">
         {{#each sources as |s|}}
           {{share-source source=s title=topic.title action=(action "share")}}
