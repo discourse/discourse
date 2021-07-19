@@ -1,26 +1,80 @@
-// styles that apply to the "share" popup when sharing a link to a post or topic
+// styles that apply to the "share" modal & popup when sharing a link to a post or topic
+
+.share-link-container {
+  display: flex;
+  button {
+    transition-property: background-color, color; // don't transition outline
+  }
+  input {
+    width: 100%;
+    font-size: var(--font-up-1);
+    margin-bottom: 0;
+    &:focus + button {
+      outline: 1px solid var(--tertiary);
+    }
+  }
+}
+
+.share-link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  button {
+    margin-top: 0.5em;
+    margin-right: 0.5em;
+  }
+
+  .sources {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .new-topic {
+    margin-right: 0;
+  }
+
+  .alt-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+}
+
+.share-twitter {
+  .d-icon {
+    color: var(--twitter);
+  }
+}
+.share-facebook {
+  .d-icon {
+    color: var(--facebook);
+  }
+}
+
+// post share popup
 
 #share-link {
   position: absolute;
-  left: 20px;
   z-index: z("dropdown");
   box-shadow: shadow("card");
   background-color: var(--secondary);
-  padding: 8px 8px 4px 8px;
+  padding: 0.5em;
   width: 300px;
   display: none;
   &.visible {
     display: block;
   }
+
   input[type="text"] {
     width: 100%;
   }
 
   .title {
-    margin-bottom: 4px;
+    margin-bottom: 0.5em;
     align-items: center;
     display: flex;
-    justify-content: space-between;
 
     h3 {
       font-size: $font-0;
@@ -30,74 +84,166 @@
     .date {
       font-weight: normal;
       color: var(--primary-med-or-secondary-med);
+      margin-left: 0.5em;
     }
-  }
 
-  .copy-text {
-    display: inline-block;
-    position: absolute;
-    margin: 5px 5px 5px 15px;
-    color: var(--success);
-    opacity: 1;
-    transition: opacity 0.25s;
-    font-size: $font-0;
-    &:not(.success) {
-      opacity: 0;
+    .btn.close {
+      margin-left: auto;
     }
   }
-  .social-link {
-    margin-right: 8px;
-    font-size: $font-up-4;
-    .d-icon {
-      color: var(--tertiary-or-white);
-    }
-    .d-icon-fab-facebook {
-      // Adheres to Facebook brand guidelines
-      color: var(--facebook-or-white);
-    }
-    .d-icon-fab-twitter-square {
-      // Adheres to Twitter brand guidelines
-      color: var(--twitter-or-white);
-    }
-  }
+}
 
-  input[type="text"] {
-    font-size: $font-up-1;
+// topic share modal
+
+.share-topic-modal {
+  form {
     margin-bottom: 0;
   }
 
-  .actions {
+  .invite-users {
     display: flex;
-    align-items: flex-end;
-    margin-top: 8px;
+    flex-direction: column;
+    margin: 1.5em 0 0.25em;
+    width: 100%;
 
-    .sources {
-      display: flex;
+    button {
+      margin-top: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+.notify-user-input {
+  display: flex;
+  align-items: stretch;
+
+  .select-kit {
+    width: 100%;
+  }
+
+  .multi-select-header {
+    width: 100%;
+  }
+
+  .select-kit.multi-select .choices {
+    padding: 0;
+  }
+
+  .select-kit.multi-select.is-expanded + button {
+    outline: 1px solid var(--tertiary); // outline the button when the input is outlined, to match height
+  }
+}
+
+// topic invite modal
+
+.create-invite-modal {
+  form {
+    margin: 0;
+    input[type="text"],
+    .btn,
+    .select-kit-header {
+      height: 2.27rem;
+    }
+  }
+
+  input {
+    margin-bottom: 0;
+  }
+
+  label {
+    margin-right: 0.5em;
+    .d-icon {
+      color: var(--primary-medium);
+      margin-right: 0.75em;
+    }
+  }
+
+  textarea {
+    margin-bottom: 0;
+  }
+
+  .input-group:not(:last-of-type) {
+    margin-bottom: 1em;
+  }
+  .input-group.input-expires-at,
+  .input-group.input-email,
+  .input-group.invite-max-redemptions {
+    input[type="text"] {
+      width: unset;
+    }
+  }
+
+  .existing-topic,
+  p {
+    // p is for "no topics found"
+    margin-left: 1.75em;
+    margin-top: 0.25em;
+  }
+
+  .future-date-input {
+    display: grid;
+    grid-template-columns: auto 1fr;
+
+    .control-group:nth-child(1) {
+      grid-column-start: 1;
+      grid-column-end: 3;
+    }
+    .control-group:nth-child(2) {
+      margin-left: 1.75em;
+      margin-right: 1.5em;
+    }
+    .control-group:nth-child(2),
+    .control-group:nth-child(3) {
+      grid-row-start: 2;
+      display: inline-flex;
       align-items: center;
-      flex-wrap: wrap;
-      flex-direction: row;
-      max-width: 45%;
-
-      .social-link {
-        margin-right: 8px;
+      margin-bottom: 0;
+      input {
+        height: 100%;
+        margin-bottom: 0;
+        margin-left: 0.5em;
+        width: 150px;
       }
     }
+  }
 
-    .alt-actions {
-      display: flex;
-      align-items: center;
-      flex: 1;
-      justify-content: flex-end;
-      height: 36px;
+  .input-group.input-email {
+    display: flex;
+    align-items: baseline;
+    label {
+      display: inline;
+    }
+  }
 
-      .close-share {
-        font-size: $font-up-3;
-        color: var(--primary-med-or-secondary-med);
-      }
+  .invite-email-container {
+    flex: 1 1 auto;
+    #invite-email {
+      width: 100%;
+    }
+  }
 
-      .new-topic {
-        margin-right: 16px;
-      }
+  .invite-max-redemptions {
+    label {
+      display: inline;
+    }
+    input {
+      width: 80px;
+    }
+  }
+
+  .show-advanced {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .input-group {
+    textarea#invite-message,
+    &.invite-to-topic input[type="text"],
+    .group-chooser,
+    .user-chooser,
+    .future-date-input-selector {
+      margin-left: 1.75em;
+      width: calc(100% - 1.75em);
     }
   }
 }

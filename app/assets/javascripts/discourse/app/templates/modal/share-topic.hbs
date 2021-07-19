@@ -2,7 +2,7 @@
   <form>
     <div class="input-group invite-link">
       <label for="invite-link">{{i18n "topic.share.instructions"}}</label>
-      <div class="invite-input-with-button">
+      <div class="share-link-container">
         {{input
           name="invite-link"
           class="invite-link"
@@ -12,50 +12,51 @@
         {{copy-button selector="input.invite-link"}}
       </div>
     </div>
+    <div class="share-link-actions">
+      <div class="sources">
+        {{#each sources as |s|}}
+          {{share-source source=s title=topic.title action=(action "share")}}
+        {{/each}}
 
-    <div class="sources">
-      {{#each sources as |s|}}
-        {{share-source source=s title=topic.title action=(action "share")}}
-      {{/each}}
-
-      {{d-button
-        class="btn-default"
-        label="topic.share.notify_users.title"
-        icon="hand-point-right"
-        action=(action "toggleNotifyUsers")
-      }}
-
-      {{#if allowInvites}}
         {{d-button
           class="btn-default"
-          label="topic.share.invite_users"
-          icon="user-plus"
-          action=(action "inviteUsers")
+          label="topic.share.notify_users.title"
+          icon="hand-point-right"
+          action=(action "toggleNotifyUsers")
         }}
+
+        {{#if allowInvites}}
+          {{d-button
+            class="btn-default"
+            label="topic.share.invite_users"
+            icon="user-plus"
+            action=(action "inviteUsers")
+          }}
+        {{/if}}
+      </div>
+
+      {{#if showNotifyUsers}}
+        <div class="input-group invite-users">
+          <label for="invite-users">{{i18n "topic.share.notify_users.instructions"}}</label>
+          <div class="notify-user-input">
+            {{user-chooser
+              value=users
+              onChange=(action "onChangeUsers")
+              options=(hash
+                      topicId=topic.id
+                      maximum=(unless currentUser.staff 1)
+                      excludeCurrentUser=true
+                      )
+            }}
+            {{d-button
+              icon="check"
+              class="btn-primary"
+              disabled=(if users false true)
+              action=(action "notifyUsers")
+            }}
+          </div>
+        </div>
       {{/if}}
     </div>
-
-    {{#if showNotifyUsers}}
-      <div class="input-group invite-users">
-        <label for="invite-users">{{i18n "topic.share.notify_users.instructions"}}</label>
-        <div class="invite-input-with-button">
-          {{user-chooser
-            value=users
-            onChange=(action "onChangeUsers")
-            options=(hash
-                     topicId=topic.id
-                     maximum=(unless currentUser.staff 1)
-                     excludeCurrentUser=true
-                    )
-          }}
-          {{d-button
-            icon="check"
-            class="btn-primary"
-            disabled=(if users false true)
-            action=(action "notifyUsers")
-          }}
-        </div>
-      </div>
-    {{/if}}
   </form>
 {{/d-modal-body}}
