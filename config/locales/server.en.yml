@@ -202,7 +202,7 @@ en:
       default_categories_already_selected: "You cannot select a category used in another list."
       default_tags_already_selected: "You cannot select a tag used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
-      enable_s3_uploads_is_required: "You cannot enable inventory to S3 unless you've enabled the S3 uploads."
+      enable_s3_uploads_is_required: "You cannot enable usage of the S3 inventory unless you've enabled S3 uploads."
       page_publishing_requirements: "Page publishing cannot be enabled if secure media is enabled."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
@@ -247,8 +247,8 @@ en:
     invite_exists: "You already invited <b>%{email}</b>."
     invalid_email: "%{email} isn't a valid email address."
     rate_limit:
-      one: "You have already sent %{count} invite in the last day, please wait %{time_left} before trying again."
-      other: "You have already sent %{count} invites in the last day, please wait %{time_left} before trying again."
+      one: "You have already sent %{count} invite in the last 24 hours, please wait %{time_left} before trying again."
+      other: "You have already sent %{count} invites in the last 24 hours, please wait %{time_left} before trying again."
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
     disabled_errors:
@@ -1634,7 +1634,7 @@ en:
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
-    site_contact_group_name: "A valid group name to be invited to all automated messages."
+    site_contact_group_name: "A valid name of a group that gets invited to all automatically sent private messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
@@ -1646,7 +1646,7 @@ en:
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
-    top_page_default_timeframe: "Default timeframe for the top view page."
+    top_page_default_timeframe: "Default timeframe for the top page."
     moderators_view_emails: "Allow moderators to view user emails"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
@@ -1877,7 +1877,7 @@ en:
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
     min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
-    min_trust_to_send_email_messages: "The minimum trust level requred to send personal messages via email."
+    min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
@@ -2051,7 +2051,7 @@ en:
     imap_polling_period_mins: "The period in minutes between checking the IMAP accounts for emails."
     imap_polling_old_emails: "The maximum number of old emails (processed) to be updated every time an IMAP box is polled (0 for all)."
     imap_polling_new_emails: "The maximum number of new emails (unprocessed) to be updated every time an IMAP box is polled ."
-    imap_batch_import_email: "The minimum number of new emails that trigger import mode (disables post alerts)."
+    imap_batch_import_email: "The minimum number of new emails that trigger import mode (disables notifications for imported posts)."
 
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
@@ -2403,7 +2403,6 @@ en:
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."
 
   original_poster: "Original Poster"
-  most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
   # Example: "Original Poster, Most Recent Poster"
