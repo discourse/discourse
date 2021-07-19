@@ -360,6 +360,9 @@ pt_BR:
   rss_num_posts:
     one: "%{count} mensagem"
     other: "%{count} mensagens"
+  rss_num_participants:
+    one: "%{count} participante"
+    other: "%{count} participantes"
   read_full_topic: "Ler tópico completo"
   private_message_abbrev: "Msg"
   rss_description:

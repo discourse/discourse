@@ -1851,6 +1851,9 @@ pt_BR:
       similar_topics: "Seu tópico é parecido com..."
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
+      group_mentioned_limit:
+        one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário. Ninguém será notificado(a)."
+        other: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuários. Ninguém será notificado(a)."
       group_mentioned:
         one: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoa</a>. Tem certeza?"
         other: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoas</a>. Tem certeza?"
@@ -1861,9 +1864,21 @@ pt_BR:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "O título é obrigatório"
+        title_too_short:
+          one: "O título deve ter pelo menos %{count} caracter"
+          other: "Título precisa ter no mínimo %{count} caracteres"
+        title_too_long:
+          one: "O título não pode ter mais do que %{count} caracter"
+          other: "O título não pode ter mais do que %{count} caracteres"
         post_missing: "A postagem não pode estar vazia"
+        post_length:
+          one: "A postagem deve ter pelo menos %{count} caracter"
+          other: "A postagem deve ter pelo menos %{count} caracteres"
         try_like: "Você já tentou o botão %{heart}?"
         category_missing: "Você precisa escolher uma categoria"
+        tags_missing:
+          one: "É preciso escolher pelo menos %{count} etiqueta"
+          other: "É preciso escolher pelo menos %{count} etiquetas"
         topic_template_not_modified: "Adicione detalhes e especificações ao seu tópico editando o modelo do tópico."
       save_edit: "Salvar edição"
       overwrite_edit: "Sobrescrever edição"
@@ -2008,6 +2023,9 @@ pt_BR:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Novo tópico</span> %{description}"
       membership_request_accepted: "Associação aceita em '%{group_name}'"
+      membership_request_consolidated:
+        one: "%{count} solicitação de associação aberta para \"%{group_name}\""
+        other: "%{count} solicitações de associação abertas para \"%{group_name}\""
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - concluído(a)"
@@ -2385,6 +2403,9 @@ pt_BR:
         go: "ir"
         jump_bottom: "pular para a última postagem"
         jump_prompt: "pular para..."
+        jump_prompt_of:
+          one: "de %{count} postagem"
+          other: "de %{count} postagens"
         jump_prompt_long: "Pular para..."
         jump_bottom_with_number: "pular para postagem %{post_number}"
         jump_prompt_to_date: "até agora"
@@ -2500,6 +2521,9 @@ pt_BR:
           one: "Tópicos fixados em %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Tópicos fixados em %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Fazer com que este tópico apareça no topo de todas listas de tópicos até"
+        confirm_pin_globally:
+          one: "Você já tem %{count} tópico ficado globalmente. Uma grande quantidade de tópicos fixados pode atrapalhar usuários(as) novos(as) e anônimos(as). Tem certeza de que quer fixar outro tópico globalmente?"
+          other: "Você já tem %{count} tópicos ficados globalmente. Uma grande quantidade de tópicos fixados pode atrapalhar usuários(as) novos(as) e anônimos(as). Tem certeza de que quer fixar outro tópico globalmente?"
         unpin_globally: "Remover este tópico do inicio de todas as listas de tópicos."
         unpin_globally_until: "Remover este tópico do topo de todas listagens de tópicos ou esperar até <strong>%{until}</strong>."
         global_pin_note: "Usuários(as) podem desafixar o tópico individualmente para si."
@@ -2694,6 +2718,9 @@ pt_BR:
         upload: "Desculpe, houve um erro ao enviar o arquivo. Tente outra vez."
         file_too_large: "Desculpe, este arquivo é muito grande (o tamanho máximo é de %{max_size_kb} KB). Que tal enviar o arquivo grande para um serviço de nuvem e compartilhar o link?"
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivo por vez."
+        too_many_dragged_and_dropped_files:
+          one: "Desculpe, é possível carregar apenas %{count} arquivo por vez."
+          other: "Desculpe, é possível carregar apenas %{count} arquivos por vez."
         upload_not_authorized: "Desculpe, o arquivo que você está tentando enviar não é permitido (extensões permitidas: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Desculpe, usuários(as) novos(as) não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários(as) novos(as) não podem enviar anexos."
@@ -3604,6 +3631,9 @@ pt_BR:
             effects: Efeitos
             trust_levels_none: "Nenhum"
             automatic_membership_email_domains: "Os(as) usuários(as) que se cadastrarem em um domínio de e-mail que corresponda exatamente a um nesta lista serão adicionados(as) automaticamente a este grupo:"
+            automatic_membership_user_count:
+              one: "%{count} usuário(a) tem os novos domínios de e-mail e será adicionado(a) ao grupo."
+              other: "%{count} usuários(as) tem os novos domínios de e-mail e serão adicionados(as) ao grupo."
             primary_group: "Definido automaticamente como grupo principal"
         name_placeholder: "Nome do grupo, sem espaços, igual à regra de nome do(a) usuário(a)"
         primary: "Grupo primário"
