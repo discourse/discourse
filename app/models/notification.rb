@@ -75,7 +75,7 @@ class Notification < ActiveRecord::Base
     DB.exec(<<~SQL)
       DELETE
         FROM notifications n
-       WHERE high_priority
+       WHERE high_priority AND notification_type <> #{types[:chat_mention]}
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
@@ -116,7 +116,8 @@ class Notification < ActiveRecord::Base
                         reaction: 25,
                         votes_released: 26,
                         event_reminder: 27,
-                        event_invitation: 28
+                        event_invitation: 28,
+                        chat_mention: 29
                        )
   end
 
