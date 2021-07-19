@@ -1067,7 +1067,7 @@ es:
       muted_users_instructions: "Omitir todas las notificaciones y mensajes personales de estos usuarios."
       allowed_pm_users: "Permitidos"
       allowed_pm_users_instructions: "Solo permitir mensajes personales de estos usuarios."
-      allow_private_messages_from_specific_users: "Solo permitir que ciertos usuarios que me envíen mensajes personales."
+      allow_private_messages_from_specific_users: "Solo permitir que ciertos usuarios me envíen mensajes personales."
       ignored_users: "Ignorados"
       ignored_users_instructions: "Omitir todas las publicaciones, notificaciones y mensajes personales de estos usuarios."
       tracked_topics_link: "Mostrar"
