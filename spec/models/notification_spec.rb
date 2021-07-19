@@ -349,7 +349,7 @@ describe Notification do
 
       expect {
         Notification.ensure_consistency!
-      }.to change { Notification.count }.by(0)
+      }.to_not change { Notification.count }
     end
   end
 
