@@ -237,6 +237,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     }
     .user-card-badge-link,
     .more-user-badges {
+      vertical-align: top;
       display: inline-block;
     }
     .more-user-badges a {
