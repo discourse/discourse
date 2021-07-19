@@ -3779,6 +3779,7 @@ zh_CN:
           theme: "主题"
           component: "组件"
           components: "组件"
+          filter_placeholder: "输入以筛选…"
           theme_name: "主题名称"
           component_name: "组件名称"
           themes_intro: "选择现有主题或安装新主题以开始"

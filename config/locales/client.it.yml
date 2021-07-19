@@ -4608,7 +4608,7 @@ it:
           prompt:
             title: "Trasferisci ed Elimina @%{username}"
             description: |
-              <p>Scegli un nuovo proprietario per i contenuti di <b>@%{username}</b></p>
+              <p>Scegli un nuovo proprietario per i contenuti di <b>@%{username}</b>.</p>
 
               <p>Tutti gli argomenti, messaggi pubblici e privati e altri contenuti creati da <b>@%{username}</b> verranno trasferiti.</p>
             target_username_placeholder: "Nome utente del nuovo proprietario"
