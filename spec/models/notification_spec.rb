@@ -341,6 +341,16 @@ describe Notification do
 
       expect(Notification.count).to eq(2)
     end
+
+    it 'does not delete chat_message notifications' do
+      user = Fabricate(:user)
+      Notification.create!(read: false, user_id: user.id, topic_id: nil, post_number: nil, data: '[]',
+                           notification_type: Notification.types[:chat_mention])
+
+      expect {
+        Notification.ensure_consistency!
+      }.to_not change { Notification.count }
+    end
   end
 
   describe '.filter_by_consolidation_data' do
