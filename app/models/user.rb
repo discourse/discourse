@@ -958,6 +958,10 @@ class User < ActiveRecord::Base
     silenced_record.try(:created_at) if silenced?
   end
 
+  def silenced_forever?
+    silenced_till > DateTime.now + 500.years
+  end
+
   def suspend_record
     UserHistory.for(self, :suspend_user).order('id DESC').first
   end
@@ -979,7 +983,7 @@ class User < ActiveRecord::Base
 
     message = "login.suspended"
     if suspend_reason
-      if suspended_till > DateTime.now + 500.years
+      if suspended_forever?
         message = "login.suspended_with_reason_forever"
       else
         message = "login.suspended_with_reason"
@@ -989,6 +993,10 @@ class User < ActiveRecord::Base
     I18n.t(message,
            date: I18n.l(suspended_till, format: :date_only),
            reason: Rack::Utils.escape_html(suspend_reason))
+  end
+
+  def suspended_forever?
+    suspended_till > DateTime.now + 500.years
   end
 
   # Use this helper to determine if the user has a particular trust level.

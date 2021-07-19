@@ -153,7 +153,7 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
-    if user.silenced_till > DateTime.now + 500.years
+    if user.silenced_forever?
       build_email(
         user.email,
         template: "user_notifications.account_silenced_forever",
@@ -176,7 +176,7 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
-    if user.suspended_till > DateTime.now + 500.years
+    if user.suspended_forever?
       build_email(
         user.email,
         template: "user_notifications.account_suspended_forever",
