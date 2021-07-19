@@ -221,7 +221,6 @@ de:
     conduct: "Verhaltenskodex"
     mobile_view: "Mobile Ansicht"
     desktop_view: "Desktop-Ansicht"
-    you: "Du"
     or: "oder"
     now: "gerade eben"
     read_more: "weiterlesen"
@@ -751,8 +750,6 @@ de:
         public: "Öffentlich"
         private: "Privat"
         public_groups: "Öffentliche Gruppen"
-        automatic_group: Automatische Gruppe
-        close_group: Gruppe schließen
         my_groups: "Meine Gruppen"
         group_type: "Art der Gruppe"
         is_group_user: "Mitglied"
@@ -858,7 +855,6 @@ de:
       posts: "Beiträge"
       topics: "Themen"
       latest: "Aktuelle"
-      toggle_ordering: "Reihenfolge ändern"
       subcategories: "Unterkategorien"
       muted: "Stummgeschaltete Kategorien"
       topic_sentence:
@@ -1311,7 +1307,6 @@ de:
         browser_active: '%{browser} | <span class="active">gerade aktiv</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Letzter Beitrag"
-      last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
       created: "Beigetreten"
       log_out: "Abmelden"
@@ -2248,13 +2243,6 @@ de:
       defer:
         help: "Als ungelesen markieren"
         title: "Aufschieben"
-      feature_on_profile:
-        help: "Füge eine Verknüpfung zu diesem Thema zu deiner Benutzerkarte und deinem Profil hinzu"
-        title: "Auf Profil hervorheben"
-      remove_from_profile:
-        warning: "Dein Profil hat bereits ein hervorgehobenes Thema. Wenn du fortfährst, wird dieses das bestehende Thema ersetzen."
-        help: "Entferne den Link zu diesem Thema aus deinem Benutzerprofil"
-        title: "Aus Profil entfernen"
       list: "Themen"
       new: "neues Thema"
       unread: "ungelesen"
@@ -2733,8 +2721,6 @@ de:
       whisper: "dies ist ein privater geflüsterter Beitrag für Moderatoren"
       wiki:
         about: "dieser Beitrag ist ein Wiki"
-      archetypes:
-        save: "Speicheroptionen"
       few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“ übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
@@ -2876,7 +2862,6 @@ de:
         post_number: "%{username}, Beitrag #%{post_number}"
         show_all: "Alle anzeigen"
     category:
-      can: "kann &hellip; "
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
       choose: "Kategorie &hellip;"
@@ -2910,7 +2895,6 @@ de:
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       name: "Name der Kategorie"
       description: "Beschreibung"
-      topic: "Thema der Kategorie"
       logo: "Logo für Kategorie"
       background_image: "Hintergrundbild für Kategorie"
       badge_colors: "Farben des Abzeichens"

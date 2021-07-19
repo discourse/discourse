@@ -12,6 +12,7 @@ pt_BR:
     discourse_narrative_bot_disable_public_replies: "Desativar respostas públicas do robô de narração do Discourse"
     discourse_narrative_bot_welcome_post_type: "Tipo de postagem de boas-vindas que o robô de narração do Discourse deve enviar"
     discourse_narrative_bot_welcome_post_delay: "Espere (n) segundos antes de enviar a postagem de boas-vindas do robô de narração do Discourse."
+    discourse_narrative_bot_skip_tutorials: "Tutoriais do Discourse Narrative Bot para pular"
   badges:
     certified:
       name: Certificado(a)
@@ -24,6 +25,7 @@ pt_BR:
       long_description: |
         Este emblema é concedido após a conclusão do tutorial interativo de usuário(a) avançado(a). Você dominou as ferramentas avançadas de discussão e agora está totalmente licenciado(a)!
   discourse_narrative_bot:
+    bio: "Oi, eu não sou uma pessoa real. Eu sou um robô que pode ensinar como usar este site. Para interagir comigo, envie uma mensagem ou mencione **`@`** em qualquer lugar."
     tl2_promotion_message:
       subject_template: "Agora que você foi promovido(a), é hora de aprender alguns recursos avançados!"
       text_body_template: |
@@ -130,6 +132,7 @@ pt_BR:
 
           `@%{discobot_username}%{magic_8_ball_trigger}`
           > :crystal_ball: Você pode confiar
+        discobot_disabled: Você me desativou nas suas preferências. Você precisa permitir dicas de integração de novo(a) usuário(a) para interagir comigo.
       do_not_understand:
         first_response: |-
           Olá, obrigado pela resposta!
@@ -273,6 +276,12 @@ pt_BR:
 
           (Sim, meu nome de usuário(a) é soletrado _disco_, como na febre de dança dos anos 70. Eu realmente [amo me divertir à noite!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          Gostamos de discussões amigáveis e precisamos da sua ajuda para [manter este ambiente saudável](%{guidelines_url}). Se constatar um problema, sinalize para avisar de forma privada o(a) autor(a) ou a nossa [equipe prestativa](%{about_url}). Há várias razões pelas quais você possa querer sinalizar uma postagem, que variam de uma simples sugestão de divisão de tópicos a claras violações dos padrões da comunidade. Caso selecione **Outra coisa**, você iniciará uma discussão por mensagem privada com os(as) moderadores(as) e poderá fazer mais perguntas.
+
+          > :imp: Escrevi uma coisa horrível aqui
+
+          Vá em frente e **sinalize esta postagem** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> e selecione **Não é apropriado** como o motivo!
         reply: |-
           [Nossa equipe](%{base_uri}/groups/staff) será notificada secretamente sobre o seu sinalizador. Se membros suficientes da comunidade sinalizarem uma postagem, ela também será automaticamente oculta como precaução. (Já que, na verdade, não escrevi uma postagem inapropriada :angel:, tomei a liberdade de remover o sinalizador por enquanto.)
         not_found: |-

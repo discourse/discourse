@@ -2138,7 +2138,6 @@ it:
     missing_secret: "L'autenticazione non è riuscita per la mancanza del segreto. Contatta gli amministratori del sito per risolvere il problema."
     invite_redeem_failed: "Riscatto dell'invito non riuscito. Contatta l'amministratore del sito."
   original_poster: "Autore iniziale"
-  most_posts: "Maggioranza Messaggi"
   most_recent_poster: "Autore più recente"
   frequent_poster: "Autore Assiduo"
   poster_description_joiner: ", "

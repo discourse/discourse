@@ -2102,7 +2102,6 @@ ja:
     missing_secret: "シークレットが欠落しているため、認証に失敗しました。この問題を修正するには、サイト管理者にお問い合わせください。"
     invite_redeem_failed: "招待状の引き換えに失敗しました。サイトの管理者にお問い合わせください。"
   original_poster: "元の投稿者"
-  most_posts: "最も多い投稿"
   most_recent_poster: "最も最近の投稿者"
   frequent_poster: "頻繁な投稿者"
   poster_description_joiner: "、"

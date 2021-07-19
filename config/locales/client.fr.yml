@@ -220,7 +220,6 @@ fr:
     conduct: "Code de conduite"
     mobile_view: "Version mobile"
     desktop_view: "Version ordinateur"
-    you: "Vous"
     or: "ou"
     now: "à l'instant"
     read_more: "lire la suite"
@@ -750,8 +749,6 @@ fr:
         public: "Public"
         private: "Privé"
         public_groups: "Groupes publics"
-        automatic_group: Groupe automatique
-        close_group: Fermer le groupe
         my_groups: "Mes groupes (membre)"
         group_type: "Type de groupe"
         is_group_user: "Membre"
@@ -857,7 +854,6 @@ fr:
       posts: "Messages"
       topics: "Sujets"
       latest: "Récents"
-      toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories"
       muted: "Catégories mises en sourdine"
       topic_sentence:
@@ -1310,7 +1306,6 @@ fr:
         browser_active: '%{browser} | <span class="active">actif</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Dernier message"
-      last_emailed: "Dernier courriel reçu"
       last_seen: "Vu"
       created: "Inscrit(e)"
       log_out: "Se déconnecter"
@@ -2247,13 +2242,6 @@ fr:
       defer:
         help: "Marquer comme non lu"
         title: "Reporter à plus tard"
-      feature_on_profile:
-        help: "Ajouter un lien vers ce sujet sur votre carte d'utilisateur et votre profil"
-        title: "Mettre en avant sur le profil"
-      remove_from_profile:
-        warning: "Votre profil contient déjà un sujet vedette. Si vous continuez, ce sujet le remplacera."
-        help: "Supprimer le lien vers ce sujet de votre profil utilisateur"
-        title: "Supprimer du profil"
       list: "Sujets"
       new: "nouveau sujet"
       unread: "non lus"
@@ -2732,8 +2720,6 @@ fr:
       whisper: "ce message est un murmure privé pour les modérateurs"
       wiki:
         about: "ce message est un wiki"
-      archetypes:
-        save: "Enregistrer les options"
       few_likes_left: "Merci de partager votre amour ! Vous n'avez plus que quelques « J'aime » à attribuer aujourd'hui."
       controls:
         reply: "commencer à répondre à ce message"
@@ -2875,7 +2861,6 @@ fr:
         post_number: "%{username}, message #%{post_number}"
         show_all: "Tout afficher"
     category:
-      can: "peut&hellip; "
       none: "(aucune catégorie)"
       all: "Toutes les catégories"
       choose: "catégorie&hellip;"
@@ -2909,7 +2894,6 @@ fr:
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
       name: "Nom de la catégorie"
       description: "Description"
-      topic: "sujet de la catégorie"
       logo: "Logo de la catégorie"
       background_image: "Image de fond de la catégorie"
       badge_colors: "Couleurs du badge"

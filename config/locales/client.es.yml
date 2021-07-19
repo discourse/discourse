@@ -220,7 +220,6 @@ es:
     conduct: "Código de conducta"
     mobile_view: "Versión móvil"
     desktop_view: "Versión de escritorio"
-    you: "Tú"
     or: "o"
     now: "justo ahora"
     read_more: "leer más"
@@ -750,8 +749,6 @@ es:
         public: "Público"
         private: "Privado"
         public_groups: "Grupos públicos"
-        automatic_group: Grupo automático
-        close_group: Cerrar grupo
         my_groups: "Mis grupos"
         group_type: "Tipo de grupo"
         is_group_user: "Miembro"
@@ -857,7 +854,6 @@ es:
       posts: "Publicaciones"
       topics: "Temas"
       latest: "Recientes"
-      toggle_ordering: "cambiar orden"
       subcategories: "Subcategorías"
       muted: "Categorías silenciadas"
       topic_sentence:
@@ -1310,7 +1306,6 @@ es:
         browser_active: '%{browser} | <span class="active">activo ahora mismo</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Última publicación"
-      last_emailed: "Último correo enviado"
       last_seen: "Última visita"
       created: "Creado el"
       log_out: "Cerrar sesión"
@@ -2246,13 +2241,6 @@ es:
       defer:
         help: "Marcar como no leído"
         title: "Aplazar"
-      feature_on_profile:
-        help: "Añadir un enlace a este tema en tu tarjeta de usuario y perfil"
-        title: "Destacar en el perfil"
-      remove_from_profile:
-        warning: "Tu perfil ya tiene un tema destacado. Si continúas, este tema remplazará el tema actual."
-        help: "Eliminar el enlace a este tema de tu perfil de usuario"
-        title: "Eliminar del perfil"
       list: "Temas"
       new: "nuevo tema"
       unread: "sin leer"
@@ -2728,8 +2716,6 @@ es:
       whisper: "esta publicación es un susurro privado para los moderadores"
       wiki:
         about: "esta publicación tiene formato wiki"
-      archetypes:
-        save: "Guardar opciones"
       few_likes_left: "¡Gracias por compartir amor! Solo te quedan unos pocos me gusta por hoy."
       controls:
         reply: "crear una respuesta a esta publicación"
@@ -2871,7 +2857,6 @@ es:
         post_number: "%{username}, publicación nº %{post_number}"
         show_all: "Mostrar todas"
     category:
-      can: "puede&hellip; "
       none: "(sin categoría)"
       all: "Todas las categorías"
       choose: "categoría&hellip;"
@@ -2905,7 +2890,6 @@ es:
       save_error: Se produjo un error al guardar la categoría
       name: "Nombre de la categoría"
       description: "Descripción"
-      topic: "tema de la categoría"
       logo: "Imagen (logo) para la categoría"
       background_image: "Imagen de fondo de la categoría"
       badge_colors: "Colores de las insignias"

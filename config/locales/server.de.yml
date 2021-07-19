@@ -2139,7 +2139,6 @@ de:
     missing_secret: "Die Authentifizierung ist aufgrund des fehlenden Geheimnisses fehlgeschlagen. Kontaktiere die Website-Administratoren, um dieses Problem zu beheben."
     invite_redeem_failed: "Einlösung der Einladung fehlgeschlagen. Bitte kontaktiere den Administrator der Website."
   original_poster: "Autor des ersten Beitrags"
-  most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor vieler Beiträge"
   poster_description_joiner: ", "

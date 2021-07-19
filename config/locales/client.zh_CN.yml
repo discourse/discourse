@@ -197,7 +197,6 @@ zh_CN:
     conduct: "行为准则"
     mobile_view: "移动版视图"
     desktop_view: "桌面版视图"
-    you: "您"
     or: "或者"
     now: "刚刚"
     read_more: "阅读更多"
@@ -710,8 +709,6 @@ zh_CN:
         public: "公开"
         private: "不公开"
         public_groups: "公开群组"
-        automatic_group: 自动生成的群组
-        close_group: 关闭群组
         my_groups: "我的群组"
         group_type: "群组类型"
         is_group_user: "成员"
@@ -821,7 +818,6 @@ zh_CN:
       posts: "帖子"
       topics: "话题"
       latest: "最新"
-      toggle_ordering: "切换排序控制"
       subcategories: "子类别"
       muted: "已设为免打扰的类别"
       topic_sentence:
@@ -1266,7 +1262,6 @@ zh_CN:
         browser_active: '%{browser} | <span class="active">正在使用</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "最后一个帖子"
-      last_emailed: "最后一次发送电子邮件"
       last_seen: "最后活动"
       created: "加入日期："
       log_out: "退出"
@@ -2171,13 +2166,6 @@ zh_CN:
       defer:
         help: "标记为未读"
         title: "推迟"
-      feature_on_profile:
-        help: "在您的用户卡和个人资料上添加指向此话题的链接"
-        title: "精选到个人资料"
-      remove_from_profile:
-        warning: "您的个人资料已有精选话题。如果继续，此话题将替换现有话题。"
-        help: "在您的用户个人资料中移除指向此话题的链接"
-        title: "从个人资料中移除"
       list: "话题"
       new: "新话题"
       unread: "未读"
@@ -2631,8 +2619,6 @@ zh_CN:
       whisper: "此帖子是对版主的密语"
       wiki:
         about: "此帖子是一个 Wiki"
-      archetypes:
-        save: "保存选项"
       few_likes_left: "谢谢您分享爱！您今天只剩下几个赞了。"
       controls:
         reply: "开始撰写对此帖子的回复"
@@ -2766,7 +2752,6 @@ zh_CN:
         post_number: "%{username}，帖子 #%{post_number}"
         show_all: "全部显示"
     category:
-      can: "能够&hellip;"
       none: "（无类别）"
       all: "所有类别"
       choose: "类别&hellip;"
@@ -2800,7 +2785,6 @@ zh_CN:
       save_error: 保存类别时出错。
       name: "类别名称"
       description: "描述"
-      topic: "类别话题"
       logo: "类别徽标图片"
       background_image: "类别背景图片"
       badge_colors: "徽章颜色"

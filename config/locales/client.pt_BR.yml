@@ -221,7 +221,6 @@ pt_BR:
     conduct: "Código de Conduta"
     mobile_view: "VIsualização Móvel"
     desktop_view: "Visualização do Desktop"
-    you: "Você"
     or: "ou"
     now: "agora"
     read_more: "leia mais"
@@ -753,8 +752,6 @@ pt_BR:
         public: "Público"
         private: "Privado"
         public_groups: "Grupos públicos"
-        automatic_group: Grupo automático
-        close_group: Fechar grupo
         my_groups: "Meus grupos"
         group_type: "Tipo de grupo"
         is_group_user: "Membro"
@@ -865,7 +862,6 @@ pt_BR:
       posts: "Postagens"
       topics: "Tópicos"
       latest: "Últimos"
-      toggle_ordering: "alternar controle de ordenação"
       subcategories: "Subcategorias"
       muted: "Categorias silenciadas"
       topic_sentence:
@@ -1137,10 +1133,16 @@ pt_BR:
         disable: "Desativar"
         enable: "Ativar"
         enable_long: "Ativar códigos de backup"
+        manage:
+          one: "Gerenciar códigos de backup. Você tem <strong>%{count}</strong> código de backup restante."
+          other: "Gerenciar códigos de backup. Você tem <strong>%{count}</strong> códigos de backup restantes."
         copy_to_clipboard: "Copiar para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"
         copied_to_clipboard: "Copiou para a área de transferência"
         download_backup_codes: "Baixar códigos de backup"
+        remaining_codes:
+          one: "Você tem <strong>%{count}</strong> código de backup restante."
+          other: "Você tem <strong>%{count}</strong> códigos de backup restantes."
         use: "Usar um código de backup"
         enable_prerequisites: "Você deve ativar um método de dois fatores primários antes de gerar código de backup."
         codes:
@@ -1312,7 +1314,6 @@ pt_BR:
         browser_active: '%{browser} | <span class="active">ativar agora</span>'
         browser_last_seen: "%{browser}|%{date}"
       last_posted: "Última postagem"
-      last_emailed: "Último e-mail enviado"
       last_seen: "Vistos"
       created: "Ingressou"
       log_out: "Sair"
@@ -1612,6 +1613,9 @@ pt_BR:
       value_prop: "Ao cadastrar uma conta, lembramos exatamente o que foi lido para que você sempre continue de onde parou. Você também recebe notificações, por aqui e via e-mail, sempre que alguém responder. E você pode curtir as postagens para compartilhar o amor. :heartpulse:"
     summary:
       enabled_description: "Você está vendo um resumo deste tópico: as postagens mais interessantes segundo a comunidade."
+      description:
+        one: "Existe <b>%{count}</b> resposta."
+        other: "Existem <b>%{count}</b> respostas."
       description_time_MF: "Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
       enable: "Resumir este tópico"
       disable: "Exibir todas as postagens"
@@ -1773,6 +1777,9 @@ pt_BR:
     conditional_loading_section:
       loading: Carregando...
     category_row:
+      topic_count:
+        one: "%{count} tópico nesta categoria"
+        other: "%{count} tópicos nesta categoria"
       plus_subcategories_title:
         one: "%{name} e uma subcategoria"
         other: "%{name} e %{count} subcategorias"
@@ -1793,6 +1800,9 @@ pt_BR:
       min_content_not_reached:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
+      invalid_selection_length:
+        one: "A seleção deve ter pelo menos %{count} caracter."
+        other: "A seleção deve ter pelo menos %{count} caracteres."
       components:
         tag_drop:
           filter_for_more: Filtre para ver mais...
@@ -2228,13 +2238,6 @@ pt_BR:
       defer:
         help: "Marcar como não lido"
         title: "Adiar"
-      feature_on_profile:
-        help: "Adicionar um link para este tópico em seu cartão de usuário(a) e perfil"
-        title: "Recurso no perfil"
-      remove_from_profile:
-        warning: "Seu perfil já tem um tópico em destaque. Se você continuar, este tópico substituirá o tópico existente."
-        help: "Remover o link para este tópico no seu perfil de usuário(a)"
-        title: "Remover do perfil"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -2705,8 +2708,6 @@ pt_BR:
       whisper: "esta mensagem é um sussuro privado para a moderação"
       wiki:
         about: "esta postagem é uma wiki"
-      archetypes:
-        save: "Salvar as opções"
       few_likes_left: "Obrigado por compartilhar o amor! Restam apenas algumas curtidas sobrando para você usar hoje."
       controls:
         reply: "começar a escrever uma resposta para esta postagem"
@@ -2849,7 +2850,6 @@ pt_BR:
         post_number: "%{username}, postagem #%{post_number}"
         show_all: "Exibir tudo"
     category:
-      can: "pode&hellip; "
       none: "(sem categoria)"
       all: "Todas as categorias"
       choose: "categoria&hellip;"
@@ -2883,7 +2883,6 @@ pt_BR:
       save_error: Houve um erro ao salvar a categoria.
       name: "Nome da categoria"
       description: "Descrição"
-      topic: "tópico da categoria"
       logo: "Imagem do logotipo da categoria"
       background_image: "Imagem de fundo da categoria"
       badge_colors: "Cores do emblema"
@@ -3906,6 +3905,7 @@ pt_BR:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
+          filter_placeholder: "Digite para filtrar..."
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"

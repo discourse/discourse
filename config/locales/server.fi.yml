@@ -2139,7 +2139,6 @@ fi:
     missing_secret: "Todennus epäonnistui puuttuvan salausavaimen (secret) vuoksi. Ota yhteyttä sivuston ylläpitoon ongelman korjaamiseksi."
     invite_redeem_failed: "Kutsun lunastus epäonnistui. Ota yhteyttä sivuston ylläpitäjään."
   original_poster: "Alkuperäinen kirjoittaja"
-  most_posts: "Eniten viestejä"
   most_recent_poster: "Uusin kirjoittaja"
   frequent_poster: "Usein kirjoittava"
   poster_description_joiner: ", "

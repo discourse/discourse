@@ -1875,6 +1875,7 @@ pt_BR:
     imap_polling_period_mins: "O período em minutos entre a conferência de contas IMAP para e-mails."
     imap_polling_old_emails: "A quantidade máxima de e-mails antigos (processados) a serem enviados sempre que uma caixa IMAP for sondada (0 para todos)."
     imap_polling_new_emails: "A quantidade máxima de e-mails novos (não processados) a serem enviados sempre que uma caixa IMAP for sondada."
+    imap_batch_import_email: "A quantidade mínima de novos e-mails que acionam o modo de importação (desativa alertas de postagem)."
     email_prefix: "A [label] usada no assunto dos e-mails. Por padrão, será \"título\" se não for configurada."
     email_site_title: "O título do site usado como o remetente dos e-mails do site. Por padrão, será \"título' se não for configurado. Caso seu \"título\" contenha caracteres não permitidos em linhas do remetente de e-mails, utilize esta configuração."
     find_related_post_with_key: "Use somente a \"chave de resposta\" para encontrar a postagem respondida. AVISO: desativar isso permite a representação do usuário(a) com base no endereço de e-mail."
@@ -1882,6 +1883,7 @@ pt_BR:
     relative_date_duration: "Quantidade de dias após postar em que as datas de postagem serão exibidas como relativas (7 d) em vez de absolutas (20 de fev.)."
     delete_user_max_post_age: "Não permitir a exclusão de usuários(as) cuja primeira postagem seja mais antiga do que (x) dias."
     delete_all_posts_max: "Quantidade máxima de postagens que podem ser excluídas de uma vez com o botão Remover todas as postages. Se um(a) usuário(a) tiver mais postagens do que essa quantidade, elas não poderão ser excluídas(as) de uma vez e o(a) usuário(a) não poderá ser excluído(a)."
+    delete_user_self_max_post_count: "A quantidade máxima de postagens que um(a) usuário(a) pode ter ao permitir a exclusão da conta de autoatendimento. Defina como 1 para desativar a exclusão da conta do serviço."
     username_change_period: "A quantidade máxima de dias após o registro em que as contas podem alterar seu nome do(a) usuário(a) (0 para não permitir a mudança de nome do(a) usuário(a))."
     email_editable: "Permita que os(as) usuários(as) alterem o seu endereço de e-mail após o cadastro."
     logout_redirect: "Local para o qual redirecionar o navegador após sair (por exemplo: https://example.com/logout)"
@@ -1895,6 +1897,7 @@ pt_BR:
     suppress_digest_email_after_days: "Bloqueie e-mails de resumo para usuários(as) não vistos(as) no site por mais de (n) dias."
     digest_suppress_categories: "Bloqueie estas categorias dos e-mails de resumo."
     disable_digest_emails: "Desative e-mails de resumo para todos os(as) usuários(as)."
+    apply_custom_styles_to_digest: "Modelo de e-mail personalizado e css aplicados ao resumo de e-mails."
     email_accent_bg_color: "A cor de destaque para usar como plano de fundo de alguns elementos em e-mails HTML. Digite o nome de uma cor (\"vermelho\") ou valor hexadecimal (\"# FF0000\")."
     email_accent_fg_color: "A cor do texto renderizado na cor de fundo de e-mail em e-mails HTML. Digite o nome de uma cor (\"branco\") ou valor hexadecimal (\"#FFFFFF\")."
     email_link_color: "A cor dos links em e-mails HTML. Digite o nome de uma cor (\"azul\") ou valor hexadecimal (\"#0000FF\")."
@@ -1904,17 +1907,23 @@ pt_BR:
     staff_user_custom_fields: "Uma lista de campos personalizados do(a) usuário(a) que podem ser recuperados para membros da equipe com a API."
     enable_user_directory: "Fornecer um diretório de usuários(as) para navegar"
     enable_group_directory: "Fornecer um diretório de grupos para navegação"
+    enable_category_group_moderation: "Permitir que grupos moderem conteúdo em categorias específicas"
     group_in_subject: "Definir %%{optional_pm} o assunto de e-mail como o nome do primeiro grupo em PM, consulte: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalizar formato de assunto para e-mails padrão</a>"
     allow_anonymous_posting: "Permitir que usuários(as) quem para modo anônimo(a)"
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar mensagens anônimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato, crie uma conta anônima a cada N minutos para cada usuário(a). Exemplo: se for configurado para 600, assim que passar 600 minutos a partir da última postagen E o(a) usuário(a) trocar para anônimo(a), uma nova conta anônima será criada."
     hide_user_profiles_from_public: "Desative cartões de usuário(a), perfis de usuário(a) e diretório do(a) usuário(a) para usuários(as) anônimos(as)."
+    allow_users_to_hide_profile: "Permitir que usuários ocultem seu perfil e presença"
+    allow_featured_topic_on_user_profiles: "Permitir que usuários apresentem o link de um tópico em seu cartão de usuário(a) e perfil."
     show_inactive_accounts: "Permitir que usuários(as) conectados(as) naveguem em perfis de contas inativas."
     hide_suspension_reasons: "Não exiba razões de suspensão publicamente nos perfis de usuário(a)."
     log_personal_messages_views: "Registre visualizações de mensagens pessoais do(a) administrador(a) para outros(as) usuários(as)/grupos."
     ignored_users_count_message_threshold: "Notifique moderadores(as) se um(a) usuário(a) específico(a) for ignorado(a) por muitos(as) outros(as) usuários(as)."
     ignored_users_message_gap_days: "Quanto tempo esperar antes de notificar novamente moderadores(as) sobre um(a) usuário(a) que foi ignorado(a) por muitos(as) outros(as)."
     clean_up_inactive_users_after_days: "Quantidade de dias antes de um(a) usuário(a) inativo(a) (nível de confiança 0 sem nenhuma postagem) ser removido(a). Para desativar a limpeza, defina para 0."
+    clean_up_unused_staged_users_after_days: "Quantidade de dias antes de um(a) usuário(a) encenado(a) não usado(a) (sem nenhuma postagem) ser removido(a). Para desativar a limpeza, defina para 0."
+    user_selected_primary_groups: "Permitir que os(as) usuários(as) definam seu próprio grupo primário"
+    max_notifications_per_user: "Quantidade máxima de notificações por usuário(a). Se esse número for excedido, as notificações antigas serão excluídas. Aplicado semanalmente."
     allowed_user_website_domains: "O site do(a) usuário(a) será verificado em comparação a estes domínios. Lista delimitada por barras."
     allow_profile_backgrounds: "Permita que os(as) usuários(as) enviem planos de fundo do perfil."
     sequential_replies_threshold: "Quantidade de postagens que um(a) usuário(a) precisa fazer em uma linha de um tópico antes de ser lembrado(a) de muitas respostas em sequência."
@@ -1927,12 +1936,18 @@ pt_BR:
     permalink_normalizations: "Aplique o seguinte regex antes de combinar permalinks, por exemplo: /(topic.*)\\?.*/\\1 irá retirar as linhas de consulta das rotas de tópicos. O formato é regex + string use \\ 1 etc. para acessar capturas"
     global_notice: "Exibir um aviso global em banner URGENTE, EMERGENCIAL e que não pode ser fechado para todos os visitantes, deixe em branco para ocultá-lo (permitido por HTML)."
     disable_system_edit_notifications: "Desative a edição de notificações do(a) usuário(a) do sistema quando \"download_remote_images_to_local\" estiver ativado."
+    notification_consolidation_threshold: "Quantidade de notificações de pedidos de associação ou curtidas recebidas antes que as notificações sejam agrupadas. Defina como 0 para desativar."
+    likes_notification_consolidation_window_mins: "Duração em minutos durante a qual as notificações curtidas são agrupadas em uma notificação única após alcançar o limite. É possível configurar o limite acessando \"SiteSetting.notification_consolidation_threshold\"."
     automatically_unpin_topics: "Desafixe automaticamente os tópicos quando o(a) usuário(a) atinge à parte inferior."
     read_time_word_count: "Contagem de palavras por minuto para calcular o tempo estimado de leitura."
+    topic_page_title_includes_category: "Página do tópico <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta do título</a> inclui o nome da categoria."
     native_app_install_banner_ios: "Exibir o banner do aplicativo DiscourseHub em dispositivos iOS para usuários(as) regulares (nível de confiança 1 e superior)."
     native_app_install_banner_android: "Exibir o banner do aplicativo DiscourseHub em dispositivos Android para usuários(as) regulares (nível de confiança 1 e superior)."
+    app_association_android: "Conteúdos do ponto de extremidade <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, usado para a API Digital Asset Links, do Google."
+    app_association_ios: "Conteúdo do ponto de extremidade <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, usado par criar links universais entre este site e apps para iOS."
     share_anonymized_statistics: "Compartilhe estatísticas de uso anônimas."
     auto_handle_queued_age: "Trate automaticamente os registros que estão aguardando revisão há vários dias. Sinalizadores serão ignorados. Postagens na fila e usuários serão rejeitados. Defina como 0 para desativar esse recurso."
+    penalty_step_hours: "Penalidades padrão por silenciar ou suspender usuários(as). A primeira ofensa é padronizada para o primeiro valor, a segunda ofensa para o segundo valor, etc."
     svg_icon_subset: "Adicione mais ícones FontAwesome 5 que você gostaria de incluir em seus ativos. Use o prefixo \"fa-\" para ícones consolidados, \"far-\" para ícones regulares e \"fab-\" para ícones de marca."
     max_prints_per_hour_per_user: "Quantidade máxima de impressões de páginas (defina como 0 para desativar)"
     full_name_required: "O nome completo é um campo obrigatório do perfil do(a) usuário(a)."
@@ -1940,10 +1955,16 @@ pt_BR:
     display_name_on_posts: "Exibir o nome completo do(a) usuário(a) em suas postagens, além de seu(sua) @username."
     show_time_gap_days: "Se duas postagens forem feitas com tantos dias de intervalo, mostre o intervalo de tempo no tópico."
     short_progress_text_threshold: "Após a quantidade de mensagens em um tópico ultrapassar este número, a barra de progresso exibirá apenas o número da postagem atual. Se você alterar a largura da barra de progresso, talvez seja necessário alterar este valor."
+    default_code_lang: "Realce de sintaxe de linguagem de programação padrão aplicada aos blocos de código do GitHub (automático, sem destaque, rubi, python, etc.)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico anterior a esta quantidade de dias, um aviso será exibido. Desative ao definir como 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não especificarem o idioma"
     highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) consulte: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para ver uma demonstração"
+    show_copy_button_on_codeblocks: "Adicione um botão ao Codeblocks para copiar o conteúdo do bloco para a área de transferência do(a) usuário(a). Este recurso não é compatível com o Internet Explorer."
+    embed_any_origin: "Permita um conteúdo incorporado, seja qual for a origem. Isso é necessário para apps móveis com HTML estático."
+    embed_topics_list: "Compatível com incorporação HTML de listas de tópicos"
+    embed_set_canonical_url: "Defina a URL canônica de tópicos incorporados para a URL do conteúdo incorporado."
     embed_truncate: "Trunque as postagens incorporadas."
+    embed_unlisted: "Tópicos importados serão removidos da lista até um(a) usuário(a) responder."
     embed_support_markdown: "Compatível com formatação de Markdown para postagens incorporadas."
     allowed_embed_selectors: "Uma lista de elementos CSS separados por vírgula permitidos em incorporações."
     allowed_href_schemes: "Esquemas permitidos em links, além de http e https."
@@ -1952,7 +1973,12 @@ pt_BR:
     notify_about_flags_after: "Se houver sinalizadores que não foram tratados depois de muitas horas, envie uma mensagem pessoal para os(as) moderadores(as). Defina como 0 para desativar."
     show_create_topics_notice: "Se o site tiver menos de cinco tópicos públicos, mostre um aviso pedindo que os(as) administradores(as) criem alguns tópicos."
     delete_drafts_older_than_n_days: "Exclua rascunhos anteriores a (n) dias."
+    delete_merged_stub_topics_after_days: "Quantidade de dias para aguardar antes de excluir automaticamente tópicos de stub totalmente mesclados. Defina para 0 para nunca excluir tópicos de stub."
     bootstrap_mode_min_users: "Quantidade mínima de usuários(as) necessários(as) para desativar o modo de inicialização (defina como 0 para desativar)"
+    prevent_anons_from_downloading_files: "Impeça que usuários(as) anônimos(as) baixem anexos."
+    secure_media: 'Limita acesso a TODOS os envios (imagens, vídeo, áudio, texto, pdfs, zips e muito mais). Se “É necessário entrar com a conta” estiver ativado, apenas usuários(as) que entraram com a conta podem acessar os envios. Caso contrário, o acesso será limitado apenas a envios de mídias em mensagens e categorias privadas. AVISO: esta configuração é complexa e requer conhecimento de administração. Consulte <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">o tópico de mídias seguras em Meta</a> para obter detalhes.'
+    secure_media_allow_embed_images_in_emails: "Permite incorporação de imagens seguras que geralmente seriam escritas em e-mails, caso seu tamanho seja menor do que a configuração \"tamanho máx. de imagem incorporada no e-mail, em KB\"."
+    secure_media_max_email_embed_image_size_kb: "A redução de tamanho para imagens seguras que serão incorporadas nos e-mails se a configuração \"Permissão de incorporação de mídias seguras no e-mail\". Caso não esteja ativada, esta configuração não terá efeito."
     slug_generation_method: "Escolha um método para geração de slug. \"Codificado\" irá gerar linhas com \"%\". 'Nenhum\" irá desativar a geração de slugs."
     enable_emoji: "Ativar emoji"
     enable_emoji_shortcuts: "Texto com carinhas comuns como :): p :( será convertido em emojis"
@@ -1970,15 +1996,23 @@ pt_BR:
     code_formatting_style: "O botão de código no compositor será este estilo de formatação de código por padrão"
     max_allowed_message_recipients: "Quantidade máxima de destinatários permitidos em uma mensagem."
     watched_words_regular_expressions: "Palavras acompanhadas são expressões regulares."
+    enable_diffhtml_preview: "Recurso experimental que usa diffHTML para sincronizar pré-visualização em vez de outra renderização total"
     old_post_notice_days: "Dias antes do aviso de postagem se tornar antigo"
     new_user_notice_tl: "Nível de confiança mínimo necessário para ver novos avisos de postagem do(a) usuário(a)."
     returning_user_notice_tl: "Nível de confiança mínimo necessário para ver os avisos de postagem do(a) usuário(a) retornando."
     returning_users_days: "Quantos dias devem passar antes que um(a) usuário(a) seja considerado(a) retornando."
+    review_media_unless_trust_level: "A equipe revisará postagens de usuários com níveis de confiança menores caso contenham mídias incorporadas."
+    blur_tl0_flagged_posts_media: "Desfoque imagens de postagens sinalizadas para ocultar conteúdos possivelmente nocivos."
+    enable_page_publishing: "Permita que membros da equipe publiquem tópicos para novas URLs com seu próprio estilo."
+    show_published_pages_login_required: "Usuários(as) anônimos(as) podem ser páginas publicadas mesmo quando for necessário entrar com a conta."
+    skip_auto_delete_reply_likes: "Ao excluir automaticamente respostas antigas, pular exclusão de postagens com esta quantidade de curtidas ou mais."
     default_email_digest_frequency: "Frequência com que os(as) usuários(as) recebem e-mails de resumo por padrão."
     default_include_tl0_in_digests: "Inclua postagens de novos(as) usuários(as) em e-mails de resumo por padrão. Os(as) usuários(as) podem mudar isso em suas preferências."
+    default_email_level: "Defina nível de notificação de e-mail padrão para tópicos regulares."
     default_email_messages_level: "Defina o nível de notificação por e-mail padrão quando alguém envia uma mensagem ao(à) usuário(a)."
     default_email_mailing_list_mode: "Envie um e-mail a cada nova postagem por padrão."
     default_email_mailing_list_mode_frequency: "Os(as) usuários(as) que ativam o modo lista de endereçamento receberão e-mails com frequência por padrão."
+    disable_mailing_list_mode: "Impedir que usuários(as) ativem o modo lista de endereçamento (evita o envio de e-mails de lista de endereçamento.)"
     default_email_previous_replies: "Inclua respostas anteriores em e-mails por padrão."
     default_email_in_reply_to: "Inclua trecho de resposta de postagem em e-mails por padrão."
     default_other_new_topic_duration_minutes: "Condição padrão global para a qual um tópico é considerado novo."
@@ -1988,16 +2022,24 @@ pt_BR:
     default_other_enable_quoting: "Ative a citação de resposta para texto realçado por padrão."
     default_other_enable_defer: "Ative a funcionalidade de adiar tópico por padrão."
     default_other_dynamic_favicon: "Mostre contagem de tópicos novos/atualizados no ícone do navegador por padrão."
+    default_other_skip_new_user_tips: "Pule emblemas e dicas de integração de novo(a) usuário(a)."
     default_other_like_notification_frequency: "Notificar usuários(as) sobre curtidas por padrão"
     default_topics_automatic_unpin: "Desvincule tópicos automaticamente quando o(a) usuário(a) alcançar a parte inferior por padrão."
     default_categories_watching: "Lista de categorias que são acompanhadas por padrão."
     default_categories_tracking: "Lista de categorias que são monitoradas por padrão."
     default_categories_muted: "Lista de categorias que são silenciadas por padrão."
     default_categories_watching_first_post: "Lista de categorias nas quais a primeira postagem em cada novo tópico será acompanhada por padrão."
+    default_categories_regular: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
+    mute_all_categories_by_default: "Defina o nível de notificação padrão de todas as categorias para silenciado(a). É preciso que os(as) usuários(as) aceitem que suas categorias sejam exibidas nas páginas \"mais recentes\" e \"categorias\". Se quiser modificar os padrões para usuários(as) anônimos(as), defina as configurações \"default_categories_\"."
+    default_tags_watching: "Lista de etiquetas que são acompanhadas por padrão."
+    default_tags_tracking: "Lista de etiquetas que são monitoradas por padrão."
+    default_tags_muted: "Lista de etiquetas que são silenciadas por padrão."
+    default_tags_watching_first_post: "Lista de etiquetas nas quais a primeira postagem em cada novo tópico será acompanhada por padrão."
     default_text_size: "Tamanho do texto que é selecionado por padrão"
     default_title_count_mode: "Modo padrão para o contador de títulos da página"
     retain_web_hook_events_period_days: "Quantidade de dias para manter registros de eventos de webhook."
     retry_web_hook_events: "Repita automaticamente os eventos com falha do webhook quatro vezes. Os intervalos de tempo entre as tentativas são de 1, 5, 25 e 125 minutos."
+    revoke_api_keys_days: "Quantidade de dias antes de uma chave de API não usada ser revogada automaticamente (0 para nunca)"
     allow_user_api_keys: "Permitir geração de chaves de API do(a) usuário(a)"
     allow_user_api_key_scopes: "Lista de escopos permitidos para chaves de API do(a) usuário(a)"
     min_trust_level_for_user_api_key: "Nível de confiança necessário para geração de chaves de API do(a) usuário(a)"
@@ -2024,8 +2066,16 @@ pt_BR:
     shared_drafts_category: "Ative o recurso Rascunhos compartilhados ao designar uma categoria para rascunhos de tópicos. Os tópicos nesta categoria serão bloqueados das listas de tópicos para usuários da equipe."
     shared_drafts_min_trust_level: "Permita que os(as) usuários(as) visualizem e editem os Rascunhos compartilhados."
     push_notifications_prompt: "Exiba o prompt de consentimento do(a) usuário(a)."
+    push_notifications_icon: "O ícone do emblema que é exibido no canto de notificações. É recomendável um PNG monocromático de 96×96."
+    base_font: "Fonte básica para usar nos textos mais importantes do site. É possível substituir os temas pela propriedade personalizada de CSS \"--font-family\"."
+    heading_font: "Fonte para usar nos cabeçalhos do site. É possível substituir os temas pela propriedade personalizada de CSS \"--heading-font-family\"."
     short_title: "O título abreviado será usado na tela inicial do(a) usuário(a), no inicializador ou em outros locais com espaço limitado. Deveria ser limitado a 12 caracteres."
+    dashboard_hidden_reports: "Permita que relatórios específicos sejam ocultos no painel de controle."
+    dashboard_visible_tabs: "Escolha quais abas do painel de controle estão visíveis."
     dashboard_general_tab_activity_metrics: "Escolha relatórios para serem exibidos como métricas de atividade na aba geral."
+    gravatar_name: "Nove do provedor Gravatar"
+    gravatar_base_url: "URL da base de APIs do provedor Gravatar"
+    gravatar_login_url: "URL relacionada a gravatar_base_url, que permite ao(à) usuário(a) entrar com a conta no serviço Gravatar"
     share_quote_buttons: "Determine quais e em que ordem os itens são exibidos na citação compartilhando widget."
     share_quote_visibility: "Determine quando exibir botões de compartilhamento de citações: nunca, apenas para usuários(as) anônimos(as) ou todos(as) os(as) usuários(as). "
     create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
@@ -2101,7 +2151,6 @@ pt_BR:
     missing_secret: "Falha na autenticação devido ao segredo ausente. Entre em contato com os(as) administradores(as) do site para solucionar este problema."
     invite_redeem_failed: "Falha ao resgatar convite. Entre em contato com o(a) administrador(a) do site."
   original_poster: "Autor(a) original"
-  most_posts: "Maior parte das postagens"
   most_recent_poster: "Autor(a) mais recente"
   frequent_poster: "Autor(a) frequente"
   poster_description_joiner: ", "
@@ -3690,6 +3739,178 @@ pt_BR:
       Sim, burocracia é chata, mas precisamos nos proteger &ndash; e, consequentemente, proteger a sua pessoa e seus dados&ndash; contra ataques hostis. Os nossos [Termos de Serviço](%{base_path}/tos) descrevem o seu (e o nosso) comportamento e os direitos referentes a conteúdo, privacidade e legislação. Para usar este serviço, você precisa concordar em obedecer aos nossos [TOS](%{base_path}/tos).
   tos_topic:
     title: "Termos de Serviço"
+    body: |
+      Estes termos regem o uso do fórum da internet em <%{base_url}>. Para usar o fórum, você deve concordar os termos da %{company_name}, a empresa que administra o fórum.
+
+      A empresa pode oferecer outros produtos e serviços com termos diferentes. Estes termos se aplicam apenas ao uso do fórum.
+
+      Pular para :
+
+      - [Termos importantes](#título--termos importantes)
+      - [Sua permissão para usar o fórum](#título--permissão)
+      - [Condições para usar o fórum](#título--condições)
+      - [Uso aceitável](#título--uso aceitável)
+      - [Padrões de conteúdo](##título--padrões-conteúdo)
+      - [Enforcement](#título--aplicação)
+      - [Sua conta](#título--sua conta)
+      - [Seu conteúdo](#título--seu-conteúdo)
+      - [Sua responsabilidade](#título--responsabilidade)
+      - [Disclaimers](#título--isenção)
+      - [Limites de responsabilidade](#título--responsabilidade)
+      - [Feedback](#título--comentários)
+      - [Termination](#título--encerramento)
+      - [Disputes](#título--disputas)
+      - [Termos gerais](#título--geral)
+      - [Contact](#título--contato)
+      - [Changes](#título--alterações)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Termos importantes</a></h2>
+
+      ***Estes termos incluem uma quantidade importante de provisões que afetam seus direitos e responsabilidades, como a isenção de responsabilidade[Disclaimers](#título--isenção), limites da responsabilidade da empresa [Limites de responsabilidade](#título--responsabilidade), seu contrato para abranger a empresa quanto a danos causados por problemas de uso do fórum em [Responsabilidade pelo seu uso](#título--responsabilidade), além de um contrato de arbitragem de disputas em [Disputes](#título--disputas).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Sua permissão para usar o fórum</a></h2>
+
+      Sujeita a estes termos, a empresa concede permissão para usar o fórum. Todos(as) precisam concordar com estes termos para usar o fórum.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Condições para usar o fórum</a></h2>
+
+      Sua permissão para usar o fórum está sujeita às condições a seguir:
+
+      1. É preciso ter pelo menos 30 anos de idade.
+
+      2. Você não pode mais usar o fórum se a empresa entrar em contato diretamente para revogar a sua permissão.
+
+      3. Você deve usar o fórum de acordo com o [Uso aceitável](#título--uso-aceitável) e os [Padrões de conteúdo](#título--padrões-de-conteúdo).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Uso aceitável</a></h2>
+
+      1. Você não pode violar a lei usando este fórum.
+
+      2. Você não pode usar ou tentar usar a conta de outros(as) usuários(as) seu permissão.
+
+      3. Você não pode comprar, vender ou trocar nomes de usuário(a) ou outros identificadores exclusivos no fórum.
+
+      4. Você não pode enviar anúncios, correntes de e-email ou outras solicitações pelo fórum, ou usar o fórum para coletar endereços ou dados pessoais para listas de endereçamento comerciais ou bancos de dados.
+
+      5. Você não pode automatizar o acesso ao fórum, nem monitorar o fórum, usando recursos como rastreadores de rede, plug-ins de navegador ou outro programa de computador diferente de um navegador. Você pode rastrear o fórum para indexá-lo em um mecanismo de busca disponível para publicidade, caso administre um.
+
+      6. Você não pode usar o fórum para enviar listas de distribuição de e-mails, grupos de notícias ou apelidos de e-mail de grupo.
+
+      7. Você não pode implicar falsamente que está afiliado(a) ou que tem com o apoio da empresa.
+
+      8. Você não pode criar links para imagens ou conteúdo de fóruns em outras páginas.
+
+      9. Você não pode remover marcas de propriedade de materiais baixados no fórum.
+
+      10. Você não pode mostrar nenhuma parte do fórum em oturos sites com "<iframe>".
+
+      11. Você não pode desativar, evitar ou burlar restrições de acesso ou segurança do fórum.
+
+      12. Você não pode sobrecarregar a infraestrutura do fórum com um volume absurdo de pedidos, ou pedidos elaborados para impor uma carga excessiva aos sistemas de informações do fórum.
+
+      13. Você não pode se passar por outras pessoas por meio do fórum.
+
+      14. Você não pode incentivar ou ajudar na violação destes termos.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
+
+      1. Você não pode enviar conteúdo ao fórum que seja ilegal, ofensivo ou nocivo às outras pessoas. Isso inclui assédio, abuso e conteúdo inapropriado.
+
+      2. Você não pode enviar conteúdo ao fórum que viole a lei, infrinja direitos de propriedade intelectual ou desobedeça contratos com outras pessoas ou empresas.
+
+      3. Você não pode enviar conteúdo ao fórum contendo código maliciosos, como vírus ou spyware.
+
+      4. Você não pode enviar conteúdo ao fórum como variável para reservar um endereço, nome de usuário(a) ou outro identificador exclusivo.
+
+      5. Você não pode usar o fórum para revelar informações que você não tem direito de revelar, como dados pessoais ou confidenciais de outras pessoas.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Aplicação</a></h2>
+
+      A empresa pode investigar e processar violações destes termos com todos os recursos jurídicos disponíveis. Pode notificar e cooperar com autoridades de aplicação da lei ao verificar violações da lei e destes termos.
+
+      A empresa reserva o direito de alterar, redigir e excluir conteúdo do fórum por qualquer motivo. Se você acredita que alguém tenha enviado conteúdo ao fórum violando estes termos, [entre em contato conosco imediatamente](#título--contato).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Sua conta</a></h2>
+
+      Você deve criar e entrar com a conta para usar alguns recursos do fórum.
+
+      Para criar uma conta, forneça algumas informações sobre você. Se criar uma conta, você concorda em fornecer pelo menos um endereço de e-mail válido e mantê-lo atualizado. É possível encerrar a conta a qualquer momento enviando um e-mail para <%{contact_email}>.
+
+      Você concorda em assumir responsabilidade total por todas as ações realizadas por meio da sua conta, com ou sem a sua autorização, até o encerramento ou a notificação por parte da empresa de que ela foi comprometida. Você concorda em notificar a empresa imediatamente em caso de suspeita de comprometimento da conta, além de escolher uma senha segura e mantê-la em segredo..
+
+      A empresa pode restringir, suspender ou encerrar a sua conta no fórum de acordo com sua política de tratamento de solicitações de remoção por direitos autorais, ou se for considerado que você violou qualquer regra destes termos.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Seu conteúdo</a></h2>
+
+      Nada nestes termos dá à empresa direitos de propriedade de propriedade intelectual que você compartilha com o fórum, como informações da conta, postagens ou outro conteúdo enviado. Nada nestes termos concede direitos de propriedade na propriedade intelectual da empresa.
+
+      Entre você e a empresa, você assume a responsabilidade apenas pelo conteúdo que você enviou ao fórum. Você concorda em não implicar falsamente que o conteúdo enviado ao fórum foi patrocinado ou aprovado pela empresa. Estes temos não obrigam a empresa a armazenar, manter ou fornecer cópias do conteúdo enviado, nem a alterá-lo de conforme estes termos.
+
+      O conteúdo que você enviar ao fórum pertence a você, bem como a decisão sobre as permissões concedidas aos outros(as) usuários(as) em relação ao conteúdo. Mas você autoriza a empresa a fornecer o conteúdo enviado ao fórum para outros(as) usuários(as). Essa autorização especial permite que a empresa copie, publique e analise o conteúdo enviado ao fórum.
+
+      Quando o conteúdo enviado é removido do fórum, por você ou pela empresa, a autorização especial da empresa encerra assim que a última cópia desaparece dos backups, caches e outros sistemas da empresa. Outras licenças que você aplicar ao conteúdo, como as do [Creative Commons](https://creativecommons.org), podem permanecer após a remoção. Essas licenças podem conceder aos(às) outros(as), ou à própria empresa, o direito de compartilhar o seu conteúdo outra vez por meio do fórum.
+
+      Outros(as) que receberem o conteúdo enviado ao fórum podem violar os termos pelos quais você licencia o seu conteúdo. Você concorda que a empresa não será responsável para você por essas violações ou suas consequências.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Sua responsabilidade</a></h2>
+
+      Você concorda em indemnizar a empresa por processos legais de outros(as) relacionados à violação destes termos, ou violação destes termos por parte de outros(as) usando a sua conta no fórum. Você e a empresa concordam em notificar a outra parte sobre processos legais pelos quais você precisa indemnizar a empresa o mais rápido possível. Se a empresa não notificar sobre um processo legal imediatamente, você não precisará indemnizar a empresa por danos contra os quais você poderia ter se defendido ou mitigado com aviso. Você concorda em permitir que a empresa controle a investigação, defesa e resolução de processos legais pelos quais você precisaria indemnizar a empresa e cooperar com esses esforços. A empresa concorda em não aceitar nenhuma resolução que admita a culpa por você ou impõe obrigações sem acordo prévio.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Isenção de responsabilidade</a></h2>
+
+      ***Você aceita todo o risco de usar o fórum e o seu conteúdo. Até o limite da lei, a empresa e seus fornecedores proporcionam o fórum assim como está, sem nenhum tipo de garantia.***
+
+      O fórum pode vincular e integrar fóruns e serviços de terceiros. A empresa não oferece nenhuma garantia sobre esses serviços de terceiros ou o conteúdo que possam fornecer. O uso dos serviços de terceiros podem ser regido por outros termos entre você e o administrador do serviço.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Limites de responsabilidade</a></h2>
+
+      ***Nem a empresa nem seus fornecedores serão responsáveis por você referente a violações de contrato não previstas por seus funcionários ao concordar com estes termos.***
+
+      ***Até o limite da lei, a sua responsabilidade total por qualquer tipo de processo relacionado ao fórum, ou ao seu conteúdo, será limitada a US$ $50.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Comentários</a></h2>
+
+      A empresa recebe seus comentários e sugestões para o fórum. Confira a seção [Contact](#título--contato) abaixo para saber como entrar em contato conosco.
+
+      Você concorda que a empresa tem liberdade para agir em relação aos comentários e sugestões enviados e que ela não precisa notificar ou pagar pelo uso do comentário. Você concorda em não enviar comentários ou sugestões que possam ser confidenciais ou propriedade sua ou de alguém.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Encerramento</a></h2>
+
+      Você ou a empresa pode encerrar o contrato descrito nestes termos a qualquer momento. Ao termino do contrato, você não terá mais permissão para usar o fórum.
+
+      As provisões a seguir permanecem após o fim do contrato: [Seu conteúdo](#título--seu-conteúdo), [Feedback](#título--comentários), [Sua responsabilidade](#título--responsabilidade), [Disclaimers](#título--isenção), [Limites de responsabilidade](#título--responsabilidade) e [Termos gerais](#título--geral).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Disputes</a></h2>
+
+      %{governing_law} irá reger qualquer disputa relacionada a estes termos ou uso do fórum.
+
+      Você e a empresa concordam em buscar medidas liminares relacionadas a estes termos apenas em tribunais estaduais e federais em %{city_for_disputes}. Nem você ou a empresa contestarão a jurisdição, fórum ou julgamentos nesses tribunais.
+
+      ***Além de buscar medidas liminares ou processos sob a Computer Fraud e o Abuse Act, você e a empresa solucionarão disputas ao vincular a arbitragem da American Arbitration Association. A arbitragem seguirá as regras da Commercial Arbitration Rules da AAA e a Supplementary Procedures para disputas relacionadas ao cliente. A arbitragem ocorrerá em %{city_for_disputes}. Você solucionará qualquer disputa de forma individual, não como parte de ação de classe ou outro procedimento representativo, seja como requerente ou o membro de uma classe. Nenhum árbitro consolidará disputas com outra arbitragem sem a permissão da empresa.***
+
+      Qualquer sentença de arbitragem incluirá os seus custos, taxas razoáveis de advogados e custos razoáveis para as testemunhas. Você e a empresa podem iniciar a sentença arbitral em qualquer tribunal com jurisdição.
+
+      <h2 id="heading--general"><a href="#heading--general">Termos gerais</a></h2>
+
+      Se a provisão destes termos não puderem ser aplicadas como descrito, mas podem ser alteradas para serem aplicadas, ela deve ser alterada o mínimo possível para torná-la aplicável. Caso contrário, será removida .
+
+      Você não pode transferir o seu contato com a empresa. A empresa transferir o seu contrato para qualquer filial ou outras empresas que obtiverem controle da empresa, ou que comprarem ativos da empresa relacionados ao fórum. Qualquer transferência não inclusas nestes termos não tem efeito legal.
+
+      Nem o exercício de qualquer direito sob este contrato, nem a renúncia de qualquer violação deste contrato, implicam a desistência de outras violações deste contrato.
+
+      Estes termos abrangem todos os termos do contrato entre você e a empresa sobre o uso do fórum. Estes termos substituem totalmente os outros termos sobre o seu uso do fórum, escritos ou não.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Contato</a></h2>
+
+      Você pode notificar a empresa sob estes termos e enviar perguntas em <%{contact_email}>.
+
+      A empresa pode notificar sobre estes termos usando o endereço de e-mail informado na sua conta do fórum, ou postando uma mensagem na página inicial do fórum ou na de sua conta.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Alterações</a></h2>
+
+      A atualização mais recente destes termos ocorrem em 12 de julho de 2018, sendo que poderão ser atualizados novamente. A empresa postará todas as atualizações do fórum. Para atualizações que contêm alterações substanciais, a empresa concorda em enviar um e-mail, caso você tenha criado uma conta e fornecido um endereço de e-mail válido. A empresa também pode anunciar atualizações com mensagens especiais ou alertas no fórum.
+
+      Ao receber notificações sobre uma atualização destes termos, você deve concordar com os novos termos para continuar a usar o fórum.
   privacy_topic:
     title: "Política de Privacidade"
     body: |
@@ -3779,6 +4000,8 @@ pt_BR:
       errors:
         invalid_csv: Encontramos um erro na linha %{line_number}. Confirme se o CSV possui um e-mail por linha.
         too_many_csv_entries: Muitas entradas para o arquivo CSV. Forneça um arquivo CSV com no máximo %{count} entradas.
+        badge_disabled: Ative o emblema %{badge_name} primeiro.
+        cant_grant_multiple_times: Não é possível conceder o emblema %{badge_name} várias vezes a um único(a) usuário(a)
     editor:
       name: Editor(a)
       description: Primeira edição de postagem
@@ -4048,6 +4271,9 @@ pt_BR:
         other: '"%{tag_name}" é restrito às seguintes categorias: %{category_names}'
       synonym: 'Sinônimos não são permitidos. Use "%{tag_name}".'
       has_synonyms: '"%{tag_name}" não pode ser usado porque tem sinônimos.'
+    required_tags_from_group:
+      one: "Você deve incluir pelo menos %{count} etiqueta %{tag_group_name}. As etiquetas deste grupo são: %{tags}."
+      other: "Você deve incluir pelo menos %{count} etiquetas %{tag_group_name}. As etiquetas deste grupo são: %{tags}."
     invalid_target_tag: "não pode ser um sinônimo de um sinônimo"
     synonyms_exist: "não é permitido, pois existem sinônimos"
   rss_by_tag: "Tópicos etiquetados com %{tag}"
@@ -4101,6 +4327,7 @@ pt_BR:
             label: "Tópico de boas-vindas"
             description: "<p>Como você descreveria sua comunidade para um(a) estranho(a) em um elevador durante cerca de 1 minuto?</p> <ul> <li>Para quem são essas discussões?</li> <li>O que posso encontrar aqui?</li> <li>Por que eu deveria acessar?</li> </ul> <p>Seu tópico de boas-vindas é a primeira coisa que os(as) recém-chegados(as) vão ler. Pense nele como um \"argumento de elevador\" ou \"declaração de missão\" de <b>um parágrafo</b>.</p>"
             one_paragraph: "Reduza sua mensagem de boas-vindas para um parágrafo."
+            extra_description: "Se não tiver certeza, pule este passo e edite seu tópico de boas-vindas mais tarde."
       privacy:
         title: "Acesso"
         description: "<p>A sua comunidade é aberta a todos ou é restrita por associação, convite ou aprovação? Se preferir, você pode configurar as coisas de forma privada e depois torná-la pública mais tarde.</p>"
@@ -4152,7 +4379,12 @@ pt_BR:
       colors:
         title: "Cores"
       fonts:
+        title: "Fontes"
         fields:
+          body_font:
+            label: "Fonte do corpo"
+          heading_font:
+            label: "Fonte do cabeçalho"
           font_preview:
             label: "Pré-visualização"
       logos:
@@ -4199,6 +4431,10 @@ pt_BR:
         disabled: "Como as entradas com conta foram desativadas, não é possível enviar convites para ninguém. Prossiga para o próximo passo."
       finished:
         title: "Seu Discourse está pronto!"
+        description: |
+          <p>Se quiser alterar esta configurações, <b>execute este instalador quando quiser</b>, ou acesse <a href='%{base_path}/admin' target='_blank'>sua seção de administrador(a)</a>, perto do ícone de chave inglesa no menu do site.</p>
+          <p>É fácil personalizar o seu Discourse ainda mais usando este sistema de temática poderoso. Por exemplo: confira os <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">melhores temas e componentes</a> em <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
+          <p>Divirta-se e boa sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construindo a sua nova comunidade!</a></p>
   search_logs:
     graph_title: "Contagem de pesquisa"
   joined: "Ingressou"
@@ -4222,9 +4458,14 @@ pt_BR:
     user_delete_self: "Autoexcluído(a) de %{url}"
     webhook_deactivation_reason: "Seu webhook foi desativado automaticamente. Recebemos várias respostas de falha de status HTTP \"%{status}\"."
     api_key:
+      automatic_revoked:
+        one: "Revogado(a) automaticamente, última atividade há mais de %{count} dia"
+        other: "Revogado(a) automaticamente, última atividade há mais de %{count} dias"
       revoked: Regovado(a)
+      restored: Restaurado(a)
   reviewables:
     already_handled: "Obrigado, mas já analisamos esta postagem e determinamos que não precisa ser sinalizada novamente."
+    already_handled_and_user_not_exist: "Obrigado, mas alguém já revisou e esse(a) usuário(a) não existe mais."
     priorities:
       low: "Baixo(a)"
       medium: "Médio(a)"
@@ -4244,11 +4485,16 @@ pt_BR:
       new_topics_unless_trust_level: "Usuários(as) com níveis de confiança baixos precisam ter tópicos aprovados pela equipe. Veja \"approve_unless_trust_level\"."
       fast_typer: "O(a) novo(a) usuário(a) digitou sua primeira postagem desconfiadamente rápido, há suspeita de comportamento de robô ou remetente de spam. Veja \"min_first_post_typing_time\"."
       auto_silence_regexp: "Novo(a) usuário(a) cuja primeira postagem corresponde à configuração \"auto_silence_first_post_regex\"."
+      watched_word: "Esta postagem incluiu uma palavra acompanhada. Confira sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras acompanhadas</a>."
       staged: "Novos tópicos e postagens para usuários encenados(as) precisam ser aprovados pela equipe. Veja \"approve_unless_staged\"."
       category: "Postagens nesta categoria exigem aprovação manual pela equipe. Veja as configurações da categoria."
       must_approve_users: "Todos os novos(as) usuários(as) precisam ser aprovados(as) pela equipe. Veja \"must_approve_users\"."
       invite_only: "Todos os(as) novos(as) usuários(as) devem ser convidados(as). Veja \"invite_only\"."
+      email_auth_res_enqueue: "Este e-mail falhou na verificação DMARC, é altamente provável que o remetente não é quem parece ser. Confira os cabeçalhos de e-mail não processados para obter mais informações."
       email_spam: "Este e-mail foi sinalizado como spam pelo cabeçalho definido em \"email_in_spam_header\"."
+      suspect_user: "Este(a) novo(a) usuário(a) inseriu informações de perfil sem ler nenhum tópico ou postagem, o que sugere que possa ser remetente de spam. Consulte \"approve_suspect_users\"."
+      contains_media: "Esta postagem inclui mídias incorporadas. Confira \"review_media_unless_trust_level\"."
+      queued_by_staff: "Um membro da equipe acha que esta postagem precisa de revisão. Permanecerá oculta até que isso seja feito."
     actions:
       agree:
         title: "Concordar…"
@@ -4314,12 +4560,42 @@ pt_BR:
           description: "O(a) usuário(a) será excluído(a) e bloquearemos seu endereço IP e de e-mail."
       reject:
         title: "Rejeitar"
+        bundle_title: "Rejeitar..."
+      reject_and_suspend:
+        title: "Rejeitar e suspender usuário(a)"
+      reject_and_silence:
+        title: "Rejeitar e silenciar usuário(a)"
+      reject_and_delete:
+        title: "Rejeitar e excluir a postagem"
+      reject_and_keep_deleted:
+        title: "Manter a postagem excluída"
+      approve_and_restore:
+        title: "Aprovar e restaurar postagem"
       delete_user:
         reason: "Excluído(a) via fila de revisão"
   email_style:
     html_missing_placeholder: "O modelo HTML deve incluir %{placeholder}"
+  notification_level:
+    ignore_error: "Desculpe, não é possível ignorar esse(a) usuário(a)."
+    mute_error: "Desculpe, não é possível silenciar esse(a) usuário(a)."
   discord:
     not_in_allowed_guild: "Falha na autenticação. Você não é um membro de uma organização permitida do Discord."
+  old_keys_reminder:
+    title: "Lembrar credenciais antigas"
+    body: |
+      Olá! Esta é um lembrete de segurança anual rotineiro da sua instância do Discourse.
+
+      Como cortesia, gostaríamos de avisar que as seguintes credenciais usadas na sua instância do Discourse não foram atualizadas há mais de dois anos:
+
+      %{keys}
+
+      Nenhuma ação é necessária por enquanto. Contudo, renovar as credenciais todos os anos é considerada uma boa prática de segurança.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (parte %{count})"
+      other: "%{topic_title} (parte %{count})"
+    post_raw: "Continuando a discussContinuing the discussion from %{parent_url}.\n\nPrevious discussions:\n\n%{previous_topics}"
+    small_action_post_raw: "Continue a discussão em %{new_title}."
   activemodel:
     errors:
       <<: *errors

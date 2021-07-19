@@ -61,7 +61,27 @@ pt_BR:
           title: "CTA de cadastro"
         topic_timer_info:
           title: "Timers de tópico"
+        topic_footer_buttons:
+          title: "Botões no rodapé do tópico"
+        topic_notifications:
+          title: "Notificações de tópico"
         post:
           title: "Postagem"
+        topic_map:
+          title: "Mapa do tópico"
+        site_header:
+          title: "Cabeçalho do site"
         suggested_topics:
           title: "Tópicos sugeridos"
+        post_menu:
+          title: "Menu de postagem"
+        modal:
+          title: "Modal"
+          header: "Título do modal"
+          footer: "Rodapé do modal"
+        user_about:
+          title: "Caixa Sobre do(a) usuário(a)"
+        header_icons:
+          title: "Ícones no cabeçalho"
+        spinners:
+          title: "Controle giratório"

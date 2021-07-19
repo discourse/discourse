@@ -313,7 +313,6 @@ ar:
     conduct: "قواعد السلوك"
     mobile_view: "العرض على الجوَّال"
     desktop_view: "العرض على كمبيوتر سطح المكتب"
-    you: "أنت"
     or: "أو"
     now: "منذ لحظات"
     read_more: "قراءة المزيد"
@@ -824,8 +823,6 @@ ar:
         public: "عامة"
         private: "خاصة"
         public_groups: "المجموعات العامة"
-        automatic_group: مجموعة تلقائية
-        close_group: مجموعة مغلقة
         my_groups: "مجموعاتي"
         group_type: "نوع المجموعة"
         is_group_user: "عضو"
@@ -920,7 +917,6 @@ ar:
       posts: "المشاركات"
       topics: "الموضوعات"
       latest: "الحديثة"
-      toggle_ordering: "تفعيل التحكم في الترتيب"
       subcategories: "الفئات الفرعية"
       muted: "الفئات المكتومة"
       topic_sentence:
@@ -1363,7 +1359,6 @@ ar:
         browser_active: '‏%{browser} | <span class="active">نشط الآن</span>'
         browser_last_seen: "‏%{browser} |‏ %{date}"
       last_posted: "آخر مشاركة"
-      last_emailed: "آخر رسالة عبر البريد الإلكتروني"
       last_seen: "آخر ظهور"
       created: "تاريخ الانضمام"
       log_out: "تسجيل الخروج"
@@ -2803,8 +2798,6 @@ ar:
       whisper: "هذا المنشور عبارة عن همسة خاصة للمشرفين"
       wiki:
         about: "هذا المنشور عبارة عن Wiki"
-      archetypes:
-        save: "خيارات الحفظ"
       few_likes_left: "نشكرك على نشر المحبة في المجتمع! و لكن للأسف لقد اقتربت من الحد اليومي المسموح به لمرات تسجيل الإعجاب."
       controls:
         reply: "ابدأ في كتابة رد على هذا المنشور"
@@ -2968,7 +2961,6 @@ ar:
         post_number: "%{username}، المنشور #%{post_number}"
         show_all: "إظهار الكل"
     category:
-      can: "يمكن&hellip; "
       none: "(بلا فئة)"
       all: "كل الفئات"
       choose: "الفئة&hellip;"
@@ -3002,7 +2994,6 @@ ar:
       save_error: حدث خطأ في أثناء حفظ الفئة.
       name: "اسم الفئة"
       description: "الوصف"
-      topic: "موضوع الفئة"
       logo: "صورة شعار الفئة"
       background_image: "صورة خلفية الفئة"
       badge_colors: "ألوان الشارات"

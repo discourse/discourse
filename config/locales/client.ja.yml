@@ -197,7 +197,6 @@ ja:
     conduct: "行動規範"
     mobile_view: "モバイルビュー"
     desktop_view: "デスクトップビュー"
-    you: "あなた"
     or: "または"
     now: "たった今"
     read_more: "もっと読む"
@@ -710,8 +709,6 @@ ja:
         public: "公開"
         private: "非公開"
         public_groups: "公開グループ"
-        automatic_group: 自動作成グループ
-        close_group: クローズされたグループ
         my_groups: "自分のグループ"
         group_type: "グループのタイプ"
         is_group_user: "メンバー"
@@ -821,7 +818,6 @@ ja:
       posts: "投稿"
       topics: "トピック"
       latest: "最新"
-      toggle_ordering: "カテゴリの並び替えモードを切り替え"
       subcategories: "サブカテゴリ"
       muted: "ミュートされたカテゴリ"
       topic_sentence:
@@ -1266,7 +1262,6 @@ ja:
         browser_active: '%{browser} | <span class="active">現在アクティブ</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "最後の投稿"
-      last_emailed: "最終メール送信日"
       last_seen: "アクセス"
       created: "参加日"
       log_out: "ログアウト"
@@ -2171,13 +2166,6 @@ ja:
       defer:
         help: "未読にする"
         title: "取り下げる"
-      feature_on_profile:
-        help: "このトピックへのリンクをユーザーカードとプロフィールに追加する"
-        title: "プロフィールの機能"
-      remove_from_profile:
-        warning: "あなたのプロフィールにはすでに注目のトピックがあります。続行すると、このトピックが既存のトピックに置き換わります。"
-        help: "ユーザープロフィールからこのトピックへのリンクを削除する"
-        title: "プロファイルから削除"
       list: "トピック"
       new: "新着トピック"
       unread: "未読"
@@ -2631,8 +2619,6 @@ ja:
       whisper: "この投稿はモデレーターの非公開のささやきです"
       wiki:
         about: "この投稿はウィキです"
-      archetypes:
-        save: "保存オプション"
       few_likes_left: "愛を共有してくれてありがとう！今日は後数個しか「いいね！」できません。"
       controls:
         reply: "この投稿の返信を作成する"
@@ -2766,7 +2752,6 @@ ja:
         post_number: "%{username}、投稿 #%{post_number}"
         show_all: "すべて表示"
     category:
-      can: "できること&hellip; "
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
       choose: "カテゴリ&hellip;"
@@ -2800,7 +2785,6 @@ ja:
       save_error: カテゴリを保存中にエラーが発生しました。
       name: "カテゴリ名"
       description: "説明"
-      topic: "カテゴリトピック"
       logo: "カテゴリのロゴの画像"
       background_image: "カテゴリの背景画像"
       badge_colors: "バッジの色"

@@ -2102,7 +2102,6 @@ zh_CN:
     missing_secret: "由于缺少密钥，身份验证失败。请联系站点管理员解决此问题。"
     invite_redeem_failed: "邀请确认失败。请联系站点管理员。"
   original_poster: "原始发帖人"
-  most_posts: "大多数帖子"
   most_recent_poster: "最新发帖人"
   frequent_poster: "频繁发帖人"
   poster_description_joiner: "、"

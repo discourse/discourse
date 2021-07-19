@@ -220,7 +220,6 @@ fi:
     conduct: "Käytännesäännöt"
     mobile_view: "Mobiilinäkymä"
     desktop_view: "Työpöytänäkymä"
-    you: "Sinä"
     or: "tai"
     now: "hetki sitten"
     read_more: "lue lisää"
@@ -750,8 +749,6 @@ fi:
         public: "Julkinen"
         private: "Yksityinen"
         public_groups: "Julkiset ryhmät"
-        automatic_group: Automaattinen ryhmä
-        close_group: Sulje ryhmä
         my_groups: "Omat ryhmät"
         group_type: "Ryhmän tyyppi"
         is_group_user: "Jäsen"
@@ -857,7 +854,6 @@ fi:
       posts: "Viestit"
       topics: "Ketjut"
       latest: "Tuoreimmat"
-      toggle_ordering: "vaihda järjestystä"
       subcategories: "Ala-alueet"
       muted: "Vaimennetut alueet"
       topic_sentence:
@@ -1310,7 +1306,6 @@ fi:
         browser_active: '%{browser} | <span class="active">aktiivinen nyt</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Viimeisin viesti"
-      last_emailed: "Viimeisin sähköposti"
       last_seen: "Nähty"
       created: "Liittynyt"
       log_out: "Kirjaudu ulos"
@@ -2252,13 +2247,6 @@ fi:
       defer:
         help: "Merkitse lukemattomaksi"
         title: "Lykkää"
-      feature_on_profile:
-        help: "Lisää käyttäjäkorttiisi ja profiilisivullesi linkki tähän ketjuun"
-        title: "Valikoi ketju profiiliisi"
-      remove_from_profile:
-        warning: "Profiilillesi on jo valikoitu ketju. Jos jatkat, tämä ketju korvaa aiemman ketjun."
-        help: "Poista linkki tähän ketjuun käyttäjäprofiilissasi"
-        title: "Poista profiilista"
       list: "Ketjut"
       new: "uusi ketju"
       unread: "lukematta"
@@ -2737,8 +2725,6 @@ fi:
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
       wiki:
         about: "tämä viesti on wiki-viesti"
-      archetypes:
-        save: "Tallennusasetukset"
       few_likes_left: "Kiitos hyvän mielen levittämisestä! Sinulla on enää muutama tykkäys jäljellä tälle päivälle."
       controls:
         reply: "aloita vastaamaan tähän viestiin"
@@ -2880,7 +2866,6 @@ fi:
         post_number: "%{username}, viesti #%{post_number}"
         show_all: "Näytä kaikki"
     category:
-      can: "voivat&hellip; "
       none: "(ei aluetta)"
       all: "Kaikki alueet"
       choose: "alue&hellip;"
@@ -2914,7 +2899,6 @@ fi:
       save_error: Alueen tallennuksessa tapahtui virhe.
       name: "Alueen nimi"
       description: "Kuvaus"
-      topic: "alueen ketju"
       logo: "Alueen logokuva"
       background_image: "Alueen taustakuva"
       badge_colors: "Kunniamerkin värit"

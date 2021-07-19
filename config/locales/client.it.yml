@@ -221,7 +221,6 @@ it:
     conduct: "Codice di Condotta"
     mobile_view: "Visualizzazione cellulari"
     desktop_view: "Visualizzazione Desktop"
-    you: "Tu"
     or: "oppure"
     now: "proprio ora"
     read_more: "altre informazioni"
@@ -751,8 +750,6 @@ it:
         public: "Pubblico"
         private: "Privato"
         public_groups: "Gruppi Pubblici"
-        automatic_group: Gruppo Automatico
-        close_group: Gruppo Chiuso
         my_groups: "I Miei Gruppi"
         group_type: "Tipo di gruppo"
         is_group_user: "Membro"
@@ -858,7 +855,6 @@ it:
       posts: "Messaggi"
       topics: "Argomenti"
       latest: "Più recenti"
-      toggle_ordering: "inverti l'ordinamento"
       subcategories: "Sottocategorie"
       muted: "Categorie silenziate"
       topic_sentence:
@@ -1311,7 +1307,6 @@ it:
         browser_active: '%{browser} | <span class="active">attivo ora</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Ultimo Messaggio"
-      last_emailed: "Ultima email inviata"
       last_seen: "Ultima visita"
       created: "Membro da"
       log_out: "Disconnetti"
@@ -2253,13 +2248,6 @@ it:
       defer:
         help: "Contrassegna come non letto"
         title: "Leggi più tardi"
-      feature_on_profile:
-        help: "Aggiungi un collegamento a questo argomento sulla tua scheda utente e sul tuo profilo"
-        title: "In evidenza Sul Profilo"
-      remove_from_profile:
-        warning: "Il tuo profilo ha già un argomento in primo piano. Se continui, questo argomento sostituirà l'argomento esistente."
-        help: "Rimuovi il collegamento a questo argomento dal tuo profilo utente"
-        title: "Rimuovi Dal Profilo"
       list: "Argomenti"
       new: "nuovo argomento"
       unread: "non letto"
@@ -2739,8 +2727,6 @@ it:
       whisper: "questo messaggio è un sussurro privato per i moderatori"
       wiki:
         about: "questo messaggio è una wiki"
-      archetypes:
-        save: "Opzioni di salvataggio"
       few_likes_left: "Grazie per aver condiviso affetto! Hai ancora pochi \"Mi piace\" rimasti per oggi."
       controls:
         reply: "inizia a comporre una risposta a questo messaggio"
@@ -2883,7 +2869,6 @@ it:
         post_number: "%{username}, messaggio n. %{post_number}"
         show_all: "Mostra tutto"
     category:
-      can: "può&hellip;"
       none: "(nessuna categoria)"
       all: "Tutte le categorie"
       choose: "categoria&hellip;"
@@ -2917,7 +2902,6 @@ it:
       save_error: Si è verificato un errore durante il salvataggio della categoria.
       name: "Nome Categoria"
       description: "Descrizione"
-      topic: "argomento della categoria"
       logo: "Immagine Categoria"
       background_image: "Immagine di sfondo della categoria"
       badge_colors: "Colori dei distintivi"

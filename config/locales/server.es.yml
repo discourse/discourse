@@ -2138,7 +2138,6 @@ es:
     missing_secret: "La autenticación ha fallado porque no se ha incluido el secreto. Ponte en contacto con la administración del sitio web para arreglar este problema."
     invite_redeem_failed: "No se ha podido canjear la invitación. Contacta con la administración del sitio."
   original_poster: "Autor original"
-  most_posts: "Con más publicaciones"
   most_recent_poster: "Autor más reciente"
   frequent_poster: "Autor frecuente"
   poster_description_joiner: ", "

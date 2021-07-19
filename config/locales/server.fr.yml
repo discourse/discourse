@@ -2139,7 +2139,6 @@ fr:
     missing_secret: "L'authentification a échoué du fait de l'absence d'une clé secrète. Nous vous invitons à contacter l'administrateur du site afin de résoudre ce problème."
     invite_redeem_failed: "Il n'a pas été possible d'utiliser ce lien d'invitation. Nous vous invitons à contacter l'administrateur du site."
   original_poster: "Créateur du sujet"
-  most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
   poster_description_joiner: ", "

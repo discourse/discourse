@@ -25,6 +25,18 @@ pt_BR:
           title: "Resultados serão mostrados quando a votação <strong>terminar</strong>."
         staff:
           title: "Resultados são mostrados apenas para membros da <strong>equipe</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Escolha pelo menos <strong>%{count}</strong> opção."
+            other: "Escolha pelo menos <strong>%{count}</strong> opções."
+          up_to_max_options:
+            one: "Escolha até <strong>%{count}</strong> opção."
+            other: "Escolha até <strong>%{count}</strong> opções."
+          x_options:
+            one: "Escolha <strong>%{count}</strong> opção."
+            other: "Escolha <strong>%{count}</strong> opções."
+          between_min_and_max_options: "Escolha entre <strong>%{min}</strong> e <strong>%{max}</strong> opções."
       cast-votes:
         title: "Participe da enquete"
         label: "Votar agora!"
@@ -52,6 +64,10 @@ pt_BR:
         closes_in: "Fecha em <strong>%{timeLeft}</strong>."
         age: "Fechou <strong>%{age}</strong>"
       breakdown:
+        title: "Resultados da enquete"
+        votes: "%{count} votos"
+        breakdown: "Divisão"
+        percentage: "Porcentagem"
         count: "Contagem"
       error_while_toggling_status: "Desculpe, houve um erro ao mudar o status desta enquete."
       error_while_casting_votes: "Desculpe, houve um erro ao registrar os seus votos."
@@ -73,15 +89,25 @@ pt_BR:
           multiple: Múltipla escolha
           number: Classificação numérica
         poll_result:
+          label: Exibir resultados
           always: Sempre visível
+          vote: Apenas após a votação
+          closed: Quando a enquete for encerrada
           staff: Somente equipe
+        poll_groups:
+          label: Limitar votação a estes grupos
         poll_chart_type:
+          label: Gráfico de resultados
           bar: Barras
           pie: Pizza
         poll_config:
+          max: Escolhas máx.
+          min: Escolhas mínimas
           step: Intervalo
         poll_public:
           label: Exibir quem votou
+        poll_title:
+          label: Título (opcional)
         poll_options:
           label: Opções (uma por linha)
           add: Adicionar opção
