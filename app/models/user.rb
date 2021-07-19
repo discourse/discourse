@@ -959,7 +959,7 @@ class User < ActiveRecord::Base
   end
 
   def silenced_forever?
-    silenced_till > DateTime.now + 500.years
+    silenced_till > DateTime.now + 100.years
   end
 
   def suspend_record
@@ -996,7 +996,7 @@ class User < ActiveRecord::Base
   end
 
   def suspended_forever?
-    suspended_till > DateTime.now + 500.years
+    suspended_till > DateTime.now + 100.years
   end
 
   # Use this helper to determine if the user has a particular trust level.
