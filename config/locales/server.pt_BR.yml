@@ -2509,35 +2509,9 @@ pt_BR:
   new_version_mailer:
     title: "Nova versão do mensageiro"
     subject_template: "[%{email_prefix}] Nova versão do Discourse, atualização disponível"
-    text_body_template: |
-      Viva! Uma nova versão do [Discourse](https://www.discourse.org) está disponível!
-
-      Seu versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      - Atualize com facilidade usando a nossa **[atualização no navegador em um clique](%{base_url}/admin/upgrade)**
-
-      - Confira as novidades nas [notas da versão](https://meta.discourse.org/tag/release-notes) ou veja o [registro de alterações não processados GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Acesse [meta.discourse.org](https://meta.discourse.org) para obter novidades, discussões e suporte para o Discourse
   new_version_mailer_with_notes:
     title: "Nova versão do mensageiro com notas"
     subject_template: "[%{email_prefix}] atualização disponível"
-    text_body_template: |
-      Viva! Uma nova versão do [Discourse](https://www.discourse.org) está disponível!
-
-      Seu versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      - Atualize com facilidade usando a nossa **[atualização no navegador em um clique](%{base_url}/admin/upgrade)**
-
-      - Confira as novidades nas [notas da versão](https://meta.discourse.org/tag/release-notes) ou veja o [registro de alterações não processados GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Acesse [meta.discourse.org](https://meta.discourse.org) para obter novidades, discussões e suporte para o Discourse
-
-      ### Notas da versão
-
-      %{notes}
   flag_reasons:
     off_topic: "Sua postagem foi sinalizada como **desvio de tópico**. A comunidade acha que não é compatível com o tópico conforme definida no título e na primeira postagem."
     inappropriate: "Sua postagem foi sinalizada como **não apropriada**: A comunidade acha que é ofensiva, abusiva, ou uma violação das [nossas diretrizes da comunidade](%{base_path}/guidelines)."

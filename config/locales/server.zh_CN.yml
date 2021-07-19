@@ -2432,35 +2432,9 @@ zh_CN:
   new_version_mailer:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
-    text_body_template: |
-      万岁，新版本的 [Discourse](https://www.discourse.org) 现已发布！
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      - 使用我们简单的**[一键浏览器升级](%{base_url}/admin/upgrade)**进行升级
-
-      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化或查看[原始 GitHub 更新日志](https://github.com/discourse/discourse/commits/master)
-
-      - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的资讯、讨论和支持
   new_version_mailer_with_notes:
     title: "带版本说明的新版本邮件"
     subject_template: "[%{email_prefix}] 有可用更新"
-    text_body_template: |
-      万岁，新版本的 [Discourse](https://www.discourse.org) 现已发布！
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      - 使用我们简单的**[一键浏览器升级](%{base_url}/admin/upgrade)**进行升级
-
-      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化或查看[原始 GitHub 更新日志](https://github.com/discourse/discourse/commits/master)
-
-      - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的资讯、讨论和支持
-
-      ### 版本说明
-
-      %{notes}
   flag_reasons:
     off_topic: "您的帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
     inappropriate: "您的帖子被举报为**不当言论**：社区认为它有冒犯或者侮辱的意味，亦或违反了[我们的社区准则](%{base_path}/guidelines)。"

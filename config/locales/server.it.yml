@@ -2100,7 +2100,7 @@ it:
       user_locale_not_enabled: "Prima di attivare questa impostazione, devi abilitare 'allow user locale'."
       invalid_regex: "Regex non è valido o non è consentito."
       email_editable_enabled: "Prima di attivare questa impostazione, devi disabilitare 'email editable'."
-      staged_users_disabled: "Devi abilitare 'staged users' prima di attivare questa impostazione ."
+      staged_users_disabled: "Devi abilitare 'staged users' prima di attivare questa impostazione."
       reply_by_email_disabled: "Devi abilitare 'reply by email' prima di attivare questa impostazione ."
       discourse_connect_url_is_empty: "È necessario definire un 'discourse connect url' prima di abilitare questa impostazione."
       discourse_connect_invite_only: "Non è possibile abilitare DiscourseConnect e solo inviti allo stesso tempo."
@@ -2486,35 +2486,9 @@ it:
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
-    text_body_template: |
-      Evviva, è finalmente disponibile una nuova versione di [Discourse](https://www.discourse.org)!
-
-      La tua versione: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Passa subito all'ultima versione utilizzando il nostro semplice strumento di **[aggiornamento da browser in un solo clic](%{base_url}/admin/upgrade)**
-
-      - Scopri le novità nelle [note di rilascio](https://meta.discourse.org/tag/release-notes) o visualizza il [log originale delle modifiche GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) per scoprire notizie, discussioni e ricevere supporto su Discourse
   new_version_mailer_with_notes:
     title: "Mailer Nuova Versione con Note"
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
-    text_body_template: |
-      Evviva, è finalmente disponibile una nuova versione di [Discourse](https://www.discourse.org)!
-
-      La tua versione: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Passa subito all'ultima versione utilizzando il nostro semplice strumento di **[aggiornamento da browser in un solo clic](%{base_url}/admin/upgrade)**
-
-      - Scopri le novità nelle [note di rilascio](https://meta.discourse.org/tag/release-notes) o visualizza il [log originale delle modifiche GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) per scoprire notizie, discussioni e ricevere supporto su Discourse
-
-      ### Note di rilascio
-
-      %{notes}
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa che non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](%{base_path}/guidelines)."

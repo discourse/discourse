@@ -2503,7 +2503,7 @@ de:
 
       - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/master)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
   new_version_mailer_with_notes:
@@ -2517,7 +2517,7 @@ de:
 
       - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/master)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
 

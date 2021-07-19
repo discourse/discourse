@@ -2429,35 +2429,9 @@ ja:
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"
-    text_body_template: |
-      やったー！新バージョンの [Discourse](https://www.discourse.org) が公開されました！
-
-      あなたのバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - **[ワンクリックのブラウザアップデート](%{base_url}/admin/upgrade)**で簡単にアップグレード
-
-      - 新機能については、[リリースノート](https://meta.discourse.org/tag/release-notes)か[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/master)をご覧ください。
-
-      - Discourse のニュース、ディスカッション、およびサポートは、[meta.discourse.org](https://meta.discourse.org)にアクセス！
   new_version_mailer_with_notes:
     title: "注意付きの新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 更新が利用可能になりました"
-    text_body_template: |
-      やったー！新バージョンの [Discourse](https://www.discourse.org) が公開されました！
-
-      あなたのバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - **[ワンクリックのブラウザアップデート](%{base_url}/admin/upgrade)**で簡単にアップグレード
-
-      - 新機能については、[リリースノート](https://meta.discourse.org/tag/release-notes)か[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/master)をご覧ください。
-
-      - Discourse のニュース、ディスカッション、およびサポートは、[meta.discourse.org](https://meta.discourse.org)にアクセス！
-
-      ### リリースノート
-
-      %{notes}
   flag_reasons:
     off_topic: "あなたの投稿は「話題に関係ない」として通報されました。コミュニティはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
     inappropriate: "あなたの投稿は**不適切**として通報されました。コミュニティは投稿が攻撃的、虐待的、または[コミュニティガイドライン](%{base_path}/guidelines)に違反すると感じています。"

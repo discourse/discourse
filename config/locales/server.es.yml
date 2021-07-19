@@ -2493,35 +2493,9 @@ es:
   new_version_mailer:
     title: "Correo electrónico de nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
-    text_body_template: |
-      ¡Hurra! Hay una nueva versión de [Discourse] (https://www.discourse.org) disponible.
-
-      Tu versión: %{installed_version}
-      Versión nueva: **%{new_version}**
-
-      Actualiza la versión fácilmente mediante nuestra **[actualización de navegador de un clic](%{base_url}/admin/upgrade)**
-
-      - Descubre qué novedades hay en las [notas de la versión](https://meta.discourse.org/tag/release-notes) o revisa [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, discusiones y soporte de Discourse
   new_version_mailer_with_notes:
     title: "Correo electrónico de nueva versión con notas"
     subject_template: "[%{email_prefix}] actualización disponible"
-    text_body_template: |
-      Hurra! Hay una nueva versión de [Discourse] (https://www.discourse.org) disponible.
-
-      Tu versión: %{installed_version}
-      Versión nueva: **%{new_version}**
-
-      Actualiza la versión fácilmente mediante nuestra **[actualización de navegador en un clic](%{base_url}/admin/upgrade)**
-
-      - Descubre qué novedades hay en las [notas de la versión](https://meta.discourse.org/tag/release-notes) o revisa [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, discusiones y soporte de Discourse
-
-      ### Notas de la versión
-
-      %{notes}
   flag_reasons:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
     inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva o que vulnera alguna de las [directrices de la comunidad](%{base_path}/directrices)."

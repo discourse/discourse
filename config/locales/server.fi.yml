@@ -2494,35 +2494,9 @@ fi:
   new_version_mailer:
     title: "Uusi versio"
     subject_template: "[%{email_prefix}] Uusi Discourse-versio, päivitys saatavilla"
-    text_body_template: |
-      Hurraa, uusi [Discourse-versio](https://www.discourse.org) on saatavilla!
-
-      Sinun versiosi: %{installed_version}
-      Uusi versio: **%{new_version}**
-
-      – Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
-
-      – Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
-
-      – Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
   new_version_mailer_with_notes:
     title: "Uusi versio julkaisumuistiolla"
     subject_template: "[%{email_prefix}] päivitys saatavilla"
-    text_body_template: |
-      Hurraa, uusi [Discourse-versio](https://www.discourse.org) on saatavilla!
-
-      Sinun versiosi: %{installed_version}
-      Uusi versio: **%{new_version}**
-
-      – Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
-
-      – Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
-
-      – Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
-
-      ### Julkaisutiedot
-
-      %{notes}
   flag_reasons:
     off_topic: "Viestisi merkittiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
     inappropriate: "Viestisi merkittiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi tai [yhteisön sääntöjen](%{base_path}/guidelines) vastaiseksi."
