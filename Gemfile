@@ -179,8 +179,12 @@ end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
   gem 'discourse_dev_assets'
+  gem 'faker', "~> 2.16"
 else
-  gem 'discourse_dev_assets', :group => :development
+  group :development do
+    gem 'discourse_dev_assets'
+    gem 'faker', "~> 2.16"
+  end
 end
 
 # this is an optional gem, it provides a high performance replacement
