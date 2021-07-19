@@ -105,14 +105,14 @@
   <meta http-equiv="x-pjax-version" content="54c2d4c4c03877e502ae56a38c2d98b6b0af19468dbeb53e4c171c0edc86d5fc">
 
 
-        <link href="https://github.com/discourse/discourse/commits/master.atom" rel="alternate" title="Recent Commits to discourse:master" type="application/atom+xml">
+        <link href="https://github.com/discourse/discourse/commits/main.atom" rel="alternate" title="Recent Commits to discourse:master" type="application/atom+xml">
 
   <meta name="go-import" content="github.com/discourse/discourse git https://github.com/discourse/discourse.git">
 
   <meta name="octolytics-dimension-user_id" content="3220138" /><meta name="octolytics-dimension-user_login" content="discourse" /><meta name="octolytics-dimension-repository_id" content="7569578" /><meta name="octolytics-dimension-repository_nwo" content="discourse/discourse" /><meta name="octolytics-dimension-repository_public" content="true" /><meta name="octolytics-dimension-repository_is_fork" content="false" /><meta name="octolytics-dimension-repository_network_root_id" content="7569578" /><meta name="octolytics-dimension-repository_network_root_nwo" content="discourse/discourse" /><meta name="octolytics-dimension-repository_explore_github_marketplace_ci_cta_shown" content="false" />
 
 
-    <link rel="canonical" href="https://github.com/discourse/discourse/tree/master/spec/fixtures" data-pjax-transient>
+    <link rel="canonical" href="https://github.com/discourse/discourse/tree/main/spec/fixtures" data-pjax-transient>
 
 
   <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
@@ -158,7 +158,7 @@
         <div class="d-flex flex-items-center">
               <a href="/join?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Ffiles%2Fdisambiguate&amp;source=header-repo"
                 class="d-inline-block d-lg-none f5 text-white no-underline border border-gray-dark rounded-2 px-2 py-1 mr-3 mr-sm-5"
-                data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/master/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="15792d7508105d8b3cf7a7682f1f9ff6ef0dcbe6ea0cd1122732d8bea435cb62"
+                data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/main/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="15792d7508105d8b3cf7a7682f1f9ff6ef0dcbe6ea0cd1122732d8bea435cb62"
                 data-ga-click="Sign up, click to sign up for account, ref_page:/&lt;user-name&gt;/&lt;repo-name&gt;/files/disambiguate;ref_cta:Sign up;ref_loc:header logged out">
                 Sign&nbsp;up
               </a>
@@ -431,13 +431,13 @@
 
         <a href="/login?return_to=%2Fdiscourse%2Fdiscourse%2Ftree%2Fmaster%2Fspec%2Ffixtures"
           class="HeaderMenu-link no-underline mr-3"
-          data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/master/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="cd2e5eaef831676675daf05be31d25cc5e281ff5a6ca138b4f785f0792646077"
+          data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/main/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="cd2e5eaef831676675daf05be31d25cc5e281ff5a6ca138b4f785f0792646077"
           data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in">
           Sign&nbsp;in
         </a>
             <a href="/join?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Ffiles%2Fdisambiguate&amp;source=header-repo&amp;source_repo=discourse%2Fdiscourse"
               class="HeaderMenu-link d-inline-block no-underline border border-gray-dark rounded-1 px-2 py-1"
-              data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/master/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="cd2e5eaef831676675daf05be31d25cc5e281ff5a6ca138b4f785f0792646077"
+              data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/main/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="cd2e5eaef831676675daf05be31d25cc5e281ff5a6ca138b4f785f0792646077"
               data-ga-click="Sign up, click to sign up for account, ref_page:/&lt;user-name&gt;/&lt;repo-name&gt;/files/disambiguate;ref_cta:Sign up;ref_loc:header logged out">
               Sign&nbsp;up
             </a>
@@ -524,7 +524,7 @@
           <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
 
   <li>
-          <a class="tooltipped tooltipped-s btn btn-sm btn-with-count" aria-label="You must be signed in to watch a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/master/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="405972d89d23ad57a208a6b762c908977e8632ed4412feebe6aabd8982c3dc67" href="/login?return_to=%2Fdiscourse%2Fdiscourse">
+          <a class="tooltipped tooltipped-s btn btn-sm btn-with-count" aria-label="You must be signed in to watch a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/main/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="405972d89d23ad57a208a6b762c908977e8632ed4412feebe6aabd8982c3dc67" href="/login?return_to=%2Fdiscourse%2Fdiscourse">
     <svg class="octicon octicon-eye" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.679 7.932c.412-.621 1.242-1.75 2.366-2.717C5.175 4.242 6.527 3.5 8 3.5c1.473 0 2.824.742 3.955 1.715 1.124.967 1.954 2.096 2.366 2.717a.119.119 0 010 .136c-.412.621-1.242 1.75-2.366 2.717C10.825 11.758 9.473 12.5 8 12.5c-1.473 0-2.824-.742-3.955-1.715C2.92 9.818 2.09 8.69 1.679 8.068a.119.119 0 010-.136zM8 2c-1.981 0-3.67.992-4.933 2.078C1.797 5.169.88 6.423.43 7.1a1.619 1.619 0 000 1.798c.45.678 1.367 1.932 2.637 3.024C4.329 13.008 6.019 14 8 14c1.981 0 3.67-.992 4.933-2.078 1.27-1.091 2.187-2.345 2.637-3.023a1.619 1.619 0 000-1.798c-.45-.678-1.367-1.932-2.637-3.023C11.671 2.992 9.981 2 8 2zm0 8a2 2 0 100-4 2 2 0 000 4z"></path></svg>
     Watch
 </a>    <a class="social-count" href="/discourse/discourse/watchers"
@@ -535,7 +535,7 @@
   </li>
 
   <li>
-          <a class="btn btn-sm btn-with-count  tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:7569578,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/master/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="fa965363a7035432c2582ba60c32caf61b31df59e448228b4ef6d44280819124" href="/login?return_to=%2Fdiscourse%2Fdiscourse">
+          <a class="btn btn-sm btn-with-count  tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:7569578,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/main/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="fa965363a7035432c2582ba60c32caf61b31df59e448228b4ef6d44280819124" href="/login?return_to=%2Fdiscourse%2Fdiscourse">
       <svg class="octicon octicon-star v-align-text-bottom" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
       Star
 </a>
@@ -547,7 +547,7 @@
   </li>
 
   <li>
-        <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to fork a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:7569578,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/master/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="f52817d4db9c640daaa9cbd6de77641556fcd6f08035601bdb7bab7cdec04960" href="/login?return_to=%2Fdiscourse%2Fdiscourse">
+        <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to fork a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:7569578,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/main/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="f52817d4db9c640daaa9cbd6de77641556fcd6f08035601bdb7bab7cdec04960" href="/login?return_to=%2Fdiscourse%2Fdiscourse">
           <svg class="octicon octicon-repo-forked" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>
           Fork
 </a>
@@ -664,18 +664,18 @@
 
     <div class="flex-1 mx-2 flex-self-center f4">
       <div class="d-none d-sm-block">
-        <span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/discourse/discourse"><span>discourse</span></a></span></span><span class="mx-1">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/discourse/discourse/tree/master/spec"><span>spec</span></a></span><span class="mx-1">/</span><strong class="final-path">fixtures</strong><span class="mx-1">/</span>
+        <span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/discourse/discourse"><span>discourse</span></a></span></span><span class="mx-1">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/discourse/discourse/tree/main/spec"><span>spec</span></a></span><span class="mx-1">/</span><strong class="final-path">fixtures</strong><span class="mx-1">/</span>
       </div>
     </div>
 
     <div class="d-flex">
-      <a class="btn mr-2 d-none d-md-block" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:7569578,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/master/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="557e83be024a36d7baeb2ebfdab8c7caa1a4a09099ec10ecaa4a7d73fd957017" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/discourse/discourse/find/master">
+      <a class="btn mr-2 d-none d-md-block" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:7569578,&quot;originating_url&quot;:&quot;https://github.com/discourse/discourse/tree/main/spec/fixtures&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="557e83be024a36d7baeb2ebfdab8c7caa1a4a09099ec10ecaa4a7d73fd957017" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/discourse/discourse/find/master">
         Go to file
 </a>
     </div>
   </div>
 
-  <div class="f4 mt-3 mb-3 d-sm-none"><span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/discourse/discourse"><span>discourse</span></a></span></span><span class="mx-1">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/discourse/discourse/tree/master/spec"><span>spec</span></a></span><span class="mx-1">/</span><strong class="final-path">fixtures</strong><span class="separator mx-1">/</span></div>
+  <div class="f4 mt-3 mb-3 d-sm-none"><span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/discourse/discourse"><span>discourse</span></a></span></span><span class="mx-1">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/discourse/discourse/tree/main/spec"><span>spec</span></a></span><span class="mx-1">/</span><strong class="final-path">fixtures</strong><span class="separator mx-1">/</span></div>
 
 
 
@@ -797,7 +797,7 @@ Co-authored-by: Gerhard Schlager &lt;mail@gerhard-schlager.at&gt;</pre>
         <h2 class="sr-only">Git stats</h2>
         <ul class="list-style-none d-flex">
           <li class="ml-0 ml-md-3">
-            <a data-pjax href="/discourse/discourse/commits/master/spec/fixtures" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link-gray-dark no-underline no-wrap">
+            <a data-pjax href="/discourse/discourse/commits/main/spec/fixtures" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link-gray-dark no-underline no-wrap">
               <svg class="octicon octicon-history text-gray" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z"></path></svg>
               <span class="d-none d-sm-inline">
                   <strong>History</strong>
@@ -829,7 +829,7 @@ Co-authored-by: Gerhard Schlager &lt;mail@gerhard-schlager.at&gt;</pre>
       </div>
         <div role="row" class="Box-row Box-row--focus-gray p-0 d-flex js-navigation-item" >
           <div role="rowheader" class="flex-auto min-width-0 col-md-2">
-            <a rel="nofollow" title="Go to parent directory" class="js-navigation-open d-block py-2 px-3" href="/discourse/discourse/tree/master/spec">
+            <a rel="nofollow" title="Go to parent directory" class="js-navigation-open d-block py-2 px-3" href="/discourse/discourse/tree/main/spec">
               <span class="text-bold text-center d-inline-block" style="min-width: 16px;">. .</span>
 </a>          </div>
           <div role="gridcell" class="d-none d-md-block"></div>
@@ -843,7 +843,7 @@ Co-authored-by: Gerhard Schlager &lt;mail@gerhard-schlager.at&gt;</pre>
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="backups" href="/discourse/discourse/tree/master/spec/fixtures/backups">backups</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="backups" href="/discourse/discourse/tree/main/spec/fixtures/backups">backups</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -866,7 +866,7 @@ This also ensures that restoring a backup works when it was created with the wro
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="csv" href="/discourse/discourse/tree/master/spec/fixtures/csv">csv</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="csv" href="/discourse/discourse/tree/main/spec/fixtures/csv">csv</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -887,7 +887,7 @@ This also ensures that restoring a backup works when it was created with the wro
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="db" href="/discourse/discourse/tree/master/spec/fixtures/db">db</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="db" href="/discourse/discourse/tree/main/spec/fixtures/db">db</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -910,7 +910,7 @@ The `EXECUTE FUNCTION` syntax for `CREATE TRIGGER` statements was introduced in 
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="emails" href="/discourse/discourse/tree/master/spec/fixtures/emails">emails</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="emails" href="/discourse/discourse/tree/main/spec/fixtures/emails">emails</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -935,7 +935,7 @@ This is a PR of the renaming whitelist to allowlist and blacklist to the blockli
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="encodings" href="/discourse/discourse/tree/master/spec/fixtures/encodings">encodings</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="encodings" href="/discourse/discourse/tree/main/spec/fixtures/encodings">encodings</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -956,7 +956,7 @@ This is a PR of the renaming whitelist to allowlist and blacklist to the blockli
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="feed" href="/discourse/discourse/tree/master/spec/fixtures/feed">feed</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="feed" href="/discourse/discourse/tree/main/spec/fixtures/feed">feed</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -977,7 +977,7 @@ This is a PR of the renaming whitelist to allowlist and blacklist to the blockli
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="i18n" href="/discourse/discourse/tree/master/spec/fixtures/i18n">i18n</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="i18n" href="/discourse/discourse/tree/main/spec/fixtures/i18n">i18n</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1000,7 +1000,7 @@ follow-up to 6d8eb9c1" class="link-gray" href="/discourse/discourse/commit/a77d8
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="images" href="/discourse/discourse/tree/master/spec/fixtures/images">images</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="images" href="/discourse/discourse/tree/main/spec/fixtures/images">images</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1029,7 +1029,7 @@ follow-up to 6d8eb9c1" class="link-gray" href="/discourse/discourse/commit/a77d8
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="json" href="/discourse/discourse/tree/master/spec/fixtures/json">json</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="json" href="/discourse/discourse/tree/main/spec/fixtures/json">json</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1066,7 +1066,7 @@ follow-up to 6d8eb9c1" class="link-gray" href="/discourse/discourse/commit/a77d8
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="md" href="/discourse/discourse/tree/master/spec/fixtures/md">md</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="md" href="/discourse/discourse/tree/main/spec/fixtures/md">md</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1087,7 +1087,7 @@ follow-up to 6d8eb9c1" class="link-gray" href="/discourse/discourse/commit/a77d8
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="media" href="/discourse/discourse/tree/master/spec/fixtures/media">media</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="media" href="/discourse/discourse/tree/main/spec/fixtures/media">media</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1116,7 +1116,7 @@ See https://meta.discourse.org/t/cannot-download-non-image-media-files-original-
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="mmdb" href="/discourse/discourse/tree/master/spec/fixtures/mmdb">mmdb</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="mmdb" href="/discourse/discourse/tree/main/spec/fixtures/mmdb">mmdb</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1145,7 +1145,7 @@ See https://meta.discourse.org/t/cannot-download-non-image-media-files-original-
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="multisite" href="/discourse/discourse/tree/master/spec/fixtures/multisite">multisite</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="multisite" href="/discourse/discourse/tree/main/spec/fixtures/multisite">multisite</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1166,7 +1166,7 @@ See https://meta.discourse.org/t/cannot-download-non-image-media-files-original-
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="onebox" href="/discourse/discourse/tree/master/spec/fixtures/onebox">onebox</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="onebox" href="/discourse/discourse/tree/main/spec/fixtures/onebox">onebox</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1219,7 +1219,7 @@ Co-authored-by: Gerhard Schlager &lt;mail@gerhard-schlager.at&gt;" class="link-g
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="pdf" href="/discourse/discourse/tree/master/spec/fixtures/pdf">pdf</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="pdf" href="/discourse/discourse/tree/main/spec/fixtures/pdf">pdf</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1244,7 +1244,7 @@ Co-authored-by: Maja Komel &lt;maja.komel@gmail.com&gt;" class="link-gray" href=
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="plugins" href="/discourse/discourse/tree/master/spec/fixtures/plugins">plugins</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="plugins" href="/discourse/discourse/tree/main/spec/fixtures/plugins">plugins</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1270,7 +1270,7 @@ moment." class="link-gray" href="/discourse/discourse/commit/cdb7ddc258c6a459bdf
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="scss" href="/discourse/discourse/tree/master/spec/fixtures/scss">scss</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="scss" href="/discourse/discourse/tree/main/spec/fixtures/scss">scss</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1291,7 +1291,7 @@ moment." class="link-gray" href="/discourse/discourse/commit/cdb7ddc258c6a459bdf
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="site_settings" href="/discourse/discourse/tree/master/spec/fixtures/site_settings">site_settings</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="site_settings" href="/discourse/discourse/tree/main/spec/fixtures/site_settings">site_settings</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1316,7 +1316,7 @@ Noted:
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="theme_settings" href="/discourse/discourse/tree/master/spec/fixtures/theme_settings">theme_settings</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="theme_settings" href="/discourse/discourse/tree/main/spec/fixtures/theme_settings">theme_settings</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1337,7 +1337,7 @@ Noted:
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="themes" href="/discourse/discourse/tree/master/spec/fixtures/themes">themes</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="themes" href="/discourse/discourse/tree/main/spec/fixtures/themes">themes</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1378,7 +1378,7 @@ This pull request is related to https://meta.discourse.org/t/uploaded-js-file-fo
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="woff2" href="/discourse/discourse/tree/master/spec/fixtures/woff2">woff2</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="woff2" href="/discourse/discourse/tree/main/spec/fixtures/woff2">woff2</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
