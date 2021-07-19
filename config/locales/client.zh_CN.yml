@@ -2568,7 +2568,7 @@ zh_CN:
       last_edited_on: "帖子最后编辑于 %{dateTime}"
       reply_as_new_topic: "作为链接话题回复"
       reply_as_new_private_message: "作为新消息回复给相同的收件人"
-      continue_discussion: "继续 %{postLink} 的讨论："
+      continue_discussion: "从%{postLink}继续讨论："
       follow_quote: "转到引用的帖子"
       show_full: "显示完整帖子"
       show_hidden: "查看已忽略的内容。"
@@ -2605,7 +2605,7 @@ zh_CN:
         too_many_uploads: "抱歉，一次只能上传一个文件。"
         too_many_dragged_and_dropped_files:
           other: "抱歉，一次只能上传 %{count} 个文件。"
-        upload_not_authorized: "抱歉，您尝试上传的文件不受支持（支持的扩展名：%{authorized_extensions}）。"
+        upload_not_authorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，您需要登录才能下载附件。"

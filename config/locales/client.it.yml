@@ -1080,7 +1080,7 @@ it:
       ignored_users_instructions: "Elimina tutti i messaggi, le notifiche e MP da questi utenti."
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
-      apps: "Applicazioni"
+      apps: "App"
       revoke_access: "Revoca Accesso"
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
@@ -1292,7 +1292,7 @@ it:
         title: "Lingua dell'interfaccia"
         instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
         default: "(default)"
-        any: "qualunque"
+        any: "tutti"
       password_confirmation:
         title: "Ripeti la password"
       invite_code:
@@ -1315,7 +1315,7 @@ it:
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Ultimo Messaggio"
       last_seen: "Ultima visita"
-      created: "Membro da"
+      created: "Iscritto"
       log_out: "Disconnetti"
       location: "Località"
       website: "Sito Web"
@@ -1388,7 +1388,7 @@ it:
         pending_tab_with_count: "In sospeso (%{count})"
         expired_tab: "Scaduto"
         expired_tab_with_count: "Scaduti (%{count})"
-        redeemed_tab: "Riscattato"
+        redeemed_tab: "Accettato"
         redeemed_tab_with_count: "Accettati (%{count})"
         invited_via: "Invito"
         invited_via_link: "Link %{key} (%{count} / %{max} accettati)"
@@ -1592,7 +1592,7 @@ it:
       exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
     learn_more: "per saperne di più..."
     first_post: Primo messaggio
-    mute: Ignora
+    mute: Silenzia
     unmute: Riattiva
     last_post: Pubblicato
     local_time: "Ora Locale"
@@ -1705,7 +1705,7 @@ it:
       authenticating: "Autenticazione..."
       awaiting_activation: "Il tuo account è in attesa di attivazione, utilizza il collegamento per la password dimenticata per ricevere un'altra email di attivazione."
       awaiting_approval: "Il tuo account non è stato ancora approvato da un membro dello staff. Ti invieremo un'email non appena verrà approvato."
-      requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
+      requires_invite: "Spiacenti, l'accesso a questo forum è solo ad invito."
       not_activated: "Non puoi ancora accedere. Abbiamo inviato un'email di attivazione a <b>%{sentTo}</b>. Ti preghiamo di seguire le istruzioni contenute nell'email per attivare l'account."
       not_allowed_from_ip_address: "Non puoi accedere da quell'indirizzo IP."
       admin_not_allowed_from_ip_address: "Non puoi accedere come amministratore da quell'indirizzo IP."
@@ -1915,7 +1915,7 @@ it:
       italic_label: "I"
       italic_title: "Corsivo"
       italic_text: "testo in corsivo"
-      link_title: "Collegamento"
+      link_title: "Hyperlink"
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
@@ -1969,7 +1969,7 @@ it:
           label: Rispondi all'argomento
           desc: Rispondi all'argomento, non a uno specifico messaggio
         toggle_whisper:
-          label: Interruttore Sussurri
+          label: Attiva/disattiva sussurri
           desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
           label: "Nuovo Argomento"
@@ -2010,8 +2010,8 @@ it:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} altro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e altri %{count}</span> %{description}"
       liked_consolidated_description:
-        one: "ha messo \"mi piace\" a %{count} tuo messaggio"
-        other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
+        one: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
+        other: "hanno messo \"mi piace\" a %{count} dei tuoi messaggi"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2188,7 +2188,7 @@ it:
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new: "Ignora i nuovi messaggi"
         dismiss_new_with_selected:
-          one: "Ignora nuovo (%{count})"
+          one: "Ignora (%{count}) nuovo"
           other: "Ignora i nuovi (%{count})"
         toggle: "interruttore di selezione multipla degli argomenti"
         actions: "Azioni Multiple"
@@ -2976,7 +2976,7 @@ it:
           title: "In osservazione"
           description: "Osserverai automaticamente tutti gli argomenti in questa categoria. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."
         watching_first_post:
-          title: "Osservando il Primo Messaggio"
+          title: "Osservazione Primo Messaggio"
           description: "Riceverai una notifica di nuovi argomenti in questa categoria, ma non per le risposte agli argomenti."
         tracking:
           title: "Seguita"
@@ -3408,7 +3408,7 @@ it:
           title: "In osservazione"
           description: "Visualizzerai automaticamente tutti gli Argomenti con questa Etichetta. Riceverai una notifica per tutti i nuovi messaggi e Argomenti. Inoltre, accanto all'Argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         watching_first_post:
-          title: "Osserva Primo Messaggio"
+          title: "Osservazione Primo Messaggio"
           description: "Riceverai una notifica se saranno aperti nuovi Argomenti in questa Etichetta, ma non per le risposte agli Argomenti."
         tracking:
           title: "Seguito"
@@ -4218,7 +4218,7 @@ it:
           modal:
             title: "Dettagli posta in arrivo"
             error: "Errore"
-            headers: "Intestazione"
+            headers: "Intestazioni"
             subject: "Oggetto"
             body: "Corpo"
             rejection_message: "Messaggio rifiutato"
@@ -4402,7 +4402,7 @@ it:
             text: "Roll up"
             title: "Crea nuovi elenchi di indirizzi IP interdetti se ci sono almeno 'min_ban_entries_for_roll_up' elementi."
         search_logs:
-          title: "Cerca nei log"
+          title: "Log di ricerca"
           term: "Termine"
           searches: "Ricerche"
           click_through_rate: "CTR"

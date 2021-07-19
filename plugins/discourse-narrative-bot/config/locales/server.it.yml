@@ -192,7 +192,7 @@ it:
         not_found: |-
           Sembra che tu non abbia caricato un'immagine così ho scelto una foto che sono _sicuro_ ti piacerà.
 
-          `%{image_url}`
+          <%{image_url}>
 
           Prova a caricare questa nel prossimo messaggio, o incolla il link su una riga da sola!
       likes:

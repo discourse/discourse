@@ -3499,7 +3499,7 @@ zh_CN:
   image: "图片"
   upload:
     edit_reason: "下载图片的本地副本"
-    unauthorized: "抱歉，您尝试上传的文件不受支持（支持的扩展名：%{authorized_extensions}）。"
+    unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
     pasted_image_filename: "粘贴图片"
     store_failure: "无法保存用户 #%{user_id} 的上传 #%{upload_id}。"
     file_missing: "抱歉，您必须提供要上传的文件。"
@@ -4429,8 +4429,8 @@ zh_CN:
   create_linked_topic:
     topic_title_with_sequence:
       other: "%{topic_title}（第 %{count} 部分）"
-    post_raw: "继续 %{parent_url} 的讨论。\n\n以前的讨论：\n\n%{previous_topics}"
-    small_action_post_raw: "在 %{new_title} 继续讨论。"
+    post_raw: "从%{parent_url}继续讨论。\n\n以前的讨论：\n\n%{previous_topics}"
+    small_action_post_raw: "在%{new_title}继续讨论。"
   activemodel:
     errors:
       <<: *errors

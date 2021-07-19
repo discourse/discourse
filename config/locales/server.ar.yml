@@ -1384,7 +1384,7 @@ ar:
       short: "يجب ألا يقل عدد الأحرف عن %{min}"
       long: "يجب ألا يزيد عدد الأحرف عن %{min}"
       unique: "يجب أن يكون فريدًا"
-      blank: "يجب أن يكون حاضرًا"
+      blank: "يجب أن يكون موجودًا"
       must_end_with_alphanumeric: "يجب أن ينتهي بحرف أو رقم"
       must_not_contain_two_special_chars_in_seq: "يجب ألا يحتوي على تسلسل من حرفين أو أكثر من الأحرف الخاصة (.-_)"
       must_not_end_with_confusing_suffix: "يجب ألا ينتهي بلاحقة مربكة مثل .json أو .png وما إلى ذلك."
