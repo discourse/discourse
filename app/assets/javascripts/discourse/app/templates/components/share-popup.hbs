@@ -14,11 +14,11 @@
   }}
 </div>
 
-<div class="share-link-container">
+<div class="link-share-container">
   <input class="share-link-input" type="text" aria-label={{i18n "share.url"}}> {{copy-button selector="input.share-link-input"}}
 </div>
 
-<div class="share-link-actions">
+<div class="link-share-actions">
   <div class="sources">
     {{#each sources as |s|}}
       {{share-source source=s title=model.title action=(action "share")}}

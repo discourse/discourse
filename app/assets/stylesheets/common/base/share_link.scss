@@ -1,6 +1,6 @@
 // styles that apply to the "share" modal & popup when sharing a link to a post or topic
 
-.share-link-container {
+.link-share-container {
   display: flex;
   button {
     transition-property: background-color, color; // don't transition outline
@@ -15,7 +15,7 @@
   }
 }
 
-.share-link-actions {
+.link-share-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
