@@ -1409,7 +1409,7 @@ RSpec.describe SessionController do
         end
 
         it 'when suspended forever should return an error without suspended till date' do
-          user.suspended_till = 1000.years.from_now
+          user.suspended_till = 101.years.from_now
           user.suspended_at = Time.now
           user.save!
           StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
