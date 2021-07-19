@@ -4230,6 +4230,7 @@ en:
           theme: "Theme"
           component: "Component"
           components: "Components"
+          filter_placeholder: "type to filter…"
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
