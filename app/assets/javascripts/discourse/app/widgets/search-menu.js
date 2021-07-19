@@ -286,7 +286,7 @@ export default createWidget("search-menu", {
     });
   },
 
-  mouseDownOutside() {
+  clickOutside() {
     this.sendWidgetAction("toggleSearchMenu");
   },
 
