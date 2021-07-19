@@ -75,7 +75,7 @@ class Notification < ActiveRecord::Base
     DB.exec(<<~SQL)
       DELETE
         FROM notifications n
-       WHERE high_priority AND notification_type <> #{types[:chat_mention]}
+       WHERE high_priority AND notification_type <> #{types[:chat_mention].to_i}
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
