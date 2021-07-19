@@ -647,4 +647,25 @@ describe Plugin::Instance do
       }.to raise_error(RuntimeError)
     end
   end
+
+  describe '#register_site_categories_callback' do
+    fab!(:category) { Fabricate(:category) }
+
+    it 'adds a callback to the Site#categories' do
+      instance = Plugin::Instance.new
+
+      instance.register_site_categories_callback do |categories|
+        categories.each do |category|
+          category[:test_field] = "test"
+        end
+      end
+
+      site = Site.new(Guardian.new)
+
+      expect(site.categories.first[:test_field]).to eq("test")
+    ensure
+      Site.clear_cache
+      Site.categories_callbacks.clear
+    end
+  end
 end
