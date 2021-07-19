@@ -1586,6 +1586,11 @@ it:
     auth_overrides_email: "Sovrascrive l'email locale con l'email del sito esterno ad ogni accesso e impedisce le modifiche locali. Si applica a tutti i provider di autenticazione. (ATTENZIONE: possono verificarsi discrepanze dovute alla normalizzazione delle email locali)"
     auth_overrides_username: "Sovrascrive il nome utente locale con il nome utente del sito esterno ad ogni accesso e previene le modifiche locali. Si applica a tutti i provider di autenticazione. (ATTENZIONE: possono verificarsi discrepanze a causa di differenze nella lunghezza/requisiti del nome utente)"
     auth_overrides_name: "Sovrascrive il nome completo locale con il nome completo del sito esterno a ogni accesso e impedisce modifiche locali. Si applica a tutti i provider di autenticazione."
+    discourse_connect_overrides_avatar: "Sostituisce l'avatar dell'utente con il valore dal payload DiscourseConnect. Se l'impostazione è abilitata, gli utenti non potranno caricare avatar su Discourse."
+    discourse_connect_overrides_location: "Sovrascrive la posizione utente con il valore dal payload DiscourseConnect e impedisce le modifiche locali."
+    discourse_connect_overrides_website: "Sovrascrive il sito web utente con il valore dal payload DiscourseConnect e impedisce le modifiche locali."
+    discourse_connect_overrides_profile_background: "Sostituisce lo sfondo del profilo utente con il valore dal payload DiscourseConnect."
+    discourse_connect_overrides_card_background: "Sostituisce lo sfondo della scheda utente con il valore dal payload DiscourseConnect."
     discourse_connect_not_approved_url: "Reindirizza gli account DiscourseConnect non approvati a questo URL"
     discourse_connect_allows_all_return_paths: "Non restringere il dominio per i return_paths forniti da DiscourseConnect (per impostazione predefinita il percorso di ritorno deve essere sul sito corrente)"
     enable_local_logins: "Abilita gli account di accesso basati su nome utente e password locali. ATTENZIONE: se questa impostazione è disabilitata, potrebbe essere impossibile accedere senza aver precedentemente configurato almeno un metodo di accesso alternativo."
@@ -1683,6 +1688,7 @@ it:
     allow_staff_to_upload_any_file_in_pm: "Consenti ai membri delle staff di caricare qualsiasi file nei PM."
     strip_image_metadata: "Rimuovi i metadati dalle immagini."
     composer_media_optimization_image_enabled: "Abilita l'ottimizzazione multimediale lato client dei file di immagini caricati."
+    composer_media_optimization_image_bytes_optimization_threshold: "Dimensione minima del file di immagini per attivare l'ottimizzazione lato client"
     composer_media_optimization_image_resize_dimensions_threshold: "Larghezza minima dell'immagine per attivare il ridimensionamento lato client"
     composer_media_optimization_image_resize_width_target: "Le immagini con larghezza maggiore di `composer_media_optimization_image_dimensions_resize_threshold` saranno ridimensionate a questa larghezza. il valore deve essere >= di `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "Qualità di codifica JPEG utilizzata nel processo di ricodifica."
@@ -2067,6 +2073,7 @@ it:
     share_quote_buttons: "Determina quali elementi appaiono nel widget di condivisione citazioni e in quale ordine."
     share_quote_visibility: "Determina quando mostrare i pulsanti di condivisione delle citazioni: mai, solo agli utenti anonimi o a tutti gli utenti. "
     create_revision_on_bulk_topic_moves: "Crea una revisione per i primi messaggi quando gli argomenti vengono spostati in blocco in una nuova categoria."
+    allow_changing_staged_user_tracking: "Consenti a un utente amministratore di modificare le preferenze di notifica di etichette e categorie di utenti provvisori."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -3613,7 +3620,9 @@ it:
     mass_award:
       errors:
         invalid_csv: Si è verificato un errore sulla riga %{line_number}. Si prega di confermare che il CSV ha un'email per riga.
+        too_many_csv_entries: Troppi elementi nel file CSV. Usa un file CSV con non più di %{count} elementi.
         badge_disabled: Attivare prima il distintivo %{badge_name} .
+        cant_grant_multiple_times: Impossibile assegnare il distintivo %{badge_name} più volte a uno stesso utente.
     editor:
       name: Redattore
       description: Prima modifica ad un messaggio

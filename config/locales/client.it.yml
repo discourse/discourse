@@ -305,6 +305,7 @@ it:
       remove: "Rimuovi"
       remove_confirmation: "Vuoi davvero eliminare questa bozza?"
       new_topic: "Nuovo argomento in bozza"
+      new_private_message: "Nuovo messaggio personale in bozza"
       topic_reply: "Risposta in bozza"
       abandon:
         confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
@@ -378,6 +379,7 @@ it:
         type_bonus:
           name: "tipo di bonus"
           title: "Ad alcune tipologie revisionabili può essere assegnato un bonus dallo staff, per aumentare la loro priorità."
+      stale_help: "La revisione di questo elemento è stata condotta da <b>%{username}</b>."
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
         required: "Per poter revisionare gli elementi devi prima rivendicarli."
@@ -826,6 +828,11 @@ it:
       flair_type:
         icon: "Seleziona un'icona"
         image: "Carica un'immagine"
+      default_notifications:
+        modal_title: "Notifiche predefinite dell'utente"
+        modal_description: "Desideri applicare questa modifica retroattivamente? Questo cambierà le preferenze per %{count} utenti esistenti."
+        modal_yes: "Sì"
+        modal_no: "No, applica le modifiche solo da adesso in avanti"
     user_action_groups:
       "1": "Mi piace - Assegnati"
       "2": "Mi piace - Ricevuti"
@@ -1954,6 +1961,7 @@ it:
           confirm: È stata salvata una nuova bozza di argomento, che verrà sovrascritta se si crea un argomento collegato.
         reply_as_new_group_message:
           label: Rispondi come nuovo messaggio di gruppo
+          desc: Crea un nuovo messaggio iniziando con gli stessi destinatari
         reply_as_private_message:
           label: Nuovo messaggio
           desc: Crea un nuovo messaggio personale
@@ -3480,6 +3488,8 @@ it:
         regular: "esperto"
         leader: "veterano"
       detailed_name: "%{level} - %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Hai scelto un file non supportato. Tipi di file supportati: %{types}."
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3710,6 +3720,7 @@ it:
               log_out: Disconnetti tutte le sessioni per un utente.
               anonymize: Rendi anonimi gli account utente.
               delete: Elimina account utente.
+              list: Ottieni un elenco di utenti.
             email:
               receive_emails: Combina questo ambito con il destinatario della posta per elaborare le email in arrivo.
       web_hooks:
@@ -4912,7 +4923,11 @@ it:
           perform: "Assegna Distintivo agli Utenti"
           upload_csv: Carica un CSV con indirizzi email o nomi degli utenti
           aborted: Carica un CSV contenente indirizzi email o i nomi degli utenti
+          success: Il tuo CSV è stato ricevuto e %{count} utenti riceveranno il loro distintivo a breve.
+          csv_has_unmatched_users: "Le seguenti voci sono nel file CSV ma non possono essere abbinate agli utenti esistenti e quindi non riceveranno il distintivo:"
+          csv_has_unmatched_users_truncated_list: "C'erano %{count} elementi nel file CSV che non è stato possibile abbinare a utenti esistenti e quindi non riceveranno il badge. A causa del gran numero di elementi privi di abbinamenti, sono mostrati solo i primi 100:"
           replace_owners: Rimuovi il distintivo dai precedenti proprietari
+          grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
         help: "Aggiungi nuovi emoji da mettere a disposizione per tutti. (Suggerimento: trascina e rilascia più file in una volta sola)"
