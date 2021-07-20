@@ -238,5 +238,14 @@ describe UserSearch do
       results = search_for("", topic_id: topic.id, searching_user: mr_b)
       expect(results).to eq [mr_pink, mr_orange].map(&:username)
     end
+
+    it "works with last_seen_users option" do
+      results = search_for("", last_seen_users: true)
+
+      expect(results).not_to be_blank
+      expect(results[0]).to eq("mrbrown")
+      expect(results[1]).to eq("mrpink")
+      expect(results[2]).to eq("mrorange")
+    end
   end
 end
