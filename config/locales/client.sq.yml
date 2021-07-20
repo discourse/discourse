@@ -182,7 +182,6 @@ sq:
     tos: "Kushtet e shërbimit"
     mobile_view: "Pamja për celular"
     desktop_view: "Pamja për desktop"
-    you: "Ju"
     or: "ose"
     now: "tani"
     read_more: "lexo më shumë"
@@ -406,7 +405,6 @@ sq:
       index:
         title: "Grupet"
         automatic: "Automatik"
-        automatic_group: Grup automatik
         my_groups: "Grupet e mia"
         is_group_user: "Anëtar"
       title:
@@ -443,6 +441,8 @@ sq:
           title: "Pa njoftime"
       flair_preview_icon: "Parashiko ikonën"
       flair_preview_image: "Parashiko imazhin"
+      default_notifications:
+        modal_yes: "Po"
     user_action_groups:
       "1": "Pëlqime të dhëna"
       "2": "Pëlqime të marra"
@@ -472,7 +472,6 @@ sq:
       posts: "Postime"
       topics: "Tema"
       latest: "Të fundit"
-      toggle_ordering: "toggle ordering control"
       subcategories: "Nënkategori"
       topic_sentence:
         one: "%{count} temë"
@@ -706,7 +705,6 @@ sq:
       auth_tokens:
         details: "Detaje"
       last_posted: "Postimi i fundit"
-      last_emailed: "Emaili i Fundit"
       last_seen: "Parë"
       created: "Regjistruar"
       log_out: "Shkëputu"
@@ -1469,8 +1467,6 @@ sq:
       whisper: "ky postim është një pëshpëritje private për moderatorët"
       wiki:
         about: "kjo temë është wiki"
-      archetypes:
-        save: "Ruaj opsionet"
       few_likes_left: "Ju falenderojmë! Ju kanë ngelur edhe disa pëlqime për sot."
       controls:
         reply: "shkruaj një përgjigje tek ky diskutim"
@@ -1534,8 +1530,8 @@ sq:
       bookmarks:
         created: "Krijuar"
         name: "Emri"
+        options: "Opsione"
     category:
-      can: "mund&hellip; "
       none: "(pa kategori)"
       all: "Të gjitha kategoritë"
       edit: "Redakto"
@@ -1556,7 +1552,6 @@ sq:
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
       name: "Emri i kategorisë"
       description: "Përshkrimi"
-      topic: "category topic"
       logo: "Logo e kategorisë"
       background_image: "Imazhi i sfondit për kategorinë"
       badge_colors: "Ngjyrat e stemës"

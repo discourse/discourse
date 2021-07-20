@@ -1589,11 +1589,6 @@ fi:
     auth_overrides_email: "Ohittaa paikallisen sähköpostiosoitteen ulkoisen sivuston sähköpostiosoitteella jokaisella kirjautumiskerralla ja estää paikalliset muutokset. Koskee kaikkia todennuksen tarjoajia. (VAROITUS: paikallisten sähköpostien normalisointi voi aiheuttaa poikkeamia)"
     auth_overrides_username: "Korvaa paikallisen käyttäjätunnuksen ulkoisen sivuston käyttäjätunnuksella jokaisella kirjautumiskerralla ja estää paikalliset muutokset. Koskee kaikkia todennuksen tarjoajia. (VAROITUS: paikallisten käyttäjätunnusten pituus ja vaatimukset voi aiheuttaa poikkeamia)"
     auth_overrides_name: "Korvaa paikallisen koko nimen ulkoisen sivuston koko nimellä jokaisella kirjautumiskerralla ja estää paikalliset muutokset. Koskee kaikkia todennuksen tarjoajia."
-    discourse_connect_overrides_avatar: "Korvaa käyttäjän avatarin ulkoisella DiscourseConnectin kautta haetulla avatarilla. Jos tämä on käytössä, käyttäjä ei voi ladata avataria Discourseen."
-    discourse_connect_overrides_location: "Korvaa käyttäjän sijainnin ulkoisella sijainnilla DiscourseConnectin tiedoista ja estää paikalliset muutokset."
-    discourse_connect_overrides_website: "Korvaa käyttäjän verkkosivuston ulkoisella sijainnilla DiscourseConnectin tiedoista ja estää paikalliset muutokset."
-    discourse_connect_overrides_profile_background: "Korvaa käyttäjän profiilin taustakuvan ulkoisella DiscourseConnectin kautta haetulla avatarilla."
-    discourse_connect_overrides_card_background: "Korvaa käyttäjäkortin taustakuvan ulkoisella DiscourseConnectin kautta haetulla avatarilla."
     discourse_connect_not_approved_url: "Uudelleenohjaa hyväksymättömät DiscourseConnect-tilit tähän URL-osoitteeseen"
     discourse_connect_allows_all_return_paths: "Älä rajoita DiscourseConnectin antamien palautuspolkujen verkkotunnusta (oletuksena palautuspolun on oltava nykyisellä sivustolla)"
     enable_local_logins: "Salli kirjautuminen paikallisesti käyttäjätunnuksen ja salasanan avulla. VAROITUS: jos tämä ei ole käytössä, voi sinun olla mahdotonta kirjautua sisään, jollet ole aiemmin määritellyt ainakin yhtä muuta kirjautumistapaa."
@@ -1690,7 +1685,6 @@ fi:
     allow_staff_to_upload_any_file_in_pm: "Salli henkilökunnan ladata minkätyyppisiä liitteitä tahansa yksityisviesteihin."
     strip_image_metadata: "Poista metatiedot kuvista."
     composer_media_optimization_image_enabled: "Mahdollistaa palvelimeen ladattujen kuvatiedostojen mediaoptimoinnin asiakkaan päässä."
-    composer_media_optimization_image_kilobytes_optimization_threshold: "Kuvatiedoston vähimmäiskoko, joka laukaisee optimoinnin asiakkaan päässä"
     composer_media_optimization_image_resize_dimensions_threshold: "Kuvan vähimmäisleveys, joka laukaisee koon muuttamisen asiakkaan päässä"
     composer_media_optimization_image_resize_width_target: "Kuvat, joiden leveys on suurempi kuin \"composer_media_optimization_image_dimensions_resize_threshold\", muunnetaan tähän leveyteen. Täytyy olla suurempi tai yhtä suuri kuin \"composer_media_optimization_image_dimensions_resize_threshold\"."
     composer_media_optimization_image_encode_quality: "Uudelleenkoodausprosessissa käytetty JPEG-koodauslaatu."
@@ -2145,7 +2139,6 @@ fi:
     missing_secret: "Todennus epäonnistui puuttuvan salausavaimen (secret) vuoksi. Ota yhteyttä sivuston ylläpitoon ongelman korjaamiseksi."
     invite_redeem_failed: "Kutsun lunastus epäonnistui. Ota yhteyttä sivuston ylläpitäjään."
   original_poster: "Alkuperäinen kirjoittaja"
-  most_posts: "Eniten viestejä"
   most_recent_poster: "Uusin kirjoittaja"
   frequent_poster: "Usein kirjoittava"
   poster_description_joiner: ", "
@@ -2501,35 +2494,9 @@ fi:
   new_version_mailer:
     title: "Uusi versio"
     subject_template: "[%{email_prefix}] Uusi Discourse-versio, päivitys saatavilla"
-    text_body_template: |
-      Hurraa, uusi [Discourse-versio](https://www.discourse.org) on saatavilla!
-
-      Sinun versiosi: %{installed_version}
-      Uusi versio: **%{new_version}**
-
-      – Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
-
-      – Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
-
-      – Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
   new_version_mailer_with_notes:
     title: "Uusi versio julkaisumuistiolla"
     subject_template: "[%{email_prefix}] päivitys saatavilla"
-    text_body_template: |
-      Hurraa, uusi [Discourse-versio](https://www.discourse.org) on saatavilla!
-
-      Sinun versiosi: %{installed_version}
-      Uusi versio: **%{new_version}**
-
-      – Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
-
-      – Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/master)
-
-      – Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
-
-      ### Julkaisutiedot
-
-      %{notes}
   flag_reasons:
     off_topic: "Viestisi merkittiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
     inappropriate: "Viestisi merkittiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi tai [yhteisön sääntöjen](%{base_path}/guidelines) vastaiseksi."

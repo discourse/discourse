@@ -1063,7 +1063,6 @@ nb_NO:
       topic: "Resultater"
       user: "Brukere"
     results_page: "Søkeresultater for \"%{term}\""
-  most_posts: "Flest innlegg"
   most_recent_poster: "Ferskeste innlegg av"
   redirected_to_top_reasons:
     new_user: "Velkommen til felleskapet vårt! Dette er de mest populære emnene for tiden. "
@@ -1170,6 +1169,9 @@ nb_NO:
     user_posted_pm_staged:
       title: "Bruker opprettet arrangert privat samtale"
     account_suspended:
+      title: "Konto sperret"
+      subject_template: "[%{email_prefix}] Kontoen din er blitt sperret"
+    account_suspended_forever:
       title: "Konto sperret"
       subject_template: "[%{email_prefix}] Kontoen din er blitt sperret"
     digest:

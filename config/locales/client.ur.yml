@@ -214,7 +214,6 @@ ur:
     conduct: "ضابطہ اخلاق"
     mobile_view: "موبائل وِیو"
     desktop_view: "ڈیسک ٹاپ وِیو"
-    you: "آپ "
     or: "یا "
     now: "ابھی "
     read_more: "مزید پڑھیں "
@@ -296,7 +295,6 @@ ur:
       remove: "خارج کریں"
       remove_confirmation: "کیا آپ واقعی یہ مسودہ حذف کرنا چاہتے ہیں؟"
       new_topic: "نئے ٹاپک کا ڈرافٹ"
-      new_private_message: "نئے ذاتی پیغام کا ڈرافٹ"
       topic_reply: "جواب ڈرافٹ کریں"
       abandon:
         confirm: "آپ کے پاس اس عنوان کے لئے ایک مسودہ ہے۔ آپ اس کے ساتھ کیا کرنا چاہیں گے؟"
@@ -370,7 +368,6 @@ ur:
         type_bonus:
           name: "قِسم بَونَس"
           title: "سٹاف کی طرف سے کچھ قابل تجدید اقسام کو بَونَس تفویض کیا جاسکتا ہے تاکہ ان کو اعلیٰ ترجیح بنایا جاسکے۔"
-      stale_help: "یہ جائزہ کسی اور کی طرف سے حل کیا گیا ہے."
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
         required: "اشیاء کا جائزہ لینے سے پہلے آپ کا اُن کو کََلیم کرنا ضروری ہے۔"
@@ -691,8 +688,6 @@ ur:
         public: "عوامی"
         private: "ذاتی"
         public_groups: "عوامی گروپس"
-        automatic_group: خودکار گروپ
-        close_group: گروپ بند کریں
         my_groups: "میرے گروپس"
         group_type: "گروپ قِسم"
         is_group_user: "ممبر"
@@ -769,6 +764,8 @@ ur:
       flair_type:
         icon: "ایک آئکن منتخب کریں"
         image: "تصویر اپ لوڈ کریں"
+      default_notifications:
+        modal_yes: "ہاں "
     user_action_groups:
       "1": "لائیکس دیے گئے"
       "2": "لائیکس موصول ہوے"
@@ -798,7 +795,6 @@ ur:
       posts: "پوسٹ"
       topics: "ٹاپک"
       latest: "تازہ ترین"
-      toggle_ordering: "ترتیب کاری کا کنٹرول ٹاگل کریں"
       subcategories: "ذیلی زمرے"
       muted: "خاموش کیٹگریز"
       topic_sentence:
@@ -1192,7 +1188,6 @@ ur:
         browser_active: '%{browser} | <span class="active">اب فعال ہے</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "آخری پوسٹ"
-      last_emailed: "جِسے آخری دفع اِی میل کی گئی"
       last_seen: "دیکھا ہوا"
       created: "شمولیت اختیار کی"
       log_out: "لاگ آُوٹ"
@@ -1758,7 +1753,6 @@ ur:
           confirm: آپ کے پاس ایک نیا عنوان ڈرافٹ محفوظ ہوا ہے ، اگر آپ کوئی لنکڈ ٹاپک تیار کرتے ہیں تو اسے اوور رائٹ کردیا جائے گا۔
         reply_as_new_group_message:
           label: نئے گروپ پیغام کے بطور جواب دیں
-          desc: انہی وصول کنندگان کے ساتھ ایک نیا نجی پیغام بنائیں
         reply_as_private_message:
           label: نیا پیغام
           desc: نیا ذاتی پیغام بنائیں
@@ -2450,8 +2444,6 @@ ur:
       whisper: "یہ پوسٹ ماڈریٹرز کے لئے ایک نجی وِھسپر ہے"
       wiki:
         about: "یہ پوسٹ ایک وِیکی ہے"
-      archetypes:
-        save: "محفوظ کرنے کے اختیارات"
       few_likes_left: "محبت شیئر کرنے کے لئے شکریہ! آپ کے پاس آج کے لئے صرف چند لائیکس بچے ہیں۔"
       controls:
         reply: "اس پوسٹ کا جواب لکھنا شروع کریں"
@@ -2552,8 +2544,8 @@ ur:
       bookmarks:
         created: "بنایا گیا"
         name: "نام"
+        options: "اختیارات"
     category:
-      can: "کر سکتا ہے&hellip; "
       none: "(کوئی زمرہ نہیں)"
       all: "تمام زُمرَہ جات"
       choose: "زمرہ&hellip;"
@@ -2580,7 +2572,6 @@ ur:
       save_error: زمرہ محفوظ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔
       name: "زمرہ کا نام"
       description: "تفصیل"
-      topic: "زمرہ کا ٹاپک"
       logo: "زمرہ کے لوگو تصویر"
       background_image: "زمرہ کے پسِ منظر کی تصویر"
       badge_colors: "بَیج رنگ"

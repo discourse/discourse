@@ -6,5 +6,5 @@
 
 gl:
   site_settings:
-    styleguide_enabled: "Activar un camiño `/styleguide` para personalizar o estilo do Discourse"
+    styleguide_enabled: 'Activar un camiño `/styleguide` para personalizar o estilo do Discourse'
     styleguide_admin_only: "Restrinxe a visibilidade da guía de estilo aos administradores"

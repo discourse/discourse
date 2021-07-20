@@ -797,7 +797,7 @@ sv:
     please_continue: "Fortsätt till %{site_name}"
     error: "Det uppstod ett fel vid ändringen av din e-postadress. Kanske används adressen redan?"
     doesnt_exist: "Den e-postadressen är inte kopplad till ditt konto."
-    error_staged: "Ett problem uppstod vid ändring av din e-postadress. Adressen används redan av en annan användare."
+    error_staged: "Ett problem uppstod vid ändring av din e-postadress. Adressen används redan av en arrangerad användare."
     already_done: "Tyvärr har den här aktiveringslänken löpt ut. Kanske har din e-postadress ändrats redan?"
     confirm: "Bekräfta"
     max_secondary_emails_error: "Du har nått gränsen för maximalt antal sekundära e-postmeddelanden."
@@ -1499,6 +1499,7 @@ sv:
     gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Tillåt moderatorer att hantera kategorier och grupper"
+    moderators_change_post_ownership: "Tillåt att moderatorer ändrar inläggsägarskap"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. Variabeln DISCOURSE_ENABLE_CORS env måste ställas in till true för att aktivera CORS."
     use_admin_ip_allowlist: "Administratörer kan bara logga in om de är på en IP-adress som definierats i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
     blocked_ip_blocks: "En lista över privata IP-block som aldrig bör genomsökas av Discourse"
@@ -1574,11 +1575,11 @@ sv:
     auth_overrides_email: "Åsidosätter lokal e-post med externa webbplatsers e-post vid varje inloggning samt förhindrar lokala ändringar. (VARNING: diskrepanser kan inträffa på grund av normalisering av lokala e-postadresser)"
     auth_overrides_username: "Åsidosätter lokala användarnamn med externa webbplatsers användarnamn vid varje inloggning samt förhindrar lokala ändringar. (VARNING: diskrepanser kan inträffa på grund av skillnader i användarnamnets längd/krav)"
     auth_overrides_name: "Åsidosätter lokala fullständiga namn med externa webbplatsers fullständiga namn vid varje inloggning samt förhindrar lokala ändringar. Gäller för alla tjänster för auktorisering."
-    discourse_connect_overrides_avatar: "Åsidosätter användaravatar med extern webbplatsavatar från DiscourseConnect-nyttolast. Om detta är aktiverat kan användare inte ladda upp avatarer på Discourse."
-    discourse_connect_overrides_location: "Åsidosätter användarens plats med plats hämtad externt från DiscourseConnect-nyttolast och förhindrar sedan lokala ändringar."
-    discourse_connect_overrides_website: "Åsidosätter användarens webbplats med plats hämtad externt från DiscourseConnect-nyttolast och förhindrar sedan lokala ändringar."
-    discourse_connect_overrides_profile_background: "Åsidosätter användarprofilbakgrund med extern webbplatsavatar från DiscourseConnect-nyttolast."
-    discourse_connect_overrides_card_background: "Åsidosätter användarkortsbakgrund med extern webbplatsavatar från DiscourseConnect-nyttolast."
+    discourse_connect_overrides_avatar: "Åsidosätter användaravatar med värde från DiscourseConnect-nyttolast. Om detta är aktiverat får användare inte ladda upp avatarer på Discourse."
+    discourse_connect_overrides_location: "Åsidosätter användarens plats med värde från DiscourseConnect-nyttolast och förhindrar sedan lokala ändringar."
+    discourse_connect_overrides_website: "Åsidosätter användarens webbplats med värde från DiscourseConnect-nyttolast och förhindrar sedan lokala ändringar."
+    discourse_connect_overrides_profile_background: "Åsidosätter användarprofilbakgrund med värde från DiscourseConnect-nyttolast."
+    discourse_connect_overrides_card_background: "Åsidosätter användarkortsbakgrund med värde från DiscourseConnect-nyttolast."
     discourse_connect_not_approved_url: "Omdirigera icke-godkända DiscourseConnect-konton till den här URL:en"
     discourse_connect_allows_all_return_paths: "Begränsa inte domänen för return_paths som tillhandahålls av DiscourseConnect (som standard måste retursökvägen finnas på den aktuella webbplatsen)"
     enable_local_logins: "Aktivera konton baserade på lokala användarnamn och lösenordsinloggning. VARNING: om detta har inaktiverats kan du kanske inte logga in om du inte tidigare har konfigurerat minst en alternativ inloggningsmetod."
@@ -1676,7 +1677,7 @@ sv:
     allow_staff_to_upload_any_file_in_pm: "Låt personalen ladda upp alla filer i PM."
     strip_image_metadata: "Radera metadata för bild."
     composer_media_optimization_image_enabled: "Möjliggör medieoptimering på klientsidan av uppladdade bildfiler."
-    composer_media_optimization_image_kilobytes_optimization_threshold: "Minsta bildfilstorlek för att utlösa optimering på klientsidan"
+    composer_media_optimization_image_bytes_optimization_threshold: "Minsta bildfilstorlek för att utlösa optimering på klientsidan"
     composer_media_optimization_image_resize_dimensions_threshold: "Minsta bildbredd för att utlösa storleksändring på klientsidan"
     composer_media_optimization_image_resize_width_target: "Bilder med större bredd än `composer_media_optimization_image_dimensions_resize_threshold` kommer att ändras till denna bredd. Måste vara >= än `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "JPEG-kodningskvalitet som används i omkodningsprocessen."
@@ -1903,7 +1904,7 @@ sv:
     ignored_users_count_message_threshold: "Meddela moderatorer om en viss användare ignoreras av många andra användare."
     ignored_users_message_gap_days: "Hur lång tid att vänta innan moderatorer meddelas igen om en användare som ignorerats av många andra."
     clean_up_inactive_users_after_days: "Antal dagar innan en inaktiv användare (förtroendenivå 0 utan några inlägg) tas bort. Ställ in till 0 för att inaktivera rensning."
-    clean_up_unused_staged_users_after_days: "Antal dagar innan en fiktiv användare (utan några inlägg) tas bort. Sätt till 0 för att inaktivera rensning."
+    clean_up_unused_staged_users_after_days: "Antal dagar innan en oanvänd arrangerad användare (utan några inlägg) tas bort. Ställ in till 0 för att inaktivera rensning."
     user_selected_primary_groups: "Tillåt att användare ställer in sin egna primära grupp"
     max_notifications_per_user: "Maximalt antal aviseringar per användare. Om detta värde överskrids kommer äldre aviseringar att raderas. Verkställs veckovis. Sätt till 0 för att inaktivera."
     allowed_user_website_domains: "Användarens webbplats kommer att verifieras mot dessa domäner. Avgränsad textfil."
@@ -1929,7 +1930,7 @@ sv:
     app_association_ios: "Innehållet i slutpunkten <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, används för att skapa universella länkar mellan denna webbplats och iOS-appar."
     share_anonymized_statistics: "Dela anonymiserad användningsstatistik."
     auto_handle_queued_age: "Hantera automatiskt inlägg som väntar på att granskas efter detta antal dagar. Flaggor ignoreras. Inlägg och användare i kö avvisas. Ställ in till 0 för att inaktivera den här funktionen."
-    penalty_step_hours: "Standardstraff, uttryckt i timmar, för att ha tystat eller stängt av användare. Förval för den första överträdelsen är det första värdet, förval för den andra överträdelsen är det andra värdet etc."
+    penalty_step_hours: "Standardtid, uttryckt i timmar, under vilken användare bestraffas genom att tystas eller stängas av. Det första värdet är standard för deras första överträdelse, det andra värdet är standard för deras andra överträdelse etc."
     svg_icon_subset: "Lägg till ytterligare FontAwesome 5-ikoner som du vill inkludera i dina tillgångar. Använd prefixet 'fa-' för solida ikoner, 'far-' för vanliga ikoner och 'fab-' för märkesikoner."
     max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
@@ -1970,7 +1971,7 @@ sv:
     approve_post_count: "Antalet inlägg från en ny användare eller basanvändare som måste godkännas"
     approve_unless_trust_level: "Inlägg för användare under den här förtroendenivån måste godkännas"
     approve_new_topics_unless_trust_level: "Nya ämnen för användare under denna förtroendenivå måste godkännas"
-    approve_unless_staged: "Nya ämnen och inlägg för påhittade användare måste godkännas"
+    approve_unless_staged: "Nya ämnen och inlägg för arrangerade användare måste godkännas"
     notify_about_queued_posts_after: "Om det finns inlägg som har väntat på att granskas i mer än detta antal timmar skickas en avisering till alla moderatorer. Inaktivera dessa aviseringar genom att ställa in till 0."
     auto_close_messages_post_count: "Högsta antal inlägg som tillåts i ett meddelande innan det automatiskt stängs (ange 0 för att inaktivera)"
     auto_close_topics_post_count: "Högsta antal inlägg som tillåts i ett ämne innan det automatiskt stängs (ange 0 för att inaktivera)"
@@ -2061,6 +2062,7 @@ sv:
     share_quote_buttons: "Bestäm vilka objekt som visas i citatdelningswidgeten, samt i vilken ordning."
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
+    allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -2132,7 +2134,6 @@ sv:
     missing_secret: "Autentisering misslyckades på grund av saknad hemlighet. Kontakta webbplatsens administratör för att åtgärda problemet."
     invite_redeem_failed: "Inbjudan kunde inte lösas in. Kontakta webbplatsens administratör."
   original_poster: "Ursprunglig skribent"
-  most_posts: "Flest inlägg"
   most_recent_poster: "Senaste skribent"
   frequent_poster: "Flitig skribent"
   poster_description_joiner: ", "
@@ -2235,6 +2236,7 @@ sv:
     reset_not_allowed_from_ip_address: "Du kan inte begära en återställning av lösenord från den IP-adressen."
     suspended: "Du kan inte logga in förrän %{date}."
     suspended_with_reason: "Konto avstängt t.o.m. %{date}: %{reason}"
+    suspended_with_reason_forever: "Konto avstängt: %{reason}"
     errors: "%{errors}"
     not_available: "Inte tillgänglig. Testa %{suggestion}?"
     something_already_taken: "Något gick fel. Kanske har användarnamnet eller e-postadressen redan registrerats. Testa Glömt lösenord-länken."
@@ -2317,7 +2319,7 @@ sv:
     auto_rejected: "Avvisas automatiskt på grund av ålder. Se webbplatsinställning auto_handle_queued_age ."
     destroy_reasons:
       unused_staged_user: "Oanvänd arrangerad användare"
-      fixed_primary_email: "Fast primär e-postadress för påhittade användare"
+      fixed_primary_email: "Fast primär e-postadress för arrangerad användare"
       same_ip_address: "Samma IP-adress (%{ip_address}) som andra användare"
       inactive_user: "Inaktiv användare"
       reviewable_reject_auto: "Automatisk hantering av köade granskningsbara"
@@ -2475,25 +2477,9 @@ sv:
   new_version_mailer:
     title: "E-post om ny version"
     subject_template: "[%{email_prefix}] Ny version av Discourse, uppdatering tillgänglig"
-    text_body_template: "Hurra, en ny version av [Discourse](http://www.discourse.org) är tillgänglig!\n\nDin version: %{installed_version}\nNy version: **%{new_version}**\n\n- Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** \n\n- Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs råa ändringslogg](https://github.com/discourse/discourse/commits/master)\n\n- Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera eller få hjälp angående Discourse\n"
   new_version_mailer_with_notes:
     title: "E-post om ny version med anteckningar"
     subject_template: "[%{email_prefix}] Uppdatering tillgänglig"
-    text_body_template: |
-      Hurra, en ny version av [Discourse](http://www.discourse.org) är tillgänglig!
-
-      Din version: %{installed_version}
-      Ny version: **%{new_version}**
-
-      - Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)**
-
-      - Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs råa ändringslogg](https://github.com/discourse/discourse/commits/master)
-
-      - Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera eller få hjälp angående Discourse
-
-      ### Uppdateringsnoteringar
-
-      %{notes}
   flag_reasons:
     off_topic: "Ditt inlägg blev flaggat som **irrelevant**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av rubriken och det första inlägget."
     inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](%{base_path}/guidelines)."
@@ -3000,6 +2986,7 @@ sv:
   subject_re: "Sv: "
   subject_pm: "[PM] "
   email_from: "%{user_name} via %{site_name}"
+  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Föregående svar"
     reached_limit:
@@ -3040,7 +3027,7 @@ sv:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      title: "Användare inbjuden till arrangerat PM"
+      title: "Användare inbjuden till PM är arrangerad"
       subject_template: "[%{email_prefix}] %{username} har bjudit in dig till ett meddelande '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -3168,7 +3155,7 @@ sv:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Användare publicerade arrangerat PM"
+      title: "Användare publicerade PM som arrangerad"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3180,11 +3167,25 @@ sv:
         Du har blivit avstängd från forumet till och med %{suspended_till}.
 
         Orsak - %{reason}
+    account_suspended_forever:
+      title: "Konto avstängt"
+      subject_template: "[%{email_prefix}] Ditt konto har stängts av"
+      text_body_template: |
+        Du har blivit avstängd från forumet.
+
+        Orsak - %{reason}
     account_silenced:
       title: "Konto tystat"
       subject_template: "[%{email_prefix}] Ditt konto har tystats"
       text_body_template: |
         Du har tystats i forumet till och med %{silenced_till}.
+
+        Orsak - %{reason}
+    account_silenced_forever:
+      title: "Konto tystat"
+      subject_template: "[%{email_prefix}] Ditt konto har tystats"
+      text_body_template: |
+        Du har tystats i forumet.
 
         Orsak - %{reason}
     account_exists:
@@ -3643,7 +3644,9 @@ sv:
     mass_award:
       errors:
         invalid_csv: Vi stötte på ett fel på rad %{line_number}. Bekräfta att CSV har en e-postadress per rad.
+        too_many_csv_entries: För många poster i CSV-filen. Ange en CSV-fil med högst %{count} poster.
         badge_disabled: Aktivera först utmärkelsen %{badge_name}.
+        cant_grant_multiple_times: Det går inte att utfärda utmärkelsen %{badge_name} flera gånger till en enda användare.
     editor:
       name: Redigerare
       description: Första inläggsredigeringen

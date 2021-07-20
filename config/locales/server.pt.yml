@@ -1349,7 +1349,6 @@ pt:
     unknown_error: "Existe um problema com a sua conta. Por favor contacte o administrador do site."
     timeout_expired: "Expirou o tempo de login, por favor tente entrar de novo."
   original_poster: "Participante Original"
-  most_posts: "Maior parte das mensagens"
   most_recent_poster: "Participante Mais Recente"
   frequent_poster: "Participante Frequente"
   redirected_to_top_reasons:

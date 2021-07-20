@@ -7,8 +7,8 @@
 zh_CN:
   js:
     styleguide:
-      title: "样式指引"
-      welcome: "从左侧菜单中选择一部分以开始使用"
+      title: "样式指南"
+      welcome: "首先，从左侧菜单中选择一个部分。"
       categories:
         atoms: 原子
         molecules: 分子
@@ -17,16 +17,16 @@ zh_CN:
         typography:
           title: "排版"
           example: "欢迎来到 Discourse"
-          paragraph: "占位符占位符占位符，那只敏捷的棕毛狐狸跳过了那条懒狗，那只敏捷的棕毛狐狸跳过了那条懒狗，占位符占位符占位符"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
-          title: "日期/时间输入框"
+          title: "日期/时间输入"
         font_scale:
           title: "字体系统"
         colors:
-          title: "配色"
+          title: "颜色"
         icons:
           title: "图标"
-          full_list: "查看全部 Font Awesome 图标"
+          full_list: "查看 Font Awesome 图标的完整列表"
         input_fields:
           title: "输入字段"
         buttons:
@@ -34,9 +34,9 @@ zh_CN:
         dropdowns:
           title: "下拉菜单"
         categories:
-          title: "分类"
+          title: "类别"
         bread_crumbs:
-          title: "面包屑"
+          title: "路径"
         navigation:
           title: "导航"
         navigation_bar:
@@ -44,7 +44,7 @@ zh_CN:
         navigation_stacked:
           title: "堆叠式导航"
         categories_list:
-          title: "分类列表"
+          title: "类别列表"
         topic_link:
           title: "话题链接"
         topic_list_item:
@@ -54,34 +54,34 @@ zh_CN:
         topic_list:
           title: "话题列表"
         basic_topic_list:
-          title: "基础话题列表"
+          title: "基本话题列表"
         footer_message:
-          title: "底栏信息"
+          title: "页脚消息"
         signup_cta:
-          title: "注册的 CTA"
+          title: "注册号召性用语"
         topic_timer_info:
           title: "话题计时器"
         topic_footer_buttons:
-          title: "话题底栏按钮"
+          title: "话题页脚按钮"
         topic_notifications:
           title: "话题通知"
         post:
           title: "帖子"
         topic_map:
-          title: "话题数据"
+          title: "话题图"
         site_header:
-          title: "站点顶栏"
+          title: "站点标头"
         suggested_topics:
-          title: "推荐话题"
+          title: "建议的话题"
         post_menu:
           title: "帖子菜单"
         modal:
-          title: "模态框"
-          header: "模态框标题"
-          footer: "模态框底栏"
+          title: "模式窗口"
+          header: "模式窗口标题"
+          footer: "模式窗口页脚"
         user_about:
           title: "用户信息框"
         header_icons:
-          title: "顶栏图标"
+          title: "标头图标"
         spinners:
-          title: "进度圈"
+          title: "旋转的图标"

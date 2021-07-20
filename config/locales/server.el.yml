@@ -1329,7 +1329,6 @@ el:
     no_email: "Δεν καταχωρήθηκε διεύθυνση email. Παρακαλούμε επικοινωνήστε με την διαχείριση."
     email_error: "Ένας λογαριασμός δεν μπόρεσε να καταχωρηθεί με την διεύθυνση email <b>%{email}</b>. Παρακαλούμε επικοινωνήστε με την διαχείριση."
   original_poster: "Αρχικός Αναρτητής"
-  most_posts: "Περισσότερες Αναρτήσεις"
   most_recent_poster: "Πιο Πρόσφατος Αναρτητής"
   frequent_poster: "Συχνός Αναρτητής"
   redirected_to_top_reasons:
@@ -2028,7 +2027,13 @@ el:
     account_suspended:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
+    account_suspended_forever:
+      title: "Χρήστης σε Αποβολη"
+      subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
     account_silenced:
+      title: "Λογαριασμός σε Σίγαση"
+      subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
+    account_silenced_forever:
       title: "Λογαριασμός σε Σίγαση"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
     account_exists:

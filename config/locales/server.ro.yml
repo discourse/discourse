@@ -1169,7 +1169,6 @@ ro:
     unknown_error: "Există o problema legată de contul tău. Te rugăm contactează administratorul site-ului."
     timeout_expired: "Autentificarea în cont a expirat, te rugăm să încerci din să te autentifici din nou."
   original_poster: "Creatorul unui subiect"
-  most_posts: "Cele mai multe postări"
   most_recent_poster: "Cel mai recent autor"
   frequent_poster: "Autor prodigios"
   redirected_to_top_reasons:

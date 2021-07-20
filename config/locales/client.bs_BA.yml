@@ -236,7 +236,6 @@ bs_BA:
     conduct: "Kodeks ponašanja"
     mobile_view: "Mobilni prikaz"
     desktop_view: "Desktop prikaz"
-    you: "Vi"
     or: "ili"
     now: "upravo sada"
     read_more: "pročitaj više"
@@ -314,7 +313,6 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
-      new_private_message: "Nova skica privatne poruke"
       topic_reply: "skica odgovora"
       abandon:
         yes_value: "Odbaci"
@@ -715,8 +713,6 @@ bs_BA:
         public: "Javno"
         private: "Privatno"
         public_groups: "Javne grupe"
-        automatic_group: Automatske grupe
-        close_group: Zatvorene grupe
         my_groups: "Moje grupe"
         group_type: "Tip grupe"
         is_group_user: "Član"
@@ -779,6 +775,8 @@ bs_BA:
       flair_type:
         icon: "Odaberi ikonu"
         image: "Učitaj sliku"
+      default_notifications:
+        modal_yes: "Da"
     user_action_groups:
       "1": "Lajkovi"
       "2": "Dobijeni Lajkovi"
@@ -808,7 +806,6 @@ bs_BA:
       posts: "Odgovori"
       topics: "Teme"
       latest: "Zadnje"
-      toggle_ordering: "toggle ordering control"
       subcategories: "Podkategorije"
       muted: "Prigušene kategorije"
       topic_sentence:
@@ -1200,7 +1197,6 @@ bs_BA:
         secure_account: "zaštiti moj račun"
         latest_post: "Poslednji ste objavili ..."
       last_posted: "Posljednja objava"
-      last_emailed: "Posljednji mejlovan"
       last_seen: "Viđen"
       created: "Registrovan"
       log_out: "Odjavi se"
@@ -2390,8 +2386,6 @@ bs_BA:
       whisper: "ova objava je privatni šapat za moderatore "
       wiki:
         about: "ova objava je wiki"
-      archetypes:
-        save: "Save Options"
       few_likes_left: "Hvala za dijeljenje ljubavi! Za danas vam je ostalo samo nekoliko lajkova."
       controls:
         reply: "počni da sastavljaš odgovor na ovaj post"
@@ -2502,6 +2496,7 @@ bs_BA:
         name: "Ime"
         name_placeholder: "Za što služi ova zabilješka?"
         set_reminder: "Podsjeti me"
+        options: "Opcije"
         actions:
           delete_bookmark:
             name: "Obriši zabilješku"
@@ -2510,7 +2505,6 @@ bs_BA:
             name: "Izmijeni zabilješku"
             description: "Izmjena naziva zabilješke ili promjena datuma i vremena podsjetnika"
     category:
-      can: "can&hellip; "
       none: "(no category)"
       all: "Sve kategorije"
       choose: "kategorij i pomoć"
@@ -2537,7 +2531,6 @@ bs_BA:
       save_error: There was an error saving the category.
       name: "Category Name"
       description: "Description"
-      topic: "category topic"
       logo: "Category Logo Image"
       background_image: "Category Background Image"
       badge_colors: "Badge colors"

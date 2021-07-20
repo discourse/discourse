@@ -182,7 +182,6 @@ th:
     conduct: "กฎเกณฑ์และเงื่อนไข"
     mobile_view: "ดูแบบอุปกรณ์เคลื่อนที่"
     desktop_view: "ดูแบบเดสก์ท็อป"
-    you: "คุณ"
     or: "หรือ"
     now: "ขณะนี้"
     read_more: "อ่านเพิ่มเติม"
@@ -250,7 +249,6 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
-      new_private_message: "แบบร่างข้อความส่วนตัวใหม่"
       topic_reply: "ตอบแบบร่าง"
     topic_count_latest:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
@@ -539,8 +537,6 @@ th:
         public: "สาธารณะ"
         private: "ส่วนตัว"
         public_groups: "กลุ่มสาธารณะ"
-        automatic_group: กลุ่มอัตโนมัติ
-        close_group: กลุ่มปิด
         my_groups: "กลุ่มของฉัน"
         group_type: "ประเภทกลุ่ม"
         is_group_user: "สมาชิก"
@@ -595,6 +591,8 @@ th:
       flair_type:
         icon: "เลือกไอคอน"
         image: "อัปโหลดรูปภาพ"
+      default_notifications:
+        modal_yes: "ใช่"
     user_action_groups:
       "1": "ถูกใจ"
       "2": "ถูกใจ"
@@ -624,7 +622,6 @@ th:
       posts: "โพสต์"
       topics: "กระทู้"
       latest: "ล่าสุด"
-      toggle_ordering: "เปลี่ยนวิธีการจัดลำดับ"
       subcategories: "หมวดหมู่ย่อย"
       topic_sentence:
         other: "%{count}กระทู้"
@@ -930,7 +927,6 @@ th:
         secure_account: "ตั้งค่าความปลอดภัยบัญชีของฉัน"
         latest_post: "คุณโพสต์ครั้งล่าสุด..."
       last_posted: "โพสต์ล่าสุด"
-      last_emailed: "อีเมลล่าสุด"
       last_seen: "ดูแล้ว"
       created: "เข้าร่วมแล้ว"
       log_out: "ออกจากระบบ"
@@ -1623,8 +1619,6 @@ th:
         title: "แก้ไข"
       defer:
         help: "ทำเครื่องหมายว่ายังไม่ได้อ่าน"
-      remove_from_profile:
-        title: "ลบออกจากโปรไฟล์"
       list: "กระทู้"
       new: "กระทู้ใหม่"
       unread: "ยังไม่ได้อ่าน"
@@ -1955,8 +1949,6 @@ th:
       whisper: "โพสนี้คือการกระซิบจากผู้ดูแล"
       wiki:
         about: "โพสนี้เป็นวิกิ; ผู้ใช้ธรรมดาสามารถแก้ไขได้"
-      archetypes:
-        save: "บันทึกการตั้งค่า"
       few_likes_left: "ขอบคุณสำหรับการแบ่งปันความรัก! คุณเหลือเพียงไม่กี่ไลค์สำหรับวันนี้"
       controls:
         reply: "เริ่มเขียนคำตอบโพสต์นี้"
@@ -2027,6 +2019,7 @@ th:
         name: "ชื่อ"
         name_placeholder: "บุ๊กมาร์กนี้สำหรับสิ่งใด"
         set_reminder: "เตือนฉัน"
+        options: "ตัวเลือก"
         actions:
           delete_bookmark:
             name: "ลบบุ๊กมาร์ก"
@@ -2051,7 +2044,6 @@ th:
       save_error: มีข้อผิดพลาดในการบันทึกหมวดหมู่
       name: "ชื่อหมวดหมู่"
       description: "รายละเอียด"
-      topic: "กระทู้หมวดหมู่"
       logo: "รูปโลโก้หมวดหมู่"
       background_image: "รูปพื้นหลังหมวดหมู่"
       background_color: "สีพื้นหลัง"

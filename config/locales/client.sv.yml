@@ -221,7 +221,6 @@ sv:
     conduct: "Uppförandekod"
     mobile_view: "Mobilvy"
     desktop_view: "Desktop-vy"
-    you: "Du"
     or: "eller"
     now: "nyss"
     read_more: "läs mer"
@@ -306,7 +305,7 @@ sv:
       remove: "Ta bort"
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
-      new_private_message: "Nytt utkast för privat meddelande"
+      new_private_message: "Nytt utkast för personligt meddelande"
       topic_reply: "Svar på utkast"
       abandon:
         confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
@@ -380,7 +379,7 @@ sv:
         type_bonus:
           name: "typ bonus"
           title: "Vissa granskningsärenden kan tilldelas en bonus av personal för att ge dem en högre prioritet."
-      stale_help: "Denna granskningsbara har lösts av någon annan."
+      stale_help: "Detta granskningsbara objekt har lösts av <b>%{username}</b>."
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
         required: "Du måste göra anspråk innan du kan granska dem."
@@ -753,8 +752,6 @@ sv:
         public: "Publikt"
         private: "Privat"
         public_groups: "Offentliga grupper"
-        automatic_group: Automatisk grupp
-        close_group: Stäng grupp
         my_groups: "Mina grupper"
         group_type: "Grupptyper"
         is_group_user: "Medlem"
@@ -831,6 +828,11 @@ sv:
       flair_type:
         icon: "Välj en ikon"
         image: "Infoga bild"
+      default_notifications:
+        modal_title: "Användarens standardaviseringar"
+        modal_description: "Vill du tillämpa denna förändring historiskt? Detta kommer att ändra inställningarna för %{count} existerande användare."
+        modal_yes: "Ja"
+        modal_no: "Nej, tillämpa enbart ändringar fr.o.m. nu"
     user_action_groups:
       "1": "Gillningar givna"
       "2": "Gillningar mottagna"
@@ -860,7 +862,6 @@ sv:
       posts: "Inlägg"
       topics: "Ämnen"
       latest: "Senaste"
-      toggle_ordering: "slå av/på sorteringskontroll"
       subcategories: "Underkategorier"
       muted: "Tystade kategorier"
       topic_sentence:
@@ -1313,7 +1314,6 @@ sv:
         browser_active: '%{browser} | <span class="active">aktiv nu</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Senaste inlägg"
-      last_emailed: "Senast mailad"
       last_seen: "Sedd"
       created: "Gick med"
       log_out: "Logga ut"
@@ -1534,7 +1534,7 @@ sv:
         none: "(ingen)"
         instructions: "visas efter ditt användarnamn"
       flair:
-        title: "Flair"
+        title: "Stil"
         none: "(ingen)"
         instructions: "ikon som visas bredvid din profilbild"
       primary_group:
@@ -1961,7 +1961,7 @@ sv:
           confirm: Du har ett nytt ämnesutkast sparat, vilket kommer att skrivas över om du skapar ett länkat ämne.
         reply_as_new_group_message:
           label: Svara som nytt gruppmeddelande
-          desc: Skapa ett nytt privat meddelande till samma mottagare
+          desc: Skapa nytt meddelande som börjar med samma mottagare
         reply_as_private_message:
           label: Nytt meddelande
           desc: Skapa ett nytt personligt meddelande
@@ -2256,13 +2256,6 @@ sv:
       defer:
         help: "Märk som oläst"
         title: "Skjut upp"
-      feature_on_profile:
-        help: "Lägg till en länk till detta ämne från ditt användarkort samt profil"
-        title: "Föredraget från profil"
-      remove_from_profile:
-        warning: "Din profil har redan ett föredraget ämne. Om du fortsätter kommer detta ämne att ersätta ditt tidigare ämne."
-        help: "Ta bort länken till detta ämne från din användarprofil"
-        title: "Ta bort från profil"
       list: "Ämnen"
       new: "nytt ämne"
       unread: "oläst"
@@ -2488,7 +2481,7 @@ sv:
         pin: "Fäst ämne"
         unpin: "Ta ner ämne"
         pin_globally: "Fäst ämne globalt"
-        make_banner: "Gör banderollämne"
+        make_banner: "Skapa banderollämne"
         remove_banner: "Ta bort banderollämne"
       reply:
         title: "Svara"
@@ -2742,8 +2735,6 @@ sv:
       whisper: "det här inlägget är en privat viskning för moderatorer"
       wiki:
         about: "detta inlägg är en wiki"
-      archetypes:
-        save: "Spara inställningar"
       few_likes_left: "Tack för att du sprider kärleken! Du har bara några få gillningar kvar idag."
       controls:
         reply: "börja skriva ett svar på detta inlägg"
@@ -2865,6 +2856,7 @@ sv:
         name: "Namn"
         name_placeholder: "Vad används detta bokmärke till?"
         set_reminder: "Påminn mig"
+        options: "Alternativ"
         actions:
           delete_bookmark:
             name: "Radera bokmärke"
@@ -2885,7 +2877,6 @@ sv:
         post_number: "%{username}, inlägg nr %{post_number}"
         show_all: "Visa alla"
     category:
-      can: "can&hellip; "
       none: "(ingen kategori)"
       all: "Alla kategorier"
       choose: "kategori&hellip;"
@@ -2919,7 +2910,6 @@ sv:
       save_error: Ett fel inträffade då kategorin skulle sparas.
       name: "Kategorinamn"
       description: "Beskrivning"
-      topic: "kategoriämne"
       logo: "Kategori logotypbild"
       background_image: "Kategori bakgrundsbild"
       badge_colors: "Utmärkelsefärg"
@@ -3498,6 +3488,8 @@ sv:
         regular: "regelbunden"
         leader: "ledare"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Du har valt en fil som inte stöds. Filtyper som stöds: %{types}."
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -3728,6 +3720,7 @@ sv:
               log_out: Logga ut alla sessioner för en användare.
               anonymize: Anonymisera användarkonton.
               delete: Ta bort användarkonton.
+              list: Få en lista över användare.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
       web_hooks:
@@ -3942,6 +3935,7 @@ sv:
           theme: "Tema"
           component: "Komponent"
           components: "Komponenter"
+          filter_placeholder: "skriv för att filtrera…"
           theme_name: "Temanamn"
           component_name: "Komponentnamn"
           themes_intro: "Välj ett befintligt tema eller installera ett nytt för att komma igång"
@@ -4930,8 +4924,11 @@ sv:
           perform: "Tilldela utmärkelse till användare"
           upload_csv: Ladda upp en CSV med antingen användares e-postadress eller användarnamn
           aborted: Ladda upp en CSV som innehåller antingen användares e-postadress eller användarnamn
-          success: Din CSV mottogs och användare kommer att få sin utmärkelse inom kort.
+          success: Din CSV togs emot och %{count} användare kommer att få sin utmärkelse inom kort.
+          csv_has_unmatched_users: "Följande poster finns i CSV-filen, men matchade inte befintliga användare, och kommer därför inte att få utmärkelsen:"
+          csv_has_unmatched_users_truncated_list: "Det fanns %{count} poster i CSV-filen som inte matchade befintliga användare och därför inte får utmärkelsen. På grund av det stora antalet omatchade poster visas bara de första 100:"
           replace_owners: Ta bort utmärkelsen från tidigare mottagare
+          grant_existing_holders: Utfärda ytterligare utmärkelser till befintliga utmärkelseinnehavare
       emoji:
         title: "Emoji"
         help: "Lägg till en ny emoji för andra att använda. (TIPS: dra och släpp flera filer på en och samma gång)"

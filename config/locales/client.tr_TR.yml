@@ -41,6 +41,7 @@ tr_TR:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} önce"
+      wrap_on: "%{date} tarihinde"
       tiny:
         half_a_minute: "< 1d"
         less_than_x_seconds:
@@ -220,7 +221,6 @@ tr_TR:
     conduct: "Davranış kodu"
     mobile_view: "Mobil Görünüm"
     desktop_view: "Masaüstü Görünümü"
-    you: "Siz"
     or: "ya da"
     now: "hemen şimdi"
     read_more: "devamını oku"
@@ -305,7 +305,7 @@ tr_TR:
       remove: "Kaldır"
       remove_confirmation: "Bu taslağı silmek istediğinizden emin misiniz?"
       new_topic: "Yeni konu taslağı"
-      new_private_message: "Yeni özel mesaj taslağı"
+      new_private_message: "Yeni kişisel mesaj taslağı"
       topic_reply: "Cevap taslağı"
       abandon:
         confirm: "Bu konu için devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
@@ -379,7 +379,6 @@ tr_TR:
         type_bonus:
           name: "tür bonusu"
           title: "Bazı gözden geçirilebilir türlere daha yüksek öncelikli olmaları için personel tarafından bir bonus tahsis edilebilir."
-      stale_help: "Bu gözden geçirme bir başkası tarafından çözüldü."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu öğeyi talep edebilirsiniz."
         required: "Öğeleri inceleyebilmeniz için önce hak talebinde bulunmalısınız."
@@ -752,8 +751,6 @@ tr_TR:
         public: "Herkese Açık"
         private: "Özel"
         public_groups: "Açık Gruplar"
-        automatic_group: Otomatik Grup
-        close_group: Kapalı grup
         my_groups: "Gruplarım"
         group_type: "Grup türü"
         is_group_user: "Üye"
@@ -830,6 +827,11 @@ tr_TR:
       flair_type:
         icon: "Bir simge seçin"
         image: "Bir görüntü yükle"
+      default_notifications:
+        modal_title: "Kullanıcı varsayılan bildirimleri"
+        modal_description: "Bu değişikliği tarihsel olarak uygulamak ister misiniz? Bu, %{count}mevcut kullanıcı için tercihlerini ​​değiştirecek."
+        modal_yes: "Evet"
+        modal_no: "Hayır, yalnızca ileriye dönük değişiklikleri uygulayın"
     user_action_groups:
       "1": "Beğenilenler"
       "2": "Alınan Beğeniler"
@@ -859,7 +861,6 @@ tr_TR:
       posts: "Gönderiler"
       topics: "Konular"
       latest: "En Son"
-      toggle_ordering: "talep kontrolünü değiştir"
       subcategories: "Alt kategoriler"
       muted: "Yok sayılan kategoriler"
       topic_sentence:
@@ -1310,7 +1311,6 @@ tr_TR:
         browser_active: '%{browser} | <span class="active">şu anda aktif</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Son Gönderi"
-      last_emailed: "Gönderilen Son E-posta"
       last_seen: "Görüldü"
       created: "Katıldı"
       log_out: "Oturumu Kapat"
@@ -1958,7 +1958,7 @@ tr_TR:
           confirm: Bağlantılı bir konu oluşturduğunuzda üzerine yazılacak yeni bir konu taslağınız var.
         reply_as_new_group_message:
           label: Yeni grup mesajı olarak yanıtla
-          desc: Aynı alıcılarla yeni bir özel mesaj oluşturun
+          desc: Aynı alıcılarla başlayan yeni mesaj oluştur
         reply_as_private_message:
           label: Yeni Mesaj
           desc: Kişisel bir mesaj oluştur
@@ -2253,13 +2253,6 @@ tr_TR:
       defer:
         help: "okunmamış olarak işaretle"
         title: "Ertele"
-      feature_on_profile:
-        help: "Kullanıcı kartı ve profiliniz üzerinden bu konuya bir bağlantı ekleyin"
-        title: "Profil Özelliği"
-      remove_from_profile:
-        warning: "Profilinizde zaten öne çıkan bir konu var. Devam ederseniz, bu konu mevcut konunun yerine öne çıkacaktır."
-        help: "Kullanıcı profilinizdeki bu konunun bağlantısını kaldırın"
-        title: "Profilden Kaldır"
       list: "Konular"
       new: "yeni konu"
       unread: "okunmamış"
@@ -2739,8 +2732,6 @@ tr_TR:
       whisper: "bu gönderi yöneticiler için özel bir fısıltıdır"
       wiki:
         about: "bu gönderi bir wiki'dir"
-      archetypes:
-        save: "Seçenekleri kaydet"
       few_likes_left: "Beğendiğin için teşekkürler! Bugün için sadece birkaç beğenin kaldı. "
       controls:
         reply: "bu gönderiye bir cevap oluşturmaya başla"
@@ -2862,6 +2853,7 @@ tr_TR:
         name: "İsim"
         name_placeholder: "Bu yer imi ne için?"
         set_reminder: "Bana hatırlat"
+        options: "Seçenekler"
         actions:
           delete_bookmark:
             name: "Yer işaretini sil"
@@ -2882,7 +2874,6 @@ tr_TR:
         post_number: "%{username}, post #%{post_number}"
         show_all: "Hepsini Göster ↓"
     category:
-      can: "yapabilir&hellip;"
       none: "(kategori yok)"
       all: "Tüm kategoriler"
       choose: "kategori&yardım;"
@@ -2916,7 +2907,6 @@ tr_TR:
       save_error: Kategori kaydedilirken hata oluştu.
       name: "Kategori Adı"
       description: "Açıklama"
-      topic: "kategori konusu"
       logo: "Kategori Logo Resmi"
       background_image: "Kategori Arka Plan Resmi "
       badge_colors: "Rozet renkleri"
@@ -3724,6 +3714,7 @@ tr_TR:
               log_out: Bir kullanıcı için tüm oturumları kapatın.
               anonymize: Kullanıcı hesaplarını anonimleştir.
               delete: Kullanıcı hesaplarını sil.
+              list: Kullanıcıların listesini alın.
             email:
               receive_emails: Gelen e-postaları işlemek için bu kapsamı posta alıcısıyla birleştirin.
       web_hooks:
@@ -3938,6 +3929,7 @@ tr_TR:
           theme: "Tema"
           component: "Bileşen"
           components: "Bileşenler"
+          filter_placeholder: "…filtrelemek için yazın"
           theme_name: "Tema adı"
           component_name: "Bileşen Adı"
           themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\n yükleyin"
@@ -4926,8 +4918,11 @@ tr_TR:
           perform: "Kullanıcılara Ödül Rozeti"
           upload_csv: Kullanıcı e-postalarını veya kullanıcı adlarını içeren bir CSV yükleyin
           aborted: Lütfen kullanıcı e-postalarını veya kullanıcı adlarını içeren bir CSV dosyası yükleyin
-          success: 'CSV&#39;niz alındı ve kullanıcılar kısa süre içinde rozetlerini alacaklar.'
+          success: CSV'niz alındı ve %{count} adet kullanıcı kısa süre içinde rozetlerini alacak.
+          csv_has_unmatched_users: "Aşağıdakiler CSV dosyasında var ama mevcut kullanıcılarla eşleştirilemedi ve bu nedenle rozeti almayacaklar:"
+          csv_has_unmatched_users_truncated_list: "CSV dosyasında mevcut kullanıcılarla eşleştirilemeyen %{count} girdi var ve bu nedenle rozeti almıyor. Eşleştirilemeyen girişlerin sayısı çok olduğundan, yalnızca ilk 100 tanesi gösteriliyor:"
           replace_owners: Rozeti önceki sahiplerden kaldır
+          grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:
         title: "Emoji"
         help: "Herkese açık yeni bir emoji ekle. (PROTIP: birden çok dosyayı tek seferde sürükleyip bırakabilirsin)"

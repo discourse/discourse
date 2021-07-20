@@ -261,7 +261,6 @@ cs:
     conduct: "Kodex chování"
     mobile_view: "Mobilní verze"
     desktop_view: "Plná verze"
-    you: "Vy"
     or: "nebo"
     now: "právě teď"
     read_more: "číst dále"
@@ -344,7 +343,6 @@ cs:
       remove: "Odstranit"
       remove_confirmation: "Opravdu chcete tento koncept smazat?"
       new_topic: "Nový koncept tématu"
-      new_private_message: "Nový koncept soukromé zprávy"
       topic_reply: "Koncept odpovědi"
       abandon:
         yes_value: "Zahodit"
@@ -647,8 +645,6 @@ cs:
         public: "Veřejné"
         private: "Soukromé"
         public_groups: "Veřejné skupiny"
-        automatic_group: Automatická skupina
-        close_group: Zavřít skupinu
         my_groups: "Moje skupiny"
         group_type: "Typ skupiny"
         is_group_user: "Člen"
@@ -727,6 +723,8 @@ cs:
       flair_type:
         icon: "Vyberte ikonu"
         image: "Nahrát obrázek"
+      default_notifications:
+        modal_yes: "Ano"
     user_action_groups:
       "1": "Rozdaných 'líbí se'"
       "2": "Obdržených 'líbí se'"
@@ -756,7 +754,6 @@ cs:
       posts: "Příspěvky"
       topics: "Témata"
       latest: "Aktuální"
-      toggle_ordering: "Přepnout editaci pořadí"
       subcategories: "Podkategorie"
       muted: "Ztlumené kategorie"
       topic_sentence:
@@ -1118,7 +1115,6 @@ cs:
         was_this_you: "Byla to vaše návštěva?"
         browser_and_device: "%{browser} na %{device}"
       last_posted: "Poslední příspěvek"
-      last_emailed: "Email naposledy zaslán"
       last_seen: "Naposledy viděn"
       created: "Účet vytvořen"
       log_out: "Odhlásit se"
@@ -2215,8 +2211,6 @@ cs:
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"
       wiki:
         about: "toto je wiki příspěvek"
-      archetypes:
-        save: "Uložit nastavení"
       few_likes_left: "Díky za šíření lásky! Zbývá ti pro dnešek už jen několik málo lajků."
       controls:
         reply: "otevře okno pro sepsání odpovědi na tento příspěvek"
@@ -2324,8 +2318,8 @@ cs:
       bookmarks:
         created: "Vytvořený"
         name: "Jméno"
+        options: "Možnosti"
     category:
-      can: "smí&hellip; "
       none: "(bez kategorie)"
       all: "Všechny kategorie"
       choose: "kategorie&hellip;"
@@ -2348,7 +2342,6 @@ cs:
       save_error: Během ukládání kategorie nastala chyba.
       name: "Název kategorie"
       description: "Popis"
-      topic: "téma kategorie"
       logo: "Logo kategorie"
       background_image: "Obrázek na pozadí této kategorie"
       badge_colors: "Barvy štítku"

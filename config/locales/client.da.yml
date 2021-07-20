@@ -220,7 +220,6 @@ da:
     conduct: "Adfærdskodeks"
     mobile_view: "Mobil visning"
     desktop_view: "Computervisning"
-    you: "Dig"
     or: "eller"
     now: "lige nu"
     read_more: "læs mere"
@@ -302,7 +301,6 @@ da:
       remove: "Fjern"
       remove_confirmation: "Er du sikker på, at du vil offentliggøre dette udkast?"
       new_topic: "Nyt emne-kladde"
-      new_private_message: "Ny kladde til privat besked"
       topic_reply: "Udkast til svar"
       abandon:
         confirm: "Du har et udkast i gang for dette emne. Hvad vil du gerne gøre med den?"
@@ -376,7 +374,6 @@ da:
         type_bonus:
           name: "skriv bonus"
           title: "Visse gennemgåelige typer kan tildeles en bonus af medarbejdere, for at give dem til en højere prioritet."
-      stale_help: "Denne gennemgang er blevet løst af en anden."
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -733,8 +730,6 @@ da:
         public: "Offentlig"
         private: "Privat"
         public_groups: "Offentlige Grupper"
-        automatic_group: Automatisk Gruppe
-        close_group: Luk Gruppe
         my_groups: "Mine Grupper"
         group_type: "Gruppe type"
         is_group_user: "Bruger"
@@ -811,6 +806,11 @@ da:
       flair_type:
         icon: "Vælg et ikon"
         image: "Overfør et billede"
+      default_notifications:
+        modal_title: "Bruger standard notifikationer"
+        modal_description: "Ønsker du at anvende denne ændring historisk? Dette vil ændre præferencer for %{count} eksisterende brugere."
+        modal_yes: "Ja"
+        modal_no: "Nej, anvend kun ændringer fremadrettet"
     user_action_groups:
       "1": "Synes godt om"
       "2": "Syntes godt om"
@@ -840,7 +840,6 @@ da:
       posts: "Indlæg"
       topics: "Emner"
       latest: "Seneste"
-      toggle_ordering: "vis/skjul rækkefølgeskifter"
       subcategories: "Underkategorier:"
       muted: "Lydløse kategorier"
       topic_sentence:
@@ -1291,7 +1290,6 @@ da:
         browser_active: '%{browser} | <span class="active">aktiv nu</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Sidste indlæg"
-      last_emailed: "Sidste e-mail"
       last_seen: "Sidst set"
       created: "Oprettet"
       log_out: "Log ud"
@@ -1926,7 +1924,6 @@ da:
           confirm: Du har gemt et nyt emneudkast, som overskrives, hvis du opretter et sammenkædet emne.
         reply_as_new_group_message:
           label: Svar som ny gruppemeddelelse
-          desc: Opret en ny privat besked med de samme modtagere
         reply_as_private_message:
           label: Ny meddelelse
           desc: Opret en ny privat besked
@@ -2211,13 +2208,6 @@ da:
       defer:
         help: "Markér som ulæst"
         title: "Udsæt"
-      feature_on_profile:
-        help: "Tilføj et link til dette emne på dit brugerkort og profil"
-        title: "Fremhæv på Profil"
-      remove_from_profile:
-        warning: "Din profil har allerede et fremhævet emne. Hvis du fortsætter, vil dette emne erstatte det eksisterende emne."
-        help: "Fjern linket til dette emne på din brugerprofil"
-        title: "Fjern fra profil"
       list: "Emner"
       new: "nyt emne"
       unread: "ulæste"
@@ -2686,8 +2676,6 @@ da:
       whisper: "dette indlæg er en privat hvisken for moderatorer"
       wiki:
         about: "indlægget er en wiki"
-      archetypes:
-        save: "Gem indstillinger"
       few_likes_left: "Tak fordi du spreder kærligheden! Du har kun få 'Synes godt om' tilbage i dag."
       controls:
         reply: "begynd at skrive et svar til dette indlæg"
@@ -2809,6 +2797,7 @@ da:
         name: "Navn"
         name_placeholder: "Hvad er dette bogmærke til?"
         set_reminder: "Påmind mig"
+        options: "Indstillinger"
         actions:
           delete_bookmark:
             name: "Slet bogmærke"
@@ -2829,7 +2818,6 @@ da:
         post_number: "%{username}, indlæg #%{post_number}"
         show_all: "Vis alle"
     category:
-      can: "kan&hellip; "
       none: "(ingen kategori)"
       all: "Alle kategorier"
       choose: "kategori&hellip;"
@@ -2863,7 +2851,6 @@ da:
       save_error: Der opstod en fejl da kategorien skulle gemmes.
       name: "Kategorinavn"
       description: "Beskrivelse"
-      topic: "kategoriemne"
       logo: "Kategori logo billede"
       background_image: "Kategori logo baggrundsbillede"
       badge_colors: "Emblem farver"
@@ -4848,8 +4835,10 @@ da:
           perform: "Tildel Emblem til Brugere"
           upload_csv: Overfør en CSV-fil med enten bruger-e-mails eller brugernavne
           aborted: Overfør venligst en CSV-fil, der indeholder enten bruger-e-mails eller brugernavne
-          success: Din CSV-fil blev modtaget, og brugerne vil modtage deres emblem om kort tid.
+          csv_has_unmatched_users: "Følgende poster er i CSV-filen, men de kunne ikke matches med eksisterende brugere, og vil derfor ikke modtage emblemet:"
+          csv_has_unmatched_users_truncated_list: "Der var %{count} poster i CSV-filen, der ikke kunne matches med eksisterende brugere og modtager derfor ikke emblemet. På grund af det store antal umatchede poster vises kun de første 100:"
           replace_owners: Fjern emblemet fra tidligere ejere
+          grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:
         title: "Humørikon"
         help: "Tilføj en ny emoji, som vil være tilgængelig for alle. (PROTIP: drag & drop flere filer på én gang)"

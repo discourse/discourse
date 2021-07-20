@@ -1262,7 +1262,6 @@ fa_IR:
     no_email: "ایمیلی وجود ندارد. لطفا با مدیر سایت تماس بگیرید."
     email_error: "با ایمیل <b>%{email}</b> نمی‌توانید عضو شوید. لطفا با مدیریت تماس بگیرید."
   original_poster: "نویسنده اصلی"
-  most_posts: "بیشترین نوشته‌ها"
   most_recent_poster: "جدیدترین نویسنده‌ها"
   frequent_poster: "نویسنده مکرر"
   poster_description_joiner: "، "
@@ -1833,6 +1832,9 @@ fa_IR:
 
         %{message}
     account_suspended:
+      title: "حساب کاربری معلق شد"
+      subject_template: "[%{email_prefix}] حساب کاربری شما معلق شده است"
+    account_suspended_forever:
       title: "حساب کاربری معلق شد"
       subject_template: "[%{email_prefix}] حساب کاربری شما معلق شده است"
     account_exists:

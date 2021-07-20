@@ -213,7 +213,6 @@ ca:
     conduct: "Codi de Conducta"
     mobile_view: "Vista mòbil"
     desktop_view: "Vista d'escriptori"
-    you: "Vós"
     or: "o"
     now: "ara mateix"
     read_more: "llegeix més"
@@ -284,7 +283,6 @@ ca:
       resume: "Reprèn"
       remove: "Elimina"
       new_topic: "Esborrany de tema nou"
-      new_private_message: "Esborrany de nou missatge privat"
       topic_reply: "Esborrany de resposta"
       abandon:
         yes_value: "Descarta"
@@ -654,8 +652,6 @@ ca:
         public: "Públic"
         private: "Privat"
         public_groups: "Grups públics"
-        automatic_group: Grup automàtic
-        close_group: Tanca el grup
         my_groups: "Els meus grups"
         group_type: "Tipus de grup"
         is_group_user: "Membre"
@@ -713,6 +709,10 @@ ca:
       flair_color_placeholder: "(Opcional) Valor de color hexadecimal"
       flair_preview_icon: "Previsualitza la icona"
       flair_preview_image: "Previsualitza la imatge"
+      default_notifications:
+        modal_description: "Voleu aplicar històricament aquest canvi? Això canviarà les preferències per a %{count} usuaris existents."
+        modal_yes: "Sí"
+        modal_no: "No, aplica el canvi només en el futur"
     user_action_groups:
       "1": "'M'agrada'"
       "2": "'M'agrada'"
@@ -742,7 +742,6 @@ ca:
       posts: "Publicacions"
       topics: "Temes"
       latest: "Més recents"
-      toggle_ordering: "commuta el control de l'ordre"
       subcategories: "Subcategories"
       topic_sentence:
         one: "%{count} tema"
@@ -1098,7 +1097,6 @@ ca:
         secure_account: "Fes segur el meu compte"
         latest_post: "L'última cosa que heu publicat..."
       last_posted: "Darrer missatge"
-      last_emailed: "Darrer correu"
       last_seen: "Vist"
       created: "Registrat"
       log_out: "Tanca la sessió"
@@ -2238,8 +2236,6 @@ ca:
       whisper: "aquesta publicació és un xiuxiueig privat per a moderadors"
       wiki:
         about: "aquesta publicació és una wiki"
-      archetypes:
-        save: "Desa opcions"
       few_likes_left: "Gràcies per compartir l'amor! Us queden uns quants 'm'agrada' per donar avui."
       controls:
         reply: "comença a redactar una resposta a aquesta publicació"
@@ -2340,8 +2336,8 @@ ca:
         created: "Creat"
         updated: "Actualitzat"
         name: "Nom"
+        options: "Opcions"
     category:
-      can: "pot&hellip; "
       none: "(sense categoria)"
       all: "Totes les categories"
       choose: "categoria&hellip;"
@@ -2372,7 +2368,6 @@ ca:
       save_error: Hi ha hagut un error en desar la categoria.
       name: "Nom de la categoria"
       description: "Descripció"
-      topic: "tema de la categoria"
       logo: "Imatge del logo de la categoria"
       background_image: "Imatge de fons de la categoria"
       badge_colors: "Colors d'insígnies"

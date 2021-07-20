@@ -220,7 +220,6 @@ nl:
     conduct: "Gedragscode"
     mobile_view: "Mobiele weergave"
     desktop_view: "Desktopweergave"
-    you: "U"
     or: "of"
     now: "zojuist"
     read_more: "meer lezen"
@@ -302,7 +301,6 @@ nl:
       remove: "Verwijderen"
       remove_confirmation: "Weet u zeker dat u dit concept wilt verwijderen?"
       new_topic: "Nieuw-topicconcept"
-      new_private_message: "Nieuw-privéberichtconcept"
       topic_reply: "Conceptantwoord"
       abandon:
         confirm: "U hebt een concept in uitvoering voor dit topic. Wat wilt u er mee doen?"
@@ -722,8 +720,6 @@ nl:
         public: "Openbaar"
         private: "Privé"
         public_groups: "Openbare groepen"
-        automatic_group: Automatische groep
-        close_group: Besloten groep
         my_groups: "Mijn groepen"
         group_type: "Groepstype"
         is_group_user: "Lid"
@@ -800,6 +796,10 @@ nl:
       flair_type:
         icon: "Een pictogram selecteren"
         image: "Een afbeelding uploaden"
+      default_notifications:
+        modal_description: "Wilt u deze wijziging op het verleden toepassen? Hierdoor worden voor %{count} bestaande gebruikers voorkeuren gewijzigd."
+        modal_yes: "Ja"
+        modal_no: "Nee, wijziging alleen vanaf nu toepassen"
     user_action_groups:
       "1": "Gegeven likes"
       "2": "Ontvangen likes"
@@ -829,7 +829,6 @@ nl:
       posts: "Berichten"
       topics: "Topics"
       latest: "Nieuwste"
-      toggle_ordering: "sorteermethode omschakelen"
       subcategories: "Subcategorieën"
       muted: "Genegeerde categorieën"
       topic_sentence:
@@ -1277,7 +1276,6 @@ nl:
         browser_active: '%{browser} | <span class="active">nu actief</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Laatste bericht"
-      last_emailed: "Laatst gemaild"
       last_seen: "Gezien"
       created: "Lid sinds"
       log_out: "Afmelden"
@@ -1917,7 +1915,6 @@ nl:
           confirm: U hebt een nieuw-topicconcept opgeslagen, dat wordt overschreven als u een gekoppeld topic maakt.
         reply_as_new_group_message:
           label: Antwoorden als nieuw groepsbericht
-          desc: Een nieuw privébericht maken met dezelfde ontvangers
         reply_as_private_message:
           label: Nieuw bericht
           desc: Een nieuw persoonlijk bericht maken
@@ -2202,13 +2199,6 @@ nl:
       defer:
         help: "Markeren als ongelezen"
         title: "Negeren"
-      feature_on_profile:
-        help: "Een koppeling naar dit topic toevoegen op uw gebruikerskaart en profiel"
-        title: "Aanbevelen op profiel"
-      remove_from_profile:
-        warning: "Uw profiel heeft al een aanbevolen topic. Als u doorgaat, vervangt dit topic het bestaande topic."
-        help: "De koppeling naar dit topic op uw gebruikersprofiel verwijderen"
-        title: "Verwijderen uit profiel"
       list: "Topics"
       new: "nieuw topic"
       unread: "ongelezen"
@@ -2677,8 +2667,6 @@ nl:
       whisper: "dit bericht is alleen toegankelijk voor moderators"
       wiki:
         about: "dit bericht is een wiki"
-      archetypes:
-        save: "Opties opslaan"
       few_likes_left: "Bedankt voor uw steun! U kunt vandaag nog een paar likes uitdelen."
       controls:
         reply: "beginnen met opstellen van een antwoord op dit bericht"
@@ -2800,6 +2788,7 @@ nl:
         name: "Naam"
         name_placeholder: "Waar is deze bladwijzer voor?"
         set_reminder: "Mij herinneren"
+        options: "Opties"
         actions:
           delete_bookmark:
             name: "Bladwijzer verwijderen"
@@ -2820,7 +2809,6 @@ nl:
         post_number: "%{username}, bericht #%{post_number}"
         show_all: "Alles tonen"
     category:
-      can: "kan&hellip; "
       none: "(geen categorie)"
       all: "Alle categorieën"
       choose: "categorie&hellip;"
@@ -2854,7 +2842,6 @@ nl:
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
       name: "Categorienaam"
       description: "Omschrijving"
-      topic: "categorietopic"
       logo: "Afbeelding van categorielogo"
       background_image: "Achtergrondafbeelding van categorie"
       badge_colors: "Badgekleuren"
@@ -4827,7 +4814,6 @@ nl:
           perform: "Badge aan gebruikers toekennen"
           upload_csv: Een CSV met e-mailadressen of gebruikersnamen uploaden
           aborted: Upload een CSV dat e-mailadressen of gebruikersnamen bevat
-          success: Uw CSV is ontvangen en gebruikers ontvangen binnenkort hun badge.
           replace_owners: De badge van vorige eigenaren verwijderen
       emoji:
         title: "Emoji"

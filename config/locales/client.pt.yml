@@ -220,7 +220,6 @@ pt:
     conduct: "Código de Conduta"
     mobile_view: "Visualização Mobile"
     desktop_view: "Visualização Desktop"
-    you: "Você"
     or: "ou"
     now: "ainda agora"
     read_more: "ler mais"
@@ -305,7 +304,6 @@ pt:
       remove: "Remover"
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"
       new_topic: "Novo rascunho de tópico"
-      new_private_message: "Novo rascunho de mensagem privada"
       topic_reply: "Rascunho da resposta"
       abandon:
         confirm: "Tem um rascunho em andamento neste tópico. O que gostaria de fazer com ele?"
@@ -379,7 +377,6 @@ pt:
         type_bonus:
           name: "tipo de bónus"
           title: "Determinado tipo de revisões podem receber um bónus por parte da equipa para terem uma prioridade mais elevada."
-      stale_help: "Esta revisão foi resolvida por outra pessoa."
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
         required: "Deve reivindicar items antes de as poder rever."
@@ -752,8 +749,6 @@ pt:
         public: "Público"
         private: "Privado"
         public_groups: "Grupos Públicos"
-        automatic_group: Grupo Automático
-        close_group: Fechar Grupo
         my_groups: "Os Meus Grupos"
         group_type: "Tipo de grupo"
         is_group_user: "Membro"
@@ -830,6 +825,8 @@ pt:
       flair_type:
         icon: "Selecione um ícone"
         image: "Enviar uma imagem"
+      default_notifications:
+        modal_yes: "Sim"
     user_action_groups:
       "1": "Gostos Dados"
       "2": "Gostos Recebidos"
@@ -859,7 +856,6 @@ pt:
       posts: "Publicações"
       topics: "Tópicos"
       latest: "Recentes"
-      toggle_ordering: "alternar o controlo de ordenação"
       subcategories: "Subcategorias"
       muted: "Categorias silenciadas"
       topic_sentence:
@@ -1314,7 +1310,6 @@ pt:
         browser_active: '%{browser} | <span class="active">ativo agora</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Última Publicação"
-      last_emailed: "Último Enviado por Mensagem"
       last_seen: "Visto"
       created: "Juntou-se"
       log_out: "Terminar Sessão"
@@ -1929,7 +1924,6 @@ pt:
           confirm: Você tem um novo rascunho de tópico guardado que será substituído se criar um tópico ligado.
         reply_as_new_group_message:
           label: Responder como uma nova mensagem de grupo
-          desc: Criar uma nova mensagem privada com os mesmos destinatários
         reply_as_private_message:
           label: Nova mensagem
           desc: Crie uma nova mensagem privada
@@ -2224,13 +2218,6 @@ pt:
       defer:
         help: "Marcar como não lida"
         title: "Diferir"
-      feature_on_profile:
-        help: "Adicione um link para este tópico no seu cartão de usuário e perfil"
-        title: "Funcionalidade no perfil"
-      remove_from_profile:
-        warning: "O seu perfil já tem um tópico em destaque. Se você continuar, este tópico substituirá o tópico existente."
-        help: "Remover o link para este tópico no seu perfil de usuário"
-        title: "Remover do Perfil"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -2699,8 +2686,6 @@ pt:
       whisper: "esta publicação é um susurro privado para os moderadores"
       wiki:
         about: "esta publicação é uma wiki"
-      archetypes:
-        save: "Guardar as Opções"
       few_likes_left: "Obrigado por partilhar o amor! Restam-lhe apenas um gostos para hoje."
       controls:
         reply: "começar a compor uma resposta a este tópico"
@@ -2809,6 +2794,7 @@ pt:
         name: "Nome"
         name_placeholder: "Para que serve este favorito?"
         set_reminder: "Me lembrar"
+        options: "Opções"
         actions:
           delete_bookmark:
             name: "Excluir favorito"
@@ -2829,7 +2815,6 @@ pt:
         post_number: "%{username}, post #%{post_number}"
         show_all: "Mostrar tudo"
     category:
-      can: "pode&hellip; "
       none: "(sem categoria)"
       all: "Todas as categorias"
       choose: "categoria&hellip;"
@@ -2863,7 +2848,6 @@ pt:
       save_error: Ocorreu um erro ao guardar a categoria.
       name: "Nome da Categoria"
       description: "Descrição"
-      topic: "tópico da categoria"
       logo: "Logótipo da Categoria"
       background_image: "Imagem de Fundo da Categoria"
       badge_colors: "Cores do crachá"

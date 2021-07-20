@@ -879,7 +879,6 @@ cs:
       user: "Uživatelé"
     results_page: "Výsledky hledání pro '%{term}'"
   original_poster: "Autor tématu"
-  most_posts: "Více příspěvků"
   most_recent_poster: "Poslední přispěvatel"
   frequent_poster: "Častý přispěvatel"
   redirected_to_top_reasons:

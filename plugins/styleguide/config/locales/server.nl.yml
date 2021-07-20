@@ -6,5 +6,5 @@
 
 nl:
   site_settings:
-    styleguide_enabled: "Een '/styleguide'-pad voor hulp bij het vormgeven van Discourse inschakelen"
+    styleguide_enabled: 'Een ''/styleguide''-pad voor hulp bij het vormgeven van Discourse inschakelen'
     styleguide_admin_only: "Beperkt de zichtbaarheid van de stijlgids tot beheerders"
