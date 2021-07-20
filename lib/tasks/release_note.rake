@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-DATE_REGEX = /\A\d{4}-\d{2}-\d{2}/
+DATE_REGEX ||= /\A\d{4}-\d{2}-\d{2}/
 
-CHANGE_TYPES = [
+CHANGE_TYPES ||= [
   { pattern: /^FEATURE:/, heading: "New Features" },
   { pattern: /^FIX:/, heading: "Bug Fixes" },
   { pattern: /^UX:/, heading: "UX Changes" },
