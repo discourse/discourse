@@ -332,7 +332,7 @@ zh_CN:
       in_reply_to: "回复给"
       explain:
         why: "解释为什么此条目最终进入队列"
-        title: "可审核帖子的评分"
+        title: "可审核话题的评分"
         formula: "公式"
         subtotal: "小计"
         total: "总计"
@@ -508,7 +508,7 @@ zh_CN:
       six_months: "六个月"
       custom: "自定义日期和时间"
       relative: "相对时间"
-      none: "不需要"
+      none: "不需要时间/日期"
       last_custom: "上次自定义日期时间"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 发布了<a href='%{topicUrl}'>该话题</a>"
@@ -560,7 +560,7 @@ zh_CN:
         remove_user_as_group_owner: "撤消所有者"
     groups:
       member_added: "已添加"
-      member_requested: "请求时间"
+      member_requested: "请求日期"
       add_members:
         title: "将用户添加到 %{group_name}"
         description: "输入您要邀请加入群组中的用户列表或粘贴到逗号分隔的列表中："
@@ -626,7 +626,7 @@ zh_CN:
             password: "密码"
           settings:
             title: "设置"
-            allow_unknown_sender_topic_replies: "允许未知发件人话题回复。"
+            allow_unknown_sender_topic_replies: "允许未知发件人回复话题。"
             allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题。如果未启用此功能，且从未被邀请至该话题的电子邮件地址回复，将创建一个新话题。"
           mailboxes:
             synchronized: "已同步的邮箱"
@@ -846,7 +846,7 @@ zh_CN:
       username: "用户名"
       trust_level: "信任级别"
       read_time: "阅读时间"
-      topics_entered: "进入的话题"
+      topics_entered: "参与的话题"
       post_count: "帖子数量"
       confirm_delete_other_accounts: "确定要删除这些帐户吗？"
       powered_by: "使用 <a href='https://maxmind.com'>MaxMindDB</a>"
@@ -1343,7 +1343,7 @@ zh_CN:
         groups: "群组"
         topic: "话题"
         sent: "创建/上次发送日期"
-        expires_at: "到期时间"
+        expires_at: "过期时间"
         edit: "编辑"
         remove: "移除"
         copy_link: "获取链接"
@@ -2285,7 +2285,7 @@ zh_CN:
       status_update_notice:
         auto_open: "此话题将在 %{timeLeft}后自动开启。"
         auto_close: "此话题将在 %{timeLeft}后自动关闭。"
-        auto_publish_to_category: "此话题将在%{timeLeft}后发布到<a href=%{categoryUrl}>#%{categoryName}</a>。"
+        auto_publish_to_category: "此话题将在 %{timeLeft}后发布到<a href=%{categoryUrl}>#%{categoryName}</a>。"
         auto_close_after_last_post: "此话题将在最后一个帖子的%{duration}后关闭。"
         auto_delete: "此话题将在 %{timeLeft}后自动删除。"
         auto_bump: "此话题将在 %{timeLeft}后自动顶帖。"
@@ -2311,7 +2311,7 @@ zh_CN:
           other: "/%{count} 个帖子"
         jump_prompt_long: "跳转到…"
         jump_bottom_with_number: "跳转到帖子 %{post_number}"
-        jump_prompt_to_date: "到日期"
+        jump_prompt_to_date: "截至日期"
         jump_prompt_or: "或者"
         total: 帖子总数
         current: 当前帖子
@@ -2495,7 +2495,7 @@ zh_CN:
         radio_label: "新消息"
         participants: "参与者"
         instructions:
-          other: "您将创建一个新消息，并使用您选择的 <b>%{count}</b> 个帖子填充。"
+          other: "您将创建一条新消息，并使用您选择的 <b>%{count}</b> 个帖子填充。"
       move_to_existing_message:
         title: "移至现有消息"
         action: "移至现有消息"
@@ -2594,7 +2594,7 @@ zh_CN:
       filtered_replies_hint:
         other: "查看此帖子及其 %{count} 个回复"
       filtered_replies_viewing:
-        other: "查看 %{count} 个回复："
+        other: "正在查看对此用户的 %{count} 个回复："
       in_reply_to: "加载父帖子"
       view_all_posts: "查看所有帖子"
       errors:
@@ -2748,7 +2748,7 @@ zh_CN:
       filtered_replies:
         viewing_posts_by: "正在查看此用户的 %{post_count} 个帖子："
         viewing_subset: "某些回复已被收起"
-        viewing_summary: "查看此话题的摘要"
+        viewing_summary: "正在查看此话题的摘要"
         post_number: "%{username}，帖子 #%{post_number}"
         show_all: "全部显示"
     category:
@@ -2841,7 +2841,7 @@ zh_CN:
       position: "类别页面上的位置："
       default_position: "默认位置"
       position_disabled: "类别将按照活动顺序显示。要控制类别在列表中的顺序，"
-      position_disabled_click: '请启用“固定类别位置”设置。'
+      position_disabled_click: '请启用“fixed category positions”设置。'
       minimum_required_tags: "话题中所需的最少标签数："
       parent: "父类别"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
@@ -2886,7 +2886,7 @@ zh_CN:
       subcategory_list_styles:
         rows: "行"
         rows_with_featured_topics: "有精选话题的行"
-        boxes: "方框"
+        boxes: "框"
         boxes_with_featured_topics: "带精选话题的框"
       settings_sections:
         general: "常规"
@@ -2896,7 +2896,7 @@ zh_CN:
       list_filters:
         all: "所有话题"
         none: "无子类别"
-      colors_disabled: "您无法选择颜色，因为您的类别样式为无。"
+      colors_disabled: "您无法选择颜色，因为您的“category style”为“none”。"
     flagging:
       title: "感谢您帮助我们建设文明社区！"
       action: "举报帖子"
@@ -4431,7 +4431,7 @@ zh_CN:
         flags_received_count: 收到的举报
         warnings_received_count: 收到的警告
         warnings_list_warning: |
-          作为版主，您可能无法查看所有这些话题。如有必要，请向管理员或发布版主请求对该消息的 <b>@moderators</b> 访问权限。
+          作为版主，您可能无法查看所有这些话题。如有必要，请向管理员或发布版主请求对该消息的<b>版主</b>访问权限。
         flags_given_received_count: "提交的举报/收到的举报"
         approve: "批准"
         approved_by: "批准人"
@@ -4610,7 +4610,7 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合您的需求："
         show_overriden: "只显示被替换"
         locale: "语言："
-        fallback_locale_warning: "您正在编辑基于%{fallback}语言。选择%{fallback}作为界面语言的用户不会看到您的变更。"
+        fallback_locale_warning: "您正在编辑基于%{fallback}的语言。选择%{fallback}作为界面语言的用户不会看到您的变更。"
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
       settings:
         show_overriden: "只显示被替换"
