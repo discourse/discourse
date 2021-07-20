@@ -523,12 +523,7 @@ en:
 
       It’s easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
 
-    dominating_topic: |
-      ### Let others join the conversation
-
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
-
-      It could be even better if you gave other people space to share their points of view, too. Can you invite them over?
+    dominating_topic: You’ve posted more than %{percent}% of the replies here, is there anyone else you would like to hear from?
 
     get_a_room: |
       ### Encourage everyone to get involved in the conversation
