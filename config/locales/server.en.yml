@@ -2515,6 +2515,7 @@ en:
     reset_not_allowed_from_ip_address: "You can't request a password reset from that IP address."
     suspended: "You can't log in until %{date}."
     suspended_with_reason: "Account suspended until %{date}: %{reason}"
+    suspended_with_reason_forever: "Account suspended: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
@@ -3703,11 +3704,27 @@ en:
 
         Reason - %{reason}
 
+    account_suspended_forever:
+      title: "Account Suspended"
+      subject_template: "[%{email_prefix}] Your account has been suspended"
+      text_body_template: |
+        You have been suspended from the forum.
+
+        Reason - %{reason}
+
     account_silenced:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum until %{silenced_till}.
+
+        Reason - %{reason}
+
+    account_silenced_forever:
+      title: "Account Silenced"
+      subject_template: "[%{email_prefix}] Your account has been silenced"
+      text_body_template: |
+        You have been silenced from the forum.
 
         Reason - %{reason}
 

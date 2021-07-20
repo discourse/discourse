@@ -1401,11 +1401,25 @@ RSpec.describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
 
+          expected_message = I18n.t('login.suspended_with_reason',
+                                    date: I18n.l(user.suspended_till, format: :date_only),
+                                    reason: Rack::Utils.escape_html(user.suspend_reason))
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to eq(I18n.t('login.suspended_with_reason',
-            date: I18n.l(user.suspended_till, format: :date_only),
-            reason: Rack::Utils.escape_html(user.suspend_reason)
-          ))
+          expect(response.parsed_body['error']).to eq(expected_message)
+        end
+
+        it 'when suspended forever should return an error without suspended till date' do
+          user.suspended_till = 101.years.from_now
+          user.suspended_at = Time.now
+          user.save!
+          StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
+
+          post "/session.json", params: {
+            login: user.username, password: 'myawesomepassword'
+          }
+
+          expected_message = I18n.t('login.suspended_with_reason_forever', reason: Rack::Utils.escape_html(user.suspend_reason))
+          expect(response.parsed_body['error']).to eq(expected_message)
         end
       end
 
