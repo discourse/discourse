@@ -350,7 +350,7 @@ zh_CN:
         type_bonus:
           name: "奖励加分"
           title: "某些可审核类型可以由管理人员分配加分，以使其具有更高的优先级。"
-      stale_help: "此可审核对象已被 <b>%{username}</b> 解决。"
+      stale_help: "此可审核条目已被 <b>%{username}</b> 解决。"
       claim_help:
         optional: "您可以认领此条目以避免被他人审核。"
         required: "您必须先认领条目才能进行审核。"
@@ -367,7 +367,7 @@ zh_CN:
         save_changes: "保存变更"
         title: "设置"
         priorities:
-          title: "可审核对象优先级"
+          title: "可审核条目优先级"
       moderation_history: "审核历史记录"
       view_all: "查看全部"
       grouped_by_topic: "按话题分组"
@@ -1573,7 +1573,7 @@ zh_CN:
     email: "电子邮件"
     username: "用户名"
     last_seen: "最后活动"
-    created: "创建日期"
+    created: "创建"
     created_lowercase: "创建"
     trust_level: "信任级别"
     search_hint: "用户名、电子邮件或 IP 地址"
@@ -2727,7 +2727,7 @@ zh_CN:
         create: "创建书签"
         edit: "编辑书签"
         created: "已创建"
-        updated: "已更新"
+        updated: "更新"
         name: "名称"
         name_placeholder: "此书签有什么用？"
         set_reminder: "提醒我"

@@ -186,7 +186,7 @@ zh_CN:
       default_categories_already_selected: "您不能选择其他列表中使用的类别。"
       default_tags_already_selected: "您不能选择在另一个列表中使用的标签。"
       s3_upload_bucket_is_required: "除非提供 's3_upload_bucket'，否则您无法启用上传到 S3。"
-      enable_s3_uploads_is_required: "除非已启用 S3 上传，否则您无法使用 S3 清单。"
+      enable_s3_uploads_is_required: "除非已启用 S3 上传，否则您无法启用 S3 清单使用情况。"
       page_publishing_requirements: "如果启用了安全媒体，则无法启用页面发布。"
       s3_backup_requires_s3_settings: "除非提供 '%{setting_name}'，否则无法将 S3 用作备份位置。"
       s3_bucket_reused: "您无法将同一个存储桶同时用作 's3_upload_bucket' 和 's3_backup_bucket'。请选择一个不同的存储桶或为每个存储桶使用不同的路径。"
@@ -223,7 +223,7 @@ zh_CN:
     invite_exists: "您已经邀请 <b>%{email}</b>。"
     invalid_email: "%{email} 不是有效的电子邮件地址。"
     rate_limit:
-      other: "您在过去一天内发出了 %{count} 个邀请，请等待 %{time_left}，然后重试。"
+      other: "您在过去 24 小时内发出了 %{count} 个邀请，请等待 %{time_left}，然后重试。"
     confirm_email: "<p>快完成了！我们向您的电子邮件地址发送了一封激活邮件。请按照邮件中的说明操作来激活您的帐户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件文件夹。</p>"
     cant_invite_to_group: "您无权邀请用户加入指定群组。请确保您是邀请其他人加入的群组的所有者。"
     disabled_errors:
@@ -922,7 +922,7 @@ zh_CN:
   unsubscribed:
     title: "已更新电子邮件偏好设置！"
     description: "<b>%{email}</b> 的电子邮件偏好设置已更新。要更改您的电子邮件设置，请<a href='%{url}'>访问您的用户偏好设置</a>。"
-    topic_description: "要重新订阅 %{link}，请使用话题底部或右侧的通知控件。"
+    topic_description: "要重新订阅%{link}，请使用话题底部或右侧的通知控件。"
     private_topic_description: "要重新订阅，请使用话题底部或右侧的通知控件。"
   uploads:
     marked_insecure_from_theme_component_reason: "在主题组件中使用上传"
@@ -1362,7 +1362,7 @@ zh_CN:
     educate_until_posts: "当用户开始输入他们的前几 (n) 个新帖子时，在编辑器中显示弹出式新用户教育面板。"
     title: "此站点的名称，在标题标签中使用。"
     site_description: "用一句话描述此站点，用于元描述标签。"
-    short_site_description: "简短描述，用于首页上的标题标签。"
+    short_site_description: "简短描述，用于首页上的 title 标记。"
     contact_email: "此站点主要负责人的电子邮件地址。用于重要通知，也显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 页面上用于紧急事项。"
     contact_url: "此站点的联系 URL。显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 页面上以应对紧急事项。"
     crawl_images: "从远程 URL 检索图片以插入正确的宽度和高度尺寸。"
@@ -1408,7 +1408,7 @@ zh_CN:
     favicon: "您的站点的网站图标，请参阅 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是 png 图片。将调整为 32x32。如果留空，将使用 large_icon。"
     apple_touch_icon: "用于 Apple 触控设备的图标。将自动调整为 180x180。如果留空，将使用 large_icon。"
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
-    twitter_summary_large_image: "Twitter卡片“摘要大图”（宽度至少应为 280，高度至少为 150）。如果留空，则使用 opengraph_image 生成常规卡片元数据。"
+    twitter_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150）。如果留空，则使用 opengraph_image 生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
     email_custom_headers: "以 | 分隔的自定义电子邮件标头列表。"
     email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1826,8 +1826,8 @@ zh_CN:
     imap_polling_period_mins: "检查 IMAP 帐户有无电子邮件的时间间隔（以分钟为单位）。"
     imap_polling_old_emails: "每次轮询 IMAP 邮箱时要更新的旧电子邮件（已处理）的最大数量（设为 0 将更新全部）。"
     imap_polling_new_emails: "每次轮询 IMAP 邮箱时要更新的新电子邮件（已处理）的最大数量。"
-    imap_batch_import_email: "触发导入模式的新电子邮件的最小数量（禁用发布警报）。"
-    email_prefix: "电子邮件主题中使用的 [label]。如果不设置，将默认为 'title'。"
+    imap_batch_import_email: "触发导入模式的新电子邮件的最小数量（禁用导入帖子的通知）。"
+    email_prefix: "电子邮件主题中使用的[标签]。如果不设置，将默认为 'title'。"
     email_site_title: "用作来自站点的电子邮件发件人的站点标头。如果不设置，则默认为 'title'。如果您的 'title' 包含电子邮件发件人字符串中不允许的字符，请使用此设置。"
     find_related_post_with_key: "仅使用“回复键”查找回复的帖子。警告：禁用此功能将允许基于电子邮件地址的用户模拟。"
     minimum_topics_similar: "编辑新话题时，在呈现相似话题之前需要存在的话题数。"
@@ -1900,7 +1900,7 @@ zh_CN:
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     svg_icon_subset: "添加您希望包含在资产中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
-    max_prints_per_hour_per_user: "/print 页的最大展示次数（设置为 0 将禁用）"
+    max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用）"
     full_name_required: "全名是用户个人资料的必填字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
@@ -1952,7 +1952,7 @@ zh_CN:
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
     returning_users_days: "在用户被视为回访之前应经过的天数。"
-    review_media_unless_trust_level: "如果包含嵌入媒体，管理人员将审核信任级别较低的用户的帖子。"
+    review_media_unless_trust_level: "如果包含嵌入式媒体，管理人员将审核信任级别较低的用户的帖子。"
     blur_tl0_flagged_posts_media: "模糊被举报的帖子图片以隐藏潜在的 NSFW 内容。"
     enable_page_publishing: "允许管理人员使用自己的样式将话题发布到新 URL。"
     show_published_pages_login_required: "即使需要登录，匿名用户也可以查看已发布的页面。"
@@ -2269,7 +2269,7 @@ zh_CN:
       fixed_primary_email: "修复了暂存用户的常用电子邮件"
       same_ip_address: "与其他用户相同的 IP 地址 (%{ip_address})"
       inactive_user: "停用用户"
-      reviewable_reject_auto: "自动处理排队的可审核内容"
+      reviewable_reject_auto: "自动处理排队的可审核条目"
       reviewable_reject: "可审核用户被拒绝"
     email_in_spam_header: "用户的第一封电子邮件已被举报为垃圾邮件"
     already_silenced: "用户已在 %{time_ago}被 %{staff} 禁言。"
@@ -3958,7 +3958,7 @@ zh_CN:
         当您达到信任级别 1 时，将授予此徽章。感谢您坚持阅读一些话题以了解我们社区的内容。新用户限制已被取消；您已被授予所有基础社区功能，例如个人消息、举报、Wiki 编辑以及发布多个图片和链接的权限。
     member:
       name: 成员
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>邀请、群组消息、更多赞
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">被授予</a>邀请、群组消息、更多赞
       long_description: |
         当您达到信任级别 2 时，将授予此徽章。感谢您在几周内参与并真正加入我们的社区。您现在可以从您的用户页面或单个话题发送邀请，创建群组个人消息，以及每天获得更多赞。
     regular:
