@@ -234,21 +234,21 @@ class UploadsController < ApplicationController
 
     hijack do
       begin
-        upload = external_upload_manager.promote_to_upload
+        upload = external_upload_manager.promote_to_upload!
       rescue ExternalUploadManager::ChecksumMismatchError
-        return upload_failed(I18n.t("upload.checksum_mismatch_failure"))
+        render json: failed_json.merge(message: I18n.t("upload.checksum_mismatch_failure")), status: 422
       rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound
-        return upload_failed(I18n.t("upload.download_failure"))
+        render json: failed_json.merge(message: I18n.t("upload.download_failure")), status: 422
       rescue => err
-        Discourse.warn_exception(err, "Complete external upload failed for user #{current_user.id}")
-        return upload_failed(I18n.t("upload.failed"))
+        Discourse.warn_exception(err, message: "Complete external upload failed for user #{current_user.id}")
+        render json: failed_json.merge(message: I18n.t("upload.failed")), status: 422
       end
 
       if upload.errors.empty?
         external_upload_manager.destroy!
         render json: UploadsController.serialize_upload(upload), status: 200
       else
-        upload_failed(upload.errors.to_hash.values.flatten)
+        render json: failed_json.merge(errors: upload.errors.to_hash.values.flatten), status: 422
       end
     end
   end
