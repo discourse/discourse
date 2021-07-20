@@ -4,7 +4,7 @@
 # about: Official poll plugin for Discourse
 # version: 1.0
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
-# url: https://github.com/discourse/discourse/tree/master/plugins/poll
+# url: https://github.com/discourse/discourse/tree/main/plugins/poll
 
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/common/poll-ui-builder.scss"

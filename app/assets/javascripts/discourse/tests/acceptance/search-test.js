@@ -52,6 +52,22 @@ acceptance("Search - Anonymous", function (needs) {
     );
   });
 
+  test("search button toggles search menu", async function (assert) {
+    await visit("/");
+
+    await click("#search-button");
+    assert.ok(exists(".search-menu"));
+
+    await click(".d-header"); // click outside
+    assert.ok(!exists(".search-menu"));
+
+    await click("#search-button");
+    assert.ok(exists(".search-menu"));
+
+    await click("#search-button"); // toggle same button
+    assert.ok(!exists(".search-menu"));
+  });
+
   test("search for a tag", async function (assert) {
     await visit("/");
 

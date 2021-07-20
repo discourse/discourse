@@ -103,8 +103,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     post_reply_key = PostReplyKey.where(user_id: recipient_user, post_id: post.id).first
     expect(post_reply_key).to eq(nil)
-    expect(email_log.raw_headers).not_to include("Reply-To: Support Group via Discourse <#{group.email_username}")
-    expect(email_log.raw_headers).to include("From: Support Group via Discourse <#{group.email_username}")
+    expect(email_log.raw_headers).not_to include("Reply-To: Support Group <#{group.email_username}")
+    expect(email_log.raw_headers).to include("From: Support Group <#{group.email_username}")
   end
 
   it "creates an EmailLog record with the correct details" do
@@ -136,8 +136,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     post_reply_key = PostReplyKey.where(user_id: recipient_user, post_id: post.id).first
     expect(post_reply_key).to eq(nil)
-    expect(email_log.raw).not_to include("Reply-To: Support Group via Discourse <#{group.email_username}")
-    expect(email_log.raw).to include("From: Support Group via Discourse <#{group.email_username}")
+    expect(email_log.raw).not_to include("Reply-To: Support Group <#{group.email_username}")
+    expect(email_log.raw).to include("From: Support Group <#{group.email_username}")
   end
 
   it "falls back to the group name if full name is blank" do
@@ -146,7 +146,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.raw_headers).to include("From: support-group via Discourse <#{group.email_username}")
+    expect(email_log.raw_headers).to include("From: support-group <#{group.email_username}")
   end
 
   it "has the group_smtp_id and the to_address filled in correctly" do
