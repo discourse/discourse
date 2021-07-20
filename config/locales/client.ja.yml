@@ -992,7 +992,7 @@ ja:
         individual: "新しい投稿があるたびにメールで送る"
         individual_no_echo: "自分以外の新しい投稿があるたびにメールで送る"
         many_per_day: "新しい投稿があるたびにメールを受け取る (1 日 %{dailyEmailEstimate} 回程度)"
-        few_per_day: "新しい投稿があるたびにメールを受け取る (1日 2 回程度)"
+        few_per_day: "新しい投稿があるたびにメールを受け取る (1 日 2 回程度)"
         warning: "メーリングリストモードです。メール通知設定が無効になります。"
       tag_settings: "タグ"
       watched_tags: "ウォッチ中"
@@ -1488,7 +1488,7 @@ ja:
         the_topic: "トピック"
     loading: "読み込み中..."
     errors:
-      prev_page: "読み込み中"
+      prev_page: "次の項目を読み込み中に発生しました:"
       reasons:
         network: "ネットワークエラー"
         server: "サーバーエラー"
@@ -2432,7 +2432,7 @@ ja:
           other: "全体に固定されているトピック: <strong class='badge badge-notification unread'>%{count} 件</strong>"
         make_banner: "このトピックをすべてのページの上部に表示されるバナーにします。"
         remove_banner: "すべてのページの上部に表示されるバナーを削除します。"
-        banner_note: "ユーザーはバナーを閉じることができます。任意のタイミングでバナー表示できるのは１つのトピックだけです。"
+        banner_note: "ユーザーはバナーを閉じることができます。任意のタイミングでバナー表示できるのは 1 つのトピックだけです。"
         no_banner_exists: "バナートピックはありません。"
         banner_exists: "現在、バナートピックが<strong class='badge badge-notification unread'>あります</strong>。"
       inviting: "招待中..."
