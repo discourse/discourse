@@ -89,7 +89,7 @@
   position: absolute;
   width: calc(50% - 30px);
   max-width: 724px;
-  top: 1.55em;
+  top: 21px; // grippie height + .reply-to margin-top + .reply-area padding-top
   bottom: 10px;
   left: 51%;
   overflow-y: auto;
