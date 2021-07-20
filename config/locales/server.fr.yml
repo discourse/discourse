@@ -478,12 +478,6 @@ fr:
       Vous pouvez modifier votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b>.
 
       Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
-    dominating_topic: |
-      ### Laissez d'autres utilisateurs rejoindre la conversation
-
-      Ce sujet semble vraiment important pour vous, vous avez publié plus de %{percent} % des réponses dans cette discussion.
-
-      Il serait peut-être judicieux de laisser d'autres personnes partager leur point de vue. Pourriez-vous les inviter à vous rejoindre ?
     get_a_room: |
       ### Encouragez tout le monde à intervenir dans la discussion
 

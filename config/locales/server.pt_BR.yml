@@ -481,12 +481,6 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
-    dominating_topic: |
-      ### Permita que outras pessoas participem da conversa
-
-      Este tópico é muito importante para você &ndash; você postou mais de %{percent}% das respostas aqui.
-
-      Seria ainda melhor se você desse espaço para que outras pessoas compartilhassem seus pontos de vista também. Poderia convidá-las?
     get_a_room: |
       ### Incentive todos a se envolverem na conversa
 
@@ -2256,6 +2250,7 @@ pt_BR:
     reset_not_allowed_from_ip_address: "Não é possível solicitar uma redefinição de senha a partir deste endereço IP."
     suspended: "Você não pode entrar até %{date}."
     suspended_with_reason: "Conta suspensa até %{date}: %{reason}"
+    suspended_with_reason_forever: "Conta suspensa: %{reason}"
     errors: "%{errors}"
     not_available: "Não disponível. Tentar %{suggestion}?"
     something_already_taken: "Algo deu errado, talvez o nome do(a) usuário(a) ou o e-mail já tenham sido cadastrados. Tente o link Esqueci minha senha."
@@ -2509,9 +2504,35 @@ pt_BR:
   new_version_mailer:
     title: "Nova versão do mensageiro"
     subject_template: "[%{email_prefix}] Nova versão do Discourse, atualização disponível"
+    text_body_template: |
+      Viva! Uma nova versão do [Discourse](https://www.discourse.org) está disponível!
+
+      Seu versão: %{installed_version}
+      Nova versão: **%{new_version}**
+
+      - Atualize com facilidade usando a nossa **[atualização no navegador em um clique](%{base_url}/admin/upgrade)**
+
+      - Confira as novidades nas [notas da versão](https://meta.discourse.org/tag/release-notes) ou veja o [registro de alterações não processados GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - Acesse [meta.discourse.org](https://meta.discourse.org) para obter novidades, discussões e suporte para o Discourse
   new_version_mailer_with_notes:
     title: "Nova versão do mensageiro com notas"
     subject_template: "[%{email_prefix}] atualização disponível"
+    text_body_template: |
+      Viva! Uma nova versão do [Discourse](https://www.discourse.org) está disponível!
+
+      Seu versão: %{installed_version}
+      Nova versão: **%{new_version}**
+
+      - Atualize com facilidade usando a nossa **[atualização no navegador em um clique](%{base_url}/admin/upgrade)**
+
+      - Confira as novidades nas [notas da versão](https://meta.discourse.org/tag/release-notes) ou veja o [registro de alterações não processados GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - Acesse [meta.discourse.org](https://meta.discourse.org) para obter novidades, discussões e suporte para o Discourse
+
+      ### Notas da versão
+
+      %{notes}
   flag_reasons:
     off_topic: "Sua postagem foi sinalizada como **desvio de tópico**. A comunidade acha que não é compatível com o tópico conforme definida no título e na primeira postagem."
     inappropriate: "Sua postagem foi sinalizada como **não apropriada**: A comunidade acha que é ofensiva, abusiva, ou uma violação das [nossas diretrizes da comunidade](%{base_path}/guidelines)."
@@ -3088,6 +3109,7 @@ pt_BR:
   subject_re: "Re:"
   subject_pm: "[PM]"
   email_from: "%{user_name} via %{site_name}"
+  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:
@@ -3301,10 +3323,17 @@ pt_BR:
 
         %{message}
     account_suspended:
-      title: "Conta suspença"
+      title: "Conta suspensa"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"
       text_body_template: |
         Você foi suspenso(a) do fórum até %{suspended_till}.
+
+        Motivo: %{reason}
+    account_suspended_forever:
+      title: "Conta suspensa"
+      subject_template: "%{email_prefix}, sua conta foi suspensa"
+      text_body_template: |
+        Sua conta foi suspensa do fórum.
 
         Motivo: %{reason}
     account_silenced:
@@ -3312,6 +3341,13 @@ pt_BR:
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
       text_body_template: |
         Você foi silenciado(a) do fórum até %{silenced_till}.
+
+        Motivo: %{reason}
+    account_silenced_forever:
+      title: "Conta silenciada"
+      subject_template: "%{email_prefix}, sua conta foi silenciada"
+      text_body_template: |
+        Sua conta foi silenciada do fórum.
 
         Motivo: %{reason}
     account_exists:

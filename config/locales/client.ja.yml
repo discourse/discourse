@@ -1012,7 +1012,7 @@ ja:
       muted_categories: "ミュート"
       muted_categories_instructions: "これらのカテゴリの新しいトピックに関する通知はユーザーに送信されません。また、カテゴリや最新のページにも表示されません。"
       muted_categories_instructions_dont_hide: "これらのカテゴリの新しいトピックに関する通知は送信されません。"
-      regular_categories: "通常"
+      regular_categories: "レギュラー"
       regular_categories_instructions: "これらのカテゴリは「最新」と「人気」のトピックリストに表示されます。"
       no_category_access: "カテゴリへのアクセスはモデレーターとして制限されているため、保存できません。"
       delete_account: "アカウントを削除"
@@ -3264,7 +3264,7 @@ ja:
           description: "このタグが付いたすべてのトピックを自動的に追跡します。トピックの隣に未読と新しい投稿の件数が表示されます。"
         regular:
           title: "通常"
-          description: "誰かが @ユーザー名であなたをメンションしたり、あなたに返信したりすると通知が送信されます。"
+          description: "誰かが @ユーザー名であなたをメンションしたり、あなたの投稿に返信したりすると通知が送信されます。"
         muted:
           title: "ミュート"
           description: "このタグのついた新しいトピックについては何も通知されず、未読タブにも表示されません。"

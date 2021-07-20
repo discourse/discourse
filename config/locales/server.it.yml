@@ -481,10 +481,6 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
-    dominating_topic: |
-      ### Consenti ad altri di partecipare alla conversazione Questo argomento è chiaramente importante per te&ndash;: hai pubblicato più di %{percent}% delle risposte.
-
-      Potrebbe essere ancora meglio se dessi ad altre persone lo spazio per condividere anche i loro punti di vista. Puoi invitarli?
     get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione in privato con questo particolare utente, [puoi inviargli un messaggio personale](%{base_path}/u/%{reply_username}).\n"
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
