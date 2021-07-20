@@ -79,7 +79,7 @@ def is_date?(string)
 end
 
 def create_updater
-  ignore_tables = %w[application_requests user_visits]
+  ignore_tables = %w[application_requests user_second_factors user_visits]
   TimestampsUpdater.new "public", ignore_tables
 end
 
