@@ -19,9 +19,9 @@ fr:
           insert: Insérer
           advanced_mode: Mode avancé
           simple_mode: Mode simple
-          format_description: "Format utilisé pour afficher la date à l'utilisateur. Utilisez Z pour afficher le décalage et zz pour le nom du fuseau horaire."
+          format_description: "Format utilisé pour afficher la date à l'utilisateur. Utilisez « Z » pour afficher le décalage et « zz » pour le nom du fuseau horaire."
           timezones_title: Fuseaux horaires à afficher
-          timezones_description: Les fuseaux horaires seront utilisés pour afficher les dates en aperçu et en mode recours.
+          timezones_description: Les fuseaux horaires seront utilisés pour afficher les dates en mode aperçu et en mode secours.
           recurring_title: Périodicité
           recurring_description: "Définir la périodicité d'un événement. Vous pouvez aussi modifier manuellement l'option de périodicité générée par le formulaire et utiliser une des clés suivantes : years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
           recurring_none: Pas de périodicité

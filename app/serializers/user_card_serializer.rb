@@ -59,6 +59,7 @@ class UserCardSerializer < BasicUserSerializer
              :recent_time_read,
              :primary_group_id,
              :primary_group_name,
+             :flair_group_id,
              :flair_name,
              :flair_url,
              :flair_bg_color,

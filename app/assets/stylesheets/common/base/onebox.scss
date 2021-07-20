@@ -672,7 +672,7 @@ aside.onebox.twitterstatus .onebox-body {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     @include ellipsis;
-    max-width: 690px;
+    max-width: 100%;
     padding: 5px 0;
 
     .inner-box {

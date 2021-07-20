@@ -231,6 +231,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_thumbnail_size(size, self)
   end
 
+  # Register a callback to add custom payload to Site#categories
+  # Example usage:
+  #   register_site_categories_callback do |categories|
+  #     categories.each do |category|
+  #       category[:some_field] = 'test'
+  #     end
+  #   end
+  def register_site_categories_callback(&block)
+    Site.add_categories_callbacks(&block)
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column

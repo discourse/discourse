@@ -111,7 +111,7 @@
   <meta http-equiv="x-pjax-version" content="f529776b45bbce11285b3d001899ace95e8dca2a27515664138433b99fe7bd6b">
 
 
-        <link href="https://github.com/discourse/discourse/commits/master.atom" rel="alternate" title="Recent Commits to discourse:master" type="application/atom+xml">
+        <link href="https://github.com/discourse/discourse/commits/main.atom" rel="alternate" title="Recent Commits to discourse:master" type="application/atom+xml">
 
   <meta name="go-import" content="github.com/discourse/discourse git https://github.com/discourse/discourse.git">
 
@@ -578,7 +578,7 @@
         </span>
       </div>
       <div class="mb-2">
-        <a href="/discourse/discourse/blob/master/LICENSE.txt" class="muted-link">
+        <a href="/discourse/discourse/blob/main/LICENSE.txt" class="muted-link">
           <svg class="octicon octicon-law mr-1" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.75.75a.75.75 0 00-1.5 0V2h-.984c-.305 0-.604.08-.869.23l-1.288.737A.25.25 0 013.984 3H1.75a.75.75 0 000 1.5h.428L.066 9.192a.75.75 0 00.154.838l.53-.53-.53.53v.001l.002.002.002.002.006.006.016.015.045.04a3.514 3.514 0 00.686.45A4.492 4.492 0 003 11c.88 0 1.556-.22 2.023-.454a3.515 3.515 0 00.686-.45l.045-.04.016-.015.006-.006.002-.002.001-.002L5.25 9.5l.53.53a.75.75 0 00.154-.838L3.822 4.5h.162c.305 0 .604-.08.869-.23l1.289-.737a.25.25 0 01.124-.033h.984V13h-2.5a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-2.5V3.5h.984a.25.25 0 01.124.033l1.29.736c.264.152.563.231.868.231h.162l-2.112 4.692a.75.75 0 00.154.838l.53-.53-.53.53v.001l.002.002.002.002.006.006.016.015.045.04a3.517 3.517 0 00.686.45A4.492 4.492 0 0013 11c.88 0 1.556-.22 2.023-.454a3.512 3.512 0 00.686-.45l.045-.04.01-.01.006-.005.006-.006.002-.002.001-.002-.529-.531.53.53a.75.75 0 00.154-.838L13.823 4.5h.427a.75.75 0 000-1.5h-2.234a.25.25 0 01-.124-.033l-1.29-.736A1.75 1.75 0 009.735 2H8.75V.75zM1.695 9.227c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L3 6.327l-1.305 2.9zm10 0c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L13 6.327l-1.305 2.9z"></path></svg>
             View license
         </a>
@@ -940,7 +940,7 @@
         <h2 class="sr-only">Git stats</h2>
         <ul class="list-style-none d-flex">
           <li class="ml-0 ml-md-3">
-            <a data-pjax href="/discourse/discourse/commits/master" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link-gray-dark no-underline no-wrap">
+            <a data-pjax href="/discourse/discourse/commits/main" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link-gray-dark no-underline no-wrap">
               <svg class="octicon octicon-history text-gray" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z"></path></svg>
               <span class="d-none d-sm-inline">
                     <strong>40,024</strong>
@@ -980,7 +980,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".github" href="/discourse/discourse/tree/master/.github">.github</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".github" href="/discourse/discourse/tree/main/.github">.github</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -999,7 +999,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="app" href="/discourse/discourse/tree/master/app">app</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="app" href="/discourse/discourse/tree/main/app">app</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1018,7 +1018,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="bin" href="/discourse/discourse/tree/master/bin">bin</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="bin" href="/discourse/discourse/tree/main/bin">bin</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1037,7 +1037,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="config" href="/discourse/discourse/tree/master/config">config</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="config" href="/discourse/discourse/tree/main/config">config</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1056,7 +1056,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="db" href="/discourse/discourse/tree/master/db">db</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="db" href="/discourse/discourse/tree/main/db">db</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1075,7 +1075,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="docs" href="/discourse/discourse/tree/master/docs">docs</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="docs" href="/discourse/discourse/tree/main/docs">docs</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1094,7 +1094,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="images" href="/discourse/discourse/tree/master/images">images</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="images" href="/discourse/discourse/tree/main/images">images</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1113,7 +1113,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="lib" href="/discourse/discourse/tree/master/lib">lib</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="lib" href="/discourse/discourse/tree/main/lib">lib</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1132,7 +1132,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="log" href="/discourse/discourse/tree/master/log">log</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="log" href="/discourse/discourse/tree/main/log">log</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1151,7 +1151,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="plugins" href="/discourse/discourse/tree/master/plugins">plugins</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="plugins" href="/discourse/discourse/tree/main/plugins">plugins</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1170,7 +1170,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="public" href="/discourse/discourse/tree/master/public">public</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="public" href="/discourse/discourse/tree/main/public">public</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1189,7 +1189,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="script" href="/discourse/discourse/tree/master/script">script</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="script" href="/discourse/discourse/tree/main/script">script</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1208,7 +1208,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="spec" href="/discourse/discourse/tree/master/spec">spec</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="spec" href="/discourse/discourse/tree/main/spec">spec</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1227,7 +1227,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="test" href="/discourse/discourse/tree/master/test">test</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="test" href="/discourse/discourse/tree/main/test">test</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1246,7 +1246,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="vendor" href="/discourse/discourse/tree/master/vendor">vendor</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="vendor" href="/discourse/discourse/tree/main/vendor">vendor</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1265,7 +1265,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".editorconfig" href="/discourse/discourse/blob/master/.editorconfig">.editorconfig</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".editorconfig" href="/discourse/discourse/blob/main/.editorconfig">.editorconfig</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1284,7 +1284,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".eslintignore" href="/discourse/discourse/blob/master/.eslintignore">.eslintignore</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".eslintignore" href="/discourse/discourse/blob/main/.eslintignore">.eslintignore</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1303,7 +1303,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".eslintrc" href="/discourse/discourse/blob/master/.eslintrc">.eslintrc</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".eslintrc" href="/discourse/discourse/blob/main/.eslintrc">.eslintrc</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1322,7 +1322,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".git-blame-ignore-revs" href="/discourse/discourse/blob/master/.git-blame-ignore-revs">.git-blame-ignore-revs</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".git-blame-ignore-revs" href="/discourse/discourse/blob/main/.git-blame-ignore-revs">.git-blame-ignore-revs</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1341,7 +1341,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".gitattributes" href="/discourse/discourse/blob/master/.gitattributes">.gitattributes</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".gitattributes" href="/discourse/discourse/blob/main/.gitattributes">.gitattributes</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1360,7 +1360,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".gitignore" href="/discourse/discourse/blob/master/.gitignore">.gitignore</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".gitignore" href="/discourse/discourse/blob/main/.gitignore">.gitignore</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1379,7 +1379,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".licensed.yml" href="/discourse/discourse/blob/master/.licensed.yml">.licensed.yml</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".licensed.yml" href="/discourse/discourse/blob/main/.licensed.yml">.licensed.yml</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1398,7 +1398,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".prettierignore" href="/discourse/discourse/blob/master/.prettierignore">.prettierignore</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".prettierignore" href="/discourse/discourse/blob/main/.prettierignore">.prettierignore</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1417,7 +1417,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".prettierrc" href="/discourse/discourse/blob/master/.prettierrc">.prettierrc</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".prettierrc" href="/discourse/discourse/blob/main/.prettierrc">.prettierrc</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1436,7 +1436,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".rspec" href="/discourse/discourse/blob/master/.rspec">.rspec</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".rspec" href="/discourse/discourse/blob/main/.rspec">.rspec</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1455,7 +1455,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".rspec_parallel" href="/discourse/discourse/blob/master/.rspec_parallel">.rspec_parallel</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".rspec_parallel" href="/discourse/discourse/blob/main/.rspec_parallel">.rspec_parallel</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1474,7 +1474,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".rubocop.yml" href="/discourse/discourse/blob/master/.rubocop.yml">.rubocop.yml</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".rubocop.yml" href="/discourse/discourse/blob/main/.rubocop.yml">.rubocop.yml</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1493,7 +1493,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".ruby-gemset.sample" href="/discourse/discourse/blob/master/.ruby-gemset.sample">.ruby-gemset.sample</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".ruby-gemset.sample" href="/discourse/discourse/blob/main/.ruby-gemset.sample">.ruby-gemset.sample</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1512,7 +1512,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".ruby-version.sample" href="/discourse/discourse/blob/master/.ruby-version.sample">.ruby-version.sample</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".ruby-version.sample" href="/discourse/discourse/blob/main/.ruby-version.sample">.ruby-version.sample</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1531,7 +1531,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".template-lintrc.js" href="/discourse/discourse/blob/master/.template-lintrc.js">.template-lintrc.js</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".template-lintrc.js" href="/discourse/discourse/blob/main/.template-lintrc.js">.template-lintrc.js</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1550,7 +1550,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Brewfile" href="/discourse/discourse/blob/master/Brewfile">Brewfile</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Brewfile" href="/discourse/discourse/blob/main/Brewfile">Brewfile</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1569,7 +1569,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="CONTRIBUTING.md" href="/discourse/discourse/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="CONTRIBUTING.md" href="/discourse/discourse/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1588,7 +1588,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="COPYRIGHT.txt" itemprop="license" href="/discourse/discourse/blob/master/COPYRIGHT.txt">COPYRIGHT.txt</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="COPYRIGHT.txt" itemprop="license" href="/discourse/discourse/blob/main/COPYRIGHT.txt">COPYRIGHT.txt</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1607,7 +1607,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Dangerfile" href="/discourse/discourse/blob/master/Dangerfile">Dangerfile</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Dangerfile" href="/discourse/discourse/blob/main/Dangerfile">Dangerfile</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1626,7 +1626,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Gemfile" href="/discourse/discourse/blob/master/Gemfile">Gemfile</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Gemfile" href="/discourse/discourse/blob/main/Gemfile">Gemfile</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1645,7 +1645,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Gemfile.lock" href="/discourse/discourse/blob/master/Gemfile.lock">Gemfile.lock</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Gemfile.lock" href="/discourse/discourse/blob/main/Gemfile.lock">Gemfile.lock</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1664,7 +1664,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="LICENSE.txt" itemprop="license" href="/discourse/discourse/blob/master/LICENSE.txt">LICENSE.txt</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="LICENSE.txt" itemprop="license" href="/discourse/discourse/blob/main/LICENSE.txt">LICENSE.txt</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1683,7 +1683,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="README.md" href="/discourse/discourse/blob/master/README.md">README.md</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="README.md" href="/discourse/discourse/blob/main/README.md">README.md</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1702,7 +1702,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Rakefile" href="/discourse/discourse/blob/master/Rakefile">Rakefile</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="Rakefile" href="/discourse/discourse/blob/main/Rakefile">Rakefile</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1721,7 +1721,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="adminjs" href="/discourse/discourse/blob/master/adminjs">adminjs</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="adminjs" href="/discourse/discourse/blob/main/adminjs">adminjs</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1740,7 +1740,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="config.ru" href="/discourse/discourse/blob/master/config.ru">config.ru</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="config.ru" href="/discourse/discourse/blob/main/config.ru">config.ru</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1759,7 +1759,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="d" href="/discourse/discourse/blob/master/d">d</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="d" href="/discourse/discourse/blob/main/d">d</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1778,7 +1778,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="discourse.sublime-project" href="/discourse/discourse/blob/master/discourse.sublime-project">discourse.sublime-project</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="discourse.sublime-project" href="/discourse/discourse/blob/main/discourse.sublime-project">discourse.sublime-project</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1797,7 +1797,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="jsapp" href="/discourse/discourse/blob/master/jsapp">jsapp</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="jsapp" href="/discourse/discourse/blob/main/jsapp">jsapp</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1816,7 +1816,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="lefthook.yml" href="/discourse/discourse/blob/master/lefthook.yml">lefthook.yml</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="lefthook.yml" href="/discourse/discourse/blob/main/lefthook.yml">lefthook.yml</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1835,7 +1835,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="package.json" href="/discourse/discourse/blob/master/package.json">package.json</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="package.json" href="/discourse/discourse/blob/main/package.json">package.json</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1854,7 +1854,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="translator.yml" href="/discourse/discourse/blob/master/translator.yml">translator.yml</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="translator.yml" href="/discourse/discourse/blob/main/translator.yml">translator.yml</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1873,7 +1873,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="yarn.lock" href="/discourse/discourse/blob/master/yarn.lock">yarn.lock</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="yarn.lock" href="/discourse/discourse/blob/main/yarn.lock">yarn.lock</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1941,10 +1941,10 @@
 <li>If you're on Ubuntu, try the <a href="https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-ubuntu-for-development/14727" rel="nofollow">Ubuntu development guide</a>.</li>
 <li>If you're on Windows, try the <a href="https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-windows-10-for-development/75149" rel="nofollow">Windows 10 development guide</a>.</li>
 </ol>
-<p>If you're familiar with how Rails works and are comfortable setting up your own environment, you can also try out the <a href="/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md"><strong>Discourse Advanced Developer Guide</strong></a>, which is aimed primarily at Ubuntu and macOS environments.</p>
-<p>Before you get started, ensure you have the following minimum versions: <a href="https://www.ruby-lang.org/en/downloads/" rel="nofollow">Ruby 2.6+</a>, <a href="https://www.postgresql.org/download/" rel="nofollow">PostgreSQL 10+</a>, <a href="https://redis.io/download" rel="nofollow">Redis 4.0+</a>. If you're having trouble, please see our <a href="/discourse/discourse/blob/master/docs/TROUBLESHOOTING.md"><strong>TROUBLESHOOTING GUIDE</strong></a> first!</p>
+<p>If you're familiar with how Rails works and are comfortable setting up your own environment, you can also try out the <a href="/discourse/discourse/blob/main/docs/DEVELOPER-ADVANCED.md"><strong>Discourse Advanced Developer Guide</strong></a>, which is aimed primarily at Ubuntu and macOS environments.</p>
+<p>Before you get started, ensure you have the following minimum versions: <a href="https://www.ruby-lang.org/en/downloads/" rel="nofollow">Ruby 2.6+</a>, <a href="https://www.postgresql.org/download/" rel="nofollow">PostgreSQL 10+</a>, <a href="https://redis.io/download" rel="nofollow">Redis 4.0+</a>. If you're having trouble, please see our <a href="/discourse/discourse/blob/main/docs/TROUBLESHOOTING.md"><strong>TROUBLESHOOTING GUIDE</strong></a> first!</p>
 <h2><a id="user-content-setting-up-discourse" class="anchor" aria-hidden="true" href="#setting-up-discourse"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Setting up Discourse</h2>
-<p>If you want to set up a Discourse forum for production use, see our <a href="/discourse/discourse/blob/master/docs/INSTALL.md"><strong>Discourse Install Guide</strong></a>.</p>
+<p>If you want to set up a Discourse forum for production use, see our <a href="/discourse/discourse/blob/main/docs/INSTALL.md"><strong>Discourse Install Guide</strong></a>.</p>
 <p>If you're looking for business class hosting, see <a href="https://www.discourse.org/buy/" rel="nofollow">discourse.org/buy</a>.</p>
 <h2><a id="user-content-requirements" class="anchor" aria-hidden="true" href="#requirements"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Requirements</h2>
 <p>Discourse is built for the <em>next</em> 10 years of the Internet, so our requirements are high.</p>
@@ -1988,7 +1988,7 @@
 <li><a href="https://redis.io/" rel="nofollow">Redis</a> — We use Redis as a cache and for transient data.</li>
 <li><a href="https://www.browserstack.com/" rel="nofollow">BrowserStack</a> — We use BrowserStack to test on real devices and browsers.</li>
 </ul>
-<p>Plus <em>lots</em> of Ruby Gems, a complete list of which is at <a href="https://github.com/discourse/discourse/blob/master/Gemfile">/master/Gemfile</a>.</p>
+<p>Plus <em>lots</em> of Ruby Gems, a complete list of which is at <a href="https://github.com/discourse/discourse/blob/main/Gemfile">/master/Gemfile</a>.</p>
 <h2><a id="user-content-contributing" class="anchor" aria-hidden="true" href="#contributing"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Contributing</h2>
 <p><a href="https://github.com/discourse/discourse/actions"><img src="https://github.com/discourse/discourse/workflows/CI/badge.svg" alt="Build Status" style="max-width:100%;"></a></p>
 <p>Discourse is <strong>100% free</strong> and <strong>open source</strong>. We encourage and support an active, healthy community that
@@ -1997,15 +1997,15 @@ accepts contributions from the public – including you!</p>
 <ol>
 <li>Please read the complete mission statements on <a href="https://www.discourse.org" rel="nofollow"><strong>discourse.org</strong></a>. Yes we actually believe this stuff; you should too.</li>
 <li>Read and sign the <a href="https://www.discourse.org/cla" rel="nofollow"><strong>Electronic Discourse Forums Contribution License Agreement</strong></a>.</li>
-<li>Dig into <a href="/discourse/discourse/blob/master/CONTRIBUTING.md"><strong>CONTRIBUTING.MD</strong></a>, which covers submitting bugs, requesting new features, preparing your code for a pull request, etc.</li>
-<li>Always strive to collaborate <a href="https://github.com/discourse/discourse/blob/master/docs/code-of-conduct.md">with mutual respect</a>.</li>
+<li>Dig into <a href="/discourse/discourse/blob/main/CONTRIBUTING.md"><strong>CONTRIBUTING.MD</strong></a>, which covers submitting bugs, requesting new features, preparing your code for a pull request, etc.</li>
+<li>Always strive to collaborate <a href="https://github.com/discourse/discourse/blob/main/docs/code-of-conduct.md">with mutual respect</a>.</li>
 <li>Not sure what to work on? <a href="https://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823" rel="nofollow"><strong>We've got some ideas.</strong></a></li>
 </ol>
 <p>We look forward to seeing your pull requests!</p>
 <h2><a id="user-content-security" class="anchor" aria-hidden="true" href="#security"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Security</h2>
-<p>We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read <a href="https://github.com/discourse/discourse/blob/master/docs/SECURITY.md">our security guide</a> for an overview of security measures in Discourse, or if you wish to report a security issue.</p>
+<p>We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read <a href="https://github.com/discourse/discourse/blob/main/docs/SECURITY.md">our security guide</a> for an overview of security measures in Discourse, or if you wish to report a security issue.</p>
 <h2><a id="user-content-the-discourse-team" class="anchor" aria-hidden="true" href="#the-discourse-team"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>The Discourse Team</h2>
-<p>The original Discourse code contributors can be found in <a href="/discourse/discourse/blob/master/docs/AUTHORS.md"><strong>AUTHORS.MD</strong></a>. For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to <a href="https://blog.discourse.org/2013/02/the-discourse-team/" rel="nofollow">the official Discourse blog</a> and <a href="https://github.com/discourse/discourse/contributors">GitHub's list of contributors</a>.</p>
+<p>The original Discourse code contributors can be found in <a href="/discourse/discourse/blob/main/docs/AUTHORS.md"><strong>AUTHORS.MD</strong></a>. For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to <a href="https://blog.discourse.org/2013/02/the-discourse-team/" rel="nofollow">the official Discourse blog</a> and <a href="https://github.com/discourse/discourse/contributors">GitHub's list of contributors</a>.</p>
 <h2><a id="user-content-copyright--license" class="anchor" aria-hidden="true" href="#copyright--license"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Copyright / License</h2>
 <p>Copyright 2014 - 2020 Civilized Discourse Construction Kit, Inc.</p>
 <p>Licensed under the GNU General Public License Version 2.0 (or later);
@@ -2078,7 +2078,7 @@ limitations under the License.</p>
 
   <h3 class="sr-only">License</h3>
   <div class="mt-3">
-    <a href="/discourse/discourse/blob/master/LICENSE.txt" class="muted-link" >
+    <a href="/discourse/discourse/blob/main/LICENSE.txt" class="muted-link" >
       <svg class="octicon octicon-law mr-2" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.75.75a.75.75 0 00-1.5 0V2h-.984c-.305 0-.604.08-.869.23l-1.288.737A.25.25 0 013.984 3H1.75a.75.75 0 000 1.5h.428L.066 9.192a.75.75 0 00.154.838l.53-.53-.53.53v.001l.002.002.002.002.006.006.016.015.045.04a3.514 3.514 0 00.686.45A4.492 4.492 0 003 11c.88 0 1.556-.22 2.023-.454a3.515 3.515 0 00.686-.45l.045-.04.016-.015.006-.006.002-.002.001-.002L5.25 9.5l.53.53a.75.75 0 00.154-.838L3.822 4.5h.162c.305 0 .604-.08.869-.23l1.289-.737a.25.25 0 01.124-.033h.984V13h-2.5a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-2.5V3.5h.984a.25.25 0 01.124.033l1.29.736c.264.152.563.231.868.231h.162l-2.112 4.692a.75.75 0 00.154.838l.53-.53-.53.53v.001l.002.002.002.002.006.006.016.015.045.04a3.517 3.517 0 00.686.45A4.492 4.492 0 0013 11c.88 0 1.556-.22 2.023-.454a3.512 3.512 0 00.686-.45l.045-.04.01-.01.006-.005.006-.006.002-.002.001-.002-.529-.531.53.53a.75.75 0 00.154-.838L13.823 4.5h.427a.75.75 0 000-1.5h-2.234a.25.25 0 01-.124-.033l-1.29-.736A1.75 1.75 0 009.735 2H8.75V.75zM1.695 9.227c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L3 6.327l-1.305 2.9zm10 0c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L13 6.327l-1.305 2.9z"></path></svg>
         View license
     </a>

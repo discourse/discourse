@@ -36,9 +36,9 @@ describe TopicRetriever do
       end
     end
 
-    context "when host is not invalid" do
+    context "when host is valid" do
       before do
-        topic_retriever.stubs(:invalid_url?).returns(false)
+        Fabricate(:embeddable_host, host: 'http://eviltrout.com/')
       end
 
       context "when topics have been retrieved recently" do
@@ -61,6 +61,17 @@ describe TopicRetriever do
           topic_retriever.expects(:perform_retrieve).once
           topic_retriever.retrieve
         end
+      end
+    end
+
+    context "when host is invalid" do
+      before do
+        Fabricate(:embeddable_host, host: 'http://not-eviltrout.com/')
+      end
+
+      it "does not perform_retrieve" do
+        topic_retriever.expects(:perform_retrieve).never
+        topic_retriever.retrieve
       end
     end
 

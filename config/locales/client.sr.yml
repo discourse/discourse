@@ -692,7 +692,6 @@ sr:
         sent: "Poslato"
         archive: "Arhiviraj"
         move_to_archive: "Arhiviraj"
-        select_all: "Izaberi sve"
       preferences_nav:
         security: "Sigurnost"
         profile: "Profil"
@@ -1102,13 +1101,6 @@ sr:
       titles:
         watching_first_post: "nova tema"
     upload_selector:
-      title: "Dodaj sliku"
-      title_with_attachments: "Dodaj sliku ili datoteku"
-      from_my_computer: "S mog uređaja"
-      from_the_web: "S interneta"
-      remote_tip: "link za sliku"
-      local_tip: "Izaberite slike sa Vašeg uređaja"
-      hint_for_supported_browsers: "možete takođe prevući ili nalepiti slike u editor"
       uploading: "Učitavanje"
       default_image_alt_text: slika
     search:
@@ -1207,18 +1199,10 @@ sr:
       not_found:
         title: "Tema nije pronađena"
         description: "Žao nam je, nismo mogli pronaći temu. Možda ju je moderator uklonio?"
-      total_unread_posts:
+      unread_posts:
         one: "Imate %{count} nepročitanu poruku u ovoj temi"
         few: "Imate %{count} nepročitanih poruka u ovoj temi"
         other: "Imate %{count} nepročitanih poruka u ovoj temi"
-      unread_posts:
-        one: "Imate %{count} staru nepročitanu poruku u ovoj temi"
-        few: "Imate %{count} starih nepročitanih poruka u ovoj temi"
-        other: "Imate %{count} starih nepročitanih poruka u ovoj temi"
-      new_posts:
-        one: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
-        few: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
-        other: "Ima %{count} novih poruka u temi od kad ste je zadnji put pročitali"
       likes:
         one: "Ima %{count} sviđanja u temi"
         few: "Ima %{count} sviđanja u temi"
@@ -1310,14 +1294,10 @@ sr:
         pin: "Zakači temu"
         unpin: "Otkači temu"
         pin_globally: "Zakači temu globalno"
-        make_banner: "Postavi temu kao banner"
         remove_banner: "Ukloni temu s bannera"
       reply:
         title: "Odgovori"
         help: "Počni pravljenje odgovora na ovu temu"
-      clear_pin:
-        title: "Obriši zakačku"
-        help: "Ukloni status zakačenog s ove teme da se vise ne pojavljuje na vrhu liste tema"
       share:
         title: "Podeli"
         help: "podeli link ka ovoj temi"
@@ -1762,6 +1742,7 @@ sr:
         muted:
           title: "Utišano"
       groups:
+        name_placeholder: "Ime foruma"
         save: "Sačuvaj"
         delete: "Obriši"
       topics:
@@ -1833,9 +1814,6 @@ sr:
               label: Grupa
             category:
               label: Kategorija
-      commits:
-        latest_changes: "Posljednje promene: molimo često nadograđujte!"
-        by: "od"
       groups:
         manage:
           interaction:
@@ -2093,7 +2071,6 @@ sr:
           details: "Detalji"
           previous_value: "Prethodno"
           new_value: "Novo"
-          diff: "Razlike"
           show: "Prikaži"
           modal_title: "Detalji"
           no_previous: "Nema prethodne vrednosti."
@@ -2271,6 +2248,7 @@ sr:
         trust_level_unlocked_tip: "Nivo poverenja zaključan, sistem neće unapređivati ili skidati korisnika"
         lock_trust_level: "Zaključaj Nivo Poverenja"
         unlock_trust_level: "Odključaj Nivo Poverenja"
+        suspended_count: "Suspendovani"
         tl3_requirements:
           title: "Predispozicije Za Nivo Poverenja 3"
           value_heading: "Vriednost"

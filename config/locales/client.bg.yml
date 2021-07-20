@@ -470,6 +470,8 @@ bg:
         remove_user_as_group_owner: "Премахни като собственик"
     groups:
       member_added: "Добавено"
+      add_members:
+        usernames_placeholder: "потебителско име"
       requests:
         title: "Заявки"
         reason: "Причина"
@@ -790,11 +792,9 @@ bg:
         sent: "Изпратени"
         archive: "Архив"
         groups: "Моите групи"
-        bulk_select: "Изберете съобщения"
         move_to_inbox: "Премести във входящи"
         move_to_archive: "Архив"
         failed_to_move: "Грешка при преместването на съобщенията (може би интернета ви спря?)"
-        select_all: "Избери всички"
         tags: "Етикети"
       preferences_nav:
         account: "Профил"
@@ -1036,6 +1036,8 @@ bg:
         header_title: "профил, съобщения, отметки и предпочитания"
       title:
         title: "Заглавие"
+        none: "(никой)"
+      flair:
         none: "(никой)"
       primary_group:
         title: "Главна група"
@@ -1293,13 +1295,6 @@ bg:
         watching_first_post: "нова тема"
         post_approved: "публикацията е одобрена"
     upload_selector:
-      title: "Добавете изображение"
-      title_with_attachments: "Добавете изображение или файл"
-      from_my_computer: "От моето устройство"
-      from_the_web: "От мрежата"
-      remote_tip: "линк към изображение"
-      local_tip: "изберете изображения от вашето устройство"
-      hint_for_supported_browsers: "вие можете винаги да привлачите или поставите картинки върху вашия редактора"
       uploading: "Качване "
       select_file: "Избери файл"
       default_image_alt_text: изображение
@@ -1440,15 +1435,9 @@ bg:
       not_found:
         title: "Темата не е намерена"
         description: "Темата не може да бъде открита. Възможно ли е да е премахната от модератор?"
-      total_unread_posts:
+      unread_posts:
         one: "имате %{count} непрочетено мнение в тази тема"
         other: " Вие имате %{count} непрочетени мнения в тази тема"
-      unread_posts:
-        one: "Вие имате %{count} непрочетено старо мнение в тази тема"
-        other: "Вие имате %{count} непрочетени стари мнения в тази тема"
-      new_posts:
-        one: "има %{count} нова публикация в темата от последното Ви посещение на темата"
-        other: "от последното Ви посещение в темата до сега има %{count} нови публикации"
       likes:
         one: "има %{count} харесване в тази тема"
         other: "има %{count} харесвания в тази тема"
@@ -1554,14 +1543,10 @@ bg:
         pin: "Закови темата"
         unpin: "Отгови темата"
         pin_globally: "Закови темата глобално"
-        make_banner: "Банер тема"
         remove_banner: "Премахни банер тема"
       reply:
         title: "Отговорете"
         help: "започнете да пишете отговор на тази тема"
-      clear_pin:
-        title: "Изчисти пин "
-        help: "Изчисти пиннатия статус на тази тема така, че тя повече да не се появява в горната част на Вашият списък с теми."
       share:
         title: "Споделяне"
         extended_title: "Сподели линк"
@@ -2162,6 +2147,8 @@ bg:
           description: "Няма да бъдете уведомявани относно нови теми с този етикет и те няма да се появяват в 'непрочетени'. "
       groups:
         title: "Групи етикети"
+        tags_label: "Етикети в тази група"
+        name_placeholder: "Име"
         save: "Запази"
         delete: "Изтрий"
         everyone_can_use: "Етикетите могат да се използват от всички"
@@ -2249,9 +2236,6 @@ bg:
               label: Група
             category:
               label: Категория
-      commits:
-        latest_changes: "Последни промени: моля обновявайте често! "
-        by: "от"
       groups:
         manage:
           interaction:
@@ -2564,7 +2548,6 @@ bg:
           details: "Детайли "
           previous_value: "Предишни"
           new_value: "Нови "
-          diff: "Разлика "
           show: "Покажи "
           modal_title: "Детайли"
           no_previous: "Няма предишна стойност. "
@@ -2786,6 +2769,7 @@ bg:
         trust_level_unlocked_tip: "Нивото на доверие е отключено, системата може да насърчава или понижава потребителя "
         lock_trust_level: "Заключете системата с нива на доверие"
         unlock_trust_level: "Отклчете системата с нива"
+        suspended_count: "Отстранени"
         tl3_requirements:
           title: "Изисквания за Ниво на доверие 3"
           value_heading: "Стойност"

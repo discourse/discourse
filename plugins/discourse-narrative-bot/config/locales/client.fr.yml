@@ -8,5 +8,5 @@ fr:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "Démarrer le tutoriel nouvel utilisateur pour tous les utilisateurs"
+        new_user_track: "Démarrer le tutoriel du nouvel utilisateur pour tous les utilisateurs"
         welcome_message: "Envoyer à tous les utilisateurs un message de bienvenue avec un guide de démarrage rapide"

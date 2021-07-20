@@ -663,7 +663,7 @@ export default Controller.extend({
     },
   },
 
-  disableSubmit: or("model.loading", "isUploading"),
+  disableSubmit: or("model.loading", "isUploading", "isProcessingUpload"),
 
   save(force, options = {}) {
     if (this.disableSubmit) {

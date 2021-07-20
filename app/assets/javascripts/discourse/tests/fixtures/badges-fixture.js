@@ -1726,6 +1726,7 @@ export default {
         name: "Both image and icon",
         icon: "fa-rocket",
         image_url: "/assets/some-image.png",
+        multiple_grant: true,
       },
     ]
   }

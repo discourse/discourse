@@ -288,26 +288,26 @@ describe UserBadgesController do
       SiteSetting.max_favorite_badges = 3
 
       put "/user_badges/#{user_badge.id}/toggle_favorite.json"
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
     end
 
     it "favorites a badge" do
       sign_in(user)
       put "/user_badges/#{user_badge.id}/toggle_favorite.json"
-      expect(response.status).to eq(200)
 
+      expect(response.status).to eq(204)
       user_badge = UserBadge.find_by(user: user, badge: badge)
-      expect(user_badge.is_favorite).to be true
+      expect(user_badge.is_favorite).to eq(true)
     end
 
     it "unfavorites a badge" do
       sign_in(user)
       user_badge.toggle!(:is_favorite)
       put "/user_badges/#{user_badge.id}/toggle_favorite.json"
-      expect(response.status).to eq(200)
 
+      expect(response.status).to eq(204)
       user_badge = UserBadge.find_by(user: user, badge: badge)
-      expect(user_badge.is_favorite).to be false
+      expect(user_badge.is_favorite).to eq(false)
     end
 
     it "works with multiple grants" do
@@ -322,17 +322,17 @@ describe UserBadgesController do
       other_user_badge = UserBadge.create(badge: other_badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now)
 
       put "/user_badges/#{user_badge.id}/toggle_favorite.json"
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
       expect(user_badge.reload.is_favorite).to eq(false)
       expect(user_badge2.reload.is_favorite).to eq(false)
 
       put "/user_badges/#{user_badge.id}/toggle_favorite.json"
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
       expect(user_badge.reload.is_favorite).to eq(true)
       expect(user_badge2.reload.is_favorite).to eq(true)
 
       put "/user_badges/#{other_user_badge.id}/toggle_favorite.json"
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
       expect(other_user_badge.reload.is_favorite).to eq(true)
     end
   end

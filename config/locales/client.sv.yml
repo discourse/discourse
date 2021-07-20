@@ -41,6 +41,7 @@ sv:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} sedan"
+      wrap_on: "den %{date}"
       tiny:
         half_a_minute: "< 1 min"
         less_than_x_seconds:
@@ -270,7 +271,7 @@ sv:
       clear_bookmarks: "Töm bokmärken"
       help:
         bookmark: "Klicka för att bokmärka första inlägget i ämnet"
-        edit_bookmark: "Klicka för att redigera bokmärket på detta ämne"
+        edit_bookmark: "Klicka för att redigera bokmärket för detta ämne"
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
     bookmarks:
@@ -607,6 +608,8 @@ sv:
       add_members:
         title: "Lägg till användare till %{group_name}"
         description: "Ange en lista över användare som du vill bjuda in till gruppen eller klistra in i en kommaseparerad lista:"
+        usernames_placeholder: "användarnamn"
+        usernames_or_emails_placeholder: "användarnamn eller e-postadresser"
         notify_users: "Meddela användare"
         set_owner: "Ange användare som ägare till den här gruppen"
       requests:
@@ -1097,11 +1100,9 @@ sv:
         sent: "Skickat"
         archive: "Arkiv"
         groups: "Mina grupper"
-        bulk_select: "Välj meddelanden"
         move_to_inbox: "Flytta till inkorg"
         move_to_archive: "Arkiv"
         failed_to_move: "Misslyckades med att flytta de markerade meddelandena (kanske ligger ditt nätverk nere)"
-        select_all: "Markera alla"
         tags: "Taggar"
         warnings: "Officiella varningar"
       preferences_nav:
@@ -1531,6 +1532,11 @@ sv:
       title:
         title: "Titel"
         none: "(ingen)"
+        instructions: "visas efter ditt användarnamn"
+      flair:
+        title: "Flair"
+        none: "(ingen)"
+        instructions: "ikon som visas bredvid din profilbild"
       primary_group:
         title: "Primär grupp"
         none: "(ingen)"
@@ -2064,21 +2070,10 @@ sv:
         reaction: "ny reaktion"
         votes_released: "Röstningen släpptes"
     upload_selector:
-      title: "Lägg till en bild"
-      title_with_attachments: "Lägg till en bild eller en fil"
-      from_my_computer: "Från min enhet"
-      from_the_web: "Från webben"
-      remote_tip: "länk till bild"
-      remote_tip_with_attachments: "länk till bild eller fil"
-      local_tip: "välj bilder från din enhet"
-      local_tip_with_attachments: "välj bilder eller filer från din enhet"
-      hint: "(du kan också dra och släppa i redigeraren för att ladda upp)"
-      hint_for_supported_browsers: "du kan också dra och släppa eller klistra in bilder i redigeraren"
       uploading: "Laddar upp"
       processing: "Bearbetar uppladdning"
       select_file: "Välj fil"
       default_image_alt_text: bild
-      supported_formats: "format som stöds"
     search:
       sort_by: "Sortera efter"
       relevance: "Relevans"
@@ -2230,7 +2225,7 @@ sv:
         top: "Det finns inga toppämnen."
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
-          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa antal <span class=\"badge new-posts badge-notification\">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läste ämnet i mer än 4 minuter</li></ul><p>Eller om du uttryckligen har ställt in ämnet till Följer eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">preferenser</a> för att ändra detta.</p>"
+          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 4 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -2288,15 +2283,9 @@ sv:
       not_found:
         title: "Ämnet hittades inte"
         description: "Vi kunde tyvärr inte hitta det ämnet. Kanske har den tagits bort av en moderator?"
-      total_unread_posts:
-        one: "du har %{count} oläst inlägg i det här ämnet"
-        other: "du har %{count} olästa inlägg i det här ämnet"
       unread_posts:
-        one: "du har %{count} oläst gammalt inlägg i det här ämnet"
-        other: "du har %{count} olästa gamla inlägg i det här ämnet"
-      new_posts:
-        one: "det finns %{count} nytt inlägg i det här ämnet sedan du senast läste den"
-        other: "det finns %{count} nya inlägg i det här ämnet sedan du senast läste det"
+        one: "du har %{count} oläst inlägg i detta ämne"
+        other: "du har %{count} olästa inlägg i detta ämne"
       likes:
         one: "det finns %{count} gillning i det här ämnet"
         other: "det finns %{count} gillningar i det här ämnet"
@@ -2499,14 +2488,11 @@ sv:
         pin: "Fäst ämne"
         unpin: "Ta ner ämne"
         pin_globally: "Fäst ämne globalt"
-        make_banner: "Gör ämne till banderoll"
+        make_banner: "Gör banderollämne"
         remove_banner: "Ta bort banderollämne"
       reply:
         title: "Svara"
         help: "Börja komponera ett svar på detta ämne"
-      clear_pin:
-        title: "Ta bort nål"
-        help: "Ta bort den fästa statusen från detta ämne så den inte längre hamnar i toppen av din ämneslista"
       share:
         title: "Dela"
         extended_title: "Dela en länk"
@@ -3618,9 +3604,6 @@ sv:
               label: Kategori
             include_subcategories:
               label: "Inkludera underkategorier"
-      commits:
-        latest_changes: "Senaste ändringarna: uppdatera dessa ofta!"
-        by: "av"
       groups:
         new:
           title: "Ny grupp"
@@ -4299,7 +4282,6 @@ sv:
           details: "Detaljer"
           previous_value: "Föregående"
           new_value: "Ny"
-          diff: "Diff"
           show: "Visa"
           modal_title: "Detaljer"
           no_previous: "Det finns inget tidigare värde."
@@ -4394,6 +4376,8 @@ sv:
             post_staff_note_create: "lägg till personalnotering"
             post_staff_note_destroy: "ta bort personalnotering"
             delete_group: "radera grupp"
+            watched_word_create: "lägg till bevakat ord"
+            watched_word_destroy: "radera bevakat ord"
         screened_emails:
           title: "Kontrollerade e-postadresser"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
@@ -4568,6 +4552,7 @@ sv:
         penalty_post_edit: "Ändra inlägget"
         penalty_post_none: "Gör ingenting"
         penalty_count: "Straffräkning"
+        penalty_history: "Straffhistorik"
         clear_penalty_history:
           title: "Rensa straffhistorik"
           description: "användare med straff kan inte nå FN3"
@@ -4701,6 +4686,9 @@ sv:
         trust_level_unlocked_tip: "förtroendenivå är olåst, systemet kan komma att befordra eller degradera användare"
         lock_trust_level: "Lås förtroendenivå"
         unlock_trust_level: "Lås upp förtroendenivå"
+        silenced_count: "Tystad"
+        suspended_count: "Avstängd"
+        last_six_months: "Senaste 6 månaderna"
         tl3_requirements:
           title: "Krav för förtroendenivå 3"
           table_title:

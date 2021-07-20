@@ -159,7 +159,7 @@ nl:
       ip_address_already_screened: "is al in een bestaande regel opgenomen"
       restrict_dependent_destroy:
         one: "Kan record niet verwijderen, omdat %{record} hiervan afhankelijk is"
-        many: "Kan record niet verwijderen, omdat %{record} hiervan afhankelijk zijn"
+        other: "Kan record niet verwijderen, omdat %{record} hiervan afhankelijk zijn"
       too_long:
         one: is te lang (maximum is %{count} teken)
         other: is te lang (maximum is %{count} tekens)
@@ -1310,7 +1310,6 @@ nl:
     category_search_priority_high_weight: "Op rangschikking toegepast gewicht voor hoge prioriteit bij doorzoeken van categorie."
     allow_uncategorized_topics: "Topics maken zonder categorie toestaan. WAARSCHUWING: als er topics zonder categorie zijn, moet u deze opnieuw aan een categorie toewijzen voordat dit wordt uitgezet."
     allow_duplicate_topic_titles: "Topics met dezelfde identieke titels toestaan"
-    allow_duplicate_topic_titles_category: "Topics met identieke, dubbele titels toestaan als de categorie anders is. allow_duplicate_topic_titles moet moet false zijn."
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "De pop-up voor nieuwe gebruikers tonen als een gebruiker begint met het typen van de eerste (n) nieuwe berichten in de berichteditor."
     title: "De naam van deze website, zoals gebruikt in de titeltag"
@@ -1479,7 +1478,6 @@ nl:
     discord_secret: "Geheime sleutel van Discord"
     discord_trusted_guilds: 'Alleen leden van deze Discord-guilds mogen zich aanmelden via Discord. Gebruik de numerieke ID voor de guild. Bekijk de instructies <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a> voor meer informatie. Laat dit leeg om alle guilds toe te staan.'
     enable_backups: "Beheerders mogen back-ups van het forum maken"
-    allow_restore: "Herstellen van gegevens toestaan, waarbij ALLE websitegegevens worden overschreven! Laat dit op 'false' staan, tenzij u een back-up wilt terugzetten."
     maximum_backups: "Het maximale aantal back-ups om op schijf te bewaren. Oudere back-ups worden automatisch verwijderd."
     automatic_backups_enabled: "Automatische back-ups uitvoeren volgens de opgegeven back-upfrequentie."
     backup_frequency: "Het aantal dagen tussen back-ups."
@@ -2682,6 +2680,8 @@ nl:
     sender_post_deleted: "bericht is verwijderd"
     sender_message_to_invalid: "ontvanger heeft een ongeldig e-mailadres"
     sender_topic_deleted: "topic is verwijderd"
+    group_smtp_post_deleted: "bericht is verwijderd"
+    group_smtp_topic_deleted: "topic is verwijderd"
   color_schemes:
     base_theme_name: "Basis"
     light: "Licht"

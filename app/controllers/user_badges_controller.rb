@@ -111,9 +111,8 @@ class UserBadgesController < ApplicationController
 
     UserBadge
       .where(user_id: user_badge.user_id, badge_id: user_badge.badge_id)
-      .update(is_favorite: !user_badge.is_favorite)
+      .update_all(is_favorite: !user_badge.is_favorite)
     UserBadge.update_featured_ranks!(user_badge.user_id)
-    render_serialized(user_badge, DetailedUserBadgeSerializer, root: :user_badge)
   end
 
   private

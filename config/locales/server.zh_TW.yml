@@ -141,8 +141,7 @@ zh_TW:
       emojis_disabled: "不能有表情符號"
       ip_address_already_screened: "已包含在現有的規則中"
       restrict_dependent_destroy:
-        one: "不能刪除記錄，因為相關的 %{record} 存在"
-        many: "不能刪除記錄，因為相關的 %{record} 存在"
+        other: "不能刪除記錄，因為相關的 %{record} 存在"
       too_long:
         other: 長度超過上限 (上限是 %{count} 字)
       too_short:
@@ -1247,7 +1246,6 @@ zh_TW:
     enable_facebook_logins: "啟用 Facebook 身份驗證，需要facebook_app_id和facebook_app_secret。 請參閱設定<a href='https://meta.discourse.org/t/13394' target='_blank'>在Discourse 設定 Facebook登錄</a>。"
     facebook_app_secret: "Facebook身份驗證需要App 鑰匙（App Secret），在<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>上取得"
     enable_backups: "允許管理員建立備份"
-    allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
     automatic_backups_enabled: "按照定義的備份頻率運行自動備份計劃"
     backup_frequency: "備份之間的天數。"
@@ -2665,6 +2663,7 @@ zh_TW:
     sender_body_blank: "內容空白"
     sender_post_deleted: "貼文已被刪除"
     sender_message_to_invalid: "收件人的郵件地址無效"
+    group_smtp_post_deleted: "貼文已被刪除"
   color_schemes:
     base_theme_name: "基礎"
     light: "輕亮"

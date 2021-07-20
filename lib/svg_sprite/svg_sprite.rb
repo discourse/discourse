@@ -351,9 +351,15 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     end
 
     custom_svg_sprites(theme_id).each do |item|
-      svg_file = Nokogiri::XML(item[:sprite]) do |config|
-        config.options = Nokogiri::XML::ParseOptions::NOBLANKS
+      begin
+        svg_file = Nokogiri::XML(item[:sprite]) do |config|
+          config.options = Nokogiri::XML::ParseOptions::NOBLANKS
+        end
+      rescue => e
+        Rails.logger.warn("Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}")
       end
+
+      next if !svg_file
 
       svg_file.css("symbol").each do |sym|
         icon_id = prepare_symbol(sym, item[:filename])

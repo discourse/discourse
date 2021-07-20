@@ -98,7 +98,9 @@ cs:
       record_invalid: ! "Ověření selhalo: %{errors}"
       restrict_dependent_destroy:
         one: "Nelze odstranit záznam, protože závisející %{record} existuje"
+        few: "Nelze smazat záznam protože na něm závisí %{record}."
         many: "Nelze smazat záznam protože na něm závisí %{record}."
+        other: "Nelze smazat záznam protože na něm závisí %{record}."
       too_long:
         one: je příliš dlouhý ( maximálně %{count} znak)
         few: je to příliš dlouhé (maximálně %{count} znaků)

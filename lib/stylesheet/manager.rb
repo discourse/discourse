@@ -188,12 +188,13 @@ class Stylesheet::Manager
 
   def stylesheet_link_tag(target = :desktop, media = 'all')
     stylesheets = stylesheet_details(target, media)
-
     stylesheets.map do |stylesheet|
       href = stylesheet[:new_href]
       theme_id = stylesheet[:theme_id]
       data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
-      %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id}/>]
+      theme_name = stylesheet[:theme_name]
+      data_theme_name = theme_name ? "data-theme-name=\"#{theme_name}\"" : ""
+      %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id} #{data_theme_name}/>]
     end.join("\n").html_safe
   end
 
@@ -211,53 +212,36 @@ class Stylesheet::Manager
 
     @@lock.synchronize do
       stylesheets = []
-      stale_theme_ids = []
-      theme_ids = is_theme_target ? @theme_ids : [nil]
-
-      theme_ids.each do |theme_id|
-        cache_key = "path_#{target}_#{theme_id}_#{current_hostname}"
-
-        if href = cache[cache_key]
-          stylesheets << {
-            target: target,
-            theme_id: theme_id,
-            new_href: href
-          }
-        else
-          stale_theme_ids << theme_id
-        end
-      end
-
-      scss_checker = ScssChecker.new(target, stale_theme_ids)
 
       if is_theme_target
-        themes = load_themes(stale_theme_ids)
-
+        scss_checker = ScssChecker.new(target, @theme_ids)
+        themes = load_themes(@theme_ids)
         themes.each do |theme|
           theme_id = theme&.id
-          data = { target: target, theme_id: theme_id }
+          data = { target: target, theme_id: theme_id, theme_name: theme&.name.downcase, remote: theme.remote_theme_id? }
           builder = Builder.new(target: target, theme: theme, manager: self)
-          is_theme = builder.is_theme?
-          has_theme = builder.theme.present?
 
-          if is_theme && !has_theme
-            next
-          else
-            next if is_theme && builder.theme&.component && !scss_checker.has_scss(theme_id)
-            builder.compile unless File.exists?(builder.stylesheet_fullpath)
-            href = builder.stylesheet_path(current_hostname)
-            cache.defer_set("path_#{target}_#{theme_id}_#{current_hostname}", href)
-          end
+          next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+          builder.compile unless File.exists?(builder.stylesheet_fullpath)
+          href = builder.stylesheet_path(current_hostname)
 
           data[:new_href] = href
           stylesheets << data
+        end
+
+        if SiteSetting.order_stylesheets && stylesheets.size > 1
+          stylesheets = stylesheets.sort_by do |s|
+            [
+              s[:remote] ? 0 : 1,
+              s[:theme_id] == @theme_id ? 1 : 0,
+              s[:theme_name]
+            ]
+          end
         end
       else
         builder = Builder.new(target: target, manager: self)
         builder.compile unless File.exists?(builder.stylesheet_fullpath)
         href = builder.stylesheet_path(current_hostname)
-
-        cache.defer_set("path_#{target}__#{current_hostname}", href)
 
         data = { target: target, new_href: href }
         stylesheets << data

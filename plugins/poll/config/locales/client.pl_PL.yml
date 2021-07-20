@@ -90,6 +90,7 @@ pl_PL:
           options_min_count: Wprowadź co najmniej 1 opcję.
           options_max_count: Wprowadź co najwyżej %{count} opcji.
           invalid_min_value: Minimalna wartość musi wynosić co najmniej 1.
+          invalid_max_value: Maksymalna wartość musi wynosić co najmniej 1, ale mniejsza lub równa liczbie opcji.
           invalid_values: Wartość minimalna musi być mniejsza niż maksymalna.
           min_step_value: Minimalna wartość kroku to 1
         poll_type:

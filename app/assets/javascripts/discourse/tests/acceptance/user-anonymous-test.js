@@ -29,7 +29,7 @@ acceptance("User Anonymous", function () {
   test("Badges", async function (assert) {
     await visit("/u/eviltrout/badges");
     assert.ok($("body.user-badges-page").length, "has the body class");
-    assert.ok(exists(".user-badges-list .badge-card"), "shows a badge");
+    assert.ok(exists(".badge-group-list .badge-card"), "shows a badge");
   });
 
   test("Restricted Routes", async function (assert) {

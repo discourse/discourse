@@ -6,5 +6,5 @@
 
 es:
   site_settings:
-    styleguide_enabled: "Activar una ruta `/styleguide` para ayudar a personalizar el aspecto de Discourse"
+    styleguide_enabled: "Activar una ruta «/styleguide» para ayudar a personalizar el aspecto de Discourse"
     styleguide_admin_only: "Solo permitir a los administradores ver la guía de estilo"

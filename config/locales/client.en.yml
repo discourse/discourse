@@ -245,7 +245,6 @@ en:
     conduct: "Code of Conduct"
     mobile_view: "Mobile View"
     desktop_view: "Desktop View"
-    you: "You"
     or: "or"
     now: "just now"
     read_more: "read more"
@@ -337,7 +336,7 @@ en:
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"
       new_topic: "New topic draft"
-      new_private_message: "New private message draft"
+      new_private_message: "New personal message draft"
       topic_reply: "Draft reply"
       abandon:
         confirm: "You have a draft in progress for this topic. What would you like to do with it?"
@@ -426,7 +425,7 @@ en:
         type_bonus:
           name: "type bonus"
           title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
-      stale_help: "This reviewable has been resolved by someone else."
+      stale_help: "This reviewable has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -814,8 +813,6 @@ en:
         public: "Public"
         private: "Private"
         public_groups: "Public Groups"
-        automatic_group: Automatic Group
-        close_group: Close Group
         my_groups: "My Groups"
         group_type: "Group type"
         is_group_user: "Member"
@@ -892,6 +889,11 @@ en:
       flair_type:
         icon: "Select an icon"
         image: "Upload an image"
+      default_notifications:
+        modal_title: "User default notifications"
+        modal_description: "Would you like to apply this change historically? This will change preferences for %{count} existing users."
+        modal_yes: "Yes"
+        modal_no: "No, only apply change going forward"
 
     user_action_groups:
       "1": "Likes"
@@ -923,7 +925,6 @@ en:
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
-      toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
       muted: "Muted categories"
       topic_sentence:
@@ -1405,7 +1406,6 @@ en:
         browser_last_seen: "%{browser} | %{date}"
 
       last_posted: "Last Post"
-      last_emailed: "Last Emailed"
       last_seen: "Seen"
       created: "Joined"
       log_out: "Log Out"
@@ -2127,7 +2127,7 @@ en:
           confirm: You have a new topic draft saved, which will be overwritten if you create a linked topic.
         reply_as_new_group_message:
           label: Reply as new group message
-          desc: Create a new private message with the same recipients
+          desc: Create new message starting with same recipients
         reply_as_private_message:
           label: New message
           desc: Create a new personal message
@@ -2435,13 +2435,6 @@ en:
       defer:
         help: "Mark as unread"
         title: "Defer"
-      feature_on_profile:
-        help: "Add a link to this topic on your user card and profile"
-        title: "Feature On Profile"
-      remove_from_profile:
-        warning: "Your profile already has a featured topic. If you continue, this topic will replace the existing topic."
-        help: "Remove the link to this topic on your user profile"
-        title: "Remove From Profile"
 
       list: "Topics"
       new: "new topic"
@@ -2982,9 +2975,6 @@ en:
       wiki:
         about: "this post is a wiki"
 
-      archetypes:
-        save: "Save Options"
-
       few_likes_left: "Thanks for sharing the love! You only have a few likes left for today."
 
       controls:
@@ -3113,6 +3103,7 @@ en:
         name: "Name"
         name_placeholder: "What is this bookmark for?"
         set_reminder: "Remind me"
+        options: "Options"
         actions:
           delete_bookmark:
             name: "Delete bookmark"
@@ -3135,7 +3126,6 @@ en:
         show_all: "Show all"
 
     category:
-      can: "can&hellip; "
       none: "(no category)"
       all: "All categories"
       choose: "category&hellip;"
@@ -3169,7 +3159,6 @@ en:
       save_error: There was an error saving the category.
       name: "Category Name"
       description: "Description"
-      topic: "category topic"
       logo: "Category Logo Image"
       background_image: "Category Background Image"
       badge_colors: "Badge colors"
@@ -3778,6 +3767,9 @@ en:
         leader: "leader"
       detailed_name: "%{level}: %{name}"
 
+    pick_files_button:
+      unsupported_file_picked: "You have picked an unsupported file. Supported file types – %{types}."
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -4017,6 +4009,7 @@ en:
               log_out: Log out all sessions for a user.
               anonymize: Anonymize user accounts.
               delete: Delete user accounts.
+              list: Get a list of users.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
 
@@ -4237,6 +4230,7 @@ en:
           theme: "Theme"
           component: "Component"
           components: "Components"
+          filter_placeholder: "type to filter…"
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
@@ -5248,8 +5242,11 @@ en:
           perform: "Award Badge to Users"
           upload_csv: Upload a CSV with either user emails or usernames
           aborted: Please upload a CSV containing either user emails or usernames
-          success: Your CSV was received and users will receive their badge shortly.
+          success: Your CSV was received and %{count} users will receive their badge shortly.
+          csv_has_unmatched_users: "The following entries are in the CSV file but they couldn't be matched to existing users, and therefore won't receive the badge:"
+          csv_has_unmatched_users_truncated_list: "There were %{count} entries in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
           replace_owners: Remove the badge from previous owners
+          grant_existing_holders: Grant additional badges to existing badge holders
 
       emoji:
         title: "Emoji"

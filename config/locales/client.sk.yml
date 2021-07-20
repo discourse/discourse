@@ -459,6 +459,8 @@ sk:
         remove_user_as_group_owner: "Odobrať vlastníka"
     groups:
       member_added: "Pridané"
+      add_members:
+        usernames_placeholder: "používateľské mená"
       requests:
         reason: "Dôvod"
       manage:
@@ -481,6 +483,8 @@ sk:
             password: "Heslo"
           settings:
             title: "Nastavenia"
+          mailboxes:
+            disabled: "Vypnuté"
         membership:
           title: Členstvo
           access: Prístup
@@ -784,11 +788,9 @@ sk:
         sent: "Odoslané"
         archive: "Archív"
         groups: "Moje skupiny"
-        bulk_select: "Označ správy"
         move_to_inbox: "Presuň do prijatej pošty"
         move_to_archive: "Archív"
         failed_to_move: "Zlyhalo presunutie označených správ (možno je chyba vo vašom pripojení)"
-        select_all: "Označ všetky"
         tags: "Štítky"
       preferences_nav:
         account: "Účet"
@@ -1076,6 +1078,8 @@ sk:
       title:
         title: "Názov"
         none: "(žiadne)"
+      flair:
+        none: "(žiadne)"
       primary_group:
         title: "Hlavná skupina"
         none: "(žiadne)"
@@ -1330,13 +1334,6 @@ sk:
       titles:
         watching_first_post: "nová téma"
     upload_selector:
-      title: "Pridať obrázok"
-      title_with_attachments: "Pridať obrázok alebo súbor"
-      from_my_computer: "Z počítača"
-      from_the_web: "Z webu"
-      remote_tip: "odkaz na obrázok"
-      local_tip: "zvoľte obrázok z vášho počítača"
-      hint_for_supported_browsers: "môžete taktiež potiahnuť a pustiť alebo priložiť obrázky do editora"
       uploading: "Nahrávanie"
       select_file: "Zvoľte súbor"
       default_image_alt_text: Obrázok
@@ -1486,21 +1483,11 @@ sk:
       not_found:
         title: "Téma sa nenašla"
         description: "Ľutujeme, hľadaná téma nebola nájdená. Možno bola odstránená moderátorom?"
-      total_unread_posts:
+      unread_posts:
         one: "máte %{count} neprečítaný príspevok k tejto téme"
         few: "máte %{count} neprečítanépríspevky k tejto téme"
         many: "máte %{count} neprečítaných príspevkov k tejto téme"
         other: "máte %{count} neprečítaných príspevkov k tejto téme"
-      unread_posts:
-        one: "máte %{count} starší neprečítaný príspevok k tejto téme"
-        few: "máte %{count} staršie neprečítané príspevky k tejto téme"
-        many: "máte %{count} starších neprečítaných príspevkov k tejto téme"
-        other: "máte %{count} starších neprečítaných príspevkov k tejto téme"
-      new_posts:
-        one: "pribudol %{count} nový príspevok odkedy ste čítali túto tému naposledy "
-        few: "pribudlo %{count} nové príspevky odkedy ste čítali túto tému naposledy "
-        many: "pribudlo %{count} nových príspevkov odkedy ste čítali túto tému naposledy "
-        other: "pribudlo %{count} nových príspevkov odkedy ste čítali túto tému naposledy "
       likes:
         one: "v tejto téme je jedo \"Páči sa\""
         few: "v tejto téme je %{count} \"Páči sa\""
@@ -1617,14 +1604,10 @@ sk:
         pin: "Pripni tému"
         unpin: "Odopni tému"
         pin_globally: "Pripni tému globálne"
-        make_banner: "Banerová téma"
         remove_banner: "Odstrániť banerovú tému"
       reply:
         title: "Odpovedať"
         help: "vytvor odpoveď k tejto téme"
-      clear_pin:
-        title: "Zruš pripnutie"
-        help: "Zruší pripnutie tejto témy takže sa už viac nebude objavovať na vrchu Vášho zoznamu tém"
       share:
         title: "Zdieľaj"
         help: "zdieľaj odkaz na túto tému"
@@ -2251,8 +2234,10 @@ sk:
       groups:
         title: "Skupiny štítkov"
         new: "Nová skupina"
+        tags_label: "Štítky v tejto skupine"
         one_per_topic_label: "Obmedziť na jeden štítok na tému z tejto skupiny"
         new_name: "Nová skupina štítkov"
+        name_placeholder: "Meno"
         save: "Uložiť"
         delete: "Vymazať"
         confirm_delete: "Ste si istý, že chcete zmazať túto skupinu štítkov?"
@@ -2346,9 +2331,6 @@ sk:
               label: Skupina
             category:
               label: Kategória
-      commits:
-        latest_changes: "Najnov3ie zmeny. Prosime aktualizujte čo najčastejšie!"
-        by: "podľa"
       groups:
         new:
           title: "Nová skupina"
@@ -2689,7 +2671,6 @@ sk:
           details: "Detaily"
           previous_value: "Predchádzajúci"
           new_value: "Nový"
-          diff: "Rozdiel"
           show: "Zobraziť"
           modal_title: "Detaily"
           no_previous: "Neexistuje predchádzajúca hodnota"
@@ -2906,6 +2887,7 @@ sk:
         trust_level_unlocked_tip: "stupeň dôvery je odomknutý, systém môže používateľovi stupeň zvýšiť alebo znížiť"
         lock_trust_level: "Zamknúť stupeň dôvery"
         unlock_trust_level: "Odomknúť stupeň dôvery"
+        suspended_count: "Odobrate práva"
         tl3_requirements:
           title: "Požiadavky pre stupeň dôvery 3"
           value_heading: "Hodnota"

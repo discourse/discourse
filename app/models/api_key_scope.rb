@@ -41,6 +41,7 @@ class ApiKeyScope < ActiveRecord::Base
           log_out: { actions: %w[admin/users#log_out] },
           anonymize: { actions: %w[admin/users#anonymize] },
           delete: { actions: %w[admin/users#destroy] },
+          list: { actions: %w[admin/users#index] },
         },
         email: {
           receive_emails: { actions: %w[admin/email#handle_mail] }

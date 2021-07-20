@@ -18,38 +18,49 @@ module DiscourseDev
       end
 
       @model = model
-      @type = model.to_s
+      @type = model.to_s.downcase.to_sym
       @count = count
     end
 
     def create!
       record = model.create!(data)
       yield(record) if block_given?
+      DiscourseEvent.trigger(:after_create_dev_record, record, type)
+      record
     end
 
-    def populate!
-      if current_count >= @count
-        puts "Already have #{current_count} #{type.downcase} records"
+    def populate!(ignore_current_count: false)
+      unless Discourse.allow_dev_populate?
+        raise 'To run this rake task in a production site, set the value of `ALLOW_DEV_POPULATE` environment variable to "1"'
+      end
 
-        Rake.application.top_level_tasks.each do |task_name|
-          Rake::Task[task_name].reenable
+      unless ignore_current_count
+        if current_count >= @count
+          puts "Already have #{current_count} #{type} records"
+
+          Rake.application.top_level_tasks.each do |task_name|
+            Rake::Task[task_name].reenable
+          end
+
+          Rake::Task['dev:repopulate'].invoke
+          return
+        elsif current_count > 0
+          @count -= current_count
+          puts "There are #{current_count} #{type} records. Creating #{@count} more."
+        else
+          puts "Creating #{@count} sample #{type} records"
         end
-
-        Rake::Task['dev:repopulate'].invoke
-        return
-      elsif current_count > 0
-        @count -= current_count
-        puts "There are #{current_count} #{type.downcase} records. Creating #{@count} more."
-      else
-        puts "Creating #{@count} sample #{type.downcase} records"
       end
 
+      records = []
       @count.times do
-        create!
-        putc "."
+        records << create!
+        putc "." unless type == :post
       end
 
-      puts
+      puts unless type == :post
+      DiscourseEvent.trigger(:after_populate_dev_records, records, type)
+      records
     end
 
     def current_count

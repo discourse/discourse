@@ -150,9 +150,9 @@ describe EmbedController do
       Jobs.run_immediately!
     end
 
-    it "raises an error with no referer" do
+    it "doesn't raises an error with no referer" do
       get '/embed/comments', params: { embed_url: embed_url }
-      expect(response.body).to match(I18n.t('embed.error'))
+      expect(response.body).not_to match(I18n.t('embed.error'))
     end
 
     it "includes CSS from embedded_scss field" do
@@ -265,14 +265,6 @@ describe EmbedController do
           headers: { 'REFERER' => "https://example.com/some-other-path" }
 
         expect(response.body).to match('class="example"')
-      end
-
-      it "doesn't work with a made up host" do
-        get '/embed/comments',
-          params: { embed_url: embed_url },
-          headers: { 'REFERER' => "http://codinghorror.com/invalid-url" }
-
-        expect(response.body).to match(I18n.t('embed.error'))
       end
     end
 

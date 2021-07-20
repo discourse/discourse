@@ -96,7 +96,8 @@ ro:
       record_invalid: ! "Validarea a eşuat: %{errors}"
       restrict_dependent_destroy:
         one: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
-        many: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
+        few: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
+        other: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
       too_long:
         one: este prea lung (maximum un caracter)
         few: este prea lung (maximum %{count} caractere)
@@ -888,7 +889,6 @@ ro:
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     google_oauth2_client_id: "ID client al aplicației tale Google."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
-    allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."

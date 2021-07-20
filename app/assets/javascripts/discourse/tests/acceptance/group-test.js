@@ -62,7 +62,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert.equal(
       groupDropdown.rowByIndex(0).name(),
-      I18n.t("groups.index.all").toLowerCase()
+      I18n.t("groups.index.all")
     );
 
     this.siteSettings.enable_group_directory = false;

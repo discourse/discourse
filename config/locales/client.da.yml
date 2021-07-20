@@ -601,6 +601,8 @@ da:
       member_added: "Tilføjet"
       member_requested: "Anmodet kl"
       add_members:
+        usernames_placeholder: "brugernavne"
+        usernames_or_emails_placeholder: "brugernavne eller e-mail adresser"
         notify_users: "Giv brugerne besked"
       requests:
         title: "Anmodninger"
@@ -653,6 +655,7 @@ da:
           mailboxes:
             synchronized: "Synkroniseret postkasse"
             none_found: "Ingen postkasser blev fundet i denne e-mail-konto."
+            disabled: "Deaktiveret"
         membership:
           title: Medlemskab
           access: Adgang
@@ -1078,11 +1081,9 @@ da:
         sent: "Sendt"
         archive: "Arkiv"
         groups: "Mine Grupper"
-        bulk_select: "Vælg beskeder"
         move_to_inbox: "Flyt til Indbakke"
         move_to_archive: "Arkiv"
         failed_to_move: "Kunne ikke flytte valgte beskeder (måske er dit netværket nede)"
-        select_all: "Vælg alle"
         tags: "Mærker"
       preferences_nav:
         account: "Konto"
@@ -1415,9 +1416,13 @@ da:
         invite:
           new_title: "Opret Invitation"
           edit_title: "Rediger Invitation"
+          instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted"
           copy_link: "kopier link"
           show_advanced: "Vis Avancerede Indstillinger"
           hide_advanced: "Skjul Avancerede Indstillinger"
+          add_to_groups: "Tilføj til grupper"
+          expires_at: "Udløber efter"
+          custom_message: "Valgfri personlig meddelelse"
           send_invite_email: "Gem og send e-mail"
           save_invite: "Gem Invitation"
           invite_saved: "Invitation gemt."
@@ -1499,6 +1504,8 @@ da:
         edit: "Rediger Profilbillede"
       title:
         title: "Titel"
+        none: "(ingen)"
+      flair:
         none: "(ingen)"
       primary_group:
         title: "Primær Gruppe"
@@ -2028,17 +2035,9 @@ da:
         reaction: "ny reaktion"
         votes_released: "Afstemningen blev frigivet"
     upload_selector:
-      title: "Indsæt billede"
-      title_with_attachments: "Tilføj et billede eller en fil"
-      from_my_computer: "Fra min enhed"
-      from_the_web: "Fra internettet"
-      remote_tip: "link til billede"
-      local_tip: "vælg billeder fra din enhed"
-      hint_for_supported_browsers: "du kan også bruge træk-og-slip eller indsætte billeder i editoren"
       uploading: "Overfører billede"
       select_file: "Vælg fil"
       default_image_alt_text: billede
-      supported_formats: "understøttede formater"
     search:
       sort_by: "Sorter efter"
       relevance: "Relevans"
@@ -2181,7 +2180,7 @@ da:
         top: "Der er ingen top emner"
         educate:
           new: '<p>Dine nye emner vil blive vist her. Som standard betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator, hvis de blev oprettet inden for de sidste 2 dage.</p><p>Besøg dine <a href="%{userPrefsUrl}">præferencer</a> for at ændre dette.</p>'
-          unread: "<p>Dine ulæste emner vises her.</p><p>Som standard betragtes emner som ulæste og vil vise antal af ulæste <span class=\"badge new-posts badge-notification\">1</span> hvis du:</p><ul><li>Oprettede emnet</li><li>Svarede på emnet</li><li>Læste emnet i mere end 4 minutter</li></ul><p>Eller hvis du udtrykkeligt har indstillet emnet til fulgt eller overvåget via \U0001F514 i hvert emne.</p><p>Besøg dine <a href=\"%{userPrefsUrl}\">præferencer</a> for at ændre dette.</p>"
+          unread: "<p>Dine ulæste emner vises her.</p><p>Som standard betragtes emner som ulæste og vil vise antal af ulæste <span class=\"badge unread-posts badge-notification\">1</span> hvis du:</p><ul><li>Oprettede emnet</li><li>Svarede på emnet</li><li>Læste emnet i mere end 4 minutter</li></ul><p>Eller hvis du udtrykkeligt har indstillet emnet til fulgt eller overvåget via \U0001F514 i hvert emne.</p><p>Besøg dine <a href=\"%{userPrefsUrl}\">præferencer</a> for at ændre dette.</p>"
       bottom:
         latest: "Der er ikke flere populære emner."
         posted: "Der er ikke flere emner."
@@ -2239,15 +2238,9 @@ da:
       not_found:
         title: "Emne ikke fundet"
         description: "Beklager, vi kunne ikke finde det emne i databasen. Måske er det blevet fjernet af moderator?"
-      total_unread_posts:
+      unread_posts:
         one: "du har %{count} ulæst indlæg i dette enme"
         other: "du har %{count} ulæste indlæg i dette enme"
-      unread_posts:
-        one: "du har %{count} ulæst gammelt indlæg i dette enme"
-        other: "du har %{count} ulæste gamle indlæg i dette enme"
-      new_posts:
-        one: "der er kommet %{count} nyt indlæg i dette emne siden du læste det sidst"
-        other: "der er kommet %{count} nye indlæg i dette emne siden du læste det sidst"
       likes:
         one: "der er %{count} \"synes godt om\" i dette emne"
         other: "der er %{count} \"synes godt om\" i dette emne"
@@ -2323,8 +2316,6 @@ da:
         title: "Planlæg Udgivelse"
       temp_open:
         title: "Åbn Midlertidigt"
-      auto_reopen:
-        title: "Åbn Automatisk Emnet"
       temp_close:
         title: "Luk Midlertidigt"
       auto_close:
@@ -2444,14 +2435,10 @@ da:
         pin: "Fastgør Emne"
         unpin: "Fjern Fastgøring af Emne"
         pin_globally: "Fastgør emne globalt"
-        make_banner: "Gør emnet til et banner"
         remove_banner: "Emnet skal ikke være banner længere"
       reply:
         title: "Svar"
         help: "start på et svar til dette emne"
-      clear_pin:
-        title: "Fjern tegnestift"
-        help: "Fjern tegnestiften på dette emne så det ikke længere vises i toppen af emnelisten"
       share:
         title: "Del"
         extended_title: "Del et link"
@@ -3386,8 +3373,11 @@ da:
       groups:
         title: "Mærkegrupper"
         new: "Ny Gruppe"
+        tags_label: "Mærker i denne gruppe"
+        parent_tag_label: "Overordnede mærke"
         one_per_topic_label: "Begræns ét mærke per emne fra denne gruppe"
         new_name: "Ny mærkegruppe"
+        name_placeholder: "Navn"
         save: "Gem"
         delete: "Slet"
         confirm_delete: "Er du sikker du vil slette denne mærkegruppe?"
@@ -3547,9 +3537,6 @@ da:
               label: Kategori
             include_subcategories:
               label: "Inkludér Underkategorier"
-      commits:
-        latest_changes: "Seneste ændringer: opdatér ofte!"
-        by: "af"
       groups:
         new:
           title: "Ny Gruppe"
@@ -4226,7 +4213,6 @@ da:
           details: "Detaljer"
           previous_value: "Forrige"
           new_value: "Ny"
-          diff: "Diff"
           show: "Vis"
           modal_title: "Detaljer"
           no_previous: "Der er ingen forrig værdi."
@@ -4321,6 +4307,8 @@ da:
             post_staff_note_create: "tilføj personalenotat"
             post_staff_note_destroy: "Slet personalenote"
             delete_group: "slet gruppe"
+            watched_word_create: "tilføj overvåget ord"
+            watched_word_destroy: "slet overvåget ord"
         screened_emails:
           title: "Blokerede e-mails"
           description: "Følgende e-mail-adresser kontrolleres når nogen prøver at oprette en konto, og oprettelsen vil enten blive blokeret, eller der vil blive foretaget en anden handling."
@@ -4395,6 +4383,7 @@ da:
           placeholder_regexp: "almindelig udtryk"
           replace_label: "Erstatning"
           tag_label: "Mærke"
+          link_label: "Link"
           add: "Tilføj"
           success: "Succes"
           exists: "Eksisterer allerede"
@@ -4581,7 +4570,7 @@ da:
         delete_confirm: "Det foretrækkes generelt at anonymisere brugere i stedet for at slette dem for at undgå at fjerne indhold fra eksisterende diskussioner. <br><br> Er du SIKKER på, at du vil slette denne bruger? Dette er permanent!"
         delete_and_block: "Slet og <b>bloker</b> denne email og IP-adresse"
         delete_dont_block: "Slet kun"
-        deleting_user: "Sleter bruger ..."
+        deleting_user: "Sletter bruger ..."
         deleted: "Brugeren blev slettet."
         delete_failed: "Der opstod en fejl ved sletning af brugeren. Kontrollér om alle indlæg er slettet før du prøver at slette brugeren."
         send_activation_email: "Send aktiverings-e-mail"
@@ -4617,6 +4606,8 @@ da:
         trust_level_unlocked_tip: "tillidsniveau er ulåst, systemet kan forfremme eller degradere bruger"
         lock_trust_level: "Lås tillidsniveau"
         unlock_trust_level: "Lås tillidsniveau op"
+        silenced_count: "Mådeholdt (silenced)"
+        suspended_count: "Suspenderet"
         tl3_requirements:
           title: "Krav for fortrolighedsniveau 3"
           table_title:

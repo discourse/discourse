@@ -162,8 +162,7 @@ ko:
       emojis_disabled: "이모티콘을 가질 수 없습니다"
       ip_address_already_screened: "기존 규칙에 이미 포함되어 있습니다"
       restrict_dependent_destroy:
-        one: "연관된 %{record} 레코드가 존재하므로 레코드를 지울 수 없음."
-        many: "연관된 %{record} 레코드가 존재하므로 레코드를 지울 수 없음."
+        other: "연관된 %{record} 레코드가 존재하므로 레코드를 지울 수 없음."
       too_long:
         other: 너무 김(최대 %{count} 글자)
       too_short:
@@ -228,6 +227,7 @@ ko:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect가 활성화되어 있기 때문에 초대가 비활성화됩니다."
       invalid_access: "요청한 리소스를 볼 수 없습니다."
+    requires_groups: "초대가 저장되었습니다. 지정된 글에 대한 접근 권한을 부여하려면 다음 그룹 중 하나를 추가하십시오: %{groups}."
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
     max_rows: "첫 번째 %{max_bulk_invites} 초대가 전송되었습니다. 파일을 작은 부분으로 분할하십시오."
@@ -1329,7 +1329,6 @@ ko:
     force_https_warning: "귀하의 웹 사이트는 SSL을 사용하고 있습니다. 그러나 사이트 설정에서` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> 가 아직 활성화되어 있지 않습니다."
     out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
     unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
-    watched_word_regexp_error: "감시 단어 %{action}의 정규식이 잘못되었습니다. <a href='%{base_path}/admin/customize/watched_words'>감시 단어 설정</a>을 확인하거나 사이트 설정의 'watched words regular expressions'을 비활성화하십시오."
   site_settings:
     display_local_time_in_user_card: "사용자 카드 페이지가 열릴 때 사용자의 시간대를 기준으로 현지 시간을 표시합니다."
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
@@ -1361,7 +1360,6 @@ ko:
     category_search_priority_high_weight: "카테고리 검색 우선 순위가 높은 순위에 가중치가 적용됩니다."
     allow_uncategorized_topics: "카테고리 없이 게시 허용. 주의: 카테고리 없는 글은 이 항목을 비활성화에 하기전에 카테고리 설정을 해야 합니다."
     allow_duplicate_topic_titles: "같은 제목의 동일한 주제 허용"
-    allow_duplicate_topic_titles_category: "카테고리가 다른 경우 동일한 중복 제목을 가진 글을 허용합니다. allow_duplicate_topic_titles는 false 여야합니다."
     unique_posts_mins: "사용자가 동일한 콘텐츠로 다시 글을 작성하기 위해서 필요한 시간(분)"
     educate_until_posts: "새로운 사용자가 글를 작성할 시 글 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 글 개수"
     title: "타이틀 태그에 쓰일 이 사이트의 이름"
@@ -1575,7 +1573,6 @@ ko:
     discord_secret: "불화 비밀 키"
     discord_trusted_guilds: '이 Discord 구성원만 Discord를 통해 로그인 할 수 있습니다. 숫자 ID를 사용하십시오. 자세한 내용은 <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">여기</a>지침을 확인하십시오. 허용하려면 공백으로 두십시오.'
     enable_backups: "관리자가 포럼 백업을 만들 수 있도록 허용"
-    allow_restore: "데이터 복원을 허용합니다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둡니다."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
     automatic_backups_enabled: "설정된 백업 주기로 자동 백업 실행"
     backup_frequency: "백업 간격 (일)입니다."
@@ -2272,6 +2269,8 @@ ko:
     email_in_spam_header: "사용자의 첫 번째 이메일이 스팸으로 표시되었습니다"
     already_silenced: "사용자가 이미 %{time_ago}전 %{staff}의해 글 작성이 금지되었습니다."
     already_suspended: "사용자의 계정이 이미 %{time_ago}전 %{staff}의해 일시 중지되었습니다."
+    cannot_delete_has_posts:
+      other: "사용자 %{username}님은 %{count}개의 게시물이 있으므로 삭제할 수 없습니다."
   reviewables_reminder:
     submitted:
       other: "항목이 %{count}시간 전에 제출되었습니다. [검토해주세요] (%{base_path}/review)."
@@ -3532,6 +3531,9 @@ ko:
     sender_post_deleted: "게시물이 삭제되었습니다"
     sender_message_to_invalid: "수신자에게 잘못된 이메일 주소가 있습니다"
     sender_topic_deleted: "주제가 삭제되었습니다"
+    group_smtp_post_deleted: "게시물이 삭제되었습니다"
+    group_smtp_topic_deleted: "주제가 삭제되었습니다"
+    group_smtp_disabled_for_group: "그룹에 대해 smtp가 비활성화되었습니다."
   color_schemes:
     base_theme_name: "기본 테마 색상"
     light: "라이트"

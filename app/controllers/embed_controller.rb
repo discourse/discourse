@@ -5,14 +5,12 @@ class EmbedController < ApplicationController
 
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
-  before_action :ensure_embeddable, except: [ :info, :topics ]
   before_action :prepare_embeddable, except: [ :info ]
   before_action :ensure_api_request, only: [ :info ]
 
   layout 'embed'
 
   rescue_from Discourse::InvalidAccess do
-    response.headers.delete('X-Frame-Options')
     if current_user.try(:admin?)
       @setup_url = "#{Discourse.base_url}/admin/customize/embedding"
       @show_reason = true
@@ -24,7 +22,6 @@ class EmbedController < ApplicationController
   def topics
     discourse_expires_in 1.minute
 
-    response.headers.delete('X-Frame-Options')
     unless SiteSetting.embed_topics_list?
       render 'embed_topics_error', status: 400
       return
@@ -73,6 +70,11 @@ class EmbedController < ApplicationController
   def comments
     embed_url = params[:embed_url]
     embed_username = params[:discourse_username]
+    embed_topic_id = params[:topic_id]&.to_i
+
+    unless embed_topic_id || EmbeddableHost.url_allowed?(embed_url)
+      raise Discourse::InvalidAccess.new('invalid embed host')
+    end
 
     topic_id = nil
     if embed_url.present?
@@ -147,6 +149,7 @@ class EmbedController < ApplicationController
   private
 
   def prepare_embeddable
+    response.headers.delete('X-Frame-Options')
     @embeddable_css_class = ""
     embeddable_host = EmbeddableHost.record_for_url(request.referer)
     @embeddable_css_class = " class=\"#{embeddable_host.class_name}\"" if embeddable_host.present? && embeddable_host.class_name.present?
@@ -158,19 +161,4 @@ class EmbedController < ApplicationController
   def ensure_api_request
     raise Discourse::InvalidAccess.new('api key not set') if !is_api?
   end
-
-  def ensure_embeddable
-    if !(Rails.env.development? && current_user&.admin?)
-      referer = request.referer
-
-      unless referer && EmbeddableHost.url_allowed?(referer)
-        raise Discourse::InvalidAccess.new('invalid referer host')
-      end
-    end
-
-    response.headers.delete('X-Frame-Options')
-  rescue URI::Error
-    raise Discourse::InvalidAccess.new('invalid referer host')
-  end
-
 end

@@ -8,19 +8,19 @@ ar:
   js:
     poll:
       voters:
-        zero: "لا أحد صوّت"
-        one: "واحد صوّت"
-        two: "إثنان صوّتا"
-        few: "صوّتوا"
-        many: "صوّتوا"
-        other: "الناخبين"
+        zero: "ناخب"
+        one: "ناخب واحد"
+        two: "ناخبان"
+        few: "ناخبين"
+        many: "ناخبًا"
+        other: "ناخب"
       total_votes:
-        zero: "لم يصوت أحد"
-        one: "صوت واحد"
-        two: "صوتان"
-        few: "مجموعة من الأصوات"
-        many: "العديد من الأصوات"
-        other: "مجموع الأصوات"
+        zero: "صوت إجمالي"
+        one: "صوت واحد إجمالي"
+        two: "صوتان إجماليان"
+        few: "أصوات إجمالية"
+        many: "صوتًا إجماليًا"
+        other: "صوت إجمالي"
       average_rating: "متوسط التقييمات: <strong>%{average}</strong>."
       public:
         title: "تكون الأصوات <strong>مرئية للعامة</strong>."
@@ -34,13 +34,13 @@ ar:
         staff:
           title: "تظهر النتائج لأعضاء <strong>طاقم العمل</strong> فقط."
       cast-votes:
-        title: "أدلِ بصوتك"
+        title: "الإدلاء بصوتك"
         label: "صوِّت اﻵن!"
       show-results:
         title: "عرض نتائج استطلاع الرأي"
         label: "عرض النتائج"
       hide-results:
-        title: "ارجع إلى أصواتك"
+        title: "العودة إلى تصويتاتك"
       group-results:
         title: "تجميع الأصوات حسب حقل المستخدم"
       export-results:
@@ -58,23 +58,23 @@ ar:
         age: "تم الإغلاق منذ <strong>%{age}</strong>."
       breakdown:
         title: "نتائج استطلاع الرأي"
-        count: "العد"
+        count: "العدد"
       error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."
-      error_while_casting_votes: "عذرا، حدث خطأ عند الإدلاء بأصواتكم."
-      error_while_fetching_voters: "عذرا، حدث خطأ في عرض الناخبين."
+      error_while_casting_votes: "عذرًا، حدث خطأ في الإدلاء بأصواتك."
+      error_while_fetching_voters: "عذرًا، حدث خطأ في عرض الناخبين."
       error_while_exporting_results: "عذرًا، حدث خطأ في أثناء تصدير نتائج استطلاع الرأي هذا."
       ui_builder:
         title: إنشاء استطلاع رأي
         insert: إدراج استطلاع رأي
         help:
-          invalid_values: يجب أن تكون القيمة الدّنيا أصغر من القيمة العليا.
-          min_step_value: قيمة الخطوة الدنيا هي 1
+          invalid_values: يجب أن يكون الحد الأدنى للقيمة أصغر من الحد الأقصى للقيمة.
+          min_step_value: الحد الأدنى لقيمة المسافة هو 1
         poll_type:
           label: النوع
           regular: اختيار فردي
           multiple: اختيارات متعددة
-          number: تقييم عددي
+          number: التقييم بالأرقام
         poll_config:
-          step: الخطوة
+          step: المسافة
         poll_public:
           label: عرض أسماء المصوِّتين
