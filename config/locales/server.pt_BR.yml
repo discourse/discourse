@@ -263,7 +263,7 @@ pt_BR:
   invalid_params: "Você forneceu parâmetros inválidos para o pedido %{message}"
   not_logged_in: "Você precisa entrar com sua conta para fazer isto."
   not_found: "A URL ou recurso pedido não pôde ser encontrada."
-  invalid_access: "Você não tem permissão para visualizar o recurso pedido."
+  invalid_access: "Você não tem permissão para ver o recurso solicitado."
   authenticator_not_found: "O método de autenticação não existe ou foi desativado."
   invalid_api_credentials: "Você não tem permissão para visualizar o recurso pedido. O nome do(a) usuário(a) ou a chave da API é inválida."
   provider_not_enabled: "Você não tem permissão para visualizar o recurso pedido. O provedor de autenticação não está ativado."
@@ -1010,7 +1010,7 @@ pt_BR:
     otp_confirmation:
       confirm_title: Continuar no %{site_name}
       logging_in_as: Entrando como %{username}
-      confirm_button: Terminar de entrar com a conta
+      confirm_button: Terminar de entrar
     no_trust_level: "Desculpe, você não tem o nível de confiança necessário para acessar a API de usuário(a)."
     generic_error: "Desculpe, não foi possível emitir as chaves de API de usuário(a). Esse recurso pode ter sido desativado pelo(a) administrador(a) do site."
     scopes:
@@ -4265,7 +4265,7 @@ pt_BR:
       title: "Confirme seu e-mail"
       message: "<p>Enviamos um e-mail de ativação para <b>%{email}</b>. Por favor, siga as instruções no e-mail para ativar sua conta.</p><p>Se não chegar, verifique sua pasta de spam e <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>se o e-mail foi configurado corretamente</a>.</p>"
     resend_email:
-      title: "Reenviar e-mail de confirmação"
+      title: "Enviar novamente e-mail de ativação"
       message: "<p>Reenviamos o e-mail de confirmação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar no modo de segurança"
@@ -4418,7 +4418,7 @@ pt_BR:
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'
-      group_mentioned: 'Você foi mencionado(a) %{username} em "%{topic}" - %{site_title}'
+      group_mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'
       quoted: 'Você foi citado(a) por %{username} em "%{topic}" - %{site_title}'
       replied: '%{username} respondeu em "%{topic}" - %{site_title}'
       posted: '%{username} postou em "%{topic}" - %{site_title}'

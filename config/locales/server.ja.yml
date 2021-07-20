@@ -48,7 +48,7 @@ ja:
   purge_reason: "放置・無効アカウントとして自動的に削除されました。"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモート画像のダウンロードは無効化されました。"
   anonymous: "匿名"
-  remove_posts_deleted_by_author: "作者によって削除"
+  remove_posts_deleted_by_author: "作成者によって削除"
   redirect_warning: "選択されたリンクがこのフォーラムに実際に投稿されていることを確認できませんでした。このまま進むには、下のリンクを選択してください。"
   on_another_topic: "別のトピック"
   inline_oneboxer:
@@ -218,12 +218,12 @@ ja:
 
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
     not_found_template_link: |
-      <p><a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待状を送るようリクエストしてください。</p>
+      <p><a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待を送るようリクエストしてください。</p>
     user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
     invalid_email: "%{email} は有効なメールアドレスではありません。"
     rate_limit:
-      other: "最終日に %{count} 通の招待状を送信済みです。%{time_left} 待ってからもう一度お試しください。"
+      other: "過去 24 時間以内に %{count} 通の招待を送信済みです。%{time_left} 待ってからもう一度お試しください。"
     confirm_email: "<p>ほぼ完了です！メールアドレスにアクティベーションメールを送信しました。メールに記載の手順に従って、アカウントを確認してください。</p><p>まだ届いていない場合は、迷惑フォルダを確認してください。</p>"
     cant_invite_to_group: "指定したグループにユーザーを招待することはできません。招待しようとしているグループのオーナーであることを確認してください。"
     disabled_errors:
@@ -525,7 +525,7 @@ ja:
             name:
               same_as_password: "はあなたのパスワードと同じです。"
             ip_address:
-              signup_not_allowed: "このアカウントからサインアップできません。"
+              signup_not_allowed: "このアカウントから登録できません。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -563,7 +563,7 @@ ja:
         watched_word:
           attributes:
             word:
-              too_many: "そのアクションには語が多すぎます"
+              too_many: "その操作には語が多すぎます"
             base:
               invalid_url: "置換 URL は無効です"
       <<: *errors
@@ -836,8 +836,8 @@ ja:
       short_description: "この投稿をブックマークする"
     like:
       title: "いいね！"
-      description: "この投稿を「いいね！」する"
-      short_description: "この投稿を「いいね！」する"
+      description: "この投稿に「いいね！」する"
+      short_description: "この投稿に「いいね！」する"
   draft:
     sequence_conflict_error:
       title: "下書きエラー"
@@ -903,7 +903,7 @@ ja:
       title: "その他"
       description: 'このトピックは<a href="%{base_path}/guidelines">ガイドライン</a>、<a href="%{tos_url}">利用規約</a>または上記に記載されていない別の理由で、一般のスタッフによる注意が必要です。'
       long_form: "モデレーターの注意要として通報"
-      short_description: "その他の理由でスタッフによる注意が必要"
+      short_description: "その他の理由でスタッフの注意が必要"
       email_title: 'トピック "%{title}" はモデレーターの注意が必要です'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -1061,7 +1061,7 @@ ja:
       labels:
         post: 投稿
         editor: 編集者
-        author: 作者
+        author: 作成者
         edit_reason: 理由
     dau_by_mau:
       title: "DAU/MAU"
@@ -1373,10 +1373,10 @@ ja:
     editing_grace_period_max_diff: "編集猶予期間で変更が許可される最大文字数。さらに変更された場合は別の投稿リビジョンを保存します (信頼レベル 0 および 1)"
     editing_grace_period_max_diff_high_trust: "編集猶予期間で変更が許可される最大文字数。さらに変更された場合は別の投稿リビジョンを保存します (信頼レベル 2 以上 )"
     staff_edit_locks_post: "スタッフメンバーが編集した投稿は編集できなくなります"
-    post_edit_time_limit: "TL0 または TL1 作者は投稿後 (n) 分間、投稿を編集できる。0 に設定すると永久に編集できます。"
-    tl2_post_edit_time_limit: "TL2 以上の作者は投稿後 (n) 分間、投稿を編集できる。0 に設定すると永久に編集できます。"
+    post_edit_time_limit: "TL0 または TL1 作成者は投稿後 (n) 分間、投稿を編集できる。0 に設定すると永久に編集できます。"
+    tl2_post_edit_time_limit: "TL2 以上の作成者は投稿後 (n) 分間、投稿を編集できる。0 に設定すると永久に編集できます。"
     edit_history_visible_to_public: "編集した投稿の前のバージョンをすべてのユーザーが閲覧することを許可する。無効である場合、スタッフメンバーのみが閲覧できます。"
-    delete_removed_posts_after: "作者が削除した投稿は (n) 時間後に自動的に削除される。0 に設置すると、投稿は直ちに削除されます。"
+    delete_removed_posts_after: "作成者が削除した投稿は (n) 時間後に自動的に削除される。0 に設置すると、投稿は直ちに削除されます。"
     max_image_width: "投稿内のサムネイル画像の最大幅"
     max_image_height: "投稿内のサムネイル画像の最大高"
     responsive_post_image_sizes: "ライトボックスのプレビュー画像のサイズを変更して、次のピクセル比の DPI の高いスクリーンを可能にします。レスポンシブ画像を無効にするには、すべての値を削除します。"
@@ -1843,7 +1843,7 @@ ja:
     automatically_download_gravatars: "アカウントの作成時またはメールアドレスの変更時にユーザーの Gravatar をダウンロードします。"
     digest_topics: "メールの要約に表示する人気のあるトピックの最大数。"
     digest_posts: "メールの要約に表示する人気のある投稿の最大数。"
-    digest_other_topics: "メールの要約の 'フォローしているトピックとカテゴリの新着' セクションに表示されるトピックの最大数。"
+    digest_other_topics: "メールの要約の 'フォローしているトピックとカテゴリの新規' セクションに表示されるトピックの最大数。"
     digest_min_excerpt_length: "メールの要約に記載されている投稿の抜粋の最低文字数。"
     suppress_digest_email_after_days: "(n) 日以上サイトにアクセスしていないユーザーの要約メールを非表示する。"
     digest_suppress_categories: "要約メールからこれらのカテゴリを非表示にする。"
@@ -2100,7 +2100,7 @@ ja:
     blank_id_error: "`external_id` は必須ですが空白になっています"
     email_error: "メールアドレス <b>%{email}</b> でアカウントを登録できませんでした。サイトの管理者にお問い合わせください。"
     missing_secret: "シークレットが欠落しているため、認証に失敗しました。この問題を修正するには、サイト管理者にお問い合わせください。"
-    invite_redeem_failed: "招待状の引き換えに失敗しました。サイトの管理者にお問い合わせください。"
+    invite_redeem_failed: "招待の引き換えに失敗しました。サイトの管理者にお問い合わせください。"
   original_poster: "元の投稿者"
   most_recent_poster: "最も最近の投稿者"
   frequent_poster: "頻繁な投稿者"
@@ -2189,7 +2189,7 @@ ja:
     not_available: "利用できません。%{suggestion}を試しますか？"
     something_already_taken: "エラーが発生しました。ユーザー名またはメールアドレスがすでに登録されている可能性があります。パスワードリセットを行ってください。"
     omniauth_error:
-      generic: "アカウントを認証中にエラーが発生しました。もう一度やり直してください。"
+      generic: "アカウントを認証中にエラーが発生しました。もう一度お試しください。"
       csrf_detected: "認証がタイムアウトしたか、ブラウザを切り替えました。もう一度お試しください。"
       request_error: "認証を開始中にエラーが発生しました。もう一度お試しください。"
       invalid_iat: "サーバークロックの差により認証トークンを検証できません。もう一度お試しください。"
@@ -2565,7 +2565,7 @@ ja:
 
         ‐ この新しいアカウント **%{username}** をあなたのために作成しました。[ユーザープロフィール][prefs]にアクセスして、名前またはパスワードを変更してください。
 
-        ‐ ログインする際は、**元の招待状と同じメールアドレスを使用**してください。異なるものを使用すると、あなたであることがわかりません！
+        ‐ ログインする際は、**元の招待と同じメールアドレスを使用**してください。異なるものを使用すると、あなたであることがわかりません！
 
         %{new_user_tips}
 
@@ -2631,12 +2631,12 @@ ja:
     bulk_invite_succeeded:
       title: "一括招待に成功しました"
       subject_template: "ユーザーの一括招待に成功しました"
-      text_body_template: "ユーザーの一括招待ファイルが処理され、%{sent} 件の招待状が送信されました。"
+      text_body_template: "ユーザーの一括招待ファイルが処理され、%{sent} 件の招待が送信されました。"
     bulk_invite_failed:
       title: "一括招待に失敗しました"
       subject_template: "ユーザーの一括招待中にエラーが発生しました"
       text_body_template: |
-        あなたの一括ユーザー招待ファイルは処理されました。招待状を %{sent} 通メール送信し、%{failed} 個のエラーが発生しました。
+        あなたの一括ユーザー招待ファイルは処理されました。招待を %{sent} 通メール送信し、%{failed} 個のエラーが発生しました。
 
         こちらがログです。
 
@@ -2774,8 +2774,8 @@ ja:
 
         より詳細な会話を促進するため、非常に短い返信は許可されていません。%{count} 文字以上で返信してください。または、"+1" と返信すれば、メールを介して投稿に「いいね！」することができます。
     email_reject_invalid_post_action:
-      title: "メールの拒否 - 無効な投稿アクション"
-      subject_template: "[%{email_prefix}] メールの問題 -- 無効な投稿アクション"
+      title: "メールの拒否 - 無効な投稿操作"
+      subject_template: "[%{email_prefix}] メールの問題 -- 無効な投稿操作"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
@@ -2982,7 +2982,7 @@ ja:
 
         [サイトダッシュボードにアクセス](%{base_url}/admin)して、それらをご覧ください。
 
-        ダッシュボードに何も表示されない場合は、別のスタッフメンバーがすでにこのアドバイスに対応した可能性があります。スタッフアクションのリストは[スタッフアクションログ](%{base_url}/admin/logs/staff_action_logs)をご覧ください。
+        ダッシュボードに何も表示されない場合は、別のスタッフメンバーがすでにこのアドバイスに対応した可能性があります。スタッフ操作のリストは[スタッフ操作ログ](%{base_url}/admin/logs/staff_action_logs)をご覧ください。
     new_user_of_the_month:
       title: "あなたは今月の新規ユーザーです！"
       subject_template: "あなたは今月の新規ユーザーです！"
@@ -3492,7 +3492,7 @@ ja:
     user_email_notification_already_read: "このメールに関する通知は既読です"
     user_email_notification_topic_nil: "post.topic は NIL です"
     user_email_post_user_deleted: "投稿のユーザーは削除されました。"
-    user_email_post_deleted: "投稿は作者によって削除されました"
+    user_email_post_deleted: "投稿は作成者によって削除されました"
     user_email_user_suspended: "ユーザーは凍結状態です"
     user_email_already_read: "ユーザーはこの投稿を閲覧済みです"
     user_email_access_denied: "ユーザーはこの投稿を閲覧できません"
@@ -3921,7 +3921,7 @@ ja:
       name: メンバー
       description: 招待、グループメッセージ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
       long_description: |
-        このバッジは、信頼レベル 2 に達すると付与されます。数週間にわたって、コミュニティにしっかりと参加していただきありがとうございました。ユーザーページまたは個別のトピックからの招待状の送信、グループ個人メッセージの作成、1 日の「いいね！」の増量が付与されています。
+        このバッジは、信頼レベル 2 に達すると付与されます。数週間にわたって、コミュニティにしっかりと参加していただきありがとうございました。ユーザーページまたは個別のトピックからの招待の送信、グループ個人メッセージの作成、1 日の「いいね！」の増量が付与されています。
     regular:
       name: レギュラー
       description: カテゴリ整理、名前変更、フォローリンク、ウィキ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
@@ -4179,7 +4179,7 @@ ja:
       button: "登録"
       title: "管理者アカウントの登録"
       help: "まず、新しいアカウントを登録してください"
-      no_emails: "残念ながら、セットアップ中に管理者メールが定義されなかったため、構成を完了するのが困難です。構成ファイルに開発者のメールを追加するか、<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>コンソールから管理者アカウントを作成</a>してください。"
+      no_emails: "残念ながら、セットアップ中に管理者メールが定義されなかったため、構成を完了するのが困難です。構成ファイルに開発者のメールアドレスを追加するか、<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>コンソールから管理者アカウントを作成</a>してください。"
     confirm_email:
       title: "メールの確認"
       message: "<p><b>%{email}</b> にアクティベーションメールを送信しました。メールに記載の指示に従って、アカウントを有効化してください。</p><p>そのメールが届かない場合は、迷惑フォルダをご確認の上、<a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>メールが正しくセットアップされていることを確認</a>してください。</p>"
@@ -4324,7 +4324,7 @@ ja:
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"
-        disabled: "ローカルログインが無効になっているため、誰にも招待状を送れません。次のステップに進んでください。"
+        disabled: "ローカルログインが無効になっているため、誰にも招待を送れません。次のステップに進んでください。"
       finished:
         title: "あなたの Discourse の準備が整いました！"
         description: |
@@ -4346,7 +4346,7 @@ ja:
       watching_first_post: '%{username} が新規トピック「%{topic}」を作成しました - %{site_title}'
       confirm_title: "通知を有効にしました - %{site_title}"
       confirm_body: "成功！通知を有効にしました！"
-      custom: "%{site_title} の %{username} からの通知"
+      custom: "%{username} からの通知（%{site_title}）"
   staff_action_logs:
     not_found: "は見つかりません"
     unknown: "不明"
