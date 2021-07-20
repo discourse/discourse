@@ -10,8 +10,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import userSearch from "discourse/lib/user-search";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
-// The backend user search query returns zero results for a term-free search
-// so the regexp below only matches @ followed by a valid character
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 
 const searchData = {};
