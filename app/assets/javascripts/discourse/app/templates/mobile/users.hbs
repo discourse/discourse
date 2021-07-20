@@ -35,7 +35,7 @@
         {{/if}}
       </div>
 
-      {{#conditional-loading-spinner condition=model.loading}}
+      {{#conditional-loading-spinner condition=isLoading}}
         {{#if model.length}}
           <div class="total-rows">{{i18n "directory.total_rows" count=model.totalRows}}</div>
           {{#each model as |item|}}
