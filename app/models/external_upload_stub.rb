@@ -33,6 +33,7 @@ class ExternalUploadStub < ActiveRecord::Base
     @statuses ||= Enum.new(
       created: 1,
       uploaded: 2,
+      failed: 3
     )
   end
 

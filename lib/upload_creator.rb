@@ -189,7 +189,7 @@ class UploadCreator
       end
 
       if should_move
-        # move the file on s3 instead of reuploading
+        # move the file in the store instead of reuploading
         url = Discourse.store.move_existing_stored_upload(@opts[:existing_external_upload_key], @upload)
       else
         # store the file and update its url

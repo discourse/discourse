@@ -53,28 +53,44 @@ RSpec.describe ExternalUploadManager do
       end
     end
 
+    context "when the upload does not get changed in UploadCreator (resized etc.)" do
+      it "copies the stubbed upload on S3 to its new destination and deletes it" do
+        upload = subject.promote_to_upload!
+        expect(WebMock).to have_requested(
+          :put,
+          "#{upload_base_url}/original/1X/#{upload.sha1}.png",
+        ).with(headers: { 'X-Amz-Copy-Source' => "#{SiteSetting.s3_upload_bucket}/#{external_upload_stub.key}" })
+        expect(WebMock).to have_requested(
+          :delete,
+          "#{upload_base_url}/#{external_upload_stub.key}"
+        )
+      end
+    end
+
+    context "when the upload does get changed by the UploadCreator" do
+      let(:file) { file_from_fixtures("should_be_jpeg.heic", "images") }
+
+      it "creates a new upload in s3 (not copy) and deletes the original stubbed upload" do
+        upload = subject.promote_to_upload!
+        expect(WebMock).to have_requested(
+          :put,
+          "#{upload_base_url}/original/1X/#{upload.sha1}.png"
+        )
+        expect(WebMock).to have_requested(
+          :delete, "#{upload_base_url}/#{external_upload_stub.key}"
+        )
+      end
+    end
+
     context "when the sha has been set on the s3 object metadata by the clientside JS" do
       let(:metadata_headers) { { "x-amz-meta-sha1-checksum" => client_sha1 } }
 
       context "when the downloaded file sha1 does not match the client sha1" do
         let(:client_sha1) { "blahblah" }
 
-        it "raises an error" do
+        it "raises an error and marks upload as failed" do
           expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
-        end
-      end
-
-      context "when the upload does not get changed in UploadCreator (resized etc.)" do
-        it "copies the stubbed upload on S3 to its new destination and deletes it" do
-          upload = subject.promote_to_upload!
-          expect(WebMock).to have_requested(
-            :put,
-            "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/original/1X/#{upload.sha1}.png"
-          )
-          expect(WebMock).to have_requested(
-            :delete,
-            "#{upload_base_url}/#{external_upload_stub.key}"
-          )
+          expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:failed])
         end
       end
     end
@@ -106,12 +122,8 @@ RSpec.describe ExternalUploadManager do
       upload = subject.promote_to_upload!
       expect(WebMock).to have_requested(
         :put,
-        "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/original/1X/#{upload.sha1}.pdf"
-      )
-      expect(WebMock).to have_requested(
-        :delete,
-        "#{upload_base_url}/#{external_upload_stub.key}"
-      )
+        "#{upload_base_url}/original/1X/#{upload.sha1}.pdf"
+      ).with(headers: { 'X-Amz-Copy-Source' => "#{SiteSetting.s3_upload_bucket}/#{external_upload_stub.key}" })
       expect(WebMock).to have_requested(
         :delete, "#{upload_base_url}/#{external_upload_stub.key}"
       )
