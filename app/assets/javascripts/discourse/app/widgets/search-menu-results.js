@@ -10,30 +10,27 @@ import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 
-const inSearchShortcuts = [
+const suggestionShortcuts = [
   "in:title",
   "in:personal",
   "in:seen",
   "in:likes",
   "in:bookmarks",
   "in:created",
-];
-const statusSearchShortcuts = [
+  "in:pinned",
   "status:open",
   "status:closed",
   "status:public",
   "status:noreplies",
-];
-const orderSearchShortcuts = [
   "order:latest",
   "order:views",
   "order:likes",
   "order:latest_topic",
 ];
 
-export function addInSearchShortcut(value) {
-  if (inSearchShortcuts.indexOf(value) === -1) {
-    inSearchShortcuts.push(value);
+export function addSearchSuggestion(value) {
+  if (suggestionShortcuts.indexOf(value) === -1) {
+    suggestionShortcuts.push(value);
   }
 }
 
@@ -361,7 +358,7 @@ createWidget("search-menu-assistant", {
 
   html(attrs) {
     if (this.siteSettings.tagging_enabled) {
-      addInSearchShortcut("in:tagged");
+      addSearchSuggestion("in:tagged");
     }
 
     const content = [];
@@ -399,22 +396,12 @@ createWidget("search-menu-assistant", {
           );
         });
         break;
-      case "in:":
-        inSearchShortcuts.map((item) => {
-          const slug = prefix ? `${prefix} ${item} ` : item;
-          content.push(this.attach("search-menu-assistant-item", { slug }));
-        });
-        break;
-      case "status:":
-        statusSearchShortcuts.map((item) => {
-          const slug = prefix ? `${prefix} ${item} ` : item;
-          content.push(this.attach("search-menu-assistant-item", { slug }));
-        });
-        break;
-      case "order:":
-        orderSearchShortcuts.map((item) => {
-          const slug = prefix ? `${prefix} ${item} ` : item;
-          content.push(this.attach("search-menu-assistant-item", { slug }));
+      default:
+        suggestionShortcuts.map((item) => {
+          if (item.startsWith(suggestionKeyword)) {
+            const slug = prefix ? `${prefix} ${item} ` : item;
+            content.push(this.attach("search-menu-assistant-item", { slug }));
+          }
         });
         break;
     }
