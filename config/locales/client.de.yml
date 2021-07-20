@@ -2468,6 +2468,7 @@ de:
         pin: "Thema anheften"
         unpin: "Thema loslösen"
         pin_globally: "Thema global anheften"
+        make_banner: "Ankündigungsbanner erstellen"
         remove_banner: "Thema des Ankündigungsbanners entfernen"
       reply:
         title: "Antworten"

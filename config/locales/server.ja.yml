@@ -42,7 +42,7 @@ ja:
   views: " 閲覧"
   loading: "読み込み中"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a> により提供されています。最適な表示のために、Javascript を有効にしてください。'
-  sign_up: "サインアップ"
+  sign_up: "アカウントを登録"
   log_in: "ログイン"
   submit: "送信"
   purge_reason: "放置・無効アカウントとして自動的に削除されました。"

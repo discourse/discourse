@@ -62,7 +62,7 @@ ja:
         over_x_years:
           other: "%{count} 年以上"
         almost_x_years:
-          other: "約 %{count} 年"
+          other: "%{count} 年"
         date_month: "MMM D 日"
         date_year: "'YY 年 MMM"
       medium:
@@ -126,7 +126,7 @@ ja:
         disabled: "固定解除しました: %{when}"
       pinned_globally:
         enabled: "全体に固定しました: %{when}"
-        disabled: "全体に固定解除しました: %{when}"
+        disabled: "固定解除しました: %{when}"
       visible:
         enabled: "表示: %{when}"
         disabled: "非表示: %{when}"
@@ -178,7 +178,7 @@ ja:
     submit: "送信"
     generic_error: "申し訳ありません。エラーが発生しました。"
     generic_error_with_reason: "エラーが発生しました: %{error}"
-    sign_up: "アカウントを作成"
+    sign_up: "アカウントを登録"
     log_in: "ログイン"
     age: "年齢"
     joined: "参加"
@@ -372,7 +372,7 @@ ja:
       view_all: "すべて表示"
       grouped_by_topic: "トピック別"
       none: "レビューする項目がありません"
-      view_pending: "保留を表示"
+      view_pending: "保留中を表示"
       topic_has_pending:
         other: "このトピックには承認待ちの投稿が <b>%{count}</b> 件あります"
       title: "レビュー"
@@ -399,7 +399,7 @@ ja:
         disagreed:
           other: "同意しない %{count}%"
         ignored:
-          other: "無投票 %{count}%"
+          other: "無視 %{count}%"
       topics:
         topic: "トピック"
         reviewable_count: "カウント"
@@ -453,7 +453,7 @@ ja:
         rejected:
           title: "却下"
         ignored:
-          title: "無投票"
+          title: "無視"
         deleted:
           title: "削除済み"
         reviewed:
@@ -528,8 +528,8 @@ ja:
       username: "ユーザー名"
       filter_name: "ユーザー名でフィルタ"
       title: "ユーザー"
-      likes_given: "した"
-      likes_received: "された"
+      likes_given: "与えた"
+      likes_received: "受け取った"
       topics_entered: "閲覧数"
       topics_entered_long: "閲覧したトピック数"
       time_read: "読んだ時間"
@@ -801,7 +801,7 @@ ja:
       "11": "編集"
       "12": "送信済み項目"
       "13": "受信トレイ"
-      "14": "保留"
+      "14": "保留中"
       "15": "下書き"
     categories:
       all: "すべてのカテゴリ"
@@ -997,7 +997,7 @@ ja:
       tag_settings: "タグ"
       watched_tags: "ウォッチ中"
       watched_tags_instructions: "これらのタグが付いたすべてのトピックを自動的にウォッチします。すべての新しい投稿とトピックが通知され、トピックの隣に新しい投稿の件数が表示されます。"
-      tracked_tags: "追跡"
+      tracked_tags: "追跡中"
       tracked_tags_instructions: "これらのタグが付いたすべてのトピックを自動的に追跡します。トピックの横に新しい投稿の件数が表示されます。"
       muted_tags: "ミュート"
       muted_tags_instructions: "これらのカテゴリの新しいトピックについては通知されず、最新にも表示されません。"
@@ -1274,7 +1274,7 @@ ja:
         title: "テキストサイズ"
         smallest: "最小"
         smaller: "小"
-        normal: "デフォルト"
+        normal: "標準"
         larger: "大"
         largest: "最大"
       title_count_mode:
@@ -1302,7 +1302,7 @@ ja:
         every_six_months: "6 か月毎"
       email_level:
         title: "誰かが自分の投稿を引用またはそれに返信したとき、@ユーザー名で自分をメンションしたとき、または自分をトピックに招待したときにメールでその通知を受け取る"
-        always: "常に"
+        always: "常時"
         only_when_away: "離れている時のみ"
         never: "通知しない"
       email_messages_level: "メッセージを受け取ったときにメールで通知を受け取る"
@@ -1543,7 +1543,7 @@ ja:
     replies_lowercase:
       other: 返信
     signup_cta:
-      sign_up: "サインアップ"
+      sign_up: "アカウントを登録"
       hide_session: "明日リマインダーを通知する"
       hide_forever: "いいえ、結構です"
       hidden_for_session: "了解です。明日お尋ねします。'ログイン' からでもアカウントを作成できます。"
@@ -3346,7 +3346,7 @@ ja:
       moderator: "モデレーター"
       tags:
         remove_muted_tags_from_latest:
-          always: "常に"
+          always: "常時"
           only_muted: "単独で使用された場合、または他のミュートされたタグを使用された場合"
           never: "削除しない"
       reports:

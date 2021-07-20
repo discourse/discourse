@@ -261,7 +261,7 @@ pt_BR:
       topic_count: "Tópicos"
       post_count: "Mensagens"
       user_count: "Usuários"
-      active_user_count: "Usuários ativos"
+      active_user_count: "Usuários(as) ativos(as)"
       contact: "Fale conosco"
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
     bookmarked:
@@ -440,7 +440,7 @@ pt_BR:
         reported_by: "Relatado(a) por"
         deleted: "[Tópico excluído]"
         original: "(tópico original)"
-        details: "informações"
+        details: "detalhes"
         unique_users:
           one: "%{count} usuário"
           other: "%{count} usuários"
@@ -676,7 +676,7 @@ pt_BR:
             none_found: "Nenhuma caixa de mensagens foi encontrada nesta conta de e-mail."
             disabled: "Desativado(a)"
         membership:
-          title: Assinatura
+          title: Associação
           access: Acesso
         categories:
           title: Categorias
