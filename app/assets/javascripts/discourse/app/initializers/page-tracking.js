@@ -35,6 +35,15 @@ export default {
       });
       return;
     }
+    
+    // Use Fathom Analytics if it is present
+    if (typeof window.fathom !== "undefined") {
+      appEvents.on("page:changed", (data) => {
+        if (!data.replacedOnlyQueryParams) {
+          window.fathom.trackPageview({ url: data.url });
+        }
+      });
+    } 
 
     // Use Universal Analytics v3 if it is present
     if (
