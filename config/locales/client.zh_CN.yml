@@ -350,7 +350,7 @@ zh_CN:
         type_bonus:
           name: "奖励加分"
           title: "某些可审核类型可以由管理人员分配加分，以使其具有更高的优先级。"
-      stale_help: "此可审查对象已被 <b>%{username}</b> 解决。"
+      stale_help: "此可审核对象已被 <b>%{username}</b> 解决。"
       claim_help:
         optional: "您可以认领此条目以避免被他人审核。"
         required: "您必须先认领条目才能进行审核。"
@@ -567,7 +567,7 @@ zh_CN:
         usernames_placeholder: "用户名"
         usernames_or_emails_placeholder: "用户名或电子邮件"
         notify_users: "通知用户"
-        set_owner: "设置用户为此群组拥有者"
+        set_owner: "设置用户为此群组的所有者"
       requests:
         title: "请求"
         reason: "原因"
@@ -627,7 +627,7 @@ zh_CN:
           settings:
             title: "设置"
             allow_unknown_sender_topic_replies: "允许未知发件人话题回复。"
-            allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题，如果未启用此功能，且未被邀请至该话题的邮件地址的回复，将会创建一个新的话题。"
+            allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题。如果未启用此功能，且从未被邀请至该话题的电子邮件地址回复，将创建一个新话题。"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
@@ -945,7 +945,7 @@ zh_CN:
         使用 %{icon} 按钮开始将帖子加入书签，它们将出现在这里，便于参考。您也可以安排提醒！
       no_notifications_title: "您还没有任何通知"
       no_notifications_body: >
-        您将在此面板上直接收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>@提及</b>您或引用您以及对您关注的话题作出回应时。当您有一段时间没有登录时，通知还将被发送到您的邮箱。<br><br>寻找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好</a>。
+        您将直接在此面板上收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>提及 (@)</b> 您或引用您以及回复您关注的话题时。当您有一段时间没有登录时，通知还将发送到您的电子邮件。<br><br>查找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
       first_notification: "您的第一个通知！选中它以开始。"
       dynamic_favicon: "在浏览器图标上显示数量"
       skip_new_user_tips:
@@ -987,7 +987,7 @@ zh_CN:
         label: "邮寄名单模式"
         enabled: "启用邮寄名单模式"
         instructions: |
-          此设置将覆盖活动摘要。<br />
+          此设置将替换活动摘要。<br />
           已设为免打扰的话题和类别将不会被包含在这些电子邮件中。
         individual: "为每个新帖子发送一封电子邮件"
         individual_no_echo: "为除了我发表的新帖子之外的每个新帖子发送一封电子邮件"
@@ -1387,7 +1387,7 @@ zh_CN:
           edit_title: "编辑邀请"
           instructions: "分享此链接可立即授予访问此站点的权限"
           copy_link: "复制链接"
-          expires_in_time: "于 %{time} 过期"
+          expires_in_time: "于 %{time}过期"
           expired_at_time: "过期时间为 %{time}"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
@@ -1396,7 +1396,7 @@ zh_CN:
           add_to_groups: "添加到群组"
           invite_to_topic: "到达此话题"
           expires_at: "过期时间"
-          custom_message: "可选私信"
+          custom_message: "可选个人信息"
           send_invite_email: "保存并发送电子邮件"
           save_invite: "保存邀请"
           invite_saved: "邀请已保存。"
@@ -1475,7 +1475,7 @@ zh_CN:
       flair:
         title: "资质"
         none: "（无）"
-        instructions: "图标显示在您的个人资料图片旁边"
+        instructions: "图标显示在您的个人资料照片旁边"
       primary_group:
         title: "主要群组"
         none: "（无）"
@@ -2095,15 +2095,15 @@ zh_CN:
         dismiss: "关闭"
         dismiss_read: "关闭所有未读话题"
         dismiss_read_with_selected:
-          other: "忽略 %{count} 个未读"
+          other: "关闭 %{count} 个未读"
         dismiss_button: "关闭…"
         dismiss_button_with_selected:
-          other: "忽略（%{count}）…"
+          other: "关闭（%{count} 个）…"
         dismiss_tooltip: "仅关闭新帖子或停止跟踪话题"
         also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
         dismiss_new: "关闭新话题"
         dismiss_new_with_selected:
-          other: "关闭新话题（%{count}）…"
+          other: "关闭新话题（%{count} 个）…"
         toggle: "切换话题批量选择"
         actions: "批量操作"
         change_category: "设置类别"
@@ -2201,7 +2201,7 @@ zh_CN:
       browse_all_categories: 浏览所有类别
       browse_all_tags: 浏览所有标签
       view_latest_topics: 查看最新话题
-      suggest_create_topic: 准备好<a href>开始新对话了吗？</a>
+      suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
       jump_reply_up: 跳转到较早的回复
       jump_reply_down: 跳转到较晚的回复
       deleted: "该话题已被删除"
@@ -2264,7 +2264,7 @@ zh_CN:
       temp_open:
         title: "临时开启"
       auto_reopen:
-        title: "自动开启话题"
+        title: "自动打开话题"
       temp_close:
         title: "临时关闭"
       auto_close:
@@ -3278,7 +3278,7 @@ zh_CN:
         edit_title: "编辑标签组"
         tags_label: "此组中的标签"
         parent_tag_label: "上级标签"
-        parent_tag_description: "只有存在上级标签时，才能使用来自该组的标签。"
+        parent_tag_description: "只有存在上级标签时，才能使用来自此组的标签。"
         one_per_topic_label: "此组中每个话题限制一个标签"
         new_name: "新标签组"
         name_placeholder: "名称"
@@ -3292,7 +3292,7 @@ zh_CN:
         tags_placeholder: "搜索或创建标签"
         parent_tag_placeholder: "可选"
         select_groups_placeholder: "选择组…"
-        disabled: "标签已禁用。"
+        disabled: "标签已被禁用。"
       topics:
         none:
           unread: "您没有未读话题。"
@@ -3515,7 +3515,7 @@ zh_CN:
         created: 创建
         updated: 更新
         last_used: 最后使用
-        never_used: '（从未）'
+        never_used: '（从不）'
         generate: "生成"
         undo_revoke: "取消撤消"
         revoke: "撤消"
@@ -3998,8 +3998,8 @@ zh_CN:
             name: "爱"
             description: "点赞按钮的颜色。"
         robots:
-          title: "覆盖您的站点 robots.txt 文件："
-          warning: "这将永久覆盖任何相关的站点设置。"
+          title: "替换您的站点的 robots.txt 文件："
+          warning: "这将永久替换任何相关的站点设置。"
           overridden: 您的站点的默认 robots.txt 文件已被覆盖。
         email_style:
           title: "电子邮件样式"
@@ -4200,7 +4200,7 @@ zh_CN:
             api_key_create: "创建 API 密钥"
             api_key_update: "更新 API 密钥"
             api_key_destroy: "销毁 API 密钥"
-            override_upload_secure_status: "覆盖上传安全状态"
+            override_upload_secure_status: "替换上传安全状态"
             page_published: "已发布页面"
             page_unpublished: "已取消发布页面"
             add_email: "添加电子邮件"
@@ -4213,8 +4213,8 @@ zh_CN:
             post_staff_note_create: "添加管理人员注释"
             post_staff_note_destroy: "删除管理人员注释"
             delete_group: "删除群组"
-            watched_word_create: "添加敏感词"
-            watched_word_destroy: "删除敏感词"
+            watched_word_create: "添加关注词"
+            watched_word_destroy: "删除关注词"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -4268,7 +4268,7 @@ zh_CN:
         clear_all: 全部清除
         clear_all_confirm: "确定要清除%{action}操作的所有关注词吗？"
         invalid_regex: '关注词“%{word}”是无效的正则表达式。'
-        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">敏感词是正则表达式</a>，它们不会自动包含词边界。如果您希望正则表达式匹配整个词，请在正则表达式的开头和结尾包含 <code>\b</code>'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">关注词是正则表达式</a>，它们不会自动包含词边界。如果您希望正则表达式匹配整个词，请在正则表达式的开头和结尾包含 <code>\b</code>'
         actions:
           block: "禁止"
           censor: "审查"
@@ -4303,7 +4303,7 @@ zh_CN:
           upload_successful: "上传成功。关注词已添加。"
         test:
           button_label: "测试"
-          modal_title: "%{action}：测试敏感词"
+          modal_title: "%{action}：测试关注词"
           description: "在下方输入文本以检查有无与关注词的匹配"
           found_matches: "找到匹配："
           no_matches: "未找到匹配项"
@@ -4431,7 +4431,7 @@ zh_CN:
         flags_received_count: 收到的举报
         warnings_received_count: 收到的警告
         warnings_list_warning: |
-          作为版主，您可能无法查看所有这些话题。如有必要，请管理员或发布版主授予对该消息的 <b>@moderators</b> 访问权限。
+          作为版主，您可能无法查看所有这些话题。如有必要，请向管理员或发布版主请求对该消息的 <b>@moderators</b> 访问权限。
         flags_given_received_count: "提交的举报/收到的举报"
         approve: "批准"
         approved_by: "批准人"
@@ -4608,12 +4608,12 @@ zh_CN:
         revert_confirm: "确定要还原您的变更吗？"
         go_back: "返回搜索"
         recommended: "我们建议自定义以下文本以符合您的需求："
-        show_overriden: "只显示被覆盖"
+        show_overriden: "只显示被替换"
         locale: "语言："
         fallback_locale_warning: "您正在编辑基于%{fallback}语言。选择%{fallback}作为界面语言的用户不会看到您的变更。"
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
       settings:
-        show_overriden: "只显示被覆盖"
+        show_overriden: "只显示被替换"
         history: "查看变更历史记录"
         reset: "重置"
         none: "无"
@@ -4715,7 +4715,7 @@ zh_CN:
         image: 图片
         graphic: 图形
         icon_help: "输入一个 Font Awsome 图标名称（使用前缀“far-”表示常规图标，使用前缀“fab-”表示品牌图标）"
-        image_help: "如果两者都设置，则上传图像会覆盖图标字段。"
+        image_help: "如果两者都设置，则上传图像会替换图标字段。"
         select_an_icon: "选择一个图标"
         upload_an_image: "上传图片"
         read_only_setting_help: "自定义文本"
