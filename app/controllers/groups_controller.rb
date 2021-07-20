@@ -333,19 +333,9 @@ class GroupsController < ApplicationController
 
   def add_members
     group = Group.find(params[:id])
-    group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
+    guardian.ensure_can_edit!(group)
+
     users = users_from_params.to_a
-
-    if group.public_admission
-      if !guardian.can_log_group_changes?(group) && current_user != users.first
-        raise Discourse::InvalidAccess
-      end
-
-      unless current_user.staff?
-        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
-      end
-    end
-
     emails = []
     if params[:emails]
       params[:emails].split(",").each do |email|
