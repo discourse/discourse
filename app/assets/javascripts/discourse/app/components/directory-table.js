@@ -79,7 +79,7 @@ export default Component.extend({
     }
   },
 
-  willDestoryElement() {
+  willDestroyElement() {
     this._tableContainer.removeEventListener("scroll", this.onBottomScroll);
     this._topHorizontalScrollBar.removeEventListener(
       "scroll",
