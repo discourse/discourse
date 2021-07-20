@@ -207,6 +207,7 @@ module SvgSprite
     "upload",
     "user",
     "user-edit",
+    "user-friends",
     "user-plus",
     "user-secret",
     "user-shield",

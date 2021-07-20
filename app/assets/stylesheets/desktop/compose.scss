@@ -85,16 +85,17 @@
 }
 
 .composer-popup {
+  box-sizing: border-box;
   position: absolute;
-  width: calc(50% - 45px);
+  width: calc(50% - 30px);
   max-width: 724px;
-  top: 20px;
+  top: 1.55em;
   bottom: 10px;
   left: 51%;
   overflow-y: auto;
   z-index: z("composer", "popover");
   padding: 10px 10px 35px 10px;
-  box-shadow: shadow("card");
+  box-shadow: shadow("dropdown");
   background: var(--highlight-medium);
   .hide-preview & {
     z-index: z("composer", "dropdown") + 1;
@@ -106,6 +107,18 @@
 
   &.education-message {
     background-color: var(--tertiary-low);
+  }
+
+  &.dominating-topic-message {
+    bottom: unset;
+    padding: 2.25em 6em 2.5em 2.25em;
+    p {
+      margin-top: 0;
+      font-size: var(--font-up-1);
+    }
+    button {
+      margin-top: 0.5em;
+    }
   }
 
   h3 {

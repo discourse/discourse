@@ -631,7 +631,9 @@
           &.single-tab {
             background: none;
             color: var(--primary);
-            padding: 4px 0;
+            padding: 0;
+            font-size: var(--font-up-3);
+            font-weight: bold;
           }
         }
       }
