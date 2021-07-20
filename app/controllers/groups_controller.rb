@@ -409,14 +409,13 @@ class GroupsController < ApplicationController
   end
 
   def join
-    group = Group.find(params[:id])
     ensure_logged_in
-
-    raise Discourse::InvalidAccess unless group.public_admission
-
     unless current_user.staff?
       RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
     end
+
+    group = Group.find(params[:id])
+    raise Discourse::InvalidAccess unless group.public_admission
 
     already_in_group = group.users.exists?(id: current_user.id)
     return if already_in_group
