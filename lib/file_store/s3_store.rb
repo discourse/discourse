@@ -10,6 +10,7 @@ module FileStore
 
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
+    TEMPORARY_UPLOAD_PREFIX ||= "corral/"
 
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper
@@ -35,6 +36,22 @@ module FileStore
       url
     end
 
+    def move_existing_stored_upload(existing_external_upload_key, upload, content_type = nil)
+      upload.url = nil
+      path = get_path_for_upload(upload)
+      url, upload.etag = store_file(
+        nil,
+        path,
+        filename: upload.original_filename,
+        content_type: content_type,
+        cache_locally: false,
+        private_acl: upload.secure?,
+        move_existing: true,
+        existing_external_upload_key: existing_external_upload_key
+      )
+      url
+    end
+
     def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
       optimized_image.url = nil
       path = get_path_for_optimized_image(optimized_image)
@@ -42,10 +59,18 @@ module FileStore
       url
     end
 
+    # File is an actual Tempfile on disk
+    #
+    # An existing_external_upload_key is given for cases where move_existing is specified.
+    # This is an object already uploaded directly to S3 that we are now moving
+    # to its final resting place with the correct sha and key.
+    #
     # options
     #   - filename
     #   - content_type
     #   - cache_locally
+    #   - move_existing
+    #   - existing_external_upload_key
     def store_file(file, path, opts = {})
       path = path.dup
 
@@ -72,7 +97,16 @@ module FileStore
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
 
       # if this fails, it will throw an exception
-      path, etag = s3_helper.upload(file, path, options)
+      if opts[:move_existing] && opts[:existing_external_upload_key]
+        path, etag = s3_helper.copy(
+          opts[:existing_external_upload_key],
+          path,
+          options: options
+        )
+        s3_helper.delete_object(opts[:existing_external_upload_key])
+      else
+        path, etag = s3_helper.upload(file, path, options)
+      end
 
       # return the upload url and etag
       [File.join(absolute_base_url, path), etag]
@@ -162,7 +196,7 @@ module FileStore
 
     def url_for(upload, force_download: false)
       upload.secure? || force_download ?
-        presigned_url(get_upload_key(upload), force_download: force_download, filename: upload.original_filename) :
+        presigned_get_url(get_upload_key(upload), force_download: force_download, filename: upload.original_filename) :
         upload.url
     end
 
@@ -175,7 +209,28 @@ module FileStore
 
     def signed_url_for_path(path, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS, force_download: false)
       key = path.sub(absolute_base_url + "/", "")
-      presigned_url(key, expires_in: expires_in, force_download: force_download)
+      presigned_get_url(key, expires_in: expires_in, force_download: force_download)
+    end
+
+    # TODO (martin) - all the tests for the permutations of prefixes
+    #
+    # s3_bucket: base-bucket/somesite
+    # s3_bucket: base-bucket
+    #
+    # multisite: true
+    #
+    # base-bucket/uploads/corral/fuewj8f34/test.jpg (normal site with no funny business)
+    # base-bucket/somesite/uploads/default/corral/fuewj8f34/test.jpg (dedicated site with bucket path)
+    # base-bucket/teams11/uploads/somesite/corral/fuewj8f34/test.jpg (multisite with bucket path)
+    def signed_url_for_temporary_upload(file_name, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
+      folder = s3_bucket_folder_path.nil? ? "" : "#{s3_bucket_folder_path}/"
+      key = "#{folder}#{upload_path}/#{TEMPORARY_UPLOAD_PREFIX}#{SecureRandom.hex}/#{file_name}"
+      url = presigned_put_url(key, expires_in: expires_in, metadata: metadata)
+      [key, url]
+    end
+
+    def object_from_key(key)
+      s3_helper.object(key)
     end
 
     def cache_avatar(avatar, user_id)
@@ -248,7 +303,19 @@ module FileStore
 
     private
 
-    def presigned_url(
+    def presigned_put_url(key, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
+      signer = Aws::S3::Presigner.new(client: s3_helper.s3_client)
+      signer.presigned_url(
+        :put_object,
+        bucket: s3_bucket_name,
+        key: key,
+        acl: "private",
+        expires_in: expires_in,
+        metadata: metadata
+      )
+    end
+
+    def presigned_get_url(
       url,
       force_download: false,
       filename: false,

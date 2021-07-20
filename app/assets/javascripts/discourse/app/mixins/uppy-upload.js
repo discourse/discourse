@@ -1,5 +1,7 @@
 import Mixin from "@ember/object/mixin";
+import { ajax } from "discourse/lib/ajax";
 import {
+  displayErrorForUpload,
   displayErrorForUppyUpload,
   validateUploadedFile,
 } from "discourse/lib/uploads";
@@ -9,6 +11,8 @@ import I18n from "I18n";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
+import AwsS3 from "@uppy/aws-s3";
+import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
 
@@ -42,13 +46,17 @@ export default Mixin.create({
 
   @on("willDestroyElement")
   _destroy() {
-    this.messageBus && this.messageBus.unsubscribe("/uploads/" + this.type);
+    if (this.messageBus) {
+      this.messageBus.unsubscribe(`/uploads/${this.type}`);
+    }
     this.uppyInstance && this.uppyInstance.close();
   },
 
   @on("didInsertElement")
   _initialize() {
-    this.set("fileInputEl", this.element.querySelector(".hidden-upload-field"));
+    this.setProperties({
+      fileInputEl: this.element.querySelector(".hidden-upload-field"),
+    });
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
 
     this._bindFileInputChangeListener();
@@ -78,6 +86,7 @@ export default Mixin.create({
               bypassNewUserRestriction: true,
               user: this.currentUser,
               siteSettings: this.siteSettings,
+              validateSize: true,
             },
             this.validateUploadedFilesOptions()
           );
@@ -114,14 +123,44 @@ export default Mixin.create({
     );
 
     this.uppyInstance.use(DropTarget, { target: this.element });
+    this.uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
 
     this.uppyInstance.on("progress", (progress) => {
       this.set("uploadProgress", progress);
     });
 
-    this.uppyInstance.on("upload-success", (_file, response) => {
-      this.uploadDone(response.body);
-      this._reset();
+    this.uppyInstance.on("upload-success", (file, response) => {
+      // TODO (martin) this needs to change if the upload is S3 because
+      // the response is not coming from our server. probably need some
+      // message-bus subscription before sending the upload to S3 that
+      // we hook into
+      //
+      // that, or some sort of after upload sucess post-processor/plugin?
+      // need to wait for the sha and for the upload to be real so we can
+      // call uploadDone with this structure:
+      //
+      //
+      // imageUrl: upload.url,
+      // imageId: upload.id,
+      // imageFilesize: upload.human_filesize,
+      // imageFilename: upload.original_filename,
+      // imageWidth: upload.width,
+      // imageHeight: upload.height,
+      if (this.usingS3Uploads) {
+        this.setProperties({ uploading: false, processing: true });
+        this._completeExternalUpload(file)
+          .then((completeResponse) => {
+            this.uploadDone(completeResponse);
+            this._reset();
+          })
+          .catch((errResponse) => {
+            displayErrorForUpload(errResponse, file.name, this.siteSettings);
+            this._reset();
+          });
+      } else {
+        this.uploadDone(response.body);
+        this._reset();
+      }
     });
 
     this.uppyInstance.on("upload-error", (file, error, response) => {
@@ -131,14 +170,51 @@ export default Mixin.create({
 
     // later we will use the uppy direct s3 uploader based on enable_s3_uploads,
     // for now we always just use XHR uploads
-    this._useXHRUploads();
+    // this._useXHRUploads();
+    //
+    this._useS3Uploads();
   },
 
   _useXHRUploads() {
+    this.set("usingXHRUploads", true);
     this.uppyInstance.use(XHRUpload, {
       endpoint: this._xhrUploadUrl(),
       headers: {
         "X-CSRF-Token": this.session.get("csrfToken"),
+      },
+    });
+  },
+
+  _useS3Uploads() {
+    this.set("usingS3Uploads", true);
+    this.uppyInstance.use(AwsS3, {
+      getUploadParameters: (file) => {
+        const data = { file_name: file.name };
+
+        // the sha1 checksum is set by the UppyChecksum plugin, except
+        // for in cases where the browser does not support the required
+        // crypto mechanisms or an error occurs. it is an additional layer
+        // of security, and not required.
+        if (file.meta.sha1_checksum) {
+          data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
+        }
+
+        return ajax(getUrl("/uploads/generate-presigned-put"), {
+          type: "POST",
+          data,
+        }).then((response) => {
+          this.uppyInstance.setFileMeta(file.id, {
+            uniqueUploadIdentifier: response.unique_identifier,
+          });
+
+          return {
+            method: response.method,
+            url: response.url,
+            headers: {
+              "Content-Type": file.type,
+            },
+          };
+        });
       },
     });
   },
@@ -172,8 +248,22 @@ export default Mixin.create({
     });
   },
 
+  _completeExternalUpload(file) {
+    return ajax(getUrl("/uploads/complete-external-upload"), {
+      type: "POST",
+      data: {
+        unique_identifier: file.meta.uniqueUploadIdentifier,
+        type: this.type,
+      },
+    });
+  },
+
   _reset() {
     this.uppyInstance && this.uppyInstance.reset();
-    this.setProperties({ uploading: false, uploadProgress: 0 });
+    this.setProperties({
+      uploading: false,
+      processing: false,
+      uploadProgress: 0,
+    });
   },
 });

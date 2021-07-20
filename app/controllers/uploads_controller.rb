@@ -9,8 +9,13 @@ class UploadsController < ApplicationController
   protect_from_forgery except: :show
 
   before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
+  before_action :external_store_check, only: [:show_secure, :generate_presigned_put, :complete_external_upload]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
+
+  def external_store_check
+    return render_404 if !Discourse.store.external?
+  end
 
   def create
     # capture current user for block later on
@@ -125,7 +130,6 @@ class UploadsController < ApplicationController
   def show_secure
     # do not serve uploads requested via XHR to prevent XSS
     return xhr_not_allowed if request.xhr?
-    return render_404 if !Discourse.store.external?
 
     path_with_ext = "#{params[:path]}.#{params[:extension]}"
 
@@ -185,6 +189,60 @@ class UploadsController < ApplicationController
       height: upload.height,
       human_filesize: upload.human_filesize
     }
+  end
+
+  def generate_presigned_put
+    params.require(:file_name)
+
+    # don't want people posting arbitrary S3 metadata so we just take the
+    # one we need. all of these will be converted to x-amz-meta- metadata
+    # fields in S3 so it's best to use dashes in the names for consistency
+    #
+    # this metadata is baked into the presigned url and is not altered when
+    # sending the PUT from the clientside to the presigned url
+    metadata = if params[:metadata].present?
+      meta = {}
+      if params[:metadata]["sha1-checksum"].present?
+        meta["sha1-checksum"] = params[:metadata]["sha1-checksum"]
+      end
+      meta
+    end
+
+    key, url = Discourse.store.signed_url_for_temporary_upload(params[:file_name], metadata: metadata)
+
+    upload_stub = ExternalUploadStub.create!(
+      key: key,
+      created_by: current_user,
+      original_filename: params[:file_name]
+    )
+
+    render json: { method: :put, url: url, key: key, unique_identifier: upload_stub.unique_identifier }
+  end
+
+  def complete_external_upload
+    unique_identifier = params.require(:unique_identifier)
+    type = params.require(:type)
+
+    external_upload_stub = ExternalUploadStub.find_by(unique_identifier: unique_identifier)
+    return render_404 if external_upload_stub.blank?
+
+    raise Discourse::InvalidAccess if external_upload_stub.created_by_id != current_user.id
+    external_upload_manager = ExternalUploadManager.new(external_upload_stub)
+
+    hijack do
+      begin
+        upload = external_upload_manager.promote_to_upload!(type: type)
+      rescue => err
+        return render json: failed_json.merge(errors: [err.message]), status: 422
+      end
+
+      if upload.errors.empty?
+        # external_upload_stub.destroy
+        render json: UploadsController.serialize_upload(upload), status: Upload === upload ? 200 : 422
+      else
+        render json: failed_json.merge(errors: upload.errors.to_hash.values.flatten), status: 422
+      end
+    end
   end
 
   protected

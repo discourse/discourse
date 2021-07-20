@@ -537,6 +537,9 @@ Discourse::Application.routes.draw do
     post "uploads" => "uploads#create"
     post "uploads/lookup-urls" => "uploads#lookup_urls"
 
+    post "uploads/generate-presigned-put" => "uploads#generate_presigned_put"
+    post "uploads/complete-external-upload" => "uploads#complete_external_upload"
+
     # used to download original images
     get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
     get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-zA-Z0-9\._-]+/i }, as: :upload_short
