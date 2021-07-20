@@ -236,12 +236,12 @@ class UploadsController < ApplicationController
       begin
         upload = external_upload_manager.promote_to_upload
       rescue ExternalUploadManager::ChecksumMismatchError
-        return upload_failed(I18n.t("upload.checksum_mismatch_failure")))
+        return upload_failed(I18n.t("upload.checksum_mismatch_failure"))
       rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound
-        return upload_failed(I18n.t("upload.download_failure")))
+        return upload_failed(I18n.t("upload.download_failure"))
       rescue => err
         Discourse.warn_exception(err, "Complete external upload failed for user #{current_user.id}")
-        return upload_failed(I18n.t("upload.failed")))
+        return upload_failed(I18n.t("upload.failed"))
       end
 
       if upload.errors.empty?
