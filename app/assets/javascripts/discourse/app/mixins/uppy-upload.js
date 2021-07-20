@@ -130,22 +130,6 @@ export default Mixin.create({
     });
 
     this.uppyInstance.on("upload-success", (file, response) => {
-      // TODO (martin) this needs to change if the upload is S3 because
-      // the response is not coming from our server. probably need some
-      // message-bus subscription before sending the upload to S3 that
-      // we hook into
-      //
-      // that, or some sort of after upload sucess post-processor/plugin?
-      // need to wait for the sha and for the upload to be real so we can
-      // call uploadDone with this structure:
-      //
-      //
-      // imageUrl: upload.url,
-      // imageId: upload.id,
-      // imageFilesize: upload.human_filesize,
-      // imageFilename: upload.original_filename,
-      // imageWidth: upload.width,
-      // imageHeight: upload.height,
       if (this.usingS3Uploads) {
         this.setProperties({ uploading: false, processing: true });
         this._completeExternalUpload(file)
@@ -189,7 +173,7 @@ export default Mixin.create({
     this.set("usingS3Uploads", true);
     this.uppyInstance.use(AwsS3, {
       getUploadParameters: (file) => {
-        const data = { file_name: file.name };
+        const data = { file_name: file.name, type: this.type };
 
         // the sha1 checksum is set by the UppyChecksum plugin, except
         // for in cases where the browser does not support the required
@@ -253,7 +237,6 @@ export default Mixin.create({
       type: "POST",
       data: {
         unique_identifier: file.meta.uniqueUploadIdentifier,
-        type: this.type,
       },
     });
   },

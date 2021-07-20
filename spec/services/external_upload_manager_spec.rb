@@ -11,8 +11,10 @@ RSpec.describe ExternalUploadManager do
   let(:etag) { "e696d20564859cbdf77b0f51cbae999a" }
   let(:client_sha1) { Upload.generate_digest(object_file) }
   let(:sha1) { Upload.generate_digest(object_file) }
+  let(:object_file) { logo_file }
   let(:metadata_headers) { {} }
   let!(:external_upload_stub) { Fabricate(:image_external_upload_stub, created_by: user) }
+  let(:upload_base_url) { "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com" }
 
   subject do
     ExternalUploadManager.new(external_upload_stub)
@@ -47,7 +49,7 @@ RSpec.describe ExternalUploadManager do
       end
 
       it "raises an error" do
-        expect { subject.promote_to_upload!(type: type) }.to raise_error(ExternalUploadManager::DownloadFailedError)
+        expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::DownloadFailedError)
       end
     end
 
@@ -58,7 +60,21 @@ RSpec.describe ExternalUploadManager do
         let(:client_sha1) { "blahblah" }
 
         it "raises an error" do
-          expect { subject.promote_to_upload!(type: type) }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
+          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
+        end
+      end
+
+      context "when the upload does not get changed in UploadCreator (resized etc.)" do
+        it "copies the stubbed upload on S3 to its new destination and deletes it" do
+          upload = subject.promote_to_upload!
+          expect(WebMock).to have_requested(
+            :put,
+            "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/original/1X/#{upload.sha1}.png"
+          )
+          expect(WebMock).to have_requested(
+            :delete,
+            "#{upload_base_url}/#{external_upload_stub.key}"
+          )
         end
       end
     end
@@ -75,28 +91,37 @@ RSpec.describe ExternalUploadManager do
 
     it "does not try and download the file" do
       FileHelper.expects(:download).never
-      subject.promote_to_upload!(type: type)
+      subject.promote_to_upload!
     end
 
     # TODO: Test for attatchment + image size limits and also extension types
     it "generates a fake sha for the upload record" do
-      upload = subject.promote_to_upload!(type: type)
+      upload = subject.promote_to_upload!
       expect(upload.sha1).not_to eq(sha1)
       expect(upload.original_sha1).to eq(nil)
       expect(upload.filesize).to eq(object_size)
     end
-  end
 
-  describe "#promote_to_upload!" do
-    it "promotes the stub to a real upload" do
-      expect { subject.promote_to_upload!(type: type) }.to change { Upload.count }.by(1)
+    it "copies the stubbed upload on S3 to its new destination and deletes it" do
+      upload = subject.promote_to_upload!
+      expect(WebMock).to have_requested(
+        :put,
+        "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/original/1X/#{upload.sha1}.pdf"
+      )
+      expect(WebMock).to have_requested(
+        :delete,
+        "#{upload_base_url}/#{external_upload_stub.key}"
+      )
+      expect(WebMock).to have_requested(
+        :delete, "#{upload_base_url}/#{external_upload_stub.key}"
+      )
     end
   end
 
   def stub_head_object
     stub_request(
       :head,
-      "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/#{external_upload_stub.key}"
+      "#{upload_base_url}/#{external_upload_stub.key}"
     ).to_return(
       status: 200,
       headers: {
@@ -115,13 +140,24 @@ RSpec.describe ExternalUploadManager do
     )
   end
 
-  # hmm...how are we going to guess the sha1 when it's going to be made up??
-  #
-  # TOOD: Also have to do this for both the pdf and the png
   def stub_copy_object
     stub_request(
       :put,
-      "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/original/1X/testbc60eb18e8f974cbfae8bb0f069c3a311024.pdf"
+      "#{upload_base_url}/original/1X/testbc60eb18e8f974cbfae8bb0f069c3a311024.pdf"
+    ).to_return(
+      status: 200,
+      headers: { "ETag" => etag },
+      body: <<~BODY)
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
+<CopyObjectResult
+	xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
+	<LastModified>2021-07-19T04:10:41.000Z</LastModified>
+	<ETag>&quot;#{etag}&quot;</ETag>
+</CopyObjectResult>
+    BODY
+    stub_request(
+      :put,
+      "#{upload_base_url}/original/1X/bc975735dfc6409c1c2aa5ebf2239949bcbdbd65.png"
     ).to_return(
       status: 200,
       headers: { "ETag" => etag },
@@ -136,7 +172,9 @@ RSpec.describe ExternalUploadManager do
   end
 
   def stub_delete_object
-    stub_request(:delete, "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/#{external_upload_stub.key}").to_return(
+    stub_request(
+      :delete, "#{upload_base_url}/#{external_upload_stub.key}"
+    ).to_return(
       status: 200
     )
   end

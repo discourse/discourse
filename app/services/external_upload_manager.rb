@@ -16,8 +16,7 @@ class ExternalUploadManager
     external_upload_stub.status == ExternalUploadStub.statuses[:created]
   end
 
-  # TODO (martin) Change it so that type is saved with the stub
-  def promote_to_upload!(type:)
+  def promote_to_upload!
     external_stub_object = Discourse.store.object_from_key(external_upload_stub.key)
     # Aws::S3::Errors::NotFound in case key has been deleted on S3
     external_etag = external_stub_object.etag
@@ -30,7 +29,7 @@ class ExternalUploadManager
     tempfile = nil
     should_download = external_size < DOWNLOAD_LIMIT
     if should_download
-      tempfile = download(external_upload_stub.key, type)
+      tempfile = download(external_upload_stub.key, external_upload_stub.upload_type)
 
       # download failed ERR
       raise DownloadFailedError if tempfile.blank?
@@ -49,7 +48,7 @@ class ExternalUploadManager
     # also check if retain_hours is needed
     #
     opts = {
-      type: type,
+      type: external_upload_stub.upload_type,
       existing_external_upload_key: external_upload_stub.key,
       external_upload_too_big: external_size > DOWNLOAD_LIMIT,
       filesize: external_size

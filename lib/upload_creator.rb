@@ -183,6 +183,7 @@ class UploadCreator
         else
           Upload.generate_digest(@file) != sha1_before_changes
         end
+
       if @opts[:existing_external_upload_key] && Discourse.store.external?
         should_move = external_upload_too_big || !upload_changed
       end

@@ -8,6 +8,7 @@ class CreateExternalUploadStubs < ActiveRecord::Migration[6.1]
       t.integer :status, default: 1, null: false, index: true
       t.string :unique_identifier, null: false, index: true
       t.integer :created_by_id, null: false, index: true
+      t.string :upload_type, null: false
 
       t.timestamps
     end

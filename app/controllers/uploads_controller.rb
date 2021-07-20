@@ -192,7 +192,8 @@ class UploadsController < ApplicationController
   end
 
   def generate_presigned_put
-    params.require(:file_name)
+    file_name = params.require(:file_name)
+    type = params.require(:type)
 
     # don't want people posting arbitrary S3 metadata so we just take the
     # one we need. all of these will be converted to x-amz-meta- metadata
@@ -208,12 +209,15 @@ class UploadsController < ApplicationController
       meta
     end
 
-    key, url = Discourse.store.signed_url_for_temporary_upload(params[:file_name], metadata: metadata)
+    key, url = Discourse.store.signed_url_for_temporary_upload(
+      file_name, metadata: metadata
+    )
 
     upload_stub = ExternalUploadStub.create!(
       key: key,
       created_by: current_user,
-      original_filename: params[:file_name]
+      original_filename: file_name,
+      upload_type: type
     )
 
     render json: { method: :put, url: url, key: key, unique_identifier: upload_stub.unique_identifier }
@@ -221,7 +225,6 @@ class UploadsController < ApplicationController
 
   def complete_external_upload
     unique_identifier = params.require(:unique_identifier)
-    type = params.require(:type)
 
     external_upload_stub = ExternalUploadStub.find_by(unique_identifier: unique_identifier)
     return render_404 if external_upload_stub.blank?
@@ -231,7 +234,7 @@ class UploadsController < ApplicationController
 
     hijack do
       begin
-        upload = external_upload_manager.promote_to_upload!(type: type)
+        upload = external_upload_manager.promote_to_upload
       rescue => err
         return render json: failed_json.merge(errors: [err.message]), status: 422
       end

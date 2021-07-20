@@ -4,6 +4,7 @@ Fabricator(:external_upload_stub) do
   created_by { Fabricate(:user) }
   original_filename "test.txt"
   key "path/to/s3/#{SecureRandom.hex(10)}/test.txt"
+  upload_type "card_background"
   status 1
 end
 
