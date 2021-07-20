@@ -408,6 +408,83 @@ class GroupsController < ApplicationController
     end
   end
 
+  def join
+    group = Group.find(params[:id])
+    group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
+    users = users_from_params.to_a
+
+    if group.public_admission
+      if !guardian.can_log_group_changes?(group) && current_user != users.first
+        raise Discourse::InvalidAccess
+      end
+
+      unless current_user.staff?
+        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      end
+    end
+
+    emails = []
+    if params[:emails]
+      params[:emails].split(",").each do |email|
+        existing_user = User.find_by_email(email)
+        existing_user.present? ? users.push(existing_user) : emails.push(email)
+      end
+    end
+
+    guardian.ensure_can_invite_to_forum!([group]) if emails.present?
+
+    if users.empty? && emails.empty?
+      raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
+    end
+
+    if users.length > ADD_MEMBERS_LIMIT
+      return render_json_error(
+        I18n.t("groups.errors.adding_too_many_users", count: ADD_MEMBERS_LIMIT)
+      )
+    end
+
+    usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
+    if usernames_already_in_group.present? &&
+      usernames_already_in_group.length == users.length &&
+      emails.blank?
+      render_json_error(I18n.t(
+        "groups.errors.member_already_exist",
+        username: usernames_already_in_group.sort.join(", "),
+        count: usernames_already_in_group.size
+      ))
+    else
+      uniq_users = users.uniq
+      uniq_users.each do |user|
+        begin
+          group.add(user)
+          GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+          group.notify_added_to_group(user) if params[:notify_users]&.to_s == "true"
+        rescue ActiveRecord::RecordNotUnique
+          # Under concurrency, we might attempt to insert two records quickly and hit a DB
+          # constraint. In this case we can safely ignore the error and act as if the user
+          # was added to the group.
+        end
+      end
+
+      emails.each do |email|
+        begin
+          Invite.generate(current_user, email: email, group_ids: [group.id])
+        rescue RateLimiter::LimitExceeded => e
+          return render_json_error(I18n.t(
+            "invite.rate_limit",
+            count: SiteSetting.max_invites_per_day,
+            time_left: e.time_left
+          ))
+        end
+      end
+
+      render json: success_json.merge!(
+        usernames: uniq_users.map(&:username),
+        emails: emails
+      )
+    end
+  end
+
   def handle_membership_request
     group = Group.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if group.blank?
