@@ -2,7 +2,6 @@ import Mixin from "@ember/object/mixin";
 import { ajax } from "discourse/lib/ajax";
 import {
   displayErrorForUpload,
-  displayErrorForUppyUpload,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import { deepMerge } from "discourse-common/lib/object";
@@ -148,7 +147,7 @@ export default Mixin.create({
     });
 
     this.uppyInstance.on("upload-error", (file, error, response) => {
-      displayErrorForUppyUpload(response, file.name, this.siteSettings);
+      displayErrorForUpload(response, file.name, this.siteSettings);
       this._reset();
     });
 

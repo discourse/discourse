@@ -75,7 +75,7 @@ export default Component.extend({
 
     $upload.on("fileuploadfail", (e, data) => {
       if (data.errorThrown !== "abort") {
-        displayErrorForUpload(data, this.siteSettings);
+        displayErrorForUpload(data, data.files[0].name, this.siteSettings);
       }
       this.reset();
     });

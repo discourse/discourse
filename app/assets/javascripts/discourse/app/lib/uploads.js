@@ -279,12 +279,6 @@ export function getUploadMarkdown(upload) {
   }
 }
 
-// TODO (martin) Conform both of these into a single function...
-//
-// 1. response.jqXHR and response.errors, response.jqXHR.status, response.jqXHR.responseJSON, with data.files[0].name
-// 2. response.body, response.status, and response.errors with dedicated file name
-//
-// Maybe just force use of a file name?
 export function displayErrorForUpload(data, fileName, siteSettings) {
   if (data.jqXHR) {
     const didError = displayErrorByResponseStatus(
@@ -296,30 +290,21 @@ export function displayErrorForUpload(data, fileName, siteSettings) {
     if (didError) {
       return;
     }
-  } else if (data.errors && data.errors.length > 0) {
-    bootbox.alert(data.errors.join("\n"));
-    return;
-  }
-  // otherwise, display a generic error message
-  bootbox.alert(I18n.t("post.errors.upload"));
-}
-
-export function displayErrorForUppyUpload(response, fileName, siteSettings) {
-  const errors = response.errors || response.body.errors;
-  if (errors.length > 0) {
-    bootbox.alert(errors.join("\n"));
-    return;
-  } else {
+  } else if (data.body && data.status) {
     const didError = displayErrorByResponseStatus(
-      response.status,
-      response.body,
+      data.status,
+      data.body,
       fileName,
       siteSettings
     );
     if (didError) {
       return;
     }
+  } else if (data.errors && data.errors.length > 0) {
+    bootbox.alert(data.errors.join("\n"));
+    return;
   }
+
   // otherwise, display a generic error message
   bootbox.alert(I18n.t("post.errors.upload"));
 }

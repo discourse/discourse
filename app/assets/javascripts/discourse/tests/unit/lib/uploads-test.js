@@ -3,6 +3,7 @@ import {
   allowsAttachments,
   allowsImages,
   authorizedExtensions,
+  displayErrorForUpload,
   getUploadMarkdown,
   isImage,
   validateUploadedFiles,
@@ -311,5 +312,54 @@ discourseModule("Unit | Utility | uploads", function () {
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
       "![image|100x200](/uploads/123/abcdef.ext)"
     );
+  });
+
+  test("displayErrorForUpload - jquery file upload - jqXHR present", function (assert) {
+    sinon.stub(bootbox, "alert");
+    displayErrorForUpload(
+      {
+        jqXHR: { status: 422, responseJSON: { message: "upload failed" } },
+      },
+      "test.png",
+      { max_attachment_size_kb: 1024, max_image_size_kb: 1024 }
+    );
+    assert.ok(bootbox.alert.calledWith("upload failed"), "the alert is called");
+  });
+
+  test("displayErrorForUpload - jquery file upload - jqXHR missing, errors present", function (assert) {
+    sinon.stub(bootbox, "alert");
+    displayErrorForUpload(
+      {
+        errors: ["upload failed"],
+      },
+      "test.png",
+      { max_attachment_size_kb: 1024, max_image_size_kb: 1024 }
+    );
+    assert.ok(bootbox.alert.calledWith("upload failed"), "the alert is called");
+  });
+
+  test("displayErrorForUpload - jquery file upload - no errors", function (assert) {
+    sinon.stub(bootbox, "alert");
+    displayErrorForUpload({}, "test.png", {
+      max_attachment_size_kb: 1024,
+      max_image_size_kb: 1024,
+    });
+    assert.ok(
+      bootbox.alert.calledWith(I18n.t("post.errors.upload")),
+      "the alert is called"
+    );
+  });
+
+  test("displayErrorForUpload - uppy - with response status and body", function (assert) {
+    sinon.stub(bootbox, "alert");
+    displayErrorForUpload(
+      {
+        status: 422,
+        body: { message: "upload failed" },
+      },
+      "test.png",
+      { max_attachment_size_kb: 1024, max_image_size_kb: 1024 }
+    );
+    assert.ok(bootbox.alert.calledWith("upload failed"), "the alert is called");
   });
 });
