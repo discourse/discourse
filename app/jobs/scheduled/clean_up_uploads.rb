@@ -45,6 +45,8 @@ module Jobs
         end
       end
 
+      ExternalUploadStub.cleanup!
+
       self.last_cleanup = Time.zone.now.to_i
     end
 
