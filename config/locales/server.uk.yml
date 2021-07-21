@@ -2070,7 +2070,6 @@ uk:
     no_email: "Не вказано електронну адресу e-mail. Зверніться до адміністратора сайту."
     email_error: "Не вдалося зареєструвати обліковий запис з електронною поштою <b>%{email}</b>. Зверніться до адміністратора сайту."
   original_poster: "Перший дописувач"
-  most_posts: "Найбільше дописів"
   most_recent_poster: "Автор останнього допису"
   frequent_poster: "Частий дописувач"
   redirected_to_top_reasons:
@@ -2674,7 +2673,13 @@ uk:
     account_suspended:
       title: "Акаунт призупинено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"
+    account_suspended_forever:
+      title: "Акаунт призупинено"
+      subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"
     account_silenced:
+      title: "Обліковий запис вимкнено"
+      subject_template: "[%{email_prefix}] Ваш обліковий запис вимкнено"
+    account_silenced_forever:
       title: "Обліковий запис вимкнено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис вимкнено"
     account_exists:

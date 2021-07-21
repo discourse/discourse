@@ -1648,7 +1648,6 @@ zh_TW:
     no_email: "沒有 email 被提供，請聯繫網站的管理員。"
     email_error: "無法使用此郵件地址：<b>%{email}</b>註冊帳號，請聯絡此網站管理員"
   original_poster: "原始作者"
-  most_posts: "大部分貼文"
   most_recent_poster: "當前大部分貼文作者"
   frequent_poster: "頻繁發文者"
   redirected_to_top_reasons:
@@ -2481,7 +2480,13 @@ zh_TW:
     account_suspended:
       title: "帳號被停權"
       subject_template: "[%{email_prefix}] 你的帳號已被停權"
+    account_suspended_forever:
+      title: "帳號被停權"
+      subject_template: "[%{email_prefix}] 你的帳號已被停權"
     account_silenced:
+      title: "帳號被禁言"
+      subject_template: "[%{email_prefix}] 你的帳號已被禁言"
+    account_silenced_forever:
       title: "帳號被禁言"
       subject_template: "[%{email_prefix}] 你的帳號已被禁言"
     account_exists:

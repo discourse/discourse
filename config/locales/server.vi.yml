@@ -1200,7 +1200,6 @@ vi:
     unknown_error: "Đã có vấn đề xảy ra với tài khoản của bạn, xin hãy liên hệ với BQT."
     timeout_expired: "Đăng nhập tài khoản hết hạn, xin hãy thử đăng nhập lại."
   original_poster: "Người viết gốc"
-  most_posts: "Bài viết Phỏ biến"
   most_recent_poster: "Người Gửi Mới Đây"
   frequent_poster: "Người Gửi Thường Xuyên"
   redirected_to_top_reasons:
@@ -1393,35 +1392,8 @@ vi:
       Chúng tôi đã gửi liên kết tải xuống này đến địa chỉ email đã được xác thực của bạn vì lý do bảo mật.
 
       (Nếu bạn *không* yêu cầu tải xuống này, bạn nên thực sự lo lắng - ai đó có quyền truy cập quản trị vào trang web của bạn.)
-  new_version_mailer:
-    text_body_template: |
-      Hoan hô, đã có phiên bản mới của [Discourse](https://www.discourse.org)!
-
-      Phiên bản của bạn: %{installed_version}
-      Phiên bản mới: **%{new_version}**
-
-      - Nâng cấp dễ dàng bằng cách sử dụng ** [nâng cấp trình duyệt bằng một cú nhấp chuột] (%{base_url}/admin/upgrade) **
-
-      - Xem có gì mới trong [ghi chú phát hành](https://meta.discourse.org/tag/release-notes) hoặc xem [bản thay đổi thô của GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Truy cập [meta.discourse.org](https://meta.discourse.org) để biết tin tức, thảo luận và hỗ trợ cho Discourse
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] có bản cập nhật"
-    text_body_template: |
-      Hoan hô, đã có phiên bản mới của [Discourse](https://www.discourse.org)
-
-      Phiên bản của bạn: %{installed_version}
-      Phiên bản mới: **%{new_version}**
-
-      - Nâng cấp bằng cách sử dụng dễ dàng **[nâng cấp trình duyệt bằng một cú nhấp chuột](%{base_url}/admin/upgrade)**
-
-      - Xem có gì mới trong [ghi chú phát hành](https://meta.discourse.org/tag/release-notes) hoặc xem [bản thay đổi thô của GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Truy cập [meta.discourse.org](https://meta.discourse.org) để biết tin tức, thảo luận và hỗ trợ cho Discourse
-
-      ### Ghi chú phát hành
-
-      %{notes}
   flag_reasons:
     off_topic: "Bài viết của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và bài viết đầu tiên."
     inappropriate: "Bài viết của bạn được đánh dấu là **inappropriate**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](%{base_path}/guidelines)."

@@ -41,6 +41,7 @@ bg:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "преди %{date}"
+      wrap_on: "на %{date}"
       tiny:
         half_a_minute: "< 1 мин."
         less_than_x_seconds:
@@ -119,6 +120,10 @@ bg:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикации #%{postNumber}"
       close: "затвори"
+      twitter: "Споделете в Twitter"
+      facebook: "Споделете във Facebook"
+      email: "Изпратете чрез имейл"
+      url: "Копирайте и споделете линка"
     action_codes:
       public_topic: "направи тази тема публична на %{when}"
       private_topic: "направи тази тема персонално съобщение%{when}"
@@ -128,6 +133,7 @@ bg:
       user_left: "%{who}напусна чата %{when}"
       removed_user: "изтри %{who} %{when}"
       removed_group: "изтри %{who} на %{when}"
+      autobumped: "автоматично вдигната %{when}"
       autoclosed:
         enabled: "затворена %{when}"
         disabled: "отворена %{when}"
@@ -154,6 +160,7 @@ bg:
     wizard_required: "Добре дошли във вашия нов Discourse! Нека започнем с <a href='%{url}' data-auto-route='true'>съветника за настройка</a> ✨"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
     software_update_prompt:
+      message: "Актуализирахме този сайт, <span>моля, презаредете</span>, или може да изпитате неочаквано поведение."
       dismiss: "Отмени"
     bootstrap_mode_disabled: "Режимът на стартиране ще бъде изключен в следващите 24 часа. "
     themes:
@@ -163,6 +170,7 @@ bg:
       regions:
         ap_northeast_1: "Азия (Токио)"
         ap_northeast_2: "Азия (Сеул)"
+        ap_east_1: "Азия (Хонг Конг)"
         ap_south_1: "Азия (Мумбай)"
         ap_southeast_1: "Азия (Сингапур)"
         ap_southeast_2: "Океания (Сидни)"
@@ -181,6 +189,7 @@ bg:
         us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (С. Калифорния)"
         us_west_2: "US West (Орегон)"
+    clear_input: "Изчистване на полето"
     edit: "редактирайте заглавието и категорията на тази тема"
     expand: "Разшири"
     not_implemented: "Тази функционалност все още не е добавена."
@@ -209,7 +218,6 @@ bg:
     conduct: "Правила за поведение"
     mobile_view: "Мобилен изглед"
     desktop_view: "Десктоп изглед"
-    you: "Вие"
     or: "или"
     now: "преди малко"
     read_more: "прочетете повече"
@@ -240,6 +248,9 @@ bg:
       moderators: "Модератори"
       stat:
         all_time: "От началото"
+        last_day: "Последните 24 часа"
+        last_7_days: "Последните 7 дни"
+        last_30_days: "Последните 30 дни"
       like_count: "Харесвания"
       topic_count: "Теми"
       post_count: "Публикации"
@@ -249,6 +260,7 @@ bg:
       contact_info: "В случай на критичен или спешен въпрос засягащ този сайт, моля свържете се с нас на адрес %{contact_email}."
     bookmarked:
       title: "Отметка"
+      edit_bookmark: "Редактиране на отметка"
       clear_bookmarks: "Изчисти отметките"
       help:
         bookmark: "Щракнете за да добавите в отметки първата публикация в тази тема"
@@ -264,18 +276,23 @@ bg:
       invalid_custom_datetime: "Въведените дата и час не са валидни. Опитайте отново."
       list_permission_denied: "Нямате право да преглеждате отметките на този потребител."
       auto_delete_preference:
+        label: "Автоматично изтриване"
         never: "Никога"
       search: "Търсене"
       reminders:
         today_with_time: "днес в %{time}"
         tomorrow_with_time: "утре в %{time}"
         at_time: "на %{date_time}"
+    copy_codeblock:
+      copied: "копирано!"
     drafts:
       resume: "Продължи"
       remove: "Премахване"
       new_topic: "Проект на нова тема"
-      new_private_message: "Чернова на лично съобщение"
       topic_reply: "Проект на отговор"
+      abandon:
+        yes_value: "Отхвърляне"
+        no_value: "Възобновете редактирането"
     topic_count_unread:
       one: "Виж %{count} непрочетена тема"
       other: "Виж %{count} непрочетени теми"
@@ -284,6 +301,7 @@ bg:
       other: "Вижте %{count} нови теми"
     preview: "преглед"
     cancel: "прекрати"
+    deleting: "Изтриване..."
     save: "Запазете промените"
     saving: "Запазва се..."
     saved: "Запазено!"
@@ -334,7 +352,10 @@ bg:
       title: "Преглед"
       topic: "Тема:"
       filtered_user: "Потребител"
+      filtered_reviewed_by: "Прегледано от"
       show_all_topics: "покажи всички теми"
+      deleted_post: "(публикацията е изтрита)"
+      deleted_user: "(потребителят е изтрит)"
       user:
         bio: "Биография"
         website: "Уебсайт"
@@ -356,6 +377,7 @@ bg:
       topics:
         topic: "Тема"
         reviewable_count: "Брой"
+        reported_by: "Докладвано от"
         details: "детайли"
         unique_users:
           one: "%{count} потребител"
@@ -548,8 +570,6 @@ bg:
         public: "Публични"
         private: "Затворени"
         public_groups: "Публични групи"
-        automatic_group: Автоматична група
-        close_group: Затворете групата
         my_groups: "Моите групи"
         group_type: "Тип група"
         is_group_user: "Член"
@@ -602,6 +622,8 @@ bg:
       flair_color_placeholder: "(По желание) Шестнадесетична стойност на цвят"
       flair_preview_icon: "Икона за прегледа"
       flair_preview_image: "Снимка за преглед"
+      default_notifications:
+        modal_yes: "Да"
     user_action_groups:
       "1": "Дадени харесвания"
       "2": "Получени харесвания"
@@ -631,7 +653,6 @@ bg:
       posts: "Публикации"
       topics: "Теми"
       latest: "Последни"
-      toggle_ordering: "включете контрол на подредбата"
       subcategories: "Подкатегории"
       topic_sentence:
         one: "%{count} тема"
@@ -895,7 +916,6 @@ bg:
       auth_tokens:
         details: "Детайли "
       last_posted: "Последна публикация"
-      last_emailed: "Последен имейл"
       last_seen: "Видян"
       created: "Присъединен"
       log_out: "Изход"
@@ -1697,8 +1717,6 @@ bg:
       whisper: "този пост е отбелязан като таен за модераторите"
       wiki:
         about: "този пост е wiki"
-      archetypes:
-        save: "Запазете опциите"
       few_likes_left: "Благодарим за споделянето на любовта Ви! Вие имате право на само още няколко харесвания за днес."
       controls:
         reply: "започни отговор на тази публикация"
@@ -1780,6 +1798,7 @@ bg:
         name: "Име"
         name_placeholder: "За какво е тази отметка?"
         set_reminder: "Напомни ми"
+        options: "Опции"
         actions:
           delete_bookmark:
             name: "Изтриване на отметка"
@@ -1787,7 +1806,6 @@ bg:
           edit_bookmark:
             name: "Редактиране на отметка"
     category:
-      can: "can&hellip;"
       none: "(без категория)"
       all: "Всички категории"
       edit: "Редактирай"
@@ -1808,7 +1826,6 @@ bg:
       save_error: Възникна грешка при запазването на категорията.
       name: "Име на категорията"
       description: "Описание"
-      topic: "предмет на категорията"
       logo: "Изображение за категория "
       background_image: "Изображение за фон на категорията "
       badge_colors: "Цветове на значките"
@@ -2957,6 +2974,8 @@ bg:
         badge_intro:
           title: "Изберете съществуваща значка или създайте нова, за да започнете"
           what_are_badges_title: "Какво са значките?"
+        mass_award:
+          csv_has_unmatched_users: "Следните записи са в CSV файла, но те не могат да бъдат съчетани със съществуващи потребители и следователно няма да получат значката:"
       emoji:
         title: "Емотикони "
         help: "Добави нови емотикони, които ще бъдат достъпни до всички. (Съвет: Може да дръпнете и пуснете много файлове наведнъж). "

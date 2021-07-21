@@ -32,7 +32,7 @@ ar:
         closed:
           title: "ستظهر النتائج بعد <strong>إغلاق الاستطلاع</strong>."
         staff:
-          title: "تظهر النتائج لأعضاء <strong>طاقم العمل</strong> فقط."
+          title: "تظهر النتائج لأعضاء <strong>فريق العمل</strong> فقط."
       cast-votes:
         title: "الإدلاء بصوتك"
         label: "صوِّت اﻵن!"

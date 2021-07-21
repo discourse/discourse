@@ -1539,11 +1539,6 @@ gl:
     auth_overrides_email: "Sobrescribe o enderezo de correo local co enderezo de correo do sitio externo, e evita os cambios locais. Aplícase a todos os fornecedores de autenticación. (AVISO: poden producirse discrepancias debido á normalización dos enderezos de correo locais)"
     auth_overrides_username: "Sobrescribe o nome de usuario local co nome de usuario do sitio externo en cada inicio de sesión e evita os cambios locais. Aplícase a todos os fornecedores de autenticación. (AVISO: poden producirse discrepancias debido á normalización dos enderezos de correo locais)"
     auth_overrides_name: "Sobrescribe o nome completo co nome completo do sitio externo en cada inicio de sesión e evita os cambios locais. Aplícase a todos os fornecedores de autenticación."
-    discourse_connect_overrides_avatar: "Sobrescribe o avatar do usuario co avatar do sitio externo que transporta a carga de DiscourseConnect. Se está activado, os usuarios non poderán cargar avatares en Discourse."
-    discourse_connect_overrides_location: "Sobrescribe a localización do usuario coa localización do sitio externo que transporta a carga de DiscourseConnect e evita os cambios locais."
-    discourse_connect_overrides_website: "Sobrescribe a localización do sitio web do usuario coa localización do sitio externo que transporta a carga de DiscourseConnect e evita os cambios locais."
-    discourse_connect_overrides_profile_background: "Sobrescribe o fondo do perfil de usuario cun avatar de sitio externo que transporte DiscourseConnect."
-    discourse_connect_overrides_card_background: "Sobrescribe o fondo da tarxeta de usuario cun avatar de sitio externo que transporte a carga de DiscourseConnect."
     discourse_connect_not_approved_url: "Redireccionar contas de DiscourseConnect sen aprobar a este URL"
     discourse_connect_allows_all_return_paths: "Non restrinxa o dominio para return_paths fornecidos por DiscourseConnect (o camiño de devolución debe estar no sitio actual, de modo predeterminado)"
     enable_local_logins: "Active as contas co nome de usuario local e o contrasinal de inicio de sesión. ATENCIÓN: de estar desactivado, quizais non poida iniciar sesión se non configurou previamente cando menos unha método de inicio alternativo."
@@ -2083,7 +2078,6 @@ gl:
     missing_secret: "Fallou a autenticación porque falta a clave secreta. Contacte co administrador do sitio para amañar este problema."
     invite_redeem_failed: "Fallou a recuperación do convite. Póñase en contacto co administrador do sitio."
   original_poster: "Publicador orixinal"
-  most_posts: "Con máis publicacións"
   most_recent_poster: "Publicador máis recente"
   frequent_poster: "Publicador frecuente"
   poster_description_joiner: ", "
@@ -2434,35 +2428,9 @@ gl:
   new_version_mailer:
     title: "Nova versión de servizo de correo"
     subject_template: "[%{email_prefix}] Nova versión de Discourse, actualización dispoñible"
-    text_body_template: |
-      Hurra, está dispoñíbel unha nova versión de [Discourse](https://www.discourse.org).
-
-      A súa versión: %{installed_version}
-      A nova versión: **%{new_version}**
-
-      - Actualice facilmente mediante ** [actualización cun só clic] (%{base_url}/admin/upgrade) **
-
-      - Vexa as novidades nas [notas da edición] (https://meta.discourse.org/tag/release-notes) ou vexa o [rexistro en bruto de cambios en GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visite [meta.discourse.org](https://meta.discourse.org) para novas, discusións e apoiar a Discourse
   new_version_mailer_with_notes:
     title: "Nova versión do servizo de correo con notas"
     subject_template: "[%{email_prefix}] actualización dispoñible"
-    text_body_template: |
-      Hurra, está dispoñíbel unha nova versión de [Discourse](https://www.discourse.org).
-
-      A súa versión: %{installed_version}
-      A nova versión: **%{new_version}**
-
-      - Actualice facilmente mediante ** [actualización cun só clic] (%{base_url}/admin/upgrade) **
-
-      - Vexa as novidades nas [notas da edición] (https://meta.discourse.org/tag/release-notes) ou vexa o [rexistro en bruto de cambios en GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visite [meta.discourse.org](https://meta.discourse.org) para novas, discusións e apoiar a Discourse
-
-      ### Notas da edición
-
-      %{notes}
   flag_reasons:
     off_topic: "A súa publicación foi denunciada como **fóra de tema**: a comunidade pensa que non se axusta como debe ao tema, tal como está definido no seu título e na primeira publicación."
     inappropriate: "A súa publicación foi denunciada como **inapropiada**: a comunidade pensa que é ofensiva, abusiva ou viola as [as directrices da nosa comunidade](%{base_path}/guidelines)."
@@ -3263,6 +3231,9 @@ gl:
         Queda suspendida a súa participación no foro ata %{suspended_till}.
 
         Razón - %{reason}
+    account_suspended_forever:
+      title: "Conta suspendida"
+      subject_template: "[%{email_prefix}] A súa conta foi suspendida"
     account_silenced:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"
@@ -3270,6 +3241,9 @@ gl:
         Queda silenciado no foro ata %{silenced_till}.
 
         Razón - %{reason}
+    account_silenced_forever:
+      title: "Conta silenciada"
+      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
     account_exists:
       title: "A conta xa existe"
       subject_template: "[%{email_prefix}] A conta xa existe"

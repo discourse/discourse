@@ -6,5 +6,5 @@
 
 pl_PL:
   site_settings:
-    styleguide_enabled: "Włącz ścieżkę `/styleguide`, aby pomóc w stylizowaniu Discourse"
+    styleguide_enabled: 'Włącz ścieżkę `/styleguide`, aby pomóc w stylizowaniu Discourse'
     styleguide_admin_only: "Ogranicza widoczność styleguide dla administratorów"

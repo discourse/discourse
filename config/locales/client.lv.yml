@@ -203,7 +203,6 @@ lv:
     rules: "Noteikumi"
     mobile_view: "Mobilais skats"
     desktop_view: "Datora skats"
-    you: "Tu"
     or: "vai"
     now: "tikko"
     read_more: "lasīt vairāk"
@@ -466,7 +465,6 @@ lv:
         closed: "Slēgts"
         public: "Publisks"
         private: "Privāts"
-        automatic_group: Automātiska grupa
         my_groups: "Manas grupas"
       title:
         zero: "Grupas"
@@ -508,6 +506,8 @@ lv:
       flair_color_placeholder: "(Neobligāti) Heksadecimālā krāsas vērtība"
       flair_preview_icon: "Priekšskatījuma ikona"
       flair_preview_image: "Priekšskatījuma attēls"
+      default_notifications:
+        modal_yes: "Jā"
     user_action_groups:
       "1": "Veiktās atzinības"
       "2": "Saņemtās atzinības"
@@ -537,7 +537,6 @@ lv:
       posts: "Raksti"
       topics: "Tēmas"
       latest: "Jaunākie"
-      toggle_ordering: "mainīt secības kontroli"
       subcategories: "Apakšsadaļas"
       topic_sentence:
         zero: "Nav tēmu"
@@ -788,7 +787,6 @@ lv:
       auth_tokens:
         details: "Detaļas"
       last_posted: "Pēdējais ieraksts"
-      last_emailed: "Pēdējais e-pasts"
       last_seen: "Redzēts"
       created: "Pievienojās"
       log_out: "Iziet"
@@ -1689,8 +1687,6 @@ lv:
       whisper: "šis ieraksts ir privāts čuksts moderatoriem"
       wiki:
         about: "šis ieraksts ir wiki"
-      archetypes:
-        save: "Saglabāšanas iespējas"
       few_likes_left: "Paldies par dalīšanos ar atzinību! Jums šodien ir palikušas tikai dažas iespējas izteikt atzinību."
       controls:
         reply: "sākt rakstīt atbildi šim ierakstam"
@@ -1762,8 +1758,8 @@ lv:
       bookmarks:
         created: "Radīts"
         name: "Vārds"
+        options: "Iespējas"
     category:
-      can: "var&hellip;"
       none: "(nav sadaļas)"
       all: "Visas sadaļas"
       edit: "Labot"
@@ -1782,7 +1778,6 @@ lv:
       save_error: Saglabājot šo sadaļu, notika kļūda.
       name: "Sadaļas nosaukums"
       description: "Apraksts"
-      topic: "sadaļas tema"
       logo: "Sadaļas logo attēls"
       background_image: "Sadaļas fona attēls"
       badge_colors: "Žetona krāsas"

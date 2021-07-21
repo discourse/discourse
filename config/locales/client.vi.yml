@@ -193,7 +193,6 @@ vi:
     conduct: "Quy tắc ứng xử"
     mobile_view: "Xem ở chế độ di động"
     desktop_view: "Xem ở chế độ máy tính"
-    you: "Bạn"
     or: "hoặc"
     now: "ngay lúc này"
     read_more: "đọc thêm"
@@ -270,7 +269,6 @@ vi:
       remove: "Xoá"
       remove_confirmation: "Bạn có chắc chắn muốn xóa bản nháp này không?"
       new_topic: "Chủ đề nháp mới"
-      new_private_message: "Tin nhắn nháp mới"
       topic_reply: "Trả lời nháp"
       abandon:
         yes_value: "Hủy bỏ"
@@ -655,8 +653,6 @@ vi:
         public: "Công khai"
         private: "Riêng tư"
         public_groups: "Nhóm công khai"
-        automatic_group: Nhóm tự động
-        close_group: Nhóm riêng tư
         my_groups: "Nhóm của tôi"
         group_type: "Loại nhóm"
         is_group_user: "Thành viên"
@@ -717,6 +713,10 @@ vi:
       flair_type:
         icon: "Chọn một biểu tượng"
         image: "Tải lên một hình ảnh"
+      default_notifications:
+        modal_description: "Bạn có muốn áp dụng thay đổi này trong lịch sử không? Điều này sẽ thay đổi tùy chọn cho %{count} người dùng hiện tại."
+        modal_yes: "Có"
+        modal_no: "Không, chỉ áp dụng thay đổi về sau"
     user_action_groups:
       "1": "Lượt thích"
       "2": "Lần được thích"
@@ -746,7 +746,6 @@ vi:
       posts: "Bài viết"
       topics: "Chủ đề"
       latest: "Mới nhất"
-      toggle_ordering: "chuyển lệnh kiểm soát"
       subcategories: "Phân loại phụ"
       muted: "Các danh mục bị ẩn"
       topic_sentence:
@@ -1161,7 +1160,6 @@ vi:
         browser_active: '%{browser} | <span class="active">kích hoạt</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Bài viết cuối cùng"
-      last_emailed: "Đã email lần cuối"
       last_seen: "được thấy"
       created: "Đã tham gia"
       log_out: "Log Out"
@@ -1732,7 +1730,6 @@ vi:
           confirm: Bạn đã lưu một bản nháp chủ đề mới, bản nháp này sẽ bị ghi đè nếu bạn tạo một chủ đề được liên kết.
         reply_as_new_group_message:
           label: Trả lời dưới dạng tin nhắn nhóm mới
-          desc: Tạo một tin nhắn riêng mới với cùng những người nhận
         reply_as_private_message:
           label: Tin nhắn mới
           desc: Tạo một tin nhắn cá nhân mới
@@ -1999,13 +1996,6 @@ vi:
       defer:
         help: "đánh dấu là chưa đọc"
         title: "Hoãn"
-      feature_on_profile:
-        help: "Thêm liên kết đến chủ đề này trên thẻ người dùng và hồ sơ của bạn"
-        title: "Tính năng trên hồ sơ"
-      remove_from_profile:
-        warning: "Hồ sơ của bạn đã có một chủ đề nổi bật. Nếu bạn tiếp tục, chủ đề này sẽ thay thế chủ đề hiện có."
-        help: "Xóa liên kết đến chủ đề này trên hồ sơ người dùng của bạn"
-        title: "Xóa khỏi hồ sơ"
       list: "Chủ đề"
       new: "chủ đề mới"
       unread: "chưa đọc"
@@ -2417,8 +2407,6 @@ vi:
       whisper: "bài viết này là lời nhắn từ điều hành viên"
       wiki:
         about: "Bài viết này là một wiki"
-      archetypes:
-        save: "Lưu lựa chọn"
       few_likes_left: "Cám ơn bạn đã chia sẻ cảm nhận! Bạn chỉ còn lại vài lượt like cho ngày hôm nay."
       controls:
         reply: "bắt đầu soản trả lời cho bài viết này"
@@ -2530,6 +2518,7 @@ vi:
         name: "Tên"
         name_placeholder: "Đánh dấu này là gì?"
         set_reminder: "Nhắc nhở tôi"
+        options: "Lựa chọn"
         actions:
           delete_bookmark:
             name: "Xóa dấu trang"
@@ -2544,7 +2533,6 @@ vi:
         post_number: "%{username}, bài số #%{post_number}"
         show_all: "Hiển thị tất cả"
     category:
-      can: "can&hellip;"
       none: "(không danh mục)"
       all: "Tất cả danh mục"
       choose: "danh mục&hellip;"
@@ -2578,7 +2566,6 @@ vi:
       save_error: Có lỗi xảy ra khi lưu chuyên mục
       name: "Tên chuyên mục"
       description: "Mô tả"
-      topic: "chủ đề chuyên mục"
       logo: "Logo của chuyên mục"
       background_image: "Ảnh nền của chuyên mục"
       badge_colors: "Màu huy hiệu"
@@ -4390,7 +4377,6 @@ vi:
           perform: "Trao huy hiệu cho người dùng"
           upload_csv: Tải lên CSV có email hoặc tên người dùng
           aborted: Vui lòng tải lên CSV có chứa email người dùng hoặc tên người dùng
-          success: CSV của bạn đã được nhận và người dùng sẽ sớm nhận được huy hiệu của họ.
           replace_owners: Xóa huy hiệu khỏi chủ sở hữu trước đó
       emoji:
         title: "Emoji"

@@ -216,7 +216,6 @@ fa_IR:
     conduct: "دستورالعمل"
     mobile_view: "نمایش برای موبایل "
     desktop_view: "نمایش برای کامپیوتر"
-    you: "شما"
     or: "یا"
     now: "هم‌اکنون"
     read_more: "بیشتر بخوانید"
@@ -297,7 +296,6 @@ fa_IR:
       remove: "پاک کردن"
       remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"
       new_topic: "درفت جدید برای مبحث"
-      new_private_message: "درفت جدید برای پیام"
       topic_reply: "پاسخ درفت"
       abandon:
         confirm: "شما یک پاسخ ذخیره نیمه تمام در این تاپیک دارید. با آن چه می کنید؟"
@@ -694,8 +692,6 @@ fa_IR:
         public: "عمومی"
         private: "خصوصی"
         public_groups: "گروههای عمومی"
-        automatic_group: گروه خودکار
-        close_group: بستن گروه
         my_groups: "گروههای من"
         group_type: "نوع گروه"
         is_group_user: "عضو"
@@ -758,6 +754,8 @@ fa_IR:
       flair_type:
         icon: "یک آیکون را انتخاب کنید"
         image: "تصویری را بارگذاری کنید"
+      default_notifications:
+        modal_yes: "بله"
     user_action_groups:
       "1": "پسندهای داده شده"
       "2": "پسندهای دریافت شده"
@@ -787,7 +785,6 @@ fa_IR:
       posts: "نوشته‌ها"
       topics: "موضوعات"
       latest: "آخرین"
-      toggle_ordering: "ضامن کنترل مرتب سازی"
       subcategories: "دسته‌‌بندی‌های فرزند"
       topic_sentence:
         one: "%{count} موضوع"
@@ -1163,7 +1160,6 @@ fa_IR:
         browser_active: '%{browser} | <span class="active"> فعال است</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "آخرین نوشته"
-      last_emailed: "آخرین ایمیل فرستاده شده"
       last_seen: "مشاهده"
       created: "عضو شده"
       log_out: "خروج"
@@ -2394,8 +2390,6 @@ fa_IR:
       whisper: "این ارسال نجوای خصوصی برای مدیران است"
       wiki:
         about: "این نوشته یک دانشنامه است"
-      archetypes:
-        save: " ذخیره تنظیمات"
       few_likes_left: "با تشکر از علاقه شما! فقط امکان چند پسندیدن دیگر را برای امروز دارید."
       controls:
         reply: "آغاز ساخت یک پاسخ به این نوشته"
@@ -2499,8 +2493,8 @@ fa_IR:
         updated: "به روز شده"
         name: "نام"
         set_reminder: "به من یادآوری کن"
+        options: "گزینه‌ها"
     category:
-      can: "can&hellip; "
       none: "(بدون دسته‌بندی)"
       all: "همه‌ی دسته‌بندی‌ها"
       edit: "ویرایش"
@@ -2526,7 +2520,6 @@ fa_IR:
       save_error: خطایی در ذخیره‌ی این دسته‌بندی روی داد.
       name: "نام دسته‌بندی"
       description: "توضیحات"
-      topic: "دسته‌بندی موضوع"
       logo: "تصویر لوگو برای دسته‌بندی"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
       badge_colors: "رنگ نشان‌ها"

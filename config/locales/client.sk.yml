@@ -238,7 +238,6 @@ sk:
     rules: "Pravidlá"
     mobile_view: "Mobilná verzia"
     desktop_view: "Zobrazenie pre počítač"
-    you: "Vy"
     or: "alebo"
     now: "práve teraz"
     read_more: "čítaj ďalej"
@@ -543,8 +542,6 @@ sk:
         public: "Verejné"
         private: "Súkromné"
         public_groups: "Verejné skupiny"
-        automatic_group: Automatická skúpina
-        close_group: Uzavrieť skupinu
         my_groups: "Moje skupiny"
         group_type: "Typ skupiny"
         is_group_user: "Člen"
@@ -600,6 +597,8 @@ sk:
       flair_color_placeholder: "(Voliteľné) Hexadecimálna hodnota farby"
       flair_preview_icon: "Ikona náhľadu"
       flair_preview_image: "Náhľad obrázku"
+      default_notifications:
+        modal_yes: "Áno"
     user_action_groups:
       "1": "Rozdaných 'páči sa mi'"
       "2": "Obdržaných 'páči sa mi'"
@@ -629,7 +628,6 @@ sk:
       posts: "Príspevky"
       topics: "Témy"
       latest: "Najnovšie"
-      toggle_ordering: "zmeniť radenie"
       subcategories: "Podkategórie"
       topic_sentence:
         one: "%{count} téma"
@@ -909,7 +907,6 @@ sk:
         log_out_all: "Odhlásiť všetky"
         secure_account: "Zabezpečiť moje konto"
       last_posted: "Posledný príspevok"
-      last_emailed: "Posledný odemailovaný"
       last_seen: "Videný"
       created: "Vytvorený"
       log_out: "Odhlásiť sa"
@@ -1780,8 +1777,6 @@ sk:
       whisper: "tento príspevok je súkromným šepotom pre moderátorov"
       wiki:
         about: "tento príspevok je wiki"
-      archetypes:
-        save: "Uložiť možnosti"
       controls:
         reply: "vytvorte odpoveď na tento príspevok"
         like: "páči sa mi tento príspevok"
@@ -1844,8 +1839,8 @@ sk:
       bookmarks:
         created: "Vytvorené"
         name: "Meno"
+        options: "Možnosti"
     category:
-      can: "môže &hellip; "
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
       edit: "Upraviť"
@@ -1866,7 +1861,6 @@ sk:
       save_error: Nastala chyba počas ukladania kategórie
       name: "Názov kategórie"
       description: "Popis"
-      topic: "kategória témy"
       logo: "Logo kategórie"
       background_image: "Pozadie kategórie"
       badge_colors: "Farby odznakov"

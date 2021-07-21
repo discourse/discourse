@@ -193,7 +193,6 @@ id:
     conduct: "Kode Etik"
     mobile_view: "Tampilan Mobile"
     desktop_view: "Tampilan Desktop"
-    you: "Anda"
     or: "atau"
     now: "baru saja"
     read_more: "baca selengkapnya"
@@ -260,7 +259,6 @@ id:
       resume: "Lanjut"
       remove: "Hapus"
       new_topic: "Konsep topik baru"
-      new_private_message: "Konsep pesan pribadi baru"
       topic_reply: "Balasan konsep"
       abandon:
         yes_value: "Batalkan"
@@ -616,8 +614,6 @@ id:
         public: "Umum"
         private: "Pribadi"
         public_groups: "Grup Umum"
-        automatic_group: Grup Otomatis
-        close_group: Tutup Grup
         my_groups: "Grupku"
         group_type: "Tipe Grup"
         is_group_user: "Anggota"
@@ -671,6 +667,8 @@ id:
       flair_color_placeholder: "(Opsional) Nilai warna dalam Hex"
       flair_preview_icon: "Pratinjau Ikon"
       flair_preview_image: "Pratinjau Gambar"
+      default_notifications:
+        modal_yes: "Ya"
     user_action_groups:
       "1": "Likes Diberikan"
       "2": "Likes Diterima"
@@ -700,7 +698,6 @@ id:
       posts: "Post"
       topics: "Topik"
       latest: "Terbaru"
-      toggle_ordering: "beralih memesan kontrol"
       subcategories: "Subkategori"
       topic_sentence:
         other: "%{count} topik"
@@ -970,7 +967,6 @@ id:
         not_you: "Bukan Anda?"
         secure_account: "Amankan Akun saya"
       last_posted: "Tulisan Terakhir"
-      last_emailed: "Terakhir Surel Dikirimkan"
       last_seen: "Seen"
       created: "Joined"
       log_out: "Keluar"
@@ -1504,6 +1500,7 @@ id:
       bookmarks:
         created: "Dibuat"
         name: "Nama"
+        options: "Pilihan"
     category:
       edit: "Ubah"
       settings: "Pengaturan"

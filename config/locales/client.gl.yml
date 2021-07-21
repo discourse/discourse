@@ -219,7 +219,6 @@ gl:
     conduct: "Código de conduta"
     mobile_view: "Visualización móbil"
     desktop_view: "Visualización en escritorio"
-    you: "Vostede"
     or: "ou"
     now: "agora mesmiño"
     read_more: "ler máis"
@@ -298,7 +297,6 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
-      new_private_message: "Borrador de nova mensaxe privada"
       topic_reply: "Borrador de resposta"
       abandon:
         confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
@@ -716,8 +714,6 @@ gl:
         public: "Público"
         private: "Privado"
         public_groups: "Grupos públicos"
-        automatic_group: Grupo automático
-        close_group: Pechar grupo
         my_groups: "Os meus grupos"
         group_type: "Tipo de grupo"
         is_group_user: "Membro"
@@ -794,6 +790,10 @@ gl:
       flair_type:
         icon: "Seleccionar unha icona"
         image: "Cargar unha imaxe"
+      default_notifications:
+        modal_description: "Quere aplicar este cambio con efectos retroactivos? Isto afectará as preferencias de %{count} usuarios existentes."
+        modal_yes: "Si"
+        modal_no: "Non, aplicar só o cambio a partir de agora"
     user_action_groups:
       "1": "Gústames"
       "2": "Gústames"
@@ -823,7 +823,6 @@ gl:
       posts: "Publicacións"
       topics: "Temas"
       latest: "Últimos"
-      toggle_ordering: "trocar o control de ordenación"
       subcategories: "Subcategorías"
       muted: "Categorías silenciadas"
       topic_sentence:
@@ -1263,7 +1262,6 @@ gl:
         browser_active: '%{browser} | <span class="active">activo agora</span>'
         browser_last_seen: "%{browser} o %{date}"
       last_posted: "Última publicación"
-      last_emailed: "Últimos envíos por correo-e"
       last_seen: "Visto"
       created: "Inscrito"
       log_out: "Saír da sesión"
@@ -1892,7 +1890,6 @@ gl:
           confirm: Ten gardado un borrador do novo tema, que se sobrescribirá se crea un tema ligado a este.
         reply_as_new_group_message:
           label: Responder como nova mensaxe de grupo
-          desc: Crear unha nova mensaxe privada cos mesmos destinatarios
         reply_as_private_message:
           label: Nova mensaxe
           desc: Crear unha nova mensaxe privada
@@ -2177,13 +2174,6 @@ gl:
       defer:
         help: "Marcar como non lido"
         title: "Adiar"
-      feature_on_profile:
-        help: "Engadir unha ligazón a este tema na súa tarxeta de usuario e perfil"
-        title: "Funcionalidade no perfil"
-      remove_from_profile:
-        warning: "O seu perfil xa ten un tema de actualidade. Se continúa, este tema substituirá o existente."
-        help: "Retirar a ligazón a este tema do seu perfil de usuario"
-        title: "Retirar do perfil"
       list: "Temas"
       new: "novo tema"
       unread: "pendente"
@@ -2641,8 +2631,6 @@ gl:
       whisper: "este é un rumor privado para moderadores"
       wiki:
         about: "esta publicación é un wiki"
-      archetypes:
-        save: "Gardar opcións"
       few_likes_left: "Grazas por repartir cariño! Só lle quedan algúns gústame por hoxe."
       controls:
         reply: "escribir unha resposta a esta publicación"
@@ -2764,6 +2752,7 @@ gl:
         name: "Nome"
         name_placeholder: "Para que serve este marcador?"
         set_reminder: "Lémbreme"
+        options: "Opcións"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -2784,7 +2773,6 @@ gl:
         post_number: "%{username}, publicación #%{post_number}"
         show_all: "Amosar todas"
     category:
-      can: "pode&hellip; "
       none: "(sen categoría)"
       all: "Todas as categorías"
       choose: "categoría&hellip;"
@@ -2818,7 +2806,6 @@ gl:
       save_error: Produciuse un erro gardando a categoría.
       name: "Nome da categoría"
       description: "Descrición"
-      topic: "tema da categoría"
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
       badge_colors: "Cores das insignias"
@@ -4771,7 +4758,6 @@ gl:
           perform: "Conceder insignia a usuarios"
           upload_csv: Cargar un CSV con enderezos de correo ou nomes de usuario
           aborted: Cargue un CSV que conteña os enderezos de correo ou os nomes de usuario
-          success: Recibimos o seu CSV. Os usuarios recibirán axiña a súa insignia.
           replace_owners: Retirar a insignia dos propietarios anteriores
       emoji:
         title: "Emoji"

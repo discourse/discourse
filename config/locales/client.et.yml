@@ -203,7 +203,6 @@ et:
     conduct: "Käitumise juhised"
     mobile_view: "Mobiilne vaade"
     desktop_view: "Täisvaade"
-    you: "Sina"
     or: "või"
     now: "just nüüd"
     read_more: "loe edasi"
@@ -280,7 +279,6 @@ et:
       remove: "Eemalda"
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
-      new_private_message: "Uus privaatsõnumi mustand"
       topic_reply: "Mustandi vastus"
     topic_count_latest:
       one: "Vaata %{count} uut või uuendatud teemat"
@@ -569,8 +567,6 @@ et:
         public: "Avalik"
         private: "Privaatne"
         public_groups: "Avalikud grupid"
-        automatic_group: Automaatne grupp
-        close_group: Sulge grupp
         my_groups: "Minu grupid"
         group_type: "Grupi liik"
         is_group_user: "Liige"
@@ -642,6 +638,8 @@ et:
       flair_type:
         icon: "Vali ikoon"
         image: "Lae pilt üles"
+      default_notifications:
+        modal_yes: "Jah"
     user_action_groups:
       "1": "Meeldimisi antud"
       "2": "Meeldimisi saadud"
@@ -671,7 +669,6 @@ et:
       posts: "Postitust"
       topics: "Teemat"
       latest: "Viimased"
-      toggle_ordering: "lülita järjestus"
       subcategories: "Alamfoorumid"
       muted: "Vaigistatud kategooriad"
       topic_sentence:
@@ -988,7 +985,6 @@ et:
         secure_account: "Turva minu konto"
         latest_post: "Sa postitasid viimati..."
       last_posted: "Viimane postitus"
-      last_emailed: "Viimati meilitud"
       last_seen: "Vaadatud"
       created: "Liitus"
       log_out: "Logi välja"
@@ -1616,13 +1612,6 @@ et:
       defer:
         help: "Märgi mitteloetuks"
         title: "Lükka edasi"
-      feature_on_profile:
-        help: "Lisa selle teema link oma kasutajakaardile ja profiili"
-        title: "Tõsta profiilis esile"
-      remove_from_profile:
-        warning: "Su profiilis on juba esile tõstetud teema. Kui jätkad, asendab see teema olemasoleva."
-        help: "Eemalda oma profiilist selle teema link"
-        title: "Eemalda profiilist"
       list: "Teemad"
       new: "uus teema"
       unread: "lugemata"
@@ -2008,8 +1997,6 @@ et:
       whisper: "see postitus on vaikne sosin moderaatoritele"
       wiki:
         about: "see postitus on wiki"
-      archetypes:
-        save: "Salvesta suvandid"
       few_likes_left: "Aitäh poolehoiu jagamise eest! Tänaseks on vaid mõned meeldimised jäänud jagada."
       controls:
         reply: "alusta sellele postitusele vastuse koostamist"
@@ -2088,6 +2075,7 @@ et:
         edit: "Muuda järjehoidjat"
         created: "Loodud"
         name: "Nimi"
+        options: "Võimalused"
         actions:
           delete_bookmark:
             description: "Eemaldab järjehoidja sinu profiilist ja peatab kõik järjehoidja meeldetuletused"
@@ -2100,7 +2088,6 @@ et:
         viewing_summary: "Vaatad teema kokkuvõtet"
         show_all: "Näita kõiki"
     category:
-      can: "saab&hellip; "
       none: "(foorum puudub)"
       all: "Kõik foorumid"
       choose: "kategooria&hellip;"
@@ -2125,7 +2112,6 @@ et:
       save_error: Foorumi salvestamisel tekkis viga.
       name: "Foorumi nimetus"
       description: "Kirjeldus"
-      topic: "foorumi teema"
       logo: "foorumi logo"
       background_image: "Foorumi taustapilt"
       badge_colors: "Märgise värvid"

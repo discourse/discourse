@@ -1794,7 +1794,6 @@ ca:
     no_email: "No s'ha proporcionat cap adreça de correu electrònic. Poseu-vos en contacte amb l'administrador del lloc web."
     email_error: "No s'ha pogut registrar un compte amb l'adreça <b>%{email}</b>. Poseu-vos en contacte amb l'administrador del lloc web."
   original_poster: "Autor original"
-  most_posts: "La majoria de publicacions"
   most_recent_poster: "Qui ha publicat més recentment"
   frequent_poster: "Ha publicat amb freqüència"
   redirected_to_top_reasons:
@@ -2530,7 +2529,13 @@ ca:
     account_suspended:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
+    account_suspended_forever:
+      title: "Compte suspès"
+      subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
     account_silenced:
+      title: "Compte silenciat"
+      subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
+    account_silenced_forever:
       title: "Compte silenciat"
       subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
     account_exists:

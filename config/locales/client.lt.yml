@@ -258,7 +258,6 @@ lt:
     conduct: "Elgesio kodeksas"
     mobile_view: "Mobili peržiūra"
     desktop_view: "Pilna peržiūra"
-    you: "Jūs"
     or: "arba"
     now: "Ką tik"
     read_more: "skaityti daugiau"
@@ -328,7 +327,6 @@ lt:
       resume: "Grįžti"
       remove: "Pašalinti"
       new_topic: "Naujos temos juodraštis"
-      new_private_message: "Naujas privatus pranešimo juodraštis"
       topic_reply: "Atsakymo juodraštis"
     topic_count_new:
       one: "Pamatyk %{count} naują temą"
@@ -583,7 +581,6 @@ lt:
         public: "Vieša"
         private: "Privati"
         public_groups: "Viešos grupės"
-        close_group: Uždaryti grupę
         my_groups: "Mano grupės"
         group_type: "Grupės tipas"
         is_group_user: "Narys"
@@ -638,6 +635,8 @@ lt:
       flair_color_placeholder: "(Pasirinktinai) Hex spalva"
       flair_preview_icon: "Peržiūros piktograma"
       flair_preview_image: "Peržiūros paveikslėlį"
+      default_notifications:
+        modal_yes: "Taip"
     user_action_groups:
       "1": "Tau Patinka"
       "2": "Žmonėms patinka"
@@ -667,7 +666,6 @@ lt:
       posts: "Įraša"
       topics: "Temos"
       latest: "Paskutinės"
-      toggle_ordering: "perjungti išdėstimo tvarką"
       subcategories: "Subkategorijos"
       topic_sentence:
         one: "%{count} tema"
@@ -937,7 +935,6 @@ lt:
       auth_tokens:
         details: "Detalės"
       last_posted: "Paskutinis Įrašas"
-      last_emailed: "Paskutinį kartą siųstas el. laiškas"
       last_seen: "Matytas"
       created: "Prisjungė"
       log_out: "Atsijungti"
@@ -1867,8 +1864,6 @@ lt:
       whisper: "Šis įrašas yra privatus šnabždesys moderatoriams"
       wiki:
         about: "šis įrašas yra wiki"
-      archetypes:
-        save: "Išsaugoti nustatymus"
       controls:
         reply: "Pradėk rašyti atsakymą šiam įrašui"
         like: "įrašas man patinka"
@@ -1952,8 +1947,8 @@ lt:
       bookmarks:
         created: "Sukurta"
         name: "Vardas"
+        options: "Nustatymai"
     category:
-      can: "galimas&hellip;"
       none: "(jokia kategorija)"
       all: "Visos kategorijos"
       choose: "category&hellip;"
@@ -1973,7 +1968,6 @@ lt:
       save_error: Įvyko klaida išsaugant kategoriją.
       name: "Kategorijos pavadinimas"
       description: "Aprašymas"
-      topic: "kategorijos tema"
       logo: "Kategorijos logotipo paveiksliukas"
       background_image: "Kategorijos fono paveiksliukas"
       badge_colors: "Ženkliukų spalvos"

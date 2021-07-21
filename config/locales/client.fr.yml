@@ -220,7 +220,6 @@ fr:
     conduct: "Code de conduite"
     mobile_view: "Version mobile"
     desktop_view: "Version ordinateur"
-    you: "Vous"
     or: "ou"
     now: "à l'instant"
     read_more: "lire la suite"
@@ -305,7 +304,6 @@ fr:
       remove: "Supprimer"
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
       new_topic: "Nouveau brouillon de sujet"
-      new_private_message: "Nouveau brouillon de message direct"
       topic_reply: "Créer un brouillon de réponse"
       abandon:
         confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
@@ -379,7 +377,6 @@ fr:
         type_bonus:
           name: "indiquer le bonus"
           title: "Certains types d'éléments à examiner peuvent se voir attribuer un bonus par les responsables pour en élever la priorité."
-      stale_help: "Cet élément a déjà été examiné par quelqu'un d'autre."
       claim_help:
         optional: "Vous pouvez vous réserver cet élément pour empêcher d'autres responsables de l'examiner."
         required: "Vous devez réserver un élément avant de l'examiner."
@@ -752,8 +749,6 @@ fr:
         public: "Public"
         private: "Privé"
         public_groups: "Groupes publics"
-        automatic_group: Groupe automatique
-        close_group: Fermer le groupe
         my_groups: "Mes groupes (membre)"
         group_type: "Type de groupe"
         is_group_user: "Membre"
@@ -859,7 +854,6 @@ fr:
       posts: "Messages"
       topics: "Sujets"
       latest: "Récents"
-      toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories"
       muted: "Catégories mises en sourdine"
       topic_sentence:
@@ -1312,7 +1306,6 @@ fr:
         browser_active: '%{browser} | <span class="active">actif</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Dernier message"
-      last_emailed: "Dernier courriel reçu"
       last_seen: "Vu"
       created: "Inscrit(e)"
       log_out: "Se déconnecter"
@@ -1955,7 +1948,6 @@ fr:
           confirm: Vos brouillons contiennent un nouveau sujet en cours de rédaction. Ce brouillon sera perdu si vous créez un sujet lié.
         reply_as_new_group_message:
           label: Répondre en créant un nouveau message de groupe
-          desc: Créer un nouveau message direct avec les mêmes destinataires
         reply_as_private_message:
           label: Nouveau message direct
           desc: Créer un nouveau message direct
@@ -2250,13 +2242,6 @@ fr:
       defer:
         help: "Marquer comme non lu"
         title: "Reporter à plus tard"
-      feature_on_profile:
-        help: "Ajouter un lien vers ce sujet sur votre carte d'utilisateur et votre profil"
-        title: "Mettre en avant sur le profil"
-      remove_from_profile:
-        warning: "Votre profil contient déjà un sujet vedette. Si vous continuez, ce sujet le remplacera."
-        help: "Supprimer le lien vers ce sujet de votre profil utilisateur"
-        title: "Supprimer du profil"
       list: "Sujets"
       new: "nouveau sujet"
       unread: "non lus"
@@ -2735,8 +2720,6 @@ fr:
       whisper: "ce message est un murmure privé pour les modérateurs"
       wiki:
         about: "ce message est un wiki"
-      archetypes:
-        save: "Enregistrer les options"
       few_likes_left: "Merci de partager votre amour ! Vous n'avez plus que quelques « J'aime » à attribuer aujourd'hui."
       controls:
         reply: "commencer à répondre à ce message"
@@ -2878,7 +2861,6 @@ fr:
         post_number: "%{username}, message #%{post_number}"
         show_all: "Tout afficher"
     category:
-      can: "peut&hellip; "
       none: "(aucune catégorie)"
       all: "Toutes les catégories"
       choose: "catégorie&hellip;"
@@ -2912,7 +2894,6 @@ fr:
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
       name: "Nom de la catégorie"
       description: "Description"
-      topic: "sujet de la catégorie"
       logo: "Logo de la catégorie"
       background_image: "Image de fond de la catégorie"
       badge_colors: "Couleurs du badge"
@@ -3262,7 +3243,7 @@ fr:
         show_incoming_updated_topics: "%{shortcut} Afficher les sujets mis à jour"
         search: "%{shortcut} Rechercher"
         help: "%{shortcut} Ouvrir l'aide du clavier"
-        dismiss_new: "%{shortcut} Ignorer les nouveaux messages"
+        dismiss_new: "%{shortcut} Ignorer les nouveaux sujets"
         dismiss_topics: "%{shortcut} Ignorer les sujets"
         log_out: "%{shortcut} Se déconnecter"
       composing:
@@ -4919,7 +4900,6 @@ fr:
           perform: "Attribuer ce badge à ces utilisateurs"
           upload_csv: Envoyez un fichier CSV contenant les adresses courriel ou les noms d'utilisateur
           aborted: Envoyez d'abord un fichier CSV contenant des adresses de courriel ou des noms d'utilisateur
-          success: Votre fichier CSV a été envoyé, les utilisateurs obtiendront leur badge d'ici peu de temps.
           replace_owners: Retirer le badge des propriétaires précédents
       emoji:
         title: "Émoji"

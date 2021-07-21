@@ -1588,11 +1588,6 @@ es:
     auth_overrides_email: "Sobrescribir la dirección de correo electrónico local con la del sitio externo en cada inicio de sesión, y evitar cambios locales. Aplica a todos los proveedores de autenticación (CUIDADO: puede haber diferencias por la normalización de direcciones locales de correo)"
     auth_overrides_username: "Sobrescribe el nombre de usuario local con el del sitio externo en cada inicio de sesión, y evita cambios locales. Se aplica a todos los proveedores de autenticación. (CUIDADO: puede haber diferencias si hay distintos requisitos en los nombres de usuarios, como los caracteres o la longitud)"
     auth_overrides_name: "Sobrescribir nombre completo local con el del sitio externo en cada inicio de sesión, y evitar cambios locales. Aplica a todos los proveedores de autenticación."
-    discourse_connect_overrides_avatar: "Sobrescribir el avatar del usuario por el dado por DiscourseConnect. Si se activa, los usuarios no podrán cambiar su avatar ni subir nuevos desde Discourse."
-    discourse_connect_overrides_location: "Sobrescribir la ubicación del usuario con la dada por DiscourseConnect, y evitar cambios locales."
-    discourse_connect_overrides_website: "Sobrescribir página web de los usuarios con la dada por DiscourseConnect, y evitar cambios locales."
-    discourse_connect_overrides_profile_background: "Sobrescribir el fondo de usuario con el externo dado por DiscourseConnect."
-    discourse_connect_overrides_card_background: "Sobrescribir el fondo de la tarjeta de usuario con el dado por DiscourseConnect."
     discourse_connect_not_approved_url: "Redireccionar cuentas no aprobadas a esta URL al iniciar sesión con DiscourseConnect."
     discourse_connect_allows_all_return_paths: "No restringir el dominio para return_paths (rutas de vuelta) de DiscourseConnect (por defecto, la ruta de vuelta debe estar en el sitio actual)"
     enable_local_logins: "Activar inicio de sesión local con usuario y contraseña. CUIDADO: si lo desactivas, puede que no puedas iniciar sesión si no has configurado otro medio alternativo primero."
@@ -1689,7 +1684,6 @@ es:
     allow_staff_to_upload_any_file_in_pm: "Permitir a los miembros del equipo subir cualquier archivo en MP."
     strip_image_metadata: "Eliminar metadatos de imágenes."
     composer_media_optimization_image_enabled: "Permite la optimización multimedia en el lado del cliente de archivos de imágenes cargados."
-    composer_media_optimization_image_kilobytes_optimization_threshold: "Tamaño mínimo del archivo de imagen para activar la optimización del lado del cliente"
     composer_media_optimization_image_resize_dimensions_threshold: "Ancho mínimo de la imagen para activar el redimensionamiento del lado del cliente"
     composer_media_optimization_image_resize_width_target: "Las imágenes con una anchura mayor que «composer_media_optimization_image_dimensions_resize_threshold» serán redimensionadas a esta anchura. Debe ser >= que «composer_media_optimization_image_dimensions_resize_threshold»."
     composer_media_optimization_image_encode_quality: "Calidad de codificación JPEG utilizada en el proceso de recodificación."
@@ -2144,7 +2138,6 @@ es:
     missing_secret: "La autenticación ha fallado porque no se ha incluido el secreto. Ponte en contacto con la administración del sitio web para arreglar este problema."
     invite_redeem_failed: "No se ha podido canjear la invitación. Contacta con la administración del sitio."
   original_poster: "Autor original"
-  most_posts: "Con más publicaciones"
   most_recent_poster: "Autor más reciente"
   frequent_poster: "Autor frecuente"
   poster_description_joiner: ", "
@@ -2500,35 +2493,9 @@ es:
   new_version_mailer:
     title: "Correo electrónico de nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
-    text_body_template: |
-      ¡Hurra! Hay una nueva versión de [Discourse] (https://www.discourse.org) disponible.
-
-      Tu versión: %{installed_version}
-      Versión nueva: **%{new_version}**
-
-      Actualiza la versión fácilmente mediante nuestra **[actualización de navegador de un clic](%{base_url}/admin/upgrade)**
-
-      - Descubre qué novedades hay en las [notas de la versión](https://meta.discourse.org/tag/release-notes) o revisa [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, discusiones y soporte de Discourse
   new_version_mailer_with_notes:
     title: "Correo electrónico de nueva versión con notas"
     subject_template: "[%{email_prefix}] actualización disponible"
-    text_body_template: |
-      Hurra! Hay una nueva versión de [Discourse] (https://www.discourse.org) disponible.
-
-      Tu versión: %{installed_version}
-      Versión nueva: **%{new_version}**
-
-      Actualiza la versión fácilmente mediante nuestra **[actualización de navegador en un clic](%{base_url}/admin/upgrade)**
-
-      - Descubre qué novedades hay en las [notas de la versión](https://meta.discourse.org/tag/release-notes) o revisa [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, discusiones y soporte de Discourse
-
-      ### Notas de la versión
-
-      %{notes}
   flag_reasons:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
     inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva o que vulnera alguna de las [directrices de la comunidad](%{base_path}/directrices)."
