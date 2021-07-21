@@ -11,9 +11,9 @@ import userSearch from "discourse/lib/user-search";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
+const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
 
 const searchData = {};
-const suggestionTriggers = ["in:", "status:", "order:"];
 
 export function initSearchData() {
   searchData.loading = false;
@@ -53,47 +53,42 @@ const SearchHelper = {
       searchData.results = [];
       searchData.loading = false;
 
-      if (typeof matchSuggestions === "string") {
-        searchData.suggestionKeyword = matchSuggestions;
+      if (matchSuggestions.type === "category") {
+        const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
+          "#",
+          ""
+        );
+
+        searchData.suggestionResults = Category.search(categorySearchTerm);
+        searchData.suggestionKeyword = "#";
         widget.scheduleRerender();
-        return;
-      } else {
-        if (matchSuggestions.type === "category") {
-          const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
-            "#",
-            ""
-          );
-
-          searchData.suggestionResults = Category.search(categorySearchTerm);
-          searchData.suggestionKeyword = "#";
-          widget.scheduleRerender();
-          return;
+      } else if (matchSuggestions.type === "username") {
+        const userSearchTerm = matchSuggestions.usernamesMatch[0].replace(
+          "@",
+          ""
+        );
+        const opts = { includeGroups: true, limit: 6 };
+        if (userSearchTerm.length > 0) {
+          opts.term = userSearchTerm;
+        } else {
+          opts.lastSeenUsers = true;
         }
-        if (matchSuggestions.type === "username") {
-          const userSearchTerm = matchSuggestions.usernamesMatch[0].replace(
-            "@",
-            ""
-          );
-          const opts = { includeGroups: true, limit: 6 };
-          if (userSearchTerm.length > 0) {
-            opts.term = userSearchTerm;
+
+        userSearch(opts).then((result) => {
+          if (result?.users?.length > 0) {
+            searchData.suggestionResults = result.users;
+            searchData.suggestionKeyword = "@";
           } else {
-            opts.lastSeenUsers = true;
+            searchData.noResults = true;
+            searchData.suggestionKeyword = false;
           }
-
-          userSearch(opts).then((result) => {
-            if (result?.users?.length > 0) {
-              searchData.suggestionResults = result.users;
-              searchData.suggestionKeyword = "@";
-            } else {
-              searchData.noResults = true;
-              searchData.suggestionKeyword = false;
-            }
-            widget.scheduleRerender();
-          });
-          return;
-        }
+          widget.scheduleRerender();
+        });
+      } else {
+        searchData.suggestionKeyword = matchSuggestions[0];
+        widget.scheduleRerender();
       }
+      return;
     }
 
     searchData.suggestionKeyword = false;
@@ -142,14 +137,6 @@ const SearchHelper = {
       return false;
     }
 
-    const simpleSuggestion = suggestionTriggers.find(
-      (mod) => searchData.term === mod || searchData.term.endsWith(` ${mod}`)
-    );
-
-    if (simpleSuggestion) {
-      return simpleSuggestion;
-    }
-
     const categoriesMatch = searchData.term.match(CATEGORY_SLUG_REGEXP);
 
     if (categoriesMatch) {
@@ -159,6 +146,11 @@ const SearchHelper = {
     const usernamesMatch = searchData.term.match(USERNAME_REGEXP);
     if (usernamesMatch) {
       return { type: "username", usernamesMatch };
+    }
+
+    const suggestionsMatch = searchData.term.match(SUGGESTIONS_REGEXP);
+    if (suggestionsMatch) {
+      return suggestionsMatch;
     }
 
     return false;

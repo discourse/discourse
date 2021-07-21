@@ -73,10 +73,10 @@ import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
-import { addInSearchShortcut } from "discourse/widgets/search-menu-results";
+import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.6";
+const PLUGIN_API_VERSION = "0.11.7";
 
 class PluginApi {
   constructor(version, container) {
@@ -1298,15 +1298,15 @@ class PluginApi {
   }
 
   /**
-   * Add a in: shortcut to search menu panel.
+   * Add a suggestion shortcut to search menu panel.
    *
    * ```
-   * addInSearchShortcut("in:assigned");
+   * addSearchSuggestion("in:assigned");
    * ```
    *
    */
-  addInSearchShortcut(value) {
-    addInSearchShortcut(value);
+  addSearchSuggestion(value) {
+    addSearchSuggestion(value);
   }
 }
 

@@ -343,6 +343,10 @@ acceptance("Search - assistant", function (needs) {
     await fillIn("#search-term", "sam in:");
     await triggerKeyEvent("#search-term", "keyup", 51);
     assert.equal(query(firstTarget).innerText, "sam in:title");
+
+    await fillIn("#search-term", "in:pers");
+    await triggerKeyEvent("#search-term", "keyup", 51);
+    assert.equal(query(firstTarget).innerText, "in:personal");
   });
 
   test("shows users when typing @", async function (assert) {
