@@ -1298,7 +1298,7 @@ class PluginApi {
   }
 
   /**
-   * Add a in: shortcut to search menu panel.
+   * Add a suggestion shortcut to search menu panel.
    *
    * ```
    * addSearchSuggestion("in:assigned");
