@@ -3159,7 +3159,7 @@ ar:
       notify_action: "رسالة"
     topic_map:
       title: "ملخص الموضوع"
-      participants_title: "الناشرون الدائمون"
+      participants_title: "الناشرون المتكررون"
       links_title: "الروابط الرائجة"
       links_shown: "عرض المزيد من الروابط..."
       clicks:

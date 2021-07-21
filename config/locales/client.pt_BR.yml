@@ -605,7 +605,7 @@ pt_BR:
       member_added: "Adicionado"
       member_requested: "Solicitado em"
       add_members:
-        title: "Adicionar usuários (a) a %{group_name}"
+        title: "Adicionar usuários(a) a %{group_name}"
         description: "Insira uma lista de usuários(as) que você quer convidar para o grupo ou cole em uma lista separada por vírgulas:"
         usernames_placeholder: "nomes de usuário(a)"
         usernames_or_emails_placeholder: "nomes de usuário(a) ou e-maiis"
