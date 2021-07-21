@@ -400,8 +400,7 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     raise Discourse::InvalidAccess unless group.public_admission
 
-    already_in_group = group.users.exists?(id: current_user.id)
-    return if already_in_group
+    return if group.users.exists?(id: current_user.id)
     add_user_to_group(group, current_user)
   end
 
