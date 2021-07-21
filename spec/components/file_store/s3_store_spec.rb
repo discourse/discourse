@@ -154,9 +154,7 @@ describe FileStore::S3Store do
 
         s3_bucket.expects(:object).with(destination).returns(s3_object)
 
-        s3_object.expects(:copy_from).with(
-          copy_source: "s3-upload-bucket/#{source}"
-        )
+        expect_copy_from(s3_object, "s3-upload-bucket/#{source}")
 
         store.copy_file(upload.url, source, destination)
       end
@@ -171,7 +169,7 @@ describe FileStore::S3Store do
         s3_object = stub
 
         s3_bucket.expects(:object).with("tombstone/original/1X/#{upload.sha1}.png").returns(s3_object)
-        s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/original/1X/#{upload.sha1}.png")
+        expect_copy_from(s3_object, "s3-upload-bucket/original/1X/#{upload.sha1}.png")
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
         s3_object.expects(:delete)
 
@@ -188,7 +186,7 @@ describe FileStore::S3Store do
         s3_object = stub
 
         s3_bucket.expects(:object).with("tombstone/#{path}").returns(s3_object)
-        s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{path}")
+        expect_copy_from(s3_object, "s3-upload-bucket/#{path}")
         s3_bucket.expects(:object).with(path).returns(s3_object)
         s3_object.expects(:delete)
 
@@ -206,7 +204,7 @@ describe FileStore::S3Store do
           s3_object = stub
 
           s3_bucket.expects(:object).with("discourse-uploads/tombstone/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/discourse-uploads/original/1X/#{upload.sha1}.png")
+          expect_copy_from(s3_object, "s3-upload-bucket/discourse-uploads/original/1X/#{upload.sha1}.png")
           s3_bucket.expects(:object).with("discourse-uploads/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
@@ -231,7 +229,7 @@ describe FileStore::S3Store do
         s3_object = stub
 
         s3_bucket.expects(:object).with("tombstone/#{image_path}").returns(s3_object)
-        s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{image_path}")
+        expect_copy_from(s3_object, "s3-upload-bucket/#{image_path}")
         s3_bucket.expects(:object).with("#{image_path}").returns(s3_object)
         s3_object.expects(:delete)
 
@@ -257,9 +255,7 @@ describe FileStore::S3Store do
             .with("discourse-uploads/tombstone/#{image_path}")
             .returns(s3_object)
 
-          s3_object.expects(:copy_from).with(
-            copy_source: "s3-upload-bucket/discourse-uploads/#{image_path}"
-          )
+          expect_copy_from(s3_object, "s3-upload-bucket/discourse-uploads/#{image_path}")
 
           s3_bucket.expects(:object).with(
             "discourse-uploads/#{image_path}"
@@ -424,5 +420,13 @@ describe FileStore::S3Store do
 
       expect(store.signed_url_for_path("special/optimized/file.png")).not_to eq(upload.url)
     end
+  end
+
+  def expect_copy_from(s3_object, source)
+    s3_object.expects(:copy_from).with(
+      copy_source: source
+    ).returns(
+      stub(copy_object_result: stub(etag: '"etagtest"'))
+    )
   end
 end

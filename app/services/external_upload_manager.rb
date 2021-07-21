@@ -17,7 +17,7 @@ class ExternalUploadManager
   end
 
   def promote_to_upload!
-    external_stub_object = Discourse.store.object_from_key(external_upload_stub.key)
+    external_stub_object = Discourse.store.object_from_path(external_upload_stub.key)
     external_etag = external_stub_object.etag
     external_size = external_stub_object.size
     external_sha1 = external_stub_object.metadata["sha1-checksum"]

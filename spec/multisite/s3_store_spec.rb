@@ -113,11 +113,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(
-            copy_source: "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png"
-          ).returns(
-            stub(copy_object_result: stub(etag: '"etagtest"'))
-          )
+          expect_copy_from(s3_object, "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png")
           s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
@@ -133,11 +129,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/second/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(
-            copy_source: "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png"
-          ).returns(
-            stub(copy_object_result: stub(etag: '"etagtest"'))
-          )
+          expect_copy_from(s3_object, "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png")
           s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
@@ -158,11 +150,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
             s3_object = stub
 
             s3_bucket.expects(:object).with("discourse-uploads/uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
-            s3_object.expects(:copy_from).with(
-              copy_source: "s3-upload-bucket/discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png"
-            ).returns(
-              stub(copy_object_result: stub(etag: '"etagtest"'))
-            )
+            expect_copy_from(s3_object, "s3-upload-bucket/discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png")
             s3_bucket.expects(:object).with("discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
             s3_object.expects(:delete)
 
@@ -357,5 +345,13 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         end
       end
     end
+  end
+
+  def expect_copy_from(s3_object, source)
+    s3_object.expects(:copy_from).with(
+      copy_source: source
+    ).returns(
+      stub(copy_object_result: stub(etag: '"etagtest"'))
+    )
   end
 end
