@@ -11,7 +11,7 @@ import userSearch from "discourse/lib/user-search";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
-const SUGGESTIONS_REGEXP = /(in:|status:|order:)([a-zA-Z]*)$/gi;
+const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
 
 const searchData = {};
 

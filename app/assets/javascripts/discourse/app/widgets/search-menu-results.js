@@ -12,11 +12,6 @@ import renderTag from "discourse/lib/render-tag";
 
 const suggestionShortcuts = [
   "in:title",
-  "in:personal",
-  "in:seen",
-  "in:likes",
-  "in:bookmarks",
-  "in:created",
   "in:pinned",
   "status:open",
   "status:closed",
@@ -357,8 +352,19 @@ createWidget("search-menu-assistant", {
   tagName: "ul.search-menu-assistant",
 
   html(attrs) {
+    if (this.currentUser) {
+      addSearchSuggestion("in:likes");
+      addSearchSuggestion("in:bookmarks");
+      addSearchSuggestion("in:mine");
+      addSearchSuggestion("in:personal");
+      addSearchSuggestion("in:seen");
+      addSearchSuggestion("in:tracking");
+      addSearchSuggestion("in:unseen");
+      addSearchSuggestion("in:watching");
+    }
     if (this.siteSettings.tagging_enabled) {
       addSearchSuggestion("in:tagged");
+      addSearchSuggestion("in:untagged");
     }
 
     const content = [];
@@ -397,16 +403,16 @@ createWidget("search-menu-assistant", {
         });
         break;
       default:
-        suggestionShortcuts.map((item) => {
-          if (item.startsWith(suggestionKeyword)) {
-            const slug = prefix ? `${prefix} ${item} ` : item;
+        suggestionShortcuts.sort().map((item) => {
+          if (item.includes(suggestionKeyword)) {
+            const slug = prefix ? `${prefix} ${item} ` : `${item} `;
             content.push(this.attach("search-menu-assistant-item", { slug }));
           }
         });
         break;
     }
 
-    return content;
+    return content.filter((c, i) => i <= 10);
   },
 });
 
