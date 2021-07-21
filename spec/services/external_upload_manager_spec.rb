@@ -65,6 +65,22 @@ RSpec.describe ExternalUploadManager do
           "#{upload_base_url}/#{external_upload_stub.key}"
         )
       end
+
+      it "errors if the image upload is too big" do
+        SiteSetting.max_image_size_kb = 1
+        upload = subject.promote_to_upload!
+        expect(upload.errors.full_messages).to include(
+          "Filesize " + I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb)
+        )
+      end
+
+      it "errors if the extension is not supported" do
+        SiteSetting.authorized_extensions = ""
+        upload = subject.promote_to_upload!
+        expect(upload.errors.full_messages).to include(
+          "Original filename " + I18n.t("upload.unauthorized", authorized_extensions: "")
+        )
+      end
     end
 
     context "when the upload does get changed by the UploadCreator" do
@@ -110,7 +126,6 @@ RSpec.describe ExternalUploadManager do
       subject.promote_to_upload!
     end
 
-    # TODO: Test for attatchment + image size limits and also extension types
     it "generates a fake sha for the upload record" do
       upload = subject.promote_to_upload!
       expect(upload.sha1).not_to eq(sha1)
@@ -153,34 +168,30 @@ RSpec.describe ExternalUploadManager do
   end
 
   def stub_copy_object
+    copy_object_result = <<~BODY
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
+<CopyObjectResult
+  xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
+  <LastModified>2021-07-19T04:10:41.000Z</LastModified>
+  <ETag>&quot;#{etag}&quot;</ETag>
+</CopyObjectResult>
+    BODY
     stub_request(
       :put,
       "#{upload_base_url}/original/1X/testbc60eb18e8f974cbfae8bb0f069c3a311024.pdf"
     ).to_return(
       status: 200,
       headers: { "ETag" => etag },
-      body: <<~BODY)
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
-<CopyObjectResult
-	xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
-	<LastModified>2021-07-19T04:10:41.000Z</LastModified>
-	<ETag>&quot;#{etag}&quot;</ETag>
-</CopyObjectResult>
-    BODY
+      body: copy_object_result
+    )
     stub_request(
       :put,
       "#{upload_base_url}/original/1X/bc975735dfc6409c1c2aa5ebf2239949bcbdbd65.png"
     ).to_return(
       status: 200,
       headers: { "ETag" => etag },
-      body: <<~BODY)
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
-<CopyObjectResult
-	xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
-	<LastModified>2021-07-19T04:10:41.000Z</LastModified>
-	<ETag>&quot;#{etag}&quot;</ETag>
-</CopyObjectResult>
-    BODY
+      body: copy_object_result
+    )
   end
 
   def stub_delete_object

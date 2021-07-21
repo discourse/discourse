@@ -30,7 +30,6 @@ class ExternalUploadManager
     if should_download
       tempfile = download(external_upload_stub.key, external_upload_stub.upload_type)
 
-      # download failed ERR
       raise DownloadFailedError if tempfile.blank?
 
       actual_sha1 = Upload.generate_digest(tempfile)
