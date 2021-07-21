@@ -23,6 +23,7 @@ $secondary-high: dark-light-diff($secondary, $primary, 30%, -35%) !default;
 $secondary-very-high: dark-light-diff($secondary, $primary, 7%, -7%) !default;
 
 //tertiary
+$tertiary-very-low: dark-light-diff($tertiary, $secondary, 90%, -75%) !default;
 $tertiary-low: dark-light-diff($tertiary, $secondary, 85%, -65%) !default;
 $tertiary-medium: dark-light-diff($tertiary, $secondary, 50%, -45%) !default;
 $tertiary-high: dark-light-diff($tertiary, $secondary, 20%, -25%) !default;

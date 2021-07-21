@@ -87,11 +87,7 @@ span.badge-posts {
         &.expand-post {
           margin: 10px 0 10px 0;
         }
-        &.reply {
-          .d-icon {
-            color: var(--primary-high);
-          }
-        }
+
         &.has-like {
           .d-icon {
             color: var(--love);
@@ -124,6 +120,10 @@ span.badge-posts {
       }
     }
   }
+}
+
+nav.post-controls button.reply .d-icon {
+  color: var(--primary-high);
 }
 
 .post-admin-menu {
@@ -335,12 +335,6 @@ iframe {
 // unhide the simple "select just this post" button
 button.select-post {
   display: inline-block;
-}
-
-.deleted {
-  .topic-body {
-    background-color: var(--danger-low-mid);
-  }
 }
 
 .deleted-user-avatar {
