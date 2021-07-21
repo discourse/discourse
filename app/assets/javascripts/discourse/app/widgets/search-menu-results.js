@@ -373,7 +373,7 @@ createWidget("search-menu-assistant", {
 
     switch (suggestionKeyword) {
       case "#":
-        attrs.results.map((category) => {
+        attrs.results.forEach((category) => {
           const slug = prefix
             ? `${prefix} #${category.slug} `
             : `#${category.slug} `;
@@ -388,7 +388,7 @@ createWidget("search-menu-assistant", {
         });
         break;
       case "@":
-        attrs.results.map((user) => {
+        attrs.results.forEach((user) => {
           const slug = prefix
             ? `${prefix} @${user.username} `
             : `@${user.username} `;
@@ -403,7 +403,7 @@ createWidget("search-menu-assistant", {
         });
         break;
       default:
-        suggestionShortcuts.map((item) => {
+        suggestionShortcuts.forEach((item) => {
           if (item.includes(suggestionKeyword)) {
             const slug = prefix ? `${prefix} ${item} ` : `${item} `;
             content.push(this.attach("search-menu-assistant-item", { slug }));
