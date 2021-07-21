@@ -648,15 +648,13 @@ class GroupsController < ApplicationController
   private
 
   def add_user_to_group(group, user, notify = false)
-    begin
-      group.add(user)
-      GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-      group.notify_added_to_group(user) if notify
-    rescue ActiveRecord::RecordNotUnique
-      # Under concurrency, we might attempt to insert two records quickly and hit a DB
-      # constraint. In this case we can safely ignore the error and act as if the user
-      # was added to the group.
-    end
+    group.add(user)
+    GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+    group.notify_added_to_group(user) if notify
+  rescue ActiveRecord::RecordNotUnique
+    # Under concurrency, we might attempt to insert two records quickly and hit a DB
+    # constraint. In this case we can safely ignore the error and act as if the user
+    # was added to the group.
   end
 
   def group_params(automatic: false)
