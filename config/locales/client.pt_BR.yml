@@ -1675,7 +1675,7 @@ pt_BR:
       logging_in_as: Entrando como %{email}
       confirm_button: Terminar de entrar
     login:
-      header_title: "Boas-vinda outra vez"
+      header_title: "Boas-vindas outra vez"
       subheader_title: "Entrar com a sua conta"
       title: "Entrar"
       username: "Usuário(a)"
@@ -1852,8 +1852,8 @@ pt_BR:
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
       group_mentioned_limit:
-        one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário. Ninguém será notificado(a)."
-        other: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuários. Ninguém será notificado(a)."
+        one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário(a). Ninguém será notificado(a)."
+        other: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuários(as). Ninguém será notificado(a)."
       group_mentioned:
         one: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoa</a>. Tem certeza?"
         other: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoas</a>. Tem certeza?"
@@ -1961,7 +1961,7 @@ pt_BR:
           confirm: Você tem um novo rascunho de tópico salvo, que será substituído ao criar um tópico vinculado.
         reply_as_new_group_message:
           label: Responder como nova mensagem de grupo
-          desc: Crie uma nova mensagem começando com os mesmo destinatários
+          desc: Crie uma nova mensagem começando com os mesmos destinatários
         reply_as_private_message:
           label: Nova mensagem
           desc: Criar uma nova mensagem pessoal
@@ -3032,7 +3032,7 @@ pt_BR:
           details: "Atingir o limite de denuncias imediatamente em vez de esperar por mais denuncias da comunidade"
         suspend:
           title: "Suspender usuário(a)"
-          details: "Alcance o limite de sinalizadores e suspensa o(a) usuário(a)"
+          details: "Alcance o limite de sinalizadores e suspenda o(a) usuário(a)"
         silence:
           title: "Silenciar usuário(a)"
           details: "Alcance o limite de sinalizadores e silencie o(a) usuário(a)"
@@ -3040,7 +3040,7 @@ pt_BR:
       official_warning: "Aviso oficial"
       delete_spammer: "Excluir remetente de spam"
       flag_for_review: "Fila para revisão"
-      delete_confirm_MF: "Você está prestes a excluir {POSTS, plural, one {<b>#</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>#</b> tópico} other {<b>#</b> tópicos}} deste(a) usuário(a), remover sua conta, bloquear cadastros a partir do seu endereço IP <b>{ip_address}</b> e adicionar seu endereço de e-mail <b>{email}</b> a uma lista de bloqueio permanente. Você tem certeza que este(a) usuário(a) é realmente um remetente de spam?"
+      delete_confirm_MF: "Você está prestes a excluir {POSTS, plural, one {<b>#</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>#</b> tópico} other {<b>#</b> tópicos}} deste(a) usuário(a), remover sua conta, bloquear cadastros a partir do seu endereço IP <b>{ip_address}</b> e adicionar seu endereço de e-mail <b>{email}</b> a uma lista de bloqueio permanente. Você tem certeza que este(a) usuário(a) é realmente remetente de spam?"
       yes_delete_spammer: "Sim, excluir remetente de spam"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -4078,7 +4078,7 @@ pt_BR:
             title: "Insira o CSS personalizado para entregar com a versão incorporada dos comentários"
           color_definitions:
             text: "Definições de cor"
-            title: "Digite definições de cor personalizadas (apeans usuários(as) avançados(as))"
+            title: "Digite definições de cor personalizadas (apenas usuários(as) avançados(as))"
             placeholder: |2-
 
               Use esta folha de estilo para adicionar cores personalizadas à lista de propriedades personalizadas do CSS.

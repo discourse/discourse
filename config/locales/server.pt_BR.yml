@@ -57,7 +57,7 @@ pt_BR:
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, paleta de cores inválida"
     other_error: "Ocorreu um erro ao atualizar o tema"
-    ember_selector_error: "Desculpe, usar #ember or . seletores .ember-view CSS não é permitido, porque esses nomes são gerados dinamicamente durante a execução e mudarão ao longo do tempo, podendo resultar em um CSS quebrado. Tente um seletor diferente."
+    ember_selector_error: "Desculpe, usar #ember ou . seletores .ember-view CSS não é permitido, porque esses nomes são gerados dinamicamente durante a execução e mudarão ao longo do tempo, podendo resultar em um CSS quebrado. Tente um seletor diferente."
     compile_error:
       unrecognized_extension: "Extensão de arquivo não reconhecida: %{extension}"
     import_error:
@@ -1461,7 +1461,6 @@ pt_BR:
     detailed_404: "Fornece mais detalhes aos(às) usuários(as) sobre o motivo de não poderem acessar um tópico específico. Observação: isso não é tão seguro porque os(as) usuários(as) saberão se uma URL estiver vinculada a um tópico válido."
     enforce_second_factor: "Obriga os(as) usuários(as) a ativar a autenticação de dois fatores. Selecione \"tudo\" para aplicar a todos os(as) usuários(as). Selecione \"equipe\" para aplicar somente aos(as) usuários(as) da equipe."
     force_https: "Obrigue seu site a usar apenas HTTPS. AVISO: NÃO ative até ter verificado se o HTTPS está totalmente configurado e funcionando em todos os lugares! Você verificou se seu CDN, todas as entradas com conta de rede social e logotipos e dependências externas também são compatíveis com HTTPS?"
-    same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos vetores de solicitação intersite forjada nos navegadores compatíveis (Lax ou Strict). Aviso: o Strict funcionará somente em sites que obrigam entrada com conta e usam um método de autenticação externo."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída em \"Resumir este tópico\" "
     summary_posts_required: "Quantidade mínima de postagens em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
     summary_likes_required: "Quantidade mínima de curtidas em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
@@ -1735,7 +1734,7 @@ pt_BR:
     min_trust_to_post_links: "O nível de confiança mínimo necessário para incluir links em postagens"
     min_trust_to_post_embedded_media: "O nível de confiança mínimo necessário para incorporar itens de mídia em uma postagem"
     min_trust_level_to_allow_profile_background: "O nível de confiança mínimo necessário par a enviar um plano de fundo para perfil"
-    min_trust_level_to_allow_user_card_background: "O nível de confiança mínimo necessário par a enviar um plano de fundo para cartão de usuário(a)"
+    min_trust_level_to_allow_user_card_background: "O nível de confiança mínimo necessário para enviar um plano de fundo para cartão de usuário(a)"
     min_trust_level_to_allow_invite: "O nível de confiança mínimo necessário para convidar usuários(as)"
     min_trust_level_to_allow_ignore: "O nível de confiança mínimo necessário para ignorar usuários(as)"
     allowed_link_domains: "Domínios aos quais os(as) usuários(as) podem vincular, mesmo que não tenham o nível de confiança apropriado para postar links"
