@@ -170,7 +170,7 @@ class GroupsController < ApplicationController
     end
 
     if group.update(params_with_permitted)
-      GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
+      GroupActionLogger.new(current_user, group).log_change_group_settings
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
       update_existing_users(group.group_users, categories, tags) if categories.present? || tags.present?
