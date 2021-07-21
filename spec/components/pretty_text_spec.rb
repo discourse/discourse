@@ -159,13 +159,13 @@ describe PrettyText do
 
           html = <<~HTML
             <blockquote>
-            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=#{Emoji::EMOJI_VERSION}" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
             </blockquote>
           HTML
 
@@ -180,13 +180,13 @@ describe PrettyText do
 
           html = <<~HTML
             <blockquote>
-            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=#{Emoji::EMOJI_VERSION}" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
             </blockquote>
           HTML
 
@@ -680,7 +680,7 @@ describe PrettyText do
     context "emojis" do
       it "should remove broken emoji" do
         html = <<~EOS
-          <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=9\" title=\":bike:\" class=\"emoji\" alt=\":bike:\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=9\" title=\":cat:\" class=\"emoji\" alt=\":cat:\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=9\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\">
+          <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=#{Emoji::EMOJI_VERSION}\" title=\":bike:\" class=\"emoji\" alt=\":bike:\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=#{Emoji::EMOJI_VERSION}\" title=\":cat:\" class=\"emoji\" alt=\":cat:\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=#{Emoji::EMOJI_VERSION}\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\">
         EOS
         expect(PrettyText.excerpt(html, 7)).to eq(":bike: &hellip;")
         expect(PrettyText.excerpt(html, 8)).to eq(":bike: &hellip;")
