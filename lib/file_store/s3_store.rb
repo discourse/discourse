@@ -10,7 +10,7 @@ module FileStore
 
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
-    TEMPORARY_UPLOAD_PREFIX ||= "corral/"
+    TEMPORARY_UPLOAD_PREFIX ||= "temp/"
 
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper
@@ -200,6 +200,10 @@ module FileStore
         upload.url
     end
 
+    def path_from_url(url)
+      URI.parse(url).path[1..-1]
+    end
+
     def cdn_url(url)
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
@@ -212,25 +216,14 @@ module FileStore
       presigned_get_url(key, expires_in: expires_in, force_download: force_download)
     end
 
-    # TODO (martin) - all the tests for the permutations of prefixes
-    #
-    # s3_bucket: base-bucket/somesite
-    # s3_bucket: base-bucket
-    #
-    # multisite: true
-    #
-    # base-bucket/uploads/corral/fuewj8f34/test.jpg (normal site with no funny business)
-    # base-bucket/somesite/uploads/default/corral/fuewj8f34/test.jpg (dedicated site with bucket path)
-    # base-bucket/teams11/uploads/somesite/corral/fuewj8f34/test.jpg (multisite with bucket path)
     def signed_url_for_temporary_upload(file_name, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
       folder = s3_bucket_folder_path.nil? ? "" : "#{s3_bucket_folder_path}/"
       key = "#{folder}#{upload_path}/#{TEMPORARY_UPLOAD_PREFIX}#{SecureRandom.hex}/#{file_name}"
-      url = presigned_put_url(key, expires_in: expires_in, metadata: metadata)
-      [key, url]
+      presigned_put_url(key, expires_in: expires_in, metadata: metadata)
     end
 
-    def object_from_key(key)
-      s3_helper.object(key)
+    def object_from_path(path)
+      s3_helper.object(path)
     end
 
     def cache_avatar(avatar, user_id)
@@ -329,7 +322,7 @@ module FileStore
         )
       end
 
-      obj = s3_helper.object(url)
+      obj = object_from_path(url)
       obj.presigned_url(:get, opts)
     end
 
@@ -343,7 +336,7 @@ module FileStore
 
     def update_ACL(key, secure)
       begin
-        s3_helper.object(key).acl.put(acl: secure ? "private" : "public-read")
+        object_from_path(key).acl.put(acl: secure ? "private" : "public-read")
       rescue Aws::S3::Errors::NoSuchKey
         Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
       end

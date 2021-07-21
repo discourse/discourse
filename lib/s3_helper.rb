@@ -102,24 +102,9 @@ class S3Helper
       end
     end
 
-    # if options[:delete_source]
-    #   options.delete(:delete_source)
-    #   source_key = options[:copy_source].gsub(@s3_bucket_name + "/", "")
-    #   response = s3_bucket.object(source_key).move_to(s3_bucket.object(destination), options)
-    #   binding.pry
-    # else
     response = s3_bucket.object(destination).copy_from(options)
-    # end
-
     [destination, response.copy_object_result.etag.gsub('"', '')]
   end
-
-  # def copy_tempfile(source_object, destination_path, destination_options: {})
-  #   path = get_path_for_s3_upload(destination_path)
-  #   binding.pry
-  #   obj = source_object.copy_to(destination_path, destination_options)
-  #   [path, obj.etag.gsub('"', '')]
-  # end
 
   # make sure we have a cors config for assets
   # otherwise we will have no fonts

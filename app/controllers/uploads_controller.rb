@@ -209,9 +209,10 @@ class UploadsController < ApplicationController
       meta
     end
 
-    key, url = Discourse.store.signed_url_for_temporary_upload(
+    url = Discourse.store.signed_url_for_temporary_upload(
       file_name, metadata: metadata
     )
+    key = Discourse.store.path_from_url(url)
 
     upload_stub = ExternalUploadStub.create!(
       key: key,

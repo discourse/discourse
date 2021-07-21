@@ -113,7 +113,11 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png")
+          s3_object.expects(:copy_from).with(
+            copy_source: "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png"
+          ).returns(
+            stub(copy_object_result: stub(etag: '"etagtest"'))
+          )
           s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
@@ -129,7 +133,11 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/second/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png")
+          s3_object.expects(:copy_from).with(
+            copy_source: "s3-upload-bucket/#{upload_path}/original/1X/#{upload.sha1}.png"
+          ).returns(
+            stub(copy_object_result: stub(etag: '"etagtest"'))
+          )
           s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
           s3_object.expects(:delete)
 
@@ -150,7 +158,11 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
             s3_object = stub
 
             s3_bucket.expects(:object).with("discourse-uploads/uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
-            s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png")
+            s3_object.expects(:copy_from).with(
+              copy_source: "s3-upload-bucket/discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png"
+            ).returns(
+              stub(copy_object_result: stub(etag: '"etagtest"'))
+            )
             s3_bucket.expects(:object).with("discourse-uploads/#{upload_path}/original/1X/#{upload.sha1}.png").returns(s3_object)
             s3_object.expects(:delete)
 
@@ -296,6 +308,54 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       link = 'mailto: roman;@test.com'
 
       expect(store.has_been_uploaded?(link)).to eq(false)
+    end
+  end
+
+  describe "#signed_url_for_temporary_upload" do
+    before do
+      setup_s3
+    end
+
+    let(:store) { FileStore::S3Store.new }
+
+    context "for a bucket with no folder path" do
+      before { SiteSetting.s3_upload_bucket = "s3-upload-bucket" }
+
+      it "returns a presigned url with the correct params and the key for the temporary file" do
+        url = store.signed_url_for_temporary_upload("test.png")
+        key = store.path_from_url(url)
+        expect(url).to match(/Amz-Expires/)
+        expect(key).to match(/uploads\/default\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+      end
+
+      it "presigned url contans the metadata when provided" do
+        url = store.signed_url_for_temporary_upload("test.png", metadata: { "test-meta": "testing" })
+        expect(url).to include("&x-amz-meta-test-meta=testing")
+      end
+    end
+
+    context "for a bucket with a folder path" do
+      before { SiteSetting.s3_upload_bucket = "s3-upload-bucket/site" }
+
+      it "returns a presigned url with the correct params and the key for the temporary file" do
+        url = store.signed_url_for_temporary_upload("test.png")
+        key = store.path_from_url(url)
+        expect(url).to match(/Amz-Expires/)
+        expect(key).to match(/site\/uploads\/default\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+      end
+    end
+
+    context "for a multisite site" do
+      before { SiteSetting.s3_upload_bucket = "s3-upload-bucket/standard99" }
+
+      it "returns a presigned url with the correct params and the key for the temporary file" do
+        test_multisite_connection('second') do
+          url = store.signed_url_for_temporary_upload("test.png")
+          key = store.path_from_url(url)
+          expect(url).to match(/Amz-Expires/)
+          expect(key).to match(/standard99\/uploads\/second\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+        end
+      end
     end
   end
 end
