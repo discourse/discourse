@@ -69,6 +69,10 @@ export default Component.extend(UtilsMixin, {
     );
   }),
 
+  dasherizedTitle: computed("title", function () {
+    return (this.title || "").replace(".", "-").dasherize();
+  }),
+
   label: computed("rowLabel", "item.label", "title", "rowName", function () {
     const label =
       this.rowLabel ||

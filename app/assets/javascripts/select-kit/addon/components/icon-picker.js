@@ -4,10 +4,10 @@ import {
   enableMissingIconWarning,
 } from "discourse-common/lib/icon-library";
 import MultiSelectComponent from "select-kit/components/multi-select";
-import { ajax } from "discourse/lib/ajax";
 import { computed } from "@ember/object";
 import { isDevelopment } from "discourse-common/config/environment";
 import { makeArray } from "discourse-common/lib/helpers";
+import { ajax } from "select-kit/lib/ajax-helper";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],
