@@ -367,7 +367,8 @@ class GroupsController < ApplicationController
       ))
     else
       notify = params[:notify_users]&.to_s == "true"
-      users.uniq.each do |user|
+      uniq_users = users.uniq
+      uniq_users.each do |user|
         add_user_to_group(group, user, notify)
       end
 
@@ -384,7 +385,7 @@ class GroupsController < ApplicationController
       end
 
       render json: success_json.merge!(
-        usernames: users.uniq.map(&:username),
+        usernames: uniq_users.map(&:username),
         emails: emails
       )
     end
