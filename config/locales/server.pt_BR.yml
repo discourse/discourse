@@ -1733,7 +1733,7 @@ pt_BR:
     min_trust_to_flag_posts: "O nível de confiança mínimo necessário para sinalizar postagens"
     min_trust_to_post_links: "O nível de confiança mínimo necessário para incluir links em postagens"
     min_trust_to_post_embedded_media: "O nível de confiança mínimo necessário para incorporar itens de mídia em uma postagem"
-    min_trust_level_to_allow_profile_background: "O nível de confiança mínimo necessário par a enviar um plano de fundo para perfil"
+    min_trust_level_to_allow_profile_background: "O nível de confiança mínimo necessário para enviar um plano de fundo para perfil"
     min_trust_level_to_allow_user_card_background: "O nível de confiança mínimo necessário para enviar um plano de fundo para cartão de usuário(a)"
     min_trust_level_to_allow_invite: "O nível de confiança mínimo necessário para convidar usuários(as)"
     min_trust_level_to_allow_ignore: "O nível de confiança mínimo necessário para ignorar usuários(as)"
