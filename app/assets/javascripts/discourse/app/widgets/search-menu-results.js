@@ -403,7 +403,7 @@ createWidget("search-menu-assistant", {
         });
         break;
       default:
-        suggestionShortcuts.sort().map((item) => {
+        suggestionShortcuts.map((item) => {
           if (item.includes(suggestionKeyword)) {
             const slug = prefix ? `${prefix} ${item} ` : `${item} `;
             content.push(this.attach("search-menu-assistant-item", { slug }));
@@ -412,7 +412,7 @@ createWidget("search-menu-assistant", {
         break;
     }
 
-    return content.filter((c, i) => i <= 10);
+    return content.filter((c, i) => i <= 8);
   },
 });
 
