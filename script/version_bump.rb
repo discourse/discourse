@@ -84,7 +84,7 @@ end
 if ARGV.include?('push')
   puts "Pushing..."
 
-  `git push origin master`
+  `git push origin main`
   `git push origin v#{version}`
   `git push origin latest-release`
 end
