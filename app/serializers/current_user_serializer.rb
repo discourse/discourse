@@ -65,6 +65,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :do_not_disturb_until,
              :has_topic_draft,
              :can_review,
+             :draft_count,
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
@@ -314,5 +315,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_has_topic_draft?
     Draft.has_topic_draft(object)
+  end
+
+  def draft_count
+    object.user_stat.draft_count
   end
 end

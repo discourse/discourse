@@ -7,6 +7,14 @@ class Draft < ActiveRecord::Base
 
   belongs_to :user
 
+  after_create do
+    UserStat.update_draft_count(self.user_id)
+  end
+
+  after_destroy do
+    UserStat.update_draft_count(self.user_id)
+  end
+
   class OutOfSequence < StandardError; end
 
   def self.set(user, key, sequence, data, owner = nil, force_save: false)
@@ -92,6 +100,8 @@ class Draft < ActiveRecord::Base
           owner = :owner,
           updated_at = CURRENT_TIMESTAMP
       SQL
+
+      UserStat.update_draft_count(user.id)
     end
 
     sequence
