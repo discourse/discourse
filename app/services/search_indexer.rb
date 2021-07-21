@@ -120,7 +120,11 @@ class SearchIndexer
       a_weight: topic_title,
       b_weight: category_name,
       c_weight: topic_tags,
-      d_weight: scrub_html_for_search(cooked)
+      # Length of a tsvector must be less than 1_048_576 bytes.
+      # The difference between the max ouptut limit and imposed input limit
+      # accounts for the fact that sometimes the output tsvector may be
+      # slighlty longer than the input.
+      d_weight: scrub_html_for_search(cooked)[0..1_000_000]
     ) do |params|
       params["private_message"] = private_message
     end
