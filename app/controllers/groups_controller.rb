@@ -366,17 +366,9 @@ class GroupsController < ApplicationController
         count: usernames_already_in_group.size
       ))
     else
-      uniq_users = users.uniq
-      uniq_users.each do |user|
-        begin
-          group.add(user)
-          GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-          group.notify_added_to_group(user) if params[:notify_users]&.to_s == "true"
-        rescue ActiveRecord::RecordNotUnique
-          # Under concurrency, we might attempt to insert two records quickly and hit a DB
-          # constraint. In this case we can safely ignore the error and act as if the user
-          # was added to the group.
-        end
+      notify = params[:notify_users]&.to_s == "true"
+      users.uniq.each do |user|
+        add_user_to_group(group, user, notify)
       end
 
       emails.each do |email|
@@ -392,7 +384,7 @@ class GroupsController < ApplicationController
       end
 
       render json: success_json.merge!(
-        usernames: uniq_users.map(&:username),
+        usernames: users.uniq.map(&:username),
         emails: emails
       )
     end
@@ -409,15 +401,7 @@ class GroupsController < ApplicationController
 
     already_in_group = group.users.exists?(id: current_user.id)
     return if already_in_group
-
-    begin
-      group.add(current_user)
-      GroupActionLogger.new(current_user, group).log_add_user_to_group(current_user)
-    rescue ActiveRecord::RecordNotUnique
-      # Under concurrency, we might attempt to insert two records quickly and hit a DB
-      # constraint. In this case we can safely ignore the error and act as if the user
-      # was added to the group.
-    end
+    add_user_to_group(group, current_user)
   end
 
   def handle_membership_request
@@ -661,6 +645,18 @@ class GroupsController < ApplicationController
   end
 
   private
+
+  def add_user_to_group(group, user, notify = false)
+    begin
+      group.add(user)
+      GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+      group.notify_added_to_group(user) if notify
+    rescue ActiveRecord::RecordNotUnique
+      # Under concurrency, we might attempt to insert two records quickly and hit a DB
+      # constraint. In this case we can safely ignore the error and act as if the user
+      # was added to the group.
+    end
+  end
 
   def group_params(automatic: false)
     permitted_params =
