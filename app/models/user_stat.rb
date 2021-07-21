@@ -214,7 +214,7 @@ class UserStat < ActiveRecord::Base
 
       MessageBus.publish(
         '/user',
-        { draft_count: draft_count },
+        { draft_count: draft_count.first },
         user_ids: [user_id]
       )
     else
@@ -324,4 +324,5 @@ end
 #  distinct_badge_count     :integer          default(0), not null
 #  first_unread_pm_at       :datetime         not null
 #  digest_attempted_at      :datetime
+#  draft_count              :integer          default(0), not null
 #
