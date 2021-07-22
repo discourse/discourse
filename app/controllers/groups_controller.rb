@@ -506,6 +506,52 @@ class GroupsController < ApplicationController
     )
   end
 
+  def leave
+    group = Group.find_by(id: params[:id])
+    raise Discourse::NotFound unless group
+    group.public_exit ? ensure_logged_in : guardian.ensure_can_edit!(group)
+
+    # Maintain backwards compatibility
+    params[:usernames] = params[:username] if params[:username].present?
+    params[:user_emails] = params[:user_email] if params[:user_email].present?
+
+    users = users_from_params
+    raise Discourse::InvalidParameters.new(
+      'user_ids or usernames or user_emails must be present'
+    ) if users.empty?
+
+    if group.public_exit
+      if !guardian.can_log_group_changes?(group) && current_user != users.first
+        raise Discourse::InvalidAccess
+      end
+
+      unless current_user.staff?
+        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      end
+    end
+
+    removed_users = []
+    skipped_users = []
+
+    users.each do |user|
+      if group.remove(user)
+        removed_users << user.username
+        GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
+      else
+        if group.users.exclude? user
+          skipped_users << user.username
+        else
+          raise Discourse::InvalidParameters
+        end
+      end
+    end
+
+    render json: success_json.merge!(
+      usernames: removed_users,
+      skipped_usernames: skipped_users
+    )
+  end
+
   MAX_NOTIFIED_OWNERS ||= 20
 
   def request_membership
