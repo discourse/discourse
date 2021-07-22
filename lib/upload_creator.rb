@@ -92,8 +92,6 @@ class UploadCreator
       # enabled because we use a unique access hash to differentiate
       # between uploads instead of the sha1, and to get around various
       # access/permission issues for uploads
-      #
-      # TODO (martin) check how existing uploads work with direct to s3
       if !SiteSetting.secure_media && !external_upload_too_big
         # do we already have that upload?
         @upload = Upload.find_by(sha1: sha1)
