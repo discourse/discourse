@@ -193,6 +193,8 @@ class UploadsController < ApplicationController
   end
 
   def generate_presigned_put
+    return render_404 if !SiteSetting.enable_direct_s3_uploads
+
     file_name = params.require(:file_name)
     type = params.require(:type)
 
@@ -230,6 +232,8 @@ class UploadsController < ApplicationController
   end
 
   def complete_external_upload
+    return render_404 if !SiteSetting.enable_direct_s3_uploads
+
     unique_identifier = params.require(:unique_identifier)
 
     external_upload_stub = ExternalUploadStub.find_by(unique_identifier: unique_identifier)

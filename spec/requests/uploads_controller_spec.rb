@@ -712,6 +712,7 @@ describe UploadsController do
 
     context "when the store is external" do
       before do
+        SiteSetting.enable_direct_s3_uploads = true
         setup_s3
       end
 
@@ -783,6 +784,7 @@ describe UploadsController do
       let(:upload) { Fabricate(:upload) }
 
       before do
+        SiteSetting.enable_direct_s3_uploads = true
         setup_s3
       end
 
