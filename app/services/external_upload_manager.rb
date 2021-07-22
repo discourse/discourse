@@ -5,6 +5,7 @@ class ExternalUploadManager
 
   class ChecksumMismatchError < StandardError; end
   class DownloadFailedError < StandardError; end
+  class CannotPromoteError < StandardError; end
 
   attr_reader :external_upload_stub
 
@@ -17,6 +18,9 @@ class ExternalUploadManager
   end
 
   def promote_to_upload!
+    raise CannotPromoteError if !can_promote?
+
+    external_upload_stub.update!(status: ExternalUploadStub.statuses[:uploaded])
     external_stub_object = Discourse.store.object_from_path(external_upload_stub.key)
     external_etag = external_stub_object.etag
     external_size = external_stub_object.size
@@ -52,7 +56,7 @@ class ExternalUploadManager
       filesize: external_size
     }
 
-    upload = UploadCreator.new(tempfile, external_upload_stub.original_filename, opts).create_for(
+    UploadCreator.new(tempfile, external_upload_stub.original_filename, opts).create_for(
       external_upload_stub.created_by_id
     )
   rescue => err

@@ -4023,6 +4023,7 @@ en:
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."
     checksum_mismatch_failure: "The checksum of the file you uploaded does not match. The file contents may have changed on upload. Please try again."
+    cannot_promote_failure: "The upload cannot be completed, it may have already completed or previously failed."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:

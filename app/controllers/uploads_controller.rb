@@ -12,6 +12,7 @@ class UploadsController < ApplicationController
   before_action :external_store_check, only: [:show_secure, :generate_presigned_put, :complete_external_upload]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
+  PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE = 5
 
   def external_store_check
     return render_404 if !Discourse.store.external?
@@ -195,6 +196,10 @@ class UploadsController < ApplicationController
     file_name = params.require(:file_name)
     type = params.require(:type)
 
+    RateLimiter.new(
+      current_user, "generate-presigned-put-upload-stub", PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE, 1.minute
+    ).performed!
+
     # don't want people posting arbitrary S3 metadata so we just take the
     # one we need. all of these will be converted to x-amz-meta- metadata
     # fields in S3 so it's best to use dashes in the names for consistency
@@ -236,20 +241,21 @@ class UploadsController < ApplicationController
     hijack do
       begin
         upload = external_upload_manager.promote_to_upload!
+        if upload.errors.empty?
+          external_upload_manager.destroy!
+          render json: UploadsController.serialize_upload(upload), status: 200
+        else
+          render json: failed_json.merge(errors: upload.errors.to_hash.values.flatten), status: 422
+        end
       rescue ExternalUploadManager::ChecksumMismatchError
         render json: failed_json.merge(message: I18n.t("upload.checksum_mismatch_failure")), status: 422
+      rescue ExternalUploadManager::CannotPromoteError
+        render json: failed_json.merge(message: I18n.t("upload.cannot_promote_failure")), status: 422
       rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound
         render json: failed_json.merge(message: I18n.t("upload.download_failure")), status: 422
       rescue => err
         Discourse.warn_exception(err, message: "Complete external upload failed for user #{current_user.id}")
         render json: failed_json.merge(message: I18n.t("upload.failed")), status: 422
-      end
-
-      if upload.errors.empty?
-        external_upload_manager.destroy!
-        render json: UploadsController.serialize_upload(upload), status: 200
-      else
-        render json: failed_json.merge(errors: upload.errors.to_hash.values.flatten), status: 422
       end
     end
   end

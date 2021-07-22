@@ -704,4 +704,153 @@ describe UploadsController do
       end
     end
   end
+
+  describe "#generate_presigned_put" do
+    before do
+      sign_in(user)
+    end
+
+    context "when the store is external" do
+      before do
+        setup_s3
+      end
+
+      it "errors if the correct params are not provided" do
+        post "/uploads/generate-presigned-put.json", params: { file_name: "test.png" }
+        expect(response.status).to eq(400)
+        post "/uploads/generate-presigned-put.json", params: { type: "card_background" }
+        expect(response.status).to eq(400)
+      end
+
+      it "generates a presigned URL and creates an external upload stub" do
+        post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
+        expect(response.status).to eq(200)
+
+        result = response.parsed_body
+
+        external_upload_stub = ExternalUploadStub.find_by(unique_identifier: result["unique_identifier"])
+        expect(external_upload_stub.original_filename).to eq("test.png")
+        expect(external_upload_stub.created_by).to eq(user)
+        expect(external_upload_stub.upload_type).to eq("card_background")
+        expect(result["key"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
+        expect(result["url"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
+        expect(result["url"]).to include("Amz-Expires")
+      end
+
+      it "includes accepted metadata in the presigned url when provided" do
+        post "/uploads/generate-presigned-put.json", {
+          params: {
+            file_name: "test.png",
+            type: "card_background",
+            metadata: {
+              "sha1-checksum" => "testing",
+              "blah" => "wontbeincluded"
+            }
+          }
+        }
+        expect(response.status).to eq(200)
+
+        result = response.parsed_body
+        expect(result['url']).to include("&x-amz-meta-sha1-checksum=testing")
+        expect(result['url']).not_to include("&x-amz-meta-blah=wontbeincluded")
+      end
+
+      it "rate limits" do
+        RateLimiter.enable
+        stub_const(UploadsController, "PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE", 1) do
+          post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
+          post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
+        end
+        expect(response.status).to eq(429)
+      end
+    end
+
+    context "when the store is not external" do
+      it "returns 404" do
+        post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "#complete_external_upload" do
+    before do
+      sign_in(user)
+    end
+
+    context "when the store is external" do
+      fab!(:external_upload_stub) { Fabricate(:external_upload_stub, created_by: user) }
+      let(:upload) { Fabricate(:upload) }
+
+      before do
+        setup_s3
+      end
+
+      it "returns 404 when the upload stub does not exist" do
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: "unknown" }
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 403 when the upload stub does not belong to the user" do
+        external_upload_stub.update!(created_by: Fabricate(:user))
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(response.status).to eq(403)
+      end
+
+      it "handles ChecksumMismatchError" do
+        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::ChecksumMismatchError)
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["message"]).to eq(I18n.t("upload.checksum_mismatch_failure"))
+      end
+
+      it "handles CannotPromoteError" do
+        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::CannotPromoteError)
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["message"]).to eq(I18n.t("upload.cannot_promote_failure"))
+      end
+
+      it "handles DownloadFailedError and Aws::S3::Errors::NotFound" do
+        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::DownloadFailedError)
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["message"]).to eq(I18n.t("upload.download_failure"))
+        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(Aws::S3::Errors::NotFound.new("error", "not found"))
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["message"]).to eq(I18n.t("upload.download_failure"))
+      end
+
+      it "handles a generic upload failure" do
+        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(StandardError)
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["message"]).to eq(I18n.t("upload.failed"))
+      end
+
+      it "handles validation errors on the upload" do
+        upload.errors.add(:base, "test error")
+        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).returns(upload)
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["test error"])
+      end
+
+      it "deletes the stub and returns the serialized upload when complete" do
+        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).returns(upload)
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(UploadsController.serialize_upload(upload))
+      end
+    end
+
+    context "when the store is not external" do
+      it "returns 404" do
+        post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end

@@ -53,6 +53,15 @@ RSpec.describe ExternalUploadManager do
       end
     end
 
+    context "when the upload is not in the created status" do
+      before do
+        external_upload_stub.update!(status: ExternalUploadStub.statuses[:uploaded])
+      end
+      it "raises an error" do
+        expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::CannotPromoteError)
+      end
+    end
+
     context "when the upload does not get changed in UploadCreator (resized etc.)" do
       it "copies the stubbed upload on S3 to its new destination and deletes it" do
         upload = subject.promote_to_upload!
@@ -131,6 +140,11 @@ RSpec.describe ExternalUploadManager do
       expect(upload.sha1).not_to eq(sha1)
       expect(upload.original_sha1).to eq(nil)
       expect(upload.filesize).to eq(object_size)
+    end
+
+    it "marks the stub as uploaded" do
+      subject.promote_to_upload!
+      expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:uploaded])
     end
 
     it "copies the stubbed upload on S3 to its new destination and deletes it" do
