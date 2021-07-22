@@ -56,11 +56,7 @@ export default {
     // When 20 minutes pass we stop long polling due to "shouldLongPollCallback".
     onPresenceChange({
       unseenTime: LONG_POLL_AFTER_UNSEEN_TIME,
-      callback: () => {
-        if (messageBus.onVisibilityChange) {
-          messageBus.onVisibilityChange();
-        }
-      },
+      callback: () => document.dispatchEvent(new Event("visibilitychange")),
     });
 
     if (siteSettings.login_required && !user) {
