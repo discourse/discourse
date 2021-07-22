@@ -410,6 +410,11 @@ RSpec.describe ListController do
       expect(response.media_type).to eq('application/rss+xml')
     end
 
+    it 'errors for invalid periods on top RSS' do
+      get "/top.rss?period=decadely"
+      expect(response.status).to eq(400)
+    end
+
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
         get "/top.rss?period=#{period}"

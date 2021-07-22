@@ -266,6 +266,10 @@ class TopicQuery
   end
 
   def list_top_for(period)
+    if !TopTopic.periods.include?(period.to_sym)
+      raise Discourse::InvalidParameters.new("Invalid period. Valid periods are #{TopTopic.periods.join(", ")}")
+    end
+
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
       topics = remove_muted_categories(topics, @user)
