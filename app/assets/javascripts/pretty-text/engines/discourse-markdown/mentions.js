@@ -33,7 +33,7 @@ export function setup(helper) {
   });
 }
 
-function mentionRegex(unicodeUsernames) {
+export function mentionRegex(unicodeUsernames) {
   if (unicodeUsernames) {
     try {
       // Create the regex from a string, because Babel doesn't understand
