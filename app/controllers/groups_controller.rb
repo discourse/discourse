@@ -463,7 +463,7 @@ class GroupsController < ApplicationController
   def remove_member
     group = Group.find_by(id: params[:id])
     raise Discourse::NotFound unless group
-    group.public_exit ? ensure_logged_in : guardian.ensure_can_edit!(group)
+    guardian.ensure_can_edit!(group)
 
     # Maintain backwards compatibility
     params[:usernames] = params[:username] if params[:username].present?
@@ -473,16 +473,6 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(
       'user_ids or usernames or user_emails must be present'
     ) if users.empty?
-
-    if group.public_exit
-      if !guardian.can_log_group_changes?(group) && current_user != users.first
-        raise Discourse::InvalidAccess
-      end
-
-      unless current_user.staff?
-        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
-      end
-    end
 
     removed_users = []
     skipped_users = []
