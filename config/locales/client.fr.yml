@@ -22,7 +22,7 @@ fr:
             mb: Mo
             tb: To
       short:
-        thousands: "%{number} 000"
+        thousands: "%{number} k"
         millions: "%{number} M"
     dates:
       time: "HH:mm"

@@ -379,6 +379,7 @@ tr_TR:
         type_bonus:
           name: "tür bonusu"
           title: "Bazı gözden geçirilebilir türlere daha yüksek öncelikli olmaları için personel tarafından bir bonus tahsis edilebilir."
+      stale_help: "Bu gözden geçirme, <b>%{username}</b>tarafından çözüldü."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu öğeyi talep edebilirsiniz."
         required: "Öğeleri inceleyebilmeniz için önce hak talebinde bulunmalısınız."
@@ -2965,6 +2966,7 @@ tr_TR:
       position_disabled: "Kategoriler etkinlik sıralarına göre görünecek. Listelerdeki kategorilerin sıralamalarını kontrol edebilmek için,"
       position_disabled_click: '"Sabit kategori pozisyonları" ayarını etkinleştir.'
       minimum_required_tags: "Bir konu için gereken minimum etiket sayısı:"
+      default_slow_mode: 'Bu kategorideki yeni konular için "Yavaş Modu" etkinleştirin.'
       parent: "Üst Kategori"
       num_auto_bump_daily: "Günlük otomatik olarak açılan açık konuların sayısı:"
       navigate_to_first_post_after_read: "Konular okunduktan sonra ilk gönderiye dön"
@@ -3485,6 +3487,8 @@ tr_TR:
         regular: "müdavim"
         leader: "lider"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Desteklenmeyen bir dosya seçtiniz. Desteklenen dosya türleri şunlardır– %{types}."
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:

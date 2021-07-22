@@ -478,12 +478,6 @@ fi:
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen maalaamalla lainattavan viestin tekstiä ja klikkaamalla ilmestyvää <b>lainaa</b>-painiketta.
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
-    dominating_topic: |
-      ### Anna muidenkin osallistua keskusteluun
-
-      Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent} % vastauksista.
-
-      Ketju voisi olla vieläkin parempi, jos useammilla olisi tilaa jakaa omia näkökulmiaan. Voisit kutsua heitä tänne?
     get_a_room: |
       ### Rohkaise kaikkia osallistumaan keskusteluun
 
@@ -1462,7 +1456,6 @@ fi:
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
     enforce_second_factor: "Pakottaa käyttäjät ottamaan kaksivaiheisen tunnistuksen käyttöön. Voit pakottaa sen kaikille valitsemalla \"kaikki\". Vaihtoehto \"henkilökunta\" pakottaa sen vain henkilökunnalle."
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN:n, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot ja muut riippuvuudet varmistaaksesi, että ne ovat myös HTTPS-yhteensopivia?"
-    same_site_cookies: "Käytä saman sivuston evästeitä, ne eliminoivat kaikki sivustojenvälisen pyynnön väärennyksen vektorit tuetuilla selaimilla (lax tai strict). Varoitus: strict toimii vain sivustoilla, jotka pakottavat kirjautumisen ja käyttävät ulkoista todennustapaa."
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
     summary_posts_required: "Vähimmäismäärä viestejä ketjussa ennen kuin Näytä ketjun tiivistelmä otetaan käyttöön. Muutokset tähän asetukseen otetaan käyttöön taannehtivasti viikon kuluessa."
     summary_likes_required: "Vähimmäismäärä tykkäyksiä ketjussa ennen kuin Näytä ketjun tiivistelmä otetaan käyttöön. Muutokset tähän asetukseen otetaan käyttöön taannehtivasti viikon kuluessa."
