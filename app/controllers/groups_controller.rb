@@ -398,6 +398,7 @@ class GroupsController < ApplicationController
     end
 
     group = Group.find(params[:id])
+    raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless group.public_admission
 
     return if group.users.exists?(id: current_user.id)
