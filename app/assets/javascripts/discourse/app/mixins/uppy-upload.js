@@ -151,11 +151,14 @@ export default Mixin.create({
       this._reset();
     });
 
-    // later we will use the uppy direct s3 uploader based on enable_s3_uploads,
-    // for now we always just use XHR uploads
-    // this._useXHRUploads();
-    //
-    this._useS3Uploads();
+    if (
+      this.siteSettings.enable_s3_uploads &&
+      this.siteSettings.enable_direct_s3_uploads // hidden setting like enable_experimental_image_uploader
+    ) {
+      this._useS3Uploads();
+    } else {
+      this._useXHRUploads();
+    }
   },
 
   _useXHRUploads() {
