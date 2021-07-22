@@ -114,6 +114,12 @@ const Group = RestModel.extend({
     }).then(() => this.findMembers(params, true));
   },
 
+  leave() {
+    return ajax(`/groups/${this.id}/leave.json`, {
+      type: "DELETE",
+    }).then(() => this.findMembers({}, true));
+  },
+
   addMembers(usernames, filter, notifyUsers, emails = []) {
     return ajax(`/groups/${this.id}/members.json`, {
       type: "PUT",

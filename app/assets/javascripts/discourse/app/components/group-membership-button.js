@@ -37,7 +37,7 @@ export default Component.extend({
   removeFromGroup() {
     const model = this.model;
     model
-      .removeMember(this.currentUser)
+      .leave()
       .then(() => {
         model.set("is_group_user", false);
         this.appEvents.trigger("group:leave", model);
