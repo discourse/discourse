@@ -50,13 +50,13 @@ export default Component.extend({
     joinGroup() {
       if (this.currentUser) {
         this.set("updatingMembership", true);
-        const model = this.model;
+        const group = this.model;
 
-        model
-          .addMembers(this.currentUser.get("username"))
+        group
+          .join()
           .then(() => {
-            model.set("is_group_user", true);
-            this.appEvents.trigger("group:join", model);
+            group.set("is_group_user", true);
+            this.appEvents.trigger("group:join", group);
           })
           .catch(popupAjaxError)
           .finally(() => {

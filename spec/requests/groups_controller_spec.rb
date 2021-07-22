@@ -1507,26 +1507,57 @@ describe GroupsController do
             expect(group_history.target_user).to eq(other_user)
           end
         end
+      end
+    end
 
-        it 'should allow a user to join the group' do
-          sign_in(other_user)
+    context '#join' do
+      let(:public_group) { Fabricate(:public_group) }
 
-          expect do
-            put "/groups/#{group.id}/members.json",
-              params: { usernames: other_user.username }
-          end.to change { group.users.count }.by(1)
+      it 'should allow a user to join a public group' do
+        sign_in(user)
 
-          expect(response.status).to eq(200)
-        end
+        expect do
+          put "/groups/#{public_group.id}/join.json"
+        end.to change { public_group.users.count }.by(1)
 
-        it 'should not allow an underprivileged user to add another user to a group' do
-          sign_in(user)
+        expect(response.status).to eq(204)
+      end
 
-          put "/groups/#{group.id}/members.json",
-            params: { usernames: other_user.username }
+      it 'should not allow a user to join a nonpublic group' do
+        sign_in(user)
 
-          expect(response).to be_forbidden
-        end
+        expect do
+          put "/groups/#{group.id}/join.json"
+        end.not_to change { group.users.count }
+
+        expect(response).to be_forbidden
+      end
+
+      it 'should not allow an anonymous user to call the join method' do
+        expect do
+          put "/groups/#{group.id}/join.json"
+        end.not_to change { group.users.count }
+
+        expect(response).to be_forbidden
+      end
+
+      it 'the join method is idempotent' do
+        sign_in(user)
+
+        expect do
+          put "/groups/#{public_group.id}/join.json"
+        end.to change { public_group.users.count }.by(1)
+        expect(response.status).to eq(204)
+
+        expect do
+          put "/groups/#{public_group.id}/join.json"
+        end.not_to change { public_group.users.count }
+        expect(response.status).to eq(204)
+
+        expect do
+          put "/groups/#{public_group.id}/join.json"
+        end.not_to change { public_group.users.count }
+        expect(response.status).to eq(204)
       end
     end
 

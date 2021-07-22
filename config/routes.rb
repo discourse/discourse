@@ -602,6 +602,7 @@ Discourse::Application.routes.draw do
 
           get "permissions" => "groups#permissions"
           put "members" => "groups#add_members"
+          put "join" => "groups#join"
           delete "members" => "groups#remove_member"
           post "request_membership" => "groups#request_membership"
           put "handle_membership_request" => "groups#handle_membership_request"
