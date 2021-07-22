@@ -1359,7 +1359,6 @@ be:
     timeout_expired: "Уваход у рахункак занадта доўгі (timed out). Калі ласка, паспрабуйце увайсці зноў."
     no_email: "Не быў прадстаўлены адрас электроннай пошты. Калі ласка, звярніцеся да адміністратара сайта."
   original_poster: "арыгінальны плакат"
-  most_posts: "большасць паведамленняў"
   most_recent_poster: "Самыя апошнія аўтары"
   frequent_poster: "Актыўны аўтар"
   redirected_to_top_reasons:
@@ -1891,9 +1890,14 @@ be:
     account_suspended:
       title: "Аккаунт прыпынены"
       subject_template: "[%{email_prefix}] Ваш рахунак быў заблякаваны"
+    account_suspended_forever:
+      title: "Аккаунт прыпынены"
+      subject_template: "[%{email_prefix}] Ваш рахунак быў заблякаваны"
     account_silenced:
       title: "Аккаунт прыпынены"
       subject_template: "[% {Email_prefix}] Ваш уліковы запіс была адключаная"
+    account_silenced_forever:
+      title: "Аккаунт прыпынены"
     account_exists:
       title: "Лік ужо існуе"
       subject_template: "[% {Email_prefix}] Лік ужо існуе"

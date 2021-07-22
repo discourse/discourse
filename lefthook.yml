@@ -29,11 +29,11 @@ pre-commit:
 
 commands: &commands
   bundle-install:
-    files: git diff --name-only HEAD master
+    files: git diff --name-only HEAD main
     glob: "{Gemfile,Gemfile.lock,*.gemspec}"
     run: bundle install
   yarn-install:
-    files: git diff --name-only HEAD master
+    files: git diff --name-only HEAD main
     glob: "{package.json,yarn.lock}"
     run: yarn install
 

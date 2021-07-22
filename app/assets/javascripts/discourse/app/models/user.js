@@ -37,7 +37,7 @@ export const SECOND_FACTOR_METHODS = {
   SECURITY_KEY: 3,
 };
 
-const isForever = (dt) => moment().diff(dt, "years") < -500;
+const isForever = (dt) => moment().diff(dt, "years") < -100;
 
 let userFields = [
   "bio_raw",

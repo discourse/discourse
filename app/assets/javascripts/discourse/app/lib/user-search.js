@@ -22,6 +22,8 @@ function performSearch(
   allowedUsers,
   groupMembersOf,
   includeStagedUsers,
+  lastSeenUsers,
+  limit,
   resultsFn
 ) {
   let cached = cache[term];
@@ -32,7 +34,7 @@ function performSearch(
 
   const eagerComplete = eagerCompleteSearch(term, topicId || categoryId);
 
-  if (term === "" && !eagerComplete) {
+  if (term === "" && !eagerComplete && !lastSeenUsers) {
     // The server returns no results in this case, so no point checking
     // do not return empty list, because autocomplete will get terminated
     resultsFn(CANCELLED_STATUS);
@@ -51,6 +53,8 @@ function performSearch(
       groups: groupMembersOf,
       topic_allowed_users: allowedUsers,
       include_staged_users: includeStagedUsers,
+      last_seen_users: lastSeenUsers,
+      limit: limit,
     },
   });
 
@@ -93,6 +97,8 @@ let debouncedSearch = function (
   allowedUsers,
   groupMembersOf,
   includeStagedUsers,
+  lastSeenUsers,
+  limit,
   resultsFn
 ) {
   discourseDebounce(
@@ -107,6 +113,8 @@ let debouncedSearch = function (
     allowedUsers,
     groupMembersOf,
     includeStagedUsers,
+    lastSeenUsers,
+    limit,
     resultsFn,
     300
   );
@@ -169,7 +177,10 @@ function organizeResults(r, options) {
 // we also ignore if we notice a double space or a string that is only a space
 const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$|^[^+]*\+[^@]*$/;
 
-export function skipSearch(term, allowEmails) {
+export function skipSearch(term, allowEmails, lastSeenUsers = false) {
+  if (lastSeenUsers) {
+    return false;
+  }
   if (term.indexOf("@") > -1 && !allowEmails) {
     return true;
   }
@@ -194,7 +205,9 @@ export default function userSearch(options) {
     topicId = options.topicId,
     categoryId = options.categoryId,
     groupMembersOf = options.groupMembersOf,
-    includeStagedUsers = options.includeStagedUsers;
+    includeStagedUsers = options.includeStagedUsers,
+    lastSeenUsers = options.lastSeenUsers,
+    limit = options.limit || 6;
 
   if (oldSearch) {
     oldSearch.abort();
@@ -217,7 +230,7 @@ export default function userSearch(options) {
       clearPromise = later(() => resolve(CANCELLED_STATUS), 5000);
     }
 
-    if (skipSearch(term, options.allowEmails)) {
+    if (skipSearch(term, options.allowEmails, options.lastSeenUsers)) {
       resolve([]);
       return;
     }
@@ -232,6 +245,8 @@ export default function userSearch(options) {
       allowedUsers,
       groupMembersOf,
       includeStagedUsers,
+      lastSeenUsers,
+      limit,
       function (r) {
         cancel(clearPromise);
         resolve(organizeResults(r, options));

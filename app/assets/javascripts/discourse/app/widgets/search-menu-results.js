@@ -10,30 +10,22 @@ import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 
-const inSearchShortcuts = [
+const suggestionShortcuts = [
   "in:title",
-  "in:personal",
-  "in:seen",
-  "in:likes",
-  "in:bookmarks",
-  "in:created",
-];
-const statusSearchShortcuts = [
+  "in:pinned",
   "status:open",
   "status:closed",
   "status:public",
   "status:noreplies",
-];
-const orderSearchShortcuts = [
   "order:latest",
   "order:views",
   "order:likes",
   "order:latest_topic",
 ];
 
-export function addInSearchShortcut(value) {
-  if (inSearchShortcuts.indexOf(value) === -1) {
-    inSearchShortcuts.push(value);
+export function addSearchSuggestion(value) {
+  if (suggestionShortcuts.indexOf(value) === -1) {
+    suggestionShortcuts.push(value);
   }
 }
 
@@ -360,8 +352,19 @@ createWidget("search-menu-assistant", {
   tagName: "ul.search-menu-assistant",
 
   html(attrs) {
+    if (this.currentUser) {
+      addSearchSuggestion("in:likes");
+      addSearchSuggestion("in:bookmarks");
+      addSearchSuggestion("in:mine");
+      addSearchSuggestion("in:personal");
+      addSearchSuggestion("in:seen");
+      addSearchSuggestion("in:tracking");
+      addSearchSuggestion("in:unseen");
+      addSearchSuggestion("in:watching");
+    }
     if (this.siteSettings.tagging_enabled) {
-      addInSearchShortcut("in:tagged");
+      addSearchSuggestion("in:tagged");
+      addSearchSuggestion("in:untagged");
     }
 
     const content = [];
@@ -370,7 +373,7 @@ createWidget("search-menu-assistant", {
 
     switch (suggestionKeyword) {
       case "#":
-        attrs.results.map((category) => {
+        attrs.results.forEach((category) => {
           const slug = prefix
             ? `${prefix} #${category.slug} `
             : `#${category.slug} `;
@@ -385,7 +388,7 @@ createWidget("search-menu-assistant", {
         });
         break;
       case "@":
-        attrs.results.map((user) => {
+        attrs.results.forEach((user) => {
           const slug = prefix
             ? `${prefix} @${user.username} `
             : `@${user.username} `;
@@ -399,27 +402,17 @@ createWidget("search-menu-assistant", {
           );
         });
         break;
-      case "in:":
-        inSearchShortcuts.map((item) => {
-          const slug = prefix ? `${prefix} ${item} ` : item;
-          content.push(this.attach("search-menu-assistant-item", { slug }));
-        });
-        break;
-      case "status:":
-        statusSearchShortcuts.map((item) => {
-          const slug = prefix ? `${prefix} ${item} ` : item;
-          content.push(this.attach("search-menu-assistant-item", { slug }));
-        });
-        break;
-      case "order:":
-        orderSearchShortcuts.map((item) => {
-          const slug = prefix ? `${prefix} ${item} ` : item;
-          content.push(this.attach("search-menu-assistant-item", { slug }));
+      default:
+        suggestionShortcuts.forEach((item) => {
+          if (item.includes(suggestionKeyword)) {
+            const slug = prefix ? `${prefix} ${item} ` : `${item} `;
+            content.push(this.attach("search-menu-assistant-item", { slug }));
+          }
         });
         break;
     }
 
-    return content;
+    return content.filter((c, i) => i <= 8);
   },
 });
 

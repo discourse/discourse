@@ -261,7 +261,6 @@ sl:
     conduct: "Pravila obnašanja"
     mobile_view: "Mobilni pogled"
     desktop_view: "Namizni pogled"
-    you: "Vi"
     or: "ali"
     now: "ravnokar"
     read_more: "preberi več"
@@ -347,7 +346,6 @@ sl:
       remove: "Odstrani"
       remove_confirmation: "Ali ste prepričani da hočete izbrisati ta osnutek?"
       new_topic: "Nov osnutek teme"
-      new_private_message: "Nov osnutek zasebnega sporočila"
       topic_reply: "Osnutek odgovora"
       abandon:
         yes_value: "Zavrzi"
@@ -739,8 +737,6 @@ sl:
         public: "Javno"
         private: "Zasebno"
         public_groups: "Javne skupine"
-        automatic_group: Samodejna skupina
-        close_group: Zapri skupino
         my_groups: "Moje skupine"
         group_type: "Vrsta skupine"
         is_group_user: "Član"
@@ -819,6 +815,8 @@ sl:
       flair_type:
         icon: "Izberite ikono"
         image: "Naložite sliko"
+      default_notifications:
+        modal_yes: "Da"
     user_action_groups:
       "1": "Dani všečki"
       "2": "Prejeti všečki"
@@ -848,7 +846,6 @@ sl:
       posts: "Prispevki"
       topics: "Teme"
       latest: "Najnovejše"
-      toggle_ordering: "preklop nadzora razvrščanja"
       subcategories: "Pod Kategorija"
       muted: "Utišane kategorije"
       topic_sentence:
@@ -1289,7 +1286,6 @@ sl:
         browser_active: '%{browser} | <span class="active">aktiven zdaj</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Zadnji prispevek"
-      last_emailed: "Zadnja e-pošta"
       last_seen: "Viden"
       created: "Pridružen"
       log_out: "Odjava"
@@ -2175,13 +2171,6 @@ sl:
       defer:
         help: "Označi kot neprebrano"
         title: "Preloži"
-      feature_on_profile:
-        help: "Na svojo uporabniško kartico in profil dodajte povezavo do te teme"
-        title: "Izpostavi na profilu"
-      remove_from_profile:
-        warning: "Vaš profil že ima izpostavljeno temo. Če nadaljujete, bo ta tema nadomestila obstoječo temo."
-        help: "Odstrani povezavo do te teme z mojega uporabniškega profila"
-        title: "Odstrani s profila"
       list: "Teme"
       new: "nova tema"
       unread: "neprebrana"
@@ -2648,8 +2637,6 @@ sl:
       whisper: "ta prispevek je zasebno šepetanje med moderatorji"
       wiki:
         about: "ta prispevek je wiki"
-      archetypes:
-        save: "Shrani možnosti"
       few_likes_left: "Hvala ker delite všečke! Danes jih imate samo še nekaj na voljo."
       controls:
         reply: "sestavi odgovor na ta prispevek"
@@ -2770,6 +2757,7 @@ sl:
       bookmarks:
         created: "Ustvarjeno"
         name: "Polno ime"
+        options: "Možnosti"
       filtered_replies:
         viewing_posts_by: "Ogled %{post_count} objav avtorja"
         viewing_subset: "Nekateri odgovori so strnjeni"
@@ -2777,7 +2765,6 @@ sl:
         post_number: "%{username}, objava #%{post_number}"
         show_all: "Pokaži vse"
     category:
-      can: "lahko&hellip; "
       none: "(brez kategorije)"
       all: "Vse kategorije"
       choose: "kategorija&hellip;"
@@ -2804,7 +2791,6 @@ sl:
       save_error: Prišlo je do napake pri shranjevanju kategorije.
       name: "Ime kategorije"
       description: "Opis"
-      topic: "kategorija teme"
       logo: "Logotip slika kategorije"
       background_image: "Slika ozadja kategorije"
       badge_colors: "Barve značk"

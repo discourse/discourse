@@ -2692,6 +2692,33 @@ describe Guardian do
     end
   end
 
+  describe 'can_use_flair_group?' do
+    fab!(:group) { Fabricate(:group, title: 'Groupie', flair_icon: 'icon') }
+
+    it 'is false without a logged in user' do
+      expect(Guardian.new(nil).can_use_flair_group?(user)).to eq(false)
+    end
+
+    it 'is false if the group does not exist' do
+      expect(Guardian.new(user).can_use_flair_group?(user, nil)).to eq(false)
+      expect(Guardian.new(user).can_use_flair_group?(user, Group.last.id + 1)).to eq(false)
+    end
+
+    it 'is false if the user is not a part of the group' do
+      expect(Guardian.new(user).can_use_flair_group?(user, group.id)).to eq(false)
+    end
+
+    it 'is false if the group does not have a flair' do
+      group.update(flair_icon: nil)
+      expect(Guardian.new(user).can_use_flair_group?(user, group.id)).to eq(false)
+    end
+
+    it 'is true if the user is a part of the group and the group has a flair' do
+      user.update(groups: [group])
+      expect(Guardian.new(user).can_use_flair_group?(user, group.id)).to eq(true)
+    end
+  end
+
   describe 'can_change_trust_level?' do
 
     it 'is false without a logged in user' do

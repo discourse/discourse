@@ -47,8 +47,10 @@ RSpec.describe PushNotificationPusher do
       SiteSetting.allow_user_locale = true
       user.update!(locale: 'pt_BR')
 
+      TranslationOverride.upsert!("pt_BR", "discourse_push_notifications.popup.mentioned", "pt_BR notification")
+
       Webpush.expects(:payload_send).with do |*args|
-        args.to_s.include?("system mencionou")
+        JSON.parse(args.first[:message])["title"] == "pt_BR notification"
       end.once
 
       create_subscription

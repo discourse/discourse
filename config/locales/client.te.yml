@@ -127,7 +127,6 @@ te:
     tos: "సేవా నిబంధనలు"
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
-    you: "మీరు"
     or: "లేదా"
     now: "ఇప్పుడే"
     read_more: "మరింత చదువు"
@@ -330,6 +329,8 @@ te:
           title: "గమనిస్తున్నారు"
         muted:
           title: "నిశ్శబ్దం"
+      default_notifications:
+        modal_yes: "అవును"
     user_action_groups:
       "1": "ఇచ్చిన ఇష్టాలు "
       "2": "వచ్చిన ఇష్టాలు"
@@ -354,7 +355,6 @@ te:
       posts: "టపాలు"
       topics: "విషయాలు"
       latest: "తాజా"
-      toggle_ordering: "వరుస నియంత్రణను అటుఇటుచేయి"
       subcategories: "ఉప వర్గాలు"
       topic_stat_unit:
         week: "వారం"
@@ -526,7 +526,6 @@ te:
       auth_tokens:
         details: "వివరాలు"
       last_posted: "చివరి టపా"
-      last_emailed: "చివరగా ఈమెయిల్ చేసింది"
       last_seen: "చూసినది"
       created: "చేరినది"
       log_out: "లాగవుట్"
@@ -1022,8 +1021,6 @@ te:
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
       via_email: "ఈ టపా ఈమెయిల్ ద్వారా వచ్చింది"
-      archetypes:
-        save: "భద్రపరుచు ఐచ్చికాలు"
       controls:
         reply: "ఈ టపాకు జవాబు రాయుట మొదలుపెట్టండి"
         like: "ఈ టపాను ఇష్టపడు"
@@ -1076,8 +1073,8 @@ te:
       bookmarks:
         created: "సృష్టించిన"
         name: "పేరు"
+        options: "ఎంపికలు"
     category:
-      can: "can&hellip;"
       none: "(ఏ వర్గం లేదు)"
       edit: "సవరించు"
       view: "ఈ వర్గంలోని విషయాలు చూడు"
@@ -1093,7 +1090,6 @@ te:
       save_error: ఈ వర్గం భద్రపరిచేప్పుడు దోషం
       name: "వర్గం పేరు"
       description: "వివరణ"
-      topic: "వర్గం విషయం"
       logo: "వర్గం లోగో బొమ్మ"
       background_image: "వర్గం వెనుతలపు బొమ్మ"
       badge_colors: "బ్యాడ్జి రంగులు"

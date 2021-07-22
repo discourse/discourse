@@ -788,7 +788,6 @@ bs_BA:
       user: "Korisnici"
     results_page: "Pretraži za termin '%{term}'"
   original_poster: "Originalni Autor"
-  most_posts: "Najviše postova"
   most_recent_poster: "Posljednji Autor"
   frequent_poster: "Čest Autor"
   redirected_to_top_reasons:

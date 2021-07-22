@@ -41,6 +41,7 @@ it:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} fa"
+      wrap_on: "il %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -220,7 +221,6 @@ it:
     conduct: "Codice di Condotta"
     mobile_view: "Visualizzazione cellulari"
     desktop_view: "Visualizzazione Desktop"
-    you: "Tu"
     or: "oppure"
     now: "proprio ora"
     read_more: "altre informazioni"
@@ -305,7 +305,7 @@ it:
       remove: "Rimuovi"
       remove_confirmation: "Vuoi davvero eliminare questa bozza?"
       new_topic: "Nuovo argomento in bozza"
-      new_private_message: "Nuovo messaggio privato in bozza"
+      new_private_message: "Nuovo messaggio personale in bozza"
       topic_reply: "Risposta in bozza"
       abandon:
         confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
@@ -379,7 +379,7 @@ it:
         type_bonus:
           name: "tipo di bonus"
           title: "Ad alcune tipologie revisionabili può essere assegnato un bonus dallo staff, per aumentare la loro priorità."
-      stale_help: "La revisione di questo elemento è stata condotta da qualcun altro."
+      stale_help: "La revisione di questo elemento è stata condotta da <b>%{username}</b>."
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
         required: "Per poter revisionare gli elementi devi prima rivendicarli."
@@ -603,7 +603,7 @@ it:
         remove_user_as_group_owner: "Revoca proprietà"
     groups:
       member_added: "Aggiunto"
-      member_requested: "Richiesto alle"
+      member_requested: "Richiesto il"
       add_members:
         title: "Aggiungi utenti a %{group_name}"
         description: "Inserisci un elenco di utenti che desideri invitare al gruppo o incollalo in un elenco separato da virgole:"
@@ -752,8 +752,6 @@ it:
         public: "Pubblico"
         private: "Privato"
         public_groups: "Gruppi Pubblici"
-        automatic_group: Gruppo Automatico
-        close_group: Gruppo Chiuso
         my_groups: "I Miei Gruppi"
         group_type: "Tipo di gruppo"
         is_group_user: "Membro"
@@ -830,6 +828,11 @@ it:
       flair_type:
         icon: "Seleziona un'icona"
         image: "Carica un'immagine"
+      default_notifications:
+        modal_title: "Notifiche predefinite dell'utente"
+        modal_description: "Desideri applicare questa modifica retroattivamente? Questo cambierà le preferenze per %{count} utenti esistenti."
+        modal_yes: "Sì"
+        modal_no: "No, applica le modifiche solo da adesso in avanti"
     user_action_groups:
       "1": "Mi piace - Assegnati"
       "2": "Mi piace - Ricevuti"
@@ -859,7 +862,6 @@ it:
       posts: "Messaggi"
       topics: "Argomenti"
       latest: "Più recenti"
-      toggle_ordering: "inverti l'ordinamento"
       subcategories: "Sottocategorie"
       muted: "Categorie silenziate"
       topic_sentence:
@@ -992,7 +994,7 @@ it:
         Inizia ad aggiungere segnalibri ai messaggi con il pulsante %{icon}. Essi saranno elencati qui per facilitarne la consultazione. Puoi anche impostare un promemoria!
       no_notifications_title: "Non hai ancora notifiche"
       no_notifications_body: >
-        Riceverai una notifica in questo pannello sulle attività che ti riguardano direttamente, quali risposte ai tuoi argomenti e messaggi. quando qualcuno ti <b>@menziona</b> o ti cita e risponde agli argomenti che stai osservando. Le notifiche verranno inviate anche alla tua e-mail quando non hai effettuato l'accesso per un po' di tempo. <br><br> Cerca %{icon} per decidere su quali argomenti, categorie e tag essere informato. Per ulteriori informazioni, consulta le tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
+        Riceverai una notifica in questo pannello sulle attività che ti riguardano direttamente, quali risposte ai tuoi argomenti e messaggi. quando qualcuno ti <b>@menziona</b> o ti cita e risponde agli argomenti che stai osservando. Le notifiche verranno inviate anche alla tua e-mail quando non hai effettuato l'accesso per un po' di tempo. <br><br> Cerca %{icon} per decidere su quali argomenti, categorie ed etichette essere informato. Per ulteriori informazioni, consulta le tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
@@ -1078,7 +1080,7 @@ it:
       ignored_users_instructions: "Elimina tutti i messaggi, le notifiche e MP da questi utenti."
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
-      apps: "Applicazioni"
+      apps: "App"
       revoke_access: "Revoca Accesso"
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
@@ -1290,7 +1292,7 @@ it:
         title: "Lingua dell'interfaccia"
         instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
         default: "(default)"
-        any: "qualunque"
+        any: "tutti"
       password_confirmation:
         title: "Ripeti la password"
       invite_code:
@@ -1312,9 +1314,8 @@ it:
         browser_active: '%{browser} | <span class="active">attivo ora</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Ultimo Messaggio"
-      last_emailed: "Ultima email inviata"
       last_seen: "Ultima visita"
-      created: "Membro da"
+      created: "Iscritto"
       log_out: "Disconnetti"
       location: "Località"
       website: "Sito Web"
@@ -1387,7 +1388,7 @@ it:
         pending_tab_with_count: "In sospeso (%{count})"
         expired_tab: "Scaduto"
         expired_tab_with_count: "Scaduti (%{count})"
-        redeemed_tab: "Riscattato"
+        redeemed_tab: "Accettato"
         redeemed_tab_with_count: "Accettati (%{count})"
         invited_via: "Invito"
         invited_via_link: "Link %{key} (%{count} / %{max} accettati)"
@@ -1447,7 +1448,7 @@ it:
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
           invite_to_topic: "Invia a questo argomento"
-          expires_at: "Scadenza dopo"
+          expires_at: "Scadenza:"
           custom_message: "Messaggio personale facoltativo"
           send_invite_email: "Salva e invia Email"
           save_invite: "Salva invito"
@@ -1591,7 +1592,7 @@ it:
       exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
     learn_more: "per saperne di più..."
     first_post: Primo messaggio
-    mute: Ignora
+    mute: Silenzia
     unmute: Riattiva
     last_post: Pubblicato
     local_time: "Ora Locale"
@@ -1704,7 +1705,7 @@ it:
       authenticating: "Autenticazione..."
       awaiting_activation: "Il tuo account è in attesa di attivazione, utilizza il collegamento per la password dimenticata per ricevere un'altra email di attivazione."
       awaiting_approval: "Il tuo account non è stato ancora approvato da un membro dello staff. Ti invieremo un'email non appena verrà approvato."
-      requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
+      requires_invite: "Spiacenti, l'accesso a questo forum è solo ad invito."
       not_activated: "Non puoi ancora accedere. Abbiamo inviato un'email di attivazione a <b>%{sentTo}</b>. Ti preghiamo di seguire le istruzioni contenute nell'email per attivare l'account."
       not_allowed_from_ip_address: "Non puoi accedere da quell'indirizzo IP."
       admin_not_allowed_from_ip_address: "Non puoi accedere come amministratore da quell'indirizzo IP."
@@ -1914,7 +1915,7 @@ it:
       italic_label: "I"
       italic_title: "Corsivo"
       italic_text: "testo in corsivo"
-      link_title: "Collegamento"
+      link_title: "Hyperlink"
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
@@ -1960,7 +1961,7 @@ it:
           confirm: È stata salvata una nuova bozza di argomento, che verrà sovrascritta se si crea un argomento collegato.
         reply_as_new_group_message:
           label: Rispondi come nuovo messaggio di gruppo
-          desc: Crea un nuovo messaggio privato con gli stessi destinatari
+          desc: Crea un nuovo messaggio iniziando con gli stessi destinatari
         reply_as_private_message:
           label: Nuovo messaggio
           desc: Crea un nuovo messaggio personale
@@ -1968,7 +1969,7 @@ it:
           label: Rispondi all'argomento
           desc: Rispondi all'argomento, non a uno specifico messaggio
         toggle_whisper:
-          label: Interruttore Sussurri
+          label: Attiva/disattiva sussurri
           desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
           label: "Nuovo Argomento"
@@ -2009,8 +2010,8 @@ it:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} altro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e altri %{count}</span> %{description}"
       liked_consolidated_description:
-        one: "ha messo \"mi piace\" a %{count} tuo messaggio"
-        other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
+        one: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
+        other: "hanno messo \"mi piace\" a %{count} dei tuoi messaggi"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2187,7 +2188,7 @@ it:
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new: "Ignora i nuovi messaggi"
         dismiss_new_with_selected:
-          one: "Ignora nuovo (%{count})"
+          one: "Ignora (%{count}) nuovo"
           other: "Ignora i nuovi (%{count})"
         toggle: "interruttore di selezione multipla degli argomenti"
         actions: "Azioni Multiple"
@@ -2255,13 +2256,6 @@ it:
       defer:
         help: "Contrassegna come non letto"
         title: "Leggi più tardi"
-      feature_on_profile:
-        help: "Aggiungi un collegamento a questo argomento sulla tua scheda utente e sul tuo profilo"
-        title: "In evidenza Sul Profilo"
-      remove_from_profile:
-        warning: "Il tuo profilo ha già un argomento in primo piano. Se continui, questo argomento sostituirà l'argomento esistente."
-        help: "Rimuovi il collegamento a questo argomento dal tuo profilo utente"
-        title: "Rimuovi Dal Profilo"
       list: "Argomenti"
       new: "nuovo argomento"
       unread: "non letto"
@@ -2403,7 +2397,7 @@ it:
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
         replies_short: "%{current} / %{total}"
       progress:
-        title: Avanzamento dell'argomento
+        title: Avanzamento lettura argomento
         go_top: "alto"
         go_bottom: "basso"
         go: "vai"
@@ -2741,8 +2735,6 @@ it:
       whisper: "questo messaggio è un sussurro privato per i moderatori"
       wiki:
         about: "questo messaggio è una wiki"
-      archetypes:
-        save: "Opzioni di salvataggio"
       few_likes_left: "Grazie per aver condiviso affetto! Hai ancora pochi \"Mi piace\" rimasti per oggi."
       controls:
         reply: "inizia a comporre una risposta a questo messaggio"
@@ -2864,6 +2856,7 @@ it:
         name: "Nome"
         name_placeholder: "A cosa serve questo segnalibro?"
         set_reminder: "Ricordamelo"
+        options: "Opzioni"
         actions:
           delete_bookmark:
             name: "Cancella segnalibro"
@@ -2884,7 +2877,6 @@ it:
         post_number: "%{username}, messaggio n. %{post_number}"
         show_all: "Mostra tutto"
     category:
-      can: "può&hellip;"
       none: "(nessuna categoria)"
       all: "Tutte le categorie"
       choose: "categoria&hellip;"
@@ -2918,7 +2910,6 @@ it:
       save_error: Si è verificato un errore durante il salvataggio della categoria.
       name: "Nome Categoria"
       description: "Descrizione"
-      topic: "argomento della categoria"
       logo: "Immagine Categoria"
       background_image: "Immagine di sfondo della categoria"
       badge_colors: "Colori dei distintivi"
@@ -2985,7 +2976,7 @@ it:
           title: "In osservazione"
           description: "Osserverai automaticamente tutti gli argomenti in questa categoria. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."
         watching_first_post:
-          title: "Osservando il Primo Messaggio"
+          title: "Osservazione Primo Messaggio"
           description: "Riceverai una notifica di nuovi argomenti in questa categoria, ma non per le risposte agli argomenti."
         tracking:
           title: "Seguita"
@@ -3417,7 +3408,7 @@ it:
           title: "In osservazione"
           description: "Visualizzerai automaticamente tutti gli Argomenti con questa Etichetta. Riceverai una notifica per tutti i nuovi messaggi e Argomenti. Inoltre, accanto all'Argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         watching_first_post:
-          title: "Osserva Primo Messaggio"
+          title: "Osservazione Primo Messaggio"
           description: "Riceverai una notifica se saranno aperti nuovi Argomenti in questa Etichetta, ma non per le risposte agli Argomenti."
         tracking:
           title: "Seguito"
@@ -3497,6 +3488,8 @@ it:
         regular: "esperto"
         leader: "veterano"
       detailed_name: "%{level} - %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Hai scelto un file non supportato. Tipi di file supportati: %{types}."
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3591,7 +3584,7 @@ it:
           total: "Totale generale"
           no_data: "Non ci sono dati da mostrare."
           trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Cerca nei log</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Ricerche nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'
           average_chart_label: Media
           filters:
@@ -3727,6 +3720,7 @@ it:
               log_out: Disconnetti tutte le sessioni per un utente.
               anonymize: Rendi anonimi gli account utente.
               delete: Elimina account utente.
+              list: Ottieni un elenco di utenti.
             email:
               receive_emails: Combina questo ambito con il destinatario della posta per elaborare le email in arrivo.
       web_hooks:
@@ -4224,7 +4218,7 @@ it:
           modal:
             title: "Dettagli posta in arrivo"
             error: "Errore"
-            headers: "Intestazione"
+            headers: "Intestazioni"
             subject: "Oggetto"
             body: "Corpo"
             rejection_message: "Messaggio rifiutato"
@@ -4408,7 +4402,7 @@ it:
             text: "Roll up"
             title: "Crea nuovi elenchi di indirizzi IP interdetti se ci sono almeno 'min_ban_entries_for_roll_up' elementi."
         search_logs:
-          title: "Cerca nei log"
+          title: "Log di ricerca"
           term: "Termine"
           searches: "Ricerche"
           click_through_rate: "CTR"
@@ -4446,9 +4440,13 @@ it:
           censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
           require_approval: "I messaggi contenenti queste parole richiederanno l'approvazione dello staff prima di poter essere visualizzati."
           flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
+          replace: "Sostituisci le parole nei messaggi con altre parole"
+          tag: "Etichetta automaticamente gli argomenti in base al primo messaggio"
           silence: "I primi post degli utenti che contengono queste parole richiederanno l'approvazione dello staff prima di essere visibili, e l'utente verrà automaticamente silenziato."
           link: "Nei messaggi sostituisce le parole con link"
         form:
+          label: "Ha una parola o frase"
+          placeholder: "Inserisci parola o frase (* è un carattere jolly)"
           placeholder_regexp: "espressione regolare"
           replace_label: "Sostituzione"
           replace_placeholder: "esempio"
@@ -4462,6 +4460,7 @@ it:
           upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
         test:
           button_label: "Test"
+          modal_title: "%{action}: Test delle parole osservate"
           description: "Inserisci il testo qui sotto per verificare la corrispondenza con le parole osservate"
           found_matches: "Trovate corrispondenze:"
           no_matches: "Nessun risultato trovato"
@@ -4546,6 +4545,7 @@ it:
         penalty_post_edit: "Modifica il messaggio"
         penalty_post_none: "Non fare nulla"
         penalty_count: "Conteggio Penalità"
+        penalty_history: "Cronologia delle penalizzazioni"
         clear_penalty_history:
           title: "Cancella cronologia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello di affidabilità 3"
@@ -4587,6 +4587,8 @@ it:
         flags_given_count: Segnalazioni Fatte
         flags_received_count: Segnalazioni Ricevute
         warnings_received_count: Avvertimenti Ricevuti
+        warnings_list_warning: |
+          In qualità di moderatore, potresti non essere in grado di visualizzare tutti questi argomenti. Se necessario, chiedi a un amministratore o al moderatore addetto alla pubblicazione di concedere ai <b>@moderatori</b> accesso al messaggio.
         flags_given_received_count: "Segnalazioni Fatte / Ricevute"
         approve: "Approva"
         approved_by: "approvato da"
@@ -4606,7 +4608,7 @@ it:
           prompt:
             title: "Trasferisci ed Elimina @%{username}"
             description: |
-              <p>Scegli un nuovo proprietario per i contenuti di <b>@%{username}</b></p>
+              <p>Scegli un nuovo proprietario per i contenuti di <b>@%{username}</b>.</p>
 
               <p>Tutti gli argomenti, messaggi pubblici e privati e altri contenuti creati da <b>@%{username}</b> verranno trasferiti.</p>
             target_username_placeholder: "Nome utente del nuovo proprietario"
@@ -4677,6 +4679,9 @@ it:
         trust_level_unlocked_tip: "il livello di attendibilità è sbloccato, il sistema può promuovere o degradare l'utente"
         lock_trust_level: "Blocca livello di attendibilità"
         unlock_trust_level: "Sblocca livello di attendibilità"
+        silenced_count: "Silenziati"
+        suspended_count: "Sospesi"
+        last_six_months: "Ultimi 6 mesi"
         tl3_requirements:
           title: "Requisiti per livello di attendibilità 3"
           table_title:
@@ -4754,6 +4759,7 @@ it:
           text: "Campo Testo"
           confirm: "Conferma"
           dropdown: "A discesa"
+          multiselect: "Selezione multipla"
       site_text:
         description: "Puoi personalizzare qualsiasi testo del tuo forum. Comincia effettuando una ricerca qui sotto:"
         search: "Trova il testo che vorresti modificare"
@@ -4917,8 +4923,11 @@ it:
           perform: "Assegna Distintivo agli Utenti"
           upload_csv: Carica un CSV con indirizzi email o nomi degli utenti
           aborted: Carica un CSV contenente indirizzi email o i nomi degli utenti
-          success: Il tuo CSV è stato ricevuto e gli utenti riceveranno il loro distintivo a breve.
+          success: Il tuo CSV è stato ricevuto e %{count} utenti riceveranno il loro distintivo a breve.
+          csv_has_unmatched_users: "Le seguenti voci sono nel file CSV ma non possono essere abbinate agli utenti esistenti e quindi non riceveranno il distintivo:"
+          csv_has_unmatched_users_truncated_list: "C'erano %{count} elementi nel file CSV che non è stato possibile abbinare a utenti esistenti e quindi non riceveranno il badge. A causa del gran numero di elementi privi di abbinamenti, sono mostrati solo i primi 100:"
           replace_owners: Rimuovi il distintivo dai precedenti proprietari
+          grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
         help: "Aggiungi nuovi emoji da mettere a disposizione per tutti. (Suggerimento: trascina e rilascia più file in una volta sola)"

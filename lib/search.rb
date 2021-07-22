@@ -452,7 +452,7 @@ class Search
     posts.where("posts.user_id = #{@guardian.user.id}") if @guardian.user
   end
 
-  advanced_filter(/^in:created$/i) do |posts|
+  advanced_filter(/^in:(created|mine)$/i) do |posts|
     posts.where(user_id: @guardian.user.id, post_number: 1) if @guardian.user
   end
 

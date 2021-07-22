@@ -1775,7 +1775,6 @@ da:
     blank_id_error: "`eksternt_id` er påkrævet men var tomt"
     invite_redeem_failed: "Invitationsindløsning mislykkedes. Kontakt venligst webstedets administrator."
   original_poster: "Oprindelig forfatter"
-  most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
   frequent_poster: "Hyppig forfatter"
   poster_description_joiner: ", "
@@ -2745,6 +2744,9 @@ da:
         Du er blevet suspenderet fra forummet indtil %{suspended_till}.
 
         Årsag - %{reason}
+    account_suspended_forever:
+      title: "Konto Suspenderet"
+      subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
     account_exists:
       title: "Konto findes allerede"
       subject_template: "[%{email_prefix}] Kontoen findes allerede"
@@ -3288,7 +3290,9 @@ da:
   badges:
     mass_award:
       errors:
+        too_many_csv_entries: For mange poster i CSV-filen. Send venligst en CSV-fil med ikke mere end %{count} poster.
         badge_disabled: Aktiver venligst %{badge_name} emblemet først.
+        cant_grant_multiple_times: Kan ikke tildele %{badge_name} emblemet flere gange til en enkelt bruger.
     editor:
       name: Redaktør
       description: Rettet første indlæg

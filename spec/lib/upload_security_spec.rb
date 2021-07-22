@@ -120,7 +120,7 @@ RSpec.describe UploadSecurity do
 
         describe "when it is based on a regular emoji" do
           it "returns false" do
-            falafel = Emoji.all.find { |e| e.url == '/images/emoji/twitter/falafel.png?v=9' }
+            falafel = Emoji.all.find { |e| e.url == "/images/emoji/twitter/falafel.png?v=#{Emoji::EMOJI_VERSION}" }
             upload.update!(origin: "http://localhost:3000#{falafel.url}")
             expect(subject.should_be_secure?).to eq(false)
           end

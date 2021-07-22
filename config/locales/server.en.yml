@@ -523,12 +523,7 @@ en:
 
       It’s easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
 
-    dominating_topic: |
-      ### Let others join the conversation
-
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
-
-      It could be even better if you gave other people space to share their points of view, too. Can you invite them over?
+    dominating_topic: You’ve posted more than %{percent}% of the replies here, is there anyone else you would like to hear from?
 
     get_a_room: |
       ### Encourage everyone to get involved in the conversation
@@ -1553,7 +1548,7 @@ en:
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Forces users to enable two-factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
-    same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use an external auth method."
+    same_site_cookies: "Use same site cookies, they eliminate all Cross Site Request Forgery vectors on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use an external auth method."
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
@@ -2515,6 +2510,7 @@ en:
     reset_not_allowed_from_ip_address: "You can't request a password reset from that IP address."
     suspended: "You can't log in until %{date}."
     suspended_with_reason: "Account suspended until %{date}: %{reason}"
+    suspended_with_reason_forever: "Account suspended: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
@@ -3458,6 +3454,7 @@ en:
   subject_re: "Re: "
   subject_pm: "[PM] "
   email_from: "%{user_name} via %{site_name}"
+  email_from_without_site: "%{user_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -3702,11 +3699,27 @@ en:
 
         Reason - %{reason}
 
+    account_suspended_forever:
+      title: "Account Suspended"
+      subject_template: "[%{email_prefix}] Your account has been suspended"
+      text_body_template: |
+        You have been suspended from the forum.
+
+        Reason - %{reason}
+
     account_silenced:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum until %{silenced_till}.
+
+        Reason - %{reason}
+
+    account_silenced_forever:
+      title: "Account Silenced"
+      subject_template: "[%{email_prefix}] Your account has been silenced"
+      text_body_template: |
+        You have been silenced from the forum.
 
         Reason - %{reason}
 

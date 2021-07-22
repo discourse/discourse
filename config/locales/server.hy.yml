@@ -1598,7 +1598,6 @@ hy:
     no_email: "Ոչ մի էլ. հասցե չի տրամադրվել: Խնդրում ենք կապվել կայքի ադմինիստրատորի հետ:"
     email_error: "Հնարավոր չէ գրանցել հաշիվ <b>%{email}</b> էլ. հասցեով: Խնդրում ենք կապվել կայքի ադմինիստրատորի հետ:"
   original_poster: "Սկզբնական Հրապարակող"
-  most_posts: "Գրառումների մեծ մասը"
   most_recent_poster: "Ամենավերջին Հրապարակողը"
   frequent_poster: "Հաճախ Հրապարակող"
   redirected_to_top_reasons:
@@ -2433,7 +2432,13 @@ hy:
     account_suspended:
       title: "Հաշիվը Սառեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը սառեցվել է"
+    account_suspended_forever:
+      title: "Հաշիվը Սառեցված է"
+      subject_template: "[%{email_prefix}] Ձեր հաշիվը սառեցվել է"
     account_silenced:
+      title: "Հաշիվը Լռեցված է"
+      subject_template: "[%{email_prefix}] Ձեր հաշիվը լռեցված է"
+    account_silenced_forever:
       title: "Հաշիվը Լռեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը լռեցված է"
     account_exists:

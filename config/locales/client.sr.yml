@@ -229,7 +229,6 @@ sr:
     conduct: "Kodeks ponašanja"
     mobile_view: "Mobilni pogled"
     desktop_view: "Računarski pogled"
-    you: "Ti"
     or: "ili"
     now: "upravo sad"
     read_more: "pročitaj više"
@@ -310,7 +309,6 @@ sr:
       remove: "Ukloni"
       remove_confirmation: "Da li ste sigurni da želite da uklonite ovaj nacrt?"
       new_topic: "Novi nacrt teme"
-      new_private_message: "Novi nacrt privatne poruke"
       topic_reply: "Nacrt odgovora"
       abandon:
         confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
@@ -566,6 +564,8 @@ sr:
           title: "Utišano"
       flair_bg_color_placeholder: "(Opciono) Hex vrednost boje"
       flair_color_placeholder: "(Opciono) Hex vrednost boje"
+      default_notifications:
+        modal_yes: "Da"
     user_action_groups:
       "1": "Data sviđanja"
       "2": "Dobijena sviđanja"
@@ -593,7 +593,6 @@ sr:
       posts: "Poruka"
       topics: "Teme"
       latest: "Poslednje"
-      toggle_ordering: "odredi kontrolu smera"
       subcategories: "Podkategorije"
       topic_stat_unit:
         week: "nedelja"
@@ -774,7 +773,6 @@ sr:
       auth_tokens:
         details: "Detalji"
       last_posted: "Poslednja poruka"
-      last_emailed: "Poslednji e-mail"
       last_seen: "Viđen"
       created: "Pridružio"
       log_out: "Odjavi se"
@@ -1391,8 +1389,6 @@ sr:
       cancel_composer:
         discard: "Odbaci"
       via_email: "ova poruka stigla je preko e-maila"
-      archetypes:
-        save: "Sačuvaj postavke"
       controls:
         reply: "počnite sa sastavljanjem odgovora na ovu poruku"
         like: "Lajkuj ovu poruku"
@@ -1441,8 +1437,8 @@ sr:
       bookmarks:
         created: "Napravljeno"
         name: "Ime foruma"
+        options: "Opcije"
     category:
-      can: "može&hellip"
       none: "(nema kategorije)"
       edit: "Izmeni"
       view: "Prikaži Teme u Kategoriji"
@@ -1457,7 +1453,6 @@ sr:
       save_error: Dogodila se greška pri čuvanju kategorije.
       name: "Ime Kategorije"
       description: "Opis"
-      topic: "tema kategorije"
       logo: "Logo Kategorije "
       background_image: "Pozadinska Slika Kategorije"
       badge_colors: "Boje značke"

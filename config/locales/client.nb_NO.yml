@@ -201,7 +201,6 @@ nb_NO:
     rules: "Regler"
     mobile_view: "Mobilvisning"
     desktop_view: "Skrivebordsvisning"
-    you: "Du"
     or: "eller"
     now: "akkurat nå"
     read_more: "les mer"
@@ -259,7 +258,6 @@ nb_NO:
       resume: "Fortsett"
       remove: "Fjern"
       new_topic: "Nytt emneutkast"
-      new_private_message: "Nytt privat emneutkast"
       topic_reply: "Svarutkast"
     topic_count_latest:
       one: "Se %{count} nytt eller oppdatert emne"
@@ -537,8 +535,6 @@ nb_NO:
         public: "Offentlig"
         private: "Privat"
         public_groups: "Offentlige grupper"
-        automatic_group: Automatisk gruppe
-        close_group: Lukk gruppe
         my_groups: "Mine grupper"
         group_type: "Gruppetype"
         is_group_user: "Medlem"
@@ -594,6 +590,8 @@ nb_NO:
       flair_color_placeholder: "(Valgfritt) Fargekode som hex-verdi"
       flair_preview_icon: "Forhåndsvis ikon"
       flair_preview_image: "Forhåndsvis bilde"
+      default_notifications:
+        modal_yes: "Ja"
     user_action_groups:
       "1": "Likes tildelt"
       "2": "Likes mottatt"
@@ -623,7 +621,6 @@ nb_NO:
       posts: "Innlegg"
       topics: "Emner"
       latest: "Siste"
-      toggle_ordering: "slå på/av styring av sortering"
       subcategories: "Underkategorier"
       topic_sentence:
         one: "%{count} emne"
@@ -898,7 +895,6 @@ nb_NO:
       auth_tokens:
         details: "Detaljer"
       last_posted: "Siste innlegg"
-      last_emailed: "Sist kontaktet"
       last_seen: "Sist sett"
       created: "Medlem fra"
       log_out: "Logg ut"
@@ -1907,8 +1903,6 @@ nb_NO:
       whisper: "dette innlegget er et privat hvisken for moderatorer"
       wiki:
         about: "dette innlegget er en wiki"
-      archetypes:
-        save: "Lagre alternativene"
       few_likes_left: "Takk for at du gir likes! Du vil nå grensen for antall ting du kan like i dag ganske snart."
       controls:
         reply: "begynn å skrive et svar til dette innlegget"
@@ -2004,8 +1998,8 @@ nb_NO:
       bookmarks:
         created: "Opprettet"
         name: "Navn"
+        options: "Alternativer"
     category:
-      can: "kan&hellip;"
       none: "(no category)"
       all: "Alle kategorier"
       choose: "kategori&hellip;"
@@ -2028,7 +2022,6 @@ nb_NO:
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
       name: "Kategorinavn"
       description: "Beskrivelse"
-      topic: "kategoriemne"
       logo: "Kategoribilde"
       background_image: "Kategoriens bakgrunnsbilde"
       badge_colors: "Merkefarger"

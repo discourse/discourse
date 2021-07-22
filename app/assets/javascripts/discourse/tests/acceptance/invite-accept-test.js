@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, visit } from "@ember/test-helpers";
@@ -22,7 +23,12 @@ function setAuthenticationData(hooks, json) {
   });
 }
 
-function preloadInvite({ link = false, email_verified_by_link = false } = {}) {
+function preloadInvite({
+  link = false,
+  email_verified_by_link = false,
+  different_external_email = false,
+  hidden_email = false,
+} = {}) {
   const info = {
     invited_by: {
       id: 123,
@@ -33,6 +39,8 @@ function preloadInvite({ link = false, email_verified_by_link = false } = {}) {
     },
     username: "invited",
     email_verified_by_link: email_verified_by_link,
+    different_external_email: different_external_email,
+    hidden_email: hidden_email,
   };
 
   if (link) {
@@ -357,6 +365,32 @@ acceptance(
         queryAll("#new-account-name").val(),
         "barfoo",
         "name is prefilled"
+      );
+    });
+  }
+);
+
+acceptance(
+  "Email Invite link with different external email address",
+  function (needs) {
+    needs.settings({ enable_local_logins: false });
+
+    setAuthenticationData(needs.hooks, {
+      auth_provider: "facebook",
+      email: "foobar+different@example.com",
+      email_valid: true,
+      username: "foobar",
+      name: "barfoo",
+    });
+
+    test("display information that email is invalid", async function (assert) {
+      preloadInvite({ different_external_email: true, hidden_email: true });
+
+      await visit("/invites/myvalidinvitetoken");
+
+      assert.equal(
+        query(".bad").textContent.trim(),
+        "Your invitation email does not match the email authenticated by Facebook"
       );
     });
   }

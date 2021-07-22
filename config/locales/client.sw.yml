@@ -188,7 +188,6 @@ sw:
     tos: "Masharti ya Huduma"
     mobile_view: "Mtazamo wa Simu"
     desktop_view: "Muonekano wa Eneo Kazi"
-    you: "Wewe"
     or: "au"
     now: "sasa hivi"
     read_more: "soma zaidi"
@@ -238,7 +237,6 @@ sw:
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
-      new_private_message: "Mswadajaribio wa ujumbe binafsi mpya"
     topic_count_latest:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"
@@ -466,8 +464,6 @@ sw:
         public: "Umma"
         private: "Binafsi"
         public_groups: "Vikundi vya Umma"
-        automatic_group: Kikundi Otomatiki
-        close_group: Funga Kikundi
         my_groups: "Vikundi Vyangu"
         group_type: "Aina ya kikundi"
         is_group_user: "Mwanachama"
@@ -521,6 +517,8 @@ sw:
       flair_color_placeholder: "(Hiari) Thamani ya Rangi kwa Hex"
       flair_preview_icon: "Kihakiki Ikoni"
       flair_preview_image: "Kihakiki Picha"
+      default_notifications:
+        modal_yes: "Ndiyo"
     user_action_groups:
       "1": "Upendo Uliotolewa"
       "2": "Upendo Uliopokea"
@@ -550,7 +548,6 @@ sw:
       posts: "Machapisho"
       topics: "Mada"
       latest: "Hivi Karibuni"
-      toggle_ordering: "swichi udhibiti wa oda"
       subcategories: "Kategoria mtoto"
       topic_sentence:
         one: "%{count} topiki"
@@ -819,7 +816,6 @@ sw:
       auth_tokens:
         details: "Taarifa"
       last_posted: "chapisho la mwisho"
-      last_emailed: "Mara ya Mwisho Amepokea Barua Pepe"
       last_seen: "Imeonwa"
       created: "Amejiunga"
       log_out: "Ondoka"
@@ -1797,8 +1793,6 @@ sw:
       whisper: "Chapisho hili ni binafsi kwa wasimamizi tu."
       wiki:
         about: "chapisho hili ni wiki"
-      archetypes:
-        save: "Hifadhi Machaguo"
       few_likes_left: "Asante kwa kutoa upendo! Umebakiwa na upendo mchache kwa ajili ya leo."
       controls:
         reply: "anza kuandika jibu kwenye mada hii"
@@ -1878,8 +1872,8 @@ sw:
       bookmarks:
         created: "Imetengenezwa"
         name: "Jina"
+        options: "Chaguo"
     category:
-      can: "can&hellip; "
       none: "(hakuna kategoria)"
       all: "Kategoria Zote"
       edit: "Hariri"
@@ -1899,7 +1893,6 @@ sw:
       save_error: Hitilafu imetokea wakati wa kuhifadhi kategoria.
       name: "Jina la Kategoria"
       description: "Maelezo"
-      topic: "kategoria mada"
       logo: "Nembo ya Kategoria"
       background_image: "Mandharinyuma ya Kategoria"
       badge_colors: "Rangi za Beji"

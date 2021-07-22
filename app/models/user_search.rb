@@ -12,6 +12,7 @@ class UserSearch
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
+    @last_seen_users = opts[:last_seen_users] || false
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
 
@@ -156,6 +157,15 @@ class UserSearch
     # 4. global matches
     if @term.present?
       filtered_by_term_users
+        .order('last_seen_at DESC NULLS LAST')
+        .limit(@limit - users.size)
+        .pluck(:id)
+        .each { |id| users << id }
+    end
+
+    # 5. last seen users (for search auto-suggestions)
+    if @last_seen_users
+      scoped_users
         .order('last_seen_at DESC NULLS LAST')
         .limit(@limit - users.size)
         .pluck(:id)

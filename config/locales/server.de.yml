@@ -1373,6 +1373,7 @@ de:
     force_https_warning: "Deine Website verwendet SSL, aber `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ist in deinen Website-Einstellungen noch nicht aktiviert."
     out_of_date_themes: "Updates sind für die folgenden Themes verfügbar:"
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
+    watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
   site_settings:
     display_local_time_in_user_card: "Zeigt die lokale Zeit basierend auf der Zeitzone eines Benutzers an, wenn die Benutzerkarte geöffnet wird."
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
@@ -1588,11 +1589,6 @@ de:
     auth_overrides_email: "Überschreibt lokale E-Mail bei jeder Anmeldung mit externer Website-E-Mail und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter. (WARNUNG: Aufgrund der Normalisierung lokaler E-Mails können Abweichungen auftreten.)"
     auth_overrides_username: "Überschreibt den lokalen Benutzernamen bei jeder Anmeldung mit dem Benutzernamen der externen Website und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter. (WARNUNG: Abweichungen können aufgrund unterschiedlicher Länge/Anforderungen des Benutzernamens auftreten.)"
     auth_overrides_name: "Überschreibt bei jeder Anmeldung den lokalen vollständigen Namen mit dem vollständigen Namen der externen Website und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter."
-    discourse_connect_overrides_avatar: "Überschreibt den Benutzeravatar mit dem externen Website-Avatar aus dem DiscourseConnect-Payload. Wenn diese Option aktiviert ist, dürfen Benutzer keine Avatare auf Discourse hochladen."
-    discourse_connect_overrides_location: "Überschreibt den Benutzerstandort mit dem externen Standort aus dem DiscourseConnect-Payload und verhindert lokale Änderungen."
-    discourse_connect_overrides_website: "Überschreibt die Benutzerwebsite mit dem externen Standort aus dem DiscourseConnect-Payload und verhindert lokale Änderungen."
-    discourse_connect_overrides_profile_background: "Überschreibt den Benutzerprofilhintergrund mit dem externen Website-Avatar aus dem DiscourseConnect-Payload."
-    discourse_connect_overrides_card_background: "Überschreibt den Benutzerkartenhintergrund mit dem externen Website-Avatar aus dem DiscourseConnect-Payload."
     discourse_connect_not_approved_url: "Nicht genehmigte DiscourseConnect-Konten zu dieser URL weiterleiten"
     discourse_connect_allows_all_return_paths: "Beschränke die von DiscourseConnect bereitgestellte Domain für return_paths nicht (standardmäßig muss der Return-Path auf der aktuellen Website liegen)"
     enable_local_logins: "Aktiviert lokale Konten mit Anmeldung über Benutzername und Passwort. WARNUNG: Wenn deaktiviert, kannst du dich möglicherweise nicht mehr anmelden, wenn du nicht vorher mindestens eine alternative Anmeldemethode konfiguriert hast."
@@ -1689,7 +1685,6 @@ de:
     allow_staff_to_upload_any_file_in_pm: "Erlaube Team-Mitgliedern, in privaten Nachrichten alle Dateien hochzuladen."
     strip_image_metadata: "Bild-Metadaten entfernen."
     composer_media_optimization_image_enabled: "Aktiviert die clientseitige Medienoptimierung hochgeladener Bilddateien."
-    composer_media_optimization_image_kilobytes_optimization_threshold: "Mindestgröße der Bilddatei, um die clientseitige Optimierung auszulösen"
     composer_media_optimization_image_resize_dimensions_threshold: "Mindestbreite des Bildes, um die clientseitige Skalierung auszulösen"
     composer_media_optimization_image_resize_width_target: "Bilder, die breiter als `composer_media_optimization_image_dimensions_resize_threshold` sind, werden auf diese Breite angepasst. Muss >= `composer_media_optimization_image_dimensions_resize_threshold` sein."
     composer_media_optimization_image_encode_quality: "JPEG-Encoding-Qualität, die im Re-Encoding-Prozess verwendet wird."
@@ -2144,7 +2139,6 @@ de:
     missing_secret: "Die Authentifizierung ist aufgrund des fehlenden Geheimnisses fehlgeschlagen. Kontaktiere die Website-Administratoren, um dieses Problem zu beheben."
     invite_redeem_failed: "Einlösung der Einladung fehlgeschlagen. Bitte kontaktiere den Administrator der Website."
   original_poster: "Autor des ersten Beitrags"
-  most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor vieler Beiträge"
   poster_description_joiner: ", "
@@ -2509,7 +2503,7 @@ de:
 
       - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/master)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
   new_version_mailer_with_notes:
@@ -2523,7 +2517,7 @@ de:
 
       - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/master)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
 
@@ -2648,7 +2642,7 @@ de:
 
         Wir sind sehr froh, dass du deine Zeit mit uns verbringst, und wir würden uns freuen, mehr über dich zu erfahren. Nimm dir etwas Zeit, um [dein Profil auszufüllen](%{base_url}/my/preferences/profile), oder zögere nicht, [ein neues Thema zu beginnen](%{base_url}/categories).
     welcome_staff:
-      title: "Begrüßungsteam"
+      title: "Teambegrüßung"
       subject_template: "Herzlichen Glückwunsch, du hast den Status %{role} erhalten!"
       text_body_template: |
         Ein Team-Mitglied hat dir den Status „%{role}“ verliehen.
@@ -3275,7 +3269,7 @@ de:
 
         %{respond_instructions}
     user_group_mentioned:
-      title: "Benutzer wurde in Gruppe erwähnt"
+      title: "Gruppe wurde erwähnt"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4199,19 +4193,19 @@ de:
         Dieses Abzeichen wird verliehen, wenn du alle %{max_likes_per_day} deiner täglichen „Gefällt mir“ an 20 Tagen verwendest. Wahnsinn! Du bist ein Vorbild darin, deine Community-Mitglieder zu ermutigen!
     thank_you:
       name: Dankeschön
-      description: Hat 20 Beiträge mit „Gefällt mir“ und 10 „Gefällt mir“ vergeben
+      description: Hat 20 „Gefällt mir“ für Beiträge erhalten und 10 „Gefällt mir“ vergeben
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 20 Beiträge mit „Gefällt mir“ hast und im Gegenzug mindestens 10 „Gefällt mir“ vergeben hast. Wenn jemand deine Beiträge mit „Gefällt mir“ markiert, findest du auch die Zeit, mit „Gefällt mir“ zu markieren, was andere schreiben.
+        Dieses Abzeichen wird verliehen, wenn du für 20 Beiträge ein „Gefällt mir“ erhalten und im Gegenzug mindestens 10 „Gefällt mir“ vergeben hast. Wenn jemand deine Beiträge mit „Gefällt mir“ markiert, findest du auch die Zeit, mit „Gefällt mir“ zu markieren, was andere schreiben.
     gives_back:
       name: Geben und nehmen
-      description: Hat 100 Beiträge mit „Gefällt mir“ und 100 „Gefällt mir“ vergeben
+      description: Hat 100 „Gefällt mir“ für Beiträge erhalten und 100 „Gefällt mir“ vergeben
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 100 Beiträge mit „Gefällt mir“ hast und im Gegenzug mindestens 100 „Gefällt mir“ vergeben hast. Danke für deine Selbstlosigkeit!
+        Dieses Abzeichen wird verliehen, wenn du für 100 Beiträge ein „Gefällt mir“ erhalten und im Gegenzug mindestens 100 „Gefällt mir“ vergeben hast. Danke für deine Selbstlosigkeit!
     empathetic:
       name: Empathisch
-      description: Hat 500 Beiträge mit „Gefällt mir“ und 1000 „Gefällt mir“ vergeben
+      description: Hat 500 „Gefällt mir“ für Beiträge erhalten und 1000 „Gefällt mir“ vergeben
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du 500 Beiträge mit „Gefällt mir“ hast und im Gegenzug mindestens 1000 „Gefällt mir“ vergeben hast. Wow! Du bist ein Vorbild für Großzügigkeit und gegenseitige Wertschätzung :two_hearts:.
+        Dieses Abzeichen wird verliehen, wenn du für 500 Beiträge ein „Gefällt mir“ erhalten und im Gegenzug mindestens 1000 „Gefällt mir“ vergeben hast. Wow! Du bist ein Vorbild für Großzügigkeit und gegenseitige Wertschätzung :two_hearts:.
     first_emoji:
       name: Erstes Emoji
       description: Hat ein Emoji in einem Beitrag verwendet

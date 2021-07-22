@@ -4022,6 +4022,24 @@ describe UsersController do
         expect(json["users"].map { |u| u["name"] }).not_to include(staged_user.name)
       end
     end
+
+    context '`last_seen_users`' do
+      it "returns results when the param is true" do
+        get "/u/search/users.json", params: { last_seen_users: true }
+
+        json = response.parsed_body
+        expect(json["users"]).not_to be_empty
+      end
+
+      it "respects limit parameter at the same time" do
+        limit = 3
+        get "/u/search/users.json", params: { last_seen_users: true, limit: limit }
+
+        json = response.parsed_body
+        expect(json["users"]).not_to be_empty
+        expect(json["users"].size).to eq(limit)
+      end
+    end
   end
 
   describe '#email_login' do

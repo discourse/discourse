@@ -239,7 +239,6 @@ ro:
     conduct: "Codul de conduită"
     mobile_view: "Vedere pentru mobil"
     desktop_view: "Vedere pentru desktop"
-    you: "Tu"
     or: "sau"
     now: "Acum"
     read_more: "Citește mai mult"
@@ -323,7 +322,6 @@ ro:
       remove: "Eliminați"
       remove_confirmation: "Ești sigur că vrei să ștergi această ciornă?"
       new_topic: "Ciornă subiect nou"
-      new_private_message: "Ciornă mesaj privat nou"
       topic_reply: "Răspuns ciornă"
       abandon:
         confirm: "Ai o schiță în curs pentru acest subiect. Ce ai vrea să faci mai departe?"
@@ -716,8 +714,6 @@ ro:
         public: "Public"
         private: "Privat"
         public_groups: "Grupuri publice"
-        automatic_group: Grup automat
-        close_group: Grup închis
         my_groups: "Grupurile mele"
         group_type: "Tip grup"
         is_group_user: "Membru"
@@ -780,6 +776,8 @@ ro:
       flair_type:
         icon: "Alege o pictogramă"
         image: "Încarcă o imagine"
+      default_notifications:
+        modal_yes: "Da"
     user_action_groups:
       "1": "Aprecieri date"
       "2": "Aprecieri primite"
@@ -809,7 +807,6 @@ ro:
       posts: "Postări"
       topics: "Subiecte"
       latest: "Cele mai recente"
-      toggle_ordering: "Comută criteriu de aranjare"
       subcategories: "Subcategorii"
       muted: "Categorii dezactivate"
       topic_sentence:
@@ -1155,7 +1152,6 @@ ro:
         title: "Dispozitive folosite recent"
         details: "Detalii"
       last_posted: "Ultima postare"
-      last_emailed: "Ultimul email"
       last_seen: "Văzut "
       created: "Înscris"
       log_out: "Ieșire"
@@ -2177,8 +2173,6 @@ ro:
       whisper: "această postare este doar pentru moderatori (modul discret)"
       wiki:
         about: "această postare este un wiki"
-      archetypes:
-        save: "Opțiuni de salvare"
       few_likes_left: "Îți mulțumim că împărtășești aprecierea! Mai ai doar câteva aprecieri pentru azi."
       controls:
         reply: "începe să scrii un răspuns pentru această postare"
@@ -2278,6 +2272,7 @@ ro:
         name: "Nume"
         name_placeholder: "Pentru ce este acest semn de carte?"
         set_reminder: "Aminteşte-mi"
+        options: "Opțiuni"
         actions:
           delete_bookmark:
             name: "Ștergere semn de carte"
@@ -2292,7 +2287,6 @@ ro:
             name: "Anulează fixarea semnului de carte"
             description: "Anulează fixarea semnului de carte. Acesta nu va mai apărea în partea de sus a listei de semne de carte."
     category:
-      can: "can&hellip; "
       none: "(nicio categorie)"
       all: "Toate categoriile"
       edit: "Editează"
@@ -2314,7 +2308,6 @@ ro:
       save_error: A apărut o eroare in timpul salvării categoriei.
       name: "Numele categoriei"
       description: "Descriere"
-      topic: "Subiectul categoriei"
       logo: " Logo pentru categorie"
       background_image: "Imaginea de fundal a categoriei"
       badge_colors: "Culori de ecuson"

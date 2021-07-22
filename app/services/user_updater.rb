@@ -124,7 +124,7 @@ class UserUpdater
     if attributes[:flair_group_id] &&
       attributes[:flair_group_id] != user.flair_group_id &&
       (attributes[:flair_group_id].blank? ||
-        guardian.can_use_primary_group?(user, attributes[:flair_group_id]))
+        guardian.can_use_flair_group?(user, attributes[:flair_group_id]))
 
       user.flair_group_id = attributes[:flair_group_id]
     end

@@ -177,6 +177,11 @@ const Category = RestModel.extend({
     return topicCount;
   },
 
+  @discourseComputed("default_slow_mode_seconds")
+  defaultSlowModeMinutes(seconds) {
+    return seconds ? seconds / 60 : null;
+  },
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
@@ -193,6 +198,7 @@ const Category = RestModel.extend({
         auto_close_based_on_last_post: this.get(
           "auto_close_based_on_last_post"
         ),
+        default_slow_mode_seconds: this.default_slow_mode_seconds,
         position: this.position,
         email_in: this.email_in,
         email_in_allow_strangers: this.email_in_allow_strangers,

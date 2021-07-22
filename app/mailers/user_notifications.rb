@@ -153,13 +153,22 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
-    build_email(
-      user.email,
-      template: "user_notifications.account_silenced",
-      locale: user_locale(user),
-      reason: user_history.details,
-      silenced_till: I18n.l(user.silenced_till, format: :long)
-    )
+    if user.silenced_forever?
+      build_email(
+        user.email,
+        template: "user_notifications.account_silenced_forever",
+        locale: user_locale(user),
+        reason: user_history.details
+      )
+    else
+      build_email(
+        user.email,
+        template: "user_notifications.account_silenced",
+        locale: user_locale(user),
+        reason: user_history.details,
+        silenced_till: I18n.l(user.silenced_till, format: :long)
+      )
+    end
   end
 
   def account_suspended(user, opts = nil)
@@ -167,13 +176,22 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
-    build_email(
-      user.email,
-      template: "user_notifications.account_suspended",
-      locale: user_locale(user),
-      reason: user_history.details,
-      suspended_till: I18n.l(user.suspended_till, format: :long)
-    )
+    if user.suspended_forever?
+      build_email(
+        user.email,
+        template: "user_notifications.account_suspended_forever",
+        locale: user_locale(user),
+        reason: user_history.details
+      )
+    else
+      build_email(
+        user.email,
+        template: "user_notifications.account_suspended",
+        locale: user_locale(user),
+        reason: user_history.details,
+        suspended_till: I18n.l(user.suspended_till, format: :long)
+      )
+    end
   end
 
   def account_exists(user, opts = {})

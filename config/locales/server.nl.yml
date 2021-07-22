@@ -1961,7 +1961,6 @@ nl:
     blank_id_error: "De `external_id` is vereist, maar was leeg"
     email_error: "Er kon geen account met het e-mailadres <b>%{email}</b> worden geregistreerd. Neem contact op met de beheerder van de website."
   original_poster: "Oorspronkelijk geplaatst door"
-  most_posts: "Meer berichten"
   most_recent_poster: "Meest recente schrijver"
   frequent_poster: "Frequente schrijver"
   poster_description_joiner: ", "
@@ -2195,33 +2194,6 @@ nl:
     title: "Mailer Test"
   new_version_mailer:
     title: "Mailer Nieuwe versie"
-    text_body_template: |
-      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
-
-      Uw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Upgrade via onze eenvoudige **[browserupgrade via één klik](%{base_url}/admin/upgrade)**
-
-      - Lees wat er nieuw is in de [uitgaveopmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [groffe GitHub-changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Bezoek [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
-  new_version_mailer_with_notes:
-    text_body_template: |
-      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
-
-      Uw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Upgrade via onze eenvoudige **[browserupgrade via één klik](%{base_url}/admin/upgrade)**
-
-      - Lees wat er nieuw is in de [uitgaveopmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [groffe GitHub-changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Bezoek [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
-
-      ### Uitgaveopmerkingen
-
-      %{notes}
   flag_reasons:
     off_topic: "Uw bericht is gemarkeerd als **off-topic**: de gemeenschap vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
     inappropriate: "Uw bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](%{base_path}/guidelines)."
@@ -2534,7 +2506,13 @@ nl:
     account_suspended:
       title: "Account geschorst"
       subject_template: "[%{email_prefix}] Uw account is geschorst"
+    account_suspended_forever:
+      title: "Account geschorst"
+      subject_template: "[%{email_prefix}] Uw account is geschorst"
     account_silenced:
+      title: "Account gedempt"
+      subject_template: "[%{email_prefix}] Uw account is gedempt"
+    account_silenced_forever:
       title: "Account gedempt"
       subject_template: "[%{email_prefix}] Uw account is gedempt"
     account_exists:

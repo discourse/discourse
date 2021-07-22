@@ -268,6 +268,33 @@ acceptance("Search - with tagging enabled", function (needs) {
 acceptance("Search - assistant", function (needs) {
   needs.user();
 
+  needs.pretender((server, helper) => {
+    server.get("/u/search/users", () => {
+      return helper.response({
+        users: [
+          {
+            username: "TeaMoe",
+            name: "TeaMoe",
+            avatar_template:
+              "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+          },
+          {
+            username: "TeamOneJ",
+            name: "J Cobb",
+            avatar_template:
+              "https://avatars.discourse.org/v3/letter/t/3d9bf3/{size}.png",
+          },
+          {
+            username: "kudos",
+            name: "Team Blogeto.com",
+            avatar_template:
+              "/user_avatar/meta.discourse.org/kudos/{size}/62185_1.png",
+          },
+        ],
+      });
+    });
+  });
+
   test("shows category shortcuts when typing #", async function (assert) {
     await visit("/");
 
@@ -316,5 +343,26 @@ acceptance("Search - assistant", function (needs) {
     await fillIn("#search-term", "sam in:");
     await triggerKeyEvent("#search-term", "keyup", 51);
     assert.equal(query(firstTarget).innerText, "sam in:title");
+
+    await fillIn("#search-term", "in:pers");
+    await triggerKeyEvent("#search-term", "keyup", 51);
+    assert.equal(query(firstTarget).innerText, "in:personal");
+  });
+
+  test("shows users when typing @", async function (assert) {
+    await visit("/");
+
+    await click("#search-button");
+
+    await fillIn("#search-term", "@");
+    await triggerKeyEvent("#search-term", "keyup", 51);
+
+    const firstUser =
+      ".search-menu .results ul.search-menu-assistant .search-item-user";
+    const firstUsername = query(firstUser).innerText.trim();
+    assert.equal(firstUsername, "TeaMoe");
+
+    await click(query(firstUser));
+    assert.equal(query("#search-term").value, `@${firstUsername} `);
   });
 });

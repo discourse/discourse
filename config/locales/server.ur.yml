@@ -1737,7 +1737,6 @@ ur:
     no_email: "کوئی ای میل پتہ فراہم نہیں گیا تھا۔ براہ مہربانی سائٹ کے ایڈمِنِسٹریٹر سے رابطہ کریں۔"
     email_error: "%{email} ای میل ایڈریس کے ساتھ اکاؤنٹ رجسٹر نہیں کیا جا سکا ۔ براہ مہربانی سائٹ کے ایڈمِنِسٹریٹر سے رابطہ کریں۔"
   original_poster: "اصل پوسٹ کرنے والا"
-  most_posts: "سب سے زیادہ پوسٹس"
   most_recent_poster: "سب سے حالیہ پوسٹ کرنے والا"
   frequent_poster: "اکثر پوسٹ کرنے والا"
   redirected_to_top_reasons:
@@ -2680,7 +2679,13 @@ ur:
     account_suspended:
       title: "اکاؤنٹ معطل"
       subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ معطل کر دیا گیا ہے"
+    account_suspended_forever:
+      title: "اکاؤنٹ معطل"
+      subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ معطل کر دیا گیا ہے"
     account_silenced:
+      title: "اکاؤنٹ خاموش"
+      subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ خاموش کر دیا گیا ہے"
+    account_silenced_forever:
       title: "اکاؤنٹ خاموش"
       subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ خاموش کر دیا گیا ہے"
     account_exists:

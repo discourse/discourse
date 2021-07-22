@@ -219,7 +219,6 @@ hu:
     conduct: "Magatartási kódex"
     mobile_view: "Mobil nézet"
     desktop_view: "Asztali nézet"
-    you: "Ön"
     or: "vagy"
     now: "épp most"
     read_more: "olvasás tovább"
@@ -303,7 +302,6 @@ hu:
       remove: "Eltávolítás"
       remove_confirmation: "Biztos, hogy törli ezt a vázlatot?"
       new_topic: "Új témavázlat"
-      new_private_message: "Új személyes üzenet vázlat"
       topic_reply: "Választervezet"
       abandon:
         confirm: "Van egy folyamatban lévő vázlata ehhez a témához. Mit szeretne vele tenni?"
@@ -695,8 +693,6 @@ hu:
         public: "Nyilvános"
         private: "Privát"
         public_groups: "Nyilvános csoportok"
-        automatic_group: Automatikus csoport
-        close_group: Csoport lezárása
         my_groups: "Saját csoportok"
         group_type: "Csoport típusa"
         is_group_user: "Tag"
@@ -758,6 +754,8 @@ hu:
       flair_type:
         icon: "Válasszon ikont"
         image: "Kép feltöltése"
+      default_notifications:
+        modal_yes: "Igen"
     user_action_groups:
       "1": "Adott kedvelések"
       "2": "Kapott kedvelések"
@@ -787,7 +785,6 @@ hu:
       posts: "Bejegyzések"
       topics: "Témák"
       latest: "Legutóbbi"
-      toggle_ordering: "rendezés megfordítása"
       subcategories: "Alkategóriák"
       topic_sentence:
         one: "%{count} téma"
@@ -1148,7 +1145,6 @@ hu:
         was_this_you: "Ez Ön volt?"
         latest_post: "Legutóbbi bejegyzése…"
       last_posted: "Utolsó hozzászólás"
-      last_emailed: "Utolsó e-mail"
       last_seen: "Utolsó látogatás"
       created: "Tagság kezdete"
       log_out: "Kijelentkezés"
@@ -1662,8 +1658,6 @@ hu:
           label: Válasz egy csatolt témaként
           desc: Egy új téma létrehozása ezzel a témával kapcsolatban
           confirm: Elmentettük az új témavázlatodat, amelyet a program automatikusan felülír, ha csatolt témakört hozol létre.
-        reply_as_new_group_message:
-          desc: Új privát üzenet létrehozása ugyanazokkal a címzettekkel
         reply_as_private_message:
           label: Új üzenet
           desc: Személyes üzenet létrehozása
@@ -1866,13 +1860,6 @@ hu:
         title: "Áthelyezés a bejövő üzenetek közé"
       edit_message:
         title: "Szerkesztés"
-      feature_on_profile:
-        help: "Témára mutató hivatkozása hozzáadása a felhasználói kártyájához és profiljához"
-        title: "Megjelenítés kiemeltként a profiljában"
-      remove_from_profile:
-        warning: "A profiljának már van egy kiemelt témája. Ha folytatja, akkor a téma lecseréli a meglévő témát."
-        help: "A témára mutató hivatkozás eltávolítása a felhasználói profiljából"
-        title: "Eltávolítás a profilból"
       list: "Témák"
       new: "új téma"
       unread: "olvasatlan"
@@ -2177,8 +2164,6 @@ hu:
         discard: "Elvetés"
       via_email: "ez a válasz e-mailben érkezett"
       via_auto_generated_email: "ez a bejegyzés egy automatikusan generált e-mailen keresztül érkezett"
-      archetypes:
-        save: "Mentési beállítások"
       few_likes_left: "Köszönjük, hogy aktívan osztod a kedveléseket! A jóból is megárt a sok: már csak néhány kiosztható kedvelésed maradt mára."
       controls:
         reply: "kezdje meg a választ erre a bejegyzésre"
@@ -2266,6 +2251,7 @@ hu:
         name: "Név"
         name_placeholder: "Mire való ez a könyvjelző?"
         set_reminder: "Emlékeztess"
+        options: "Beállítások"
         actions:
           delete_bookmark:
             name: "Könyvjelző törlése"
@@ -2297,7 +2283,6 @@ hu:
       save_error: Hiba lépett fel a kategória mentése során!
       name: "Kategória neve"
       description: "Leírás"
-      topic: "Kategória témája"
       logo: "Kategória képe"
       background_image: "Kategória háttérképe"
       badge_colors: "Jelvény színek"
