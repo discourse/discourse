@@ -1234,11 +1234,11 @@ describe GroupsController do
   describe "membership edits" do
     fab!(:admin) { Fabricate(:admin) }
 
-    before do
-      sign_in(admin)
-    end
-
     context '#add_members' do
+      before do
+        sign_in(admin)
+      end
+
       it "can make incremental adds" do
         user2 = Fabricate(:user)
 
@@ -1562,6 +1562,10 @@ describe GroupsController do
     end
 
     context '#remove_member' do
+      before do
+        sign_in(admin)
+      end
+
       it "cannot remove members from automatic groups" do
         group.update!(automatic: true)
 
@@ -1641,17 +1645,6 @@ describe GroupsController do
             end
           end
 
-          it 'should allow a user to leave a group' do
-            sign_in(other_user)
-
-            expect do
-              delete "/groups/#{group.id}/members.json",
-              params: { username: other_user.username }
-            end.to change { group.users.count }.by(-1)
-
-            expect(response.status).to eq(200)
-          end
-
           it 'should not allow a underprivileged user to leave a group for another user' do
             sign_in(user)
 
@@ -1714,6 +1707,57 @@ describe GroupsController do
             expect(response_body["skipped_usernames"].first).to eq(user.username)
           end
         end
+      end
+    end
+
+    context '#leave' do
+      let(:group_with_public_exit) { Fabricate(:group, public_exit: true, users: [user]) }
+
+      it 'should allow a user to leave a group with public exit' do
+        sign_in(user)
+
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.to change { group_with_public_exit.users.count }.by(-1)
+
+        expect(response.status).to eq(204)
+      end
+
+      it 'should not allow a user to leave a group without public exit' do
+        sign_in(user)
+
+        expect do
+          delete "/groups/#{group.id}/leave.json"
+        end.not_to change { group.users.count }
+
+        expect(response).to be_forbidden
+      end
+
+      it 'should not allow an anonymous user to call the leave method' do
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.not_to change { group_with_public_exit.users.count }
+
+        expect(response).to be_forbidden
+      end
+
+      it 'the leave method is idempotent' do
+        sign_in(user)
+
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.to change { group_with_public_exit.users.count }.by(-1)
+        expect(response.status).to eq(204)
+
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.not_to change { group_with_public_exit.users.count }
+        expect(response.status).to eq(204)
+
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.not_to change { group_with_public_exit.users.count }
+        expect(response.status).to eq(204)
       end
     end
   end
