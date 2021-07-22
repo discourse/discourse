@@ -265,10 +265,13 @@ da:
       contact_info: "I tilfælde af en kritisk begivenhed eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_info}."
     bookmarked:
       title: "Bogmærke"
+      edit_bookmark: "Rediger Bogmærke"
       clear_bookmarks: "Fjern bogmærker"
       help:
         bookmark: "Klik for at sætte et bogmærke i det første indlæg i denne tråd"
+        edit_bookmark: "Klik for at redigere bogmærket for dette emne"
         unbookmark: "Klik for at fjerne alle bogmærker i dette emne"
+        unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne."
     bookmarks:
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
       not_bookmarked: "bogmærk dette indlæg"
@@ -1503,8 +1506,11 @@ da:
       title:
         title: "Titel"
         none: "(ingen)"
+        instructions: "vises efter dit brugernavn"
       flair:
+        title: "Flair"
         none: "(ingen)"
+        instructions: "ikon vises ved siden af dit profilbillede"
       primary_group:
         title: "Primær Gruppe"
         none: "(ingen)"
@@ -2033,6 +2039,7 @@ da:
         votes_released: "Afstemningen blev frigivet"
     upload_selector:
       uploading: "Overfører billede"
+      processing: "Behandler Overførsel"
       select_file: "Vælg fil"
       default_image_alt_text: billede
     search:
@@ -2909,6 +2916,7 @@ da:
       position_disabled: "Kategorier vil blive vist i rækkefølge efter aktivitet. For at styre rækkefølgen af kategorier i lister, "
       position_disabled_click: 'skal funktionen "fikserede kategori positioner" slås til.'
       minimum_required_tags: "Minimum antal mærker krævet i et emne:"
+      default_slow_mode: 'Aktivér "Langsom tilstand" for nye emner i denne kategori.'
       parent: "Overordnet kategori"
       num_auto_bump_daily: "Antal åbne emner, der automatisk 'bump'es dagligt:"
       navigate_to_first_post_after_read: "Navigér til det første indlæg, når emnerne er læst"
@@ -3419,6 +3427,8 @@ da:
         regular: "Trofast"
         leader: "Veteran"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Du har valgt en fil, der ikke understøttes. Understøttede filtyper - %{types}."
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:
@@ -3646,6 +3656,7 @@ da:
               log_out: Log alle sessioner ud for en bruger.
               anonymize: Anonymiser brugerkonti.
               delete: Slet brugerkonti.
+              list: Hent en liste over brugere.
             email:
               receive_emails: Kombiner dette anvendelsesområde med mail-modtageren til at behandle indgående e-mails.
       web_hooks:
@@ -3860,6 +3871,7 @@ da:
           theme: "Tema"
           component: "Komponent"
           components: "komponenter"
+          filter_placeholder: "skriv for at filtrere…"
           theme_name: "Tema navn"
           component_name: "Komponent navn"
           themes_intro: "Vælg et eksisterende tema, eller installer et nyt for at komme i gang"
@@ -4462,6 +4474,7 @@ da:
         penalty_post_edit: "Rediger indlægget"
         penalty_post_none: "Gøre ingenting"
         penalty_count: "Straffetælling"
+        penalty_history: "Straf Historik"
         clear_penalty_history:
           title: "Ryd straffehistorie"
           description: "brugere med straffe kan ikke nå TL3"
@@ -4595,6 +4608,7 @@ da:
         unlock_trust_level: "Lås tillidsniveau op"
         silenced_count: "Mådeholdt (silenced)"
         suspended_count: "Suspenderet"
+        last_six_months: "Seneste 6 måneder"
         tl3_requirements:
           title: "Krav for fortrolighedsniveau 3"
           table_title:
@@ -4672,6 +4686,7 @@ da:
           text: "Tekstfelt"
           confirm: "Bekræft"
           dropdown: "Rulleboks"
+          multiselect: "Multivælg"
       site_text:
         description: "Du kan ændre alt tekst på dette forum. Start med at søge herunder:"
         search: "Søg efter teksten du gerne vil rette"

@@ -474,7 +474,6 @@ tr_TR:
 
       Herkesin benzersiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
     sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi denediniz \nBunun yerine yerine, lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt veriniz.\nMetni vurgulayıp görünen <b>alıntı</b> düğmesini seçerek önceki yanıtınızı düzenleyebilirsiniz. Böylece diğer kullanıcıların, yanıtlarınızı okuması daha kolay olacaktır.\n"
-    dominating_topic: "### Diğer insanları da tartışmaya dahil et \n\nBelli ki bu konu sizin için çok önemli &ndash; çünkü buradaki yanıtların %{percent} yüzdesinden çoğunu siz göndermişsiniz.\n\nDiğer insanlara da kendi bakış açılarını paylaşmaları için alan verirseniz daha da iyi olabilir. Onları da davet etmek istemez misin?\n"
     get_a_room: |
       ### Herkesi sohbete katılmaya teşvik edin
 

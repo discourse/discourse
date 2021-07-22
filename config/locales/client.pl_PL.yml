@@ -3217,6 +3217,7 @@ pl_PL:
       position_disabled: "Kolejność kategorii będzie uzależniona od aktywności. Aby kontrolować ich kolejność,"
       position_disabled_click: 'włącz statyczną kolejność kategorii'
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
+      default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
       parent: "Kategoria rodzica"
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"

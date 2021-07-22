@@ -3189,6 +3189,7 @@ he:
       position_disabled: "קטגוריות יוצגו על פס סדר הפעילות. כדי לשלוט בסדר הקטגורייות ברשימה,"
       position_disabled_click: 'אפשרו את ההגדרה "סדר קטגוריות קבוע".'
       minimum_required_tags: "מספר התגיות המזערי הנדרש לנושא:"
+      default_slow_mode: 'להפעיל „מצב אטי” לנושאים חדשים בקטגוריה הזאת.'
       parent: "קטגורית אם"
       num_auto_bump_daily: "מספר הנושאים הפתוחים להקפצה מדי יום:"
       navigate_to_first_post_after_read: "ניווט לפוסט הראשוני לאחר שהנושאים נקראו"

@@ -200,7 +200,7 @@ zh_CN:
       cors_origins_should_not_have_trailing_slash: "您不应该将尾部反斜杠 (/) 添加到 CORS 源。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
-      invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 '%{hostname}'。您的帖子中只会显示链接，而不会显示预览。 :cry:"
+      invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 '%{hostname}'。您的帖子中只会显示链接，而不会显示预览。:cry:"
       error_response: "抱歉，我们无法为此网页生成预览，因为服务器返回错误代码 %{status_code}。您的帖子中只会显示链接，而不会显示预览。:cry:"
       missing_data:
         other: "抱歉，我们无法为此网页生成预览，因为找不到以下 oEmbed / OpenGraph 标签：%{missing_attributes}"
@@ -456,12 +456,6 @@ zh_CN:
       您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
-    dominating_topic: |
-      ### 让其他人也加入讨论
-
-      此话题显然对您很重要 - 在所有回复中您的发言占比超过 %{percent}%。
-
-      留一点空间给其他人分享他们自己的见解会更好。您能邀请他们吗？
     get_a_room: |
       ### 鼓励每一个人都参与到讨论中
 
@@ -766,7 +760,7 @@ zh_CN:
     please_continue: "继续访问 %{site_name}"
     error: "更改您的电子邮件地址时出错。也许该地址已被使用？"
     doesnt_exist: "该电子邮件地址未与您的帐户关联。"
-    error_staged: "更改您的电子邮件地址时出错。该地址已被用户使用。"
+    error_staged: "更改您的电子邮件地址时出错。该地址已被暂存用户使用。"
     already_done: "抱歉，此确认链接不再有效。也许您的电子邮件已被更改？"
     confirm: "确认"
     max_secondary_emails_error: "您已达到允许的最大辅助电子邮件数量。"
@@ -816,7 +810,7 @@ zh_CN:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不当言论"
-      description: '此帖子包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
+      description: '此帖子包含对他人攻击、辱骂的内容或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     notify_user:
       title: "向 @%{username} 发送消息"
@@ -828,7 +822,7 @@ zh_CN:
       title: "其他内容"
       description: "由于上面未列出的另一个原因，此帖子需要管理人员注意。"
       short_description: "因其他原因需要管理人员注意"
-      email_title: '“%{title}”中的一个帖子需要工作人员注意'
+      email_title: '“%{title}”中的一个帖子需要管理人员注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "加入书签"
@@ -879,7 +873,7 @@ zh_CN:
       challenge_mismatch_error: "提供的质询与身份验证服务器生成的质询不匹配。"
       invalid_origin_error: "身份验证请求的来源与服务器来源不匹配。"
       malformed_attestation_error: "解码证明数据时出错。"
-      invalid_relying_party_id_error: "身份验证请求的依赖方 ID 与服务器依赖方 ID 不匹配。"
+      invalid_relying_party_id_error: "身份验证请求的信赖方 ID 与服务器信赖方 ID 不匹配。"
       user_verification_error: "需要用户验证。"
       unsupported_public_key_algorithm_error: "服务器不支持提供的公钥算法。"
       unsupported_attestation_format_error: "服务器不支持该证明格式。"
@@ -896,7 +890,7 @@ zh_CN:
       short_description: "这是广告"
     inappropriate:
       title: "不当言论"
-      description: '此话题包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
+      description: '此话题包含对他人攻击、辱骂的内容或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       long_form: "将此话题举报为不当言论"
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     notify_moderators:
@@ -1415,7 +1409,6 @@ zh_CN:
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
     enforce_second_factor: "强制用户启用双重身份验证。选择“所有”可以强制所有用户。选择“管理人员”仅强制管理人员。"
     force_https: "强制您的站点仅使用 HTTPS。警告：在您验证 HTTPS 已完全设置并在任何地方都可以正常工作之前，请勿启用此功能！您是否检查过您的 CDN、所有社交登录以及任何外部徽标/依赖项，以确保它们都与 HTTPS 兼容？"
-    same_site_cookies: "使用相同的站点 Cookie，它们在支持的浏览器上消除了所有向量跨站点请求伪造（宽松或严格）。警告：“严格”仅适用于强制登录并使用外部身份验证方法的站点。"
     summary_score_threshold: "将帖子包含在“总结此话题”中所需的最低分数"
     summary_posts_required: "启用“总结此话题”之前话题中的最少帖子数。对此设置的更改将在一周内追溯应用。"
     summary_likes_required: "启用“总结此话题”之前话题中的最少赞数。对此设置的更改将在一周内追溯应用。"
@@ -1516,13 +1509,13 @@ zh_CN:
     auto_approve_email_domains: "使用此网域列表中电子邮件地址的用户将自动获得批准。"
     hide_email_address_taken: "在注册期间和在“忘记密码”表单中不通知用户存在使用给定电子邮件地址的帐户。"
     log_out_strict: "退出时，退出用户在所有设备上的会话"
-    version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 仪表板上显示新版本消息"
+    version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
     new_version_emails: "当有新版本的 Discourse 时，向 contact_email 地址发送一封电子邮件。"
     invite_expiry_days: "用户邀请密钥的有效期，以天为单位"
     invite_only: "所有新用户必须由受信任的用户或管理人员明确邀请。公共注册被禁用。"
     login_required: "需要进行身份验证才能阅读此站点上的内容，禁止匿名访问。"
-    min_username_length: "最小用户名长度。警告：如果任何现有用户或群组名称的长度比此数值短，您的站点将无法正常工作！"
-    max_username_length: "最大用户名长度。警告：如果任何现有用户或群组名称的长度比此数值长，您的站点将无法正常工作！"
+    min_username_length: "最小用户名长度（以字符为单位）。警告：如果任何现有用户或群组名称的长度比此数值短，您的站点将无法正常工作！"
+    max_username_length: "最大用户名长度（以字符为单位）。警告：如果任何现有用户或群组名称的长度比此数值长，您的站点将无法正常工作！"
     unicode_usernames: "允许用户名和群组名称包含 Unicode 字母和数字。"
     allowed_unicode_username_characters: "仅在用户名中允许某些 Unicode 字符的正则表达式。ASCII 字符和数字将始终被允许，不需要包含在许可名单中。"
     reserved_usernames: "不允许注册的用户名。通配符 * 可用于匹配任何字符零次或多次。"
@@ -1794,7 +1787,7 @@ zh_CN:
     bounce_score_threshold: "在我们停止向用户发送电子邮件之前的最大退回分数。"
     reset_bounce_score_after_days: "X 天后自动重置退回分数。"
     blocked_attachment_content_types: "用于根据内容类型屏蔽附件的关键字列表。"
-    blocked_attachment_filenames: "用于根据文件名屏蔽附件的关键字列表。"
+    blocked_attachment_filenames: "用于根据文件名屏蔽名单附件的关键字列表。"
     forwarded_emails_behaviour: "如何处理转发到 Discourse 的电子邮件"
     always_show_trimmed_content: "始终显示传入电子邮件被修剪的部分。警告：可能会泄露电子邮件地址。"
     trim_incoming_emails: "修剪传入电子邮件的不相关部分。"
@@ -1845,7 +1838,7 @@ zh_CN:
     digest_posts: "要在电子邮件摘要中显示的热门帖子的最大数量。"
     digest_other_topics: "在电子邮件摘要的“您关注的新话题和类别”部分中显示的最大话题数。"
     digest_min_excerpt_length: "电子邮件摘要中的最少帖子摘录，以字符为单位。"
-    suppress_digest_email_after_days: "禁止向超过 (n) 天未在网站上看到的用户发送摘要电子邮件。"
+    suppress_digest_email_after_days: "禁止向超过 (n) 天未在站点上看到的用户发送摘要电子邮件。"
     digest_suppress_categories: "从摘要电子邮件中禁止这些类别。"
     disable_digest_emails: "禁用所有用户的摘要电子邮件。"
     apply_custom_styles_to_digest: "自定义电子邮件模板和 CSS 应用于摘要电子邮件。"
@@ -1886,7 +1879,7 @@ zh_CN:
     header_dropdown_category_count: "标题下拉菜单中可以显示的类别数量。"
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
     global_notice: "向所有访客显示紧急、突发、不可关闭的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
-    disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑提醒。"
+    disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑通知。"
     notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
     likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
@@ -2018,8 +2011,8 @@ zh_CN:
     shared_drafts_min_trust_level: "允许用户查看和编辑共享草稿。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
-    base_font: "用于网站上大多数文本的基字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
-    heading_font: "用于网站标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
+    base_font: "用于站点上大多数文本的基字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
+    heading_font: "用于站点上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
     short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
@@ -2051,7 +2044,7 @@ zh_CN:
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling host'。"
       pop3_polling_username_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling username'。"
       pop3_polling_password_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling password'。"
-      pop3_polling_authentication_failed: "POP3 验证失败。请验证您的 pop3 凭据。"
+      pop3_polling_authentication_failed: "POP3 身份验证失败。请验证您的 pop3 凭据。"
       reply_by_email_address_is_empty: "在启用通过电子邮件回复之前，您必须先设置 'reply by email address'。"
       email_polling_disabled: "在启用通过电子邮件回复之前，您必须先启用手动或者 POP3 轮询。"
       user_locale_not_enabled: "在启用此设置之前，您必须先启用 'allow user locale'。"
@@ -2169,7 +2162,7 @@ zh_CN:
     security_key_description: "当您准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
     security_key_alternative: "尝试另一种方式"
     security_key_authenticate: "使用安全密钥进行身份验证"
-    security_key_not_allowed_error: "安全密钥身份验证超时或被取消。"
+    security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
     security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
     security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
     security_key_invalid: "验证安全密钥时出错。"
@@ -3043,7 +3036,7 @@ zh_CN:
   user_notifications:
     previous_discussion: "以前的回复"
     reached_limit:
-      other: "注意：我们每天最多发送 %{count} 封电子邮件。检查站点以查看可能被阻止的电子邮件。 PS：您很受欢迎！"
+      other: "注意：我们每天最多发送 %{count} 封电子邮件。检查站点以查看可能被阻止的电子邮件。PS：您很受欢迎！"
     in_reply_to: "回复给"
     unsubscribe:
       title: "退订"
@@ -3628,7 +3621,7 @@ zh_CN:
 
       当您看到不良行为时，不要回复。这种承认会变相鼓励这种不良行为，既消耗您的精力，又浪费每一个人的时间。_只需举报它_。如果收到足够多的举报，将会有相应的处理，这种处理可能会自动发生，也可能由版主介入。
 
-      为了维护我们的社区，版主保留随时以任何理由删除任何内容和任何用户帐户的权利。版主不会预先审核任何新帖子；版主和站点维护人员对社区发表的任何言论均不负责任。
+      为了维护我们的社区，版主保留随时以任何理由移除任何内容和任何用户帐户的权利。版主不会预先审核任何新帖子；版主和站点维护人员对社区发表的任何言论均不负责任。
 
       <a name="be-civil"></a>
 
@@ -3983,7 +3976,7 @@ zh_CN:
         当您填写<a href="%{base_uri}/my/preferences/profile">用户个人资料</a>并设置了个人资料照片时，将授予此徽章。让社区更多地了解您是谁以及您对什么感兴趣，这有助于建立一个更好、联系更紧密的社区。加入我们！
     anniversary:
       name: 周年纪念日
-      description: 已成为有效用户一年，并且至少发帖一次
+      description: 已成为活跃成员一年，并且至少发帖一次
       long_description: |
         当您成为成员一年并在此期间至少发布一个帖子时，将授予此徽章。感谢您坚持并为我们的社区做出贡献。没有您，我们做不到。
     nice_post:
@@ -4170,17 +4163,17 @@ zh_CN:
       name: 爱好者
       description: 连续 10 天访问
       long_description: |
-        连续 10 天访问论坛会被授予此勋章。感谢与我们共度超过一周的时光！
+        连续 10 天访问论坛会被授予此徽章。感谢与我们共度超过一周的时光！
     aficionado:
       name: 百尺竿头
       description: 连续 100 天访问
       long_description: |
-        连续 100 天访问论坛会被授予此勋章。这可是超过三个月的时间！
+        连续 100 天访问论坛会被授予此徽章。这可是超过三个月的时间！
     devotee:
       name: 全年不落
       description: 连续 365 天访问
       long_description: |
-        连续 365 天访问论坛会被授予此勋章。哇哦，一整年！
+        连续 365 天访问论坛会被授予此徽章。哇哦，一整年！
     badge_title_metadata: "%{site_title}上的%{display_name}徽章"
   admin_login:
     success: "电子邮件已发送"
