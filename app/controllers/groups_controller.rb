@@ -507,14 +507,14 @@ class GroupsController < ApplicationController
   end
 
   def leave
-    group = Group.find_by(id: params[:id])
-    raise Discourse::NotFound unless group
     ensure_logged_in
-    raise Discourse::InvalidAccess unless group.public_exit
-
     unless current_user.staff?
       RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
     end
+
+    group = Group.find_by(id: params[:id])
+    raise Discourse::NotFound unless group
+    raise Discourse::InvalidAccess unless group.public_exit
 
     if group.remove(current_user)
       GroupActionLogger.new(current_user, group).log_remove_user_from_group(current_user)
