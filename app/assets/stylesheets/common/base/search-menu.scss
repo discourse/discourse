@@ -251,6 +251,23 @@
         }
       }
     }
+
+    .search-menu-assistant {
+      min-width: 100%;
+      margin-top: -1em;
+
+      .search-menu-assistant-item {
+        > span {
+          vertical-align: baseline;
+          display: inline-block;
+        }
+      }
+
+      .search-item-user .avatar,
+      .search-item-prefix {
+        margin-right: 0.5em;
+      }
+    }
   }
 
   .searching {

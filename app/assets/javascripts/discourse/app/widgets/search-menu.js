@@ -1,4 +1,5 @@
 import { isValidSearchTerm, searchForTerm } from "discourse/lib/search";
+import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -6,6 +7,11 @@ import { get } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import userSearch from "discourse/lib/user-search";
+
+const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
+const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
+const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
 
 const searchData = {};
 
@@ -17,6 +23,7 @@ export function initSearchData() {
   searchData.typeFilter = null;
   searchData.invalidTerm = false;
   searchData.topicId = null;
+  searchData.afterAutocomplete = false;
 }
 
 initSearchData();
@@ -39,6 +46,52 @@ const SearchHelper = {
     const { term, typeFilter, contextEnabled } = searchData;
     const searchContext = contextEnabled ? widget.searchContext() : null;
     const fullSearchUrl = widget.fullSearchUrl();
+    const matchSuggestions = this.matchesSuggestions();
+
+    if (matchSuggestions) {
+      searchData.noResults = true;
+      searchData.results = [];
+      searchData.loading = false;
+
+      if (matchSuggestions.type === "category") {
+        const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
+          "#",
+          ""
+        );
+
+        searchData.suggestionResults = Category.search(categorySearchTerm);
+        searchData.suggestionKeyword = "#";
+        widget.scheduleRerender();
+      } else if (matchSuggestions.type === "username") {
+        const userSearchTerm = matchSuggestions.usernamesMatch[0].replace(
+          "@",
+          ""
+        );
+        const opts = { includeGroups: true, limit: 6 };
+        if (userSearchTerm.length > 0) {
+          opts.term = userSearchTerm;
+        } else {
+          opts.lastSeenUsers = true;
+        }
+
+        userSearch(opts).then((result) => {
+          if (result?.users?.length > 0) {
+            searchData.suggestionResults = result.users;
+            searchData.suggestionKeyword = "@";
+          } else {
+            searchData.noResults = true;
+            searchData.suggestionKeyword = false;
+          }
+          widget.scheduleRerender();
+        });
+      } else {
+        searchData.suggestionKeyword = matchSuggestions[0];
+        widget.scheduleRerender();
+      }
+      return;
+    }
+
+    searchData.suggestionKeyword = false;
 
     if (!isValidSearchTerm(term, widget.siteSettings)) {
       searchData.noResults = true;
@@ -73,9 +126,34 @@ const SearchHelper = {
         .catch(popupAjaxError)
         .finally(() => {
           searchData.loading = false;
+          searchData.afterAutocomplete = false;
           widget.scheduleRerender();
         });
     }
+  },
+
+  matchesSuggestions() {
+    if (searchData.term === undefined) {
+      return false;
+    }
+
+    const categoriesMatch = searchData.term.match(CATEGORY_SLUG_REGEXP);
+
+    if (categoriesMatch) {
+      return { type: "category", categoriesMatch };
+    }
+
+    const usernamesMatch = searchData.term.match(USERNAME_REGEXP);
+    if (usernamesMatch) {
+      return { type: "username", usernamesMatch };
+    }
+
+    const suggestionsMatch = searchData.term.match(SUGGESTIONS_REGEXP);
+    if (suggestionsMatch) {
+      return suggestionsMatch;
+    }
+
+    return false;
   },
 };
 
@@ -132,10 +210,14 @@ export default createWidget("search-menu", {
   },
 
   panelContents() {
-    const contextEnabled = searchData.contextEnabled;
+    const { contextEnabled, afterAutocomplete } = searchData;
 
     let searchInput = [
-      this.attach("search-term", { value: searchData.term, contextEnabled }),
+      this.attach(
+        "search-term",
+        { value: searchData.term, contextEnabled },
+        { state: { afterAutocomplete } }
+      ),
     ];
     if (searchData.term && searchData.loading) {
       searchInput.push(h("div.searching", h("div.spinner")));
@@ -157,6 +239,8 @@ export default createWidget("search-menu", {
           results: searchData.results,
           invalidTerm: searchData.invalidTerm,
           searchContextEnabled: searchData.contextEnabled,
+          suggestionKeyword: searchData.suggestionKeyword,
+          suggestionResults: searchData.suggestionResults,
         })
       );
     }
@@ -200,7 +284,7 @@ export default createWidget("search-menu", {
     });
   },
 
-  mouseDownOutside() {
+  clickOutside() {
     this.sendWidgetAction("toggleSearchMenu");
   },
 
@@ -211,7 +295,7 @@ export default createWidget("search-menu", {
       return false;
     }
 
-    if (searchData.loading || searchData.noResults) {
+    if (searchData.loading) {
       return;
     }
 
@@ -304,6 +388,11 @@ export default createWidget("search-menu", {
     searchData.typeFilter = null;
     searchData.term = term;
     this.triggerSearch();
+  },
+
+  triggerAutocomplete(term) {
+    searchData.afterAutocomplete = true;
+    this.searchTermChanged(term);
   },
 
   fullSearch() {

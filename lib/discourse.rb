@@ -1003,6 +1003,10 @@ module Discourse
     headers['Access-Control-Allow-Methods'] = CDN_REQUEST_METHODS.join(", ")
     headers
   end
+
+  def self.allow_dev_populate?
+    Rails.env.development? || ENV["ALLOW_DEV_POPULATE"] == "1"
+  end
 end
 
 # rubocop:enable Style/GlobalVars

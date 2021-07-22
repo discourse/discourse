@@ -89,6 +89,7 @@ class FinalDestination
     result = {
       "User-Agent" => @user_agent,
       "Accept" => "*/*",
+      "Accept-Language" => "*",
       "Host" => @uri.hostname
     }
 

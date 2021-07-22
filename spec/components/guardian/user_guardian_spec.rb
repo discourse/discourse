@@ -455,4 +455,41 @@ describe UserGuardian do
       expect(guardian.can_upload_user_card_background?(trust_level_1)).to eq(false)
     end
   end
+
+  describe "#can_change_tracking_preferences?" do
+    let(:staged_user) { Fabricate(:staged) }
+    let(:admin_user) { Fabricate(:admin) }
+
+    it "is true for normal TL0 user" do
+      expect(Guardian.new(user).can_change_tracking_preferences?(user)).to eq(true)
+    end
+
+    it "is true for admin user" do
+      expect(Guardian.new(admin_user).can_change_tracking_preferences?(admin_user)).to eq(true)
+    end
+
+    context "allow_changing_staged_user_tracking is false" do
+      before { SiteSetting.allow_changing_staged_user_tracking = false }
+
+      it "is false to staged user" do
+        expect(Guardian.new(staged_user).can_change_tracking_preferences?(staged_user)).to eq(false)
+      end
+
+      it "is false for staged user as admin user" do
+        expect(Guardian.new(admin_user).can_change_tracking_preferences?(staged_user)).to eq(false)
+      end
+    end
+
+    context "allow_changing_staged_user_tracking is true" do
+      before { SiteSetting.allow_changing_staged_user_tracking = true }
+
+      it "is true to staged user" do
+        expect(Guardian.new(staged_user).can_change_tracking_preferences?(staged_user)).to eq(true)
+      end
+
+      it "is true for staged user as admin user" do
+        expect(Guardian.new(admin_user).can_change_tracking_preferences?(staged_user)).to eq(true)
+      end
+    end
+  end
 end

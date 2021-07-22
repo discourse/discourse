@@ -206,7 +206,6 @@ $quote-share-maxwidth: 150px;
 .moderator {
   .regular > .cooked {
     background-color: var(--highlight-low-or-medium);
-    padding: 10px;
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
@@ -232,6 +231,53 @@ $quote-share-maxwidth: 150px;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
+  }
+}
+
+.deleted {
+  .regular > .cooked {
+    background-color: var(--danger-low-mid);
+  }
+  .topic-meta-data:not(.embedded-reply) {
+    color: var(--danger);
+
+    .post-info a,
+    a {
+      color: currentColor;
+    }
+
+    .d-icon {
+      color: currentColor;
+    }
+  }
+  nav.post-controls {
+    color: var(--danger);
+
+    .show-replies,
+    button.reply.create {
+      color: var(--danger);
+      .d-icon {
+        color: var(--danger);
+      }
+    }
+    .widget-button {
+      &:hover {
+        color: currentColor;
+        background: var(--danger-low);
+        .d-icon {
+          color: currentColor;
+        }
+      }
+      &.fade-out {
+        opacity: 1;
+      }
+    }
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+  .post-action {
+    color: var(--danger);
   }
 }
 

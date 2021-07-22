@@ -755,6 +755,9 @@ export default createWidget("post", {
     if (attrs.topicOwner) {
       classNames.push("topic-owner");
     }
+    if (this.currentUser && attrs.user_id === this.currentUser.id) {
+      classNames.push("current-user-post");
+    }
     if (attrs.groupModerator) {
       classNames.push("category-moderator");
     }

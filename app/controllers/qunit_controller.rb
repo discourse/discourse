@@ -10,6 +10,7 @@ class QunitController < ApplicationController
 
   # only used in test / dev
   def index
+    raise Discourse::NotFound.new if request.headers["HTTP_X_DISCOURSE_EMBER_CLI"] == "true"
     raise Discourse::InvalidAccess.new if Rails.env.production?
   end
 

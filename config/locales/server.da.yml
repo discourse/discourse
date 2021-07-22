@@ -230,6 +230,7 @@ da:
     disabled_errors:
       discourse_connect_enabled: "Invitationer er deaktiveret, fordi DiscourseConnect er aktiveret."
       invalid_access: "Du har ikke tilladelse til at se den ønskede ressource."
+    requires_groups: "Invitation gemt. For at give adgang til det angivne emne skal du tilføje en af følgende grupper: %{groups}."
   bulk_invite:
     file_should_be_csv: "Den overførte fil skal være i csv format."
     max_rows: "De første %{max_bulk_invites} invitationer er blevet sendt. Prøv at opdele filen i mindre dele."
@@ -470,12 +471,6 @@ da:
       Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
 
       Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
-    dominating_topic: |
-      ### Lad andre deltage i samtalen
-
-      Dette emne er helt klart vigtigt for dig &ndash; du har skrevet mere end %{percent}% af svarene her.
-
-      Det kunne være endnu bedre, hvis du gav andre mennesker plads til at dele deres synspunkter, også. Kan du invitere dem hertil?
     get_a_room: |
       ### Opfordre alle til at blive involveret i samtalen
 
@@ -1427,6 +1422,7 @@ da:
     ga_version: "Version af Google Universal Analytics der skal benyttes: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, fx: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     moderators_manage_categories_and_groups: "Tillad moderatorer at administrere kategorier og grupper"
+    moderators_change_post_ownership: "Tillad moderatorer at ændre ejerskab af indlæg"
     use_admin_ip_allowlist: "Administratorer kan kun logge ind, hvis de kommer fra en IP-adresse, der er defineret i listen Screenede IP'er (Admin> Logs> Screenede Ip'er)."
     blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
     allowed_internal_hosts: "En liste over interne værter, som discourse sikkert kan gennemsøge til brug for oneboxing og andre formål"
@@ -1538,6 +1534,7 @@ da:
     image_preview_jpg_quality: "Kvaliteten af skalerede billedfiler (1 er laveste kvalitet, 99 er bedste kvalitet, 100 for at deaktivere)."
     allow_staff_to_upload_any_file_in_pm: "Tillad personale at overføre filer i PM."
     strip_image_metadata: "Fjern billedmetadata."
+    composer_media_optimization_image_bytes_optimization_threshold: "Mindste billedfilstørrelse for at udløse optimering af klientsiden"
     tl1_requires_topics_entered: "Hvor mange emner en ny bruger skal læse før vedkommende forfremmes til tillidsniveau 1."
     tl1_requires_read_posts: "Hvor mange indlæg en ny bruger skal læse før vedkommende forfremmes til tillidsniveau 1."
     tl1_requires_time_spent_mins: "Hvor mange minutter en ny bruger skal læse indlæg før vedkommende forfremmes til tillidsniveau 1."
@@ -1729,6 +1726,7 @@ da:
     city_for_disputes: "By for tvister"
     shared_drafts_min_trust_level: "Tillad brugere at se og redigere Delte kladder."
     push_notifications_icon: "Emblemikonet, der vises i meddelelseshjørnet. Et monokromatisk PNG på 96×96 med gennemsigtighed anbefales."
+    allow_changing_staged_user_tracking: "Tillad, at en forhåndsoprettet brugers kategori- og mærke notifikationsindstillinger ændres af en administratorbruger."
     errors:
       invalid_email: "Ugyldig e-mail-adresse"
       invalid_username: "Der er ingen bruger med det brugernavn."
@@ -1775,7 +1773,6 @@ da:
     blank_id_error: "`eksternt_id` er påkrævet men var tomt"
     invite_redeem_failed: "Invitationsindløsning mislykkedes. Kontakt venligst webstedets administrator."
   original_poster: "Oprindelig forfatter"
-  most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
   frequent_poster: "Hyppig forfatter"
   poster_description_joiner: ", "
@@ -1845,6 +1842,7 @@ da:
     reset_not_allowed_from_ip_address: "Du kan ikke anmode om nulstilling af en adgangskode fra den pågældende IP-adresse."
     suspended: "Du kan ikke logge ind før %{date}."
     suspended_with_reason: "Kontoen er suspenderet indtil %{date}: %{reason}"
+    suspended_with_reason_forever: "Konto suspenderet: %{reason}"
     errors: "%{errors}"
     not_available: "Ikke ledigt. Prøv %{suggestion}?"
     something_already_taken: "Noget gik galt, måske er brugernavnet eller e-mail-adressen allerede registreret. Prøv “Glemt adgangskode“-linket."
@@ -2534,6 +2532,7 @@ da:
     [Afmeld](%{unsubscribe_url}).
   subject_re: "Sv: "
   subject_pm: "[PM] "
+  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Tidligere Svar"
     in_reply_to: "Som svar på"
@@ -2743,6 +2742,20 @@ da:
       subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
       text_body_template: |
         Du er blevet suspenderet fra forummet indtil %{suspended_till}.
+
+        Årsag - %{reason}
+    account_suspended_forever:
+      title: "Konto Suspenderet"
+      subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
+      text_body_template: |
+        Du er blevet suspenderet fra forummet.
+
+        Årsag - %{reason}
+    account_silenced_forever:
+      title: "Konto gjort tavs"
+      subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
+      text_body_template: |
+        Du er blevet bragt til tavshed fra forummet.
 
         Årsag - %{reason}
     account_exists:
@@ -3288,7 +3301,9 @@ da:
   badges:
     mass_award:
       errors:
+        too_many_csv_entries: For mange poster i CSV-filen. Send venligst en CSV-fil med ikke mere end %{count} poster.
         badge_disabled: Aktiver venligst %{badge_name} emblemet først.
+        cant_grant_multiple_times: Kan ikke tildele %{badge_name} emblemet flere gange til en enkelt bruger.
     editor:
       name: Redaktør
       description: Rettet første indlæg

@@ -5,7 +5,7 @@ import PanEvents, {
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { later } from "@ember/runloop";
+import { later, next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 
@@ -16,10 +16,21 @@ export default Component.extend(PanEvents, {
   composerOpen: null,
   info: null,
   isPanning: false,
+  canRender: true,
+  _lastTopicId: null,
 
   init() {
     this._super(...arguments);
     this.set("info", EmberObject.create());
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+    if (this._lastTopicId !== this.topic.id) {
+      this._lastTopicId = this.topic.id;
+      this.set("canRender", false);
+      next(() => this.set("canRender", true));
+    }
   },
 
   _performCheckSize() {
@@ -179,6 +190,8 @@ export default Component.extend(PanEvents, {
 
   didInsertElement() {
     this._super(...arguments);
+
+    this._lastTopicId = this.topic.id;
 
     this.appEvents
       .on("topic:current-post-scrolled", this, this._topicScrolled)

@@ -5,8 +5,8 @@ require "rails_helper"
 describe Onebox::Engine::GithubFolderOnebox do
   context 'without fragments' do
     before do
-      @link = "https://github.com/discourse/discourse/tree/master/spec/fixtures"
-      @uri = "https://github.com/discourse/discourse/tree/master/spec/fixtures"
+      @link = "https://github.com/discourse/discourse/tree/main/spec/fixtures"
+      @uri = "https://github.com/discourse/discourse/tree/main/spec/fixtures"
 
       stub_request(:get, @uri).to_return(status: 200, body: onebox_response(described_class.onebox_name))
     end
@@ -16,7 +16,7 @@ describe Onebox::Engine::GithubFolderOnebox do
 
     describe "#to_html" do
       it "includes link to folder with truncated display path" do
-        expect(html).to include("<a href=\"https://github.com/discourse/discourse/tree/master/spec/fixtures\" target=\"_blank\" rel=\"noopener\">master/spec/fixtures</a>")
+        expect(html).to include('<a href="https://github.com/discourse/discourse/tree/main/spec/fixtures" target="_blank" rel="noopener">main/spec/fixtures</a>')
       end
 
       it "includes repository name" do

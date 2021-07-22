@@ -478,12 +478,6 @@ fr:
       Vous pouvez modifier votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b>.
 
       Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
-    dominating_topic: |
-      ### Laissez d'autres utilisateurs rejoindre la conversation
-
-      Ce sujet semble vraiment important pour vous, vous avez publié plus de %{percent} % des réponses dans cette discussion.
-
-      Il serait peut-être judicieux de laisser d'autres personnes partager leur point de vue. Pourriez-vous les inviter à vous rejoindre ?
     get_a_room: |
       ### Encouragez tout le monde à intervenir dans la discussion
 
@@ -1462,7 +1456,6 @@ fr:
     detailed_404: "Donne plus d'informations aux utilisateurs concernant la raison pour laquelle ils ne peuvent pas accéder à ce sujet en particulier. Note : cela est moins sécurisé car les utilisateurs sauront si une URL pointe vers un sujet valide ou non."
     enforce_second_factor: "Force les utilisateurs à activer l'authentification à deux facteurs. Sélectionner « tous » pour l'appliquer à tous les utilisateurs. Sélectionner « responsables » pour l'appliquer aux responsables uniquement."
     force_https: "Forcer votre site en HTTPS uniquement. ATTENTION : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré et fonctionne absolument partout ! Avez-vous vérifié que vos CDN, vos connexions de réseaux sociaux et tous les logos/dépendances tiers sont eux aussi compatibles avec HTTPS ?"
-    same_site_cookies: "Délivrer des cookies avec l'attribut SameSite. Cela permet d'éliminer tous les vecteurs de requêtes illégitimes par rebond (attaques de type « CSRF ») dans les navigateurs qui le prennent en charge (en mode « Lax » ou « Strict »). Attention : le mode « Strict » ne fonctionnera que sur des sites qui imposent l'authentification et qui utilisent un système d'authentification externe."
     summary_score_threshold: "Le score minimal pour qu'un message soit inclus dans le résultat de « Résumer ce sujet »"
     summary_posts_required: "Nombre minimal de messages dans un sujet avant que la fonctionnalité « Résumer ce sujet » soit activée. Les modifications de ce paramètre sont appliquées rétroactivement sur une semaine."
     summary_likes_required: "Nombre minimal de « J'aime » dans un sujet avant que la fonctionnalité « Résumer ce sujet » soit activée. Les modifications de ce paramètre sont appliquées rétroactivement sur une semaine."
@@ -1589,11 +1582,6 @@ fr:
     auth_overrides_email: "Écrase l'adresse de courriel définie localement en la remplaçant par l'adresse de courriel définie sur le site externe à chaque connexion, et interdit de la modifier localement. S'applique à tous les fournisseurs de service d'authentification. (ATTENTION : des divergences peuvent se produire en raison d'un algorithme de normalisation des adresses de courriel locales)"
     auth_overrides_username: "Écrase le nom d'utilisateur défini localement en le remplaçant par le nom d'utilisateur défini sur le site externe à chaque connexion, et interdit de le modifier localement. S'applique à tous les fournisseurs de service d'authentification. (ATTENTION : des divergences peuvent se produire en raison de contraintes de longueur ou de complexité des noms d'utilisateur)"
     auth_overrides_name: "Écrase le nom complet défini localement en le remplaçant par le nom complet défini sur le site externe à chaque connexion, et interdit de le modifier localement. S'applique à tous les fournisseurs de service d'authentification."
-    discourse_connect_overrides_avatar: "Écrase l'image de profil en la remplaçant par une image de profil définie dans les données transmises par le biais de DiscourseConnect. Si ce paramètre est activé, les utilisateurs ne seront pas autorisés à charger les images de profil sur le serveur Discourse."
-    discourse_connect_overrides_location: "Écrase le champ « Localisation » défini localement en le remplaçant par une valeur définie par un site externe par le biais de données transmises avec le protocole DiscourseConnect, et interdit sa modification locale."
-    discourse_connect_overrides_website: "Écrase le champ « Site Web » défini localement en le remplaçant par une valeur définie par un site externe par le biais de données transmises avec le protocole DiscourseConnect, et interdit sa modification locale."
-    discourse_connect_overrides_profile_background: "Écrase l'arrière-plan du profil défini localement en le remplaçant par une image définie par un site externe par le biais de données transmises avec le protocole DiscourseConnect."
-    discourse_connect_overrides_card_background: "Écrase l'arrière-plan de la carte de l'utilisateur défini localement en le remplaçant par une image définie par un site externe par le biais de données transmises avec le protocole DiscourseConnect."
     discourse_connect_not_approved_url: "Rediriger les comptes DiscourseConnect non validés vers cette URL"
     discourse_connect_allows_all_return_paths: "Ne pas restreindre le nom de domaine du champ return_paths indiqué par DiscourseConnect (si ce paramètres est désactivé, l'emplacement indiqué par « return path » doit se trouver sur le site actuel)"
     enable_local_logins: "Activer l'authentification locale avec nom d'utilisateur et mot de passe. ATTENTION : si ce paramètre est désactivé, il vous sera peut-être impossible de vous connecter si vous n'avez pas configuré au moins une méthode d'authentification alternative."
@@ -1690,7 +1678,6 @@ fr:
     allow_staff_to_upload_any_file_in_pm: "Autoriser les responsables à envoyer n'importe quel fichier dans les messages directs."
     strip_image_metadata: "Enlever les métadonnées de l'image."
     composer_media_optimization_image_enabled: "Permet l'optimisation multimédia côté client des fichiers image téléversés."
-    composer_media_optimization_image_kilobytes_optimization_threshold: "Taille minimale du fichier image pour déclencher l'optimisation côté client"
     composer_media_optimization_image_resize_dimensions_threshold: "Largeur d'image minimale pour déclencher le redimensionnement côté client"
     composer_media_optimization_image_resize_width_target: "Les images dont la largeur est supérieure à « composer_media_optimization_image_dimensions_resize_threshold » seront redimensionnées à cette largeur. Doit être >= à « composer_media_optimization_image_dimensions_resize_threshold »."
     composer_media_optimization_image_encode_quality: "Qualité d'encodage JPEG utilisée dans le processus de réencodage."
@@ -2145,7 +2132,6 @@ fr:
     missing_secret: "L'authentification a échoué du fait de l'absence d'une clé secrète. Nous vous invitons à contacter l'administrateur du site afin de résoudre ce problème."
     invite_redeem_failed: "Il n'a pas été possible d'utiliser ce lien d'invitation. Nous vous invitons à contacter l'administrateur du site."
   original_poster: "Créateur du sujet"
-  most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
   poster_description_joiner: ", "
@@ -2511,35 +2497,9 @@ fr:
   new_version_mailer:
     title: "Nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
-
-      - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour obtenir des actualités, des discussions et de l'aide concernant Discourse
   new_version_mailer_with_notes:
     title: "Nouvelle version avec notes de modifications"
     subject_template: "[%{email_prefix}] Mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
-
-      - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour obtenir des actualités, des discussions et de l'aide concernant Discourse
-
-      ### Notes de version
-
-      %{notes}
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **répréhensible** : la communauté a estimé que son contenu était offensant, injurieux, violent ou qu'il enfreignait notre [charte communautaire](%{base_path}/guidelines)."

@@ -1079,6 +1079,8 @@ class UsersController < ApplicationController
     }
 
     options[:include_staged_users] = !!ActiveModel::Type::Boolean.new.cast(params[:include_staged_users])
+    options[:last_seen_users] = !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
+    options[:limit] = params[:limit].to_i if params[:limit].present?
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 

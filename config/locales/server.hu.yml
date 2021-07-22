@@ -882,7 +882,6 @@ hu:
     enable_badges: "A jelvény rendszer engedélyezése"
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
-    discourse_connect_overrides_profile_background: "Felülírja a felhasználói profil hátterét a külső webhely-avatarral a DiscourseConnect payloadból."
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hoznának létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
@@ -933,7 +932,6 @@ hu:
     not_found: "A fiókod nem található. Kérjük, lépj kapcsolatba a webhely rendszergazdájával."
     account_not_approved: "A fiókod jóváhagyásra vár. A jóváhagyásról e-mailben küldünk majd neked értesítést."
   original_poster: "Eredeti szerző"
-  most_posts: "Legtöbb bejegyzés"
   most_recent_poster: "Legutóbbi szerzők"
   frequent_poster: "Gyakori szerzők"
   redirected_to_top_reasons:

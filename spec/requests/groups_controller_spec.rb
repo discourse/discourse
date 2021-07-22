@@ -1234,11 +1234,11 @@ describe GroupsController do
   describe "membership edits" do
     fab!(:admin) { Fabricate(:admin) }
 
-    before do
-      sign_in(admin)
-    end
-
     context '#add_members' do
+      before do
+        sign_in(admin)
+      end
+
       it "can make incremental adds" do
         user2 = Fabricate(:user)
 
@@ -1507,30 +1507,65 @@ describe GroupsController do
             expect(group_history.target_user).to eq(other_user)
           end
         end
+      end
+    end
 
-        it 'should allow a user to join the group' do
-          sign_in(other_user)
+    context '#join' do
+      let(:public_group) { Fabricate(:public_group) }
 
-          expect do
-            put "/groups/#{group.id}/members.json",
-              params: { usernames: other_user.username }
-          end.to change { group.users.count }.by(1)
+      it 'should allow a user to join a public group' do
+        sign_in(user)
 
-          expect(response.status).to eq(200)
-        end
+        expect do
+          put "/groups/#{public_group.id}/join.json"
+        end.to change { public_group.users.count }.by(1)
 
-        it 'should not allow an underprivileged user to add another user to a group' do
-          sign_in(user)
+        expect(response.status).to eq(204)
+      end
 
-          put "/groups/#{group.id}/members.json",
-            params: { usernames: other_user.username }
+      it 'should not allow a user to join a nonpublic group' do
+        sign_in(user)
 
-          expect(response).to be_forbidden
-        end
+        expect do
+          put "/groups/#{group.id}/join.json"
+        end.not_to change { group.users.count }
+
+        expect(response).to be_forbidden
+      end
+
+      it 'should not allow an anonymous user to call the join method' do
+        expect do
+          put "/groups/#{group.id}/join.json"
+        end.not_to change { group.users.count }
+
+        expect(response).to be_forbidden
+      end
+
+      it 'the join method is idempotent' do
+        sign_in(user)
+
+        expect do
+          put "/groups/#{public_group.id}/join.json"
+        end.to change { public_group.users.count }.by(1)
+        expect(response.status).to eq(204)
+
+        expect do
+          put "/groups/#{public_group.id}/join.json"
+        end.not_to change { public_group.users.count }
+        expect(response.status).to eq(204)
+
+        expect do
+          put "/groups/#{public_group.id}/join.json"
+        end.not_to change { public_group.users.count }
+        expect(response.status).to eq(204)
       end
     end
 
     context '#remove_member' do
+      before do
+        sign_in(admin)
+      end
+
       it "cannot remove members from automatic groups" do
         group.update!(automatic: true)
 
@@ -1610,17 +1645,6 @@ describe GroupsController do
             end
           end
 
-          it 'should allow a user to leave a group' do
-            sign_in(other_user)
-
-            expect do
-              delete "/groups/#{group.id}/members.json",
-              params: { username: other_user.username }
-            end.to change { group.users.count }.by(-1)
-
-            expect(response.status).to eq(200)
-          end
-
           it 'should not allow a underprivileged user to leave a group for another user' do
             sign_in(user)
 
@@ -1683,6 +1707,57 @@ describe GroupsController do
             expect(response_body["skipped_usernames"].first).to eq(user.username)
           end
         end
+      end
+    end
+
+    context '#leave' do
+      let(:group_with_public_exit) { Fabricate(:group, public_exit: true, users: [user]) }
+
+      it 'should allow a user to leave a group with public exit' do
+        sign_in(user)
+
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.to change { group_with_public_exit.users.count }.by(-1)
+
+        expect(response.status).to eq(204)
+      end
+
+      it 'should not allow a user to leave a group without public exit' do
+        sign_in(user)
+
+        expect do
+          delete "/groups/#{group.id}/leave.json"
+        end.not_to change { group.users.count }
+
+        expect(response).to be_forbidden
+      end
+
+      it 'should not allow an anonymous user to call the leave method' do
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.not_to change { group_with_public_exit.users.count }
+
+        expect(response).to be_forbidden
+      end
+
+      it 'the leave method is idempotent' do
+        sign_in(user)
+
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.to change { group_with_public_exit.users.count }.by(-1)
+        expect(response.status).to eq(204)
+
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.not_to change { group_with_public_exit.users.count }
+        expect(response.status).to eq(204)
+
+        expect do
+          delete "/groups/#{group_with_public_exit.id}/leave.json"
+        end.not_to change { group_with_public_exit.users.count }
+        expect(response.status).to eq(204)
       end
     end
   end

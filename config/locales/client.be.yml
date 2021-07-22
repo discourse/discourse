@@ -116,7 +116,6 @@ be:
     rules: "Правілы"
     mobile_view: "Выгляд для мабільнага"
     desktop_view: "Выгляд для настольнага кампутара"
-    you: "Вы"
     or: "або"
     now: "толькі што"
     read_more: "чытаць далей"
@@ -378,6 +377,8 @@ be:
           title: "Cачыць"
         muted:
           title: "ігнараваць"
+      default_notifications:
+        modal_yes: "Так"
     user_action_groups:
       "1": "упадабаныя"
       "2": "атрыманыя перавагі"
@@ -403,7 +404,6 @@ be:
       posts: "Паведамленні"
       topics: "Тэмы"
       latest: "Апошнія"
-      toggle_ordering: "паказаць"
       subcategories: "Падкатэгорыі"
       topic_stat_unit:
         week: "тыдзень"
@@ -568,7 +568,6 @@ be:
         details: "дэталі"
         log_out_all: "Выйсці паўсюль"
       last_posted: "Апошняе паведамленне"
-      last_emailed: "Апошні электронны ліст"
       last_seen: "заўважаны апошні раз"
       created: "Далучыўся (лася)"
       log_out: "Выйсці"
@@ -1085,8 +1084,6 @@ be:
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
-      archetypes:
-        save: "Захаваць налады"
       controls:
         like: "упадабаць гэты пост"
         edit_action: "Рэдагаваць"
@@ -1118,8 +1115,8 @@ be:
       bookmarks:
         created: "створаны"
         name: "Імя"
+        options: "Налады"
     category:
-      can: "можа&hellip;"
       none: "(па-за катэгорыямі)"
       all: "Усе катэгорыі"
       choose: "Абраць"
@@ -1136,7 +1133,6 @@ be:
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       name: "Назва катэгорыі"
       description: "апісанне"
-      topic: "тэма катэгорыі"
       badge_colors: "колеру значка"
       background_color: "колер фону"
       foreground_color: "колер тэксту"

@@ -104,7 +104,7 @@ ja:
         poll_title:
           label: タイトル (オプション)
         poll_options:
-          label: オプション（1 行に 1 つ）
+          label: オプション (1 行に 1 つ)
           add: オプションを追加
         automatic_close:
           label: 投票を自動的にクローズする

@@ -1064,8 +1064,15 @@ email:
   email_accent_bg_color:
     type: color
     default: "#2F70AC"
-  email_accent_fg_color: "#FFFFFF"
-  email_link_color: "#006699"
+    validator: "CssColorValidator"
+  email_accent_fg_color:
+    type: color
+    default: "#FFFFFF"
+    validator: "CssColorValidator"
+  email_link_color:
+    type: color
+    default: "#006699"
+    validator: "CssColorValidator"
   show_topic_featured_link_in_digest: false
   email_custom_headers: "Auto-Submitted: auto-generated"
   email_subject: "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
@@ -1413,9 +1420,9 @@ files:
     default: 100000
     hidden: true
   composer_media_optimization_image_enabled:
-    default: false
+    default: true
     client: true
-  composer_media_optimization_image_kilobytes_optimization_threshold:
+  composer_media_optimization_image_bytes_optimization_threshold:
     default: 524288
     client: true
   composer_media_optimization_image_resize_dimensions_threshold:
@@ -1640,7 +1647,7 @@ security:
   content_security_policy_collect_reports:
     default: false
   content_security_policy_frame_ancestors:
-    default: false
+    default: true
   content_security_policy_script_src:
     type: simple_list
     default: ""
@@ -2308,6 +2315,8 @@ uncategorized:
 
   create_revision_on_bulk_topic_moves:
     default: true
+
+  allow_changing_staged_user_tracking: false
 
 user_preferences:
   default_email_digest_frequency:

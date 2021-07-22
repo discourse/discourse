@@ -50,10 +50,13 @@ class InvitesController < ApplicationController
       email = Email.obfuscate(invite.email)
 
       # Show email if the user already authenticated their email
+      different_external_email = false
       if session[:authentication]
         auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
         if invite.email == auth_result.email
           email = invite.email
+        else
+          different_external_email = true
         end
       end
 
@@ -72,6 +75,10 @@ class InvitesController < ApplicationController
         is_invite_link: invite.is_invite_link?,
         email_verified_by_link: email_verified_by_link
       }
+
+      if different_external_email
+        info[:different_external_email] = true
+      end
 
       if staged_user = User.where(staged: true).with_email(invite.email).first
         info[:username] = staged_user.username

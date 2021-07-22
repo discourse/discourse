@@ -102,6 +102,7 @@ he:
       maximum_staged_user_per_email_reached: "הגעת למספר המרבי של משתמשים מבוימים לדוא״ל."
       no_subject: "(אין נושא)"
       no_body: "(אין גוף)"
+      missing_attachment: "(הקובץ המצורף %{filename} חסר)"
       continuing_old_discussion:
         one: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיום (%{count})."
         two: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיומיים (%{count})."
@@ -529,12 +530,6 @@ he:
       ניתן לערוך תגובות קודמות שלך כדי להוסיף ציטוט על ידי סימון טקסט ובחירה בכפתור שנגלה <b>ציטוט תגובה</b>.
 
       יותר קל לכולם לקרוא נושאים שיש בהם פחות תגובות עמוקות מאשר הרבה תגובות קטנות.
-    dominating_topic: |
-      ### לאפשר לזולת לקחת חלק בדיון
-
-      נושא זה בהחלט חשוב בעיניך &ndash; פרסמת בו למעלה מ־%{percent}% מהתגובות.
-
-      הדיון הזה עשוי עוד להשתפר אם יצטרפו אליו אנשים עם גישות שונות בנוסף. למה שלא להזמין אותם?
     get_a_room: |
       ### מומלץ לעודד את כולם להשתתף בדיון
 
@@ -1596,6 +1591,7 @@ he:
     gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
     enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "לאפשר למפקחים לנהל קטגוריות וקבוצות"
+    moderators_change_post_ownership: "לאפשר למפקחים לשנות בעלות על פוסטים"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     use_admin_ip_allowlist: "מנהלים יכולים להיכנס רק אם הכתובת שלהם מופיעה ברשימת כתובות ה־IP המפוקחות (ניהול > יומנים > כתובות IP מפוקחות)."
     blocked_ip_blocks: "רשימת מקטעי כתובות IP פרטיות ש־Discourse לא אמור לסרוק"
@@ -1671,11 +1667,6 @@ he:
     auth_overrides_email: "דריסת כתובת הדוא״ל המקומית בכתובת הדוא״ל מהאתר המרוחק עם כל כניסה למערכת ומניעת שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב שינויים באורך/דרישות שם המשתמש)"
     auth_overrides_username: "דריסת שם המשתמש המקומי בשם המשתמש מהאתר המרוחק עם כל כניסה למערכת ומניעת שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב שינויים באורך/דרישות שם המשתמש)"
     auth_overrides_name: "דריסת השם המלא המקומי בשם מלא חיצוני עם כל כניסה ולמנוע שינויים מקומיים. חל על כל ספקי האימות."
-    discourse_connect_overrides_avatar: "דריסת התמונה הייצוגית בתמונה ייצוגית חיצונית ממטען ה־DiscourseConnect. אם אפשרות זו פעילה, למשתמשים לא תהיה אפשרות להעלות תמונות ייצוגיות ל־Discourse."
-    discourse_connect_overrides_location: "דריסת מיקום המשתמש במיקום חיצוני ממטען ה־DiscourseConnect ולמנוע שינויים מקומיים."
-    discourse_connect_overrides_website: "דריסת אתר המשתמש במיקום חיצוני ממטען ה־DiscourseConnect ולמנוע שינויים מקומיים."
-    discourse_connect_overrides_profile_background: "דריסת רקע פרופיל המשתמש בתמונה ייצוגית חיצונית ממטען ה־DiscourseConnect."
-    discourse_connect_overrides_card_background: "דריסת רקע כרטיס המשתמש בתמונה ייצוגית חיצונית ממטען ה־DiscourseConnect."
     discourse_connect_not_approved_url: "הפניית חשבונות DiscourseConnect ללא אישור לכתובת הזאת"
     discourse_connect_allows_all_return_paths: "לא להגביל את שמות התחום של נתיבי החזרה (return_paths) שמסופקים על ידי DiscourseConnect (כבררת מחדל, נתיבי החזרה חייבים להיות באתר הנוכחי)"
     enable_local_logins: "הפעלת חשבונות כניסה עם שם משתמש וססמה. אזהרה: השבתה עשויה למנוע את כניסתך אלמלא הגדרת לפחות שיטת כניסה חלופית אחת נוספת."
@@ -1701,6 +1692,7 @@ he:
     discord_secret: "מפתח סודי של Discord"
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
+    allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
     maximum_backups: "המספר המקסימלי של גיבויים לשמירה על הכונן. גיבויים ישנים יותר ימחקו אוטומטית"
     automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
     backup_frequency: "מספר הימים בין גיבויים."
@@ -1772,7 +1764,7 @@ he:
     allow_staff_to_upload_any_file_in_pm: "אפשרו לחברי צוות להעלות כל קובץ בהודעה פרטית."
     strip_image_metadata: "הסרת מטה-דאטה מהתמונה"
     composer_media_optimization_image_enabled: "מאפשר מיטוב של מדיה בצד הלקוח של קובצי תמונה שהועלו."
-    composer_media_optimization_image_kilobytes_optimization_threshold: "גודל קובץ תמונה מזערי להפעלת מיטוב בצד הלקוח"
+    composer_media_optimization_image_bytes_optimization_threshold: "גודל קובץ תמונה מזערי להפעלת מיטוב בצד הלקוח"
     composer_media_optimization_image_resize_dimensions_threshold: "רוחב תמונה מזערי להפעלת שינוי גודל בצד הלקוח"
     composer_media_optimization_image_resize_width_target: "תמונות שרוחבן עולה על `composer_media_optimization_image_dimensions_resize_threshold`, גודלן ישתנה לרוחב זה. הערך חייב להיות >= לעומת `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "איכות קידוד JPEG המשמשת בתהליך הקידוד מחדש."
@@ -2226,7 +2218,6 @@ he:
     missing_secret: "האימות נכשל כי חסר סוד. יש ליצור קשר עם ההנהלה כדי לתקן את התקלה הזאת."
     invite_redeem_failed: "ניצול ההזמנה נכשל. נא ליצור קשר עם הנהלת האתר."
   original_poster: "מפרסמים מקוריים"
-  most_posts: "מירב הפוסטים"
   most_recent_poster: "המפרסמים האחרונים"
   frequent_poster: "מפרסמים מתמידים"
   poster_description_joiner: ", "
@@ -2367,6 +2358,7 @@ he:
     reset_not_allowed_from_ip_address: "אי אפשר לבקש איפוס ססמה מכתובת ה־IP הזאת."
     suspended: "אינך יכול להתחבר עד %{date}."
     suspended_with_reason: "חשבון הושעה עד %{date}: %{reason}"
+    suspended_with_reason_forever: "חשבון מושעה: %{reason}"
     errors: "%{errors}"
     not_available: "לא זמין. נסו %{suggestion}?"
     something_already_taken: "משהו השתבש, אולי שם המשתמש או כתובת הדואר האלקטרוני כבר בשימוש. נסו את קישור שכחתי סיסמה."
@@ -2621,35 +2613,9 @@ he:
   new_version_mailer:
     title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{email_prefix}] גרסת Discourse חדשה, עדכון זמין."
-    text_body_template: |
-      היאח, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
-
-      הגרסה שלך: %{installed_version}
-      הגרסה החדשה: **%{new_version}**
-
-      - אפשר לשדרג בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/upgrade)**
-
-      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) יציגו בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
   new_version_mailer_with_notes:
     title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{email_prefix}] עדכון זמין"
-    text_body_template: |
-      היאח, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
-
-      הגרסה שלך: %{installed_version}
-      הגרסה החדשה: **%{new_version}**
-
-      - אפשר לשדרג בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/upgrade)**
-
-      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) תציג בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
-
-      ### הערות מהדורה
-
-      %{notes}
   flag_reasons:
     off_topic: "הפוסט שלכם סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון. "
     inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](%{base_path}/guidelines)"
@@ -3233,6 +3199,7 @@ he:
   subject_re: "תגובה: "
   subject_pm: "[PM] "
   email_from: "%{user_name} דרך %{site_name}"
+  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "תגובות קודמות"
     reached_limit:
@@ -3441,6 +3408,13 @@ he:
         הושעית מהפורום עד %{suspended_till}.
 
         סיבה - %{reason}
+    account_suspended_forever:
+      title: "חשבון מושעה"
+      subject_template: "[%{email_prefix}] חשבונך הושעה"
+      text_body_template: |
+        הושעית מהפורום.
+
+        הסיבה - %{reason}
     account_silenced:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
@@ -3448,6 +3422,13 @@ he:
         הושתקת בפורום עד %{silenced_till}.
 
         סיבה - %{reason}
+    account_silenced_forever:
+      title: "חשבון מושתק"
+      subject_template: "[%{email_prefix}] חשבונך הושתק"
+      text_body_template: |
+        הושתקת בפורום.
+
+        הסיבה - %{reason}
     account_exists:
       title: "החשבון כבר קיים"
       subject_template: "[%{email_prefix}] החשבון כבר קיים"
@@ -4045,7 +4026,9 @@ he:
     mass_award:
       errors:
         invalid_csv: נתקלנו בשגיאה בשורה מס׳ %{line_number}. נא לוודא שב־CSV יש כתובת דוא״ל אחת בכל שורה.
+        too_many_csv_entries: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות.
         badge_disabled: נא לפעיל את העיטור %{badge_name} תחילה.
+        cant_grant_multiple_times: לא ניתן להעניק את %{badge_name} מספר פעמים לאותו המשתמש.
     editor:
       name: עורכים
       description: עריכת פוסט ראשונה

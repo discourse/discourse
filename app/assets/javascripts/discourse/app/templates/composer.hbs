@@ -167,7 +167,7 @@
               {{/if}}
             {{/if}}
 
-            {{#if isUploading}}
+            {{#if (or isUploading isProcessingUpload)}}
               <div id="file-uploading">
                 {{#if isProcessingUpload}}
                   {{loading-spinner size="small"}}<span>{{i18n "upload_selector.processing"}}</span>

@@ -221,7 +221,6 @@ de:
     conduct: "Verhaltenskodex"
     mobile_view: "Mobile Ansicht"
     desktop_view: "Desktop-Ansicht"
-    you: "Du"
     or: "oder"
     now: "gerade eben"
     read_more: "weiterlesen"
@@ -306,7 +305,6 @@ de:
       remove: "Entfernen"
       remove_confirmation: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
       new_topic: "Neuer Entwurf für Thema"
-      new_private_message: "Neuer Entwurf für private Nachricht"
       topic_reply: "Entwurf für Antwort"
       abandon:
         confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
@@ -380,7 +378,6 @@ de:
         type_bonus:
           name: "Bonustyp"
           title: "Bestimmte überprüfbare Typen können vom Team mit einem Bonus ausgestattet werden, damit sie höher priorisiert sind."
-      stale_help: "Dieses überprüfbare Element wurde von einer anderen Person bearbeitet."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
         required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
@@ -753,8 +750,6 @@ de:
         public: "Öffentlich"
         private: "Privat"
         public_groups: "Öffentliche Gruppen"
-        automatic_group: Automatische Gruppe
-        close_group: Gruppe schließen
         my_groups: "Meine Gruppen"
         group_type: "Art der Gruppe"
         is_group_user: "Mitglied"
@@ -860,7 +855,6 @@ de:
       posts: "Beiträge"
       topics: "Themen"
       latest: "Aktuelle"
-      toggle_ordering: "Reihenfolge ändern"
       subcategories: "Unterkategorien"
       muted: "Stummgeschaltete Kategorien"
       topic_sentence:
@@ -1313,7 +1307,6 @@ de:
         browser_active: '%{browser} | <span class="active">gerade aktiv</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Letzter Beitrag"
-      last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
       created: "Beigetreten"
       log_out: "Abmelden"
@@ -1956,7 +1949,6 @@ de:
           confirm: Du hast einen neuen Themen-Entwurf gespeichert. Wenn du ein verknüpftes Thema erstellst, wird er überschrieben.
         reply_as_new_group_message:
           label: Als neue Gruppen-Nachricht antworten
-          desc: Erstelle eine neue private Nachricht mit denselben Empfängern
         reply_as_private_message:
           label: Neue Nachricht
           desc: Erstelle eine neue persönliche Nachricht
@@ -2160,7 +2152,7 @@ de:
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
     current_user: "zu deiner Benutzerseite gehen"
-    view_all: "Alle anzeigen %{tab}"
+    view_all: "Alle %{tab} anzeigen"
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
@@ -2251,13 +2243,6 @@ de:
       defer:
         help: "Als ungelesen markieren"
         title: "Aufschieben"
-      feature_on_profile:
-        help: "Füge eine Verknüpfung zu diesem Thema zu deiner Benutzerkarte und deinem Profil hinzu"
-        title: "Auf Profil hervorheben"
-      remove_from_profile:
-        warning: "Dein Profil hat bereits ein hervorgehobenes Thema. Wenn du fortfährst, wird dieses das bestehende Thema ersetzen."
-        help: "Entferne den Link zu diesem Thema aus deinem Benutzerprofil"
-        title: "Aus Profil entfernen"
       list: "Themen"
       new: "neues Thema"
       unread: "ungelesen"
@@ -2483,6 +2468,7 @@ de:
         pin: "Thema anheften"
         unpin: "Thema loslösen"
         pin_globally: "Thema global anheften"
+        make_banner: "Ankündigungsbanner erstellen"
         remove_banner: "Thema des Ankündigungsbanners entfernen"
       reply:
         title: "Antworten"
@@ -2736,8 +2722,6 @@ de:
       whisper: "dies ist ein privater geflüsterter Beitrag für Moderatoren"
       wiki:
         about: "dieser Beitrag ist ein Wiki"
-      archetypes:
-        save: "Speicheroptionen"
       few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“ übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
@@ -2879,7 +2863,6 @@ de:
         post_number: "%{username}, Beitrag #%{post_number}"
         show_all: "Alle anzeigen"
     category:
-      can: "kann &hellip; "
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
       choose: "Kategorie &hellip;"
@@ -2913,7 +2896,6 @@ de:
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       name: "Name der Kategorie"
       description: "Beschreibung"
-      topic: "Thema der Kategorie"
       logo: "Logo für Kategorie"
       background_image: "Hintergrundbild für Kategorie"
       badge_colors: "Farben des Abzeichens"
@@ -3015,8 +2997,8 @@ de:
       subcategory_list_styles:
         rows: "Zeilen"
         rows_with_featured_topics: "Zeilen mit hervorgehobenen Themen"
-        boxes: "Spalten"
-        boxes_with_featured_topics: "Spalten mit hervorgehobenen Themen"
+        boxes: "Boxen"
+        boxes_with_featured_topics: "Boxen mit hervorgehobenen Themen"
       settings_sections:
         general: "Allgemein"
         moderation: "Moderation"
@@ -4920,7 +4902,6 @@ de:
           perform: "Verleihe Abzeichen an Benutzer"
           upload_csv: Lade eine CSV-Datei mit entweder den E-Mail-Adressen oder den Benutzernamen hoch
           aborted: Bitte lade eine CSV-Datei hoch, die entweder E-Mail-Adressen oder Benutzernamen enthält
-          success: Deine CSV-Datei wurde empfangen und die Benutzer werden ihr Abzeichen in Kürze erhalten.
           replace_owners: Entferne das Abzeichen von vorherigen Eigentümern
       emoji:
         title: "Emoji"

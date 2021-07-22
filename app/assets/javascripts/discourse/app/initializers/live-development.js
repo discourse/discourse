@@ -60,12 +60,22 @@ export default {
             // Refresh if necessary
             document.location.reload(true);
           } else if (me.new_href && me.target) {
-            const link_target = me.theme_id
-              ? `[data-target="${me.target}"][data-theme-id="${me.theme_id}"]`
-              : `[data-target="${me.target}"]`;
-            document.querySelectorAll(`link${link_target}`).forEach((link) => {
-              this.refreshCSS(link, me.new_href);
-            });
+            const link_target = !!me.theme_id
+              ? `[data-target='${me.target}'][data-theme-id='${me.theme_id}']`
+              : `[data-target='${me.target}']`;
+
+            const links = document.querySelectorAll(`link${link_target}`);
+            if (links.length > 0) {
+              const lastLink = links[links.length - 1];
+              // this check is useful when message-bus has multiple file updates
+              // it avoids the browser doing a lot of work for nothing
+              // should the filenames be unchanged
+              if (
+                lastLink.href.split("/").pop() !== me.new_href.split("/").pop()
+              ) {
+                this.refreshCSS(lastLink, me.new_href);
+              }
+            }
           }
         });
       },
@@ -74,21 +84,14 @@ export default {
   },
 
   refreshCSS(node, newHref) {
-    if (node.dataset.reloading) {
-      clearTimeout(node.dataset.timeout);
-    }
-
-    node.dataset.reloading = true;
-
     let reloaded = node.cloneNode(true);
     reloaded.href = newHref;
     node.insertAdjacentElement("afterend", reloaded);
 
-    let timeout = setTimeout(() => {
-      node.parentNode.removeChild(node);
-      reloaded.dataset.reloading = false;
-    }, 2000);
-
-    node.dataset.timeout = timeout;
+    setTimeout(() => {
+      if (node && node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+    }, 500);
   },
 };

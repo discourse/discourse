@@ -30,7 +30,7 @@ export default createWidget("embedded-post", {
         h("div.row", [
           this.attach("post-avatar", attrs),
           h("div.topic-body", [
-            h("div.topic-meta-data", [
+            h("div.topic-meta-data.embedded-reply", [
               this.attach("poster-name", attrs),
               this.attach("post-link-arrow", {
                 above: state.above,

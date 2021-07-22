@@ -197,7 +197,7 @@ acceptance("Review", function (needs) {
     publishToMessageBus("/reviewable_counts", {
       review_count: 1,
       updates: {
-        1234: { status: 1 },
+        1234: { last_performing_username: "foo", status: 1 },
       },
     });
 
@@ -206,5 +206,11 @@ acceptance("Review", function (needs) {
     assert.ok(reviewable.className.includes("reviewable-stale"));
     assert.equal(count("[data-reviewable-id=1234] .status .approved"), 1);
     assert.equal(count(".stale-help"), 1);
+    assert.ok(query(".stale-help").innerText.includes("foo"));
+
+    await visit("/");
+    await visit("/review"); // reload review
+
+    assert.equal(count(".stale-help"), 0);
   });
 });

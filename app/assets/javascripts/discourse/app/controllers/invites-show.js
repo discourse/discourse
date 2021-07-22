@@ -31,6 +31,7 @@ export default Controller.extend(
     accountEmail: alias("email"),
     hiddenEmail: alias("model.hidden_email"),
     emailVerifiedByLink: alias("model.email_verified_by_link"),
+    differentExternalEmail: alias("model.different_external_email"),
     accountUsername: alias("model.username"),
     passwordRequired: notEmpty("accountPassword"),
     successMessage: null,
@@ -130,7 +131,8 @@ export default Controller.extend(
       "authOptions.email",
       "authOptions.email_valid",
       "hiddenEmail",
-      "emailVerifiedByLink"
+      "emailVerifiedByLink",
+      "differentExternalEmail"
     )
     emailValidation(
       email,
@@ -138,9 +140,10 @@ export default Controller.extend(
       externalAuthEmail,
       externalAuthEmailValid,
       hiddenEmail,
-      emailVerifiedByLink
+      emailVerifiedByLink,
+      differentExternalEmail
     ) {
-      if (hiddenEmail) {
+      if (hiddenEmail && !differentExternalEmail) {
         return EmberObject.create({
           ok: true,
           reason: I18n.t("user.email.ok"),

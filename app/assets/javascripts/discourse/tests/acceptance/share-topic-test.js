@@ -30,7 +30,7 @@ acceptance("Share and Invite modal", function (needs) {
       "it shows the topic sharing url"
     );
 
-    assert.ok(count("button[class^='share-']") > 1, "it shows social sources");
+    assert.ok(count("button[class*='share-']") > 1, "it shows social sources");
 
     assert.ok(
       exists(".btn[aria-label='Notify']"),

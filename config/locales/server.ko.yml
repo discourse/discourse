@@ -456,12 +456,6 @@ ko:
       글을 드래그해서 선택한 다음에, 표시되는 '답글 인용하기'버튼을 눌러서 답글을 추가하는 식으로 쓰신 답글을 편집할 수 있습니다.
 
       다른 사람도 깨알같이 흩어진 답글을 읽는 것 보다는, 깊이 있게 작성된 몇개의 답글을 읽는 편이 토픽보기에 더 편하답니다.
-    dominating_topic: |
-      ### 다른 사람들이 대화에 참여하게 하십시오
-
-      이 글은 사용자님에게 중요합니다 &ndash; 사용자님은 여기에 %{percent}% 이상의 댓글을 게시했습니다.
-
-      다른 사람들에게도 그들의 관점을 공유 할 수있는 공간을 제공하면 더 좋을 수 있습니다. 그들을 초대 할 수 있습니까?
     get_a_room: |
       ### 모든 사람이 대화에 참여하도록 장려
 
@@ -1417,7 +1411,6 @@ ko:
     detailed_404: "특정 주제에 액세스 할 수없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고 : URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
     enforce_second_factor: "사용자가 2단계 인증을 사용하도록합니다. 모든 사용자에게 적용하려면 '모두'를 선택하십시오. 관리자에게만 적용하려면 '관리자'를 선택하십시오."
     force_https: "사이트가 HTTPS를 사용하도록 강제합니다. 경고: HTTPS가 완벽히 적용되어 있는 것을 확인하기 전까지는 이 옵션을 켜지마세요. CDN, 소셜 로그인, 외부 링크로 가져오는 자료, 로고들이 HTTPS호환성이 있는지 확인하셨나요?"
-    same_site_cookies: "동일한 사이트 쿠키를 사용하면 지원되는 브라우저 (Lax 또는 Strict)에서 모든 벡터 교차 사이트 요청 위조를 제거합니다. 경고 : Strict는 로그인을 강제하고 외부 인증 방법을 사용하는 사이트에서만 작동합니다."
     summary_score_threshold: "요약본에 포함되기 위한 글의 최소 점수 값"
     summary_posts_required: "&#39;이 주제 요약&#39;이 활성화되기 전에 주제의 최소 게시물. 이 설정에 대한 변경 사항은 일주일 이내에 소급 적용됩니다."
     summary_likes_required: "&#39;이 주제 요약&#39;이 활성화되기 전에 주제에서 최소 좋아요를 찾습니다. 이 설정에 대한 변경 사항은 일주일 이내에 소급 적용됩니다."
@@ -1543,11 +1536,6 @@ ko:
     discourse_connect_overrides_groups: "모든 수동 그룹 구성원을 그룹 속성에 지정된 그룹과 동기화합니다. (경고: 그룹을 지정하지 않으면 모든 수동 그룹 구성원이 지워짐)"
     auth_overrides_username: "로그인 할 때마다 외부 사이트의 사용자 이름으로  로컬 사용자 이름을 재정의하고 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다. (경고: 사용자 이름 길이/요구 사항의 차이로 인해 불일치가 발생할 수 있음)"
     auth_overrides_name: "로그인 할 때마다 사용자의 로컬 전체 이름을 무시하고 외부 사이트 전체 이름을 사용해 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다."
-    discourse_connect_overrides_avatar: "외부 DiscourseConnect 페이로드의 아바타로 사용자 아바타를 재정의합니다. 활성화되면 사용자는 Discourse에서 아바타를 업로드 할 수 없습니다."
-    discourse_connect_overrides_location: "DiscourseConnect 페이로드의 외부 위치로 사용자 위치를 재정의하고 로컬 변경을 방지합니다."
-    discourse_connect_overrides_website: "DiscourseConnect 페이로드의 외부 위치로 사용자 웹 사이트를 재정의하고 로컬 변경을 방지합니다."
-    discourse_connect_overrides_profile_background: "사용자 프로필 배경을 DiscourseConnect 페이로드의 외부 사이트 아바타로 재정의합니다."
-    discourse_connect_overrides_card_background: "DiscourseConnect 페이로드의 외부 사이트 아바타로 사용자 카드 배경을 재설정 합니다."
     discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
     discourse_connect_allows_all_return_paths: "DiscourseConnect에서 제공하는 return_paths에 대한 도메인을 제한하지 마십시오 (기본적으로 반환 경로는 현재 사이트에 있어야 함)."
     enable_local_logins: "로컬 사용자 아이디 및 암호 로그인 기반 계정을 활성화합니다. 경고: 비활성화 된 경우 이전에 하나 이상의 대체 로그인 방법을 구성하지 않은 경우 로그인하지 못할 수 있습니다."
@@ -1644,7 +1632,7 @@ ko:
     allow_staff_to_upload_any_file_in_pm: "관리자는 개인메시지에 파일 첨부를 허용합니다."
     strip_image_metadata: "스트립 이미지 메타 데이터."
     composer_media_optimization_image_enabled: "업로드된 이미지 파일의 클라이언트측 미디어 최적화를 활성화합니다."
-    composer_media_optimization_image_kilobytes_optimization_threshold: "클라이언트 측 최적화를 트리거하기 위한 최소 이미지 파일 크기"
+    composer_media_optimization_image_bytes_optimization_threshold: "클라이언트 측 최적화를 트리거하기 위한 최소 이미지 파일 크기"
     composer_media_optimization_image_resize_dimensions_threshold: "클라이언트측 크기 조정을 트리거하는 최소 이미지 너비"
     composer_media_optimization_image_resize_width_target: "너비가`composer_media_optimization_image_dimensions_resize_threshold`보다 큰 이미지는 이 너비로 크기가 조정됩니다. `composer_media_optimization_image_dimensions_resize_threshold`보다 크거나 같아야합니다."
     composer_media_optimization_image_encode_quality: "재 인코딩 프로세스에 사용되는 JPEG 인코딩 품질입니다."
@@ -2096,7 +2084,6 @@ ko:
     missing_secret: "시크릿이 없어 인증에 실패했습니다. 이 문제를 해결하려면 사이트 관리자에게 문의하십시오."
     invite_redeem_failed: "초대 사용에 실패했습니다. 사이트 관리자에게 문의하십시오."
   original_poster: "원본 게시자"
-  most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
   frequent_poster: "빈번한 게시자"
   poster_description_joiner: ", "
@@ -2430,21 +2417,9 @@ ko:
   new_version_mailer:
     title: "새 버전 메일러"
     subject_template: "[%{email_prefix}] 새로운 담화 버전, 업데이트 가능"
-    text_body_template: |
-      [Discourse](https://www.discourse.org)의 새 버전이 출시되었습니다!
-
-      현재 버전: %{installed_version}
-      새 버전: **%{new_version}**
-
-      - 간편한 ** [원 클릭 브라우저 업그레이드](%{base_url}/admin/upgrade) **
-
-      - [출시 노트](https://meta.discourse.org/tag/release-notes) 또는 [raw GitHub 변경 로그](https://github.com/discourse/discourse/commits/master) 보기
-
-      - [meta.discourse.org](https://meta.discourse.org) 뉴스, 토론 및 Discourse 지원 살펴보기
   new_version_mailer_with_notes:
     title: "노트가있는 새로운 버전 메일러"
     subject_template: "[%{email_prefix}] 업데이트 가능"
-    text_body_template: "[Discourse](https://www.discourse.org)의 새 버전이 출시되었습니다!\n\n버전 : %{installed_version}\n새 버전 : **%{new_version}**\n\n- 간편한 **[원 클릭 브라우저 업그레이드](%{base_url}/admin/upgrade)**\n\n- [출시 노트]( https://meta.discourse.org/tag/release-notes) 또는 [raw GitHub 변경 로그](https://github.com/discourse/discourse/commits/master) 보기\n\n- Discourse에 대한 뉴스, 토론 및 지원을 위한 [meta.discourse.org](https://meta.discourse.org) 방문 \n\n### 릴리스 노트\n\n%{notes}\n"
   flag_reasons:
     off_topic: "내가 올린 글타래가 **주제 벗어난 이야기**으로 신고 되었습니다. 사람들이 이 글타래의 제목이랑 글 내용이 안 맞는다고 느끼나 봅니다. "
     inappropriate: "내가 올린 글타래가 **부적절**로 신고 되었습니다. 사람들이 이 글타래가 [가이드라인](%{base_path}/guidelines)에서 벗어나 공격적, 모욕적, 폭력적이라고 느낍니다."
@@ -3245,6 +3220,9 @@ ko:
         사용자님은 %{suspended_till}까지 사이트의 사용이 중지되었습니다.
 
         이유 - %{reason}
+    account_suspended_forever:
+      title: "계정 일시 중지"
+      subject_template: "[%{email_prefix}] 귀하의 계정이 정지되었습니다"
     account_silenced:
       title: "계정이 쓰기 금지됨"
       subject_template: "[%{email_prefix}] 사용자님의 계정이 쓰기 금지 되었습니다"
@@ -3252,6 +3230,9 @@ ko:
         사용자님은 %{silenced_till}까지 사이트내 글쓰기가 일시적으로 차단되었습니다.
 
         이유 - %{reason}
+    account_silenced_forever:
+      title: "계정이 쓰기 금지됨"
+      subject_template: "[%{email_prefix}] 사용자님의 계정이 쓰기 금지 되었습니다"
     account_exists:
       title: "계정이 이미 존재합니다"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"

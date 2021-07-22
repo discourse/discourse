@@ -984,7 +984,6 @@ sw:
     no_email: "Hakuna barua pepe iliyoandikwa. Tafadhali wasiliana na msimamizi wa tovuti."
     email_error: "Akaunti haijaweza kusajiliwa na barua pepe<b>%{email}</b>Tafadhali wasiliana na msimamizi wa tovuti."
   original_poster: "Muandishi wa Kwanza"
-  most_posts: "Machapisho Mengi"
   most_recent_poster: "Mwandishi wa hivi karibuni"
   frequent_poster: "Mwandishi wa mara kwa mara"
   redirected_to_top_reasons:
@@ -1613,7 +1612,13 @@ sw:
     account_suspended:
       title: "Akaunti Imesimamishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
+    account_suspended_forever:
+      title: "Akaunti Imesimamishwa"
+      subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
     account_silenced:
+      title: "Akaunti imenyamazishwa"
+      subject_template: "[%{email_prefix}] Akaunti yako imenyamazishwa"
+    account_silenced_forever:
       title: "Akaunti imenyamazishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imenyamazishwa"
     account_exists:

@@ -41,6 +41,6 @@ ar:
     topic_must_be_open_to_vote: "يجب أن يكون الموضوع مفتوحًا للتصويت."
     poll_must_be_open_to_vote: "يجب أن يكون الاستطلاع مفتوحًا للتصويت."
     topic_must_be_open_to_toggle_status: "يجب أن يكون الموضوع مفتوحًا لتبديل الحالة."
-    only_staff_or_op_can_toggle_status: "يمكن لعضو طاقم العمل أو الناشر الأصلي فقط تبديل حالة الاستطلاع."
+    only_staff_or_op_can_toggle_status: "يمكن لعضو فريق العمل أو الناشر الأصلي فقط تبديل حالة الاستطلاع."
     email:
       link_to_poll: "انقر لعرض الاستطلاع."

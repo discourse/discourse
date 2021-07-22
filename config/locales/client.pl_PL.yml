@@ -269,7 +269,6 @@ pl_PL:
     conduct: "Regulamin"
     mobile_view: "Widok mobilny"
     desktop_view: "Wersja komputerowa"
-    you: "Ty"
     or: "lub"
     now: "teraz"
     read_more: "więcej"
@@ -358,7 +357,7 @@ pl_PL:
       remove: "Usuń"
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
       new_topic: "Nowy szkic tematu"
-      new_private_message: "Nowy szkic wiadomości prywatnej"
+      new_private_message: "Nowy szkic wiadomości osobistej"
       topic_reply: "Szkic odpowiedzi"
       abandon:
         confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
@@ -438,6 +437,7 @@ pl_PL:
         type_bonus:
           name: "bonus typu"
           title: "Niektóre rodzaje przeglądalne mogą otrzymać premię od pracowników, aby nadać im wyższy priorytet."
+      stale_help: "Wiadomość została już zweryfikowana przez <b>%{username}</b>."
       claim_help:
         optional: "Możesz zgłosić roszczenie do tego elementu, aby uniemożliwić innym jego sprawdzenie."
         required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
@@ -675,6 +675,7 @@ pl_PL:
         many: "%{count} użytkowników"
         other: "%{count} użytkowników"
       edit_columns:
+        title: "Edytuj kolumny katalogu"
         save: "Zapisz"
         reset_to_default: "Przywróć ustawienia domyślne"
       group:
@@ -736,6 +737,9 @@ pl_PL:
           imap_instructions: 'Po włączeniu protokołu IMAP dla grupy wiadomości e-mail są synchronizowane między skrzynką odbiorczą grupy a dostarczonym serwerem IMAP i skrzynką pocztową. Protokół SMTP musi być włączony przy użyciu prawidłowych i przetestowanych poświadczeń, zanim będzie można włączyć protokół IMAP. Nazwa użytkownika poczty e-mail i hasło używane do SMTP będą używane do IMAP. Aby uzyskać więcej informacji, zobacz ogłoszenie o funkcji <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588"></a>.'
           imap_alpha_warning: "Ostrzeżenie: To jest funkcja na etapie alfa. Tylko Gmail jest oficjalnie wspierany. Używaj na własne ryzyko!"
           imap_settings_valid: "Ustawienia IMAP są prawidłowe."
+          smtp_disable_confirm: "Jeśli wyłączysz SMTP, wszystkie ustawienia SMTP i IMAP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Jesteś pewien, że chcesz kontynuować?"
+          imap_disable_confirm: "Jeśli wyłączysz IMAP, wszystkie ustawienia IMAP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Jesteś pewien, że chcesz kontynuować?"
+          imap_mailbox_not_selected: "Musisz wybrać skrzynkę pocztową dla tej konfiguracji IMAP, w przeciwnym razie żadna skrzynka pocztowa nie zostanie zsynchronizowana!"
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
             gmail: "GMail"
@@ -834,8 +838,6 @@ pl_PL:
         public: "Publiczna"
         private: "Prywatna"
         public_groups: "Publiczne grupy"
-        automatic_group: Grupa automatyczna
-        close_group: Zamknij grupę
         my_groups: "Moje grupy"
         group_type: "Rodzaj grupy"
         is_group_user: "Członek"
@@ -914,6 +916,11 @@ pl_PL:
       flair_type:
         icon: "Wybierz ikonę"
         image: "Prześlij obraz"
+      default_notifications:
+        modal_title: "Domyślne powiadomienia użytkownika"
+        modal_description: "Czy chciałbyś wprowadzić tę zmianę wstecz? Zmieni to ustawienia %{count} istniejących użytkowników."
+        modal_yes: "Tak"
+        modal_no: "Nie, wprowadź zmianę odtąd, na przyszłość"
     user_action_groups:
       "1": "Polubienia"
       "2": "Otrzymane polubienia"
@@ -943,7 +950,6 @@ pl_PL:
       posts: "Posty"
       topics: "Tematy"
       latest: "Aktualne"
-      toggle_ordering: "przełącz kolejność kontroli"
       subcategories: "Podkategorie"
       muted: "Wyciszone kategorie"
       topic_sentence:
@@ -1079,8 +1085,14 @@ pl_PL:
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       no_messages_title: "Nie masz żadnych wiadomości"
+      no_messages_body: >
+        Potrzebujesz bezpośredniej, osobistej rozmowy z kimś, poza normalnym tokiem rozmowy? Wyślij wiadomość, wybierając awatar i używając przycisku %{icon} wiadomość.<br><br> Jeśli potrzebujesz pomocy, możesz <a href='%{aboutUrl}'>wysłać wiadomość do członka personelu</a>.
       no_bookmarks_title: "Nie masz jeszcze żadnych zakładek"
+      no_bookmarks_body: >
+        Rozpocznij zakładki za pomocą przycisku %{icon} i zostaną one wymienione tutaj w celu ułatwienia odniesienia się do nich w późniejszym czasie. Możesz też zaplanować przypomnienie!
       no_notifications_title: "Nie masz jeszcze żadnych powiadomień"
+      no_notifications_body: >
+        W tym panelu zostaniesz powiadomiony o aktywności bezpośrednio związanej z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> lub zacytuje Cię i odpowie na obserwowane przez Ciebie tematy. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie jesteś zalogowany przez jakiś czas. <br><br> Poszukaj %{icon} aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz otrzymywać powiadomienia. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       skip_new_user_tips:
@@ -1405,7 +1417,6 @@ pl_PL:
         browser_active: '%{browser} | <span class="active">aktywny teraz</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Ostatni wpis"
-      last_emailed: "Ostatnio otrzymał(a) email"
       last_seen: "Ostatnio widziano"
       created: "Dołączył"
       log_out: "Wyloguj"
@@ -1642,8 +1653,11 @@ pl_PL:
       title:
         title: "Tytuł"
         none: "(brak)"
+        instructions: "pojawia się po Twojej nazwie użytkownika"
       flair:
+        title: "Ikona"
         none: "(brak)"
+        instructions: "ikona wyświetlana obok Twojego zdjęcia profilowego"
       primary_group:
         title: "Główna grupa"
         none: "(brak)"
@@ -2096,7 +2110,7 @@ pl_PL:
           confirm: Zapisano nową wersję roboczą tematu, która zostanie zastąpiona, jeśli utworzysz połączony temat.
         reply_as_new_group_message:
           label: Odpowiedz jako nowa wiadomość grupowa
-          desc: Utwórz nową wiadomość prywatną z tymi samymi adresatami
+          desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
         reply_as_private_message:
           label: Nowa wiadomość
           desc: Utwórz nową osobistą wiadomość
@@ -2421,13 +2435,6 @@ pl_PL:
       defer:
         help: "Oznacz jako nieprzeczytane"
         title: "Zignoruj"
-      feature_on_profile:
-        help: "Dodaj link do tego tematu na karcie użytkownika i profilu"
-        title: "Funkcja na profilu"
-      remove_from_profile:
-        warning: "Twój profil ma już polecany temat. Jeśli będziesz kontynuować, ten temat zastąpi istniejący."
-        help: "Usuń link do tego tematu w swoim profilu użytkownika"
-        title: "Usuń z profilu"
       list: "Tematy"
       new: "nowy temat"
       unread: "nieprzeczytane"
@@ -2475,6 +2482,7 @@ pl_PL:
       browse_all_categories: Przeglądaj wszystkie kategorie
       browse_all_tags: Przeglądaj wszystkie tagi
       view_latest_topics: pokaż aktualne tematy
+      suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
       jump_reply_up: skocz do wcześniejszej odpowiedzi
       jump_reply_down: skocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
@@ -2536,6 +2544,8 @@ pl_PL:
         title: "Zaplanuj publikację"
       temp_open:
         title: "Otwórz tymczasowo"
+      auto_reopen:
+        title: "Automatyczne otwieranie tematu"
       temp_close:
         title: "Zamknij tymczasowo"
       auto_close:
@@ -2600,12 +2610,15 @@ pl_PL:
         reasons:
           mailing_list_mode: "Masz włączony tryb powiadomień mailowych, więc będziesz otrzymywał powiadomienia o nowych odpowiedziach w tym temacie za przez e-mail."
           "3_10": "Będziesz otrzymywał powiadomienia, ponieważ temat zawiera obserwowany przez Ciebie tag"
+          "3_10_stale": "Będziesz otrzymywać powiadomienia, ponieważ w przeszłości oglądałeś tag na ten temat."
           "3_6": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie i temacie, ponieważ obserwujesz tę kategorię."
+          "3_6_stale": "Będziesz otrzymywać powiadomienia, ponieważ oglądałeś tę kategorię w przeszłości."
           "3_5": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ włączono automatyczne obserwowanie tego tematu."
           "3_2": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat."
           "3_1": "Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem tego tematu."
           "3": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat."
           "2_8": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz kategorię wątku."
+          "2_8_stale": "Zobaczysz liczbę nowych odpowiedzi, ponieważ śledziłeś tę kategorię w przeszłości."
           "2_4": "Widzisz ilość nowych odpowiedzi, ponieważ wypowiedziałeś/łaś się w tym wątku."
           "2_2": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz ten wątek."
           "2": 'Zobaczysz liczbę nowych odpowiedzi, ponieważ <a href="%{basePath}/u/%{username}/preferences/notifications">przeczytałeś/łaś ten temat</a>.'
@@ -2661,6 +2674,7 @@ pl_PL:
         pin: "Przypnij temat"
         unpin: "Odepnij temat"
         pin_globally: "Przypnij temat globalnie"
+        make_banner: "Utwórz temat bannerowy"
         remove_banner: "Wyłącz baner"
       reply:
         title: "Odpowiedz"
@@ -2952,8 +2966,6 @@ pl_PL:
       whisper: "ten wpis jest prywatnym szeptem do moderatorów"
       wiki:
         about: "ten wpis jest częścią wiki"
-      archetypes:
-        save: "Opcje zapisu"
       few_likes_left: "Dziękuję za polubienie! Pozostało Ci tylko parę polubień do wykorzystania dzisiaj"
       controls:
         reply: "zacznij tworzyć odpowiedź na ten wpis"
@@ -3093,6 +3105,7 @@ pl_PL:
         name: "Imię"
         name_placeholder: "Do czego ma służyć ta zakładka?"
         set_reminder: "Przypomnij mi"
+        options: "Opcje"
         actions:
           delete_bookmark:
             name: "Usuń zakładkę"
@@ -3113,7 +3126,6 @@ pl_PL:
         post_number: "%{username}, post #%{post_number}"
         show_all: "Pokaż wszystkie"
     category:
-      can: "może&hellip; "
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
       choose: "kategoria&hellip;"
@@ -3147,7 +3159,6 @@ pl_PL:
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
       name: "Nazwa kategorii"
       description: "Opis"
-      topic: "temat kategorii"
       logo: "Grafika z logo kategorii"
       background_image: "Grafika z tłem kategorii"
       badge_colors: "Kolor Etykiety"
@@ -3206,6 +3217,7 @@ pl_PL:
       position_disabled: "Kolejność kategorii będzie uzależniona od aktywności. Aby kontrolować ich kolejność,"
       position_disabled_click: 'włącz statyczną kolejność kategorii'
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
+      default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
       parent: "Kategoria rodzica"
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
@@ -3615,6 +3627,7 @@ pl_PL:
           name: Pisanie
       favorite_max_reached: "Nie możesz faworyzować więcej odznak."
       favorite_max_not_reached: "Oznacz tę odznakę jako ulubioną"
+      favorite_count: "%{count}/%{max} odznaki oznaczone jako ulubione"
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
@@ -3624,6 +3637,7 @@ pl_PL:
       tags: "Tagi"
       choose_for_topic: "tagi opcjonalne"
       info: "Informacje"
+      default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów. Aby dodać ograniczenia, umieść ten tag w grupie tagów <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
       synonyms: "Synonimy"
       synonyms_description: "W przypadku użycia następujących tagów zostaną one zastąpione przez <b>%{base_tag_name}</b>."
@@ -3709,10 +3723,15 @@ pl_PL:
           description: "Nie będziesz powiadamiany o niczym dotyczącym nowych tematów z tym tagiem i nie pojawią się na liście aktualnych."
       groups:
         title: "Tagi grup"
+        about_heading: "Wybierz grupę tagów lub utwórz nową"
+        about_heading_empty: "Aby rozpocząć, utwórz nową grupę tagów"
+        about_description: "Grupy tagów pomagają zarządzać uprawnieniami dla wielu tagów w jednym miejscu."
         new: "Nowa Grupa"
         new_title: "Utwórz nową grupę"
+        edit_title: "Edytuj grupę tagów"
         tags_label: "Tagi w tej grupie"
         parent_tag_label: "Nadrzędny tag"
+        parent_tag_description: "Tagi z tej grupy mogą być użyte tylko wtedy, gdy tag nadrzędny jest obecny."
         one_per_topic_label: "Ogranicz jeden tag na temat z tej grupy"
         new_name: "Nowa grupa tagów"
         name_placeholder: "Nazwa"
@@ -3722,6 +3741,7 @@ pl_PL:
         everyone_can_use: "Tagi mogą być wykorzystywane przez wszystkich"
         usable_only_by_groups: "Tagi są widoczne dla wszystkich, ale tylko następujące grupy mogą ich używać"
         visible_only_to_groups: "Tagi są widoczne tylko dla następujących grup"
+        cannot_save: "Nie można zapisać grupy tagów. Upewnij się, że istnieje co najmniej jeden tag, nazwa grupy tagów nie jest pusta, a grupa jest wybrana do uprawnień tagów."
         tags_placeholder: "Wyszukaj lub utwórz tagi"
         parent_tag_placeholder: "Opcjonalnie"
         select_groups_placeholder: "Wybierz grupy..."
@@ -3770,6 +3790,8 @@ pl_PL:
         regular: "zwyczajny"
         leader: "lider"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Wybrałeś nieobsługiwany plik. Obsługiwane typy plików – %{types}."
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4006,6 +4028,7 @@ pl_PL:
               log_out: Wyloguj wszystkie sesje użytkownika.
               anonymize: Anonimizuj konta użytkowników.
               delete: Usuń konta użytkowników.
+              list: Uzyskaj listę użytkowników.
             email:
               receive_emails: Połącz ten zakres z odbiorcą poczty w celu przetwarzania przychodzących wiadomości e-mail.
       web_hooks:
@@ -4224,6 +4247,7 @@ pl_PL:
           theme: "Motyw"
           component: "Składnik"
           components: "Składniki"
+          filter_placeholder: "pisz, aby filtrować…"
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
           themes_intro: "Wybierz istniejący motyw lub zainstaluj nowy, by rozpocząć"
@@ -4718,6 +4742,7 @@ pl_PL:
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
         invalid_regex: 'Obserwowane słowo "%{word}" jest nieprawidłowym wyrażeniem regularnym.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Obserwowane słowa są wyrażeniami regularnymi</a> i nie zawierają w sobie automatycznie granic słów. Jeśli chcesz, aby wyrażenie regularne pasowało do całych słów, dodaj <code>\b</code> na początku i na końcu wyrażenia regularnego.'
         actions:
           block: "Zablokuj"
           censor: "Cenzuruj"
@@ -4733,6 +4758,8 @@ pl_PL:
           require_approval: "Wpisy zawierające te słowa będą wymagały zatwierdzenia przez członka zespołu zarządzającego zanim zostaną opublikowane."
           flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
           replace: "Zastąp słowa w postach innymi słowami"
+          tag: "Automatycznie otaguj tematy na podstawie pierwszego postu"
+          silence: "Pierwsze posty użytkowników zawierające te słowa będą wymagały zatwierdzenia przez personel, zanim będą widoczne, a użytkownik zostanie automatycznie wyciszony."
           link: "Zastąp słowa w postach linkami"
         form:
           label: "Zawiera słowo lub frazę"
@@ -4750,6 +4777,7 @@ pl_PL:
           upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
         test:
           button_label: "Sprawdź"
+          modal_title: "%{action}: Testuj obserwowane słowa"
           description: "Wpisz tekst poniżej, aby sprawdzić dopasowania z obserwowanymi słowami"
           found_matches: "Znalezione wyniki:"
           no_matches: "Nie znaleziono dopasowań"
@@ -4808,6 +4836,7 @@ pl_PL:
         suspend_reasons:
           not_listening_to_staff: "Nie słuchał opinii personelu"
           consuming_staff_time: "Zużywał nieproporcjonalne ilości czasu personelu"
+          combative: "Zbyt wojowniczy"
           in_wrong_place: "W złym miejscu"
           no_constructive_purpose: "Nie ma żadnego konstruktywnego celu dla swoich działań z wyjątkiem tworzenia kłótni wewnątrz społeczności."
           custom: "Niestandardowy..."
@@ -5221,8 +5250,11 @@ pl_PL:
           perform: "Odznaka dla użytkowników"
           upload_csv: Prześlij plik CSV z adresami e-mail lub nazwami użytkowników
           aborted: Proszę przesłać plik CSV zawierający adresy e-mail użytkowników lub ich nazwy
-          success: Twój plik CSV został odebrany, a użytkownicy wkrótce otrzymają swoją odznakę.
+          success: Twój plik CSV został odebrany i %{count} użytkowników wkrótce otrzyma swoją plakietkę.
+          csv_has_unmatched_users: "Następujące wpisy znajdują się w pliku CSV, ale nie można ich dopasować do istniejących użytkowników, dlatego nie otrzymają plakietki:"
+          csv_has_unmatched_users_truncated_list: "W pliku CSV znalazło się %{count} wpisów, które nie mogły być dopasowane do istniejących użytkowników i dlatego nikt nie otrzyma odznaki. Ze względu na dużą liczbę niedopasowanych wpisów, wyświetlane jest tylko pierwsze 100 wpisów:"
           replace_owners: Usuń odznakę od poprzednich właścicieli
+          grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
         help: "Dodaj nowe emoji. (PROTIP: przeciągnij i upuść kilka plików na raz)"

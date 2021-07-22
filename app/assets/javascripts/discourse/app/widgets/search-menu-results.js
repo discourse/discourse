@@ -10,6 +10,25 @@ import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 
+const suggestionShortcuts = [
+  "in:title",
+  "in:pinned",
+  "status:open",
+  "status:closed",
+  "status:public",
+  "status:noreplies",
+  "order:latest",
+  "order:views",
+  "order:likes",
+  "order:latest_topic",
+];
+
+export function addSearchSuggestion(value) {
+  if (suggestionShortcuts.indexOf(value) === -1) {
+    suggestionShortcuts.push(value);
+  }
+}
+
 class Highlighted extends RawHtml {
   constructor(html, term) {
     super({ html: `<span>${html}</span>` });
@@ -207,6 +226,14 @@ createWidget("search-menu-results", {
   tagName: "div.results",
 
   html(attrs) {
+    if (attrs.suggestionKeyword) {
+      return this.attach("search-menu-assistant", {
+        fullTerm: attrs.term,
+        suggestionKeyword: attrs.suggestionKeyword,
+        results: attrs.suggestionResults || [],
+      });
+    }
+
     if (attrs.invalidTerm) {
       return h("div.no-results", I18n.t("search.too_short"));
     }
@@ -318,5 +345,137 @@ createWidget("search-menu-results", {
     }
 
     return content;
+  },
+});
+
+createWidget("search-menu-assistant", {
+  tagName: "ul.search-menu-assistant",
+
+  html(attrs) {
+    if (this.currentUser) {
+      addSearchSuggestion("in:likes");
+      addSearchSuggestion("in:bookmarks");
+      addSearchSuggestion("in:mine");
+      addSearchSuggestion("in:personal");
+      addSearchSuggestion("in:seen");
+      addSearchSuggestion("in:tracking");
+      addSearchSuggestion("in:unseen");
+      addSearchSuggestion("in:watching");
+    }
+    if (this.siteSettings.tagging_enabled) {
+      addSearchSuggestion("in:tagged");
+      addSearchSuggestion("in:untagged");
+    }
+
+    const content = [];
+    const { fullTerm, suggestionKeyword } = attrs;
+    const prefix = fullTerm.split(suggestionKeyword)[0].trim() || null;
+
+    switch (suggestionKeyword) {
+      case "#":
+        attrs.results.forEach((category) => {
+          const slug = prefix
+            ? `${prefix} #${category.slug} `
+            : `#${category.slug} `;
+
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              prefix: prefix,
+              category,
+              slug,
+            })
+          );
+        });
+        break;
+      case "@":
+        attrs.results.forEach((user) => {
+          const slug = prefix
+            ? `${prefix} @${user.username} `
+            : `@${user.username} `;
+
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              prefix: prefix,
+              user,
+              slug,
+            })
+          );
+        });
+        break;
+      default:
+        suggestionShortcuts.forEach((item) => {
+          if (item.includes(suggestionKeyword)) {
+            const slug = prefix ? `${prefix} ${item} ` : `${item} `;
+            content.push(this.attach("search-menu-assistant-item", { slug }));
+          }
+        });
+        break;
+    }
+
+    return content.filter((c, i) => i <= 8);
+  },
+});
+
+createWidget("search-menu-assistant-item", {
+  tagName: "li.search-menu-assistant-item",
+
+  html(attrs) {
+    if (attrs.category) {
+      return h(
+        "a.widget-link.search-link",
+        {
+          attributes: {
+            href: attrs.category.url,
+          },
+        },
+        [
+          h("span.search-item-prefix", attrs.prefix),
+          this.attach("category-link", {
+            category: attrs.category,
+            allowUncategorized: true,
+          }),
+        ]
+      );
+    } else if (attrs.user) {
+      const userResult = [
+        avatarImg("small", {
+          template: attrs.user.avatar_template,
+          username: attrs.user.username,
+        }),
+        h("span.username", formatUsername(attrs.user.username)),
+      ];
+
+      return h(
+        "a.widget-link.search-link",
+        {
+          attributes: {
+            href: "#",
+          },
+        },
+        [
+          h("span.search-item-prefix", attrs.prefix),
+          h("span.search-item-user", userResult),
+        ]
+      );
+    } else {
+      return h(
+        "a.widget-link.search-link",
+        {
+          attributes: {
+            href: "#",
+          },
+        },
+        h("span.search-item-slug", attrs.slug)
+      );
+    }
+  },
+
+  click(e) {
+    const searchInput = document.querySelector("#search-term");
+    searchInput.value = this.attrs.slug;
+    searchInput.focus();
+    this.sendWidgetAction("triggerAutocomplete", this.attrs.slug);
+    e.preventDefault();
+    return false;
   },
 });

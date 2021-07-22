@@ -269,7 +269,6 @@ he:
     conduct: "נהלי התנהגות"
     mobile_view: "תצוגת נייד"
     desktop_view: "תצוגת מחשב"
-    you: "אני"
     or: "או"
     now: "ממש עכשיו"
     read_more: "המשך קריאה"
@@ -358,7 +357,7 @@ he:
       remove: "הסרה"
       remove_confirmation: "למחוק את הטיוטה הזאת?"
       new_topic: "טיוטת נושא חדשה"
-      new_private_message: "טיוטת הודעה פרטית חדשה"
+      new_private_message: "טיוטת הודעה אישית חדשה"
       topic_reply: "טיוטת תשובה"
       abandon:
         confirm: "יש טיוטה שהתחלת לערוך לנושא הזה. מה לעשות אתה?"
@@ -838,8 +837,6 @@ he:
         public: "ציבורי"
         private: "פרטי"
         public_groups: "קבוצות ציבוריות"
-        automatic_group: קבוצה אוטומטית
-        close_group: קבוצה סגורה
         my_groups: "הקבוצות שלי"
         group_type: "סוג קבוצה"
         is_group_user: "חבר"
@@ -918,6 +915,11 @@ he:
       flair_type:
         icon: "נא לבחור סמל"
         image: "העלאת תמונה"
+      default_notifications:
+        modal_title: "התראות בררת המחדל של המשתמש"
+        modal_description: "מעניין אותך להחיל את השינוי הזה רטרואקטיבית? פעולה זו תשנה את העדפותיהם של %{count} משתמשים קיימים."
+        modal_yes: "כן"
+        modal_no: "לא, להחיל את השינוי מעתה ואילך"
     user_action_groups:
       "1": "לייקים שהוענקו"
       "2": "לייקים שהתקבלו"
@@ -947,7 +949,6 @@ he:
       posts: "פוסטים"
       topics: "נושאים"
       latest: "לאחרונה"
-      toggle_ordering: "שינוי בקר סדר"
       subcategories: "תתי קטגוריות"
       muted: "קטגוריות מושתקות"
       topic_sentence:
@@ -1414,7 +1415,6 @@ he:
         browser_active: '%{browser} | <span class="active">פעיל כעת</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "פוסט אחרון"
-      last_emailed: "נשלח לאחרונה בדואר אלקטרוני"
       last_seen: "נראה"
       created: "הצטרפו"
       log_out: "יציאה"
@@ -2103,7 +2103,6 @@ he:
           confirm: יש לך טיוטה של נושא חדש שתשוכתב בעת יציאת נושא מקושר.
         reply_as_new_group_message:
           label: להגיב בהודעה קבוצתית חדשה
-          desc: ליצור הודעה פרטית חדשה עם אותם הנמענים
         reply_as_private_message:
           label: הודעה חדשה
           desc: צור הודעה פרטית חדשה
@@ -2413,13 +2412,6 @@ he:
       defer:
         help: "סימון כלא נקראו"
         title: "אחר כך"
-      feature_on_profile:
-        help: "הוספת הנושא הזה לכרטיס המשתמש ולפרופיל שלך"
-        title: "הצגה בפרופיל"
-      remove_from_profile:
-        warning: "בפרופיל שלך כבר יש נושא מומלץ. המשך פעולה זו תחליף את הנושא הקיים."
-        help: "הסרת הקישור לנושא הזה בפרופיל המשתמש שלך"
-        title: "הסרה מהפרופיל"
       list: "נושאים"
       new: "נושא חדש"
       unread: "לא נקראו"
@@ -2946,8 +2938,6 @@ he:
       whisper: "פוסט זה הוא לחישה פרטית למפקחים"
       wiki:
         about: "הפוסט הוא ויקי"
-      archetypes:
-        save: "שמור אפשרויות"
       few_likes_left: "תודה על כל האהבה! נותרו לך סימוני לייק מועטים להיום."
       controls:
         reply: "התחילו לכתוב תגובה לפוסט זה"
@@ -3087,6 +3077,7 @@ he:
         name: "שם"
         name_placeholder: "עבור מה הסימנייה?"
         set_reminder: "להזכיר לי"
+        options: "אפשרויות"
         actions:
           delete_bookmark:
             name: "מחיקת סימנייה"
@@ -3107,7 +3098,6 @@ he:
         post_number: "%{username}, פוסט מס׳ %{post_number}"
         show_all: "להציג הכול"
     category:
-      can: "יכול&hellip; "
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
       choose: "קטגוריה&hellip;"
@@ -3141,7 +3131,6 @@ he:
       save_error: ארעה שגיאה בשמירת הקטגוריה הזו
       name: "שם הקטגוריה"
       description: "תיאור"
-      topic: "נושא הקטגוריה"
       logo: "תמונת לוגו לקטגוריה"
       background_image: "תמונת רקע לקטגוריה"
       badge_colors: "צבעי העיטורים"
@@ -3200,6 +3189,7 @@ he:
       position_disabled: "קטגוריות יוצגו על פס סדר הפעילות. כדי לשלוט בסדר הקטגורייות ברשימה,"
       position_disabled_click: 'אפשרו את ההגדרה "סדר קטגוריות קבוע".'
       minimum_required_tags: "מספר התגיות המזערי הנדרש לנושא:"
+      default_slow_mode: 'להפעיל „מצב אטי” לנושאים חדשים בקטגוריה הזאת.'
       parent: "קטגורית אם"
       num_auto_bump_daily: "מספר הנושאים הפתוחים להקפצה מדי יום:"
       navigate_to_first_post_after_read: "ניווט לפוסט הראשוני לאחר שהנושאים נקראו"
@@ -3771,6 +3761,8 @@ he:
         regular: "רגיל"
         leader: "מוביל"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "בחרת קובץ שאינו נתמך. סוגי קבצים נתמכים - %{types}."
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -4007,6 +3999,7 @@ he:
               log_out: להוציא משתמש מכל ההפעלות שלו.
               anonymize: הפיכת חשבונות משתמשים לאלמוניים.
               delete: מחיקת חשבונות משתמשים.
+              list: קבלת רשימת משתמשים.
             email:
               receive_emails: לשלב את התחום הזה עם מקבל הודעות הדוא״ל כדי לעבד הודעות דוא״ל נכנסות.
       web_hooks:
@@ -4225,6 +4218,7 @@ he:
           theme: "ערכת עיצוב"
           component: "רכיב"
           components: "רכיבים"
+          filter_placeholder: "יש להקליד לסינון…"
           theme_name: "שם ערכת העיצוב"
           component_name: "שם רכיב"
           themes_intro: "נא לבחור בערכת עיצוב קיימת או להתקין חדשה כדי להתחיל"
@@ -5224,8 +5218,11 @@ he:
           perform: "להעניק עיטור למשתמשים"
           upload_csv: להעלות CSV עם כתובות דוא״ל או שמות משתמשים
           aborted: נא להעלות קובץ CSV שמכיל או כתובות דוא״ל או שמות משתמשים
-          success: ה־CSV שלך התקבל והמשתמשים יקבלו את העיטור שלהם בעוד רגע קט.
+          success: ה־CSV שלך התקבל ו־%{count} משתמשים יקבלו את העיטור שלהם בעוד רגע קט.
+          csv_has_unmatched_users: "הערכים הבאים נמצאים בקובץ ה־CSV אך לא ניתן היה להתאים אותם למשתמשים קיימים ולכן לא יקבלו את העיטור:"
+          csv_has_unmatched_users_truncated_list: "בקובץ ה־CSV היו %{count} רשומות שלא ניתן היה להתאים למשתמשים קיימים ולכן לא יקבלו את העיטור. בשל מספר הרשומות הרב ללא התאמה, רק 100 הראשונות מוצגות:"
           replace_owners: הסרת העיטור מהבעלים הקודמים
+          grant_existing_holders: הענקת עיטורים נוספים למחזיקים בעיטורים קיימים
       emoji:
         title: "אמוג׳י"
         help: "הוספת אמוג׳י חדשים שיהיו זמינים לכולם. (עצה למקצוענים: עדיף לגרור לכאן כמה קבצים בבת אחת)"

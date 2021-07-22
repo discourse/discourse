@@ -220,7 +220,6 @@ fi:
     conduct: "Käytännesäännöt"
     mobile_view: "Mobiilinäkymä"
     desktop_view: "Työpöytänäkymä"
-    you: "Sinä"
     or: "tai"
     now: "hetki sitten"
     read_more: "lue lisää"
@@ -305,7 +304,6 @@ fi:
       remove: "Poista"
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
       new_topic: "Uusi ketjuluonnos"
-      new_private_message: "Uusi yksityisviestiluonnos"
       topic_reply: "Vastausluonnos"
       abandon:
         confirm: "Sinulla on meneillään luonnos tätä ketjua varten. Mitä haluaisit tehdä sen kanssa?"
@@ -379,7 +377,6 @@ fi:
         type_bonus:
           name: "tyyppibonus"
           title: "Henkilökunta voi määrittää tietyille käsiteltävälle tyypeille bonuksen, jotta ne saavat korkeamman prioriteetin."
-      stale_help: "Joku muu on ratkaissut tämän käsiteltävän kohteen."
       claim_help:
         optional: "Voit osoittaa tämän kohteen itsellesi, jolloin muut eivät voi käsitellä sitä."
         required: "Sinun täytyy osoittaa kohde itsellesi, ennen kuin voit käsitellä sen."
@@ -752,8 +749,6 @@ fi:
         public: "Julkinen"
         private: "Yksityinen"
         public_groups: "Julkiset ryhmät"
-        automatic_group: Automaattinen ryhmä
-        close_group: Sulje ryhmä
         my_groups: "Omat ryhmät"
         group_type: "Ryhmän tyyppi"
         is_group_user: "Jäsen"
@@ -859,7 +854,6 @@ fi:
       posts: "Viestit"
       topics: "Ketjut"
       latest: "Tuoreimmat"
-      toggle_ordering: "vaihda järjestystä"
       subcategories: "Ala-alueet"
       muted: "Vaimennetut alueet"
       topic_sentence:
@@ -1312,7 +1306,6 @@ fi:
         browser_active: '%{browser} | <span class="active">aktiivinen nyt</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Viimeisin viesti"
-      last_emailed: "Viimeisin sähköposti"
       last_seen: "Nähty"
       created: "Liittynyt"
       log_out: "Kirjaudu ulos"
@@ -1960,7 +1953,6 @@ fi:
           confirm: Sinulla on tallennettuna uusi ketjuluonnos, joka korvataan, jos luot liittyvän ketjun.
         reply_as_new_group_message:
           label: Vastaa uudessa ryhmäviestissä
-          desc: Luo uusi yksityisviesti, jossa samat vastaanottajat
         reply_as_private_message:
           label: Uusi viesti
           desc: Luo uusi yksityisviesti
@@ -2255,13 +2247,6 @@ fi:
       defer:
         help: "Merkitse lukemattomaksi"
         title: "Lykkää"
-      feature_on_profile:
-        help: "Lisää käyttäjäkorttiisi ja profiilisivullesi linkki tähän ketjuun"
-        title: "Valikoi ketju profiiliisi"
-      remove_from_profile:
-        warning: "Profiilillesi on jo valikoitu ketju. Jos jatkat, tämä ketju korvaa aiemman ketjun."
-        help: "Poista linkki tähän ketjuun käyttäjäprofiilissasi"
-        title: "Poista profiilista"
       list: "Ketjut"
       new: "uusi ketju"
       unread: "lukematta"
@@ -2740,8 +2725,6 @@ fi:
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
       wiki:
         about: "tämä viesti on wiki-viesti"
-      archetypes:
-        save: "Tallennusasetukset"
       few_likes_left: "Kiitos hyvän mielen levittämisestä! Sinulla on enää muutama tykkäys jäljellä tälle päivälle."
       controls:
         reply: "aloita vastaamaan tähän viestiin"
@@ -2883,7 +2866,6 @@ fi:
         post_number: "%{username}, viesti #%{post_number}"
         show_all: "Näytä kaikki"
     category:
-      can: "voivat&hellip; "
       none: "(ei aluetta)"
       all: "Kaikki alueet"
       choose: "alue&hellip;"
@@ -2917,7 +2899,6 @@ fi:
       save_error: Alueen tallennuksessa tapahtui virhe.
       name: "Alueen nimi"
       description: "Kuvaus"
-      topic: "alueen ketju"
       logo: "Alueen logokuva"
       background_image: "Alueen taustakuva"
       badge_colors: "Kunniamerkin värit"
@@ -4923,7 +4904,6 @@ fi:
           perform: "Myönnä kunniamerkki käyttäjille"
           upload_csv: Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
           aborted: Lataa CSV, joka sisältää joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
-          success: CSV tuli perille ja käyttäjät saavat kunniamerkkinsä pian.
           replace_owners: Poista kunniamerkki aiemmilta omistajilta
       emoji:
         title: "Emoji"

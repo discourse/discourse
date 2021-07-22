@@ -183,7 +183,6 @@ zh_TW:
     conduct: "行為準則"
     mobile_view: "手機版"
     desktop_view: "電腦版"
-    you: "你"
     or: "或"
     now: "就在剛才"
     read_more: "閱讀更多"
@@ -246,7 +245,6 @@ zh_TW:
       resume: "恢復"
       remove: "移除"
       new_topic: "新話題草稿"
-      new_private_message: "新私訊草稿"
       topic_reply: "回覆草稿"
       abandon:
         yes_value: "捨棄"
@@ -551,8 +549,6 @@ zh_TW:
         public: "公開"
         private: "私密"
         public_groups: "公開群組"
-        automatic_group: 自動群組
-        close_group: 不公開的群組
         my_groups: "我的群組"
         group_type: "群組類型"
         is_group_user: "成員"
@@ -607,6 +603,8 @@ zh_TW:
       flair_color_placeholder: "（可選）十六進制色彩值"
       flair_preview_icon: "預覽圖示"
       flair_preview_image: "預覽圖片"
+      default_notifications:
+        modal_yes: "是"
     user_action_groups:
       "1": "已按讚"
       "2": "已收到讚"
@@ -636,7 +634,6 @@ zh_TW:
       posts: "貼文"
       topics: "話題"
       latest: "最新"
-      toggle_ordering: "顯示/隱藏排序控制"
       subcategories: "次分類"
       topic_sentence:
         other: "%{count} 個話題"
@@ -947,7 +944,6 @@ zh_TW:
         secure_account: "增強我的帳號安全性"
         latest_post: "最近的貼文…"
       last_posted: "最近發表"
-      last_emailed: "最近寄出電子郵件"
       last_seen: "出現時間"
       created: "建立日期"
       log_out: "登出"
@@ -2019,8 +2015,6 @@ zh_TW:
       whisper: "這貼文是版主私人密談"
       wiki:
         about: "這篇貼文是共筆"
-      archetypes:
-        save: "儲存選項"
       few_likes_left: "謝謝你的熱情！你今天的讚快用完了。"
       controls:
         reply: "開始編寫對此貼文的回覆"
@@ -2113,12 +2107,12 @@ zh_TW:
         edit: "編輯書籤"
         created: "已建立"
         name: "名稱"
+        options: "選項"
         actions:
           edit_bookmark:
             name: "編輯書籤"
             description: "編輯書籤名稱或更改提醒日期和時間"
     category:
-      can: "可以&hellip; "
       none: "( 無分類 )"
       all: "所有分類"
       choose: "選擇一個分類&hellip;"
@@ -2145,7 +2139,6 @@ zh_TW:
       save_error: 儲存分類時發生錯誤。
       name: "分類名稱"
       description: "描述"
-      topic: "分類話題"
       logo: "分類圖示"
       background_image: "分類背景圖片"
       badge_colors: "識別顏色"

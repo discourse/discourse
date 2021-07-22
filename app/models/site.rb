@@ -7,6 +7,14 @@ class Site
   cattr_accessor :preloaded_category_custom_fields
   self.preloaded_category_custom_fields = Set.new
 
+  def self.add_categories_callbacks(&block)
+    categories_callbacks << block
+  end
+
+  def self.categories_callbacks
+    @categories_callbacks ||= []
+  end
+
   def initialize(guardian)
     @guardian = guardian
   end
@@ -104,6 +112,11 @@ class Site
       end
 
       categories.reject! { |c| c[:parent_category_id] && !by_id[c[:parent_category_id]] }
+
+      self.class.categories_callbacks.each do |callback|
+        callback.call(categories)
+      end
+
       categories
     end
   end

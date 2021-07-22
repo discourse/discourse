@@ -89,18 +89,27 @@ it:
           multiple: Scelta Multipla
           number: Votazione Numerica
         poll_result:
+          label: Mostra i risultati...
           always: Sempre visibile
+          vote: Solo dopo la votazione
+          closed: Quando il sondaggio è chiuso
           staff: Solo staff
+        poll_groups:
+          label: Limita il voto a questi gruppi
         poll_chart_type:
+          label: Grafico dei risultati
           bar: Barra
           pie: Torta
         poll_config:
+          max: Numero max di scelte
+          min: Numero min di scelte
           step: Intervallo
         poll_public:
           label: Mostra i votanti
         poll_title:
           label: Titolo (facoltativo)
         poll_options:
+          label: Opzioni (una per riga)
           add: Aggiungi opzione
         automatic_close:
           label: Chiudi sondaggio automaticamente
