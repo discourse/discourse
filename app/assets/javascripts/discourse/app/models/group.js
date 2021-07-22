@@ -131,7 +131,7 @@ const Group = RestModel.extend({
     return ajax(`/groups/${this.id}/join.json`, {
       type: "PUT",
     }).then(() => {
-      this.findMembers();
+      this.findMembers({}, true);
     });
   },
 
