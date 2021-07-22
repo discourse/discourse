@@ -56,6 +56,7 @@ end
 #  status            :integer          default(1), not null
 #  unique_identifier :string           not null
 #  created_by_id     :integer          not null
+#  upload_type       :string           not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
