@@ -259,7 +259,11 @@ class ListController < ApplicationController
     options ||= {}
     period = params[:period]
     period ||= ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
-    public_send("top_#{period}", options)
+    begin
+      public_send("top_#{period}", options)
+    rescue NoMethodError
+      raise Discourse::InvalidParameters.new("Invalid period. Valid periods are #{TopTopic.periods.join(", ")}")
+    end
   end
 
   def category_top
