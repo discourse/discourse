@@ -111,7 +111,7 @@ zh_CN:
       user_left: "%{who} 在 %{when}将自己从此消息中移除"
       removed_user: "%{when}移除了 %{who}"
       removed_group: "%{when}移除了 %{who}"
-      autobumped: "%{when}自动顶帖"
+      autobumped: "%{when}自动提升"
       autoclosed:
         enabled: "%{when}关闭"
         disabled: "%{when}打开"
@@ -141,7 +141,7 @@ zh_CN:
       message: "我们已经更新此站点，请 <span>刷新页面</span>，否则可能会遇到意外行为。"
       dismiss: "关闭"
     bootstrap_mode_enabled:
-      other: "为了更轻松地启动您的新站点，您现在处于引导模式。所有新用户都将被授予信任等级 1，并且已启用每日摘要电子邮件。引导模式会在达到 %{count} 个用户时自动关闭。"
+      other: "为了更轻松地启动您的新站点，您现在处于引导模式。所有新用户都将被授予信任级别 1，并且已启用每日摘要电子邮件。引导模式会在达到 %{count} 个用户时自动关闭。"
     bootstrap_mode_disabled: "引导模式将在 24 小时内禁用。"
     themes:
       default_description: "默认"
@@ -170,7 +170,7 @@ zh_CN:
         us_west_1: "美国西部（北加利福尼亚州）"
         us_west_2: "美国西部（俄勒冈州）"
     clear_input: "清除输入"
-    edit: "编辑此话题的标题和分类"
+    edit: "编辑此话题的标题和类别"
     expand: "展开"
     not_implemented: "抱歉，该功能尚未实现！"
     no_value: "否"
@@ -438,7 +438,7 @@ zh_CN:
       conversation:
         view_full: "查看完整对话"
       scores:
-        about: "此分数是根据举报人的信任等级、该用户以往举报的准确性以及被举报条目的优先级计算得出的。"
+        about: "此分数是根据举报人的信任级别、该用户以往举报的准确性以及被举报条目的优先级计算得出的。"
         score: "分数"
         date: "日期"
         type: "类型"
@@ -1170,7 +1170,7 @@ zh_CN:
         uploaded_avatar_empty: "上传自定义图片"
         upload_title: "上传图片"
         image_is_not_a_square: "警告：我们已经裁剪了您的图片；宽度和高度不相等。"
-        logo_small: "网站的小徽标。默认情况下使用。"
+        logo_small: "站点的小徽标。默认情况下使用。"
       change_profile_background:
         title: "个人资料标题"
         instructions: "个人资料标题将居中且默认宽度为 1110px。"
@@ -1548,7 +1548,7 @@ zh_CN:
       hide_forever: "不，谢谢"
       hidden_for_session: "好的，我们会在明天问您。您也可以随时使用“登录”来创建帐户。"
       intro: "您好！看起来您很喜欢讨论，但您还没有注册帐户。"
-      value_prop: "当您创建帐户时，我们会准确记住您阅读过的内容，因此您总可以从上次停止的地方返回。每当有人回复您时，您还会在此处和通过电子邮件收到通知。您可以为帖子点赞来分享爱。 :heartpulse:"
+      value_prop: "当您创建帐户时，我们会准确记住您阅读过的内容，因此您总可以从上次停止的地方返回。每当有人回复您时，您还会在此处和通过电子邮件收到通知。您可以为帖子点赞来分享爱。:heartpulse:"
     summary:
       enabled_description: "您正在查看此话题的摘要：社区确定的最有趣的帖子。"
       description:
@@ -1594,7 +1594,7 @@ zh_CN:
       complete_email_found: "我们找到一个与 <b>%{email}</b> 匹配的帐户。您应该会收到一封电子邮件，其中包含有关如何尽快重置密码的说明。"
       complete_username_not_found: "没有与用户名 <b>%{username}</b> 相匹配的帐户"
       complete_email_not_found: "没有与 <b>%{email}</b> 相匹配的帐户"
-      help: "没收到电子邮件？务必查看您的垃圾邮件文件夹。<p>不确定使用了哪个电子邮件地址？输入电子邮件地址来查看是否存在。</p><p>如果您无法再访问您的帐户使用的电子邮件地址，请联系<a href='%{basePath}/about'>我们的工作人员</a>。</p>"
+      help: "没收到电子邮件？务必查看您的垃圾邮件文件夹。<p>不确定使用了哪个电子邮件地址？输入电子邮件地址来查看是否存在。</p><p>如果您无法再访问您的帐户使用的电子邮件地址，请联系<a href='%{basePath}/about'>我们的管理人员</a>。</p>"
       button_ok: "确定"
       button_help: "帮助"
     email_login:
@@ -1626,7 +1626,7 @@ zh_CN:
       security_key_description: "当您准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
       security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
-      security_key_not_allowed_error: "安全密钥身份验证超时或被取消。"
+      security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
       email_placeholder: "电子邮件/用户名"
@@ -1789,7 +1789,7 @@ zh_CN:
       cannot_see_mention:
         category: "您提及了 %{username}，但由于他们无法访问此类别，他们将不会收到通知。您需要将其添加到可以访问此类别的群组中。"
         private: "您提及了 %{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们加入此个人消息。"
-      duplicate_link: "好像 <b>@%{username}</b> 在<a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
+      duplicate_link: "好像 <b>@%{username}</b> 在话题 <a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
       reference_topic_title: "回复：%{title}"
       error:
         title_missing: "标题为必填项"
@@ -1902,7 +1902,7 @@ zh_CN:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
         toggle_topic_bump:
-          label: "切换话题顶帖"
+          label: "切换话题提升"
           desc: "回复但不更改最新回复日期"
       reload: "重新加载"
       ignore: "忽略"
@@ -2277,7 +2277,7 @@ zh_CN:
       auto_delete:
         title: "自动删除话题"
       auto_bump:
-        title: "自动顶帖"
+        title: "自动提升话题"
       reminder:
         title: "提醒我"
       auto_delete_replies:
@@ -2286,9 +2286,9 @@ zh_CN:
         auto_open: "此话题将在 %{timeLeft}后自动开启。"
         auto_close: "此话题将在 %{timeLeft}后自动关闭。"
         auto_publish_to_category: "此话题将在 %{timeLeft}后发布到<a href=%{categoryUrl}>#%{categoryName}</a>。"
-        auto_close_after_last_post: "此话题将在最后一个帖子的%{duration}后关闭。"
+        auto_close_after_last_post: "此话题将在最后一个回复的%{duration}后关闭。"
         auto_delete: "此话题将在 %{timeLeft}后自动删除。"
-        auto_bump: "此话题将在 %{timeLeft}后自动顶帖。"
+        auto_bump: "此话题将在 %{timeLeft}后自动提升。"
         auto_reminder: "您将在 %{timeLeft}后收到此话题的提醒。"
         auto_delete_replies: "此话题的回复会在%{duration}后自动删除。"
       auto_close_title: "自动关闭设置"
@@ -2379,11 +2379,11 @@ zh_CN:
         reset_read: "重置阅读数据"
         make_public: "设为公开话题"
         make_private: "设为个人消息"
-        reset_bump_date: "重置顶帖日期"
+        reset_bump_date: "重置提升日期"
       feature:
         pin: "置顶话题"
         unpin: "取消置顶话题"
-        pin_globally: "全局置顶话题"
+        pin_globally: "全站置顶话题"
         make_banner: "设为横幅话题"
         remove_banner: "移除横幅话题"
       reply:
@@ -2423,13 +2423,13 @@ zh_CN:
           other: "%{categoryLink}中的当前置顶话题数：<strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "将此话题置于所有话题列表顶部至"
         confirm_pin_globally:
-          other: "您已经有 %{count} 个全局置顶的话题。置顶话题过多可能会困扰新用户和匿名用户。确定要全局置顶另一个话题吗？"
+          other: "您已经有 %{count} 个全站置顶的话题。置顶话题过多可能会困扰新用户和匿名用户。确定要全站置顶另一个话题吗？"
         unpin_globally: "将此话题从所有话题列表顶部移除。"
         unpin_globally_until: "将此话题从所有话题列表顶部移除，或等到<strong>%{until}</strong>。"
         global_pin_note: "用户可以为自己单独取消置顶话题。"
-        not_pinned_globally: "没有全局置顶话题。"
+        not_pinned_globally: "没有全站置顶话题。"
         already_pinned_globally:
-          other: "当前全局置顶的话题数：<strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "当前全站置顶的话题数：<strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "将此话题设为在所有页面顶部显示的横幅。"
         remove_banner: "移除在所有页面顶部显示的横幅。"
         banner_note: "用户可以通过关闭话题来关闭横幅。任何时候都只能将一个话题设为横幅。"
@@ -2805,7 +2805,7 @@ zh_CN:
         see: "查看"
         reply: "回复"
         create: "创建"
-        no_groups_selected: "没有群组被授予访问权限；此类别仅对管理员可见。"
+        no_groups_selected: "没有群组被授予访问权限；此类别仅对管理人员可见。"
         everyone_has_access: '此类别是公开的，任何人都可以查看、回复和创建帖子。要限制权限，请移除授予“所有人”组的一个或多个权限。'
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
@@ -2915,7 +2915,7 @@ zh_CN:
       official_warning: "官方警告"
       delete_spammer: "删除垃圾信息发布者"
       flag_for_review: "加入审核队列"
-      delete_confirm_MF: "您将删除此用户的 {POSTS, plural, one {<b>1</b> 个帖子} other {<b>#</b> 个帖子}}和 {TOPICS, plural, one {<b>#</b> 个话题} other {<b>#</b> 个话题}}，移除他们的帐户，阻止其 IP 地址 <b>{ip_address}</b> 再次注册，同时将其电子邮件地址 <b>{email}</b> 加入永久黑名单。确定此用户是垃圾信息发布者吗？"
+      delete_confirm_MF: "您将删除此用户的 {POSTS, plural, other {<b>#</b> 个帖子}}和 {TOPICS, plural, other {<b>#</b> 个话题}}，移除他们的帐户，禁止其 IP 地址 <b>{ip_address}</b> 再次注册，同时将其电子邮件地址 <b>{email}</b> 加入永久屏蔽名单。确定此用户是垃圾信息发布者吗？"
       yes_delete_spammer: "是，删除垃圾信息发布者"
       ip_address_missing: "（不适用）"
       hidden_email_address: "（已隐藏）"
@@ -2966,8 +2966,8 @@ zh_CN:
         title: "已取消置顶"
         help: "此话题已对您取消置顶；它将以常规顺序显示"
       pinned_globally:
-        title: "已全局置顶"
-        help: "此话题已被全局置顶；它将显示在最新话题列表及其所属类别的顶部"
+        title: "已全站置顶"
+        help: "此话题已被全站置顶；它将显示在最新话题列表及其所属类别的顶部"
       pinned:
         title: "已置顶"
         help: "此话题已对您置顶；它将显示在所属类别的顶部"
@@ -3554,7 +3554,7 @@ zh_CN:
               read: 阅读一个话题或其中的一个帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
-              wordpress: WordPress wp-discussion 插件正常工作所必需。
+              wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
             users:
@@ -3909,7 +3909,7 @@ zh_CN:
             title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"
           header:
             text: "页眉"
-            title: "输入要显示在站点页眉上方的 HTML"
+            title: "输入要显示在站点标头上方的 HTML"
           after_header:
             text: "页眉后"
             title: "输入要显示在所有页面的页眉后的 HTML"
@@ -3975,10 +3975,10 @@ zh_CN:
             description: "导航链接。"
           header_background:
             name: "页眉背景"
-            description: "站点页眉的背景色。"
+            description: "站点标头的背景色。"
           header_primary:
             name: "页眉主要"
-            description: "站点页眉的文本和图标。"
+            description: "站点标头的文本和图标。"
           highlight:
             name: "突出显示"
             description: "页面上突出显示元素的背景色，例如帖子和话题。"
@@ -4174,7 +4174,7 @@ zh_CN:
             post_unlocked: "已解锁帖子"
             check_personal_message: "检查个人消息"
             disabled_second_factor: "禁用双重身份验证"
-            topic_published: "已发布帖子"
+            topic_published: "已发布话题"
             post_approved: "已批准帖子"
             post_rejected: "已拒绝帖子"
             create_badge: "创建徽章"
@@ -4268,7 +4268,7 @@ zh_CN:
         clear_all: 全部清除
         clear_all_confirm: "确定要清除%{action}操作的所有关注词吗？"
         invalid_regex: '关注词“%{word}”是无效的正则表达式。'
-        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">关注词是正则表达式</a>，它们不会自动包含词边界。如果您希望正则表达式匹配整个词，请在正则表达式的开头和结尾包含 <code>\b</code>'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">关注词是正则表达式</a>，它们不会自动包含词边界。如果您希望正则表达式匹配整个字词，请在正则表达式的开头和结尾包含 <code>\b</code>'
         actions:
           block: "禁止"
           censor: "审查"
@@ -4281,11 +4281,11 @@ zh_CN:
         action_descriptions:
           block: "禁止发布包含这些字词的帖子。用户在尝试提交帖子时会看到一条错误消息。"
           censor: "允许包含这些字词的帖子，但将其替换为隐藏敏感词的字符。"
-          require_approval: "包含这些字词的帖子需通过人工批准才能被看到。"
+          require_approval: "包含这些字词的帖子需通过管理人员批准才能被看到。"
           flag: "允许包含这些字词的帖子，但将其举报为不当，以便版主对其进行审核。"
           replace: "使用其他字词替换帖子中的字词"
           tag: "根据第一个帖子自动为话题添加标签"
-          silence: "用户包含这些字词的第一个帖子需要工作人员批准才能被看到，该用户将被自动禁言。"
+          silence: "用户包含这些字词的第一个帖子需要管理人员批准才能被看到，该用户将被自动禁言。"
           link: "使用链接替换帖子中的字词"
         form:
           label: "包含字词或短语"
@@ -4392,7 +4392,7 @@ zh_CN:
         clear_penalty_history:
           title: "清除处罚历史记录"
           description: "有处罚的用户无法达到信任级别 3"
-        delete_all_posts_confirm_MF: "您将删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个话题} other {# 个话题}}。确定吗？"
+        delete_all_posts_confirm_MF: "您将删除 {POSTS, plural, other {# 个帖子}}和 {TOPICS, plural, other {# 个话题}}。确定吗？"
         silence: "禁言"
         unsilence: "取消禁言"
         silenced: "已禁言？"
@@ -4549,7 +4549,7 @@ zh_CN:
           will_be_demoted: "很快会被降级。"
           on_grace_period: "目前在升级宽限期，不会被降级。"
           locked_will_not_be_promoted: "信任级别被锁定。将不再被提升。"
-          locked_will_not_be_demoted: "信任等级被锁定。将不再被降级。"
+          locked_will_not_be_demoted: "信任级别被锁定。将不再被降级。"
         discourse_connect:
           title: "DiscourseConnect 单点登录"
           external_id: "外部 ID"

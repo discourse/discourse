@@ -320,7 +320,7 @@ pt_BR:
   too_many_mentions_newuser:
     one: "Desculpe, usuários(as) novos(as) podem mencionar apenas um(a) usuário(as) em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem mencionar apenas %{count} usuários(as) em uma postagem."
-  no_embedded_media_allowed_trust: "Desculpe, n"
+  no_embedded_media_allowed_trust: "Desculpe, não é possível incorporar itens de mídia nesta postagem."
   no_embedded_media_allowed: "Desculpe, novos(as) usuários(as) não podem incorporar itens de mídia em postagens."
   too_many_embedded_media:
     one: "Desculpe, novos(as) usuários(as) só podem inserir um item de mídia incorporado em uma postagem."
@@ -481,6 +481,7 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
+    dominating_topic: Você postou mais do que %{percent} das respostas aqui, deseja saber a opinião de outra pessoa?
     get_a_room: |
       ### Incentive todos a se envolverem na conversa
 
@@ -1461,6 +1462,7 @@ pt_BR:
     detailed_404: "Fornece mais detalhes aos(às) usuários(as) sobre o motivo de não poderem acessar um tópico específico. Observação: isso não é tão seguro porque os(as) usuários(as) saberão se uma URL estiver vinculada a um tópico válido."
     enforce_second_factor: "Obriga os(as) usuários(as) a ativar a autenticação de dois fatores. Selecione \"tudo\" para aplicar a todos os(as) usuários(as). Selecione \"equipe\" para aplicar somente aos(as) usuários(as) da equipe."
     force_https: "Obrigue seu site a usar apenas HTTPS. AVISO: NÃO ative até ter verificado se o HTTPS está totalmente configurado e funcionando em todos os lugares! Você verificou se seu CDN, todas as entradas com conta de rede social e logotipos e dependências externas também são compatíveis com HTTPS?"
+    same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos vetores de solicitação intersite forjada nos navegadores compatíveis (Lax ou Strict). Aviso: o Strict funcionará somente em sites que obrigam entrada com conta e usam um método de autenticação externo."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída em \"Resumir este tópico\" "
     summary_posts_required: "Quantidade mínima de postagens em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
     summary_likes_required: "Quantidade mínima de curtidas em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
@@ -2077,6 +2079,7 @@ pt_BR:
     create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
     errors:
+      invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
       invalid_email: "Endereço de e-mail inválido"
       invalid_username: "Não há nenhum(a) usuário(a) com este nome de usuário(a)."
       invalid_group: "Não há nenhum grupo com este nome."
