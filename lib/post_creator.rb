@@ -458,14 +458,18 @@ class PostCreator
 
   def ensure_in_allowed_users
     return unless @topic.private_message? && @topic.id
+    return if @post.whisper?
+    return if @topic.topic_allowed_users.exists?(user_id: @user.id)
 
-    unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
-      unless @topic.topic_allowed_groups.where('group_id IN (
-                                              SELECT group_id FROM group_users where user_id = ?
-                                           )', @user.id).exists?
-        @topic.topic_allowed_users.create!(user_id: @user.id)
-      end
-    end
+    return if @topic
+      .topic_allowed_groups
+      .where(
+        "group_id IN (SELECT group_id FROM group_users where user_id = ?)",
+        @user.id
+      )
+      .exists?
+
+    @topic.topic_allowed_users.create!(user_id: @user.id)
   end
 
   def unarchive_message
