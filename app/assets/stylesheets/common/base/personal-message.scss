@@ -23,9 +23,13 @@
   }
 
   .current-user-post {
+    &:not(.moderator) {
+      .topic-body .cooked {
+        background: var(--tertiary-very-low);
+      }
+    }
     .topic-body .cooked {
       border: 1px solid transparent;
-      background: var(--tertiary-very-low);
     }
     .topic-body.highlighted {
       .cooked {
