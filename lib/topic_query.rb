@@ -266,18 +266,22 @@ class TopicQuery
   end
 
   def list_top_for(period)
-    if !TopTopic.periods.include?(period.to_sym)
-      raise Discourse::InvalidParameters.new("Invalid period. Valid periods are #{TopTopic.periods.join(", ")}")
-    end
-
-    score = "#{period}_score"
+    score_column = TopTopic.score_column_for_period(period)
     create_list(:top, unordered: true) do |topics|
       topics = remove_muted_categories(topics, @user)
-      topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
+      topics = topics.joins(:top_topic).where("top_topics.#{score_column} > 0")
       if period == :yearly && @user.try(:trust_level) == TrustLevel[0]
-        topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
+        topics.order(<<~SQL)
+          CASE WHEN (
+             COALESCE(topics.pinned_at, '1900-01-01') > COALESCE(tu.cleared_pinned_at, '1900-01-01')
+          ) THEN 0 ELSE 1 END,
+          top_topics.#{score_column} DESC,
+          topics.bumped_at DESC
+        SQL
       else
-        topics.order(TopicQuerySQL.order_top_for(score))
+        topics.order(<<~SQL)
+          COALESCE(top_topics.#{score_column}, 0) DESC, topics.bumped_at DESC
+        SQL
       end
     end
   end
@@ -676,7 +680,9 @@ class TopicQuery
     # If we are sorting by category, actually use the name
     if sort_column == 'category_id'
       # TODO forces a table scan, slow
-      return result.references(:categories).order(TopicQuerySQL.order_by_category_sql(sort_dir))
+      return result.references(:categories).order(<<~SQL)
+        CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id.to_i} THEN '' ELSE categories.name END #{sort_dir}
+      SQL
     end
 
     if sort_column == 'op_likes'

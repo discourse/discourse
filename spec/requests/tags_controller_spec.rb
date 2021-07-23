@@ -717,6 +717,11 @@ describe TagsController do
       topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
       expect(topic_ids).to eq([tag_topic.id])
     end
+
+    it "raises an error if the period is not valid" do
+      get "/tag/#{tag.name}/l/top.json?period=decadely"
+      expect(response.status).to eq(400)
+    end
   end
 
   describe '#search' do

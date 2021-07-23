@@ -218,6 +218,8 @@ class ListController < ApplicationController
     @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
     period = params[:period] || SiteSetting.top_page_default_timeframe.to_sym
+    TopTopic.validate_period(period)
+
     @topic_list = TopicQuery.new(nil).list_top_for(period)
 
     render 'list', formats: [:rss]
