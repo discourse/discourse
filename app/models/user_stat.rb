@@ -226,6 +226,7 @@ class UserStat < ActiveRecord::Base
               LEFT JOIN drafts ON user_stats.user_id = drafts.user_id
               GROUP BY user_stats.user_id) new_user_stats
         WHERE user_stats.user_id = new_user_stats.user_id
+          AND user_stats.draft_count <> new_user_stats.draft_count
       SQL
     end
   end
