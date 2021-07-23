@@ -911,11 +911,13 @@ describe PostCreator do
     fab!(:target_user2) { Fabricate(:moderator) }
     fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
-      PostCreator.create!(user, title: 'hi there welcome to my topic',
-                               raw: "this is my awesome message @#{unrelated_user.username_lower}",
-                               archetype: Archetype.private_message,
-                               target_usernames: [target_user1.username, target_user2.username].join(','),
-                               category: 1)
+      PostCreator.create!(user,
+        title: 'hi there welcome to my topic',
+        raw: "this is my awesome message @#{unrelated_user.username_lower}",
+        archetype: Archetype.private_message,
+        target_usernames: [target_user1.username, target_user2.username].join(','),
+        category: 1
+      )
     end
 
     it 'acts correctly' do
@@ -949,8 +951,10 @@ describe PostCreator do
 
       # if an admin replies they should be added to the allowed user list
       admin = Fabricate(:admin)
-      PostCreator.create!(admin, raw: 'hi there welcome topic, I am a mod',
-                                topic_id: post.topic_id)
+      PostCreator.create!(admin,
+        raw: 'hi there welcome topic, I am a mod',
+        topic_id: post.topic_id
+      )
 
       post.topic.reload
       expect(post.topic.topic_allowed_users.where(user_id: admin.id).count).to eq(1)
