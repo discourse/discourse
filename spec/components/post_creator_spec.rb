@@ -909,10 +909,10 @@ describe PostCreator do
   context 'private message' do
     let(:target_user1) { Fabricate(:coding_horror) }
     fab!(:target_user2) { Fabricate(:moderator) }
-    fab!(:unrelated) { Fabricate(:user) }
+    fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
-      PostCreator.create(user, title: 'hi there welcome to my topic',
-                               raw: "this is my awesome message @#{unrelated.username_lower}",
+      PostCreator.create!(user, title: 'hi there welcome to my topic',
+                               raw: "this is my awesome message @#{unrelated_user.username_lower}",
                                archetype: Archetype.private_message,
                                target_usernames: [target_user1.username, target_user2.username].join(','),
                                category: 1)
@@ -934,7 +934,7 @@ describe PostCreator do
       expect(post.topic.category).to eq(nil)
 
       # does not notify an unrelated user
-      expect(unrelated.notifications.count).to eq(0)
+      expect(unrelated_user.notifications.count).to eq(0)
       expect(post.topic.subtype).to eq(TopicSubtype.user_to_user)
 
       # PMs do not increase post count or topic count
@@ -949,7 +949,7 @@ describe PostCreator do
 
       # if an admin replies they should be added to the allowed user list
       admin = Fabricate(:admin)
-      PostCreator.create(admin, raw: 'hi there welcome topic, I am a mod',
+      PostCreator.create!(admin, raw: 'hi there welcome topic, I am a mod',
                                 topic_id: post.topic_id)
 
       post.topic.reload
@@ -963,9 +963,25 @@ describe PostCreator do
       admin2 = Fabricate(:admin)
       group.add(admin2)
 
-      PostCreator.create(admin2, raw: 'I am also an admin, and a mod', topic_id: post.topic_id)
+      PostCreator.create!(admin2, raw: 'I am also an admin, and a mod', topic_id: post.topic_id)
 
       expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
+    end
+
+    it 'does not add whisperers to allowed users of the topic' do
+      SiteSetting.enable_whispers = true
+      unrelated_user.update!(admin: true)
+
+      PostCreator.create!(
+        unrelated_user,
+        raw: "This is a whisper that I am testing",
+        topic_id: post.topic_id,
+        post_type: Post.types[:whisper]
+      )
+
+      expect(post.topic.topic_allowed_users.map(&:user_id)).to contain_exactly(
+        target_user1.id, target_user2.id, user.id
+      )
     end
 
     it 'does not increase posts count for small actions' do
