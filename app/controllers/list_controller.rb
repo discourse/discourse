@@ -259,6 +259,7 @@ class ListController < ApplicationController
     options ||= {}
     period = params[:period]
     period ||= ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
+    TopTopic.validate_period(period)
     public_send("top_#{period}", options)
   end
 
