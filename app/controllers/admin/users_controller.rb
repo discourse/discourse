@@ -211,9 +211,10 @@ class Admin::UsersController < Admin::AdminController
 
   def add_group
     group = Group.find(params[:group_id].to_i)
-
     raise Discourse::NotFound unless group
+
     return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
+    guardian.ensure_can_edit!(group)
 
     group.add(@user)
     GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
@@ -223,12 +224,14 @@ class Admin::UsersController < Admin::AdminController
 
   def remove_group
     group = Group.find(params[:group_id].to_i)
-
     raise Discourse::NotFound unless group
-    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
 
-    group.remove(@user)
-    GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
+    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
+    guardian.ensure_can_edit!(group)
+
+    if group.remove(@user)
+      GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
+    end
 
     render body: nil
   end
