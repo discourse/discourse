@@ -603,6 +603,22 @@ describe PostDestroyer do
     end
   end
 
+  describe "deleting a post directly after a whisper" do
+    before do
+      SiteSetting.enable_whispers = true
+    end
+
+    it 'should not set Topic#last_post_user_id to a whisperer' do
+      post_1 = create_post(topic: post.topic, user: moderator)
+      whisper_1 = create_post(topic: post.topic, user: Fabricate(:user), post_type: Post.types[:whisper])
+      whisper_2 = create_post(topic: post.topic, user: Fabricate(:user), post_type: Post.types[:whisper])
+
+      PostDestroyer.new(admin, whisper_2).destroy
+
+      expect(post.topic.reload.last_post_user_id).to eq(post_1.user.id)
+    end
+  end
+
   context 'deleting the second post in a topic' do
 
     fab!(:user) { Fabricate(:user) }
