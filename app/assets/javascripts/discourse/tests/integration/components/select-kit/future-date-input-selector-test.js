@@ -168,6 +168,41 @@ discourseModule(
       },
     });
 
+    componentTest("doesn't show 'This Weekend' on Sundays", {
+      /*
+        We need this test to avoid regressions.
+        We tend to write such conditions and think that
+        they mean the beginning of work week
+        (Monday, Tuesday and Wednesday in this specific case):
+
+         if (date.day <= 3) {
+             ...
+         }
+
+        In fact, Sunday will pass this check too, because
+        in moment.js 0 stands for Sunday.
+      */
+
+      template: hbs`
+        {{future-date-input-selector
+          includeWeekend=true
+        }}
+      `,
+
+      beforeEach() {
+        const timezone = moment.tz.guess();
+        this.clock = fakeTime("2100-04-25 18:00:00", timezone, true); // Sunday
+      },
+
+      async test(assert) {
+        await this.subject.expand();
+        const options = getOptions();
+        const thisWeekend = I18n.t("topic.auto_update_input.this_weekend");
+
+        assert.not(options.includes(thisWeekend));
+      },
+    });
+
     componentTest(
       "shows 'Later This Week' instead of 'Later Today' at the end of the day",
       {
