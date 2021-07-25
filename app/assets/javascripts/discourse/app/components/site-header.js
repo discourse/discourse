@@ -260,9 +260,7 @@ const SiteHeaderComponent = MountWidget.extend(
           } else {
             document.body.classList.remove("docked");
           }
-        });
-
-        this._stickyHeaderObserver.observe(dockAnchor);
+        }).observe(dockAnchor);
       }
     },
 
