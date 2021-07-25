@@ -45,6 +45,7 @@ ar:
       long_date_without_year_with_linebreak: "D MMMM <br/>LT"
       long_date_with_year_with_linebreak: "D ‏MMMM ‏YYYY <br/>LT"
       wrap_ago: "منذ %{date}"
+      wrap_on: "في %{date}"
       tiny:
         half_a_minute: "< 1د"
         less_than_x_seconds:
@@ -408,6 +409,7 @@ ar:
       remove: "إزالة"
       remove_confirmation: "هل تريد بالتأكيد حذف هذه المسودة؟"
       new_topic: "مسودة موضوع جديد"
+      new_private_message: "مسودة رسالة خاصة جديدة"
       topic_reply: "مسودة الرد"
       abandon:
         confirm: "لديك مسودة محفوظة لهذا الموضوع. ماذا تريد أن تفعل بها؟"
@@ -814,7 +816,9 @@ ar:
           last_updated_by: "بواسطة"
           settings_required: "جميع الإعدادات مطلوبة، يُرجى ملء جميع الحقول قبل التحقُّق."
           smtp_settings_valid: "إعدادات SMTP صالحة."
+          smtp_title: "SMTP"
           smtp_instructions: "عند تمكين SMTP للمجموعة، سيتم إرسال جميع الرسائل الإلكترونية الصادرة المُرسَلة من صندوق الوارد الخاص بالمجموعة عبر إعدادات SMTP المحدَّدة هنا بدلًا من خادم البريد الذي تم إعداده للرسائل الإلكترونية الأخرى التي يرسلها منتداك."
+          imap_title: "IMAP"
           imap_additional_settings: "إعدادات إضافية"
           imap_instructions: 'عند تمكين IMAP للمجموعة، تتم مزامنة الرسائل الإلكترونية بين صندوق الوارد للمجموعة وخادم IMAP وصندوق البريد المقدَّمين. يجب تفعيل SMTP باستخدام بيانات اعتماد صالحة ومُختبَرة قبل تفعيل IMAP. سيتم استخدام اسم مستخدم البريد الإلكتروني وكلمة المرور المستخدمين لخادم SMTP في خادم IMAP. لمزيد من المعلومات، راجع <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">إعلان الميزة في Discourse Meta</a>.'
           imap_alpha_warning: "تحذير: هذه الميزة في مرحلة الإصدار الأولي. ويتم دعم Gmail فقط بشكلٍ رسمي. استخدمها على مسؤوليتك الخاصة!"
@@ -824,6 +828,7 @@ ar:
           imap_mailbox_not_selected: "يجب تحديد صندوق بريد لإعداد خادم IMAP وإلا فلن تتم مزامنة أي صناديق بريد!"
           prefill:
             title: "الملء المسبق بإعدادات:"
+            gmail: "GMail"
           credentials:
             title: "بيانات الاعتماد"
             smtp_server: "خادم SMTP"
@@ -999,6 +1004,11 @@ ar:
       flair_type:
         icon: "تحديد أيقونة"
         image: "تحميل صورة"
+      default_notifications:
+        modal_title: "الإشعارات الافتراضية للمستخدم"
+        modal_description: "هل ترغب في تطبيق هذا التغيير بأثر رجعي؟ سيؤدي ذلك إلى تغيير التفضيلات لعدد %{count} مستخدم حالي."
+        modal_yes: "نعم"
+        modal_no: "لا، تطبيق التغيير من الآن فصاعدًا فقط"
     user_action_groups:
       "1": "الإعجابات"
       "2": "الإعجابات"
@@ -1761,6 +1771,7 @@ ar:
       avatar:
         title: "صورة الملف الشخصي"
         header_title: "الملف الشخصي والرسائل والإشارات المرجعية والتفضيلات"
+        name_and_description: "%{name} - %{description}"
         edit: "تعديل صورة الملف الشخصي"
       title:
         title: "اللقب"
@@ -2250,6 +2261,7 @@ ar:
           confirm: لديك مسودة موضوع جديد تم حفظها، وسيتم استبدالها إذا أنشأت موضوعًا مرتبطًا.
         reply_as_new_group_message:
           label: الرد كرسالة جديدة للمجموعة
+          desc: إنشاء رسالة جديدة بدءًا بالمستلمين الجُدد
         reply_as_private_message:
           label: رسالة جديدة
           desc: إنشاء رسالة خاصة جديدة
@@ -3344,6 +3356,7 @@ ar:
         name: "الاسم"
         name_placeholder: "ما استخدام هذه الإشارة المرجعية؟"
         set_reminder: "تذكيري"
+        options: "الخيارات"
         actions:
           delete_bookmark:
             name: "حذف الإشارة المرجعية"
@@ -3455,6 +3468,7 @@ ar:
       position_disabled: "سيتم عرض الفئات بترتيب نشاطها. للتحكُّم في ترتيب الفئات في القائمة، "
       position_disabled_click: 'عليك تفعيل إعداد "تثبيت ترتيب الفئات".'
       minimum_required_tags: "الحد الأدنى من عدد الوسوم المطلوبة في الموضوع:"
+      default_slow_mode: 'تفعيل "الوضع البطيء" للموضوعات الجديدة في هذه الفئة.'
       parent: "الفئة الرئيسية"
       num_auto_bump_daily: "عدد الموضوعات المفتوحة التي سيتم رفعها تلقائيًا بشكل يومي:"
       navigate_to_first_post_after_read: "الانتقال إلى أول منشور بعد قراءة الموضوعات"
@@ -4078,6 +4092,9 @@ ar:
         member: "عضو"
         regular: "عادي"
         leader: "قائد"
+      detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "لقد اخترت ملفًا غير مدعوم. أنواع الملفات المدعومة - %{types}."
   admin_js:
     type_to_filter: "اكتب للتصفية..."
     admin:
@@ -4320,6 +4337,7 @@ ar:
               log_out: تسجيل الخروج من جميع الجلسات لمستخدم
               anonymize: إخفاء هوية حسابات المستخدمين
               delete: حذف حسابات المستخدمين
+              list: احصل على قائمة بالمستخدمين.
             email:
               receive_emails: ادمج هذا النطاق مع مستقبل البريد لمعالجة الرسائل الإلكترونية الواردة.
       web_hooks:
@@ -4542,6 +4560,7 @@ ar:
           theme: "السمة"
           component: "المكوِّن"
           components: "المكوِّنات"
+          filter_placeholder: "اكتب للتصفية…"
           theme_name: "اسم السمة"
           component_name: "اسم المكوِّن"
           themes_intro: "حدِّد سمة موجودة أو ثبِّت سمة جديدة للبدء"
@@ -4705,6 +4724,7 @@ ar:
             text: "</‎body>"
             title: "HTML الذي سيتم إدراجه قبل وسم ‎</body>‎"
           yaml:
+            text: "YAML"
             title: "تحديد إعدادات السمة بتنسيق YAML"
           scss_color_variables_warning: 'تم التوقف عن استخدام متغيرات ألوان SCSS الأساسية في السمات. يُرجى استخدام خصائص CSS المخصَّصة بدلًا من ذلك. راجع <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">هذا الدليل</a> لمزيد من التفاصيل.'
           scss_warning_inline: "تم التوقف عن استخدام متغيرات ألوان SCSS الأساسية في السمات."
@@ -5159,6 +5179,7 @@ ar:
         penalty_post_edit: "تعديل المنشور"
         penalty_post_none: "عدم اتخاذ أي إجراء"
         penalty_count: "عدد العقوبات"
+        penalty_history: "سجل العقوبات"
         clear_penalty_history:
           title: "مسح سجل العقوبات"
           description: "لا يمكن للمستخدمين الذين حصلوا على عقوبات الوصول إلى مستوى الثقة 3"
@@ -5304,6 +5325,9 @@ ar:
         trust_level_unlocked_tip: "تم إلغاء قفل مستوى الثقة، قد يرقِّي النظام المستخدم أو يخفض رتبته"
         lock_trust_level: "قفل مستوى الثقة"
         unlock_trust_level: "إلغاء قفل مستوى الثقة"
+        silenced_count: "مكتوم"
+        suspended_count: "معلَّق"
+        last_six_months: "آخر 6 أشهر"
         tl3_requirements:
           title: "المتطلبات لمستوى الثقة 3."
           table_title:
@@ -5553,7 +5577,10 @@ ar:
           perform: "منح شارة للمستخدمين"
           upload_csv: تحميل ملف CSV يتضمَّن عناوين البريد الإلكتروني للمستخدمين أو أسماء المستخدمين
           aborted: يُرجى تحميل ملف CSV يتضمَّن عناوين البريد الإلكتروني للمستخدمين أو أسماء المستخدمين
+          success: تم استلام ملف CSV وسيتلقَّى %{count} مستخدم الشارة قريبًا.
+          csv_has_unmatched_users: "الإدخالات التالية موجودة في ملف CSV ولكن لا يمكن مطابقتها مع المستخدمين الحاليين، وبالتالي لن تتلقى الشارة:"
           replace_owners: إزالة الشارة من مالكيها السابقين
+          grant_existing_holders: منح شارات إضافة لحاملي الشارات الحاليين
       emoji:
         title: "الرمز التعبيري"
         help: "إضافة رمز تعبيري جديد سيكون متاحًا للجميع. (تلميح احترافي: يمكنك سحب وإفلات عدة ملفات في الوقت نفسه)"
