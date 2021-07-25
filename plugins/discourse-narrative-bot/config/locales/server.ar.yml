@@ -46,12 +46,12 @@ ar:
       invalid: |-
         عذرًا، من المستحيل رياضيًا الحصول على هذه التركيبة في النرد. :confounded:
       not_enough_dice:
-        zero: "لدي فقط %{count} نرد. [Shameful] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        zero: "لدي %{count} حجر نرد فقط. [هذا مخزٍ] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
         one: "لدي حجر نرد واحد (%{count}) فقط. [هذا مخزٍ] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        two: "لدي فقط %{count} نرد. [Shameful] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        few: "لدي فقط %{count} نرد. [Shameful] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        many: "لدي فقط %{count} نرد. [Shameful] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        other: "لدي فقط %{count} نرد. [Shameful] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        two: "لدي حجرَي نرد (%{count}) فقط. [هذا مخزٍ] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        few: "لدي %{count} أحجار نرد فقط. [هذا مخزٍ] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        many: "لدي فقط %{count} حجر نرد. [هذا مخزٍ] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        other: "لدي فقط %{count} حجر نرد. [هذا مخزٍ] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
       out_of_range: |-
         هل تعلم أن [أقصى عدد من الجوانب](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) في نرد عادل رياضيًا هو 120؟
       results: |-
@@ -296,7 +296,14 @@ ar:
         not_found: |-
           حسنًا... يبدو أنك تواجه مشكلة. آسف بشأن ذلك. هل بحثت <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> عن المصطلح **كابيبارا**؟
       end:
-        message: "شكرًا لك على البقاء معي يا @%{username}! لقد صنعت هذا من أجلك، وأعتقد أنك استحققته:\n\n%{Certificate} \n\nهذا كل شيء في الوقت الحالي! اطَّلع على [**أحدث موضوعات المناقشة**](%{base_uri}/latest) or [**فئات المناقشة**](%{base_uri}/categories). :sunglasses:\n\n(إذا كنت ترغب في التحدُّث إليَّ مرة أخرى لمعرفة المزيد، فما عليك سوى إرسال رسالة أو الإشارة إلى \"@%{discobot_username}\" في أي وقت!)"
+        message: |-
+          شكرًا لك على البقاء معي يا @%{username}! لقد صنعت هذا من أجلك، وأعتقد أنك استحققته:
+
+          %{certificate}
+
+          هذا كل شيء في الوقت الحالي! اطَّلع على [**أحدث موضوعات المناقشة**](%{base_uri}/latest) or [**فئات المناقشة**](%{base_uri}/categories). :sunglasses:
+
+          (إذا كنت ترغب في التحدُّث إليَّ مرة أخرى لمعرفة المزيد، فما عليك سوى إرسال رسالة أو الإشارة إلى "@%{discobot_username}" في أي وقت!)
       certificate:
         alt: "شهادة الإنجاز"
     advanced_user_narrative:
