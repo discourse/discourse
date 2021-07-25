@@ -14,7 +14,6 @@ const SiteHeaderComponent = MountWidget.extend(
   RerenderOnDoNotDisturbChange,
   {
     widget: "header",
-    dockedHeader: null,
     _animate: false,
     _isPanning: false,
     _panMenuOrigin: "right",
@@ -22,7 +21,6 @@ const SiteHeaderComponent = MountWidget.extend(
     _scheduledRemoveAnimate: null,
     _topic: null,
     _mousetrap: null,
-    _stickyHeaderDiv: null,
     _stickyHeaderObserver: null,
 
     @observes(
@@ -256,21 +254,15 @@ const SiteHeaderComponent = MountWidget.extend(
     _stickyHeaderCheck() {
       const dockAnchor = document.querySelector(".header-dock-anchor");
       if (dockAnchor) {
-        this._dockAnchor = dockAnchor;
-
-        const dockObserver = new IntersectionObserver((entries) => {
+        this._stickyHeaderObserver = new IntersectionObserver((entries) => {
           if (!entries[0].isIntersecting) {
             document.body.classList.add("docked");
-            this.dockedHeader = true;
           } else {
             document.body.classList.remove("docked");
-            this.dockedHeader = false;
           }
         });
 
-        this._stickyHeaderObserver = dockObserver;
-
-        dockObserver.observe(dockAnchor);
+        this._stickyHeaderObserver.observe(dockAnchor);
       }
     },
 
@@ -296,9 +288,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
       document.removeEventListener("click", this._dismissFirstNotification);
 
-      if (this._stickyHeaderDockObserver) {
-        this._stickyHeaderDockObserver.unobserve(this._dockAnchor);
-      }
+      const dockAnchor = document.querySelector(".header-dock-anchor");
+      this._stickyHeaderDockObserver?.unobserve(dockAnchor);
     },
 
     buildArgs() {
