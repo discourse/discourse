@@ -273,7 +273,7 @@ ar:
         reply: |-
           سيتم إرسال إشعار إلى [فريق عملنا](%{base_uri}/groups/staff) بشأن بلاغك. إذا أبلغ عدد كافٍ من أعضاء المجتمع عن منشور، فسيتم إخفاؤه تلقائيًا كإجراء وقائي. (بما أنني لم أكتب في الواقع منشورًا مزعجًا :angel:، فقد مضيت قدمًا وأزلت البلاغ في الوقت الحالي.)
         not_found: |-
-          أوه لا، لم يتم الإبلاغ عن منشوري المزعج على أنه غير لائق بعد. :worried: هل يمكنك الإبلاغ عنه كغير لائق باستخدام **العلم** img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">؟ لا تنسَ استخدام الزر "عرض المزيد" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> للكشف عن المزيد من الإجراءات لكل منشور.
+          أوه لا، لم يتم الإبلاغ عن منشوري المزعج على أنه غير لائق بعد. :worried: هل يمكنك الإبلاغ عنه كغير لائق باستخدام **العلم** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">؟ لا تنسَ استخدام الزر "عرض المزيد" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> للكشف عن المزيد من الإجراءات لكل منشور.
       search:
         instructions: |-
           _بسست_... لقد أخفيت مفاجأة في هذا الموضوع. إذا كنت مستعدًا للتحدي، **فحدِّد رمز البحث** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> أعلى اليسار &#8599; للبحث عنه.
@@ -343,7 +343,7 @@ ar:
         deleted_post_raw: "لماذا حذف @%{discobot_username} منشوري؟ :anguished:"
         instructions: "أوه لا! يبدو أنني حذفت عن طريق الخطأ منشورًا جديدًا أنشأته للتو من أجلك. \n \n هل يمكنك تقديم خدمة لي و<img src=\"%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png\" width=\"16\" height=\"16\"> **إلغاء حذفه**؟"
         not_found: |-
-          تواجه بعض المتاعب؟ تذكَّر أن <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">"عرض المزيد" سيكشف عن src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">"إلغاء الحذف".
+          تواجه بعض المتاعب؟ تذكَّر أن <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "عرض المزيد" سيكشف عن <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> "إلغاء الحذف".
         reply: |-
           مرحى، كان ذلك وشيكًا! شكرًا لك على إصلاح ذلك :wink:
 
