@@ -3,7 +3,6 @@ import PanEvents, {
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
 import { cancel, later, schedule } from "@ember/runloop";
-import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import Mousetrap from "mousetrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
@@ -11,12 +10,10 @@ import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
 const SiteHeaderComponent = MountWidget.extend(
-  Docking,
   PanEvents,
   RerenderOnDoNotDisturbChange,
   {
     widget: "header",
-    docAt: null,
     dockedHeader: null,
     _animate: false,
     _isPanning: false,
@@ -25,6 +22,8 @@ const SiteHeaderComponent = MountWidget.extend(
     _scheduledRemoveAnimate: null,
     _topic: null,
     _mousetrap: null,
+    _stickyHeaderDiv: null,
+    _stickyHeaderObserver: null,
 
     @observes(
       "currentUser.unread_notifications",
@@ -172,30 +171,6 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    dockCheck(info) {
-      const header = document.querySelector("header.d-header");
-
-      if (this.docAt === null) {
-        if (!header) {
-          return;
-        }
-        this.docAt = header.offsetTop;
-      }
-
-      const offset = info.offset();
-      if (offset >= this.docAt) {
-        if (!this.dockedHeader) {
-          document.body.classList.add("docked");
-          this.dockedHeader = true;
-        }
-      } else {
-        if (this.dockedHeader) {
-          document.body.classList.remove("docked");
-          this.dockedHeader = false;
-        }
-      }
-    },
-
     setTopic(topic) {
       this.eventDispatched("dom:clean", "header");
       this._topic = topic;
@@ -212,6 +187,8 @@ const SiteHeaderComponent = MountWidget.extend(
       this._super(...arguments);
       this._resizeDiscourseMenuPanel = () => this.afterRender();
       window.addEventListener("resize", this._resizeDiscourseMenuPanel);
+
+      this._stickyHeaderCheck();
 
       this.appEvents.on("header:show-topic", this, "setTopic");
       this.appEvents.on("header:hide-topic", this, "setTopic");
@@ -276,6 +253,27 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
+    _stickyHeaderCheck() {
+      const dockAnchor = document.querySelector(".header-dock-anchor");
+      if (dockAnchor) {
+        this._dockAnchor = dockAnchor;
+
+        const dockObserver = new IntersectionObserver((entries) => {
+          if (!entries[0].isIntersecting) {
+            document.body.classList.add("docked");
+            this.dockedHeader = true;
+          } else {
+            document.body.classList.remove("docked");
+            this.dockedHeader = false;
+          }
+        });
+
+        this._stickyHeaderObserver = dockObserver;
+
+        dockObserver.observe(dockAnchor);
+      }
+    },
+
     _cleanDom() {
       // For performance, only trigger a re-render if any menu panels are visible
       if (this.element.querySelector(".menu-panel")) {
@@ -297,6 +295,10 @@ const SiteHeaderComponent = MountWidget.extend(
       this._mousetrap.reset();
 
       document.removeEventListener("click", this._dismissFirstNotification);
+
+      if (this._stickyHeaderDockObserver) {
+        this._stickyHeaderDockObserver.unobserve(this._dockAnchor);
+      }
     },
 
     buildArgs() {
