@@ -430,6 +430,11 @@ HTML
       theme_field.destroy!
       expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(0)
     end
+
+    it 'crashes gracefully when svg is invalid' do
+      FileStore::LocalStore.any_instance.stubs(:path_for).returns(nil)
+      expect(theme_field.validate_svg_sprite_xml).to match("Error with icons-sprite")
+    end
   end
 
 end
