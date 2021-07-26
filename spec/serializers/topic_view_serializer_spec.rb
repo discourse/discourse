@@ -73,19 +73,6 @@ describe TopicViewSerializer do
           json = serialize_topic(topic, user)
         end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
       end
-
-      it 'should have thumbnails after jobs run' do
-        Jobs.run_immediately!
-        SiteSetting.create_thumbnails = true
-
-        Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
-        json = serialize_topic(topic, user)
-        topic.generate_thumbnails!
-        json = serialize_topic(topic, user)
-
-        # Original + Optimized
-        expect(json[:thumbnails].length).to eq(2)
-      end
     end
 
     describe 'when a topic does not contain an image' do

@@ -116,6 +116,25 @@ describe EmbedController do
         expect(response.body).to match("data-referer=\"https://example.com/evil-trout\"")
       end
 
+      it "returns a list of topics if the top_period is not valid" do
+        topic1 = Fabricate(:topic)
+        topic2 = Fabricate(:topic)
+        good_topic = Fabricate(:topic, like_count: 1000, posts_count: 100)
+        TopTopic.refresh!
+        TopicQuery.any_instance.expects(:list_top_for).never
+
+        get '/embed/topics?discourse_embed_id=de-1234&top_period=decadely', headers: {
+          'REFERER' => 'https://example.com/evil-trout'
+        }
+        expect(response.status).to eq(200)
+        expect(response.headers['X-Frame-Options']).to be_nil
+        expect(response.body).to match("data-embed-id=\"de-1234\"")
+        expect(response.body).to match("data-topic-id=\"#{good_topic.id}\"")
+        expect(response.body).to match("data-topic-id=\"#{topic1.id}\"")
+        expect(response.body).to match("data-topic-id=\"#{topic2.id}\"")
+        expect(response.body).to match("data-referer=\"https://example.com/evil-trout\"")
+      end
+
       it "wraps the list in a custom class" do
         topic = Fabricate(:topic)
         get '/embed/topics?discourse_embed_id=de-1234&embed_class=my-special-class', headers: {

@@ -57,8 +57,13 @@ class EmbedController < ApplicationController
     end
 
     topic_query = TopicQuery.new(current_user, list_options)
-    top_period = params[:top_period]&.to_sym
-    valid_top_period = TopTopic.periods.include?(top_period)
+    top_period = params[:top_period]
+    begin
+      TopTopic.validate_period(top_period)
+      valid_top_period = true
+    rescue Discourse::InvalidParameters
+      valid_top_period = false
+    end
 
     @list = if valid_top_period
       topic_query.list_top_for(top_period)

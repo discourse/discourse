@@ -1,6 +1,6 @@
 {{#unless site.mobileView}}
   {{#if showToggleBulkSelect}}
-    {{bulk-select-button selected=selected action=(route-action "refresh")}}
+    {{bulk-select-button canDoBulkActions=true selected=selected action=(route-action "refresh")}}
   {{/if}}
 {{/unless}}
 

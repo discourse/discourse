@@ -355,6 +355,24 @@ describe TopicQuery do
     end
   end
 
+  context "#list_top_for" do
+    it "lists top for the week" do
+      Fabricate(:topic, like_count: 1000, posts_count: 100)
+      TopTopic.refresh!
+      expect(topic_query.list_top_for(:weekly).topics.count).to eq(1)
+    end
+
+    it "only allows periods defined by TopTopic.periods" do
+      expect { topic_query.list_top_for(:all) }.not_to raise_error
+      expect { topic_query.list_top_for(:yearly) }.not_to raise_error
+      expect { topic_query.list_top_for(:quarterly) }.not_to raise_error
+      expect { topic_query.list_top_for(:monthly) }.not_to raise_error
+      expect { topic_query.list_top_for(:weekly) }.not_to raise_error
+      expect { topic_query.list_top_for(:daily) }.not_to raise_error
+      expect { topic_query.list_top_for("some bad input") }.to raise_error(Discourse::InvalidParameters)
+    end
+  end
+
   context 'mute_all_categories_by_default' do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:topic) { Fabricate(:topic, category: category) }

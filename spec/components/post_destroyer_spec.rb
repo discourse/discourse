@@ -15,8 +15,6 @@ describe PostDestroyer do
   describe "destroy_old_hidden_posts" do
 
     it "destroys posts that have been hidden for 30 days" do
-      Fabricate(:admin)
-
       now = Time.now
 
       freeze_time(now - 60.days)
@@ -63,7 +61,6 @@ describe PostDestroyer do
 
     it 'destroys stubs for deleted by user posts' do
       SiteSetting.delete_removed_posts_after = 24
-      Fabricate(:admin)
       topic = post.topic
       reply1 = create_post(topic: topic)
       reply2 = create_post(topic: topic)
@@ -111,7 +108,6 @@ describe PostDestroyer do
     end
 
     it 'uses the delete_removed_posts_after site setting' do
-      Fabricate(:admin)
       topic = post.topic
       reply1 = create_post(topic: topic)
       reply2 = create_post(topic: topic)
@@ -147,7 +143,6 @@ describe PostDestroyer do
     end
 
     it "deletes posts immediately if delete_removed_posts_after is 0" do
-      Fabricate(:admin)
       topic = post.topic
       reply1 = create_post(topic: topic)
 
@@ -184,7 +179,7 @@ describe PostDestroyer do
       post = Fabricate(:post)
       UserDestroyer.new(Discourse.system_user).destroy(post.user, delete_posts: true)
 
-      expect { PostDestroyer.new(Fabricate(:admin), post.reload).recover }
+      expect { PostDestroyer.new(admin, post.reload).recover }
         .to change { post.reload.user_id }.to(Discourse.system_user.id)
         .and change { post.topic.user_id }.to(Discourse.system_user.id)
     end
@@ -437,7 +432,7 @@ describe PostDestroyer do
       expect(user2.user_stat.topic_count).to eq(0)
       expect(user2.user_stat.post_count).to eq(1)
 
-      PostDestroyer.new(Fabricate(:admin), post).destroy
+      PostDestroyer.new(admin, post).destroy
       user1.reload
       user2.reload
       expect(user1.user_stat.topic_count).to eq(0)
@@ -613,6 +608,22 @@ describe PostDestroyer do
       Fabricate(:topic_web_hook)
       StaffActionLogger.any_instance.expects(:log_check_personal_message).never
       PostDestroyer.new(admin, first_post).destroy
+    end
+  end
+
+  describe "deleting a post directly after a whisper" do
+    before do
+      SiteSetting.enable_whispers = true
+    end
+
+    it 'should not set Topic#last_post_user_id to a whisperer' do
+      post_1 = create_post(topic: post.topic, user: moderator)
+      whisper_1 = create_post(topic: post.topic, user: Fabricate(:user), post_type: Post.types[:whisper])
+      whisper_2 = create_post(topic: post.topic, user: Fabricate(:user), post_type: Post.types[:whisper])
+
+      PostDestroyer.new(admin, whisper_2).destroy
+
+      expect(post.topic.reload.last_post_user_id).to eq(post_1.user.id)
     end
   end
 
@@ -820,7 +831,7 @@ describe PostDestroyer do
       user = Fabricate(:evil_trout)
       post = create_post(raw: 'Hello @eviltrout')
       expect {
-        PostDestroyer.new(Fabricate(:moderator), post).destroy
+        PostDestroyer.new(moderator, post).destroy
       }.to change(user.notifications, :count).by(-1)
     end
   end

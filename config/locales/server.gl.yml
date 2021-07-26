@@ -463,12 +463,6 @@ gl:
       Pode editar a súa resposta e engadir unha cita seleccionando o texto e premendo no botón <b>citar resposta</b> que aparece.
 
       É máis sinxelo para a comunidade ler temas con menos respostas, pero con máis contido, que moitas respostas pequenas e individuais.
-    dominating_topic: |
-      ### Permita que máis xente se una á conversa
-
-      Está claro que este tema lle importa &ndash; publicou máis do %{percent}% das respostas.
-
-      Aínda podería ser mellor se lles dese espazo a outras persoas para compartiren o seu punto de vista. Que tal se as convida?
     get_a_room: |
       ###Anime a todos a participar na conversa
 
@@ -1418,7 +1412,6 @@ gl:
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
     enforce_second_factor: "Obriga os usuarios a activar a autenticación de dobre paso. Seleccione «todo» para aplicalo a todos os usuarios. Seleccione «equipo» para forzalo en usuarios do equipo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
-    same_site_cookies: "Utilizar os mesmos rastros do sitio; eliminan todos os vectores CSRF -falsificación de petición en sitios cruzados- dos navegadores compatíbeis (laxo ou estrito). AVISO: O estrito só funcionará en sitios que forcen o inicio de sesión e utilicen un método externo de autenticación."
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
     summary_posts_required: "Número mínimo de publicacións antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."
     summary_likes_required: "Número mínimo de gústame nun tema antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."

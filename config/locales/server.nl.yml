@@ -427,12 +427,6 @@ nl:
       U kunt uw eerdere antwoord bewerken om een citaat toe te voegen door tekst te accentueren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder uitgebreide antwoorden bevatten dan die met veel kleine, individuele antwoorden.
-    dominating_topic: |
-      ### Laat anderen aan de conversatie deelnemen
-
-      Dit topic is duidelijk belangrijk voor u &ndash; u hebt hier meer dan %{percent}% van de antwoorden geplaatst.
-
-      Het zou nog beter kunnen zijn als u ook anderen de ruimte geeft om hun ideeën te delen. Kunt u ze uitnodigen?
     too_many_replies: |
       ### U hebt de antwoordlimiet voor dit topic bereikt
 

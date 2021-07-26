@@ -387,7 +387,7 @@ zh_CN:
         reply: |-
           太棒了！我希望你没有将这个话题设为免打扰，因为我有时会有点健谈 :grin:。
 
-          请注意，当你回复话题或阅读话题超过几分钟时，它会被自动设置为“跟踪”通知级别。 你可以在[你的用户偏好设置](%{base_uri}/my/preferences)中更改此设置。
+          请注意，当你回复话题或阅读话题超过几分钟时，它会被自动设置为“跟踪”通知级别。你可以在[你的用户偏好设置](%{base_uri}/my/preferences)中更改此设置。
       poll:
         instructions: |-
           你知道你可以在任何帖子中添加投票吗？尝试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标来**构建投票**。
@@ -420,7 +420,7 @@ zh_CN:
           [details=点这里查看运作方式！]
           1. 点击编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标。
           2. 选择“隐藏详细信息”。
-          3. 编辑详细信息概要并添加内容。
+          3. 编辑详细信息摘要并添加内容。
           [/details]
 
           你可以使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标在你的下一个回复中添加详细信息部分吗？

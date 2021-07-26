@@ -2968,6 +2968,7 @@ sv:
       position_disabled: "Kategorier kommer att sorteras efter sin aktivitet. För att ställa in sorteringen av kategorier i den här listan "
       position_disabled_click: 'aktiverar du inställningen "fasta kategoripositioner".'
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
+      default_slow_mode: 'Aktivera "Långsamt läge" för nya ämnen i denna kategori.'
       parent: "Överordnad kategori"
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
       navigate_to_first_post_after_read: "Navigera till första inlägget efter att ämnen är lästa"

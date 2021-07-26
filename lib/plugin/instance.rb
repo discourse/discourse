@@ -840,7 +840,7 @@ class Plugin::Instance
   #   methods: :get,
   #   actions: "mycontroller#myaction",
   #   formats: :ics,
-  #   parameters: :testparam
+  #   params: :testparam
   # )
   #
   # The scope registered would be `discourse-awesome-plugin:read_my_route`

@@ -40,13 +40,13 @@ export const TIMEFRAMES = [
   buildTimeframe({
     id: "later_this_week",
     format: "ddd, h a",
-    enabled: (opts) => !opts.canScheduleToday && opts.day < 4,
+    enabled: (opts) => !opts.canScheduleToday && opts.day > 0 && opts.day < 4,
     when: (time, timeOfDay) => time.add(2, "day").hour(timeOfDay).minute(0),
   }),
   buildTimeframe({
     id: "this_weekend",
     format: "ddd, h a",
-    enabled: (opts) => opts.day < 5 && opts.includeWeekend,
+    enabled: (opts) => opts.day > 0 && opts.day < 5 && opts.includeWeekend,
     when: (time, timeOfDay) => time.day(6).hour(timeOfDay).minute(0),
     icon: "bed",
   }),

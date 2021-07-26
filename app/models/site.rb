@@ -35,10 +35,12 @@ class Site
     UserField.order(:position).all
   end
 
-  CATEGORIES_CACHE_KEY = "site_categories"
+  def self.categories_cache_key
+    "site_categories_#{Discourse.git_version}"
+  end
 
   def self.clear_cache
-    Discourse.cache.delete(CATEGORIES_CACHE_KEY)
+    Discourse.cache.delete(categories_cache_key)
   end
 
   def self.all_categories_cache
@@ -47,7 +49,7 @@ class Site
     #
     # Do note that any new association added to the eager loading needs a
     # corresponding ActiveRecord callback to clear the categories cache.
-    Discourse.cache.fetch(CATEGORIES_CACHE_KEY, expires_in: 30.minutes) do
+    Discourse.cache.fetch(categories_cache_key, expires_in: 30.minutes) do
       categories = Category
         .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups, :required_tag_group)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')

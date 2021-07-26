@@ -333,19 +333,9 @@ class GroupsController < ApplicationController
 
   def add_members
     group = Group.find(params[:id])
-    group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
+    guardian.ensure_can_edit!(group)
+
     users = users_from_params.to_a
-
-    if group.public_admission
-      if !guardian.can_log_group_changes?(group) && current_user != users.first
-        raise Discourse::InvalidAccess
-      end
-
-      unless current_user.staff?
-        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
-      end
-    end
-
     emails = []
     if params[:emails]
       params[:emails].split(",").each do |email|
@@ -376,17 +366,10 @@ class GroupsController < ApplicationController
         count: usernames_already_in_group.size
       ))
     else
+      notify = params[:notify_users]&.to_s == "true"
       uniq_users = users.uniq
       uniq_users.each do |user|
-        begin
-          group.add(user)
-          GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-          group.notify_added_to_group(user) if params[:notify_users]&.to_s == "true"
-        rescue ActiveRecord::RecordNotUnique
-          # Under concurrency, we might attempt to insert two records quickly and hit a DB
-          # constraint. In this case we can safely ignore the error and act as if the user
-          # was added to the group.
-        end
+        add_user_to_group(group, user, notify)
       end
 
       emails.each do |email|
@@ -406,6 +389,20 @@ class GroupsController < ApplicationController
         emails: emails
       )
     end
+  end
+
+  def join
+    ensure_logged_in
+    unless current_user.staff?
+      RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+    end
+
+    group = Group.find(params[:id])
+    raise Discourse::NotFound unless group
+    raise Discourse::InvalidAccess unless group.public_admission
+
+    return if group.users.exists?(id: current_user.id)
+    add_user_to_group(group, current_user)
   end
 
   def handle_membership_request
@@ -467,7 +464,7 @@ class GroupsController < ApplicationController
   def remove_member
     group = Group.find_by(id: params[:id])
     raise Discourse::NotFound unless group
-    group.public_exit ? ensure_logged_in : guardian.ensure_can_edit!(group)
+    guardian.ensure_can_edit!(group)
 
     # Maintain backwards compatibility
     params[:usernames] = params[:username] if params[:username].present?
@@ -477,16 +474,6 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(
       'user_ids or usernames or user_emails must be present'
     ) if users.empty?
-
-    if group.public_exit
-      if !guardian.can_log_group_changes?(group) && current_user != users.first
-        raise Discourse::InvalidAccess
-      end
-
-      unless current_user.staff?
-        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
-      end
-    end
 
     removed_users = []
     skipped_users = []
@@ -508,6 +495,21 @@ class GroupsController < ApplicationController
       usernames: removed_users,
       skipped_usernames: skipped_users
     )
+  end
+
+  def leave
+    ensure_logged_in
+    unless current_user.staff?
+      RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+    end
+
+    group = Group.find_by(id: params[:id])
+    raise Discourse::NotFound unless group
+    raise Discourse::InvalidAccess unless group.public_exit
+
+    if group.remove(current_user)
+      GroupActionLogger.new(current_user, group).log_remove_user_from_group(current_user)
+    end
   end
 
   MAX_NOTIFIED_OWNERS ||= 20
@@ -649,6 +651,16 @@ class GroupsController < ApplicationController
   end
 
   private
+
+  def add_user_to_group(group, user, notify = false)
+    group.add(user)
+    GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+    group.notify_added_to_group(user) if notify
+  rescue ActiveRecord::RecordNotUnique
+    # Under concurrency, we might attempt to insert two records quickly and hit a DB
+    # constraint. In this case we can safely ignore the error and act as if the user
+    # was added to the group.
+  end
 
   def group_params(automatic: false)
     permitted_params =

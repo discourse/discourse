@@ -273,6 +273,8 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
         expect(response.body).to include("unwatch_category")
+        doc = Nokogiri::HTML5::fragment(response.body)
+        expect(doc.css('a.badge-wrapper[href="/c/uncategorized/1"]').size).to eq(1)
 
         cu.destroy!
 

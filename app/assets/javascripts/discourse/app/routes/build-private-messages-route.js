@@ -41,7 +41,6 @@ export default (viewName, path, channel) => {
       this.controllerFor("user-topics-list").setProperties({
         hideCategory: true,
         showPosters: true,
-        canBulkSelect: true,
         tagsForUser: this.modelFor("user").get("username_lower"),
         selected: [],
         showToggleBulkSelect: true,

@@ -2324,6 +2324,7 @@ en:
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
 
     errors:
+      invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       invalid_group: "There's no group with that name."

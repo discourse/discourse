@@ -258,6 +258,7 @@ class PostDestroyer
       .select(:created_at, :user_id, :post_number)
       .where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
       .where.not(user_id: nil)
+      .where.not(post_type: Post.types[:whisper])
       .order('created_at desc')
       .limit(1)
       .first
