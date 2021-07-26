@@ -53,7 +53,7 @@ class StylesheetsController < ApplicationController
     # Security note, safe due to route constraint
     underscore_digest = digest ? "_" + digest : ""
 
-    cache_path = "#{Rails.root}/#{Stylesheet::Manager::CACHE_PATH}"
+    cache_path = Stylesheet::Manager.cache_fullpath
     location = "#{cache_path}/#{target}#{underscore_digest}#{extension}"
 
     stylesheet_time = query.pluck_first(:created_at)
