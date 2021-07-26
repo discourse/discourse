@@ -2438,6 +2438,17 @@ RSpec.describe TopicsController do
         body = response.body
         expect(body).to have_tag(:meta, with: { name: 'description', content: '[image_description]' })
       end
+
+      it "uses image cdn url for schema markup" do
+        set_cdn_url("http://cdn.localhost")
+        post = Fabricate(:post_with_uploaded_image)
+        cpp = CookedPostProcessor.new(post).update_post_image
+
+        get post.topic.url
+
+        body = response.body
+        expect(body).to have_tag(:link, with: { itemprop: 'image', href: post.image_url })
+      end
     end
   end
 
