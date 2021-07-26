@@ -177,18 +177,16 @@ describe Draft do
   end
 
   it 'updates draft count when a draft is created or destroyed' do
-    messages = MessageBus.track_publish do
+    messages = MessageBus.track_publish("/user") do
       Draft.set(user, "test", 0, "data")
     end
 
-    expect(messages.first.channel).to eq("/user")
     expect(messages.first.data[:draft_count]).to eq(1)
 
-    messages = MessageBus.track_publish do
+    messages = MessageBus.track_publish("/user") do
       Draft.where(user: user).destroy_all
     end
 
-    expect(messages.first.channel).to eq("/user")
     expect(messages.first.data[:draft_count]).to eq(0)
   end
 

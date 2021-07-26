@@ -223,7 +223,7 @@ describe UserStat do
 
   end
 
-  describe 'update_draft_count' do
+  describe '.update_draft_count' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
 
