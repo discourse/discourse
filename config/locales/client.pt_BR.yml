@@ -2968,6 +2968,7 @@ pt_BR:
       position_disabled: "Categorias serão exibidas em ordem de atividade. Para controlar a ordem das categorias nas listas,"
       position_disabled_click: 'ative a configuração "posições de categoria fixas".'
       minimum_required_tags: "Número mínimo de etiquetas exigidas em um tópico:"
+      default_slow_mode: 'Ative o "Modo lento" para obter novos tópicos nesta categoria.'
       parent: "Categoria principal"
       num_auto_bump_daily: "Número de tópicos em aberto para promover automaticamente:"
       navigate_to_first_post_after_read: "Navegue até a primeira postagem depois que os tópicos forem lidos"

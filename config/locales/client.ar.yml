@@ -342,7 +342,7 @@ ar:
       two: "حرفان (%{count})"
       few: "%{count} أحرف"
       many: "%{count} حرفًا"
-      other: "%{count} محرف"
+      other: "%{count} حرف"
     related_messages:
       title: "الرسائل ذات الصلة"
       see_all: 'عرض <a href="%{path}">كل الرسائل</a> من ⁨@%{username}⁩...'
