@@ -126,35 +126,35 @@ pt_BR:
       url: "Copiar e compartilhar a URL"
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
-      private_topic: "tornou este tópico uma mensagem pessoal em %{when}"
+      private_topic: "tornou este tópico uma mensagem pessoal %{when} atrás"
       split_topic: "dividiu este tópico %{when}"
-      invited_user: "convidou %{who} em %{when}"
-      invited_group: "convidou %{who} em %{when}"
-      user_left: "%{who} foi removido(a) desta mensagem em %{when}"
-      removed_user: "%{who} foi removido(a) em %{when}"
-      removed_group: "%{who} foi removido(a) em %{when}"
-      autobumped: "automaticamente promovido(a) em %{when}"
+      invited_user: "convidou %{who} %{when} atrás"
+      invited_group: "onvidou %{who} %{when} atrás"
+      user_left: "%{who} foi removido(a) desta mensagem %{when} atrás"
+      removed_user: "%{who} foi removido(a) %{when} atrás"
+      removed_group: "%{who} foi removido(a) %{when} atrás"
+      autobumped: "automaticamente promovido(a) %{when} atrás"
       autoclosed:
-        enabled: "fechou %{when}"
-        disabled: "abriu %{when}"
+        enabled: "fechou %{when} atrás"
+        disabled: "abriu %{when} atrás"
       closed:
-        enabled: "fechou %{when}"
-        disabled: "abriu %{when}"
+        enabled: "fechou %{when} atrás"
+        disabled: "abriu %{when} atrás"
       archived:
-        enabled: "arquivou %{when}"
-        disabled: "desarquivou %{when}"
+        enabled: "arquivou %{when} atrás"
+        disabled: "desarquivou %{when} atrás"
       pinned:
-        enabled: "fixou %{when}"
-        disabled: "desafixou %{when}"
+        enabled: "fixou %{when} atrás"
+        disabled: "desafixou %{when} atrás"
       pinned_globally:
-        enabled: "fixou globalmente %{when}"
-        disabled: "desafixou %{when}"
+        enabled: "fixou globalmente %{when} atrás"
+        disabled: "desafixou %{when} atrás"
       visible:
-        enabled: "listou %{when}"
-        disabled: "removeu da lista %{when}"
+        enabled: "listou %{when} atrás"
+        disabled: "removeu da lista %{when} atrás"
       banner:
-        enabled: "tornou um banner em %{when}. Isso será mostrado no topo de todas as páginas até que seja descartado pelo usuário."
-        disabled: "removeu este banner em %{when}. Ele não irá mais aparecer no topo de todas as páginas."
+        enabled: "tornou isto um banner %{when} atrás. Isso será mostrado no topo de todas as páginas até que seja descartado pelo(a) usuário(a)."
+        disabled: "removeu este banner %{when} atrás. Ele não irá mais aparecer no topo de todas as páginas."
       forwarded: "encaminhou o e-mail acima"
     topic_admin_menu: "ações de tópico"
     wizard_required: "Boas-vindas ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
@@ -412,7 +412,7 @@ pt_BR:
       filtered_reviewed_by: "Revisado por"
       show_all_topics: "exibir todos os tópicos"
       deleted_post: "(postagem excluída)"
-      deleted_user: "(usuário(a) excluído)"
+      deleted_user: "(usuário(a) excluído(a))"
       user:
         bio: "Bio"
         website: "Site"
@@ -437,7 +437,7 @@ pt_BR:
       topics:
         topic: "Tópico"
         reviewable_count: "Contagem"
-        reported_by: "Relatado(a) por"
+        reported_by: "Relatado por"
         deleted: "[Tópico excluído]"
         original: "(tópico original)"
         details: "detalhes"
@@ -615,9 +615,9 @@ pt_BR:
         title: "Solicitações"
         reason: "Motivo"
         accept: "Aceitar"
-        accepted: "aceito(a)"
+        accepted: "aceito"
         deny: "Negar"
-        denied: "negado(a)"
+        denied: "negado"
         undone: "solicitação desfeita"
         handle: "tratar solicitação de associação"
       manage:
@@ -815,7 +815,7 @@ pt_BR:
           title: "Normal"
           description: "Você será notificado(a) se alguém mencionar seu @nome ou responder."
         muted:
-          title: "Silenciado(a)"
+          title: "Silenciado"
           description: "Você não receberá nenhuma notificação sobre mensagens neste grupo."
       flair_url: "Imagem de estilo de avatar"
       flair_upload_description: "Use imagens quadradas não menores do que 20px por 20px."
@@ -899,7 +899,7 @@ pt_BR:
       post_count: "# postagens"
       confirm_delete_other_accounts: "Tem certeza de que deseja excluir estas contas?"
       powered_by: "usando <a href='https://maxmind.com'>MaxMindDB</a>"
-      copied: "copiado(a)"
+      copied: "copiado"
     user_fields:
       none: "(selecione uma opção)"
       required: 'Digite um valor para "%{name}"'
@@ -1263,7 +1263,7 @@ pt_BR:
         connect: "Conectar"
         revoke: "Revogar"
         cancel: "Cancelar"
-        not_connected: "(não conectado(a))"
+        not_connected: "(não conectada)"
         confirm_modal_title: "Conecte-se à conta %{provider}"
         confirm_description:
           account_specific: "Sua conta %{provider} \"%{account_description}\" será usada para autenticação."
