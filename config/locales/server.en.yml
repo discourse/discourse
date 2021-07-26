@@ -2998,11 +2998,7 @@ en:
       text_body_template: |
         The restore was successful.
 
-        Here's the log:
-
-        ``` text
-        %{logs}
-        ```
+        Here's the log: %{logs}
 
     restore_failed:
       title: "Restore Failed"
@@ -3010,11 +3006,7 @@ en:
       text_body_template: |
         The restore has failed.
 
-        Here's the log:
-
-        ``` text
-        %{logs}
-        ```
+        Here's the log: %{logs}
 
     bulk_invite_succeeded:
       title: "Bulk Invite Succeeded"

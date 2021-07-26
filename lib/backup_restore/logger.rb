@@ -27,6 +27,30 @@ module BackupRestore
       end
     end
 
+    def self.save_log_to_upload(user:, filename: 'log.txt', logs:)
+      Dir.mktmpdir do |dir|
+        logfile = File.new(File.join(dir, filename), 'w')
+        logfile.write(Discourse::Utils.pretty_logs(logs))
+        logfile.close
+
+        zipfile = Compression::Zip.new.compress(dir, filename)
+        upload = File.open(zipfile) do |file|
+          UploadCreator.new(
+            file,
+            File.basename(zipfile),
+            type: 'backup_logs',
+            for_export: 'true'
+          ).create_for(user.id)
+        end
+
+        if !upload.persisted?
+          Rails.logger.warn("Failed to upload the backup logs file #{zipfile}")
+        end
+
+        upload
+      end
+    end
+
     protected
 
     def publish_log(message, timestamp)
