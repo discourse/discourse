@@ -321,8 +321,30 @@ module BackupRestore
       log "Notifying '#{@user.username}' of the end of the backup..."
       status = @success ? :backup_succeeded : :backup_failed
 
+      upload = Dir.mktmpdir do |dir|
+        logfile = File.new(File.join(dir, 'log.txt'), 'w')
+        logfile.write(Discourse::Utils.pretty_logs(@logs))
+        logfile.close
+
+        zipfile = Compression::Zip.new.compress(dir, 'log.txt')
+        File.open(zipfile) do |file|
+          upload = UploadCreator.new(
+            file,
+            File.basename(zipfile),
+            type: 'backup_logs',
+            for_export: 'true'
+          ).create_for(@user.id)
+        end
+
+        if !upload.persisted?
+          Rails.logger.warn("Failed to upload the backup logs file #{zipfile}")
+        end
+
+        upload
+      end
+
       post = SystemMessage.create_from_system_user(
-        @user, status, logs: Discourse::Utils.pretty_logs(@logs)
+        @user, status, logs: UploadMarkdown.new(upload).attachment_markdown
       )
 
       if @user.id == Discourse::SYSTEM_USER_ID

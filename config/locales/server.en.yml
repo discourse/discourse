@@ -2982,11 +2982,7 @@ en:
 
         Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup.
 
-        Here's the log:
-
-        ``` text
-        %{logs}
-        ```
+        Here's the log: %{logs}
 
     backup_failed:
       title: "Backup Failed"
@@ -2994,11 +2990,7 @@ en:
       text_body_template: |
         The backup has failed.
 
-        Here's the log:
-
-        ``` text
-        %{logs}
-        ```
+        Here's the log: %{logs}
 
     restore_succeeded:
       title: "Restore Succeeded"

@@ -16,4 +16,13 @@ describe BackupRestore::Backuper do
 
     expect(backuper.send(:get_parameterized_title)).to eq("coding-horror")
   end
+
+  describe '#notify_user' do
+    it 'include upload' do
+      backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+      expect { backuper.send(:notify_user) }
+        .to change { Topic.private_messages.count }.by(1)
+        .and change { Upload.count }.by(1)
+    end
+  end
 end
