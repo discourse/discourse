@@ -7,13 +7,7 @@ class Draft < ActiveRecord::Base
 
   belongs_to :user
 
-  after_create do
-    UserStat.update_draft_count(self.user_id)
-  end
-
-  after_destroy do
-    UserStat.update_draft_count(self.user_id)
-  end
+  after_commit :update_draft_count, on: [:create, :destroy]
 
   class OutOfSequence < StandardError; end
 
@@ -348,6 +342,9 @@ class Draft < ActiveRecord::Base
 
   end
 
+  def update_draft_count
+    UserStat.update_draft_count(self.user_id)
+  end
 end
 
 # == Schema Information
