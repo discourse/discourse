@@ -135,23 +135,23 @@ pt_BR:
       removed_group: "%{who} foi removido(a) em %{when}"
       autobumped: "automaticamente promovido(a) em %{when}"
       autoclosed:
-        enabled: "fechado(a) em %{when}"
-        disabled: "aberto(a) em %{when}"
+        enabled: "fechou %{when}"
+        disabled: "abriu %{when}"
       closed:
-        enabled: "fechado(a) em %{when}"
-        disabled: "aberto(a) em %{when}"
+        enabled: "fechou %{when}"
+        disabled: "abriu %{when}"
       archived:
-        enabled: "arquivado(a) em %{when}"
-        disabled: "desarquivado(a) em %{when}"
+        enabled: "arquivou %{when}"
+        disabled: "desarquivou %{when}"
       pinned:
-        enabled: "fixado(a) em %{when}"
-        disabled: "desafixado(a) em %{when}"
+        enabled: "fixou %{when}"
+        disabled: "desafixou %{when}"
       pinned_globally:
-        enabled: "fixado(a) globalmente em %{when}"
-        disabled: "desafixado(a) em %{when}"
+        enabled: "fixou globalmente %{when}"
+        disabled: "desafixou %{when}"
       visible:
-        enabled: "listado(a) em %{when}"
-        disabled: "removido(a) da lista em %{when}"
+        enabled: "listou %{when}"
+        disabled: "removeu da lista %{when}"
       banner:
         enabled: "tornou um banner em %{when}. Isso será mostrado no topo de todas as páginas até que seja descartado pelo usuário."
         disabled: "removeu este banner em %{when}. Ele não irá mais aparecer no topo de todas as páginas."
