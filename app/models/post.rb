@@ -1087,7 +1087,8 @@ class Post < ActiveRecord::Base
   end
 
   def image_url
-    image_upload&.url
+    raw_url = image_upload&.url
+    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?, local: true) if raw_url
   end
 
   private
