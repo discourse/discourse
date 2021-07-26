@@ -803,25 +803,25 @@ describe UploadsController do
         ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::ChecksumMismatchError)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.checksum_mismatch_failure"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
       end
 
       it "handles CannotPromoteError" do
         ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::CannotPromoteError)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.cannot_promote_failure"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
       end
 
       it "handles DownloadFailedError and Aws::S3::Errors::NotFound" do
         ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::DownloadFailedError)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
         ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(Aws::S3::Errors::NotFound.new("error", "not found"))
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
       end
 
       it "handles a generic upload failure" do

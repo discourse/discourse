@@ -162,7 +162,6 @@ export default Mixin.create({
   },
 
   _useXHRUploads() {
-    this.set("usingXHRUploads", true);
     this.uppyInstance.use(XHRUpload, {
       endpoint: this._xhrUploadUrl(),
       headers: {
@@ -188,19 +187,24 @@ export default Mixin.create({
         return ajax(getUrl("/uploads/generate-presigned-put"), {
           type: "POST",
           data,
-        }).then((response) => {
-          this.uppyInstance.setFileMeta(file.id, {
-            uniqueUploadIdentifier: response.unique_identifier,
-          });
+        })
+          .then((response) => {
+            this.uppyInstance.setFileMeta(file.id, {
+              uniqueUploadIdentifier: response.unique_identifier,
+            });
 
-          return {
-            method: response.method,
-            url: response.url,
-            headers: {
-              "Content-Type": file.type,
-            },
-          };
-        });
+            return {
+              method: response.method,
+              url: response.url,
+              headers: {
+                "Content-Type": file.type,
+              },
+            };
+          })
+          .catch((errResponse) => {
+            displayErrorForUpload(errResponse, this.siteSettings, file.name);
+            this._reset();
+          });
       },
     });
   },

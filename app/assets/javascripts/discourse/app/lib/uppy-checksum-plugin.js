@@ -1,26 +1,24 @@
 import { Plugin } from "@uppy/core";
+import { warn } from "@ember/debug";
 import { Promise } from "rsvp";
 
 export default class UppyChecksum extends Plugin {
   constructor(uppy, opts) {
     super(uppy, opts);
-    opts = opts || {};
     this.id = opts.id || "uppy-checksum";
     this.capabilities = opts.capabilities;
-
-    // this is meaningless, can be anything
     this.type = "preprocessor";
   }
 
   canUseSubtleCrypto() {
     if (!window.isSecureContext) {
-      this.warn(
+      this.warnPrefixed(
         "Cannot generate cryptographic digests in an insecure context (not HTTPS)."
       );
       return false;
     }
     if (this.capabilities.isIE11) {
-      this.warn(
+      this.warnPrefixed(
         "The required cipher suite is unavailable in Internet Explorer 11."
       );
       return false;
@@ -28,7 +26,9 @@ export default class UppyChecksum extends Plugin {
     if (
       !(window.crypto && window.crypto.subtle && window.crypto.subtle.digest)
     ) {
-      this.warn("The required cipher suite is unavailable in this browser.");
+      this.warnPrefixed(
+        "The required cipher suite is unavailable in this browser."
+      );
       return false;
     }
 
@@ -62,7 +62,9 @@ export default class UppyChecksum extends Plugin {
             if (
               err.message.toString().includes("Algorithm: Unrecognized name")
             ) {
-              this.warn("SHA-1 algorithm is unsupported in this browser.");
+              this.warnPrefixed(
+                "SHA-1 algorithm is unsupported in this browser."
+              );
             }
           });
       });
@@ -78,9 +80,8 @@ export default class UppyChecksum extends Plugin {
     return Promise.all(promises).then(emitPreprocessCompleteForAll);
   }
 
-  warn(message) {
-    // eslint-disable-next-line no-console
-    console.warn("[uppy-checksum-plugin] " + message);
+  warnPrefixed(message) {
+    warn(`[uppy-checksum-plugin] ${message}`);
   }
 
   install() {

@@ -251,12 +251,15 @@ class UploadsController < ApplicationController
         else
           render_json_error(upload.errors.to_hash.values.flatten, status: 422)
         end
-      rescue ExternalUploadManager::ChecksumMismatchError
-        render_json_error(I18n.t("upload.checksum_mismatch_failure"), status: 422)
-      rescue ExternalUploadManager::CannotPromoteError
-        render_json_error(I18n.t("upload.cannot_promote_failure"), status: 422)
-      rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound
-        render_json_error(I18n.t("upload.download_failure"), status: 422)
+      rescue ExternalUploadManager::ChecksumMismatchError => err
+        Discourse.warn_exception(err, message: I18n.t("upload.checksum_mismatch_failure"))
+        render_json_error(I18n.t("upload.failed"), status: 422)
+      rescue ExternalUploadManager::CannotPromoteError => err
+        Discourse.warn_exception(err, message: I18n.t("upload.cannot_promote_failure"))
+        render_json_error(I18n.t("upload.failed"), status: 422)
+      rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound => err
+        Discourse.warn_exception(err, message: I18n.t("upload.download_failure"))
+        render_json_error(I18n.t("upload.failed"), status: 422)
       rescue => err
         Discourse.warn_exception(err, message: "Complete external upload failed for user #{current_user.id}")
         render_json_error(I18n.t("upload.failed"), status: 422)
