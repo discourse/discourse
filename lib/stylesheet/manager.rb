@@ -135,7 +135,9 @@ class Stylesheet::Manager
   end
 
   def self.cache_fullpath
-    "#{Rails.root}/#{CACHE_PATH}"
+    path = "#{Rails.root}/#{CACHE_PATH}"
+    return path if !Rails.env.test?
+    File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
   end
 
   attr_reader :theme_ids
