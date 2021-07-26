@@ -137,7 +137,7 @@ export default Mixin.create({
             this._reset();
           })
           .catch((errResponse) => {
-            displayErrorForUpload(errResponse, file.name, this.siteSettings);
+            displayErrorForUpload(errResponse, this.siteSettings, file.name);
             this._reset();
           });
       } else {
@@ -147,7 +147,7 @@ export default Mixin.create({
     });
 
     this.uppyInstance.on("upload-error", (file, error, response) => {
-      displayErrorForUpload(response, file.name, this.siteSettings);
+      displayErrorForUpload(response, this.siteSettings, file.name);
       this._reset();
     });
 

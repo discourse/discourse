@@ -201,7 +201,7 @@ module FileStore
     end
 
     def path_from_url(url)
-      URI.parse(url).path[1..-1]
+      URI.parse(url).path.delete_prefix("/")
     end
 
     def cdn_url(url)

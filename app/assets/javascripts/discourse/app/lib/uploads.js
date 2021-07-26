@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
 import { isAppleDevice } from "discourse/lib/utilities";
 
@@ -279,7 +280,14 @@ export function getUploadMarkdown(upload) {
   }
 }
 
-export function displayErrorForUpload(data, fileName, siteSettings) {
+export function displayErrorForUpload(data, siteSettings, fileName) {
+  if (!fileName) {
+    deprecated(
+      "Calling displayErrorForUpload without a fileName is deprecated and will be removed in a future version."
+    );
+    fileName = data.files[0].name;
+  }
+
   if (data.jqXHR) {
     const didError = displayErrorByResponseStatus(
       data.jqXHR.status,

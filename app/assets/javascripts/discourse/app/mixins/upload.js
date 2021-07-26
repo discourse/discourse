@@ -108,7 +108,7 @@ export default Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      displayErrorForUpload(data, data.files[0].name, this.siteSettings);
+      displayErrorForUpload(data, this.siteSettings, data.files[0].name);
       reset();
     });
   }),

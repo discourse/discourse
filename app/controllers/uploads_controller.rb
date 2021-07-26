@@ -249,17 +249,17 @@ class UploadsController < ApplicationController
           external_upload_manager.destroy!
           render json: UploadsController.serialize_upload(upload), status: 200
         else
-          render json: failed_json.merge(errors: upload.errors.to_hash.values.flatten), status: 422
+          render_json_error(upload.errors.to_hash.values.flatten, status: 422)
         end
       rescue ExternalUploadManager::ChecksumMismatchError
-        render json: failed_json.merge(message: I18n.t("upload.checksum_mismatch_failure")), status: 422
+        render_json_error(I18n.t("upload.checksum_mismatch_failure"), status: 422)
       rescue ExternalUploadManager::CannotPromoteError
-        render json: failed_json.merge(message: I18n.t("upload.cannot_promote_failure")), status: 422
+        render_json_error(I18n.t("upload.cannot_promote_failure"), status: 422)
       rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound
-        render json: failed_json.merge(message: I18n.t("upload.download_failure")), status: 422
+        render_json_error(I18n.t("upload.download_failure"), status: 422)
       rescue => err
         Discourse.warn_exception(err, message: "Complete external upload failed for user #{current_user.id}")
-        render json: failed_json.merge(message: I18n.t("upload.failed")), status: 422
+        render_json_error(I18n.t("upload.failed"), status: 422)
       end
     end
   end
@@ -349,10 +349,5 @@ class UploadsController < ApplicationController
     return render_404 unless file_path
 
     send_file(file_path, opts)
-  end
-
-  def upload_failed(message)
-    message = message.is_a? Array ? message : [message]
-    render json: failed_json.merge(errors: message), status: 422
   end
 end
