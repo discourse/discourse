@@ -311,7 +311,6 @@ describe Jobs::CleanUpUploads do
     external_stub2 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:created], created_at: (ExternalUploadStub::CREATED_EXPIRY_HOURS.hours + 10.minutes).ago)
     external_stub3 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:uploaded], created_at: 10.minutes.ago)
     external_stub4 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:uploaded], created_at: (ExternalUploadStub::UPLOADED_EXPIRY_HOURS.hours + 10.minutes).ago)
-    expect(ExternalUploadStub.count).to eq(4)
     Jobs::CleanUpUploads.new.execute(nil)
     expect(ExternalUploadStub.pluck(:id)).to match_array([external_stub1.id, external_stub3.id])
   end
