@@ -124,9 +124,7 @@ export default Component.extend({
       newTree._emberView = this;
       const patches = diff(this._tree || this._rootNode, newTree);
 
-      if (this._tree) {
-        traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
-      }
+      traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
 
       this.beforePatch();
       this._rootNode = patch(this._rootNode, patches);

@@ -38,6 +38,10 @@ export function decorateWidget(widgetName, cb) {
 }
 
 export function traverseCustomWidgets(tree, callback) {
+  if (!tree) {
+    return;
+  }
+
   if (tree.__type === "CustomWidget") {
     callback(tree);
   }
