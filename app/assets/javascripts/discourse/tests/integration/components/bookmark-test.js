@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   fakeTime,
   query,
   queryAll,
