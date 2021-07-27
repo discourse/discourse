@@ -2982,7 +2982,9 @@ en:
 
         Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup.
 
-        Here's the log: %{logs}
+        Here's the log:
+
+        %{logs}
 
     backup_failed:
       title: "Backup Failed"
@@ -2990,7 +2992,9 @@ en:
       text_body_template: |
         The backup has failed.
 
-        Here's the log: %{logs}
+        Here's the log:
+
+        %{logs}
 
     restore_succeeded:
       title: "Restore Succeeded"
@@ -2998,7 +3002,9 @@ en:
       text_body_template: |
         The restore was successful.
 
-        Here's the log: %{logs}
+        Here's the log:
+
+        %{logs}
 
     restore_failed:
       title: "Restore Failed"
@@ -3006,7 +3012,9 @@ en:
       text_body_template: |
         The restore has failed.
 
-        Here's the log: %{logs}
+        Here's the log:
+
+        %{logs}
 
     bulk_invite_succeeded:
       title: "Bulk Invite Succeeded"

@@ -322,9 +322,18 @@ module BackupRestore
       status = @success ? :backup_succeeded : :backup_failed
 
       upload = Logger.save_log_to_upload(user: @user, logs: @logs)
-      post = SystemMessage.create_from_system_user(
-        @user, status, logs: UploadMarkdown.new(upload).attachment_markdown
-      )
+      if upload.persisted?
+        logs = UploadMarkdown.new(upload).attachment_markdown
+      else
+        Rails.logger.warn("Failed to upload the backup logs file: #{upload.errors.full_messages}")
+        logs = <<~RAW
+          ```text
+          #{upload.errors.full_messages}
+          ```
+        RAW
+      end
+
+      post = SystemMessage.create_from_system_user(@user, status, logs: logs)
 
       if @user.id == Discourse::SYSTEM_USER_ID
         post.topic.invite_group(@user, Group[:admins])

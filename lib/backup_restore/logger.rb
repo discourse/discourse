@@ -34,7 +34,7 @@ module BackupRestore
         logfile.close
 
         zipfile = Compression::Zip.new.compress(dir, filename)
-        upload = File.open(zipfile) do |file|
+        File.open(zipfile) do |file|
           UploadCreator.new(
             file,
             File.basename(zipfile),
@@ -42,12 +42,6 @@ module BackupRestore
             for_export: 'true'
           ).create_for(user.id)
         end
-
-        if !upload.persisted?
-          Rails.logger.warn("Failed to upload the backup logs file #{zipfile}")
-        end
-
-        upload
       end
     end
 
