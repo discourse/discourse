@@ -187,12 +187,12 @@ RSpec.describe ExternalUploadManager do
 
   def stub_copy_object
     copy_object_result = <<~BODY
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
-<CopyObjectResult
-  xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
-  <LastModified>2021-07-19T04:10:41.000Z</LastModified>
-  <ETag>&quot;#{etag}&quot;</ETag>
-</CopyObjectResult>
+    <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
+    <CopyObjectResult
+      xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
+      <LastModified>2021-07-19T04:10:41.000Z</LastModified>
+      <ETag>&quot;#{etag}&quot;</ETag>
+    </CopyObjectResult>
     BODY
     stub_request(
       :put,
