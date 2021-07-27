@@ -305,4 +305,13 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: badge_image.id)).to eq(true)
   end
+
+  it "deletes external upload stubs that have expired" do
+    external_stub1 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:created], created_at: 10.minutes.ago)
+    external_stub2 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:created], created_at: (ExternalUploadStub::CREATED_EXPIRY_HOURS.hours + 10.minutes).ago)
+    external_stub3 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:uploaded], created_at: 10.minutes.ago)
+    external_stub4 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:uploaded], created_at: (ExternalUploadStub::UPLOADED_EXPIRY_HOURS.hours + 10.minutes).ago)
+    Jobs::CleanUpUploads.new.execute(nil)
+    expect(ExternalUploadStub.pluck(:id)).to contain_exactly(external_stub1.id, external_stub3.id)
+  end
 end

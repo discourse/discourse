@@ -30,6 +30,7 @@ class UploadCreator
     @filename = (filename || "").gsub(/[^[:print:]]/, "")
     @upload = Upload.new(original_filename: @filename, filesize: 0)
     @opts = opts
+    @filesize = @opts[:filesize] if @opts[:external_upload_too_big]
     @opts[:validate] = opts[:skip_validations].present? ? !ActiveRecord::Type::Boolean.new.cast(opts[:skip_validations]) : true
   end
 
@@ -44,14 +45,22 @@ class UploadCreator
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
 
+    # if this is present then it means we are creating an upload record from
+    # an external_upload_stub and the file is > ExternalUploadManager::DOWNLOAD_LIMIT,
+    # so we have not downloaded it to a tempfile. no modifications can be made to the
+    # file in this case because it does not exist; we simply move it to its new location
+    # in S3
+    external_upload_too_big = @opts[:external_upload_too_big]
+    sha1_before_changes = Upload.generate_digest(@file) if @file
+
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
       # We need to convert HEIFs early because FastImage does not consider them as images
-      if convert_heif_to_jpeg?
+      if convert_heif_to_jpeg? && !external_upload_too_big
         convert_heif!
         is_image = FileHelper.is_supported_image?("test.#{@image_info.type}")
       end
 
-      if is_image
+      if is_image && !external_upload_too_big
         extract_image_info!
         return @upload if @upload.errors.present?
 
@@ -72,14 +81,18 @@ class UploadCreator
 
       # compute the sha of the file and generate a unique hash
       # which is only used for secure uploads
-      sha1 = Upload.generate_digest(@file)
-      unique_hash = SecureRandom.hex(20) if SiteSetting.secure_media
+      if !external_upload_too_big
+        sha1 = Upload.generate_digest(@file)
+      end
+      if SiteSetting.secure_media || external_upload_too_big
+        unique_hash = generate_fake_sha1_hash
+      end
 
       # we do not check for duplicate uploads if secure media is
       # enabled because we use a unique access hash to differentiate
       # between uploads instead of the sha1, and to get around various
       # access/permission issues for uploads
-      if !SiteSetting.secure_media
+      if !SiteSetting.secure_media && !external_upload_too_big
         # do we already have that upload?
         @upload = Upload.find_by(sha1: sha1)
 
@@ -99,7 +112,7 @@ class UploadCreator
 
       fixed_original_filename = nil
 
-      if is_image
+      if is_image && !external_upload_too_big
         current_extension = File.extname(@filename).downcase.sub("jpeg", "jpg")
         expected_extension = ".#{image_type}".downcase.sub("jpeg", "jpg")
 
@@ -117,13 +130,13 @@ class UploadCreator
       @upload.user_id           = user_id
       @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize          = filesize
-      @upload.sha1              = SiteSetting.secure_media? ? unique_hash : sha1
+      @upload.sha1              = (SiteSetting.secure_media? || external_upload_too_big) ? unique_hash : sha1
       @upload.original_sha1     = SiteSetting.secure_media? ? sha1 : nil
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
       @upload.extension         = image_type || File.extname(@filename)[1..10]
 
-      if is_image
+      if is_image && !external_upload_too_big
         if @image_info.type.to_s == 'svg'
           w, h = [0, 0]
 
@@ -157,19 +170,41 @@ class UploadCreator
 
       # Callbacks using this event to validate the upload or the file must add errors to the
       # upload errors object.
-      DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @upload, @opts[:validate])
+      #
+      # Can't do any validation of the file if external_upload_too_big because we don't have
+      # the actual file.
+      if !external_upload_too_big
+        DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @upload, @opts[:validate])
+      end
       return @upload unless @upload.errors.empty? && @upload.save(validate: @opts[:validate])
 
-      # store the file and update its url
-      File.open(@file.path) do |f|
-        url = Discourse.store.store_upload(f, @upload)
-
-        if url.present?
-          @upload.url = url
-          @upload.save!(validate: @opts[:validate])
+      should_move = false
+      upload_changed = \
+        if external_upload_too_big
+          false
         else
-          @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
+          Upload.generate_digest(@file) != sha1_before_changes
         end
+
+      if @opts[:existing_external_upload_key] && Discourse.store.external?
+        should_move = external_upload_too_big || !upload_changed
+      end
+
+      if should_move
+        # move the file in the store instead of reuploading
+        url = Discourse.store.move_existing_stored_upload(@opts[:existing_external_upload_key], @upload)
+      else
+        # store the file and update its url
+        File.open(@file.path) do |f|
+          url = Discourse.store.store_upload(f, @upload)
+        end
+      end
+
+      if url.present?
+        @upload.url = url
+        @upload.save!(validate: @opts[:validate])
+      else
+        @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
       end
 
       if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
@@ -430,7 +465,7 @@ class UploadCreator
   end
 
   def filesize
-    File.size?(@file.path).to_i
+    @filesize || File.size?(@file.path).to_i
   end
 
   def max_image_size
@@ -484,4 +519,7 @@ class UploadCreator
     end
   end
 
+  def generate_fake_sha1_hash
+    SecureRandom.hex(20)
+  end
 end

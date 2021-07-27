@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
 import { isAppleDevice } from "discourse/lib/utilities";
 
@@ -279,12 +280,29 @@ export function getUploadMarkdown(upload) {
   }
 }
 
-export function displayErrorForUpload(data, siteSettings) {
+export function displayErrorForUpload(data, siteSettings, fileName) {
+  if (!fileName) {
+    deprecated(
+      "Calling displayErrorForUpload without a fileName is deprecated and will be removed in a future version."
+    );
+    fileName = data.files[0].name;
+  }
+
   if (data.jqXHR) {
     const didError = displayErrorByResponseStatus(
       data.jqXHR.status,
       data.jqXHR.responseJSON,
-      data.files[0].name,
+      fileName,
+      siteSettings
+    );
+    if (didError) {
+      return;
+    }
+  } else if (data.body && data.status) {
+    const didError = displayErrorByResponseStatus(
+      data.status,
+      data.body,
+      fileName,
       siteSettings
     );
     if (didError) {
@@ -294,25 +312,7 @@ export function displayErrorForUpload(data, siteSettings) {
     bootbox.alert(data.errors.join("\n"));
     return;
   }
-  // otherwise, display a generic error message
-  bootbox.alert(I18n.t("post.errors.upload"));
-}
 
-export function displayErrorForUppyUpload(response, fileName, siteSettings) {
-  if (response.body.errors && response.body.errors.length > 0) {
-    bootbox.alert(response.body.errors.join("\n"));
-    return;
-  } else {
-    const didError = displayErrorByResponseStatus(
-      response.status,
-      response.body,
-      fileName,
-      siteSettings
-    );
-    if (didError) {
-      return;
-    }
-  }
   // otherwise, display a generic error message
   bootbox.alert(I18n.t("post.errors.upload"));
 }

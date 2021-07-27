@@ -15,7 +15,13 @@ class S3Helper
   # * cache time for secure-media URLs
   # * expiry time for S3 presigned URLs, which include backup downloads and
   #   any upload that has a private ACL (e.g. secure uploads)
-  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 300
+  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 5.minutes.to_i
+
+  ##
+  # Controls the following:
+  #
+  # * presigned put_object URLs for direct S3 uploads
+  UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 10.minutes.to_i
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_client = options.delete(:client)
@@ -80,6 +86,7 @@ class S3Helper
   end
 
   def copy(source, destination, options: {})
+    destination = get_path_for_s3_upload(destination)
     if !Rails.configuration.multisite
       options[:copy_source] = File.join(@s3_bucket_name, source)
     else
@@ -87,16 +94,16 @@ class S3Helper
         options[:copy_source] = File.join(@s3_bucket_name, source)
       elsif @s3_bucket_folder_path
         folder, filename = begin
-          source.split("/", 2)
-        end
+                             source.split("/", 2)
+                           end
         options[:copy_source] = File.join(@s3_bucket_name, folder, multisite_upload_path, filename)
       else
         options[:copy_source] = File.join(@s3_bucket_name, multisite_upload_path, source)
       end
     end
-    s3_bucket
-      .object(destination)
-      .copy_from(options)
+
+    response = s3_bucket.object(destination).copy_from(options)
+    [destination, response.copy_object_result.etag.gsub('"', '')]
   end
 
   # make sure we have a cors config for assets
