@@ -3651,11 +3651,11 @@ RSpec.describe TopicsController do
         it "should attach group to the invite" do
           post "/t/#{group_private_topic.id}/invite.json", params: {
             user: recipient,
-            group_ids: "#{group.id},123"
+            group_ids: "#{group.id},9999999"
           }
 
           expect(response.status).to eq(200)
-          expect(Invite.find_by(email: recipient).groups).to eq([group])
+          expect(Invite.find_by(email: recipient).groups).to contain_exactly(group)
         end
 
         describe 'when group is available to automatic groups only' do
