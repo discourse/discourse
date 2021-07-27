@@ -301,6 +301,8 @@ sv:
     copy_codeblock:
       copied: "kopierad!"
     drafts:
+      label: "Utkast"
+      label_with_count: "Utkast (%{count})"
       resume: "Återuppta"
       remove: "Ta bort"
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"

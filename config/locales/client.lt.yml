@@ -324,6 +324,7 @@ lt:
     copy_codeblock:
       copied: "nukopijuota!"
     drafts:
+      label: "Juodraščiai"
       resume: "Grįžti"
       remove: "Pašalinti"
       new_topic: "Naujos temos juodraštis"

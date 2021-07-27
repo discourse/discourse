@@ -318,6 +318,7 @@ ro:
     copy_codeblock:
       copied: "copiat!"
     drafts:
+      label: "Ciorne"
       resume: "Reluați"
       remove: "Eliminați"
       remove_confirmation: "Ești sigur că vrei să ștergi această ciornă?"

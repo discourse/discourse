@@ -11,6 +11,8 @@ ar:
         today: اليوم %{time}
         tomorrow: غدًا %{time}
         yesterday: أمس %{time}
+        countdown:
+          passed: لقد انقضى التاريخ
       title: إدخال التاريخ/الوقت
       create:
         form:
@@ -19,6 +21,7 @@ ar:
           simple_mode: الوضع البسيط
           format_description: "التنسيق المستخدم لعرض التاريخ للمستخدم. استخدم Z لعرض الإزاحة وzz لاسم المنطقة الزمنية."
           timezones_title: المناطق الزمنية لعرضها
+          timezones_description: سيتم استخدام المناطق الزمنية لعرض التواريخ في المعاينة والنسخة الاحتياطية.
           recurring_title: التكرار
           recurring_description: "حدِّد مدى تكرار الحدث. يمكنك أيضًا تعديل خيار التكرار الذي أنشأه النموذج يدويًا واستخدام أحد المفاتيح التالية: years، ‏quarters، ‏months، ‏days، ‏hours، ‏minutes، ‏seconds، ‏milliseconds."
           recurring_none: بلا تكرار

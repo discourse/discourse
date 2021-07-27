@@ -2079,6 +2079,7 @@ pt_BR:
     create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
     errors:
+      invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
       invalid_email: "Endereço de e-mail inválido"
       invalid_username: "Não há nenhum(a) usuário(a) com este nome de usuário(a)."
       invalid_group: "Não há nenhum grupo com este nome."

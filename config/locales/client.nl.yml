@@ -297,6 +297,7 @@ nl:
     copy_codeblock:
       copied: "gekopieerd!"
     drafts:
+      label: "Concepten"
       resume: "Hervatten"
       remove: "Verwijderen"
       remove_confirmation: "Weet u zeker dat u dit concept wilt verwijderen?"

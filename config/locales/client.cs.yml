@@ -339,6 +339,7 @@ cs:
     copy_codeblock:
       copied: "zkopírováno!"
     drafts:
+      label: "Koncepty"
       resume: "Pokračovat"
       remove: "Odstranit"
       remove_confirmation: "Opravdu chcete tento koncept smazat?"

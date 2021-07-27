@@ -353,6 +353,8 @@ he:
     copy_codeblock:
       copied: "הועתק!"
     drafts:
+      label: "טיוטות"
+      label_with_count: "טיוטות (%{count})"
       resume: "המשך"
       remove: "הסרה"
       remove_confirmation: "למחוק את הטיוטה הזאת?"
@@ -2103,6 +2105,7 @@ he:
           confirm: יש לך טיוטה של נושא חדש שתשוכתב בעת יציאת נושא מקושר.
         reply_as_new_group_message:
           label: להגיב בהודעה קבוצתית חדשה
+          desc: יצירת הודעה חדשה שתיפתח עם אותם נמענים
         reply_as_private_message:
           label: הודעה חדשה
           desc: צור הודעה פרטית חדשה
@@ -2519,6 +2522,8 @@ he:
         title: "תזמון פרסום"
       temp_open:
         title: "פתיחה זמנית"
+      auto_reopen:
+        title: "פתיחה אוטומטית של נושא"
       temp_close:
         title: "סגירה זמנית"
       auto_close:
@@ -2647,6 +2652,7 @@ he:
         pin: "נעץ נושא"
         unpin: "שחרר נעיצת נושא"
         pin_globally: "נעיצת נושא גלובלית"
+        make_banner: "המרה לכרזת נושא"
         remove_banner: "הסרת נושא באנר"
       reply:
         title: "תגובה"

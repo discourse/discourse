@@ -275,6 +275,7 @@ et:
     copy_codeblock:
       copied: "kopeeritud!"
     drafts:
+      label: "Mustandid"
       resume: "Taasta"
       remove: "Eemalda"
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"

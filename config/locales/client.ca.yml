@@ -280,6 +280,7 @@ ca:
     copy_codeblock:
       copied: "copiat!"
     drafts:
+      label: "Esborranys"
       resume: "Reprèn"
       remove: "Elimina"
       new_topic: "Esborrany de tema nou"

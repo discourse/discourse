@@ -342,6 +342,7 @@ sl:
     copy_codeblock:
       copied: "kopirano!"
     drafts:
+      label: "Osnutki"
       resume: "Nadaljuj"
       remove: "Odstrani"
       remove_confirmation: "Ali ste prepričani da hočete izbrisati ta osnutek?"

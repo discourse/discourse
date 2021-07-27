@@ -310,6 +310,7 @@ bs_BA:
     copy_codeblock:
       copied: "kopirano!"
     drafts:
+      label: "Skice"
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"

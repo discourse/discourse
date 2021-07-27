@@ -169,6 +169,7 @@ be:
         never: "ніколі"
       search: "Пошук"
     drafts:
+      label: "Чарнавікі"
       remove: "выдаліць"
     preview: "папярэдні прагляд"
     cancel: "адмена"

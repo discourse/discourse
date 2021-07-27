@@ -288,6 +288,7 @@ el:
     copy_codeblock:
       copied: "αντιγράφηκε!"
     drafts:
+      label: "Προσχέδια"
       resume: "Βιογραφικό"
       remove: "Αφαίρεση"
       new_topic: "Νέο προσχέδιο θέματος"

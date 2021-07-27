@@ -293,6 +293,7 @@ gl:
     copy_codeblock:
       copied: "copiado!"
     drafts:
+      label: "Borradores"
       resume: "Retomar"
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"

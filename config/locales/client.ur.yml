@@ -291,6 +291,7 @@ ur:
     copy_codeblock:
       copied: "کاپی کر لیا!"
     drafts:
+      label: "ڈرافٹس"
       resume: "جاری رکھیں"
       remove: "خارج کریں"
       remove_confirmation: "کیا آپ واقعی یہ مسودہ حذف کرنا چاہتے ہیں؟"

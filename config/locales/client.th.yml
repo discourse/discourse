@@ -246,6 +246,7 @@ th:
     copy_codeblock:
       copied: "คัดลอกแล้ว!"
     drafts:
+      label: "แบบร่าง"
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
