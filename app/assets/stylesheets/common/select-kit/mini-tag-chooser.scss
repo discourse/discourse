@@ -68,10 +68,6 @@
           margin-right: 0.25em;
           margin-bottom: 0.25em;
 
-          .tag-icon {
-            margin-right: 0.25em;
-          }
-
           &.is-highlighted {
             box-shadow: 0 0 2px var(--danger), 0 1px 0 rgba(0, 0, 0, 0.05);
           }
@@ -79,6 +75,7 @@
           .d-icon {
             color: var(--primary-low-mid);
             vertical-align: middle;
+            margin-right: 0.25em;
           }
 
           &:hover .d-icon.d-icon-times {
