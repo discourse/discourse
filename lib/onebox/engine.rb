@@ -31,8 +31,6 @@ module Onebox
     attr_reader :url, :uri, :options, :timeout
     attr :errors
 
-    DEFAULT = {}
-
     def options=(opt)
       return @options if opt.nil? # make sure options provided
       opt = opt.to_h if opt.instance_of?(OpenStruct)
@@ -42,7 +40,7 @@ module Onebox
 
     def initialize(url, timeout = nil)
       @errors = {}
-      @options = DEFAULT
+      @options = {}
       class_name = self.class.name.split("::").last.to_s
 
       # Set the engine options extracted from global options.
