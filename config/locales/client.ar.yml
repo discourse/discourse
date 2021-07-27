@@ -259,7 +259,7 @@ ar:
       other: "أنت في وضع تمهيد التشغيل لتسهيل إطلاق موقعك الجديد. سيتم منح جميع المستخدمين الجُدد مستوى الثقة 1 وتفعيل الرسائل الإلكترونية التلخيصية لهم. وسيتم إيقاف هذا الوضع تلقائيًا عند انضمام %{count} مستخدم."
     bootstrap_mode_disabled: "سيتم إيقاف وضع تمهيد التشغيل خلال 24 ساعة."
     themes:
-      default_description: "افتراضية"
+      default_description: "افتراضي"
       broken_theme_alert: "قد لا يعمل الموقع كما ينبغي بسبب وجود أخطاء في السمة/المكوِّن %{theme}. أوقفه من %{path}."
     s3:
       regions:
@@ -452,8 +452,8 @@ ar:
     enable: "تفعيل"
     disable: "إيقاف"
     continue: "متابعة"
-    undo: "تراجَع"
-    revert: "عودة"
+    undo: "تراجع"
+    revert: "تراجع"
     failed: "فشل"
     switch_to_anon: "دخول وضع التخفي"
     switch_from_anon: "الخروج من وضع التخفي"
@@ -812,7 +812,7 @@ ar:
           enable_imap: "تفعيل IMAP"
           test_settings: "إعدادات الاختبار"
           save_settings: "إعدادات الحفظ"
-          last_updated: "تاريخ آخر تحديث:"
+          last_updated: "آخر تحديث:"
           last_updated_by: "بواسطة"
           settings_required: "جميع الإعدادات مطلوبة، يُرجى ملء جميع الحقول قبل التحقُّق."
           smtp_settings_valid: "إعدادات SMTP صالحة."
@@ -873,7 +873,7 @@ ar:
           when: "التوقيت"
           action: "الإجراء"
           acting_user: "المستخدم المتخذ للإجراء"
-          target_user: "العضو المستهدف"
+          target_user: "المستخدم المستهدف"
           subject: "الموضوع"
           details: "التفاصيل"
           from: "من"
@@ -895,7 +895,7 @@ ar:
       add: "إضافة"
       join: "انضمام"
       leave: "مغادرة"
-      request: "اطلب الانضمام"
+      request: "طلب"
       message: "رسالة"
       confirm_leave: "هل تريد بالتأكيد مغادرة هذه المجموعة؟"
       allow_membership_requests: "السماح للمستخدمين بإرسال طلبات العضوية إلى مالكي المجموعة (يلزم أن تكون المجموعة عامة)"
@@ -961,7 +961,7 @@ ar:
         remove_all_primary: "الإزالة كمجموعة أساسية"
         remove_all_primary_description: "إزالة هذه المجموعة كمجموعة أساسية"
         owner: "المالك"
-        primary: "أساسية"
+        primary: "أساسي"
         forbidden: "غير مسموح لك بعرض الأعضاء."
       topics: "الموضوعات"
       posts: "المنشورات"
@@ -1295,7 +1295,7 @@ ar:
       messages:
         all: "الكل"
         inbox: "صندوق الوارد"
-        sent: "المرسلة"
+        sent: "المُرسَلة"
         archive: "الأرشيف"
         groups: "مجموعاتي"
         move_to_inbox: "النقل إلى صندوق الوارد"
@@ -1439,7 +1439,7 @@ ar:
         title: "البريد الإلكتروني"
         primary: "عنوان البريد الإلكتروني الرئيسي"
         secondary: "عناوين البريد الإلكتروني الثانوية"
-        primary_label: "الرئيسي"
+        primary_label: "الأساسي"
         unconfirmed_label: "غير مؤكَّد"
         resend_label: "إعادة إرسال رسالة التأكيد"
         resending_label: "جارٍ الإرسال..."
@@ -1598,7 +1598,7 @@ ar:
         expired_tab_with_count: "المنتهية (%{count})"
         redeemed_tab: "تم استردادها"
         redeemed_tab_with_count: "تم استردادها (%{count})"
-        invited_via: "الدعوة"
+        invited_via: "دعوة"
         invited_via_link: "رابط %{key} (تم استرداد %{count}/%{max})"
         groups: "المجموعات"
         topic: "الموضوع"
@@ -1782,7 +1782,7 @@ ar:
         none: "(لا يوجد)"
         instructions: "يتم عرض الرمز بجوار صورة ملفك الشخصي"
       primary_group:
-        title: "المجموعة الرئيسية"
+        title: "المجموعة الأساسية"
         none: "(لا يوجد)"
       filters:
         all: "الكل"
@@ -1994,7 +1994,7 @@ ar:
         totp: "استخدام تطبيق مصادقة بدلًا من ذلك"
         backup_code: "استخدام رمز احتياطي بدلًا من ذلك"
     invites:
-      accept_title: "دعوة"
+      accept_title: "الدعوة"
       emoji: "رمز مظروف"
       welcome_to: "مرحبًا بك في %{site_name}!"
       invited_by: "دعاك:"
@@ -2020,7 +2020,7 @@ ar:
       categories_and_latest_topics: "الفئات والموضوعات الحديثة"
       categories_and_top_topics: "الفئات والموضوعات الأكثر عرضًا"
       categories_boxes: "المربعات ذات الفئات الفرعية"
-      categories_boxes_with_topics: "المربعات ذات الموضوعات المميزة"
+      categories_boxes_with_topics: "مربعات بالموضوعات المميزة"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2571,8 +2571,8 @@ ar:
           many: "التقدُّم: <strong>%{count}</strong> موضوعًا"
           other: "التقدُّم: <strong>%{count}</strong> موضوع"
       none:
-        unread: "ليست هناك موضوعات غير مقروءة."
-        new: "ليس لديك موضوعات جديدة."
+        unread: "ليس لديك أي موضوع غير مقروء."
+        new: "ليس لديك أي موضوع جديد."
         read: "لم تقرأ أي موضوع بعد."
         posted: "لم تنشر في أي موضوع بعد."
         latest: "لا توجد موضوعات أخرى!"
@@ -2875,7 +2875,7 @@ ar:
         title: "الرد"
         help: "ابدأ في كتابة رد على هذه الموضوع"
       share:
-        title: "المشاركة"
+        title: "مشاركة"
         extended_title: "مشاركة رابط"
         help: "شارِك رابطًا إلى هذا الموضوع"
         instructions: "مشاركة رابط إلى هذا الموضوع:"
@@ -3495,10 +3495,10 @@ ar:
           ignore: "تجاهل"
           very_low: "منخفضة جدًا"
           low: "منخفضة"
-          high: "مرتفعة"
+          high: "عالية"
           very_high: "مرتفعة جدًا"
       sort_options:
-        default: "افتراضي"
+        default: "افتراضية"
         likes: "الإعجابات"
         op_likes: "الإعجابات على المنشور الأصلي"
         views: "مرات العرض"
@@ -3747,7 +3747,7 @@ ar:
           other: "‏%{categoryName} ‏(%{count})"
         help: "الموضوعات الحديثة في الفئة %{categoryName}"
       top:
-        title: "الأكثر نشاطًا"
+        title: "الأكثر عرضًا"
         help: "أكثر الموضوعات نشاطًا في آخر عام أو شهر أو أسبوع أو يوم"
         all:
           title: "طوال الوقت"
@@ -4056,7 +4056,7 @@ ar:
           read: "لم تقرأ أي موضوع بعد."
           posted: "لم تنشر في أي موضوع بعد."
           latest: "لا توجد موضوعات حديثة."
-          bookmarks: "لم تضع إشارة مرجعية علي أي موضوع بعد."
+          bookmarks: "لم تضع إشارة مرجعية على أي موضوع بعد."
           top: "لا توجد موضوعات في الأكثر نشاطًا."
     invite:
       custom_message: "جعل دعوتك أكثر اتسامًا بالطابع الشخصي عن طريق كتابة <a href>رسالة مخصَّصة</a>."
@@ -4067,7 +4067,7 @@ ar:
     forced_anonymous: "بسبب الضغط الشديد، يتم عرض هذا الموضوع للجميع مؤقتًا كما يراه مستخدم سجَّل الخروج."
     forced_anonymous_login_required: "الموقع تحت ضغط شديد ولا يمكن تحميله في الوقت الحالي، حاول مرة أخرى في غضون بضع دقائق."
     footer_nav:
-      back: "للخلف"
+      back: "الرجوع"
       forward: "للأمام"
       share: "مشاركة"
       dismiss: "تجاهل"
@@ -4083,7 +4083,7 @@ ar:
         one_hour: "ساعة واحدة"
         two_hours: "ساعتان"
         tomorrow: "حتى الغد"
-        custom: "مخصَّص"
+        custom: "مخصَّصة"
       set_schedule: "ضبط جدول الإشعارات"
     trust_levels:
       names:
@@ -4119,7 +4119,7 @@ ar:
         no_check_performed: "لم يتم التحقُّق من وجود تحديثات. تأكَّد أن sidekiq قيد التشغيل."
         stale_data: "لم يتم التحقُّق من توفُّر تحديثات مؤخرًا. تأكَّد أن sidekiq قيد التشغيل."
         version_check_pending: "يبدو أنك قد حدَّثت مؤخرًا. رائع!"
-        installed_version: "الإصدار المثبَّت"
+        installed_version: "مثبَّت"
         latest_version: "الحديثة"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         new_features:
@@ -4293,7 +4293,7 @@ ar:
         all_users: "جميع المستخدمين"
         active_keys: "مفاتيح API النشطة"
         manage_keys: إدارة المفاتيح
-        show_details: تفاصيل
+        show_details: التفاصيل
         description: الوصف
         no_description: (لا يوجد وصف)
         all_api_keys: جميع مفاتيح API
@@ -4426,11 +4426,11 @@ ar:
           completed_in:
             zero: "اكتمل خلال %{count} ثانية."
             one: "اكتمل خلال ثانية واحدة (%{count})."
-            two: "اكتمل خلال ثانيتين (%{count})."
+            two: "اكتمل خلال ثانيتَين (%{count})."
             few: "اكتمل خلال %{count} ثوانٍ."
             many: "اكتمل خلال %{count} ثانية."
             other: "اكتمل خلال %{count} ثانية."
-          request: "الطلب"
+          request: "طلب"
           response: "الاستجابة"
           redeliver_confirm: "هل تريد بالتأكيد إعادة تسليم الحمولة نفسها؟"
           headers: "الرؤوس"
@@ -4519,7 +4519,7 @@ ar:
       export_csv:
         success: "بدأ التصدير وسنُرسل إليك إشعارًا عبر البريد الإلكتروني عند اكتمال العملية."
         failed: "فشل التصدير. يُرجى التحقُّق من السجلات."
-        button_text: "التصدير"
+        button_text: "تصدير"
         button_title:
           user: "تصدير قائمة بجميع المستخدمين بتنسيق CSV"
           staff_action: "تصدير سجل إجراءات فريق العمل الكامل بتنسيق CSV"
@@ -4814,7 +4814,7 @@ ar:
         sent: "المُرسَلة"
         skipped: "المتخطاة"
         bounced: "المرتدة"
-        received: "المُستلَمة"
+        received: "المتلقاة"
         rejected: "المرفوضة"
         sent_at: "تم إرسالها في"
         time: "الوقت"
@@ -4875,7 +4875,7 @@ ar:
           silence_user: "تم كتم المستخدم"
           delete_post: "تم حذف المنشور"
           delete_topic: "تم حذف الموضوع"
-          post_approved: "تمت الموافقة على المنشور"
+          post_approved: "الموافقة على المنشور"
       logs:
         title: "السجلات"
         action: "الإجراء"
@@ -5027,7 +5027,7 @@ ar:
             label: "جديد:"
             ip_address: "عنوان IP"
             add: "إضافة"
-            filter: "بحث"
+            filter: "البحث"
           roll_up:
             text: "تجميع"
             title: "يُنشئ إدخالات حظر جديدة في الشبكة الفرعية إذا كان هناك 'min_ban_entries_for_roll_up' من الإدخالات على الأقل."
@@ -5046,7 +5046,7 @@ ar:
           title: "سجلات الأخطاء"
       watched_words:
         title: "الكلمات المُراقَبة"
-        search: "بحث"
+        search: "البحث"
         clear_filter: "مسح"
         show_words:
           zero: "إظهار %{count} كلمة"
