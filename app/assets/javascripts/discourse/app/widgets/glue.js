@@ -47,9 +47,7 @@ export default class WidgetGlue {
     });
     const patches = diff(this._tree || this._rootNode, newTree);
 
-    if (this._tree) {
-      traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
-    }
+    traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
 
     newTree._rerenderable = this;
     this._rootNode = patch(this._rootNode, patches);
