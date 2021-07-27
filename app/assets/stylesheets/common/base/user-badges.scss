@@ -247,6 +247,7 @@
   display: grid;
   grid: auto-flow / repeat(3, 1fr);
   grid-gap: 1em;
+  width: 100%;
   margin-bottom: 1.5em;
 
   @include breakpoint(medium) {
