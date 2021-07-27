@@ -729,10 +729,13 @@ describe UploadsController do
 
         result = response.parsed_body
 
-        external_upload_stub = ExternalUploadStub.find_by(unique_identifier: result["unique_identifier"])
-        expect(external_upload_stub.original_filename).to eq("test.png")
-        expect(external_upload_stub.created_by).to eq(user)
-        expect(external_upload_stub.upload_type).to eq("card_background")
+        external_upload_stub = ExternalUploadStub.where(
+          unique_identifier: result["unique_identifier"],
+          original_filename: "test.png",
+          created_by: user,
+          upload_type: "card_background"
+        )
+        expect(external_upload_stub.exists?).to eq(true)
         expect(result["key"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
         expect(result["url"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
         expect(result["url"]).to include("Amz-Expires")
@@ -793,10 +796,10 @@ describe UploadsController do
         expect(response.status).to eq(404)
       end
 
-      it "returns 403 when the upload stub does not belong to the user" do
+      it "returns 404 when the upload stub does not belong to the user" do
         external_upload_stub.update!(created_by: Fabricate(:user))
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
 
       it "handles ChecksumMismatchError" do

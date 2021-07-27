@@ -194,7 +194,7 @@ export default Mixin.create({
             });
 
             return {
-              method: response.method,
+              method: "put",
               url: response.url,
               headers: {
                 "Content-Type": file.type,

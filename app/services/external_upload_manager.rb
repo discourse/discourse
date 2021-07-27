@@ -59,15 +59,15 @@ class ExternalUploadManager
     UploadCreator.new(tempfile, external_upload_stub.original_filename, opts).create_for(
       external_upload_stub.created_by_id
     )
-  rescue => err
+  rescue
     external_upload_stub.update!(status: ExternalUploadStub.statuses[:failed])
-    raise err
+    raise
   ensure
     tempfile&.close!
   end
 
   def destroy!
-    external_upload_stub.destroy
+    external_upload_stub.destroy!
   end
 
   private

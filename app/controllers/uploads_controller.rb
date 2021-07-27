@@ -195,12 +195,12 @@ class UploadsController < ApplicationController
   def generate_presigned_put
     return render_404 if !SiteSetting.enable_direct_s3_uploads
 
-    file_name = params.require(:file_name)
-    type = params.require(:type)
-
     RateLimiter.new(
       current_user, "generate-presigned-put-upload-stub", PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE, 1.minute
     ).performed!
+
+    file_name = params.require(:file_name)
+    type = params.require(:type)
 
     # don't want people posting arbitrary S3 metadata so we just take the
     # one we need. all of these will be converted to x-amz-meta- metadata
@@ -228,15 +228,16 @@ class UploadsController < ApplicationController
       upload_type: type
     )
 
-    render json: { method: :put, url: url, key: key, unique_identifier: upload_stub.unique_identifier }
+    render json: { url: url, key: key, unique_identifier: upload_stub.unique_identifier }
   end
 
   def complete_external_upload
     return render_404 if !SiteSetting.enable_direct_s3_uploads
 
     unique_identifier = params.require(:unique_identifier)
-
-    external_upload_stub = ExternalUploadStub.find_by(unique_identifier: unique_identifier)
+    external_upload_stub = ExternalUploadStub.find_by(
+      unique_identifier: unique_identifier, created_by: current_user
+    )
     return render_404 if external_upload_stub.blank?
 
     raise Discourse::InvalidAccess if external_upload_stub.created_by_id != current_user.id

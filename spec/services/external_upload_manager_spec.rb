@@ -38,124 +38,126 @@ RSpec.describe ExternalUploadManager do
     end
   end
 
-  context "when stubbed upload is < DOWNLOAD_LIMIT (small enough to download + generate sha)" do
-    let!(:external_upload_stub) { Fabricate(:image_external_upload_stub, created_by: user) }
-    let(:object_size) { 1.megabyte }
-    let(:object_file) { logo_file }
+  describe "#promote_to_upload!" do
+    context "when stubbed upload is < DOWNLOAD_LIMIT (small enough to download + generate sha)" do
+      let!(:external_upload_stub) { Fabricate(:image_external_upload_stub, created_by: user) }
+      let(:object_size) { 1.megabyte }
+      let(:object_file) { logo_file }
 
-    context "when the download of the s3 file fails" do
-      before do
-        FileHelper.stubs(:download).returns(nil)
+      context "when the download of the s3 file fails" do
+        before do
+          FileHelper.stubs(:download).returns(nil)
+        end
+
+        it "raises an error" do
+          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::DownloadFailedError)
+        end
       end
 
-      it "raises an error" do
-        expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::DownloadFailedError)
+      context "when the upload is not in the created status" do
+        before do
+          external_upload_stub.update!(status: ExternalUploadStub.statuses[:uploaded])
+        end
+        it "raises an error" do
+          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::CannotPromoteError)
+        end
+      end
+
+      context "when the upload does not get changed in UploadCreator (resized etc.)" do
+        it "copies the stubbed upload on S3 to its new destination and deletes it" do
+          upload = subject.promote_to_upload!
+          expect(WebMock).to have_requested(
+            :put,
+            "#{upload_base_url}/original/1X/#{upload.sha1}.png",
+          ).with(headers: { 'X-Amz-Copy-Source' => "#{SiteSetting.s3_upload_bucket}/#{external_upload_stub.key}" })
+          expect(WebMock).to have_requested(
+            :delete,
+            "#{upload_base_url}/#{external_upload_stub.key}"
+          )
+        end
+
+        it "errors if the image upload is too big" do
+          SiteSetting.max_image_size_kb = 1
+          upload = subject.promote_to_upload!
+          expect(upload.errors.full_messages).to include(
+            "Filesize " + I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb)
+          )
+        end
+
+        it "errors if the extension is not supported" do
+          SiteSetting.authorized_extensions = ""
+          upload = subject.promote_to_upload!
+          expect(upload.errors.full_messages).to include(
+            "Original filename " + I18n.t("upload.unauthorized", authorized_extensions: "")
+          )
+        end
+      end
+
+      context "when the upload does get changed by the UploadCreator" do
+        let(:file) { file_from_fixtures("should_be_jpeg.heic", "images") }
+
+        it "creates a new upload in s3 (not copy) and deletes the original stubbed upload" do
+          upload = subject.promote_to_upload!
+          expect(WebMock).to have_requested(
+            :put,
+            "#{upload_base_url}/original/1X/#{upload.sha1}.png"
+          )
+          expect(WebMock).to have_requested(
+            :delete, "#{upload_base_url}/#{external_upload_stub.key}"
+          )
+        end
+      end
+
+      context "when the sha has been set on the s3 object metadata by the clientside JS" do
+        let(:metadata_headers) { { "x-amz-meta-sha1-checksum" => client_sha1 } }
+
+        context "when the downloaded file sha1 does not match the client sha1" do
+          let(:client_sha1) { "blahblah" }
+
+          it "raises an error and marks upload as failed" do
+            expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
+            expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:failed])
+          end
+        end
       end
     end
 
-    context "when the upload is not in the created status" do
-      before do
-        external_upload_stub.update!(status: ExternalUploadStub.statuses[:uploaded])
-      end
-      it "raises an error" do
-        expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::CannotPromoteError)
-      end
-    end
+    context "when stubbed upload is > DOWNLOAD_LIMIT (too big to download, generate a fake sha)" do
+      let(:object_size) { 200.megabytes }
+      let(:object_file) { pdf_file }
+      let!(:external_upload_stub) { Fabricate(:attachment_external_upload_stub, created_by: user) }
 
-    context "when the upload does not get changed in UploadCreator (resized etc.)" do
+      before do
+        UploadCreator.any_instance.stubs(:generate_fake_sha1_hash).returns("testbc60eb18e8f974cbfae8bb0f069c3a311024")
+      end
+
+      it "does not try and download the file" do
+        FileHelper.expects(:download).never
+        subject.promote_to_upload!
+      end
+
+      it "generates a fake sha for the upload record" do
+        upload = subject.promote_to_upload!
+        expect(upload.sha1).not_to eq(sha1)
+        expect(upload.original_sha1).to eq(nil)
+        expect(upload.filesize).to eq(object_size)
+      end
+
+      it "marks the stub as uploaded" do
+        subject.promote_to_upload!
+        expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:uploaded])
+      end
+
       it "copies the stubbed upload on S3 to its new destination and deletes it" do
         upload = subject.promote_to_upload!
         expect(WebMock).to have_requested(
           :put,
-          "#{upload_base_url}/original/1X/#{upload.sha1}.png",
+          "#{upload_base_url}/original/1X/#{upload.sha1}.pdf"
         ).with(headers: { 'X-Amz-Copy-Source' => "#{SiteSetting.s3_upload_bucket}/#{external_upload_stub.key}" })
-        expect(WebMock).to have_requested(
-          :delete,
-          "#{upload_base_url}/#{external_upload_stub.key}"
-        )
-      end
-
-      it "errors if the image upload is too big" do
-        SiteSetting.max_image_size_kb = 1
-        upload = subject.promote_to_upload!
-        expect(upload.errors.full_messages).to include(
-          "Filesize " + I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb)
-        )
-      end
-
-      it "errors if the extension is not supported" do
-        SiteSetting.authorized_extensions = ""
-        upload = subject.promote_to_upload!
-        expect(upload.errors.full_messages).to include(
-          "Original filename " + I18n.t("upload.unauthorized", authorized_extensions: "")
-        )
-      end
-    end
-
-    context "when the upload does get changed by the UploadCreator" do
-      let(:file) { file_from_fixtures("should_be_jpeg.heic", "images") }
-
-      it "creates a new upload in s3 (not copy) and deletes the original stubbed upload" do
-        upload = subject.promote_to_upload!
-        expect(WebMock).to have_requested(
-          :put,
-          "#{upload_base_url}/original/1X/#{upload.sha1}.png"
-        )
         expect(WebMock).to have_requested(
           :delete, "#{upload_base_url}/#{external_upload_stub.key}"
         )
       end
-    end
-
-    context "when the sha has been set on the s3 object metadata by the clientside JS" do
-      let(:metadata_headers) { { "x-amz-meta-sha1-checksum" => client_sha1 } }
-
-      context "when the downloaded file sha1 does not match the client sha1" do
-        let(:client_sha1) { "blahblah" }
-
-        it "raises an error and marks upload as failed" do
-          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
-          expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:failed])
-        end
-      end
-    end
-  end
-
-  context "when stubbed upload is > DOWNLOAD_LIMIT (too big to download, generate a fake sha)" do
-    let(:object_size) { 200.megabytes }
-    let(:object_file) { pdf_file }
-    let!(:external_upload_stub) { Fabricate(:attachment_external_upload_stub, created_by: user) }
-
-    before do
-      UploadCreator.any_instance.stubs(:generate_fake_sha1_hash).returns("testbc60eb18e8f974cbfae8bb0f069c3a311024")
-    end
-
-    it "does not try and download the file" do
-      FileHelper.expects(:download).never
-      subject.promote_to_upload!
-    end
-
-    it "generates a fake sha for the upload record" do
-      upload = subject.promote_to_upload!
-      expect(upload.sha1).not_to eq(sha1)
-      expect(upload.original_sha1).to eq(nil)
-      expect(upload.filesize).to eq(object_size)
-    end
-
-    it "marks the stub as uploaded" do
-      subject.promote_to_upload!
-      expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:uploaded])
-    end
-
-    it "copies the stubbed upload on S3 to its new destination and deletes it" do
-      upload = subject.promote_to_upload!
-      expect(WebMock).to have_requested(
-        :put,
-        "#{upload_base_url}/original/1X/#{upload.sha1}.pdf"
-      ).with(headers: { 'X-Amz-Copy-Source' => "#{SiteSetting.s3_upload_bucket}/#{external_upload_stub.key}" })
-      expect(WebMock).to have_requested(
-        :delete, "#{upload_base_url}/#{external_upload_stub.key}"
-      )
     end
   end
 

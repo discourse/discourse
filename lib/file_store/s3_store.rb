@@ -10,7 +10,6 @@ module FileStore
 
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
-    TEMPORARY_UPLOAD_PREFIX ||= "temp/"
 
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper
@@ -217,9 +216,13 @@ module FileStore
     end
 
     def signed_url_for_temporary_upload(file_name, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
-      folder = s3_bucket_folder_path.nil? ? "" : "#{s3_bucket_folder_path}/"
-      key = "#{folder}#{upload_path}/#{TEMPORARY_UPLOAD_PREFIX}#{SecureRandom.hex}/#{file_name}"
+      key = temporary_upload_path(file_name)
       presigned_put_url(key, expires_in: expires_in, metadata: metadata)
+    end
+
+    def temporary_upload_path(file_name)
+      path = super(file_name)
+      s3_bucket_folder_path.nil? ? path : File.join(s3_bucket_folder_path, path)
     end
 
     def object_from_path(path)

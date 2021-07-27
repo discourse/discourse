@@ -25,7 +25,7 @@ class ExternalUploadStub < ActiveRecord::Base
   }
 
   before_create do
-    self.unique_identifier = SecureRandom.hex(20)
+    self.unique_identifier = SecureRandom.uuid
     self.status = ExternalUploadStub.statuses[:created] if self.status.blank?
   end
 
@@ -41,8 +41,8 @@ class ExternalUploadStub < ActiveRecord::Base
   # systems, I don't think we really want to be calling out to the external systems
   # here right?
   def self.cleanup!
-    expired_created.destroy_all
-    expired_uploaded.destroy_all
+    expired_created.delete_all
+    expired_uploaded.delete_all
   end
 end
 
@@ -54,7 +54,7 @@ end
 #  key               :string           not null
 #  original_filename :string           not null
 #  status            :integer          default(1), not null
-#  unique_identifier :string           not null
+#  unique_identifier :uuid             not null
 #  created_by_id     :integer          not null
 #  upload_type       :string           not null
 #  created_at        :datetime         not null
@@ -63,6 +63,7 @@ end
 # Indexes
 #
 #  index_external_upload_stubs_on_created_by_id      (created_by_id)
+#  index_external_upload_stubs_on_key                (key) UNIQUE
 #  index_external_upload_stubs_on_status             (status)
-#  index_external_upload_stubs_on_unique_identifier  (unique_identifier)
+#  index_external_upload_stubs_on_unique_identifier  (unique_identifier) UNIQUE
 #
