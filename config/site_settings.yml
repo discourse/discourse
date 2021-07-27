@@ -275,6 +275,9 @@ basic:
     client: true
     default: false
     hidden: true
+  enable_upload_debug_mode:
+    default: false
+    hidden: true
   default_theme_id:
     default: -1
     hidden: true

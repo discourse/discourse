@@ -788,6 +788,7 @@ describe UploadsController do
 
       before do
         SiteSetting.enable_direct_s3_uploads = true
+        SiteSetting.enable_upload_debug_mode = true
         setup_s3
       end
 

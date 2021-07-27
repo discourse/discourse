@@ -253,16 +253,18 @@ class UploadsController < ApplicationController
           render_json_error(upload.errors.to_hash.values.flatten, status: 422)
         end
       rescue ExternalUploadManager::ChecksumMismatchError => err
-        Discourse.warn_exception(err, message: I18n.t("upload.checksum_mismatch_failure"))
+        debug_upload_error(err, "upload.checksum_mismatch_failure")
         render_json_error(I18n.t("upload.failed"), status: 422)
       rescue ExternalUploadManager::CannotPromoteError => err
-        Discourse.warn_exception(err, message: I18n.t("upload.cannot_promote_failure"))
+        debug_upload_error(err, "upload.cannot_promote_failure")
         render_json_error(I18n.t("upload.failed"), status: 422)
       rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound => err
-        Discourse.warn_exception(err, message: I18n.t("upload.download_failure"))
+        debug_upload_error(err, "upload.download_failure")
         render_json_error(I18n.t("upload.failed"), status: 422)
       rescue => err
-        Discourse.warn_exception(err, message: "Complete external upload failed for user #{current_user.id}")
+        Discourse.warn_exception(
+          err, message: "Complete external upload failed unexpectedly for user #{current_user.id}"
+        )
         render_json_error(I18n.t("upload.failed"), status: 422)
       end
     end
@@ -353,5 +355,10 @@ class UploadsController < ApplicationController
     return render_404 unless file_path
 
     send_file(file_path, opts)
+  end
+
+  def debug_upload_error(translation_key, err)
+    return if !SiteSetting.enable_upload_debug_mode
+    Discourse.warn_exception(err, message: I18n.t(translation_key))
   end
 end

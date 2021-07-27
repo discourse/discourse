@@ -13,7 +13,6 @@ class CreateExternalUploadStubs < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index :external_upload_stubs, [:unique_identifier], unique: true
     add_index :external_upload_stubs, [:key], unique: true
   end
 end
