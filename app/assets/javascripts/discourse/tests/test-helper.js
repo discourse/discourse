@@ -8,14 +8,16 @@ document.addEventListener("discourse-booted", () => {
   let setupTests = require("discourse/tests/setup-tests").default;
   Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
 
-  document.write(`
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-
-    <div id="ember-testing-container" style='position: fixed'>
-      <div id="ember-testing"></div>
-    </div>
-  `);
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    `
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <div id="ember-testing-container" style="position: fixed">
+        <div id="ember-testing"></div>
+      </div>
+    `
+  );
 
   setupTests(config.APP);
   start({ setupTestContainer: false });

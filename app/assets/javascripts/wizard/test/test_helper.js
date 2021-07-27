@@ -24,14 +24,15 @@
 //= require ./wizard-pretender
 //= require test-shims
 
-// Trick JSHint into allow document.write
-let d = document;
-d.write(
-  '<div id="ember-testing-container"><div id="ember-testing"></div></div>'
-);
-d.write(
-  "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
-);
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    `
+      <div id="ember-testing-container"><div id="ember-testing"></div></div>
+      <style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>
+    `
+  );
+});
 
 if (window.Logster) {
   Logster.enabled = false;
