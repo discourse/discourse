@@ -116,7 +116,9 @@ After completing the setup wizard, you should see Staff topics and **READ ME FIR
   - **CentOS/RHEL**: `sudo dnf install fail2ban`
 - If you need or want a default firewall, [turn on ufw](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584) for Ubuntu or use `firewalld` for CentOS/RHEL.
 
-Discourse will send an email notification when new versions of Discourse are released. Please stay current to get the latest features and security fixes. To **upgrade Discourse to the latest version**, visit `/admin/upgrade` in your browser and click the Upgrade button.
+> 💡 Discourse will send you an email notification when new versions of Discourse are released. Please stay current to get the latest features and security fixes. 
+
+To **upgrade Discourse to the latest version**, visit `https://discourse.example.com/admin/upgrade` in your browser and click the Upgrade button.
 
 Alternatively, You can ssh into your server and perform and rebuild
 
