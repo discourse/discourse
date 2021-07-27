@@ -38,6 +38,9 @@ class PostOwnerChanger
         first_post_created_at: @new_owner.reload.posts.order('created_at ASC').first&.created_at
       )
 
+      Post.where(topic_id: @topic.id, reply_to_post_number: post.post_number)
+        .update_all(reply_to_user_id: @new_owner.id)
+
       @topic.save!(validate: false)
     end
   end
