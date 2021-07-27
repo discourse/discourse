@@ -332,6 +332,8 @@ en:
       copied: "copied!"
 
     drafts:
+      label: "Drafts"
+      label_with_count: "Drafts (%{count})"
       resume: "Resume"
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"

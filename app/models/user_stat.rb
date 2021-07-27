@@ -202,6 +202,21 @@ class UserStat < ActiveRecord::Base
     self.class.update_distinct_badge_count(self.user_id)
   end
 
+  def self.update_draft_count(user_id)
+    draft_count = DB.query_single <<~SQL, user_id: user_id
+      UPDATE user_stats
+      SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
+      WHERE user_id = :user_id
+      RETURNING draft_count
+    SQL
+
+    MessageBus.publish(
+      '/user',
+      { draft_count: draft_count.first },
+      user_ids: [user_id]
+    )
+  end
+
   # topic_reply_count is a count of posts in other users' topics
   def calc_topic_reply_count!(start_time = nil)
     sql = <<~SQL
@@ -292,4 +307,5 @@ end
 #  distinct_badge_count     :integer          default(0), not null
 #  first_unread_pm_at       :datetime         not null
 #  digest_attempted_at      :datetime
+#  draft_count              :integer          default(0), not null
 #

@@ -222,4 +222,18 @@ describe UserStat do
     end
 
   end
+
+  describe '.update_draft_count' do
+    fab!(:user) { Fabricate(:user) }
+
+    it 'updates draft_count' do
+      Draft.create!(user: user, draft_key: "topic_1", data: {})
+      Draft.create!(user: user, draft_key: "new_topic", data: {})
+      Draft.create!(user: user, draft_key: "topic_2", data: {})
+      UserStat.update_all(draft_count: 0)
+
+      UserStat.update_draft_count(user.id)
+      expect(user.user_stat.draft_count).to eq(3)
+    end
+  end
 end
