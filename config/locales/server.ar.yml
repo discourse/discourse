@@ -38,7 +38,7 @@ ar:
     <<: *datetime_formats
   title: "Discourse"
   topics: "المواضيع"
-  posts: "المشاركات"
+  posts: "المنشورات"
   views: "مرات العرض"
   loading: "جارٍ التحميل"
   powered_by_html: 'بدعم من <a href="http://www.discourse.org">Discourse</a>، يُفضَّل عرضه مع تفعيل JavaScript'
@@ -2358,7 +2358,7 @@ ar:
     missing_secret: "فشلت المصادقة بسبب عدم توفُّر الرمز السري. تواصل مع مسؤولي الموقع لإصلاح هذه المشكلة."
     invite_redeem_failed: "فشل استرداد الدعوة. يُرجى التواصل مع مسؤول الموقع."
   original_poster: "كاتب المنشور الأصلي"
-  most_recent_poster: "أحدث ناشر"
+  most_recent_poster: "أحدث كاتب منشور"
   frequent_poster: "ناشر متكرر"
   poster_description_joiner: "، "
   redirected_to_top_reasons:
