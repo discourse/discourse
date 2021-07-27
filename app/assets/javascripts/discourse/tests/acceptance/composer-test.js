@@ -22,7 +22,7 @@ import LinkLookup from "discourse/lib/link-lookup";
 
 acceptance("Composer", function (needs) {
   needs.user();
-  needs.settings({ enable_whispers: true });
+  needs.settings({ enable_whispers: true, min_first_post_length: 20 });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
@@ -998,5 +998,14 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", "@staff");
     assert.ok(exists(".composer-popup"), "Shows the 'group_mentioned' notice");
+  });
+
+  test("Does not save invalid draft", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "Something");
+    await fillIn(".d-editor-input", "Something");
+    await click(".save-or-cancel .cancel");
+    assert.notOk(exists(".discard-draft-modal .save-draft"));
   });
 });
