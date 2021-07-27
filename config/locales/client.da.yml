@@ -300,6 +300,7 @@ da:
     copy_codeblock:
       copied: "kopieret!"
     drafts:
+      label: "Kladder"
       resume: "Genoptag"
       remove: "Fjern"
       remove_confirmation: "Er du sikker på, at du vil offentliggøre dette udkast?"

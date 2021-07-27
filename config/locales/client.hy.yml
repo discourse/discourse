@@ -275,6 +275,7 @@ hy:
         tomorrow_with_time: "Վաղը %{time}"
         at_time: " %{date_time} -ում"
     drafts:
+      label: "Սևագրեր"
       resume: "Վերսկսել"
       remove: "Ջնջել"
       new_topic: "Նոր թեմայի սևագիր"

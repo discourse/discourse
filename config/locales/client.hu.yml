@@ -298,6 +298,7 @@ hu:
     copy_codeblock:
       copied: "másolva!"
     drafts:
+      label: "Vázlatok"
       resume: "Folytatás"
       remove: "Eltávolítás"
       remove_confirmation: "Biztos, hogy törli ezt a vázlatot?"

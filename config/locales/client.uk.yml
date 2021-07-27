@@ -349,6 +349,7 @@ uk:
     copy_codeblock:
       copied: "скопійовано!"
     drafts:
+      label: "Чернетки"
       resume: "Продовжити"
       remove: "Вилучити"
       remove_confirmation: "Ви дійсно бажаєте видалити цю чернетку?"

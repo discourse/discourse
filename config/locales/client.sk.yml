@@ -295,6 +295,7 @@ sk:
         never: "Nikdy"
       search: "Hľadať"
     drafts:
+      label: "Koncepty"
       resume: "Pokračovať"
       remove: "Odstrániť"
       new_topic: "Nová téma"

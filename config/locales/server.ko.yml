@@ -1462,6 +1462,7 @@ ko:
     gtm_container_id: "Google 태그 관리자 컨테이너 ID 예 : GTM-ABCDEF. <br/> 참고 : GTM에서로드 한 타사 스크립트는 &#39;콘텐츠 보안 정책 스크립트 src&#39;에 허용 목록에 있어야합니다."
     enable_escaped_fragments: "웹 크롤러가 감지되지 않으면 Google의 Ajax-Crawling API로 폴백하십시오. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more를</a> 참조 <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>하십시오.</a>"
     moderators_manage_categories_and_groups: "관리자가 카테고리 및 그룹을 관리하도록 허용"
+    moderators_change_post_ownership: "관리자가 게시물 소유권을 변경할 수 있도록 허용"
     cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
     use_admin_ip_allowlist: "관리자는 선별 된 IP 목록(관리자> 로그> 선별된 IP)에 있는 IP에서만 로그인 할 수 있습니다."
     blocked_ip_blocks: "Discourse에서 크롤링해서는 안되는 개인 IP 블록 목록"
@@ -1561,6 +1562,7 @@ ko:
     discord_secret: "불화 비밀 키"
     discord_trusted_guilds: '이 Discord 구성원만 Discord를 통해 로그인 할 수 있습니다. 숫자 ID를 사용하십시오. 자세한 내용은 <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">여기</a>지침을 확인하십시오. 허용하려면 공백으로 두십시오.'
     enable_backups: "관리자가 포럼 백업을 만들 수 있도록 허용"
+    allow_restore: "모든 사이트 데이터를 대체할 수 있는 복원 허용! 백업을 복원할 계획이 아니라면 비활성화된 상태로 두십시오."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
     automatic_backups_enabled: "설정된 백업 주기로 자동 백업 실행"
     backup_frequency: "백업 간격 (일)입니다."
@@ -2014,6 +2016,7 @@ ko:
     share_quote_visibility: "견적 공유 버턴을 표시할 시기를 결정합니다. 익명 사용자만 또는 모든 사용자에게 표시하지 않습니다. "
     create_revision_on_bulk_topic_moves: "주제가 대량으로 새 카테고리로 이동되면 첫 번째 게시물에 대한 개정판을 만듭니다."
     errors:
+      invalid_css_color: "잘못된 색상입니다. 색상 이름 또는 16진수 값을 입력해야 합니다."
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
       invalid_group: "그 이름을 가진 그룹이 없습니다."
@@ -2167,6 +2170,7 @@ ko:
     reset_not_allowed_from_ip_address: "해당 IP 에서는 비밀번호 재설정을 요청할 수 없습니다."
     suspended: "당신은 %{date} 까지 로그인할 수 없습니다. "
     suspended_with_reason: "%{date}까지 계정 정지 됨: %{reason}"
+    suspended_with_reason_forever: "계정 정지: %{reason}"
     errors: "%{errors}"
     not_available: "불가능합니다. %{suggestion}"
     something_already_taken: "뭔가가 이상합니다. 아마도 계정의 아이디 또는 이메일이 이미 등록된것 같습니다. 비밀번호 찾기 링크를 이용해주세요."
@@ -2992,6 +2996,7 @@ ko:
   subject_re: "덧: "
   subject_pm: "[PM] "
   email_from: "%{site_name}를 통한 %{user_name}"
+  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "이전 답글"
     reached_limit:
@@ -3223,6 +3228,10 @@ ko:
     account_suspended_forever:
       title: "계정 일시 중지"
       subject_template: "[%{email_prefix}] 귀하의 계정이 정지되었습니다"
+      text_body_template: |
+        사이트 이용이 중지되었습니다.
+
+        이유 - %{reason}
     account_silenced:
       title: "계정이 쓰기 금지됨"
       subject_template: "[%{email_prefix}] 사용자님의 계정이 쓰기 금지 되었습니다"
@@ -3233,6 +3242,10 @@ ko:
     account_silenced_forever:
       title: "계정이 쓰기 금지됨"
       subject_template: "[%{email_prefix}] 사용자님의 계정이 쓰기 금지 되었습니다"
+      text_body_template: |
+        사이트에서 글쓰기가 금지되었습니다.
+
+        이유 - %{reason}
     account_exists:
       title: "계정이 이미 존재합니다"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -3729,6 +3742,7 @@ ko:
       errors:
         invalid_csv: 라인 %{line_number}에서 오류가 발생했습니다. CSV에 한 줄에 하나의 이메일이 있는지 확인하십시오.
         badge_disabled: 먼저 %{badge_name} 배지를 활성화하십시오.
+        cant_grant_multiple_times: 단일 사용자에게 %{badge_name} 배지를 여러 번 부여할 수 없습니다.
     editor:
       name: 에디터
       description: 첫 포스트 편집

@@ -256,6 +256,7 @@ id:
     copy_codeblock:
       copied: "disalin!"
     drafts:
+      label: "Konsep"
       resume: "Lanjut"
       remove: "Hapus"
       new_topic: "Konsep topik baru"

@@ -40,6 +40,7 @@ ko:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "'YY MMM D <br/>LT"
       wrap_ago: "%{date}전"
+      wrap_on: "%{date}"
       tiny:
         half_a_minute: "< 1분"
         less_than_x_seconds:
@@ -274,10 +275,12 @@ ko:
     copy_codeblock:
       copied: "복사되었습니다!"
     drafts:
+      label: "임시저장"
       resume: "이력서"
       remove: "삭제"
       remove_confirmation: "이 초안을 삭제 하시겠습니까?"
       new_topic: "새 글 초안"
+      new_private_message: "새 개인 메시지 초안"
       topic_reply: "임시 댓글"
       abandon:
         confirm: "이 항목에 대한 초안이 진행중입니다. 무엇을 하고 싶습니까?"
@@ -348,6 +351,7 @@ ko:
         type_bonus:
           name: "유형 보너스"
           title: "특정한 검토 유형에는 관리자가 보너스를 할당하여 우선 순위를 높일 수 있습니다."
+      stale_help: "이 검토 항목은 <b>%{username}</b>님에 의해 처리되었습니다."
       claim_help:
         optional: "다른 사용자가 처리하지 못하도록 이 항목을 지정 할 수 있습니다."
         required: "항목을 검토하려면 먼저 항목을 검토 요청을 해야합니다."
@@ -782,6 +786,7 @@ ko:
         icon: "아이콘 선택"
         image: "이미지 업로드"
       default_notifications:
+        modal_title: "사용자 기본 알림"
         modal_description: "이 변경 사항을 역사적으로 적용 하시겠습니까? 기존 사용자 %{count}의 환경 설정이 변경됩니다."
         modal_yes: "예"
         modal_no: "아니요, 앞으로 만 변경 사항을 적용하십시오."
@@ -3323,6 +3328,8 @@ ko:
         regular: "일반"
         leader: "리더"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "지원되지 않는 파일을 선택했습니다. 지원되는 파일 형식 – %{types}."
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:
@@ -3550,6 +3557,7 @@ ko:
               log_out: 사용자의 모든 세션을 로그 아웃합니다.
               anonymize: 사용자 계정을 익명화합니다.
               delete: 사용자 계정을 삭제합니다.
+              list: 사용자 목록을 가져옵니다.
             email:
               receive_emails: 이 범위를 메일 수신자와 결합하여 수신 이메일을 처리하십시오.
       web_hooks:
@@ -3762,6 +3770,7 @@ ko:
           theme: "테마"
           component: "구성 요소"
           components: "구성 요소"
+          filter_placeholder: "필터 입력..."
           theme_name: "테마명"
           component_name: "구성 요소 이름"
           themes_intro: "기존 테마를 선택하거나 새 테마를 설치하여 시작하십시오."
@@ -4370,6 +4379,7 @@ ko:
         penalty_post_edit: "글 수정"
         penalty_post_none: "아무것도하지 않음"
         penalty_count: "페널티 수"
+        penalty_history: "페널티 기록"
         clear_penalty_history:
           title: "명확한 페널티 기록"
           description: "위약금이있는 사용자는 TL3에 도달 할 수 없습니다"
@@ -4502,6 +4512,7 @@ ko:
         unlock_trust_level: "회원등급 고정 해제"
         silenced_count: "쓰기 금지"
         suspended_count: "차단됨"
+        last_six_months: "지난 6개월"
         tl3_requirements:
           title: "3등급 회원이 되기 위한 자격"
           table_title:
@@ -4742,6 +4753,7 @@ ko:
           upload_csv: 사용자 이메일 또는 사용자 이름으로 CSV 업로드
           aborted: 사용자 이메일 또는 사용자 이름이 포함 된 CSV를 업로드하십시오
           replace_owners: 이전 소유자에서 배지를 제거합니다
+          grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
         help: "모든 사람이 사용할 수 있는 새 이모티콘을 추가합니다.(PROTIP: 한 번에 여러 파일을 드래그 앤 드롭)"

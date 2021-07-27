@@ -242,6 +242,7 @@ zh_TW:
       reminders:
         existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
     drafts:
+      label: "草稿"
       resume: "恢復"
       remove: "移除"
       new_topic: "新話題草稿"

@@ -2059,6 +2059,7 @@ sv:
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
     errors:
+      invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
       invalid_group: "Det finns ingen grupp med det namnet."

@@ -353,6 +353,7 @@ pl_PL:
     copy_codeblock:
       copied: "skopiowane!"
     drafts:
+      label: "Szkice"
       resume: "Kontynuuj"
       remove: "Usuń"
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"

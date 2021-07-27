@@ -300,6 +300,7 @@ pt:
     copy_codeblock:
       copied: "copiado!"
     drafts:
+      label: "Rascunhos"
       resume: "Continuar"
       remove: "Remover"
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"

@@ -292,6 +292,7 @@ fa_IR:
     copy_codeblock:
       copied: "کپی شد!"
     drafts:
+      label: "درفت"
       resume: "از سر گیری"
       remove: "پاک کردن"
       remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"

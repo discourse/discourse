@@ -265,6 +265,7 @@ vi:
     copy_codeblock:
       copied: "đã sao chép!"
     drafts:
+      label: "Nháp"
       resume: "Làm lại"
       remove: "Xoá"
       remove_confirmation: "Bạn có chắc chắn muốn xóa bản nháp này không?"
