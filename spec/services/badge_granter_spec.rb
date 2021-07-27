@@ -205,6 +205,21 @@ describe BadgeGranter do
         BadgeGranter.backfill(Badge.find(Badge::FirstLike))
       }.to_not change { Notification.where(user_id: user.id).count }
     end
+
+    it 'does not grant sharing badges to deleted users' do
+      post = Fabricate(:post)
+      incoming_links = Fabricate.times(25, :incoming_link, post: post, user: user)
+      user_id = user.id
+      user.destroy!
+
+      nice_share = Badge.find(Badge::NiceShare)
+      first_share = Badge.find(Badge::FirstShare)
+
+      BadgeGranter.backfill(nice_share)
+      BadgeGranter.backfill(first_share)
+
+      expect(UserBadge.where(user_id: user_id).count).to eq(0)
+    end
   end
 
   describe 'grant' do
