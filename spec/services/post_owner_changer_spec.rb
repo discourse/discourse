@@ -235,6 +235,17 @@ describe PostOwnerChanger do
         expect(stats[1].action_type).to eq(UserAction::REPLY)
         expect(stats[1].count).to eq(1)
       end
+
+      it "updates reply_to_user_id" do
+        p4 = Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, reply_to_user_id: p1.user_id)
+        p5 = Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, reply_to_user_id: p2.user_id)
+
+        PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        p4.reload; p5.reload
+
+        expect(p4.reply_to_user_id).to eq(user_a.id)
+        expect(p5.reply_to_user_id).to eq(p2.user_id)
+      end
     end
   end
 end
