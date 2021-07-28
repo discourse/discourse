@@ -803,11 +803,16 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    case flair_type
-    when :icon
-      flair_icon
-    when :image
-      upload_cdn_path(flair_upload.url)
+    if members_visibility_level == Group.visibility_levels[:public] &&
+      visibility_level == Group.visibility_levels[:public]
+      case flair_type
+      when :icon
+        flair_icon
+      when :image
+        upload_cdn_path(flair_upload.url)
+      else
+        nil
+      end
     else
       nil
     end

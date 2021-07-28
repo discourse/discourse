@@ -6,7 +6,7 @@ class UserLookup
   end
 
   def self.group_lookup_columns
-    @group_lookup_columns ||= %i{id name flair_icon flair_upload_id flair_bg_color flair_color}
+    @group_lookup_columns ||= %i{id name flair_icon flair_upload_id flair_bg_color flair_color visibility_level members_visibility_level}
   end
 
   def initialize(user_ids = [])
