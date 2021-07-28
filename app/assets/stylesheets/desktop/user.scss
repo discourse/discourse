@@ -22,11 +22,14 @@
 
   .combo-box {
     width: 100%;
-    margin-top: 1px;
+    &:not(:last-of-type) {
+      margin-bottom: 0.875em;
+    }
   }
 
   .nav-stacked {
     background-color: transparent;
+    margin: 0;
 
     li {
       border-bottom: none;
@@ -51,10 +54,23 @@
     }
   }
 
+  .select-kit + .messages-nav {
+    margin-top: 1em;
+  }
+
+  .inboxes-controls {
+    margin-bottom: 0.75em;
+  }
+
   &.user-messages {
+    --left-padding: 0.8em;
     .user-messages-inboxes-drop,
     .user-messages-tags-drop {
-      padding: 13px 13px 0 0;
+      padding: 0 1em 0 0;
+
+      .select-kit-header {
+        padding-left: var(--left-padding);
+      }
 
       .select-kit-selected-name {
         overflow: hidden;
@@ -63,13 +79,16 @@
 
     .nav-stacked {
       a {
-        padding-left: 0;
-      }
-
-      .new-private-message {
-        margin-top: 13px;
+        padding-left: calc(
+          var(--left-padding) - 1px
+        ); // 1px accounts for border on select-kit elements above
       }
     }
+  }
+}
+.user-additional-controls {
+  button {
+    margin-bottom: 1em;
   }
 }
 
@@ -247,6 +266,16 @@ table.user-invite-list {
 
   .public-user-fields {
     overflow: hidden;
+  }
+}
+
+.user-messages-page {
+  .topic-list th {
+    padding-top: 4px;
+  }
+
+  .show-mores {
+    position: absolute;
   }
 }
 

@@ -66,12 +66,10 @@
 .nav-stacked {
   @extend %nav;
   padding: 0;
-  overflow: hidden;
   background: var(--primary-low);
 
   li {
     border-bottom: 1px solid var(--primary-low);
-    position: relative;
 
     &:last-of-type {
       border-bottom: 0;
@@ -89,6 +87,7 @@
     line-height: $line-height-small;
     cursor: pointer;
     color: var(--primary);
+    @include ellipsis;
 
     &.active {
       color: var(--secondary);

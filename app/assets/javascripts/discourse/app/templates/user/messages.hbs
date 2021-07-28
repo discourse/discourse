@@ -1,29 +1,35 @@
 {{#d-section class=sectionClass pageClass="user-messages"}}
   {{#if inboxes.length}}
+    <div class="inboxes-controls">
+      {{combo-box
+        content=inboxes
+        classNames="user-messages-inboxes-drop"
+        value=selectedInbox
+        onChange=(action "updateInbox")
+        options=(hash
+          filterable=true
+        )
+      }}
+      {{#if (and group site.mobileView)}}
+        {{group-notifications-button
+          value=group.group_user.notification_level
+          onChange=(action "changeGroupNotificationLevel")
+        }}
+      {{/if}}
+    </div>
+  {{/if}}
+
+  {{#if (and pmTaggingEnabled tagsContent)}}
     {{combo-box
-      content=inboxes
-      classNames="user-messages-inboxes-drop"
-      value=selectedInbox
-      onChange=(action "updateInbox")
+      content=tagsContent
+      value=tag
+      classNames="user-messages-tags-drop"
       options=(hash
         filterable=true
+        none="tagging.selector_all_tags"
       )
     }}
   {{/if}}
-
-  {{#unless site.mobileView}}
-    {{#if (and pmTaggingEnabled tagsContent)}}
-      {{combo-box
-        content=tagsContent
-        value=tag
-        classNames="user-messages-tags-drop"
-        options=(hash
-          filterable=true
-          none="tagging.selector_all_tags"
-        )
-      }}
-    {{/if}}
-  {{/unless}}
 
   {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list"}}
     {{#if isAllInbox}}
@@ -105,25 +111,26 @@
         {{/link-to}}
       </li>
     {{/if}}
-
-    {{#unless mobileView}}
-      {{#if group}}
-        <li>
-          {{group-notifications-button
-            value=group.group_user.notification_level
-            onChange=(action "changeGroupNotificationLevel")
-          }}
-        </li>
-      {{/if}}
-
-      {{#if showNewPM}}
-        <li>
-          {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
-        </li>
-      {{/if}}
-    {{/unless}}
   {{/mobile-nav}}
 {{/d-section}}
+
+{{#if (and site.mobileView showNewPM)}}
+  {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+{{/if}}
+
+{{#unless site.mobileView}}
+  <section class="user-additional-controls">
+    {{#if group}}
+      {{group-notifications-button
+        value=group.group_user.notification_level
+        onChange=(action "changeGroupNotificationLevel")
+      }}
+    {{/if}}
+    {{#if showNewPM}}
+      {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+    {{/if}}
+  </section>
+{{/unless}}
 
 <section class="user-content">
   {{#if showWarningsWarning}}
