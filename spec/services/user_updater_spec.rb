@@ -43,7 +43,7 @@ describe UserUpdater do
 
     it 'saves user' do
       user = Fabricate(:user, name: 'Billy Bob')
-      updater = UserUpdater.new(acting_user, user)
+      updater = UserUpdater.new(user, user)
 
       updater.update(name: 'Jim Tom')
 
@@ -547,11 +547,10 @@ describe UserUpdater do
     end
 
     it "logs the action" do
-      user_without_name = Fabricate(:user, name: nil)
       user = Fabricate(:user, name: 'Billy Bob')
 
       expect do
-        UserUpdater.new(acting_user, user).update(name: 'Jim Tom')
+        UserUpdater.new(user, user).update(name: 'Jim Tom')
       end.to change { UserHistory.count }.by(1)
 
       expect(UserHistory.last.action).to eq(
@@ -559,19 +558,21 @@ describe UserUpdater do
       )
 
       expect do
-        UserUpdater.new(acting_user, user).update(name: 'JiM TOm')
+        UserUpdater.new(user, user).update(name: 'JiM TOm')
       end.to_not change { UserHistory.count }
 
       expect do
-        UserUpdater.new(acting_user, user).update(bio_raw: 'foo bar')
+        UserUpdater.new(user, user).update(bio_raw: 'foo bar')
+      end.to_not change { UserHistory.count }
+
+      user_without_name = Fabricate(:user, name: nil)
+
+      expect do
+        UserUpdater.new(user_without_name, user_without_name).update(bio_raw: 'foo bar')
       end.to_not change { UserHistory.count }
 
       expect do
-        UserUpdater.new(acting_user, user_without_name).update(bio_raw: 'foo bar')
-      end.to_not change { UserHistory.count }
-
-      expect do
-        UserUpdater.new(acting_user, user_without_name).update(name: 'Jim Tom')
+        UserUpdater.new(user_without_name, user_without_name).update(name: 'Jim Tom')
       end.to change { UserHistory.count }.by(1)
 
       expect(UserHistory.last.action).to eq(
@@ -579,7 +580,7 @@ describe UserUpdater do
       )
 
       expect do
-        UserUpdater.new(acting_user, user).update(name: '')
+        UserUpdater.new(user, user).update(name: '')
       end.to change { UserHistory.count }.by(1)
 
       expect(UserHistory.last.action).to eq(
