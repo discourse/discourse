@@ -1,6 +1,6 @@
 **Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
 
->  🔔 Don't have 30 minutes to set this up? For a one time fee as low as $150 or less, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://meta.discourse.org/new-topic?title=%5BPAID%5D+Discourse+Installation&body=I+would+like+to+purchase+a+one-time+community+install&category=marketplace).
+>  🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $150, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
 ### Create New Cloud Server
 
@@ -120,7 +120,7 @@ After completing the setup wizard, you should see Staff topics and **READ ME FIR
 
 To **upgrade Discourse to the latest version**, visit `https://discourse.example.com/admin/upgrade` in your browser and click the Upgrade button.
 
-Alternatively, You can ssh into your server and perform and rebuild
+Alternatively, you can ssh into your server and rebuild using:
 
 ```
 cd /var/discourse
@@ -170,7 +170,7 @@ Do you want...
 
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857). We recommend [Fastly](http://www.fastly.com/).
 
-- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/main/script/import_scripts).
+- Import/migrate old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/main/script/import_scripts) and our [migration guide](https://meta.discourse.org/t/how-to-migrate-from-one-platform-forum-to-discourse/197236).
 
 - A user friendly [offline page when rebuilding or upgrading?](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
 
