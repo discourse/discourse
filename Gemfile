@@ -177,14 +177,9 @@ group :development do
   gem 'yaml-lint'
 end
 
-if ENV["ALLOW_DEV_POPULATE"] == "1"
+group ENV["ALLOW_DEV_POPULATE"] == "1" ? :production : :development do
   gem 'discourse_dev_assets'
   gem 'faker', "~> 2.16"
-else
-  group :development do
-    gem 'discourse_dev_assets'
-    gem 'faker', "~> 2.16"
-  end
 end
 
 # this is an optional gem, it provides a high performance replacement
