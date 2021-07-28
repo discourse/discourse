@@ -80,8 +80,6 @@ You'll get the SMTP details from your [email](#email) setup, be sure to complete
 
 Let's Encrypt account setup is to give you a free HTTPS certificate for your site, be sure to set that up if you want your site secure.
 
-Optional: If you want to be able to see the approximate geographical location of people in your community to help combat spam and trolls, you may want to enable reverse IP lookup via maxmind. Follow [this guide](https://meta.discourse.org/t/configuring-maxmind-for-reverse-ip-lookups/173941) 
-
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will re-use your previous values from the file) or edit `/containers/app.yml` manually with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
 
 ### Start Discourse
