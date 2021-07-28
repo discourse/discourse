@@ -151,10 +151,8 @@ export default Mixin.create({
       this._reset();
     });
 
-    if (
-      this.siteSettings.enable_s3_uploads &&
-      this.siteSettings.enable_direct_s3_uploads // hidden setting like enable_experimental_image_uploader
-    ) {
+    // hidden setting like enable_experimental_image_uploader
+    if (this.siteSettings.enable_direct_s3_uploads) {
       this._useS3Uploads();
     } else {
       this._useXHRUploads();
