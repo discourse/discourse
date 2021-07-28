@@ -12,6 +12,14 @@ let cache = {},
   currentTerm,
   oldSearch;
 
+export function resetUserSearchCache() {
+  cache = {};
+  cacheKey = null;
+  cacheTime = null;
+  currentTerm = null;
+  oldSearch = null;
+}
+
 function performSearch(
   term,
   topicId,
