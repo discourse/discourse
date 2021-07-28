@@ -44,7 +44,7 @@ $mobile-breakpoint: 700px;
   }
   .bookmark-metadata {
     font-size: $font-down-2;
-    margin-bottom: 0.35em;
+    margin-bottom: 0.25em;
 
     &-item {
       display: inline-block;
@@ -58,12 +58,6 @@ $mobile-breakpoint: 700px;
 
     .d-icon {
       margin-right: 0.25em;
-    }
-
-    @media (max-width: $mobile-breakpoint) {
-      &-item {
-        display: block;
-      }
     }
   }
   .bookmark-status-with-link {
