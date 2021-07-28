@@ -34,6 +34,7 @@ import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
+import { resetUserSearchCache } from "discourse/lib/user-search";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
@@ -272,6 +273,7 @@ export function acceptance(name, optionsOrCallback) {
       resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+      resetUserSearchCache();
       clearCustomNavItemHref();
       setTopicList(null);
       _clearSnapshots();
