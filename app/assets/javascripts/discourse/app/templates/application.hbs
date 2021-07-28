@@ -1,7 +1,7 @@
 {{#discourse-root}}
   {{d-document}}
   {{plugin-outlet name="above-site-header" tagName=""}}
-  <div class="header-dock-anchor"></div>
+  {{sticky-header-anchor}}
   {{site-header canSignUp=canSignUp
                 showCreateAccount=(route-action "showCreateAccount")
                 showLogin=(route-action "showLogin")

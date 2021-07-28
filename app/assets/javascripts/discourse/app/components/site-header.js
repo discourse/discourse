@@ -21,7 +21,6 @@ const SiteHeaderComponent = MountWidget.extend(
     _scheduledRemoveAnimate: null,
     _topic: null,
     _mousetrap: null,
-    _stickyHeaderObserver: null,
 
     @observes(
       "currentUser.unread_notifications",
@@ -186,8 +185,6 @@ const SiteHeaderComponent = MountWidget.extend(
       this._resizeDiscourseMenuPanel = () => this.afterRender();
       window.addEventListener("resize", this._resizeDiscourseMenuPanel);
 
-      this._stickyHeaderCheck();
-
       this.appEvents.on("header:show-topic", this, "setTopic");
       this.appEvents.on("header:hide-topic", this, "setTopic");
 
@@ -251,19 +248,6 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
-    _stickyHeaderCheck() {
-      const dockAnchor = document.querySelector(".header-dock-anchor");
-      if (dockAnchor) {
-        this._stickyHeaderObserver = new IntersectionObserver((entries) => {
-          if (!entries[0].isIntersecting) {
-            document.body.classList.add("docked");
-          } else {
-            document.body.classList.remove("docked");
-          }
-        }).observe(dockAnchor);
-      }
-    },
-
     _cleanDom() {
       // For performance, only trigger a re-render if any menu panels are visible
       if (this.element.querySelector(".menu-panel")) {
@@ -285,9 +269,6 @@ const SiteHeaderComponent = MountWidget.extend(
       this._mousetrap.reset();
 
       document.removeEventListener("click", this._dismissFirstNotification);
-
-      const dockAnchor = document.querySelector(".header-dock-anchor");
-      this._stickyHeaderDockObserver?.unobserve(dockAnchor);
     },
 
     buildArgs() {
