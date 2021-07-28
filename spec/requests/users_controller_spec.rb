@@ -1083,8 +1083,11 @@ describe UsersController do
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json['success']).to eq(true)
-          expect(User.last.username).to eq('testosama')
-          expect(User.last.name).to eq('Osama Test')
+
+          user = User.last
+
+          expect(user.username).to eq('testosama')
+          expect(user.name).to eq('Osama Test')
         end
 
       end
@@ -1819,6 +1822,17 @@ describe UsersController do
         put "/u/guest.json"
         expect(response.status).to eq(403)
       end
+    end
+
+    it "does not allow name to be updated if auth auth_overrides_name is enabled" do
+      SiteSetting.auth_overrides_name = true
+
+      sign_in(user)
+
+      put "/u/#{user.username}", params: { name: 'test.test' }
+
+      expect(response.status).to eq(200)
+      expect(user.reload.name).to_not eq('test.test')
     end
 
     context "when username contains a period" do

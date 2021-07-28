@@ -97,7 +97,10 @@ class UserUpdater
     end
 
     old_user_name = user.name.present? ? user.name : ""
-    user.name = attributes.fetch(:name) { user.name }
+
+    if guardian.can_edit_name?(user)
+      user.name = attributes.fetch(:name) { user.name }
+    end
 
     user.locale = attributes.fetch(:locale) { user.locale }
     user.date_of_birth = attributes.fetch(:date_of_birth) { user.date_of_birth }
