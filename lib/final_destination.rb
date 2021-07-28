@@ -30,7 +30,7 @@ class FinalDestination
 
   DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
 
-  attr_reader :status, :cookie, :status_code, :ignored
+  attr_reader :status, :cookie, :status_code, :content_type, :ignored
 
   def initialize(url, opts = nil)
     @url = url
@@ -215,6 +215,7 @@ class FinalDestination
         end
       end
 
+      @content_type = response.headers['Content-Type'] if response.headers.has_key?('Content-Type')
       @status = :resolved
       return @uri
     when 400, 405, 406, 409, 500, 501

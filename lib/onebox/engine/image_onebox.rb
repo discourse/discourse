@@ -5,6 +5,7 @@ module Onebox
     class ImageOnebox
       include Engine
 
+      matches_content_type(/^image\/(png|jpg|jpeg|gif|bmp|tif|tiff)$/)
       matches_regexp(/^(https?:)?\/\/.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)(\?.*)?$/i)
 
       def always_https?
