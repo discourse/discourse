@@ -22,7 +22,7 @@ import LinkLookup from "discourse/lib/link-lookup";
 
 acceptance("Composer", function (needs) {
   needs.user();
-  needs.settings({ enable_whispers: true, min_first_post_length: 20 });
+  needs.settings({ enable_whispers: true });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
@@ -1001,6 +1001,8 @@ acceptance("Composer", function (needs) {
   });
 
   test("Does not save invalid draft", async function (assert) {
+    this.siteSettings.min_first_post_length = 20;
+
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "Something");
