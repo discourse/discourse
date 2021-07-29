@@ -37,7 +37,7 @@ ar:
     pm: "م"
     <<: *datetime_formats
   title: "Discourse"
-  topics: "المواضيع"
+  topics: "الموضوعات"
   posts: "المنشورات"
   views: "مرات العرض"
   loading: "جارٍ التحميل"
@@ -366,7 +366,7 @@ ar:
       many: "%{count} إعجابًا"
       other: "%{count} إعجاب"
     last_reply: "آخر رد"
-    created: "تم الإنشاء"
+    created: "تاريخ الإنشاء"
     new_topic: "إنشاء موضوع جديد"
   no_mentions_allowed: "عذرًا، لا يمكنك الإشارة إلى الغير."
   too_many_mentions:
