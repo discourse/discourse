@@ -45,6 +45,14 @@ function head(buffer, bootstrap) {
     buffer.push(`<meta name="theme-color" content="${bootstrap.theme_color}">`);
   }
 
+  if (bootstrap.authentication_data) {
+    buffer.push(
+      `<meta id="data-authentication" data-authentication-data="${encode(
+        bootstrap.authentication_data
+      )}">`
+    );
+  }
+
   let setupData = "";
   Object.keys(bootstrap.setup_data).forEach((sd) => {
     let val = bootstrap.setup_data[sd];
