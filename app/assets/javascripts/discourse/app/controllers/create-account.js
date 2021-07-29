@@ -237,7 +237,7 @@ export default Controller.extend(
       "authOptions.email",
       "authOptions.email_valid"
     )
-    emailValidated() {
+    emailDisabled() {
       return (
         this.get("authOptions.email") === this.accountEmail &&
         this.get("authOptions.email_valid")

@@ -141,6 +141,9 @@
         border: 1px solid var(--tertiary);
         box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
       }
+      input:disabled {
+        background-color: var(--primary-low);
+      }
       span.more-info {
         color: var(--primary-medium);
         min-height: 1.4em; // prevents height increase due to tips
@@ -154,6 +157,7 @@
         left: 1em;
         top: 10px;
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
+        border-radius: 0.25em;
         transition: 0.2s ease all;
       }
       input:focus + label.alt-placeholder,
