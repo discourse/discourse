@@ -134,10 +134,10 @@ export default Mixin.create({
     );
   },
 
-  _cardClickHandler(e) {
+  _cardClickHandler(event) {
     if (this.avatarSelector) {
       let matched = this._showCardOnClick(
-        e,
+        event,
         this.avatarSelector,
         (el) => el.dataset[this.avatarDataAttrKey]
       );
@@ -148,7 +148,7 @@ export default Mixin.create({
     }
 
     // Mention click
-    this._showCardOnClick(e, this.mentionSelector, (el) =>
+    this._showCardOnClick(event, this.mentionSelector, (el) =>
       el.innerText.replace(/^@/, "")
     );
   },
