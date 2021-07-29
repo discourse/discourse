@@ -126,9 +126,9 @@ const Group = RestModel.extend({
       data: { usernames, emails, notify_users: notifyUsers },
     }).then((response) => {
       if (filter) {
-        this._filterMembers(response.usernames);
+        return this._filterMembers(response.usernames);
       } else {
-        this.findMembers();
+        return this.findMembers();
       }
     });
   },
@@ -136,9 +136,7 @@ const Group = RestModel.extend({
   join() {
     return ajax(`/groups/${this.id}/join.json`, {
       type: "PUT",
-    }).then(() => {
-      this.findMembers({}, true);
-    });
+    }).then(() => this.findMembers({}, true));
   },
 
   addOwners(usernames, filter, notifyUsers) {
@@ -147,9 +145,9 @@ const Group = RestModel.extend({
       data: { group: { usernames, notify_users: notifyUsers } },
     }).then((response) => {
       if (filter) {
-        this._filterMembers(response.usernames);
+        return this._filterMembers(response.usernames);
       } else {
-        this.findMembers({}, true);
+        return this.findMembers({}, true);
       }
     });
   },
@@ -302,7 +300,7 @@ const Group = RestModel.extend({
         ownerUsernames: null,
       });
 
-      this.findMembers();
+      return this.findMembers();
     });
   },
 
