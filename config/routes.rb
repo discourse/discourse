@@ -922,7 +922,7 @@ Discourse::Application.routes.draw do
       get '/' => 'tags#index'
       get '/filter/list' => 'tags#index'
       get '/filter/search' => 'tags#search'
-      get '/personal_messages/:username' => 'tags#personal_messages'
+      get '/personal_messages/:username' => 'tags#personal_messages', constraints: { username: RouteFormat.username }
       post '/upload' => 'tags#upload'
       get '/unused' => 'tags#list_unused'
       delete '/unused' => 'tags#destroy_unused'
