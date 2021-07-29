@@ -1,11 +1,7 @@
-export function findOrResetCachedTopicList(session, filter, params) {
+export function findOrResetCachedTopicList(session, filter) {
   const lastTopicList = session.get("topicList");
 
-  if (
-    lastTopicList &&
-    lastTopicList.filter === filter &&
-    lastTopicList.params.tag === params?.tag
-  ) {
+  if (lastTopicList && lastTopicList.filter === filter) {
     return lastTopicList;
   } else {
     session.setProperties({

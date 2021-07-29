@@ -57,7 +57,6 @@ class TopicQuery
          q
          f
          group_name
-         tag
          tags
          match_all_tags
          no_subcategories

@@ -9,7 +9,6 @@ export const PERSONAL_INBOX = "__personal_inbox__";
 const ALL_INBOX = "__all_inbox__";
 
 export default Controller.extend({
-  queryParams: ["tag"],
   user: controller(),
 
   pmView: false,
@@ -19,9 +18,20 @@ export default Controller.extend({
   groupFilter: alias("group.name"),
   currentPath: alias("router._router.currentPath"),
   pmTaggingEnabled: alias("site.can_tag_pms"),
-  tag: null,
+  tagId: null,
 
   showNewPM: and("user.viewingSelf", "currentUser.can_send_private_messages"),
+
+  @discourseComputed("inboxes", "isAllInbox")
+  displayGlobalFilters(inboxes, isAllInbox) {
+    if (inboxes.length === 0) {
+      return true;
+    }
+    if (inboxes.length && isAllInbox) {
+      return true;
+    }
+    return false;
+  },
 
   @discourseComputed("inboxes")
   sectionClass(inboxes) {
@@ -56,14 +66,7 @@ export default Controller.extend({
     return pmView === VIEW_NAME_WARNINGS && !viewingSelf && !isAdmin;
   },
 
-  @discourseComputed("tags")
-  tagsContent(tags) {
-    return tags.map((tag) => {
-      return { id: tag.id, name: tag.text };
-    });
-  },
-
-  @discourseComputed("model.groups", "tags")
+  @discourseComputed("model.groups")
   inboxes(groups) {
     const groupsWithMessages = groups?.filter((group) => {
       return group.has_messages;
@@ -100,20 +103,12 @@ export default Controller.extend({
 
   @action
   updateInbox(inbox) {
-    const queryParams = {};
-
-    if (this.tag) {
-      queryParams.tag = this.tag;
-    }
-
     if (inbox === ALL_INBOX) {
-      this.transitionToRoute("userPrivateMessages.index", { queryParams });
+      this.transitionToRoute("userPrivateMessages.index");
     } else if (inbox === PERSONAL_INBOX) {
-      this.transitionToRoute("userPrivateMessages.personal", { queryParams });
+      this.transitionToRoute("userPrivateMessages.personal");
     } else {
-      this.transitionToRoute("userPrivateMessages.group", inbox, {
-        queryParams,
-      });
+      this.transitionToRoute("userPrivateMessages.group", inbox);
     }
   },
 });

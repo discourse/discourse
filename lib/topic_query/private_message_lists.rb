@@ -160,7 +160,7 @@ class TopicQuery
       options.reverse_merge!(per_page: per_page_setting)
 
       result = Topic.includes(:allowed_users)
-      result = result.includes(:tags) if tagging_enabled?
+      result = result.includes(:tags) if SiteSetting.tagging_enabled
 
       if type == :group
         result = result.joins(
@@ -188,18 +188,6 @@ class TopicQuery
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
         .order("topics.bumped_at DESC")
         .private_messages
-
-      if @options[:tag] && tagging_enabled?
-        tag_id = Tag.where("lower(name) = ?", @options[:tag]).pluck_first(:id)
-
-        if tag_id
-          result = result.joins(<<~SQL)
-          INNER JOIN topic_tags
-          ON topic_tags.topic_id = topics.id
-          AND topic_tags.tag_id = #{tag_id.to_i}
-          SQL
-        end
-      end
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
@@ -263,10 +251,6 @@ class TopicQuery
           .select(:id, :publish_read_state)
           .first
       end
-    end
-
-    def tagging_enabled?
-      @guardian.can_tag_pms?
     end
   end
 end

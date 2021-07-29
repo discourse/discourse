@@ -774,10 +774,7 @@ Discourse::Application.routes.draw do
       get "private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", defaults: { format: :json }
       get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", defaults: { format: :json }
       get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", defaults: { format: :json }
-
-      # Deprecated: Remove after Discourse 2.9 has been released
       get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", defaults: { format: :json }
-
       get "private-messages-new/:username" => "list#private_messages_new", as: "topics_private_messages_new", defaults: { format: :json }
       get "private-messages-warnings/:username" => "list#private_messages_warnings", as: "topics_private_messages_warnings", defaults: { format: :json }
       get "groups/:group_name" => "list#group_topics", as: "group_topics", group_name: RouteFormat.username

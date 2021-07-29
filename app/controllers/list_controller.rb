@@ -156,7 +156,6 @@ class ListController < ApplicationController
 
     case action
     when :private_messages_tag
-      Discourse.deprecate("The '/private-messages-tags/:username/:tag_id.json' has been deprecated and will be removed in the Discourse 2.9 release.")
       raise Discourse::NotFound if !guardian.can_tag_pms?
     when :private_messages_warnings
       guardian.ensure_can_see_warnings!(target_user)

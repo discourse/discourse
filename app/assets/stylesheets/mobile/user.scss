@@ -69,19 +69,6 @@
     grid-row-start: 1;
   }
 
-  .user-messages-tags-drop {
-    justify-self: start;
-    margin-bottom: -1.5em; // pulls the topic list below closer
-    .select-kit-header {
-      border: none;
-      justify-self: start;
-      padding-left: 10px;
-    }
-    &.single-select.is-expanded .select-kit-header {
-      outline: none;
-    }
-  }
-
   .new-private-message {
     grid-row-start: 1;
     grid-column-start: 2;

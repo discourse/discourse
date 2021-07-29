@@ -28,37 +28,6 @@ describe TopicQuery::PrivateMessageLists do
     ).topic
   end
 
-  describe '#private_messages_for' do
-    context "tag option" do
-      before do
-        SiteSetting.allow_staff_to_tag_pms = true
-        user.update!(admin: true)
-      end
-
-      fab!(:tag) do
-        Fabricate(:tag).tap do |t|
-          private_message.tags << t
-        end
-      end
-
-      let(:topic_query) { TopicQuery.new(user, tag: tag.name) }
-
-      it 'returns a list of all private messages for a given tag' do
-        topics = topic_query.private_messages_for(user, :user)
-
-        expect(topics).to contain_exactly(private_message)
-      end
-
-      it 'returns the right list of private messages when tagging is disabled' do
-        SiteSetting.tagging_enabled = false
-
-        topics = topic_query.private_messages_for(user, :user)
-
-        expect(topics).to contain_exactly(private_message, group_message)
-      end
-    end
-  end
-
   describe '#list_private_messages_all' do
     it 'returns a list of all private messages that a user has access to' do
       topics = TopicQuery.new(nil).list_private_messages_all(user).topics

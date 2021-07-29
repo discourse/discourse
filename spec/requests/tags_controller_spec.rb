@@ -496,21 +496,6 @@ describe TagsController do
         tag = response.parsed_body['tags']
         expect(tag[0]["id"]).to eq('test')
       end
-
-      it 'accepts a limit on number of tags to return' do
-        Fabricate(:tag, topics: [personal_message], name: 'test2')
-        Fabricate(:tag, topics: [personal_message], name: 'test3')
-
-        get "/tags/personal_messages/#{moderator.username}.json", params: {
-          limit: 2
-        }
-
-        expect(response.status).to eq(200)
-
-        tags = response.parsed_body["tags"]
-
-        expect(tags.map { |t| t["id"] }).to contain_exactly("test", "test2")
-      end
     end
 
     context "as an admin" do

@@ -64,8 +64,7 @@
 
   &.user-messages {
     --left-padding: 0.8em;
-    .user-messages-inboxes-drop,
-    .user-messages-tags-drop {
+    .user-messages-inboxes-drop {
       padding: 0 1em 0 0;
 
       .select-kit-header {

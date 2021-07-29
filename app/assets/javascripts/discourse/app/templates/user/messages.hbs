@@ -19,66 +19,53 @@
     </div>
   {{/if}}
 
-  {{#if (and pmTaggingEnabled tagsContent)}}
-    {{combo-box
-      content=tagsContent
-      value=tag
-      classNames="user-messages-tags-drop"
-      options=(hash
-        filterable=true
-        none="tagging.selector_all_tags"
-      )
-    }}
-  {{/if}}
-
   {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list"}}
     {{#if isAllInbox}}
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.index" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.index" model}}
           {{i18n "user.messages.latest"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.sent" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.sent" model}}
           {{i18n "user.messages.sent"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.new" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.new" model}}
           {{i18n "user.messages.new"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.unread" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.unread" model}}
           {{i18n "user.messages.unread"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.archive" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.archive" model}}
           {{i18n "user.messages.archive"}}
         {{/link-to}}
       </li>
-      {{plugin-outlet name="user-messages-nav" connectorTagName="li" args=(hash model=model)}}
     {{/if}}
 
     {{#if group}}
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.group" group.name (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.group" group.name}}
           {{i18n "user.messages.latest"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.groupNew" group.name (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.groupNew" group.name}}
           {{i18n "user.messages.new"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.groupUnread" group.name (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.groupUnread" group.name}}
           {{i18n "user.messages.unread"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.groupArchive" group.name (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.groupArchive" group.name}}
           {{i18n "user.messages.archive"}}
         {{/link-to}}
       </li>
@@ -86,30 +73,50 @@
 
     {{#if isPersonalInbox}}
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personal" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.personal" model}}
           {{i18n "user.messages.latest"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personalSent" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.personalSent" model}}
           {{i18n "user.messages.sent"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personalNew" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.personalNew" model}}
           {{i18n "user.messages.new"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personalUnread" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.personalUnread" model}}
           {{i18n "user.messages.unread"}}
         {{/link-to}}
       </li>
       <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personalArchive" model (query-params tag=tag)}}
+        {{#link-to "userPrivateMessages.personalArchive" model}}
           {{i18n "user.messages.archive"}}
         {{/link-to}}
       </li>
+    {{/if}}
+
+    {{#if displayGlobalFilters}}
+      {{#if pmTaggingEnabled}}
+        <li class="noGlyph tags">
+          {{#link-to "userPrivateMessages.tags" model}}
+            {{i18n "user.messages.tags"}}
+          {{/link-to}}
+
+          {{#if tagId}}
+            <li class="archive">
+              {{#link-to "userPrivateMessages.tagsShow" tagId}}
+                {{tagId}}
+              {{/link-to}}
+            </li>
+          {{/if}}
+        </li>
+      {{/if}}
+
+      {{plugin-outlet name="user-messages-nav" connectorTagName="li" args=(hash model=model)}}
     {{/if}}
   {{/mobile-nav}}
 {{/d-section}}

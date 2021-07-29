@@ -24,25 +24,11 @@ export default (viewName, path, channel) => {
       const filter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
 
-      const tag = this.paramsFor("user-private-messages").tag;
-      const params = {};
-
-      if (tag) {
-        params.tag = tag;
-      }
-
-      const lastTopicList = findOrResetCachedTopicList(
-        this.session,
-        filter,
-        params
-      );
+      const lastTopicList = findOrResetCachedTopicList(this.session, filter);
 
       return lastTopicList
         ? lastTopicList
-        : this.store.findFiltered("topicList", {
-            filter,
-            params,
-          });
+        : this.store.findFiltered("topicList", { filter });
     },
 
     setupController() {

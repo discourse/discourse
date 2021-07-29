@@ -28,25 +28,11 @@ export default (viewName, channel) => {
         filter = `${filter}/${viewName}`;
       }
 
-      const tag = this.paramsFor("user-private-messages").tag;
-      const filterParams = {};
-
-      if (tag) {
-        filterParams.tag = tag;
-      }
-
-      const lastTopicList = findOrResetCachedTopicList(
-        this.session,
-        filter,
-        filterParams
-      );
+      const lastTopicList = findOrResetCachedTopicList(this.session, filter);
 
       return lastTopicList
         ? lastTopicList
-        : this.store.findFiltered("topicList", {
-            filter,
-            params: filterParams,
-          });
+        : this.store.findFiltered("topicList", { filter });
     },
 
     afterModel(model) {
