@@ -3,8 +3,6 @@
 class Users::AssociateAccountsController < ApplicationController
   REDIS_PREFIX ||= "omniauth_reconnect"
 
-  ##
-  # Presents a confirmation screen to the user. Accessed via GET, with no CSRF checks
   def connect_info
     auth = get_auth_hash
 
@@ -17,8 +15,6 @@ class Users::AssociateAccountsController < ApplicationController
     render json: { token: params[:token], provider_name: provider_name, account_description: account_description }
   end
 
-  ##
-  # Presents a confirmation screen to the user. Accessed via GET, with no CSRF checks
   def connect
     auth = get_auth_hash
     Discourse.redis.del "#{REDIS_PREFIX}_#{current_user&.id}_#{params[:token]}"
