@@ -202,19 +202,32 @@ class UserStat < ActiveRecord::Base
     self.class.update_distinct_badge_count(self.user_id)
   end
 
-  def self.update_draft_count(user_id)
-    draft_count = DB.query_single <<~SQL, user_id: user_id
-      UPDATE user_stats
-      SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
-      WHERE user_id = :user_id
-      RETURNING draft_count
-    SQL
+  def self.update_draft_count(user_id = nil)
+    if user_id.present?
+      draft_count = DB.query_single <<~SQL, user_id: user_id
+        UPDATE user_stats
+        SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
+        WHERE user_id = :user_id
+        RETURNING draft_count
+      SQL
 
-    MessageBus.publish(
-      '/user',
-      { draft_count: draft_count.first },
-      user_ids: [user_id]
-    )
+      MessageBus.publish(
+        '/user',
+        { draft_count: draft_count.first },
+        user_ids: [user_id]
+      )
+    else
+      DB.exec <<~SQL
+        UPDATE user_stats
+        SET draft_count = new_user_stats.draft_count
+        FROM (SELECT user_stats.user_id, COUNT(drafts.id) draft_count
+              FROM user_stats
+              LEFT JOIN drafts ON user_stats.user_id = drafts.user_id
+              GROUP BY user_stats.user_id) new_user_stats
+        WHERE user_stats.user_id = new_user_stats.user_id
+          AND user_stats.draft_count <> new_user_stats.draft_count
+      SQL
+    end
   end
 
   # topic_reply_count is a count of posts in other users' topics

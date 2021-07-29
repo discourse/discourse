@@ -254,6 +254,8 @@ class Draft < ActiveRecord::Base
     # remove old drafts
     delete_drafts_older_than_n_days = SiteSetting.delete_drafts_older_than_n_days.days.ago
     Draft.where("updated_at < ?", delete_drafts_older_than_n_days).destroy_all
+
+    UserStat.update_draft_count
   end
 
   def self.backup_draft(user, key, sequence, data)

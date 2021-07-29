@@ -229,6 +229,7 @@ class PostCreator
       @post.topic.reload
 
       publish
+      UserStat.update_draft_count(@user.id)
 
       track_latest_on_category
       enqueue_jobs unless @opts[:skip_jobs]
