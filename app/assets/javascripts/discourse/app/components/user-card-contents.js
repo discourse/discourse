@@ -16,7 +16,9 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
   classNames: "user-card",
-  triggeringLinkClass: "mention",
+  avatarSelector: "[data-user-card]",
+  avatarDataAttrKey: "userCard",
+  mentionSelector: "a.mention",
   classNameBindings: [
     "visible:show",
     "showBadges",
