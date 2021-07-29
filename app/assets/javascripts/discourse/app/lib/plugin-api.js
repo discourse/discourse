@@ -1087,7 +1087,8 @@ class PluginApi {
 
   /**
    * Card contents mixin will add a listener to elements matching this selector
-   * that will open card contents on click
+   * that will open card contents when a mention of div with the correct data attribute
+   * is clicked
    */
   addCardClickListenerSelector(selector) {
     addCardClickListenerSelector(selector);
