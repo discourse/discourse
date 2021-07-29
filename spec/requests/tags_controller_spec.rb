@@ -520,6 +520,14 @@ describe TagsController do
         tag = response.parsed_body['tags']
         expect(tag[0]["id"]).to eq('test')
       end
+
+      it 'works with usernames with a period' do
+        admin.update!(username: "test.test")
+
+        get "/tags/personal_messages/#{admin.username}.json"
+
+        expect(response.status).to eq(200)
+      end
     end
   end
 
