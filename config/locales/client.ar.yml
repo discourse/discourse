@@ -318,7 +318,7 @@ ar:
     mobile_view: "العرض على الجوَّال"
     desktop_view: "العرض على كمبيوتر سطح المكتب"
     or: "أو"
-    now: "منذ لحظات"
+    now: "الآن"
     read_more: "قراءة المزيد"
     more: "المزيد"
     x_more:
@@ -329,12 +329,12 @@ ar:
       many: "%{count} أكثر"
       other: "%{count} أكثر"
     never: "أبدًا"
-    every_30_minutes: "كلّ 30 دقيقة"
-    every_hour: "كلّ ساعة"
+    every_30_minutes: "كل 30 دقيقة"
+    every_hour: "كل ساعة"
     daily: "يوميًا"
     weekly: "أسبوعيًا"
-    every_month: "كلّ شهر"
-    every_six_months: "كلّ ستة أشهر"
+    every_month: "كل شهر"
+    every_six_months: "كل ستة أشهر"
     max_of_count: "%{count} كحدٍ أقصى"
     character_count:
       zero: "%{count} حرف"
@@ -846,7 +846,7 @@ ar:
           mailboxes:
             synchronized: "صندوق البريد المتزامن"
             none_found: "لم يتم العثور على صناديق بريد في حساب البريد الإلكتروني هذا."
-            disabled: "معطَّل"
+            disabled: "متوقفة"
         membership:
           title: العضوية
           access: الوصول
@@ -913,7 +913,7 @@ ar:
       owner: "المالك"
       index:
         title: "المجموعات"
-        all: "كلّ المجموعات"
+        all: "كل المجموعات"
         empty: "لا توجد مجموعات مرئية."
         filter: "التصفية حسب نوع المجموعة"
         owner_groups: "المجموعات التي أملكها"
@@ -1115,7 +1115,7 @@ ar:
       user_notifications:
         filters:
           filter_by: "التصفية حسب"
-          all: "الكلّ"
+          all: "الكل"
           read: "المقروءة"
           unread: "غير المقروءة"
         ignore_duration_title: "تجاهل المستخدم"
@@ -1386,7 +1386,7 @@ ar:
           default_name: "تطبيق المصادقة الخاص بي"
           name_and_code_required_error: "يجب عليك إدخال اسم، والرمز من تطبيق المصادقة."
         security_key:
-          register: "تسجيل"
+          register: "التسجيل"
           title: "مفاتيح الأمان"
           add: "إضافة مفتاح أمان"
           default_name: "مفتاح الأمان الرئيسي"
@@ -1443,7 +1443,7 @@ ar:
         unconfirmed_label: "غير مؤكَّد"
         resend_label: "إعادة إرسال رسالة التأكيد"
         resending_label: "جارٍ الإرسال..."
-        resent_label: "تم إرسال الرسالة"
+        resent_label: "تم إرسال الرسالة الإلكترونية"
         update_email: "تغيير البريد الإلكتروني"
         set_primary: "ضبط عنوان البريد الإلكتروني الرئيسي"
         destroy: "إزالة عنوان البريد الإلكتروني"
@@ -1488,7 +1488,7 @@ ar:
         instructions: "مميز، وبلا مسافات، وقصير"
         short_instructions: "يمكن للأشخاص الإشارة إليك هكذا: ⁨@%{username}⁩"
         available: "اسم المستخدم متوفر"
-        not_available: "غير متوفر. هل تريد تجربة %{suggestion}؟"
+        not_available: "غير متاح. هل تريد تجربة %{suggestion}؟"
         not_available_no_suggestion: "غير متاح"
         too_short: "اسم المستخدم قصير جدًا"
         too_long: "اسم المستخدم طويل جدًا"
@@ -1554,11 +1554,11 @@ ar:
         never: "أبدًا"
       email_digests:
         title: "إرسال ملخص إليَّ عبر البريد الإلكتروني بالموضوعات والردود الشائعة عندما لا أزور الموقع"
-        every_30_minutes: "كلّ 30 دقيقة"
-        every_hour: "كلّ ساعة"
+        every_30_minutes: "كل 30 دقيقة"
+        every_hour: "كل ساعة"
         daily: "يوميًا"
         weekly: "أسبوعيًا"
-        every_month: "كلّ شهر"
+        every_month: "كل شهر"
         every_six_months: "كل ستة أشهر"
       email_level:
         title: "مراسلتي عبر البريد الإلكتروني عندما يقتبس مني شخص ما، أو يرد على منشوري، أو يشير إلى اسم المستخدم الخاص بي باستخدام الرمز @، أو يدعوني إلى موضوع"
@@ -1654,8 +1654,8 @@ ar:
           copy_link: "نسخ الرابط"
           expires_in_time: "تنتهي صلاحيتها في %{time}"
           expired_at_time: "تنتهي صلاحيتها في %{time}"
-          show_advanced: "عرض الخيارات المتقدمة"
-          hide_advanced: "عرض الخيارات المتقدمة"
+          show_advanced: "إظهار الخيارات المتقدمة"
+          hide_advanced: "إخفاء الخيارات المتقدمة"
           restrict_email: "التقييد على عنوان بريد إلكتروني واحد"
           max_redemptions_allowed: "الحد الأقصى لمرات الاستخدام"
           add_to_groups: "إضافة إلى المجموعات"
@@ -1902,7 +1902,7 @@ ar:
       title: "إعادة ضبط كلمة المرور"
       action: "نسيت كلمة مروري"
       invite: "أدخِل اسم المستخدم أو عنوان البريد الإلكتروني، وسنُرسل إليك رسالة إلكترونية لإعادة ضبط كلمة المرور."
-      reset: "إعادة تعين كلمة المرور"
+      reset: "إعادة ضبط كلمة المرور"
       complete_username: "إذا تطابق أحد الحسابات مع اسم المستخدم <b>%{username}</b>، فستتلقى سريعًا رسالة إلكترونية تتضمَّن تعليمات عن كيفية إعادة ضبط كلمة المرور."
       complete_email: "إذا تطابق أحد الحسابات مع <b>%{email}</b>، فستتلقى سريعًا رسالة إلكترونية تتضمَّن تعليمات عن كيفية إعادة ضبط كلمة المرور."
       complete_username_found: "لقد عثرنا على حساب مطابق لاسم المستخدم <b>%{username}</b>. ومن المفترض أن تتلقى رسالة إلكترونية بإرشادات إعادة ضبط كلمة المرور قريبًا."
@@ -1939,9 +1939,9 @@ ar:
       second_factor_backup_description: "يُرجى إدخال أحد الرموز الاحتياطية:"
       second_factor: "تسجيل الدخول باستخدام تطبيق المصادقة"
       security_key_description: "عندما يكون مفتاح الأمان المادي جاهزًا، اضغط على زر \"المصادقة باستخدام مفتاح الأمان\" أدناه."
-      security_key_alternative: "تجربة طريقة أخرى"
-      security_key_authenticate: "المصادقة باستخدام مفتاح أمان"
-      security_key_not_allowed_error: "انتهت مهلة عملية المصادقة باستخدام مفتاح أمان أو تم إلغاؤها."
+      security_key_alternative: "جرِّب طريقة أخرى"
+      security_key_authenticate: "المصادقة باستخدام مفتاح الأمان"
+      security_key_not_allowed_error: "انتهت مهلة عملية المصادقة باستخدام مفتاح الأمان أو تم إلغاؤها."
       security_key_no_matching_credential_error: "تعذَّر العثور على بيانات اعتماد مطابقة في مفتاح الأمان المقدَّم."
       security_key_support_missing_error: "لا يدعم جهازك أو متصفحك الحالي استخدام مفاتيح الأمان. يُرجى استخدام طريقة مختلفة."
       email_placeholder: "البريد الإلكتروني/اسم المستخدم"
@@ -1951,7 +1951,7 @@ ar:
       rate_limit: "يُرجى الانتظار قبل محاولة تسجيل الدخول مرة أخرى."
       blank_username: "يُرجى إدخال بريدك الإلكتروني أو اسم المستخدم."
       blank_username_or_password: "يُرجى إدخال بريدك الإلكتروني أو اسم المستخدم، وكلمة المرور."
-      reset_password: "إعادة تعين كلمة المرور"
+      reset_password: "إعادة ضبط كلمة المرور"
       logging_in: "جارٍ تسجيل الدخول..."
       or: "أو"
       authenticating: "جارٍ المصادقة..."
@@ -1971,7 +1971,7 @@ ar:
       sent_activation_email_again_generic: "لقد أرسلنا رسالة إلكترونية أخرى للتفعيل. قد يستغرق وصولها بضع دقائق؛ لذا احرص على التحقُّق من مجلد البريد غير المرغوب فيه."
       to_continue: "يُرجى تسجيل الدخول"
       preferences: "عليك تسجل الدخول لتغيير تفضيلات المستخدم."
-      not_approved: "لم تتم الموافقة على حسابك بعد. سيصلك إشعار عبر البريد عندما تكون مستعدًا لتسجيل الدخول."
+      not_approved: "لم تتم الموافقة على حسابك حتى الآن. سيتم إعلامك عبر البريد الإلكتروني عندما تكون مستعدًا لتسجيل الدخول."
       google_oauth2:
         name: "Google"
         title: "باستخدام Google"
@@ -2017,7 +2017,7 @@ ar:
     category_page_style:
       categories_only: "الفئات فقط"
       categories_with_featured_topics: "الفئات ذات الموضوعات المميزة"
-      categories_and_latest_topics: "الفئات والموضوعات الحديثة"
+      categories_and_latest_topics: "الفئات وأحدث الموضوعات"
       categories_and_top_topics: "الفئات والموضوعات الأكثر عرضًا"
       categories_boxes: "المربعات ذات الفئات الفرعية"
       categories_boxes_with_topics: "مربعات بالموضوعات المميزة"
@@ -2097,7 +2097,7 @@ ar:
       activities: الأنشطة
       objects: الأشياء
       symbols: الرموز
-      flags: الأعلام
+      flags: البلاغات
       recent: المستخدمة حديثًا
       default_tone: بلا لون بشرة
       light_tone: لون البشرة الفاتح
@@ -2363,11 +2363,11 @@ ar:
       popup:
         mentioned: 'أشار %{username} إليك في "%{topic}" - ‏%{site_title}'
         group_mentioned: 'أشار %{username} إليك في "%{topic}" - ‏%{site_title}'
-        quoted: 'اقتبس %{username} كلامك في "%{topic}" - ‏%{site_title}'
-        replied: 'ردَّ %{username} عليك في "%{topic}" - ‏%{site_title}'
-        posted: 'نشر %{username} منشورًا في "%{topic}" - ‏%{site_title}'
+        quoted: 'اقتبس %{username} منك في "%{topic}" - %{site_title}'
+        replied: 'ردَّ %{username} عليك في "%{topic}" - %{site_title}'
+        posted: 'نشر %{username} في "%{topic}" - ‏%{site_title}'
         private_message: 'أرسل %{username} إليك رسالة خاصة في "%{topic}" -‏ %{site_title}'
-        linked: 'وضع %{username} رابطًا لمنشورك من "%{topic}" - %{site_title}'
+        linked: 'وضع %{username} رابطًا إلى منشورك في "%{topic}" - %{site_title}'
         watching_first_post: 'أنشأ %{username} موضوعًا جديدًا: "%{topic}" -‏ %{site_title}'
         confirm_title: "تم تفعيل الإشعارات - %{site_title}"
         confirm_body: "تم بنجاح! تم تفعيل الإشعارات."
@@ -3185,7 +3185,7 @@ ar:
           few: "عذرًا، يمكنك تحميل %{count} ملفات فقط في الوقت نفسه."
           many: "عذرًا، يمكنك تحميل %{count} ملفًا فقط في الوقت نفسه."
           other: "عذرًا، يمكنك تحميل %{count} ملف فقط في الوقت نفسه."
-        upload_not_authorized: "عذرًا، الملف الذي تحاول تحميله غير مسموح به ( الامتدادات المسموح بها: %{authorized_extensions})."
+        upload_not_authorized: "عذرًا، الملف الذي تحاول تحميله غير مسموح به (الامتدادات المسموح بها: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "عذرًا، لا يمكن للمستخدمين الجُدد تحميل الصور."
         attachment_upload_not_allowed_for_new_user: "عذرًا، لا يمكن للمستخدمين الجُدد تحميل المرفقات."
         attachment_download_requires_login: "عذرًا، عليك تسجيل الدخول لتنزيل المرفقات."
@@ -3804,7 +3804,7 @@ ar:
         next: "%{shortcut} الموضوع التالي"
         previous: "%{shortcut} الموضوع السابق"
       navigation:
-        title: "التنقُّل"
+        title: "التنقل"
         jump: "%{shortcut} الانتقال إلى المنشور #"
         back: "%{shortcut} الرجوع"
         up_down: "%{shortcut} نقل التحديد &uarr; &darr;"
@@ -4048,7 +4048,7 @@ ar:
         tags_placeholder: "البحث أو إنشاء الوسوم"
         parent_tag_placeholder: "اختياري"
         select_groups_placeholder: "تحديد المجموعات..."
-        disabled: "وضع الوسوم معطَّل. "
+        disabled: "وضع الوسوم متوقف. "
       topics:
         none:
           unread: "ليس لديك أي موضوع غير مقروء."
@@ -4163,7 +4163,7 @@ ar:
         security_tab: "الأمان"
         reports_tab: "التقارير"
         report_filter_any: "أي"
-        disabled: معطَّل
+        disabled: متوقفة
         timeout_error: عذرًا، يستغرق الاستعلام وقتًا طويلًا، يُرجى اختيار فترة زمنية أقصر
         exception_error: عذرًا، حدث خطأ في أثناء تنفيذ الاستعلام
         too_many_requests: لقد نفَّذت هذا الإجراء مرات كثيرة جدًا. يُرجى الانتظار قليلًا قبل إعادة المحاولة.
@@ -4412,7 +4412,7 @@ ar:
           inactive: "غير نشط"
           failed: "فشل"
           successful: "نجح"
-          disabled: "معطَّل"
+          disabled: "متوقفة"
         events:
           none: "لا توجد أحداث ذات صلة."
           redeliver: "إعادة التسليم"
@@ -4649,7 +4649,7 @@ ar:
           public_key_note: "بعد إدخال عنوان URL صالح لمستودع خاص أعلاه، سيتم إنشاء مفتاح SSH وعرضه هنا."
           install: "تثبيت"
           installed: "مثبَّت"
-          install_popular: "رائج"
+          install_popular: "الرائجة"
           install_upload: "من جهازك"
           install_git_repo: "من مستودع Git"
           install_create: "إنشاء جديد"
