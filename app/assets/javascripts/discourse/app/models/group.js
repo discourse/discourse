@@ -126,7 +126,7 @@ const Group = RestModel.extend({
       data: { usernames, emails, notify_users: notifyUsers },
     }).then((response) => {
       if (filter) {
-        this._filterMembers(response);
+        this._filterMembers(response.usernames);
       } else {
         this.findMembers();
       }
@@ -147,15 +147,15 @@ const Group = RestModel.extend({
       data: { group: { usernames, notify_users: notifyUsers } },
     }).then((response) => {
       if (filter) {
-        this._filterMembers(response);
+        this._filterMembers(response.usernames);
       } else {
         this.findMembers({}, true);
       }
     });
   },
 
-  _filterMembers(response) {
-    return this.findMembers({ filter: response.usernames.join(",") });
+  _filterMembers(usernames) {
+    return this.findMembers({ filter: usernames.join(",") });
   },
 
   @discourseComputed("display_name", "name")
