@@ -8,6 +8,11 @@ import headerOutletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
+let _cardClickListenerSelectors = ["#main-outlet"];
+export function addCardClickListenerSelector(selector) {
+  _cardClickListenerSelectors.push(selector);
+}
+
 export default Mixin.create({
   router: service(),
 
@@ -26,7 +31,7 @@ export default Mixin.create({
   isFixed: false,
   isDocked: false,
 
-  _show(username, $target) {
+  _show(username, target) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
       return false;
@@ -35,9 +40,9 @@ export default Mixin.create({
     username = escapeExpression(username.toString());
 
     // Don't show if nested
-    if ($target.parents(".card-content").length) {
+    if (target.closest(".card-content")) {
       this._close();
-      DiscourseURL.routeTo($target.attr("href"));
+      DiscourseURL.routeTo(target.href);
       return false;
     }
 
@@ -46,10 +51,10 @@ export default Mixin.create({
       return;
     }
 
-    const postId = $target.parents("article").data("post-id");
+    const closestArticle = target.closest("article");
+    const postId = closestArticle ? closestArticle.dataset["post-id"] : null;
     const wasVisible = this.visible;
     const previousTarget = this.cardTarget;
-    const target = $target[0];
 
     if (wasVisible) {
       this._close();
@@ -69,7 +74,7 @@ export default Mixin.create({
       post,
     });
 
-    this._showCallback(username, $target);
+    this._showCallback(username, $(target));
 
     // We bind scrolling on mobile after cards are shown to hide them if user scrolls
     if (this.site.mobileView) {
@@ -85,15 +90,12 @@ export default Mixin.create({
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
     const clickOutsideEventName = `mousedown.outside-${id}`;
-    const clickDataExpand = `click.discourse-${id}`;
-    const clickMention = `click.discourse-${id}-${triggeringLinkClass}`;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
     const mobileScrollEvent = "scroll.mobile-card-cloak";
 
     this.setProperties({
+      boundCardClickHandler: this._cardClickHandler.bind(this),
       clickOutsideEventName,
-      clickDataExpand,
-      clickMention,
       previewClickEvent,
       mobileScrollEvent,
     });
@@ -117,20 +119,10 @@ export default Mixin.create({
         return true;
       });
 
-    $("#main-outlet").on(clickDataExpand, `[data-${id}]`, (e) => {
-      if (wantsNewWindow(e)) {
-        return;
-      }
-      const $target = $(e.currentTarget);
-      return this._show($target.data(id), $target);
-    });
-
-    $("#main-outlet").on(clickMention, `a.${triggeringLinkClass}`, (e) => {
-      if (wantsNewWindow(e)) {
-        return;
-      }
-      const $target = $(e.currentTarget);
-      return this._show($target.text().replace(/^@/, ""), $target);
+    _cardClickListenerSelectors.forEach((selector) => {
+      document
+        .querySelector(selector)
+        .addEventListener("click", this.boundCardClickHandler);
     });
 
     this.appEvents.on(previewClickEvent, this, "_previewClick");
@@ -140,6 +132,41 @@ export default Mixin.create({
       this,
       "_topicHeaderTrigger"
     );
+  },
+
+  _cardClickHandler(event) {
+    if (this.avatarSelector) {
+      let matched = this._showCardOnClick(
+        event,
+        this.avatarSelector,
+        (el) => el.dataset[this.avatarDataAttrKey]
+      );
+
+      if (matched) {
+        return; // Don't need to check for mention click; it's an avatar click
+      }
+    }
+
+    // Mention click
+    this._showCardOnClick(event, this.mentionSelector, (el) =>
+      el.innerText.replace(/^@/, "")
+    );
+  },
+
+  _showCardOnClick(event, selector, transformText) {
+    let matchingEl = event.target.closest(selector);
+    if (matchingEl) {
+      if (wantsNewWindow(event)) {
+        return true;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      return this._show(transformText(matchingEl), matchingEl);
+    }
+    {
+      return false;
+    }
   },
 
   _topicHeaderTrigger(username, $target) {
@@ -302,12 +329,14 @@ export default Mixin.create({
   willDestroyElement() {
     this._super(...arguments);
     const clickOutsideEventName = this.clickOutsideEventName;
-    const clickDataExpand = this.clickDataExpand;
-    const clickMention = this.clickMention;
     const previewClickEvent = this.previewClickEvent;
 
     $("html").off(clickOutsideEventName);
-    $("#main").off(clickDataExpand).off(clickMention);
+    _cardClickListenerSelectors.forEach((selector) => {
+      document
+        .querySelector(selector)
+        .removeEventListener("click", this.boundCardClickHandler);
+    });
 
     this.appEvents.off(previewClickEvent, this, "_previewClick");
 

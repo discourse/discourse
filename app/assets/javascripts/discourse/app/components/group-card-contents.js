@@ -11,7 +11,7 @@ const maxMembersToDisplay = 10;
 
 export default Component.extend(CardContentsBase, CleansUp, {
   elementId: "group-card",
-  triggeringLinkClass: "mention-group",
+  mentionSelector: "a.mention-group",
   classNames: ["no-bg", "group-card"],
   classNameBindings: [
     "visible:show",
