@@ -57,14 +57,12 @@
 
 <section class="user-content">
   <div class="list-actions">
-    {{#if site.mobileView}}
-      {{#if showNewPM}}
-        {{d-button
-          class="btn-primary new-private-message"
-          action=(route-action "composePrivateMessage")
-          icon="envelope"
-          label="user.new_private_message"}}
-      {{/if}}
+    {{#if (and site.mobileView showNewPM)}}
+      {{d-button
+        class="btn-primary new-private-message"
+        action=(route-action "composePrivateMessage")
+        icon="envelope"
+        label="user.new_private_message"}}
     {{/if}}
 
     {{#if isGroup}}
