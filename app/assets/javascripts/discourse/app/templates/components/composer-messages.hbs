@@ -1,3 +1,3 @@
 {{#each messages as |message|}}
-  {{composer-message message=message closeMessage=(action "closeMessage")}}
+  {{composer-message message=message closeMessage=(action "closeMessage") shareModal=(action "shareModal")}}
 {{/each}}

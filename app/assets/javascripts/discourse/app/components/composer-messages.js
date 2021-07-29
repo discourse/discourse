@@ -4,6 +4,7 @@ import I18n from "I18n";
 import LinkLookup from "discourse/lib/link-lookup";
 import { not } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 let _messagesCache = {};
 
@@ -71,6 +72,19 @@ export default Component.extend({
         this.set("messageCount", messages.get("length"));
         messagesByTemplate[templateName] = message;
       }
+    },
+
+    shareModal() {
+      const { topic } = this.composer;
+      const controller = showModal("share-topic");
+      controller.setProperties({
+        allowInvites:
+          topic.details.can_invite_to &&
+          !topic.archived &&
+          !topic.closed &&
+          !topic.deleted,
+        topic: topic,
+      });
     },
   },
 
