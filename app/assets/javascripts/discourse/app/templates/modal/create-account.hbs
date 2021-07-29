@@ -15,37 +15,28 @@
         {{#if showCreateForm}}
 
           <div class="login-form">
-
             <form>
               <div class="input-group create-account-email">
-                {{#if emailValidated}}
-                  <span class="value">{{accountEmail}}</span>
-                {{else}}
-                  {{input type="email" value=accountEmail id="new-account-email" name="email" class=(value-entered accountEmail) autofocus="autofocus" focusOut=(action "checkEmailAvailability")}}
-                  <label class="alt-placeholder" for="new-account-email">
-                    {{i18n "user.email.title"}}
-                    {{~#if userFields~}}
-                      <span class="required">*</span>
-                    {{/if}}
-                  </label>
-                {{/if}}
+                {{input type="email" disabled=emailDisabled value=accountEmail id="new-account-email" name="email" class=(value-entered accountEmail) autofocus="autofocus" focusOut=(action "checkEmailAvailability")}}
+                <label class="alt-placeholder" for="new-account-email">
+                  {{i18n "user.email.title"}}
+                  {{~#if userFields~}}
+                    <span class="required">*</span>
+                  {{/if}}
+                </label>
                 {{input-tip validation=emailValidation id="account-email-validation"}}
                 <span class="more-info">{{i18n "user.email.instructions"}}</span>
               </div>
 
               <div class="input-group">
-                {{#if usernameDisabled}}
-                  <span class="value">{{accountUsername}}</span>
-                {{else}}
-                  {{input value=accountUsername class=(value-entered accountUsername) id="new-account-username" name="username" maxlength=maxUsernameLength
-                  autocomplete="discourse"}}
-                  <label class="alt-placeholder" for="new-account-username">
-                    {{i18n "user.username.title"}}
-                    {{~#if userFields~}}
-                      <span class="required">*</span>
-                    {{/if}}
-                  </label>
-                {{/if}}
+                {{input value=accountUsername disabled=usernameDisabled class=(value-entered accountUsername) id="new-account-username" name="username" maxlength=maxUsernameLength
+                autocomplete="discourse"}}
+                <label class="alt-placeholder" for="new-account-username">
+                  {{i18n "user.username.title"}}
+                  {{~#if userFields~}}
+                    <span class="required">*</span>
+                  {{/if}}
+                </label>
 
                 {{input-tip validation=usernameValidation id="username-validation"}}
                 <span class="more-info">{{i18n "user.username.instructions"}}</span>
@@ -53,20 +44,15 @@
 
               <div class="input-group">
                 {{#if fullnameRequired}}
-
-                  {{#if nameDisabled}}
-                    <span class="value">{{accountName}}</span>
-                  {{else}}
-                    {{text-field value=accountName id="new-account-name" class=(value-entered accountName)}}
-                    <label class="alt-placeholder" for="new-account-name">
-                      {{i18n "user.name.title"}}
-                      {{#if siteSettings.full_name_required}}
-                        {{~#if userFields~}}
-                          <span class="required">*</span>
-                        {{/if}}
+                  {{text-field disabled=nameDisabled value=accountName id="new-account-name" class=(value-entered accountName)}}
+                  <label class="alt-placeholder" for="new-account-name">
+                    {{i18n "user.name.title"}}
+                    {{#if siteSettings.full_name_required}}
+                      {{~#if userFields~}}
+                        <span class="required">*</span>
                       {{/if}}
-                    </label>
-                  {{/if}}
+                    {{/if}}
+                  </label>
 
                   {{input-tip validation=nameValidation}}
                   <span class="more-info">{{nameInstructions}}</span>
