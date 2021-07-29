@@ -43,9 +43,9 @@
                 <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}} class="avatar">
                   {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
                 </a>
-                {{!-- template-lint-disable --}}
-                <p class="post-excerpt" {{on "click" this.screenExcerptForExternalLink}}>{{html-safe bookmark.excerpt}}</p>
               {{/if}}
+              {{!-- template-lint-disable --}}
+              <p class="post-excerpt" {{on "click" this.screenExcerptForExternalLink}}>{{html-safe bookmark.excerpt}}</p>
             </td>
             {{#unless site.mobileView}}
               <td>
