@@ -485,7 +485,7 @@ ar:
         score_to_hide: "النقاط اللازمة لإخفاء المنشور"
         take_action_bonus:
           name: "اتخذ إجراءً"
-          title: "عندما يقرر أحد أعضاء الفريق اتخاذ إجراء، يتم منح مكافأة على البلاغ."
+          title: "عندما يقرر أحد أعضاء فريق العمل اتخاذ إجراء، يتم منح مكافأة على البلاغ."
         user_accuracy_bonus:
           name: "دقة المستخدم"
           title: "يحصل المستخدمون الذين تم التحقُّق من صحة بلاغاتهم بشكلٍ متكرر على مكافأة."
@@ -4194,7 +4194,7 @@ ar:
           no_data: "لا توجد بيانات لعرضها."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سجلات البحث</a>'
-            disabled: 'تقرير عبارات البحث الرائجة معطَّل. فعِّل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'
+            disabled: 'تقرير عبارات البحث الرائجة متوقف. فعِّل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'
           average_chart_label: المتوسط
           filters:
             file_extension:
@@ -4435,7 +4435,7 @@ ar:
           redeliver_confirm: "هل تريد بالتأكيد إعادة تسليم الحمولة نفسها؟"
           headers: "الرؤوس"
           payload: "الحمولة"
-          body: "النص"
+          body: "النص الأساسي"
           go_list: "الانتقال إلى القائمة"
           go_details: "تعديل خطاف الويب"
           go_events: "الانتقال إلى الأحداث"
@@ -4553,7 +4553,7 @@ ar:
           title: "البريد الإلكتروني"
           subject: "الموضوع"
           multiple_subjects: "توجد موضوعات متعددة في نموذج البريد الإلكتروني هذا."
-          body: "النص"
+          body: "النص الأساسي"
           revert: "التراجع عن التغييرات"
           revert_confirm: "هل تريد بالتأكيد التراجع عن التغييرات؟"
         theme:
@@ -4850,7 +4850,7 @@ ar:
             error: "خطأ"
             headers: "الرؤوس"
             subject: "الموضوع"
-            body: "النص"
+            body: "النص الأساسي"
             rejection_message: "رسالة الرفض"
           filters:
             from_placeholder: "from@example.com"

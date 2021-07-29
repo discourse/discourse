@@ -520,7 +520,7 @@ ar:
         other: "يمكن إضافة %{count} مستخدم كحد أقصى دفعة واحدة"
       usernames_or_emails_required: "يجب أن تكون أسماء المستخدمين أو عناوين البريد الإلكتروني موجودة"
       no_invites_with_discourse_connect: "يمكنك دعوة المستخدمين المسجَّلين فقط عند تفعيل DiscourseConnect"
-      no_invites_without_local_logins: "يمكنك دعوة المستخدمين المسجَّلين فقط عند تعطيل عمليات تسجيل الدخول المحلية"
+      no_invites_without_local_logins: "يمكنك دعوة المستخدمين المسجَّلين فقط عند إيقاف عمليات تسجيل الدخول المحلية"
     default_names:
       everyone: "الجميع"
       admins: "المسؤولون"
@@ -611,7 +611,7 @@ ar:
         featured_link: "رابط مميز"
         category_id: "الفئة"
       post:
-        raw: "النص"
+        raw: "النص الأساسي"
       user_profile:
         bio_raw: "نبذة عني"
     errors:
@@ -2261,7 +2261,7 @@ ar:
     tags_sort_alphabetically: "عرض الوسوم بترتيب أبجدي. الإعداد الافتراضي هو العرض بترتيب الأكثر رواجًا."
     tags_listed_by_group: "إدراج الوسوم حسب مجموعة الوسوم الموجودة في <a href='%{base_path}/tags' target='_blank'>صفحة الوسوم</a>"
     tag_style: "النمط المرئي لشارات الوسوم"
-    allow_staff_to_tag_pms: "السماح للموظفين بوضع وسم على أي رسالة خاصة"
+    allow_staff_to_tag_pms: "السماح لفريق العمل بوضع وسم على أي رسالة خاصة"
     min_trust_level_to_tag_topics: "الحد الأدنى لمستوى الثقة المطلوب لوضع وسوم على الموضوعات"
     suppress_overlapping_tags_in_list: "عدم عرض الوسم إذا كانت الوسوم تتطابق تمامًا مع الكلمات الموجودة في عناوين الموضوعات"
     remove_muted_tags_from_latest: "عدم عرض الموضوعات التي تم وضع وسم الكتم فقط عليها في قائمة الموضوعات الحديثة"
@@ -3897,7 +3897,7 @@ ar:
     sender_message_blank: "الرسالة خالية"
     sender_message_to_blank: "القيمة message.to خالية"
     sender_text_part_body_blank: "القيمة text_part.body خالية"
-    sender_body_blank: "النص خالٍ"
+    sender_body_blank: "النص الأساسي فارغ"
     sender_post_deleted: "تم حذف المنشور"
     sender_message_to_invalid: "عنوان البريد الإلكتروني للمستلم غير صالح"
     sender_topic_deleted: "تم حذف الموضوع"
