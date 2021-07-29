@@ -136,11 +136,15 @@ export default Mixin.create({
 
   _cardClickHandler(e) {
     if (this.avatarSelector) {
-      this._showCardOnClick(
+      let matched = this._showCardOnClick(
         e,
         this.avatarSelector,
         (el) => el.dataset[this.avatarDataAttrKey]
       );
+
+      if (matched) {
+        return; // Don't need to check for mention click; it's an avatar click
+      }
     }
 
     // Mention click
