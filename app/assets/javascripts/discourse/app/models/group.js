@@ -34,7 +34,7 @@ const Group = RestModel.extend({
     return automatic ? "automatic" : "custom";
   },
 
-  async findMembers(params, refresh) {
+  async reloadMembers(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
       return;
     }
@@ -104,7 +104,7 @@ const Group = RestModel.extend({
       type: "DELETE",
       data: { user_id: member.id },
     });
-    await this.findMembers({}, true);
+    await this.reloadMembers({}, true);
   },
 
   async removeMember(member, params) {
@@ -112,14 +112,14 @@ const Group = RestModel.extend({
       type: "DELETE",
       data: { user_id: member.id },
     });
-    await this.findMembers(params, true);
+    await this.reloadMembers(params, true);
   },
 
   async leave() {
     await ajax(`/groups/${this.id}/leave.json`, {
       type: "DELETE",
     });
-    await this.findMembers({}, true);
+    await this.reloadMembers({}, true);
   },
 
   async addMembers(usernames, filter, notifyUsers, emails = []) {
@@ -130,7 +130,7 @@ const Group = RestModel.extend({
     if (filter) {
       await this._filterMembers(response.usernames);
     } else {
-      await this.findMembers();
+      await this.reloadMembers();
     }
   },
 
@@ -138,7 +138,7 @@ const Group = RestModel.extend({
     await ajax(`/groups/${this.id}/join.json`, {
       type: "PUT",
     });
-    await this.findMembers({}, true);
+    await this.reloadMembers({}, true);
   },
 
   async addOwners(usernames, filter, notifyUsers) {
@@ -150,12 +150,12 @@ const Group = RestModel.extend({
     if (filter) {
       await this._filterMembers(response.usernames);
     } else {
-      await this.findMembers({}, true);
+      await this.reloadMembers({}, true);
     }
   },
 
   _filterMembers(usernames) {
-    return this.findMembers({ filter: usernames.join(",") });
+    return this.reloadMembers({ filter: usernames.join(",") });
   },
 
   @discourseComputed("display_name", "name")
@@ -303,7 +303,7 @@ const Group = RestModel.extend({
       ownerUsernames: null,
     });
 
-    await this.findMembers();
+    await this.reloadMembers();
   },
 
   save(opts = {}) {

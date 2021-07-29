@@ -35,10 +35,10 @@ export default Controller.extend({
 
   @observes("order", "asc", "filter")
   _filtersChanged() {
-    this.findMembers(true);
+    this.reloadMembers(true);
   },
 
-  findMembers(refresh) {
+  reloadMembers(refresh) {
     if (this.loading || !this.model) {
       return;
     }
@@ -49,7 +49,7 @@ export default Controller.extend({
     }
 
     this.set("loading", true);
-    this.model.findMembers(this.memberParams, refresh).finally(() => {
+    this.model.reloadMembers(this.memberParams, refresh).finally(() => {
       this.setProperties({
         "application.showFooter":
           this.model.members.length >= this.model.user_count,
@@ -85,7 +85,7 @@ export default Controller.extend({
 
   @action
   loadMore() {
-    this.findMembers();
+    this.reloadMembers();
   },
 
   @action
@@ -128,7 +128,7 @@ export default Controller.extend({
           type: "DELETE",
           data: { user_ids: selection.map((u) => u.id).join(",") },
         }).then(() => {
-          this.model.findMembers(this.memberParams, true);
+          this.model.reloadMembers(this.memberParams, true);
           this.set("isBulk", false);
         });
 
