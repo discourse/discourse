@@ -33,6 +33,7 @@
             class="btn-default open-edit-columns-btn"
           }}
         {{/if}}
+        {{plugin-outlet name="users-directory-controls" connectorTagName="" tagName="" args=(hash model=model)}}
       </div>
 
       {{#conditional-loading-spinner condition=isLoading}}
