@@ -337,6 +337,30 @@ describe 'users' do
     end
   end
 
+  path '/admin/users/{id}/anonymize.json' do
+    put 'Anonymize a user' do
+      tags 'Users', 'Admin'
+      consumes 'application/json'
+      expected_request_schema = nil
+
+      parameter name: :id, in: :path, type: :integer, required: true
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:id) { Fabricate(:user).id }
+
+        expected_response_schema = load_spec_schema('user_anonymize_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
   path '/admin/users/{id}/log_out.json' do
 
     post 'Log a user out' do
