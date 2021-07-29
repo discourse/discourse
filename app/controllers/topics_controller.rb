@@ -372,6 +372,11 @@ class TopicsController < ApplicationController
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 
+    if Tag.include_tags?
+      topic_tags = topic.tags.map(&:name).sort
+      changes.delete(:tags) if changes[:tags]&.sort == topic_tags
+    end
+
     success = true
 
     if changes.length > 0

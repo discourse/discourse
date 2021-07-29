@@ -1470,6 +1470,18 @@ RSpec.describe TopicsController do
             expect(response.status).to eq(200)
             expect(topic.tags).to eq([])
           end
+
+          it 'does not cause a revision when tags have not changed' do
+            topic.tags << tag
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                tags: [tag.name]
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(0)
+
+            expect(response.status).to eq(200)
+          end
         end
 
         context 'when topic is private' do
