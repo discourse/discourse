@@ -24,7 +24,7 @@ module Onebox
 
       ordered_engines.find do |engine|
         (
-          engine.handles_content_type?(@options[:content_type]) ||
+          engine.respond_to?(:handles_content_type?) && engine.handles_content_type?(@options[:content_type]) ||
           engine === @uri
         ) && has_allowed_iframe_origins?(engine)
       end
