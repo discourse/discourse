@@ -1156,7 +1156,7 @@ ar:
         search_label: "البحث عن موضوع بالعنوان"
         save: "حفظ"
         clear:
-          title: "امسح"
+          title: "مسح"
           warning: "هل تريد بالتأكيد مسح موضوعك المميز؟"
       use_current_timezone: "استخدام المنطقة الزمنية الحالية"
       profile_hidden: "الملف الشخصي العام لهذا المستخدم مخفي."
@@ -2895,7 +2895,7 @@ ar:
         title: "الطباعة"
         help: "فتح نسخة ملائمة للطباعة من هذا الموضوع"
       flag_topic:
-        title: "الإبلاغ"
+        title: "إبلاغ"
         help: "الإبلاغ عن هذا الموضوع بشكلٍ خاص للفت الانتباه إليه، أو إرسال إشعار خاص بشأنه."
         success_message: "لقد أبلغت عن هذا الموضوع بنجاح."
       make_public:
@@ -3175,7 +3175,7 @@ ar:
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
-        upload: "عذرا، حدث خطأ في أثناء تحميل هذا الملف. يُرجى إعادة المحاولة."
+        upload: "عذرًا، حدث خطأ في أثناء تحميل هذا الملف. يُرجى إعادة المحاولة."
         file_too_large: "عذرًا، لكن الملف كبير جدًا (أقصى حجم هو %{max_size_kb} ك.ب). لماذا لا تحمِّل ملفك الكبير إلى خدمة مشاركة سحابية، ثم تلصق الرابط؟"
         too_many_uploads: "عذرًا، يمكنك تحميل ملف واحد فقط في الوقت نفسه."
         too_many_dragged_and_dropped_files:
@@ -3720,7 +3720,7 @@ ar:
           few: "%{count} جديدة"
           many: "%{count} جديدًا"
           other: "%{count} جديد"
-        lower_title: "جديد"
+        lower_title: "الجديدة"
         title: "الجديدة"
         title_with_count:
           zero: "الجديدة (%{count})"
@@ -4778,7 +4778,7 @@ ar:
             name: "الخطر"
             description: "لون تمييز الإجراءات مثل حذف المنشورات والموضوعات."
           success:
-            name: "النجاح"
+            name: "تم بنجاح"
             description: "يتم استخدامه لإظهار نجاح عملية ما."
           love:
             name: "الإعجاب"
@@ -4927,8 +4927,8 @@ ar:
             delete_topic: "حذف الموضوع"
             recover_topic: "إلغاء حذف الموضوع"
             delete_post: "حذف المنشور"
-            impersonate: "الانتحال"
-            anonymize_user: "مستخدم مجهول"
+            impersonate: "انتحال"
+            anonymize_user: "إخفاء هوية المستخدم"
             roll_up: "تجميع عناوين IP المحظورة"
             change_category_settings: "تغيير إعدادات الفئة"
             delete_category: "حذف الفئة"
@@ -4940,7 +4940,7 @@ ar:
             grant_admin: "التعيين كمسؤول"
             revoke_admin: "إلغاء التعيين كمسؤول"
             grant_moderation: "منح صلاحيات الإشراف"
-            revoke_moderation: "إلغاء التعيين كمشرف"
+            revoke_moderation: "سحب صلاحيات الإشراف"
             backup_create: "إنشاء نسخة احتياطية"
             deleted_tag: "حذف الوسم"
             deleted_unused_tags: "حذف الوسوم غير المستخدمة"
@@ -5032,7 +5032,7 @@ ar:
             text: "تجميع"
             title: "يُنشئ إدخالات حظر جديدة في الشبكة الفرعية إذا كان هناك 'min_ban_entries_for_roll_up' من الإدخالات على الأقل."
         search_logs:
-          title: "البحث في السجلات"
+          title: "سجلات البحث"
           term: "المصطلح"
           searches: "عمليات البحث"
           click_through_rate: "نسبة النقر إلى الظهور"
@@ -5097,7 +5097,7 @@ ar:
           modal_title: "%{action}: اختبار الكلمات المُراقَبة"
           description: "إدخال النص أدناه للتحقُّق من التطابقات مع الكلمات المُراقَبة"
           found_matches: "التطابقات التي تم العثور عليها:"
-          no_matches: "لم يتم العثور على مطابقات"
+          no_matches: "لم يتم العثور على نتائج مطابقة"
       impersonate:
         title: "الانتحال"
         help: "استخدم هذه الأداة لانتحال شخصية حساب مستخدم لأغراض تصحيح الأخطاء. عليك تسجيل الخروج بعد الانتهاء."
@@ -5201,8 +5201,8 @@ ar:
         revoke_admin: "إلغاء التعيين كمسؤول"
         grant_admin: "التعيين كمسؤول"
         grant_admin_confirm: "لقد أرسلنا رسالة إلكترونية للتحقُّق من المسؤول الجديد. يُرجى فتحها واتباع التعليمات."
-        revoke_moderation: "إلغاء التعيين كمشرف"
-        grant_moderation: "التعيين كمشرف"
+        revoke_moderation: "سحب صلاحيات الإشراف"
+        grant_moderation: "منح صلاحيات الإشراف"
         unsuspend: "إلغاء التعليق"
         suspend: "تعليق"
         show_flags_received: "عرض البلاغات المقدَّمة"
@@ -5217,7 +5217,7 @@ ar:
         posts_read_count: منشور مقروء
         post_count: منشور تم إنشاؤه
         second_factor_enabled: المصادقة الثنائية مفعَّلة
-        topics_entered: موضوع معروض
+        topics_entered: الموضوعات المعروضة
         flags_given_count: بلاغ مقدَّم
         flags_received_count: بلاغ مُستلَم
         warnings_received_count: تحذير مُستلَم
@@ -5444,7 +5444,7 @@ ar:
           label: "تعديل القائمة"
           empty: "لا توجد صور حتى الآن. يُرجى تحميل واحدة."
           upload:
-            label: "التحميل"
+            label: "تحميل"
             title: "تحميل الصور"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
@@ -5504,15 +5504,15 @@ ar:
         granted_by: منحها
         granted_at: تاريخ المنح
         reason_help: (رابط إلى منشور أو موضوع)
-        save: احفظ
-        delete: احذف
+        save: حفظ
+        delete: حذف
         delete_confirm: هل تريد بالتأكيد حذف هذه الشارة؟
         revoke: سحب
         reason: السبب
         expand: توسيع&hellip;
         revoke_confirm: هل تريد بالتأكيد سحب هذه الشارة؟
         edit_badges: تعديل الشارات
-        grant_badge: منح الشارة
+        grant_badge: منح شارة
         granted_badges: الشارات الممنوحة
         grant: منح
         no_user_badges: "لم يتم منح %{name} أي شارة."
@@ -5527,7 +5527,7 @@ ar:
         graphic: رمز الشارة
         icon_help: "إدخال اسم أيقونة Font Awesome (استخدم البادئة \"far-\" للأيقونات العادية والبادئة \"fab-‎\" لأيقونات العلامات التجارية)"
         image_help: "يؤدي تحميل صورة إلى تجاوز حقل الرمز إذا تم ضبط كليهما."
-        select_an_icon: "تحديد رمز"
+        select_an_icon: "تحديد أيقونة"
         upload_an_image: "تحميل صورة"
         read_only_setting_help: "تخصيص النص"
         query: استعلام الشارة (SQL)
@@ -5673,4 +5673,4 @@ ar:
         topic_title: "موضوع المناقشة"
         font_title: "الخط %{font}"
         share_button: "مشاركة"
-        reply_button: "رد"
+        reply_button: "الرد"
