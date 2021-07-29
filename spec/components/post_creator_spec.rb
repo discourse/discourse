@@ -165,7 +165,9 @@ describe PostCreator do
             "/latest",
             "/latest",
             "/topic/#{created_post.topic_id}",
-            "/topic/#{created_post.topic_id}"
+            "/topic/#{created_post.topic_id}",
+            "/user",
+            "/user"
           ].sort
         )
 
@@ -194,7 +196,7 @@ describe PostCreator do
         user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)
 
-        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(5)
+        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(6)
       end
 
       it 'extracts links from the post' do
@@ -281,12 +283,14 @@ describe PostCreator do
       it 'creates post stats' do
         Draft.set(user, Draft::NEW_TOPIC, 0, "test")
         Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
+        expect(user.user_stat.draft_count).to eq(1)
 
         begin
           PostCreator.track_post_stats = true
           post = creator.create
           expect(post.post_stat.typing_duration_msecs).to eq(0)
           expect(post.post_stat.drafts_saved).to eq(2)
+          expect(user.reload.user_stat.draft_count).to eq(0)
         ensure
           PostCreator.track_post_stats = false
         end

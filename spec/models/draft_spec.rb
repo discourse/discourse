@@ -152,6 +152,7 @@ describe Draft do
     Draft.set(user, key, 0, 'draft')
     Draft.cleanup!
     expect(Draft.count).to eq 1
+    expect(user.user_stat.draft_count).to eq(1)
 
     seq = DraftSequence.next!(user, key)
 
@@ -161,6 +162,7 @@ describe Draft do
     Draft.cleanup!
 
     expect(Draft.count).to eq 0
+    expect(user.reload.user_stat.draft_count).to eq(0)
 
     Draft.set(Fabricate(:user), Draft::NEW_TOPIC, 0, 'draft')
 
