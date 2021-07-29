@@ -8,6 +8,11 @@ import headerOutletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
+let _cardClickListenerSelectors = ["#main-outlet"];
+export function addCardClickListenerSelector(selector) {
+  _cardClickListenerSelectors.push(selector);
+}
+
 export default Mixin.create({
   router: service(),
 
@@ -117,20 +122,22 @@ export default Mixin.create({
         return true;
       });
 
-    $("#main-outlet").on(clickDataExpand, `[data-${id}]`, (e) => {
-      if (wantsNewWindow(e)) {
-        return;
-      }
-      const $target = $(e.currentTarget);
-      return this._show($target.data(id), $target);
-    });
+    _cardClickListenerSelectors.forEach((selector) => {
+      $(selector).on(clickDataExpand, `[data-${id}]`, (e) => {
+        if (wantsNewWindow(e)) {
+          return;
+        }
+        const $target = $(e.currentTarget);
+        return this._show($target.data(id), $target);
+      });
 
-    $("#main-outlet").on(clickMention, `a.${triggeringLinkClass}`, (e) => {
-      if (wantsNewWindow(e)) {
-        return;
-      }
-      const $target = $(e.currentTarget);
-      return this._show($target.text().replace(/^@/, ""), $target);
+      $(selector).on(clickMention, `a.${triggeringLinkClass}`, (e) => {
+        if (wantsNewWindow(e)) {
+          return;
+        }
+        const $target = $(e.currentTarget);
+        return this._show($target.text().replace(/^@/, ""), $target);
+      });
     });
 
     this.appEvents.on(previewClickEvent, this, "_previewClick");

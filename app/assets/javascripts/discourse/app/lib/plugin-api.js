@@ -37,6 +37,7 @@ import DiscourseBanner from "discourse/components/discourse-banner";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import Sharing from "discourse/lib/sharing";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
@@ -1082,6 +1083,14 @@ class PluginApi {
    */
   addCategorySortCriteria(criteria) {
     addCategorySortCriteria(criteria);
+  }
+
+  /**
+   * Card contents mixin will add a listener to elements matching this selector
+   * that will open card contents on click
+   */
+  addCardClickListenerSelector(selector) {
+    addCardClickListenerSelector(selector);
   }
 
   /**
