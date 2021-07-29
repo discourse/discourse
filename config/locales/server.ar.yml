@@ -691,7 +691,7 @@ ar:
   vip_category_name: "الاستراحة"
   vip_category_description: "فئة حصرية للأعضاء من مستوى الثقة 3 وأعلى."
   meta_category_name: "التعليقات على الموقع"
-  meta_category_description: "مناقشة حول هذا الموقع، ومؤسسته، وطريقة عمله، وكيف يمكننا تحسينه."
+  meta_category_description: "مناقشة بشأن هذا الموقع، ومؤسسته، وطريقة عمله، وكيف يمكننا تحسينه."
   staff_category_name: "فريق العمل"
   staff_category_description: "فئة خاصة لمناقشات فريق العمل. تكون الموضوعات مرئية للمسؤولين والمشرفين فقط."
   discourse_welcome_topic:
@@ -3862,8 +3862,12 @@ ar:
     store_failure: "فشل تخزين التحميل #%{upload_id} للمستخدم #%{user_id}."
     file_missing: "عذرًا، يجب عليك تقديم ملف للتحميل."
     empty: "عذرًا، لكن الملف الذي قدَّمته فارغ."
+    failed: "عذرًا، لقد فشل التحميل. يُرجى إعادة المحاولة."
     png_to_jpg_conversion_failure_message: "حدث خطأ عند التحويل من PNG إلى JPG."
     optimize_failure_message: "حدث خطأ في أثناء تحسين الصورة التي تم تحميلها."
+    download_failure: "فشل تنزيل الملف من الموفِّر الخارجي."
+    checksum_mismatch_failure: "المجموع الاختباري للملف الذي حمَّلته غير متطابق. ربما تغيَّرت محتويات الملف عند التحميل. حاول مرة أخرى."
+    cannot_promote_failure: "يتعذَّر إكمال التحميل، ربما يكون قد اكتمل بالفعل أو فشل مسبقًا."
     attachments:
       too_large: "عذرًا، الملف الذي تحاول تحميله كبير جدًا (الحجم الأقصى هو %{max_size_kb} ك.ب)."
     images:

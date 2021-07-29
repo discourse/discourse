@@ -405,6 +405,8 @@ ar:
     copy_codeblock:
       copied: "تم النسخ!"
     drafts:
+      label: "المسودات"
+      label_with_count: "المسودات (%{count})"
       resume: "استئناف"
       remove: "إزالة"
       remove_confirmation: "هل تريد بالتأكيد حذف هذه المسودة؟"
@@ -1256,7 +1258,7 @@ ar:
       watched_first_post_tags_instructions: "ستتلقى إشعارًا بأول منشور في كل موضوع جديد يحمل هذه الوسوم."
       muted_categories: "المكتومة"
       muted_categories_instructions: "لن تتلقى أي إشعارات أبدًا بخصوص الموضوعات الجديدة في هذه الفئات، ولن تظهر في الفئات أو صفحات أحدث الموضوعات."
-      muted_categories_instructions_dont_hide: "لن تتلقى أي إشعارات أبدًا بخصوص الموضوعات الجديدة في هذه الفئات."
+      muted_categories_instructions_dont_hide: "لن تتلقى أي إشعارات أبدًا بشأن الموضوعات الجديدة في هذه الفئات."
       regular_categories: "العادية"
       regular_categories_instructions: "سترى هذه الفئات في قوائم الموضوعات \"الحديثة\" و\"الأكثر عرضًا\"."
       no_category_access: "كمشرف لديك صلاحيات وصول محدودة للفئات، فالحفظ متوقف."

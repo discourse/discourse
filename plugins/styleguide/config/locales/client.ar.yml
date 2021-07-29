@@ -80,7 +80,7 @@ ar:
           header: "العنوان المشروط"
           footer: "التذييل المشروط"
         user_about:
-          title: "مربّع ”عن المستخدم“"
+          title: "مربع \"نبذة عن المستخدم\""
         header_icons:
           title: "أيقونات الترويسة"
         spinners:
