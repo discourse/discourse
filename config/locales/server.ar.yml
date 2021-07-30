@@ -37,7 +37,7 @@ ar:
     pm: "م"
     <<: *datetime_formats
   title: "Discourse"
-  topics: "المواضيع"
+  topics: "الموضوعات"
   posts: "المنشورات"
   views: "مرات العرض"
   loading: "جارٍ التحميل"
@@ -366,7 +366,7 @@ ar:
       many: "%{count} إعجابًا"
       other: "%{count} إعجاب"
     last_reply: "آخر رد"
-    created: "تم الإنشاء"
+    created: "تاريخ الإنشاء"
     new_topic: "إنشاء موضوع جديد"
   no_mentions_allowed: "عذرًا، لا يمكنك الإشارة إلى الغير."
   too_many_mentions:
@@ -425,7 +425,7 @@ ar:
   slow_mode_enabled: "هذا الموضوع في الوضع البطيء."
   just_posted_that: "مشابه جدًا لما نشرته مؤخرًا"
   invalid_characters: "يتضمَّن حروفًا غير صالحة"
-  is_invalid: "يبدو غير واضح، هل هو جملة كاملة؟"
+  is_invalid: "تبدو غير واضحة، هل هذه الجملة كاملة؟"
   next_page: "الصفحة التالية ←"
   prev_page: "→ الصفحة السابقة"
   page_num: "الصفحة %{num}"
@@ -450,7 +450,7 @@ ar:
   read_full_topic: "قراءة الموضوع بالكامل"
   private_message_abbrev: "رسالة"
   rss_description:
-    latest: "آخر الموضوعات"
+    latest: "أحدث الموضوعات"
     top: "الموضوعات الأكثر عرضًا"
     top_all: "الموضوعات الأكثر عرضًا على الإطلاق"
     top_yearly: "الموضوعات الأكثر عرضًا سنويًا"
@@ -463,7 +463,7 @@ ar:
     group_posts: "آخر المنشورات من %{group_name}"
     group_mentions: "آخر الإشارات من %{group_name}"
     user_posts: "آخر المنشورات من @%{username}"
-    user_topics: "آخر الموضوعات من @%{username}"
+    user_topics: "أحدث الموضوعات من @%{username}"
     tag: "الموضوعات الموسومة"
     badge: "الشارة %{display_name} على %{site_title}"
   too_late_to_edit: "تم إنشاء هذا المنشور منذ فترة طويلة جدًا، ولم يعد من الممكن تعديله أو حذفه."
@@ -520,7 +520,7 @@ ar:
         other: "يمكن إضافة %{count} مستخدم كحد أقصى دفعة واحدة"
       usernames_or_emails_required: "يجب أن تكون أسماء المستخدمين أو عناوين البريد الإلكتروني موجودة"
       no_invites_with_discourse_connect: "يمكنك دعوة المستخدمين المسجَّلين فقط عند تفعيل DiscourseConnect"
-      no_invites_without_local_logins: "يمكنك دعوة المستخدمين المسجَّلين فقط عند تعطيل عمليات تسجيل الدخول المحلية"
+      no_invites_without_local_logins: "يمكنك دعوة المستخدمين المسجَّلين فقط عند إيقاف عمليات تسجيل الدخول المحلية"
     default_names:
       everyone: "الجميع"
       admins: "المسؤولون"
@@ -611,7 +611,7 @@ ar:
         featured_link: "رابط مميز"
         category_id: "الفئة"
       post:
-        raw: "النص"
+        raw: "النص الأساسي"
       user_profile:
         bio_raw: "نبذة عني"
     errors:
@@ -691,7 +691,7 @@ ar:
   vip_category_name: "الاستراحة"
   vip_category_description: "فئة حصرية للأعضاء من مستوى الثقة 3 وأعلى."
   meta_category_name: "التعليقات على الموقع"
-  meta_category_description: "مناقشة حول هذا الموقع، ومؤسسته، وطريقة عمله، وكيف يمكننا تحسينه."
+  meta_category_description: "مناقشة بشأن هذا الموقع، ومؤسسته، وطريقة عمله، وكيف يمكننا تحسينه."
   staff_category_name: "فريق العمل"
   staff_category_description: "فئة خاصة لمناقشات فريق العمل. تكون الموضوعات مرئية للمسؤولين والمشرفين فقط."
   discourse_welcome_topic:
@@ -820,12 +820,12 @@ ar:
     distance_in_words:
       half_a_minute: "< 1د"
       less_than_x_seconds:
-        zero: "< %{count}ث"
-        one: "< %{count}ث"
-        two: "< %{count}ث"
-        few: "< %{count}ث"
-        many: "< %{count}ث"
-        other: "< %{count}ث"
+        zero: "< %{count} ث"
+        one: "< %{count} ث"
+        two: "< %{count} ث"
+        few: "< %{count} ث"
+        many: "< %{count} ث"
+        other: "< %{count} ث"
       x_seconds:
         zero: "%{count}ث"
         one: "%{count}ث"
@@ -834,68 +834,68 @@ ar:
         many: "%{count}ث"
         other: "%{count}ث"
       less_than_x_minutes:
-        zero: "< %{count}د"
-        one: "< %{count}د"
-        two: "< %{count}د"
-        few: "< %{count}د"
-        many: "< %{count}د"
-        other: "< %{count}د"
+        zero: "< %{count} د"
+        one: "< %{count} د"
+        two: "< %{count} د"
+        few: "< %{count} د"
+        many: "< %{count} د"
+        other: "< %{count} د"
       x_minutes:
-        zero: "< %{count}د"
-        one: "< %{count}د"
-        two: "< %{count}د"
-        few: "< %{count}د"
-        many: "< %{count}د"
-        other: "< %{count}د"
+        zero: "< %{count} د"
+        one: "< %{count} د"
+        two: "< %{count} د"
+        few: "< %{count} د"
+        many: "< %{count} د"
+        other: "< %{count} د"
       about_x_hours:
-        zero: "%{count}س"
-        one: "%{count}س"
-        two: "%{count}س"
-        few: "%{count}س"
-        many: "%{count}س"
-        other: "%{count}س"
+        zero: "%{count} س"
+        one: "%{count} س"
+        two: "%{count} س"
+        few: "%{count} س"
+        many: "%{count} س"
+        other: "%{count} س"
       x_days:
-        zero: "%{count}ي"
-        one: "%{count}ي"
-        two: "%{count}ي"
-        few: "%{count}ي"
-        many: "%{count}ي"
-        other: "%{count}ي"
+        zero: "%{count} ي"
+        one: "%{count} ي"
+        two: "%{count} ي"
+        few: "%{count} ي"
+        many: "%{count} ي"
+        other: "%{count} ي"
       about_x_months:
-        zero: "%{count}ش"
-        one: "%{count}ش"
-        two: "%{count}ش"
-        few: "%{count}ش"
-        many: "%{count}ش"
-        other: "%{count}ش"
+        zero: "%{count} ش"
+        one: "%{count} ش"
+        two: "%{count} ش"
+        few: "%{count} ش"
+        many: "%{count} ش"
+        other: "%{count} ش"
       x_months:
-        zero: "%{count}ش"
-        one: "%{count}ش"
-        two: "%{count}ش"
-        few: "%{count}ش"
-        many: "%{count}ش"
-        other: "%{count}ش"
+        zero: "%{count} ش"
+        one: "%{count} ش"
+        two: "%{count} ش"
+        few: "%{count} ش"
+        many: "%{count} ش"
+        other: "%{count} ش"
       about_x_years:
-        zero: "%{count}ع"
-        one: "%{count}ع"
-        two: "%{count}ع"
-        few: "%{count}ع"
-        many: "%{count}ع"
-        other: "%{count}ع"
+        zero: "%{count} ع"
+        one: "%{count} ع"
+        two: "%{count} ع"
+        few: "%{count} ع"
+        many: "%{count} ع"
+        other: "%{count} ع"
       over_x_years:
-        zero: "> %{count}ع"
-        one: "> %{count}ع"
-        two: "> %{count}ع"
-        few: "> %{count}ع"
-        many: "> %{count}ع"
-        other: "> %{count}ع"
+        zero: "> %{count} ع"
+        one: "> %{count} ع"
+        two: "> %{count} ع"
+        few: "> %{count} ع"
+        many: "> %{count} ع"
+        other: "> %{count} ع"
       almost_x_years:
-        zero: "%{count}ع"
-        one: "%{count}ع"
-        two: "%{count}ع"
-        few: "%{count}ع"
-        many: "%{count}ع"
-        other: "%{count}ع"
+        zero: "%{count} ع"
+        one: "%{count} ع"
+        two: "%{count} ع"
+        few: "%{count} ع"
+        many: "%{count} ع"
+        other: "%{count} ع"
     distance_in_words_verbose:
       half_a_minute: "الآن"
       less_than_x_seconds: "الآن"
@@ -1081,7 +1081,7 @@ ar:
       email_title: 'يستدعي منشور في "%{title}" انتباه فريق العمل'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: "إشارة مرجعية"
+      title: "وضع إشارة مرجعية"
       description: "وضع إشارة مرجعية على هذا المنشور"
       short_description: "وضع إشارة مرجعية على هذا المنشور"
     like:
@@ -1100,7 +1100,7 @@ ar:
       self: "ليس لديك نشاط حتى الآن."
       others: "لا يوجد نشاط."
     no_bookmarks:
-      self: "ليس لديك منشورات عليها إشارة مرجعية؛ تُتيح لك الإشارات المرجعية الرجوع إلى المنشورات التي تريدها بسرعة."
+      self: "ليس لديك منشورات موضوع عليها إشارة مرجعية. تتيح لك الإشارات المرجعية الرجوع إلى المنشورات التي تريدها بسرعة."
       search: "لم يتم العثور على إشارات مرجعية تطابق استعلام البحث المقدَّم."
       others: "لا توجد إشارات مرجعية."
     no_likes_given:
@@ -1377,7 +1377,7 @@ ar:
       title: مصطلحات البحث الرائجة
       labels:
         term: المصطلح
-        searches: عدد مرات البحث
+        searches: عمليات البحث
         click_through: نسبة النقر إلى الظهور
       description: "مصطلحات البحث الأكثر رواجًا حسب نسبة النقر إلى الظهور"
     emails:
@@ -2261,7 +2261,7 @@ ar:
     tags_sort_alphabetically: "عرض الوسوم بترتيب أبجدي. الإعداد الافتراضي هو العرض بترتيب الأكثر رواجًا."
     tags_listed_by_group: "إدراج الوسوم حسب مجموعة الوسوم الموجودة في <a href='%{base_path}/tags' target='_blank'>صفحة الوسوم</a>"
     tag_style: "النمط المرئي لشارات الوسوم"
-    allow_staff_to_tag_pms: "السماح للموظفين بوضع وسم على أي رسالة خاصة"
+    allow_staff_to_tag_pms: "السماح لفريق العمل بوضع وسم على أي رسالة خاصة"
     min_trust_level_to_tag_topics: "الحد الأدنى لمستوى الثقة المطلوب لوضع وسوم على الموضوعات"
     suppress_overlapping_tags_in_list: "عدم عرض الوسم إذا كانت الوسوم تتطابق تمامًا مع الكلمات الموجودة في عناوين الموضوعات"
     remove_muted_tags_from_latest: "عدم عرض الموضوعات التي تم وضع وسم الكتم فقط عليها في قائمة الموضوعات الحديثة"
@@ -2411,7 +2411,7 @@ ar:
     slug_errors:
       blank: "لا يمكن تركه خاليًا"
       unavailable: "غير متوفرة"
-      invalid: "يحتوي على أحرف غير صالحة"
+      invalid: "يتضمَّن حروفًا غير صالحة"
   topic_statuses:
     autoclosed_message_max_posts:
       zero: "تم إغلاق هذه الرسالة تلقائيًا بعد الوصول إلى الحد الأقصى للردود (%{count})."
@@ -2517,12 +2517,12 @@ ar:
   login:
     invalid_second_factor_method: "طريقة المصادقة الثنائية المحدَّدة غير صالحة."
     not_enabled_second_factor_method: "طريقة المصادقة الثنائية المحدَّدة غير مفعَّلة لحسابك."
-    security_key_description: "عند تجهيز مفتاح الأمان المادي، اضغط على زر المصادقة باستخدام مفتاح الأمان أدناه."
+    security_key_description: "عندما يكون مفتاح الأمان المادي جاهزًا، اضغط على زر \"المصادقة باستخدام مفتاح الأمان\" أدناه."
     security_key_alternative: "جرِّب طريقة أخرى"
     security_key_authenticate: "المصادقة باستخدام مفتاح الأمان"
-    security_key_not_allowed_error: "انتهت مهلة عملية مصادقة مفتاح الأمان أو تم إلغاؤها."
-    security_key_no_matching_credential_error: "لم يتم العثور على بيانات اعتماد متطابقة في مفتاح الأمان المقدَّم."
-    security_key_support_missing_error: "جهازك الحالي أو متصفحك لا يدعم استخدام مفاتيح الأمان. يُرجى استخدام طريقة مختلفة."
+    security_key_not_allowed_error: "انتهت مهلة عملية المصادقة باستخدام مفتاح الأمان أو تم إلغاؤها."
+    security_key_no_matching_credential_error: "تعذَّر العثور على بيانات اعتماد مطابقة في مفتاح الأمان المقدَّم."
+    security_key_support_missing_error: "لا يدعم جهازك أو متصفحك الحالي استخدام مفاتيح الأمان. يُرجى استخدام طريقة مختلفة."
     security_key_invalid: "حدث خطأ في أثناء التحقُّق من مفتاح الأمان."
     not_approved: "لم تتم الموافقة على حسابك حتى الآن. سيتم إعلامك عبر البريد الإلكتروني عندما تكون مستعدًا لتسجيل الدخول."
     incorrect_username_email_or_password: "اسم المستخدم أو البريد الإلكتروني أو كلمة المرور غير صحيحة"
@@ -2560,7 +2560,7 @@ ar:
     already_logged_in: "عذرًا! هذه الدعوة مخصَّصة للمستخدمين الجُدد الذين ليس لديهم حساب موجود بالفعل."
     second_factor_title: "المصادقة الثنائية"
     second_factor_description: "يُرجى إدخال رمز المصادقة المطلوب من تطبيقك:"
-    second_factor_backup_description: "يُرجى إدخال أحد الرموز الاحتياطية الخاصة بك:"
+    second_factor_backup_description: "يُرجى إدخال أحد الرموز الاحتياطية:"
     second_factor_backup_title: "الرمز الثنائي للنسخ الاحتياطي"
     invalid_second_factor_code: "رمز المصادقة غير صالح. يمكن استخدام كل رمز مرة واحدة فقط."
     invalid_security_key: "مفتاح الأمان غير صالح."
@@ -3721,7 +3721,7 @@ ar:
         انقر على الرابط التالي لاختيار كلمة مرور لحسابك الجديد:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
-      title: "تأكيد عنوان بريدك الإلكتروني الجديد"
+      title: "تأكيد عنوان البريد الإلكتروني الجديد"
       subject_template: "[%{email_prefix}] تأكيد عنوان بريدك الإلكتروني الجديد"
       text_body_template: |
         أكِّد عنوان بريدك الإلكتروني الجديد للموقع %{site_name} من خلال النقر على الرابط التالي:
@@ -3862,8 +3862,12 @@ ar:
     store_failure: "فشل تخزين التحميل #%{upload_id} للمستخدم #%{user_id}."
     file_missing: "عذرًا، يجب عليك تقديم ملف للتحميل."
     empty: "عذرًا، لكن الملف الذي قدَّمته فارغ."
+    failed: "عذرًا، لقد فشل التحميل. يُرجى إعادة المحاولة."
     png_to_jpg_conversion_failure_message: "حدث خطأ عند التحويل من PNG إلى JPG."
     optimize_failure_message: "حدث خطأ في أثناء تحسين الصورة التي تم تحميلها."
+    download_failure: "فشل تنزيل الملف من الموفِّر الخارجي."
+    checksum_mismatch_failure: "المجموع الاختباري للملف الذي حمَّلته غير متطابق. ربما تغيَّرت محتويات الملف عند التحميل. حاول مرة أخرى."
+    cannot_promote_failure: "يتعذَّر إكمال التحميل، ربما يكون قد اكتمل بالفعل أو فشل مسبقًا."
     attachments:
       too_large: "عذرًا، الملف الذي تحاول تحميله كبير جدًا (الحجم الأقصى هو %{max_size_kb} ك.ب)."
     images:
@@ -3897,7 +3901,7 @@ ar:
     sender_message_blank: "الرسالة خالية"
     sender_message_to_blank: "القيمة message.to خالية"
     sender_text_part_body_blank: "القيمة text_part.body خالية"
-    sender_body_blank: "النص خالٍ"
+    sender_body_blank: "النص الأساسي فارغ"
     sender_post_deleted: "تم حذف المنشور"
     sender_message_to_invalid: "عنوان البريد الإلكتروني للمستلم غير صالح"
     sender_topic_deleted: "تم حذف الموضوع"
@@ -3931,7 +3935,7 @@ ar:
   csv_export:
     boolean_yes: "نعم"
     boolean_no: "لا"
-    rate_limit_error: "يمكن تنزيل المنشورات مرة واحدة يوميًا، يُرجى إعادة المحاولة غدًا."
+    rate_limit_error: "يمكن تنزيل المنشورات مرة واحدة يوميًا. يُرجى إعادة المحاولة غدًا."
   static_topic_first_reply: |
     عدِّل أول منشور في هذا الموضوع لتغيير محتويات الصفحة {page_name}.
   guidelines_topic:
@@ -4361,7 +4365,7 @@ ar:
       description: الزيارة لمدة 365 يومًا متتاليًا
       long_description: |
         يتم منح هذه الشارة عند الزيارة 365 يومًا متتاليًا. هذا أكثر من عام كامل!
-    badge_title_metadata: "شارة %{display_name} على %{site_title}"
+    badge_title_metadata: "الشارة %{display_name} على %{site_title}"
   admin_login:
     success: "تم إرسال الرسالة الإلكترونية"
     errors:
@@ -4470,10 +4474,10 @@ ar:
           privacy:
             choices:
               open:
-                label: "عام"
+                label: "عامة"
                 description: "يمكن لأي شخص الوصول إلى هذا المجتمع"
               restricted:
-                label: "خاص"
+                label: "خاصة"
                 description: "يمكن للمستخدمين المسجَّلين فقط الوصول إلى هذا المجتمع"
           privacy_options:
             description: "كيف يشترك المستخدمون الجُدد للحصول على حساب؟"
@@ -4506,7 +4510,7 @@ ar:
             label: "اسم الشركة"
             placeholder: "مثال لمؤسسة"
           governing_law:
-            label: "القانون الحاكم"
+            label: "القانون المعمول به"
             placeholder: "قانون ولاية كاليفورنيا"
           city_for_disputes:
             label: "مدينة النزاعات"
@@ -4521,7 +4525,7 @@ ar:
           heading_font:
             label: "خط العنوان"
           font_preview:
-            label: "المعاينة"
+            label: "معاينة"
       logos:
         title: "الشعارات"
         fields:
@@ -4572,20 +4576,20 @@ ar:
           <p>استمتع، وحظًا سعيدًا في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>بناء مجتمعك الجديد!</a></p>
   search_logs:
     graph_title: "عدد مرات البحث"
-  joined: "انضممت"
+  joined: "تاريخ الانضمام"
   discourse_push_notifications:
     popup:
-      mentioned: 'أشار إليك %{username} في "%{topic}" - %{site_title}'
-      group_mentioned: 'أشار إليك %{username} في "%{topic}" - %{site_title}'
+      mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'
+      group_mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'
       quoted: 'اقتبس %{username} منك في "%{topic}" - %{site_title}'
       replied: 'ردَّ %{username} عليك في "%{topic}" - %{site_title}'
       posted: 'نشر %{username} في "%{topic}" - %{site_title}'
       private_message: 'أرسل %{username} رسالة خاصة إليك في "%{topic}" - %{site_title}'
       linked: 'وضع %{username} رابطًا إلى منشورك في "%{topic}" - %{site_title}'
-      watching_first_post: 'أنشأ %{username} موضوعًا جديدًا "%{topic}" - %{site_title}'
-      confirm_title: "الإشعارات مفعَّلة - %{site_title}"
+      watching_first_post: 'أنشأ %{username} موضوعًا جديدًا: "%{topic}" -‏ %{site_title}'
+      confirm_title: "تم تفعيل الإشعارات - %{site_title}"
       confirm_body: "تم بنجاح! تم تفعيل الإشعارات."
-      custom: "إشعار من%{username} على %{site_title}"
+      custom: "إشعار من %{username} على %{site_title}"
   staff_action_logs:
     not_found: "غير موجود"
     unknown: "غير معروف"
@@ -4610,7 +4614,7 @@ ar:
       medium: "متوسطة"
       high: "عالية"
     sensitivity:
-      disabled: "تم الإيقاف"
+      disabled: "متوقفة"
       low: "منخفضة"
       medium: "متوسطة"
       high: "عالية"
@@ -4692,7 +4696,7 @@ ar:
       reject_user:
         title: "حذف المستخدم..."
         delete:
-          title: "مسح المستخدم"
+          title: "حذف المستخدم"
           description: "سيتم حذف المستخدم من المنتدى."
         block:
           title: "الحذف وحظر المستخدم"
