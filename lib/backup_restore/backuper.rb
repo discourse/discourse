@@ -321,18 +321,7 @@ module BackupRestore
       log "Notifying '#{@user.username}' of the end of the backup..."
       status = @success ? :backup_succeeded : :backup_failed
 
-      upload = Logger.save_log_to_upload(user: @user, logs: @logs)
-      if upload.persisted?
-        logs = UploadMarkdown.new(upload).attachment_markdown
-      else
-        Rails.logger.warn("Failed to upload the backup logs file: #{upload.errors.full_messages}")
-        logs = <<~RAW
-          ```text
-          #{upload.errors.full_messages}
-          ```
-        RAW
-      end
-
+      logs = Discourse::Utils.logs_markdown(@logs, user: @user)
       post = SystemMessage.create_from_system_user(@user, status, logs: logs)
 
       if @user.id == Discourse::SYSTEM_USER_ID
