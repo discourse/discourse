@@ -41,7 +41,7 @@ import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearResolverOptions } from "discourse-common/resolver";
-import { clearCustomNavItemHref } from "discourse/models/nav-item";
+import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
@@ -277,6 +277,7 @@ export function acceptance(name, optionsOrCallback) {
       resetUserSearchCache();
       resetCardClickListenerSelector();
       clearCustomNavItemHref();
+      clearNavItems();
       setTopicList(null);
       _clearSnapshots();
       setURLContainer(null);
