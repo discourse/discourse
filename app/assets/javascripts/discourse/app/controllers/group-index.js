@@ -83,6 +83,17 @@ export default Controller.extend({
     }
   },
 
+  @discourseComputed("filter", "members", "model.can_see_members")
+  emptyMessageKey(filter, members, canSeeMembers) {
+    if (!canSeeMembers) {
+      return "groups.members.forbidden";
+    } else if (filter) {
+      return "groups.members.no_filter_matches";
+    } else {
+      return "groups.empty.members";
+    }
+  },
+
   @action
   loadMore() {
     this.findMembers();
