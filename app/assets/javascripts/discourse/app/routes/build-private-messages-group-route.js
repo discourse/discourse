@@ -2,8 +2,8 @@ import I18n from "I18n";
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 
-export default (viewName, channel) => {
-  return createPMRoute("groups", "private-messages-groups").extend({
+export default (inboxType, filter) => {
+  return createPMRoute(inboxType, "private-messages-groups", filter).extend({
     groupName: null,
 
     titleToken() {
@@ -12,8 +12,8 @@ export default (viewName, channel) => {
       if (groupName) {
         let title = groupName.capitalize();
 
-        if (viewName !== "index") {
-          title = `${title} ${I18n.t("user.messages." + viewName)}`;
+        if (filter !== "inbox") {
+          title = `${title} ${I18n.t("user.messages." + filter)}`;
         }
 
         return [title, I18n.t(`user.private_messages`)];
@@ -22,24 +22,27 @@ export default (viewName, channel) => {
 
     model(params) {
       const username = this.modelFor("user").get("username_lower");
-      let filter = `topics/private-messages-group/${username}/${params.name}`;
+      let topicListFilter = `topics/private-messages-group/${username}/${params.name}`;
 
-      if (viewName !== "index") {
-        filter = `${filter}/${viewName}`;
+      if (filter !== "inbox") {
+        topicListFilter = `${topicListFilter}/${filter}`;
       }
 
-      const lastTopicList = findOrResetCachedTopicList(this.session, filter);
+      const lastTopicList = findOrResetCachedTopicList(
+        this.session,
+        topicListFilter
+      );
 
       return lastTopicList
         ? lastTopicList
-        : this.store.findFiltered("topicList", { filter });
+        : this.store.findFiltered("topicList", { filter: topicListFilter });
     },
 
     afterModel(model) {
       const filters = model.get("filter").split("/");
       let groupName;
 
-      if (viewName !== "index") {
+      if (filter !== "inbox") {
         groupName = filters[filters.length - 2];
       } else {
         groupName = filters.pop();
@@ -55,14 +58,21 @@ export default (viewName, channel) => {
     setupController() {
       this._super.apply(this, arguments);
       this.controllerFor("user-private-messages").set("group", this.group);
+      this.controllerFor("user-topics-list").set("group", this.group);
 
-      if (channel) {
+      if (filter) {
         this.controllerFor("user-topics-list").subscribe(
           `/private-messages/group/${this.get(
             "groupName"
-          ).toLowerCase()}/${channel}`
+          ).toLowerCase()}/${filter}`
         );
       }
+    },
+
+    dismissReadOptions() {
+      return {
+        group_name: this.get("groupName"),
+      };
     },
   });
 };

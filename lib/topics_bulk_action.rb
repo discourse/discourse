@@ -86,7 +86,6 @@ class TopicsBulkAction
       .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{@user.id}")
       .where("topics.created_at >= ?", dismiss_topics_since_date)
       .where("topic_users.last_read_post_number IS NULL")
-      .where("topics.archetype <> ?", Archetype.private_message)
       .order("topics.created_at DESC")
       .limit(SiteSetting.max_new_topics).map do |topic|
       {

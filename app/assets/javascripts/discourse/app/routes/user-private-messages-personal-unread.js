@@ -1,7 +1,6 @@
-import createPMRoute from "discourse/routes/build-private-messages-route";
+import {
+  UNREAD_FILTER,
+  default as createPMRoute,
+} from "discourse/routes/build-private-messages-route";
 
-export default createPMRoute(
-  "personal",
-  "private-messages-unread",
-  null /* no message bus notifications */
-);
+export default createPMRoute("user", "private-messages-unread", UNREAD_FILTER);

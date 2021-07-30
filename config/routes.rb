@@ -758,6 +758,7 @@ Discourse::Application.routes.draw do
     put "t/:id/reset-bump-date" => "topics#reset_bump_date"
     put "topics/bulk"
     put "topics/reset-new" => 'topics#reset_new'
+    put "topics/pm-reset-new" => 'topics#private_message_reset_new'
     post "topics/timings"
 
     get 'topics/similar_to' => 'similar_topics#index'
