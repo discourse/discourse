@@ -850,6 +850,7 @@ en:
         owner: "Owner"
         primary: "Primary"
         forbidden: "You're not allowed to view the members."
+        no_filter_matches: "No members match that search."
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
