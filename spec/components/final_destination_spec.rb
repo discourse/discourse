@@ -42,6 +42,13 @@ describe FinalDestination do
     }
   end
 
+  let(:image_response) do
+    {
+      status: 200,
+      headers: { "Content-Type" => "image/jpeg" }
+    }
+  end
+
   def redirect_response(from, dest)
     stub_request(:head, from).to_return(
       status: 302,
@@ -316,6 +323,19 @@ describe FinalDestination do
       final = FinalDestination.new("#{origin_url}#L154-L205", opts)
       expect(final.resolve.to_s).to eq("#{upstream_url}#L154-L205")
       expect(final.status).to eq(:resolved)
+    end
+
+    context "content_type" do
+      before do
+        stub_request(:head, "https://eviltrout.com/this/is/an/image").to_return(image_response)
+      end
+
+      it "returns a content_type" do
+        final = FinalDestination.new("https://eviltrout.com/this/is/an/image", opts)
+        expect(final.resolve.to_s).to eq("https://eviltrout.com/this/is/an/image")
+        expect(final.content_type).to eq("image/jpeg")
+        expect(final.status).to eq(:resolved)
+      end
     end
   end
 
