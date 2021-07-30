@@ -282,9 +282,17 @@ describe TopicQuery::PrivateMessageLists do
       ).topic
     end
 
+    fab!(:pm_2) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
     it 'returns a list of new private messages' do
       expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics)
-        .to contain_exactly(pm)
+        .to contain_exactly(pm, pm_2)
     end
 
     it 'returns a list of new private messages accounting for muted tags' do
@@ -299,7 +307,14 @@ describe TopicQuery::PrivateMessageLists do
       )
 
       expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics)
-        .to eq([])
+        .to contain_exactly(pm_2)
+    end
+
+    it 'returns a list of new private messages accounting for dismissed topics' do
+      Fabricate(:dismissed_topic_user, topic: pm, user: user_2)
+
+      expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics)
+        .to contain_exactly(pm_2)
     end
   end
 end

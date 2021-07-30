@@ -1,3 +1,3 @@
 import createPMRoute from "discourse/routes/build-private-messages-route";
 
-export default createPMRoute("personal", "private-messages-sent", "sent");
+export default createPMRoute("user", "private-messages-sent", "sent");

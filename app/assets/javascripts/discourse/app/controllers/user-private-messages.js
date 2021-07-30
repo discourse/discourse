@@ -44,7 +44,7 @@ export default Controller.extend({
 
   @discourseComputed("pmView")
   isPersonalInbox(pmView) {
-    return pmView && pmView.startsWith("personal");
+    return pmView && pmView.startsWith("user");
   },
 
   @discourseComputed("isPersonalInbox", "group.name")

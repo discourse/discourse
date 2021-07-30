@@ -5,7 +5,7 @@ require 'rails_helper'
 describe TopicsBulkAction do
   fab!(:topic) { Fabricate(:topic) }
 
-  describe type: "dismiss_topics" do
+  describe "#dismiss_topics" do
     fab!(:user) { Fabricate(:user, created_at: 1.days.ago) }
     fab!(:category) { Fabricate(:category) }
     fab!(:topic2) { Fabricate(:topic, category: category, created_at: 60.minutes.ago) }
@@ -13,6 +13,14 @@ describe TopicsBulkAction do
 
     before do
       topic.destroy!
+    end
+
+    it 'dismisses private messages' do
+      pm = Fabricate(:private_message_topic)
+
+      TopicsBulkAction.new(user, [pm.id], type: "dismiss_topics").perform!
+
+      expect(DismissedTopicUser.exists?(topic: pm)).to eq(true)
     end
 
     it 'dismisses two topics' do
