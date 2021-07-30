@@ -374,9 +374,11 @@ createWidget("search-menu-assistant", {
     switch (suggestionKeyword) {
       case "#":
         attrs.results.forEach((category) => {
-          const slug = prefix
-            ? `${prefix} #${category.slug} `
-            : `#${category.slug} `;
+          const fullSlug = category.parentCategory
+            ? `#${category.parentCategory.slug}:${category.slug}`
+            : `#${category.slug}`;
+
+          const slug = prefix ? `${prefix} ${fullSlug} ` : `${fullSlug} `;
 
           content.push(
             this.attach("search-menu-assistant-item", {
@@ -433,6 +435,7 @@ createWidget("search-menu-assistant-item", {
           this.attach("category-link", {
             category: attrs.category,
             allowUncategorized: true,
+            recursive: true,
           }),
         ]
       );

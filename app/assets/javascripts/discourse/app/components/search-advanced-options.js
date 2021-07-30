@@ -263,33 +263,32 @@ export default Component.extend({
       const subcategories = match[0]
         .replace(REGEXP_CATEGORY_PREFIX, "")
         .split(":");
+
+      let userInput;
       if (subcategories.length > 1) {
-        const userInput = Category.findBySlug(
-          subcategories[1],
-          subcategories[0]
+        userInput = Category.list().find(
+          (category) =>
+            category.get("parentCategory.slug") === subcategories[0] &&
+            category.slug === subcategories[1]
         );
-        if (
-          (!existingInput && userInput) ||
-          (existingInput && userInput && existingInput.id !== userInput.id)
-        ) {
-          this.set("searchedTerms.category", userInput);
-        }
-      } else if (isNaN(subcategories)) {
-        const userInput = Category.findSingleBySlug(subcategories[0]);
-        if (
-          (!existingInput && userInput) ||
-          (existingInput && userInput && existingInput.id !== userInput.id)
-        ) {
-          this.set("searchedTerms.category", userInput);
-        }
       } else {
-        const userInput = Category.findById(subcategories[0]);
-        if (
-          (!existingInput && userInput) ||
-          (existingInput && userInput && existingInput.id !== userInput.id)
-        ) {
-          this.set("searchedTerms.category", userInput);
+        userInput = Category.list().find(
+          (category) =>
+            !category.parentCategory && category.slug === subcategories[0]
+        );
+
+        if (!userInput) {
+          userInput = Category.list().find(
+            (category) => category.slug === subcategories[0]
+          );
         }
+      }
+
+      if (
+        (!existingInput && userInput) ||
+        (existingInput && userInput && existingInput.id !== userInput.id)
+      ) {
+        this.set("searchedTerms.category", userInput);
       }
     } else {
       this.set("searchedTerms.category", null);
