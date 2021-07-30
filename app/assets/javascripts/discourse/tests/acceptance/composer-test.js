@@ -999,4 +999,15 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "@staff");
     assert.ok(exists(".composer-popup"), "Shows the 'group_mentioned' notice");
   });
+
+  test("Does not save invalid draft", async function (assert) {
+    this.siteSettings.min_first_post_length = 20;
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "Something");
+    await fillIn(".d-editor-input", "Something");
+    await click(".save-or-cancel .cancel");
+    assert.notOk(exists(".discard-draft-modal .save-draft"));
+  });
 });

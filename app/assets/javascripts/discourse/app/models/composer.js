@@ -1165,36 +1165,54 @@ const Composer = RestModel.extend({
     return "";
   },
 
-  saveDraft() {
+  @discourseComputed(
+    "draftSaving",
+    "disableDrafts",
+    "canEditTitle",
+    "title",
+    "reply",
+    "titleLengthValid",
+    "replyLength",
+    "minimumPostLength"
+  )
+  canSaveDraft() {
     if (this.draftSaving) {
-      return Promise.resolve();
+      return false;
     }
 
     // Do not save when drafts are disabled
     if (this.disableDrafts) {
-      return Promise.resolve();
+      return false;
     }
 
     if (this.canEditTitle) {
       // Save title and/or post body
       if (isEmpty(this.title) && isEmpty(this.reply)) {
-        return Promise.resolve();
+        return false;
       }
 
       // Do not save when both title and reply's length are too small
       if (!this.titleLengthValid && this.replyLength < this.minimumPostLength) {
-        return Promise.resolve();
+        return false;
       }
     } else {
       // Do not save when there is no reply
       if (isEmpty(this.reply)) {
-        return Promise.resolve();
+        return false;
       }
 
       // Do not save when the reply's length is too small
       if (this.replyLength < this.minimumPostLength) {
-        return Promise.resolve();
+        return false;
       }
+    }
+
+    return true;
+  },
+
+  saveDraft(user) {
+    if (!this.canSaveDraft) {
+      return Promise.resolve();
     }
 
     this.setProperties({
@@ -1225,6 +1243,10 @@ const Composer = RestModel.extend({
             draftConflictUser: result.conflict_user,
           });
         } else {
+          if (this.draftKey === NEW_TOPIC_KEY && user) {
+            user.set("has_topic_draft", true);
+          }
+
           this.setProperties({
             draftStatus: null,
             draftConflictUser: null,
