@@ -570,6 +570,14 @@ module Email
 
       return unless mail[:from]
 
+      if mail[:reply_to] && mail[:reply_to].errors.blank?
+        mail[:reply_to].each do |address_field|
+          from_address = address_field.address
+          from_display_name = address_field.display_name.try(:to_s)
+          return [from_address&.downcase, from_display_name&.strip] if from_address["@"]
+        end
+      end
+
       if mail[:from].errors.blank?
         mail[:from].each do |address_field|
           from_address = address_field.address
