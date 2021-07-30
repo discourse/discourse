@@ -34,9 +34,9 @@ const Group = RestModel.extend({
     return automatic ? "automatic" : "custom";
   },
 
-  findMembers(params, refresh) {
+  async reloadMembers(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
-      return Promise.reject();
+      return;
     }
 
     if (refresh) {
@@ -48,25 +48,24 @@ const Group = RestModel.extend({
       params
     );
 
-    return Group.loadMembers(this.name, params).then((result) => {
-      const ownerIds = new Set();
-      result.owners.forEach((owner) => ownerIds.add(owner.id));
+    const response = await Group.loadMembers(this.name, params);
+    const ownerIds = new Set();
+    response.owners.forEach((owner) => ownerIds.add(owner.id));
 
-      const members = refresh ? [] : this.members;
-      members.pushObjects(
-        result.members.map((member) => {
-          member.owner = ownerIds.has(member.id);
-          member.primary = member.primary_group_name === this.name;
-          return User.create(member);
-        })
-      );
+    const members = refresh ? [] : this.members;
+    members.pushObjects(
+      response.members.map((member) => {
+        member.owner = ownerIds.has(member.id);
+        member.primary = member.primary_group_name === this.name;
+        return User.create(member);
+      })
+    );
 
-      this.setProperties({
-        members,
-        user_count: result.meta.total,
-        limit: result.meta.limit,
-        offset: result.meta.offset,
-      });
+    this.setProperties({
+      members,
+      user_count: response.meta.total,
+      limit: response.meta.limit,
+      offset: response.meta.offset,
     });
   },
 
@@ -100,62 +99,63 @@ const Group = RestModel.extend({
     });
   },
 
-  removeOwner(member) {
-    return ajax(`/admin/groups/${this.id}/owners.json`, {
+  async removeOwner(member) {
+    await ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "DELETE",
       data: { user_id: member.id },
-    }).then(() => this.findMembers({}, true));
+    });
+    await this.reloadMembers({}, true);
   },
 
-  removeMember(member, params) {
-    return ajax(`/groups/${this.id}/members.json`, {
+  async removeMember(member, params) {
+    await ajax(`/groups/${this.id}/members.json`, {
       type: "DELETE",
       data: { user_id: member.id },
-    }).then(() => this.findMembers(params, true));
+    });
+    await this.reloadMembers(params, true);
   },
 
-  leave() {
-    return ajax(`/groups/${this.id}/leave.json`, {
+  async leave() {
+    await ajax(`/groups/${this.id}/leave.json`, {
       type: "DELETE",
-    }).then(() => this.findMembers({}, true));
+    });
+    await this.reloadMembers({}, true);
   },
 
-  addMembers(usernames, filter, notifyUsers, emails = []) {
-    return ajax(`/groups/${this.id}/members.json`, {
+  async addMembers(usernames, filter, notifyUsers, emails = []) {
+    const response = await ajax(`/groups/${this.id}/members.json`, {
       type: "PUT",
       data: { usernames, emails, notify_users: notifyUsers },
-    }).then((response) => {
-      if (filter) {
-        this._filterMembers(response);
-      } else {
-        this.findMembers();
-      }
     });
+    if (filter) {
+      await this._filterMembers(response.usernames);
+    } else {
+      await this.reloadMembers();
+    }
   },
 
-  join() {
-    return ajax(`/groups/${this.id}/join.json`, {
+  async join() {
+    await ajax(`/groups/${this.id}/join.json`, {
       type: "PUT",
-    }).then(() => {
-      this.findMembers({}, true);
     });
+    await this.reloadMembers({}, true);
   },
 
-  addOwners(usernames, filter, notifyUsers) {
-    return ajax(`/admin/groups/${this.id}/owners.json`, {
+  async addOwners(usernames, filter, notifyUsers) {
+    const response = await ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "PUT",
       data: { group: { usernames, notify_users: notifyUsers } },
-    }).then((response) => {
-      if (filter) {
-        this._filterMembers(response);
-      } else {
-        this.findMembers({}, true);
-      }
     });
+
+    if (filter) {
+      await this._filterMembers(response.usernames);
+    } else {
+      await this.reloadMembers({}, true);
+    }
   },
 
-  _filterMembers(response) {
-    return this.findMembers({ filter: response.usernames.join(",") });
+  _filterMembers(usernames) {
+    return this.reloadMembers({ filter: usernames.join(",") });
   },
 
   @discourseComputed("display_name", "name")
@@ -291,19 +291,19 @@ const Group = RestModel.extend({
     return attrs;
   },
 
-  create() {
-    return ajax("/admin/groups", {
+  async create() {
+    const response = await ajax("/admin/groups", {
       type: "POST",
       data: { group: this.asJSON() },
-    }).then((resp) => {
-      this.setProperties({
-        id: resp.basic_group.id,
-        usernames: null,
-        ownerUsernames: null,
-      });
-
-      this.findMembers();
     });
+
+    this.setProperties({
+      id: response.basic_group.id,
+      usernames: null,
+      ownerUsernames: null,
+    });
+
+    await this.reloadMembers();
   },
 
   save(opts = {}) {
