@@ -1354,6 +1354,7 @@ ko:
     category_search_priority_high_weight: "카테고리 검색 우선 순위가 높은 순위에 가중치가 적용됩니다."
     allow_uncategorized_topics: "카테고리 없이 게시 허용. 주의: 카테고리 없는 글은 이 항목을 비활성화에 하기전에 카테고리 설정을 해야 합니다."
     allow_duplicate_topic_titles: "같은 제목의 동일한 주제 허용"
+    allow_duplicate_topic_titles_category: "카테고리가 다른 경우 동일한 제목을 가진 중복 글을 허용합니다. allow_duplicate_topic_titles을 비활성화해야 합니다."
     unique_posts_mins: "사용자가 동일한 콘텐츠로 다시 글을 작성하기 위해서 필요한 시간(분)"
     educate_until_posts: "새로운 사용자가 글를 작성할 시 글 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 글 개수"
     title: "타이틀 태그에 쓰일 이 사이트의 이름"
@@ -1543,7 +1544,7 @@ ko:
     enable_local_logins_via_email: "사용자가 원 클릭 로그인 링크를 이메일을 통해 보내도록 요청할 수 있습니다."
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
     enable_signup_cta: "재방문한 익명 사용자에게 가입 권유 공지 표시"
-    enable_google_oauth2_logins: "Google Oauth2 인증을 활성화하십시오. Google에서 현재 지원하는 인증 방법입니다. 열쇠와 비밀이 필요합니다. <a href='https://meta.discourse.org/t/15858' target='_blank'>담화를위한 Google 로그인 구성을</a> 참조하십시오."
+    enable_google_oauth2_logins: "Google Oauth2 인증을 활성화합니다. 현재 Google에서 지원하는 인증 방법입니다. 키와 시크릿 번호가 필요합니다. <a href='https://meta.discourse.org/t/15858' target='_blank'>Google 로그인 구성을 참조하십시오</a>."
     google_oauth2_client_id: "Google Application의 Client ID"
     google_oauth2_client_secret: "Google Application의 Client Secret"
     google_oauth2_prompt: "권한 부여 서버가 사용자에게 재 인증 및 동의를 요구하는지 여부를 지정하는 선택적 공백으로 구분 된 문자열 값 목록입니다. 가능한 값은 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 를 참조 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>하십시오</a> ."
@@ -3486,8 +3487,10 @@ ko:
     store_failure: "#%{user_id}가 업로드한 파일 #%{upload_id} 을 저장하는데 실패함."
     file_missing: "죄송합니다. 업로드 할 파일을 지정하셔야 합니다."
     empty: "죄송합니다. 지정된 파일은 빈 파일입니다."
+    failed: "죄송합니다. 업로드에 실패했습니다. 다시 시도해 주세요."
     png_to_jpg_conversion_failure_message: "PNG에서 JPG로 변환 할 때 오류가 발생했습니다."
     optimize_failure_message: "업로드된 이미지를 최적화하는 동안 오류가 발생했습니다."
+    download_failure: "외부 공급자로부터 파일을 다운로드하지 못했습니다."
     attachments:
       too_large: "죄송합니다, 업로드하려는 파일이 너무 큽니다. (최대 크기 %{max_size_kb}KB)."
     images:

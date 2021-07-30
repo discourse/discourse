@@ -3674,8 +3674,12 @@ he:
     store_failure: "נכשלה שמירת העלאה #%{upload_id} עבור משתמש #%{user_id}."
     file_missing: "סליחה, עליך לספק קובץ להעלות."
     empty: "הקובץ שסיפקת ריק, עמך הסליחה."
+    failed: "ההעלאה שלך נכשלה, נא לנסות שוב, עמך הסליחה."
     png_to_jpg_conversion_failure_message: "אירעה שגיאה בעת המרה מ־PNG ל־JPG."
     optimize_failure_message: "אירעה שגיאה בעת מיטוב התמונה שהועלתה."
+    download_failure: "הורדת הקובץ מהספק החיצוני נכשלה."
+    checksum_mismatch_failure: "בדיקת התקינות של הקובץ שהעלית שגויה. יכול להיות שתוכן הקובץ השתנה במהלך ההעלאה. נא לנסות שוב."
+    cannot_promote_failure: "לא ניתן להשלים את ההעלאה, יתכן שהיא כבר הושלמה או נכשלה בעבר."
     attachments:
       too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
     images:

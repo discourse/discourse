@@ -826,7 +826,7 @@ sv:
       flair_color: "En Avatar som ändrar färg beroende på ljuset"
       flair_color_placeholder: "(Valfritt) Hex-färgvärde"
       flair_preview_icon: "Förhandsvisa ikon"
-      flair_preview_image: "Förhandsvisa bild"
+      flair_preview_image: "Förhandsgranskningsbild"
       flair_type:
         icon: "Välj en ikon"
         image: "Infoga bild"

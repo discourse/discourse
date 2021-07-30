@@ -3753,8 +3753,11 @@ pl_PL:
     store_failure: "Błąd zapisu załączników #%{upload_id} dla użytkownika #%{user_id}."
     file_missing: "Przepraszamy, należy podać plik do przesłania."
     empty: "Przepraszamy, plik który wysłałeś/łaś jest pusty."
+    failed: "Przepraszamy, ale przesyłanie nie powiodło się. Proszę spróbuj ponownie."
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
+    download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."
+    cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
     attachments:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
     images:

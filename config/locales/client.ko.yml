@@ -276,6 +276,7 @@ ko:
       copied: "복사되었습니다!"
     drafts:
       label: "임시저장"
+      label_with_count: "임시 보관함 (%{count})"
       resume: "이력서"
       remove: "삭제"
       remove_confirmation: "이 초안을 삭제 하시겠습니까?"
@@ -787,7 +788,7 @@ ko:
         image: "이미지 업로드"
       default_notifications:
         modal_title: "사용자 기본 알림"
-        modal_description: "이 변경 사항을 역사적으로 적용 하시겠습니까? 기존 사용자 %{count}의 환경 설정이 변경됩니다."
+        modal_description: "이 변경 사항을 일괄 적용 하시겠습니까? 기존 사용자 %{count}명의 환경 설정이 변경됩니다."
         modal_yes: "예"
         modal_no: "아니요, 앞으로 만 변경 사항을 적용하십시오."
     user_action_groups:
@@ -1885,6 +1886,7 @@ ko:
           confirm: 새 글 초안이 저장되어 있으며 링크된 글을 만들면 덮어 쓰게됩니다.
         reply_as_new_group_message:
           label: 새 그룹 메시지로 답장
+          desc: 동일한 수신자에게 새 메시지 쓰기
         reply_as_private_message:
           label: 새 메시지
           desc: 새 개인 메시지 쓰기

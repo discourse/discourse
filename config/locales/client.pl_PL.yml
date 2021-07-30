@@ -354,6 +354,7 @@ pl_PL:
       copied: "skopiowane!"
     drafts:
       label: "Szkice"
+      label_with_count: "Szkice (%{count})"
       resume: "Kontynuuj"
       remove: "Usuń"
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
