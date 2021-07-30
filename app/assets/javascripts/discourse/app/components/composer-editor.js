@@ -85,6 +85,8 @@ export default Component.extend({
   shouldBuildScrollMap: true,
   scrollMap: null,
   uploadFilenamePlaceholder: null,
+  uploadProcessingFilename: null,
+  uploadProcessingPlaceholdersAdded: false,
 
   @discourseComputed("uploadFilenamePlaceholder")
   uploadPlaceholder(uploadFilenamePlaceholder) {
@@ -691,21 +693,20 @@ export default Component.extend({
         });
       })
       .on("fileuploadprocess", (e, data) => {
-        this.appEvents.trigger(
-          "composer:insert-text",
-          `[${I18n.t("processing_filename", {
-            filename: data.files[data.index].name,
-          })}]()\n`
-        );
-      })
-      .on("fileuploadprocessalways", (e, data) => {
-        this.appEvents.trigger(
-          "composer:replace-text",
-          `[${I18n.t("processing_filename", {
-            filename: data.files[data.index].name,
-          })}]()\n`,
-          ""
-        );
+        if (!this.uploadProcessingPlaceholdersAdded) {
+          data.originalFiles
+            .map((f) => f.name)
+            .forEach((f) => {
+              this.appEvents.trigger(
+                "composer:insert-text",
+                `[${I18n.t("processing_filename", {
+                  filename: f,
+                })}]()\n`
+              );
+            });
+          this.uploadProcessingPlaceholdersAdded = true;
+        }
+        this.uploadProcessingFilename = data.files[data.index].name;
       })
       .on("fileuploadprocessstop", () => {
         this.setProperties({
@@ -714,6 +715,7 @@ export default Component.extend({
           isProcessingUpload: false,
           isCancellable: false,
         });
+        this.uploadProcessingPlaceholdersAdded = false;
       });
 
     $element.on("fileuploadpaste", (e) => {
@@ -804,7 +806,21 @@ export default Component.extend({
 
         this._setUploadPlaceholderSend(data);
 
-        this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
+        if (this.uploadProcessingFilename) {
+          this.appEvents.trigger(
+            "composer:replace-text",
+            `[${I18n.t("processing_filename", {
+              filename: this.uploadProcessingFilename,
+            })}]()\n`,
+            this.uploadPlaceholder.trim()
+          );
+          this.uploadProcessingFilename = null;
+        } else {
+          this.appEvents.trigger(
+            "composer:insert-text",
+            this.uploadPlaceholder
+          );
+        }
 
         if (data.xhr && data.originalFiles.length === 1) {
           this.set("isCancellable", true);
