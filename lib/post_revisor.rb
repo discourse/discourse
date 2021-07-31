@@ -77,7 +77,12 @@ class PostRevisor
   end
 
   track_topic_field(:title) do |topic_changes, attribute|
-    track_and_revise topic_changes, :title, attribute
+    if UrlHelper.contains_url?(attribute) && !topic_changes.guardian.can_put_urls_in_topic_title?
+      topic_changes.topic.errors.add(:base, I18n.t("urls_in_title_require_trust_level"))
+      topic_changes.check_result(false)
+    else
+      track_and_revise topic_changes, :title, attribute
+    end
   end
 
   track_topic_field(:archetype) do |topic_changes, attribute|

@@ -164,6 +164,7 @@ class Topic < ActiveRecord::Base
                     topic_title_length: true,
                     censored_words: true,
                     watched_words: true,
+                    urls_in_topic_title: true,
                     quality_title: { unless: :private_message? },
                     max_emojis: true,
                     unique_among: { unless: Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },

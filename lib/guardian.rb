@@ -540,6 +540,10 @@ class Guardian
     !SiteSetting.login_required? || authenticated?
   end
 
+  def can_put_urls_in_topic_title?
+    @user.trust_level >= TrustLevel.levels[:basic]
+  end
+
   def auth_token
     if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
       UserAuthToken.hash_token(cookie)
