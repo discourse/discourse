@@ -570,19 +570,28 @@ module Email
 
       return unless mail[:from]
 
-      if mail[:reply_to] && mail[:reply_to].errors.blank?
-        mail[:reply_to].each do |address_field|
-          from_address = address_field.address
-          from_display_name = address_field.display_name.try(:to_s)
-          return [from_address&.downcase, from_display_name&.strip] if from_address["@"]
+      # For now we are only using the Reply-To header if the email has
+      # been forwarded via Google Groups, which is why we are checking the
+      # X-Original-From header too. In future we may want to use the Reply-To
+      # header in more cases.
+      if mail['X-Original-From'].present?
+        if mail[:reply_to] && mail[:reply_to].errors.blank?
+          mail[:reply_to].each do |address_field|
+            from_address = address_field.address
+            from_display_name = address_field.display_name&.to_s
+            next if address_field.to_s != mail['X-Original-From'].to_s
+            next if !from_address&.include?("@")
+            return [from_address&.downcase, from_display_name&.strip]
+          end
         end
       end
 
       if mail[:from].errors.blank?
         mail[:from].each do |address_field|
           from_address = address_field.address
-          from_display_name = address_field.display_name.try(:to_s)
-          return [from_address&.downcase, from_display_name&.strip] if from_address["@"]
+          from_display_name = address_field.display_name&.to_s
+          next if !from_address&.include?("@")
+          return [from_address&.downcase, from_display_name&.strip]
         end
       end
 
