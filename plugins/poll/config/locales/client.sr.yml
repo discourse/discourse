@@ -10,7 +10,7 @@ sr:
       voters:
         one: "glasač"
         few: "glasača"
-        other: "glasača"
+        other: "гласача"
       total_votes:
         one: "ukupno glasova"
         few: "ukupno glasova"
@@ -83,6 +83,9 @@ sr:
         insert: Unesi anketu
         help:
           options_min_count: Unesite najmanje 1 opciju.
+          options_max_count: Унесите највише %{count} опција.
+          invalid_min_value: Минимална вредност мора бити најмање 1.
+          invalid_max_value: Максимална вредност мора бити најмање 1, али мања или једнака броју опција.
           invalid_values: Minimalna vrednost mora biti manja od maksimalne.
           min_step_value: Minimalna vrednost koraka je 1
         poll_type:
@@ -91,16 +94,29 @@ sr:
           multiple: Višestruki odabir
           number: Broj rejtinga
         poll_result:
+          label: Prikaži rezultate...
           always: Uvek vidljivi
+          vote: Тек након гласања
+          closed: Kada je glasanje zatvoreno
           staff: Samo članovi osoblja
+        poll_groups:
+          label: Ограничите гласање на ове групе
         poll_chart_type:
+          label: Графикон резултата
           bar: Dijagram
           pie: Strukturni krug
         poll_config:
+          max: Maksimalni broj izbora
+          min: Minimalni broj izbora
           step: Korak
         poll_public:
           label: Prikaži ko je glasao
         poll_title:
           label: Naslov (opcionalno)
+        poll_options:
+          label: Опције (по једна у реду)
+          add: Додај опцију
         automatic_close:
           label: Automatski zatvorite anketu
+        show_advanced: "Прикажи напредне опције"
+        hide_advanced: "Сакриј напредне опције"

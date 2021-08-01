@@ -143,16 +143,16 @@ class UsersController < ApplicationController
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
-      fields.each do |f|
-        field_id = f.id.to_s
+      fields.each do |field|
+        field_id = field.id.to_s
         next unless params[:user_fields].has_key?(field_id)
 
-        val = params[:user_fields][field_id]
-        val = nil if val === "false"
-        val = val[0...UserField.max_length] if val
+        value = clean_custom_field_values(field)
+        value = nil if value === "false"
+        value = value[0...UserField.max_length] if value
 
-        return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
-        attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{f.id}"] = val
+        return render_json_error(I18n.t("login.missing_user_field")) if value.blank? && field.required?
+        attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{field.id}"] = value
       end
     end
 
@@ -1580,6 +1580,21 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def clean_custom_field_values(field)
+    field_values = params[:user_fields][field.id.to_s]
+
+    return field_values if field_values.nil? || field_values.empty?
+
+    if field.field_type == "dropdown"
+      field.user_field_options.find_by_value(field_values)&.value
+    elsif field.field_type == "multiselect"
+      bad_values = field_values - field.user_field_options.map(&:value)
+      field_values - bad_values
+    else
+      field_values
+    end
+  end
 
   def password_reset_find_user(token, committing_change:)
     if EmailToken.valid_token_format?(token)

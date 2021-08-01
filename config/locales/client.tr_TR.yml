@@ -161,7 +161,7 @@ tr_TR:
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik durumlarla karşılaşabilirsiniz."
-      dismiss: "Yoksay"
+      dismiss: "Kapat"
     bootstrap_mode_enabled:
       one: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılacaktır."
       other: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılacaktır."
@@ -185,7 +185,7 @@ tr_TR:
         eu_west_1: "AB (İrlanda)"
         eu_west_2: "AB (Londra)"
         eu_west_3: "AB (Paris)"
-        sa_east_1: "Güney Amerika (São Paulo)"
+        sa_east_1: "Güney Amerika (Sao Paulo)"
         us_east_1: "Doğu ABD (Kuzey Virjinya)"
         us_east_2: "Doğu ABD (Ohio)"
         us_gov_east_1: "AWS GovCloud (ABD-Doğu)"
@@ -321,7 +321,7 @@ tr_TR:
     topic_count_new:
       one: "%{count} Yeni Konu Gör"
       other: "%{count} Yeni konular gör"
-    preview: "önizleme"
+    preview: "ön izleme"
     cancel: "iptal"
     deleting: "Siliniyor..."
     save: "Değişiklikleri Kaydet"
@@ -384,7 +384,7 @@ tr_TR:
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu öğeyi talep edebilirsiniz."
         required: "Öğeleri inceleyebilmeniz için önce hak talebinde bulunmalısınız."
-        claimed_by_you: "Bu öğeyi talep ettiniz ve inceleyebilirsiniz."
+        claimed_by_you: "Bu ögeyi talep ettiniz ve inceleyebilirsiniz."
         claimed_by_other: "Bu öge yalnızca <b>%{username}</b> kullanıcısı tarafından incelenebilir."
       claim:
         title: "konu talebinde bulun"
@@ -490,7 +490,7 @@ tr_TR:
         rejected:
           title: "Reddedildi"
         ignored:
-          title: "Yoksayıldı"
+          title: "Yok sayıldı"
         deleted:
           title: "Silindi"
         reviewed:
@@ -516,7 +516,7 @@ tr_TR:
           one: "Bekleyen <strong>%{count}</strong> gönderiniz var."
           other: "Bekleyen <strong>%{count}</strong> gönderiniz var."
         ok: "Tamam"
-      example_username: "kullaniciadi"
+      example_username: "kullanıcı adı"
       reject_reason:
         title: "Bu kullanıcıyı neden reddediyorsunuz?"
         send_email: "Ret e-postası gönder"
@@ -923,14 +923,14 @@ tr_TR:
           all: "Tümü"
           read: "Okunan"
           unread: "Okunmamış"
-        ignore_duration_title: "Kullanıcıyı yoksay"
+        ignore_duration_title: "Kullanıcıyı yok say"
         ignore_duration_username: "Kullanıcı Adı"
         ignore_duration_when: "Süre:"
-        ignore_duration_save: "Yoksay"
+        ignore_duration_save: "Yok say"
         ignore_duration_note: "Lütfen yoksayma süresi dolduktan sonra tüm yoksaymaların otomatik olarak kaldırıldığını unutmayın."
         ignore_duration_time_frame_required: "Bir zaman dilimi seç"
         ignore_no_users: "Yoksaydığınız kullanıcı bulunmuyor."
-        ignore_option: "Yoksayıldı"
+        ignore_option: "Yok sayıldı"
         ignore_option_title: "Bu kullanıcıyla ilgili bildirimleri almayacaksınız ve kullanıcının tüm başlık ve cevapları gizlenecek."
         add_ignored_user: "Ekle..."
         mute_option: "Sessiz"
@@ -951,7 +951,7 @@ tr_TR:
         saturday: "Cumartesi"
         sunday: "Pazar"
         to: "kime"
-      activity_stream: "Aktivite"
+      activity_stream: "Hareketler"
       read: "Okunmuş"
       read_help: "Son okunan konular"
       preferences: "Tercihler"
@@ -984,8 +984,8 @@ tr_TR:
         enable: "Bildirimleri Etkinleştir"
         each_browser_note: 'Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, "rahatsız etmeyin" modundayken tüm bildirimler devre dışı bırakılır.'
         consent_prompt: "Gönderilerine cevap verildiğinde anlık bildirim almak ister misin?"
-      dismiss: "Yoksay"
-      dismiss_notifications: "Tümünü Yoksay"
+      dismiss: "Kapat"
+      dismiss_notifications: "Tümünü Kapat"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
       no_messages_title: "Hiç mesajınız yok"
       no_messages_body: >
@@ -997,7 +997,7 @@ tr_TR:
       no_notifications_body: >
         Konu ve iletilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizle alâkalı etkinlik olduğunda, biri size <b>@mention</b> attığında veya sizi alıntıladığında bu panelde bildirilecektir. Bir süredir giriş yapmadığınızda da bildirimler e-posta olarak gönderilecektir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} ikonuna bakın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize bakın</a>.
       first_notification: "İlk bildirimin! Başlamak için seç. "
-      dynamic_favicon: "Sayacı, tarayıcı ikonunda göster"
+      dynamic_favicon: "Sayacı, tarayıcı ikonu üzerinde göster"
       skip_new_user_tips:
         description: "Yeni kullanıcı katılımı ipuçlarını ve rozetlerini atlayın"
         not_first_time: "İlk defa değil mi?"

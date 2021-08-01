@@ -42,6 +42,7 @@ sr:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} ranije"
+      wrap_on: "дана %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -172,6 +173,9 @@ sr:
     topic_admin_menu: "opcije teme"
     wizard_required: "Dobrodošli na Vaš novi Discourse! Počnimo sa <a href='%{url}' data-auto-route='true'>instalacijom</a>"
     emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
+    software_update_prompt:
+      message: "Ažurirali smo ovaj sajt, <span>molimo vas rifrešujte</span>, u suprotnom može doći do nepredviđenih rezultata."
+      dismiss: "Одбаци"
     bootstrap_mode_disabled: "Bootstrap mod će biti onemogućen u roku od 24 časa."
     themes:
       default_description: "zadato"
@@ -264,6 +268,9 @@ sr:
       moderators: "Moderatori"
       stat:
         all_time: "Sve vreme"
+        last_day: "Последња 24 сата"
+        last_7_days: "Последњих 7 дана"
+        last_30_days: "Последњих 30 дана"
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
@@ -273,10 +280,13 @@ sr:
       contact_info: "U trenutku kritičnog problema ili hitnog slučaja koji utiče na sajt, molimo vas kontaktirajte nas na %{contact_info}."
     bookmarked:
       title: "Markiraj"
+      edit_bookmark: "Uredi marker"
       clear_bookmarks: "Očisti markere"
       help:
         bookmark: "Klikni da markiraš prvi post u ovoj temi"
+        edit_bookmark: "Klikni da bi obirsao sve markere sa ove teme"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
+        unbookmark_with_reminder: "Klikni da bi obirsao sve markere sa ove teme."
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
@@ -305,10 +315,13 @@ sr:
     copy_codeblock:
       copied: "kopirano!"
     drafts:
+      label: "Нацрти"
+      label_with_count: "Нацрти (%{count})"
       resume: "Nastavi"
       remove: "Ukloni"
       remove_confirmation: "Da li ste sigurni da želite da uklonite ovaj nacrt?"
       new_topic: "Novi nacrt teme"
+      new_private_message: "Nacrt nove privatne poruke"
       topic_reply: "Nacrt odgovora"
       abandon:
         confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
@@ -331,6 +344,7 @@ sr:
     upload: "Učitaj"
     uploading: "Učitava se..."
     uploading_filename: "Otpremanje: %{filename}..."
+    processing_filename: "Обрада: %{filename}..."
     clipboard: "klipbord"
     uploaded: "Učitano!"
     pasting: "Nalepljivanje..."

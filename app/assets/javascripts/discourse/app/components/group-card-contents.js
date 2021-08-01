@@ -51,7 +51,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
         }
         return group.can_see_members &&
           group.members.length < maxMembersToDisplay
-          ? group.findMembers({ limit: maxMembersToDisplay }, true)
+          ? group.reloadMembers({ limit: maxMembersToDisplay }, true)
           : Promise.resolve();
       })
       .catch(() => this._close())

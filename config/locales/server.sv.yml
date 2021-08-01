@@ -3393,8 +3393,12 @@ sv:
     store_failure: "Lagringen av den uppladdade filen #%{upload_id} som användaren #%{user_id} gjort misslyckades."
     file_missing: "Tyvärr måste du tillhandahålla en fil för uppladdning."
     empty: "Tyvärr är filen du angav tom."
+    failed: "Tyvärr misslyckades din uppladdning. Försök igen."
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
+    download_failure: "Det gick inte att hämta filen från den externa leverantören."
+    checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
+    cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
     attachments:
       too_large: "Tyvärr är filen som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB)."
     images:

@@ -77,7 +77,7 @@ import { addSearchResultsCallback } from "discourse/lib/search";
 import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.7";
+const PLUGIN_API_VERSION = "0.12.0";
 
 class PluginApi {
   constructor(version, container) {

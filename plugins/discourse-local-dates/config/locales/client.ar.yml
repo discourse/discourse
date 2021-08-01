@@ -32,11 +32,11 @@ ar:
           timezone: المنطقة الزمنية
           until: حتّى...
           recurring:
-            every_day: "كلّ يوم"
-            every_week: "كلّ أسبوع"
-            every_two_weeks: "كلّ أسبوعين"
-            every_month: "كلّ شهر"
-            every_two_months: "كلّ شهرين"
-            every_three_months: "كلّ ثلاثة أشهر"
-            every_six_months: "كلّ ستة أشهر"
-            every_year: "كلّ سنة"
+            every_day: "كل يوم"
+            every_week: "كل أسبوع"
+            every_two_weeks: "كل أسبوعين"
+            every_month: "كل شهر"
+            every_two_months: "كل شهرين"
+            every_three_months: "كل ثلاثة أشهر"
+            every_six_months: "كل ستة أشهر"
+            every_year: "كل سنة"

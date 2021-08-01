@@ -52,7 +52,6 @@ module BackupRestore
 
       reload_site_settings
 
-      @system.unpause_sidekiq
       @system.disable_readonly_mode
 
       clear_category_cache
