@@ -22,7 +22,7 @@ class Users::AssociateAccountsController < ApplicationController
     end
 
     DiscourseEvent.trigger(:before_auth, authenticator, auth_hash, session, cookies, request)
-    auth_result = authenticator.after_authenticate(auth, existing_account: current_user)
+    auth_result = authenticator.after_authenticate(auth_hash, existing_account: current_user)
     DiscourseEvent.trigger(:after_auth, authenticator, auth_result, session, cookies, request)
 
     secure_session[self.class.key(params[:token])] = nil
