@@ -407,6 +407,17 @@ export default Controller.extend(
       }
     },
 
+    @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
+    associateHtml(url, provider) {
+      if (!url) {
+        return;
+      }
+      return I18n.t("create_account.associate", {
+        associate_link: url,
+        provider: I18n.t(`login.${provider}.name`),
+      });
+    },
+
     actions: {
       externalLogin(provider) {
         this.login.send("externalLogin", provider, { signup: true });

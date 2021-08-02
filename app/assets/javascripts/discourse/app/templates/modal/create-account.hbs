@@ -16,6 +16,11 @@
 
           <div class="login-form">
             <form>
+              {{#if associateHtml}}
+                <div class="input-group create-account-associate-link">
+                  <span>{{html-safe associateHtml}}</span>
+                </div>
+              {{/if}}
               <div class="input-group create-account-email">
                 {{input type="email" disabled=emailDisabled value=accountEmail id="new-account-email" name="email" class=(value-entered accountEmail) autofocus="autofocus" focusOut=(action "checkEmailAvailability")}}
                 <label class="alt-placeholder" for="new-account-email">
