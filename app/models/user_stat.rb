@@ -321,4 +321,4 @@ end
 #  first_unread_pm_at       :datetime         not null
 #  digest_attempted_at      :datetime
 #  draft_count              :integer          default(0), not null
-#
+#  post_edits_count         :integer
