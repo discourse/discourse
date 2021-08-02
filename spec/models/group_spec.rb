@@ -1307,4 +1307,12 @@ describe Group do
       expect(Group.find_by_email("nope@test.com")).to eq(nil)
     end
   end
+
+  it "fetches flair_url based on group visibility" do
+    public_group = Fabricate(:group, flair_icon: "icon", visibility_level: Group.visibility_levels[:public], members_visibility_level: Group.visibility_levels[:public])
+    private_group = Fabricate(:group, flair_icon: "icon", visibility_level: Group.visibility_levels[:logged_on_users], members_visibility_level: Group.visibility_levels[:public])
+
+    expect(public_group.flair_url).to eq("icon")
+    expect(private_group.flair_url).to eq(nil)
+  end
 end
