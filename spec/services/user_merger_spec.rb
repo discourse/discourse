@@ -848,6 +848,15 @@ describe UserMerger do
     expect(UserEmail.where(user_id: source_user.id).count).to eq(0)
   end
 
+  it "skips merging email addresses when target user is not human" do
+    target_user = Discourse.system_user
+    merge_users!(source_user, target_user)
+
+    emails = UserEmail.where(user_id: target_user.id).pluck(:email, :primary)
+    expect(emails).to contain_exactly([target_user.email, true])
+    expect(UserEmail.where(user_id: source_user.id).count).to eq(0)
+  end
+
   it "updates exports" do
     UserExport.create(file_name: "user-archive-alice1-190218-003249", user_id: source_user.id)
 
