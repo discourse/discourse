@@ -511,12 +511,7 @@ class Search
     category_ids = Category.where('slug ilike ? OR name ilike ? OR id = ?',
                                   match, match, match.to_i).pluck(:id)
     if category_ids.present?
-
-      unless exact
-        category_ids +=
-          Category.where('parent_category_id = ?', category_ids.first).pluck(:id)
-      end
-
+      category_ids += Category.subcategory_ids(category_ids.first) unless exact
       @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
     else
@@ -525,44 +520,31 @@ class Search
   end
 
   advanced_filter(/^\#([\p{L}\p{M}0-9\-:=]+)$/i) do |posts, match|
-
-    exact = true
-
     category_slug, subcategory_slug = match.to_s.split(":")
     next unless category_slug
 
-    if subcategory_slug
-
-      category_id, _ = DB.query_single(<<~SQL, category_slug.downcase, subcategory_slug.downcase)
-        SELECT sub.id
-        FROM categories sub
-        JOIN categories c ON sub.parent_category_id = c.id
-        WHERE LOWER(c.slug)  = ? AND LOWER(sub.slug) = ?
-        ORDER BY c.id
-        LIMIT 1
-      SQL
-
+    exact = true
+    if category_slug[0] == "="
+      category_slug = category_slug[1..-1]
     else
-      # main category
-      if category_slug[0] == "="
-        category_slug = category_slug[1..-1]
-      else
-        exact = false
-      end
+      exact = false
+    end
 
-      category_id = Category.where("lower(slug) = ?", category_slug.downcase)
+    category_id = if subcategory_slug
+      Category
+        .where('lower(slug) = ?', subcategory_slug.downcase)
+        .where(parent_category_id: Category.where('lower(slug) = ?', category_slug.downcase).select(:id))
+        .pluck_first(:id)
+    else
+      Category
+        .where('lower(slug) = ?', category_slug.downcase)
         .order('case when parent_category_id is null then 0 else 1 end')
-        .pluck(:id)
-        .first
+        .pluck_first(:id)
     end
 
     if category_id
       category_ids = [category_id]
-
-      unless exact
-        category_ids +=
-          Category.where('parent_category_id = ?', category_id).pluck(:id)
-      end
+      category_ids += Category.subcategory_ids(category_id) if !exact
 
       @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
