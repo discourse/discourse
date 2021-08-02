@@ -59,6 +59,8 @@ div.poll {
   }
 
   .poll-buttons {
+    display: flex;
+    flex-direction: row;
     .info-text {
       margin: 0.25em 0;
       color: var(--primary-medium);
@@ -66,6 +68,9 @@ div.poll {
     .info-text + .info-text,
     button + .info-text {
       margin-left: 0.5em;
+    }
+    .btn-danger.toggle-status {
+      margin-left: auto;
     }
   }
 
