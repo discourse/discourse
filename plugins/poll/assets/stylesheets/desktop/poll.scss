@@ -37,6 +37,8 @@ div.poll {
   .poll-buttons {
     border-top: 1px solid var(--primary-low);
     padding: 1em;
+    display: flex;
+    flex-direction: row;
 
     .info-text {
       line-height: 2em;
@@ -46,8 +48,8 @@ div.poll {
       margin-left: 1em;
     }
 
-    .toggle-status {
-      float: right;
+    .btn-danger.toggle-status {
+      margin-left: auto;
     }
   }
 }
