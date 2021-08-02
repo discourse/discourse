@@ -811,7 +811,7 @@ export default Component.extend({
             "composer:replace-text",
             `[${I18n.t("processing_filename", {
               filename: this.uploadProcessingFilename,
-            })}]()\n`,
+            })}]()`,
             this.uploadPlaceholder.trim()
           );
           this.uploadProcessingFilename = null;
