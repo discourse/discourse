@@ -473,7 +473,7 @@ describe TagsController do
       it "can't see pm tags" do
         get "/tags/personal_messages/#{regular_user.username}.json"
 
-        expect(response).not_to be_successful
+        expect(response.status).to eq(403)
       end
     end
 
@@ -485,7 +485,7 @@ describe TagsController do
       it "can't see pm tags for regular user" do
         get "/tags/personal_messages/#{regular_user.username}.json"
 
-        expect(response).not_to be_successful
+        expect(response.status).to eq(404)
       end
 
       it "can see their own pm tags" do

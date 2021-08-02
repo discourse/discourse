@@ -4,8 +4,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto;
-  grid-row-gap: 20px;
-  grid-column-gap: 16px;
+  grid-gap: 16px;
   .user-primary-navigation {
     grid-column-start: 1;
     grid-row-start: 1;
@@ -29,6 +28,71 @@
   .spinner {
     grid-row-start: 3;
     grid-column-start: 1;
+  }
+
+  // specific to messages
+
+  .user-messages.user-messages-inboxes {
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    + .user-additional-controls {
+      grid-row-start: 2;
+      grid-column-start: 1;
+    }
+  }
+
+  .inboxes-controls {
+    display: flex;
+  }
+
+  .user-messages-inboxes-drop {
+    padding: 0;
+    flex: 1 1 auto;
+    .select-kit-header {
+      padding: 8px 10px;
+
+      .caret-icon {
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  .messages-nav {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+  }
+
+  .new-private-message {
+    grid-row-start: 1;
+    grid-column-start: 2;
+  }
+
+  .group-notifications-button {
+    margin-left: 8px;
+
+    .select-kit-header {
+      height: 100%;
+
+      .selected-name .name {
+        display: none;
+      }
+    }
+  }
+}
+
+.user-messages-page {
+  .paginated-topics-list {
+    margin-top: 0;
+  }
+  .show-mores {
+    margin-top: 0.5em;
   }
 }
 
@@ -166,6 +230,10 @@
       flex: 1 1 25%;
       margin-left: auto;
 
+      .btn {
+        margin-bottom: 16px;
+      }
+
       ul {
         margin: 0;
         display: flex;
@@ -223,6 +291,7 @@
 
 .user-main .collapsed-info.about .details {
   display: flex;
+  margin-bottom: 16px;
   .user-profile-avatar {
     margin: 0;
     flex: 0 0 auto;

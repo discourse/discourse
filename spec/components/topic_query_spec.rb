@@ -1067,7 +1067,6 @@ describe TopicQuery do
 
             expect(TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics).to eq([private_message])
           end
-
         end
       end
 
@@ -1193,75 +1192,6 @@ describe TopicQuery do
     end
   end
 
-  describe '#list_private_messages_group' do
-    fab!(:group) { Fabricate(:group) }
-
-    let!(:group_message) do
-      Fabricate(:private_message_topic,
-        allowed_groups: [group],
-        topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: Fabricate(:user)),
-        ]
-      )
-    end
-
-    before do
-      group.add(creator)
-    end
-
-    it 'should return the right list for a group user' do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(creator)
-        .topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it 'should return the right list for an admin not part of the group' do
-      group.update!(name: group.name.capitalize)
-
-      topics = TopicQuery.new(nil, group_name: group.name.upcase)
-        .list_private_messages_group(Fabricate(:admin))
-        .topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it "should not allow a moderator not part of the group to view the group's messages" do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(Fabricate(:moderator))
-        .topics
-
-      expect(topics).to eq([])
-    end
-
-    it "should not allow a user not part of the group to view the group's messages" do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(Fabricate(:user))
-        .topics
-
-      expect(topics).to eq([])
-    end
-
-    context "Calculating minimum unread count for a topic" do
-      before { group.update!(publish_read_state: true) }
-
-      let(:listed_message) do
-        TopicQuery.new(nil, group_name: group.name)
-          .list_private_messages_group(creator)
-          .topics.first
-      end
-
-      it 'returns the last read post number' do
-        topic_group = TopicGroup.create!(
-          topic: group_message, group: group, last_read_post_number: 10
-        )
-
-        expect(listed_message.last_read_post_number).to eq(topic_group.last_read_post_number)
-      end
-    end
-  end
-
   context "shared drafts" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
@@ -1347,18 +1277,6 @@ describe TopicQuery do
         expect(TopicQuery.new(admin).list_latest.topics).not_to include(partially_read) # Check we set up the topic/category correctly
         expect(TopicQuery.new(admin).list_unread.topics).to include(partially_read)
       end
-    end
-  end
-
-  describe '#list_private_messages' do
-    it "includes topics with moderator posts" do
-      private_message_topic = Fabricate(:private_message_post, user: user).topic
-
-      expect(TopicQuery.new(user).list_private_messages(user).topics).to be_empty
-
-      private_message_topic.add_moderator_post(admin, "Thank you for your flag")
-
-      expect(TopicQuery.new(user).list_private_messages(user).topics).to eq([private_message_topic])
     end
   end
 end
