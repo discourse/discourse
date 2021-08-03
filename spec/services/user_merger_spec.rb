@@ -854,7 +854,7 @@ describe UserMerger do
 
     emails = UserEmail.where(user_id: target_user.id).pluck(:email, :primary)
     expect(emails).to contain_exactly([target_user.email, true])
-    expect(UserEmail.where(user_id: source_user.id).count).to eq(0)
+    expect(UserEmail.exists?(user_id: source_user.id)).to eq(false)
   end
 
   it "updates exports" do
