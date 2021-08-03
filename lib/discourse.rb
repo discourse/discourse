@@ -58,10 +58,7 @@ module Discourse
 
       # Try to create an upload for the logs
       upload = Dir.mktmpdir do |dir|
-        logfile = File.new(File.join(dir, filename), 'w')
-        logfile.write(pretty_logs)
-        logfile.close
-
+        File.write(File.join(dir, filename), pretty_logs)
         zipfile = Compression::Zip.new.compress(dir, filename)
         File.open(zipfile) do |file|
           UploadCreator.new(
@@ -82,6 +79,7 @@ module Discourse
       # If logs are long and upload cannot be created, show trimmed logs
       <<~TEXT
       ```text
+      ...
       #{pretty_logs.last(max_logs_length)}
       ```
       TEXT

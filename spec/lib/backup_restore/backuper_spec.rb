@@ -68,7 +68,7 @@ describe BackupRestore::Backuper do
           .and change { Upload.count }.by(0)
       end
 
-      expect(Topic.last.first_post.raw).to include("```text\n[2010-01-01 12:00:00] Line 10\n[2010-01-01 12:00:00] Notifying 'system' of the end of the backup...\n```")
+      expect(Topic.last.first_post.raw).to include("```text\n...\n[2010-01-01 12:00:00] Line 10\n[2010-01-01 12:00:00] Notifying 'system' of the end of the backup...\n```")
     end
   end
 end
