@@ -102,12 +102,12 @@ export default {
           this.insertAdjacentHTML("beforeend", DATE_TEMPLATE);
           this.setAttribute("aria-label", localDateBuilder.textPreview);
           this.dataset.htmlTooltip = previewsNode.outerHTML;
-          this.classList.add("cooked-date");
+
+          const classes = ["cooked-date"];
           if (localDateBuilder.pastEvent) {
-            this.classList.add("past");
+            classes.push("past");
           }
-          const relativeTime = this.querySelector(".relative-time");
-          relativeTime.innerText = localDateBuilder.formated;
+          this.classList.add(...classes);
         });
       };
 
