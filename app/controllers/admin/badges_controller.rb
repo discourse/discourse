@@ -31,15 +31,6 @@ class Admin::BadgesController < Admin::AdminController
                                       trigger: params[:trigger].to_i)
   end
 
-  def new
-  end
-
-  def show
-  end
-
-  def award
-  end
-
   def mass_award
     csv_file = params.permit(:file).fetch(:file, nil)
     badge = Badge.find_by(id: params[:badge_id])
