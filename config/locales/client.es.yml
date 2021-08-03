@@ -1089,7 +1089,6 @@ es:
         warnings_received: "avisos"
         rejected_posts: "publicaciones rechazadas"
       messages:
-        all: "Todos"
         inbox: "Bandeja de entrada"
         sent: "Enviados"
         archive: "Archivo"

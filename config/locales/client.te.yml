@@ -439,9 +439,11 @@ te:
         suspensions: "సస్పెన్షన్లు"
         warnings_received: "హెచ్చరికలు"
       messages:
-        all: "అన్నీ"
         inbox: "ఇన్ బాక్స్"
+        latest: "తాజా"
         sent: "పంపిన"
+        unread: "చదవని"
+        new: "కొత్త"
         tags: "ట్యాగులు"
       preferences_nav:
         account: "ఖాతా"

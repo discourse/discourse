@@ -1089,7 +1089,6 @@ fr:
         warnings_received: "avertissements"
         rejected_posts: "messages rejetés"
       messages:
-        all: "Tous"
         inbox: "Boîte de réception"
         sent: "Envoyés"
         archive: "Archivés"
