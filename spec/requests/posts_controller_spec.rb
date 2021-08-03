@@ -1485,6 +1485,59 @@ describe PostsController do
         expect(response.status).to eq(200)
       end
     end
+
+    describe "featured links" do
+      it "allows to create topics with featured links" do
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow TL0 users to create topics with featured links" do
+        sign_in(user_trust_level_0)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to create topics with featured links if featured links are disabled in settings" do
+        SiteSetting.topic_featured_link_enabled = false
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to create topics with featured links in the category with forbidden feature links" do
+        category = Fabricate(:category, topic_featured_link_allowed: false)
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org",
+          category: category.id
+        }
+
+        expect(response.status).to eq(422)
+      end
+    end
   end
 
   describe '#revisions' do
