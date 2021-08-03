@@ -35,7 +35,7 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(count("#quick-access-notifications li"), 5);
+    assert.equal(count("#quick-access-notifications li"), 6);
 
     // high priority, unread notification - should be first
 
