@@ -46,6 +46,7 @@ import {
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
+import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -282,6 +283,7 @@ export function acceptance(name, optionsOrCallback) {
       cleanUpComposerUploadHandler();
       cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
+      resetLastEditNotificationClick();
       app._runInitializer("instanceInitializers", (initName, initializer) => {
         if (initializer && initializer.teardown) {
           initializer.teardown(this.container);

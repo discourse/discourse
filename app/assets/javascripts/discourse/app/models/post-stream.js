@@ -28,6 +28,10 @@ export function setLastEditNotificationClick(
   };
 }
 
+export function resetLastEditNotificationClick() {
+  _lastEditNotificationClick = null;
+}
+
 export default RestModel.extend({
   _identityMap: null,
   posts: null,
@@ -1225,7 +1229,7 @@ export default RestModel.extend({
   _checkIfShouldShowRevisions() {
     if (_lastEditNotificationClick) {
       const copy = _lastEditNotificationClick;
-      _lastEditNotificationClick = null;
+      resetLastEditNotificationClick();
       const postsNumbers = this.posts.mapBy("post_number");
       if (
         copy.topicId === this.topic.id &&
