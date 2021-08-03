@@ -552,8 +552,13 @@ module Email
       @previous_replies_regex ||= /^--[- ]\n\*#{I18n.t("user_notifications.previous_discussion")}\*\n/im
     end
 
+    def reply_above_line_regex
+      @reply_above_line_regex ||= /\n#{I18n.t("user_notifications.reply_above_line")}\n/im
+    end
+
     def trim_discourse_markers(reply)
-      reply.split(previous_replies_regex)[0]
+      reply = reply.split(previous_replies_regex)[0]
+      reply.split(reply_above_line_regex)[0]
     end
 
     def parse_from_field(mail = nil)
