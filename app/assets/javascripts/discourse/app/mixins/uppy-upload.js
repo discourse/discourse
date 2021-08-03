@@ -1,6 +1,7 @@
 import Mixin from "@ember/object/mixin";
 import { ajax } from "discourse/lib/ajax";
 import {
+  bindFileInputChangeListener,
   displayErrorForUpload,
   validateUploadedFile,
 } from "discourse/lib/uploads";
@@ -58,7 +59,7 @@ export default Mixin.create({
     });
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
 
-    this._bindFileInputChangeListener();
+    this._bindFileInputChange();
 
     if (!this.id) {
       warn(
@@ -216,10 +217,10 @@ export default Mixin.create({
     );
   },
 
-  _bindFileInputChangeListener() {
-    this.fileInputEl.addEventListener("change", (event) => {
-      const files = Array.from(event.target.files);
-      files.forEach((file) => {
+  _bindFileInputChange() {
+    this.fileInputEventListener = bindFileInputChangeListener(
+      this.fileInputEl,
+      (file) => {
         try {
           this.uppyInstance.addFile({
             source: `${this.id} file input`,
@@ -232,8 +233,8 @@ export default Mixin.create({
             id: "discourse.upload.uppy-add-files-error",
           });
         }
-      });
-    });
+      }
+    );
   },
 
   _completeExternalUpload(file) {
@@ -252,5 +253,15 @@ export default Mixin.create({
       processing: false,
       uploadProgress: 0,
     });
+  },
+
+  @on("willDestroyElement")
+  _teardown() {
+    if (this.fileInputEventListener && this.fileInputEl) {
+      this.fileInputEl.removeEventListener(
+        "change",
+        this.fileInputEventListener
+      );
+    }
   },
 });

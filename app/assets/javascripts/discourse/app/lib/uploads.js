@@ -343,3 +343,14 @@ function displayErrorByResponseStatus(status, body, fileName, siteSettings) {
 
   return;
 }
+
+export function bindFileInputChangeListener(element, fileCallbackFn) {
+  function changeListener(event) {
+    const files = Array.from(event.target.files);
+    files.forEach((file) => {
+      fileCallbackFn(file);
+    });
+  }
+  element.addEventListener("change", changeListener);
+  return changeListener;
+}

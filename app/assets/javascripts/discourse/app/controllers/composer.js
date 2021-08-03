@@ -284,6 +284,13 @@ export default Controller.extend({
     return option;
   },
 
+  @discourseComputed
+  composerComponent() {
+    return this.siteSettings.enable_experimental_composer_uploader
+      ? "composer-editor-uppy"
+      : "composer-editor";
+  },
+
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
   popupMenuOptions(composeState) {
     if (composeState === "open" || composeState === "fullscreen") {
