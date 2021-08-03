@@ -252,8 +252,9 @@ describe Email::Styles do
       SiteSetting.secure_media = true
     end
 
-    let(:attachments) { { 'testimage.png' => stub(url: 'cid:email/test.png') } }
     fab!(:upload) { Fabricate(:upload, original_filename: 'testimage.png', secure: true, sha1: '123456') }
+    let(:attachments) { [stub(url: 'cid:email/test.png')] }
+    let(:attachments_index) { { upload.sha1 => 0 } }
     let(:html) { "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\" width=\"20\" height=\"30\"></a>" }
 
     def strip_and_inline
@@ -265,7 +266,7 @@ describe Email::Styles do
 
       # pass in the attachments to match uploads based on sha + original filename
       styler = Email::Styles.new(html)
-      styler.inline_secure_images(attachments)
+      styler.inline_secure_images(attachments, attachments_index)
       @frag = Nokogiri::HTML5.fragment(styler.to_s)
     end
 
@@ -302,12 +303,8 @@ describe Email::Styles do
       end
 
       let(:siteicon) { Fabricate(:upload, original_filename: "siteicon.ico") }
-      let(:attachments) do
-        {
-          'testimage.png' => stub(url: 'cid:email/test.png'),
-          'siteicon.ico' => stub(url: 'cid:email/test2.ico')
-        }
-      end
+      let(:attachments) { [stub(url: 'cid:email/test.png'), stub(url: 'cid:email/test2.ico')] }
+      let(:attachments_index) { { upload.sha1 => 0, siteicon.sha1 => 1 } }
       let(:html) do
         <<~HTML
 <aside class="onebox allowlistedgeneric">
