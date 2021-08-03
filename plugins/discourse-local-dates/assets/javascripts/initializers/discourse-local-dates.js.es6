@@ -45,6 +45,8 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
     if (siteSettings.discourse_local_dates_enabled) {
+      const currentUserTZ = moment.tz.guess();
+
       $.fn.applyLocalDates = function () {
         return this.each(function () {
           const opts = {};
@@ -67,7 +69,7 @@ export default {
 
           const localDateBuilder = new LocalDateBuilder(
             opts,
-            moment.tz.guess()
+            currentUserTZ
           ).build();
 
           const htmlPreviews = localDateBuilder.previews.map((preview) => {
@@ -96,7 +98,8 @@ export default {
             previewsNode.appendChild(htmlPreview)
           );
 
-          this.innerHTML = DATE_TEMPLATE;
+          this.innerText = "";
+          this.insertAdjacentHTML("beforeend", DATE_TEMPLATE);
           this.setAttribute("aria-label", localDateBuilder.textPreview);
           this.dataset.htmlTooltip = previewsNode.outerHTML;
           this.classList.add("cooked-date");

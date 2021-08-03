@@ -1,5 +1,7 @@
 import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
 
+const timezoneNames = moment.tz.names();
+
 function addLocalDate(buffer, matches, state) {
   let token;
 
@@ -77,7 +79,7 @@ function addLocalDate(buffer, matches, state) {
 
   if (
     config.displayedTimezone &&
-    moment.tz.names().includes(config.displayedTimezone)
+    timezoneNames.includes(config.displayedTimezone)
   ) {
     token.attrs.push([
       "data-displayed-timezone",
@@ -87,7 +89,7 @@ function addLocalDate(buffer, matches, state) {
 
   if (config.timezones) {
     const timezones = config.timezones.split("|").filter((timezone) => {
-      return moment.tz.names().includes(timezone);
+      return timezoneNames.includes(timezone);
     });
 
     token.attrs.push([
@@ -96,7 +98,7 @@ function addLocalDate(buffer, matches, state) {
     ]);
   }
 
-  if (config.timezone && moment.tz.names().includes(config.timezone)) {
+  if (config.timezone && timezoneNames.includes(config.timezone)) {
     token.attrs.push([
       "data-timezone",
       state.md.utils.escapeHtml(config.timezone),
