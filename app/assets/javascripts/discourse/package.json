@@ -66,7 +66,7 @@
   "engines": {
     "node": ">= 12.*",
     "npm": "please-use-yarn",
-    "yarn": ">= 1.22.11"
+    "yarn": ">= 1.21.1"
   },
   "ember": {
     "edition": "default"
