@@ -1,3 +1,4 @@
+import deprecated from "discourse-common/lib/deprecated";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { hidePopover, showPopover } from "discourse/lib/d-popover";
 import LocalDateBuilder from "../lib/local-date-builder";
@@ -154,6 +155,10 @@ export default {
     const siteSettings = container.lookup("site-settings:main");
     if (siteSettings.discourse_local_dates_enabled) {
       $.fn.applyLocalDates = function () {
+        deprecated(
+          "`$.applyLocalDates()` is deprecated, import and use `applyLocalDates()` instead."
+        );
+
         return applyLocalDates(this.toArray(), siteSettings);
       };
 
