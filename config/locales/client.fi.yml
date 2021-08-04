@@ -1089,7 +1089,6 @@ fi:
         warnings_received: "varoituksia"
         rejected_posts: "hylättyjä viestejä"
       messages:
-        all: "Kaikki"
         inbox: "Saapuneet"
         sent: "Lähetetyt"
         archive: "Arkisto"

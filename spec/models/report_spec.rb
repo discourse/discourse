@@ -578,6 +578,37 @@ describe Report do
         expect(row[:topic_id]).to eq(post.topic.id)
       end
     end
+
+    context "with editor filter" do
+      fab!(:posts) { Fabricate.times(3, :post) }
+
+      fab!(:editor_with_two_edits) do
+        Fabricate(:user).tap do |user|
+          2.times do |i|
+            posts[i].revise(user, { raw: "edit #{i + 1}" })
+          end
+        end
+      end
+
+      fab!(:editor_with_one_edit) do
+        Fabricate(:user).tap do |user|
+          posts.last.revise(user, { raw: "edit 3" })
+        end
+      end
+
+      let(:report_with_one_edit) do
+        Report.find('post_edits', { filters: { 'editor' => editor_with_one_edit.username } })
+      end
+
+      let(:report_with_two_edits) do
+        Report.find('post_edits', { filters: { 'editor' => editor_with_two_edits.username } })
+      end
+
+      it "returns a report for a given editor" do
+        expect(report_with_one_edit.data.count).to be(1)
+        expect(report_with_two_edits.data.count).to be(2)
+      end
+    end
   end
 
   describe 'moderator activity' do

@@ -2984,9 +2984,7 @@ en:
 
         Here's the log:
 
-        ``` text
         %{logs}
-        ```
 
     backup_failed:
       title: "Backup Failed"
@@ -2996,9 +2994,7 @@ en:
 
         Here's the log:
 
-        ``` text
         %{logs}
-        ```
 
     restore_succeeded:
       title: "Restore Succeeded"
@@ -3008,9 +3004,7 @@ en:
 
         Here's the log:
 
-        ``` text
         %{logs}
-        ```
 
     restore_failed:
       title: "Restore Failed"
@@ -3020,9 +3014,7 @@ en:
 
         Here's the log:
 
-        ``` text
         %{logs}
-        ```
 
     bulk_invite_succeeded:
       title: "Bulk Invite Succeeded"

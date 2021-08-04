@@ -45,7 +45,7 @@ acceptance("User Routes", function (needs) {
     const $links = queryAll(".item.notification a");
 
     assert.ok(
-      $links[1].href.includes(
+      $links[2].href.includes(
         "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
       )
     );

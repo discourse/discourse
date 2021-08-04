@@ -606,6 +606,12 @@ describe PostRevisor do
         expect(post.topic.word_count).to eq(5)
       end
 
+      it 'increases the post_edits stat count' do
+        expect do
+          subject.revise!(post.user, { raw: "This is a new revision" })
+        end.to change { post.user.user_stat.post_edits_count.to_i }.by(1)
+      end
+
       context 'second poster posts again quickly' do
 
         it 'is a grace period edit, because the second poster posted again quickly' do
