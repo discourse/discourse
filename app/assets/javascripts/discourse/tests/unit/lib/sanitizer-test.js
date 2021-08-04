@@ -136,6 +136,11 @@ module("Unit | Utility | sanitizer", function () {
     );
 
     cooked(`<div dir="rtl">RTL text</div>`, `<div dir="rtl">RTL text</div>`);
+
+    cooked(
+      `<div data-value="<something>" data-html-value="<something>"></div>`,
+      `<div data-value="&lt;something&gt;"></div>`
+    );
   });
 
   test("ids on headings", function (assert) {
