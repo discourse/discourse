@@ -2,15 +2,6 @@ import LocalDateBuilder from "../lib/local-date-builder";
 import showModal from "discourse/lib/show-modal";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-const DATE_TEMPLATE = `
-  <span>
-    <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-      <use xlink:href="#globe-americas"></use>
-    </svg>
-    <span class="relative-time"></span>
-  </span>
-`;
-
 function initializeDiscourseLocalDates(api) {
   api.decorateCooked(
     ($elem) => $(".discourse-local-date", $elem).applyLocalDates(),
@@ -45,6 +36,8 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
     if (siteSettings.discourse_local_dates_enabled) {
+      const currentUserTZ = moment.tz.guess();
+
       $.fn.applyLocalDates = function () {
         return this.each(function () {
           const opts = {};
@@ -67,7 +60,7 @@ export default {
 
           const localDateBuilder = new LocalDateBuilder(
             opts,
-            moment.tz.guess()
+            currentUserTZ
           ).build();
 
           const htmlPreviews = localDateBuilder.previews.map((preview) => {
@@ -96,15 +89,24 @@ export default {
             previewsNode.appendChild(htmlPreview)
           );
 
-          this.innerHTML = DATE_TEMPLATE;
+          this.innerText = "";
+          this.insertAdjacentHTML(
+            "beforeend",
+            `
+              <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="#globe-americas"></use>
+              </svg>
+              <span class="relative-time">${localDateBuilder.formated}</span>
+            `
+          );
           this.setAttribute("aria-label", localDateBuilder.textPreview);
           this.dataset.htmlTooltip = previewsNode.outerHTML;
-          this.classList.add("cooked-date");
+
+          const classes = ["cooked-date"];
           if (localDateBuilder.pastEvent) {
-            this.classList.add("past");
+            classes.push("past");
           }
-          const relativeTime = this.querySelector(".relative-time");
-          relativeTime.innerText = localDateBuilder.formated;
+          this.classList.add(...classes);
         });
       };
 
