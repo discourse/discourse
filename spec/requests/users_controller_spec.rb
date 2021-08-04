@@ -2922,6 +2922,19 @@ describe UsersController do
       expect(user.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
       expect(user.email_change_requests).to contain_exactly(request_1)
     end
+
+    it "can destroy associated email tokens" do
+      new_email = 'new.n.cool@example.com'
+      updater = EmailUpdater.new(guardian: user.guardian, user: user)
+
+      expect { updater.change_to(new_email) }
+        .to change { user.email_tokens.count }.by(1)
+
+      expect { delete "/u/#{user.username}/preferences/email.json", params: { email: new_email } }
+        .to change { user.email_tokens.count }.by(-1)
+
+      expect(user.email_tokens.first.email).to eq(user.email)
+    end
   end
 
   describe '#is_local_username' do
