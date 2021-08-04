@@ -335,6 +335,7 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
+  services: ["router"],
 
   defaultState() {
     let states = {
@@ -465,9 +466,7 @@ export default createWidget("header", {
         params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
       }
 
-      const currentPath = this.register
-        .lookup("service:router")
-        .get("_router.currentPath");
+      const currentPath = this.router.get("_router.currentPath");
 
       if (currentPath === "full-page-search") {
         scrollTop();
@@ -545,9 +544,7 @@ export default createWidget("header", {
 
     state.contextEnabled = false;
 
-    const currentPath = this.register
-      .lookup("service:router")
-      .get("_router.currentPath");
+    const currentPath = this.router.get("_router.currentPath");
     const blocklist = [/^discovery\.categories/];
     const allowlist = [/^topic\./];
     const check = function (regex) {
