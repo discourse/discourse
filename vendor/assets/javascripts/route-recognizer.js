@@ -202,7 +202,7 @@ generate[4 /* Epsilon */] = function () {
 };
 var EmptyObject = Object.freeze({});
 var EmptyArray = Object.freeze([]);
-// The `names` will be populated with the paramter name for each dynamic/star
+// The `names` will be populated with the parameter name for each dynamic/star
 // segment. `shouldDecodes` will be populated with a boolean for each dyanamic/star
 // segment, indicating whether it should be decoded during recognition.
 function parse(segments, route, types) {
