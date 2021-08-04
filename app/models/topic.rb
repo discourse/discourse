@@ -191,8 +191,9 @@ class Topic < ActiveRecord::Base
 
   validates :featured_link, allow_nil: true, url: true
   validate if: :featured_link do
-    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? ||
-      Guardian.new.can_edit_featured_link?(category_id)
+    if featured_link_changed? && !Guardian.new(user).can_edit_featured_link?(category_id)
+      errors.add(:featured_link)
+    end
   end
 
   before_validation do

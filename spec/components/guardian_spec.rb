@@ -3688,7 +3688,7 @@ describe Guardian do
 
   context 'topic featured link category restriction' do
     before { SiteSetting.topic_featured_link_enabled = true }
-    let(:guardian) { Guardian.new }
+    let(:guardian) { Guardian.new(user) }
     let(:uncategorized) { Category.find(SiteSetting.uncategorized_category_id) }
 
     context "uncategorized" do
