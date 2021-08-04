@@ -661,6 +661,34 @@ describe PostRevisor do
       expect(post.raw).to eq("    <-- whitespaces -->")
     end
 
+    it "revises and tracks changes of topic titles" do
+      new_title = "New topic title"
+      result = subject.revise!(
+        post.user,
+        { title: new_title },
+        revised_at: post.updated_at + 10.minutes
+      )
+
+      expect(result).to eq(true)
+      post.reload
+      expect(post.topic.title).to eq(new_title)
+      expect(post.revisions.first.modifications["title"][1]).to eq(new_title)
+    end
+
+    it "revises and tracks changes of topic archetypes" do
+      new_archetype = Archetype.banner
+      result = subject.revise!(
+        post.user,
+        { archetype: new_archetype },
+        revised_at: post.updated_at + 10.minutes
+      )
+
+      expect(result).to eq(true)
+      post.reload
+      expect(post.topic.archetype).to eq(new_archetype)
+      expect(post.revisions.first.modifications["archetype"][1]).to eq(new_archetype)
+    end
+
     context "#publish_changes" do
       let!(:post) { Fabricate(:post, topic: topic) }
 
