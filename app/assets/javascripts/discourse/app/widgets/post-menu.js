@@ -43,7 +43,7 @@ export function addButton(name, builder) {
 }
 
 export function resetPostMenuExtraButtons() {
-  (apiExtraButtons || []).forEach((button) => {
+  Object.keys(apiExtraButtons).forEach((button) => {
     removeButton(button);
   });
 
