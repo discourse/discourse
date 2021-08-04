@@ -252,6 +252,7 @@ export default Component.extend({
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
   isEditorFocused: false,
+  processPreview: false,
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
@@ -387,7 +388,7 @@ export default Component.extend({
   },
 
   _updatePreview() {
-    if (this._state !== "inDOM") {
+    if (this._state !== "inDOM" || !this.processPreview) {
       return;
     }
 
@@ -453,7 +454,7 @@ export default Component.extend({
     });
   },
 
-  @observes("ready", "value")
+  @observes("ready", "value", "processPreview")
   _watchForChanges() {
     if (!this.ready) {
       return;
