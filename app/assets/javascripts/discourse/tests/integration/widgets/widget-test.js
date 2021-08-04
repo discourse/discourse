@@ -37,6 +37,24 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
   });
 
+  componentTest("widget services", {
+    template: hbs`{{mount-widget widget="service-test"}}`,
+
+    beforeEach() {
+      createWidget("service-test", {
+        tagName: "div.base-url-test",
+        services: ["router"],
+        html() {
+          return this.router.rootURL;
+        },
+      });
+    },
+
+    test(assert) {
+      assert.equal(queryAll(".base-url-test").text(), "/");
+    },
+  });
+
   componentTest("hbs template - no tagName", {
     template: hbs`{{mount-widget widget="hbs-test" args=args}}`,
 
