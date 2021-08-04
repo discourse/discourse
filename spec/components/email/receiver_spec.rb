@@ -412,6 +412,11 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
     end
 
+    it "removes the 'type reply above' marker" do
+      expect { process(:reply_above) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
     it "handles multiple paragraphs" do
       expect { process(:paragraphs) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. And if\nyou can mix it up with some anise, then I'm in heaven ;)")
