@@ -1009,9 +1009,11 @@ bs_BA:
         warnings_received: "upozorenja"
         rejected_posts: "odbijeni postovi"
       messages:
-        all: "Sve"
         inbox: "Inbox"
+        latest: "Zadnje"
         sent: "Poslano"
+        unread: "Nepročitano"
+        new: "Novo"
         archive: "Arhiva"
         groups: "Moje grupe"
         move_to_inbox: "Idi u inbox"

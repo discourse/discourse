@@ -1097,7 +1097,6 @@ pt_BR:
         warnings_received: "avisos"
         rejected_posts: "postagens rejeitadas"
       messages:
-        all: "Tudo"
         inbox: "Caixa de entrada"
         sent: "Enviadas"
         archive: "Arquivo"

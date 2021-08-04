@@ -981,9 +981,11 @@ hu:
         warnings_received: "figyelmeztetések"
         rejected_posts: "elutasított bejegyzések"
       messages:
-        all: "Mind"
         inbox: "Bejövő"
+        latest: "Legutóbbi"
         sent: "Elküldött"
+        unread: "Olvasatlan"
+        new: "Új"
         archive: "Archívum"
         groups: "Saját csoportok"
         move_to_inbox: "Áthelyezés a bejövő üzenetek közé"

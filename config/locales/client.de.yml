@@ -1090,7 +1090,6 @@ de:
         warnings_received: "Warnungen"
         rejected_posts: "abgelehnte Beiträge"
       messages:
-        all: "Alle"
         inbox: "Posteingang"
         sent: "Gesendet"
         archive: "Archiv"

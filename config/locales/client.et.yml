@@ -847,9 +847,11 @@ et:
         warnings_received: "hoiatused"
         rejected_posts: "tagasilükatud postitused"
       messages:
-        all: "Kõik"
         inbox: "Postkast"
+        latest: "Viimased"
         sent: "Saadetud"
+        unread: "Lugemata"
+        new: "Uus"
         archive: "Arhiiv"
         groups: "Minu grupid"
         move_to_inbox: "Liiguta sisendkausta"

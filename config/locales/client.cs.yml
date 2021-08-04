@@ -929,9 +929,11 @@ cs:
         warnings_received: "varování"
         rejected_posts: "zamítnuté příspěvky"
       messages:
-        all: "Všechny"
         inbox: "Doručené"
+        latest: "Aktuální"
         sent: "Odeslané"
+        unread: "Nepřečtená"
+        new: "Nová"
         archive: "Archív"
         groups: "Moje skupiny"
         move_to_inbox: "Přesunout do doručených"

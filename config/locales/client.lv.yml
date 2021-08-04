@@ -679,9 +679,11 @@ lv:
         suspensions: "īslaicīgās bloķēšanas"
         warnings_received: "brīdinājumi"
       messages:
-        all: "Viss"
         inbox: "Iesūtne"
+        latest: "Jaunākie"
         sent: "Nosūtne"
+        unread: "Nelasīts"
+        new: "Jaunie"
         archive: "Arhīvs"
         groups: "Manas grupas"
         move_to_inbox: "Pārvietot uz iesūtni"

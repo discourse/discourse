@@ -1048,7 +1048,6 @@ ja:
         warnings_received: "警告"
         rejected_posts: "拒否された投稿"
       messages:
-        all: "すべて"
         inbox: "受信トレイ"
         sent: "送信済み"
         archive: "アーカイブ"
