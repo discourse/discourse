@@ -75,11 +75,10 @@ class Badge < ActiveRecord::Base
   attr_accessor :has_badge
 
   def self.trigger_hash
-    Hash[*(
-      Badge::Trigger.constants.map { |k|
-        [k.to_s.underscore, Badge::Trigger.const_get(k)]
-      }.flatten
-    )]
+    @trigger_hash ||= Badge::Trigger.constants.map do |k|
+      name = k.to_s.underscore
+      [name, Badge::Trigger.const_get(k)] unless name =~ /deprecated/
+    end.compact.to_h
   end
 
   module Trigger
@@ -88,6 +87,7 @@ class Badge < ActiveRecord::Base
     PostRevision = 2
     TrustLevelChange = 4
     UserChange = 8
+    DeprecatedPostProcessed = 16 # No longer in use
 
     def self.is_none?(trigger)
       [None].include? trigger
