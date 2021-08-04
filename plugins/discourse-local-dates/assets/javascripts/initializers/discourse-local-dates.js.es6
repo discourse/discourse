@@ -58,9 +58,10 @@ function buildOptionsFromElement(element, siteSettings) {
 }
 
 function initializeDiscourseLocalDates(api) {
+  const siteSettings = api.container.lookup("site-settings:main");
+
   api.decorateCookedElement(
     (elem) => {
-      const siteSettings = api.container.lookup("site-settings:main");
       applyLocalDates(
         elem.querySelectorAll(".discourse-local-date"),
         siteSettings
