@@ -252,7 +252,7 @@ export default Component.extend({
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
   isEditorFocused: false,
-  processPreview: false,
+  processPreview: true,
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
