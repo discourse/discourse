@@ -9,39 +9,58 @@ export default class UppyMediaOptimization extends Plugin {
 
     this.type = "preprocessor";
     this.optimizeFn = opts.optimizeFn;
+    this.runParallel = opts.runParallel || false;
   }
 
-  optimize(fileIds) {
-    let promises = fileIds.map((fileId) => {
-      let file = this.uppy.getFile(fileId);
+  _optimizeFile(fileId) {
+    let file = this.uppy.getFile(fileId);
 
-      this.uppy.emit("preprocess-progress", file, {
-        mode: "indeterminate",
-        message: "optimizing images",
-      });
-
-      return this.optimizeFn(file)
-        .then((optimizedFile) => {
-          if (!optimizedFile) {
-            warn("Nothing happened, possible error or other restriction.", {
-              id: "discourse.uppy-media-optimization",
-            });
-          } else {
-            this.uppy.setFileState(fileId, { data: optimizedFile });
-          }
-          this.uppy.emit("preprocess-complete", file);
-        })
-        .catch((err) => warn(err, { id: "discourse.uppy-media-optimization" }));
+    this.uppy.emit("preprocess-progress", file, {
+      mode: "indeterminate",
+      message: "optimizing images",
     });
 
-    return Promise.all(promises);
+    return this.optimizeFn(file)
+      .then((optimizedFile) => {
+        if (!optimizedFile) {
+          warn("Nothing happened, possible error or other restriction.", {
+            id: "discourse.uppy-media-optimization",
+          });
+        } else {
+          this.uppy.setFileState(fileId, { data: optimizedFile });
+        }
+        this.uppy.emit("preprocess-complete", file);
+      })
+      .catch((err) => warn(err, { id: "discourse.uppy-media-optimization" }));
+  }
+
+  _optimizeParallel(fileIds) {
+    return Promise.all(fileIds.map(this._optimizeFile.bind(this)));
+  }
+
+  async _optimizeSerial(fileIds) {
+    let optimizeTasks = fileIds.map((fileId) => () =>
+      this._optimizeFile.call(this, fileId)
+    );
+
+    for (const task of optimizeTasks) {
+      await task();
+    }
   }
 
   install() {
-    this.uppy.addPreProcessor(this.optimize.bind(this));
+    if (this.runParallel) {
+      this.uppy.addPreProcessor(this._optimizeParallel.bind(this));
+    } else {
+      this.uppy.addPreProcessor(this._optimizeSerial.bind(this));
+    }
   }
 
   uninstall() {
-    this.uppy.removePreProcessor(this.optimize.bind(this));
+    if (this.runParallel) {
+      this.uppy.removePreProcessor(this._optimizeParallel.bind(this));
+    } else {
+      this.uppy.removePreProcessor(this._optimizeSerial.bind(this));
+    }
   }
 }

@@ -10,7 +10,7 @@ export default class UppyChecksum extends Plugin {
     this.type = "preprocessor";
   }
 
-  canUseSubtleCrypto() {
+  _canUseSubtleCrypto() {
     if (!window.isSecureContext) {
       this.warnPrefixed(
         "Cannot generate cryptographic digests in an insecure context (not HTTPS)."
@@ -35,8 +35,8 @@ export default class UppyChecksum extends Plugin {
     return true;
   }
 
-  generateChecksum(fileIds) {
-    if (!this.canUseSubtleCrypto()) {
+  _generateChecksum(fileIds) {
+    if (!this._canUseSubtleCrypto()) {
       return Promise.resolve();
     }
 
@@ -85,10 +85,10 @@ export default class UppyChecksum extends Plugin {
   }
 
   install() {
-    this.uppy.addPreProcessor(this.generateChecksum.bind(this));
+    this.uppy.addPreProcessor(this._generateChecksum.bind(this));
   }
 
   uninstall() {
-    this.uppy.removePreProcessor(this.generateChecksum.bind(this));
+    this.uppy.removePreProcessor(this._generateChecksum.bind(this));
   }
 }

@@ -204,6 +204,7 @@ export default Mixin.create({
         case "optimizeJPEG":
           this.uppyInstance.use(UppyMediaOptimization, {
             optimizeFn: this.uploadProcessorActions[action],
+            runParallel: !this.site.isMobileDevice,
           });
           break;
       }
