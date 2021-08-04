@@ -198,9 +198,6 @@
             "trust_level_change": {
               "type": "integer"
             },
-            "post_processed": {
-              "type": "integer"
-            },
             "post_action": {
               "type": "integer"
             }
@@ -210,7 +207,6 @@
             "none",
             "post_revision",
             "trust_level_change",
-            "post_processed",
             "post_action"
           ]
         },
