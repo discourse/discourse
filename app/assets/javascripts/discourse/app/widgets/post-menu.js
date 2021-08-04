@@ -34,11 +34,16 @@ function animateHeart($elem, start, end, complete) {
     );
 }
 
-const _builders = {};
-const _extraButtons = {};
+let _builders = {};
+let _extraButtons = {};
 
 export function addButton(name, builder) {
   _extraButtons[name] = builder;
+}
+
+export function resetPostMenuExtraButtons() {
+  _extraButtons = {};
+  _builders = {};
 }
 
 export function removeButton(name) {
