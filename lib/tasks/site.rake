@@ -47,7 +47,7 @@ class ZippedSiteStructure
     puts "  - Exporting upload #{upload_or_id_or_url} to #{zip_path}"
     @zip.add(zip_path, local_path)
 
-    { filename: upload.original_filename, path: file_zip_path }
+    { filename: upload.original_filename, path: zip_path }
   end
 
   def get_upload(upload, opts = {})
