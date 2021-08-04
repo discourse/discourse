@@ -140,11 +140,7 @@ function closeBuffer(buffer, state, text) {
 }
 
 export function setup(helper) {
-  helper.allowList([
-    "span.discourse-local-date",
-    "span[data-*]",
-    "span[aria-label]",
-  ]);
+  helper.allowList(["span.discourse-local-date", "span[aria-label]"]);
 
   helper.registerOptions((opts, siteSettings) => {
     opts.datesEmailFormat = siteSettings.discourse_local_dates_email_format;
