@@ -62,7 +62,11 @@
     "lodash": "4.17.21"
   },
   "scripts": {
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\"",
     "postinstall": "yarn --cwd app/assets/javascripts/discourse"
+  },
+  "engines": {
+    "node": ">= 12.*",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.22.11"
   }
 }

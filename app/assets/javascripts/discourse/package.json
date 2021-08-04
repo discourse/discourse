@@ -64,7 +64,9 @@
     "virtual-dom": "^2.1.1"
   },
   "engines": {
-    "node": "8.* || >= 10.*"
+    "node": ">= 12.*",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.22.11"
   },
   "ember": {
     "edition": "default"
