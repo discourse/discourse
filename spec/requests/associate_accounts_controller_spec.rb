@@ -96,11 +96,19 @@ RSpec.describe Users::AssociateAccountsController do
     end
 
     it "returns the correct response for non-existent tokens" do
+      sign_in(user)
+
       get "/associate/12345678901234567890123456789012.json"
       expect(response.status).to eq(404)
 
       get "/associate/shorttoken.json"
       expect(response.status).to eq(404)
+    end
+
+    it "requires login" do
+      # XHR should 403
+      get "/associate/#{SecureRandom.hex}.json"
+      expect(response.status).to eq(403)
     end
   end
 end
