@@ -59,12 +59,16 @@ export default Mixin.create({
     if (this.pasteEventListener && this.element) {
       this.element.removeEventListener("paste", this.pasteEventListener);
     }
+
+    this.appEvents.off("composer:add-files", this._addFiles.bind(this));
   },
 
   _bindUploadTarget() {
     this.placeholders = {};
     this.fileInputEl = document.getElementById("file-uploader");
     const isPrivateMessage = this.get("composer.privateMessage");
+
+    this.appEvents.on("composer:add-files", this._addFiles.bind(this));
 
     this._unbindUploadTarget();
     this._bindFileInputChangeListener();
@@ -96,6 +100,9 @@ export default Mixin.create({
             this.setProperties({ uploadProgress: 0, isUploading });
           });
 
+          if (!isUploading) {
+            this.appEvents.trigger("composer:uploads-aborted");
+          }
           return isUploading;
         },
 
@@ -110,6 +117,7 @@ export default Mixin.create({
                 count: maxFiles,
               })
             );
+            this.appEvents.trigger("composer:uploads-aborted");
             this._reset();
             return false;
           }
@@ -137,12 +145,14 @@ export default Mixin.create({
       const files = data.fileIDs.map((fileId) =>
         this.uppyInstance.getFile(fileId)
       );
+
       files.forEach((file) => {
         const placeholder = this._uploadPlaceholder(file);
         this.placeholders[file.id] = {
           uploadPlaceholder: placeholder,
         };
         this.appEvents.trigger("composer:insert-text", placeholder);
+        this.appEvents.trigger("composer:upload-started", file.name);
       });
     });
 
@@ -162,6 +172,7 @@ export default Mixin.create({
       );
 
       this._resetUpload(file, { removePlaceholder: false });
+      this.appEvents.trigger("composer:upload-success", file.name, upload);
     });
 
     this.uppyInstance.on("upload-error", (file) => {
@@ -169,12 +180,14 @@ export default Mixin.create({
         this._resetUpload(file, { removePlaceholder: true });
 
         if (!this.userCancelled) {
+          this.appEvents.trigger("composer:upload-error", file);
           displayErrorForUpload(file, this.siteSettings, file.name);
         }
       });
     });
 
     this.uppyInstance.on("complete", () => {
+      this.appEvents.trigger("composer:all-uploads-complete");
       this._reset();
     });
 
@@ -327,7 +340,7 @@ export default Mixin.create({
   _bindFileInputChangeListener() {
     this.fileInputEventListener = bindFileInputChangeListener(
       this.fileInputEl,
-      this._addFile.bind(this)
+      this._addFiles.bind(this)
     );
   },
 
@@ -350,20 +363,25 @@ export default Mixin.create({
         }
 
         if (event && event.clipboardData && event.clipboardData.files) {
-          [...event.clipboardData.files].forEach(this._addFile.bind(this));
+          this._addFiles([...event.clipboardData.files]);
         }
       }
     );
   },
 
-  _addFile(file) {
+  _addFiles(files) {
+    files = Array.isArray(files) ? files : [files];
     try {
-      this.uppyInstance.addFile({
-        source: `${this.id} file input`,
-        name: file.name,
-        type: file.type,
-        data: file,
-      });
+      this.uppyInstance.addFiles(
+        files.map((file) => {
+          return {
+            source: "composer",
+            name: file.name,
+            type: file.type,
+            data: file,
+          };
+        })
+      );
     } catch (err) {
       warn(`error adding files to uppy: ${err}`, {
         id: "discourse.upload.uppy-add-files-error",
