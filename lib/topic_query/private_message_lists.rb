@@ -104,6 +104,7 @@ class TopicQuery
 
     def list_private_messages_group_new(user)
       list = filter_private_message_new(user, :group)
+      list = remove_dismissed(list, user)
       publish_read_state = !!group.publish_read_state
       list = append_read_state(list, group) if publish_read_state
       create_list(:private_messages, { publish_read_state: publish_read_state }, list)

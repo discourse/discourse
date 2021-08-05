@@ -203,6 +203,16 @@ describe TopicQuery::PrivateMessageLists do
 
       expect(topics).to contain_exactly(group_message)
     end
+
+    it 'returns a list of new private messages for a group accounting for dismissed topics' do
+      Fabricate(:dismissed_topic_user, topic: group_message, user: user_2)
+
+      topics = TopicQuery.new(nil, group_name: group.name)
+        .list_private_messages_group_new(user_2)
+        .topics
+
+      expect(topics).to eq([])
+    end
   end
 
   describe '#list_private_messages_group_unread' do
