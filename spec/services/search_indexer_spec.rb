@@ -145,7 +145,7 @@ describe SearchIndexer do
     end
 
     it 'should work with invalid HTML' do
-      post.update!(cooked: "<FD>" * Nokogumbo::DEFAULT_MAX_TREE_DEPTH)
+      post.update!(cooked: "<FD>" * Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH)
 
       SearchIndexer.update_posts_index(
         post_id: post.id,
