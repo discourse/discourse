@@ -286,6 +286,7 @@ en:
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
+  authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."

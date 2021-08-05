@@ -1359,6 +1359,7 @@ en:
         not_connected: "(not connected)"
         confirm_modal_title: "Connect %{provider} Account"
         confirm_description:
+          disconnect: "Your existing %{provider} account '%{account_description}' will be disconnected."
           account_specific: "Your %{provider} account '%{account_description}' will be used for authentication."
           generic: "Your %{provider} account will be used for authentication."
 
