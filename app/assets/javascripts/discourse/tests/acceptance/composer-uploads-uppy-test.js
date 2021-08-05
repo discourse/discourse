@@ -1,4 +1,5 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
@@ -65,7 +66,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    const image = createImage("avatar.png");
+    const image = createFile("avatar.png");
     appEvents.trigger("composer:add-files", image);
   });
 
@@ -73,12 +74,11 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     const appEvents = this.container.lookup("service:app-events");
-    const image = createImage("avatar.png");
-    const image1 = createImage("avatar1.png");
-    const image2 = createImage("avatar2.png");
+    const image = createFile("avatar.png");
+    const image1 = createFile("avatar1.png");
+    const image2 = createFile("avatar2.png");
     const done = assert.async();
 
-    appEvents.trigger("composer:add-files", [image, image1, image2]);
     appEvents.on("composer:uploads-aborted", () => {
       assert.equal(
         queryAll(".bootbox .modal-body").html(),
@@ -92,10 +92,39 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
 
       done();
     });
+
+    appEvents.trigger("composer:add-files", [image, image1, image2]);
   });
 
-  function createImage(name) {
-    const file = new Blob([""], { type: "image/png" });
+  test("should error if an unauthorized extension file is added", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const appEvents = this.container.lookup("service:app-events");
+    const jsonFile = createFile("something.json", "application/json");
+    const done = assert.async();
+
+    appEvents.on("composer:uploads-aborted", () => {
+      assert.equal(
+        queryAll(".bootbox .modal-body").html(),
+        I18n.t("post.errors.upload_not_authorized", {
+          authorized_extensions: authorizedExtensions(
+            false,
+            this.siteSettings
+          ).join(", "),
+        }),
+        "it should warn about unauthorized extensions"
+      );
+
+      click(".modal-footer .btn-primary");
+
+      done();
+    });
+
+    appEvents.trigger("composer:add-files", [jsonFile]);
+  });
+
+  function createFile(name, type = "image/png") {
+    const file = new Blob([""], { type });
     file.name = name;
     return file;
   }
