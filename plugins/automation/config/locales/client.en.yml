@@ -85,6 +85,18 @@ en:
           fields:
             joined_group:
               label: Tracked group
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Restrict to group
+            trust_level_transition:
+              label: Trust level transition
+          trust_levels:
+            ALL: "All trust levels"
+            TL01: "TL0 to TL1"
+            TL12: "TL1 to TL2"
+            TL23: "TL2 to TL3"
+            TL34: "TL3 to TL4"
         point_in_time:
           fields:
             execute_at:

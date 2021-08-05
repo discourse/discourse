@@ -15,6 +15,10 @@ en:
       user_added_to_group:
         title: User added to group
         description: When a user is added to the specified group the automation will be triggered
+      user_promoted:
+        title: User promoted
+        description: When a user is promoted from one trust level to another
+        transition_placeholder: "from %{from_level_name} to %{to_level_name}"
       stalled_wiki:
         title: Stalled wiki
         description: When a wiki has not been edited for a period longer than the one defined, the automation will be triggered

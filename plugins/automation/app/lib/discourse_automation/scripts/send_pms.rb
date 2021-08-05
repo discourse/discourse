@@ -12,7 +12,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SEND_PMS) d
   field :receiver, component: :user, triggerable: :recurring
   field :sendable_pms, component: :pms, accepts_placeholders: true
 
-  triggerables %i[user_added_to_group stalled_wiki recurring]
+  triggerables %i[user_added_to_group stalled_wiki recurring user_promoted]
 
   script do |context, fields, automation|
     sender_username = fields.dig('sender', 'value') || Discourse.system_user.username

@@ -32,6 +32,41 @@ def handle_post_created_edited(post, action)
     end
 end
 
+def handle_user_promoted(user_id, new_trust_level, old_trust_level)
+  name = DiscourseAutomation::Triggerable::USER_PROMOTED
+  user = User.find_by(id: user_id)
+  return if user.blank?
+
+  # don't want to do anything if the user is demoted. this should probably
+  # be a separate event in core
+  return if new_trust_level < old_trust_level
+
+  DiscourseAutomation::Automation.where(trigger: name).find_each do |automation|
+    trust_level_code_all = DiscourseAutomation::Triggerable::USER_PROMOTED_TRUST_LEVEL_CHOICES.first[:id]
+
+    restricted_group_id = automation.trigger_field('restricted_group')['value']
+    trust_level_transition = automation.trigger_field('trust_level_transition')['value']
+    trust_level_transition = trust_level_transition || trust_level_code_all
+
+    next if restricted_group_id.present? && !GroupUser.exists?(user_id: user_id, group_id: restricted_group_id)
+
+    transition_code = "TL#{old_trust_level}#{new_trust_level}"
+    if trust_level_transition == trust_level_code_all || trust_level_transition == transition_code
+      automation.trigger!(
+        'kind' => name,
+        'users' => [user],
+        'placeholders' => {
+          'trust_level_transition' => I18n.t(
+            "discourse_automation.triggerables.user_promoted.transition_placeholder",
+            from_level_name: TrustLevel.name(old_trust_level),
+            to_level_name: TrustLevel.name(new_trust_level)
+          )
+        }
+      )
+    end
+  end
+end
+
 require File.expand_path('../app/lib/discourse_automation/triggerable', __FILE__)
 require File.expand_path('../app/lib/discourse_automation/scriptable', __FILE__)
 require File.expand_path('../app/core_ext/plugin_instance', __FILE__)
@@ -54,6 +89,7 @@ after_initialize do
     '../app/lib/discourse_automation/triggers/recurring',
     '../app/lib/discourse_automation/triggers/stalled_wiki',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
+    '../app/lib/discourse_automation/triggers/user_promoted',
     '../app/lib/discourse_automation/triggers/point_in_time',
     '../app/lib/discourse_automation/triggers/post_created_edited',
     '../app/lib/discourse_automation/triggers/topic',
@@ -115,6 +151,11 @@ after_initialize do
         )
       end
     end
+  end
+
+  on(:user_promoted) do |payload|
+    user_id, new_trust_level, old_trust_level = payload.values_at(:user_id, :new_trust_level, :old_trust_level)
+    handle_user_promoted(user_id, new_trust_level, old_trust_level)
   end
 
   on(:post_created) do |post|
