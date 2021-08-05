@@ -171,9 +171,10 @@ describe PostRevisor do
         topic.update!(slow_mode_seconds: 1000)
       end
 
-      it 'regular edit' do
-        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
+      it 'regular edits are not allowed by default' do
+        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 1000.minutes)
 
+        post.reload
         expect(post.errors.present?).to eq(true)
         expect(post.errors.messages[:base].first).to be I18n.t("cannot_edit_on_slow_mode")
       end
@@ -184,17 +185,15 @@ describe PostRevisor do
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
 
         post.reload
-
         expect(post.errors).to be_empty
       end
 
-      it 'edits are generally allowed' do
+      it 'regular edits are allowed if it was turned on in settings' do
         SiteSetting.slow_mode_prevents_editing = false
 
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
 
         post.reload
-
         expect(post.errors).to be_empty
       end
 
@@ -203,7 +202,6 @@ describe PostRevisor do
         subject.revise!(admin, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
 
         post.reload
-
         expect(post.errors).to be_empty
       end
     end
