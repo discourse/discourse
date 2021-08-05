@@ -1295,7 +1295,6 @@ ar:
         warnings_received: "تحذير"
         rejected_posts: "منشور مرفوض"
       messages:
-        all: "الكل"
         inbox: "صندوق الوارد"
         sent: "المُرسَلة"
         archive: "الأرشيف"

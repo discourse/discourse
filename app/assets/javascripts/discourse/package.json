@@ -54,7 +54,7 @@
     "message-bus-client": "^3.3.0",
     "mousetrap": "^1.6.5",
     "mousetrap-global-bind": "^1.1.0",
-    "pretender": "^3.4.3",
+    "pretender": "^3.4.7",
     "pretty-text": "^1.0.0",
     "qunit": "^2.14.0",
     "qunit-dom": "^1.6.0",
@@ -64,7 +64,9 @@
     "virtual-dom": "^2.1.1"
   },
   "engines": {
-    "node": "8.* || >= 10.*"
+    "node": ">= 12.*",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.21.1"
   },
   "ember": {
     "edition": "default"

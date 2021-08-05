@@ -24,6 +24,7 @@ import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
 import { initSearchData } from "discourse/widgets/search-menu";
+import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
 import { mapRoutes } from "discourse/mapping-router";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -275,6 +276,7 @@ export function acceptance(name, optionsOrCallback) {
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
       resetUserSearchCache();
+      resetPostMenuExtraButtons();
       clearNavItems();
       setTopicList(null);
       _clearSnapshots();

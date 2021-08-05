@@ -1048,7 +1048,6 @@ zh_CN:
         warnings_received: "警告"
         rejected_posts: "被拒绝的帖子"
       messages:
-        all: "所有"
         inbox: "收件箱"
         sent: "已发送"
         archive: "归档"

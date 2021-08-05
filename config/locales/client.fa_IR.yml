@@ -986,9 +986,11 @@ fa_IR:
         warnings_received: "هشدارها"
         rejected_posts: "پست های رد شده"
       messages:
-        all: "همه"
         inbox: "صندوق دریافت"
+        latest: "آخرین"
         sent: "ارسال شد"
+        unread: "خوانده‌ نشده‌"
+        new: "جدید"
         archive: "بایگانی"
         groups: "گروه‌های من"
         move_to_inbox: "انتقال به صندوق دریافت"

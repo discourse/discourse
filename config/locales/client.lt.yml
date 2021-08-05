@@ -816,9 +816,11 @@ lt:
         suspensions: "nušalinimai"
         warnings_received: "perspejimai"
       messages:
-        all: "Visos"
         inbox: "Pranešimų dežutė"
+        latest: "Paskutinės"
         sent: "Išsiųsti"
+        unread: "Neperskaitytos"
+        new: "Naujos"
         archive: "Archyvuoti"
         groups: "Grupės"
         move_to_inbox: "Perkelti į Pranešimų dėžutę"

@@ -167,6 +167,7 @@ describe PostCreator do
             "/topic/#{created_post.topic_id}",
             "/topic/#{created_post.topic_id}",
             "/user",
+            "/user",
             "/user"
           ].sort
         )
@@ -196,7 +197,10 @@ describe PostCreator do
         user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)
 
-        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(6)
+        draft_count = messages.find { |m| m.channel == "/user" }
+        expect(draft_count).not_to eq(nil)
+
+        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(7)
       end
 
       it 'extracts links from the post' do

@@ -74,6 +74,7 @@ export default Component.extend(ComposerUpload, {
 
   shouldBuildScrollMap: true,
   scrollMap: null,
+  processPreview: true,
 
   uploadMarkdownResolvers,
   uploadProcessorActions,

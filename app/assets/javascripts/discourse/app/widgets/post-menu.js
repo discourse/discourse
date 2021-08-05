@@ -36,9 +36,18 @@ function animateHeart($elem, start, end, complete) {
 
 const _builders = {};
 const _extraButtons = {};
+export let apiExtraButtons = {};
 
 export function addButton(name, builder) {
   _extraButtons[name] = builder;
+}
+
+export function resetPostMenuExtraButtons() {
+  Object.keys(apiExtraButtons).forEach((button) => {
+    removeButton(button);
+  });
+
+  apiExtraButtons = {};
 }
 
 export function removeButton(name) {

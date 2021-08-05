@@ -1097,7 +1097,6 @@ it:
         warnings_received: "avvisi"
         rejected_posts: "messaggi rifiutati"
       messages:
-        all: "Tutti"
         inbox: "In arrivo"
         sent: "Inviati"
         archive: "Archiviati"

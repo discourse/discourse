@@ -745,6 +745,7 @@ ko:
         owner: "소유자"
         primary: "기본"
         forbidden: "회원을 볼 수 없습니다."
+        no_filter_matches: "검색어와 일치하는 회원이 없습니다."
       topics: "글"
       posts: "게시글"
       mentions: "멘션"
@@ -1050,9 +1051,11 @@ ko:
         warnings_received: "경고"
         rejected_posts: "거부된 게시물"
       messages:
-        all: "모두"
         inbox: "받은 편지함"
+        latest: "최신"
         sent: "보낸 편지함"
+        unread: "읽지 않음"
+        new: "새글"
         archive: "저장함"
         groups: "내 그룹"
         move_to_inbox: "받은 편지함으로 이동"
@@ -2842,6 +2845,7 @@ ko:
       position_disabled: "카테고리는 활동량에 따라서 표시됩니다. 목록 내의 카테고리 순서를 지정하하려면"
       position_disabled_click: '"카테고리 위치 고정" 설정을 활성화 시키십시요.'
       minimum_required_tags: "글 작성에 필요한 최소 태그 수:"
+      default_slow_mode: '이 카테고리의 새 글에 대해 “슬로우 모드”를 활성화합니다.'
       parent: "상위 카테고리"
       num_auto_bump_daily: "열린 글 중 매일 자동으로 끌어올릴 수:"
       navigate_to_first_post_after_read: "글을 읽은 후 첫 번째 게시물로 이동"
@@ -4375,6 +4379,7 @@ ko:
         delete_all_posts: "모든 글을 삭제합니다"
         delete_posts_progress: "글 삭제중..."
         delete_posts_failed: "글을 삭제하는 중 문제가 발생했습니다."
+        post_edits: "게시물 수정"
         penalty_post_actions: "관련 게시물에 대해 무엇을하고 싶습니까?"
         penalty_post_delete: "글 삭제"
         penalty_post_delete_replies: "게시물 + 답글 삭제"
@@ -4431,6 +4436,7 @@ ko:
         approve_success: "인증 이메일이 발송되었습니다."
         approve_bulk_success: "성공! 모든 선택된 사용자는 인증되었고 통보되었습니다."
         time_read: "읽은 시간"
+        post_edits_count: "게시물 수정"
         anonymize: "익명 사용자"
         anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
         anonymize_yes: "Yes, anonymize this account"
@@ -4748,7 +4754,7 @@ ko:
           what_are_badges_title: "배지란 무엇입니까?"
           badge_query_examples_title: "배지 쿼리 예제"
         mass_award:
-          title: 벌크 어워드
+          title: 일괄 처리
           description: 한 번에 많은 사용자에게 동일한 배지를 수여하십시오.
           no_badge_selected: 시작하려면 배지를 선택하십시오.
           perform: "사용자에게 보너스 배지"

@@ -997,9 +997,11 @@ ro:
         warnings_received: "Avertizări"
         rejected_posts: "postări respinse"
       messages:
-        all: "Toate"
         inbox: "Primite"
+        latest: "Cele mai recente"
         sent: "Trimise"
+        unread: "Necitite"
+        new: "Noi"
         archive: "Arhivă"
         groups: "Grupurile mele"
         move_to_inbox: "Mută în „Primite”"
