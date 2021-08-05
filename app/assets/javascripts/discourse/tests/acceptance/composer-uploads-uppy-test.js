@@ -87,6 +87,9 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         }),
         "it should warn about too many files added"
       );
+
+      click(".modal-footer .btn-primary");
+
       done();
     });
   });
