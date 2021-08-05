@@ -172,7 +172,11 @@ describe PostRevisor do
       end
 
       it 'regular edits are not allowed by default' do
-        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 1000.minutes)
+        subject.revise!(
+          post.user,
+          { raw: 'updated body' },
+          revised_at: post.updated_at + 1000.minutes
+        )
 
         post.reload
         expect(post.errors.present?).to eq(true)
@@ -182,7 +186,11 @@ describe PostRevisor do
       it 'grace period editing is allowed' do
         SiteSetting.editing_grace_period = 1.minute
 
-        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
+        subject.revise!(
+          post.user,
+          { raw: 'updated body' },
+          revised_at: post.updated_at + 10.seconds
+        )
 
         post.reload
         expect(post.errors).to be_empty
@@ -191,7 +199,11 @@ describe PostRevisor do
       it 'regular edits are allowed if it was turned on in settings' do
         SiteSetting.slow_mode_prevents_editing = false
 
-        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
+        subject.revise!(
+          post.user,
+          { raw: 'updated body' },
+          revised_at: post.updated_at + 10.minutes
+        )
 
         post.reload
         expect(post.errors).to be_empty
@@ -199,7 +211,11 @@ describe PostRevisor do
 
       it 'staff is allowed to edit posts even if the topic is in slow mode' do
         admin = Fabricate(:admin)
-        subject.revise!(admin, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
+        subject.revise!(
+          admin,
+          { raw: 'updated body' },
+          revised_at: post.updated_at + 10.minutes
+        )
 
         post.reload
         expect(post.errors).to be_empty
