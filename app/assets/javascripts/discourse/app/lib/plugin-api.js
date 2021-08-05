@@ -3,7 +3,11 @@ import ComposerEditor, {
   addComposerUploadMarkdownResolver,
   addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
-import { addButton, removeButton } from "discourse/widgets/post-menu";
+import {
+  addButton,
+  apiExtraButtons,
+  removeButton,
+} from "discourse/widgets/post-menu";
 import {
   addExtraIconRenderer,
   replaceCategoryLinkRenderer,
@@ -428,6 +432,7 @@ class PluginApi {
    * ```
    **/
   addPostMenuButton(name, callback) {
+    apiExtraButtons[name] = callback;
     addButton(name, callback);
   }
 
