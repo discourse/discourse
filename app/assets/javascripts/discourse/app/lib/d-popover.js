@@ -16,8 +16,7 @@ const D_ARROW_HEIGHT = 10;
 
 const D_HORIZONTAL_MARGIN = 5;
 
-export const POPOVER_SELECTORS =
-  "[data-html-popover], [data-html-tooltip], [data-popover], [data-tooltip]";
+export const POPOVER_SELECTORS = "[data-popover], [data-tooltip]";
 
 export function hidePopover() {
   getPopover().fadeOut().remove();
@@ -55,11 +54,6 @@ export function showPopover(event, options = {}) {
 }
 
 function setPopoverHtmlContent($enteredElement, content) {
-  content =
-    content ||
-    $enteredElement.attr("data-html-popover") ||
-    $enteredElement.attr("data-html-tooltip");
-
   replaceHtmlContent($enteredElement, content);
 }
 
