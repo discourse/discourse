@@ -81,6 +81,8 @@ describe PostsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:user_trust_level_0) { Fabricate(:trust_level_0) }
+  fab!(:user_trust_level_1) { Fabricate(:trust_level_1) }
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post_by_user) { Fabricate(:post, user: user) }
@@ -1457,6 +1459,85 @@ describe PostsController do
       end
     end
 
+    describe "urls in the title" do
+      let!(:title_with_url) { "A title with the URL https://google.com" }
+
+      it "doesn't allow TL0 users to put urls into the title" do
+        sign_in(user_trust_level_0)
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: title_with_url
+        }
+
+        expect(response.status).to eq(422)
+        expect(response.body).to include(I18n.t('urls_in_title_require_trust_level'))
+      end
+
+      it "allows TL1 users to put urls into the title" do
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: title_with_url
+        }
+
+        expect(response.status).to eq(200)
+      end
+    end
+
+    describe "featured links" do
+      it "allows to create topics with featured links" do
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow TL0 users to create topics with featured links" do
+        sign_in(user_trust_level_0)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to create topics with featured links if featured links are disabled in settings" do
+        SiteSetting.topic_featured_link_enabled = false
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to create topics with featured links in the category with forbidden feature links" do
+        category = Fabricate(:category, topic_featured_link_allowed: false)
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org",
+          category: category.id
+        }
+
+        expect(response.status).to eq(422)
+      end
+    end
   end
 
   describe '#revisions' do

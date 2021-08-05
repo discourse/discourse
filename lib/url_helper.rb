@@ -65,6 +65,11 @@ class UrlHelper
     Addressable::URI.normalized_encode(uri)
   end
 
+  def self.contains_url?(string)
+    uri_regexp = Discourse::Utils::URI_REGEXP
+    uri_regexp.match?(string)
+  end
+
   def self.rails_route_from_url(url)
     path = URI.parse(encode(url)).path
     Rails.application.routes.recognize_path(path)

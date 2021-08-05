@@ -358,6 +358,7 @@ en:
     other: "Sorry, new users can only put %{count} attachments in a post."
   no_links_allowed: "Sorry, new users can't put links in posts."
   links_require_trust: "Sorry, you can't include links in your posts."
+  urls_in_title_require_trust_level: "Sorry, new users can't include links in topic titles."
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
@@ -579,7 +580,6 @@ en:
               unable_to_tag: "There was an error tagging the topic."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
-              invalid_category: "can't be edited in this category."
         user:
           attributes:
             password:

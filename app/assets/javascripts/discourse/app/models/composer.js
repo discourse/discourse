@@ -280,8 +280,22 @@ const Composer = RestModel.extend({
     "notPrivateMessage"
   ),
 
-  @discourseComputed("canEditTitle", "creatingPrivateMessage", "categoryId")
-  canEditTopicFeaturedLink(canEditTitle, creatingPrivateMessage, categoryId) {
+  @discourseComputed(
+    "canEditTitle",
+    "creatingPrivateMessage",
+    "categoryId",
+    "user.trust_level"
+  )
+  canEditTopicFeaturedLink(
+    canEditTitle,
+    creatingPrivateMessage,
+    categoryId,
+    userTrustLevel
+  ) {
+    if (userTrustLevel === 0) {
+      return false;
+    }
+
     if (
       !this.siteSettings.topic_featured_link_enabled ||
       !canEditTitle ||

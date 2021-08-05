@@ -172,6 +172,10 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @discourseComputed("model.isPrivateMessage", "model.category.id")
   canEditTopicFeaturedLink(isPrivateMessage, categoryId) {
+    if (this.currentUser && this.currentUser.trust_level === 0) {
+      return false;
+    }
+
     if (!this.siteSettings.topic_featured_link_enabled || isPrivateMessage) {
       return false;
     }

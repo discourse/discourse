@@ -9,6 +9,8 @@ RSpec.describe TopicsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:trust_level_0) { Fabricate(:trust_level_0) }
+  fab!(:trust_level_1) { Fabricate(:trust_level_1) }
   fab!(:trust_level_4) { Fabricate(:trust_level_4) }
 
   fab!(:category) { Fabricate(:category) }
@@ -1648,6 +1650,83 @@ RSpec.describe TopicsController do
             expect(topic.reload.category).to eq(category)
           end
         end
+      end
+    end
+
+    describe "urls in the title" do
+      let!(:title_with_url) { "A title with the URL https://google.com" }
+
+      it "doesn't allow TL0 users to put urls into the title" do
+        sign_in(trust_level_0)
+        topic = Fabricate(:topic, user: trust_level_0)
+        Fabricate(:post, topic: topic)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: { title: title_with_url }
+
+        expect(response.status).to eq(422)
+        expect(response.body).to include(I18n.t('urls_in_title_require_trust_level'))
+      end
+
+      it "allows TL1 users to put urls into the title" do
+        sign_in(trust_level_1)
+        topic = Fabricate(:topic, user: trust_level_1)
+        Fabricate(:post, topic: topic)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: { title: title_with_url }
+
+        expect(response.status).to eq(200)
+      end
+    end
+
+    describe "featured links" do
+      def fabricate_topic(user, category = nil)
+        topic = Fabricate(:topic, user: user, category: category)
+        Fabricate(:post, topic: topic)
+        topic
+      end
+
+      it "allows to update topic featured link" do
+        sign_in(trust_level_1)
+
+        topic = fabricate_topic(trust_level_1)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow TL0 users to update topic featured link" do
+        sign_in(trust_level_0)
+
+        topic = fabricate_topic(trust_level_0)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to update topic featured link if featured links are disabled in settings" do
+        sign_in(trust_level_1)
+
+        SiteSetting.topic_featured_link_enabled = false
+        topic = fabricate_topic(trust_level_1)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to update topic featured link in the category with forbidden feature links" do
+        sign_in(trust_level_1)
+
+        category = Fabricate(:category, topic_featured_link_allowed: false)
+        topic = fabricate_topic(trust_level_1, category)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
       end
     end
   end
