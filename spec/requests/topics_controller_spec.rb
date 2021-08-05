@@ -2863,6 +2863,14 @@ RSpec.describe TopicsController do
           ).topic
         end
 
+        fab!(:private_message_2) do
+          create_post(
+            user: user,
+            target_usernames: [user_2.username],
+            archetype: Archetype.private_message
+          ).topic
+        end
+
         fab!(:group_pm_topic_user) do
           TopicUser.find_by(user: user_2, topic: group_message).tap do |tu|
             tu.update!(last_read_post_number: 1)
@@ -2875,9 +2883,16 @@ RSpec.describe TopicsController do
           end
         end
 
+        fab!(:regular_pm_topic_user_2) do
+          TopicUser.find_by(user: user_2, topic: private_message_2).tap do |tu|
+            tu.update!(last_read_post_number: 1)
+          end
+        end
+
         before do
           create_post(user: user, topic: group_message)
           create_post(user: user, topic: private_message)
+          create_post(user: user, topic: private_message_2)
           sign_in(user_2)
         end
 
@@ -2895,17 +2910,20 @@ RSpec.describe TopicsController do
         end
 
         it "can dismiss all user unread private message topics" do
-          expect do
-            put "/topics/bulk.json", params: {
-              filter: "unread",
-              operation: { type: 'dismiss_posts' },
-              private_message_inbox: "user"
-            }
+          stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+            expect do
+              put "/topics/bulk.json", params: {
+                filter: "unread",
+                operation: { type: 'dismiss_posts' },
+                private_message_inbox: "user"
+              }
 
-            expect(response.status).to eq(200)
-          end.to change { regular_pm_topic_user.reload.last_read_post_number }.from(1).to(2)
+              expect(response.status).to eq(200)
+            end.to change { regular_pm_topic_user.reload.last_read_post_number }.from(1).to(2)
+              .and change { regular_pm_topic_user_2.reload.last_read_post_number }.from(1).to(2)
 
-          expect(group_pm_topic_user.reload.last_read_post_number).to eq(1)
+            expect(group_pm_topic_user.reload.last_read_post_number).to eq(1)
+          end
         end
 
         it "returns the right response when trying to dismiss private messages of an invalid group" do
@@ -4217,6 +4235,14 @@ RSpec.describe TopicsController do
       ).topic
     end
 
+    fab!(:private_message_2) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
     before do
       sign_in(user_2)
     end
@@ -4268,26 +4294,30 @@ RSpec.describe TopicsController do
 
       expect(response.status).to eq(200)
 
-      expect(DismissedTopicUser.count).to eq(1)
+      expect(DismissedTopicUser.count).to eq(2)
 
-      expect(DismissedTopicUser.exists?(topic: private_message, user: user_2))
-        .to eq(true)
+      expect(DismissedTopicUser.exists?(user: user_2, topic: [
+        private_message,
+        private_message_2
+      ])).to eq(true)
     end
 
     it 'can reset new personal and group private messages' do
-      put "/topics/pm-reset-new.json", params: {
-        inbox: "all",
-      }
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+        put "/topics/pm-reset-new.json", params: {
+          inbox: "all",
+        }
 
-      expect(response.status).to eq(200)
+        expect(response.status).to eq(200)
 
-      expect(DismissedTopicUser.count).to eq(2)
+        expect(DismissedTopicUser.count).to eq(3)
 
-      expect(DismissedTopicUser.exists?(topic: private_message, user: user_2))
-        .to eq(true)
-
-      expect(DismissedTopicUser.exists?(topic: group_message, user: user_2))
-        .to eq(true)
+        expect(DismissedTopicUser.exists?(user: user_2, topic: [
+          private_message,
+          private_message_2,
+          group_message
+        ])).to eq(true)
+      end
     end
 
     it 'returns the right response is topic_ids params is not valid' do

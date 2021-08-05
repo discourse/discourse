@@ -958,6 +958,7 @@ class TopicsController < ApplicationController
       params.require(:inbox)
       inbox = params[:inbox].to_s
       filter = private_message_filter(topic_query, inbox)
+      topic_query.options[:limit] = false
       topic_scope = topic_query.filter_private_message_new(current_user, filter)
     end
 
@@ -1233,6 +1234,7 @@ class TopicsController < ApplicationController
 
     if inbox = params[:private_message_inbox]
       filter = private_message_filter(topic_query, inbox)
+      topic_query.options[:limit] = false
       topics = topic_query.filter_private_messages_unread(current_user, filter)
     else
       topics = TopicQuery.unread_filter(topic_query.joined_topic_user, staff: guardian.is_staff?).listable_topics
