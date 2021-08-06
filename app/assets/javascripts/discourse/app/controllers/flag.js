@@ -180,11 +180,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   submitDisabled: not("submitEnabled"),
-
-  @discourseComputed("notifyModeratorsFlag")
-  cantFlagForReview(notifyModeratorsFlag) {
-    return !notifyModeratorsFlag;
-  },
+  cantFlagForReview: not("notifyModeratorsFlag"),
 
   @discourseComputed("flagsAvailable")
   notifyModeratorsFlag(flagsAvailable) {
