@@ -229,7 +229,15 @@ def copy_ember_cli_assets
   assets = {}
   files = {}
 
-  system("yarn --cwd #{ember_dir} run ember build -prod")
+  unless system("yarn --cwd #{ember_dir} install")
+    STDERR.puts "Error running yarn install"
+    exit 1
+  end
+
+  unless system("yarn --cwd #{ember_dir} run ember build -prod")
+    STDERR.puts "Error running ember build"
+    exit 1
+  end
 
   # Copy assets and generate manifest data
   Dir["#{ember_cli_assets}**/*"].each do |f|
