@@ -52,7 +52,6 @@ class TopicTrackingState
       last_read_post_number: nil,
       highest_post_number: 1,
       created_at: topic.created_at,
-      topic_id: topic.id,
       category_id: topic.category_id,
       archetype: topic.archetype,
       created_in_new_period: true
@@ -237,7 +236,6 @@ class TopicTrackingState
       payload: {
         last_read_post_number: last_read_post_number,
         highest_post_number: highest_post_number,
-        topic_id: topic_id,
         notification_level: notification_level
       }
     }

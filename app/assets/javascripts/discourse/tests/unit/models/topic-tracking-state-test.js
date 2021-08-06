@@ -417,7 +417,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 111,
         message_type: "unread",
         payload: {
-          topic_id: 111,
           category_id: 123,
           topic_tag_ids: [44],
           tags: ["pending"],
@@ -479,7 +478,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         assert.deepEqual(
           trackingState.findState(111),
           {
-            topic_id: 111,
             category_id: 123,
             topic_tag_ids: [44],
             tags: ["pending"],
@@ -543,7 +541,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           message_type: "read",
           topic_id: 112,
           payload: {
-            topic_id: 112,
             last_read_post_number: 4,
             highest_post_number: 4,
             notification_level: NotificationLevels.TRACKING,
@@ -575,7 +572,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 222,
         message_type: "new_topic",
         payload: {
-          topic_id: 222,
           category_id: 123,
           topic_tag_ids: [44],
           tags: ["pending"],
@@ -648,7 +644,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         assert.deepEqual(
           trackingState.findState(222),
           {
-            topic_id: 222,
             category_id: 123,
             topic_tag_ids: [44],
             tags: ["pending"],
@@ -764,17 +759,17 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 1,
-      payload: { category_id: 2, topic_id: 1 },
+      payload: { category_id: 2 },
     });
     trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 2,
-      payload: { category_id: 3, topic_id: 2 },
+      payload: { category_id: 3 },
     });
     trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 3,
-      payload: { category_id: 1, topic_id: 3 },
+      payload: { category_id: 1 },
     });
 
     assert.equal(
@@ -789,17 +784,17 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 1,
-      payload: { category_id: 2, topic_id: 1 },
+      payload: { category_id: 2 },
     });
     trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 2,
-      payload: { category_id: 3, topic_id: 2 },
+      payload: { category_id: 3 },
     });
     trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 3,
-      payload: { category_id: 1, topic_id: 3 },
+      payload: { category_id: 1 },
     });
 
     assert.equal(
