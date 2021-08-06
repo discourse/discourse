@@ -124,8 +124,9 @@ class UserDestroyer
   end
 
   def agree_with_flags(user)
+    guardian = Guardian.new(Discourse.system_user)
     ReviewableFlaggedPost.where(target_created_by: user).find_each do |reviewable|
-      reviewable.perform(@actor, :agree_and_keep)
+      reviewable.perform(@actor, :agree_and_keep) if reviewable.actions_for(guardian).has?(:agree_and_keep)
     end
   end
 
