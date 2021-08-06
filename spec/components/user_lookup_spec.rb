@@ -55,7 +55,7 @@ describe UserLookup do
   end
 
   describe '#flair_groups' do
-    fab!(:group) { Fabricate(:group, name: "flair_group", flair_icon: "icon", visibility_level: Group.visibility_levels[:public], members_visibility_level: Group.visibility_levels[:public]) }
+    fab!(:group) { Fabricate(:group, name: "flair_group", flair_icon: "icon", flair_bg_color: "40E0D0", visibility_level: Group.visibility_levels[:public], members_visibility_level: Group.visibility_levels[:public]) }
     fab!(:user2) { Fabricate(:user, flair_group: group) }
 
     before do
@@ -79,6 +79,7 @@ describe UserLookup do
       expect(user_lookup_group).to eq(group)
       expect(user_lookup_group.name).to eq("flair_group")
       expect(user_lookup_group.flair_url).to eq("icon")
+      expect(user_lookup_group.flair_bg_color).to eq("40E0D0")
     end
   end
 end
