@@ -1459,33 +1459,6 @@ describe PostsController do
       end
     end
 
-    describe "urls in the title" do
-      let!(:title_with_url) { "A title with the URL https://google.com" }
-
-      it "doesn't allow TL0 users to put urls into the title" do
-        sign_in(user_trust_level_0)
-
-        post "/posts.json", params: {
-          raw: 'this is the test content',
-          title: title_with_url
-        }
-
-        expect(response.status).to eq(422)
-        expect(response.body).to include(I18n.t('urls_in_title_require_trust_level'))
-      end
-
-      it "allows TL1 users to put urls into the title" do
-        sign_in(user_trust_level_1)
-
-        post "/posts.json", params: {
-          raw: 'this is the test content',
-          title: title_with_url
-        }
-
-        expect(response.status).to eq(200)
-      end
-    end
-
     describe "featured links" do
       it "allows to create topics with featured links" do
         sign_in(user_trust_level_1)
