@@ -782,9 +782,11 @@ sk:
         suspensions: "pozastavenia"
         warnings_received: "varovania"
       messages:
-        all: "Všetky"
         inbox: "Prijatá pošta"
+        latest: "Najnovšie"
         sent: "Odoslané"
+        unread: "Neprečítané"
+        new: "Nové"
         archive: "Archív"
         groups: "Moje skupiny"
         move_to_inbox: "Presuň do prijatej pošty"

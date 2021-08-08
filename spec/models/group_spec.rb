@@ -315,7 +315,7 @@ describe Group do
   end
 
   it "Correctly handles removal of primary group" do
-    group = Fabricate(:group)
+    group = Fabricate(:group, flair_icon: "icon")
     user = Fabricate(:user)
     group.add(user)
     group.save
@@ -330,6 +330,7 @@ describe Group do
 
     user.reload
     expect(user.primary_group).to eq nil
+    expect(user.flair_group_id).to eq nil
   end
 
   it "Can update moderator/staff/admin groups correctly" do
@@ -1306,5 +1307,15 @@ describe Group do
       expect(Group.find_by_email("support@test.com")).to eq(group)
       expect(Group.find_by_email("nope@test.com")).to eq(nil)
     end
+  end
+
+  it "fetches flair_url based on group visibility" do
+    public_group = Fabricate(:group, flair_icon: "icon", flair_bg_color: "40E0D0", visibility_level: Group.visibility_levels[:public], members_visibility_level: Group.visibility_levels[:public])
+    private_group = Fabricate(:group, flair_icon: "icon", flair_bg_color: "40E0D0", visibility_level: Group.visibility_levels[:logged_on_users], members_visibility_level: Group.visibility_levels[:public])
+
+    expect(public_group.flair_url).to eq("icon")
+    expect(private_group.flair_url).to eq(nil)
+    expect(public_group.flair_bg_color).to eq("40E0D0")
+    expect(private_group.flair_bg_color).to eq(nil)
   end
 end

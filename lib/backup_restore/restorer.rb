@@ -148,10 +148,8 @@ module BackupRestore
         log "Notifying '#{user.username}' of the end of the restore..."
         status = @success ? :restore_succeeded : :restore_failed
 
-        SystemMessage.create_from_system_user(
-          user, status,
-          logs: Discourse::Utils.pretty_logs(@logger.logs)
-        )
+        logs = Discourse::Utils.logs_markdown(@logger.logs, user: user)
+        post = SystemMessage.create_from_system_user(user, status, logs: logs)
       else
         log "Could not send notification to '#{@user_info[:username]}' " \
           "(#{@user_info[:email]}), because the user does not exist."

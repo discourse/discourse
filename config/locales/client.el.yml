@@ -981,9 +981,11 @@ el:
         warnings_received: "προειδοποιήσεις"
         rejected_posts: "απορριφθείσες αναρτήσεις"
       messages:
-        all: "Όλα"
         inbox: "Εισερχόμενα"
+        latest: "Πρόσφατες"
         sent: "Απεσταλμένα"
+        unread: "Αδιάβαστα"
+        new: "Νέα"
         archive: "Αρχείο"
         groups: "Οι Ομάδες Μου"
         move_to_inbox: "Μετακίνηση στα Εισερχόμενα"

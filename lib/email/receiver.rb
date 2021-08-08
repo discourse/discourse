@@ -552,8 +552,13 @@ module Email
       @previous_replies_regex ||= /^--[- ]\n\*#{I18n.t("user_notifications.previous_discussion")}\*\n/im
     end
 
+    def reply_above_line_regex
+      @reply_above_line_regex ||= /\n#{I18n.t("user_notifications.reply_above_line")}\n/im
+    end
+
     def trim_discourse_markers(reply)
-      reply.split(previous_replies_regex)[0]
+      reply = reply.split(previous_replies_regex)[0]
+      reply.split(reply_above_line_regex)[0]
     end
 
     def parse_from_field(mail = nil)
@@ -570,11 +575,28 @@ module Email
 
       return unless mail[:from]
 
+      # For now we are only using the Reply-To header if the email has
+      # been forwarded via Google Groups, which is why we are checking the
+      # X-Original-From header too. In future we may want to use the Reply-To
+      # header in more cases.
+      if mail['X-Original-From'].present?
+        if mail[:reply_to] && mail[:reply_to].errors.blank?
+          mail[:reply_to].each do |address_field|
+            from_address = address_field.address
+            from_display_name = address_field.display_name&.to_s
+            next if address_field.to_s != mail['X-Original-From'].to_s
+            next if !from_address&.include?("@")
+            return [from_address&.downcase, from_display_name&.strip]
+          end
+        end
+      end
+
       if mail[:from].errors.blank?
         mail[:from].each do |address_field|
           from_address = address_field.address
-          from_display_name = address_field.display_name.try(:to_s)
-          return [from_address&.downcase, from_display_name&.strip] if from_address["@"]
+          from_display_name = address_field.display_name&.to_s
+          next if !from_address&.include?("@")
+          return [from_address&.downcase, from_display_name&.strip]
         end
       end
 

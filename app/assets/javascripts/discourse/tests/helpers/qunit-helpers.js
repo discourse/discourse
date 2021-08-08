@@ -24,6 +24,7 @@ import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
 import { initSearchData } from "discourse/widgets/search-menu";
+import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
 import { mapRoutes } from "discourse/mapping-router";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -47,6 +48,7 @@ import {
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
+import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -277,6 +279,7 @@ export function acceptance(name, optionsOrCallback) {
       resetUserSearchCache();
       resetCardClickListenerSelector();
       clearCustomNavItemHref();
+      resetPostMenuExtraButtons();
       clearNavItems();
       setTopicList(null);
       _clearSnapshots();
@@ -285,6 +288,7 @@ export function acceptance(name, optionsOrCallback) {
       cleanUpComposerUploadHandler();
       cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
+      resetLastEditNotificationClick();
       app._runInitializer("instanceInitializers", (initName, initializer) => {
         if (initializer && initializer.teardown) {
           initializer.teardown(this.container);

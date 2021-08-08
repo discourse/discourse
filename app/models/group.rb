@@ -690,7 +690,7 @@ class Group < ActiveRecord::Base
     has_webhooks = WebHook.active_web_hooks(:group_user)
     payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer) if has_webhooks
     group_user.destroy
-    user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
+    user.update_attribute(:primary_group_id, nil) if user.primary_group_id == self.id
     DiscourseEvent.trigger(:user_removed_from_group, user, self)
     WebHook.enqueue_hooks(:group_user, :user_removed_from_group,
       id: group_user.id,
@@ -803,14 +803,20 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    case flair_type
-    when :icon
-      flair_icon
-    when :image
-      upload_cdn_path(flair_upload.url)
-    else
-      nil
-    end
+    return if members_visibility_level != Group.visibility_levels[:public]
+    return if visibility_level != Group.visibility_levels[:public]
+
+    return flair_icon if flair_type == :icon
+    return upload_cdn_path(flair_upload.url) if flair_type == :image
+
+    nil
+  end
+
+  def flair_bg_color
+    return if members_visibility_level != Group.visibility_levels[:public]
+    return if visibility_level != Group.visibility_levels[:public]
+
+    read_attribute(:flair_bg_color)
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|

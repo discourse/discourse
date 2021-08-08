@@ -299,6 +299,7 @@ nb_NO:
       copied: "kopiert!"
     drafts:
       label: "Utkast"
+      label_with_count: "Utkast (%{count})"
       resume: "Fortsett"
       remove: "Fjern"
       remove_confirmation: "Er du sikker på at du vil slette dette utkastet?"
@@ -1083,9 +1084,11 @@ nb_NO:
         warnings_received: "advarsler"
         rejected_posts: "avviste innlegg"
       messages:
-        all: "Alle"
         inbox: "Innboks"
+        latest: "Siste"
         sent: "Sendt"
+        unread: "Uleste"
+        new: "Nye"
         archive: "Arkiver"
         groups: "Mine grupper"
         move_to_inbox: "Flytt til innboks"

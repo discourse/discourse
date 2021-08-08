@@ -850,9 +850,11 @@ id:
         suspensions: "penangguhan"
         warnings_received: "peringatan"
       messages:
-        all: "Semua"
         inbox: "Kotak Masuk"
+        latest: "Terbaru"
         sent: "Mengirim"
+        unread: "Belum dibaca"
+        new: "Baru"
         archive: "Arsip"
         groups: "Kelompok Saya"
         move_to_inbox: "Pindah ke Kotak Masuk"

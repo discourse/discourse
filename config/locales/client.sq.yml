@@ -600,9 +600,11 @@ sq:
         suspensions: "pezullimet"
         warnings_received: "paralajmërimet"
       messages:
-        all: "Të gjitha"
         inbox: "Inbox"
+        latest: "Të fundit"
         sent: "Të dërguara"
+        unread: "Të palexuara"
+        new: "Të reja"
         archive: "Arkivi"
         groups: "Grupet e mia"
         move_to_inbox: "Transfero në inbox"

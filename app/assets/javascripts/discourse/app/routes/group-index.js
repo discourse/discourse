@@ -20,7 +20,7 @@ export default DiscourseRoute.extend({
       showing: "members",
     });
 
-    controller.findMembers(true);
+    controller.reloadMembers(true);
   },
 
   @action

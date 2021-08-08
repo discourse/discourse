@@ -132,15 +132,10 @@ class TopicCreator
     end
 
     topic_params[:category_id] = category.id if category.present?
-
     topic_params[:created_at] = convert_time(@opts[:created_at]) if @opts[:created_at].present?
-
     topic_params[:pinned_at] = convert_time(@opts[:pinned_at]) if @opts[:pinned_at].present?
     topic_params[:pinned_globally] = @opts[:pinned_globally] if @opts[:pinned_globally].present?
-
-    if SiteSetting.topic_featured_link_enabled && @opts[:featured_link].present? && @guardian.can_edit_featured_link?(topic_params[:category_id])
-      topic_params[:featured_link] = @opts[:featured_link]
-    end
+    topic_params[:featured_link] = @opts[:featured_link]
 
     topic_params
   end

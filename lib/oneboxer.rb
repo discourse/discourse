@@ -429,7 +429,8 @@ module Oneboxer
         hostname: GlobalSetting.hostname,
         facebook_app_access_token: SiteSetting.facebook_app_access_token,
         disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
-        body_cacher: self
+        body_cacher: self,
+        content_type: fd.content_type
       }
 
       onebox_options[:cookie] = fd.cookie if fd.cookie

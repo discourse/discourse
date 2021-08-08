@@ -1260,6 +1260,120 @@ describe UsersController do
       end
 
       context "with values for the fields" do
+        let(:update_user_url) { "/u/#{user.username}.json" }
+        let(:field_id) { user_field.id.to_s }
+
+        before { sign_in(user) }
+
+        context "with multple select fields" do
+          let(:valid_options) { %w[Axe Sword] }
+
+          fab!(:user_field) do
+            Fabricate(:user_field, field_type: 'multiselect') do
+              user_field_options do
+                [
+                  Fabricate(:user_field_option, value: 'Axe'),
+                  Fabricate(:user_field_option, value: 'Sword')
+                ]
+              end
+            end
+          end
+
+          it "shouldn't allow unregistered field values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => %w[Juice] } }
+            end.not_to change { user.reload.user_fields[field_id] }
+          end
+
+          it "should filter valid values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => %w[Axe Juice Sword] } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to(valid_options)
+          end
+
+          it "allows registered field values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => valid_options } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to(valid_options)
+          end
+
+          it "value can't be nil or empty if the field is required" do
+            put update_user_url, params: { user_fields: { field_id => valid_options } }
+
+            user_field.update!(required: true)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => nil } }
+            end.not_to change { user.reload.user_fields[field_id] }
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "" } }
+            end.not_to change { user.reload.user_fields[field_id] }
+          end
+
+          it 'value can nil or empty if the field is not required' do
+            put update_user_url, params: { user_fields: { field_id => valid_options } }
+
+            user_field.update!(required: false)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => nil } }
+            end.to change { user.reload.user_fields[field_id] }.from(valid_options).to(nil)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "" } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to("")
+          end
+
+        end
+
+        context "with dropdown fields" do
+          let(:valid_options) { ['Black Mesa', 'Fox Hound'] }
+
+          fab!(:user_field) do
+            Fabricate(:user_field, field_type: 'dropdown') do
+              user_field_options do
+                [
+                  Fabricate(:user_field_option, value: 'Black Mesa'),
+                  Fabricate(:user_field_option, value: 'Fox Hound')
+                ]
+              end
+            end
+          end
+
+          it "shouldn't allow unregistered field values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => 'Umbrella Corporation' } }
+            end.not_to change { user.reload.user_fields[field_id] }
+          end
+
+          it "allows registered field values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => valid_options.first } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to(valid_options.first)
+          end
+
+          it "value can't be nil if the field is required" do
+            put update_user_url, params: { user_fields: { field_id => valid_options.first } }
+
+            user_field.update!(required: true)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => nil } }
+            end.not_to change { user.reload.user_fields[field_id] }
+          end
+
+          it 'value can be set to nil if the field is not required' do
+            put update_user_url, params: { user_fields: { field_id => valid_options.last } }
+
+            user_field.update!(required: false)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => nil } }
+            end.to change { user.reload.user_fields[field_id] }.from(valid_options.last).to(nil)
+          end
+        end
+
         let(:create_params) { {
           name: @user.name,
           password: 'suChS3cuRi7y',
@@ -2935,6 +3049,19 @@ describe UsersController do
 
       expect(user.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
       expect(user.email_change_requests).to contain_exactly(request_1)
+    end
+
+    it "can destroy associated email tokens" do
+      new_email = 'new.n.cool@example.com'
+      updater = EmailUpdater.new(guardian: user.guardian, user: user)
+
+      expect { updater.change_to(new_email) }
+        .to change { user.email_tokens.count }.by(1)
+
+      expect { delete "/u/#{user.username}/preferences/email.json", params: { email: new_email } }
+        .to change { user.email_tokens.count }.by(-1)
+
+      expect(user.email_tokens.first.email).to eq(user.email)
     end
   end
 

@@ -166,4 +166,32 @@ describe Search do
       ])
     end
   end
+
+  context "categories" do
+    it "finds topics in sub-sub-categories" do
+      SiteSetting.max_category_nesting = 3
+
+      category = Fabricate(:category_with_definition)
+      subcategory = Fabricate(:category_with_definition, parent_category_id: category.id)
+      subsubcategory = Fabricate(:category_with_definition, parent_category_id: subcategory.id)
+
+      topic = Fabricate(:topic, category: subsubcategory)
+      post = Fabricate(:post, topic: topic)
+
+      SearchIndexer.enable
+      SearchIndexer.index(post, force: true)
+
+      expect(Search.execute("test ##{category.slug}").posts).to contain_exactly(post)
+      expect(Search.execute("test ##{category.slug}:#{subcategory.slug}").posts).to contain_exactly(post)
+      expect(Search.execute("test ##{subcategory.slug}").posts).to contain_exactly(post)
+      expect(Search.execute("test ##{subcategory.slug}:#{subsubcategory.slug}").posts).to contain_exactly(post)
+      expect(Search.execute("test ##{subsubcategory.slug}").posts).to contain_exactly(post)
+
+      expect(Search.execute("test #=#{category.slug}").posts).to be_empty
+      expect(Search.execute("test #=#{category.slug}:#{subcategory.slug}").posts).to be_empty
+      expect(Search.execute("test #=#{subcategory.slug}").posts).to be_empty
+      expect(Search.execute("test #=#{subcategory.slug}:#{subsubcategory.slug}").posts).to contain_exactly(post)
+      expect(Search.execute("test #=#{subsubcategory.slug}").posts).to contain_exactly(post)
+    end
+  end
 end

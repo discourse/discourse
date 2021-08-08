@@ -696,9 +696,11 @@ sw:
         suspensions: "masitisho"
         warnings_received: "maonyo"
       messages:
-        all: "Vyote"
         inbox: "Kisanduku-pokezi"
+        latest: "Hivi Karibuni"
         sent: "Imetumwa"
+        unread: "Haijasomwa"
+        new: "Mpya"
         archive: "Hifadhi"
         groups: "Makundi yangu"
         move_to_inbox: "Hamishia kwenye kisanduku-pokezi"

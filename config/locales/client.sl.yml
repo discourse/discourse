@@ -1084,9 +1084,11 @@ sl:
         warnings_received: "opozorila"
         rejected_posts: "zavrnjene objave"
       messages:
-        all: "Vse"
         inbox: "Prejeto"
+        latest: "Najnovejše"
         sent: "Poslano"
+        unread: "Neprebrane"
+        new: "Nove"
         archive: "Arhiv"
         groups: "Moje Skupine"
         move_to_inbox: "Prestavi v Prejeto"

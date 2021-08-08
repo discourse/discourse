@@ -241,6 +241,12 @@ acceptance("Group - Authenticated", function (needs) {
       "This is a private message 1",
       "it should display the list of group topics"
     );
+
+    await click("#search-button");
+    assert.ok(
+      exists(".search-context input:checked"),
+      "scope to message checkbox is checked"
+    );
   });
 
   test("Admin Viewing Group", async function (assert) {

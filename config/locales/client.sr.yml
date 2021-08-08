@@ -700,9 +700,11 @@ sr:
         suspensions: "suspenzije"
         warnings_received: "upozorenja"
       messages:
-        all: "sve"
         inbox: "Primljeno"
+        latest: "Poslednje"
         sent: "Poslato"
+        unread: "Nepročitano"
+        new: "Novo"
         archive: "Arhiviraj"
         move_to_archive: "Arhiviraj"
       preferences_nav:

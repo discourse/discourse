@@ -50,6 +50,18 @@ describe Onebox::Engine do
     end
   end
 
+  describe "handles_content_type?" do
+    class OneboxEngineImages
+      include Onebox::Engine
+      @@matcher_content_type = /^image\/png$/
+    end
+
+    it "returns true if argument matches the matcher" do
+      result = OneboxEngineImages.handles_content_type?('image/png')
+      expect(result).to eq(true)
+    end
+  end
+
   class AlwaysHttpsEngineExample < OneboxEngineExample
     always_https
   end

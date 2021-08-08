@@ -31,10 +31,21 @@ export default (type) => {
         hideCategory: true,
         showPosters: true,
       });
+
+      const currentUser = this.currentUser;
+      this.searchService.set("searchContext", {
+        type: "private_messages",
+        id: currentUser.get("username_lower"),
+        user: currentUser,
+      });
     },
 
     _isArchive() {
       return type === "archive";
+    },
+
+    deactivate() {
+      this.searchService.set("searchContext", null);
     },
   });
 };

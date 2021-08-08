@@ -253,7 +253,7 @@ module Email
       @@plugin_callbacks.each { |block| block.call(@fragment, @opts) }
     end
 
-    def inline_secure_images(attachments)
+    def inline_secure_images(attachments, attachments_index)
       stripped_media = @fragment.css('[data-stripped-secure-media]')
       upload_shas = {}
       stripped_media.each do |div|
@@ -269,10 +269,8 @@ module Email
         upload = uploads.find { |upl| upl.sha1 == upload_shas[div['data-stripped-secure-media']] }
         next if !upload
 
-        original_filename = upload.original_filename
-
-        if attachments[original_filename]
-          url = attachments[original_filename].url
+        if attachments[attachments_index[upload.sha1]]
+          url = attachments[attachments_index[upload.sha1]].url
 
           onebox_type = div['data-onebox-type']
           style = if onebox_type

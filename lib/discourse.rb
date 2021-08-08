@@ -42,6 +42,49 @@ module Discourse
       logs.join("\n")
     end
 
+    def self.logs_markdown(logs, user:, filename: 'log.txt')
+      # Reserve 250 characters for the rest of the text
+      max_logs_length = SiteSetting.max_post_length - 250
+      pretty_logs = Discourse::Utils.pretty_logs(logs)
+
+      # If logs are short, try to inline them
+      if pretty_logs.size < max_logs_length
+        return <<~TEXT
+        ```text
+        #{pretty_logs}
+        ```
+        TEXT
+      end
+
+      # Try to create an upload for the logs
+      upload = Dir.mktmpdir do |dir|
+        File.write(File.join(dir, filename), pretty_logs)
+        zipfile = Compression::Zip.new.compress(dir, filename)
+        File.open(zipfile) do |file|
+          UploadCreator.new(
+            file,
+            File.basename(zipfile),
+            type: 'backup_logs',
+            for_export: 'true'
+          ).create_for(user.id)
+        end
+      end
+
+      if upload.persisted?
+        return UploadMarkdown.new(upload).attachment_markdown
+      else
+        Rails.logger.warn("Failed to upload the backup logs file: #{upload.errors.full_messages}")
+      end
+
+      # If logs are long and upload cannot be created, show trimmed logs
+      <<~TEXT
+      ```text
+      ...
+      #{pretty_logs.last(max_logs_length)}
+      ```
+      TEXT
+    end
+
     def self.atomic_write_file(destination, contents)
       begin
         return if File.read(destination) == contents

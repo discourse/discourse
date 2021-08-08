@@ -3,7 +3,11 @@ import ComposerEditor, {
   addComposerUploadMarkdownResolver,
   addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
-import { addButton, removeButton } from "discourse/widgets/post-menu";
+import {
+  addButton,
+  apiExtraButtons,
+  removeButton,
+} from "discourse/widgets/post-menu";
 import {
   addExtraIconRenderer,
   replaceCategoryLinkRenderer,
@@ -77,7 +81,7 @@ import { addSearchResultsCallback } from "discourse/lib/search";
 import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.12.0";
+const PLUGIN_API_VERSION = "0.12.1";
 
 class PluginApi {
   constructor(version, container) {
@@ -428,6 +432,7 @@ class PluginApi {
    * ```
    **/
   addPostMenuButton(name, callback) {
+    apiExtraButtons[name] = callback;
     addButton(name, callback);
   }
 
@@ -1311,12 +1316,34 @@ class PluginApi {
    * Add a suggestion shortcut to search menu panel.
    *
    * ```
-   * addSearchSuggestion("in:assigned");
+   * api.addSearchSuggestion("in:assigned");
    * ```
    *
    */
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
+  }
+
+  /**
+   * Calls a method on a mounted widget whenever an app event happens.
+   *
+   * For example, if you have a widget with a `key` of `cool-widget` that lives inside the
+   * `site-header` component, and you wanted it to respond to `thing:happened`, you could do this:
+   *
+   * ```
+   * api.dispatchWidgetAppEvent('site-header', 'cool-widget', 'thing:happened');
+   * ```
+   *
+   * In this case, the `cool-widget` must have a method called `thingHappened`. The event name
+   * is converted to camelCase and used as the method name for you.
+   */
+  dispatchWidgetAppEvent(mountedComponent, widgetKey, appEvent) {
+    this.modifyClass(`component:${mountedComponent}`, {
+      didInsertElement() {
+        this._super();
+        this.dispatch(appEvent, widgetKey);
+      },
+    });
   }
 }
 

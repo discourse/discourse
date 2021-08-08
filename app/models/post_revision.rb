@@ -59,4 +59,4 @@ end
 #
 #  index_post_revisions_on_post_id             (post_id)
 #  index_post_revisions_on_post_id_and_number  (post_id,number)
-#
+#  index_post_revisions_on_user_id             (user_id)

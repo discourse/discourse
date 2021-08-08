@@ -8,6 +8,8 @@ USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
+  def patch(*) end # Disable PATCH requests
+
   scope path: nil, constraints: { format: /(json|html|\*\/\*)/ } do
     relative_url_root = (defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root) ? Rails.configuration.relative_url_root + '/' : '/'
 
@@ -447,8 +449,10 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/private-messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/messages/personal" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/messages/personal/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
-      get "#{root_path}/:username/messages/group/:group_name/archive" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
+      get "#{root_path}/:username/messages/group/:group_name/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/tags/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
       get "#{root_path}/:username.json" => "users#show", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username } }.merge(index == 1 ? { as: 'user' } : {}))
@@ -755,6 +759,7 @@ Discourse::Application.routes.draw do
     put "t/:id/reset-bump-date" => "topics#reset_bump_date"
     put "topics/bulk"
     put "topics/reset-new" => 'topics#reset_new'
+    put "topics/pm-reset-new" => 'topics#private_message_reset_new'
     post "topics/timings"
 
     get 'topics/similar_to' => 'similar_topics#index'
@@ -764,17 +769,25 @@ Discourse::Application.routes.draw do
 
     scope "/topics", username: RouteFormat.username do
       get "created-by/:username" => "list#topics_by", as: "topics_by", defaults: { format: :json }
+      get "private-messages-all/:username" => "list#private_messages_all", as: "topics_private_messages_all", defaults: { format: :json }
+      get "private-messages-all-sent/:username" => "list#private_messages_all_sent", as: "topics_private_messages_all_sent", defaults: { format: :json }
+      get "private-messages-all-new/:username" => "list#private_messages_all_new", as: "topics_private_messages_all_new", defaults: { format: :json }
+      get "private-messages-all-unread/:username" => "list#private_messages_all_unread", as: "topics_private_messages_all_unread", defaults: { format: :json }
+      get "private-messages-all-archive/:username" => "list#private_messages_all_archive", as: "topics_private_messages_all_archive", defaults: { format: :json }
       get "private-messages/:username" => "list#private_messages", as: "topics_private_messages", defaults: { format: :json }
       get "private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", defaults: { format: :json }
       get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", defaults: { format: :json }
       get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", defaults: { format: :json }
       get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", defaults: { format: :json }
+      get "private-messages-new/:username" => "list#private_messages_new", as: "topics_private_messages_new", defaults: { format: :json }
       get "private-messages-warnings/:username" => "list#private_messages_warnings", as: "topics_private_messages_warnings", defaults: { format: :json }
       get "groups/:group_name" => "list#group_topics", as: "group_topics", group_name: RouteFormat.username
 
       scope "/private-messages-group/:username", group_name: RouteFormat.username do
         get ":group_name.json" => "list#private_messages_group", as: "topics_private_messages_group"
         get ":group_name/archive.json" => "list#private_messages_group_archive", as: "topics_private_messages_group_archive"
+        get ":group_name/new.json" => "list#private_messages_group_new", as: "topics_private_messages_group_new"
+        get ":group_name/unread.json" => "list#private_messages_group_unread", as: "topics_private_messages_group_unread"
       end
     end
 

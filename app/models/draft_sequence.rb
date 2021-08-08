@@ -23,6 +23,8 @@ class DraftSequence < ActiveRecord::Base
 
     DB.exec("DELETE FROM drafts WHERE user_id = :user_id AND draft_key = :draft_key AND sequence < :sequence", draft_key: key, user_id: user_id, sequence: sequence)
 
+    UserStat.update_draft_count(user_id)
+
     sequence
   end
 

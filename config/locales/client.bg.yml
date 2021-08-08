@@ -808,9 +808,11 @@ bg:
         suspensions: "отстранявания"
         warnings_received: "предупреждения"
       messages:
-        all: "Всички"
         inbox: "Входяща кутия"
+        latest: "Последни"
         sent: "Изпратени"
+        unread: "Непрочетени"
+        new: "Нов"
         archive: "Архив"
         groups: "Моите групи"
         move_to_inbox: "Премести във входящи"

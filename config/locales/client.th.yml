@@ -787,9 +787,11 @@ th:
         warnings_received: "คำเตือน"
         rejected_posts: "โพสต์ที่ถูกปฏิเสธ"
       messages:
-        all: "ทั้งหมด"
         inbox: "กล่องจดหมายเข้า"
+        latest: "ล่าสุด"
         sent: "ส่ง"
+        unread: "ยังไม่อ่าน"
+        new: "ใหม่"
         archive: "คลัง"
         groups: "กลุ่มของฉัน"
         move_to_inbox: "ย้ายไปกล่องขาเข้า"

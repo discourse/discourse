@@ -747,6 +747,14 @@ Topic.reopenClass({
       if (options.tagName) {
         data.tag_name = options.tagName;
       }
+
+      if (options.private_message_inbox) {
+        data.private_message_inbox = options.private_message_inbox;
+
+        if (options.group_name) {
+          data.group_name = options.group_name;
+        }
+      }
     }
 
     return ajax("/topics/bulk", {
@@ -776,6 +784,24 @@ Topic.reopenClass({
     }
 
     return ajax("/topics/reset-new", { type: "PUT", data });
+  },
+
+  pmResetNew(opts = {}) {
+    const data = {};
+
+    if (opts.topicIds) {
+      data.topic_ids = opts.topicIds;
+    }
+
+    if (opts.inbox) {
+      data.inbox = opts.inbox;
+
+      if (opts.groupName) {
+        data.group_name = opts.groupName;
+      }
+    }
+
+    return ajax("/topics/pm-reset-new", { type: "PUT", data });
   },
 
   idForSlug(slug) {

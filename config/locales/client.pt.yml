@@ -1094,9 +1094,11 @@ pt:
         warnings_received: "avisos"
         rejected_posts: "mensagens rejeitadas"
       messages:
-        all: "Todas"
         inbox: "Caixa de Entrada"
+        latest: "Recentes"
         sent: "Enviado"
+        unread: "Não Lido"
+        new: "Novo"
         archive: "Arquivo"
         groups: "Os Meus Grupos"
         move_to_inbox: "Mover para Caixa de Entrada"
