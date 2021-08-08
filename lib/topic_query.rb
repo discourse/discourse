@@ -456,9 +456,7 @@ class TopicQuery
 
   def latest_results(options = {})
     result = default_results(options)
-    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted"
-    result = remove_muted_categories(result, @user, exclude: options[:category])
-    result = remove_muted_tags(result, @user, options)
+    result = remove_muted(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
 
     # plugins can remove topics here:
@@ -472,9 +470,7 @@ class TopicQuery
   def unseen_results(options = {})
     result = default_results(options)
     result = TopicQuery.unseen_filter(result, @user.first_seen_at, @user.staff?) if @user
-    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted"
-    result = remove_muted_categories(result, @user, exclude: options[:category])
-    result = remove_muted_tags(result, @user, options)
+    result = remove_muted(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
 
     # plugins can remove topics here:
@@ -522,9 +518,7 @@ class TopicQuery
       default_results(options.reverse_merge(unordered: true)),
       treat_as_new_topic_start_date: @user.user_option.treat_as_new_topic_start_date
     )
-    result = remove_muted_topics(result, @user)
-    result = remove_muted_categories(result, @user, exclude: options[:category])
-    result = remove_muted_tags(result, @user, options)
+    result = remove_muted(result, @user, options)
     result = remove_dismissed(result, @user)
 
     self.class.results_filter_callbacks.each do |filter_callback|
@@ -816,6 +810,12 @@ class TopicQuery
     result = TopicQuery.apply_custom_filters(result, self)
 
     result
+  end
+
+  def remove_muted(list, user, options)
+    list = remove_muted_topics(list, user) unless options && options[:state] == "muted"
+    list = remove_muted_categories(list, user, exclude: options[:category])
+    remove_muted_tags(list, user, options)
   end
 
   def remove_muted_topics(list, user)
