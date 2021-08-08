@@ -138,7 +138,7 @@ export default Mixin.create({
       "keydown.setting-enter",
       ".input-setting-string",
       (e) => {
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
           // enter key
           this.send("save");
         }

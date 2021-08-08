@@ -539,7 +539,7 @@ export default {
       const $sel = $(selector);
 
       // Special case: We're binding to enter.
-      if (e && e.keyCode === 13) {
+      if (e && e.key === "Enter") {
         // Binding to enter should only be effective when there is something
         // to select.
         if ($sel.length === 0) {

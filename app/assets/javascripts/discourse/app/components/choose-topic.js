@@ -43,7 +43,7 @@ export default Component.extend({
     this._super(...arguments);
     schedule("afterRender", () => {
       $("#choose-topic-title").keydown((e) => {
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
           return false;
         }
       });
