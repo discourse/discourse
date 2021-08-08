@@ -83,7 +83,10 @@ async function keyboardHelper(value, target, selector) {
     await triggerEvent(
       target[0],
       "keydown",
-      mapping[value] || { key: value, keyCode: value.charCodeAt(0) }
+      mapping[value.toLowerCase()] || {
+        key: value,
+        keyCode: value.charCodeAt(0),
+      }
     );
   }
 }
