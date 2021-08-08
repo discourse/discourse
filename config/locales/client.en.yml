@@ -991,6 +991,7 @@ en:
           all: "All"
           read: "Read"
           unread: "Unread"
+          unseen: "Unseen"
         ignore_duration_title: "Ignore User"
         ignore_duration_username: "Username"
         ignore_duration_when: "Duration:"
@@ -2401,6 +2402,7 @@ en:
 
       none:
         unread: "You have no unread topics."
+        unseen: "You have no unseen topics."
         new: "You have no new topics."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
@@ -2417,6 +2419,7 @@ en:
         read: "There are no more read topics."
         new: "There are no more new topics."
         unread: "There are no more unread topics."
+        unseen: "There are no more unseen topics."
         category: "There are no more %{category} topics."
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
@@ -3431,6 +3434,15 @@ en:
         lower_title_with_count:
           one: "%{count} unread"
           other: "%{count} unread"
+      unseen:
+        title: "Unseen"
+        title_with_count:
+          one: "Unseen (%{count})"
+          other: "Unseen (%{count})"
+        lower_title: "unseen"
+        lower_title_with_count:
+          one: "%{count} unseen"
+          other: "%{count} unseen"
       new:
         lower_title_with_count:
           one: "%{count} new"
@@ -3726,6 +3738,7 @@ en:
       topics:
         none:
           unread: "You have no unread topics."
+          unseen: "You have no unseen topics."
           new: "You have no new topics."
           read: "You haven't read any topics yet."
           posted: "You haven't posted in any topics yet."

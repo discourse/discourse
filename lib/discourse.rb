@@ -245,7 +245,7 @@ module Discourse
   class ScssError < StandardError; end
 
   def self.filters
-    @filters ||= [:latest, :unread, :new, :top, :read, :posted, :bookmarks]
+    @filters ||= [:latest, :unread, :new, :unseen, :top, :read, :posted, :bookmarks]
   end
 
   def self.anonymous_filters
