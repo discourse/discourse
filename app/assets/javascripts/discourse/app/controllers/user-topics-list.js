@@ -1,6 +1,16 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
+import { action } from "@ember/object";
+import Topic from "discourse/models/topic";
+
+import {
+  NEW_FILTER,
+  UNREAD_FILTER,
+} from "discourse/routes/build-private-messages-route";
 
 // Lists of topics on a user's page.
 export default Controller.extend(BulkTopicSelection, {
@@ -12,24 +22,33 @@ export default Controller.extend(BulkTopicSelection, {
   channel: null,
   tagsForUser: null,
 
-  init() {
-    this._super(...arguments);
-
+  @on("init")
+  _initialize() {
     this.newIncoming = [];
   },
 
-  saveScrollPosition: function () {
+  saveScrollPosition() {
     this.session.set("topicListScrollPosition", $(window).scrollTop());
   },
 
   @observes("model.canLoadMore")
-  _showFooter: function () {
+  _showFooter() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
   @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount > 0;
+  },
+
+  @discourseComputed("filter", "model.topics.length")
+  showResetNew(filter, hasTopics) {
+    return filter === NEW_FILTER && hasTopics;
+  },
+
+  @discourseComputed("filter", "model.topics.length")
+  showDismissRead(filter, hasTopics) {
+    return filter === UNREAD_FILTER && hasTopics;
   },
 
   subscribe(channel) {
@@ -59,15 +78,35 @@ export default Controller.extend(BulkTopicSelection, {
     });
   },
 
-  actions: {
-    loadMore: function () {
-      this.model.loadMore();
-    },
+  @action
+  resetNew() {
+    const topicIds = this.selected
+      ? this.selected.map((topic) => topic.id)
+      : null;
 
-    showInserted() {
-      this.model.loadBefore(this.newIncoming);
-      this._resetTracking();
-      return false;
-    },
+    const opts = {
+      inbox: this.inbox,
+      topicIds: topicIds,
+    };
+
+    if (this.group) {
+      opts.groupName = this.group.name;
+    }
+
+    Topic.pmResetNew(opts).then(() => {
+      this.send("refresh");
+    });
+  },
+
+  @action
+  loadMore() {
+    this.model.loadMore();
+  },
+
+  @action
+  showInserted() {
+    this.model.loadBefore(this.newIncoming);
+    this._resetTracking();
+    return false;
   },
 });

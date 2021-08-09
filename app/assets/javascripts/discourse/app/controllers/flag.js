@@ -180,6 +180,13 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   submitDisabled: not("submitEnabled"),
+  cantFlagForReview: not("notifyModeratorsFlag"),
+
+  @discourseComputed("flagsAvailable")
+  notifyModeratorsFlag(flagsAvailable) {
+    const notifyModeratorsID = 7;
+    return flagsAvailable.find((f) => f.id === notifyModeratorsID);
+  },
 
   // Staff accounts can "take action"
   @discourseComputed("flagTopic", "selected.is_custom_flag")
@@ -289,12 +296,7 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     flagForReview() {
-      const notifyModeratorsID = 7;
-      const notifyModerators = this.flagsAvailable.find(
-        (f) => f.id === notifyModeratorsID
-      );
-      this.set("selected", notifyModerators);
-
+      this.set("selected", this.get("notifyModeratorsFlag"));
       this.send("createFlag", { queue_for_review: true });
       this.set("model.hidden", true);
     },

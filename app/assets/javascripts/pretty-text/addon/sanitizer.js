@@ -75,7 +75,9 @@ export function sanitize(text, allowLister) {
         if (
           (forAttr &&
             (forAttr.indexOf("*") !== -1 || forAttr.indexOf(value) !== -1)) ||
-          (name.indexOf("data-") === 0 && forTag["data-*"]) ||
+          (name.indexOf("data-html-") === -1 &&
+            name.indexOf("data-") === 0 &&
+            forTag["data-*"]) ||
           (tag === "a" &&
             name === "href" &&
             hrefAllowed(value, extraHrefMatchers)) ||

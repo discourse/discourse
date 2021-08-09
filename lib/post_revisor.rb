@@ -67,12 +67,21 @@ class PostRevisor
     end
   end
 
-  # Fields we want to record revisions for by default
-  %i{title archetype}.each do |field|
-    track_topic_field(field) do |tc, attribute|
-      tc.record_change(field, tc.topic.public_send(field), attribute)
-      tc.topic.public_send("#{field}=", attribute)
-    end
+  def self.track_and_revise(topic_changes, field, attribute)
+    topic_changes.record_change(
+      field,
+      topic_changes.topic.public_send(field),
+      attribute
+    )
+    topic_changes.topic.public_send("#{field}=", attribute)
+  end
+
+  track_topic_field(:title) do |topic_changes, attribute|
+    track_and_revise topic_changes, :title, attribute
+  end
+
+  track_topic_field(:archetype) do |topic_changes, attribute|
+    track_and_revise topic_changes, :archetype, attribute
   end
 
   track_topic_field(:category_id) do |tc, category_id, fields|
@@ -111,9 +120,10 @@ class PostRevisor
   end
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
-    if SiteSetting.topic_featured_link_enabled &&
-       topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
-
+    if !SiteSetting.topic_featured_link_enabled ||
+      !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
+      topic_changes.check_result(false)
+    else
       topic_changes.record_change('featured_link', topic_changes.topic.featured_link, featured_link)
       topic_changes.topic.featured_link = featured_link
     end

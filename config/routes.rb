@@ -453,6 +453,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/messages/personal/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
+      get "#{root_path}/:username/messages/tags/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
       get "#{root_path}/:username.json" => "users#show", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username } }.merge(index == 1 ? { as: 'user' } : {}))
       put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -758,6 +759,7 @@ Discourse::Application.routes.draw do
     put "t/:id/reset-bump-date" => "topics#reset_bump_date"
     put "topics/bulk"
     put "topics/reset-new" => 'topics#reset_new'
+    put "topics/pm-reset-new" => 'topics#private_message_reset_new'
     post "topics/timings"
 
     get 'topics/similar_to' => 'similar_topics#index'

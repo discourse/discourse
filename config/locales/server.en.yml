@@ -579,7 +579,6 @@ en:
               unable_to_tag: "There was an error tagging the topic."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
-              invalid_category: "can't be edited in this category."
         user:
           attributes:
             password:
