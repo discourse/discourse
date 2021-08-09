@@ -278,7 +278,6 @@ export function acceptance(name, optionsOrCallback) {
       resetCustomPostMessageCallbacks();
       resetUserSearchCache();
       resetCardClickListenerSelector();
-      clearCustomNavItemHref();
       resetPostMenuExtraButtons();
       clearNavItems();
       setTopicList(null);
