@@ -287,17 +287,18 @@ export default Controller.extend({
 
   @discourseComputed("model.isEncrypted")
   composerComponent(isEncrypted) {
+    const defaultComposer = "composer-editor";
     if (this.siteSettings.enable_experimental_composer_uploader) {
       if (isEncrypted) {
         warn(
           "Uppy cannot be used for composer uploads until upload handlers are developed, falling back to composer-editor.",
           { id: "composer" }
         );
-        return "composer-editor";
+        return defaultComposer;
       }
       return "composer-editor-uppy";
     }
-    return "composer-editor";
+    return defaultComposer;
   },
 
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
