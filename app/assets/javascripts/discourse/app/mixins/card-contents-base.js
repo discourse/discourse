@@ -358,8 +358,7 @@ export default Mixin.create({
   },
 
   keyUp(e) {
-    if (e.keyCode === 27) {
-      // ESC
+    if (e.key === "Escape") {
       const target = this.cardTarget;
       this._close();
       target.focus();

@@ -44,7 +44,7 @@ export default Component.extend({
     }
 
     $(this.element).on("keydown.discourse-create-account", (e) => {
-      if (!this.disabled && e.keyCode === 13) {
+      if (!this.disabled && e.key === "Enter") {
         e.preventDefault();
         e.stopPropagation();
         this.action();

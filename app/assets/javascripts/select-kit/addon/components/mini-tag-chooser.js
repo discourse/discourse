@@ -193,11 +193,11 @@ export default ComboBox.extend(TagsMixin, {
   _onKeydown(event) {
     const value = makeArray(this.value);
 
-    if (event.keyCode === 8) {
+    if (event.key === "Backspace") {
       if (!this.selectKit.filter) {
         this._onBackspace(this.value, this.highlightedTag);
       }
-    } else if (event.keyCode === 37) {
+    } else if (event.key === "ArrowLeft") {
       if (this.highlightedTag) {
         const index = value.indexOf(this.highlightedTag);
         const highlightedTag = value[index - 1]
@@ -207,7 +207,7 @@ export default ComboBox.extend(TagsMixin, {
       } else {
         this.set("highlightedTag", value.lastObject);
       }
-    } else if (event.keyCode === 39) {
+    } else if (event.key === "ArrowRight") {
       if (this.highlightedTag) {
         const index = value.indexOf(this.highlightedTag);
         const highlightedTag = value[index + 1]
