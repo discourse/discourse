@@ -99,7 +99,7 @@ module Discourse
         fd.fsync()
       end
 
-      File.rename(temp_destination, destination)
+      FileUtils.mv(temp_destination, destination)
 
       nil
     end
@@ -113,7 +113,7 @@ module Discourse
       FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
       temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
       execute_command('ln', '-s', source, temp_destination)
-      File.rename(temp_destination, destination)
+      FileUtils.mv(temp_destination, destination)
 
       nil
     end
