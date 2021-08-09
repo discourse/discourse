@@ -861,6 +861,59 @@ describe TopicQuery do
     end
   end
 
+  context 'list_unseen' do
+    it "returns an empty list when there aren't topics" do
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    it "doesn't return topics that were bumped last time before user joined the forum" do
+      user.first_seen_at = 10.minute.ago
+      create_topic_with_three_posts bumped_at: 15.minutes.ago
+
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    it "returns only topics that contain unseen posts" do
+      user.first_seen_at = 10.minute.ago
+      topic_with_unseen_posts = create_topic_with_three_posts bumped_at: 5.minutes.ago
+      read_to_post(topic_with_unseen_posts, user, 1)
+
+      fully_read_topic = create_topic_with_three_posts bumped_at: 5.minutes.ago
+      read_to_the_end(fully_read_topic, user)
+
+      expect(topic_query.list_unseen.topics).to eq([topic_with_unseen_posts])
+    end
+
+    it "ignores staff posts if user is not staff" do
+      user.first_seen_at = 10.minute.ago
+      topic = create_topic_with_three_posts bumped_at: 5.minutes.ago
+      read_to_the_end(topic, user)
+
+      Fabricate(:post, post_type: Post.types[:whisper], topic: topic)
+      topic.highest_staff_post_number += 1
+
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    def create_topic_with_three_posts(bumped_at:)
+      topic = Fabricate(:topic, bumped_at: bumped_at)
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      topic.highest_staff_post_number = 3
+      topic.highest_post_number = 3
+      topic
+    end
+
+    def read_to_post(topic, user, post_number)
+      TopicUser.update_last_read(user, topic.id, post_number, 0, 0)
+    end
+
+    def read_to_the_end(topic, user)
+      read_to_post topic, user, topic.highest_post_number
+    end
+  end
+
   context 'list_related_for do' do
 
     let(:user) do
