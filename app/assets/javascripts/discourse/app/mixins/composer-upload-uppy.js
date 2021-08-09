@@ -97,7 +97,11 @@ export default Mixin.create({
           const isUploading = validateUploadedFile(currentFile, validationOpts);
 
           run(() => {
-            this.setProperties({ uploadProgress: 0, isUploading });
+            this.setProperties({
+              uploadProgress: 0,
+              isUploading,
+              isCancellable: isUploading,
+            });
           });
 
           if (!isUploading) {
@@ -127,10 +131,13 @@ export default Mixin.create({
 
     this.uppyInstance.use(DropTarget, { target: this.element });
     this.uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
+
+    // TODO (martin) support for direct S3 uploads will come later, for now
+    // we just want the regular /uploads.json endpoint to work well
     this._useXHRUploads();
 
-    // TODO
-    // upload handlers
+    // TODO (martin) develop upload handler guidance and an API to use; will
+    // likely be using uppy plugins for this
     this.uppyInstance.on("file-added", (file) => {
       if (isPrivateMessage) {
         file.meta.for_private_message = true;
@@ -175,13 +182,13 @@ export default Mixin.create({
       this.appEvents.trigger("composer:upload-success", file.name, upload);
     });
 
-    this.uppyInstance.on("upload-error", (file) => {
+    this.uppyInstance.on("upload-error", (file, error, response) => {
       run(() => {
         this._resetUpload(file, { removePlaceholder: true });
 
         if (!this.userCancelled) {
+          displayErrorForUpload(response, this.siteSettings, file.name);
           this.appEvents.trigger("composer:upload-error", file);
-          displayErrorForUpload(file, this.siteSettings, file.name);
         }
       });
     });
@@ -205,6 +212,10 @@ export default Mixin.create({
 
         this.set("userCancelled", false);
         this._reset();
+
+        next(() => {
+          this.appEvents.trigger("composer:uploads-cancelled");
+        });
       }
     });
 
@@ -321,13 +332,14 @@ export default Mixin.create({
       uploadProgress: 0,
       isUploading: false,
       isProcessingUpload: false,
-      isCancelleble: false,
+      isCancellable: false,
     });
+    this.fileInputEl.value = "";
   },
 
-  _resetUpload(file, removePlaceholder) {
+  _resetUpload(file, opts) {
     next(() => {
-      if (removePlaceholder) {
+      if (opts.removePlaceholder) {
         this.appEvents.trigger(
           "composer:replace-text",
           this.placeholders[file.id].uploadPlaceholder,

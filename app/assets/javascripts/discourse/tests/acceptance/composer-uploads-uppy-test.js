@@ -17,23 +17,35 @@ function pretender(server, helper) {
   });
 
   server.post("/uploads.json", () => {
-    return helper.response({
-      extension: "jpeg",
-      filesize: 126177,
-      height: 800,
-      human_filesize: "123 KB",
-      id: 202,
-      original_filename: "avatar.PNG.jpg",
-      retain_hours: null,
-      short_path: "/uploads/short-url/yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
-      short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
-      thumbnail_height: 320,
-      thumbnail_width: 690,
-      url:
-        "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
-      width: 1920,
-    });
+    return helper.response(
+      {
+        extension: "jpeg",
+        filesize: 126177,
+        height: 800,
+        human_filesize: "123 KB",
+        id: 202,
+        original_filename: "avatar.PNG.jpg",
+        retain_hours: null,
+        short_path: "/uploads/short-url/yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+        short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+        thumbnail_height: 320,
+        thumbnail_width: 690,
+        url:
+          "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
+        width: 1920,
+      },
+      1000
+    );
   });
+}
+
+function createFile(name, type = "image/png") {
+  // the blob content doesn't matter at all, just want it to be random-ish
+  const file = new Blob([(Math.random() + 1).toString(36).substring(2)], {
+    type,
+  });
+  file.name = name;
+  return file;
 }
 
 acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
@@ -123,9 +135,79 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", [jsonFile]);
   });
 
-  function createFile(name, type = "image/png") {
-    const file = new Blob([""], { type });
-    file.name = name;
-    return file;
-  }
+  test("cancelling uploads clears the placeholders out", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
+    const appEvents = this.container.lookup("service:app-events");
+    const done = assert.async();
+
+    appEvents.on("composer:uploads-cancelled", () => {
+      assert.equal(
+        queryAll(".d-editor-input").val(),
+        "The image:\n",
+        "it should clear the cancelled placeholders"
+      );
+      done();
+    });
+
+    let uploadStarted = 0;
+    appEvents.on("composer:upload-started", async () => {
+      uploadStarted++;
+
+      if (uploadStarted === 2) {
+        assert.equal(
+          queryAll(".d-editor-input").val(),
+          "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
+          "it should show the upload placeholders when the upload starts"
+        );
+        await click("#cancel-file-upload");
+      }
+    });
+
+    const image = createFile("avatar.png");
+    const image2 = createFile("avatar2.png");
+    appEvents.trigger("composer:add-files", [image, image2]);
+  });
+});
+
+acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.post("/uploads.json", () => {
+      return helper.response(422, {
+        success: false,
+        errors: [
+          "There was an error uploading the file, the gif was way too cool.",
+        ],
+      });
+    });
+  });
+  needs.settings({
+    enable_experimental_composer_uploader: true,
+    simultaneous_uploads: 2,
+  });
+
+  test("should show an error message for the failed upload", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
+    const appEvents = this.container.lookup("service:app-events");
+    const done = assert.async();
+
+    appEvents.on("composer:upload-error", () => {
+      assert.equal(
+        queryAll(".bootbox .modal-body").html(),
+        "There was an error uploading the file, the gif was way too cool.",
+        "it should show the error message from the server"
+      );
+
+      click(".modal-footer .btn-primary");
+
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
 });
