@@ -8,9 +8,16 @@ import headerOutletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
-let _cardClickListenerSelectors = ["#main-outlet"];
+const DEFAULT_SELECTOR = "#main-outlet";
+
+let _cardClickListenerSelectors = [DEFAULT_SELECTOR];
+
 export function addCardClickListenerSelector(selector) {
   _cardClickListenerSelectors.push(selector);
+}
+
+export function resetCardClickListenerSelector() {
+  _cardClickListenerSelectors = [DEFAULT_SELECTOR];
 }
 
 export default Mixin.create({
