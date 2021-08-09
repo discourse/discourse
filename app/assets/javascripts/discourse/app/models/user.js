@@ -22,6 +22,7 @@ import UserDraftsStream from "discourse/models/user-drafts-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import UserStream from "discourse/models/user-stream";
 import { ajax } from "discourse/lib/ajax";
+import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -1118,5 +1119,21 @@ User.reopenClass(Singleton, {
     });
   },
 });
+
+if (typeof Discourse !== "undefined") {
+  let warned = false;
+  Object.defineProperty(Discourse, "User", {
+    get() {
+      if (!warned) {
+        deprecated("Import the User class instead of using User", {
+          since: "2.4.0",
+          dropFrom: "2.6.0",
+        });
+        warned = true;
+      }
+      return User;
+    },
+  });
+}
 
 export default User;
