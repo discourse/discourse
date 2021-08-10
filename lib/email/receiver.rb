@@ -558,7 +558,10 @@ module Email
 
     def trim_discourse_markers(reply)
       reply = reply.split(previous_replies_regex)[0]
-      reply.split(reply_above_line_regex)[0]
+      if reply
+        reply = reply.split(reply_above_line_regex)[0]
+      end
+      reply
     end
 
     def parse_from_field(mail = nil)
