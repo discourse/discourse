@@ -3436,13 +3436,7 @@ en:
           other: "%{count} unread"
       unseen:
         title: "Unseen"
-        title_with_count:
-          one: "Unseen (%{count})"
-          other: "Unseen (%{count})"
         lower_title: "unseen"
-        lower_title_with_count:
-          one: "%{count} unseen"
-          other: "%{count} unseen"
       new:
         lower_title_with_count:
           one: "%{count} new"
