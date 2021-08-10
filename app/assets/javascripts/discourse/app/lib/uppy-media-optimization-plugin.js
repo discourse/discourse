@@ -9,6 +9,11 @@ export default class UppyMediaOptimization extends Plugin {
 
     this.type = "preprocessor";
     this.optimizeFn = opts.optimizeFn;
+
+    // mobile devices have limited processing power, so we only enable
+    // running media optimization in parallel when we are sure the user
+    // is not on a mobile device. otherwise we just process the images
+    // serially.
     this.runParallel = opts.runParallel || false;
   }
 
@@ -31,7 +36,10 @@ export default class UppyMediaOptimization extends Plugin {
         }
         this.uppy.emit("preprocess-complete", file);
       })
-      .catch((err) => warn(err, { id: "discourse.uppy-media-optimization" }));
+      .catch((err) => {
+        warn(err, { id: "discourse.uppy-media-optimization" });
+        this.uppy.emit("preprocess-complete", file);
+      });
   }
 
   _optimizeParallel(fileIds) {
