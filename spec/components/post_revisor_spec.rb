@@ -293,12 +293,12 @@ describe PostRevisor do
 
       it "should send muted and latest message" do
         TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
-        messages = MessageBus.track_publish("/latest") do
+        messages = MessageBus.track_publish(TopicTrackingState::TOPIC_CHANNEL) do
           subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
         end
 
-        muted_message = messages.find { |message| message.data["message_type"] == "muted" }
-        latest_message = messages.find { |message| message.data["message_type"] == "latest" }
+        muted_message = messages.find { |message| message.data["message_type"] == TopicTrackingState::MUTED_MESSAGE_TYPE }
+        latest_message = messages.find { |message| message.data["message_type"] == TopicTrackingState::LATEST_MESSAGE_TYPE }
 
         expect(muted_message.data["topic_id"]).to eq(topic.id)
         expect(latest_message.data["topic_id"]).to eq(topic.id)

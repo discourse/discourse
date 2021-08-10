@@ -18,14 +18,17 @@ describe TopicTrackingState do
 
   describe '#publish_latest' do
     it 'can correctly publish latest' do
-      message = MessageBus.track_publish("/latest") do
+      messages = MessageBus.track_publish(TopicTrackingState::TOPIC_CHANNEL) do
         described_class.publish_latest(topic)
-      end.first
+      end
+
+      message = messages.find do |m|
+        m.data["message_type"] == described_class::LATEST_MESSAGE_TYPE
+      end
 
       data = message.data
 
       expect(data["topic_id"]).to eq(topic.id)
-      expect(data["message_type"]).to eq(described_class::LATEST_MESSAGE_TYPE)
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
     end
 
@@ -42,14 +45,17 @@ describe TopicTrackingState do
 
   describe '#publish_unread' do
     it "can correctly publish unread" do
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
+      messages = MessageBus.track_publish(TopicTrackingState::TOPIC_CHANNEL) do
         TopicTrackingState.publish_unread(post)
-      end.first
+      end
+
+      message = messages.find do |m|
+        m.data["message_type"] == described_class::UNREAD_MESSAGE_TYPE
+      end
 
       data = message.data
 
       expect(data["topic_id"]).to eq(topic.id)
-      expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
     end
 
@@ -82,21 +88,24 @@ describe TopicTrackingState do
 
     it 'can correctly publish muted' do
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
-      messages = MessageBus.track_publish("/latest") do
+      messages = MessageBus.track_publish(TopicTrackingState::TOPIC_CHANNEL) do
         TopicTrackingState.publish_muted(topic)
       end
 
-      muted_message = messages.find { |message| message.data["message_type"] == "muted" }
+      muted_message = messages.find do |message|
+        message.data["message_type"] == described_class::MUTED_MESSAGE_TYPE
+      end
 
       expect(muted_message.data["topic_id"]).to eq(topic.id)
-      expect(muted_message.data["message_type"]).to eq(described_class::MUTED_MESSAGE_TYPE)
     end
 
     it 'should not publish any message when notification level is not muted' do
       messages = MessageBus.track_publish("/latest") do
         TopicTrackingState.publish_muted(topic)
       end
-      muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
+      muted_messages = messages.select do |message|
+        message.data["message_type"] == described_class::MUTED_MESSAGE_TYPE
+      end
 
       expect(muted_messages).to eq([])
     end
@@ -107,7 +116,11 @@ describe TopicTrackingState do
       messages = MessageBus.track_publish("/latest") do
         TopicTrackingState.publish_muted(topic)
       end
-      muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
+
+      muted_messages = messages.select do |message|
+        message.data["message_type"] == described_class::MUTED_MESSAGE_TYPE
+      end
+
       expect(muted_messages).to eq([])
     end
   end
@@ -133,14 +146,16 @@ describe TopicTrackingState do
       CategoryUser.create!(category: topic.category, user: second_user, notification_level: 1)
       TagUser.create!(tag: topic.tags.first, user: third_user, notification_level: 1)
       TagUser.create!(tag: topic.tags.first, user: Fabricate(:user), notification_level: 0)
-      messages = MessageBus.track_publish("/latest") do
+      messages = MessageBus.track_publish(TopicTrackingState::TOPIC_CHANNEL) do
         TopicTrackingState.publish_unmuted(topic)
       end
 
-      unmuted_message = messages.find { |message| message.data["message_type"] == "unmuted" }
+      unmuted_message = messages.find do |message|
+        message.data["message_type"] == described_class::UNMUTED_MESSAGE_TYPE
+      end
+
       expect(unmuted_message.user_ids.sort).to eq([user.id, second_user.id, third_user.id].sort)
       expect(unmuted_message.data["topic_id"]).to eq(topic.id)
-      expect(unmuted_message.data["message_type"]).to eq(described_class::UNMUTED_MESSAGE_TYPE)
     end
 
     it 'should not publish any message when notification level is not muted' do
@@ -149,7 +164,9 @@ describe TopicTrackingState do
       messages = MessageBus.track_publish("/latest") do
         TopicTrackingState.publish_unmuted(topic)
       end
-      unmuted_messages = messages.select { |message| message.data["message_type"] == "unmuted" }
+      unmuted_messages = messages.select do |message|
+        message.data["message_type"] == described_class::UNMUTED_MESSAGE_TYPE
+      end
 
       expect(unmuted_messages).to eq([])
     end
@@ -160,7 +177,10 @@ describe TopicTrackingState do
       messages = MessageBus.track_publish("/latest") do
         TopicTrackingState.publish_unmuted(topic)
       end
-      unmuted_messages = messages.select { |message| message.data["message_type"] == "unmuted" }
+      unmuted_messages = messages.select do |message|
+        message.data["message_type"] == described_class::UNMUTED_MESSAGE_TYPE
+      end
+
       expect(unmuted_messages).to eq([])
     end
   end

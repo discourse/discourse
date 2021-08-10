@@ -65,36 +65,28 @@ const TopicTrackingState = EmberObject.extend({
    * @method establishChannels
    */
   establishChannels() {
-    this.messageBus.subscribe("/new", this._processChannelPayload.bind(this));
-    this.messageBus.subscribe(
-      "/latest",
-      this._processChannelPayload.bind(this)
-    );
-    if (this.currentUser) {
-      this.messageBus.subscribe(
-        "/unread/" + this.currentUser.get("id"),
-        this._processChannelPayload.bind(this)
-      );
-    }
-
-    this.messageBus.subscribe("/delete", (msg) => {
-      this.modifyStateProp(msg, "deleted", true);
-      this.incrementMessageCount();
-    });
-
-    this.messageBus.subscribe("/recover", (msg) => {
-      this.modifyStateProp(msg, "deleted", false);
-      this.incrementMessageCount();
-    });
-
-    this.messageBus.subscribe("/destroy", (msg) => {
-      this.incrementMessageCount();
-      const currentRoute = DiscourseURL.router.currentRoute.parent;
-      if (
-        currentRoute.name === "topic" &&
-        parseInt(currentRoute.params.id, 10) === msg.topic_id
-      ) {
-        DiscourseURL.redirectTo("/");
+    this.messageBus.subscribe("/topic-tracking-state", (data) => {
+      switch (data.message_type) {
+        case "delete":
+          this.modifyStateProp(data, "deleted", true);
+          this.incrementMessageCount();
+          break;
+        case "recover":
+          this.modifyStateProp(data, "deleted", false);
+          this.incrementMessageCount();
+          break;
+        case "destroy":
+          this.incrementMessageCount();
+          const currentRoute = DiscourseURL.router.currentRoute.parent;
+          if (
+            currentRoute.name === "topic" &&
+            parseInt(currentRoute.params.id, 10) === data.topic_id
+          ) {
+            DiscourseURL.redirectTo("/");
+          }
+          break;
+        default:
+          this._processChannelPayload(data);
       }
     });
   },

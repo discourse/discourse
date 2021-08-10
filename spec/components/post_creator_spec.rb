@@ -124,8 +124,7 @@ describe PostCreator do
         end
         # don't notify on system messages they introduce too much noise
         channels = messages.map(&:channel)
-        expect(channels.find { |s| s =~ /unread/ }).to eq(nil)
-        expect(channels.find { |s| s =~ /new/ }).to eq(nil)
+        expect(channels.find { |s| s =~ /#{TopicTrackingState::TOPIC_CHANNEL}/ }).to eq(nil)
       end
 
       it 'enqueues job to generate messages' do
@@ -155,21 +154,25 @@ describe PostCreator do
         channels = messages.map { |m| m.channel }.sort
 
         # 2 for topic, one to notify of new topic another for tracking state
-        expect(channels).to eq(
-          [
-            "/new",
-            "/u/#{admin.username}",
-            "/u/#{admin.username}",
-            "/unread/#{admin.id}",
-            "/unread/#{admin.id}",
-            "/latest",
-            "/latest",
-            "/topic/#{created_post.topic_id}",
-            "/topic/#{created_post.topic_id}",
-            "/user",
-            "/user",
-            "/user"
-          ].sort
+        expect(channels.select { |c| c == "/topic/#{created_post.topic_id}" }.length)
+          .to eq(2)
+
+        expect(channels.select { |c| c == "/u/#{admin.username}" }.length)
+          .to eq(2)
+
+        expect(channels.select { |c| c == "/user" }.length)
+          .to eq(3)
+
+        topic_tracking_messages = messages.select { |m| m.channel == TopicTrackingState::TOPIC_CHANNEL }
+
+        expect(topic_tracking_messages.length).to eq(5)
+
+        expect(topic_tracking_messages.map { |m| m.data["message_type"] }).to contain_exactly(
+          TopicTrackingState::LATEST_MESSAGE_TYPE,
+          TopicTrackingState::LATEST_MESSAGE_TYPE,
+          TopicTrackingState::NEW_TOPIC_MESSAGE_TYPE,
+          TopicTrackingState::READ_MESSAGE_TYPE,
+          TopicTrackingState::UNREAD_MESSAGE_TYPE,
         )
 
         admin_ids = [Group[:admins].id]
@@ -185,14 +188,18 @@ describe PostCreator do
           p = creator.create
         end
 
-        latest = messages.find { |m| m.channel == "/latest" }
-        expect(latest).not_to eq(nil)
+        topic_tracking_messages = messages.select do |m|
+          m.channel == TopicTrackingState::TOPIC_CHANNEL
+        end
 
-        latest = messages.find { |m| m.channel == "/new" }
-        expect(latest).not_to eq(nil)
+        expect(topic_tracking_messages.length).to eq(3)
 
-        read = messages.find { |m| m.channel == "/unread/#{p.user_id}" }
-        expect(read).not_to eq(nil)
+        expect(topic_tracking_messages.map { |m| m.data["message_type"] })
+          .to contain_exactly(
+            TopicTrackingState::LATEST_MESSAGE_TYPE,
+            TopicTrackingState::NEW_TOPIC_MESSAGE_TYPE,
+            TopicTrackingState::READ_MESSAGE_TYPE,
+          )
 
         user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)

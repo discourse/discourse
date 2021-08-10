@@ -94,7 +94,7 @@ acceptance("Topic Discovery", function (needs) {
       "shows the topic unread"
     );
 
-    publishToMessageBus("/latest", {
+    publishToMessageBus("/topic-tracking-state", {
       message_type: "read",
       topic_id: 11995,
       payload: {

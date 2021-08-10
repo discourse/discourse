@@ -30,6 +30,7 @@ class TopicTrackingState
   READ_MESSAGE_TYPE = "read"
   DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
   MAX_TOPICS = 5000
+  TOPIC_CHANNEL = "/topic-tracking-state"
 
   attr_accessor :user_id,
                 :topic_id,
@@ -71,7 +72,7 @@ class TopicTrackingState
 
     group_ids = topic.category && topic.category.secure_group_ids
 
-    MessageBus.publish("/new", message.as_json, group_ids: group_ids)
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, group_ids: group_ids)
     publish_read(topic.id, 1, topic.user_id)
   end
 
@@ -104,11 +105,7 @@ class TopicTrackingState
       else
         topic.category && topic.category.secure_group_ids
       end
-    MessageBus.publish("/latest", message.as_json, group_ids: group_ids)
-  end
-
-  def self.unread_channel_key(user_id)
-    "/unread/#{user_id}"
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, group_ids: group_ids)
   end
 
   def self.publish_muted(topic)
@@ -124,7 +121,7 @@ class TopicTrackingState
       topic_id: topic.id,
       message_type: MUTED_MESSAGE_TYPE,
     }
-    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, user_ids: user_ids)
   end
 
   def self.publish_unmuted(topic)
@@ -139,7 +136,7 @@ class TopicTrackingState
       topic_id: topic.id,
       message_type: UNMUTED_MESSAGE_TYPE,
     }
-    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, user_ids: user_ids)
   end
 
   def self.publish_unread(post)
@@ -189,7 +186,10 @@ class TopicTrackingState
         payload: payload
       }
 
-      MessageBus.publish(self.unread_channel_key(tu.user_id), message.as_json, group_ids: group_ids)
+      MessageBus.publish(TOPIC_CHANNEL, message.as_json,
+        group_ids: group_ids,
+        user_ids: [tu.user_id]
+      )
     end
 
   end
@@ -202,7 +202,7 @@ class TopicTrackingState
       message_type: RECOVER_MESSAGE_TYPE
     }
 
-    MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, group_ids: group_ids)
 
   end
 
@@ -214,7 +214,7 @@ class TopicTrackingState
       message_type: DELETE_MESSAGE_TYPE
     }
 
-    MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, group_ids: group_ids)
   end
 
   def self.publish_destroy(topic)
@@ -225,7 +225,7 @@ class TopicTrackingState
       message_type: DESTROY_MESSAGE_TYPE
     }
 
-    MessageBus.publish("/destroy", message.as_json, group_ids: group_ids)
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, group_ids: group_ids)
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level = nil)
@@ -242,7 +242,7 @@ class TopicTrackingState
       }
     }
 
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, user_ids: [user_id])
   end
 
   def self.publish_dismiss_new(user_id, topic_ids: [])
@@ -252,7 +252,7 @@ class TopicTrackingState
         topic_ids: topic_ids
       }
     }
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+    MessageBus.publish(TOPIC_CHANNEL, message.as_json, user_ids: [user_id])
   end
 
   def self.new_filter_sql
