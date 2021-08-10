@@ -132,6 +132,8 @@ export default Component.extend({
       DiscourseURL.routeTo(this.href);
     }
 
+    event.stopPropagation();
+
     return false;
   },
 
