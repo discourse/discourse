@@ -65,12 +65,14 @@ const TopicTrackingState = EmberObject.extend({
    * @method establishChannels
    */
   establishChannels() {
-    this.messageBus.subscribe("/new", this._processChannelPayload.bind(this));
     this.messageBus.subscribe(
       "/latest",
       this._processChannelPayload.bind(this)
     );
+
     if (this.currentUser) {
+      this.messageBus.subscribe("/new", this._processChannelPayload.bind(this));
+
       this.messageBus.subscribe(
         "/unread/" + this.currentUser.get("id"),
         this._processChannelPayload.bind(this)
