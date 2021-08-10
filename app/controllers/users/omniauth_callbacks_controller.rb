@@ -30,7 +30,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
       # Save to redis, with a secret token, then redirect to confirmation screen
       token = SecureRandom.hex
-      Discourse.redis.setex "#{Users::AssociateAccountsController::REDIS_PREFIX}_#{current_user.id}_#{token}", 10.minutes, auth.to_json
+      secure_session.set "#{Users::AssociateAccountsController.key(token)}", auth.to_json, expires: 10.minutes
       return redirect_to "#{Discourse.base_path}/associate/#{token}"
     else
       DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies, request)

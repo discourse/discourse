@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::AssociateAccountsController < ApplicationController
-  REDIS_PREFIX ||= "omniauth_reconnect"
+  SECURE_SESSION_PREFIX ||= "omniauth_reconnect"
 
   def connect_info
     auth = get_auth_hash
@@ -17,7 +17,7 @@ class Users::AssociateAccountsController < ApplicationController
 
   def connect
     auth = get_auth_hash
-    Discourse.redis.del "#{REDIS_PREFIX}_#{current_user&.id}_#{params[:token]}"
+    secure_session[self.class.key(params[:token])] = nil
 
     provider_name = auth.provider
     authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
@@ -34,9 +34,13 @@ class Users::AssociateAccountsController < ApplicationController
 
   def get_auth_hash
     token = params[:token]
-    json = Discourse.redis.get "#{REDIS_PREFIX}_#{current_user&.id}_#{token}"
+    json = secure_session[self.class.key(token)]
     raise Discourse::NotFound if json.nil?
 
     OmniAuth::AuthHash.new(JSON.parse(json))
+  end
+
+  def self.key(token)
+    "#{SECURE_SESSION_PREFIX}_#{token}"
   end
 end
