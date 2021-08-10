@@ -343,13 +343,6 @@ class TopicQuery
                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
-  def self.unseen_filter(list, user_first_seen_at, staff)
-    list = list.where("topics.bumped_at >= ?", user_first_seen_at)
-
-    col_name = staff ? "highest_staff_post_number" : "highest_post_number"
-    list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
-  end
-
   def self.tracked_filter(list, user_id)
     sql = +<<~SQL
       topics.category_id IN (
@@ -469,7 +462,7 @@ class TopicQuery
 
   def unseen_results(options = {})
     result = default_results(options)
-    result = TopicQuery.unseen_filter(result, @user.first_seen_at, @user.staff?) if @user
+    result = unseen_filter(result, @user.first_seen_at, @user.staff?) if @user
     result = remove_muted(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
 
@@ -1059,5 +1052,14 @@ class TopicQuery
     end
 
     result.order('topics.bumped_at DESC')
+  end
+
+  private
+
+  def unseen_filter(list, user_first_seen_at, staff)
+    list = list.where("topics.bumped_at >= ?", user_first_seen_at)
+
+    col_name = staff ? "highest_staff_post_number" : "highest_post_number"
+    list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
   end
 end
