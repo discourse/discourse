@@ -20,6 +20,12 @@
         <p>{{i18n "invites.invited_by"}}</p>
         <p>{{user-info user=invitedBy}}</p>
 
+        {{#if associateHtml}}
+          <p class="create-account-associate-link">
+            {{html-safe associateHtml}}
+          </p>
+        {{/if}}
+
         {{#unless isInviteLink}}
           <p class="email-message">
             {{html-safe yourEmailMessage}}
