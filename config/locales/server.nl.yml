@@ -465,7 +465,6 @@ nl:
               unable_to_update: "Er is een fout opgetreden bij het bijwerken van dat topic."
             featured_link:
               invalid: "is ongeldig. URL moet http:// of https:// bevatten."
-              invalid_category: "kan niet worden bewerkt in deze categorie."
         user:
           attributes:
             password:
@@ -2242,14 +2241,6 @@ nl:
     backup_failed:
       title: "Back-up mislukt"
       subject_template: "Back-up mislukt"
-      text_body_template: |
-        De back-up is mislukt.
-
-        Hier zijn de details:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Back-up teruggezet"
       subject_template: "Back-up succesvol voltooid"

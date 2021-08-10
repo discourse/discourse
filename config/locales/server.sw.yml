@@ -291,7 +291,6 @@ sw:
               target_user_not_found: "Mtumiaji mmoja unaejaribu kumtumia ujumbe hajapatikana."
             featured_link:
               invalid: "ni batili. Anwani inahitaji kuwa na http:// or https://."
-              invalid_category: "haiwezi kufanyiwa uhariri kwenye kategoria hii."
         user:
           attributes:
             password:

@@ -581,7 +581,6 @@ pl_PL:
               unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
             featured_link:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
-              invalid_category: "nie może być edytowany w tej kategorii."
         user:
           attributes:
             password:
@@ -2853,9 +2852,7 @@ pl_PL:
 
         Oto dziennik:
 
-        ``` text
         %{logs}
-        ```
     backup_failed:
       title: "Kopia zapasowa nie została utworzona "
       subject_template: "Kopia zapasowa nieudana"
@@ -2864,9 +2861,7 @@ pl_PL:
 
         Oto dziennik:
 
-        ``` text
         %{logs}
-        ```
     restore_succeeded:
       title: "Przywracanie udane"
       subject_template: "Przywrócenie udane"
@@ -2875,9 +2870,7 @@ pl_PL:
 
         Oto dziennik:
 
-        ``` text
         %{logs}
-        ```
     restore_failed:
       title: "Przywracanie nieudane"
       subject_template: "Przywracanie nieudane"
@@ -2886,9 +2879,7 @@ pl_PL:
 
         Oto dziennik:
 
-        ``` text
         %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Zaproszenia hurtowe udane"
       subject_template: "Przetwarzanie masowej ilości zaproszeń zakończyło się sukcesem."

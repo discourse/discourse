@@ -530,6 +530,7 @@ he:
       ניתן לערוך תגובות קודמות שלך כדי להוסיף ציטוט על ידי סימון טקסט ובחירה בכפתור שנגלה <b>ציטוט תגובה</b>.
 
       יותר קל לכולם לקרוא נושאים שיש בהם פחות תגובות עמוקות מאשר הרבה תגובות קטנות.
+    dominating_topic: פרסמת כאן למעלה מ־%{percent}% מהתגובות, האם כדאי לשמוע דעות של אנשים נוספים?
     get_a_room: |
       ### מומלץ לעודד את כולם להשתתף בדיון
 
@@ -578,7 +579,6 @@ he:
               unable_to_tag: "אירעה שגיאה בתיוג הנושא."
             featured_link:
               invalid: "שגוי. כתובת אמורה לכלול http://‎ או https://‎."
-              invalid_category: "לא ניתן לעריכה בקטגוריה זו."
         user:
           attributes:
             password:
@@ -1484,6 +1484,7 @@ he:
     category_search_priority_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה בקטגוריות."
     allow_uncategorized_topics: "לאפשר לפתוח נושאים ללא קטגוריה. אזהרה: אם יש נושאים ללא קטגוריה, יש לסדר אותם לפני שמבטלים את ההגדרה הזאת. "
     allow_duplicate_topic_titles: "לאפשר נושאים עם כותרות זהות או כפולות."
+    allow_duplicate_topic_titles_category: "לאפשר נושאים עם כותרות זהות, כפולות אם הם לא באותה הקטגוריה. ההגדרה allow_duplicate_topic_titles (לאפשר כותרות נושאים כפולות) חייבת להיות מושבתת."
     unique_posts_mins: "כמה דקות לפני שמשתמש יכול לפרסם את אותו תוכן שוב"
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) הפוסטים הראשונים שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור הפוסטים."
     title: "שם האתר הזה, כפי שהוא משמש בתגית הכותרת."
@@ -1667,6 +1668,11 @@ he:
     auth_overrides_email: "דריסת כתובת הדוא״ל המקומית בכתובת הדוא״ל מהאתר המרוחק עם כל כניסה למערכת ומניעת שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב שינויים באורך/דרישות שם המשתמש)"
     auth_overrides_username: "דריסת שם המשתמש המקומי בשם המשתמש מהאתר המרוחק עם כל כניסה למערכת ומניעת שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב שינויים באורך/דרישות שם המשתמש)"
     auth_overrides_name: "דריסת השם המלא המקומי בשם מלא חיצוני עם כל כניסה ולמנוע שינויים מקומיים. חל על כל ספקי האימות."
+    discourse_connect_overrides_avatar: "דריסת התמונה הייצוגית בערך ממטען ה־DiscourseConnect. אם אפשרות זו פעילה, למשתמשים לא תהיה אפשרות להעלות תמונות ייצוגיות ל־Discourse."
+    discourse_connect_overrides_location: "דריסת מיקום המשתמש בערך ממטען ה־DiscourseConnect ולמנוע שינויים מקומיים."
+    discourse_connect_overrides_website: "דריסת אתר המשתמש בערך ממטען ה־DiscourseConnect ולמנוע שינויים מקומיים."
+    discourse_connect_overrides_profile_background: "דריסת רקע פרופיל המשתמש בערך ממטען ה־DiscourseConnect."
+    discourse_connect_overrides_card_background: "דריסת רקע כרטיס המשתמש בערך ממטען ה־DiscourseConnect."
     discourse_connect_not_approved_url: "הפניית חשבונות DiscourseConnect ללא אישור לכתובת הזאת"
     discourse_connect_allows_all_return_paths: "לא להגביל את שמות התחום של נתיבי החזרה (return_paths) שמסופקים על ידי DiscourseConnect (כבררת מחדל, נתיבי החזרה חייבים להיות באתר הנוכחי)"
     enable_local_logins: "הפעלת חשבונות כניסה עם שם משתמש וססמה. אזהרה: השבתה עשויה למנוע את כניסתך אלמלא הגדרת לפחות שיטת כניסה חלופית אחת נוספת."
@@ -2772,46 +2778,38 @@ he:
       text_body_template: |
         הגיבוי הצליח.
 
-        יש לבקר ב־[ניהול > אגף הגיבוי](%{base_url}/admin/backups) כדי להוריד את הגיבוי החדש שלך.
+        אפשר לגשת אל [ניהול > אגף הגיבוי](%{base_url}/admin/backups) כדי להוריד את הגיבוי החדש שלך.
 
-        להלן יומן הפעילות:
+        להלן התיעוד:
 
-        ``` text
         %{logs}
-        ```
     backup_failed:
       title: "גיבוי נכשל"
       subject_template: "הגיבוי נכשל."
       text_body_template: |
         הגיבוי נכשל.
 
-        להלן יומן הפעילות:
+        להלן התיעוד:
 
-        ``` text
         %{logs}
-        ```
     restore_succeeded:
       title: "שחזור הצליח"
       subject_template: "השחזור הסתיים בהצלחה."
       text_body_template: |
         השחזור הצליח.
 
-        להלן יומן התיעוד:
+        להלן התיעוד:
 
-        ``` text
         %{logs}
-        ```
     restore_failed:
       title: "שחזור נכשל"
       subject_template: "השחזור נכשל"
       text_body_template: |
         השחזור נכשל.
 
-        להלן יומן הפעילות:
+        להלן התיעוד:
 
-        ``` text
         %{logs}
-        ```
     bulk_invite_succeeded:
       title: "הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"

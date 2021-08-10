@@ -1813,11 +1813,9 @@ ca:
         dismiss_new: "Descarta'n els nous"
         toggle: "commuta la selecció massiva de temes"
         actions: "Accions massives"
-        change_category: "Defineix categoria"
         close_topics: "Tanca temes"
         archive_topics: "Arxiva temes"
         move_messages_to_inbox: "Mou a la safata d'entrada"
-        notification_level: "Notificacions"
         choose_new_category: "Seleccioneu la categoria nova per als temes:"
         selected:
           one: "He seleccionat <b>%{count}</b> tema."
@@ -2027,7 +2025,6 @@ ca:
         invisible: "Fes invisible"
         visible: "Fes visible"
         reset_read: "Restableix data de lectura"
-        make_public: "Fes públic el tema"
         make_private: "Converteix en missatge personal"
         reset_bump_date: "Restableix la data d'elevació"
       feature:
@@ -2270,8 +2267,6 @@ ca:
         revert_to_regular: "Elimina el color de l'equip responsable"
         rebake: "Refés HTML"
         unhide: "Desfés amagar"
-        change_owner: "Canvia la propietat"
-        grant_badge: "Atorga insígnia"
         lock_post: "Bloca la publicació"
         lock_post_description: "impedeix que l'autor editi aquesta publicació"
         unlock_post: "Desbloca la publicació"
@@ -2279,7 +2274,6 @@ ca:
         delete_topic_disallowed_modal: "No teniu permís per a suprimir aquest tema. Si realment voleu que se suprimeixi, envieu una bandera perquè un moderador hi pari atenció juntament amb una argumentació."
         delete_topic_disallowed: "no teniu permís per a suprimir aquest tema"
         delete_topic: "suprimeix el tema"
-        add_post_notice: "Afegeix un avís a l'equip responsable"
         remove_timer: "elimina el temporitzador"
       actions:
         people:
@@ -4041,7 +4035,6 @@ ca:
           post_revision: "Quan un usuari edita o crea una publicació"
           trust_level_change: "Quan un usuari canvia de nivell de confiança"
           user_change: "Quan s'edita o es crea un usuari"
-          post_processed: "Després de processar una publicació "
         preview:
           link_text: "Previsualitza les insígnies concedides"
           plan_text: "Previsualitza amb pla de consulta"

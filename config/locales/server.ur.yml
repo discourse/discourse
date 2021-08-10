@@ -394,7 +394,6 @@ ur:
               target_user_not_found: "جن صارفین کو آپ یہ پیغام بھیج رہے ہیں اُن میں سے ایک نہ مل سکا۔"
             featured_link:
               invalid: "غلط ہے۔ URL میں http:// یا https:// شامل ہونا چاہئے۔"
-              invalid_category: "اِس زُمرہ میں ترمیم نہیں کیا جا سکتا۔"
         user:
           attributes:
             password:
@@ -2119,49 +2118,15 @@ ur:
     backup_succeeded:
       title: "بیک اَپ کامیاب"
       subject_template: "بیک اَپ کامیابی سے مکمل کر لیا گیا"
-      text_body_template: |
-        بیک اَپ کامیاب ہو گیا تھا۔
-
-        اپنا نیا بیک اَپ ڈاؤن لوڈ کرنے کیلئے [ایڈمن > بیک اَپ سیکشن](%{base_url}/admin/backups) ملاحظہ کریں۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "بیک اَپ ناکام"
       subject_template: "بیک اَپ ناکام ہو گیا"
-      text_body_template: |
-        بیک اَپ ناکام ہو گیا ہے۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "رِیسٹور کامیاب"
       subject_template: "رِیسٹور کامیابی سے مکمل ہو گیا"
-      text_body_template: |
-        رِیسٹور کامیاب ہو گیا تھا۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "رِیسٹور ناکام"
       subject_template: "رِیسٹور ناکام ہو گیا"
-      text_body_template: |
-        رِیسٹور ناکام ہو گیا ہے۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "بَلک مدعو کامیاب"
       subject_template: "بَلک صارف دعوت ناموں پر کامیابی سے عملدرآمد ہو گیا"

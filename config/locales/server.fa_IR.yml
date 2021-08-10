@@ -52,13 +52,16 @@ fa_IR:
   redirect_warning: "ما قادر به تایید این پیوند نمی‌باشیم. پیوند انتخابی شما قبلا به انجمن پست شده است. اگر در هر‌صورت مایل به انجام این کار هستید بر روی پیوند زیر کلیک کنید."
   on_another_topic: "در یک مبحث دیگر"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} توسط %{username}"
   themes:
     bad_color_scheme: "نمی‌توان پوسته را بروزرسانی کرد، جعبه رنگ نامعتبر"
     other_error: "در بروزرسانی قالب مشکلی پیش آمده"
+    ember_selector_error: "متأسفیم - استفاده از انتخابگرهای #ember یا .ember-view در CSS مجاز نیست ، زیرا این نام‌ها در زمان اجرا به صورت پویا تولید شده و با گذشت زمان تغییر می‌کنند که در نهایت منجر به تولید CSS غیر معتبر خواهد شد. انتخابگر دیگری را امتحان کنید."
     compile_error:
       unrecognized_extension: "پرونده افزونه شناسایی نشد:%{extension}"
     import_error:
+      generic: خطایی در هنگام وارد کردن پوسته اتفاق افتاده است
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
   emails:
@@ -315,7 +318,6 @@ fa_IR:
               reply_by_email_disabled: "پاسخ با ایمیل از کار انداخته شده است."
             featured_link:
               invalid: "نامعتبر است. لینک باید شامل http:// یا https:// باشد."
-              invalid_category: "در این دسته بندی قابل ویرایش نیست."
         user:
           attributes:
             password:

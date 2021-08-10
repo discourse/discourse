@@ -1384,7 +1384,6 @@ id:
         select_all: "Pilih Semua"
         dismiss: "Bubar"
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
-        notification_level: "Pemberitahuan"
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
       none:
         new: "Anda tidak memiliki topik baru"

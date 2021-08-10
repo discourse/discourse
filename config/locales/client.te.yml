@@ -808,7 +808,6 @@ te:
         actions: "బహుళ చర్యలు"
         close_topics: "విషయాలు మూయు"
         archive_topics: "విషయాలు కట్టకట్టు"
-        notification_level: "ప్రకటనలు"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
           one: "మీరు <b>%{count}</b> విషయం ఎంచుకున్నారు."
@@ -1045,7 +1044,6 @@ te:
         revert_to_regular: "సిబ్బంది రంగు తొలగించు"
         rebake: "హెచే టీ యం యల్ పునర్నిర్మించు"
         unhide: "చూపు"
-        grant_badge: "బ్యాడ్జి ఇవ్వు"
         delete_topic: "విషయం తొలగించు"
       actions:
         people:

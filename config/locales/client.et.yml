@@ -1554,11 +1554,9 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline ära märkimine ümber"
         actions: "Masstoimingud"
-        change_category: "Määra kategooria"
         close_topics: "Sulge Teemad"
         archive_topics: "Arhiveeri Teemad"
         move_messages_to_inbox: "Liiguta sisendkausta"
-        notification_level: "Teavitus"
         change_notification_level: "Muuda teavituste taset"
         choose_new_category: "Vali teemadele uus foorum:"
         selected:
@@ -1784,7 +1782,6 @@ et:
         invisible: "Ära avalda teemade nimekirjas"
         visible: "Avalda teemade nimekirjas"
         reset_read: "Nulli andmed teema lugemise kohta"
-        make_public: "Loo avalik teema"
         make_private: "Loo isiklik sõnum"
       feature:
         pin: "Tõsta teema esile"
@@ -2023,8 +2020,6 @@ et:
         revert_to_regular: "Eemalda meeskonna värv"
         rebake: "Rekonstrueeri HTML"
         unhide: "Too nähtavale"
-        change_owner: "Omanikuvahetus"
-        grant_badge: "Anna märgis"
         lock_post: "Lukusta postitus"
         delete_topic: "kustuta teema"
       actions:
@@ -3443,7 +3438,6 @@ et:
           post_revision: "Kui kasutaja muudab postitust või loob postituse"
           trust_level_change: "Kui kasutaja muudab usaldustaset"
           user_change: "Kui kasutajat muudetakse või luuakse"
-          post_processed: "Peale postituse toimetamist"
         preview:
           link_text: "Näita eelvaadet antud märgistest"
           plan_text: "Eelvaatle koos päringukavaga"

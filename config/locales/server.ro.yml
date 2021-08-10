@@ -280,7 +280,6 @@ ro:
               no_user_selected: "Trebuie selectat un nume de utilizator valid."
             featured_link:
               invalid: "e invalid. URL-ul trebuie să includă http:// sau https://."
-              invalid_category: "nu poate fi editat în această categorie."
         user:
           attributes:
             password:

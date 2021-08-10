@@ -1575,11 +1575,9 @@ th:
         dismiss_new: "ซ่อนใหม่"
         toggle: "สลับการเลือกกระทู้จำนวนมาก"
         actions: "การดำเนินการจำนวนมาก"
-        change_category: "ตั้งค่าหมวดหมู่"
         close_topics: "ปิดกระทู้"
         archive_topics: "คลังกระทู้"
         move_messages_to_inbox: "ย้ายไปกล่องขาเข้า"
-        notification_level: "การแจ้งเตือน"
         choose_new_category: "เลือกหมวดหมู่ใหม่ให้กระทู้"
         selected:
           other: "คุณได้เลือก <b>%{count}</b> กระทู้"
@@ -1770,7 +1768,6 @@ th:
         invisible: "ทำให้ไม่แสดงในรายชื่อ"
         visible: "ทำให้แสดงในรายชื่อ"
         reset_read: "ล้างข้อมูลการอ่าน"
-        make_public: "ทำให้กระทู้เป็นสาธารณะ"
         make_private: "สร้างข้อความส่วนตัว"
       feature:
         pin: "ปักหมุดกระทู้"
@@ -3052,7 +3049,6 @@ th:
           post_revision: "เมื่อผู้ใช้แก้ไขหรือสร้างโพสต์"
           trust_level_change: "เมื่อผู้ใช้เปลี่ยนระดับความไว้ใจ"
           user_change: "เมื่อผู้ใช้ถูกแก้ไขหรือถูกสร้าง"
-          post_processed: "หลังจากโพสต์ถูกดำเนินการ"
         preview:
           bad_count_warning:
             header: "ระวัง!"

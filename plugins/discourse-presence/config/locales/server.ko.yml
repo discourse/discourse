@@ -6,5 +6,5 @@
 
 ko:
   site_settings:
-    presence_enabled: "지금 현재의 주제에 답장하는 사용자를 표시하거나 지금의 글을 수정 하시겠습니까?"
+    presence_enabled: "현재 글에 댓글을 작성하고 있거나 현재 글을 수정중인 사용자를 표시 하시겠습니까?"
     presence_max_users_shown: "표시되는 최대 사용자 수입니다."

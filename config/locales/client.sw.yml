@@ -1434,11 +1434,9 @@ sw:
         dismiss_new: "Ondosha Mpya"
         toggle: "Badili kwa wingi chaguo la topiki"
         actions: "Vitendo za Jumla"
-        change_category: "Seti Kategoria"
         close_topics: "Funga Mada"
         archive_topics: "Hifadhi Mada kwenye nyaraka"
         move_messages_to_inbox: "Hamishia kwenye kisanduku-pokezi"
-        notification_level: "Taarifa"
         choose_new_category: "Chagua kategoria mpya kwa ajili ya mada:"
         selected:
           one: "Umechagua mada <b>%{count}</b>."
@@ -1635,7 +1633,6 @@ sw:
         invisible: "Ondoa Orodha"
         visible: "Tengeneza Orodha"
         reset_read: "Anzisha Upya Usomaji wa Taarifa"
-        make_public: "Fanya Mada iwe ya Umma"
         make_private: "Tengeneza Ujumbe Binafsi"
       feature:
         pin: "Bandika Mada"
@@ -1819,8 +1816,6 @@ sw:
         revert_to_regular: "Ondoa Rangi ya Wasaidizi"
         rebake: "Tengeneza upya HTML"
         unhide: "Onesha"
-        change_owner: "Badilisha Umiliki"
-        grant_badge: "Toa Beji"
         lock_post: "Funga Chapisho"
         lock_post_description: "mzuie mchapishaji kuhariri chapisho hili"
         unlock_post: "Fungua Chapisho"
@@ -3209,7 +3204,6 @@ sw:
           post_revision: "Mtumiaji akiwa amehariri au tengeneza taarifa"
           trust_level_change: "Mtumiaji akiwa amebadilisha kiwango cha uaminifu"
           user_change: "Mtumiaji akiwa amefanyiwa uhariri au ametengenezwa"
-          post_processed: "Baada ya taarifa kupitia mchakato"
         preview:
           link_text: "Mwonekano wa kwanza wa beji zilizotolewa"
           modal_title: "Muonekano wa Awali wa Swala la Beji"

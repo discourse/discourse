@@ -464,7 +464,7 @@ pt_BR:
 
       - Crítica construtiva é bem-vinda, mas critique *ideias*, não pessoas.
 
-      Para saber mais, [consulte nossas diretrizes da comunidade] (%{base_path}/guidelines). Este painel aparecerá apenas para seu primeiro %{education_posts_text}.
+      Para saber mais, [consulte nossas diretrizes da comunidade](%{base_path}/guidelines). Este painel aparecerá apenas para seu primeiro %{education_posts_text}.
     avatar: |
       ### Que tal usar uma imagem para a sua conta?
 
@@ -530,7 +530,6 @@ pt_BR:
               unable_to_tag: "Houve um erro ao etiquetar o tópico."
             featured_link:
               invalid: "é inválida. A URL deve conter http:// ou https://."
-              invalid_category: "não pode ser editado(a) nesta categoria."
         user:
           attributes:
             password:
@@ -2348,8 +2347,8 @@ pt_BR:
       other: "O(a) usuário(a) %{username} tem %{count} postagens em um tópico público ou mensagem pessoal, de forma que não pode ser excluído(a)."
   reviewables_reminder:
     submitted:
-      one: "Os itens foram enviados durante %{count} hora atrás. [Revise-os] (%{base_path}/review)."
-      other: "Os itens foram enviados durante %{count} horas atrás. [Revise-os] (%{base_path}/review)."
+      one: "Os itens foram enviados durante %{count} hora atrás. [Revise-os](%{base_path}/review)."
+      other: "Os itens foram enviados durante %{count} horas atrás. [Revise-os](%{base_path}/review)."
     subject_template:
       one: "%{count} item precisa ser revisado"
       other: "%{count} itens precisam ser revisados"
@@ -2630,7 +2629,7 @@ pt_BR:
       text_body_template: |
         Para obter algumas dicas rápidas sobre como começar como um(a) novo(a) usuário(a), [confira esta postagem no blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        Enquanto você participa, saberemos mais sobre você e as limitações temporárias de novo(a) usuário(a) serão suspensas. Ao longo do tempo, você ganhará [níveis de confiança] (https://blog.discourse.org/20/20/entrevista-conhecimento-disco-trustes-levels/) que incluem capacidades especiais para nos ajudar a administrar a nossa comunidade.
+        Enquanto você participa, saberemos mais sobre você e as limitações temporárias de novo(a) usuário(a) serão suspensas. Ao longo do tempo, você ganhará [níveis de confiança](https://blog.discourse.org/20/20/entrevista-conhecimento-disco-trustes-levels/) que incluem capacidades especiais para nos ajudar a administrar a nossa comunidade.
     welcome_user:
       title: "Boas-vindas, usuário(a)"
       subject_template: "Boas-vindas ao %{site_name}!"
@@ -2686,49 +2685,15 @@ pt_BR:
     backup_succeeded:
       title: "Backup realizado com êxito"
       subject_template: "Backup concluído com êxito"
-      text_body_template: |
-        O backup foi bem-sucedido.
-
-        Acesse a seção [administrador(a) > backup](%{base_url}/admin/backups) para baixar o seu novo backup.
-
-        Aqui está o registro:
-
-        ``` texto
-        %{logs}
-        ```
     backup_failed:
       title: "Falha ao fazer backup"
       subject_template: "Falha ao fazer backup"
-      text_body_template: |
-        O backup falhou.
-
-        Aqui está o registro:
-
-        ``` texto
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauração realizada"
       subject_template: "Restauração concluída com sucesso"
-      text_body_template: |
-        A restauração foi realizada.
-
-        Aqui está o registro:
-
-        ``` texto
-        %{logs}
-        ```
     restore_failed:
       title: "A restauração falhou"
       subject_template: "A restauração falhou"
-      text_body_template: |
-        A restauração falhou
-
-        Aqui está o registro:
-
-        ``` texto
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Convites em massa realizados"
       subject_template: "Seus convites foram enviados com êxito."
@@ -2753,7 +2718,7 @@ pt_BR:
       title: "Adicionado ao grupo como membro"
       subject_template: "Você foi adicionado(a) como membro do grupo %{group_name}"
       text_body_template: |
-        Você foi adicionado(a) como membro do grupo [%{group_name}] (%{base_url}%{group_path}).
+        Você foi adicionado(a) como membro do grupo [%{group_name}](%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "A exportação CSV foi bem-sucedida"
       subject_template: "[%{export_title}] exportação de dados concluída"
@@ -2768,7 +2733,7 @@ pt_BR:
     csv_export_failed:
       title: "Falha na exportação de CSV"
       subject_template: "A exportação de dados falhou"
-      text_body_template: "Desculpe, mas sua exportação de dados falhou. Verifique os registros ou [entre em contato com um membro da equipe] (%{base_url}/about)."
+      text_body_template: "Desculpe, mas sua exportação de dados falhou. Verifique os registros ou [entre em contato com um membro da equipe](%{base_url}/about)."
     email_reject_insufficient_trust_level:
       title: "E-mail rejeitado, nível de confiança insuficiente"
       subject_template: "[%{email_prefix}] Problema no email, nível de confiança insuficiente"
@@ -3931,7 +3896,7 @@ pt_BR:
     body: |
       <a name="collect"></a>
 
-      ## [Quais informações coletamos?] (# Coletar)
+      ## [Quais informações coletamos?](# Coletar)
 
       Coletamos informações quando você se cadastra no nosso site e coletamos dados quando você participa do fórum lendo, escrevendo e avaliando o conteúdo compartilhado aqui.
 
@@ -3941,7 +3906,7 @@ pt_BR:
 
       <a name="use"></a>
 
-      ## [Para que usamos suas informações?] (# Use)
+      ## [Para que usamos suas informações?](# Use)
 
       Qualquer informação coletada pode ser usada de uma das seguintes formas:
 
@@ -3952,13 +3917,13 @@ pt_BR:
 
       <a name="protect"></a>
 
-      ## [Como protegemos suas informações?] (#protect)
+      ## [Como protegemos suas informações?](#protect)
 
       Implementamos uma variedade de medidas de segurança para manter a segurança de suas informações pessoais quando você as insere, envia ou acessa.
 
       <a name="data-retention"></a>
 
-      ## [Qual é a sua política de retenção de dados?] (# Retenção de dados)
+      ## [Qual é a sua política de retenção de dados?](# Retenção de dados)
 
       Faremos um esforço de boa fé para:
 
@@ -3967,7 +3932,7 @@ pt_BR:
 
       <a name="cookies"></a>
 
-      ## [Nós usamos cookies?] (#cookies)
+      ## [Nós usamos cookies?](#cookies)
 
       Sim. Cookies são pequenos arquivos que um site ou seu provedor de serviços transfere para o disco rígido do seu computador pelo navegador (se você permitir). Esses cookies permitem que o site reconheça seu navegador e, se você tiver uma conta cadastrada, o associe à sua conta registrada.
 
@@ -3975,37 +3940,37 @@ pt_BR:
 
       <a name="disclose"></a>
 
-      ## [Nós divulgamos qualquer informação a terceiros?] (#divulgue)
+      ## [Nós divulgamos qualquer informação a terceiros?](#divulgue)
 
       Nós não vendemos, comercializamos ou transferimos de outra forma para terceiros suas informações pessoalmente identificáveis. Isso não inclui terceiros confiáveis ​​que nos auxiliam a operar nosso site, conduzir nossos negócios ou prestar serviços a você, desde que as partes concordem em manter essas informações confidenciais. Também podemos liberar suas informações quando acreditarmos que a divulgação é apropriada para cumprir a lei, aplicar as políticas do nosso site ou proteger os direitos, propriedade ou segurança da nossa empresa ou de terceiros. No entanto, informações de visitantes não pessoalmente identificáveis ​​podem ser fornecidas a terceiros para fins de marketing, publicidade ou outros usos.
 
       <a name="third-party"></a>
 
-      ## [Links de terceiros] (#terceiros)
+      ## [Links de terceiros](#terceiros)
 
       Ocasionalmente, a nosso critério, podemos incluir ou oferecer produtos ou serviços de terceiros em nosso site. Esses sites de terceiros têm políticas de privacidade separadas e independentes. Portanto, não temos responsabilidade nem obrigação em relação ao conteúdo e atividades desses sites vinculados. No entanto, procuramos proteger a integridade do nosso site e agradecemos qualquer comentário sobre esses sites.
 
       <a name="coppa"></a>
 
-      ## [Cumprimento da Lei de Proteção à Privacidade On-line das Crianças] (#coppa)
+      ## [Cumprimento da Lei de Proteção à Privacidade On-line das Crianças](#coppa)
 
       Nosso site, produtos e serviços são direcionados para pessoas com pelo menos 13 anos de idade. Se este servidor estiver nos EUA e você tiver menos de 13 anos, de acordo com os requisitos da COPPA (https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act), não use este site.
 
       <a name="online"></a>
 
-      ## [Apenas Política de Privacidade On-line] (#online)
+      ## [Apenas Política de Privacidade On-line](#online)
 
       Esta política de privacidade on-line se aplica somente a informações coletadas pelo nosso site e não a informações coletadas off-line.
 
       <a name="consent"></a>
 
-      ## [Seu consentimento] (#consentimento)
+      ## [Seu consentimento](#consentimento)
 
       Ao utilizar o nosso site, você concorda com a nossa política de privacidade.
 
       <a name="changes"></a>
 
-      ## [Alterações à nossa Política de Privacidade] (#alterações)
+      ## [Alterações à nossa Política de Privacidade](#alterações)
 
       Se decidirmos alterar nossa política de privacidade, elas serão publicadas nesta página.
 

@@ -309,7 +309,6 @@ cs:
               target_user_not_found: "Jeden z uživatelů, kterým posíláte tuto zprávu, nebyl nalezen."
             featured_link:
               invalid: "je neplatná. URL adresa by měla obsahovat http:// nebo https://."
-              invalid_category: "nelze upravit v této kategorii."
         user:
           attributes:
             password:

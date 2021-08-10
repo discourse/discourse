@@ -504,7 +504,6 @@ zh_CN:
               unable_to_tag: "给话题添加标签时出错。"
             featured_link:
               invalid: "无效。URL 应包括 http:// 或 https://。"
-              invalid_category: "无法在此类别中编辑。"
         user:
           attributes:
             password:
@@ -2607,49 +2606,15 @@ zh_CN:
     backup_succeeded:
       title: "备份成功"
       subject_template: "备份成功完成"
-      text_body_template: |
-        备份成功。
-        访问[管理员 > 备份](%{base_url}/admin/backups)下载您的新备份。
-
-        以下为日志：
-
-        ```text
-        %{logs}
-
-        ```
     backup_failed:
       title: "备份失败"
       subject_template: "备份失败"
-      text_body_template: |
-        备份失败。
-
-        以下为日志：
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "恢复成功"
       subject_template: "恢复成功完成"
-      text_body_template: |
-        恢复成功。
-
-        以下为日志：
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "恢复失败"
       subject_template: "恢复失败"
-      text_body_template: |
-        恢复失败。
-
-        以下为日志：
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "批量邀请成功"
       subject_template: "批量用户邀请处理成功"
@@ -2669,12 +2634,12 @@ zh_CN:
       title: "作为所有者被添加到群组"
       subject_template: "您已被添加为 %{group_name} 群组的所有者"
       text_body_template: |
-        您已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的所有者。
+        您已被添加为 [%{group_name}](%{base_url}%{group_path}) 群组的所有者。
     user_added_to_group_as_member:
       title: "作为成员被添加到群组"
       subject_template: "您已被添加为 %{group_name} 群组的成员"
       text_body_template: |
-        您已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的成员。
+        您已被添加为 [%{group_name}](%{base_url}%{group_path}) 群组的成员。
     csv_export_succeeded:
       title: "CSV 导出成功"
       subject_template: "[%{export_title}] 数据导出完成"

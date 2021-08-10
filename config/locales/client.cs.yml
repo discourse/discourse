@@ -1788,11 +1788,9 @@ cs:
         dismiss_new: "Označit jako přečtené vše nové"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
-        change_category: "Nastavit kategorii"
         close_topics: "Zavřít téma"
         archive_topics: "Archivovat témata"
         move_messages_to_inbox: "Přesunout do doručených"
-        notification_level: "Upozornění"
         choose_new_category: "Zvolte novou kategorii pro témata:"
         selected:
           one: "Vybrali jste <b>%{count}</b> téma."
@@ -2011,7 +2009,6 @@ cs:
         invisible: "Zneviditelnit"
         visible: "Zviditelnit"
         reset_read: "Vynulovat počet čtení"
-        make_public: "Vytvořit Veřejné Téma"
         make_private: "Vytvořit soukromou zprávu "
         reset_bump_date: "Resetovat datum zvýraznění"
       feature:
@@ -2248,8 +2245,6 @@ cs:
         revert_to_regular: "Zrušit zvýraznění"
         rebake: "Obnovit HTML"
         unhide: "Odkrýt"
-        change_owner: "Změnit autora"
-        grant_badge: "Udělit odznak"
         lock_post: "Uzamknout příspěvek "
         lock_post_description: "Zabránit přispěvatelům v úpravách tohoto příspěvku"
         unlock_post: "Odemknout příspěvek"
@@ -3799,7 +3794,6 @@ cs:
           post_revision: "Když uživatel upraví nebo vytvoří příspěvek"
           trust_level_change: "Když uživatel změní důvěryhodnost"
           user_change: "Když je uživatel upraven nebo vytvořen"
-          post_processed: "Po zpracování příspěvku"
         preview:
           link_text: "Náhled udělených odznaků"
           plan_text: "Náhled s plánem dotazu"

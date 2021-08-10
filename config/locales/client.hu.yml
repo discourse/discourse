@@ -1818,11 +1818,9 @@ hu:
         dismiss_read: "Olvasatlan üzenetek elvetése"
         dismiss_button: "Elvetés..."
         actions: "Csoportos műveletek"
-        change_category: "Kategória beállítása"
         close_topics: "Témakörök lezárása"
         archive_topics: "Témakörök archíválása"
         move_messages_to_inbox: "Áthelyezés a bejövő üzenetek közé"
-        notification_level: "Értesítések"
         change_notification_level: "Értesítési szint módosítása"
         choose_new_category: "Válaszd ki az új kategóriát a témákhoz:"
         selected:
@@ -2016,7 +2014,6 @@ hu:
         invisible: "Listázás törlése"
         visible: "Listázás"
         reset_read: "Olvasási adatok visszaállítása"
-        make_public: "Nyílvános téma létrehozása"
         make_private: "Személyes üzenet írása"
       feature:
         pin: "Témakör kiemelése"
@@ -2191,8 +2188,6 @@ hu:
         revert_to_regular: "Stáb szín eltávolítása"
         rebake: "HTML újjáépítése"
         unhide: "Elrejtés visszavonása"
-        change_owner: "Tulajdonjog módosítása"
-        grant_badge: "Jelvény adományozása"
         lock_post: "Bejegyzés zárolása"
         unlock_post: "Bejegyzés zárolásának feloldása"
         delete_topic_confirm_modal_yes: "Igen, töröld ezt a témát"
