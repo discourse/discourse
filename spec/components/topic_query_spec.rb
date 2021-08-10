@@ -868,17 +868,17 @@ describe TopicQuery do
 
     it "doesn't return topics that were bumped last time before user joined the forum" do
       user.first_seen_at = 10.minutes.ago
-      create_topic_with_three_posts bumped_at: 15.minutes.ago
+      create_topic_with_three_posts(bumped_at: 15.minutes.ago)
 
       expect(topic_query.list_unseen.topics).to be_blank
     end
 
     it "returns only topics that contain unseen posts" do
       user.first_seen_at = 10.minutes.ago
-      topic_with_unseen_posts = create_topic_with_three_posts bumped_at: 5.minutes.ago
+      topic_with_unseen_posts = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
       read_to_post(topic_with_unseen_posts, user, 1)
 
-      fully_read_topic = create_topic_with_three_posts bumped_at: 5.minutes.ago
+      fully_read_topic = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
       read_to_the_end(fully_read_topic, user)
 
       expect(topic_query.list_unseen.topics).to eq([topic_with_unseen_posts])
@@ -886,7 +886,7 @@ describe TopicQuery do
 
     it "ignores staff posts if user is not staff" do
       user.first_seen_at = 10.minutes.ago
-      topic = create_topic_with_three_posts bumped_at: 5.minutes.ago
+      topic = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
       read_to_the_end(topic, user)
 
       Fabricate(:post, post_type: Post.types[:whisper], topic: topic)
