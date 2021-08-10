@@ -190,6 +190,17 @@ def concurrent?
   end
 end
 
+def current_timestamp
+  Process.clock_gettime(Process::CLOCK_MONOTONIC)
+end
+
+def log_task_duration(task_description, &task)
+  task_start = current_timestamp
+  task.call
+  STDERR.puts "Done '#{task_description}' : #{(current_timestamp - task_start).round(2)} secs"
+  STDERR.puts
+end
+
 def geolite_dbs
   @geolite_dbs ||= %w{
     GeoLite2-City
@@ -229,58 +240,66 @@ def copy_ember_cli_assets
   assets = {}
   files = {}
 
-  unless system("yarn --cwd #{ember_dir} install")
-    STDERR.puts "Error running yarn install"
-    exit 1
-  end
+  log_task_duration('yarn install') {
+    unless system("yarn --cwd #{ember_dir} install")
+      STDERR.puts "Error running yarn install"
+      exit 1
+    end
+  }
 
-  unless system("yarn --cwd #{ember_dir} run ember build -prod")
-    STDERR.puts "Error running ember build"
-    exit 1
-  end
+  log_task_duration('ember build -prod') {
+    unless system("yarn --cwd #{ember_dir} run ember build -prod")
+      STDERR.puts "Error running ember build"
+      exit 1
+    end
+  }
 
   # Copy assets and generate manifest data
-  Dir["#{ember_cli_assets}**/*"].each do |f|
-    if f !~ /test/ && File.file?(f)
-      rel_file = f.sub(ember_cli_assets, "")
-      digest = f.scan(/\-([a-f0-9]+)\./)[0][0]
+  log_task_duration('Copy assets and generate manifest data') {
+    Dir["#{ember_cli_assets}**/*"].each do |f|
+      if f !~ /test/ && File.file?(f)
+        rel_file = f.sub(ember_cli_assets, "")
+        digest = f.scan(/\-([a-f0-9]+)\./)[0][0]
 
-      dest = "public/assets"
-      dest_sub = dest
-      if rel_file =~ /^([a-z\-\_]+)\//
-        dest_sub = "#{dest}/#{Regexp.last_match[1]}"
+        dest = "public/assets"
+        dest_sub = dest
+        if rel_file =~ /^([a-z\-\_]+)\//
+          dest_sub = "#{dest}/#{Regexp.last_match[1]}"
+        end
+
+        FileUtils.mkdir_p(dest_sub) unless Dir.exists?(dest_sub)
+        log_file = File.basename(rel_file).sub("-#{digest}", "")
+
+        # It's simpler to serve the file as `application.js`
+        if log_file == "discourse.js"
+          log_file = "application.js"
+          rel_file.sub!(/^discourse/, "application")
+        end
+
+        res = FileUtils.cp(f, "#{dest}/#{rel_file}")
+
+        assets[log_file] = rel_file
+        files[rel_file] = {
+          "logical_path" => log_file,
+          "mtime" => File.mtime(f).iso8601(9),
+          "size" => File.size(f),
+          "digest" => digest,
+          "integrity" => "sha384-#{Base64.encode64(Digest::SHA384.digest(File.read(f))).chomp}"
+        }
       end
-
-      FileUtils.mkdir_p(dest_sub) unless Dir.exists?(dest_sub)
-      log_file = File.basename(rel_file).sub("-#{digest}", "")
-
-      # It's simpler to serve the file as `application.js`
-      if log_file == "discourse.js"
-        log_file = "application.js"
-        rel_file.sub!(/^discourse/, "application")
-      end
-
-      res = FileUtils.cp(f, "#{dest}/#{rel_file}")
-
-      assets[log_file] = rel_file
-      files[rel_file] = {
-        "logical_path" => log_file,
-        "mtime" => File.mtime(f).iso8601(9),
-        "size" => File.size(f),
-        "digest" => digest,
-        "integrity" => "sha384-#{Base64.encode64(Digest::SHA384.digest(File.read(f))).chomp}"
-      }
     end
-  end
+  }
 
   # Update manifest file
-  manifest_result = Dir["public/assets/.sprockets-manifest-*.json"]
-  if manifest_result && manifest_result.size == 1
-    json = JSON.parse(File.read(manifest_result[0]))
-    json['files'].merge!(files)
-    json['assets'].merge!(assets)
-    File.write(manifest_result[0], json.to_json)
-  end
+  log_task_duration('Update manifest file') {
+    manifest_result = Dir["public/assets/.sprockets-manifest-*.json"]
+    if manifest_result && manifest_result.size == 1
+      json = JSON.parse(File.read(manifest_result[0]))
+      json['files'].merge!(files)
+      json['assets'].merge!(assets)
+      File.write(manifest_result[0], json.to_json)
+    end
+  }
 end
 
 task 'test_ember_cli_copy' do
@@ -332,7 +351,6 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
-    startAll = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     manifest = Sprockets::Manifest.new(assets_path)
 
     locales = Set.new(["en"])
@@ -341,43 +359,40 @@ task 'assets:precompile' => 'assets:precompile:before' do
       locales.add(SiteSetting.default_locale)
     end
 
-    concurrent? do |proc|
-      manifest.files
-        .select { |k, v| k =~ /\.js$/ }
-        .each do |file, info|
+    log_task_duration('Done compressing all JS files') {
+      concurrent? do |proc|
+        manifest.files
+          .select { |k, v| k =~ /\.js$/ }
+          .each do |file, info|
 
-        path = "#{assets_path}/#{file}"
-          _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
-          _path = "#{assets_path}/#{_file}"
-          max_compress = max_compress?(info["logical_path"], locales)
-          if File.exists?(_path)
-            STDERR.puts "Skipping: #{file} already compressed"
-          elsif file.include? "discourse/tests"
-            STDERR.puts "Skipping: #{file}"
-          else
-            proc.call do
-              start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-              STDERR.puts "#{start} Compressing: #{file}"
+          path = "#{assets_path}/#{file}"
+            _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
+            _path = "#{assets_path}/#{_file}"
+            max_compress = max_compress?(info["logical_path"], locales)
+            if File.exists?(_path)
+              STDERR.puts "Skipping: #{file} already compressed"
+            elsif file.include? "discourse/tests"
+              STDERR.puts "Skipping: #{file}"
+            else
+              proc.call do
+                log_task_duration(file) {
+                  STDERR.puts "Compressing: #{file}"
 
-              if max_compress
-                FileUtils.mv(path, _path)
-                compress(_file, file)
+                  if max_compress
+                    FileUtils.mv(path, _path)
+                    compress(_file, file)
+                  end
+
+                  info["size"] = File.size(path)
+                  info["mtime"] = File.mtime(path).iso8601
+                  gzip(path)
+                  brotli(path, max_compress)
+                }
               end
-
-              info["size"] = File.size(path)
-              info["mtime"] = File.mtime(path).iso8601
-              gzip(path)
-              brotli(path, max_compress)
-
-              STDERR.puts "Done compressing #{file} : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)} secs"
-              STDERR.puts
             end
-          end
+        end
       end
-    end
-
-    STDERR.puts "Done compressing all JS files : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - startAll).round(2)} secs"
-    STDERR.puts
+    }
 
     # protected
     manifest.send :save
