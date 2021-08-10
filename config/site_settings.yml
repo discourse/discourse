@@ -179,6 +179,7 @@ basic:
       - latest
       - new
       - unread
+      - unseen
       - top
       - categories
       - read
