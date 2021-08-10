@@ -706,12 +706,9 @@ describe UploadsController do
   end
 
   describe "#generate_presigned_put" do
-    before do
-      sign_in(user)
-    end
-
     context "when the store is external" do
       before do
+        sign_in(user)
         SiteSetting.enable_direct_s3_uploads = true
         setup_s3
       end
@@ -761,6 +758,8 @@ describe UploadsController do
 
       it "rate limits" do
         RateLimiter.enable
+        RateLimiter.clear_all!
+
         stub_const(UploadsController, "PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE", 1) do
           post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
           post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
@@ -770,6 +769,10 @@ describe UploadsController do
     end
 
     context "when the store is not external" do
+      before do
+        sign_in(user)
+      end
+
       it "returns 404" do
         post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
         expect(response.status).to eq(404)
