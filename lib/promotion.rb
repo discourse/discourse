@@ -26,7 +26,9 @@ class Promotion
 
   def review_tl0
     if Promotion.tl1_met?(@user) && change_trust_level!(TrustLevel[1])
-      @user.enqueue_member_welcome_message unless @user.badges.where(id: Badge::BasicUser).count > 0
+      if Badge.exists?(id: Badge::BasicUser, enabled: true) && !@user.badges.exists?(id: Badge::BasicUser)
+        @user.enqueue_member_welcome_message
+      end
       return true
     end
     false

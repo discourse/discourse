@@ -95,6 +95,17 @@ describe Promotion do
         expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
       end
 
+      it "does not not send when the tl1 badge is disabled" do
+        SiteSetting.send_tl1_welcome_message = true
+        Badge.find(1).update!(enabled: false)
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.tl1_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl1_requires_read_posts
+        stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
+        Promotion.recalculate(user)
+        expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
+      end
+
       it "can be turned off" do
         SiteSetting.send_tl1_welcome_message = false
         @result = promotion.review
