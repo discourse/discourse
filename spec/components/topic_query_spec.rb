@@ -888,9 +888,7 @@ describe TopicQuery do
       user.first_seen_at = 10.minutes.ago
       topic = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
       read_to_the_end(topic, user)
-
-      Fabricate(:post, post_type: Post.types[:whisper], topic: topic)
-      topic.highest_staff_post_number += 1
+      create_post(topic: topic, post_type: Post.types[:whisper])
 
       expect(topic_query.list_unseen.topics).to be_blank
     end
