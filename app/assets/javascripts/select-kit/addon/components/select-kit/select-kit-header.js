@@ -84,7 +84,7 @@ export default Component.extend(UtilsMixin, {
   },
 
   keyUp(event) {
-    if (event.keyCode === 32) {
+    if (event.key === " ") {
       event.preventDefault();
     }
   },
@@ -98,13 +98,12 @@ export default Component.extend(UtilsMixin, {
       return false;
     }
 
-    const onlyShiftKey = event.shiftKey && event.keyCode === 16;
+    const onlyShiftKey = event.shiftKey && event.key === "Shift";
     if (event.metaKey || onlyShiftKey) {
       return;
     }
 
-    if (event.keyCode === 13) {
-      // Enter
+    if (event.key === "Enter") {
       if (this.selectKit.isExpanded) {
         if (this.selectKit.highlighted) {
           this.selectKit.select(
@@ -116,37 +115,31 @@ export default Component.extend(UtilsMixin, {
       } else {
         this.selectKit.close(event);
       }
-    } else if (event.keyCode === 38) {
-      // Up arrow
+    } else if (event.key === "ArrowUp") {
       if (this.selectKit.isExpanded) {
         this.selectKit.highlightPrevious();
       } else {
         this.selectKit.open(event);
       }
       return false;
-    } else if (event.keyCode === 40) {
-      // Down arrow
+    } else if (event.key === "ArrowDown") {
       if (this.selectKit.isExpanded) {
         this.selectKit.highlightNext();
       } else {
         this.selectKit.open(event);
       }
       return false;
-    } else if (event.keyCode === 37 || event.keyCode === 39) {
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       // Do nothing for left/right arrow
       return true;
-    } else if (event.keyCode === 32) {
-      // Space
+    } else if (event.key === " ") {
       event.preventDefault(); // prevents the space to trigger a scroll page-next
       this.selectKit.toggle(event);
-    } else if (event.keyCode === 27) {
-      // Escape
+    } else if (event.key === "Escape") {
       this.selectKit.close(event);
-    } else if (event.keyCode === 8) {
-      // Backspace
+    } else if (event.key === "Backspace") {
       this._focusFilterInput();
-    } else if (event.keyCode === 9) {
-      // Tab
+    } else if (event.key === "Tab") {
       if (
         this.selectKit.highlighted &&
         this.selectKit.isExpanded &&

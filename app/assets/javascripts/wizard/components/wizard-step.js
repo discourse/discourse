@@ -73,8 +73,8 @@ export default Component.extend({
     this.autoFocus();
   },
 
-  keyPress(key) {
-    if (key.keyCode === 13) {
+  keyPress(event) {
+    if (event.key === "Enter") {
       if (this.showDoneButton) {
         this.send("quit");
       } else {

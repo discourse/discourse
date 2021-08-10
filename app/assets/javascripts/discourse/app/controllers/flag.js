@@ -56,7 +56,7 @@ export default Controller.extend(ModalFunctionality, {
   @bind
   keyDown(event) {
     // CTRL+ENTER or CMD+ENTER
-    if (event.keyCode === 13 && (event.ctrlKey || event.metaKey)) {
+    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
       if (this.submitEnabled) {
         this.send("createFlag");
         return false;

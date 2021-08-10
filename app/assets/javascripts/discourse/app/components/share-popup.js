@@ -156,7 +156,7 @@ export default Component.extend({
       return;
     }
 
-    if (event.keyCode === 27) {
+    if (event.key === "Escape") {
       this.send("close");
     }
   },

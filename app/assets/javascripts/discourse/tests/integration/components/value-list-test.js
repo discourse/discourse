@@ -25,7 +25,7 @@ discourseModule("Integration | Component | value-list", function (hooks) {
     async test(assert) {
       await selectKit().expand();
       await selectKit().fillInFilter("eviltrout");
-      await selectKit().keyboard("enter");
+      await selectKit().keyboard("Enter");
 
       assert.equal(
         count(".values .value"),
@@ -109,7 +109,7 @@ discourseModule("Integration | Component | value-list", function (hooks) {
 
       await selectKit().expand();
       await selectKit().fillInFilter("eviltrout");
-      await selectKit().keyboard("enter");
+      await selectKit().keyboard("Enter");
 
       assert.equal(
         count(".values .value"),
@@ -137,7 +137,7 @@ discourseModule("Integration | Component | value-list", function (hooks) {
     async test(assert) {
       await selectKit().expand();
       await selectKit().fillInFilter("eviltrout");
-      await selectKit().keyboard("enter");
+      await selectKit().keyboard("Enter");
 
       assert.equal(
         count(".values .value"),

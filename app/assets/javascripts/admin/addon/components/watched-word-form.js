@@ -118,7 +118,7 @@ export default Component.extend({
   _init() {
     schedule("afterRender", () => {
       $(this.element.querySelector(".watched-word-input")).keydown((e) => {
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
           this.send("submit");
         }
       });
