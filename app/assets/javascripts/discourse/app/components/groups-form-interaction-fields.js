@@ -97,4 +97,15 @@ export default Component.extend({
   canAdminGroup(isCreated, canAdmin, canCreate) {
     return (!isCreated && canCreate) || (isCreated && canAdmin);
   },
+
+  @discourseComputed("membersVisibilityLevel")
+  membersVisibilityLevelsDescription(membersVisibilityLevel) {
+    if (
+      membersVisibilityLevel === this.visibilityLevelOptions.firstObject.value
+    ) {
+      return "admin.groups.manage.interaction.members_visibility_levels.description";
+    } else {
+      return "admin.groups.manage.interaction.members_visibility_levels.description_flair_visible";
+    }
+  },
 });
