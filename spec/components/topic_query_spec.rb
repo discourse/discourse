@@ -62,7 +62,7 @@ describe TopicQuery do
     end
   end
 
-  context "list_topics_by" do
+  context "#list_topics_by" do
 
     it "allows users to view their own invisible topics" do
       _topic = Fabricate(:topic, user: user)
@@ -74,7 +74,7 @@ describe TopicQuery do
 
   end
 
-  context "prioritize_pinned_topics" do
+  context "#prioritize_pinned_topics" do
     it "does the pagination correctly" do
       num_topics = 15
       per_page = 3
@@ -730,7 +730,7 @@ describe TopicQuery do
 
   end
 
-  context 'list_new' do
+  context '#list_new' do
 
     context 'without a new topic' do
       it "has no new topics" do
@@ -807,7 +807,7 @@ describe TopicQuery do
 
   end
 
-  context 'list_posted' do
+  context '#list_posted' do
     let(:topics) { topic_query.list_posted.topics }
 
     it "returns blank when there are no posted topics" do
@@ -861,7 +861,7 @@ describe TopicQuery do
     end
   end
 
-  context 'list_unseen' do
+  context '#list_unseen' do
     it "returns an empty list when there aren't topics" do
       expect(topic_query.list_unseen.topics).to be_blank
     end
@@ -914,7 +914,7 @@ describe TopicQuery do
     end
   end
 
-  context 'list_related_for do' do
+  context '#list_related_for' do
 
     let(:user) do
       Fabricate(:admin)
