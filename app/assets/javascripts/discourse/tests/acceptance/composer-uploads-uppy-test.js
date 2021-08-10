@@ -1,4 +1,9 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  loggedInUser,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { Promise } from "rsvp";
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
@@ -60,7 +65,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
-    const appEvents = this.container.lookup("service:app-events");
+    const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
     appEvents.on("composer:all-uploads-complete", () => {
@@ -85,33 +90,34 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   test("should error if too many files are added at once", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const appEvents = this.container.lookup("service:app-events");
+    const appEvents = loggedInUser().appEvents;
     const image = createFile("avatar.png");
     const image1 = createFile("avatar1.png");
     const image2 = createFile("avatar2.png");
-    const done = assert.async();
+    const promise = new Promise((resolve) => {
+      appEvents.on("composer:uploads-aborted", () => {
+        assert.equal(
+          queryAll(".bootbox .modal-body").html(),
+          I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+            count: 2,
+          }),
+          "it should warn about too many files added"
+        );
 
-    appEvents.on("composer:uploads-aborted", () => {
-      assert.equal(
-        queryAll(".bootbox .modal-body").html(),
-        I18n.t("post.errors.too_many_dragged_and_dropped_files", {
-          count: 2,
-        }),
-        "it should warn about too many files added"
-      );
+        click(".modal-footer .btn-primary");
 
-      click(".modal-footer .btn-primary");
-
-      done();
+        resolve();
+      });
     });
 
     appEvents.trigger("composer:add-files", [image, image1, image2]);
+    await promise;
   });
 
   test("should error if an unauthorized extension file is added", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const appEvents = this.container.lookup("service:app-events");
+    const appEvents = loggedInUser().appEvents;
     const jsonFile = createFile("something.json", "application/json");
     const done = assert.async();
 
@@ -139,7 +145,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
-    const appEvents = this.container.lookup("service:app-events");
+    const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
     appEvents.on("composer:uploads-cancelled", () => {
@@ -192,7 +198,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
-    const appEvents = this.container.lookup("service:app-events");
+    const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
     appEvents.on("composer:upload-error", () => {
