@@ -106,6 +106,7 @@ module TestSetup
     #
     # Discourse.redis = DiscourseMockRedis.new
 
+    RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable
     UserActionManager.disable
@@ -259,8 +260,6 @@ RSpec.configure do |config|
 
     unfreeze_time
     ActionMailer::Base.deliveries.clear
-    RateLimiter.disable
-    RateLimiter.clear_all!
 
     if ActiveRecord::Base.connection_pool.stat[:busy] > 1
       raise ActiveRecord::Base.connection_pool.stat.inspect
