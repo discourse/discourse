@@ -3402,7 +3402,8 @@ en:
       one: "user"
       other: "users"
     category_title: "Category"
-    history: "History, last 100 revisions"
+    history_capped_revisions: "History, last 100 revisions"
+    history: "History"
     changed_by: "by %{author}"
 
     raw_email:

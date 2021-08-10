@@ -46,6 +46,15 @@ export default Controller.extend(ModalFunctionality, {
   previousTagChanges: customTagArray("model.tags_changes.previous"),
   currentTagChanges: customTagArray("model.tags_changes.current"),
 
+  @discourseComputed("post.version")
+  modalTitleKey(version) {
+    if (version > 100) {
+      return "history_capped_revisions";
+    } else {
+      return "history";
+    }
+  },
+
   @discourseComputed(
     "previousVersion",
     "model.current_version",
