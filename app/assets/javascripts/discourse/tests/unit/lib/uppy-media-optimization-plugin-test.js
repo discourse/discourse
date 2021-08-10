@@ -1,6 +1,5 @@
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import { Promise } from "rsvp";
 
 class FakeUppy {
@@ -36,7 +35,8 @@ class FakeUppy {
 
 module("Unit | Utility | UppyMediaOptimization Plugin", function () {
   test("sets the options passed in", function (assert) {
-    const plugin = new UppyMediaOptimization(sinon.fake(), {
+    const fakeUppy = new FakeUppy();
+    const plugin = new UppyMediaOptimization(fakeUppy, {
       id: "test-uppy",
       runParallel: true,
       optimizeFn: function () {

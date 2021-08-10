@@ -11,24 +11,28 @@ export default class UppyChecksum extends Plugin {
   }
 
   _canUseSubtleCrypto() {
-    if (!window.isSecureContext) {
-      this.warnPrefixed(
-        "Cannot generate cryptographic digests in an insecure context (not HTTPS)."
+    if (!this._secureContext()) {
+      warn(
+        "Cannot generate cryptographic digests in an insecure context (not HTTPS).",
+        {
+          id: "discourse.uppy-media-optimization",
+        }
       );
       return false;
     }
     if (this.capabilities.isIE11) {
-      this.warnPrefixed(
-        "The required cipher suite is unavailable in Internet Explorer 11."
+      warn(
+        "The required cipher suite is unavailable in Internet Explorer 11.",
+        {
+          id: "discourse.uppy-media-optimization",
+        }
       );
       return false;
     }
-    if (
-      !(window.crypto && window.crypto.subtle && window.crypto.subtle.digest)
-    ) {
-      this.warnPrefixed(
-        "The required cipher suite is unavailable in this browser."
-      );
+    if (!this._hasCryptoCipher()) {
+      warn("The required cipher suite is unavailable in this browser.", {
+        id: "discourse.uppy-media-optimization",
+      });
       return false;
     }
 
@@ -62,10 +66,15 @@ export default class UppyChecksum extends Plugin {
             if (
               err.message.toString().includes("Algorithm: Unrecognized name")
             ) {
-              this.warnPrefixed(
-                "SHA-1 algorithm is unsupported in this browser."
-              );
+              warn("SHA-1 algorithm is unsupported in this browser.", {
+                id: "discourse.uppy-media-optimization",
+              });
+            } else {
+              warn(`Error encountered when generating digest: ${err.message}`, {
+                id: "discourse.uppy-media-optimization",
+              });
             }
+            this.uppy.emit("preprocess-complete", file);
           });
       });
     });
@@ -80,8 +89,12 @@ export default class UppyChecksum extends Plugin {
     return Promise.all(promises).then(emitPreprocessCompleteForAll);
   }
 
-  warnPrefixed(message) {
-    warn(`[uppy-checksum-plugin] ${message}`);
+  _secureContext() {
+    return window.isSecureContext;
+  }
+
+  _hasCryptoCipher() {
+    return window.crypto && window.crypto.subtle && window.crypto.subtle.digest;
   }
 
   install() {
