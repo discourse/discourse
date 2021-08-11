@@ -24,7 +24,7 @@ module Onebox
         end
 
         unless m_url_hash.nil?
-          section_header_title = raw.xpath("//span[@id='#{m_url_hash_name}']")
+          section_header_title = raw.xpath("//span[@id='#{CGI.unescape(m_url_hash_name)}']")
 
           if section_header_title.empty?
             paras = raw.search("p") # default get all the paras
