@@ -46,23 +46,17 @@ export default Mixin.create({
   _unbindUploadTarget() {
     this.messageBus.unsubscribe("/uploads/composer");
 
-    if (this.uploadButton && this.uploadButtonEventListener) {
-      this.uploadButton.removeEventListener(
-        "click",
-        this.uploadButtonEventListener
-      );
-    }
+    this.uploadButton?.removeEventListener(
+      "click",
+      this.uploadButtonEventListener
+    );
 
-    if (this.fileInputEventListener && this.fileInputEl) {
-      this.fileInputEl.removeEventListener(
-        "change",
-        this.fileInputEventListener
-      );
-    }
+    this.fileInputEl?.removeEventListener(
+      "change",
+      this.fileInputEventListener
+    );
 
-    if (this.pasteEventListener && this.element) {
-      this.element.removeEventListener("paste", this.pasteEventListener);
-    }
+    this.element?.removeEventListener("paste", this.pasteEventListener);
 
     this.appEvents.off("composer:add-files", this._addFiles.bind(this));
 
@@ -317,8 +311,7 @@ export default Mixin.create({
       const orderNr = regex.exec(lastMatch)[1]
         ? parseInt(regex.exec(lastMatch)[1], 10) + 1
         : 1;
-      const filenameWithOrderNr = `${filename}(${orderNr})`;
-      return filenameWithOrderNr;
+      return `${filename}(${orderNr})`;
     }
 
     return filename;
@@ -343,13 +336,13 @@ export default Mixin.create({
     this._uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       headers: {
-        "X-CSRF-Token": this.session.get("csrfToken"),
+        "X-CSRF-Token": this.session.csrfToken,
       },
     });
   },
 
   _reset() {
-    this._uppyInstance && this._uppyInstance.reset();
+    this._uppyInstance?.reset();
     this.setProperties({
       uploadProgress: 0,
       isUploading: false,
