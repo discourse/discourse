@@ -22,4 +22,14 @@ describe Onebox::Engine::WikipediaOnebox do
       expect(html).to include("Billy Jack is a 1971 action/drama")
     end
   end
+
+  context "url with section hash" do
+    before do
+      @link = "http://en.wikipedia.org/wiki/Billy_Jack#Soundtrack"
+    end
+
+    it "includes summary" do
+      expect(html).to include("The film score was composed")
+    end
+  end
 end
