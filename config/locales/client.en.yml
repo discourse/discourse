@@ -3928,8 +3928,7 @@ en:
               description: "Admins can see all groups."
             members_visibility_levels:
               title: "Who can see this group's members?"
-              description: "Admins can see members of all groups."
-              description_flair_visible: "Admins can see members of all groups. Flair is visible to all users."
+              description: "Admins can see members of all groups. Flair is visible to all users."
             publish_read_state: "On group messages publish group read state"
 
           membership:

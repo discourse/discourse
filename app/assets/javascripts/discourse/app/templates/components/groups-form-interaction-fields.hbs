@@ -29,9 +29,11 @@
       onChange=(action (mut model.members_visibility_level))
     }}
 
-    <div class="control-instructions">
-      {{i18n membersVisibilityLevelsDescription}}
-    </div>
+    {{#if membersVisibilityPrivate}}
+      <div class="control-instructions">
+        {{i18n "admin.groups.manage.interaction.members_visibility_levels.description"}}
+      </div>
+    {{/if}}
   </div>
 {{/if}}
 
