@@ -3,7 +3,6 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { Promise } from "rsvp";
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
@@ -21,9 +20,10 @@ function pretender(server, helper) {
     ]);
   });
 
-  server.post("/uploads.json", () => {
-    return helper.response(
-      {
+  server.post(
+    "/uploads.json",
+    () => {
+      return helper.response({
         extension: "jpeg",
         filesize: 126177,
         height: 800,
@@ -38,10 +38,10 @@ function pretender(server, helper) {
         url:
           "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
         width: 1920,
-      },
-      1000
-    );
-  });
+      });
+    },
+    500 // this delay is important to slow down the uploads a bit so we can click elements in the UI like the cancel button
+  );
 }
 
 function createFile(name, type = "image/png") {
@@ -94,24 +94,22 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const image = createFile("avatar.png");
     const image1 = createFile("avatar1.png");
     const image2 = createFile("avatar2.png");
-    const promise = new Promise((resolve) => {
-      appEvents.on("composer:uploads-aborted", () => {
-        assert.equal(
-          queryAll(".bootbox .modal-body").html(),
-          I18n.t("post.errors.too_many_dragged_and_dropped_files", {
-            count: 2,
-          }),
-          "it should warn about too many files added"
-        );
+    const done = assert.async();
+    appEvents.on("composer:uploads-aborted", async () => {
+      assert.equal(
+        queryAll(".bootbox .modal-body").html(),
+        I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+          count: 2,
+        }),
+        "it should warn about too many files added"
+      );
 
-        click(".modal-footer .btn-primary");
+      await click(".modal-footer .btn-primary");
 
-        resolve();
-      });
+      done();
     });
 
     appEvents.trigger("composer:add-files", [image, image1, image2]);
-    await promise;
   });
 
   test("should error if an unauthorized extension file is added", async function (assert) {
@@ -121,7 +119,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const jsonFile = createFile("something.json", "application/json");
     const done = assert.async();
 
-    appEvents.on("composer:uploads-aborted", () => {
+    appEvents.on("composer:uploads-aborted", async () => {
       assert.equal(
         queryAll(".bootbox .modal-body").html(),
         I18n.t("post.errors.upload_not_authorized", {
@@ -133,7 +131,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         "it should warn about unauthorized extensions"
       );
 
-      click(".modal-footer .btn-primary");
+      await click(".modal-footer .btn-primary");
 
       done();
     });
@@ -167,8 +165,11 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
           "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
           "it should show the upload placeholders when the upload starts"
         );
-        await click("#cancel-file-upload");
       }
+    });
+
+    appEvents.on("composer:uploads-preprocessing-complete", async () => {
+      await click("#cancel-file-upload");
     });
 
     const image = createFile("avatar.png");
@@ -201,14 +202,14 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
-    appEvents.on("composer:upload-error", () => {
+    appEvents.on("composer:upload-error", async () => {
       assert.equal(
         queryAll(".bootbox .modal-body").html(),
         "There was an error uploading the file, the gif was way too cool.",
         "it should show the error message from the server"
       );
 
-      click(".modal-footer .btn-primary");
+      await click(".modal-footer .btn-primary");
 
       done();
     });

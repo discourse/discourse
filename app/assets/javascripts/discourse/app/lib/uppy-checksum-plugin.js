@@ -6,6 +6,7 @@ export default class UppyChecksum extends Plugin {
   constructor(uppy, opts) {
     super(uppy, opts);
     this.id = opts.id || "uppy-checksum";
+    this.pluginClass = this.constructor.name;
     this.capabilities = opts.capabilities;
     this.type = "preprocessor";
   }
@@ -47,10 +48,7 @@ export default class UppyChecksum extends Plugin {
     let promises = fileIds.map((fileId) => {
       let file = this.uppy.getFile(fileId);
 
-      this.uppy.emit("preprocess-progress", file, {
-        mode: "indeterminate",
-        message: "generating checksum",
-      });
+      this.uppy.emit("preprocess-progress", this.pluginClass, file);
 
       return file.data.arrayBuffer().then((arrayBuffer) => {
         return window.crypto.subtle
@@ -61,6 +59,7 @@ export default class UppyChecksum extends Plugin {
               .map((b) => b.toString(16).padStart(2, "0"))
               .join("");
             this.uppy.setFileMeta(fileId, { sha1_checksum: hashHex });
+            this.uppy.emit("preprocess-complete", this.pluginClass, file);
           })
           .catch((err) => {
             if (
@@ -74,19 +73,12 @@ export default class UppyChecksum extends Plugin {
                 id: "discourse.uppy-media-optimization",
               });
             }
-            this.uppy.emit("preprocess-complete", file);
+            this.uppy.emit("preprocess-complete", this.pluginClass, file);
           });
       });
     });
 
-    const emitPreprocessCompleteForAll = () => {
-      fileIds.forEach((fileId) => {
-        const file = this.uppy.getFile(fileId);
-        this.uppy.emit("preprocess-complete", file);
-      });
-    };
-
-    return Promise.all(promises).then(emitPreprocessCompleteForAll);
+    return Promise.all(promises);
   }
 
   _secureContext() {

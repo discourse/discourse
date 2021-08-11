@@ -9,6 +9,7 @@ export default class UppyMediaOptimization extends Plugin {
 
     this.type = "preprocessor";
     this.optimizeFn = opts.optimizeFn;
+    this.pluginClass = this.constructor.name;
 
     // mobile devices have limited processing power, so we only enable
     // running media optimization in parallel when we are sure the user
@@ -20,10 +21,7 @@ export default class UppyMediaOptimization extends Plugin {
   _optimizeFile(fileId) {
     let file = this.uppy.getFile(fileId);
 
-    this.uppy.emit("preprocess-progress", file, {
-      mode: "indeterminate",
-      message: "optimizing images",
-    });
+    this.uppy.emit("preprocess-progress", this.pluginClass, file);
 
     return this.optimizeFn(file)
       .then((optimizedFile) => {
@@ -34,11 +32,11 @@ export default class UppyMediaOptimization extends Plugin {
         } else {
           this.uppy.setFileState(fileId, { data: optimizedFile });
         }
-        this.uppy.emit("preprocess-complete", file);
+        this.uppy.emit("preprocess-complete", this.pluginClass, file);
       })
       .catch((err) => {
         warn(err, { id: "discourse.uppy-media-optimization" });
-        this.uppy.emit("preprocess-complete", file);
+        this.uppy.emit("preprocess-complete", this.pluginClass, file);
       });
   }
 

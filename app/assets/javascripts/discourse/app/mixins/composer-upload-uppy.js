@@ -40,12 +40,11 @@ export default Mixin.create({
     this.set("composer.uploadCancelled", false);
     this.set("userCancelled", true);
 
-    this.uppyInstance.cancelAll();
+    this._uppyInstance.cancelAll();
   },
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
-    this._processingUploads = 0;
     $("#reply-control .mobile-file-upload").off("click.uploader");
     this.messageBus.unsubscribe("/uploads/composer");
 
@@ -61,10 +60,16 @@ export default Mixin.create({
     }
 
     this.appEvents.off("composer:add-files", this._addFiles.bind(this));
+
+    if (this._uppyInstance) {
+      this._uppyInstance.cancelAll();
+      this._uppyInstance = null;
+    }
   },
 
   _bindUploadTarget() {
     this.placeholders = {};
+    this._preProcessorStatus = {};
     this.fileInputEl = document.getElementById("file-uploader");
     const isPrivateMessage = this.get("composer.privateMessage");
 
@@ -75,62 +80,66 @@ export default Mixin.create({
     this._bindPasteListener();
     this._bindMobileUploadButton();
 
-    this.set(
-      "uppyInstance",
-      new Uppy({
-        id: "composer-uppy",
-        autoProceed: true,
+    this._uppyInstance = new Uppy({
+      id: "composer-uppy",
+      autoProceed: true,
 
-        // need to use upload_type because uppy overrides type with the
-        // actual file type
-        meta: deepMerge({ upload_type: "composer" }, this.data || {}),
+      // need to use upload_type because uppy overrides type with the
+      // actual file type
+      meta: deepMerge({ upload_type: "composer" }, this.data || {}),
 
-        onBeforeFileAdded: (currentFile) => {
-          const validationOpts = {
-            user: this.currentUser,
-            siteSettings: this.siteSettings,
-            isPrivateMessage,
-            allowStaffToUploadAnyFileInPm: this.siteSettings
-              .allow_staff_to_upload_any_file_in_pm,
-          };
+      onBeforeFileAdded: (currentFile) => {
+        const validationOpts = {
+          user: this.currentUser,
+          siteSettings: this.siteSettings,
+          isPrivateMessage,
+          allowStaffToUploadAnyFileInPm: this.siteSettings
+            .allow_staff_to_upload_any_file_in_pm,
+        };
 
-          const isUploading = validateUploadedFile(currentFile, validationOpts);
+        const isUploading = validateUploadedFile(currentFile, validationOpts);
 
-          run(() => {
-            this.setProperties({
-              uploadProgress: 0,
-              isUploading,
-              isCancellable: isUploading,
-            });
+        run(() => {
+          this.setProperties({
+            uploadProgress: 0,
+            isUploading,
+            isCancellable: isUploading,
           });
+        });
 
-          if (!isUploading) {
-            this.appEvents.trigger("composer:uploads-aborted");
-          }
-          return isUploading;
-        },
+        if (!isUploading) {
+          this.appEvents.trigger("composer:uploads-aborted");
+        }
+        return isUploading;
+      },
 
-        onBeforeUpload: (files) => {
-          const fileCount = Object.keys(files).length;
-          const maxFiles = this.siteSettings.simultaneous_uploads;
+      onBeforeUpload: (files) => {
+        const fileCount = Object.keys(files).length;
+        const maxFiles = this.siteSettings.simultaneous_uploads;
 
-          // Limit the number of simultaneous uploads
-          if (maxFiles > 0 && fileCount > maxFiles) {
-            bootbox.alert(
-              I18n.t("post.errors.too_many_dragged_and_dropped_files", {
-                count: maxFiles,
-              })
-            );
-            this.appEvents.trigger("composer:uploads-aborted");
-            this._reset();
-            return false;
-          }
-        },
-      })
-    );
+        // Limit the number of simultaneous uploads
+        if (maxFiles > 0 && fileCount > maxFiles) {
+          bootbox.alert(
+            I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+              count: maxFiles,
+            })
+          );
+          this.appEvents.trigger("composer:uploads-aborted");
+          this._reset();
+          return false;
+        }
+      },
+    });
 
-    this.uppyInstance.use(DropTarget, { target: this.element });
-    this.uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
+    this._uppyInstance.use(DropTarget, { target: this.element });
+    this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
+
+    // TODO (martin) Need a more automatic way to do this for preprocessor
+    // plugins like UppyChecksum and UppyMediaOptimization so people don't
+    // have to remember to do this, also want to wrap this.uppy.emit in those
+    // classes so people don't have to remember to pass through the plugin class
+    // name for the preprocess-X events.
+    this._trackPreProcessorStatus(UppyChecksum);
 
     // TODO (martin) support for direct S3 uploads will come later, for now
     // we just want the regular /uploads.json endpoint to work well
@@ -138,20 +147,29 @@ export default Mixin.create({
 
     // TODO (martin) develop upload handler guidance and an API to use; will
     // likely be using uppy plugins for this
-    this.uppyInstance.on("file-added", (file) => {
+    this._uppyInstance.on("file-added", (file) => {
       if (isPrivateMessage) {
         file.meta.for_private_message = true;
       }
     });
 
-    this.uppyInstance.on("progress", (progress) => {
+    this._uppyInstance.on("progress", (progress) => {
       this.set("uploadProgress", progress);
     });
 
-    this.uppyInstance.on("upload", (data) => {
+    this._uppyInstance.on("upload", (data) => {
       const files = data.fileIDs.map((fileId) =>
-        this.uppyInstance.getFile(fileId)
+        this._uppyInstance.getFile(fileId)
       );
+
+      this._eachPreProcessor((pluginName, status) => {
+        status.needProcessing = files.length;
+      });
+
+      this.setProperties({
+        isProcessingUpload: true,
+        isCancellable: false,
+      });
 
       files.forEach((file) => {
         const placeholder = this._uploadPlaceholder(file);
@@ -163,7 +181,7 @@ export default Mixin.create({
       });
     });
 
-    this.uppyInstance.on("upload-success", (file, response) => {
+    this._uppyInstance.on("upload-success", (file, response) => {
       let upload = response.body;
       const markdown = this.uploadMarkdownResolvers.reduce(
         (md, resolver) => resolver(upload) || md,
@@ -182,7 +200,7 @@ export default Mixin.create({
       this.appEvents.trigger("composer:upload-success", file.name, upload);
     });
 
-    this.uppyInstance.on("upload-error", (file, error, response) => {
+    this._uppyInstance.on("upload-error", (file, error, response) => {
       run(() => {
         this._resetUpload(file, { removePlaceholder: true });
 
@@ -193,12 +211,12 @@ export default Mixin.create({
       });
     });
 
-    this.uppyInstance.on("complete", () => {
+    this._uppyInstance.on("complete", () => {
       this.appEvents.trigger("composer:all-uploads-complete");
       this._reset();
     });
 
-    this.uppyInstance.on("cancel-all", () => {
+    this._uppyInstance.on("cancel-all", () => {
       // uppyInstance.reset() also fires cancel-all, so we want to
       // only do the manual cancelling work if the user clicked cancel
       if (this.userCancelled) {
@@ -226,15 +244,17 @@ export default Mixin.create({
     Object.keys(this.uploadProcessorActions).forEach((action) => {
       switch (action) {
         case "optimizeJPEG":
-          this.uppyInstance.use(UppyMediaOptimization, {
+          this._uppyInstance.use(UppyMediaOptimization, {
             optimizeFn: this.uploadProcessorActions[action],
             runParallel: !this.site.isMobileDevice,
           });
+          this._trackPreProcessorStatus(UppyMediaOptimization);
           break;
       }
     });
 
-    this.uppyInstance.on("preprocess-progress", (file) => {
+    this._uppyInstance.on("preprocess-progress", (pluginClass, file) => {
+      this._preProcessorStatus[pluginClass].activeProcessing++;
       let placeholderData = this.placeholders[file.id];
       placeholderData.processingPlaceholder = `[${I18n.t(
         "processing_filename",
@@ -248,14 +268,9 @@ export default Mixin.create({
         placeholderData.uploadPlaceholder,
         placeholderData.processingPlaceholder
       );
-      this._processingUploads++;
-      this.setProperties({
-        isProcessingUpload: true,
-        isCancellable: false,
-      });
     });
 
-    this.uppyInstance.on("preprocess-complete", (file) => {
+    this._uppyInstance.on("preprocess-complete", (pluginClass, file) => {
       run(() => {
         let placeholderData = this.placeholders[file.id];
         this.appEvents.trigger(
@@ -263,13 +278,23 @@ export default Mixin.create({
           placeholderData.processingPlaceholder,
           placeholderData.uploadPlaceholder
         );
-        this._processingUploads--;
+        const preProcessorStatus = this._preProcessorStatus[pluginClass];
+        preProcessorStatus.activeProcessing--;
+        preProcessorStatus.completeProcessing++;
 
-        if (this._processingUploads === 0) {
-          this.setProperties({
-            isProcessingUpload: false,
-            isCancellable: true,
-          });
+        if (
+          preProcessorStatus.completeProcessing ===
+          preProcessorStatus.needProcessing
+        ) {
+          preProcessorStatus.allComplete = true;
+
+          if (this._allPreprocessorsComplete()) {
+            this.setProperties({
+              isProcessingUpload: false,
+              isCancellable: true,
+            });
+            this.appEvents.trigger("composer:uploads-preprocessing-complete");
+          }
         }
       });
     });
@@ -318,7 +343,7 @@ export default Mixin.create({
   },
 
   _useXHRUploads() {
-    this.uppyInstance.use(XHRUpload, {
+    this._uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       headers: {
         "X-CSRF-Token": this.session.get("csrfToken"),
@@ -327,12 +352,15 @@ export default Mixin.create({
   },
 
   _reset() {
-    this.uppyInstance && this.uppyInstance.reset();
+    this._uppyInstance && this._uppyInstance.reset();
     this.setProperties({
       uploadProgress: 0,
       isUploading: false,
       isProcessingUpload: false,
       isCancellable: false,
+    });
+    this._eachPreProcessor((pluginClass) => {
+      this._preProcessorStatus[pluginClass] = {};
     });
     this.fileInputEl.value = "";
   },
@@ -384,7 +412,7 @@ export default Mixin.create({
   _addFiles(files) {
     files = Array.isArray(files) ? files : [files];
     try {
-      this.uppyInstance.addFiles(
+      this._uppyInstance.addFiles(
         files.map((file) => {
           return {
             source: "composer",
@@ -399,6 +427,31 @@ export default Mixin.create({
         id: "discourse.upload.uppy-add-files-error",
       });
     }
+  },
+
+  _trackPreProcessorStatus(pluginClass) {
+    this._preProcessorStatus[pluginClass.name] = {
+      needProcessing: 0,
+      activeProcessing: 0,
+      completeProcessing: 0,
+      allComplete: false,
+    };
+  },
+
+  _eachPreProcessor(cb) {
+    for (const [pluginClass, status] of Object.entries(
+      this._preProcessorStatus
+    )) {
+      cb(pluginClass, status);
+    }
+  },
+
+  _allPreprocessorsComplete() {
+    let completed = [];
+    this._eachPreProcessor((pluginClass, status) => {
+      completed.push(status.allComplete);
+    });
+    return completed.every(Boolean);
   },
 
   showUploadSelector(toolbarEvent) {
