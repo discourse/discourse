@@ -306,7 +306,11 @@ private
 
     if [:notify_moderators, :spam].include?(@post_action_name)
       create_args[:subtype] = TopicSubtype.notify_moderators
-      create_args[:target_group_names] = Group[:moderators].name
+      create_args[:target_group_names] = [Group[:moderators].name]
+
+      if SiteSetting.enable_category_group_moderation? && @post.topic&.category&.reviewable_by_group_id?
+        create_args[:target_group_names] << @post.topic.category.reviewable_by_group.name
+      end
     else
       create_args[:subtype] = TopicSubtype.notify_user
 

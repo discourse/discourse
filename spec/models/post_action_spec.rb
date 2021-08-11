@@ -91,6 +91,28 @@ describe PostAction do
       expect(topic.message_archived?(mod)).to eq(true)
     end
 
+    context "category group moderators" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:group) { group_user.group }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
+        post.topic.category.update!(reviewable_by_group_id: group.id)
+      end
+
+      it "notifies via pm" do
+        result = PostActionCreator.notify_moderators(
+          codinghorror,
+          post,
+          "this is my special long message"
+        )
+
+        readable_by_groups = result.reviewable_score.meta_topic.topic_allowed_groups.map(&:group_id)
+        expect(readable_by_groups).to include(group.id)
+      end
+    end
+
   end
 
   describe "update_counters" do
@@ -831,16 +853,11 @@ describe PostAction do
     end
 
     it "should raise the right errors when it fails to create a post" do
-      begin
-        group = Group[:moderators]
-        messageable_level = group.messageable_level
-        group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
+      user = Fabricate(:user)
+      UserSilencer.new(user, Discourse.system_user).silence
 
-        result = PostActionCreator.notify_moderators(Fabricate(:user), post, 'testing')
-        expect(result).to be_failed
-      ensure
-        group.update!(messageable_level: messageable_level)
-      end
+      result = PostActionCreator.notify_moderators(user, post, 'testing')
+      expect(result).to be_failed
     end
 
     it "should succeed even with low max title length" do
