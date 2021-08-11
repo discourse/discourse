@@ -451,21 +451,13 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         ]);
       });
 
-      test("message count is incremented and callback is called", function (assert) {
-        let messageIncrementCalled = false;
-        trackingState.onMessageIncrement(() => {
-          messageIncrementCalled = true;
-        });
+      test("message count is incremented", function (assert) {
         publishToMessageBus(`/unread/${currentUser.id}`, unreadTopicPayload);
+
         assert.equal(
           trackingState.messageCount,
           1,
           "message count incremented"
-        );
-        assert.equal(
-          messageIncrementCalled,
-          true,
-          "message increment callback called"
         );
       });
 
@@ -617,21 +609,13 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("message count is incremented and callback is called", function (assert) {
-        let messageIncrementCalled = false;
-        trackingState.onMessageIncrement(() => {
-          messageIncrementCalled = true;
-        });
+      test("message count is incremented", function (assert) {
         publishToMessageBus("/new", newTopicPayload);
+
         assert.equal(
           trackingState.messageCount,
           1,
           "message count incremented"
-        );
-        assert.equal(
-          messageIncrementCalled,
-          true,
-          "message increment callback called"
         );
       });
 
