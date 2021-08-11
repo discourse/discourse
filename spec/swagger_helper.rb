@@ -88,7 +88,7 @@ RSpec.configure do |config|
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
   config.swagger_docs = {
     'openapi.yaml' => {
-      openapi: '3.0.3',
+      openapi: '3.1.0',
       info: {
         title: 'Discourse API Documentation',
         'x-logo': {
