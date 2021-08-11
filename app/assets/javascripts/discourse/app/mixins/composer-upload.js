@@ -326,8 +326,8 @@ export default Mixin.create({
 
   _bindMobileUploadButton() {
     if (this.site.mobileView) {
-      const uploadButton = document.getElementById("mobile-file-upload");
-      uploadButton.addEventListener(
+      this.uploadButton = document.getElementById("mobile-file-upload");
+      this.uploadButtonEventListener = this.uploadButton.addEventListener(
         "click",
         () => document.getElementById("file-uploader").click(),
         false
@@ -337,8 +337,14 @@ export default Mixin.create({
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
+    if (this.uploadButton && this.uploadButtonEventListener) {
+      this.uploadButton.removeEventListener(
+        "click",
+        this.uploadButtonEventListener
+      );
+    }
+
     this._validUploads = 0;
-    $("#reply-control .mobile-file-upload").off("click.uploader");
     this.messageBus.unsubscribe("/uploads/composer");
     const $uploadTarget = $(this.element);
     try {

@@ -45,8 +45,14 @@ export default Mixin.create({
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
-    $("#reply-control .mobile-file-upload").off("click.uploader");
     this.messageBus.unsubscribe("/uploads/composer");
+
+    if (this.uploadButton && this.uploadButtonEventListener) {
+      this.uploadButton.removeEventListener(
+        "click",
+        this.uploadButtonEventListener
+      );
+    }
 
     if (this.fileInputEventListener && this.fileInputEl) {
       this.fileInputEl.removeEventListener(
@@ -388,7 +394,9 @@ export default Mixin.create({
     this.pasteEventListener = this.element.addEventListener(
       "paste",
       (event) => {
-        if (!$(".d-editor-input").is(":focus")) {
+        if (
+          document.activeElement !== document.querySelector(".d-editor-input")
+        ) {
           return;
         }
 
