@@ -67,7 +67,7 @@ export default Mixin.create({
     this.appEvents.off("composer:add-files", this._addFiles.bind(this));
 
     if (this._uppyInstance) {
-      this._uppyInstance.cancelAll();
+      this._uppyInstance.close();
       this._uppyInstance = null;
     }
   },
