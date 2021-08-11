@@ -554,22 +554,6 @@ class PostsController < ApplicationController
     render body: nil
   end
 
-  def flagged_posts
-    params.permit(:offset, :limit)
-    guardian.ensure_can_see_flagged_posts!
-
-    user = fetch_user_from_params
-    offset = [params[:offset].to_i, 0].max
-    limit = [(params[:limit] || 60).to_i, 100].min
-
-    posts = user_posts(guardian, user.id, offset: offset, limit: limit)
-      .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
-                                   .where(disagreed_at: nil)
-                                   .select(:post_id))
-
-    render_serialized(posts, AdminUserActionSerializer)
-  end
-
   def deleted_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_deleted_posts!
