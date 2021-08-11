@@ -7,7 +7,6 @@ import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
 import { warn } from "@ember/debug";
 import I18n from "I18n";
-import { next, run } from "@ember/runloop";
 import getURL from "discourse-common/lib/get-url";
 import { clipboardHelpers } from "discourse/lib/utilities";
 import { observes, on } from "discourse-common/utils/decorators";
@@ -105,12 +104,10 @@ export default Mixin.create({
 
         const isUploading = validateUploadedFile(currentFile, validationOpts);
 
-        run(() => {
-          this.setProperties({
-            uploadProgress: 0,
-            isUploading,
-            isCancellable: isUploading,
-          });
+        this.setProperties({
+          uploadProgress: 0,
+          isUploading,
+          isCancellable: isUploading,
         });
 
         if (!isUploading) {
@@ -207,14 +204,12 @@ export default Mixin.create({
     });
 
     this._uppyInstance.on("upload-error", (file, error, response) => {
-      run(() => {
-        this._resetUpload(file, { removePlaceholder: true });
+      this._resetUpload(file, { removePlaceholder: true });
 
-        if (!this.userCancelled) {
-          displayErrorForUpload(response, this.siteSettings, file.name);
-          this.appEvents.trigger("composer:upload-error", file);
-        }
-      });
+      if (!this.userCancelled) {
+        displayErrorForUpload(response, this.siteSettings, file.name);
+        this.appEvents.trigger("composer:upload-error", file);
+      }
     });
 
     this._uppyInstance.on("complete", () => {
@@ -237,9 +232,7 @@ export default Mixin.create({
         this.set("userCancelled", false);
         this._reset();
 
-        next(() => {
-          this.appEvents.trigger("composer:uploads-cancelled");
-        });
+        this.appEvents.trigger("composer:uploads-cancelled");
       }
     });
 
@@ -277,32 +270,30 @@ export default Mixin.create({
     });
 
     this._uppyInstance.on("preprocess-complete", (pluginClass, file) => {
-      run(() => {
-        let placeholderData = this.placeholders[file.id];
-        this.appEvents.trigger(
-          "composer:replace-text",
-          placeholderData.processingPlaceholder,
-          placeholderData.uploadPlaceholder
-        );
-        const preProcessorStatus = this._preProcessorStatus[pluginClass];
-        preProcessorStatus.activeProcessing--;
-        preProcessorStatus.completeProcessing++;
+      let placeholderData = this.placeholders[file.id];
+      this.appEvents.trigger(
+        "composer:replace-text",
+        placeholderData.processingPlaceholder,
+        placeholderData.uploadPlaceholder
+      );
+      const preProcessorStatus = this._preProcessorStatus[pluginClass];
+      preProcessorStatus.activeProcessing--;
+      preProcessorStatus.completeProcessing++;
 
-        if (
-          preProcessorStatus.completeProcessing ===
-          preProcessorStatus.needProcessing
-        ) {
-          preProcessorStatus.allComplete = true;
+      if (
+        preProcessorStatus.completeProcessing ===
+        preProcessorStatus.needProcessing
+      ) {
+        preProcessorStatus.allComplete = true;
 
-          if (this._allPreprocessorsComplete()) {
-            this.setProperties({
-              isProcessingUpload: false,
-              isCancellable: true,
-            });
-            this.appEvents.trigger("composer:uploads-preprocessing-complete");
-          }
+        if (this._allPreprocessorsComplete()) {
+          this.setProperties({
+            isProcessingUpload: false,
+            isCancellable: true,
+          });
+          this.appEvents.trigger("composer:uploads-preprocessing-complete");
         }
-      });
+      }
     });
   },
 
@@ -372,15 +363,13 @@ export default Mixin.create({
   },
 
   _resetUpload(file, opts) {
-    next(() => {
-      if (opts.removePlaceholder) {
-        this.appEvents.trigger(
-          "composer:replace-text",
-          this.placeholders[file.id].uploadPlaceholder,
-          ""
-        );
-      }
-    });
+    if (opts.removePlaceholder) {
+      this.appEvents.trigger(
+        "composer:replace-text",
+        this.placeholders[file.id].uploadPlaceholder,
+        ""
+      );
+    }
   },
 
   _bindFileInputChangeListener() {
