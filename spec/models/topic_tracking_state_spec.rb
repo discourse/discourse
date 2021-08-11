@@ -48,9 +48,52 @@ describe TopicTrackingState do
 
       data = message.data
 
+      expect(message.user_ids).to contain_exactly(post.user.id)
+      expect(message.group_ids).to eq(nil)
       expect(data["topic_id"]).to eq(topic.id)
       expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    it "does not publish whisper post to non-staff users" do
+      post.update!(post_type: Post.types[:whisper])
+
+      messages = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+        TopicTrackingState.publish_unread(post)
+      end
+
+      expect(messages).to eq([])
+
+      post.user.grant_admin!
+
+      message = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+        TopicTrackingState.publish_unread(post)
+      end.first
+
+      expect(message.user_ids).to contain_exactly(post.user_id)
+      expect(message.group_ids).to eq(nil)
+    end
+
+    it "correctly publishes unread for a post in a restricted category" do
+      group = Fabricate(:group)
+      category = Fabricate(:private_category, group: group)
+
+      post.topic.update!(category: category)
+
+      messages = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+        TopicTrackingState.publish_unread(post)
+      end
+
+      expect(messages).to eq([])
+
+      group.add(post.user)
+
+      message = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+        TopicTrackingState.publish_unread(post)
+      end.first
+
+      expect(message.user_ids).to contain_exactly(post.user_id)
+      expect(message.group_ids).to eq(nil)
     end
 
     describe 'for a private message' do

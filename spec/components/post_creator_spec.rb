@@ -137,7 +137,8 @@ describe PostCreator do
         Jobs.run_immediately!
         UserActionManager.enable
 
-        admin = Fabricate(:admin)
+        admin = Fabricate(:user)
+        admin.grant_admin!
 
         cat = Fabricate(:category)
         cat.set_permissions(admins: :full)
