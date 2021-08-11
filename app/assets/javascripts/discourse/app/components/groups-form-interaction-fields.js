@@ -99,13 +99,9 @@ export default Component.extend({
   },
 
   @discourseComputed("membersVisibilityLevel")
-  membersVisibilityLevelsDescription(membersVisibilityLevel) {
-    if (
-      membersVisibilityLevel === this.visibilityLevelOptions.firstObject.value
-    ) {
-      return "admin.groups.manage.interaction.members_visibility_levels.description";
-    } else {
-      return "admin.groups.manage.interaction.members_visibility_levels.description_flair_visible";
-    }
+  membersVisibilityPrivate(membersVisibilityLevel) {
+    return (
+      membersVisibilityLevel !== this.visibilityLevelOptions.firstObject.value
+    );
   },
 });
