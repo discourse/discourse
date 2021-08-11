@@ -13,7 +13,7 @@ describe 'user_badges' do
   path '/user-badges/{username}.json' do
 
     get 'List badges for a user' do
-      tags 'Badges, Users'
+      tags 'Badges', 'Users'
       consumes 'application/json'
       expected_request_schema = nil
       parameter name: :username, in: :path, schema: { type: :string }
