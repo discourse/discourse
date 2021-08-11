@@ -33,7 +33,7 @@ export const DefaultNotificationItem = createWidget(
       const lookup = this.site.get("notificationLookup");
       const notificationName = lookup[notificationType];
       if (notificationName) {
-        classNames.push(notificationName.replaceAll("_", "-"));
+        classNames.push(notificationName.replace(/_/g, "-"));
       }
       return classNames;
     },
