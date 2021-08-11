@@ -991,6 +991,7 @@ en:
           all: "All"
           read: "Read"
           unread: "Unread"
+          unseen: "Unseen"
         ignore_duration_title: "Ignore User"
         ignore_duration_username: "Username"
         ignore_duration_when: "Duration:"
@@ -1359,6 +1360,7 @@ en:
         not_connected: "(not connected)"
         confirm_modal_title: "Connect %{provider} Account"
         confirm_description:
+          disconnect: "Your existing %{provider} account '%{account_description}' will be disconnected."
           account_specific: "Your %{provider} account '%{account_description}' will be used for authentication."
           generic: "Your %{provider} account will be used for authentication."
 
@@ -1794,6 +1796,7 @@ en:
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
       title: "Create your account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
+      associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
 
     forgot_password:
       title: "Password Reset"
@@ -2401,6 +2404,7 @@ en:
 
       none:
         unread: "You have no unread topics."
+        unseen: "You have no unseen topics."
         new: "You have no new topics."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
@@ -2417,6 +2421,7 @@ en:
         read: "There are no more read topics."
         new: "There are no more new topics."
         unread: "There are no more unread topics."
+        unseen: "There are no more unseen topics."
         category: "There are no more %{category} topics."
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
@@ -3397,7 +3402,8 @@ en:
       one: "user"
       other: "users"
     category_title: "Category"
-    history: "History, last 100 revisions"
+    history_capped_revisions: "History, last 100 revisions"
+    history: "History"
     changed_by: "by %{author}"
 
     raw_email:
@@ -3431,6 +3437,9 @@ en:
         lower_title_with_count:
           one: "%{count} unread"
           other: "%{count} unread"
+      unseen:
+        title: "Unseen"
+        lower_title: "unseen"
       new:
         lower_title_with_count:
           one: "%{count} new"
@@ -3726,6 +3735,7 @@ en:
       topics:
         none:
           unread: "You have no unread topics."
+          unseen: "You have no unseen topics."
           new: "You have no new topics."
           read: "You haven't read any topics yet."
           posted: "You haven't posted in any topics yet."
@@ -3919,6 +3929,7 @@ en:
             members_visibility_levels:
               title: "Who can see this group's members?"
               description: "Admins can see members of all groups."
+              description_flair_visible: "Admins can see members of all groups. Flair is visible to all users."
             publish_read_state: "On group messages publish group read state"
 
           membership:

@@ -130,8 +130,12 @@ export default {
   name: "discourse-local-dates",
 
   showDatePopover(event) {
-    const siteSettings = getOwner(this).lookup("site-settings:main");
+    const owner = getOwner(this);
+    if (owner.isDestroyed || owner.isDestroying) {
+      return;
+    }
 
+    const siteSettings = owner.lookup("site-settings:main");
     if (event?.target?.classList?.contains("discourse-local-date")) {
       showPopover(event, {
         htmlContent: buildHtmlPreview(event.target, siteSettings),

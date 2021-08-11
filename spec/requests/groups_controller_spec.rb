@@ -723,9 +723,9 @@ describe GroupsController do
 
         group.reload
 
-        expect(group.flair_bg_color).to eq(nil)
+        expect(group.flair_bg_color).to eq('FFF')
         expect(group.flair_color).to eq('BBB')
-        expect(group.flair_url).to eq(nil)
+        expect(group.flair_url).to eq('fa-adjust')
         expect(group.bio_raw).to eq('testing')
         expect(group.full_name).to eq('awesome team')
         expect(group.public_admission).to eq(true)
@@ -834,10 +834,10 @@ describe GroupsController do
         expect(response.status).to eq(200)
 
         group.reload
-        expect(group.flair_bg_color).to eq(nil)
+        expect(group.flair_bg_color).to eq('FFF')
         expect(group.flair_color).to eq('BBB')
         expect(group.flair_icon).to eq('fa-adjust')
-        expect(group.flair_url).to eq(nil)
+        expect(group.flair_url).to eq('fa-adjust')
         expect(group.name).to eq('admins')
         expect(group.visibility_level).to eq(1)
         expect(group.mentionable_level).to eq(1)
@@ -1006,10 +1006,10 @@ describe GroupsController do
         expect(response.status).to eq(200)
 
         group.reload
-        expect(group.flair_bg_color).to eq(nil)
+        expect(group.flair_bg_color).to eq('FFF')
         expect(group.flair_color).to eq('BBB')
         expect(group.flair_icon).to eq('fa-adjust')
-        expect(group.flair_url).to eq(nil)
+        expect(group.flair_url).to eq('fa-adjust')
         expect(group.name).to eq('trust_level_4')
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)

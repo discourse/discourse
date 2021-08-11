@@ -259,6 +259,10 @@ class TopicQuery
     create_list(:unread, { unordered: true }, unread_results)
   end
 
+  def list_unseen
+    create_list(:unseen, { unordered: true }, unseen_results)
+  end
+
   def list_posted
     create_list(:posted) { |l| l.where('tu.posted') }
   end
@@ -445,9 +449,21 @@ class TopicQuery
 
   def latest_results(options = {})
     result = default_results(options)
-    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted"
-    result = remove_muted_categories(result, @user, exclude: options[:category])
-    result = remove_muted_tags(result, @user, options)
+    result = remove_muted(result, @user, options)
+    result = apply_shared_drafts(result, get_category_id(options[:category]), options)
+
+    # plugins can remove topics here:
+    self.class.results_filter_callbacks.each do |filter_callback|
+      result = filter_callback.call(:latest, result, @user, options)
+    end
+
+    result
+  end
+
+  def unseen_results(options = {})
+    result = default_results(options)
+    result = unseen_filter(result, @user.first_seen_at, @user.staff?) if @user
+    result = remove_muted(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
 
     # plugins can remove topics here:
@@ -495,9 +511,7 @@ class TopicQuery
       default_results(options.reverse_merge(unordered: true)),
       treat_as_new_topic_start_date: @user.user_option.treat_as_new_topic_start_date
     )
-    result = remove_muted_topics(result, @user)
-    result = remove_muted_categories(result, @user, exclude: options[:category])
-    result = remove_muted_tags(result, @user, options)
+    result = remove_muted(result, @user, options)
     result = remove_dismissed(result, @user)
 
     self.class.results_filter_callbacks.each do |filter_callback|
@@ -791,6 +805,12 @@ class TopicQuery
     result
   end
 
+  def remove_muted(list, user, options)
+    list = remove_muted_topics(list, user) unless options && options[:state] == "muted"
+    list = remove_muted_categories(list, user, exclude: options[:category])
+    remove_muted_tags(list, user, options)
+  end
+
   def remove_muted_topics(list, user)
     if user
       list = list.where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
@@ -1032,5 +1052,14 @@ class TopicQuery
     end
 
     result.order('topics.bumped_at DESC')
+  end
+
+  private
+
+  def unseen_filter(list, user_first_seen_at, staff)
+    list = list.where("topics.bumped_at >= ?", user_first_seen_at)
+
+    col_name = staff ? "highest_staff_post_number" : "highest_post_number"
+    list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
   end
 end

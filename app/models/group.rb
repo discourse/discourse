@@ -803,20 +803,10 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    return if members_visibility_level != Group.visibility_levels[:public]
-    return if visibility_level != Group.visibility_levels[:public]
-
     return flair_icon if flair_type == :icon
     return upload_cdn_path(flair_upload.url) if flair_type == :image
 
     nil
-  end
-
-  def flair_bg_color
-    return if members_visibility_level != Group.visibility_levels[:public]
-    return if visibility_level != Group.visibility_levels[:public]
-
-    read_attribute(:flair_bg_color)
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
