@@ -146,6 +146,15 @@ class TopicTrackingState
     return unless post.topic.regular?
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
+    tags = nil
+    tag_ids = nil
+    if include_tags_in_report?
+      tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose
+    end
+
+    scope = TopicUser
+      .tracking(post.topic_id)
+      .includes(user: :user_stat)
 
     group_ids =
       if post.post_type == Post.types[:whisper]
@@ -154,15 +163,13 @@ class TopicTrackingState
         post.topic.category && post.topic.category.secure_group_ids
       end
 
-    tags = nil
-    tag_ids = nil
-    if include_tags_in_report?
-      tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose
+    if group_ids.present?
+      scope = scope
+        .joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id")
+        .where("gu.group_id IN (?)", group_ids)
     end
 
-    TopicUser
-      .tracking(post.topic_id)
-      .includes(user: :user_stat)
+    scope
       .select([:user_id, :last_read_post_number, :notification_level])
       .each do |tu|
 
@@ -189,7 +196,9 @@ class TopicTrackingState
         payload: payload
       }
 
-      MessageBus.publish(self.unread_channel_key(tu.user_id), message.as_json, group_ids: group_ids)
+      MessageBus.publish(self.unread_channel_key(tu.user_id), message.as_json,
+        user_ids: [tu.user_id]
+      )
     end
 
   end
