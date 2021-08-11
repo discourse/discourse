@@ -114,7 +114,7 @@ GEM
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
     discourse-ember-source (3.12.2.3)
-    discourse-fonts (0.0.8)
+    discourse-fonts (0.0.9)
     discourse_dev_assets (0.0.3)
       faker (~> 2.16)
       literate_randomizer
