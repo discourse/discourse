@@ -139,6 +139,7 @@ onmessage = async function (e) {
         console.error(error);
         postMessage({
           type: "error",
+          file: e.data.file
         });
       }
       break;

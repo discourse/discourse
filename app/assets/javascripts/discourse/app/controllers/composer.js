@@ -1,4 +1,5 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
+import { warn } from "@ember/debug";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
@@ -284,6 +285,22 @@ export default Controller.extend({
     return option;
   },
 
+  @discourseComputed("model.isEncrypted")
+  composerComponent(isEncrypted) {
+    const defaultComposer = "composer-editor";
+    if (this.siteSettings.enable_experimental_composer_uploader) {
+      if (isEncrypted) {
+        warn(
+          "Uppy cannot be used for composer uploads until upload handlers are developed, falling back to composer-editor.",
+          { id: "composer" }
+        );
+        return defaultComposer;
+      }
+      return "composer-editor-uppy";
+    }
+    return defaultComposer;
+  },
+
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
   popupMenuOptions(composeState) {
     if (composeState === "open" || composeState === "fullscreen") {
@@ -482,14 +499,14 @@ export default Controller.extend({
             }
           }
 
-          const [warn, info] = linkLookup.check(post, href);
+          const [linkWarn, linkInfo] = linkLookup.check(post, href);
 
-          if (warn) {
+          if (linkWarn) {
             const body = I18n.t("composer.duplicate_link", {
-              domain: info.domain,
-              username: info.username,
-              post_url: topic.urlForPostNumber(info.post_number),
-              ago: shortDate(info.posted_at),
+              domain: linkInfo.domain,
+              username: linkInfo.username,
+              post_url: topic.urlForPostNumber(linkInfo.post_number),
+              ago: shortDate(linkInfo.posted_at),
             });
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",

@@ -6,47 +6,49 @@ export default class UppyChecksum extends Plugin {
   constructor(uppy, opts) {
     super(uppy, opts);
     this.id = opts.id || "uppy-checksum";
+    this.pluginClass = this.constructor.name;
     this.capabilities = opts.capabilities;
     this.type = "preprocessor";
   }
 
-  canUseSubtleCrypto() {
-    if (!window.isSecureContext) {
-      this.warnPrefixed(
-        "Cannot generate cryptographic digests in an insecure context (not HTTPS)."
+  _canUseSubtleCrypto() {
+    if (!this._secureContext()) {
+      warn(
+        "Cannot generate cryptographic digests in an insecure context (not HTTPS).",
+        {
+          id: "discourse.uppy-media-optimization",
+        }
       );
       return false;
     }
     if (this.capabilities.isIE11) {
-      this.warnPrefixed(
-        "The required cipher suite is unavailable in Internet Explorer 11."
+      warn(
+        "The required cipher suite is unavailable in Internet Explorer 11.",
+        {
+          id: "discourse.uppy-media-optimization",
+        }
       );
       return false;
     }
-    if (
-      !(window.crypto && window.crypto.subtle && window.crypto.subtle.digest)
-    ) {
-      this.warnPrefixed(
-        "The required cipher suite is unavailable in this browser."
-      );
+    if (!this._hasCryptoCipher()) {
+      warn("The required cipher suite is unavailable in this browser.", {
+        id: "discourse.uppy-media-optimization",
+      });
       return false;
     }
 
     return true;
   }
 
-  generateChecksum(fileIds) {
-    if (!this.canUseSubtleCrypto()) {
+  _generateChecksum(fileIds) {
+    if (!this._canUseSubtleCrypto()) {
       return Promise.resolve();
     }
 
     let promises = fileIds.map((fileId) => {
       let file = this.uppy.getFile(fileId);
 
-      this.uppy.emit("preprocess-progress", file, {
-        mode: "indeterminate",
-        message: "generating checksum",
-      });
+      this.uppy.emit("preprocess-progress", this.pluginClass, file);
 
       return file.data.arrayBuffer().then((arrayBuffer) => {
         return window.crypto.subtle
@@ -57,38 +59,41 @@ export default class UppyChecksum extends Plugin {
               .map((b) => b.toString(16).padStart(2, "0"))
               .join("");
             this.uppy.setFileMeta(fileId, { sha1_checksum: hashHex });
+            this.uppy.emit("preprocess-complete", this.pluginClass, file);
           })
           .catch((err) => {
             if (
               err.message.toString().includes("Algorithm: Unrecognized name")
             ) {
-              this.warnPrefixed(
-                "SHA-1 algorithm is unsupported in this browser."
-              );
+              warn("SHA-1 algorithm is unsupported in this browser.", {
+                id: "discourse.uppy-media-optimization",
+              });
+            } else {
+              warn(`Error encountered when generating digest: ${err.message}`, {
+                id: "discourse.uppy-media-optimization",
+              });
             }
+            this.uppy.emit("preprocess-complete", this.pluginClass, file);
           });
       });
     });
 
-    const emitPreprocessCompleteForAll = () => {
-      fileIds.forEach((fileId) => {
-        const file = this.uppy.getFile(fileId);
-        this.uppy.emit("preprocess-complete", file);
-      });
-    };
-
-    return Promise.all(promises).then(emitPreprocessCompleteForAll);
+    return Promise.all(promises);
   }
 
-  warnPrefixed(message) {
-    warn(`[uppy-checksum-plugin] ${message}`);
+  _secureContext() {
+    return window.isSecureContext;
+  }
+
+  _hasCryptoCipher() {
+    return window.crypto && window.crypto.subtle && window.crypto.subtle.digest;
   }
 
   install() {
-    this.uppy.addPreProcessor(this.generateChecksum.bind(this));
+    this.uppy.addPreProcessor(this._generateChecksum.bind(this));
   }
 
   uninstall() {
-    this.uppy.removePreProcessor(this.generateChecksum.bind(this));
+    this.uppy.removePreProcessor(this._generateChecksum.bind(this));
   }
 }
