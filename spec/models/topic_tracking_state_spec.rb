@@ -688,4 +688,27 @@ describe TopicTrackingState do
     expect(TopicTrackingState.report(post.user)).to be_empty
     expect(TopicTrackingState.report(user)).to be_empty
   end
+
+  describe ".report" do
+    it "correctly reports topics with staff posts" do
+      create_post(
+        raw: "this is a test post",
+        topic: topic,
+        user: post.user
+      )
+
+      create_post(
+        raw: "this is a test post",
+        topic: topic,
+        post_type: Post.types[:whisper],
+        user: user
+      )
+
+      post.user.grant_admin!
+
+      state = TopicTrackingState.report(post.user)
+
+      expect(state.map(&:topic_id)).to contain_exactly(topic.id)
+    end
+  end
 end
