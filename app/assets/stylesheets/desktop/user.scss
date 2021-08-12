@@ -86,8 +86,11 @@
   }
 }
 .user-additional-controls {
-  button {
+  display: flex;
+  flex-wrap: wrap;
+  .single-select-header, button {
     margin-bottom: 1em;
+    margin-right: 0.75em;
   }
 }
 
