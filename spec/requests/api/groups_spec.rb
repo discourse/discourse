@@ -125,13 +125,11 @@ describe 'groups' do
         run_test!
       end
     end
-  end
 
-  path '/groups/{name}.json' do
     get 'Get a group' do
       tags 'Groups'
       consumes 'application/json'
-      parameter name: :name, in: :path, type: :string
+      parameter name: :id, in: :path, type: :string, example: 'name', description: "Use group name instead of id"
       expected_request_schema = nil
 
       produces 'application/json'
@@ -139,29 +137,7 @@ describe 'groups' do
         expected_response_schema = load_spec_schema('group_response')
         schema expected_response_schema
 
-        let(:name) { Fabricate(:group).name }
-
-        it_behaves_like "a JSON endpoint", 200 do
-          let(:expected_response_schema) { expected_response_schema }
-          let(:expected_request_schema) { expected_request_schema }
-        end
-      end
-    end
-  end
-
-  path '/groups/{name}/members.json' do
-    get 'List group members' do
-      tags 'Groups'
-      consumes 'application/json'
-      parameter name: :name, in: :path, type: :string
-      expected_request_schema = nil
-
-      produces 'application/json'
-      response '200', 'success response' do
-        expected_response_schema = load_spec_schema('group_members_response')
-        schema expected_response_schema
-
-        let(:name) { Fabricate(:group).name }
+        let(:id) { Fabricate(:group).name }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -172,6 +148,26 @@ describe 'groups' do
   end
 
   path '/groups/{id}/members.json' do
+    get 'List group members' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :string, example: 'name', description: "Use group name instead of id"
+      expected_request_schema = nil
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('group_members_response')
+        schema expected_response_schema
+
+        let(:id) { Fabricate(:group).name }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
     put 'Add group members' do
       tags 'Groups'
       consumes 'application/json'

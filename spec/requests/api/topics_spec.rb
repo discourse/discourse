@@ -746,15 +746,15 @@ describe 'topics' do
     end
   end
 
-  path '/top.json?period={flag}' do
-    get 'Get the top topics filtered by a flag' do
+  path '/top.json' do
+    get 'Get the top topics filtered by period' do
       tags 'Topics'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
       parameter(
-        name: :flag,
-        in: :path,
+        name: :period,
+        in: :query,
         type: :string,
         description: 'Enum: `all`, `yearly`, `quarterly`, `monthly`, `weekly`, `daily`')
 
@@ -843,7 +843,7 @@ describe 'topics' do
           },
         }
 
-        let(:flag) { 'all' }
+        let(:period) { 'all' }
 
         run_test!
       end
