@@ -75,57 +75,54 @@ export default Mixin.create({
       );
     }
 
-    this.set(
-      "_uppyInstance",
-      new Uppy({
-        id: this.id,
-        autoProceed: this.autoStartUploads,
+    this._uppyInstance = new Uppy({
+      id: this.id,
+      autoProceed: this.autoStartUploads,
 
-        // need to use upload_type because uppy overrides type with the
-        // actual file type
-        meta: deepMerge({ upload_type: this.type }, this.data || {}),
+      // need to use upload_type because uppy overrides type with the
+      // actual file type
+      meta: deepMerge({ upload_type: this.type }, this.data || {}),
 
-        onBeforeFileAdded: (currentFile) => {
-          const validationOpts = deepMerge(
-            {
-              bypassNewUserRestriction: true,
-              user: this.currentUser,
-              siteSettings: this.siteSettings,
-              validateSize: true,
-            },
-            this.validateUploadedFilesOptions()
+      onBeforeFileAdded: (currentFile) => {
+        const validationOpts = deepMerge(
+          {
+            bypassNewUserRestriction: true,
+            user: this.currentUser,
+            siteSettings: this.siteSettings,
+            validateSize: true,
+          },
+          this.validateUploadedFilesOptions()
+        );
+        const isValid = validateUploadedFile(currentFile, validationOpts);
+        this.setProperties({ uploadProgress: 0, uploading: isValid });
+        return isValid;
+      },
+
+      onBeforeUpload: (files) => {
+        let tooMany = false;
+        const fileCount = Object.keys(files).length;
+        const maxFiles = this.getWithDefault(
+          "maxFiles",
+          this.siteSettings.simultaneous_uploads
+        );
+
+        if (this.allowMultipleFiles) {
+          tooMany = maxFiles > 0 && fileCount > maxFiles;
+        } else {
+          tooMany = fileCount > 1;
+        }
+
+        if (tooMany) {
+          bootbox.alert(
+            I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+              count: this.allowMultipleFiles ? maxFiles : 1,
+            })
           );
-          const isValid = validateUploadedFile(currentFile, validationOpts);
-          this.setProperties({ uploadProgress: 0, uploading: isValid });
-          return isValid;
-        },
-
-        onBeforeUpload: (files) => {
-          let tooMany = false;
-          const fileCount = Object.keys(files).length;
-          const maxFiles = this.getWithDefault(
-            "maxFiles",
-            this.siteSettings.simultaneous_uploads
-          );
-
-          if (this.allowMultipleFiles) {
-            tooMany = maxFiles > 0 && fileCount > maxFiles;
-          } else {
-            tooMany = fileCount > 1;
-          }
-
-          if (tooMany) {
-            bootbox.alert(
-              I18n.t("post.errors.too_many_dragged_and_dropped_files", {
-                count: this.allowMultipleFiles ? maxFiles : 1,
-              })
-            );
-            this._reset();
-            return false;
-          }
-        },
-      })
-    );
+          this._reset();
+          return false;
+        }
+      },
+    });
 
     this._uppyInstance.use(DropTarget, { target: this.element });
     this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
