@@ -19,7 +19,7 @@ import { warn } from "@ember/debug";
 export default Mixin.create({
   uploading: false,
   uploadProgress: 0,
-  uppyInstance: null,
+  _uppyInstance: null,
   autoStartUploads: true,
   id: null,
 
@@ -49,7 +49,12 @@ export default Mixin.create({
     if (this.messageBus) {
       this.messageBus.unsubscribe(`/uploads/${this.type}`);
     }
-    this.uppyInstance && this.uppyInstance.close();
+    this.fileInputEl?.removeEventListener(
+      "change",
+      this.fileInputEventListener
+    );
+    this._uppyInstance?.close();
+    this._uppyInstance = null;
   },
 
   @on("didInsertElement")
@@ -71,7 +76,7 @@ export default Mixin.create({
     }
 
     this.set(
-      "uppyInstance",
+      "_uppyInstance",
       new Uppy({
         id: this.id,
         autoProceed: this.autoStartUploads,
@@ -122,14 +127,14 @@ export default Mixin.create({
       })
     );
 
-    this.uppyInstance.use(DropTarget, { target: this.element });
-    this.uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
+    this._uppyInstance.use(DropTarget, { target: this.element });
+    this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
 
-    this.uppyInstance.on("progress", (progress) => {
+    this._uppyInstance.on("progress", (progress) => {
       this.set("uploadProgress", progress);
     });
 
-    this.uppyInstance.on("upload-success", (file, response) => {
+    this._uppyInstance.on("upload-success", (file, response) => {
       if (this.usingS3Uploads) {
         this.setProperties({ uploading: false, processing: true });
         this._completeExternalUpload(file)
@@ -147,7 +152,7 @@ export default Mixin.create({
       }
     });
 
-    this.uppyInstance.on("upload-error", (file, error, response) => {
+    this._uppyInstance.on("upload-error", (file, error, response) => {
       displayErrorForUpload(response, this.siteSettings, file.name);
       this._reset();
     });
@@ -161,17 +166,17 @@ export default Mixin.create({
   },
 
   _useXHRUploads() {
-    this.uppyInstance.use(XHRUpload, {
+    this._uppyInstance.use(XHRUpload, {
       endpoint: this._xhrUploadUrl(),
       headers: {
-        "X-CSRF-Token": this.session.get("csrfToken"),
+        "X-CSRF-Token": this.session.csrfToken,
       },
     });
   },
 
   _useS3Uploads() {
     this.set("usingS3Uploads", true);
-    this.uppyInstance.use(AwsS3, {
+    this._uppyInstance.use(AwsS3, {
       getUploadParameters: (file) => {
         const data = { file_name: file.name, type: this.type };
 
@@ -188,7 +193,7 @@ export default Mixin.create({
           data,
         })
           .then((response) => {
-            this.uppyInstance.setFileMeta(file.id, {
+            this._uppyInstance.setFileMeta(file.id, {
               uniqueUploadIdentifier: response.unique_identifier,
             });
 
@@ -222,7 +227,7 @@ export default Mixin.create({
       this.fileInputEl,
       (file) => {
         try {
-          this.uppyInstance.addFile({
+          this._uppyInstance.addFile({
             source: `${this.id} file input`,
             name: file.name,
             type: file.type,
@@ -247,21 +252,11 @@ export default Mixin.create({
   },
 
   _reset() {
-    this.uppyInstance && this.uppyInstance.reset();
+    this._uppyInstance?.reset();
     this.setProperties({
       uploading: false,
       processing: false,
       uploadProgress: 0,
     });
-  },
-
-  @on("willDestroyElement")
-  _teardown() {
-    if (this.fileInputEventListener && this.fileInputEl) {
-      this.fileInputEl.removeEventListener(
-        "change",
-        this.fileInputEventListener
-      );
-    }
   },
 });
