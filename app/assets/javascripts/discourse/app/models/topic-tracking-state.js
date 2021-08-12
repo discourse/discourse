@@ -213,14 +213,17 @@ const TopicTrackingState = EmberObject.extend({
 
     // always count a new_topic as incoming
     if (
-      ["all", "latest", "new"].includes(filter) &&
+      ["all", "latest", "new", "unseen"].includes(filter) &&
       data.message_type === "new_topic"
     ) {
       this._addIncoming(data.topic_id);
     }
 
     // count an unread topic as incoming
-    if (["all", "unread"].includes(filter) && data.message_type === "unread") {
+    if (
+      ["all", "unread", "unseen"].includes(filter) &&
+      data.message_type === "unread"
+    ) {
       const old = this.findState(data);
 
       // the highest post number is equal to last read post number here

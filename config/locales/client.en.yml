@@ -349,6 +349,10 @@ en:
       one: "See %{count} new or updated topic"
       other: "See %{count} new or updated topics"
 
+    topic_count_unseen:
+      one: "See %{count} new or updated topic"
+      other: "See %{count} new or updated topics"
+
     topic_count_unread:
       one: "See %{count} unread topic"
       other: "See %{count} unread topics"
