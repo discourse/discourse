@@ -337,12 +337,10 @@ export default Mixin.create({
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
-    if (this.uploadButton && this.uploadButtonEventListener) {
-      this.uploadButton.removeEventListener(
-        "click",
-        this.uploadButtonEventListener
-      );
-    }
+    this.uploadButton?.removeEventListener(
+      "click",
+      this.uploadButtonEventListener
+    );
 
     this._validUploads = 0;
     this.messageBus.unsubscribe("/uploads/composer");
