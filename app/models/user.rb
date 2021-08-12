@@ -1220,12 +1220,7 @@ class User < ActiveRecord::Base
   end
 
   def number_of_flagged_posts
-    Post.with_deleted
-      .where(user_id: self.id)
-      .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
-                             .where(disagreed_at: nil)
-                             .select(:post_id))
-      .count
+    ReviewableFlaggedPost.where(target_created_by: self.id).count
   end
 
   def number_of_rejected_posts
