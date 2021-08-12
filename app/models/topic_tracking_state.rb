@@ -385,7 +385,7 @@ class TopicTrackingState
       if skip_unread
         "1=0"
       else
-        unread_filter_sql
+        unread_filter_sql(staff: staff)
       end
 
     filter_old_unread_sql =
