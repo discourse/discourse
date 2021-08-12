@@ -554,6 +554,13 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  def flagged_posts
+    deprecate('posts#flagged_posts is deprecated. Please use /review instead.', since: '2.8.0.beta4', drop_from: '2.9')
+    review_queue_url = path("/review?status=all&type=ReviewableFlaggedPost&username=#{params[:username]}")
+
+    redirect_to review_queue_url, status: 301
+  end
+
   def deleted_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_deleted_posts!
