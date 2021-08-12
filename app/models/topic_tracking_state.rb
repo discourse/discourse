@@ -31,15 +31,6 @@ class TopicTrackingState
   DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
   MAX_TOPICS = 5000
 
-  attr_accessor :user_id,
-                :topic_id,
-                :highest_post_number,
-                :last_read_post_number,
-                :created_at,
-                :category_id,
-                :notification_level,
-                :tags
-
   def self.publish_new(topic)
     return unless topic.regular?
 
