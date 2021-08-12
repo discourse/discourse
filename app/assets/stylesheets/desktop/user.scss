@@ -88,7 +88,8 @@
 .user-additional-controls {
   display: flex;
   flex-wrap: wrap;
-  .single-select-header, button {
+  .single-select-header,
+  button {
     margin-bottom: 1em;
     margin-right: 0.75em;
   }
