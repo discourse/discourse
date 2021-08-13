@@ -382,13 +382,12 @@ export default Mixin.create({
           return;
         }
 
-        const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
+        const { canUpload } = clipboardHelpers(event, {
           siteSettings: this.siteSettings,
           canUpload: true,
         });
 
-        if (!canUpload || canPasteHtml || types.includes("text/plain")) {
-          event.preventDefault();
+        if (!canUpload) {
           return;
         }
 
