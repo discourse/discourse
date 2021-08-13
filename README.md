@@ -1,8 +1,6 @@
-<a href="https://www.discourse.org/"><img src=
-"https://user-images.githubusercontent.com/1681963/52239617-e2683480-289c-11e9-922b-5da55472e5b4.png"
- width="300px"></a>
-
-
+<a href="https://www.discourse.org/">
+   <img src="images/discourse-logo.svg" width="300px">
+</a>
 
 Discourse is the 100% open source discussion platform built for the next decade of the Internet. Use it as a:
 
