@@ -50,15 +50,17 @@ end
 #
 # Table name: external_upload_stubs
 #
-#  id                :bigint           not null, primary key
-#  key               :string           not null
-#  original_filename :string           not null
-#  status            :integer          default(1), not null
-#  unique_identifier :uuid             not null
-#  created_by_id     :integer          not null
-#  upload_type       :string           not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id                         :bigint           not null, primary key
+#  key                        :string           not null
+#  original_filename          :string           not null
+#  status                     :integer          default(1), not null
+#  unique_identifier          :uuid             not null
+#  created_by_id              :integer          not null
+#  upload_type                :string           not null
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  multipart                  :boolean          default(FALSE), not null
+#  external_upload_identifier :string
 #
 # Indexes
 #
