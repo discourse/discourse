@@ -9,10 +9,27 @@ class UploadsController < ApplicationController
   protect_from_forgery except: :show
 
   before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
-  before_action :external_store_check, only: [:show_secure, :generate_presigned_put, :complete_external_upload]
+  before_action :external_store_check, only: [
+    :show_secure,
+    :generate_presigned_put,
+    :complete_external_upload,
+    :create_multipart,
+    :list_multipart_upload_parts,
+    :batch_presign_multipart_parts,
+    :abort_multipart_upload,
+    :complete_multipart
+  ]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
-  PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE = 5
+  PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE = 10
+  CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
+  COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
+  BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE = 10
+
+  #   rescue_from Exception do |e|
+  #     binding.pry
+  #     puts e
+  #   end
 
   def external_store_check
     return render_404 if !Discourse.store.external?
@@ -240,9 +257,11 @@ class UploadsController < ApplicationController
     )
     return render_404 if external_upload_stub.blank?
 
-    raise Discourse::InvalidAccess if external_upload_stub.created_by_id != current_user.id
-    external_upload_manager = ExternalUploadManager.new(external_upload_stub)
+    complete_external_upload_via_manager(external_upload_stub)
+  end
 
+  def complete_external_upload_via_manager(external_upload_stub)
+    external_upload_manager = ExternalUploadManager.new(external_upload_stub)
     hijack do
       begin
         upload = external_upload_manager.promote_to_upload!
@@ -268,6 +287,151 @@ class UploadsController < ApplicationController
         render_json_error(I18n.t("upload.failed"), status: 422)
       end
     end
+  end
+
+  def create_multipart
+    return render_404 if !SiteSetting.enable_direct_s3_uploads
+
+    RateLimiter.new(
+      current_user, "create-multipart-upload", CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE, 1.minute
+    ).performed!
+
+    file_name = params.require(:file_name)
+    upload_type = params.require(:upload_type)
+    content_type = params.require(:content_type)
+
+    # TODO(martin): handle S3 errors gracefully
+    multipart_upload = Discourse.store.create_multipart_upload(
+      file_name, content_type
+    )
+
+    upload_stub = ExternalUploadStub.create!(
+      key: multipart_upload[:key],
+      created_by: current_user,
+      original_filename: file_name,
+      upload_type: upload_type,
+      external_upload_identifier: multipart_upload[:upload_id],
+      multipart: true
+    )
+
+    render json: {
+      external_upload_identifier: upload_stub.external_upload_identifier,
+      key: upload_stub.key,
+      unique_identifier: upload_stub.unique_identifier
+    }
+  end
+
+  def list_multipart_upload_parts
+    return render_404 if !Discourse.store.external?
+    parts = Discourse.store.list_multipart_upload_parts(upload_id: params[:uploadId], key: params[:key])
+    render json: { parts: parts }
+  end
+
+  def batch_presign_multipart_parts
+    return render_404 if !SiteSetting.enable_direct_s3_uploads
+
+    part_numbers = params.require(:part_numbers)
+    key = params.require(:key)
+    unique_identifier = params.require(:unique_identifier)
+
+    RateLimiter.new(
+      current_user, "batch-presign-#{unique_identifier}", BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE, 1.minute
+    ).performed!
+
+    part_numbers = part_numbers.map(&:to_i).map do |part_number|
+      validate_part_number(part_number)
+      part_number
+    end
+
+    external_upload_stub = ExternalUploadStub.find_by(
+      unique_identifier: unique_identifier, created_by: current_user
+    )
+    return render_404 if external_upload_stub.blank?
+
+    if !multipart_upload_exists?(external_upload_stub)
+      return render_404
+    end
+
+    presigned_urls = {}
+    part_numbers.each do |part_number|
+      presigned_urls[part_number] = Discourse.store.presign_multipart_upload_part(
+        upload_id: external_upload_stub.external_upload_identifier,
+        key: key,
+        part_number: part_number
+      )
+    end
+
+    render json: { presigned_urls: presigned_urls }
+  end
+
+  def validate_part_number(part_number)
+    if part_number.zero? || part_number.negative? || !part_number.between?(1, 10000)
+      raise Discourse::InvalidParameters.new(
+        "Part numbers should be a list of numbers between 1 and 10000"
+      )
+    end
+  end
+
+  def multipart_upload_exists?(external_upload_stub)
+    begin
+      Discourse.store.list_multipart_upload_parts(
+        upload_id: external_upload_stub.external_upload_identifier, key: external_upload_stub.key
+      )
+    rescue Aws::S3::Errors::NoSuchUpload => err
+      # TODO (martin) Add debug_upload_error message
+      return false
+    end
+    true
+  end
+
+  def abort_multipart_upload
+    # TODO (martin): Uh...write this code
+  end
+
+  def complete_multipart
+    return render_404 if !SiteSetting.enable_direct_s3_uploads
+
+    unique_identifier = params.require(:unique_identifier)
+    parts = params.require(:parts)
+
+    RateLimiter.new(
+      current_user, "complete-multipart-upload", COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE, 1.minute
+    ).performed!
+
+    external_upload_stub = ExternalUploadStub.find_by(
+      unique_identifier: unique_identifier, created_by: current_user
+    )
+    return render_404 if external_upload_stub.blank?
+
+    if !multipart_upload_exists?(external_upload_stub)
+      return render_404
+    end
+
+    parts = parts.map do |part|
+      part_number = part[:PartNumber].to_i
+      etag = part[:ETag]
+      validate_part_number(part_number)
+
+      if part_number.blank? || etag.blank?
+        raise Discourse::InvalidParameters.new("All parts must have a part number between 1 and 10000 and an ETag")
+      end
+
+      { part_number: part_number, etag: etag }
+    end.sort_by do |part|
+      part[:part_number]
+    end
+
+    complete_response = Discourse.store.complete_multipart_upload(
+      upload_id: external_upload_stub.external_upload_identifier,
+      key: external_upload_stub.key,
+      parts: parts
+    )
+
+    # TODO (martin) This should only go ahead if the completion of the multipart
+    # upload was successful, otherwise there is nothing to move.
+    #
+    # Check complete_response
+    complete_external_upload_via_manager(external_upload_stub)
   end
 
   protected
