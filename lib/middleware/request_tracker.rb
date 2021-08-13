@@ -8,6 +8,16 @@ class Middleware::RequestTracker
   @@detailed_request_loggers = nil
   @@ip_skipper = nil
 
+  # You can add exceptions to our app rate limiter in the app.yml ENV section.
+  # example:
+  #
+  # env:
+  #   DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS: >-
+  #     14.15.16.32/27
+  #     216.148.1.2
+  #
+  STATIC_IP_SKIPPER = ENV['DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS']&.split&.map { |ip| IPAddr.new(ip) }
+
   # register callbacks for detailed request loggers called on every request
   # example:
   #
@@ -234,6 +244,7 @@ class Middleware::RequestTracker
       end
 
       return false if @@ip_skipper&.call(ip)
+      return false if STATIC_IP_SKIPPER&.any? { |entry| entry.include?(ip) }
 
       limiter10 = RateLimiter.new(
         nil,
