@@ -1,10 +1,12 @@
 import Mixin from "@ember/object/mixin";
+import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
+import AwsS3Multipart from "@uppy/aws-s3-multipart";
 import { warn } from "@ember/debug";
 import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
@@ -138,9 +140,12 @@ export default Mixin.create({
     // name for the preprocess-X events.
     this._trackPreProcessorStatus(UppyChecksum);
 
-    // TODO (martin) support for direct S3 uploads will come later, for now
-    // we just want the regular /uploads.json endpoint to work well
-    this._useXHRUploads();
+    // hidden setting like enable_experimental_image_uploader
+    if (this.siteSettings.enable_direct_s3_uploads) {
+      this._useS3MultipartUploads();
+    } else {
+      this._useXHRUploads();
+    }
 
     // TODO (martin) develop upload handler guidance and an API to use; will
     // likely be using uppy plugins for this
@@ -338,6 +343,91 @@ export default Mixin.create({
       headers: {
         "X-CSRF-Token": this.session.csrfToken,
       },
+    });
+  },
+
+  _useS3MultipartUploads() {
+    const headers = {
+      "X-CSRF-Token": this.session.csrfToken,
+      "Content-Type": "application/json",
+    };
+
+    this._uppyInstance.use(AwsS3Multipart, {
+      // controls how many simultaneous _chunks_ are uploaded, not files,
+      // which in turn controls the minimum number of chunks presigned
+      // in each batch (limit / 2)
+      //
+      // the default, and minimum, chunk size is 5mb. we can control the
+      // chunk size via getChunkSize(file), so we may want to increase
+      // the chunk size for larger files
+      limit: 10,
+
+      createMultipartUpload(file) {
+        return (
+          ajax(getURL("/uploads/create-multipart.json"), {
+            type: "POST",
+            headers,
+            data: JSON.stringify({
+              file_name: file.name,
+              content_type: file.type,
+              upload_type: file.meta.upload_type,
+            }),
+          })
+            .then((data) => {
+              // TODO (martin) Make sure the unique identifier of the stub is stored and
+              // used in the other two API calls
+              file.meta.unique_identifier = data.unique_identifier;
+              return {
+                uploadId: data.external_upload_identifier,
+                key: data.key,
+              };
+            })
+            // eslint-disable-next-line
+            .catch((err) => alert(err))
+        );
+      },
+
+      prepareUploadParts(file, partData) {
+        return (
+          ajax(getURL("/uploads/batch-presign-multipart-parts.json"), {
+            type: "POST",
+            headers,
+            data: JSON.stringify({
+              part_numbers: partData.partNumbers,
+              key: partData.key,
+              unique_identifier: file.meta.unique_identifier,
+            }),
+          })
+            .then((data) => {
+              return { presignedUrls: data.presigned_urls };
+            })
+            // eslint-disable-next-line
+            .catch((err) => alert(err))
+        );
+      },
+
+      completeMultipartUpload(file, data) {
+        // TODO (martin) see if i can munge the part PartNumber to part_number here
+        return (
+          ajax(getURL("/uploads/complete-multipart.json"), {
+            type: "POST",
+            headers,
+            data: JSON.stringify({
+              ...data,
+              unique_identifier: file.meta.unique_identifier,
+            }),
+          })
+            .then((responseData) => {
+              return responseData;
+            })
+            // eslint-disable-next-line
+            .catch((err) => alert(err))
+        );
+      },
+
+      // we will need a listParts function at some point when we want to
+      // resume multipart uploads; this is used by uppy to figure out
+      // what parts are uploaded and which still need to be
     });
   },
 
