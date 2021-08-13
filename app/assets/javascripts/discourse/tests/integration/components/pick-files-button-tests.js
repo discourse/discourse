@@ -19,8 +19,58 @@ discourseModule(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    componentTest("it doesn't show alert if a file has a supported MIME type", {
+      skip: true,
+      template: hbs`
+        {{pick-files-button
+          acceptedFileTypes=this.acceptedFileTypes
+          onFilesChosen=this.onFilesChosen}}`,
+
+      beforeEach() {
+        const expectedExtension = ".json";
+        this.set("acceptedFileTypes", [expectedExtension]);
+        this.set("onFilesChosen", () => {});
+      },
+
+      async test(assert) {
+        sinon.stub(bootbox, "alert");
+
+        const wrongExtension = ".txt";
+        const file = createBlob("text/json", wrongExtension);
+
+        await triggerEvent("input#file-input", "change", { files: [file] });
+
+        assert.ok(bootbox.alert.notCalled);
+      },
+    });
+
+    componentTest("it doesn't show alert if a file has a supported extension", {
+      skip: true,
+      template: hbs`
+        {{pick-files-button
+          acceptedFileTypes=this.acceptedFileTypes
+          onFilesChosen=this.onFilesChosen}}`,
+
+      beforeEach() {
+        const expectedMimeType = "text/json";
+        this.set("acceptedFileTypes", [expectedMimeType]);
+        this.set("onFilesChosen", () => {});
+      },
+
+      async test(assert) {
+        sinon.stub(bootbox, "alert");
+
+        const wrongMimeType = "text/plain";
+        const file = createBlob(wrongMimeType, ".json");
+
+        await triggerEvent("input#file-input", "change", { files: [file] });
+
+        assert.ok(bootbox.alert.notCalled);
+      },
+    });
+
     componentTest(
-      "it shows alert if a file with an unsupported extension was chosen",
+      "it shows alert if a file has an unsupported extension and unsupported MIME type",
       {
         skip: true,
         template: hbs`
@@ -30,7 +80,8 @@ discourseModule(
 
         beforeEach() {
           const expectedExtension = ".json";
-          this.set("acceptedFileTypes", [expectedExtension]);
+          const expectedMimeType = "text/json";
+          this.set("acceptedFileTypes", [expectedExtension, expectedMimeType]);
           this.set("onFilesChosen", () => {});
         },
 
@@ -38,35 +89,8 @@ discourseModule(
           sinon.stub(bootbox, "alert");
 
           const wrongExtension = ".txt";
-          const file = createBlob("text/json", wrongExtension);
-
-          await triggerEvent("input#file-input", "change", { files: [file] });
-
-          assert.ok(bootbox.alert.calledOnce);
-        },
-      }
-    );
-
-    componentTest(
-      "it shows alert if a file with an unsupported MIME type was chosen",
-      {
-        skip: true,
-        template: hbs`
-        {{pick-files-button
-          acceptedFileTypes=this.acceptedFileTypes
-          onFilesChosen=this.onFilesChosen}}`,
-
-        beforeEach() {
-          const expectedMimeType = "text/json";
-          this.set("acceptedFileTypes", [expectedMimeType]);
-          this.set("onFilesChosen", () => {});
-        },
-
-        async test(assert) {
-          sinon.stub(bootbox, "alert");
-
           const wrongMimeType = "text/plain";
-          const file = createBlob(wrongMimeType, ".json");
+          const file = createBlob(wrongMimeType, wrongExtension);
 
           await triggerEvent("input#file-input", "change", { files: [file] });
 
