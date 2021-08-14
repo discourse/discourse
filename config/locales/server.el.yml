@@ -385,7 +385,6 @@ el:
               reply_by_email_disabled: "Η απάντηση μέσω email έχει απενεργοποιηθεί."
             featured_link:
               invalid: "δεν είναι έγκυρο. To URL πρέπει να συμπεριλαμβάνει http:// ή https://."
-              invalid_category: "δεν μπορεί να δεχτεί επεξεργασία σε αυτή την κατηγορία."
         user:
           attributes:
             password:

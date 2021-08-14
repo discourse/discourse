@@ -1944,11 +1944,9 @@ vi:
         dismiss_new: "Bỏ "
         toggle: "chuyển sang chọn chủ đề theo lô"
         actions: "Hành động theo lô"
-        change_category: "Đặt danh mục"
         close_topics: "Đóng các chủ đề"
         archive_topics: "Chủ đề Lưu trữ"
         move_messages_to_inbox: "Chuyển sang hộp thư"
-        notification_level: "Thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
         selected:
           other: "Bạn đã chọn <b>%{count}</b> chủ đề"
@@ -2173,7 +2171,6 @@ vi:
         open: "Mở Chủ Đề"
         close: "Đóng Chủ Đề"
         multi_select: "Chọn Bài Viết..."
-        slow_mode: "Đặt chế độ chậm"
         timed_update: "Đặt bộ hẹn giờ chủ đề ..."
         pin: "Ghim Chủ Đề..."
         unpin: "Bỏ-Ghim Chủ Đề..."
@@ -2182,7 +2179,6 @@ vi:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Đặt lại dữ liệu đọc"
-        make_public: "Công khai chủ đề này"
         make_private: "Gửi tin nhắn cá nhân"
         reset_bump_date: "Đặt lại ngày Bump"
       feature:
@@ -2440,8 +2436,6 @@ vi:
         rebake: "Tạo lại HTML"
         publish_page: "Xuất bản trang"
         unhide: "Bỏ ẩn"
-        change_owner: "Đổi chủ sở hữu"
-        grant_badge: "Cấp huy hiệu"
         lock_post: "Khóa bài đăng"
         lock_post_description: "ngăn người đăng chỉnh sửa bài đăng này"
         unlock_post: "Mở khóa bài đăng"
@@ -2454,8 +2448,6 @@ vi:
         delete_topic_confirm_modal_no: "Không, giữ chủ đề này"
         delete_topic_error: "Đã xảy ra lỗi khi xóa chủ đề này"
         delete_topic: "xóa chủ đề"
-        add_post_notice: "Thêm thông báo cho nhân viên"
-        change_post_notice: "Thông báo thay đổi từ nhân viên"
         delete_post_notice: "Xóa thông báo từ nhân viên"
         remove_timer: "gỡ bỏ bộ đếm thời gian"
       actions:
@@ -4352,7 +4344,6 @@ vi:
           post_revision: "Khi người dùng sửa hoặc tạo bài viết"
           trust_level_change: "Khi người dùng thay đổi mức độ tin cậy"
           user_change: "Khi người dùng được sửa hoặc được tạo"
-          post_processed: "Sau khi bài viết được đăng"
         preview:
           link_text: "Xem trước cấp huy hiệu"
           plan_text: "Xem trước kế hoạch truy vấn"

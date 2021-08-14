@@ -504,7 +504,6 @@ ja:
               unable_to_tag: "トピックにタグ付け中にエラーが発生しました。"
             featured_link:
               invalid: "は無効です。URL には http:// または https:// を含める必要があります。"
-              invalid_category: "をこのカテゴリで編集することはできません。"
         user:
           attributes:
             password:
@@ -1852,7 +1851,7 @@ ja:
     enable_user_directory: "閲覧用のユーザーディレクトリを提供"
     enable_group_directory: "閲覧用のグループディレクトリを提供"
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
-    group_in_subject: "メールの件名の %{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
+    group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
     allow_anonymous_posting: "ユーザーに匿名モードへの切り替えを許可"
     anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
@@ -2578,49 +2577,15 @@ ja:
     backup_succeeded:
       title: "バックアップに成功しました"
       subject_template: "バックアップは正常に完了しました"
-      text_body_template: |
-        バックアップに成功しました。
-
-        [管理者 > バックアップセクション](%{base_url}/admin/backups)にアクセスして、新しいバックアップをダウンロードしてください。
-
-        こちらはログです。
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "バックアップに失敗しました"
       subject_template: "バックアップに失敗しました"
-      text_body_template: |
-        バックアップに失敗しました。
-
-        こちらがログです。
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "復元に成功しました"
       subject_template: "復元は正常に完了しました"
-      text_body_template: |
-        復元に成功しました。
-
-        こちらがログです。
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "復元に失敗しました"
       subject_template: "復元に失敗しました"
-      text_body_template: |
-        復元に失敗しました。
-
-        こちらがログです。
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "一括招待に成功しました"
       subject_template: "ユーザーの一括招待に成功しました"

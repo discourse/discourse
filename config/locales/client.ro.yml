@@ -1778,11 +1778,9 @@ ro:
         dismiss_new: "Anulează cele noi"
         toggle: "activează selecția multiplă a subiectelor"
         actions: "Acțiuni multiple"
-        change_category: "Alege categoria"
         close_topics: "Închide subiectele"
         archive_topics: "Arhivează subiectele"
         move_messages_to_inbox: "Mută în „Primite”"
-        notification_level: "Notificări"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
         selected:
           one: "Ai selectat <b>un</b> subiect."
@@ -1989,7 +1987,6 @@ ro:
         invisible: "Fă invizibil"
         visible: "Fă vizibil"
         reset_read: "Resetează datele despre subiecte citite"
-        make_public: "Transformă în subiect public"
         make_private: "Transformă în mesaj privat"
       feature:
         pin: "Fixează subiectul"
@@ -2208,8 +2205,6 @@ ro:
         revert_to_regular: "Șterge culoarea pentru membrii echipei"
         rebake: "Reconstruieşte HTML"
         unhide: "Arată"
-        change_owner: "Schimbă proprietarul"
-        grant_badge: "Acordă ecuson"
         lock_post: "Blochează postarea"
         unlock_post: "Deblochează postarea"
         delete_topic_disallowed_modal: "Nu ai permisiuni suficiente pentru a șterge această discuție. Dacă vrei ca ea să fie ștearsă, marcheaz-o trimițând un mesaj explicativ moderatorului."
@@ -3658,7 +3653,6 @@ ro:
           post_revision: "Când un utlizator creează sau editează un mesaj"
           trust_level_change: "Când un utilizator schimbă nivelul de încredere"
           user_change: "Când un utilizator este editat sau creat"
-          post_processed: "După ce o postare este procesată"
         preview:
           link_text: "Previzualizare ecusoane acordate"
           plan_text: "Previzualizare cu interogare"

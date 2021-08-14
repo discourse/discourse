@@ -526,7 +526,6 @@ fr:
               unable_to_tag: "Une erreur s'est produite lors de l'ajout d'étiquette à ce sujet."
             featured_link:
               invalid: "est invalide. L'URL doit inclure http:// ou https://."
-              invalid_category: "ne peut pas être modifié dans cette catégorie."
         user:
           attributes:
             password:
@@ -2654,49 +2653,15 @@ fr:
     backup_succeeded:
       title: "Sauvegarde effectuée"
       subject_template: "Sauvegarde terminée avec succès"
-      text_body_template: |
-        La sauvegarde s'est terminée avec succès.
-
-        Pour la télécharger, rendez-vous dans la section [Administration > Sauvegardes](%{base_url}/admin/backups) du site.
-
-        Voici les détails journalisés :
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "Sauvegarde échouée"
       subject_template: "Échec de la sauvegarde"
-      text_body_template: |
-        La sauvegarde a échoué.
-
-        Voici les détails journalisés :
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauration réussie"
       subject_template: "Restauration terminée avec succès"
-      text_body_template: |
-        La restauration a réussi.
-
-        Voici le détail :
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Restauration échouée"
       subject_template: "Échec de la restauration"
-      text_body_template: |
-        La restauration a échoué.
-
-        Voici le détail :
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Invitation en masse réussie"
       subject_template: "Envoi des invitations en masse réussi"
@@ -2716,7 +2681,7 @@ fr:
       title: "Désigné(e) comme propriétaire du groupe"
       subject_template: "Vous avez été désigné(e) comme l'un(e) des propriétaire du groupe %{group_name}"
       text_body_template: |
-        Vous avez été désigné(e) comme l'un(e) des propriétaires du groupe [%{group_name}] (%{base_url}%{group_path}).
+        Vous avez été désigné(e) comme l'un(e) des propriétaires du groupe [%{group_name}](%{base_url}%{group_path}).
     user_added_to_group_as_member:
       title: "Désigné(e) comme membre du groupe"
       subject_template: "Vous êtes maintenant membre du groupe %{group_name}."
@@ -2746,7 +2711,7 @@ fr:
         Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse courriel. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_user_not_found:
       title: "Courriel rejeté - Utilisateur introuvable"
-      subject_template: "[%{site_name}] Problème de courriel -- L'utilisateur est introuvable"
+      subject_template: "[%{email_prefix}] Problème de courriel -- L'utilisateur est introuvable"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 

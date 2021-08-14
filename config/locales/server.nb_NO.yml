@@ -351,7 +351,6 @@ nb_NO:
               target_user_not_found: "En av brukerne du prøver å sende denne meldingen til ble ikke funnet."
             featured_link:
               invalid: "er ugyldig. Nettadressen bør inneholde http:// eller https://"
-              invalid_category: "kan ikke redigeres i denne kategorien."
         user:
           attributes:
             password:

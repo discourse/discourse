@@ -1158,7 +1158,6 @@ sr:
         actions: "Grupne aktivnosti"
         close_topics: "Zatvori Teme"
         archive_topics: "Arhiviraj teme"
-        notification_level: "Obaveštenja"
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
         selected:
           one: "Odabrali ste <b>%{count}</b> temu."
@@ -1303,7 +1302,6 @@ sr:
         invisible: "Ukloni temu s popisa"
         visible: "Stavi na popis"
         reset_read: "Poništi podatke o pročitanom"
-        make_public: "Napravi javnu temu"
       feature:
         pin: "Zakači temu"
         unpin: "Otkači temu"
@@ -1427,7 +1425,6 @@ sr:
         revert_to_regular: "Ukloni Boje Osoblja"
         rebake: "Popravi HTML"
         unhide: "Poništi sakrivanje"
-        grant_badge: "Dodeli Značku"
         delete_topic: "obriši temu"
       actions:
         by_you:

@@ -1304,11 +1304,9 @@ lv:
         dismiss_new: "Nerādīt jaunus"
         toggle: "darbības ar vairākām tēmām"
         actions: "Darbības ar vairumu"
-        change_category: "Norādīt sadaļu"
         close_topics: "Slēgt tēmas"
         archive_topics: "Arhivēt tēmas"
         move_messages_to_inbox: "Pārvietot uz iesūtni"
-        notification_level: "Paziņojumi"
         choose_new_category: "Izvēlēties jaunu sadaļu šīm tēmām:"
         selected:
           zero: "Jūs izvēlējāties <b>0.</b> tēmas."
@@ -1513,7 +1511,6 @@ lv:
         invisible: "Izņemt tēmu no sarakstiem"
         visible: "Atgriezt tēmu sarakstos"
         reset_read: "Atstatīt visu kā nelasītu"
-        make_public: "Izveidot publisku tēmu"
       feature:
         pin: "Piespraust tēmu"
         unpin: "Atspraust tēmu"
@@ -1712,8 +1709,6 @@ lv:
         revert_to_regular: "Noņemt darbinieka krāsu"
         rebake: "Pārbūvēt HTML"
         unhide: "Noņemt slēpšanu"
-        change_owner: "Mainīt īpašnieku"
-        grant_badge: "Piešķirt Žetonu"
         delete_topic: "Dzēst tēmu"
       actions:
         people:
@@ -2994,7 +2989,6 @@ lv:
           post_revision: "Kad lietotājs labo vai rada ierakstu"
           trust_level_change: "Kad lietotājam maina uzticamības līmeni"
           user_change: "Kad lietotājs ir labots vai radīts"
-          post_processed: "Pēc tam, kad ieraksts ir apstrādāts"
         preview:
           link_text: "Ieskats piešķirtajos Žetonos"
           plan_text: "Ieskats vaicājumu plānā"

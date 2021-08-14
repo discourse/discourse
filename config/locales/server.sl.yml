@@ -1060,49 +1060,15 @@ sl:
     backup_succeeded:
       title: "Varnostna kopija uspela"
       subject_template: "Varnostna kopija uspela"
-      text_body_template: |
-        Varnostna kopija uspešno narejena.
-
-        Pojdite v [Admin > Varnostne kopije](%{base_url}/admin/backups) za prenos vaše nove varnostne kopije.
-
-        Tukaj je dnevnik:
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "Varnostna kopija ni uspela"
       subject_template: "Varnostna kopija ni uspela"
-      text_body_template: |
-        Varnostna kopija ni uspela.
-
-        Tukaj je dnevnik:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Obnovitev iz varnostne kopije uspela"
       subject_template: "Obnovitev iz varnostne kopije uspela"
-      text_body_template: |
-        Obnovitev iz varnostne kopije uspela.
-
-        Tukaj je dnevnik:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "Obnovitev iz varnostne kopije ni uspela"
       subject_template: "Obnovitev iz varnostne kopije ni uspela"
-      text_body_template: |
-        Obnovitev iz varnostne kopije ni uspela.
-
-        Tukaj je dnevnik:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Množično povabilo je uspelo"
       subject_template: "Množično povabilo uporabnikov je uspelo"

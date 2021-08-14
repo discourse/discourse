@@ -530,7 +530,6 @@ sv:
               unable_to_tag: "Det uppstod ett fel vid taggning av ämnet."
             featured_link:
               invalid: "är ogiltig. URL måste innehålla http:// eller http://."
-              invalid_category: "kan inte redigeras i denna kategori"
         user:
           attributes:
             password:
@@ -2637,35 +2636,29 @@ sv:
       text_body_template: |
         Säkerhetskopieringen lyckades.
 
-        Besök [admin > säkerhetskopiering](%{base_url}/admin/backups) för att hämta den nya säkerhetskopian.
+        Gå till [avsnittet admin > säkerhetskopia](%{base_url}/admin/backups) för att hämta din nya säkerhetskopia.
 
         Här är loggen:
 
-        ``` text
         %{logs}
-        ```
     backup_failed:
       title: "Säkerhetskopieringen misslyckades"
       subject_template: "Säkerhetskopiering misslyckades"
       text_body_template: |
-        Säkerhetskopieringen har misslyckats.
+        Säkerhetskopieringen misslyckades.
 
         Här är loggen:
 
-        `` text
         %{logs}
-        ```
     restore_succeeded:
       title: "Återställningen lyckades"
       subject_template: "Återställningen lyckades!"
       text_body_template: |
-        Återställningen gick bra.
+        Återställningen lyckades.
 
         Här är loggen:
 
-        `` text
         %{logs}
-        ```
     restore_failed:
       title: "Återställningen misslyckades"
       subject_template: "Återställningen misslyckades"
@@ -2674,9 +2667,7 @@ sv:
 
         Här är loggen:
 
-        ``` text
         %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Massinbjudan lyckades"
       subject_template: "Massinbjudan av användare behandlades utan fel"

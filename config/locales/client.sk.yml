@@ -1413,7 +1413,6 @@ sk:
         close_topics: "Uzavrieť tému"
         archive_topics: "Archivuj témy"
         move_messages_to_inbox: "Presuň do prijatej pošty"
-        notification_level: "Upozornenia"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
         selected:
           one: "Označíli ste <b>%{count}</b> tému."
@@ -1599,7 +1598,6 @@ sk:
         invisible: "Skyť"
         visible: "Zobraziť"
         reset_read: "Zrušiť načítané údaje"
-        make_public: "Spraviť verejnou témou"
       feature:
         pin: "Pripni tému"
         unpin: "Odopni tému"
@@ -1802,8 +1800,6 @@ sk:
         revert_to_regular: "Odobrať farbu personálu"
         rebake: "Pregenerovať HTML"
         unhide: "Odokryť"
-        change_owner: "Zmeniť vlastníctvo"
-        grant_badge: "Udeliť vyznamenanie"
         lock_post: "Zamknúť príspevok"
         unlock_post: "Odblokovať príspevok"
         delete_topic: "odstrániť tému"

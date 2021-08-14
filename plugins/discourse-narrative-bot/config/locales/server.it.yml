@@ -156,7 +156,7 @@ it:
 
           - Io sono solo un robot, ma [il nostro amichevole staff](%{base_uri}/about) è qui per aiutarti se hai bisogno di contattare qualcuno.
 
-          - Per ragioni di sicurezza, limitiamo temporaneamente ciò che i nuovi utenti possono fare. Potrai ottenere [nuove abilità] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [distintivi](%{base_uri}/badges)) appena ti conosceremo meglio.
+          - Per ragioni di sicurezza, limitiamo temporaneamente ciò che i nuovi utenti possono fare. Potrai ottenere [nuove abilità](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [distintivi](%{base_uri}/badges)) appena ti conosceremo meglio.
 
           - Noi crediamo in una [comunità dal comportamento civile](%{base_uri}/guidelines) in ogni momento.
       onebox:
