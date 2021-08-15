@@ -129,6 +129,13 @@ export default Mixin.create({
 
     const $element = $(this.element);
 
+    this.setProperties({
+      uploadProgress: 0,
+      isUploading: false,
+      isProcessingUpload: false,
+      isCancellable: false,
+    });
+
     $.blueimp.fileupload.prototype.processActions = this.uploadProcessorActions;
 
     $element.fileupload({
