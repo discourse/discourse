@@ -44,8 +44,6 @@ module Reports::TopUsersByReceivedLikes
       LIMIT 10
       SQL
 
-      report.data = []
-
       DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
         report.data << {
           user_id: row.user_id,
