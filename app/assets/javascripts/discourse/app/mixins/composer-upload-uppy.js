@@ -62,6 +62,8 @@ export default Mixin.create({
 
     this.appEvents.off("composer:add-files", this._addFiles.bind(this));
 
+    this._reset();
+
     if (this._uppyInstance) {
       this._uppyInstance.close();
       this._uppyInstance = null;
@@ -472,13 +474,12 @@ export default Mixin.create({
           return;
         }
 
-        const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
+        const { canUpload } = clipboardHelpers(event, {
           siteSettings: this.siteSettings,
           canUpload: true,
         });
 
-        if (!canUpload || canPasteHtml || types.includes("text/plain")) {
-          event.preventDefault();
+        if (!canUpload) {
           return;
         }
 

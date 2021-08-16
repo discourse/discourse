@@ -41,6 +41,7 @@ fa_IR:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} پیش"
+      wrap_on: "در %{date}"
       tiny:
         half_a_minute: "1 دقیقه پیش"
         less_than_x_seconds:
@@ -169,6 +170,7 @@ fa_IR:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
         ap_northeast_2: "آسیا و اقیانوسیه (سئول)"
+        ap_east_1: "آسیا و اقیانوسیه (هنگ کنگ)"
         ap_south_1: "آسیا و اقیانوسیه (بمبئی)"
         ap_southeast_1: "آسیا و اقیانوسیه (سنگاپور)"
         ap_southeast_2: "آسیا و اقیانوسیه (سیدنی)"
@@ -261,10 +263,13 @@ fa_IR:
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا از طریق %{contact_info} با تماس بگیرید."
     bookmarked:
       title: "ذخیره"
+      edit_bookmark: "ویرایش نشانک"
       clear_bookmarks: "پاک کردن نشانک‌ها"
       help:
         bookmark: "کلیک کنید تا به اولین نوشته این موضوع نشانک بزنید"
+        edit_bookmark: "برای ویرایش نشانک مربوط به این موضوع کلیک کنید"
         unbookmark: "کلیک کنید تا همهٔ نشانک‌های این موضوع را حذف کنید"
+        unbookmark_with_reminder: "برای حذف همه نشانک‌ها و یادآورها در این موضوع کلیک کنید."
     bookmarks:
       created: "شما این نوشته را نشانک کردید. %{name}"
       not_bookmarked: "این نوشته را نشانک بزنید"
@@ -289,14 +294,17 @@ fa_IR:
         today_with_time: "امروز در %{time}"
         tomorrow_with_time: "فردا در %{time}"
         at_time: "در %{date_time}"
+        existing_reminder: "شما یک یادآور برای این نشانک دارید که در %{at_date_time} ارسال خواهد شد"
     copy_codeblock:
       copied: "کپی شد!"
     drafts:
       label: "درفت"
+      label_with_count: "پیش‌نویس (%{count})"
       resume: "از سر گیری"
       remove: "پاک کردن"
       remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"
       new_topic: "درفت جدید برای مبحث"
+      new_private_message: "پیش‌نویس پیام شخصی جدید"
       topic_reply: "پاسخ درفت"
       abandon:
         confirm: "شما یک پاسخ ذخیره نیمه تمام در این تاپیک دارید. با آن چه می کنید؟"
@@ -370,6 +378,7 @@ fa_IR:
         type_bonus:
           name: "امتیاز را وارد کنید"
           title: "موارد قابل بررسی خاص می توانند کارمندان دارای امتیاز شوند تا اولویت آن ها را بیشتر کند."
+      stale_help: "این موردِ قابل بررسی توسط <b>%{username}</b> حل شده است."
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
         required: "شما قبل از بازنگری موارد باید آن‌ها را درخواست دهید ."
@@ -412,6 +421,9 @@ fa_IR:
         fields: "فیلدها"
         reject_reason: "دلیل"
       user_percentage:
+        summary:
+          one: "%{agreed}، %{disagreed}، %{ignored} (از پرچم آخر)"
+          other: "%{agreed}، %{disagreed}، %{ignored} (از %{count} پرچم آخر)"
         agreed:
           one: "%{count}% موافقت شده"
           other: "%{count}% موافقت شده"
@@ -617,6 +629,8 @@ fa_IR:
         email:
           title: "ایمیل"
           last_updated_by: "توسط"
+          prefill:
+            gmail: "جی‌میل"
           credentials:
             title: "اطلاعات ورود"
             smtp_server: "سرور SMTP"
@@ -630,6 +644,7 @@ fa_IR:
           settings:
             title: "تنظیمات"
           mailboxes:
+            synchronized: "صندوق پستی همگام شده"
             disabled: "غیرفعال"
         membership:
           title: عضویت
@@ -1950,11 +1965,9 @@ fa_IR:
         dismiss_new: "بستن جدید"
         toggle: "تغییر وضعیت انتخاب گروهی موضوعات"
         actions: "عملیات گروهی"
-        change_category: "تنظیم دسته‌بندی"
         close_topics: "بستن موضوعات"
         archive_topics: "بایگانی موضوعات"
         move_messages_to_inbox: "انتقال به صندوق دریافت"
-        notification_level: "اعلان‌ها"
         choose_new_category: "یک دسته‌بندی جدید برای موضوع انتخاب نمایید"
         selected:
           one: "شما <b>%{count}</b> موضوع را انتخاب کرده اید."
@@ -2190,7 +2203,6 @@ fa_IR:
         invisible: "خارج کردن از فهرست"
         visible: "وارد کردن به فهرست"
         reset_read: "تنظیم مجدد خواندن داده ها"
-        make_public: "ایجاد موضوع عمومی"
         make_private: "به پیام تبدیل کن"
         reset_bump_date: "تنظیم مجدد خواندن داده ها"
       feature:
@@ -2418,8 +2430,6 @@ fa_IR:
         revert_to_regular: "حذف رنگ همکاران"
         rebake: "ساخت مجدد HTML"
         unhide: "آشکار کردن"
-        change_owner: "تغییر مالکیت"
-        grant_badge: "اعطای نشان"
         lock_post: "قفل کردن پست"
         lock_post_description: "ممانعت از ویرایش پست توسط فرستنده"
         unlock_post: "بازکردن پست"
@@ -2430,8 +2440,6 @@ fa_IR:
         delete_topic_confirm_modal_no: "خیر، این موضوع را نگه دار"
         delete_topic_error: "خطایی در هنگام حذف این موضوع رخ داده است."
         delete_topic: "حذف موضوع"
-        add_post_notice: "اطلاعیه کارکنان را اضافه کنید"
-        change_post_notice: "تغییر اطلاعیه همکاران"
         delete_post_notice: "حذف اطلاعیه همکاران"
         remove_timer: "حذف زمان‌سنج"
       actions:
@@ -4008,7 +4016,6 @@ fa_IR:
           post_revision: "هنگامی که یک کاربر نوشته ای ویرایش می‌کند یا فرستد"
           trust_level_change: "هنگامی که کاربری سطح اعتماد را تغییر می‌دهد"
           user_change: "هنگامی که کاربری ویرایش یا ساخته می‌شود"
-          post_processed: "پس از پردازش یک نوشته"
         preview:
           link_text: "پیش‌نمایش نشان‌های اعطایی"
           plan_text: "پیش‌نمایش با طرح پرسش"

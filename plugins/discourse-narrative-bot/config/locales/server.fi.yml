@@ -156,7 +156,7 @@ fi:
 
           – Olen vain robotti, mutta [avulias henkilökuntamme](%{base_uri}/about) on myös täällä auttamassa, jos sinun tarvitsee saada yhteys ihmiseen.
 
-          – Turvallisuussyistä uusi käyttäjä ei voi heti tehdä kaikkea. Saat [uusia kykyjä] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ja [kunniamerkkejä] (%{base_uri}/badges)) sitä mukaa, kun tutustumme sinuun.
+          – Turvallisuussyistä uusi käyttäjä ei voi heti tehdä kaikkea. Saat [uusia kykyjä](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ja [kunniamerkkejä](%{base_uri}/badges)) sitä mukaa, kun tutustumme sinuun.
 
           Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:

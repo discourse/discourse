@@ -474,6 +474,7 @@ tr_TR:
 
       Herkesin benzersiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
     sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi denediniz \nBunun yerine yerine, lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt veriniz.\nMetni vurgulayıp görünen <b>alıntı</b> düğmesini seçerek önceki yanıtınızı düzenleyebilirsiniz. Böylece diğer kullanıcıların, yanıtlarınızı okuması daha kolay olacaktır.\n"
+    dominating_topic: Birden fazla gönderdiniz %{percent}Burada cevapların% else orada herkesin duymak isteriz edilir?
     get_a_room: |
       ### Herkesi sohbete katılmaya teşvik edin
 
@@ -522,7 +523,6 @@ tr_TR:
               unable_to_tag: "Konu etiketlenirken bir hata oluştu."
             featured_link:
               invalid: "geçersiz link. URL, http: // veya https: // içermelidir."
-              invalid_category: "bu kategoride düzenlenemez."
         user:
           attributes:
             password:
@@ -1344,6 +1344,7 @@ tr_TR:
     sidekiq_warning: 'Sidekiq çalışmıyor. E-posta yollamak gibi gibi birçok asenkron görev sidekiq''in işidir. En az bir tane sidekiq süreci çalıştırdığınızdan emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq ile ilgili bilgi burada</a>.'
     queue_size_warning: "Kuyruğa eklenmiş işlerin sayısı fazla: %{queue_size}. Bu Sidekiq işlem(ler)indeki bir sorunu işaret ediyor olabilir, ya da daha fazla Sidekiq işçisi eklemeniz gerekiyor olabilir."
     memory_warning: "Sunucunuz toplam 1GB'tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir."
+    google_oauth2_config_warning: 'Sunucu, Google OAuth2 (enable_google_oauth2_logins) ile kaydolmaya ve oturum açmaya izin verecek şekilde yapılandırılmıştır, ancak istemci kimliği ve istemci gizli değerleri ayarlanmamıştır. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazlasını öğrenmek için bu kılavuza bakın</a>.'
     s3_config_warning: 'Sunucu s3''e dosya yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarlarına</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "S3''e resim yüklemeleri nasıl ayarlanır?" konulu gönderiye bakın</a>.'
     s3_backup_config_warning: 'Sunucu s3''e yedeklerin yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarlarına</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "S3''e resim yüklemeleri nasıl ayarlanır?" konulu gönderiye bakın</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="https://www.imagemagick.org/script/download.php" target="_blank">son sürümünü indirin</a>.'
@@ -2519,49 +2520,15 @@ tr_TR:
     backup_succeeded:
       title: "Yedekleme Başarılı"
       subject_template: "Yedekleme başarıyla tamamlandı"
-      text_body_template: |
-        Yedekleme başarılı oldu.
-
-        Yedeğinizi indirmek için [yönetici> yedekleme alanını](%{base_url}/admin/backups) ziyaret edin.
-
-        İşlem kaydı burada:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "Yedekleme Başarısız"
       subject_template: "Yedekleme başarısız"
-      text_body_template: |
-        Yedekleme başarısız oldu.
-
-        İşlem kaydı burada:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Geri Alma Başarılı"
       subject_template: "Geri alma başarıyla tamamlandı"
-      text_body_template: |
-        Geri yükleme başarılı oldu.
-
-        İşlem kaydı burada:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Geri Alma Başarısız Oldu"
       subject_template: "Geri alma başarısız"
-      text_body_template: |
-        Geri alma başarısız oldu.
-
-        İşlem kaydı burada:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Toplu Davet Başarılı"
       subject_template: "Toplu davet gönderimi başarıyla tamamlandı"

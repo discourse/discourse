@@ -513,7 +513,6 @@ da:
               unable_to_tag: "Der opstod en fejl under mærkning af emnet."
             featured_link:
               invalid: "er ugyldig. URL'en skal indeholde http:// eller https://. "
-              invalid_category: "kan ikke redigeres i denne kategori."
         user:
           attributes:
             password:
@@ -2209,27 +2208,9 @@ da:
     backup_succeeded:
       title: "Sikkerhedskopiering Gennemført"
       subject_template: "Sikkerhedskopiering er gennemført"
-      text_body_template: |
-        Sikkerhedskopieringen lykkedes.
-
-        Besøg afsnittet [admin > backup](%{base_url}/admin/backupsr) for at hente din nye sikkerhedskopi.
-
-        Her er loggen:
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "Sikkerheskopiering Mislykkedes"
       subject_template: "Sikkerhedskopiering mislykkedes"
-      text_body_template: |
-        Sikkerhedskopieringen mislykkedes.
-
-        Her er loggen:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Gendannelse Gennemført"
       subject_template: "Gendannelse fuldført"

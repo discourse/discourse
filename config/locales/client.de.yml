@@ -301,6 +301,7 @@ de:
     copy_codeblock:
       copied: "Kopiert!"
     drafts:
+      label: "Entwürfe"
       resume: "Fortsetzen"
       remove: "Entfernen"
       remove_confirmation: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
@@ -826,6 +827,10 @@ de:
       flair_type:
         icon: "Wähle ein Symbol"
         image: "Lade ein Bild hoch"
+      default_notifications:
+        modal_description: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehende Benutzer."
+        modal_yes: "Ja"
+        modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
     user_action_groups:
       "1": "Abgegebene „Gefällt mir“"
       "2": "Erhaltene „Gefällt mir“"
@@ -1091,7 +1096,10 @@ de:
         rejected_posts: "abgelehnte Beiträge"
       messages:
         inbox: "Posteingang"
+        latest: "Aktuelle"
         sent: "Gesendet"
+        unread: "Ungelesen"
+        new: "Neu"
         archive: "Archiv"
         groups: "Meine Gruppen"
         move_to_inbox: "In Posteingang verschieben"
@@ -1523,6 +1531,8 @@ de:
         edit: "Profilbild bearbeiten"
       title:
         title: "Titel"
+        none: "(keiner)"
+      flair:
         none: "(keiner)"
       primary_group:
         title: "Primäre Gruppe"
@@ -2178,11 +2188,9 @@ de:
           other: "Neue Themen ignorieren (%{count})"
         toggle: "Massenauswahl von Themen umschalten"
         actions: "Massenoperationen"
-        change_category: "Kategorie auswählen"
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
         move_messages_to_inbox: "In Posteingang verschieben"
-        notification_level: "Benachrichtigungen"
         change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
         selected:
@@ -2451,7 +2459,6 @@ de:
         open: "Thema öffnen"
         close: "Thema schließen"
         multi_select: "Beiträge auswählen …"
-        slow_mode: "Aktiviere langsamen Modus"
         timed_update: "Zeitschaltuhren …"
         pin: "Thema anheften …"
         unpin: "Thema loslösen …"
@@ -2460,7 +2467,6 @@ de:
         invisible: "Unsichtbar machen"
         visible: "Sichtbar machen"
         reset_read: "„Gelesen“ zurücksetzen"
-        make_public: "Umwandeln in öffentliches Thema"
         make_private: "In persönliche Nachricht umwandeln"
         reset_bump_date: "„Nach oben verschieben“-Datum zurücksetzen"
       feature:
@@ -2753,8 +2759,6 @@ de:
         rebake: "HTML erneuern"
         publish_page: "Als Seite veröffentlichen"
         unhide: "Einblenden"
-        change_owner: "Eigentümer ändern"
-        grant_badge: "Abzeichen verleihen"
         lock_post: "Beitrag sperren"
         lock_post_description: "verhindern, dass der Autor den Beitrag bearbeitet"
         unlock_post: "Beitrag entsperren"
@@ -2768,8 +2772,6 @@ de:
         delete_topic_confirm_modal_no: "Nein, dieses Thema behalten"
         delete_topic_error: "Beim Löschen dieses Themas ist ein Fehler aufgetreten"
         delete_topic: "Thema löschen"
-        add_post_notice: "Team-Notiz hinzufügen"
-        change_post_notice: "Team-Notiz ändern"
         delete_post_notice: "Team-Notiz löschen"
         remove_timer: "Zeitschaltuhr deaktivieren"
         edit_timer: "Zeitschaltuhr bearbeiten"
@@ -2842,6 +2844,7 @@ de:
         name: "Name"
         name_placeholder: "Wofür dient dieses Lesezeichen?"
         set_reminder: "Erinnere mich"
+        options: "Optionen"
         actions:
           delete_bookmark:
             name: "Lesezeichen löschen"
@@ -4521,6 +4524,7 @@ de:
         delete_all_posts: "Lösche alle Beiträge"
         delete_posts_progress: "Beiträge werden gelöscht …"
         delete_posts_failed: "Es gab ein Problem beim Löschen der Beiträge."
+        post_edits: "Beitragsbearbeitungen"
         penalty_post_actions: "Was möchtest du mit dem zugehörigen Beitrag machen?"
         penalty_post_delete: "Beitrag löschen"
         penalty_post_delete_replies: "Den Beitrag und etwaige Antworten löschen"
@@ -4576,6 +4580,7 @@ de:
         approve_success: "Benutzer wurde genehmigt und eine E-Mail mit Anweisungen zur Aktivierung wurde gesendet."
         approve_bulk_success: "Erfolgreich! Alle ausgewählten Benutzer wurden genehmigt und benachrichtigt."
         time_read: "Lesezeit"
+        post_edits_count: "Beitragsbearbeitungen"
         anonymize: "Benutzer anonymisieren"
         anonymize_confirm: "Möchtest du dieses Konto WIRKLICH anonymisieren? Dadurch werden der Benutzername und die E-Mail-Adresse geändert und alle Informationen im Profil zurückgesetzt."
         anonymize_yes: "Ja, dieses Konto anonymisieren"
@@ -4660,6 +4665,8 @@ de:
         trust_level_unlocked_tip: "Vertrauensstufe ist nicht gesperrt. Das System kann den Benutzer befördern oder zurückstufen."
         lock_trust_level: "Vertrauensstufe sperren"
         unlock_trust_level: "Vertrauensstufe entsperren"
+        silenced_count: "Stummgeschaltet"
+        suspended_count: "Gesperrt"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
           table_title:
@@ -4869,7 +4876,6 @@ de:
           post_revision: "Wenn ein Benutzer einen Beitrag bearbeitet oder erstellt"
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
           user_change: "Wenn ein Benutzer bearbeitet oder erstellt wird"
-          post_processed: "Nach der Verarbeitung eines Beitrags"
         preview:
           link_text: "Vorschau auf verliehene Abzeichen"
           plan_text: "Vorschau mit Abfrageplan"

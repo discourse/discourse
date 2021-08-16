@@ -245,6 +245,38 @@ describe Middleware::RequestTracker do
       end
     end
 
+    it "blocks if the ip isn't static skipped" do
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'block'
+
+      env1 = env("REMOTE_ADDR" => "1.1.1.1")
+      status, _ = middleware.call(env1)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(429)
+    end
+
+    it "doesn't block if rate limiter is enabled but IP is on the static exception list" do
+      stub_const(Middleware::RequestTracker, "STATIC_IP_SKIPPER", "177.33.14.73 191.209.88.192/30"&.split&.map { |ip| IPAddr.new(ip) }) do
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, 'block'
+
+        env1 = env("REMOTE_ADDR" => "177.33.14.73")
+        env2 = env("REMOTE_ADDR" => "191.209.88.194")
+
+        status, _ = middleware.call(env1)
+        expect(status).to eq(200)
+
+        status, _ = middleware.call(env1)
+        expect(status).to eq(200)
+
+        status, _ = middleware.call(env2)
+        expect(status).to eq(200)
+
+        status, _ = middleware.call(env2)
+        expect(status).to eq(200)
+      end
+    end
+
     describe "register_ip_skipper" do
       before do
         Middleware::RequestTracker.register_ip_skipper do |ip|

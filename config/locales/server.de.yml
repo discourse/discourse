@@ -164,6 +164,9 @@ de:
       max_emojis: "kann nicht mehr als %{max_emojis_count} Emojis beinhalten"
       emojis_disabled: "kann keine Emojis beinhalten"
       ip_address_already_screened: "wird bereits von einer bestehenden Regel abgedeckt"
+      restrict_dependent_destroy:
+        one: "Eintrag kann nicht gelöscht werden, da noch ein davon abhängiger %{record} existiert."
+        other: "Eintrag kann nicht gelöscht werden, da noch davon abhängige %{record} existieren."
       too_long:
         one: ist zu lang (Maximum ist %{count} Zeichen)
         other: ist zu lang (Maximum sind %{count} Zeichen)
@@ -525,7 +528,6 @@ de:
               unable_to_tag: "Beim Versehen des Themas mit einem Schlagwort ist ein Fehler aufgetreten."
             featured_link:
               invalid: "ist ungültig. URL sollte http:// oder https:// enthalten."
-              invalid_category: "kann in dieser Kategorie nicht bearbeitet werden."
         user:
           attributes:
             password:
@@ -1678,6 +1680,7 @@ de:
     allow_staff_to_upload_any_file_in_pm: "Erlaube Team-Mitgliedern, in privaten Nachrichten alle Dateien hochzuladen."
     strip_image_metadata: "Bild-Metadaten entfernen."
     composer_media_optimization_image_enabled: "Aktiviert die clientseitige Medienoptimierung hochgeladener Bilddateien."
+    composer_media_optimization_image_bytes_optimization_threshold: "Mindestgröße der Bilddatei, um die clientseitige Optimierung auszulösen"
     composer_media_optimization_image_resize_dimensions_threshold: "Mindestbreite des Bildes, um die clientseitige Skalierung auszulösen"
     composer_media_optimization_image_resize_width_target: "Bilder, die breiter als `composer_media_optimization_image_dimensions_resize_threshold` sind, werden auf diese Breite angepasst. Muss >= `composer_media_optimization_image_dimensions_resize_threshold` sein."
     composer_media_optimization_image_encode_quality: "JPEG-Encoding-Qualität, die im Re-Encoding-Prozess verwendet wird."
@@ -2671,49 +2674,15 @@ de:
     backup_succeeded:
       title: "Backup erfolgreich"
       subject_template: "Backup erfolgreich abgeschlossen"
-      text_body_template: |
-        Backup erfolgreich erstellt.
-
-        Besuche [Administration > Backups](%{base_url}/admin/backups), um das neue Backup herunterzuladen.
-
-        Hier ist das Protokoll:
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "Backup fehlgeschlagen"
       subject_template: "Backup fehlgeschlagen"
-      text_body_template: |
-        Backup ist fehlgeschlagen.
-
-        Hier ist das Protokoll:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Wiederherstellung erfolgreich"
       subject_template: "Wiederherstellung erfolgreich abgeschlossen"
-      text_body_template: |
-        Die Wiederherstellung war erfolgreich..
-
-        Hier ist das Protokoll:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "Wiederherstellung fehlgeschlagen"
       subject_template: "Wiederherstellung fehlgeschlagen"
-      text_body_template: |
-        Die Wiederherstellung ist fehlgeschlagen.
-
-        Hier ist das Protokoll:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Masseneinladung erfolgreich"
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
@@ -3318,6 +3287,9 @@ de:
         Du wurdest im Forum bis zum %{suspended_till} gesperrt.
 
         Grund – %{reason}
+    account_suspended_forever:
+      title: "Konto gesperrt"
+      subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
     account_silenced:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
@@ -3325,6 +3297,9 @@ de:
         Du wurdest im Forum bis zum %{silenced_till} stummgeschaltet.
 
         Grund – %{reason}
+    account_silenced_forever:
+      title: "Konto stummgeschaltet"
+      subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"

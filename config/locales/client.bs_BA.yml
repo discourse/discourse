@@ -1944,11 +1944,9 @@ bs_BA:
         dismiss_new: "Odpusti Nove"
         toggle: "preklopi masovno označavanje tema"
         actions: "Masovno odrađene akcije"
-        change_category: "Postavi kategoriju"
         close_topics: "Zatvori teme"
         archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Idi u inbox"
-        notification_level: "Obavijesti"
         choose_new_category: "Izaberi novu kategoriju za temu:"
         selected:
           one: "Označili ste <b>%{count}</b> temu."
@@ -2164,7 +2162,6 @@ bs_BA:
         invisible: "Ukloni temu s popisa"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
-        make_public: "Napiši temu javno"
         make_private: "Pretvori u privatnu poruku"
         reset_bump_date: "Resetuj datum bumpa"
       feature:
@@ -2421,8 +2418,6 @@ bs_BA:
         revert_to_regular: "Ukloni boje osoblja"
         rebake: "Popravi HTML"
         unhide: "Unhide"
-        change_owner: "Izmijeni vlasništvo"
-        grant_badge: "Dodijeli bedž"
         lock_post: "Zaključaj objavu"
         lock_post_description: "spriječi objavljivača ove objave da izmijeni objavu"
         unlock_post: "Odključaj objavu"
@@ -2430,7 +2425,6 @@ bs_BA:
         delete_topic_disallowed_modal: "Nemate dozvolu za brisanje ove teme. Ako zaista želite da bude obrisan, pošaljite kaznu za pažnju moderatora zajedno s obrazloženjem."
         delete_topic_disallowed: "nemate dozvolu za brisanje ove teme"
         delete_topic: "obriši temu"
-        add_post_notice: "Dodaj obavještenje moderatora"
         remove_timer: "ukloni tajmer"
       actions:
         people:
@@ -4254,7 +4248,6 @@ bs_BA:
           post_revision: "When a user edits or creates a post"
           trust_level_change: "When a user changes trust level"
           user_change: "When a user is edited or created"
-          post_processed: "Nakon objave posta"
         preview:
           link_text: "Preview granted badges"
           plan_text: "Preview with query plan"

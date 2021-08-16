@@ -255,7 +255,6 @@ et:
               no_user_selected: "Pead valima sobiva kasutaja."
             featured_link:
               invalid: "on vigane. URL peab sisaldama http:// või https://."
-              invalid_category: "ei saa selles foorumis redigeerida."
         user:
           attributes:
             password:

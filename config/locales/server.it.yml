@@ -522,7 +522,6 @@ it:
               unable_to_tag: "Si è verificato un errore etichettando l'argomento."
             featured_link:
               invalid: "non è valido. Un URL dovrebbe includere http:// o https://."
-              invalid_category: "non può essere modificato in questa categoria."
         user:
           attributes:
             password:
@@ -2337,8 +2336,8 @@ it:
       other: "L'utente %{username} ha %{count} messaggi tra contenuti personali e argomenti pubblici, perciò non può essere cancellato."
   reviewables_reminder:
     submitted:
-      one: "Gli elementi sono stati inviati oltre %{count} ora fa. [Si prega di rivederli] (%{base_path}/review)."
-      other: "Gli elementi sono stati inviati oltre %{count} ore fa. [Si prega di revisionarli] (%{base_path}/review)."
+      one: "Gli elementi sono stati inviati oltre %{count} ora fa. [Si prega di rivederli](%{base_path}/review)."
+      other: "Gli elementi sono stati inviati oltre %{count} ore fa. [Si prega di revisionarli](%{base_path}/review)."
     subject_template:
       one: "%{count} elemento da revisionare"
       other: "%{count} elementi da revisionare"
@@ -2611,33 +2610,15 @@ it:
     backup_succeeded:
       title: "Backup Riuscito"
       subject_template: "Backup completato correttamente"
-      text_body_template: "Il backup ha avuto successo. \n\nVisita la sezione [amministrazione > backup] (%{base_url}/admin/backup) per scaricare il nuovo backup.\n\nEcco il log:\n\n``` text\n%{logs}\n```\n"
     backup_failed:
       title: "Backup Fallito"
       subject_template: "Backup fallito"
-      text_body_template: |
-        Il backup non è riuscito.
-
-        Ecco il log:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Ripristino Riuscito"
       subject_template: "Il ripristino è avvenuto con successo."
-      text_body_template: "Il ripristino ha avuto successo. \n\nEcco il log:\n\n``` text\n%{logs}\n```\n"
     restore_failed:
       title: "Ripristino Fallito"
       subject_template: "Ripristino fallito"
-      text_body_template: |
-        Il ripristino non è riuscito.
-
-        Ecco il log:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Invito di Massa Riuscito"
       subject_template: "Invito di massa processato con successo"
@@ -2650,12 +2631,12 @@ it:
       title: "Aggiunto al gruppo come proprietario"
       subject_template: "Sei stato aggiunto come proprietario del gruppo %{group_name}"
       text_body_template: |
-        Sei stato aggiunto come proprietario del gruppo [%{group_name}] (%{base_url}%{group_path}).
+        Sei stato aggiunto come proprietario del gruppo [%{group_name}](%{base_url}%{group_path}).
     user_added_to_group_as_member:
       title: "Aggiunto al gruppo come membro"
       subject_template: "Sei stato aggiunto come membro del gruppo %{group_name}"
       text_body_template: |
-        Sei stato aggiunto come membro del gruppo [%{group_name}] (%{base_url}%{group_path}).
+        Sei stato aggiunto come membro del gruppo [%{group_name}](%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "Esportazione CSV Riuscita"
       subject_template: "[%{export_title}] Esportazione dati completata"
@@ -2808,7 +2789,7 @@ it:
       text_body_template: |
         Siamo spiacenti, ma il tuo messaggio di posta elettronica per %{destination} (intitolato %{former_title}) non ha funzionato.
 
-        Accettiamo solo le risposte alle notifiche originali per %{number_of_days} giorni. Per favore [visita l'argomento] (%{short_url}) per continuare la conversazione.
+        Accettiamo solo le risposte alle notifiche originali per %{number_of_days} giorni. Per favore [visita l'argomento](%{short_url}) per continuare la conversazione.
     email_reject_topic_not_found:
       title: "Email Rifiutata Argomento Non Trovato"
       subject_template: "[%{email_prefix}] Problema email -- Argomento Non Trovato"
@@ -2844,11 +2825,11 @@ it:
     email_reject_reply_not_allowed:
       title: "Email Rifiutate - Risposta Non Consentita"
       subject_template: "[%{email_prefix}] Problema alla posta elettronica - Risposta non consentita"
-      text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nNon hai le autorizzazioni per rispondere all'argomento. Se ritieni che si tratti di un errore, [contatta un membro dello staff] (%{base_url}/about).\n"
+      text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nNon hai le autorizzazioni per rispondere all'argomento. Se ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
     email_reject_reply_to_digest:
       title: "Email di risposta a un messaggio di riepilogo rifiutata"
       subject_template: "[%{email_prefix}] Problema e-mail - Risposta a un messaggio di riepilogo"
-      text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai risposto a un'e-mail di riepilogo, e questo non è consentito.\n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff] (%{base_url}/about).\n"
+      text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai risposto a un'e-mail di riepilogo, e questo non è consentito.\n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
     email_error_notification:
       title: "Notifica Errore Email"
       subject_template: "[%{email_prefix}] Problema email -- errore di autenticazione POP"
@@ -2928,7 +2909,7 @@ it:
     spam_post_blocked:
       title: "Messaggio di Spam bloccato"
       subject_template: "I messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio ripetuto di link"
-      text_body_template: "Questo è un messaggio automatico.\n\nIl nuovo utente [%{username}] (%{user_url}) ha provato a creare numerosi messaggi contenenti link a %{domains}, ma quei messaggi sono stati bloccati per evitare fenomeni di spam. L'utente è ancora in grado di creare nuovi messaggi purché non contengano link a %{domains}. \n\nPer favore [controlla l'utente] (%{user_url}). \n\nQuesto comportamento può essere modificato agendo sulle impostazioni del sito `newuser_spam_host_threshold` e `allowed_spam_host_domains`. Puoi anche aggiungere %{domains} alla lista dei consentiti se vuoi ammettere tali link.\n"
+      text_body_template: "Questo è un messaggio automatico.\n\nIl nuovo utente [%{username}](%{user_url}) ha provato a creare numerosi messaggi contenenti link a %{domains}, ma quei messaggi sono stati bloccati per evitare fenomeni di spam. L'utente è ancora in grado di creare nuovi messaggi purché non contengano link a %{domains}. \n\nPer favore [controlla l'utente](%{user_url}). \n\nQuesto comportamento può essere modificato agendo sulle impostazioni del sito `newuser_spam_host_threshold` e `allowed_spam_host_domains`. Puoi anche aggiungere %{domains} alla lista dei consentiti se vuoi ammettere tali link.\n"
     unsilenced:
       title: "Non silenziato"
       subject_template: "Account non più sospeso"
@@ -3388,7 +3369,7 @@ it:
     suspicious_login:
       title: "Nuovo avviso di accesso"
       subject_template: "[%{site_name}] Nuovo accesso da %{location}"
-      text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Sei stato tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, fantastico! Non c'è nient'altro che devi fare. \n\nSe non sei stato tu, ti preghiamo di [controllare le tue sessioni esistenti] (%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
+      text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Sei stato tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, fantastico! Non c'è nient'altro che devi fare. \n\nSe non sei stato tu, ti preghiamo di [controllare le tue sessioni esistenti](%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
     post_approved:
       title: "Il tuo messaggio è stato approvato"
       subject_template: "[%{site_name}] Il tuo messaggio è stato approvato"

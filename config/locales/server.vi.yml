@@ -306,7 +306,6 @@ vi:
               unable_to_update: "Đã xảy ra lỗi khi cập nhật chủ đề đó."
             featured_link:
               invalid: "là không hợp lệ. URL nên bao gồm http://hoặc https://."
-              invalid_category: "không thể chỉnh sửa trong thể loại này."
         user:
           attributes:
             password:
@@ -1449,25 +1448,9 @@ vi:
       subject_template: "Sao lưu lỗi."
     restore_succeeded:
       subject_template: "Phục hồi thành công"
-      text_body_template: |
-        Khôi phục thành công.
-
-        Đây là nhật ký:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "Khôi phục không thành công"
       subject_template: "Phục hồi thất bại."
-      text_body_template: |
-        Khôi phục không thành công.
-
-        Đây là nhật ký:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Mời hàng loạt thành công"
       subject_template: "Mời thành viên hàng loạt đã được thực hiện thành công"

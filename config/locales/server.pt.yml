@@ -435,7 +435,6 @@ pt:
               no_user_selected: "Tem que selecionar um utilizador válido."
             featured_link:
               invalid: "é inválida. URL deve incluir http:// ou https://."
-              invalid_category: "não pode ser editada nesta categoria."
         user:
           attributes:
             password:

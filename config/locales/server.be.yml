@@ -296,7 +296,6 @@ be:
               target_user_not_found: "Адзін з карыстальнікаў вы адпраўляеце паведамленне не можа быць знойдзены."
             featured_link:
               invalid: "з'яўляецца несапраўдным. URL павінен уключаць у сябе HTTP:"
-              invalid_category: "не могуць быць зменены ў гэтай катэгорыі."
         user:
           attributes:
             password:

@@ -526,7 +526,6 @@ fi:
               unable_to_tag: "Tunnisteen asettaminen ketjuun epäonnistui."
             featured_link:
               invalid: "ei ole kelvollinen. URL-osoitteen tulisi sisältää http:// tai https://."
-              invalid_category: "ei ole muokattavissa tällä alueella."
         user:
           attributes:
             password:
@@ -2551,7 +2550,7 @@ fi:
 
         Viestisi pysyy piilossa, kunnes henkilökunnan jäsen tarkistaa sen.
 
-        Lisätietoja on [yhteisön ohjeissa] (%{base_url}/guidelines).
+        Lisätietoja on [yhteisön ohjeissa](%{base_url}/guidelines).
     flags_disagreed:
       title: "Henkilökunta palautti merkityn viestin"
       subject_template: "Henkilökunta palautti merkityn viestin"
@@ -2644,49 +2643,15 @@ fi:
     backup_succeeded:
       title: "Varmuuskopiointi onnistui"
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
-      text_body_template: |
-        Varmuuskopiointi onnistui.
-
-        Lataa varmuuskopio siirtymällä kohtaan [ylläpito > varmuuskopiot](%{base_url}/admin/backups).
-
-        Tässä loki:
-
-        ```vtext
-        %{logs}
-        ```
     backup_failed:
       title: "Varmuuskopiointi epäonnistui"
       subject_template: "Varmuuskopiointi epäonnistui"
-      text_body_template: |
-        Varmuuskopiointi epäonnistui.
-
-        Tässä loki:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Palautus onnistui"
       subject_template: "Palautus suoritettu onnistuneesti"
-      text_body_template: |
-        Palautus onnistui.
-
-        Tässä loki:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "Palautus epäonnistui"
       subject_template: "Palautus epäonnistui"
-      text_body_template: |
-        Palautus epäonnistui.
-
-        Tässä loki:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Massakutsun lähetys onnistui"
       subject_template: "Massakutsun käsittely onnistui"

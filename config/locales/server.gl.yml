@@ -511,7 +511,6 @@ gl:
               unable_to_tag: "Produciuse un erro etiquetando o tema."
             featured_link:
               invalid: "non é válido. Un URL debe incluír http:// ou https://."
-              invalid_category: "non se pode editar nesta categoría."
         user:
           attributes:
             password:
@@ -2578,49 +2577,15 @@ gl:
     backup_succeeded:
       title: "Copia de seguranza feita correctamente"
       subject_template: "A copia de seguranza completouse correctamente"
-      text_body_template: |
-        Copia de seguranza realizada correctamente.
-
-        Visite a sección [administración > copias de seguranza](%{base_url}/admin/backups) para descargar a súa nova copia de seguranza.
-
-        Velaquí está o rexistro:
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "Erro na copia de seguranza"
       subject_template: "Erro na copia de seguranza"
-      text_body_template: |
-        Erro na copia de seguranza.
-
-        Velaquí está o rexistro:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauración realizada correctamente"
       subject_template: "Restauración completada correctamente"
-      text_body_template: |
-        A restauración completouse correctamente.
-
-        Velaquí está o rexistro:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "Erro na restauración"
       subject_template: "Erro na restauración"
-      text_body_template: |
-        Erro na restauración.
-
-        Velaquí está o rexistro:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Convite en masa correcto"
       subject_template: "O convite en masa procesouse correctamente"

@@ -91,13 +91,17 @@ zh_TW:
       next_month: "下個月"
       placeholder: 日期
     share:
-      topic_html: '話題<span class="topic-title">%{topicTitle}</span>'
+      topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "貼文 #%{postNumber} "
       close: "關閉"
+      twitter: "分享到 Twitter"
+      facebook: "分享到 Facebook"
+      email: "透過電子郵件傳送"
+      url: "複製並分享網址"
     action_codes:
-      public_topic: "於 %{when}發佈這個話題"
-      private_topic: "於 %{when} 私訊這個話題"
-      split_topic: "於 %{when} 分割此話題"
+      public_topic: "於 %{when} 發佈這個話題"
+      private_topic: "於 %{when} 私訊這個主題"
+      split_topic: "於 %{when} 分割此主題"
       invited_user: "於 %{when} 邀請 %{who}"
       invited_group: "於 %{when} 邀請 %{who} "
       user_left: "%{who} 已於 %{when} 將自己從此訊息中移除"
@@ -125,15 +129,19 @@ zh_TW:
       banner:
         enabled: "已於 %{when} 將其作為橫幅主題。它將一直顯示直至使用者關閉它。"
         disabled: "已於 %{when} 移除該橫幅主題。將不再出現於任何頁面。"
+      forwarded: "轉寄上述電子郵件"
+    topic_admin_menu: "話題動作"
     wizard_required: "是時候配置你的論壇啦！<a href='%{url}' data-auto-route='true'>點擊開始設置嚮導</a>！"
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     software_update_prompt:
+      message: "我們更新了這個網站， <span>請重新整理</span>，否則您可能會遇到預期之外的狀況。"
       dismiss: "忽略"
     bootstrap_mode_enabled:
       other: "為了讓您更輕鬆地建設網站，您正處於初始模式。將會自動授予所有新註冊的使用者信任等級 1，並自動啟用每日摘要電子郵件。該功能將於 %{count} 個使用者註冊後自動關閉。"
     bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
     themes:
       default_description: "預設"
+      broken_theme_alert: "您的網站可能無法正常工作，因為話題/組件 %{theme} 有錯誤。在 %{path} 處停用它。"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -156,6 +164,7 @@ zh_TW:
         us_gov_east_1: "AWS 政府專用（US-East）"
         us_west_1: "美國西部 (北加州)"
         us_west_2: "美國西部 (奧勒岡州)"
+    clear_input: "清除輸入"
     edit: "編輯此話題的標題與分類"
     expand: "展開"
     not_implemented: "抱歉，此功能尚未開放。"
@@ -203,7 +212,7 @@ zh_TW:
       title: "相關訊息"
       see_all: '參閱 @%{username} 的 <a href="%{path}">所有訊息</a>...'
     suggested_topics:
-      title: "推薦的話題"
+      title: "建議的話題"
       pm_title: "推薦訊息"
     about:
       simple_title: "關於"
@@ -214,6 +223,9 @@ zh_TW:
       moderators: "板主"
       stat:
         all_time: "所有時間"
+        last_day: "過去 24 小時"
+        last_7_days: "過去 7 天"
+        last_30_days: "過去 30 天"
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
@@ -223,32 +235,47 @@ zh_TW:
       contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
     bookmarked:
       title: "書籤"
+      edit_bookmark: "編輯書籤"
       clear_bookmarks: "清除書籤"
       help:
         bookmark: "點擊以將此話題的第一篇貼文加入書籤"
+        edit_bookmark: "點擊以編輯此主題的書籤"
         unbookmark: "點擊以移除此話題所有書籤"
+        unbookmark_with_reminder: "點擊以移除此話題所有書籤和提醒。"
     bookmarks:
+      created: "你已將這篇文章加入書籤。 %{name}"
       not_bookmarked: "將此貼文加入書籤"
       remove: "移除書籤"
+      delete: "刪除書籤"
       confirm_delete: "您確定要刪除這個書籤嗎？提醒也會被刪除。"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
       save: "儲存"
       no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
       no_user_bookmarks: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
       auto_delete_preference:
+        label: "自動刪除"
         never: "永不"
         on_owner_reply: "在我回复這個話題之後"
       search: "搜索"
       reminders:
+        today_with_time: "今天 %{time}"
+        tomorrow_with_time: "明天 %{time}"
+        at_time: "在 %{date_time}"
         existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
+    copy_codeblock:
+      copied: "已複製!"
     drafts:
       label: "草稿"
+      label_with_count: "草稿 (%{count})"
       resume: "恢復"
       remove: "移除"
+      remove_confirmation: "您確定要刪除此草稿嗎？"
       new_topic: "新話題草稿"
+      new_private_message: "新個人訊息草稿"
       topic_reply: "回覆草稿"
       abandon:
         yes_value: "捨棄"
+        no_value: "繼續編輯"
     topic_count_latest:
       other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_unread:
@@ -257,12 +284,14 @@ zh_TW:
       other: "檢視 %{count} 則新話題"
     preview: "預覽"
     cancel: "取消"
+    deleting: "正在刪除..."
     save: "儲存變更"
     saving: "正在儲存..."
     saved: "儲存完畢！"
     upload: "上傳"
     uploading: "正在上傳..."
     uploading_filename: "正在上傳: %{filename}…"
+    processing_filename: "處理中： %{filename}..."
     clipboard: "剪貼簿"
     uploaded: "上傳完畢！"
     pasting: "正在貼上…"
@@ -281,12 +310,19 @@ zh_TW:
       install_banner: "你希望在此裝置上 <a href>安裝 %{title} 嗎？</a>"
     choose_topic:
       none_found: "未找到任何話題。"
+      title:
+        search: "搜尋話題"
+        placeholder: "在這裡輸入主題標題、網址或 ID"
     choose_message:
       none_found: "沒有訊息"
+      title:
+        search: "搜尋訊息"
+        placeholder: "在這裡輸入訊息標題、網址或 ID"
     review:
       order_by: "排序按照"
       in_reply_to: "回覆給"
       explain:
+        subtotal: "小計"
         total: "總計"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
@@ -319,6 +355,7 @@ zh_TW:
       deleted_post: "（貼文已被刪除）"
       deleted_user: "（使用者已被刪除）"
       user:
+        website: "網站"
         username: "使用者名稱"
         email: "電子信箱"
         name: "名稱"
@@ -346,6 +383,7 @@ zh_TW:
       save: "儲存"
       cancel: "取消"
       filters:
+        all_categories: "(所有分類)"
         type:
           title: "類型"
           all: "（所有類型）"
@@ -355,6 +393,7 @@ zh_TW:
         category: "分類"
         orders:
           score: "分數"
+          created_at: "建立於"
         priority:
           low: "低"
           medium: "中間的"
@@ -398,25 +437,36 @@ zh_TW:
         ok: "確定"
       example_username: "username"
     relative_time_picker:
+      minutes:
+        other: "分鐘"
+      hours:
+        other: "小時"
       days:
         other: "天"
+      months:
+        other: "月"
+      years:
+        other: "年"
     time_shortcut:
       later_today: "今日稍晚"
+      next_business_day: "下個工作日"
       tomorrow: "明天"
       post_local_date: "張貼日期"
       later_this_week: "本週稍晚"
       this_weekend: "這週末"
       start_of_next_business_week: "星期一"
       start_of_next_business_week_alt: "下個星期一"
+      two_weeks: "兩週"
       next_month: "下個月"
+      six_months: "六個月"
       custom: "自定義日期和時間"
     user_action:
-      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 開啟了 <a href='%{topicUrl}'>此話題</a>"
-      you_posted_topic: "<a href='%{userUrl}'>你</a> 開啟了 <a href='%{topicUrl}'>此話題</a>"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 張貼了 <a href='%{topicUrl}'>此主題</a>"
+      you_posted_topic: "<a href='%{userUrl}'>你</a> 張貼了 <a href='%{topicUrl}'>此主題</a>"
       user_replied_to_post: "<a href='%{userUrl}'>%{user}</a> 回覆 <a href='%{postUrl}'>%{post_number}</a>"
       you_replied_to_post: "<a href='%{userUrl}'>你</a> 回覆 <a href='%{postUrl}'>%{post_number}</a>"
-      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> 回覆了 <a href='%{topicUrl}'>此話題</a>"
-      you_replied_to_topic: "<a href='%{userUrl}'>你</a> 回覆了 <a href='%{topicUrl}'>此話題</a>"
+      user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> 回覆了 <a href='%{topicUrl}'>此主題</a>"
+      you_replied_to_topic: "<a href='%{userUrl}'>你</a> 回覆了 <a href='%{topicUrl}'>此主題</a>"
       user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> 提及了 <a href='%{user2Url}'>%{another_user}</a>"
       user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> 提及了 <a href='%{user2Url}'>你</a>"
       you_mentioned_user: "<a href='%{user1Url}'>你</a> 提及了 <a href='%{user2Url}'>%{another_user}</a>"
@@ -473,6 +523,7 @@ zh_TW:
         title: "管理"
         name: "名稱"
         full_name: "全名"
+        add_members: "新增使用者"
         invite_members: "邀請"
         delete_member_confirm: "確定要從群組「\\b%{group}」中移除「%{username}'」嗎？"
         profile:
@@ -483,8 +534,20 @@ zh_TW:
           notification: 通知
         email:
           title: "電子信箱"
+          enable_smtp: "啟用 SMTP"
+          enable_imap: "啟用 IMAP"
+          test_settings: "測試設定"
+          save_settings: "儲存設定"
+          last_updated: "上次更新："
           last_updated_by: "由"
+          imap_additional_settings: "其他設定"
           credentials:
+            smtp_server: "SMTP 伺服器"
+            smtp_port: "SMTP 通訊埠"
+            smtp_ssl: "在 SMTP 上使用 SSL"
+            imap_server: "IMAP 伺服器"
+            imap_port: "IMAP 連接埠"
+            imap_ssl: "在 IMAP 上使用 SSL"
             username: "使用者名稱"
             password: "密碼"
           settings:
@@ -568,6 +631,7 @@ zh_TW:
         remove_owner: "移除擁有者身份"
         remove_owner_description: "移除 <b>%{username}</b> 的擁有者身份"
         owner: "擁有者"
+        primary: "主要"
       topics: "話題"
       posts: "貼文"
       mentions: "提及"
@@ -698,19 +762,30 @@ zh_TW:
       notification_schedule:
         none: "無"
         monday: "星期一"
+        tuesday: "週二"
+        wednesday: "週三"
+        thursday: "週四"
+        friday: "週五"
+        saturday: "週六"
+        sunday: "週日"
         to: "至"
       activity_stream: "活動"
       read: "已讀"
       preferences: "偏好設定"
       feature_topic_on_profile:
+        open_search: "選擇一個新主題"
+        title: "選擇一個主題"
+        search_label: "依標題搜尋主題"
         save: "儲存"
         clear:
           title: "清除"
+      use_current_timezone: "使用目前時區"
       profile_hidden: "該使用者的個人檔案已被設為隱藏。"
       expand_profile: "展開"
       collapse_profile: "收合"
       bookmarks: "書籤"
       bio: "關於我"
+      timezone: "時區"
       invited_by: "邀請人"
       trust_level: "信任等級"
       notifications: "通知"
@@ -733,11 +808,15 @@ zh_TW:
       color_schemes:
         undo: "重置"
         regular: "普通"
+        dark: "夜間模式"
+        default_dark_scheme: "(網站預設值)"
+      dark_mode: "夜間模式"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
       change: "修改"
+      featured_topic: "特色主題"
       moderator: "%{user} 是板主"
       admin: "%{user} 是管理員"
       moderator_tooltip: "該使用者為板主"
@@ -1611,11 +1690,9 @@ zh_TW:
         dismiss_new: "設定新貼文為已讀"
         toggle: "批次切換選擇話題"
         actions: "批次操作"
-        change_category: "設定分類"
         close_topics: "關閉話題"
         archive_topics: "已封存的話題"
         move_messages_to_inbox: "移動到收件匣"
-        notification_level: "通知"
         choose_new_category: "為話題選擇新類別："
         selected:
           other: "你已選擇了 <b>%{count}</b> 個話題。"
@@ -1746,7 +1823,7 @@ zh_TW:
         back_description: "回到最後一個未讀貼文"
         replies_short: "%{current} / %{total}"
       progress:
-        title: topic progress
+        title: 主題進度
         go_top: "頂部"
         go_bottom: "底部"
         go: "前往"
@@ -1818,7 +1895,6 @@ zh_TW:
         invisible: "不出現在列表上"
         visible: "出現在列表上"
         reset_read: "重置讀取資料"
-        make_public: "設置為公共話題"
         make_private: "設置為私訊"
         reset_bump_date: "重設上浮日期"
       feature:
@@ -2046,8 +2122,6 @@ zh_TW:
         revert_to_regular: "移除工作人員顏色"
         rebake: "重建 HTML"
         unhide: "取消隱藏"
-        change_owner: "更改作者"
-        grant_badge: "核可徽章"
         lock_post: "封鎖貼文"
         lock_post_description: "禁止發文者編輯此貼文"
         unlock_post: "解除封鎖貼文"
@@ -2055,7 +2129,6 @@ zh_TW:
         delete_topic_disallowed_modal: "您沒有權限刪除此話題。若您認為它應被刪除，請向板主檢舉並附上原因。"
         delete_topic_disallowed: "您沒有刪除此話題的權限。"
         delete_topic: "刪除話題"
-        add_post_notice: "加入工作人員通知"
       actions:
         people:
           like:
@@ -3706,7 +3779,6 @@ zh_TW:
           post_revision: "當使用者新增或是編輯一個貼文"
           trust_level_change: "當使用者信任等級有改變"
           user_change: "當使用者被新增或是編輯"
-          post_processed: "在貼文被處理之後"
         preview:
           link_text: "預覽獲得的徽章"
           plan_text: "預覽 SQL 查詢語法"

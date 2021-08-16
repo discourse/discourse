@@ -580,7 +580,6 @@ ru:
               unable_to_tag: "При добавлении тега произошла ошибка."
             featured_link:
               invalid: "недействительна. URL должен включать http:// или https://."
-              invalid_category: "не может быть изменено в данном разделе."
         user:
           attributes:
             password:
@@ -2844,9 +2843,7 @@ ru:
 
         Вот журнал:
 
-        ```text
         %{logs}
-        ```
     backup_failed:
       title: "Неудачное резервное копирование"
       subject_template: "Резервное копирование не удалось"
@@ -2855,21 +2852,16 @@ ru:
 
         Вот журнал:
 
-         ```text
-
         %{logs}
-        ```
     restore_succeeded:
       title: "Успешное восстановление данных"
       subject_template: "Восстановление данных успешно завершено"
       text_body_template: |
-        Восстановление было успешным.
+        Восстановление прошло успешно.
 
         Вот журнал:
 
-         ```text
         %{logs}
-        ```
     restore_failed:
       title: "Неудачное восстановление данных"
       subject_template: "Восстановление данных не удалось"
@@ -2878,9 +2870,7 @@ ru:
 
         Вот журнал:
 
-        ```text
         %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Массовое приглашение"
       subject_template: "Массовое приглашение пользователей успешно выполнено"

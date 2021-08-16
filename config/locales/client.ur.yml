@@ -1958,11 +1958,9 @@ ur:
         dismiss_new: "نیا برخاست کریں"
         toggle: "ٹاپکس کے بَلک انتخاب کو ٹَوگل کریں"
         actions: "بَلک عمل"
-        change_category: "زمرہ تبدیل کریں"
         close_topics: "ٹاپکس بند کریں"
         archive_topics: "ٹاپکس آر کائیو کریں"
         move_messages_to_inbox: "اِنباکس میں منتقل کریں"
-        notification_level: "اطلاعات"
         choose_new_category: "ٹاپکس کیلئے نئے زمرہ کا انتخاب کریں:"
         selected:
           one: "آپ نے <b>%{count}</b> ٹاپک منتخب کیا ہے۔"
@@ -2201,7 +2199,6 @@ ur:
         open: "ٹاپک کھولیں"
         close: "ٹاپک بند کریں"
         multi_select: "پوسٹس منتخب کریں..."
-        slow_mode: "سست موڈ مقرر کریں"
         timed_update: "ٹاپک ٹائمر مقرر کریں..."
         pin: "ٹاپک پِن کریں..."
         unpin: "ٹاپک سے پِن ہٹائیں..."
@@ -2210,7 +2207,6 @@ ur:
         invisible: "غیر مندرج بنائیں"
         visible: "مندرج بنائیں"
         reset_read: "\"پڑھ لیا گیا\" کا ڈیٹا رِی سَیٹ کریں"
-        make_public: "ٹاپک پبلک بنائیں"
         make_private: "ذاتی پیغام بنائیں"
         reset_bump_date: "بَمپ تاریخ رِی سَیٹ کریں"
       feature:
@@ -2479,8 +2475,6 @@ ur:
         rebake: "HTML دوبارہ بِلڈ کریں"
         publish_page: "صفحہ اشاعت"
         unhide: "چھپانا ختم کریں"
-        change_owner: "پوسٹس کے مالک کو تبدیل کریں"
-        grant_badge: "بَیج دیں"
         lock_post: "پوسٹ لاک کریں"
         lock_post_description: "شائع کرنے والے کو اِس پوسٹ میں ترمیم کرنے سے روک دیں"
         unlock_post: "پوسٹ کھول دیں"
@@ -2488,7 +2482,6 @@ ur:
         delete_topic_disallowed_modal: "آپ کے پاس اِس ٹاپک کو حذف کرنے کی اجازت نہیں ہے۔ اگر آپ واقعی اِسے حذف کروانا چاہتے ہیں تو، استدلال کے ساتھ ماڈریٹر کی توجہ کیلئے فلَیگ جمع کریں۔"
         delete_topic_disallowed: "آپ کے پاس اِس ٹاپک کو حذف کرنے کی اجازت نہیں ہے۔"
         delete_topic: "ٹاپک حذف کریں"
-        add_post_notice: "اسٹاف نوٹِس شامل کریں"
         remove_timer: "ٹائمر ہٹائیں"
       actions:
         people:
@@ -4225,7 +4218,6 @@ ur:
           post_revision: "جب صارف پوسٹ میں ترمیم یا اُسے تخلیق کرے"
           trust_level_change: "جب صارف ٹرسٹ لَیول تبدیل کرے"
           user_change: "جب ایک صارف ترمیم یا تخلیق کیا جاتا ہے۔"
-          post_processed: "پوسٹ کے پراسس ہونے کے بعد"
         preview:
           link_text: "دیے گئے بَیجز کا مشاہدہ کریں"
           plan_text: "قُوَیری پلان کا ساتھ مشاہدہ کریں"

@@ -1,8 +1,6 @@
-<a href="https://www.discourse.org/"><img src=
-"https://user-images.githubusercontent.com/1681963/52239617-e2683480-289c-11e9-922b-5da55472e5b4.png"
- width="300px"></a>
-
-
+<a href="https://www.discourse.org/">
+  <img src="images/discourse-readme-logo.png" width="300px">
+</a>
 
 Discourse is the 100% open source discussion platform built for the next decade of the Internet. Use it as a:
 
@@ -14,7 +12,7 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Screenshots
 
-
+ 
 <a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://user-images.githubusercontent.com/1681963/52239245-04ad8280-289c-11e9-9c88-8c173d4a0422.png" width="720px"></a>
 <a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
 <a href="https://discuss.atom.io/"><img src="https://user-images.githubusercontent.com/1681963/89088039-6735f080-d364-11ea-93a6-5629ea8738fe.png" width="720px"></a>

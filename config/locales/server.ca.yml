@@ -401,7 +401,6 @@ ca:
               target_user_not_found: "Un dels usuaris a qui envieu el missatge no s'ha pogut trobar."
             featured_link:
               invalid: "no és vàlid. L'URL hauria d'incloure http:// o https://."
-              invalid_category: "no pot editar-se dins aquesta categoria."
         user:
           attributes:
             password:
@@ -2074,33 +2073,15 @@ ca:
     backup_succeeded:
       title: "Còpia de seguretat reeixida"
       subject_template: "Còpia de seguretat completada amb èxit"
-      text_body_template: "La còpia de seguretat ha tingut èxit.\n\nVisiteu la secció [Administració>còpia de seguretat](%{base_url}/admin/backups) per a descarregar la nova còpia de seguretat. \n\nVet aquí el registre: \n\n``text\n%{logs}\n```\n"
     backup_failed:
       title: "La còpia de seguretat ha fallat"
       subject_template: "La còpia de seguretat ha fallat"
-      text_body_template: |
-        La còpia de seguretat ha fallat.
-
-        Vet aquí el registre (log):
-
-         ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauració reeixida"
       subject_template: "Restauració completada amb èxit"
-      text_body_template: |
-        La restauració ha tingut èxit.
-
-        Vet aquí el registre (log):
-
-         ```text
-         %{logs}
-        ```
     restore_failed:
       title: "Ha fallat la restauració"
       subject_template: "Ha fallat la restauració"
-      text_body_template: "La restauració ha fallat. \n\nVet aquí el registre: \n\n```text\n%{logs}\n```\n"
     bulk_invite_succeeded:
       title: "Invitació massiva reeixida"
       subject_template: "La invitació d'usuaris massiva s'ha processat amb èxit"

@@ -525,7 +525,6 @@ es:
               unable_to_tag: "Hubo un error al etiquetar el tema."
             featured_link:
               invalid: "no es válido. La URL debería incluir http:// o https://."
-              invalid_category: "no se puede editar en esta categoría."
         user:
           attributes:
             password:
@@ -2645,49 +2644,15 @@ es:
     backup_succeeded:
       title: "Copia de seguridad realizada con éxito"
       subject_template: "La copia de seguridad se completó con éxito"
-      text_body_template: |
-        Copia de seguridad realizada con éxito.
-
-        Visita la sección [administrador > copias de seguridad](%{base_url}/admin/backups) para descargar tu nueva copia de seguridad.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "Error en la copia de seguridad"
       subject_template: "Error en la copia de seguridad"
-      text_body_template: |
-        La copia de seguridad ha fallado.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauración realizada con éxito"
       subject_template: "Restauración completada exitosamente."
-      text_body_template: |
-        La restauración se ha completado con éxito.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Error en la restauración"
       subject_template: "Error en la restauración"
-      text_body_template: |
-        La restauración ha fallado.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Invitación en masa realizada con éxito"
       subject_template: "Invitación masiva procesada con éxito"
@@ -2922,7 +2887,7 @@ es:
 
         Has respondido a un correo electrónico de resumen, lo cual no es aceptable.
 
-        Si crees que se trata de un error, [ponte en contacto con un miembro del equipo] (%{base_url}/acerca de).
+        Si crees que se trata de un error, [ponte en contacto con un miembro del equipo](%{base_url}/acerca de).
     email_error_notification:
       title: "Error de notificación de correo electrónico"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de autenticación POP"

@@ -370,7 +370,6 @@ hy:
               target_user_not_found: "Օգտատերերից մեկը, ում Դուք ուղարկում եք այս նամակը, չի գտնվել:"
             featured_link:
               invalid: "անվավեր է: URL -ը պետք է ներառի http:// կամ https:// :"
-              invalid_category: "չի կարող խմբագրվել այս կատեգորիայում:"
         user:
           attributes:
             password:
@@ -1915,49 +1914,15 @@ hy:
     backup_succeeded:
       title: "Պահուստը Հաջողվեց"
       subject_template: "Պահուստը հաջողությամբ ավարտված է"
-      text_body_template: |
-        Պահուստը հաջողվեց:
-
-        Այցելեք [ադմին > պահուստի բաժին](%{base_url}/admin/backups) ՝Ձեր նոր պահուստը ներբեռնելու համար:
-
-        Ահա գրառումը՝
-
-        ``` տեքստ
-        %{logs}
-        ```
     backup_failed:
       title: "Պահուստը Ձախողվեց"
       subject_template: "Պահուստը ձախողվեց"
-      text_body_template: |
-        Պահուստը ձախողվեց:
-
-        Ահա գրառումը՝
-
-        ``` տեքստ
-        %{logs}
-        ```
     restore_succeeded:
       title: "Վերականգնումը Հաջողվեց"
       subject_template: "Վերականգնումը հաջողությամբ ավարտվեց"
-      text_body_template: |
-        Վերականգնումը հաջող էր!
-
-        Ահա գրառումը`
-
-        ``` տեքստ
-        %{logs}
-        ```
     restore_failed:
       title: "Վերականգնումը Ձախողվեց"
       subject_template: "Վերականգնումը ձախողվեց"
-      text_body_template: |
-        Վերականգնումը ձախողվեց:
-
-        Ահա գրառումը՝
-
-        ``` տեքստ
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Զանգվածային Հրավերը Հաջողվեց"
       subject_template: "Օգտատերերի զանգվածային հրավերը հաջողությամբ իրագործված է:"

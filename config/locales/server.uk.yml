@@ -554,7 +554,6 @@ uk:
               unable_to_tag: "Сталася помилка під час додавання тегів до теми."
             featured_link:
               invalid: "недійсна. URL-адреса повинна містити http:// або https://."
-              invalid_category: "не можна редагувати в цій категорії."
         user:
           attributes:
             password:
@@ -2367,14 +2366,12 @@ uk:
     backup_failed:
       title: "Помилка резервного копіювання"
       subject_template: "Резервне копіювання не вдалося"
-      text_body_template: "Резервне копіювання не вдалося. \n\nОсь журнал: \n\n``` text\n%{logs}\n```\n"
     restore_succeeded:
       title: "Відновлення успішне"
       subject_template: "Відновлення даних успішно завершено"
     restore_failed:
       title: "Помилка відновлення"
       subject_template: "Відновлення даних не вдалося"
-      text_body_template: "Не вдалося відновити. Ось журнал: \n```text\n%{logs}\n```\n"
     bulk_invite_succeeded:
       title: "Запрошення вдалося успішно"
       subject_template: "Масове запрошення користувачів оброблено успішно"
