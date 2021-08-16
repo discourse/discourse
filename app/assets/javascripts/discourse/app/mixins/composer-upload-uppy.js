@@ -46,9 +46,9 @@ export default Mixin.create({
   _unbindUploadTarget() {
     this.messageBus.unsubscribe("/uploads/composer");
 
-    this.uploadButton?.removeEventListener(
+    this.mobileUploadButton?.removeEventListener(
       "click",
-      this.uploadButtonEventListener
+      this.mobileUploadButtonEventListener
     );
 
     this.fileInputEl?.removeEventListener(
@@ -375,29 +375,28 @@ export default Mixin.create({
   },
 
   _bindPasteListener() {
-    this.pasteEventListener = this.element.addEventListener(
-      "paste",
-      (event) => {
-        if (
-          document.activeElement !== document.querySelector(".d-editor-input")
-        ) {
-          return;
-        }
-
-        const { canUpload } = clipboardHelpers(event, {
-          siteSettings: this.siteSettings,
-          canUpload: true,
-        });
-
-        if (!canUpload) {
-          return;
-        }
-
-        if (event && event.clipboardData && event.clipboardData.files) {
-          this._addFiles([...event.clipboardData.files]);
-        }
+    this.pasteEventListener = function pasteListener(event) {
+      if (
+        document.activeElement !== document.querySelector(".d-editor-input")
+      ) {
+        return;
       }
-    );
+
+      const { canUpload } = clipboardHelpers(event, {
+        siteSettings: this.siteSettings,
+        canUpload: true,
+      });
+
+      if (!canUpload) {
+        return;
+      }
+
+      if (event && event.clipboardData && event.clipboardData.files) {
+        this._addFiles([...event.clipboardData.files]);
+      }
+    }.bind(this);
+
+    this.element.addEventListener("paste", this.pasteEventListener);
   },
 
   _addFiles(files) {

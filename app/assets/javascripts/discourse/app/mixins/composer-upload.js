@@ -333,10 +333,13 @@ export default Mixin.create({
 
   _bindMobileUploadButton() {
     if (this.site.mobileView) {
-      this.uploadButton = document.getElementById("mobile-file-upload");
-      this.uploadButtonEventListener = this.uploadButton.addEventListener(
+      this.mobileUploadButton = document.getElementById("mobile-file-upload");
+      this.mobileUploadButtonEventListener = function mobileButtonEventListener() {
+        document.getElementById("file-uploader").click();
+      };
+      this.mobileUploadButton.addEventListener(
         "click",
-        () => document.getElementById("file-uploader").click(),
+        this.mobileUploadButtonEventListener,
         false
       );
     }
@@ -344,9 +347,9 @@ export default Mixin.create({
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
-    this.uploadButton?.removeEventListener(
+    this.mobileUploadButton?.removeEventListener(
       "click",
-      this.uploadButtonEventListener
+      this.mobileUploadButtonEventListener
     );
 
     this._validUploads = 0;
