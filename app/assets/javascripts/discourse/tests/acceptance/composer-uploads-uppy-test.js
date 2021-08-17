@@ -6,7 +6,7 @@ import {
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { test } from "qunit";
+import { skip } from "qunit";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -61,7 +61,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     simultaneous_uploads: 2,
   });
 
-  test("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
+  skip("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
@@ -87,7 +87,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
-  test("should error if too many files are added at once", async function (assert) {
+  skip("should error if too many files are added at once", async function (assert) {
     await visit("/");
     await click("#create-topic");
     const appEvents = loggedInUser().appEvents;
@@ -112,7 +112,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", [image, image1, image2]);
   });
 
-  test("should error if an unauthorized extension file is added", async function (assert) {
+  skip("should error if an unauthorized extension file is added", async function (assert) {
     await visit("/");
     await click("#create-topic");
     const appEvents = loggedInUser().appEvents;
@@ -143,7 +143,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   // UI updates sink it for the old Ember for some reason. Will re-enable
   // when we make Ember CLI the primary.
   //
-  // test("cancelling uploads clears the placeholders out", async function (assert) {
+  // skip("cancelling uploads clears the placeholders out", async function (assert) {
   //   await visit("/");
   //   await click("#create-topic");
   //   await fillIn(".d-editor-input", "The image:\n");
@@ -199,7 +199,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     simultaneous_uploads: 2,
   });
 
-  test("should show an error message for the failed upload", async function (assert) {
+  skip("should show an error message for the failed upload", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
