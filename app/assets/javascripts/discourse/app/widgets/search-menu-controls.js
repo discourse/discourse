@@ -7,7 +7,7 @@ import { searchContextDescription } from "discourse/lib/search";
 createWidget("search-term", {
   tagName: "input",
   buildId: () => "search-term",
-  buildKey: () => `search-term`,
+  buildKey: () => "search-term",
 
   defaultState() {
     return { afterAutocomplete: false };
@@ -23,12 +23,15 @@ createWidget("search-term", {
     };
   },
 
-  keyUp(e) {
-    if (e.which === 13 && !this.state.afterAutocomplete) {
+  keyDown(e) {
+    if (e.key === "Enter" && !this.state.afterAutocomplete) {
       return this.sendWidgetAction("fullSearch");
     }
+  },
 
+  input(e) {
     const val = this.attrs.value;
+
     // remove zero-width chars
     const newVal = e.target.value.replace(/[\u200B-\u200D\uFEFF]/, "");
 
