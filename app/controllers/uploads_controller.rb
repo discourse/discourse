@@ -14,7 +14,6 @@ class UploadsController < ApplicationController
     :generate_presigned_put,
     :complete_external_upload,
     :create_multipart,
-    :list_multipart_upload_parts,
     :batch_presign_multipart_parts,
     :abort_multipart,
     :complete_multipart
