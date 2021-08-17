@@ -97,12 +97,13 @@ module FileStore
 
       # if this fails, it will throw an exception
       if opts[:move_existing] && opts[:existing_external_upload_key]
+        original_path = opts[:existing_external_upload_key]
         path, etag = s3_helper.copy(
-          opts[:existing_external_upload_key],
+          original_path,
           path,
           options: options
         )
-        delete_file(path)
+        delete_file(original_path)
       else
         path, etag = s3_helper.upload(file, path, options)
       end

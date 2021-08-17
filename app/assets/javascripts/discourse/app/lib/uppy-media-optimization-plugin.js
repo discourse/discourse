@@ -30,7 +30,10 @@ export default class UppyMediaOptimization extends BasePlugin {
             id: "discourse.uppy-media-optimization",
           });
         } else {
-          this.uppy.setFileState(fileId, { data: optimizedFile });
+          this.uppy.setFileState(fileId, {
+            data: optimizedFile,
+            size: optimizedFile.size,
+          });
         }
         this.uppy.emit("preprocess-complete", this.pluginClass, file);
       })

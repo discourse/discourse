@@ -371,6 +371,7 @@ export default Mixin.create({
             headers,
             data: JSON.stringify({
               file_name: file.name,
+              file_size: file.size,
               content_type: file.type,
               upload_type: file.meta.upload_type,
             }),
