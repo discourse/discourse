@@ -47,7 +47,7 @@
     {{/if}}
   </div>
 
-  <div class="control-group">
+  <div class="modal-footer control-group">
     {{d-button id="save-bookmark" label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
     {{d-modal-cancel close=(action "closeWithoutSavingBookmark")}}
     {{#if showDelete}}
