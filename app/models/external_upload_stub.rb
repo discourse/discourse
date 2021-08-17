@@ -69,7 +69,8 @@ end
 #
 # Indexes
 #
-#  index_external_upload_stubs_on_created_by_id  (created_by_id)
-#  index_external_upload_stubs_on_key            (key) UNIQUE
-#  index_external_upload_stubs_on_status         (status)
+#  index_external_upload_stubs_on_created_by_id               (created_by_id)
+#  index_external_upload_stubs_on_external_upload_identifier  (external_upload_identifier)
+#  index_external_upload_stubs_on_key                         (key) UNIQUE
+#  index_external_upload_stubs_on_status                      (status)
 #
