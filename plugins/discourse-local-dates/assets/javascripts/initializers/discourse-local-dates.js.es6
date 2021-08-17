@@ -1,4 +1,3 @@
-import { isTesting } from "discourse-common/config/environment";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { hidePopover, showPopover } from "discourse/lib/d-popover";
@@ -154,11 +153,9 @@ export default {
     const router = container.lookup("router:main");
     router.on("routeWillChange", hidePopover);
 
-    if (!isTesting()) {
-      window.addEventListener("click", this.showDatePopover);
-      window.addEventListener("mouseover", this.showDatePopover);
-      window.addEventListener("mouseout", this.hideDatePopover);
-    }
+    window.addEventListener("click", this.showDatePopover);
+    window.addEventListener("mouseover", this.showDatePopover);
+    window.addEventListener("mouseout", this.hideDatePopover);
 
     const siteSettings = container.lookup("site-settings:main");
     if (siteSettings.discourse_local_dates_enabled) {
