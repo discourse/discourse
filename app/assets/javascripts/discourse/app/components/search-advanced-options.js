@@ -528,8 +528,10 @@ export default Component.extend({
             idCategoryMatches[0],
             `category:${id}`
           );
-        } else {
+        } else if (slug) {
           searchTerm += ` #${parentSlug}:${slug}`;
+        } else {
+          searchTerm += ` category:${id}`;
         }
 
         this._updateSearchTerm(searchTerm);
@@ -541,8 +543,10 @@ export default Component.extend({
             idCategoryMatches[0],
             `category:${id}`
           );
-        } else {
+        } else if (slug) {
           searchTerm += ` #${slug}`;
+        } else {
+          searchTerm += ` category:${id}`;
         }
 
         this._updateSearchTerm(searchTerm);
