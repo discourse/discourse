@@ -34,7 +34,8 @@ class SiteController < ApplicationController
       title: SiteSetting.title,
       description: SiteSetting.site_description,
       header_primary_color: ColorScheme.hex_for_name('header_primary') || '333333',
-      header_background_color: ColorScheme.hex_for_name('header_background') || 'ffffff'
+      header_background_color: ColorScheme.hex_for_name('header_background') || 'ffffff',
+      login_required: SiteSetting.login_required
     }
 
     if mobile_logo_url = SiteSetting.site_mobile_logo_url.presence
