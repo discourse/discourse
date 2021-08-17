@@ -19,6 +19,7 @@ class UploadsController < ApplicationController
     :abort_multipart_upload,
     :complete_multipart
   ]
+  before_action :can_upload_external?, only: [:create_multipart, :generate_presigned_put]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
   PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE = 10
@@ -28,6 +29,10 @@ class UploadsController < ApplicationController
 
   def external_store_check
     return render_404 if !Discourse.store.external?
+  end
+
+  def can_upload_external?
+    raise Discourse::InvalidAccess if !guardian.can_upload_external?
   end
 
   def create

@@ -492,4 +492,15 @@ describe UserGuardian do
       end
     end
   end
+
+  describe "#can_upload_external?" do
+    it "is true by default" do
+      expect(Guardian.new(user).can_upload_external?).to eq(true)
+    end
+
+    it "is false if the user has been banned from external uploads for a time period" do
+      user.ban_from_external_uploads!
+      expect(Guardian.new(user).can_upload_external?).to eq(false)
+    end
+  end
 end
