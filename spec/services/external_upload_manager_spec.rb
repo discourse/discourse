@@ -141,7 +141,7 @@ RSpec.describe ExternalUploadManager do
     context "when stubbed upload is > DOWNLOAD_LIMIT (too big to download, generate a fake sha)" do
       let(:object_size) { 200.megabytes }
       let(:object_file) { pdf_file }
-      let!(:external_upload_stub) { Fabricate(:attachment_external_upload_stub, created_by: user) }
+      let!(:external_upload_stub) { Fabricate(:attachment_external_upload_stub, created_by: user, filesize: object_size) }
 
       before do
         UploadCreator.any_instance.stubs(:generate_fake_sha1_hash).returns("testbc60eb18e8f974cbfae8bb0f069c3a311024")
