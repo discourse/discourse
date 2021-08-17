@@ -242,9 +242,7 @@ export default Controller.extend({
         return;
       }
 
-      const defaultTheme = this.site
-        .get("user_themes")
-        ?.findBy("default", true);
+      const defaultTheme = this.site.user_themes?.findBy("default", true);
 
       // we don't want to display the numeric ID of a scheme
       // when it is set by the theme but not marked as user selectable

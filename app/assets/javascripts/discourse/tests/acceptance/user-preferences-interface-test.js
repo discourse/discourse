@@ -205,17 +205,15 @@ acceptance(
       await visit("/u/eviltrout/preferences/interface");
 
       assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+      const dropdownObject = selectKit(".light-color-scheme .select-kit");
+      assert.equal(dropdownObject.header().value(), null);
       assert.equal(
-        selectKit(".light-color-scheme .select-kit").header().value(),
-        null
-      );
-      assert.equal(
-        selectKit(".light-color-scheme .select-kit").header().label(),
+        dropdownObject.header().label(),
         I18n.t("user.color_schemes.default_description")
       );
 
-      await selectKit(".light-color-scheme .select-kit").expand();
-      assert.equal(count(".light-color-scheme .select-kit .select-kit-row"), 1);
+      await dropdownObject.expand();
+      assert.equal(dropdownObject.rows().length, 1);
 
       document.querySelector("meta[name='discourse_theme_id']").remove();
     });
