@@ -19,7 +19,7 @@ discourseModule(
       {{uppy-image-uploader imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}
     `,
 
-      async skip(assert) {
+      async test(assert) {
         assert.equal(
           count(".d-icon-far-image"),
           1,
@@ -50,7 +50,7 @@ discourseModule(
     componentTest("without image", {
       template: hbs`{{uppy-image-uploader}}`,
 
-      skip(assert) {
+      test(assert) {
         assert.equal(
           count(".d-icon-far-image"),
           1,
@@ -72,7 +72,7 @@ discourseModule(
     componentTest("with placeholder", {
       template: hbs`{{uppy-image-uploader placeholderUrl='/images/avatar.png'}}`,
 
-      skip(assert) {
+      test(assert) {
         assert.equal(
           count(".d-icon-far-image"),
           1,
