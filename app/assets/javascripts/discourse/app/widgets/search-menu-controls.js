@@ -23,7 +23,7 @@ createWidget("search-term", {
     };
   },
 
-  keyDown(e) {
+  keyUp(e) {
     if (e.key === "Enter" && !this.state.afterAutocomplete) {
       return this.sendWidgetAction("fullSearch");
     }
