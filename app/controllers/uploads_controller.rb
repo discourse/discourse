@@ -16,7 +16,7 @@ class UploadsController < ApplicationController
     :create_multipart,
     :list_multipart_upload_parts,
     :batch_presign_multipart_parts,
-    :abort_multipart_upload,
+    :abort_multipart,
     :complete_multipart
   ]
   before_action :can_upload_external?, only: [:create_multipart, :generate_presigned_put]
@@ -25,6 +25,7 @@ class UploadsController < ApplicationController
   PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE = 10
   CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
   COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
+  ABORT_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
   BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE = 10
 
   def external_store_check
@@ -328,12 +329,6 @@ class UploadsController < ApplicationController
     }
   end
 
-  def list_multipart_upload_parts
-    return render_404 if !Discourse.store.external?
-    parts = Discourse.store.list_multipart_upload_parts(upload_id: params[:uploadId], key: params[:key])
-    render json: { parts: parts }
-  end
-
   def batch_presign_multipart_parts
     return render_404 if !SiteSetting.enable_direct_s3_uploads
 
@@ -391,8 +386,29 @@ class UploadsController < ApplicationController
     true
   end
 
-  def abort_multipart_upload
-    # TODO (martin): Uh...write this code
+  def abort_multipart
+    return render_404 if !SiteSetting.enable_direct_s3_uploads
+
+    external_upload_identifier = params.require(:external_upload_identifier)
+
+    RateLimiter.new(
+      current_user, "abort-multipart-upload", ABORT_MULTIPART_RATE_LIMIT_PER_MINUTE, 1.minute
+    ).performed!
+
+    external_upload_stub = ExternalUploadStub.find_by(
+      external_upload_identifier: external_upload_identifier,
+      created_by: current_user
+    )
+    return render_404 if external_upload_stub.blank?
+
+    # TODO (martin) Handle S3 errors gracefully
+    abort_response = Discourse.store.abort_multipart_upload(
+      upload_id: external_upload_stub.external_upload_identifier,
+      key: external_upload_stub.key
+    )
+    external_upload_stub.destroy!
+
+    render json: success_json
   end
 
   def complete_multipart

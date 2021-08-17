@@ -1223,6 +1223,101 @@ describe UploadsController do
     end
   end
 
+  describe "#abort_multipart" do
+    let(:upload_base_url) { "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com" }
+    let(:mock_multipart_upload_id) { "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--" }
+    let!(:external_upload_stub) do
+      Fabricate(:image_external_upload_stub, created_by: user, multipart: true, external_upload_identifier: mock_multipart_upload_id)
+    end
+
+    context "when the store is external" do
+      before do
+        sign_in(user)
+        SiteSetting.enable_direct_s3_uploads = true
+        setup_s3
+      end
+
+      def stub_abort_request
+        temp_location = "#{upload_base_url}/#{external_upload_stub.key}"
+        stub_request(
+          :delete,
+          "#{temp_location}?uploadId=#{external_upload_stub.external_upload_identifier}"
+        ).to_return(status: 200, body: "")
+      end
+
+      it "errors if the correct params are not provided" do
+        post "/uploads/abort-multipart.json", params: {}
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 404 when the upload stub does not exist" do
+        post "/uploads/abort-multipart.json", params: {
+          external_upload_identifier: "unknown",
+        }
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when the upload stub does not belong to the user" do
+        external_upload_stub.update!(created_by: Fabricate(:user))
+        post "/uploads/abort-multipart.json", params: {
+          external_upload_identifier: external_upload_stub.external_upload_identifier
+        }
+        expect(response.status).to eq(404)
+      end
+
+      it "aborts the multipart upload and deletes the stub" do
+        stub_abort_request
+
+        post "/uploads/abort-multipart.json", params: {
+          external_upload_identifier: external_upload_stub.external_upload_identifier
+        }
+
+        expect(response.status).to eq(200)
+        expect(ExternalUploadStub.find_by(id: external_upload_stub.id)).to eq(nil)
+      end
+
+      it "rate limits" do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        stub_abort_request
+
+        stub_const(UploadsController, "ABORT_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
+          post "/uploads/abort-multipart.json", params: {
+            external_upload_identifier: external_upload_stub.external_upload_identifier
+          }
+          post "/uploads/abort-multipart.json", params: {
+            external_upload_identifier: external_upload_stub.external_upload_identifier
+          }
+        end
+        expect(response.status).to eq(429)
+      end
+    end
+
+    context "when the store is not external" do
+      before do
+        sign_in(user)
+      end
+
+      it "returns 404" do
+        post "/uploads/complete-multipart.json", params: {
+          unique_identifier: external_upload_stub.external_upload_identifier,
+          parts: [
+            {
+              PartNumber: 1,
+              ETag: "test1"
+            },
+            {
+              PartNumber: 2,
+              ETag: "test2"
+            }
+          ]
+        }
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   describe "#complete_external_upload" do
     before do
       sign_in(user)

@@ -385,6 +385,7 @@ export default Mixin.create({
                 key: data.key,
               };
             })
+            // TODO (martin) gracefully handle errors
             // eslint-disable-next-line
             .catch((err) => alert(err))
         );
@@ -404,6 +405,7 @@ export default Mixin.create({
             .then((data) => {
               return { presignedUrls: data.presigned_urls };
             })
+            // TODO (martin) gracefully handle errors
             // eslint-disable-next-line
             .catch((err) => alert(err))
         );
@@ -423,9 +425,31 @@ export default Mixin.create({
             .then((responseData) => {
               return responseData;
             })
+            // TODO (martin) gracefully handle errors
             // eslint-disable-next-line
             .catch((err) => alert(err))
         );
+      },
+
+      abortMultipartUpload(file, { key, uploadId }) {
+        // if the user cancels the upload before the key and uploadId
+        // are stored from the createMultipartUpload response then they
+        // will not be set, and we don't have to abort the upload because
+        // it will not exist yet
+        if (!key || !uploadId) {
+          return;
+        }
+
+        ajax(getURL("/uploads/abort-multipart.json"), {
+          type: "POST",
+          headers,
+          data: JSON.stringify({
+            external_upload_identifier: uploadId,
+          }),
+        })
+          // TODO (martin) gracefully handle errors
+          // eslint-disable-next-line
+          .catch((err) => alert(err));
       },
 
       // we will need a listParts function at some point when we want to

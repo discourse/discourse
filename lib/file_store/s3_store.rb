@@ -306,16 +306,13 @@ module FileStore
 
     # TODO (martin): clean up all of these disparate methods added for multipart
 
-    # def create_multipart_upload(filename, content_type, key_prefix = "uppy_test")
-    #   key = "#{key_prefix}/#{SecureRandom.hex(4)}/#{filename}"
-    #   response = s3_helper.s3_client.create_multipart_upload(
-    #     acl: "private",
-    #     bucket: s3_bucket_name,
-    #     key: key,
-    #     content_type: content_type
-    #   )
-    #   { upload_id: response.upload_id, key: key }
-    # end
+    def abort_multipart_upload(key:, upload_id:)
+      s3_helper.s3_client.abort_multipart_upload(
+        bucket: s3_bucket_name,
+        key: key,
+        upload_id: upload_id
+      )
+    end
 
     def create_multipart_upload(file_name, content_type)
       key = temporary_upload_path(file_name)

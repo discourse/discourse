@@ -549,6 +549,7 @@ Discourse::Application.routes.draw do
     post "uploads/create-multipart" => "uploads#create_multipart"
     post "uploads/list-multipart-upload-parts" => "uploads#list_multipart_upload_parts"
     post "uploads/complete-multipart" => "uploads#complete_multipart"
+    post "uploads/abort-multipart" => "uploads#abort_multipart"
     post "uploads/batch-presign-multipart-parts" => "uploads#batch_presign_multipart_parts"
 
     # used to download original images
