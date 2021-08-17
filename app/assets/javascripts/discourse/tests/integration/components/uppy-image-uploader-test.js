@@ -19,7 +19,7 @@ discourseModule(
       {{uppy-image-uploader imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}
     `,
 
-      async test(assert) {
+      async skip(assert) {
         assert.equal(
           count(".d-icon-far-image"),
           1,
