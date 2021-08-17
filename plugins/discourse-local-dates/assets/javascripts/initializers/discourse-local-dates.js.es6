@@ -130,53 +130,53 @@ function buildHtmlPreview(element, siteSettings) {
 export default {
   name: "discourse-local-dates",
 
-  showDatePopover(event) {
-    const owner = getOwner(this);
-    if (owner.isDestroyed || owner.isDestroying) {
-      return;
-    }
-
-    const siteSettings = owner.lookup("site-settings:main");
-    if (event?.target?.classList?.contains("discourse-local-date")) {
-      showPopover(event, {
-        htmlContent: buildHtmlPreview(event.target, siteSettings),
-      });
-    }
-  },
-
-  hideDatePopover(event) {
-    if (event?.target?.classList?.contains("discourse-local-date")) {
-      hidePopover(event);
-    }
-  },
+  // showDatePopover(event) {
+  //   const owner = getOwner(this);
+  //   if (owner.isDestroyed || owner.isDestroying) {
+  //     return;
+  //   }
+  //
+  //   const siteSettings = owner.lookup("site-settings:main");
+  //   if (event?.target?.classList?.contains("discourse-local-date")) {
+  //     showPopover(event, {
+  //       htmlContent: buildHtmlPreview(event.target, siteSettings),
+  //     });
+  //   }
+  // },
+  //
+  // hideDatePopover(event) {
+  //   if (event?.target?.classList?.contains("discourse-local-date")) {
+  //     hidePopover(event);
+  //   }
+  // },
 
   initialize(container) {
-    const router = container.lookup("router:main");
-    router.on("routeWillChange", hidePopover);
-
-    if (!isTesting()) {
-      window.addEventListener("click", this.showDatePopover);
-      window.addEventListener("mouseover", this.showDatePopover);
-      window.addEventListener("mouseout", this.hideDatePopover);
-    }
-
-    const siteSettings = container.lookup("site-settings:main");
-    if (siteSettings.discourse_local_dates_enabled) {
-      $.fn.applyLocalDates = function () {
-        deprecated(
-          "`$.applyLocalDates()` is deprecated, import and use `applyLocalDates()` instead."
-        );
-
-        return applyLocalDates(this.toArray(), siteSettings);
-      };
-
-      withPluginApi("0.8.8", initializeDiscourseLocalDates);
-    }
+    // const router = container.lookup("router:main");
+    // router.on("routeWillChange", hidePopover);
+    //
+    // if (!isTesting()) {
+    //   window.addEventListener("click", this.showDatePopover);
+    //   window.addEventListener("mouseover", this.showDatePopover);
+    //   window.addEventListener("mouseout", this.hideDatePopover);
+    // }
+    //
+    // const siteSettings = container.lookup("site-settings:main");
+    // if (siteSettings.discourse_local_dates_enabled) {
+    //   $.fn.applyLocalDates = function () {
+    //     deprecated(
+    //       "`$.applyLocalDates()` is deprecated, import and use `applyLocalDates()` instead."
+    //     );
+    //
+    //     return applyLocalDates(this.toArray(), siteSettings);
+    //   };
+    //
+    //   withPluginApi("0.8.8", initializeDiscourseLocalDates);
+    // }
   },
 
   teardown() {
-    window.removeEventListener("click", this.showDatePopover);
-    window.removeEventListener("mouseover", this.showDatePopover);
-    window.removeEventListener("mouseout", this.hideDatePopover);
+    // window.removeEventListener("click", this.showDatePopover);
+    // window.removeEventListener("mouseover", this.showDatePopover);
+    // window.removeEventListener("mouseout", this.hideDatePopover);
   },
 };
