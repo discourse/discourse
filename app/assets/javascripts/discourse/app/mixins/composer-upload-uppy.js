@@ -398,7 +398,6 @@ export default Mixin.create({
             headers,
             data: JSON.stringify({
               part_numbers: partData.partNumbers,
-              key: partData.key,
               unique_identifier: file.meta.unique_identifier,
             }),
           })

@@ -55,6 +55,7 @@ export default class MediaOptimizationWorkerService extends Service {
       this.logIfDebug(`Transforming ${file.name}`);
 
       this.currentComposerUploadData = data;
+      // TODO (martin) Use something better than the fileName for the key
       this.promiseResolvers[file.name] = resolve;
 
       let imageData;
@@ -120,10 +121,12 @@ export default class MediaOptimizationWorkerService extends Service {
           );
 
           if (usingUppy) {
+            // TODO (martin) Use something better than the fileName for the key
             this.promiseResolvers[optimizedFile.name](optimizedFile);
           } else {
             let data = this.currentComposerUploadData;
             data.files[data.index] = optimizedFile;
+            // TODO (martin) Use something better than the fileName for the key
             this.promiseResolvers[optimizedFile.name](data);
           }
 
@@ -131,8 +134,10 @@ export default class MediaOptimizationWorkerService extends Service {
         case "error":
           this.stopWorker();
           if (usingUppy) {
+            // TODO (martin) Use something better than the fileName for the key
             this.promiseResolvers[e.data.fileName]();
           } else {
+            // TODO (martin) Use something better than the fileName for the key
             this.promiseResolvers[e.data.fileName](
               this.currentComposerUploadData
             );

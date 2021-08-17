@@ -332,7 +332,6 @@ class UploadsController < ApplicationController
     return render_404 if !SiteSetting.enable_direct_s3_uploads
 
     part_numbers = params.require(:part_numbers)
-    key = params.require(:key)
     unique_identifier = params.require(:unique_identifier)
 
     RateLimiter.new(
@@ -357,7 +356,7 @@ class UploadsController < ApplicationController
     part_numbers.each do |part_number|
       presigned_urls[part_number] = Discourse.store.presign_multipart_upload_part(
         upload_id: external_upload_stub.external_upload_identifier,
-        key: key,
+        key: external_upload_stub.key,
         part_number: part_number
       )
     end

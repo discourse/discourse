@@ -944,15 +944,13 @@ describe UploadsController do
         stub_list_multipart_request
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          part_numbers: [-1, 0, 1, 2, 3, 4],
-          key: "test/key.png"
+          part_numbers: [-1, 0, 1, 2, 3, 4]
         }
         expect(response.status).to eq(400)
         expect(response.body).to include("Part numbers should be a list of numbers")
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          part_numbers: [3, 4, "blah"],
-          key: "test/key.png"
+          part_numbers: [3, 4, "blah"]
         }
         expect(response.status).to eq(400)
         expect(response.body).to include("Part numbers should be a list of numbers")
@@ -961,8 +959,7 @@ describe UploadsController do
       it "returns 404 when the upload stub does not exist" do
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: "unknown",
-          part_numbers: [1, 2, 3],
-          key: "test/key.png"
+          part_numbers: [1, 2, 3]
         }
         expect(response.status).to eq(404)
       end
@@ -971,8 +968,7 @@ describe UploadsController do
         external_upload_stub.update!(created_by: Fabricate(:user))
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          part_numbers: [1, 2, 3],
-          key: "test/key.png"
+          part_numbers: [1, 2, 3]
         }
         expect(response.status).to eq(404)
       end
@@ -981,8 +977,7 @@ describe UploadsController do
         FileStore::S3Store.any_instance.stubs(:list_multipart_upload_parts).raises(Aws::S3::Errors::NoSuchUpload.new("test", "test"))
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          part_numbers: [1, 2, 3],
-          key: "test/key.png"
+          part_numbers: [1, 2, 3]
         }
         expect(response.status).to eq(404)
       end
@@ -991,8 +986,7 @@ describe UploadsController do
         stub_list_multipart_request
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          part_numbers: [2, 3, 4],
-          key: external_upload_stub.key
+          part_numbers: [2, 3, 4]
         }
 
         expect(response.status).to eq(200)
@@ -1011,13 +1005,11 @@ describe UploadsController do
         stub_const(UploadsController, "BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE", 1) do
           post "/uploads/batch-presign-multipart-parts.json", params: {
             unique_identifier: external_upload_stub.unique_identifier,
-            part_numbers: [1, 2, 3],
-            key: "test/key.png"
+            part_numbers: [1, 2, 3]
           }
           post "/uploads/batch-presign-multipart-parts.json", params: {
             unique_identifier: external_upload_stub.unique_identifier,
-            part_numbers: [1, 2, 3],
-            key: "test/key.png"
+            part_numbers: [1, 2, 3]
           }
         end
         expect(response.status).to eq(429)
@@ -1032,8 +1024,7 @@ describe UploadsController do
       it "returns 404" do
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          part_numbers: [1, 2, 3],
-          key: "test/key.png"
+          part_numbers: [1, 2, 3]
         }
         expect(response.status).to eq(404)
       end
