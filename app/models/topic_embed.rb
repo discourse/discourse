@@ -27,7 +27,7 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   # Import an article from a source (RSS/Atom/Other)
-  def self.import(user, url, title, contents)
+  def self.import(user, url, title, contents, category_id: nil)
     return unless url =~ /^https?\:\/\//
 
     if SiteSetting.embed_truncate
@@ -58,7 +58,7 @@ class TopicEmbed < ActiveRecord::Base
           raw: absolutize_urls(url, contents),
           skip_validations: true,
           cook_method: cook_method,
-          category: eh.try(:category_id)
+          category: category_id || eh.try(:category_id)
         }
         if SiteSetting.embed_unlisted?
           create_args[:visible] = false
