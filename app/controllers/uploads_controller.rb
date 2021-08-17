@@ -26,11 +26,6 @@ class UploadsController < ApplicationController
   COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
   BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE = 10
 
-  #   rescue_from Exception do |e|
-  #     binding.pry
-  #     puts e
-  #   end
-
   def external_store_check
     return render_404 if !Discourse.store.external?
   end
@@ -217,6 +212,7 @@ class UploadsController < ApplicationController
     ).performed!
 
     file_name = params.require(:file_name)
+    file_size = params.require(:file_size)
     type = params.require(:type)
 
     # don't want people posting arbitrary S3 metadata so we just take the
@@ -242,7 +238,8 @@ class UploadsController < ApplicationController
       key: key,
       created_by: current_user,
       original_filename: file_name,
-      upload_type: type
+      upload_type: type,
+      filesize: file_size
     )
 
     render json: { url: url, key: key, unique_identifier: upload_stub.unique_identifier }
@@ -271,6 +268,9 @@ class UploadsController < ApplicationController
         else
           render_json_error(upload.errors.to_hash.values.flatten, status: 422)
         end
+      rescue ExternalUploadManager::SizeMismatchError => err
+        debug_upload_error(err, "upload.size_mismatch_failure", additional_detail: err.message)
+        render_json_error(I18n.t("upload.failed"), status: 422)
       rescue ExternalUploadManager::ChecksumMismatchError => err
         debug_upload_error(err, "upload.checksum_mismatch_failure")
         render_json_error(I18n.t("upload.failed"), status: 422)
@@ -297,6 +297,7 @@ class UploadsController < ApplicationController
     ).performed!
 
     file_name = params.require(:file_name)
+    file_size = params.require(:file_size)
     upload_type = params.require(:upload_type)
     content_type = params.require(:content_type)
 
@@ -311,7 +312,8 @@ class UploadsController < ApplicationController
       original_filename: file_name,
       upload_type: upload_type,
       external_upload_identifier: multipart_upload[:upload_id],
-      multipart: true
+      multipart: true,
+      filesize: file_size
     )
 
     render json: {
@@ -378,7 +380,7 @@ class UploadsController < ApplicationController
         upload_id: external_upload_stub.external_upload_identifier, key: external_upload_stub.key
       )
     rescue Aws::S3::Errors::NoSuchUpload => err
-      # TODO (martin) Add debug_upload_error message
+      debug_upload_error(err, "upload.external_upload_not_found", { additional_detail: "path: #{external_upload_stub.key}" })
       return false
     end
     true
@@ -421,6 +423,7 @@ class UploadsController < ApplicationController
       part[:part_number]
     end
 
+    # TODO (martin) Handle S3 errors gracefully
     complete_response = Discourse.store.complete_multipart_upload(
       upload_id: external_upload_stub.external_upload_identifier,
       key: external_upload_stub.key,
@@ -521,8 +524,8 @@ class UploadsController < ApplicationController
     send_file(file_path, opts)
   end
 
-  def debug_upload_error(translation_key, err)
+  def debug_upload_error(err, translation_key, translation_params = {})
     return if !SiteSetting.enable_upload_debug_mode
-    Discourse.warn_exception(err, message: I18n.t(translation_key))
+    Discourse.warn_exception(err, message: I18n.t(translation_key, translation_params))
   end
 end

@@ -40,7 +40,7 @@ RSpec.describe ExternalUploadManager do
 
   describe "#promote_to_upload!" do
     context "when stubbed upload is < DOWNLOAD_LIMIT (small enough to download + generate sha)" do
-      let!(:external_upload_stub) { Fabricate(:image_external_upload_stub, created_by: user) }
+      let!(:external_upload_stub) { Fabricate(:image_external_upload_stub, created_by: user, filesize: object_size) }
       let(:object_size) { 1.megabyte }
       let(:object_file) { logo_file }
 
@@ -118,6 +118,22 @@ RSpec.describe ExternalUploadManager do
             expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
             expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:failed])
           end
+        end
+      end
+
+      context "when the downloaded file size does not match the expected file size for the upload stub" do
+        before do
+          external_upload_stub.update(filesize: 10)
+        end
+
+        it "raises an error, deletes the file immediately, and prevents the user from uploading external files for a few minutes" do
+          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::SizeMismatchError)
+          expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:failed])
+          expect(Discourse.redis.get("ban_user_from_external_uploads_#{external_upload_stub.created_by_id}")).to eq("1")
+          expect(WebMock).to have_requested(
+            :delete,
+            "#{upload_base_url}/#{external_upload_stub.key}"
+          )
         end
       end
     end

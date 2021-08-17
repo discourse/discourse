@@ -2,10 +2,12 @@
 
 class ExternalUploadManager
   DOWNLOAD_LIMIT = 100.megabytes
+  SIZE_MISMATCH_BAN_MINUTES = 5
 
   class ChecksumMismatchError < StandardError; end
   class DownloadFailedError < StandardError; end
   class CannotPromoteError < StandardError; end
+  class SizeMismatchError < StandardError; end
 
   attr_reader :external_upload_stub
 
@@ -31,6 +33,17 @@ class ExternalUploadManager
     # variable as well to check.
     tempfile = nil
     should_download = external_size < DOWNLOAD_LIMIT
+
+    # We require that the file size is specified ahead of time, and compare
+    # it here to make sure that people are not uploading excessively large
+    # files to the external provider. If this happens, the user will be banned
+    # from uploading to the external provider for N minutes.
+    if external_size != external_upload_stub.filesize
+      external_upload_stub.created_by.ban_from_external_uploads!(ban_minutes: SIZE_MISMATCH_BAN_MINUTES)
+      Discourse.store.delete_file(external_upload_stub.key)
+      raise SizeMismatchError.new("expected: #{external_upload_stub.filesize}, actual: #{external_size}")
+    end
+
     if should_download
       tempfile = download(external_upload_stub.key, external_upload_stub.upload_type)
 

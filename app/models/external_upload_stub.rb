@@ -8,6 +8,10 @@ class ExternalUploadStub < ActiveRecord::Base
 
   belongs_to :created_by, class_name: 'User'
 
+  validates :filesize, numericality: {
+    allow_nil: false, only_integer: true, greater_than_or_equal_to: 1
+  }
+
   scope :expired_created, -> {
     where(
       "status = ? AND created_at <= ?",

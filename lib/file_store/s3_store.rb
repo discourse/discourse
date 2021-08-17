@@ -102,13 +102,19 @@ module FileStore
           path,
           options: options
         )
-        s3_helper.delete_object(opts[:existing_external_upload_key])
+        delete_file(path)
       else
         path, etag = s3_helper.upload(file, path, options)
       end
 
       # return the upload url and etag
       [File.join(absolute_base_url, path), etag]
+    end
+
+    def delete_file(path)
+      # delete the object outright without moving to tombstone,
+      # not recommended for most use cases
+      s3_helper.delete_object(path)
     end
 
     def remove_file(url, path)

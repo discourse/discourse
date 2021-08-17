@@ -721,7 +721,9 @@ describe UploadsController do
       end
 
       it "generates a presigned URL and creates an external upload stub" do
-        post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
+        post "/uploads/generate-presigned-put.json", params: {
+          file_name: "test.png", type: "card_background", file_size: 1024
+        }
         expect(response.status).to eq(200)
 
         result = response.parsed_body
@@ -730,7 +732,8 @@ describe UploadsController do
           unique_identifier: result["unique_identifier"],
           original_filename: "test.png",
           created_by: user,
-          upload_type: "card_background"
+          upload_type: "card_background",
+          filesize: 1024
         )
         expect(external_upload_stub.exists?).to eq(true)
         expect(result["key"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
@@ -742,6 +745,7 @@ describe UploadsController do
         post "/uploads/generate-presigned-put.json", {
           params: {
             file_name: "test.png",
+            file_size: 1024,
             type: "card_background",
             metadata: {
               "sha1-checksum" => "testing",
@@ -761,8 +765,8 @@ describe UploadsController do
         RateLimiter.clear_all!
 
         stub_const(UploadsController, "PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE", 1) do
-          post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
-          post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
+          post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background", file_size: 1024 }
+          post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background", file_size: 1024 }
         end
         expect(response.status).to eq(429)
       end
@@ -774,7 +778,7 @@ describe UploadsController do
       end
 
       it "returns 404" do
-        post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background" }
+        post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background", file_size: 1024 }
         expect(response.status).to eq(404)
       end
     end
@@ -822,6 +826,7 @@ describe UploadsController do
         post "/uploads/create-multipart.json", {
           params: {
             file_name: "test.png",
+            file_size: 1024,
             upload_type: "composer",
             content_type: "image/png"
           }
@@ -837,7 +842,8 @@ describe UploadsController do
           upload_type: "composer",
           key: result["key"],
           external_upload_identifier: mock_multipart_upload_id,
-          multipart: true
+          multipart: true,
+          filesize: 1024
         )
         expect(external_upload_stub.exists?).to eq(true)
         expect(result["key"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
@@ -851,8 +857,18 @@ describe UploadsController do
 
         stub_create_multipart_request
         stub_const(UploadsController, "CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
-          post "/uploads/create-multipart.json", params: { file_name: "test.png", upload_type: "composer", content_type: "image/png" }
-          post "/uploads/create-multipart.json", params: { file_name: "test.png", upload_type: "composer", content_type: "image/png" }
+          post "/uploads/create-multipart.json", params: {
+            file_name: "test.png",
+            upload_type: "composer",
+            content_type: "image/png",
+            file_size: 1024
+          }
+          post "/uploads/create-multipart.json", params: {
+            file_name: "test.png",
+            upload_type: "composer",
+            content_type: "image/png",
+            file_size: 1024
+          }
         end
         expect(response.status).to eq(429)
       end
@@ -864,7 +880,12 @@ describe UploadsController do
       end
 
       it "returns 404" do
-        post "/uploads/create-multipart.json", params: { file_name: "test.png", upload_type: "composer", content_type: "image/png" }
+        post "/uploads/create-multipart.json", params: {
+          file_name: "test.png",
+          upload_type: "composer",
+          content_type: "image/png",
+          file_size: 1024
+        }
         expect(response.status).to eq(404)
       end
     end
@@ -1230,6 +1251,13 @@ describe UploadsController do
 
       it "handles ChecksumMismatchError" do
         ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::ChecksumMismatchError)
+        post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+      end
+
+      it "handles SizeMismatchError" do
+        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::SizeMismatchError.new("expected: 10, actual: 1000"))
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
