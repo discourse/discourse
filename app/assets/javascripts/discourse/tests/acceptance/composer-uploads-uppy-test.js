@@ -61,7 +61,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     simultaneous_uploads: 2,
   });
 
-  test("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
+  skip("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
@@ -87,7 +87,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
-  skip("should error if too many files are added at once", async function (assert) {
+  test("should error if too many files are added at once", async function (assert) {
     await visit("/");
     await click("#create-topic");
     const appEvents = loggedInUser().appEvents;
