@@ -224,7 +224,15 @@ module FileStore
 
     def signed_url_for_temporary_upload(file_name, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
       key = temporary_upload_path(file_name)
-      presigned_put_url(key, expires_in: expires_in, metadata: metadata)
+      presigned_url(
+        key,
+        method: :put_object,
+        expires_in: expires_in,
+        opts: {
+          metadata: metadata,
+          acl: "private"
+        }
+      )
     end
 
     def temporary_upload_path(file_name)
@@ -304,9 +312,7 @@ module FileStore
       FileUtils.mv(old_upload_path, public_upload_path) if old_upload_path
     end
 
-    # TODO (martin): clean up all of these disparate methods added for multipart
-
-    def abort_multipart_upload(key:, upload_id:)
+    def abort_multipart(key:, upload_id:)
       s3_helper.s3_client.abort_multipart_upload(
         bucket: s3_bucket_name,
         key: key,
@@ -314,7 +320,7 @@ module FileStore
       )
     end
 
-    def create_multipart_upload(file_name, content_type)
+    def create_multipart(file_name, content_type)
       key = temporary_upload_path(file_name)
       response = s3_helper.s3_client.create_multipart_upload(
         acl: "private",
@@ -325,34 +331,28 @@ module FileStore
       { upload_id: response.upload_id, key: key }
     end
 
-    def presign_multipart_upload_part(upload_id:, key:, part_number:)
-      signer = Aws::S3::Presigner.new(client: s3_helper.s3_client)
-      signer.presigned_url(
-        :upload_part,
-        bucket: s3_bucket_name,
-        key: key,
-        part_number: part_number,
-        upload_id: upload_id,
-        expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS
+    def presign_multipart_part(upload_id:, key:, part_number:)
+      presigned_url(
+        key,
+        method: :upload_part,
+        expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+        opts: {
+          part_number: part_number,
+          upload_id: upload_id
+        }
       )
     end
 
-    def list_multipart_upload_parts(upload_id:, key:)
-      response = s3_helper.s3_client.list_parts(
+    def list_multipart_parts(upload_id:, key:)
+      s3_helper.s3_client.list_parts(
         bucket: s3_bucket_name,
         key: key,
         upload_id: upload_id
       )
-
-      # TODO (martin): maybe do this in a serializer instead, or on JS side because
-      # the mapping is only for uppy's benefit really
-      response.parts.map do |part|
-        { PartNumber: part.part_number, Size: part.size, ETag: part.etag }
-      end
     end
 
-    def complete_multipart_upload(upload_id:, key:, parts:)
-      response = s3_helper.s3_client.complete_multipart_upload(
+    def complete_multipart(upload_id:, key:, parts:)
+      s3_helper.s3_client.complete_multipart_upload(
         bucket: s3_bucket_name,
         key: key,
         upload_id: upload_id,
@@ -364,15 +364,20 @@ module FileStore
 
     private
 
-    def presigned_put_url(key, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
+    def presigned_url(
+      key,
+      method:,
+      expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+      opts: {}
+    )
       signer = Aws::S3::Presigner.new(client: s3_helper.s3_client)
       signer.presigned_url(
-        :put_object,
-        bucket: s3_bucket_name,
-        key: key,
-        acl: "private",
-        expires_in: expires_in,
-        metadata: metadata
+        method,
+        {
+          bucket: s3_bucket_name,
+          key: key,
+          expires_in: expires_in,
+        }.merge(opts)
       )
     end
 

@@ -807,7 +807,7 @@ describe UploadsController do
       end
 
       it "returns 422 when the create request errors" do
-        FileStore::S3Store.any_instance.stubs(:create_multipart_upload).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+        FileStore::S3Store.any_instance.stubs(:create_multipart).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
         post "/uploads/create-multipart.json", {
           params: {
             file_name: "test.png",
@@ -987,7 +987,7 @@ describe UploadsController do
       end
 
       it "returns 404 when the multipart upload does not exist" do
-        FileStore::S3Store.any_instance.stubs(:list_multipart_upload_parts).raises(Aws::S3::Errors::NoSuchUpload.new("test", "test"))
+        FileStore::S3Store.any_instance.stubs(:list_multipart_parts).raises(Aws::S3::Errors::NoSuchUpload.new("test", "test"))
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
           part_numbers: [1, 2, 3]
@@ -1135,7 +1135,7 @@ describe UploadsController do
       end
 
       it "returns 422 when the compelte request errors" do
-        FileStore::S3Store.any_instance.stubs(:complete_multipart_upload).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+        FileStore::S3Store.any_instance.stubs(:complete_multipart).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
         stub_list_multipart_request
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
@@ -1154,7 +1154,7 @@ describe UploadsController do
       end
 
       it "returns 404 when the multipart upload does not exist" do
-        FileStore::S3Store.any_instance.stubs(:list_multipart_upload_parts).raises(Aws::S3::Errors::NoSuchUpload.new("test", "test"))
+        FileStore::S3Store.any_instance.stubs(:list_multipart_parts).raises(Aws::S3::Errors::NoSuchUpload.new("test", "test"))
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
           parts: [{ PartNumber: 1, ETag: "test1" }]
@@ -1291,7 +1291,7 @@ describe UploadsController do
       end
 
       it "returns 422 when the abort request errors" do
-        FileStore::S3Store.any_instance.stubs(:abort_multipart_upload).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+        FileStore::S3Store.any_instance.stubs(:abort_multipart).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
         post "/uploads/abort-multipart.json", params: {
           external_upload_identifier: external_upload_stub.external_upload_identifier
         }

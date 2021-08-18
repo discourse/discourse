@@ -307,7 +307,7 @@ class UploadsController < ApplicationController
     content_type = params.require(:content_type)
 
     begin
-      multipart_upload = Discourse.store.create_multipart_upload(
+      multipart_upload = Discourse.store.create_multipart(
         file_name, content_type
       )
     rescue Aws::S3::Errors::ServiceError => err
@@ -358,7 +358,7 @@ class UploadsController < ApplicationController
 
     presigned_urls = {}
     part_numbers.each do |part_number|
-      presigned_urls[part_number] = Discourse.store.presign_multipart_upload_part(
+      presigned_urls[part_number] = Discourse.store.presign_multipart_part(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key,
         part_number: part_number
@@ -378,7 +378,7 @@ class UploadsController < ApplicationController
 
   def multipart_upload_exists?(external_upload_stub)
     begin
-      Discourse.store.list_multipart_upload_parts(
+      Discourse.store.list_multipart_parts(
         upload_id: external_upload_stub.external_upload_identifier, key: external_upload_stub.key
       )
     rescue Aws::S3::Errors::NoSuchUpload => err
@@ -404,7 +404,7 @@ class UploadsController < ApplicationController
     return render_404 if external_upload_stub.blank?
 
     begin
-      abort_response = Discourse.store.abort_multipart_upload(
+      abort_response = Discourse.store.abort_multipart(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key
       )
@@ -452,7 +452,7 @@ class UploadsController < ApplicationController
     end
 
     begin
-      complete_response = Discourse.store.complete_multipart_upload(
+      complete_response = Discourse.store.complete_multipart(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key,
         parts: parts
