@@ -3444,7 +3444,7 @@ en:
       unseen:
         title: "Unseen"
         lower_title: "unseen"
-        help: "topics created in the last few days and topics you are currently watching or tracking with unread posts"
+        help: "new topics and topics you are currently watching or tracking with unread posts"
       new:
         lower_title_with_count:
           one: "%{count} new"
