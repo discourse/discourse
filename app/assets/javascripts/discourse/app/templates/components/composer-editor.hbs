@@ -20,13 +20,6 @@
   disabled=disableTextarea
   outletArgs=(hash composer=composer editorType="composer")}}
 
-{{#if experimentalComposerUploads}}
-  <br>
-  <div class="alert alert-warning">
-    Experimental uploader being used!
-  </div>
-{{/if}}
-
 {{#if allowUpload}}
   {{#if acceptsAllFormats}}
     <input type="file" id="file-uploader" multiple>
