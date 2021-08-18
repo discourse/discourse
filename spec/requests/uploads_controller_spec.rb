@@ -806,6 +806,19 @@ describe UploadsController do
         expect(response.status).to eq(400)
       end
 
+      it "returns 422 when the create request errors" do
+        FileStore::S3Store.any_instance.stubs(:create_multipart_upload).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+        post "/uploads/create-multipart.json", {
+          params: {
+            file_name: "test.png",
+            file_size: 1024,
+            upload_type: "composer",
+            content_type: "image/png"
+          }
+        }
+        expect(response.status).to eq(422)
+      end
+
       def stub_create_multipart_request
         create_multipart_result = <<~BODY
         <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
@@ -1121,6 +1134,16 @@ describe UploadsController do
         expect(response.status).to eq(404)
       end
 
+      it "returns 422 when the compelte request errors" do
+        FileStore::S3Store.any_instance.stubs(:complete_multipart_upload).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+        stub_list_multipart_request
+        post "/uploads/complete-multipart.json", params: {
+          unique_identifier: external_upload_stub.unique_identifier,
+          parts: [{ PartNumber: 1, ETag: "test1" }]
+        }
+        expect(response.status).to eq(422)
+      end
+
       it "returns 404 when the upload stub does not belong to the user" do
         external_upload_stub.update!(created_by: Fabricate(:user))
         post "/uploads/complete-multipart.json", params: {
@@ -1265,6 +1288,14 @@ describe UploadsController do
 
         expect(response.status).to eq(200)
         expect(ExternalUploadStub.find_by(id: external_upload_stub.id)).to eq(nil)
+      end
+
+      it "returns 422 when the abort request errors" do
+        FileStore::S3Store.any_instance.stubs(:abort_multipart_upload).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
+        post "/uploads/abort-multipart.json", params: {
+          external_upload_identifier: external_upload_stub.external_upload_identifier
+        }
+        expect(response.status).to eq(422)
       end
 
       it "rate limits" do

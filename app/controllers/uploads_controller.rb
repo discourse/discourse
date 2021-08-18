@@ -306,10 +306,14 @@ class UploadsController < ApplicationController
     upload_type = params.require(:upload_type)
     content_type = params.require(:content_type)
 
-    # TODO(martin): handle S3 errors gracefully
-    multipart_upload = Discourse.store.create_multipart_upload(
-      file_name, content_type
-    )
+    begin
+      multipart_upload = Discourse.store.create_multipart_upload(
+        file_name, content_type
+      )
+    rescue Aws::S3::Errors::ServiceError => err
+      debug_upload_error(err, "upload.create_mutlipart_failure")
+      return render_json_error(I18n.t("upload.failed"), status: 422)
+    end
 
     upload_stub = ExternalUploadStub.create!(
       key: multipart_upload[:key],
@@ -399,11 +403,16 @@ class UploadsController < ApplicationController
     )
     return render_404 if external_upload_stub.blank?
 
-    # TODO (martin) Handle S3 errors gracefully
-    abort_response = Discourse.store.abort_multipart_upload(
-      upload_id: external_upload_stub.external_upload_identifier,
-      key: external_upload_stub.key
-    )
+    begin
+      abort_response = Discourse.store.abort_multipart_upload(
+        upload_id: external_upload_stub.external_upload_identifier,
+        key: external_upload_stub.key
+      )
+    rescue Aws::S3::Errors::ServiceError => err
+      debug_upload_error(err, "upload.abort_mutlipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}")
+      return render_json_error(I18n.t("upload.failed"), status: 422)
+    end
+
     external_upload_stub.destroy!
 
     render json: success_json
@@ -442,17 +451,17 @@ class UploadsController < ApplicationController
       part[:part_number]
     end
 
-    # TODO (martin) Handle S3 errors gracefully
-    complete_response = Discourse.store.complete_multipart_upload(
-      upload_id: external_upload_stub.external_upload_identifier,
-      key: external_upload_stub.key,
-      parts: parts
-    )
+    begin
+      complete_response = Discourse.store.complete_multipart_upload(
+        upload_id: external_upload_stub.external_upload_identifier,
+        key: external_upload_stub.key,
+        parts: parts
+      )
+    rescue Aws::S3::Errors::ServiceError => err
+      debug_upload_error(err, "upload.complete_mutlipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}")
+      return render_json_error(I18n.t("upload.failed"), status: 422)
+    end
 
-    # TODO (martin) This should only go ahead if the completion of the multipart
-    # upload was successful, otherwise there is nothing to move.
-    #
-    # Check complete_response
     complete_external_upload_via_manager(external_upload_stub)
   end
 
