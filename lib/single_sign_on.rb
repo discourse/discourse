@@ -50,6 +50,10 @@ class SingleSignOn
     @nonce_expiry_time = v
   end
 
+  def self.used_nonce_expiry_time
+    24.hours
+  end
+
   attr_accessor(*ACCESSORS)
   attr_writer :sso_secret, :sso_url
 
