@@ -5,6 +5,7 @@ import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
+import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -369,37 +370,45 @@ createWidget("search-menu-assistant", {
 
     const content = [];
     const { fullTerm, suggestionKeyword } = attrs;
-    const prefix = fullTerm.split(suggestionKeyword)[0].trim() || null;
+    let prefix = fullTerm.split(suggestionKeyword)[0].trim() || "";
+
+    if (prefix.length) {
+      prefix = `${prefix} `;
+    }
 
     switch (suggestionKeyword) {
       case "#":
-        attrs.results.forEach((category) => {
-          const fullSlug = category.parentCategory
-            ? `#${category.parentCategory.slug}:${category.slug}`
-            : `#${category.slug}`;
+        attrs.results.forEach((item) => {
+          if (item.model) {
+            const fullSlug = item.model.parentCategory
+              ? `#${item.model.parentCategory.slug}:${item.model.slug}`
+              : `#${item.model.slug}`;
 
-          const slug = prefix ? `${prefix} ${fullSlug} ` : `${fullSlug} `;
-
-          content.push(
-            this.attach("search-menu-assistant-item", {
-              prefix: prefix,
-              category,
-              slug,
-            })
-          );
+            content.push(
+              this.attach("search-menu-assistant-item", {
+                prefix,
+                category: item.model,
+                slug: `${prefix}${fullSlug} `,
+              })
+            );
+          } else {
+            content.push(
+              this.attach("search-menu-assistant-item", {
+                prefix,
+                tag: item.name,
+                slug: `${prefix}#${item.name} `,
+              })
+            );
+          }
         });
         break;
       case "@":
         attrs.results.forEach((user) => {
-          const slug = prefix
-            ? `${prefix} @${user.username} `
-            : `@${user.username} `;
-
           content.push(
             this.attach("search-menu-assistant-item", {
-              prefix: prefix,
+              prefix,
               user,
-              slug,
+              slug: `${prefix}@${user.username} `,
             })
           );
         });
@@ -407,8 +416,11 @@ createWidget("search-menu-assistant", {
       default:
         suggestionShortcuts.forEach((item) => {
           if (item.includes(suggestionKeyword)) {
-            const slug = prefix ? `${prefix} ${item} ` : `${item} `;
-            content.push(this.attach("search-menu-assistant-item", { slug }));
+            content.push(
+              this.attach("search-menu-assistant-item", {
+                slug: `${prefix}${item} `,
+              })
+            );
           }
         });
         break;
@@ -422,6 +434,7 @@ createWidget("search-menu-assistant-item", {
   tagName: "li.search-menu-assistant-item",
 
   html(attrs) {
+    const prefix = attrs.prefix?.trim();
     if (attrs.category) {
       return h(
         "a.widget-link.search-link",
@@ -431,12 +444,26 @@ createWidget("search-menu-assistant-item", {
           },
         },
         [
-          h("span.search-item-prefix", attrs.prefix),
+          h("span.search-item-prefix", prefix),
           this.attach("category-link", {
             category: attrs.category,
             allowUncategorized: true,
             recursive: true,
           }),
+        ]
+      );
+    } else if (attrs.tag) {
+      return h(
+        "a.widget-link.search-link",
+        {
+          attributes: {
+            href: getURL(`/tag/${attrs.tag}`),
+          },
+        },
+        [
+          h("span.search-item-prefix", prefix),
+          iconNode("tag"),
+          h("span.search-item-tag", attrs.tag),
         ]
       );
     } else if (attrs.user) {
@@ -456,7 +483,7 @@ createWidget("search-menu-assistant-item", {
           },
         },
         [
-          h("span.search-item-prefix", attrs.prefix),
+          h("span.search-item-prefix", prefix),
           h("span.search-item-user", userResult),
         ]
       );

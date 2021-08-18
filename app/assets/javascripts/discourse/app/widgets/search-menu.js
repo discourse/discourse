@@ -1,5 +1,4 @@
 import { isValidSearchTerm, searchForTerm } from "discourse/lib/search";
-import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -7,6 +6,8 @@ import { get } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { Promise } from "rsvp";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
@@ -59,9 +60,15 @@ const SearchHelper = {
           ""
         );
 
-        searchData.suggestionResults = Category.search(categorySearchTerm);
-        searchData.suggestionKeyword = "#";
-        widget.scheduleRerender();
+        const categoryTagSearch = searchCategoryTag(
+          categorySearchTerm,
+          widget.siteSettings
+        );
+        Promise.resolve(categoryTagSearch).then((results) => {
+          searchData.suggestionResults = results;
+          searchData.suggestionKeyword = "#";
+          widget.scheduleRerender();
+        });
       } else if (matchSuggestions.type === "username") {
         const userSearchTerm = matchSuggestions.usernamesMatch[0].replace(
           "@",
