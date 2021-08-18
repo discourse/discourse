@@ -6,7 +6,7 @@ import {
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { skip, test } from "qunit";
+import { skip } from "qunit";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -67,7 +67,6 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await fillIn(".d-editor-input", "The image:\n");
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
-
     appEvents.on("composer:all-uploads-complete", () => {
       assert.equal(
         queryAll(".d-editor-input").val(),
@@ -87,7 +86,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
-  test("should error if too many files are added at once", async function (assert) {
+  skip("should error if too many files are added at once", async function (assert) {
     await visit("/");
     await click("#create-topic");
     const appEvents = loggedInUser().appEvents;
