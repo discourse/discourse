@@ -412,8 +412,18 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
     end
 
+    it "removes the trnaslated 'Previous Replies' marker" do
+      expect { process(:previous_replies_de) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
     it "removes the 'type reply above' marker" do
       expect { process(:reply_above) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
+    it "removes the translated 'Previous Replies' marker" do
+      expect { process(:reply_above_de) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
     end
 
