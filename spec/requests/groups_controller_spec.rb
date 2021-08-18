@@ -860,6 +860,54 @@ describe GroupsController do
         it "should update default notification preference for existing users" do
           user1 = Fabricate(:user)
           user2 = Fabricate(:user)
+          group.add(user1)
+          group.add(user2)
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: 2
+            }
+          }
+
+          expect(response.status).to eq(200)
+          group_users = group.group_users
+          expect(response.parsed_body["user_count"]).to eq(group_users.count)
+
+          group_users.where(user: user1).update_all(notification_level: 1)
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: 2
+            }
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_count"]).to eq(group.group_users.count - 1)
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: 2
+            },
+            update_existing_users: true
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+          expect(GroupUser.exists?(user: user2, group: group, notification_level: 2)).to be_truthy
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: 2
+            }
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+        end
+
+        it "should update category & tag notification preferences for existing users" do
+          user1 = Fabricate(:user)
+          user2 = Fabricate(:user)
           CategoryUser.create!(user: user1, category: category, notification_level: 4)
           TagUser.create!(user: user1, tag: tag, notification_level: 4)
           TagUser.create!(user: user2, tag: tag, notification_level: 4)
