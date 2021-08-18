@@ -6,7 +6,7 @@ import {
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { skip } from "qunit";
+import { skip, test } from "qunit";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -61,7 +61,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     simultaneous_uploads: 2,
   });
 
-  skip("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
+  test("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
