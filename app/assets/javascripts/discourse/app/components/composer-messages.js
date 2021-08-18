@@ -130,7 +130,12 @@ export default Component.extend({
       }
     }
 
-    this.queuedForTyping.forEach((msg) => this.send("popup", msg));
+    this.queuedForTyping.forEach((msg) => {
+      if (composer.whisper && msg.hide_if_whisper) {
+        return;
+      }
+      this.send("popup", msg);
+    });
   },
 
   _create(info) {
