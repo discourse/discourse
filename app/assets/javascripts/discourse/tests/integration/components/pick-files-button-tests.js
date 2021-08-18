@@ -17,28 +17,30 @@ function createBlob(mimeType, extension) {
 discourseModule(
   "Integration | Component | pick-files-button",
   function (hooks) {
+    const expectedExtension = ".json";
+    const expectedMimeType = "text/json";
+
     setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.set("acceptedFileTypes", [expectedExtension, expectedMimeType]);
+      this.set("onFilesPicked", () => {});
+    });
 
     componentTest("it doesn't show alert if a file has a supported MIME type", {
       skip: true,
       template: hbs`
         {{pick-files-button
           acceptedFileTypes=this.acceptedFileTypes
-          onFilesChosen=this.onFilesChosen}}`,
-
-      beforeEach() {
-        const expectedExtension = ".json";
-        this.set("acceptedFileTypes", [expectedExtension]);
-        this.set("onFilesChosen", () => {});
-      },
+          onFilesPicked=this.onFilesPicked}}`,
 
       async test(assert) {
         sinon.stub(bootbox, "alert");
 
         const wrongExtension = ".txt";
-        const file = createBlob("text/json", wrongExtension);
+        const file = createBlob(expectedMimeType, wrongExtension);
 
-        await triggerEvent("input#file-input", "change", { files: [file] });
+        await triggerEvent("input[type='file']", "change", { files: [file] });
 
         assert.ok(bootbox.alert.notCalled);
       },
@@ -49,21 +51,15 @@ discourseModule(
       template: hbs`
         {{pick-files-button
           acceptedFileTypes=this.acceptedFileTypes
-          onFilesChosen=this.onFilesChosen}}`,
-
-      beforeEach() {
-        const expectedMimeType = "text/json";
-        this.set("acceptedFileTypes", [expectedMimeType]);
-        this.set("onFilesChosen", () => {});
-      },
+          onFilesPicked=this.onFilesPicked}}`,
 
       async test(assert) {
         sinon.stub(bootbox, "alert");
 
         const wrongMimeType = "text/plain";
-        const file = createBlob(wrongMimeType, ".json");
+        const file = createBlob(wrongMimeType, expectedExtension);
 
-        await triggerEvent("input#file-input", "change", { files: [file] });
+        await triggerEvent("input[type='file']", "change", { files: [file] });
 
         assert.ok(bootbox.alert.notCalled);
       },
@@ -76,14 +72,7 @@ discourseModule(
         template: hbs`
         {{pick-files-button
           acceptedFileTypes=this.acceptedFileTypes
-          onFilesChosen=this.onFilesChosen}}`,
-
-        beforeEach() {
-          const expectedExtension = ".json";
-          const expectedMimeType = "text/json";
-          this.set("acceptedFileTypes", [expectedExtension, expectedMimeType]);
-          this.set("onFilesChosen", () => {});
-        },
+          onFilesPicked=this.onFilesPicked}}`,
 
         async test(assert) {
           sinon.stub(bootbox, "alert");
@@ -92,7 +81,7 @@ discourseModule(
           const wrongMimeType = "text/plain";
           const file = createBlob(wrongMimeType, wrongExtension);
 
-          await triggerEvent("input#file-input", "change", { files: [file] });
+          await triggerEvent("input[type='file']", "change", { files: [file] });
 
           assert.ok(bootbox.alert.calledOnce);
         },
