@@ -203,6 +203,30 @@ acceptance("Search - Full Page", function (needs) {
     );
   });
 
+  test("update category without slug through advanced search ui", async function (assert) {
+    const categoryChooser = selectKit(
+      ".search-advanced-options .category-chooser"
+    );
+
+    await visit("/search");
+
+    await fillIn(".search-query", "none");
+
+    await categoryChooser.expand();
+    await categoryChooser.fillInFilter("快乐的");
+    await categoryChooser.selectRowByValue(240);
+
+    assert.ok(
+      exists('.search-advanced-options .badge-category:contains("快乐的")'),
+      'has "快乐的" populated'
+    );
+    assert.equal(
+      queryAll(".search-query").val(),
+      "none category:240",
+      'has updated search term to "none category:240"'
+    );
+  });
+
   test("update in:title filter through advanced search ui", async function (assert) {
     await visit("/search");
     await fillIn(".search-query", "none");
