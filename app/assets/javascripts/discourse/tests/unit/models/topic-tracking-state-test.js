@@ -31,13 +31,11 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 1,
         last_read_post_number: null,
         tags: ["foo", "baz"],
-        created_in_new_period: true,
       },
       {
         topic_id: 2,
         last_read_post_number: null,
         tags: ["baz"],
-        created_in_new_period: true,
       },
       {
         topic_id: 3,
@@ -50,7 +48,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["pending"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 5,
@@ -58,7 +55,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["bar", "pending"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -89,13 +85,11 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 1,
         last_read_post_number: null,
         tags: ["foo", "baz"],
-        created_in_new_period: true,
       },
       {
         topic_id: 2,
         last_read_post_number: null,
         tags: ["baz"],
-        created_in_new_period: true,
       },
       {
         topic_id: 3,
@@ -108,7 +102,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["pending"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 5,
@@ -116,7 +109,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["bar", "pending"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -177,7 +169,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 3,
         last_read_post_number: null,
         tags: ["random"],
-        created_in_new_period: true,
       },
       {
         topic_id: 4,
@@ -186,7 +177,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         category_id: 7,
         tags: ["bug"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 5,
@@ -195,7 +185,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         tags: ["bar", "bug"],
         category_id: 7,
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -379,14 +368,12 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         last_read_post_number: 4,
         highest_post_number: 5,
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 222,
         last_read_post_number: null,
         seen: false,
         notification_level: NotificationLevels.TRACKING,
-        created_in_new_period: true,
       },
     ]);
 
@@ -847,7 +834,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       id: 112,
       notification_level: NotificationLevels.TRACKING,
       category_id: 2,
-      created_in_new_period: true,
     });
 
     assert.equal(trackingState.countNew(1), 1);
@@ -862,7 +848,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       notification_level: NotificationLevels.TRACKING,
       category_id: 3,
       tags: ["amazing"],
-      created_in_new_period: true,
     });
 
     assert.equal(trackingState.countNew(1), 2);
@@ -876,7 +861,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       id: 111,
       notification_level: NotificationLevels.TRACKING,
       category_id: 1,
-      created_in_new_period: true,
     });
 
     assert.equal(trackingState.countNew(1), 3);

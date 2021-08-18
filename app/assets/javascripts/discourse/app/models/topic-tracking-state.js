@@ -13,7 +13,6 @@ function isNew(topic) {
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
       topic.notification_level >= NotificationLevels.TRACKING) &&
-    topic.created_in_new_period &&
     isUnseen(topic)
   );
 }
@@ -22,8 +21,7 @@ function isUnread(topic) {
   return (
     topic.last_read_post_number !== null &&
     topic.last_read_post_number < topic.highest_post_number &&
-    topic.notification_level >= NotificationLevels.TRACKING &&
-    topic.unread_not_too_old
+    topic.notification_level >= NotificationLevels.TRACKING
   );
 }
 

@@ -178,7 +178,6 @@ discourseModule(
                   last_read_post_number: 1,
                   highest_post_number: 2,
                   notification_level: NotificationLevels.TRACKING,
-                  unread_not_too_old: true,
                 });
               }
             } else {
@@ -187,7 +186,6 @@ discourseModule(
                 c.topicTrackingState.modifyState(321 + i, {
                   category_id: c.id,
                   last_read_post_number: null,
-                  created_in_new_period: true,
                 });
               }
               return false;

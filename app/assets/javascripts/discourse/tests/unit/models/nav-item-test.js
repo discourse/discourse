@@ -43,7 +43,6 @@ module("Unit | Model | nav-item", function (hooks) {
     tracker.modifyState("t1", {
       topic_id: 1,
       last_read_post_number: null,
-      created_in_new_period: true,
     });
     tracker.incrementMessageCount();
 
