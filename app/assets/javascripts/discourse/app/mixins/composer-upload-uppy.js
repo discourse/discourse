@@ -72,6 +72,7 @@ export default Mixin.create({
 
   _bindUploadTarget() {
     this.placeholders = {};
+    this._inProgressUploads = 0;
     this._preProcessorStatus = {};
     this.fileInputEl = document.getElementById("file-uploader");
     const isPrivateMessage = this.get("composer.privateMessage");
@@ -176,6 +177,7 @@ export default Mixin.create({
       });
 
       files.forEach((file) => {
+        this._inProgressUploads++;
         const placeholder = this._uploadPlaceholder(file);
         this.placeholders[file.id] = {
           uploadPlaceholder: placeholder,
@@ -204,14 +206,7 @@ export default Mixin.create({
       this.appEvents.trigger("composer:upload-success", file.name, upload);
     });
 
-    this._uppyInstance.on("upload-error", (file, error, response) => {
-      this._resetUpload(file, { removePlaceholder: true });
-
-      if (!this.userCancelled) {
-        displayErrorForUpload(response, this.siteSettings, file.name);
-        this.appEvents.trigger("composer:upload-error", file);
-      }
-    });
+    this._uppyInstance.on("upload-error", this._handleUploadError.bind(this));
 
     this._uppyInstance.on("complete", () => {
       this.appEvents.trigger("composer:all-uploads-complete");
@@ -238,6 +233,20 @@ export default Mixin.create({
     });
 
     this._setupPreprocessing();
+  },
+
+  _handleUploadError(file, error, response) {
+    this._inProgressUploads--;
+    this._resetUpload(file, { removePlaceholder: true });
+
+    if (!this.userCancelled) {
+      displayErrorForUpload(response || error, this.siteSettings, file.name);
+      this.appEvents.trigger("composer:upload-error", file);
+    }
+
+    if (this._inProgressUploads === 0) {
+      this._reset();
+    }
   },
 
   _setupPreprocessing() {
@@ -353,6 +362,7 @@ export default Mixin.create({
       "X-CSRF-Token": this.session.csrfToken,
       "Content-Type": "application/json",
     };
+    const self = this;
 
     this._uppyInstance.use(AwsS3Multipart, {
       // controls how many simultaneous _chunks_ are uploaded, not files,
@@ -365,30 +375,23 @@ export default Mixin.create({
       limit: 10,
 
       createMultipartUpload(file) {
-        return (
-          ajax(getURL("/uploads/create-multipart.json"), {
-            type: "POST",
-            headers,
-            data: JSON.stringify({
-              file_name: file.name,
-              file_size: file.size,
-              content_type: file.type,
-              upload_type: file.meta.upload_type,
-            }),
-          })
-            .then((data) => {
-              // TODO (martin) Make sure the unique identifier of the stub is stored and
-              // used in the other two API calls
-              file.meta.unique_identifier = data.unique_identifier;
-              return {
-                uploadId: data.external_upload_identifier,
-                key: data.key,
-              };
-            })
-            // TODO (martin) gracefully handle errors
-            // eslint-disable-next-line
-            .catch((err) => alert(err))
-        );
+        return ajax(getURL("/uploads/create-multipart.json"), {
+          type: "POST",
+          headers,
+          data: JSON.stringify({
+            file_name: file.name,
+            file_size: file.size,
+            content_type: file.type,
+            upload_type: file.meta.upload_type,
+          }),
+          // uppy is inconsistent, an error here fires the upload-error event
+        }).then((data) => {
+          file.meta.unique_identifier = data.unique_identifier;
+          return {
+            uploadId: data.external_upload_identifier,
+            key: data.key,
+          };
+        });
       },
 
       prepareUploadParts(file, partData) {
@@ -404,30 +407,28 @@ export default Mixin.create({
             .then((data) => {
               return { presignedUrls: data.presigned_urls };
             })
-            // TODO (martin) gracefully handle errors
-            // eslint-disable-next-line
-            .catch((err) => alert(err))
+            // uppy is inconsistent, an error here does not fire the upload-error event
+            .catch((err) => {
+              self._handleUploadError(file, err);
+            })
         );
       },
 
       completeMultipartUpload(file, data) {
-        // TODO (martin) see if i can munge the part PartNumber to part_number here
-        return (
-          ajax(getURL("/uploads/complete-multipart.json"), {
-            type: "POST",
-            headers,
-            data: JSON.stringify({
-              ...data,
-              unique_identifier: file.meta.unique_identifier,
-            }),
-          })
-            .then((responseData) => {
-              return responseData;
-            })
-            // TODO (martin) gracefully handle errors
-            // eslint-disable-next-line
-            .catch((err) => alert(err))
-        );
+        const parts = data.parts.map((part) => {
+          return { part_number: part.PartNumber, etag: part.ETag };
+        });
+        return ajax(getURL("/uploads/complete-multipart.json"), {
+          type: "POST",
+          headers,
+          data: JSON.stringify({
+            parts,
+            unique_identifier: file.meta.unique_identifier,
+          }),
+          // uppy is inconsistent, an error here fires the upload-error event
+        }).then((responseData) => {
+          return responseData;
+        });
       },
 
       abortMultipartUpload(file, { key, uploadId }) {
@@ -445,10 +446,10 @@ export default Mixin.create({
           data: JSON.stringify({
             external_upload_identifier: uploadId,
           }),
-        })
-          // TODO (martin) gracefully handle errors
-          // eslint-disable-next-line
-          .catch((err) => alert(err));
+          // uppy is inconsistent, an error here does not fire the upload-error event
+        }).catch((err) => {
+          self._handleUploadError(file, err);
+        });
       },
 
       // we will need a listParts function at some point when we want to

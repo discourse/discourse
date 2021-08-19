@@ -438,14 +438,16 @@ class UploadsController < ApplicationController
     end
 
     parts = parts.map do |part|
-      part_number = part[:PartNumber].to_i
-      etag = part[:ETag]
+      part_number = part[:part_number].to_i
+      etag = part[:etag]
       validate_part_number(part_number)
 
       if part_number.blank? || etag.blank?
         raise Discourse::InvalidParameters.new("All parts must have a part number between 1 and 10000 and an ETag")
       end
 
+      # this is done so it's an array of hashes rather than an array of
+      # ActionController::Parameters
       { part_number: part_number, etag: etag }
     end.sort_by do |part|
       part[:part_number]

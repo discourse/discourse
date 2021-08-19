@@ -1098,19 +1098,19 @@ describe UploadsController do
         stub_list_multipart_request
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          parts: [{ PartNumber: -1, ETag: "test1" }]
+          parts: [{ part_number: -1, etag: "test1" }]
         }
         expect(response.status).to eq(400)
         expect(response.body).to include("Part numbers should be a list of numbers")
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          parts: [{ PartNumber: 20001, ETag: "test1" }]
+          parts: [{ part_number: 20001, etag: "test1" }]
         }
         expect(response.status).to eq(400)
         expect(response.body).to include("Part numbers should be a list of numbers")
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          parts: [{ PartNumber: "blah", ETag: "test1" }]
+          parts: [{ part_number: "blah", etag: "test1" }]
         }
         expect(response.status).to eq(400)
         expect(response.body).to include("Part numbers should be a list of numbers")
@@ -1120,7 +1120,7 @@ describe UploadsController do
         stub_list_multipart_request
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          parts: [{ PartNumber: 1 }]
+          parts: [{ part_number: 1 }]
         }
         expect(response.status).to eq(400)
         expect(response.body).to include("All parts must have a part number")
@@ -1129,7 +1129,7 @@ describe UploadsController do
       it "returns 404 when the upload stub does not exist" do
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: "unknown",
-          parts: [{ PartNumber: 1, ETag: "test1" }]
+          parts: [{ part_number: 1, etag: "test1" }]
         }
         expect(response.status).to eq(404)
       end
@@ -1139,7 +1139,7 @@ describe UploadsController do
         stub_list_multipart_request
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          parts: [{ PartNumber: 1, ETag: "test1" }]
+          parts: [{ part_number: 1, etag: "test1" }]
         }
         expect(response.status).to eq(422)
       end
@@ -1148,7 +1148,7 @@ describe UploadsController do
         external_upload_stub.update!(created_by: Fabricate(:user))
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          parts: [{ PartNumber: 1, ETag: "test1" }]
+          parts: [{ part_number: 1, etag: "test1" }]
         }
         expect(response.status).to eq(404)
       end
@@ -1157,7 +1157,7 @@ describe UploadsController do
         FileStore::S3Store.any_instance.stubs(:list_multipart_parts).raises(Aws::S3::Errors::NoSuchUpload.new("test", "test"))
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          parts: [{ PartNumber: 1, ETag: "test1" }]
+          parts: [{ part_number: 1, etag: "test1" }]
         }
         expect(response.status).to eq(404)
       end
@@ -1187,7 +1187,7 @@ describe UploadsController do
 
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
-          parts: [{ PartNumber: 1, ETag: "test1" }, { PartNumber: 2, ETag: "test2" }]
+          parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }]
         }
 
         expect(response.status).to eq(200)
@@ -1202,11 +1202,11 @@ describe UploadsController do
         stub_const(UploadsController, "COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
           post "/uploads/complete-multipart.json", params: {
             unique_identifier: "blah",
-            parts: [{ PartNumber: 1, ETag: "test1" }, { PartNumber: 2, ETag: "test2" }]
+            parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }]
           }
           post "/uploads/complete-multipart.json", params: {
             unique_identifier: "blah",
-            parts: [{ PartNumber: 1, ETag: "test1" }, { PartNumber: 2, ETag: "test2" }]
+            parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }]
           }
         end
         expect(response.status).to eq(429)
@@ -1223,12 +1223,12 @@ describe UploadsController do
           unique_identifier: external_upload_stub.external_upload_identifier,
           parts: [
             {
-              PartNumber: 1,
-              ETag: "test1"
+              part_number: 1,
+              etag: "test1"
             },
             {
-              PartNumber: 2,
-              ETag: "test2"
+              part_number: 2,
+              etag: "test2"
             }
           ]
         }
@@ -1326,12 +1326,12 @@ describe UploadsController do
           unique_identifier: external_upload_stub.external_upload_identifier,
           parts: [
             {
-              PartNumber: 1,
-              ETag: "test1"
+              part_number: 1,
+              etag: "test1"
             },
             {
-              PartNumber: 2,
-              ETag: "test2"
+              part_number: 2,
+              etag: "test2"
             }
           ]
         }
