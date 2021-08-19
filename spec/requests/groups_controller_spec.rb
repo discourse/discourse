@@ -903,6 +903,17 @@ describe GroupsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["success"]).to eq("OK")
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: 4
+            },
+            update_existing_users: false
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+          expect(GroupUser.exists?(user: user2, group: group, notification_level: 2)).to be_truthy
         end
 
         it "should update category & tag notification preferences for existing users" do

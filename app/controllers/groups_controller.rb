@@ -173,7 +173,7 @@ class GroupsController < ApplicationController
       GroupActionLogger.new(current_user, group).log_change_group_settings
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
-      update_existing_users(group.group_users, notification_level, categories, tags) if notification_level.present? || categories.present? || tags.present?
+      update_existing_users(group.group_users, notification_level, categories, tags) if params[:update_existing_users] == "true"
 
       if guardian.can_see?(group)
         render json: success_json
