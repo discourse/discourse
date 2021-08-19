@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import {
+  ARCHIVE_FILTER,
   INBOX_FILTER,
   NEW_FILTER,
   UNREAD_FILTER,
@@ -116,14 +117,35 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
         }
 
         break;
+      case "archive":
+        if (
+          [INBOX_FILTER, ARCHIVE_FILTER].includes(this.filter) &&
+          ["user", "all"].includes(this.inbox)
+        ) {
+          this._notifyIncoming(message.topic_id);
+        }
+        break;
+      case "group_archive":
+        if (
+          [INBOX_FILTER, ARCHIVE_FILTER].includes(this.filter) &&
+          (this.inbox === "all" || this._displayMessageForGroupInbox(message))
+        ) {
+          this._notifyIncoming(message.topic_id);
+        }
     }
+  },
+
+  _displayMessageForGroupInbox(message) {
+    return (
+      this.inbox === "group" &&
+      message.payload.group_ids.includes(this.activeGroup.id)
+    );
   },
 
   _shouldDisplayMessageForInbox(message) {
     return (
       this.inbox === "all" ||
-      (this.inbox === "group" &&
-        message.payload.group_ids.includes(this.activeGroup.id)) ||
+      this._displayMessageForGroupInbox(message) ||
       (this.inbox === "user" &&
         (message.payload.group_ids.length === 0 ||
           this.currentUser.groups.filter((group) => {

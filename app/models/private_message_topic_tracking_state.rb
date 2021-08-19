@@ -19,9 +19,7 @@ class PrivateMessageTopicTrackingState
   NEW_MESSAGE_TYPE = "new_topic"
   UNREAD_MESSAGE_TYPE = "unread"
   ARCHIVE_MESSAGE_TYPE = "archive"
-  UNARCHIVE_MESSAGE_TYPE = "unarchive"
   GROUP_ARCHIVE_MESSAGE_TYPE = "group_archive"
-  GROUP_UNARCHIVE_MESSAGE_TYPE = "group_unarchive"
 
   def self.report(user)
     sql = new_and_unread_sql(user)
@@ -124,7 +122,7 @@ class PrivateMessageTopicTrackingState
         }
       }
 
-      MessageBus.publish("#{CHANNEL_PREFIX}/#{tu.user_id}", message.as_json,
+      MessageBus.publish(self.channel(tu.user_id), message.as_json,
         user_ids: [tu.user_id]
       )
     end
@@ -144,8 +142,40 @@ class PrivateMessageTopicTrackingState
     }.as_json
 
     topic.all_allowed_users.pluck(:id).each do |user_id|
-      MessageBus.publish("#{CHANNEL_PREFIX}/#{user_id}", message, user_ids: [user_id])
+      MessageBus.publish(self.channel(user_id), message, user_ids: [user_id])
     end
+  end
+
+  def self.publish_group_archived(topic, group_id)
+    return unless topic.private_message?
+
+    message = {
+      message_type: GROUP_ARCHIVE_MESSAGE_TYPE,
+      topic_id: topic.id,
+      payload: {
+        group_ids: [group_id]
+      }
+    }.as_json
+
+    topic
+      .allowed_group_users
+      .where("group_users.group_id = ?", group_id)
+      .pluck(:id)
+      .each do |user_id|
+
+      MessageBus.publish(self.channel(user_id), message, user_ids: [user_id])
+    end
+  end
+
+  def self.publish_user_archived(topic, user_id)
+    return unless topic.private_message?
+
+    message = {
+      message_type: ARCHIVE_MESSAGE_TYPE,
+      topic_id: topic.id,
+    }.as_json
+
+    MessageBus.publish(self.channel(user_id), message, user_ids: [user_id])
   end
 
   def self.new_filter_sql
@@ -171,5 +201,9 @@ class PrivateMessageTopicTrackingState
         min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
       }
     ).where_clause.ast.to_sql
+  end
+
+  def self.channel(user_id)
+    "#{CHANNEL_PREFIX}/#{user_id}"
   end
 end

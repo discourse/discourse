@@ -114,8 +114,8 @@ describe PrivateMessageTopicTrackingState do
       end
 
       expect(messages.map(&:channel)).to contain_exactly(
-        "#{described_class::CHANNEL_PREFIX}/#{user.id}",
-        "#{described_class::CHANNEL_PREFIX}/#{user_2.id}"
+        described_class.channel(user.id),
+        described_class.channel(user_2.id)
       )
 
       data = messages.first.data
@@ -129,8 +129,8 @@ describe PrivateMessageTopicTrackingState do
       end
 
       expect(messages.map(&:channel)).to contain_exactly(
-        "#{described_class::CHANNEL_PREFIX}/#{user.id}",
-        "#{described_class::CHANNEL_PREFIX}/#{user_2.id}"
+        described_class.channel(user.id),
+        described_class.channel(user_2.id)
       )
 
       data = messages.first.data
@@ -150,8 +150,8 @@ describe PrivateMessageTopicTrackingState do
       end
 
       expect(messages.map(&:channel)).to contain_exactly(
-        "#{described_class::CHANNEL_PREFIX}/#{user.id}",
-        "#{described_class::CHANNEL_PREFIX}/#{user_2.id}"
+        described_class.channel(user.id),
+        described_class.channel(user_2.id)
       )
 
       data = messages.first.data
@@ -163,6 +163,41 @@ describe PrivateMessageTopicTrackingState do
       expect(data['payload']['notification_level'])
         .to eq(NotificationLevels.all[:watching])
       expect(data['payload']['group_ids']).to eq([])
+    end
+  end
+
+  describe '.publish_user_archived' do
+    it 'should publish the right message_bus message' do
+      message = MessageBus.track_publish(described_class.channel(user.id)) do
+        described_class.publish_user_archived(private_message, user.id)
+      end.first
+
+      data = message.data
+
+      expect(data['topic_id']).to eq(private_message.id)
+      expect(data['message_type']).to eq(described_class::ARCHIVE_MESSAGE_TYPE)
+    end
+  end
+
+  describe '.publish_group_archived' do
+    it 'should publish the right message_bus message' do
+      user_3 = Fabricate(:user)
+      group.add(user_3)
+
+      messages = MessageBus.track_publish do
+        described_class.publish_group_archived(group_message, group.id)
+      end
+
+      expect(messages.map(&:channel)).to contain_exactly(
+        described_class.channel(user_2.id),
+        described_class.channel(user_3.id)
+      )
+
+      data = messages.first.data
+
+      expect(data['message_type']).to eq(described_class::GROUP_ARCHIVE_MESSAGE_TYPE)
+      expect(data['topic_id']).to eq(group_message.id)
+      expect(data['payload']['group_ids']).to contain_exactly(group.id)
     end
   end
 end

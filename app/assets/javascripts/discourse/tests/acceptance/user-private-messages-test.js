@@ -75,10 +75,13 @@ acceptance(
       [
         "/topics/private-messages-all-new/:username.json",
         "/topics/private-messages-all-unread/:username.json",
+        "/topics/private-messages-all-archive/:username.json",
         "/topics/private-messages-new/:username.json",
         "/topics/private-messages-unread/:username.json",
+        "/topics/private-messages-archive/:username.json",
         "/topics/private-messages-group/:username/:group_name/new.json",
         "/topics/private-messages-group/:username/:group_name/unread.json",
+        "/topics/private-messages-group/:username/:group_name/archive.json",
       ].forEach((url) => {
         server.get(url, () => {
           let topics;
@@ -180,6 +183,95 @@ acceptance(
         },
       });
     };
+
+    const publishArchiveToMessageBus = function () {
+      publishToMessageBus("/private-message-topic-tracking-state/5", {
+        topic_id: Math.random(),
+        message_type: "archive",
+      });
+    };
+
+    const publishGroupArchiveToMessageBus = function (group_ids) {
+      publishToMessageBus("/private-message-topic-tracking-state/5", {
+        topic_id: Math.random(),
+        message_type: "group_archive",
+        payload: {
+          group_ids: group_ids,
+        },
+      });
+    };
+
+    test("incoming archive message on all and archive filter", async function (assert) {
+      for (const url of [
+        "/u/charlie/messages",
+        "/u/charlie/messages/archive",
+        "/u/charlie/messages/personal",
+        "/u/charlie/messages/personal/archive",
+      ]) {
+        await visit(url);
+
+        publishArchiveToMessageBus();
+
+        await visit(url); // wait for re-render
+
+        assert.ok(
+          exists(".show-mores"),
+          `${url} displays the topic incoming info`
+        );
+      }
+
+      for (const url of [
+        "/u/charlie/messages/group/awesome_group/archive",
+        "/u/charlie/messages/group/awesome_group",
+      ]) {
+        await visit(url);
+
+        publishArchiveToMessageBus();
+
+        await visit(url); // wait for re-render
+
+        assert.ok(
+          !exists(".show-mores"),
+          `${url} does not display the topic incoming info`
+        );
+      }
+    });
+
+    test("incoming group archive message on all and archive filter", async function (assert) {
+      for (const url of [
+        "/u/charlie/messages",
+        "/u/charlie/messages/archive",
+        "/u/charlie/messages/group/awesome_group",
+        "/u/charlie/messages/group/awesome_group/archive",
+      ]) {
+        await visit(url);
+
+        publishGroupArchiveToMessageBus([14]);
+
+        await visit(url); // wait for re-render
+
+        assert.ok(
+          exists(".show-mores"),
+          `${url} displays the topic incoming info`
+        );
+      }
+
+      for (const url of [
+        "/u/charlie/messages/personal",
+        "/u/charlie/messages/personal/archive",
+      ]) {
+        await visit(url);
+
+        publishGroupArchiveToMessageBus([14]);
+
+        await visit(url); // wait for re-render
+
+        assert.ok(
+          !exists(".show-mores"),
+          `${url} does not display the topic incoming info`
+        );
+      }
+    });
 
     test("incoming unread and new messages on all filter", async function (assert) {
       await visit("/u/charlie/messages");
