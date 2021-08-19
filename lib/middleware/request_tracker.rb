@@ -16,7 +16,7 @@ class Middleware::RequestTracker
   #     14.15.16.32/27
   #     216.148.1.2
   #
-  STATIC_IP_SKIPPER = ENV['DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS']&.split&.map { |ip| IPAddr.new(ip) }
+  STATIC_IP_SKIPPER ||= ENV['DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS']&.split&.map { |ip| IPAddr.new(ip) }
 
   # register callbacks for detailed request loggers called on every request
   # example:
