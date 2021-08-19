@@ -144,7 +144,7 @@ describe ComposerMessagesFinder do
     end
 
     it "doesn't notify users if 'allow_uploaded_avatars' setting is disabled" do
-      SiteSetting.allow_uploaded_avatars = false
+      SiteSetting.allow_uploaded_avatars = 'disabled'
       expect(finder.check_avatar_notification).to be_blank
     end
   end

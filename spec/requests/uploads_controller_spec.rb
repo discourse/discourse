@@ -126,7 +126,7 @@ describe UploadsController do
       end
 
       it 'ensures allow_uploaded_avatars is enabled when uploading an avatar' do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(422)
       end
@@ -139,7 +139,7 @@ describe UploadsController do
 
       it 'always allows admins to upload avatars' do
         sign_in(Fabricate(:admin))
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
 
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(200)

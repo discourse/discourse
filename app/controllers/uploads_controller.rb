@@ -29,7 +29,7 @@ class UploadsController < ApplicationController
     # 50 characters ought to be enough for the upload type
     type = (params[:upload_type].presence || params[:type].presence).parameterize(separator: "_")[0..50]
 
-    if type == "avatar" && !me.admin? && (SiteSetting.discourse_connect_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
+    if type == "avatar" && !me.admin? && (SiteSetting.discourse_connect_overrides_avatar || !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, me))
       return render json: failed_json, status: 422
     end
 

@@ -2483,7 +2483,7 @@ describe UsersController do
       end
 
       it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "custom"
         }
@@ -2491,8 +2491,50 @@ describe UsersController do
         expect(response.status).to eq(422)
       end
 
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is admin" do
+        SiteSetting.allow_uploaded_avatars = 'admin'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(admin: true)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is staff" do
+        SiteSetting.allow_uploaded_avatars = 'staff'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(moderator: true)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is a trust level" do
+        SiteSetting.allow_uploaded_avatars = '3'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(trust_level: 3)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
       it 'ignores the upload if picking a system avatar' do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         another_upload = Fabricate(:upload)
 
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
@@ -2504,7 +2546,7 @@ describe UsersController do
       end
 
       it 'raises an error if the type is invalid' do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         another_upload = Fabricate(:upload)
 
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
