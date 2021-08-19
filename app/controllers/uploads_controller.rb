@@ -217,8 +217,17 @@ class UploadsController < ApplicationController
     ).performed!
 
     file_name = params.require(:file_name)
-    file_size = params.require(:file_size)
+    file_size = params.require(:file_size).to_i
     type = params.require(:type)
+
+    # we can pre-emptively check size for attachments, but not for images
+    # as they may be further reduced in size by UploadCreator (at this point
+    # they may have already been reduced in size by preprocessors)
+    if !FileHelper.is_supported_image?(file_name)
+      if file_size >= SiteSetting.max_attachment_size_kb.kilobytes
+        return render_json_error(I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb), status: 422)
+      end
+    end
 
     # don't want people posting arbitrary S3 metadata so we just take the
     # one we need. all of these will be converted to x-amz-meta- metadata
@@ -302,9 +311,18 @@ class UploadsController < ApplicationController
     ).performed!
 
     file_name = params.require(:file_name)
-    file_size = params.require(:file_size)
+    file_size = params.require(:file_size).to_i
     upload_type = params.require(:upload_type)
     content_type = params.require(:content_type)
+
+    # we can pre-emptively check size for attachments, but not for images
+    # as they may be further reduced in size by UploadCreator (at this point
+    # they may have already been reduced in size by preprocessors)
+    if !FileHelper.is_supported_image?(file_name)
+      if file_size >= SiteSetting.max_attachment_size_kb.kilobytes
+        return render_json_error(I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb), status: 422)
+      end
+    end
 
     begin
       multipart_upload = Discourse.store.create_multipart(

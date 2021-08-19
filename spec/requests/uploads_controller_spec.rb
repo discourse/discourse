@@ -819,6 +819,20 @@ describe UploadsController do
         expect(response.status).to eq(422)
       end
 
+      it "returns 422 when the file is an attachment and it's too big" do
+        SiteSetting.max_attachment_size_kb = 1000
+        post "/uploads/create-multipart.json", {
+          params: {
+            file_name: "test.zip",
+            file_size: 9999999,
+            upload_type: "composer",
+            content_type: "application/zip"
+          }
+        }
+        expect(response.status).to eq(422)
+        expect(response.body).to include(I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb))
+      end
+
       def stub_create_multipart_request
         create_multipart_result = <<~BODY
         <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
