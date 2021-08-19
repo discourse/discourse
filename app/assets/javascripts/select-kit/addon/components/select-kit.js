@@ -673,7 +673,7 @@ export default Component.extend(
             highlighted:
               this.singleSelect && this.value
                 ? this.itemForValue(this.value, this.mainCollection)
-                : this.mainCollection.firstObject,
+                : false,
             isLoading: false,
             hasNoContent,
           });
