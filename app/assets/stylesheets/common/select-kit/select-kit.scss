@@ -169,6 +169,10 @@
     justify-content: flex-start;
     padding: 0.5em;
 
+    > * {
+      pointer-events: none;
+    }
+
     .name {
       margin: 0;
       overflow: hidden;

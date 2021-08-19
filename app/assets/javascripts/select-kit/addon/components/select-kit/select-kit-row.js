@@ -1,3 +1,4 @@
+import { propertyEqual } from "discourse/lib/computed";
 import { action, computed } from "@ember/object";
 import Component from "@ember/component";
 import I18n from "I18n";
@@ -34,14 +35,17 @@ export default Component.extend(UtilsMixin, {
 
   didInsertElement() {
     this._super(...arguments);
-    this.element.addEventListener("mouseenter", this.handleMouseEnter);
-    this.element.addEventListener("focus", this.handleMouseEnter);
-    this.element.addEventListener("blur", this.handleBlur);
+
+    if (!this.site.mobileView) {
+      this.element.addEventListener("mouseenter", this.handleMouseEnter);
+      this.element.addEventListener("focus", this.handleMouseEnter);
+      this.element.addEventListener("blur", this.handleBlur);
+    }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    if (this.element) {
+    if (!this.site.mobileView && this.element) {
       this.element.removeEventListener("mouseenter", this.handleBlur);
       this.element.removeEventListener("focus", this.handleMouseEnter);
       this.element.removeEventListener("blur", this.handleMouseEnter);
@@ -111,13 +115,9 @@ export default Component.extend(UtilsMixin, {
     return this.getValue(this.selectKit.highlighted);
   }),
 
-  isHighlighted: computed("rowValue", "highlightedValue", function () {
-    return this.rowValue === this.highlightedValue;
-  }),
+  isHighlighted: propertyEqual("rowValue", "highlightedValue"),
 
-  isSelected: computed("rowValue", "value", function () {
-    return this.rowValue === this.value;
-  }),
+  isSelected: propertyEqual("rowValue", "value"),
 
   @action
   handleMouseEnter() {
@@ -143,6 +143,7 @@ export default Component.extend(UtilsMixin, {
   },
 
   click(event) {
+    event.preventDefault();
     event.stopPropagation();
     this.selectKit.select(this.rowValue, this.item);
     return false;
