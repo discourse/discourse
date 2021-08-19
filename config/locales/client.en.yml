@@ -1067,6 +1067,7 @@ en:
       no_bookmarks_title: "You haven’t bookmarked anything yet"
       no_bookmarks_body: >
         Start bookmarking posts with the %{icon} button and they will be listed here for easy reference. You can schedule a reminder too!
+      no_bookmarks_search: "No bookmarks found with the provided search query."
       no_notifications_title: "You don’t have any notifications yet"
       no_notifications_body: >
         You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
