@@ -187,7 +187,7 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_revoke_admin!(@user)
     @user.revoke_admin!
     StaffActionLogger.new(current_user).log_revoke_admin(@user)
-    render body: nil
+    render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
   def grant_admin
@@ -199,14 +199,14 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_revoke_moderation!(@user)
     @user.revoke_moderation!
     StaffActionLogger.new(current_user).log_revoke_moderation(@user)
-    render body: nil
+    render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
   def grant_moderation
     guardian.ensure_can_grant_moderation!(@user)
     @user.grant_moderation!
     StaffActionLogger.new(current_user).log_grant_moderation(@user)
-    render_serialized(@user, AdminUserSerializer)
+    render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
   def add_group
