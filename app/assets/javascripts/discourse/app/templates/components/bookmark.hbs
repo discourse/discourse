@@ -51,9 +51,7 @@
     {{d-button id="save-bookmark" label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
     {{d-modal-cancel close=(action "closeWithoutSavingBookmark")}}
     {{#if showDelete}}
-      <div class="pull-right">
-        {{d-button id="delete-bookmark" icon="trash-alt" class="btn-danger" action=(action "delete")}}
-      </div>
+      {{d-button id="delete-bookmark" icon="trash-alt" class="delete-bookmark btn-danger" action=(action "delete")}}
     {{/if}}
   </div>
 {{/conditional-loading-spinner}}
