@@ -6,10 +6,12 @@
       {{/link-to}}
     </li>
   {{else}}
-    {{group-dropdown
-      groups=group.extras.visible_group_names
-      value=group.name
-    }}
+    <li>
+      {{group-dropdown
+        groups=group.extras.visible_group_names
+        value=group.name
+      }}
+    </li>
   {{/if}}
 
   {{#each tabs as |tab|}}

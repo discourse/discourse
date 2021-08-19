@@ -44,11 +44,14 @@ acceptance("Review", function (needs) {
   });
 
   test("Reject user", async function (assert) {
-    await visit("/review");
-    await click(
-      `${user} .reviewable-actions button[data-name="Delete User..."]`
+    let reviewableActionDropdown = selectKit(
+      `${user} .reviewable-action-dropdown`
     );
-    await click(`${user} li[data-value="reject_user_delete"]`);
+
+    await visit("/review");
+    await reviewableActionDropdown.expand();
+    await reviewableActionDropdown.selectRowByValue("reject_user_delete");
+
     assert.ok(
       queryAll(".reject-reason-reviewable-modal:visible .title")
         .html()
@@ -57,11 +60,9 @@ acceptance("Review", function (needs) {
     );
 
     await click(".modal-footer button[aria-label='cancel']");
+    await reviewableActionDropdown.expand();
+    await reviewableActionDropdown.selectRowByValue("reject_user_block");
 
-    await click(
-      `${user} .reviewable-actions button[data-name="Delete User..."]`
-    );
-    await click(`${user} li[data-value="reject_user_block"]`);
     assert.ok(
       queryAll(".reject-reason-reviewable-modal:visible .title")
         .html()

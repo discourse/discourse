@@ -69,27 +69,11 @@ acceptance("Topic", function (needs) {
       "it fills composer with the ring string"
     );
 
-    const targets = queryAll(
-      "#private-message-users .selected-name",
-      ".composer-fields"
-    );
-
+    const privateMessageUsers = selectKit("#private-message-users");
     assert.equal(
-      $(targets[0]).text().trim(),
-      "someguy",
-      "it fills up the composer with the right user to start the PM to"
-    );
-
-    assert.equal(
-      $(targets[1]).text().trim(),
-      "test",
-      "it fills up the composer with the right user to start the PM to"
-    );
-
-    assert.equal(
-      $(targets[2]).text().trim(),
-      "Group",
-      "it fills up the composer with the right group to start the PM to"
+      privateMessageUsers.header().value(),
+      "someguy,test,Group",
+      "it fills up the composer correctly"
     );
   });
 

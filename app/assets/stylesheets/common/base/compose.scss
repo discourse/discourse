@@ -223,7 +223,7 @@
     display: flex;
     flex: 1 0 40%;
     max-width: 40%;
-    margin: 0 0 5px 10px;
+    margin: 0 0 0 10px;
     @media screen and (max-width: 955px) {
       flex: 1 0 100%;
       margin-left: 0;
@@ -294,7 +294,7 @@
 
   .mini-tag-chooser {
     width: 49%;
-    margin: 0 0 5px auto;
+    margin: 0 0 0 auto;
     background: var(--secondary);
     z-index: z("composer", "dropdown");
   }

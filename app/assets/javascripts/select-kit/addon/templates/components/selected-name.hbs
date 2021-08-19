@@ -1,5 +1,5 @@
 {{#if selectKit.options.showFullTitle}}
-  <div tabindex="0" role="button" lang={{lang}} {{action "onSelectedNameClick"}} title={{title}} data-value={{value}} data-name={{name}} class="select-kit-selected-name selected-name choice">
+  <div lang={{lang}} title={{title}} data-value={{value}} data-name={{name}} class="select-kit-selected-name selected-name choice">
     {{#if item.icon}}
       {{d-icon item.icon}}
     {{/if}}
@@ -8,18 +8,14 @@
       {{label}}
     </span>
 
-    {{#if selectKit.options.clearOnClick}}
-      {{d-icon "times"}}
-    {{else}}
-      {{#if shouldDisplayClearableButton}}
-        {{d-button
-          class="btn-clear"
-          icon="times"
-          action=selectKit.deselect
-          actionParam=item
-          ariaLabel="clear_input"
-        }}
-      {{/if}}
+    {{#if shouldDisplayClearableButton}}
+      {{d-button
+        class="btn-clear"
+        icon="times"
+        action=selectKit.deselect
+        actionParam=item
+        ariaLabel="clear_input"
+      }}
     {{/if}}
   </div>
 {{else}}

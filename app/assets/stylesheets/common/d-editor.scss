@@ -52,14 +52,22 @@
 .d-editor-button-bar {
   display: flex;
   align-items: center;
-  min-height: 30px;
   border-bottom: 1px solid var(--primary-low);
+  padding: 2px;
+
+  .btn:focus {
+    border-radius: 0;
+    @include default-focus;
+  }
 
   .btn,
   .btn-default {
     background-color: transparent;
     display: inline-block;
     color: var(--primary-medium);
+    height: 34px;
+    box-sizing: border-box;
+
     .d-icon {
       color: currentColor;
     }
@@ -264,13 +272,25 @@
 // d-editor bar button sizing for all editors - this is kept separate to keep
 // everything in one place
 .d-editor-button-bar {
-  margin: 0.25em;
+  box-sizing: border-box;
 
   // shared styles for all font sizes
   .btn,
   .btn-default {
     padding: 0.5em;
+    margin: 0;
   }
+
+  button {
+    background: pink;
+  }
+
+  .select-kit {
+    .select-kit-header {
+      margin: 0;
+    }
+  }
+
   .d-editor-spacer {
     margin: 0 0.25em;
   }

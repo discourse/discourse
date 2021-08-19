@@ -34,7 +34,8 @@ discourseModule(
       },
 
       async test(assert) {
-        await this.subject.deselectItem("bob");
+        await this.subject.expand();
+        await this.subject.deselectItemByValue("bob");
         assert.equal(this.subject.header().name(), "martin");
       },
     });

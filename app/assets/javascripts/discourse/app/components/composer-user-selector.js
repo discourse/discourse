@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 
 export default Component.extend({
   init() {
@@ -12,7 +11,7 @@ export default Component.extend({
     this._super(...arguments);
 
     if (this.focusTarget === "usernames") {
-      putCursorAtEnd(this.element.querySelector("input"));
+      this.element.querySelector(".select-kit .select-kit-header").focus();
     }
   },
 

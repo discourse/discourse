@@ -21,6 +21,7 @@ export default Component.extend({
   translatedAriaLabel: null,
   forwardEvent: false,
   preventFocus: false,
+  onKeyDown: null,
 
   isLoading: computed({
     set(key, value) {
@@ -105,6 +106,13 @@ export default Component.extend({
     }
   },
 
+  keyDown(e) {
+    if (this.onKeyDown) {
+      e.stopPropagation();
+      this.onKeyDown(e);
+    }
+  },
+
   click(event) {
     let { action } = this;
 
@@ -132,6 +140,7 @@ export default Component.extend({
       DiscourseURL.routeTo(this.href);
     }
 
+    event.preventDefault();
     event.stopPropagation();
 
     return false;

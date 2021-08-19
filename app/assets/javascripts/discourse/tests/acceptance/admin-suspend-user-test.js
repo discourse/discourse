@@ -120,12 +120,6 @@ acceptance("Admin - Suspend User - timeframe choosing", function (needs) {
     await click(".suspend-user");
     await click(".future-date-input-selector-header");
 
-    assert.equal(
-      query(".future-date-input-selector-header").getAttribute("aria-expanded"),
-      "true",
-      "selector is expanded"
-    );
-
     const options = Array.from(
       queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>
         x.innerText.trim()
