@@ -195,6 +195,20 @@ class UserOption < ActiveRecord::Base
       email_messages_level == UserOption.email_level_types[:never]
   end
 
+  def self.user_tzinfo(user_id)
+    timezone = UserOption.where(user_id: user_id).pluck(:timezone).first || 'UTC'
+
+    tzinfo = nil
+    begin
+      tzinfo = ActiveSupport::TimeZone.find_tzinfo(timezone)
+    rescue TZInfo::InvalidTimezoneIdentifier
+      Rails.logger.warn("#{User.find_by(id: user_id)&.username} has the timezone #{timezone} set, we do not know how to parse it in Rails, fallback to UTC")
+      tzinfo = ActiveSupport::TimeZone.find_tzinfo('UTC')
+    end
+
+    tzinfo
+  end
+
   private
 
   def update_tracked_topics
