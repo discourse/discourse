@@ -1,6 +1,9 @@
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import Draft from "discourse/models/draft";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import PrivateMessageTopicTrackingState from "discourse/models/private-message-topic-tracking-state";
 
 export default DiscourseRoute.extend({
   renderTemplate() {
@@ -8,11 +11,28 @@ export default DiscourseRoute.extend({
   },
 
   model() {
-    return this.modelFor("user");
+    const user = this.modelFor("user");
+    return ajax(`/u/${user.username}/private-message-topic-tracking-state`)
+      .then((response) => {
+        return {
+          user: user,
+          pmTopicTrackingState: response,
+        };
+      })
+      .catch(popupAjaxError);
   },
 
-  setupController(controller, user) {
-    controller.set("model", user);
+  setupController(controller, model) {
+    const user = model.user;
+
+    controller.setProperties({
+      model: user,
+      pmTopicTrackingState: PrivateMessageTopicTrackingState.create({
+        data: model.pmTopicTrackingState,
+        messageBus: controller.messageBus,
+        user: user,
+      }),
+    });
 
     if (this.currentUser) {
       const composerController = this.controllerFor("composer");

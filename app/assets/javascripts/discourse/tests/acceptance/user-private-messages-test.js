@@ -1,10 +1,13 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import I18n from "I18n";
 import {
   acceptance,
   count,
   exists,
+  publishToMessageBus,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { PERSONAL_INBOX } from "discourse/controllers/user-private-messages";
 
@@ -151,6 +154,135 @@ acceptance(
 
         return helper.response({});
       });
+    });
+
+    const publishUnreadToMessageBus = function (group_ids) {
+      publishToMessageBus("/private-message-topic-tracking-state/5", {
+        topic_id: Math.random(),
+        message_type: "unread",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 2,
+          notification_level: 2,
+          group_ids: group_ids || [],
+        },
+      });
+    };
+
+    const publishNewToMessageBus = function (group_ids) {
+      publishToMessageBus("/private-message-topic-tracking-state/5", {
+        topic_id: Math.random(),
+        message_type: "new_topic",
+        payload: {
+          last_read_post_number: null,
+          highest_post_number: 1,
+          group_ids: group_ids || [],
+        },
+      });
+    };
+
+    test("incoming unread and new messages on all filter", async function (assert) {
+      await visit("/u/charlie/messages");
+
+      publishUnreadToMessageBus();
+      publishNewToMessageBus();
+
+      await visit("/u/charlie/messages"); // wait for re-render
+
+      assert.equal(
+        queryAll(".messages-nav li a.new").text().trim(),
+        I18n.t("user.messages.new_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      assert.equal(
+        queryAll(".messages-nav li a.unread").text().trim(),
+        I18n.t("user.messages.unread_with_count", { count: 1 }),
+        "displays the right count"
+      );
+    });
+
+    test("incoming new messages while viewing new", async function (assert) {
+      await visit("/u/charlie/messages/new");
+
+      publishNewToMessageBus();
+
+      await visit("/u/charlie/messages/new"); // wait for re-render
+
+      assert.equal(
+        queryAll(".messages-nav li a.new").text().trim(),
+        I18n.t("user.messages.new_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+    });
+
+    test("incoming unread messages while viewing unread", async function (assert) {
+      await visit("/u/charlie/messages/unread");
+
+      publishUnreadToMessageBus();
+
+      await visit("/u/charlie/messages/unread"); // wait for re-render
+
+      assert.equal(
+        queryAll(".messages-nav li a.unread").text().trim(),
+        I18n.t("user.messages.unread_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+    });
+
+    test("incoming unread messages while viewing group unread", async function (assert) {
+      await visit("/u/charlie/messages/group/awesome_group/unread");
+
+      publishUnreadToMessageBus([14]);
+      publishNewToMessageBus([14]);
+
+      await visit("/u/charlie/messages/group/awesome_group/unread"); // wait for re-render
+
+      assert.equal(
+        queryAll(".messages-nav li a.unread").text().trim(),
+        I18n.t("user.messages.unread_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      assert.equal(
+        queryAll(".messages-nav li a.new").text().trim(),
+        I18n.t("user.messages.new_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+
+      await visit("/u/charlie/messages/unread");
+
+      assert.equal(
+        queryAll(".messages-nav li a.unread").text().trim(),
+        I18n.t("user.messages.unread_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      assert.equal(
+        queryAll(".messages-nav li a.new").text().trim(),
+        I18n.t("user.messages.new_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      await visit("/u/charlie/messages/personal/unread");
+
+      assert.equal(
+        queryAll(".messages-nav li a.unread").text().trim(),
+        I18n.t("user.messages.unread"),
+        "displays the right count"
+      );
+
+      assert.equal(
+        queryAll(".messages-nav li a.new").text().trim(),
+        I18n.t("user.messages.new"),
+        "displays the right count"
+      );
     });
 
     test("dismissing all unread messages", async function (assert) {

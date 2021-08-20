@@ -57,16 +57,16 @@ export default (inboxType, filter) => {
 
     setupController() {
       this._super.apply(this, arguments);
-      this.controllerFor("user-private-messages").set("group", this.group);
-      this.controllerFor("user-topics-list").set("group", this.group);
 
-      if (filter) {
-        this.controllerFor("user-topics-list").subscribe(
-          `/private-messages/group/${this.get(
-            "groupName"
-          ).toLowerCase()}/${filter}`
-        );
-      }
+      const userTopicsListController = this.controllerFor("user-topics-list");
+      userTopicsListController.set("group", this.group);
+
+      userTopicsListController.set(
+        "pmTopicTrackingState.activeGroup",
+        this.group
+      );
+
+      this.controllerFor("user-private-messages").set("group", this.group);
     },
 
     dismissReadOptions() {

@@ -217,6 +217,10 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
+  pretender.get("/u/:username/private-message-topic-tracking-state", () => {
+    return response([]);
+  });
+
   pretender.get("/topics/feature_stats.json", () => {
     return response({
       pinned_in_category_count: 0,

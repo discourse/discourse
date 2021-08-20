@@ -1184,7 +1184,13 @@ en:
         latest: "Latest"
         sent: "Sent"
         unread: "Unread"
+        unread_with_count:
+          one: "Unread (%{count})"
+          other: "Unread (%{count})"
         new: "New"
+        new_with_count:
+          one: "New (%{count})"
+          other: "New (%{count})"
         archive: "Archive"
         groups: "My Groups"
         move_to_inbox: "Move to Inbox"

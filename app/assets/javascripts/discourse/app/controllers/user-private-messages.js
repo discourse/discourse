@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { alias, and, equal } from "@ember/object/computed";
+import { alias, and, equal, filterBy } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { VIEW_NAME_WARNINGS } from "discourse/routes/user-private-messages-warnings";
 import I18n from "I18n";
@@ -66,12 +66,30 @@ export default Controller.extend({
     return pmView === VIEW_NAME_WARNINGS && !viewingSelf && !isAdmin;
   },
 
-  @discourseComputed("model.groups")
-  inboxes(groups) {
-    const groupsWithMessages = groups?.filter((group) => {
-      return group.has_messages;
-    });
+  @discourseComputed("pmTopicTrackingState.newIncoming.[]", "selectedInbox")
+  newLinkText() {
+    return this._linkText("new");
+  },
 
+  @discourseComputed("selectedInbox", "pmTopicTrackingState.newIncoming.[]")
+  unreadLinkText() {
+    return this._linkText("unread");
+  },
+
+  _linkText(type) {
+    const count = this.pmTopicTrackingState?.lookupCount(type) || 0;
+
+    if (count === 0) {
+      return I18n.t(`user.messages.${type}`);
+    } else {
+      return I18n.t(`user.messages.${type}_with_count`, { count });
+    }
+  },
+
+  groupsWithMessages: filterBy("model.groups", "has_messages", true),
+
+  @discourseComputed("groupsWithMessages")
+  inboxes(groupsWithMessages) {
     if (!groupsWithMessages || groupsWithMessages.length === 0) {
       return [];
     }
