@@ -675,7 +675,9 @@ export default Component.extend(
             highlighted:
               this.singleSelect && this.value
                 ? this.itemForValue(this.value, this.mainCollection)
-                : false,
+                : isEmpty(this.selectKit.filter)
+                ? null
+                : this.mainCollection.firstObject,
             isLoading: false,
             hasNoContent,
           });
