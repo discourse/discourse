@@ -21,27 +21,27 @@
 
   {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list"}}
     {{#if isAllInbox}}
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.index" model}}
           {{i18n "user.messages.latest"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.sent" model}}
           {{i18n "user.messages.sent"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.new" model}}
           {{i18n "user.messages.new"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.unread" model}}
           {{i18n "user.messages.unread"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.archive" model}}
           {{i18n "user.messages.archive"}}
         {{/link-to}}
@@ -49,22 +49,22 @@
     {{/if}}
 
     {{#if group}}
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.group" group.name}}
           {{i18n "user.messages.latest"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.groupNew" group.name}}
           {{i18n "user.messages.new"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.groupUnread" group.name}}
           {{i18n "user.messages.unread"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.groupArchive" group.name}}
           {{i18n "user.messages.archive"}}
         {{/link-to}}
@@ -72,27 +72,27 @@
     {{/if}}
 
     {{#if isPersonalInbox}}
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.personal" model}}
           {{i18n "user.messages.latest"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.personalSent" model}}
           {{i18n "user.messages.sent"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.personalNew" model}}
           {{i18n "user.messages.new"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.personalUnread" model}}
           {{i18n "user.messages.unread"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
+      <li>
         {{#link-to "userPrivateMessages.personalArchive" model}}
           {{i18n "user.messages.archive"}}
         {{/link-to}}
