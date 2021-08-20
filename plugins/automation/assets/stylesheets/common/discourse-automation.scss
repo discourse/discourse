@@ -8,23 +8,6 @@
       cursor: pointer;
     }
   }
-
-  .dropdown-select-box {
-    .select-kit-header {
-      background: var(--secondary);
-      border: 1px solid var(--primary-medium);
-      color: var(--primary);
-
-      &:hover {
-        color: var(--primary);
-      }
-    }
-
-    .select-kit-row.none .name {
-      font-weight: 500;
-      color: var(--primary-medium);
-    }
-  }
 }
 
 .discourse-automation-title {
