@@ -82,12 +82,12 @@ export default Component.extend(UtilsMixin, {
     }
 
     if (event.key === "ArrowUp") {
-      this.selectKit.highlightPrevious();
+      this.selectKit.highlightLast();
       return false;
     }
 
     if (event.key === "ArrowDown") {
-      this.selectKit.highlightNext();
+      this.selectKit.highlightFirst();
       return false;
     }
 

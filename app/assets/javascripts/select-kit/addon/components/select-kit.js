@@ -114,6 +114,8 @@ export default Component.extend(
           open: bind(this, this._open),
           highlightNext: bind(this, this._highlightNext),
           highlightPrevious: bind(this, this._highlightPrevious),
+          highlightLast: bind(this, this._highlightLast),
+          highlightFirst: bind(this, this._highlightFirst),
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
@@ -711,6 +713,24 @@ export default Component.extend(
       rowContainer && rowContainer.focus({ preventScroll });
     },
 
+    _highlightLast() {
+      const highlighted = this.mainCollection.objectAt(
+        this.mainCollection.length - 1
+      );
+      if (highlighted) {
+        this._scrollToRow(highlighted, false);
+        this.set("selectKit.highlighted", highlighted);
+      }
+    },
+
+    _highlightFirst() {
+      const highlighted = this.mainCollection.objectAt(0);
+      if (highlighted) {
+        this._scrollToRow(highlighted, false);
+        this.set("selectKit.highlighted", highlighted);
+      }
+    },
+
     _highlightNext() {
       let highlightedIndex = this.mainCollection.indexOf(
         this.selectKit.highlighted
@@ -720,7 +740,11 @@ export default Component.extend(
       if (highlightedIndex < count - 1) {
         highlightedIndex = highlightedIndex + 1;
       } else {
-        highlightedIndex = 0;
+        if (this.selectKit.isFilterExpanded) {
+          this._focusFilter();
+        } else {
+          highlightedIndex = 0;
+        }
       }
 
       const highlighted = this.mainCollection.objectAt(highlightedIndex);
@@ -739,7 +763,11 @@ export default Component.extend(
       if (highlightedIndex > 0) {
         highlightedIndex = highlightedIndex - 1;
       } else {
-        highlightedIndex = count - 1;
+        if (this.selectKit.isFilterExpanded) {
+          this._focusFilter();
+        } else {
+          highlightedIndex = count - 1;
+        }
       }
 
       const highlighted = this.mainCollection.objectAt(highlightedIndex);
