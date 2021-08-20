@@ -3,6 +3,8 @@ import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { action } from "@ember/object";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import getURL from "discourse-common/lib/get-url";
 
 export const NEW_FILTER = "new";
 export const UNREAD_FILTER = "unread";
@@ -61,6 +63,7 @@ export default (inboxType, path, filter) => {
         inbox: inboxType,
         pmTopicTrackingState:
           userPrivateMessagesController.pmTopicTrackingState,
+        emptyState: this.emptyState(),
       });
 
       userTopicsListController.subscribe();
@@ -72,6 +75,15 @@ export default (inboxType, path, filter) => {
       });
 
       this.searchService.set("contextType", "private_messages");
+    },
+
+    emptyState() {
+      const title = I18n.t("user.no_messages_title");
+      const body = I18n.t("user.no_messages_body", {
+        aboutUrl: getURL("/about"),
+        icon: iconHTML("envelope"),
+      }).htmlSafe();
+      return { title, body };
     },
 
     deactivate() {

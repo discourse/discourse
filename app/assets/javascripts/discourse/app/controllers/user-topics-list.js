@@ -19,6 +19,12 @@ export default Controller.extend(BulkTopicSelection, {
   channel: null,
   tagsForUser: null,
   pmTopicTrackingState: null,
+  incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
+
+  @discourseComputed("emptyState", "model.topics.length", "incomingCount")
+  showEmptyStatePlaceholder(emptyState, topicsLength, incomingCount) {
+    return emptyState && topicsLength === 0 && incomingCount === 0;
+  },
 
   saveScrollPosition() {
     this.session.set("topicListScrollPosition", $(window).scrollTop());
@@ -28,8 +34,6 @@ export default Controller.extend(BulkTopicSelection, {
   _showFooter() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
-
-  incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
 
   @discourseComputed("filter", "model.topics.length")
   showResetNew(filter, hasTopics) {
