@@ -23,7 +23,7 @@ export default class UppyMediaOptimization extends Plugin {
 
     this.uppy.emit("preprocess-progress", this.pluginClass, file);
 
-    return this.optimizeFn(file)
+    return this.optimizeFn(file, { stopWorkerOnError: !this.runParallel })
       .then((optimizedFile) => {
         if (!optimizedFile) {
           warn("Nothing happened, possible error or other restriction.", {
