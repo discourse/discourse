@@ -9,10 +9,10 @@ export default {
       addComposerUploadProcessor(
         { action: "optimizeJPEG" },
         {
-          optimizeJPEG: (data) =>
+          optimizeJPEG: (data, opts) =>
             container
               .lookup("service:media-optimization-worker")
-              .optimizeImage(data),
+              .optimizeImage(data, opts),
         }
       );
     }
