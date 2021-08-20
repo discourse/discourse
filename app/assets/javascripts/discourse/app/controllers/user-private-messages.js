@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { alias, and, equal, filterBy } from "@ember/object/computed";
+import { alias, and, equal } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { VIEW_NAME_WARNINGS } from "discourse/routes/user-private-messages-warnings";
 import I18n from "I18n";
@@ -86,9 +86,7 @@ export default Controller.extend({
     }
   },
 
-  groupsWithMessages: filterBy("model.groups", "has_messages", true),
-
-  @discourseComputed("groupsWithMessages")
+  @discourseComputed("model.groupsWithMessages")
   inboxes(groupsWithMessages) {
     if (!groupsWithMessages || groupsWithMessages.length === 0) {
       return [];

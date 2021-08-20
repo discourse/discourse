@@ -6,7 +6,7 @@ import {
   count,
   exists,
   publishToMessageBus,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { PERSONAL_INBOX } from "discourse/controllers/user-private-messages";
@@ -160,7 +160,7 @@ acceptance(
     });
 
     const publishUnreadToMessageBus = function (group_ids) {
-      publishToMessageBus("/private-message-topic-tracking-state/5", {
+      publishToMessageBus("/private-message-topic-tracking-state/user/5", {
         topic_id: Math.random(),
         message_type: "unread",
         payload: {
@@ -173,7 +173,7 @@ acceptance(
     };
 
     const publishNewToMessageBus = function (group_ids) {
-      publishToMessageBus("/private-message-topic-tracking-state/5", {
+      publishToMessageBus("/private-message-topic-tracking-state/user/5", {
         topic_id: Math.random(),
         message_type: "new_topic",
         payload: {
@@ -185,20 +185,23 @@ acceptance(
     };
 
     const publishArchiveToMessageBus = function () {
-      publishToMessageBus("/private-message-topic-tracking-state/5", {
+      publishToMessageBus("/private-message-topic-tracking-state/user/5", {
         topic_id: Math.random(),
         message_type: "archive",
       });
     };
 
     const publishGroupArchiveToMessageBus = function (group_ids) {
-      publishToMessageBus("/private-message-topic-tracking-state/5", {
-        topic_id: Math.random(),
-        message_type: "group_archive",
-        payload: {
-          group_ids: group_ids,
-        },
-      });
+      publishToMessageBus(
+        `/private-message-topic-tracking-state/group/${group_ids[0]}`,
+        {
+          topic_id: Math.random(),
+          message_type: "group_archive",
+          payload: {
+            group_ids: group_ids,
+          },
+        }
+      );
     };
 
     test("incoming archive message on all and archive filter", async function (assert) {
@@ -282,13 +285,13 @@ acceptance(
       await visit("/u/charlie/messages"); // wait for re-render
 
       assert.equal(
-        queryAll(".messages-nav li a.new").text().trim(),
+        query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
 
       assert.equal(
-        queryAll(".messages-nav li a.unread").text().trim(),
+        query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -302,7 +305,7 @@ acceptance(
       await visit("/u/charlie/messages/new"); // wait for re-render
 
       assert.equal(
-        queryAll(".messages-nav li a.new").text().trim(),
+        query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -318,7 +321,7 @@ acceptance(
       await visit("/u/charlie/messages/unread"); // wait for re-render
 
       assert.equal(
-        queryAll(".messages-nav li a.unread").text().trim(),
+        query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -335,13 +338,13 @@ acceptance(
       await visit("/u/charlie/messages/group/awesome_group/unread"); // wait for re-render
 
       assert.equal(
-        queryAll(".messages-nav li a.unread").text().trim(),
+        query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
 
       assert.equal(
-        queryAll(".messages-nav li a.new").text().trim(),
+        query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -351,13 +354,13 @@ acceptance(
       await visit("/u/charlie/messages/unread");
 
       assert.equal(
-        queryAll(".messages-nav li a.unread").text().trim(),
+        query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
 
       assert.equal(
-        queryAll(".messages-nav li a.new").text().trim(),
+        query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -365,13 +368,13 @@ acceptance(
       await visit("/u/charlie/messages/personal/unread");
 
       assert.equal(
-        queryAll(".messages-nav li a.unread").text().trim(),
+        query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread"),
         "displays the right count"
       );
 
       assert.equal(
-        queryAll(".messages-nav li a.new").text().trim(),
+        query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new"),
         "displays the right count"
       );

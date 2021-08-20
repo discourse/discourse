@@ -101,10 +101,6 @@ describe PrivateMessageTopicTrackingState do
       expect(described_class.report(user_2).map(&:topic_id))
         .to contain_exactly(private_message.id)
     end
-
-    it 'does not include unread topics which are too old' do
-
-    end
   end
 
   describe '.publish_new' do
@@ -114,11 +110,13 @@ describe PrivateMessageTopicTrackingState do
       end
 
       expect(messages.map(&:channel)).to contain_exactly(
-        described_class.channel(user.id),
-        described_class.channel(user_2.id)
+        described_class.user_channel(user.id),
+        described_class.user_channel(user_2.id)
       )
 
-      data = messages.first.data
+      data = messages.find do |message|
+        message.channel == described_class.user_channel(user.id)
+      end.data
 
       expect(data['message_type']).to eq(described_class::NEW_MESSAGE_TYPE)
     end
@@ -129,11 +127,13 @@ describe PrivateMessageTopicTrackingState do
       end
 
       expect(messages.map(&:channel)).to contain_exactly(
-        described_class.channel(user.id),
-        described_class.channel(user_2.id)
+        described_class.group_channel(group.id),
+        described_class.user_channel(user.id)
       )
 
-      data = messages.first.data
+      data = messages.find do |message|
+        message.channel == described_class.group_channel(group.id)
+      end.data
 
       expect(data['message_type']).to eq(described_class::NEW_MESSAGE_TYPE)
       expect(data['topic_id']).to eq(group_message.id)
@@ -150,11 +150,13 @@ describe PrivateMessageTopicTrackingState do
       end
 
       expect(messages.map(&:channel)).to contain_exactly(
-        described_class.channel(user.id),
-        described_class.channel(user_2.id)
+        described_class.user_channel(user.id),
+        described_class.user_channel(user_2.id)
       )
 
-      data = messages.first.data
+      data = messages.find do |message|
+        message.channel == described_class.user_channel(user.id)
+      end.data
 
       expect(data['message_type']).to eq(described_class::UNREAD_MESSAGE_TYPE)
       expect(data['topic_id']).to eq(private_message.id)
@@ -168,7 +170,7 @@ describe PrivateMessageTopicTrackingState do
 
   describe '.publish_user_archived' do
     it 'should publish the right message_bus message' do
-      message = MessageBus.track_publish(described_class.channel(user.id)) do
+      message = MessageBus.track_publish(described_class.user_channel(user.id)) do
         described_class.publish_user_archived(private_message, user.id)
       end.first
 
@@ -189,11 +191,12 @@ describe PrivateMessageTopicTrackingState do
       end
 
       expect(messages.map(&:channel)).to contain_exactly(
-        described_class.channel(user_2.id),
-        described_class.channel(user_3.id)
+        described_class.group_channel(group.id)
       )
 
-      data = messages.first.data
+      data = messages.find do |message|
+        message.channel == described_class.group_channel(group.id)
+      end.data
 
       expect(data['message_type']).to eq(described_class::GROUP_ARCHIVE_MESSAGE_TYPE)
       expect(data['topic_id']).to eq(group_message.id)

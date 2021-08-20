@@ -1,5 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { reads } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import { action } from "@ember/object";
 import Topic from "discourse/models/topic";
@@ -28,10 +29,7 @@ export default Controller.extend(BulkTopicSelection, {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
-  @discourseComputed("pmTopicTrackingState.newIncoming.[]")
-  incomingCount(newIncoming) {
-    return newIncoming?.length || 0;
-  },
+  incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
 
   @discourseComputed("filter", "model.topics.length")
   showResetNew(filter, hasTopics) {

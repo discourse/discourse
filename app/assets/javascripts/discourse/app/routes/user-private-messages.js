@@ -13,26 +13,34 @@ export default DiscourseRoute.extend({
   model() {
     const user = this.modelFor("user");
     return ajax(`/u/${user.username}/private-message-topic-tracking-state`)
-      .then((response) => {
+      .then((pmTopicTrackingStateData) => {
         return {
-          user: user,
-          pmTopicTrackingState: response,
+          user,
+          pmTopicTrackingStateData,
         };
       })
-      .catch(popupAjaxError);
+      .catch((e) => {
+        popupAjaxError(e);
+        return { user };
+      });
   },
 
   setupController(controller, model) {
     const user = model.user;
 
+    const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
+      messageBus: controller.messageBus,
+      user,
+    });
+
+    pmTopicTrackingState.startTracking(model.pmTopicTrackingStateData);
+
     controller.setProperties({
       model: user,
-      pmTopicTrackingState: PrivateMessageTopicTrackingState.create({
-        data: model.pmTopicTrackingState,
-        messageBus: controller.messageBus,
-        user: user,
-      }),
+      pmTopicTrackingState,
     });
+
+    this.set("pmTopicTrackingState", pmTopicTrackingState);
 
     if (this.currentUser) {
       const composerController = this.controllerFor("composer");
@@ -48,6 +56,10 @@ export default DiscourseRoute.extend({
         }
       });
     }
+  },
+
+  deactivate() {
+    this.pmTopicTrackingState.stopTracking();
   },
 
   actions: {

@@ -11,23 +11,37 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 const PrivateMessageTopicTrackingState = EmberObject.extend({
   CHANNEL_PREFIX: "/private-message-topic-tracking-state",
 
-  newIncoming: Ember.A(),
+  newIncoming: [],
   inbox: null,
   filter: null,
   activeGroup: null,
 
-  init(opts) {
-    this._super(...arguments);
+  startTracking(data) {
     this.states = new Map();
-    this._loadStates(opts.data);
+    this._loadStates(data);
     this.establishChannels();
   },
 
   establishChannels() {
     this.messageBus.subscribe(
-      `${this.CHANNEL_PREFIX}/${this.user.id}`,
+      this._userChannel(this.user.id),
       this._processMessage.bind(this)
     );
+
+    this.user.groupsWithMessages?.forEach((group) => {
+      this.messageBus.subscribe(
+        this._groupChannel(group.id),
+        this._processMessage.bind(this)
+      );
+    });
+  },
+
+  stopTracking() {
+    this.messageBus.unsubscribe(this._userChannel(this.user.id));
+
+    this.user.groupsWithMessages?.forEach((group) => {
+      this.messageBus.unsubscribe(this._groupChannel(group.id));
+    });
   },
 
   lookupCount(type) {
@@ -51,13 +65,21 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
   resetTracking() {
     if (this.inbox) {
-      this.set("newIncoming", Ember.A());
+      this.set("newIncoming", []);
     }
+  },
+
+  _userChannel(userId) {
+    return `${this.CHANNEL_PREFIX}/user/${userId}`;
+  },
+
+  _groupChannel(groupId) {
+    return `${this.CHANNEL_PREFIX}/group/${groupId}`;
   },
 
   _isNew(topic) {
     return (
-      topic.last_read_post_number === null &&
+      !topic.last_read_post_number &&
       ((topic.notification_level !== 0 && !topic.notification_level) ||
         topic.notification_level >= NotificationLevels.TRACKING) &&
       !topic.is_seen
@@ -66,7 +88,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
   _isUnread(topic) {
     return (
-      topic.last_read_post_number !== null &&
+      topic.last_read_post_number &&
       topic.last_read_post_number < topic.highest_post_number &&
       topic.notification_level >= NotificationLevels.TRACKING
     );
@@ -77,11 +99,11 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
     if (groups.length === 0) {
       return true;
-    } else {
-      return !groups.some((group) => {
-        return topic.group_ids?.includes(group.id);
-      });
     }
+
+    return !groups.some((group) => {
+      return topic.group_ids?.includes(group.id);
+    });
   },
 
   _isGroup(topic) {

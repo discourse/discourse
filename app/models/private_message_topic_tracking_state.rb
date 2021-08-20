@@ -28,7 +28,7 @@ class PrivateMessageTopicTrackingState
       sql + "\n\n LIMIT :max_topics",
       {
         max_topics: TopicTrackingState::MAX_TOPICS,
-        min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
+        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
       }
     )
   end
@@ -46,14 +46,14 @@ class PrivateMessageTopicTrackingState
       if skip_unread
         "1=0"
       else
-        TopicQuery.unread_filter(Topic, staff: user.staff?).where_clause.ast.to_sql
+        TopicTrackingState.unread_filter_sql(staff: user.staff?)
       end
 
     new =
       if skip_new
         "1=0"
       else
-        new_filter_sql
+        TopicTrackingState.new_filter_sql
       end
 
     sql = +<<~SQL
@@ -62,7 +62,7 @@ class PrivateMessageTopicTrackingState
         u.id AS user_id,
         last_read_post_number,
         tu.notification_level,
-        #{highest_post_number_column_select(user.staff?)},
+        #{TopicTrackingState.highest_post_number_column_select(user.staff?)},
         ARRAY(SELECT group_id FROM topic_allowed_groups WHERE topic_allowed_groups.topic_id = topics.id) AS group_ids
       FROM topics
       JOIN users u on u.id = #{user.id.to_i}
@@ -79,10 +79,6 @@ class PrivateMessageTopicTrackingState
         ((#{unread}) OR (#{new})) AND
         topics.deleted_at IS NULL
     SQL
-  end
-
-  def self.highest_post_number_column_select(staff)
-    "#{staff ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
   end
 
   def self.publish_unread(post)
@@ -122,7 +118,7 @@ class PrivateMessageTopicTrackingState
         }
       }
 
-      MessageBus.publish(self.channel(tu.user_id), message.as_json,
+      MessageBus.publish(self.user_channel(tu.user_id), message.as_json,
         user_ids: [tu.user_id]
       )
     end
@@ -141,8 +137,12 @@ class PrivateMessageTopicTrackingState
       }
     }.as_json
 
-    topic.all_allowed_users.pluck(:id).each do |user_id|
-      MessageBus.publish(self.channel(user_id), message, user_ids: [user_id])
+    topic.allowed_users.pluck(:id).each do |user_id|
+      MessageBus.publish(self.user_channel(user_id), message, user_ids: [user_id])
+    end
+
+    topic.allowed_groups.pluck(:id).each do |group_id|
+      MessageBus.publish(self.group_channel(group_id), message, group_ids: [group_id])
     end
   end
 
@@ -157,14 +157,7 @@ class PrivateMessageTopicTrackingState
       }
     }.as_json
 
-    topic
-      .allowed_group_users
-      .where("group_users.group_id = ?", group_id)
-      .pluck(:id)
-      .each do |user_id|
-
-      MessageBus.publish(self.channel(user_id), message, user_ids: [user_id])
-    end
+    MessageBus.publish(self.group_channel(group_id), message, group_ids: [group_id])
   end
 
   def self.publish_user_archived(topic, user_id)
@@ -175,35 +168,14 @@ class PrivateMessageTopicTrackingState
       topic_id: topic.id,
     }.as_json
 
-    MessageBus.publish(self.channel(user_id), message, user_ids: [user_id])
+    MessageBus.publish(self.user_channel(user_id), message, user_ids: [user_id])
   end
 
-  def self.new_filter_sql
-    TopicQuery.new_filter(
-      Topic, treat_as_new_topic_clause_sql: treat_as_new_topic_clause
-    ).where_clause.ast.to_sql +
-      " AND topics.created_at > :min_date" +
-      " AND dismissed_topic_users.id IS NULL"
+  def self.user_channel(user_id)
+    "#{CHANNEL_PREFIX}/user/#{user_id}"
   end
 
-  def self.treat_as_new_topic_clause
-    User.where(
-      "GREATEST(CASE
-        WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
-        WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
-        ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
-      END, u.created_at, :min_date)",
-      {
-        now: DateTime.now,
-        last_visit: User::NewTopicDuration::LAST_VISIT,
-        always: User::NewTopicDuration::ALWAYS,
-        default_duration: SiteSetting.default_other_new_topic_duration_minutes,
-        min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
-      }
-    ).where_clause.ast.to_sql
-  end
-
-  def self.channel(user_id)
-    "#{CHANNEL_PREFIX}/#{user_id}"
+  def self.group_channel(group_id)
+    "#{CHANNEL_PREFIX}/group/#{group_id}"
   end
 end
