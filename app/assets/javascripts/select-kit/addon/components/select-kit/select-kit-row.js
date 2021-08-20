@@ -157,7 +157,16 @@ export default Component.extend(UtilsMixin, {
 
   keyDown(event) {
     if (this.selectKit.isExpanded) {
-      if (event.key === "ArrowUp") {
+      if (event.key === "Backspace") {
+        if (this.selectKit.isFilterExpanded) {
+          this.selectKit.set("filter", this.selectKit.filter.slice(0, -1));
+          this.selectKit.triggerSearch();
+          this.selectKit.focusFilter();
+          event.preventDefault();
+          event.stopPropagation();
+          return false;
+        }
+      } else if (event.key === "ArrowUp") {
         this.selectKit.highlightPrevious();
         return false;
       } else if (event.key === "ArrowDown") {
@@ -177,8 +186,8 @@ export default Component.extend(UtilsMixin, {
       } else {
         if (this.isValidInput(event.key)) {
           this.selectKit.set("filter", event.key);
-          this.selectKit.focusFilter();
           this.selectKit.triggerSearch();
+          this.selectKit.focusFilter();
           event.preventDefault();
           event.stopPropagation();
         }
