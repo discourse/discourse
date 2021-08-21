@@ -109,7 +109,8 @@
     background-color: var(--tertiary-low);
   }
 
-  &.dominating-topic-message {
+  &.dominating-topic-message,
+  &.get-a-room {
     bottom: unset;
     padding: 2.25em 6em 2.5em 2.25em;
     p {

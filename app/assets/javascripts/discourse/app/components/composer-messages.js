@@ -86,6 +86,12 @@ export default Component.extend({
         topic: topic,
       });
     },
+
+    switchPM(message) {
+      this.composer.set("action", "privateMessage");
+      this.composer.set("targetRecipients", message.reply_username);
+      this._removeMessage(message);
+    },
   },
 
   // Resets all active messages.
