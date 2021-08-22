@@ -19,6 +19,10 @@
   <%- end -%>
 </head>
 <body class="no-ember <%= @custom_body_class %>">
+  <%- if allow_plugins? %>
+    <%= build_plugin_html 'server:after-body-open' %>
+  <%- end -%>
+
   <%- unless customization_disabled? %>
     <%= theme_lookup("header") %>
   <%- end %>
