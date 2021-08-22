@@ -53,7 +53,10 @@ import { addPluginOutletDecorator } from "discourse/components/plugin-connector"
 import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
-import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
+import {
+  addGroupPostSmallActionCode,
+  addPostSmallActionIcon,
+} from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
@@ -81,7 +84,7 @@ import { addSearchResultsCallback } from "discourse/lib/search";
 import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.12.1";
+const PLUGIN_API_VERSION = "0.12.2";
 
 class PluginApi {
   constructor(version, container) {
@@ -713,6 +716,17 @@ class PluginApi {
    **/
   addPostSmallActionIcon(key, icon) {
     addPostSmallActionIcon(key, icon);
+  }
+
+  /**
+   * Register a small action code to be used for small post actions containing a link to a group
+   *
+   * ```javascript
+   * api.addGroupPostSmallActionCode('group_assigned');
+   * ```
+   **/
+  addGroupPostSmallActionCode(actionCode) {
+    addGroupPostSmallActionCode(actionCode);
   }
 
   /**
