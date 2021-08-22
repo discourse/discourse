@@ -112,14 +112,16 @@ export default Component.extend({
       type: "line",
       data,
       options: {
-        tooltips: {
-          callbacks: {
-            title: (tooltipItem) =>
-              moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL"),
+        plugins: {
+          tooltip: {
+            callbacks: {
+              title: (tooltipItem) =>
+                moment(tooltipItem[0].label, "YYYY-MM-DD").format("LL"),
+            },
           },
-        },
-        legend: {
-          display: false,
+          legend: {
+            display: false,
+          },
         },
         responsive: true,
         maintainAspectRatio: false,
@@ -136,15 +138,10 @@ export default Component.extend({
           },
         },
         scales: {
-          yAxes: [
+          y: [
             {
               display: true,
               ticks: {
-                userCallback: (label) => {
-                  if (Math.floor(label) === label) {
-                    return label;
-                  }
-                },
                 callback: (label) => number(label),
                 sampleSize: 5,
                 maxRotation: 25,
@@ -152,7 +149,7 @@ export default Component.extend({
               },
             },
           ],
-          xAxes: [
+          x: [
             {
               display: true,
               gridLines: { display: false },
