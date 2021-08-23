@@ -10,34 +10,6 @@
         }
       }
 
-      .select-kit-header {
-        height: 30px;
-
-        .selected-name {
-          margin: 0;
-          border: 0;
-          padding: 0;
-          outline: none;
-          box-shadow: none;
-          cursor: pointer;
-          max-width: 250px;
-          overflow: hidden;
-
-          .name {
-            @include ellipsis;
-          }
-        }
-      }
-
-      .select-kit-filter {
-        border-top: 0;
-      }
-
-      &.is-expanded .select-kit-wrapper,
-      .select-kit-wrapper {
-        display: none;
-      }
-
       .select-kit-row {
         &.is-selected {
           background: none;
@@ -45,42 +17,6 @@
 
         &.is-highlighted.is-selected {
           background: var(--tertiary-low);
-        }
-      }
-
-      .selected-tags {
-        max-height: 125px;
-        overflow-y: auto;
-        display: flex;
-        border-bottom: 1px solid var(--primary-low);
-        padding: 0.25em 0 0 0.25em;
-        box-sizing: border-box;
-        flex-wrap: wrap;
-        width: 100%;
-
-        .selected-tag {
-          background: var(--primary-low);
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0.5em;
-          border: 0;
-          font-size: $font-down-1;
-          margin-right: 0.25em;
-          margin-bottom: 0.25em;
-
-          &.is-highlighted {
-            box-shadow: 0 0 2px var(--danger), 0 1px 0 rgba(0, 0, 0, 0.05);
-          }
-
-          .d-icon {
-            color: var(--primary-low-mid);
-            vertical-align: middle;
-            margin-right: 0.25em;
-          }
-
-          &:hover .d-icon.d-icon-times {
-            color: var(--danger);
-          }
         }
       }
     }

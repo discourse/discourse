@@ -3,7 +3,6 @@ import {
   count,
   exists,
   fakeTime,
-  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
@@ -129,12 +128,6 @@ acceptance("User Notifications - Users - Ignore User", function (needs) {
 
     await click("div.user-notifications div div button");
     await click(".future-date-input-selector-header");
-
-    assert.equal(
-      query(".future-date-input-selector-header").getAttribute("aria-expanded"),
-      "true",
-      "selector is expanded"
-    );
 
     const options = Array.from(
       queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>

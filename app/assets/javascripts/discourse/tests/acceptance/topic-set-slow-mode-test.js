@@ -1,7 +1,6 @@
 import {
   acceptance,
   fakeTime,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -44,12 +43,6 @@ acceptance("Topic - Set Slow Mode", function (needs) {
     await click(".topic-admin-slow-mode button");
 
     await click(".future-date-input-selector-header");
-
-    assert.equal(
-      query(".future-date-input-selector-header").getAttribute("aria-expanded"),
-      "true",
-      "selector is expanded"
-    );
 
     const options = Array.from(
       queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>
