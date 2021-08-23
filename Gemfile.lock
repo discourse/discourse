@@ -225,7 +225,7 @@ GEM
     message_bus (3.3.6)
       rack (>= 1.1.3)
     method_source (1.0.0)
-    mini_mime (1.1.0)
+    mini_mime (1.1.1)
     mini_portile2 (2.6.1)
     mini_racer (0.4.0)
       libv8-node (~> 15.14.0.0)
