@@ -117,6 +117,7 @@ class ComposerMessagesFinder
       templateName: 'education',
       wait_for_typing: true,
       extraClass: 'education-message',
+      hide_if_whisper: true,
       body: PrettyText.cook(I18n.t('education.sequential_replies'))
     }
   end

@@ -12,18 +12,20 @@ export default class MediaOptimizationWorkerService extends Service {
   promiseResolvers = null;
 
   startWorker() {
+    this.logIfDebug("Starting media-optimization-worker");
     this.worker = new Worker(this.workerUrl); // TODO come up with a workaround for FF that lacks type: module support
   }
 
   stopWorker() {
+    this.logIfDebug("Stopping media-optimization-worker...");
     this.worker.terminate();
     this.worker = null;
   }
 
-  ensureAvailiableWorker(usingUppy) {
+  ensureAvailiableWorker() {
     if (!this.worker) {
       this.startWorker();
-      this.registerMessageHandler(usingUppy);
+      this.registerMessageHandler();
       this.appEvents.on("composer:closed", this, "stopWorker");
     }
   }
@@ -35,22 +37,25 @@ export default class MediaOptimizationWorkerService extends Service {
     }
   }
 
-  optimizeImage(data) {
-    const usingUppy = data.id && data.id.includes("uppy");
+  optimizeImage(data, opts = {}) {
+    this.usingUppy = data.id && data.id.includes("uppy");
     this.promiseResolvers = this.promiseResolvers || {};
+    this.stopWorkerOnError = opts.hasOwnProperty("stopWorkerOnError")
+      ? opts.stopWorkerOnError
+      : true;
 
-    let file = usingUppy ? data : data.files[data.index];
+    let file = this.usingUppy ? data : data.files[data.index];
     if (!/(\.|\/)(jpe?g|png|webp)$/i.test(file.type)) {
-      return usingUppy ? Promise.resolve() : data;
+      return this.usingUppy ? Promise.resolve() : data;
     }
     if (
       file.size <
       this.siteSettings
         .composer_media_optimization_image_bytes_optimization_threshold
     ) {
-      return usingUppy ? Promise.resolve() : data;
+      return this.usingUppy ? Promise.resolve() : data;
     }
-    this.ensureAvailiableWorker(usingUppy);
+    this.ensureAvailiableWorker();
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 
@@ -60,14 +65,14 @@ export default class MediaOptimizationWorkerService extends Service {
 
       let imageData;
       try {
-        if (usingUppy) {
+        if (this.usingUppy) {
           imageData = await fileToImageData(file.data);
         } else {
           imageData = await fileToImageData(file);
         }
       } catch (error) {
         this.logIfDebug(error);
-        return usingUppy ? resolve() : resolve(data);
+        return this.usingUppy ? resolve() : resolve(data);
       }
 
       this.worker.postMessage(
@@ -109,7 +114,7 @@ export default class MediaOptimizationWorkerService extends Service {
     });
   }
 
-  registerMessageHandler(usingUppy) {
+  registerMessageHandler() {
     this.worker.onmessage = (e) => {
       switch (e.data.type) {
         case "file":
@@ -120,8 +125,7 @@ export default class MediaOptimizationWorkerService extends Service {
             `Finished optimization of ${optimizedFile.name} new size: ${optimizedFile.size}.`
           );
 
-          if (usingUppy) {
-            // TODO (martin) Use something better than the fileName for the key
+          if (this.usingUppy) {
             this.promiseResolvers[optimizedFile.name](optimizedFile);
           } else {
             let data = this.currentComposerUploadData;
@@ -132,9 +136,15 @@ export default class MediaOptimizationWorkerService extends Service {
 
           break;
         case "error":
-          this.stopWorker();
-          if (usingUppy) {
-            // TODO (martin) Use something better than the fileName for the key
+          this.logIfDebug(
+            `Handling error message from image optimization for ${e.data.fileName}.`
+          );
+
+          if (this.stopWorkerOnError) {
+            this.stopWorker();
+          }
+
+          if (this.usingUppy) {
             this.promiseResolvers[e.data.fileName]();
           } else {
             // TODO (martin) Use something better than the fileName for the key

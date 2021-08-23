@@ -182,9 +182,23 @@ class TopicQuery
         staff: user.staff?
       )
 
-      first_unread_pm_at = UserStat
-        .where(user_id: user.id)
-        .pluck_first(:first_unread_pm_at)
+      first_unread_pm_at =
+        case type
+        when :user
+          user_first_unread_pm_at(user)
+        when :group
+          GroupUser
+            .where(user: user, group: group)
+            .pluck_first(:first_unread_pm_at)
+        else
+          user_first_unread_pm_at = user_first_unread_pm_at(user)
+
+          group_first_unread_pm_at = GroupUser
+            .where(user: user)
+            .minimum(:first_unread_pm_at)
+
+          [user_first_unread_pm_at, group_first_unread_pm_at].compact.min
+        end
 
       if first_unread_pm_at
         list = list.where("topics.updated_at >= ?", first_unread_pm_at)
@@ -245,6 +259,10 @@ class TopicQuery
           .select(:id, :publish_read_state)
           .first
       end
+    end
+
+    def user_first_unread_pm_at(user)
+      UserStat.where(user: user).pluck_first(:first_unread_pm_at)
     end
   end
 end

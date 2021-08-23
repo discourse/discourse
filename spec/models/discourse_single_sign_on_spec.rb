@@ -406,6 +406,28 @@ describe DiscourseSingleSignOn do
     expect(sso.nonce).to_not be_nil
   end
 
+  context 'nonce error' do
+    it "generates correct error message when nonce has already been used" do
+      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+
+      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      expect(sso.nonce_valid?).to eq true
+
+      sso.expire_nonce!
+      expect(sso.nonce_error).to eq("Nonce has already been used")
+    end
+
+    it "generates correct error message when nonce is expired" do
+      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+
+      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      expect(sso.nonce_valid?).to eq true
+
+      Discourse.cache.delete(sso.used_nonce_key)
+      expect(sso.nonce_error).to eq("Nonce has expired")
+    end
+  end
+
   context 'user locale' do
     it 'sets default user locale if specified' do
       SiteSetting.allow_user_locale = true

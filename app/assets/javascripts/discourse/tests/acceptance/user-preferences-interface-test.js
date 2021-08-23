@@ -189,6 +189,35 @@ acceptance(
       );
     });
 
+    test("display 'Theme default' when default color scheme is not marked as selectable", async function (assert) {
+      let meta = document.createElement("meta");
+      meta.name = "discourse_theme_id";
+      meta.content = "1";
+      document.getElementsByTagName("head")[0].appendChild(meta);
+
+      let site = Site.current();
+      site.set("user_themes", [
+        { theme_id: 1, name: "A Theme", color_scheme_id: 2, default: true },
+      ]);
+
+      site.set("user_color_schemes", [{ id: 3, name: "A Color Scheme" }]);
+
+      await visit("/u/eviltrout/preferences/interface");
+
+      assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+      const dropdownObject = selectKit(".light-color-scheme .select-kit");
+      assert.equal(dropdownObject.header().value(), null);
+      assert.equal(
+        dropdownObject.header().label(),
+        I18n.t("user.color_schemes.default_description")
+      );
+
+      await dropdownObject.expand();
+      assert.equal(dropdownObject.rows().length, 1);
+
+      document.querySelector("meta[name='discourse_theme_id']").remove();
+    });
+
     test("light and dark color scheme pickers", async function (assert) {
       let site = Site.current();
       let session = Session.current();

@@ -549,11 +549,19 @@ module Email
     end
 
     def previous_replies_regex
-      @previous_replies_regex ||= /^--[- ]\n\*#{I18n.t("user_notifications.previous_discussion")}\*\n/im
+      strings = I18n.available_locales.map do |locale|
+        I18n.with_locale(locale) { I18n.t("user_notifications.previous_discussion") }
+      end.uniq
+
+      @previous_replies_regex ||= /^--[- ]\n\*(?:#{strings.map { |x| Regexp.escape(x) }.join("|")})\*\n/im
     end
 
     def reply_above_line_regex
-      @reply_above_line_regex ||= /\n#{I18n.t("user_notifications.reply_above_line")}\n/im
+      strings = I18n.available_locales.map do |locale|
+        I18n.with_locale(locale) { I18n.t("user_notifications.reply_above_line") }
+      end.uniq
+
+      @reply_above_line_regex ||= /\n(?:#{strings.map { |x| Regexp.escape(x) }.join("|")})\n/im
     end
 
     def trim_discourse_markers(reply)

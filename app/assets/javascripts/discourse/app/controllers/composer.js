@@ -501,7 +501,7 @@ export default Controller.extend({
 
           const [linkWarn, linkInfo] = linkLookup.check(post, href);
 
-          if (linkWarn) {
+          if (linkWarn && !this.get("isWhispering")) {
             const body = I18n.t("composer.duplicate_link", {
               domain: linkInfo.domain,
               username: linkInfo.username,

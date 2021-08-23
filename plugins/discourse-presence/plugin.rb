@@ -15,7 +15,7 @@ PLUGIN_NAME ||= -"discourse-presence"
 
 after_initialize do
 
-  MessageBus.register_client_message_filter('/presence/') do |message|
+  MessageBus.register_client_message_filter('/presence-plugin/') do |message|
     published_at = message.data["published_at"]
 
     if published_at
@@ -146,7 +146,7 @@ after_initialize do
         payload[:post_id] = post_id
       end
 
-      MessageBus.publish("/presence/#{topic_id}", payload, opts)
+      MessageBus.publish("/presence-plugin/#{topic_id}", payload, opts)
 
       render json: success_json
     end
@@ -172,7 +172,7 @@ after_initialize do
   end
 
   Discourse::Application.routes.append do
-    mount ::Presence::Engine, at: '/presence'
+    mount ::Presence::Engine, at: '/presence-plugin'
   end
 
 end

@@ -263,6 +263,22 @@ acceptance("Search - with tagging enabled", function (needs) {
 
     assert.equal(tags, "dev slow");
   });
+
+  test("displays tag shortcuts", async function (assert) {
+    await visit("/");
+
+    await click("#search-button");
+
+    await fillIn("#search-term", "dude #monk");
+    await triggerKeyEvent("#search-term", "keyup", 51);
+
+    const firstItem =
+      ".search-menu .results ul.search-menu-assistant .search-link";
+    assert.ok(exists(query(firstItem)));
+
+    const firstTag = query(`${firstItem} .search-item-tag`).innerText.trim();
+    assert.equal(firstTag, "monkey");
+  });
 });
 
 acceptance("Search - assistant", function (needs) {

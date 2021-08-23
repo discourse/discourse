@@ -111,16 +111,26 @@ describe TopicQuery::PrivateMessageLists do
   end
 
   describe '#list_private_messages_all_unread' do
-    it 'returns a list of unread private messages' do
-      topics = TopicQuery.new(nil).list_private_messages_all_unread(user_2).topics
-
-      expect(topics).to eq([])
-
+    before do
       TopicUser.find_by(user: user_2, topic: group_message).update!(
         last_read_post_number: 1
       )
 
       create_post(user: user, topic: group_message)
+    end
+
+    it 'returns a list of unread private messages' do
+      topics = TopicQuery.new(nil).list_private_messages_all_unread(user_2).topics
+
+      expect(topics).to contain_exactly(group_message)
+    end
+
+    it 'takes into account first_unread_pm_at optimization' do
+      user_2.user_stat.update!(first_unread_pm_at: group_message.created_at + 1.day)
+
+      GroupUser.find_by(user: user_2, group: group).update!(
+        first_unread_pm_at: group_message.created_at - 1.day
+      )
 
       topics = TopicQuery.new(nil).list_private_messages_all_unread(user_2).topics
 

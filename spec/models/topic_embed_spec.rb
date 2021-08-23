@@ -16,6 +16,7 @@ describe TopicEmbed do
     let(:url) { 'http://eviltrout.com/123' }
     let(:contents) { "<p>hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'></p>" }
     fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+    fab!(:category) { Fabricate(:category) }
 
     it "returns nil when the URL is malformed" do
       expect(TopicEmbed.import(user, "invalid url", title, contents)).to eq(nil)
@@ -94,6 +95,14 @@ describe TopicEmbed do
         SiteSetting.embed_unlisted = false
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
         expect(imported_post.topic).to be_visible
+      end
+
+      it "creates the topic in the category passed as a parameter" do
+        Jobs.run_immediately!
+        SiteSetting.embed_unlisted = false
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content", category_id: category.id)
+        expect(imported_post.topic.category).not_to eq(embeddable_host.category)
+        expect(imported_post.topic.category).to eq(category)
       end
     end
 
