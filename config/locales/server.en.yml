@@ -526,14 +526,7 @@ en:
 
     dominating_topic: You’ve posted more than %{percent}% of the replies here, is there anyone else you would like to hear from?
 
-    get_a_room: |
-      ### Encourage everyone to get involved in the conversation
-
-      You’ve replied %{count} times to @%{reply_username} in this particular topic!
-
-      A great discussion includes many voices and perspectives. Can you get anybody else involved?
-
-      And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
+    get_a_room: You’ve replied %{count} times to @%{reply_username}, did you know you could send them a personal message instead?
 
     too_many_replies: |
       ### You have reached the reply limit for this topic

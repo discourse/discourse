@@ -176,9 +176,10 @@ class ComposerMessagesFinder
 
     {
       id: 'get_a_room',
-      templateName: 'education',
+      templateName: 'get-a-room',
       wait_for_typing: true,
-      extraClass: 'education-message',
+      reply_username: reply_username,
+      extraClass: 'education-message get-a-room',
       body: PrettyText.cook(
         I18n.t(
           'education.get_a_room',
