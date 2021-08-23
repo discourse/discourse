@@ -470,6 +470,7 @@ createWidget("discourse-poll-pie-canvas", {
       });
 
       const el = document.getElementById(`poll-results-chart-${attrs.id}`);
+      // eslint-disable-next-line no-undef
       this._chart = new Chart(el.getContext("2d"), config);
     });
   },
@@ -566,7 +567,7 @@ function pieChartConfig(data, labels, opts = {}) {
       plugins: {
         legend: {
           labels: {
-            generateLabels: function (chart) {
+            generateLabels: function () {
               return labels.map((text, index) => {
                 return {
                   fillStyle: getColors(data.length)[index],
