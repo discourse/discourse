@@ -683,8 +683,10 @@ export default Component.extend(
           });
 
           this._safeAfterRender(() => {
-            this.popper && this.popper.update();
-            this._focusFilter();
+            if (this.selectKit.isExpanded) {
+              this.popper && this.popper.update();
+              this._focusFilter();
+            }
           });
         })
         .finally(() => {
