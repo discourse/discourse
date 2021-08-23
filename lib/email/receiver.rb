@@ -584,6 +584,20 @@ module Email
 
       return unless mail[:from]
 
+      # For forwarded emails, where the from address matches a group incoming
+      # email, we want to use the from address of the original email sender,
+      # which we can extract from embedded_email_raw.
+      if has_been_forwarded?
+        if mail[:from].to_s =~ group_incoming_emails_regex && embedded_email[:from].errors.blank?
+          embedded_email[:from].each do |address_field|
+            from_address = address_field.address
+            from_display_name = address_field.display_name&.to_s
+            next if !from_address&.include?("@")
+            return [from_address&.downcase, from_display_name&.strip]
+          end
+        end
+      end
+
       # For now we are only using the Reply-To header if the email has
       # been forwarded via Google Groups, which is why we are checking the
       # X-Original-From header too. In future we may want to use the Reply-To
@@ -883,6 +897,10 @@ module Email
       text = fix_charset(@mail.multipart? ? @mail.text_part : @mail)
       @embedded_email_raw, @before_embedded = EmailReplyTrimmer.extract_embedded_email(text)
       @embedded_email_raw
+    end
+
+    def embedded_email
+      @embedded_email ||= embedded_email_raw.present? ? Mail.new(embedded_email_raw) : nil
     end
 
     def process_forwarded_email(destination, user)
