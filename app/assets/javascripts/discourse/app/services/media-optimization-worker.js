@@ -60,8 +60,7 @@ export default class MediaOptimizationWorkerService extends Service {
       this.logIfDebug(`Transforming ${file.name}`);
 
       this.currentComposerUploadData = data;
-      // TODO (martin) Use something better than the fileName for the key
-      this.promiseResolvers[file.name] = resolve;
+      this.promiseResolvers[this.usingUppy ? file.id : file.name] = resolve;
 
       let imageData;
       try {
@@ -78,6 +77,7 @@ export default class MediaOptimizationWorkerService extends Service {
       this.worker.postMessage(
         {
           type: "compress",
+          fileId: file.id,
           file: imageData.data.buffer,
           fileName: file.name,
           width: imageData.width,
@@ -118,7 +118,7 @@ export default class MediaOptimizationWorkerService extends Service {
     this.worker.onmessage = (e) => {
       switch (e.data.type) {
         case "file":
-          let optimizedFile = new File([e.data.file], `${e.data.fileName}`, {
+          let optimizedFile = new File([e.data.file], e.data.fileName, {
             type: "image/jpeg",
           });
           this.logIfDebug(
@@ -126,11 +126,10 @@ export default class MediaOptimizationWorkerService extends Service {
           );
 
           if (this.usingUppy) {
-            this.promiseResolvers[optimizedFile.name](optimizedFile);
+            this.promiseResolvers[e.data.fileId](optimizedFile);
           } else {
             let data = this.currentComposerUploadData;
             data.files[data.index] = optimizedFile;
-            // TODO (martin) Use something better than the fileName for the key
             this.promiseResolvers[optimizedFile.name](data);
           }
 
@@ -145,9 +144,8 @@ export default class MediaOptimizationWorkerService extends Service {
           }
 
           if (this.usingUppy) {
-            this.promiseResolvers[e.data.fileName]();
+            this.promiseResolvers[e.data.fileId]();
           } else {
-            // TODO (martin) Use something better than the fileName for the key
             this.promiseResolvers[e.data.fileName](
               this.currentComposerUploadData
             );
