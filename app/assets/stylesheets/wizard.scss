@@ -822,15 +822,20 @@ body.wizard {
   max-height: 500px;
   display: flex;
 
+  .wizard-fields-main {
+    width: 100%;
+  }
+
   .wizard-fields-sidebar {
     width: 170px;
-    margin-right: 5px;
     box-sizing: border-box;
     padding: 15px 10px;
+    border-right: 1px solid var(--primary-low);
     background: var(--primary-very-low);
     + .wizard-fields-main {
       padding: 15px;
       background: var(--primary-very-low);
+      width: auto;
     }
   }
 }
@@ -859,7 +864,7 @@ body.wizard {
   box-sizing: border-box;
   margin: 1.5em auto;
   padding: 0;
-  max-width: 880px;
+  max-width: 820px;
   min-width: 280px;
   width: 100%;
   border: 1px solid var(--primary-low-mid);
@@ -892,7 +897,7 @@ body.wizard {
   }
   .wizard-step-banner {
     margin-bottom: 2em;
-    width: 620px;
+    width: 100%;
     display: block;
   }
 

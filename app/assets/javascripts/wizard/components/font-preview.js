@@ -12,7 +12,7 @@ Nullam eget sem non elit tincidunt rhoncus. Fusce
 velit nisl, porttitor sed nisl ac, consectetur interdum
 metus. Fusce in consequat augue, vel facilisis felis.`;
 
-export default createPreviewComponent(659, 320, {
+export default createPreviewComponent(580, 320, {
   logo: null,
   avatar: null,
 
@@ -40,8 +40,8 @@ export default createPreviewComponent(659, 320, {
     }
 
     const margin = 20;
-    const avatarSize = height * 0.2;
-    const lineHeight = height / 11;
+    const avatarSize = height * 0.15;
+    const lineHeight = height / 14;
 
     // Draw a fake topic
     this.scaleImage(
@@ -81,7 +81,7 @@ export default createPreviewComponent(659, 320, {
     ctx.fillText(
       I18n.t("wizard.previews.share_button"),
       margin + 10,
-      line + lineHeight * 1.7
+      line + lineHeight * 1.9
     );
 
     // Reply Button
@@ -101,7 +101,7 @@ export default createPreviewComponent(659, 320, {
     ctx.fillText(
       I18n.t("wizard.previews.reply_button"),
       shareButtonWidth + margin + 20,
-      line + lineHeight * 1.7
+      line + lineHeight * 1.9
     );
 
     // Draw Timeline

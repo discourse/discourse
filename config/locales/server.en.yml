@@ -4860,6 +4860,7 @@ en:
 
       styling:
         title: "Styling"
+        description: "Your community's appearance is very important. Below you can do some basic customizations for colors and fonts. You can also visit the admin interface later and do more in-depth styling changes."
         fields:
           color_scheme:
             label: "Color scheme"
