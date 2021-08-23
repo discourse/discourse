@@ -465,15 +465,17 @@ createWidget("discourse-poll-pie-canvas", {
     loadScript("/javascripts/Chart.min.js").then(() => {
       const data = attrs.poll.options.mapBy("votes");
       const labels = attrs.poll.options.mapBy("html");
-      const config = pieChartConfig(data, labels);
+      const config = pieChartConfig(data, labels, {
+        legendContainerId: `poll-results-legend-${attrs.id}`,
+      });
 
       const el = document.getElementById(`poll-results-chart-${attrs.id}`);
-      // eslint-disable-next-line
-      let chart = new Chart(el.getContext("2d"), config);
-      document.getElementById(
-        `poll-results-legend-${attrs.id}`
-      ).innerHTML = chart.generateLegend();
+      this._chart = new Chart(el.getContext("2d"), config);
     });
+  },
+
+  willRerenderWidget() {
+    this._chart?.destroy();
   },
 
   buildAttributes(attrs) {
@@ -497,15 +499,54 @@ createWidget("discourse-poll-pie-chart", {
     const chart = this.attach("discourse-poll-pie-canvas", attrs);
     contents.push(chart);
 
-    contents.push(h(`div#poll-results-legend-${attrs.id}.pie-chart-legends`));
+    contents.push(h(`ul#poll-results-legend-${attrs.id}.pie-chart-legends`));
 
     return contents;
   },
 });
 
+const htmlLegendPlugin = {
+  id: "htmlLegend",
+
+  afterUpdate(chart, args, options) {
+    const ul = document.getElementById(options.containerID);
+    ul.innerHTML = "";
+
+    const items = chart.options.plugins.legend.labels.generateLabels(chart);
+    items.forEach((item) => {
+      const li = document.createElement("li");
+      li.classList.add("legend");
+      li.onclick = () => {
+        chart.toggleDataVisibility(item.index);
+        chart.update();
+      };
+
+      const boxSpan = document.createElement("span");
+      boxSpan.classList.add("swatch");
+      boxSpan.style.background = item.fillStyle;
+
+      const textContainer = document.createElement("span");
+      textContainer.style.color = item.fontColor;
+      textContainer.innerHTML = item.text;
+
+      if (!chart.getDataVisibility(item.index)) {
+        li.style.opacity = 0.2;
+      } else {
+        li.style.opacity = 1.0;
+      }
+
+      li.appendChild(boxSpan);
+      li.appendChild(textContainer);
+
+      ul.appendChild(li);
+    });
+  },
+};
+
 function pieChartConfig(data, labels, opts = {}) {
   const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
   const strippedLabels = labels.map((l) => stripHtml(l));
+
   return {
     type: PIE_CHART_TYPE,
     data: {
@@ -517,18 +558,29 @@ function pieChartConfig(data, labels, opts = {}) {
       ],
       labels: strippedLabels,
     },
+    plugins: [htmlLegendPlugin],
     options: {
       responsive: true,
       aspectRatio,
       animation: { duration: 0 },
-      legend: { display: false },
-      legendCallback: function (chart) {
-        let legends = "";
-        for (let i = 0; i < labels.length; i++) {
-          legends += `<div class="legend"><span class="swatch" style="background-color:
-            ${chart.data.datasets[0].backgroundColor[i]}"></span>${labels[i]}</div>`;
-        }
-        return legends;
+      plugins: {
+        legend: {
+          labels: {
+            generateLabels: function (chart) {
+              return labels.map((text, index) => {
+                return {
+                  fillStyle: getColors(data.length)[index],
+                  text,
+                  index,
+                };
+              });
+            },
+          },
+          display: false,
+        },
+        htmlLegend: {
+          containerID: opts?.legendContainerId,
+        },
       },
     },
   };

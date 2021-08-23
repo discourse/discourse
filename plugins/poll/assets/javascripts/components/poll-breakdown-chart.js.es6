@@ -5,6 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { htmlSafe } from "@ember/template";
 import { mapBy } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 
 export default Component.extend({
   // Arguments:
@@ -92,6 +93,7 @@ export default Component.extend({
       },
       options: {
         plugins: {
+          tooltip: false,
           datalabels: {
             color: "#333",
             backgroundColor: "rgba(255, 255, 255, 0.5)",
@@ -122,10 +124,14 @@ export default Component.extend({
         responsive: true,
         aspectRatio: 1.1,
         animation: { duration: 0 },
-        tooltips: false,
+
+        // wrapping setHighlightedOption in next block as hover can create many events
+        // prevents two sets to happen in the same computation
         onHover: (event, activeElements) => {
           if (!activeElements.length) {
-            this.setHighlightedOption(null);
+            next(() => {
+              this.setHighlightedOption(null);
+            });
             return;
           }
 
@@ -137,7 +143,9 @@ export default Component.extend({
           // Clear the array to avoid issues in Chart.js
           activeElements.length = 0;
 
-          this.setHighlightedOption(Number(optionIndex));
+          next(() => {
+            this.setHighlightedOption(Number(optionIndex));
+          });
         },
       },
     };
