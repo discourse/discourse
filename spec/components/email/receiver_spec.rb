@@ -1032,10 +1032,31 @@ describe Email::Receiver do
       end
     end
 
+    context "when a group forwards an email to its inbox" do
+      let!(:topic) do
+        group.update!(
+          email_username: "team@somesmtpaddress.com",
+          incoming_email: "team@somesmtpaddress.com|support+team@bar.com",
+          smtp_server: "smtp.test.com",
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_enabled: true
+        )
+        process(:forwarded_by_group_to_group)
+        Topic.last
+      end
+
+      it "does not use the team's address as the from_address; it uses the original sender address" do
+        expect(topic.incoming_email.first.to_addresses).to include("support+team@bar.com")
+        expect(topic.incoming_email.first.from_address).to eq("fred@bedrock.com")
+      end
+    end
+
     context "emailing a group by email_username and following reply flow" do
       let!(:original_inbound_email_topic) do
         group.update!(
           email_username: "team@somesmtpaddress.com",
+          incoming_email: "team@somesmtpaddress.com|suppor+team@bar.com",
           smtp_server: "smtp.test.com",
           smtp_port: 587,
           smtp_ssl: true,
