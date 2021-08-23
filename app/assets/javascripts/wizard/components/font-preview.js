@@ -18,7 +18,8 @@ export default createPreviewComponent(659, 320, {
 
   @observes(
     "step.fieldsById.body_font.value",
-    "step.fieldsById.heading_font.value"
+    "step.fieldsById.heading_font.value",
+    "step.fieldsById.color_scheme.value"
   )
   fontChanged() {
     this.triggerRepaint();

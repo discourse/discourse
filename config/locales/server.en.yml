@@ -4858,12 +4858,11 @@ en:
             label: "City for Disputes"
             placeholder: "San Francisco, California"
 
-      colors:
-        title: "Colors"
-
-      fonts:
-        title: "Fonts"
+      styling:
+        title: "Styling"
         fields:
+          color_scheme:
+            label: "Color scheme"
           body_font:
             label: "Body font"
           heading_font:

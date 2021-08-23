@@ -133,10 +133,10 @@ class ColorScheme < ActiveRecord::Base
   LIGHT_THEME_ID = 'Light'
 
   def self.base_color_scheme_colors
-    base_with_hash = {}
+    base_with_hash = []
 
     base_colors.each do |name, color|
-      base_with_hash[name] = "#{color}"
+      base_with_hash << { name: name, hex: "#{color}" }
     end
 
     list = [
@@ -144,7 +144,11 @@ class ColorScheme < ActiveRecord::Base
     ]
 
     CUSTOM_SCHEMES.each do |k, v|
-      list.push(id: k.to_s, colors: v)
+      colors = []
+      v.each do |name, color|
+        colors << { name: name, hex: "#{color}" }
+      end
+      list.push(id: k.to_s, colors: colors)
     end
 
     list

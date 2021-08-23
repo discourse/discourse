@@ -87,10 +87,16 @@ export function createPreviewComponent(width, height, obj) {
           return false;
         }
 
-        const colors = this.wizard.getCurrentColors(this.colorsId);
-        if (!colors) {
+        const colorsArray = this.wizard.getCurrentColors(this.colorsId);
+        if (!colorsArray) {
           return;
         }
+
+        let colors = {};
+        colorsArray.forEach(function (c) {
+          const name = c.name;
+          colors[name] = `#${c.hex}`;
+        });
 
         const font = this.wizard.getCurrentFont(this.fontId);
         const headingFont = this.wizard.getCurrentFont(

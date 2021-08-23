@@ -141,7 +141,7 @@ class Wizard
         end
       end
 
-      @wizard.append_step('colors') do |step|
+      @wizard.append_step('styling') do |step|
         default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
         default_theme_override = SiteSetting.exists?(name: "default_theme_id")
 
@@ -151,8 +151,8 @@ class Wizard
         scheme_id = default_theme_override ? (base_scheme || color_scheme_name) : ColorScheme::LIGHT_THEME_ID
 
         themes = step.add_field(
-          id: 'theme_previews',
-          type: 'component',
+          id: 'color_scheme',
+          type: 'dropdown',
           required: !default_theme_override,
           value: scheme_id || ColorScheme::LIGHT_THEME_ID
         )
@@ -160,46 +160,13 @@ class Wizard
         # fix for the case when base_scheme is nil
         if scheme_id && default_theme_override && base_scheme.nil?
           scheme = default_theme.color_scheme
-          default_colors = scheme.colors.select(:name, :hex)
-          choice_hash = default_colors.reduce({}) { |choice, color| choice[color.name] = "##{color.hex}"; choice }
-          themes.add_choice(scheme_id, data: { colors: choice_hash })
+          themes.add_choice(scheme_id, data: { colors: scheme.colors_hashes })
         end
 
         ColorScheme.base_color_scheme_colors.each do |t|
-          with_hash = t[:colors].dup
-          with_hash.map { |k, v| with_hash[k] = "##{v}" }
-          themes.add_choice(t[:id], data: { colors: with_hash })
+          themes.add_choice(t[:id], data: { colors: t[:colors] })
         end
 
-        step.on_update do |updater|
-          scheme_name = (
-            (updater.fields[:theme_previews] || "") ||
-            ColorScheme::LIGHT_THEME_ID
-          )
-
-          next unless scheme_name.present? && ColorScheme.is_base?(scheme_name)
-
-          name = I18n.t("color_schemes.#{scheme_name.downcase.gsub(' ', '_')}_theme_name")
-
-          scheme = ColorScheme.find_by(base_scheme_id: scheme_name, via_wizard: true)
-          scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: scheme_name)
-
-          if default_theme
-            default_theme.color_scheme_id = scheme.id
-            default_theme.save!
-          else
-            theme = Theme.create!(
-              name: name,
-              user_id: @wizard.user.id,
-              color_scheme_id: scheme.id
-            )
-
-            theme.set_default!
-          end
-        end
-      end
-
-      @wizard.append_step('fonts') do |step|
         body_font = step.add_field(id: 'body_font', type: 'dropdown', value: SiteSetting.base_font)
         heading_font = step.add_field(id: 'heading_font', type: 'dropdown', value: SiteSetting.heading_font)
 
@@ -216,6 +183,31 @@ class Wizard
         step.on_update do |updater|
           updater.update_setting(:base_font, updater.fields[:body_font])
           updater.update_setting(:heading_font, updater.fields[:heading_font])
+
+          scheme_name = (
+            (updater.fields[:color_scheme] || "") ||
+            ColorScheme::LIGHT_THEME_ID
+          )
+
+          next unless scheme_name.present? && ColorScheme.is_base?(scheme_name)
+
+          name = I18n.t("color_schemes.#{scheme_name.downcase.gsub(' ', '_')}_theme_name")
+
+          scheme = ColorScheme.find_by(base_scheme_id: scheme_name, via_wizard: true)
+          scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: scheme_name)
+
+          if default_theme
+            default_theme.color_scheme_id = scheme.id
+            default_theme.save!
+          else
+            theme = Theme.create!(
+              name: I18n.t("color_schemes.default_theme_name"),
+              user_id: @wizard.user.id,
+              color_scheme_id: scheme.id
+            )
+
+            theme.set_default!
+          end
         end
       end
 
