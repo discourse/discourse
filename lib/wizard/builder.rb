@@ -154,7 +154,8 @@ class Wizard
           id: 'color_scheme',
           type: 'dropdown',
           required: !default_theme_override,
-          value: scheme_id || ColorScheme::LIGHT_THEME_ID
+          value: scheme_id || ColorScheme::LIGHT_THEME_ID,
+          show_in_sidebar: true
         )
 
         # fix for the case when base_scheme is nil
@@ -167,8 +168,19 @@ class Wizard
           themes.add_choice(t[:id], data: { colors: t[:colors] })
         end
 
-        body_font = step.add_field(id: 'body_font', type: 'dropdown', value: SiteSetting.base_font)
-        heading_font = step.add_field(id: 'heading_font', type: 'dropdown', value: SiteSetting.heading_font)
+        body_font = step.add_field(
+          id: 'body_font',
+          type: 'dropdown',
+          value: SiteSetting.base_font,
+          show_in_sidebar: true
+        )
+
+        heading_font = step.add_field(
+          id: 'heading_font',
+          type: 'dropdown',
+          value: SiteSetting.heading_font,
+          show_in_sidebar: true
+        )
 
         DiscourseFonts.fonts.each do |font|
           body_font.add_choice(font[:key], label: font[:name])

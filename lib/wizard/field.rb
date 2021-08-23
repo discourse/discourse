@@ -16,7 +16,7 @@ class Wizard
   end
 
   class Field
-    attr_reader :id, :type, :required, :value, :choices
+    attr_reader :id, :type, :required, :value, :choices, :show_in_sidebar
     attr_accessor :step
 
     def initialize(attrs)
@@ -27,6 +27,7 @@ class Wizard
       @required = !!attrs[:required]
       @value = attrs[:value]
       @choices = []
+      @show_in_sidebar = attrs[:show_in_sidebar]
     end
 
     def add_choice(id, opts = nil)

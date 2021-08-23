@@ -96,6 +96,11 @@ export default Component.extend({
     return htmlSafe(`width: ${ratio * 200}px`);
   },
 
+  @discourseComputed("step.fields")
+  includeSidebar(fields) {
+    return !!fields.findBy("show_in_sidebar");
+  },
+
   autoFocus() {
     schedule("afterRender", () => {
       const $invalid = $(
