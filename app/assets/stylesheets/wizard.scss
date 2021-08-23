@@ -1294,11 +1294,6 @@ body.wizard {
   }
 }
 
-/* hide native indicator */
-summary::-webkit-details-marker {
-  display: none;
-}
-
 @media only screen and (min-device-width: 569px) {
   @import "desktop/modal";
 }

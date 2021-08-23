@@ -72,6 +72,11 @@
     display: flex;
     align-items: stretch;
 
+    /* hide native indicator */
+    &::-webkit-details-marker {
+      display: none;
+    }
+
     .select-kit-header-wrapper {
       box-sizing: border-box;
       min-height: 28px;
