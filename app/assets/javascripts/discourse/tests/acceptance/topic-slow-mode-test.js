@@ -1,3 +1,4 @@
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
   exists,
@@ -38,16 +39,9 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-slow-mode button");
 
-    await click(".future-date-input-selector-header");
-
+    const slowModeType = selectKit(".slow-mode-type");
     assert.equal(
-      query(".future-date-input-selector-header").getAttribute("aria-expanded"),
-      "true",
-      "selector is expanded"
-    );
-
-    assert.equal(
-      query("div.slow-mode-type span.name").innerText,
+      slowModeType.header().name(),
       I18n.t("topic.slow_mode_update.durations.10_minutes"),
       "slow mode interval is rendered"
     );

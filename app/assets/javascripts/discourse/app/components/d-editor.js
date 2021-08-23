@@ -37,6 +37,7 @@ import { siteDir } from "discourse/lib/text-direction";
 import toMarkdown from "discourse/lib/to-markdown";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { action } from "@ember/object";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -182,6 +183,7 @@ class Toolbar {
 
     const createdButton = {
       id: button.id,
+      tabindex: button.tabindex || "-1",
       className: button.className || button.id,
       label: button.label,
       icon: button.label ? null : button.icon || button.id,
@@ -442,13 +444,19 @@ export default Component.extend({
         if (this._state !== "inDOM" || !this.element) {
           return;
         }
-        const $preview = $(this.element.querySelector(".d-editor-preview"));
-        if ($preview.length === 0) {
+
+        const preview = this.element.querySelector(".d-editor-preview");
+        if (!preview) {
           return;
         }
 
+        // prevents any tab focus in preview
+        preview.querySelectorAll("a").forEach((anchor) => {
+          anchor.setAttribute("tabindex", "-1");
+        });
+
         if (this.previewUpdated) {
-          this.previewUpdated($preview);
+          this.previewUpdated($(preview));
         }
       });
     });
@@ -1025,6 +1033,45 @@ export default Component.extend({
       textarea.blur();
       textarea.focus();
     });
+  },
+
+  @action
+  rovingButtonBar(event) {
+    let target = event.target;
+    let siblingFinder;
+    if (event.code === "ArrowRight") {
+      siblingFinder = "nextElementSibling";
+    } else if (event.code === "ArrowLeft") {
+      siblingFinder = "previousElementSibling";
+    } else {
+      return true;
+    }
+
+    while (
+      target.parentNode &&
+      !target.parentNode.classList.contains("d-editor-button-bar")
+    ) {
+      target = target.parentNode;
+    }
+
+    let focusable = target[siblingFinder];
+    if (focusable) {
+      while (
+        (focusable.tagName !== "BUTTON" &&
+          !focusable.classList.contains("select-kit")) ||
+        focusable.classList.contains("hidden")
+      ) {
+        focusable = focusable[siblingFinder];
+      }
+
+      if (focusable?.tagName === "DETAILS") {
+        focusable = focusable.querySelector("summary");
+      }
+
+      focusable?.focus();
+    }
+
+    return true;
   },
 
   actions: {

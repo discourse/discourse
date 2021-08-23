@@ -1,3 +1,4 @@
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
   exists,
@@ -35,10 +36,10 @@ acceptance("New Message - Authenticated", function (needs) {
       "message body",
       "it pre-fills message body"
     );
+
+    const privateMessageUsers = selectKit("#private-message-users");
     assert.equal(
-      queryAll("#private-message-users .selected-name:nth-of-type(1)")
-        .text()
-        .trim(),
+      privateMessageUsers.header().value(),
       "charlie",
       "it selects correct username"
     );

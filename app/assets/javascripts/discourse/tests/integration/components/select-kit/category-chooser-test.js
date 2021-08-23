@@ -63,15 +63,9 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
 
-        assert.equal(
-          this.subject.rowByIndex(0).title(),
-          "Discussion about features or potential features of Discourse: how they work, why they work, etc."
-        );
+        assert.equal(this.subject.rowByIndex(0).title(), "feature");
         assert.equal(this.subject.rowByIndex(0).value(), 2);
-        assert.equal(
-          this.subject.rowByIndex(1).title(),
-          "My idea here is to have mini specs for features we would like built but have no bandwidth to build"
-        );
+        assert.equal(this.subject.rowByIndex(1).title(), "spec");
         assert.equal(this.subject.rowByIndex(1).value(), 26);
         assert.equal(
           this.subject.rows().length,
@@ -320,7 +314,8 @@ discourseModule(
         await this.subject.expand();
 
         assert.equal(
-          this.subject.rowByIndex(0).el()[0].title,
+          this.subject.rowByIndex(0).el()[0].querySelector(".category-desc")
+            .innerText,
           'baz "bar ‘foo’'
         );
       },

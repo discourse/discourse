@@ -352,7 +352,12 @@ export default Mixin.create({
       isCancellable: false,
     });
     this._eachPreProcessor((pluginClass) => {
-      this._preProcessorStatus[pluginClass] = {};
+      this._preProcessorStatus[pluginClass] = {
+        needProcessing: 0,
+        activeProcessing: 0,
+        completeProcessing: 0,
+        allComplete: false,
+      };
     });
     this.fileInputEl.value = "";
   },

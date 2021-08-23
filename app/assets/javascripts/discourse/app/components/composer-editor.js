@@ -682,6 +682,7 @@ export default Component.extend(ComposerUpload, {
 
     extraButtons(toolbar) {
       toolbar.addButton({
+        tabindex: "0",
         id: "quote",
         group: "fontStyles",
         icon: "far-comment",

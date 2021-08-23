@@ -105,6 +105,10 @@ export default MultiSelectComponent.extend(TagsMixin, {
   },
 
   _transformJson(context, json) {
+    if (context.isDestroyed || context.isDestroying) {
+      return [];
+    }
+
     let results = json.results;
 
     context.setProperties({

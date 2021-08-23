@@ -16,7 +16,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
 
   let who = "";
   if (username) {
-    if (actionCode === "invited_group" || actionCode === "removed_group") {
+    if (groupActionCodes.includes(actionCode)) {
       who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;
     } else {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
@@ -33,6 +33,8 @@ export function actionDescription(actionCode, createdAt, username) {
     }
   });
 }
+
+const groupActionCodes = ["invited_group", "removed_group"];
 
 const icons = {
   "closed.enabled": "lock",
@@ -62,6 +64,10 @@ const icons = {
 
 export function addPostSmallActionIcon(key, icon) {
   icons[key] = icon;
+}
+
+export function addGroupPostSmallActionCode(actionCode) {
+  groupActionCodes.push(actionCode);
 }
 
 export default createWidget("post-small-action", {

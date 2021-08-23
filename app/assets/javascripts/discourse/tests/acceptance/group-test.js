@@ -212,8 +212,9 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-message-button");
 
     assert.equal(count("#reply-control"), 1, "it opens the composer");
+    const privateMessageUsers = selectKit("#private-message-users");
     assert.equal(
-      queryAll("#private-message-users .selected-name").text().trim(),
+      privateMessageUsers.header().value(),
       "discourse",
       "it prefills the group name"
     );
