@@ -823,13 +823,14 @@ body.wizard {
   display: flex;
 
   .wizard-fields-sidebar {
-    width: 190px;
-    margin-right: 20px;
+    width: 170px;
+    margin-right: 5px;
     box-sizing: border-box;
-    padding: 15px;
+    padding: 15px 10px;
     background: var(--primary-very-low);
-    + .wizard-field-main {
-      padding-top: 15px;
+    + .wizard-fields-main {
+      padding: 15px;
+      background: var(--primary-very-low);
     }
   }
 }
@@ -858,7 +859,7 @@ body.wizard {
   box-sizing: border-box;
   margin: 1.5em auto;
   padding: 0;
-  max-width: 920px;
+  max-width: 880px;
   min-width: 280px;
   width: 100%;
   border: 1px solid var(--primary-low-mid);
