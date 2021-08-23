@@ -1,4 +1,3 @@
-import { propertyEqual } from "discourse/lib/computed";
 import { action, computed } from "@ember/object";
 import Component from "@ember/component";
 import I18n from "I18n";
@@ -36,7 +35,7 @@ export default Component.extend(UtilsMixin, {
   didInsertElement() {
     this._super(...arguments);
 
-    if (!this.site.mobileView) {
+    if (!this?.site?.mobileView) {
       this.element.addEventListener("mouseenter", this.handleMouseEnter);
       this.element.addEventListener("focus", this.handleMouseEnter);
       this.element.addEventListener("blur", this.handleBlur);
@@ -45,7 +44,7 @@ export default Component.extend(UtilsMixin, {
 
   willDestroyElement() {
     this._super(...arguments);
-    if (!this.site.mobileView && this.element) {
+    if (!this?.site?.mobileView && this.element) {
       this.element.removeEventListener("mouseenter", this.handleBlur);
       this.element.removeEventListener("focus", this.handleMouseEnter);
       this.element.removeEventListener("blur", this.handleMouseEnter);
@@ -115,9 +114,13 @@ export default Component.extend(UtilsMixin, {
     return this.getValue(this.selectKit.highlighted);
   }),
 
-  isHighlighted: propertyEqual("rowValue", "highlightedValue"),
+  isHighlighted: computed("rowValue", "highlightedValue", function () {
+    return this.rowValue === this.highlightedValue;
+  }),
 
-  isSelected: propertyEqual("rowValue", "value"),
+  isSelected: computed("rowValue", "value", function () {
+    return this.rowValue === this.value;
+  }),
 
   @action
   handleMouseEnter() {
