@@ -113,6 +113,8 @@ class TopicList
       user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
     end
 
+    DiscourseEvent.trigger(:before_topic_list_user_lookup, @topics, user_ids)
+
     user_lookup = UserLookup.new(user_ids)
 
     @topics.each do |ft|
