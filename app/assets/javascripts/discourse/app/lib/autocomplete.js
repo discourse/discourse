@@ -580,7 +580,7 @@ export default function (options) {
       }
 
       // If we've backspaced past the beginning, cancel unless no key
-      if (cp - 1 <= completeStart && options.key) {
+      if (cp <= completeStart && options.key) {
         closeAutocomplete();
         return true;
       }
