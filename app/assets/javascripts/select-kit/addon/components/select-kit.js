@@ -77,7 +77,7 @@ export default Component.extend(
       this.set(
         "selectKit",
         EmberObject.create({
-          uniqueID: this.attrs?.id || guidFor(this),
+          uniqueID: this.attrs?.id?.value || this.attrs?.id || guidFor(this),
           valueProperty: this.valueProperty,
           nameProperty: this.nameProperty,
           labelProperty: this.labelProperty,
@@ -838,7 +838,7 @@ export default Component.extend(
       this.clearErrors();
 
       const inModal = this.element.closest("#discourse-modal");
-      if (inModal && this.site.mobileView) {
+      if (inModal && this?.site?.mobileView) {
         const modalBody = inModal.querySelector(".modal-body");
         modalBody.style = "";
       }
@@ -870,7 +870,7 @@ export default Component.extend(
           `#${this.selectKit.uniqueID}-body`
         );
 
-        const placementStrategy = this.site.mobileView ? "absolute" : "fixed";
+        const placementStrategy = this?.site?.mobileView ? "absolute" : "fixed";
         const verticalOffset = 3;
 
         this.popper = createPopper(anchor, popper, {

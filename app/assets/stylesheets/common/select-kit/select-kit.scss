@@ -69,14 +69,15 @@
     overflow: hidden;
     transition: all 0.25s;
     cursor: pointer;
+    display: flex;
+    align-items: stretch;
 
     .select-kit-header-wrapper {
       box-sizing: border-box;
       min-height: 28px;
       display: flex;
-      align-items: center;
       flex: 1 0 auto;
-      width: 100%;
+      align-items: center;
       height: 100%;
     }
 
@@ -262,6 +263,8 @@
       border-radius: 0;
       box-shadow: none;
       width: 100%;
+      box-sizing: border-box;
+      min-height: 30px;
     }
 
     &.is-hidden {
