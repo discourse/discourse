@@ -72,13 +72,17 @@
     display: flex;
     align-items: stretch;
 
+    /* hide native indicator */
+    &::-webkit-details-marker {
+      display: none;
+    }
+
     .select-kit-header-wrapper {
       box-sizing: border-box;
       min-height: 28px;
       display: flex;
       flex: 1 0 auto;
       align-items: center;
-      height: 100%;
     }
 
     .d-icon-spinner {
