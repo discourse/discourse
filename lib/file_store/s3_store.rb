@@ -236,8 +236,7 @@ module FileStore
     end
 
     def temporary_upload_path(file_name)
-      path = super(file_name)
-      s3_bucket_folder_path.nil? ? path : File.join(s3_bucket_folder_path, path)
+      s3_bucket_folder_path.nil? ? super(file_name) : super(file_name, folder_prefix: s3_bucket_folder_path)
     end
 
     def object_from_path(path)

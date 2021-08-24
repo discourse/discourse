@@ -41,10 +41,11 @@ module FileStore
       File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
     end
 
-    def temporary_upload_path(file_name)
+    def temporary_upload_path(file_name, folder_prefix: "")
       File.join(
-        upload_path,
         TEMPORARY_UPLOAD_PREFIX,
+        folder_prefix,
+        upload_path,
         SecureRandom.hex,
         file_name
       )
