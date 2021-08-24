@@ -356,6 +356,10 @@ class UploadsController < ApplicationController
     )
     return render_404 if external_upload_stub.blank?
 
+    if !multipart_upload_exists?(external_upload_stub)
+      return render_404
+    end
+
     presigned_urls = {}
     part_numbers.each do |part_number|
       presigned_urls[part_number] = Discourse.store.presign_multipart_part(
@@ -363,10 +367,6 @@ class UploadsController < ApplicationController
         key: external_upload_stub.key,
         part_number: part_number
       )
-    end
-
-    if !multipart_upload_exists?(external_upload_stub)
-      return render_404
     end
 
     render json: { presigned_urls: presigned_urls }

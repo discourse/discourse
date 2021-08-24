@@ -32,11 +32,12 @@ RSpec.describe ExternalUploadManager do
   end
 
   describe "#ban_user_from_external_uploads!" do
+    after { Discourse.redis.flushdb }
+
     it "bans the user from external uploads using a redis key" do
       ExternalUploadManager.ban_user_from_external_uploads!(user: user)
       expect(ExternalUploadManager.user_banned?(user)).to eq(true)
     end
-    after { Discourse.redis.flushdb }
   end
 
   describe "#can_promote?" do
@@ -134,6 +135,8 @@ RSpec.describe ExternalUploadManager do
           external_upload_stub.update!(filesize: 10)
         end
 
+        after { Discourse.redis.flushdb }
+
         it "raises an error, deletes the file immediately, and prevents the user from uploading external files for a few minutes" do
           expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::SizeMismatchError)
           expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
@@ -143,8 +146,6 @@ RSpec.describe ExternalUploadManager do
             "#{upload_base_url}/#{external_upload_stub.key}"
           )
         end
-
-        after { Discourse.redis.flushdb }
       end
     end
 

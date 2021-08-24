@@ -494,6 +494,8 @@ describe UserGuardian do
   end
 
   describe "#can_upload_external?" do
+    after { Discourse.redis.flushdb }
+
     it "is true by default" do
       expect(Guardian.new(user).can_upload_external?).to eq(true)
     end
@@ -502,7 +504,5 @@ describe UserGuardian do
       ExternalUploadManager.ban_user_from_external_uploads!(user: user)
       expect(Guardian.new(user).can_upload_external?).to eq(false)
     end
-
-    after { Discourse.redis.flushdb }
   end
 end
