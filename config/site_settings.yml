@@ -1365,7 +1365,8 @@ files:
   automatically_download_gravatars: true
   allow_uploaded_avatars:
     client: true
-    default: true
+    default: "0"
+    enum: "TrustLevelAndStaffAndDisabledSetting"
   default_avatars:
     default: ""
     type: url_list
