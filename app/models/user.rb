@@ -1438,10 +1438,6 @@ class User < ActiveRecord::Base
     ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
   end
 
-  def ban_from_external_uploads!(ban_minutes: 5)
-    Discourse.redis.setex("ban_user_from_external_uploads_#{self.id}", ban_minutes.minutes.to_i, "1")
-  end
-
   protected
 
   def badge_grant

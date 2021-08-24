@@ -890,14 +890,16 @@ describe UploadsController do
             content_type: "image/png",
             file_size: 1024
           }
+          expect(response.status).to eq(200)
+
           post "/uploads/create-multipart.json", params: {
             file_name: "test.png",
             upload_type: "composer",
             content_type: "image/png",
             file_size: 1024
           }
+          expect(response.status).to eq(429)
         end
-        expect(response.status).to eq(429)
       end
     end
 
@@ -919,8 +921,8 @@ describe UploadsController do
   end
 
   describe "#batch_presign_multipart_parts" do
-    let(:mock_multipart_upload_id) { "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--" }
-    let!(:external_upload_stub) do
+    fab!(:mock_multipart_upload_id) { "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--" }
+    fab!(:external_upload_stub) do
       Fabricate(:image_external_upload_stub, created_by: user, multipart: true, external_upload_identifier: mock_multipart_upload_id)
     end
 
@@ -968,19 +970,18 @@ describe UploadsController do
       end
 
       it "errors if the part_numbers do not contain numbers between 1 and 10000" do
-        stub_list_multipart_request
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
           part_numbers: [-1, 0, 1, 2, 3, 4]
         }
         expect(response.status).to eq(400)
-        expect(response.body).to include("Part numbers should be a list of numbers")
+        expect(response.body).to include("You supplied invalid parameters to the request: Each part number should be between 1 and 10000")
         post "/uploads/batch-presign-multipart-parts.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
           part_numbers: [3, 4, "blah"]
         }
         expect(response.status).to eq(400)
-        expect(response.body).to include("Part numbers should be a list of numbers")
+        expect(response.body).to include("You supplied invalid parameters to the request: Each part number should be between 1 and 10000")
       end
 
       it "returns 404 when the upload stub does not exist" do
@@ -1028,18 +1029,22 @@ describe UploadsController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        stub_list_multipart_request
         stub_const(UploadsController, "BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE", 1) do
+          stub_list_multipart_request
           post "/uploads/batch-presign-multipart-parts.json", params: {
             unique_identifier: external_upload_stub.unique_identifier,
             part_numbers: [1, 2, 3]
           }
+
+          expect(response.status).to eq(200)
+
           post "/uploads/batch-presign-multipart-parts.json", params: {
             unique_identifier: external_upload_stub.unique_identifier,
             part_numbers: [1, 2, 3]
           }
+
+          expect(response.status).to eq(429)
         end
-        expect(response.status).to eq(429)
       end
     end
 
@@ -1115,19 +1120,19 @@ describe UploadsController do
           parts: [{ part_number: -1, etag: "test1" }]
         }
         expect(response.status).to eq(400)
-        expect(response.body).to include("Part numbers should be a list of numbers")
+        expect(response.body).to include("You supplied invalid parameters to the request: Each part number should be between 1 and 10000")
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
           parts: [{ part_number: 20001, etag: "test1" }]
         }
         expect(response.status).to eq(400)
-        expect(response.body).to include("Part numbers should be a list of numbers")
+        expect(response.body).to include("You supplied invalid parameters to the request: Each part number should be between 1 and 10000")
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
           parts: [{ part_number: "blah", etag: "test1" }]
         }
         expect(response.status).to eq(400)
-        expect(response.body).to include("Part numbers should be a list of numbers")
+        expect(response.body).to include("You supplied invalid parameters to the request: Each part number should be between 1 and 10000")
       end
 
       it "errors if any of the parts objects have missing values" do
@@ -1137,7 +1142,7 @@ describe UploadsController do
           parts: [{ part_number: 1 }]
         }
         expect(response.status).to eq(400)
-        expect(response.body).to include("All parts must have a part number")
+        expect(response.body).to include("All parts must have an etag")
       end
 
       it "returns 404 when the upload stub does not exist" do
@@ -1148,7 +1153,7 @@ describe UploadsController do
         expect(response.status).to eq(404)
       end
 
-      it "returns 422 when the compelte request errors" do
+      it "returns 422 when the complete request errors" do
         FileStore::S3Store.any_instance.stubs(:complete_multipart).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
         stub_list_multipart_request
         post "/uploads/complete-multipart.json", params: {
@@ -1185,13 +1190,13 @@ describe UploadsController do
         ).with(
           body: "<CompleteMultipartUpload xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">\n  <Part>\n    <ETag>test1</ETag>\n    <PartNumber>1</PartNumber>\n  </Part>\n  <Part>\n    <ETag>test2</ETag>\n    <PartNumber>2</PartNumber>\n  </Part>\n</CompleteMultipartUpload>\n"
         ).to_return(status: 200, body: <<~XML)
-<?xml version="1.0" encoding="UTF-8"?>
-<CompleteMultipartUploadResult>
-   <Location>#{temp_location}</Location>
-   <Bucket>s3-upload-bucket</Bucket>
-   <Key>#{external_upload_stub.key}</Key>
-   <ETag>testfinal</ETag>
-</CompleteMultipartUploadResult>
+          <?xml version="1.0" encoding="UTF-8"?>
+          <CompleteMultipartUploadResult>
+             <Location>#{temp_location}</Location>
+             <Bucket>s3-upload-bucket</Bucket>
+             <Key>#{external_upload_stub.key}</Key>
+             <ETag>testfinal</ETag>
+          </CompleteMultipartUploadResult>
         XML
 
         # all the functionality for ExternalUploadManager is already tested along
@@ -1278,11 +1283,12 @@ describe UploadsController do
         expect(response.status).to eq(400)
       end
 
-      it "returns 404 when the upload stub does not exist" do
+      it "returns 200 when the stub does not exist, assumes it has already been deleted" do
+        FileStore::S3Store.any_instance.expects(:abort_multipart).never
         post "/uploads/abort-multipart.json", params: {
           external_upload_identifier: "unknown",
         }
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(200)
       end
 
       it "returns 404 when the upload stub does not belong to the user" do
@@ -1301,7 +1307,7 @@ describe UploadsController do
         }
 
         expect(response.status).to eq(200)
-        expect(ExternalUploadStub.find_by(id: external_upload_stub.id)).to eq(nil)
+        expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
       end
 
       it "returns 422 when the abort request errors" do
@@ -1310,23 +1316,6 @@ describe UploadsController do
           external_upload_identifier: external_upload_stub.external_upload_identifier
         }
         expect(response.status).to eq(422)
-      end
-
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
-
-        stub_abort_request
-
-        stub_const(UploadsController, "ABORT_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
-          post "/uploads/abort-multipart.json", params: {
-            external_upload_identifier: external_upload_stub.external_upload_identifier
-          }
-          post "/uploads/abort-multipart.json", params: {
-            external_upload_identifier: external_upload_stub.external_upload_identifier
-          }
-        end
-        expect(response.status).to eq(429)
       end
     end
 

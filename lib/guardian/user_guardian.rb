@@ -177,7 +177,7 @@ module UserGuardian
   end
 
   def can_upload_external?
-    Discourse.redis.get("ban_user_from_external_uploads_#{@user.id}") != "1"
+    !ExternalUploadManager.user_banned?(user)
   end
 
   def can_delete_sso_record?(user)

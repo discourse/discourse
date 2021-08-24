@@ -5,6 +5,7 @@ require "digest/sha1"
 class ExternalUploadStub < ActiveRecord::Base
   CREATED_EXPIRY_HOURS = 1
   UPLOADED_EXPIRY_HOURS = 24
+  FAILED_EXPIRY_HOURS = 48
 
   belongs_to :created_by, class_name: 'User'
 
@@ -28,6 +29,14 @@ class ExternalUploadStub < ActiveRecord::Base
     )
   }
 
+  scope :expired_failed, -> {
+    where(
+      "status = ? AND created_at <= ?",
+      ExternalUploadStub.statuses[:failed],
+      FAILED_EXPIRY_HOURS.hours.ago
+    )
+  }
+
   before_create do
     self.unique_identifier = SecureRandom.uuid
     self.status = ExternalUploadStub.statuses[:created] if self.status.blank?
@@ -46,6 +55,7 @@ class ExternalUploadStub < ActiveRecord::Base
   # here right?
   def self.cleanup!
     expired_created.delete_all
+    expired_failed.delete_all
     expired_uploaded.delete_all
   end
 end

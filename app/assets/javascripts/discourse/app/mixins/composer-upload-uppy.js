@@ -358,10 +358,6 @@ export default Mixin.create({
   },
 
   _useS3MultipartUploads() {
-    const headers = {
-      "X-CSRF-Token": this.session.csrfToken,
-      "Content-Type": "application/json",
-    };
     const self = this;
 
     this._uppyInstance.use(AwsS3Multipart, {
@@ -375,15 +371,13 @@ export default Mixin.create({
       limit: 10,
 
       createMultipartUpload(file) {
-        return ajax(getURL("/uploads/create-multipart.json"), {
+        return ajax("/uploads/create-multipart.json", {
           type: "POST",
-          headers,
-          data: JSON.stringify({
+          data: {
             file_name: file.name,
             file_size: file.size,
-            content_type: file.type,
             upload_type: file.meta.upload_type,
-          }),
+          },
           // uppy is inconsistent, an error here fires the upload-error event
         }).then((data) => {
           file.meta.unique_identifier = data.unique_identifier;
@@ -396,13 +390,12 @@ export default Mixin.create({
 
       prepareUploadParts(file, partData) {
         return (
-          ajax(getURL("/uploads/batch-presign-multipart-parts.json"), {
+          ajax("/uploads/batch-presign-multipart-parts.json", {
             type: "POST",
-            headers,
-            data: JSON.stringify({
+            data: {
               part_numbers: partData.partNumbers,
               unique_identifier: file.meta.unique_identifier,
-            }),
+            },
           })
             .then((data) => {
               return { presignedUrls: data.presigned_urls };
@@ -418,9 +411,9 @@ export default Mixin.create({
         const parts = data.parts.map((part) => {
           return { part_number: part.PartNumber, etag: part.ETag };
         });
-        return ajax(getURL("/uploads/complete-multipart.json"), {
+        return ajax("/uploads/complete-multipart.json", {
           type: "POST",
-          headers,
+          contentType: "application/json",
           data: JSON.stringify({
             parts,
             unique_identifier: file.meta.unique_identifier,
@@ -440,12 +433,11 @@ export default Mixin.create({
           return;
         }
 
-        ajax(getURL("/uploads/abort-multipart.json"), {
+        return ajax("/uploads/abort-multipart.json", {
           type: "POST",
-          headers,
-          data: JSON.stringify({
+          data: {
             external_upload_identifier: uploadId,
-          }),
+          },
           // uppy is inconsistent, an error here does not fire the upload-error event
         }).catch((err) => {
           self._handleUploadError(file, err);

@@ -32,6 +32,9 @@ class UploadCreator
     @opts = opts
     @filesize = @opts[:filesize] if @opts[:external_upload_too_big]
     @opts[:validate] = opts[:skip_validations].present? ? !ActiveRecord::Type::Boolean.new.cast(opts[:skip_validations]) : true
+
+    # TODO (martin) Validate @opts[:type] to make sure only blessed types are passed
+    # in, since the clientside can pass any type it wants.
   end
 
   def create_for(user_id)

@@ -18,6 +18,14 @@ class UploadsController < ApplicationController
     :abort_multipart,
     :complete_multipart
   ]
+  before_action :direct_s3_uploads_check, only: [
+    :generate_presigned_put,
+    :complete_external_upload,
+    :create_multipart,
+    :batch_presign_multipart_parts,
+    :abort_multipart,
+    :complete_multipart
+  ]
   before_action :can_upload_external?, only: [:create_multipart, :generate_presigned_put]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
@@ -29,6 +37,10 @@ class UploadsController < ApplicationController
 
   def external_store_check
     return render_404 if !Discourse.store.external?
+  end
+
+  def direct_s3_uploads_check
+    return render_404 if !SiteSetting.enable_direct_s3_uploads
   end
 
   def can_upload_external?
@@ -210,8 +222,6 @@ class UploadsController < ApplicationController
   end
 
   def generate_presigned_put
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
-
     RateLimiter.new(
       current_user, "generate-presigned-put-upload-stub", PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE, 1.minute
     ).performed!
@@ -258,8 +268,6 @@ class UploadsController < ApplicationController
   end
 
   def complete_external_upload
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
-
     unique_identifier = params.require(:unique_identifier)
     external_upload_stub = ExternalUploadStub.find_by(
       unique_identifier: unique_identifier, created_by: current_user
@@ -275,7 +283,7 @@ class UploadsController < ApplicationController
       begin
         upload = external_upload_manager.promote_to_upload!
         if upload.errors.empty?
-          external_upload_manager.destroy!
+          external_upload_stub.destroy!
           render json: UploadsController.serialize_upload(upload), status: 200
         else
           render_json_error(upload.errors.to_hash.values.flatten, status: 422)
@@ -302,8 +310,6 @@ class UploadsController < ApplicationController
   end
 
   def create_multipart
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
-
     RateLimiter.new(
       current_user, "create-multipart-upload", CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE, 1.minute
     ).performed!
@@ -311,7 +317,7 @@ class UploadsController < ApplicationController
     file_name = params.require(:file_name)
     file_size = params.require(:file_size).to_i
     upload_type = params.require(:upload_type)
-    content_type = params.require(:content_type)
+    content_type = MiniMime.lookup_by_filename(file_name)&.content_type
 
     if file_size_too_big?(file_name, file_size)
       return render_json_error(
@@ -347,28 +353,21 @@ class UploadsController < ApplicationController
   end
 
   def batch_presign_multipart_parts
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
-
     part_numbers = params.require(:part_numbers)
     unique_identifier = params.require(:unique_identifier)
 
     RateLimiter.new(
-      current_user, "batch-presign-#{unique_identifier}", BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE, 1.minute
+      current_user, "batch-presign", BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE, 1.minute
     ).performed!
 
-    part_numbers = part_numbers.map(&:to_i).map do |part_number|
+    part_numbers = part_numbers.map do |part_number|
       validate_part_number(part_number)
-      part_number
     end
 
     external_upload_stub = ExternalUploadStub.find_by(
       unique_identifier: unique_identifier, created_by: current_user
     )
     return render_404 if external_upload_stub.blank?
-
-    if !multipart_upload_exists?(external_upload_stub)
-      return render_404
-    end
 
     presigned_urls = {}
     part_numbers.each do |part_number|
@@ -379,15 +378,21 @@ class UploadsController < ApplicationController
       )
     end
 
+    if !multipart_upload_exists?(external_upload_stub)
+      return render_404
+    end
+
     render json: { presigned_urls: presigned_urls }
   end
 
   def validate_part_number(part_number)
-    if part_number.zero? || part_number.negative? || !part_number.between?(1, 10000)
+    part_number = part_number.to_i
+    if !part_number.between?(1, 10000)
       raise Discourse::InvalidParameters.new(
-        "Part numbers should be a list of numbers between 1 and 10000"
+        "Each part number should be between 1 and 10000"
       )
     end
+    part_number
   end
 
   def multipart_upload_exists?(external_upload_stub)
@@ -403,22 +408,15 @@ class UploadsController < ApplicationController
   end
 
   def abort_multipart
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
-
     external_upload_identifier = params.require(:external_upload_identifier)
-
-    RateLimiter.new(
-      current_user, "abort-multipart-upload", ABORT_MULTIPART_RATE_LIMIT_PER_MINUTE, 1.minute
-    ).performed!
-
     external_upload_stub = ExternalUploadStub.find_by(
-      external_upload_identifier: external_upload_identifier,
-      created_by: current_user
+      external_upload_identifier: external_upload_identifier
     )
-    return render_404 if external_upload_stub.blank?
+    return render json: success_json if external_upload_stub.blank?
+    return render_404 if external_upload_stub.created_by_id != current_user.id
 
     begin
-      abort_response = Discourse.store.abort_multipart(
+      Discourse.store.abort_multipart(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key
       )
@@ -433,8 +431,6 @@ class UploadsController < ApplicationController
   end
 
   def complete_multipart
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
-
     unique_identifier = params.require(:unique_identifier)
     parts = params.require(:parts)
 
@@ -452,12 +448,12 @@ class UploadsController < ApplicationController
     end
 
     parts = parts.map do |part|
-      part_number = part[:part_number].to_i
+      part_number = part[:part_number]
       etag = part[:etag]
-      validate_part_number(part_number)
+      part_number = validate_part_number(part_number)
 
-      if part_number.blank? || etag.blank?
-        raise Discourse::InvalidParameters.new("All parts must have a part number between 1 and 10000 and an ETag")
+      if etag.blank?
+        raise Discourse::InvalidParameters.new("All parts must have an etag and a valid part number")
       end
 
       # this is done so it's an array of hashes rather than an array of

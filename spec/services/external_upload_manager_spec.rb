@@ -31,6 +31,14 @@ RSpec.describe ExternalUploadManager do
     stub_delete_object
   end
 
+  describe "#ban_user_from_external_uploads!" do
+    it "bans the user from external uploads using a redis key" do
+      ExternalUploadManager.ban_user_from_external_uploads!(user: user)
+      expect(ExternalUploadManager.user_banned?(user)).to eq(true)
+    end
+    after { Discourse.redis.flushdb }
+  end
+
   describe "#can_promote?" do
     it "returns false if the external stub status is not created" do
       external_upload_stub.update!(status: ExternalUploadStub.statuses[:uploaded])
@@ -123,18 +131,20 @@ RSpec.describe ExternalUploadManager do
 
       context "when the downloaded file size does not match the expected file size for the upload stub" do
         before do
-          external_upload_stub.update(filesize: 10)
+          external_upload_stub.update!(filesize: 10)
         end
 
         it "raises an error, deletes the file immediately, and prevents the user from uploading external files for a few minutes" do
           expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::SizeMismatchError)
-          expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:failed])
-          expect(Discourse.redis.get("ban_user_from_external_uploads_#{external_upload_stub.created_by_id}")).to eq("1")
+          expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
+          expect(Discourse.redis.get("#{ExternalUploadManager::BAN_USER_REDIS_PREFIX}#{external_upload_stub.created_by_id}")).to eq("1")
           expect(WebMock).to have_requested(
             :delete,
             "#{upload_base_url}/#{external_upload_stub.key}"
           )
         end
+
+        after { Discourse.redis.flushdb }
       end
     end
 

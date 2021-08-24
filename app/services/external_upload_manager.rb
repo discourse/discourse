@@ -3,6 +3,7 @@
 class ExternalUploadManager
   DOWNLOAD_LIMIT = 100.megabytes
   SIZE_MISMATCH_BAN_MINUTES = 5
+  BAN_USER_REDIS_PREFIX = "ban_user_from_external_uploads_"
 
   class ChecksumMismatchError < StandardError; end
   class DownloadFailedError < StandardError; end
@@ -10,6 +11,14 @@ class ExternalUploadManager
   class SizeMismatchError < StandardError; end
 
   attr_reader :external_upload_stub
+
+  def self.ban_user_from_external_uploads!(user:, ban_minutes: 5)
+    Discourse.redis.setex("#{BAN_USER_REDIS_PREFIX}#{user.id}", ban_minutes.minutes.to_i, "1")
+  end
+
+  def self.user_banned?(user)
+    Discourse.redis.get("#{BAN_USER_REDIS_PREFIX}#{user.id}") == "1"
+  end
 
   def initialize(external_upload_stub)
     @external_upload_stub = external_upload_stub
@@ -39,7 +48,10 @@ class ExternalUploadManager
     # files to the external provider. If this happens, the user will be banned
     # from uploading to the external provider for N minutes.
     if external_size != external_upload_stub.filesize
-      external_upload_stub.created_by.ban_from_external_uploads!(ban_minutes: SIZE_MISMATCH_BAN_MINUTES)
+      ExternalUploadManager.ban_user_from_external_uploads!(
+        user: external_upload_stub.created_by,
+        ban_minutes: SIZE_MISMATCH_BAN_MINUTES
+      )
       Discourse.store.delete_file(external_upload_stub.key)
       raise SizeMismatchError.new("expected: #{external_upload_stub.filesize}, actual: #{external_size}")
     end
@@ -72,15 +84,14 @@ class ExternalUploadManager
     UploadCreator.new(tempfile, external_upload_stub.original_filename, opts).create_for(
       external_upload_stub.created_by_id
     )
+  rescue SizeMismatchError
+    external_upload_stub.destroy!
+    raise
   rescue
     external_upload_stub.update!(status: ExternalUploadStub.statuses[:failed])
     raise
   ensure
     tempfile&.close!
-  end
-
-  def destroy!
-    external_upload_stub.destroy!
   end
 
   private

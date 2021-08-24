@@ -499,8 +499,10 @@ describe UserGuardian do
     end
 
     it "is false if the user has been banned from external uploads for a time period" do
-      user.ban_from_external_uploads!
+      ExternalUploadManager.ban_user_from_external_uploads!(user: user)
       expect(Guardian.new(user).can_upload_external?).to eq(false)
     end
+
+    after { Discourse.redis.flushdb }
   end
 end
