@@ -3,19 +3,14 @@ import {
   createPreviewComponent,
   darkLightDiff,
 } from "wizard/lib/preview";
-import { observes } from "discourse-common/utils/decorators";
 
 export default createPreviewComponent(659, 320, {
   logo: null,
   avatar: null,
 
-  @observes(
-    "step.fieldsById.homepage_style.value",
-    "step.fieldsById.body_font.value",
-    "step.fieldsById.heading_font.value",
-    "step.fieldsById.color_scheme.value"
-  )
-  styleChanged() {
+  didUpdateAttrs() {
+    this._super(...arguments);
+
     this.triggerRepaint();
   },
 

@@ -57,13 +57,14 @@ export default createPreviewComponent(659, 320, {
     }
   },
 
-  @observes(
-    "step.fieldsById.body_font.value",
-    "step.fieldsById.heading_font.value",
-    "step.fieldsById.color_scheme.value"
-  )
-  fontChanged() {
+  didUpdateAttrs() {
+    this._super(...arguments);
+
     this.triggerRepaint();
+
+    if (this.stylingDropdown?.id === "homepage_style") {
+      this.set("previewTopic", false);
+    }
   },
 
   @observes("previewTopic")
@@ -74,11 +75,6 @@ export default createPreviewComponent(659, 320, {
       left: this.previewTopic ? 0 : el.offsetWidth + 80,
       behavior: "smooth",
     });
-  },
-
-  @observes("step.fieldsById.homepage_style.value")
-  homepageStyleChanged() {
-    this.set("previewTopic", false);
   },
 
   images() {

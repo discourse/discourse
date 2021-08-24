@@ -26,6 +26,7 @@ const alreadyWarned = {};
 export default Component.extend({
   classNames: ["wizard-step"],
   saving: null,
+  stylingDropdown: {},
 
   didInsertElement() {
     this._super(...arguments);
@@ -133,6 +134,10 @@ export default Component.extend({
   actions: {
     quit() {
       document.location = getUrl("/");
+    },
+
+    stylingDropdownChanged(id, value) {
+      this.set("stylingDropdown", { id, value });
     },
 
     exitEarly() {
