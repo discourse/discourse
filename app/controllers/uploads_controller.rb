@@ -399,7 +399,12 @@ class UploadsController < ApplicationController
     external_upload_stub = ExternalUploadStub.find_by(
       external_upload_identifier: external_upload_identifier
     )
+
+    # The stub could have already been deleted by an earlier error via
+    # ExternalUploadManager, so we consider this a great success if the
+    # stub is already gone.
     return render json: success_json if external_upload_stub.blank?
+
     return render_404 if external_upload_stub.created_by_id != current_user.id
 
     begin

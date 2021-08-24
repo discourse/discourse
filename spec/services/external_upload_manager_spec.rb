@@ -123,9 +123,9 @@ RSpec.describe ExternalUploadManager do
         context "when the downloaded file sha1 does not match the client sha1" do
           let(:client_sha1) { "blahblah" }
 
-          it "raises an error and marks upload as failed" do
+          it "raises an error, deletes the stub" do
             expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
-            expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:failed])
+            expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
           end
         end
       end

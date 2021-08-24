@@ -29,14 +29,6 @@ class ExternalUploadStub < ActiveRecord::Base
     )
   }
 
-  scope :expired_failed, -> {
-    where(
-      "status = ? AND created_at <= ?",
-      ExternalUploadStub.statuses[:failed],
-      FAILED_EXPIRY_HOURS.hours.ago
-    )
-  }
-
   before_create do
     self.unique_identifier = SecureRandom.uuid
     self.status = ExternalUploadStub.statuses[:created] if self.status.blank?
@@ -46,7 +38,6 @@ class ExternalUploadStub < ActiveRecord::Base
     @statuses ||= Enum.new(
       created: 1,
       uploaded: 2,
-      failed: 3
     )
   end
 
@@ -55,7 +46,6 @@ class ExternalUploadStub < ActiveRecord::Base
   # here right?
   def self.cleanup!
     expired_created.delete_all
-    expired_failed.delete_all
     expired_uploaded.delete_all
   end
 end

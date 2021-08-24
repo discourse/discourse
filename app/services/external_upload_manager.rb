@@ -52,7 +52,6 @@ class ExternalUploadManager
         user: external_upload_stub.created_by,
         ban_minutes: SIZE_MISMATCH_BAN_MINUTES
       )
-      Discourse.store.delete_file(external_upload_stub.key)
       raise SizeMismatchError.new("expected: #{external_upload_stub.filesize}, actual: #{external_size}")
     end
 
@@ -84,11 +83,13 @@ class ExternalUploadManager
     UploadCreator.new(tempfile, external_upload_stub.original_filename, opts).create_for(
       external_upload_stub.created_by_id
     )
-  rescue SizeMismatchError
-    external_upload_stub.destroy!
-    raise
   rescue
-    external_upload_stub.update!(status: ExternalUploadStub.statuses[:failed])
+    # We don't need to do anything special to abort multipart uploads here,
+    # because at this point (calling promote_to_upload!), the multipart
+    # upload would already be complete.
+    Discourse.store.delete_file(external_upload_stub.key)
+    external_upload_stub.destroy!
+
     raise
   ensure
     tempfile&.close!
