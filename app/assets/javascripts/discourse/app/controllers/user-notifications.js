@@ -18,7 +18,7 @@ export default Controller.extend({
   },
 
   @discourseComputed("filter")
-  filtered() {
+  isFiltered() {
     return this.filter && this.filter !== "all";
   },
 
@@ -29,14 +29,14 @@ export default Controller.extend({
     );
   },
 
-  @discourseComputed("filtered", "hasNotifications")
-  userDoesNotHaveNotifications(filtered, hasNotifications) {
-    return !filtered && !hasNotifications;
+  @discourseComputed("isFiltered", "hasNotifications")
+  userDoesNotHaveNotifications(isFiltered, hasNotifications) {
+    return !isFiltered && !hasNotifications;
   },
 
-  @discourseComputed("filtered", "hasNotifications")
-  nothingFound(filtered, hasNotifications) {
-    return filtered && !hasNotifications;
+  @discourseComputed("isFiltered", "hasNotifications")
+  nothingFound(isFiltered, hasNotifications) {
+    return isFiltered && !hasNotifications;
   },
 
   @discourseComputed()
