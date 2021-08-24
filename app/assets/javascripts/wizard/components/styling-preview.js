@@ -71,7 +71,7 @@ export default createPreviewComponent(659, 320, {
     const el = this.element.querySelector(".previews");
     el.scrollTo({
       top: 0,
-      left: this.previewTopic ? 0 : el.offsetWidth + 10,
+      left: this.previewTopic ? 0 : el.offsetWidth + 80,
       behavior: "smooth",
     });
   },

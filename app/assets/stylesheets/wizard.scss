@@ -886,10 +886,10 @@ body.wizard {
     }
     .homepage-preview {
       position: absolute;
-      left: calc(100% + 45px);
+      left: calc(100% + 25px);
       top: 0px;
-      transform: scale(0.85) translateX(-90px);
-      padding-right: 45px;
+      transform: scale(0.85);
+      padding-right: 25px;
     }
   }
 }
