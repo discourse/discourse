@@ -25,14 +25,11 @@ export default Controller.extend({
       content: [],
       loading: true,
       permissionDenied: false,
+      searchTerm: this.q,
     });
 
-    if (this.q && !this.searchTerm) {
-      this.set("searchTerm", this.q);
-    }
-
     return this.model
-      .loadItems({ q: this.searchTerm })
+      .loadItems({ q: this.q })
       .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => {
@@ -85,7 +82,7 @@ export default Controller.extend({
     this.set("loadingMore", true);
 
     return this.model
-      .loadMore({ q: this.searchTerm })
+      .loadMore({ q: this.q })
       .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
