@@ -4908,24 +4908,6 @@ en:
             label: "Large Icon"
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Ideally larger than 512 × 512. We'll use the square logo by default."
 
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Latest Topics"
-              categories_only:
-                label: "Categories Only"
-              categories_with_featured_topics:
-                label: "Categories with Featured Topics"
-              categories_and_latest_topics:
-                label: "Categories and Latest Topics"
-              categories_and_top_topics:
-                label: "Categories and Top Topics"
-              categories_boxes:
-                label: "Categories boxes"
-              categories_boxes_with_topics:
-                label: "Categories boxes with Topics"
-
       invites:
         title: "Invite Staff"
         description: "You’re almost done! Let’s invite some people to help <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to get your community started."
