@@ -353,7 +353,6 @@ export default Mixin.create({
     );
 
     this._validUploads = 0;
-    this.messageBus.unsubscribe("/uploads/composer");
     const $uploadTarget = $(this.element);
     try {
       $uploadTarget.fileupload("destroy");
