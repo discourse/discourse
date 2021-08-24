@@ -126,7 +126,7 @@ export function createPreviewComponent(width, height, obj) {
         // draw border
         ctx.beginPath();
         ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
-        ctx.rect(0, 0, width, height);
+        ctx.rect(0, 0, width - 1, height - 1);
         ctx.stroke();
       },
 

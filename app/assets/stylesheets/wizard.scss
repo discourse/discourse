@@ -873,7 +873,11 @@ body.wizard {
     background: var(--secondary);
     border: 1px dashed var(--tertiary-low);
     border-radius: 10px;
-
+    cursor: grab;
+    user-select: none;
+    &.dragging {
+      cursor: grabbing;
+    }
     .topic-preview {
       position: absolute;
       left: 0px;

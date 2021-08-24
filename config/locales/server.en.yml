@@ -4868,7 +4868,7 @@ en:
             label: "Body font"
           heading_font:
             label: "Heading font"
-          font_preview:
+          styling_preview:
             label: "Preview"
           homepage_style:
             label: "Homepage style"

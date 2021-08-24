@@ -12,12 +12,50 @@ Nullam eget sem non elit tincidunt rhoncus. Fusce
 velit nisl, porttitor sed nisl ac, consectetur interdum
 metus. Fusce in consequat augue, vel facilisis felis.`;
 
-const CANVAS_WIDTH = 659;
-
-export default createPreviewComponent(CANVAS_WIDTH, 320, {
+export default createPreviewComponent(659, 320, {
   logo: null,
   avatar: null,
   previewTopic: true,
+  draggingActive: false,
+  startX: 0,
+  scrollLeft: 0,
+
+  mouseDown(e) {
+    const slider = this.element.querySelector(".previews");
+    this.setProperties({
+      draggingActive: true,
+      startX: e.pageX - slider.offsetLeft,
+      scrollLeft: slider.scrollLeft,
+    });
+  },
+
+  mouseLeave() {
+    this.set("draggingActive", false);
+  },
+
+  mouseUp() {
+    this.set("draggingActive", false);
+  },
+
+  mouseMove(e) {
+    if (!this.draggingActive) {
+      return;
+    }
+    e.preventDefault();
+
+    const slider = this.element.querySelector(".previews"),
+      x = e.pageX - slider.offsetLeft,
+      walk = (x - this.startX) * 1.5;
+
+    slider.scrollLeft = this.scrollLeft - walk;
+
+    if (slider.scrollLeft < 50) {
+      this.set("previewTopic", true);
+    }
+    if (slider.scrollLeft > slider.offsetWidth) {
+      this.set("previewTopic", false);
+    }
+  },
 
   @observes(
     "step.fieldsById.body_font.value",
@@ -33,7 +71,7 @@ export default createPreviewComponent(CANVAS_WIDTH, 320, {
     const el = this.element.querySelector(".previews");
     el.scrollTo({
       top: 0,
-      left: this.previewTopic ? 0 : CANVAS_WIDTH + 90,
+      left: this.previewTopic ? 0 : el.offsetWidth + 10,
       behavior: "smooth",
     });
   },

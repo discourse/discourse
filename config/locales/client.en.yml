@@ -5372,6 +5372,7 @@ en:
 
       previews:
         topic_title: "A discussion topic heading"
-        font_title: "%{font} Font"
         share_button: "Share"
         reply_button: "Reply"
+        topic_preview: "Topic preview"
+        homepage_preview: "Homepage preview"

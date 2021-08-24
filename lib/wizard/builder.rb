@@ -195,7 +195,7 @@ class Wizard
         end
 
         step.add_field(
-          id: 'font_preview',
+          id: 'styling_preview',
           type: 'component'
         )
 
