@@ -200,6 +200,11 @@ lt:
     software_update_prompt:
       message: "Mes atnaujinome šią svetainę. <span>prašome perkrauti puslapį</span>, kitaip galite patirti nenumatytas klaidas."
       dismiss: "Praleisti"
+    bootstrap_mode_enabled:
+      one: "Kad būtų lengviau paleisti naują svetainę, esate įkrovos režimu. Visiems naujiems vartotojams bus suteiktas 1 patikimumo lygis ir įjungti kasdieniai el. Laiškų suvestiniai el. Laiškai. Tai bus automatiškai išjungta, kai %{count} vartotojų."
+      few: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{count} vartotojų ribą."
+      many: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{count} vartotojų ribą."
+      other: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{count} vartotojų ribą."
     bootstrap_mode_disabled: "Paleidimo režimas bus išjungtas per 24 valandas."
     themes:
       default_description: "Numatytasis"
@@ -307,28 +312,38 @@ lt:
       contact_info: "Atsiradus bet kokiai problemai susijusiai su puslapiu, prašome kontaktuoti %{contact_info}."
     bookmarked:
       title: "Žymės"
+      edit_bookmark: "Redaguoti žymę"
       clear_bookmarks: "Pašalinti žymes"
       help:
         bookmark: "Paspausk, kad pažymėtum pirmą įrašą šioje temoje"
+        edit_bookmark: "Spustelėkite, jei norite redaguoti šios temos žymę"
         unbookmark: "Paspausk, kad pašalintum visas žymęs šioje temoje"
+        unbookmark_with_reminder: "Spustelėkite, kad pašalintumėte visas šios temos žymes ir priminimus."
     bookmarks:
+      created: "Jūs pažymėjote šį įrašą. %{name}"
       not_bookmarked: "pažymėkite šį įrašą"
       remove: "Pašalinti Žymę"
       delete: "Ištrinti žymę"
       save: "Saugoti"
       auto_delete_preference:
+        label: "Automatiškai ištrinti"
         never: "Niekada"
       search: "Paieška"
       reminders:
+        today_with_time: "šiandien %{time}"
+        tomorrow_with_time: "rytoj %{time}"
         at_time: "ties %{date_time}"
     copy_codeblock:
       copied: "nukopijuota!"
     drafts:
       label: "Juodraščiai"
+      label_with_count: "Juodraščiai (%{count})"
       resume: "Grįžti"
       remove: "Pašalinti"
       new_topic: "Naujos temos juodraštis"
       topic_reply: "Atsakymo juodraštis"
+      abandon:
+        no_value: "Tęsti redagavimą"
     topic_count_new:
       one: "Pamatyk %{count} naują temą"
       few: "Pamatyk %{count} naujas temas"
@@ -374,6 +389,7 @@ lt:
         title: "Nustatymai"
       moderation_history: "Moderavimo istorija"
       view_all: "Peržiūrėti visus"
+      grouped_by_topic: "Grupuojama pagal temą"
       topic: "Tema:"
       filtered_user: "Narys"
       user:
@@ -400,6 +416,7 @@ lt:
       save: "Saugoti"
       cancel: "Atšaukti"
       filters:
+        all_categories: "(Visos kategorijos)"
         type:
           title: "Tipas"
         refresh: "Atnaujinti"
@@ -676,6 +693,7 @@ lt:
       topic_stat_unit:
         week: "savaitė"
         month: "mėnesis"
+      n_more: "Kategorijos (dar %{count} ) ..."
     ip_lookup:
       title: IP adreso peržiųra
       hostname: Adresas
@@ -732,6 +750,7 @@ lt:
       collapse_profile: "Suskleisti"
       bookmarks: "Žymės"
       bio: "Apie mane"
+      timezone: "Laiko zona"
       invited_by: "Pakvietė"
       trust_level: "Patikimumo lygis"
       notifications: "Perspėjimai"
@@ -755,6 +774,7 @@ lt:
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
       enable_quoting: "Įjungti citatų atsakymus pabrėžtam tekstui"
       change: "pakeisti"
+      featured_topic: "Įpatinga tema"
       moderator: "%{user} yra moderatorius"
       admin: "%{user} yra administratorius"
       moderator_tooltip: "Šis vartotojas yra moderatorius"
@@ -886,9 +906,13 @@ lt:
         uploaded_avatar_empty: "Pridėti paveiksliuką"
         upload_title: "Įkelti savo nuotrauką"
         image_is_not_a_square: "Įspėjimas: jūs ką tik apkirpote nuotrauką, tačiau plotis ir ilgis nėra vienodi."
+      change_profile_background:
+        title: "Profilio antraštė"
       change_card_background:
         title: "Paskyros fonas"
         instructions: "Fono paveiksliukas bus sucentruotas ir turės numatytą 590px plotį."
+      change_featured_topic:
+        title: "Įpatinga tema"
       email:
         title: "El. paštas"
         primary: "Pagrindinis el. Paštas"
@@ -1069,6 +1093,7 @@ lt:
         most_liked_users: "Daugiausia tau patinka"
         most_replied_to_users: "Daugiausia atsakyta į"
         no_likes: "Jokių patinka kolkas."
+        top_categories: "Populiariausios kategorijos"
         topics: "Temos"
         replies: "Atsakymai"
       ip_address:
@@ -1243,6 +1268,7 @@ lt:
     conditional_loading_section:
       loading: Kraunasi...
     select_kit:
+      delete_item: "Ištrinti %{name}"
       default_header_text: Pasirinkti...
       no_content: Atitikmenų nerasta
       filter_placeholder: Paieška...
@@ -1401,6 +1427,7 @@ lt:
         confirm_title: "Pranešimai įgalinti - %{site_title}"
         confirm_body: "Pavyko! Pranešimai buvo įgalinti."
       titles:
+        granted_badge: "suteiktas ženklelis"
         watching_first_post: "nauja tema"
     upload_selector:
       uploading: "Įkeliama"
@@ -1582,6 +1609,7 @@ lt:
       read_more: "Norite skaityti daugiau? %{catLink} arba %{latestLink}."
       browse_all_categories: Žiūrėkite visas kategorijas
       view_latest_topics: peržiūrėkite paskutines temas
+      suggest_create_topic: Pasirengę <a href>pradėti naują pokalbį?</a>
       jump_reply_up: Pereiti į ankstesnį atsakymą
       jump_reply_down: Pereitį į sekantį atsakymą
       deleted: "Tema buvo ištrinta"
@@ -2234,6 +2262,7 @@ lt:
     lightbox:
       download: "atsisiųsti"
       counter: "%curr% iš %total%"
+      close: "Uždaryti (Esc)"
     keyboard_shortcuts_help:
       title: "Klaviatūros trumpiniai"
       jump_to:
@@ -2285,6 +2314,7 @@ lt:
         mark_tracking: "%{shortcut} Sekti temą"
         mark_watching: "%{shortcut} Stebėti temą"
     badges:
+      granted_on: "Suteikta %{date}"
       title: Ženkleliai
       badge_count:
         one: "%{count} _enklelis"
@@ -2296,8 +2326,14 @@ lt:
         few: "+%{count}Daugiau"
         many: "+%{count}Daugiau"
         other: "+%{count}Daugiau"
+      granted:
+        one: "%{count} suteikta"
+        few: "%{count} suteikta"
+        many: "%{count} suteikta"
+        other: "%{count} suteikta"
       select_badge_for_title: Pasirinkti trofėjų ir naudoti, kaip antraštę
       none: "(nieko)"
+      successfully_granted: "Sėkmingai suteiktas ženklelis %{badge} nariui %{username}"
       badge_grouping:
         getting_started:
           name: Pradžia
@@ -2339,6 +2375,8 @@ lt:
       groups:
         title: "Žymos grupės"
         new: "Nauja grupė"
+        new_title: "Sukurti naują grupę"
+        tags_label: "Šios grupės žymos"
         parent_tag_label: "Panašios žymos"
         new_name: "Nauja žymos grupė"
         name_placeholder: "Vardas"

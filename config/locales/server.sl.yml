@@ -724,6 +724,7 @@ sl:
     s3_cdn_warning: 'Strežnik je konfiguriran za nalaganje datotek v S3, vendar hkrati ni konfiguriran tudi S3 CDN. To lahko privede do visokih stroškov uporabe S3 in počasnejšega delovanja strani. Če želite izvedeti več, glejte <a href="https://meta.discourse.org/t/-/148916" target="_blank">"Using Object Storage for Uploads"</a>.'
     out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
+    disabled: "onemogočeno"
     send_welcome_message: "Pošlji sporočilo z dobrodošlico in kratkimi uvodnimi navodili vsem novim uporabnikom."
     auth_skip_create_confirm: Pri prijavi s pomočjo zunanjega overjanja preskočite pojavno okno za ustvarjanje računa. Priporočena uporaba skupaj z auth_overrides_email, auth_overrides_username in auth_overrides_name.
     auth_immediately: "Samodejno preusmeri na zunanji sistem za prijavo brez interakcije uporabnika. To začne veljati šele, ko je login_required vklopljen in ko obstaja samo en način zunanje overitve"

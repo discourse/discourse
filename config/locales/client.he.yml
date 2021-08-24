@@ -370,6 +370,11 @@ he:
       two: "הצגת %{count} נושאים חדשים או עדכניים"
       many: "הצגת %{count} נושאים חדשים או עדכניים"
       other: "הצגת %{count} נושאים חדשים או עדכניים"
+    topic_count_unseen:
+      one: "הצגת נושא %{count} חדש או עדכני"
+      two: "הצגת %{count} נושאים חדשים או עדכניים"
+      many: "הצגת %{count} נושאים חדשים או עדכניים"
+      other: "הצגת %{count} נושאים חדשים או עדכניים"
     topic_count_unread:
       one: "הצגת נושא %{count} שלא נקרא"
       two: "הצגת %{count} נושאים שלא נקראו"
@@ -1093,6 +1098,7 @@ he:
       no_bookmarks_title: "עדיין לא הוספת שום דבר לסימניות"
       no_bookmarks_body: >
         ניתן להתחיל להוסיף פוסטים לסימניות עם הכפתור %{icon} והן תופענה כאן לפנייה בקלות. ניתן גם לתזמן תזכורת!
+      no_bookmarks_search: "לא נמצאו סימניות עם שאילתת החיפוש שסופקה."
       no_notifications_title: "אין לך התראות עדיין"
       first_notification: "התראה ראשונה! בחרו אותה כדי להתחיל."
       dynamic_favicon: "הצגת ספירה בסמל הדפדפן"
@@ -1375,6 +1381,7 @@ he:
         not_connected: "(לא מחובר)"
         confirm_modal_title: "חיבור חשבון %{provider}"
         confirm_description:
+          disconnect: "חשבון %{provider} הקיים שלך ‚%{account_description}’ ינותק."
           account_specific: "החשבון שלך ‚%{account_description}’ ב־%{provider} ישמש לאימות."
           generic: "החשבון של אצל %{provider} ישמש לאימות."
       name:
@@ -1772,6 +1779,7 @@ he:
       disclaimer: "עצם הרשמתך מביעה את הסכמתך ל<a href='%{privacy_link}' target='blank'>מדיניות הפרטיות</a> ול<a href='%{tos_link}' target='blank'>תנאי השירות</a>."
       title: "יצירת חשבון משלך"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסו את קישור שכחתי סיסמה."
+      associate: "כבר יש לך חשבון? ניתן <a href='%{associate_link}'>להיכנס</a> כדי לקשר את חשבון ה־%{provider} שלך."
     forgot_password:
       title: "אתחול סיסמה"
       action: "שכחתי את ססמתי"
@@ -1919,10 +1927,16 @@ he:
         many: "+ %{count} תת־קטגוריות"
         other: "+ %{count} תת־קטגוריות"
     select_kit:
+      delete_item: "למחוק את %{name}"
       filter_by: "סינון לפי: %{name}"
       select_to_filter: "נא לבחור ערך לסינון"
       default_header_text: בחירה…
       no_content: לא נמצאו התאמות
+      results_count:
+        one: "תוצאה %{count}"
+        two: "%{count} תוצאות"
+        many: "%{count} תוצאות"
+        other: "%{count} תוצאות"
       filter_placeholder: חיפוש...
       filter_placeholder_with_any: חיפוש או יצירה…
       create: "יצירה: ‚%{content}’"
@@ -2395,6 +2409,7 @@ he:
         read: "אין עוד נושאים שנקראו."
         new: "אין עוד נושאים חדשים."
         unread: "אין עוד נושאים שלא נקראו."
+        unseen: "אין יותר נושאים שלא נראו."
         category: "אין עוד נושאים בקטגוריה %{category}."
         tag: "אין יותר נושאי %{tag}."
         top: "אין עוד נושאים מובילים."
@@ -3384,7 +3399,8 @@ he:
       many: "משתמשים"
       other: "משתמשים"
     category_title: "קטגוריה"
-    history: "היסטוריה, 100 התיקונים האחרונים"
+    history_capped_revisions: "היסטוריה, 100 התיקונים האחרונים"
+    history: "היסטוריה"
     changed_by: "מאת %{author}"
     raw_email:
       title: "דוא״ל נכנס"
@@ -3421,6 +3437,8 @@ he:
           two: "לא-נקראו %{count} "
           many: "לא-נקראו %{count} "
           other: "לא-נקראו %{count} "
+      unseen:
+        help: "נושאים חדשים ונושאים שאתם כרגע צופים או עוקבים אחריהם עם פוסטים שלא נקראו"
       new:
         lower_title_with_count:
           one: "חדש (%{count})"
@@ -3732,6 +3750,7 @@ he:
       topics:
         none:
           unread: "אין לך נושאים שלא נקראו."
+          unseen: "אין לך נושאים שלא ראית."
           new: "אין לך נושאים חדשים."
           read: "טרם קראת נושאים."
           posted: "עדיין לא פרסמתם באף נושא."
@@ -3910,7 +3929,6 @@ he:
               description: "מנהלים יכולים לראות את כל הקבוצות."
             members_visibility_levels:
               title: "מי יכול לראות את חברי הקבוצה הזו?"
-              description: "מנהלים יכולים לראות את רשימות חברי כל הקבוצות."
             publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי

@@ -238,6 +238,7 @@ de:
     disabled_errors:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
       invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
+    requires_groups: "Einladung gespeichert. Um Zugriff auf das angegebene Thema zu gewähren, füge eine der folgenden Gruppen hinzu: %{groups}."
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV-Format vorliegen."
     max_rows: "Die ersten %{max_bulk_invites} Einladungen wurden versandt. Versuche, die Datei in kleinere Teile aufzuteilen."
@@ -264,6 +265,7 @@ de:
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
   invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
   authenticator_not_found: "Authentifizierungsmethode existiert nicht oder wurde deaktiviert."
+  authenticator_no_connect: "Dieser Authentifizierungsanbieter lässt keine Verbindung zu einem bestehenden Forenkonto zu."
   invalid_api_credentials: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen. Der API-Benutzername oder -Schlüssel ist ungültig."
   provider_not_enabled: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen. Der Authentifizierungsanbieter ist nicht aktiviert."
   provider_not_found: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen. Der Authentifizierungsanbieter existiert nicht."
@@ -480,14 +482,8 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
-    get_a_room: |
-      ### Ermutige jeden, sich an der Unterhaltung zu beteiligen
-
-      Du hast in diesem speziellen Thema %{count} Mal auf @%{reply_username} geantwortet!
-
-      Eine tolle Diskussion umfasst viele Stimmen und Perspektiven. Kannst du noch jemanden dazu motivieren, sich zu beteiligen?
-
-      Und vergiss nicht: Wenn du deine Unterhaltung mit diesem Benutzer außerhalb der Öffentlichkeit fortsetzen möchtest, [sende ihm eine persönliche Nachricht](%{base_path}/u/%{reply_username}).
+    dominating_topic: Du hast mehr als %{percent}% der Antworten hier gepostet, gibt es noch jemanden, von dem du gerne hören würdest?
+    get_a_room: Du hast %{count} Mal auf @%{reply_username}geantwortet. Wusstest Du, dass Du ihnen stattdessen eine persönliche Nachricht senden kannst?
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
 
@@ -550,7 +546,7 @@ de:
         user_email:
           attributes:
             user_id:
-              reassigning_primary_email: "Das Zuweisen einer primären E-Mail-Adresse an einen anderen Benutzer ist nicht erlaubt."
+              reassigning_primary_email: "Das Zuordnen einer primären E-Mail-Adresse an einen anderen Benutzer ist nicht erlaubt."
         color_scheme_color:
           attributes:
             hex:
@@ -1064,7 +1060,7 @@ de:
         no_action: Keine Aktion
       labels:
         flag: Typ
-        assigned: Zugewiesen
+        assigned: Zugeordnet
         poster: Beitragsersteller
         flagger: Meldungsersteller
         time_to_resolution: Lösungszeit
@@ -1371,6 +1367,7 @@ de:
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
   site_settings:
+    disabled: "deaktiviert"
     display_local_time_in_user_card: "Zeigt die lokale Zeit basierend auf der Zeitzone eines Benutzers an, wenn die Benutzerkarte geöffnet wird."
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
     delete_old_hidden_posts: "Automatisch alle Beiträge löschen, die länger als 30 Tage versteckt bleiben."
@@ -1401,6 +1398,7 @@ de:
     category_search_priority_high_weight: "Gewichtung der Rangfolge für hohe Kategorie-Suchpriorität."
     allow_uncategorized_topics: "Erlaube, Themen ohne Kategorie zu erstellen. ACHTUNG: Falls es nicht kategorisierte Themen gibt, musst du sie neu kategorisieren, bevor du diese Option abschaltest."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
+    allow_duplicate_topic_titles_category: "Themen mit identischen, doppelten Titeln zulassen, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss deaktiviert sein."
     unique_posts_mins: "Minuten, nach denen ein Benutzer denselben Inhalt noch einmal schreiben kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor, wenn ein Benutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
     title: "Der Name dieser Website. Wird für das „title“-Tag verwendet."
@@ -1458,6 +1456,7 @@ de:
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
     enforce_second_factor: "Zwingt die Benutzer, die Zwei-Faktor-Authentifizierung zu aktivieren. Wähle „all“, um sie für alle Benutzer zu erzwingen. Wähle „staff“, um sie nur für Team-Mitglieder zu erzwingen."
     force_https: "Erzwinge HTTPS für deine Website. ACHTUNG: Aktiviere dies NICHT, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du dein CDN, alle Anmeldungen über soziale Netzwerke, alle externe Logos/Abhängigkeiten geprüft, um sicherzustellen, dass sie auch HTTPS-kompatibel sind?"
+    same_site_cookies: "Verwenden Sie dieselben Site-Cookies, sie eliminieren alle Cross Site Request Forgery-Vektoren in unterstützten Browsern (Lax oder Strict). Warnung: Strict funktioniert nur auf Websites, die eine Anmeldung erzwingen und eine externe Authentifizierungsmethode verwenden."
     summary_score_threshold: "Mindestscore, den ein Beitrag benötigt, um in der „Dieses Thema zusammenfassen“-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
     summary_likes_required: "Mindestanzahl an „Gefällt mir“ in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
@@ -1509,6 +1508,7 @@ de:
     gtm_container_id: "Google-Tag-Manager-Container-ID. Zum Beispiel: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssen unter Umständen in der Liste „content security policy script src“ erlaubt werden (Positivliste)."
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu verwalten"
+    moderators_change_post_ownership: "Moderatoren erlauben, die Inhaberschaft des Beitrags zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
     blocked_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
@@ -1584,6 +1584,11 @@ de:
     auth_overrides_email: "Überschreibt lokale E-Mail bei jeder Anmeldung mit externer Website-E-Mail und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter. (WARNUNG: Aufgrund der Normalisierung lokaler E-Mails können Abweichungen auftreten.)"
     auth_overrides_username: "Überschreibt den lokalen Benutzernamen bei jeder Anmeldung mit dem Benutzernamen der externen Website und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter. (WARNUNG: Abweichungen können aufgrund unterschiedlicher Länge/Anforderungen des Benutzernamens auftreten.)"
     auth_overrides_name: "Überschreibt bei jeder Anmeldung den lokalen vollständigen Namen mit dem vollständigen Namen der externen Website und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter."
+    discourse_connect_overrides_avatar: "Überschreibt den Benutzeravatar mit dem Wert aus der DiscourseConnect-Payload. Wenn diese Option aktiviert ist, dürfen Benutzer keine Avatare auf Discourse hochladen."
+    discourse_connect_overrides_location: "Überschreibt den Benutzerstandort mit dem Wert aus der DiscourseConnect-Payload und verhindert lokale Änderungen."
+    discourse_connect_overrides_website: "Überschreibt die Benutzer-Website mit dem Wert aus der DiscourseConnect-Payload und verhindert lokale Änderungen."
+    discourse_connect_overrides_profile_background: "Überschreibt den Hintergrund des Benutzerprofils mit dem Wert aus der DiscourseConnect-Payload."
+    discourse_connect_overrides_card_background: "Überschreibt den Hintergrund der Benutzerkarte mit dem Wert aus der DiscourseConnect-Payload."
     discourse_connect_not_approved_url: "Nicht genehmigte DiscourseConnect-Konten zu dieser URL weiterleiten"
     discourse_connect_allows_all_return_paths: "Beschränke die von DiscourseConnect bereitgestellte Domain für return_paths nicht (standardmäßig muss der Return-Path auf der aktuellen Website liegen)"
     enable_local_logins: "Aktiviert lokale Konten mit Anmeldung über Benutzername und Passwort. WARNUNG: Wenn deaktiviert, kannst du dich möglicherweise nicht mehr anmelden, wenn du nicht vorher mindestens eine alternative Anmeldemethode konfiguriert hast."
@@ -1609,6 +1614,7 @@ de:
     discord_secret: "Discord-Secret-Key"
     discord_trusted_guilds: 'Das Anmelden per Discord nur Mitgliedern dieser Discord-Gilden gestatten. Verwende die numerische ID der Gilde. Lies die Anleitung <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a>, um mehr zu erfahren. Leer lassen, um jede Gilde zuzulassen.'
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
+    allow_restore: "Wiederherstellung zulassen, die ALLE Site-Daten ersetzen kann! Lasse es deaktiviert, es sei denn, Du möchtest ein Backup wiederherstellen."
     maximum_backups: "Die maximale Anzahl an Backups, die gespeichert werden. Ältere Backups werden automatisch gelöscht."
     automatic_backups_enabled: "Automatische Backups aktivieren. Die Backups werden im eingestellten Zeitintervall erstellt."
     backup_frequency: "Die Anzahl von Tagen zwischen Backups."
@@ -1933,6 +1939,7 @@ de:
     app_association_ios: "Inhalt des Endpunkts <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, der verwendet wird, um Universal Links zwischen dieser Website und iOS-Apps zu erstellen."
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignoriert. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
+    penalty_step_hours: "Standardstrafen für das Stummschalten oder Sperren von Benutzern in Stunden. Beim ersten Verstoß wird standardmäßig der erste Wert verwendet, beim zweiten Verstoß standardmäßig der zweite Wert usw."
     svg_icon_subset: "Füge zusätzliche „FontAwesome 5“-Symbole hinzu, die du in deine Assets einbinden möchtest. Verwende das Präfix „fa-“ für einfarbige Symbole, „far-“ für normale Symbole und „fab-“ für Markensymbole."
     max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der /print-Seite (zum Deaktivieren auf 0 setzen)"
     full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
@@ -2064,7 +2071,9 @@ de:
     share_quote_buttons: "Lege fest, welche Elemente im Widget zum Teilen von Zitaten erscheinen und in welcher Reihenfolge."
     share_quote_visibility: "Bestimme, wann die Schaltflächen zum Teilen von Zitaten angezeigt werden sollen: nie, nur für anonyme Benutzer oder für alle Benutzer. "
     create_revision_on_bulk_topic_moves: "Erstelle eine Überarbeitung für die ersten Beiträge, wenn Themen massenweise in eine neue Kategorie verschoben werden."
+    allow_changing_staged_user_tracking: "Erlauben Sie, dass die Kategorie- und Tag-Benachrichtigungseinstellungen eines bereitgestellten Benutzers von einem Administratorbenutzer geändert werden."
     errors:
+      invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
       invalid_group: "Es gibt keine Gruppe mit diesem Namen."
@@ -2237,6 +2246,7 @@ de:
     reset_not_allowed_from_ip_address: "Du kannst keine Passwort-Zurücksetzung von dieser IP-Adresse aus anfordern."
     suspended: "Du kannst dich bis zum %{date} nicht anmelden."
     suspended_with_reason: "Konto gesperrt bis zum %{date}: %{reason}"
+    suspended_with_reason_forever: "Konto gesperrt: %{reason}"
     errors: "%{errors}"
     not_available: "Nicht verfügbar. Wie wäre es mit %{suggestion}?"
     something_already_taken: "Etwas ist schiefgelaufen. Vielleicht ist dieser Benutzername oder diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
@@ -2674,15 +2684,41 @@ de:
     backup_succeeded:
       title: "Backup erfolgreich"
       subject_template: "Backup erfolgreich abgeschlossen"
+      text_body_template: |
+        Die Sicherung war erfolgreich.
+
+        Besuche den [admin > Backup-Bereich](%{base_url}/admin/backups), um Deine neue Sicherung herunterzuladen.
+
+        Hier ist das Protokoll:
+
+        %{logs}
     backup_failed:
       title: "Backup fehlgeschlagen"
       subject_template: "Backup fehlgeschlagen"
+      text_body_template: |
+        Die Sicherung ist fehlgeschlagen.
+
+        Hier ist das Protokoll:
+
+        %{logs}
     restore_succeeded:
       title: "Wiederherstellung erfolgreich"
       subject_template: "Wiederherstellung erfolgreich abgeschlossen"
+      text_body_template: |
+        Die Wiederherstellung war erfolgreich.
+
+        Hier ist das Protokoll:
+
+        %{logs}
     restore_failed:
       title: "Wiederherstellung fehlgeschlagen"
       subject_template: "Wiederherstellung fehlgeschlagen"
+      text_body_template: |
+        Die Wiederherstellung ist fehlgeschlagen.
+
+        Hier ist das Protokoll:
+
+        %{logs}
     bulk_invite_succeeded:
       title: "Masseneinladung erfolgreich"
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
@@ -3068,6 +3104,7 @@ de:
   subject_re: "Re: "
   subject_pm: "[PN] "
   email_from: "%{user_name} via %{site_name}"
+  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Vorherige Antworten"
     reached_limit:
@@ -3290,6 +3327,10 @@ de:
     account_suspended_forever:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
+      text_body_template: |
+        Du wurdest vom Forum gesperrt.
+
+        Grund - %{reason}
     account_silenced:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
@@ -3300,6 +3341,10 @@ de:
     account_silenced_forever:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
+      text_body_template: |
+        Du wurdest im Forum stummgeschaltet.
+
+        Grund - %{reason}
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"
@@ -3539,8 +3584,12 @@ de:
     store_failure: "Hochladen von #%{upload_id} für Benutzer #%{user_id} ist fehlgeschlagen."
     file_missing: "Bitte wähle eine Datei zum Hochladen aus."
     empty: "Entschuldige, aber die angegebene Datei ist leer."
+    failed: "Sorry, aber dein Upload ist fehlgeschlagen. Bitte versuche es erneut."
     png_to_jpg_conversion_failure_message: "Beim Konvertieren von PNG in JPG ist ein Fehler aufgetreten."
     optimize_failure_message: "Beim Optimieren des hochgeladenen Bildes ist ein Fehler aufgetreten."
+    download_failure: "Herunterladen der Datei vom externen Anbieter fehlgeschlagen."
+    checksum_mismatch_failure: "Die Prüfsumme der hochgeladenen Datei stimmt nicht überein. Der Dateiinhalt könnte sich beim Hochladen geändert haben. Bitte versuche es erneut."
+    cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
     attachments:
       too_large: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB)."
     images:
@@ -3973,7 +4022,9 @@ de:
     mass_award:
       errors:
         invalid_csv: Wir haben einen Fehler in Zeile %{line_number} festgestellt. Bitte stelle sicher, dass die CSV-Datei eine E-Mail-Adresse pro Zeile enthält.
+        too_many_csv_entries: Zu viele Einträge in der CSV-Datei. Bitte gib eine CSV-Datei mit nicht mehr als %{count} Einträgen an.
         badge_disabled: Bitte aktiviere zunächst das Abzeichen „%{badge_name}“.
+        cant_grant_multiple_times: Das %{badge_name} -Abzeichen kann einem einzelnen Benutzer nicht mehrfach gewährt werden.
     editor:
       name: Bearbeiter
       description: Hat den ersten Beitrag bearbeitet

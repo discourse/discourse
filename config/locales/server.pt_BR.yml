@@ -482,14 +482,6 @@ pt_BR:
 
       Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
     dominating_topic: Você postou mais do que %{percent} das respostas aqui, deseja saber a opinião de outra pessoa?
-    get_a_room: |
-      ### Incentive todos a se envolverem na conversa
-
-      Você respondeu %{count} vezes para @%{reply_username} neste tópico em particular!
-
-      Uma boa discussão inclui muitas vozes e perspectivas. Você consegue envolver mais alguém?
-
-      E não se esqueça, se você quiser continuar sua conversa com este usuário em particular fora da visão pública, [envie-o uma mensagem pessoal](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
 
@@ -1373,6 +1365,7 @@ pt_BR:
     unreachable_themes: "Não foi possível verificar se há atualizações para os seguintes temas:"
     watched_word_regexp_error: "A expressão regular para \"%{action}\" palavras acompanhadas é inválida. Verifique as <a href='%{base_path}/admin/customize/watched_words'>configurações de palavras acompanhadas</a> ou desative as \"configurações do site para expressões regulares\"."
   site_settings:
+    disabled: "desativado"
     display_local_time_in_user_card: "Exiba a hora local baseada no fuso horário(a) do usuário(a) quando seu cartão de usuário(a) estiver disponível."
     censored_words: "Palavras que serão substituídas automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Exclua automaticamente todas as postagens ocultas que permanecerem ocultas por mais de 30 dias."

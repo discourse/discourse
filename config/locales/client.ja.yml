@@ -275,6 +275,7 @@ ja:
     copy_codeblock:
       copied: "コピーしました！"
     drafts:
+      label: "下書き"
       resume: "再開"
       remove: "削除"
       remove_confirmation: "この下書きを削除してもよろしいですか？"
@@ -286,6 +287,8 @@ ja:
         yes_value: "破棄"
         no_value: "編集を再開"
     topic_count_latest:
+      other: "%{count} 件の新規/更新トピックを見る"
+    topic_count_unseen:
       other: "%{count} 件の新規/更新トピックを見る"
     topic_count_unread:
       other: "%{count} 件の未読トピックを見る"
@@ -943,6 +946,7 @@ ja:
       no_bookmarks_title: "まだ何もブックマークしていません"
       no_bookmarks_body: >
         %{icon} ボタンを使って投稿をブックマークしましょう。すぐに参照できるように、ここに一覧表示されます。リマインダーもスケジュール設定可能です！
+      no_bookmarks_search: "指定された検索クエリでブックマークは見つかりませんでした。"
       no_notifications_title: "まだ通知はありません"
       no_notifications_body: >
         あなたのトピックや投稿に対する返信があったとき、誰かがあなたを <b>@メンション</b>または引用したとき、あなたがウォッチ中のトピックに返信があったときなど、あなたに直接関連するアクティビティはこのパネルで通知されます。あなたがしばらくログインしていない場合は、メールにも通知が送信されます。<br><br>%{icon} を探して、どの特定のトピック、カテゴリ、およびタグについて通知するかを決めましょう。詳細については、<a href='%{preferencesUrl}'>通知の設定</a>をご覧ください。
@@ -1049,7 +1053,10 @@ ja:
         rejected_posts: "拒否された投稿"
       messages:
         inbox: "受信トレイ"
+        latest: "最新"
         sent: "送信済み"
+        unread: "未読"
+        new: "新規"
         archive: "アーカイブ"
         groups: "自分のグループ"
         move_to_inbox: "受信トレイに移動"
@@ -1720,6 +1727,7 @@ ja:
       plus_subcategories:
         other: "+ %{count} 個のサブカテゴリ"
     select_kit:
+      delete_item: "%{name} 件削除"
       filter_by: "フィルタ: %{name}"
       select_to_filter: "フィルタする値を選択する"
       default_header_text: 選択...
@@ -2989,7 +2997,7 @@ ja:
     users_lowercase:
       other: "ユーザー"
     category_title: "カテゴリ"
-    history: "履歴、直近の 100 回のレビジョン"
+    history_capped_revisions: "履歴、直近の 100 回のレビジョン"
     changed_by: "%{author}"
     raw_email:
       title: "受信メール"
@@ -3462,7 +3470,6 @@ ja:
               description: "管理者はすべてのグループを閲覧できます。"
             members_visibility_levels:
               title: "誰がこのグループメンバーを閲覧できますか？"
-              description: "管理者はすべてのグループのメンバーを閲覧できます。"
             publish_read_state: "グループメッセージにグループの既読状態を公開する"
           membership:
             automatic: 自動
@@ -4372,6 +4379,7 @@ ja:
         delete_all_posts: "すべての投稿を削除する"
         delete_posts_progress: "投稿を削除中..."
         delete_posts_failed: "投稿を削除中に問題が発生しました。"
+        post_edits: "投稿の編集"
         penalty_post_actions: "関連する投稿についてどうしますか？"
         penalty_post_delete: "投稿を削除する"
         penalty_post_delete_replies: "投稿と返信を削除する"
@@ -4428,6 +4436,7 @@ ja:
         approve_success: "ユーザーは承認され、アクティベーション方法を記載したメールが送信されました。"
         approve_bulk_success: "成功！選択したすべてのユーザーは承認され、通知が送信されました。"
         time_read: "閲覧時間"
+        post_edits_count: "投稿の編集"
         anonymize: "ユーザーを匿名化"
         anonymize_confirm: "このアカウントを匿名化してよろしいですか？ユーザー名とメールアドレスが変更され、すべてのプロフィール情報がリセットされます。"
         anonymize_yes: "はい。このアカウントを匿名化する"

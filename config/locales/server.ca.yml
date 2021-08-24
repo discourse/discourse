@@ -1183,6 +1183,7 @@ ca:
     out_of_date_themes: "Hi ha actualitzacions disponibles per a les aparences següents:"
     unreachable_themes: "No hem pogut comprovar si hi ha actualitzacions de les aparences següents:"
   site_settings:
+    disabled: "desactivat"
     censored_words: "Paraules que es reemplaçaran automàticament amb &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Suprimeix automàticament qualsevol publicació que resti oculta durant més de 30 dies."
     default_locale: "L'idioma per defecte d'aquesta instància de Discourse. Podeu substituir el text de les categories i els temes generats pel sistema en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalitza / Text</a>."

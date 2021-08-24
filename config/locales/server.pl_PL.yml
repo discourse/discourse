@@ -283,6 +283,7 @@ pl_PL:
   not_found: "Żądany URL lub źródło nie mógł/mogła zostać znaleziony."
   invalid_access: "Nie jesteś uprawniony, by zobaczyć żądane źródło."
   authenticator_not_found: "Metoda uwierzytelnienia nie istnieje albo została zablokowana."
+  authenticator_no_connect: "Ten dostawca uwierzytelniania nie zezwala na połączenie z istniejącym kontem forum."
   invalid_api_credentials: "Nie masz dostępu do żądanego zasobu. Nazwa użytkownika lub klucz API jest nieprawidłowy."
   provider_not_enabled: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie został upoważniony w systemie."
   provider_not_found: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie istnieje."
@@ -533,14 +534,6 @@ pl_PL:
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
     dominating_topic: Zamieściłeś tutaj ponad %{percent}% odpowiedzi, czy jest ktoś jeszcze, z kim chciałbyś się skontaktować?
-    get_a_room: |
-      ### Zachęć wszystkich do zaangażowania się w rozmowę
-
-      W tym temacie odpowiedziałaś/eś %{reply_username} już %{count} razy!
-
-      Dobra dyskusja uwzględnia wiele głosów i perspektyw. Czy możesz tu zaangażować kogoś jeszcze?
-
-      Nie zapominaj, że jeśli chciał(a)byś kontynuować rozmowę z tym użytkownikiem poza widokiem publicznym, to możesz [wysłać im prywatną wiadomość](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
 
@@ -1478,6 +1471,7 @@ pl_PL:
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
   site_settings:
+    disabled: "wyłączone"
     display_local_time_in_user_card: "Wyświetl czas lokalny w oparciu o strefę czasową użytkownika po otwarciu karty użytkownika."
     censored_words: "Wskazane słowa będą automatycznie zamieniane na &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
@@ -1566,6 +1560,7 @@ pl_PL:
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
     enforce_second_factor: "Wymusza na użytkownikach włączenie uwierzytelniania dwuskładnikowego. Wybierz opcję 'wszystkie', aby wymusić na wszystkich użytkownikach. Wybierz 'personel', aby wymusić tylko użytkownikach z personelu."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś/łaś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
+    same_site_cookies: "Używaj plików cookie tej samej witryny, eliminują wszystkie wektory Cross Site Request Forgery w obsługiwanych przeglądarkach (Lax lub Strict). Ostrzeżenie: Strict będzie działać tylko w witrynach, które wymuszają logowanie i używają zewnętrznej metody uwierzytelniania."
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
     summary_posts_required: "Minimalna liczba wpisów w temacie przed „Podsumowaniem tego tematu” jest włączona. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
     summary_likes_required: "Minimalna liczba polubień w temacie przed włączeniem „Podsumuj ten temat”. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."

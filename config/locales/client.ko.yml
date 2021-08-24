@@ -289,6 +289,8 @@ ko:
         no_value: "편집 재개"
     topic_count_latest:
       other: "%{count}개의 새글 또는 업데이트 된 글 보기"
+    topic_count_unseen:
+      other: "%{count}개의 새글 또는 업데이트 된 글 보기"
     topic_count_unread:
       other: "%{count}개의 읽지 않은 글 보기"
     topic_count_new:
@@ -946,6 +948,7 @@ ko:
       no_bookmarks_title: "아직 북마크가 없습니다."
       no_bookmarks_body: >
         %{icon} 버튼으로 게시물 북마크를 시작하면 쉽게 참조 할 수 있도록 여기에 나열됩니다. 알림을 예약 할 수도 있습니다!
+      no_bookmarks_search: "검색어와 일치하는 북마크를 찾을 수 없습니다."
       no_notifications_title: "아직 알림이 없습니다."
       no_notifications_body: >
         이 패널에서는 글 및 댓글에 대한 답글을 포함하여 직접적으로 관련된 활동에 대한 알림을 받게됩니다. 누군가 사용자님을 <b>@멘션</b> 또는 인용하고 사용자님이 팔로우중인 글에 댓글을 올릴 때. 한동안 로그인하지 않은 경우에도 알림이 이메일로 전송됩니다. <br><br> 알림을받을 특정 주제, 카테고리 및 태그를 살펴보세요 %{icon}. 자세한 내용은 <a href='%{preferencesUrl}'>알림 기본 설정</a>을 참조하십시오.
@@ -1588,6 +1591,7 @@ ko:
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인 정보 보호 정책</a> 및 <a href='%{tos_link}' target='blank'>서비스 약관에</a> 동의하게됩니다."
       title: "계정 만들기"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어있을 수 있습니다. 비밀번호 찾기 링크를 시도해보세요."
+      associate: "이미 계정이 있습니까? <a href='%{associate_link}'>로그인</a>해 %{provider} 계정을 연결합니다."
     forgot_password:
       title: "비밀번호 재설정"
       action: "비밀번호를 잊어버렸습니다."
@@ -1726,6 +1730,7 @@ ko:
       plus_subcategories:
         other: "+ %{count}개의 하위 카테고리"
     select_kit:
+      delete_item: "%{name}개 삭제"
       filter_by: "필터링 기준: %{name}"
       select_to_filter: "필터링 기준 선택"
       default_header_text: 선택...
@@ -2997,7 +3002,8 @@ ko:
     users_lowercase:
       other: "사용자"
     category_title: "카테고리"
-    history: "히스토리, 최근 100개의 리비전"
+    history_capped_revisions: "히스토리, 최근 100개의 리비전"
+    history: "히스토리"
     changed_by: "%{author}에 의해"
     raw_email:
       title: "수신 이메일"
@@ -3470,7 +3476,6 @@ ko:
               description: "관리자는 모든 그룹을 볼 수 있습니다."
             members_visibility_levels:
               title: "누가이 그룹의 회원을 볼 수 있습니까?"
-              description: "관리자는 모든 그룹의 구성원을 볼 수 있습니다."
             publish_read_state: "그룹 메시지에서 그룹 읽기 상태 게시"
           membership:
             automatic: 자동
@@ -4212,8 +4217,8 @@ ko:
             post_staff_note_create: "관리자 메모 추가"
             post_staff_note_destroy: "관리자 메모 삭제"
             delete_group: "그룹 삭제"
-            watched_word_create: "감시 단어 추가"
-            watched_word_destroy: "감시 단어 삭제"
+            watched_word_create: "검열 단어 추가"
+            watched_word_destroy: "검열 단어 삭제"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -4227,7 +4232,7 @@ ko:
           domain: "도메인"
         screened_ips:
           title: "노출된 IP들"
-          description: 'IP 주소는 감시됩니다. "허용"으로 Whitelist에 등록해주세요.'
+          description: '감시 중인 IP 주소입니다. IP 주소를 허용하려면 "허용"을 사용하십시오.'
           delete_confirm: "%{ip_address}를 규칙에 의해 삭제할까요?"
           roll_up_confirm: "화면에 표시되는 IP 주소를 subnet으로 바꾸시겠습니까?"
           rolled_up_some_subnets: "다음의 subnet들의 IP 주소들을 차단하였습니다: %{subnets}."
@@ -4258,7 +4263,7 @@ ko:
         logster:
           title: "에러 로그"
       watched_words:
-        title: "\\b감시 단어"
+        title: "검열 단어"
         search: "검색"
         clear_filter: "지우기"
         show_words:
@@ -4266,8 +4271,8 @@ ko:
         download: 다운로드
         clear_all: 모두 지우기
         clear_all_confirm: "%{action} 작업에 대한 모든 관심 단어를 지우시겠습니까?"
-        invalid_regex: '감시 단어 "%{word}"은 잘못된 정규식입니다.'
-        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">감시 된 단어는 정규식</a> 이며 단어 경계를 자동으로 포함하지 않습니다. 정규식이 전체 단어와 일치하도록하려면 정규식의 시작과 끝에 <code>\b</code>를 사용하세요.'
+        invalid_regex: '검열 단어 "%{word}"은 잘못된 정규식입니다.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">검열 단어는 정규식</a> 이며 단어 경계를 자동으로 포함하지 않습니다. 정규식이 전체 단어와 일치하도록하려면 정규식의 시작과 끝에 <code>\b</code>를 사용하세요.'
         actions:
           block: "차단"
           censor: "가리기"
@@ -4278,8 +4283,8 @@ ko:
           silence: "쓰기 금지"
           link: "링크"
         action_descriptions:
-          block: "이 단어를 포함한 포스트는 게시되지 못하게 합니다. 사용자가 포스트를 올리려할 때 에러 메시지를 표시합니다."
-          censor: "이 단어를 포함해도 포스트는 올라가지만, 가리기 설정된 단어는 다른 글자로 교체됩니다."
+          block: "이러한 단어가 포함된 게시물이 작성되지 않도록 합니다. 사용자가 게시물을 작성 완료 하면 오류 메시지가 표시됩니다."
+          censor: "이 단어가 포함된 게시물을 허용하되, 검열된 단어를 숨김 문자로 대체합니다."
           require_approval: "이 단어를 포함한 포스트가 올라가려면 스탭의 허가가 필요합니다."
           flag: "이러한 단어가 포함 된 게시물을 허용하지만 관리자가 검토 할 수 있도록 검토 대상 항목으로 표시합니다."
           replace: "게시물의 단어를 다른 단어로 바꾸기"
@@ -4287,7 +4292,7 @@ ko:
           silence: "이러한 단어가 포함 된 사용자의 첫 게시물은 관리자의 승인을 받아야 볼 수 있으며 사용자는 자동으로 글쓰기가 금지됩니다."
           link: "게시물의 단어를 링크로 바꾸기"
         form:
-          label: "단어 또는 문구가 있음"
+          label: "단어 또는 구문"
           placeholder: "단어 또는 구 입력 (*는 와일드카드)"
           placeholder_regexp: "정규표현식"
           replace_label: "교체"
@@ -4302,7 +4307,7 @@ ko:
           upload_successful: "성공적으로 업로드되었습니다. 단어가 추가되었습니다."
         test:
           button_label: "테스트"
-          modal_title: "%{action}: 감시 단어 테스트"
+          modal_title: "%{action}: 검열 단어 테스트"
           description: "시청 한 단어와 일치하는지 확인하려면 아래에 텍스트를 입력하십시오"
           found_matches: "일치하는 결과 :"
           no_matches: "일치하는 결과가 없습니다"

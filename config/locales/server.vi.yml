@@ -69,6 +69,7 @@ vi:
       file_too_big: "Tệp chưa được nén quá lớn."
       unknown_file_type: "Tệp bạn tải lên dường như không phải là một Discourse theme hợp lệ."
     settings_errors:
+      invalid_yaml: "YAML được cung cấp không hợp lệ."
       name_too_long: "Có một cài đặt có tên quá dài. Chiều dài tối đa là 255"
       default_value_missing: "Cài đặt `%{name}'không có giá trị mặc định"
       number_value_not_valid_min_max: "Nó phải nằm trong khoảng từ %{min} đến %{max}."
@@ -867,6 +868,7 @@ vi:
     out_of_date_themes: "Các bản cập nhật có sẵn cho các chủ đề sau:"
     unreachable_themes: "Chúng tôi không thể kiểm tra cập nhật về các chủ đề sau:"
   site_settings:
+    disabled: "khóa"
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
@@ -1092,6 +1094,7 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
+    imap_polling_period_mins: "Khoảng thời gian tính bằng phút giữa việc kiểm tra tài khoản IMAP cho email."
     imap_polling_old_emails: "Số lượng email cũ tối đa (đã xử lý) được cập nhật mỗi khi hộp IMAP được thăm dò (0 cho tất cả)."
     imap_polling_new_emails: "Số lượng email mới (chưa xử lý) tối đa được cập nhật mỗi khi hộp IMAP được thăm dò ý kiến."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
@@ -1442,6 +1445,8 @@ vi:
         Với quyền lực lớn đi kèm với trách nhiệm lớn. Nếu bạn chưa quen với việc kiểm duyệt, vui lòng tham khảo [Hướng dẫn kiểm duyệt](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       subject_template: "Chào mừng đến với %{site_name}!"
+    tl2_promotion_message:
+      subject_template: "Chúc mừng bạn đã thăng cấp mức độ tin cậy!"
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
     backup_failed:
@@ -1557,6 +1562,14 @@ vi:
     download_remote_images_disabled:
       subject_template: "Download ảnh từ xa đã bị vô hiệu"
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
+    dashboard_problems:
+      subject_template: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
+      text_body_template: |
+        Chúng tôi có một số lời khuyên & đề xuất mới cho bạn dựa trên cài đặt trang web hiện tại của bạn.
+
+        [Truy cập bảng điều khiển trang web của bạn](%{base_url}/admin) để xem nó.
+
+        Nếu không có gì hiển thị trên bảng điều khiển của bạn, một nhân viên khác có thể đã thực hiện theo lời khuyên này. Bạn có thể tìm thấy danh sách các hành động của nhân viên trong [Nhật ký hành động của nhân viên](%{base_url}/admin/logs/staff_action_logs) của bạn.
     new_user_of_the_month:
       title: "Bạn là thành viên mới của tháng!"
       subject_template: "Bạn là một thành viên mới của tháng!"
@@ -1783,6 +1796,8 @@ vi:
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">cấp</a> lời mời, nhắn tin nhóm, nhiều lượt thích hơn
     regular:
       name: Thường xuyên
+      long_description: |
+        Huy hiệu này được cấp khi bạn đạt đến cấp độ tin cậy 3. Cảm ơn bạn đã trở thành thành viên thường xuyên của cộng đồng chúng tôi trong khoảng thời gian vài tháng. Giờ đây, bạn là một trong những độc giả tích cực nhất và là người đóng góp đáng tin cậy giúp cộng đồng của chúng ta trở nên tuyệt vời. Giờ đây, bạn có thể phân loại lại và đổi tên các chủ đề, tận dụng các cờ spam mạnh mẽ hơn, truy cập khu vực tiếp khách riêng và bạn cũng sẽ nhận được nhiều lượt thích hơn mỗi ngày.
     leader:
       name: Lãnh đạo
     welcome:
@@ -1921,6 +1936,9 @@ vi:
       name: Đề cập đầu tiên
     new_user_of_the_month:
       name: "Thành viên mới của tháng"
+    aficionado:
+      long_description: |
+        Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
   admin_login:
     success: "Gửi mail lỗi"
     email_input: "Email quản trị"

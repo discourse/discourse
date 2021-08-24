@@ -963,6 +963,7 @@ pt:
     poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
     poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
   site_settings:
+    disabled: "desativado"
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."

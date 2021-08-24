@@ -278,6 +278,8 @@ zh_TW:
         no_value: "繼續編輯"
     topic_count_latest:
       other: "檢視 %{count} 則新發佈或更新的話題"
+    topic_count_unseen:
+      other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_unread:
       other: "檢視 %{count} 則未讀的討論訊息"
     topic_count_new:
@@ -1378,6 +1380,7 @@ zh_TW:
       topic_count:
         other: "%{count}個話題在此分類"
     select_kit:
+      delete_item: "刪除 %{name} 個"
       default_header_text: 選擇...
       no_content: 找不到符合的項目
       filter_placeholder: 搜尋...

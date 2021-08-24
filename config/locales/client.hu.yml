@@ -311,6 +311,9 @@ hu:
     topic_count_latest:
       one: "Nézzen meg %{count} új vagy frissített témát"
       other: "Nézzen meg %{count} új vagy frissített témát"
+    topic_count_unseen:
+      one: "Nézzen meg %{count} új vagy frissített témát"
+      other: "Nézzen meg %{count} új vagy frissített témát"
     topic_count_unread:
       one: "Nézzen meg %{count} olvasatlan témát"
       other: "Nézzen meg %{count} olvasatlan témát"
@@ -1538,6 +1541,7 @@ hu:
         one: "%{count} téma van ebben a kategóriában."
         other: "%{count} téma van ebben a kategóriában"
     select_kit:
+      delete_item: "%{name} törlése"
       filter_by: "Szűrő: %{name}"
       select_to_filter: "Válaszd ki a szűrni kívánt értéket"
       default_header_text: Kiválasztás...

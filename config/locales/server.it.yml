@@ -481,7 +481,6 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
-    get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione in privato con questo particolare utente, [puoi inviargli un messaggio personale](%{base_path}/u/%{reply_username}).\n"
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
@@ -1365,6 +1364,7 @@ it:
     unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
     watched_word_regexp_error: "L'espressione regolare per le parole osservate %{action} non è valida. Per favore verifica le tue <a href='%{base_path}/admin/customize/watched_words'>Impostazioni sulle Parole Osservate</a>, o disabilita l'impostazione del sito 'watched words regular expressions'."
   site_settings:
+    disabled: "disabilitata"
     display_local_time_in_user_card: "Visualizza l'ora locale in base al fuso orario di un utente quando viene aperta la sua scheda utente."
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
@@ -3186,6 +3186,9 @@ it:
         Sei stato sospeso dal forum fino a %{suspended_till}.
 
         Motivo: %{reason}
+    account_suspended_forever:
+      title: "Account Sospeso"
+      subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
     account_silenced:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
@@ -3193,6 +3196,9 @@ it:
         Sei stato silenziato nel forum fino a %{silenced_till}.
 
         Motivo: %{reason}
+    account_silenced_forever:
+      title: "Account Silenziato"
+      subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
     account_exists:
       title: "L'account esiste già"
       subject_template: "[%{email_prefix}] L'account esiste già"

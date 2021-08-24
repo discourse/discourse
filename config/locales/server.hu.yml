@@ -874,6 +874,7 @@ hu:
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
     memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
   site_settings:
+    disabled: "kikapcsolva"
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
     post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."

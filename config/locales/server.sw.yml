@@ -763,6 +763,7 @@ sw:
     missing_mailgun_api_key: "Seva imesanidiwa kutuma barua pepe kwa kutumia Mailgun lakini haujaweka ufunguo wa Mailgun unaotumika kuthibitisha ujumbe."
     force_https_warning: "Tovuti yako inatumia SSL. Lakini `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https` haijaruhusiwa kwenye mipangilio ya tovuti yako."
   site_settings:
+    disabled: "imezuiwa"
     censored_words: "Maneno ambayo yatabadilishwa kuwa &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Futa machapisho yote ambayo yatakuwa yamefichwa baada ya siku 30."
     allow_user_locale: "Waruhusu watumiaji wachague lugha ya kutumia au kuwasiliana"

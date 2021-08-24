@@ -296,10 +296,11 @@ es:
         today_with_time: "hoy a las %{time}"
         tomorrow_with_time: "mañana a las %{time}"
         at_time: "a las %{date_time}"
-        existing_reminder: "Tienes un recordatorio para este marcador que se enviará el %{at_date_time}"
+        existing_reminder: "Tienes un recordatorio para este marcador que se enviará %{at_date_time}"
     copy_codeblock:
       copied: "¡copiado!"
     drafts:
+      label: "Borradores"
       resume: "Reanudar"
       remove: "Eliminar"
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
@@ -310,6 +311,9 @@ es:
         yes_value: "Descartar"
         no_value: "Reanudar edición"
     topic_count_latest:
+      one: "Ver %{count} tema nuevo o actualizado"
+      other: "Ver %{count} temas nuevos o actualizados"
+    topic_count_unseen:
       one: "Ver %{count} tema nuevo o actualizado"
       other: "Ver %{count} temas nuevos o actualizados"
     topic_count_unread:
@@ -825,6 +829,10 @@ es:
       flair_type:
         icon: "Selecciona un icono"
         image: "Sube una imagen"
+      default_notifications:
+        modal_description: "¿Quieres aplicar este cambio retroactivamente? Esto cambiará las preferencias de %{count} usuarios existentes."
+        modal_yes: "Sí"
+        modal_no: "No, solo aplicar el cambio a partir de ahora"
     user_action_groups:
       "1": "Me gusta dados"
       "2": "Me gusta recibidos"
@@ -984,6 +992,7 @@ es:
       no_bookmarks_title: "Todavía no has añadido nada a marcadores"
       no_bookmarks_body: >
         Añade publicaciones a tus marcadores con el botón %{icon}, y aparecerán aquí para que puedas volver fácilmente a ellos. ¡Hasta programarte recordatorios!
+      no_bookmarks_search: "No se han encontrado marcadores para la consulta de búsqueda proporcionada."
       no_notifications_title: "No tienes ninguna notificación todavía"
       no_notifications_body: >
         En esta pestaña te avisaremos sobre actividad relevante para ti incluyendo respuestas a tus temas y mensajes, <b>@menciones</b> o citas, y respuestas a los temas que estés siguiendo. También te notificaremos por correo electrónico si hace tiempo que no te conectas.<br><br>A través del icono %{icon} puedes decidir sobre qué temas, categorías y etiquetas quieres que te avisemos. Ve a tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a> para más detalles.
@@ -1090,7 +1099,10 @@ es:
         rejected_posts: "publicaciones rechazadas"
       messages:
         inbox: "Bandeja de entrada"
+        latest: "Recientes"
         sent: "Enviados"
+        unread: "Sin leer"
+        new: "Nuevo"
         archive: "Archivo"
         groups: "Mis grupos"
         move_to_inbox: "Mover a la bandeja de entrada"
@@ -1523,6 +1535,8 @@ es:
       title:
         title: "Título"
         none: "(ninguno)"
+      flair:
+        none: "(ninguno)"
       primary_group:
         title: "Grupo principal"
         none: "(ninguno)"
@@ -1773,6 +1787,7 @@ es:
         one: "+ %{count} subcategoría"
         other: "+ %{count} subcategorías"
     select_kit:
+      delete_item: "Eliminar %{name}"
       filter_by: "Filtrar por: %{name}"
       select_to_filter: "Selecciona un valor para filtrar"
       default_header_text: Seleccionar...
@@ -1846,7 +1861,7 @@ es:
       cannot_see_mention:
         category: "Mencionaste a %{username} pero no se les notificará porque no tienen acceso a esta categoría. Necesitarás añadirlos a un grupo que tenga acceso a esta categoría."
         private: "Mencionaste a %{username} pero no se les notificará porque no pueden ver este mensaje personal. Necesitarás invitarlos a este MP."
-      duplicate_link: "Parece que tu enlace a <b>%{domain}</b> ya se publicó en el tema por <b>@%{username}</b> en <a href='%{post_url}'>una respuesta el %{ago}</a>. ¿Seguro que deseas volver a publicarlo?"
+      duplicate_link: "Parece que tu enlace a <b>%{domain}</b> ya fue publicado en el tema por <b>@%{username}</b> en <a href='%{post_url}'>una respuesta el %{ago}</a>. ¿Seguro que deseas volver a publicarlo?"
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Es necesario un título"
@@ -2208,6 +2223,7 @@ es:
         top: "No hay temas destacados."
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
+          unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge unread-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 4 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
       bottom:
         latest: "No hay más temas recientes."
         posted: "No hay más temas publicados."
@@ -2258,6 +2274,9 @@ es:
       not_found:
         title: "Tema no encontrado"
         description: "Lo sentimos, no pudimos encontrar ese tema. ¿Tal vez fue eliminado por un moderador?"
+      unread_posts:
+        one: "tienes %{count} publicación sin leer en este tema"
+        other: "tienes %{count} publicaciones sin leer en este tema"
       likes:
         one: "este tema le gusta a %{count} persona"
         other: "este tema les gusta a %{count} personas"
@@ -2828,6 +2847,7 @@ es:
         name: "Nombre"
         name_placeholder: "¿Para qué es este marcador?"
         set_reminder: "Recordarme"
+        options: "Opciones"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -3103,7 +3123,7 @@ es:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    history: "Últimas 100 ediciones"
+    history_capped_revisions: "Últimas 100 ediciones"
     changed_by: "por %{author}"
     raw_email:
       title: "Correo electrónico entrante"
@@ -3592,7 +3612,6 @@ es:
               description: "Los administradores pueden ver todos los grupos."
             members_visibility_levels:
               title: "¿Quién puede ver los miembros de este grupo?"
-              description: "Los administradores pueden ver los miembros de todos los grupos."
             publish_read_state: "Publicar confirmaciones de lectura en los mensajes grupales"
           membership:
             automatic: Automático
@@ -4336,6 +4355,8 @@ es:
             post_staff_note_create: "añadir nota del personal"
             post_staff_note_destroy: "destruir aviso del personal"
             delete_group: "eliminar grupo"
+            watched_word_create: "añadir palabra vigilada"
+            watched_word_destroy: "eliminar palabra vigilada"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos electrónicos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
@@ -4504,6 +4525,7 @@ es:
         delete_all_posts: "Eliminar todas las publicaciones"
         delete_posts_progress: "Eliminando publicaciones..."
         delete_posts_failed: "Hubo un problema al eliminar los mensajes."
+        post_edits: "Ediciones de la publicación"
         penalty_post_actions: "¿Qué te gustaría hacer con la publicación asociada?"
         penalty_post_delete: "Eliminar la publicación"
         penalty_post_delete_replies: "Eliminar la publicación + sus respuestas"
@@ -4559,6 +4581,7 @@ es:
         approve_success: "Usuario aprobado y correo electrónico enviado con instrucciones para la activación."
         approve_bulk_success: "¡Perfecto! Todos los usuarios seleccionados han sido aprobados y notificados."
         time_read: "Tiempo de lectura"
+        post_edits_count: "Ediciones de la publicación"
         anonymize: "Anonimizar usuario"
         anonymize_confirm: "¿SEGURO que quieres hacer anónima esta cuenta? Esto cambiará el nombre de usuario y el correo electrónico y restablecerá toda la información del perfil."
         anonymize_yes: "Sí, hacer anónima esta cuenta."
@@ -4643,6 +4666,8 @@ es:
         trust_level_unlocked_tip: "el nivel de confianza está desbloqueado, el sistema podrá promoverá o degradará al usuario."
         lock_trust_level: "Bloquear el nivel de confianza"
         unlock_trust_level: "Desbloquear el nivel de confianza"
+        silenced_count: "Silenciado"
+        suspended_count: "Suspendido"
         tl3_requirements:
           title: "Requisitos para el nivel de confianza 3"
           table_title:

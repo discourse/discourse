@@ -1079,6 +1079,7 @@ zh_TW:
     out_of_date_themes: "以下主題可更新："
     unreachable_themes: "我們無法檢查以下主題是否可更新："
   site_settings:
+    disabled: "停用"
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的貼文。"
     allow_user_locale: "允許使用者選擇自己的語言介面"

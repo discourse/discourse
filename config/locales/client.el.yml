@@ -298,6 +298,9 @@ el:
     topic_count_latest:
       one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
       other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
+    topic_count_unseen:
+      one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
+      other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
     topic_count_unread:
       one: "%{count} μη αναγνωσμένο θέμα"
       other: "Δείτε %{count} μη αναγνωσμένα θέματα"
@@ -1574,6 +1577,7 @@ el:
         one: "+ %{count} υποκατηγορία"
         other: "+ %{count} υποκατηγορίες"
     select_kit:
+      delete_item: "Διαγραφή %{name}"
       default_header_text: Επιλογή...
       no_content: Δεν βρέθηκαν αποτελέσματα
       filter_placeholder: Αναζήτηση...
@@ -3198,7 +3202,6 @@ el:
               description: "Οι διαχειριστές μπορούν να δουν όλες τις ομάδες."
             members_visibility_levels:
               title: "Ποιος μπορεί να δει τα μέλη αυτής της ομάδας;"
-              description: "Οι διαχειριστές μπορούν να δουν τα μέλη όλων των ομάδων."
             publish_read_state: "Σε ομαδικά μηνύματα δημοσιεύστε την ομαδική κατάσταση ανάγνωσης"
           membership:
             automatic: Αυτόματα

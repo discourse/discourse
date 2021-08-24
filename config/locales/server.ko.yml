@@ -456,14 +456,6 @@ ko:
       글을 드래그해서 선택한 다음에, 표시되는 '답글 인용하기'버튼을 눌러서 답글을 추가하는 식으로 쓰신 답글을 편집할 수 있습니다.
 
       다른 사람도 깨알같이 흩어진 답글을 읽는 것 보다는, 깊이 있게 작성된 몇개의 답글을 읽는 편이 토픽보기에 더 편하답니다.
-    get_a_room: |
-      ### 모든 사람이 대화에 참여하도록 장려
-
-      이 글에서 @%{reply_username}님은 %{count}번 댓글을 달았습니다!
-
-      훌륭한 토론에는 많은 목소리와 관점이 포함됩니다. 다른 사람들도 참여시킬 수 있습니까?
-
-      그리고 잊지 마세요. 이 특정 사용자와의 대화를 비공개로 계속하려면 [개인 메시지를 보내세요](%{base_path}/u/%{reply_username}).
     too_many_replies: |2
 
       ### 이 토픽 답글 제한량을 모두 채우셨습니다
@@ -1323,6 +1315,7 @@ ko:
     out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
     unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
   site_settings:
+    disabled: "비활성"
     display_local_time_in_user_card: "사용자 카드 페이지가 열릴 때 사용자의 시간대를 기준으로 현지 시간을 표시합니다."
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
@@ -1963,7 +1956,7 @@ ko:
     default_other_skip_new_user_tips: "신규 사용자 온 보딩 팁 및 배지를 건너 뜁니다."
     default_other_like_notification_frequency: "기본적으로 좋아요에 사용자에게 알림"
     default_topics_automatic_unpin: "사용자가 기본적으로 하단에 도달하면 주제를 자동으로 고정 해제합니다."
-    default_categories_watching: "기본적으로 감시되는 카테고리 목록."
+    default_categories_watching: "기본적으로 검열되는 카테고리 목록."
     default_categories_tracking: "기본적으로 추적되는 카테고리 목록."
     default_categories_muted: "기본적으로 음소거 된 카테고리 목록."
     default_categories_watching_first_post: "각 새 주제의 첫 번째 게시물이 기본적으로 감시되는 카테고리 목록입니다."
@@ -2594,6 +2587,14 @@ ko:
     backup_succeeded:
       title: "백업 성공"
       subject_template: "백업 성공"
+      text_body_template: |
+        백업이 성공적으로 완료되었습니다.
+
+        [관리자 > 백업 섹션](%{base_url}/admin/backups)을 방문해 백업을 다운로드하세요.
+
+        로그는 다음과 같습니다:
+
+        %{logs}
     backup_failed:
       title: "백업 실패"
       subject_template: "백업에 실패했습니다."
@@ -4238,7 +4239,7 @@ ko:
       new_topics_unless_trust_level: "신뢰 수준이 낮은 사용자에게는 직원이 승인 한 주제가 있어야합니다. `approve_new_topics_unless_trust_level`을 참조하십시오."
       fast_typer: "새로운 사용자가 첫 번째 게시물을 의심스럽게 빠르거나 의심되는 봇 또는 스패머 동작을 입력했습니다. `min_first_post_typing_time`을 참조하십시오."
       auto_silence_regexp: "첫 번째 게시물이`auto_silence_first_post_regex` 설정과 일치하는 새 사용자입니다."
-      watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다.  <a href='%{base_url}/admin/customize/watched_words'>감시 단어 목록</a>을 참조하십시오."
+      watched_word: "이 게시물에는 검열중인 단어가 포함되어 있습니다.  <a href='%{base_url}/admin/customize/watched_words'>검열 단어 목록</a>을 참조하십시오."
       staged: "단계별 사용자를위한 새로운 주제와 게시물은 직원의 승인을 받아야합니다. `approve_unless_staged`를 참조하십시오."
       category: "이 카테고리의 게시물은 직원의 수동 승인이 필요합니다. 카테고리 설정을 참조하십시오."
       must_approve_users: "모든 신규 사용자는 직원의 승인을 받아야합니다. `must_approve_users`를 참조하십시오."

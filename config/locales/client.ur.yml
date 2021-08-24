@@ -304,6 +304,9 @@ ur:
     topic_count_latest:
       one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
+    topic_count_unseen:
+      one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
+      other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
     topic_count_unread:
       one: "%{count} غیر پڑھا ٹاپک دیکھیں۔"
       other: "%{count} غیر پڑھے ٹاپک دیکھیں۔"
@@ -1597,6 +1600,7 @@ ur:
         one: "+ %{count} ذیلی زمرہ"
         other: "+ %{count} ذیلی زمرہ جات"
     select_kit:
+      delete_item: "%{name} حذف کریں"
       filter_by: "فلٹر بذریعہ: %{name}"
       select_to_filter: "فلٹر کرنے کے لئے ایک قدر منتخب کریں"
       default_header_text: منتخب کریں...
@@ -3169,7 +3173,6 @@ ur:
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
             members_visibility_levels:
               title: "کون اِس گروپ  کے ممبران کو دیکھ سکتا ہے؟"
-              description: "ایڈمن تمام گروپس کے ممبران کو دیکھ سکتے ہیں۔"
             publish_read_state: "گروپ پیغامات پر گروپ رِیڈ اسٹیٹ شائع کریں۔"
           membership:
             automatic: خود کار طریقے سے

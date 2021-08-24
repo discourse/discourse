@@ -313,6 +313,9 @@ pt:
     topic_count_latest:
       one: "Ver %{count} tópico novo ou atualizado"
       other: "Ver %{count} tópicos novos ou atualizados"
+    topic_count_unseen:
+      one: "Ver %{count} tópico novo ou atualizado"
+      other: "Ver %{count} tópicos novos ou atualizados"
     topic_count_unread:
       one: "Ver %{count} tópico não lido"
       other: "Ver %{count} tópicos não lidos"
@@ -1768,6 +1771,7 @@ pt:
         one: "+ %{count} subcategoria"
         other: "+ %{count} subcategorias"
     select_kit:
+      delete_item: "Apagar %{name}"
       filter_by: "Filtrar por: %{name}"
       select_to_filter: "Selecione um valor para filtrar"
       default_header_text: Selecionar...
@@ -3498,7 +3502,6 @@ pt:
               description: "Os administradores podem ver todos os grupos."
             members_visibility_levels:
               title: "Quem pode ver os membros deste grupo?"
-              description: "Os administradores podem ver os membros de todos os grupos."
             publish_read_state: "Em mensagens de grupo, publicar o estado de leitura do grupo"
           membership:
             automatic: Automático
