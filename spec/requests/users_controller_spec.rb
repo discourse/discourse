@@ -3938,6 +3938,13 @@ describe UsersController do
       expect(response.status).to eq(200)
     end
 
+    context 'limit' do
+      it "returns an error if value is invalid" do
+        get "/u/search/users.json", params: { limit: '-1' }
+        expect(response.status).to eq(400)
+      end
+    end
+
     context "when `enable_names` is true" do
       before do
         SiteSetting.enable_names = true
