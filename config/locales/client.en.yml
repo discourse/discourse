@@ -5371,7 +5371,7 @@ en:
           regular: "Regular User"
 
       previews:
-        topic_title: "Discussion topic"
+        topic_title: "A discussion topic heading"
         font_title: "%{font} Font"
         share_button: "Share"
         reply_button: "Reply"

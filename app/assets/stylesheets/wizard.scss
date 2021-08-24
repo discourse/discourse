@@ -829,8 +829,7 @@ body.wizard {
   .wizard-fields-sidebar {
     width: 170px;
     box-sizing: border-box;
-    padding: 15px 10px;
-    border-right: 1px solid var(--primary-low);
+    padding: 15px 0px 15px 15px;
     background: var(--primary-very-low);
     + .wizard-fields-main {
       padding: 15px;
@@ -840,21 +839,7 @@ body.wizard {
   }
 }
 
-.wizard-step-homepage {
-  .field-homepage-style {
-    width: 280px;
-  }
-}
-
 .wizard-step-styling {
-  .dropdown-field {
-    float: left;
-    margin-right: 1.5em;
-  }
-  .component-field {
-    clear: both;
-  }
-
   .preview-nav {
     display: flex;
     justify-content: flex-end;
@@ -888,17 +873,19 @@ body.wizard {
     background: var(--secondary);
     border: 1px dashed var(--tertiary-low);
     border-radius: 10px;
+
     .topic-preview {
       position: absolute;
       left: 0px;
       top: 0px;
-      transform: scale(0.9);
+      transform: scale(0.8) translateX(-45px);
     }
     .homepage-preview {
       position: absolute;
-      left: 580px + 20px;
+      left: calc(100% + 45px);
       top: 0px;
-      transform: scale(0.9);
+      transform: scale(0.8) translateX(-90px);
+      padding-right: 45px;
     }
   }
 }

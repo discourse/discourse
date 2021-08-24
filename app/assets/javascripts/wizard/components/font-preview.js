@@ -12,7 +12,7 @@ Nullam eget sem non elit tincidunt rhoncus. Fusce
 velit nisl, porttitor sed nisl ac, consectetur interdum
 metus. Fusce in consequat augue, vel facilisis felis.`;
 
-const CANVAS_WIDTH = 580;
+const CANVAS_WIDTH = 659;
 
 export default createPreviewComponent(CANVAS_WIDTH, 320, {
   logo: null,
@@ -33,7 +33,7 @@ export default createPreviewComponent(CANVAS_WIDTH, 320, {
     const el = this.element.querySelector(".previews");
     el.scrollTo({
       top: 0,
-      left: this.previewTopic ? 0 : CANVAS_WIDTH + 40,
+      left: this.previewTopic ? 0 : CANVAS_WIDTH + 90,
       behavior: "smooth",
     });
   },
@@ -65,7 +65,7 @@ export default createPreviewComponent(CANVAS_WIDTH, 320, {
     this.scaleImage(
       this.avatar,
       margin,
-      headerHeight + height * 0.11,
+      headerHeight + height * 0.09,
       avatarSize,
       avatarSize
     );
