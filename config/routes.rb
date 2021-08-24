@@ -541,8 +541,15 @@ Discourse::Application.routes.draw do
     post "uploads" => "uploads#create"
     post "uploads/lookup-urls" => "uploads#lookup_urls"
 
-    post "uploads/generate-presigned-put" => "uploads#generate_presigned_put"
-    post "uploads/complete-external-upload" => "uploads#complete_external_upload"
+    # direct to s3 uploads
+    post "uploads/generate-presigned-put" => "uploads#generate_presigned_put", format: :json
+    post "uploads/complete-external-upload" => "uploads#complete_external_upload", format: :json
+
+    # multipart uploads
+    post "uploads/create-multipart" => "uploads#create_multipart", format: :json
+    post "uploads/complete-multipart" => "uploads#complete_multipart", format: :json
+    post "uploads/abort-multipart" => "uploads#abort_multipart", format: :json
+    post "uploads/batch-presign-multipart-parts" => "uploads#batch_presign_multipart_parts", format: :json
 
     # used to download original images
     get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }

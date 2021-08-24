@@ -1,8 +1,8 @@
-import { Plugin } from "@uppy/core";
+import { BasePlugin } from "@uppy/core";
 import { warn } from "@ember/debug";
 import { Promise } from "rsvp";
 
-export default class UppyChecksum extends Plugin {
+export default class UppyChecksum extends BasePlugin {
   constructor(uppy, opts) {
     super(uppy, opts);
     this.id = opts.id || "uppy-checksum";

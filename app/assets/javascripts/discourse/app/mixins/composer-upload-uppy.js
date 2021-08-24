@@ -1,10 +1,12 @@
 import Mixin from "@ember/object/mixin";
+import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
+import AwsS3Multipart from "@uppy/aws-s3-multipart";
 import { warn } from "@ember/debug";
 import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
@@ -70,6 +72,7 @@ export default Mixin.create({
 
   _bindUploadTarget() {
     this.placeholders = {};
+    this._inProgressUploads = 0;
     this._preProcessorStatus = {};
     this.fileInputEl = document.getElementById("file-uploader");
     const isPrivateMessage = this.get("composer.privateMessage");
@@ -140,9 +143,12 @@ export default Mixin.create({
     // name for the preprocess-X events.
     this._trackPreProcessorStatus(UppyChecksum);
 
-    // TODO (martin) support for direct S3 uploads will come later, for now
-    // we just want the regular /uploads.json endpoint to work well
-    this._useXHRUploads();
+    // hidden setting like enable_experimental_image_uploader
+    if (this.siteSettings.enable_direct_s3_uploads) {
+      this._useS3MultipartUploads();
+    } else {
+      this._useXHRUploads();
+    }
 
     // TODO (martin) develop upload handler guidance and an API to use; will
     // likely be using uppy plugins for this
@@ -171,6 +177,7 @@ export default Mixin.create({
       });
 
       files.forEach((file) => {
+        this._inProgressUploads++;
         const placeholder = this._uploadPlaceholder(file);
         this.placeholders[file.id] = {
           uploadPlaceholder: placeholder,
@@ -199,14 +206,7 @@ export default Mixin.create({
       this.appEvents.trigger("composer:upload-success", file.name, upload);
     });
 
-    this._uppyInstance.on("upload-error", (file, error, response) => {
-      this._resetUpload(file, { removePlaceholder: true });
-
-      if (!this.userCancelled) {
-        displayErrorForUpload(response, this.siteSettings, file.name);
-        this.appEvents.trigger("composer:upload-error", file);
-      }
-    });
+    this._uppyInstance.on("upload-error", this._handleUploadError.bind(this));
 
     this._uppyInstance.on("complete", () => {
       this.appEvents.trigger("composer:all-uploads-complete");
@@ -233,6 +233,20 @@ export default Mixin.create({
     });
 
     this._setupPreprocessing();
+  },
+
+  _handleUploadError(file, error, response) {
+    this._inProgressUploads--;
+    this._resetUpload(file, { removePlaceholder: true });
+
+    if (!this.userCancelled) {
+      displayErrorForUpload(response || error, this.siteSettings, file.name);
+      this.appEvents.trigger("composer:upload-error", file);
+    }
+
+    if (this._inProgressUploads === 0) {
+      this._reset();
+    }
   },
 
   _setupPreprocessing() {
@@ -340,6 +354,99 @@ export default Mixin.create({
       headers: {
         "X-CSRF-Token": this.session.csrfToken,
       },
+    });
+  },
+
+  _useS3MultipartUploads() {
+    const self = this;
+
+    this._uppyInstance.use(AwsS3Multipart, {
+      // controls how many simultaneous _chunks_ are uploaded, not files,
+      // which in turn controls the minimum number of chunks presigned
+      // in each batch (limit / 2)
+      //
+      // the default, and minimum, chunk size is 5mb. we can control the
+      // chunk size via getChunkSize(file), so we may want to increase
+      // the chunk size for larger files
+      limit: 10,
+
+      createMultipartUpload(file) {
+        return ajax("/uploads/create-multipart.json", {
+          type: "POST",
+          data: {
+            file_name: file.name,
+            file_size: file.size,
+            upload_type: file.meta.upload_type,
+          },
+          // uppy is inconsistent, an error here fires the upload-error event
+        }).then((data) => {
+          file.meta.unique_identifier = data.unique_identifier;
+          return {
+            uploadId: data.external_upload_identifier,
+            key: data.key,
+          };
+        });
+      },
+
+      prepareUploadParts(file, partData) {
+        return (
+          ajax("/uploads/batch-presign-multipart-parts.json", {
+            type: "POST",
+            data: {
+              part_numbers: partData.partNumbers,
+              unique_identifier: file.meta.unique_identifier,
+            },
+          })
+            .then((data) => {
+              return { presignedUrls: data.presigned_urls };
+            })
+            // uppy is inconsistent, an error here does not fire the upload-error event
+            .catch((err) => {
+              self._handleUploadError(file, err);
+            })
+        );
+      },
+
+      completeMultipartUpload(file, data) {
+        const parts = data.parts.map((part) => {
+          return { part_number: part.PartNumber, etag: part.ETag };
+        });
+        return ajax("/uploads/complete-multipart.json", {
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            parts,
+            unique_identifier: file.meta.unique_identifier,
+          }),
+          // uppy is inconsistent, an error here fires the upload-error event
+        }).then((responseData) => {
+          return responseData;
+        });
+      },
+
+      abortMultipartUpload(file, { key, uploadId }) {
+        // if the user cancels the upload before the key and uploadId
+        // are stored from the createMultipartUpload response then they
+        // will not be set, and we don't have to abort the upload because
+        // it will not exist yet
+        if (!key || !uploadId) {
+          return;
+        }
+
+        return ajax("/uploads/abort-multipart.json", {
+          type: "POST",
+          data: {
+            external_upload_identifier: uploadId,
+          },
+          // uppy is inconsistent, an error here does not fire the upload-error event
+        }).catch((err) => {
+          self._handleUploadError(file, err);
+        });
+      },
+
+      // we will need a listParts function at some point when we want to
+      // resume multipart uploads; this is used by uppy to figure out
+      // what parts are uploaded and which still need to be
     });
   },
 

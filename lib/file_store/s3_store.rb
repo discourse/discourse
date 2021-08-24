@@ -97,18 +97,25 @@ module FileStore
 
       # if this fails, it will throw an exception
       if opts[:move_existing] && opts[:existing_external_upload_key]
+        original_path = opts[:existing_external_upload_key]
         path, etag = s3_helper.copy(
-          opts[:existing_external_upload_key],
+          original_path,
           path,
           options: options
         )
-        s3_helper.delete_object(opts[:existing_external_upload_key])
+        delete_file(original_path)
       else
         path, etag = s3_helper.upload(file, path, options)
       end
 
       # return the upload url and etag
       [File.join(absolute_base_url, path), etag]
+    end
+
+    def delete_file(path)
+      # delete the object outright without moving to tombstone,
+      # not recommended for most use cases
+      s3_helper.delete_object(path)
     end
 
     def remove_file(url, path)
@@ -217,7 +224,15 @@ module FileStore
 
     def signed_url_for_temporary_upload(file_name, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
       key = temporary_upload_path(file_name)
-      presigned_put_url(key, expires_in: expires_in, metadata: metadata)
+      presigned_url(
+        key,
+        method: :put_object,
+        expires_in: expires_in,
+        opts: {
+          metadata: metadata,
+          acl: "private"
+        }
+      )
     end
 
     def temporary_upload_path(file_name)
@@ -297,17 +312,72 @@ module FileStore
       FileUtils.mv(old_upload_path, public_upload_path) if old_upload_path
     end
 
-    private
-
-    def presigned_put_url(key, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
-      signer = Aws::S3::Presigner.new(client: s3_helper.s3_client)
-      signer.presigned_url(
-        :put_object,
+    def abort_multipart(key:, upload_id:)
+      s3_helper.s3_client.abort_multipart_upload(
         bucket: s3_bucket_name,
         key: key,
+        upload_id: upload_id
+      )
+    end
+
+    def create_multipart(file_name, content_type)
+      key = temporary_upload_path(file_name)
+      response = s3_helper.s3_client.create_multipart_upload(
         acl: "private",
-        expires_in: expires_in,
-        metadata: metadata
+        bucket: s3_bucket_name,
+        key: key,
+        content_type: content_type
+      )
+      { upload_id: response.upload_id, key: key }
+    end
+
+    def presign_multipart_part(upload_id:, key:, part_number:)
+      presigned_url(
+        key,
+        method: :upload_part,
+        expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+        opts: {
+          part_number: part_number,
+          upload_id: upload_id
+        }
+      )
+    end
+
+    def list_multipart_parts(upload_id:, key:)
+      s3_helper.s3_client.list_parts(
+        bucket: s3_bucket_name,
+        key: key,
+        upload_id: upload_id
+      )
+    end
+
+    def complete_multipart(upload_id:, key:, parts:)
+      s3_helper.s3_client.complete_multipart_upload(
+        bucket: s3_bucket_name,
+        key: key,
+        upload_id: upload_id,
+        multipart_upload: {
+          parts: parts
+        }
+      )
+    end
+
+    private
+
+    def presigned_url(
+      key,
+      method:,
+      expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+      opts: {}
+    )
+      signer = Aws::S3::Presigner.new(client: s3_helper.s3_client)
+      signer.presigned_url(
+        method,
+        {
+          bucket: s3_bucket_name,
+          key: key,
+          expires_in: expires_in,
+        }.merge(opts)
       )
     end
 

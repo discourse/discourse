@@ -175,7 +175,11 @@ export default Mixin.create({
     this.set("usingS3Uploads", true);
     this._uppyInstance.use(AwsS3, {
       getUploadParameters: (file) => {
-        const data = { file_name: file.name, type: this.type };
+        const data = {
+          file_name: file.name,
+          file_size: file.size,
+          type: this.type,
+        };
 
         // the sha1 checksum is set by the UppyChecksum plugin, except
         // for in cases where the browser does not support the required

@@ -176,6 +176,10 @@ module UserGuardian
     (is_me?(user) && user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)) || is_staff?
   end
 
+  def can_upload_external?
+    !ExternalUploadManager.user_banned?(user)
+  end
+
   def can_delete_sso_record?(user)
     SiteSetting.enable_discourse_connect && user && is_admin?
   end
