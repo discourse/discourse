@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { Promise } from "rsvp";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
+import { htmlSafe } from "@ember/template";
 import { scheduleOnce } from "@ember/runloop";
 
 export const LOREM = `
@@ -41,7 +42,7 @@ export function createPreviewComponent(width, height, obj) {
       height,
       elementWidth: width * scale,
       elementHeight: height * scale,
-      canvasStyle: `width:${width}px;height:${height}px`,
+      canvasStyle: htmlSafe(`width:${width}px;height:${height}px`),
       ctx: null,
       loaded: false,
 
