@@ -1,8 +1,14 @@
-<div class="preview-area">
-  <canvas
-    width={{elementWidth}}
-    height={{elementHeight}}
-    style={{canvasStyle}}
-  >
-  </canvas>
+<div class="previews">
+  <div class="preview-area topic-preview">
+    <canvas width={{elementWidth}} height={{elementHeight}} style={{canvasStyle}}>
+    </canvas>
+  </div>
+  <div class="preview-area homepage-preview">
+    {{homepage-preview wizard=wizard step=step}}
+  </div>
+</div>
+
+<div class="preview-nav">
+  <a href class="preview-nav-button {{if previewTopic "active"}}" {{action "setPreviewTopic"}}>Topic preview</a>
+  <a href class="preview-nav-button {{unless previewTopic "active"}}" {{action "setPreviewHomepage"}}>Homepage preview</a>
 </div>

@@ -9,7 +9,12 @@ export default createPreviewComponent(659, 320, {
   logo: null,
   avatar: null,
 
-  @observes("step.fieldsById.homepage_style.value")
+  @observes(
+    "step.fieldsById.homepage_style.value",
+    "step.fieldsById.body_font.value",
+    "step.fieldsById.heading_font.value",
+    "step.fieldsById.color_scheme.value"
+  )
   styleChanged() {
     this.triggerRepaint();
   },

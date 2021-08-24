@@ -12,9 +12,12 @@ Nullam eget sem non elit tincidunt rhoncus. Fusce
 velit nisl, porttitor sed nisl ac, consectetur interdum
 metus. Fusce in consequat augue, vel facilisis felis.`;
 
-export default createPreviewComponent(580, 320, {
+const CANVAS_WIDTH = 580;
+
+export default createPreviewComponent(CANVAS_WIDTH, 320, {
   logo: null,
   avatar: null,
+  previewTopic: true,
 
   @observes(
     "step.fieldsById.body_font.value",
@@ -23,6 +26,21 @@ export default createPreviewComponent(580, 320, {
   )
   fontChanged() {
     this.triggerRepaint();
+  },
+
+  @observes("previewTopic")
+  scrollPreviewArea() {
+    const el = this.element.querySelector(".previews");
+    el.scrollTo({
+      top: 0,
+      left: this.previewTopic ? 0 : CANVAS_WIDTH + 40,
+      behavior: "smooth",
+    });
+  },
+
+  @observes("step.fieldsById.homepage_style.value")
+  homepageStyleChanged() {
+    this.set("previewTopic", false);
   },
 
   images() {
@@ -124,5 +142,15 @@ export default createPreviewComponent(580, 320, {
     ctx.font = `Bold ${bodyFontSize}em ${font}`;
     ctx.fillStyle = colors.primary;
     ctx.fillText("1 / 20", timelineX + margin, height * 0.3 + margin * 1.5);
+  },
+
+  actions: {
+    setPreviewHomepage() {
+      this.set("previewTopic", false);
+    },
+
+    setPreviewTopic() {
+      this.set("previewTopic", true);
+    },
   },
 });
