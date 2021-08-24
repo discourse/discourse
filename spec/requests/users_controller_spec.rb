@@ -5064,6 +5064,43 @@ describe UsersController do
     end
   end
 
+  describe "#private_message_topic_tracking_state" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+
+    fab!(:private_message) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    before do
+      sign_in(user_2)
+    end
+
+    it 'does not allow an unauthorized user to access the state of another user' do
+      get "/u/#{user.username}/private-message-topic-tracking-state.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it 'returns the right response' do
+      get "/u/#{user_2.username}/private-message-topic-tracking-state.json"
+
+      expect(response.status).to eq(200)
+
+      topic_state = response.parsed_body.first
+
+      expect(topic_state["topic_id"]).to eq(private_message.id)
+      expect(topic_state["highest_post_number"]).to eq(1)
+      expect(topic_state["last_read_post_number"]).to eq(nil)
+      expect(topic_state["notification_level"]).to eq(NotificationLevels.all[:watching])
+      expect(topic_state["group_ids"]).to eq([])
+    end
+  end
+
   def create_second_factor_security_key
     sign_in(user)
     stub_secure_session_confirmed
