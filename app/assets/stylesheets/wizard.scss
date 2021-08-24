@@ -829,10 +829,11 @@ body.wizard {
   .wizard-fields-sidebar {
     width: 170px;
     box-sizing: border-box;
-    padding: 15px 0px 15px 15px;
+    padding: 30px 0px 15px 15px;
     background: var(--primary-very-low);
     + .wizard-fields-main {
       padding: 15px;
+      padding-top: 30px;
       background: var(--primary-very-low);
       width: calc(100% - 170px);
     }
