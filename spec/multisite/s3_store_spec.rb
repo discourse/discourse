@@ -313,7 +313,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         url = store.signed_url_for_temporary_upload("test.png")
         key = store.path_from_url(url)
         expect(url).to match(/Amz-Expires/)
-        expect(key).to match(/uploads\/default\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+        expect(key).to match(/temp\/uploads\/default\/test_[0-9]\/[a-zA-z0-9]{0,32}\/test.png/)
       end
 
       it "presigned url contans the metadata when provided" do
@@ -329,7 +329,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         url = store.signed_url_for_temporary_upload("test.png")
         key = store.path_from_url(url)
         expect(url).to match(/Amz-Expires/)
-        expect(key).to match(/site\/uploads\/default\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+        expect(key).to match(/temp\/site\/uploads\/default\/test_[0-9]\/[a-zA-z0-9]{0,32}\/test.png/)
       end
     end
 
@@ -341,7 +341,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           url = store.signed_url_for_temporary_upload("test.png")
           key = store.path_from_url(url)
           expect(url).to match(/Amz-Expires/)
-          expect(key).to match(/standard99\/uploads\/second\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+          expect(key).to match(/temp\/standard99\/uploads\/second\/test_[0-9]\/[a-zA-z0-9]{0,32}\/test.png/)
         end
       end
     end
