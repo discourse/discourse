@@ -4,11 +4,13 @@ import { ajax } from "discourse/lib/ajax";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
+import { gt } from "@ember/object/computed";
 
 export default Controller.extend({
   application: controller(),
   queryParams: ["filter"],
   filter: "all",
+  hasNotifications: gt("model.content.length", 0),
 
   @observes("model.canLoadMore")
   _showFooter() {
@@ -18,11 +20,6 @@ export default Controller.extend({
   @discourseComputed("filter")
   filtered() {
     return this.filter && this.filter !== "all";
-  },
-
-  @discourseComputed("model.content.length")
-  hasNotifications(length) {
-    return length > 0;
   },
 
   @discourseComputed("model.content.@each.read")
