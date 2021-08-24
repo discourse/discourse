@@ -32,20 +32,7 @@ class UploadsController < ApplicationController
   PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE = 10
   CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
   COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
-  ABORT_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
   BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE = 10
-
-  def external_store_check
-    return render_404 if !Discourse.store.external?
-  end
-
-  def direct_s3_uploads_check
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
-  end
-
-  def can_upload_external?
-    raise Discourse::InvalidAccess if !guardian.can_upload_external?
-  end
 
   def create
     # capture current user for block later on
@@ -545,6 +532,18 @@ class UploadsController < ApplicationController
   end
 
   private
+
+  def external_store_check
+    return render_404 if !Discourse.store.external?
+  end
+
+  def direct_s3_uploads_check
+    return render_404 if !SiteSetting.enable_direct_s3_uploads
+  end
+
+  def can_upload_external?
+    raise Discourse::InvalidAccess if !guardian.can_upload_external?
+  end
 
   # We can pre-emptively check size for attachments, but not for images
   # as they may be further reduced in size by UploadCreator (at this point
