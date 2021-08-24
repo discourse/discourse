@@ -719,6 +719,8 @@ te:
       categories_only: "వర్గాలు మాత్రమే"
     conditional_loading_section:
       loading: లోడవుతోంది...
+    select_kit:
+      delete_item: "%{name} తొలగించు"
     emoji_picker:
       flags: కేతనాలు
     composer:

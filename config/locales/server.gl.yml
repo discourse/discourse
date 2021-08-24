@@ -463,14 +463,6 @@ gl:
       Pode editar a súa resposta e engadir unha cita seleccionando o texto e premendo no botón <b>citar resposta</b> que aparece.
 
       É máis sinxelo para a comunidade ler temas con menos respostas, pero con máis contido, que moitas respostas pequenas e individuais.
-    get_a_room: |
-      ###Anime a todos a participar na conversa
-
-      Respondeu %{count} veces a @%{reply_username} neste tema en particular!
-
-      Unha gran discusión inclúe moitas voces e perspectivas. Pode atraer a alguén máis?
-
-      E non o esqueza, se quere continuar a conversa en extenso con este usuario en particular fóra da vista pública, [envíelle unha mensaxe persoal] (%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Alcanzou o límite de respostas para este tema.
 
@@ -1326,6 +1318,7 @@ gl:
     out_of_date_themes: "Hai actualizacións dispoñibles para os seguintes temas:"
     unreachable_themes: "Non puidemos comprobar se hai actualizacións para os seguintes temas:"
   site_settings:
+    disabled: "desactivado"
     display_local_time_in_user_card: "Amosar a hora local con base no fuso horario do usuario cando se abre a súa tarxeta."
     censored_words: "As palabras serán automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente as publicacións ocultas máis de 30 días."

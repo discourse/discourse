@@ -290,6 +290,9 @@ ca:
     topic_count_latest:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
+    topic_count_unseen:
+      one: "Vegeu %{count} tema nou o actualitzat"
+      other: "Vegeu %{count} temes nous o actualitzats"
     topic_count_unread:
       one: "Vegeu %{count} tema no llegit "
       other: "Vegeu %{count} temes no llegits"
@@ -1480,6 +1483,7 @@ ca:
     conditional_loading_section:
       loading: Carregant...
     select_kit:
+      delete_item: "Suprimeix %{name}"
       default_header_text: Selecciona...
       no_content: No s'han trobat coincidències
       filter_placeholder: Cerca...
@@ -2964,7 +2968,6 @@ ca:
               description: "Els administradors poden veure tots els grups."
             members_visibility_levels:
               title: "Qui pot veure els membres d’aquest grup?"
-              description: "Els administradors poden veure membres de tots els grups."
             publish_read_state: "En els missatges de grup publica l'estat de lectura del grup"
           membership:
             automatic: Automàtic

@@ -310,6 +310,9 @@ nl:
     topic_count_latest:
       one: "%{count} nieuw of bijgewerkt topic bekijken"
       other: "%{count} nieuwe of bijgewerkte topics bekijken"
+    topic_count_unseen:
+      one: "%{count} nieuw of bijgewerkt topic bekijken"
+      other: "%{count} nieuwe of bijgewerkte topics bekijken"
     topic_count_unread:
       one: "%{count} ongelezen topic bekijken"
       other: "%{count} ongelezen topics bekijken"
@@ -960,6 +963,7 @@ nl:
       no_bookmarks_title: "U hebt nog geen bladwijzers gemaakt"
       no_bookmarks_body: >
         Begin een bladwijzer te maken voor berichten met de %{icon} knop en ze worden hier weergegeven voor gemakkelijke referentie. U kunt ook een herinnering plannen!
+      no_bookmarks_search: "Geen bladwijzers gevonden met de opgegeven zoekopdracht."
       no_notifications_title: "U hebt nog geen meldingen"
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
       dynamic_favicon: "Aantal op browserpictogram tonen"
@@ -1744,6 +1748,7 @@ nl:
         one: "+ %{count} subcategorie"
         other: "+ %{count} subcategorieën"
     select_kit:
+      delete_item: "%{name} verwijderen"
       filter_by: "Filteren op: %{name}"
       select_to_filter: "Een waarde selecteren om te filteren"
       default_header_text: Selecteren...
@@ -3059,7 +3064,7 @@ nl:
       one: "gebruiker"
       other: "gebruikers"
     category_title: "Categorie"
-    history: "Geschiedenis, laatste 100 herzieningen"
+    history_capped_revisions: "Geschiedenis, laatste 100 herzieningen"
     changed_by: "door %{author}"
     raw_email:
       title: "Inkomende e-mail"
@@ -3531,7 +3536,6 @@ nl:
               description: "Beheerders kunnen alle groepen zien."
             members_visibility_levels:
               title: "Wie kan de leden van deze groep zien?"
-              description: "Beheerders kunnen leden van alle groepen zien."
             publish_read_state: "Bij groepsberichten leesstatus van groep publiceren"
           membership:
             automatic: Automatisch

@@ -164,6 +164,9 @@ fr:
       max_emojis: "ne peut pas contenir plus de %{max_emojis_count} émojis"
       emojis_disabled: "ne peut pas contenir des émojis"
       ip_address_already_screened: "est déjà inclus dans une règle existante"
+      restrict_dependent_destroy:
+        one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
+        other: "Impossible de supprimer l'enregistrement car un %{record} existe et en dépend"
       too_long:
         one: 'est trop long (nombre maximal de caractères : %{count})'
         other: 'est trop long (nombre maximal de caractères : %{count})'
@@ -478,14 +481,6 @@ fr:
       Vous pouvez modifier votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b>.
 
       Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
-    get_a_room: |
-      ### Encouragez tout le monde à intervenir dans la discussion
-
-      Vous avez répondu %{count} fois à @%{reply_username} dans ce sujet !
-
-      Une bonne discussion implique plusieurs avis et points de vue. Pourriez-vous impliquer quelqu'un d'autre ?
-
-      Et n'oubliez pas, si vous souhaitez prolonger la discussion avec cette personne en particulier à l'abri du regard des autres, vous pouvez lui [envoyer un message direct](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Vous avez atteint le nombre maximal de réponses dans ce sujet
 
@@ -1368,6 +1363,7 @@ fr:
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
   site_settings:
+    disabled: "désactivé"
     display_local_time_in_user_card: "Afficher l'heure locale en fonction du fuseau horaire de l'utilisateur quand sa carte est ouverte."
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages masqués pendant plus de 30 jours."
@@ -1677,6 +1673,7 @@ fr:
     allow_staff_to_upload_any_file_in_pm: "Autoriser les responsables à envoyer n'importe quel fichier dans les messages directs."
     strip_image_metadata: "Enlever les métadonnées de l'image."
     composer_media_optimization_image_enabled: "Permet l'optimisation multimédia côté client des fichiers image téléversés."
+    composer_media_optimization_image_bytes_optimization_threshold: "Taille minimale du fichier image pour déclencher l'optimisation côté client"
     composer_media_optimization_image_resize_dimensions_threshold: "Largeur d'image minimale pour déclencher le redimensionnement côté client"
     composer_media_optimization_image_resize_width_target: "Les images dont la largeur est supérieure à « composer_media_optimization_image_dimensions_resize_threshold » seront redimensionnées à cette largeur. Doit être >= à « composer_media_optimization_image_dimensions_resize_threshold »."
     composer_media_optimization_image_encode_quality: "Qualité d'encodage JPEG utilisée dans le processus de réencodage."
@@ -3259,6 +3256,9 @@ fr:
         Votre compte sur le forum a été suspendu jusqu'à %{suspended_till}.
 
         Motif : %{reason}
+    account_suspended_forever:
+      title: "Compte suspendu"
+      subject_template: "[%{email_prefix}] Votre compte a été suspendu"
     account_silenced:
       title: "Compte mis en sourdine"
       subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
@@ -3266,6 +3266,9 @@ fr:
         Votre compte sur le forum a été mis en sourdine jusqu'à %{silenced_till}.
 
         Motif : %{reason}
+    account_silenced_forever:
+      title: "Compte mis en sourdine"
+      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
     account_exists:
       title: "Le compte existe déjà"
       subject_template: "[%{email_prefix}] Le compte existe déjà"

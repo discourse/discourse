@@ -475,14 +475,6 @@ tr_TR:
       Herkesin benzersiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
     sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi denediniz \nBunun yerine yerine, lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt veriniz.\nMetni vurgulayıp görünen <b>alıntı</b> düğmesini seçerek önceki yanıtınızı düzenleyebilirsiniz. Böylece diğer kullanıcıların, yanıtlarınızı okuması daha kolay olacaktır.\n"
     dominating_topic: Birden fazla gönderdiniz %{percent}Burada cevapların% else orada herkesin duymak isteriz edilir?
-    get_a_room: |
-      ### Herkesi sohbete katılmaya teşvik edin
-
-      Bu konuda @%{reply_username} kullanıcısına %{count} kez yanıt verdiniz!
-
-      Harika bir tartışma, birçok ses ve bakış açısı içerir. Başkalarını da sohbete dahil edebilir misiniz?
-
-      Ve unutmayın, bu belirli kullanıcıyla görüşmenize herkesin göremeyeceği şekilde uzun süre devam etmek istiyorsanız, [onlara kişisel bir mesaj gönderebilirsiniz](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Bu konu için cevap limitinizi doldurdunuz
 
@@ -1361,6 +1353,7 @@ tr_TR:
     out_of_date_themes: "Aşağıdaki temalar için güncellemeler mevcuttur:"
     unreachable_themes: "Aşağıdaki temalar için güncellemeleri kontrol edemedik:"
   site_settings:
+    disabled: "devredışı"
     display_local_time_in_user_card: "Kullanıcı kartı açıkken yerel saati kullanıcının saat dilimine göre görüntüle."
     censored_words: "kelime yerine otomatik olarak &#9632;&#9632;&#9632;&#9632; kullanılacak kelimeler"
     delete_old_hidden_posts: "30 günden fazla süreyle gizli kalan gizlenmiş gönderileri otomatik olarak sil."

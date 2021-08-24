@@ -332,6 +332,10 @@ ro:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
       other: "%{count} de subiecte noi sau actualizate."
+    topic_count_unseen:
+      one: "Un subiect nou sau actualizat."
+      few: "%{count} subiecte noi sau actualizate."
+      other: "%{count} de subiecte noi sau actualizate."
     topic_count_unread:
       one: "Afișați %{count} cubiect necitit"
       few: "Afișați %{count} subiect necitit"
@@ -1526,6 +1530,7 @@ ro:
     conditional_loading_section:
       loading: Se încarcă...
     select_kit:
+      delete_item: "Șterge %{name}"
       default_header_text: Selectează...
       no_content: Nu s-au găsit potriviri
       filter_placeholder: Caută...

@@ -1273,6 +1273,7 @@ nl:
     out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
     unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
   site_settings:
+    disabled: "uitgeschakeld"
     display_local_time_in_user_card: "De lokale tijd weergeven op basis van de tijdzone van een gebruiker wanneer zijn of haar gebruikerskaart wordt geopend."
     censored_words: "Woorden die automatisch door &#9632;&#9632;&#9632;&#9632; zullen worden vervangen"
     delete_old_hidden_posts: "Verborgen berichten die meer dan 30 dagen verborgen blijven automatisch verwijderen"

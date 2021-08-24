@@ -456,14 +456,6 @@ ja:
       前の返信を編集する際に、テキストをハイライトして<b>引用して返信</b>ボタンを選択すると、返信に引用を追加することができます。
 
       短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
-    get_a_room: |
-      ### 全員が会話に参加できるように奨励しましょう
-
-      この特定のトピックで @%{reply_username} に %{count} 回返信しています！
-
-      素晴らしいディスカッションには多数の人の意見と観点が含まれるものです。ほかに参加できる人はいませんか？
-
-      周りの視線を気にせずにこの特定のユーザーと長い会話を続けるには、[個人メッセージを送信](%{base_path}/u/%{reply_username})できることもお忘れなく。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
@@ -1320,6 +1312,7 @@ ja:
     unreachable_themes: "次のテーマの更新を確認できませんでした:"
     watched_word_regexp_error: "'%{action}' のウォッチ語の正規表現は無効です。<a href='%{base_path}/admin/customize/watched_words'>ウォッチ語の設定</a>を確認するか、'ウォッチ語の正規表現' サイト設定を無効にしてください。"
   site_settings:
+    disabled: "無効"
     display_local_time_in_user_card: "ユーザーカードが開いたときのユーザーのタイムゾーンに基づいて現地時間を表示します。"
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; に置換される語"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動的に削除します。"
@@ -3187,6 +3180,9 @@ ja:
         あなたは %{suspended_till} までフォーラムから凍結されました。
 
         理由 - %{reason}
+    account_suspended_forever:
+      title: "アカウントが凍結されました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
     account_silenced:
       title: "アカウントが投稿禁止にされました"
       subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
@@ -3194,6 +3190,9 @@ ja:
         あなたは %{silenced_till} までフォーラムから投稿禁止にされました。
 
         理由 - %{reason}
+    account_silenced_forever:
+      title: "アカウントが投稿禁止にされました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
     account_exists:
       title: "アカウントはすでに存在します"
       subject_template: "[%{email_prefix}] アカウントはすでに存在します"

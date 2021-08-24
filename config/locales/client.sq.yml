@@ -1004,6 +1004,8 @@ sq:
       alt: "Alt"
     conditional_loading_section:
       loading: Duke ngarkuar...
+    select_kit:
+      delete_item: "Fshi %{name}"
     date_time_picker:
       from: Nga
       to: Për

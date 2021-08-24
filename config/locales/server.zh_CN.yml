@@ -256,6 +256,7 @@ zh_CN:
   not_found: "找不到请求的 URL 或资源。"
   invalid_access: "您没有权限查看请求的资源。"
   authenticator_not_found: "身份验证方法不存在或已被禁用。"
+  authenticator_no_connect: "此身份验证提供程序不允许连接到现有论坛帐户。"
   invalid_api_credentials: "您没有权限查看请求的资源。API 用户名或者密钥无效。"
   provider_not_enabled: "您没有权限查看请求的资源。身份验证服务提供商未启用。"
   provider_not_found: "您没有权限查看请求的资源。身份验证服务提供商不存在。"
@@ -456,14 +457,7 @@ zh_CN:
       您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
-    get_a_room: |
-      ### 鼓励每一个人都参与到讨论中
-
-      您已经在这个话题中给 @%{reply_username} 回复 %{count} 次了！
-
-      良好的讨论应该包含许多不同的声音和观点。您能让其他人也参与进来吗？
-
-      不要忘了，如果您想私下继续与此特定用户进行对话，可以[给他们发送个人消息](%{base_path}/u/%{reply_username})。
+    dominating_topic: 您在这里发布了超过 %{percent}% 的回复，想听听其他人的发言吗？
     too_many_replies: |
       ### 您已达到此话题的回复上限
 
@@ -1320,6 +1314,7 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
   site_settings:
+    disabled: "已"
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示当地时间。"
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632; 的字词"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
@@ -2024,6 +2019,7 @@ zh_CN:
     create_revision_on_bulk_topic_moves: "当话题被批量移入新类别时，为第一个帖子创建修订。"
     allow_changing_staged_user_tracking: "允许管理员用户更改暂存用户的类别和标签通知偏好设置。"
     errors:
+      invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
       invalid_username: "没有使用该用户名的用户。"
       invalid_group: "没有使用该名称的群组。"
@@ -2177,6 +2173,7 @@ zh_CN:
     reset_not_allowed_from_ip_address: "您无法从该 IP 地址请求密码重置。"
     suspended: "您在 %{date}之前无法登录。"
     suspended_with_reason: "帐户已被封禁至 %{date}：%{reason}"
+    suspended_with_reason_forever: "账户被停用： %{reason}"
     errors: "%{errors}"
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了点问题，可能该用户名或电子邮件已被注册，试试点击忘记密码链接。"
@@ -2606,15 +2603,41 @@ zh_CN:
     backup_succeeded:
       title: "备份成功"
       subject_template: "备份成功完成"
+      text_body_template: |
+        备份成功。
+
+        访问 [管理 > 备份选项](%{base_url}/admin/backups) 下载您的新备份。
+
+        这是日志：
+
+        %{logs}
     backup_failed:
       title: "备份失败"
       subject_template: "备份失败"
+      text_body_template: |
+        备份失败。
+
+        这是日志：
+
+        %{logs}
     restore_succeeded:
       title: "恢复成功"
       subject_template: "恢复成功完成"
+      text_body_template: |
+        恢复成功。
+
+        这是日志：
+
+        %{logs}
     restore_failed:
       title: "恢复失败"
       subject_template: "恢复失败"
+      text_body_template: |
+        恢复失败。
+
+        这是日志：
+
+        %{logs}
     bulk_invite_succeeded:
       title: "批量邀请成功"
       subject_template: "批量用户邀请处理成功"
@@ -2998,6 +3021,7 @@ zh_CN:
   subject_re: "回复："
   subject_pm: "[PM]"
   email_from: "%{user_name} 通过 %{site_name}"
+  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "以前的回复"
     reached_limit:
@@ -3216,11 +3240,25 @@ zh_CN:
         您的帐户被论坛封禁至 %{suspended_till}。
 
         原因 - %{reason}
+    account_suspended_forever:
+      title: "帐户被封禁"
+      subject_template: "[%{email_prefix}] 您的帐户已被封禁"
+      text_body_template: |
+        您已被论坛暂停登录。
+
+        原因 - %{reason}
     account_silenced:
       title: "帐户被禁言"
       subject_template: "[%{email_prefix}] 您的帐户已被禁言"
       text_body_template: |
         您的帐户被论坛禁言至 %{silenced_till}。
+
+        原因 - %{reason}
+    account_silenced_forever:
+      title: "帐户被禁言"
+      subject_template: "[%{email_prefix}] 您的帐户已被禁言"
+      text_body_template: |
+        您已被论坛禁言。
 
         原因 - %{reason}
     account_exists:
@@ -3462,8 +3500,12 @@ zh_CN:
     store_failure: "无法保存用户 #%{user_id} 的上传 #%{upload_id}。"
     file_missing: "抱歉，您必须提供要上传的文件。"
     empty: "抱歉，您提供的文件是空的。"
+    failed: "抱歉，您上传失败。请再试一次。"
     png_to_jpg_conversion_failure_message: "从 PNG 转换为 JPG 时出错。"
     optimize_failure_message: "优化上传的图片时出错。"
+    download_failure: "从外部下载文件失败。"
+    checksum_mismatch_failure: "您上传的文件的校验和不匹配。在上传时文件内容可能已更改。请再试一次。"
+    cannot_promote_failure: "上传无法完成，可能已经完成或失败了。"
     attachments:
       too_large: "抱歉，您尝试上传的文件过大（最大大小为 %{max_size_kb}KB）。"
     images:

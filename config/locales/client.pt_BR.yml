@@ -126,29 +126,29 @@ pt_BR:
       url: "Copiar e compartilhar a URL"
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
-      private_topic: "tornou este tópico uma mensagem pessoal %{when} atrás"
+      private_topic: "tornou este tópico em uma mensagem pessoal %{when}"
       split_topic: "dividiu este tópico %{when}"
-      invited_user: "convidou %{who} %{when} atrás"
-      invited_group: "onvidou %{who} %{when} atrás"
-      user_left: "%{who} foi removido(a) desta mensagem %{when} atrás"
+      invited_user: "convidou %{who} %{when}"
+      invited_group: "convidou %{who} %{when}"
+      user_left: "%{who} se removeram desta mensagem %{when}"
       removed_user: "%{who} foi removido(a) %{when} atrás"
-      removed_group: "%{who} foi removido(a) %{when} atrás"
-      autobumped: "automaticamente promovido(a) %{when} atrás"
+      removed_group: "removido %{who} %{when}"
+      autobumped: "automaticamente promovido %{when}"
       autoclosed:
-        enabled: "fechou %{when} atrás"
-        disabled: "abriu %{when} atrás"
+        enabled: "fechou %{when}"
+        disabled: "abriu %{when}"
       closed:
-        enabled: "fechou %{when} atrás"
-        disabled: "abriu %{when} atrás"
+        enabled: "fechou %{when}"
+        disabled: "abriu %{when}"
       archived:
-        enabled: "arquivou %{when} atrás"
-        disabled: "desarquivou %{when} atrás"
+        enabled: "arquivou %{when}"
+        disabled: "desarquivou %{when}"
       pinned:
-        enabled: "fixou %{when} atrás"
-        disabled: "desafixou %{when} atrás"
+        enabled: "fixou %{when}"
+        disabled: "desafixou %{when}"
       pinned_globally:
-        enabled: "fixou globalmente %{when} atrás"
-        disabled: "desafixou %{when} atrás"
+        enabled: "fixou globalmente %{when}"
+        disabled: "desafixou %{when}"
       visible:
         enabled: "listou %{when} atrás"
         disabled: "removeu da lista %{when} atrás"
@@ -301,6 +301,7 @@ pt_BR:
     copy_codeblock:
       copied: "copiado!"
     drafts:
+      label: "Rascunhos"
       resume: "Retomar"
       remove: "Remover"
       remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
@@ -312,6 +313,9 @@ pt_BR:
         yes_value: "Descartar"
         no_value: "Retomar a edição"
     topic_count_latest:
+      one: "Veja %{count} tópico novo ou atualizado"
+      other: "Veja %{count} tópicos novos ou atualizados"
+    topic_count_unseen:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
     topic_count_unread:
@@ -992,6 +996,7 @@ pt_BR:
       no_bookmarks_title: "Você ainda não adicionou nada aos favoritos"
       no_bookmarks_body: >
         Comece a adicionar postagens aos favoritos com o botão %{icon}, eles serão listados aqui para consulta rápida. Você pode agendar um lembrete também!
+      no_bookmarks_search: "Nenhum favorito encontrado com a consulta de pesquisa fornecida."
       no_notifications_title: "Você ainda não tem nenhuma notificação"
       no_notifications_body: >
         Neste painel, você receberá notificações sobre atividades relevantes, inclusive respostas aos seus tópicos e postagens, quando você for citado(a) ou mencionado(a) (<b>@mentions</b>) por alguém e quando os tópicos que você estiver acompanhando receberem respostas. As notificações também serão enviadas por e-mail quando você passar algum tempo sem entrar com a conta. <br><br> Procure por %{icon} para decidir sobre quais tópicos, categorias e etiquetas específicas você quer receber notificações. Para obter mais informações, verifique suas <a href='%{preferencesUrl}'>preferências de notificações</a>.
@@ -1098,7 +1103,10 @@ pt_BR:
         rejected_posts: "postagens rejeitadas"
       messages:
         inbox: "Caixa de entrada"
+        latest: "Últimos"
         sent: "Enviadas"
+        unread: "Não lidos(as)"
+        new: "Novo"
         archive: "Arquivo"
         groups: "Meus grupos"
         move_to_inbox: "Mover para caixa de entrada"
@@ -1786,6 +1794,7 @@ pt_BR:
         one: "+%{count} subcategoria"
         other: "+%{count} subcategorias"
     select_kit:
+      delete_item: "Excluir %{name}"
       filter_by: "Filtrar por: %{name}"
       select_to_filter: "Selecione um valor para filtrar"
       default_header_text: Selecionar...
@@ -3124,7 +3133,7 @@ pt_BR:
       one: "usuário(a)"
       other: "usuários(as)"
     category_title: "Categoria"
-    history: "Histórico, últimas 100 revisões"
+    history_capped_revisions: "Histórico, últimas 100 revisões"
     changed_by: "de %{author}"
     raw_email:
       title: "E-mails recebidos"
@@ -3615,7 +3624,6 @@ pt_BR:
               description: "Administradores(as) podem ver todos os grupos."
             members_visibility_levels:
               title: "Quem pode ver os membros deste grupo?"
-              description: "Administradores(as) podem ver os membros de todos os grupos."
             publish_read_state: "Em mensagens de grupo, publique o estado de leitura do grupo"
           membership:
             automatic: Automático
@@ -4532,6 +4540,7 @@ pt_BR:
         delete_all_posts: "Excluir todas postagens"
         delete_posts_progress: "Excluindo postagens…"
         delete_posts_failed: "Houve um problema ao excluir as postagens."
+        post_edits: "Postar edições"
         penalty_post_actions: "O que você gostaria de fazer com a postagem associada?"
         penalty_post_delete: "Excluir a postagem"
         penalty_post_delete_replies: "Excluir a postagem + respostas"
@@ -4588,6 +4597,7 @@ pt_BR:
         approve_success: "Usuário(a) aprovado(a) e e-mail enviado com instruções de ativação."
         approve_bulk_success: "Sucesso! Todos os(as) usuários(as) selecionados(as) foram aprovados(as) e notificados(as)."
         time_read: "Tempo de leitura"
+        post_edits_count: "Postar edições"
         anonymize: "Tornar usuário(a) anônimo(a)"
         anonymize_confirm: "Você TEM CERTEZA de que gostaria de tornar esta conta anônima? Essa mudança irá alterar o nome do(a) usuário(a) e o e-mail, além de redefinir todas informações do perfil."
         anonymize_yes: "Sim, tornar esta conta anônima"

@@ -792,6 +792,7 @@ ro:
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
   site_settings:
+    disabled: "dezactivat"
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "șterge automat toate postările ascunse care stau ascunse mai mult de 30 de zile."
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"

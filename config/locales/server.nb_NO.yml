@@ -934,6 +934,7 @@ nb_NO:
     force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
     out_of_date_themes: "Oppdateringer er tilgjengelig for følgende drakter:"
   site_settings:
+    disabled: "deaktivert"
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
     allow_user_locale: "Tillat brukere å velge eget språk"

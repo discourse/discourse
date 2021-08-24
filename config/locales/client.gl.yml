@@ -306,6 +306,9 @@ gl:
     topic_count_latest:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
+    topic_count_unseen:
+      one: "Ver %{count} tema novo ou actualizado"
+      other: "Ver %{count} temas novos ou actualizados"
     topic_count_unread:
       one: "Ver %{count} tema pendente"
       other: "Ver %{count} temas pendentes"
@@ -948,6 +951,7 @@ gl:
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
       dismiss_notifications_tooltip: "Marcar todas notificacións sen ler como lidas"
+      no_bookmarks_search: "Non se atoparon marcadores coa busca fornecida."
       first_notification: "Xa ten a súa primeira notificación! Selecciónea para comezar."
       dynamic_favicon: "Amosar conta na icona do navegador"
       skip_new_user_tips:
@@ -1725,6 +1729,7 @@ gl:
         one: "+ %{count} subcategoría"
         other: "+ %{count} subcategorías"
     select_kit:
+      delete_item: "Eliminar %{name}"
       filter_by: "Filtrado por: %{name}"
       select_to_filter: "Seleccione un valor para filtrar"
       default_header_text: Seleccionar...
@@ -3491,7 +3496,6 @@ gl:
               description: "Os administradores poden ver todos os grupos."
             members_visibility_levels:
               title: "Quen pode ver os membros deste grupo?"
-              description: "Os administradores poden ver os membros de todos os grupos."
             publish_read_state: "Publicar nas mensaxes de grupo o estado de lectura de grupo"
           membership:
             automatic: Automático

@@ -265,6 +265,7 @@ sv:
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   authenticator_not_found: "Autentiseringsmetod finns inte eller har inaktiverats."
+  authenticator_no_connect: "Denna autentiseringsleverantör tillåter inte anslutning till ett befintligt forumkonto."
   invalid_api_credentials: "Du har inte behörighet att se den begärda resursen. API-användarnamnet eller -nyckeln är ogiltig(t)."
   provider_not_enabled: "Du har inte behörighet att se den begärda resursen. Autentiseringsleverantören är inte aktiverad."
   provider_not_found: "Du har inte behörighet att se den begärda resursen. Autentiseringsleverantören finns inte."
@@ -482,14 +483,7 @@ sv:
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
     dominating_topic: Du har publicerat mer än %{percent} % av svaren här. Finns det någon annan du vill höra från?
-    get_a_room: |
-      ### Uppmuntra alla att delta i samtalet
-
-      Du svarade @%{reply_username} %{count} gånger i just detta ämne!
-
-      En riktigt bra diskussion involverar flera röster och perspektiv. Kan du få någon annan involverad?
-
-      Glöm inte att om du vill fortsätta diskussionen med just denna användare, utan att alla andra ser det, kan du [skicka ett personligt meddelande](%{base_path}/u/%{reply_username}).
+    get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
 
@@ -1353,6 +1347,7 @@ sv:
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
+    disabled: "inaktiverade"
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
