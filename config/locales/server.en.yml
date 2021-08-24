@@ -526,7 +526,7 @@ en:
 
     dominating_topic: You’ve posted more than %{percent}% of the replies here, is there anyone else you would like to hear from?
 
-    get_a_room: You’ve replied %{count} times to @%{reply_username}, did you know you could send them a personal message instead?
+    get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
