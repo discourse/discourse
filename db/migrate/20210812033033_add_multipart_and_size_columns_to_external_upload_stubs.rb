@@ -4,7 +4,7 @@ class AddMultipartAndSizeColumnsToExternalUploadStubs < ActiveRecord::Migration[
   def up
     add_column :external_upload_stubs, :multipart, :boolean, default: false, null: false
     add_column :external_upload_stubs, :external_upload_identifier, :string, null: true
-    add_column :external_upload_stubs, :filesize, :integer
+    add_column :external_upload_stubs, :filesize, :bigint
 
     add_index :external_upload_stubs, :external_upload_identifier
 

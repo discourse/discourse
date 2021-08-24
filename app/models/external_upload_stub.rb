@@ -65,7 +65,7 @@ end
 #  updated_at                 :datetime         not null
 #  multipart                  :boolean          default(FALSE), not null
 #  external_upload_identifier :string
-#  filesize                   :integer          not null
+#  filesize                   :bigint           not null
 #
 # Indexes
 #
