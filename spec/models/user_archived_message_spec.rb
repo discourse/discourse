@@ -20,7 +20,7 @@ describe UserArchivedMessage do
       UserArchivedMessage.archive!(user.id, private_message)
 
       expect do
-        messages = MessageBus.track_publish(PrivateMessageTopicTrackingState.channel(user.id)) do
+        messages = MessageBus.track_publish(PrivateMessageTopicTrackingState.user_channel(user.id)) do
           UserArchivedMessage.move_to_inbox!(user.id, private_message)
         end
 
@@ -42,7 +42,7 @@ describe UserArchivedMessage do
 
   describe '.archive' do
     it 'archives message correctly' do
-      messages = MessageBus.track_publish(PrivateMessageTopicTrackingState.channel(user.id)) do
+      messages = MessageBus.track_publish(PrivateMessageTopicTrackingState.user_channel(user.id)) do
         UserArchivedMessage.archive!(user.id, private_message)
       end
 

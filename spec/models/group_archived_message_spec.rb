@@ -24,7 +24,7 @@ describe GroupArchivedMessage do
     it 'should unarchive the topic correctly' do
       described_class.archive!(group.id, group_message)
 
-      messages = MessageBus.track_publish(PrivateMessageTopicTrackingState.channel(user_2.id)) do
+      messages = MessageBus.track_publish(PrivateMessageTopicTrackingState.group_channel(group.id)) do
         described_class.move_to_inbox!(group.id, group_message)
       end
 
@@ -39,7 +39,7 @@ describe GroupArchivedMessage do
 
   describe '.archive!' do
     it 'should archive the topic correctly' do
-      messages = MessageBus.track_publish(PrivateMessageTopicTrackingState.channel(user_2.id)) do
+      messages = MessageBus.track_publish(PrivateMessageTopicTrackingState.group_channel(group.id)) do
         described_class.archive!(group.id, group_message)
       end
 
