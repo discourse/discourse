@@ -77,7 +77,6 @@ export default Controller.extend({
   @action
   editInvite(invite) {
     const controller = showModal("create-invite");
-    controller.set("showAdvanced", true);
     controller.setInvite(invite);
   },
 

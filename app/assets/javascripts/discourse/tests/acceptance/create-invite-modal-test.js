@@ -59,10 +59,9 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
       "shows an invite link when modal is opened"
     );
 
-    await click(".modal-footer .show-advanced");
-    await assert.ok(exists(".invite-to-groups"), "shows advanced options");
-    await assert.ok(exists(".invite-to-topic"), "shows advanced options");
-    await assert.ok(exists(".invite-expires-at"), "shows advanced options");
+    await assert.ok(exists(".invite-to-groups"));
+    await assert.ok(exists(".invite-to-topic"));
+    await assert.ok(exists(".invite-expires-at"));
 
     await click(".modal-close");
     assert.ok(deleted, "deletes the invite if not saved");
@@ -232,7 +231,6 @@ acceptance(
       await visit("/u/eviltrout/invited/pending");
 
       await click(".user-invite-buttons .btn:first-child");
-      await click(".modal-footer .show-advanced");
       await click(".future-date-input-selector-header");
 
       const options = Array.from(
