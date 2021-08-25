@@ -86,13 +86,13 @@ describe "S3Helper" do
     expect(object1.key).to eq(object2.key)
   end
 
-  it "should not prefix the bucket folder path if the key begins with temp/" do
+  it "should not prefix the bucket folder path if the key begins with the temporary upload prefix" do
     s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
 
     object1 = s3_helper.object("original/1X/def.xyz")
-    object2 = s3_helper.object("temp/folder_path/uploads/default/blah/def.xyz")
+    object2 = s3_helper.object("#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz")
 
     expect(object1.key).to eq("folder_path/original/1X/def.xyz")
-    expect(object2.key).to eq("temp/folder_path/uploads/default/blah/def.xyz")
+    expect(object2.key).to eq("#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz")
   end
 end
