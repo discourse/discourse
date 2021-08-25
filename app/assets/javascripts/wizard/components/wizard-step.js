@@ -26,7 +26,11 @@ const alreadyWarned = {};
 export default Component.extend({
   classNames: ["wizard-step"],
   saving: null,
-  stylingDropdown: {},
+
+  init() {
+    this._super(...arguments);
+    this.set("stylingDropdown", {});
+  },
 
   didInsertElement() {
     this._super(...arguments);
