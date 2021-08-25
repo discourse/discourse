@@ -6,7 +6,6 @@
 // use the plugins we actually want.
 window.Uppy = {}
 Uppy.Core = require('./packages/@uppy/core/lib/index.js')
-Uppy.BasePlugin = Uppy.Core.BasePlugin
 Uppy.XHRUpload = require('./packages/@uppy/xhr-upload/lib/index.js')
 Uppy.AwsS3 = require('./packages/@uppy/aws-s3/lib/index.js')
 Uppy.AwsS3Multipart = require('./packages/@uppy/aws-s3-multipart/lib/index.js')

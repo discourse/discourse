@@ -1,8 +1,8 @@
-import { BasePlugin } from "@uppy/core";
+import { Plugin } from "@uppy/core";
 import { warn } from "@ember/debug";
 import { Promise } from "rsvp";
 
-export default class UppyMediaOptimization extends BasePlugin {
+export default class UppyMediaOptimization extends Plugin {
   constructor(uppy, opts) {
     super(uppy, opts);
     this.id = opts.id || "uppy-media-optimization";
