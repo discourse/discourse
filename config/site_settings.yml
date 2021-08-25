@@ -283,6 +283,7 @@ basic:
   enable_upload_debug_mode:
     default: false
     hidden: true
+    client: true
   default_theme_id:
     default: -1
     hidden: true
