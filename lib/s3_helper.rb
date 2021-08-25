@@ -264,7 +264,12 @@ class S3Helper
   end
 
   def get_path_for_s3_upload(path)
-    path = File.join(@s3_bucket_folder_path, path) if @s3_bucket_folder_path && path !~ /^#{@s3_bucket_folder_path}\//
+    if @s3_bucket_folder_path &&
+        !path.starts_with?(@s3_bucket_folder_path) &&
+        !path.starts_with?(File.join(FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX, @s3_bucket_folder_path))
+      return File.join(@s3_bucket_folder_path, path)
+    end
+
     path
   end
 
