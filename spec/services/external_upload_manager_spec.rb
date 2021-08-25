@@ -127,6 +127,13 @@ RSpec.describe ExternalUploadManager do
             expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
             expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
           end
+
+          it "does not delete the stub if enable_upload_debug_mode" do
+            SiteSetting.enable_upload_debug_mode = true
+            expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
+            external_stub = ExternalUploadStub.find(external_upload_stub.id)
+            expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
+          end
         end
       end
 
@@ -145,6 +152,13 @@ RSpec.describe ExternalUploadManager do
             :delete,
             "#{upload_base_url}/#{external_upload_stub.key}"
           )
+        end
+
+        it "does not delete the stub if enable_upload_debug_mode" do
+          SiteSetting.enable_upload_debug_mode = true
+          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::SizeMismatchError)
+          external_stub = ExternalUploadStub.find(external_upload_stub.id)
+          expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
         end
       end
     end
