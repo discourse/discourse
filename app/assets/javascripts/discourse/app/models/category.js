@@ -8,6 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { get } from "@ember/object";
 import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
+import { escapeExpression } from "discourse/lib/utilities";
 
 const STAFF_GROUP_NAME = "staff";
 
@@ -54,6 +55,11 @@ const Category = RestModel.extend({
   @discourseComputed("id")
   searchContext(id) {
     return { type: "category", id, category: this };
+  },
+
+  @discourseComputed("name")
+  escapeName(name) {
+    return escapeExpression(name);
   },
 
   @discourseComputed("parentCategory.ancestors")
