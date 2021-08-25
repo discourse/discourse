@@ -13,10 +13,6 @@
       </div>
     </div>
 
-    <div class="input-group input-expires-at">
-      <label>{{d-icon "far-clock"}}{{expiresAtLabel}}</label>
-    </div>
-
     <div class="input-group input-email">
       <label for="invite-email">{{d-icon "envelope"}}{{i18n "user.invited.invite.restrict_email"}}</label>
       <div class="invite-email-container">
@@ -94,11 +90,17 @@
         {{future-date-input
           displayLabelIcon="far-clock"
           displayLabel=(i18n "user.invited.invite.expires_at")
+          statusType="close"
           includeDateTime=true
           includeMidFuture=true
           clearable=true
+          input=buffered.expires_at
           onChangeInput=(action (mut buffered.expires_at))
         }}
+      </div>
+    {{else}}
+      <div class="input-group input-expires-at">
+        <label>{{d-icon "far-clock"}}{{expiresAtLabel}}</label>
       </div>
     {{/if}}
   </form>
