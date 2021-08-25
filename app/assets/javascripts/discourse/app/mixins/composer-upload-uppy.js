@@ -239,6 +239,8 @@ export default Mixin.create({
     this._inProgressUploads--;
     this._resetUpload(file, { removePlaceholder: true });
 
+    file.meta.error = error;
+
     if (!this.userCancelled) {
       displayErrorForUpload(response || error, this.siteSettings, file.name);
       this.appEvents.trigger("composer:upload-error", file);
@@ -430,6 +432,13 @@ export default Mixin.create({
         // will not be set, and we don't have to abort the upload because
         // it will not exist yet
         if (!key || !uploadId) {
+          return;
+        }
+
+        // this gives us a chance to inspect the upload stub before
+        // it is deleted from external storage by aborting the multipart
+        // upload; see also ExternalUploadManager
+        if (file.meta.error && self.siteSettings.enable_upload_debug_mode) {
           return;
         }
 
