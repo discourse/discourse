@@ -4863,18 +4863,34 @@ en:
             label: "City for Disputes"
             placeholder: "San Francisco, California"
 
-      colors:
-        title: "Colors"
-
-      fonts:
-        title: "Fonts"
+      styling:
+        title: "Styling"
         fields:
+          color_scheme:
+            label: "Color scheme"
           body_font:
             label: "Body font"
           heading_font:
             label: "Heading font"
-          font_preview:
+          styling_preview:
             label: "Preview"
+          homepage_style:
+            label: "Homepage style"
+            choices:
+              latest:
+                label: "Latest Topics"
+              categories_only:
+                label: "Categories Only"
+              categories_with_featured_topics:
+                label: "Categories with Featured Topics"
+              categories_and_latest_topics:
+                label: "Categories and Latest Topics"
+              categories_and_top_topics:
+                label: "Categories and Top Topics"
+              categories_boxes:
+                label: "Categories boxes"
+              categories_boxes_with_topics:
+                label: "Categories boxes with Topics"
 
       logos:
         title: "Logos"
@@ -4895,28 +4911,6 @@ en:
           large_icon:
             label: "Large Icon"
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Ideally larger than 512 × 512. We'll use the square logo by default."
-
-      homepage:
-        description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
-        title: "Homepage"
-
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Latest Topics"
-              categories_only:
-                label: "Categories Only"
-              categories_with_featured_topics:
-                label: "Categories with Featured Topics"
-              categories_and_latest_topics:
-                label: "Categories and Latest Topics"
-              categories_and_top_topics:
-                label: "Categories and Top Topics"
-              categories_boxes:
-                label: "Categories boxes"
-              categories_boxes_with_topics:
-                label: "Categories boxes with Topics"
 
       invites:
         title: "Invite Staff"

@@ -27,6 +27,11 @@ export default Component.extend({
   classNames: ["wizard-step"],
   saving: null,
 
+  init() {
+    this._super(...arguments);
+    this.set("stylingDropdown", {});
+  },
+
   didInsertElement() {
     this._super(...arguments);
     this.autoFocus();
@@ -96,6 +101,11 @@ export default Component.extend({
     return htmlSafe(`width: ${ratio * 200}px`);
   },
 
+  @discourseComputed("step.fields")
+  includeSidebar(fields) {
+    return !!fields.findBy("show_in_sidebar");
+  },
+
   autoFocus() {
     schedule("afterRender", () => {
       const $invalid = $(
@@ -128,6 +138,10 @@ export default Component.extend({
   actions: {
     quit() {
       document.location = getUrl("/");
+    },
+
+    stylingDropdownChanged(id, value) {
+      this.set("stylingDropdown", { id, value });
     },
 
     exitEarly() {
