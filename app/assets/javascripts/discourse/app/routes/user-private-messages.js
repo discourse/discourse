@@ -1,6 +1,9 @@
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import Draft from "discourse/models/draft";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import PrivateMessageTopicTrackingState from "discourse/models/private-message-topic-tracking-state";
 
 export default DiscourseRoute.extend({
   renderTemplate() {
@@ -8,11 +11,36 @@ export default DiscourseRoute.extend({
   },
 
   model() {
-    return this.modelFor("user");
+    const user = this.modelFor("user");
+    return ajax(`/u/${user.username}/private-message-topic-tracking-state`)
+      .then((pmTopicTrackingStateData) => {
+        return {
+          user,
+          pmTopicTrackingStateData,
+        };
+      })
+      .catch((e) => {
+        popupAjaxError(e);
+        return { user };
+      });
   },
 
-  setupController(controller, user) {
-    controller.set("model", user);
+  setupController(controller, model) {
+    const user = model.user;
+
+    const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
+      messageBus: controller.messageBus,
+      user,
+    });
+
+    pmTopicTrackingState.startTracking(model.pmTopicTrackingStateData);
+
+    controller.setProperties({
+      model: user,
+      pmTopicTrackingState,
+    });
+
+    this.set("pmTopicTrackingState", pmTopicTrackingState);
 
     if (this.currentUser) {
       const composerController = this.controllerFor("composer");
@@ -28,6 +56,10 @@ export default DiscourseRoute.extend({
         }
       });
     }
+  },
+
+  deactivate() {
+    this.pmTopicTrackingState.stopTracking();
   },
 
   actions: {

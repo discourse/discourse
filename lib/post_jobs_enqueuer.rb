@@ -20,11 +20,6 @@ class PostJobsEnqueuer
       after_topic_create
       make_visible
     end
-
-    if @topic.private_message?
-      TopicTrackingState.publish_private_message(@topic, post: @post)
-      TopicGroup.new_message_update(@topic.last_poster, @topic.id, @post.post_number)
-    end
   end
 
   private
@@ -46,6 +41,7 @@ class PostJobsEnqueuer
   end
 
   def make_visible
+    return if @topic.private_message?
     return unless SiteSetting.embed_unlisted?
     return unless @post.post_number > 1
     return if @topic.visible?
@@ -73,12 +69,18 @@ class PostJobsEnqueuer
     @topic.posters = @topic.posters_summary
     @topic.posts_count = 1
 
-    TopicTrackingState.publish_new(@topic)
+    klass =
+      if @topic.private_message?
+        PrivateMessageTopicTrackingState
+      else
+        TopicTrackingState
+      end
+
+    klass.publish_new(@topic)
   end
 
   def skip_after_create?
     @opts[:import_mode] ||
-      @topic.private_message? ||
       @post.post_type == Post.types[:moderator_action] ||
       @post.post_type == Post.types[:small_action]
   end

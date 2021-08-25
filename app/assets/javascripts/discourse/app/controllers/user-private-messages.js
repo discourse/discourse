@@ -66,12 +66,28 @@ export default Controller.extend({
     return pmView === VIEW_NAME_WARNINGS && !viewingSelf && !isAdmin;
   },
 
-  @discourseComputed("model.groups")
-  inboxes(groups) {
-    const groupsWithMessages = groups?.filter((group) => {
-      return group.has_messages;
-    });
+  @discourseComputed("pmTopicTrackingState.newIncoming.[]", "selectedInbox")
+  newLinkText() {
+    return this._linkText("new");
+  },
 
+  @discourseComputed("selectedInbox", "pmTopicTrackingState.newIncoming.[]")
+  unreadLinkText() {
+    return this._linkText("unread");
+  },
+
+  _linkText(type) {
+    const count = this.pmTopicTrackingState?.lookupCount(type) || 0;
+
+    if (count === 0) {
+      return I18n.t(`user.messages.${type}`);
+    } else {
+      return I18n.t(`user.messages.${type}_with_count`, { count });
+    }
+  },
+
+  @discourseComputed("model.groupsWithMessages")
+  inboxes(groupsWithMessages) {
     if (!groupsWithMessages || groupsWithMessages.length === 0) {
       return [];
     }
