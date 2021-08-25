@@ -84,12 +84,11 @@ class ExternalUploadManager
       external_upload_stub.created_by_id
     )
   rescue
-    # We don't need to do anything special to abort multipart uploads here,
-    # because at this point (calling promote_to_upload!), the multipart
-    # upload would already be complete.
-    Discourse.store.delete_file(external_upload_stub.key)
-
     if !SiteSetting.enable_upload_debug_mode
+      # We don't need to do anything special to abort multipart uploads here,
+      # because at this point (calling promote_to_upload!), the multipart
+      # upload would already be complete.
+      Discourse.store.delete_file(external_upload_stub.key)
       external_upload_stub.destroy!
     else
       external_upload_stub.update(status: ExternalUploadStub.statuses[:failed])
