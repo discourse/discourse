@@ -11,13 +11,13 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 const PrivateMessageTopicTrackingState = EmberObject.extend({
   CHANNEL_PREFIX: "/private-message-topic-tracking-state",
 
-  newIncoming: [],
   inbox: null,
   filter: null,
   activeGroup: null,
 
   startTracking(data) {
     this.states = new Map();
+    this.newIncoming = [];
     this._loadStates(data);
     this.establishChannels();
   },
