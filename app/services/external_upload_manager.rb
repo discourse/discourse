@@ -88,7 +88,12 @@ class ExternalUploadManager
     # because at this point (calling promote_to_upload!), the multipart
     # upload would already be complete.
     Discourse.store.delete_file(external_upload_stub.key)
-    external_upload_stub.destroy!
+
+    if !SiteSetting.enable_upload_debug_mode
+      external_upload_stub.destroy!
+    else
+      external_upload_stub.update(status: ExternalUploadStub.statuses[:failed])
+    end
 
     raise
   ensure
