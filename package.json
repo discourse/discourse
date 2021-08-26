@@ -9,7 +9,7 @@
     "@fortawesome/fontawesome-free": "5.11.2",
     "@highlightjs/cdn-assets": "^10.6.0",
     "@json-editor/json-editor": "^2.5.2",
-    "@popperjs/core": "v2.0.6",
+    "@popperjs/core": "v2.9.3",
     "@uppy/aws-s3": "^1.7.12",
     "@uppy/aws-s3-multipart": "^1.8.18",
     "@uppy/core": "^1.19.2",
