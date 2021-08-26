@@ -373,19 +373,30 @@ export default Mixin.create({
       limit: 10,
 
       createMultipartUpload(file) {
+        const data = {
+          file_name: file.name,
+          file_size: file.size,
+          upload_type: file.meta.upload_type,
+          metadata: file.meta,
+        };
+
+        // the sha1 checksum is set by the UppyChecksum plugin, except
+        // for in cases where the browser does not support the required
+        // crypto mechanisms or an error occurs. it is an additional layer
+        // of security, and not required.
+        if (file.meta.sha1_checksum) {
+          data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
+        }
+
         return ajax("/uploads/create-multipart.json", {
           type: "POST",
-          data: {
-            file_name: file.name,
-            file_size: file.size,
-            upload_type: file.meta.upload_type,
-          },
+          data,
           // uppy is inconsistent, an error here fires the upload-error event
-        }).then((data) => {
-          file.meta.unique_identifier = data.unique_identifier;
+        }).then((responseData) => {
+          file.meta.unique_identifier = responseData.unique_identifier;
           return {
-            uploadId: data.external_upload_identifier,
-            key: data.key,
+            uploadId: responseData.external_upload_identifier,
+            key: responseData.key,
           };
         });
       },
