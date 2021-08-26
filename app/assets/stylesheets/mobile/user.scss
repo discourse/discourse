@@ -64,7 +64,9 @@
     padding: 0;
     flex: 1 1 auto;
     .select-kit-header {
-      padding: 8px 10px;
+      .select-kit-header-wrapper {
+        padding: 8px 10px;
+      }
 
       .caret-icon {
         color: var(--primary-medium);
