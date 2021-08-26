@@ -546,3 +546,46 @@ acceptance(
     });
   }
 );
+
+acceptance("User Private Messages - user with no messages", function (needs) {
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    const emptyResponse = {
+      topic_list: {
+        topics: [],
+      },
+    };
+
+    const apiUrls = [
+      "/topics/private-messages-all/:username.json",
+      "/topics/private-messages-all-sent/:username.json",
+      "/topics/private-messages-all-new/:username.json",
+      "/topics/private-messages-all-unread/:username.json",
+      "/topics/private-messages-all-archive/:username.json",
+    ];
+
+    apiUrls.forEach((url) => {
+      server.get(url, () => {
+        return helper.response(emptyResponse);
+      });
+    });
+  });
+
+  test("It renders the empty state panel", async function (assert) {
+    await visit("/u/charlie/messages");
+    assert.ok(exists("div.empty-state"));
+
+    await visit("/u/charlie/messages/sent");
+    assert.ok(exists("div.empty-state"));
+
+    await visit("/u/charlie/messages/new");
+    assert.ok(exists("div.empty-state"));
+
+    await visit("/u/charlie/messages/unread");
+    assert.ok(exists("div.empty-state"));
+
+    await visit("/u/charlie/messages/archive");
+    assert.ok(exists("div.empty-state"));
+  });
+});
