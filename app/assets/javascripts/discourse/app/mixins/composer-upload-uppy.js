@@ -133,16 +133,6 @@ export default Mixin.create({
       },
     });
 
-    this._uppyInstance.use(DropTarget, { target: this.element });
-    this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
-
-    // TODO (martin) Need a more automatic way to do this for preprocessor
-    // plugins like UppyChecksum and UppyMediaOptimization so people don't
-    // have to remember to do this, also want to wrap this.uppy.emit in those
-    // classes so people don't have to remember to pass through the plugin class
-    // name for the preprocess-X events.
-    this._trackPreProcessorStatus(UppyChecksum);
-
     // hidden setting like enable_experimental_image_uploader
     if (this.siteSettings.enable_direct_s3_uploads) {
       this._useS3MultipartUploads();
@@ -233,6 +223,20 @@ export default Mixin.create({
     });
 
     this._setupPreprocessing();
+
+    // It is important that the UppyChecksum preprocessor is the last one to
+    // be added; the preprocessors are run in order and since other preprocessors
+    // may modify the file (e.g. the UppyMediaOptimization one), we need to
+    // checksum once we are sure the file data has "settled".
+    this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
+    this._uppyInstance.use(DropTarget, { target: this.element });
+
+    // TODO (martin) Need a more automatic way to do this for preprocessor
+    // plugins like UppyChecksum and UppyMediaOptimization so people don't
+    // have to remember to do this, also want to wrap this.uppy.emit in those
+    // classes so people don't have to remember to pass through the plugin class
+    // name for the preprocess-X events.
+    this._trackPreProcessorStatus(UppyChecksum);
   },
 
   _handleUploadError(file, error, response) {
@@ -373,19 +377,30 @@ export default Mixin.create({
       limit: 10,
 
       createMultipartUpload(file) {
+        const data = {
+          file_name: file.name,
+          file_size: file.size,
+          upload_type: file.meta.upload_type,
+          metadata: file.meta,
+        };
+
+        // the sha1 checksum is set by the UppyChecksum plugin, except
+        // for in cases where the browser does not support the required
+        // crypto mechanisms or an error occurs. it is an additional layer
+        // of security, and not required.
+        if (file.meta.sha1_checksum) {
+          data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
+        }
+
         return ajax("/uploads/create-multipart.json", {
           type: "POST",
-          data: {
-            file_name: file.name,
-            file_size: file.size,
-            upload_type: file.meta.upload_type,
-          },
+          data,
           // uppy is inconsistent, an error here fires the upload-error event
-        }).then((data) => {
-          file.meta.unique_identifier = data.unique_identifier;
+        }).then((responseData) => {
+          file.meta.unique_identifier = responseData.unique_identifier;
           return {
-            uploadId: data.external_upload_identifier,
-            key: data.key,
+            uploadId: responseData.external_upload_identifier,
+            key: responseData.key,
           };
         });
       },

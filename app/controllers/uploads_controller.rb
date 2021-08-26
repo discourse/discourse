@@ -224,19 +224,7 @@ class UploadsController < ApplicationController
       )
     end
 
-    # don't want people posting arbitrary S3 metadata so we just take the
-    # one we need. all of these will be converted to x-amz-meta- metadata
-    # fields in S3 so it's best to use dashes in the names for consistency
-    #
-    # this metadata is baked into the presigned url and is not altered when
-    # sending the PUT from the clientside to the presigned url
-    metadata = if params[:metadata].present?
-      meta = {}
-      if params[:metadata]["sha1-checksum"].present?
-        meta["sha1-checksum"] = params[:metadata]["sha1-checksum"]
-      end
-      meta
-    end
+    metadata = parse_allowed_metadata(params[:metadata])
 
     url = Discourse.store.signed_url_for_temporary_upload(
       file_name, metadata: metadata
@@ -313,9 +301,11 @@ class UploadsController < ApplicationController
       )
     end
 
+    metadata = parse_allowed_metadata(params[:metadata])
+
     begin
       multipart_upload = Discourse.store.create_multipart(
-        file_name, content_type
+        file_name, content_type, metadata: metadata
       )
     rescue Aws::S3::Errors::ServiceError => err
       debug_upload_error(err, "upload.create_mutlipart_failure")
@@ -578,5 +568,16 @@ class UploadsController < ApplicationController
   def debug_upload_error(err, translation_key, translation_params = {})
     return if !SiteSetting.enable_upload_debug_mode
     Discourse.warn_exception(err, message: I18n.t(translation_key, translation_params))
+  end
+
+  # don't want people posting arbitrary S3 metadata so we just take the
+  # one we need. all of these will be converted to x-amz-meta- metadata
+  # fields in S3 so it's best to use dashes in the names for consistency
+  #
+  # this metadata is baked into the presigned url and is not altered when
+  # sending the PUT from the clientside to the presigned url
+  def parse_allowed_metadata(metadata)
+    return if metadata.blank?
+    metadata.permit("sha1-checksum").to_h
   end
 end

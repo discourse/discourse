@@ -319,13 +319,14 @@ module FileStore
       )
     end
 
-    def create_multipart(file_name, content_type)
+    def create_multipart(file_name, content_type, metadata: {})
       key = temporary_upload_path(file_name)
       response = s3_helper.s3_client.create_multipart_upload(
         acl: "private",
         bucket: s3_bucket_name,
         key: key,
-        content_type: content_type
+        content_type: content_type,
+        metadata: metadata
       )
       { upload_id: response.upload_id, key: key }
     end

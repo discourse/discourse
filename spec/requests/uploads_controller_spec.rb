@@ -802,8 +802,6 @@ describe UploadsController do
         expect(response.status).to eq(400)
         post "/uploads/create-multipart.json", params: { upload_type: "composer" }
         expect(response.status).to eq(400)
-        post "/uploads/create-multipart.json", params: { content_type: "image/jpeg" }
-        expect(response.status).to eq(400)
       end
 
       it "returns 422 when the create request errors" do
@@ -813,7 +811,6 @@ describe UploadsController do
             file_name: "test.png",
             file_size: 1024,
             upload_type: "composer",
-            content_type: "image/png"
           }
         }
         expect(response.status).to eq(422)
@@ -826,7 +823,6 @@ describe UploadsController do
             file_name: "test.zip",
             file_size: 9999999,
             upload_type: "composer",
-            content_type: "application/zip"
           }
         }
         expect(response.status).to eq(422)
@@ -855,7 +851,6 @@ describe UploadsController do
             file_name: "test.png",
             file_size: 1024,
             upload_type: "composer",
-            content_type: "image/png"
           }
         }
 
@@ -878,6 +873,27 @@ describe UploadsController do
         expect(result["key"]).to eq(external_upload_stub.last.key)
       end
 
+      it "includes accepted metadata when calling the store to create_multipart, but only allowed keys" do
+        stub_create_multipart_request
+        FileStore::S3Store.any_instance.expects(:create_multipart).with(
+          "test.png", "image/png", metadata: { "sha1-checksum" => "testing" }
+        ).returns({ key: "test" })
+
+        post "/uploads/create-multipart.json", {
+          params: {
+            file_name: "test.png",
+            file_size: 1024,
+            upload_type: "composer",
+            metadata: {
+              "sha1-checksum" => "testing",
+              "blah" => "wontbeincluded"
+            }
+          }
+        }
+
+        expect(response.status).to eq(200)
+      end
+
       it "rate limits" do
         RateLimiter.enable
         RateLimiter.clear_all!
@@ -887,7 +903,6 @@ describe UploadsController do
           post "/uploads/create-multipart.json", params: {
             file_name: "test.png",
             upload_type: "composer",
-            content_type: "image/png",
             file_size: 1024
           }
           expect(response.status).to eq(200)
@@ -895,7 +910,6 @@ describe UploadsController do
           post "/uploads/create-multipart.json", params: {
             file_name: "test.png",
             upload_type: "composer",
-            content_type: "image/png",
             file_size: 1024
           }
           expect(response.status).to eq(429)
@@ -912,7 +926,6 @@ describe UploadsController do
         post "/uploads/create-multipart.json", params: {
           file_name: "test.png",
           upload_type: "composer",
-          content_type: "image/png",
           file_size: 1024
         }
         expect(response.status).to eq(404)
