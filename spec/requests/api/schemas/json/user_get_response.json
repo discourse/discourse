@@ -206,6 +206,9 @@
         "pending_count": {
           "type": "integer"
         },
+        "pending_posts_count": {
+          "type": "integer"
+        },
         "profile_view_count": {
           "type": "integer"
         },

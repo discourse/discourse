@@ -9,6 +9,8 @@ describe User do
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
   end
 
+  it { is_expected.to have_many(:pending_posts).class_name('ReviewableQueuedPost').with_foreign_key(:created_by_id) }
+
   context 'validations' do
     describe '#username' do
       it { is_expected.to validate_presence_of :username }

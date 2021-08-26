@@ -3514,6 +3514,9 @@ en:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
     posts: "Posts"
+    pending_posts:
+      label: "Pending"
+      label_with_count: "Pending (%{count})"
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |

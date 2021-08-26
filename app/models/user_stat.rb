@@ -291,6 +291,16 @@ class UserStat < ActiveRecord::Base
     Discourse.redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
   end
 
+  def update_pending_posts
+    update(pending_posts_count: user.pending_posts.count)
+    MessageBus.publish(
+      "/u/#{user.username_lower}/counters",
+      { pending_posts_count: pending_posts_count },
+      user_ids: [user.id],
+      group_ids: [Group::AUTO_GROUPS[:staff]]
+    )
+  end
+
   protected
 
   def trigger_badges
@@ -323,5 +333,7 @@ end
 #  distinct_badge_count     :integer          default(0), not null
 #  first_unread_pm_at       :datetime         not null
 #  digest_attempted_at      :datetime
-#  draft_count              :integer          default(0), not null
 #  post_edits_count         :integer
+#  draft_count              :integer          default(0), not null
+#  pending_posts_count      :integer          default(0), not null
+#

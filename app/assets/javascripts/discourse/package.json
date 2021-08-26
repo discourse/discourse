@@ -80,6 +80,7 @@
     ]
   },
   "devDependencies": {
-    "ember-exam": "6.1.0"
+    "ember-exam": "6.1.0",
+    "ember-test-selectors": "^6.0.0"
   }
 }

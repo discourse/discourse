@@ -579,6 +579,7 @@ Discourse::Application.routes.draw do
     get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
     get "posts/:username/deleted" => "posts#deleted_posts", constraints: { username: RouteFormat.username }
     get "posts/:username/flagged" => "posts#flagged_posts", constraints: { username: RouteFormat.username }
+    get "posts/:username/pending" => "posts#pending", constraints: { username: RouteFormat.username }
 
     %w{groups g}.each do |root_path|
       resources :groups, id: RouteFormat.username, path: root_path do
