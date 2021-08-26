@@ -80,6 +80,15 @@ describe Jobs::NotifyMailingListSubscribers do
       include_examples "no emails"
     end
 
+    context "with a private message" do
+      before do
+        post.topic.update!(archetype: Archetype.private_message, category: nil)
+        TopicAllowedUser.create(topic: post.topic, user: mailing_list_user)
+        post.topic.reload
+      end
+      include_examples "no emails"
+    end
+
     context "with a valid post from another user" do
 
       context "to an inactive user" do
