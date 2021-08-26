@@ -3252,6 +3252,53 @@ RSpec.describe TopicsController do
           DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
         }.by(4)
       end
+
+      context "when tracked=false" do
+        it "updates the user_stat new_since column and dismisses all the new topics" do
+          sign_in(user)
+          tracked_category = Fabricate(:category)
+          CategoryUser.set_notification_level_for_category(user,
+                                                           NotificationLevels.all[:tracking],
+                                                           tracked_category.id)
+
+          topic_ids = []
+          5.times do
+            topic_ids << create_post(category: tracked_category).topic.id
+          end
+          topic_ids << Fabricate(:topic).id
+          topic_ids << Fabricate(:topic).id
+          old_new_since = user.user_stat.new_since
+
+          put "/topics/reset-new.json?tracked=false"
+          expect(DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count).to eq(7)
+          expect(user.reload.user_stat.new_since > old_new_since).to eq(true)
+        end
+
+        it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
+          sign_in(user)
+          tracked_category = Fabricate(:category)
+          CategoryUser.set_notification_level_for_category(user,
+                                                           NotificationLevels.all[:tracking],
+                                                           tracked_category.id)
+
+          topic_ids = []
+          5.times do
+            topic_ids << create_post(category: tracked_category).topic.id
+          end
+          topic_ids << Fabricate(:topic).id
+          topic_ids << Fabricate(:topic).id
+
+          dismiss_ids = topic_ids[0..1]
+          other_ids = topic_ids[2..-1].sort.reverse
+
+          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
+          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
+
+          expect { put "/topics/reset-new.json?tracked=false" }.to change {
+            DismissedTopicUser.where(user_id: user.id).count
+          }.by(5)
+        end
+      end
     end
 
     context 'category' do

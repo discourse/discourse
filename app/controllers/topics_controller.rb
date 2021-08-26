@@ -985,11 +985,12 @@ class TopicsController < ApplicationController
       elsif params[:tag_id].present?
         Topic.joins(:tags).where(tags: { name: params[:tag_id] })
       else
+        new_results = TopicQuery.new(current_user).new_results(limit: false)
         if params[:tracked].to_s == "true"
-          TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results(limit: false), current_user.id)
+          TopicQuery.tracked_filter(new_results, current_user.id)
         else
           current_user.user_stat.update_column(:new_since, Time.zone.now)
-          Topic
+          new_results
         end
       end
 
