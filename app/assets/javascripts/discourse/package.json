@@ -15,7 +15,7 @@
     "start": "ember serve",
     "test": "ember test"
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.14.3",
     "@ember/optional-features": "^1.1.0",
     "@ember/test-helpers": "^2.2.0",
