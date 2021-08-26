@@ -41,7 +41,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :dismissed_banner_key,
              :is_anonymous,
              :reviewable_count,
-             :read_faq,
+             :read_faq?,
              :automatically_unpin_topics,
              :mailing_list_mode,
              :treat_as_new_topic_start_date,
@@ -67,6 +67,10 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_review,
              :draft_count,
              :default_calendar,
+             :pending_posts_count
+
+  delegate :user_stat, to: :object, private: true
+  delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
@@ -91,14 +95,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_create_group?
     scope.can_create_group?
-  end
-
-  def read_faq
-    object.user_stat.read_faq?
-  end
-
-  def any_posts
-    object.user_stat.any_posts
   end
 
   def hide_profile_and_presence
@@ -320,9 +316,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_has_topic_draft?
     Draft.has_topic_draft(object)
-  end
-
-  def draft_count
-    object.user_stat.draft_count
   end
 end

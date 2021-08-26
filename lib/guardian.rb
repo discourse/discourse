@@ -550,6 +550,10 @@ class Guardian
     @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
   end
 
+  def is_me?(other)
+    other && authenticated? && other.is_a?(User) && @user == other
+  end
+
   private
 
   def is_my_own?(obj)
@@ -560,10 +564,6 @@ class Guardian
     end
 
     false
-  end
-
-  def is_me?(other)
-    other && authenticated? && other.is_a?(User) && @user == other
   end
 
   def is_not_me?(other)
