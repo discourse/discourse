@@ -578,10 +578,6 @@ class UploadsController < ApplicationController
   # sending the PUT from the clientside to the presigned url
   def parse_allowed_metadata(metadata)
     return if metadata.blank?
-    meta = {}
-    if metadata["sha1-checksum"].present?
-      meta["sha1-checksum"] = metadata["sha1-checksum"]
-    end
-    meta
+    metadata.permit("sha1-checksum").to_h
   end
 end
