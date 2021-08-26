@@ -316,6 +316,21 @@ class UsersController < ApplicationController
     render json: MultiJson.dump(serializer)
   end
 
+  def private_message_topic_tracking_state
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    report = PrivateMessageTopicTrackingState.report(user)
+
+    serializer = ActiveModel::ArraySerializer.new(
+      report,
+      each_serializer: PrivateMessageTopicTrackingStateSerializer,
+      scope: guardian
+    )
+
+    render json: MultiJson.dump(serializer)
+  end
+
   def badge_title
     params.require(:user_badge_id)
 

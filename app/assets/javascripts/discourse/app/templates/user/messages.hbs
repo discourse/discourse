@@ -32,13 +32,13 @@
         {{/link-to}}
       </li>
       <li>
-        {{#link-to "userPrivateMessages.new" model}}
-          {{i18n "user.messages.new"}}
+        {{#link-to "userPrivateMessages.new" model class="new"}}
+          {{newLinkText}}
         {{/link-to}}
       </li>
       <li>
-        {{#link-to "userPrivateMessages.unread" model}}
-          {{i18n "user.messages.unread"}}
+        {{#link-to "userPrivateMessages.unread" model class="unread"}}
+          {{unreadLinkText}}
         {{/link-to}}
       </li>
       <li>
@@ -55,13 +55,13 @@
         {{/link-to}}
       </li>
       <li>
-        {{#link-to "userPrivateMessages.groupNew" group.name}}
-          {{i18n "user.messages.new"}}
+        {{#link-to "userPrivateMessages.groupNew" group.name class="new"}}
+          {{newLinkText}}
         {{/link-to}}
       </li>
       <li>
-        {{#link-to "userPrivateMessages.groupUnread" group.name}}
-          {{i18n "user.messages.unread"}}
+        {{#link-to "userPrivateMessages.groupUnread" group.name class="unread"}}
+          {{unreadLinkText}}
         {{/link-to}}
       </li>
       <li>
@@ -83,13 +83,13 @@
         {{/link-to}}
       </li>
       <li>
-        {{#link-to "userPrivateMessages.personalNew" model}}
-          {{i18n "user.messages.new"}}
+        {{#link-to "userPrivateMessages.personalNew" model class="new"}}
+          {{newLinkText}}
         {{/link-to}}
       </li>
       <li>
-        {{#link-to "userPrivateMessages.personalUnread" model}}
-          {{i18n "user.messages.unread"}}
+        {{#link-to "userPrivateMessages.personalUnread" model class="unread"}}
+          {{unreadLinkText}}
         {{/link-to}}
       </li>
       <li>
@@ -101,7 +101,7 @@
 
     {{#if displayGlobalFilters}}
       {{#if pmTaggingEnabled}}
-        <li class="noGlyph tags">
+        <li class="tags">
           {{#link-to "userPrivateMessages.tags" model}}
             {{i18n "user.messages.tags"}}
           {{/link-to}}

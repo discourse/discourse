@@ -15,13 +15,66 @@ metus. Fusce in consequat augue, vel facilisis felis.`;
 export default createPreviewComponent(659, 320, {
   logo: null,
   avatar: null,
+  previewTopic: true,
+  draggingActive: false,
+  startX: 0,
+  scrollLeft: 0,
 
-  @observes(
-    "step.fieldsById.body_font.value",
-    "step.fieldsById.heading_font.value"
-  )
-  fontChanged() {
+  mouseDown(e) {
+    const slider = this.element.querySelector(".previews");
+    this.setProperties({
+      draggingActive: true,
+      startX: e.pageX - slider.offsetLeft,
+      scrollLeft: slider.scrollLeft,
+    });
+  },
+
+  mouseLeave() {
+    this.set("draggingActive", false);
+  },
+
+  mouseUp() {
+    this.set("draggingActive", false);
+  },
+
+  mouseMove(e) {
+    if (!this.draggingActive) {
+      return;
+    }
+    e.preventDefault();
+
+    const slider = this.element.querySelector(".previews"),
+      x = e.pageX - slider.offsetLeft,
+      walk = (x - this.startX) * 1.5;
+
+    slider.scrollLeft = this.scrollLeft - walk;
+
+    if (slider.scrollLeft < 50) {
+      this.set("previewTopic", true);
+    }
+    if (slider.scrollLeft > slider.offsetWidth) {
+      this.set("previewTopic", false);
+    }
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+
     this.triggerRepaint();
+
+    if (this.stylingDropdown?.id === "homepage_style") {
+      this.set("previewTopic", false);
+    }
+  },
+
+  @observes("previewTopic")
+  scrollPreviewArea() {
+    const el = this.element.querySelector(".previews");
+    el.scrollTo({
+      top: 0,
+      left: this.previewTopic ? 0 : el.scrollWidth - el.offsetWidth,
+      behavior: "smooth",
+    });
   },
 
   images() {
@@ -39,14 +92,14 @@ export default createPreviewComponent(659, 320, {
     }
 
     const margin = 20;
-    const avatarSize = height * 0.2;
-    const lineHeight = height / 11;
+    const avatarSize = height * 0.15;
+    const lineHeight = height / 14;
 
     // Draw a fake topic
     this.scaleImage(
       this.avatar,
       margin,
-      headerHeight + height * 0.11,
+      headerHeight + height * 0.09,
       avatarSize,
       avatarSize
     );
@@ -80,7 +133,7 @@ export default createPreviewComponent(659, 320, {
     ctx.fillText(
       I18n.t("wizard.previews.share_button"),
       margin + 10,
-      line + lineHeight * 1.7
+      line + lineHeight * 1.9
     );
 
     // Reply Button
@@ -100,7 +153,7 @@ export default createPreviewComponent(659, 320, {
     ctx.fillText(
       I18n.t("wizard.previews.reply_button"),
       shareButtonWidth + margin + 20,
-      line + lineHeight * 1.7
+      line + lineHeight * 1.9
     );
 
     // Draw Timeline
@@ -123,5 +176,15 @@ export default createPreviewComponent(659, 320, {
     ctx.font = `Bold ${bodyFontSize}em ${font}`;
     ctx.fillStyle = colors.primary;
     ctx.fillText("1 / 20", timelineX + margin, height * 0.3 + margin * 1.5);
+  },
+
+  actions: {
+    setPreviewHomepage() {
+      this.set("previewTopic", false);
+    },
+
+    setPreviewTopic() {
+      this.set("previewTopic", true);
+    },
   },
 });

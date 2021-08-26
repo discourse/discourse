@@ -16,7 +16,6 @@
 #
 # See discourse/app/models/topic-tracking-state.js
 class TopicTrackingState
-
   include ActiveModel::SerializerSupport
 
   UNREAD_MESSAGE_TYPE = "unread"
@@ -508,60 +507,6 @@ class TopicTrackingState
 
   def self.highest_post_number_column_select(staff)
     "#{staff ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
-  end
-
-  def self.publish_private_message(topic, archive_user_id: nil,
-                                          post: nil,
-                                          group_archive: false)
-
-    return unless topic.private_message?
-    channels = {}
-
-    allowed_user_ids = topic.allowed_users.pluck(:id)
-
-    if post && allowed_user_ids.include?(post.user_id)
-      channels["/private-messages/sent"] = [post.user_id]
-    end
-
-    if archive_user_id
-      user_ids = [archive_user_id]
-
-      [
-        "/private-messages/archive",
-        "/private-messages/inbox",
-        "/private-messages/sent",
-      ].each do |channel|
-        channels[channel] = user_ids
-      end
-    end
-
-    if channels.except("/private-messages/sent").blank?
-      channels["/private-messages/inbox"] = allowed_user_ids
-    end
-
-    topic.allowed_groups.each do |group|
-      group_user_ids = group.users.pluck(:id)
-      next if group_user_ids.blank?
-      group_channels = []
-      channel_prefix = "/private-messages/group/#{group.name.downcase}"
-      group_channels << "#{channel_prefix}/inbox"
-      group_channels << "#{channel_prefix}/archive" if group_archive
-      group_channels.each { |channel| channels[channel] = group_user_ids }
-    end
-
-    message = {
-      topic_id: topic.id
-    }
-
-    channels.each do |channel, ids|
-      if ids.present?
-        MessageBus.publish(
-          channel,
-          message.as_json,
-          user_ids: ids
-        )
-      end
-    end
   end
 
   def self.publish_read_indicator_on_write(topic_id, last_read_post_number, user_id)

@@ -2,6 +2,7 @@ import { visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
+  exists,
   publishToMessageBus,
   query,
   queryAll,
@@ -198,3 +199,29 @@ acceptance("User Notifications", function (needs) {
     ]);
   });
 });
+
+acceptance(
+  "User Notifications - there is no notifications yet",
+  function (needs) {
+    needs.user();
+
+    needs.pretender((server, helper) => {
+      server.get("/notifications", () => {
+        return helper.response({
+          notifications: [],
+        });
+      });
+    });
+
+    test("It renders the empty state panel", async function (assert) {
+      await visit("/u/eviltrout/notifications");
+      assert.ok(exists("div.empty-state"));
+    });
+
+    test("It does not render filter", async function (assert) {
+      await visit("/u/eviltrout/notifications");
+
+      assert.notOk(exists("div.user-notifications-filter-select-kit"));
+    });
+  }
+);

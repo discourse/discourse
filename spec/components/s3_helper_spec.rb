@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "s3_helper"
 require "rails_helper"
+require "s3_helper"
 
 describe "S3Helper" do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
@@ -78,11 +78,21 @@ describe "S3Helper" do
   end
 
   it "should prefix bucket folder path only if not exists" do
-    s3_helper = S3Helper.new('bucket/folder_path', "", client: client)
+    s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
 
     object1 = s3_helper.object("original/1X/def.xyz")
     object2 = s3_helper.object("folder_path/original/1X/def.xyz")
 
     expect(object1.key).to eq(object2.key)
+  end
+
+  it "should not prefix the bucket folder path if the key begins with the temporary upload prefix" do
+    s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
+
+    object1 = s3_helper.object("original/1X/def.xyz")
+    object2 = s3_helper.object("#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz")
+
+    expect(object1.key).to eq("folder_path/original/1X/def.xyz")
+    expect(object2.key).to eq("#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz")
   end
 end

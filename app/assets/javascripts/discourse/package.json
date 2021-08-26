@@ -15,12 +15,12 @@
     "start": "ember serve",
     "test": "ember test"
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.14.3",
     "@ember/optional-features": "^1.1.0",
     "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.0",
-    "@popperjs/core": "^2.4.4",
+    "@popperjs/core": "2.9.3",
     "@uppy/aws-s3": "^1.7.12",
     "@uppy/aws-s3-multipart": "^1.8.18",
     "@uppy/core": "^1.19.2",

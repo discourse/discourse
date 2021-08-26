@@ -13,7 +13,7 @@ discourseModule("Integration | Component | badge-title", function (hooks) {
 
   componentTest("badge title", {
     template: hbs`
-      {{badge-title selectableUserBadges=selectableUserBadges user=user}}
+      {{badge-title selectableUserBadges=selectableUserBadges}}
     `,
 
     beforeEach() {
