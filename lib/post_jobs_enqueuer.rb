@@ -55,10 +55,13 @@ class PostJobsEnqueuer
   def after_post_create
     Jobs.enqueue(:post_update_topic_tracking_state, post_id: @post.id)
 
-    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
-      :notify_mailing_list_subscribers,
-      post_id: @post.id,
-    )
+    if !@topic.private_message?
+      Jobs.enqueue_in(
+        SiteSetting.email_time_window_mins.minutes,
+        :notify_mailing_list_subscribers,
+        post_id: @post.id,
+      )
+    end
   end
 
   def after_topic_create
