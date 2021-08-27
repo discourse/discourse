@@ -1006,6 +1006,9 @@ Discourse::Application.routes.draw do
     post "/do-not-disturb" => "do_not_disturb#create"
     delete "/do-not-disturb" => "do_not_disturb#destroy"
 
+    post "/presence/update" => "presence#update"
+    get "/presence/get" => "presence#get"
+
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end
 end
