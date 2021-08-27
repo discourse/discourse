@@ -16,7 +16,7 @@ discourseModule(
 
     componentTest("with image", {
       template: hbs`
-      {{uppy-image-uploader imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}
+      {{uppy-image-uploader id="test-uppy-image-uploader" imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}
     `,
 
       async test(assert) {
@@ -48,7 +48,7 @@ discourseModule(
     });
 
     componentTest("without image", {
-      template: hbs`{{uppy-image-uploader}}`,
+      template: hbs`{{uppy-image-uploader id="test-uppy-image-uploader"}}`,
 
       test(assert) {
         assert.equal(
@@ -70,7 +70,7 @@ discourseModule(
     });
 
     componentTest("with placeholder", {
-      template: hbs`{{uppy-image-uploader placeholderUrl='/images/avatar.png'}}`,
+      template: hbs`{{uppy-image-uploader id="test-uppy-image-uploader" placeholderUrl='/images/avatar.png'}}`,
 
       test(assert) {
         assert.equal(

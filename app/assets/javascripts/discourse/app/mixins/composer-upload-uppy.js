@@ -33,12 +33,12 @@ import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 // functionality and event binding.
 //
 export default Mixin.create({
-  @observes("composer.uploadCancelled")
+  @observes("composerModel.uploadCancelled")
   _cancelUpload() {
-    if (!this.get("composer.uploadCancelled")) {
+    if (!this.get("composerModel.uploadCancelled")) {
       return;
     }
-    this.set("composer.uploadCancelled", false);
+    this.set("composerModel.uploadCancelled", false);
     this.set("userCancelled", true);
 
     this._uppyInstance.cancelAll();
@@ -46,8 +46,6 @@ export default Mixin.create({
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
-    this.messageBus.unsubscribe("/uploads/composer");
-
     this.mobileUploadButton?.removeEventListener(
       "click",
       this.mobileUploadButtonEventListener
@@ -60,7 +58,10 @@ export default Mixin.create({
 
     this.element?.removeEventListener("paste", this.pasteEventListener);
 
-    this.appEvents.off("composer:add-files", this._addFiles.bind(this));
+    this.appEvents.off(
+      `${this.eventPrefix}:add-files`,
+      this._addFiles.bind(this)
+    );
 
     this._reset();
 
@@ -74,10 +75,13 @@ export default Mixin.create({
     this.placeholders = {};
     this._inProgressUploads = 0;
     this._preProcessorStatus = {};
-    this.fileInputEl = document.getElementById("file-uploader");
-    const isPrivateMessage = this.get("composer.privateMessage");
+    this.fileInputEl = document.getElementById(this.fileUploadElementId);
+    const isPrivateMessage = this.get("composerModel.privateMessage");
 
-    this.appEvents.on("composer:add-files", this._addFiles.bind(this));
+    this.appEvents.on(
+      `${this.eventPrefix}:add-files`,
+      this._addFiles.bind(this)
+    );
 
     this._unbindUploadTarget();
     this._bindFileInputChangeListener();
@@ -85,12 +89,12 @@ export default Mixin.create({
     this._bindMobileUploadButton();
 
     this._uppyInstance = new Uppy({
-      id: "composer-uppy",
+      id: this.uppyId,
       autoProceed: true,
 
       // need to use upload_type because uppy overrides type with the
       // actual file type
-      meta: deepMerge({ upload_type: "composer" }, this.data || {}),
+      meta: deepMerge({ upload_type: this.uploadType }, this.data || {}),
 
       onBeforeFileAdded: (currentFile) => {
         const validationOpts = {
@@ -110,7 +114,7 @@ export default Mixin.create({
         });
 
         if (!isUploading) {
-          this.appEvents.trigger("composer:uploads-aborted");
+          this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
         }
         return isUploading;
       },
@@ -126,7 +130,7 @@ export default Mixin.create({
               count: maxFiles,
             })
           );
-          this.appEvents.trigger("composer:uploads-aborted");
+          this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
           this._reset();
           return false;
         }
@@ -172,8 +176,8 @@ export default Mixin.create({
         this.placeholders[file.id] = {
           uploadPlaceholder: placeholder,
         };
-        this.appEvents.trigger("composer:insert-text", placeholder);
-        this.appEvents.trigger("composer:upload-started", file.name);
+        this.appEvents.trigger(`${this.eventPrefix}:insert-text`, placeholder);
+        this.appEvents.trigger(`${this.eventPrefix}:upload-started`, file.name);
       });
     });
 
@@ -187,19 +191,23 @@ export default Mixin.create({
       cacheShortUploadUrl(upload.short_url, upload);
 
       this.appEvents.trigger(
-        "composer:replace-text",
+        `${this.eventPrefix}:replace-text`,
         this.placeholders[file.id].uploadPlaceholder.trim(),
         markdown
       );
 
       this._resetUpload(file, { removePlaceholder: false });
-      this.appEvents.trigger("composer:upload-success", file.name, upload);
+      this.appEvents.trigger(
+        `${this.eventPrefix}:upload-success`,
+        file.name,
+        upload
+      );
     });
 
     this._uppyInstance.on("upload-error", this._handleUploadError.bind(this));
 
     this._uppyInstance.on("complete", () => {
-      this.appEvents.trigger("composer:all-uploads-complete");
+      this.appEvents.trigger(`${this.eventPrefix}:all-uploads-complete`);
       this._reset();
     });
 
@@ -209,7 +217,7 @@ export default Mixin.create({
       if (this.userCancelled) {
         Object.values(this.placeholders).forEach((data) => {
           this.appEvents.trigger(
-            "composer:replace-text",
+            `${this.eventPrefix}:replace-text`,
             data.uploadPlaceholder,
             ""
           );
@@ -218,7 +226,7 @@ export default Mixin.create({
         this.set("userCancelled", false);
         this._reset();
 
-        this.appEvents.trigger("composer:uploads-cancelled");
+        this.appEvents.trigger(`${this.eventPrefix}:uploads-cancelled`);
       }
     });
 
@@ -247,7 +255,7 @@ export default Mixin.create({
 
     if (!this.userCancelled) {
       displayErrorForUpload(response || error, this.siteSettings, file.name);
-      this.appEvents.trigger("composer:upload-error", file);
+      this.appEvents.trigger(`${this.eventPrefix}:upload-error`, file);
     }
 
     if (this._inProgressUploads === 0) {
@@ -279,7 +287,7 @@ export default Mixin.create({
       )}]()\n`;
 
       this.appEvents.trigger(
-        "composer:replace-text",
+        `${this.eventPrefix}:replace-text`,
         placeholderData.uploadPlaceholder,
         placeholderData.processingPlaceholder
       );
@@ -288,7 +296,7 @@ export default Mixin.create({
     this._uppyInstance.on("preprocess-complete", (pluginClass, file) => {
       let placeholderData = this.placeholders[file.id];
       this.appEvents.trigger(
-        "composer:replace-text",
+        `${this.eventPrefix}:replace-text`,
         placeholderData.processingPlaceholder,
         placeholderData.uploadPlaceholder
       );
@@ -307,7 +315,9 @@ export default Mixin.create({
             isProcessingUpload: false,
             isCancellable: true,
           });
-          this.appEvents.trigger("composer:uploads-preprocessing-complete");
+          this.appEvents.trigger(
+            `${this.eventPrefix}:uploads-preprocessing-complete`
+          );
         }
       }
     });
@@ -324,7 +334,9 @@ export default Mixin.create({
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
     })}\\]\\(\\)`;
     const globalRegex = new RegExp(regexString, "g");
-    const matchingPlaceholder = this.get("composer.reply").match(globalRegex);
+    const matchingPlaceholder = this.get("composerModel.reply").match(
+      globalRegex
+    );
     if (matchingPlaceholder) {
       // get last matching placeholder and its consecutive nr in regex
       // capturing group and apply +1 to the placeholder
@@ -496,7 +508,7 @@ export default Mixin.create({
   _resetUpload(file, opts) {
     if (opts.removePlaceholder) {
       this.appEvents.trigger(
-        "composer:replace-text",
+        `${this.eventPrefix}:replace-text`,
         this.placeholders[file.id].uploadPlaceholder,
         ""
       );
@@ -541,7 +553,7 @@ export default Mixin.create({
       this._uppyInstance.addFiles(
         files.map((file) => {
           return {
-            source: "composer",
+            source: this.uppyId,
             name: file.name,
             type: file.type,
             data: file,
