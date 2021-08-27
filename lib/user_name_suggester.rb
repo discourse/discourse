@@ -2,6 +2,7 @@
 
 module UserNameSuggester
   GENERIC_NAMES = ['i', 'me', 'info', 'support', 'admin', 'webmaster', 'hello', 'mail', 'office', 'contact', 'team']
+  FALLBACK_USERNAME = 'user'
 
   def self.suggest(name_or_email, allowed_username = nil)
     return unless name_or_email.present?
@@ -102,7 +103,9 @@ module UserNameSuggester
   end
 
   def self.fix_username(name)
-    rightsize_username(sanitize_username(name))
+    fixed_username = sanitize_username(name)
+    fixed_username << FALLBACK_USERNAME if fixed_username.empty?
+    rightsize_username(fixed_username)
   end
 
   def self.sanitize_username(name)

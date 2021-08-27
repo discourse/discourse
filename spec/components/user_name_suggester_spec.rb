@@ -82,6 +82,11 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest("myname!^$=")).to eq('myname')
     end
 
+    it "suggest a fallback username if name contains only invalid characters" do
+      suggestion = UserNameSuggester.suggest("---")
+      expect(suggestion).to eq("user1") # it doesn't suggest just 'user', because 'user' is a reserved username
+    end
+
     it "allows dots in the middle" do
       expect(UserNameSuggester.suggest("my.name")).to eq('my.name')
     end
@@ -120,8 +125,8 @@ describe UserNameSuggester do
       end
 
       it "replaces Unicode characters" do
-        expect(UserNameSuggester.suggest('طائر')).to eq('111')
-        expect(UserNameSuggester.suggest('πουλί')).to eq('111')
+        expect(UserNameSuggester.suggest('طائر')).to eq('user1')
+        expect(UserNameSuggester.suggest('πουλί')).to eq('user1')
       end
     end
 
@@ -178,7 +183,7 @@ describe UserNameSuggester do
       it "uses allowlist" do
         SiteSetting.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]"
 
-        expect(UserNameSuggester.suggest('πουλί')).to eq('111')
+        expect(UserNameSuggester.suggest('πουλί')).to eq('user1')
         expect(UserNameSuggester.suggest('a鳥b')).to eq('a_b')
         expect(UserNameSuggester.suggest('Löwe')).to eq('Löwe')
 
