@@ -584,7 +584,7 @@ class PresenceChannel
     local time = ARGV[2]
     local mutex_value = ARGV[3]
 
-    local expire = redis.call('ZRANGE', zlist_key, '-inf', time, 'BYSCORE')
+    local expire = redis.call('ZRANGEBYSCORE', zlist_key, '-inf', time)
 
     local has_mutex = false
 
