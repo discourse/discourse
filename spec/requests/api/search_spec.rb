@@ -29,7 +29,9 @@ describe 'groups' do
           - `after:`: `yyyy-mm-dd`
           - `order:`: `latest`, `likes`, `views`, `latest_topic`
           - `assigned:`: username (without `@`)
-          - `in:`: `title`, `likes`, `personal`, `seen`, `unseen`, `posted`, `created`, `watching`, `tracking`, `bookmarks`, `assigned`, `unassigned`, `first`, `pinned`, `open`, `closed`, `public`, `archived`, `noreplies`, `single_user`, `solved`, `unsolved`
+          - `in:`: `title`, `likes`, `personal`, `seen`, `unseen`, `posted`, `created`, `watching`, `tracking`, `bookmarks`, `assigned`, `unassigned`, `first`, `pinned`, `wiki`
+          - `with:`: `images`
+          - `status:`: `open`, `closed`, `public`, `archived`, `noreplies`, `single_user`, `solved`, `unsolved`
           - `min_posts:`: 1
           - `max_posts:`: 10
           - `min_views:`: 1
