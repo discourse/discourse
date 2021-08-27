@@ -334,9 +334,9 @@ export default Mixin.create({
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
     })}\\]\\(\\)`;
     const globalRegex = new RegExp(regexString, "g");
-    const matchingPlaceholder = this.get("composerModel.reply").match(
-      globalRegex
-    );
+    const matchingPlaceholder = this.get(
+      `composerModel.${this.composerModelContentKey}`
+    ).match(globalRegex);
     if (matchingPlaceholder) {
       // get last matching placeholder and its consecutive nr in regex
       // capturing group and apply +1 to the placeholder
@@ -525,7 +525,7 @@ export default Mixin.create({
   _bindPasteListener() {
     this.pasteEventListener = function pasteListener(event) {
       if (
-        document.activeElement !== document.querySelector(".d-editor-input")
+        document.activeElement !== document.querySelector(this.editorInputClass)
       ) {
         return;
       }
