@@ -8,6 +8,7 @@ describe UserNameSuggester do
     before do
       SiteSetting.min_username_length = 3
       SiteSetting.max_username_length = 15
+      SiteSetting.reserved_usernames = ''
     end
 
     it "keeps adding numbers to the username" do
@@ -84,7 +85,7 @@ describe UserNameSuggester do
 
     it "suggest a fallback username if name contains only invalid characters" do
       suggestion = UserNameSuggester.suggest("---")
-      expect(suggestion).to eq("user1") # it doesn't suggest just 'user', because 'user' is a reserved username
+      expect(suggestion).to eq(I18n.t('fallback_username'))
     end
 
     it "allows dots in the middle" do
@@ -124,9 +125,10 @@ describe UserNameSuggester do
         expect(UserNameSuggester.suggest('Jørn')).to eq('Jorn')
       end
 
-      it "replaces Unicode characters" do
-        expect(UserNameSuggester.suggest('طائر')).to eq('user1')
-        expect(UserNameSuggester.suggest('πουλί')).to eq('user1')
+      it "uses fallback username if there are Unicode characters only" do
+        fallback_username = I18n.t('fallback_username')
+        expect(UserNameSuggester.suggest('طائر')).to eq(fallback_username)
+        expect(UserNameSuggester.suggest('πουλί')).to eq(fallback_username)
       end
     end
 
@@ -183,7 +185,7 @@ describe UserNameSuggester do
       it "uses allowlist" do
         SiteSetting.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]"
 
-        expect(UserNameSuggester.suggest('πουλί')).to eq('user1')
+        expect(UserNameSuggester.suggest('πουλί')).to eq(I18n.t('fallback_username'))
         expect(UserNameSuggester.suggest('a鳥b')).to eq('a_b')
         expect(UserNameSuggester.suggest('Löwe')).to eq('Löwe')
 
