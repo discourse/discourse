@@ -484,9 +484,9 @@ class PresenceChannel
         added_users = 1
         redis.call('SET', mutex_key, mutex_value, 'EX', #{MUTEX_TIMEOUT_SECONDS})
       end
-      -- Add the channel to the global channel list. 'LT' means the value will
-      -- only be set if it's lower than the existing value
-      redis.call('ZADD', channels_key, "LT", expires, tostring(channel))
+      -- Add the channel to the global channel list. 'NX' means the value will
+      -- only be set if doesn't already exist
+      redis.call('ZADD', channels_key, "NX", expires, tostring(channel))
     end
 
     redis.call('EXPIREAT', hash_key, expires + #{GC_SECONDS})
