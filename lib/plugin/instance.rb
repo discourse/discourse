@@ -923,6 +923,12 @@ class Plugin::Instance
       }, self)
   end
 
+  # Register a new PresenceChannel prefix. See {PresenceChannel.register_prefix}
+  # for usage instructions
+  def register_presence_channel_prefix(prefix, &block)
+    DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
+  end
+
   protected
 
   def self.js_path
