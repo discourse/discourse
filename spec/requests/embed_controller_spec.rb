@@ -229,6 +229,14 @@ describe EmbedController do
 
         expect(response.body).to match(I18n.t('embed.continue'))
         expect(response.body).to match(post.cooked)
+        expect(response.body).to match("<span class='replies'>1 reply</span>")
+
+        small_action = Fabricate(:small_action, topic: topic_embed.topic)
+
+        get '/embed/comments', params: { embed_url: embed_url }, headers: headers
+
+        expect(response.body).not_to match("post-#{small_action.id}")
+        expect(response.body).to match("<span class='replies'>1 reply</span>")
       end
 
       it "provides the topic retriever with the discourse username when provided" do
