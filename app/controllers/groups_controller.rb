@@ -449,7 +449,7 @@ class GroupsController < ApplicationController
     group = find_group(:group_id, ensure_can_see: false)
 
     if group
-      render json: { messageable: Group.messageable(current_user).where(id: group.id).present? }
+      render json: { messageable: guardian.can_send_private_message?(group) }
     else
       raise Discourse::InvalidAccess.new
     end

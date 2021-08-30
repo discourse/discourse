@@ -95,7 +95,7 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def messageable
-    Group.messageable(scope.user).exists?(id: object.id)
+    scope.can_send_private_message?(object)
   end
 
   def include_flair_icon?
