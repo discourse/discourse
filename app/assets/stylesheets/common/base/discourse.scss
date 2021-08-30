@@ -880,3 +880,18 @@ table {
     }
   }
 }
+
+a#skip-link {
+  padding: 0.25em 0.5em;
+  position: absolute;
+  top: -40px;
+  left: 1em;
+  color: var(--secondary);
+  background: var(--tertiary);
+  transition: top 0.3s ease-out;
+  z-index: z("header") + 1;
+  &:focus {
+    top: 0px;
+    transition: top 0.15s ease-in;
+  }
+}
