@@ -236,7 +236,7 @@
                 <div class="public-user-field {{uf.field.dasherized_name}}">
                   <span class="user-field-name">{{uf.field.name}}:</span>
                   <span class="user-field-value">
-                    {{#each uf.value as |v|}} <!-- some values are arrays -->
+                    {{#each uf.value as |v|}} {{! some values are arrays }}
                       <span class="user-field-value-list-item">{{v}}</span>
                     {{else}}
                       {{uf.value}}
