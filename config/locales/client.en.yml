@@ -2348,6 +2348,11 @@ en:
       search_google_button: "Google"
       search_button: "Search"
 
+      type:
+        default: "Topics/posts"
+        users: "Users"
+        categories_and_tags: "Categories/tags"
+
       context:
         user: "Search posts by @%{username}"
         category: "Search the #%{category} category"
@@ -2356,7 +2361,7 @@ en:
         private_messages: "Search messages"
 
       advanced:
-        title: Advanced Search
+        title: Advanced filters
         posted_by:
           label: Posted by
         in_category:

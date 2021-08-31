@@ -15,6 +15,9 @@ import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
+import { Promise } from "rsvp";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import userSearch from "discourse/lib/user-search";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -22,6 +25,16 @@ const SortOrders = [
   { name: I18n.t("search.most_liked"), id: 2, term: "order:likes" },
   { name: I18n.t("search.most_viewed"), id: 3, term: "order:views" },
   { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" },
+];
+
+const SearchTypes = [
+  { name: I18n.t("search.type.default"), id: 0 },
+  {
+    name: I18n.t("search.type.categories_and_tags"),
+    id: 1,
+    term: "in:categories",
+  },
+  { name: I18n.t("search.type.users"), id: 2, term: "in:users" },
 ];
 const PAGE_LIMIT = 10;
 
@@ -34,7 +47,6 @@ export default Controller.extend({
   queryParams: ["q", "expanded", "context_id", "context", "skip_context"],
   q: null,
   selected: [],
-  expanded: false,
   context_id: null,
   context: null,
   searching: false,
@@ -43,6 +55,8 @@ export default Controller.extend({
   invalidSearch: false,
   page: 1,
   resultCount: null,
+  searchType: 0,
+  searchTypes: SearchTypes,
 
   @discourseComputed("resultCount")
   hasResults(resultCount) {
@@ -202,6 +216,11 @@ export default Controller.extend({
     return page === PAGE_LIMIT;
   },
 
+  @discourseComputed("searchType")
+  usingDefaultSearchType(searchType) {
+    return searchType === 0;
+  },
+
   searchButtonDisabled: or("searching", "loading"),
 
   _search() {
@@ -244,33 +263,57 @@ export default Controller.extend({
 
     const searchKey = getSearchKey(args);
 
-    ajax("/search", { data: args })
-      .then(async (results) => {
-        const model = (await translateResults(results)) || {};
-
-        if (results.grouped_search_result) {
-          this.set("q", results.grouped_search_result.term);
-        }
-
-        if (args.page > 1) {
-          if (model) {
-            this.model.posts.pushObjects(model.posts);
-            this.model.topics.pushObjects(model.topics);
-            this.model.set(
-              "grouped_search_result",
-              results.grouped_search_result
-            );
-          }
-        } else {
-          setTransient("lastSearch", { searchKey, model }, 5);
-          model.grouped_search_result = results.grouped_search_result;
+    switch (this.searchType) {
+      case 1:
+        const categoryTagSearch = searchCategoryTag(args.q, this.siteSettings);
+        Promise.resolve(categoryTagSearch).then(async (results) => {
+          const model = (await translateResults({ categories: results })) || {};
+          // TODO: Tags aren't working
           this.set("model", model);
-        }
-      })
-      .finally(() => {
-        this.set("searching", false);
-        this.set("loading", false);
-      });
+          this.set("searching", false);
+          this.set("loading", false);
+        });
+
+        break;
+      case 2:
+        userSearch({ term: args.q }).then(async (results) => {
+          const model = (await translateResults({ users: results })) || {};
+          this.set("model", model);
+          this.set("searching", false);
+          this.set("loading", false);
+        });
+
+        break;
+      default:
+        ajax("/search", { data: args })
+          .then(async (results) => {
+            const model = (await translateResults(results)) || {};
+
+            if (results.grouped_search_result) {
+              this.set("q", results.grouped_search_result.term);
+            }
+
+            if (args.page > 1) {
+              if (model) {
+                this.model.posts.pushObjects(model.posts);
+                this.model.topics.pushObjects(model.topics);
+                this.model.set(
+                  "grouped_search_result",
+                  results.grouped_search_result
+                );
+              }
+            } else {
+              setTransient("lastSearch", { searchKey, model }, 5);
+              model.grouped_search_result = results.grouped_search_result;
+              this.set("model", model);
+            }
+          })
+          .finally(() => {
+            this.set("searching", false);
+            this.set("loading", false);
+          });
+        break;
+    }
   },
 
   actions: {
@@ -312,13 +355,6 @@ export default Controller.extend({
     search() {
       this.set("page", 1);
       this._search();
-      if (this.site.mobileView) {
-        this.set("expanded", false);
-      }
-    },
-
-    toggleAdvancedSearch() {
-      this.toggleProperty("expanded");
     },
 
     loadMore() {

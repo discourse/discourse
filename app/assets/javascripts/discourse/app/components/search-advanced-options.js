@@ -80,13 +80,15 @@ export function addAdvancedSearchOptions(options) {
 }
 
 export default Component.extend({
-  classNames: ["search-advanced-options"],
+  tagName: "details",
+  attributeBindings: ["expanded:open"],
   category: null,
 
   init() {
     this._super(...arguments);
 
     this.setProperties({
+      expanded: false,
       searchedTerms: {
         username: null,
         category: null,
@@ -189,6 +191,10 @@ export default Component.extend({
       "searchedTerms.max_views",
       REGEXP_MAX_VIEWS_PREFIX
     );
+
+    if (this.site.mobileView) {
+      this.set("expanded", false);
+    }
   },
 
   findSearchTerms() {

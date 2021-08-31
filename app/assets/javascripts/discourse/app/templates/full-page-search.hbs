@@ -1,21 +1,47 @@
 {{#d-section pageClass="search" class="search-container"}}
   {{scroll-tracker name="full-page-search" tag=searchTerm class="hidden"}}
-
-  <div class="search-advanced">
-    {{#unless site.mobileView}}
-      <div class="search-bar">
-        {{search-text-field
-          value=searchTerm
-          class="full-page-search search no-blur search-query"
-          aria-label=(i18n "search.full_page_title")
-          enter=(action "search")
-          hasAutofocus=hasAutofocus
-          aria-controls="search-result-count"
-        }}
-        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" ariaLabel="search.search_button" disabled=searchButtonDisabled}}
+  <h1 class="search-page-heading">
+    {{#if hasResults}}
+      <div class="result-count" id="search-result-count" aria-live="polite">
+        {{html-safe resultCountLabel}}
       </div>
-    {{/unless}}
-
+    {{else}}
+      Search
+    {{/if}}
+  </h1>
+  <div class="search-bar">
+    {{search-text-field
+      value=searchTerm
+      class="full-page-search search no-blur search-query"
+      aria-label=(i18n "search.full_page_title")
+      enter=(action "search")
+      hasAutofocus=hasAutofocus
+      aria-controls="search-result-count"
+    }}
+    {{combo-box
+      value=searchType
+      content=searchTypes
+      castInteger=true
+      onChange=(action (mut searchType))
+    }}
+    {{d-button
+      action=(action "search")
+      icon="search"
+      label="search.search_button"
+      class="btn-primary search-cta"
+      ariaLabel="search.search_button"
+      disabled=searchButtonDisabled
+    }}
+  </div>
+  {{#if usingDefaultSearchType}}
+    <div class="search-filters">
+      {{search-advanced-options
+        searchTerm=(readonly searchTerm)
+        onChangeSearchTerm=(action (mut searchTerm))
+      }}
+    </div>
+  {{/if}}
+  <div class="search-advanced">
     <div class="search-notice">
       {{#if invalidSearch}}
         <div class="fps-invalid">
@@ -36,40 +62,32 @@
     </div>
 
     {{#if hasResults}}
-      <div class="search-title">
-        {{#if hasResults}}
-          {{create-topic-button canCreateTopic=canCreateTopic action=(action "createTopic" searchTerm)}}
-        {{/if}}
+      {{#if usingDefaultSearchType}}
+        <div class="search-info">
+          {{#if canBulkSelect}}
+            {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
+            {{bulk-select-button selected=selected category=category action=(action "search")}}
+          {{/if}}
 
-        {{#if canBulkSelect}}
-          {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
-          {{bulk-select-button selected=selected category=category action=(action "search")}}
-        {{/if}}
-
-        {{#if bulkSelectEnabled}}
-          <div class="fps-select">
-            {{d-button icon="check-square" class="btn-default" action=(action "selectAll") label="search.select_all"~}}
-            {{d-button icon="far-square" class="btn-default" action=(action "clearAll") label="search.clear_all"}}
+          {{#if bulkSelectEnabled}}
+            <div class="fps-select">
+              {{d-button icon="check-square" class="btn-default" action=(action "selectAll") label="search.select_all"~}}
+              {{d-button icon="far-square" class="btn-default" action=(action "clearAll") label="search.clear_all"}}
+            </div>
+          {{/if}}
+          <div class="sort-by">
+            <span class="desc">
+              {{i18n "search.sort_by"}}
+            </span>
+            {{combo-box
+              value=sortOrder
+              content=sortOrders
+              castInteger=true
+              onChange=(action (mut sortOrder))
+            }}
           </div>
-        {{/if}}
-      </div>
-
-      <div class="search-info">
-        <div class="result-count" id="search-result-count" aria-live="polite">
-          {{html-safe resultCountLabel}}
         </div>
-        <div class="sort-by">
-          <span class="desc">
-            {{i18n "search.sort_by"}}
-          </span>
-          {{combo-box
-            value=sortOrder
-            content=sortOrders
-            castInteger=true
-            onChange=(action (mut sortOrder))
-          }}
-        </div>
-      </div>
+      {{/if}}
     {{/if}}
 
     {{plugin-outlet name="full-page-search-below-search-info" args=(hash search=searchTerm)}}
@@ -79,98 +97,73 @@
     {{else}}
       <div class="search-results">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
-          {{search-result-entries posts=model.posts bulkSelectEnabled=bulkSelectEnabled selected=selected}}
+          {{#if usingDefaultSearchType}}
+            {{search-result-entries posts=model.posts bulkSelectEnabled=bulkSelectEnabled selected=selected}}
 
-          {{#conditional-loading-spinner condition=loading }}
-            {{#unless hasResults}}
-              {{#if searchActive}}
-                <h3>{{i18n "search.no_results"}}</h3>
+            {{#conditional-loading-spinner condition=loading }}
+              {{#unless hasResults}}
+                {{#if searchActive}}
+                  <h3>{{i18n "search.no_results"}}</h3>
 
-                {{#if model.grouped_search_result.error}}
-                  <div class="warning">
-                    {{model.grouped_search_result.error}}
-                  </div>
-                {{/if}}
-
-                {{#if showSuggestion}}
-                  <div class="no-results-suggestion">
-                    {{i18n "search.cant_find"}}
-                    {{#if canCreateTopic}}
-                      <a href {{action "createTopic" searchTerm}}>{{i18n "search.start_new_topic"}}</a>
-                      {{#unless siteSettings.login_required}}
-                        {{i18n "search.or_search_google"}}
-                      {{/unless}}
-                    {{else}}
-                      {{i18n "search.search_google"}}
-                    {{/if}}
-                  </div>
-
-                  {{google-search searchTerm=searchTerm}}
-                {{/if}}
-              {{/if}}
-            {{/unless}}
-
-            {{#if hasResults}}
-              {{#unless loading}}
-                <h3 class="search-footer">
-                  {{#if model.grouped_search_result.more_full_page_results}}
-                    {{#if isLastPage }}
-                      {{i18n "search.more_results"}}
-                    {{/if}}
-                  {{else}}
-                    {{i18n "search.no_more_results"}}
+                  {{#if model.grouped_search_result.error}}
+                    <div class="warning">
+                      {{model.grouped_search_result.error}}
+                    </div>
                   {{/if}}
-                </h3>
+
+                  {{#if showSuggestion}}
+                    <div class="no-results-suggestion">
+                      {{i18n "search.cant_find"}}
+                      {{#if canCreateTopic}}
+                        <a href {{action "createTopic" searchTerm}}>{{i18n "search.start_new_topic"}}</a>
+                        {{#unless siteSettings.login_required}}
+                          {{i18n "search.or_search_google"}}
+                        {{/unless}}
+                      {{else}}
+                        {{i18n "search.search_google"}}
+                      {{/if}}
+                    </div>
+
+                    {{google-search searchTerm=searchTerm}}
+                  {{/if}}
+                {{/if}}
               {{/unless}}
+
+              {{#if hasResults}}
+                {{#unless loading}}
+                  <h3 class="search-footer">
+                    {{#if model.grouped_search_result.more_full_page_results}}
+                      {{#if isLastPage }}
+                        {{i18n "search.more_results"}}
+                      {{/if}}
+                    {{else}}
+                      {{i18n "search.no_more_results"}}
+                    {{/if}}
+                  </h3>
+                {{/unless}}
+              {{/if}}
+            {{/conditional-loading-spinner}}
+          {{else}}
+            {{#if model.categories}}
+              {{#each model.categories as |category|}}
+                <div class="category-item">
+                  {{category-link category}}
+                </div>
+              {{/each}}
             {{/if}}
-          {{/conditional-loading-spinner}}
+
+            {{#if model.users}}
+              {{#each model.users as |user|}}
+                {{#user-link user=user}}
+                  <div class="user-item">
+                    {{avatar user imageSize="large"}}
+                    {{user.username}}
+                  </div>
+                {{/user-link}}
+              {{/each}}
+            {{/if}}
+          {{/if}}
         {{/load-more}}
-      </div>
-    {{/if}}
-  </div>
-
-  <div class="search-advanced-sidebar">
-    {{#if site.mobileView}}
-      <div class="search-bar">
-        {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" enter=(action "search") hasAutofocus=hasAutofocus}}
-        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" ariaLabel="search.search_button" disabled=searchButtonDisabled}}
-      </div>
-    {{/if}}
-
-    {{#if site.mobileView}}
-      <div role="button" class="search-advanced-title" {{on "click" (action "toggleAdvancedSearch")}}>
-        {{d-icon (if expanded "caret-down" "caret-right")}}
-        <span>{{i18n "search.advanced.title"}}</span>
-      </div>
-    {{else}}
-      <h1 class="search-advanced-title">
-        {{i18n "search.advanced.title"}}
-      </h1>
-    {{/if}}
-
-    {{#if site.mobileView}}
-      {{#if expanded}}
-        <div class="search-advanced-filters">
-          {{search-advanced-options
-            searchTerm=(readonly searchTerm)
-            onChangeSearchTerm=(action (mut searchTerm))
-          }}
-        </div>
-      {{/if}}
-    {{else}}
-      <div class="search-advanced-filters">
-        {{search-advanced-options
-          searchTerm=(readonly searchTerm)
-          onChangeSearchTerm=(action (mut searchTerm))
-          onChangeCategory=(action (mut category))
-        }}
-
-        {{d-button
-          label="submit"
-          action=(action "search")
-          icon="search"
-          class="btn-primary search-cta"
-          disabled=searchButtonDisabled}}
       </div>
     {{/if}}
   </div>
