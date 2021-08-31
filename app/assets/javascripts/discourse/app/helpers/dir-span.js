@@ -13,7 +13,11 @@ function setDir(text) {
   return content;
 }
 
-export default registerUnbound("dir-span", function (str, escapeText = true) {
-  let text = escapeText ? escapeExpression(str) : str;
+export default registerUnbound("dir-span", function (str, params = {}) {
+  let isHtmlSafe = false;
+  if (params.htmlSafe) {
+    isHtmlSafe = params.htmlSafe;
+  }
+  let text = isHtmlSafe ? str : escapeExpression(str);
   return htmlSafe(setDir(text));
 });
