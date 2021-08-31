@@ -175,6 +175,7 @@ en:
       forwarded: "forwarded the above email"
 
     topic_admin_menu: "topic actions"
+    skip_to_main_content: "Skip to main content"
 
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
