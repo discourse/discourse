@@ -271,17 +271,14 @@ export default Component.extend(TextareaTextManipulation, {
   didInsertElement() {
     this._super(...arguments);
 
-    const $editorInput = $(this.element.querySelector(".d-editor-input"));
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
-    this._applyEmojiAutocomplete($editorInput);
-    this._applyCategoryHashtagAutocomplete($editorInput);
+    this._applyEmojiAutocomplete(this._$textarea);
+    this._applyCategoryHashtagAutocomplete(this._$textarea);
 
     scheduleOnce("afterRender", this, this._readyNow);
 
-    this._mouseTrap = new Mousetrap(
-      this.element.querySelector(".d-editor-input")
-    );
+    this._mouseTrap = new Mousetrap(this._textarea);
     const shortcuts = this.get("toolbar.shortcuts");
 
     Object.keys(shortcuts).forEach((sc) => {
@@ -463,7 +460,7 @@ export default Component.extend(TextareaTextManipulation, {
   _applyCategoryHashtagAutocomplete() {
     const siteSettings = this.siteSettings;
 
-    $(this.element.querySelector(".d-editor-input")).autocomplete({
+    this._$textarea.autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
       afterComplete: (value) => {
@@ -485,12 +482,12 @@ export default Component.extend(TextareaTextManipulation, {
     });
   },
 
-  _applyEmojiAutocomplete($editorInput) {
+  _applyEmojiAutocomplete($textarea) {
     if (!this.siteSettings.enable_emoji) {
       return;
     }
 
-    $editorInput.autocomplete({
+    $textarea.autocomplete({
       template: findRawTemplate("emoji-selector-autocomplete"),
       key: ":",
       afterComplete: (text) => {
@@ -517,7 +514,7 @@ export default Component.extend(TextareaTextManipulation, {
           this.emojiStore.track(v.code);
           return `${v.code}:`;
         } else {
-          $editorInput.autocomplete({ cancel: true });
+          $textarea.autocomplete({ cancel: true });
           this.set("emojiPickerIsActive", true);
 
           schedule("afterRender", () => {
