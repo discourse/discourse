@@ -915,7 +915,7 @@ describe GroupsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["user_count"]).to eq(group.group_users.count - 1)
-          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:watching])
+          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:regular])
           expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:watching])
 
           put "/groups/#{group.id}.json", params: {
@@ -927,7 +927,7 @@ describe GroupsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["success"]).to eq("OK")
-          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:tracking])
+          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:regular])
           expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:tracking])
 
           put "/groups/#{group.id}.json", params: {
@@ -939,7 +939,7 @@ describe GroupsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["success"]).to eq("OK")
-          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:tracking])
+          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:regular])
           expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:tracking])
         end
 
