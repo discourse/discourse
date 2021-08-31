@@ -213,6 +213,8 @@ export default Component.extend(KeyEnterEscape, {
     if (this._visualViewportResizing()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
     }
+
+    cancel(this._lastKeyTimeout);
   },
 
   click() {
